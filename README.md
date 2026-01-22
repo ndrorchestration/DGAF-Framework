@@ -1,4 +1,4 @@
-# CSDF-Framework (CyberShield Defense Framework)
+# DGAF-Framework (Distributed Governance & AI Framework)
 ![Gold Star Certified](https://img.shields.io/badge/Status-Gold%20Star%20Certified-gold)
 ![NIST Compliant](https://img.shields.io/badge/Compliance-NIST%20AI%20RMF-blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
@@ -29,7 +29,7 @@ This ensures downstream users and security implementations are properly protecte
 | **Lavender Audit** | Rigor 90th% | Certified | PASS |
 
 ## Deployment
-1. `git clone https://github.com/Flickerflash/CSDF-Framework.git`
+1. `git clone https://github.com/Flickerflash/DGAF-Framework.git`
 2. `pip install -r requirements.txt`
 3. `python demo.py`
 
