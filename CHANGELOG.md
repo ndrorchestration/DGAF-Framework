@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2026-04-29
+
+### Fixed
+
+- **NOTICE file**: Corrected project name from `CyberShield Defense Framework (CSDF)` to `DGAF-Framework (Dynamic Governance Agentic Formation Framework)` — this was a template artifact that was never updated
+- **NOTICE file**: Replaced retired Agent Lavender references with current agent roster (Amethyst, Apogee, Sentinel) and updated capability descriptions to match the active stack
+- **CHANGELOG [1.0.0]**: Added `(retired — superseded by Agent Apogee)` qualifier to Agent Lavender reference for historical accuracy
+
+---
+
 ## [1.0.1] - 2026-04-28
 
 ### Fixed
@@ -64,9 +74,9 @@ For security-conscious and institutional users: This change provides enhanced le
 - Updated README.md with Apache 2.0 license section
 - Added Apache 2.0 license badge to README
 
-### Framework Components
+### Framework Components (Historical — as of v1.0.0)
 
-- Agent Lavender micro-benchmarks
+- Agent Lavender micro-benchmarks *(retired — superseded by Agent Apogee as of Q1 2026)*
 - Gold Star validation processes
 - NIST AI RMF alignment
 - Enterprise security standards
