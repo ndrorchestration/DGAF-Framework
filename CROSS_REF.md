@@ -4,7 +4,7 @@
 > Maintained by: **Agent COLLEEN** (Continuity, Archive, Cross-Repo Coherence)
 > Audited by: **Agent Apogee** (Evidence Governance, Gap Detection)
 > Conductor: **Agent Amethyst**
-> Last full sweep: **May 01, 2026 05:50 EDT — Session 014 — All 21 repos clean ✅**
+> Last full sweep: **May 01, 2026 06:35 EDT — Session 015 — All 21 repos clean ✅**
 
 ---
 
@@ -34,18 +34,16 @@ ndrorchestration (GitHub org)
 │   └── .github                            (community health files)
 └── PRIVATE (10)
     ├── Gold-star-standards                (certification rubrics — 4 active rubrics)
-    ├── chat-archives                      (session archive + MASTER_PORTFOLIO_INVENTORY)
+    ├── chat-archives                      (session archive + MASTER_PORTFOLIO_INVENTORY v2.3)
     ├── ai-prompt-engineering-portfolio    (v1 archive)
     ├── prompt-optimization-library        (v0 baseline archive)
     ├── AI-Prompt-Engineer                 (historical archive)
-    ├── Amethyst-Governance-Eval-Stack     (multi-tier eval framework)
+    ├── Amethyst-Governance-Eval-Stack     (multi-tier eval framework — scaffold seeded S014)
     ├── phi-calculus-app                   (phi-harmonic calculus explorer)
     ├── career-positioning                 (COLLEEN-governed career strategy)
     ├── automation-scripts                 (Google Apps Scripts + Drive automation)
     └── gold-star-qa-framework             (⛔ ARCHIVED — superseded by Gold-star-standards)
 ```
-
-> **Flickerflash** repo: retained as legacy artifact; profile now served by `ndrorchestration/ndrorchestration`.
 
 ---
 
@@ -71,18 +69,18 @@ ndrorchestration (GitHub org)
 
 | Repo | Role | Gov Status | NOTICE | DGAF Attr | Last Audited |
 |------|------|------------|--------|-----------|--------------|
-| `Gold-star-standards` | Certification rubrics; 4 active rubrics in `docs/rubrics/` | ✅ Active | ✅ | ✅ | May 01 2026 |
+| `Gold-star-standards` | Certification rubrics; 4 rubrics + taxonomy verified S015 | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `chat-archives` | Session archive; MASTER_PORTFOLIO_INVENTORY v2.3 | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `ai-prompt-engineering-portfolio` | v1 archive — DGAF certified baseline | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `prompt-optimization-library` | v0 baseline archive | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `AI-Prompt-Engineer` | Historical archive; GCP dormant | ✅ Active | ✅ | ✅ | May 01 2026 |
-| `Amethyst-Governance-Eval-Stack` | Multi-tier eval framework; MDAR protocol | ✅ Active | — | ✅ | May 01 2026 |
+| `Amethyst-Governance-Eval-Stack` | Multi-tier eval framework; dir scaffold seeded S014 | ✅ Active | — | ✅ | May 01 2026 |
 | `phi-calculus-app` | Phi-harmonic calculus explorer | ✅ Active | — | — | May 01 2026 |
 | `career-positioning` | COLLEEN-governed career strategy; PATHS.md live | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `automation-scripts` | Google Apps Scripts; Drive Organizer live | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `gold-star-qa-framework` | ⛔ ARCHIVED — superseded by Gold-star-standards | ⛔ Archived | — | — | May 01 2026 |
 
-**ECOSYSTEM STATUS: ✅ ALL 21 REPOS REGISTERED | Session 014 2026-05-01**
+**ECOSYSTEM STATUS: ✅ ALL 21 REPOS REGISTERED | Session 015 2026-05-01**
 
 ---
 
@@ -116,6 +114,10 @@ ndrorchestration (GitHub org)
 | `prompt-optimization-library` | `README.md` | `ai-prompt-engineering-portfolio` | v1 successor | ✅ |
 | `sentinel-governance` | `CONTRIBUTING.md` | `DGAF-Framework` | Governance notice | ✅ |
 | `Gold-star-standards` | `README.md` | `DGAF-Framework` | Governance spine | ✅ |
+| `Gold-star-standards` | `README.md` | `Amethyst-Governance-Eval-Stack` | Implements tiers | ✅ |
+| `Gold-star-standards` | `README.md` | `ai-prompt-systems-portfolio` | Gold Star certified | ✅ |
+| `Gold-star-standards` | `README.md` | `junior-apogee-app` | Production QA | ✅ |
+| `Gold-star-standards` | `README.md` | `sentinel-governance` | CI enforcement | ✅ |
 | `ai-governance-frameworks` | `README.md` | `DGAF-Framework` | Governance spine | ✅ |
 | `Driftwatch` | `README.md` | `DGAF-Framework` | Governance spine | ✅ |
 | `Driftwatch` | `README.md` | `3d-visualization-hub` | Visualization output | ✅ |
@@ -139,17 +141,18 @@ ndrorchestration (GitHub org)
 
 ## GAP-06 Drive ↔ GitHub Sync Register
 
-| Drive Asset | GitHub Counterpart | Sync Status | Sub-Gap | Resolution |
-|-------------|-------------------|-------------|---------|------------|
-| `PERPLEXITY-Space-standard-record-v.1.md` | None — session archive | ✅ Drive-only accepted | — | Low priority — no action needed |
-| `MASTER-PORTFOLIO-INVENTORY-VERIFICATION-SYSTEM.md` | `chat-archives/MASTER_PORTFOLIO_INVENTORY_v2.0.md` | ✅ Synced | GAP-06a | ✅ Closed Session 004 |
-| `Google-Drive-Organizer-Apps-Script.md` | `automation-scripts/drive/organizer.gs` | ✅ Migrated | GAP-06b | ✅ Closed Session 004 |
-| `Gmail-Routing-Table` | None — Drive-only | ✅ Drive-only accepted | — | Low priority — no action needed |
-| `careerpositioning.md` | `career-positioning` (private repo) | ✅ Migrated | GAP-06d | ✅ Closed Session 004 |
-| `agent-lavender-space-context-analysis.pdf` | Superseded by SWEEP_LOG/NOTICE | ✅ Archived | — | ✅ Done |
-| `PROJECT-ANDROMEDA_SOVEREIGN-LEDGER-SYNC` | `DGAF-Framework/docs/andromeda/` | ✅ Filed | GAP-06c | ✅ Closed Session 003 |
+**GAP-06 STATUS: ✅ ALL SUB-GAPS RESOLVED** (closed Session 004)
 
-**GAP-06 STATUS: ✅ ALL SUB-GAPS RESOLVED**
+---
+
+## Open GAP Register
+
+| ID | Gap | Agent Lead | Priority | Status |
+|----|-----|------------|----------|--------|
+| ~~GAP-01~~ | ~~Gold-star-standards agent taxonomy~~ | COLLEEN | — | ✅ **CLOSED S015** — false positive; all rubrics clean |
+| GAP-03 | `ai-prompt-systems-portfolio` DGAF vocab check | COLLEEN | 🟡 Medium | Open — NOTICE + ARCHITECTURE patched S013; vocab scan pending |
+| GAP-07 | AGES dirs: scaffold done; full eval content | Apogee | 🟠 Sprint 1 | Scaffold seeded S014; full content deferred |
+| GAP-08 | No `CROSS_REF.md` back-links in dependent repos | COLLEEN | 🟡 Low-med | Open |
 
 ---
 
@@ -170,9 +173,10 @@ Auto-flag for re-audit when:
 | Version | Date | Change |
 |---------|------|--------|
 | 1.0 | Apr 29 03:46 | Initial — 13 repos, Flickerflash namespace |
-| 2.0 | Apr 29 07:36 | Full namespace migration Flickerflash → ndrorchestration; 21 repos registered; GAP-06 all closed; Wave 5 Session 004 seal |
-| 2.1 | May 01 04:35 | S011 Trio+Quintet sweep: Last Audited dates refreshed; `.github profile/README.md` cross-link entry added; ECOSYSTEM STATUS updated |
-| 2.2 | May 01 05:50 | S014 refresh: chat-archives inventory bumped to v2.3; AGES Last Audited confirmed; session log updated |
+| 2.0 | Apr 29 07:36 | Full namespace migration; 21 repos; GAP-06 closed |
+| 2.1 | May 01 04:35 | S011 sweep; Last Audited refreshed |
+| 2.2 | May 01 05:50 | S014 refresh; chat-archives v2.3; AGES confirmed |
+| 2.3 | May 01 06:35 | S015 seal; GAP-01 closed; GSS 5 cross-links added to link table; open GAP register added inline |
 
 ---
 
