@@ -4,7 +4,7 @@
 > Maintained by: **Agent COLLEEN** (Continuity, Archive, Cross-Repo Coherence)
 > Audited by: **Agent Apogee** (Evidence Governance, Gap Detection)
 > Conductor: **Agent Amethyst**
-> Last full sweep: **May 01, 2026 06:35 EDT — Session 015 — All 21 repos clean ✅**
+> Last full sweep: **May 01, 2026 06:40 EDT — Session 016 — All 21 repos clean ✅**
 
 ---
 
@@ -29,11 +29,11 @@ ndrorchestration (GitHub org)
 │   ├── resumeapex-eval                    (flagship benchmark)
 │   ├── 3d-visualization-hub               (governance viz)
 │   ├── ai-governance-frameworks           (NIST/ISO/IIA docs)
-│   ├── ai-prompt-systems-portfolio        (IP-safe prompt samples)
+│   ├── ai-prompt-systems-portfolio        (IP-safe prompt samples — GAP-03 CLOSED S016)
 │   ├── ndrorchestration                   (GitHub profile README)
 │   └── .github                            (community health files)
 └── PRIVATE (10)
-    ├── Gold-star-standards                (certification rubrics — 4 active rubrics)
+    ├── Gold-star-standards                (certification rubrics — GAP-01 CLOSED S015)
     ├── chat-archives                      (session archive + MASTER_PORTFOLIO_INVENTORY v2.3)
     ├── ai-prompt-engineering-portfolio    (v1 archive)
     ├── prompt-optimization-library        (v0 baseline archive)
@@ -61,7 +61,7 @@ ndrorchestration (GitHub org)
 | `resumeapex-eval` | [link](https://github.com/ndrorchestration/resumeapex-eval) | Flagship benchmark | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `3d-visualization-hub` | [link](https://github.com/ndrorchestration/3d-visualization-hub) | Governance viz + drift rendering | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `ai-governance-frameworks` | [link](https://github.com/ndrorchestration/ai-governance-frameworks) | NIST/ISO/IIA governance docs | ✅ Active | ✅ | ✅ | May 01 2026 |
-| `ai-prompt-systems-portfolio` | [link](https://github.com/ndrorchestration/ai-prompt-systems-portfolio) | IP-safe prompt samples | ✅ Active | ✅ | ✅ | May 01 2026 |
+| `ai-prompt-systems-portfolio` | [link](https://github.com/ndrorchestration/ai-prompt-systems-portfolio) | IP-safe prompt samples; GAP-03 closed S016 | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `ndrorchestration` | [link](https://github.com/ndrorchestration/ndrorchestration) | GitHub profile README | ✅ Active | — | — | May 01 2026 |
 | `.github` | [link](https://github.com/ndrorchestration/.github) | Community health files | ✅ Active | — | — | May 01 2026 |
 
@@ -69,7 +69,7 @@ ndrorchestration (GitHub org)
 
 | Repo | Role | Gov Status | NOTICE | DGAF Attr | Last Audited |
 |------|------|------------|--------|-----------|--------------|
-| `Gold-star-standards` | Certification rubrics; 4 rubrics + taxonomy verified S015 | ✅ Active | ✅ | ✅ | May 01 2026 |
+| `Gold-star-standards` | Certification rubrics; GAP-01 closed S015 | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `chat-archives` | Session archive; MASTER_PORTFOLIO_INVENTORY v2.3 | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `ai-prompt-engineering-portfolio` | v1 archive — DGAF certified baseline | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `prompt-optimization-library` | v0 baseline archive | ✅ Active | ✅ | ✅ | May 01 2026 |
@@ -80,7 +80,7 @@ ndrorchestration (GitHub org)
 | `automation-scripts` | Google Apps Scripts; Drive Organizer live | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `gold-star-qa-framework` | ⛔ ARCHIVED — superseded by Gold-star-standards | ⛔ Archived | — | — | May 01 2026 |
 
-**ECOSYSTEM STATUS: ✅ ALL 21 REPOS REGISTERED | Session 015 2026-05-01**
+**ECOSYSTEM STATUS: ✅ ALL 21 REPOS REGISTERED | Session 016 2026-05-01**
 
 ---
 
@@ -104,6 +104,7 @@ ndrorchestration (GitHub org)
 | `ai-prompt-systems-portfolio` | `README.md` | `DGAF-Framework` | Governance spine | ✅ |
 | `ai-prompt-systems-portfolio` | `README.md` | `junior-apogee-app` | Related project | ✅ |
 | `ai-prompt-systems-portfolio` | `README.md` | `resumeapex-eval` | Related project | ✅ |
+| `ai-prompt-systems-portfolio` | `ARCHITECTURE.md` | `DGAF-Framework` (CROSS_REF) | Full ecosystem map | ✅ |
 | `ai-prompt-engineering-portfolio` | `README.md` | `DGAF-Framework` | Governance spine | ✅ |
 | `ai-prompt-engineering-portfolio` | `README.md` | `ai-prompt-systems-portfolio` | Successor link | ✅ |
 | `ai-prompt-engineering-portfolio` | `README.md` | `Amethyst-Governance-Eval-Stack` | Related project | ✅ |
@@ -149,10 +150,10 @@ ndrorchestration (GitHub org)
 
 | ID | Gap | Agent Lead | Priority | Status |
 |----|-----|------------|----------|--------|
-| ~~GAP-01~~ | ~~Gold-star-standards agent taxonomy~~ | COLLEEN | — | ✅ **CLOSED S015** — false positive; all rubrics clean |
-| GAP-03 | `ai-prompt-systems-portfolio` DGAF vocab check | COLLEEN | 🟡 Medium | Open — NOTICE + ARCHITECTURE patched S013; vocab scan pending |
-| GAP-07 | AGES dirs: scaffold done; full eval content | Apogee | 🟠 Sprint 1 | Scaffold seeded S014; full content deferred |
-| GAP-08 | No `CROSS_REF.md` back-links in dependent repos | COLLEEN | 🟡 Low-med | Open |
+| ~~GAP-01~~ | ~~Gold-star-standards agent taxonomy~~ | COLLEEN | — | ✅ CLOSED S015 |
+| ~~GAP-03~~ | ~~ai-prompt-systems-portfolio DGAF vocab~~ | COLLEEN | — | ✅ **CLOSED S016** — 5 pattern headers + ARCHITECTURE.md fixed |
+| GAP-07 | AGES dirs: scaffold done; full eval content | Apogee | 🟠 Sprint 1 | Open |
+| GAP-08 | No CROSS_REF back-links in dependent repos | COLLEEN | 🟡 Low-med | Open |
 
 ---
 
@@ -176,7 +177,8 @@ Auto-flag for re-audit when:
 | 2.0 | Apr 29 07:36 | Full namespace migration; 21 repos; GAP-06 closed |
 | 2.1 | May 01 04:35 | S011 sweep; Last Audited refreshed |
 | 2.2 | May 01 05:50 | S014 refresh; chat-archives v2.3; AGES confirmed |
-| 2.3 | May 01 06:35 | S015 seal; GAP-01 closed; GSS 5 cross-links added to link table; open GAP register added inline |
+| 2.3 | May 01 06:35 | S015 seal; GAP-01 closed; GSS 5 cross-links added; open GAP register added inline |
+| 2.4 | May 01 06:40 | S016 seal; GAP-03 closed; ai-prompt-systems-portfolio ARCHITECTURE link registered |
 
 ---
 

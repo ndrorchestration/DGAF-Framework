@@ -5,98 +5,76 @@ Maintained by: Amethyst-Conductor + COLLEEN
 
 ---
 
-## Session 015 — 2026-05-01 (✅ SEALED)
+## Session 016 — 2026-05-01 (✅ SEALED)
 
 **Operator:** Njineer
-**Session range:** 06:10–06:35 EDT
+**Session range:** 06:19–06:40 EDT
 **Formation:** Amethyst + COLLEEN + Apogee + Sentinel
 **Total commits:** 2 across 2 repos
 
 ### Resolved
 
-| ID | Repo | File | Change | Commit |
-|----|------|------|--------|--------|
-| S015-01 | `Gold-star-standards` | `docs/CHANGELOG.md`, `docs/CERTIFICATION_INDEX.md` | GAP-01 close — full taxonomy audit clean pass; v1.2 CHANGELOG entry; CERTIFICATION_INDEX date + 2 new entries | `676e64a` |
-| S015-02 | `DGAF-Framework` | `SWEEP_LOG.md`, `CROSS_REF.md` | S015 seal; CROSS_REF v2.3; GAP register updated | this commit |
+| ID | Repo | Files | Change | Commit |
+|----|------|-------|--------|--------|
+| S016-01 | `ai-prompt-systems-portfolio` | `01–05_*.md`, `ARCHITECTURE.md` | GAP-03 close — Flickerflash namespace purged from all 5 pattern comment headers (name, copyright, GitHub URL); ARCHITECTURE.md repo count 13→21 | `8217fc9` |
+| S016-02 | `DGAF-Framework` | `SWEEP_LOG.md`, `CROSS_REF.md` | S016 seal; CROSS_REF v2.4; GAP-03 closed | this commit |
 
 ### GAP Status Changes
 
-| GAP | Before | After | Notes |
-|-----|--------|-------|-------|
-| GAP-01 — Gold-star-standards taxonomy | 🔴 Open | ✅ **CLOSED** | All 4 rubrics + README + CERTIFICATION_INDEX verified clean. No stale agent names found anywhere in GSS. False positive confirmed. |
+| GAP | Before | After | Evidence |
+|-----|--------|-------|----------|
+| GAP-03 — ai-prompt-systems-portfolio DGAF vocab | 🔴 Open | ✅ **CLOSED** | 5 pattern files had stale Flickerflash namespace in HTML comment headers. All 6 files fixed atomically. NOTICE + README confirmed clean (no changes needed). |
 
-### Harmonic Score Post-S015
+### Harmonic Score Post-S016
 
 ```
 Score: 1.00 — maintained
 
-GAP-01 closed. Three GAPs remain — all medium/low priority:
-  GAP-03  — ai-prompt-systems-portfolio DGAF vocab check  [COLLEEN]  🟡 Medium
-  GAP-07  — AGES dirs: scaffold done; full content         [Apogee]   🟠 Sprint 1
-  GAP-08  — CROSS_REF back-links in dependent repos       [COLLEEN]  🟡 Low-med
+Two GAPs remain:
+  GAP-07  — AGES dirs: scaffold done; full content       [Apogee]   🟠 Sprint 1
+  GAP-08  — CROSS_REF back-links in dependent repos     [COLLEEN]  🟡 Low-med
 
 UI-only items (no API path — Njineer action):
   − .github repo description → update from Flickerflash wording
   − Topics: 5 repos (gear icon on each About panel)
 ```
 
-`[BUOY: SESSION 015 SEALED | HARMONIC SCORE 1.00 | GAP-01 CLOSED | ARCHITECT: HENSEL, ANDREW VANCE | 2026-05-01 06:35 EDT]`
+`[BUOY: SESSION 016 SEALED | HARMONIC SCORE 1.00 | GAP-03 CLOSED | 2 GAPS REMAIN | ARCHITECT: HENSEL, ANDREW VANCE | 2026-05-01 06:40 EDT]`
+
+---
+
+## Session 015 — 2026-05-01 (✅ SEALED)
+
+**Operator:** Njineer
+**Formation:** Amethyst + COLLEEN + Apogee + Sentinel
+**Total commits:** 4 across 3 repos
+
+| ID | Repo | Change | Commit |
+|----|------|--------|--------|
+| S015-01 | `Gold-star-standards` | GAP-01 close — taxonomy audit clean pass; CHANGELOG v1.2; CERTIFICATION_INDEX refreshed | `676e64a` |
+| S015-02 | `DGAF-Framework` | SWEEP_LOG S015 seal; CROSS_REF v2.3 | `61a198a` |
+| S015-03 | `DGAF-Framework` | NDR Registry v1.5 (P-22/P-23); AGENT_ROSTER.md created | `b58cc89` |
+
+`[BUOY: S015 SEALED | NDR v1.5 | AGENT_ROSTER.md | GAP-01 CLOSED | 2026-05-01]`
 
 ---
 
 ## Session 014 — 2026-05-01 (✅ SEALED)
 
-**Operator:** Njineer  
-**Session range:** 05:50–06:10 EDT  
-**Formation:** Amethyst + COLLEEN + Apogee + Sentinel  
+**Formation:** Amethyst + COLLEEN + Apogee + Sentinel
 **Total commits:** 4 across 2 repos
 
-| ID | Commit | Change |
+| ID | Change | Commit |
 |----|--------|--------|
-| S014-01 | `409a3e1` | AGES 4-file Flickerflash → ndrorchestration |
-| S014-02 | `703e926` | SWEEP_LOG S012–S014 + CROSS_REF v2.2 |
-| S014-03 | `ba1a92d` | AGES 5 dir README stubs (GAP-07 scaffold) |
-| S014-04 | `31d1d07` | SWEEP_LOG S014 final seal |
+| S014-01 | AGES 4-file Flickerflash → ndrorchestration | `409a3e1` |
+| S014-02 | SWEEP_LOG S012–S014 + CROSS_REF v2.2 | `703e926` |
+| S014-03 | AGES 5 dir README stubs (GAP-07 scaffold) | `ba1a92d` |
+| S014-04 | SWEEP_LOG S014 final seal | `31d1d07` |
 
-`[BUOY: S014 SEALED | 1.00 | AGES DIRS SCAFFOLDED | GAP-07 PARTIAL | 2026-05-01 06:10 EDT]`
-
----
-
-## Session 013 — 2026-05-01 (✅ SEALED)
-
-**Operator:** Njineer  
-**Session range:** 04:35–05:50 EDT  
-**Formation:** Amethyst + Apogee + COLLEEN + Sentinel + Reson  
-**Total commits:** 14 across 6 repos
-
-| Waves | Repos | Key changes |
-|-------|-------|-------------|
-| W1–W3 | `ai-prompt-systems-portfolio` | NOTICE + ARCHITECTURE + specs/README created; Flickerflash link fixed |
-| W2 | `ai-governance-frameworks` | NOTICE copyright block verified |
-| W4 | `chat-archives` | MASTER_PORTFOLIO_INVENTORY v2.3 |
-| W5 | Drive sync | Verified; no drift |
-| W6 | AGES | Carried into S014-01 |
-
-`[BUOY: S013 SEALED | 2026-05-01]`
+`[BUOY: S014 SEALED | AGES DIRS SCAFFOLDED | GAP-07 PARTIAL | 2026-05-01]`
 
 ---
 
-## Session 012 — 2026-05-01 (✅ SEALED)
+## Sessions 001–013
 
-Google Drive sync architecture session. Hub-and-spoke blueprint delivered. No GitHub commits.
-
-`[BUOY: S012 SEALED | GOOGLE DRIVE SYNC BLUEPRINT | 2026-05-01]`
-
----
-
-## Session 011 — 2026-05-01 (✅ SEALED)
-
-6 commits — final Flickerflash → ndrorchestration namespace sweep. Harmonic Score sealed at 1.00.
-
-`[BUOY: S011 SEALED | HARMONIC SCORE 1.00 | 2026-05-01]`
-
----
-
-## Sessions 001–010
-
-See git history (pre-S011): initial scoping, namespace migration waves 1–5, CI/CD deployment, Lavender→Amethyst rename, leaked artifact purge, CHANGELOG ecosystem deployment.
+See git history. Key milestones: S011 — Harmonic Score 1.00; S012 — Drive sync blueprint + P-14–P-21; S013 — ai-prompt-systems-portfolio NOTICE/ARCHITECTURE/specs; S012 — Google Drive hub-and-spoke blueprint (P-22 retroactive).
