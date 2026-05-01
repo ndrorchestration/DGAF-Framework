@@ -4,7 +4,7 @@
 > Maintained by: **Agent COLLEEN** (Continuity, Archive, Cross-Repo Coherence)
 > Audited by: **Agent Apogee** (Evidence Governance, Gap Detection)
 > Conductor: **Agent Amethyst**
-> Last full sweep: **May 01, 2026 06:40 EDT — Session 016 — All 21 repos clean ✅**
+> Last full sweep: **May 01, 2026 06:45 EDT — Session 017 — All 21 repos clean ✅**
 
 ---
 
@@ -38,7 +38,7 @@ ndrorchestration (GitHub org)
     ├── ai-prompt-engineering-portfolio    (v1 archive)
     ├── prompt-optimization-library        (v0 baseline archive)
     ├── AI-Prompt-Engineer                 (historical archive)
-    ├── Amethyst-Governance-Eval-Stack     (multi-tier eval framework — scaffold seeded S014)
+    ├── Amethyst-Governance-Eval-Stack     (multi-tier eval framework — GAP-07 CLOSED S017)
     ├── phi-calculus-app                   (phi-harmonic calculus explorer)
     ├── career-positioning                 (COLLEEN-governed career strategy)
     ├── automation-scripts                 (Google Apps Scripts + Drive automation)
@@ -74,13 +74,13 @@ ndrorchestration (GitHub org)
 | `ai-prompt-engineering-portfolio` | v1 archive — DGAF certified baseline | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `prompt-optimization-library` | v0 baseline archive | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `AI-Prompt-Engineer` | Historical archive; GCP dormant | ✅ Active | ✅ | ✅ | May 01 2026 |
-| `Amethyst-Governance-Eval-Stack` | Multi-tier eval framework; dir scaffold seeded S014 | ✅ Active | — | ✅ | May 01 2026 |
+| `Amethyst-Governance-Eval-Stack` | Multi-tier eval framework; GAP-07 closed S017 — fully operational | ✅ Active | — | ✅ | May 01 2026 |
 | `phi-calculus-app` | Phi-harmonic calculus explorer | ✅ Active | — | — | May 01 2026 |
 | `career-positioning` | COLLEEN-governed career strategy; PATHS.md live | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `automation-scripts` | Google Apps Scripts; Drive Organizer live | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `gold-star-qa-framework` | ⛔ ARCHIVED — superseded by Gold-star-standards | ⛔ Archived | — | — | May 01 2026 |
 
-**ECOSYSTEM STATUS: ✅ ALL 21 REPOS REGISTERED | Session 016 2026-05-01**
+**ECOSYSTEM STATUS: ✅ ALL 21 REPOS REGISTERED | Session 017 2026-05-01**
 
 ---
 
@@ -95,6 +95,7 @@ ndrorchestration (GitHub org)
 | `DGAF-Framework` | `docs/gates/GATE_SPECS.md` | All gate sub-docs | Internal cross-ref | ✅ |
 | `Amethyst-Governance-Eval-Stack` | `ARCHITECTURE.md` | `DGAF-Framework` | Governance spine | ✅ |
 | `Amethyst-Governance-Eval-Stack` | `README.md` | `junior-apogee-app` | Related project | ✅ |
+| `Amethyst-Governance-Eval-Stack` | `eval_stack/protocols/MDAR_PROTOCOL_v1.md` | `Gold-star-standards` | Certification gate | ✅ |
 | `junior-apogee-app` | `README.md` | `DGAF-Framework` | Governance spine | ✅ |
 | `junior-apogee-app` | `README.md` | `resumeapex-eval` | Related benchmark | ✅ |
 | `resumeapex-eval` | `README.md` | `DGAF-Framework` | Governance spine | ✅ |
@@ -151,8 +152,8 @@ ndrorchestration (GitHub org)
 | ID | Gap | Agent Lead | Priority | Status |
 |----|-----|------------|----------|--------|
 | ~~GAP-01~~ | ~~Gold-star-standards agent taxonomy~~ | COLLEEN | — | ✅ CLOSED S015 |
-| ~~GAP-03~~ | ~~ai-prompt-systems-portfolio DGAF vocab~~ | COLLEEN | — | ✅ **CLOSED S016** — 5 pattern headers + ARCHITECTURE.md fixed |
-| GAP-07 | AGES dirs: scaffold done; full eval content | Apogee | 🟠 Sprint 1 | Open |
+| ~~GAP-03~~ | ~~ai-prompt-systems-portfolio DGAF vocab~~ | COLLEEN | — | ✅ CLOSED S016 |
+| ~~GAP-07~~ | ~~AGES dirs: scaffold + full eval content~~ | Apogee | — | ✅ **CLOSED S017** — 8 files across 4 dirs |
 | GAP-08 | No CROSS_REF back-links in dependent repos | COLLEEN | 🟡 Low-med | Open |
 
 ---
@@ -177,8 +178,9 @@ Auto-flag for re-audit when:
 | 2.0 | Apr 29 07:36 | Full namespace migration; 21 repos; GAP-06 closed |
 | 2.1 | May 01 04:35 | S011 sweep; Last Audited refreshed |
 | 2.2 | May 01 05:50 | S014 refresh; chat-archives v2.3; AGES confirmed |
-| 2.3 | May 01 06:35 | S015 seal; GAP-01 closed; GSS 5 cross-links added; open GAP register added inline |
-| 2.4 | May 01 06:40 | S016 seal; GAP-03 closed; ai-prompt-systems-portfolio ARCHITECTURE link registered |
+| 2.3 | May 01 06:35 | S015 seal; GAP-01 closed; GSS 5 cross-links; open GAP register inline |
+| 2.4 | May 01 06:40 | S016 seal; GAP-03 closed; AGES ARCHITECTURE.md back-link |
+| 2.5 | May 01 06:45 | S017 seal; GAP-07 closed; AGES MDAR→Gold-star-standards cert link added |
 
 ---
 
