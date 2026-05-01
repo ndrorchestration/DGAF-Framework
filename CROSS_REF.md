@@ -4,7 +4,7 @@
 > Maintained by: **Agent COLLEEN** (Continuity, Archive, Cross-Repo Coherence)
 > Audited by: **Agent Apogee** (Evidence Governance, Gap Detection)
 > Conductor: **Agent Amethyst**
-> Last full sweep: **May 01, 2026 07:39 EDT — Session 022b (Surface Sweep Patch) — All 21 repos clean ✔️**
+> Last full sweep: **May 01, 2026 08:08 EDT — Session 024 (Quality & Coherence Sweep) — All 21 repos clean ✔️**
 
 ---
 
@@ -58,7 +58,7 @@ ndrorchestration (GitHub org)
 | `sentinel-governance` | [link](https://github.com/ndrorchestration/sentinel-governance) | CI/CD + secret scan | ✅ Active | ✅ | ✅ | Apache-2.0 | ✅ S022b | May 01 2026 |
 | `Driftwatch` | [link](https://github.com/ndrorchestration/Driftwatch) | Phi-driven drift detection | ✅ Active | ✅ | ✅ | **Apache-2.0 + SPDX** (upgraded S020) | ✅ S022 | May 01 2026 |
 | `Acoustic-mesh` | [link](https://github.com/ndrorchestration/Acoustic-mesh) | WebRTC phi-harmonic mesh | ✅ Active | ✅ | ✅ | Apache-2.0 | — | May 01 2026 |
-| `resumeapex-eval` | [link](https://github.com/ndrorchestration/resumeapex-eval) | Flagship benchmark | ✅ Active | ✅ | ✅ | Apache-2.0 | — | May 01 2026 |
+| `resumeapex-eval` | [link](https://github.com/ndrorchestration/resumeapex-eval) | Flagship eval benchmark | ✅ Active | ✅ | ✅ | Apache-2.0 | — | May 01 2026 |
 | `3d-visualization-hub` | [link](https://github.com/ndrorchestration/3d-visualization-hub) | Governance viz + drift rendering | ✅ Active | ✅ | ✅ | Apache-2.0 | — | May 01 2026 |
 | `ai-governance-frameworks` | [link](https://github.com/ndrorchestration/ai-governance-frameworks) | NIST/ISO/IIA governance docs | ✅ Active | ✅ | ✅ | Apache-2.0 + SPDX | — | May 01 2026 |
 | `ai-prompt-systems-portfolio` | [link](https://github.com/ndrorchestration/ai-prompt-systems-portfolio) | IP-safe prompt samples; GAP-03 closed S016 | ✅ Active | ✅ | ✅ | Apache-2.0 | ✅ S022 | May 01 2026 |
@@ -80,7 +80,7 @@ ndrorchestration (GitHub org)
 | `automation-scripts` | Google Apps Scripts; Drive Organizer live | ✅ Active | ✅ | ✅ | May 01 2026 |
 | `gold-star-qa-framework` | ⛔ ARCHIVED — superseded by Gold-star-standards | ⛔ Archived | — | — | May 01 2026 |
 
-**ECOSYSTEM STATUS: ✔️ ALL 21 REPOS REGISTERED | Session 022b SURFACE SWEEP 2026-05-01**
+**ECOSYSTEM STATUS: ✔️ ALL 21 REPOS REGISTERED | Session 024 QUALITY & COHERENCE SWEEP 2026-05-01**
 
 ---
 
@@ -91,7 +91,12 @@ ndrorchestration (GitHub org)
 | `DGAF-Framework` | `README.md` | `Amethyst-Governance-Eval-Stack` | Related project | ✅ |
 | `DGAF-Framework` | `README.md` | `junior-apogee-app` | Related project | ✅ |
 | `DGAF-Framework` | `README.md` | `sentinel-governance` | Related project | ✅ |
-| `DGAF-Framework` | `README.md` | `Gold-star-standards` | Related project | ✅ |
+| `DGAF-Framework` | `README.md` | `Driftwatch` | Related project | ✅ |
+| `DGAF-Framework` | `README.md` | `ai-governance-frameworks` | Related project | ✅ |
+| `DGAF-Framework` | `README.md` | `ai-prompt-systems-portfolio` | Related project | ✅ |
+| `DGAF-Framework` | `README.md` | `resumeapex-eval` | Related project | ✅ |
+| `DGAF-Framework` | `README.md` | `3d-visualization-hub` | Related project | ✅ |
+| `DGAF-Framework` | `README.md` | `Acoustic-mesh` | Related project | ✅ |
 | `DGAF-Framework` | `docs/gates/GATE_SPECS.md` | All gate sub-docs | Internal cross-ref | ✅ |
 | `DGAF-Framework` | `docs/sync/DRIVE_SYNC_POLICY.md` | All platform endpoints | Drive sync spec | ✅ |
 | `Amethyst-Governance-Eval-Stack` | `ARCHITECTURE.md` | `DGAF-Framework` | Governance spine | ✅ |
@@ -144,7 +149,7 @@ ndrorchestration (GitHub org)
 
 ## GAP-06 Drive ↔ GitHub Sync Register
 
-**GAP-06 STATUS: ✅ ALL SUB-GAPS RESOLVED** (closed Session 004)  
+**GAP-06 STATUS: ✅ ALL SUB-GAPS RESOLVED** (closed Session 004)
 **Extended by:** `docs/sync/DRIVE_SYNC_POLICY.md` — full operational spec (Session 019)
 
 ---
@@ -185,7 +190,8 @@ Auto-flag for re-audit when:
 | 2.5 | May 01 06:45 | S017 seal; GAP-07 closed; AGES MDAR→Gold-star-standards cert link added |
 | 2.6 | May 01 06:42 | S019 seal; P1-IP all 3 closed; Flickerflash residual cleared; Drive sync policy registered |
 | 2.7 | May 01 07:22 | S020–S021 finality: Driftwatch Apache-2.0 noted; License column added; last sweep S021 |
-| 2.8 | May 01 07:39 | S022/S022b surface sweep: Templates column added to public repo table; 5 repos with full .github/ suite; FUNDING.yml ecosystem-wide; badge posture complete |
+| 2.8 | May 01 07:39 | S022/S022b surface sweep: Templates column added; 5 repos with .github/ suite; FUNDING.yml ecosystem-wide |
+| 2.9 | May 01 08:08 | S022c–S024 quality sweep: PHDGE rename registered; CHANGELOG v1.0.6; CROSS_REF link table updated (DGAF README now links 9 repos); last sweep advanced to S024 |
 
 ---
 

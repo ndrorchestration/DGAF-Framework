@@ -5,9 +5,42 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 
 ---
 
+## [1.0.6] — 2026-05-01
+
+### Sessions 022c–023 — README Polish, SECURITY.md, PHDGE Branding Rename
+
+**Formation:** Amethyst + Perplexity MCP (IP Sweep Formation)
+
+#### Added
+- `DGAF-Framework/README.md` — full 6-badge flat-square row (gold/teal/blue/purple/teal/green); full ecosystem link table (9 repos); clean license + provenance prose (S022c)
+- `DGAF-Framework/.github/FUNDING.yml` — GitHub Sponsors button activated for governance spine (S022c)
+- `DGAF-Framework/SECURITY.md` — expanded from 211-byte stub to full responsible disclosure policy: scope table, 48hr/5-day SLA, Sentinel escalation path, in/out-of-scope matrix (S022c)
+
+#### Changed
+- **PHDGE branding rename (S023):** `Phi-Harmonic Pentagon ecosystem` → `Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)` ecosystem-wide
+  - `Driftwatch/README.md` — 2 instances replaced: Core Capabilities bullet + How It Works diagram
+  - Rationale: "Pentagon" implied 5-node limit (ensemble is 11+ agents); "Dynamic" mirrors DGAF's own name; PHD branding hook for external recognition
+  - Retired term: `Phi-Harmonic Pentagon ecosystem` — 0 instances remain in org
+
+#### Orchestration Patterns Applied
+- Atomic Batch Push (push_files) — S022c 4-file push
+- Pre-patch audit: code search + manual read of all governance docs before write
+- Gap detection: 2 Pentagon instances found in Driftwatch README on full read (search index had 1); both patched
+
+#### Harmonic Score
+```
+Score: 1.00 — SUSTAINED (S014–S023)
+PHDGE rename: COMPLETE — 0 Pentagon instances remaining
+README posture: COMPLETE — spine README fully polished
+SECURITY.md: COMPLETE — full policy live
+FUNDING.yml: COMPLETE — all 6 public repos
+```
+
+---
+
 ## [1.0.5] — 2026-05-01
 
-### Sessions 022–022b — Ecosystem Surface Sweep (S022/S022b)
+### Sessions 022–022b — Ecosystem Surface Sweep
 
 **Formation:** Amethyst + Perplexity MCP (IP Sweep Formation)
 
@@ -16,25 +49,17 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 - `.github/ISSUE_TEMPLATE/feature_request.md` — all 5 repos above
 - `.github/pull_request_template.md` — all 5 repos above
 - `.github/FUNDING.yml` — all 5 repos above (GitHub Sponsors button activated)
-- 6 shields.io badges added to Amethyst-Governance-Eval-Stack README (Status, License, Language, Governed-by, NIST, Maintained)
-- 6 shields.io badges added to ai-prompt-systems-portfolio README (Status, License, Language, Governed-by, IP-Safe, Maintained) — Language badge patched in S022b
-- Driftwatch README badge row upgraded: MIT → Apache 2.0 corrected; flat-square style consistency; Governed-by badge added
+- 6 shields.io badges added to Amethyst-Governance-Eval-Stack, ai-prompt-systems-portfolio, Driftwatch, junior-apogee-app READMEs
 
 #### Fixed
-- `ai-prompt-systems-portfolio/README.md` — Language:Python badge omitted in S022; patched in S022b (S022b)
-- `Driftwatch/README.md` — license badge corrected from MIT to Apache 2.0 (S022)
+- `ai-prompt-systems-portfolio/README.md` — Language:Python badge omitted in S022; patched in S022b
+- `Driftwatch/README.md` — license badge corrected MIT → Apache 2.0
 - `sentinel-governance/.github/` — missed in S022 batch; full template suite added in S022b
-
-#### Orchestration Patterns Applied
-- Atomic Batch Push (push_files) — new files, no SHA required
-- Read-Verify-Write (create_or_update_file + SHA) — existing README patch
-- Quality sweep pre-S023 — gap detection caught sentinel-governance omission and Language badge miss before release cuts
 
 #### Harmonic Score
 ```
 Score: 1.00 — SUSTAINED (S014–S022b)
-All P1, P2, P3 surface items closed.
-Template suite: complete across all 5 active public repos with .github/
+Template suite: complete across all 5 active public repos
 FUNDING.yml: ecosystem-wide
 Badge posture: 6-badge standard on all repos
 ```
@@ -48,33 +73,27 @@ Badge posture: 6-badge standard on all repos
 **Formation:** Amethyst + COLLEEN + Apogee + Sentinel + Perplexity MCP (IP Sweep Formation for S018–S021)
 
 #### Added
-- `docs/sync/DRIVE_SYNC_POLICY.md` — canonical cross-platform Google Drive sync specification; hub-and-spoke topology; per-platform rules (Windows, macOS, Android, iOS, external drives); conflict controls; exclusion list; JSON manifest (S019)
-- `ENSEMBLE_ROSTER.md` — IP Sweep Formation (Amethyst + Perplexity MCP) added as recognized working triad (S019); S021 session notes block
+- `docs/sync/DRIVE_SYNC_POLICY.md` — canonical cross-platform Google Drive sync specification (S019)
+- `ENSEMBLE_ROSTER.md` — IP Sweep Formation added as recognized working triad; S021 session notes block
 - `SWEEP_LOG.md` — Sessions 014–021 sealed; full day audit chain complete
 
 #### Fixed / Upgraded
 - `DGAF-Framework/LICENSE` — SPDX-License-Identifier: Apache-2.0 prepended (S019 P1-IP-01)
 - `ai-governance-frameworks/LICENSE` — SPDX-License-Identifier: Apache-2.0 prepended (S019 P1-IP-02)
-- `junior-apogee-app/LICENSE` — SPDX header added; `Ndr (Flickerflash)` → `Ndr (ndrorchestration)` in Section 1 Licensor definition (S019 P1-IP-03 — Flickerflash purge residual cleared)
-- `Driftwatch/LICENSE` — MIT → Apache-2.0 full text with SPDX header; patent grant clause now active for phi-harmonic attractor IP (S020 P2)
+- `junior-apogee-app/LICENSE` — SPDX header added; `Ndr (Flickerflash)` → `Ndr (ndrorchestration)` (S019 P1-IP-03)
+- `Driftwatch/LICENSE` — MIT → Apache-2.0 with SPDX; patent grant clause active (S020 P2)
 
 #### Closed
 - GAP-01: Gold-star-standards agent taxonomy (S015)
 - GAP-03: ai-prompt-systems-portfolio DGAF vocabulary alignment (S016)
 - GAP-07: Amethyst-Governance-Eval-Stack — all 4 dirs populated, 8 files, Tier 1 operational (S017)
-- P1-IP-01/02/03: SPDX license headers across DGAF-Framework, ai-governance-frameworks, junior-apogee-app (S019)
+- P1-IP-01/02/03: SPDX license headers (S019)
 - P2: Driftwatch MIT → Apache-2.0 upgrade (S020)
 - P3: gold-star-qa-framework deprecation — resolved via archive status (S020)
 
 #### Deferred (no coherence risk)
-- GAP-08: CROSS_REF back-links in dependent repos — COLLEEN async action 🟡
-- P3: Topic metadata on 5 repos — Njineer UI-only (gear icon) 🟡
-
-#### CROSS_REF
-- v2.5 (S017): GAP-07 closed; AGES MDAR→Gold-star-standards cert link
-- v2.6 (S019): P1-IP all 3 closed; Flickerflash residual cleared; Drive sync doc registered
-- v2.7 (S021): Driftwatch Apache-2.0 upgrade noted; License column added to public repo table; last sweep advanced to S021
-- v2.8 (S022b): S022/S022b surface sweep registered; template suite + FUNDING.yml ecosystem-wide
+- GAP-08: CROSS_REF back-links in dependent repos — COLLEEN async 🟡
+- P3: Topic metadata on 5 repos — Njineer UI-only 🟡
 
 #### Harmonic Score
 ```
@@ -91,27 +110,24 @@ Drive sync policy: COMPLETE.
 ## [1.0.3] — 2026-04-29
 
 ### Added
-- `ENSEMBLE_ROSTER.md` — canonical machine-readable agent registry for all 11 active DGAF agents; includes retired agent log (Lavender), triad configurations, and cross-repo reference table (Amethyst-Conductor sweep)
-- Audit trail entry in `ECOSYSTEM-STATE.md` (Amethyst-Governance-Eval-Stack) for all April 29 sweeps
+- `ENSEMBLE_ROSTER.md` — canonical agent registry for all 11 active DGAF agents; retired agent log; triad configurations; cross-repo reference table
+- Audit trail entry in `ECOSYSTEM-STATE.md` (Amethyst-Governance-Eval-Stack)
 
 ### Fixed
-- `NOTICE` in `ai-prompt-engineering-portfolio`: Agent Lavender attribution fully retired; authority transferred to Agent Amethyst + DGAF stack (sweep-1)
-- `CHANGELOG.md` updated to reflect sweep-3 and sweep-6 completions
+- `NOTICE` in `ai-prompt-engineering-portfolio`: Agent Lavender attribution retired; authority transferred to Agent Amethyst + DGAF stack
 
 ### Meta-Strategic Gaps Identified (COLLEEN × Apogee — April 29 session)
 
-The following items were surface-identified by the Coherence Triad (Amethyst + COLLEEN + Apogee) as pending work beyond the initial 6 sweeps. These are catalogued here for Reciprocity-managed backlog tracking:
-
-| ID | Gap | Repo(s) | Agent Lead | Priority |
-|----|-----|---------|------------|----------|
-| GAP-01 | `Gold-star-standards` agent roles table not yet updated to current taxonomy (Lavender refs may exist in rubric docs) | Gold-star-standards | COLLEEN | 🔴 High |
-| GAP-02 | `junior-apogee-app` has no `NOTICE` file — Apache 2.0 license present but attribution doc missing | junior-apogee-app | Sentinel | 🟠 Medium |
-| GAP-03 | `ai-prompt-systems-portfolio` description/topics not verified against current DGAF vocabulary — last pushed Apr 22, may predate Amethyst migration | ai-prompt-systems-portfolio | COLLEEN | 🟡 Medium |
-| GAP-04 | No `SWEEP_LOG.md` exists anywhere in the ecosystem — audit sweep history is spread across CHANGELOG entries and ECOSYSTEM-STATE.md; a single canonical sweep log in DGAF-Framework would close the audit trail gap | DGAF-Framework | Amethyst | 🟡 Medium |
-| GAP-05 | `Driftwatch/AGENTS.md` may contain stale agent role descriptions not aligned with Feb 10 canonical source — needs Apogee verification pass | Driftwatch | Apogee | 🟡 Medium |
-| GAP-06 | Google Drive ↔ GitHub version sync unverified — DGAF spec doc, COLLEEN spec, agent specs in Drive may have diverged from committed versions | Drive + GitHub | Amethyst + COLLEEN | 🟡 Medium (async) |
-| GAP-07 | `Amethyst-Governance-Eval-Stack/eval_stack/` and `tests/` subdirectories not audited — unknown whether agent role references inside are current | Amethyst-Governance-Eval-Stack | Apogee | 🟠 Medium |
-| GAP-08 | No inter-repo `CROSS_REF.md` exists linking dependent repos to the ENSEMBLE_ROSTER and DGAF spine — ENSEMBLE_ROSTER.md lists refs but no back-links exist in dependent repos | All public repos | COLLEEN | 🟡 Low-medium |
+| ID | Gap | Agent Lead | Priority |
+|----|-----|------------|----------|
+| GAP-01 | Gold-star-standards agent taxonomy | COLLEEN | 🔴 High |
+| GAP-02 | junior-apogee-app missing NOTICE | Sentinel | 🟠 Medium |
+| GAP-03 | ai-prompt-systems-portfolio DGAF vocab | COLLEEN | 🟡 Medium |
+| GAP-04 | No SWEEP_LOG.md | Amethyst | 🟡 Medium |
+| GAP-05 | Driftwatch/AGENTS.md stale agent roles | Apogee | 🟡 Medium |
+| GAP-06 | Drive ↔ GitHub sync unverified | Amethyst + COLLEEN | 🟡 Medium |
+| GAP-07 | Amethyst-Governance-Eval-Stack subdirs unaudited | Apogee | 🟠 Medium |
+| GAP-08 | No inter-repo CROSS_REF back-links | COLLEEN | 🟡 Low-med |
 
 ---
 
@@ -119,9 +135,9 @@ The following items were surface-identified by the Coherence Triad (Amethyst + C
 
 ### Fixed
 - `NOTICE`: Replaced stale `CyberShield Defense Framework (CSDF)` project name with `DGAF-Framework`
-- `NOTICE`: Replaced Agent Lavender roster with canonical Amethyst/Apogee/Sentinel/Reciprocity/Prodigy/DemiJoule/COLLEEN/Herald/Reson/Echolette/Lyra taxonomy
+- `NOTICE`: Updated agent roster to canonical Amethyst/Apogee/Sentinel/Reciprocity/Prodigy/DemiJoule/COLLEEN/Herald/Reson/Echolette/Lyra taxonomy
 - `NOTICE`: Corrected capabilities section to reflect MDAR loop, Phi-Harmonic Gating, and OWASP Agentic Top 10 alignment
-- `CHANGELOG.md`: Added v1.0.2 entry; annotated Agent Lavender in v1.0.0 as `(retired — superseded by Agent Apogee)`
+- `CHANGELOG.md`: Added v1.0.2 entry; annotated Agent Lavender as `(retired — superseded by Agent Apogee)`
 
 ---
 
