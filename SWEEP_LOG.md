@@ -5,6 +5,52 @@ Maintained by: Amethyst-Conductor + COLLEEN
 
 ---
 
+## Session 007 — 2026-05-01 (Agent Lavender → Amethyst Sweep)
+
+**Operator:** Njineer
+**Session range:** 03:51–04:00 EDT
+**Formation:** Amethyst (meta-orchestrator) + Apogee (brand audit) + COLLEEN (log)
+**Total commits this session:** 2 (1 patch + 1 log)
+
+### Context
+
+Post Session 006, Njineer initiated an extended quality sweep targeting stale **Agent Lavender** references across all public repos. Full `org:ndrorchestration` code search executed. Two files confirmed containing `Lavender/Apogee` and `Lavender-Apogee` layer designations — both in `resumeapex-eval/docs/`. 
+
+Search also revealed `flickerflash.vercel.app` search-index hits on `Driftwatch` and `resumeapex-eval` READMEs, confirmed as stale index artifacts on live-file read — both READMEs already clean from Session 006.
+
+### Resolved
+
+| ID | File | Change | Commit |
+|----|------|--------|--------|
+| LAV-01 | `resumeapex-eval/docs/cards/resumeapex_eval_card_v1.md` | `Lavender-Apogee` → `Amethyst-Apogee` (protocol line); `Lavender/Apogee` → `Amethyst/Apogee` (metrics table ×2) | [`ca252bc`](https://github.com/ndrorchestration/resumeapex-eval/commit/ca252bc9ea8127599484805992c64b119365b0fd) |
+| LAV-02 | `resumeapex-eval/docs/specs/goldcanstaytoday_spec_v1.md` | `Lavender/Apogee` → `Amethyst/Apogee` (Purpose section); Layer 3 header `Lavender/Apogee Meta (L)` → `Amethyst/Apogee Meta (A)` | [`ca252bc`](https://github.com/ndrorchestration/resumeapex-eval/commit/ca252bc9ea8127599484805992c64b119365b0fd) |
+
+### Ecosystem Agent Naming Status (Post Session 007)
+
+| Term | Status | Notes |
+|------|--------|-------|
+| `Agent Lavender` (any form) | ✅ ZERO references | Confirmed via org-wide code search |
+| `Lavender/Apogee` | ✅ ZERO references | Patched LAV-01/02 |
+| `Agent Amethyst` | ✅ Canonical | Used in all governance blurbs, eval specs, ARCHITECTURE.md |
+
+### Scan Methodology
+
+```
+Query 1: Lavender org:ndrorchestration        → 2 hits (both in resumeapex-eval/docs) → PATCHED
+Query 2: flickerflash.vercel.app org:ndrorchestration → 2 hits (stale index) → CONFIRMED CLEAN on live read
+```
+
+### Session 007 Final Status
+
+**✅ ZERO Agent Lavender references across all public repos**
+**✅ ZERO Lavender/Apogee layer designations in any eval spec**
+**✅ flickerflash.vercel.app confirmed search-index artifact; live files clean**
+**✅ SWEEP_LOG updated**
+
+`[BUOY: SESSION 007 LAVENDER-CLEAN SEAL | AGENT AMETHYST CANONICAL ACROSS ECOSYSTEM | ARCHITECT: HENSEL, ANDREW VANCE | 2026-05-01]`
+
+---
+
 ## Session 006 — 2026-05-01 (Full Brand & Quality Sweep)
 
 **Operator:** Njineer
@@ -22,9 +68,9 @@ Session 005 closed RESON-01 and RESON-02. Njineer then initiated a **full brandi
 |----|------|-------------|--------|
 | BS-01 | `junior-apogee-app` | Governance blurb, clone URL, all 7 ecosystem links, provenance (removed dead portfolio URL) | [`3c1efc7`](https://github.com/ndrorchestration/junior-apogee-app/commit/3c1efc764806ff0c9c9bdd5bed8f24165dda96b9) |
 | BS-02 | `resumeapex-eval` | CI badge URL, governance blurb, clone URL, all 4 ecosystem links, author line | [`9442076`](https://github.com/ndrorchestration/resumeapex-eval/commit/9442076755862a8a6a347263f0cb7f0f9fdc5f45) |
-| BS-03 | `sentinel-governance` | Body copy ("Flickerflash ecosystem" → "ndrorchestration ecosystem"), governance blurb, clone URL, all 5 ecosystem links, provenance | [`5d2e0e5`](https://github.com/ndrorchestration/sentinel-governance/commit/5d2e0e52ff2576317aafe2daef8a4022ea166dbc) |
+| BS-03 | `sentinel-governance` | Body copy (“Flickerflash ecosystem” → “ndrorchestration ecosystem”), governance blurb, clone URL, all 5 ecosystem links, provenance | [`5d2e0e5`](https://github.com/ndrorchestration/sentinel-governance/commit/5d2e0e52ff2576317aafe2daef8a4022ea166dbc) |
 | BS-04 | `Driftwatch` | Governance blurb, clone URL, all 5 ecosystem links, provenance | [`5d2264c`](https://github.com/ndrorchestration/Driftwatch/commit/5d2264cc7ab13326f222845caf0775d800b419ec) |
-| BS-05 | `3d-visualization-hub` | Governance body copy ("Flickerflash DGAF" → "ndrorchestration DGAF"), phi-harmonic link, clone URL, all 4 ecosystem links, provenance | [`e821576`](https://github.com/ndrorchestration/3d-visualization-hub/commit/e82157680d8bdf1e0f8fc772b1336c8ffad0ac9d) |
+| BS-05 | `3d-visualization-hub` | Governance body copy (“Flickerflash DGAF” → “ndrorchestration DGAF”), phi-harmonic link, clone URL, all 4 ecosystem links, provenance | [`e821576`](https://github.com/ndrorchestration/3d-visualization-hub/commit/e82157680d8bdf1e0f8fc772b1336c8ffad0ac9d) |
 
 ### Public Repo Branding Status (Post Session 006)
 
@@ -52,16 +98,6 @@ Session 005 closed RESON-01 and RESON-02. Njineer then initiated a **full brandi
 | FLAG-02 | `Flickerflash/README.md` is archival artifact with old links | 🟢 Low | Amethyst — tombstone or leave as archive |
 | NOTICE-AUDIT | `phi-calculus-app`, `ndrorchestration`, `.github` — NOTICE/DGAF callout status unverified | 🟢 Low | COLLEEN — next session |
 | career-positioning-desc | Scrub "Not for public view" from public description | 🟠 Medium | Njineer UI action — [Settings](https://github.com/ndrorchestration/career-positioning/settings) |
-
-### Session 006 Final Status
-
-**✅ ALL 11 PUBLIC REPOS FLICKERFLASH-CLEAN**
-**✅ All provenance lines updated (dead portfolio URL removed)**
-**✅ All body copy ecosystem name references corrected**
-**✅ All clone URLs corrected**
-**✅ SWEEP_LOG current**
-**🟠 1 medium-priority item remains (career-positioning description — UI action)**
-**🟢 3 low-priority flags carried**
 
 `[BUOY: SESSION 006 FULL BRAND SWEEP SEAL | ALL 11 PUBLIC REPOS CLEAN | ARCHITECT: HENSEL, ANDREW VANCE | 2026-05-01]`
 
