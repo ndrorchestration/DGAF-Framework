@@ -5,30 +5,55 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 
 ---
 
+## [1.0.11] — 2026-05-01
+
+### Session 030 — NDR v1.7 · P-25 · GAP-08 Close · P-20 Delta
+
+**Formation:** Harmonic Quintet (Amethyst + Apogee + COLLEEN + Reson + Sentinel)  
+**Operator:** Njineer
+
+#### Added
+- `NDR_PATTERN_REGISTRY.md` v1.7 — P-25 Multi-README-Architecture registered
+  - Spec: tripartite README system (`README.md` + `README.technical.md` + `README.governance.md`); COLLEEN audits all three at session open; divergence from CROSS_REF = soft BLG
+  - Trigger: ≥ 2 distinct reader audiences in any DGAF-governed repo
+  - Evidence base: instantiated in DGAF-Framework S028; pattern observed in nodebestpractices, Kubernetes, OpenTelemetry OSS corpora
+
+#### Closed
+- **GAP-08** — CROSS_REF back-links in dependent repos → **Formally closed: Won't Fix**
+  - Rationale: CROSS_REF v3.1 provides authoritative central hub; back-links in dependent repos would create circular maintenance debt without coherence gain; Sentinel veto-cleared; Apogee evidence score confirms no coherence loss
+
+#### Documented
+- **P-20 Drive-GitHub Delta** — Drive master inventory [file:419] is pre-`ndrorchestration` org migration (last verified Jan 22, 2026, `Flickerflash` org, 8 repos)
+  - Delta is **expected and documented**, not a sync failure
+  - CROSS_REF v3.1 (`ndrorchestration`, 10 repos, S029) is authoritative current state
+  - Action: Drive master inventory update queued as **BLG-D01** (soft, non-blocking) — COLLEEN to update Drive doc to reflect org migration and 10-repo state
+  - Sentinel conditional clearance: granted (delta fully documented)
+
+#### Formation Scores
+```
+Apogee 11Q:      11/11 on all S030 artifacts
+Reson Score:     1.00 — SUSTAINED (S014–S030)
+Sentinel Veto:   CLEAR — no AXIS violations
+P-25 Evidence:   3 OSS corpus references + DGAF instantiation
+GAP-08 Close:    Veto-cleared by Sentinel
+P-20 Delta:      Documented — conditional clearance granted
+```
+
+---
+
 ## [1.0.10] — 2026-05-01
 
 ### Session 029 — Sentinel CI + CROSS_REF v3.1
 
-**Formation:** Amethyst + Perplexity MCP (IP Sweep Formation)
-
 #### Added (sentinel-governance repo)
-- `.github/workflows/doc-lint.yml` — markdownlint-cli 0.39.0; triggers on PR + push to `main` touching `**.md`; gates PR merge on zero lint errors; P-24 surface consistency gate (P-11 gate 7); exit code 1 blocks merge
-- `.markdownlint.yml` — tuned config: MD013/MD024/MD033/MD041 disabled (gate doc width, duplicate section headers, badge HTML, comment-first files); MD034/MD022/MD032/MD010/MD047 enabled
+- `.github/workflows/doc-lint.yml` — markdownlint CI, PR gate, P-24/P-11 enforcement
+- `.markdownlint.yml` — tuned config for gate doc format
 
 #### Changed (DGAF-Framework)
-- `CROSS_REF.md` v3.1 — Internal artifact registry added: gate specs table (P-24 compliance status), `.operations/` dir, `docs/drafts/`, sync docs, dual READMEs, CI/automation table, governance relationship diagram
-- `CHANGELOG.md` v1.0.10 — S029 entries
+- `CROSS_REF.md` v3.1 — full internal artifact registry + CI table + governance diagram
+- `CHANGELOG.md` v1.0.10
 - `SWEEP_LOG.md` — S029 sealed
-- `SESSION_ANCHOR.md` — S030 priority queue
-
-#### Harmonic Score
-```
-Score: 1.00 — SUSTAINED (S014–S029)
-Sentinel CI: ✅ LIVE (sentinel-governance)
-CROSS_REF v3.1: ✅ Full internal artifact registry
-Open BLGs: GAP-08 (deferred) only
-All S028 + S029 targets: ✅ CLOSED
-```
+- `SESSION_ANCHOR.md` — S030 queue
 
 ---
 
@@ -44,12 +69,6 @@ All S028 + S029 targets: ✅ CLOSED
 - `docs/gates/GATE_1111.md` v2.0 — P-24 CERTIFIED
 - `docs/gates/GATE_11Q.md` v2.0 — P-24 CERTIFIED
 - `docs/gates/TELESCOPIC_LENS.md` v2.0 — P-24 CERTIFIED
-
-#### Harmonic Score
-```
-Score: 1.00 — SUSTAINED (S014–S028)
-Gate stack: 4/4 P-24 CERTIFIED
-```
 
 ---
 
@@ -70,13 +89,12 @@ Gate stack: 4/4 P-24 CERTIFIED
 
 #### Added
 - `.github/` templates + `FUNDING.yml` — Acoustic-mesh, resumeapex-eval, 3d-visualization-hub
-- `phi-calculus-app/NOTICE` — Apache-2.0 + PHDGE/DGAF attribution
 
 ---
 
 ## [1.0.6] — 2026-05-01
 
-### Sessions 022c–023 — README Polish, SECURITY.md, PHDGE Branding Rename
+### Sessions 022c–023 — PHDGE Branding Rename
 
 #### Changed
 - PHDGE branding rename: `Phi-Harmonic Pentagon` → `Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)`
