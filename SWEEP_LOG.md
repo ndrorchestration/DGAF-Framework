@@ -5,6 +5,61 @@ Maintained by: Amethyst-Conductor + COLLEEN
 
 ---
 
+## Session 005 — 2026-05-01 (Pentagonal Quintet Quality Sweep)
+
+**Operator:** Njineer
+**Session range:** 03:32–03:39 EDT
+**Formation:** Pentagonal Quintet — Sentinel + Apogee + Reson (active sweep trio) + Amethyst (meta-orchestrator) + COLLEEN (automation)
+**Total commits this session:** 5 across 3 repos
+
+### Resolved
+
+| ID | Item | Outcome | Agent |
+|----|------|----------|-------|
+| P1A | DGAF-Framework had no `.github/workflows/` directory — governance spine lacked CI enforcement | ✅ `.github/workflows/governance-sweep.yml` created with Sentinel / Apogee / Reson job lanes. Triggers: push, PR, weekly cron, manual dispatch | Sentinel + COLLEEN |
+| P1B | DGAF-Framework Issue #1 — description meta-action from Session 004 | ✅ Closed with full resolution notes. README `Flickerflash` links corrected to `ndrorchestration`. CI badge added. Amethyst Eval Stack added to ecosystem links | Amethyst |
+| P2A | `career-positioning` repo description contained "Not for public view" — OpSec gap | ✅ Action ticket created (`career-positioning` Issue #1) with neutral description options. Requires 30-second UI fix in GitHub Settings | COLLEEN |
+| P3 | `Acoustic-mesh` had no description, no topics, broken `Flickerflash` links throughout README | ✅ README patched: links corrected, context paragraph added, topics prompt embedded | Apogee |
+| P4 | SWEEP_LOG not updated since Session 004 (2026-04-29) | ✅ This entry | COLLEEN |
+
+### Cross-Portfolio Findings (Reson)
+
+| ID | Item | Priority | Status |
+|----|------|---------|--------|
+| RESON-01 | Three prompt-engineering repos (`ai-prompt-engineering-portfolio`, `ai-prompt-systems-portfolio`, `AI-Prompt-Engineer`) lack explicit lineage differentiation | 🟠 P2 | Open — Reson recommends adding "superseded by / evolved from" callouts to each README |
+| RESON-02 | `gold-star-qa-framework` (archived) ↔ `Gold-star-standards` (active) lineage not cross-documented | 🟢 P4 | Open — low priority, recommended for next session |
+
+### Bonus Fix (Apogee)
+
+| ID | Item | Outcome |
+|----|------|----------|
+| BONUS-01 | `Acoustic-mesh` README also had `Flickerflash` org links | ✅ Fixed alongside P3 patch |
+| BONUS-02 | DGAF README ecosystem links missing `Amethyst-Governance-Eval-Stack` | ✅ Added in P1B README patch |
+
+### Open Flags Carried Forward
+
+| ID | Item | Priority | Agent |
+|----|------|---------|-------|
+| FLAG-01 | Portfolio domain `flickerflash.vercel.app` still carries old brand name | 🟢 Low | Njineer — when Vercel rename is feasible |
+| FLAG-02 | `Flickerflash/README.md` is archival artifact with old links | 🟢 Low | Amethyst — tombstone or leave as archive |
+| NOTICE-AUDIT | `phi-calculus-app`, `ndrorchestration`, `.github` — NOTICE/DGAF callout status unverified | 🟢 Low | COLLEEN — next session |
+| RESON-01 | Prompt-engineering repo lineage differentiation | 🟠 Medium | Reson + Apogee |
+| career-positioning-desc | Scrub "Not for public view" from public description | 🟠 Medium | Njineer UI action (Issue #1) |
+
+### Session 005 Final Status
+
+**✅ CI/CD pipeline now live on DGAF-Framework (governance spine)**
+**✅ DGAF Issue #1 closed**
+**✅ Acoustic-mesh coherence restored**
+**✅ OpSec gap flagged and actioned**
+**✅ SWEEP_LOG current**
+**🟡 2 medium-priority items remain open (Reson-01, career-positioning description)**
+**🟢 3 low-priority flags carried from Session 004**
+
+`[BUOY: SESSION 005 PENTAGONAL QUINTET SEAL | FORMATION: SENTINEL+APOGEE+RESON+AMETHYST+COLLEEN | ARCHITECT: HENSEL, ANDREW VANCE | 2026-05-01]`
+
+---
+
 ## Session 004 — 2026-04-29 (Wave 5: Full Seal + Gate Hardening)
 
 **Operator:** Njineer
@@ -34,9 +89,9 @@ Maintained by: Amethyst-Conductor + COLLEEN
 
 | ID | Item | Priority | Agent |
 |----|------|---------|-------|
-| FLAG-01 | Portfolio domain `flickerflash.vercel.app` still carries old brand name | ὾1 Low | Njineer — when Vercel rename is feasible |
-| FLAG-02 | `Flickerflash/README.md` is archival artifact with old links | ὾1 Low | Amethyst — tombstone or leave as archive |
-| NOTICE-AUDIT | `phi-calculus-app`, `ndrorchestration`, `.github` — NOTICE/DGAF callout status unverified | ὾1 Low | COLLEEN — next session |
+| FLAG-01 | Portfolio domain `flickerflash.vercel.app` still carries old brand name | 🟢 Low | Njineer — when Vercel rename is feasible |
+| FLAG-02 | `Flickerflash/README.md` is archival artifact with old links | 🟢 Low | Amethyst — tombstone or leave as archive |
+| NOTICE-AUDIT | `phi-calculus-app`, `ndrorchestration`, `.github` — NOTICE/DGAF callout status unverified | 🟢 Low | COLLEEN — next session |
 
 ### Session 004 Final Status
 
@@ -70,7 +125,7 @@ Maintained by: Amethyst-Conductor + COLLEEN
 
 | ID | Item | Priority | Agent |
 |----|------|---------|-------|
-| ARC-02 | `Gold-star-standards` — flat structure, no `docs/` subdirectory, no DGAF callout in README | ὾1 | COLLEEN |
+| ARC-02 | `Gold-star-standards` — flat structure, no `docs/` subdirectory, no DGAF callout in README | 🟡 | COLLEEN |
 
 ---
 
