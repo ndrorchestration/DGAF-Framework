@@ -1,4 +1,5 @@
 # DGAF-Framework
+![Governance Sweep](https://github.com/ndrorchestration/DGAF-Framework/actions/workflows/governance-sweep.yml/badge.svg)
 ![Gold Star Certified](https://img.shields.io/badge/Status-Gold%20Star%20Certified-gold)
 ![NIST Compliant](https://img.shields.io/badge/Compliance-NIST%20AI%20RMF-blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
@@ -27,7 +28,7 @@
 This repository contains governance schemas, evaluation rubrics, and agent protocol specs. Clone and reference directly:
 
 ```bash
-git clone https://github.com/Flickerflash/DGAF-Framework.git
+git clone https://github.com/ndrorchestration/DGAF-Framework.git
 cd DGAF-Framework
 ```
 
@@ -35,10 +36,12 @@ No runtime dependencies required. All artifacts are specification documents and 
 
 ## Related Ecosystem
 
-- [junior-apogee-app](https://github.com/Flickerflash/junior-apogee-app) — Production AI eval & QA platform (OWASP Agentic)
-- [sentinel-governance](https://github.com/Flickerflash/sentinel-governance) — Automated CI/CD integrity monitoring
-- [ai-governance-frameworks](https://github.com/Flickerflash/ai-governance-frameworks) — NIST, ISO 42001, IIA AI Auditing frameworks
-- [Driftwatch](https://github.com/Flickerflash/Driftwatch) — Phi-driven real-time drift detection
+- [junior-apogee-app](https://github.com/ndrorchestration/junior-apogee-app) — Production AI eval & QA platform (OWASP Agentic)
+- [sentinel-governance](https://github.com/ndrorchestration/sentinel-governance) — Automated CI/CD integrity monitoring
+- [ai-governance-frameworks](https://github.com/ndrorchestration/ai-governance-frameworks) — NIST, ISO 42001, IIA AI Auditing frameworks
+- [Driftwatch](https://github.com/ndrorchestration/Driftwatch) — Phi-driven real-time drift detection
+- [Amethyst-Governance-Eval-Stack](https://github.com/ndrorchestration/Amethyst-Governance-Eval-Stack) — Multi-agent governance evaluation, MDAR protocol
+- [sentinel-governance](https://github.com/ndrorchestration/sentinel-governance) — Automated integrity monitoring and CI/CD governance sweeps
 
 ## License
 
@@ -56,4 +59,4 @@ As a security and governance framework for enterprise AI systems, Apache 2.0 pro
 
 ## Provenance
 
-Multi-agent governance framework developed under the Phi-Harmonic Pentagon ecosystem by [Ndr "Ender" Hensel](https://github.com/Flickerflash) — AI Orchestration Engineer & Systems Architect.
+Multi-agent governance framework developed under the Phi-Harmonic Pentagon ecosystem by [Ndr "Ender" Hensel](https://github.com/ndrorchestration) — AI Orchestration Engineer & Systems Architect.
