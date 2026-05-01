@@ -1,0 +1,61 @@
+# Doc-Lint CI Workflow — DGAF-Framework (Spine Repo)
+# Mirrors sentinel-governance/.github/workflows/doc-lint.yml
+# Pattern: P-24 (Canonical Practice Unit) | P-11 (11Q gate 7 — Surface Consistency)
+# Owner: Agent Sentinel
+# Activated: Session S031 — closes last CI coverage gap in PHDGE ecosystem
+
+name: Doc Lint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+      - '.markdownlint.yml'
+      - '.markdownlint.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.md'
+      - '.markdownlint.yml'
+      - '.markdownlint.json'
+
+jobs:
+  markdownlint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli@0.39.0
+
+      - name: Run markdownlint
+        run: |
+          markdownlint \
+            --config .markdownlint.yml \
+            --ignore node_modules \
+            --ignore CHANGELOG.md \
+            --ignore SWEEP_LOG.md \
+            '**/*.md'
+        # CHANGELOG.md and SWEEP_LOG.md: auto-generated append-format; excluded from lint
+        # All gate specs, protocols, READMEs, SESSION_ANCHOR, CROSS_REF enforced
+
+      - name: Report summary
+        if: always()
+        run: |
+          echo "## Doc Lint Summary — DGAF-Framework" >> $GITHUB_STEP_SUMMARY
+          echo "- Linter: markdownlint-cli 0.39.0" >> $GITHUB_STEP_SUMMARY
+          echo "- Config: .markdownlint.yml" >> $GITHUB_STEP_SUMMARY
+          echo "- Excluded: CHANGELOG.md, SWEEP_LOG.md (append-format auto-generated)" >> $GITHUB_STEP_SUMMARY
+          echo "- Pattern gates: P-24 (CPU surface consistency) + P-11 gate 7" >> $GITHUB_STEP_SUMMARY
+          echo "- Owner: Agent Sentinel | Spine repo: DGAF-Framework" >> $GITHUB_STEP_SUMMARY
+          echo "- Mirror of: sentinel-governance/.github/workflows/doc-lint.yml (S029)" >> $GITHUB_STEP_SUMMARY

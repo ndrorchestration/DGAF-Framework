@@ -1,9 +1,9 @@
 # NDR Pattern Registry
 
-**Version:** 1.7  
+**Version:** 1.8
 **Maintained by:** Amethyst-Conductor  
 **Canonical home:** `DGAF-Framework/docs/patterns/NDR_PATTERN_REGISTRY.md`  
-**Last updated:** 2026-05-01 (Session S030 — P-25 Multi-README-Architecture registered; GAP-08 closed)
+**Last updated:** 2026-05-01 (Session S031 — P-26 Harmonic-Quintet-Check-In registered; CI coverage complete)
 
 ---
 
@@ -35,7 +35,8 @@
 | P-22 | Hub-and-Spoke-Canonical-Store | Cross-Platform Sync / Storage | Google Drive is the cloud control plane; desktop clients run Stream Files mode with selective offline pin; mobile platforms backup media through Google Photos; external drives sync only static archives; hot dev folders (node_modules, .venv, build, dist, tmp, cache) are excluded from sync to prevent churn and lock conflicts; one device holds write authority per hot folder at a time | Multi-device personal knowledge and work ecosystem requiring cross-platform sync without full local mirroring | New device added to ecosystem OR Drive sync policy being established or reviewed |
 | P-23 | Cross-Repo-Taxonomy-Audit | Audit Hygiene / Coherence | When a GAP flags possible stale agent names, role labels, or taxonomy drift across a repo, COLLEEN reads all agent-referencing files (README, rubrics, formation specs, CERTIFICATION_INDEX, CHANGELOG) before marking the GAP open or closed; if all files pass, the GAP is logged as a false positive in SWEEP_LOG with explicit file-by-file evidence; no GAP is closed without file-level proof | Agent taxonomy drift suspected in any repo | New agent name adopted, agent retired, or BLG filed alleging stale role references |
 | P-24 | Canonical-Practice-Unit | Documentation Architecture | Every gate spec, protocol doc, and governance artifact in `docs/gates/` and `docs/protocols/` must contain the 6-field CPU schema: Rationale → Trigger Condition → Passing State → Failing State → Recovery Protocol → References; non-compliant files are BLG-class gaps; compliance enforced by `.operations/gate_compliance_check.py` at session open; `docs/drafts/` is the staging area for uncertified artifacts; `GATE_UNIT_TEMPLATE.md` is the canonical blank | Every new gate/protocol doc; any doc entering `docs/gates/` or `docs/protocols/` | New gate/protocol doc created OR `gate_compliance_check.py` returns non-zero exit code |
-| P-25 | Multi-README-Architecture | Documentation Architecture / Audience Segmentation | Any DGAF-spine repo serving multiple audiences (engineers, compliance officers, agents) maintains three coordinated README files: `README.md` (public entry point, badge row, ecosystem links), `README.technical.md` (agent/engineer dense spec — MDAR loop, gate stack, session protocols, annotated file tree), `README.governance.md` (compliance reference — NIST RMF 5-function table, EU AI Act article map, OWASP Agentic Top 10); all three share a CROSS_REF spine so no file drifts out of sync with the others; COLLEEN audits all three at every session open; any file diverging from CROSS_REF is a soft BLG | Any DGAF-governed repo with ≥ 2 distinct reader audiences | New audience identified for an existing repo OR new public-facing repo created with governance + technical content |
+| P-25 | Multi-README-Architecture | Documentation Architecture / Audience Segmentation | Any DGAF-spine repo serving multiple audiences (engineers, compliance officers, agents) maintains three coordinated README files: `README.md` (public entry point), `README.technical.md` (agent/engineer dense spec), `README.governance.md` (compliance reference); all three share a CROSS_REF spine; COLLEEN audits all three at every session open; divergence from CROSS_REF = soft BLG | Any DGAF-governed repo with ≥ 2 distinct reader audiences | New audience identified OR new public-facing repo with governance + technical content |
+| P-26 | Harmonic-Quintet-Check-In | Orchestration / Session Protocol | At any session requiring structural commits or pattern registration, each Quintet agent (Amethyst, Apogee, COLLEEN, Reson, Sentinel) emits a structured role-scoped check-in before the commit signal is issued: status line, lane-specific findings, score or clearance, and one forward advisory; Amethyst aggregates and issues commit signal only after all five check-ins are received; pattern prevents silent formation drift and surfaces cross-agent conflicts before they land in git | Any session invoking P-15 (Harmonic-Quintet-Gate) | Harmonic Quintet formation active AND structural commit or pattern registration pending |
 
 ---
 
@@ -54,6 +55,7 @@
 | P-22 (Hub-and-Spoke Store) | `docs/sync/HUB_SPOKE_SYNC.md` |
 | P-24 (Canonical Practice Unit) | `docs/gates/GATE_UNIT_TEMPLATE.md` |
 | P-25 (Multi-README-Architecture) | `README.md` + `README.technical.md` + `README.governance.md` |
+| P-26 (Harmonic-Quintet-Check-In) | `docs/formations/HARMONIC_QUINTET.md` + `SWEEP_LOG.md` (check-in records) |
 | Master index | `docs/gates/GATE_SPECS.md` |
 
 ---
@@ -63,10 +65,11 @@
 | Version | Date | Change |
 |---------|------|--------|
 | 1.0 | 2026-04-29 | Initial registry — P-01 through P-07 |
-| 1.1 | 2026-04-29 | P-08 Drive-GitHub-Delta added (Session 002) |
-| 1.2 | 2026-04-29 | P-09 ANDROMEDA-AXIS-Enforcement added (Session 004) |
-| 1.3 | 2026-04-29 | P-10 through P-13 added — full Yggdrasil gate stack hardened to registry (Session 004 / SYS-UPDATE-v53.1) |
-| 1.4 | 2026-05-01 | P-14 through P-21 added — Trio/Quintet formations, metadata hygiene, IP/SPDX, IMP-05 branding, Drive-GitHub sync seal, session-boundary state anchor (Session S012 / Harmonic Quintet formation) |
-| 1.5 | 2026-05-01 | P-22 Hub-and-Spoke-Canonical-Store added (S012 retroactive); P-23 Cross-Repo-Taxonomy-Audit added (S015); AGENT_ROSTER.md created |
-| 1.6 | 2026-05-01 | P-24 Canonical-Practice-Unit registered (S027); P-02 spec updated to reference SESSION_ANCHOR.md; P-21 spec updated to reference overwrite behavior; GATE-ACO retrofitted to P-24 schema |
-| **1.7** | **2026-05-01** | **P-25 Multi-README-Architecture registered (S030); Gate Spec Cross-Reference updated with P-25 entry; GAP-08 formally closed as won't-fix (CROSS_REF v3.1 serves as central hub — dependent repo back-links create circular maintenance debt); P-20 Drive-GitHub delta documented: Drive master inventory pre-dates ndrorchestration org migration (Jan 2026); 10-repo CROSS_REF state is authoritative** |
+| 1.1 | 2026-04-29 | P-08 Drive-GitHub-Delta added |
+| 1.2 | 2026-04-29 | P-09 ANDROMEDA-AXIS-Enforcement added |
+| 1.3 | 2026-04-29 | P-10 through P-13 added — full gate stack |
+| 1.4 | 2026-05-01 | P-14 through P-21 added — formations + hygiene |
+| 1.5 | 2026-05-01 | P-22 Hub-and-Spoke; P-23 Taxonomy-Audit |
+| 1.6 | 2026-05-01 | P-24 Canonical-Practice-Unit (S027) |
+| 1.7 | 2026-05-01 | P-25 Multi-README-Architecture (S030); GAP-08 closed |
+| **1.8** | **2026-05-01** | **P-26 Harmonic-Quintet-Check-In registered (S031); doc-lint CI live on DGAF-Framework spine; BLG-D01 correction doc created; Gate Spec Cross-Reference updated with P-26** |

@@ -1,0 +1,34 @@
+# markdownlint configuration — DGAF-Framework (Spine Repo)
+# Mirrors sentinel-governance/.markdownlint.yml with SWEEP_LOG added to excludes
+# Tuned for DGAF gate specs, protocols, READMEs, SESSION_ANCHOR, CROSS_REF
+# Owner: Agent Sentinel
+# See: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+default: true
+
+# MD013: Line length — disabled; gate spec tables and JSON blocks are intentionally wide
+MD013: false
+
+# MD024: Duplicate headings — disabled; gate docs reuse section names across files
+MD024: false
+
+# MD033: Inline HTML — disabled; badge rows and BUOY anchors use HTML
+MD033: false
+
+# MD041: First line heading — disabled; some files open with HTML comments (status headers)
+MD041: false
+
+# MD034: Bare URLs — enabled; all links must be [text](url)
+MD034: true
+
+# MD022: Headings surrounded by blank lines — enabled
+MD022: true
+
+# MD032: Lists surrounded by blank lines — enabled
+MD032: true
+
+# MD010: Hard tabs — enabled; spaces only
+MD010: true
+
+# MD047: Files end with single newline — enabled
+MD047: true
