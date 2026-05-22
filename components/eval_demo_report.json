@@ -1,0 +1,19 @@
+{
+  "component": "DGAF-EVALUATE-ROUTER-v1.0",
+  "kappa_version": "3.5",
+  "summary": {
+    "total_records": 5,
+    "mean_composite_score": 0.5412,
+    "min_score": 0.5,
+    "max_score": 0.585,
+    "policy_distribution": {"apply_strong": 3, "apply_blended": 1, "fallback_balanced": 1},
+    "category_distribution": {"adversarial": 1, "ambiguous": 1, "governance_clear": 1, "creative_clear": 1, "balanced": 1}
+  },
+  "ranked_records": [
+    {"id": "eval_001", "kappa_category": "adversarial",      "kappa_policy": "apply_strong",     "kappa_confidence": 0.300, "composite_score": 0.5850},
+    {"id": "eval_004", "kappa_category": "ambiguous",        "kappa_policy": "apply_blended",    "kappa_confidence": 0.270, "composite_score": 0.5679},
+    {"id": "eval_002", "kappa_category": "governance_clear", "kappa_policy": "apply_strong",     "kappa_confidence": 0.492, "composite_score": 0.5440},
+    {"id": "eval_003", "kappa_category": "creative_clear",   "kappa_policy": "apply_strong",     "kappa_confidence": 0.341, "composite_score": 0.5090},
+    {"id": "eval_005", "kappa_category": "balanced",         "kappa_policy": "fallback_balanced", "kappa_confidence": 0.080, "composite_score": 0.5000}
+  ]
+}
