@@ -1,5 +1,5 @@
 # SWEEP LOG
-## PhiLattice Studio · Coherence Sweep History
+## DGAF-Framework · Coherence Sweep History
 
 ---
 
@@ -28,39 +28,24 @@
 | C-014 | LOW | ✅ RESOLVED | AWCP/Symphony cross-ref added |
 | C-015 | LOW | ✅ RESOLVED | GCP Project ID standardized |
 
-### GitHub Commits This Sweep
-
-| Repo | Commit SHA | Files Added |
-|---|---|---|
-| ai-governance-frameworks | fb4ab22 | structural-alignment.md, index-11-gate.md, CONTRIBUTING.md |
-| DGAF-Framework | be19e9a | colleen-l5-protocol.md, platinum-convergence.md |
-| DGAF-Framework | 874df27 | canonical-agent-registry.md |
-| DGAF-Framework | d406d5e | ndr-pattern-registry-v3.md, SWEEP_LOG.md |
-
 ---
 
-## S033+S034+S035 Wave — 2026-05-22 | KAPPA Pipeline + Governance Hardening
+## S033–S036 Wave — 2026-05-22 | KAPPA Pipeline + Governance Hardening
 
-**Session type:** Feature build + governance synchronization + ethical cognition alignment  
+**Session type:** Feature build + governance synchronization + ethical cognition  
 **Formation:** Amethyst + COLLEEN Co-Orchestration  
 **Seal status:** ✅ SEALED
 
-### Commits this wave
-
+### Commits
 | SHA | Description |
 |-----|-------------|
-| 66b79e2 | feat(KAPPA): DGAF-GATE-KAPPA-v3.5 dynamic confidence router |
-| a5c9219 | feat(evaluate-router): DGAF-EVALUATE-ROUTER-v1.0 |
-| a1997ed | chore(governance): NDR v1.9, KAPPA CPU card, SESSION_ANCHOR S033 |
+| 66b79e2 | feat(KAPPA): DGAF-GATE-KAPPA-v3.5 |
+| a5c9219 | feat(evaluate-router): v1.0 |
+| a1997ed | chore(governance): NDR v1.9, S033 |
 | 7a944cd | feat(S034): Sentinel v1.1, KAPPA v3.6, P-29, NDR v2.0 |
-| (this commit) | feat(S035): NormativeConstraint, P-30, NDR v2.1, S-TIER attestation |
-
-### Components shipped
-- KAPPA v3.6 — S-TIER 97.3%
-- Evaluate Router v1.1 — S-TIER 95.5%
-- normative_constraint.py — full NormativeConstraint class
-- P-27, P-28, P-29, P-30 registered
-- NDR Registry v2.1
+| d786731 | feat(S035): NormativeConstraint, P-30, NDR v2.1 |
+| 89ed455 | chore(S036): S032-DRIVE BLG closed |
+| 05c372d | chore(S037): CHANGELOG v1.0.14 |
 
 ### BLGs closed
 | ID | Resolution |
@@ -68,19 +53,37 @@
 | S033-BLG-01 | governance_clear 100% |
 | S033-BLG-02 | P-10 deontic gate wired |
 | S033-BLG-03 | Apogee 11Q S-TIER |
-
-### Carry-forward to S036
-- S032-DRIVE: Njineer action required
-- CHANGELOG v1.0.14
-- P-31 TBD
-
-### Compliance confirmed
-- NIST AI RMF: Measure ✅ | Govern ✅
-- EU AI Act: Art.9 ✅ | Art.13 ✅ | Art.17 ✅
-- Normative Constraint (P-10): fully wired ✅
-- Gold Star: both components S-TIER ✅
+| S032-DRIVE | Njineer executed all 4 Drive templates |
 
 ### Next Sweep Trigger
-- >60 days (target: July 22, 2026)
-- OR new Drive parse with >5 files
+- >60 days from today (target: July 22, 2026)
+- OR new Drive parse with >5 new files
 - OR new agent instantiated
+
+---
+
+## S038 — 2026-05-22 | Full Coherence & Quality Sweep
+
+**Session type:** Full coherence scan + documentation remediation  
+**Formation:** IP Sweep | Amethyst + COLLEEN  
+**Seal status:** 🟡 OPEN
+
+### Triage summary
+- 20 issues found: 7 HIGH · 9 MEDIUM · 4 LOW
+- 12 domains already clean
+- Primary cluster: CROSS_REF.md stale (10 issues)
+
+### Remediation completed
+| File | Action |
+|---|---|
+| CROSS_REF.md | Upgraded to v3.3 — runtime components + QA + P-30 authority |
+| components/README.md | Added — runtime discoverability index |
+| docs/qa/README.md | Added — attestation artifact navigation |
+| README.technical.md | Refreshed — current components, P-30, QA surface |
+| README.governance.md | Refreshed — P-10 implementation, P-30, compliance mapping |
+
+### Remaining work
+- README.md public surface — verify NDR v2.1 and P-27–P-30 visible
+- Final rescan; seal S038 if clean
+
+### COLLEEN gate: 🟡 PENDING final rescan

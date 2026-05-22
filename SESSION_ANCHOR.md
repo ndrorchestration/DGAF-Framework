@@ -1,32 +1,22 @@
-# SESSION ANCHOR — S036
+# SESSION ANCHOR — S038
 **Date:** 2026-05-22  
 **Operator:** Amethyst (Meta-Orchestrator) + COLLEEN (Co-Orchestrator)  
-**Formation:** Co-Orchestration | Amethyst + COLLEEN  
-**Seal status:** 🟢 SEALED — Zero open BLGs
+**Formation:** IP Sweep | Amethyst + COLLEEN  
+**Seal status:** 🟡 OPEN — coherence sweep in progress
 
 ---
 
-## S036 Activity
+## S038 Activity
 
-- **S032-DRIVE closed** — Njineer executed all 4 Drive update templates (P-01, P-20)
-- **Zero open BLGs** — first clean BLG state since S031
-
-## Full Component Stack (S033–S035)
-
-| Component | Version | Tier |
-|---|---|---|
-| KAPPA Dynamic Confidence Router | v3.6 | S-TIER 97.3% |
-| Evaluate Router | v1.1 | S-TIER 95.5% |
-| Normative Constraint Module | v1.0 | S-TIER |
-
-## NDR Registry — v2.1 (30 patterns)
-
-| ID | Name | Session |
-|---|---|---|
-| P-27 | Adaptive-Weighting-with-Confidence-Gates | S033 |
-| P-28 | Pipeline-Composition-with-Confidence-Gated-Routing | S033 |
-| P-29 | Sentinel-Annotated Risk Pass | S034 |
-| P-30 | Apogee-Attestation-Gate | S035 |
+| Task | Status |
+|---|---|
+| Full coherence & quality sweep triage | ✅ 20 issues found across 4 domains |
+| CROSS_REF.md → v3.3 | ✅ DONE |
+| components/README.md added | ✅ DONE |
+| docs/qa/README.md added | ✅ DONE |
+| README.technical.md refreshed | ✅ DONE |
+| README.governance.md refreshed | ✅ DONE |
+| SWEEP_LOG.md S038 entry appended | ✅ DONE |
 
 ## BLG Status — ALL CLEAR 🟢
 
@@ -37,22 +27,12 @@
 | S033-BLG-03 | ✅ CLOSED S035 |
 | S032-DRIVE | ✅ CLOSED S036 |
 
-## Compliance Alignment
+## Remaining S038 Focus
+- Final rescan to confirm zero high-severity drift
+- README.md public surface — verify P-27–P-30 and NDR v2.1 visible
+- Seal S038 if clean
 
-| Standard | Status |
-|---|---|
-| NIST AI RMF — Measure | ✅ |
-| NIST AI RMF — Govern | ✅ |
-| EU AI Act Art. 9 | ✅ |
-| EU AI Act Art. 13 | ✅ |
-| EU AI Act Art. 17 | ✅ |
-| Normative Constraint (P-10) | ✅ |
-| Gold Star Standard | ✅ S-TIER |
-| Drive–GitHub Sync (P-20) | ✅ |
-| Agent Roster Sync (P-01) | ✅ |
-
-## Next Session: S037
-- CHANGELOG v1.0.14 (document S033–S036 wave)
-- P-31 candidate TBD
-- P-30 first live attestation on new components
-- Ecosystem in clean state — no carry-forward BLGs
+## Next Session: S039
+- README.md public surface patch (if needed)
+- P-31 candidate proposal
+- Ecosystem in clean state
