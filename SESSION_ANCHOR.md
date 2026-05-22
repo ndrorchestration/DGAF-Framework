@@ -1,20 +1,25 @@
-# SESSION ANCHOR — S035
+# SESSION ANCHOR — S036
 **Date:** 2026-05-22  
 **Operator:** Amethyst (Meta-Orchestrator) + COLLEEN (Co-Orchestrator)  
 **Formation:** Co-Orchestration | Amethyst + COLLEEN  
-**Seal status:** 🟡 OPEN — S032-DRIVE pending Njineer execution
+**Seal status:** 🟢 SEALED — Zero open BLGs
 
 ---
 
-## Components Shipped This Wave (S033–S035)
+## S036 Activity
 
-| Component | Version | File | Tier |
-|---|---|---|---|
-| KAPPA Dynamic Confidence Router | v3.6 | components/KAPPA/ | S-TIER |
-| Evaluate Router | v1.1 | components/evaluate_router_v1_1.py | S-TIER |
-| Normative Constraint Module | v1.0 | components/normative_constraint.py | S-TIER |
+- **S032-DRIVE closed** — Njineer executed all 4 Drive update templates (P-01, P-20)
+- **Zero open BLGs** — first clean BLG state since S031
 
-## NDR Patterns Registered (S033–S035)
+## Full Component Stack (S033–S035)
+
+| Component | Version | Tier |
+|---|---|---|
+| KAPPA Dynamic Confidence Router | v3.6 | S-TIER 97.3% |
+| Evaluate Router | v1.1 | S-TIER 95.5% |
+| Normative Constraint Module | v1.0 | S-TIER |
+
+## NDR Registry — v2.1 (30 patterns)
 
 | ID | Name | Session |
 |---|---|---|
@@ -23,31 +28,31 @@
 | P-29 | Sentinel-Annotated Risk Pass | S034 |
 | P-30 | Apogee-Attestation-Gate | S035 |
 
-**Registry version:** 2.1
+## BLG Status — ALL CLEAR 🟢
 
-## BLG Status
-
-| ID | Priority | Status |
-|---|---|---|
-| S033-BLG-01 | HIGH | ✅ CLOSED |
-| S033-BLG-02 | LOW | ✅ CLOSED |
-| S033-BLG-03 | LOW | ✅ CLOSED |
-| S032-DRIVE | MEDIUM | ⏳ OPEN — Njineer action required → S036 |
+| ID | Status |
+|---|---|
+| S033-BLG-01 | ✅ CLOSED S034 |
+| S033-BLG-02 | ✅ CLOSED S034 |
+| S033-BLG-03 | ✅ CLOSED S035 |
+| S032-DRIVE | ✅ CLOSED S036 |
 
 ## Compliance Alignment
 
 | Standard | Status |
 |---|---|
-| NIST AI RMF — Measure | ✅ Per-record audit log |
-| NIST AI RMF — Govern | ✅ P-10 deontic gate + P-30 attestation gate |
-| EU AI Act Art. 9 | ✅ Risk management log per record |
-| EU AI Act Art. 13 | ✅ Routing decision transparent and logged |
-| EU AI Act Art. 17 | ✅ Quality management via P-30 attestation |
-| Normative Constraint (P-10) | ✅ Full NormativeConstraint class wired |
-| Gold Star Standard | ✅ S-TIER — both components 97.3% + 95.5% |
+| NIST AI RMF — Measure | ✅ |
+| NIST AI RMF — Govern | ✅ |
+| EU AI Act Art. 9 | ✅ |
+| EU AI Act Art. 13 | ✅ |
+| EU AI Act Art. 17 | ✅ |
+| Normative Constraint (P-10) | ✅ |
+| Gold Star Standard | ✅ S-TIER |
+| Drive–GitHub Sync (P-20) | ✅ |
+| Agent Roster Sync (P-01) | ✅ |
 
-## Next Session: S036
-- P-30 live attestation run on new components
-- CHANGELOG update (v1.0.14)
-- S032-DRIVE closure (Njineer action)
+## Next Session: S037
+- CHANGELOG v1.0.14 (document S033–S036 wave)
 - P-31 candidate TBD
+- P-30 first live attestation on new components
+- Ecosystem in clean state — no carry-forward BLGs
