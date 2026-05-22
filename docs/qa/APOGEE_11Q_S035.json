@@ -1,0 +1,27 @@
+{
+  "session": "S035",
+  "agent": "Apogee",
+  "date": "2026-05-22",
+  "normative_constraint_module": "components/normative_constraint.py",
+  "results": [
+    {
+      "label": "KAPPA v3.6 + NormativeConstraint",
+      "total": 107,
+      "pct": 97.3,
+      "tier": "S-TIER",
+      "q11": "10/10 — fully wired via NormativeConstraint class",
+      "attestation": "GRANTED"
+    },
+    {
+      "label": "Evaluate Router v1.1 + NormativeConstraint",
+      "total": 105,
+      "pct": 95.5,
+      "tier": "S-TIER",
+      "q11": "10/10 — fully wired via NormativeConstraint class",
+      "attestation": "GRANTED"
+    }
+  ],
+  "s_tier_achieved": true,
+  "p30_first_live_run": true,
+  "colleen_gate": "PASSED"
+}

@@ -1,4 +1,4 @@
-# SESSION ANCHOR — S034
+# SESSION ANCHOR — S035
 **Date:** 2026-05-22  
 **Operator:** Amethyst (Meta-Orchestrator) + COLLEEN (Co-Orchestrator)  
 **Formation:** Co-Orchestration | Amethyst + COLLEEN  
@@ -6,46 +6,48 @@
 
 ---
 
-## Components Shipped This Wave (S034)
+## Components Shipped This Wave (S033–S035)
 
-| Component | Version | File |
-|---|---|---|
-| Sentinel Integration | v1.1 | components/evaluate_router_v1_1.py |
-| KAPPA Calibration | v3.6 | components/KAPPA/calibration_v3_6.json |
-| Apogee 11Q Report | S034 | docs/qa/APOGEE_11Q_S034.json |
+| Component | Version | File | Tier |
+|---|---|---|---|
+| KAPPA Dynamic Confidence Router | v3.6 | components/KAPPA/ | S-TIER |
+| Evaluate Router | v1.1 | components/evaluate_router_v1_1.py | S-TIER |
+| Normative Constraint Module | v1.0 | components/normative_constraint.py | S-TIER |
 
-## NDR Patterns Registered
+## NDR Patterns Registered (S033–S035)
 
 | ID | Name | Session |
 |---|---|---|
 | P-27 | Adaptive-Weighting-with-Confidence-Gates | S033 |
 | P-28 | Pipeline-Composition-with-Confidence-Gated-Routing | S033 |
 | P-29 | Sentinel-Annotated Risk Pass | S034 |
+| P-30 | Apogee-Attestation-Gate | S035 |
 
-**Registry version:** 2.0
+**Registry version:** 2.1
 
 ## BLG Status
 
-| ID | Priority | Status | Resolution |
-|---|---|---|---|
-| S033-BLG-01 | HIGH | ✅ CLOSED | governance_clear 100% (STRONG=0.22, BLENDED=0.18) |
-| S033-BLG-02 | LOW | ✅ CLOSED | p10_deontic_gate() implemented in evaluate_router v1.1 |
-| S033-BLG-03 | LOW | ✅ CLOSED | Apogee 11Q: KAPPA 93.6% A-TIER, Router 92.7% A-TIER |
-| S032-DRIVE | MEDIUM | ⏳ OPEN | Carries to S035 — Njineer action required |
+| ID | Priority | Status |
+|---|---|---|
+| S033-BLG-01 | HIGH | ✅ CLOSED |
+| S033-BLG-02 | LOW | ✅ CLOSED |
+| S033-BLG-03 | LOW | ✅ CLOSED |
+| S032-DRIVE | MEDIUM | ⏳ OPEN — Njineer action required → S036 |
 
-## Ethical Cognition / Compliance Alignment
+## Compliance Alignment
 
 | Standard | Status |
 |---|---|
-| NIST AI RMF — Measure | ✅ Per-record audit log emitted (Sentinel hook) |
-| NIST AI RMF — Govern | ✅ P-10 deontic gate wired at hook point 1 |
-| EU AI Act Article 9 | ✅ Risk management audit log per record |
-| EU AI Act Article 13 | ✅ Transparency via per-record routing decision log |
-| Normative Constraint (P-10) | ✅ Deontic gate: permitted / obligated / forbidden |
-| Gold Star Standard | 🟡 A-TIER — S-TIER path: Q11 full normative wiring (S035) |
+| NIST AI RMF — Measure | ✅ Per-record audit log |
+| NIST AI RMF — Govern | ✅ P-10 deontic gate + P-30 attestation gate |
+| EU AI Act Art. 9 | ✅ Risk management log per record |
+| EU AI Act Art. 13 | ✅ Routing decision transparent and logged |
+| EU AI Act Art. 17 | ✅ Quality management via P-30 attestation |
+| Normative Constraint (P-10) | ✅ Full NormativeConstraint class wired |
+| Gold Star Standard | ✅ S-TIER — both components 97.3% + 95.5% |
 
-## Next Session: S035
-- Full Q11 normative constraint wiring for KAPPA + Router (path to S-TIER)
-- P-30 Apogee-Attestation-Gate registration
+## Next Session: S036
+- P-30 live attestation run on new components
+- CHANGELOG update (v1.0.14)
 - S032-DRIVE closure (Njineer action)
-- COLLEEN: SWEEP_LOG seal for S034 wave
+- P-31 candidate TBD
