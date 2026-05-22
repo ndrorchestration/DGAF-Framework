@@ -1,0 +1,26 @@
+{
+  "component": "DGAF-GATE-KAPPA-v3.5",
+  "validation_date": "2026-05-21",
+  "total_passes": 100,
+  "overall_accuracy": 0.95,
+  "critical_fails": 0,
+  "per_category_accuracy": {
+    "adversarial": 1.00,
+    "ambiguous": 0.947,
+    "governance_clear": 0.826,
+    "creative_clear": 1.00,
+    "unclear": 1.00
+  },
+  "policy_distribution": {
+    "apply_strong": 60,
+    "apply_blended": 19,
+    "fallback_balanced": 21
+  },
+  "optimal_config": {
+    "pattern_weight": 0.60,
+    "strong_threshold": 0.28,
+    "blended_threshold": 0.25
+  },
+  "agent": "Amethyst",
+  "seed": 42
+}

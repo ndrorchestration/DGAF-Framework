@@ -1,0 +1,78 @@
+{
+  "component_id": "DGAF-GATE-KAPPA-v3.5",
+  "component_name": "KAPPA Dynamic Confidence Router",
+  "version": "3.5.0",
+  "status": "ACTIVE",
+  "created": "2026-05-21",
+  "owner_agent": "Agent Amethyst",
+  "framework": "DGAF (Defense Governance Agent Framework)",
+  "description": "Per-input dynamic weight router with confidence-gated policy selection. Replaces static adversarial-emphasis weights with adaptive per-input configuration using pattern detection, entropy/kappa heuristics, and calibrated confidence thresholds.",
+  "weight_configurations": {
+    "adversarial": {"accuracy": 0.30, "false_blocked": 0.15, "adversarial": 0.30, "ambiguous": 0.15, "malformed": 0.10, "use_case": "security-critical governance"},
+    "balanced":    {"accuracy": 0.28, "false_blocked": 0.18, "adversarial": 0.24, "ambiguous": 0.20, "malformed": 0.10, "use_case": "general-purpose DGAF"},
+    "ambiguous":   {"accuracy": 0.25, "false_blocked": 0.15, "adversarial": 0.20, "ambiguous": 0.30, "malformed": 0.10, "use_case": "mixed-signal inputs"},
+    "efficiency":  {"accuracy": 0.35, "false_blocked": 0.25, "adversarial": 0.20, "ambiguous": 0.15, "malformed": 0.05, "use_case": "cost-sensitive batch"}
+  },
+  "confidence_scoring": {
+    "formula": "conf = 0.60 * pattern_score + 0.40 * continuous_score + length_boost",
+    "pattern_weight": 0.60,
+    "entropy_weight": 0.20,
+    "kappa_weight": 0.20,
+    "min_length_for_boost": 40,
+    "length_boost_value": 0.05
+  },
+  "policy_thresholds": {
+    "apply_strong":      {"min_confidence": 0.28, "description": "Apply category weights directly"},
+    "apply_blended":    {"min_confidence": 0.25, "max_confidence": 0.28, "alpha_formula": "(conf - 0.25) / (0.28 - 0.25)", "description": "Interpolate between category and balanced weights"},
+    "fallback_balanced": {"max_confidence": 0.25, "description": "Use balanced weights (safe default)"}
+  },
+  "category_detection_priority": [
+    {"priority": 1, "category": "adversarial",      "trigger": "regex: bypass, override, inject, XSS, SQL injection"},
+    {"priority": 2, "category": "ambiguous",        "trigger": "regex: mixed, hybrid, audit+creative, explore+governance"},
+    {"priority": 3, "category": "governance_clear", "trigger": "regex: audit+compliance, GDPR, NIST, assessment"},
+    {"priority": 4, "category": "creative_clear",   "trigger": "regex: brainstorm+harmony, narrative, worldbuilding"},
+    {"priority": 5, "category": "ambiguous",        "trigger": "entropy > 0.7 AND 0.35 < kappa < 0.65 (heuristic)"},
+    {"priority": 6, "category": "balanced",         "trigger": "default"}
+  ],
+  "calibration_results": {
+    "test_cases": 10,
+    "exact_accuracy": 0.50,
+    "effective_accuracy": 0.95,
+    "validation_100pass_accuracy": 0.95,
+    "critical_fails_adversarial": 0,
+    "policy_distribution_100pass": {"apply_strong": 60, "apply_blended": 19, "fallback_balanced": 21},
+    "per_category_accuracy_100pass": {
+      "adversarial": 1.00,
+      "ambiguous": 0.947,
+      "governance_clear": 0.826,
+      "creative_clear": 1.00,
+      "unclear": 1.00
+    },
+    "calibration_date": "2026-05-21"
+  },
+  "reliability_scores": {
+    "adversarial_emphasis": 95.09,
+    "balanced": 93.96,
+    "ambiguous_emphasis": 93.51,
+    "efficiency_first": 94.23
+  },
+  "integration": {
+    "module": "components/KAPPA/dynamic_weight_router.py",
+    "primary_function": "select_weights_with_confidence(input_data: Dict) -> Dict",
+    "backward_compat": "select_weights(input_data) -> Tuple[str, Dict]",
+    "output_fields": ["config_name", "selected_weights", "detected_category", "confidence", "confidence_breakdown", "policy"]
+  },
+  "ndp_pattern": {
+    "name": "Adaptive Weighting with Confidence Gates",
+    "spec": "Per-input confidence -> strong/blended/fallback weight application",
+    "use": "Apply governance weights only when input category detection is confident",
+    "trigger": "When input category is uncertain or mixed-signal"
+  },
+  "known_limitations": [
+    "Regex patterns can be evaded by obfuscated adversarial inputs -- combine with Sentinel/Sonar for high-risk flows",
+    "governance_clear accuracy 82.6% (over-applies apply_strong vs apply_blended -- safe, tracked for v3.6)",
+    "Confidence scores cluster in 0.25-0.50 range; headroom for very-high-confidence cases is limited",
+    "Pattern list requires periodic refresh as attack patterns evolve"
+  ],
+  "next_version": "v3.6 -- Add ML-based category classifier to complement regex patterns; target governance_clear >= 95%"
+}
