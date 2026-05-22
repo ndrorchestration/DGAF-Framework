@@ -8,27 +8,29 @@
 
 # DGAF-Framework
 
-**Dynamic Governance Assurance Framework (DGAF)** — the governance spine of the **PhiLattice / PDMAL** (Phi-Driven Multi-Agent Lattice) ecosystem. Features Agent Amethyst meta-orchestration, COLLEEN-L5 institutional anchor, Agent Apogee QA governance, and Gold Star S-TIER validation.
+**Dynamic Governance Assurance Framework (DGAF)** — the governance spine of the **Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)**. Features Agent Amethyst meta-orchestration, COLLEEN institutional anchor, Agent Apogee QA governance, and Gold Star S-TIER validation.
 
 > 📐 **Architecture docs:** [README.governance.md](README.governance.md) · [README.technical.md](README.technical.md)  
-> 📋 **NDR Pattern Registry:** [docs/governance/ndr-pattern-registry-v3.md](docs/governance/ndr-pattern-registry-v3.md)  
-> 🤖 **Agent Registry:** [docs/agents/canonical-agent-registry.md](docs/agents/canonical-agent-registry.md)  
-> 🏛️ **COLLEEN-L5 Protocol:** [docs/agents/colleen-l5-governance-protocol.md](docs/agents/colleen-l5-governance-protocol.md)  
-> 🔺 **Index 11 Gate:** [docs/structural-alignment/index-11-governance-gate.md](https://github.com/ndrorchestration/ai-governance-frameworks/blob/main/docs/structural-alignment/index-11-governance-gate.md)
+> 📋 **NDR Pattern Registry v2.1:** [docs/patterns/NDR_PATTERN_REGISTRY.md](docs/patterns/NDR_PATTERN_REGISTRY.md)  
+> ⚙️ **Runtime Components:** [components/README.md](components/README.md)  
+> 🤖 **Agent Registry:** [ENSEMBLE_ROSTER.md](ENSEMBLE_ROSTER.md)  
+> 🗺️ **Ecosystem Map:** [CROSS_REF.md](CROSS_REF.md)
 
 ---
 
 ## Core Capabilities
 
 - **Agent Amethyst** — L5 meta-orchestrator for multi-agent synthesis, handoff routing, and certification
-- **COLLEEN-L5** — Institutional anchor; 1-1-1-1 Alignment Gate (Semantic/Logical/Visual/Ethical)
-- **Agent Apogee** — L4 QA orchestrator; NIST AI RMF compliance verification; Apogee Lens review
-- **DemiJoule** — L4 ethics/safety gate; cost control ($25/mo GCP gate)
+- **COLLEEN** — Institutional anchor; 1-1-1-1 Alignment Gate (Semantic/Logical/Visual/Ethical)
+- **Agent Apogee** — L4 QA orchestrator; NIST AI RMF compliance; P-30 attestation authority
+- **Agent Sentinel** — Safety/veto gate; AXIS enforcement; 11Q gates 9–11
+- **KAPPA v3.6** — Confidence-gated dynamic weight router; `governance_clear` 100%
+- **NormativeConstraint v1.0** — P-10 deontic/ethical cognition layer
+- **Evaluate Router v1.1** — Sentinel-hooked batch pipeline with per-record audit log
 - **Gold Star Certification** — S-TIER eval pipeline; hallucination rate < 0.24%
 - **OWASP Agentic Top 10** — integrated safety sweep layer
-- **Phi-Harmonic Gating** — 1-1-1-1 Gate, Index 11 Stability Gradient, Platinum Strata convergence
+- **Phi-Harmonic Gating** — 1-1-1-1 Gate, Acoustic Gate Chain (P-13), Telescopic Lens audit
 - **Schizophonic Studio** — Signal chain trio: Reson (#1) · Echolette (#2) · Lyra (#3)
-- **NDR-Stasis Manifest** — 133 patterns governing durable execution and agent governance
 
 ---
 
@@ -39,10 +41,28 @@
 | **Hallucination Rate** | < 5% | 0.24% ★ | ✅ PASS |
 | **NIST Alignment** | RMF v1.0 | 100% | ✅ PASS |
 | **Amethyst Governance Audit** | 90th percentile | Certified | ✅ PASS |
-| **NDR Patterns Registered** | — | 133 + 7 named | ✅ CURRENT |
+| **NDR Patterns Registered** | — | P-01 through P-30 (v2.1) | ✅ CURRENT |
+| **Apogee Attestation (P-30)** | S-TIER ≥95% | S-TIER 97.3% | ✅ GRANTED |
 | **Yggdrasil Completion** | 100% | 50% (24/48) | 🟡 IN PROGRESS |
 | **Agent Registry** | 11 agents | 11 canonical | ✅ COMPLETE |
 | **COLLEEN 1-1-1-1 Gate** | All PASS | 0 Hz Ionian | ✅ PASS |
+
+---
+
+## Runtime Stack
+
+```
+components/
+├── KAPPA/                          ← Confidence-gated router (v3.6, S-TIER)
+│   ├── dynamic_weight_router.py
+│   ├── calibration_v3_6.json
+│   └── DGAF_GATE_KAPPA_v3_5_component_card.json
+├── evaluate_router.py              ← Batch pipeline (v1.0)
+├── evaluate_router_v1_1.py         ← Sentinel hooks + P-10 gate (v1.1, S-TIER)
+└── normative_constraint.py         ← P-10 deontic layer (S-TIER, Q11=10/10)
+```
+
+All components P-30 attested. Full index: [components/README.md](components/README.md)
 
 ---
 
@@ -53,7 +73,7 @@ git clone https://github.com/ndrorchestration/DGAF-Framework.git
 cd DGAF-Framework
 ```
 
-No runtime dependencies. All artifacts are specification documents and governance templates.
+No runtime dependencies for governance artifacts. Python components require Python 3.x.
 
 ---
 
@@ -63,10 +83,10 @@ No runtime dependencies. All artifacts are specification documents and governanc
 - [sentinel-governance](https://github.com/ndrorchestration/sentinel-governance) — Automated CI/CD integrity monitoring
 - [Amethyst-Governance-Eval-Stack](https://github.com/ndrorchestration/Amethyst-Governance-Eval-Stack) — Multi-agent governance eval, MDAR protocol
 - [Driftwatch](https://github.com/ndrorchestration/Driftwatch) — Phi-driven real-time drift detection
-- [ai-governance-frameworks](https://github.com/ndrorchestration/ai-governance-frameworks) — NIST, ISO 42001, IIA AI Auditing, Index 11
-- [Acoustic-mesh](https://github.com/ndrorchestration/Acoustic-mesh) — Schizophonic Studio WebRTC substrate
+- [Acoustic-mesh](https://github.com/ndrorchestration/Acoustic-mesh) — Acoustic Gate Chain (P-13) substrate
+- [phi-calculus-app](https://github.com/ndrorchestration/phi-calculus-app) — Phi-Harmonic calculus and platinum mean
 - [resumeapex-eval](https://github.com/ndrorchestration/resumeapex-eval) — Flagship evaluation benchmark
-- [3d-visualization-hub](https://github.com/ndrorchestration/3d-visualization-hub) — GCP Phase 4 visualization layer
+- [3d-visualization-hub](https://github.com/ndrorchestration/3d-visualization-hub) — Hendecagonal lattice visualization
 - [ai-prompt-systems-portfolio](https://github.com/ndrorchestration/ai-prompt-systems-portfolio) — IP-safe prompt engineering samples
 
 ---
@@ -77,5 +97,5 @@ Licensed under [Apache License 2.0](LICENSE). Provides explicit patent protectio
 
 ## Provenance
 
-PhiLattice / PDMAL ecosystem developed by [Ndr "Ender" Hensel](https://github.com/ndrorchestration) — AI Orchestration Engineer & Systems Architect, Columbus OH.  
+PHDGE ecosystem developed by [Ndr "Ender" Hensel](https://github.com/ndrorchestration) — AI Orchestration Engineer & Systems Architect, Columbus OH.  
 [LinkedIn](https://linkedin.com/in/andrewhensel) · [GitHub](https://github.com/ndrorchestration)
