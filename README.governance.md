@@ -19,10 +19,10 @@ The framework is not a policy document. It is an **executable governance spine**
 
 | NIST Function | DGAF Mechanism | Artifact |
 |---------------|---------------|----------|
-| **GOVERN** | NDR Pattern Registry (P-01→P-24); ENSEMBLE_ROSTER; AXIS declarations | `docs/patterns/NDR_PATTERN_REGISTRY.md` · `ENSEMBLE_ROSTER.md` |
+| **GOVERN** | NDR Pattern Registry (P-01→P-30); ENSEMBLE_ROSTER; AXIS declarations; P-30 canonical promotion gate | `docs/patterns/NDR_PATTERN_REGISTRY.md` · `ENSEMBLE_ROSTER.md` |
 | **MAP** | CROSS_REF ecosystem map; TELESCOPIC_LENS 4-altitude risk mapping | `CROSS_REF.md` · `docs/gates/TELESCOPIC_LENS.md` |
-| **MEASURE** | 1-1-1-1 Gate (P-10); 11Q Framework (P-11); Harmonic Score 0.00–1.00 | `docs/gates/GATE_1111.md` · `docs/gates/GATE_11Q.md` |
-| **MANAGE** | MDAR loop; Acoustic Gate Chain (P-13); Sentinel veto authority | `docs/gates/ACOUSTIC_GATES.md` · `docs/protocols/MDAR_PROTOCOL_v1.md` |
+| **MEASURE** | 1-1-1-1 Gate (P-10); 11Q Framework (P-11); Apogee attestation artifacts; Harmonic Score 0.00–1.00 | `docs/gates/GATE_1111.md` · `docs/gates/GATE_11Q.md` · `docs/qa/APOGEE_11Q_S035.json` |
+| **MANAGE** | MDAR loop; Acoustic Gate Chain (P-13); Sentinel veto authority; Evaluate Router v1.1 per-record audit log | `docs/gates/ACOUSTIC_GATES.md` · `docs/protocols/MDAR_PROTOCOL_v1.md` · `components/evaluate_router_v1_1.py` |
 | **IMPROVE** | SWEEP_LOG sealed audit trail; SESSION_ANCHOR session continuity; P-24 retrofit cycle | `SWEEP_LOG.md` · `SESSION_ANCHOR.md` |
 
 ---
@@ -31,12 +31,20 @@ The framework is not a policy document. It is an **executable governance spine**
 
 | Article | Requirement | DGAF Implementation |
 |---------|-------------|--------------------|
-| **Art. 9** | Risk Management System | MDAR loop + full gate stack (GATE-1111, GATE-11Q, GATE-ACO, GATE-TEL) |
-| **Art. 13** | Transparency & Logging | SWEEP_LOG sealed audit trail; all gate decisions are machine-readable JSON |
+| **Art. 9** | Risk Management System | MDAR loop + full gate stack + per-record audit log in `evaluate_router_v1_1.py` |
+| **Art. 13** | Transparency & Logging | SWEEP_LOG sealed audit trail; routing and deontic decisions logged; machine-readable JSON artifacts |
 | **Art. 14** | Human Oversight | Sentinel veto (gates 9–11) requires Njineer release; no agent can override architect |
-| **Art. 17** | Quality Management | P-24 Canonical Practice Unit enforced on all gate/protocol docs; `gate_compliance_check.py` |
+| **Art. 17** | Quality Management | P-30 Apogee-Attestation-Gate; CPU component cards; `gate_compliance_check.py` |
 | **Art. 40** | Harmonized Standards | TELESCOPIC_LENS 32-checkpoint audit; S-TIER certification process |
 | **Art. 72** | Penalties / Non-compliance | Sentinel hard veto + SYNC_LOCKED escalation; quarantine to `docs/drafts/` |
+
+---
+
+## Ethical Cognition Layer
+
+The active P-10 implementation artifact is `components/normative_constraint.py`, which formalizes deontic logic (`permitted`, `obligated`, `forbidden`, `escalate`), score ceiling constraints, and epistemic integrity checks for governance-facing evaluation flows.
+
+P-30 extends this by requiring Apogee attestation before any component is promoted to canonical status. This prevents silent governance claims without Q11 normative wiring.
 
 ---
 
