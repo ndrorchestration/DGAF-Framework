@@ -1,106 +1,46 @@
-# SESSION ANCHOR
-
-> **This file is overwritten at every session close.** Do not append — replace.  
-> **Pattern:** P-21 (Session-Boundary-State-Anchor) | P-02 (COLLEEN-Trigger-Chain)  
-> **Read by:** COLLEEN at every session open  
-> **Written by:** Amethyst at every session close
-
----
-
-## Current Session: S032 — 2026-05-01 🟡 OPEN
-
-**Seal status:** 🟡 OPEN — awaiting Njineer Drive execution confirmation  
-**Harmonic Score:** 1.00 — SUSTAINED (S014–S031, 18 consecutive; S032 pending seal)  
-**NDR Pattern Registry version:** 1.8 (P-26 registered, S031)  
-**Formation:** COLLEEN solo (P-02) — Drive sync verification lane
+# SESSION ANCHOR — S033
+**Date:** 2026-05-22  
+**Operator:** Amethyst (Meta-Orchestrator) + COLLEEN (Co-Orchestrator)  
+**Formation:** Co-Orchestration | Amethyst + COLLEEN  
+**Seal status:** 🟡 OPEN — Sentinel integration pending (S034)
 
 ---
+
+## Components Shipped This Session
+
+| Component | Version | File |
+|---|---|---|
+| KAPPA Dynamic Confidence Router | v3.5 | components/KAPPA/dynamic_weight_router.py |
+| DGAF Evaluate Router | v1.0 | components/evaluate_router.py |
+
+## NDR Patterns Registered
+
+| ID | Name |
+|---|---|
+| P-27 | Adaptive-Weighting-with-Confidence-Gates |
+| P-28 | Pipeline-Composition-with-Confidence-Gated-Routing |
+
+**Registry version:** 1.9
 
 ## Open BLGs
 
-**0 formal BLGs open.**
+| ID | Priority | Description |
+|---|---|---|
+| S033-BLG-01 | HIGH | governance_clear 82.6% → 95% target (v3.6) |
+| S033-BLG-02 | LOW | P-10 gate hook missing in evaluate_router.py |
+| S033-BLG-03 | LOW | Apogee P-11 11Q score not run on KAPPA/evaluate_router |
+| S032-DRIVE | MEDIUM | Drive 4 docs pending Njineer execution |
 
-| Item | Description | Owner | Status |
-|------|-------------|-------|--------|
-| S032-DRIVE | Drive layer sync — 4 documents pending Njineer execution | COLLEEN + Njineer | 🟡 Pending confirmation |
+## Carry-Forward from S032
+- Drive layer 4 docs still pending Njineer execution
+- P-26 QUINTET_CHECKIN_TEMPLATE.md deferred to S034
 
-*Note: S032-DRIVE is a P-20 sync verification item, not a formal BLG. No blocking risk.*
+## Next Session: S034
+- Sentinel integration → evaluate_router → Sentinel pipeline chain
+- Apogee 11Q scoring on KAPPA + evaluate_router
+- Optionally: P-29 Sentinel-Annotated Risk Pass registration
 
----
-
-## Drive-GitHub Sync Status (P-20)
-
-| Document | Template Committed | Njineer Executed | COLLEEN Verified |
-|----------|--------------------|-----------------|------------------|
-| IMP-05 Brand Spec | ✅ | ⏳ Pending | ⏳ Pending |
-| Eval Rubrics | ✅ | ⏳ Pending | ⏳ Pending |
-| Agent Roster | ✅ | ⏳ Pending | ⏳ Pending |
-| Inbox Notes | ✅ | ⏳ Pending | ⏳ Pending |
-
-CROSS_REF v3.2 remains authoritative. Drive layer is catching up.
-
----
-
-## NDR Pattern Registry
-
-| Field | Value |
-|-------|-------|
-| Version | 1.8 (current) |
-| Last pattern added | P-26 (Harmonic-Quintet-Check-In) — S031 |
-| Total patterns | 26 (P-01 through P-26) |
-| P-24 compliance | 4/4 gate docs CERTIFIED ✅ |
-
----
-
-## CI Coverage
-
-```
-sentinel-governance:  ✅ doc-lint.yml LIVE (S029)
-DGAF-Framework:       ✅ doc-lint.yml LIVE (S031)
-All other repos:       No CI required (governed by spine)
-Status:                FULL ECOSYSTEM CI COVERAGE ✅
-```
-
----
-
-## Ecosystem Documentation Posture
-
-```
-All GitHub artifacts:          ✅ CLEAN — see S031 seal
-Master Portfolio Inventory:    ✅ v2.0 committed — S031-BLG-D01
-CROSS_REF:                     ✅ v3.2 — S031-BLG-D01
-Drive layer — IMP-05:          ⏳ Template committed; Njineer execution pending
-Drive layer — Eval Rubrics:    ⏳ Template committed; Njineer execution pending
-Drive layer — Agent Roster:    ⏳ Template committed; Njineer execution pending
-Drive layer — Inbox Notes:     ⏳ Template committed; Njineer execution pending
-```
-
----
-
-## S032 Seal Condition
-
-S032 seals when Njineer confirms Drive execution complete across all 4 documents.
-COLLEEN will then:
-1. Update SWEEP_LOG S032 with completion report
-2. Mark all 4 P-20 items CLEARED
-3. Overwrite SESSION_ANCHOR with S033 priority queue
-4. Assess Reson score for S032
-
----
-
-## Next Session Priority Queue (S033 — post Drive confirmation)
-
-1. 🟡 **Ecosystem light scan** — 10-repo metadata drift check since S025
-2. 🔵 **P-26 templating** — `QUINTET_CHECKIN_TEMPLATE.md` in `.operations/`
-3. 🔵 **P-27 candidate** — open assessment (Amethyst)
-4. 🟢 **Quarterly `.markdownlint.yml` audit** — Sentinel advisory
-
----
-
-## State Anchor Buoy
-
-`[BUOY: S032 OPEN | DRIVE TEMPLATES COMMITTED (4/4) | NJINEER EXECUTION PENDING | 0 FORMAL BLGs | HARMONIC SCORE 1.00 SUSTAINED S014–S031 | CROSS_REF v3.2 | NDR v1.8 | ARCHITECT: HENSEL, ANDREW VANCE | 2026-05-01 10:20 EDT]`
-
----
-
-*Written by: Agent COLLEEN · Read by: Agent COLLEEN · Architect: Hensel, Andrew Vance [@ndrorchestration](https://github.com/ndrorchestration)*
+## Governance References
+- SWEEP_LOG: S033 entry appended
+- CPU Card: DGAF-GATE-KAPPA-v3.5 registered
+- NDR Registry: v1.9
