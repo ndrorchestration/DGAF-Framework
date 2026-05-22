@@ -1,7 +1,7 @@
 # DGAF-Framework — Technical & Agent-Facing Reference
 
 > **Audience:** Agent Amethyst, Agent Apogee, Agent COLLEEN, Agent Sentinel, and all ensemble members; engineers integrating with DGAF  
-> **Entry point for:** Gate specs · Pattern registry · Formation protocols · Session open/close procedures  
+> **Entry point for:** Gate specs · Pattern registry · Runtime components · Formation protocols · Session open/close procedures  
 > **Compliance/governance entry point:** [`README.governance.md`](./README.governance.md)  
 > **Architect:** Hensel, Andrew Vance · [@ndrorchestration](https://github.com/ndrorchestration)
 
@@ -28,8 +28,24 @@ Every agent action occurs within an MDAR cycle. Cycles are time-bounded by the A
 | 2 (every artifact) | GATE-1111: 1-1-1-1 | P-10 | Pre-registry sign-off | Apogee |
 | 3 (pre-deploy) | GATE-11Q: Hendecagonal | P-11 | Production deployment | Apogee + Sentinel |
 | 4 (S-TIER/audit) | GATE-TEL: Telescopic Lens | P-12 | S-TIER cert · structural audit | Apogee + Amethyst |
+| 5 (canonical promotion) | Apogee-Attestation-Gate | P-30 | Component/pattern canonical promotion | Apogee + Amethyst |
 
 Full specs: [`docs/gates/`](./docs/gates/)
+
+---
+
+## Runtime Components
+
+| Component | Path | Purpose | Session |
+|-----------|------|---------|---------|
+| KAPPA Dynamic Confidence Router | `components/KAPPA/dynamic_weight_router.py` | Confidence-gated routing and category-sensitive weight selection | S033 |
+| KAPPA Calibration v3.6 | `components/KAPPA/calibration_v3_6.json` | Threshold calibration; `governance_clear` tuned to 100% | S034 |
+| KAPPA Component Card | `components/KAPPA/DGAF_GATE_KAPPA_v3_5_component_card.json` | CPU-compliant registry card | S034 |
+| Evaluate Router | `components/evaluate_router.py` | Batch pipeline composition: detect → apply_weights → rank | S033 |
+| Evaluate Router v1.1 | `components/evaluate_router_v1_1.py` | Sentinel hooks, P-10 deontic gate, per-record audit log | S034 |
+| Normative Constraint | `components/normative_constraint.py` | Deontic / optimization / epistemic integrity constraint class | S035 |
+
+Component index: [`components/README.md`](./components/README.md)
 
 ---
 
@@ -42,8 +58,19 @@ Full specs: [`docs/gates/`](./docs/gates/)
 | P-14–P-15 | Formation protocols (Trio, Harmonic Quintet) |
 | P-16–P-20 | Metadata hygiene, IP, issue triage, branding, Drive sync |
 | P-21–P-24 | Session continuity, storage topology, taxonomy audit, canonical practice unit |
+| P-27–P-30 | Confidence routing, pipeline composition, Sentinel risk pass, Apogee attestation |
 
 Full registry: [`docs/patterns/NDR_PATTERN_REGISTRY.md`](./docs/patterns/NDR_PATTERN_REGISTRY.md)
+
+---
+
+## QA & Attestation Surface
+
+| Artifact | Path | Meaning |
+|----------|------|---------|
+| Apogee 11Q S034 | `docs/qa/APOGEE_11Q_S034.json` | Pre-NormativeConstraint A-TIER attestation |
+| Apogee 11Q S035 | `docs/qa/APOGEE_11Q_S035.json` | Post-NormativeConstraint S-TIER attestation |
+| QA Index | `docs/qa/README.md` | Attestation artifact index |
 
 ---
 
@@ -97,6 +124,12 @@ DGAF-Framework/
 ├── CHANGELOG.md                       ← Semantic versioned history
 ├── CROSS_REF.md                       ← Ecosystem artifact map
 ├── ENSEMBLE_ROSTER.md                 ← Canonical agent registry
+├── components/
+│   ├── README.md                      ← Runtime component index
+│   ├── KAPPA/
+│   ├── evaluate_router.py
+│   ├── evaluate_router_v1_1.py
+│   └── normative_constraint.py
 ├── docs/
 │   ├── gates/
 │   │   ├── GATE_UNIT_TEMPLATE.md      ← P-24 blank (copy to start new gate)
@@ -106,9 +139,13 @@ DGAF-Framework/
 │   │   ├── TELESCOPIC_LENS.md         ← GATE-TEL (P-12) — CERTIFIED v2.0
 │   │   └── GATE_SPECS.md              ← Gate index
 │   ├── patterns/
-│   │   └── NDR_PATTERN_REGISTRY.md    ← P-01 through P-24
+│   │   └── NDR_PATTERN_REGISTRY.md    ← P-01 through P-30
 │   ├── protocols/
 │   │   └── MDAR_PROTOCOL_v1.md        ← Master cycle protocol
+│   ├── qa/
+│   │   ├── README.md                  ← QA / attestation index
+│   │   ├── APOGEE_11Q_S034.json
+│   │   └── APOGEE_11Q_S035.json
 │   └── drafts/                        ← Staging area (P-03/P-11/P-18)
 ├── .operations/                       ← Maintainer-only ops tooling
 │   ├── gate_compliance_check.py       ← P-24 compliance scanner
