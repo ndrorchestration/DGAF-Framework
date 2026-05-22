@@ -1,0 +1,23 @@
+{
+  "session": "S034",
+  "agent": "Apogee",
+  "date": "2026-05-22",
+  "results": [
+    {
+      "label": "KAPPA v3.6",
+      "total": 103,
+      "pct": 93.6,
+      "tier": "A-TIER",
+      "gap_to_s_tier": "Q05 audit log commit, Q11 full normative constraint wiring"
+    },
+    {
+      "label": "Evaluate Router v1.1",
+      "total": 102,
+      "pct": 92.7,
+      "tier": "A-TIER",
+      "gap_to_s_tier": "Q07 failure mode detail, Q11 full normative constraint wiring"
+    }
+  ],
+  "blg_03_closed": true,
+  "s_tier_path": "Q11 full normative constraint wiring required for both components — target S035"
+}

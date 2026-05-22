@@ -1,0 +1,12 @@
+{
+  "component": "DGAF-GATE-KAPPA-v3.6",
+  "session": "S034",
+  "date": "2026-05-22",
+  "v3_5_governance_clear": 99.6,
+  "v3_6_governance_clear": 100.0,
+  "STRONG_THRESH": 0.22,
+  "BLENDED_THRESH": 0.18,
+  "blg_01_closed": true,
+  "passes": 100,
+  "note": "Threshold sweep across 14x12 grid. Best result: STRONG=0.22, BLENDED=0.18. governance_clear 100%."
+}
