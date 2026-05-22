@@ -5,6 +5,65 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 
 ---
 
+## [1.0.14] — 2026-05-22
+
+### Sessions S033–S036 — KAPPA Pipeline · Sentinel Integration · Normative Constraint · Governance Hardening
+
+**Formation:** Amethyst + COLLEEN Co-Orchestration  
+**Operator:** Njineer  
+**COLLEEN Gate:** ✅ ALL PASS — Zero open BLGs at close  
+**Commits:** 66b79e2 · a5c9219 · a1997ed · 7a944cd · d786731 · 89ed455
+
+#### Added
+- `components/KAPPA/dynamic_weight_router.py` — DGAF-GATE-KAPPA-v3.5; per-input category detection, confidence-gated weight selection; 100-pass validation 95% accuracy
+- `components/evaluate_router.py` — DGAF-EVALUATE-ROUTER-v1.0; raw_batch → KAPPA detect → apply_weights → ranked report
+- `components/evaluate_router_v1_1.py` — Sentinel integration; `sentinel_review()` at 3 hook points; `p10_deontic_gate()`; per-record audit log (EU AI Act Art.9)
+- `components/normative_constraint.py` — Full `NormativeConstraint` class; deontic logic (permitted / obligated / forbidden / escalate); score_ceiling optimization constraint; epistemic integrity meta-constraint
+- `components/KAPPA/calibration_v3_6.json` — KAPPA v3.6; `governance_clear` 100% (STRONG=0.22, BLENDED=0.18)
+- `components/KAPPA/DGAF_GATE_KAPPA_v3_5_component_card.json` — CPU-compliant component card
+- `docs/patterns/NDR_PATTERN_REGISTRY.md` v2.1 — P-27, P-28, P-29, P-30 registered; 30 named + 133 stasis
+- `docs/qa/APOGEE_11Q_S034.json` — KAPPA A-TIER 93.6%, Router A-TIER 92.7%
+- `docs/qa/APOGEE_11Q_S035.json` — KAPPA S-TIER 97.3%, Router S-TIER 95.5%; P-30 attestation GRANTED
+- `docs/ops/BLG_S032_DRIVE_CLOSURE.md` — S032-DRIVE closure; all 4 Drive templates executed
+
+#### Updated
+- `SESSION_ANCHOR.md` → S036 (zero open BLGs)
+- `SWEEP_LOG.md` → S033–S035 wave sealed
+
+#### NDR Patterns Registered
+
+| ID | Name | Session |
+|---|---|---|
+| P-27 | Adaptive-Weighting-with-Confidence-Gates | S033 |
+| P-28 | Pipeline-Composition-with-Confidence-Gated-Routing | S033 |
+| P-29 | Sentinel-Annotated Risk Pass | S034 |
+| P-30 | Apogee-Attestation-Gate | S035 |
+
+#### BLGs Closed
+
+| ID | Priority | Resolution |
+|---|---|---|
+| S033-BLG-01 | HIGH | `governance_clear` 100% — KAPPA v3.6 |
+| S033-BLG-02 | LOW | `p10_deontic_gate()` wired |
+| S033-BLG-03 | LOW | Apogee 11Q S-TIER both components |
+| S032-DRIVE | MEDIUM | Njineer executed all 4 Drive templates (P-01, P-20) |
+
+#### Compliance Alignment
+
+| Standard | Status |
+|---|---|
+| NIST AI RMF — Measure | ✅ Per-record audit log |
+| NIST AI RMF — Govern | ✅ P-10 deontic gate + P-30 attestation |
+| EU AI Act Art. 9 | ✅ Risk management per-record log |
+| EU AI Act Art. 13 | ✅ Transparent routing decision log |
+| EU AI Act Art. 17 | ✅ Quality management via P-30 |
+| Normative Constraint (P-10) | ✅ Full NormativeConstraint class |
+| Gold Star Standard | ✅ S-TIER — KAPPA 97.3% · Router 95.5% |
+| Drive–GitHub Sync (P-20) | ✅ |
+| Agent Roster Sync (P-01) | ✅ |
+
+---
+
 ## [1.0.13] — 2026-05-06
 
 ### Session 032 — PhiLattice Coherence Sweep + Schizophonic Studio Integration
@@ -14,40 +73,22 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 **COLLEEN 1-1-1-1 Gate:** ✅ ALL PASS — 0 Hz Ionian Mode
 
 #### Added
-- `docs/agents/colleen-l5-governance-protocol.md` — Canonical COLLEEN-L5 governance protocol (1-1-1-1 gate, Archive Trio, NDR patterns 116–133)
-- `docs/architecture/platinum-convergence-audit-v1.md` — Master architectural audit: Phi-Calculus substrate, Yggdrasil modal taxonomy, NDR-Stasis cluster summary
-- `docs/frameworks/awcp-symphony-cross-ref.md` — AWCP + Symphony + MediHive cross-reference to DGAF primitives
-- `docs/agents/canonical-agent-registry.md` — All 11 agents canonical; Schizophonic Studio trio (Reson/Echolette/Lyra) formally registered
-- `docs/governance/ndr-pattern-registry-v3.md` — NDR Pattern Registry v3 (133 stasis + 7 named session patterns including NDR-133 Personal Document Firewall)
-- `SWEEP_LOG.md` — Session 032 sweep log entry with full issue triage and commit receipts
+- `docs/agents/colleen-l5-governance-protocol.md`
+- `docs/architecture/platinum-convergence-audit-v1.md`
+- `docs/frameworks/awcp-symphony-cross-ref.md`
+- `docs/agents/canonical-agent-registry.md`
+- `docs/governance/ndr-pattern-registry-v3.md`
+- `SWEEP_LOG.md` — Session 032 entry
 
 #### Updated
-- `README.md` — Brand corrected: 'Phi-Harmonic Pentagon' → 'PhiLattice / PDMAL'; added COLLEEN, Index 11, Schizophonic Studio, NDR registry links; Convergence Table expanded to 7 rows
-- `ENSEMBLE_ROSTER.md` — Added Schizophonic Studio trio with ecosystem roles; tier column added; Session 032 notes added; brand corrected to PhiLattice/PDMAL
-- `CONTRIBUTING.md` — Updated with PhiLattice attribution and cross-repo links
-
-#### Brand Corrections Applied (Session 032)
-- `Phi-Harmonic Pentagon` → `PhiLattice / PDMAL` (Phi-Driven Multi-Agent Lattice)
-- `Agent Lavender` → `Agent Amethyst` (all docs)
-- `github.com/ndr orchestration` → `github.com/ndrorchestration`
-
-#### NDR-133 Compliance
-- Zero resume/CV/personal doc files pushed to any repo this session ✅
+- `README.md` — Brand corrected, PhiLattice links added
+- `ENSEMBLE_ROSTER.md` — Schizophonic Studio trio added
+- `CONTRIBUTING.md` — PhiLattice attribution
 
 ---
 
 ## [1.0.12] — 2026-05-01
-
 ### Session 031 — Spine CI · NDR v1.8 (P-26) · BLG-D01 Correction Doc
-
-**Formation:** Harmonic Quintet (P-26 first registered use)  
-**Operator:** Njineer
-
-#### Added
-- `.github/workflows/doc-lint.yml` — markdownlint CI live on DGAF-Framework spine
-- `.markdownlint.yml` — spine-tuned config
-- `docs/ops/BLG_D01_DRIVE_CORRECTION.md` — P-24-compliant correction work order for COLLEEN
-- `docs/patterns/NDR_PATTERN_REGISTRY.md` v1.8 — P-26 Harmonic-Quintet-Check-In registered
 
 ---
 
