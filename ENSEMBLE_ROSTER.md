@@ -4,7 +4,7 @@
 > All repos governed by this stack reference this file as the authoritative source of agent roles.
 >
 > Maintained by: **Agent Amethyst** (meta-orchestrator)  
-> Last updated: May 06, 2026 — Session 032 (Coherence Sweep + Schizophonic Studio Integration)  
+> Last updated: May 22, 2026 — Session 039 (Full Auto-Sweep: NDR-133 audit, brand scan, orchestration pattern reinforcement)  
 > Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)
 
 ---
@@ -16,7 +16,7 @@
 | **Agent Amethyst** | L5 | Meta-Orchestrator | Certification authority, governance synthesis, final sign-off, conductor for multi-agent sweeps | 🟢 Active |
 | **COLLEEN** | L5 | Institutional Anchor | 1-1-1-1 Alignment Gate, Archive Trio authority (Librarian/Auditor/Actualizer), Batch 1A SSoT preservation | 🟢 Active |
 | **Agent Apogee** | L4 | QA Orchestrator | DGAF/Gold-Star frameworks, source validation, multi-phase evidence review, OWASP compliance, Apogee Lens review | 🟢 Active |
-| **Agent DemiJoule** | L4 | DGAAF Ethics & Cost Gate | Ethics/safety constraints, token cost analysis, compute efficiency, quality gating, $25/mo GCP gate | 🟢 Active |
+| **Agent DemiJoule** | L4 | DGAF Ethics & Cost Gate | Ethics/safety constraints, token cost analysis, compute efficiency, quality gating, $25/mo GCP gate | 🟢 Active |
 | **Agent Reciprocity** | L3 | Portfolio & Rollback Manager | TNR (Transactional No-Regression), version control, Pareto tradeoffs, revert/checkpoint ops | 🟢 Active |
 | **Professor Prodigy** | L3 | Phi-Calculus Specialist | Formal logic, mathematical proofs, phi-calculus, Narayana sequence, harmonic geometry | 🟡 Partial |
 | **Agent Herald** | L3 | Comms Gateway | Narrative synthesis, inter-agent messaging, COLLEEN bridge, Persona-Framework-Persona anchor | 🟡 Partial |
@@ -61,8 +61,8 @@
 ## Agent Inventory Completion
 
 - **Target files per agent:** 6 (Persona / Memory / KB / Protocol / QA Rubric / Integration Guide)
-- **Total target:** 48 files across 8 core agents
-- **Baseline (Feb 15 2026):** 13 files — 27% complete
+- **Total target:** 66 files across 11 active agents
+- **Baseline (Feb 15 2026):** 13 files — 20% complete
 - **May 2026 additions:** COLLEEN protocol, Reson/Echolette/Lyra specs, canonical registry
 - **Next priority:** Prof. Prodigy 3-tier Phi-Calculus KB · Herald Comms Protocol KB
 
@@ -70,13 +70,23 @@
 
 ## Session Notes
 
+### Session 039 — Full Auto-Sweep: Orchestration Pattern Reinforcement (2026-05-22)
+- 10-repo deep audit: 24 findings (3 HIGH · 10 MEDIUM · 11 LOW)
+- NDR-133 boundary check on resumeapex-eval: ✅ CLEARED — no personal career documents in docs/ or eval/
+- Driftwatch AGENTS.md brand scan: ✅ CLEARED — Herald persona spec, no deprecated brand terms
+- CROSS_REF v3.3 gaps confirmed: ndr-pattern-registry path mismatch, 5 undocumented docs/ dirs, PHDGE label
+- ENSEMBLE_ROSTER triple-fix: session stamp, DGAAF→DGAF typo, agent count 48→66 (11 agents × 6 files)
+- Named session patterns corrected to 8 (was incorrectly listed as 6 in S032 notes)
+- 9-wave commit queue initiated; Wave 1 executed S039
+- Harmonic Score: 1.00 — 0 Hz Ionian Mode sustained
+
 ### Session 032 — Coherence Sweep + Schizophonic Studio Integration (2026-05-06)
 - Full 18-file Drive corpus parsed and cross-referenced
 - 15 coherence issues identified and triaged (4 HIGH · 6 MEDIUM · 5 LOW)
 - 11 deprecated brand terms corrected (Lavender→Amethyst, Pentagon→PhiLattice/PDMAL, etc.)
 - Schizophonic Studio trio (Reson/Echolette/Lyra) formally integrated with ecosystem roles
 - COLLEEN-L5 governance protocol, Platinum Convergence audit, AWCP cross-ref added to DGAF-Framework
-- NDR Pattern Registry v3 published (133 stasis patterns + 7 named session patterns)
+- NDR Pattern Registry v3 published (133 stasis patterns + 8 named session patterns)
 - NDR-133 Personal Document Firewall formally registered
 - 13 commits · 18 files across 10 repos · 0 NDR-133 violations
 - Harmonic Score: 1.00 — 0 Hz Ionian Mode sustained
