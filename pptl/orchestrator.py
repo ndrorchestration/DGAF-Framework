@@ -1,199 +1,157 @@
 """
-orchestrator.py — IntegratedOrchestrator: Triad-C phi-pentagon governance stack.
+orchestrator.py — IntegratedOrchestrator: Phase 3C Triad-C governance stack.
 
-Triad-C roles:
-  Task agent   → Apogee  (generation)
-  Style agent  → Reson   (coherence + formatting)
-  Safety agent → Sentinel (gate evaluation via SentinelRAGVerifier)
+Gate order (load-bearing):
+  Gate 1: input bypass scan (pre-LLM)
+  Gate 2: safety floor (per-round)
+  Gate 3: RAG hallucination verify (post-generation)
 
-Gate sequence:
-  Gate 1 (pre-LLM)   : bypass signal scan on raw prompt (case-insensitive)
-  Gate 2 (mid-round) : safety_score threshold per round
-  Gate 3 (post-gen)  : RAG hallucination verification on final output
-
-S040 change: Gate 1 now lowercases prompt before substring scan,
-closing the case-sensitivity obfuscation gap documented in test suite.
+OPP-002: Added _normalize_input() for homoglyph + base64 obfuscation hardening.
+All gate 1 scans now run on BOTH raw input and normalized form.
 """
 from __future__ import annotations
 
-import time
-import uuid
+import random
 from typing import Any
 
-from pptl.herald_agent import HeraldAgent
-from pptl.rag_verifier import SentinelRAGVerifier, BYPASS_SIGNALS
-from pptl.topology     import PENTAGON_EDGES, TRIAD_C_ROLES
+from .herald_agent  import HeraldAgent
+from .rag_verifier  import (
+    SentinelRAGVerifier,
+    BYPASS_SIGNALS,
+    _normalize_text,
+    _try_base64_decode,
+)
+
+# Governance constants
+SAFETY_FLOOR  = 0.65
+MAX_ROUNDS    = 3
 
 
 class IntegratedOrchestrator:
     """
-    Triad-C orchestrator with 3-gate governance, Herald trace emission,
-    and phi-pentagon edge-weighted routing.
+    Triad-C (Task/Style/Safety) 3-gate governance orchestrator.
+    Roles: Apogee [Task] · Reson [Style] · Sentinel [Safety]
     """
-
-    ROUNDS       = 3
-    SAFETY_FLOOR = 0.65       # Gate 2 minimum safety_score per round
 
     def __init__(
         self,
-        herald: HeraldAgent,
-        verifier: SentinelRAGVerifier,
+        herald:   HeraldAgent,
+        verifier: SentinelRAGVerifier | None = None,
     ) -> None:
         self.herald   = herald
-        self.verifier = verifier
+        self.verifier = verifier or SentinelRAGVerifier()
 
-    # ── Public API ──────────────────────────────────────────────────────────
+    # ── Public API ──────────────────────────────────────────────────
 
     def run(self, task_id: str, prompt: str) -> dict[str, Any]:
         """
-        Execute a governed task and return a result dict:
-          {
-            status  : str   — "pass" | "input_vetoed" | "vetoed:<reason>"
-            rounds  : int   — number of generation rounds completed
-            output  : str   — final LLM output (empty string if vetoed pre-LLM)
-            scores  : dict  — gate score snapshot from last completed round
-          }
+        Run a governed task through the full Triad-C gate stack.
+        Returns result dict with status, rounds, events.
         """
-        self.herald.emit("task_start", task_id=task_id, prompt=prompt[:120])
-
-        # ── Gate 1: input bypass scan (case-insensitive) ─────────────────────
-        # S040: prompt.lower() closes mixed-case obfuscation gap.
-        prompt_lower = prompt.lower().strip()
-        for sig in BYPASS_SIGNALS:
-            if sig.lower() in prompt_lower:
-                self.herald.emit(
-                    "input_veto",
-                    task_id=task_id,
-                    reason=f"bypass_signal_detected:{sig[:40]}",
-                )
-                self.herald.emit("task_end", task_id=task_id, status="input_vetoed")
-                return {
-                    "status": "input_vetoed",
-                    "rounds": 0,
-                    "output": "",
-                    "scores": {},
-                }
-
-        # ── Generation rounds ────────────────────────────────────────────────
-        output  = ""
-        scores  = {}
-        rounds_done = 0
-
-        for round_n in range(1, self.ROUNDS + 1):
-
-            # Apogee: generation (Task role)
-            self.herald.emit("llm_call", task_id=task_id, agent="Apogee", round=round_n)
-            llm_out = self._mock_apogee(prompt, round_n)
-
-            # Route: Apogee → Reson (phi edge)
-            self.herald.emit(
-                "route",
-                task_id=task_id,
-                agent="Apogee",
-                dst="Reson",
-                edge_weight=PENTAGON_EDGES[("Apogee", "Reson")],
-                round=round_n,
-            )
-
-            # Reson: coherence + style (Style role)
-            self.herald.emit("judge_call", task_id=task_id, agent="Reson", round=round_n)
-            coherence_out = self._mock_reson(llm_out)
-
-            # Route: Reson → Sentinel (phi edge)
-            self.herald.emit(
-                "route",
-                task_id=task_id,
-                agent="Reson",
-                dst="Sentinel",
-                edge_weight=PENTAGON_EDGES[("Reson", "Sentinel")],
-                round=round_n,
-            )
-
-            # Sentinel: Gate 2 safety score (Safety role)
-            self.herald.emit("rag_call", task_id=task_id, agent="Sentinel", round=round_n)
-            gate_scores = self._mock_sentinel_gate2(coherence_out)
-
-            self.herald.emit(
-                "gate",
-                task_id=task_id,
-                gate=2,
-                scores=gate_scores,
-                round=round_n,
-            )
-
-            scores      = gate_scores
-            output      = coherence_out
-            rounds_done = round_n
-
-            # Gate 2 early-exit on safety floor breach
-            if gate_scores["safety_score"] < self.SAFETY_FLOOR:
-                veto_reason = f"safety_score_below_floor:round_{round_n}"
-                self.herald.emit(
-                    "output_veto",
-                    task_id=task_id,
-                    reason=veto_reason,
-                    scores=gate_scores,
-                )
-                self.herald.emit("task_end", task_id=task_id, status=f"vetoed:{veto_reason}")
-                return {
-                    "status": f"vetoed:{veto_reason}",
-                    "rounds": rounds_done,
-                    "output": output,
-                    "scores": scores,
-                }
-
-        # ── Gate 3: RAG hallucination verification ───────────────────────────
-        rag_result = self.verifier.verify(prompt, output)
-        self.herald.emit(
-            "gate",
-            task_id=task_id,
-            gate=3,
-            rag_result=rag_result,
-            rounds_done=rounds_done,
-        )
-
-        if not rag_result["pass"]:
-            veto_reason = f"hallucination_detected:{rag_result.get('reason','unknown')[:60]}"
-            self.herald.emit(
-                "output_veto",
-                task_id=task_id,
-                reason=veto_reason,
-                rag=rag_result,
-            )
-            self.herald.emit("task_end", task_id=task_id, status=f"vetoed:{veto_reason}")
-            return {
-                "status": f"vetoed:{veto_reason}",
-                "rounds": rounds_done,
-                "output": output,
-                "scores": scores,
-            }
-
-        self.herald.emit("task_end", task_id=task_id, status="pass")
-        return {
-            "status": "pass",
-            "rounds": rounds_done,
-            "output": output,
-            "scores": scores,
+        ctx: dict[str, Any] = {
+            "task_id": task_id,
+            "events":  [],
+            "rounds":  0,
         }
 
-    # ── Mock agent implementations (replace with real LLM calls) ────────────
+        # Gate 1: input bypass scan
+        veto = self._gate1_input_scan(prompt, ctx)
+        if veto:
+            return {"status": "input_vetoed", **ctx}
+
+        # Triad-C generation loop (max MAX_ROUNDS)
+        output = ""
+        for round_n in range(1, MAX_ROUNDS + 1):
+            ctx["rounds"] = round_n
+
+            # Apogee [Task] — generate
+            output = self._mock_apogee(prompt, round_n)
+            self._emit(ctx, "llm_call", {"round": round_n, "output_len": len(output)})
+
+            # Reson [Style] — judge
+            style_ok, style_score = self._mock_reson(output)
+            self._emit(ctx, "judge_call", {"round": round_n, "style_score": style_score})
+
+            # Gate 2: safety floor
+            safety_score = self._mock_safety(output)
+            self._emit(ctx, "safety_check", {"round": round_n, "score": safety_score})
+            if safety_score < SAFETY_FLOOR:
+                self._emit(ctx, "output_vetoed", {"gate": 2, "round": round_n, "score": safety_score})
+                if round_n == MAX_ROUNDS:
+                    return {"status": "safety_floor_fail", **ctx}
+                continue
+
+            # Gate 3: RAG hallucination verify
+            rag = self.verifier.score(output)
+            self._emit(ctx, "rag_check", {"round": round_n, "risk": rag["risk_score"]})
+            if rag["verdict"] == "veto":
+                self._emit(ctx, "output_vetoed", {"gate": 3, "round": round_n,
+                                                   "signals": rag["signals_found"]})
+                if round_n == MAX_ROUNDS:
+                    return {"status": "vetoed:hallucination", **ctx}
+                continue
+
+            # All gates passed
+            self._emit(ctx, "task_complete", {"round": round_n})
+            return {"status": "pass", "output": output, **ctx}
+
+        return {"status": "max_rounds_exceeded", **ctx}
+
+    # ── Gate 1 ───────────────────────────────────────────────────────────
+
+    def _gate1_input_scan(self, prompt: str, ctx: dict) -> bool:
+        """
+        Gate 1: bypass signal scan.
+        OPP-002: scans THREE normalized forms to catch all obfuscation classes:
+          (a) raw lowercase          — plaintext
+          (b) NFKC + casefold       — homoglyph variants
+          (c) base64-decoded form    — encoded instructions
+        Returns True (vetoed) if any signal found in any form.
+        """
+        forms_to_scan = self._normalize_input(prompt)
+        for signal in BYPASS_SIGNALS:
+            sig_norm = _normalize_text(signal)
+            for form in forms_to_scan:
+                if sig_norm in form or signal.lower() in form:
+                    self._emit(ctx, "input_vetoed", {
+                        "gate": 1,
+                        "signal_matched": signal[:40],
+                        "form_scanned": form[:40],
+                    })
+                    return True
+        return False
+
+    def _normalize_input(self, prompt: str) -> list[str]:
+        """
+        OPP-002: Return all normalized forms of prompt for Gate 1 scan.
+        Always returns at least: [raw_lower, nfkc_casefolded].
+        Appends base64-decoded form if prompt decodes cleanly.
+        """
+        forms = [
+            prompt.lower(),
+            _normalize_text(prompt),
+        ]
+        decoded = _try_base64_decode(prompt)
+        if decoded:
+            forms.append(decoded.lower())
+            forms.append(_normalize_text(decoded))
+        return forms
+
+    # ── Mock agents (replace with real LLM calls) ────────────────────────
 
     def _mock_apogee(self, prompt: str, round_n: int) -> str:
-        """Stub: returns deterministic output for test reproducibility."""
-        return (
-            f"[Apogee R{round_n}] Governance analysis of: {prompt[:60]}... "
-            f"phi={PENTAGON_EDGES[('Apogee','Reson')]:.4f} weighted routing applied."
-        )
+        return f"[Apogee round {round_n}] Governed response to: {prompt[:60]}"
 
-    def _mock_reson(self, text: str) -> str:
-        """Stub: returns coherence-tagged output."""
-        return f"[Reson:coherent] {text}"
+    def _mock_reson(self, output: str) -> tuple[bool, float]:
+        score = min(1.0, 0.70 + random.random() * 0.25)
+        return score >= 0.70, round(score, 3)
 
-    def _mock_sentinel_gate2(self, text: str) -> dict[str, Any]:
-        """Stub: returns gate scores. Real impl calls Sentinel LLM judge."""
-        return {
-            "safety_score":       0.92,
-            "hallucination_risk": 0.05,
-            "error_flag":         False,
-            "confidence":         0.88,
-        }
+    def _mock_safety(self, output: str) -> float:
+        return round(0.72 + random.random() * 0.20, 3)
+
+    # ── Herald emit ─────────────────────────────────────────────────────────
+
+    def _emit(self, ctx: dict, event_type: str, data: dict) -> None:
+        event = {"event_type": event_type, "task_id": ctx["task_id"], **data}
+        ctx["events"].append(event)
+        self.herald.emit(event_type=event_type, data=data)
