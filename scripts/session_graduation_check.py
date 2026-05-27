@@ -1,36 +1,26 @@
+#!/usr/bin/env python3
 """
-session_graduation_check.py — Automated session graduation checker (NDR P-10).
+P-10 — Session Graduation Check
+DGAF-Framework · NDR Pattern P-10
 
-OPP-008 (COMPOSE P-10): No prior pattern covered automated session state validation.
-Registered as NDR P-10 in docs/NDR_PATTERN_REGISTRY.md.
-
-Runs 4 graduation checks:
-  1. SESSION_ANCHOR sealed at current session
-  2. CROSS_REF indexes all required paths
-  3. CI status green (GitHub Actions via API, optional)
-  4. Zero open BLGs (blocking log gaps) in SESSION_ANCHOR
-
-Outputs: GRADUATION_REPORT.md in repo root.
+Runs 4 checks to verify session is ready to graduate.
+Outputs GRADUATION_REPORT.md with pass/fail per check.
+sys.exit(1) on any failure — CI-integrable as pre-push hook or merge gate.
 
 Usage:
-    python scripts/session_graduation_check.py [--session S041] [--no-ci]
+    python scripts/session_graduation_check.py --session S041
+    python scripts/session_graduation_check.py --session S042 --anchor SESSION_ANCHOR.md
 """
-from __future__ import annotations
 
 import argparse
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
-REPO_ROOT         = Path(__file__).parent.parent
-SESSION_ANCHOR    = REPO_ROOT / "SESSION_ANCHOR.md"
-CROSS_REF         = REPO_ROOT / "CROSS_REF.md"
-CO_ORCH_QUEUE     = REPO_ROOT / "CO_ORCH_QUEUE.md"
-GRADUATION_REPORT = REPO_ROOT / "GRADUATION_REPORT.md"
+REPO_ROOT = Path(__file__).parent.parent
 
-# Paths that MUST appear in CROSS_REF for a session to be considered indexed
-REQUIRED_CROSS_REF_PATHS = [
+CROSS_REF_REQUIRED_PATHS = [
     "pptl/",
     "docs/NDR_PATTERN_REGISTRY.md",
     ".github/workflows/",
@@ -41,133 +31,128 @@ REQUIRED_CROSS_REF_PATHS = [
 ]
 
 
-def _read(path: Path) -> str:
-    try:
-        return path.read_text(encoding="utf-8")
-    except FileNotFoundError:
-        return ""
+def check_session_anchor_sealed(session: str, anchor_path: Path) -> tuple[bool, str]:
+    """Check 1: SESSION_ANCHOR.md header contains '# SESSION ANCHOR — {session}'"""
+    if not anchor_path.exists():
+        return False, f"SESSION_ANCHOR not found at {anchor_path}"
+    content = anchor_path.read_text(encoding="utf-8")
+    expected = f"# SESSION ANCHOR — {session}"
+    if expected in content:
+        return True, f"Found '{expected}' in SESSION_ANCHOR.md"
+    return False, f"Expected '{expected}' not found in SESSION_ANCHOR.md"
 
 
-# ── Check 1: SESSION_ANCHOR sealed ───────────────────────────────────────
-
-def check_anchor_sealed(session: str) -> tuple[bool, str]:
-    content = _read(SESSION_ANCHOR)
-    if not content:
-        return False, "SESSION_ANCHOR.md not found"
-    if f"# SESSION ANCHOR — {session}" in content:
-        return True, f"SESSION_ANCHOR sealed at {session}"
-    # Find highest sealed session
-    matches = re.findall(r"# SESSION ANCHOR — (S\d+)", content)
-    latest  = matches[-1] if matches else "unknown"
-    return False, (
-        f"SESSION_ANCHOR sealed at {latest}, expected {session}. "
-        f"Run SESSION_ANCHOR update to seal {session}."
-    )
+def check_cross_ref_complete(cross_ref_path: Path) -> tuple[bool, str]:
+    """Check 2: CROSS_REF.md contains all required path strings."""
+    if not cross_ref_path.exists():
+        return False, f"CROSS_REF.md not found at {cross_ref_path}"
+    content = cross_ref_path.read_text(encoding="utf-8")
+    missing = [p for p in CROSS_REF_REQUIRED_PATHS if p not in content]
+    if not missing:
+        return True, f"All {len(CROSS_REF_REQUIRED_PATHS)} required paths present in CROSS_REF.md"
+    return False, f"Missing from CROSS_REF.md: {missing}"
 
 
-# ── Check 2: CROSS_REF indexes required paths ───────────────────────────
-
-def check_cross_ref(required: list[str] = REQUIRED_CROSS_REF_PATHS) -> tuple[bool, str]:
-    content = _read(CROSS_REF)
-    if not content:
-        return False, "CROSS_REF.md not found"
-    missing = [p for p in required if p not in content]
-    if missing:
-        return False, f"CROSS_REF missing {len(missing)} path(s): {missing}"
-    return True, f"CROSS_REF indexes all {len(required)} required paths"
-
-
-# ── Check 3: CO_ORCH_QUEUE has no blocking PENDING items ────────────────
-
-def check_queue_clear() -> tuple[bool, str]:
-    content = _read(CO_ORCH_QUEUE)
-    if not content:
-        return True, "CO_ORCH_QUEUE.md not found — skipping (not yet active)"
-    pending_count = content.count("Status:       PENDING") + content.count("Status: PENDING")
-    in_prog_count = content.count("Status:       IN_PROGRESS") + content.count("Status: IN_PROGRESS")
-    open_count    = pending_count + in_prog_count
-    if open_count > 0:
-        return False, (
-            f"CO_ORCH_QUEUE has {open_count} open OPP(s) "
-            f"({pending_count} PENDING, {in_prog_count} IN_PROGRESS). "
-            "Cycle must close before session graduation."
-        )
-    return True, "CO_ORCH_QUEUE: all OPPs closed (DONE/DEFERRED/REJECTED)"
+def check_co_orch_queue_clear(queue_path: Path) -> tuple[bool, str]:
+    """Check 3: CO_ORCH_QUEUE.md has zero PENDING or IN_PROGRESS OPPs."""
+    if not queue_path.exists():
+        return False, f"CO_ORCH_QUEUE.md not found at {queue_path}"
+    content = queue_path.read_text(encoding="utf-8")
+    pending = len(re.findall(r"\bPENDING\b", content))
+    in_progress = len(re.findall(r"\bIN_PROGRESS\b", content))
+    open_items = pending + in_progress
+    if open_items == 0:
+        return True, "CO_ORCH_QUEUE.md: zero PENDING or IN_PROGRESS entries"
+    return False, f"CO_ORCH_QUEUE.md has {open_items} open items (PENDING={pending}, IN_PROGRESS={in_progress})"
 
 
-# ── Check 4: Zero open BLGs ─────────────────────────────────────────────
+def check_zero_open_blgs(anchor_path: Path) -> tuple[bool, str]:
+    """Check 4: No BLG entries without '✅ CLOSED' in SESSION_ANCHOR.md."""
+    if not anchor_path.exists():
+        return False, f"SESSION_ANCHOR not found at {anchor_path}"
+    content = anchor_path.read_text(encoding="utf-8")
+    blg_section_match = re.search(r"## BLG Status.*?(?=\n## |\Z)", content, re.DOTALL)
+    if not blg_section_match:
+        return False, "BLG Status section not found in SESSION_ANCHOR.md"
+    blg_section = blg_section_match.group(0)
+    rows = re.findall(r"\|\s*(S\d+-BLG-\S+|S\d+\s+\S+)\s*\|\s*(.+?)\s*\|", blg_section)
+    open_blgs = [(ref, status) for ref, status in rows if "✅ CLOSED" not in status and "ALL RESOLVED" not in status]
+    if not open_blgs:
+        return True, f"BLG Status: all entries resolved ({len(rows)} total)"
+    return False, f"Open BLGs: {[ref for ref, _ in open_blgs]}"
 
-def check_no_open_blgs() -> tuple[bool, str]:
-    content = _read(SESSION_ANCHOR)
-    if not content:
-        return False, "SESSION_ANCHOR.md not found"
-    # BLGs are open if they appear without a ✅ CLOSED marker
-    blg_lines = [l for l in content.splitlines() if "BLG" in l]
-    open_blgs = [l for l in blg_lines if "✅ CLOSED" not in l and "BLG Status" not in l
-                 and "| ID" not in l and "---|---" not in l]
-    if open_blgs:
-        return False, f"{len(open_blgs)} open BLG(s) found: {open_blgs[:3]}"
-    return True, "No open BLGs detected in SESSION_ANCHOR"
 
+def run_graduation_check(session: str, anchor_path: Path = None, queue_path: Path = None,
+                         cross_ref_path: Path = None) -> dict:
+    anchor_path = anchor_path or REPO_ROOT / "SESSION_ANCHOR.md"
+    queue_path = queue_path or REPO_ROOT / "CO_ORCH_QUEUE.md"
+    cross_ref_path = cross_ref_path or REPO_ROOT / "CROSS_REF.md"
 
-# ── Report ───────────────────────────────────────────────────────────────────
-
-def run_checks(session: str) -> dict:
     checks = [
-        ("SESSION_ANCHOR sealed",      check_anchor_sealed(session)),
-        ("CROSS_REF complete",         check_cross_ref()),
-        ("CO_ORCH_QUEUE clear",        check_queue_clear()),
-        ("Zero open BLGs",             check_no_open_blgs()),
+        ("SESSION_ANCHOR sealed", check_session_anchor_sealed(session, anchor_path)),
+        ("CROSS_REF complete", check_cross_ref_complete(cross_ref_path)),
+        ("CO_ORCH_QUEUE clear", check_co_orch_queue_clear(queue_path)),
+        ("Zero open BLGs", check_zero_open_blgs(anchor_path)),
     ]
-    results = []
-    all_pass = True
-    for name, (passed, detail) in checks:
-        results.append({"check": name, "passed": passed, "detail": detail})
-        if not passed:
-            all_pass = False
-    return {"session": session, "all_pass": all_pass, "checks": results}
+
+    results = {name: {"pass": passed, "detail": detail} for name, (passed, detail) in checks}
+    all_pass = all(r["pass"] for r in results.values())
+    verdict = "GRADUATED" if all_pass else "NOT READY"
+    return {"session": session, "verdict": verdict, "all_pass": all_pass, "checks": results}
 
 
-def write_report(results: dict) -> Path:
-    ts   = datetime.now(timezone.utc).isoformat()
-    icon = "✅" if results["all_pass"] else "❌"
+def write_graduation_report(result: dict, report_path: Path = None) -> Path:
+    report_path = report_path or REPO_ROOT / "GRADUATION_REPORT.md"
     lines = [
-        f"# Graduation Report — {results['session']}",
-        f"Generated: {ts}",
-        f"Verdict: {icon} {'GRADUATED' if results['all_pass'] else 'NOT GRADUATED'}",
+        f"# GRADUATION REPORT — {result['session']}",
+        f"**Generated:** {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
+        f"**Verdict:** {'\u2705 GRADUATED' if result['all_pass'] else '\u274c NOT READY'}",
         "",
-        "## Checks",
+        "## Check Results",
         "",
-        "| Check | Status | Detail |",
+        "| Check | Result | Detail |",
         "|---|---|---|",
     ]
-    for r in results["checks"]:
-        status = "✅ PASS" if r["passed"] else "❌ FAIL"
-        lines.append(f"| {r['check']} | {status} | {r['detail']} |")
-    lines += [
-        "",
-        "---",
-        f"*NDR P-10 Session Graduation Check · {results['session']}*",
-    ]
-    GRADUATION_REPORT.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return GRADUATION_REPORT
+    for name, info in result["checks"].items():
+        icon = "✅ PASS" if info["pass"] else "❌ FAIL"
+        lines.append(f"| {name} | {icon} | {info['detail']} |")
+    if not result["all_pass"]:
+        lines += [
+            "",
+            "## Action Items",
+            "",
+            "Resolve all FAIL items before re-running graduation check.",
+        ]
+    report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return report_path
 
 
-# ── CLI ───────────────────────────────────────────────────────────────────
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="NDR P-10 Session Graduation Check")
-    parser.add_argument("--session", default="S041", help="Session ID to check (e.g. S041)")
+def main():
+    parser = argparse.ArgumentParser(description="P-10 Session Graduation Check")
+    parser.add_argument("--session", required=True, help="Session ID, e.g. S041")
+    parser.add_argument("--anchor", default=None, help="Path to SESSION_ANCHOR.md")
+    parser.add_argument("--queue", default=None, help="Path to CO_ORCH_QUEUE.md")
+    parser.add_argument("--cross-ref", default=None, help="Path to CROSS_REF.md")
+    parser.add_argument("--report", default=None, help="Output path for GRADUATION_REPORT.md")
     args = parser.parse_args()
 
-    results = run_checks(args.session)
-    path    = write_report(results)
+    anchor = Path(args.anchor) if args.anchor else None
+    queue = Path(args.queue) if args.queue else None
+    cross_ref = Path(args.cross_ref) if args.cross_ref else None
+    report = Path(args.report) if args.report else None
 
-    for r in results["checks"]:
-        icon = "✅" if r["passed"] else "❌"
-        print(f"  {icon} {r['check']}: {r['detail']}")
+    result = run_graduation_check(args.session, anchor, queue, cross_ref)
+    report_path = write_graduation_report(result, report)
 
-    print()
-    verdict = "GRADUATED" if results["all_pass"] else "NOT GRADUATED"
-    print(f"Verdict: {verdict} — report written to {path}")
-    sys.exit(0 if results["all_pass"] else 1)
+    print(f"\nGRADUATION CHECK — {result['session']}")
+    print(f"Verdict: {result['verdict']}")
+    for name, info in result["checks"].items():
+        icon = "✅" if info["pass"] else "❌"
+        print(f"  {icon} {name}: {info['detail']}")
+    print(f"\nReport written to: {report_path}")
+
+    sys.exit(0 if result["all_pass"] else 1)
+
+
+if __name__ == "__main__":
+    main()

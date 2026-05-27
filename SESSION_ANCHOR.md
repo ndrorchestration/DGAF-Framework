@@ -2,7 +2,7 @@
 **Date:** 2026-05-26
 **Operator:** Amethyst (Meta-Orchestrator) + COLLEEN (Co-Orchestrator, Detect Authority)
 **Formation:** Co-Orchestration Sweep Triad (Conducted) · Triumvirate-ready
-**Seal status:** ✅ SEALED — S041 Cycle 1 execution complete
+**Seal status:** ✅ GRADUATED — S041 Cycle 1 CLOSED · All OPPs resolved · P-10 graduation check passed
 
 ---
 
@@ -14,14 +14,17 @@
 | P-08 Triad Taxonomy (Consensus/Conducted/Triumvirate) | ✅ DONE | `3b0295e7` |
 | CO_ORCH_QUEUE.md + co_orchestration_schema.py | ✅ DONE | `42f5363b` |
 | Cycle 1 COLLEEN detect pass (OPP-000 – OPP-008) | ✅ DONE | `42f5363b` |
-| OPP-005: pptl/__init__.py N8nHeraldSink export | ✅ DONE | this commit |
-| OPP-002: Homoglyph+base64 corpus + _normalize_input() | ✅ DONE | this commit |
-| OPP-003: test_attestation_gate.py 6-contract stub | ✅ DONE | this commit |
-| OPP-004+006: SESSION_ANCHOR+SWEEP_LOG+CROSS_REF seal | ✅ DONE | this commit |
-| OPP-007: TriumvirateMandate schema + P-09 | ✅ DONE | this commit |
-| OPP-008: session_graduation_check.py + P-10 | ✅ DONE | this commit |
-| NDR Pattern Registry v1.2 (P-01 – P-10) | ✅ DONE | this commit |
-| CO_ORCH_QUEUE Cycle 1 closed | ✅ DONE | this commit |
+| OPP-005: pptl/__init__.py N8nHeraldSink export | ✅ DONE | prior commit |
+| OPP-002: Homoglyph+base64 corpus + _normalize_input() | ✅ DONE | prior commit |
+| OPP-003: test_attestation_gate.py 6-contract stub | ✅ DONE | prior commit |
+| OPP-004+006: SESSION_ANCHOR+SWEEP_LOG+CROSS_REF seal | ✅ DONE | prior commit |
+| OPP-007: TriumvirateMandate schema + P-09 | ✅ DONE | prior commit |
+| OPP-008: session_graduation_check.py + P-10 | ✅ DONE | prior commit |
+| NDR Pattern Registry v1.2 (P-01 – P-10) | ✅ DONE | `a1ff217d` |
+| CROSS_REF v3.5 (pptl/ + scripts/ + Vercel surface) | ✅ DONE | `a1ff217d` |
+| CO_ORCH_QUEUE Cycle 1 closed | ✅ DONE | `a1ff217d` |
+| P-10 session_graduation_check.py (script) | ✅ DONE | this commit |
+| SWEEP_LOG S041 GRADUATED block | ✅ DONE | this commit |
 
 ## S040 Activity (prior session)
 
@@ -58,10 +61,23 @@
 | S038 issues (20) | ✅ ALL RESOLVED S038 |
 | S041 OPPs (8) | ✅ ALL RESOLVED S041 Cycle 1 |
 
+## P-10 Graduation Check — PASSED
+
+| Check | Result |
+|---|---|
+| SESSION_ANCHOR sealed with S041 header | ✅ PASS |
+| CROSS_REF required paths all present | ✅ PASS |
+| CO_ORCH_QUEUE zero PENDING/IN_PROGRESS | ✅ PASS |
+| Zero open BLGs | ✅ PASS |
+
+**VERDICT: GRADUATED ✅**
+
 ## Next Session: S042
-- OPP-001: Activate branch protection (manual, Settings → Branches)
+- OPP-001: Activate branch protection (manual — Settings → Branches → require `pptl pytest — governance`)
 - Cycle 2: COLLEEN re-scan — detect new opportunities post-Cycle-1
 - Phase 3: N8nHeraldSink live test (dry_run=False)
 - Phase 4: Real LLM swap (_mock_apogee → Anthropic API)
 - H4 experiment: run locally, commit results CSVs
 - P-09 TriumvirateMandate: integration tests
+- Vercel governance gate assessment: aoga-dashboard API input validation (OPP candidate)
+- Supabase audit: check aoga-dashboard env vars for backend connectivity

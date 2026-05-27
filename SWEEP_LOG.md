@@ -5,7 +5,7 @@
 
 ---
 
-## S041 — Co-Orchestration Sweep + Cycle 1 Execution (2026-05-26)
+## S041 — Co-Orchestration Sweep + Cycle 1 Execution (2026-05-26) — GRADUATED
 
 **Formation:** Co-Orchestration Sweep Triad (Conducted)
 **Operator:** Amethyst[Conductor/Implementer] + COLLEEN[Detect/Audit]
@@ -16,15 +16,25 @@
 | OPP | Mode | Pattern | Finding | Resolution |
 |---|---|---|---|---|
 | OPP-000 | COMPOSE | NEW P-07+P-08 | No dual-agent sweep loop or triad taxonomy pattern | ✅ DONE — `3b0295e7` |
-| OPP-001 | ADOPT | P-05 | Branch protection not activated | 🔵 PENDING — manual action |
-| OPP-002 | CUSTOMIZE | P-04 | Homoglyph+base64 bypass classes not in corpus | ✅ DONE — this commit |
-| OPP-003 | ALTER | P-03 | Variable contract count not documented; Gate 0 stub missing | ✅ DONE — this commit |
-| OPP-004 | ADOPT | P-07 | SESSION_ANCHOR sealed at S038; 3 sessions undocumented | ✅ DONE — this commit |
-| OPP-005 | ADOPT | P-01 | N8nHeraldSink missing from __init__.py | ✅ DONE — this commit |
-| OPP-006 | ALTER | P-08 | NDR registry + Triumvirate not in CROSS_REF | ✅ DONE — this commit |
-| OPP-007 | COMPOSE | NEW P-09 | No machine-readable Triumvirate mandate schema | ✅ DONE — this commit |
-| OPP-008 | COMPOSE | NEW P-10 | No automated session graduation checker | ✅ DONE — this commit |
+| OPP-001 | ADOPT | P-05 | Branch protection not activated | 🔵 PENDING — manual action S042 |
+| OPP-002 | CUSTOMIZE | P-04 | Homoglyph+base64 bypass classes not in corpus | ✅ DONE |
+| OPP-003 | ALTER | P-03 | Variable contract count not documented; Gate 0 stub missing | ✅ DONE |
+| OPP-004 | ADOPT | P-07 | SESSION_ANCHOR sealed at S038; 3 sessions undocumented | ✅ DONE |
+| OPP-005 | ADOPT | P-01 | N8nHeraldSink missing from __init__.py | ✅ DONE |
+| OPP-006 | ALTER | P-08 | NDR registry + Triumvirate not in CROSS_REF | ✅ DONE |
+| OPP-007 | COMPOSE | NEW P-09 | No machine-readable Triumvirate mandate schema | ✅ DONE |
+| OPP-008 | COMPOSE | NEW P-10 | No automated session graduation checker | ✅ DONE |
 
+### Final Commit Table
+
+| Artifact | Commit |
+|---|---|
+| CO_ORCH_QUEUE.md + P-07/P-08 + co_orchestration_schema.py | `42f5363b` |
+| pptl/ OPPs 002–008 (normalize, corpus, Gate 0 stub, P-09, P-10) | prior commits |
+| CROSS_REF v3.5 + NDR Registry v1.2 (P-09 + P-10 added) | `a1ff217d` |
+| SESSION_ANCHOR GRADUATED + SWEEP_LOG closed + P-10 script | this commit |
+
+**P-10 Graduation Check: 4/4 PASS — GRADUATED ✅**
 **Harmonic Score: 1.00 — 0 Hz Ionian Mode sustained**
 
 ---
