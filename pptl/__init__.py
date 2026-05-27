@@ -11,12 +11,15 @@ from .n8n_herald_sink     import N8nHeraldSink          # OPP-005: production si
 from .rag_verifier        import SentinelRAGVerifier
 from .orchestrator        import IntegratedOrchestrator
 from .topology            import PHI, PENTAGON_EDGES
+from .attestation_gate    import (
+    AttestationGate, AttestationRecord, AttestationResult, AttestationStatus,
+)
 from .co_orchestration_schema import (
     CoOrchQueue, Opportunity, AlignmentGate,
     load_queue, save_queue,
 )
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 __all__ = [
     # Herald
     "HeraldAgent", "TraceEventType",
@@ -24,6 +27,7 @@ __all__ = [
     "JSONLSink", "StdoutSink", "N8nWebhookSink", "N8nHeraldSink",
     # Governance
     "SentinelRAGVerifier", "IntegratedOrchestrator",
+    "AttestationGate", "AttestationRecord", "AttestationResult", "AttestationStatus",
     # Topology
     "PHI", "PENTAGON_EDGES",
     # Co-orchestration

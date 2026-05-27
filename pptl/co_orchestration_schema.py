@@ -26,7 +26,9 @@ import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional, Protocol
+
+from .attestation_gate import AttestationGate, AttestationRecord
 
 # ── Types ────────────────────────────────────────────────────────────
 
@@ -36,6 +38,11 @@ GateLabel         = Literal["fit", "risk", "effort", "priority"]
 
 QUEUE_JSON_PATH = Path("co_orch_queue.json")
 
+
+class SupportsAttestation(Protocol):
+    def attest(self, record: AttestationRecord): ...
+
+
 # ── Dataclasses ────────────────────────────────────────────────────────
 
 @dataclass
@@ -43,11 +50,15 @@ class AlignmentGate:
     """
     COLLEEN’s 1-1-1-1 binary gate. All four must be True to PASS.
     Fail any → DEFERRED or REJECTED. Never silent drop.
+
+    Optional integration:
+        attestation_gate — when provided, claim/evidence must attest before PASS.
     """
     fit:      bool = False  # belongs in this repo/layer
     risk:     bool = False  # CI-safe to implement
     effort:   bool = False  # completable in ≤1 session
     priority: bool = False  # unblocks something downstream
+    attestation_gate: Optional[SupportsAttestation] = field(default=None, repr=False, compare=False)
 
     @property
     def passes(self) -> bool:
@@ -59,6 +70,22 @@ class AlignmentGate:
             "effort": self.effort, "priority": self.priority,
         }.items() if not v]
         return "PASS" if not failed else f"FAIL:{','.join(failed)}"
+
+    def evaluate_claim(self, agent_id: str, claim: str, evidence: str) -> bool:
+        """
+        Combined governance gate:
+        1) 1-1-1-1 alignment must pass
+        2) If attestation_gate exists, claim/evidence must attest
+
+        Returns True only if both conditions pass.
+        """
+        if not self.passes:
+            return False
+        if not self.attestation_gate:
+            return True
+        record = AttestationRecord(agent_id=agent_id, claim=claim, evidence=evidence)
+        result = self.attestation_gate.attest(record)
+        return bool(getattr(result, "passed", False))
 
     def __str__(self) -> str:
         marks = {
@@ -175,7 +202,10 @@ class CoOrchQueue:
 
     def to_dict(self) -> dict:
         d = asdict(self)
-        # Flatten AlignmentGate back to dict (asdict handles nested)
+        # Remove non-serializable runtime dependency
+        for o in d.get("opportunities", []):
+            if "gate" in o and "attestation_gate" in o["gate"]:
+                o["gate"].pop("attestation_gate", None)
         return d
 
     @classmethod
@@ -183,6 +213,7 @@ class CoOrchQueue:
         opps = []
         for o in d.get("opportunities", []):
             gate_d = o.pop("gate", {})
+            gate_d.pop("attestation_gate", None)
             gate   = AlignmentGate(**gate_d)
             opps.append(Opportunity(gate=gate, **o))
         return cls(
