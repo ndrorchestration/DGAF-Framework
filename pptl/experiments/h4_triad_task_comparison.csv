@@ -1,0 +1,4 @@
+task_family,triad_a,triad_b,triad_c
+TASK1_reasoning,0.651,0.643,0.649
+TASK2_synthesis,0.637,0.634,0.640
+TASK3_adversarial,0.611,0.610,0.652

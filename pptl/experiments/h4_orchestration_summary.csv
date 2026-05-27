@@ -1,0 +1,8 @@
+orch_mode,composite_mean,composite_std,triadic,n_runs
+triad_c,0.6634,0.052341,True,360
+triad_a,0.6628,0.051892,True,360
+triad_b,0.6604,0.052103,True,360
+agents_as_tools,0.5531,0.059234,False,360
+mesh,0.5541,0.058921,False,360
+pipeline,0.5448,0.060123,False,360
+centralized,0.5419,0.061204,False,360

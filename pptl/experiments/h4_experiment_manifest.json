@@ -1,0 +1,32 @@
+{
+  "experiment": "H4 Task-Stratified Topology x Orchestration Lab",
+  "session": "S040-S041",
+  "total_runs": 2520,
+  "seed": 42,
+  "runner": "pptl/experiments/h4_task_stratified.py",
+  "dimensions": {
+    "topologies": ["phi_pentagon", "ring", "k5_full", "star"],
+    "orch_modes": ["triad_a", "triad_b", "triad_c", "pipeline", "mesh", "centralized", "agents_as_tools"],
+    "task_families": ["TASK1_reasoning", "TASK2_synthesis", "TASK3_adversarial"],
+    "noise_levels": [0.0, 0.15, 0.30],
+    "seeds": 10
+  },
+  "h4_verdict": {
+    "hypothesis": "Triad-C (Task/Style/Safety) outperforms Triad-A and Triad-B on TASK3_adversarial",
+    "triad_c_task3": 0.652,
+    "triad_a_task3": 0.611,
+    "triad_b_task3": 0.610,
+    "delta_triad_c_vs_triad_a": 0.041,
+    "verdict": "CONFIRMED — Triad-C +0.041 over Triad-A on adversarial noise tasks",
+    "triad_c_task1": 0.649,
+    "triad_c_task2": 0.640,
+    "note": "Triad-C advantage is adversarial-specific. TASK1/TASK2: all triads within 0.008."
+  },
+  "key_findings": {
+    "top_topology": "phi_pentagon",
+    "phi_pentagon_composite": 0.681217,
+    "triadic_lift": "+0.117 uniform across all topologies",
+    "noise_resilience": "phi_pentagon triadic degrades -0.074 at noise=0.30; star non-triadic degrades -0.107",
+    "dominant_config": "phi_pentagon x triad_c (adversarial) = 0.7557"
+  }
+}
