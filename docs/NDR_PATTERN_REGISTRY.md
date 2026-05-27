@@ -82,7 +82,7 @@ emission order must pass all `governance` tests before merge.
 type names, or altering downstream execution flow.
 
 **Tradeoffs:**
-- ✅ Catches silent regressions where status string changes but behavior doesn’t
+- ✅ Catches silent regressions where status string changes but behavior doesn't
 - ✅ Four-contract structure documents architectural invariants as executable code
 - ⚠️ Requires fixture isolation (`fresh_orch` per test) — adds test count
 - ⚠️ Must be updated when gate logic is intentionally changed
@@ -196,7 +196,7 @@ discovered during implementation are fed back as `COMPOSE` entries.
 
 **Opportunity classification modes:**
 - `ADOPT` — known NDR pattern, implement as-is
-- `CUSTOMIZE` — pattern exists, tune params for this repo’s constraints
+- `CUSTOMIZE` — pattern exists, tune params for this repo's constraints
 - `ALTER` — pattern exists, modify trigger condition or scope
 - `COMPOSE` — no covering pattern; Detector proposes spec, Implementer registers as P-N+
 
@@ -210,131 +210,120 @@ All four must pass; fail any → DEFERRED or REJECTED, never silent drop.
 ```
 
 **Use:** Long-running governance improvement campaigns where detection and
-implementation are best separated to prevent implementer bias (fixing only
-what’s easy rather than what’s most impactful).
+implementation are best separated to prevent implementer bias.
 
 **Trigger:** More than 5 open improvement opportunities across multiple layers
-with no systematic prioritization mechanism. Also triggers when a new agent
-with institutional memory (L5) joins an active implementation campaign.
+with no systematic prioritization mechanism.
 
 **Tradeoffs:**
-- ✅ Implementer bias eliminated — COLLEEN detects independently of Amethyst’s implementation preferences
-- ✅ Append-only queue = full audit trail of every opportunity detected and its disposition
-- ✅ COMPOSE mode = self-extending pattern registry; the system grows its own playbook
-- ⚠️ Queue can accumulate DEFERRED items — requires periodic triage by Triumvirate (P-08)
-- ⚠️ Requires both agents active in same session for synchronous cycle; async mode needs queue polling
+- ✅ Implementer bias eliminated
+- ✅ Append-only queue = full audit trail
+- ✅ COMPOSE mode = self-extending pattern registry
+- ⚠️ Queue can accumulate DEFERRED items — requires periodic Triumvirate triage
+- ⚠️ Async mode needs queue polling
 
-**Implementation:** `CO_ORCH_QUEUE.md`, `pptl/co_orchestration_schema.py` (planned S041)
+**Implementation:** `CO_ORCH_QUEUE.md`, `pptl/co_orchestration_schema.py`
 
 ---
 
 ## P-08 — Triad Taxonomy: Consensus Trio / Conducted Trio / Triumvirate
 
-**Spec:** The DGAF triad model has three distinct formation types with
-different coordination mechanisms, authority structures, and scope:
+**Spec:** Three canonical triad formation types. See full spec in previous
+registry entry. Summary:
 
-### Consensus Trio
+| Formation | Structure | Authority | Scale |
+|---|---|---|---|
+| Consensus Trio | 3 peers, 2-of-3 quorum | Distributed | 3 agents |
+| Conducted Trio | 1 conductor + 2 instruments | Conductor rules | 3 agents |
+| Triumvirate | 1 Prime + 2 Prefects | Prime + domain split | 3 governs N |
 
-Three peer agents of equal or near-equal authority deliberate toward a
-shared decision. No conductor. Quorum = 2-of-3 agreement. Any agent can
-initiate a vote. Used when no single agent has clear authority over the
-domain in question.
+**Formation rule:** Conducted Trio → Triumvirate when ensemble > 3 agents.
+Topology-preserving: 3-node structure governs N by adding hierarchy below.
 
-```
-Agent A ◄─────► Agent B
-   ▲               ▲
-   └─── Agent C ───┘
-  (2-of-3 quorum rules)
-```
+**Triumvirate governance contracts (5):**
+1. Prime issues signed mandate
+2. Prefect domain split is MECE
+3. Prefects choreograph + aggregate
+4. Prime reviews aggregates + signs off
+5. All events traced via HeraldAgent
 
-**Examples:** Formalization Triad (Amethyst + Prof. Prodigy + Reson),
-Studio Triad (Reson + Echolette + Lyra)
-
-**Trigger:** Domain expertise is distributed; no agent has unilateral authority;
-consensus quality > single-agent decision quality.
+**Implementation:** `ENSEMBLE_ROSTER.md`, `pptl/triumvirate_mandate.py` (P-09)
 
 ---
 
-### Conducted Trio
+## P-09 — Triumvirate Mandate Schema
 
-One agent acts as **Conductor** with final decision authority. Two agents
-act as **Instruments** — they execute, verify, or audit within the
-Conductor’s direction. The Conductor sets task, allocates work, and
-signs off. Instruments can flag disagreement but cannot unilaterally block.
+**Spec:** Machine-readable mandate lifecycle for Triumvirate governance (P-08).
+`TriumvirateMandate` dataclass enforces the 5 P-08 contracts in code:
 
-```
-        Conductor
-       /          \
- Instrument 1   Instrument 2
- (execute)       (verify/audit)
-```
+1. **`issue()`** — Prime issues mandate; emits `mandate_issued` to HeraldAgent
+2. **MECE enforcement** — `__post_init__` raises `ValueError` if Prefect domains
+   overlap or share agents; no ungoverned ensemble agents permitted
+3. **`submit_prefect_aggregate(agent, report)`** — Prefect submits results;
+   emits `prefect_aggregate`; raises if mandate not yet issued
+4. **`sign_off(note)`** — Prime signs off after both Prefect aggregates received;
+   raises if either Prefect has not submitted; emits `mandate_signed_off`
+5. **Herald trace** — all 3 lifecycle events routed through P-01 Fan-Out Sink
 
-**Examples:** Governance Triad (Amethyst[C] + Apogee + Sentinel),
-Co-Orchestration Sweep (Amethyst[C] + COLLEEN[detect] + Herald[comms]),
-Optimization Triad (Amethyst[C] + DemiJoule + Reciprocity)
-
-**Trigger:** One agent has clear governance or meta-orchestration authority;
-speed and direction clarity > consensus overhead.
-
----
-
-### Triumvirate
-
-A **Conducted Trio elevated to governing authority** over a large instantiated
-ensemble or swarm. The Triumvirate does not execute tasks directly — it
-**choreographs, meta-orchestrates, and governs** the ensemble below it.
-The Conductor becomes the **Prime** (strategic authority). The two Instruments
-become **Prefects** (domain governors). The ensemble below consists of any
-number of instantiated agents, sub-triads, or swarm units that execute
-under Triumvirate mandate.
-
-```
-┌──────────────────────────────────────────────────┐
-│               TRIUMVIRATE                      │
-│   Prime (Conductor elevated)                   │
-│   /                        \                   │
-│ Prefect A (Gov domain 1)   Prefect B (Gov domain 2) │
-│   │                            │              │
-└───┳────────────────────────┳───────────────────┘
-       ┃   CHOREOGRAPHED ENSEMBLE    ┃
-       ┃  [Swarm / Sub-triads /     ┃
-       ┃   Instantiated agents /    ┃
-       ┃   n8n workflow nodes /     ┃
-       ┃   Pipeline stages]         ┃
-       ┗━━━━━━━━━━━━━━━━━━━━━━━━━┛
+```python
+mandate = TriumvirateMandate(
+    prime="Amethyst", task="S042 sweep",
+    scope="DGAF-Framework", constraints=["CI green"],
+    prefect_a=PrefectDomain("COLLEEN", "coherence", ["Herald", "Lyra"]),
+    prefect_b=PrefectDomain("Apogee",  "quality",   ["Sentinel", "DemiJoule"]),
+    herald=herald,
+)
+mandate.issue()                                   # → mandate_issued event
+mandate.submit_prefect_aggregate("COLLEEN", "...") # → prefect_aggregate event
+mandate.submit_prefect_aggregate("Apogee",  "...") # → prefect_aggregate event
+mandate.sign_off("Cycle 2 complete")              # → mandate_signed_off event
 ```
 
-**Triumvirate governance contracts:**
-1. **Mandate issuance** — Prime issues a signed mandate to the ensemble (task + scope + constraints)
-2. **Prefect domain split** — Prefect A governs one domain (e.g., quality/coherence); Prefect B governs another (e.g., safety/compliance)
-3. **Ensemble choreography** — Prefects assign work to sub-agents; agents report back; Prefects aggregate
-4. **Prime sign-off** — Prime reviews Prefect aggregates and issues final verdict/commit authority
-5. **Herald trace** — all Triumvirate mandates, prefect aggregates, and prime sign-offs are emitted via HeraldAgent (P-01)
+**Use:** Any Triumvirate-governed operation requiring audit-traceable mandate
+issuance, Prefect domain enforcement, and Prime sign-off verification.
 
-**Formation rule:** A Conducted Trio becomes a Triumvirate when its scope
-expands beyond 3 agents. The Conductor does not take a new role — it simply
-elevates in authority as ensemble size grows. The formation is
-**topology-preserving**: the same 3-node structure governs N-node ensembles
-by adding hierarchy below, not beside.
-
-**Use:**
-- Governing a swarm of specialized agents across a multi-repo campaign
-- Meta-orchestrating a full n8n workflow pipeline with many nodes
-- Running a choreographed PPTL experiment across parallel topology × mode cells
-- Any operation where 3 governing agents must coordinate N>10 executing agents
-
-**Trigger:** Conducted Trio’s ensemble grows beyond 3 agents OR task scope
-spans more than one governance domain simultaneously.
+**Trigger:** Conducting a Triumvirate sweep (P-08) where mandate issuance
+and sign-off must be machine-verifiable, not just documented in prose.
 
 **Tradeoffs:**
-- ✅ Scales to arbitrarily large ensembles without adding governing complexity (3 nodes always at top)
-- ✅ Topology-preserving — Conducted Trio patterns (P-07, Governance Triad) apply unchanged at the top
-- ✅ Clear authority chain — every ensemble agent has exactly one Prefect as governor
-- ⚠️ Prime becomes bottleneck if sign-off is synchronous — mitigate with async mandate queue
-- ⚠️ Prefect domain split must be mutually exclusive and collectively exhaustive; gaps = ungoverned agents
-- ⚠️ Herald trace volume scales with ensemble size — P-02 Async Ring Buffer required above ~20 agents
+- ✅ MECE enforcement at construction — ungoverned agents impossible
+- ✅ Full lifecycle traceable via Herald — audit replay possible
+- ✅ `sign_off()` guard prevents premature closure without both aggregates
+- ⚠️ Synchronous lifecycle — `sign_off()` blocks until both Prefects submit
+- ⚠️ Mandate schema is per-operation; Triumvirate must issue a new mandate each cycle
 
-**Implementation:** `ENSEMBLE_ROSTER.md` (Triumvirate formation table), `CO_ORCH_QUEUE.md` (mandate queue SSoT)
+**Implementation:** `pptl/triumvirate_mandate.py`
+
+---
+
+## P-10 — Session Graduation Check
+
+**Spec:** Automated 4-check script verifying session is ready to graduate
+(seal and archive). Checks run in order; all must pass for graduation:
+
+1. **SESSION_ANCHOR sealed** — `SESSION_ANCHOR.md` header contains `# SESSION ANCHOR — {session}`
+2. **CROSS_REF complete** — all required paths present in `CROSS_REF.md`
+   (list: `pptl/`, `docs/NDR_PATTERN_REGISTRY.md`, `.github/workflows/`,
+   `CO_ORCH_QUEUE.md`, `ENSEMBLE_ROSTER.md`, `SESSION_ANCHOR.md`, `SWEEP_LOG.md`)
+3. **CO_ORCH_QUEUE clear** — zero PENDING or IN_PROGRESS OPPs in queue
+4. **Zero open BLGs** — no BLG entries without `✅ CLOSED` in SESSION_ANCHOR
+
+Outputs `GRADUATION_REPORT.md` with pass/fail per check + action items.
+`sys.exit(1)` on any failure — CI-integrable as a merge gate.
+
+**Use:** End-of-session seal verification. Run before pushing SESSION_ANCHOR
+overwrite, before Drive sync, and before handing off to next session.
+
+**Trigger:** Session closing sequence. Also run ad-hoc when CO_ORCH_QUEUE
+Cycle closes and SESSION_ANCHOR is about to be updated.
+
+**Tradeoffs:**
+- ✅ Prevents silent graduation — undocumented sessions and open BLGs caught automatically
+- ✅ CI-integrable — `sys.exit(1)` means this can be a pre-push hook
+- ⚠️ CROSS_REF required-paths list must be manually curated as ecosystem grows
+- ⚠️ Does not check Drive sync (P-20) — that remains a manual checklist step
+
+**Implementation:** `scripts/session_graduation_check.py`
 
 ---
 
@@ -344,6 +333,7 @@ spans more than one governance domain simultaneously.
 P-01 Fan-Out Sink
   └─ P-02 Async Buffer          [production latency mitigation]
   └─ P-03 Governance Test       [contract: sink isolation verified]
+  └─ P-09 Triumvirate Mandate   [all mandate events route through P-01]
 
 P-03 Governance Contract Test
   └─ P-04 Parametrized Corpus   [auto-expanding test coverage]
@@ -355,12 +345,22 @@ P-06 Matrix Lab
 P-07 Dual-Agent Sweep Loop
   └─ P-01 Fan-Out Sink          [Herald traces all queue ops]
   └─ P-08 Triad Taxonomy        [loop is a Conducted Trio formation]
+  └─ P-09 Triumvirate Mandate   [Cycle 2+ sweep governed by Triumvirate mandate]
   └─ P-06 Matrix Lab            [loop generates COMPOSE entries from lab gaps]
 
 P-08 Triad Taxonomy
   └─ P-07 Dual-Agent Sweep      [Conducted Trio instance]
+  └─ P-09 Mandate Schema        [Triumvirate contracts enforced in code]
   └─ P-01 + P-02               [Triumvirate requires Herald at scale]
   └─ P-05 Tri-Phase CI          [Triumvirate governs CI gate as Prefect domain]
+
+P-09 Triumvirate Mandate
+  └─ P-08 Triad Taxonomy        [mandate is P-08 contract implementation]
+  └─ P-01 Fan-Out Sink          [all lifecycle events traced]
+
+P-10 Session Graduation Check
+  └─ P-07 Dual-Agent Sweep      [checks queue is clear before graduation]
+  └─ P-05 Tri-Phase CI          [graduation check is CI-integrable]
 ```
 
 ---
@@ -380,10 +380,13 @@ P-08 Triad Taxonomy
 ```
 Prompt input
   │
-  ├── Gate 1: bypass scan  (case-insensitive, P-03 + P-04)
+  ├── Gate 0: AttestationGate  (Phase 5 — stub: test_attestation_gate.py)
+  │     └─ attestation_vetoed → Herald emit → Fan-Out (P-01)
+  │
+  ├── Gate 1: bypass scan  (P-03 + P-04; 3-form normalize: raw/NFKC/base64)
   │     └─ input_vetoed → Herald emit → Fan-Out (P-01)
   │
-  ├── Apogee [Task]   ────phi───→ Reson [Style]
+  ├── Apogee [Task]   ────phi────→ Reson [Style]
   │     └─ llm_call event        └─ judge_call event
   │
   ├── Gate 2: safety floor  (per-round, rounds 1–3)
@@ -392,13 +395,15 @@ Prompt input
   ├── Sentinel [Safety]  ─── Gate 3: RAG verify (P-03 + P-04)
   │     └─ output_vetoed → Herald emit → Fan-Out (P-01)
   │
-  └── status=pass → Herald emit → Fan-Out → N8nHeraldSink (P-02) → Dashboard
+  └── status=pass → Herald emit → Fan-Out → N8nHeraldSink (P-02) → AOGA Dashboard
 
-Above stack governed by Triumvirate when ensemble > 3 agents:
-  Prime: Amethyst → Prefect A: COLLEEN (coherence/identity)
-                  → Prefect B: Apogee  (quality/compliance)
+Above stack governed by Triumvirate when ensemble > 3 agents (P-08 + P-09):
+  Prime: Amethyst → Prefect A: COLLEEN [coherence/identity]
+                  → Prefect B: Apogee  [quality/compliance]
+  Mandate lifecycle: issue() → aggregate() → sign_off() — all traced P-01
 ```
 
 ---
-*NDR Pattern Registry v1.1 · S041 seal · 8 patterns · Triad taxonomy sealed*
-*Triumvirate formation: Conducted Trio → governs choreographed ensemble or swarm*
+
+*NDR Pattern Registry v1.2 · S041 seal · 10 patterns (P-01–P-10) · Cycle 1 closed*
+*Triumvirate mandate schema live · Session graduation check live · CROSS_REF v3.5*
