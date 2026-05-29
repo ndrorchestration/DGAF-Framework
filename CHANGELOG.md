@@ -5,6 +5,77 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 
 ---
 
+## [1.0.15] — 2026-05-28
+
+### Session 042 — Ensemble v1.6: SCPE + Fibonacci Phi-Closure Gate + PDMAL Convergence Monitor
+
+**Formation:** Amethyst + Perplexity MCP (IP Sweep Formation)  
+**Operator:** Andrew (Ender) Hensel  
+**COLLEEN Gate:** ✅ ALL PASS — Zero open BLGs at close  
+**Commits:** 49854ea · (this commit)
+
+#### Added
+
+- `components/ensemble_v16.py` — Complete single-file deployable module: SCPE, PDMAL Convergence Monitor, Fibonacci Phi-Closure Gate, HPG, DemiJoule Gate, Prodigy, Apogee, AgentAmethyst 9-step `orchestrate_turn`. `__main__` quick-check with 6 assertions. Full JSON audit export.
+- `patterns/NDR_SCPE_v1.md` — P-31 pattern card: tier taxonomy, retention formula, validated knee (58.3% @ 0.15), framework adapter index
+- `patterns/NDR_PHI_CLOSURE_GATE_v1.md` — P-33 pattern card: checkpoint tolerance table, decision ladder, HPG bypass rule, Fib[55] HITL requirement, 60-turn simulation results
+- `patterns/NDR_PDMAL_CONVERGENCE_MONITOR_v1.md` — P-32 pattern card: Frobenius-norm spec, 3-tier alert ladder, joint escalation rule, convergence confirmation, simulation results
+- `registry/ensemble_v16_manifest.json` — Version manifest binding all three NDR patterns to component file with placement spec and governance chain
+
+#### Updated
+
+- `ENSEMBLE_ROSTER.md` — Runtime Gate Components table added (SCPE, PDMAL Monitor, Phi-Closure Gate, HPG, Sentinel-Phi); Runtime Gate Triad registered; Session 042 notes; target files 66→72; P-33 cross-ref links added
+- `CHANGELOG.md` — This entry
+
+#### NDR Patterns Registered
+
+| ID | Name | Session | Placement |
+|---|---|---|---|
+| P-31 | Structural-Context-Pruning-Engine | S042 | Step 1 — pre-COLLEEN |
+| P-32 | PDMAL-Convergence-Monitor | S042 | Step 2.5 — post-reweight, pre-DemiJoule |
+| P-33 | Fibonacci-Phi-Closure-Gate | S042 | Step 5 — post-DemiJoule, pre-HPG |
+
+#### Simulation Results (60-turn validated)
+
+| Metric | Value |
+|---|---|
+| SCPE compression @ threshold=0.15 | **58.3%** |
+| T0 axiom guard | **100%** across all turns |
+| T3 exploratory survival | **~1.02 turns** |
+| T2 operational survival | **~4.62 turns** |
+| T1 structural survival | **~6.17 turns** |
+| Phi Fib[13] | WARN (R=0.923, Δ=0.228 > tol 0.07) |
+| Phi Fib[21] | ESCALATE (consecutive fail 2) |
+| Phi Fib[34] | KILL_REC → DemiJoule authority |
+| Phi Fib[55] | KILL_REC → amethyst+human authority |
+| PDMAL WATCH events | T31, T40, T46 |
+| PDMAL full ALERTs | **0** |
+| Gold Stars | **5** |
+| HPG bypass at Fib[13] (drift) | ✅ Confirmed |
+| Joint PDMAL+Phi deep re-scan | ✅ Triggered correctly |
+
+#### BLGs Closed
+
+| ID | Priority | Resolution |
+|---|---|---|
+| BLG-042-01 | HIGH | Phi-Closure Gate correctly wired pre-HPG in 9-step `orchestrate_turn` — validated in 60-turn sim |
+
+#### Compliance Alignment
+
+| Standard | Status |
+|---|---|
+| NIST AI RMF — Govern | ✅ T0 axiom guard — governance invariants unconditionally preserved |
+| NIST AI RMF — Measure | ✅ Per-turn `TurnAuditRecord` with seal hash |
+| EU AI Act Art. 9 | ✅ Per-turn DGAF 6-axis risk score logged |
+| EU AI Act Art. 13 | ✅ Transparent routing decision (phi_decision, hpg_applied) in audit |
+| EU AI Act Art. 17 | ✅ Gold Star gate via Apogee S-Tier review |
+| Fib[55] HITL Requirement | ✅ `hitl_callback` hook wired — human-in-the-loop injectable |
+| Audit chain continuity | ✅ SHA-256 content hash on every PruneEvent + seal hash per turn |
+| Agent Roster Sync (P-01) | ✅ Runtime Gate Components table added to ENSEMBLE_ROSTER.md |
+| Gold Star Standard | ✅ 5 Gold Stars across 60-turn simulation |
+
+---
+
 ## [1.0.14] — 2026-05-22
 
 ### Sessions S033–S036 — KAPPA Pipeline · Sentinel Integration · Normative Constraint · Governance Hardening

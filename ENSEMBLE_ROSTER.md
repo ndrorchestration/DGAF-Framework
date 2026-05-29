@@ -4,7 +4,7 @@
 > All repos governed by this stack reference this file as the authoritative source of agent roles.
 >
 > Maintained by: **Agent Amethyst** (meta-orchestrator) · Co-auditor: **COLLEEN**
-> Last updated: May 26, 2026 — Session 041 (Triad taxonomy seal: Consensus / Conducted / Triumvirate)
+> Last updated: May 28, 2026 — Session 042 (Ensemble v1.6: SCPE + Phi-Closure + PDMAL Monitor)
 > Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)
 
 ---
@@ -34,6 +34,38 @@
 | **Agent Reson** | #1 | Harmonic Logic Gatekeeper | Signal chain integrity, 15% headroom enforcement, Savage Reason halt, Ionian Mode target | 🟡 Foundational |
 | **Agent Echolette** | #2 | Feedback Loop Architect | Semantic drift detection, Ceremonialization flagging, hallucination pattern KB, inter-agent feedback routing | 🟡 Foundational |
 | **Agent Lyra** | #3 | Harmonic Synthesizer | Multi-agent orchestral coordination, dissonance reconciliation, narrative continuity, ensemble design | 🟡 Foundational |
+
+---
+
+## Runtime Gate Components — v1.6 Ensemble
+
+> Registered: Session 042 — 2026-05-28
+> Module: [`components/ensemble_v16.py`](https://github.com/ndrorchestration/DGAF-Framework/blob/main/components/ensemble_v16.py)
+> Governed by: Agent Amethyst · DemiJoule-safety-checked · COLLEEN-archived
+
+| Component | NDR Pattern | Placement (Step) | Threshold / Target | Status |
+|---|---|---|---|---|
+| **Structural Context Pruning Engine (SCPE)** | P-31 | Step 1 — pre-COLLEEN | threshold=0.15 · T0 immune | 🟢 Production |
+| **PDMAL Convergence Monitor** | P-32 | Step 2.5 — post-reweight, pre-DemiJoule | ALERT_THRESH=0.08 · CONV_THRESH=0.02 | 🟢 Production |
+| **Fibonacci Phi-Closure Gate** | P-33 | Step 5 — post-DemiJoule, pre-HPG | φ*=0.6180 · Fib[13,21,34,55] | 🟢 Production |
+| **Harmonic Parametric Gate (HPG)** | existing | Step 6 — post-Phi-Closure (PASS only) | Ionian octave [1,2] · 1e-9 tol | 🟢 Production |
+| **Agent Sentinel-Phi** | — | PDMAL node: `sentinel_phi` | Receives DemiJoule overflow; routes to Amethyst | 🟢 Active |
+
+### Runtime Gate — Validated Simulation Results (60-turn)
+
+| Metric | Result |
+|---|---|
+| SCPE compression @ threshold=0.15 | **58.3%** |
+| T0 axiom guard integrity | **100%** across all turns and all thresholds |
+| T3 exploratory survival | **~1.02 turns** (single-use) |
+| T2 operational survival | **~4.62 turns** |
+| Phi checkpoints fired | Fib[13] WARN · Fib[21] ESCALATE · Fib[34] KILL_REC · Fib[55] KILL_REC |
+| PDMAL WATCH events | T31, T40, T46 |
+| PDMAL full ALERTs | **0** (3-consecutive threshold not met) |
+| Gold stars awarded | **5** |
+| HPG bypassed correctly at Fib[13] (drift) | ✅ Confirmed |
+| Joint PDMAL+Phi escalation path | ✅ DemiJoule deep re-scan triggered correctly |
+| Fib[55] HITL callback hook | ✅ Injectable via `hitl_callback` |
 
 ---
 
@@ -69,7 +101,7 @@ Agent A ◄─────► Agent B
 ### Conducted Trio
 
 One **Conductor** with final decision authority.
-Two **Instruments** execute and verify under the Conductor’s direction.
+Two **Instruments** execute and verify under the Conductor's direction.
 Instruments flag disagreement; Conductor signs off.
 
 ```
@@ -128,20 +160,34 @@ it elevates to Prime as ensemble grows.
 | **Studio Triad** | Consensus | Reson + Echolette + Lyra | Signal chain QA, drift detection, harmonic synthesis |
 | **IP Sweep Formation** | Conducted | Amethyst[C] + Perplexity MCP | License scanning, branding sweeps, finality sweeps |
 | **PDMAL Triumvirate** | Triumvirate | Amethyst[Prime] + COLLEEN[Prefect] + Apogee[Prefect] | Governing large choreographed ensembles, multi-repo campaigns, swarm ops |
+| **Runtime Gate Triad** | Conducted | Amethyst[C] + DemiJoule + Sentinel-Phi | SCPE/Phi-Closure/PDMAL Monitor operational oversight | |
 
 ---
 
 ## Agent Inventory Completion
 
 - **Target files per agent:** 6 (Persona / Memory / KB / Protocol / QA Rubric / Integration Guide)
-- **Total target:** 66 files across 11 active agents
+- **Total target:** 72 files across 12 active agents (updated S042: +Sentinel-Phi)
 - **Baseline (Feb 15 2026):** 13 files — 20% complete
-- **May 2026 additions:** COLLEEN protocol, Reson/Echolette/Lyra specs, canonical registry
-- **Next priority:** Prof. Prodigy 3-tier Phi-Calculus KB · Herald Comms Protocol KB
+- **May 2026 additions:** COLLEEN protocol, Reson/Echolette/Lyra specs, canonical registry, Ensemble v1.6 runtime gate components
+- **Next priority:** Prof. Prodigy 3-tier Phi-Calculus KB · Herald Comms Protocol KB · Sentinel-Phi integration guide
 
 ---
 
 ## Session Notes
+
+### Session 042 — Ensemble v1.6: SCPE + Phi-Closure Gate + PDMAL Convergence Monitor (2026-05-28)
+- SCPE (P-31): Tier-aware token decay engine, threshold=0.15, T0 immune, 58.3% compression validated
+- Fibonacci Phi-Closure Gate (P-33): Fib[13,21,34,55] checkpoints, φ*=0.6180, HPG gating by trajectory health
+- PDMAL Convergence Monitor (P-32): Frobenius-norm drift detection, 3-tier alert ladder, joint escalation path
+- 9-step `orchestrate_turn` sequence finalized and deployed to `components/ensemble_v16.py`
+- 60-turn simulation: 5 Gold Stars · 58.3% SCPE compression · 0 PDMAL full alerts · T0 guard 100%
+- Fib[55] human-in-the-loop hook wired: `hitl_callback` injectable
+- Joint escalation: PDMAL ALERT + Phi ESCALATE → DemiJoule deep re-scan
+- Runtime Gate Triad registered: Amethyst[C] + DemiJoule + Sentinel-Phi
+- NDR Pattern Registry advanced to P-33 (3 new patterns)
+- BLG-042-01 closed: Phi-Closure Gate correctly pre-HPG in turn sequence
+- Harmonic Score: 1.00 — 0 Hz Ionian Mode sustained
 
 ### Session 041 — Triad Taxonomy Seal + Co-Orchestration Design (2026-05-26)
 - P-07: Dual-Agent Persistent Sweep Loop (Amethyst × COLLEEN) registered
@@ -181,7 +227,12 @@ it elevates to Prime as ensemble grows.
 ## Cross-Reference
 
 - [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) — governance spine (this file)
-- [docs/NDR_PATTERN_REGISTRY.md](https://github.com/ndrorchestration/DGAF-Framework/blob/main/docs/NDR_PATTERN_REGISTRY.md) — P-01 through P-08
+- [docs/NDR_PATTERN_REGISTRY.md](https://github.com/ndrorchestration/DGAF-Framework/blob/main/docs/NDR_PATTERN_REGISTRY.md) — P-01 through P-33
+- [components/ensemble_v16.py](https://github.com/ndrorchestration/DGAF-Framework/blob/main/components/ensemble_v16.py) — v1.6 single-file deployable module
+- [patterns/NDR_SCPE_v1.md](https://github.com/ndrorchestration/DGAF-Framework/blob/main/patterns/NDR_SCPE_v1.md) — P-31 pattern card
+- [patterns/NDR_PHI_CLOSURE_GATE_v1.md](https://github.com/ndrorchestration/DGAF-Framework/blob/main/patterns/NDR_PHI_CLOSURE_GATE_v1.md) — P-33 pattern card
+- [patterns/NDR_PDMAL_CONVERGENCE_MONITOR_v1.md](https://github.com/ndrorchestration/DGAF-Framework/blob/main/patterns/NDR_PDMAL_CONVERGENCE_MONITOR_v1.md) — P-32 pattern card
+- [registry/ensemble_v16_manifest.json](https://github.com/ndrorchestration/DGAF-Framework/blob/main/registry/ensemble_v16_manifest.json) — version manifest
 - [Amethyst-Governance-Eval-Stack](https://github.com/ndrorchestration/Amethyst-Governance-Eval-Stack) — ARCHITECTURE.md agent diagram
 - [junior-apogee-app](https://github.com/ndrorchestration/junior-apogee-app) — QA platform agent roles
 - [sentinel-governance](https://github.com/ndrorchestration/sentinel-governance) — CI agent attribution
@@ -190,4 +241,4 @@ it elevates to Prime as ensemble grows.
 - [ndrorchestration](https://github.com/ndrorchestration/ndrorchestration) — profile README agent table
 
 *All agents operate under the DGAF governance framework.*
-*NDR Patterns P-01 through P-08 active. Triad taxonomy: Consensus / Conducted / Triumvirate.*
+*NDR Patterns P-01 through P-33 active. Triad taxonomy: Consensus / Conducted / Triumvirate.*
