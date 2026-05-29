@@ -1,62 +1,56 @@
-# SWEEP-001 Log
+# SWEEP-001: Phi-Calculus White Paper Coherence Sweep
 
-================================================================================
-## Metadata
-- Sweep ID: SWEEP-001
-- Title: Phi-Calculus White Paper Coherence Sweep
-- Repo: DGAF-Framework
-- Branch: feat/phi-calculus-whitepaper
-- Tracking issue: #2
-- Verification issue: #3
-- Status: IN_PROGRESS — Phase 3 next
-================================================================================
+**Initiated by:** Agent Amethyst (meta-orchestrator)  
+**Date:** 2026-05-21  
+**Last Updated:** 2026-05-29  
+**Status:** 🟡 IN PROGRESS — Phase 2 complete, Phase 3–5 pending
 
-## Phase status
-- Phase 0 Context Rehydration: ✅ COMPLETE
-- Phase 1 Branch & Scaffold: ✅ COMPLETE
-- Phase 2 Formal Spec Verification: ✅ COMPLETE
-- Phase 3 Cross-Repo Coherence: 🟡 IN PROGRESS
-- Phase 4 PR & Apogee Lens Review: ⬜ PENDING
-- Phase 5 Merge & Close: ⬜ PENDING
+---
 
-## Phase 2 verification record [Prof Prodigy]
-- HDFS 1.0 crystalline clarity: PASS
-- Axiom 1 Mathematical Coherence: PASS
-- Axiom 1 Epistemic Honesty: PASS
-- Axiom 1 Rights Non-Violation: PASS
-- Axiom 1 Global Invariance (HDFS 1.0): PASS
-- Compliance algebra truth table: ADDED
-- θ calibration note: ADDED
-- Synthetic unit test example: ADDED
-- Amethyst-Lattice-v3.1 mapping table: ADDED
-- JSON metadata sidecar: UPDATED (PRODIGY signature)
+## Phase Completion Log
 
-## Open hooks carried forward
-- NDR-Protocol-03 control enumeration verification
-- SWEEP-002 live eval corpus for empirical θ validation
-- evaluator_model version pin check
-- Partial-REJECT algebra extension
+| Phase | Description | Status | Date | Notes |
+|---|---|---|---|---|
+| Phase 0 | Context Rehydration | ✅ COMPLETE | 2026-05-21 | Amethyst Status Report + Prof Prodigy HDFS 1.0 loaded |
+| Phase 1 | Branch & Scaffold | ✅ COMPLETE | 2026-05-21 | Branch `feat/phi-calculus-whitepaper` created; `docs/phi-calculus-architecture/` pushed; `DEFINITIONS_THEOREM_PROOF.md` pushed (11KB) |
+| Phase 2 | Formal Spec Verification | ✅ COMPLETE | 2026-05-21 | All 6 Prof Prodigy checklist items verified; Axiom 1 Guard 4/4 PASS; JSON metadata sidecar embedded; 4 PRODIGY-OPEN hooks logged |
+| Phase 3 | Cross-Repo Coherence | 🔴 PENDING | — | COLLEEN: update Driftwatch README, profile README, Gmail routing table |
+| Phase 4 | PR & Apogee Lens Review | 🔴 PENDING | — | Open PR `feat/phi-calculus-whitepaper` → `main`; Apogee Lens annotation |
+| Phase 5 | Merge & SWEEP_LOG Close | 🔴 PENDING | — | DemiJoule safety check; merge; terminal attestation JSON |
 
-## Phase 3 checklist [COLLEEN]
-- [ ] Update Driftwatch README with DGAF-Framework Phi-Calculus spec link
-- [ ] Update ndrorchestration profile README ecosystem map
-- [ ] Verify Gmail routing table alignment
-- [ ] Governance Adapter patch (max_review_age_hours: 48)
-- [ ] delta_compute.py + Playwright scraper → automation-scripts
+---
 
-## State anchor
-- φ: 1.61818
-- θ: 0.009
-- Integrity score: 99.1% (Platinum baseline)
-- Axiom 1 Guard: 4/4 PASS
+## State Anchor
+- φ attractor: **1.61818**
+- Integrity Score: **99.1%** (Platinum Star baseline, Prof Prodigy OST-50)
+- Drift threshold: **θ = 0.009**
+- Axiom 1 Guard: **4/4 PASS**
 
-## Terminal attestation stub
+---
+
+## Open Verification Hooks (from DEFINITIONS_THEOREM_PROOF.md)
+
+- [ ] `[PRODIGY-OPEN]` Confirm NDR-Protocol-03 control enumeration maps fully to C (no omissions/duplicates)
+- [ ] `[PRODIGY-OPEN]` Run live eval corpus (SWEEP-002) to empirically validate θ = 0.009
+- [ ] `[PRODIGY-OPEN]` Extend compliance algebra to cover partial-REJECT (REJECT-with-explanation) for HITL paths
+- [ ] `[PRODIGY-OPEN]` Verify evaluator_model version pin in rubric eval_config before SWEEP-002 launch
+
+---
+
+## Blocking Dependencies
+- Issue #3 (Prof Prodigy verification) — **UNBLOCKED** by Phase 1 completion; checklist items verified in-doc
+- Phase 3 (COLLEEN cross-repo) — blocked until Phase 2 sign-off is formalized in PR
+- Phase 4 (Apogee Lens) — blocked until PR is opened
+
+---
+
+## Terminal Attestation (to be filled at Phase 5)
 ```json
 {
   "sweep_id": "SWEEP-001",
-  "status": "IN_PROGRESS",
-  "phase_2_signature": "PRODIGY-SWEEP-001-PHASE2-AXIOM1-PASS",
-  "orchestrator": "Agent Amethyst",
-  "validation_signature": "SWEEP-001-PHASE2-COMPLETE"
+  "status": "PENDING_CLOSE",
+  "terminal_attestation": null,
+  "merge_commit": null,
+  "demijoule_safety_check": "PENDING"
 }
 ```
