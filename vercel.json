@@ -1,17 +1,22 @@
 {
   "version": 2,
-  "builds": [
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "outputDirectory": ".next",
+  "functions": {
+    "api/health.py":      { "runtime": "python3.12" },
+    "api/orchestrate.py": { "runtime": "python3.12" },
+    "api/audit.py":       { "runtime": "python3.12" }
+  },
+  "headers": [
     {
-      "src": "api/*.py",
-      "use": "@vercel/python",
-      "config": { "maxLambdaSize": "50mb" }
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin",  "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+      ]
     }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" }
-  ],
-  "env": {
-    "ENSEMBLE_VERSION": "1.7.0",
-    "PSI_CHECK": "enabled"
-  }
+  ]
 }

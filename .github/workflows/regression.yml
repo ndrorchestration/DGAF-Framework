@@ -1,0 +1,84 @@
+name: DGAF Regression Suite
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 */6 * * *'   # every 6 hours against production
+  workflow_dispatch:
+    inputs:
+      dgaf_url:
+        description: 'Override DGAF_URL for live regression'
+        required: false
+        default: ''
+
+jobs:
+  local-quick-check:
+    name: Local Quick Check (no network)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install httpx -q
+
+      - name: Run quick_check.py
+        run: python3 scripts/quick_check.py
+
+      - name: Assert PSI cubic (standalone)
+        run: |
+          python3 -c "
+import sys; sys.path.insert(0,'.')
+from resonant_decay.math_core import PSI, psi_cubic_check
+assert psi_cubic_check(), f'PSI cubic FAIL: PSI={PSI}'
+print(f'PSI cubic OK: PSI={PSI:.10f}')
+"
+
+  live-regression:
+    name: Live Regression (Vercel)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    env:
+      DGAF_URL: ${{ inputs.dgaf_url || vars.DGAF_URL || 'https://dgaf-framework.vercel.app' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install httpx
+        run: pip install httpx -q
+
+      - name: Health preflight
+        run: |
+          curl -sf "$DGAF_URL/api/health" | python3 -m json.tool
+          PSIOK=$(curl -sf "$DGAF_URL/api/health" | \
+            python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('psi_cubic',''))")
+          [ "$PSIOK" = "True" ] && echo 'psi_cubic OK' || { echo 'psi_cubic FAIL'; exit 1; }
+
+      - name: 30-turn live regression
+        run: python3 scripts/live_regression_v17.py
+
+      - name: Upload regression results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-results-${{ github.run_id }}
+          path: regression_results_v17.json
+
+      - name: Audit log check
+        run: |
+          curl -sf "$DGAF_URL/api/audit" | python3 -m json.tool
+          TC=$(curl -sf "$DGAF_URL/api/audit" | \
+            python3 -c "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
+          [ "$TC" -ge 30 ] && echo "audit: turn_count=$TC OK" || \
+            { echo "audit: turn_count=$TC < 30"; exit 1; }
