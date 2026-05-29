@@ -1,5 +1,4 @@
 // app/page.tsx  —  DGAF-Framework Dashboard
-// Next.js 14 App Router page — auto-refreshes every 10s
 'use client'
 import { useEffect, useState } from 'react'
 
@@ -23,15 +22,18 @@ interface AuditData {
   prune_events: number
   axiom_count: number
   consec_phi_fail: number
+  cold_start: boolean
+  cold_start_at: string
+  _warning: string | null
 }
 
 const REFRESH_MS = 10_000
 
 export default function Dashboard() {
-  const [health, setHealth]   = useState<HealthData | null>(null)
-  const [audit, setAudit]     = useState<AuditData | null>(null)
+  const [health, setHealth]     = useState<HealthData | null>(null)
+  const [audit, setAudit]       = useState<AuditData | null>(null)
   const [lastPoll, setLastPoll] = useState<string>('')
-  const [err, setErr]         = useState<string | null>(null)
+  const [err, setErr]           = useState<string | null>(null)
 
   const poll = async () => {
     try {
@@ -56,14 +58,9 @@ export default function Dashboard() {
 
   const badge = (ok: boolean, label: string) => (
     <span style={{
-      display: 'inline-block',
-      padding: '2px 10px',
-      borderRadius: 4,
-      fontSize: 13,
-      fontWeight: 700,
-      background: ok ? '#16a34a' : '#dc2626',
-      color: '#fff',
-      marginRight: 8,
+      display: 'inline-block', padding: '2px 10px', borderRadius: 4,
+      fontSize: 13, fontWeight: 700,
+      background: ok ? '#16a34a' : '#dc2626', color: '#fff', marginRight: 8,
     }}>{label}</span>
   )
 
@@ -76,18 +73,29 @@ export default function Dashboard() {
         🔷 DGAF-Framework Ensemble Dashboard
       </h1>
       <p style={{ fontSize: 12, color: '#94a3b8', marginBottom: 24 }}>
-        v{health?.version ?? '…'} &nbsp;·&nbsp; last poll: {lastPoll || '…'}
-        &nbsp;·&nbsp; auto-refresh every {REFRESH_MS / 1000}s
+        v{health?.version ?? '…'}  ·  last poll: {lastPoll || '…'}
+         ·  auto-refresh every {REFRESH_MS / 1000}s
       </p>
 
       {err && (
-        <div style={{ background: '#7f1d1d', padding: 12,
-                      borderRadius: 6, marginBottom: 16 }}>
+        <div style={{ background: '#7f1d1d', padding: 12, borderRadius: 6, marginBottom: 16 }}>
           ⚠️ {err}
         </div>
       )}
 
-      {/* ─ Health row ─ */}
+      {/* Cold-start warning banner */}
+      {audit?.cold_start && (
+        <div style={{
+          background: '#78350f', border: '1px solid #d97706',
+          padding: '10px 14px', borderRadius: 6, marginBottom: 16,
+          fontSize: 12, color: '#fef3c7',
+        }}>
+          ⚠️ <strong>Cold start detected</strong> at {audit.cold_start_at} — 
+          session counters reset. Upgrade to Vercel KV for persistence.
+        </div>
+      )}
+
+      {/* Health row */}
       <section style={{ marginBottom: 24 }}>
         <h2 style={{ fontSize: 14, color: '#94a3b8', marginBottom: 8 }}>HEALTH</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -98,7 +106,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* ─ Constants row ─ */}
+      {/* Constants */}
       <section style={{ marginBottom: 24 }}>
         <h2 style={{ fontSize: 14, color: '#94a3b8', marginBottom: 8 }}>CONSTANTS</h2>
         <table style={{ borderCollapse: 'collapse', width: '100%' }}>
@@ -110,8 +118,7 @@ export default function Dashboard() {
               ['Phi checkpoints',   health?.phi_checkpoints?.join(', ')],
             ] as [string, unknown][]).map(([k, v]) => (
               <tr key={k}>
-                <td style={{ color: '#94a3b8', paddingRight: 24,
-                             paddingBottom: 4, width: 200 }}>{k}</td>
+                <td style={{ color: '#94a3b8', paddingRight: 24, paddingBottom: 4, width: 200 }}>{k}</td>
                 <td style={{ color: '#f8fafc', fontWeight: 600 }}>{String(v ?? '…')}</td>
               </tr>
             ))}
@@ -119,46 +126,50 @@ export default function Dashboard() {
         </table>
       </section>
 
-      {/* ─ Session audit row ─ */}
+      {/* Session audit */}
       <section style={{ marginBottom: 24 }}>
         <h2 style={{ fontSize: 14, color: '#94a3b8', marginBottom: 8 }}>SESSION AUDIT</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
           {([
-            ['Turns',         audit?.turn_count],
-            ['Stable turns',  audit?.stable_turns],
-            ['Prune events',  audit?.prune_events],
-            ['Axiom count',   audit?.axiom_count],
+            ['Turns',              audit?.turn_count],
+            ['Stable turns',       audit?.stable_turns],
+            ['Prune events',       audit?.prune_events],
+            ['Axiom count',        audit?.axiom_count],
             ['Phi fails (consec)', audit?.consec_phi_fail],
           ] as [string, number | undefined][]).map(([label, val]) => (
-            <div key={label} style={{ background: '#1e293b', borderRadius: 6,
-                                      padding: '10px 14px' }}>
+            <div key={label} style={{ background: '#1e293b', borderRadius: 6, padding: '10px 14px' }}>
               <div style={{ fontSize: 11, color: '#94a3b8' }}>{label}</div>
-              <div style={{ fontSize: 24, fontWeight: 700,
-                            color: '#38bdf8' }}>{val ?? '…'}</div>
+              <div style={{
+                fontSize: 24, fontWeight: 700,
+                color: audit?.cold_start ? '#64748b' : '#38bdf8',
+              }}>{val ?? '…'}</div>
             </div>
           ))}
         </div>
+        {audit?.cold_start && (
+          <p style={{ fontSize: 11, color: '#64748b', marginTop: 8 }}>
+            Counters greyed — cold start, no session data yet.
+          </p>
+        )}
       </section>
 
-      {/* ─ Adapters row ─ */}
+      {/* Adapters */}
       <section style={{ marginBottom: 24 }}>
         <h2 style={{ fontSize: 14, color: '#94a3b8', marginBottom: 8 }}>ADAPTERS</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {(health?.adapters ?? []).map(a => (
             <span key={a} style={{
               background: '#1e3a5f', border: '1px solid #38bdf8',
-              borderRadius: 4, padding: '2px 8px', fontSize: 12,
-              color: '#93c5fd',
+              borderRadius: 4, padding: '2px 8px', fontSize: 12, color: '#93c5fd',
             }}>{a}</span>
           ))}
         </div>
       </section>
 
-      {/* ─ Gate ordering reminder ─ */}
+      {/* 9-Gate order */}
       <section>
         <h2 style={{ fontSize: 14, color: '#94a3b8', marginBottom: 8 }}>9-GATE ORDER</h2>
-        <ol style={{ paddingLeft: 20, lineHeight: 2, fontSize: 13,
-                     color: '#cbd5e1' }}>
+        <ol style={{ paddingLeft: 20, lineHeight: 2, fontSize: 13, color: '#cbd5e1' }}>
           {[
             'SCPE.prune() — resonant decay, T0 immune',
             'COLLEEN schema diff check',
