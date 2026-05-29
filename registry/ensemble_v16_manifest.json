@@ -1,118 +1,167 @@
 {
-  "manifest_version": "1.0",
-  "ensemble_version": "1.6.0",
-  "created": "2026-05-28",
-  "session": "S042",
-  "governed_by": "Agent Amethyst",
-  "operator": "Andrew (Ender) Hensel",
-  "colleen_gate": "PASS",
-  "demijoul_safety": "PASS",
-  "component_file": "components/ensemble_v16.py",
-  "description": "Single-file deployable orchestration ensemble implementing the 9-step turn sequence with SCPE, PDMAL Convergence Monitor, Fibonacci Phi-Closure Gate, HPG, DemiJoule, Prodigy, and Apogee.",
-  "constants": {
-    "PSI": 1.6180339887498949,
-    "PHI_STAR": 0.6180339887498949,
-    "FIB_CHECKPOINTS": [13, 21, 34, 55],
-    "IONIAN_INTERVALS": [1.0, 1.125, 1.25, 1.3333, 1.5, 1.6667, 1.875, 2.0]
-  },
-  "ndr_patterns": [
+  "manifest_version": "v16",
+  "anchor": "S043",
+  "last_updated": "2026-05-29",
+  "owner": "Ender",
+  "steward": "COLLEEN",
+  "orchestrator": "Amethyst",
+  "description": "Full ensemble manifest for DGAF-Framework v16. Includes all 9 turn-sequence gate bindings, SCPE config, Phi-Closure gate, HPG, orchestration firewall, and topology router. Supersedes v14.",
+  "supersedes": "ensemble_v14_manifest.json",
+  "turn_sequence": [
     {
-      "id": "P-31",
-      "name": "Structural-Context-Pruning-Engine",
-      "class": "StructuralContextPruningEngine",
-      "placement_step": 1,
-      "placement_description": "Post-ingestion, pre-COLLEEN schema check",
-      "threshold": 0.15,
-      "validated_compression": 0.583,
-      "t0_immune": true,
-      "last_k_anchor": 3,
-      "trigger_conditions": ["turn_start", "buffer_util > 0.60", "turn_count > fib[34]"],
-      "audit_output": "PruneEvent[]",
-      "pattern_card": "patterns/NDR_SCPE_v1.md"
+      "step": 1,
+      "name": "SCPE.prune",
+      "component": "components/scpe_ensemble_v14.py",
+      "pattern": "NDR-005",
+      "config": {
+        "threshold": 0.15,
+        "axiom_tier": "T0",
+        "structural_tier": "T1",
+        "operational_tier": "T2",
+        "exploratory_tier": "T3",
+        "t0_immune": true,
+        "last_3_t2_anchor": true,
+        "psi_cubic_check_tolerance": 1e-12
+      },
+      "emits": ["PruneEvent"],
+      "audit_target": "AmethystAuditLoop.prune_log"
     },
     {
-      "id": "P-32",
-      "name": "PDMAL-Convergence-Monitor",
-      "class": "PDMALConvergenceMonitor",
-      "placement_step": 2.5,
-      "placement_description": "Post-PDMALGraph.reweight(), pre-DemiJoule safety gate",
-      "alert_thresh": 0.08,
-      "conv_thresh": 0.02,
-      "n_consec": 3,
-      "metric": "Frobenius norm ||delta_W||_F",
-      "alert_routing": "amethyst_alert",
-      "joint_escalation": "PDMAL_ALERT + Phi_ESCALATE → DemiJoule deep re-scan (tool_call=True)",
-      "audit_output": "DivergenceEvent[]",
-      "simulation_results": {
-        "watch_events": [31, 40, 46],
-        "full_alerts": 0,
-        "norm_delta_range_during_watches": [0.108, 0.117]
+      "step": 2,
+      "name": "COLLEEN.schema_diff_check",
+      "component": "components/colleen_schema_diff.py",
+      "pattern": "NDR-002",
+      "config": {
+        "hash_algorithm": "SHA-256",
+        "ssot_reference": "registry/state_ssot.json"
       },
-      "pattern_card": "patterns/NDR_PDMAL_CONVERGENCE_MONITOR_v1.md"
+      "emits": ["SchemaDiffEvent"]
     },
     {
-      "id": "P-33",
-      "name": "Fibonacci-Phi-Closure-Gate",
-      "class": "FibonacciPhiClosureGate",
-      "placement_step": 5,
-      "placement_description": "Post-DemiJoule safety gate, pre-HPG",
-      "target": 0.6180339887498949,
-      "checkpoints": {
-        "13": {"tolerance": 0.07, "label": "early_warning"},
-        "21": {"tolerance": 0.05, "label": "mid_session"},
-        "34": {"tolerance": 0.04, "label": "late"},
-        "55": {"tolerance": 0.03, "label": "closure_horizon", "hitl_required": true}
+      "step": 3,
+      "name": "RECIPROCITY.arbitrate",
+      "component": "components/reciprocity_arbiter.py",
+      "pattern": "NDR-004",
+      "config": {
+        "trigger": "on_alert",
+        "pdmal_reweight": true,
+        "apogee_floater": true,
+        "colleen_ratify": true
       },
-      "decision_ladder": {
-        "0_fails": "pass",
-        "1_fail": "warn",
-        "2_fails": "escalate",
-        "3_fails": "kill_rec_demijoul",
-        "4+_or_fib55": "kill_rec_amethyst_human"
+      "emits": ["ArbitrationEvent"]
+    },
+    {
+      "step": 4,
+      "name": "DEMIJOUL.safety_gate",
+      "component": "components/dgaf_semantic_gate.py",
+      "pattern": "NDR-010",
+      "config": {
+        "layer_1": "syntactic_blocked_patterns",
+        "layer_2": "dgaf_6axis_semantic_scoring",
+        "decisions": ["KILL", "REPROMPT", "pass"],
+        "early_return_on_kill": true,
+        "records_stable_for_phi_gate": true
       },
-      "hpg_bypass_on": ["warn", "reprompt", "escalate", "kill_rec"],
-      "hpg_proceeds_on": ["pass"],
-      "audit_output": "PhiCheckpointEvent[]",
-      "simulation_results": {
-        "fib13": {"ratio": 0.9231, "decision": "warn", "authority": "amethyst_log"},
-        "fib21": {"ratio": 0.9524, "decision": "escalate", "authority": "amethyst"},
-        "fib34": {"ratio": 0.9412, "decision": "kill_rec", "authority": "demijoul"},
-        "fib55": {"ratio": 0.9273, "decision": "kill_rec", "authority": "amethyst+human"}
+      "emits": ["SafetyGateEvent"]
+    },
+    {
+      "step": 5,
+      "name": "PHI_CLOSURE_GATE",
+      "component": "components/phi_closure_gate.py",
+      "pattern": "NDR-006",
+      "config": {
+        "target_phi_conjugate": 0.6180339887,
+        "tolerance": 0.05,
+        "fibonacci_checkpoints": [13, 21, 34, 55],
+        "pass_action": "continue_to_hpg",
+        "fail_action": "reprompt_skip_hpg_early_seal",
+        "consecutive_fail_threshold": 2,
+        "consecutive_fail_action": "kill_recommendation_to_demijoul"
       },
-      "pattern_card": "patterns/NDR_PHI_CLOSURE_GATE_v1.md"
+      "emits": ["PhiClosureEvent"]
+    },
+    {
+      "step": 6,
+      "name": "HPG.gate",
+      "component": "components/hpg_ionian_gate.py",
+      "pattern": "NDR-007",
+      "config": {
+        "octave_range": [1, 2],
+        "membership_mode": "Phi-Ionian",
+        "snap_nearest": true,
+        "tolerance": 1e-9,
+        "condition": "only_if_phi_closure_pass"
+      },
+      "emits": ["HPGGateEvent"]
+    },
+    {
+      "step": 7,
+      "name": "PRODIGY.verify",
+      "component": "components/prodigy_verifier.py",
+      "pattern": "NDR-003",
+      "config": {
+        "mandatory_threshold": 0.85,
+        "below_threshold_action": "mandatory_verify",
+        "above_threshold_action": "advisory"
+      },
+      "emits": ["ProdigyVerifyEvent"]
+    },
+    {
+      "step": 8,
+      "name": "APOGEE.review_artifact_seal",
+      "component": "components/amethyst_dual_lock.py",
+      "pattern": "NDR-011",
+      "config": {
+        "evidence_grades": ["A", "B", "C"],
+        "qa_tiers": ["Gold", "Silver", "Bronze"],
+        "gold_star_gate": true,
+        "apogee_lens_required_for_s_tier": true
+      },
+      "emits": ["ApogeeReviewEvent"]
+    },
+    {
+      "step": 9,
+      "name": "AMETHYST.seal",
+      "component": "components/orchestration_firewall.py",
+      "pattern": "NDR-008",
+      "config": {
+        "hash_algorithm": "SHA-256",
+        "log_target": "amethyst_audit.json",
+        "append_only": true,
+        "includes_prune_events": true,
+        "includes_phi_closure_events": true,
+        "includes_gate_events": true
+      },
+      "emits": ["TurnAuditRecord"]
     }
   ],
-  "turn_sequence": [
-    {"step": 1,    "component": "SCPE.prune()",                          "pattern": "P-31"},
-    {"step": 2,    "component": "COLLEEN.schema_diff_check()",           "pattern": "existing"},
-    {"step": 2.5,  "component": "PDMALConvergenceMonitor.check()",       "pattern": "P-32"},
-    {"step": 3,    "component": "Reciprocity.arbitrate() [on alert]",    "pattern": "existing"},
-    {"step": 4,    "component": "DemiJouleGate.safety_gate()",           "pattern": "existing"},
-    {"step": 5,    "component": "FibonacciPhiClosureGate.check()",       "pattern": "P-33"},
-    {"step": 6,    "component": "HPG.gate() [PASS only]",                "pattern": "existing"},
-    {"step": 7,    "component": "Prodigy.verify()",                      "pattern": "existing"},
-    {"step": 8,    "component": "Apogee.review()",                       "pattern": "existing"},
-    {"step": 9,    "component": "Amethyst.seal()",                       "pattern": "existing"}
-  ],
-  "simulation_summary": {
-    "turns": 60,
-    "gold_stars": 5,
-    "scpe_compression": 0.583,
-    "t0_axiom_guard": "100%",
-    "pdmal_watches": [31, 40, 46],
-    "pdmal_alerts": 0,
-    "phi_checkpoints_fired": 4,
-    "hpg_bypasses": 3,
-    "hitl_hook": "injectable via AgentAmethyst.hitl_callback"
+  "orchestration_firewall": {
+    "invariants": [
+      "no_unreviewed_deploy",
+      "tests_before_deploy",
+      "single_active_deploy_attempt",
+      "provenance_complete",
+      "authority_bounded_deployment"
+    ],
+    "rollback_on_violation": true,
+    "audit_all_events": true
   },
-  "governance_chain": [
-    "AgentAmethyst (orchestrator + seal authority)",
-    "COLLEEN (schema archive + 1-1-1-1 gate)",
-    "DemiJoule (6-axis semantic safety)",
-    "Apogee (S-tier evidence grade + Gold Star)",
-    "Sentinel-Phi (PDMAL overflow routing)"
-  ],
-  "blg_closed": [
-    {"id": "BLG-042-01", "priority": "HIGH", "resolution": "Phi-Closure Gate correctly placed pre-HPG in 9-step orchestrate_turn — 60-turn simulation validated"}
+  "state_anchor_goals": {
+    "zero_open_blg": true,
+    "single_authority_chain": true,
+    "append_only_log": true,
+    "observable_invariants_only": true,
+    "procluding_premise_first": true
+  },
+  "integrations": {
+    "langchain": "SCPECallbackHandler in scpe_ensemble_v14.py",
+    "langgraph": "scpe_node inserted before router_node",
+    "autogen": "SCPEAgent wraps ConversableAgent",
+    "crewai": "scpe_kickoff_wrapper pre-processes inputs"
+  },
+  "changelog": [
+    {"version": "v16", "date": "2026-05-29", "changes": "Added Phi-Closure gate (step 5), orchestration firewall invariants, full 9-step turn sequence manifest, S043 state anchors"},
+    {"version": "v14", "date": "2026-05-28", "changes": "Added SCPE threshold lock at 0.15, framework adapters (LangChain/LangGraph/AutoGen/CrewAI)"},
+    {"version": "v12", "date": "2026-05-21", "changes": "HPG Ionian gate, DGAF 6-axis semantic scoring"}
   ]
 }
