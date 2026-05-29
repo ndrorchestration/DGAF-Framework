@@ -1,14 +1,14 @@
 {
   "version": 2,
-  "framework": "nextjs",
-  "buildCommand": "next build",
-  "installCommand": "npm install",
-  "outputDirectory": ".next",
-  "functions": {
-    "api/health.py":      { "runtime": "python3.12" },
-    "api/orchestrate.py": { "runtime": "python3.12" },
-    "api/audit.py":       { "runtime": "python3.12" }
-  },
+  "framework": null,
+  "builds": [
+    { "src": "api/*.py", "use": "@vercel/python" },
+    { "src": "app/**",   "use": "@vercel/next" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)",     "dest": "/app/$1" }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
