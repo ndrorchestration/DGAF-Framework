@@ -35,21 +35,27 @@ jobs:
       - name: Run quick_check.py
         run: python3 scripts/quick_check.py
 
-      - name: Assert PSI cubic (standalone)
+      - name: Assert PSI cubic
         run: |
-          python3 -c "
-import sys; sys.path.insert(0,'.')
-from resonant_decay.math_core import PSI, psi_cubic_check
-assert psi_cubic_check(), f'PSI cubic FAIL: PSI={PSI}'
-print(f'PSI cubic OK: PSI={PSI:.10f}')
-"
+          python3 - <<'EOF'
+          import sys
+          sys.path.insert(0, '.')
+          from resonant_decay.math_core import PSI, psi_cubic_check
+          assert psi_cubic_check(), f'PSI cubic FAIL: PSI={PSI}'
+          print(f'PSI cubic OK: PSI={PSI:.10f}')
+          EOF
 
   live-regression:
     name: Live Regression (Vercel)
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: >
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
     env:
-      DGAF_URL: ${{ inputs.dgaf_url || vars.DGAF_URL || 'https://dgaf-framework.vercel.app' }}
+      DGAF_URL: >-
+        ${{ inputs.dgaf_url ||
+            vars.DGAF_URL ||
+            'https://dgaf-framework.vercel.app' }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
@@ -66,8 +72,11 @@ print(f'PSI cubic OK: PSI={PSI:.10f}')
         run: |
           curl -sf "$DGAF_URL/api/health" | python3 -m json.tool
           PSIOK=$(curl -sf "$DGAF_URL/api/health" | \
-            python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('psi_cubic',''))")
-          [ "$PSIOK" = "True" ] && echo 'psi_cubic OK' || { echo 'psi_cubic FAIL'; exit 1; }
+            python3 -c \
+            "import sys,json; d=json.load(sys.stdin); print(d.get('psi_cubic',''))")
+          [ "$PSIOK" = "True" ] \
+            && echo 'psi_cubic OK' \
+            || { echo 'psi_cubic FAIL'; exit 1; }
 
       - name: 30-turn live regression
         run: python3 scripts/live_regression_v17.py
@@ -83,6 +92,8 @@ print(f'PSI cubic OK: PSI={PSI:.10f}')
         run: |
           curl -sf "$DGAF_URL/api/audit" | python3 -m json.tool
           TC=$(curl -sf "$DGAF_URL/api/audit" | \
-            python3 -c "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
-          [ "$TC" -ge 30 ] && echo "audit: turn_count=$TC OK" || \
-            { echo "audit: turn_count=$TC < 30"; exit 1; }
+            python3 -c \
+            "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
+          [ "$TC" -ge 30 ] \
+            && echo "audit: turn_count=$TC OK" \
+            || { echo "audit: turn_count=$TC < 30"; exit 1; }
