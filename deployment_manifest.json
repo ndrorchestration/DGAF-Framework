@@ -1,0 +1,69 @@
+{
+  "project":   "DGAF-Framework",
+  "version":   "1.7.0",
+  "anchor":    "S046",
+  "platform":  "vercel",
+  "framework": "nextjs",
+  "committed": "2026-05-29T04:56:00Z",
+  "routes": {
+    "dashboard":   "/",
+    "health":      "/api/health",
+    "orchestrate": "/api/orchestrate",
+    "audit":       "/api/audit"
+  },
+  "env": {
+    "ENSEMBLE_VERSION": "1.7.0",
+    "PSI_CHECK":        "enabled"
+  },
+  "runtime": {
+    "frontend": "node-18",
+    "api":      "python-3.12"
+  },
+  "checks": {
+    "health": {
+      "path":   "/api/health",
+      "method": "GET",
+      "expect": {
+        "status":           "ok",
+        "psi_cubic":        true,
+        "version":          "1.7.0",
+        "phi_star":         0.618034
+      }
+    },
+    "orchestrate": {
+      "path":   "/api/orchestrate",
+      "method": "POST",
+      "body": {
+        "payload":           "Validate schema hash against SSoT. Mode: governance.",
+        "confidence":        0.80,
+        "claim":             "Schema hash validated.",
+        "entropy_score":     0.25,
+        "kappa_score_hint":  0.50
+      },
+      "expect_fields": [
+        "turn_id", "dgaf_decision", "phi_decision",
+        "kappa_category", "hpg_applied", "effective_confidence",
+        "apogee_grade", "gold_star", "scpe_compression",
+        "pdmal_status", "seal_hash"
+      ]
+    },
+    "audit": {
+      "path":   "/api/audit",
+      "method": "GET",
+      "expect_fields": ["status", "turn_count", "prune_events"]
+    }
+  },
+  "governance": {
+    "psi":               1.4655712318767682,
+    "phi_star":          0.6180339887498949,
+    "scpe_threshold":    0.15,
+    "phi_checkpoints":   [13, 21, 34, 55],
+    "phi_tolerance":     0.05,
+    "t0_axiom_guard":    true,
+    "t2_narayana_anchor": 3
+  },
+  "package": {
+    "installable": "resonant_decay/",
+    "adapters": ["raw", "langchain", "langgraph", "autogen", "crewai"]
+  }
+}
