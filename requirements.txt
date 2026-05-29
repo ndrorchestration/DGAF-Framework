@@ -1,4 +1,3 @@
-# ensemble_v17 is stdlib-only (hashlib, math, json, re, time, importlib)
-# uncomment below if KAPPA dynamic_weight_router pulls in extras:
-# numpy>=1.26
-# scikit-learn>=1.4
+# Python dependencies intentionally left empty.
+# All API routes are now Next.js pages/api/*.ts handlers.
+# The root api/*.py files are deprecated stubs.
