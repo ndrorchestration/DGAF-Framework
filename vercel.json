@@ -1,13 +1,12 @@
 {
   "version": 2,
-  "framework": null,
   "builds": [
-    { "src": "api/*.py", "use": "@vercel/python" },
-    { "src": "app/**",   "use": "@vercel/next" }
+    { "src": "api/*.py",     "use": "@vercel/python" },
+    { "src": "package.json", "use": "@vercel/next" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)",     "dest": "/app/$1" }
+    { "src": "/(.*)",     "dest": "/$1" }
   ],
   "headers": [
     {
