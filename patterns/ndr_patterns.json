@@ -1,0 +1,67 @@
+{
+  "registry_version": "0.2.0",
+  "generated_at": "2026-05-29T02:11:00Z",
+  "patterns": [
+    {
+      "id": "ndr.ecosystem_manifest_audit",
+      "name": "Ecosystem Manifest & Audit Harness",
+      "category": "governance",
+      "intent": "Maintain a single DGAF-governed registry of all projects (repos + deployments + docs + governance) and continuously audit it against live platform inventories.",
+      "roles": {
+        "Sentinel": "Owns CI audit workflow; drift = governance event.",
+        "Amethyst": "Reads registry for planning, routing, and QA sweep enumeration.",
+        "COLLEEN": "Uses registry as enumeration space for coherence and consistency checks."
+      },
+      "applicability": [
+        "Projects > ~5 requiring cross-coherent governance.",
+        "Pre-certification or DGAF tier promotion runs.",
+        "Any workflow needing ecosystem-wide agent reasoning."
+      ],
+      "trigger": [
+        "New repo or deployment surface created.",
+        "Pre-Gold Star or DGAF tier escalation.",
+        "Scheduled maintenance / sweep cycle."
+      ],
+      "consequences": {
+        "benefits": ["Single source of truth", "Automated drift detection", "Foundation for agent QA sweeps"],
+        "liabilities": ["Registry requires lifecycle maintenance", "CI audit silently stops if workflow is disabled"]
+      },
+      "related_patterns": ["ndr.dual_orchestrator_qa_loop", "Orchestrator-Workers", "Agent Registry"]
+    },
+    {
+      "id": "ndr.dual_orchestrator_qa_loop",
+      "name": "Dual-Orchestrator QA Loop (Amethyst + COLLEEN)",
+      "category": "multi-agent",
+      "intent": "Use a planner/orchestrator agent (Amethyst) and a dedicated evaluator/critic agent (COLLEEN) to run structured QA, coherence, and consistency sweeps over agent traces and outputs.",
+      "roles": {
+        "Amethyst": "Meta-orchestrator: selects traces, plans sweeps, aggregates metrics, recommends routing/prompt/index changes.",
+        "COLLEEN": "Evaluator/critic: applies QA, coherence, and consistency rubrics; emits JSON scores + rationales."
+      },
+      "rubrics": {
+        "qa_goal_satisfaction": {"threshold": 0.8, "description": "Did output satisfy explicit goal with no missing critical steps?"},
+        "coherence": {"threshold": 0.8, "description": "Logical consistency, natural flow, no contradictions across trace."},
+        "consistency_confidence": {"threshold": 0.75, "description": "Stable outputs on similar inputs; disclaimers calibrated to uncertainty."}
+      },
+      "amethyst_actions": {
+        "qa_goal_satisfaction < 0.8": ["mark_pattern_unstable", "increase_self_critique_depth"],
+        "coherence < 0.8": ["tighten_step_plans", "enable_intermediate_summaries"],
+        "consistency_confidence < 0.75": ["run_repeatability_tests", "add_calibration_prompts"]
+      },
+      "applicability": [
+        "High-stakes or complex agentic workflows.",
+        "Governance or certification evaluation runs.",
+        "Any project tagged with ndr.dual_orchestrator_qa_loop in ecosystem_registry."
+      ],
+      "trigger": [
+        "New pattern or tool introduced.",
+        "Observed success rate degradation.",
+        "Scheduled QA sweep or DGAF tier review."
+      ],
+      "consequences": {
+        "benefits": ["Continuous quality learning", "Clear execution vs evaluation separation", "Pattern-aware targeted remediation"],
+        "liabilities": ["Extra compute; tune to avoid score overfitting", "Evaluator drift breaks metric time-series"]
+      },
+      "related_patterns": ["ndr.ecosystem_manifest_audit", "Evaluator-Optimizer", "Human-in-the-loop gates"]
+    }
+  ]
+}

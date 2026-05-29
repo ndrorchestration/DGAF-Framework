@@ -1,0 +1,42 @@
+name: Ecosystem Registry Audit
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 * * * *"   # hourly
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ecosystem:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_OWNER: ndrorchestration
+      REGISTRY_PATH: registry/ecosystem_registry.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run ecosystem audit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY_PATH: ${{ env.REGISTRY_PATH }}
+          GITHUB_OWNER: ${{ env.GITHUB_OWNER }}
+        run: python registry/ecosystem_audit.py
+
+      - name: Upload audit log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-audit-log-${{ github.run_id }}
+          path: registry/
+          retention-days: 14

@@ -1,0 +1,150 @@
+{
+  "registry_version": "0.3.0",
+  "generated_at": "2026-05-29T02:11:00Z",
+  "projects": [
+    {
+      "id": "dgaf-framework",
+      "name": "DGAF-Framework",
+      "summary": "Dynamic Governance Agentic Formation Framework — NDR pattern registry, AXIS constraints, multi-agent governance protocols, and SWEEP_LOG. Spine of the ecosystem.",
+      "tags": ["ai-governance", "multi-agent", "pattern-registry"],
+      "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
+      "github": {"owner": "ndrorchestration", "repo": "DGAF-Framework", "url": "https://github.com/ndrorchestration/DGAF-Framework", "default_branch": "main", "private": false, "archived": false, "topics": ["ai-governance","apache-2-0","multi-agent","nist-ai-rmf","phi-harmonic"]},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/DGAF-Framework", "status": "silver", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "silver", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "driftwatch",
+      "name": "Driftwatch",
+      "summary": "Phi-driven multi-agent synthesis simulation with real-time drift detection, truth scoring, and harmonic state monitoring.",
+      "tags": ["drift-detection", "multi-agent", "simulation"],
+      "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
+      "github": {"owner": "ndrorchestration", "repo": "Driftwatch", "url": "https://github.com/ndrorchestration/Driftwatch", "default_branch": "main", "private": false, "archived": false, "topics": ["drift-detection","multi-agent","phi-calculus","simulation","typescript"]},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/Driftwatch", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "aoga-dashboard",
+      "name": "AOGA Dashboard",
+      "summary": "Agentic Orchestration and Governance Architecture. 17-route Vercel-deployed governance dashboard. Co-authored: Ender, Amethyst, COLLEEN. DGAF-governed.",
+      "tags": ["dashboard", "governance", "vercel"],
+      "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
+      "github": {"owner": "ndrorchestration", "repo": "aoga-dashboard", "url": "https://github.com/ndrorchestration/aoga-dashboard", "default_branch": "main", "private": true, "archived": false, "topics": []},
+      "deployments": [{"platform": "vercel", "project_id": "TODO:fill-vercel-id", "url": "TODO:fill-vercel-url", "env": "prod", "status": "active", "last_deploy_at": null}],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/aoga-dashboard", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "pptl-governance-dashboard",
+      "name": "PPTL Herald Governance Dashboard",
+      "summary": "Phase 3C/4A/4B real-time SSE audit stream, Neon Postgres persistence, Next.js 14 App Router. DGAF-governed. Amethyst meta-orchestrated.",
+      "tags": ["dashboard", "governance", "vercel", "neon"],
+      "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
+      "github": {"owner": "ndrorchestration", "repo": "pptl-governance-dashboard", "url": "https://github.com/ndrorchestration/pptl-governance-dashboard", "default_branch": "main", "private": true, "archived": false, "topics": []},
+      "deployments": [{"platform": "vercel", "project_id": "TODO:fill-vercel-id", "url": "TODO:fill-vercel-url", "env": "prod", "status": "active", "last_deploy_at": null}],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/pptl-governance-dashboard", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "sentinel-governance",
+      "name": "Sentinel Governance",
+      "summary": "Automated integrity monitoring and CI/CD governance sweeps for project stability and security compliance.",
+      "tags": ["ci-cd", "governance", "security"],
+      "patterns": ["ndr.ecosystem_manifest_audit"],
+      "github": {"owner": "ndrorchestration", "repo": "sentinel-governance", "url": "https://github.com/ndrorchestration/sentinel-governance", "default_branch": "main", "private": false, "archived": false, "topics": ["ci-cd","github-actions","governance","powershell","security"]},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/sentinel-governance", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Sentinel"},
+      "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "amethyst-governance-eval-stack",
+      "name": "Amethyst Governance Eval Stack",
+      "summary": "Multi-agent governance evaluation framework: Bronze/Silver/Gold/Autodiagnostic tiers, MDAR protocol, Reciprocity verification, Sentinel safety layer.",
+      "tags": ["evaluation", "governance", "multi-agent"],
+      "patterns": ["ndr.dual_orchestrator_qa_loop"],
+      "github": {"owner": "ndrorchestration", "repo": "Amethyst-Governance-Eval-Stack", "url": "https://github.com/ndrorchestration/Amethyst-Governance-Eval-Stack", "default_branch": "main", "private": true, "archived": false, "topics": []},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/Amethyst-Governance-Eval-Stack", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "bronze", "safety_profile": "mdar-protocol", "governance_owner": "Amethyst"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "junior-apogee-app",
+      "name": "Junior Apogee App",
+      "summary": "Production-ready AI agent evaluation and QA platform with multi-agent scoring, automated test execution, real-time dashboards, and OWASP Agentic Top 10 compliance checks.",
+      "tags": ["evaluation", "qa", "owasp", "multi-agent"],
+      "patterns": ["ndr.dual_orchestrator_qa_loop"],
+      "github": {"owner": "ndrorchestration", "repo": "junior-apogee-app", "url": "https://github.com/ndrorchestration/junior-apogee-app", "default_branch": "main", "private": false, "archived": false, "topics": ["agent-orchestration","ai-evaluation","multi-agent","owasp","python","qa-testing"]},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/junior-apogee-app", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "phi-calculus-app",
+      "name": "Phi-Calculus App",
+      "summary": "Phi-harmonic calculus explorer. Private. DGAF-Framework governed.",
+      "tags": ["phi-harmonic", "visualization"],
+      "patterns": ["ndr.ecosystem_manifest_audit"],
+      "github": {"owner": "ndrorchestration", "repo": "phi-calculus-app", "url": "https://github.com/ndrorchestration/phi-calculus-app", "default_branch": "main", "private": true, "archived": false, "topics": []},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/phi-calculus-app", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "experimental", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "acoustic-mesh",
+      "name": "Acoustic Mesh",
+      "summary": "WebRTC phi-harmonic acoustic mesh. DGAF-governed. Amethyst-attributed.",
+      "tags": ["phi-harmonic", "webrtc", "audio"],
+      "patterns": ["ndr.ecosystem_manifest_audit"],
+      "github": {"owner": "ndrorchestration", "repo": "Acoustic-mesh", "url": "https://github.com/ndrorchestration/Acoustic-mesh", "default_branch": "main", "private": false, "archived": false, "topics": ["audio","javascript","mesh-networking","phi-harmonic","webrtc"]},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/Acoustic-mesh", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "experimental", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "3d-visualization-hub",
+      "name": "3D Visualization Hub",
+      "summary": "Interactive 3D data visualizations powered by Google Cloud. Plotly, Matplotlib, Streamlit, phi-harmonic modal analysis.",
+      "tags": ["visualization", "plotly", "streamlit", "phi-harmonic"],
+      "patterns": ["ndr.ecosystem_manifest_audit"],
+      "github": {"owner": "ndrorchestration", "repo": "3d-visualization-hub", "url": "https://github.com/ndrorchestration/3d-visualization-hub", "default_branch": "main", "private": false, "archived": false, "topics": ["3d","plotly","python","streamlit","visualization"]},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/3d-visualization-hub", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "experimental", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "ai-governance-frameworks",
+      "name": "AI Governance Frameworks",
+      "summary": "Validated frameworks for AI governance: Paul-Elder Critical Thinking, NIST AI RMF, ISO 42001, IIA AI Auditing.",
+      "tags": ["ai-governance", "nist-ai-rmf", "iso-42001"],
+      "patterns": ["ndr.ecosystem_manifest_audit"],
+      "github": {"owner": "ndrorchestration", "repo": "ai-governance-frameworks", "url": "https://github.com/ndrorchestration/ai-governance-frameworks", "default_branch": "main", "private": false, "archived": false, "topics": ["ai-governance","compliance","frameworks","iso-42001","nist-ai-rmf"]},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/ai-governance-frameworks", "status": "silver", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "Amethyst"},
+      "governance": {"dgaf_tier": "silver", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
+      "lifecycle_state": "active"
+    },
+    {
+      "id": "gold-star-qa-framework",
+      "name": "Gold Star QA Framework",
+      "summary": "Quality assurance framework for AI prompt engineering: S-Tier certification standards, evaluation rubrics, and multi-tier rating processes. ARCHIVED.",
+      "tags": ["qa", "certification", "prompt-engineering"],
+      "patterns": [],
+      "github": {"owner": "ndrorchestration", "repo": "gold-star-qa-framework", "url": "https://github.com/ndrorchestration/gold-star-qa-framework", "default_branch": "main", "private": true, "archived": true, "topics": []},
+      "deployments": [],
+      "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/gold-star-qa-framework", "status": "bronze", "last_reviewed": "2026-05-29T02:11:00Z", "owner": "COLLEEN"},
+      "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "COLLEEN"},
+      "lifecycle_state": "archived"
+    }
+  ]
+}
