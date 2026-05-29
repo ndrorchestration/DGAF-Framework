@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   deploy:
     name: Vercel Production Deploy
@@ -14,10 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node 18
+      - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '24'
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
@@ -37,8 +40,8 @@ jobs:
 
       - name: Set env vars on Vercel project
         run: |
-          echo "1.7.0" | vercel env add ENSEMBLE_VERSION production --token=${{ secrets.VERCEL_TOKEN }} --force || true
-          echo "enabled"  | vercel env add PSI_CHECK     production --token=${{ secrets.VERCEL_TOKEN }} --force || true
+          echo "1.7.0"   | vercel env add ENSEMBLE_VERSION production --token=${{ secrets.VERCEL_TOKEN }} --force || true
+          echo "enabled" | vercel env add PSI_CHECK       production --token=${{ secrets.VERCEL_TOKEN }} --force || true
 
   post-deploy-verification:
     name: Health + Regression Check
@@ -46,6 +49,7 @@ jobs:
     needs: deploy
     env:
       DGAF_URL: ${{ needs.deploy.outputs.deployment_url }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 
@@ -67,7 +71,7 @@ jobs:
           echo "$HEALTH" | python3 -m json.tool
           PSI=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('psi_cubic',''))")
           VER=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('version',''))")
-          [ "$PSI" = "True" ]   && echo '  ✓ psi_cubic'     || { echo '  ✗ psi_cubic FAIL';  exit 1; }
+          [ "$PSI" = "True" ]   && echo '  ✓ psi_cubic'     || { echo '  ✗ psi_cubic FAIL'; exit 1; }
           [ "$VER" = "1.7.0" ]  && echo '  ✓ version=1.7.0' || echo "  ⚠ version=$VER"
 
       - name: 30-turn live regression

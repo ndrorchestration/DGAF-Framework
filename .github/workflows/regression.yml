@@ -6,13 +6,16 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: '0 */6 * * *'   # every 6 hours against production
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       dgaf_url:
         description: 'Override DGAF_URL for live regression'
         required: false
         default: ''
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   local-quick-check:
@@ -47,6 +50,7 @@ print(f'PSI cubic OK: PSI={PSI:.10f}')
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     env:
       DGAF_URL: ${{ inputs.dgaf_url || vars.DGAF_URL || 'https://dgaf-framework.vercel.app' }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 
