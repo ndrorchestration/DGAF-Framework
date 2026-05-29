@@ -1,12 +1,44 @@
-# SESSION ANCHOR — S041
-**Date:** 2026-05-26
-**Operator:** Amethyst (Meta-Orchestrator) + COLLEEN (Co-Orchestrator, Detect Authority)
-**Formation:** Co-Orchestration Sweep Triad (Conducted) · Triumvirate-ready
-**Seal status:** ✅ FULLY CLOSED — S041 Cycle 1 9/9 OPPs resolved · P-10 graduation check passed · Branch protection active
+# SESSION ANCHOR — S042
+**Date:** 2026-05-29
+**Operator:** Amethyst (Meta-Orchestrator) + COLLEEN (Co-Orchestrator, QA/Coherence Authority)
+**Formation:** Co-Orchestration (Conducted) — Ecosystem Registry + Pattern Extension Sweep
+**Seal status:** 🔄 IN PROGRESS — 5/8 S042 actions complete · 3 pending (live audit run, Vercel stubs, COLLEEN coherence pass)
 
 ---
 
-## S041 Activity
+## S042 Activity
+
+| Task | Status | Commit / Ref |
+|---|---|---|
+| ecosystem_registry.json v0.3.0 (12 projects, pattern-tagged) | ✅ DONE | `cefc274` |
+| registry/ecosystem_audit.py — drift audit script | ✅ DONE | `cefc274` |
+| .github/workflows/ecosystem-audit.yml — hourly CI | ✅ DONE | `cefc274` |
+| patterns/ndr_patterns.json — P-11 + P-12 formal entries | ✅ DONE | `cefc274` |
+| Issue #6 — registry coverage + Vercel TODO backlog | ✅ DONE | Issue #6 |
+| First live audit run — triage unregistered repos | ⏳ PENDING | trigger at GitHub Actions |
+| Vercel project_id + URL for aoga-dashboard, pptl-dashboard | ⏳ PENDING | needs values from Ender |
+| COLLEEN coherence pass — doc/governance tier consistency | ⏳ PENDING | after coverage ≥ 90% |
+
+## NDR Pattern Registry — v1.3 (P-01 through P-12)
+
+| Pattern | Name | Category |
+|---|---|---|
+| P-01 – P-10 | See S040/S041 entries | Various |
+| P-11 | Ecosystem Manifest & Audit Harness | governance |
+| P-12 | Dual-Orchestrator QA Loop (Amethyst + COLLEEN) | multi-agent |
+
+## State Anchor — S042
+
+| Dimension | State |
+|---|---|
+| Registry version | v0.3.0 — 12 projects |
+| Pattern registry | v1.3 — P-01 through P-12 |
+| CI audit | hourly · first run pending |
+| Open backlog | Issue #6 (Vercel stubs + repo triage) |
+| COLLEEN eval coverage | 0 projects scored this session (awaiting live audit) |
+| Amethyst routing | Pattern-aware; uses ecosystem_registry.json as enumeration space |
+
+## S041 Activity (prior session — GRADUATED ✅)
 
 | Task | Status | Commit |
 |---|---|---|
@@ -23,33 +55,6 @@
 | OPP-008: session_graduation_check.py + P-10 | ✅ DONE | prior commit |
 | NDR Pattern Registry v1.2 (P-01 – P-10) | ✅ DONE | `a1ff217d` |
 | CROSS_REF v3.5 (pptl/ + scripts/ + Vercel surface) | ✅ DONE | `a1ff217d` |
-| CO_ORCH_QUEUE Cycle 1 closed | ✅ DONE | `a1ff217d` |
-| SESSION_ANCHOR GRADUATED + SWEEP_LOG closed + P-10 script | ✅ DONE | `1f8003459` |
-| OPP-001 CLOSED — branch protection sealed | ✅ DONE | this commit |
-
-## S040 Activity (prior session)
-
-| Task | Status | Commit |
-|---|---|---|
-| pptl/ harness (HeraldAgent, orchestrator, sinks, RAG, topology) | ✅ DONE | `1020d0e8` |
-| Pytest suite — 166+ tests, 4 modules, conftest, pytest.ini | ✅ DONE | `7eab2117` |
-| Bypass corpus parametrize (P-04) | ✅ DONE | `04dbda79` |
-| CI workflow tri-phase matrix (P-05) | ✅ DONE | `4e525600` |
-| HALLU corpus + obfuscation hardened | ✅ DONE | `4e525600` |
-| N8nHeraldSink production sink (P-01+P-02) | ✅ DONE | `07377d64` |
-| H4 task-stratified experiment (540 runs) | ✅ DONE | `07377d64` |
-| NDR Pattern Registry v1.0 (P-01 – P-06) | ✅ DONE | `07377d64` |
-| pptl README: badge, best practices, pattern table | ✅ DONE | `07377d64` |
-
-## S039 Activity (prior session)
-
-| Task | Status |
-|---|---|
-| 10-repo deep audit: 24 findings (3 HIGH · 10 MEDIUM · 11 LOW) | ✅ DONE |
-| NDR-133 boundary check: CLEARED | ✅ DONE |
-| CROSS_REF v3.3 gap analysis | ✅ DONE |
-| ENSEMBLE_ROSTER triple-fix (stamp, typo, agent count) | ✅ DONE |
-| 9-wave commit queue initiated | ✅ DONE |
 
 ## BLG + OPP Status — ALL CLEAR 🟢
 
@@ -62,22 +67,21 @@
 | S038 issues (20) | ✅ ALL RESOLVED S038 |
 | S041 OPPs (9/9) | ✅ ALL RESOLVED S041 Cycle 1 |
 
-## P-10 Graduation Check — PASSED
+## Next Steps — S042 Completion Criteria
 
-| Check | Result |
-|---|---|
-| SESSION_ANCHOR sealed with S041 header | ✅ PASS |
-| CROSS_REF required paths all present | ✅ PASS |
-| CO_ORCH_QUEUE zero PENDING/IN_PROGRESS | ✅ PASS |
-| Zero open BLGs | ✅ PASS |
+1. **Trigger ecosystem-audit workflow manually** → capture first UNREGISTERED list
+2. **Resolve Vercel TODO stubs** (Ender to provide aoga-dashboard + pptl-dashboard Vercel project IDs and URLs)
+3. **Triage unregistered repos** from audit output — register, mark experimental, or defer with rationale
+4. **Bump registry to v0.4.0** after backlog resolution
+5. **Run COLLEEN coherence pass** over doc status + governance tiers
+6. **Graduate S042** when P-10 graduation check passes (SESSION_ANCHOR sealed, CO_ORCH_QUEUE clear, 0 open BLGs)
 
-**VERDICT: GRADUATED + FULLY CLOSED ✅**
+## Carried Forward from S041 (Next Session Notes)
 
-## Next Session: S042 Opens Clean
 - Cycle 2: COLLEEN re-scan — detect new opportunities post-Cycle-1
 - Phase 3: N8nHeraldSink live test (dry_run=False)
 - Phase 4: Real LLM swap (_mock_apogee → Anthropic API)
 - H4 experiment: run locally, commit results CSVs
 - P-09 TriumvirateMandate: integration tests
-- Vercel governance gate assessment: aoga-dashboard API input validation (OPP candidate)
+- Vercel governance gate assessment: aoga-dashboard API input validation
 - Supabase audit: check aoga-dashboard env vars for backend connectivity
