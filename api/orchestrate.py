@@ -1,2 +1,2 @@
-# DEPRECATED — logic moved to app/api/orchestrate/route.ts
-raise NotImplementedError('Use app/api/orchestrate/route.ts')
+# REMOVED — see pages/api/orchestrate.ts
+# This file is intentionally blank. Delete on next repo sweep.

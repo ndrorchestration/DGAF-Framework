@@ -1,2 +1,2 @@
-# DEPRECATED — logic moved to app/api/health/route.ts
-raise NotImplementedError('Use app/api/health/route.ts')
+# REMOVED — see pages/api/health.ts
+# This file is intentionally blank. Delete on next repo sweep.
