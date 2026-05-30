@@ -34,6 +34,17 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 
 ---
 
+### [Q-S068-VERCEL-DETAIL] Vercel Deployment URL + Region Inventory
+
+- **Owner:** Amethyst
+- **Priority:** P3 — housekeeping
+- **Status:** 🔲 Queued — S068
+- **Context:** `vercel ls` confirmed 2 deployments (aoga-dashboard + pptl-governance-dashboard) on 2026-05-30. Deployment URLs, regions, and environment config not yet captured. Run `vercel ls --json` or check Vercel dashboard to complete.
+- **Artifacts:** Update `docs/ECOSYSTEM_INVENTORY.md` with full deployment detail
+- **Metrics:** Both deployment URLs confirmed resolvable; regions logged; ECOSYSTEM_INVENTORY updated
+
+---
+
 ## Completed Queue Items — S067
 
 | ID | Name | Owner | Status |

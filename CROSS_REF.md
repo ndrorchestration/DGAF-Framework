@@ -3,7 +3,7 @@
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
 > **Last updated:** 2026-05-30  
-> **Anchor:** S067
+> **Anchor:** S067 (gap sweep wave 2)
 
 Canonical cross-reference index for patterns, files, agents, and ecosystem components.
 All NDR patterns, governance gates, and framework bindings are registered here.
@@ -83,7 +83,8 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 | `docs/ndr_patterns_unified.json` | Machine-readable unified index v2.0.0 | ✅ Live S066 |
 | `docs/NDR_PATTERN_REGISTRY.md` | ~~Primary registry~~ → **Redirect stub** | ✅ PR-D S067 |
 | `docs/NDR_REGISTRY_MERGE_PLAN.md` | Merge plan v1.3 — Phase 1+2 ✅, Phase 3 🟢 | Active |
-| `docs/lifecycle_harness_v2.md` | Lifecycle phase harness spec | 🔄 In Progress |
+| `docs/lifecycle_harness_v2.md` | Lifecycle phase harness spec — Phase 0–VI | ✅ Created S067 |
+| `docs/ECOSYSTEM_INVENTORY.md` | Cross-platform inventory — GitHub (24) + Vercel (2) + Supabase (1) | ✅ Created S067 |
 
 ### docs/qa/
 
@@ -100,7 +101,7 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 | `phi_closure_gate.py` | P-32 / NDR-006 Phi-Closure | ✅ Wired |
 | `hpg_ionian_gate.py` | P-29 / NDR-007 HPG | ✅ Stable |
 | `orchestration_firewall.py` | P-08 / NDR-008 Firewall | ✅ Active |
-| `topology_router.py` | P-27 / NDR-009 Router | 🔄 Bug TC1/2/7/8 — Q-S066-01 |
+| `topology_router.py` | P-27 / NDR-009 Router | ✅ v3.6.0 — 8/8 TC — S067 |
 | `dgaf_semantic_gate.py` | P-03 / NDR-010 DGAF | ✅ Stable |
 | `amethyst_dual_lock.py` | P-30 / NDR-011 Dual-Lock | ✅ Stable |
 | `dynamic_weight_router.py` | P-34 / BLG-P34-02 ref path | ✅ Confirmed S066 |
@@ -110,14 +111,14 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 | File | Purpose | Status |
 |---|---|---|
 | `ensemble_v16_manifest.json` | V16 full manifest with all gate bindings | ✅ Created S043 |
-| `lifecycle_stability_report.json` | Phase stability metrics | 🔄 Pending — Q-S066-04 |
+| `lifecycle_stability_report.json` | Phase stability metrics — 7/7 STABLE φ*=0.618 | ✅ Created S067 |
 
 ### tests/
 
 | File | Coverage | Status |
 |---|---|---|
-| `test_orchestration_firewall.py` | Invariants 1–5, happy+attack path | ✅ Created S043 |
-| `test_router_coverage.py` | TC1–TC8 | 🔄 TC1/2/7/8 failing — Q-S066-01 |
+| `test_orchestration_firewall.py` | Invariants 1–5, happy+attack path | ✅ Created S043 ✅ |
+| `test_router_coverage.py` | TC1–TC8 | ✅ 8/8 passing — v3.6.0 — S067 |
 | `test_scpe_thresholds.py` | Threshold sweep, T0 guard | ✅ Stable |
 | `test_phi_closure.py` | 16-turn sim, checkpoint fire | ✅ Stable |
 
@@ -150,7 +151,7 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 
 | Goal | Enforced By | File | Status |
 |---|---|---|---|
-| zero_open_blg | Orchestration Firewall | `orchestration_firewall.py` | ✅ 0 session BLGs — S066 sealed |
+| zero_open_blg | Orchestration Firewall | `orchestration_firewall.py` | ✅ 0 session BLGs — S067 sealed |
 | single_authority_chain | `authority_chain_valid()` | `orchestration_firewall.py` | ✅ Active |
 | append_only_log | Rollback on invariant failure | `orchestration_firewall.py` | ✅ Active |
 | observable_invariants_only | All invariants tested at boundary | `test_orchestration_firewall.py` | ✅ Active |
@@ -158,5 +159,5 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 
 ---
 
-*CROSS_REF v4.0 · S067 · COLLEEN + Amethyst · 2026-05-30*
-*Unified registry path active · PR-D + PR-E complete · P-10 graduation check: PENDING*
+*CROSS_REF v4.1 · S067 gap sweep wave 2 · COLLEEN + Amethyst · 2026-05-30*  
+*Unified registry path active · All stale statuses corrected · Ecosystem inventory live · P-10 graduation check: PENDING S068*

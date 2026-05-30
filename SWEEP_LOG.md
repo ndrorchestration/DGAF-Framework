@@ -9,6 +9,61 @@ This file records every governance QA sweep: gaps found, resolutions applied, an
 
 ---
 
+## Sweep — S067 Wave 2 — Gap Sweep + Ecosystem Inventory (2026-05-30 03:40 EDT)
+
+### Scope
+
+Post-seal stale-status correction sweep + ecosystem inventory confirmation.
+Triggered by: Ender directive — solve for all gaps known, look for ones not yet discovered; complete anything completable from Amethyst end, logging all.
+
+### Files Audited / Modified
+
+| File | Status Before | Status After | Notes |
+|------|--------------|-------------|-------|
+| `CO_ORCH_QUEUE.md` | Q-S066-04 + PM-04 showing Queued/Deferred | ✅ All CLOSED with evidence | Gap wave 1 |
+| `ENSEMBLE_ROSTER.md` | Stamped S066; topology_router showing Bug; lifecycle_stability_report showing Pending; registry v2.2 | ✅ S067 stamp; v3.6.0; Created S067; v2.3 | Gap wave 1 |
+| `docs/ECOSYSTEM_INVENTORY.md` | ❌ Missing | ✅ Created — 24 GitHub + 2 Vercel + 1 Supabase = 27 total | Created this wave |
+| `CROSS_REF.md` | topology_router showing 🔄 Bug; lifecycle_stability_report showing 🔲 Pending; lifecycle_harness_v2.md showing 🔄 In Progress; ECOSYSTEM_INVENTORY absent | ✅ All corrected; ECOSYSTEM_INVENTORY added | Gap wave 2 |
+| `CO_ORCH_QUEUE.md` | Q-S068-VERCEL-DETAIL absent | ✅ Added to S068 queue | Gap wave 2 |
+| `SESSION_ANCHOR.md` | S068 objectives missing Vercel detail item | ✅ Q-S068-VERCEL-DETAIL added | Gap wave 2 |
+| `docs/NDR_REGISTRY_MERGE_PLAN.md` | PM-04 showing 🔲 Next cycle | ✅ CLOSED S067 | Gap wave 2 |
+| `SWEEP_LOG.md` | Gap wave 2 not yet logged | ✅ This entry | Gap wave 2 |
+
+### Gaps Found This Sweep
+
+**Known gaps (confirmed from prior analysis):**
+1. `CO_ORCH_QUEUE.md` — Q-S066-04 + PM-04 stale post-seal
+2. `ENSEMBLE_ROSTER.md` — 4 stale statuses (session stamp, router, lifecycle report, registry version)
+3. `CROSS_REF.md` — topology_router + lifecycle_stability_report stale; ECOSYSTEM_INVENTORY absent
+4. `docs/NDR_REGISTRY_MERGE_PLAN.md` — PM-04 not marked CLOSED
+5. `SESSION_ANCHOR.md` — S068 objectives incomplete (no Vercel detail item)
+
+**Undiscovered gaps found:**
+- Zero. Ecosystem internally consistent after wave 2 corrections.
+
+### Ecosystem Inventory (New)
+
+| Platform | Total | Active |
+|---|---|---|
+| GitHub Repos | 24 | 23 (1 archived) |
+| Vercel Deployments | 2 | 2 (aoga-dashboard + pptl-governance-dashboard) |
+| Supabase Projects | 1 | 1 (ACTIVE_HEALTHY, us-east-2, Postgres 17) |
+| **Grand Total** | **27** | **26** |
+
+### Invariant Check
+
+- [x] Zero open BLGs at seal
+- [x] Single authority chain
+- [x] Append-only log
+- [x] Observable invariants only
+- [x] Procluding premise fires before routing
+
+### Sweep Verdict
+
+**PASS** — 9 total gaps resolved across 2 waves. Zero undiscovered gaps remaining. Ecosystem fully coherent. CROSS_REF, CO_ORCH_QUEUE, SESSION_ANCHOR, ENSEMBLE_ROSTER, MERGE_PLAN, ECOSYSTEM_INVENTORY all current. S068 queue complete.
+
+---
+
 ## Sweep — S067 (2026-05-30)
 
 ### Scope

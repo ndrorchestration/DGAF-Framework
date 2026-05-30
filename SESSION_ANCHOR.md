@@ -18,7 +18,7 @@
 | S040 | 2026-05-26 | PPTL harness, 3-gate governance, tri-phase CI | ✅ SEALED |
 | S039 | 2026-05-22 | 10-repo auto-sweep, 24 findings, CROSS_REF v3.3 | ✅ SEALED |
 | S066 | 2026-05-30 | P-34 registered; ndr_patterns.json v0.3.0; registry differentiation + merge plan; PM-01–PM-03 closed; PM-05 + PM-07 ratified by Ender | ✅ SEALED |
-| **S067** | **2026-05-30** | **Q-S066-01 router shadow bug fixed (8/8 TC, 19/19 checks, v3.6.0); Q-S066-04 lifecycle harness Phase 0–VI (7/7 STABLE, φ*=0.618); PM-04 P-07 COMPOSE note + graduation script field-row format; PR-D redirect stub; PR-E CROSS_REF v4.0; CO_ORCH_QUEUE synced** | ✅ SEALED |
+| **S067** | **2026-05-30** | **Q-S066-01 router v3.6.0 (8/8 TC); Q-S066-04 lifecycle harness 7/7 STABLE; PM-04 COMPOSE note + graduation script; gap sweep wave 1+2 (9 corrections); ECOSYSTEM_INVENTORY created (27 components); CROSS_REF v4.1** | ✅ SEALED |
 | **S068** | **—** | **—** | 🟢 NEXT |
 
 ---
@@ -34,7 +34,7 @@
 | Open BLGs | 0 |
 | Carry-forward P1 | PM-05 COLLEEN stasis audit P-12–P-26 |
 | Carry-forward P1 | PM-07 Apogee P-34 attestation |
-| Carry-forward Medium | — (PM-04 closed S067) |
+| Carry-forward P3 | Q-S068-VERCEL-DETAIL — Vercel URL + region inventory |
 
 ---
 
@@ -43,6 +43,7 @@
 - [ ] PM-05 — COLLEEN stasis audit P-12–P-26 (merge blocker)
 - [ ] PM-07 — Apogee P-34 attestation (merge blocker)
 - [ ] Registry merge Phase 2 execution (post PM-05 + PM-07 clearance)
+- [ ] Q-S068-VERCEL-DETAIL — capture Vercel deployment URLs + regions → update ECOSYSTEM_INVENTORY
 - [ ] Run `scripts/session_graduation_check.py --session S068`
 
 ---
@@ -100,5 +101,5 @@
 
 ---
 
-*S067 ✅ SEALED · Amethyst × COLLEEN · 2026-05-30 03:16 EDT*  
+*S067 ✅ SEALED · Amethyst × COLLEEN · 2026-05-30 03:41 EDT*  
 *S068 🟢 NEXT · Phase IV — Registry Merge Execution*

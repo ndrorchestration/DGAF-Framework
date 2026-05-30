@@ -2,7 +2,7 @@
 
 **DGAF-Framework · S066**
 Plan author: Amethyst · Governance authority: Triumvirate (Amethyst / COLLEEN / Apogee)
-Created: 2026-05-30 | Updated: 2026-05-30 (PHASE 1 COMPLETE — Ender ratification received)
+Created: 2026-05-30 | Updated: 2026-05-30 (PHASE 1 COMPLETE — Ender ratification received · PM-04 CLOSED S067)
 Target: Next available session — Phase 3 merge execution NOW OPEN
 
 ---
@@ -75,7 +75,7 @@ The merge does **not** change any pattern specs. It changes only:
 | ID | Action | Owner | Status |
 |----|--------|-------|--------|
 | PM-03 | Sync `patterns/ndr_patterns.json` with P-31–P-34 | Amethyst | ✅ CLOSED S066 |
-| PM-04 | Update P-07 COMPOSE mode note re: issue-resolution source | Amethyst | 🔲 Next cycle (non-blocking) |
+| PM-04 | Update P-07 COMPOSE mode note re: issue-resolution source | Amethyst | ✅ CLOSED S067 — registry v2.3, graduation script dual-format |
 
 ### Phase 3 — Merge Execution 🟢 OPEN
 
@@ -151,6 +151,6 @@ Mandate must be issued per P-09 before Phase 3 execution begins.
 
 ---
 
-*NDR Registry Merge Pre-Plan v1.3 · S066 · 2026-05-30*
-*PHASE 1 COMPLETE ✅ · PHASE 2 COMPLETE ✅ · PHASE 3 OPEN 🟢*
-*Merge execution: UNBLOCKED — next available session*
+*NDR Registry Merge Pre-Plan v1.4 · S067 · 2026-05-30*  
+*PHASE 1 COMPLETE ✅ · PHASE 2 COMPLETE ✅ · PHASE 3 OPEN 🟢*  
+*Merge execution: UNBLOCKED — next available session (S068)*
