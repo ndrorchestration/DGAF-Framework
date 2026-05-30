@@ -10,6 +10,10 @@ sys.exit(1) on any failure — CI-integrable as pre-push hook or merge gate.
 Usage:
     python scripts/session_graduation_check.py --session S041
     python scripts/session_graduation_check.py --session S042 --anchor SESSION_ANCHOR.md
+
+Anchor ID formats accepted (both are equivalent):
+    Header format:     # SESSION ANCHOR — S067
+    Field-row format:  | Anchor | S067 |   (or | Anchor ID | S067 |)
 """
 
 import argparse
@@ -32,14 +36,34 @@ CROSS_REF_REQUIRED_PATHS = [
 
 
 def check_session_anchor_sealed(session: str, anchor_path: Path) -> tuple[bool, str]:
-    """Check 1: SESSION_ANCHOR.md header contains '# SESSION ANCHOR — {session}'"""
+    """Check 1: SESSION_ANCHOR.md contains the session ID in either accepted format.
+
+    Accepted formats:
+        Header format:    # SESSION ANCHOR — {session}
+        Field-row format: | Anchor[ ID] | {session} |  (case-insensitive label)
+    """
     if not anchor_path.exists():
         return False, f"SESSION_ANCHOR not found at {anchor_path}"
     content = anchor_path.read_text(encoding="utf-8")
-    expected = f"# SESSION ANCHOR — {session}"
-    if expected in content:
-        return True, f"Found '{expected}' in SESSION_ANCHOR.md"
-    return False, f"Expected '{expected}' not found in SESSION_ANCHOR.md"
+
+    # Format 1: strict header
+    header_pattern = f"# SESSION ANCHOR — {session}"
+    if header_pattern in content:
+        return True, f"Found '{header_pattern}' in SESSION_ANCHOR.md (header format)"
+
+    # Format 2: field-row  |  Anchor [ID]  |  {session}  |
+    field_row_pattern = re.compile(
+        r"\|\s*Anchor(?:\s+ID)?\s*\|\s*" + re.escape(session) + r"\s*\|",
+        re.IGNORECASE,
+    )
+    if field_row_pattern.search(content):
+        return True, f"Found Anchor ID '{session}' in SESSION_ANCHOR.md (field-row format)"
+
+    return (
+        False,
+        f"Session '{session}' not found in SESSION_ANCHOR.md "
+        f"(checked header '# SESSION ANCHOR — {session}' and field-row '| Anchor | {session} |')",
+    )
 
 
 def check_cross_ref_complete(cross_ref_path: Path) -> tuple[bool, str]:
@@ -67,7 +91,7 @@ def check_co_orch_queue_clear(queue_path: Path) -> tuple[bool, str]:
 
 
 def check_zero_open_blgs(anchor_path: Path) -> tuple[bool, str]:
-    """Check 4: No BLG entries without '✅ CLOSED' in SESSION_ANCHOR.md."""
+    """Check 4: No BLG entries without '\u2705 CLOSED' in SESSION_ANCHOR.md."""
     if not anchor_path.exists():
         return False, f"SESSION_ANCHOR not found at {anchor_path}"
     content = anchor_path.read_text(encoding="utf-8")
@@ -76,7 +100,7 @@ def check_zero_open_blgs(anchor_path: Path) -> tuple[bool, str]:
         return False, "BLG Status section not found in SESSION_ANCHOR.md"
     blg_section = blg_section_match.group(0)
     rows = re.findall(r"\|\s*(S\d+-BLG-\S+|S\d+\s+\S+)\s*\|\s*(.+?)\s*\|", blg_section)
-    open_blgs = [(ref, status) for ref, status in rows if "✅ CLOSED" not in status and "ALL RESOLVED" not in status]
+    open_blgs = [(ref, status) for ref, status in rows if "\u2705 CLOSED" not in status and "ALL RESOLVED" not in status]
     if not open_blgs:
         return True, f"BLG Status: all entries resolved ({len(rows)} total)"
     return False, f"Open BLGs: {[ref for ref, _ in open_blgs]}"
@@ -114,7 +138,7 @@ def write_graduation_report(result: dict, report_path: Path = None) -> Path:
         "|---|---|---|",
     ]
     for name, info in result["checks"].items():
-        icon = "✅ PASS" if info["pass"] else "❌ FAIL"
+        icon = "\u2705 PASS" if info["pass"] else "\u274c FAIL"
         lines.append(f"| {name} | {icon} | {info['detail']} |")
     if not result["all_pass"]:
         lines += [
@@ -147,7 +171,7 @@ def main():
     print(f"\nGRADUATION CHECK — {result['session']}")
     print(f"Verdict: {result['verdict']}")
     for name, info in result["checks"].items():
-        icon = "✅" if info["pass"] else "❌"
+        icon = "\u2705" if info["pass"] else "\u274c"
         print(f"  {icon} {name}: {info['detail']}")
     print(f"\nReport written to: {report_path}")
 

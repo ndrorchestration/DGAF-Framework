@@ -1,9 +1,9 @@
 # NDR Pattern Registry
 ## DGAF-Framework · Canonical Pattern Set
-**Version:** 2.2
+**Version:** 2.3
 **Maintained by:** COLLEEN (Archival Authority) | Amethyst (Meta-Orchestrator)
 **Updated:** 2026-05-30
-**Session:** S066 (base: S035)
+**Session:** S067 (base: S035)
 
 ---
 
@@ -22,6 +22,15 @@
 > This file holds full specs for P-27–P-30. P-01–P-10 full specs are in
 > `docs/NDR_PATTERN_REGISTRY.md`. P-31–P-33 cards are in `patterns/`. P-34
 > full spec is in `docs/NDR_PATTERN_REGISTRY.md`.
+
+---
+
+## P-07 — Co-Orchestration Sweep
+**Spec:** A conducted Amethyst[C/impl] + COLLEEN[detect] + Herald[comms] triad continuously detects and implements best-practice improvements across the ecosystem. COMPOSE mode issues are resolved directly by the implementing agent within the same session that raised them (not deferred to a separate resolution session). PM items that cannot be resolved within the raising session are carried forward as explicit queue entries in CO_ORCH_QUEUE.md and owned by a named agent.
+**Source clarification (PM-04):** Issue-resolution source = the implementing agent acting within the current session. COMPOSE mode does not imply deferred or external resolution.
+**Ref:** `ENSEMBLE_ROSTER.md` · Triad Configurations table
+**NIST:** Govern | **EU AI Act:** Art.9, Art.17
+**Registered:** S041 | **Updated:** S067 (PM-04 — COMPOSE mode note clarified)
 
 ---
 
@@ -45,7 +54,7 @@
 
 ## P-29 — Sentinel-Annotated Risk Pass
 **Spec:** Invoke sentinel_review(record, routing, hook_point) at 3 hook points. Emits per-record audit log with risk classification (risk_ok / risk_warn / risk_block). Only risk_block halts pipeline. Integrates P-10 deontic gate at hook point 1.
-**Cross-ref (pending PM-01):** P-32 Phi-Closure Gate KILL_REC action should trigger risk_block at hook point 2. Cross-ref note to be added to P-32 card before merge.
+**Cross-ref:** P-32 Phi-Closure Gate KILL_REC action triggers risk_block at hook point 2 (PM-01 ✅ CLOSED S066).
 **Ref:** `components/evaluate_router_v1_1.py`
 **Ethical cognition:** P-10 Normative Constraint gate — permitted / obligated / forbidden
 **NIST:** Measure, Govern | **EU AI Act:** Art.9, Art.13
@@ -87,5 +96,6 @@
 - P-27, P-28: S033 | P-29: S034 | P-30: S035
 - P-31–P-33: S042 runtime cards | P-34: S066 COMPOSE
 - **Next candidate:** P-35 — TBD (next CO_ORCH_QUEUE COMPOSE entry)
-- **Open pre-merge actions:** PM-01 through PM-08 — see `docs/NDR_REGISTRY_MERGE_PLAN.md`
+- **Open pre-merge actions:** PM-05, PM-07 — see `docs/NDR_REGISTRY_MERGE_PLAN.md`
 - SWEEP_LOG: S033+S034 wave sealed | S066 wave: KAPPA training data resolved, P-34 registered
+- **PM-04 ✅ CLOSED S067:** P-07 COMPOSE mode note clarified; session_graduation_check.py field-row Anchor ID support added
