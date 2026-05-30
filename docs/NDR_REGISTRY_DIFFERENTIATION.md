@@ -2,7 +2,8 @@
 
 **DGAF-Framework · S066**
 Authority: COLLEEN (archival) | Amethyst (meta-orchestration)
-Created: 2026-05-30 | Status: **Active — pre-merge tracking document**
+Created: 2026-05-30 | Updated: 2026-05-30 (PM-01 PM-02 PM-03 closed)
+Status: **Active — pre-merge tracking document**
 
 ---
 
@@ -22,10 +23,10 @@ as the pre-planning substrate for the eventual unified merge.
 
 | Registry | Path | Version | Scope | Patterns | Status |
 |----------|------|---------|-------|----------|--------|
-| **Primary** | `docs/NDR_PATTERN_REGISTRY.md` | v1.3 / S066 | Harness, CI, triads, mandate, graduation, cross-ref index | P-01–P-10 (full spec) + P-11–P-34 (index) | ✅ Active |
-| **KAPPA/Governance** | `docs/patterns/NDR_PATTERN_REGISTRY.md` | v2.1 / S035 | Router calibration, pipeline composition, sentinel, attestation | P-27–P-30 (full spec) + P-01–P-26 (133 stasis) | ✅ Active |
-| **Runtime Cards** | `patterns/NDR_*.md` | v1.0 cards | Long-context safety, drift, convergence | P-31 (SCPE), P-32 (Phi-Closure), P-33 (PDMAL) | ✅ Active |
-| **Machine-readable** | `patterns/ndr_patterns.json` | — | JSON index of pattern IDs and names | Subset | ⚠️ Needs sync |
+| **Primary** | `docs/NDR_PATTERN_REGISTRY.md` | v1.4 / S066 | Harness, CI, triads, mandate, graduation, cross-ref index | P-01–P-10 (full spec) + P-11–P-34 (index) | ✅ Active |
+| **KAPPA/Governance** | `docs/patterns/NDR_PATTERN_REGISTRY.md` | v2.2 / S066 | Router calibration, pipeline, sentinel, attestation | P-27–P-30 (full spec) + P-01–P-26 (133 stasis) | ✅ Active |
+| **Runtime Cards** | `patterns/NDR_*.md` | v1.1 (Phi-Closure) / v1.0 (SCPE, PDMAL) | Long-context safety, drift, convergence | P-31 (SCPE), P-32 (Phi-Closure), P-33 (PDMAL) | ✅ Active |
+| **Machine-readable** | `patterns/ndr_patterns.json` | v0.3.0 / S066 | JSON index — P-31–P-34 + ndr.* entries | P-31–P-34 + 2 ndr.* | ✅ Synced |
 | **Merged (target)** | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` | v3.0 (planned) | All patterns, all layers | P-01–P-34+ | 🔲 Not yet created |
 
 ---
@@ -75,65 +76,54 @@ P-numbers are **globally unique across all registries**. Current assignment map:
 
 ## Cross-Registry Interaction Points
 
-These are the seams where patterns in different registries interact directly.
-They are the highest-priority items to verify during merge:
+1. **P-27 ↔ P-34** — P-34 is the calibration prerequisite for P-27. P-27 lives in KAPPA/Gov; P-34 in Primary. After merge, adjacent sections.
 
-1. **P-27 ↔ P-34** — P-34 (Empirical-Sweep) is the calibration prerequisite for
-   P-27 (Adaptive-Weighting). P-27 lives in KAPPA/Gov; P-34 lives in Primary.
-   After merge, these must be adjacent sections.
+2. **P-29 ↔ P-32** — Phi-Closure Gate KILL_REC triggers P-29 risk_block at hook point 2. **✅ PM-01 CLOSED S066** — cross-ref added to `patterns/NDR_PHI_CLOSURE_GATE_v1.md` v1.1 and documented in decision ladder and placement diagram.
 
-2. **P-29 ↔ P-32** — Phi-Closure Gate (P-32, Runtime) `KILL_REC` action should
-   trigger P-29 `risk_block` at hook point 2. Currently undocumented in either card.
-   **Pre-merge action required:** add cross-ref note to P-32 card before merge.
+3. **P-30 ↔ P-03** — AttestationGate (P-30) requires 6 P-03 contracts. **✅ PM-02 CLOSED S066** — P-03 ALTER note in `docs/NDR_PATTERN_REGISTRY.md` v1.4 now explicitly names P-30 by pattern number and doc path.
 
-3. **P-30 ↔ P-03** — AttestationGate (P-30) requires 6 P-03 contracts. P-30 lives
-   in KAPPA/Gov; P-03 lives in Primary. After merge, the P-03 ALTER note must
-   reference P-30 explicitly by pattern number (currently references "Gate 0" only).
+4. **P-31 ↔ P-33** — SCPE feeds compressed context to PDMAL. **✅ PM-03 CLOSED S066** — `patterns/ndr_patterns.json` v0.3.0 synced with P-31–P-34 full entries including cross-ref fields.
 
-4. **P-31 ↔ P-33** — SCPE (P-31) feeds compressed context to PDMAL (P-33).
-   Both in Runtime Cards. This interaction is documented in cards but not in
-   `ndr_patterns.json`. **Pre-merge action:** sync JSON index.
-
-5. **P-07 ↔ P-34** — Dual-Agent Sweep Loop (P-07) is the process by which
-   new COMPOSE patterns like P-34 are discovered and registered. P-34 is the
-   first pattern registered directly from issue resolution (not from COLLEEN
-   COMPOSE proposal). This is a precedent — document in P-07 spec under
-   COMPOSE mode definition.
+5. **P-07 ↔ P-34** — P-34 is the first pattern registered directly from issue resolution (not COLLEEN COMPOSE proposal). Precedent to document in P-07 COMPOSE mode. **PM-04 — soft, next cycle.**
 
 ---
 
 ## Open Pre-Merge Actions
 
-| # | Action | Owner | Priority | Blocking merge? |
-|---|--------|-------|----------|-----------------|
-| PM-01 | Add P-32 ↔ P-29 cross-ref note to `patterns/NDR_PHI_CLOSURE_GATE_v1.md` | Amethyst | High | ✅ Yes |
-| PM-02 | Update P-03 ALTER note to reference P-30 by pattern number | Amethyst | High | ✅ Yes |
-| PM-03 | Sync `patterns/ndr_patterns.json` with P-31–P-34 | Amethyst | Medium | ⚠️ Soft |
-| PM-04 | Update P-07 COMPOSE mode note re: issue-resolution as valid COMPOSE source | Amethyst | Medium | ⚠️ Soft |
-| PM-05 | Resolve P-numbering in stasis block (P-12–P-26): confirm no gaps or duplicates | COLLEEN | High | ✅ Yes |
-| PM-06 | Write unified header + table of contents for merged file | Amethyst | Low | 🔲 Final step |
-| PM-07 | P-30 attestation pass on P-34 before canonical promotion | Apogee | High | ✅ Yes |
-| PM-08 | Archive individual `patterns/NDR_*.md` cards after merge (move to `patterns/archive/`) | Amethyst | Low | 🔲 Final step |
+| # | Action | Owner | Priority | Status |
+|---|--------|-------|----------|--------|
+| PM-01 | Add P-32 ↔ P-29 cross-ref to Phi-Closure card | Amethyst | High | ✅ CLOSED S066 |
+| PM-02 | Update P-03 ALTER note to reference P-30 by number | Amethyst | High | ✅ CLOSED S066 |
+| PM-03 | Sync `patterns/ndr_patterns.json` with P-31–P-34 | Amethyst | Medium | ✅ CLOSED S066 |
+| PM-04 | Update P-07 COMPOSE mode note re: issue-resolution source | Amethyst | Medium | 🔲 Next cycle |
+| PM-05 | COLLEEN stasis audit P-12–P-26: gap/duplicate check | COLLEEN | High | 🔲 Queued (Q-S066-02) |
+| PM-06 | Write unified header + TOC for merged file | Amethyst | Low | 🔲 Final step |
+| PM-07 | P-30 attestation pass on P-34 | Apogee | High | 🔲 Queued (Q-S066-03) |
+| PM-08 | Archive `patterns/NDR_*.md` → `patterns/archive/` after merge | Amethyst | Low | 🔲 Final step |
 
 ---
 
 ## Registry Merge Status
 
 ```
-[S066] Pre-merge plan created ← YOU ARE HERE
-[S0??] PM-01 through PM-05 resolved
-[S0??] COLLEEN stasis audit (P-12–P-26) complete
-[S0??] Apogee P-30 attestation on P-34 complete
-[S0??] Draft unified registry written to docs/NDR_PATTERN_REGISTRY_UNIFIED.md
+[S066] Pre-merge plan created                              ✅ DONE
+[S066] PM-01: P-32 ↔ P-29 cross-ref added                ✅ CLOSED
+[S066] PM-02: P-03 ALTER → P-30 explicit ref              ✅ CLOSED
+[S066] PM-03: ndr_patterns.json v0.3.0 synced             ✅ CLOSED
+[S066] SESSION_ANCHOR + CO_ORCH_QUEUE advanced             ✅ DONE
+[S0??] PM-05: COLLEEN stasis audit P-12–P-26             🔲 Queued
+[S0??] PM-07: Apogee P-30 attestation on P-34             🔲 Queued
+[S0??] PM-04: P-07 COMPOSE mode note update               🔲 Next cycle
+[S0??] Draft unified registry → NDR_PATTERN_REGISTRY_UNIFIED.md
 [S0??] Triumvirate review (Amethyst + COLLEEN + Apogee sign-off)
-[S0??] PR: replace docs/NDR_PATTERN_REGISTRY.md with unified
-[S0??] PR: deprecate docs/patterns/NDR_PATTERN_REGISTRY.md (redirect note)
-[S0??] PR: archive patterns/NDR_*.md cards → patterns/archive/
-[S0??] PR: delete patterns/ndr_patterns.json or replace with unified JSON export
-[S0??] Session graduation check (P-10) — CROSS_REF updated to unified path
+[S0??] PR-A: Add unified .md + unified .json
+[S0??] PR-B: Deprecate docs/patterns/NDR_PATTERN_REGISTRY.md
+[S0??] PR-C: Archive patterns/NDR_*.md → patterns/archive/
+[S0??] PR-D: docs/NDR_PATTERN_REGISTRY.md → redirect stub
+[S0??] PR-E: Update CROSS_REF; run P-10 graduation check
 ```
 
 ---
 
-*Created: S066 · 2026-05-30 · Agent Amethyst*
-*Next review: first session that opens a CO_ORCH_QUEUE cycle*
+*NDR Registry Differentiation Index v1.1 · S066 · 2026-05-30*
+*PM-01 PM-02 PM-03: ✅ CLOSED · PM-05 PM-07: queued · merge execution: TBD*
