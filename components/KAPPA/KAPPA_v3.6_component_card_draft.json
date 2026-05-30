@@ -1,0 +1,93 @@
+{
+  "component_id": "DGAF-GATE-KAPPA-v3.6",
+  "version": "3.6-draft",
+  "status": "IN_DESIGN",
+  "predecessor": "DGAF-GATE-KAPPA-v3.5",
+  "date_initiated": "2026-05-30",
+  "orchestration": {
+    "meta_orchestrator": "Amethyst",
+    "routing_agent": "COLLEEN",
+    "ndr_pattern": "Adaptive Weighting with Confidence Gates",
+    "github_issue": "#5"
+  },
+  "objective": "Improve governance_clear routing accuracy from 82.6% to >=95% by replacing regex-only detection with logistic regression TF-IDF classifier and adding governance-specific confidence sub-bands",
+  "v3_5_baseline": {
+    "overall_accuracy": 0.95,
+    "adversarial": 1.0,
+    "ambiguous": 0.947,
+    "governance_clear": 0.826,
+    "creative_clear": 1.0,
+    "unclear": 1.0,
+    "critical_adversarial_failures": 0,
+    "validation_passes": 100
+  },
+  "v3_6_targets": {
+    "overall_accuracy": ">=0.95",
+    "adversarial": "1.0 (hard floor)",
+    "ambiguous": ">=0.90",
+    "governance_clear": ">=0.95",
+    "creative_clear": ">=0.90",
+    "unclear": "1.0 (hard floor)"
+  },
+  "changes": {
+    "classifier_upgrade": {
+      "from": "regex_only",
+      "to": "logistic_regression_tfidf",
+      "model": "sklearn.linear_model.LogisticRegression",
+      "features": "TfidfVectorizer(ngram_range=(1,3), max_features=5000, sublinear_tf=True)",
+      "hyperparams": {"C": 1.0, "class_weight": "balanced", "max_iter": 1000, "random_state": 42}
+    },
+    "confidence_bands": {
+      "governance_strong": "p_governance_clear >= 0.45 AND intent == directive",
+      "governance_blended": "p_governance_clear 0.25-0.45 OR intent == discretionary",
+      "apply_strong": "score >= 0.28 (non-governance, unchanged)",
+      "apply_blended": "score 0.15-0.28 (non-governance, unchanged)",
+      "apply_light": "score < 0.15 (unchanged)"
+    },
+    "intent_classifier": {
+      "directive_signals": ["must", "shall", "required", "mandatory", "enforce"],
+      "discretionary_signals": ["should", "consider", "recommended", "may", "if appropriate"],
+      "default": "governance_blended"
+    }
+  },
+  "validation_plan": {
+    "total_passes": 100,
+    "governance_clear_items": 23,
+    "governance_clear_pass_threshold": 22,
+    "regression_guard": {
+      "adversarial": "1.0 hard floor",
+      "unclear": "1.0 hard floor"
+    }
+  },
+  "axis_constraints": {
+    "s_tier_gate": "Apogee Lens validation required before S-Tier claim",
+    "predecessor_archive": "v3.5 archived, not deleted",
+    "reproducibility": "random_state=42 enforced",
+    "axiom_1_guard": "Amethyst sign-off required on component card change"
+  },
+  "open_questions": [
+    "Training data source for logistic regression",
+    "C hyperparameter tuning via cross-validation",
+    "Intent classifier: separate micro-model vs integrated features",
+    "Confidence band thresholds: empirical calibration vs 0.45/0.25 defaults"
+  ],
+  "colleen_routing": {
+    "post_validation": [
+      "Update ENSEMBLE_ROSTER.md with KAPPA v3.6 entry",
+      "Route validation report to AI_Governance&_Ethics label",
+      "Update CHANGELOG.md: add v3.6 entry under Unreleased"
+    ]
+  },
+  "demijoule_checks": [
+    "No unsafe routing states reachable in v3.6 band logic",
+    "Regression guard holds (adversarial + unclear = 100%)",
+    "No PII in training data or test suite"
+  ],
+  "attestation": {
+    "design_authored_by": "Amethyst x COLLEEN",
+    "date": "2026-05-30",
+    "validation_result": "PENDING",
+    "apogee_lens": "PENDING",
+    "demijoule": "PENDING"
+  }
+}
