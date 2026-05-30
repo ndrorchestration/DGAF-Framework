@@ -12,22 +12,6 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 
 ## Queue — S067 Active
 
-### [Q-S066-01] Router TC1/TC2/TC7/TC8 Shadow Bug Fix
-
-- **Owner:** Reson
-- **Priority:** P1
-- **Status:** 🔲 Queued
-- **Context:** Sequential and fan-out predicates in topology router are shadowed by hierarchical catch-all. TC1, TC2, TC7, TC8 currently fail (5/8 pass rate). Tracked from S043 Q-S043-04.
-- **Checks:**
-  - [ ] Reorder predicates so SEQUENTIAL and FAN-OUT match before HIERARCHICAL catch-all
-  - [ ] All 8 TCs pass: TC1 SEQUENTIAL, TC2 SEQUENTIAL, TC3 REFLEXIVE, TC4 HIERARCHICAL, TC5 REJECTED, TC6 REJECTED, TC7 FAN-OUT, TC8 FAN-OUT
-  - [ ] Regression: TC3–TC6 still pass after reorder
-  - [ ] CI green on `tests/test_router_coverage.py`
-- **Artifacts:** `components/topology_router.py`, `tests/test_router_coverage.py`
-- **Metrics:** 8/8 TC pass rate (up from 5/8)
-
----
-
 ### [Q-S066-04] Lifecycle Harness — Phase 0–VI Executable (Carry-Forward)
 
 - **Owner:** Amethyst + COLLEEN
@@ -48,7 +32,7 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 - **Owner:** Amethyst
 - **Priority:** Medium
 - **Status:** 🔲 Deferred (non-blocking, any session)
-- **Context:** Update P-07 COMPOSE mode note re: issue-resolution source.
+- **Context:** Update P-07 COMPOSE mode note re: issue-resolution source. Also: update `session_graduation_check.py` to accept field-row Anchor ID format alongside strict header.
 
 ---
 
@@ -56,6 +40,7 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 
 | ID | Name | Owner | Status |
 |----|------|-------|--------|
+| Q-S066-01 | Router TC1/TC2/TC7/TC8 shadow bug fix | Reson + Amethyst | ✅ CLOSED — 8/8 TC pass, 19/19 checks, v3.6.0 live — S067 2026-05-30 |
 | PR-D | `docs/NDR_PATTERN_REGISTRY.md` → redirect stub | Amethyst | ✅ Done S067 |
 | PR-E (partial) | CROSS_REF → unified path + S067 anchor | COLLEEN | ✅ Done S067 |
 
