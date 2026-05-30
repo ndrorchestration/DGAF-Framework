@@ -1,6 +1,6 @@
 # NDR Pattern Registry
 
-**DGAF-Framework · Session S041 seal**
+**DGAF-Framework · Session S066 update (base: S041 seal)**
 Meta-orchestrator: Agent Amethyst · Co-auditor: COLLEEN · Maintained by: ndrorchestration
 
 ---
@@ -8,6 +8,13 @@ Meta-orchestrator: Agent Amethyst · Co-auditor: COLLEEN · Maintained by: ndror
 > NDR Patterns are reusable, named orchestration/governance constructs with a
 > canonical spec, trigger condition, and known tradeoff profile. They are the
 > building blocks of the DGAF multi-agent governance stack.
+
+> **Registry status (S066):** P-01–P-10 are full-spec canonical patterns held in
+> this file. P-11–P-30 are held in `docs/patterns/NDR_PATTERN_REGISTRY.md` (v2.1).
+> P-31–P-33 are held as individual cards in `patterns/`. P-34 is a new COMPOSE entry
+> registered this session. A full unified merge is pre-planned in
+> `docs/NDR_REGISTRY_MERGE_PLAN.md`. See also `docs/NDR_REGISTRY_DIFFERENTIATION.md`
+> for authoritative registry map.
 
 ---
 
@@ -290,7 +297,7 @@ and sign-off must be machine-verifiable, not just documented in prose.
 - ✅ Full lifecycle traceable via Herald — audit replay possible
 - ✅ `sign_off()` guard prevents premature closure without both aggregates
 - ⚠️ Synchronous lifecycle — `sign_off()` blocks until both Prefects submit
-- ⚠️ Mandate schema is per-operation; Triumvirate must issue a new mandate each cycle
+- ⚠️ Mandate schema is per-operation; Triumvirate must issue a new mandate per cycle
 
 **Implementation:** `pptl/triumvirate_mandate.py`
 
@@ -303,8 +310,6 @@ and sign-off must be machine-verifiable, not just documented in prose.
 
 1. **SESSION_ANCHOR sealed** — `SESSION_ANCHOR.md` header contains `# SESSION ANCHOR — {session}`
 2. **CROSS_REF complete** — all required paths present in `CROSS_REF.md`
-   (list: `pptl/`, `docs/NDR_PATTERN_REGISTRY.md`, `.github/workflows/`,
-   `CO_ORCH_QUEUE.md`, `ENSEMBLE_ROSTER.md`, `SESSION_ANCHOR.md`, `SWEEP_LOG.md`)
 3. **CO_ORCH_QUEUE clear** — zero PENDING or IN_PROGRESS OPPs in queue
 4. **Zero open BLGs** — no BLG entries without `✅ CLOSED` in SESSION_ANCHOR
 
@@ -321,23 +326,96 @@ Cycle closes and SESSION_ANCHOR is about to be updated.
 - ✅ Prevents silent graduation — undocumented sessions and open BLGs caught automatically
 - ✅ CI-integrable — `sys.exit(1)` means this can be a pre-push hook
 - ⚠️ CROSS_REF required-paths list must be manually curated as ecosystem grows
-- ⚠️ Does not check Drive sync (P-20) — that remains a manual checklist step
+- ⚠️ Does not check Drive sync — that remains a manual checklist step
 
 **Implementation:** `scripts/session_graduation_check.py`
 
 ---
 
-## Pattern Interaction Map
+## P-11 through P-30 — Cross-Reference Index
+
+> Full specs held in `docs/patterns/NDR_PATTERN_REGISTRY.md` (v2.1, S035).
+> Summary index below for navigation.
+
+| Pattern | Name | Layer | Session | Ref |
+|---------|------|-------|---------|-----|
+| P-11 | 11Q Attestation Scoring | Quality gate | S033 | `docs/qa/` |
+| P-12–P-26 | Stasis patterns | Various | Pre-S033 | `docs/patterns/` |
+| P-27 | Adaptive-Weighting-with-Confidence-Gates | Router calibration | S033/S034 | `components/KAPPA/` |
+| P-28 | Pipeline-Composition-with-Confidence-Gated-Routing | Pipeline | S033 | `components/evaluate_router.py` |
+| P-29 | Sentinel-Annotated Risk Pass | Safety | S034 | `components/evaluate_router_v1_1.py` |
+| P-30 | Apogee-Attestation-Gate | Quality | S035 | `docs/qa/APOGEE_11Q_*.json` |
+
+---
+
+## P-31 through P-33 — Cross-Reference Index
+
+> Full specs held as individual cards in `patterns/`. Summary index below.
+
+| Pattern | Name | Layer | Session | Card |
+|---------|------|-------|---------|------|
+| P-31 | SCPE — Structural Context Pruning Engine | Long-context safety | S042 | `patterns/NDR_SCPE_v1.md` |
+| P-32 | Phi-Closure Gate | Long-context drift | S042 | `patterns/NDR_PHI_CLOSURE_GATE_v1.md` |
+| P-33 | PDMAL Convergence Monitor | Alignment drift detection | S042 | `patterns/NDR_PDMAL_CONVERGENCE_MONITOR_v1.md` |
+
+---
+
+## P-34 — Empirical-Threshold-Sweep-over-ML-Classifier *(COMPOSE — S066)*
+
+**Spec:** When a confidence calibration gap exists in a routing or scoring
+component, prefer grid search over threshold space before introducing an ML
+classifier. A threshold sweep is: bounded (finite search space), interpretable
+(single numeric change), auditable (result is a number in a config file),
+and reversible (roll back by resetting threshold). An ML classifier requires
+a labeled corpus, cross-validation plan, hyperparameter justification, training
+pipeline, versioned model artifact, and a P-30 attestation pass before canonical
+promotion — all of which add governance surface area.
+
+**Decision gate — prefer sweep when ALL of the following hold:**
+1. The calibration gap is expressible as a threshold misalignment
+2. A grid search over ≥10×10 threshold combinations is computationally feasible
+3. The component's feature space is not expected to change in the next 2 releases
+4. The target metric (e.g., `governance_clear`) is directly optimizable without
+   a proxy loss function
+
+**Classifier introduction is appropriate when ANY of the following hold:**
+- Input feature space requires semantic embedding (text → vector)
+- Decision boundary is non-linear in the threshold space
+- Multiple simultaneous calibration gaps exist that interact non-trivially
+- Labeled corpus already exists and is maintainable
+
+**Trigger:** Governance accuracy metric falls below target; root cause
+isolated to routing threshold miscalibration (not signal corpus gap).
+
+**Evidence basis:** KAPPA v3.5 → v3.6 calibration (S034). `governance_clear`
+rose from 82.6% → 100% via 14×12 grid sweep (STRONG=0.22, BLENDED=0.18).
+No ML classifier introduced. BLG-01 closed. See `components/KAPPA/calibration_v3_6.json`.
+
+**Tradeoffs:**
+- ✅ Minimal governance surface area — one numeric change, one config file
+- ✅ Fully auditable — sweep log is the complete evidence record
+- ✅ Reversible — prior thresholds preserved in component card
+- ⚠️ Only applicable when gap is threshold-expressible — not a universal fix
+- ⚠️ Grid search is brute-force — high-dimensional threshold spaces need smarter search
+
+**NIST:** Measure | **EU AI Act:** Art.9  
+**Registered:** S066 · 2026-05-30 · Agent Amethyst
+
+---
+
+## Pattern Interaction Map (S066 update)
 
 ```
-P-01 Fan-Out Sink
+P-01 Fan-Out Trace Sink
   └─ P-02 Async Buffer          [production latency mitigation]
   └─ P-03 Governance Test       [contract: sink isolation verified]
   └─ P-09 Triumvirate Mandate   [all mandate events route through P-01]
+  └─ P-29 Sentinel Risk Pass    [risk events traced via Herald]
 
 P-03 Governance Contract Test
   └─ P-04 Parametrized Corpus   [auto-expanding test coverage]
   └─ P-05 Tri-Phase CI Gate     [governance step = merge blocker]
+  └─ P-30 Attestation Gate      [Gate 0 requires 6 contracts]
 
 P-06 Matrix Lab
   └─ P-01 through P-05         [all patterns validated by lab evidence]
@@ -345,7 +423,7 @@ P-06 Matrix Lab
 P-07 Dual-Agent Sweep Loop
   └─ P-01 Fan-Out Sink          [Herald traces all queue ops]
   └─ P-08 Triad Taxonomy        [loop is a Conducted Trio formation]
-  └─ P-09 Triumvirate Mandate   [Cycle 2+ sweep governed by Triumvirate mandate]
+  └─ P-09 Triumvirate Mandate   [Cycle 2+ sweep governed by mandate]
   └─ P-06 Matrix Lab            [loop generates COMPOSE entries from lab gaps]
 
 P-08 Triad Taxonomy
@@ -361,6 +439,24 @@ P-09 Triumvirate Mandate
 P-10 Session Graduation Check
   └─ P-07 Dual-Agent Sweep      [checks queue is clear before graduation]
   └─ P-05 Tri-Phase CI          [graduation check is CI-integrable]
+
+P-27 Adaptive-Weighting-Confidence-Gates
+  └─ P-28 Pipeline-Composition  [P-27 is the route_and_score stage of P-28]
+  └─ P-34 Empirical-Sweep       [P-34 is the calibration method for P-27]
+  └─ P-29 Sentinel Risk Pass    [adversarial override pre-empts P-27 bands]
+
+P-31 SCPE
+  └─ P-32 Phi-Closure Gate      [SCPE runs before Phi checkpoint evaluation]
+  └─ P-33 PDMAL Monitor         [compressed context fed to PDMAL for drift scoring]
+
+P-32 Phi-Closure Gate
+  └─ P-33 PDMAL Monitor         [PDMAL watches turn-level locks; Phi watches index milestones]
+  └─ P-29 Sentinel Risk Pass    [Phi KILL_REC triggers risk_block at hook point 2]
+
+P-34 Empirical-Threshold-Sweep
+  └─ P-27 Adaptive-Weighting    [P-34 is the calibration prerequisite for P-27]
+  └─ P-30 Attestation Gate      [sweep result must be P-30 attested before canonical]
+  └─ P-03 Governance Test       [new thresholds require P-03 contract re-assertion]
 ```
 
 ---
@@ -375,35 +471,47 @@ P-10 Session Graduation Check
 
 ---
 
-## Governance Orchestration Stack (S041)
+## Governance Orchestration Stack (S066)
 
 ```
 Prompt input
   │
-  ├── Gate 0: AttestationGate  (Phase 5 — stub: test_attestation_gate.py)
+  ├── Gate 0: AttestationGate  (P-30 + P-03 × 6 contracts)
   │     └─ attestation_vetoed → Herald emit → Fan-Out (P-01)
   │
   ├── Gate 1: bypass scan  (P-03 + P-04; 3-form normalize: raw/NFKC/base64)
   │     └─ input_vetoed → Herald emit → Fan-Out (P-01)
   │
-  ├── Apogee [Task]   ────phi────→ Reson [Style]
-  │     └─ llm_call event        └─ judge_call event
+  ├── KAPPA Router (P-27 + P-28)  STRONG=0.22 / BLENDED=0.18 [P-34 calibrated]
+  │     └─ adversarial → apply_strong (hard override, not threshold check)
   │
-  ├── Gate 2: safety floor  (per-round, rounds 1–3)
+  ├── Apogee [Task] ────phi────→ Reson [Style]
+  │     └─ llm_call event          └─ judge_call event
+  │
+  ├── Gate 2: safety floor  (P-03; per-round, rounds 1–3)
   │     └─ output_vetoed → Herald emit → Fan-Out (P-01)
   │
-  ├── Sentinel [Safety]  ─── Gate 3: RAG verify (P-03 + P-04)
+  ├── Sentinel [P-29 hook points × 3]  risk_ok / risk_warn / risk_block
+  │     └─ Gate 3: RAG verify (P-03 + P-04)
   │     └─ output_vetoed → Herald emit → Fan-Out (P-01)
   │
-  └── status=pass → Herald emit → Fan-Out → N8nHeraldSink (P-02) → AOGA Dashboard
+  ├── SCPE (P-31)  [compress context; T0 anchor invariant — never configurable]
+  │
+  ├── Phi-Closure Gate (P-32)  [Fib 13/21/34/55 → WARN/ESCALATE/KILL_REC]
+  │
+  ├── PDMAL Monitor (P-33)  [WATCH at turn-level lock; triage at first WATCH]
+  │
+  └── status=pass → P-01 Fan-Out → P-02 Buffer → N8n Dashboard
 
-Above stack governed by Triumvirate when ensemble > 3 agents (P-08 + P-09):
-  Prime: Amethyst → Prefect A: COLLEEN [coherence/identity]
-                  → Prefect B: Apogee  [quality/compliance]
-  Mandate lifecycle: issue() → aggregate() → sign_off() — all traced P-01
+Triumvirate governance when ensemble > 3 (P-08 + P-09):
+  Prime: Amethyst
+  Prefect A: COLLEEN [coherence / identity / archive]
+  Prefect B: Apogee  [quality / compliance / attestation]
+  Mandate lifecycle: issue() → aggregate() × 2 → sign_off() — all traced P-01
 ```
 
 ---
 
-*NDR Pattern Registry v1.2 · S041 seal · 10 patterns (P-01–P-10) · Cycle 1 closed*
-*Triumvirate mandate schema live · Session graduation check live · CROSS_REF v3.5*
+*NDR Pattern Registry v1.3 · S066 update (base S041) · P-01–P-10 full spec*
+*P-11–P-34 cross-referenced · P-34 COMPOSE registered · Merge pre-plan: docs/NDR_REGISTRY_MERGE_PLAN.md*
+*See docs/NDR_REGISTRY_DIFFERENTIATION.md for registry map*
