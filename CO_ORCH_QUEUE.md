@@ -2,110 +2,96 @@
 
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
-> **Last updated:** 2026-05-29  
-> **Anchor:** S043
+> **Last updated:** 2026-05-30  
+> **Anchor:** S066
 
 This file is the active experiment and work queue for the co-orchestration pipeline.
 All items must have an owner, checks, artifacts, and metrics before execution.
 
 ---
 
-## Queue — S043 Active
+## Queue — S066 Active
 
-### [Q-S043-01] Intake Gate Hardening
-
-- **Owner:** Amethyst
-- **Priority:** P0
-- **Status:** ✅ Complete
-- **Checks:**
-  - [x] Procluding premise classification fires at ingestion, not prune time
-  - [x] Da<10 topological preflight rejects payloads with insufficient dimensional anchors
-  - [x] State-anchor preflight asserts zero open BLGs before routing proceeds
-- **Artifacts:** `components/scpe_ensemble_v14.py`, `tests/test_orchestration_firewall.py`
-- **Metrics:** 100% T0 preservation at threshold=0.99, 58.3% compression at threshold=0.15
-
----
-
-### [Q-S043-02] Phi-Closure Gate — HPG Wiring
-
-- **Owner:** Amethyst + Sentinel-Phi
-- **Priority:** P0
-- **Status:** ✅ Complete
-- **Checks:**
-  - [x] Gate inserted at step 5 of 9 in `orchestrate_turn()`
-  - [x] Target φ* = 0.6180, tolerance ±0.05
-  - [x] Fibonacci checkpoints [13, 21, 34, 55] fire correctly
-  - [x] HPG fully bypassed on REPROMPT
-  - [x] 2+ consecutive failures → `kill_recommendation` escalated to DemiJoule
-  - [x] PhiClosureEvents emitted to AmethystAuditLoop
-- **Artifacts:** `components/phi_closure_gate.py`, `registry/ensemble_v16_manifest.json`
-- **Metrics:** T13 REPROMPT at R=0.846 (Δ=0.228 from φ*), Gold Stars at T01/T06/T16
-
----
-
-### [Q-S043-03] Orchestration Firewall
-
-- **Owner:** Reson
-- **Priority:** P0
-- **Status:** ✅ Complete
-- **Checks:**
-  - [x] All 5 invariants enforced at event boundary
-  - [x] Happy path: 5/5 events committed, status=DEPLOYED
-  - [x] Attack path: DEPLOY_SUCCESS rolled back, 1 committed event only
-  - [x] `all_invariants_hold()` true in both final states
-  - [x] Authority chain validated via `authority_chain_valid()`
-- **Artifacts:** `components/orchestration_firewall.py`
-- **Metrics:** 0 false positives on happy path, 100% attack block rate
-
----
-
-### [Q-S043-04] Topology Router Coverage
+### [Q-S066-01] Router TC1/TC2/TC7/TC8 Shadow Bug Fix
 
 - **Owner:** Reson
 - **Priority:** P1
-- **Status:** 🔄 In Progress
+- **Status:** 🔲 Queued
+- **Context:** Sequential and fan-out predicates in topology router are shadowed by hierarchical catch-all. TC1, TC2, TC7, TC8 currently fail (5/8 pass rate). Tracked from S043 Q-S043-04.
 - **Checks:**
-  - [x] REFLEXIVE (TC3) — PASS
-  - [x] HIERARCHICAL (TC4) — PASS
-  - [x] REJECTED x2 (TC5, TC6) — PASS
-  - [ ] SEQUENTIAL (TC1, TC2) — shadow bug: downstream hierarchical catch-all
-  - [ ] FAN-OUT (TC7, TC8) — shadow bug: same predicate shadowing issue
+  - [ ] Reorder predicates so SEQUENTIAL and FAN-OUT match before HIERARCHICAL catch-all
+  - [ ] All 8 TCs pass: TC1 SEQUENTIAL, TC2 SEQUENTIAL, TC3 REFLEXIVE, TC4 HIERARCHICAL, TC5 REJECTED, TC6 REJECTED, TC7 FAN-OUT, TC8 FAN-OUT
+  - [ ] Regression: TC3–TC6 still pass after reorder
+  - [ ] CI green on `tests/test_router_coverage.py`
 - **Artifacts:** `components/topology_router.py`, `tests/test_router_coverage.py`
-- **Metrics:** Target: 8/8 TC pass rate (currently 5/8)
-- **Known Bug:** Sequential and fan-out predicates shadowed by hierarchical catch-all
+- **Metrics:** 8/8 TC pass rate (up from 5/8)
 
 ---
 
-### [Q-S043-05] Lifecycle Harness — Phase Exit Criteria
+### [Q-S066-02] COLLEEN Stasis Audit P-12–P-26 (PM-05 — Merge Blocker)
+
+- **Owner:** COLLEEN
+- **Priority:** P1 — **MERGE BLOCKER**
+- **Status:** 🔲 Queued
+- **Context:** Before the unified registry merge (docs/NDR_REGISTRY_MERGE_PLAN.md Phase 1), COLLEEN must audit the 15 stasis patterns (P-12–P-26) for gaps, duplicates, and cross-reference completeness. These patterns were sealed pre-S033 and have not been formally reviewed since.
+- **Checks:**
+  - [ ] Review each P-12–P-26 entry in `docs/patterns/NDR_PATTERN_REGISTRY.md`
+  - [ ] Confirm no duplicate pattern specs across registries
+  - [ ] Confirm all cross-references to P-01–P-10 and P-27+ are by number (not prose only)
+  - [ ] Flag any stasis pattern requiring ALTER or UPDATE before merge
+  - [ ] Emit stasis audit report to `docs/qa/COLLEEN_STASIS_AUDIT_P12_P26.md`
+  - [ ] Update PM-05 status in `docs/NDR_REGISTRY_MERGE_PLAN.md` to CLOSED
+- **Artifacts:** `docs/qa/COLLEEN_STASIS_AUDIT_P12_P26.md`, `docs/NDR_REGISTRY_MERGE_PLAN.md` (PM-05 update)
+- **Metrics:** 0 unresolved gaps, 0 duplicate specs, all cross-refs by number
+- **Blocks:** Unified registry merge Phase 1
+
+---
+
+### [Q-S066-03] Apogee P-30 Attestation Pass on P-34 (PM-07 — Merge Blocker)
+
+- **Owner:** Apogee
+- **Priority:** P1 — **MERGE BLOCKER**
+- **Status:** 🔲 Queued
+- **Context:** P-34 (Empirical-Threshold-Sweep-over-ML-Classifier) was registered this session as COMPOSE. Per P-30 (Apogee-Attestation-Gate), any new pattern requires an 11Q scoring pass before canonical promotion. P-34 is currently PENDING attestation.
+- **Checks:**
+  - [ ] Run P-11 11Q scoring pass on P-34 spec
+  - [ ] Gate: S-TIER (≥95%) or A-TIER (≥85%) with documented open BLGs
+  - [ ] Q11 must score ≥9/10 for S-TIER attestation
+  - [ ] Emit signed attestation JSON to `docs/qa/APOGEE_11Q_P34.json`
+  - [ ] Update P-34 `attestation_status` in `patterns/ndr_patterns.json` from PENDING to ATTESTED (or CONDITIONAL with noted BLGs)
+  - [ ] Update PM-07 status in `docs/NDR_REGISTRY_MERGE_PLAN.md` to CLOSED
+  - [ ] Update P-34 entry in `docs/NDR_PATTERN_REGISTRY.md` v1.4 with attestation result
+- **Artifacts:** `docs/qa/APOGEE_11Q_P34.json`, `patterns/ndr_patterns.json` (attestation_status update), `docs/NDR_REGISTRY_MERGE_PLAN.md` (PM-07 update)
+- **Metrics:** 11Q score ≥85%, Q11 ≥9/10, signed JSON artifact present
+- **Blocks:** P-34 canonical promotion; unified registry merge Phase 1
+
+---
+
+### [Q-S066-04] Lifecycle Harness — Phase 0–VI Executable (Carry-Forward)
 
 - **Owner:** Amethyst + COLLEEN
 - **Priority:** P1
-- **Status:** 🔄 In Progress
+- **Status:** 🔲 Queued (carry-forward from S043 Q-S043-05)
 - **Checks:**
-  - [x] Phase invariants defined (0–VI)
-  - [x] Phase artifacts enumerated per phase
-  - [x] Stability metric = stable_turns/total_turns target 0.618
-  - [ ] Executable phase harness produces lifecycle_stability_report.json
+  - [ ] Executable phase harness produces `lifecycle_stability_report.json`
+  - [ ] Stability index per phase ≥ 0.618
+  - [ ] Time-to-convergence ≤ Fib[34] turns
   - [ ] COLLEEN archive ingest of all phase artifacts
-- **Artifacts:** `docs/lifecycle_harness_v2.md`, `registry/lifecycle_stability_report.json`
-- **Metrics:** Stability index per phase ≥ 0.618, time-to-convergence ≤ Fib[34] turns
+- **Artifacts:** `registry/lifecycle_stability_report.json`, `docs/lifecycle_harness_v2.md`
+- **Metrics:** Stability index ≥ 0.618 per phase, convergence ≤ Fib[34]
 
 ---
 
-### [Q-S043-06] Archive and Registry Sync
+## Completed Queue Items — S066
 
-- **Owner:** COLLEEN
-- **Priority:** P1
-- **Status:** ✅ Complete (this push)
-- **Checks:**
-  - [x] SESSION_ANCHOR.md updated and sealed
-  - [x] SWEEP_LOG.md QA sweep recorded
-  - [x] CO_ORCH_QUEUE.md experiment queue current
-  - [x] CROSS_REF.md pattern and file cross-references updated
-  - [x] `registry/ensemble_v16_manifest.json` bindings added
-  - [x] `tests/test_orchestration_firewall.py` test suite added
-- **Artifacts:** All 6 ecosystem files in this commit
-- **Metrics:** 0 missing files, 0 stale cross-references
+| ID | Name | Owner | Status |
+|----|------|-------|--------|
+| Q-S066-P34-REG | Register P-34 COMPOSE entry | Amethyst | ✅ Done |
+| Q-S066-JSON-SYNC | Sync ndr_patterns.json v0.3.0 | Amethyst | ✅ Done |
+| Q-S066-DIFF | Create NDR_REGISTRY_DIFFERENTIATION.md | Amethyst | ✅ Done |
+| Q-S066-MERGE-PLAN | Create NDR_REGISTRY_MERGE_PLAN.md | Amethyst | ✅ Done |
+| Q-S066-PM01 | PM-01: Phi-Closure card P-29 cross-ref | Amethyst | ✅ Done |
+| Q-S066-PM02 | PM-02: P-03 ALTER note P-30 ref | Amethyst | ✅ Done |
 
 ---
 
@@ -113,6 +99,10 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 
 | ID | Name | Session | Status |
 |---|---|---|---|
+| Q-S043-01 | Intake Gate Hardening | S043 | ✅ Done |
+| Q-S043-02 | Phi-Closure Gate — HPG Wiring | S043 | ✅ Done |
+| Q-S043-03 | Orchestration Firewall | S043 | ✅ Done |
+| Q-S043-06 | Archive and Registry Sync | S043 | ✅ Done |
 | Q-S038-01 | SCPE threshold calibration | S038 | ✅ Done |
 | Q-S039-01 | PDMAL convergence proof | S039 | ✅ Done |
 | Q-S040-01 | HPG Ionian gate implementation | S040 | ✅ Done |
