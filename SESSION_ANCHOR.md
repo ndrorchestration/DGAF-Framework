@@ -4,7 +4,7 @@
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead  
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect  
 > **Last updated:** 2026-05-30  
-> **Anchor ID:** S067
+> **Anchor ID:** S068
 
 ---
 
@@ -17,52 +17,43 @@
 | S041 | 2026-05-26 | Triad taxonomy, P-07 P-08 registered, Triumvirate defined | ✅ SEALED |
 | S040 | 2026-05-26 | PPTL harness, 3-gate governance, tri-phase CI | ✅ SEALED |
 | S039 | 2026-05-22 | 10-repo auto-sweep, 24 findings, CROSS_REF v3.3 | ✅ SEALED |
-| S066 | 2026-05-30 | P-34 registered; ndr_patterns.json v0.3.0; registry differentiation + merge plan; PM-01–PM-03 closed; PM-05 + PM-07 ratified by Ender; Phase 1+2 complete; Phase 3 OPEN | ✅ SEALED |
-| **S067** | **2026-05-30** | **Phase 3 merge completion: PR-D (redirect stub), PR-E (CROSS_REF v4.0 → unified path); CO_ORCH_QUEUE sync (Q-S066-02 + Q-S066-03 closed); SESSION_ANCHOR advanced S066 → S067; Amethyst × COLLEEN co-orchestration instantiated** | 🟢 ACTIVE |
+| S066 | 2026-05-30 | P-34 registered; ndr_patterns.json v0.3.0; registry differentiation + merge plan; PM-01–PM-03 closed; PM-05 + PM-07 ratified by Ender | ✅ SEALED |
+| **S067** | **2026-05-30** | **Q-S066-01 router shadow bug fixed (8/8 TC, 19/19 checks, v3.6.0); Q-S066-04 lifecycle harness Phase 0–VI (7/7 STABLE, φ*=0.618); PM-04 P-07 COMPOSE note + graduation script field-row format; PR-D redirect stub; PR-E CROSS_REF v4.0; CO_ORCH_QUEUE synced** | ✅ SEALED |
+| **S068** | **—** | **—** | 🟢 NEXT |
 
 ---
 
-## Current Session State — S067
+## Current Session State — S068
 
 | Field | Value |
 |---|---|
-| Anchor ID | S067 |
-| Status | 🟢 ACTIVE |
-| Opened | 2026-05-30 |
-| Phase | III — Phase 3 Merge Execution |
+| Anchor ID | S068 |
+| Status | 🟢 NEXT (not yet opened) |
+| Opened | — |
+| Phase | IV — Registry Merge Execution |
 | Open BLGs | 0 |
-| PR-D | ✅ COMPLETE — `docs/NDR_PATTERN_REGISTRY.md` redirect stub |
-| PR-E | ✅ COMPLETE — `CROSS_REF.md` v4.0 → unified registry path + S067 anchor |
-| CO_ORCH_QUEUE | ✅ SYNCED — Q-S066-02 + Q-S066-03 closed, S067 wave active |
-| P-10 graduation check | 🔲 PENDING — `scripts/session_graduation_check.py` |
-| Unified registry links | 🔲 PENDING — internal link validation |
-| ndr_patterns_unified.json | ✅ Parseable — v2.0.0 live |
-| BLG-P34-01 / BLG-P34-02 | ✅ Confirmed closed in unified spec (S066) |
-| COLLEEN stasis secondary sign-off | ✅ On record — Ender ratified S066 |
+| Carry-forward P1 | PM-05 COLLEEN stasis audit P-12–P-26 |
+| Carry-forward P1 | PM-07 Apogee P-34 attestation |
+| Carry-forward Medium | — (PM-04 closed S067) |
 
 ---
 
-## S067 Objectives
+## S068 Objectives (Pre-loaded)
 
-- [x] CO_ORCH_QUEUE: close Q-S066-02 + Q-S066-03 (COLLEEN)
-- [x] PR-D: `docs/NDR_PATTERN_REGISTRY.md` → redirect stub (Amethyst)
-- [x] PR-E: `CROSS_REF.md` → unified path + S067 anchor (COLLEEN + Amethyst)
-- [x] SESSION_ANCHOR advanced to S067
-- [ ] P-10 graduation check — run `scripts/session_graduation_check.py`
-- [ ] Internal link validation across unified registry
-- [ ] Q-S066-01 — Router TC1/TC2/TC7/TC8 fix (Reson)
-- [ ] Q-S066-04 — Lifecycle harness Phase 0–VI executable (Amethyst + COLLEEN)
-- [ ] PM-04 — P-07 COMPOSE mode note (non-blocking)
+- [ ] PM-05 — COLLEEN stasis audit P-12–P-26 (merge blocker)
+- [ ] PM-07 — Apogee P-34 attestation (merge blocker)
+- [ ] Registry merge Phase 2 execution (post PM-05 + PM-07 clearance)
+- [ ] Run `scripts/session_graduation_check.py --session S068`
 
 ---
 
-## S067 Carry-Forward
+## S067 Carry-Forward — ALL CLOSED
 
-| ID | Owner | Item | Priority |
-|----|-------|------|----------|
-| Q-S066-01 | Reson | Router TC1/TC2/TC7/TC8 shadow bug fix | P1 |
-| Q-S066-04 | Amethyst + COLLEEN | Lifecycle harness Phase 0–VI executable | P1 |
-| PM-04 | Amethyst | P-07 COMPOSE mode note | Medium |
+| ID | Owner | Item | Status |
+|----|-------|------|--------|
+| Q-S066-01 | Reson + Amethyst | Router TC1/TC2/TC7/TC8 shadow bug fix | ✅ CLOSED S067 |
+| Q-S066-04 | Amethyst + COLLEEN | Lifecycle harness Phase 0–VI executable | ✅ CLOSED S067 |
+| PM-04 | Amethyst | P-07 COMPOSE mode note + graduation script | ✅ CLOSED S067 |
 
 ---
 
@@ -73,11 +64,12 @@
 - [x] PR-C: Archive `patterns/NDR_*.md` → redirect stubs ✅ S066
 - [x] PR-D: `docs/NDR_PATTERN_REGISTRY.md` → redirect stub ✅ S067
 - [x] PR-E: CROSS_REF → unified path ✅ S067
-- [ ] P-10 graduation check passes
-- [ ] All internal links resolve
-- [ ] `ndr_patterns_unified.json` parseable ✅ confirmed
-- [ ] BLG-P34-01 + BLG-P34-02 confirmed closed ✅ confirmed S066
-- [ ] COLLEEN stasis expansion secondary sign-off ✅ Ender ratified S066
+- [x] `ndr_patterns_unified.json` parseable ✅ v2.0.0 confirmed
+- [x] BLG-P34-01 + BLG-P34-02 confirmed closed ✅ S066
+- [x] COLLEEN stasis secondary sign-off ✅ Ender ratified S066
+- [ ] PM-05: COLLEEN stasis audit P-12–P-26 → S068
+- [ ] PM-07: Apogee P-34 attestation → S068
+- [ ] P-10 graduation check → S068
 
 ---
 
@@ -98,7 +90,7 @@
 
 ---
 
-## State Anchor Goals — S067
+## State Anchor Goals — S067 ✅ All Met
 
 - [x] zero_open_blg — 0 session BLGs
 - [x] single_authority_chain
@@ -108,5 +100,5 @@
 
 ---
 
-*S067 ACTIVE · Amethyst × COLLEEN co-orchestration · 2026-05-30*
-*Phase 3 merge: PR-A through PR-E complete · Post-merge validation in progress*
+*S067 ✅ SEALED · Amethyst × COLLEEN · 2026-05-30 03:16 EDT*  
+*S068 🟢 NEXT · Phase IV — Registry Merge Execution*
