@@ -2,8 +2,8 @@
 
 **DGAF-Framework · S066**
 Plan author: Amethyst · Governance authority: Triumvirate (Amethyst / COLLEEN / Apogee)
-Created: 2026-05-30 | Updated: 2026-05-30 (PM-01 PM-02 closed)
-Target: First available session after PM-04, PM-05, PM-07 resolved
+Created: 2026-05-30 | Updated: 2026-05-30 (PM-05 PM-07 pending ratification)
+Target: First available session after Ender ratification of PM-05 + PM-07
 
 ---
 
@@ -67,8 +67,8 @@ The merge does **not** change any pattern specs. It changes only:
 |----|--------|-------|--------|
 | PM-01 | Add P-32 ↔ P-29 cross-ref to Phi-Closure Gate card | Amethyst | ✅ CLOSED S066 |
 | PM-02 | Update P-03 ALTER note to reference P-30 by number | Amethyst | ✅ CLOSED S066 |
-| PM-05 | COLLEEN stasis audit: P-12–P-26 gap/duplicate check | COLLEEN | 🔲 Queued Q-S066-02 |
-| PM-07 | Apogee P-30 attestation pass on P-34 | Apogee | 🔲 Queued Q-S066-03 |
+| PM-05 | COLLEEN stasis audit: P-12–P-26 gap/duplicate check | COLLEEN | 🟡 PENDING ENDER RATIFICATION |
+| PM-07 | Apogee P-30 attestation pass on P-34 | Apogee | 🟡 PENDING ENDER RATIFICATION |
 
 ### Phase 2 — Soft Pre-Merge
 
@@ -82,15 +82,15 @@ The merge does **not** change any pattern specs. It changes only:
 1. **Draft unified file** at `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`
    - Copy P-01–P-10 full specs from source A
    - Copy P-11, P-27–P-30 full specs from source B
-   - Expand stasis block P-12–P-26 from source B (post COLLEEN audit)
+   - **Expand stasis block P-12–P-26 from source B** (COLLEEN secondary review required per audit)
    - Absorb P-31–P-33 card content from sources C/D/E
-   - Insert P-34 full spec (in source A as of S066)
+   - Insert P-34 full spec (add explicit tradeoff block + ref path per BLG-P34-01/02)
    - Build unified interaction map and orchestration stack diagram
 
 2. **Triumvirate review**
    - Amethyst: structure, completeness, interaction map accuracy
-   - COLLEEN: archival integrity, stasis block correctness, provenance
-   - Apogee: P-30 attestation on P-34, quality gate section accuracy
+   - COLLEEN: archival integrity, stasis block expansion sign-off (secondary review)
+   - Apogee: confirm BLG-P34-01 and BLG-P34-02 resolved in merged P-34 spec
 
 3. **PRs** (separate, merge in order):
    - PR-A: Add `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` + `docs/ndr_patterns_unified.json`
@@ -104,6 +104,7 @@ The merge does **not** change any pattern specs. It changes only:
    - CROSS_REF updated
    - All internal links resolve
    - `ndr_patterns_unified.json` parseable
+   - BLG-P34-01 and BLG-P34-02 confirmed closed in merged spec
 
 ### Phase 4 — Deprecation
 
@@ -117,8 +118,8 @@ The merge does **not** change any pattern specs. It changes only:
 
 Triumvirate-governed per P-08 + P-09:
 - **Prime:** Amethyst
-- **Prefect A:** COLLEEN (archival integrity, stasis audit, provenance)
-- **Prefect B:** Apogee (quality gate, attestation, P-30 pass on P-34)
+- **Prefect A:** COLLEEN (archival integrity, stasis audit, stasis block expansion secondary review)
+- **Prefect B:** Apogee (quality gate, attestation, BLG-P34-01/02 resolution confirmation)
 
 Mandate must be issued per P-09 before Phase 3 begins.
 
@@ -128,14 +129,25 @@ Mandate must be issued per P-09 before Phase 3 begins.
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|------------|
-| P-numbering gap in stasis P-12–P-26 | Medium | High | PM-05 COLLEEN audit is hard blocker |
+| P-numbering gap in stasis P-12–P-26 | Medium | High | COLLEEN conditional pass: expand source B first; secondary sign-off |
 | Cross-ref links break after path changes | Medium | Medium | All refs use pattern numbers after merge |
-| P-34 enters registry without attestation | Low | High | PM-07 Apogee attestation is hard blocker |
-| Stasis patterns inadvertently modified | Low | High | COLLEEN signs off on stasis section |
+| P-34 enters registry without attestation | Low | High | PM-07: A-TIER conditional; BLG-P34-01/02 must close at merge |
+| Stasis patterns inadvertently modified | Low | High | COLLEEN signs off on expanded stasis section |
 | Merge creates conflicting interaction maps | Medium | Medium | Unified map written fresh, not concatenated |
 
 ---
 
-*NDR Registry Merge Pre-Plan v1.1 · S066 · 2026-05-30*
-*PM-01 PM-02 PM-03: ✅ CLOSED · PM-05 PM-07: queued · Phase 1 partially complete*
-*Merge execution: pending PM-05 (COLLEEN) + PM-07 (Apogee)*
+## Pending Ratification (Ender)
+
+| Item | Artifact | Verdict | Ratify to |
+|------|----------|---------|-----------|
+| PM-05 COLLEEN stasis audit | `docs/qa/COLLEEN_STASIS_AUDIT_P12_P26.md` | ⚠️ CONDITIONAL PASS | Close PM-05 |
+| PM-07 Apogee 11Q on P-34 | `docs/qa/APOGEE_11Q_P34.json` | A-TIER 94.5% / 2 minor BLGs | Close PM-07 |
+
+**Upon Ender ratification of both: Phase 1 is complete. Phase 3 merge execution opens.**
+
+---
+
+*NDR Registry Merge Pre-Plan v1.2 · S066 · 2026-05-30*
+*PM-05 PM-07: ⚠️ PENDING ENDER RATIFICATION · Phase 3: blocked pending ratification*
+*Merge execution: opens upon Ender confirm*
