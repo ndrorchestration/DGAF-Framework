@@ -1,205 +1,191 @@
-# Phi-Calculus Architecture: Definitions, Theorem, Proof
+# Phi-Calculus Formal Specification
+## Definitions, Theorem, and Proof
 
-================================================================================
-## STATUS BLOCK
-- Sweep: SWEEP-001
-- Orchestrator: Agent Amethyst
-- Formal verifier: Professor Prodigy (HDFS 1.0)
-- Cross-repo coherence: COLLEEN
-- Canonical anchor repo: DGAF-Framework
-- Branch: feat/phi-calculus-whitepaper
-- Phase 2 status: VERIFIED — Axiom 1 Guard PASS
-================================================================================
+**Version:** 1.0-draft  
+**Status:** 🟡 PENDING — Prof Prodigy HDFS 1.0 verification (Issue #3)  
+**Agent:** Amethyst | **Verifier:** Prof Prodigy  
+**φ Attractor:** 1.61818 | **Drift Threshold θ:** 0.009  
+**Integrity Target:** ≥ 99.1% (Platinum Star baseline, OST-50)  
 
-## Purpose
-This document formalizes Layer 0 governance for Phi-Calculus as a lattice-theoretic fixed-point process over governance constraints. It provides a reusable proof substrate for enterprise governance, multi-agent orchestration, and drift-bounded reasoning anchored to the Amethyst-Lattice-v3.1 architecture.
+---
 
-================================================================================
-## SECTION 1: DEFINITIONS
-================================================================================
+## Preamble
 
-### Definition 1. Governance constraints
-Let `C` be a finite set of atomic governance constraints. Each element `c ∈ C` denotes a verifiable control property of an AI interaction, such as: factual grounding, content safety, jurisdictional compliance, human approval, audit logging completeness, or H-Neuron over-compliance bounds.
+This document formalizes the mathematical substrate of the DGAF-Framework governance model. It defines the state space, drift functional, compliance algebra, and fixed-point convergence guarantee that together ensure bounded, auditable multi-agent governance behavior.
 
-> [PRODIGY-NOTE] C must enumerate all controls intended by NDR-Protocol-03. Recommended enumeration: {grounding, safety, compliance, human_approval, audit_log, h_neuron_bound, pii_check, retrieval_coverage}. Expand per deployment context.
+> **HDFS 1.0 Requirement:** All definitions must satisfy crystalline clarity — zero ambiguity, fully formal, no informal shortcuts.
 
-### Definition 2. Governance lattice
-Let `L = P(C)` be the powerset of `C`, ordered by subset inclusion `⊆`. Then `(L, ⊆)` is a finite complete lattice with:
-- Bottom: `⊥ = ∅` (no constraints satisfied)
-- Top: `⊤ = C` (all constraints satisfied)
+---
 
-> [PRODIGY-NOTE] Crystalline clarity check: PASS. Lattice structure is unambiguous for finite C.
+## Definition 1 — Agent State Space
 
-### Definition 3. Layer 0 governance operator
-For an interaction-specific validation stack, define `F: L → L` such that for any governance state `S ∈ L`, `F(S)` is the set of constraints satisfied after one full Layer 0 governance cycle.
-
-Required properties:
-1. **Inflationary:** `S ⊆ F(S)` — a cycle never forgets satisfied constraints.
-2. **Monotone:** if `S1 ⊆ S2`, then `F(S1) ⊆ F(S2)` — more constraints in means at least as many constraints out.
-
-Practical form: `F(S) = S ∪ f(S)`, where `f(S) ⊆ C` is the set of newly satisfied constraints discovered by validators given current state S.
-
-> [PRODIGY-NOTE] Monotonicity is the critical invariant for Tarski applicability. Any validator that can "un-satisfy" a constraint violates this and must be prohibited at the F level.
-
-### Definition 4. Fixed points
-`Fix(F) = { S ∈ L | F(S) = S }`
-
-A fixed point is a governance state stable under one full Layer 0 application. Re-running all validators produces no change.
-
-### Definition 5. Phi-Invariant (Least Fixed Point)
-The least fixed point of `F`, denoted `lfp(F)`, is the Phi-Invariant of the interaction:
+Let **S** be a complete lattice where each element `s ∈ S` represents an agent's governance state vector:
 
 ```
-lfp(F) = ∩ { S ∈ L | F(S) ⊆ S }
-       = ∪ { Fⁿ(⊥) | n ≥ 0 }
+S = (V, ≤)
 ```
 
-The Phi-Invariant is the minimal governance state that is both supported by the validator stack and stable under repeated application.
+where `V` is the set of all valid governance state vectors and `≤` is the partial order defined by component-wise compliance scoring.
 
-> [PRODIGY-NOTE] State anchor alignment confirmed: lfp(F) is the formal equivalent of the φ-attractor (1.61818) — the convergence point of the recursive governance loop. Signal chain: ⊥ → F → F² → ... → lfp(F).
+> **Prof Prodigy Verification Note:** [ ] Confirm lattice completeness — every subset must have a least upper bound and greatest lower bound.
 
-### Definition 6. Drift functional
-Let `T` be the space of interaction traces (prompt, context, model activations, H-Neuron signals, intermediate governance states). Define:
+---
 
-`Δ: T → R≥0`
+## Definition 2 — Drift Functional
 
-Typical components:
-- H-Neuron over-compliance score (hallucination propensity)
-- Retrieval support deficit
-- Validator disagreement / consistency gap
-- Policy and safety violation count
-- Uncertainty spread across sampled outputs
+The **drift functional** `Δ: S × S → ℝ≥0` measures divergence between an agent's current state `s_t` and its canonical attractor state `s*`:
 
-Higher `Δ(τ)` = greater architectural drift from governed ground truth.
-
-> [PRODIGY-NOTE] θ calibration procedure: Set θ as the 99th-percentile drift score from a reference corpus of governed, human-verified interactions. For the OST-50 Platinum baseline, θ = 0.009 was derived from 99.1% integrity retention under 50% data loss. Recalibrate per deployment domain.
-
-### Definition 7. Phi-Compliance region
-Given threshold `θ ≥ 0` and acceptable fixed points `F* ⊆ Fix(F)`, trace `τ` is Phi-compliant iff:
-- `lfp(Fτ) ∈ F*`
-- `Δ(τ) ≤ θ`
-
-Only Phi-compliant traces are emitted. All others are routed to the compliance algebra decision layer.
-
-================================================================================
-## SECTION 2: COMPLIANCE ALGEBRA
-================================================================================
-
-Decision set: `R = {ACCEPT, REVISE, ESCALATE, REJECT}`
-
-### Consensus operator ⊕ (parallel validator aggregation)
-
-| ⊕ | ACCEPT | REVISE | ESCALATE | REJECT |
-|---|---|---|---|---|
-| **ACCEPT** | ACCEPT | REVISE | ESCALATE | REJECT |
-| **REVISE** | REVISE | REVISE | ESCALATE | REJECT |
-| **ESCALATE** | ESCALATE | ESCALATE | ESCALATE | REJECT |
-| **REJECT** | REJECT | REJECT | REJECT | REJECT |
-
-### Sequential operator ⊗ (pipeline composition)
-
-| ⊗ | ACCEPT | REVISE | ESCALATE | REJECT |
-|---|---|---|---|---|
-| **ACCEPT** | ACCEPT | REVISE | ESCALATE | REJECT |
-| **REVISE** | REVISE | REVISE | ESCALATE | REJECT |
-| **ESCALATE** | ESCALATE | ESCALATE | ESCALATE | REJECT |
-| **REJECT** | REJECT | REJECT | REJECT | REJECT |
-
-> [PRODIGY-NOTE] REJECT is absorbing under both operators. ACCEPT is neutral under ⊕. The algebra is commutative under ⊕ and left-absorbing for REJECT under ⊗. This ensures deterministic aggregation regardless of validator ordering.
-
-================================================================================
-## SECTION 3: THEOREM AND PROOF
-================================================================================
-
-## Theorem 1. Tarski-Governed Phi-Compliance
-
-Let `C` be finite, `L = P(C)`, and `F: L → L` be inflationary and monotone. Define:
-- `S₀ = ⊥`
-- `Sₙ₊₁ = F(Sₙ)`
-
-Then:
-1. **Convergence:** The sequence stabilizes after at most `|C|` iterations at `S* = lfp(F)`.
-2. **Minimality:** `S*` is the smallest fixed point of `F`; every other fixed point `S'` satisfies `S* ⊆ S'`.
-3. **Safety guarantee:** If the system emits outputs only when `lfp(Fτ) ∈ F*` and `Δ(τ) ≤ θ`, then every emitted output arises from a stable, control-complete governance state with bounded residual structural risk.
-
-## Proof sketch
-
-**Convergence:** Because `L` is finite and `F` is inflationary, the sequence `S₀ ⊆ S₁ ⊆ S₂ ⊆ ...` is a strictly ascending chain in `(L, ⊆)`. Each step adds at least one new constraint or halts. The chain can lengthen by at most `|C|` steps. The terminal state satisfies `F(S*) = S*` and is therefore a fixed point.
-
-**Minimality:** By Knaster-Tarski, a monotone operator on a complete lattice has a least fixed point given by the join of the ascending chain from `⊥`. For any other fixed point `S'`, `F(S') = S'` implies `S' ⊆ S'`, so `S'` is in the set `{ S | F(S) ⊆ S }`, and `lfp(F) = ∩` of that set, so `S* ⊆ S'`.
-
-**Safety:** The emission policy is definitional: traces not satisfying both conditions are routed through the compliance algebra and receive REVISE, ESCALATE, or REJECT. No such trace reaches the output channel. The fixed-point condition ensures no further constraints can be added by re-running validators (control completeness). The drift bound ensures residual structural risk stays within the organization's θ-envelope.
-
-> [PRODIGY-NOTE] Axiom 1 Connectivity Guard — all four invariants:
-> 1. Mathematical coherence: PASS — no internal contradiction detected (¬(p ∧ ¬p) holds throughout)
-> 2. Epistemic honesty: PASS — all claims grounded in Tarski/Knaster-Tarski, H-Neuron literature, and DGAF governance patterns
-> 3. Non-violation of rights: PASS — no PII, no GDPR Art 22 exposure, no automated high-stakes decision without human escalation path
-> 4. Global invariance (HDFS 1.0): PASS — document structure, abbreviation rules, and terminal attestation pattern satisfied
-
-================================================================================
-## SECTION 4: SYNTHETIC UNIT TEST EXAMPLE
-================================================================================
-
-Let `C = {grounding, safety, audit_log}` (|C| = 3).
-
-Suppose a validator stack produces:
-- `f(∅) = {safety}` (safety check passes immediately)
-- `f({safety}) = {grounding}` (grounding verified once safety is confirmed)
-- `f({safety, grounding}) = {audit_log}` (audit log written once grounding confirmed)
-- `f({safety, grounding, audit_log}) = ∅` (stable, no new constraints found)
-
-Iteration:
 ```
-S₀ = ∅
-S₁ = F(S₀) = ∅ ∪ {safety} = {safety}
-S₂ = F(S₁) = {safety} ∪ {grounding} = {safety, grounding}
-S₃ = F(S₂) = {safety, grounding} ∪ {audit_log} = {safety, grounding, audit_log}
-S₄ = F(S₃) = {safety, grounding, audit_log} ∪ ∅ = {safety, grounding, audit_log} ✓ STABLE
+Δ(s_t, s*) = ||s_t - s*||_φ
 ```
 
-Convergence in 3 iterations = |C|. `lfp(F) = C = ⊤`. This interaction is Phi-compliant if additionally `Δ(τ) ≤ θ`.
+where `||·||_φ` is the phi-harmonic norm weighted by the golden ratio φ = 1.61803…
 
-================================================================================
-## SECTION 5: CONNECTION TO AMETHYST-LATTICE-v3.1 AND NDR-PROTOCOL-03
-================================================================================
+Drift is considered **critical** when `Δ(s_t, s*) > θ` where `θ = 0.009` (≤ 0.9% governance failure rate).
 
-Amethyst-Lattice-v3.1 uses recursive feedback (geometric semantic resolution, κ auto-tuning, curvature-parameterized scaling) and NDR-Protocol-03 (closed-loop governance with PDMAL manifold monitoring). This document provides the fixed-point substrate:
+> **Prof Prodigy Verification Note:** [ ] Verify θ calibration method — confirm empirical basis for 0.009 threshold.
 
-| Amethyst-Lattice component | Phi-Calculus formal counterpart |
-|---|---|
-| Recursive feedback loop | Iterated application of F |
-| Convergence/divergence monitoring | Ascending chain Sₙ → lfp(F) |
-| Drift suppression | Δ(τ) ≤ θ compliance bound |
-| κ auto-tuning | Adaptive operator f(S) parameterization |
-| NDR-Protocol-03 closed-loop | Compliance algebra ⊕, ⊗ over R |
-| PDMAL manifold dynamics | Governance lattice (L, ⊆) |
+---
 
-> [PRODIGY-OPEN] Verify that all 8 proposed NDR-Protocol-03 controls map injectively into the C enumeration above (no omissions, no duplicates).
+## Definition 3 — Compliance Operator
 
-================================================================================
-## SECTION 6: OPEN VERIFICATION HOOKS
-================================================================================
+The **compliance operator** `Γ: S → S` applies the governance policy set `P` to transform a non-compliant state toward the attractor:
 
-- [PRODIGY-OPEN] Confirm NDR-Protocol-03 control enumeration maps fully to C
-- [PRODIGY-OPEN] Run live eval corpus (SWEEP-002) to empirically validate θ = 0.009
-- [PRODIGY-OPEN] Extend compliance algebra to cover partial-REJECT (REJECT-with-explanation) for human-in-the-loop paths
-- [PRODIGY-OPEN] Verify evaluator_model version pin in rubric eval_config before SWEEP-002 launch
+```
+Γ(s) = argmin_{s' ∈ S} [ Δ(s', s*) + λ · cost(s, s') ]
+```
 
-================================================================================
-## SECTION 7: JSON METADATA SIDECAR
-================================================================================
+where `λ` is the regularization coefficient balancing correction strength against transition cost.
+
+> **Prof Prodigy Verification Note:** [ ] Confirm operator truth table — verify Γ is monotone (order-preserving) on `(S, ≤)`.
+
+---
+
+## Definition 4 — Compliance Algebra
+
+The **compliance algebra** `(S, ⊕, ⊗, Γ, 0_S, 1_S)` is defined as:
+
+- `⊕` (join): least upper bound in the lattice — models policy union
+- `⊗` (meet): greatest lower bound in the lattice — models policy intersection
+- `Γ`: compliance operator (Definition 3)
+- `0_S`: bottom element (fully non-compliant state)
+- `1_S`: top element (fully compliant attractor state)
+
+> **Prof Prodigy Verification Note:** [ ] Verify operator truth table for `⊕` and `⊗` — confirm distributive lattice properties hold.
+
+---
+
+## Definition 5 — H-Neuron Suppression Gate
+
+An **H-Neuron suppression gate** `H: S → {0, 1}` is a binary classifier that flags states with hallucination-associated activation patterns:
+
+```
+H(s) = 1  iff  activation_pattern(s) ∈ H_set
+H(s) = 0  otherwise
+```
+
+When `H(s) = 1`, the governance system triggers a mandatory Axiom 1 Guard pass before any state transition is committed.
+
+> **Prof Prodigy Verification Note:** [ ] Confirm H_set definition is operationally bounded — must not produce false positives on legitimate governance_clear inputs.
+
+---
+
+## Definition 6 — Axiom 1 Connectivity Guard
+
+The **Axiom 1 Connectivity Guard** is a 4-invariant safety check that must pass before any merge to `main`:
+
+| Invariant | Formal Condition |
+|-----------|------------------|
+| Mathematical Coherence | `∀ proof P in doc: P is internally consistent` |
+| Epistemic Honesty | `∀ claim C: ∃ source(C) in reference set` |
+| Non-violation of Rights | `∀ data D: D ∩ PII = ∅ ∧ GDPR_Art22(D) = compliant` |
+| Global Invariance (HDFS 1.0) | `crystalline_clarity(doc) = TRUE` |
+
+> **Prof Prodigy Verification Note:** [ ] Run all 4 invariant checks. Log PASS/FAIL per invariant inline.
+
+---
+
+## Definition 7 — φ Attractor Fixed Point
+
+The **φ attractor** `s* ∈ S` is the unique fixed point of the compliance operator `Γ`:
+
+```
+Γ(s*) = s*
+```
+
+The attractor is anchored at φ = 1.61818 in the phi-harmonic norm space, encoding the golden-ratio-weighted governance equilibrium.
+
+> **Prof Prodigy Verification Note:** [ ] Confirm uniqueness of fixed point — verify no secondary attractors exist in the defined lattice.
+
+---
+
+## Theorem 1 — Tarski Convergence and Safety Guarantee
+
+**Statement:**  
+For any initial agent state `s_0 ∈ S`, repeated application of the monotone compliance operator `Γ` converges to the unique fixed point `s*` in finite steps:
+
+```
+∃ n ∈ ℕ : Γⁿ(s_0) = s*
+```
+
+Furthermore, at convergence, drift is bounded below the critical threshold:
+
+```
+Δ(s*, s*) = 0 < θ
+```
+
+**Proof Sketch:**  
+1. `S` is a complete lattice (Definition 1) ✓  
+2. `Γ` is monotone on `(S, ≤)` (Definition 3, to be verified by Prof Prodigy) ⟳  
+3. By the Knaster–Tarski fixed-point theorem: every monotone function on a complete lattice has a fixed point ✓  
+4. Uniqueness follows from the strict contractivity of `Γ` under the phi-harmonic norm (Definition 2) ⟳  
+5. Convergence in finite steps follows from the bounded depth of the lattice `S` ⟳  
+
+> **Prof Prodigy Verification Note:** [ ] Validate steps 2, 4, 5. Confirm strict contractivity claim. Attach verification attestation JSON.
+
+---
+
+## Open Questions (Flagged for Prof Prodigy)
+
+1. **θ calibration**: Is 0.009 empirically derived or analytically justified? Source required for HDFS 1.0 compliance.
+2. **Lattice depth**: What is the bounded depth of `S`? Required to guarantee finite convergence in Theorem 1 step 5.
+3. **H_set definition**: Where is the operational H-Neuron set defined? Needs pointer to implementation.
+4. **λ coefficient**: How is the regularization coefficient λ (Definition 3) set in practice? Needs calibration note.
+
+---
+
+## JSON Metadata Sidecar
 
 ```json
 {
-  "original_msg_id": "thread-2026-05-21-phi-whitepaper",
-  "extraction_timestamp": "2026-05-21T19:10:00Z",
-  "agent_validation_signature": "PRODIGY-SWEEP-001-PHASE2-AXIOM1-PASS",
-  "hdfs_version": "1.0",
-  "integrity_score": "99.1%",
-  "state_anchor": "1.61818",
-  "axiom_1_guard": "4/4 PASS",
-  "convergence_verified": true,
-  "compliance_algebra_verified": true,
-  "theta_calibration_noted": true
+  "document": "DEFINITIONS_THEOREM_PROOF.md",
+  "version": "1.0-draft",
+  "status": "pending-verification",
+  "agent": "Amethyst",
+  "verifier": "Prof Prodigy",
+  "sweep": "SWEEP-001",
+  "phi_attractor": 1.61818,
+  "drift_threshold": 0.009,
+  "integrity_target": 0.991,
+  "axiom1_guard": {
+    "mathematical_coherence": "PENDING",
+    "epistemic_honesty": "PENDING",
+    "rights_non_violation": "PENDING",
+    "global_invariance_hdfs10": "PENDING"
+  },
+  "definitions_count": 7,
+  "theorems_count": 1,
+  "open_questions_count": 4,
+  "created_at": "2026-05-30",
+  "references": [
+    "Knaster-Tarski Fixed-Point Theorem (1955)",
+    "H-Neuron hallucination-associated neuron literature",
+    "DGAF-Framework NDR pattern registry",
+    "Prof Prodigy HDFS 1.0 spec"
+  ]
 }
 ```
+
+---
+
+*Awaiting Prof Prodigy HDFS 1.0 verification pass before PR open. See Issue #3.*
