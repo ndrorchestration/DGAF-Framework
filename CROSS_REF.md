@@ -2,30 +2,44 @@
 
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
-> **Last updated:** 2026-05-29  
-> **Anchor:** S043
+> **Last updated:** 2026-05-30  
+> **Anchor:** S067
 
 Canonical cross-reference index for patterns, files, agents, and ecosystem components.
 All NDR patterns, governance gates, and framework bindings are registered here.
+
+> ⚠️ **Registry path updated S067:** All pattern references now point to
+> `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` (P-01 through P-34+).
+> Machine-readable index: `docs/ndr_patterns_unified.json` v2.0.0.
 
 ---
 
 ## NDR Pattern Registry
 
-| Pattern ID | Name | File | Turn Sequence Step | Status |
-|---|---|---|---|---|
-| NDR-001 | PDMAL Convergence Proof | `components/pdmal_convergence.py` | Pre-turn (substrate) | ✅ Stable |
-| NDR-002 | Semantic Control-Plane Translation | `docs/semantic_controlplane.md` | N/A (design pattern) | ✅ Stable |
-| NDR-003 | Governance-First Constraint Stack | `components/governance_stack.py` | Steps 4–6 | ✅ Stable |
-| NDR-004 | Domain Expert Governance Overlay | `components/domain_overlay.py` | Step 3 | ✅ Stable |
-| NDR-005 | Structural Context Pruning Engine (SCPE) | `components/scpe_ensemble_v14.py` | Step 1 | ✅ Locked (threshold=0.15) |
-| NDR-006 | Fibonacci Phi-Closure Gate | `components/phi_closure_gate.py` | Step 5 | ✅ Wired |
-| NDR-007 | HPG Ionian Gate | `components/hpg_ionian_gate.py` | Step 6 | ✅ Stable |
-| NDR-008 | Orchestration Firewall | `components/orchestration_firewall.py` | All steps (boundary) | ✅ Active |
-| NDR-009 | Topology Router | `components/topology_router.py` | Post-HPG | 🔄 TC1/TC2/TC7/TC8 bug |
-| NDR-010 | DGAF 6-Axis Semantic Scoring | `components/dgaf_semantic_gate.py` | Step 4 | ✅ Stable |
-| NDR-011 | Amethyst Dual-Lock | `components/amethyst_dual_lock.py` | Step 8 | ✅ Stable |
-| NDR-012 | Lifecycle Phase Harness | `docs/lifecycle_harness_v2.md` | Meta (lifecycle) | 🔄 In Progress |
+**Canonical source:** [`docs/NDR_PATTERN_REGISTRY_UNIFIED.md`](docs/NDR_PATTERN_REGISTRY_UNIFIED.md)
+
+| Pattern ID | Name | Layer | Status |
+|---|---|---|---|
+| P-01 | Herald Trace Sink | 1 — Trace & Audit | ✅ Stable |
+| P-02 | COLLEEN Archive Ingest | 1 — Trace & Audit | ✅ Stable |
+| P-03 | CI Gate Harness | 2 — Testing & CI | ✅ Stable |
+| P-04 | Schema Diff Watchdog | 2 — Testing & CI | ✅ Stable |
+| P-05 | Regression Sentinel | 2 — Testing & CI | ✅ Stable |
+| P-06 | Architecture Lab Pattern | 3 — Architecture Lab | ✅ Stable |
+| P-07 | Co-Orchestration Dual-Agent Sweep | 4 — Governance Formation | ✅ Stable |
+| P-08 | Triumvirate Governance Gate | 4 — Governance Formation | ✅ Stable |
+| P-09 | Mandate Issuance Protocol | 4 — Governance Formation | ✅ Stable |
+| P-10 | Session Graduation Check | 4 — Governance Formation | ✅ Stable |
+| P-11 | 11Q Attestation Rubric | 5 — Quality Gate | ✅ Stable |
+| P-12–P-26 | Stasis Patterns (15 entries) | 6 — Stasis | ✅ CONDITIONAL PASS — Ender ratified S066 |
+| P-27 | Router Calibration Alpha | 7 — Router Calibration | ✅ Stable |
+| P-28 | Router Calibration Beta | 7 — Router Calibration | ✅ Stable |
+| P-29 | Sentinel Risk Block | 8 — Safety & Sentinel | ✅ Stable |
+| P-30 | Apogee Attestation Gate | 5 — Quality Gate | ✅ Stable |
+| P-31 | SCPE Long-Context Guard | 9 — Long-Context Safety | ✅ Locked (threshold=0.15) |
+| P-32 | Phi-Closure Gate | 9 — Long-Context Safety | ✅ Wired |
+| P-33 | PDMAL Convergence Monitor | 9 — Long-Context Safety | ✅ Stable |
+| P-34 | Empirical-Threshold-Sweep-over-ML-Classifier | 7 — Router Calibration | ✅ ATTESTED — A-TIER 94.5% — S066 |
 
 ---
 
@@ -33,15 +47,15 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 
 | Step | Gate / Component | Pattern | File | Notes |
 |---|---|---|---|---|
-| 1 | SCPE.prune() | NDR-005 | `scpe_ensemble_v14.py` | T0 immune, T3 eliminates in ~1 turn |
-| 2 | COLLEEN.schema_diff_check() | NDR-002 | `colleen_schema_diff.py` | SHA-256 state hash vs SSoT |
-| 3 | RECIPROCITY.arbitrate() | NDR-004 | `reciprocity_arbiter.py` | PDMAL reweight, Apogee floater |
-| 4 | DEMIJOUL.safety_gate() | NDR-010 | `dgaf_semantic_gate.py` | Layer1 syntactic, Layer2 DGAF 6-axis |
-| 5 | PHI-CLOSURE GATE | NDR-006 | `phi_closure_gate.py` | Fib[13,21,34,55]; φ*=0.618; ±0.05 |
-| 6 | HPG.gate() | NDR-007 | `hpg_ionian_gate.py` | Only if Phi-closure PASS |
-| 7 | PRODIGY.verify() | NDR-003 | `prodigy_verifier.py` | Mandatory on conf<0.85 |
-| 8 | APOGEE.review_artifact_seal() | NDR-011 | `amethyst_dual_lock.py` | Evidence grade → Gold Star gate |
-| 9 | AMETHYST.seal() | NDR-008 | `orchestration_firewall.py` | SHA-256 TurnAuditRecord → audit_log |
+| 1 | SCPE.prune() | P-31 / NDR-005 | `scpe_ensemble_v14.py` | T0 immune, T3 eliminates in ~1 turn |
+| 2 | COLLEEN.schema_diff_check() | P-04 / NDR-002 | `colleen_schema_diff.py` | SHA-256 state hash vs SSoT |
+| 3 | RECIPROCITY.arbitrate() | P-06 / NDR-004 | `reciprocity_arbiter.py` | PDMAL reweight, Apogee floater |
+| 4 | DEMIJOUL.safety_gate() | P-03 / NDR-010 | `dgaf_semantic_gate.py` | Layer1 syntactic, Layer2 DGAF 6-axis |
+| 5 | PHI-CLOSURE GATE | P-32 / NDR-006 | `phi_closure_gate.py` | Fib[13,21,34,55]; φ*=0.618; ±0.05 |
+| 6 | HPG.gate() | P-29 / NDR-007 | `hpg_ionian_gate.py` | Only if Phi-closure PASS |
+| 7 | PRODIGY.verify() | P-05 / NDR-003 | `prodigy_verifier.py` | Mandatory on conf<0.85 |
+| 8 | APOGEE.review_artifact_seal() | P-30 / NDR-011 | `amethyst_dual_lock.py` | Evidence grade → Gold Star gate |
+| 9 | AMETHYST.seal() | P-08 / NDR-008 | `orchestration_firewall.py` | SHA-256 TurnAuditRecord → audit_log |
 
 ---
 
@@ -61,33 +75,59 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 | `README.governance.md` | Governance architecture | Amethyst |
 | `README.technical.md` | Technical implementation | Reson |
 
+### docs/
+
+| File | Purpose | Status |
+|---|---|---|
+| `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` | **Unified registry — canonical SSoT (P-01–P-34+)** | ✅ Live S066 |
+| `docs/ndr_patterns_unified.json` | Machine-readable unified index v2.0.0 | ✅ Live S066 |
+| `docs/NDR_PATTERN_REGISTRY.md` | ~~Primary registry~~ → **Redirect stub** | ✅ PR-D S067 |
+| `docs/NDR_REGISTRY_MERGE_PLAN.md` | Merge plan v1.3 — Phase 1+2 ✅, Phase 3 🟢 | Active |
+| `docs/lifecycle_harness_v2.md` | Lifecycle phase harness spec | 🔄 In Progress |
+
+### docs/qa/
+
+| File | Purpose | Status |
+|---|---|---|
+| `docs/qa/APOGEE_11Q_P34.json` | P-34 attestation — A-TIER 94.5% | ✅ Ender ratified S066 |
+| `docs/qa/COLLEEN_STASIS_AUDIT_P12_P26.md` | Stasis audit — CONDITIONAL PASS | ✅ Ender ratified S066 |
+
 ### components/
 
 | File | Pattern | Status |
 |---|---|---|
-| `scpe_ensemble_v14.py` | NDR-005 SCPE | ✅ Locked |
-| `phi_closure_gate.py` | NDR-006 Phi-Closure | ✅ Wired |
-| `hpg_ionian_gate.py` | NDR-007 HPG | ✅ Stable |
-| `orchestration_firewall.py` | NDR-008 Firewall | ✅ Active |
-| `topology_router.py` | NDR-009 Router | 🔄 Bug TC1/2/7/8 |
-| `dgaf_semantic_gate.py` | NDR-010 DGAF | ✅ Stable |
-| `amethyst_dual_lock.py` | NDR-011 Dual-Lock | ✅ Stable |
+| `scpe_ensemble_v14.py` | P-31 / NDR-005 SCPE | ✅ Locked |
+| `phi_closure_gate.py` | P-32 / NDR-006 Phi-Closure | ✅ Wired |
+| `hpg_ionian_gate.py` | P-29 / NDR-007 HPG | ✅ Stable |
+| `orchestration_firewall.py` | P-08 / NDR-008 Firewall | ✅ Active |
+| `topology_router.py` | P-27 / NDR-009 Router | 🔄 Bug TC1/2/7/8 — Q-S066-01 |
+| `dgaf_semantic_gate.py` | P-03 / NDR-010 DGAF | ✅ Stable |
+| `amethyst_dual_lock.py` | P-30 / NDR-011 Dual-Lock | ✅ Stable |
+| `dynamic_weight_router.py` | P-34 / BLG-P34-02 ref path | ✅ Confirmed S066 |
 
 ### registry/
 
 | File | Purpose | Status |
 |---|---|---|
 | `ensemble_v16_manifest.json` | V16 full manifest with all gate bindings | ✅ Created S043 |
-| `lifecycle_stability_report.json` | Phase stability metrics | 🔄 Pending |
+| `lifecycle_stability_report.json` | Phase stability metrics | 🔄 Pending — Q-S066-04 |
 
 ### tests/
 
 | File | Coverage | Status |
 |---|---|---|
 | `test_orchestration_firewall.py` | Invariants 1–5, happy+attack path | ✅ Created S043 |
-| `test_router_coverage.py` | TC1–TC8 | 🔄 TC1/2/7/8 failing |
+| `test_router_coverage.py` | TC1–TC8 | 🔄 TC1/2/7/8 failing — Q-S066-01 |
 | `test_scpe_thresholds.py` | Threshold sweep, T0 guard | ✅ Stable |
 | `test_phi_closure.py` | 16-turn sim, checkpoint fire | ✅ Stable |
+
+### patterns/
+
+| File | Purpose | Status |
+|---|---|---|
+| `NDR_SCPE_v1.md` | P-31 card | ✅ Archived — redirect stub S066 |
+| `NDR_PHI_CLOSURE_GATE_v1.md` | P-32 card | ✅ Archived — redirect stub S066 |
+| `NDR_PDMAL_CONVERGENCE_MONITOR_v1.md` | P-33 card | ✅ Archived — redirect stub S066 |
 
 ---
 
@@ -95,23 +135,28 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 
 | Agent | Patterns Owned / Enforced |
 |---|---|
-| Amethyst | NDR-008 (firewall), NDR-011 (dual-lock), NDR-012 (lifecycle harness) |
-| COLLEEN | NDR-002 (schema diff), all archive and registry patterns |
-| Sentinel-Phi | NDR-006 (Phi-closure), NDR-007 (HPG), NDR-003 (constraint stack) |
-| Reciprocity | NDR-004 (domain overlay), arbitration logic |
+| Amethyst | P-08 (firewall), P-09 (mandate), P-10 (graduation), P-30 (dual-lock) |
+| COLLEEN | P-02 (archive ingest), P-04 (schema diff), P-07 (co-orch sweep), all registry/archive patterns |
+| Sentinel-Phi | P-32 (Phi-closure), P-29 (HPG), P-05 (constraint stack) |
+| Reciprocity | P-06 (domain overlay), arbitration logic |
 | Sonar | Evidence grounding for all patterns |
-| Reson | NDR-009 (router topology), NDR-001 (PDMAL substrate) |
-| Prodigy | NDR-010 (claim verification, confidence) |
-| Apogee | NDR-011 (Gold Star gate), QA rubrics |
+| Reson | P-27/P-28 (router topology), P-33 (PDMAL substrate) |
+| Prodigy | P-03 (claim verification, confidence) |
+| Apogee | P-11 / P-30 (Gold Star gate), QA rubrics, P-34 attestation |
 
 ---
 
 ## State Anchor Cross-Reference
 
-| Goal | Enforced By | File |
-|---|---|---|
-| zero_open_blg | Orchestration Firewall | `orchestration_firewall.py` |
-| single_authority_chain | `authority_chain_valid()` | `orchestration_firewall.py` |
-| append_only_log | Rollback on invariant failure | `orchestration_firewall.py` |
-| observable_invariants_only | All invariants tested at boundary | `test_orchestration_firewall.py` |
-| procluding_premise_first | SCPE.ingest() tier classification | `scpe_ensemble_v14.py` |
+| Goal | Enforced By | File | Status |
+|---|---|---|---|
+| zero_open_blg | Orchestration Firewall | `orchestration_firewall.py` | ✅ 0 session BLGs — S066 sealed |
+| single_authority_chain | `authority_chain_valid()` | `orchestration_firewall.py` | ✅ Active |
+| append_only_log | Rollback on invariant failure | `orchestration_firewall.py` | ✅ Active |
+| observable_invariants_only | All invariants tested at boundary | `test_orchestration_firewall.py` | ✅ Active |
+| procluding_premise_first | SCPE.ingest() tier classification | `scpe_ensemble_v14.py` | ✅ Active |
+
+---
+
+*CROSS_REF v4.0 · S067 · COLLEEN + Amethyst · 2026-05-30*
+*Unified registry path active · PR-D + PR-E complete · P-10 graduation check: PENDING*

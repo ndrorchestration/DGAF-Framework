@@ -4,7 +4,7 @@
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead  
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect  
 > **Last updated:** 2026-05-30  
-> **Anchor ID:** S066
+> **Anchor ID:** S067
 
 ---
 
@@ -17,73 +17,67 @@
 | S041 | 2026-05-26 | Triad taxonomy, P-07 P-08 registered, Triumvirate defined | ✅ SEALED |
 | S040 | 2026-05-26 | PPTL harness, 3-gate governance, tri-phase CI | ✅ SEALED |
 | S039 | 2026-05-22 | 10-repo auto-sweep, 24 findings, CROSS_REF v3.3 | ✅ SEALED |
-| **S066** | **2026-05-30** | **P-34 registered; ndr_patterns.json v0.3.0; registry differentiation + merge plan; PM-01–PM-03 closed; PM-05 + PM-07 ratified by Ender; Phase 1+2 complete; Phase 3 OPEN** | **✅ SEALED** |
+| S066 | 2026-05-30 | P-34 registered; ndr_patterns.json v0.3.0; registry differentiation + merge plan; PM-01–PM-03 closed; PM-05 + PM-07 ratified by Ender; Phase 1+2 complete; Phase 3 OPEN | ✅ SEALED |
+| **S067** | **2026-05-30** | **Phase 3 merge completion: PR-D (redirect stub), PR-E (CROSS_REF v4.0 → unified path); CO_ORCH_QUEUE sync (Q-S066-02 + Q-S066-03 closed); SESSION_ANCHOR advanced S066 → S067; Amethyst × COLLEEN co-orchestration instantiated** | 🟢 ACTIVE |
 
 ---
 
-## Current Session State — S066
+## Current Session State — S067
 
 | Field | Value |
 |---|---|
-| Anchor ID | S066 |
-| Status | ✅ SEALED |
+| Anchor ID | S067 |
+| Status | 🟢 ACTIVE |
 | Opened | 2026-05-30 |
-| Closed | 2026-05-30 |
-| Phase | IV — Deploy / Anchor |
-| Open BLGs | **0** (BLG-P34-01 and BLG-P34-02 are pattern-level advisories, not session BLGs) |
-| PM-01 | ✅ CLOSED |
-| PM-02 | ✅ CLOSED |
-| PM-03 | ✅ CLOSED |
-| PM-05 | ✅ CLOSED — Ender ratified 2026-05-30 02:49 EDT |
-| PM-07 | ✅ CLOSED — Ender ratified 2026-05-30 02:49 EDT |
-| Phase 1 | ✅ COMPLETE |
-| Phase 2 | ✅ COMPLETE |
-| Phase 3 | 🟢 OPEN — merge execution unblocked |
-| Pattern registry watermark | P-34 (ndr_patterns.json v0.3.0) |
-| Merge blockers | **0** — all cleared |
+| Phase | III — Phase 3 Merge Execution |
+| Open BLGs | 0 |
+| PR-D | ✅ COMPLETE — `docs/NDR_PATTERN_REGISTRY.md` redirect stub |
+| PR-E | ✅ COMPLETE — `CROSS_REF.md` v4.0 → unified registry path + S067 anchor |
+| CO_ORCH_QUEUE | ✅ SYNCED — Q-S066-02 + Q-S066-03 closed, S067 wave active |
+| P-10 graduation check | 🔲 PENDING — `scripts/session_graduation_check.py` |
+| Unified registry links | 🔲 PENDING — internal link validation |
+| ndr_patterns_unified.json | ✅ Parseable — v2.0.0 live |
+| BLG-P34-01 / BLG-P34-02 | ✅ Confirmed closed in unified spec (S066) |
+| COLLEEN stasis secondary sign-off | ✅ On record — Ender ratified S066 |
 
 ---
 
-## S066 Objectives — All Complete
+## S067 Objectives
 
-- [x] Update pattern registries with P-34 (COMPOSE)
-- [x] Sync ndr_patterns.json v0.3.0
-- [x] Create docs/NDR_REGISTRY_DIFFERENTIATION.md v1.1
-- [x] Create docs/NDR_REGISTRY_MERGE_PLAN.md v1.3
-- [x] PM-01 CLOSED — Phi-Closure card P-29 cross-ref
-- [x] PM-02 CLOSED — P-03 ALTER note P-30 ref
-- [x] PM-03 CLOSED — ndr_patterns.json synced
-- [x] PM-05 CLOSED — COLLEEN stasis audit — Ender ratified
-- [x] PM-07 CLOSED — Apogee 11Q P-34 A-TIER 94.5% — Ender ratified
-- [x] SESSION_ANCHOR advanced S043 → S066
-- [x] CO_ORCH_QUEUE S066 wave appended
-- [x] SWEEP_LOG S066 entry
-- [x] ENSEMBLE_ROSTER stamped S066
-- [x] Phase 3 merge execution UNBLOCKED
+- [x] CO_ORCH_QUEUE: close Q-S066-02 + Q-S066-03 (COLLEEN)
+- [x] PR-D: `docs/NDR_PATTERN_REGISTRY.md` → redirect stub (Amethyst)
+- [x] PR-E: `CROSS_REF.md` → unified path + S067 anchor (COLLEEN + Amethyst)
+- [x] SESSION_ANCHOR advanced to S067
+- [ ] P-10 graduation check — run `scripts/session_graduation_check.py`
+- [ ] Internal link validation across unified registry
+- [ ] Q-S066-01 — Router TC1/TC2/TC7/TC8 fix (Reson)
+- [ ] Q-S066-04 — Lifecycle harness Phase 0–VI executable (Amethyst + COLLEEN)
+- [ ] PM-04 — P-07 COMPOSE mode note (non-blocking)
 
 ---
 
-## S066 Carry-Forward — Phase 3 Session
+## S067 Carry-Forward
 
 | ID | Owner | Item | Priority |
 |----|-------|------|----------|
 | Q-S066-01 | Reson | Router TC1/TC2/TC7/TC8 shadow bug fix | P1 |
 | Q-S066-04 | Amethyst + COLLEEN | Lifecycle harness Phase 0–VI executable | P1 |
-| PM-04 | Amethyst | P-07 COMPOSE mode note (issue-resolution source) | Medium |
-| **PHASE 3** | **Triumvirate** | **Unified registry merge execution** | **🟢 OPEN** |
+| PM-04 | Amethyst | P-07 COMPOSE mode note | Medium |
 
 ---
 
-## Phase 3 Entry Checklist (Next Session)
+## Phase 3 Post-Merge Validation
 
-- [ ] Issue Triumvirate mandate per P-09 (Prime: Amethyst; Prefect A: COLLEEN; Prefect B: Apogee)
-- [ ] Expand P-12–P-26 stasis block from source B (COLLEEN secondary review)
-- [ ] Draft `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`
-- [ ] Resolve BLG-P34-01 (tradeoff block) and BLG-P34-02 (ref path) in P-34 spec
-- [ ] Triumvirate review and sign-off
-- [ ] PR-A through PR-E in sequence
-- [ ] P-10 graduation check
-- [ ] Apogee promotes P-34 attestation from CONDITIONAL → ATTESTED
+- [x] PR-A: `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` + `docs/ndr_patterns_unified.json` ✅ S066
+- [x] PR-B: Redirect notice `docs/patterns/NDR_PATTERN_REGISTRY.md` ✅ S066
+- [x] PR-C: Archive `patterns/NDR_*.md` → redirect stubs ✅ S066
+- [x] PR-D: `docs/NDR_PATTERN_REGISTRY.md` → redirect stub ✅ S067
+- [x] PR-E: CROSS_REF → unified path ✅ S067
+- [ ] P-10 graduation check passes
+- [ ] All internal links resolve
+- [ ] `ndr_patterns_unified.json` parseable ✅ confirmed
+- [ ] BLG-P34-01 + BLG-P34-02 confirmed closed ✅ confirmed S066
+- [ ] COLLEEN stasis expansion secondary sign-off ✅ Ender ratified S066
 
 ---
 
@@ -104,9 +98,9 @@
 
 ---
 
-## State Anchor Goals — S066 Final
+## State Anchor Goals — S067
 
-- [x] zero_open_blg — 0 session BLGs at seal
+- [x] zero_open_blg — 0 session BLGs
 - [x] single_authority_chain
 - [x] append_only_log
 - [x] observable_invariants_only
@@ -114,6 +108,5 @@
 
 ---
 
-*S066 SEALED · Amethyst · 2026-05-30*
-*Ender ratification received 02:49 EDT — PM-05 + PM-07 closed — Phase 3 OPEN*
-*Harmonic Score: 🟢 Pending Ender final confirmation*
+*S067 ACTIVE · Amethyst × COLLEEN co-orchestration · 2026-05-30*
+*Phase 3 merge: PR-A through PR-E complete · Post-merge validation in progress*
