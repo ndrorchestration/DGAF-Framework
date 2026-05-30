@@ -1,6 +1,8 @@
 {
-  "registry_version": "0.2.0",
-  "generated_at": "2026-05-29T02:11:00Z",
+  "registry_version": "0.3.0",
+  "generated_at": "2026-05-30T06:16:00Z",
+  "session": "S066",
+  "note": "Full unified JSON export planned as docs/ndr_patterns_unified.json (see docs/NDR_REGISTRY_MERGE_PLAN.md). This file is the interim machine-readable index.",
   "patterns": [
     {
       "id": "ndr.ecosystem_manifest_audit",
@@ -62,6 +64,58 @@
         "liabilities": ["Extra compute; tune to avoid score overfitting", "Evaluator drift breaks metric time-series"]
       },
       "related_patterns": ["ndr.ecosystem_manifest_audit", "Evaluator-Optimizer", "Human-in-the-loop gates"]
+    },
+    {
+      "id": "P-31",
+      "name": "SCPE — Structural Context Pruning Engine",
+      "category": "long-context-safety",
+      "session": "S042",
+      "card": "patterns/NDR_SCPE_v1.md",
+      "intent": "Compress multi-turn context by pruning low-relevance turns below configurable threshold. T0 axiom anchor is always preserved regardless of score.",
+      "thresholds": {"default_prune_threshold": 0.15, "compression_achieved": "58.3% @ threshold=0.15 in 60-turn simulation"},
+      "hard_invariant": "T0 anchor is never configurable; always preserved.",
+      "related_patterns": ["P-32", "P-33"]
+    },
+    {
+      "id": "P-32",
+      "name": "Phi-Closure Gate",
+      "category": "long-context-safety",
+      "session": "S042",
+      "card": "patterns/NDR_PHI_CLOSURE_GATE_v1.md",
+      "intent": "Fibonacci-indexed structural checkpoints trigger escalating governance actions to catch slow drift that semantic checks miss.",
+      "checkpoints": {
+        "Fib_13": "WARN",
+        "Fib_21": "ESCALATE",
+        "Fib_34": "KILL_REC",
+        "Fib_55": "KILL_REC (mandatory)"
+      },
+      "cross_ref_pending": "PM-01: P-32 KILL_REC should trigger P-29 risk_block at hook point 2 — cross-ref note pending pre-merge",
+      "related_patterns": ["P-31", "P-33", "P-29"]
+    },
+    {
+      "id": "P-33",
+      "name": "PDMAL Convergence Monitor",
+      "category": "alignment-drift",
+      "session": "S042",
+      "card": "patterns/NDR_PDMAL_CONVERGENCE_MONITOR_v1.md",
+      "intent": "Watches for multi-turn alignment lock. WATCH at 3 consecutive convergence signals; ALERT at persistent lock.",
+      "simulation_results": {"WATCH_count": 3, "WATCH_turns": [31, 40, 46], "ALERT_count": 0, "turns_simulated": 60},
+      "best_practice": "Triage at first WATCH, not ALERT. By ALERT the lock is entrenched.",
+      "related_patterns": ["P-31", "P-32"]
+    },
+    {
+      "id": "P-34",
+      "name": "Empirical-Threshold-Sweep-over-ML-Classifier",
+      "category": "router-calibration",
+      "session": "S066",
+      "origin": "COMPOSE — registered directly from issue resolution (Issue #5, S034 calibration evidence)",
+      "spec_location": "docs/NDR_PATTERN_REGISTRY.md",
+      "intent": "When a confidence calibration gap exists, prefer grid search over threshold space before introducing an ML classifier. Applicable when gap is threshold-expressible, search space is bounded, and feature space is stable.",
+      "evidence": "KAPPA v3.5 -> v3.6: governance_clear 82.6% -> 100% via 14x12 grid sweep. STRONG=0.22, BLENDED=0.18. No ML classifier. BLG-01 closed.",
+      "attestation_status": "PENDING — PM-07: Apogee P-30 attestation pass required before canonical promotion",
+      "nist": "Measure",
+      "eu_ai_act": "Art.9",
+      "related_patterns": ["P-27", "P-30", "P-03"]
     }
   ]
 }
