@@ -22,7 +22,7 @@ Source of truth for cross-platform deployment status.
 
 | Repo | Visibility | Vercel | Status |
 |---|---|---|---|
-| [pptl-governance-dashboard](https://github.com/ndrorchestration/pptl-governance-dashboard) | Private | ❌ Not found in Vercel | ⚠️ Inventory correction — see note |
+| [pptl-governance-dashboard](https://github.com/ndrorchestration/pptl-governance-dashboard) | Private | ❌ Not found in Vercel | ⚠️ Needs Ender clarification |
 | [aoga-dashboard](https://github.com/ndrorchestration/aoga-dashboard) | Private | ✅ Deployed | 🟢 Active |
 | [Driftwatch](https://github.com/ndrorchestration/Driftwatch) | Public | — | 🟢 Active |
 | [phi-calculus-app](https://github.com/ndrorchestration/phi-calculus-app) | Private | — | 🟢 Active |
@@ -71,29 +71,22 @@ Source of truth for cross-platform deployment status.
 ## Vercel Deployments — Ground Truth S068
 
 > **Verified:** 2026-05-31 via `vercel project ls` (Ender terminal, Vercel CLI 54.6.1)  
-> **Prior inventory was incorrect** — `pptl-governance-dashboard` does not exist as a Vercel project.
+> **`dgaf-framework` Vercel project deleted by Ender 2026-05-31 23:20 EDT**
 
 | Project | Production URL | Status | Notes |
 |---|---|---|---|
 | `aoga-dashboard` | [https://aoga-dashboard.vercel.app](https://aoga-dashboard.vercel.app) | ✅ Ready | Last deployed 4d ago |
-| `dgaf-framework` | [https://dgaf-framework-ndrorchestration.vercel.app](https://dgaf-framework-ndrorchestration.vercel.app) | ⚠️ Error | 30+ failed builds · Python repo · **Recommended: delete project** |
-| `ndrorchestration` | [https://ndrorchestration-ndrorchestration.vercel.app](https://ndrorchestration-ndrorchestration.vercel.app) | 🟡 Unknown | Not previously inventoried · requires Ender review |
-| `phiknightverticalcorridor` | — | 🟡 No URL | Not previously inventoried · no production URL |
+| `ndrorchestration` | [https://ndrorchestration-ndrorchestration.vercel.app](https://ndrorchestration-ndrorchestration.vercel.app) | 🟡 Unknown | Needs Ender review |
+| `phiknightverticalcorridor` | — | 🟡 No URL | Needs Ender review |
+| ~~`dgaf-framework`~~ | ~~https://dgaf-framework-ndrorchestration.vercel.app~~ | 🗑️ Deleted | Deleted by Ender 2026-05-31 · was Python repo · 30+ error builds |
 
-### ⚠️ Inventory Corrections (S068)
+### ⚠️ Remaining Inventory Actions (Ender)
 
-1. **`pptl-governance-dashboard`** — previously listed as "✅ Deployed" in S067 inventory. Confirmed **not present** in `vercel project ls` output. GitHub repo exists; Vercel project either was never created or was deleted. Requires Ender clarification.
-2. **`dgaf-framework`** — Vercel project exists but should not. This is a Python governance library with no frontend. Produced 30+ consecutive `● Error` Production deployments (user `flickerflash-8879`, 2–3 days ago). **Action required: disconnect repo and delete Vercel project.**
-3. **`ndrorchestration`** and **`phiknightverticalcorridor`** — present in Vercel but not in prior inventory. Requires Ender review and classification.
-
-### Recommended Actions (Ender)
-
-| Action | Priority | Command / URL |
-|---|---|---|
-| Delete `dgaf-framework` Vercel project | P1 | [vercel.com/ndrorchestration/dgaf-framework/settings](https://vercel.com/ndrorchestration/dgaf-framework/settings) → Danger Zone → Delete |
-| Clarify `pptl-governance-dashboard` Vercel status | P1 | Was it deployed? Does it need to be re-created? |
-| Review `ndrorchestration` project | P2 | [vercel.com/ndrorchestration/ndrorchestration](https://vercel.com/ndrorchestration/ndrorchestration) |
-| Review `phiknightverticalcorridor` project | P2 | [vercel.com/ndrorchestration/phiknightverticalcorridor](https://vercel.com/ndrorchestration/phiknightverticalcorridor) |
+| Action | Priority |
+|---|---|
+| Clarify `pptl-governance-dashboard` — was it deleted or never deployed? | P1 |
+| Review `ndrorchestration` Vercel project — classify and document | P2 |
+| Review `phiknightverticalcorridor` Vercel project — classify and document | P2 |
 
 ---
 
@@ -110,10 +103,11 @@ Source of truth for cross-platform deployment status.
 | Platform | Total | Active | Needs Action |
 |---|---|---|---|
 | GitHub Repos | 24 | 23 | 1 (archived) |
-| Vercel Projects | 4 | 1 confirmed healthy | 3 require Ender review |
+| Vercel Projects | 3 (after dgaf delete) | 1 confirmed healthy | 2 need review |
 | Supabase Projects | 1 | 1 | 0 |
 
 ---
 
 *Created S067 · Updated S068 · Amethyst × COLLEEN × Ender · 2026-05-31*  
-*Vercel source: `vercel project ls` output · Ender terminal · 2026-05-31 23:17 EDT*
+*Vercel source: `vercel project ls` · Ender terminal · 2026-05-31 23:17 EDT*  
+*`dgaf-framework` Vercel project deleted by Ender · 2026-05-31 23:20 EDT*
