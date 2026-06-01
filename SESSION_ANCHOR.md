@@ -3,7 +3,7 @@
 > **Steward:** COLLEEN — Institutional Memory, Archivist, Chief Librarian, Pattern Collector  
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead  
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect  
-> **Last updated:** 2026-05-30  
+> **Last updated:** 2026-05-31  
 > **Anchor ID:** S068
 
 ---
@@ -18,8 +18,8 @@
 | S040 | 2026-05-26 | PPTL harness, 3-gate governance, tri-phase CI | ✅ SEALED |
 | S039 | 2026-05-22 | 10-repo auto-sweep, 24 findings, CROSS_REF v3.3 | ✅ SEALED |
 | S066 | 2026-05-30 | P-34 registered; ndr_patterns.json v0.3.0; registry differentiation + merge plan; PM-01–PM-03 closed; PM-05 + PM-07 ratified by Ender | ✅ SEALED |
-| **S067** | **2026-05-30** | **Q-S066-01 router v3.6.0 (8/8 TC); Q-S066-04 lifecycle harness 7/7 STABLE; PM-04 COMPOSE note + graduation script; gap sweep wave 1+2 (9 corrections); ECOSYSTEM_INVENTORY created (27 components); CROSS_REF v4.1** | ✅ SEALED |
-| **S068** | **—** | **—** | 🟢 NEXT |
+| S067 | 2026-05-30 | Q-S066-01 router v3.6.0 (8/8 TC); Q-S066-04 lifecycle harness 7/7 STABLE; PM-04 COMPOSE note + graduation script; gap sweep wave 1+2 (9 corrections); ECOSYSTEM_INVENTORY created (27 components); CROSS_REF v4.1 | ✅ SEALED |
+| **S068** | **2026-05-31** | **P-35 Procluding Premise Gate registered (Layer 10 — Constitutional Invariants); registry watermark P-35; procluding_premise.py module added; TGL wiring pending** | 🟡 OPEN |
 
 ---
 
@@ -28,23 +28,25 @@
 | Field | Value |
 |---|---|
 | Anchor ID | S068 |
-| Status | 🟢 NEXT (not yet opened) |
-| Opened | — |
-| Phase | IV — Registry Merge Execution |
+| Status | 🟡 OPEN |
+| Opened | 2026-05-31 22:42 EDT |
+| Phase | IV — Registry Merge Execution + Constitutional Primitive Integration |
 | Open BLGs | 0 |
-| Carry-forward P1 | PM-05 COLLEEN stasis audit P-12–P-26 |
-| Carry-forward P1 | PM-07 Apogee P-34 attestation |
+| Carry-forward P1 | Q-S068-TGL — Triadic Governance Loop module (pptl/triadic_governance_loop.py) |
+| Carry-forward P1 | Q-S068-PROTOTYPE — Credit/justice workflow stress test spec |
 | Carry-forward P3 | Q-S068-VERCEL-DETAIL — Vercel URL + region inventory |
 
 ---
 
-## S068 Objectives (Pre-loaded)
+## S068 Objectives
 
-- [ ] PM-05 — COLLEEN stasis audit P-12–P-26 (merge blocker)
-- [ ] PM-07 — Apogee P-34 attestation (merge blocker)
-- [ ] Registry merge Phase 2 execution (post PM-05 + PM-07 clearance)
+- [x] Open S068 — SESSION_ANCHOR updated
+- [x] P-35 Procluding Premise Gate — registered in NDR_PATTERN_REGISTRY_UNIFIED.md + ndr_patterns_unified.json
+- [x] pptl/procluding_premise.py — constitutional invariant enforcement module
+- [ ] Q-S068-TGL — pptl/triadic_governance_loop.py — TGL module wired to IntegratedOrchestrator
+- [ ] Q-S068-PROTOTYPE — docs/CREDIT_JUSTICE_PROTOTYPE_SPEC.md — applied stress test
 - [ ] Q-S068-VERCEL-DETAIL — capture Vercel deployment URLs + regions → update ECOSYSTEM_INVENTORY
-- [ ] Run `scripts/session_graduation_check.py --session S068`
+- [ ] Run scripts/session_graduation_check.py --session S068
 
 ---
 
@@ -68,9 +70,9 @@
 - [x] `ndr_patterns_unified.json` parseable ✅ v2.0.0 confirmed
 - [x] BLG-P34-01 + BLG-P34-02 confirmed closed ✅ S066
 - [x] COLLEEN stasis secondary sign-off ✅ Ender ratified S066
-- [ ] PM-05: COLLEEN stasis audit P-12–P-26 → S068
-- [ ] PM-07: Apogee P-34 attestation → S068
-- [ ] P-10 graduation check → S068
+- [x] PM-05: COLLEEN stasis audit P-12–P-26 ✅ CLOSED S066
+- [x] PM-07: Apogee P-34 attestation ✅ CLOSED S066
+- [x] P-35: Procluding Premise Gate ✅ REGISTERED S068
 
 ---
 
@@ -91,15 +93,15 @@
 
 ---
 
-## State Anchor Goals — S067 ✅ All Met
+## State Anchor Goals — S068
 
-- [x] zero_open_blg — 0 session BLGs
+- [ ] zero_open_blg — 0 session BLGs
 - [x] single_authority_chain
 - [x] append_only_log
 - [x] observable_invariants_only
-- [x] procluding_premise_first
+- [x] procluding_premise_first — P-35 now formally registered
 
 ---
 
 *S067 ✅ SEALED · Amethyst × COLLEEN · 2026-05-30 03:41 EDT*  
-*S068 🟢 NEXT · Phase IV — Registry Merge Execution*
+*S068 🟡 OPEN · Phase IV — Registry Merge Execution + Constitutional Primitive Integration · 2026-05-31 22:42 EDT*
