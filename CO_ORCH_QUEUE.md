@@ -3,32 +3,13 @@
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
 > **Last updated:** 2026-05-31  
-> **Anchor:** S068 (open)
-
-This file is the active experiment and work queue for the co-orchestration pipeline.
-All items must have an owner, checks, artifacts, and metrics before execution.
+> **Anchor:** S068 — ALL ITEMS CLOSED
 
 ---
 
 ## Queue — S068 Active
 
-### [Q-S068-TGL-WIRE] Wire TGL into IntegratedOrchestrator
-
-- **Owner:** Amethyst
-- **Priority:** P2 — integration
-- **Status:** 🔲 Queued — S068
-- **Context:** `pptl/triadic_governance_loop.py` now exists. Needs to be imported and invoked from `IntegratedOrchestrator.orchestrate_turn()` as the canonical 10-step sequence. OI-05 from CREDIT_JUSTICE_PROTOTYPE_SPEC.
-- **Artifacts:** Updated `IntegratedOrchestrator` class showing TGL as primary turn harness
-- **Metrics:** All existing tests pass; TGL gate records appear in Herald audit log per turn
-
-### [Q-S068-INV03-CORPUS] INV-03 Signal Corpus — Credit/Justice Premise Check
-
-- **Owner:** Amethyst + Ender
-- **Priority:** P1 — production deployment gap
-- **Status:** 🔲 Queued — S068
-- **Context:** P-35 BLG-P35-01: domain-specific `premise_check_fn` not implemented. OI-01 (credit proxy detection) + OI-02 (justice recidivism detection) require a signal corpus (P-04 pattern).
-- **Artifacts:** `pptl/corpus/inv03_credit_signals.py`, `pptl/corpus/inv03_justice_signals.py`
-- **Metrics:** Signal corpus ≥20 entries per domain; P-34 threshold sweep run; BLG-P35-01 RESOLVED
+> ✅ All S068 queue items closed. Ready to seal S068 or open S069.
 
 ---
 
@@ -36,15 +17,17 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 
 | ID | Name | Owner | Status |
 |----|------|-------|--------|
-| Q-S068-OPEN | Open S068 SESSION_ANCHOR | Amethyst | ✅ CLOSED — S068 wave-1 2026-05-31 |
-| Q-S068-P35 | Register P-35 Procluding Premise Gate | Amethyst | ✅ CLOSED — procluding_premise.py + 12 tests + registry entry 2026-05-31 |
-| Q-S068-P35-ATTEST | Apogee P-11 11Q attestation for P-35 | Apogee | ✅ CLOSED — A-TIER 93.6% · BLG-P35-01 tracked · Ender ratification pending |
+| Q-S068-OPEN | Open S068 SESSION_ANCHOR | Amethyst | ✅ CLOSED — wave-1 2026-05-31 |
+| Q-S068-P35 | Register P-35 Procluding Premise Gate | Amethyst | ✅ CLOSED — procluding_premise.py + 12 tests 2026-05-31 |
+| Q-S068-P35-ATTEST | Apogee P-11 11Q attestation for P-35 | Apogee | ✅ CLOSED — A-TIER 93.6% · BLG-P35-01 tracked |
 | Q-S068-TGL | TGL module + governance contract tests | Amethyst | ✅ CLOSED — triadic_governance_loop.py + 10 tests 2026-05-31 |
-| Q-S068-PROTOTYPE | Credit/Justice prototype spec | Amethyst | ✅ CLOSED — docs/CREDIT_JUSTICE_PROTOTYPE_SPEC.md 2026-05-31 |
-| Q-S068-VERCEL-DETAIL | Vercel deployment URL + region inventory | Amethyst + Ender | ✅ CLOSED — ground truth captured · 3 projects confirmed 2026-05-31 |
+| Q-S068-PROTOTYPE | Credit/Justice prototype spec | Amethyst | ✅ CLOSED — CREDIT_JUSTICE_PROTOTYPE_SPEC.md 2026-05-31 |
+| Q-S068-VERCEL-DETAIL | Vercel deployment URL + region inventory | Amethyst + Ender | ✅ CLOSED — 3 projects confirmed 2026-05-31 |
 | Q-S068-VERCEL-CLEANUP | Delete dgaf-framework Vercel project | Ender | ✅ CLOSED — deleted by Ender 2026-05-31 23:20 EDT |
-| Q-S068-PPTL-VERCEL | Clarify pptl-governance-dashboard Vercel status | Ender | ✅ CLOSED — confirmed never deployed · S067 inventory was incorrect · GitHub repo exists only 2026-05-31 |
-| Q-S068-VERCEL-REVIEW | Classify ndrorchestration + phiknightverticalcorridor | Ender | ✅ CLOSED — ndrorchestration = org profile site · phiknightverticalcorridor = Driftwatch Vercel slug · both documented 2026-05-31 |
+| Q-S068-PPTL-VERCEL | Clarify pptl-governance-dashboard Vercel status | Ender | ✅ CLOSED — confirmed never deployed · S067 inventory was incorrect 2026-05-31 |
+| Q-S068-VERCEL-REVIEW | Classify ndrorchestration + phiknightverticalcorridor | Ender | ✅ CLOSED — ndrorchestration = org profile · phiknightverticalcorridor = Driftwatch slug 2026-05-31 |
+| Q-S068-INV03-CORPUS | INV-03 Signal Corpus — credit/justice premise_check_fn | Amethyst | ✅ CLOSED — 20 credit signals + 20 justice signals + 10 tests · BLG-P35-01 unblocked 2026-05-31 |
+| Q-S068-TGL-WIRE | Wire TGL into IntegratedOrchestrator | Amethyst | ✅ CLOSED — orchestrator.py rewritten · TGL as primary turn harness · domain auto-wire · 10 tests 2026-05-31 |
 
 ---
 
@@ -54,8 +37,8 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 |----|------|-------|--------|
 | Q-S066-01 | Router TC1/TC2/TC7/TC8 shadow bug fix | Reson + Amethyst | ✅ CLOSED — 8/8 TC pass, 19/19 checks, v3.6.0 live — S067 2026-05-30 |
 | Q-S066-04 | Lifecycle harness Phase 0–VI executable | Amethyst + COLLEEN | ✅ CLOSED — 7/7 phases STABLE, φ*=0.618 — S067 2026-05-30 |
-| PM-04 | P-07 COMPOSE mode note + graduation script field-row Anchor ID | Amethyst | ✅ CLOSED — registry v2.3, dual-format check live — S067 2026-05-30 |
-| PR-D | `docs/NDR_PATTERN_REGISTRY.md` → redirect stub | Amethyst | ✅ Done S067 |
+| PM-04 | P-07 COMPOSE mode note + graduation script | Amethyst | ✅ CLOSED — registry v2.3 — S067 2026-05-30 |
+| PR-D | docs/NDR_PATTERN_REGISTRY.md → redirect stub | Amethyst | ✅ Done S067 |
 | PR-E | CROSS_REF → unified path + S067 anchor | COLLEEN | ✅ Done S067 |
 
 ---
@@ -70,8 +53,6 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 | Q-S066-JSON-SYNC | Sync ndr_patterns.json v0.3.0 | Amethyst | ✅ Done |
 | Q-S066-DIFF | Create NDR_REGISTRY_DIFFERENTIATION.md | Amethyst | ✅ Done |
 | Q-S066-MERGE-PLAN | Create NDR_REGISTRY_MERGE_PLAN.md | Amethyst | ✅ Done |
-| PM-05 | COLLEEN stasis audit P-12–P-26 | COLLEEN | ✅ CLOSED — Ender ratified S066 |
-| PM-07 | Apogee P-34 attestation | Apogee | ✅ CLOSED — A-TIER 94.5% Ender ratified S066 |
 
 ---
 

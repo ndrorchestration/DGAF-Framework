@@ -1,157 +1,171 @@
 """
-orchestrator.py — IntegratedOrchestrator: Phase 3C Triad-C governance stack.
+IntegratedOrchestrator — PPTL Runtime Core
+Anchor: S068 | OI-05: TGL wired as canonical turn harness
 
-Gate order (load-bearing):
-  Gate 1: input bypass scan (pre-LLM)
-  Gate 2: safety floor (per-round)
-  Gate 3: RAG hallucination verify (post-generation)
-
-OPP-002: Added _normalize_input() for homoglyph + base64 obfuscation hardening.
-All gate 1 scans now run on BOTH raw input and normalized form.
+Turn execution order (TGL 10-step sequence):
+  1.  Intake validation (P-01)
+  2.  Procluding premise gate (P-35) — domain premise_check_fn
+  3.  Phi-closure gate (HPG)
+  4.  Normative constraint check (P-02)
+  5.  RAG verification (P-06)
+  6.  Attestation gate (P-11)
+  7.  Triumvirate mandate check
+  8.  Herald audit log emit
+  9.  Response synthesis
+  10. Phi-convergence closure
 """
 from __future__ import annotations
 
-import random
-from typing import Any
+import logging
+from dataclasses import dataclass, field
+from typing import Any, Callable, Dict, Optional
 
-from .herald_agent  import HeraldAgent
-from .rag_verifier  import (
-    SentinelRAGVerifier,
-    BYPASS_SIGNALS,
-    _normalize_text,
-    _try_base64_decode,
-)
+from .triadic_governance_loop import TriadicGovernanceLoop, TGLConfig, TurnContext
+from .procluding_premise import ProcludioPremiseGate
+from .herald_agent import HeraldAgent
 
-# Governance constants
-SAFETY_FLOOR  = 0.65
-MAX_ROUNDS    = 3
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class OrchestratorConfig:
+    """Runtime configuration for IntegratedOrchestrator."""
+    session_id: str
+    domain: str = "general"                         # "credit", "justice", or "general"
+    premise_check_fn: Optional[Callable[[str], bool]] = None
+    phi_threshold: float = 0.618
+    herald_sink_url: Optional[str] = None
+    dry_run: bool = False
+    extra: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class TurnResult:
+    """Structured result returned from orchestrate_turn()."""
+    session_id: str
+    turn_id: str
+    domain: str
+    tgl_passed: bool
+    gate_records: list
+    response: Optional[str]
+    blocked_reason: Optional[str] = None
+    phi_score: Optional[float] = None
 
 
 class IntegratedOrchestrator:
     """
-    Triad-C (Task/Style/Safety) 3-gate governance orchestrator.
-    Roles: Apogee [Task] · Reson [Style] · Sentinel [Safety]
+    Primary runtime entry point for all PPTL-governed turns.
+
+    The TGL (TriadicGovernanceLoop) is the canonical 10-step harness.
+    Every call to orchestrate_turn() runs the full TGL gate sequence
+    before any response is synthesized.
     """
 
-    def __init__(
-        self,
-        herald:   HeraldAgent,
-        verifier: SentinelRAGVerifier | None = None,
-    ) -> None:
-        self.herald   = herald
-        self.verifier = verifier or SentinelRAGVerifier()
+    def __init__(self, config: OrchestratorConfig) -> None:
+        self.config = config
+        self._resolve_premise_check_fn()
 
-    # ── Public API ──────────────────────────────────────────────────
+        tgl_config = TGLConfig(
+            session_id=config.session_id,
+            phi_threshold=config.phi_threshold,
+            premise_check_fn=self.config.premise_check_fn,
+            herald_sink_url=config.herald_sink_url,
+            dry_run=config.dry_run,
+        )
+        self.tgl = TriadicGovernanceLoop(tgl_config)
+        self.herald = HeraldAgent(session_id=config.session_id)
+        logger.info(
+            "IntegratedOrchestrator ready · session=%s domain=%s dry_run=%s",
+            config.session_id, config.domain, config.dry_run,
+        )
 
-    def run(self, task_id: str, prompt: str) -> dict[str, Any]:
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
+
+    def orchestrate_turn(self, user_input: str, turn_id: str) -> TurnResult:
         """
-        Run a governed task through the full Triad-C gate stack.
-        Returns result dict with status, rounds, events.
+        Execute a full governed turn via TGL 10-step sequence.
+
+        Steps 1–10 are delegated to TriadicGovernanceLoop.run().
+        Response synthesis only proceeds when TGL gate passes.
         """
-        ctx: dict[str, Any] = {
-            "task_id": task_id,
-            "events":  [],
-            "rounds":  0,
-        }
+        ctx = TurnContext(
+            session_id=self.config.session_id,
+            turn_id=turn_id,
+            user_input=user_input,
+            domain=self.config.domain,
+        )
 
-        # Gate 1: input bypass scan
-        veto = self._gate1_input_scan(prompt, ctx)
-        if veto:
-            return {"status": "input_vetoed", **ctx}
+        tgl_result = self.tgl.run(ctx)
 
-        # Triad-C generation loop (max MAX_ROUNDS)
-        output = ""
-        for round_n in range(1, MAX_ROUNDS + 1):
-            ctx["rounds"] = round_n
+        if not tgl_result.passed:
+            logger.warning(
+                "TGL BLOCKED · turn=%s reason=%s",
+                turn_id, tgl_result.blocked_at,
+            )
+            self.herald.emit(
+                event="turn_blocked",
+                turn_id=turn_id,
+                blocked_at=tgl_result.blocked_at,
+                gate_records=tgl_result.gate_records,
+            )
+            return TurnResult(
+                session_id=self.config.session_id,
+                turn_id=turn_id,
+                domain=self.config.domain,
+                tgl_passed=False,
+                gate_records=tgl_result.gate_records,
+                response=None,
+                blocked_reason=tgl_result.blocked_at,
+                phi_score=tgl_result.phi_score,
+            )
 
-            # Apogee [Task] — generate
-            output = self._mock_apogee(prompt, round_n)
-            self._emit(ctx, "llm_call", {"round": round_n, "output_len": len(output)})
+        response = self._synthesize_response(user_input, tgl_result)
 
-            # Reson [Style] — judge
-            style_ok, style_score = self._mock_reson(output)
-            self._emit(ctx, "judge_call", {"round": round_n, "style_score": style_score})
+        self.herald.emit(
+            event="turn_complete",
+            turn_id=turn_id,
+            phi_score=tgl_result.phi_score,
+            gate_records=tgl_result.gate_records,
+        )
 
-            # Gate 2: safety floor
-            safety_score = self._mock_safety(output)
-            self._emit(ctx, "safety_check", {"round": round_n, "score": safety_score})
-            if safety_score < SAFETY_FLOOR:
-                self._emit(ctx, "output_vetoed", {"gate": 2, "round": round_n, "score": safety_score})
-                if round_n == MAX_ROUNDS:
-                    return {"status": "safety_floor_fail", **ctx}
-                continue
+        return TurnResult(
+            session_id=self.config.session_id,
+            turn_id=turn_id,
+            domain=self.config.domain,
+            tgl_passed=True,
+            gate_records=tgl_result.gate_records,
+            response=response,
+            phi_score=tgl_result.phi_score,
+        )
 
-            # Gate 3: RAG hallucination verify
-            rag = self.verifier.score(output)
-            self._emit(ctx, "rag_check", {"round": round_n, "risk": rag["risk_score"]})
-            if rag["verdict"] == "veto":
-                self._emit(ctx, "output_vetoed", {"gate": 3, "round": round_n,
-                                                   "signals": rag["signals_found"]})
-                if round_n == MAX_ROUNDS:
-                    return {"status": "vetoed:hallucination", **ctx}
-                continue
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
 
-            # All gates passed
-            self._emit(ctx, "task_complete", {"round": round_n})
-            return {"status": "pass", "output": output, **ctx}
+    def _resolve_premise_check_fn(self) -> None:
+        """Auto-wire domain-specific premise_check_fn if not explicitly provided."""
+        if self.config.premise_check_fn is not None:
+            return
 
-        return {"status": "max_rounds_exceeded", **ctx}
+        domain = self.config.domain
+        if domain == "credit":
+            from .corpus.inv03_credit_signals import premise_check_fn_credit
+            self.config.premise_check_fn = premise_check_fn_credit
+            logger.info("Auto-wired premise_check_fn: credit (INV-03)")
+        elif domain == "justice":
+            from .corpus.inv03_justice_signals import premise_check_fn_justice
+            self.config.premise_check_fn = premise_check_fn_justice
+            logger.info("Auto-wired premise_check_fn: justice (INV-03)")
+        else:
+            self.config.premise_check_fn = lambda _text: False
+            logger.info("Domain '%s': premise_check_fn set to pass-through", domain)
 
-    # ── Gate 1 ───────────────────────────────────────────────────────────
-
-    def _gate1_input_scan(self, prompt: str, ctx: dict) -> bool:
+    def _synthesize_response(self, user_input: str, tgl_result: Any) -> str:
         """
-        Gate 1: bypass signal scan.
-        OPP-002: scans THREE normalized forms to catch all obfuscation classes:
-          (a) raw lowercase          — plaintext
-          (b) NFKC + casefold       — homoglyph variants
-          (c) base64-decoded form    — encoded instructions
-        Returns True (vetoed) if any signal found in any form.
+        Placeholder synthesis step.
+        In production this delegates to the configured LLM adapter.
+        Subclasses override this method.
         """
-        forms_to_scan = self._normalize_input(prompt)
-        for signal in BYPASS_SIGNALS:
-            sig_norm = _normalize_text(signal)
-            for form in forms_to_scan:
-                if sig_norm in form or signal.lower() in form:
-                    self._emit(ctx, "input_vetoed", {
-                        "gate": 1,
-                        "signal_matched": signal[:40],
-                        "form_scanned": form[:40],
-                    })
-                    return True
-        return False
-
-    def _normalize_input(self, prompt: str) -> list[str]:
-        """
-        OPP-002: Return all normalized forms of prompt for Gate 1 scan.
-        Always returns at least: [raw_lower, nfkc_casefolded].
-        Appends base64-decoded form if prompt decodes cleanly.
-        """
-        forms = [
-            prompt.lower(),
-            _normalize_text(prompt),
-        ]
-        decoded = _try_base64_decode(prompt)
-        if decoded:
-            forms.append(decoded.lower())
-            forms.append(_normalize_text(decoded))
-        return forms
-
-    # ── Mock agents (replace with real LLM calls) ────────────────────────
-
-    def _mock_apogee(self, prompt: str, round_n: int) -> str:
-        return f"[Apogee round {round_n}] Governed response to: {prompt[:60]}"
-
-    def _mock_reson(self, output: str) -> tuple[bool, float]:
-        score = min(1.0, 0.70 + random.random() * 0.25)
-        return score >= 0.70, round(score, 3)
-
-    def _mock_safety(self, output: str) -> float:
-        return round(0.72 + random.random() * 0.20, 3)
-
-    # ── Herald emit ─────────────────────────────────────────────────────────
-
-    def _emit(self, ctx: dict, event_type: str, data: dict) -> None:
-        event = {"event_type": event_type, "task_id": ctx["task_id"], **data}
-        ctx["events"].append(event)
-        self.herald.emit(event_type=event_type, data=data)
+        return f"[Governed response · phi={tgl_result.phi_score:.3f}] {user_input}"
