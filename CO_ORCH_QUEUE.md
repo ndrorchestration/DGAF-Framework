@@ -12,15 +12,6 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 
 ## Queue — S068 Active
 
-### [Q-S068-PPTL-VERCEL] Clarify pptl-governance-dashboard Vercel Status (Ender action)
-
-- **Owner:** Ender
-- **Priority:** P1 — inventory correction
-- **Status:** 🔲 Queued — S068 · Blocked on Ender clarification
-- **Context:** `pptl-governance-dashboard` was listed as "✅ Deployed" in S067 inventory. Confirmed absent from `vercel project ls`. GitHub repo exists. Was it deleted? Never deployed? Needs re-creation?
-- **Artifacts:** ECOSYSTEM_INVENTORY updated with correct status
-- **Metrics:** pptl-governance-dashboard Vercel status confirmed and documented
-
 ### [Q-S068-TGL-WIRE] Wire TGL into IntegratedOrchestrator
 
 - **Owner:** Amethyst
@@ -39,15 +30,6 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 - **Artifacts:** `pptl/corpus/inv03_credit_signals.py`, `pptl/corpus/inv03_justice_signals.py`
 - **Metrics:** Signal corpus ≥20 entries per domain; P-34 threshold sweep run; BLG-P35-01 RESOLVED
 
-### [Q-S068-VERCEL-REVIEW] ndrorchestration + phiknightverticalcorridor Vercel Review
-
-- **Owner:** Ender
-- **Priority:** P2 — housekeeping
-- **Status:** 🔲 Queued — S068
-- **Context:** Two previously uninventoried Vercel projects found: `ndrorchestration` and `phiknightverticalcorridor`. Neither is classified. Ender to review and document purpose, or delete if unused.
-- **Artifacts:** ECOSYSTEM_INVENTORY updated with classification
-- **Metrics:** Both projects classified or deleted; inventory accurate
-
 ---
 
 ## Completed Queue Items — S068
@@ -59,8 +41,10 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 | Q-S068-P35-ATTEST | Apogee P-11 11Q attestation for P-35 | Apogee | ✅ CLOSED — A-TIER 93.6% · BLG-P35-01 tracked · Ender ratification pending |
 | Q-S068-TGL | TGL module + governance contract tests | Amethyst | ✅ CLOSED — triadic_governance_loop.py + 10 tests 2026-05-31 |
 | Q-S068-PROTOTYPE | Credit/Justice prototype spec | Amethyst | ✅ CLOSED — docs/CREDIT_JUSTICE_PROTOTYPE_SPEC.md 2026-05-31 |
-| Q-S068-VERCEL-DETAIL | Vercel deployment URL + region inventory | Amethyst + Ender | ✅ CLOSED — ground truth captured · 4 projects found · inventory corrected 2026-05-31 |
-| Q-S068-VERCEL-CLEANUP | Delete dgaf-framework Vercel project | Ender | ✅ CLOSED — deleted by Ender 2026-05-31 23:20 EDT · 30+ error builds eliminated |
+| Q-S068-VERCEL-DETAIL | Vercel deployment URL + region inventory | Amethyst + Ender | ✅ CLOSED — ground truth captured · 3 projects confirmed 2026-05-31 |
+| Q-S068-VERCEL-CLEANUP | Delete dgaf-framework Vercel project | Ender | ✅ CLOSED — deleted by Ender 2026-05-31 23:20 EDT |
+| Q-S068-PPTL-VERCEL | Clarify pptl-governance-dashboard Vercel status | Ender | ✅ CLOSED — confirmed never deployed · S067 inventory was incorrect · GitHub repo exists only 2026-05-31 |
+| Q-S068-VERCEL-REVIEW | Classify ndrorchestration + phiknightverticalcorridor | Ender | ✅ CLOSED — ndrorchestration = org profile site · phiknightverticalcorridor = Driftwatch Vercel slug · both documented 2026-05-31 |
 
 ---
 
