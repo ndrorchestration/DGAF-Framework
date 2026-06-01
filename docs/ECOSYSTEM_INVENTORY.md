@@ -2,8 +2,8 @@
 
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
-> **Last updated:** 2026-05-30  
-> **Anchor:** S067 (sealed)
+> **Last updated:** 2026-05-31  
+> **Anchor:** S068 (open)
 
 Canonical inventory of all system components across GitHub, Supabase, and Vercel.
 Source of truth for cross-platform deployment status.
@@ -16,13 +16,13 @@ Source of truth for cross-platform deployment status.
 
 | Repo | Visibility | Status |
 |---|---|---|
-| [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) | Public | 🟢 Active · S067 sealed |
+| [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) | Public | 🟢 Active · S068 open |
 
 ### Active App / Tool Repos (8)
 
 | Repo | Visibility | Vercel | Status |
 |---|---|---|---|
-| [pptl-governance-dashboard](https://github.com/ndrorchestration/pptl-governance-dashboard) | Private | ✅ Deployed | 🟢 Active |
+| [pptl-governance-dashboard](https://github.com/ndrorchestration/pptl-governance-dashboard) | Private | ❌ Not found in Vercel | ⚠️ Inventory correction — see note |
 | [aoga-dashboard](https://github.com/ndrorchestration/aoga-dashboard) | Private | ✅ Deployed | 🟢 Active |
 | [Driftwatch](https://github.com/ndrorchestration/Driftwatch) | Public | — | 🟢 Active |
 | [phi-calculus-app](https://github.com/ndrorchestration/phi-calculus-app) | Private | — | 🟢 Active |
@@ -68,14 +68,32 @@ Source of truth for cross-platform deployment status.
 
 ---
 
-## Vercel Deployments — 2 confirmed
+## Vercel Deployments — Ground Truth S068
 
-| Project | Source Repo | Confirmed Via | Status |
+> **Verified:** 2026-05-31 via `vercel project ls` (Ender terminal, Vercel CLI 54.6.1)  
+> **Prior inventory was incorrect** — `pptl-governance-dashboard` does not exist as a Vercel project.
+
+| Project | Production URL | Status | Notes |
 |---|---|---|---|
-| `aoga-dashboard` | [aoga-dashboard](https://github.com/ndrorchestration/aoga-dashboard) | `vercel ls` 2026-05-30 | ✅ Deployed |
-| `pptl-governance-dashboard` | [pptl-governance-dashboard](https://github.com/ndrorchestration/pptl-governance-dashboard) | `vercel ls` 2026-05-30 | ✅ Deployed |
+| `aoga-dashboard` | [https://aoga-dashboard.vercel.app](https://aoga-dashboard.vercel.app) | ✅ Ready | Last deployed 4d ago |
+| `dgaf-framework` | [https://dgaf-framework-ndrorchestration.vercel.app](https://dgaf-framework-ndrorchestration.vercel.app) | ⚠️ Error | 30+ failed builds · Python repo · **Recommended: delete project** |
+| `ndrorchestration` | [https://ndrorchestration-ndrorchestration.vercel.app](https://ndrorchestration-ndrorchestration.vercel.app) | 🟡 Unknown | Not previously inventoried · requires Ender review |
+| `phiknightverticalcorridor` | — | 🟡 No URL | Not previously inventoried · no production URL |
 
-> URLs and deployment region not yet captured. Add to Q-S068-VERCEL-DETAIL if needed.
+### ⚠️ Inventory Corrections (S068)
+
+1. **`pptl-governance-dashboard`** — previously listed as "✅ Deployed" in S067 inventory. Confirmed **not present** in `vercel project ls` output. GitHub repo exists; Vercel project either was never created or was deleted. Requires Ender clarification.
+2. **`dgaf-framework`** — Vercel project exists but should not. This is a Python governance library with no frontend. Produced 30+ consecutive `● Error` Production deployments (user `flickerflash-8879`, 2–3 days ago). **Action required: disconnect repo and delete Vercel project.**
+3. **`ndrorchestration`** and **`phiknightverticalcorridor`** — present in Vercel but not in prior inventory. Requires Ender review and classification.
+
+### Recommended Actions (Ender)
+
+| Action | Priority | Command / URL |
+|---|---|---|
+| Delete `dgaf-framework` Vercel project | P1 | [vercel.com/ndrorchestration/dgaf-framework/settings](https://vercel.com/ndrorchestration/dgaf-framework/settings) → Danger Zone → Delete |
+| Clarify `pptl-governance-dashboard` Vercel status | P1 | Was it deployed? Does it need to be re-created? |
+| Review `ndrorchestration` project | P2 | [vercel.com/ndrorchestration/ndrorchestration](https://vercel.com/ndrorchestration/ndrorchestration) |
+| Review `phiknightverticalcorridor` project | P2 | [vercel.com/ndrorchestration/phiknightverticalcorridor](https://vercel.com/ndrorchestration/phiknightverticalcorridor) |
 
 ---
 
@@ -89,14 +107,13 @@ Source of truth for cross-platform deployment status.
 
 ## Summary Totals
 
-| Platform | Total | Active | Archived / Inactive |
+| Platform | Total | Active | Needs Action |
 |---|---|---|---|
 | GitHub Repos | 24 | 23 | 1 (archived) |
-| Vercel Deployments | 2 | 2 | 0 |
+| Vercel Projects | 4 | 1 confirmed healthy | 3 require Ender review |
 | Supabase Projects | 1 | 1 | 0 |
-| **Grand Total** | **27** | **26** | **1** |
 
 ---
 
-*Created S067 · Amethyst × COLLEEN · 2026-05-30*  
-*Source: GitHub MCP (24 repos) + Supabase MCP (1 project) + `vercel ls` output (2 deployments)*
+*Created S067 · Updated S068 · Amethyst × COLLEEN × Ender · 2026-05-31*  
+*Vercel source: `vercel project ls` output · Ender terminal · 2026-05-31 23:17 EDT*
