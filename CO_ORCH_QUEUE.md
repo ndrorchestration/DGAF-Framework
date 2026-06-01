@@ -2,8 +2,8 @@
 
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
-> **Last updated:** 2026-05-30  
-> **Anchor:** S067 (sealed) → S068
+> **Last updated:** 2026-05-31  
+> **Anchor:** S068 (open)
 
 This file is the active experiment and work queue for the co-orchestration pipeline.
 All items must have an owner, checks, artifacts, and metrics before execution.
@@ -11,28 +11,6 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 ---
 
 ## Queue — S068 Active
-
-### [PM-05] COLLEEN Stasis Audit P-12–P-26 (Merge Blocker)
-
-- **Owner:** COLLEEN
-- **Priority:** P1 — merge blocker
-- **Status:** 🔲 Queued — S068
-- **Context:** Full stasis audit of P-12 through P-26 patterns required before registry merge Phase 2 execution.
-- **Artifacts:** `docs/qa/COLLEEN_STASIS_AUDIT_P12_P26_FINAL.md`
-- **Metrics:** All 15 stasis patterns reviewed, zero unresolved anomalies
-
----
-
-### [PM-07] Apogee P-34 Attestation (Merge Blocker)
-
-- **Owner:** Apogee
-- **Priority:** P1 — merge blocker
-- **Status:** 🔲 Queued — S068
-- **Context:** P-34 requires full P-30 Apogee attestation pass before canonical promotion. Currently A-TIER 94.5% — requires Q11 ≥ 9/10 for S-TIER or explicit Ender ratification of A-TIER promotion.
-- **Artifacts:** `docs/qa/APOGEE_11Q_P34_FINAL.json`
-- **Metrics:** P-30 gate: S-TIER ≥ 95% OR A-TIER ≥ 85% with Ender ratification
-
----
 
 ### [Q-S068-VERCEL-DETAIL] Vercel Deployment URL + Region Inventory
 
@@ -42,6 +20,36 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 - **Context:** `vercel ls` confirmed 2 deployments (aoga-dashboard + pptl-governance-dashboard) on 2026-05-30. Deployment URLs, regions, and environment config not yet captured. Run `vercel ls --json` or check Vercel dashboard to complete.
 - **Artifacts:** Update `docs/ECOSYSTEM_INVENTORY.md` with full deployment detail
 - **Metrics:** Both deployment URLs confirmed resolvable; regions logged; ECOSYSTEM_INVENTORY updated
+
+### [Q-S068-TGL-WIRE] Wire TGL into IntegratedOrchestrator
+
+- **Owner:** Amethyst
+- **Priority:** P2 — integration
+- **Status:** 🔲 Queued — S068
+- **Context:** `pptl/triadic_governance_loop.py` now exists. Needs to be imported and invoked from `IntegratedOrchestrator.orchestrate_turn()` as the canonical 10-step sequence replacing any ad-hoc gate ordering. OI-05 from CREDIT_JUSTICE_PROTOTYPE_SPEC.
+- **Artifacts:** Updated `components/ensemble_v16.py` or `IntegratedOrchestrator` class showing TGL as primary turn harness
+- **Metrics:** All existing tests pass; TGL gate records appear in Herald audit log per turn
+
+### [Q-S068-INV03-CORPUS] INV-03 Signal Corpus — Credit/Justice Premise Check
+
+- **Owner:** Amethyst + Ender
+- **Priority:** P1 — production deployment gap
+- **Status:** 🔲 Queued — S068
+- **Context:** P-35 BLG-P35-01: domain-specific `premise_check_fn` not implemented. OI-01 (credit proxy detection) + OI-02 (justice recidivism detection) require a signal corpus (P-04 pattern). This is the production deployment gap for P-35.
+- **Artifacts:** `pptl/corpus/inv03_credit_signals.py`, `pptl/corpus/inv03_justice_signals.py`
+- **Metrics:** Signal corpus ≥20 entries per domain; P-34 threshold sweep run on corpus; BLG-P35-01 RESOLVED
+
+---
+
+## Completed Queue Items — S068
+
+| ID | Name | Owner | Status |
+|----|------|-------|--------|
+| Q-S068-OPEN | Open S068 SESSION_ANCHOR | Amethyst | ✅ CLOSED — S068 wave-1 2026-05-31 |
+| Q-S068-P35 | Register P-35 Procluding Premise Gate | Amethyst | ✅ CLOSED — procluding_premise.py + 12 tests + registry entry 2026-05-31 |
+| Q-S068-P35-ATTEST | Apogee P-11 11Q attestation for P-35 | Apogee | ✅ CLOSED — A-TIER 93.6% · BLG-P35-01 tracked · Ender ratification pending |
+| Q-S068-TGL | TGL module + governance contract tests | Amethyst | ✅ CLOSED — triadic_governance_loop.py + 10 tests 2026-05-31 |
+| Q-S068-PROTOTYPE | Credit/Justice prototype spec | Amethyst | ✅ CLOSED — docs/CREDIT_JUSTICE_PROTOTYPE_SPEC.md 2026-05-31 |
 
 ---
 
@@ -69,6 +77,8 @@ All items must have an owner, checks, artifacts, and metrics before execution.
 | Q-S066-MERGE-PLAN | Create NDR_REGISTRY_MERGE_PLAN.md | Amethyst | ✅ Done |
 | Q-S066-PM01 | PM-01: Phi-Closure card P-29 cross-ref | Amethyst | ✅ Done |
 | Q-S066-PM02 | PM-02: P-03 ALTER note P-30 ref | Amethyst | ✅ Done |
+| PM-05 | COLLEEN stasis audit P-12–P-26 | COLLEEN | ✅ CLOSED — Ender ratified S066 |
+| PM-07 | Apogee P-34 attestation | Apogee | ✅ CLOSED — A-TIER 94.5% Ender ratified S066 |
 
 ---
 

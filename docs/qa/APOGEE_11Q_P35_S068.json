@@ -1,0 +1,39 @@
+{
+  "attestation_id": "APOGEE_11Q_P35_S068",
+  "pattern_id": "P-35",
+  "pattern_name": "Procluding Premise Gate",
+  "attestation_tier": "A-TIER",
+  "score_raw": 103,
+  "score_max": 110,
+  "score_pct": 93.6,
+  "session": "S068",
+  "date": "2026-05-31",
+  "attested_by": "Apogee",
+  "ratification_pending": true,
+  "ratification_note": "Awaiting Ender ratification. A-TIER 93.6% ≥ 85% threshold. BLG-P35-01 open (see below).",
+  "scores": [
+    { "q": "Q01", "label": "Problem clarity",                  "score": 10, "max": 10, "notes": "Constitutional invariant concept precisely stated; procluding vs refutation distinction is unambiguous." },
+    { "q": "Q02", "label": "Spec completeness",               "score": 10, "max": 10, "notes": "ProcludingPremiseGate, ConstitutionalInvariant, PremiseViolationEvent, PremiseViolationError all specified. T0+KILL enforcement in dataclass __post_init__." },
+    { "q": "Q03", "label": "Use case coverage",               "score": 9,  "max": 10, "notes": "Credit/justice prototype spec covers 4 scenarios. Domain-specific premise_check_fn not yet implemented (-1)." },
+    { "q": "Q04", "label": "Implementation artifact quality",  "score": 10, "max": 10, "notes": "procluding_premise.py: frozen dataclass, immutable frozenset, fail-fast KILL, SHA-256 input hash, export_log JSON. Clean." },
+    { "q": "Q05", "label": "Test coverage",                   "score": 10, "max": 10, "notes": "12 governance contract tests. P-03 × 4 contract structure satisfied. All 4 contracts per gate tested. DGAF invariant set smoke tests included." },
+    { "q": "Q06", "label": "Tradeoff documentation",          "score": 9,  "max": 10, "notes": "Tradeoffs in registry entry cover fail-fast, immutability, KILL non-recoverability. Domain check_fn injection gap noted but not fully quantified (-1)." },
+    { "q": "Q07", "label": "Pattern interaction map",         "score": 10, "max": 10, "notes": "P-35 → TGL Step 0 → P-29 risk_block → P-01 dead-letter chain fully documented. maps_to field in JSON entry covers 4 architectural anchors." },
+    { "q": "Q08", "label": "NIST / EU AI Act alignment",      "score": 10, "max": 10, "notes": "INV-03 Human Rights maps directly to EU AI Act Art.5 (prohibited practices). INV-04 audit trail maps to Art.13. INV-05 authority order maps to Art.14 (human oversight)." },
+    { "q": "Q09", "label": "Session anchor integrity",        "score": 10, "max": 10, "notes": "procluding_premise_first state anchor goal satisfied. SESSION_ANCHOR S068 updated with registration record. Audit trail complete." },
+    { "q": "Q10", "label": "BLG resolution status",          "score": 7,  "max": 10, "notes": "BLG-P35-01 open: domain-specific premise_check_fn not yet implemented for credit/justice domains. Tracked. Resolved by OI-01/OI-02 in prototype spec." },
+    { "q": "Q11", "label": "Adoption recommendation",        "score": 8,  "max": 10, "notes": "Strong adoption case for any governance system with constitutional invariants. Slight gap: integration with IntegratedOrchestrator not yet wired (OI-05 open). Recommendation is conditional ADOPT pending OI-05." }
+  ],
+  "blgs": [
+    {
+      "id": "BLG-P35-01",
+      "description": "Domain-specific premise_check_fn not yet implemented for credit proxy detection (OI-01) or justice recidivism detection (OI-02). Gate is fully implemented and tested with injected check_fn; production deployment requires domain corpus.",
+      "severity": "minor",
+      "status": "OPEN",
+      "resolution_path": "OI-01 + OI-02 in CREDIT_JUSTICE_PROTOTYPE_SPEC.md"
+    }
+  ],
+  "gate_decision": "A-TIER PASS",
+  "promotion_path": "A-TIER ≥ 85% with 1 open minor BLG. Eligible for canonical promotion with Ender ratification.",
+  "summary": "P-35 Procluding Premise Gate scores A-TIER at 93.6% (103/110). Pattern is architecturally sound, fully specified, 12 governance contract tests pass, all 5 DGAF canonical invariants registered. Single open BLG (domain check_fn) is a production deployment gap, not a design gap. Recommend A-TIER canonical promotion pending Ender ratification."
+}
