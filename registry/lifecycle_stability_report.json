@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "steward": "COLLEEN",
+    "orchestrator": "Amethyst",
+    "created": "2026-06-01",
+    "session": "S044",
+    "ensemble": "v1.6",
+    "ndr_patterns": ["P-31 (SCPE)", "P-32 (PDMAL Monitor)", "P-33 (Phi-Closure Gate)"],
+    "phi_attractor": 1.61818,
+    "drift_threshold": 0.009,
+    "status": "SCAFFOLD — awaiting harness execution"
+  },
+  "lifecycle_stability_report": {
+    "target_stability_index": 0.618,
+    "convergence_bound_turns": 34,
+    "phi_complement_note": "0.618 = 1 - 1/phi — minimum stability target per Fibonacci Phi-Closure Gate (P-33)",
+    "phases": {
+      "phase_0_init": {
+        "label": "Initialization — state anchor assertion, BLG check, procluding premise preflight",
+        "invariants": ["zero_open_blgs", "state_anchor_loaded", "procluding_premise_fires_before_routing"],
+        "stability_index": null,
+        "time_to_convergence_turns": null,
+        "artifacts": ["SESSION_ANCHOR.md", "CO_ORCH_QUEUE.md"],
+        "status": "PENDING"
+      },
+      "phase_I_ingest": {
+        "label": "Ingest — SCPE tier-aware token decay, Da>=10 topological preflight",
+        "invariants": ["da_preflight_passes", "scpe_compression_within_bounds", "t0_immune"],
+        "target_compression": 0.583,
+        "stability_index": null,
+        "time_to_convergence_turns": null,
+        "artifacts": ["components/scpe_ensemble_v14.py"],
+        "status": "PENDING"
+      },
+      "phase_II_route": {
+        "label": "Route — topology router predicate resolution, NDR P-02 invariant",
+        "invariants": ["predicate_order_correct", "no_shadow_bugs", "8_of_8_tc_pass"],
+        "stability_index": null,
+        "time_to_convergence_turns": null,
+        "artifacts": ["components/topology_router.py", "tests/test_topology_router.py"],
+        "status": "PENDING — Q-S043-04 fix pushed S044"
+      },
+      "phase_III_execute": {
+        "label": "Execute — orchestration firewall invariants, authority chain, provenance",
+        "invariants": ["all_5_invariants_hold", "authority_chain_valid", "attack_path_blocked"],
+        "stability_index": null,
+        "time_to_convergence_turns": null,
+        "artifacts": ["components/orchestration_firewall.py", "tests/test_orchestration_firewall.py"],
+        "status": "PENDING"
+      },
+      "phase_IV_verify": {
+        "label": "Verify — PDMAL drift monitor, Phi-Closure Gate, DemiJoule safety gate",
+        "invariants": ["pdmal_no_full_alerts", "phi_closure_passes", "demijule_ethics_clear"],
+        "pdmal_alert_threshold": 0.08,
+        "pdmal_convergence_threshold": 0.02,
+        "phi_target": 0.6180,
+        "stability_index": null,
+        "time_to_convergence_turns": null,
+        "artifacts": ["components/ensemble_v16.py", "registry/ensemble_v16_manifest.json"],
+        "status": "PENDING"
+      },
+      "phase_V_archive": {
+        "label": "Archive — COLLEEN 1-1-1-1 Gate, SSoT preservation, cross-ref update",
+        "invariants": ["colleen_1_1_1_1_gate_pass", "cross_ref_updated", "sweep_log_appended"],
+        "stability_index": null,
+        "time_to_convergence_turns": null,
+        "artifacts": ["SWEEP_LOG.md", "CROSS_REF.md", "CO_ORCH_QUEUE.md"],
+        "status": "PENDING"
+      },
+      "phase_VI_close": {
+        "label": "Close — Amethyst sign-off, terminal attestation JSON, issue close",
+        "invariants": ["amethyst_signed", "terminal_attestation_present", "issue_closed"],
+        "stability_index": null,
+        "time_to_convergence_turns": null,
+        "artifacts": ["terminal_attestation.json"],
+        "status": "PENDING"
+      }
+    },
+    "aggregate": {
+      "phases_complete": 0,
+      "phases_total": 7,
+      "overall_stability_index": null,
+      "verdict": "PENDING — run lifecycle harness to populate"
+    }
+  }
+}
