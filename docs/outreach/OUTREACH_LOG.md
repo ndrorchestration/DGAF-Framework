@@ -77,3 +77,88 @@ https://lnkd.in/gVGVh-ri
 ---
 
 *Log initialized: 2026-06-09 | Agent COLLEEN | S069*
+
+
+---
+
+## Metrics Snapshot — NMS-001: Needle Partner Hub (2026-06-09)
+
+**Source:** Needle Partner Hub (`needle.app/dashboard/partners`)
+**Captured:** 2026-06-09 ~9 PM EDT
+**Session Anchor:** S069
+**Window:** Mar 11 – Jun 9, 2026 (90 days)
+**Logged by:** Agent COLLEEN
+
+### Summary KPIs
+
+| Metric | Value | Window | Description |
+|--------|-------|--------|-------------|
+| Total Views | 10,677 | Mar 11 – Jun 9, 2026 | People discovering your templates |
+| Total Uses | 1,310 | Mar 11 – Jun 9, 2026 | Workflows you've helped create |
+| Workflow Runs | 3,254 | Mar 11 – Jun 9, 2026 | Your templates in action |
+| Referrals | 0 | Mar 11 – Jun 9, 2026 | Automation enthusiasts brought to Needle |
+| Total Payouts | $4.19 | Since sign-up | Earnings to date |
+
+### Conversion Funnel
+
+| Stage | Count | Funnel Rate |
+|-------|-------|-------------|
+| Views | 10,677 | 100% |
+| Uses | 1,310 | 12.3% |
+| Runs | 3,254 | 30.5% (of views) / 248% (runs per use) |
+
+### Top Templates by Views
+
+| Template | Views | % of Total |
+|----------|-------|------------|
+| Evaluate LLM Output Quality | 3,460 | 32.4% |
+| Generate Grounded Knowledge Base Answers | 3,289 | 30.8% |
+| KB Answer With Quality Check | 2,343 | 21.9% |
+| Define AI Governance Specification | 1,627 | 15.2% |
+| **Total** | **10,719** | |
+
+### Top Templates by Uses
+
+| Template | Uses | % of Total |
+|----------|------|------------|
+| Evaluate LLM Output Quality | 478 | 36.5% |
+| Generate Grounded Knowledge Base Answers | 444 | 33.9% |
+| KB Answer With Quality Check | 229 | 17.5% |
+| Define AI Governance Specification | 159 | 12.1% |
+| **Total** | **1,310** | |
+
+### Top Templates by Runs
+
+| Template | Runs | % of Total |
+|----------|------|------------|
+| Generate Grounded Knowledge Base Answers | 1,394 | 42.8% |
+| Evaluate LLM Output Quality | 1,064 | 32.7% |
+| KB Answer With Quality Check | 476 | 14.6% |
+| Define AI Governance Specification | 320 | 9.8% |
+| **Total** | **3,254** | |
+
+### Template-Level Conversion (Views → Uses → Runs)
+
+| Template | Views | Uses | Runs | Use Rate | Run/Use |
+|----------|-------|------|------|----------|---------|
+| Evaluate LLM Output Quality | 3,460 | 478 | 1,064 | 13.8% | 2.23x |
+| Generate Grounded Knowledge Base Answers | 3,289 | 444 | 1,394 | 13.5% | 3.14x |
+| KB Answer With Quality Check | 2,343 | 229 | 476 | 9.8% | 2.08x |
+| Define AI Governance Specification | 1,627 | 159 | 320 | 9.8% | 2.01x |
+
+### Workspace Plan Distribution
+
+- **Uses by Plan:** Free + Paid (total: 1,310) — exact split not captured
+- **Runs by Plan:** Free + Paid (total: 3,254) — exact split not captured
+
+### Notes
+
+- Referrals remain at 0; affiliate sign-up CTA added to OL-001 LinkedIn post to drive this metric
+- "Generate Grounded Knowledge Base Answers" has the highest run/use ratio (3.14x) — indicating strong repeat usage once adopted
+- "Evaluate LLM Output Quality" is the top template by both views and uses; leads the stack in discovery
+- Payout of $4.19 reflects early-stage monetization; referral pipeline not yet active
+- Next milestones to track: 12K total views, 1.5K uses, 4K runs, first referral conversion
+
+---
+
+*Snapshot logged: 2026-06-09 | Agent COLLEEN | S069*
