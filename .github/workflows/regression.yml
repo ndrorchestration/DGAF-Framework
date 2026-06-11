@@ -99,12 +99,14 @@ jobs:
             && echo "audit: turn_count=$TC OK" \
             || { echo "audit: turn_count=$TC < 30"; exit 1; }
 
-    - name: Notify on live-regression failure
+        - name: Notify on live-regression failure
       if: failure()
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        RUN_ID: ${{ github.run_id }}
       run: |
-        echo "[DGAF] live-regression failed — Vercel unavailable or regression error. Suite still passing via continue-on-error."
-        if [ -n "${{ secrets.SLACK_WEBHOOK }}" ]; then
-          curl -s -X POST "${{ secrets.SLACK_WEBHOOK }}" \
-            -H 'Content-type: application/json' \
-            --data '{"text":"\u26a0\ufe0f DGAF live-regression failed (run ${{ github.run_id }}). Vercel may be unavailable. Suite overall: continue-on-error active."}'
+        echo '[DGAF] live-regression failed - Vercel unavailable or regression error. Suite still passing via continue-on-error.'
+        if [ -n "${SLACK_WEBHOOK}" ]; then
+          MSG="{\"text\":\"[DGAF] live-regression failed (run ${RUN_ID}). Vercel may be unavailable. Suite: continue-on-error active.\"}"
+          curl -s -X POST "${SLACK_WEBHOOK}" -H 'Content-type: application/json' --data "${MSG}"
         fi
