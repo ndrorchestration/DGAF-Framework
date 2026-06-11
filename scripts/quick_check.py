@@ -53,8 +53,8 @@ chk("Hash tamper detect", not validate_token(tok))
 
 # 5. Phi-Closure Gate — 13 clean turns → PASS
 gate = PhiClosureGate(tolerance=0.05)
-# 8 stable + 5 unstable -> R = 8/13 ≈ phi* at Fibonacci checkpoint T13
-_phi_stable = {1, 2, 3, 5, 6, 8, 10, 12}
+# _phi_stable derived dynamically: k = round(PHI_STAR * N) turns marked stable
+_N_PHI = 13; _k_phi = round(PHI_STAR * _N_PHI); _phi_stable = {i for i in range(1, _N_PHI + 1) if (i * _k_phi) % _N_PHI < _k_phi}
 for i in range(1, 14):
         result = gate.record(stable=(i in _phi_stable))
 chk("Phi gate T13 PASS",  result["checkpoint"] and result["decision"] == "PASS",
