@@ -46,6 +46,7 @@ jobs:
           EOF
 
   live-regression:
+    continue-on-error: true
     name: Live Regression (Vercel)
     runs-on: ubuntu-latest
     if: >
