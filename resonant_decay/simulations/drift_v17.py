@@ -50,7 +50,7 @@ def run(n_turns: int = 30, threshold: float = 0.15) -> list:
     ]):
         tok = ContextToken(f"ax{i}", text, Tier.AXIOM)
         tok = lock_token(tok)
-                assert tok is not None, f"lock_token failed for axiom {i}: check resonant_decay.governance.lock_token()"
+        assert tok is not None, f"lock_token failed for axiom {i}: check resonant_decay.governance.lock_token()"
         engine.ingest(tok)
 
     for turn in range(1, n_turns + 1):
