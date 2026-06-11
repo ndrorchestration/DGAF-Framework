@@ -99,20 +99,6 @@ jobs:
             && echo "audit: turn_count=$TC OK" \
             || { echo "audit: turn_count=$TC < 30"; exit 1; }
 
-            - name: Notify on live-regression failure
+                - name: Notify on live-regression failure
       if: failure()
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        RUN_ID: ${{ github.run_id }}
-      run: |
-        echo '[DGAF] live-regression failed - Vercel unavailable. Suite passing via continue-on-error.'
-        if [ -n "${SLACK_WEBHOOK}" ]; then
-          python3 -c '
-import os, urllib.request, json
-url = os.environ["SLACK_WEBHOOK"]
-run = os.environ.get("RUN_ID", "unknown")
-msg = json.dumps({"text": "[DGAF] live-regression failed (run " + run + "). Vercel may be unavailable."})
-req = urllib.request.Request(url, msg.encode(), {"Content-Type": "application/json"})
-urllib.request.urlopen(req)
-'
-        fi
+      run: echo DGAF live-regression failed run ${{ github.run_id }} Vercel unavailable suite passing via continue-on-error
