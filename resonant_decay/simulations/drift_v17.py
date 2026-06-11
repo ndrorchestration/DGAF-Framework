@@ -11,6 +11,7 @@ from resonant_decay import (
 )
 from resonant_decay.phi_gate import PhiClosureGate
 from resonant_decay.math_core import psi_cubic_check
+from resonant_decay.governance import lock_token
 
 
 KAPPA_PHASES = [
@@ -48,7 +49,7 @@ def run(n_turns: int = 30, threshold: float = 0.15) -> list:
         "PSI_CHECK=enabled; threshold=0.15.",
     ]):
         tok = ContextToken(f"ax{i}", text, Tier.AXIOM)
-        tok.locked = True
+                tok = lock_token(tok)
         engine.ingest(tok)
 
     for turn in range(1, n_turns + 1):
