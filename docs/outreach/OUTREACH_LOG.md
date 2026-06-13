@@ -161,4 +161,65 @@ https://lnkd.in/gVGVh-ri
 
 ---
 
+---
+
+## Metrics Snapshot — NMS-002
+
+**NMS-002: Needle Partner Hub — Multi-Period Snapshot (Jun 12, 2026)**
+
+**Captured by:** Agent Amethyst (Comet session) 
+**Session Anchor:** S070 
+**Date:** 2026-06-12
+
+### Summary KPIs by Period
+
+| Period | Window | Views | Uses | Runs | Referrals | Payouts |
+|--------|--------|-------|------|------|-----------|---------|
+| Current (13d) | May 31 – Jun 12, 2026 | 2,000 | 71 | 143 | 0 | $4.19 |
+| Last 30 days | May 13 – Jun 12, 2026 | 4,900 | 352 | 699 | 0 | $4.19 |
+| Last 60 days | Apr 13 – Jun 12, 2026 | 9,000 | 862 | 1,800 | 0 | $4.19 |
+| Last 90 days | Mar 14 – Jun 12, 2026 | 11,200 | 1,300 | 3,300 | 0 | $4.19 |
+
+### Funnel Ratios (Current Period)
+
+| Metric | Value |
+|--------|-------|
+| View → Use Rate | ~3.6% (13-day window; lower than 90d avg) |
+| Run / Use Ratio | ~2.01x |
+| 90-day View → Use Rate | ~11.6% |
+| 90-day Run / Use Ratio | ~2.54x |
+
+### Top Templates by Uses (Current Period, May 31 – Jun 12)
+
+| Template | Views | Uses | Runs |
+|----------|-------|------|------|
+| Define AI Governance Specification (NT-04) | ~445 | 23 | 46 |
+| Evaluate LLM Output Quality (NT-01) | ~446 | 18 | 35 |
+| Generate Grounded KB Answers (NT-02) | ~461 | 16 | 32 |
+| KB Answer With Quality Check (NT-03) | ~442 | 14 | 30 |
+
+### Growth Deltas (NMS-001 → NMS-002, Jun 9 → Jun 12)
+
+| Metric | NMS-001 (Jun 9) | NMS-002 (Jun 12) | Delta |
+|--------|----------------|-----------------|-------|
+| 90d Views | 10,677 | 11,200 | +523 |
+| 90d Uses | 1,310 | 1,300 | ~flat |
+| 90d Runs | 3,254 | 3,300 | +46 |
+| Current-period Views | ~1,500 | 2,000 | +500 |
+
+### New Template Registered
+
+- **NT-05** — Test Governance API Gates 
+  - Published: 2026-06-11 
+  - Needle URL: https://needle.app/workflow-templates/test-governance-api-gates 
+  - Designated: DGAF-PROBE-001 (canonical governance sentinel harness)
+
+### Notes
+
+- 90-day views crossed 11K milestone; linear growth curve holding steady.
+- "Define AI Governance Specification" leads by uses and runs in current period — strongest signal for governance-focused Pro upsell.
+- NT-05 (Governance API Gates) published and registered as DGAF-PROBE-001; child profiles (strict/lenient/multi-tenant) now have a canonical base to derive from.
+- Payouts remain $4.19; monetization layer not yet activated.
+- Next milestones: 12K total views, 1.5K uses, 4K runs, first referral conversion.
+
 *Snapshot logged: 2026-06-09 | Agent COLLEEN | S069*
