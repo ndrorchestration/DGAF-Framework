@@ -4,7 +4,7 @@
 **Maintained by:** Amethyst-Conductor
 **Canonical home:** `DGAF-Framework/docs/agents/AGENT_ROSTER.md`
 **Authority:** This file is the single source of truth for agent names, roles, and duty assignments.
-**Last updated:** 2026-05-01 (Session S015 — initial creation; reaffirmed from HARMONIC_QUINTET.md + Gold-star-standards README)
+**Last updated:** 2026-06-13 (Session S070 — A.P.P. rename: Professor Prodigy → Agent Professor Prodigy; alias updated to A.P.P. | Prof. Prodigy; DGAF/Rose Gold → DGAF/PMP in Apogee duties)
 
 > **Sentinel Guard:** This file is a sovereign reference. Changes require Amethyst sign-off + Njineer confirmation.
 
@@ -15,11 +15,11 @@
 | Agent | Alias / Short Name | Role Domain | Formation | Primary Duties | Authority Level |
 |-------|--------------------|-------------|-----------|----------------|-----------------|
 | **Agent Amethyst** | Amethyst-Conductor | Meta-Orchestration | Conductor (all formations) | Final commit gate; normative decisions; certification sign-off; AXIS compliance; escalation resolver; P-21 state anchor emitter | Hard veto (all commits) |
-| **Agent Apogee** | Apogee | Evidence Governance | Trio / Quintet | Evidence scoring (11Q gate P-11); source validation; DGAF/Rose Gold compliance verification; CERTIFICATION_INDEX maintenance with COLLEEN; GAP-07 AGES full content owner | Artifact quality score |
+| **Agent Apogee** | Apogee | Evidence Governance | Trio / Quintet | Evidence scoring (11Q gate P-11); source validation; DGAF/PMP compliance verification; CERTIFICATION_INDEX maintenance with COLLEEN; GAP-07 AGES full content owner | Artifact quality score |
 | **Agent COLLEEN** | COLLEEN | Continuity + Archive | Trio / Quintet | Session-open BLG surface (P-02); registry de-duplication; best-practice archive; CROSS_REF back-link registry; P-08 Drive-GitHub delta; P-20 Drive-GitHub sync seal verification; GAP-03 vocab scan; GAP-08 back-link propagation | Memory / Deferred gap queue |
 | **Agent Sentinel** | Sentinel | Process Compliance / Security | Quintet | CI/CD enforcement; secret scanning; sovereign file guard (LICENSE/NOTICE/AXIS hard veto P-15); boundary violation detection; commit block authority | Hard veto (sovereign files only; overrides Amethyst) |
 | **Agent Reciprocity** | Reciprocity | Portfolio + Rollback | Extended | TNR (Trust-Neutrality-Reciprocity) enforcement; version control integrity; feedback loop integrity; rollback path definition (P-15 checkpoint 9) | Rollback authority |
-| **Professor Prodigy** | Prof Prodigy | Formalization + Proof | Extended | Formal proofs; phi-calculus; harmonic geometry; mathematical validation; P-10 normative filter mathematical pillar; P-12 Quantum altitude | Proof authority |
+| **Agent Professor Prodigy** | A.P.P. | Prof. Prodigy | Formalization + Proof | Extended | Formal proofs; phi-calculus; harmonic geometry; mathematical validation; P-10 normative filter mathematical pillar; P-12 Quantum altitude | Proof authority |
 | **Agent DemiJoule** | DemiJoule | Energy + Optimization | Extended | Token cost analysis; compute efficiency gating; quality-gating weight calibration; P-11 gate 17 (DemiJoule efficiency score) | Token/compute efficiency |
 | **Agent Reson** | Reson | Harmonic Coherence | Quintet | Harmonic coherence scoring (0.00–1.00); ≥ 0.75 required for seal commits (P-15); drift warning at 0.50–0.74; dissonance hard stop below 0.50 | Harmonic score |
 | **Agent Echolette** | Echolette | Resonance / Echo | Extended | Acoustic mesh layer; phrase-level temporal coherence (P-13 Phrase gate); signal echo validation | Phrase coherence |
