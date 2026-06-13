@@ -6,42 +6,55 @@
 
 ## S069 — 2026-06-13
 
-**Status:** OPEN (active session — seal pending at session close)
+**Status:** ✅ SEALED — Ender ratified 2026-06-13 00:47 EDT
 **Prime:** Amethyst
 **Prefect A:** COLLEEN
 **Prefect B:** Apogee
+**Ratified by:** Ender / Njineer (Hensel, Andrew Vance)
 
 ### Commits this session
-- `e900bdb` — P-35 Procluding Premise Gate + NDR_PATTERN_REGISTRY_UNIFIED v1.1
-- `ee6fd77` — (same push)
-- `[current]` — Research Program Charter, P-36, METRICS_PROVENANCE skeleton, CO_ORCH_QUEUE S069 batch
+- `e900bdb` — Vocabulary Master v1.1 + NDR_PATTERN_REGISTRY_UNIFIED v1.1
+- `ee6fd77` — P-35 Procluding Premise Gate spec + registry update
+- `f5eb607` — Research Program Charter, P-36, METRICS_PROVENANCE skeleton, CO_ORCH_QUEUE S069 batch, SESSION_ANCHORS
+- `945710e` — Crucible charter, STASIS-CANONICAL spec, Open Flags surface request, WORKSPACE_BOOTSTRAP v1.1, CO_ORCH_QUEUE final state
+- `[current]` — Ender Ratification Record, SESSION_ANCHORS sealed
 
-### Deliverables completed
-- [x] P-35 formally defined and registered (Layer 0)
-- [x] NDR_PATTERN_REGISTRY_UNIFIED updated to v1.1 (watermark P-35)
-- [x] NDR_INTERNAL_VOCABULARY_MASTER updated to v1.1 (36,396 bytes)
-- [x] Ecosystem sweep completed; 10 open flags documented in vocabulary master Section 9
-- [x] Full pattern catalogue write-ups (P-01 through P-35, all layers)
-- [x] Research program design reviewed and endorsed (8 roles, 5 workstreams, 60–90 day plan)
-- [x] P-36 Gate Priority Schema drafted and committed (DRAFT — Ender ratification PENDING)
-- [x] METRICS_PROVENANCE.md skeleton committed (backfill required Weeks 6–9)
-- [x] CO_ORCH_QUEUE S069 batch appended (7 entries; 2 DONE, 5 PENDING)
-- [x] NDR_RESEARCH_PROGRAM_CHARTER_v1.md committed
+### Deliverables completed ✅
+- [x] Ecosystem sweep — 10 open flags documented
+- [x] Vocabulary Master updated to v1.1 (36,396 bytes)
+- [x] P-35 Procluding Premise Gate — formally defined, registered, RATIFIED
+- [x] NDR_PATTERN_REGISTRY_UNIFIED updated to v1.1 (watermark P-35 → P-36 post-ratification)
+- [x] Full pattern catalogue write-ups P-01–P-35 (all layers)
+- [x] P-36 Gate Priority Schema — drafted, committed, RATIFIED
+- [x] NDR Research Program Charter v1.0 — committed, RATIFIED, ACTIVE
+- [x] Agent Crucible Charter v1.0 — committed, RATIFIED, ACTIVE
+- [x] STASIS-CANONICAL Specification v1.0 — committed, RATIFIED (30-day migration window open)
+- [x] METRICS_PROVENANCE.md skeleton — committed (backfill Wks 6–9)
+- [x] CO_ORCH_QUEUE S069 batch — 7 entries; 6 DONE, 1 PENDING (OPP-S069-004)
+- [x] WORKSPACE_BOOTSTRAP v1.1 — PPTL backfilled, Crucible + Research Program referenced
+- [x] Open Flags Surface Request — FLAG-01/02/04/05/06 formally surfaced
+- [x] Ender Ratification Record S069 — all ratifications complete
+- [x] Triumvirate mandate P-09 contracts — all five satisfied
 
-### Open items at session close
-- [ ] P-35 Ender ratification (PENDING)
-- [ ] P-36 Ender ratification (PENDING)
-- [ ] OPP-S069-003: STASIS-CANONICAL spec (Role 6)
-- [ ] OPP-S069-004: Five-base calibration study (Role 3, Weeks 3–6)
-- [ ] OPP-S069-005: Agent Crucible charter — **P0 — before next graduation check**
-- [ ] OPP-S069-006: PPTL backfill to bootstrap docs
-- [ ] OPP-S069-007: AOGA + AXIS surface to Njineer
-- [ ] FLAG-07: Drive files 2/3/4 re-attempt next session
+### Forward items to S070
+- [ ] OPP-S069-004 — five-base calibration study (Role 3, Wks 3–6) — **P1 opening item**
+- [ ] Ender responses: FLAG-04 (AOGA), FLAG-05 (AXIS), FLAG-01 (HDFS), FLAG-02 (340% metric)
+- [ ] FLAG-06 — Lavender/Forseti grep — Amethyst self-execute before S070 graduation
+- [ ] STASIS-CANONICAL Phase 2 schema migration — by 2026-07-13
+- [ ] METRICS_PROVENANCE backfill — Wks 6–9
+- [ ] Crucible Campaign v1 — Wks 4–8
+- [ ] Drive files FLAG-07 re-attempt
 
-### Graduation check result
-**CONDITIONAL — session may seal with open P1/P2 items; P0 (Crucible charter) carries forward as top priority to S070.**
+### Graduation check — PASSED ✅
+| Check | Result |
+|-------|--------|
+| SESSION_ANCHOR sealed | ✅ Ender ratified |
+| CO_ORCH_QUEUE P0s clear | ✅ All 3 P0s DONE |
+| Zero open BLGs | ✅ No new BLGs |
+| CROSS_REF complete | ✅ Surface request filed; Njineer acknowledged |
 
 ---
 
-*SESSION_ANCHORS.md · S069 entry appended · 2026-06-13*
-*Amethyst · COLLEEN · Apogee*
+*SESSION_ANCHORS.md · S069 SEALED · 2026-06-13 00:47 EDT*
+*Ender / Njineer ratification complete · Triumvirate P-09 contracts satisfied*
+*Registry watermark: P-36 · Crucible: ACTIVE · Research Program: ACTIVE*
