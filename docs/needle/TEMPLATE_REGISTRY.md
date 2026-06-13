@@ -1,6 +1,6 @@
 # Needle Template Registry
 <!-- DGAF Governance Layer: docs/needle/TEMPLATE_REGISTRY.md -->
-<!-- Status: GOLD STAR CERTIFIED | Last Updated: 2026-06-12 | Session: S070 | Owner: ndrorchestration --><!-- P-30: PASS | COLLEEN 1-1-1-1: PASS | Apogee Composite Avg: 0.958 -->
+<!-- Status: GOLD STAR CERTIFIED | Last Updated: 20<!-- Status: GOLD STAR CERTIFIED | Last Updated: 2026-06-13 | Session: S071 | Owner: ndrorchestration --><!-- P-30: PASS | COLLEEN 1-1-1-1: PASS | Apogee Composite Avg: 0.958 -->1-1-1-1: PASS | Apogee Composite Avg: 0.958 -->
 
 ## Purpose
 This registry is the canonical cross-reference between Needle.app workflow
@@ -89,3 +89,20 @@ A template may be added to this registry only when:
 - [ai-prompt-systems-portfolio: Prompt specs](https://github.com/ndrorchestration/ai-prompt-systems-portfolio/tree/main/specs/needle)
 - [Apogee Attestation Records](https://github.com/ndrorchestration/ai-prompt-systems-portfolio/tree/main/docs/qa)
 - [Needle Partner Directory](https://needle.app/partners-directory/ndr-ai-orchestration)
+
+---
+
+## Last Measured Metrics
+
+> **Snapshot:** NMS-003 — 2026-06-13 7 PM EDT | Session S071 | Window: Mar 15 – Jun 13, 2026
+
+| Template | Views | Uses | Runs | Use Rate | Run/Use |
+|----------|-------|------|------|----------|---------|
+| NT-01 Evaluate LLM Output Quality | 3,613 | 479 | 1,064 | 13.3% | 2.22x |
+| NT-02 Generate Grounded KB Answers | 3,453 | 444 | 1,394 | 12.9% | 3.14x |
+| NT-03 KB Answer With Quality Check | 2,491 | 229 | 476 | 9.2% | 2.08x |
+| NT-04 Define AI Governance Specification | 1,777 | 159 | 320 | 8.9% | 2.01x |
+| NT-05 Test Governance API Gates | 93 | — | — | — | — |
+| **90d Totals** | **11,374** | **1,311** | **3,254** | **11.5%** | **2.48x** |
+
+*Updated: 2026-06-13 | Agent Amethyst | S071*
