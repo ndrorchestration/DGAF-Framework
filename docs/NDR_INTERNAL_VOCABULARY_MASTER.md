@@ -3,15 +3,15 @@
 > **Steward:** COLLEEN — Institutional Memory, Archivist, Chief Librarian
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect
-> **Last updated:** 2026-06-12
+> **Last updated:** 2026-06-12 (v1.1 — full ecosystem sweep)
 > **Anchor:** S069 (OPEN)
-> **Source sweep:** GitHub ecosystem (CROSS_REF v4.1, SESSION_ANCHOR, SWEEP_LOG) + Google Drive (Auditing Engineering Terminology Taxonomy, SPACES AUDIT, What other things am I calling by the wrong names?, MASTER CONTEXT FILE) + historical thread context
+> **Sweep coverage (v1.1):** GitHub ecosystem (CROSS_REF v4.1, SESSION_ANCHOR, SWEEP_LOG, NDR_PATTERN_REGISTRY_UNIFIED v1.0, AGENT_ROSTER v1.0, ECOSYSTEM_INVENTORY, docs/agents/*, docs/architecture/*, docs/gates/*, docs/patterns/*, docs/specs/*) + Google Drive (Auditing Engineering Terminology Taxonomy, SPACES AUDIT, What other things am I calling by the wrong names?, MASTER CONTEXT FILE, Agent Professor Prodigy Technical Spec, Phi-Calculus White Paper, Prodigy Mathematical Rigor POC) + historical thread context
 
 ---
 
 ## Purpose
 
-This file is the **canonical single source of truth** for mapping every internal DGAF/NDR term, agent name, subsystem label, or design idiom to its nearest accepted external equivalent in AI safety, distributed systems, formal methods, software engineering, and governance standards (ISO/IEC/IEEE, NIST, INCOSE, W3C).
+This file is the **canonical single source of truth** for mapping every internal DGAF/NDR term, agent name, subsystem label, or design idiom to its nearest accepted external equivalent in AI safety, distributed systems, formal methods, software engineering, and governance standards (ISO/IEC/IEEE, NIST, INCOSE, W3C, EU AI Act).
 
 **Three columns per entry:**
 1. **Internal Name** — what the ecosystem calls it
@@ -24,18 +24,22 @@ This file is the **canonical single source of truth** for mapping every internal
 
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
-| **Amethyst** | Control Plane / Metacognitive Orchestrator (Orchestrator Pattern) | Amethyst adds φ-harmonic session state tracking not present in standard orchestrators; standard term: "metacognitive orchestrator with φ-calibrated state" |
-| **COLLEEN** | Institutional Memory System / Knowledge Base Steward / Archival Agent | Maps to knowledge base + document management roles; "Chief Librarian" is an apt human-readable gloss — keep it, but pair with "Archival Agent (P-02)" for engineering contexts |
-| **Prof. Prodigy / Prodigy** | Process Reward Model (PRM) / Step-wise Verification Agent | Unlike a final-answer evaluator, PRM judges each reasoning step — this is the exact function Prodigy performs; also maps to IEEE "Verification" (is it built correctly?) vs. "Validation" (is it the right thing?) |
-| **DemiJoule** | Safety Gate / Ethics Classifier / Pre-deployment Risk Screener | Maps to DemiJoule's 2-layer (syntactic + semantic DGAF 6-axis) check; closest external: NIST AI RMF "Measure" function + EU AI Act risk-tier classifier |
-| **Apogee** | QA Attestation Agent / Evidence-Grade Evaluator | "Gold Star" = internal S-Tier certification; external equivalent: CMMI Level 4–5 quality audit with rubric-based attestation (P-30 / P-11) |
-| **Reson** | Router Topology Engineer / Constraint Satisfaction Solver | Manages topology_router.py; external: CSP (Constraint Satisfaction Problem) solver + graph topology manager |
-| **Reciprocity** | Arbitration Agent / PDMAL Reweight Engine | External: Weighted consensus arbitrator in a BFT-adjacent multi-agent system; "reciprocity" is a meaningful differentiator — mutual obligation tracking is novel |
-| **Sentinel-Phi** | Invariant Guard / Safety Monitor | Enforces Phi-Closure gate and HPG; external: runtime assertion monitor / formal invariant checker |
-| **Sonar** | Evidence Grounding Agent / Fact Retrieval Module | Provides evidence grounding for all patterns; external: retrieval-augmented generation (RAG) grounding layer or "epistemic sourcing agent" |
-| **Herald** | Trace Sink / Audit Logger | External: append-only audit log writer (P-01); maps to W3C PROV-O `prov:wasGeneratedBy` provenance recorder |
-| **Agent Lavender** | QA Verification Persona / Audit Role | Historical persona from pre-S066 sessions; external: QA Reviewer role in a V&V (Verification & Validation, IEEE 1012) process |
-| **Ender (Andrew Hensel)** | Human Principal Architect / Human-in-the-Loop Approver | Maps to L4 Approver in the AI autonomy taxonomy (L1–L5); ratification authority for all Ender-ratified items |
+| **Amethyst / Amethyst-Conductor** | Control Plane / Metacognitive Orchestrator (Orchestrator Pattern) | Hard veto on all commits; normative decisions; escalation resolver. Adds φ-harmonic session state tracking not present in standard orchestrators. External gloss: "metacognitive orchestrator with φ-calibrated state" |
+| **COLLEEN** | Institutional Memory System / Knowledge Base Steward / Archival Agent (P-02) | Surfaces BLGs at session-open; maintains CROSS_REF back-link registry; de-duplication. "Chief Librarian" is apt; pair with "Archival Agent" for engineering contexts. COLLEEN secondary sign-off required before any stasis pattern (P-12–P-26) is deprecated |
+| **Prof. Prodigy / Professor Prodigy** | Process Reward Model (PRM) / Step-wise Formal Verification Agent | Provides formal proofs, phi-calculus, harmonic geometry, mathematical validation. Does not orchestrate. External: PRM (step-level verifier); IEEE "Verification" (is it built correctly?) |
+| **DemiJoule** | Safety Gate / Ethics Classifier / Semantic Risk Screener | 2-layer (syntactic + semantic DGAF 6-axis) check; token cost analysis; compute efficiency gating; P-11 gate 17 (DemiJoule efficiency score). Advisory, not blocking, unless combined with Apogee 11Q gate failure. NIST AI RMF "Measure" + EU AI Act risk-tier classifier |
+| **Apogee** | QA Attestation Agent / Evidence-Grade Evaluator | Evidence scoring (11Q gate P-11); source validation; DGAF/Rose Gold compliance verification; CERTIFICATION_INDEX maintenance. Gold Star = S-Tier certification. External: CMMI Level 4–5 quality audit with rubric-based attestation |
+| **Reson** | Harmonic Coherence Scorer / CSP Router | Harmonic coherence scoring (0.00–1.00); ≥0.75 required for seal commits (P-15); drift warning at 0.50–0.74; dissonance hard stop below 0.50. Manages topology_router.py. External: CSP solver + harmonic coherence monitor |
+| **Reciprocity** | Arbitration Agent / Portfolio + Rollback Authority | TNR (Trust-Neutrality-Reciprocity) enforcement; version control integrity; rollback path definition (P-15 checkpoint 9). External: weighted consensus arbitrator; "reciprocity" (mutual obligation tracking) is a genuine differentiator |
+| **Sentinel / Sentinel-Phi** | Process Compliance + Security Monitor / Invariant Guard | CI/CD enforcement; secret scanning; sovereign file guard (LICENSE/NOTICE/AXIS hard veto P-15); boundary violation detection. Sovereign veto overrides Amethyst; only Njineer can resolve a Sentinel-Amethyst conflict |
+| **Sonar** | Evidence Grounding Agent / RAG Fact Retrieval Module | Provides evidence grounding; external: retrieval-augmented generation (RAG) grounding layer or "epistemic sourcing agent" |
+| **Herald** | Communication Gate / Audit Logger / Release Authority | External publication gate; changelog authorship; release notes; inter-agent status broadcast. Maps to W3C PROV-O `prov:wasGeneratedBy` provenance recorder (P-01) |
+| **Echolette** | Resonance / Temporal Phrase Coherence Agent | Acoustic mesh layer; phrase-level temporal coherence (P-13 Phrase gate); signal echo validation. External: temporal coherence monitor / phrase-level consistency verifier |
+| **Lyra** | Narrative Coherence + Brand Voice Agent | Narrative coherence; IMP-05 brand voice consistency (P-19); portfolio language quality. External: style consistency enforcer / narrative quality monitor |
+| **Njineer** | Human Principal Architect / System Owner / Final Arbiter | Primary human identity: Andrew Hensel (@ndrorchestration). L4/L5 Approver in AI autonomy taxonomy. Ultimate authority; the only entity that can resolve Sentinel-Amethyst conflicts. "Ender" is the in-session alias |
+| **Ender** | In-Session Alias for Njineer (Andrew Hensel) | Used in session context and internal documents; same authority level as Njineer; direct equivalent — use "Njineer" in formal engineering contexts |
+| **Agent Lavender** | *(Deprecated 2026-04-29 → renamed Amethyst)* | Any reference to Lavender in any file is a hard BLG — trigger P-01 immediately. Replaced by Agent Amethyst (full rename sweep completed S011) |
+| **Forseti** | *(Deprecated 2026-04-29 → renamed Sentinel)* | Role absorbed by Agent Sentinel; CI/CD duties retained. Any reference to Forseti is a hard BLG |
 
 ---
 
@@ -43,17 +47,23 @@ This file is the **canonical single source of truth** for mapping every internal
 
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
-| **DGAF (Deterministic Governance for Agentic Frameworks)** | AI Governance Framework / Constitutional AI Runtime | Closest external: Databricks DAGF (AI Governance Framework); DGAF differentiates by being runtime-first (layer-0) rather than compliance-wrapper; also maps to NIST AI RMF "Govern" function |
-| **PDMAL (Phi-Driven Multi-Agent Lattice)** | Distributed Consensus Monitor / BFT-adjacent convergence tracker | External: Byzantine Fault Tolerance (BFT) consensus protocol with drift detection; PDMAL differentiates by using φ-harmonic weighting on convergence thresholds — a genuine extension beyond standard BFT |
-| **SCPE (Short-Context Pruning Engine)** | Context Window Manager / Relevance Pruner | External: sliding-window context manager with T0 immune constraint; maps to "context compression" in long-context LLM literature; threshold=0.15 (P-31) is the proprietary calibration |
-| **Phi-Closure Gate** | Harmonic Stability Monitor / Convergence Invariant Gate | External: fixed-point convergence gate; Knaster-Tarski Fixed-Point Theorem is the mathematical substrate; Fibonacci sequence [13,21,34,55] + φ*=0.618 tolerance ±0.05 is the novel calibration method |
-| **HPG (Harmonic Parametric Gate)** | Signal Normalization Gate / Bounds Enforcement Layer | External: signal-to-noise ratio normalization with bounds [1.0, 2.0]; "Ionian octave [1,2]" = musical metaphor for the ratio; engineering-readable gloss: "normalization bounds [1.0, 2.0] with φ-harmonic calibration" |
-| **TGL (Triadic Governance Loop)** | Three-Phase Governance Pipeline / Tri-Gate Orchestration | External: three-stage pipeline with assertion, validation, and seal phases; maps to ISO/IEC 38500's "Evaluate–Direct–Monitor" governance cycle |
-| **Procluding Premise Gate (P-35)** | Pre-admissibility Guard / Constitutional Precondition Enforcer | External: pre-condition enforcement gate in formal methods; "procluding premise" = logical precondition that must fire before any routing; maps to "semantic firewall" in AI safety literature |
-| **RECIPROCITY Arbiter** | Weighted Consensus Arbitrator / PDMAL Reweight Engine | External: multi-agent conflict resolution with weighted voting; "reciprocity" (mutual obligation tracking) is a genuine semantic differentiator not present in standard BFT |
-| **Orchestration Firewall** | Runtime Governance Interceptor / Pre-inference Invariant Enforcer | External: runtime monitor (formal methods) or "constitutional layer" (Anthropic terminology); P-08 |
-| **Turn Audit Record** | Immutable Audit Log Entry / Cryptographic Trace Record | External: append-only event log with SHA-256 hash seal; maps to W3C PROV-O `prov:Activity` with `prov:wasAssociatedWith` |
-| **11-Node Consensus** | BFT Quorum | External: Byzantine Fault Tolerance (BFT) — 11 nodes tolerates up to 3 simultaneous Byzantine failures (n = 3f + 1 → f=3, n=11) |
+| **DGAF (Deterministic Governance for Agentic Frameworks)** | AI Governance Framework / Constitutional AI Runtime | Closest external: Databricks DAGF; differentiates by being runtime-first (layer-0) not compliance-wrapper; NIST AI RMF "Govern" function |
+| **PDMAL (Phi-Driven Multi-Agent Lattice)** | Distributed Consensus Monitor / BFT-adjacent Convergence Tracker | Byzantine Fault Tolerance (BFT) consensus protocol with φ-harmonic weighting on convergence thresholds; Frobenius-norm edge-weight change tracking (P-33) is a genuine extension |
+| **SCPE (Structural Context Pruning Engine)** | Context Window Manager / Token Decay Engine | Tier-aware token decay: T0 AXIOM (immune) / T1 STRUCTURAL / T2 OPERATIONAL / T3 EXPLORATORY; retention formula R(t) = TIF × ψ^(-Δt × decay), ψ=φ=1.618; threshold 0.15 → 58.3% compression (P-31) |
+| **Phi-Closure Gate (P-32)** | Temporal Stability Gate / Harmonic Convergence Invariant | Fibonacci checkpoints [13,21,34,55] against φ*=0.618; progressive tolerance tightening [±0.07 → ±0.03]; KILL_REC on 3+ failures triggers P-29 risk_block |
+| **HPG (Harmonic Parametric Gate)** | Signal Normalization Gate / Bounds Enforcement Layer | Invoked only on Phi-Closure PASS (severity=0); bounds [1.0, 2.0] = "Ionian octave" metaphor; engineering gloss: "normalization bounds [1.0, 2.0] with φ-harmonic calibration" |
+| **TGL (Triadic Governance Loop)** | Three-Phase Governance Pipeline | Three-stage pipeline with assertion, validation, and seal phases; maps to ISO/IEC 38500 "Evaluate–Direct–Monitor" |
+| **KAPPA** | ML Routing & Calibration Component | Contains `dynamic_weight_router.py`; P-27 adaptive weighting + P-28 pipeline composition; threshold calibration via P-34 grid sweep (STRONG=0.22, BLENDED=0.18). External: confidence-gated routing component in an evaluation pipeline |
+| **PPTL** | Procluding Premise Triadic Loop | The governance runtime deployed on Vercel; PPTL = internal acronym for the full TGL + Procluding Premise enforcement loop. **Acronym expansion was not documented in v1.0 — this is the canonical expansion.** |
+| **Procluding Premise Gate (P-35)** | Pre-admissibility Guard / Hoare-Logic Precondition Enforcer | Pre-condition in Hoare logic (`{P} C {Q}`); fires before routing; "procluding" = logically blocking if precondition fails. Maps to "semantic firewall" in AI safety literature |
+| **RECIPROCITY Arbiter** | Weighted Consensus Arbitrator / PDMAL Reweight Engine | Mutual obligation tracking is a genuine semantic differentiator not present in standard BFT |
+| **Orchestration Firewall** | Runtime Governance Interceptor / Pre-inference Invariant Enforcer | Maps to "constitutional layer" (Anthropic) or runtime monitor (formal methods); `orchestration_firewall.py` |
+| **Turn Audit Record** | Immutable Audit Log Entry | Append-only event log with SHA-256 hash seal; W3C PROV-O `prov:Activity` with `prov:wasAssociatedWith` |
+| **11-Node Consensus** | BFT Quorum | 11 nodes tolerates up to 3 simultaneous Byzantine failures (n = 3f + 1 → f=3, n=11) |
+| **1-1-1-1 Alignment Gate (P-07)** | Binary 4-Gate Decision Criterion | Four independent pass/fail gates: fit / risk / effort / priority — all must pass for an opportunity to proceed. External: multi-criteria decision matrix with hard constraints |
+| **ADOPT / CUSTOMIZE / ALTER / COMPOSE** | Pattern Implementation Mode Taxonomy | Four modes for how an NDR pattern is applied: direct adoption, customization, alteration with documented deviation, or composition of a new pattern. External: adapt/extend/compose in pattern language taxonomies (POSA) |
+| **AttestationGate (Gate 0)** | Pre-admissibility Quality Gate | First gate in governance orchestration stack; P-30 + P-03 × 6 contracts; token valid + expiry check. External: quality gate at pipeline ingress |
+| **BYPASS_SIGNALS / HALLU_SIGNALS** | Adversarial Bypass Corpus / Hallucination Signal Corpus | Module-level constants in production source; test suite parametrized from same source (P-04); adversarial category routes to apply_strong regardless of confidence. External: adversarial test corpus / enumerable signal registry |
 
 ---
 
@@ -61,15 +71,19 @@ This file is the **canonical single source of truth** for mapping every internal
 
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
-| **Phi-Calculus Architecture** | Formal Governance Substrate grounded in the Knaster-Tarski Fixed-Point Theorem | The "phi-calculus" label also maps to an experimental OOP formal system (φ-calculus, derived from π-calculus) in theoretical CS; DGAF's usage is specifically the governance attractor at φ=1.618; recommend gloss: "Phi-Calculus Architecture (φ-attractor governance, Knaster-Tarski substrate)" |
-| **φ attractor / φ* = 0.618** | Golden Ratio Convergence Target / Harmonic Stability Threshold | φ = 1.61803...; φ* = 1/φ = 0.61803...; used as stability threshold; external: harmonic ratio in signal processing; the governance application is novel |
-| **Drift Functional** | Divergence Metric / Behavioral Drift Measure | External: KL-divergence or L2-norm drift measure in ML; the drift functional in Phi-Calculus maps governance behavior over time; θ = 0.009 is the proprietary calibration threshold |
-| **Compliance Algebra** | Boolean Constraint Algebra / Formal Compliance Logic | External: formal logic operators applied to governance predicates; maps to temporal logic (LTL/CTL) for expressing compliance properties over traces |
-| **Tarski Layer 0** | Semantic Foundation Layer / Denotational Substrate | "Layer 0" is borrowed from OSI networking — creates a mixed metaphor; correct framing: "the Knaster-Tarski fixed-point theorem provides the denotational substrate; runtime enforcement is the pre-inference intercept" |
-| **Frequency-Based Orchestration (f=0 → f=φ')** | Parametric Constraint Tuning / Constraint Satisfaction Problem (CSP) with Harmonic Weighting | External: CSP with parametric relaxation from exploratory (f=0) to hard constraint (f=∞); the φ-harmonic weighting on constraint boundaries is the proprietary novel element |
-| **Bidirectional Frequency Sweep** | Constraint Feasibility Region Search | External: bidirectional search in a constraint feasibility landscape; maps to binary search or gradient descent in constraint space |
-| **SI ≥ φ* = 0.618 (Stability Index)** | Minimum Stability Threshold / Convergence Lower Bound | External: stability index with harmonic lower bound; 7/7 STABLE in lifecycle_stability_report.json means all phases exceed this threshold |
-| **H-Neurons** | Over-Compliance Circuits / Sycophancy Neurons | External closest: sycophancy neurons identified in representation engineering literature (Zou et al., 2023, Anthropic); "H-Neurons" is an internal classification — should be cited as analogous to, not identical with, externally verified circuits |
+| **Phi-Calculus Architecture** | Formal Governance Substrate (Knaster-Tarski Fixed-Point Theorem) | Note: "φ-calculus" also refers to an experimental OOP formal system derived from π-calculus; DGAF usage is specifically the governance attractor at φ=1.618. Recommended gloss: "Phi-Calculus Architecture (φ-attractor governance, Knaster-Tarski substrate)" |
+| **φ attractor / φ* = 0.618** | Golden Ratio Convergence Target / Harmonic Stability Threshold | φ = 1.61803...; φ* = 1/φ = 0.61803...; governance application is novel; external: harmonic ratio in signal processing |
+| **Drift Functional** | Divergence Metric / Behavioral Drift Measure | KL-divergence or L2-norm drift measure; θ = 0.009 is proprietary calibration |
+| **Frobenius Norm (‖ΔW‖_F)** | Matrix Norm for Edge-Weight Change Detection | Standard linear algebra metric; used in PDMAL (P-33) to catch coordinated multi-edge manipulation; convergence when ‖ΔW‖_F < 0.02 for 3 consecutive turns |
+| **Compliance Algebra** | Boolean Constraint Algebra / Formal Compliance Logic | Maps to temporal logic (LTL/CTL) for compliance properties over traces |
+| **Tarski Layer 0** | Semantic Foundation Layer / Denotational Substrate | "Layer 0" borrows OSI networking metaphor; correct framing: Knaster-Tarski fixed-point theorem provides the denotational substrate; runtime enforcement is the pre-inference intercept |
+| **Frequency-Based Orchestration (f=0 → f=φ')** | CSP with Parametric Harmonic Relaxation | Constraint Satisfaction Problem with relaxation from exploratory (f=0) to hard constraint (f=∞); φ-harmonic weighting on constraint boundaries is proprietary |
+| **Bidirectional Frequency Sweep** | Constraint Feasibility Region Search | Bidirectional search in constraint feasibility landscape; maps to binary search or gradient descent in constraint space |
+| **Fibonacci Checkpoints [13,21,34,55]** | Fibonacci-Sequence-Indexed Evaluation Checkpoints | Standard Fibonacci sequence used as natural session rhythm checkpoints; ±0.07 → ±0.03 progressive tolerance tightening is the novel governance application |
+| **Retention Formula R(t) = TIF × ψ^(-Δt × decay)** | Exponential Token Decay with Trust-Indexed Floor | ψ=φ=1.618; TIF (Trust Index Factor) from PDMAL trust edge (+0.15 per edge); external: exponential decay in caching / memory systems; φ-base is the novel element |
+| **TIF (Trust Index Factor)** | Trust-Weighted Retention Multiplier | Adds 0.15 to token retention per PDMAL trust edge; external: trust weight in a trust management system (e.g., EigenTrust) |
+| **SI ≥ φ* = 0.618 (Stability Index)** | Minimum Stability Threshold / Convergence Lower Bound | 7/7 STABLE in lifecycle_stability_report.json = all phases exceed this threshold |
+| **H-Neurons** | Over-Compliance Circuits / Sycophancy Neurons | Analogous to sycophancy neurons in representation engineering literature (Zou et al., 2023; Anthropic); should be cited as analogous, not identical |
 
 ---
 
@@ -77,13 +91,33 @@ This file is the **canonical single source of truth** for mapping every internal
 
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
-| **NDR Pattern (P-XX)** | Architecture Pattern / Design Pattern (POSA / EAA taxonomy) | External: "Pattern" in POSA (Pattern-Oriented Software Architecture) or EAA (Fowler); NDR patterns are governance-specific and runtime-enforceable, which is a genuine differentiator |
-| **Stasis Patterns (P-12–P-26)** | Idempotency Patterns / Steady-State Invariant Patterns | External: idempotency guarantees in distributed systems; "stasis" = stable equilibrium under perturbation; 15 patterns with CONDITIONAL PASS status — need one-line descriptions added |
-| **Gold Star (S-Tier / Platinum Star)** | CMMI Level 5 Quality Designation / Peer-Attested Artifact Seal | External: CMMI Maturity Level 5 (Optimizing); OST-50 = internal benchmark target at ≥99.1% integrity; "Gold Star" is a proprietary certification brand |
-| **11Q Attestation Rubric (P-11)** | 11-Point Evaluation Rubric / QA Scoring Matrix | External: rubric-based evaluation (ISO/IEC 25010 quality model has 8 quality characteristics; 11Q is more granular and governance-specific) |
-| **HDFS (Hierarchical Documentation Format Standard) 1.0** | Documentation Standard / Formatting Protocol | External: a formatting protocol within a documentation standards framework; "HDFS" also acronym-collides with Hadoop Distributed File System — recommend disambiguating as "HDFS-DOC 1.0" or "NDR-HDFS" |
-| **A-TIER / S-TIER / Gold Star** | Quality Grade / Evidence Tier | External: tiered quality classification (A = high, S = exceptional); maps to ISO/IEC 25010 quality levels; 94.5% A-TIER for P-34 is the attestation baseline |
-| **APOGEE_11Q_P34.json** | QA Attestation Artifact / Evidence-Grade Report | External: attestation record (W3C PROV-O `prov:Entity` with evidence grade); this is a living artifact and the primary claim-to-artifact link for P-34 |
+| **NDR Pattern (P-XX)** | Architecture Pattern (POSA / EAA taxonomy) | Governance-specific and runtime-enforceable; genuine differentiator vs. standard design patterns |
+| **P-01 — Fan-Out Trace Sink w/ Dead-Letter** | Multi-Sink Audit Logger with Dead-Letter Queue | External: fan-out pattern (EAA) + dead-letter queue (messaging systems); iterates all sinks, routes failures to dead-letter JSONL; no re-raise |
+| **P-02 — Async-Persist Ring Buffer** | Bounded In-Process Ring Buffer with Background Drain Thread | External: producer-consumer pattern with bounded buffer; background thread drains to persistent storage on interval or capacity trigger |
+| **P-03 — Governance Contract Test** | Governance Property Test / Behavioral Contract Test | 4-contract assertion structure per gate; Gate 0 (P-30) requires 6 contracts; `@pytest.mark.governance`; external: contract testing (Pact) or property-based testing |
+| **P-04 — Parametrized Corpus** | Auto-Expanding Parametrized Test Suite | Production signal constants drive test parametrization; external: data-driven testing / table-driven tests; single source of truth for signal list |
+| **P-05 — Tri-Phase CI Gate** | Three-Matrix CI Pipeline with Independent Governance Stage | unit / governance / integration matrix; `fail-fast: false`; governance = merge blocker; external: staged CI pipeline (GitHub Actions matrix) |
+| **P-06 — Topology × Orchestration Matrix Lab** | Empirical Architecture Decision Record via Combinatorial Simulation | All (topology, orchestration_mode) cell combinations; 5 canonical outputs: topology ranking, mode ranking, interaction heatmap, triadic lift, noise resilience curves |
+| **P-07 — Dual-Agent Persistent Sweep Loop** | Two-Agent Detect-and-Implement Pipeline with Append-Only Queue | COLLEEN detects; Amethyst implements; CO_ORCH_QUEUE as SSoT hand-off; 1-1-1-1 Alignment Gate; four implementation modes (ADOPT/CUSTOMIZE/ALTER/COMPOSE) |
+| **P-08 — Triad Taxonomy** | Multi-Agent Formation Taxonomy | Three canonical triad types: Consensus Trio (2-of-3 quorum), Conducted Trio (1 conductor + 2), Triumvirate (1 Prime + 2 Prefects governs N). Conducted Trio → Triumvirate when ensemble > 3 |
+| **P-09 — Triumvirate Mandate Schema** | Machine-Readable Governance Mandate Lifecycle | `TriumvirateMandate` dataclass; 5 P-08 contracts enforced in code; issue() / MECE enforcement / submit_prefect_aggregate() / sign_off() / Herald trace |
+| **P-10 — Session Graduation Check** | Automated Definition-of-Done Validator | 4-check script: SESSION_ANCHOR sealed + CROSS_REF complete + CO_ORCH_QUEUE clear + zero open BLGs; `sys.exit(1)` on failure |
+| **P-11 — 11Q Attestation Scoring** | 11-Point Rubric-Based QA Gate | S-TIER ≥95% (Q11 ≥9/10 required); A-TIER ≥85%; attestation artifact as signed JSON in `docs/qa/` |
+| **P-12–P-26 — Stasis Patterns (133 entries)** | Idempotency / Steady-State Invariant Patterns (133 entries) | Block-level declaration; CONDITIONAL PASS; COLLEEN secondary sign-off required before deprecation or modification; per-pattern enumeration deferred |
+| **P-27 — Adaptive-Weighting-with-Confidence-Gates** | Confidence-Proportional Dynamic Weight Router | Three routing paths: STRONG (≥0.22) / BLENDED (0.18–0.22) / balanced (<0.18); adversarial hard override regardless of confidence; thresholds calibrated by P-34 |
+| **P-28 — Pipeline-Composition-with-Confidence-Gated-Routing** | Auditable Confidence-Gated Evaluation Pipeline | raw_batch → detect → route_and_score → apply_weights → ranked_report; each stage independently auditable; no stage may read from non-predecessor |
+| **P-29 — Sentinel-Annotated Risk Pass** | Three-Hook-Point Risk Classification Pass | risk_ok / risk_warn / risk_block at 3 hook points; only risk_block halts; P-10 deontic gate at hook_point 1; KILL_REC from P-32 triggers risk_block at hook_point 2 |
+| **P-30 — Apogee-Attestation-Gate** | Pre-Canonical-Promotion Quality Gate | P-11 11Q scoring before any component is governance-ready; 6 contracts (per P-03 ALTER); Ender ratification required for S-TIER |
+| **P-31 — SCPE — Structural Context Pruning Engine** | Tier-Aware Token Decay Engine | T0 AXIOM unconditionally immune; R(t) = TIF × φ^(-Δt × decay); threshold 0.15 → 58.3% compression |
+| **P-32 — Fibonacci Phi-Closure Gate** | Fibonacci-Indexed Temporal Stability Gate | Fibonacci checkpoints [13,21,34,55]; φ*=0.618; progressive tolerance tightening; KILL_REC on 3+ failures |
+| **P-33 — PDMAL Convergence Monitor** | Trust-Graph Structural Health Monitor (Frobenius-Norm) | ‖ΔW‖_F tracking turn-over-turn; STABLE/WATCH/WARN/ALERT ladder; CONVERGED when ‖ΔW‖_F < 0.02 for 3 turns; joint escalation with P-32 → DemiJoule deep re-scan |
+| **P-34 — Empirical-Threshold-Sweep-over-ML-Classifier** | Grid-Search Threshold Calibration Pattern | Prefer grid sweep over introducing ML classifier when gap is threshold misalignment; 14×12 grid; `governance_clear` 82.6%→100% for KAPPA v3.5→v3.6; A-TIER 94.5% attested |
+| **Stasis Patterns (P-12–P-26)** | Idempotency Patterns / Steady-State Invariant Patterns | External: idempotency guarantees in distributed systems; "stasis" = stable equilibrium under perturbation; 133 entries, CONDITIONAL PASS status |
+| **Gold Star (S-Tier / Platinum Star)** | CMMI Level 5 Quality Designation / Peer-Attested Artifact Seal | OST-50 = ≥99.1% integrity target; proprietary certification brand |
+| **11Q Attestation Rubric (P-11)** | 11-Point Evaluation Rubric / QA Scoring Matrix | More granular than ISO/IEC 25010 (8 characteristics); governance-specific |
+| **HDFS (Hierarchical Documentation Format Standard) 1.0** | Documentation Standard / Formatting Protocol | ⚠️ ACRONYM COLLISION: conflicts with Hadoop Distributed File System; recommend "NDR-HDFS" or "HDFS-DOC 1.0" |
+| **A-TIER / S-TIER** | Quality Grade / Evidence Tier | A-TIER ≥85%; S-TIER ≥95% with Q11≥9; maps to ISO/IEC 25010 quality levels |
+| **APOGEE_11Q_P34.json** | QA Attestation Artifact / Evidence-Grade Report | W3C PROV-O `prov:Entity` with evidence grade; primary claim-to-artifact link for P-34 |
 
 ---
 
@@ -91,19 +125,28 @@ This file is the **canonical single source of truth** for mapping every internal
 
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
-| **PhiLattice** | φ-Calibrated Multi-Agent Consensus Topology / Harmonic Consensus Lattice | External: fixed-topology multi-agent communication graph (graph theory); a lattice in the mathematical sense (partially ordered set with meets and joins); φ-weighting of node weights is the novel element |
-| **Yggdrasil** | Cross-Repo Governance Mesh / Global Metadata Snapshot | External (two mappings): (1) TOSCA-style cross-application orchestration mesh; (2) HDFS fsimage — a serialized binary snapshot of the entire namespace; at 50% completion, maps to "cross-repo governance Phase 2 of 4" |
-| **Project Andromeda** | Distributed Vector Space / Multimodal Embedding Space | External: high-dimensional vector space for semantic similarity search; maps to "distributed vector store" (Pinecone, Weaviate, Chroma architecture class) |
-| **Rose Gold** | Staging Environment / Blue-Green Deployment / Canary Stage | External: pre-production validation environment; "Savage Reason" (ungrounded divergence) is the failure mode being screened; maps to canary deployment where traffic is gated before full promotion |
-| **CSDF-Framework (historical)** | Constraint-Satisfaction-Driven Framework | Renamed to DGAF-Framework (January 2026); CSDF is the legacy internal label; external: constraint-driven governance architecture |
-| **Ensemble v1.6** | Multi-Agent Runtime Manifest / Agent Ensemble Configuration | External: "ensemble" in ML = combination of models; here it means the full 9-agent runtime configuration with all gate bindings; v1.6 = current sealed version |
-| **CO_ORCH_QUEUE** | Co-Orchestration Work Queue / Backlog | External: sprint backlog or work queue in Scrum/Kanban; "co-orchestration" signals dual-agent execution (Amethyst + COLLEEN); maps to "shared task queue with agent assignment" |
-| **SESSION_ANCHOR** | Session State Record / Sprint Anchor Document | External: session state manifest; maps to a sprint planning document with "Definition of Done" criteria and carry-forward tracking |
-| **BLG (Blocking Gap)** | Blocker / Critical Path Item | External: "blocker" in Scrum; "critical dependency" in PMBOK; zero_open_blg = zero open blockers at session seal |
-| **Sweep / Sweep Log** | QA Audit Cycle / Governance Audit Trail | External: audit cycle (ISO 19011 audit management); SWEEP_LOG = append-only audit trail (maps to ISO/IEC 38500 "Monitor" governance function) |
-| **SWEEP-002 Phase 3** | Sprint 3 of QA Sweep 2 / Audit Phase 3 | External: sprint phase in an iterative audit cycle; Phase 3 = CO_ORCH_QUEUE execution (drift-sim, ingestion pipeline, link validation) |
-| **Session Graduation** | Sprint Retrospective + Release Gate | External: "sprint close" + "release gate" in Agile/DevOps; graduation_check.py is the automated Definition-of-Done validator |
-| **Driftwatch** | Behavioral Drift Monitor / Anomaly Detection Service | External: behavioral drift detection service; maps to MLOps model monitoring (concept drift detection); deployed on Vercel |
+| **PhiLattice** | φ-Calibrated Multi-Agent Consensus Topology | Partially ordered set (lattice) with φ-weighted node edges; novel governance application of lattice theory |
+| **Yggdrasil** | Cross-Repo Governance Mesh / Global Metadata Snapshot | (1) TOSCA-style cross-application orchestration mesh; (2) HDFS fsimage-style serialized namespace snapshot; 50% complete = Phase 2 of 4 |
+| **Project Andromeda** | Distributed Vector Space / Multimodal Embedding Store | High-dimensional vector space for semantic similarity; maps to distributed vector store (Pinecone/Weaviate/Chroma class) |
+| **Rose Gold** | Staging / Canary Environment | Pre-production validation environment screening for Savage Reason (ungrounded divergence); maps to blue-green deployment canary stage |
+| **CSDF-Framework (historical)** | Constraint-Satisfaction-Driven Framework | Legacy label; renamed DGAF-Framework January 2026; any CSDF reference should be updated |
+| **Ensemble v1.6** | Multi-Agent Runtime Manifest v1.6 | Full 9-agent runtime configuration with all gate bindings; `registry/ensemble_v16_manifest.json` |
+| **CO_ORCH_QUEUE** | Co-Orchestration Work Queue / Append-Only Backlog | SSoT hand-off substrate for P-07 Dual-Agent Sweep; COLLEEN detects, Amethyst implements; append-only |
+| **SESSION_ANCHOR** | Session State Record / Sprint Anchor Document | Session state manifest with Definition of Done and carry-forward tracking |
+| **BLG (Blocking Gap)** | Blocker / Critical Path Item | "Blocker" in Scrum; "critical dependency" in PMBOK; zero_open_blg = clean sprint close |
+| **Sweep / Sweep Log** | QA Audit Cycle / Governance Audit Trail | ISO 19011 audit cycle; SWEEP_LOG = append-only audit trail; maps to ISO/IEC 38500 "Monitor" |
+| **SWEEP-002 Phase 3** | Sprint 3 of QA Sweep 2 | CO_ORCH_QUEUE execution phase (drift-sim, ingestion pipeline, link validation) |
+| **Session Graduation** | Sprint Retrospective + Release Gate | `graduation_check.py` = automated Definition-of-Done validator (P-10) |
+| **Driftwatch** | Behavioral Drift Monitor / MLOps Anomaly Detection Service | Concept drift detection service deployed on Vercel |
+| **Trio (P-14)** | Three-Agent Governance Formation | Amethyst + Apogee + COLLEEN; activates for any session touching ≥3 repos or requiring cross-repo delta |
+| **Harmonic Quintet (P-15)** | Five-Agent Governance Formation with Sovereign File Authority | Trio + Reson + Sentinel; activates for SWEEP_LOG seal commit; sovereign file touch; NDR Registry update; new public repo; Reson score < 0.75 |
+| **Extended Formation** | Domain-Specific Supplemental Agent Formation | Quintet + any of Reciprocity, Prof Prodigy, DemiJoule, Echolette, Lyra, Herald; triggered for formal proofs, rollback, brand review, release, cost audit |
+| **MECE (Prefect Domain Split)** | Mutually Exclusive, Collectively Exhaustive Domain Partition | Standard MECE principle (McKinsey consulting origin); enforced in code via TriumvirateMandate.MECE enforcement; ValueError raised on violation |
+| **TNR (Trust-Neutrality-Reciprocity)** | Trust-Neutral-Reciprocal Governance Protocol | Enforced by Reciprocity agent; three-axis fairness check on portfolio and rollback operations; external: fairness constraints in multi-stakeholder systems |
+| **Sovereign Files** | Protected / Immutable System Files | LICENSE / NOTICE / AXIS files; Sentinel hard veto on any modification; overrides Amethyst; only Njineer can override Sentinel on sovereign files |
+| **AXIS** | Governance Axis Definition File | Internal sovereign file defining the DGAF governance axes; Sentinel-protected; exact acronym expansion not documented — **FLAG: needs canonical expansion** |
+| **CERTIFICATION_INDEX** | Artifact Certification Registry | Maintained jointly by Apogee and COLLEEN; indexes all attested artifacts with tier, date, and Ender ratification status |
+| **GAP-XX (numbered gaps)** | Tracked Architectural Gap / Deferred Improvement Item | GAP-03 = vocab scan; GAP-07 = AGES full content; GAP-08 = back-link propagation; external: deferred architectural decision record (ADR) or technical debt item |
 
 ---
 
@@ -111,20 +154,27 @@ This file is the **canonical single source of truth** for mapping every internal
 
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
-| **Gain Staging** | Signal Flow Optimization / Signal-to-Noise Ratio Management | External: SNR management across a reasoning chain; "signal" = grounded truth, "noise" = hallucination; borrowed from audio engineering — valid metaphor but requires gloss in engineering docs |
-| **Pinging the Buoy** | Liveness Check / Heartbeat Signal | External: heartbeat probe / pulse-width synchronization; ensures agent has not become a "zombie process" (running but logically unaligned) |
-| **Schizophonic** | Decoupled Agency / Acousmatic Separation | External: structural separation of agent output from training source; maps to "decoupled agency" or "source-output dissociation" in AI interpretability |
-| **Savage Reason** | Ungrounded Divergence / Unconstrained Hallucination Mode | External: ungrounded LLM output in the absence of constraint enforcement; the failure mode Rose Gold (staging env) is designed to screen |
-| **HDFS 1.0 (Information Density)** | Information Extraction Density / Match Rule Density | External: IE (Information Extraction) density; measures how much structured metadata can be extracted from a context window; also collides with Hadoop HDFS acronym (see Section 4) |
-| **Modal Misalignment** | Agent Behavioral Inconsistency / Cross-Agent Incoherence | External: inconsistency in agent output distributions across identical prompts; solved by frequency-based orchestration (21% improvement); maps to "behavioral alignment" problem in multi-agent RL |
-| **Frequency-Based Orchestration** | Parametric Harmonic Constraint Tuning | External: parametric tuning of constraint weights using harmonic ratios; φ-ratio application to constraint weighting is the proprietary novel element — do not publish specific tuning tables |
-| **Governance-First Architecture** | Layer-0 Constitutional Governance / Pre-inference Governance Integration | External: "constitutional AI" (Anthropic) or "governance-as-code" (DevOps); DGAF differentiates by enforcing governance at the pre-inference intercept (layer 0), not as a post-hoc wrapper |
-| **Single Authority Chain** | Canonical Source of Truth (SSoT) / Single Point of Authority | External: Single Source of Truth (SSoT); "authority chain" emphasizes hierarchical delegation from Ender → Amethyst → agents, which is more specific than standard SSoT |
-| **Append-Only Log** | Immutable Audit Trail / Event Sourcing Log | External: event sourcing pattern (append-only event log); maps to CQRS (Command Query Responsibility Segregation) event store |
-| **Observable Invariants Only** | Externally Verifiable Properties / Testable Invariants | External: "observable properties" in formal verification; only invariants that can be tested at a system boundary are enforced — prevents unfalsifiable claims |
-| **Procluding Premise** | Constitutional Precondition / Pre-routing Axiom | "Procluding" = logically blocking downstream processing if a precondition fails; external: pre-condition in Hoare logic (`{P} C {Q}` — P must hold before C executes); P-35 |
-| **Context Rehydration** | Session State Restoration / Context Reconstruction | External: session state rehydration in stateless architectures; maps to loading a prior session's working memory from a persistent store (COLLEEN archive) |
-| **Zero Open BLGs** | Zero Blockers / Clean Sprint Close | External: "sprint close condition" or "Definition of Done: no open blockers"; enforced by orchestration_firewall.py |
+| **Gain Staging** | Signal Flow Optimization / SNR Management | Borrowed from audio engineering; "signal" = grounded truth, "noise" = hallucination; requires engineering gloss in formal docs |
+| **Pinging the Buoy** | Liveness Check / Heartbeat Signal | Heartbeat probe ensuring agent is not a zombie process (running but logically unaligned) |
+| **Schizophonic** | Decoupled Agency / Source-Output Dissociation | Structural separation of agent output from training source; maps to "decoupled agency" in AI interpretability |
+| **Savage Reason** | Ungrounded Divergence / Unconstrained Hallucination Mode | Failure mode that Rose Gold (staging env) is designed to screen; external: ungrounded LLM output in absence of constraint enforcement |
+| **Modal Misalignment** | Cross-Agent Behavioral Inconsistency | Inconsistency in agent output distributions across identical prompts; solved by frequency-based orchestration (21% improvement) |
+| **Frequency-Based Orchestration** | Parametric Harmonic Constraint Tuning | CSP with φ-harmonic weighting; φ-ratio application to constraint weighting is proprietary — do not publish specific tuning tables |
+| **Governance-First Architecture** | Layer-0 Constitutional Governance | Pre-inference governance integration; differentiates from "constitutional AI" (Anthropic) by enforcing at layer 0, not post-hoc |
+| **Single Authority Chain** | Single Source of Truth (SSoT) + Hierarchical Delegation | Ender → Amethyst → agents; more specific than standard SSoT |
+| **Append-Only Log** | Immutable Audit Trail / Event Sourcing Log | Event sourcing pattern; maps to CQRS event store |
+| **Observable Invariants Only** | Externally Verifiable Properties / Testable Invariants | Only invariants testable at system boundary are enforced; prevents unfalsifiable claims |
+| **Procluding Premise** | Constitutional Precondition / Hoare-Logic Pre-condition | `{P} C {Q}` — P must hold before C executes; P-35 |
+| **Context Rehydration** | Session State Restoration / Context Reconstruction | Loading prior session working memory from persistent store (COLLEEN archive) |
+| **Zero Open BLGs** | Zero Blockers / Clean Sprint Close | "Definition of Done: no open blockers"; enforced by `orchestration_firewall.py` |
+| **Njineer Confirmation** | Human Principal Architect Sign-Off | Required for: changes to AGENT_ROSTER, Sentinel-Amethyst conflict resolution, sovereign file overrides |
+| **Deep Re-scan (DemiJoule)** | Semantic Re-evaluation Pass | Triggered by joint escalation: PDMAL ALERT (severity ≥3) + Phi-Closure ESCALATE (severity ≥3); if deep scan returns `kill`, session terminated before HPG |
+| **Deontic Gate (P-10)** | Normative Obligation Gate | P-10 deontic gate at hook_point 1 in P-29; "deontic" = logic of obligation/permission/prohibition; external: deontic logic in formal methods |
+| **IMP-XX (numbered improvements)** | Tracked Improvement Item | IMP-05 = brand voice consistency (P-19); external: improvement backlog item; analogous to a GitHub issue or Jira ticket |
+| **PM-XX (numbered pattern milestones)** | Pattern Registry Milestone / Tracked Action Item | PM-01 = P-32↔P-29 cross-ref (CLOSED S066); PM-02 = P-03 ALTER P-30 ref (CLOSED S066); PM-05 = COLLEEN stasis audit (CLOSED S066); PM-07 = Apogee P-34 attestation (CLOSED S066); external: milestone or tracked action item in a project management system |
+| **OPP-XX (numbered opportunities)** | Detected Improvement Opportunity | OPP-003 = P-03 Gate 0 contract count discrepancy; external: improvement opportunity surfaced by COLLEEN in P-07 detect role |
+| **BLG-P34-01 / BLG-P34-02** | Pattern-Scoped Blocker | BLG scoped to a specific pattern (P-34); BLG-P34-01 = tradeoff block; BLG-P34-02 = ref path missing; both RESOLVED S066 |
+| **HDFS 1.0 (Information Density)** | Information Extraction Density / Match Rule Density | Measures structured metadata extractable from context window; ⚠️ acronym collision with Hadoop HDFS (see Section 4) |
 
 ---
 
@@ -133,14 +183,16 @@ This file is the **canonical single source of truth** for mapping every internal
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
 | **DGAF-Framework (GitHub repo)** | Canonical Governance Architecture Repository | Primary SSoT for all governance patterns, sweep logs, and session anchors |
-| **ndrorchestration (GitHub org)** | Engineering Organization / Repository Namespace | Owner org for all DGAF ecosystem repos |
-| **Supabase Project (us-east-2, Postgres 17)** | Managed Relational Database / Backend-as-a-Service (BaaS) | External: BaaS with Postgres; ACTIVE_HEALTHY status per ECOSYSTEM_INVENTORY |
-| **Vercel Deployments (aoga-dashboard + pptl-governance-dashboard)** | Edge-deployed Frontend Applications / CDN-hosted Dashboards | External: static site + serverless function deployments on Vercel Edge Network |
-| **AOGA Dashboard** | Governance Analytics Frontend / Orchestration Dashboard | External: observability dashboard for multi-agent governance metrics |
-| **PPTL Governance Dashboard** | PPTL (Procluding Premise Triadic Loop?) Frontend | External: governance status dashboard; PPTL = internal acronym needing one-line expansion |
+| **ndrorchestration (GitHub org)** | Engineering Organization / Repository Namespace | Owner org for all DGAF ecosystem repos; human alias: @ndrorchestration = Andrew Hensel / Njineer |
+| **Supabase Project (us-east-2, Postgres 17)** | Managed Relational Database / BaaS | BaaS with Postgres; ACTIVE_HEALTHY status per ECOSYSTEM_INVENTORY |
+| **Vercel Deployments (aoga-dashboard + pptl-governance-dashboard)** | Edge-deployed Frontend Applications / CDN-hosted Dashboards | Static site + serverless function deployments on Vercel Edge Network |
+| **AOGA Dashboard** | Governance Analytics Frontend / Agent Observability Dashboard | Observability dashboard for multi-agent governance metrics; "AOGA" = internal acronym, **FLAG: canonical expansion not documented** |
+| **PPTL Governance Dashboard** | Procluding Premise Triadic Loop Governance Dashboard | PPTL now fully expanded (see Section 2); Vercel-deployed governance status frontend |
 | **GitHub (24 repos, 23 active)** | Version Control + Artifact Registry | Primary artifact storage for all sealed session outputs |
 | **Google Drive / Gmail (PEL label)** | Document Management System / Knowledge Base | PEL = Prompt Engineering Library & Documentation; 25 essential emails post-cleanup (March 2026) |
 | **chat-archives (private repo)** | Research Knowledge Base / Conversation Archive | Internal reference only; not for publication |
+| **Gold-star-standards (private repo)** | Proprietary Rating & Certification Methodology Repository | Licensing model; consulting fees; KEEP PRIVATE per January 2026 IP decision |
+| **HARMONIC_QUINTET.md** | Harmonic Quintet Formation Specification Document | Source authority for P-15 formation definition; superseded by AGENT_ROSTER.md v1.0 as canonical reference |
 
 ---
 
@@ -148,14 +200,37 @@ This file is the **canonical single source of truth** for mapping every internal
 
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
-| **21% constraint compliance improvement** | +21 percentage point constraint compliance gain | Measured across 5-agent system with frequency-based orchestration; baseline not yet publicly published — needs artifact link |
-| **95% modal alignment** | 95% behavioral consistency across agents | Cross-agent consistency on identical prompts; baseline was 87% (pre-orchestration) |
-| **96% TruthfulQA accuracy** | 96% internal TruthfulQA-style benchmark score | Internal benchmark (not the public TruthfulQA dataset); should be glossed as "96% accuracy on internal TruthfulQA-style evaluation" |
-| **89% off-domain reasoning reduction** | 89% reduction in out-of-scope reasoning | Measures reduction in responses that violate domain constraints |
+| **21% constraint compliance improvement** | +21 percentage point constraint compliance gain | 5-agent system; frequency-based orchestration; baseline not publicly published — needs artifact link |
+| **95% modal alignment** | 95% behavioral consistency across agents | Baseline was 87% pre-orchestration; cross-agent consistency on identical prompts |
+| **96% TruthfulQA accuracy** | 96% accuracy on internal TruthfulQA-style evaluation | Internal benchmark; not the public TruthfulQA dataset; always gloss with "internal" qualifier |
+| **89% off-domain reasoning reduction** | 89% reduction in out-of-scope reasoning | Reduction in responses violating domain constraints |
 | **OST-50 / Platinum Star** | ≥99.1% integrity target | Internal benchmark designation; OST-50 = the evaluation standard at that tier |
-| **A-TIER (94.5%)** | High-quality attestation grade | P-34 attestation result via APOGEE_11Q; A-TIER = below Gold Star (S-Tier) but above standard |
-| **340% coordination gain** | Significant non-linear coordination gain (precise metric undefined) | Claimed in HDFS 1.0 spec; "coordination effectiveness" metric not yet formally defined — needs artifact link or downgrade to qualitative claim |
-| **60-turn simulation (5 Gold Stars)** | 60-step multi-agent simulation with internally attested Gold Star results | Self-attested via Apogee; reproduce via `python tests/test_orchestration_firewall.py` against `registry/ensemble_v16_manifest.json` |
+| **A-TIER (94.5%)** | High-quality attestation grade | P-34 attestation result via APOGEE_11Q; A-TIER = below S-Tier but above standard |
+| **82.6% → 100% (governance_clear)** | KAPPA Router Calibration Result | KAPPA v3.5→v3.6 via P-34 14×12 grid sweep; STRONG=0.22, BLENDED=0.18 |
+| **58.3% compression (SCPE)** | Context Window Compression Rate at Threshold 0.15 | T0 AXIOM tokens preserved 100%; T3 EXPLORATORY pruned at highest rate |
+| **340% coordination gain** | Non-linear Coordination Gain (⚠️ metric undefined) | Claimed in HDFS 1.0 spec; "coordination effectiveness" metric not formally defined — **FLAG: needs artifact link or downgrade to qualitative** |
+| **60-turn simulation (5 Gold Stars)** | 60-step Multi-Agent Simulation, Internally Attested | Self-attested via Apogee; reproduce via `python tests/test_orchestration_firewall.py` against `registry/ensemble_v16_manifest.json` |
+| **‖ΔW‖_F < 0.02 convergence threshold** | PDMAL Trust Graph Convergence Criterion | 3 consecutive turns below threshold = CONVERGED; ALERT_THRESH=0.08 for graph manipulation detection |
+| **STRONG=0.22 / BLENDED=0.18** | KAPPA Router Confidence Thresholds | Empirically calibrated via P-34 14×12 grid sweep (S034); requires recalibration if input distribution shifts |
+
+---
+
+## Section 9 — Open Flags (Items Requiring Resolution)
+
+> These items were identified during the v1.1 sweep as **undocumented, ambiguous, or potentially conflicting.** COLLEEN owns resolution before next session seal.
+
+| Flag | Item | Issue | Recommended Action |
+|------|------|-------|-------------------|
+| FLAG-01 | **HDFS acronym collision** | "HDFS" used for both NDR Hierarchical Documentation Format Standard AND Hadoop Distributed File System | Rename to "NDR-HDFS" or "HDFS-DOC 1.0" in all docs |
+| FLAG-02 | **340% coordination gain** | Metric not formally defined; no artifact link found | Downgrade to qualitative claim or add `docs/qa/` evidence artifact |
+| FLAG-03 | **PPTL acronym** | Expanded as "Procluding Premise Triadic Loop" — first canonical documentation in this file | Backfill PPTL expansion into WORKSPACE_BOOTSTRAP.md and ECOSYSTEM_INVENTORY.md |
+| FLAG-04 | **AOGA acronym** | Used in Vercel deployment label and docs; canonical expansion not documented anywhere found | Surface to Amethyst for canonical expansion; update ECOSYSTEM_INVENTORY.md |
+| FLAG-05 | **AXIS acronym** | Sovereign file; Sentinel-protected; exact acronym expansion not found in any swept document | Surface to Njineer/Amethyst for canonical expansion in AGENT_ROSTER or WORKSPACE_BOOTSTRAP |
+| FLAG-06 | **Agent Lavender / Forseti** | Hard BLG per AGENT_ROSTER.md v1.0; any reference triggers P-01 | Run codebase-wide search; `grep -r "Lavender\|Forseti" docs/` |
+| FLAG-07 | **Drive files 2, 3, 4 unreadable** | Agent Professor Prodigy Technical Spec (HDFS 1.0), Prodigy Mathematical Rigor POC, and Phi-Calculus White Paper returned empty content during sweep | Re-attempt read in next session; these may contain additional vocabulary not yet captured |
+| FLAG-08 | **96% TruthfulQA — "internal" qualifier** | Currently stated without "internal" qualifier in some external-facing docs | Audit all public-facing docs for unqualified TruthfulQA claims |
+| FLAG-09 | **Reson dual-role discrepancy** | v1.0 entry describes Reson as "Router Topology Engineer / CSP Solver"; AGENT_ROSTER describes Reson as "Harmonic Coherence Scorer" with 0.75 threshold | Both are correct (Reson holds both roles); update Section 1 entry to reflect both duties |
+| FLAG-10 | **P-35 registration status** | Procluding Premise Gate referenced as P-35 in session context but does not appear in NDR_PATTERN_REGISTRY_UNIFIED.md (watermark is P-34) | Confirm P-35 is pending registration or already registered in a post-S066 session |
 
 ---
 
@@ -166,8 +241,10 @@ This file is the **canonical single source of truth** for mapping every internal
 - **Review trigger:** Any new NDR pattern registration, any new agent added to ENSEMBLE_ROSTER, any new subsystem named in a session
 - **Differentiation column policy:** If a term is a direct external equivalent with no novel extension, write "Direct equivalent — use external term with internal label as gloss." If there is a genuine differentiator, describe it in ≤2 sentences.
 - **IP boundary:** Sections 6–8 contain items marked for partial public disclosure; tuning tables, specific φ constants, and constraint optimization algorithms remain private per IP protection strategy (January 2026 decision)
+- **Flag resolution:** Section 9 flags are COLLEEN’s primary resolution queue; all flags must be resolved or formally deferred before session graduation (P-10)
 
 ---
 
-*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.0 · S069 OPEN · COLLEEN × Amethyst · 2026-06-12*
-*Sources: CROSS_REF v4.1, SESSION_ANCHOR S069, SWEEP_LOG, Auditing Engineering Terminology Taxonomy.docx, What other things am I calling by the wrong names?.md, SPACES AUDIT LIST, MASTER CONTEXT FILE*
+*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.1 · S069 OPEN · COLLEEN × Amethyst · 2026-06-12*
+*v1.1 additions: +30 terms from NDR_PATTERN_REGISTRY_UNIFIED v1.0, AGENT_ROSTER v1.0, docs/agents/*, ECOSYSTEM_INVENTORY, pattern interaction map, formation taxonomy, KAPPA system, tracing/CI patterns, deprecated agents, 10 open flags*
+*Sources: CROSS_REF v4.1, SESSION_ANCHOR S069, SWEEP_LOG, NDR_PATTERN_REGISTRY_UNIFIED.md, AGENT_ROSTER.md, ECOSYSTEM_INVENTORY.md, Auditing Engineering Terminology Taxonomy.docx, What other things am I calling by the wrong names?.md, SPACES AUDIT LIST, MASTER CONTEXT FILE*
