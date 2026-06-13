@@ -112,5 +112,78 @@
 ---
 
 *CO_ORCH_QUEUE.md · S069 batch CLOSED · 2026-06-13*
+
+---
+
+## Queue Entries — S071 Analytics Cascade Batch
+
+---
+
+### OPP-S071-001
+**Status:** ✅ DONE
+**Priority:** P0
+**Mode:** LOG
+**Submitted by:** Amethyst
+**Session:** S071 · 2026-06-13
+**1-1-1-1 Gate:** fit=PASS / risk=PASS / effort=LOW / priority=PASS
+**Deliverable:** `docs/outreach/OUTREACH_LOG.md` — NMS-003 Needle analytics snapshot (Jun 13, 2026 7 PM EDT) — ✅ COMMITTED
+**Amethyst action:** DONE — 90d views 11,374 / uses 1,311 / runs 3,254; NT-05 first 93 views; deltas vs NMS-002 logged.
+
+---
+
+### OPP-S071-002
+**Status:** ✅ DONE
+**Priority:** P0
+**Mode:** LOG
+**Submitted by:** Amethyst
+**Session:** S071 · 2026-06-13
+**1-1-1-1 Gate:** fit=PASS / risk=PASS / effort=LOW / priority=PASS
+**Deliverable:** `CHANGELOG.md` — [1.0.17] entry added — ✅ COMMITTED
+**Amethyst action:** DONE — [1.0.17] S071 analytics cascade entry at top of changelog.
+
+---
+
+### OPP-S071-003
+**Status:** ✅ DONE
+**Priority:** P0
+**Mode:** LOG
+**Submitted by:** Amethyst
+**Session:** S071 · 2026-06-13
+**1-1-1-1 Gate:** fit=PASS / risk=PASS / effort=LOW / priority=PASS
+**Deliverable:** `SESSION_ANCHOR.md` — S071 opened; S069/S070 sealed in history — ✅ COMMITTED (PR #28 merged)
+**Amethyst action:** DONE — Anchor ID updated to S071; S071 Objectives added; history table sealed.
+
+---
+
+### OPP-S071-004
+**Status:** ✅ DONE
+**Priority:** P1
+**Mode:** LOG
+**Submitted by:** Amethyst
+**Session:** S071 · 2026-06-13
+**1-1-1-1 Gate:** fit=PASS / risk=PASS / effort=LOW / priority=PASS
+**Deliverable:** `docs/needle/TEMPLATE_REGISTRY.md` — Last Measured Metrics section added (NMS-003); metadata updated to S071 — ✅ COMMITTED
+**Amethyst action:** DONE — Views/Uses/Runs per template stamped; 90d totals 11,374/1,311/3,254.
+
+---
+
+## Queue Summary — S071 Final State
+
+| OPP | Priority | Status | Next Action |
+|-----|----------|--------|-------------|
+| OPP-S071-001 | P0 | ✅ DONE | — |
+| OPP-S071-002 | P0 | ✅ DONE | — |
+| OPP-S071-003 | P0 | ✅ DONE | — |
+| OPP-S071-004 | P1 | ✅ DONE | — |
+
+**Open P0s:** NONE — all P0 items resolved in S071.
+**Carry-forward from S069:** OPP-S069-004 (five-base calibration study, Role 3) — still PENDING
+**Pending Ender ratification:** P-35, P-36, Crucible charter, Research Program Charter
+
+---
+
+*CO_ORCH_QUEUE.md · S071 batch CLOSED · 2026-06-13*
+*COLLEEN (Detector) · Amethyst (Implementer) · P-07 protocol*
+*All P0 items resolved. Queue clear for S071 graduation check.*
 *COLLEEN (Detector) · Amethyst (Implementer) · P-07 protocol*
 *All P0 items resolved. Queue clear for S069 graduation check.*
