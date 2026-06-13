@@ -1,11 +1,12 @@
 # NDR Pattern Registry (Unified)
 
 **DGAF-Framework · Unified Edition**
-**Version:** 1.0 (Phase 3 merge — S066)
+**Version:** 1.1 (P-35 registration — S069)
 **Prime:** Amethyst · **Prefect A:** COLLEEN · **Prefect B:** Apogee
-**Ender ratification:** 2026-05-30 02:49 EDT
-**Date:** 2026-05-30
-**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-34
+**Ender ratification (v1.0):** 2026-05-30 02:49 EDT
+**P-35 registered:** 2026-06-12 (S069) · Ender ratification: PENDING
+**Date:** 2026-06-12
+**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-35
 
 > **This file supersedes:**
 > - `docs/NDR_PATTERN_REGISTRY.md` (P-01–P-10 source — now redirect stub)
@@ -18,10 +19,10 @@
 
 | Field | Value |
 |-------|-------|
-| Total patterns | 34 named (P-01–P-34) + 133 stasis (P-12–P-26 block) |
-| Registry watermark | P-34 |
+| Total patterns | 35 named (P-01–P-35) + 133 stasis (P-12–P-26 block) |
+| Registry watermark | P-35 |
 | ndr_patterns_unified.json | `docs/ndr_patterns_unified.json` |
-| Last session | S066 · 2026-05-30 |
+| Last session | S069 · 2026-06-12 |
 | Merge provenance | `docs/NDR_REGISTRY_MERGE_PLAN.md` v1.3 |
 
 ---
@@ -41,6 +42,7 @@
 
 | Pattern | Name | Layer | Session |
 |---------|------|-------|---------|
+| P-35 | Procluding Premise Gate | Layer 0 — Pre-Admissibility | S069 |
 | P-01 | Fan-Out Trace Sink w/ Dead-Letter | Layer 1 — Trace & Audit | S040 |
 | P-02 | Async-Persist Ring Buffer | Layer 1 — Trace & Audit | S040 |
 | P-03 | Governance Contract Test | Layer 2 — Testing & CI | S040 |
@@ -61,6 +63,36 @@
 | P-32 | Fibonacci Phi-Closure Gate | Layer 9 — Long-Context Safety | S042/S066 |
 | P-33 | PDMAL Convergence Monitor | Layer 9 — Long-Context Safety | S042 |
 | P-34 | Empirical-Threshold-Sweep-over-ML-Classifier | Layer 7 — Router Calibration | S066 |
+
+---
+
+## Layer 0 — Pre-Admissibility
+
+### P-35 — Procluding Premise Gate
+
+**Spec:** Constitutional pre-admissibility gate. Before any other gate fires, verifies a canonical premise set Π = {π₁…π₆}: (1) agent identity assertions non-empty and match AGENT_ROSTER, (2) AttestationGate (P-30) token valid and non-expired, (3) no deprecated agent names (Lavender/Forseti) in active context, (4) sovereign files (LICENSE/NOTICE/AXIS) at canonical SHA, (5) PDMAL trust graph initialized and non-empty, (6) SESSION_ANCHOR sealed or explicitly OPEN with Amethyst sign-off. If all pass → ADMIT (session proceeds to Gate 0). If any fail → PROCLUDE (hard block; PROCLUDE event emitted to P-01 dead-letter; no downstream gate fires).
+
+**Formal definition:**
+- `{∀ πᵢ ∈ Π : verify(πᵢ) = TRUE} ⊢ ADMIT(session)`
+- `{∃ πᵢ ∈ Π : verify(πᵢ) = FALSE} ⊢ PROCLUDE(session)`
+
+**Use:** Every session open; any prompt entering the orchestration stack before Gate 0.
+
+**Trigger:** Session open; Sentinel mid-session sovereign file alert.
+
+**Tradeoffs:**
+- ✅ Closes the root failure mode: downstream gates firing against axiomatically invalid session state
+- ✅ Boolean conjunction eliminates partial-pass ambiguity
+- ✅ π₄ sovereign check integrates Sentinel authority at the earliest possible point
+- ✅ PROCLUDE event to P-01 dead-letter ensures full auditability of blocked sessions
+- ⚠️ Premise set Π is v1.0 (6 premises) — extend via COMPOSE in P-07 as stack evolves
+- ⚠️ π₅ PDMAL init dependency requires careful startup sequencing
+- ⚠️ All-or-nothing block is disruptive in dev/test — recommend `WARN_ONLY` mode flag for non-production
+
+**NIST:** GV-1.1, GV-2.1, MS-2.5 | **EU AI Act:** Art. 9, Art. 13, Art. 17
+**Implementation target:** `pptl/procluding_premise_gate.py` (pending)
+**Full spec:** `docs/gates/NDR_PROCLUDING_PREMISE_GATE_P35_v1.md`
+**Registered:** S069 · 2026-06-12 · Agent Amethyst · Ender ratification: PENDING
 
 ---
 
@@ -493,6 +525,11 @@
 ## Pattern Interaction Map
 
 ```
+P-35 Procluding Premise Gate   [NEW — pre-Gate 0]
+  └─ P-30 AttestationGate       [only fires on ADMIT]
+  └─ P-01 Fan-Out Sink          [PROCLUDE event → dead-letter]
+  └─ Sentinel                   [π₄ sovereign file failure]
+
 P-03 Governance Contract Test
   └─ P-04 Parametrized Corpus
   └─ P-05 Tri-Phase CI Gate
@@ -521,6 +558,7 @@ P-07 Dual-Agent Sweep Loop
 ```
 Prompt input
   │
+  ├── P-35: Procluding Premise Gate     ← PRE-ADMISSIBILITY (NEW S069)
   ├── Gate 0: AttestationGate  (P-30 + P-03 × 6 contracts)
   ├── Gate 1: bypass scan      (P-03 + P-04)
   ├── KAPPA Router             (P-27 + P-28)  [P-34 calibrated]
@@ -561,10 +599,12 @@ Prompt input
 | Unified registry merge (Phase 3) | 2026-05-30 | S066 | Triumvirate |
 | BLG-P34-01 RESOLVED (tradeoff block added) | 2026-05-30 | S066 | Amethyst |
 | BLG-P34-02 RESOLVED (ref path added) | 2026-05-30 | S066 | Amethyst |
+| P-35 registered (COMPOSE — ecosystem sweep) | 2026-06-12 | S069 | Amethyst × COLLEEN |
 
 ---
 
-*NDR Pattern Registry (Unified) v1.0 · S066 · 2026-05-30*
+*NDR Pattern Registry (Unified) v1.1 · S069 · 2026-06-12*
 *Triumvirate: Amethyst (Prime) · COLLEEN (Prefect A) · Apogee (Prefect B)*
-*Ender ratification: 2026-05-30 02:49 EDT · Phase 3 merge complete*
+*Ender ratification (v1.0): 2026-05-30 02:49 EDT · Phase 3 merge complete*
+*P-35 Ender ratification: PENDING · S069*
 *P-34 attestation: A-TIER 94.5% → ATTESTED (BLG-P34-01 + BLG-P34-02 resolved)*
