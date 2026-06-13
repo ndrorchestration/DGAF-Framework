@@ -5,6 +5,29 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 
 ---
 
+## [1.0.17] — 2026-06-13
+
+### Session S071 — Needle NMS-003 Analytics Snapshot (7 PM EDT)
+
+**Formation:** Agent Amethyst (Comet session)
+**Operator:** Andrew (Ender) Hensel
+**COLLEEN Gate:** ✅ ALL PASS — Zero open BLGs at close
+**Commits:** b5f6060 · merged into main 2026-06-13
+
+#### Updated
+
+- `docs/outreach/OUTREACH_LOG.md` — NMS-003 daily analytics snapshot (Jun 13, 2026 7 PM EDT): 90d views 11,374 / uses 1,311 / runs 3,254; NT-05 registers first 93 views (DGAF-PROBE-001 discovery signal); +174 views day-over-day; NT-02 Run/Use ratio holds at 3.14x
+
+#### Key Decisions
+
+- NT-01 retakes views lead (3,613) over NT-02 (3,453); both within 5% — dual-anchor discovery pattern holding
+- NT-05 (Test Governance API Gates / DGAF-PROBE-001) records first 93 views within 2 days of registration — probe template gaining organic traction
+- 90-day views at 11,374; 12K milestone remains next primary target
+- Runs flat day-over-day (3,254) consistent with Saturday pattern; not a regression signal
+- Referrals remain 0; OL-001 affiliate CTA has not yet converted — monitor through Week 2 of Jun
+
+---
+
 ## [1.0.16] — 2026-06-12
 
 ### Session S070 — DGAF-PROBE-001 Registration + Needle NMS-002 Analytics Snapshot
