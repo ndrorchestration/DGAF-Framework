@@ -1,84 +1,47 @@
-# SESSION ANCHORS
+# SESSION_ANCHORS.md
 
-> **Steward:** COLLEEN  
-> **Orchestrator:** Amethyst  
-> **Format:** One entry per session — open record at top of Active section; sealed records in History.
+> Append-only session seal registry. Each session gets one entry. Sealing requires: SESSION_ANCHOR sealed, CROSS_REF complete, CO_ORCH_QUEUE clear of P0s, zero open BLGs (P-10).
 
 ---
 
-## Active
+## S069 — 2026-06-13
 
-### S069
+**Status:** OPEN (active session — seal pending at session close)
+**Prime:** Amethyst
+**Prefect A:** COLLEEN
+**Prefect B:** Apogee
 
-- **Status:** 🟢 OPEN
-- **Opened:** 2026-05-31 23:27 EDT
-- **Opened by:** Amethyst (auto-open on S068 seal)
-- **Carry-forwards:** ✅ All closed — see below
-- **Intent:** To be defined at next S069 work item
-- **Anchor commit:** f0b9d14b
+### Commits this session
+- `e900bdb` — P-35 Procluding Premise Gate + NDR_PATTERN_REGISTRY_UNIFIED v1.1
+- `ee6fd77` — (same push)
+- `[current]` — Research Program Charter, P-36, METRICS_PROVENANCE skeleton, CO_ORCH_QUEUE S069 batch
 
-#### S069 Carry-Forwards — CLOSED
+### Deliverables completed
+- [x] P-35 formally defined and registered (Layer 0)
+- [x] NDR_PATTERN_REGISTRY_UNIFIED updated to v1.1 (watermark P-35)
+- [x] NDR_INTERNAL_VOCABULARY_MASTER updated to v1.1 (36,396 bytes)
+- [x] Ecosystem sweep completed; 10 open flags documented in vocabulary master Section 9
+- [x] Full pattern catalogue write-ups (P-01 through P-35, all layers)
+- [x] Research program design reviewed and endorsed (8 roles, 5 workstreams, 60–90 day plan)
+- [x] P-36 Gate Priority Schema drafted and committed (DRAFT — Ender ratification PENDING)
+- [x] METRICS_PROVENANCE.md skeleton committed (backfill required Weeks 6–9)
+- [x] CO_ORCH_QUEUE S069 batch appended (7 entries; 2 DONE, 5 PENDING)
+- [x] NDR_RESEARCH_PROGRAM_CHARTER_v1.md committed
 
-| Item | Resolution | Closed |
-|---|---|---|
-| Ender ratification · P-35 A-TIER 93.6% | ✅ Ratified by Ender 2026-05-31 23:29 EDT | S069 wave-1 |
-| `phiknightverticalcorridor` no production deploy | ✅ Assessed · no production deploy needed (Driftwatch) | S069 wave-1 |
+### Open items at session close
+- [ ] P-35 Ender ratification (PENDING)
+- [ ] P-36 Ender ratification (PENDING)
+- [ ] OPP-S069-003: STASIS-CANONICAL spec (Role 6)
+- [ ] OPP-S069-004: Five-base calibration study (Role 3, Weeks 3–6)
+- [ ] OPP-S069-005: Agent Crucible charter — **P0 — before next graduation check**
+- [ ] OPP-S069-006: PPTL backfill to bootstrap docs
+- [ ] OPP-S069-007: AOGA + AXIS surface to Njineer
+- [ ] FLAG-07: Drive files 2/3/4 re-attempt next session
 
----
-
-## History
-
-### S068 — SEALED
-
-- **Status:** ✅ SEALED
-- **Opened:** 2026-05-31 (wave-1)
-- **Sealed:** 2026-05-31 23:27 EDT
-- **Sealed by:** Ender
-- **Seal commit:** [2df7de59](https://github.com/ndrorchestration/DGAF-Framework/commit/2df7de5902c1003617e45790730fb07d4af60176)
-
-#### S068 Deliverables
-
-| Item | Artifact | Outcome |
-|---|---|---|
-| P-35 Procluding Premise Gate | `pptl/procluding_premise.py` + 12 tests | ✅ Registered · A-TIER 93.6% · **Ender ratified S069** |
-| TGL module | `pptl/triadic_governance_loop.py` + 10 tests | ✅ Complete |
-| Credit/Justice prototype spec | `docs/CREDIT_JUSTICE_PROTOTYPE_SPEC.md` | ✅ Complete |
-| INV-03 signal corpus | `pptl/corpus/inv03_credit_signals.py` (20) + `inv03_justice_signals.py` (20) + 10 tests | ✅ BLG-P35-01 unblocked |
-| TGL × IntegratedOrchestrator wire-in | `pptl/orchestrator.py` rewrite + 10 tests | ✅ Domain auto-wire live |
-| Vercel inventory corrected | `docs/ECOSYSTEM_INVENTORY.md` | ✅ 3 projects documented; `dgaf-framework` deleted |
-| `pptl-governance-dashboard` Vercel status | Confirmed never deployed | ✅ S067 inventory error resolved |
-
-#### S068 Blockers Resolved
-
-| Blocker | Resolution |
-|---|---|
-| BLG-P35-01 — `premise_check_fn` not implemented | ✅ RESOLVED · INV-03 corpus + auto-wire |
-| Vercel inventory errors (3 items) | ✅ RESOLVED · ground-truth captured + dgaf-framework deleted |
+### Graduation check result
+**CONDITIONAL — session may seal with open P1/P2 items; P0 (Crucible charter) carries forward as top priority to S070.**
 
 ---
 
-### S067 — SEALED
-
-- **Status:** ✅ SEALED
-- **Sealed:** 2026-05-30
-- **Key deliverables:** Router v3.6.0 · Lifecycle harness Phase 0–VI (φ*=0.618) · NDR registry v2.3 · COLLEEN SWEEP-001 Phase 3
-
----
-
-### S066 — SEALED
-
-- **Status:** ✅ SEALED
-- **Sealed:** 2026-05-30
-- **Key deliverables:** P-34 COMPOSE (A-TIER 94.5%) · ndr_patterns.json v0.3.0 · NDR_REGISTRY_DIFFERENTIATION.md · COLLEEN stasis audit P-12–P-26
-
----
-
-### S043 — SEALED
-
-- **Status:** ✅ SEALED
-- **Key deliverables:** Intake Gate Hardening · Phi-Closure Gate HPG · Orchestration Firewall · Archive and Registry Sync
-
----
-
-*Maintained by Amethyst × COLLEEN · Ratified by Ender per seal*  
-*S068 sealed 2026-05-31 23:27 EDT · S069 carry-forwards closed 2026-05-31 23:29 EDT*
+*SESSION_ANCHORS.md · S069 entry appended · 2026-06-13*
+*Amethyst · COLLEEN · Apogee*
