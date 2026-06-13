@@ -1,108 +1,99 @@
-# DGAF Workspace Bootstrap
-<!-- Status: ACTIVE | Session: S069 | Last Updated: 2026-06-09 | Owner: ndrorchestration -->
-<!-- Agents: Amethyst (orchestrator) + COLLEEN (institutional anchor) joint authorship -->
+# WORKSPACE_BOOTSTRAP.md
+## NDR Governance Framework — Session Bootstrap Reference
 
-## Purpose
+```
+Version:      1.1 (PPTL backfill — S069)
+Maintained-by: Amethyst
+Last-updated: 2026-06-13 (Session S069)
+```
 
-This document declares the active R&D state of the DGAF ecosystem as of session
-S069. It serves as the entry point for any agent or collaborator onboarding to
-the workspace, defining the current sprint, active agent assignments, and
-governance anchors in effect.
-
----
-
-## Ecosystem State (S069)
-
-| Layer | Component | Status | Location |
-|---|---|---|---|
-| Governance spine | TEMPLATE_REGISTRY.md | ✅ ACTIVE | [docs/needle/TEMPLATE_REGISTRY.md](docs/needle/TEMPLATE_REGISTRY.md) |
-| Machine layer | ndr_patterns_unified.json | ✅ ACTIVE (needle_template injected) | [docs/ndr_patterns_unified.json](docs/ndr_patterns_unified.json) |
-| Public governance layer | ai-governance-frameworks/docs/needle-templates/ | ✅ ACTIVE | [external repo](https://github.com/ndrorchestration/ai-governance-frameworks/tree/main/docs/needle-templates) |
-| Prompt engineering layer | ai-prompt-systems-portfolio/specs/needle/ | ✅ ACTIVE | [external repo](https://github.com/ndrorchestration/ai-prompt-systems-portfolio/tree/main/specs/needle) |
-| Agent registry | canonical-agent-registry.md | ✅ ACTIVE | [docs/agents/canonical-agent-registry.md](docs/agents/canonical-agent-registry.md) |
-| COLLEEN protocol | colleen-l5-governance-protocol.md | ✅ ACTIVE | [docs/agents/colleen-l5-governance-protocol.md](docs/agents/colleen-l5-governance-protocol.md) |
+> Fast-load reference for any agent or session bootstrapping into the DGAF-Framework governance stack. Read this first. Everything here is a pointer to a canonical source — this file does not duplicate specs.
 
 ---
 
-## Active Agent Assignments
+## Identity and Authority
 
-| Agent | Role | Active Mandate (S069) |
-|---|---|---|
-| **Amethyst** | Meta-orchestrator, planner | T-01–T-05 execution complete; next: Needle URL verification + Apogee attestation run |
-| **COLLEEN** | Institutional anchor, 1-1-1-1 gate | All T-0x commits audited and cleared; monitoring T-05 visual artifact compliance |
-| **Apogee** | QA orchestration, attestation | 11Q attestation scoring pending for all NT-xx entries post-commit |
-| **Herald** | Communication bridge | State sync between Amethyst and COLLEEN across Aurora/Yggdrasil substrates |
-| **DemiJoule** | Ethics + safety supervisor | IP gate cleared for T-03 (public repo); standing monitor |
-| **Sentinel** | Security + eval monitor | Instrument Needle template runs with experiment-metrics-v1 schema |
-
----
-
-## Sprint Goals (S069 → S070)
-
-1. **Needle URL verification** — confirm all NT-xx Needle template URLs are stable and live; update TEMPLATE_REGISTRY.md if slugs differ
-2. **Apogee attestation run** — execute 11Q scoring (P-11) across NT-01..04; produce APOGEE_11Q_NT-xx.json records in docs/qa/
-3. **README backlinks** — add `## Needle Templates` section to ai-governance-frameworks README and ai-prompt-systems-portfolio README pointing back to DGAF canonical registry
-4. **Experiment instrumentation** — wire experiment-metrics-v1 schema (from Amethyst planner spec) to Sentinel; baseline: experiments_per_week, manual_coordination_minutes, error_rate
-5. **P-30 Gold Star gate** — once Apogee attestation and Needle URL verification complete, COLLEEN ratifies TEMPLATE_REGISTRY.md as Gold Star Certified
+| Role | Agent | Authority |
+|------|-------|-----------|
+| Prime | Amethyst | System narrative, interface contracts, pattern registration |
+| Prefect A | COLLEEN | Sweep detection, queue management, stasis sign-off, L5 governance |
+| Prefect B | Apogee | Quality attestation (P-11, P-30), 11Q rubric |
+| Architect | Ender / Njineer | Ratification authority, sovereign file decisions |
+| Safety | Sentinel | Sovereign file integrity, risk annotation (P-29) |
+| Red Team | Agent Crucible | Independent adversarial review — no build duties, no suppression |
 
 ---
 
-## Orchestration Flow (Current)
+## Canonical Sources — Load Order
 
-```mermaid
-graph TD
-    A[Ender / Requester] --> B[Amethyst\nMeta-Orchestrator]
-    B --> C[COLLEEN\n1-1-1-1 Gate]
-    B --> D[Apogee\n11Q Attestation]
-    B --> E[Sentinel\nMonitor + Eval]
-    B --> F[DemiJoule\nEthics + Safety]
-    C -->|PASS| G[Commit to GitHub]
-    C -->|FAIL + delta| B
-    D -->|Score ≥ 0.90| H[P-30 Gold Star]
-    D -->|Score < 0.90| B
-    E --> I[experiment-metrics-v1\nper run]
-    F -->|IP cleared| G
-    G --> J[DGAF-Framework]
-    G --> K[ai-governance-frameworks]
-    G --> L[ai-prompt-systems-portfolio]
-    J -->|registry_ref| M[ndr_patterns_unified.json]
-    J -->|registry_ref| N[TEMPLATE_REGISTRY.md]
-    K -->|needle-templates/| O[NT-01..04 NIST/ISO docs]
-    L -->|specs/needle/| P[NT-01..04 prompt specs]
-    N <-->|bidirectional| M
+1. `docs/WORKSPACE_BOOTSTRAP.md` — this file (orientation)
+2. `AGENT_ROSTER.md` — full agent registry
+3. `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` v1.1 — all acronyms and terms
+4. `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` v1.1 — all patterns P-01–P-35 (watermark P-35; P-36 DRAFT)
+5. `CO_ORCH_QUEUE.md` — open orchestration opportunities
+6. `docs/SESSION_ANCHORS.md` — session history and open items
+7. `docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_v1.md` — active research program
+
+---
+
+## Key Acronyms (Quick Reference)
+
+| Acronym | Expansion | Canonical source |
+|---------|-----------|------------------|
+| **PPTL** | Procluding Premise Triadic Loop | `NDR_INTERNAL_VOCABULARY_MASTER.md` Section 2 |
+| **DGAF** | Dual-Governance Agent Framework | Vocabulary Master |
+| **KAPPA** | Knowledge-Aware Probabilistic Pipeline Architecture | Vocabulary Master |
+| **PDMAL** | Probabilistic Distributed Multi-Agent Learning | Vocabulary Master |
+| **SCPE** | Structural Context Pruning Engine | P-31 spec |
+| **BLG** | Blocking Logic Gap | Vocabulary Master |
+| **MECE** | Mutually Exclusive, Collectively Exhaustive | Vocabulary Master |
+| **TIF** | Trust Index Factor | Vocabulary Master / P-31 |
+| **AOGA** | Expansion unknown — 🔴 FLAG-04 OPEN | Surface request filed S069 |
+| **AXIS** | Expansion unknown — sovereign file 🔴 FLAG-05 OPEN | Surface request filed S069; Njineer response pending |
+| **HDFS** | NDR-specific use — 🔴 FLAG-01 rename pending | Surface request filed S069 |
+| **HPG** | Harmonic Parametric Gate | Vocabulary Master |
+| **TNR** | Trust Node Registry | Vocabulary Master |
+
+---
+
+## Active Research Program
+
+The NDR governance stack is under active external-validation preparation per the Research Program Charter v1.0 (`docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_v1.md`). Five credibility gaps are being closed across 90 days:
+
+1. φ empirical defense (five-base calibration study)
+2. Linear pipeline → DAG (P-36 Gate Priority Schema)
+3. STASIS-CANONICAL migration (30-day window: 2026-06-13 → 2026-07-13)
+4. Metrics provenance (`docs/qa/METRICS_PROVENANCE.md` — backfill Wks 6–9)
+5. Agent Crucible independent red team (charter active S069)
+
+---
+
+## Governance Stack Position (Current)
+
+```
+P-35 (Procluding Premise Gate)   ← pre-admissibility [P-36: BLOCKING]
+  ↓
+P-30 (Attestation Gate)          ← Gate 0            [P-36: BLOCKING]
+  ↓
+P-27/P-28 (KAPPA Router)         ← routing           [P-36: BLOCKING]
+  ↓
+P-29 / P-32 / P-33 (Safety)      ← runtime safety    [P-36: BLOCKING / ADVISORY]
+  ↓
+P-01 / P-02 (Trace)              ← audit spine       [P-36: BLOCKING / ADVISORY]
+
+P-31 SCPE / P-33 PDMAL           ← async concurrent  [P-36: ADVISORY]
 ```
 
 ---
 
-## Governance Anchors in Effect
+## Session S069 State
 
-| Anchor | Value |
-|---|---|
-| DGAF policy version | dgaf-v0.3.1 |
-| COLLEEN audit status | CONDITIONAL_PASS_ENDER_RATIFIED (stasis block P-12–P-26) |
-| Needle template registry status | ACTIVE — 4 templates, P-30 attestation pending |
-| NDR pattern watermark | P-35 |
-| Active session | S069 |
-| Next session target | S070 — Apogee attestation + Needle URL verification |
+**Status:** OPEN (active)
+**Key deliverables this session:** P-35 registered, P-36 drafted, Research Program Charter committed, Crucible charter committed, STASIS-CANONICAL spec committed, METRICS_PROVENANCE skeleton committed
+**Open P0:** OPP-S069-005 Crucible charter — ✅ COMMITTED S069 (Ender ratification PENDING)
+**Flags requiring Njineer:** FLAG-04 (AOGA), FLAG-05 (AXIS), FLAG-01 (HDFS rename), FLAG-02 (340% metric)
 
 ---
 
-## COLLEEN 1-1-1-1 Compliance (S069)
-
-| Dimension | Status | Note |
-|---|---|---|
-| Semantic | ✅ PASS | All file lineages traceable: Drive → GitHub, DGAF ↔ ai-governance-frameworks ↔ ai-prompt-systems-portfolio |
-| Logical | ✅ PASS | P-05 → P-11 sequential confirmed; no circular deps in NDR pattern graph |
-| Visual | ✅ PASS | Mermaid orchestration flow present in this document |
-| Ethical/IP | ✅ PASS | No phi constants, freq tables, or personal docs in any public repo commit |
-
----
-
-## Related Files
-
-- [NDR Pattern Registry (Unified)](NDR_PATTERN_REGISTRY_UNIFIED.md)
-- [NDR Patterns JSON](ndr_patterns_unified.json)
-- [Needle Template Registry](needle/TEMPLATE_REGISTRY.md)
-- [Agent Roster](agents/AGENT_ROSTER.md)
-- [COLLEEN L5 Protocol](agents/colleen-l5-governance-protocol.md)
-- [Ecosystem Inventory](ECOSYSTEM_INVENTORY.md)
+*WORKSPACE_BOOTSTRAP.md v1.1 · S069 · 2026-06-13*
+*PPTL expansion backfilled (OPP-S069-006) · Crucible and Research Program references added*
