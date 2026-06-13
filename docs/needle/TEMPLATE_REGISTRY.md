@@ -1,7 +1,6 @@
 # Needle Template Registry
 <!-- DGAF Governance Layer: docs/needle/TEMPLATE_REGISTRY.md -->
-<!-- Status: GOLD STAR CERTIFIED | Last Updated: 2026-06-09 | Session: S069 | Owner: ndrorchestration -->
-<!-- P-30: PASS | COLLEEN 1-1-1-1: PASS | Apogee Composite Avg: 0.958 -->
+<!-- Status: GOLD STAR CERTIFIED | Last Updated: 2026-06-12 | Session: S070 | Owner: ndrorchestration --><!-- P-30: PASS | COLLEEN 1-1-1-1: PASS | Apogee Composite Avg: 0.958 -->
 
 ## Purpose
 This registry is the canonical cross-reference between Needle.app workflow
@@ -22,6 +21,7 @@ corresponding NDR patterns. All templates have passed Apogee Attestation Gate
 | NT-02 | Generate Grounded KB Answers | P-05 | MANAGE 2.2 | §8.4 | [Run →](https://needle.app/workflow-templates/generate-grounded-knowledge-base-answers) | ⭐ GOLD STAR |
 | NT-03 | KB Answer With Quality Check | P-05, P-11, P-30 | MEASURE 2.9 | §9.1 | [Run →](https://needle.app/workflow-templates/kb-answer-with-quality-check) | ⭐ GOLD STAR |
 | NT-04 | Define AI Governance Specification | P-03, P-30 | GOVERN 1.7 | §6.1, §9.1 | [Run →](https://needle.app/workflow-templates/implement-governance-multi-agent-orchestration) | ⭐ GOLD STAR |
+| NT-05 | Test Governance API Gates | P-03, P-30 | GOVERN 1.7, MEASURE 2.5, MEASURE 2.9, MANAGE 2.2 | §8.4, §9.1 | [Run →](https://needle.app/workflow-templates/test-governance-api-gates) | 🟡 CANONICAL PROBE |
 
 ---
 
