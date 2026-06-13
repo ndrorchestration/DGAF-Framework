@@ -223,3 +223,102 @@ https://lnkd.in/gVGVh-ri
 - Next milestones: 12K total views, 1.5K uses, 4K runs, first referral conversion.
 
 *Snapshot logged: 2026-06-09 | Agent COLLEEN | S069*
+
+---
+
+## Metrics Snapshot — NMS-003: Needle Partner Hub (2026-06-13)
+
+**Source:** Needle Partner Hub (`needle.app/dashboard/partners`)
+**Captured:** 2026-06-13 ~7 PM EDT
+**Session Anchor:** S071
+**Window:** Mar 15 – Jun 13, 2026 (90 days)
+**Logged by:** Agent Amethyst (Comet session)
+
+### Summary KPIs
+
+| Metric | Value | Window | Description |
+|--------|-------|--------|-------------|
+| Total Views | 11,374 | Mar 15 – Jun 13, 2026 | People discovering your templates |
+| Total Uses | 1,311 | Mar 15 – Jun 13, 2026 | Workflows you've helped create |
+| Workflow Runs | 3,254 | Mar 15 – Jun 13, 2026 | Your templates in action |
+| Referrals | 0 | Mar 15 – Jun 13, 2026 | Automation enthusiasts brought to Needle |
+| Total Payouts | $4.19 | Since sign-up | Earnings to date |
+
+### Conversion Funnel
+
+| Stage | Count | Funnel Rate |
+|-------|-------|-------------|
+| Views | 11,374 | 100% |
+| Uses | 1,311 | 11.5% |
+| Runs | 3,254 | 28.6% (of views) / 248% (runs per use) |
+
+### Top Templates by Views
+
+| Template | Views | % of Total |
+|----------|-------|------------|
+| Evaluate LLM Output Quality (NT-01) | 3,613 | 31.7% |
+| Generate Grounded KB Answers (NT-02) | 3,453 | 30.4% |
+| KB Answer With Quality Check (NT-03) | 2,491 | 21.9% |
+| Define AI Governance Specification (NT-04) | 1,777 | 15.6% |
+| Test Governance API Gates (NT-05) | 93 | 0.8% |
+| **Total** | **11,427** | |
+
+### Top Templates by Uses
+
+| Template | Uses | % of Total |
+|----------|------|------------|
+| Evaluate LLM Output Quality (NT-01) | 479 | 36.5% |
+| Generate Grounded KB Answers (NT-02) | 444 | 33.9% |
+| KB Answer With Quality Check (NT-03) | 229 | 17.5% |
+| Define AI Governance Specification (NT-04) | 159 | 12.1% |
+| **Total** | **1,311** | |
+
+### Top Templates by Runs
+
+| Template | Runs | % of Total |
+|----------|------|------------|
+| Generate Grounded KB Answers (NT-02) | 1,394 | 42.8% |
+| Evaluate LLM Output Quality (NT-01) | 1,064 | 32.7% |
+| KB Answer With Quality Check (NT-03) | 476 | 14.6% |
+| Define AI Governance Specification (NT-04) | 320 | 9.8% |
+| **Total** | **3,254** | |
+
+### Template-Level Conversion (Views → Uses → Runs)
+
+| Template | Views | Uses | Runs | Use Rate | Run/Use |
+|----------|-------|------|------|----------|---------|
+| Evaluate LLM Output Quality (NT-01) | 3,613 | 479 | 1,064 | 13.3% | 2.22x |
+| Generate Grounded KB Answers (NT-02) | 3,453 | 444 | 1,394 | 12.9% | 3.14x |
+| KB Answer With Quality Check (NT-03) | 2,491 | 229 | 476 | 9.2% | 2.08x |
+| Define AI Governance Specification (NT-04) | 1,777 | 159 | 320 | 8.9% | 2.01x |
+| Test Governance API Gates (NT-05) | 93 | — | — | — | — |
+
+### Growth Deltas (NMS-002 → NMS-003, Jun 12 → Jun 13)
+
+| Metric | NMS-002 (Jun 12) | NMS-003 (Jun 13) | Delta |
+|--------|-----------------|-----------------|-------|
+| 90d Views | 11,200 | 11,374 | +174 |
+| 90d Uses | 1,300 | 1,311 | +11 |
+| 90d Runs | 3,300 | 3,254 | ~flat (rounding) |
+| NT-01 Views | ~3,550 | 3,613 | +63 |
+| NT-02 Views | ~3,410 | 3,453 | +43 |
+| NT-04 Views | ~1,735 | 1,777 | +42 |
+| NT-05 Views | — | 93 | +93 (first data) |
+
+### Workspace Plan Distribution
+
+- **Uses by Plan:** Free + Paid (total: 1,311) — exact split not captured in dashboard
+- **Runs by Plan:** Free + Paid (total: 3,254) — exact split not captured in dashboard
+
+### Notes
+
+- 90-day views reached 11,374 — advancing toward 12K milestone; +174 in one day signals continued organic velocity.
+- NT-01 (Evaluate LLM Output Quality) retakes the views lead at 3,613; NT-02 close behind at 3,453.
+- NT-05 (Test Governance API Gates / DGAF-PROBE-001) registers first recorded views at 93 — early discovery signal within 2 days of full registration.
+- Run/Use ratio for NT-02 holds at 3.14x — strongest repeat-run signal in the stack; grounded KB workflow stickiest by behavior.
+- Uses and Runs delta essentially flat day-over-day — consistent with weekend pattern; cumulative totals stable.
+- Referrals remain 0; affiliate CTA from OL-001 not yet converting. Monitor into Week 2.
+- Payouts hold at $4.19; no referral-based revenue yet.
+- Next milestones: 12K total views, 1.5K uses, 4K runs, first referral conversion.
+
+*Snapshot logged: 2026-06-13 | Agent Amethyst | S071*
