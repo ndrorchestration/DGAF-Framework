@@ -1,0 +1,102 @@
+{
+  "probe_id": "DGAF-PROBE-001",
+  "name": "test-governance-api-gates",
+  "version": "1.0.0",
+  "status": "CANONICAL",
+  "registered": "2026-06-12",
+  "registered_by": "Agent Amethyst (Comet session S070)",
+  "needle_url": "https://needle.app/workflow-templates/test-governance-api-gates",
+  "needle_template_id": "NT-05",
+  "intent": "Canonical reference harness for validating multi-agent governance API correctness. Verifies health, agent roster, gate rejection of malformed artifacts, and gate acceptance of well-formed artifacts.",
+  "nist_ai_rmf_mapping": {
+    "GOVERN": ["1.7"],
+    "MEASURE": ["2.5", "2.9"],
+    "MANAGE": ["2.2"]
+  },
+  "iso_42001": ["9.1", "8.4"],
+  "canonical_rule": "All child profiles (strict, lenient, multi-tenant, etc.) MUST implement all five steps. Deviations require a registered entry in PROBE-DEVIATION-PROTOCOL.md with: probe_id, step_id, change_description, rationale, approved_by.",
+  "assumptions": {
+    "base_url": "https://YOUR-GOV-API",
+    "health_endpoint": "/api/health",
+    "agents_endpoint": "/api/agents",
+    "gate_endpoint": "/api/gate"
+  },
+  "steps": [
+    {
+      "id": "manual_trigger",
+      "type": "manual",
+      "description": "Operator or CI pipeline manually starts the governance gate test run."
+    },
+    {
+      "id": "api_health_check",
+      "type": "http_get",
+      "url_template": "{{base_url}}{{health_endpoint}}",
+      "expected": {
+        "status": [200],
+        "schema_min": ["status", "version"]
+      },
+      "on_failure": "fail_fast"
+    },
+    {
+      "id": "get_active_agents",
+      "type": "http_get",
+      "url_template": "{{base_url}}{{agents_endpoint}}",
+      "expected": {
+        "status": [200],
+        "schema_min": ["agents"],
+        "agents_item_schema_min": ["id", "role", "status"]
+      },
+      "on_failure": "warn_and_continue"
+    },
+    {
+      "id": "test_gate_rejection",
+      "type": "http_post",
+      "url_template": "{{base_url}}{{gate_endpoint}}",
+      "body_template": {
+        "artifact": {
+          "id": "dummy-invalid-artifact",
+          "content": "missing-required-fields"
+        }
+      },
+      "expected": {
+        "status": [400, 422, 403],
+        "must_not": { "fields": ["accepted", "queued"] }
+      },
+      "on_failure": "fail_if_accepted"
+    },
+    {
+      "id": "submit_valid_artifact",
+      "type": "http_post",
+      "url_template": "{{base_url}}{{gate_endpoint}}",
+      "body_template": {
+        "artifact": {
+          "id": "{{run_id}}",
+          "type": "governance-test-artifact",
+          "content": {
+            "source": "needle-governance-template",
+            "timestamp": "{{timestamp_iso}}",
+            "agents_snapshot_step": "get_active_agents"
+          },
+          "metadata": {
+            "policy_profile": "default",
+            "test_run": true
+          }
+        }
+      },
+      "expected": {
+        "status": [200, 202],
+        "fields": ["accepted"],
+        "accepted_value": true
+      },
+      "on_failure": "fail_fast"
+    }
+  ],
+  "outputs": {
+    "health_response": "api_health_check.response",
+    "agents_response": "get_active_agents.response",
+    "rejection_response": "test_gate_rejection.response",
+    "acceptance_response": "submit_valid_artifact.response"
+  },
+  "child_profiles": [],
+  "deviation_log": "docs/gates/PROBE-DEVIATION-PROTOCOL.md"
+}
