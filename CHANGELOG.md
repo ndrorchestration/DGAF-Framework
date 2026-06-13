@@ -5,6 +5,34 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 
 ---
 
+## [1.0.16] — 2026-06-12
+
+### Session S070 — DGAF-PROBE-001 Registration + Needle NMS-002 Analytics Snapshot
+
+**Formation:** Agent Amethyst (Comet session) 
+**Operator:** Andrew (Ender) Hensel 
+**COLLEEN Gate:** ✅ ALL PASS — Zero open BLGs at close 
+**Commits:** PRs #21, #22, #23, #24 · merged into main 2026-06-12
+
+#### Added
+
+- `docs/gates/PROBE-001-governance-sentinel.json` — DGAF-PROBE-001 canonical governance sentinel harness (5-step HTTP probe: health, agents, reject, accept); designated as reference contract for all child profiles
+- `docs/gates/PROBE-DEVIATION-PROTOCOL.md` — Deviation registration protocol; any child probe profile modifying PROBE-001 steps must log here; steps 4–5 require explicit Ender approval
+- `docs/needle/TEMPLATE_REGISTRY.md` — NT-05 (Test Governance API Gates) registered; CANONICAL PROBE status; NIST AI RMF GOVERN 1.7, MEASURE 2.5/2.9, MANAGE 2.2
+
+#### Updated
+
+- `docs/outreach/OUTREACH_LOG.md` — NMS-002 multi-period analytics snapshot (Jun 12, 2026): 90d views 11.2K / uses 1.3K / runs 3.3K; current 13-day window 2K views / 71 uses / 143 runs; NT-04 "Define AI Governance Specification" leads current period by uses (23) and runs (46)
+- `docs/needle/TEMPLATE_REGISTRY.md` — Metadata updated to Session S070, 2026-06-12
+
+#### Key Decisions
+
+- DGAF-PROBE-001 designated CANONICAL: all child profiles (strict, lenient, multi-tenant) derive from it; no step may be removed without a registered deviation
+- Needle 90-day views crossed 11K milestone; linear growth curve holding; monetization layer remains unactivated (next priority arc)
+- NT-04 "Define AI Governance Specification" confirmed as strongest signal for governance-focused Pro upsell based on current-period usage lead
+
+---
+
 ## [1.0.15] — 2026-05-28
 
 ### Session 042 — Ensemble v1.6: SCPE + Fibonacci Phi-Closure Gate + PDMAL Convergence Monitor
