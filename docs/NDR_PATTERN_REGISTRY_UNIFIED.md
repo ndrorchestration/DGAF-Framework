@@ -1,17 +1,19 @@
 # NDR Pattern Registry (Unified)
 
 **DGAF-Framework · Unified Edition**
-**Version:** 1.2 (P-36 ratified — S069 sealed)
+**Version:** 1.3 (v3 named session patterns absorbed · JSON schema aligned · QA sweep fixes — S069)
 **Prime:** Amethyst · **Prefect A:** COLLEEN · **Prefect B:** Apogee
 **Ender ratification (v1.0):** 2026-05-30 02:49 EDT
 **Ender ratification (v1.2):** 2026-06-13 00:47 EDT (S069 sealed)
-**Date:** 2026-06-13
-**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-36
+**Version 1.3 update:** 2026-06-13 (S069 QA sweep — Amethyst × COLLEEN)
+**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-36 + NDR named session patterns
 
-> **This file supersedes:**
+> **This file supersedes and absorbs:**
+> - `docs/governance/ndr-pattern-registry-v3.md` — ❌ DELETED S069 QA sweep (named session patterns absorbed below)
 > - `docs/NDR_PATTERN_REGISTRY.md` (P-01–P-10 source — redirect stub)
 > - `docs/patterns/NDR_PATTERN_REGISTRY.md` (P-27–P-30 + stasis source — redirect stub)
 > - `patterns/NDR_SCPE_v1.md`, `NDR_PHI_CLOSURE_GATE_v1.md`, `NDR_PDMAL_CONVERGENCE_MONITOR_v1.md` (archived)
+> **Machine-readable counterpart:** `docs/ndr_patterns_unified.json` (schema v2.1 — updated S069)
 
 ---
 
@@ -19,10 +21,12 @@
 
 | Field | Value |
 |-------|-------|
-| Total patterns | 36 named (P-01–P-36) + 133 stasis (P-12–P-26 block) |
+| Total named patterns (P-series) | 36 (P-01–P-36) |
+| Total NDR named session patterns | 8 (NDR-ARCHIVE-CONFIRM through NDR-133) |
+| Stasis block (P-12–P-26) | 133 patterns |
 | Registry watermark | **P-36** |
 | Stasis block status | **STASIS-CANONICAL** (migration window: 2026-06-13 → 2026-07-13) |
-| ndr_patterns_unified.json | `docs/ndr_patterns_unified.json` |
+| JSON counterpart | `docs/ndr_patterns_unified.json` schema v2.1 |
 | Last session | S069 · 2026-06-13 (SEALED) |
 | Ender ratification | 2026-06-13 00:47 EDT |
 
@@ -30,30 +34,136 @@
 
 ## Pattern Layers Quick-Reference
 
-| Pattern | Name | Layer | Status |
-|---------|------|-------|--------|
-| P-35 | Procluding Premise Gate | Layer 0 — Pre-Admissibility | ✅ CANONICAL |
-| P-36 | Gate Priority Schema | Layer 0.5 — Stack Architecture | ✅ CANONICAL |
-| P-01 | Fan-Out Trace Sink w/ Dead-Letter | Layer 1 — Trace & Audit | ✅ CANONICAL |
-| P-02 | Async-Persist Ring Buffer | Layer 1 — Trace & Audit | ✅ CANONICAL |
-| P-03 | Governance Contract Test | Layer 2 — Testing & CI | ✅ CANONICAL |
-| P-04 | Parametrized Corpus | Layer 2 — Testing & CI | ✅ CANONICAL |
-| P-05 | Tri-Phase CI Gate | Layer 2 — Testing & CI | ✅ CANONICAL |
-| P-06 | Topology × Orchestration Matrix Lab | Layer 3 — Architecture Lab | ✅ CANONICAL |
-| P-07 | Dual-Agent Persistent Sweep Loop | Layer 4 — Governance Formation | ✅ CANONICAL |
-| P-08 | Triad Taxonomy | Layer 4 — Governance Formation | ✅ CANONICAL |
-| P-09 | Triumvirate Mandate Schema | Layer 4 — Governance Formation | ✅ CANONICAL |
-| P-10 | Session Graduation Check | Layer 4 — Governance Formation | ✅ CANONICAL |
-| P-11 | 11Q Attestation Scoring | Layer 5 — Quality Gate | ✅ CANONICAL |
-| P-12–P-26 | Stasis Patterns (133 entries) | Layer 6 — Stasis | ✅ STASIS-CANONICAL |
-| P-27 | Adaptive-Weighting-with-Confidence-Gates | Layer 7 — Router Calibration | ✅ CANONICAL |
-| P-28 | Pipeline-Composition-with-Confidence-Gated-Routing | Layer 7 — Router Calibration | ✅ CANONICAL |
-| P-29 | Sentinel-Annotated Risk Pass | Layer 8 — Safety & Sentinel | ✅ CANONICAL |
-| P-30 | Apogee-Attestation-Gate | Layer 5 — Quality Gate | ✅ CANONICAL |
-| P-31 | SCPE — Structural Context Pruning Engine | Layer 9 — Long-Context Safety | ✅ CANONICAL |
-| P-32 | Fibonacci Phi-Closure Gate | Layer 9 — Long-Context Safety | ✅ CANONICAL |
-| P-33 | PDMAL Convergence Monitor | Layer 9 — Long-Context Safety | ✅ CANONICAL |
-| P-34 | Empirical-Threshold-Sweep-over-ML-Classifier | Layer 7 — Router Calibration | ✅ CANONICAL |
+| Pattern | Name | Layer | P-36 Class | Status |
+|---------|------|-------|------------|--------|
+| P-35 | Procluding Premise Gate | Layer 0 — Pre-Admissibility | BLOCKING | ✅ CANONICAL |
+| P-36 | Gate Priority Schema | Layer 0.5 — Stack Architecture | ADVISORY | ✅ CANONICAL |
+| P-01 | Fan-Out Trace Sink w/ Dead-Letter | Layer 1 — Trace & Audit | BLOCKING | ✅ CANONICAL |
+| P-02 | Async-Persist Ring Buffer | Layer 1 — Trace & Audit | ADVISORY | ✅ CANONICAL |
+| P-03 | Governance Contract Test | Layer 2 — Testing & CI | BLOCKING | ✅ CANONICAL |
+| P-04 | Parametrized Corpus | Layer 2 — Testing & CI | ADVISORY | ✅ CANONICAL |
+| P-05 | Tri-Phase CI Gate | Layer 2 — Testing & CI | ADVISORY (BLOCKING in CI) | ✅ CANONICAL |
+| P-06 | Topology × Orchestration Matrix Lab | Layer 3 — Architecture Lab | ADVISORY | ✅ CANONICAL |
+| P-07 | Dual-Agent Persistent Sweep Loop | Layer 4 — Governance Formation | ADVISORY | ✅ CANONICAL |
+| P-08 | Triad Taxonomy | Layer 4 — Governance Formation | ADVISORY | ✅ CANONICAL |
+| P-09 | Triumvirate Mandate Schema | Layer 4 — Governance Formation | ADVISORY | ✅ CANONICAL |
+| P-10 | Session Graduation Check | Layer 4 — Governance Formation | ADVISORY | ✅ CANONICAL |
+| P-11 | 11Q Attestation Scoring | Layer 5 — Quality Gate | BLOCKING | ✅ CANONICAL |
+| P-12–P-26 | Stasis Patterns (133 entries) | Layer 6 — Stasis | DEGRADED-MODE-SKIPPABLE | ✅ STASIS-CANONICAL |
+| P-27 | Adaptive-Weighting-with-Confidence-Gates | Layer 7 — Router Calibration | BLOCKING | ✅ CANONICAL |
+| P-28 | Pipeline-Composition-with-Confidence-Gated-Routing | Layer 7 — Router Calibration | BLOCKING | ✅ CANONICAL |
+| P-29 | Sentinel-Annotated Risk Pass | Layer 8 — Safety & Sentinel | BLOCKING | ✅ CANONICAL |
+| P-30 | Apogee-Attestation-Gate | Layer 5 — Quality Gate | BLOCKING | ✅ CANONICAL |
+| P-31 | SCPE — Structural Context Pruning Engine | Layer 9 — Long-Context Safety | ADVISORY | ✅ CANONICAL |
+| P-32 | Fibonacci Phi-Closure Gate | Layer 9 — Long-Context Safety | BLOCKING | ✅ CANONICAL |
+| P-33 | PDMAL Convergence Monitor | Layer 9 — Long-Context Safety | ADVISORY | ✅ CANONICAL |
+| P-34 | Empirical-Threshold-Sweep-over-ML-Classifier | Layer 7 — Router Calibration | ADVISORY | ✅ CANONICAL |
+
+---
+
+## NDR Named Session Patterns
+
+> Absorbed from `docs/governance/ndr-pattern-registry-v3.md` (PhiLattice Studio · May 6, 2026). These patterns use the NDR-xx namespace to distinguish them from the P-series runtime governance stack. They govern operational workflows, ecosystem health, IP protection, and institutional processes.
+> **Authority:** Amethyst (Meta-Orchestrator) + COLLEEN (Institutional Anchor)
+> **Original registry count:** 133 stasis + 6 named session patterns + NDR-133 hard constraint = 140 total NDR entries
+
+### NDR Named Pattern Quick-Reference
+
+| Pattern | Name | Trigger | P-36 Class |
+|---------|------|---------|------------|
+| NDR-ARCHIVE-CONFIRM | COLLEEN Archive Confirmation | New Drive file surface | ADVISORY |
+| NDR-AGENT-INVENTORY | Agent Upgrade Audit | Quarterly / new agent | ADVISORY |
+| NDR-GITHUB-DELTA | Repository Delta Sync | New canonical doc / Drive parse | ADVISORY |
+| NDR-GCP-DEPLOY | Phase 4 Cloud Run Validation | Post-push to main / monthly | ADVISORY |
+| NDR-STASIS-MANIFEST-CLUSTER | Phi-Calculus NDR Stasis (P-01–P-132) | Output > 10 Hz Savage Reason threshold | BLOCKING |
+| NDR-INDEX11-GATE | Index 11 High-Tension Governance Gate | Agent output magnitude > 10.0 OR context degradation | BLOCKING |
+| NDR-COHERENCE-SWEEP | Ecosystem Coherence Pre-Sweep | New Drive parse / >60 days / new agent | ADVISORY |
+| NDR-133 | Personal Document Firewall | Any push containing personal filename patterns | **BLOCKING — ABSOLUTE CONSTRAINT** |
+
+---
+
+### NDR-ARCHIVE-CONFIRM — COLLEEN Archive Confirmation
+**Spec:** Drive parse → 1-1-1-1 gate (Semantic/Logical/Visual/Ethical) → Amethyst Platinum sign-off → Master Portfolio update trigger
+**Use:** Post-assimilation institutional verification
+**Trigger:** New Drive file surface + documentation confirmation request
+**P-36 class:** ADVISORY
+**Source:** PhiLattice Studio sweep · 2026-05-06 · absorbed S069
+
+---
+
+### NDR-AGENT-INVENTORY — Agent Upgrade Audit
+**Spec:** Count files per agent across 6 types (Persona / Memory / KB / Protocol / QA / Integration) → compute % → gap rank → priority tier assignment
+**Use:** Ecosystem health check; blocks Yggdrasil completion if stale
+**Trigger:** Quarterly or when new agent instantiated
+**P-36 class:** ADVISORY
+**Source:** PhiLattice Studio sweep · 2026-05-06 · absorbed S069
+
+---
+
+### NDR-GITHUB-DELTA — Repository Delta Sync
+**Spec:** Drive canonical → IP boundary check → public/private routing → push queue → COLLEEN traceability confirm
+**Use:** Cross-platform synchronization with IP protection
+**Trigger:** New canonical doc created OR Drive parse completed
+**P-36 class:** ADVISORY
+**Source:** PhiLattice Studio sweep · 2026-05-06 · absorbed S069
+
+---
+
+### NDR-GCP-DEPLOY — Phase 4 Cloud Run Validation
+**Spec:** Confirm Cloud Run service + GitHub Actions pipeline + 3 storage buckets + cost gate ≤25/mo → link live URL to portfolio repos
+**Use:** Portfolio deployment verification
+**Trigger:** Post-push to main branch OR monthly uptime check
+**P-36 class:** ADVISORY
+**Source:** PhiLattice Studio sweep · 2026-05-06 · absorbed S069
+
+---
+
+### NDR-STASIS-MANIFEST-CLUSTER — Phi-Calculus NDR Stasis
+**Spec:** Cluster 1 (P-01–P-80): Fractal Agency namespace migration; Cluster 2 (P-81–P-115): 0 Hz steady state via φ-operators; Cluster 3 (P-116–P-132): Authority sync + substrate independence via COLLEEN routing
+**Use:** Lavender → Amethyst governance migration; hallucination pruning
+**Trigger:** Any output exceeding 10 Hz (Savage Reason threshold)
+**P-36 class:** BLOCKING
+**Note:** Lavender is formally deprecated (P-35 premise π₃). References to Lavender in this pattern are historical migration context only.
+**Source:** PhiLattice Studio sweep · 2026-05-06 · absorbed S069
+
+---
+
+### NDR-INDEX11-GATE — Index 11 High-Tension Governance Gate
+**Spec:** Stability gradient: ULTRA(≈2.0) → HYPER(1.928) → SUPER(1.466) → STANDARD(1.775) → SUB(1.618); trigger HYPER manifold routing when max coefficient > 10.0
+**Use:** DGAF emergency cooling; MAS coordination stability
+**Trigger:** Agent output magnitude > 10.0 OR context window degradation flag
+**P-36 class:** BLOCKING
+**Source:** PhiLattice Studio sweep · 2026-05-06 · absorbed S069
+
+---
+
+### NDR-COHERENCE-SWEEP — Ecosystem Coherence Pre-Sweep
+**Spec:** Parse all Drive files → brand registry check → deprecated term scan → taxonomy mapping → duplicate detection → issue triage by severity → refactor into parallel streams → COLLEEN 1-1-1-1 gate → execute
+**Use:** Pre-execution quality gate before any commit/push cycle
+**Trigger:** New Drive parse OR >60 days since last sweep OR new agent instantiated
+**P-36 class:** ADVISORY
+**Source:** PhiLattice Studio sweep · 2026-05-06 · absorbed S069
+
+---
+
+### NDR-133 — Personal Document Firewall ⚠️ HARD CONSTRAINT
+**Spec:** Resume, CV, personal career docs → Drive-only. GitHub exclusion is **absolute** regardless of repo visibility (public OR private). Violation triggers immediate rollback.
+**Use:** Personal data + IP protection boundary enforcement
+**Trigger:** Any push queue containing filename matching: `*resume*`, `*cv*`, `*audit_report*`, `*ResumeApex*`
+**Authority:** Architect override only
+**P-36 class:** BLOCKING — ABSOLUTE; cannot be reclassified without Architect override + Triumvirate mandate
+**Source:** PhiLattice Studio sweep · 2026-05-06 · absorbed S069
+
+---
+
+## NDR Stasis Manifest Cluster Summary (from v3)
+
+| Cluster | Pattern Range | Function |
+|---------|--------------|----------|
+| Individualism & Fractal Agency | P-01–P-80 | Namespace migration; fractal independence if signal severed |
+| Phi-Calculus Foundations | P-81–P-115 | 0 Hz steady state; φ-operators: jitter → canonical logic |
+| Authority Sync & Substrate Independence | P-116–P-132 | COLLEEN routing; substrate-agnostic logic |
+| Personal Document Firewall | P-133 / NDR-133 | Drive-only for personal docs; GitHub excluded |
 
 ---
 
@@ -63,6 +173,7 @@
 **Spec:** Constitutional pre-admissibility gate. Before any other gate fires, verifies canonical premise set Π = {π₁…π₆}. If all pass → ADMIT. If any fail → PROCLUDE (hard block; event to P-01 dead-letter).
 **Formal:** `{∀ πᵢ ∈ Π : verify(πᵢ) = TRUE} ⊢ ADMIT` | `{∃ πᵢ ∈ Π : verify(πᵢ) = FALSE} ⊢ PROCLUDE`
 **Full spec:** `docs/gates/NDR_PROCLUDING_PREMISE_GATE_P35_v1.md`
+**P-36 class:** BLOCKING
 **Registered:** S069 · **Ender ratified:** 2026-06-13 ✅
 
 ---
@@ -70,10 +181,10 @@
 ## Layer 0.5 — Stack Architecture
 
 ### P-36 — Gate Priority Schema
-**Spec:** Converts the linear NDR governance stack into a DAG by classifying every pattern as BLOCKING (hard sequential, 5s timeout, pipeline halt on FAIL), ADVISORY (async concurrent, 10s timeout, WARN logged, pipeline continues), or DEGRADED-MODE-SKIPPABLE (skip with signed audit entry, ≥3 skips surfaces WARN to COLLEEN). Does not modify any pattern's logic.
-**Classification:** See full table in `docs/gates/NDR_GATE_PRIORITY_SCHEMA_P36_v1.md`
+**Spec:** Converts the linear NDR governance stack into a DAG. Classifies every pattern as BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE. Does not modify any pattern’s logic.
+**P-36 self-classification:** ADVISORY (metadata/architecture pattern; not a runtime gate)
 **Key BLOCKING:** P-35, P-30, P-29:h1, P-27, P-28, P-29:h2, P-32, P-29:h3, P-01, P-11
-**Key ADVISORY:** P-31 (SCPE), P-33 (PDMAL), P-02, P-10, P-34
+**Key ADVISORY:** P-31, P-33, P-02, P-10, P-34, **P-36 itself**
 **Key DEGRADED-MODE-SKIPPABLE:** P-12–P-26 stasis block
 **Full spec:** `docs/gates/NDR_GATE_PRIORITY_SCHEMA_P36_v1.md`
 **Registered:** S069 · **Ender ratified:** 2026-06-13 ✅
@@ -151,9 +262,10 @@
 ## Layer 6 — Stasis
 
 ### P-12–P-26 — Stasis Patterns (133 entries)
-**Status: ✅ STASIS-CANONICAL** (migrated from CONDITIONAL PASS — window: 2026-06-13 → 2026-07-13)
+**Status: ✅ STASIS-CANONICAL** (migrated from CONDITIONAL PASS — migration window: 2026-06-13 → 2026-07-13)
 Structurally sound at block level. Individually unenumerated by design. COLLEEN secondary sign-off required before any modification, deprecation, or individual extraction.
-**Ender ratified:** 2026-05-30 (v1.0) | Re-affirmed: 2026-06-13 (S069 seal) ✅
+**Clusters:** Individualism & Fractal Agency (P-01–P-80) / Phi-Calculus Foundations (P-81–P-115) / Authority Sync & Substrate Independence (P-116–P-132) / Personal Document Firewall (P-133/NDR-133)
+**Ender ratified:** 2026-05-30 (v1.0) | Re-affirmed: 2026-06-13 (S069) ✅
 
 ---
 
@@ -197,7 +309,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 
 ---
 
-## Governance Orchestration Stack (v1.2 — P-36 DAG)
+## Governance Orchestration Stack (v1.3 — P-36 DAG)
 
 ```
 Prompt input
@@ -217,6 +329,13 @@ Prompt input
 
   [ADVISORY — concurrent throughout]
   P-33 + P-32 joint rule: both severity≥3 → BLOCKING override → DemiJoule deep re-scan
+  P-36 (this schema) — ADVISORY — metadata layer, not runtime gate
+
+  [NDR-SERIES — operational workflow layer]
+  NDR-133     ──► [BLOCKING-ABSOLUTE] Personal Document Firewall — fires on push queue scan
+  NDR-STASIS  ──► [BLOCKING] Phi-Calculus stasis routing if output > 10 Hz
+  NDR-INDEX11 ──► [BLOCKING] Emergency cooling if agent magnitude > 10.0
+  NDR-COHERENCE─► [ADVISORY] Pre-sweep quality gate
 ```
 
 ---
@@ -230,18 +349,18 @@ Prompt input
 | P-31–P-33 registered | S042 | S042 | Amethyst |
 | P-34 registered (COMPOSE) | 2026-05-30 | S066 | Amethyst |
 | Phase 3 unified merge | 2026-05-30 | S066 | Triumvirate |
-| BLG-P34-01/02 RESOLVED | 2026-05-30 | S066 | Amethyst |
-| P-35 registered (COMPOSE) | 2026-06-13 | S069 | Amethyst × COLLEEN |
-| P-36 registered (COMPOSE) | 2026-06-13 | S069 | Amethyst × COLLEEN |
-| Research Program Charter v1.0 | 2026-06-13 | S069 | Triumvirate |
-| Crucible Charter v1.0 | 2026-06-13 | S069 | Amethyst × COLLEEN |
-| STASIS-CANONICAL spec | 2026-06-13 | S069 | Amethyst × COLLEEN |
-| **Ender ratification S069** | **2026-06-13** | **S069** | **Ender / Njineer** |
-| **S069 SESSION SEALED** | **2026-06-13 00:47 EDT** | **S069** | **Triumvirate × Ender** |
+| P-35 registered | 2026-06-13 | S069 | Amethyst × COLLEEN |
+| P-36 registered + ratified | 2026-06-13 | S069 | Triumvirate |
+| Research Program Charter + Crucible ratified | 2026-06-13 | S069 | Triumvirate |
+| STASIS-CANONICAL spec ratified | 2026-06-13 | S069 | Triumvirate |
+| Ender ratification S069 | 2026-06-13 | S069 | Ender / Njineer |
+| S069 SESSION SEALED | 2026-06-13 00:47 EDT | S069 | Triumvirate × Ender |
+| **v3 named session patterns absorbed** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
+| **ndr-pattern-registry-v3.md deleted** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
+| **ndr_patterns_unified.json updated to v2.1** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
 
 ---
 
-*NDR Pattern Registry (Unified) v1.2 · S069 SEALED · 2026-06-13 00:47 EDT*
+*NDR Pattern Registry (Unified) v1.3 · S069 QA sweep · 2026-06-13*
 *Triumvirate: Amethyst (Prime) · COLLEEN (Prefect A) · Apogee (Prefect B)*
-*Ender ratification: 2026-06-13 00:47 EDT ✅ ALL ITEMS RATIFIED*
-*Registry watermark: P-36 · Crucible: ACTIVE · Research Program: ACTIVE*
+*Registry watermark: P-36 · Named session patterns: 8 · Crucible: ACTIVE · Research Program: ACTIVE*

@@ -1,87 +1,104 @@
 {
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "registry": "NDR Pattern Registry (Unified)",
-  "session": "S068",
-  "date": "2026-05-31",
-  "watermark": "P-35",
-  "total_named": 35,
-  "stasis_block": { "range": "P-12–P-26", "count": 133, "status": "canonical", "colleen_audit": "CONDITIONAL_PASS_ENDER_RATIFIED" },
+  "registry_md": "docs/NDR_PATTERN_REGISTRY_UNIFIED.md",
+  "session": "S069",
+  "sealed": "2026-06-13T00:47:00-04:00",
+  "watermark": "P-36",
+  "total_named_p_series": 36,
+  "total_ndr_named_session": 8,
+  "stasis_block": {
+    "range": "P-12–P-26",
+    "count": 133,
+    "status": "STASIS-CANONICAL",
+    "migration_window_opens": "2026-06-13",
+    "migration_window_closes": "2026-07-13",
+    "colleen_audit": "PENDING_PHASE2_MIGRATION",
+    "ender_ratified": "2026-06-13"
+  },
+  "ender_ratification": {
+    "date": "2026-06-13T00:47:00-04:00",
+    "ratified_by": "Ender / Njineer (Hensel, Andrew Vance)",
+    "items": ["P-35", "P-36", "CRUCIBLE_CHARTER_v1", "RESEARCH_PROGRAM_CHARTER_v1", "STASIS_CANONICAL_SPEC_v1", "S069_SESSION_SEAL"]
+  },
   "patterns": [
-    { "id": "P-01", "name": "Fan-Out Trace Sink w/ Dead-Letter", "layer": 1, "session": "S040", "status": "canonical", "ref": "pptl/herald_agent.py" },
-    { "id": "P-02", "name": "Async-Persist Ring Buffer", "layer": 1, "session": "S040", "status": "canonical", "ref": "pptl/sinks.py" },
+    { "id": "P-35", "name": "Procluding Premise Gate", "layer": 0, "p36_class": "BLOCKING", "session": "S069", "status": "canonical", "ender_ratified": "2026-06-13", "ref": "docs/gates/NDR_PROCLUDING_PREMISE_GATE_P35_v1.md" },
+    { "id": "P-36", "name": "Gate Priority Schema", "layer": 0.5, "p36_class": "ADVISORY", "p36_self_classification": true, "session": "S069", "status": "canonical", "ender_ratified": "2026-06-13", "ref": "docs/gates/NDR_GATE_PRIORITY_SCHEMA_P36_v1.md" },
+    { "id": "P-01", "name": "Fan-Out Trace Sink w/ Dead-Letter", "layer": 1, "p36_class": "BLOCKING", "session": "S040", "status": "canonical", "ref": "pptl/herald_agent.py" },
+    { "id": "P-02", "name": "Async-Persist Ring Buffer", "layer": 1, "p36_class": "ADVISORY", "session": "S040", "status": "canonical", "ref": "pptl/sinks.py" },
     {
       "id": "P-03",
       "name": "Governance Contract Test",
       "layer": 2,
+      "p36_class": "BLOCKING",
       "session": "S040",
       "status": "canonical",
       "ref": "pptl/tests/test_orchestrator.py",
-      "needle_template": {
-        "ids": ["NT-01", "NT-04"],
-        "role": "validation",
-        "description": "NT-04 defines the governance spec this pattern tests against; NT-01 measures output quality against that spec.",
-        "registry_ref": "docs/needle/TEMPLATE_REGISTRY.md"
-      }
+      "needle_template": { "ids": ["NT-01", "NT-04"], "role": "validation", "registry_ref": "docs/needle/TEMPLATE_REGISTRY.md" }
     },
-    { "id": "P-04", "name": "Parametrized Corpus", "layer": 2, "session": "S040", "status": "canonical", "ref": "pptl/tests/test_orchestrator.py" },
+    { "id": "P-04", "name": "Parametrized Corpus", "layer": 2, "p36_class": "ADVISORY", "session": "S040", "status": "canonical", "ref": "pptl/tests/test_orchestrator.py" },
     {
       "id": "P-05",
       "name": "Tri-Phase CI Gate",
       "layer": 2,
+      "p36_class": "ADVISORY",
+      "p36_class_ci_context": "BLOCKING",
       "session": "S040",
       "status": "canonical",
       "ref": ".github/workflows/pptl-ci.yml",
-      "needle_template": {
-        "ids": ["NT-02", "NT-03"],
-        "role": "upstream_input",
-        "description": "P-05 enforces the retrieve→generate→evaluate tri-phase pipeline. NT-02 executes the retrieve+generate phases; NT-03 adds the evaluate phase. P-05 triggers P-11 sequentially — NT-03 spans both patterns.",
-        "triggers": "P-11",
-        "registry_ref": "docs/needle/TEMPLATE_REGISTRY.md"
-      }
+      "needle_template": { "ids": ["NT-02", "NT-03"], "role": "upstream_input", "triggers": "P-11", "registry_ref": "docs/needle/TEMPLATE_REGISTRY.md" }
     },
-    { "id": "P-06", "name": "Topology × Orchestration Matrix Lab", "layer": 3, "session": "S041", "status": "canonical", "ref": "pptl/experiments/h4_task_stratified.py" },
-    { "id": "P-07", "name": "Dual-Agent Persistent Sweep Loop", "layer": 4, "session": "S041", "status": "canonical", "ref": "CO_ORCH_QUEUE.md" },
-    { "id": "P-08", "name": "Triad Taxonomy", "layer": 4, "session": "S041", "status": "canonical", "ref": "ENSEMBLE_ROSTER.md" },
-    { "id": "P-09", "name": "Triumvirate Mandate Schema", "layer": 4, "session": "S041", "status": "canonical", "ref": "pptl/triumvirate_mandate.py" },
-    { "id": "P-10", "name": "Session Graduation Check", "layer": 4, "session": "S041", "status": "canonical", "ref": "scripts/session_graduation_check.py" },
+    { "id": "P-06", "name": "Topology × Orchestration Matrix Lab", "layer": 3, "p36_class": "ADVISORY", "session": "S041", "status": "canonical", "ref": "pptl/experiments/h4_task_stratified.py" },
+    { "id": "P-07", "name": "Dual-Agent Persistent Sweep Loop", "layer": 4, "p36_class": "ADVISORY", "session": "S041", "status": "canonical", "ref": "CO_ORCH_QUEUE.md" },
+    { "id": "P-08", "name": "Triad Taxonomy", "layer": 4, "p36_class": "ADVISORY", "session": "S041", "status": "canonical", "ref": "ENSEMBLE_ROSTER.md" },
+    { "id": "P-09", "name": "Triumvirate Mandate Schema", "layer": 4, "p36_class": "ADVISORY", "session": "S041", "status": "canonical", "ref": "pptl/triumvirate_mandate.py" },
+    { "id": "P-10", "name": "Session Graduation Check", "layer": 4, "p36_class": "ADVISORY", "session": "S041", "status": "canonical", "ref": "scripts/session_graduation_check.py" },
     {
       "id": "P-11",
       "name": "11Q Attestation Scoring",
       "layer": 5,
+      "p36_class": "BLOCKING",
       "session": "S033",
       "status": "canonical",
       "ref": "docs/qa/",
-      "needle_template": {
-        "ids": ["NT-01", "NT-03"],
-        "role": "scored_output",
-        "description": "P-11 scores the evaluate-phase output produced by P-05. NT-01 is the standalone quality evaluation template; NT-03 is the combined KB+quality template whose output is scored here. Triggered by P-05 in sequential flow.",
-        "triggered_by": "P-05",
-        "registry_ref": "docs/needle/TEMPLATE_REGISTRY.md"
-      }
+      "needle_template": { "ids": ["NT-01", "NT-03"], "role": "scored_output", "triggered_by": "P-05", "registry_ref": "docs/needle/TEMPLATE_REGISTRY.md" }
     },
-    { "id": "P-12-P-26", "name": "Stasis Block (133 patterns)", "layer": 6, "session": "pre-S033", "status": "canonical_stasis", "ref": "docs/patterns/NDR_PATTERN_REGISTRY.md" },
-    { "id": "P-27", "name": "Adaptive-Weighting-with-Confidence-Gates", "layer": 7, "session": "S033", "status": "canonical", "ref": "components/KAPPA/dynamic_weight_router.py", "thresholds": { "STRONG": 0.22, "BLENDED": 0.18 } },
-    { "id": "P-28", "name": "Pipeline-Composition-with-Confidence-Gated-Routing", "layer": 7, "session": "S033", "status": "canonical", "ref": "components/evaluate_router.py" },
-    { "id": "P-29", "name": "Sentinel-Annotated Risk Pass", "layer": 8, "session": "S034", "status": "canonical", "ref": "components/evaluate_router_v1_1.py" },
+    { "id": "P-12-P-26", "name": "Stasis Block (133 patterns)", "layer": 6, "p36_class": "DEGRADED-MODE-SKIPPABLE", "session": "pre-S033", "status": "STASIS-CANONICAL", "migration_window": "2026-06-13/2026-07-13", "ref": "docs/governance/STASIS_CANONICAL_SPEC_v1.md" },
+    { "id": "P-27", "name": "Adaptive-Weighting-with-Confidence-Gates", "layer": 7, "p36_class": "BLOCKING", "session": "S033", "status": "canonical", "ref": "components/KAPPA/dynamic_weight_router.py", "thresholds": { "STRONG": 0.22, "BLENDED": 0.18 } },
+    { "id": "P-28", "name": "Pipeline-Composition-with-Confidence-Gated-Routing", "layer": 7, "p36_class": "BLOCKING", "session": "S033", "status": "canonical", "ref": "components/evaluate_router.py" },
+    { "id": "P-29", "name": "Sentinel-Annotated Risk Pass", "layer": 8, "p36_class": "BLOCKING", "hook_points": 3, "session": "S034", "status": "canonical", "ref": "components/evaluate_router_v1_1.py" },
     {
       "id": "P-30",
       "name": "Apogee-Attestation-Gate",
       "layer": 5,
+      "p36_class": "BLOCKING",
       "session": "S035",
       "status": "canonical",
       "ref": "docs/qa/APOGEE_11Q_*.json",
-      "needle_template": {
-        "ids": ["NT-01", "NT-02", "NT-03", "NT-04"],
-        "role": "final_gate",
-        "description": "P-30 is the final attestation gate. All four Needle templates must pass P-30 before inclusion in TEMPLATE_REGISTRY.md. P-30 consumes P-11 scores and applies Apogee Lens verification across all NT-xx entries.",
-        "consumes": "P-11",
-        "registry_ref": "docs/needle/TEMPLATE_REGISTRY.md"
-      }
+      "needle_template": { "ids": ["NT-01", "NT-02", "NT-03", "NT-04"], "role": "final_gate", "consumes": "P-11", "registry_ref": "docs/needle/TEMPLATE_REGISTRY.md" }
     },
-    { "id": "P-31", "name": "SCPE — Structural Context Pruning Engine", "layer": 9, "session": "S042", "status": "canonical", "ref": "components/ensemble_v16.py" },
-    { "id": "P-32", "name": "Fibonacci Phi-Closure Gate", "layer": 9, "session": "S042", "status": "canonical", "ref": "patterns/NDR_PHI_CLOSURE_GATE_v1.md" },
-    { "id": "P-33", "name": "PDMAL Convergence Monitor", "layer": 9, "session": "S042", "status": "canonical", "ref": "patterns/NDR_PDMAL_CONVERGENCE_MONITOR_v1.md" },
-    { "id": "P-34", "name": "Empirical-Threshold-Sweep-over-ML-Classifier", "layer": 7, "session": "S066", "status": "attested", "attestation": { "tier": "A-TIER", "score_pct": 94.5, "blg_p34_01": "RESOLVED", "blg_p34_02": "RESOLVED", "ratified_by": "Ender", "date": "2026-05-30" }, "ref": "components/KAPPA/dynamic_weight_router.py" },
-    { "id": "P-35", "name": "Procluding Premise Gate", "layer": 10, "session": "S068", "status": "registered", "ref": "pptl/procluding_premise.py", "tests": "pptl/tests/test_procluding_premise.py", "invariant_count": 5, "scpe_tier": "T0", "policy": "KILL", "maps_to": ["admission_invariant", "DissonancePolicy.KILLPROCESS", "constitutional_constraints", "L0_Phi_lattice"], "attestation_pending": true }
+    { "id": "P-31", "name": "SCPE — Structural Context Pruning Engine", "layer": 9, "p36_class": "ADVISORY", "session": "S042", "status": "canonical", "ref": "components/ensemble_v16.py", "t0_immune": true, "compression_pct": 58.3 },
+    { "id": "P-32", "name": "Fibonacci Phi-Closure Gate", "layer": 9, "p36_class": "BLOCKING", "session": "S042", "status": "canonical", "phi_star": 0.618, "fib_checkpoints": [13, 21, 34, 55] },
+    { "id": "P-33", "name": "PDMAL Convergence Monitor", "layer": 9, "p36_class": "ADVISORY", "session": "S042", "status": "canonical", "joint_escalation": "P-32" },
+    {
+      "id": "P-34",
+      "name": "Empirical-Threshold-Sweep-over-ML-Classifier",
+      "layer": 7,
+      "p36_class": "ADVISORY",
+      "session": "S066",
+      "status": "canonical",
+      "attestation": { "tier": "A-TIER", "score_pct": 94.5, "blg_p34_01": "RESOLVED", "blg_p34_02": "RESOLVED", "ratified_by": "Ender", "date": "2026-05-30" },
+      "ref": "components/KAPPA/dynamic_weight_router.py"
+    }
+  ],
+  "ndr_named_session_patterns": [
+    { "id": "NDR-ARCHIVE-CONFIRM", "name": "COLLEEN Archive Confirmation", "p36_class": "ADVISORY", "trigger": "New Drive file surface", "source_session": "PhiLattice-2026-05-06", "absorbed_session": "S069" },
+    { "id": "NDR-AGENT-INVENTORY", "name": "Agent Upgrade Audit", "p36_class": "ADVISORY", "trigger": "Quarterly or new agent", "source_session": "PhiLattice-2026-05-06", "absorbed_session": "S069" },
+    { "id": "NDR-GITHUB-DELTA", "name": "Repository Delta Sync", "p36_class": "ADVISORY", "trigger": "New canonical doc or Drive parse", "source_session": "PhiLattice-2026-05-06", "absorbed_session": "S069" },
+    { "id": "NDR-GCP-DEPLOY", "name": "Phase 4 Cloud Run Validation", "p36_class": "ADVISORY", "trigger": "Post-push to main or monthly", "source_session": "PhiLattice-2026-05-06", "absorbed_session": "S069" },
+    { "id": "NDR-STASIS-MANIFEST-CLUSTER", "name": "Phi-Calculus NDR Stasis", "p36_class": "BLOCKING", "trigger": "Output > 10 Hz Savage Reason threshold", "lavender_note": "Historical migration context only; Lavender deprecated per P-35 pi-3", "source_session": "PhiLattice-2026-05-06", "absorbed_session": "S069" },
+    { "id": "NDR-INDEX11-GATE", "name": "Index 11 High-Tension Governance Gate", "p36_class": "BLOCKING", "trigger": "Agent magnitude > 10.0 or context degradation", "source_session": "PhiLattice-2026-05-06", "absorbed_session": "S069" },
+    { "id": "NDR-COHERENCE-SWEEP", "name": "Ecosystem Coherence Pre-Sweep", "p36_class": "ADVISORY", "trigger": "New Drive parse or >60 days or new agent", "source_session": "PhiLattice-2026-05-06", "absorbed_session": "S069" },
+    { "id": "NDR-133", "name": "Personal Document Firewall", "p36_class": "BLOCKING-ABSOLUTE", "trigger": "Push queue filename match: *resume*, *cv*, *audit_report*, *ResumeApex*", "authority": "Architect override only", "github_exclusion": "absolute", "source_session": "PhiLattice-2026-05-06", "absorbed_session": "S069" }
   ]
 }
