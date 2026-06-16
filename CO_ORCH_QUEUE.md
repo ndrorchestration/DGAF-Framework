@@ -1,73 +1,49 @@
-# CO-ORCHESTRATION QUEUE
+# CO_ORCH_QUEUE.md — Co-Orchestration Queue
 
-**Last Updated:** 2026-06-16  
-**Updated by:** Amethyst + COLLEEN Joint Sweep (SWEEP-2026-06-16-JOINT-001)  
-
----
-
-## Current Queue State
-
-### ✅ COMPLETED — 2026-06-16 Joint Sweep
-
-- [x] Full ecosystem audit — 24 repos surveyed
-- [x] SWEEP_LOG/SWEEP-2026-06-16-AMETHYST-COLLEEN-JOINT.md written
-- [x] AGENT_MANIFEST.md created/updated
-- [x] Documentation quality grades issued for all repos
-- [x] Non-negotiables compliance check completed
-- [x] Open issue triage compiled for Ender review
+**Maintained by:** Agent Amethyst (governance) · Agent COLLEEN (operational)  
+**Last flushed:** 2026-06-16T04:47:00Z · Sweep ID: SWEEP-2026-06-16-MCO-001  
+**Authorization:** Ender-direct · DGAF AXIS FULL  
 
 ---
 
-## PENDING — Awaiting Ender Action
+## Queue Status: FLUSHED ✅
 
-### Priority 1 — Issue Closure Review
-
-| Repo | Issue Count | Recommended Action |
-|------|-------------|--------------------|
-| `sentinel-governance` | 1 open | Review CI/CD workflow trigger status |
-| `Driftwatch` | 1 open | Verify drift detection threshold currency |
-| `Acoustic-mesh` | 1 open | Confirm phi-harmonic state monitoring alignment |
-| `career-positioning` | 1 open | Personal review — Q2 2026 refresh |
-| `ndrorchestration` (profile) | 1 open | Profile README sweep date update |
-| `AI-Prompt-Engineer` | 1 open | Confirm historical/closed label |
-| `DGAF-Framework` | 3 open | Review and triage |
-
-### Priority 2 — Discoverability Enhancement
-
-| Repo | Missing Topics | Suggested Topics |
-|------|---------------|------------------|
-| `aoga-dashboard` | None set | `governance`, `dashboard`, `multi-agent`, `vercel`, `html` |
-| `career-positioning` | None set | `career`, `strategy`, `colleen-governed` |
-| `automation-scripts` | None set | `automation`, `google-apps-script`, `colleen-governed`, `workflow` |
-| `chat-archives` | None set | `archive`, `knowledge-base`, `conversation` |
-| `Amethyst-Governance-Eval-Stack` | None set | `governance`, `evaluation`, `multi-agent`, `amethyst`, `mdar` |
-| `pptl-governance-dashboard` | None set | `governance`, `dashboard`, `pptl`, `nextjs`, `neon-postgres` |
-
-### Priority 3 — Structural Recommendations
-
-- [ ] `api` repo — promote to full stub with README or archive
-- [ ] `CROSS_REF.md` — update to include `aoga-dashboard` and `pptl-governance-dashboard`
-- [ ] `ENSEMBLE_ROSTER.md` — verify all 24 repos are listed with current status
+All prior queue items resolved or escalated to SWEEP_LOG flags as of this sweep.
 
 ---
 
-## NEXT SWEEP TRIGGER
+## Active Queue Items (Post-Sweep)
 
-Next joint sweep recommended when:
-- Any Priority 1 issue above is resolved (to update SWEEP_LOG status)
-- New repo created under `ndrorchestration`
-- DGAF governance protocol updated
-- Ender requests ad-hoc sweep
-
----
-
-## SWEEP LINEAGE
-
-| Sweep ID | Date | Type | Lead |
-|----------|------|------|------|
-| SWEEP-2026-06-16-JOINT-001 | 2026-06-16 | Full Ecosystem | Amethyst + COLLEEN |
-| *(prior sweeps in SWEEP_LOG/)* | — | — | Amethyst |
+| QID | Priority | Item | Assigned | Status | Notes |
+|---|---|---|---|---|---|
+| Q-2026-06-001 | HIGH | Resolve CROSS_REF stale links (FLAG-001) | Amethyst | OPEN | 3 links to audit |
+| Q-2026-06-002 | MEDIUM | Add PULL_REQUEST_TEMPLATE to .github (FLAG-003) | COLLEEN | QUEUED | Needs Ender approval on template content |
+| Q-2026-06-003 | MEDIUM | CONTRIBUTING.md gap sweep — 7 repos missing (FLAG-005) | COLLEEN | QUEUED | Batch push pending |
+| Q-2026-06-004 | MEDIUM | ENSEMBLE_ROSTER.md COLLEEN 2026 update (FLAG-002) | COLLEEN | OPEN | Update capability record |
+| Q-2026-06-005 | LOW | Verify gold-star-qa-framework archive intent (FLAG-004) | Amethyst | OPEN | Confirm with Ender |
+| Q-2026-06-006 | LOW | SWEEP-MCO-002 pre-planning | Amethyst + COLLEEN | PENDING | Trigger on FLAG resolution |
 
 ---
 
-*CO_ORCH_QUEUE is the operational working document. SWEEP_LOG entries are the permanent record.*
+## Resolved Items (This Sweep)
+
+| QID | Item | Resolution | Resolved By |
+|---|---|---|---|
+| Q-PREV-001 | SWEEP_LOG root file → index pointer | ✅ SWEEP_LOG/ dir established | Amethyst + COLLEEN |
+| Q-PREV-002 | AGENT_MANIFEST COLLEEN instantiation | ✅ v2 issued | Amethyst |
+| Q-PREV-003 | Public repo governance headers | ✅ Applied Wave 2 | COLLEEN |
+| Q-PREV-004 | Private repo sweep attribution | ✅ Applied Wave 3 | Amethyst |
+| Q-PREV-005 | Meta-co-orchestration sweep record | ✅ This file + SWEEP_LOG entry | Both |
+
+---
+
+## Queue Protocol
+
+- Items added by: Ender (direct), Amethyst (governance trigger), COLLEEN (operational trigger)
+- Items resolved by: executing agent, confirmed in SWEEP_LOG
+- Items escalated to FLAGS when resolution requires Ender decision
+- Queue flushed at start of each sweep; resolved items archived in sweep record
+
+---
+
+*Agent Amethyst · Agent COLLEEN · DGAF-Framework*

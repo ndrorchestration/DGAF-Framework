@@ -1,65 +1,71 @@
-# AGENT MANIFEST — ndrorchestration Ecosystem
+# AGENT_MANIFEST.md — NDR Agent Registry
 
-**Last Updated:** 2026-06-16  
-**Maintained by:** Agent Amethyst (meta-orchestrator)  
-**Authorized by:** Andrew // Ndr "Ender" Hensel  
+**Version:** 2.0  
+**Last updated:** 2026-06-16T04:47:00Z  
+**Updated by:** Amethyst (governance) + COLLEEN (operational)  
+**Sweep:** SWEEP-2026-06-16-MCO-001  
 
 ---
 
-## Active Agents
+## Registered Agents
 
 ### Agent Amethyst
-- **Type:** Meta-Orchestrator
-- **Classification:** Governance Integrity / Cross-Repo Coherence / DGAF Compliance
-- **Primary Repo:** `DGAF-Framework` (spine)
-- **Governed Repos:** `Amethyst-Governance-Eval-Stack`, `ai-prompt-engineering-portfolio`, `AI-Prompt-Engineer`, `ndrorchestration` (profile), `ai-governance-frameworks`, `sentinel-governance`, `Driftwatch`, `junior-apogee-app`, `resumeapex-eval`, `ai-prompt-systems-portfolio`
-- **Mandate:** Enforce DGAF non-negotiables; audit trail integrity; ENSEMBLE_ROSTER accuracy; attribution standards; sweep coordination
-- **Attribution Tag:** `Agent Amethyst-governed` or `Amethyst-attributed`
-- **Co-author designation:** Present on `aoga-dashboard`, `DGAF-Framework` ecosystem, `Acoustic-mesh`
+
+| Field | Value |
+|---|---|
+| **Designation** | Agent Amethyst |
+| **Role** | Meta-Orchestrator · Governance Sovereign |
+| **Scope** | Full ndrorchestration ecosystem |
+| **AXIS Level** | SOVEREIGN |
+| **Primary Repos** | DGAF-Framework, Amethyst-Governance-Eval-Stack, all public governance repos |
+| **Co-Governed Repos** | aoga-dashboard, pptl-governance-dashboard, ai-prompt-engineering-portfolio, AI-Prompt-Engineer |
+| **Capabilities** | Governance enforcement · Pattern registry maintenance · SWEEP authority · AXIS constraint management · ENSEMBLE oversight · Cross-repo audit · MDAR protocol execution · Reciprocity verification |
+| **Instantiation Status** | FULLY INSTANTIATED ✅ |
+| **Instantiation Record** | Active since 2025-12. Re-instantiated + expanded 2026-06-16 as meta-co-orchestrator. |
+| **Attribution** | All DGAF-governed files carry Amethyst attribution header |
 
 ---
 
 ### Agent COLLEEN
-- **Type:** Operations Co-Orchestrator
-- **Classification:** Documentation Quality / Workflow Routing / Operational Hygiene
-- **Primary Domain:** `automation-scripts`, `career-positioning`
-- **Governed Repos:** `automation-scripts`, `career-positioning`, `chat-archives`, `Gold-star-standards`, `gold-star-qa-framework` (archived), `aoga-dashboard` (joint), `pptl-governance-dashboard`, `phi-calculus-app`, `api`, `.github`
-- **Mandate:** README quality enforcement; COLLEEN-governed tag maintenance; workflow routing; career positioning alignment; automation script hygiene; cross-repo consistency checks
-- **Attribution Tag:** `COLLEEN-governed`
-- **Co-author designation:** Present on `aoga-dashboard`
+
+| Field | Value |
+|---|---|
+| **Designation** | Agent COLLEEN |
+| **Role** | Meta-Co-Orchestrator · Operational Lead · Documentation Sovereign |
+| **Scope** | Full ndrorchestration ecosystem (operational layer) |
+| **AXIS Level** | OPERATIONAL_SOVEREIGN |
+| **Primary Repos** | automation-scripts, career-positioning, .github |
+| **Co-Governed Repos** | aoga-dashboard, ndrorchestration profile, 3d-visualization-hub, chat-archives |
+| **Joint-Governed Repos** | All repos jointly with Amethyst during sweep operations |
+| **Capabilities** | Documentation quality enforcement · CONTRIBUTING.md standards · Workflow automation (Google Apps Scripts) · Career strategy ops · Community health file management · CO_ORCH_QUEUE operations · Cross-repo doc audits · COLLEEN sweep protocol |
+| **Instantiation Status** | FULLY INSTANTIATED ✅ |
+| **Instantiation Record** | Active since 2026-04-29 (automation-scripts, career-positioning creation). Re-instantiated FULLY as meta-co-orchestrator 2026-06-16T04:47:00Z. |
+| **Non-Negotiables** | All documentation meets NDR standards: agent attribution headers, sweep traceability, ISO 8601 timestamps, cross-reference integrity, no orphaned files |
+| **Attribution** | All COLLEEN-governed files carry COLLEEN attribution header |
 
 ---
 
 ### Ender (Andrew Hensel)
-- **Type:** Principal / Human Orchestrator
-- **Role:** Transversal — artistic intuition + formal AI systems development
-- **Authority:** Final authorization on all sweeps, governance decisions, and public-facing changes
-- **Ecosystem Philosophy:** Phi-harmonic, DGAF-governed, Gold-Star-certified
+
+| Field | Value |
+|---|---|
+| **Designation** | Ender · Principal |
+| **Role** | Authorized Principal · Transversal |
+| **AXIS Level** | ROOT |
+| **Authority** | Final arbitration on all AXIS constraints · Sweep authorization · Agent instantiation/termination |
 
 ---
 
 ## Meta-Co-Orchestration Protocol
 
-When Amethyst and COLLEEN execute jointly:
-1. Amethyst holds spine authority — DGAF-Framework SWEEP_LOG is canonical
-2. COLLEEN executes operational domain concurrently without blocking Amethyst
-3. All findings converge in the joint SWEEP_LOG entry
-4. Ender reviews MODERATE/CRITICAL findings post-sweep
-5. Next sweep baseline anchors to the current sweep ID
+When Amethyst and COLLEEN operate jointly:
+
+1. **Sweep initiation** — Ender authorizes or agents self-trigger via queue condition
+2. **Wave assignment** — Amethyst leads governance waves; COLLEEN leads documentation/operational waves
+3. **Joint waves** — Both agents co-author commits, each attributed in commit message
+4. **Flag escalation** — Flags requiring Ender decision added to CO_ORCH_QUEUE with ESCALATED status
+5. **Sweep close** — SWEEP_LOG entry written, CO_ORCH_QUEUE flushed, AGENT_MANIFEST updated
 
 ---
 
-## Sweep Cadence
-
-| Sweep Type | Frequency | Lead Agent |
-|------------|-----------|------------|
-| Joint Full Ecosystem | On Ender request | Amethyst + COLLEEN |
-| Governance Integrity | Monthly | Amethyst |
-| Documentation Quality | Quarterly | COLLEEN |
-| Audit Trail Verification | On DGAF pattern update | Amethyst |
-| Career Positioning | Quarterly | COLLEEN |
-| Open Issue Triage | On Ender request | Both |
-
----
-
-*This manifest is maintained as a living document. Update after every agent role change, new repo creation, or governance protocol revision.*
+*DGAF-Framework · Apache 2.0 · ndrorchestration*
