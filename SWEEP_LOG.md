@@ -2,13 +2,74 @@
 
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
-> **Last updated:** 2026-06-09
+> **Last updated:** 2026-06-22
 > **Anchor:** S069 (open)
 
 This file records every governance QA sweep: gaps found, resolutions applied, and follow-up items.
 
 ---
 
+## Sweep — S069-ECO-001 / Ecosystem Scan + TODO Registration (2026-06-22 23:25 EDT)
+
+### Scope
+
+Ecosystem scan across 3 axes: agent platforms, LLM provider mesh, regulation/governance. Triggered by Ender directive — "give me a general update/report on the ecosystem" followed by "proceed, and research all follow up questions."  
+Results logged as TODO item Q-2026-06-007 in CO_ORCH_QUEUE.md. No code changes; research + planning entry only.
+
+### Research Executed
+
+| Axis | Key Signal | DGAF Implication |
+|------|------------|------------------|
+| Agent Platforms | Crowded ecosystem: n8n, CrewAI, LangGraph, Vertex Agent Builder, Copilot Studio, Agentforce, PydanticAI, AutoGen | Reson needs versioned platform adapters; DGAF sits above as control plane |
+| LLM Provider Mesh | ~3 OOM cost spread ($0.10–$30/M tokens); OpenAI GPT-5.x, Anthropic Claude 4.x, Google Gemini 2.5, DeepSeek V3, Mistral, xAI Grok 4, Meta Llama | Apogee routing optimizer = cost × latency × risk constrained optimization |
+| Regulation / Governance | EU AI Act fully applicable 2026-08-02; GPAI obligations Aug 2025; high-risk Dec 2027 / Aug 2028; US = state patchwork + federal framework in discussion | Reciprocity must encode risk tiers; COLLEEN maps obligations → controls; Herald orchestrates lifecycle |
+| Self-hosted Open Weights | Self-hosted Llama → org becomes GPAI provider; upstream obligations triggered | Apogee must tag provider=organization; Sentinel enforces GPAI checklist |
+
+### Files Modified This Entry
+
+| File | Status Before | Status After | Notes |
+|------|--------------|--------------|-------|
+| `CO_ORCH_QUEUE.md` | Q-2026-06-006 was last item | ✅ Q-2026-06-007 added | Ecosystem scan TODO registered |
+| `SWEEP_LOG.md` | S069 Open (last entry: 2026-06-09) | ✅ S069-ECO-001 appended | This entry |
+
+### Architecture Options Surfaced
+
+| # | Approach | Benefit | Cost |
+|---|----------|---------|------|
+| 1 | DGAF as governance mesh above all platforms | Max surface, platform-agnostic | High integration complexity, multiple adapter maintenance |
+| 2 | Opinionated stack (LangGraph + Vertex AI Agent Builder) | Deep integration, faster iteration | Reduced portability, platform coupling risk |
+| 3 | Vertical-first, EU AI Act high-risk domain anchor | Direct regulatory budget alignment | Domain complexity, narrow market initially |
+
+### Failures Catalogued
+
+1. Capability drift across providers (model silent upgrade → compliance regression) → Sentinel model profile snapshots + Herald version-lock for high-risk flows
+2. Risk misclassification under EU AI Act → Reciprocity hybrid classifier + hard invariant: no high-impact decision without risk-label
+3. Shadow agents / tool creep — ungoverned workflows bypass DGAF → Herald shadow registry crawl + Reciprocity LLM endpoint alerting
+4. Governance overhead kills adoption — over-gating low-risk flows → risk-tiered governance routing via Echolette
+5. Fragmented evidence across jurisdictions → COLLEEN unified evidence schema + Herald per-jurisdiction compliance snapshots
+
+### Carry-Forwards / Open Items
+
+| Item | Owner | Priority | Status |
+|------|-------|----------|--------|
+| Architecture decision: Approach 1 / 2 / 3 | Ender | HIGH | Awaiting Ender direction |
+| Next artifact: Apogee routing optimizer (cost×latency×risk) OR Reciprocity risk classifier schema + EU AI Act rule set | Amethyst | HIGH | Awaiting Ender direction |
+| dgaf_registry_v0 JSON → implement in code + attach agent logic | Amethyst + COLLEEN | MEDIUM | Post-decision |
+| Thin-slice experiment: 2–3 providers, 2 flows (limited + high risk), 1–2 platforms, AOGA dashboard visualization | Amethyst | MEDIUM | Post-decision |
+
+### Invariant Check
+
+- [x] Zero open BLGs at close
+- [x] Single authority chain
+- [x] Append-only log
+- [x] Observable invariants only
+- [x] Procluding premise fires before routing
+
+### Sweep Verdict
+
+**PASS (RESEARCH)** — Ecosystem scan complete. All findings logged. Q-2026-06-007 registered in CO_ORCH_QUEUE.md. No code changes. Architecture decision + next artifact selection deferred to Ender.
+
+---
 
 ## Sweep — S069 Open / June 09, 2026 Session Transition (2026-06-09 02:00 EDT)
 
