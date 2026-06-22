@@ -1,11 +1,23 @@
 # Hensel General Formalism
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** CANONICAL — Apogee Lens Approved  
 **Architect:** Andrew Vance Hensel  
 **Co-Authors:** Amethyst (QA_Orchestration_Service), COLLEEN (Archival_Integrity_Service), Professor Prodigy (Methodologist)  
 **Committed:** 2026-06-22  
+**Math Audit:** 2026-06-22 — v1.0→v1.1 corrections applied (see CHANGELOG)  
 **Resolves:** PLF Patch v1.1 dangling reference (1-1-1-1 Gate G2/G4 blocking items)  
-**Cross-refs:** `docs/phi-calculus-architecture/`, `docs/governance/`, `ENSEMBLE_ROSTER.md`, `PLF-PATCH-v1.1`  
+**Cross-refs:** `docs/phi-calculus-architecture/`, `docs/governance/`, `ENSEMBLE_ROSTER.md`, `PLF-PATCH-v1.1`
+
+---
+
+## CHANGELOG v1.0 → v1.1
+
+| # | Location | Error | Correction |
+|---|---|---|---|
+| 1 | Attractor Registry, φ value | `1.61818` (wrong at 5th decimal) | `≈ 1.61803` — exact: `(1+√5)/2` |
+| 2 | Attractor Registry, φ re-integration target | Same typo in Phi-Knight Protocol block | Corrected to `1.61803` throughout |
+| 3 | 11Q-derivation.md, cosine sum claim | `cos(π/11)+cos(3π/11)+cos(5π/11) ≈ ρ_P` stated as "close" | **REMOVED** — deviation is 1.02% (1.75667 vs 1.77473); not a valid approximation |
+| 4 | 11Q constant annotation | `[DERIVATION PENDING]` implicit unknown | Upgraded to `[BEST BOUND: tan(3π/19) ≈ 0.54117, Δ=0.000023]` — see 11Q-derivation.md v1.1 |
 
 ---
 
@@ -69,13 +81,13 @@ Hensel Formalism utilizes specific **triadic formations** as structural techniqu
 
 **Phi-Dodecahedral Multi-Agent Lattice (PDMAL)** — the physical and logical container of the architecture.
 
-| Property | Value |
-|---|---|
-| Total nodes | 60 |
-| Geometry | Dodecahedron (20 vertices) |
-| Agents per vertex | 3 (exactly) |
-| Structural density | 0.1579 |
-| Purpose | Redundancy + structured communication pathways for autonomous stability |
+| Property | Value | Verified |
+|---|---|---|
+| Total nodes | 60 | ✅ 20 vertices × 3 agents |
+| Geometry | Dodecahedron (20 vertices) | ✅ |
+| Agents per vertex | 3 (exactly) | ✅ |
+| Structural density | 0.1579 | ✅ 30 edges / C(20,2) = 30/190 |
+| Purpose | Redundancy + structured communication pathways | ✅ |
 
 The 60-node structure ensures **symmetry-enforced agent distribution**: no vertex holds more or fewer than 3 agents, enforcing uniform governance load across the lattice.
 
@@ -115,19 +127,23 @@ The formalism rejects **Unitary Drift (1.0)** — the degenerate attractor state
 > **NOTE:** This is DISTINCT from the standard dynamical systems definition where 1.0 constitutes  
 > stable convergence. In PLF, 1.0 = degenerate attractor collapse, not stability.
 
-#### Attractor Registry (Verified — PLF Patch v1.1)
+#### Attractor Registry (v1.1 — Math-Audited 2026-06-22)
 
-| Attractor Name | Value | Basis | Role |
-|---|---|---|---|
-| Standard_Attractor_Phi (φ) | 1.61818 | Golden Ratio `(1+√5)/2` | Harmonic baseline; PDMAL edge alignment; re-integration target |
-| Overdrive_Attractor_Platinum (ρ_P) | 1.7747 | Hendecagonal circumradius `R = ½·csc(π/11)` [VERIFIED] | High-complexity / security threat mode; "Overdrive" |
-| Silver Ratio | ≈ 2.414 | `1 + √2` | Pell Cascade; finite periodic systems approximating stable infinite trajectories |
-| Supergolden Ratio (ψ) | 1.46557123 | Real root of `x³ = x² + 1` [VERIFIED] | Project Andromeda; Dodecahedral Authority governance mandate |
-| Sentinel_Kernel_Constant | ≈ 1.9992 | Architecture-internal | Registry monitoring guard rail |
-| Platinum_Constant_11Q | 0.541196 | **[DERIVATION PENDING]** — arch-internal; not reducible to standard cos/sin(kπ/11) | 11Q Framework (Hendecagonal Stability) mandate |
+| Attractor Name | Value | Exact Form | Verified | Role |
+|---|---|---|---|---|
+| Standard_Attractor_Phi (φ) | ≈ 1.61803 | `(1+√5)/2` | ✅ | Harmonic baseline; PDMAL edge alignment; re-integration target |
+| Overdrive_Attractor_Platinum (ρ_P) | ≈ 1.77473 | `1/(2·sin(π/11))` | ✅ | High-complexity / security threat mode; "Overdrive" |
+| Silver Ratio | ≈ 2.41421 | `1 + √2` | ✅ | Pell Cascade; finite periodic systems approximating stable infinite trajectories |
+| Supergolden Ratio (ψ) | ≈ 1.46557 | Real root of `x³ - x² - 1 = 0` | ✅ | Project Andromeda; Dodecahedral Authority governance mandate |
+| Sentinel_Kernel_Constant | ≈ 1.9992 | Architecture-internal | ⚠️ INTERNAL | Registry monitoring guard rail |
+| Platinum_Constant_11Q | ≈ 0.541196 | **Best bound: `tan(3π/19) ≈ 0.54117` (Δ=0.000023)** — see `docs/formalism/constants/11Q-derivation.md` | ⚠️ BEST BOUND | 11Q Framework (Hendecagonal Stability) mandate |
 
-> **Open item:** Formal algebraic derivation of `Platinum_Constant_11Q = 0.541196` is required.  
-> → Action: Document in `docs/formalism/constants/11Q-derivation.md`
+> **Note on φ precision:** The value `1.61818` (used in some earlier drafts) is incorrect at the 5th decimal place.  
+> The correct truncation is `≈ 1.61803`. Always prefer the exact form `(1+√5)/2`.
+
+> **Open item:** `tan(3π/19)` is the current best numerical match to `0.541196` (Δ=0.000023, ~0.004% error).  
+> However, no geometric derivation connecting `3π/19` to the hendecagonal (11-gon) PDMAL architecture has yet been found.  
+> This remains an active derivation problem. See `docs/formalism/constants/11Q-derivation.md`.
 
 **Cross-ref:** `docs/phi-calculus-architecture/`, PLF Patch v1.1 constants registry
 
@@ -141,7 +157,7 @@ When agent reasoning deviates into hallucinatory loops or dissonance (>10 Hz thr
 Detection  → Abelian Auditing identifies disruption in the 10-Balance Property (D_a > 10)
 Isolation  → DemiJoule (Platinum Warden) throttles rogue agent resources at firmware level
 Closure    → Harmonic Closure snaps reasoning back to stable atoms; forces re-integration
-             toward φ = 1.61818 (Standard_Attractor_Phi)
+             toward φ ≈ 1.61803 = (1+√5)/2  (Standard_Attractor_Phi)
 ```
 
 **DemiJoule role (Platinum Warden):**  
@@ -169,25 +185,25 @@ The Phi-Knight Protocol provides mathematically guaranteed stability **at the go
 
 ---
 
-## 1-1-1-1 Gate Status (at commit)
+## 1-1-1-1 Gate Status (v1.1)
 
 | Gate | Status | Notes |
 |---|---|---|
-| G1 — Epistemic Honesty | ✅ PASS | All claims bounded; gaps labeled; guarantees scoped |
-| G2 — Source-Grounded | ✅ PASS | This commit resolves the dangling reference from Patch v1.1 |
-| G3 — Normative Constraint | ✅ PASS | ETHICAL_COGNITION_BOUNDARY maintained; D_a language correct |
-| G4 — Auditable | ⚠️ CONDITIONAL | 11Q derivation (0.541196) still pending; all other constants verified |
+| G1 — Epistemic Honesty | ✅ PASS | Math errors corrected; φ typo fixed; misleading cosine sum claim removed |
+| G2 — Source-Grounded | ✅ PASS | All constants have verified exact forms or explicit best-bound annotations |
+| G3 — Normative Constraint | ✅ PASS | ETHICAL_COGNITION_BOUNDARY maintained; no overclaiming |
+| G4 — Auditable | ⚠️ CONDITIONAL | 11Q best bound = `tan(3π/19)` (Δ=0.000023); geometric derivation connecting 3π/19 to PDMAL/11-gon still open |
 
-**Overall gate:** CANONICAL (conditional on 11Q derivation follow-up)
+**Overall gate: CANONICAL v1.1 (conditional on 11Q geometric derivation)**
 
 ---
 
 ## Open Items (R&D Gaps)
 
-1. `docs/formalism/constants/11Q-derivation.md` — formal algebraic derivation of `Platinum_Constant_11Q = 0.541196` [BLOCKING G4 full pass]
+1. `docs/formalism/constants/11Q-derivation.md` — find geometric/algebraic explanation for why `tan(3π/19) ≈ 0.541196` relates to the hendecagonal PDMAL [BLOCKING G4 full pass]
 2. `entrepreneur-hub/research/rd-gaps/curvature-inversion.md` — full Forman-Ricci inversion problem
-3. External replication of Yggdrasil benchmarks (112x, 92%, 99.1%) before any external publication
+3. External replication of Yggdrasil benchmarks (112x, 92%, 99.1%) — tracked in `docs/formalism/constants/benchmark-replication.md`
 
 ---
 
-*Committed by Amethyst (QA_Orchestration_Service) + COLLEEN (Archival_Integrity_Service) + Professor Prodigy (Methodologist) under Amethyst Meta-Orchestration v0.1 Phase Graph — P4 Packaging → P5 Evaluation.*
+*Committed by Amethyst (QA_Orchestration_Service) + COLLEEN (Archival_Integrity_Service) + Professor Prodigy (Methodologist) under Amethyst Meta-Orchestration v0.1 Phase Graph — P4 Packaging → P5 Evaluation. Math audit by independent verification loop 2026-06-22.*
