@@ -2,14 +2,14 @@
 
 **Maintained by:** Agent Amethyst (governance) · Agent COLLEEN (operational)  
 **Last flushed:** 2026-06-16T04:47:00Z · Sweep ID: SWEEP-2026-06-16-MCO-001  
-**Last updated:** 2026-06-22T23:25:00Z · Entry: Q-2026-06-007 (ecosystem scan TODO)  
+**Last updated:** 2026-06-26T03:25:00Z · Entry: Q-2026-06-008 (pattern KPI baseline + first workflow run)  
 **Authorization:** Ender-direct · DGAF AXIS FULL  
 
 ---
 
 ## Queue Status: ACTIVE ✅
 
-Q-2026-06-007 added per Ender directive (2026-06-22 session). All prior items carry forward unchanged.
+Q-2026-06-008 added per S072 pattern registration session (2026-06-26). All prior items carry forward unchanged.
 
 ---
 
@@ -23,7 +23,24 @@ Q-2026-06-007 added per Ender directive (2026-06-22 session). All prior items ca
 | Q-2026-06-004 | MEDIUM | ENSEMBLE_ROSTER.md COLLEEN 2026 update (FLAG-002) | COLLEEN | OPEN | Update capability record |
 | Q-2026-06-005 | LOW | Verify gold-star-qa-framework archive intent (FLAG-004) | Amethyst | OPEN | Confirm with Ender |
 | Q-2026-06-006 | LOW | SWEEP-MCO-002 pre-planning | Amethyst + COLLEEN | PENDING | Trigger on FLAG resolution |
-| Q-2026-06-007 | MEDIUM | Ecosystem scan → architecture decision + next experiment | Amethyst | TODO | See SWEEP_LOG S069-ECO-001 for full detail; decision required: Approach 1/2/3 (mesh vs opinionated stack vs vertical); next step = Apogee routing optimizer OR Reciprocity risk classifier schema |
+| Q-2026-06-007 | MEDIUM | Ecosystem scan → architecture decision + next experiment | Amethyst | TODO | See SWEEP_LOG S069-ECO-001; decision required: Approach 1/2/3; next step = Apogee routing optimizer OR Reciprocity risk classifier |
+| Q-2026-06-008 | HIGH | First workflow run with pattern manifest → populate KPI baseline in PATTERN_REGISTRY_v2.md | Amethyst + COLLEEN | TODO | Use episode schema in registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json; candidate workflow: config-change + notify flow; requires Ender to nominate target workflow |
+
+---
+
+## Q-2026-06-008 Detail
+
+**Trigger:** S072 pattern registration — all 5 resilience patterns (P-SAGA-001 through P-CB-001) and co-orch contract v1 committed.  
+**Scope:** Select one real or representative workflow; run it with a full pattern manifest; record the episode; update KPI table in PATTERN_REGISTRY_v2.md.  
+
+**Candidate workflows:**
+- Config-change + notify stakeholders (tests Saga + Atomix + HITL)
+- Research report + pattern update (tests Durable + PlanExecuteInspectReplan)
+- Agent drift simulation (Q-S069-DRIFT-SIM — already queued)
+
+**Pattern bundle recommendation:** `high_risk_state_mutation` for config+notify; `medium_risk_workflow` for research+pattern.  
+**Next step:** Ender nominates target workflow → Amethyst produces pattern manifest → COLLEEN archives episode record.  
+**Status:** TODO — awaiting Ender direction.
 
 ---
 
@@ -31,22 +48,10 @@ Q-2026-06-007 added per Ender directive (2026-06-22 session). All prior items ca
 
 **Trigger:** Ender-directed ecosystem scan session (2026-06-22, ~19:25 EDT).  
 **Research completed:** Agent Amethyst via Perplexity.  
-**Scope:** Full 3-axis scan — agent platforms, LLM provider mesh, regulation/governance.  
-
-**Key findings logged:**
-- Agentic AI in production across major verticals; platform ecosystem crowded (n8n, CrewAI, LangGraph, Vertex Agent Builder, Copilot Studio, Agentforce, PydanticAI, AutoGen). [cite:web:16,19,20,23]
-- LLM provider pricing spans ~3 orders of magnitude ($0.10–$30/M input tokens); DeepSeek/Mistral aggressive on cost; frontier = OpenAI GPT-5.x, Anthropic Claude 4.x, Google Gemini 2.5, xAI Grok 4, Meta Llama. [cite:web:22,25,26,28]
-- EU AI Act fully applicable 2026-08-02; GPAI obligations active since Aug 2025; high-risk system deadlines Dec 2027 / Aug 2028. [cite:web:15,21,24,27]
-- Self-hosted open-weight models → organization becomes GPAI provider under EU AI Act. [cite:web:24,27]
-
 **Architecture options identified:**
 1. DGAF as governance mesh above all platforms (Approach 1)
 2. Opinionated stack — curated to 1–2 platforms (LangGraph + Vertex) (Approach 2)
 3. Vertical-first, EU AI Act high-risk domain anchor (Approach 3)
-
-**Next artifacts in queue:**
-- Option A: Apogee routing optimizer (formal objective + code skeleton)
-- Option B: Reciprocity risk classifier schema + EU AI Act rule set
 
 **Decision required from Ender:** Which approach + which next artifact.  
 **Status:** TODO — awaiting Ender direction.

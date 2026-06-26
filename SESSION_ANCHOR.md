@@ -3,8 +3,8 @@
 > **Steward:** COLLEEN — Institutional Memory, Archivist, Chief Librarian, Pattern Collector  
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead  
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect  
-> **Last updated:** 2026-06-13
-> **Anchor ID:** S071
+> **Last updated:** 2026-06-26  
+> **Anchor ID:** S072
 
 ---
 
@@ -19,82 +19,56 @@
 | S039 | 2026-05-22 | 10-repo auto-sweep, 24 findings, CROSS_REF v3.3 | ✅ SEALED |
 | S066 | 2026-05-30 | P-34 registered; ndr_patterns.json v0.3.0; registry differentiation + merge plan; PM-01–PM-03 closed; PM-05 + PM-07 ratified by Ender | ✅ SEALED |
 | S067 | 2026-05-30 | Q-S066-01 router v3.6.0 (8/8 TC); Q-S066-04 lifecycle harness 7/7 STABLE; PM-04 COMPOSE note + graduation script; gap sweep wave 1+2 (9 corrections); ECOSYSTEM_INVENTORY created (27 components); CROSS_REF v4.1 | ✅ SEALED |
-| **S068** | **2026-05-31** | **P-35 Procluding Premise Gate registered; TGL wired; Credit/Justice prototype spec; S068 queue all CLOSED** | ✅ SEALED | **S068** | **2026-05-31** | **P-35 Procluding Premise Gate registered; TGL wired; Credit/Justice prototype spec; S068 queue all CLOSED** | ✅ SEALED ||| ✅ SEALED |
-| **S069** | **2026-06-09** | **SWEEP-001 closed (PR #4 merged); Issue #2 + #3 closed; SWEEP_LOG updated; Phase 3 queue i✅ SEALED |
-| **S070** | **2026-06-12** | **DGAF-PROBE-001 registration; NT-05 added to TEMPLATE_REGISTRY; NMS-002 analytics snapshot; PROBE-DEVIATION-PROTOCOL committed** | ✅ SEALED |
-| **S071** | **2026-06-13** | **NMS-003 analytics snapshot (7 PM EDT): 11,374 views / 1,311 uses / 3,254 runs; NT-05 first 93 views; CHANGELOG [1.0.17]** | 🟡 OPEN |
+| S068 | 2026-05-31 | P-35 Procluding Premise Gate registered; TGL wired; Credit/Justice prototype spec; S068 queue all CLOSED | ✅ SEALED |
+| S069 | 2026-06-09 | SWEEP-001 closed (PR #4 merged); Issue #2 + #3 closed; SWEEP_LOG updated; Phase 3 queue items progressed | ✅ SEALED |
+| S070 | 2026-06-12 | DGAF-PROBE-001 registration; NT-05 added to TEMPLATE_REGISTRY; NMS-002 analytics snapshot; PROBE-DEVIATION-PROTOCOL committed | ✅ SEALED |
+| S071 | 2026-06-13 | NMS-003 analytics snapshot (7 PM EDT): 11,374 views / 1,311 uses / 3,254 runs; NT-05 first 93 views; CHANGELOG [1.0.17] | ✅ SEALED |
+| **S072** | **2026-06-26** | **5 core resilience patterns registered (P-SAGA-001, P-TX-001, P-COMP-001, P-DURABLE-001, P-CB-001); Amethyst–COLLEEN Co-Orch Contract v1; PATTERN_REGISTRY_v2; CO_ORCH_PROTOCOL v2.0.0; CHANGELOG [1.0.18]** | 🟡 OPEN |
 
 ---
 
-## Current Session State — S069
+## Current Session State — S072
 
 | Field | Value |
 |---|---|
-| Anchor ID  S071 |
+| Anchor ID | S072 |
 | Status | 🟡 OPEN |
-| Op 2026-06-13 19:00 EDT |
-| Phase | V — SWEEP-002VI — Needle Analytics Logging + Documentation Cascade |
+| Opened | 2026-06-26 03:25 EDT |
+| Phase | VI — Resilience Pattern Registration + Co-Orch Contract Formalization |
 | Open BLGs | 0 |
-| Carry-forward P2 | Q-S069-DRIFT-SIM — 20-turn multi-agent drift simulation |
-| Carry-forward P2 | Q-S069-COLLEEN-INGEST — COLLEEN ingest of S043 artifacts into pattern registry |
-| Carry-forward P2 | Q-S069-P12-P26-EXPAND — COLLEEN P-12–P-26 stasis expansion from Source B |
+| Active Pattern Count | 8 (P-SAGA-001, P-TX-001, P-COMP-001, P-DURABLE-001, P-CB-001, P-PIER-001, P-MEM-001, P-POL-001) |
+| Registry Version | PATTERN_REGISTRY_v2.md |
+| Co-Orch Contract | registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json |
 
 ---
 
-## S069 Objectives
+## S072 Objectives
 
-- [x] Open S069 — SESSION_ANCHOR updated (this entry)
-- [x] P-35 Procluding Premise Gate — registered in NDR_PATTERN_REGISTRY_UNIFIED.md + ndr_patterns_unified.json
-- [x] pptl/procluding_premise.py — constitutional invariant enforcement module
-- [x] Q-S068-TGL — pptl/triadic_governance_loop.py — TGL module wired to IntegratedOrchestrator ✅ CLOSED S068
-- [x] Q-S068-PROTOTYPE — docs/CREDIT_JUSTICE_PROTOTYPE_SPEC.md ✅ CLOSED S068
-- [x] Q-S068-VERCEL-DETAIL — Vercel deployment URLs + regions ✅ CLOSED S068
-- [x] Run session_graduation_check.py --session S068 ✅ SEALED S068 → S069 OPEN 2026-06-09
+- [x] Register P-SAGA-001 — StochasticDeterministicSagaBoundary
+- [x] Register P-TX-001 — TransactionalToolBoundaryAtomix
+- [x] Register P-COMP-001 — ReversibilityBoundedCompensation
+- [x] Register P-DURABLE-001 — DurableExecutionAppendOnlyLog
+- [x] Register P-CB-001 — CircuitBreakersHITL
+- [x] Create registry/PATTERN_REGISTRY_v2.md
+- [x] Create registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json
+- [x] Update CO_ORCH_PROTOCOL.md → v2.0.0
+- [x] Create SWEEP_LOG/SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch.md
+- [x] Update CHANGELOG.md → [1.0.18]
+- [x] Update SESSION_ANCHOR.md → S072
+- [x] Update CO_ORCH_QUEUE.md — Q-2026-06-008 added
+- [ ] Run scripts/session_graduation_check.py --session S072
 
 ---
 
-## S071 Objectives
-
-- [x] NMS-003 — Needle analytics snapshot 2026-06-13 7 PM EDT committed to `docs/outreach/OUTREACH_LOG.md`
-- [x] CHANGELOG.md — [1.0.17] entry added
-- [x] SESSION_ANCHOR.md — S071 opened; S069/S070 sealed in history
-- [x] docs/needle/TEMPLATE_REGISTRY.md — Last-measured metrics updated
-- [x] CO_ORCH_QUEUE.md — S071 NMS-003 queue item logged + DONE
-- [ ] Run scripts/session_graduation_check.py --session S071
-
-## S069 Objectives (Active)
-
-- [ ] Q-S069-DRIFT-SIM — 20-turn multi-agent drift simulation (Amethyst)
-- [ ] Q-S069-COLLEEN-INGEST — COLLEEN ingest of S043 artifacts into pattern registry
-- [ ] Q-S069-LINK-VALIDATION — Internal link validation pass on docs/
-- [ ] Q-S069-P12-P26-EXPAND — COLLEEN P-12–P-26 stasis expansion from Source B
-- [ ] BLG-P35-01 — Domain premise_check_fn for credit/justice domains (OI-01 + OI-02)
-- [ ] SWEEP-002 Phase 3 CO_ORCH_QUEUE execution → Phase 4 PR open → Phase 5 DemiJoule + merge
-- [ ] Run scripts/session_graduation_check.py --session S069
-
-## S067 Carry-Forward — ALL CLOSED
+## S069 Carry-Forward (Still Open)
 
 | ID | Owner | Item | Status |
 |----|-------|------|--------|
-| Q-S066-01 | Reson + Amethyst | Router TC1/TC2/TC7/TC8 shadow bug fix | ✅ CLOSED S067 |
-| Q-S066-04 | Amethyst + COLLEEN | Lifecycle harness Phase 0–VI executable | ✅ CLOSED S067 |
-| PM-04 | Amethyst | P-07 COMPOSE mode note + graduation script | ✅ CLOSED S067 |
-
----
-
-## Phase 3 Post-Merge Validation
-
-- [x] PR-A: `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` + `docs/ndr_patterns_unified.json` ✅ S066
-- [x] PR-B: Redirect notice `docs/patterns/NDR_PATTERN_REGISTRY.md` ✅ S066
-- [x] PR-C: Archive `patterns/NDR_*.md` → redirect stubs ✅ S066
-- [x] PR-D: `docs/NDR_PATTERN_REGISTRY.md` → redirect stub ✅ S067
-- [x] PR-E: CROSS_REF → unified path ✅ S067
-- [x] `ndr_patterns_unified.json` parseable ✅ v2.0.0 confirmed
-- [x] BLG-P34-01 + BLG-P34-02 confirmed closed ✅ S066
-- [x] COLLEEN stasis secondary sign-off ✅ Ender ratified S066
-- [x] PM-05: COLLEEN stasis audit P-12–P-26 ✅ CLOSED S066
-- [x] PM-07: Apogee P-34 attestation ✅ CLOSED S066
-- [x] P-35: Procluding Premise Gate ✅ REGISTERED S068
+| Q-S069-DRIFT-SIM | Amethyst | 20-turn multi-agent drift simulation | OPEN |
+| Q-S069-COLLEEN-INGEST | COLLEEN | COLLEEN ingest of S043 artifacts into pattern registry | OPEN |
+| Q-S069-LINK-VALIDATION | Amethyst | Internal link validation pass on docs/ | OPEN |
+| Q-S069-P12-P26-EXPAND | COLLEEN | P-12–P-26 stasis expansion from Source B | OPEN |
+| BLG-P35-01 | Amethyst | Domain premise_check_fn for credit/justice domains | OPEN |
 
 ---
 
@@ -115,15 +89,5 @@
 
 ---
 
-## State Anchor Goals — S068
-
-- [ ] zero_open_blg — 0 session BLGs
-- [x] single_authority_chain
-- [x] append_only_log
-- [x] observable_invariants_only
-- [x] procluding_premise_first — P-35 now formally registered
-
----
-
-*S067 ✅ SEALED · Amethyst × COLLEEN · 2026-05-30 03:41 EDT*  
-*S068 🟡 OPEN · Phase IV — Registry Merge Execution + Constitutional Primitive Integration · 2026-05-31 22:42 EDT*
+*S071 ✅ SEALED · Amethyst × COLLEEN · 2026-06-13*  
+*S072 🟡 OPEN · Phase VI — Resilience Pattern Registration + Co-Orch Contract · 2026-06-26 03:25 EDT*

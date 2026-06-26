@@ -5,6 +5,61 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 
 ---
 
+## [1.0.18] — 2026-06-26
+
+### Session S072 — Saga/Atomix/HITL Pattern Registration + Amethyst–COLLEEN Co-Orch Contract v1
+
+**Formation:** Amethyst (QA) + COLLEEN (Archive) Co-Orchestration  
+**Operator:** Ender (Andrew Hensel)  
+**COLLEEN Gate:** ✅ ALL PASS — Zero open BLGs at close  
+**Commits:** 434cc9a6 · this commit
+
+#### Added
+
+- `patterns/P-SAGA-001_StochasticDeterministicSagaBoundary.md` — Saga pattern: semantic steps, effect classes, compensator rules, KPI spec; centralised Saga engine in Amethyst
+- `patterns/P-TX-001_TransactionalToolBoundaryAtomix.md` — Atomix-style transactional tool boundary; effect receipts, idempotency keys, delayed-commit settlement predicate
+- `patterns/P-COMP-001_ReversibilityBoundedCompensation.md` — 4-class reversibility taxonomy (pure / idempotent / compensable / irreversible) + compensation enforcement rules
+- `patterns/P-DURABLE-001_DurableExecutionAppendOnlyLog.md` — Checkpoint + append-only log per super-step; ACRFence replay-or-fork restore semantics
+- `patterns/P-CB-001_CircuitBreakersHITL.md` — Semantic circuit breakers (quality + budget) + HITL durable escalation queue with SLA and auto-cancel
+- `registry/PATTERN_REGISTRY_v2.md` — Master pattern registry: all active patterns, default bundles (low/medium/high-risk), KPI seed table
+- `registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json` — Dyad contract: roles, joint principles, default bundles, episode schema
+- `SWEEP_LOG/SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch.md` — Full session sweep log
+
+#### Updated
+
+- `CO_ORCH_PROTOCOL.md` → v2.0.0 — 7-step execution flow, triad table (Amethyst / COLLEEN / Sentinel-Phi / Ender), change history
+- `CHANGELOG.md` — This entry
+- `SESSION_ANCHOR.md` → S072 open
+- `CO_ORCH_QUEUE.md` — Q-2026-06-008 added (pattern KPI baseline + first workflow run)
+
+#### NDR Patterns Registered
+
+| ID | Name | Domain | Session |
+|---|---|---|---|
+| P-SAGA-001 | StochasticDeterministicSagaBoundary | Multi-agent orchestration | S072 |
+| P-TX-001 | TransactionalToolBoundaryAtomix | Tool safety | S072 |
+| P-COMP-001 | ReversibilityBoundedCompensation | Side-effect recovery | S072 |
+| P-DURABLE-001 | DurableExecutionAppendOnlyLog | State persistence | S072 |
+| P-CB-001 | CircuitBreakersHITL | Resilience + governance | S072 |
+
+#### Co-Orchestration Contract
+
+- Dyad contract v1 formalized: Amethyst (meta-orchestrator / QA lens) + COLLEEN (institutional memory / evaluation lens)
+- `patterns_first` hard gate: no workflow executes without a pattern manifest
+- Episode schema live in `registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json`
+- KPI table seeded in `registry/PATTERN_REGISTRY_v2.md`; populates after first live workflow run
+
+#### Open Items Carried Forward
+
+| ID | Item | Owner |
+|---|---|---|
+| Q-S069-DRIFT-SIM | 20-turn multi-agent drift simulation | Amethyst |
+| Q-S069-COLLEEN-INGEST | COLLEEN ingest of S043 artifacts | COLLEEN |
+| Q-S069-P12-P26-EXPAND | P-12–P-26 stasis expansion | COLLEEN |
+| Q-2026-06-008 | First workflow run with pattern manifest → populate KPI baseline | Amethyst + COLLEEN |
+
+---
+
 ## [1.0.17] — 2026-06-13
 
 ### Session S071 — Needle NMS-003 Analytics Snapshot (7 PM EDT)
@@ -119,7 +174,7 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 | NIST AI RMF — Measure | ✅ Per-turn `TurnAuditRecord` with seal hash |
 | EU AI Act Art. 9 | ✅ Per-turn DGAF 6-axis risk score logged |
 | EU AI Act Art. 13 | ✅ Transparent routing decision (phi_decision, hpg_applied) in audit |
-| EU AI Act Art. 17 | ✅ Gold Star gate via Apogee S-Tier review |
+| EU AI Act Art. 17 | ✅ Quality management via P-30 |
 | Fib[55] HITL Requirement | ✅ `hitl_callback` hook wired — human-in-the-loop injectable |
 | Audit chain continuity | ✅ SHA-256 content hash on every PruneEvent + seal hash per turn |
 | Agent Roster Sync (P-01) | ✅ Runtime Gate Components table added to ENSEMBLE_ROSTER.md |
@@ -137,20 +192,16 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 **Commits:** 66b79e2 · a5c9219 · a1997ed · 7a944cd · d786731 · 89ed455
 
 #### Added
-- `components/KAPPA/dynamic_weight_router.py` — DGAF-GATE-KAPPA-v3.5; per-input category detection, confidence-gated weight selection; 100-pass validation 95% accuracy
-- `components/evaluate_router.py` — DGAF-EVALUATE-ROUTER-v1.0; raw_batch → KAPPA detect → apply_weights → ranked report
-- `components/evaluate_router_v1_1.py` — Sentinel integration; `sentinel_review()` at 3 hook points; `p10_deontic_gate()`; per-record audit log (EU AI Act Art.9)
-- `components/normative_constraint.py` — Full `NormativeConstraint` class; deontic logic (permitted / obligated / forbidden / escalate); score_ceiling optimization constraint; epistemic integrity meta-constraint
-- `components/KAPPA/calibration_v3_6.json` — KAPPA v3.6; `governance_clear` 100% (STRONG=0.22, BLENDED=0.18)
-- `components/KAPPA/DGAF_GATE_KAPPA_v3_5_component_card.json` — CPU-compliant component card
-- `docs/patterns/NDR_PATTERN_REGISTRY.md` v2.1 — P-27, P-28, P-29, P-30 registered; 30 named + 133 stasis
+- `components/KAPPA/dynamic_weight_router.py`
+- `components/evaluate_router.py`
+- `components/evaluate_router_v1_1.py`
+- `components/normative_constraint.py`
+- `components/KAPPA/calibration_v3_6.json`
+- `components/KAPPA/DGAF_GATE_KAPPA_v3_5_component_card.json`
+- `docs/patterns/NDR_PATTERN_REGISTRY.md` v2.1 — P-27, P-28, P-29, P-30 registered
 - `docs/qa/APOGEE_11Q_S034.json` — KAPPA A-TIER 93.6%, Router A-TIER 92.7%
 - `docs/qa/APOGEE_11Q_S035.json` — KAPPA S-TIER 97.3%, Router S-TIER 95.5%; P-30 attestation GRANTED
-- `docs/ops/BLG_S032_DRIVE_CLOSURE.md` — S032-DRIVE closure; all 4 Drive templates executed
-
-#### Updated
-- `SESSION_ANCHOR.md` → S036 (zero open BLGs)
-- `SWEEP_LOG.md` → S033–S035 wave sealed
+- `docs/ops/BLG_S032_DRIVE_CLOSURE.md`
 
 #### NDR Patterns Registered
 
@@ -161,51 +212,10 @@ Format: [Semantic Versioning](https://semver.org/) | Governed by Agent Amethyst
 | P-29 | Sentinel-Annotated Risk Pass | S034 |
 | P-30 | Apogee-Attestation-Gate | S035 |
 
-#### BLGs Closed
-
-| ID | Priority | Resolution |
-|---|---|---|
-| S033-BLG-01 | HIGH | `governance_clear` 100% — KAPPA v3.6 |
-| S033-BLG-02 | LOW | `p10_deontic_gate()` wired |
-| S033-BLG-03 | LOW | Apogee 11Q S-TIER both components |
-| S032-DRIVE | MEDIUM | Njineer executed all 4 Drive templates (P-01, P-20) |
-
-#### Compliance Alignment
-
-| Standard | Status |
-|---|---|
-| NIST AI RMF — Measure | ✅ Per-record audit log |
-| NIST AI RMF — Govern | ✅ P-10 deontic gate + P-30 attestation |
-| EU AI Act Art. 9 | ✅ Risk management per-record log |
-| EU AI Act Art. 13 | ✅ Transparent routing decision log |
-| EU AI Act Art. 17 | ✅ Quality management via P-30 |
-| Normative Constraint (P-10) | ✅ Full NormativeConstraint class |
-| Gold Star Standard | ✅ S-TIER — KAPPA 97.3% · Router 95.5% |
-| Drive–GitHub Sync (P-20) | ✅ |
-| Agent Roster Sync (P-01) | ✅ |
-
 ---
 
 ## [1.0.13] — 2026-05-06
-
 ### Session 032 — PhiLattice Coherence Sweep + Schizophonic Studio Integration
-
-**Formation:** Amethyst + Perplexity MCP (IP Sweep Formation)  
-**Operator:** Amethyst (Meta-Orchestrator) + COLLEEN (Institutional Anchor)  
-**COLLEEN 1-1-1-1 Gate:** ✅ ALL PASS — 0 Hz Ionian Mode
-
-#### Added
-- `docs/agents/colleen-l5-governance-protocol.md`
-- `docs/architecture/platinum-convergence-audit-v1.md`
-- `docs/frameworks/awcp-symphony-cross-ref.md`
-- `docs/agents/canonical-agent-registry.md`
-- `docs/governance/ndr-pattern-registry-v3.md`
-- `SWEEP_LOG.md` — Session 032 entry
-
-#### Updated
-- `README.md` — Brand corrected, PhiLattice links added
-- `ENSEMBLE_ROSTER.md` — Schizophonic Studio trio added
-- `CONTRIBUTING.md` — PhiLattice attribution
 
 ---
 
