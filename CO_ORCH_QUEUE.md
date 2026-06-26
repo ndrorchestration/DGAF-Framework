@@ -1,64 +1,61 @@
-# CO_ORCH_QUEUE.md — Improvement Opportunity Queue
+# CO-ORCHESTRATION QUEUE
 
-> **Authority:** COLLEEN (detect) × Amethyst (implement)
-> **Queue type:** Append-only. Completed entries archived, never deleted.
-> **Last updated:** 2026-06-26 | Cycle 4 CLOSED → Cycle 5 OPEN
-
----
-
-## Cycle 5 — OPEN (seeded 2026-06-26)
-
-Cycle 5 OPPs are derived from `docs/RD_GAPS.md`. Each OPP maps to a gap closure action.
-
-| OPP-ID | Source Gap | Action | Owner | Status | Priority |
-|---|---|---|---|---|---|
-| OPP-C5-001 | GAP-001 | Wire DemiJoule RAG to production Sentinel-Phi pipeline; re-benchmark hallucination detection ≥96% | DemiJoule + Amethyst | 🔴 OPEN | HIGH |
-| OPP-C5-002 | GAP-002 | Design 6–8 RAG collections (canon, active-context, governance-policy, architecture-patterns, evaluations, compliance); wire COLLEEN as query authority | COLLEEN + Reson | 🔴 OPEN | HIGH |
-| OPP-C5-003 | GAP-003 | Build Saga fault injection test suite: transient tool failures, semantic failures, mid-workflow restarts; validate 4 failure modes | Amethyst + pptl | 🔴 OPEN | MEDIUM |
-| OPP-C5-004 | GAP-004 | Wire HITL durable queue to Temporal signal / LangGraph interrupt; define SLA + escalation; test deadlock scenario | Reson + Amethyst | 🔴 OPEN | MEDIUM |
-| OPP-C5-005 | GAP-005 | Instrument semantic quality metrics in Herald trace schema; breaker opens on 3 schema failures or 5 near-identical iterations | Herald + Sentinel-Phi | 🔴 OPEN | MEDIUM |
-| OPP-C5-006 | GAP-006 | Formalize Coherent Agency spec: 4 subsystems (identity, policy, adaptive learning, ethical constraint); Apogee Lens review | Amethyst + COLLEEN | 🔴 OPEN | LOW |
+> Active work items, pattern integration tasks, and pending handoffs.
+> Maintained by Amethyst. Reviewed at every session start.
 
 ---
 
-## Cycle 4 — CLOSED (2026-06-26)
+## Queue Status
 
-| OPP-ID | Action | Status | Commit |
+| Field | Value |
+|---|---|
+| **Last Updated** | 2026-06-26 04:03 EDT |
+| **Updated By** | Amethyst |
+| **Session** | SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch |
+
+---
+
+## ✅ Completed This Session
+
+| ID | Item | Owner | Closed |
 |---|---|---|---|
-| OPP-C4-001 | Create P-SAGA-001, P-TX-001, P-COMP-001, P-DURABLE-001, P-CB-001 | ✅ DONE | 434cc9a6 |
-| OPP-C4-002 | Create PATTERN_REGISTRY_v2.md + AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json | ✅ DONE | 434cc9a6 |
-| OPP-C4-003 | Update CO_ORCH_PROTOCOL.md → v2.0.0 | ✅ DONE | 434cc9a6 |
-| OPP-C4-004 | Create SWEEP_LOG/SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch.md | ✅ DONE | 434cc9a6 |
-| OPP-C4-005 | Create BOOTSTRAP.md | ✅ DONE | 0e8f84d9 |
-| OPP-C4-006 | Create docs/TEAM_WIKI.md | ✅ DONE | 0e8f84d9 |
-| OPP-C4-007 | Create docs/RD_GAPS.md (6 gaps) | ✅ DONE | 0e8f84d9 |
-| OPP-C4-008 | Create SWEEP_LOG/SWEEP_2026-06-26_Saga-HITL-Bootstrap-WikiGapClose.md | ✅ DONE | 0e8f84d9 |
-| OPP-C4-009 | Update CHANGELOG.md + SESSION_ANCHOR.md + CO_ORCH_QUEUE.md | ✅ DONE | this commit |
+| Q-2026-06-26-001 | Author P-SAGA-001: Stochastic–Deterministic Saga Boundary | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-002 | Author P-TX-001: Transactional Tool Boundary (Atomix) | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-003 | Author P-COMP-001: Reversibility-Bounded Compensation | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-004 | Author P-DURABLE-001: Durable Execution + Append-Only Log | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-005 | Author P-CB-001: Circuit Breakers + HITL Escalation | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-006 | Create PATTERN_REGISTRY_v2.md with all 5 patterns indexed | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-007 | Create AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-008 | Create SWEEP_LOG/SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch.md | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-009 | Update CO_ORCH_PROTOCOL.md → v2.0.0 | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-010 | Update CHANGELOG.md with session entry | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-011 | Update SESSION_ANCHOR.md with pattern count + last session ref | Amethyst | ✅ 2026-06-26 |
+| Q-2026-06-26-012 | Update CO_ORCH_QUEUE.md with completed items | Amethyst | ✅ 2026-06-26 |
 
 ---
 
-## Cycle 3 — CLOSED (2026-06-01)
+## 🔄 Active / Pending
 
-| OPP-ID | Action | Status |
-|---|---|---|
-| OPP-C3-Q-01 through Q-11 | Cross-repo coherence sweep findings (11 items) | ✅ DONE |
-
----
-
-## Cycle 2 — CLOSED (2026-06-01)
-
-| OPP-ID | Action | Status |
-|---|---|---|
-| OPP-C2-001 through C2-008 | S043 + EvidenceVerifier + constitutional cognition | ✅ DONE |
+| ID | Item | Owner | Priority | Notes |
+|---|---|---|---|---|
+| Q-NEXT-001 | Implement end-to-end Saga+Tx+Checkpoint+CB+HITL test flow (LangGraph or equiv.) | Ender | High | Fault-injection: HTTP 5xx, semantic failure, mid-run restart |
+| Q-NEXT-002 | Populate COLLEEN KPI baselines from first real episode runs | COLLEEN | High | Schema in AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json |
+| Q-NEXT-003 | Sentinel-Phi: wire effect-class enforcement to plan-load gate | Sentinel-Phi | High | Reject plans missing compensators for compensable steps |
+| Q-NEXT-004 | Saga lint tool: offline check all plans for compensator completeness | Amethyst+Ender | Medium | Fail-fast at config time |
+| Q-NEXT-005 | CROSS_REF.md update: add cross-links for 5 new patterns | Amethyst | Medium | Link from pattern IDs → registry → sweep log |
+| Q-NEXT-006 | README.technical.md: document Saga + Tx layers in architecture overview | Amethyst | Medium | After Q-NEXT-001 validated |
+| Q-NEXT-007 | Apogee Lens review: formal portfolio-grade assessment of P-SAGA-001 + P-CB-001 | Apogee Lens | Low | Prerequisite for S-Tier designation |
 
 ---
 
-## Cycle 1 — CLOSED (2026-05-27)
+## 📋 Backlog
 
-| OPP-ID | Action | Status |
-|---|---|---|
-| OPP-001 through OPP-008 | S042 harness + pptl + patterns P-01 through P-08 | ✅ DONE |
+| ID | Item | Owner | Notes |
+|---|---|---|---|
+| Q-BACKLOG-001 | Device-side checkpoint / GPU KV-cache persistence (Concordia-style) | Ender | Deep infra; defer until Q-NEXT-001 stable |
+| Q-BACKLOG-002 | Multi-agent parallel Saga with distributed compensator ordering | Amethyst | Complex; requires Q-NEXT-001 baseline |
+| Q-BACKLOG-003 | Semantic rollback attack red-team exercise | Ender+DemiJoule | Schedule after P-DURABLE-001 implementation |
 
 ---
 
-*COLLEEN detects → Amethyst implements → queue is truth of record*
+*Amethyst is the queue owner. Add items via PR or direct commit with `[queue]` in the message.*
