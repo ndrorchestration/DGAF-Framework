@@ -1,82 +1,64 @@
-# CO_ORCH_QUEUE.md — Co-Orchestration Queue
+# CO_ORCH_QUEUE.md — Improvement Opportunity Queue
 
-**Maintained by:** Agent Amethyst (governance) · Agent COLLEEN (operational)  
-**Last flushed:** 2026-06-16T04:47:00Z · Sweep ID: SWEEP-2026-06-16-MCO-001  
-**Last updated:** 2026-06-26T03:25:00Z · Entry: Q-2026-06-008 (pattern KPI baseline + first workflow run)  
-**Authorization:** Ender-direct · DGAF AXIS FULL  
-
----
-
-## Queue Status: ACTIVE ✅
-
-Q-2026-06-008 added per S072 pattern registration session (2026-06-26). All prior items carry forward unchanged.
+> **Authority:** COLLEEN (detect) × Amethyst (implement)
+> **Queue type:** Append-only. Completed entries archived, never deleted.
+> **Last updated:** 2026-06-26 | Cycle 4 CLOSED → Cycle 5 OPEN
 
 ---
 
-## Active Queue Items
+## Cycle 5 — OPEN (seeded 2026-06-26)
 
-| QID | Priority | Item | Assigned | Status | Notes |
+Cycle 5 OPPs are derived from `docs/RD_GAPS.md`. Each OPP maps to a gap closure action.
+
+| OPP-ID | Source Gap | Action | Owner | Status | Priority |
 |---|---|---|---|---|---|
-| Q-2026-06-001 | HIGH | Resolve CROSS_REF stale links (FLAG-001) | Amethyst | OPEN | 3 links to audit |
-| Q-2026-06-002 | MEDIUM | Add PULL_REQUEST_TEMPLATE to .github (FLAG-003) | COLLEEN | QUEUED | Needs Ender approval on template content |
-| Q-2026-06-003 | MEDIUM | CONTRIBUTING.md gap sweep — 7 repos missing (FLAG-005) | COLLEEN | QUEUED | Batch push pending |
-| Q-2026-06-004 | MEDIUM | ENSEMBLE_ROSTER.md COLLEEN 2026 update (FLAG-002) | COLLEEN | OPEN | Update capability record |
-| Q-2026-06-005 | LOW | Verify gold-star-qa-framework archive intent (FLAG-004) | Amethyst | OPEN | Confirm with Ender |
-| Q-2026-06-006 | LOW | SWEEP-MCO-002 pre-planning | Amethyst + COLLEEN | PENDING | Trigger on FLAG resolution |
-| Q-2026-06-007 | MEDIUM | Ecosystem scan → architecture decision + next experiment | Amethyst | TODO | See SWEEP_LOG S069-ECO-001; decision required: Approach 1/2/3; next step = Apogee routing optimizer OR Reciprocity risk classifier |
-| Q-2026-06-008 | HIGH | First workflow run with pattern manifest → populate KPI baseline in PATTERN_REGISTRY_v2.md | Amethyst + COLLEEN | TODO | Use episode schema in registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json; candidate workflow: config-change + notify flow; requires Ender to nominate target workflow |
+| OPP-C5-001 | GAP-001 | Wire DemiJoule RAG to production Sentinel-Phi pipeline; re-benchmark hallucination detection ≥96% | DemiJoule + Amethyst | 🔴 OPEN | HIGH |
+| OPP-C5-002 | GAP-002 | Design 6–8 RAG collections (canon, active-context, governance-policy, architecture-patterns, evaluations, compliance); wire COLLEEN as query authority | COLLEEN + Reson | 🔴 OPEN | HIGH |
+| OPP-C5-003 | GAP-003 | Build Saga fault injection test suite: transient tool failures, semantic failures, mid-workflow restarts; validate 4 failure modes | Amethyst + pptl | 🔴 OPEN | MEDIUM |
+| OPP-C5-004 | GAP-004 | Wire HITL durable queue to Temporal signal / LangGraph interrupt; define SLA + escalation; test deadlock scenario | Reson + Amethyst | 🔴 OPEN | MEDIUM |
+| OPP-C5-005 | GAP-005 | Instrument semantic quality metrics in Herald trace schema; breaker opens on 3 schema failures or 5 near-identical iterations | Herald + Sentinel-Phi | 🔴 OPEN | MEDIUM |
+| OPP-C5-006 | GAP-006 | Formalize Coherent Agency spec: 4 subsystems (identity, policy, adaptive learning, ethical constraint); Apogee Lens review | Amethyst + COLLEEN | 🔴 OPEN | LOW |
 
 ---
 
-## Q-2026-06-008 Detail
+## Cycle 4 — CLOSED (2026-06-26)
 
-**Trigger:** S072 pattern registration — all 5 resilience patterns (P-SAGA-001 through P-CB-001) and co-orch contract v1 committed.  
-**Scope:** Select one real or representative workflow; run it with a full pattern manifest; record the episode; update KPI table in PATTERN_REGISTRY_v2.md.  
-
-**Candidate workflows:**
-- Config-change + notify stakeholders (tests Saga + Atomix + HITL)
-- Research report + pattern update (tests Durable + PlanExecuteInspectReplan)
-- Agent drift simulation (Q-S069-DRIFT-SIM — already queued)
-
-**Pattern bundle recommendation:** `high_risk_state_mutation` for config+notify; `medium_risk_workflow` for research+pattern.  
-**Next step:** Ender nominates target workflow → Amethyst produces pattern manifest → COLLEEN archives episode record.  
-**Status:** TODO — awaiting Ender direction.
-
----
-
-## Q-2026-06-007 Detail
-
-**Trigger:** Ender-directed ecosystem scan session (2026-06-22, ~19:25 EDT).  
-**Research completed:** Agent Amethyst via Perplexity.  
-**Architecture options identified:**
-1. DGAF as governance mesh above all platforms (Approach 1)
-2. Opinionated stack — curated to 1–2 platforms (LangGraph + Vertex) (Approach 2)
-3. Vertical-first, EU AI Act high-risk domain anchor (Approach 3)
-
-**Decision required from Ender:** Which approach + which next artifact.  
-**Status:** TODO — awaiting Ender direction.
+| OPP-ID | Action | Status | Commit |
+|---|---|---|---|
+| OPP-C4-001 | Create P-SAGA-001, P-TX-001, P-COMP-001, P-DURABLE-001, P-CB-001 | ✅ DONE | 434cc9a6 |
+| OPP-C4-002 | Create PATTERN_REGISTRY_v2.md + AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json | ✅ DONE | 434cc9a6 |
+| OPP-C4-003 | Update CO_ORCH_PROTOCOL.md → v2.0.0 | ✅ DONE | 434cc9a6 |
+| OPP-C4-004 | Create SWEEP_LOG/SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch.md | ✅ DONE | 434cc9a6 |
+| OPP-C4-005 | Create BOOTSTRAP.md | ✅ DONE | 0e8f84d9 |
+| OPP-C4-006 | Create docs/TEAM_WIKI.md | ✅ DONE | 0e8f84d9 |
+| OPP-C4-007 | Create docs/RD_GAPS.md (6 gaps) | ✅ DONE | 0e8f84d9 |
+| OPP-C4-008 | Create SWEEP_LOG/SWEEP_2026-06-26_Saga-HITL-Bootstrap-WikiGapClose.md | ✅ DONE | 0e8f84d9 |
+| OPP-C4-009 | Update CHANGELOG.md + SESSION_ANCHOR.md + CO_ORCH_QUEUE.md | ✅ DONE | this commit |
 
 ---
 
-## Resolved Items (This Sweep)
+## Cycle 3 — CLOSED (2026-06-01)
 
-| QID | Item | Resolution | Resolved By |
-|------|------|------------|-------------|
-| Q-PREV-001 | SWEEP_LOG root file → index pointer | ✅ SWEEP_LOG/ dir established | Amethyst + COLLEEN |
-| Q-PREV-002 | AGENT_MANIFEST COLLEEN instantiation | ✅ v2 issued | Amethyst |
-| Q-PREV-003 | Public repo governance headers | ✅ Applied Wave 2 | COLLEEN |
-| Q-PREV-004 | Private repo sweep attribution | ✅ Applied Wave 3 | Amethyst |
-| Q-PREV-005 | Meta-co-orchestration sweep record | ✅ This file + SWEEP_LOG entry | Both |
+| OPP-ID | Action | Status |
+|---|---|---|
+| OPP-C3-Q-01 through Q-11 | Cross-repo coherence sweep findings (11 items) | ✅ DONE |
 
 ---
 
-## Queue Protocol
+## Cycle 2 — CLOSED (2026-06-01)
 
-- Items added by: Ender (direct), Amethyst (governance trigger), COLLEEN (operational trigger)
-- Items resolved by: executing agent, confirmed in SWEEP_LOG
-- Items escalated to FLAGS when resolution requires Ender decision
-- Queue flushed at start of each sweep; resolved items archived in sweep record
+| OPP-ID | Action | Status |
+|---|---|---|
+| OPP-C2-001 through C2-008 | S043 + EvidenceVerifier + constitutional cognition | ✅ DONE |
 
 ---
 
-*Agent Amethyst · Agent COLLEEN · DGAF-Framework*
+## Cycle 1 — CLOSED (2026-05-27)
+
+| OPP-ID | Action | Status |
+|---|---|---|
+| OPP-001 through OPP-008 | S042 harness + pptl + patterns P-01 through P-08 | ✅ DONE |
+
+---
+
+*COLLEEN detects → Amethyst implements → queue is truth of record*
