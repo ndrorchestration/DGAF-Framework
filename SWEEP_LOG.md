@@ -9,6 +9,64 @@ This file records every governance QA sweep: gaps found, resolutions applied, an
 
 ---
 
+## Sweep — S069-VERCEL-002 / aoga-dashboard Carry-Forward Closure (2026-06-26 04:24 EDT)
+
+### Scope
+
+Targeted follow-up to S069-VERCEL-001. Carry-forward item: "Confirm `aoga-dashboard` deployment target and trigger fresh deploy." Triggered by Ender directive — "Fix the aoga-dashboard deployment next" → "Yes close it out in the logs."
+
+### Resolution
+
+Carry-forward was based on stale project-list data from S069-VERCEL-001 audit. Full deployment lookup via Vercel MCP confirmed:
+
+| Field | Value |
+|-------|-------|
+| **State** | `READY` (production) ✅ |
+| **URL** | `aoga-dashboard.vercel.app` |
+| **Last deploy** | `chore: tag v1.2.0 release marker [Amethyst]` (commit `d9040f2e`) |
+| **Source repo** | `ndrorchestration/aoga-dashboard` (private, dedicated repo) |
+| **Framework** | `null` (auto-detected) |
+| **Runtime** | Node.js lambdas, region `iad1` |
+
+**Root cause of false gap:** S069-VERCEL-001 pulled data from the Vercel project list endpoint which returned no deployment entries for `aoga-dashboard` at that moment. Direct deployment lookup confirmed READY state. The project has a **separate dedicated repo** — it is not sourced from `dashboard/` subdirectory of DGAF-Framework.
+
+### New Flag Registered
+
+| Flag | Severity | Detail |
+|------|----------|--------|
+| Node runtime mismatch | LOW | `lambdaRuntimeStats: nodejs12` vs `project.nodeVersion: 24.x`. Build-time and runtime environment diverge. Recommend adding `"engines": {"node": ">=20"}` to `aoga-dashboard/package.json` and redeploying to force alignment. |
+
+### Carry-Forward Table Update (S069-VERCEL-001 → Current)
+
+| Item | Priority | Status |
+|------|----------|--------|
+| ~~Confirm `aoga-dashboard` deployment target and trigger fresh deploy~~ | ~~HIGH~~ | ✅ **CLOSED** — Already READY at v1.2.0. Separate repo confirmed. |
+| Confirm `phiknightverticalcorridor` deployment state | HIGH | Open |
+| Review + resolve Dependabot PR #1 (Next 14→15 breaking changes) | MEDIUM | Open |
+| Update `ndrorchestration.vercel.app` landing content | MEDIUM | Open |
+| Verify Needle Partner Directory profile link active | MEDIUM | Open |
+| Fix Node runtime mismatch in `aoga-dashboard` (`nodejs12` vs `24.x`) | LOW | Open |
+
+### Files Modified This Entry
+
+| File | Change |
+|------|--------|
+| `SWEEP_LOG.md` | S069-VERCEL-002 appended (this entry) |
+
+### Invariant Check
+
+- [x] Zero open BLGs at close
+- [x] Single authority chain
+- [x] Append-only log
+- [x] Observable invariants only
+- [x] Procluding premise fires before routing
+
+### Sweep Verdict
+
+**PASS (CLOSURE)** — aoga-dashboard carry-forward closed. False gap traced to stale project-list data. READY at v1.2.0 confirmed. One new low-severity flag (Node runtime mismatch) registered. 4 medium/1 low carry-forwards remain open.
+
+---
+
 ## Sweep — S069-VERCEL-001 / Vercel Infrastructure Audit + Needle Cross-Reference (2026-06-26 04:17 EDT)
 
 ### Scope
@@ -68,7 +126,7 @@ Note: Needle template drops are inside Needle's infrastructure — not caused by
 
 | Item | Owner | Priority | Status |
 |------|-------|----------|--------|
-| Confirm `aoga-dashboard` deployment target (rootDirectory = `dashboard`?) and trigger fresh deploy | Ender | HIGH | Open |
+| Confirm `aoga-dashboard` deployment target (rootDirectory = `dashboard`?) and trigger fresh deploy | Ender | HIGH | ✅ CLOSED S069-VERCEL-002 |
 | Confirm `phiknightverticalcorridor` deployment state via Vercel inspector | Ender | HIGH | Open |
 | Review + resolve Dependabot PR #1 (Next 14→15 has breaking changes — merge or dismiss) | Ender | MEDIUM | Open |
 | Update `ndrorchestration.vercel.app` landing content: AOGA dashboard, Hensel Formalism v1.0, Entrepreneur Hub Phase 0 | Amethyst | MEDIUM | Open |
