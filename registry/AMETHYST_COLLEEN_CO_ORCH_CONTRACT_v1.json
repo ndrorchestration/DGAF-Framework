@@ -1,0 +1,71 @@
+{
+  "co_orch_contract": {
+    "version": "1.0.0",
+    "registered": "2026-06-26",
+    "authority": "Ender (human final arbiter)",
+    "roles": {
+      "Amethyst": {
+        "type": "meta_orchestrator",
+        "lenses": ["QA", "governance"],
+        "responsibilities": [
+          "Select 2-5 patterns from pattern_registry for each new workflow",
+          "Configure agent graph, Saga boundaries, tool boundary semantics, circuit breakers, and HITL",
+          "Run pre-flight pattern compliance check with Sentinel-Phi before execution",
+          "Sign off on orchestration spec before execution"
+        ]
+      },
+      "COLLEEN": {
+        "type": "institutional_memory",
+        "lenses": ["evaluation", "archive"],
+        "responsibilities": [
+          "Maintain pattern_registry with provenance and KPIs",
+          "Store per-run manifests: selected_patterns, agents, tools, effects, checkpoints",
+          "Compute pattern KPIs: success_rate, rollback_freq, HITL_rate, incidents",
+          "Surface prior episodes and KPIs to Amethyst at workflow design time"
+        ]
+      }
+    },
+    "joint_principles": {
+      "patterns_first": "No new workflow executes without an explicit pattern manifest",
+      "strict_by_default": "Safety-critical flows use high_risk_state_mutation bundle unless explicitly downgraded",
+      "episodic_learning": "Every run updates COLLEEN pattern KPIs; Amethyst reads them before reuse",
+      "human_final": "High-risk irreversible changes require Ender approval regardless of pattern pass",
+      "co_author_not_co_process": "Amethyst and COLLEEN co-author with Ender; they are not autonomous actors"
+    },
+    "default_pattern_bundles": {
+      "low_risk_retrieval_flow": [
+        "PlanExecuteInspectReplan",
+        "P-DURABLE-001",
+        "TieredContextAgenticMemory"
+      ],
+      "medium_risk_workflow": [
+        "P-SAGA-001",
+        "P-DURABLE-001",
+        "P-CB-001"
+      ],
+      "high_risk_state_mutation": [
+        "P-SAGA-001",
+        "P-TX-001",
+        "P-COMP-001",
+        "P-DURABLE-001",
+        "P-CB-001",
+        "PolicyAwareToolGuards"
+      ]
+    },
+    "episode_schema": {
+      "run_id": "uuid",
+      "timestamp": "ISO8601",
+      "workflow_name": "string",
+      "bundle_used": "string",
+      "patterns_selected": ["pattern_id"],
+      "agents_involved": ["agent_name"],
+      "tools_invoked": ["tool_name"],
+      "effect_log_ref": "path_to_effect_log",
+      "checkpoint_ref": "path_to_checkpoint",
+      "outcome": "success | partial_rollback | full_rollback | hitl_paused | aborted",
+      "breaker_trips": "int",
+      "hitl_events": "int",
+      "notes": "string"
+    }
+  }
+}

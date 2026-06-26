@@ -1,131 +1,76 @@
-# Meta-Co-Orchestration Protocol
+# CO_ORCH_PROTOCOL.md
 
-> **Governed by:** DGAF-Framework · Apache 2.0  
-> **Agents:** Agent Amethyst (Tier-0) + COLLEEN (Tier-1)  
-> **Sweep ID:** S-2026-06-16-PROTOCOL  
-> **Last Updated:** 2026-06-16T04:47:00Z  
-> **Status:** ✅ ACTIVE
+**Version:** 2.0.0  
+**Updated:** 2026-06-26  
+**Owner:** Amethyst (meta-orchestrator) + COLLEEN (institutional memory)  
+**Authority:** Ender (human final arbiter)  
 
 ---
 
 ## Purpose
 
-This document defines the operational protocol for joint execution of governance, audit, and documentation quality sweeps by Agent Amethyst and COLLEEN operating in meta-co-orchestration mode.
+This document defines the operational protocol for Amethyst–COLLEEN co-orchestration. It governs how all multi-agent workflows are designed, logged, and reviewed within the DGAF-Framework.
 
 ---
 
-## Sweep Types
+## Guiding Principles
 
-### Type A — Governance Audit Sweep
-**Trigger:** Ender directive or 30-day automatic  
-**Lead:** Agent Amethyst  
-**Support:** COLLEEN (operational hygiene layer)  
-**Scope:** All repos — README quality, governance headers, DGAF compliance, pattern registry integrity  
-**Output:** SWEEP_LOG entry + per-repo issue if findings > 0  
-
-### Type B — Documentation Quality Sweep
-**Trigger:** Ender directive or new repo creation  
-**Lead:** COLLEEN  
-**Support:** Agent Amethyst (governance standards enforcement)  
-**Scope:** All file types — MD, JSON, TS, PY, JS, HTML — for header completeness, attribution, versioning  
-**Output:** Push updated files + SWEEP_LOG entry  
-
-### Type C — Cross-Repo Propagation Sweep
-**Trigger:** New DGAF pattern registered  
-**Lead:** Agent Amethyst  
-**Support:** COLLEEN  
-**Scope:** Propagate pattern to all applicable repos  
-**Output:** Multi-repo push + CROSS_REF.md update  
-
-### Type D — Operational Hygiene Sweep
-**Trigger:** COLLEEN schedule or Ender directive  
-**Lead:** COLLEEN  
-**Support:** Agent Amethyst (spot checks)  
-**Scope:** automation-scripts, career-positioning, .github, chat-archives  
-**Output:** Changelogs + versioned stamps + SWEEP_LOG entry  
-
-### Type E — Full Ecosystem Sweep (THIS SWEEP)
-**Trigger:** Ender "Execute them all at once" directive  
-**Lead:** Amethyst + COLLEEN jointly  
-**Scope:** All 24 repos — governance headers, documentation quality, AGENT_MANIFEST updates, SWEEP_LOG entries, CO_ORCH_QUEUE resolution  
-**Output:** Bulk push to all priority repos + master SWEEP_LOG entry  
+1. **Patterns first.** No workflow executes without an explicit pattern manifest from `registry/PATTERN_REGISTRY_v2.md`.
+2. **Strict by default.** Safety-critical flows use the `high_risk_state_mutation` bundle unless Ender explicitly approves a downgrade.
+3. **Episodic learning.** Every run produces a COLLEEN episode record that feeds back into pattern KPIs.
+4. **Human final.** Irreversible actions with high risk require Ender approval regardless of pattern pass status.
+5. **Co-author, not co-process.** Amethyst and COLLEEN co-author with Ender; they are not autonomous actors.
 
 ---
 
-## Commit Signature Standard
+## Workflow Execution Protocol
 
-All co-orchestrated commits must use:
+### Step 1 — Context Rehydration
+Amethyst reads prior episodes and pattern KPIs from COLLEEN's archive before designing any new workflow.
 
-```
-feat(sweep): <description> — Sweep ID: <ID>
+### Step 2 — Pattern Selection
+Amethyst selects a default bundle or explicit pattern list. COLLEEN surfaces relevant prior episodes and flags any patterns with elevated failure rates.
 
-Co-authored-by: Agent-Amethyst <amethyst@ndrorchestration>
-Co-authored-by: COLLEEN <colleen@ndrorchestration>
-```
+### Step 3 — Pattern Manifest
+Amethyst produces a pattern manifest (JSON, schema in `registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json`) and submits to Sentinel-Phi for compliance check.
 
-Single-agent commits use the responsible agent's tag only.
+### Step 4 — Compliance Check
+Sentinel-Phi validates:
+- All compensable steps have declared compensators.
+- All irreversible tools are in HITL high-risk list or are last in sequence.
+- Checkpoint and effect log targets are defined.
 
----
+### Step 5 — Execution
+Amethyst orchestrates the workflow. Effect receipts and super-step checkpoints are written per P-TX-001 and P-DURABLE-001.
 
-## Documentation Quality Standards (Non-Negotiable)
+### Step 6 — Episode Archival
+COLLEEN writes the episode record (outcome, breaker trips, HITL events, notes) and updates pattern KPIs.
 
-Every file pushed by either agent must meet:
-
-### For Markdown files
-```markdown
-> **Governed by:** [framework] · [license]  
-> **Agent:** [Amethyst | COLLEEN | Both]  
-> **Sweep ID:** [S-YYYY-MM-DD-TYPE]  
-> **Last Updated:** [ISO 8601 timestamp]  
-```
-
-### For code files (Python, TypeScript, JavaScript)
-```
-# Governed by: DGAF-Framework
-# Agent: [Amethyst | COLLEEN]
-# Sweep ID: [S-YYYY-MM-DD-TYPE]
-# Last Updated: [ISO 8601]
-```
-
-### For JSON/config files
-```json
-{
-  "_governance": {
-    "governed_by": "DGAF-Framework",
-    "agent": "[Amethyst | COLLEEN]",
-    "sweep_id": "[S-YYYY-MM-DD-TYPE]",
-    "last_updated": "[ISO 8601]"
-  }
-}
-```
+### Step 7 — Ender Review (on-demand or post-run)
+Ender reviews any run flagged with `partial_rollback`, `hitl_paused`, or `aborted` outcomes.
 
 ---
 
-## Audit Findings Table Format
+## Triad Structure
 
-All audit outputs must use this table:
-
-| Repo | File/Area | Finding | Severity | Status | Action |
-|---|---|---|---|---|---|
-| `repo-name` | `path/file` | Description | HIGH/MED/LOW | ✅ PASS / ⚠️ WARN / ❌ FAIL | Applied / Pending |
-
----
-
-## Escalation Path
-
-```
-Level 1: COLLEEN handles → operational/workflow issues
-Level 2: Amethyst handles → governance/architecture issues  
-Level 3: Joint session → systemic issues requiring both
-Level 4: Ender override → any issue requiring human judgment
-```
+| Role | Agent | Function |
+|---|---|---|
+| Executive / QA | Amethyst | Pattern selection, workflow wiring, pre-flight checks |
+| Legislative / Archive | COLLEEN | Pattern registry, episode records, KPI tracking |
+| Judicial / Constraint | Sentinel-Phi | Tool classification, compensator enforcement, gate checks |
+| Human Arbiter | Ender | Final authority on high-risk actions and pattern changes |
 
 ---
 
-## Active Sweep Queue
+## Co-Orch Contract Reference
 
-See [CO_ORCH_QUEUE.md](./CO_ORCH_QUEUE.md) for current queue state.
+See `registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json` for the full dyad contract including episode schema and bundle definitions.
 
 ---
 
-*Protocol version: 1.0.0 · Established 2026-06-16 · Both agents co-signed*
+## Change History
+
+| Version | Date | Change |
+|---|---|---|
+| 1.0.0 | 2026-05-27 | Initial co-orch protocol |
+| 2.0.0 | 2026-06-26 | Added Saga/Atomix/HITL patterns, dyad contract v1, triad structure, episode schema |
