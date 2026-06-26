@@ -10,12 +10,12 @@
 | Field | Value |
 |---|---|
 | **Date** | 2026-06-26 |
-| **Session ID** | SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch |
+| **Session ID** | S069-VERCEL-001 |
 | **Primary Host** | Amethyst |
 | **Co-Orchestrator** | COLLEEN |
 | **Governance Layer** | Sentinel-Phi / Ender |
-| **Commit** | `434cc9a6` (patterns + registry + protocol push) |
-| **Session Wrap Commit** | session-wrap push — CHANGELOG, SESSION_ANCHOR, CO_ORCH_QUEUE |
+| **Session Type** | Infrastructure Audit + Log Update |
+| **Prior Session** | SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch (patterns push) |
 
 ---
 
@@ -40,17 +40,28 @@ Full registry: [`registry/PATTERN_REGISTRY_v2.md`](registry/PATTERN_REGISTRY_v2.
 | `registry/PATTERN_REGISTRY_v2.md` | Master pattern index + KPI seed table |
 | `registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json` | Dyad contract, episode schema |
 | `CO_ORCH_QUEUE.md` | Active work queue — what is pending next session |
-| `SWEEP_LOG/SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch.md` | Last session full log |
+| `SWEEP_LOG/SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch.md` | Patterns session full log |
 | `ENSEMBLE_ROSTER.md` | Agent manifest — roles, responsibilities |
 
 ---
 
 ## Open Items Carried Forward
 
-1. **KPI baseline population** — First real workflow run should populate actuals against KPI seed table in `PATTERN_REGISTRY_v2.md`
-2. **Fault injection campaign** — Design and run the 3-scenario fault injection test (transient failure, semantic failure, mid-workflow restart) on the reference Saga+Tx+Checkpoint+Breaker+HITL flow
-3. **CROSS_REF.md update** — New P-* pattern IDs should be cross-referenced against existing DGAF conceptual map
-4. **Sentinel-Phi tool classification config** — Formalize `effect_classes` from `P-COMP-001` into Sentinel-Phi's enforcement config
+### From S069-VERCEL-001 (Infrastructure Audit — 2026-06-26)
+
+1. **aoga-dashboard deployment** — Zero successful deploys since project creation (May 25). Confirm rootDirectory = `dashboard` in Vercel settings and trigger fresh deploy. Owner: Ender.
+2. **phiknightverticalcorridor state** — Deployment status unconfirmed. Verify via Vercel inspector. Owner: Ender.
+3. **Dependabot PR #1** — Next.js 14→15 upgrade attempt. Preview failed. Breaking changes exist. Review + merge or dismiss. Owner: Ender. Priority: MEDIUM.
+4. **ndrorchestration.vercel.app content refresh** — Content stale since Jun 9. Should reflect AOGA dashboard, Hensel Formalism v1.0, Entrepreneur Hub Phase 0 close. Owner: Amethyst. Priority: MEDIUM.
+5. **Needle Partner Directory link audit** — Confirm ndrorchestration.vercel.app link in Needle profile is active post-recovery. Owner: Ender. Priority: MEDIUM.
+
+### From Prior Sessions (Still Open)
+
+6. **KPI baseline population** — First real workflow run should populate actuals against KPI seed table in `PATTERN_REGISTRY_v2.md`
+7. **Fault injection campaign** — Design and run the 3-scenario fault injection test (transient failure, semantic failure, mid-workflow restart) on the reference Saga+Tx+Checkpoint+Breaker+HITL flow
+8. **CROSS_REF.md update** — New P-* pattern IDs should be cross-referenced against existing DGAF conceptual map
+9. **Sentinel-Phi tool classification config** — Formalize `effect_classes` from `P-COMP-001` into Sentinel-Phi's enforcement config
+10. **Architecture decision** — Approach 1 / 2 / 3 (see S069-ECO-001 in SWEEP_LOG.md). Owner: Ender. Priority: HIGH.
 
 ---
 
