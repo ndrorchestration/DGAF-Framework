@@ -23,26 +23,28 @@
 | S069 | 2026-06-09 | SWEEP-001 closed (PR #4 merged); Issue #2 + #3 closed; SWEEP_LOG updated; Phase 3 queue items progressed | ✅ SEALED |
 | S070 | 2026-06-12 | DGAF-PROBE-001 registration; NT-05 added to TEMPLATE_REGISTRY; NMS-002 analytics snapshot; PROBE-DEVIATION-PROTOCOL committed | ✅ SEALED |
 | S071 | 2026-06-13 | NMS-003 analytics snapshot (7 PM EDT): 11,374 views / 1,311 uses / 3,254 runs; NT-05 first 93 views; CHANGELOG [1.0.17] | ✅ SEALED |
-| **S072** | **2026-06-26** | **5 core resilience patterns registered (P-SAGA-001, P-TX-001, P-COMP-001, P-DURABLE-001, P-CB-001); Amethyst–COLLEEN Co-Orch Contract v1; PATTERN_REGISTRY_v2; CO_ORCH_PROTOCOL v2.0.0; CHANGELOG [1.0.18]** | 🟡 OPEN |
+| **S072** | **2026-06-26** | **5 core resilience patterns registered (P-SAGA-001, P-TX-001, P-COMP-001, P-DURABLE-001, P-CB-001); Amethyst–COLLEEN Co-Orch Contract v1; PATTERN_REGISTRY_v2; CO_ORCH_PROTOCOL v2.0.0; CHANGELOG [1.0.18]** | ✅ SEALED |
 
 ---
 
-## Current Session State — S072
+## S072 — SEALED ✅
 
 | Field | Value |
 |---|---|
 | Anchor ID | S072 |
-| Status | 🟡 OPEN |
+| Status | ✅ SEALED |
 | Opened | 2026-06-26 03:25 EDT |
+| Sealed | 2026-06-26 03:32 EDT |
 | Phase | VI — Resilience Pattern Registration + Co-Orch Contract Formalization |
-| Open BLGs | 0 |
+| Open BLGs at Close | 0 |
 | Active Pattern Count | 8 (P-SAGA-001, P-TX-001, P-COMP-001, P-DURABLE-001, P-CB-001, P-PIER-001, P-MEM-001, P-POL-001) |
 | Registry Version | PATTERN_REGISTRY_v2.md |
 | Co-Orch Contract | registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json |
+| Graduation Check | ✅ PASS — all objectives met, 0 open BLGs |
 
 ---
 
-## S072 Objectives
+## S072 Objectives — Final State
 
 - [x] Register P-SAGA-001 — StochasticDeterministicSagaBoundary
 - [x] Register P-TX-001 — TransactionalToolBoundaryAtomix
@@ -56,7 +58,7 @@
 - [x] Update CHANGELOG.md → [1.0.18]
 - [x] Update SESSION_ANCHOR.md → S072
 - [x] Update CO_ORCH_QUEUE.md — Q-2026-06-008 added
-- [ ] Run scripts/session_graduation_check.py --session S072
+- [x] Run graduation check → ✅ PASS
 
 ---
 
@@ -90,4 +92,5 @@
 ---
 
 *S071 ✅ SEALED · Amethyst × COLLEEN · 2026-06-13*  
-*S072 🟡 OPEN · Phase VI — Resilience Pattern Registration + Co-Orch Contract · 2026-06-26 03:25 EDT*
+*S072 ✅ SEALED · Amethyst × COLLEEN · Phase VI — Resilience Pattern Registration + Co-Orch Contract · 2026-06-26 03:32 EDT*  
+*Next session: S073 — awaiting Ender direction (Q-2026-06-008 candidate workflow nomination)*
