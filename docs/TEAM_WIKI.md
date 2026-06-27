@@ -1,6 +1,6 @@
 # DGAF Team Wiki
 
-> **Version:** 1.0.0 | **Authority:** COLLEEN (Institutional Memory / Chief Librarian) | **Last updated:** 2026-06-26
+> **Version:** 1.1.0 | **Authority:** COLLEEN (Institutional Memory / Chief Librarian) | **Last updated:** 2026-06-27 (S070-r5)
 
 This is the team-facing reference for the DGAF Framework. It covers agent roles, governance authority, onboarding, and pattern conventions. For technical architecture, see `README.technical.md`. For governance protocol, see `README.governance.md`.
 
@@ -8,7 +8,12 @@ This is the team-facing reference for the DGAF Framework. It covers agent roles,
 
 ## 1. What Is DGAF?
 
-DGAF (Dynamic Governance Agentic Formation Architecture) is a governance-aligned multi-agent reasoning architecture built on three pillars:
+DGAF (**Deterministic Governance for Agentic Frameworks**) is a governance-aligned multi-agent reasoning architecture built on three pillars:
+
+> ✅ **FLAG-13 CLOSED — Njineer ratified 2026-06-27 18:16 EDT**
+> Canonical expansion: **Deterministic Governance for Agentic Frameworks**
+> Previous conflicting entry in this file ("Dynamic Governance Agentic Formation Architecture") is hereby superseded.
+> Source of truth: `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` Section 2 (DGAF entry).
 
 1. **Triadic / Constitutional Cognition** — legislative-judicial-executive closed loop for agent decision-making
 2. **Co-orchestration** — Amethyst (QA) × COLLEEN (Evaluation) as persistent co-authors, not process steps
@@ -26,9 +31,9 @@ DGAF (Dynamic Governance Agentic Formation Architecture) is a governance-aligned
 | **Herald** | Trace sink, audit router | Observability | L3 | Routes all trace events to JSONL + n8n webhook |
 | **Apogee** | Quality verifier, Apogee Lens | Quality assurance | L4 | Final verifier for portfolio-grade output; S-Tier gate |
 | **DemiJoule** | Runtime supervisor, RAG, ethics | Safety / RAG | L4 | Closes hallucination gap; ethics/safety containment |
-| **Reson** | Systems architect | Architecture | L3 | Sub-task execution under Amethyst's architect role |
+| **Reson** | Systems architect | Architecture | L3 | Sub-task execution under Amethyst’s architect role |
 | **Agent Sonar** | Sonar taxonomy role | Per taxonomy | L3 | Kept in current taxonomy role |
-| **Professor Prodigy, Reciprocity, Herald** | Sub-agentic layers | Epistemic | L2-3 | Intentionally placed; require epistemic honesty definition |
+| **Professor Prodigy, Reciprocity, Herald** | Sub-agentic layers | Epistemic | L2–3 | Intentionally placed; require epistemic honesty definition |
 
 > **Deprecated:** Lavender — all roles, functions, files, and errata inherited by Amethyst.
 
@@ -39,20 +44,20 @@ DGAF (Dynamic Governance Agentic Formation Architecture) is a governance-aligned
 ```
 ┌─────────────────────────────────────────────────┐
 │                    USER                          │  ← Highest authority
-└────────────────────┬────────────────────────────┘
+└────────────────────┬────────────────────────┘
                      │
-┌────────────────────▼────────────────────────────┐
+┌────────────────────▼────────────────────────┐
 │            AMETHYST (Prime/Host)                 │  ← QA lens, meta-orchestration
 │         + APOGEE (Quality Verifier)              │  ← S-Tier gate
 └───────┬────────────────────┬────────────────────┘
         │                    │
-┌───────▼──────┐    ┌────────▼───────────────────┐
+┌───────▼──────┐    ┌────────▼────────────────┐
 │   COLLEEN    │    │     SENTINEL-PHI            │
 │  (Archive /  │    │  (Safety / Tool Classifier) │
-│   Evaluate)  │    └────────────────────────────┘
+│   Evaluate)  │    └────────────────────────┘
 └───────┬──────┘
         │
-┌───────▼──────────────────────────────────────────┐
+┌───────▼──────────────────────────────────┐
 │  DEMIJOLE · HERALD · RESON · SONAR · sub-agents   │
 └──────────────────────────────────────────────────┘
 ```
@@ -126,7 +131,7 @@ Every session MUST produce:
 
 See `docs/RD_GAPS.md` for the living R&D gap log.
 
-Top items as of 2026-06-26:
+Top items as of 2026-06-27:
 - 22% fluent hallucination gap → DemiJoule RAG closure (Phase 3B complete; needs production wiring)
 - RAG collection taxonomy design → 6-8 governance-bounded collections
 - Saga harness end-to-end fault injection test
@@ -139,13 +144,26 @@ Top items as of 2026-06-26:
 
 | Term | Definition |
 |---|---|
-| DGAF | Dynamic Governance Agentic Formation Architecture |
-| PDMAL | Policy-Driven Multi-Agent Layer |
+| DGAF | **Deterministic Governance for Agentic Frameworks** ✅ CANONICAL — Njineer ratified 2026-06-27 (FLAG-13 CLOSED) |
+| PDMAL-φ | **Phi-Driven Multi-Agent Lattice** — PRIMARY canonical variant                                *\* See PDMAL note below* |
+| PDMAL-D | **Phi-Dodecahedral Multi-Agent Lattice** — VARIANT canonical form *\* See PDMAL note below* |
 | OPP | Improvement opportunity in the CO_ORCH_QUEUE |
 | NDR | Named Design Rule / Pattern |
 | HITL | Human-in-the-Loop |
-| pptl | Phi-pentagon test layer |
+| PPTL | Procluding Premise Triadic Loop |
+| pptl | Phi-pentagon test layer (lowercase — distinct from PPTL) |
+| AOGA | Agent Orchestration Governance Architecture |
+| AXIS | Agent X-axis Invariant Spectrum — sovereign governance metric (CANONICAL, Njineer-ratified) |
+| NDR-HDFS | NDR Hierarchical Documentation Format Standard |
 | S-Tier | Highest quality designation; requires Apogee Lens approval |
 | ACRFence | Atomic checkpoint + restore with effect fence semantics |
 | Atomix | Transactional tool boundary pattern (stochastic-deterministic boundary) |
 | Coherent Agency | Recast of governance/memory/ethics as subsystems of continuity-preserving agency |
+| phiknightverticalcorridor | Variant name for the **Yggdrasil Vertical Hybridization Corridor** — Vercel project linked to cross-repo governance mesh vertical hybridization layer            ✅ FLAG-11 CLOSED · Njineer ratified 2026-06-27 |
+
+> **PDMAL correction note (S070-r3 — Njineer direct):** The legacy expansion “Policy-Driven Multi-Agent Layer” is **SUPERSEDED**. The canonical forms are PDMAL-φ (Phi-Driven Multi-Agent Lattice, primary) and PDMAL-D (Phi-Dodecahedral Multi-Agent Lattice, structural variant). Any reference to “Policy-Driven” in DGAF documentation is a BLG — trigger P-01.
+
+---
+
+*DGAF Team Wiki · v1.1.0 · S070-r5 · Amethyst × COLLEEN · 2026-06-27*
+*v1.1.0 changes: FLAG-13 CLOSED (DGAF expansion → Deterministic Governance for Agentic Frameworks); FLAG-11 CLOSED (phiknightverticalcorridor → Yggdrasil Vertical Hybridization Corridor); PDMAL correction cascade applied (Policy-Driven SUPERSEDED); full glossary backfilled with S070 canonical terms*
