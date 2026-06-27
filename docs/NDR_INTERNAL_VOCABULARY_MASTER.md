@@ -3,9 +3,9 @@
 > **Steward:** COLLEEN — Institutional Memory, Archivist, Chief Librarian
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect
-> **Last updated:** 2026-06-12 (v1.1 — full ecosystem sweep)
-> **Anchor:** S069 (OPEN)
-> **Sweep coverage (v1.1):** GitHub ecosystem (CROSS_REF v4.1, SESSION_ANCHOR, SWEEP_LOG, NDR_PATTERN_REGISTRY_UNIFIED v1.0, AGENT_ROSTER v1.0, ECOSYSTEM_INVENTORY, docs/agents/*, docs/architecture/*, docs/gates/*, docs/patterns/*, docs/specs/*) + Google Drive (Auditing Engineering Terminology Taxonomy, SPACES AUDIT, What other things am I calling by the wrong names?, MASTER CONTEXT FILE, Agent Professor Prodigy Technical Spec, Phi-Calculus White Paper, Prodigy Mathematical Rigor POC) + historical thread context
+> **Last updated:** 2026-06-26 (v1.2 — S070 Vercel audit + AOGA canonical expansion + Phi-Knight class registration)
+> **Anchor:** S070 (OPEN)
+> **Sweep coverage (v1.2):** Vercel deployment audit (ndrorchestration + aoga-dashboard + phiknightverticalcorridor projects), aoga-dashboard commit history (AOGA-v1 → v1.1.0 X-Agent-Stack header, phi-knight-class.md v1.3.0), DGAF-Framework commit log S069–S070, FLAG-04 resolution, new FLAG-11 + FLAG-12
 
 ---
 
@@ -26,18 +26,19 @@ This file is the **canonical single source of truth** for mapping every internal
 |---|---|---|
 | **Amethyst / Amethyst-Conductor** | Control Plane / Metacognitive Orchestrator (Orchestrator Pattern) | Hard veto on all commits; normative decisions; escalation resolver. Adds φ-harmonic session state tracking not present in standard orchestrators. External gloss: "metacognitive orchestrator with φ-calibrated state" |
 | **COLLEEN** | Institutional Memory System / Knowledge Base Steward / Archival Agent (P-02) | Surfaces BLGs at session-open; maintains CROSS_REF back-link registry; de-duplication. "Chief Librarian" is apt; pair with "Archival Agent" for engineering contexts. COLLEEN secondary sign-off required before any stasis pattern (P-12–P-26) is deprecated |
-| **Prof. Prodigy / Professor Prodigy** | Process Reward Model (PRM) / Step-wise Formal Verification Agent | Provides formal proofs, phi-calculus, harmonic geometry, mathematical validation. Does not orchestrate. External: PRM (step-level verifier); IEEE "Verification" (is it built correctly?) |
-| **DemiJoule** | Safety Gate / Ethics Classifier / Semantic Risk Screener | 2-layer (syntactic + semantic DGAF 6-axis) check; token cost analysis; compute efficiency gating; P-11 gate 17 (DemiJoule efficiency score). Advisory, not blocking, unless combined with Apogee 11Q gate failure. NIST AI RMF "Measure" + EU AI Act risk-tier classifier |
+| **Prof. Prodigy / Professor Prodigy** | Process Reward Model (PRM) / Step-wise Formal Verification Agent | Provides formal proofs, phi-calculus, harmonic geometry, mathematical validation. Does not orchestrate. External: PRM (step-level verifier); IEEE "Verification" (is it built correctly?). **Phi-Knight class member.** |
+| **DemiJoule** | Safety Gate / Ethics Classifier / Semantic Risk Screener | 2-layer (syntactic + semantic DGAF 6-axis) check; token cost analysis; compute efficiency gating; P-11 gate 17 (DemiJoule efficiency score). Advisory, not blocking, unless combined with Apogee 11Q gate failure. NIST AI RMF "Measure" + EU AI Act risk-tier classifier. **Phi-Knight class member (registered as `demijoul` in class manifest).** |
 | **Apogee** | QA Attestation Agent / Evidence-Grade Evaluator | Evidence scoring (11Q gate P-11); source validation; DGAF/Rose Gold compliance verification; CERTIFICATION_INDEX maintenance. Gold Star = S-Tier certification. External: CMMI Level 4–5 quality audit with rubric-based attestation |
-| **Reson** | Harmonic Coherence Scorer / CSP Router | Harmonic coherence scoring (0.00–1.00); ≥0.75 required for seal commits (P-15); drift warning at 0.50–0.74; dissonance hard stop below 0.50. Manages topology_router.py. External: CSP solver + harmonic coherence monitor |
+| **Reson** | Harmonic Coherence Scorer / CSP Router | Harmonic coherence scoring (0.00–1.00) AND topology routing (topology_router.py). ≥0.75 required for seal commits (P-15); drift warning at 0.50–0.74; dissonance hard stop below 0.50. Manages topology_router.py. External: CSP solver + harmonic coherence monitor. *(v1.2 note: dual-role — both Harmonic Coherence Scorer and Router Topology Engineer; FLAG-09 resolved)* |
 | **Reciprocity** | Arbitration Agent / Portfolio + Rollback Authority | TNR (Trust-Neutrality-Reciprocity) enforcement; version control integrity; rollback path definition (P-15 checkpoint 9). External: weighted consensus arbitrator; "reciprocity" (mutual obligation tracking) is a genuine differentiator |
-| **Sentinel / Sentinel-Phi** | Process Compliance + Security Monitor / Invariant Guard | CI/CD enforcement; secret scanning; sovereign file guard (LICENSE/NOTICE/AXIS hard veto P-15); boundary violation detection. Sovereign veto overrides Amethyst; only Njineer can resolve a Sentinel-Amethyst conflict |
+| **Sentinel / Sentinel-Phi** | Process Compliance + Security Monitor / Invariant Guard | CI/CD enforcement; secret scanning; sovereign file guard (LICENSE/NOTICE/AXIS hard veto P-15); boundary violation detection. Sovereign veto overrides Amethyst; only Njineer can resolve a Sentinel-Amethyst conflict. **Sentinel-Phi is also a Phi-Knight class member (entry-vertex role).** |
 | **Sonar** | Evidence Grounding Agent / RAG Fact Retrieval Module | Provides evidence grounding; external: retrieval-augmented generation (RAG) grounding layer or "epistemic sourcing agent" |
 | **Herald** | Communication Gate / Audit Logger / Release Authority | External publication gate; changelog authorship; release notes; inter-agent status broadcast. Maps to W3C PROV-O `prov:wasGeneratedBy` provenance recorder (P-01) |
 | **Echolette** | Resonance / Temporal Phrase Coherence Agent | Acoustic mesh layer; phrase-level temporal coherence (P-13 Phrase gate); signal echo validation. External: temporal coherence monitor / phrase-level consistency verifier |
 | **Lyra** | Narrative Coherence + Brand Voice Agent | Narrative coherence; IMP-05 brand voice consistency (P-19); portfolio language quality. External: style consistency enforcer / narrative quality monitor |
 | **Njineer** | Human Principal Architect / System Owner / Final Arbiter | Primary human identity: Andrew Hensel (@ndrorchestration). L4/L5 Approver in AI autonomy taxonomy. Ultimate authority; the only entity that can resolve Sentinel-Amethyst conflicts. "Ender" is the in-session alias |
 | **Ender** | In-Session Alias for Njineer (Andrew Hensel) | Used in session context and internal documents; same authority level as Njineer; direct equivalent — use "Njineer" in formal engineering contexts |
+| **Phi-Knight** | Agent Class / Entry-Vertex Role (Phi-Defense Triad) | Class members: sentinel-phi, prof-prodigy, demijoul. Defines phi-defense triad entry-vertex role. Cross-references /api/agents, /api/phi/state, P-30. Gate class promoted from Sentinel-Phi in AOGA v1.3.0 (2026-06-26). X-Gate-Class header value: `Phi-Knight`. Canonical source: `docs/phi-knight-class.md` in `aoga-dashboard` repo. Authored: COLLEEN · Reviewed: Amethyst · Apogee: pending first live gate event. External: agent class taxonomy / capability tier in multi-agent systems |
 | **Agent Lavender** | *(Deprecated 2026-04-29 → renamed Amethyst)* | Any reference to Lavender in any file is a hard BLG — trigger P-01 immediately. Replaced by Agent Amethyst (full rename sweep completed S011) |
 | **Forseti** | *(Deprecated 2026-04-29 → renamed Sentinel)* | Role absorbed by Agent Sentinel; CI/CD duties retained. Any reference to Forseti is a hard BLG |
 
@@ -185,8 +186,11 @@ This file is the **canonical single source of truth** for mapping every internal
 | **DGAF-Framework (GitHub repo)** | Canonical Governance Architecture Repository | Primary SSoT for all governance patterns, sweep logs, and session anchors |
 | **ndrorchestration (GitHub org)** | Engineering Organization / Repository Namespace | Owner org for all DGAF ecosystem repos; human alias: @ndrorchestration = Andrew Hensel / Njineer |
 | **Supabase Project (us-east-2, Postgres 17)** | Managed Relational Database / BaaS | BaaS with Postgres; ACTIVE_HEALTHY status per ECOSYSTEM_INVENTORY |
-| **Vercel Deployments (aoga-dashboard + pptl-governance-dashboard)** | Edge-deployed Frontend Applications / CDN-hosted Dashboards | Static site + serverless function deployments on Vercel Edge Network |
-| **AOGA Dashboard** | Governance Analytics Frontend / Agent Observability Dashboard | Observability dashboard for multi-agent governance metrics; "AOGA" = internal acronym, **FLAG: canonical expansion not documented** |
+| **Vercel Project: ndrorchestration** | Ecosystem Landing / GitHub Profile Site (Edge-deployed) | Primary public-facing site at ndrorchestration.vercel.app; current production deployment READY as of 2026-06-09 (sweep date update). Experienced 10 consecutive ERROR deployments 2026-05-25–29 due to fatal Layout.tsx syntax error (unclosed array, no export); resolved in seal commit S029. Open: Dependabot PR #1 (Next 14→15 bump, preview ERROR — see FLAG-12). |
+| **Vercel Project: aoga-dashboard** | AOGA Governance Analytics Frontend (Edge-deployed) | Dedicated Vercel project for the AOGA Dashboard; created 2026-05-25; X-Agent-Stack: AOGA-v1.1.0 (bumped 2026-06-26 v1.3.0 commit). Last known deployment state requires verification — may need fresh push or rootDirectory=dashboard confirmation. Source: `ndrorchestration/aoga-dashboard` (private repo). |
+| **Vercel Project: phiknightverticalcorridor** | Unknown — Project Purpose Undocumented | Created ~2026-05-05; no deployment data returned in S070 Vercel audit; project purpose not found in any swept document. **See FLAG-11.** |
+| **Vercel Project: pptl-governance-dashboard** | Procluding Premise Triadic Loop Governance Dashboard | PPTL now fully expanded (see Section 2); Vercel-deployed governance status frontend |
+| **AOGA Dashboard** | Agent Orchestration Governance Architecture Dashboard | **FLAG-04 RESOLVED (S070):** AOGA = Agent Orchestration Governance Architecture. 17/18-route Next.js governance observability frontend. Runtime identity: `X-Agent-Stack: AOGA-v1.1.0`, `X-Gate-Class: Phi-Knight` (promoted from Sentinel-Phi in v1.3.0). Canonical source: `aoga-dashboard` repo + `docs/phi-knight-class.md`. SI=0.8862 at Apogee 18/18 CLEARED. |
 | **PPTL Governance Dashboard** | Procluding Premise Triadic Loop Governance Dashboard | PPTL now fully expanded (see Section 2); Vercel-deployed governance status frontend |
 | **GitHub (24 repos, 23 active)** | Version Control + Artifact Registry | Primary artifact storage for all sealed session outputs |
 | **Google Drive / Gmail (PEL label)** | Document Management System / Knowledge Base | PEL = Prompt Engineering Library & Documentation; 25 essential emails post-cleanup (March 2026) |
@@ -212,25 +216,29 @@ This file is the **canonical single source of truth** for mapping every internal
 | **60-turn simulation (5 Gold Stars)** | 60-step Multi-Agent Simulation, Internally Attested | Self-attested via Apogee; reproduce via `python tests/test_orchestration_firewall.py` against `registry/ensemble_v16_manifest.json` |
 | **‖ΔW‖_F < 0.02 convergence threshold** | PDMAL Trust Graph Convergence Criterion | 3 consecutive turns below threshold = CONVERGED; ALERT_THRESH=0.08 for graph manipulation detection |
 | **STRONG=0.22 / BLENDED=0.18** | KAPPA Router Confidence Thresholds | Empirically calibrated via P-34 14×12 grid sweep (S034); requires recalibration if input distribution shifts |
+| **SI=0.8862 (AOGA Apogee score)** | Stability Index at AOGA 18/18 Apogee Clearance | Recorded in `[AOGA COMPLETE]` commit 2026-05-25; exceeds φ*=0.618 threshold by +0.2682; all 18 routes cleared |
+| **Deployment Error Chain: May 25–29, 2026** | Named Production Incident / Root Cause: Fatal Syntax Error | 10 consecutive ERROR deployments on `ndrorchestration` Vercel project. Root cause: Layout.tsx — unclosed array, no export (fatal syntax error). Symptom-level fixes attempted: --legacy-peer-deps, vercel.json cleanup, Next.js version rollback 14.2.29→14.2.28. Resolved by seal commit targeting Layout.tsx directly. Duration: ~4 days. Risk: any Vercel-linked traffic during this window may have contributed to June Needle analytics drop (NT-01/NT-02). |
 
 ---
 
 ## Section 9 — Open Flags (Items Requiring Resolution)
 
-> These items were identified during the v1.1 sweep as **undocumented, ambiguous, or potentially conflicting.** COLLEEN owns resolution before next session seal.
+> These items were identified during sweep as **undocumented, ambiguous, or potentially conflicting.** COLLEEN owns resolution before next session seal.
 
-| Flag | Item | Issue | Recommended Action |
-|------|------|-------|-------------------|
-| FLAG-01 | **HDFS acronym collision** | "HDFS" used for both NDR Hierarchical Documentation Format Standard AND Hadoop Distributed File System | Rename to "NDR-HDFS" or "HDFS-DOC 1.0" in all docs |
-| FLAG-02 | **340% coordination gain** | Metric not formally defined; no artifact link found | Downgrade to qualitative claim or add `docs/qa/` evidence artifact |
-| FLAG-03 | **PPTL acronym** | Expanded as "Procluding Premise Triadic Loop" — first canonical documentation in this file | Backfill PPTL expansion into WORKSPACE_BOOTSTRAP.md and ECOSYSTEM_INVENTORY.md |
-| FLAG-04 | **AOGA acronym** | Used in Vercel deployment label and docs; canonical expansion not documented anywhere found | Surface to Amethyst for canonical expansion; update ECOSYSTEM_INVENTORY.md |
-| FLAG-05 | **AXIS acronym** | Sovereign file; Sentinel-protected; exact acronym expansion not found in any swept document | Surface to Njineer/Amethyst for canonical expansion in AGENT_ROSTER or WORKSPACE_BOOTSTRAP |
-| FLAG-06 | **Agent Lavender / Forseti** | Hard BLG per AGENT_ROSTER.md v1.0; any reference triggers P-01 | Run codebase-wide search; `grep -r "Lavender\|Forseti" docs/` |
-| FLAG-07 | **Drive files 2, 3, 4 unreadable** | Agent Professor Prodigy Technical Spec (HDFS 1.0), Prodigy Mathematical Rigor POC, and Phi-Calculus White Paper returned empty content during sweep | Re-attempt read in next session; these may contain additional vocabulary not yet captured |
-| FLAG-08 | **96% TruthfulQA — "internal" qualifier** | Currently stated without "internal" qualifier in some external-facing docs | Audit all public-facing docs for unqualified TruthfulQA claims |
-| FLAG-09 | **Reson dual-role discrepancy** | v1.0 entry describes Reson as "Router Topology Engineer / CSP Solver"; AGENT_ROSTER describes Reson as "Harmonic Coherence Scorer" with 0.75 threshold | Both are correct (Reson holds both roles); update Section 1 entry to reflect both duties |
-| FLAG-10 | **P-35 registration status** | Procluding Premise Gate referenced as P-35 in session context but does not appear in NDR_PATTERN_REGISTRY_UNIFIED.md (watermark is P-34) | Confirm P-35 is pending registration or already registered in a post-S066 session |
+| Flag | Item | Issue | Recommended Action | Status |
+|------|------|-------|-------------------|----|
+| FLAG-01 | **HDFS acronym collision** | "HDFS" used for both NDR Hierarchical Documentation Format Standard AND Hadoop Distributed File System | Rename to "NDR-HDFS" or "HDFS-DOC 1.0" in all docs | OPEN |
+| FLAG-02 | **340% coordination gain** | Metric not formally defined; no artifact link found | Downgrade to qualitative claim or add `docs/qa/` evidence artifact | OPEN |
+| FLAG-03 | **PPTL acronym** | Expanded as "Procluding Premise Triadic Loop" — first canonical documentation in this file | Backfill PPTL expansion into WORKSPACE_BOOTSTRAP.md and ECOSYSTEM_INVENTORY.md | OPEN |
+| FLAG-04 | **AOGA acronym** | ~~Used in Vercel deployment label and docs; canonical expansion not documented anywhere found~~ | ~~Surface to Amethyst for canonical expansion; update ECOSYSTEM_INVENTORY.md~~ | **RESOLVED S070** — AOGA = Agent Orchestration Governance Architecture. Source: aoga-dashboard commit history + X-Agent-Stack header manifest. Update ECOSYSTEM_INVENTORY.md to backfill. |
+| FLAG-05 | **AXIS acronym** | Sovereign file; Sentinel-protected; exact acronym expansion not found in any swept document | Surface to Njineer/Amethyst for canonical expansion in AGENT_ROSTER or WORKSPACE_BOOTSTRAP | OPEN |
+| FLAG-06 | **Agent Lavender / Forseti** | Hard BLG per AGENT_ROSTER.md v1.0; any reference triggers P-01 | Run codebase-wide search; `grep -r "Lavender\|Forseti" docs/` | OPEN |
+| FLAG-07 | **Drive files 2, 3, 4 unreadable** | Agent Professor Prodigy Technical Spec (HDFS 1.0), Prodigy Mathematical Rigor POC, and Phi-Calculus White Paper returned empty content during sweep | Re-attempt read in next session; these may contain additional vocabulary not yet captured | OPEN |
+| FLAG-08 | **96% TruthfulQA — "internal" qualifier** | Currently stated without "internal" qualifier in some external-facing docs | Audit all public-facing docs for unqualified TruthfulQA claims | OPEN |
+| FLAG-09 | **Reson dual-role discrepancy** | v1.0 entry describes Reson as "Router Topology Engineer / CSP Solver"; AGENT_ROSTER describes Reson as "Harmonic Coherence Scorer" with 0.75 threshold | Both are correct (Reson holds both roles); update Section 1 entry to reflect both duties | **RESOLVED S070** — Section 1 entry updated to reflect both Harmonic Coherence Scorer and CSP Router roles. |
+| FLAG-10 | **P-35 registration status** | Procluding Premise Gate referenced as P-35 in session context but does not appear in NDR_PATTERN_REGISTRY_UNIFIED.md (watermark is P-34) | Confirm P-35 is pending registration or already registered in a post-S066 session | OPEN |
+| FLAG-11 | **phiknightverticalcorridor Vercel project** | Project created ~2026-05-05; no deployment data found in S070 Vercel audit; project purpose, linked repo, and intended function are undocumented in all swept files | Surface to Njineer for canonical purpose definition; update Section 7 and ECOSYSTEM_INVENTORY.md once confirmed | OPEN |
+| FLAG-12 | **Dependabot PR #1 — Next 14→15 bump** | Open on `ndrorchestration` repo; preview deployment in ERROR state; Next 14→15 is a major version with breaking changes; disposition not decided | Njineer to decide: merge with breaking-change review, or close/dismiss to keep PR list clean | OPEN |
 
 ---
 
@@ -241,10 +249,10 @@ This file is the **canonical single source of truth** for mapping every internal
 - **Review trigger:** Any new NDR pattern registration, any new agent added to ENSEMBLE_ROSTER, any new subsystem named in a session
 - **Differentiation column policy:** If a term is a direct external equivalent with no novel extension, write "Direct equivalent — use external term with internal label as gloss." If there is a genuine differentiator, describe it in ≤2 sentences.
 - **IP boundary:** Sections 6–8 contain items marked for partial public disclosure; tuning tables, specific φ constants, and constraint optimization algorithms remain private per IP protection strategy (January 2026 decision)
-- **Flag resolution:** Section 9 flags are COLLEEN’s primary resolution queue; all flags must be resolved or formally deferred before session graduation (P-10)
+- **Flag resolution:** Section 9 flags are COLLEEN's primary resolution queue; all flags must be resolved or formally deferred before session graduation (P-10)
 
 ---
 
-*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.1 · S069 OPEN · COLLEEN × Amethyst · 2026-06-12*
-*v1.1 additions: +30 terms from NDR_PATTERN_REGISTRY_UNIFIED v1.0, AGENT_ROSTER v1.0, docs/agents/*, ECOSYSTEM_INVENTORY, pattern interaction map, formation taxonomy, KAPPA system, tracing/CI patterns, deprecated agents, 10 open flags*
-*Sources: CROSS_REF v4.1, SESSION_ANCHOR S069, SWEEP_LOG, NDR_PATTERN_REGISTRY_UNIFIED.md, AGENT_ROSTER.md, ECOSYSTEM_INVENTORY.md, Auditing Engineering Terminology Taxonomy.docx, What other things am I calling by the wrong names?.md, SPACES AUDIT LIST, MASTER CONTEXT FILE*
+*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.2 · S070 OPEN · COLLEEN × Amethyst · 2026-06-26*
+*v1.2 additions: FLAG-04 RESOLVED (AOGA = Agent Orchestration Governance Architecture), FLAG-09 RESOLVED (Reson dual-role), Phi-Knight agent class registered (Section 1), phiknightverticalcorridor Vercel project documented (Section 7, FLAG-11), Dependabot PR #1 flagged (FLAG-12), Vercel deployment inventory expanded to 4 projects, SI=0.8862 + May 25–29 Error Chain incident added (Section 8), AOGA Dashboard entry updated (Section 7)*
+*Sources: S070 Vercel audit (ndrorchestration/aoga-dashboard/phiknightverticalcorridor projects), aoga-dashboard commit history (phi-knight-class.md v1.3.0, X-Agent-Stack header manifest), DGAF-Framework commit log S069–S070*
