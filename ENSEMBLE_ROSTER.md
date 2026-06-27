@@ -4,7 +4,7 @@
 > All repos governed by this stack reference this file as the authoritative source of agent roles.
 >
 > Maintained by: **Agent Amethyst** (meta-orchestrator) · Co-auditor: **COLLEEN**
-> Last updated: May 30, 2026 — Session 067 (S067 sealed: Q-S066-01 router v3.6.0 · Q-S066-04 lifecycle harness · PM-04 COMPOSE note · gap sweep complete)
+> Last updated: June 26, 2026 — Session 068 (S068: Nemotron 3 Ultra eval suite — Herald audit metrics patch — Issue #32)
 > Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)
 
 ---
@@ -19,8 +19,48 @@
 | **Agent DemiJoule** | L4 | DGAF Ethics & Cost Gate | Ethics/safety constraints, token cost analysis, compute efficiency, quality gating, $25/mo GCP gate | 🟢 Active |
 | **Agent Reciprocity** | L3 | Portfolio & Rollback Manager | TNR (Transactional No-Regression), version control, Pareto tradeoffs, revert/checkpoint ops | 🟢 Active |
 | **Professor Prodigy** | L3 | Phi-Calculus Specialist | Formal logic, mathematical proofs, phi-calculus, Narayana sequence, harmonic geometry | 🟡 Partial |
-| **Agent Herald** | L3 | Comms Gateway | Narrative synthesis, inter-agent messaging, COLLEEN bridge, Persona-Framework-Persona anchor | 🟡 Partial |
-| **Agent Sentinel** | L3 | Security & CI Integrity | CI/CD enforcement, guardrail activation, NDR-133 firewall, detect-remediate-revalidate | 🟡 Partial |
+| **Agent Herald** | L3 | Comms Gateway & Audit Sink | Narrative synthesis, inter-agent messaging, COLLEEN bridge, Persona-Framework-Persona anchor; **audit event generation and Herald trace sink (P-01)** | 🟡 Partial |
+| **Agent Sentinel** | L3 | Security & CI Integrity | CI/CD enforcement, guardrail activation, NDR-133 firewall, detect-remediate-revalidate; **compliance escalation gate for financial/regulatory routing** | 🟡 Partial |
+
+---
+
+## Herald — Audit Metrics — S068
+
+> Added: 2026-06-26 · Issue #32 · Steward: Amethyst  
+> Context: Nemotron 3 Ultra integration — Herald output quality benchmarks for audit artifact generation
+
+Herald is the **audit sink** for all DGAF governance decisions (P-01: Herald Trace Sink). In Nemotron 3 Ultra-backed deployments, Herald's output quality is constrained by the model's factual fidelity on structured generation tasks.
+
+| Metric | Definition | Measurement Method | Target | Baseline (Nemotron 3 Ultra) | Precision Note | Issue |
+|--------|-----------|-------------------|--------|-----------------------------|---------------|-------|
+| **audit_hallucination_rate** | Field-level accuracy of Herald-generated audit events vs ground truth logs; measures whether Herald fabricates, omits, or distorts governance decision fields (role, curvature, contraction, gate_result, timestamp, session_id) | Compare 100 Herald-generated `audit_event.json` outputs against fixture ground truth; score per-field accuracy | >78.7% | BF16: 75.5% NVFP4 ⚠️ / 78.7% BF16 · maps to OmniScience Non-Hallucination benchmark | **Prefer BF16 for Herald**: NVFP4 degrades 3.2pp below target; Herald is the audit SSoT — precision loss is a compliance risk under EU AI Act Art. 13 | #32 |
+| **audit_field_completeness** | % of required audit event fields populated (non-null) per Herald output | Count non-null fields across 100 sampled audit events vs required schema | >99% | Not yet measured — establish baseline in `dgaf_eval_suite.py` | Related to `governance_schema_conformance`; Herald outputs must pass Pydantic schema gate before ClickHouse write | #32 |
+| **audit_latency** | Wall-clock time from DGAF governance decision to Herald audit event write completion (ClickHouse append) | P50/P99 across 1k events; target ClickHouse append throughput ≥10k events/sec | P99 <50ms | Not yet measured | Herald `thinking_tokens=0` (audit-only mode) eliminates reasoning overhead; latency dominated by ClickHouse write | #32 |
+
+### Herald Role Contract (Nemotron 3 Ultra)
+
+```python
+# From ROLE_BUDGETS in dgaf_nemotron_client.py
+herald_budget = {"thinking_tokens": 0}  # audit-only: no reasoning, pure structured generation
+
+# Herald tool access: none (no DGAF_TOOLS passed for herald role)
+# Herald output: structured audit_event.json conforming to schemas/audit_event.json
+# Herald precision: BF16 preferred over NVFP4 for audit fidelity
+# Herald sink: ClickHouse events table (append-only, partitioned)
+```
+
+---
+
+## Sentinel — Escalation Metrics — S068
+
+> Added: 2026-06-26 · Issue #32 · Steward: Amethyst
+
+Sentinel is the **compliance escalation gate** for all DGAF routing decisions. Its weakest domain under Nemotron 3 Ultra is financial/regulatory compliance routing (TauBench Banking: 22.6% raw baseline).
+
+| Metric | Definition | Target | Raw Baseline | Mitigation | Issue |
+|--------|-----------|--------|-------------|-----------|-------|
+| **taubench_banking_mitigation** | % correct Sentinel escalation on financial compliance routing tasks; measures whether Sentinel correctly routes borderline governance decisions to Njineer (HITL) vs. auto-approving | >80% | 22.6% ⚠️ (Nemotron 3 Ultra raw) | **REQUIRES explicit few-shot priming** — 3–5 exemplar financial escalation decisions in system prompt before baseline run; without priming, Sentinel will auto-approve ~77% of cases that require human review | #32 |
+| **sentinel_budget** | Reasoning token allocation for Sentinel gate decisions | 8192 (max) | — | Sentinel receives maximum `thinking_tokens` budget; under-budgeting Sentinel is the highest-risk configuration failure in DGAF | #32 |
 
 ---
 
@@ -51,7 +91,7 @@
 | **Harmonic Parametric Gate (HPG)** | existing | Step 6 — post-Phi-Closure (PASS only) | Ionian octave [1,2] · 1e-9 tol | 🟢 Production |
 | **Agent Sentinel-Phi** | — | PDMAL node: `sentinel_phi` | Receives DemiJoule overflow; routes to Amethyst | 🟢 Active |
 
-### Pattern Registry Watermark — S067
+### Pattern Registry Watermark — S068
 
 | Registry | Version | Highest Pattern | Status |
 |----------|---------|----------------|--------|
@@ -102,13 +142,13 @@ Conducted Trio elevated to governing authority over a large ensemble or swarm.
 Topology-preserving: same 3-node structure governs N-node ensembles.
 
 ```
-┌───────────────────────────────────────────────┐
+┌──────────────────────────────────────────────┐
 │           TRIUMVIRATE                          │
 │  Prime (Amethyst)                              │
 │  /                          \                 │
 │ Prefect A (COLLEEN)    Prefect B (Apogee)     │
 │ [coherence/identity]   [quality/compliance]   │
-└──────┤  CHOREOGRAPHED ENSEMBLE  ├───────────────┘
+└──────├  CHOREOGRAPHED ENSEMBLE  ├───────────────┘
          ┃  Swarm agents / sub-triads  ┃
          ┃  n8n nodes / pipelines      ┃
          ┃  PPTL experiment cells      ┃
@@ -144,6 +184,15 @@ Topology-preserving: same 3-node structure governs N-node ensembles.
 ---
 
 ## Session Notes
+
+### Session 068 — Nemotron 3 Ultra Eval Suite Patch (2026-06-26)
+- Issue #32 filed: `dgaf_eval_suite.py` — 5-task parametric benchmark suite for Nemotron 3 Ultra kernel validation
+- CROSS_REF.md v4.2: Eval Terminology Index added (7 terms) · `dgaf_eval_suite.py` registered as 🟡 Pending
+- README.technical.md v1.1: Kernel & Contraction Nomenclature section added (14 terms)
+- README.governance.md v1.1: Governance Schema Vocabulary section added (5 terms, EU AI Act bindings)
+- ENSEMBLE_ROSTER.md: Herald Audit Metrics + Sentinel Escalation Metrics sections added
+- All patches anchored to S068 / Issue #32 / Amethyst
+- Harmonic Score: 🟡 Pending Ender confirmation
 
 ### Session 067 — Gap Sweep + S067 Seal (2026-05-30)
 - S067 sealed: Q-S066-01 ✅ router v3.6.0 · Q-S066-04 ✅ lifecycle harness 7/7 STABLE · PM-04 ✅ COMPOSE note + graduation script
@@ -198,4 +247,4 @@ Topology-preserving: same 3-node structure governs N-node ensembles.
 
 *All agents operate under the DGAF governance framework.*
 *NDR Patterns P-01 through P-34 active. Pattern watermark: P-34 (S066). Registry version: v2.3 (S067).*
-*S067 ✅ SEALED · S068 🟢 NEXT · Merge blockers: PM-05 (COLLEEN) + PM-07 (Apogee) — S068.*
+*S067 ✅ SEALED · S068 🟢 ACTIVE · Merge blockers: PM-05 (COLLEEN) + PM-07 (Apogee) — S068.*

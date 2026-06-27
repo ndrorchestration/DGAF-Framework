@@ -73,6 +73,21 @@ Audit query: to reconstruct the state of any artifact at any point in time, trac
 
 ---
 
+## Governance Schema Vocabulary — S068
+
+> Added: 2026-06-26 · Issue #32 · Steward: Amethyst  
+> Context: Nemotron 3 Ultra integration — compliance-layer terminology for schema-validated governance artifacts
+
+| Term | Compliance Layer | Definition | EU AI Act Binding | Issue |
+|------|-----------------|-----------|-------------------|-------|
+| **governance_schema_conformance** | Art. 9 / Art. 13 | The property that all `governance.yml` variants and typed kernel outputs strictly conform to their declared JSON Schema / Pydantic model (`extra=forbid`); measured as % valid outputs over a fuzz corpus of 1k variants. Target: >99%. | Art. 9 (Risk Management): schema non-conformance = uncontrolled model output = unmanaged risk. Art. 13 (Transparency): non-conforming outputs cannot be logged in structured audit trail. | #32 |
+| **governance.yml** | Art. 9 / Art. 17 | Single source of truth file declaring all DGAF role contracts: role name, curvature scalar, contraction rate ρ, fallback chain, and compliance flags (NIST RMF, EU AI Act articles). All downstream kernels, dashboard configs, eval harnesses, and CI gates derive from this file. | Art. 17 (Quality Management): `governance.yml` is the quality management input artifact; its integrity is enforced by `governance_schema_conformance`. | #32 |
+| **typed kernel** | Art. 9 / Art. 13 | An executable role unit with explicit `input_schema → policy → output_schema → audit_trail` contract; generated from `governance.yml` and validated by `contraction_proof_fidelity` before CI promotion. Constitutes a machine-readable risk control artifact. | Art. 9: each typed kernel is a discrete, auditable risk control. Art. 13: the `audit_trail` field in each kernel satisfies logging requirements. | #32 |
+| **ρ-contraction** (governance) | Art. 9 | Mathematical guarantee `‖T(x) - T(y)‖ ≤ ρ‖x - y‖` (ρ < 1.0) on role transition operators T; ensures governance trajectories converge rather than diverge under repeated application. Spectral radius check via `numpy.linalg.eigvals`. | Art. 9: convergence guarantee = bounded, predictable risk behavior. Failure = unbounded governance drift = unmanaged high risk. | #32 |
+| **few-shot priming** (compliance routing) | Art. 9 / Art. 14 | The practice of pre-loading 3–5 exemplar compliance routing decisions into Nemotron 3 Ultra context before running `taubench_banking_mitigation` eval; required because raw model baseline is 22.6% on financial compliance routing — below acceptable governance threshold. | Art. 14 (Human Oversight): few-shot priming is a human-in-the-loop intervention; its absence constitutes a governance gap that must be flagged to Sentinel. | #32 |
+
+---
+
 ## Governance Contacts
 
 | Role | Identity |
@@ -87,4 +102,5 @@ Audit query: to reconstruct the state of any artifact at any point in time, trac
 ---
 
 *License: Apache 2.0 · See [NOTICE](./NOTICE) for full attribution*  
-*Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*
+*Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*  
+*README.governance v1.1 · S068 governance schema vocabulary patch · Amethyst · 2026-06-26*
