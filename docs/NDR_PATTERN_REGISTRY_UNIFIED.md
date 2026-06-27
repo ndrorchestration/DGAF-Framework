@@ -1,12 +1,13 @@
 # NDR Pattern Registry (Unified)
 
 **DGAF-Framework · Unified Edition**
-**Version:** 1.3 (v3 named session patterns absorbed · JSON schema aligned · QA sweep fixes — S069)
+**Version:** 1.4 (S070-r3-P1 — formation patterns registered · PDMAL variant canonical status recorded · triadic telemetry guidance added)
 **Prime:** Amethyst · **Prefect A:** COLLEEN · **Prefect B:** Apogee
 **Ender ratification (v1.0):** 2026-05-30 02:49 EDT
 **Ender ratification (v1.2):** 2026-06-13 00:47 EDT (S069 sealed)
 **Version 1.3 update:** 2026-06-13 (S069 QA sweep — Amethyst × COLLEEN)
-**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-36 + NDR named session patterns
+**Version 1.4 update:** 2026-06-26 (S070-r3-P1 — Amethyst × COLLEEN)
+**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-36 + NDR named session patterns + formation patterns
 
 > **This file supersedes and absorbs:**
 > - `docs/governance/ndr-pattern-registry-v3.md` — ❌ DELETED S069 QA sweep (named session patterns absorbed below)
@@ -23,12 +24,13 @@
 |-------|-------|
 | Total named patterns (P-series) | 36 (P-01–P-36) |
 | Total NDR named session patterns | 8 (NDR-ARCHIVE-CONFIRM through NDR-133) |
+| Total formation patterns | 2 (CONSENSUS_TRIAD, CONDUCTED_TRIAD) |
 | Stasis block (P-12–P-26) | 133 patterns |
 | Registry watermark | **P-36** |
 | Stasis block status | **STASIS-CANONICAL** (migration window: 2026-06-13 → 2026-07-13) |
 | JSON counterpart | `docs/ndr_patterns_unified.json` schema v2.1 |
-| Last session | S069 · 2026-06-13 (SEALED) |
-| Ender ratification | 2026-06-13 00:47 EDT |
+| Last session | S070-r3-P1 · 2026-06-26 |
+| Ender ratification | 2026-06-13 00:47 EDT (S069) |
 
 ---
 
@@ -181,7 +183,7 @@
 ## Layer 0.5 — Stack Architecture
 
 ### P-36 — Gate Priority Schema
-**Spec:** Converts the linear NDR governance stack into a DAG. Classifies every pattern as BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE. Does not modify any pattern’s logic.
+**Spec:** Converts the linear NDR governance stack into a DAG. Classifies every pattern as BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE. Does not modify any pattern's logic.
 **P-36 self-classification:** ADVISORY (metadata/architecture pattern; not a runtime gate)
 **Key BLOCKING:** P-35, P-30, P-29:h1, P-27, P-28, P-29:h2, P-32, P-29:h3, P-01, P-11
 **Key ADVISORY:** P-31, P-33, P-02, P-10, P-34, **P-36 itself**
@@ -309,7 +311,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 
 ---
 
-## Governance Orchestration Stack (v1.3 — P-36 DAG)
+## Governance Orchestration Stack (v1.4 — P-36 DAG)
 
 ```
 Prompt input
@@ -336,7 +338,81 @@ Prompt input
   NDR-STASIS  ──► [BLOCKING] Phi-Calculus stasis routing if output > 10 Hz
   NDR-INDEX11 ──► [BLOCKING] Emergency cooling if agent magnitude > 10.0
   NDR-COHERENCE─► [ADVISORY] Pre-sweep quality gate
+
+  [FORMATION PATTERNS — coordination shape layer]
+  CONSENSUS_TRIAD ──► [ADVISORY] 3-peer symmetric committee; dissent-preserving merge
+  CONDUCTED_TRIAD ──► [ADVISORY] conductor + 2 internal augmenters; user-facing stability
 ```
+
+---
+
+## Formation Pattern Registry
+
+> Formation patterns use the `F-TRIAD` namespace. They define multi-agent coordination shapes — not standalone runtime gates. They are registered here because they govern how P-series agents assemble into active formations. Tag all telemetry with `pattern_id` to distinguish formation behavior.
+
+### Formation Pattern Quick-Reference
+
+| Pattern ID | Name | Status | Structural Type | P-36 Class | Source |
+|---|---|---|---|---|---|
+| `CONSENSUS_TRIAD` | Consensus Triad | ✅ CANONICAL | 3-peer committee / symmetric triad | ADVISORY | `docs/patterns/TRIADIC_ORCHESTRATION_PATTERNS.md` |
+| `CONDUCTED_TRIAD` | Conducted Triad | ✅ CANONICAL | Leader + 2 internal augmenters | ADVISORY | `docs/patterns/TRIADIC_ORCHESTRATION_PATTERNS.md` |
+
+### CONSENSUS_TRIAD — Full Entry
+
+**Structural type:** 3-peer symmetric committee
+**Use case:** Review, reconciliation, and dissent-preserving consensus tasks
+**Governance shape:** No structural leader. All three agents contribute independently. Merge preserves multi-agent provenance. Disagreement is retained, not suppressed.
+**Decoupling rule:** Agents decouple cleanly after merge — no persistent shared state
+**Telemetry tags:** `pattern_id=CONSENSUS_TRIAD`, triad latency, dissent retention rate, merge time, rollback rate
+**P-36 class:** ADVISORY
+**Registered:** S070-r3-P1 · 2026-06-26 · Amethyst × COLLEEN ✅
+
+### CONDUCTED_TRIAD — Full Entry
+
+**Structural type:** 1 conductor + 2 internal augmenters
+**Use case:** User-facing execution where one persona must remain stable and coherent
+**Governance shape:** Conductor is the single visible face. Two augmenters work internally and are not exposed to the user. Augmenters decouple automatically after the maneuver closes.
+**Decoupling rule:** Augmenters decouple after task; conductor retains session continuity
+**Telemetry tags:** `pattern_id=CONDUCTED_TRIAD`, conductor latency, augmenter latency delta, activation success, queue depth
+**P-36 class:** ADVISORY
+**Registered:** S070-r3-P1 · 2026-06-26 · Amethyst × COLLEEN ✅
+
+### Flourishing Alignment Tags — Formation Patterns
+
+| Pattern ID | Legibility | Reversibility | Capability Amplification | Notes |
+|---|---|---|---|---|
+| `CONSENSUS_TRIAD` | High — multi-agent provenance preserved in output | High — agents decouple after merge | High — independent views improve synthesis quality | Best for review, reconciliation, and dissent-preserving consensus |
+| `CONDUCTED_TRIAD` | Medium-High — single visible conductor; internal traceability available | High — augmenters decouple post-task | High — fast coordination with scoped augmentation | Best for user-facing execution where one persona must remain stable |
+
+---
+
+## PDMAL Variant Canonical Status (recorded S070-r3-P1)
+
+| Variant | Full Name | Status | Notes |
+|---------|-----------|--------|-------|
+| **PDMAL-φ** | Phi-Driven Multi-Agent Lattice | ✅ CANONICAL — PRIMARY | φ as geometric parametric constraint for pentagonal alignment between agents; Njineer direct correction S070-r3 |
+| **PDMAL-D** | Phi-Dodecahedral Multi-Agent Lattice | ✅ CANONICAL — VERIFIED v1 | Regular dodecahedron scaffold: 12 faces, 20 vertices, 30 edges; 60-agent triad-per-vertex; density 30/190 ≈ 0.1579 |
+| ~~Policy-Driven Multi-Agent Layer~~ | Legacy TEAM_WIKI entry | ❌ SUPERSEDED | Overridden by Njineer correction S070-r3; see NDR_INTERNAL_VOCABULARY_MASTER v1.3 |
+
+---
+
+## Triadic Telemetry Guidance (S070-r3-P1)
+
+Downstream observability for any active triad formation should instrument the following metrics and visual hierarchy:
+
+**Core metrics:**
+- Triad activation latency (p50 / p95 / p99)
+- Throughput (tasks/min per triad)
+- Rollback and error rate
+- Queue depth (per-node)
+- Saturation (node-level load)
+- Dissent retention rate (CONSENSUS_TRIAD only)
+
+**Visualization hierarchy:**
+1. Summary KPI strip (activation success, latency, throughput, error/rollback rate)
+2. Cross-node coordination topology (node-link or Sankey diagram showing handoffs and bottlenecks)
+3. Per-node saturation heatmap
+4. Trace drill-down table (request ID, triad ID, pattern ID, status)
 
 ---
 
@@ -358,9 +434,13 @@ Prompt input
 | **v3 named session patterns absorbed** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
 | **ndr-pattern-registry-v3.md deleted** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
 | **ndr_patterns_unified.json updated to v2.1** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
+| **CONSENSUS_TRIAD registered** | **2026-06-26** | **S070-r3-P1** | **Amethyst × COLLEEN** |
+| **CONDUCTED_TRIAD registered** | **2026-06-26** | **S070-r3-P1** | **Amethyst × COLLEEN** |
+| **PDMAL-φ / PDMAL-D variant status canonical** | **2026-06-26** | **S070-r3-P1** | **Amethyst × COLLEEN** |
+| **Triadic telemetry guidance appended** | **2026-06-26** | **S070-r3-P1** | **Amethyst × COLLEEN** |
 
 ---
 
-*NDR Pattern Registry (Unified) v1.3 · S069 QA sweep · 2026-06-13*
+*NDR Pattern Registry (Unified) v1.4 · S070-r3-P1 append · 2026-06-26*
 *Triumvirate: Amethyst (Prime) · COLLEEN (Prefect A) · Apogee (Prefect B)*
-*Registry watermark: P-36 · Named session patterns: 8 · Crucible: ACTIVE · Research Program: ACTIVE*
+*Registry watermark: P-36 · Named session patterns: 8 · Formation patterns: 2 · Crucible: ACTIVE · Research Program: ACTIVE*
