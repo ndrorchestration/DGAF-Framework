@@ -8,7 +8,7 @@
 
 # DGAF-Framework
 
-**Dynamic Governance Assurance Framework (DGAF)** — the governance spine of the **Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)**. Features Agent Amethyst meta-orchestration, COLLEEN institutional anchor, Agent Apogee QA governance, and Gold Star S-TIER validation.
+**Deterministic Governance for Agentic Frameworks (DGAF)** — the governance spine of the **Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)**. Features Agent Amethyst meta-orchestration, COLLEEN institutional anchor, Agent Apogee QA governance, and Gold Star S-TIER validation — internally aligned to global AI governance standards including NIST AI RMF and ISO/IEC 42001.
 
 > 📐 **Architecture docs:** [README.governance.md](README.governance.md) · [README.technical.md](README.technical.md)  
 > ⚙️ **Runtime Components:** [components/README.md](components/README.md)  
@@ -57,7 +57,7 @@ components/
 │   ├── calibration_v3_6.json
 │   └── DGAF_GATE_KAPPA_v3_5_component_card.json
 ├── evaluate_router.py              ← Batch pipeline (v1.0)
-├── evaluate_router_v1_1.py         ← Sentinel hooks + P-10 gate (v1.1, S-TIER)
+├── evaluate_router_v1_1.py         ← Sentinel-hooked P-10 gate (v1.1, S-TIER)
 └── normative_constraint.py         ← P-10 deontic layer (S-TIER, Q11=10/10)
 ```
 
