@@ -1,7 +1,7 @@
 {
-  "registry_version": "0.3.0",
-  "generated_at": "2026-05-30T06:16:00Z",
-  "session": "S066",
+  "registry_version": "0.4.0",
+  "generated_at": "2026-06-26T20:05:00Z",
+  "session": "S067",
   "note": "Full unified JSON export planned as docs/ndr_patterns_unified.json (see docs/NDR_REGISTRY_MERGE_PLAN.md). This file is the interim machine-readable index.",
   "patterns": [
     {
@@ -90,7 +90,7 @@
         "Fib_55": "KILL_REC (mandatory)"
       },
       "cross_ref_pending": "PM-01: P-32 KILL_REC should trigger P-29 risk_block at hook point 2 — cross-ref note pending pre-merge",
-      "related_patterns": ["P-31", "P-33", "P-29"]
+      "related_patterns": ["P-31", "P-33", "P-29", "P-LOCK-001"]
     },
     {
       "id": "P-33",
@@ -116,6 +116,37 @@
       "nist": "Measure",
       "eu_ai_act": "Art.9",
       "related_patterns": ["P-27", "P-30", "P-03"]
+    },
+    {
+      "id": "P-LOCK-001",
+      "name": "Ionian Lock (Bounded Execution Seal)",
+      "category": "concurrency-consistency",
+      "session": "S067",
+      "card": "patterns/P-LOCK-001_IonianLockBoundedExecutionSeal.md",
+      "intent": "Guarantee that at most one resolution path holds active write authority over a bound resource at any moment, by requiring every execution context to emit a seal signal before it yields, suspends, or delegates — and requiring every successor context to verify the seal before acquiring authority.",
+      "cadence": {
+        "phases": [
+          {"phase": 1, "name": "Claim", "actor": "initiating-context", "artifact": "authority-token"},
+          {"phase": 2, "name": "Work", "actor": "initiating-context", "artifact": "state-delta (append-only, zero or more)"},
+          {"phase": 3, "name": "Seal", "actor": "initiating-context", "artifact": "seal-record"},
+          {"phase": 4, "name": "Acquire", "actor": "successor-context", "artifact": "acquire-record"}
+        ]
+      },
+      "invariants": [
+        "single-authority: at most one authority-token active per bound resource at any instant",
+        "causal-seal: seal-record contains sufficient reference to final state at seal time",
+        "no-silent-yield: context may not terminate/suspend/error without emitting seal-record or triggering contested-seal escalation"
+      ],
+      "failure_modes": [
+        {"name": "missed-seal", "detection": "Phase 4 gap assertion", "compensation": "contested-seal escalation via P-CB-001"},
+        {"name": "stale-authority", "detection": "Phase 4 causal-seal check", "compensation": "reject acquire, force re-seal from last known good state"},
+        {"name": "duplicate-seal", "detection": "seal-record deduplication", "compensation": "retain earlier seal by causal timestamp"},
+        {"name": "phantom-seal", "detection": "Phase 3 validation", "compensation": "warn; allow only if yield-reason is no-op-confirmed"},
+        {"name": "gap-under-recovery", "detection": "replay guard", "compensation": "reject restore, re-derive from delta log"}
+      ],
+      "attestation_status": "DRAFT — pending Apogee Lens review",
+      "substrate_agnostic": true,
+      "related_patterns": ["P-CB-001", "P-DURABLE-001", "P-SAGA-001", "P-TX-001", "P-32"]
     }
   ]
 }
