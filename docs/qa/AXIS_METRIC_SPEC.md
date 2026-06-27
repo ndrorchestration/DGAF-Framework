@@ -1,8 +1,8 @@
 # AXIS_METRIC_SPEC.md
-## Agent X-axis Invariant Spectrum — Full Specification v1.1 CANONICAL
+## Agent X-axis Invariant Spectrum — Full Specification v1.2 CANONICAL
 
 ```
-Version:        1.1 CANONICAL
+Version:        1.2 CANONICAL
 Status:         ✅ RATIFIED — Njineer ratification received 2026-06-27 16:40 EDT
 Filed by:       Amethyst (meta-orchestrator) × COLLEEN (institutional anchor)
 Ratified by:    Ender / Njineer (Hensel, Andrew Vance)
@@ -12,6 +12,7 @@ Sovereign file: YES — Njineer override authority only
 Parent flag:    FLAG-05 (S069 surface request) — CLOSED
 Linked gap:     GAP-006 — Coherent Agency Formal Spec (docs/RD_GAPS.md)
 Parent issue:   DGAF-Framework #26
+v1.2 change:    Phase 3 instrumentation owner assigned to Amethyst — Njineer ratified 2026-06-27 17:14 EDT
 ```
 
 > **Ratification record:** All definitions in this document are confirmed CANONICAL per Njineer ratification 2026-06-27 16:40 EDT. Expansion, four invariants (I-P-A-E), weakest-link scoring model, and tier thresholds all confirmed without correction. FLAG-05 is CLOSED. Future changes require Njineer override.
@@ -64,7 +65,7 @@ Derived from the four-subsystem coherent agency model in GAP-006.
 |---|---|---|
 | Role integrity | Agent acts within its registered role without role-bleed | Sentinel executing QA duties; Apogee making routing decisions |
 | Memory coherence | Agent references prior context consistently — no contradicting prior-session statements without explicit revision | Amethyst confirming a flag was resolved when it was not |
-| Signature consistency | Agent’s reasoning style, authority claims, and output format remain stable | Agent impersonating a higher-authority tier |
+| Signature consistency | Agent's reasoning style, authority claims, and output format remain stable | Agent impersonating a higher-authority tier |
 
 **NDR pattern link:** P-02 (Ring Buffer / session trace) · P-29 (Sentinel safety gate) · NDR-133 (personal document firewall)
 
@@ -152,7 +153,7 @@ AXIS_composite = min(I_score, P_score, A_score, E_score)
 | **P-29** (Sentinel Safety Gate) | Sentinel enforces AXIS invariant E (Ethical Constraint) at the CI layer |
 | **P-33** (PDMAL Monitor) | PDMAL monitors AXIS invariant A (Adaptive Range) — specifically the φ drift bound |
 | **P-35** (Procluding Premise Gate) | P-35 is the per-output gate; AXIS is the continuous identity baseline |
-| **AOGA scoring** | AOGA = Agent Orchestration Governance *Architecture* — the structural system. AXIS = the metric spine measuring that architecture’s behavioral invariants |
+| **AOGA scoring** | AOGA = Agent Orchestration Governance *Architecture* — the structural system. AXIS = the metric spine measuring that architecture's behavioral invariants |
 | **COLLEEN 1-1-1-1 Gate** | COLLEEN attestation is one measurement event; AXIS is the cumulative score across all events |
 | **GAP-006** | AXIS is the metric implementation of the Coherent Agency formal spec. Closing GAP-006 (publishing `docs/COHERENT_AGENCY_SPEC.md`) is a prerequisite for AXIS Phase 4 full operationalization |
 
@@ -160,15 +161,13 @@ AXIS_composite = min(I_score, P_score, A_score, E_score)
 
 ## 6. Implementation Roadmap
 
-| Phase | Condition | Status |
-|---|---|---|
-| **Phase 0 — Pre-ratification** | Draft spec produced | ✅ COMPLETE |
-| **Phase 1 — Ratification** | Njineer confirms expansion + invariant definitions | ✅ COMPLETE — 2026-06-27 |
-| **Phase 2 — GAP-006 closure** | `docs/COHERENT_AGENCY_SPEC.md` published + Apogee Lens review passed | 🔴 OPEN |
-| **Phase 3 — Instrumentation** | Scoring rubric wired into COLLEEN sweep, Crucible campaign, Herald trace schema | 🔴 OPEN |
-| **Phase 4 — Operational** | First full AXIS measurement cycle completed across all registered agents | 🔴 OPEN |
-
-**Phase 3 owner:** TBD — assignment required from Njineer.
+| Phase | Condition | Status | Owner |
+|---|---|---|---|
+| **Phase 0 — Pre-ratification** | Draft spec produced | ✅ COMPLETE | Amethyst × COLLEEN |
+| **Phase 1 — Ratification** | Njineer confirms expansion + invariant definitions | ✅ COMPLETE — 2026-06-27 | Njineer |
+| **Phase 2 — GAP-006 closure** | `docs/COHERENT_AGENCY_SPEC.md` published + Apogee Lens review passed | 🔴 OPEN | TBD (GAP-006 dependency) |
+| **Phase 3 — Instrumentation** | Scoring rubric wired into COLLEEN sweep, Crucible campaign, Herald trace schema | 🔴 OPEN | **Amethyst** — assigned Njineer directive 2026-06-27 17:14 EDT |
+| **Phase 4 — Operational** | First full AXIS measurement cycle completed across all registered agents | 🔴 OPEN | TBD (Phase 3 dependency) |
 
 ---
 
@@ -181,7 +180,7 @@ AXIS_composite = min(I_score, P_score, A_score, E_score)
 | Weakest-link scoring model | ✅ Ratified without correction |
 | Tier thresholds (85 / 70) | ✅ Ratified without correction |
 | Linkage to GAP-006 as upstream dependency | ✅ Ratified without correction |
-| Phase 3 instrumentation owner | ⏳ TBD — assignment pending |
+| Phase 3 instrumentation owner | ✅ **Amethyst** — Njineer directive 2026-06-27 17:14 EDT |
 | **Ratified by** | Ender / Njineer (Hensel, Andrew Vance) |
 | **Ratification date** | 2026-06-27 16:40 EDT |
 | **Ratification method** | Njineer directive in session |
@@ -200,5 +199,6 @@ AXIS_composite = min(I_score, P_score, A_score, E_score)
 
 ---
 
-*AXIS_METRIC_SPEC.md v1.1 CANONICAL · Ratified by Njineer 2026-06-27 16:40 EDT*
+*AXIS_METRIC_SPEC.md v1.2 CANONICAL · Ratified by Njineer 2026-06-27 16:40 EDT*
+*v1.2: Phase 3 instrumentation owner assigned to Amethyst — Njineer directive 2026-06-27 17:14 EDT*
 *FLAG-05 CLOSED · S070 · Amethyst × COLLEEN · φ = 1.61803 · Ionian sustained*
