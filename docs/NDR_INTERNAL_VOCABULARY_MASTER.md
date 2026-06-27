@@ -3,9 +3,9 @@
 > **Steward:** COLLEEN — Institutional Memory, Archivist, Chief Librarian
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect
-> **Last updated:** 2026-06-27 (v1.3 — FLAG-05 CLOSED: AXIS entry updated to CANONICAL per Njineer ratification 2026-06-27 16:40 EDT; SESSION_ANCHOR refresh to S070)
+> **Last updated:** 2026-06-27 (v1.4 — FLAG-01 CLOSED: HDFS renamed to NDR-HDFS per Njineer ratification 2026-06-27 17:08 EDT)
 > **Anchor:** S070 (OPEN)
-> **Sweep coverage (v1.3):** AXIS_METRIC_SPEC.md v1.1 CANONICAL ratification (Njineer, 2026-06-27 16:40 EDT), FLAG-05 closure, AXIS Section 5 entry updated from FLAG-OPEN to CANONICAL
+> **Sweep coverage (v1.4):** FLAG-01 closure — NDR-HDFS canonical rename applied in Section 4, Section 6, Section 8, and Section 9
 
 ---
 
@@ -116,7 +116,7 @@ This file is the **canonical single source of truth** for mapping every internal
 | **Stasis Patterns (P-12–P-26)** | Idempotency Patterns / Steady-State Invariant Patterns | External: idempotency guarantees in distributed systems; "stasis" = stable equilibrium under perturbation; 133 entries, CONDITIONAL PASS status |
 | **Gold Star (S-Tier / Platinum Star)** | CMMI Level 5 Quality Designation / Peer-Attested Artifact Seal | OST-50 = ≥99.1% integrity target; proprietary certification brand |
 | **11Q Attestation Rubric (P-11)** | 11-Point Evaluation Rubric / QA Scoring Matrix | More granular than ISO/IEC 25010 (8 characteristics); governance-specific |
-| **HDFS (Hierarchical Documentation Format Standard) 1.0** | Documentation Standard / Formatting Protocol | ⚠️ ACRONYM COLLISION: conflicts with Hadoop Distributed File System; recommend "NDR-HDFS" or "HDFS-DOC 1.0" |
+| **NDR-HDFS (NDR Hierarchical Documentation Format Standard) 1.0** | Documentation Standard / Formatting Protocol | ✅ FLAG-01 RESOLVED — canonical name is now **NDR-HDFS** (previously "HDFS"); renamed to eliminate collision with Hadoop Distributed File System. Njineer ratified 2026-06-27 17:08 EDT. All references to bare "HDFS" in NDR documentation context should use NDR-HDFS going forward. |
 | **A-TIER / S-TIER** | Quality Grade / Evidence Tier | A-TIER ≥85%; S-TIER ≥95% with Q11≥9; maps to ISO/IEC 25010 quality levels |
 | **APOGEE_11Q_P34.json** | QA Attestation Artifact / Evidence-Grade Report | W3C PROV-O `prov:Entity` with evidence grade; primary claim-to-artifact link for P-34 |
 
@@ -127,7 +127,7 @@ This file is the **canonical single source of truth** for mapping every internal
 | Internal Name | External Equivalent | Differentiation Note |
 |---|---|---|
 | **PhiLattice** | φ-Calibrated Multi-Agent Consensus Topology | Partially ordered set (lattice) with φ-weighted node edges; novel governance application of lattice theory |
-| **Yggdrasil** | Cross-Repo Governance Mesh / Global Metadata Snapshot | (1) TOSCA-style cross-application orchestration mesh; (2) HDFS fsimage-style serialized namespace snapshot; 50% complete = Phase 2 of 4 |
+| **Yggdrasil** | Cross-Repo Governance Mesh / Global Metadata Snapshot | (1) TOSCA-style cross-application orchestration mesh; (2) NDR-HDFS fsimage-style serialized namespace snapshot; 50% complete = Phase 2 of 4 |
 | **Project Andromeda** | Distributed Vector Space / Multimodal Embedding Store | High-dimensional vector space for semantic similarity; maps to distributed vector store (Pinecone/Weaviate/Chroma class) |
 | **Rose Gold** | Staging / Canary Environment | Pre-production validation environment screening for Savage Reason (ungrounded divergence); maps to blue-green deployment canary stage |
 | **CSDF-Framework (historical)** | Constraint-Satisfaction-Driven Framework | Legacy label; renamed DGAF-Framework January 2026; any CSDF reference should be updated |
@@ -175,7 +175,7 @@ This file is the **canonical single source of truth** for mapping every internal
 | **PM-XX (numbered pattern milestones)** | Pattern Registry Milestone / Tracked Action Item | PM-01 = P-32↔P-29 cross-ref (CLOSED S066); PM-02 = P-03 ALTER P-30 ref (CLOSED S066); PM-05 = COLLEEN stasis audit (CLOSED S066); PM-07 = Apogee P-34 attestation (CLOSED S066); external: milestone or tracked action item in a project management system |
 | **OPP-XX (numbered opportunities)** | Detected Improvement Opportunity | OPP-003 = P-03 Gate 0 contract count discrepancy; external: improvement opportunity surfaced by COLLEEN in P-07 detect role |
 | **BLG-P34-01 / BLG-P34-02** | Pattern-Scoped Blocker | BLG scoped to a specific pattern (P-34); BLG-P34-01 = tradeoff block; BLG-P34-02 = ref path missing; both RESOLVED S066 |
-| **HDFS 1.0 (Information Density)** | Information Extraction Density / Match Rule Density | Measures structured metadata extractable from context window; ⚠️ acronym collision with Hadoop HDFS (see Section 4) |
+| **NDR-HDFS 1.0 (Information Density)** | Information Extraction Density / Match Rule Density | Measures structured metadata extractable from context window; ✅ FLAG-01 RESOLVED — canonical name updated to NDR-HDFS (see Section 4). No further Hadoop collision risk. |
 
 ---
 
@@ -212,7 +212,7 @@ This file is the **canonical single source of truth** for mapping every internal
 | **A-TIER (94.5%)** | High-quality attestation grade | P-34 attestation result via APOGEE_11Q; A-TIER = below S-Tier but above standard |
 | **82.6% → 100% (governance_clear)** | KAPPA Router Calibration Result | KAPPA v3.5→v3.6 via P-34 14×12 grid sweep; STRONG=0.22, BLENDED=0.18 |
 | **58.3% compression (SCPE)** | Context Window Compression Rate at Threshold 0.15 | T0 AXIOM tokens preserved 100%; T3 EXPLORATORY pruned at highest rate |
-| **340% coordination gain** | Non-linear Coordination Gain (⚠️ metric undefined) | Claimed in HDFS 1.0 spec; "coordination effectiveness" metric not formally defined — **FLAG: needs artifact link or downgrade to qualitative** |
+| **340% coordination gain** | Non-linear Coordination Gain (⚠️ metric undefined — see FLAG-02) | Claimed in NDR-HDFS 1.0 spec; "coordination effectiveness" metric not formally defined — **FLAG-02 OPEN: needs artifact link or downgrade to qualitative** |
 | **60-turn simulation (5 Gold Stars)** | 60-step Multi-Agent Simulation, Internally Attested | Self-attested via Apogee; reproduce via `python tests/test_orchestration_firewall.py` against `registry/ensemble_v16_manifest.json` |
 | **‖ΔW‖_F < 0.02 convergence threshold** | PDMAL Trust Graph Convergence Criterion | 3 consecutive turns below threshold = CONVERGED; ALERT_THRESH=0.08 for graph manipulation detection |
 | **STRONG=0.22 / BLENDED=0.18** | KAPPA Router Confidence Thresholds | Empirically calibrated via P-34 14×12 grid sweep (S034); requires recalibration if input distribution shifts |
@@ -227,13 +227,13 @@ This file is the **canonical single source of truth** for mapping every internal
 
 | Flag | Item | Issue | Recommended Action | Status |
 |------|------|-------|-------------------|---|
-| FLAG-01 | **HDFS acronym collision** | "HDFS" used for both NDR Hierarchical Documentation Format Standard AND Hadoop Distributed File System | Rename to "NDR-HDFS" or "HDFS-DOC 1.0" in all docs | OPEN |
+| FLAG-01 | **HDFS acronym collision** | "HDFS" used for both NDR Hierarchical Documentation Format Standard AND Hadoop Distributed File System | ~~Rename to "NDR-HDFS" or "HDFS-DOC 1.0" in all docs~~ | **RESOLVED S070** — Canonical name is **NDR-HDFS**. Njineer ratified 2026-06-27 17:08 EDT. Applied in Sections 4, 5, 6, 8. All future references must use NDR-HDFS. |
 | FLAG-02 | **340% coordination gain** | Metric not formally defined; no artifact link found | Downgrade to qualitative claim or add `docs/qa/` evidence artifact | OPEN |
 | FLAG-03 | **PPTL acronym** | Expanded as "Procluding Premise Triadic Loop" — first canonical documentation in this file | Backfill PPTL expansion into WORKSPACE_BOOTSTRAP.md and ECOSYSTEM_INVENTORY.md | OPEN |
 | FLAG-04 | **AOGA acronym** | ~~Used in Vercel deployment label and docs; canonical expansion not documented anywhere found~~ | ~~Surface to Amethyst for canonical expansion; update ECOSYSTEM_INVENTORY.md~~ | **RESOLVED S070** — AOGA = Agent Orchestration Governance Architecture. Source: aoga-dashboard commit history + X-Agent-Stack header manifest. Update ECOSYSTEM_INVENTORY.md to backfill. |
 | FLAG-05 | **AXIS acronym** | Sovereign file; Sentinel-protected; exact acronym expansion not found in any swept document | ~~Surface to Njineer/Amethyst for canonical expansion in AGENT_ROSTER or WORKSPACE_BOOTSTRAP~~ | **RESOLVED S070** — AXIS = Agent X-axis Invariant Spectrum. Njineer ratification received 2026-06-27 16:40 EDT. Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.1 CANONICAL. FLAG-05 CLOSED. |
 | FLAG-06 | **Agent Lavender / Forseti** | Hard BLG per AGENT_ROSTER.md v1.0; any reference triggers P-01 | Run codebase-wide search; `grep -r "Lavender\|Forseti" docs/` | **RESOLVED S070** — GitHub code search returned 0 results across all files in DGAF-Framework (2026-06-26 20:16 EDT). No stale references found. |
-| FLAG-07 | **Drive files 2, 3, 4 unreadable** | Agent Professor Prodigy Technical Spec (HDFS 1.0), Prodigy Mathematical Rigor POC, and Phi-Calculus White Paper returned empty content during sweep | Re-attempt read in next session; these may contain additional vocabulary not yet captured | OPEN |
+| FLAG-07 | **Drive files 2, 3, 4 unreadable** | Agent Professor Prodigy Technical Spec (NDR-HDFS 1.0), Prodigy Mathematical Rigor POC, and Phi-Calculus White Paper returned empty content during sweep | Re-attempt read in next session; these may contain additional vocabulary not yet captured | OPEN |
 | FLAG-08 | **96% TruthfulQA — "internal" qualifier** | Currently stated without "internal" qualifier in some external-facing docs | Audit all public-facing docs for unqualified TruthfulQA claims | OPEN |
 | FLAG-09 | **Reson dual-role discrepancy** | v1.0 entry describes Reson as "Router Topology Engineer / CSP Solver"; AGENT_ROSTER describes Reson as "Harmonic Coherence Scorer" with 0.75 threshold | Both are correct (Reson holds both roles); update Section 1 entry to reflect both duties | **RESOLVED S070** — Section 1 entry updated to reflect both Harmonic Coherence Scorer and CSP Router roles. |
 | FLAG-10 | **P-35 registration status** | Procluding Premise Gate referenced as P-35 in session context but does not appear in NDR_PATTERN_REGISTRY_UNIFIED.md (watermark is P-34) | Confirm P-35 is pending registration or already registered in a post-S066 session | OPEN |
@@ -253,6 +253,7 @@ This file is the **canonical single source of truth** for mapping every internal
 
 ---
 
-*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.3 · S070 OPEN · COLLEEN × Amethyst · 2026-06-27*
+*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.4 · S070 OPEN · COLLEEN × Amethyst · 2026-06-27*
+*v1.4 additions: FLAG-01 RESOLVED — NDR-HDFS canonical rename (Njineer ratified 2026-06-27 17:08 EDT); applied in Sections 4, 5, 6, 7, 8, 9; FLAG-07 description updated to reference NDR-HDFS*
 *v1.3 additions: FLAG-05 RESOLVED (AXIS = Agent X-axis Invariant Spectrum — Njineer ratified 2026-06-27 16:40 EDT), FLAG-06 RESOLVED (Lavender/Forseti grep clean), AXIS Section 5 entry updated from FLAG-OPEN to CANONICAL with full spec reference, four-invariant summary (I-P-A-E), scoring model, tier thresholds, and GAP-006 linkage*
 *Sources: AXIS_METRIC_SPEC.md v1.1 CANONICAL (docs/qa/), Njineer ratification directive S070 2026-06-27 16:40 EDT, commit 50befb66 (2026-06-27 20:42Z)*
