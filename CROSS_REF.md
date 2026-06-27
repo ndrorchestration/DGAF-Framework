@@ -2,8 +2,8 @@
 
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
-> **Last updated:** 2026-05-30  
-> **Anchor:** S067 (gap sweep wave 2)
+> **Last updated:** 2026-06-26  
+> **Anchor:** S068 (Nemotron 3 Ultra eval suite — Issue #32)
 
 Canonical cross-reference index for patterns, files, agents, and ecosystem components.
 All NDR patterns, governance gates, and framework bindings are registered here.
@@ -121,6 +121,7 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 | `test_router_coverage.py` | TC1–TC8 | ✅ 8/8 passing — v3.6.0 — S067 |
 | `test_scpe_thresholds.py` | Threshold sweep, T0 guard | ✅ Stable |
 | `test_phi_closure.py` | 16-turn sim, checkpoint fire | ✅ Stable |
+| `dgaf_eval_suite.py` | Nemotron 3 Ultra parametric eval — 5 tasks | 🟡 Pending — Issue #32 |
 
 ### patterns/
 
@@ -159,5 +160,22 @@ All NDR patterns, governance gates, and framework bindings are registered here.
 
 ---
 
-*CROSS_REF v4.1 · S067 gap sweep wave 2 · COLLEEN + Amethyst · 2026-05-30*  
-*Unified registry path active · All stale statuses corrected · Ecosystem inventory live · P-10 graduation check: PENDING S068*
+## Eval Terminology Index — S068
+
+> Added: 2026-06-26 · Filed under Issue #32 · Steward: Amethyst  
+> Source: Nemotron 3 Ultra parametric benchmark integration (`dgaf_eval_suite.py`)
+
+| Term | Definition | Maps To | File | Issue |
+|------|-----------|---------|------|-------|
+| `role_boundary_coherence` | % correct role identification at turn N in a 50-turn triadic trace; measures Mamba state retention under long context | RULER 1M / AA-LCR (94.0 / 65.5) | `tests/dgaf_eval_suite.py` | #32 |
+| `contraction_proof_fidelity` | % of generated kernel specs where `numpy.linalg.eigvals` confirms spectral radius < 1.0; validates ρ-contraction property | GPQA Diamond (87.9%) | `tests/dgaf_eval_suite.py` | #32 |
+| `governance_schema_conformance` | % of fuzz-generated `governance.yml` variants that pass Pydantic `extra=forbid` validation; measures IFBench-class instruction following | IFBench / MMLU-Pro (81.7% / 90.1%) | `tests/dgaf_eval_suite.py` | #32 |
+| `audit_hallucination_rate` | Field-level accuracy of Herald-generated audit events vs ground truth logs; measures factual fidelity of audit output | OmniScience Non-Hallucination (75.5% NVFP4) | `tests/dgaf_eval_suite.py` | #32 |
+| `taubench_banking_mitigation` | % correct Sentinel escalation on financial compliance routing tasks; raw model baseline 22.6% — requires few-shot priming | TauBench Banking (22.6% ⚠️) | `tests/dgaf_eval_suite.py` | #32 |
+| `DGAF_EVAL_TASKS` | Top-level registry dict in `dgaf_eval_suite.py` — keyed by eval task name; values include method, metric, target, maps_to | — | `tests/dgaf_eval_suite.py` | #32 |
+| `thinking_tokens` | Per-role reasoning budget parameter passed to Nemotron 3 Ultra via `chat_template_kwargs`; controls depth of inference per DGAF role | — | `dgaf_nemotron_client.py` | #32 |
+
+---
+
+*CROSS_REF v4.2 · S068 Nemotron eval suite patch · COLLEEN + Amethyst · 2026-06-26*  
+*Unified registry path active · Eval terminology section added · dgaf_eval_suite.py registered (pending) · Issue #32 linked*
