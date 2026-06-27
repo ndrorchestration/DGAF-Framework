@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/schemas/governance.yml.schema.json",
+  "title": "DGAF Governance YAML Schema",
+  "description": "Pydantic-enforced schema for governance.yml. extra=forbid. All downstream kernels, CI gates, and eval harnesses derive from this file.",
+  "type": "object",
+  "required": ["schema_version", "session_id", "roles"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Semantic version of this governance schema (e.g. 1.0.0)"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "DGAF session identifier at time of governance.yml generation",
+      "pattern": "^S[0-9]{3,}(-[A-Z0-9-]+)?$"
+    },
+    "roles": {
+      "type": "array",
+      "description": "Array of role definitions. Each role is a typed kernel entry.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "curvature", "contraction_rate", "fallback_chain", "compliance_flags"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Agent role name"
+          },
+          "curvature": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Role curvature scalar. Controls governance trajectory curvature."
+          },
+          "contraction_rate": {
+            "type": "number",
+            "minimum": 0.0,
+            "exclusiveMaximum": 1.0,
+            "description": "Spectral radius rho of role transition operator. Must be < 1.0 (contraction guarantee)."
+          },
+          "fallback_chain": {
+            "type": "array",
+            "description": "Ordered list of fallback role names if this role fails.",
+            "items": {"type": "string"}
+          },
+          "compliance_flags": {
+            "type": "object",
+            "description": "Compliance declarations for this role.",
+            "additionalProperties": false,
+            "properties": {
+              "nist_rmf": {
+                "type": "boolean",
+                "description": "NIST AI RMF alignment declared"
+              },
+              "eu_ai_act_articles": {
+                "type": "array",
+                "description": "EU AI Act articles this role's governance satisfies",
+                "items": {"type": "string"}
+              },
+              "owasp_controls": {
+                "type": "array",
+                "description": "OWASP Agentic AI Top 10 controls implemented by this role",
+                "items": {"type": "string"}
+              }
+            }
+          },
+          "thinking_tokens": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Reasoning token budget for this role. 0 = audit-only/structured generation mode."
+          },
+          "tools": {
+            "type": "array",
+            "description": "Tool IDs accessible to this role (from DGAF_TOOLS registry).",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "default_precision": {
+      "type": "string",
+      "enum": ["BF16", "NVFP4"],
+      "description": "Default inference precision. BF16 required for Herald (audit) roles."
+    },
+    "eval_suite_version": {
+      "type": "string",
+      "description": "Version of dgaf_eval_suite.py used to validate this governance.yml"
+    }
+  }
+}
