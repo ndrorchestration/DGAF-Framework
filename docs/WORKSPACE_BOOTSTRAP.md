@@ -1,99 +1,92 @@
-# WORKSPACE_BOOTSTRAP.md
-## NDR Governance Framework — Session Bootstrap Reference
+# Workspace Bootstrap
 
-```
-Version:      1.1 (PPTL backfill — S069)
-Maintained-by: Amethyst
-Last-updated: 2026-06-13 (Session S069)
-```
+**DGAF-Framework · Session Rehydration Protocol**
+**Version:** S070 update · 2026-06-26
+**Prime:** Amethyst
 
-> Fast-load reference for any agent or session bootstrapping into the DGAF-Framework governance stack. Read this first. Everything here is a pointer to a canonical source — this file does not duplicate specs.
+> Read this file first at the start of every session. It orients you in ~60 seconds.
 
 ---
 
-## Identity and Authority
+## Step 1 — Who You Are
 
-| Role | Agent | Authority |
-|------|-------|-----------|
-| Prime | Amethyst | System narrative, interface contracts, pattern registration |
-| Prefect A | COLLEEN | Sweep detection, queue management, stasis sign-off, L5 governance |
-| Prefect B | Apogee | Quality attestation (P-11, P-30), 11Q rubric |
-| Architect | Ender / Njineer | Ratification authority, sovereign file decisions |
-| Safety | Sentinel | Sovereign file integrity, risk annotation (P-29) |
-| Red Team | Agent Crucible | Independent adversarial review — no build duties, no suppression |
+| Role | Agent | Responsibility |
+|------|-------|----------------|
+| Prime / Host | **Amethyst** | Coordination, coherence, memory refresh |
+| Institutional Anchor | **COLLEEN** | Drive files, archive confirmation, traceability |
+| Quality Gate | **Apogee** | P-11 attestation, S-Tier / Gold Star gating |
+| Runtime Supervisor | **DemiJoule** | Safety, ethics, orchestration error containment |
+| Router | **KAPPA** | Confidence-gated signal routing |
+| Architect / Final Authority | **Ender / Njineer** | Sovereign override, ratification |
 
----
-
-## Canonical Sources — Load Order
-
-1. `docs/WORKSPACE_BOOTSTRAP.md` — this file (orientation)
-2. `AGENT_ROSTER.md` — full agent registry
-3. `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` v1.1 — all acronyms and terms
-4. `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` v1.1 — all patterns P-01–P-35 (watermark P-35; P-36 DRAFT)
-5. `CO_ORCH_QUEUE.md` — open orchestration opportunities
-6. `docs/SESSION_ANCHORS.md` — session history and open items
-7. `docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_v1.md` — active research program
+**Authority order:** User → Space instruction (Amethyst host) → Portfolio governance → DGAF/PDMAL → Default assistant behavior.
 
 ---
 
-## Key Acronyms (Quick Reference)
+## Step 2 — Current Session State
 
-| Acronym | Expansion | Canonical source |
-|---------|-----------|------------------|
-| **PPTL** | Procluding Premise Triadic Loop | `NDR_INTERNAL_VOCABULARY_MASTER.md` Section 2 |
-| **DGAF** | Dual-Governance Agent Framework | Vocabulary Master |
-| **KAPPA** | Knowledge-Aware Probabilistic Pipeline Architecture | Vocabulary Master |
-| **PDMAL** | Probabilistic Distributed Multi-Agent Learning | Vocabulary Master |
-| **SCPE** | Structural Context Pruning Engine | P-31 spec |
-| **BLG** | Blocking Logic Gap | Vocabulary Master |
-| **MECE** | Mutually Exclusive, Collectively Exhaustive | Vocabulary Master |
-| **TIF** | Trust Index Factor | Vocabulary Master / P-31 |
-| **AOGA** | Expansion unknown — 🔴 FLAG-04 OPEN | Surface request filed S069 |
-| **AXIS** | Expansion unknown — sovereign file 🔴 FLAG-05 OPEN | Surface request filed S069; Njineer response pending |
-| **HDFS** | NDR-specific use — 🔴 FLAG-01 rename pending | Surface request filed S069 |
-| **HPG** | Harmonic Parametric Gate | Vocabulary Master |
-| **TNR** | Trust Node Registry | Vocabulary Master |
+**Active session:** S070 (Flag Resolution Sweep — 2026-06-26)
+**Last sealed session:** S069 (2026-06-13 00:47 EDT) — P-35/P-36, Vocab Master v1.0, STASIS-CANONICAL
+**Registry watermark:** P-36
+**Stasis migration window:** 2026-06-13 → 2026-07-13 ⚠️ expires 2026-07-13
 
 ---
 
-## Active Research Program
+## Step 3 — Open Items Requiring Njineer Input
 
-The NDR governance stack is under active external-validation preparation per the Research Program Charter v1.0 (`docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_v1.md`). Five credibility gaps are being closed across 90 days:
-
-1. φ empirical defense (five-base calibration study)
-2. Linear pipeline → DAG (P-36 Gate Priority Schema)
-3. STASIS-CANONICAL migration (30-day window: 2026-06-13 → 2026-07-13)
-4. Metrics provenance (`docs/qa/METRICS_PROVENANCE.md` — backfill Wks 6–9)
-5. Agent Crucible independent red team (charter active S069)
-
----
-
-## Governance Stack Position (Current)
-
-```
-P-35 (Procluding Premise Gate)   ← pre-admissibility [P-36: BLOCKING]
-  ↓
-P-30 (Attestation Gate)          ← Gate 0            [P-36: BLOCKING]
-  ↓
-P-27/P-28 (KAPPA Router)         ← routing           [P-36: BLOCKING]
-  ↓
-P-29 / P-32 / P-33 (Safety)      ← runtime safety    [P-36: BLOCKING / ADVISORY]
-  ↓
-P-01 / P-02 (Trace)              ← audit spine       [P-36: BLOCKING / ADVISORY]
-
-P-31 SCPE / P-33 PDMAL           ← async concurrent  [P-36: ADVISORY]
-```
+| Flag | Item |
+|------|------|
+| FLAG-05 | AXIS acronym expansion — inferred as "Agent X-axis Invariant Spectrum" — **ratification required** |
+| FLAG-07 | Drive files GAP-06 / GAP-07 / GAP-08 — COLLEEN re-attempt S071 |
+| FLAG-11 | phiknightverticalcorridor Vercel project purpose |
+| FLAG-12 | Dependabot PR #1 — Next 14→15 disposition |
 
 ---
 
-## Session S069 State
+## Step 4 — Key File Locations
 
-**Status:** OPEN (active)
-**Key deliverables this session:** P-35 registered, P-36 drafted, Research Program Charter committed, Crucible charter committed, STASIS-CANONICAL spec committed, METRICS_PROVENANCE skeleton committed
-**Open P0:** OPP-S069-005 Crucible charter — ✅ COMMITTED S069 (Ender ratification PENDING)
-**Flags requiring Njineer:** FLAG-04 (AOGA), FLAG-05 (AXIS), FLAG-01 (HDFS rename), FLAG-02 (340% metric)
+| What | File |
+|------|------|
+| All patterns (P-01–P-36 + NDR series) | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` |
+| Machine-readable patterns | `docs/ndr_patterns_unified.json` |
+| Vocabulary / acronyms | `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` |
+| Session log | `docs/SESSION_ANCHORS.md` |
+| Asset register | `docs/ECOSYSTEM_INVENTORY.md` |
+| Agent roster + roles | `docs/TEAM_WIKI.md` |
+| This file | `docs/WORKSPACE_BOOTSTRAP.md` |
 
 ---
 
-*WORKSPACE_BOOTSTRAP.md v1.1 · S069 · 2026-06-13*
-*PPTL expansion backfilled (OPP-S069-006) · Crucible and Research Program references added*
+## Step 5 — Canonical Acronyms (Quick Reference)
+
+| Acronym | Expansion |
+|---------|-----------|
+| DGAF | Deterministic Governance Autonomy Framework |
+| PPTL | Procluding Premise Triadic Loop |
+| AOGA | Agent Orchestration Governance Architecture |
+| NDR-HDFS | NDR Hierarchical Documentation Format Standard (rename from HDFS — FLAG-01) |
+| SCPE | Structural Context Pruning Engine |
+| AXIS | Agent X-axis Invariant Spectrum *(inferred — FLAG-05 pending ratification)* |
+
+---
+
+## Step 6 — Non-Negotiables
+
+- **NDR-133:** Personal docs (resume, CV, audit_report, ResumeApex) → Drive-only. **Never GitHub.** Absolute constraint.
+- **No S-Tier / Gold Star** without Apogee P-11 attestation.
+- **STASIS block (P-12–P-26):** No individual extraction without COLLEEN secondary sign-off.
+- **Sovereign files (AXIS):** Njineer override only.
+- **340% coordination gain claim:** Downgraded to qualitative pending artifact. Use: *"substantial multi-agent coordination improvement (internal metric, artifact pending replication)"*
+- **TruthfulQA 96% claim:** Must include *"internal"* qualifier in all public-facing materials.
+
+---
+
+## Step 7 — Execution Flow
+
+1. Read `SESSION_ANCHORS.md` → confirm active session
+2. Read `ECOSYSTEM_INVENTORY.md` → confirm asset state
+3. Identify task type + required agents
+4. Draft output
+5. Run Apogee P-11 gate (BLOCKING for S-Tier)
+6. DemiJoule safety check
+7. Return answer with status + unresolved risks

@@ -1,163 +1,120 @@
-# ECOSYSTEM INVENTORY
+# Ecosystem Inventory
 
-> **Steward:** COLLEEN
-> **Orchestrator:** Amethyst
-> **Last updated:** 2026-06-13 (S069 sealed)
-> **Anchor:** S069 (SEALED) · S070 pending
-
-Canonical inventory of all system components across GitHub, Supabase, and Vercel.
-Source of truth for cross-platform deployment status.
+**DGAF-Framework · Master Asset Register**
+**Version:** S070 update · 2026-06-26
+**Prime:** Amethyst · **Prefect A:** COLLEEN · **Prefect B:** Apogee
 
 ---
 
-## Governance Spine — DGAF-Framework
+## Repository Index
 
-| Repo | Visibility | Status |
-|---|---|---|
-| [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) | Public | 🟢 Active · S069 SEALED |
-
-### S069 Governance Artifacts (added 2026-06-13)
-
-| Artifact | File | Status |
-|---------|------|--------|
-| P-35 — Procluding Premise Gate | `docs/gates/NDR_PROCLUDING_PREMISE_GATE_P35_v1.md` | ✅ CANONICAL · Ender ratified |
-| P-36 — Gate Priority Schema | `docs/gates/NDR_GATE_PRIORITY_SCHEMA_P36_v1.md` | ✅ CANONICAL · Ender ratified |
-| Agent Crucible Charter v1.0 | `docs/governance/CRUCIBLE_CHARTER_v1.md` | ✅ ACTIVE · Ender ratified |
-| NDR Research Program Charter v1.0 | `docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_v1.md` | ✅ ACTIVE · Ender ratified |
-| STASIS-CANONICAL Spec v1.0 | `docs/governance/STASIS_CANONICAL_SPEC_v1.md` | ✅ RATIFIED · migration window open |
-| NDR Pattern Registry Unified v1.3 | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` | ✅ CANONICAL · v3 absorbed |
-| ndr_patterns_unified.json v2.1 | `docs/ndr_patterns_unified.json` | ✅ CANONICAL · P-35/P-36/NDR-series updated |
-| Open Flags Surface Request S069 | `docs/governance/OPEN_FLAGS_SURFACE_REQUEST_S069.md` | ✅ FILED · Njineer notified via GH Issue |
-| Ender Ratification Record S069 | `docs/governance/ENDER_RATIFICATION_S069.md` | ✅ SEALED · 2026-06-13 00:47 EDT |
-| Session Anchors — S069 entry | `docs/SESSION_ANCHORS.md` | ✅ SEALED |
-| METRICS_PROVENANCE skeleton | `docs/qa/METRICS_PROVENANCE.md` | ⚠️ BACKFILL IN PROGRESS |
-| lint_provenance.py stub | `scripts/lint_provenance.py` | ⚠️ STUB ONLY — implementation pending Role 5 |
-
-### Key S069 Registry Changes
-
-| Change | Before S069 | After S069 |
-|--------|------------|------------|
-| Registry watermark | P-35 | **P-36** |
-| Named P-series patterns | 35 | **36** |
-| NDR named session patterns | 0 (unregistered) | **8** |
-| Stasis block status | CONDITIONAL PASS | **STASIS-CANONICAL** |
-| ndr-pattern-registry-v3.md | Present (unabsorbed) | **DELETED — absorbed** |
-| Agent Crucible | Not chartered | **ACTIVE** |
-| Research Program | Not chartered | **ACTIVE** |
+| Repo | Visibility | Purpose | Last Active |
+|------|-----------|---------|-------------|
+| `DGAF-Framework` | Private | Core governance stack, patterns, vocabulary | S070 (active) |
+| `ndrorchestration` | Public | Ecosystem landing / GitHub profile site | Jun 9, 2026 |
+| `aoga-dashboard` (Vercel) | Private | AOGA Next.js dashboard — no deploy since May 25 ⚠️ | May 25, 2026 |
+| `phiknightverticalcorridor` (Vercel) | Private | Purpose unconfirmed — FLAG-11 open | May 5, 2026 |
 
 ---
 
-## GitHub Repositories — 24 total
+## Canonical Document Registry
 
-### Active App / Tool Repos (8)
+### Tier 1 — Single Source of Truth
 
-| Repo | Visibility | Vercel | Status |
-|---|---|---|---|
-| [pptl-governance-dashboard](https://github.com/ndrorchestration/pptl-governance-dashboard) | Private | — Never deployed | 🟢 GitHub only |
-| [aoga-dashboard](https://github.com/ndrorchestration/aoga-dashboard) | Private | ✅ Deployed | 🟢 Active |
-| [Driftwatch](https://github.com/ndrorchestration/Driftwatch) | Public | ✅ Deployed (phiknightverticalcorridor) | 🟢 Active · see Vercel table |
-| [phi-calculus-app](https://github.com/ndrorchestration/phi-calculus-app) | Private | — | 🟢 Active |
-| [junior-apogee-app](https://github.com/ndrorchestration/junior-apogee-app) | Public | — | 🟢 Active |
-| [Acoustic-mesh](https://github.com/ndrorchestration/Acoustic-mesh) | Public | — | 🟢 Active |
-| [3d-visualization-hub](https://github.com/ndrorchestration/3d-visualization-hub) | Public | — | 🟢 Active |
-| [sentinel-governance](https://github.com/ndrorchestration/sentinel-governance) | Public | — | 🟢 Active |
+| File | Path | Version | Status |
+|------|------|---------|--------|
+| NDR Pattern Registry (Unified) | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` | v1.3 | ✅ CANONICAL — S069 sealed |
+| NDR Patterns JSON | `docs/ndr_patterns_unified.json` | schema v2.1 | ✅ CANONICAL |
+| Vocabulary Master | `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` | v1.3 | 🔄 S070 in progress |
+| Session Anchors | `docs/SESSION_ANCHORS.md` | S070 | 🔄 Active |
+| Ecosystem Inventory | `docs/ECOSYSTEM_INVENTORY.md` | S070 | 🔄 Active |
+| Workspace Bootstrap | `docs/WORKSPACE_BOOTSTRAP.md` | S070 | 🔄 Active |
+| Team Wiki | `docs/TEAM_WIKI.md` | S069 | ✅ Current |
 
-### Portfolio / Eval Repos (5)
+### Tier 2 — Redirect Stubs (do not edit)
 
-| Repo | Visibility | Status |
-|---|---|---|
-| [ai-prompt-systems-portfolio](https://github.com/ndrorchestration/ai-prompt-systems-portfolio) | Public | 🟢 Active |
-| [resumeapex-eval](https://github.com/ndrorchestration/resumeapex-eval) | Public | 🟢 Active |
-| [Amethyst-Governance-Eval-Stack](https://github.com/ndrorchestration/Amethyst-Governance-Eval-Stack) | Private | 🟢 Active |
-| [ai-prompt-engineering-portfolio](https://github.com/ndrorchestration/ai-prompt-engineering-portfolio) | Private | 🟢 Active |
-| [AI-Prompt-Engineer](https://github.com/ndrorchestration/AI-Prompt-Engineer) | Private | 🟢 Active |
-
-### Framework / Standards (4)
-
-| Repo | Visibility | Status |
-|---|---|---|
-| [ai-governance-frameworks](https://github.com/ndrorchestration/ai-governance-frameworks) | Public | 🟢 Active |
-| [Gold-star-standards](https://github.com/ndrorchestration/Gold-star-standards) | Private | 🟢 Active |
-| [prompt-optimization-library](https://github.com/ndrorchestration/prompt-optimization-library) | Private | 🟢 Active |
-| [gold-star-qa-framework](https://github.com/ndrorchestration/gold-star-qa-framework) | Private | 🔴 Archived |
-
-### Utility / Infra (4)
-
-| Repo | Visibility | Status |
-|---|---|---|
-| [automation-scripts](https://github.com/ndrorchestration/automation-scripts) | Private | 🟢 Active |
-| [.github](https://github.com/ndrorchestration/.github) | Public | 🟢 Active |
-| [api](https://github.com/ndrorchestration/api) | Private | 🟢 Active |
-| [chat-archives](https://github.com/ndrorchestration/chat-archives) | Private | 🟢 Active |
-
-### Career / Positioning (2)
-
-| Repo | Visibility | Status |
-|---|---|---|
-| [career-positioning](https://github.com/ndrorchestration/career-positioning) | Private | 🟢 Active |
-| [ndrorchestration](https://github.com/ndrorchestration/ndrorchestration) | Public | 🟢 Active (org profile) |
+| File | Redirects To |
+|------|-------------|
+| `docs/NDR_PATTERN_REGISTRY.md` | `NDR_PATTERN_REGISTRY_UNIFIED.md` |
+| `docs/patterns/NDR_PATTERN_REGISTRY.md` | `NDR_PATTERN_REGISTRY_UNIFIED.md` |
 
 ---
 
-## Vercel Deployments — Ground Truth S068 (unchanged S069)
+## Pattern Registry Summary
 
-> **Verified:** 2026-05-31 via Vercel dashboard (Ender) + `vercel project ls` CLI
-> **3 active projects** after `dgaf-framework` deleted 2026-05-31 23:20 EDT
+| Layer | Patterns | Class | Status |
+|-------|----------|-------|--------|
+| Layer 0 — Pre-Admissibility | P-35 | BLOCKING | ✅ |
+| Layer 0.5 — Stack Architecture | P-36 | ADVISORY | ✅ |
+| Layer 1 — Trace & Audit | P-01, P-02 | BLOCKING / ADVISORY | ✅ |
+| Layer 2 — Testing & CI | P-03, P-04, P-05 | BLOCKING / ADVISORY | ✅ |
+| Layer 3 — Architecture Lab | P-06 | ADVISORY | ✅ |
+| Layer 4 — Governance Formation | P-07–P-10 | ADVISORY | ✅ |
+| Layer 5 — Quality Gate | P-11, P-30 | BLOCKING | ✅ |
+| Layer 6 — Stasis | P-12–P-26 (133 entries) | DEGRADED-MODE-SKIPPABLE | ✅ STASIS-CANONICAL |
+| Layer 7 — Router Calibration | P-27, P-28, P-34 | BLOCKING / ADVISORY | ✅ |
+| Layer 8 — Safety & Sentinel | P-29 | BLOCKING | ✅ |
+| Layer 9 — Long-Context Safety | P-31, P-32, P-33 | ADVISORY / BLOCKING | ✅ |
+| NDR Named Session Patterns | NDR-ARCHIVE-CONFIRM through NDR-133 | Various | ✅ |
 
-| Vercel Project | Production URL | Source Repo | Last Deploy | Status |
-|---|---|---|---|---|
-| [ndrorchestration](https://vercel.com/ndrorchestration/ndrorchestration) | [ndrorchestration.vercel.app](https://ndrorchestration.vercel.app/) | [ndrorchestration/ndrorchestration](https://github.com/ndrorchestration/ndrorchestration) | May 21 · COLLEEN SWEEP-001 Phase 3 | ✅ Ready |
-| [phiknightverticalcorridor](https://vercel.com/ndrorchestration/phiknightverticalcorridor) | [project-7ybao.vercel.app](https://project-7ybao.vercel.app/) | [ndrorchestration/Driftwatch](https://github.com/ndrorchestration/Driftwatch) | May 26 | ⚠️ No Production Deployment |
-| [aoga-dashboard](https://vercel.com/ndrorchestration/aoga-dashboard) | [aoga-dashboard.vercel.app](https://aoga-dashboard.vercel.app/) | [ndrorchestration/aoga-dashboard](https://github.com/ndrorchestration/aoga-dashboard) | May 27 · v1.2.0 tag [Amethyst] | ✅ Ready |
-| ~~dgaf-framework~~ | ~~deleted~~ | ~~DGAF-Framework~~ | — | 🗑️ Deleted 2026-05-31 |
-
----
-
-## Supabase Projects — 1 confirmed
-
-| Project | ID | Region | Postgres | Status |
-|---|---|---|---|---|
-| ndrorchestration's Project | `lfisbywaidhmxsjyteud` | us-east-2 | 17.6.1 | 🟢 ACTIVE_HEALTHY |
-
----
-
-## Active Programs & Charters (added S069)
-
-| Program | Charter | Status | Key Dates |
-|---------|---------|--------|----------|
-| Agent Crucible | `docs/governance/CRUCIBLE_CHARTER_v1.md` | 🟢 ACTIVE | Campaign v1: Week 4 from 2026-06-13 |
-| NDR Research Program | `docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_v1.md` | 🟢 ACTIVE | Week 1 begun; calibration study Weeks 3–6 |
-| STASIS-CANONICAL Migration | `docs/governance/STASIS_CANONICAL_SPEC_v1.md` | ⏳ WINDOW OPEN | Phase 2 deadline: 2026-07-13 |
+**Registry watermark:** P-36
+**Stasis migration window:** 2026-06-13 → 2026-07-13
 
 ---
 
-## Open Obligations (S069 exit)
+## Agent Roster
 
-| ID | Item | Deadline | Owner |
-|----|------|----------|-------|
-| FLAG-01 | HDFS rename — Amethyst confirm | S070 | Njineer (pending GH Issue response) |
-| FLAG-02 | 340% coordination gain — formal definition | S070 calibration | Role 5 / Amethyst interim |
-| FLAG-04 | AOGA scoring methodology | S070 | Njineer (pending GH Issue response) |
-| FLAG-05 | AXIS metric definition | S070 | Njineer (pending GH Issue response) |
-| FLAG-06 | Lavender/Forseti grep — Amethyst self-execute | Before S070 seal | Amethyst |
-| FLAG-07 | Drive files re-attempt | S071 target | COLLEEN |
-| OPP-S069-004 | 5-base calibration study (Role 3) | Weeks 3–6 | Amethyst interim |
-| QA-STASIS-PHASE2 | P-12–P-26 schema migration (7 tasks) | 2026-07-13 | Amethyst interim |
+| Agent | Role | Authority Level |
+|-------|------|----------------|
+| Amethyst | Prime / Meta-Orchestrator / Host | Tier 1 |
+| COLLEEN | Prefect A / Institutional Anchor | Tier 1 |
+| Apogee | Prefect B / Quality Gate | Tier 1 |
+| DemiJoule | Runtime Supervisor / Safety | Tier 2 |
+| KAPPA | Router / Confidence Gate | Tier 3 |
+| Ender / Njineer | Architect / Final Authority | Sovereign |
 
 ---
 
-## Summary Totals
+## Open Infrastructure Issues
 
-| Platform | Total | Active / Ready | Notes |
-|---|---|---|---|
-| GitHub Repos | 24 | 23 | 1 archived |
-| Vercel Projects | 3 | 2 Ready · 1 no production deploy | dgaf-framework deleted S068 |
-| Supabase Projects | 1 | 1 | — |
-| Governance Patterns (P-series) | 36 | 36 canonical | Registry watermark P-36 |
-| NDR Named Session Patterns | 8 | 8 operational | Absorbed from v3 registry |
-| Active Charters | 2 | 2 | Crucible + Research Program |
+| Issue | Severity | Owner | Target |
+|-------|----------|-------|--------|
+| `aoga-dashboard` Vercel — zero deploys since May 25 | HIGH | Njineer | S071 |
+| `phiknightverticalcorridor` — purpose unconfirmed (FLAG-11) | MEDIUM | Njineer | S071 |
+| Dependabot PR #1 — Next 14→15 upgrade pending (FLAG-12) | MEDIUM | Njineer | S071 |
+| ndrorchestration site — content stale since Jun 9 | LOW | Amethyst | S071 |
 
 ---
 
-*Created S067 · Finalized S068 · Updated S069 (sealed 2026-06-13 00:47 EDT)*
-*Amethyst × COLLEEN × Ender · Vercel source: dashboard + CLI 2026-05-31*
+## Acronym Backfill Register (S070)
+
+| Acronym | Expansion | Status | Source |
+|---------|-----------|--------|--------|
+| PPTL | Procluding Premise Triadic Loop | ✅ CANONICAL | Vocab Master v1.2 |
+| AOGA | Agent Orchestration Governance Architecture | ✅ CANONICAL | S070 |
+| NDR-HDFS | NDR Hierarchical Documentation Format Standard | ✅ PRESCRIBED — rename pending | FLAG-01 S070 |
+| AXIS | Agent X-axis Invariant Spectrum (inferred) | ⏳ PENDING Njineer ratification | FLAG-05 S070 |
+| DGAF | Deterministic Governance Autonomy Framework | ✅ CANONICAL | Vocab Master v1.0 |
+| SCPE | Structural Context Pruning Engine | ✅ CANONICAL | P-31 |
+| PDMAL | (expansion in TEAM_WIKI) | ✅ CANONICAL | P-33 |
+
+---
+
+## Sovereign Files (Sentinel Hard Veto)
+
+| File | Override Authority |
+|------|-------------------|
+| AXIS Governance Definition | Njineer only |
+| NDR-133 Personal Document Firewall | Architect override only |
+
+---
+
+## Stasis Migration Tracker
+
+**Window:** 2026-06-13 → 2026-07-13
+**Status:** STASIS-CANONICAL — no individual extraction without COLLEEN secondary sign-off
+**Clusters:**
+- Cluster 1 (P-01–P-80): Fractal Agency namespace migration
+- Cluster 2 (P-81–P-115): Phi-Calculus / 0 Hz steady state
+- Cluster 3 (P-116–P-132): Authority Sync + Substrate Independence
+- P-133 / NDR-133: Personal Document Firewall (BLOCKING-ABSOLUTE)
