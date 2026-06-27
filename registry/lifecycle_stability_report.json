@@ -1,123 +1,28 @@
 {
-  "report_id": "lifecycle_stability_report_S067",
-  "version": "1.0.0",
-  "generated": "2026-05-30T07:11:09Z",
-  "session": "S067",
-  "orchestrators": ["Amethyst", "COLLEEN"],
-  "phi_star": 0.618,
-  "fib_34": 5702887,
-  "overall_verdict": "ALL_STABLE",
-  "phases_passing": 7,
-  "phases_total": 7,
-  "phase_results": [
-    {
-      "phase_id": "Phase_0",
-      "phase_name": "Bootstrap & Axiom Guard",
-      "stability_index": 1.0,
-      "stability_target": 0.618,
-      "stability_pass": true,
-      "convergence_turns": null,
-      "convergence_upper": 233,
-      "convergence_pass": true,
-      "status": "STABLE",
-      "agents": ["Amethyst", "COLLEEN", "Sentinel-Phi"],
-      "ndp_patterns": ["P-31", "P-10"],
-      "gate_condition": "SCPE threshold=0.15 / T0 immunity enforced"
-    },
-    {
-      "phase_id": "Phase_I",
-      "phase_name": "Context Pruning & Reweight",
-      "stability_index": 1.0,
-      "stability_target": 0.618,
-      "stability_pass": true,
-      "convergence_turns": null,
-      "convergence_upper": 10946,
-      "convergence_pass": true,
-      "status": "STABLE",
-      "agents": ["Amethyst", "DemiJoule", "COLLEEN"],
-      "ndp_patterns": ["P-31", "P-34"],
-      "gate_condition": "SCPE compression >= 50% · weight config selected with conf >= 0.28"
-    },
-    {
-      "phase_id": "Phase_II",
-      "phase_name": "PDMAL Convergence Monitor",
-      "stability_index": 1.0,
-      "stability_target": 0.618,
-      "stability_pass": true,
-      "convergence_turns": 46,
-      "convergence_upper": 10946,
-      "convergence_pass": true,
-      "status": "STABLE",
-      "agents": ["Amethyst", "DemiJoule", "Sentinel-Phi"],
-      "ndp_patterns": ["P-33"],
-      "gate_condition": "0 full ALERTs · WATCH events <= 5 per 60 turns"
-    },
-    {
-      "phase_id": "Phase_III",
-      "phase_name": "Phi-Closure Gate",
-      "stability_index": 0.9999,
-      "stability_target": 0.618,
-      "stability_pass": true,
-      "convergence_turns": null,
-      "convergence_upper": 5702887,
-      "convergence_pass": true,
-      "status": "STABLE",
-      "agents": ["Amethyst", "Professor_Prodigy", "Reson"],
-      "ndp_patterns": ["P-32", "P-29"],
-      "gate_condition": "phi_score >= PHI_STAR=0.618 · Fib[34] KILL_REC handled correctly"
-    },
-    {
-      "phase_id": "Phase_IV",
-      "phase_name": "HPG & Harmonic Scoring",
-      "stability_index": 1.0,
-      "stability_target": 0.618,
-      "stability_pass": true,
-      "convergence_turns": null,
-      "convergence_upper": 5702887,
-      "convergence_pass": true,
-      "status": "STABLE",
-      "agents": ["Reson", "Lyra", "Echolette"],
-      "ndp_patterns": ["P-08"],
-      "gate_condition": "harmonic_score = 1.00 · HPG passed or correctly bypassed"
-    },
-    {
-      "phase_id": "Phase_V",
-      "phase_name": "Multi-Agent Triad Integration",
-      "stability_index": 1.0,
-      "stability_target": 0.618,
-      "stability_pass": true,
-      "convergence_turns": null,
-      "convergence_upper": 10946,
-      "convergence_pass": true,
-      "status": "STABLE",
-      "agents": ["Amethyst", "COLLEEN", "Apogee"],
-      "ndp_patterns": ["P-07", "P-08", "P-10"],
-      "gate_condition": "all triad types verified · Q-S066-01 router 8/8 confirmed · co-orch active"
-    },
-    {
-      "phase_id": "Phase_VI",
-      "phase_name": "Archive Ingest & COLLEEN Seal",
-      "stability_index": 1.0,
-      "stability_target": 0.618,
-      "stability_pass": true,
-      "convergence_turns": null,
-      "convergence_upper": 233,
-      "convergence_pass": true,
-      "status": "STABLE",
-      "agents": ["COLLEEN", "Amethyst", "Apogee"],
-      "ndp_patterns": ["P-10", "P-07"],
-      "gate_condition": "all phase artifacts ingested · COLLEEN CLOSED · BLG count = 0"
-    }
+  "report_id": "LSR-S043-001",
+  "session_id": "S043",
+  "generated": "2026-06-27T01:10:00Z",
+  "generated_by": "Amethyst × COLLEEN (SWEEP-002 Phase 5 — merged to main)",
+  "stability_target": 0.618,
+  "convergence_turn_target": 34,
+  "phases": [
+    {"phase": 0, "name": "Bootstrap", "invariants": ["zero_open_blg", "single_authority_chain"], "artifacts": ["SESSION_ANCHOR.md", "CO_ORCH_QUEUE.md"], "stability_index": null, "status": "COMPLETE", "notes": "Phase 0 gates passed at S043 open."},
+    {"phase": 1, "name": "Pattern Registration", "invariants": ["append_only_log", "observable_invariants_only"], "artifacts": ["registry/ensemble_v16_manifest.json", "registry/PATTERN_REGISTRY_v2.md"], "stability_index": null, "status": "COMPLETE", "notes": "Ensemble v16 manifest + P-SAGA-001 through P-CB-001 registered."},
+    {"phase": 2, "name": "Gate Wiring", "invariants": ["procluding_premise_first", "phi_closure_gate_active"], "artifacts": ["components/phi_closure_gate.py", "components/scpe_ensemble_v14.py"], "stability_index": 0.846, "status": "COMPLETE", "notes": "Phi-Closure Gate wired at step 5 of 9. T13 REPROMPT at R=0.846."},
+    {"phase": 3, "name": "Firewall & Router", "invariants": ["all_invariants_hold", "authority_chain_valid"], "artifacts": ["components/orchestration_firewall.py", "components/topology_router.py", "tests/test_orchestration_firewall.py", "tests/test_router_coverage.py"], "stability_index": null, "status": "COMPLETE", "notes": "Firewall 5/5 invariants. Router 8/8 TC after SWEEP-002 shadow bug fix."},
+    {"phase": 4, "name": "Deploy / Anchor", "invariants": ["zero_open_blg", "seal_hash_present"], "artifacts": ["SESSION_ANCHOR.md", "SWEEP_LOG.md"], "stability_index": null, "status": "COMPLETE", "notes": "SWEEP-002 Phase 5 merged to main 2026-06-27."},
+    {"phase": 5, "name": "Operate / Monitor", "invariants": ["kpi_actuals_populated", "colleen_episode_archived"], "artifacts": ["registry/PATTERN_REGISTRY_v2.md", "tests/dgaf_eval_suite.py"], "stability_index": null, "status": "PENDING", "notes": "Gated on first real workflow run (Q-001). KPI actuals not yet populated."},
+    {"phase": 6, "name": "Continuous Improvement", "invariants": ["stasis_canonical_migrated", "lint_provenance_clean"], "artifacts": ["docs/qa/METRICS_PROVENANCE.md", "scripts/lint_provenance.py"], "stability_index": null, "status": "PENDING", "notes": "STASIS Phase 2 deadline 2026-07-13."}
   ],
-  "context_refresh": {
-    "files_ingested": 14,
-    "commits_reviewed": 10,
-    "agents_catalogued": 11,
-    "patterns_active": 34,
-    "router_tcs": "8/8",
-    "graduation": "4/4",
-    "open_blgs": 0
-  },
-  "carry_forward": ["Q-S066-04 lifecycle harness CLOSED S067", "PM-04 deferred"],
-  "colleen_ingest": "COMPLETE"
+  "colleen_1_1_1_1_gate": {
+    "attestation": "PASS",
+    "session": "SWEEP-002",
+    "date": "2026-06-27",
+    "checks": [
+      {"id": "1", "description": "All blocking CO_ORCH_QUEUE items executed", "result": "PASS"},
+      {"id": "2", "description": "Router 8/8 TC verified", "result": "PASS"},
+      {"id": "3", "description": "Lifecycle harness artifact present", "result": "PASS"},
+      {"id": "4", "description": "Apogee Lens Grade A on all delivered items", "result": "PASS"}
+    ]
+  }
 }
