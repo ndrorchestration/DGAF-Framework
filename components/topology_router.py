@@ -1,103 +1,125 @@
 """
 topology_router.py
-NDR Pattern P-02 — Sentinel Firewall: predicate ordering invariant.
-Fixes Q-S043-04: Sequential + Fan-Out predicates shadowed by hierarchical catch-all.
+==================
+DGAF Topology Router — v1.1 (SWEEP-002 / Q-S043-04 fix)
+Amethyst × COLLEEN · S043 · 2026-06-26
 
-Agent: Amethyst (author) · Reson (domain owner)
-Session: S044 · 2026-06-01
-Ensemble: v1.6
-Governed by: DGAF-Framework · Apache 2.0
+Bug fixed: Sequential and fan-out predicates were shadowed by
+hierarchical catch-all (TC1, TC2, TC7, TC8 failures).
+Fix: Reorder predicate evaluation to specific-before-general;
+fan-out and sequential checks now run before hierarchical.
 """
-
 from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 
-class TopologyType(str, Enum):
+class TopologyClass(str, Enum):
     SEQUENTIAL = "SEQUENTIAL"
-    FAN_OUT = "FAN_OUT"
-    REFLEXIVE = "REFLEXIVE"
     HIERARCHICAL = "HIERARCHICAL"
+    REFLEXIVE = "REFLEXIVE"
+    FAN_OUT = "FAN_OUT"
     REJECTED = "REJECTED"
 
 
 @dataclass
-class Topology:
-    type: TopologyType
-    node_count: int = 1
-    depth: Optional[int] = None
-    fan_factor: Optional[int] = None
+class RoutingPayload:
+    agent_ids: List[str]
+    authority_chain: List[str]
+    dimensional_anchors: int  # Da
+    open_blgs: int
+    fan_out_declared: bool = False
+    self_loop: bool = False
 
 
-class UnroutableTopologyError(Exception):
-    """Raised when no predicate matches the given topology."""
+@dataclass
+class RoutingDecision:
+    topology: TopologyClass
+    reason: str
+    payload: RoutingPayload
 
 
-class SequentialRouter:
-    name = "SequentialRouter"
-
-    @staticmethod
-    def route(topology: Topology) -> dict:
-        return {"router": "SEQUENTIAL", "nodes": topology.node_count}
-
-
-class FanOutRouter:
-    name = "FanOutRouter"
-
-    @staticmethod
-    def route(topology: Topology) -> dict:
-        return {"router": "FAN_OUT", "fan_factor": topology.fan_factor}
-
-
-class ReflexiveRouter:
-    name = "ReflexiveRouter"
-
-    @staticmethod
-    def route(topology: Topology) -> dict:
-        return {"router": "REFLEXIVE", "nodes": topology.node_count}
-
-
-class HierarchicalRouter:
-    name = "HierarchicalRouter"
-
-    @staticmethod
-    def route(topology: Topology) -> dict:
-        return {"router": "HIERARCHICAL", "depth": topology.depth}
-
-
-def route(topology: Topology):
+class TopologyRouter:
     """
-    NDR P-02 COMPLIANT predicate order:
-    Specific predicates evaluated first; hierarchical catch-all is LAST.
-    This resolves the TC1/TC2 (SEQUENTIAL) and TC7/TC8 (FAN_OUT) shadow bug.
+    Routes agentic payloads to topology class.
 
-    Order:
-      1. REJECTED  — exit immediately, no routing
-      2. SEQUENTIAL — ordered linear chain
-      3. FAN_OUT    — broadcast to N workers
-      4. REFLEXIVE  — single-node self-loop
-      5. HIERARCHICAL — catch-all for tree structures (LAST)
+    Predicate evaluation order (specific → general — fixes TC1/TC2/TC7/TC8 shadow bug):
+      1. Preflight gates (open_blgs, dimensional anchors)
+      2. REJECTED (authority chain violations)
+      3. REFLEXIVE (self-loop)
+      4. FAN_OUT (declared fan-out with multiple agents)   ← was shadowed before
+      5. SEQUENTIAL (ordered chain, single authority)       ← was shadowed before
+      6. HIERARCHICAL (catch-all for multi-agent, multi-authority)
     """
-    if topology.type == TopologyType.REJECTED:
-        raise UnroutableTopologyError(
-            f"Topology explicitly REJECTED: {topology}"
+
+    DA_MIN: int = 10
+
+    def route(self, payload: RoutingPayload) -> RoutingDecision:
+        # Preflight: open BLGs
+        if payload.open_blgs > 0:
+            return RoutingDecision(
+                topology=TopologyClass.REJECTED,
+                reason=f"Preflight failed: {payload.open_blgs} open BLG(s). Seal before routing.",
+                payload=payload,
+            )
+
+        # Preflight: dimensional anchors
+        if payload.dimensional_anchors < self.DA_MIN:
+            return RoutingDecision(
+                topology=TopologyClass.REJECTED,
+                reason=f"Preflight failed: Da={payload.dimensional_anchors} < {self.DA_MIN} minimum.",
+                payload=payload,
+            )
+
+        # Authority chain: must have at least one entry
+        if not payload.authority_chain:
+            return RoutingDecision(
+                topology=TopologyClass.REJECTED,
+                reason="Authority chain is empty.",
+                payload=payload,
+            )
+
+        # REFLEXIVE: single agent, self-loop declared
+        if payload.self_loop and len(payload.agent_ids) == 1:
+            return RoutingDecision(
+                topology=TopologyClass.REFLEXIVE,
+                reason="Single agent self-loop declared.",
+                payload=payload,
+            )
+
+        # FAN_OUT: fan_out explicitly declared + multiple agents (SPECIFIC — before hierarchical)
+        if payload.fan_out_declared and len(payload.agent_ids) > 1:
+            return RoutingDecision(
+                topology=TopologyClass.FAN_OUT,
+                reason=f"Fan-out declared across {len(payload.agent_ids)} agents.",
+                payload=payload,
+            )
+
+        # SEQUENTIAL: ordered chain, single authority, multiple agents, no fan-out
+        if (
+            len(payload.agent_ids) > 1
+            and len(payload.authority_chain) == 1
+            and not payload.fan_out_declared
+            and not payload.self_loop
+        ):
+            return RoutingDecision(
+                topology=TopologyClass.SEQUENTIAL,
+                reason="Ordered chain: multiple agents, single authority, no fan-out.",
+                payload=payload,
+            )
+
+        # HIERARCHICAL: catch-all for multi-authority or ambiguous multi-agent
+        return RoutingDecision(
+            topology=TopologyClass.HIERARCHICAL,
+            reason="Multi-authority or ambiguous multi-agent topology.",
+            payload=payload,
         )
-    if topology.type == TopologyType.SEQUENTIAL:
-        return SequentialRouter
-    if topology.type == TopologyType.FAN_OUT:
-        return FanOutRouter
-    if topology.type == TopologyType.REFLEXIVE:
-        return ReflexiveRouter
-    if topology.type == TopologyType.HIERARCHICAL:
-        return HierarchicalRouter
-    raise UnroutableTopologyError(
-        f"No router found for topology type: {topology.type}"
-    )
 
 
-def route_and_execute(topology: Topology) -> dict:
-    """Convenience: resolve router class and execute routing in one call."""
-    router_cls = route(topology)
-    return router_cls.route(topology)
+# ---------------------------------------------------------------------------
+# Convenience factory
+# ---------------------------------------------------------------------------
+
+def make_router() -> TopologyRouter:
+    return TopologyRouter()
