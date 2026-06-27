@@ -3,9 +3,9 @@
 > **Steward:** COLLEEN — Institutional Memory, Archivist, Chief Librarian
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect
-> **Last updated:** 2026-06-27 (v1.4 — FLAG-01 CLOSED: HDFS renamed to NDR-HDFS per Njineer ratification 2026-06-27 17:08 EDT)
+> **Last updated:** 2026-06-27 (v1.5 — FLAG-02 CLOSED: 340% coordination gain downgraded to qualitative claim per Njineer directive 2026-06-27 17:17 EDT)
 > **Anchor:** S070 (OPEN)
-> **Sweep coverage (v1.4):** FLAG-01 closure — NDR-HDFS canonical rename applied in Section 4, Section 6, Section 8, and Section 9
+> **Sweep coverage (v1.5):** FLAG-02 closure — 340% coordination gain relabeled ILLUSTRATIVE / qualitative; Section 8 entry and Section 9 FLAG-02 updated
 
 ---
 
@@ -145,7 +145,7 @@ This file is the **canonical single source of truth** for mapping every internal
 | **MECE (Prefect Domain Split)** | Mutually Exclusive, Collectively Exhaustive Domain Partition | Standard MECE principle (McKinsey consulting origin); enforced in code via TriumvirateMandate.MECE enforcement; ValueError raised on violation |
 | **TNR (Trust-Neutrality-Reciprocity)** | Trust-Neutral-Reciprocal Governance Protocol | Enforced by Reciprocity agent; three-axis fairness check on portfolio and rollback operations; external: fairness constraints in multi-stakeholder systems |
 | **Sovereign Files** | Protected / Immutable System Files | LICENSE / NOTICE / AXIS files; Sentinel hard veto on any modification; overrides Amethyst; only Njineer can override Sentinel on sovereign files |
-| **AXIS** | Agent X-axis Invariant Spectrum — Governance Metric Spine | ✅ CANONICAL — Njineer ratified 2026-06-27 16:40 EDT · FLAG-05 CLOSED. Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.1 CANONICAL. Four invariants: Identity Continuity (I), Policy Enforcement (P), Adaptive Range (A), Ethical Constraint (E). Scoring: AXIS_composite = min(I,P,A,E). Tiers: ≥85 DGAF-COMPLIANT / 70–84 DRIFT-WARNING / <70 GOVERNANCE-BREACH. Sovereign file: Njineer override authority only. Linked gap: GAP-006 (Coherent Agency Formal Spec). |
+| **AXIS** | Agent X-axis Invariant Spectrum — Governance Metric Spine | ✅ CANONICAL — Njineer ratified 2026-06-27 16:40 EDT · FLAG-05 CLOSED. Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.2 CANONICAL. Four invariants: Identity Continuity (I), Policy Enforcement (P), Adaptive Range (A), Ethical Constraint (E). Scoring: AXIS_composite = min(I,P,A,E). Tiers: ≥85 DGAF-COMPLIANT / 70–84 DRIFT-WARNING / <70 GOVERNANCE-BREACH. Sovereign file: Njineer override authority only. Linked gap: GAP-006 (Coherent Agency Formal Spec). Phase 3 owner: Amethyst (assigned S070). |
 | **CERTIFICATION_INDEX** | Artifact Certification Registry | Maintained jointly by Apogee and COLLEEN; indexes all attested artifacts with tier, date, and Ender ratification status |
 | **GAP-XX (numbered gaps)** | Tracked Architectural Gap / Deferred Improvement Item | GAP-03 = vocab scan; GAP-07 = AGES full content; GAP-08 = back-link propagation; external: deferred architectural decision record (ADR) or technical debt item |
 
@@ -212,7 +212,7 @@ This file is the **canonical single source of truth** for mapping every internal
 | **A-TIER (94.5%)** | High-quality attestation grade | P-34 attestation result via APOGEE_11Q; A-TIER = below S-Tier but above standard |
 | **82.6% → 100% (governance_clear)** | KAPPA Router Calibration Result | KAPPA v3.5→v3.6 via P-34 14×12 grid sweep; STRONG=0.22, BLENDED=0.18 |
 | **58.3% compression (SCPE)** | Context Window Compression Rate at Threshold 0.15 | T0 AXIOM tokens preserved 100%; T3 EXPLORATORY pruned at highest rate |
-| **340% coordination gain** | Non-linear Coordination Gain (⚠️ metric undefined — see FLAG-02) | Claimed in NDR-HDFS 1.0 spec; "coordination effectiveness" metric not formally defined — **FLAG-02 OPEN: needs artifact link or downgrade to qualitative** |
+| **~~340% coordination gain~~ → ILLUSTRATIVE: substantial multi-agent coordination improvement** | Qualitative Coordination Improvement Claim (ILLUSTRATIVE) | ✅ FLAG-02 RESOLVED — Njineer directive 2026-06-27 17:17 EDT: downgraded from quantitative to qualitative. Original figure sourced from NDR-HDFS 1.0 spec; "coordination effectiveness" baseline was never formally defined and cannot be verified. **All future references must use the qualitative form: "substantial multi-agent coordination improvement observed under frequency-based orchestration." The 340% figure must not appear in any external-facing or evidence-grade document without a formally defined baseline and reproducible measurement methodology.** |
 | **60-turn simulation (5 Gold Stars)** | 60-step Multi-Agent Simulation, Internally Attested | Self-attested via Apogee; reproduce via `python tests/test_orchestration_firewall.py` against `registry/ensemble_v16_manifest.json` |
 | **‖ΔW‖_F < 0.02 convergence threshold** | PDMAL Trust Graph Convergence Criterion | 3 consecutive turns below threshold = CONVERGED; ALERT_THRESH=0.08 for graph manipulation detection |
 | **STRONG=0.22 / BLENDED=0.18** | KAPPA Router Confidence Thresholds | Empirically calibrated via P-34 14×12 grid sweep (S034); requires recalibration if input distribution shifts |
@@ -228,10 +228,10 @@ This file is the **canonical single source of truth** for mapping every internal
 | Flag | Item | Issue | Recommended Action | Status |
 |------|------|-------|-------------------|---|
 | FLAG-01 | **HDFS acronym collision** | "HDFS" used for both NDR Hierarchical Documentation Format Standard AND Hadoop Distributed File System | ~~Rename to "NDR-HDFS" or "HDFS-DOC 1.0" in all docs~~ | **RESOLVED S070** — Canonical name is **NDR-HDFS**. Njineer ratified 2026-06-27 17:08 EDT. Applied in Sections 4, 5, 6, 8. All future references must use NDR-HDFS. |
-| FLAG-02 | **340% coordination gain** | Metric not formally defined; no artifact link found | Downgrade to qualitative claim or add `docs/qa/` evidence artifact | OPEN |
+| FLAG-02 | **340% coordination gain** | Metric not formally defined; no artifact link found | ~~Downgrade to qualitative claim or add `docs/qa/` evidence artifact~~ | **RESOLVED S070** — Downgraded to qualitative per Njineer directive 2026-06-27 17:17 EDT. Canonical form: "substantial multi-agent coordination improvement observed under frequency-based orchestration." The 340% figure is retired from evidence-grade use. See Section 8 entry for full constraint language. |
 | FLAG-03 | **PPTL acronym** | Expanded as "Procluding Premise Triadic Loop" — first canonical documentation in this file | Backfill PPTL expansion into WORKSPACE_BOOTSTRAP.md and ECOSYSTEM_INVENTORY.md | OPEN |
 | FLAG-04 | **AOGA acronym** | ~~Used in Vercel deployment label and docs; canonical expansion not documented anywhere found~~ | ~~Surface to Amethyst for canonical expansion; update ECOSYSTEM_INVENTORY.md~~ | **RESOLVED S070** — AOGA = Agent Orchestration Governance Architecture. Source: aoga-dashboard commit history + X-Agent-Stack header manifest. Update ECOSYSTEM_INVENTORY.md to backfill. |
-| FLAG-05 | **AXIS acronym** | Sovereign file; Sentinel-protected; exact acronym expansion not found in any swept document | ~~Surface to Njineer/Amethyst for canonical expansion in AGENT_ROSTER or WORKSPACE_BOOTSTRAP~~ | **RESOLVED S070** — AXIS = Agent X-axis Invariant Spectrum. Njineer ratification received 2026-06-27 16:40 EDT. Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.1 CANONICAL. FLAG-05 CLOSED. |
+| FLAG-05 | **AXIS acronym** | Sovereign file; Sentinel-protected; exact acronym expansion not found in any swept document | ~~Surface to Njineer/Amethyst for canonical expansion in AGENT_ROSTER or WORKSPACE_BOOTSTRAP~~ | **RESOLVED S070** — AXIS = Agent X-axis Invariant Spectrum. Njineer ratification received 2026-06-27 16:40 EDT. Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.2 CANONICAL. FLAG-05 CLOSED. |
 | FLAG-06 | **Agent Lavender / Forseti** | Hard BLG per AGENT_ROSTER.md v1.0; any reference triggers P-01 | Run codebase-wide search; `grep -r "Lavender\|Forseti" docs/` | **RESOLVED S070** — GitHub code search returned 0 results across all files in DGAF-Framework (2026-06-26 20:16 EDT). No stale references found. |
 | FLAG-07 | **Drive files 2, 3, 4 unreadable** | Agent Professor Prodigy Technical Spec (NDR-HDFS 1.0), Prodigy Mathematical Rigor POC, and Phi-Calculus White Paper returned empty content during sweep | Re-attempt read in next session; these may contain additional vocabulary not yet captured | OPEN |
 | FLAG-08 | **96% TruthfulQA — "internal" qualifier** | Currently stated without "internal" qualifier in some external-facing docs | Audit all public-facing docs for unqualified TruthfulQA claims | OPEN |
@@ -253,7 +253,8 @@ This file is the **canonical single source of truth** for mapping every internal
 
 ---
 
-*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.4 · S070 OPEN · COLLEEN × Amethyst · 2026-06-27*
-*v1.4 additions: FLAG-01 RESOLVED — NDR-HDFS canonical rename (Njineer ratified 2026-06-27 17:08 EDT); applied in Sections 4, 5, 6, 7, 8, 9; FLAG-07 description updated to reference NDR-HDFS*
-*v1.3 additions: FLAG-05 RESOLVED (AXIS = Agent X-axis Invariant Spectrum — Njineer ratified 2026-06-27 16:40 EDT), FLAG-06 RESOLVED (Lavender/Forseti grep clean), AXIS Section 5 entry updated from FLAG-OPEN to CANONICAL with full spec reference, four-invariant summary (I-P-A-E), scoring model, tier thresholds, and GAP-006 linkage*
-*Sources: AXIS_METRIC_SPEC.md v1.1 CANONICAL (docs/qa/), Njineer ratification directive S070 2026-06-27 16:40 EDT, commit 50befb66 (2026-06-27 20:42Z)*
+*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.5 · S070 OPEN · COLLEEN × Amethyst · 2026-06-27*
+*v1.5 additions: FLAG-02 RESOLVED — 340% coordination gain downgraded to qualitative (Njineer directive 2026-06-27 17:17 EDT); Section 8 entry retired with canonical qualitative replacement; Section 5 AXIS entry updated to reference AXIS_METRIC_SPEC v1.2 and Phase 3 owner*
+*v1.4 additions: FLAG-01 RESOLVED — NDR-HDFS canonical rename (Njineer ratified 2026-06-27 17:08 EDT); applied in Sections 4, 5, 6, 7, 8, 9*
+*v1.3 additions: FLAG-05 RESOLVED (AXIS = Agent X-axis Invariant Spectrum — Njineer ratified 2026-06-27 16:40 EDT), FLAG-06 RESOLVED, AXIS Section 5 entry updated to CANONICAL*
+*Sources: AXIS_METRIC_SPEC.md v1.2 CANONICAL (docs/qa/), Njineer ratification directives S070*
