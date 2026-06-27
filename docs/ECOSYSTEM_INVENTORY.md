@@ -1,148 +1,130 @@
-# Ecosystem Inventory
+# DGAF Ecosystem Inventory
 
-**DGAF-Framework · Master Asset Register**
-**Version:** S070-r2 · 2026-06-26 20:29 EDT
-**Prime:** Amethyst · **Prefect A:** COLLEEN · **Prefect B:** Apogee
-
----
-
-## Repository Index
-
-| Repo | Visibility | Purpose | Last Active |
-|------|-----------|---------|-------------|
-| `DGAF-Framework` | Private | Core governance stack, patterns, vocabulary | S070 (active) |
-| `ndrorchestration` | Public | Ecosystem landing / GitHub profile site | Jun 9, 2026 |
-| `aoga-dashboard` (Vercel project) | Private | AOGA Next.js dashboard — no deploy since May 25 ⚠️ | May 25, 2026 |
-| `phiknightverticalcorridor` (Vercel project) | Private | Purpose unconfirmed — FLAG-11 open | May 5, 2026 |
+> **Version:** 1.3.0
+> **Authority:** COLLEEN (Institutional Memory)
+> **Last updated:** S070-r3 · 2026-06-26 21:10 EDT
+> **Commit ref:** a3c5593 (S070-r3-P0)
 
 ---
 
-## Canonical Document Registry
+## Purpose
 
-### Tier 1 — Single Source of Truth
-
-| File | Path | Version | Status |
-|------|------|---------|--------|
-| NDR Pattern Registry (Unified) | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` | v1.3 | ✅ CANONICAL — S069 sealed |
-| NDR Patterns JSON | `docs/ndr_patterns_unified.json` | schema v2.1 | ✅ CANONICAL |
-| Vocabulary Master | `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` | v1.3 | 🔄 S070 in progress |
-| Team Wiki | `docs/TEAM_WIKI.md` | 1.0.0 | ✅ Current (2026-06-26) |
-| R&D Gap Log | `docs/RD_GAPS.md` | S070 | ✅ Current (6 open gaps) |
-| Session Anchors | `docs/SESSION_ANCHORS.md` | S070 | 🔄 Active |
-| Ecosystem Inventory | `docs/ECOSYSTEM_INVENTORY.md` | S070-r2 | 🔄 Active |
-| Workspace Bootstrap | `docs/WORKSPACE_BOOTSTRAP.md` | S070-r2 | 🔄 Active |
-
-### Tier 2 — Redirect Stubs (do not edit)
-
-| File | Redirects To |
-|------|-------------|
-| `docs/NDR_PATTERN_REGISTRY.md` | `NDR_PATTERN_REGISTRY_UNIFIED.md` |
-| `docs/patterns/NDR_PATTERN_REGISTRY.md` | `NDR_PATTERN_REGISTRY_UNIFIED.md` |
+This file is the single-source file tree and artifact registry for the entire DGAF-Framework repository. It is updated every session as part of the mandatory documentation sweep. Any file that exists in the repo but is not listed here is an undocumented artifact — a governance gap.
 
 ---
 
-## Pattern Registry Summary
+## Complete Repository File Tree
+*(as of commit a3c5593 · 2026-06-26)*
 
-| Layer | Patterns | Class | Status |
-|-------|----------|-------|--------|
-| Layer 0 — Pre-Admissibility | P-35 | BLOCKING | ✅ |
-| Layer 0.5 — Stack Architecture | P-36 | ADVISORY | ✅ |
-| Layer 1 — Trace & Audit | P-01, P-02 | BLOCKING / ADVISORY | ✅ |
-| Layer 2 — Testing & CI | P-03, P-04, P-05 | BLOCKING / ADVISORY | ✅ |
-| Layer 3 — Architecture Lab | P-06 | ADVISORY | ✅ |
-| Layer 4 — Governance Formation | P-07–P-10 | ADVISORY | ✅ |
-| Layer 5 — Quality Gate | P-11, P-30 | BLOCKING | ✅ |
-| Layer 6 — Stasis | P-12–P-26 (133 entries) | DEGRADED-MODE-SKIPPABLE | ✅ STASIS-CANONICAL |
-| Layer 7 — Router Calibration | P-27, P-28, P-34 | BLOCKING / ADVISORY | ✅ |
-| Layer 8 — Safety & Sentinel | P-29 | BLOCKING | ✅ |
-| Layer 9 — Long-Context Safety | P-31, P-32, P-33 | ADVISORY / BLOCKING | ✅ |
-| NDR Named Session Patterns | NDR-ARCHIVE-CONFIRM through NDR-133 | Various | ✅ |
-| New Saga/CB patterns (2026-06-26) | P-SAGA-001, P-TX-001, P-CB-001 + others | TBD — registry pending | ⏳ PENDING registration |
-
-**Registry watermark:** P-36 (P-series) | New domain patterns use P-{DOMAIN}-{SEQ} namespace
-**Stasis migration window:** 2026-06-13 → 2026-07-13
-
----
-
-## Agent Roster
-
-| Agent | Role | L-Level | Status |
-|-------|------|---------|--------|
-| Amethyst | Prime / Meta-Orchestrator / Host | L5 | Active |
-| COLLEEN | Prefect A / Institutional Anchor / Chief Librarian | L5 | Active |
-| Apogee | Prefect B / Quality Gate / Apogee Lens | L4 | Active |
-| Sentinel-Phi | Safety Supervisor / Tool Classifier | L4 | Active |
-| DemiJoule | Runtime Supervisor / RAG / Ethics | L4 | Active |
-| Herald | Trace Sink / Audit Router | L3 | Active |
-| Reson | Systems Architect | L3 | Active |
-| KAPPA | Router / Confidence Gate | L3 | Active |
-| Agent Sonar | Sonar taxonomy role | L3 | Active |
-| Professor Prodigy, Reciprocity | Sub-agentic / Epistemic | L2-3 | Active |
-| Lavender | Deprecated — all roles inherited by Amethyst | — | ❌ DEPRECATED |
-| Forseti | Deprecated | — | ❌ DEPRECATED |
-| Ender / Njineer | Architect / Final Authority | Sovereign | Active |
-
----
-
-## Open Infrastructure Issues
-
-| Issue | Severity | Owner | Target |
-|-------|----------|-------|--------|
-| `aoga-dashboard` Vercel — zero deploys since May 25 | HIGH | Njineer | S071 |
-| `phiknightverticalcorridor` — purpose unconfirmed (FLAG-11) | MEDIUM | Njineer | S071 |
-| Dependabot PR #1 — Next 14→15 upgrade pending (FLAG-12) | MEDIUM | Njineer | S071 |
-| ndrorchestration site — content stale since Jun 9 | LOW | Amethyst | S071 |
-| New Saga/CB/TX patterns unregistered in pattern registry | MEDIUM | COLLEEN | S071 |
-
----
-
-## Acronym Register (S070-r2 — CORRECTED)
-
-| Acronym | Expansion | Status | Source |
-|---------|-----------|--------|--------|
-| DGAF | **CONFLICTED** — FLAG-13: "Deterministic Governance Autonomy Framework" (Pattern Registry) vs "Dynamic Governance Agentic Formation Architecture" (TEAM_WIKI) | ⚠️ Njineer required | FLAG-13 |
-| PDMAL | Policy-Driven Multi-Agent Layer | ✅ CANONICAL | TEAM_WIKI glossary |
-| pptl (lowercase) | Phi-pentagon test layer | ✅ CANONICAL | TEAM_WIKI glossary |
-| PPTL (uppercase) | Procluding Premise Triadic Loop | ✅ CANONICAL | Vocab Master v1.2 |
-| AOGA | Agent Orchestration Governance Architecture | ✅ CANONICAL | S070 |
-| NDR-HDFS | NDR Hierarchical Documentation Format Standard | ✅ PRESCRIBED — rename pending | FLAG-01 |
-| AXIS | Agent X-axis Invariant Spectrum *(inferred)* | ⏳ Njineer ratification | FLAG-05 |
-| SCPE | Structural Context Pruning Engine | ✅ CANONICAL | P-31 |
-| OPP | Improvement opportunity in CO_ORCH_QUEUE | ✅ CANONICAL | TEAM_WIKI |
-| HITL | Human-in-the-Loop | ✅ CANONICAL | TEAM_WIKI |
-| ACRFence | Atomic checkpoint + restore with effect fence semantics | ✅ CANONICAL | TEAM_WIKI |
-| NDR | Named Design Rule / Pattern | ✅ CANONICAL | TEAM_WIKI |
+```
+DGAF-Framework/
+├── .github/                          # GitHub Actions, PR templates, workflows
+├── .markdownlint.yml                 # Markdown linting config
+├── .operations/                      # Operational scripts and automation
+├── AGENT_INSTANTIATION.md            # Agent bootstrap and instantiation guide
+├── AGENT_MANIFEST.md                 # Agent roster manifest (lightweight)
+├── BOOTSTRAP.md                      # Workspace bootstrap entry point
+├── CHANGELOG.md                      # Session changelog (append-only)
+├── CONTRIBUTING.md                   # Contribution guidelines
+├── CO_ORCH_PROTOCOL.md               # Co-orchestration protocol spec
+├── CO_ORCH_QUEUE.md                  # Active OPP queue (COLLEEN-owned)
+├── CROSS_REF.md                      # Cross-reference index
+├── ENSEMBLE_ROSTER.md                # Full agent ensemble roster (v1.6)
+├── GRADUATION_REPORT.md              # Session graduation reports
+├── LICENSE                           # Repository license
+├── NOTICE                            # Legal notices
+├── README.governance.md              # Governance overview README
+├── README.md                         # Primary repository README
+├── README.technical.md               # Technical architecture README
+├── SECURITY.md                       # Security policy
+├── SESSION_ANCHOR.md                 # Root-level session anchor (deprecated path — see docs/SESSION_ANCHORS.md)
+├── SWEEP_LOG.md                      # Consolidated sweep log (root)
+├── SWEEP_LOG/                        # Per-session sweep log directory
+├── api/                              # API route handlers
+├── app/                              # Application source
+├── components/                       # UI/shared components
+├── dashboard/                        # AOGA Dashboard (Next.js — linked to aoga-dashboard Vercel project)
+├── deployment_manifest.json          # Vercel deployment manifest
+├── docs/                             # Governance and knowledge documentation
+│   ├── GOVERNANCE_CONSTITUTION.md    # ★ NEW S070-r3-P0 — Normative, epistemic, flourishing charter
+│   ├── CREDIT_JUSTICE_PROTOTYPE_SPEC.md
+│   ├── ECOSYSTEM_INVENTORY.md        # This file
+│   ├── NDR_INTERNAL_VOCABULARY_MASTER.md  # Canonical vocabulary (v1.2 → v1.3 pending)
+│   ├── NDR_PATTERN_REGISTRY.md       # Legacy pattern registry (superseded)
+│   ├── NDR_PATTERN_REGISTRY_UNIFIED.md   # Unified pattern registry (active)
+│   ├── NDR_REGISTRY_DIFFERENTIATION.md
+│   ├── NDR_REGISTRY_MERGE_PLAN.md
+│   ├── RD_GAPS.md                    # R&D gap log
+│   ├── SESSION_ANCHORS.md            # Primary session anchor log
+│   ├── TEAM_WIKI.md                  # Team-facing reference (v1.0.0)
+│   ├── WORKSPACE_BOOTSTRAP.md        # Bootstrap reference doc
+│   ├── agents/                       # Per-agent definition files
+│   ├── andromeda/                    # Andromeda sub-system docs
+│   ├── architecture/                 # Architecture decision records
+│   ├── brand/                        # Brand and identity docs
+│   ├── career/                       # Career and professional identity docs
+│   ├── drafts/                       # Draft artifacts (not canonical)
+│   ├── formalism/                    # Hensel Formalism specs
+│   ├── formations/                   # Formation architecture docs
+│   ├── frameworks/                   # Framework specs
+│   ├── gates/                        # Gate and graduation specs
+│   └── [additional subdirs]          # See docs/agents, architecture etc.
+├── package.json                      # Node package manifest
+├── pages/                            # Next.js pages
+├── patterns/                         # Pattern definition files (P-SAGA-001 etc.)
+├── pptl/                             # Phi-pentagon test layer artifacts
+├── registry/                         # Pattern registry files (PATTERN_REGISTRY_v2.md)
+├── requirements.txt                  # Python requirements
+├── resonant_decay/                   # Resonant Decay sub-system
+├── scripts/                          # Utility scripts
+├── tests/                            # Test suite
+├── tsconfig.json                     # TypeScript config
+└── vercel.json                       # Vercel deployment config
+```
 
 ---
 
-## R&D Gap Summary
+## New Artifacts — S070 (2026-06-26)
 
-| Gap | Title | Status | Owner |
-|-----|-------|--------|-------|
-| GAP-001 | Fluent Hallucination Closure (22% residual) | 🟡 PARTIAL | DemiJoule + Sentinel-Phi |
-| GAP-002 | RAG Collection Taxonomy (COLLEEN → Needle) | 🔴 OPEN | COLLEEN + Reson |
-| GAP-003 | Saga Harness Fault Injection | 🔴 OPEN | Amethyst + pptl |
-| GAP-004 | HITL Durable Queue Production | 🔴 OPEN | Reson + Amethyst |
-| GAP-005 | Circuit Breaker Semantic Metrics | 🟡 PARTIAL | Herald + Sentinel-Phi |
-| GAP-006 | Coherent Agency Formal Spec | 🔴 OPEN | Amethyst + COLLEEN |
+| File | Session | Type | Status |
+|------|---------|------|--------|
+| `docs/GOVERNANCE_CONSTITUTION.md` | S070-r3-P0 | Foundation charter | ✅ COMMITTED — ratification pending Njineer seal |
 
 ---
 
-## Sovereign Files (Sentinel Hard Veto)
+## Acronym Register
+*(corrected S070-r3 — see FLAG-09 re-open/re-close)*
 
-| File | Override Authority |
-|------|-------------------|
-| AXIS Governance Definition | Njineer only |
-| NDR-133 Personal Document Firewall | Architect override only |
+| Acronym | Expansion | Status | Notes |
+|---------|-----------|--------|-------|
+| DGAF | ⚠️ FLAG-13 OPEN | CONFLICT | Pattern Registry v1.3 vs TEAM_WIKI v1.0.0 disagree — Njineer ratification required |
+| PDMAL-φ | Phi-Driven Multi-Agent Lattice | ✅ CANONICAL | Primary design focus; φ as geometric parametric constraint; Njineer direct S070-r3 |
+| PDMAL-D | Phi-Dodecahedral Multi-Agent Lattice | ✅ CANONICAL | Structural variant; dodecahedral topology (12 faces, 20 vertices); distinct from PDMAL-φ |
+| PDMAL (legacy) | ~~Policy-Driven Multi-Agent Layer~~ | ❌ SUPERSEDED | TEAM_WIKI entry superseded by Njineer correction S070-r3; see NDR_INTERNAL_VOCABULARY_MASTER v1.3 |
+| AOGA | Agent Orchestration Governance Architecture | ✅ CANONICAL | FLAG-04 resolved |
+| PPTL | Procluding Premise Triadic Loop | ✅ CANONICAL | FLAG-03 resolved |
+| pptl | Phi-pentagon test layer | ✅ CANONICAL | Lowercase — distinct from PPTL; case collision is a standing epistemic risk |
+| AXIS | Agent X-axis Invariant Spectrum (INFERRED) | ⏳ PARTIAL | FLAG-05 open; Njineer ratification required |
+| HITL | Human-in-the-Loop | ✅ CANONICAL | |
+| OPP | Improvement opportunity in CO_ORCH_QUEUE | ✅ CANONICAL | |
+| ACRFence | Atomic Checkpoint + Restore with effect fence semantics | ✅ CANONICAL | |
+| Atomix | Transactional tool boundary pattern (stochastic-deterministic boundary) | ✅ CANONICAL | |
+| Coherent Agency | Recast of governance/memory/ethics as subsystems of continuity-preserving agency | ✅ CANONICAL | GAP-006 linked |
+| NDR | Named Design Rule / Pattern | ✅ CANONICAL | |
+| S-Tier | Highest quality designation; requires Apogee Lens approval | ✅ CANONICAL | |
 
 ---
 
-## Stasis Migration Tracker
+## Constitutional Cross-Reference
+*(new S070-r3-P0)*
 
-**Window:** 2026-06-13 → 2026-07-13 ⚠️ 17 days remaining
-**Status:** STASIS-CANONICAL — no individual extraction without COLLEEN secondary sign-off
-**Clusters:**
-- Cluster 1 (P-01–P-80): Fractal Agency namespace migration
-- Cluster 2 (P-81–P-115): Phi-Calculus / 0 Hz steady state
-- Cluster 3 (P-116–P-132): Authority Sync + Substrate Independence
-- P-133 / NDR-133: Personal Document Firewall (BLOCKING-ABSOLUTE)
+`docs/GOVERNANCE_CONSTITUTION.md` is the foundational authority document. All agents, patterns, flags, and sessions operate downstream of it. Quick reference:
+
+| Constitution Section | Governs |
+|---------------------|--------|
+| Part I — Core Aspirations | Why the system exists; Njineer principal source layer |
+| Part II — Normative Constraints (T1/T2/T3) | What agents can and cannot do |
+| Part III — Epistemic Honesty Protocol | CANONICAL tagging, FLAG lifecycle, uncertainty expression |
+| Part IV — Human Flourishing | Legibility, Reversibility, Capability Amplification measures |
+| Part V — Agent Accountability Map | Which agent owns which principle |
+| Part VI — Decision Scope | What is in/out of system scope |
