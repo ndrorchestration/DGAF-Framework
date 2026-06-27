@@ -1,9 +1,9 @@
 # DGAF Ecosystem Inventory
 
-> **Version:** 1.3.0
+> **Version:** 1.4.0
 > **Authority:** COLLEEN (Institutional Memory)
-> **Last updated:** S070-r3 · 2026-06-26 21:10 EDT
-> **Commit ref:** a3c5593 (S070-r3-P0)
+> **Last updated:** S070-r3-P1 · 2026-06-26 22:45 EDT
+> **Commit ref:** d2bbb31 (S070-r3-P1)
 
 ---
 
@@ -14,7 +14,7 @@ This file is the single-source file tree and artifact registry for the entire DG
 ---
 
 ## Complete Repository File Tree
-*(as of commit a3c5593 · 2026-06-26)*
+*(as of commit d2bbb31 · 2026-06-26)*
 
 ```
 DGAF-Framework/
@@ -48,14 +48,14 @@ DGAF-Framework/
 ├── docs/                             # Governance and knowledge documentation
 │   ├── GOVERNANCE_CONSTITUTION.md    # ★ NEW S070-r3-P0 — Normative, epistemic, flourishing charter
 │   ├── CREDIT_JUSTICE_PROTOTYPE_SPEC.md
-│   ├── ECOSYSTEM_INVENTORY.md        # This file
+│   ├── ECOSYSTEM_INVENTORY.md        # This file (v1.4.0)
 │   ├── NDR_INTERNAL_VOCABULARY_MASTER.md  # Canonical vocabulary (v1.2 → v1.3 pending)
-│   ├── NDR_PATTERN_REGISTRY.md       # Legacy pattern registry (superseded)
-│   ├── NDR_PATTERN_REGISTRY_UNIFIED.md   # Unified pattern registry (active)
+│   ├── NDR_PATTERN_REGISTRY.md       # Legacy pattern registry (superseded — redirect stub)
+│   ├── NDR_PATTERN_REGISTRY_UNIFIED.md   # ★ UPDATED S070-r3-P1 → v1.4 — Unified pattern registry
 │   ├── NDR_REGISTRY_DIFFERENTIATION.md
 │   ├── NDR_REGISTRY_MERGE_PLAN.md
 │   ├── RD_GAPS.md                    # R&D gap log
-│   ├── SESSION_ANCHORS.md            # Primary session anchor log
+│   ├── SESSION_ANCHORS.md            # ★ UPDATED S070-r3-P1 — Primary session anchor log
 │   ├── TEAM_WIKI.md                  # Team-facing reference (v1.0.0)
 │   ├── WORKSPACE_BOOTSTRAP.md        # Bootstrap reference doc
 │   ├── agents/                       # Per-agent definition files
@@ -68,7 +68,12 @@ DGAF-Framework/
 │   ├── formations/                   # Formation architecture docs
 │   ├── frameworks/                   # Framework specs
 │   ├── gates/                        # Gate and graduation specs
-│   └── [additional subdirs]          # See docs/agents, architecture etc.
+│   ├── patterns/                     # Additional pattern specs
+│   │   └── TRIADIC_ORCHESTRATION_PATTERNS.md  # Source doc for CONSENSUS_TRIAD + CONDUCTED_TRIAD
+│   ├── qa/                           # QA attestation artifacts
+│   │   ├── APOGEE_11Q_*.json         # Apogee attestation records (P-11)
+│   │   └── QA_CHECKPOINT_TEMPLATE_SPECIALIZED.md  # ★ NEW S070-r3-P1 — Specialized QA checkpoint template (3 variants)
+│   └── [additional subdirs]
 ├── package.json                      # Node package manifest
 ├── pages/                            # Next.js pages
 ├── patterns/                         # Pattern definition files (P-SAGA-001 etc.)
@@ -89,6 +94,18 @@ DGAF-Framework/
 | File | Session | Type | Status |
 |------|---------|------|--------|
 | `docs/GOVERNANCE_CONSTITUTION.md` | S070-r3-P0 | Foundation charter | ✅ COMMITTED — ratification pending Njineer seal |
+| `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` v1.4 | S070-r3-P1 | Pattern registry update | ✅ COMMITTED |
+| `docs/qa/QA_CHECKPOINT_TEMPLATE_SPECIALIZED.md` | S070-r3-P1 | QA template (3 variants) | ✅ COMMITTED |
+
+---
+
+## Formation Pattern Registry Cross-Reference
+*(registered S070-r3-P1)*
+
+| Pattern ID | Name | Status | Source doc | Registry entry |
+|---|---|---|---|---|
+| `CONSENSUS_TRIAD` | Consensus Triad | ✅ CANONICAL | `docs/patterns/TRIADIC_ORCHESTRATION_PATTERNS.md` | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` §Formation Pattern Registry |
+| `CONDUCTED_TRIAD` | Conducted Triad | ✅ CANONICAL | `docs/patterns/TRIADIC_ORCHESTRATION_PATTERNS.md` | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` §Formation Pattern Registry |
 
 ---
 
@@ -128,3 +145,13 @@ DGAF-Framework/
 | Part IV — Human Flourishing | Legibility, Reversibility, Capability Amplification measures |
 | Part V — Agent Accountability Map | Which agent owns which principle |
 | Part VI — Decision Scope | What is in/out of system scope |
+
+---
+
+## QA Template Cross-Reference
+*(new S070-r3-P1)*
+
+| Template | Path | Variants | Use case |
+|---|---|---|---|
+| Generic | `docs/qa/QA_CHECKPOINT_TEMPLATE.md` (pending) | — | Any auditable process |
+| Specialized | `docs/qa/QA_CHECKPOINT_TEMPLATE_SPECIALIZED.md` | A (Release), B (P-11 Apogee), C (Compliance) | Software release, canonical promotion, regulatory audit |
