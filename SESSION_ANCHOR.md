@@ -10,12 +10,13 @@
 | Field | Value |
 |---|---|
 | **Date** | 2026-06-26 |
-| **Session ID** | S069-VERCEL-001 |
+| **Session ID** | S068 ✅ SEALED (Nemotron eval vocab sweep) |
+| **Prior Session** | S069-VERCEL-002 (aoga-dashboard closure) |
 | **Primary Host** | Amethyst |
 | **Co-Orchestrator** | COLLEEN |
 | **Governance Layer** | Sentinel-Phi / Ender |
-| **Session Type** | Infrastructure Audit + Log Update |
-| **Prior Session** | SWEEP_2026-06-26_Amethyst-COLLEEN-CoOrch (patterns push) |
+| **Session Type** | Vocabulary Sweep — Issue #32 — S068 Seal |
+| **Active Session** | S069 (open) |
 
 ---
 
@@ -47,21 +48,25 @@ Full registry: [`registry/PATTERN_REGISTRY_v2.md`](registry/PATTERN_REGISTRY_v2.
 
 ## Open Items Carried Forward
 
+### From S068 Seal (2026-06-26) — Issue #32
+
+1. **`dgaf_eval_suite.py` scaffold** — 5-task parametric benchmark suite for Nemotron 3 Ultra kernel validation. File to be created in `tests/`. Owner: Amethyst. Priority: HIGH. Issue #32 close condition.
+2. **Issue #32 close condition** — All 5 eval tasks passing with baseline scores recorded. Owner: Amethyst + Apogee. Priority: HIGH.
+
 ### From S069-VERCEL-001 (Infrastructure Audit — 2026-06-26)
 
-1. **aoga-dashboard deployment** — Zero successful deploys since project creation (May 25). Confirm rootDirectory = `dashboard` in Vercel settings and trigger fresh deploy. Owner: Ender.
-2. **phiknightverticalcorridor state** — Deployment status unconfirmed. Verify via Vercel inspector. Owner: Ender.
-3. **Dependabot PR #1** — Next.js 14→15 upgrade attempt. Preview failed. Breaking changes exist. Review + merge or dismiss. Owner: Ender. Priority: MEDIUM.
-4. **ndrorchestration.vercel.app content refresh** — Content stale since Jun 9. Should reflect AOGA dashboard, Hensel Formalism v1.0, Entrepreneur Hub Phase 0 close. Owner: Amethyst. Priority: MEDIUM.
-5. **Needle Partner Directory link audit** — Confirm ndrorchestration.vercel.app link in Needle profile is active post-recovery. Owner: Ender. Priority: MEDIUM.
+3. **phiknightverticalcorridor state** — Deployment status unconfirmed. Verify via Vercel inspector. Owner: Ender.
+4. **Dependabot PR #1** — Next.js 14→15 upgrade attempt. Preview failed. Breaking changes exist. Review + merge or dismiss. Owner: Ender. Priority: MEDIUM.
+5. **ndrorchestration.vercel.app content refresh** — Content stale since Jun 9. Should reflect AOGA dashboard, Hensel Formalism v1.0, Entrepreneur Hub Phase 0 close. Owner: Amethyst. Priority: MEDIUM.
+6. **Needle Partner Directory link audit** — Confirm ndrorchestration.vercel.app link in Needle profile is active post-recovery. Owner: Ender. Priority: MEDIUM.
 
 ### From Prior Sessions (Still Open)
 
-6. **KPI baseline population** — First real workflow run should populate actuals against KPI seed table in `PATTERN_REGISTRY_v2.md`
-7. **Fault injection campaign** — Design and run the 3-scenario fault injection test (transient failure, semantic failure, mid-workflow restart) on the reference Saga+Tx+Checkpoint+Breaker+HITL flow
-8. **CROSS_REF.md update** — New P-* pattern IDs should be cross-referenced against existing DGAF conceptual map
-9. **Sentinel-Phi tool classification config** — Formalize `effect_classes` from `P-COMP-001` into Sentinel-Phi's enforcement config
-10. **Architecture decision** — Approach 1 / 2 / 3 (see S069-ECO-001 in SWEEP_LOG.md). Owner: Ender. Priority: HIGH.
+7. **KPI baseline population** — First real workflow run should populate actuals against KPI seed table in `PATTERN_REGISTRY_v2.md`
+8. **Fault injection campaign** — Design and run the 3-scenario fault injection test (transient failure, semantic failure, mid-workflow restart) on the reference Saga+Tx+Checkpoint+Breaker+HITL flow
+9. **CROSS_REF.md update** — New P-* pattern IDs should be cross-referenced against existing DGAF conceptual map
+10. **Sentinel-Phi tool classification config** — Formalize `effect_classes` from `P-COMP-001` into Sentinel-Phi’s enforcement config
+11. **Architecture decision** — Approach 1 / 2 / 3 (see S069-ECO-001 in SWEEP_LOG.md). Owner: Ender. Priority: HIGH.
 
 ---
 

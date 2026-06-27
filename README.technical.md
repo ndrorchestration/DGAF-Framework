@@ -74,6 +74,29 @@ Full registry: [`docs/patterns/NDR_PATTERN_REGISTRY.md`](./docs/patterns/NDR_PAT
 
 ---
 
+## Kernel & Contraction Nomenclature — S068
+
+> Added: 2026-06-26 · Issue #32 · Steward: Amethyst  
+> Context: Nemotron 3 Ultra integration planning — parametric eval suite
+
+| Term | Definition | Constraint | First Used |
+|------|-----------|-----------|------------|
+| **typed kernel** | A governance role's executable Python/TypeScript unit with explicit `input_schema → policy → output_schema → audit_trail` contract; generated from `governance.yml` | Must pass `contraction_proof_fidelity` gate before CI promotion | S068 |
+| **ρ-contraction** | The property `‖T(x) - T(y)‖ ≤ ρ‖x - y‖` for a role transition operator T; guarantees convergence of governance trajectories | ρ < 1.0 required; verified via `numpy.linalg.eigvals` spectral radius check | S068 |
+| **spectral radius** | Largest absolute eigenvalue of a role transition matrix; must be < 1.0 to satisfy ρ-contraction; monitored in production via vLLM expert-routing logs | Alert threshold: ≥ 0.99; freeze curriculum if ≥ 1.0 | S068 |
+| **curvature** (governance) | Per-role scalar (0.0–1.0) encoding how sharply a role's decision boundary curves in embedding space; drives routing decisions in the curvature-aware router | Defined in `governance.yml` per role; Lyra = 0.00 (base), Echolette = 0.20 (highest) | S068 |
+| **triadic orchestration** | Three-phase inference loop: Apogee (propose) → Reson (critique) → Lyra (resolve); produces stronger alignment guarantees at 3× inference cost | Target p99 < 200ms on 7B-class; budget via `thinking_tokens` per role | S068 |
+| **thinking_tokens** | Per-role reasoning budget parameter passed to Nemotron 3 Ultra via `extra_body.chat_template_kwargs`; controls depth of inference per DGAF role | Sentinel: 8192 (max); Herald: 0 (audit-only); Echolette: 512 (min) | S068 |
+| **MoE expert entropy** | Shannon entropy H of expert activation distribution across all MoE routing decisions for a given DGAF role; low entropy signals expert collapse | Alert if H < 0.6 per role; measure via vLLM routing logs | S068 |
+| **role_boundary_coherence** | Eval metric: % correct role identification at turn N in 50-turn triadic trace; maps to Mamba state retention under 1M-token context | Target > 95%; baseline: RULER 1M = 94.0 | S068 |
+| **contraction_proof_fidelity** | Eval metric: % of 100 generated kernel specs where spectral radius < 1.0; maps to GPQA Diamond reasoning (87.9%) | Target > 98%; run as CI gate before kernel promotion | S068 |
+| **governance_schema_conformance** | Eval metric: % of 1k fuzz-generated `governance.yml` variants passing Pydantic `extra=forbid`; maps to IFBench instruction following | Target > 99%; blocks CI on failure | S068 |
+| **audit_hallucination_rate** | Eval metric: field-level accuracy of Herald-generated audit events vs ground truth; maps to OmniScience Non-Hallucination | Target > 78.7% (BF16 baseline); NVFP4 degrades to 75.5% — prefer BF16 for Herald | S068 |
+| **taubench_banking_mitigation** | Eval metric: % correct Sentinel escalation on financial compliance routing; raw Nemotron baseline 22.6% — hardest domain | Target > 80%; REQUIRES explicit few-shot priming before baseline run | S068 |
+| **ROLE_BUDGETS** | Dict in `dgaf_nemotron_client.py` mapping DGAF role names to `thinking_tokens` values; single source of truth for per-role reasoning allocation | Must be reviewed on each Nemotron model version upgrade | S068 |
+
+---
+
 ## Session Open Protocol (COLLEEN — P-02)
 
 ```
@@ -147,6 +170,9 @@ DGAF-Framework/
 │   │   ├── APOGEE_11Q_S034.json
 │   │   └── APOGEE_11Q_S035.json
 │   └── drafts/                        ← Staging area (P-03/P-11/P-18)
+├── tests/
+│   ├── dgaf_eval_suite.py             ← 🟡 Nemotron 3 Ultra eval — Issue #32
+│   └── ...
 ├── .operations/                       ← Maintainer-only ops tooling
 │   ├── gate_compliance_check.py       ← P-24 compliance scanner
 │   ├── sweep_session_init.md          ← Session open checklist
@@ -174,4 +200,5 @@ Violation triggers `SYNC_LOCKED` escalation to Amethyst-Conductor immediately.
 ---
 
 *License: Apache 2.0 · See [NOTICE](./NOTICE) for full attribution*  
-*Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*
+*Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*  
+*README.technical v1.1 · S068 kernel/contraction nomenclature patch · Amethyst · 2026-06-26*
