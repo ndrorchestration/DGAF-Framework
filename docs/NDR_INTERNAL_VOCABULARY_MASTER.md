@@ -3,9 +3,9 @@
 > **Steward:** COLLEEN — Institutional Memory, Archivist, Chief Librarian
 > **Orchestrator:** Amethyst — Meta-Orchestration Lead
 > **Owner:** Ender (Andrew Hensel) — Human Principal Architect
-> **Last updated:** 2026-06-26 (v1.2 — S070 Vercel audit + AOGA canonical expansion + Phi-Knight class registration)
+> **Last updated:** 2026-06-27 (v1.3 — FLAG-05 CLOSED: AXIS entry updated to CANONICAL per Njineer ratification 2026-06-27 16:40 EDT; SESSION_ANCHOR refresh to S070)
 > **Anchor:** S070 (OPEN)
-> **Sweep coverage (v1.2):** Vercel deployment audit (ndrorchestration + aoga-dashboard + phiknightverticalcorridor projects), aoga-dashboard commit history (AOGA-v1 → v1.1.0 X-Agent-Stack header, phi-knight-class.md v1.3.0), DGAF-Framework commit log S069–S070, FLAG-04 resolution, new FLAG-11 + FLAG-12
+> **Sweep coverage (v1.3):** AXIS_METRIC_SPEC.md v1.1 CANONICAL ratification (Njineer, 2026-06-27 16:40 EDT), FLAG-05 closure, AXIS Section 5 entry updated from FLAG-OPEN to CANONICAL
 
 ---
 
@@ -31,7 +31,7 @@ This file is the **canonical single source of truth** for mapping every internal
 | **Apogee** | QA Attestation Agent / Evidence-Grade Evaluator | Evidence scoring (11Q gate P-11); source validation; DGAF/Rose Gold compliance verification; CERTIFICATION_INDEX maintenance. Gold Star = S-Tier certification. External: CMMI Level 4–5 quality audit with rubric-based attestation |
 | **Reson** | Harmonic Coherence Scorer / CSP Router | Harmonic coherence scoring (0.00–1.00) AND topology routing (topology_router.py). ≥0.75 required for seal commits (P-15); drift warning at 0.50–0.74; dissonance hard stop below 0.50. Manages topology_router.py. External: CSP solver + harmonic coherence monitor. *(v1.2 note: dual-role — both Harmonic Coherence Scorer and Router Topology Engineer; FLAG-09 resolved)* |
 | **Reciprocity** | Arbitration Agent / Portfolio + Rollback Authority | TNR (Trust-Neutrality-Reciprocity) enforcement; version control integrity; rollback path definition (P-15 checkpoint 9). External: weighted consensus arbitrator; "reciprocity" (mutual obligation tracking) is a genuine differentiator |
-| **Sentinel / Sentinel-Phi** | Process Compliance + Security Monitor / Invariant Guard | CI/CD enforcement; secret scanning; sovereign file guard (LICENSE/NOTICE/AXIS hard veto P-15); boundary violation detection. Sovereign veto overrides Amethyst; only Njineer can resolve a Sentinel-Amethyst conflict. **Sentinel-Phi is also a Phi-Knight class member (entry-vertex role).** |
+| **Sentinel / Sentinel-Phi** | Process Compliance + Security Monitor / Invariant Guard | CI/CD enforcement; secret scanning; sovereign file guard (LICENSE/NOTICE/AXIS hard veto P-15); boundary violation detection. Sovereign veto overrides Amethyst; only Njineer can override Sentinel on sovereign files. **Sentinel-Phi is also a Phi-Knight class member (entry-vertex role).** |
 | **Sonar** | Evidence Grounding Agent / RAG Fact Retrieval Module | Provides evidence grounding; external: retrieval-augmented generation (RAG) grounding layer or "epistemic sourcing agent" |
 | **Herald** | Communication Gate / Audit Logger / Release Authority | External publication gate; changelog authorship; release notes; inter-agent status broadcast. Maps to W3C PROV-O `prov:wasGeneratedBy` provenance recorder (P-01) |
 | **Echolette** | Resonance / Temporal Phrase Coherence Agent | Acoustic mesh layer; phrase-level temporal coherence (P-13 Phrase gate); signal echo validation. External: temporal coherence monitor / phrase-level consistency verifier |
@@ -145,7 +145,7 @@ This file is the **canonical single source of truth** for mapping every internal
 | **MECE (Prefect Domain Split)** | Mutually Exclusive, Collectively Exhaustive Domain Partition | Standard MECE principle (McKinsey consulting origin); enforced in code via TriumvirateMandate.MECE enforcement; ValueError raised on violation |
 | **TNR (Trust-Neutrality-Reciprocity)** | Trust-Neutral-Reciprocal Governance Protocol | Enforced by Reciprocity agent; three-axis fairness check on portfolio and rollback operations; external: fairness constraints in multi-stakeholder systems |
 | **Sovereign Files** | Protected / Immutable System Files | LICENSE / NOTICE / AXIS files; Sentinel hard veto on any modification; overrides Amethyst; only Njineer can override Sentinel on sovereign files |
-| **AXIS** | Governance Axis Definition File | Internal sovereign file defining the DGAF governance axes; Sentinel-protected; exact acronym expansion not documented — **FLAG: needs canonical expansion** |
+| **AXIS** | Agent X-axis Invariant Spectrum — Governance Metric Spine | ✅ CANONICAL — Njineer ratified 2026-06-27 16:40 EDT · FLAG-05 CLOSED. Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.1 CANONICAL. Four invariants: Identity Continuity (I), Policy Enforcement (P), Adaptive Range (A), Ethical Constraint (E). Scoring: AXIS_composite = min(I,P,A,E). Tiers: ≥85 DGAF-COMPLIANT / 70–84 DRIFT-WARNING / <70 GOVERNANCE-BREACH. Sovereign file: Njineer override authority only. Linked gap: GAP-006 (Coherent Agency Formal Spec). |
 | **CERTIFICATION_INDEX** | Artifact Certification Registry | Maintained jointly by Apogee and COLLEEN; indexes all attested artifacts with tier, date, and Ender ratification status |
 | **GAP-XX (numbered gaps)** | Tracked Architectural Gap / Deferred Improvement Item | GAP-03 = vocab scan; GAP-07 = AGES full content; GAP-08 = back-link propagation; external: deferred architectural decision record (ADR) or technical debt item |
 
@@ -226,13 +226,13 @@ This file is the **canonical single source of truth** for mapping every internal
 > These items were identified during sweep as **undocumented, ambiguous, or potentially conflicting.** COLLEEN owns resolution before next session seal.
 
 | Flag | Item | Issue | Recommended Action | Status |
-|------|------|-------|-------------------|----|
+|------|------|-------|-------------------|---|
 | FLAG-01 | **HDFS acronym collision** | "HDFS" used for both NDR Hierarchical Documentation Format Standard AND Hadoop Distributed File System | Rename to "NDR-HDFS" or "HDFS-DOC 1.0" in all docs | OPEN |
 | FLAG-02 | **340% coordination gain** | Metric not formally defined; no artifact link found | Downgrade to qualitative claim or add `docs/qa/` evidence artifact | OPEN |
 | FLAG-03 | **PPTL acronym** | Expanded as "Procluding Premise Triadic Loop" — first canonical documentation in this file | Backfill PPTL expansion into WORKSPACE_BOOTSTRAP.md and ECOSYSTEM_INVENTORY.md | OPEN |
 | FLAG-04 | **AOGA acronym** | ~~Used in Vercel deployment label and docs; canonical expansion not documented anywhere found~~ | ~~Surface to Amethyst for canonical expansion; update ECOSYSTEM_INVENTORY.md~~ | **RESOLVED S070** — AOGA = Agent Orchestration Governance Architecture. Source: aoga-dashboard commit history + X-Agent-Stack header manifest. Update ECOSYSTEM_INVENTORY.md to backfill. |
-| FLAG-05 | **AXIS acronym** | Sovereign file; Sentinel-protected; exact acronym expansion not found in any swept document | Surface to Njineer/Amethyst for canonical expansion in AGENT_ROSTER or WORKSPACE_BOOTSTRAP | OPEN |
-| FLAG-06 | **Agent Lavender / Forseti** | Hard BLG per AGENT_ROSTER.md v1.0; any reference triggers P-01 | Run codebase-wide search; `grep -r "Lavender\|Forseti" docs/` | OPEN |
+| FLAG-05 | **AXIS acronym** | Sovereign file; Sentinel-protected; exact acronym expansion not found in any swept document | ~~Surface to Njineer/Amethyst for canonical expansion in AGENT_ROSTER or WORKSPACE_BOOTSTRAP~~ | **RESOLVED S070** — AXIS = Agent X-axis Invariant Spectrum. Njineer ratification received 2026-06-27 16:40 EDT. Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.1 CANONICAL. FLAG-05 CLOSED. |
+| FLAG-06 | **Agent Lavender / Forseti** | Hard BLG per AGENT_ROSTER.md v1.0; any reference triggers P-01 | Run codebase-wide search; `grep -r "Lavender\|Forseti" docs/` | **RESOLVED S070** — GitHub code search returned 0 results across all files in DGAF-Framework (2026-06-26 20:16 EDT). No stale references found. |
 | FLAG-07 | **Drive files 2, 3, 4 unreadable** | Agent Professor Prodigy Technical Spec (HDFS 1.0), Prodigy Mathematical Rigor POC, and Phi-Calculus White Paper returned empty content during sweep | Re-attempt read in next session; these may contain additional vocabulary not yet captured | OPEN |
 | FLAG-08 | **96% TruthfulQA — "internal" qualifier** | Currently stated without "internal" qualifier in some external-facing docs | Audit all public-facing docs for unqualified TruthfulQA claims | OPEN |
 | FLAG-09 | **Reson dual-role discrepancy** | v1.0 entry describes Reson as "Router Topology Engineer / CSP Solver"; AGENT_ROSTER describes Reson as "Harmonic Coherence Scorer" with 0.75 threshold | Both are correct (Reson holds both roles); update Section 1 entry to reflect both duties | **RESOLVED S070** — Section 1 entry updated to reflect both Harmonic Coherence Scorer and CSP Router roles. |
@@ -253,6 +253,6 @@ This file is the **canonical single source of truth** for mapping every internal
 
 ---
 
-*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.2 · S070 OPEN · COLLEEN × Amethyst · 2026-06-26*
-*v1.2 additions: FLAG-04 RESOLVED (AOGA = Agent Orchestration Governance Architecture), FLAG-09 RESOLVED (Reson dual-role), Phi-Knight agent class registered (Section 1), phiknightverticalcorridor Vercel project documented (Section 7, FLAG-11), Dependabot PR #1 flagged (FLAG-12), Vercel deployment inventory expanded to 4 projects, SI=0.8862 + May 25–29 Error Chain incident added (Section 8), AOGA Dashboard entry updated (Section 7)*
-*Sources: S070 Vercel audit (ndrorchestration/aoga-dashboard/phiknightverticalcorridor projects), aoga-dashboard commit history (phi-knight-class.md v1.3.0, X-Agent-Stack header manifest), DGAF-Framework commit log S069–S070*
+*NDR_INTERNAL_VOCABULARY_MASTER.md · v1.3 · S070 OPEN · COLLEEN × Amethyst · 2026-06-27*
+*v1.3 additions: FLAG-05 RESOLVED (AXIS = Agent X-axis Invariant Spectrum — Njineer ratified 2026-06-27 16:40 EDT), FLAG-06 RESOLVED (Lavender/Forseti grep clean), AXIS Section 5 entry updated from FLAG-OPEN to CANONICAL with full spec reference, four-invariant summary (I-P-A-E), scoring model, tier thresholds, and GAP-006 linkage*
+*Sources: AXIS_METRIC_SPEC.md v1.1 CANONICAL (docs/qa/), Njineer ratification directive S070 2026-06-27 16:40 EDT, commit 50befb66 (2026-06-27 20:42Z)*
