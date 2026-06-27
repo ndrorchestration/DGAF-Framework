@@ -1,9 +1,9 @@
 # DGAF Ecosystem Inventory
 
-> **Version:** 1.4.0
+> **Version:** 1.5.0
 > **Authority:** COLLEEN (Institutional Memory)
-> **Last updated:** S070-r3-P1 · 2026-06-26 22:45 EDT
-> **Commit ref:** d2bbb31 (S070-r3-P1)
+> **Last updated:** S070-r4 (FINAL) · 2026-06-27 18:15 EDT
+> **Commit ref:** a98f60c (S070-r4)
 
 ---
 
@@ -14,7 +14,7 @@ This file is the single-source file tree and artifact registry for the entire DG
 ---
 
 ## Complete Repository File Tree
-*(as of commit d2bbb31 · 2026-06-26)*
+*(as of commit a98f60c · 2026-06-27)*
 
 ```
 DGAF-Framework/
@@ -48,16 +48,16 @@ DGAF-Framework/
 ├── docs/                             # Governance and knowledge documentation
 │   ├── GOVERNANCE_CONSTITUTION.md    # ★ NEW S070-r3-P0 — Normative, epistemic, flourishing charter
 │   ├── CREDIT_JUSTICE_PROTOTYPE_SPEC.md
-│   ├── ECOSYSTEM_INVENTORY.md        # This file (v1.4.0)
-│   ├── NDR_INTERNAL_VOCABULARY_MASTER.md  # Canonical vocabulary (v1.2 → v1.3 pending)
+│   ├── ECOSYSTEM_INVENTORY.md        # This file (v1.5.0)
+│   ├── NDR_INTERNAL_VOCABULARY_MASTER.md  # Canonical vocabulary — v1.5 CURRENT
 │   ├── NDR_PATTERN_REGISTRY.md       # Legacy pattern registry (superseded — redirect stub)
 │   ├── NDR_PATTERN_REGISTRY_UNIFIED.md   # ★ UPDATED S070-r3-P1 → v1.4 — Unified pattern registry
 │   ├── NDR_REGISTRY_DIFFERENTIATION.md
 │   ├── NDR_REGISTRY_MERGE_PLAN.md
 │   ├── RD_GAPS.md                    # R&D gap log
-│   ├── SESSION_ANCHORS.md            # ★ UPDATED S070-r3-P1 — Primary session anchor log
+│   ├── SESSION_ANCHORS.md            # ★ UPDATED S070-r4 — Primary session anchor log
 │   ├── TEAM_WIKI.md                  # Team-facing reference (v1.0.0)
-│   ├── WORKSPACE_BOOTSTRAP.md        # Bootstrap reference doc
+│   ├── WORKSPACE_BOOTSTRAP.md        # ★ UPDATED S070-r4 — Bootstrap reference doc
 │   ├── agents/                       # Per-agent definition files
 │   ├── andromeda/                    # Andromeda sub-system docs
 │   ├── architecture/                 # Architecture decision records
@@ -72,6 +72,7 @@ DGAF-Framework/
 │   │   └── TRIADIC_ORCHESTRATION_PATTERNS.md  # Source doc for CONSENSUS_TRIAD + CONDUCTED_TRIAD
 │   ├── qa/                           # QA attestation artifacts
 │   │   ├── APOGEE_11Q_*.json         # Apogee attestation records (P-11)
+│   │   ├── AXIS_METRIC_SPEC.md       # ★ UPDATED S070-r4 → v1.1 CANONICAL — AXIS sovereign spec
 │   │   └── QA_CHECKPOINT_TEMPLATE_SPECIALIZED.md  # ★ NEW S070-r3-P1 — Specialized QA checkpoint template (3 variants)
 │   └── [additional subdirs]
 ├── package.json                      # Node package manifest
@@ -89,13 +90,20 @@ DGAF-Framework/
 
 ---
 
-## New Artifacts — S070 (2026-06-26)
+## New & Updated Artifacts — S070 Complete (2026-06-26 / 2026-06-27)
 
-| File | Session | Type | Status |
-|------|---------|------|--------|
-| `docs/GOVERNANCE_CONSTITUTION.md` | S070-r3-P0 | Foundation charter | ✅ COMMITTED — ratification pending Njineer seal |
+| File | Session Rev | Type | Status |
+|------|-------------|------|--------|
+| `docs/GOVERNANCE_CONSTITUTION.md` | S070-r3-P0 | Foundation charter | ✅ COMMITTED |
 | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` v1.4 | S070-r3-P1 | Pattern registry update | ✅ COMMITTED |
 | `docs/qa/QA_CHECKPOINT_TEMPLATE_SPECIALIZED.md` | S070-r3-P1 | QA template (3 variants) | ✅ COMMITTED |
+| `docs/qa/AXIS_METRIC_SPEC.md` v1.1 | S070-r4 | Sovereign metric spec | ✅ CANONICAL — Njineer ratified 2026-06-27 |
+| `docs/SESSION_ANCHORS.md` | S070-r4 | Session anchor log | ✅ COMMITTED |
+| `docs/WORKSPACE_BOOTSTRAP.md` | S070-r4 | Bootstrap reference | ✅ COMMITTED |
+| `entrepreneur-hub/docs/NEEDLE_TEMPLATE_INDEX.md` v2.0 | S070-r4 | Template index | ✅ COMMITTED (entrepreneur-hub repo) |
+| `entrepreneur-hub/docs/ROADMAP.md` v2.0 | S070-r4 | Hub roadmap | ✅ COMMITTED (entrepreneur-hub repo) |
+| `entrepreneur-hub/docs/NEEDLE_WORKFLOW_REGISTRY.md` v1.0 | S070-r4 | 12-workflow registry | ✅ COMMITTED (entrepreneur-hub repo) |
+| `entrepreneur-hub/templates/governance-starter-pack/T-EH-05-NEEDLE-READY.md` | S070-r4 | Paste-and-go Needle template | ✅ LIVE-READY (entrepreneur-hub repo) |
 
 ---
 
@@ -110,18 +118,19 @@ DGAF-Framework/
 ---
 
 ## Acronym Register
-*(corrected S070-r3 — see FLAG-09 re-open/re-close)*
+*(updated S070-r4 FINAL — all S070 flag closures applied)*
 
 | Acronym | Expansion | Status | Notes |
 |---------|-----------|--------|-------|
-| DGAF | ⚠️ FLAG-13 OPEN | CONFLICT | Pattern Registry v1.3 vs TEAM_WIKI v1.0.0 disagree — Njineer ratification required |
-| PDMAL-φ | Phi-Driven Multi-Agent Lattice | ✅ CANONICAL | Primary design focus; φ as geometric parametric constraint; Njineer direct S070-r3 |
-| PDMAL-D | Phi-Dodecahedral Multi-Agent Lattice | ✅ CANONICAL | Structural variant; dodecahedral topology (12 faces, 20 vertices); distinct from PDMAL-φ |
-| PDMAL (legacy) | ~~Policy-Driven Multi-Agent Layer~~ | ❌ SUPERSEDED | TEAM_WIKI entry superseded by Njineer correction S070-r3; see NDR_INTERNAL_VOCABULARY_MASTER v1.3 |
-| AOGA | Agent Orchestration Governance Architecture | ✅ CANONICAL | FLAG-04 resolved |
-| PPTL | Procluding Premise Triadic Loop | ✅ CANONICAL | FLAG-03 resolved |
-| pptl | Phi-pentagon test layer | ✅ CANONICAL | Lowercase — distinct from PPTL; case collision is a standing epistemic risk |
-| AXIS | Agent X-axis Invariant Spectrum (INFERRED) | ⏳ PARTIAL | FLAG-05 open; Njineer ratification required |
+| DGAF | ⚠️ FLAG-13 OPEN | CONFLICT | Pattern Registry v1.3 vs TEAM_WIKI v1.0.0 disagree — Njineer ratification required · BLOCKING |
+| PDMAL-φ | Phi-Driven Multi-Agent Lattice | ✅ CANONICAL | Primary — Njineer direct S070-r3 |
+| PDMAL-D | Phi-Dodecahedral Multi-Agent Lattice | ✅ CANONICAL | Structural variant — distinct topology; Njineer direct S070-r3 |
+| PDMAL (legacy) | ~~Policy-Driven Multi-Agent Layer~~ | ❌ SUPERSEDED | TEAM_WIKI entry superseded; use PDMAL-φ or PDMAL-D |
+| AOGA | Agent Orchestration Governance Architecture | ✅ CANONICAL | FLAG-04 resolved S070 |
+| PPTL | Procluding Premise Triadic Loop | ✅ CANONICAL | FLAG-03 resolved; backfilled WORKSPACE_BOOTSTRAP S070-r4 |
+| pptl | Phi-pentagon test layer | ✅ CANONICAL | Lowercase — distinct from PPTL; case collision is standing epistemic risk |
+| AXIS | Agent X-axis Invariant Spectrum | ✅ **CANONICAL** | FLAG-05 CLOSED · Njineer ratified 2026-06-27 16:40 EDT · Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.1 |
+| NDR-HDFS | NDR Hierarchical Documentation Format Standard | ✅ CANONICAL | FLAG-01 resolved · renamed from bare HDFS · Njineer ratified 2026-06-27 17:08 EDT |
 | HITL | Human-in-the-Loop | ✅ CANONICAL | |
 | OPP | Improvement opportunity in CO_ORCH_QUEUE | ✅ CANONICAL | |
 | ACRFence | Atomic Checkpoint + Restore with effect fence semantics | ✅ CANONICAL | |
@@ -129,13 +138,14 @@ DGAF-Framework/
 | Coherent Agency | Recast of governance/memory/ethics as subsystems of continuity-preserving agency | ✅ CANONICAL | GAP-006 linked |
 | NDR | Named Design Rule / Pattern | ✅ CANONICAL | |
 | S-Tier | Highest quality designation; requires Apogee Lens approval | ✅ CANONICAL | |
+| SCPE | Structural Context Pruning Engine | ✅ CANONICAL | P-31 |
 
 ---
 
 ## Constitutional Cross-Reference
 *(new S070-r3-P0)*
 
-`docs/GOVERNANCE_CONSTITUTION.md` is the foundational authority document. All agents, patterns, flags, and sessions operate downstream of it. Quick reference:
+`docs/GOVERNANCE_CONSTITUTION.md` is the foundational authority document. All agents, patterns, flags, and sessions operate downstream of it.
 
 | Constitution Section | Governs |
 |---------------------|--------|
@@ -155,3 +165,30 @@ DGAF-Framework/
 |---|---|---|---|
 | Generic | `docs/qa/QA_CHECKPOINT_TEMPLATE.md` (pending) | — | Any auditable process |
 | Specialized | `docs/qa/QA_CHECKPOINT_TEMPLATE_SPECIALIZED.md` | A (Release), B (P-11 Apogee), C (Compliance) | Software release, canonical promotion, regulatory audit |
+
+---
+
+## S070 Open Items Carried to S071
+
+> Items below cannot be resolved by Amethyst without Njineer input or COLLEEN Drive access.
+
+| Item | Owner | Priority |
+|------|-------|----------|
+| FLAG-13: DGAF expansion conflict | Njineer ratification | 🔴 BLOCKING |
+| FLAG-07: Drive files GAP-06/07/08 re-attempt | COLLEEN | 🟡 HIGH |
+| FLAG-11: phiknightverticalcorridor Vercel purpose | Njineer | 🟡 HIGH |
+| FLAG-12: Dependabot PR #1 disposition | Njineer | 🟡 HIGH |
+| NDR-HDFS rename execution sweep (find/replace all docs) | Amethyst S071 | 🟡 HIGH |
+| PDMAL correction cascade — TEAM_WIKI full rewrite | Amethyst S071 | 🟡 HIGH |
+| FLAG-08: TruthfulQA "internal" qualifier audit | Amethyst S071 | 🟠 MEDIUM |
+| FLAG-10: P-35 registration status confirmation | Amethyst S071 | 🟠 MEDIUM |
+| FLAG-03: PPTL — Vocab Master Section 9 close note | Amethyst S071 | 🟢 LOW |
+| Stasis migration window monitor (expires 2026-07-13) | Amethyst | ⏳ DATE-SENSITIVE |
+| Saga/CB pattern registration (P-37+ candidates) | S071 | 🟠 MEDIUM |
+| Apogee P-11 attestation on Vocab Master v1.5 | Apogee | 🟡 HIGH |
+| GAP-006 Coherent Agency Formal Spec — AXIS Phase 4 dependency | COLLEEN + Prof. Prodigy | 🟠 MEDIUM |
+| AXIS Phase 3 instrumentation owner assignment | Njineer | 🟡 HIGH |
+
+---
+
+*ECOSYSTEM_INVENTORY.md · v1.5.0 · S070-r4 FINAL · Amethyst × COLLEEN · 2026-06-27 18:15 EDT*
