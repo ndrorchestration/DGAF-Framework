@@ -8,7 +8,7 @@
 
 # DGAF-Framework
 
-**Dynamic Governance Assurance Framework (DGAF)** — the governance spine of the **Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)**. Features Agent Amethyst meta-orchestration, COLLEEN institutional anchor, Agent Apogee QA governance, and Gold Star S-TIER validation.
+**Dynamic Governance Agentic Formation (DGAF)** Framework — the governance spine of the **Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)**. Features Agent Amethyst meta-orchestration, COLLEEN institutional anchor, Agent Apogee QA governance, and Gold Star S-TIER validation internally by aligning to global standards for AI Governance such as NIST and RMF.
 
 > 📐 **Architecture docs:** [README.governance.md](README.governance.md) · [README.technical.md](README.technical.md)  
 > 📋 **NDR Pattern Registry v2.1:** [docs/patterns/NDR_PATTERN_REGISTRY.md](docs/patterns/NDR_PATTERN_REGISTRY.md)  
