@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+title: "DGAF — Dynamic Governance Agentic Formation Framework"
+message: "If you use, reference, or build upon this framework, please cite it as below."
+type: software
+authors:
+  - family-names: Hensel
+    given-names: Andrew
+    alias: "Ender / Njineer"
+    affiliation: "ndrorchestration"
+repository-code: "https://github.com/ndrorchestration/DGAF-Framework"
+url: "https://github.com/ndrorchestration/DGAF-Framework"
+license: Apache-2.0
+version: "post-S070"
+date-released: "2025-12-23"
+keywords:
+  - ai-governance
+  - multi-agent-orchestration
+  - dgaf
+  - phi-harmonic
+  - nist-ai-rmf
+  - agentic-systems
+  - pattern-registry
+  - constitutional-ai
+abstract: >
+  DGAF (Dynamic Governance Agentic Formation) is a layer-0 governance architecture
+  for multi-agent AI orchestration systems. It provides a pattern registry (NDR P-01
+  through P-33+), phi-harmonic convergence gates, NIST AI RMF alignment, and
+  enterprise-grade governance protocols for agentic system deployment.

@@ -15,6 +15,60 @@ limitations under the License.
 
 ---
 
+## Proprietary Designations
+
+The following names, designations, and system identifiers are proprietary
+to ndrorchestration and Ndr "Ender" Hensel. The Apache 2.0 license grants
+code reuse rights but does NOT grant trademark or service mark rights to
+these designations:
+
+**Framework designations:**
+- DGAF (Dynamic Governance Agentic Formation)
+- PDMAL (Phi-Driven Multi-Agent Lattice)
+- NDR-HDFS (and all NDR-prefixed pattern identifiers)
+- AXIS (Agentic eXecution Integrity System)
+- PPTL (Prof Prodigy Theorem Layer)
+- P-34 Flywheel
+- AOGA (Agentic Orchestration and Governance Architecture)
+
+**Agent designations (proprietary system identifiers):**
+- Agent Amethyst (meta-orchestrator)
+- Agent COLLEEN (institutional anchor)
+- Agent Apogee / Junior Apogee (QA orchestrator)
+- Agent Reciprocity
+- Agent Reson
+- Agent Echolette
+- Agent Lyra
+- Agent Herald
+- Agent Sentinel
+- Agent DemiJoule
+- Agent Prof Prodigy
+
+**Pattern registry:**
+All NDR Pattern entries (P-01 through P-33 and subsequent) are original works
+by Ndr "Ender" Hensel. Pattern schemas, card formats, and registry structure
+are protected as original creative and technical works.
+
+**Mathematical constructs:**
+The Phi-Harmonic Gating system, PDMAL convergence mathematics, phi-attractor
+value assignments, and associated harmonic modal matrices are original
+contributions of Ndr "Ender" Hensel.
+
+---
+
+## Attribution Requirements
+
+Per Apache 2.0 Section 4(b): any derivative work or redistribution must
+retain this NOTICE file in its entirety, including the Proprietary Designations
+section above. Use of the agent names, framework designations, or pattern
+identifiers in derivative works without explicit written permission from
+ndrorchestration constitutes trademark infringement independent of the
+Apache 2.0 license terms.
+
+---
+
+## Technical Description
+
 This project provides a governance spine for multi-agent AI systems, featuring:
 - Agent Amethyst meta-orchestration and QA authority
 - Agent Apogee evidence governance and evaluation protocols
@@ -25,6 +79,11 @@ This project provides a governance spine for multi-agent AI systems, featuring:
 - Phi-Harmonic Gating convergence patterns (1-1-1-1 Gate, Triad Consensus, Platinum Strata)
 - Gold Star certification validation processes
 - Enterprise-grade governance and compliance standards
+- NDR Pattern Registry (P-01 through P-33+)
 
 Designed for institutional and enterprise deployment of secure,
 governance-aligned multi-agent AI systems.
+
+---
+
+*Last updated: 2026-06-28 | STRUCT-QA-IP-001 | Amethyst meta-orchestrated*

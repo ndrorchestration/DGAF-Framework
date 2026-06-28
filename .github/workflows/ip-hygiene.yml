@@ -1,0 +1,64 @@
+name: IP Hygiene Sweep
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly Monday 6am UTC
+
+jobs:
+  ip-hygiene:
+    name: IP & PR Hygiene Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for deployment_manifest.json in root
+        run: |
+          if [ -f "deployment_manifest.json" ]; then
+            echo "::error::deployment_manifest.json found in public repo root. Move to dgaf-ops (private)."
+            exit 1
+          fi
+          echo "OK: No deployment_manifest.json in root"
+
+      - name: Check for SESSION_ANCHOR.md in root
+        run: |
+          if [ -f "SESSION_ANCHOR.md" ]; then
+            echo "::warning::SESSION_ANCHOR.md found in public root. Consider moving to dgaf-ops."
+          fi
+          echo "OK: SESSION_ANCHOR check complete"
+
+      - name: Check CITATION.cff exists
+        run: |
+          if [ ! -f "CITATION.cff" ]; then
+            echo "::error::CITATION.cff missing. Required for Apache 2.0 attribution hardening."
+            exit 1
+          fi
+          echo "OK: CITATION.cff present"
+
+      - name: Check NOTICE contains Proprietary Designations section
+        run: |
+          if ! grep -q "Proprietary Designations" NOTICE; then
+            echo "::error::NOTICE file missing Proprietary Designations section."
+            exit 1
+          fi
+          echo "OK: NOTICE has Proprietary Designations"
+
+      - name: Check for secrets patterns
+        run: |
+          # Basic secret pattern check (supplements GitHub secret scanning)
+          PATTERNS=("PRIVATE_KEY" "SECRET_KEY" "API_KEY=" "password=" "token=" "Bearer ")  
+          for pattern in "${PATTERNS[@]}"; do
+            if grep -r --include="*.json" --include="*.yml" --include="*.yaml" -l "$pattern" . 2>/dev/null | grep -v ".github" | grep -v "node_modules"; then
+              echo "::warning::Potential secret pattern '$pattern' found. Review flagged files."
+            fi
+          done
+          echo "OK: Secret pattern scan complete"
+
+      - name: Portfolio staleness check
+        run: |
+          echo "Manual check required: Verify ai-prompt-systems-portfolio and ai-governance-frameworks updated within 30 days of last Tier 1 push."
+          echo "Automated staleness enforcement is in sentinel-governance."
