@@ -1,7 +1,7 @@
 {
-  "registry_version": "0.4.0",
-  "generated_at": "2026-06-26T20:05:00Z",
-  "session": "S067",
+  "registry_version": "0.5.0",
+  "generated_at": "2026-06-28T20:54:00Z",
+  "session": "S071",
   "note": "Full unified JSON export planned as docs/ndr_patterns_unified.json (see docs/NDR_REGISTRY_MERGE_PLAN.md). This file is the interim machine-readable index.",
   "patterns": [
     {
@@ -116,6 +116,47 @@
       "nist": "Measure",
       "eu_ai_act": "Art.9",
       "related_patterns": ["P-27", "P-30", "P-03"]
+    },
+    {
+      "id": "P-34b",
+      "name": "GPT-5.4 Thinking Optimized Prompt Templates",
+      "category": "prompt-engineering",
+      "subcategory": "multi-model-orchestration",
+      "session": "S071",
+      "card": "patterns/P-34_GPT54_THINKING_PROMPTS.md",
+      "intent": "Canonical prompt templates for operating GPT-5.4 Thinking within the DGAF/PDMAL/Amethyst governance stack. Front-loads constraints so the model's visible reasoning plan can be redirected before computation completes. Covers 5 operational modes: governance doc drafting, FLAG resolution, eval suite development, portfolio refresh, and session open/instantiation.",
+      "templates": [
+        {"id": "T-1", "name": "Governance Document Drafting", "use_for": "GOVERNANCE.md, STRUCT-QA artifacts, session anchors"},
+        {"id": "T-2", "name": "FLAG Resolution", "use_for": "FLAG-01/04/05, multi-variable decisions"},
+        {"id": "T-3", "name": "Code / Eval Suite Development", "use_for": "dgaf_eval_suite.py, Nemotron kernel, taubench"},
+        {"id": "T-4", "name": "Portfolio Refresh", "use_for": "Tier 3 staleness >14 days, doc sync"},
+        {"id": "T-5", "name": "Session Open / Amethyst Instantiation", "use_for": "Any new session, CONDUCTED_TRIAD reinstantiation"}
+      ],
+      "quick_rules": [
+        "Declare phi=1.61818 in every preamble",
+        "Name authority chain explicitly (Njineer > Amethyst > Apogee > DemiJoule)",
+        "Include THINKING PLAN checklist to redirect before execution",
+        "End every output with a verification gate",
+        "Use flag-instead-of-invent instruction",
+        "Paste full doc context — never summarize (1M token window)",
+        "confidence_bound field required on all scores"
+      ],
+      "model_target": "GPT-5.4 Thinking (Perplexity Pro/Max)",
+      "dual_model_workflow": {
+        "Perplexity_Amethyst": "Live GitHub data retrieval, search, citation, priority auditing",
+        "GPT54_Thinking": "Deep synthesis, code generation, long-horizon governance reasoning, document drafting"
+      },
+      "phi_anchor": 1.61818,
+      "dgaf_version": "post-S070-r3",
+      "review_status": {
+        "apogee_lens": "APPROVED",
+        "demijole_gate": "PASSED — no IP, safety, or ethics flags"
+      },
+      "cross_listed": [
+        "ndrorchestration/ai-prompt-systems-portfolio",
+        "ndrorchestration/ai-governance-frameworks"
+      ],
+      "related_patterns": ["P-31", "P-32", "P-33", "ndr.dual_orchestrator_qa_loop", "P-LOCK-001"]
     },
     {
       "id": "P-LOCK-001",
