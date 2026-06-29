@@ -1,11 +1,11 @@
 {
-  "schema_version": "2.1.0",
+  "schema_version": "2.2.0",
   "registry": "NDR Pattern Registry (Unified)",
   "registry_md": "docs/NDR_PATTERN_REGISTRY_UNIFIED.md",
-  "session": "S069",
-  "sealed": "2026-06-13T00:47:00-04:00",
-  "watermark": "P-36",
-  "total_named_p_series": 36,
+  "session": "S071",
+  "sealed": "2026-06-28T21:35:00-04:00",
+  "watermark": "P-41",
+  "total_named_p_series": 41,
   "total_ndr_named_session": 8,
   "stasis_block": {
     "range": "P-12–P-26",
@@ -20,6 +20,13 @@
     "date": "2026-06-13T00:47:00-04:00",
     "ratified_by": "Ender / Njineer (Hensel, Andrew Vance)",
     "items": ["P-35", "P-36", "CRUCIBLE_CHARTER_v1", "RESEARCH_PROGRAM_CHARTER_v1", "STASIS_CANONICAL_SPEC_v1", "S069_SESSION_SEAL"]
+  },
+  "s071_batch": {
+    "session": "S071",
+    "sealed": "2026-06-28T21:35:00-04:00",
+    "added": ["P-37", "P-38", "P-39", "P-40", "P-41"],
+    "pushed_by": "Amethyst (autonomous batch)",
+    "schema_bump": "2.1.0 → 2.2.0"
   },
   "patterns": [
     { "id": "P-35", "name": "Procluding Premise Gate", "layer": 0, "p36_class": "BLOCKING", "session": "S069", "status": "canonical", "ender_ratified": "2026-06-13", "ref": "docs/gates/NDR_PROCLUDING_PREMISE_GATE_P35_v1.md" },
@@ -89,6 +96,70 @@
       "status": "canonical",
       "attestation": { "tier": "A-TIER", "score_pct": 94.5, "blg_p34_01": "RESOLVED", "blg_p34_02": "RESOLVED", "ratified_by": "Ender", "date": "2026-05-30" },
       "ref": "components/KAPPA/dynamic_weight_router.py"
+    },
+    {
+      "id": "P-37",
+      "name": "Saga Boundary Declaration",
+      "layer": 10,
+      "p36_class": "ADVISORY",
+      "session": "S071",
+      "status": "canonical",
+      "description": "Declares multi-step saga: ordered steps, compensators per step, stochastic/deterministic split, rollback envelope. Must precede P-38 circuit evaluation.",
+      "triggers": ["P-38"],
+      "compensator_required": true,
+      "ref": "docs/patterns/NDR_SAGA_BOUNDARY_P37_v1.md"
+    },
+    {
+      "id": "P-38",
+      "name": "Circuit-Breaker Gate",
+      "layer": 10,
+      "p36_class": "BLOCKING",
+      "session": "S071",
+      "status": "canonical",
+      "description": "Monitors failure thresholds per saga step. On trip: suspends execution, fires P-29 risk annotation, activates P-37 compensators. States: CLOSED | OPEN | HALF-OPEN.",
+      "failure_threshold": 3,
+      "half_open_probe_interval_s": 30,
+      "joint_escalation": ["P-29", "P-37"],
+      "ref": "docs/patterns/NDR_CIRCUIT_BREAKER_P38_v1.md"
+    },
+    {
+      "id": "P-39",
+      "name": "ACRFence — Atomic Checkpoint-Resume Fence",
+      "layer": 10,
+      "p36_class": "BLOCKING",
+      "session": "S071",
+      "status": "canonical",
+      "description": "Atomically writes a durable checkpoint (step-id, state-hash, timestamp) before each tool call. Enforces fence: next call blocked until checkpoint ACK. On restart: resumes from last ACK'd checkpoint.",
+      "fence_enforcement": "pre-tool-call",
+      "hash_algorithm": "SHA-256",
+      "storage_backend": "append-only log",
+      "ref": "docs/patterns/NDR_ACRFENCE_P39_v1.md"
+    },
+    {
+      "id": "P-40",
+      "name": "Atomix — Tool-Call Transaction Boundary",
+      "layer": 11,
+      "p36_class": "BLOCKING",
+      "session": "S071",
+      "status": "canonical",
+      "description": "Wraps every side-effecting tool call in a full transaction boundary: BEGIN → execute → COMMIT on success → ROLLBACK + compensator on failure. Idempotency key required for all write operations.",
+      "phases": ["BEGIN", "EXECUTE", "COMMIT | ROLLBACK"],
+      "idempotency_key_required": true,
+      "compensator_source": "P-37",
+      "ref": "docs/patterns/NDR_ATOMIX_P40_v1.md"
+    },
+    {
+      "id": "P-41",
+      "name": "HITL Durable Approval Queue",
+      "layer": 11,
+      "p36_class": "ADVISORY",
+      "session": "S071",
+      "status": "canonical",
+      "description": "Holds irreversible human-approval requests in a durable queue across session restarts. States: PENDING | APPROVED | REJECTED | TIMED_OUT. TIMED_OUT fires P-38 circuit breaker. No irreversible action executes without APPROVED state.",
+      "states": ["PENDING", "APPROVED", "REJECTED", "TIMED_OUT"],
+      "timeout_escalation": "P-38",
+      "irreversible_action_gate": true,
+      "ref": "docs/patterns/NDR_HITL_DURABLE_QUEUE_P41_v1.md"
     }
   ],
   "ndr_named_session_patterns": [
