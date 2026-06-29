@@ -1,7 +1,7 @@
 # Workspace Bootstrap
 
 **DGAF-Framework · Session Rehydration Protocol**
-**Version:** S070-r4 · 2026-06-27 18:00 EDT
+**Version:** S071-r1 · 2026-06-28 21:18 EDT
 **Prime:** Amethyst
 
 > Read this file first at the start of every session. It orients you in ~60 seconds.
@@ -30,10 +30,10 @@
 
 ## Step 2 — Current Session State
 
-**Active session:** S070 (r4 — final anchor pending S071 seal checklist)
-**Last sealed session:** S069 (2026-06-13 00:47 EDT) — P-35/P-36, Vocab Master v1.0, STASIS-CANONICAL
-**Registry watermark:** P-36
-**Stasis migration window:** 2026-06-13 → 2026-07-13 ⚠️ expires in 16 days
+**Active session:** S071 (r1 — flag correction sweep in progress)
+**Last sealed session:** S070 (r4 FINAL — 2026-06-27 18:00 EDT)
+**Registry watermark:** P-36 (P-37+ Saga/CB candidates queued S071)
+**Stasis migration window:** 2026-06-13 → 2026-07-13 ⚠️ **15 days remaining**
 
 ---
 
@@ -42,9 +42,13 @@
 | Flag | Item | Confidence |
 |------|------|------------|
 | FLAG-07 | Drive files GAP-06 / GAP-07 / GAP-08 — COLLEEN re-attempt S071 | COLLEEN deferred |
-| FLAG-11 | phiknightverticalcorridor Vercel project purpose | Unknown |
 | FLAG-12 | Dependabot PR #1 — Next 14→15 disposition | Recommend dismiss |
-| **FLAG-13** | **DGAF expansion conflict: “Deterministic Governance Autonomy Framework” (Pattern Registry v1.3) vs “Dynamic Governance Agentic Formation Architecture” (TEAM_WIKI v1.0)** | **BLOCKING — cannot canonicalize without Njineer** |
+
+> **All other flags resolved.** FLAGS 02/05/11/13 closed in S070 — commit-evidenced (see SESSION_ANCHORS.md).
+> - FLAG-13: DGAF canonical — **"Deterministic Governance for Agentic Frameworks"** · Njineer 2026-06-27
+> - FLAG-11: phiknightverticalcorridor — purpose identified · Njineer 2026-06-27
+> - FLAG-05: AXIS Phase 3 owner — Amethyst assigned · Njineer 2026-06-27
+> - FLAG-02: 340% coordination gain — downgraded to qualitative · Njineer 2026-06-27
 
 ---
 
@@ -62,6 +66,7 @@
 | R&D gap log | `docs/RD_GAPS.md` |
 | Governance constitution | `docs/GOVERNANCE_CONSTITUTION.md` |
 | Entrepreneur Hub | `github.com/ndrorchestration/entrepreneur-hub` |
+| Operational files (private) | `dgaf-ops` repo (SWEEP_LOG, CO_ORCH_QUEUE, AGENT_MANIFEST, etc.) |
 | This file | `docs/WORKSPACE_BOOTSTRAP.md` |
 
 ---
@@ -70,14 +75,14 @@
 
 | Acronym | Expansion | Status |
 |---------|-----------|--------|
-| DGAF | **CONFLICT** — see FLAG-13 | ⚠️ Njineer required |
+| DGAF | **Deterministic Governance for Agentic Frameworks** | ✅ CANONICAL — Njineer ratified 2026-06-27 |
 | PDMAL | Phi-Driven Multi-Agent Lattice (primary) · PDMAL-D (Phi-Dodecahedral, variant) | ✅ CANONICAL (S070-r3 — Njineer direct) |
 | pptl | Phi-pentagon test layer | ✅ CANONICAL (TEAM_WIKI glossary) |
 | PPTL (uppercase) | Procluding Premise Triadic Loop | ✅ CANONICAL (Vocab Master v1.2) — distinct from lowercase pptl |
 | AOGA | Agent Orchestration Governance Architecture | ✅ CANONICAL (S070) |
 | NDR-HDFS | NDR Hierarchical Documentation Format Standard | ✅ PRESCRIBED — rename execution S071 |
 | SCPE | Structural Context Pruning Engine | ✅ CANONICAL (P-31) |
-| AXIS | Agent X-axis Invariant Spectrum | ✅ **CANONICAL — Njineer ratified 2026-06-27** |
+| AXIS | Agent X-axis Invariant Spectrum | ✅ **CANONICAL — Njineer ratified 2026-06-27 · Phase 3 owner: Amethyst** |
 | OPP | Improvement opportunity in CO_ORCH_QUEUE | ✅ CANONICAL |
 | HITL | Human-in-the-Loop | ✅ CANONICAL |
 | ACRFence | Atomic checkpoint + restore with effect fence semantics | ✅ CANONICAL |
@@ -90,17 +95,18 @@
 - **No S-Tier / Gold Star** without Apogee P-11 attestation.
 - **STASIS block (P-12–P-26):** No individual extraction without COLLEEN secondary sign-off.
 - **Sovereign files (AXIS_METRIC_SPEC.md):** Njineer override only.
-- **340% coordination gain claim:** Downgraded to qualitative. Use: *“substantial multi-agent coordination improvement (internal metric, artifact pending replication)”*
-- **TruthfulQA 96% claim:** Must include *“internal”* qualifier in all public-facing materials.
-- **DGAF expansion:** Do NOT use either expansion in public-facing docs until FLAG-13 resolved.
+- **340% coordination gain claim:** Downgraded to qualitative. Use: *"substantial multi-agent coordination improvement (internal metric, artifact pending replication)"*
+- **TruthfulQA 96% claim:** Must include *"internal"* qualifier in all public-facing materials.
+- **DGAF expansion:** CANONICAL — use **"Deterministic Governance for Agentic Frameworks"** in all docs.
+- **Operational files** (SWEEP_LOG, CO_ORCH_QUEUE, AGENT_MANIFEST, etc.) → `dgaf-ops` (private) only. Not in DGAF-Framework.
 
 ---
 
 ## Step 7 — AXIS / GAP-006 Context Note
 
-AXIS = **Agent X-axis Invariant Spectrum** — CANONICAL as of 2026-06-27 (Njineer ratification). Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.1.
+AXIS = **Agent X-axis Invariant Spectrum** — CANONICAL as of 2026-06-27 (Njineer ratification). Full spec: `docs/qa/AXIS_METRIC_SPEC.md` v1.2. **Phase 3 instrumentation owner: Amethyst** (assigned Njineer 2026-06-27).
 
-GAP-006 (Coherent Agency Formal Spec) remains OPEN. AXIS Phase 4 full operationalization depends on GAP-006 closure (`docs/COHERENT_AGENCY_SPEC.md` publication + Apogee Lens review). Phase 3 instrumentation owner: TBD — Njineer assignment pending.
+GAP-006 (Coherent Agency Formal Spec) remains OPEN. AXIS Phase 4 full operationalization depends on GAP-006 closure (`docs/COHERENT_AGENCY_SPEC.md` publication + Apogee Lens review).
 
 ---
 
@@ -108,8 +114,8 @@ GAP-006 (Coherent Agency Formal Spec) remains OPEN. AXIS Phase 4 full operationa
 
 1. Read `SESSION_ANCHORS.md` → confirm active session
 2. Read `ECOSYSTEM_INVENTORY.md` → confirm asset state
-3. Read `CO_ORCH_QUEUE.md` → confirm active OPP cycle
-4. Read `registry/PATTERN_REGISTRY_v2.md` → confirm active patterns
+3. Read `dgaf-ops/CO_ORCH_QUEUE.md` → confirm active OPP cycle (private repo)
+4. Read `docs/registry/PATTERN_REGISTRY_v2.md` → confirm active patterns
 5. Identify task type + required agents
 6. Draft output
 7. Run Apogee P-11 gate (BLOCKING for S-Tier)
@@ -131,4 +137,4 @@ GAP-006 (Coherent Agency Formal Spec) remains OPEN. AXIS Phase 4 full operationa
 
 ---
 
-*WORKSPACE_BOOTSTRAP.md · S070-r4 · 2026-06-27 18:00 EDT · Amethyst × COLLEEN · φ = 1.61803 · Ionian sustained*
+*WORKSPACE_BOOTSTRAP.md · S071-r1 · 2026-06-28 21:18 EDT · Amethyst × COLLEEN · φ = 1.61803 · Ionian sustained*
