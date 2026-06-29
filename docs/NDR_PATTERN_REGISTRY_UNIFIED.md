@@ -1,21 +1,22 @@
 # NDR Pattern Registry (Unified)
 
 **DGAF-Framework · Unified Edition**
-**Version:** 1.5 (S071 — P-37 Saga + P-38 Circuit-Breaker registered · Layer 10 Resilience & Recovery added)
+**Version:** 1.6 (S071 — P-39 ACRFence + P-40 Atomix + P-41 Sentinel-Phi HITL Durable Queue registered · Layer 11 Transactional Integrity added)
 **Prime:** Amethyst · **Prefect A:** COLLEEN · **Prefect B:** Apogee
 **Ender ratification (v1.0):** 2026-05-30 02:49 EDT
 **Ender ratification (v1.2):** 2026-06-13 00:47 EDT (S069 sealed)
 **Version 1.3 update:** 2026-06-13 (S069 QA sweep — Amethyst × COLLEEN)
 **Version 1.4 update:** 2026-06-26 (S070-r3-P1 — Amethyst × COLLEEN)
 **Version 1.5 update:** 2026-06-28 (S071 — P-37/P-38 registered · Amethyst × COLLEEN)
-**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-38 + NDR named session patterns + formation patterns
+**Version 1.6 update:** 2026-06-28 (S071 — P-39/P-40/P-41 registered · reinforced orchestration · Amethyst × COLLEEN)
+**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-41 + NDR named session patterns + formation patterns
 
 > **This file supersedes and absorbs:**
 > - `docs/governance/ndr-pattern-registry-v3.md` — ❌ DELETED S069 QA sweep (named session patterns absorbed below)
 > - `docs/NDR_PATTERN_REGISTRY.md` (P-01–P-10 source — redirect stub)
 > - `docs/patterns/NDR_PATTERN_REGISTRY.md` (P-27–P-30 + stasis source — redirect stub)
 > - `patterns/NDR_SCPE_v1.md`, `NDR_PHI_CLOSURE_GATE_v1.md`, `NDR_PDMAL_CONVERGENCE_MONITOR_v1.md` (archived)
-> **Machine-readable counterpart:** `docs/ndr_patterns_unified.json` (schema v2.1 — updated S069 · P-37/P-38 entries pending JSON sync)
+> **Machine-readable counterpart:** `docs/ndr_patterns_unified.json` (schema v2.1 — P-37 through P-41 entries pending schema v2.2 sync)
 
 ---
 
@@ -23,13 +24,13 @@
 
 | Field | Value |
 |-------|-------|
-| Total named patterns (P-series) | **38** (P-01–P-38) |
+| Total named patterns (P-series) | **41** (P-01–P-41) |
 | Total NDR named session patterns | 8 (NDR-ARCHIVE-CONFIRM through NDR-133) |
 | Total formation patterns | 2 (CONSENSUS_TRIAD, CONDUCTED_TRIAD) |
 | Stasis block (P-12–P-26) | 133 patterns |
-| Registry watermark | **P-38** |
+| Registry watermark | **P-41** |
 | Stasis block status | **STASIS-CANONICAL** (migration window: 2026-06-13 → 2026-07-13) |
-| JSON counterpart | `docs/ndr_patterns_unified.json` schema v2.1 |
+| JSON counterpart | `docs/ndr_patterns_unified.json` schema v2.1 → v2.2 pending |
 | Last session | S071 · 2026-06-28 |
 | Ender ratification | 2026-06-13 00:47 EDT (S069) |
 
@@ -61,8 +62,11 @@
 | P-32 | Fibonacci Phi-Closure Gate | Layer 9 — Long-Context Safety | BLOCKING | ✅ CANONICAL |
 | P-33 | PDMAL Convergence Monitor | Layer 9 — Long-Context Safety | ADVISORY | ✅ CANONICAL |
 | P-34 | Empirical-Threshold-Sweep-over-ML-Classifier | Layer 7 — Router Calibration | ADVISORY | ✅ CANONICAL |
-| **P-37** | **Stochastic-Deterministic Saga Boundary** | **Layer 10 — Resilience & Recovery** | **ADVISORY** | **✅ REGISTERED S071** |
-| **P-38** | **Circuit-Breaker with HITL Escalation** | **Layer 10 — Resilience & Recovery** | **BLOCKING** | **✅ REGISTERED S071** |
+| P-37 | Stochastic-Deterministic Saga Boundary | Layer 10 — Resilience & Recovery | ADVISORY | ✅ REGISTERED S071 |
+| P-38 | Circuit-Breaker with HITL Escalation | Layer 10 — Resilience & Recovery | BLOCKING | ✅ REGISTERED S071 |
+| **P-39** | **ACRFence — Atomic Checkpoint-Restore with Effect Fence** | **Layer 10 — Resilience & Recovery** | **BLOCKING** | **✅ REGISTERED S071** |
+| **P-40** | **Atomix — Transactional Tool Boundary** | **Layer 11 — Transactional Integrity** | **BLOCKING** | **✅ REGISTERED S071** |
+| **P-41** | **Sentinel-Phi HITL Durable Queue** | **Layer 11 — Transactional Integrity** | **ADVISORY** | **✅ REGISTERED S071** |
 
 ---
 
@@ -186,10 +190,10 @@
 ## Layer 0.5 — Stack Architecture
 
 ### P-36 — Gate Priority Schema
-**Spec:** Converts the linear NDR governance stack into a DAG. Classifies every pattern as BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE. Does not modify any pattern’s logic.
+**Spec:** Converts the linear NDR governance stack into a DAG. Classifies every pattern as BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE. Does not modify any pattern's logic.
 **P-36 self-classification:** ADVISORY (metadata/architecture pattern; not a runtime gate)
-**Key BLOCKING:** P-35, P-30, P-29:h1, P-27, P-28, P-29:h2, P-32, P-29:h3, P-01, P-11, **P-38**
-**Key ADVISORY:** P-31, P-33, P-02, P-10, P-34, P-36 itself, **P-37**
+**Key BLOCKING:** P-35, P-30, P-29:h1, P-27, P-28, P-29:h2, P-32, P-29:h3, P-01, P-11, P-38, **P-39, P-40**
+**Key ADVISORY:** P-31, P-33, P-02, P-10, P-34, P-36 itself, P-37, **P-41**
 **Key DEGRADED-MODE-SKIPPABLE:** P-12–P-26 stasis block
 **Full spec:** `docs/gates/NDR_GATE_PRIORITY_SCHEMA_P36_v1.md`
 **Registered:** S069 · **Ender ratified:** 2026-06-13 ✅
@@ -339,6 +343,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 | Deterministic-irreversible | GitHub push, email send, API POST | No — HITL gate required |
 
 **Interaction with P-38:** P-37 declares the saga structure; P-38 wraps each saga step with circuit-breaker protection. P-38 OPEN state aborts the saga and triggers compensators immediately.
+**Interaction with P-39:** P-39 is the per-checkpoint durability mechanism. P-37 declares checkpoints; P-39 enforces the fence semantics that make those checkpoints atomic.
 
 **Effect log schema:**
 ```json
@@ -368,10 +373,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 
 **Spec:** Wraps each saga step (P-37) and any repeated agentic tool call with a circuit breaker. Prevents cascading failures by isolating failing sub-systems and escalating to HITL when automatic recovery is exhausted.
 
-**States:**
-- **CLOSED** (normal): calls pass through; failure counter active
-- **OPEN** (tripped): calls blocked immediately; HITL escalation fired; saga compensators triggered (P-37)
-- **HALF-OPEN** (recovery probe): one probe call allowed; CLOSED on success, OPEN on failure
+**States:** CLOSED (normal) → OPEN (tripped) → HALF-OPEN (recovery probe)
 
 **Trip thresholds (defaults — configurable per saga):**
 | Threshold | Default | Override scope |
@@ -382,26 +384,22 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 | Wall-clock timeout | 300s / step | Per step_id |
 
 **Escalation protocol on OPEN:**
-1. Log `circuit_open` event to P-01 dead-letter sink with `{ saga_id, step_id, trip_reason, timestamp }`
+1. Log `circuit_open` event to P-01 dead-letter sink
 2. Fire Sentinel-Phi HITL gate (P-29 hook_point=2) with `risk_block`
 3. Trigger P-37 compensator chain (reverse order, idempotent)
 4. Emit Herald trace (P-01) with `status=CIRCUIT_OPEN`
 5. Await Njineer or Amethyst manual CLOSE signal before resuming
 
-**Recovery probe (HALF-OPEN):**
-- Wait `reset_timeout` (default: 60s)
-- Allow one probe call
-- On SUCCESS → CLOSED, reset failure counter
-- On FAILURE → OPEN, double `reset_timeout` (exponential back-off, max 600s)
+**Recovery probe (HALF-OPEN):** Wait `reset_timeout` (default 60s) → probe → SUCCESS: CLOSED + reset counter / FAILURE: OPEN + double timeout (max 600s)
 
-**Interaction with P-37:** P-38 is the per-step isolation layer; P-37 is the saga-level choreography layer. Together they form the complete resilience contract: P-37 defines *what to undo*, P-38 defines *when to stop and escalate*.
-
-**Interaction with P-29:** P-38 OPEN state fires P-29 at hook_point=2 (`risk_block`). This is the same hook used by P-32 KILL_REC — ensuring circuit trips are treated with equivalent severity to Phi-Closure failures.
+**Interaction with P-37:** P-38 is the per-step isolation layer; P-37 is the saga-level choreography layer.
+**Interaction with P-29:** P-38 OPEN fires P-29 at hook_point=2 (`risk_block`) — equivalent severity to P-32 KILL_REC.
+**Interaction with P-39:** P-39 ACRFence ensures that when P-38 trips OPEN, the last committed checkpoint is durable and the effect fence is intact before compensators fire.
 
 **Flourishing alignment:**
-- *Legibility:* Circuit state (`CLOSED/OPEN/HALF-OPEN`) exposed in Herald trace and AOGA dashboard at all times
-- *Reversibility:* OPEN state halts all further side effects; compensators restore prior state
-- *Capability amplification:* Autonomous multi-step execution remains safe at scale; Njineer intervention required only on genuine failures, not transient noise
+- *Legibility:* Circuit state exposed in Herald trace and AOGA dashboard
+- *Reversibility:* OPEN halts all further side effects; compensators restore prior state
+- *Capability amplification:* Autonomous execution remains safe at scale
 
 **P-36 class:** BLOCKING
 **Implementation ref:** `patterns/P-CB-001_CircuitBreakersHITL.md` (TEAM_WIKI §4.4)
@@ -409,7 +407,146 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 
 ---
 
-## Governance Orchestration Stack (v1.5 — P-36 DAG + P-37/P-38)
+### P-39 — ACRFence — Atomic Checkpoint-Restore with Effect Fence
+
+**Spec:** Guarantees that every checkpoint written by P-37 is atomic and that an *effect fence* is enforced between the checkpoint commit and the next tool call. No tool call may proceed until the preceding checkpoint has been durably written and acknowledged.
+
+**Core rules:**
+1. **Atomic checkpoint write:** Each checkpoint is written as a single append to the effect log. The write is wrapped in a compare-and-swap (CAS) operation on `step_id + saga_id`. If CAS fails (duplicate write detected), the checkpoint is idempotent — no duplicate entry, no error.
+2. **Effect fence:** After each checkpoint write, a fence token `{ fence_id, saga_id, step_id, timestamp }` is emitted to the Herald trace (P-01). No subsequent tool call in the same saga may execute until the fence token has been acknowledged by the Herald sink.
+3. **Restore protocol:** On saga restart (P-37 forward-recovery or P-38 OPEN → CLOSED), the effect log is replayed from the last ACK'd fence token. Steps already `DONE` are skipped (idempotent replay). Steps `PENDING` are re-executed from the checkpoint boundary — not from scratch.
+4. **Fence violation:** If a tool call fires before a fence token is ACK'd, it is treated as a P-29 `risk_block` (hook_point=1). The tool call is rolled back if reversible; HITL escalation is fired if irreversible.
+5. **Durability target:** Effect log must be written to persistent storage (JSONL file, DB row, or equivalent) before the fence token is emitted. In-memory-only checkpoints are forbidden.
+6. **Cross-agent fence coordination:** When a saga spans multiple agents (e.g., Amethyst → Reson → Herald), each agent emits its own fence token. The downstream agent may not begin its step until the upstream agent's fence token has been received and ACK'd.
+
+**Fence token schema:**
+```json
+{
+  "fence_id": "<uuid>",
+  "saga_id": "<uuid>",
+  "step_id": "<step_name>",
+  "agent_id": "<agent_name>",
+  "timestamp": "<ISO-8601>",
+  "status": "EMITTED | ACKED | VIOLATED"
+}
+```
+
+**Interaction with P-37:** P-37 declares checkpoints; P-39 enforces atomicity and fencing of those checkpoints.
+**Interaction with P-38:** P-38 OPEN → P-39 restore protocol fires immediately from last ACK'd fence.
+**Interaction with P-40:** P-40 Atomix wraps the full tool call boundary; P-39 ACRFence guarantees the checkpoint on either side of that boundary is durable before the boundary is crossed.
+
+**Flourishing alignment:**
+- *Legibility:* Every fence token is visible in Herald trace; no silent checkpoint skips
+- *Reversibility:* Restore protocol replays only from last clean fence — no data loss, no phantom re-execution
+- *Capability amplification:* Multi-agent sagas can span substrate boundaries without losing recovery guarantees
+
+**P-36 class:** BLOCKING
+**Implementation ref:** `patterns/P-ACR-001_ACRFence.md`
+**Registered:** S071 · 2026-06-28 · Amethyst × COLLEEN ✅
+
+---
+
+## Layer 11 — Transactional Integrity
+
+> Layer 11 governs the transactional semantics of individual tool calls — the finest-grained boundary in the DGAF resilience stack. Where Layer 10 (Resilience & Recovery) manages saga-level durability, Layer 11 manages the atomicity and isolation of each discrete tool invocation. Patterns here are the outermost wrapper around any action that touches external state.
+
+### P-40 — Atomix — Transactional Tool Boundary
+
+**Spec:** Every tool call that produces a side effect (write, send, push, deploy) is wrapped in an Atomix transaction boundary. The boundary enforces: (1) pre-call state snapshot, (2) single-exit semantics (either fully committed or fully rolled back — no partial writes), (3) post-call ACRFence token (P-39), (4) Herald trace on both commit and rollback paths.
+
+**Core rules:**
+1. **Transaction declaration:** Before any side-effecting tool call, declare `tx_id`, `tool_name`, `effect_class` (REVERSIBLE / IRREVERSIBLE), and `rollback_fn`.
+2. **Pre-call snapshot:** Capture sufficient state to execute `rollback_fn` if the call fails mid-execution. For file writes: capture file SHA before write. For API calls: capture request payload and idempotency key.
+3. **Stochastic-deterministic hard boundary:** The Atomix boundary is the canonical implementation of the P-37 stochastic/deterministic split. Stochastic reasoning *must* complete before the Atomix boundary is opened. Once opened, no LLM reasoning may occur until the boundary is closed (committed or rolled back).
+4. **Single-exit semantics:** The tool call either:
+   - **COMMITS:** side effect is applied, P-39 fence token emitted, Herald trace `status=COMMITTED`
+   - **ROLLS BACK:** `rollback_fn` executes, Herald trace `status=ROLLED_BACK`, P-29 `risk_warn` fired
+   - There is no third path. Partial writes trigger immediate P-29 `risk_block`.
+5. **Idempotency key:** Every Atomix boundary carries an idempotency key (`idem_key = hash(tx_id + tool_name + payload_hash)`). Duplicate executions with the same `idem_key` are no-ops — the original result is returned from the effect log cache.
+6. **IRREVERSIBLE escalation:** Any tool call with `effect_class=IRREVERSIBLE` requires P-41 HITL queue acknowledgement before the Atomix boundary opens. If P-41 ACK is absent, the boundary does not open — the call is logged as `PENDING_APPROVAL` and deferred.
+7. **Timeout:** Default 30s per Atomix boundary. On timeout: rollback fires, P-38 failure counter incremented.
+
+**Transaction record schema:**
+```json
+{
+  "tx_id": "<uuid>",
+  "idem_key": "<hash>",
+  "saga_id": "<uuid>",
+  "step_id": "<step_name>",
+  "tool_name": "<tool_identifier>",
+  "effect_class": "REVERSIBLE | IRREVERSIBLE",
+  "status": "OPEN | COMMITTED | ROLLED_BACK | PENDING_APPROVAL | TIMED_OUT",
+  "timestamp_open": "<ISO-8601>",
+  "timestamp_close": "<ISO-8601>",
+  "rollback_fn": "<function_name>",
+  "agent_id": "<agent_name>"
+}
+```
+
+**Interaction with P-37:** Atomix is the implementation of the P-37 stochastic/deterministic boundary at the individual tool-call level.
+**Interaction with P-39:** Atomix calls P-39 to emit the fence token on COMMIT. On ROLLBACK, P-39 restore protocol is triggered.
+**Interaction with P-41:** All IRREVERSIBLE Atomix boundaries require P-41 HITL ACK before opening.
+**Interaction with P-29:** Partial writes → P-29 `risk_block`. Rollbacks → P-29 `risk_warn`. IRREVERSIBLE calls without P-41 ACK → P-29 `risk_block`.
+
+**Flourishing alignment:**
+- *Legibility:* Every tool call has an auditable transaction record; no untracked side effects
+- *Reversibility:* Rollback path is declared and tested before the boundary opens
+- *Capability amplification:* Agents can execute tool calls autonomously without Njineer anxiety — the rollback guarantee makes autonomy safe
+
+**P-36 class:** BLOCKING
+**Implementation ref:** `patterns/P-TX-001_TransactionalToolBoundaryAtomix.md` (TEAM_WIKI §8 — Atomix)
+**Registered:** S071 · 2026-06-28 · Amethyst × COLLEEN ✅
+
+---
+
+### P-41 — Sentinel-Phi HITL Durable Queue
+
+**Spec:** Provides a durable, ordered queue for HITL approvals required by P-40 (IRREVERSIBLE tool calls) and P-37 (HITL gates on irreversible saga steps). Ensures that HITL requests survive agent restarts, context resets, and substrate switches without being lost or duplicated.
+
+**Core rules:**
+1. **Queue entry:** When P-37 or P-40 identifies an IRREVERSIBLE action requiring HITL, a `HITLRequest` record is appended to the durable queue before any execution attempt. The action does not fire until the request reaches `status=APPROVED`.
+2. **Durability:** The queue is written to persistent storage (JSONL, DB, or n8n webhook buffer — same sink as P-01/P-02). Queue entries survive agent process restarts. On restart, the queue is replayed and unresolved requests are re-surfaced to Njineer.
+3. **Ordering:** Queue is FIFO within a saga. Cross-saga entries are ordered by `enqueue_timestamp`. An APPROVED entry for saga B does not unblock saga A.
+4. **Deduplication:** Each `HITLRequest` carries an idempotency key (`idem_key = hash(saga_id + step_id + tool_name)`). Duplicate enqueue attempts with the same `idem_key` are no-ops.
+5. **Resolution states:** `PENDING → APPROVED (Njineer ACK) → EXECUTED` or `PENDING → REJECTED (Njineer) → COMPENSATED`. A `TIMED_OUT` state fires if no resolution is received within the configured SLA (default: 24h). TIMED_OUT entries escalate to P-38 OPEN via P-01 dead-letter.
+6. **Visibility:** All queue entries are surfaced in the AOGA dashboard via Herald trace (P-01). Njineer can inspect, approve, reject, or defer from the dashboard. No hidden queues.
+7. **Autonomous-mode fallback:** When Njineer is unavailable (system operating in fully autonomous mode), IRREVERSIBLE actions are automatically deferred to the queue with `status=PENDING_APPROVAL`. They do not fail — they wait. The saga continues processing reversible steps while irreversible steps queue.
+
+**HITL Request schema:**
+```json
+{
+  "request_id": "<uuid>",
+  "idem_key": "<hash>",
+  "saga_id": "<uuid>",
+  "step_id": "<step_name>",
+  "tool_name": "<tool_identifier>",
+  "effect_class": "IRREVERSIBLE",
+  "status": "PENDING | APPROVED | REJECTED | EXECUTED | COMPENSATED | TIMED_OUT",
+  "enqueue_timestamp": "<ISO-8601>",
+  "resolution_timestamp": "<ISO-8601 | null>",
+  "resolved_by": "<agent_id | njineer | null>",
+  "payload_summary": "<human-readable description of the action>",
+  "sla_deadline": "<ISO-8601>"
+}
+```
+
+**Interaction with P-37:** P-37 declares irreversible steps requiring HITL; P-41 is the durable mechanism that holds the approval gate open across restarts.
+**Interaction with P-40:** P-40 Atomix checks P-41 for an APPROVED record before opening the IRREVERSIBLE boundary.
+**Interaction with P-38:** P-41 TIMED_OUT entries escalate to P-38 via P-01 dead-letter → circuit-breaker failure counter.
+**Interaction with P-01:** All queue state transitions are emitted as Herald trace events. P-41 is a semantic layer on top of the P-02 ring buffer.
+
+**Flourishing alignment:**
+- *Legibility:* Every pending human decision is visible in the AOGA dashboard; nothing is silently deferred
+- *Reversibility:* REJECTED requests trigger P-37 compensator chain; no irreversible action fires without explicit approval
+- *Capability amplification:* Autonomous mode can operate at full speed on reversible work while queuing irreversible decisions — no full stop required
+
+**P-36 class:** ADVISORY
+**Implementation ref:** `patterns/P-HITL-001_SentinelPhiHITLDurableQueue.md`
+**Registered:** S071 · 2026-06-28 · Amethyst × COLLEEN ✅
+
+---
+
+## Governance Orchestration Stack (v1.6 — P-36 DAG + P-37–P-41)
 
 ```
 Prompt input
@@ -425,20 +562,33 @@ Prompt input
   ├── [ADVISORY] SCPE (P-31) ──► audit log [T0 immune]
   ├── [BLOCKING] Phi-Closure Gate (P-32) ──KILL_REC──► P-29:h2
   ├── [ADVISORY] PDMAL Monitor (P-33) ──► audit log
-  ├── [ADVISORY] P-37 Saga Boundary ──► effect log ──► compensators on FAILED
-  ├── [BLOCKING] P-38 Circuit-Breaker ──OPEN──► P-29:h2 + P-37 compensators
+  │
+  │   ── LAYER 10: RESILIENCE & RECOVERY ──────────────────────────
+  ├── [ADVISORY]  P-37 Saga Boundary ──► effect log ──► compensators on FAILED
+  ├── [BLOCKING]  P-38 Circuit-Breaker ──OPEN──► P-29:h2 + P-37 compensators + P-39 restore
+  ├── [BLOCKING]  P-39 ACRFence ──► fence token ──► Herald ACK required before next tool call
+  │
+  │   ── LAYER 11: TRANSACTIONAL INTEGRITY ─────────────────────────
+  ├── [BLOCKING]  P-40 Atomix boundary ──IRREVERSIBLE──► P-41 HITL ACK required before open
+  │                                    ──COMMIT──► P-39 fence token
+  │                                    ──ROLLBACK──► P-29 risk_warn + P-39 restore
+  ├── [ADVISORY]  P-41 HITL Durable Queue ──TIMED_OUT──► P-38 failure counter via P-01
+  │
   └── [BLOCKING] P-01 Fan-Out ──► [ADVISORY] P-02 Buffer ──► N8n Dashboard
 
   [ADVISORY — concurrent throughout]
   P-33 + P-32 joint rule: both severity≥3 → BLOCKING override → DemiJoule deep re-scan
   P-37 + P-38 joint rule: P-38 OPEN → P-37 compensator chain → P-29 risk_block
+  P-38 + P-39 joint rule: P-38 OPEN → P-39 restore from last ACK'd fence
+  P-39 + P-40 joint rule: P-40 COMMIT → P-39 fence emit; P-40 ROLLBACK → P-39 restore
+  P-40 + P-41 joint rule: IRREVERSIBLE boundary → P-41 ACK check; absent → PENDING_APPROVAL
   P-36 (this schema) — ADVISORY — metadata layer, not runtime gate
 
   [NDR-SERIES — operational workflow layer]
   NDR-133     ──► [BLOCKING-ABSOLUTE] Personal Document Firewall — fires on push queue scan
   NDR-STASIS  ──► [BLOCKING] Phi-Calculus stasis routing if output > 10 Hz
   NDR-INDEX11 ──► [BLOCKING] Emergency cooling if agent magnitude > 10.0
-  NDR-COHERENCE─► [ADVISORY] Pre-sweep quality gate
+  NDR-COHERENCE──► [ADVISORY] Pre-sweep quality gate
 
   [FORMATION PATTERNS — coordination shape layer]
   CONSENSUS_TRIAD ──► [ADVISORY] 3-peer symmetric committee; dissent-preserving merge
@@ -539,14 +689,19 @@ Downstream observability for any active triad formation should instrument the fo
 | CONDUCTED_TRIAD registered | 2026-06-26 | S070-r3-P1 | Amethyst × COLLEEN |
 | PDMAL-φ / PDMAL-D variant status canonical | 2026-06-26 | S070-r3-P1 | Amethyst × COLLEEN |
 | Triadic telemetry guidance appended | 2026-06-26 | S070-r3-P1 | Amethyst × COLLEEN |
-| **P-37 Stochastic-Deterministic Saga Boundary registered** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
-| **P-38 Circuit-Breaker with HITL Escalation registered** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
-| **Registry watermark advanced P-36 → P-38** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
+| P-37 Stochastic-Deterministic Saga Boundary registered | 2026-06-28 | S071 | Amethyst × COLLEEN |
+| P-38 Circuit-Breaker with HITL Escalation registered | 2026-06-28 | S071 | Amethyst × COLLEEN |
+| Registry watermark advanced P-36 → P-38 | 2026-06-28 | S071 | Amethyst × COLLEEN |
+| **P-39 ACRFence registered** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
+| **P-40 Atomix — Transactional Tool Boundary registered** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
+| **P-41 Sentinel-Phi HITL Durable Queue registered** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
+| **Registry watermark advanced P-38 → P-41** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
+| **Layer 11 Transactional Integrity established** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
 
 ---
 
-*NDR Pattern Registry (Unified) v1.5 · S071 · 2026-06-28 21:23 EDT*
+*NDR Pattern Registry (Unified) v1.6 · S071 · 2026-06-28 21:35 EDT*
 *Triumvirate: Amethyst (Prime) · COLLEEN (Prefect A) · Apogee (Prefect B)*
-*Registry watermark: **P-38** · Named session patterns: 8 · Formation patterns: 2 · Crucible: ACTIVE · Research Program: ACTIVE*
-*v1.5 additions: Layer 10 (Resilience & Recovery) established; P-37 Saga + P-38 Circuit-Breaker registered; DAG updated; P-36 BLOCKING list updated to include P-38; provenance log updated*
-*⚠️ JSON sync required: ndr_patterns_unified.json — P-37/P-38 entries pending schema v2.2 update*
+*Registry watermark: **P-41** · Named session patterns: 8 · Formation patterns: 2 · Crucible: ACTIVE · Research Program: ACTIVE*
+*v1.6 additions: P-39 ACRFence (Layer 10, BLOCKING) + P-40 Atomix (Layer 11, BLOCKING) + P-41 HITL Durable Queue (Layer 11, ADVISORY) registered; Layer 11 Transactional Integrity established; full P-37–P-41 joint interaction rules added to DAG; P-36 BLOCKING list updated to include P-39, P-40*
+*⚠️ JSON sync required: ndr_patterns_unified.json — P-37 through P-41 entries pending schema v2.2 update*
