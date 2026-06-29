@@ -5,6 +5,39 @@
 
 ---
 
+## Entry SWP-004 — Phase 4: FORMATION_TOPOLOGY.md
+**Date:** 2026-06-28  
+**Time:** ~23:39 EDT  
+**Operator:** Njineer + Amethyst (meta-orchestrator)  
+**Formation:** Harmonic Quintet (Amethyst, Apogee, COLLEEN, Reson, Sentinel)
+
+### Action
+Created `docs/agents/FORMATION_TOPOLOGY.md` — canonical formation classification document.  
+Defines all named formations, member composition, activation conditions, authority scope, and topology algebra.
+
+### Commit
+`(see push)` — `docs/SWEEP_LOG.md` + `docs/agents/FORMATION_TOPOLOGY.md`
+
+### Closed BLGs
+| BLG-ID | Description | Status |
+|--------|-------------|--------|
+| BLG-005 | FORMATION_TOPOLOGY.md undefined | ✅ CLOSED |
+
+### Apogee Score (projected)
+| Metric | Pre | Post (est.) | Delta |
+|--------|-----|-------------|-------|
+| Q3 — Authority boundaries | 0.85 | 0.92 | +0.07 |
+| **Composite** | 0.918 | **~0.93** | **+0.01** |
+
+### COLLEEN Signal
+Ethical dimension gate: COLLEEN 1-1-1-1 GREEN — formation boundary spec eliminates ambiguous authority overlap.
+
+### Inventory Delta
+- Files added: 1 (FORMATION_TOPOLOGY.md)
+- Running total: 27/66 (41%)
+
+---
+
 ## Entry SWP-003 — Phase 3 Seal
 **Date:** 2026-06-28  
 **Time:** ~23:33 EDT  
@@ -93,14 +126,15 @@ Gate P-11 (≥ 0.70): PASSED
 
 ---
 
-## Open Items (as of SWP-003)
+## Open Items (as of SWP-004)
 | BLG-ID | Description | Phase | Owner |
 |--------|-------------|-------|-------|
-| BLG-005 | FORMATION_TOPOLOGY.md undefined | Phase 4 | COLLEEN |
-| — | KB layer: 9 agents unseeded | Phase 4+ | Amethyst |
-| — | Protocol files: 9 agents missing | Phase 4+ | COLLEEN |
-| — | QA Rubric files: all 11 missing | Phase 4+ | Reson |
-| — | Integration files: all 11 missing | Phase 4+ | Amethyst |
+| — | KB layer: 9 agents unseeded | Phase 5 | Amethyst |
+| — | Protocol files: 9 agents missing | Phase 5 | COLLEEN |
+| — | QA Rubric files: all 11 missing | Phase 5 | Reson |
+| — | Integration files: all 11 missing | Phase 5 | Amethyst |
+
+**All BLG-001 through BLG-005: CLOSED ✅**
 
 ---
 

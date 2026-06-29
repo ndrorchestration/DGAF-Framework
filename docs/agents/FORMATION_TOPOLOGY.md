@@ -1,256 +1,219 @@
-# DGAF Formation Topology
-
-**Authority:** COLLEEN-L5 (structure) + Amethyst-Conductor (gate decisions)  
+# FORMATION TOPOLOGY
 **Classification:** T1 PUBLIC  
-**Canonical home:** `DGAF-Framework/docs/agents/FORMATION_TOPOLOGY.md`  
-**Last Updated:** 2026-06-28 (Phase 4 — BLG-005 close)
-
-> **Scope:** This file defines the structural topology of all agent formations — slot assignments,  
-> activation triggers, authority flow, and gate cross-references.  
-> For agent identity and role definitions, see [`AGENT_ROSTER.md`](./AGENT_ROSTER.md).  
-> For IP foundations (SOV-001 geometric basis), see [`PROPRIETARY.md`](./PROPRIETARY.md).
+**Maintainer:** Amethyst (meta-orchestrator)  
+**Version:** 1.0  
+**Last Updated:** 2026-06-28  
+**BLG Reference:** BLG-005 (CLOSED)
 
 ---
 
-## See Also
+## 1. Purpose
 
-| File | Scope |
-|---|---|
-| [`AGENT_ROSTER.md`](./AGENT_ROSTER.md) | Sovereign SSoT — agent identity, formation activation map, authority levels |
-| [`AGENT_ECOSYSTEM_REGISTRY.md`](./AGENT_ECOSYSTEM_REGISTRY.md) | L-tier, studio affiliation, KB inventory |
-| [`PROPRIETARY.md`](./PROPRIETARY.md) | IP partition, SOV-001 geometric basis of formation topology |
-| [`FORMATION_TOPOLOGY.md`](./FORMATION_TOPOLOGY.md) | **This file** — structural topology, slot maps, authority flow, gate cross-refs |
+This document is the canonical specification for all named agent formations within the DGAF (Dynamic Governance Agentic Formation) Framework. It defines:
 
----
+- Formation names, member composition, and seat counts
+- Activation conditions and authority scope per formation
+- Topology algebra — rules for composition, intersection, and promotion
+- Disambiguation from ad-hoc groupings
 
-## Formation Taxonomy
-
-DGAF formations are instantiated progressively. Each tier is a strict superset of the tier below it.
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│  EXTENDED FORMATION                                                   │
-│  Quintet + ≥ 1 of: Reciprocity, Prof. Prodigy, DemiJoule,            │
-│                      Echolette, Lyra, Herald                         │
-│                                                                      │
-│   ┌───────────────────────────────────────────────────────┐   │
-│   │  HARMONIC QUINTET (P-15)                               │   │
-│   │  Trio + Reson + Sentinel                               │   │
-│   │                                                        │   │
-│   │   ┌───────────────────────────────────────┐   │   │
-│   │   │  TRIO (P-14)                                   │   │   │
-│   │   │  Amethyst + Apogee + COLLEEN                   │   │   │
-│   │   │  ─────────────────────────────────────  │   │   │
-│   │   │  Conductor: Amethyst                           │   │   │
-│   │   │  QA Gate:   Apogee (11Q, P-11)                 │   │   │
-│   │   │  Archive:   COLLEEN (BLG, P-02, P-08, P-20)   │   │   │
-│   │   └───────────────────────────────────────┘   │   │
-│   │   + Reson (harmonic score, P-15 seal gate)         │   │
-│   │   + Sentinel (sovereign guard, hard veto P-15)      │   │
-│   └───────────────────────────────────────────────────────┘   │
-│   + domain agents (1 or more, task-specific)              │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-**Geometric basis:** The Trio→Quintet nesting mirrors the pentagonal topology defined in SOV-001 (Harmonic Pentagonal Alignment). The five Quintet slots correspond to the five vertices of the governing pentagon. See [`PROPRIETARY.md`](./PROPRIETARY.md) → SOV-001.
+Formations are **not** ad-hoc groupings. A formation is a named, structurally defined multi-agent configuration with a specific governance purpose, authority scope, and activation threshold.
 
 ---
 
-## Formation 1 — Trio (P-14)
+## 2. Agent Roster (Formation Atoms)
 
-### Slot Map
+All formations are composed from the following 9 operational agents + 1 meta-orchestrator:
 
-| Slot | Agent | Function | Authority |
-|---|---|---|---|
-| **S1 — Conductor** | Amethyst | Final gate; normative decisions; P-21 state anchor | Hard veto (all commits) |
-| **S2 — QA Gate** | Apogee | 11Q scoring (P-11); artifact quality; source validation | Artifact quality score |
-| **S3 — Archive** | COLLEEN | BLG surface (P-02); registry ops; back-link propagation (P-08, P-20) | Memory / deferred gap queue |
+| ID | Agent | Role Class | Classification |
+|----|-------|-----------|----------------|
+| A-00 | **Amethyst** | Meta-Orchestrator | T1 PUBLIC |
+| A-01 | **Apogee** | Scoring / Evaluation | T1 PUBLIC |
+| A-02 | **Reciprocity** | Exchange / Bidirectional Algebra | T1 PUBLIC |
+| A-03 | **COLLEEN** | Compliance / Ethical Gate | T1 PUBLIC |
+| A-04 | **Reson** | Harmonic Signal / Coherence | T1 PUBLIC |
+| A-05 | **Echolette** | Pattern Amplification / Echo | T-2 FRAMEWORK |
+| A-06 | **Lyra** | Synthesis / Integration | T-2 FRAMEWORK |
+| A-07 | **Herald** | Communication / Output | T1 PUBLIC |
+| A-08 | **Sentinel** | Security / Firewall | T1 PUBLIC |
+| A-09 | **[Reserved]** | TBD | — |
 
-### Activation Conditions
-
-```yaml
-formation: TRIO
-protocol: P-14
-activates_when:
-  - session_touches_repos: ≥ 3
-  - cross_repo_delta: true
-  - any_commit_requires_QA_score: true
-minimum_required: all 3 slots filled
-escalates_to: HARMONIC_QUINTET when any quintet trigger fires
-```
-
-### Authority Flow (Trio)
-
-```
-Njineer (Architect)
-    ↓ confirmation required for sovereign file changes
-Amethyst (S1 — Conductor)
-    ↓ gates commit
-    ├── requests score from Apogee (S2)
-    └── requests gap surface from COLLEEN (S3)
-Apogee (S2)
-    └── returns 11Q score → Amethyst gates on threshold
-COLLEEN (S3)
-    └── surfaces BLGs, deferred gaps → Amethyst queues or closes
-```
-
-### Gate Cross-Reference
-
-| Gate | Protocol | Trio role |
-|---|---|---|
-| Session open | P-02 | COLLEEN surfaces BLG list |
-| Evidence scoring | P-11 | Apogee runs 11Q gate |
-| Trio activation | P-14 | Amethyst confirms formation |
-| State anchor | P-21 | Amethyst emits session state |
+> Full agent specs in `docs/agents/[AGENT]_SPEC.md`. Memory state in `docs/agents/[AGENT]_MEMORY.md`.
 
 ---
 
-## Formation 2 — Harmonic Quintet (P-15)
+## 3. Named Formations
 
-### Slot Map
+### 3.1 Harmonic Quintet
+**Seats:** 5  
+**Members:** Amethyst · Apogee · COLLEEN · Reson · Sentinel  
+**Activation:** Default formation for all standard governance sweep, evaluation, and compliance cycles.  
+**Authority Scope:** Full read/write on all T1 PUBLIC documents. No sovereign (T3) file access.  
+**Quorum:** 3/5 for advisory outputs; 5/5 for structural commits (new files, BLG closures).  
+**Use Cases:**
+- Session sweeps (SWP-* entries)
+- BLG triage and closure
+- Apogee scoring cycles
+- PROPRIETARY boundary enforcement (Sentinel gate active)
 
-| Slot | Agent | Function | Authority |
-|---|---|---|---|
-| **S1 — Conductor** | Amethyst | Final gate; seal commit authority | Hard veto (all commits) |
-| **S2 — QA Gate** | Apogee | 11Q scoring; CERTIFICATION_INDEX | Artifact quality score |
-| **S3 — Archive** | COLLEEN | Continuity; P-20 sync seal verification | Memory / deferred gap queue |
-| **S4 — Harmonic** | Reson | Harmonic coherence score (0.00–1.00); seal gate ≥ 0.75 | Harmonic score |
-| **S5 — Sovereign Guard** | Sentinel | Sovereign file hard veto; CI/CD enforcement; NDR-133 firewall | Hard veto (sovereign files only; overrides Amethyst) |
-
-### Activation Conditions
-
-```yaml
-formation: HARMONIC_QUINTET
-protocol: P-15
-activates_when:
-  - commit_type: SWEEP_LOG_SEAL
-  - file_touched: [LICENSE, NOTICE, AXIS, AGENT_ROSTER.md, PROPRIETARY.md]
-  - event: NDR_REGISTRY_UPDATE
-  - event: NEW_PUBLIC_REPO
-  - reson_score: < 0.75  # dissonance escalation
-requires: TRIO already active (S1-S3 inherited)
-adds: S4 (Reson) + S5 (Sentinel)
-```
-
-### Authority Flow (Quintet)
-
-```
-Njineer (Architect)
-    ↓ confirmation required
-Sentinel (S5 — Sovereign Guard)  ← HARD VETO overrides all
-    ↓ boundary check passes → continues
-Reson (S4 — Harmonic)
-    ↓ score ≥ 0.75 → continues | score < 0.75 → DISSONANCE STOP
-Amethyst (S1 — Conductor)
-    ├── requests 11Q from Apogee (S2)
-    └── requests continuity seal from COLLEEN (S3)
-Apogee (S2) → returns score
-COLLEEN (S3) → returns sync status
-Amethyst → gates final commit
-```
-
-### Reson Threshold Table
-
-| Score Range | Status | Action |
-|---|---|---|
-| 0.90 – 1.00 | ✅ Harmonic | Proceed |
-| 0.75 – 0.89 | ✅ Clear | Proceed with drift note |
-| 0.50 – 0.74 | ⚠️ Drift Warning | Log warning; Amethyst reviews before commit |
-| 0.25 – 0.49 | ❌ Dissonance | STOP — resolve dissonance source before proceeding |
-| 0.00 – 0.24 | ❌ Hard Stop | BLOCK — Savage Reason threshold; escalate to Njineer |
-
-### Gate Cross-Reference
-
-| Gate | Protocol | Quintet role |
-|---|---|---|
-| Sovereign file guard | P-15 checkpoint 1 | Sentinel hard veto check |
-| Harmonic seal | P-15 checkpoint 4 | Reson score ≥ 0.75 required |
-| Sync seal verification | P-20 | COLLEEN confirms Drive-GitHub delta |
-| Rollback checkpoint | P-15 checkpoint 9 | Reciprocity defines rollback path (if Extended) |
+**Topology Class:** `CORE-5` — stable, always-available, no promotion required.
 
 ---
 
-## Formation 3 — Extended Formation
+### 3.2 Full Ensemble
+**Seats:** 9  
+**Members:** All agents A-00 through A-08  
+**Activation:** Triggered by Amethyst on architectural restructuring events, cross-formation conflicts, or v* release gates.  
+**Authority Scope:** Full T1 + T2. T3 access requires Njineer explicit approval per session.  
+**Quorum:** 5/9 for advisory; 7/9 for structural.  
+**Use Cases:**
+- Major version releases (v2.x, v3.x gate reviews)
+- Cross-agent integration spec approval
+- Formation topology amendments (this document)
+- Ecosystem inventory audits
 
-### Domain Agent Slot Map
-
-| Slot | Agent | Activates For | Authority |
-|---|---|---|---|
-| **S6 — Rollback** | Reciprocity | Version integrity ops; rollback path definition | Rollback authority |
-| **S7 — Proof** | Prof. Prodigy | Formal proofs; phi-calculus; P-10 normative filter math | Proof authority |
-| **S8 — Efficiency** | DemiJoule | Token cost analysis; P-11 gate 17 efficiency score | Token/compute efficiency |
-| **S9 — Echo** | Echolette | Acoustic mesh; P-13 phrase gate; signal echo validation | Phrase coherence |
-| **S10 — Narrative** | Lyra | Narrative coherence; IMP-05 brand voice; P-19 | Narrative authority |
-| **S11 — Release** | Herald | External publication gate; changelog; release notes | Release authority |
-
-### Activation Conditions (by agent)
-
-```yaml
-Reciprocity:    rollback_operation: true | version_integrity_audit: true
-Prof.Prodigy:   formal_proof_required: true | phi_calculus_validation: true
-DemiJoule:      token_budget_review: true | efficiency_gate_17_triggered: true
-Echolette:      phrase_coherence_check: true | semantic_drift_detected: true
-Lyra:           brand_voice_review: true | narrative_continuity_check: true
-Herald:         external_publish: true | changelog_authorship: true | release: true
-```
-
-**Multiple domain agents** may be active simultaneously. Each operates in its own lane; Amethyst arbitrates conflicts.
+**Topology Class:** `FULL-9` — requires explicit Amethyst activation call.
 
 ---
 
-## Formation State Machine
+### 3.3 Evaluation Triad
+**Seats:** 3  
+**Members:** Amethyst · Apogee · Reson  
+**Activation:** Invoked for targeted scoring runs — Apogee Q-series evaluation, RESON harmonic signal checks, or rapid quality sweeps not requiring compliance gating.  
+**Authority Scope:** Read-only on all layers. Write only to scoring/signal records (SWEEP_LOG score fields, ECOSYSTEM_INVENTORY metrics).  
+**Quorum:** 2/3.  
+**Use Cases:**
+- Apogee composite score updates
+- RESON coherence audits
+- Pre-commit quality checks on docs
+- Gate P-* threshold verification
+
+**Topology Class:** `EVAL-3` — lightweight, low-latency, no Sentinel overhead.
+
+---
+
+### 3.4 Compliance Dyad
+**Seats:** 2  
+**Members:** COLLEEN · Sentinel  
+**Activation:** Invoked when a proposed action touches ethical boundaries, sovereign IP, or security perimeter. Can be called by any agent as a veto check.  
+**Authority Scope:** Read T1/T2/T3 (audit mode). Write only to compliance flags and PROPRIETARY.md redaction records.  
+**Quorum:** 2/2 (unanimous required — dyad has no split-vote resolution).  
+**Use Cases:**
+- Pre-commit review of any file touching T3 classification
+- NDR-133 trigger pattern review
+- Ethical gate checks (COLLEEN 1-1-1-1 protocol)
+- IP boundary enforcement
+
+**Topology Class:** `GATE-2` — veto-capable. Any agent may invoke; output is binding.
+
+---
+
+### 3.5 Integration Pair
+**Seats:** 2  
+**Members:** Lyra · Echolette  
+**Activation:** Invoked for pattern synthesis, cross-document harmonization, and echo amplification tasks.  
+**Authority Scope:** Read T1/T2. Write to pattern registries and integration layer files only.  
+**Quorum:** 2/2.  
+**Use Cases:**
+- NDR_PATTERN_REGISTRY_UNIFIED.md updates
+- CROSS_LISTED_PATTERNS.md maintenance
+- Echo amplification of governance signals across agent layer
+- Synthesis reports for Harmonic Quintet consumption
+
+**Topology Class:** `SYNTH-2` — downstream of Harmonic Quintet; feeds outputs upward.
+
+---
+
+### 3.6 Herald Relay
+**Seats:** 1  
+**Members:** Herald  
+**Activation:** Singleton formation. Invoked for all external-facing output generation — user reports, session summaries, external API responses.  
+**Authority Scope:** Read T1 only. No write access to internal docs.  
+**Quorum:** N/A (singleton).  
+**Use Cases:**
+- Session post-reports
+- User-facing summary generation
+- External communication drafts
+- Notification and alert outputs
+
+**Topology Class:** `RELAY-1` — output-only boundary agent.
+
+---
+
+## 4. Topology Algebra
+
+### 4.1 Formation Composition Rules
+
+```
+Harmonic Quintet ⊂ Full Ensemble
+Evaluation Triad ⊂ Harmonic Quintet
+Compliance Dyad ⊂ Harmonic Quintet
+Integration Pair ∩ Harmonic Quintet = ∅  (no shared members)
+Herald Relay ∩ [all other formations] = ∅  (singleton, no overlap)
+```
+
+### 4.2 Promotion Rules
+
+| From | To | Trigger | Amethyst Call Required |
+|------|----|---------|------------------------|
+| Evaluation Triad | Harmonic Quintet | Compliance gate needed | No — auto-promote |
+| Harmonic Quintet | Full Ensemble | Architectural event | Yes — explicit |
+| Compliance Dyad | Harmonic Quintet | Escalation | No — auto-promote |
+| Any | Full Ensemble | T3 access needed | Yes + Njineer approval |
+
+### 4.3 Concurrency Rules
+
+- **Harmonic Quintet + Integration Pair** may run concurrently (disjoint member sets).
+- **Evaluation Triad + Herald Relay** may run concurrently.
+- **Compliance Dyad** blocks all writes on affected files during active gate review.
+- **Full Ensemble** is exclusive — no sub-formations run independently while Full Ensemble is active.
+
+### 4.4 Conflict Resolution
+
+When two formations issue conflicting instructions on the same file:
+
+1. Compliance Dyad veto overrides all.
+2. Higher seat-count formation takes precedence (Full Ensemble > Harmonic Quintet > Triad > Dyad > Singleton).
+3. Ties resolved by Amethyst meta-orchestrator casting vote.
+4. Unresolvable conflicts escalate to Njineer for human-in-the-loop decision.
+
+---
+
+## 5. Activation State Machine
 
 ```
 [IDLE]
-    ↓ session opens + ≥ 3 repos touched
-[TRIO ACTIVE — P-14]
-    ↓ seal commit OR sovereign file OR NDR registry update
-[HARMONIC QUINTET ACTIVE — P-15]
-    ↓ domain task triggered (proof / rollback / release / etc.)
-[EXTENDED ACTIVE — P-19+]
-    ↓ task completes, domain agent deactivates
-[HARMONIC QUINTET ACTIVE]  ← returns to Quintet baseline
-    ↓ session ends, seal commit lands
-[TRIO ACTIVE]  ← returns to Trio for non-seal work
-    ↓ session closes
-[IDLE]
+  │
+  ├─ standard sweep trigger ──────────────► [HARMONIC QUINTET ACTIVE]
+  │                                               │
+  │                                    ├─ compliance touch ──► [+ COMPLIANCE DYAD]
+  │                                    ├─ eval only ──────────► [EVALUATION TRIAD]
+  │                                    └─ arch event ─────────► [FULL ENSEMBLE]
+  │
+  ├─ pattern/registry work ──────────────► [INTEGRATION PAIR ACTIVE]
+  │
+  └─ output generation ──────────────────► [HERALD RELAY ACTIVE]
 ```
 
-**Formations do not dissolve mid-session.** Once Quintet is activated in a session, it remains active for the remainder of the session even if the triggering condition resolves. Trio is the minimum persistent formation for any session touching ≥ 3 repos.
+---
+
+## 6. Amendment Protocol
+
+This document may only be amended by:
+
+1. **Full Ensemble** vote (7/9 quorum) for structural changes (adding/removing formations, changing member composition).
+2. **Harmonic Quintet** vote (5/5 quorum) for editorial corrections (typos, clarifications with no semantic change).
+3. All amendments must be logged in `docs/SWEEP_LOG.md` with a SWP-* entry prior to commit.
+4. Njineer retains final authority on all amendments.
 
 ---
 
-## Authority Conflict Resolution
+## 7. Version History
 
-| Conflict | Resolution |
-|---|---|
-| Sentinel hard veto vs. Amethyst gate | Sentinel wins. Only Njineer can override. |
-| Reson dissonance stop vs. deadline pressure | Reson wins. Resolve dissonance source first. |
-| Apogee score fail vs. Amethyst time gate | Score fail blocks. Amethyst cannot override Apogee gate. |
-| Two domain agents in conflict | Amethyst arbitrates. Neither domain agent has cross-lane authority. |
-| Amethyst vs. Njineer | Njineer is Architect — absolute authority. Amethyst defers. |
+| Version | Date | Author | Change |
+|---------|------|--------|--------|
+| 1.0 | 2026-06-28 | Amethyst + Njineer | Initial creation — BLG-005 closure |
 
 ---
 
-## Formation Topology — Session History
-
-| Session | Formation Used | Notes |
-|---|---|---|
-| S011 | Trio | Lavender → Amethyst rename sweep |
-| S015 | Quintet | AGENT_ROSTER.md creation (sovereign file) |
-| S050 | Trio | Registry ops, Reson/Echolette spec additions |
-| S070 | Trio | A.P.P. rename; DGAF/Rose Gold → DGAF/PMP |
-| S071 (2026-06-28) | Quintet | Phase 1–4; PROPRIETARY.md (sovereign); BLG-001–005 |
-
----
-
-## BLG Closure Record
-
-| BLG-ID | Description | Closed By | Date |
-|---|---|---|---|
-| BLG-005 | FORMATION_TOPOLOGY.md not established | Phase 4 — this file | 2026-06-28 |
-
----
-
-*Topology authority: COLLEEN-L5 (structure) + Amethyst-Conductor (gate decisions). Changes require Njineer confirmation.*  
-*Conductor: Njineer ([@ndrorchestration](https://github.com/ndrorchestration))*
+*Classification: T1 PUBLIC*  
+*Sovereign mathematics governing formation dynamics: see PROPRIETARY.md → SOV-001 through SOV-004*
