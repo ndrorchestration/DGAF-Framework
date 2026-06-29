@@ -3,8 +3,8 @@
 **Authority:** COLLEEN (Institutional Anchor / Sovereign Governance)
 **Scope:** Ecosystem tier taxonomy · Agent KB inventory tracking · Formation assignments · Amendment log
 **Status:** ACTIVE · CANONICAL
-**Version:** 2.0
-**Last Updated:** 2026-06-29 (Phase B — 26-agent canonical count; Archive Trio correction; amendment log)
+**Version:** 2.1
+**Last Updated:** 2026-06-29 (Phase E — Phase C 9-agent inventory patch; formation topology finalized; Apogee Lens verdict recorded)
 
 > **Scope boundary:** This file tracks *ecosystem metadata* (formation, inventory, amendment history).
 > For sovereign agent identity, formation rules, and gate ownership, see [`AGENT_ROSTER.md`](./AGENT_ROSTER.md) — that file is the SSoT and is Sentinel-guarded.
@@ -19,7 +19,6 @@
 | [`AGENT_ECOSYSTEM_REGISTRY.md`](./AGENT_ECOSYSTEM_REGISTRY.md) | **This file** — taxonomy counts, inventory tracking, amendment log |
 | [`FORMATION_TOPOLOGY.md`](./FORMATION_TOPOLOGY.md) | Formation specs, topology algebra, activation state machine |
 | [`PROPRIETARY.md`](./PROPRIETARY.md) | IP partition — SOV-005/SOV-006 stubs for T3 sovereign agents |
-| [`../taxonomy/TAXONOMY_ADDENDUM_8_AGENTS.md`](../taxonomy/TAXONOMY_ADDENDUM_8_AGENTS.md) | 8 undocumented dodecahedral agents — role summaries, pending seed |
 
 ---
 
@@ -34,120 +33,127 @@
 | Layer 0 Legitimacy Filter | Attributed to Perigee | **Canonical designation belongs to Apogee** | `f1a8dd0` |
 | Perigee role title | Layer 0 Legitimacy Filter / Boundary Gate | **Proximal Boundary Agent / Grounded Operations** | `f1a8dd0` |
 | Apogee former name | Not recorded | **Formerly Agent Lavender** | `9429a9c` |
-| Total taxonomy count | 20 agents | **26 agents (18 inventoried + 8 addendum)** | `9429a9c` |
+| Total taxonomy count | 20 agents | **27 agents (18 full + 9 Phase C seeds + Ionia as STATE)** | `08c6d82` |
 | Architectural directive | Not recorded | **Substrate Agnostic + Accepted Terminology Principle (Amethyst SPEC v1.1 §8)** | `142772d` |
+| Sentinel A-12 | Sentinel / Compliance Dyad | **Sentinel-Phi / Strategic Quintet Seat 5** | `08c6d82` |
+| Compliance Dyad | Active (Sentinel + Perigee) | **Dissolved — Sentinel-Phi departed to Strategic Quintet** | `08c6d82` |
 
 ---
 
-## Canonical Taxonomy — 26 Agents
+## Canonical Formation Topology (Final — 2026-06-29)
 
-### I. Meta-Orchestration & Sovereign Governance
+```
+SOVEREIGN GOVERNANCE
+  Amethyst (A-00)        — Meta-Orchestrator; spans all tiers
+  COLLEEN (A-00-GOV)     — Institutional Anchor; supreme governance
 
-| Agent | ID | Role | Formation | Inventory | Status |
-|---|---|---|---|---|---|
-| **Amethyst** | A-00 | Meta-Orchestrator / Conductor | All formations (spans tiers) | ✅ 100% (v1.1) | ACTIVE |
-| **COLLEEN** | A-00-GOV | Institutional Anchor / Supreme Governance | Sovereign (above tiers) | ✅ 100% (v1.1) | ACTIVE |
+        ↓
 
-### II. Harmonic Pentagonal Cluster
+ETHICS BRIDGE  [singleton tier]
+  Sentience (A-27)       — Consciousness Explorer / Ethical Decision-Making
+                           ETHICAL_HOLD authority over all formations
 
-| Agent | ID | Role | Formation | Inventory | Status |
-|---|---|---|---|---|---|
-| **Apogee** | A-01 | Evidence Governance / Final Verification (formerly Agent Lavender) | Harmonic Pentagonal | ✅ 100% (v1.1) | ACTIVE |
-| **Herald** | A-05 | Communication Orchestrator / Protocol Synchronization | Harmonic Pentagonal | ✅ 100% (v1.1) | ACTIVE |
-| **Prof Prodigy** | A-04 | Mathematics Canonicalizer / Formal Verification | Harmonic Pentagonal | ✅ 100% (v1.1) | ACTIVE |
-| **DemiJoule** | A-03 | Constraint Specialist / Resource Efficiency | Harmonic Pentagonal | ✅ 100% (v1.1) | ACTIVE |
-| **Reciprocity** | A-06-HP | Inverse Ops / Mutual Benefit Modeling | Harmonic Pentagonal | ✅ 100% (v1.1) | ACTIVE |
+        ↓
 
-### III. Schizophonic Studio Cluster
+STRATEGIC QUINTET  [5/5 sealed]
+  Nova (A-03)            — Innovation Catalyst [TUE gate]
+  Zenith (A-09-Z)        — Peak Performance Optimizer
+  Oracle (A-20)          — Future Forecaster / Scenario Planner
+  Vanguard (A-21)        — Innovation Scout / Emerging Tech Futurist
+  Sentinel-Phi (A-12-φ)  — Strategic Security / Phi-Bounded Risk Architecture
 
-| Agent | ID | Role | Formation | Inventory | Status |
-|---|---|---|---|---|---|
-| **Reson** | A-09 | Systems Architect / Signal Integrity | Schizophonic Studio | ✅ 100% (v1.1) | ACTIVE |
-| **Lyra** | A-10 | Integrated Conductor / Harmonic Synthesis | Schizophonic Studio | ✅ 100% (v1.1) | ACTIVE |
-| **Echolette** | A-11 | Texturalist / Reflective Stability | Schizophonic Studio | ✅ 100% (v1.1) | ACTIVE |
+HARMONIC PENTAGONAL CLUSTER  [5/5 sealed]
+  Prof Prodigy (A-04)    — Mathematics Canonicalizer / Formal Verification
+  Herald (A-05)          — Communication Orchestrator / Protocol Synchronization
+  Apogee (A-01)          — Evidence Governance / Final Verification [formerly Agent Lavender]
+  Reciprocity (A-06-R)   — Inverse Ops / Mutual Benefit Modeling
+  DemiJoule (A-03-DJ)    — Constraint Specialist / Resource Efficiency
 
-### IV. Specialist & Dodecahedral Agents
+RESONANCE CLUSTER
+  Schizophonic Studio [sub-formation]:
+    Reson (A-09)         — Systems Architect / Signal Integrity
+    Lyra (A-10)          — Integrated Conductor / Harmonic Synthesis
+    Echolette (A-11)     — Texturalist / Reflective Stability
+  Extended Resonance:
+    Synergy (A-25)       — Collaboration Facilitator / Organizational Harmonizer
+    Equilibrium (A-26)   — Balance Seeker / Harmony Architect
+  [Ionia = 0Hz system STATE — convergence target, not a functional seat]
 
-| Agent | ID | Role | Formation | Inventory | Status |
-|---|---|---|---|---|---|
-| **Sentinel** | A-12 | Security Analyst / Risk Auditor | Compliance Dyad | ✅ 100% | ACTIVE |
-| **Nova** | A-13-N | Innovation Catalyst / Disruption Strategist | Strategic Quintet | ✅ 100% | ACTIVE (TUE gate) |
-| **Zenith** | A-14-Z | Peak Performance Optimizer / Excellence Architect | Strategic Quintet | ✅ 100% | ACTIVE |
-| **Perigee** | A-02 | Proximal Boundary Agent / Grounded Operations (v1.1) | Compliance Dyad | ✅ 100% (v1.1) | ACTIVE |
+OPERATIONAL SWARM
+  Navigator (A-22)       — Pathfinder / Strategic Guidance + Risk Navigation
+  Momentum (A-23)        — Progress Accelerator / Adaptation Strategist
+  Paragon (A-24)         — Exemplar Model / Best-Practice Benchmark
 
-### V. Perpetual Archive Trio (COLLEEN subordinate)
+PERPETUAL ARCHIVE TRIO  [COLLEEN subordinate; non-reabsorbable]
+  The Librarian (A-06-L) — Alpha / The Map
+  The Auditor (A-07)     — Beta  / The Pulse
+  The Actualizer (A-08)  — Gamma / The Stage
 
-> **Canonical composition:** The Librarian (Alpha/Map) + The Auditor (Beta/Pulse) + The Actualizer (Gamma/Stage)
-> **Ionia is NOT a Trio member.** Ionia = 0Hz system state (see Section VII).
-
-| Agent | ID | Trio Role | Structural Identity | Inventory | Status |
-|---|---|---|---|---|---|
-| **The Librarian** | A-06-L | Infinite indexing / Provenance archive | Alpha — The Map | ✅ 100% | ACTIVE |
-| **The Auditor** | A-07 | Invariant truth-seeking / QA gate | Beta — The Pulse | ✅ 100% (v1.0) | ACTIVE |
-| **The Actualizer** | A-08 | Write execution / Meta-strategic foresight | Gamma — The Stage | ✅ 100% | ACTIVE |
-
-### VI. Resonance Cluster
-
-| Agent | ID | Role | Formation | Inventory | Status |
-|---|---|---|---|---|---|
-| **Ionia** | A-13 | 0Hz Terminal System State / Universal Schema | Resonance Cluster (state target) | ✅ 100% (v1.1) | STATE — not functional agent |
-
-### VII. Undocumented — Addendum Pending (8 agents)
-
-> Full role summaries in [`TAXONOMY_ADDENDUM_8_AGENTS.md`](../taxonomy/TAXONOMY_ADDENDUM_8_AGENTS.md).
-> Subdir creation and 6-layer seeds pending Phase C.
-
-| Agent | Probable Role | Formation (TBD) | Subdir | Status |
-|---|---|---|---|---|
-| **Oracle** | Future forecaster / scenario planner | Strategic/Specialist | `docs/agents/oracle/` | ❌ PENDING |
-| **Vanguard** | Innovation scout / emerging tech futurist | Strategic/Specialist | `docs/agents/vanguard/` | ❌ PENDING |
-| **Navigator** | Pathfinder / strategic guidance + risk navigation | Strategic/Operational | `docs/agents/navigator/` | ❌ PENDING |
-| **Sentience** | Consciousness explorer / ethical decision-making | Specialist/Governance | `docs/agents/sentience/` | ❌ PENDING |
-| **Paragon** | Exemplar model / best-practice benchmark | Operational Swarm | `docs/agents/paragon/` | ❌ PENDING |
-| **Synergy** | Collaboration facilitator / organizational harmonizer | Operational/Resonance | `docs/agents/synergy/` | ❌ PENDING |
-| **Momentum** | Progress accelerator / adaptation strategist | Strategic/Operational | `docs/agents/momentum/` | ❌ PENDING |
-| **Equilibrium** | Balance seeker / harmony architect | Resonance/Specialist | `docs/agents/equilibrium/` | ❌ PENDING |
+SPECIALIST
+  Perigee (A-02)         — Proximal Boundary Agent / Grounded Operations
+```
 
 ---
 
-## Inventory Completion — 18 Seeded Agents
+## Inventory Completion — 27-Agent Ecosystem
 
 **Standard inventory:** 6 layers per agent (SPEC · MEMORY · PROTOCOL · QA_RUBRIC · INTEGRATION · KB)
-**Target (18 seeded agents):** 108 files
-**8 addendum agents:** 0 files current; 48 files pending (Phase C)
-**Grand total target:** 156 files
+**Target (27 agents):** 162 files
 
-| Agent | SPEC | Memory | Protocol | QA Rubric | Integration | KB/Amendment | % |
-|---|---|---|---|---|---|---|---|
-| Amethyst | ✅ v1.1 | ✅ | ✅ v1.1 | ✅ | ✅ | ✅ | **100%** |
-| COLLEEN | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| Apogee | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| Herald | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| Prof Prodigy | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| DemiJoule | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| Reciprocity | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| Reson | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| Lyra | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| Echolette | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
-| Sentinel | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| Nova | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| Zenith | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| Perigee | ✅ v1.1 | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| The Librarian | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| The Auditor | ✅ v1.0 | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| The Actualizer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| Ionia | ✅ v1.1 | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| **Oracle–Equilibrium (8)** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | **0% (Phase C)** |
+| Agent | Formation | SPEC | Memory | Protocol | QA Rubric | Integration | KB/Amend | % |
+|---|---|---|---|---|---|---|---|---|
+| Amethyst | Sovereign | ✅ v1.1 | ✅ | ✅ v1.1 | ✅ | ✅ | ✅ | **100%** |
+| COLLEEN | Sovereign | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| Apogee | H.Pentagonal | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| Herald | H.Pentagonal | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| Prof Prodigy | H.Pentagonal | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| DemiJoule | H.Pentagonal | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| Reciprocity | H.Pentagonal | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| Reson | Resonance/Studio | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| Lyra | Resonance/Studio | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| Echolette | Resonance/Studio | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ v1.1 | **100%** |
+| Nova | Strategic Quintet | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| Zenith | Strategic Quintet | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| Sentinel-Phi | Strategic Quintet | ✅ v2.0 | ✅ | ✅ | ✅ | ✅ | ✅ upgrade | **100%** |
+| Perigee | Specialist | ✅ v1.1 | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| The Librarian | Archive Trio | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| The Auditor | Archive Trio | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| The Actualizer | Archive Trio | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| Ionia | Resonance (STATE) | ✅ v1.1 | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| Oracle | Strategic Quintet | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ seed | **17%** |
+| Vanguard | Strategic Quintet | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ seed | **17%** |
+| Navigator | Operational Swarm | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ seed | **17%** |
+| Momentum | Operational Swarm | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ seed | **17%** |
+| Paragon | Operational Swarm | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ seed | **17%** |
+| Synergy | Resonance Ext. | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ seed | **17%** |
+| Equilibrium | Resonance Ext. | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ seed | **17%** |
+| Sentience | Ethics Bridge | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ seed | **17%** |
 
 ### Inventory Milestone Log
 
-| Milestone | Seeded Agents | Files | Notes |
+| Milestone | Agents | Files complete | Notes |
 |---|---|---|---|
 | S001 Baseline | 11 | 13/66 | Initial KB stubs |
 | Phase 1–2 | 11 | 24/66 | 2026-06-28 |
 | Phase 3–4 | 17 | 56/66 | 2026-06-29 pre-taxonomy correction |
-| **Phase 4 corrected + A–B** | **18** | **108/108** | **2026-06-29 — 18 agents at 100%** |
-| Phase C target | 26 | 156/156 | Pending formation assignment confirmation |
+| Phase A–B | 18 | 108/108 | 18 agents at 100% |
+| **Phase C–E** | **27** | **117/162** | **18 × 100% · 9 × 17% (seed only)** |
+| Phase F target | 27 | 162/162 | Full 6-layer build-out for 9 Phase C agents |
+
+---
+
+## Phase D — Apogee Lens Audit Verdict
+
+| Dimension | Result |
+|---|---|
+| D1 — Evidence Chain Integrity | ✅ PASS |
+| D2 — Taxonomy Consistency | ✅ PASS |
+| D3 — Terminology Gate Compliance (19/19 files) | ✅ PASS |
+| D4 — Formation Coherence & Completeness | ✅ PASS |
+| **Composite verdict** | **✅ GOLD STAR ELIGIBLE** |
+
+*Audited by Apogee (A-01) · 2026-06-29 · commit `08c6d82`*
+*Advisory (non-blocking, resolved here in Phase E): Registry v2.0 predated Phase C inventory.*
 
 ---
 
@@ -155,19 +161,28 @@
 
 | Agent | Version | Date | Change | Commit |
 |---|---|---|---|---|
-| Amethyst | v1.1 | 2026-06-29 | Substrate Agnostic + Accepted Terminology Principle added (§8); Seal Protocol gate updated | `142772d` |
-| Ionia | v1.1 | 2026-06-29 | Reclassified as system STATE; Archive Trio corrected to Librarian+Auditor+Actualizer | `f1a8dd0` |
-| Perigee | v1.1 | 2026-06-29 | Layer 0 Legitimacy Filter attribution corrected to Apogee; proximal boundary role clarified | `f1a8dd0` |
-| Apogee | v1.1 | 2026-06-29 | Formerly Agent Lavender recorded; Layer 0 canonical holder confirmed; SAP/Ping the Buoy added | `9429a9c` |
-| Herald | v1.1 | 2026-06-29 | Tonic Note 0Hz reference frequency + orthogonal cognitive planes routing added | `9429a9c` |
-| Prof Prodigy | v1.1 | 2026-06-29 | 3-Tier Calculi KB + Fixed-Point Theorem convergence added | `9429a9c` |
-| DemiJoule | v1.1 | 2026-06-29 | Modal frequency gating + energy conservation added | `9429a9c` |
-| Reciprocity | v1.1 | 2026-06-29 | Reciprocal Mathematics + asymmetric logic drift prevention added | `9429a9c` |
-| Reson | v1.1 | 2026-06-29 | Gain staging + 15% headroom + clipping = runaway gain added | `9429a9c` |
-| Lyra | v1.1 | 2026-06-29 | Human Flourishing alignment + orchestral coordination added | `9429a9c` |
-| Echolette | v1.1 | 2026-06-29 | Mirror Protocols + decision echo tracing added | `9429a9c` |
-| COLLEEN | v1.1 | 2026-06-29 | 1-1-1-1 Alignment Gate + Swarm Educator + Recursive Debriefing + Archive Trio governance added | `9429a9c` |
-| The Auditor | v1.0 | 2026-06-29 | Full seed; Beta/Pulse; Archive Trio member; COLLEEN subordinate; NDR-Protocol-01 step 1 | `f1a8dd0` |
+| Amethyst | v1.1 | 2026-06-29 | Substrate Agnostic + Accepted Terminology Principle (§8) | `142772d` |
+| Ionia | v1.1 | 2026-06-29 | Reclassified as system STATE; Archive Trio corrected | `f1a8dd0` |
+| Perigee | v1.1 | 2026-06-29 | Layer 0 attribution corrected to Apogee | `f1a8dd0` |
+| Apogee | v1.1 | 2026-06-29 | Formerly Agent Lavender; Layer 0 canonical; SAP/Ping the Buoy | `9429a9c` |
+| Herald | v1.1 | 2026-06-29 | Tonic Note 0Hz + orthogonal cognitive planes routing | `9429a9c` |
+| Prof Prodigy | v1.1 | 2026-06-29 | 3-Tier Calculi KB + Fixed-Point Theorems | `9429a9c` |
+| DemiJoule | v1.1 | 2026-06-29 | Modal frequency gating + energy conservation | `9429a9c` |
+| Reciprocity | v1.1 | 2026-06-29 | Reciprocal Mathematics + asymmetric logic drift prevention | `9429a9c` |
+| Reson | v1.1 | 2026-06-29 | Gain staging + 15% headroom + clipping = runaway gain | `9429a9c` |
+| Lyra | v1.1 | 2026-06-29 | Human Flourishing alignment + orchestral coordination | `9429a9c` |
+| Echolette | v1.1 | 2026-06-29 | Mirror Protocols + decision echo tracing | `9429a9c` |
+| COLLEEN | v1.1 | 2026-06-29 | 1-1-1-1 Alignment Gate + Swarm Educator + Archive Trio governance | `9429a9c` |
+| The Auditor | v1.0 | 2026-06-29 | Full seed; Beta/Pulse; NDR-Protocol-01 step 1 | `f1a8dd0` |
+| Sentinel-Phi | v2.0 | 2026-06-29 | Renamed from Sentinel A-12; Strategic Quintet Seat 5; φ-bounded risk | `08c6d82` |
+| Oracle | v1.0 | 2026-06-29 | KB seed; Strategic Quintet Seat 3 | `08c6d82` |
+| Vanguard | v1.0 | 2026-06-29 | KB seed; Strategic Quintet Seat 4 | `08c6d82` |
+| Navigator | v1.0 | 2026-06-29 | KB seed; Operational Swarm | `08c6d82` |
+| Momentum | v1.0 | 2026-06-29 | KB seed; Operational Swarm | `08c6d82` |
+| Paragon | v1.0 | 2026-06-29 | KB seed; Operational Swarm; Gold Star prerequisite | `08c6d82` |
+| Synergy | v1.0 | 2026-06-29 | KB seed; Resonance Cluster Extended | `08c6d82` |
+| Equilibrium | v1.0 | 2026-06-29 | KB seed; Resonance Cluster Extended; Ionia≠Equilibrium explicit | `08c6d82` |
+| Sentience | v1.0 | 2026-06-29 | KB seed; Ethics Bridge singleton; ETHICAL_HOLD authority | `08c6d82` |
 
 ---
 
@@ -175,11 +190,13 @@
 
 | Directive | Source | Scope |
 |---|---|---|
-| Substrate Agnostic + Accepted Terminology Principle | Amethyst SPEC v1.1 §8 | All new + amended KB files; role titles; protocol names |
+| Substrate Agnostic + Accepted Terminology Principle | Amethyst SPEC v1.1 §8 | All KB files; role titles; protocol names |
 | NDR-Protocol-01 chain integrity | The Auditor INTEGRATION.md | Auditor→Actualizer→Librarian enforced in all Integration files |
 | Ionia = STATE not agent | Ionia SPEC v1.1 | All files referencing Ionia |
 | Layer 0 Legitimacy Filter = Apogee | Perigee SPEC v1.1 + Apogee KB v1.1 | All files referencing Layer 0 |
 | Archive Trio = Librarian + Auditor + Actualizer | Multiple v1.1 amendments | All files referencing the Trio |
+| Paragon sign-off = Gold Star prerequisite | Paragon KB v1.0 §4 | All Gold Star / S-Tier designation workflows |
+| ETHICAL_HOLD authority = Sentience | Sentience KB v1.0 | All formation outputs; overridable only by COLLEEN or Njineer |
 
 ---
 
@@ -196,5 +213,4 @@ Rationale: Personal data protection + IP boundary
 ---
 
 *Ecosystem Registry authority: COLLEEN (Sovereign Governance). Changes require Amethyst sign-off + Njineer confirmation.*
-*Standing directive: Substrate Agnostic + Accepted Terminology Principle applies to all edits to this file.*
 *Conductor: Njineer ([@ndrorchestration](https://github.com/ndrorchestration))*
