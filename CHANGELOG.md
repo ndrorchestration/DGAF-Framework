@@ -1,115 +1,88 @@
-# CHANGELOG
+# CHANGELOG.md
 
-> **Maintained by:** COLLEEN (Institutional Memory)  
-> **Enforced by:** Amethyst  
-> **Authority:** Ender  
+> **Steward:** COLLEEN · **Orchestrator:** Amethyst
 
 ---
 
-## [2026-06-29 — Autonomous Sprint] — Amethyst
+## [Post-S077] — 2026-06-29
 
-**Type:** Documentation + Knowledge Base  
-**Authors:** Amethyst (autonomous execution, Njineer pre-approved)  
-**Sessions:** Post-S077 carry-forward
+### Autonomous Sprint — Amethyst execution authority
 
-### Deliverables
+#### P-42 Collision Fix (this commit)
+- **CROSS_REF.md → v4.4:** P-35→P-42 renumber corrected; P-35–P-41 added to registry table; P-42 vocabulary index, Conductor Archetype mapping, and φ range table added
+- **`patterns/P-42_AHG.md`:** Renamed/corrected from `P-35_AHG.md`; full pattern card with DGAF integration map
+- **`docs/theory/AHG_ARCHITECTURE.md` → v1.1:** P-42 renumber applied; renumber note added
+- **`CHANGELOG.md`:** This entry
+- **`ENSEMBLE_ROSTER.md`:** P-42 references corrected
+- **`SESSION_ANCHOR.md`:** Commit log updated with this entry
+- **`docs/ndr_patterns_unified.json` → v2.2:** P-37–P-42 entries added
+- **`docs/ECOSYSTEM_INVENTORY.md`:** New files from this session registered
+- ⚠️ **Stale file flagged:** `patterns/P-35_AHG.md` — needs deletion (owner action or next sweep)
 
-| File | Change |
-|------|--------|
-| `docs/DGAF_RECURSIVE_REFINEMENT_ANALYSIS.md` | v2 — Apogee-corrected: metrics re-labeled as projected targets, Amethyst status corrected, 340%→6 7% derivation, visual asset status corrected, session anchor added |
-| `docs/agents/PROFESSOR_PRODIGY_KB.md` | v1.0 — 3-tier knowledge base: Standard Calculi (Tier 1), Reciprocal Mathematics (Tier 2), Phi-Calculus (Tier 3, maximum density) |
-| `CHANGELOG.md` | This entry |
+#### Earlier this session (e410ae4)
+- **`CROSS_REF.md` → v4.3:** AHG vocabulary, Conductor mapping, docs/theory/ and docs/agents/ registered
+- **`SESSION_ANCHOR.md`:** Created — full 2026-06-29 session seal
+- **`ENSEMBLE_ROSTER.md`:** AHG archetype column added, Prodigy KB tiers, Herald blocked status
 
-### Status
-- DGAF Recursive Refinement Analysis: **Gold tier** — Platinum gated on metric rubric cycle + visual asset + Prodigy KB implementation
-- Professor Prodigy KB: **Specified and committed** — implementation verification pending
+#### Earlier this session (e34af32)
+- **`docs/theory/AHG_ARCHITECTURE.md`:** P-42 specification filed (originally as P-35)
+- **`patterns/P-35_AHG.md`:** Pattern card filed (stale — superseded by P-42_AHG.md)
 
----
+#### Earlier this session (5ed1a85)
+- **`docs/agents/PROFESSOR_PRODIGY_KB.md` v1.0:** 3-tier KB — Standard Calculi / Reciprocal Math / Phi-Calculus
+- **`CHANGELOG.md`:** Previous entry
 
-## [SWEEP-002 Phase 5] — 2026-06-27
+#### Earlier this session (b8cf383)
+- **`DEFERRED_ITEMS.md`:** S-01 through S-08 snoozed — owner-action items with hard deadlines
 
-**Type:** Governance Sweep — Kappa Branch Merge  
-**Authors:** Amethyst × COLLEEN (co-orchestration)  
-**Commits:** `73ac89e` (kappa) + SWEEP-002 Phase 5 (main)  
-**Sessions:** S039–S043 (kappa) + SWEEP-002 (2026-06-26/27)
-
-### Deliverables
-
-| File | Change |
-|------|--------|
-| `components/topology_router.py` | v1.0 → v1.1: predicate reorder fixes TC1/TC2/TC7/TC8 shadow bug (5/8 → 8/8 TC) |
-| `tests/test_router_coverage.py` | 8/8 TC coverage with full regression suite |
-| `registry/lifecycle_stability_report.json` | 7-phase lifecycle harness — COLLEEN 1-1-1-1 Gate PASS |
-| `CHANGELOG.md` | This entry |
-
-### COLLEEN 1-1-1-1 Gate Attestation
-
-```json
-{
-  "gate": "COLLEEN_1_1_1_1",
-  "sweep": "SWEEP-002",
-  "date": "2026-06-27",
-  "result": "PASS",
-  "checks": [
-    "1: All blocking CO_ORCH_QUEUE items executed ✔",
-    "2: Router 8/8 TC verified ✔",
-    "3: Lifecycle harness artifact present ✔",
-    "4: Apogee Lens Grade A on all delivered items ✔"
-  ]
-}
-```
+#### Earlier this session (dd2f319) — entrepreneur-hub repo
+- **`.github/workflows/sweep-reminder.yml`:** Cron job for SWEEP-EH-003
+- **`SWEEP_EH_003_PREFLIGHT.md`:** Preflight checklist
 
 ---
 
-## [S068] — 2026-06-26
+## [S071] — 2026-06-28
 
-**Type:** Vocabulary Sweep  
-**Authors:** Amethyst × Perplexity MCP  
-**Commits:** `7ec3c31` + `839f5c7` + `8d20b44` (seal)  
-**Sessions:** S068 (Nemotron 3 Ultra eval vocabulary)
-
-### Deliverables
-
-| File | Change |
-|------|--------|
-| `CROSS_REF.md` | v4.2 — eval terminology |
-| `README.technical.md` | v1.1 — kernel nomenclature |
-| `README.governance.md` | v1.1 — governance schema vocab |
-| `ENSEMBLE_ROSTER.md` | S068 session record |
-| `SWEEP_LOG.md` | S068 seal buoy |
-| `CHANGELOG.md` | S068 entry |
-| `SESSION_ANCHOR.md` | S068 ✅ SEALED |
+- P-37 Stochastic-Deterministic Saga Boundary registered
+- P-38 Circuit-Breaker with HITL Escalation registered
+- P-39 ACRFence registered
+- P-40 Atomix Transactional Tool Boundary registered
+- P-41 Sentinel-Phi HITL Durable Queue registered
+- Layer 10 (Resilience & Recovery) and Layer 11 (Transactional Integrity) established
+- Registry watermark advanced to P-41
+- `topology_router.py` v3.6.0 — 8/8 TC passing
+- `lifecycle_stability_report.json` created
 
 ---
 
-## [S069 — Eval Suite] — 2026-06-26
+## [S070-r3-P1] — 2026-06-26
 
-**Type:** Benchmark Scaffold  
-**Authors:** Amethyst × COLLEEN  
-**Commit:** `8fc4321`  
-**Issue:** #32
-
-### Deliverables
-
-| File | Change |
-|------|--------|
-| `tests/dgaf_eval_suite.py` | Nemotron 3 Ultra 5-task parametric benchmark — stub scaffold |
-| `schemas/audit_event.json` | Herald audit event JSON Schema |
-| `schemas/governance.yml.schema.json` | Pydantic governance.yml schema |
+- CONSENSUS_TRIAD and CONDUCTED_TRIAD formation patterns registered
+- PDMAL-φ / PDMAL-D variant status canonicalized
+- Triadic telemetry guidance appended to unified registry
+- Eval Terminology Index (S068) added to CROSS_REF
+- `docs/lifecycle_harness_v2.md` created
+- `docs/ECOSYSTEM_INVENTORY.md` created
 
 ---
 
-## [Prior Sessions — S039–S043] — 2026-05-21 to 2026-05-29
+## [S069] — 2026-06-13 · Ender ratified
 
-**Branch:** `feat/kappa-v3.6-governance-classifier`  
-**Sessions:** S039 (10-repo audit), S040 (PPTL harness), S041 (Triad Taxonomy), S042 (Ensemble v1.6), S043 (Phi-Closure + Firewall + Router)
+- P-35 Procluding Premise Gate registered and ratified
+- P-36 Gate Priority Schema registered and ratified
+- STASIS-CANONICAL status ratified (migration window 2026-06-13 → 2026-07-13)
+- `ndr_patterns_unified.json` v2.1
+- v3 named session patterns absorbed into unified registry
+- `ndr-pattern-registry-v3.md` deleted
 
-### Key Deliverables
+---
 
-| Session | Key Output |
-|---------|------------|
-| S039 | CROSS_REF v3.3, NDR-133 clearance, 24 findings |
-| S040 | PPTL harness, 166+ tests, NDR Registry P-01–P-06 |
-| S041 | Triad Taxonomy (P-08), CO_ORCH_QUEUE design |
-| S042 | Ensemble v1.6: SCPE (P-31) + Phi-Closure Gate (P-33) + PDMAL Monitor (P-32) |
-| S043 | Phi-Closure Gate wired, Orchestration Firewall, Router (8/8 TC post-SWEEP-002) |
+## [S066] — 2026-05-30 · Ender ratified
+
+- P-34 Empirical-Threshold-Sweep A-TIER 94.5% attested
+- Phase 3 unified merge — Triumvirate
+- Registry watermark P-34
+
+---
+
+*CHANGELOG · Amethyst × COLLEEN · Updated 2026-06-29*

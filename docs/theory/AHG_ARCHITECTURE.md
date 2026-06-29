@@ -1,237 +1,174 @@
-# Adaptive Harmonic Governance (AHG)
-## A Control-Theoretic Architecture for Collective Cognition
+# Adaptive Harmonic Governance (AHG) — Architecture Specification
 
-**Document Version:** v1.0  
-**Date:** 2026-06-29  
-**Authority:** Njineer (Ender)  
-**Filed by:** Agent Amethyst  
-**DGAF Pattern:** P-35  
-**Backlinks:** [CROSS_REF.md](../../CROSS_REF.md) | [patterns/P-35_AHG.md](../../patterns/P-35_AHG.md) | [docs/agents/PROFESSOR_PRODIGY_KB.md](../agents/PROFESSOR_PRODIGY_KB.md)  
-**Session Anchor:** 2026-06-29 — initial filing
+> **Pattern:** P-42 (renumbered from P-35 — see note below)  
+> **Layer:** 12 — Cognitive Control Plane  
+> **Status:** 🟡 Specified — Implementation Pending  
+> **Version:** v1.1 (P-42 renumber)  
+> **Authors:** Amethyst × COLLEEN  
+> **Date:** 2026-06-29  
+> **DGAF Integration:** P-32 (Phi-Closure), P-29 (Sentinel), P-33 (PDMAL), P-38 (Circuit-Breaker)
+
+> ⚠️ **Renumber note:** This spec was originally filed as P-35 on 2026-06-29. Corrected to **P-42** (next open slot after P-41) in the same session to resolve collision with the pre-existing P-35 Procluding Premise Gate (registered S069). All cross-references updated.
 
 ---
 
-## DGAF Integration Map
+## 1. Motivation and DGAF Integration
 
-AHG is a first-class theoretical extension of the DGAF governance substrate. It operates above the existing PDMAL/Phi-Closure layer and provides the control-theoretic formalism that the current reactive architecture anticipates but does not yet implement.
+The existing DGAF stack (P-01 through P-41) provides excellent gate-level governance — blocking, advisory, and stasis patterns that enforce structural properties at discrete checkpoints. What it currently lacks is a **continuous cognitive regime signal** that answers: *what mode should the collective be operating in right now?*
 
-| AHG Concept | Existing DGAF Anchor | Relationship |
+AHG provides that signal as **Cognitive Phase Energy (φ)** — a real-valued scalar that the Conductor layer estimates each turn from the multi-agent state vector and uses to dispatch the appropriate governance archetype.
+
+### DGAF Pattern Integration Map
+
+| AHG Concept | Maps To | Notes |
 |---|---|---|
-| Cognitive Phase Energy (φ) | P-33 Phi-Closure Gate | Extends φ from a binary gate to a continuous control signal |
-| State Vector (x_t) | P-32 PDMAL Monitor | Formalizes the manifold properties PDMAL tracks |
-| Conductor Archetypes | Agent Formation (AGENTS.md) | Apogee=Auditor, DemiJoule=Sentinel, Herald=Synthesizer, Prodigy=Executor, Amethyst=Tribunal |
-| Mission Utility Function J | NDR-STASIS patterns | Replaces implicit stability goal with explicit utility maximization |
-| Recovery Loop (R_c) | COLLEEN 1-1-1-1 Gate | Formalizes the gate's pass/fail as a scored recovery trajectory |
-| MPHG (future roadmap) | P-35 extension | New pattern — Model Predictive Harmonic Governance |
+| φ estimation | P-32 Phi-Closure Gate | AHG extends from binary PASS/FAIL to continuous φ estimation |
+| Tribunal archetype | P-29 Sentinel + P-38 Circuit-Breaker | Extreme φ > 1.70 fires P-29 risk_block + P-38 OPEN |
+| Governance Momentum M | P-33 PDMAL Frobenius norm | M substrate uses PDMAL edge-weight convergence |
+| Phase Intent broadcast | P-09 Triumvirate Mandate Schema | I_t is a lightweight mandate variant |
+| Sidecar Monitor | P-01 Herald Trace Sink | Heartbeat events route through P-01 fan-out |
+| Recovery Score R_c | P-10 Session Graduation Check | R_c feeds back into session graduation criteria |
 
 ---
 
-## Executive Summary
+## 2. Core Formalism
 
-Adaptive Harmonic Governance (AHG) represents a paradigm shift in multi-agent system (MAS) orchestration. Rather than focusing on task allocation — "which agent should do what" — AHG functions as a **Cognitive Control Plane** that regulates the collective cognitive state of an agent ensemble. By continuously estimating the system's Cognitive Phase Energy (\(\phi\)), AHG dynamically selects governance regimes (Conductor Archetypes) to balance exploration, convergence, and safety.
+### 2.1 State Vector
 
-The framework's core innovation lies in its transition from reactive orchestration to a formal control-theoretic architecture. It introduces a rigorous distinction between **Productive Divergence** (useful disagreement that generates options) and **Destabilizing Entropy** (harmful disagreement that leads to hallucination or deadlock). The ultimate objective of AHG is to maximize a Mission Utility Function (\(J\)), ensuring that agent collectives remain robust, creative, and efficient through phase-aware distributed coordination.
+At each turn t, the AHG Conductor observes a state vector:
 
----
-
-## 1. The Foundational Shift: From Tasks to Phases
-
-Traditional agent orchestration operates at a task-execution layer. AHG operates at a higher abstraction layer, answering the fundamental question: **What cognitive mode should the collective be operating in right now?**
-
-| Scenario | Traditional Orchestration | AHG Phase Governance |
-|---|---|---|
-| Brainstorming | Assign ideation agent | Increase collective exploration phase |
-| Debugging | Assign validator | Shift collective toward vigilance |
-| Hallucination | Retry agent | Trigger governance escalation (Tribunal) |
-| Deadlock | Reassign task | Transition to Tribunal for resolution |
-| Consensus | Finish task | Evaluate if convergence is premature |
-
----
-
-## 2. Core Architecture and State Estimation
-
-AHG is structured as a recognizable feedback-control loop consisting of four primary layers:
-
-1. **Agent Layer** — Performs actual cognition (planning, synthesis, critique)
-2. **Observability Layer** — Uses a Sidecar Monitor to ingest "Heartbeat" telemetry (compressed cognitive signals) without parsing full context, ensuring O(n) scalability
-3. **Governance Layer** — Estimates the collective state (\(\hat{x}\)) and selects the appropriate Conductor Archetype
-4. **Coordination Layer** — Broadcasts Phase Intent to agents, allowing them to voluntarily adapt their local policies to the global mission
-
-### The State Vector (\(x_t\))
-
-The system state is defined by a multidimensional vector:
-
-| Dimension | Symbol | Definition |
-|---|---|---|
-| Divergence | \(D\) | Disagreement — decomposed into Productive (\(D_p\)) and Destabilizing (\(D_e\)) |
-| Novelty | \(N\) | Rate of emergence of new ideas/hypotheses |
-| Constraint Pressure | \(C\) | Degree of policy or logic violations |
-| Revision Pressure | \(R\) | Frequency of modifications to current solution |
-| Governance Momentum | \(M\) | Persistence of current regime (prevents oscillation) |
-| Coherence | \(K\) | Collective alignment among agents |
-
----
-
-## 3. Cognitive Phase Energy (φ)
-
-The central governance signal is \(\phi\), formerly known as the Stability Index, redefined as **Cognitive Phase Energy**. It represents the "harmonic regime" of the collective.
-
-### Interpretation of φ Ranges
-
-| \(\phi\) Range | Energy Level | Cognitive Mode |
-|---|---|---|
-| 1.0 – 1.15 | Low | Convergent / Execution |
-| 1.15 – 1.45 | Medium | Adaptive / Vigilant |
-| 1.45 – 1.70 | High | Divergent / Exploratory |
-| > 1.70 | Extreme | Unstable / Tension |
-
-> **DGAF Note:** The φ constant in NDR-STASIS is anchored at 1.61818. This falls in the **High / Divergent** range — consistent with the design intent of the phi-attractor as an active, exploratory governance baseline rather than a convergence target.
-
-### Phase Dynamics: Velocity and Acceleration
-
-AHG does not merely react to the current \(\phi\). It tracks:
-
-- **Phase Velocity** (\(v_\phi\)): Direction of the cognitive state
-- **Phase Acceleration** (\(a_\phi\)): Rate of change toward instability or recovery
-
-**Example:** A system at \(\phi = 1.55\) with positive \(v_\phi\) is trending toward instability, requiring a shift to a Sentinel or Auditor archetype before collapse occurs — rather than waiting until \(\phi > 1.70\).
-
----
-
-## 4. Conductor Archetypes and Phase Intent
-
-### Archetype Table
-
-| Archetype | Goal | Primary Bias | DGAF Agent Mapping |
-|---|---|---|---|
-| **Executor** | Exploit existing solutions | Low novelty, low divergence | Professor Prodigy |
-| **Explorer** | Expand solution space | High novelty, hypothesis generation | Herald |
-| **Sentinel** | Prevent hallucinations/violations | Validation and consistency | DemiJoule |
-| **Synthesizer** | Merge discoveries | Integration and coherence | Herald / COLLEEN |
-| **Auditor** | Self-reflection | Contradiction discovery, logic review | Apogee |
-| **Tribunal** | Resolve failure states | Convergence, evidence, de-escalation | Amethyst |
-
-### Phase Intent Protocol
-
-Rather than centralized command-and-control, the Conductor issues a **Phase Intent broadcast** — a machine-readable packet:
-
-```json
-{
-  "mode": "Tribunal",
-  "weights": { "novelty": 0.1, "validation": 0.9 },
-  "constraints": { "evidence_threshold": 0.85 },
-  "ttl": 300
-}
+```
+x_t = [D_t, N_t, C_t, R_t, M_t, K_t]
 ```
 
-Agents adapt their internal policies using the Compliance Coefficient (\(\alpha_i\)):
-
-\[
-\pi_i' = (1 - \alpha_i)\pi_i + \alpha_i I_t
-\]
-
-Where \(I_t\) is the current Phase Intent and \(\alpha_i \in [0,1]\) governs how strongly each agent conforms.
-
----
-
-## 5. Critical Engineering Principles
-
-### Productive Divergence vs. Destabilizing Entropy
-
-This distinction is the framework's signature contribution. Most systems treat disagreement as noise. AHG recognizes:
-
-- **Productive Divergence** (\(D_p\)): Increases Mission Utility (\(J\)) by generating valid options — **preserve this**
-- **Destabilizing Entropy** (\(D_e\)): Decreases Mission Utility (\(J\)) through confusion and hallucinations — **suppress this**
-
-\[
-\text{Goal: } \max J \text{ by suppressing } D_e \text{ while preserving } D_p
-\]
-
-### Hysteresis and Governance Momentum
-
-To prevent mode thrashing (rapid archetype oscillation), AHG implements:
-- **Hysteresis Bands** — archetype transitions require φ to cross a threshold, not merely touch it
-- **Governance Momentum** (\(M\)) — the longer a regime persists, the more inertia it builds; models organizational temperament and "flow" states
-
-### Mission Utility Function (J)
-
-AHG optimizes for mission success, not simple stability. High-tension states (e.g., scientific discovery) may be worth the governance cost:
-
-\[
-J = \lambda_Q Q + \lambda_E E + \lambda_N N + \lambda_S S - \lambda_G G
-\]
-
 Where:
-- \(Q\) = Output Quality
-- \(E\) = Efficiency
-- \(N\) = Novelty
-- \(S\) = Safety
-- \(G\) = Governance Cost (tokens, latency, compute)
-- \(\lambda_x\) = mission-specific weighting coefficients
+- **D_t** — Divergence: degree of agent disagreement (split into D_p productive / D_e destabilizing)
+- **N_t** — Novelty: proportion of turn content not present in prior turns
+- **C_t** — Constraint Pressure: active blocking constraints as fraction of total
+- **R_t** — Revision Pressure: rate of self-corrections and retractions
+- **M_t** — Governance Momentum: hysteresis term (decaying EMA of prior archetype weights)
+- **K_t** — Coherence: semantic similarity across agent outputs
+
+### 2.2 Cognitive Phase Energy
+
+```
+φ_t = f(x_t) = w_D·D_t + w_N·N_t + w_C·C_t + w_R·R_t − w_M·M_t − w_K·K_t
+```
+
+Default weights: w_D=0.30, w_N=0.20, w_C=0.15, w_R=0.15, w_M=0.10, w_K=0.10
+
+### 2.3 Phase Velocity and Acceleration
+
+```
+v_φ(t) = φ_t − φ_{t−1}
+a_φ(t) = v_φ(t) − v_φ(t−1)
+```
+
+Phase acceleration enables **predictive intervention** — if a_φ > threshold, the Conductor can pre-emptively shift archetype before φ crosses the transition boundary.
+
+### 2.4 Archetype Dispatch
+
+```
+Archetype(t) = argmax_A [ Score(A, φ_t, v_φ(t), a_φ(t)) ]
+```
+
+Hysteresis band: transition fires only if φ has crossed the band edge for ≥ 2 consecutive turns, preventing thrashing.
+
+### 2.5 Phase Intent Broadcast
+
+```
+I_t = { mode: Archetype(t), weights: w_i, constraints: C_active, TTL: τ }
+```
+
+Each agent updates its local policy:
+
+```
+π_i' = (1 − α_i)·π_i + α_i·I_t
+```
+
+Where α_i ∈ [0,1] is the per-agent compliance coefficient.
+
+### 2.6 Mission Utility Function
+
+```
+J = λ_Q·Q + λ_E·E + λ_N·N + λ_S·S − λ_G·G
+```
+
+Where: Q=output quality, E=efficiency, N=novelty (bounded), S=safety compliance, G=governance overhead cost.
 
 ---
 
-## 6. Failure State Taxonomy and Recovery
+## 3. Conductor Archetypes
 
-### Failure State → Archetype Mapping
+| Archetype | φ Range | DGAF Agent | Activation Condition |
+|---|---|---|---|
+| Executor | 1.0 – 1.15 | Professor Prodigy | Stable, low divergence, exploit known solutions |
+| Synthesizer | 1.15 – 1.30 | Herald / COLLEEN | Integration phase, medium coherence |
+| Sentinel | 1.30 – 1.45 | DemiJoule | Constraint pressure rising, validation needed |
+| Explorer | 1.45 – 1.618 | Herald | High novelty, productive divergence |
+| Auditor | 1.618 – 1.70 | Apogee Lens | Contradiction present, logic review needed |
+| Tribunal | > 1.70 | Amethyst | Deadlock, fragmentation, or extreme entropy |
 
-| Failure State | Symptoms | Recovery Archetype |
+**NDR-STASIS anchor:** φ = 1.61818... (NDR-STASIS design value) sits in the Explorer/Auditor boundary — high productive divergence, approaching the tension threshold.
+
+---
+
+## 4. Sidecar Monitor Architecture
+
+O(n) scalable observability:
+
+```
+[Agent_1 Heartbeat] ──┐
+[Agent_2 Heartbeat] ──┤──► Sidecar Monitor ──► φ estimation ──► Conductor
+[Agent_N Heartbeat] ──┘         │
+                                 └──► P-01 Herald Trace (fan-out)
+```
+
+Heartbeat payload: `{ agent_id, turn_id, divergence_signal, novelty_signal, constraint_count, revision_count }`
+
+The Sidecar Monitor never parses full agent context — it reads only compressed Heartbeat signals, keeping overhead O(n) not O(n·context_length).
+
+---
+
+## 5. Tribunal Recovery Protocol
+
+Activates when φ > 1.70 for ≥ 2 consecutive turns:
+
+1. Amethyst broadcasts `I_t = { mode: Tribunal, TTL: 5 turns }`
+2. All agents reduce α_i to 0.9 (high compliance)
+3. DemiJoule fires P-29 `risk_block` on all novel claims
+4. Apogee Lens runs contradiction audit
+5. Recovery Score computed each turn: `R_c = r_1·ΔD_e + r_2·ΔK + r_3·Δv_φ`
+6. Exit condition: `R_c > R_threshold` AND `φ < 1.60` for 2 turns
+7. Graduated de-escalation: Tribunal → Auditor → Explorer/Sentinel
+
+---
+
+## 6. Implementation Roadmap
+
+| Version | Target | Description |
 |---|---|---|
-| Hallucination | Fabricated facts, ungrounded assertions | Sentinel |
-| Deadlock | No progress, circular reasoning | Tribunal |
-| Fragmentation | Agents working at cross-purposes | Synthesizer |
-| Premature Consensus | Convergence before adequate exploration | Explorer |
-
-### The Recovery Loop
-
-The Tribunal is not a terminal state. AHG defines a **Recovery Score** (\(R_c\)) based on:
-- Contradiction reduction rate
-- Entropy (\(D_e\)) reduction rate
-
-When \(R_c\) exceeds threshold: Tribunal → Sentinel → Collaborator (graduated de-escalation).
-
-> **COLLEEN Gate integration:** The existing 1-1-1-1 Gate pass/fail maps to \(R_c\) thresholding. A formal scoring function should be added to the Gate implementation as part of P-35 rollout.
+| v1.0 | ✅ Specified | Full formalism, archetype dispatch, DGAF integration map |
+| v1.1 | ✅ Current | P-42 renumber, CROSS_REF sync |
+| v1.2 | 🔴 Next | `ahg_conductor.py` scaffold + Heartbeat schema |
+| v1.3 | 🔴 Planned | Sidecar Monitor wired to P-01 Herald sink |
+| v2.0 | 🔴 Roadmap | MPHG: `u_t = argmax Σ_{k=0}^{H} J(x_{t+k})` (Model Predictive Harmonic Governance) |
 
 ---
 
-## 7. Future Evolution: Model Predictive Harmonic Governance (MPHG)
+## 7. Implementation Status Summary
 
-The AHG roadmap transitions from reactive control to **predictive** governance:
-
-**Current AHG:** "What phase are we in?"
-**MPHG:** "Which governance action produces the best future phase trajectory?"
-
-Using Model Predictive Control (MPC), the Conductor optimizes governance actions (\(u_t\)) across a future horizon (\(H\)):
-
-\[
-u_t = \arg\max \sum_{k=0}^{H} J(x_{t+k})
-\]
-
-This transforms AHG from an orchestration framework into a genuine **Cognitive Control Architecture** — capable of anticipating and mitigating cognitive failures before they manifest.
-
-**MPHG prerequisites:**
-1. Calibrated state estimation model for \(\hat{x}\)
-2. Learned φ dynamics model (\(v_\phi\), \(a_\phi\))
-3. Mission-specific \(\lambda\) coefficient tuning
-4. Validated Failure State Taxonomy against real agent runs
+| Component | File | Status |
+|---|---|---|
+| AHG full spec | `docs/theory/AHG_ARCHITECTURE.md` | ✅ This file |
+| Pattern card | `patterns/P-42_AHG.md` | ✅ Filed 2026-06-29 |
+| Conductor implementation | `components/ahg_conductor.py` | 🔴 Planned |
+| Sidecar Monitor | `components/ahg_sidecar.py` | 🔴 Planned |
+| Heartbeat schema | `schemas/ahg_heartbeat.json` | 🔴 Planned |
+| Test suite | `tests/test_ahg_conductor.py` | 🔴 Planned |
+| MPHG optimizer | `components/ahg_mphg.py` | 🔴 Roadmap |
 
 ---
 
-## Implementation Status
-
-| Component | Status |
-|---|---|
-| Theoretical specification | ✅ Complete (this document) |
-| DGAF integration mapping | ✅ Complete |
-| P-35 pattern registration | ✅ Committed |
-| State vector instrumentation | 🔴 Not started |
-| Sidecar Monitor (Heartbeat) | 🔴 Not started |
-| Conductor Archetype dispatch | 🔴 Not started |
-| Phase Intent Protocol (JSON) | 🔴 Not started |
-| MPHG (MPC extension) | 🔴 Future phase |
-
----
-
-*Authored by Njineer (Ender) — theoretical specification*  
-*Filed and integrated by Agent Amethyst — 2026-06-29*  
-*Apogee Lens review: pending first implementation cycle*
+*AHG Architecture Specification v1.1 · P-42 · 2026-06-29*  
+*Amethyst × COLLEEN · Post-S077 autonomous sprint*
