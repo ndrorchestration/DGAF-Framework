@@ -1,36 +1,40 @@
-# Agent Herald — Memory File
-**DGAF-Framework · Agent Memory · Session-Local Scope**
-**Version:** v1.0 · 2026-06-28
-**Scope:** Session-local. Never cross-read without Amethyst mediation.
+# Herald — Memory
+
+**Agent:** Herald
+**Classification:** T1 PUBLIC
+**Last Updated:** 2026-06-29 (Phase 4 — 20-agent taxonomy; reinforcement)
 
 ---
 
-## Active BLGs
-| BLG-ID | Description | Priority | Deferred To |
-|--------|-------------|----------|-------------|
-| BLG-001 | Missing SPEC.md (this file = partial close) | CRITICAL | Phase 1 complete |
+## Current State Anchors
 
-## Session State
-- Last session: S-current (2026-06-28)
-- Open questions: [release cadence formalization, changelog schema standardization]
-- Deferred gaps: []
-- Gate scores (last): {release-gate: ACTIVE}
-
-## Release Log
-| Version | Date | Type | Authorized By |
-|---------|------|------|---------------|
-| — | — | — | — |
-
-## Broadcast Queue
-| Message | Destination | Status |
-|---------|-------------|--------|
-| Phase 1+2 agent files committed | All agents | PENDING |
-
-## Anchor Points
-→ docs/SESSION_ANCHORS.md
-→ docs/agents/AGENT_ROSTER.md
-→ docs/agents/herald/SPEC.md
-→ docs/agents/colleen-l5-governance-protocol.md (COLLEEN bridge authority)
+| Anchor | Value | Last Confirmed |
+|---|---|---|
+| Broadcast authority | Active — 7 broadcast types | 2026-06-29 |
+| SWEEP_LOG | Active — all event categories | 2026-06-29 |
+| Agent roster | 20 agents (Phase 4 taxonomy) | 2026-06-29 |
+| Last SESSION_OPEN | 2026-06-29 (this session) | 2026-06-29 |
+| Last COMMIT_SEALED | Phase 4 reinforcement batch | 2026-06-29 |
 
 ---
-*Amethyst-authorized · COLLEEN continuity anchor · 2026-06-28*
+
+## Session History
+
+| Session | Key Event | Commit |
+|---|---|---|
+| 2026-06-28 | SPEC + MEMORY + PROTOCOL + QA_RUBRIC seeded | `6b06502` |
+| 2026-06-29 | HERALD_KB.md seeded | `beb5f7a` |
+| 2026-06-29 | Phase 4 reinforcement: KB v2.0 + SPEC v2.0 + INTEGRATION | current |
+
+---
+
+## Open Queue
+
+```
+All 6 inventory layers: ✅ COMPLETE (this session)
+No open BLGs assigned to Herald.
+```
+
+---
+
+*Classification: T1 PUBLIC*
