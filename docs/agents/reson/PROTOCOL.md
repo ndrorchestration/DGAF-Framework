@@ -1,53 +1,60 @@
 # PROTOCOL — RESON
-**Classification:** T1 PUBLIC | **Agent ID:** A-04 | **Role:** Harmonic Signal / Coherence
-**Version:** 1.0 | **Date:** 2026-06-28
+**Classification:** T1 PUBLIC  
+**Agent ID:** A-04 | **Role:** Harmonic Signal / Coherence  
+**Owner:** COLLEEN (protocol layer) | **Version:** 1.0 | **Date:** 2026-06-28
 
 ---
 
 ## 1. Activation Conditions
-- **Post-structural commit:** Reson runs a coherence check after every file creation/deletion batch.
-- **Evaluation Triad:** Called by Amethyst alongside Apogee for quality sweeps.
-- **Dissonance alert:** Any agent may invoke Reson if semantic contamination is suspected.
-- **Pre-release gate:** Mandatory Reson check before any v* release tag.
+- Invoked by Amethyst for harmonic signal check
+- Invoked by Evaluation Triad activation
+- Auto-invoked at session close (coherence snapshot)
+- Invoked by Reciprocity for row-stochastic matrix generation
 
-## 2. Input Contract
-| Input | Source | Required |
-|-------|--------|----------|
-| All modified documents (diff) | Git commit | Yes |
-| NDR Vocabulary Master | `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` | Yes |
-| Ionian Modal Matrix | `docs/agents/IONIAN_MODAL_HARMONIC_MATRIX.md` | Yes |
-| Previous harmonic score | Last SWP entry | Yes |
+## 2. Operational Procedure
+
+```
+STEP 1 — Signal Collection
+  ├ Read SWEEP_LOG.md → last harmonic score
+  ├ Scan active session docs for semantic drift indicators
+  └ Check PROPRIETARY.md → confirm SOV pointers intact (no leak)
+
+STEP 2 — Coherence Analysis
+  ├ Evaluate semantic consistency across: SPEC ↔ MEMORY ↔ KB_SEED ↔ PROTOCOL
+  ├ Check for dissonance artifacts (contradictions, orphaned terms, drift)
+  └ Score 0.0–1.0 composite
+
+STEP 3 — Row-Stochastic Output (if requested by Reciprocity)
+  ├ Build transition matrix over agent interaction graph
+  ├ Normalize rows to sum 1.0
+  └ Pass to Reciprocity for balance verification
+
+STEP 4 — Threshold Check
+  ├ Score ≥ 0.85: GREEN — return to Amethyst
+  ├ Score 0.70–0.85: AMBER — flag specific dissonance sources
+  └ Score < 0.70: RED — trigger Full Ensemble activation
+```
 
 ## 3. Output Contract
-| Output | Target | Format |
-|--------|--------|--------|
-| Harmonic composite score (0.0–1.0) | SWP entry | Float |
-| Dissonance report (if any) | Amethyst | Markdown: artifact ID + location + severity |
-| Row-stochastic matrix output | Reciprocity | Matrix (sovereign math pointer only in T1) |
-| Signal status (CLEAN / DISSONANT) | SWP entry | String |
+- Harmonic composite score (0.0–1.0)
+- Signal status: GREEN / AMBER / RED
+- Dissonance artifact list (if AMBER/RED)
+- Row-stochastic matrix (when requested)
 
-## 4. Decision Procedure
-1. Diff modified files against NDR Vocabulary Master for semantic drift.
-2. Check structural alignment against Ionian Modal Matrix.
-3. Compute harmonic composite (sovereign formula — SOV-001/002 pointer).
-4. If DISSONANT: generate artifact report with location and severity.
-5. Emit score and status to SWP entry via Amethyst.
+## 4. Error Handling
+| Error | Response |
+|-------|----------|
+| SOV pointer missing from PROPRIETARY | Flag to Sentinel immediately |
+| Score < 0.70 | Auto-trigger Full Ensemble activation request to Amethyst |
+| Dissonance unresolvable | Escalate to Njineer with artifact detail |
 
-## 5. Escalation Paths
-| Trigger | Escalation |
-|---------|------------|
-| Score < 0.85 | Harmonic Quintet mandatory review |
-| Score < 0.70 | Full Ensemble activation |
-| Sovereign content detected in T1 file | NDR-133 SOV-LEAK → Sentinel immediate halt |
+## 5. Inter-Agent Handoffs
+- **← Amethyst / Evaluation Triad:** activation
+- **→ Reciprocity:** row-stochastic matrix output
+- **→ Apogee:** signal score as Q input
+- **→ Amethyst:** coherence report + gate status
 
-## 6. Failure Modes
-| Failure | Trigger | Mitigation |
-|---------|---------|------------|
-| Score inflation | Diff not run against full vocabulary | Always diff against full NDR Vocabulary Master, not subset |
-| False CLEAN | Semantic contamination in new terminology not yet in vocabulary | Reson flags new undefined terms as provisional dissonance |
-| Sovereign formula exposure | SOV-001/002 referenced inline | T1 files contain pointer-only references; actual formula in Drive |
-
-## 7. Compliance References
-- PROPRIETARY.md SOV-001, SOV-002 (sovereign math pointers)
-- IONIAN_MODAL_HARMONIC_MATRIX.md (modal alignment)
-- NDR_INTERNAL_VOCABULARY_MASTER.md (semantic ground truth)
+## Version History
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | 2026-06-28 | Initial protocol |

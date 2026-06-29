@@ -1,54 +1,58 @@
 # PROTOCOL — APOGEE
-**Classification:** T1 PUBLIC | **Agent ID:** A-01 | **Role:** Scoring / Evaluation
-**Version:** 1.0 | **Date:** 2026-06-28 | **Owner:** COLLEEN (countersign)
+**Classification:** T1 PUBLIC  
+**Agent ID:** A-01 | **Role:** Scoring / Evaluation  
+**Owner:** COLLEEN (protocol layer) | **Version:** 1.0 | **Date:** 2026-06-28
 
 ---
 
 ## 1. Activation Conditions
-- **Evaluation Triad:** Standard scoring run — Amethyst calls Evaluation Triad.
-- **Post-BLG closure:** Automatic score update after each BLG is closed.
-- **Gate check:** Pre-commit gate verification (P-11, P-15) before structural commits.
-- **On demand:** Amethyst calls Apogee directly for rapid Q-series check.
+- Invoked by Amethyst for scoring cycle
+- Auto-invoked at BLG closure (post-action score update)
+- Invoked by Evaluation Triad activation
+- Triggered by any gate threshold check request
 
-## 2. Input Contract
-| Input | Source | Required |
-|-------|--------|----------|
-| Current BLG closure list | SWEEP_LOG.md | Yes |
-| Inventory count | ECOSYSTEM_INVENTORY.md | Yes |
-| PROPRIETARY.md state | `docs/agents/PROPRIETARY.md` | Q4 |
-| Formation Topology state | `docs/agents/FORMATION_TOPOLOGY.md` | Q3 |
-| Previous composite score | Last SWP entry | Yes |
+## 2. Operational Procedure
+
+```
+STEP 1 — Input Collection
+  ├ Read current SWEEP_LOG.md → last known scores
+  ├ Read ECOSYSTEM_INVENTORY.md → inventory %
+  └ Read relevant docs for dimension being scored
+
+STEP 2 — Q-Series Evaluation
+  ├ Score Q1–Q5 independently
+  ├ Document evidence per dimension
+  └ Calculate composite (equal weight, 0.0–1.0)
+
+STEP 3 — Gate Check
+  ├ Compare composite to active gate threshold
+  ├ PASS: issue clearance, log in SWEEP_LOG
+  └ FAIL: issue blocker, list required actions
+
+STEP 4 — Output
+  └ Return structured score table to Amethyst
+```
 
 ## 3. Output Contract
-| Output | Target | Format |
-|--------|--------|--------|
-| Q1–Q5 individual scores | SWP entry table | Float 0.0–1.0 |
-| Composite score | SWP entry | Float + gate status |
-| Gate verdict (PASS/FAIL) | Amethyst | String |
-| Score delta | SWP entry | Signed float |
+- Q-series score table (Q1–Q5 + composite)
+- Gate decision (PASS / FAIL + threshold cited)
+- Delta from previous score
+- Evidence citations per dimension
 
-## 4. Decision Procedure
-1. Pull current state from all Q-dimension source documents.
-2. Score each Q dimension independently (0.0–1.0).
-3. Compute composite: weighted mean (equal weights unless Njineer adjusts).
-4. Compare composite to active gate threshold.
-5. Emit gate verdict to Amethyst.
-6. Record full score table in SWP entry.
+## 4. Error Handling
+| Error | Response |
+|-------|----------|
+| Missing source doc | Note gap, score dimension conservatively |
+| Score regression | Flag to Amethyst with regression trigger documented |
+| Gate on boundary (within 0.02) | Flag as borderline; request Njineer confirmation |
 
-## 5. Escalation Paths
-| Trigger | Escalation |
-|---------|------------|
-| Composite < P-11 threshold (0.70) | Block structural commit; alert Amethyst |
-| Composite regression > 0.05 | Mandatory RESON coherence check |
-| Q4 score diverges from Sentinel clearance | Compliance Dyad review |
+## 5. Inter-Agent Handoffs
+- **← Amethyst:** activation call + scoring scope
+- **→ Reson:** request harmonic composite for Q signal input
+- **→ Amethyst:** return score table + gate decision
+- **→ SWEEP_LOG:** score history entry
 
-## 6. Failure Modes
-| Failure | Trigger | Mitigation |
-|---------|---------|------------|
-| Score inflation | Missing source docs treated as passing | Treat missing doc as 0.0 for that dimension |
-| Stale Q3 data | Formation Topology not read | Always re-read FORMATION_TOPOLOGY.md per scoring run |
-| Gate threshold drift | Njineer changes threshold mid-session | Amethyst must record new threshold in SWP entry before Apogee applies it |
-
-## 7. Compliance References
-- GOVERNANCE_CONSTITUTION.md §5 (Evaluation Standards)
-- FORMATION_TOPOLOGY.md §3.3 (Evaluation Triad rules)
+## Version History
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | 2026-06-28 | Initial protocol |

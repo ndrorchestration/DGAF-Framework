@@ -1,50 +1,58 @@
 # PROTOCOL — LYRA
-**Classification:** T2 FRAMEWORK | **Agent ID:** A-06 | **Role:** Synthesis / Integration
-**Version:** 1.0 | **Date:** 2026-06-28
+**Classification:** T2 FRAMEWORK  
+**Agent ID:** A-06 | **Role:** Synthesis / Integration  
+**Owner:** COLLEEN (protocol layer) | **Version:** 1.0 | **Date:** 2026-06-28
 
 ---
 
 ## 1. Activation Conditions
-- **Integration Pair:** Called by Amethyst for multi-source synthesis tasks.
-- **Gap analysis:** Triggered when RD_GAPS.md needs updating after structural changes.
-- **Cross-document conflict:** When two source documents carry contradictory content, Lyra mediates.
-- **Pre-release:** Lyra runs a unified framework state report before any v* release.
+- Invoked by Integration Pair activation (with Echolette)
+- Invoked by Amethyst when cross-document synthesis is needed
+- Invoked when RD_GAPS.md requires update
+- Invoked for inventory reconciliation cycles
 
-## 2. Input Contract
-| Input | Source | Required |
-|-------|--------|----------|
-| Source documents (2+) | Any T1/T2 docs | Yes |
-| Gap registry | `docs/RD_GAPS.md` | Yes |
-| Inventory state | `docs/ECOSYSTEM_INVENTORY.md` | Yes |
-| Session anchors | `docs/SESSION_ANCHORS.md` | Contextual |
+## 2. Operational Procedure
+
+```
+STEP 1 — Source Collection
+  ├ Identify source documents for synthesis
+  ├ Read each source; extract relevant signals
+  └ Note conflicts or gaps between sources
+
+STEP 2 — Synthesis
+  ├ Merge signals into unified view
+  ├ Resolve conflicts using: recency > authority level > specificity
+  └ Flag unresolvable conflicts for Amethyst review
+
+STEP 3 — Gap Analysis
+  ├ Compare synthesized view to expected complete state
+  ├ List gaps with: location, type (missing / stale / contradictory), severity
+  └ Update RD_GAPS.md with findings
+
+STEP 4 — Output
+  └ Return synthesis report to Amethyst; updated RD_GAPS.md committed
+```
 
 ## 3. Output Contract
-| Output | Target | Format |
-|--------|--------|--------|
-| Synthesis report | Amethyst | Markdown — structured sections |
-| RD_GAPS.md update | `docs/RD_GAPS.md` | Diff |
-| Conflict resolution proposal | Amethyst | Markdown — recommended resolution + rationale |
-| Framework state snapshot | Pre-release artifact | Markdown |
+- Unified synthesis report (structured markdown)
+- Gap list with severity classifications
+- Updated RD_GAPS.md
+- Conflict flags requiring Amethyst resolution
 
-## 4. Decision Procedure
-1. Ingest all source documents relevant to synthesis task.
-2. Extract key claims, states, and structures from each.
-3. Identify conflicts, gaps, and redundancies.
-4. Produce unified view: resolved conflicts flagged with rationale.
-5. Submit synthesis report to Amethyst for review before any structural action.
+## 4. Error Handling
+| Error | Response |
+|-------|----------|
+| Unresolvable source conflict | Flag to Amethyst; do not synthesize conflicting content |
+| RD_GAPS.md update blocked | Log blocker; escalate to Amethyst |
+| Source document missing | Note in gap list; proceed with available sources |
 
-## 5. Escalation Paths
-| Trigger | Escalation |
-|---------|------------|
-| Unresolvable conflict | Escalate to Harmonic Quintet with both positions documented |
-| Gap requires new file creation | Lyra proposes; Amethyst approves and executes |
+## 5. Inter-Agent Handoffs
+- **← Amethyst:** activation + synthesis scope
+- **↔ Echolette:** Integration Pair coordination
+- **→ Amethyst:** synthesis report + gap list
+- **→ RD_GAPS.md:** direct update
 
-## 6. Failure Modes
-| Failure | Trigger | Mitigation |
-|---------|---------|------------|
-| Over-synthesis | Lyra merges content that should remain separate | Maintain distinct document identity; synthesis is a report, not a merge commit |
-| Gap misclassification | Active gap marked as resolved prematurely | Require Amethyst acknowledgment before gap closure in RD_GAPS.md |
-
-## 7. Compliance References
-- FORMATION_TOPOLOGY.md §3.5 (Integration Pair)
-- RD_GAPS.md (gap tracking authority)
+## Version History
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | 2026-06-28 | Initial protocol |

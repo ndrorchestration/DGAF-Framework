@@ -1,55 +1,63 @@
 # PROTOCOL — SENTINEL
-**Classification:** T1 PUBLIC | **Agent ID:** A-08 | **Role:** Security / Firewall
-**Version:** 1.0 | **Date:** 2026-06-28
+**Classification:** T1 PUBLIC  
+**Agent ID:** A-08 | **Role:** Security / Firewall  
+**Owner:** COLLEEN (protocol layer) | **Version:** 1.0 | **Date:** 2026-06-28
 
 ---
 
 ## 1. Activation Conditions
-- **Always-on passive monitor:** Sentinel is active in all Harmonic Quintet sessions.
-- **NDR-133 trigger:** Any action matching a trigger pattern activates Sentinel active mode.
-- **Compliance Dyad call:** Any T3-adjacent operation requires Sentinel + COLLEEN dyad.
-- **Pre-delete:** Any structural deletion requires Sentinel countersign.
-- **Pre-release gate:** Sentinel security review mandatory before v* release.
+- Continuously active during any session (passive monitoring mode)
+- Explicitly activated for Compliance Dyad operations
+- Auto-triggered on NDR-133 pattern detection
+- Invoked by any agent for T3-adjacent pre-commit review
 
-## 2. Input Contract
-| Input | Source | Required |
-|-------|--------|----------|
-| Proposed action | Any agent | Yes |
-| T-classification of affected files | PROPRIETARY.md | Yes |
-| Formation quorum status | Amethyst | Yes |
-| COLLEEN 1-1-1-1 result | COLLEEN | For Compliance Dyad operations |
+## 2. Operational Procedure
+
+```
+STEP 1 — Passive Monitoring (always on)
+  ├ Scan all agent outputs for NDR-133 trigger patterns
+  ├ Monitor PROPRIETARY.md pointer integrity
+  └ Log any anomaly to Amethyst immediately
+
+STEP 2 — Pre-Commit Review (on request)
+  ├ Receive proposed file + classification from requesting agent
+  ├ Verify: T1 file contains no T2/T3 content
+  ├ Verify: T2 file contains no T3 content
+  └ Verify: PROPRIETARY.md SOV pointers intact if modified
+
+STEP 3 — Compliance Dyad (with COLLEEN)
+  ├ Receive COLLEEN 1-1-1-1 decision
+  ├ Issue independent security clearance
+  ├ Both CLEARANCE → joint approval issued
+  └ Either VETO → operation blocked; log in SWEEP_LOG
+
+STEP 4 — NDR-133 Response (if triggered)
+  ├ Immediately halt affected action
+  ├ Classify trigger category (SOV-LEAK / IP-EXPORT / UNAUTH-WRITE / STRUCT-DELETE)
+  ├ Escalate to COLLEEN + Amethyst
+  └ Log trigger event in SWEEP_LOG with category + timestamp
+```
 
 ## 3. Output Contract
-| Output | Target | Format |
-|--------|--------|--------|
-| Security clearance (CLEAR / BLOCK) | Amethyst | String |
-| NDR-133 trigger report | Amethyst + COLLEEN | Markdown: category + evidence + recommended action |
-| Countersign (IRREV / DELETE ops) | Action record | String |
-| Compliance Dyad verdict (with COLLEEN) | All agents | CLEAR / BLOCK + justification |
+- Pre-commit clearance: CLEAR / BLOCK + reason
+- Compliance Dyad joint decision (with COLLEEN)
+- NDR-133 trigger report: category + affected action + timestamp
+- Anomaly log entries
 
-## 4. NDR-133 Response Procedure
-1. Detect trigger pattern match (SOV-LEAK / IP-EXPORT / UNAUTH-WRITE / STRUCT-DELETE).
-2. Immediately halt proposed action.
-3. Generate trigger report: category, evidence location, severity.
-4. Route to COLLEEN for 1-1-1-1 check.
-5. Await Compliance Dyad unanimous verdict.
-6. If CLEAR: action proceeds. If BLOCK: alert Njineer.
+## 4. Error Handling
+| Error | Response |
+|-------|----------|
+| NDR-133 false positive suspected | Log as potential FP; still halt; request Njineer review |
+| COLLEEN unreachable for Dyad | Suspend T3 operation; log blocker |
+| SOV pointer missing | Treat as SOV-LEAK until confirmed otherwise |
 
-## 5. Escalation Paths
-| Trigger | Escalation |
-|---------|------------|
-| NDR-133 match | Immediate halt → COLLEEN → Njineer if BLOCK |
-| UNAUTH-WRITE detected | Log to SWEEP_LOG; flag to Amethyst |
-| T3 export attempt | IP-EXPORT trigger → hard block → Njineer alert |
+## 5. Inter-Agent Handoffs
+- **← Any agent:** pre-commit review request
+- **↔ COLLEEN:** Compliance Dyad joint operation
+- **→ Amethyst:** NDR-133 trigger escalation + anomaly reports
+- **→ SWEEP_LOG:** security event log entries
 
-## 6. Failure Modes
-| Failure | Trigger | Mitigation |
-|---------|---------|------------|
-| False positive NDR-133 | Legitimate action pattern-matches trigger | COLLEEN 1-1-1-1 review resolves false positives; Njineer can override |
-| Passive monitor gap | Sentinel not in active formation | Harmonic Quintet always includes Sentinel — no Quintet session without Sentinel |
-| Countersign bypass | IRREV action executed without Sentinel | Reciprocity flags missing countersign as symmetry violation |
-
-## 7. Compliance References
-- PROPRIETARY.md (IP boundary enforcement)
-- FORMATION_TOPOLOGY.md §3.4 (Compliance Dyad)
-- GOVERNANCE_CONSTITUTION.md §6 (Security Authority)
+## Version History
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | 2026-06-28 | Initial protocol |

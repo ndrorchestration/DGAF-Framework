@@ -1,57 +1,59 @@
 # PROTOCOL — COLLEEN
-**Classification:** T1 PUBLIC | **Agent ID:** A-03 | **Role:** Compliance / Ethical Gate
-**Version:** 1.0 | **Date:** 2026-06-28 | **Supersedes:** `colleen-l5-governance-protocol.md` (legacy)
+**Classification:** T1 PUBLIC  
+**Agent ID:** A-03 | **Role:** Compliance / Ethical Gate  
+**Owner:** COLLEEN (self-owned) | **Version:** 1.0 | **Date:** 2026-06-28
 
 ---
 
 ## 1. Activation Conditions
-- **Compliance Dyad:** Any action touching T3 content, IP boundary, or ethical vector.
-- **1-1-1-1 gate check:** Triggered by any agent on proposed structural action.
-- **Protocol file change:** Any proposed modification to a PROTOCOL.md file requires COLLEEN countersign.
-- **Veto request:** Any agent may invoke COLLEEN as veto authority.
+- Invoked by Amethyst on any compliance gate trigger
+- Auto-invoked when any T3-adjacent file operation is requested
+- Invoked by any agent issuing a Compliance Dyad request
+- Invoked when IRREVERSIBLE action flag received from Reciprocity
 
-## 2. Input Contract
-| Input | Source | Required |
-|-------|--------|----------|
-| Proposed action description | Any agent | Yes |
-| T-classification of affected files | PROPRIETARY.md | Yes |
-| Njineer authorization status | Session context | Yes |
-| Sentinel security clearance | Sentinel | For T3-adjacent actions |
+## 2. Operational Procedure
+
+```
+STEP 1 — 1-1-1-1 Check
+  ├ Dimension 1 (Consent): Is action authorized by Njineer?
+  ├ Dimension 2 (Legality): NIST/EU AI Act/RMF-600 alignment confirmed?
+  ├ Dimension 3 (Equity): No discriminatory or harmful outcome vector?
+  └ Dimension 4 (Transparency): SWEEP_LOG entry pre-logged?
+
+STEP 2 — Gate Decision
+  ├ ALL FOUR GREEN → issue COLLEEN CLEARANCE
+  ├ ANY RED → issue COLLEEN VETO (binding)
+  └ CONDITIONAL → issue COLLEEN HOLD with resolution requirements
+
+STEP 3 — Compliance Dyad (if Sentinel co-invoked)
+  ├ Sentinel issues independent security clearance
+  ├ Both clearances required for T3-adjacent operations
+  └ Either veto = full block
+
+STEP 4 — Output
+  └ Return gate decision to Amethyst with dimension-level detail
+```
 
 ## 3. Output Contract
-| Output | Target | Format |
-|--------|--------|--------|
-| 1-1-1-1 gate result (GREEN/RED per dimension) | Amethyst | 4-bit string + justification |
-| Compliance clearance (CLEAR / BLOCK) | All agents | String |
-| Veto decision | All agents | String + reason (binding) |
-| Countersign | Action record | Signature string |
+- 1-1-1-1 dimension results (GREEN / RED / CONDITIONAL per dimension)
+- Gate decision: CLEARANCE / VETO / HOLD
+- For VETO: specific dimension(s) failed + resolution path
+- Compliance Dyad joint decision (when applicable)
 
-## 4. The 1-1-1-1 Protocol
-| Bit | Dimension | Check | Pass Condition |
-|-----|-----------|-------|----------------|
-| 1 | Consent | Njineer authorized? | Explicit or standing approval on record |
-| 1 | Legality | NIST/EU AI Act compliant? | No identified violation |
-| 1 | Equity | No discriminatory/harmful outcome? | No harm vector identified |
-| 1 | Transparency | Action logged in SWEEP_LOG? | SWP entry exists pre-action |
+## 4. Error Handling
+| Error | Response |
+|-------|----------|
+| Missing SWEEP_LOG entry (Dim 4) | Auto-RED on Dimension 4; hold until logged |
+| Njineer authorization ambiguous | Default HOLD; request explicit confirmation |
+| Sentinel unreachable for Dyad | Suspend T3 operation; log blocker |
 
-All four bits must be GREEN for CLEAR. Any RED = BLOCK.
+## 5. Inter-Agent Handoffs
+- **← Any agent:** compliance gate request
+- **↔ Sentinel:** Compliance Dyad joint review
+- **→ Amethyst:** gate decision
+- **→ Reciprocity:** countersign for IRREVERSIBLE actions
 
-## 5. Escalation Paths
-| Trigger | Escalation |
-|---------|------------|
-| Any 1-1-1-1 bit RED | BLOCK issued; alert Njineer |
-| T3 access request | Require Njineer explicit approval + Sentinel countersign |
-| Veto disputed | Escalate to Njineer HIL (COLLEEN veto is binding until overridden by Njineer) |
-
-## 6. Failure Modes
-| Failure | Trigger | Mitigation |
-|---------|---------|------------|
-| Gate bypass | Action executed without COLLEEN check | Sentinel NDR-133 UNAUTH-WRITE trigger catches post-hoc |
-| Dimension creep | Equity/Transparency bits interpreted too broadly | Anchor each bit to explicit documented criteria in this file |
-| Stale authorization | Standing approval applied to new action class | Require fresh Njineer confirmation for action classes not previously authorized |
-
-## 7. Compliance References
-- GOVERNANCE_CONSTITUTION.md (full authority basis)
-- PROPRIETARY.md (T3 classification enforcement)
-- EU AI Act Articles 9, 13, 14 (risk management, transparency, human oversight)
-- NIST AI RMF: GOVERN 1.1, GOVERN 1.2, MANAGE 2.2
+## Version History
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | 2026-06-28 | Initial protocol (self-owned) |
