@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://dgaf.ndrorchestration.com/schemas/ahg_heartbeat.json",
+  "title": "AHG Heartbeat Vector",
+  "description": "Compressed cognitive signal emitted by each DGAF agent to the AHG Sidecar Monitor per turn. Only D_e enters S(t). D_explore and D_correct are tracked separately. Schema v1.0 - P-42 AHG v1.3.",
+  "version": "1.0",
+  "pattern": "P-42",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "agent_id",
+    "turn_id",
+    "timestamp_utc",
+    "d_e",
+    "d_explore",
+    "d_correct",
+    "novelty",
+    "constraint_count",
+    "total_constraints",
+    "revision_count",
+    "total_turns"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Heartbeat schema version"
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for the emitting agent (e.g. Herald, DemiJoule, Amethyst)"
+    },
+    "turn_id": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Monotonic turn counter"
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp when heartbeat was emitted"
+    },
+    "d_e": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Destabilizing entropy signal [0,1]. Enters S(t). Represents hallucinations, off-task loops, contradictions."
+    },
+    "d_explore": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Exploratory divergence signal [0,1]. Excluded from S(t). Preserved - feeds Novelty."
+    },
+    "d_correct": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Corrective dissent signal [0,1]. Excluded from S(t). Preserved - fuel for Apogee Auditor archetype."
+    },
+    "novelty": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Proportion of turn content not present in prior turns [0,1]. Enters S(t) as N."
+    },
+    "constraint_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of active blocking constraints this agent is operating under this turn"
+    },
+    "total_constraints": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total constraints defined for this agent. Used to compute C fraction = constraint_count / total_constraints."
+    },
+    "revision_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of self-corrections or corrections to other agents this turn. Enters S(t) as R."
+    },
+    "total_turns": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Total turns elapsed so far. Used to normalise revision rate R = revision_count / total_turns."
+    },
+    "phase_space": {
+      "type": "object",
+      "description": "Optional 3D Cognitive Phase Space context vector (AHG_ARCHITECTURE.md \u00a72.7). Not used in phi computation but available for Tribunal recovery path selection.",
+      "properties": {
+        "exploration": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "0=Exploitation, 1=Exploration"
+        },
+        "dissent": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "0=Consensus, 1=Dissent"
+        },
+        "uncertainty": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "0=Confidence, 1=Uncertainty"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional agent-specific metadata for trace/audit purposes",
+      "additionalProperties": true
+    }
+  },
+  "examples": [
+    {
+      "schema_version": "1.0",
+      "agent_id": "Herald",
+      "turn_id": 42,
+      "timestamp_utc": "2026-06-29T02:49:00Z",
+      "d_e": 0.05,
+      "d_explore": 0.72,
+      "d_correct": 0.10,
+      "novelty": 0.65,
+      "constraint_count": 1,
+      "total_constraints": 8,
+      "revision_count": 0,
+      "total_turns": 42,
+      "phase_space": { "exploration": 0.80, "dissent": 0.55, "uncertainty": 0.40 },
+      "metadata": { "archetype_hint": "Explorer" }
+    },
+    {
+      "schema_version": "1.0",
+      "agent_id": "DemiJoule",
+      "turn_id": 42,
+      "timestamp_utc": "2026-06-29T02:49:01Z",
+      "d_e": 0.02,
+      "d_explore": 0.10,
+      "d_correct": 0.45,
+      "novelty": 0.15,
+      "constraint_count": 3,
+      "total_constraints": 8,
+      "revision_count": 2,
+      "total_turns": 42,
+      "phase_space": { "exploration": 0.20, "dissent": 0.70, "uncertainty": 0.30 },
+      "metadata": { "archetype_hint": "Sentinel" }
+    }
+  ]
+}
