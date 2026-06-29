@@ -5,6 +5,44 @@
 
 ---
 
+## Entry SWP-005 — Phase 5: KB Layer Seed (All Agents)
+**Date:** 2026-06-28  
+**Time:** ~23:41 EDT  
+**Operator:** Njineer + Amethyst (meta-orchestrator)  
+**Formation:** Harmonic Quintet (Amethyst, Apogee, COLLEEN, Reson, Sentinel)
+
+### Action
+Created `KB_SEED.md` for all 10 agents. Each seed contains: role summary, primary knowledge domains, active context pointers, key patterns, known constraints, and Google Drive/NotebookLM reference stubs.
+
+### Files Created
+| Agent | Path |
+|-------|------|
+| Amethyst | `docs/agents/amethyst/KB_SEED.md` |
+| Apogee | `docs/agents/apogee/KB_SEED.md` |
+| Reciprocity | `docs/agents/reciprocity/KB_SEED.md` |
+| COLLEEN | `docs/agents/colleen/KB_SEED.md` |
+| Reson | `docs/agents/reson/KB_SEED.md` |
+| Echolette | `docs/agents/echolette/KB_SEED.md` |
+| Lyra | `docs/agents/lyra/KB_SEED.md` |
+| Herald | `docs/agents/herald/KB_SEED.md` |
+| Sentinel | `docs/agents/sentinel/KB_SEED.md` |
+| Demi-Joule | `docs/agents/demi-joule/KB_SEED.md` |
+
+### Inventory Delta
+- Files added: 10 (KB_SEED.md × 10)
+- Running total: 37/66 (56%)
+
+### Apogee Score (projected)
+| Metric | Pre | Post (est.) | Delta |
+|--------|-----|-------------|-------|
+| Q2 — All agents have backing spec | 0.91 | 0.95 | +0.04 |
+| **Composite** | ~0.93 | **~0.95** | **+0.02** |
+
+### RESON Signal
+KB layer seeded — harmonic coherence across agent identity nodes now grounded. Signal chain complete at knowledge-seed level.
+
+---
+
 ## Entry SWP-004 — Phase 4: FORMATION_TOPOLOGY.md
 **Date:** 2026-06-28  
 **Time:** ~23:39 EDT  
@@ -12,25 +50,15 @@
 **Formation:** Harmonic Quintet (Amethyst, Apogee, COLLEEN, Reson, Sentinel)
 
 ### Action
-Created `docs/agents/FORMATION_TOPOLOGY.md` — canonical formation classification document.  
-Defines all named formations, member composition, activation conditions, authority scope, and topology algebra.
+Created `docs/agents/FORMATION_TOPOLOGY.md` — canonical formation classification document.
 
 ### Commit
-`(see push)` — `docs/SWEEP_LOG.md` + `docs/agents/FORMATION_TOPOLOGY.md`
+`4a872a5` — `docs/SWEEP_LOG.md` + `docs/agents/FORMATION_TOPOLOGY.md`
 
 ### Closed BLGs
 | BLG-ID | Description | Status |
 |--------|-------------|--------|
 | BLG-005 | FORMATION_TOPOLOGY.md undefined | ✅ CLOSED |
-
-### Apogee Score (projected)
-| Metric | Pre | Post (est.) | Delta |
-|--------|-----|-------------|-------|
-| Q3 — Authority boundaries | 0.85 | 0.92 | +0.07 |
-| **Composite** | 0.918 | **~0.93** | **+0.01** |
-
-### COLLEEN Signal
-Ethical dimension gate: COLLEEN 1-1-1-1 GREEN — formation boundary spec eliminates ambiguous authority overlap.
 
 ### Inventory Delta
 - Files added: 1 (FORMATION_TOPOLOGY.md)
@@ -42,7 +70,7 @@ Ethical dimension gate: COLLEEN 1-1-1-1 GREEN — formation boundary spec elimin
 **Date:** 2026-06-28  
 **Time:** ~23:33 EDT  
 **Operator:** Njineer + Amethyst (meta-orchestrator)  
-**Formation:** Harmonic Quintet (Amethyst, Apogee, COLLEEN, Reson, Sentinel)
+**Formation:** Harmonic Quintet
 
 ### Action
 Created `docs/agents/PROPRIETARY.md` — sovereign IP boundary document.
@@ -64,11 +92,8 @@ Created `docs/agents/PROPRIETARY.md` — sovereign IP boundary document.
 
 **Gate P-15 (≥ 0.90): PASSED**
 
-### RESON Signal
-Composite: 0.93 — clean. No sovereign content leaked into T3 stubs.
-
 ### Inventory Delta
-- Files added: 1 (PROPRIETARY.md)
+- Files added: 1
 - Running total: 26/66 (39%)
 
 ---
@@ -76,38 +101,29 @@ Composite: 0.93 — clean. No sovereign content leaked into T3 stubs.
 ## Entry SWP-002 — BLG-004 Registry Deduplication
 **Date:** 2026-06-28  
 **Time:** ~22:00 EDT  
-**Operator:** Njineer + Amethyst  
-**Formation:** Harmonic Quintet
-
-### Action
-Resolved registry duplication. Promoted `ECOSYSTEM_REGISTRY.md` as SSoT canonical. Deleted `canonical-agent-registry.md`. Updated `ROSTER.md` to v1.1.
+**Operator:** Njineer + Amethyst
 
 ### Commits
-- `bc59f70` — `docs/agents/ECOSYSTEM_REGISTRY.md` + `ROSTER.md` v1.1
-- `a8718e8` — DELETE `docs/agents/canonical-agent-registry.md`
+- `bc59f70` — ECOSYSTEM_REGISTRY + ROSTER v1.1
+- `a8718e8` — DELETE canonical-agent-registry.md
 
 ### Closed BLGs
 | BLG-ID | Description | Status |
 |--------|-------------|--------|
 | BLG-004 | Registry deduplication | ✅ CLOSED |
 
-### Notes
-COLLEEN flagged canonical-agent-registry.md as orphaned post-ECOSYSTEM_REGISTRY creation. Sentinel confirmed no downstream pointer breakage before deletion.
-
 ---
 
 ## Entry SWP-001 — Phase 1 + Phase 2 Batch
 **Date:** 2026-06-28  
 **Time:** ~21:00 EDT  
-**Operator:** Njineer + Amethyst  
-**Formation:** Harmonic Quintet
+**Operator:** Njineer + Amethyst
 
 ### Action
-Phase 1: Created 9 missing SPEC stubs for agents (Apogee, Reciprocity, COLLEEN, Reson, Echolette, Lyra, Herald, Sentinel, Amethyst — consolidation).  
-Phase 2: Created 11 MEMORY.md files for all agents.
+Phase 1: 9 SPEC stubs. Phase 2: 11 MEMORY.md files.
 
 ### Commit
-`6b06502` — 20 files (9 SPEC + 11 MEMORY)
+`6b06502` — 20 files
 
 ### Closed BLGs
 | BLG-ID | Description | Status |
@@ -116,25 +132,19 @@ Phase 2: Created 11 MEMORY.md files for all agents.
 | BLG-002 | 11 MEMORY.md missing | ✅ CLOSED |
 
 ### Inventory Delta
-- Files added: 20
-- Pre-session total: 13/66 (20%)
-- Post-session total: 24/66 (36%)
-
-### Apogee Score (entry)
-Composite: ~0.83 / 1.0  
-Gate P-11 (≥ 0.70): PASSED
+- Pre-session: 13/66 (20%) → Post: 24/66 (36%)
 
 ---
 
-## Open Items (as of SWP-004)
-| BLG-ID | Description | Phase | Owner |
-|--------|-------------|-------|-------|
-| — | KB layer: 9 agents unseeded | Phase 5 | Amethyst |
-| — | Protocol files: 9 agents missing | Phase 5 | COLLEEN |
-| — | QA Rubric files: all 11 missing | Phase 5 | Reson |
-| — | Integration files: all 11 missing | Phase 5 | Amethyst |
+## Open Items (as of SWP-005)
+| Layer | Description | Phase | Owner |
+|-------|-------------|-------|-------|
+| Protocol | Protocol files: 9 agents missing | Phase 6 | COLLEEN |
+| QA Rubric | QA Rubric files: all 11 missing | Phase 6 | Reson |
+| Integration | Integration files: all 11 missing | Phase 6 | Amethyst |
 
-**All BLG-001 through BLG-005: CLOSED ✅**
+**All BLG-001 through BLG-005: CLOSED ✅**  
+**KB Layer: COMPLETE ✅ (10/10 seeded)**
 
 ---
 
