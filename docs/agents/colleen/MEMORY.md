@@ -1,68 +1,79 @@
-# COLLEEN — Session Memory
+# COLLEEN — Memory
 
-**Agent:** COLLEEN · **Role:** Prefect A / Institutional Anchor / Ethical Gate
-**Memory version:** v1.0 · **Initialized:** S073 · 2026-06-29
-**Classification:** T1 PUBLIC
-
----
-
-## Active State
-
-| Parameter | Value |
-|-----------|-------|
-| Last session | S072 SEALED |
-| 1-1-1-1 status (last) | FULL GREEN ✅ |
-| Constitution version | v1.0 (no amendments pending) |
-| Drive access (GAP-06/07/08) | ⚠️ FAILED S071 — retry queued S073 (FLAG-07) |
-| Stasis oversight | Active — window closes 2026-07-13 (14 days) |
-| Pending action | Drive retry GAP-06/07/08; PDMAL cascade (TEAM_WIKI) |
+**Agent ID:** A-05  
+**Classification:** T1 PUBLIC  
+**Last Updated:** 2026-06-29 (Phase 4 — 20-agent taxonomy integration; KB layer sealed)
 
 ---
 
-## 1-1-1-1 History
+## Current State Anchors
 
-| Session | C1 | C2 | C3 | C4 | Result |
-|---------|----|----|----|----|--------|
-| S069 | 1 | 1 | 1 | 1 | ✅ FULL GREEN |
-| S070 | 1 | 1 | 1 | 1 | ✅ FULL GREEN |
-| S071 | 1 | 1 | 1 | 1 | ✅ FULL GREEN |
-| S072 | 1 | 1 | 1 | 1 | ✅ FULL GREEN |
-
-**Streak:** 4 consecutive sessions FULL GREEN.
-
----
-
-## BLG Participation Log
-
-| BLG | COLLEEN Role | Session | Outcome |
-|-----|-------------|---------|--------|
-| BLG-001 (9 SPEC stubs) | Secondary sign-off | S072 | ✅ CLOSED |
-| BLG-002 (11 MEMORY.md) | Secondary sign-off | S072 | ✅ CLOSED |
-| BLG-003 (PROPRIETARY.md) | Co-author (IP classification review) | S072 | ✅ CLOSED |
-| BLG-004 (Registry dedup) | Secondary sign-off | S072 | ✅ CLOSED |
-| BLG-005 (FORMATION_TOPOLOGY) | Co-author (ethical gate mapping) | S072 | ✅ CLOSED |
+| Anchor | Value | Last Confirmed |
+|---|---|---|
+| L-Tier | L5 Auditor (Executor gate LOCKED) | 2026-06-29 |
+| TUE Status | LOCKED — Batch 1A not complete | 2026-06-29 |
+| Nova gate | LOCKED (TUE dependency) | 2026-06-29 |
+| Open BLGs | BLG-007 (Phase 5: 7-agent SPEC/MEMORY/QA) | 2026-06-29 |
+| Swarm composition | A-05, A-06, A-07, A-08, A-09 | 2026-06-29 |
+| Compliance Dyad | COLLEEN + Sentinel (active) | 2026-06-29 |
+| Trunk status | STABLE | 2026-06-29 |
+| KB layer | 16/16 T1/T2 ✅ COMPLETE | 2026-06-29 |
 
 ---
 
-## Continuity Anchors (current)
+## Session History (Relevant)
 
-| Anchor | Status |
-|--------|--------|
-| SESSION_ANCHORS.md S072 | ✅ SEALED |
-| GOVERNANCE_CONSTITUTION.md v1.0 | ✅ Active |
-| ECOSYSTEM_INVENTORY.md S072-SEAL | ✅ Current |
-| FLAG board (12 closed, 1 open) | ✅ Tracked |
-| Stasis window (expires 2026-07-13) | ⚠️ Active — 14 days |
-
----
-
-## Open COLLEEN Actions (S073)
-
-1. **FLAG-07 retry** — Drive GAP-06/07/08 re-attempt (HIGH)
-2. **PDMAL cascade** — TEAM_WIKI + WORKSPACE_BOOTSTRAP rewrite (HIGH)
-3. **Stasis secondary sign-off** — any extraction from P-12–P-132 cluster requires COLLEEN counter-sign
-4. **Apogee P-11 co-monitor** — observe attestation run on Vocab Master v1.3
+| Session | Key Event | Commit |
+|---|---|---|
+| 2026-06-28 | Phase 1+2: 9 SPEC + 11 MEMORY seeded | `6b06502` |
+| 2026-06-28 | BLG-004: ECOSYSTEM_REGISTRY + ROSTER v1.1 | `bc59f70` |
+| 2026-06-28 | PROPRIETARY.md established (BLG-003 closed) | `f9611da` |
+| 2026-06-29 | Phase 4: 20-agent taxonomy | `664c481` |
+| 2026-06-29 | Phase 4 KB: 14 KB files complete | `beb5f7a` |
+| 2026-06-29 | Inventory sync: ECOSYSTEM + PROPRIETARY | `64dfe74` |
+| 2026-06-29 | Amethyst reinforcement (KB + SPEC + INTEGRATION) | `22c3c57` |
+| 2026-06-29 | COLLEEN reinforcement (KB + SPEC + INTEGRATION) | current |
 
 ---
 
-*MEMORY.md · COLLEEN · v1.0 · S073 · 2026-06-29*
+## BLG Status
+
+| BLG-ID | Status |
+|---|---|
+| BLG-001 through BLG-006 | ✅ CLOSED |
+| BLG-007 | ⏳ OPEN — SPEC + MEMORY + QA Rubric for 7 new agents (Phase 5) |
+
+---
+
+## TUE Pre-condition Tracker
+
+| Pre-condition | Status |
+|---|---|
+| Batch 1A complete | ⏳ Phase 5 |
+| Protocol layer ≥50% | ⏳ Phase 6 |
+| Integration ≥1 per formation type | ⏳ Amethyst ✅, 4 more needed |
+| Apogee TUE audit ≥0.95 | ⏳ TUE session |
+| Reson TUE audit ≥0.90 | ⏳ TUE session |
+| No BLOCKING BLGs | ⏳ BLG-007 open |
+| Amethyst TUE declaration | ⏳ post all above |
+
+---
+
+## Open Queue (Phase 5)
+
+```
+Priority 1: SPEC + MEMORY + QA Rubric for 7 new agents
+            Perigee · Nova · Zenith · Ionia
+            The Librarian · The Auditor · The Actualizer
+            → closes BLG-007 → 66/96 = 69%
+
+Priority 2: Protocol layer build-out (Phase 6)
+            → TUE pre-condition 2 of 7
+
+Priority 3: A-14→A-19 names from Drive
+            → unlocks T3 KB stubs
+```
+
+---
+
+*Classification: T1 PUBLIC*
