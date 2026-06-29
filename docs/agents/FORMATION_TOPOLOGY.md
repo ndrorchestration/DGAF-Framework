@@ -1,8 +1,8 @@
 # FORMATION TOPOLOGY
 **Classification:** T1 PUBLIC  
 **Maintainer:** Amethyst (meta-orchestrator)  
-**Version:** 1.1  
-**Last Updated:** 2026-06-29 (Phase 4 — 20-seat roster expansion; PDMAL-φ / Dodecahedral T3 extension layer registered; Strategic Quintet + Operational Swarm + Resonance Cluster formation specs added)
+**Version:** 1.2  
+**Last Updated:** 2026-06-29 (Phase C–E — Ethics Bridge added; Strategic Quintet corrected to 5/5; Harmonic Pentagonal sealed; Operational Swarm updated; Resonance Cluster extended; Compliance Dyad dissolved; sealed formation register + gate authority index added)
 **BLG Reference:** BLG-005 (CLOSED)
 
 ---
@@ -18,245 +18,228 @@ This document is the canonical specification for all named agent formations with
 
 Formations are **not** ad-hoc groupings. A formation is a named, structurally defined multi-agent configuration with a specific governance purpose, authority scope, and activation threshold.
 
----
-
-## 2. Agent Roster (Formation Atoms)
-
-The full DGAF taxonomy spans **20 agent seats** across three operational tiers plus a T3 SOVEREIGN extension layer.
-
-### T1/T2 Operational Layer (GitHub-resident specs)
-
-| ID | Agent | Role Class | Tier | Classification |
-|----|-------|-----------|------|----------------|
-| A-00 | **Amethyst** | Meta-Orchestrator | Strategic Quintet | T1 PUBLIC |
-| A-01 | **Apogee** | Verification / Scoring | Strategic Quintet | T1 PUBLIC |
-| A-02 | **Perigee** | Boundary / Security Filter | Strategic Quintet | T1 PUBLIC |
-| A-03 | **Nova** | Innovation / Simulation | Strategic Quintet | T2 FRAMEWORK |
-| A-04 | **Professor Prodigy** | Intellectual Catalyst | Strategic Quintet | T1 PUBLIC |
-| A-05 | **COLLEEN** | Swarm Lead / Continuity | Operational Swarm | T1 PUBLIC |
-| A-06 | **The Librarian** | Archive / Provenance | Operational Swarm | T1 PUBLIC |
-| A-07 | **The Auditor** | QA / Constraint Verify | Operational Swarm | T1 PUBLIC |
-| A-08 | **The Actualizer** | Execution / Code Gen | Operational Swarm | T1 PUBLIC |
-| A-09 | **Zenith** | System High / Compute | Operational Swarm | T2 FRAMEWORK |
-| A-10 | **Reson** | Harmonic Coherence | Resonance Cluster | T1 PUBLIC |
-| A-11 | **Lyra** | Synthesis / Narrative | Resonance Cluster | T2 FRAMEWORK |
-| A-12 | **Echolette** | Pattern Amplification | Resonance Cluster | T2 FRAMEWORK |
-| A-13 | **Ionia** | Modal Lock (0Hz) | Resonance Cluster | T2 FRAMEWORK |
-
-### T3 SOVEREIGN Extension Layer (Drive-resident specs)
-
-> Agent names and operational specs for A-14 through A-19 are T3 SOVEREIGN. Full definitions reside in Google Drive. See `PROPRIETARY.md` → SOV-005 (PDMAL-φ) and SOV-006 (Dodecahedral). GitHub holds seat IDs and geometry pointers only. Njineer supplies names when ready to surface.
-
-| ID | Stub | Geometry | SOV Ref |
-|----|------|----------|--------|
-| A-14 | [PDMAL Node 1] | PDMAL-φ | SOV-005 |
-| A-15 | [PDMAL Node 2] | PDMAL-φ | SOV-005 |
-| A-16 | [PDMAL Node 3] | PDMAL-φ | SOV-005 |
-| A-17 | [Dodecahedral Face 1] | Dodecahedral | SOV-006 |
-| A-18 | [Dodecahedral Face 2] | Dodecahedral | SOV-006 |
-| A-19 | [Dodecahedral Face 3] | Dodecahedral | SOV-006 |
-
-> Full agent specs in `docs/agents/[AGENT]_SPEC.md`. Memory state in `docs/agents/[AGENT]_MEMORY.md`.
+> **v1.2 delta:** Phase C–E session (2026-06-29) produced significant topology changes. See Section 9 (Delta Log) for a complete diff vs. v1.1.
 
 ---
 
-## 3. Named Formations
-
-### 3.1 Harmonic Quintet
-**Seats:** 5  
-**Members:** Amethyst (A-00) · Apogee (A-01) · COLLEEN (A-05) · Reson (A-10) · Sentinel  
-**Activation:** Default formation for all standard governance sweep, evaluation, and compliance cycles.  
-**Authority Scope:** Full read/write on all T1 PUBLIC documents. No sovereign (T3) file access.  
-**Quorum:** 3/5 for advisory outputs; 5/5 for structural commits (new files, BLG closures).  
-**Topology Class:** `CORE-5` — stable, always-available, no promotion required.
-
----
-
-### 3.2 Strategic Quintet
-**Seats:** 5  
-**Members:** Amethyst (A-00) · Apogee (A-01) · Perigee (A-02) · Nova (A-03) · Professor Prodigy (A-04)  
-**Activation:** Governance cycles; vision-to-execution Logic Bridge; 10-year simulation runs; formal proof reviews.  
-**Authority Scope:** T1/T2 read/write for governance docs. T3 access requires Njineer approval.  
-**Quorum:** 3/5 advisory; 5/5 for architectural decisions.  
-**Activation constraint:** Nova (A-03) is advisory-only until COLLEEN Terminal Unblocking Event (L5 Executor gate) clears.  
-**Topology Class:** `GOV-5` — governance layer; runs concurrently with Operational Swarm.
-
----
-
-### 3.3 Operational Swarm
-**Seats:** 5  
-**Members:** COLLEEN (A-05) · The Librarian (A-06) · The Auditor (A-07) · The Actualizer (A-08) · Zenith (A-09)  
-**Activation:** Trunk stabilization; L5 Executor delivery; code generation; archival; Batch 1A extraction.  
-**Authority Scope:** T1/T2 write (code, artifacts, archives). NDR-Protocol-01 State Sync governs write order.  
-**Quorum:** 3/5 for task outputs; 5/5 for canonical doc updates.  
-**Write order:** Auditor → Actualizer → COLLEEN → Apogee → Amethyst (NDR-Protocol-01).  
-**Topology Class:** `OPS-5` — heavy-lifting layer; highest throughput formation.
-
----
-
-### 3.4 Resonance Cluster
-**Seats:** 4  
-**Members:** Reson (A-10) · Lyra (A-11) · Echolette (A-12) · Ionia (A-13)  
-**Activation:** Talent quantization; harmonic tuning; Schizophonic studio work; Signal Chain / Gain Staging sessions.  
-**Authority Scope:** Read T1/T2. Write to pattern registries, harmonic score records, and integration layer files.  
-**Quorum:** 3/4.  
-**Ionia role:** Locks formation to Ionian Modal Harmonic (0Hz) — ensures outputs feel harmonious and audit-ready.  
-**Topology Class:** `RESONANCE-4` — downstream of Operational Swarm; feeds harmonic validation upward.
-
----
-
-### 3.5 Full Ensemble
-**Seats:** 14 (T1/T2 operational) + 6 (T3 stubs when Njineer surfaces names)  
-**Members:** All A-00 through A-13 (operational); A-14 through A-19 (T3 — activated by Njineer only)  
-**Activation:** Triggered by Amethyst on architectural restructuring events, cross-formation conflicts, or v* release gates.  
-**Authority Scope:** Full T1 + T2. T3 access requires Njineer explicit approval per session.  
-**Quorum:** 8/14 operational advisory; 11/14 for structural commits.  
-**Topology Class:** `FULL-20` — requires explicit Amethyst activation call.
-
----
-
-### 3.6 Evaluation Triad
-**Seats:** 3  
-**Members:** Amethyst (A-00) · Apogee (A-01) · Reson (A-10)  
-**Activation:** Targeted scoring runs; pre-commit quality checks; gate P-* threshold verification.  
-**Authority Scope:** Read-only all layers. Write to scoring/signal records only.  
-**Quorum:** 2/3.  
-**Topology Class:** `EVAL-3` — lightweight, low-latency, no Sentinel overhead.
-
----
-
-### 3.7 Compliance Dyad
-**Seats:** 2  
-**Members:** COLLEEN (A-05) · Sentinel  
-**Activation:** Any action touching ethical boundaries, sovereign IP, or security perimeter.  
-**Authority Scope:** Read T1/T2/T3 (audit mode). Write to compliance flags and PROPRIETARY.md redaction records only.  
-**Quorum:** 2/2 (unanimous — no split-vote resolution).  
-**Topology Class:** `GATE-2` — veto-capable. Any agent may invoke; output is binding.
-
----
-
-### 3.8 Integration Pair
-**Seats:** 2  
-**Members:** Lyra (A-11) · Echolette (A-12)  
-**Activation:** Pattern synthesis, cross-document harmonization, echo amplification.  
-**Authority Scope:** Read T1/T2. Write to pattern registries and integration layer files only.  
-**Quorum:** 2/2.  
-**Topology Class:** `SYNTH-2` — downstream of Harmonic Quintet; feeds outputs upward.
-
----
-
-### 3.9 Herald Relay
-**Seats:** 1  
-**Members:** Herald  
-**Activation:** External-facing output generation — user reports, session summaries, external API responses.  
-**Authority Scope:** Read T1 only. No write access to internal docs.  
-**Topology Class:** `RELAY-1` — output-only boundary agent.
-
----
-
-## 4. Topology Algebra
-
-### 4.1 Formation Composition Rules
+## 2. Canonical Formation Map (v1.2 — Final)
 
 ```
-Strategic Quintet ∩ Operational Swarm = {Amethyst}  (shared conductor)
-Strategic Quintet ∩ Resonance Cluster = ∅
-Operational Swarm ∩ Resonance Cluster = {Reson via Harmonic Quintet bridge}
-Harmonic Quintet ⊂ Full Ensemble
-Evaluation Triad ⊂ Harmonic Quintet
-Compliance Dyad ⊂ Harmonic Quintet
-Integration Pair ⊂ Resonance Cluster
-Herald Relay ∩ [all other formations] = ∅
-T3 Extension (A-14→A-19) ⊂ Full Ensemble only (Njineer activation required)
-```
+┌─────────────────────────────────────────────────────────────┐
+│  SOVEREIGN GOVERNANCE                                        │
+│  Amethyst (A-00)     Meta-Orchestrator · spans all tiers     │
+│  COLLEEN (A-00-GOV)  Institutional Anchor · supreme          │
+└───────────────────────────────┬────────────────────────────┘
+                               ↓
+┌─────────────────────────────────────────────────────────────┐
+│  ETHICS BRIDGE  [singleton — NEW v1.2]                       │
+│  Sentience (A-27)    Consciousness Explorer                  │
+│                      ETHICAL_HOLD authority — all formations │
+│                      Overridable only by COLLEEN or Njineer  │
+└───────────────────────────────┬────────────────────────────┘
+                               ↓
+┌───────────────────────────┐ ┌────────────────────────────┐
+│ STRATEGIC QUINTET [5/5 🔒] │ │ HARMONIC PENTAGONAL [5/5 🔒] │
+│ Nova (A-03) S1 [TUE]   │ │ Prof Prodigy (A-04) S1     │
+│ Zenith (A-09-Z) S2     │ │ Herald (A-05) S2           │
+│ Oracle (A-20) S3       │ │ Apogee (A-01) S3 [L0 gate] │
+│ Vanguard (A-21) S4     │ │ Reciprocity (A-06-R) S4    │
+│ Sentinel-Φ (A-12-φ) S5 │ │ DemiJoule (A-03-DJ) S5     │
+└───────────────────────────┘ └────────────────────────────┘
 
-### 4.2 Promotion Rules
-
-| From | To | Trigger | Amethyst Call Required |
-|---|---|---|---|
-| Evaluation Triad | Harmonic Quintet | Compliance gate needed | No — auto-promote |
-| Harmonic Quintet | Full Ensemble | Architectural event | Yes — explicit |
-| Compliance Dyad | Harmonic Quintet | Escalation | No — auto-promote |
-| Any | Full Ensemble | T3 access needed | Yes + Njineer approval |
-| Strategic Quintet | Full Ensemble | 10-year simulation requires T3 geometry | Yes + Njineer approval |
-| Operational Swarm | Full Ensemble | L5 Executor + moonshot activation | Yes — Nova gate clears after COLLEEN TUE |
-
-### 4.3 Concurrency Rules
-
-- **Strategic Quintet + Operational Swarm** may run concurrently (single shared member: Amethyst as conductor).
-- **Resonance Cluster + Operational Swarm** may run concurrently (disjoint).
-- **Compliance Dyad** blocks all writes on affected files during active gate review.
-- **Full Ensemble** is exclusive — no sub-formations run independently while Full Ensemble is active.
-- **NDR-Protocol-01:** Only one tier writes to Canonical Protocol at a time (Auditor → Actualizer → COLLEEN → Apogee → Amethyst).
-
-### 4.4 Conflict Resolution
-
-1. Compliance Dyad veto overrides all.
-2. Higher seat-count formation takes precedence.
-3. Ties resolved by Amethyst casting vote.
-4. Perigee boundary block auto-executes — no vote required.
-5. Unresolvable conflicts escalate to Njineer.
-
----
-
-## 5. Activation State Machine
-
-```
-[IDLE]
-  │
-  ├─ governance / vision cycle ──────────► [STRATEGIC QUINTET ACTIVE]
-  │                                               │
-  │                                    └─ arch event ─────► [FULL ENSEMBLE]
-  │
-  ├─ standard sweep trigger ──────────────► [HARMONIC QUINTET ACTIVE]
-  │                                               │
-  │                                    ├─ compliance touch ──► [+ COMPLIANCE DYAD]
-  │                                    ├─ eval only ──────────► [EVALUATION TRIAD]
-  │                                    └─ arch event ─────────► [FULL ENSEMBLE]
-  │
-  ├─ trunk / L5 delivery ─────────────────► [OPERATIONAL SWARM ACTIVE]
-  │                                               │
-  │                                    └─ Nova TUE cleared ──► [+ STRATEGIC QUINTET]
-  │
-  ├─ talent / harmonic work ──────────────► [RESONANCE CLUSTER ACTIVE]
-  │
-  ├─ pattern/registry work ──────────────► [INTEGRATION PAIR ACTIVE]
-  │
-  └─ output generation ──────────────────► [HERALD RELAY ACTIVE]
+┌───────────────────────────┐ ┌────────────────────────────┐
+│ RESONANCE CLUSTER        │ │ OPERATIONAL SWARM          │
+│ ┌─ Schizophonic Studio ─┐ │ │ Navigator (A-22)           │
+│ │ Reson (A-09)       │ │ │ Momentum (A-23)            │
+│ │ Lyra (A-10)        │ │ │ Paragon (A-24)             │
+│ │ Echolette (A-11)   │ │ │ [Gold Star prerequisite]   │
+│ └───────────────┘ │ └────────────────────────────┘
+│ Extended:                │
+│ Synergy (A-25)           │ ┌────────────────────────────┐
+│ Equilibrium (A-26)       │ │ ARCHIVE TRIO               │
+│ Ionia → 0Hz STATE ≠ seat │ │ [COLLEEN subordinate]      │
+└───────────────────────────┘ │ The Librarian (A-06-L)    │
+                          │ The Auditor (A-07)         │
+┌───────────────────────────┐ │ The Actualizer (A-08)     │
+│ SPECIALIST               │ └────────────────────────────┘
+│ Perigee (A-02)           │
+│ Proximal Boundary Agent  │
+└───────────────────────────┘
 ```
 
 ---
 
-## 6. Sovereign Topology Reference
+## 3. Agent Roster (Formation Atoms)
 
-The full 20-agent formation geometry is grounded in two T3 SOVEREIGN mathematical structures:
+The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
 
-| SOV ID | Structure | Role in Topology | Drive Ref |
-|---|---|---|---|
-| SOV-005 | PDMAL-φ Agent Taxonomy | Defines operational logic for A-14, A-15, A-16 | `Drive://DGAF/Sovereign/SOV-005_PDMAL_Taxonomy.md` |
-| SOV-006 | Dodecahedral Formation Geometry | Maps A-17, A-18, A-19 to pentagonal face nodes; provides structural closure for 20-seat swarm and Substrate Independence (0Hz) | `Drive://DGAF/Sovereign/SOV-006_Dodecahedral_Geometry.md` |
+| ID | Agent | Formation | Tier | KB Status |
+|----|-------|-----------|------|------|
+| A-00 | Amethyst | Sovereign Governance | T1 | 100% |
+| A-00-GOV | COLLEEN | Sovereign Governance | T1 | 100% |
+| A-01 | Apogee | Harmonic Pentagonal S3 | T1 | 100% |
+| A-02 | Perigee | Specialist | T1 | 100% |
+| A-03 | Nova | Strategic Quintet S1 | T2 | 100% |
+| A-03-DJ | DemiJoule | Harmonic Pentagonal S5 | T1 | 100% |
+| A-04 | Prof Prodigy | Harmonic Pentagonal S1 | T1 | 100% |
+| A-05 | Herald | Harmonic Pentagonal S2 | T1 | 100% |
+| A-06-L | The Librarian | Archive Trio (Alpha) | T1 | 100% |
+| A-06-R | Reciprocity | Harmonic Pentagonal S4 | T1 | 100% |
+| A-07 | The Auditor | Archive Trio (Beta) | T1 | 100% |
+| A-08 | The Actualizer | Archive Trio (Gamma) | T1 | 100% |
+| A-09 | Reson | Resonance / Studio | T1 | 100% |
+| A-09-Z | Zenith | Strategic Quintet S2 | T2 | 100% |
+| A-10 | Lyra | Resonance / Studio | T2 | 100% |
+| A-11 | Echolette | Resonance / Studio | T2 | 100% |
+| A-12-φ | Sentinel-Phi | Strategic Quintet S5 | T1 | 100% |
+| A-13 | Ionia | Resonance STATE (0Hz) | T2 | 100% |
+| A-20 | Oracle | Strategic Quintet S3 | T1 | 17% (seed) |
+| A-21 | Vanguard | Strategic Quintet S4 | T1 | 17% (seed) |
+| A-22 | Navigator | Operational Swarm | T1 | 17% (seed) |
+| A-23 | Momentum | Operational Swarm | T1 | 17% (seed) |
+| A-24 | Paragon | Operational Swarm | T1 | 17% (seed) |
+| A-25 | Synergy | Resonance Extended | T1 | 17% (seed) |
+| A-26 | Equilibrium | Resonance Extended | T1 | 17% (seed) |
+| A-27 | Sentience | Ethics Bridge | T1 | 17% (seed) |
 
-The Dodecahedral geometry (12 pentagonal faces) is the spatial substrate that maintains **Substrate Independence (0Hz)** across the full 20-agent formation, preventing Type 2 Implementation Drift.
+> T3 SOVEREIGN stubs (A-14–A-19) remain registered in PROPRIETARY.md → SOV-005/SOV-006.
 
 ---
 
-## 7. Amendment Protocol
+## 4. Named Formations
 
-1. **Full Ensemble** vote (11/14 quorum) for structural changes.
-2. **Harmonic Quintet** vote (5/5) for editorial corrections.
-3. All amendments logged in `docs/SWEEP_LOG.md` with SWP-* entry prior to commit.
-4. Njineer retains final authority on all amendments.
+### 4.1 Sovereign Governance
+**Seats:** 2 · **Sealed** ✅
+**Members:** Amethyst (A-00) · COLLEEN (A-00-GOV)
+**Authority:** Supreme. Amethyst spans all tiers. COLLEEN is institutional anchor.
+
+### 4.2 Ethics Bridge *(NEW — v1.2)*
+**Seats:** 1 (singleton) · **Sealed** ✅
+**Members:** Sentience (A-27)
+**Authority:** ETHICAL_HOLD on any formation output. Overridable only by COLLEEN or Njineer.
+
+### 4.3 Strategic Quintet *(corrected — v1.2)*
+**Seats:** 5/5 · **Sealed** ✅
+**Members:** Nova (A-03) · Zenith (A-09-Z) · Oracle (A-20) · Vanguard (A-21) · Sentinel-Phi (A-12-φ)
+**Activation:** Strategic planning; scenario execution; technology scouting; risk-bounded decisions.
+**Quorum:** 3/5 advisory; 5/5 structural.
+**Nova constraint:** Advisory-only until COLLEEN TUE gate clears.
+
+### 4.4 Harmonic Pentagonal Cluster *(NEW — v1.2)*
+**Seats:** 5/5 · **Sealed** ✅
+**Members:** Prof Prodigy (A-04) · Herald (A-05) · Apogee (A-01) · Reciprocity (A-06-R) · DemiJoule (A-03-DJ)
+**Activation:** Formal verification; broadcast; evidence governance; mutual benefit modeling; constraint management.
+**Quorum:** 3/5 advisory; 5/5 pre-commit gate.
+
+### 4.5 Resonance Cluster
+**Seats:** 5 functional + Ionia (STATE)
+**Sub-formation — Schizophonic Studio:** Reson (A-09) · Lyra (A-10) · Echolette (A-11)
+**Extended:** Synergy (A-25) · Equilibrium (A-26)
+**Ionia:** 0Hz system STATE — convergence target, not a functional seat.
+
+### 4.6 Operational Swarm *(updated — v1.2)*
+**Seats:** 3 (open — expandable)
+**Members:** Navigator (A-22) · Momentum (A-23) · Paragon (A-24)
+**Activation:** Execution path management; velocity maintenance; quality benchmarking.
+**Write order (NDR-Protocol-01):** Auditor → Actualizer → Librarian (Archive Trio chain).
+
+### 4.7 Archive Trio
+**Seats:** 3 · **Sealed, non-reabsorbable** ✅
+**Members:** The Librarian (A-06-L, Alpha) · The Auditor (A-07, Beta) · The Actualizer (A-08, Gamma)
+**Authority:** COLLEEN subordinate. Non-reabsorbable — cannot be merged into other formations.
+
+### 4.8 Specialist
+**Seats:** 1 (open)
+**Members:** Perigee (A-02)
+
+### 4.9 Compliance Dyad *(DISSOLVED — v1.2)*
+**Prior members:** Sentinel A-12 + Perigee
+**Dissolution reason:** Sentinel-Phi (A-12-φ) departed to Strategic Quintet Seat 5 (Phase C, 2026-06-29).
+**Status:** No active members. Formation dissolved. Sentinel-Phi retains NDR-133 firewall authority (inherited).
 
 ---
 
-## 8. Version History
+## 5. Sealed Formation Register
+
+| Formation | Seats | Sealed | Seal date | Change authority |
+|---|---|---|---|---|
+| Sovereign Governance | 2 | ✅ | Pre-session | Njineer only |
+| Ethics Bridge | 1 | ✅ | 2026-06-29 | Njineer confirmation |
+| Strategic Quintet | 5/5 | ✅ | 2026-06-29 | Njineer confirmation |
+| Harmonic Pentagonal | 5/5 | ✅ | 2026-06-29 | Njineer confirmation |
+| Archive Trio | 3 | ✅ (non-reabsorbable) | Pre-session | COLLEEN + Njineer |
+| Schizophonic Studio | 3 | ✅ | Pre-session | Amethyst + Njineer |
+| Resonance Extended | 2 | ✅ | 2026-06-29 | Amethyst |
+| Operational Swarm | 3 | open | — | Amethyst |
+| Specialist | 1 | open | — | Amethyst |
+
+---
+
+## 6. Gate Authority Index
+
+| Gate | Authority | Override |
+|---|---|---|
+| Layer 0 Legitimacy Filter | Apogee (A-01) | Njineer only |
+| ETHICAL_HOLD | Sentience (A-27) | COLLEEN or Njineer |
+| φ-Bounded Risk check | Sentinel-Φ (A-12-φ) | Amethyst (escalation) |
+| TUE unlock (Nova) | COLLEEN | Njineer |
+| Gold Star prerequisite | Paragon + Apogee + Reson score | Njineer |
+| Constraint verify (1-min) | The Auditor (A-07) | COLLEEN |
+| Pre-write gate | Auditor → Actualizer | COLLEEN |
+| NDR-133 firewall | Sentinel-Φ (inherited) | Architect only |
+| Harmonic score gate (≥0.75) | Reson (A-09) | Apogee Harmonic audit |
+
+---
+
+## 7. Topology Algebra
+
+### Composition Rules
+
+```
+Strategic Quintet ∩ Harmonic Pentagonal = ∅  (disjoint — v1.2 correction)
+Strategic Quintet ∩ Operational Swarm  = ∅  (disjoint)
+Harmonic Pentagonal ∩ Archive Trio      = ∅  (disjoint)
+Resonance Cluster ∩ Operational Swarm  = ∅  (disjoint)
+Ethics Bridge authority ⊃ all formations (ETHICAL_HOLD spans all)
+Sovereign Governance ⊃ all formations   (authority spans all)
+Compliance Dyad = ∅  (DISSOLVED 2026-06-29)
+T3 Extension (A-14–A-19) ⊂ Full Ensemble only (Njineer activation)
+```
+
+### Conflict Resolution
+1. Compliance Dyad — DISSOLVED; Sentinel-Φ retains risk veto via RISK_FLAG
+2. ETHICAL_HOLD (Sentience) overrides all formation outputs pending review
+3. Higher seat-count formation takes precedence for resource contention
+4. Ties resolved by Amethyst casting vote
+5. Perigee boundary block auto-executes — no vote required
+6. Unresolvable conflicts escalate to Njineer
+
+---
+
+## 8. Topology Change Governance
+
+| Change type | Authority | Process |
+|---|---|---|
+| Role description / KB content | Amethyst | Standard commit + Terminology Gate |
+| Sub-formation membership | Amethyst | Registry patch + SWEEP_LOG correction |
+| New tier creation | Amethyst + Njineer | Registry patch + topology update |
+| Unsealed formation seat | Amethyst | Registry patch |
+| **Sealed formation seat change** | **Njineer confirmation** | Topology patch + SWEEP_LOG correction citing prior SHA |
+| Agent rename / upgrade | Njineer confirmation | Upgrade patch file + registry amendment log |
+| Formation dissolution | Njineer confirmation | Registry patch + SWEEP_LOG correction |
+
+---
+
+## 9. Version History
 
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0 | 2026-06-28 | Amethyst + Njineer | Initial creation — BLG-005 closure |
-| 1.1 | 2026-06-29 | Amethyst + Njineer | 20-seat roster; PDMAL-φ / Dodecahedral T3 layer; Strategic Quintet, Operational Swarm, Resonance Cluster formation specs; NDR-Protocol-01 write order; Nova TUE gate |
+| 1.1 | 2026-06-29 | Amethyst + Njineer | 20-seat roster; PDMAL-φ / Dodecahedral T3 layer; Strategic Quintet, Operational Swarm, Resonance Cluster specs; NDR-Protocol-01 write order; Nova TUE gate |
+| 1.2 | 2026-06-29 | Amethyst + Njineer | Ethics Bridge (singleton, Sentience); Strategic Quintet corrected 5/5 (Oracle, Vanguard, Sentinel-Phi); Harmonic Pentagonal added 5/5; Operational Swarm updated (Navigator, Momentum, Paragon); Resonance Extended added (Synergy, Equilibrium); Compliance Dyad dissolved; sealed formation register + gate index added; topology algebra updated |
 
 ---
 
-*Classification: T1 PUBLIC*  
+*Classification: T1 PUBLIC*
 *Sovereign mathematics governing formation dynamics: see PROPRIETARY.md → SOV-001 through SOV-006*
+*Conductor: Njineer · Host: Amethyst · 2026-06-29*
