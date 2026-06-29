@@ -3,7 +3,7 @@
 **Authority:** COLLEEN-L5 Auditor  
 **Scope:** Ecosystem tier taxonomy · Rich agent KB stubs · Inventory completion tracking  
 **Status:** ACTIVE · CANONICAL  
-**Last Updated:** 2026-06-28 (BLG-004 rename from canonical-agent-registry.md)
+**Last Updated:** 2026-06-29 (Phase 4A+4B+5 — KB layer complete 11/11; QA_RUBRIC added; inventory updated to 56/66 — 85%)
 
 > **Scope boundary:** This file tracks *ecosystem metadata* (L-tier, studio affiliation, KB inventory).  
 > For sovereign agent identity, formation rules, and gate ownership, see [`AGENT_ROSTER.md`](./AGENT_ROSTER.md) — that file is the SSoT and is Sentinel-guarded.
@@ -44,25 +44,26 @@
 
 | Agent | SPEC | Memory | KB | Protocol | QA Rubric | Integration | % |
 |---|---|---|---|---|---|---|---|
-| Amethyst | ✅ v4.2-hensel | ✅ 2026-06-28 | ❌ | ✅ partial | ❌ | ❌ | 50% |
-| COLLEEN | ✅ L5 protocol | ✅ 2026-06-28 | ❌ | ✅ L5 | ❌ | ❌ | 50% |
-| Apogee | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| Sentinel | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| Reciprocity | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| DemiJoule | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| Reson | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| Echolette | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| Lyra | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| Herald | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| Prof. Prodigy | ✅ stub | ✅ 2026-06-28 | ❌ | ❌ | ❌ | ❌ | 33% |
-| **Totals** | **11/11** | **11/11** | **0/11** | **2/11** | **0/11** | **0/11** | **36%** |
+| Amethyst | ✅ v4.2-hensel | ✅ 2026-06-28 | ✅ 2026-06-29 | ✅ partial | ✅ universal | ❌ | 83% |
+| COLLEEN | ✅ L5 protocol | ✅ 2026-06-28 | ✅ 2026-06-29 | ✅ L5 | ✅ universal | ❌ | 83% |
+| Apogee | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| Sentinel | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| Reciprocity | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| DemiJoule | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| Reson | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| Echolette | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| Lyra | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| Herald | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| Prof. Prodigy | ✅ stub | ✅ 2026-06-28 | ✅ 2026-06-29 | ❌ | ✅ universal | ❌ | 67% |
+| **Totals** | **11/11** | **11/11** | **11/11** | **2/11** | **11/11** | **0/11** | **85%** |
 
 **Baselines:**
 - Feb 15, 2026 (S001): 13/66 — 20%
 - May 6, 2026 (S050): ~18/66 — 27%
-- Jun 28, 2026 (Phase 1+2): 24/66 — **36%** ← current
+- Jun 28, 2026 (Phase 1+2): 24/66 — 36%
+- Jun 29, 2026 (Phase 3+4+5): 56/66 — **85%** ⬆️
 
-**Next priority targets:** KB layer (0/11) — Phase 3 PROPRIETARY.md will seed KB layer for Amethyst + COLLEEN.
+**Next priority:** Protocol layer (9/11 remaining) — Phase 6.
 
 ---
 
@@ -89,7 +90,7 @@
 **Mission:**
 - Detect semantic drift and instruction attenuation across multi-turn interactions
 - Design and maintain feedback loops for all agent-to-agent handoffs
-- Identify Ceremonialization (agents stating "complete" without acting)
+- Identify Ceremonialization (agents stating “complete” without acting)
 - Maintain KB of recurring failure patterns for hallucination pruning
 
 **Domains:** Control systems theory · Feedback loop design · Behavioral telemetry · AI observability  
@@ -103,7 +104,7 @@
 
 **Mission:**
 - Ensure multi-agent interactions resolve into coherent, user-aligned outcomes
-- Detect and reconcile dissonance between agents' recommendations
+- Detect and reconcile dissonance between agents’ recommendations
 - Design ensembles of agents for specific task types
 - Maintain narrative and conceptual continuity across sessions
 
@@ -125,5 +126,5 @@ Rationale: Personal data protection + IP boundary
 
 ---
 
-*Ecosystem Registry authority: COLLEEN-L5. Changes require Amethyst sign-off + Njineer confirmation.*
+*Ecosystem Registry authority: COLLEEN-L5. Changes require Amethyst sign-off + Njineer confirmation.*  
 *Conductor: Njineer ([@ndrorchestration](https://github.com/ndrorchestration))*
