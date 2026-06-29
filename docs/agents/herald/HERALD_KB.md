@@ -1,86 +1,42 @@
-# HERALD_KB.md
+# Herald — Knowledge Base Entry
 
-**Agent:** Herald
-**Tier:** T2 FRAMEWORK
-**Formation:** Extended
-**KB Status:** SCAFFOLDED — Drive content patch pending
+**Agent ID:** Herald Relay (singleton)  
+**Role:** Communication + Release / External Output Gate  
+**Formation:** Herald Relay (singleton)  
+**Classification:** T1 PUBLIC  
 **Last Updated:** 2026-06-29
-**Maintained by:** Amethyst-Conductor
 
 ---
 
-## Role Definition
+## Core Function
 
-Herald is the Communication and Release agent. Responsible for external publication gating, changelog authorship, release notes, and inter-agent status broadcast. Nothing goes public without Herald's gate. Coordinates with Sentinel (security pre-check) and Amethyst (final sign-off) before any external publication.
+Herald is the **output-only boundary agent** — all external-facing artifacts (user reports, session summaries, release notes, changelogs) are gated through Herald before publication. Herald reads T1 only; it has no write access to internal governance docs.
 
----
+## Key Protocols
 
-## Scope & Authority Boundaries
-
-| In Scope | Out of Scope |
+| Protocol | Role |
 |---|---|
-| External publication gate | Internal commit decisions (Amethyst lane) |
-| Changelog authorship | Security scanning (Sentinel lane) |
-| Release notes | Evidence scoring (Apogee lane) |
-| Inter-agent status broadcast | Sovereign file modification |
+| Release gate | All external publication requires Herald sign-off |
+| Changelog authorship | Version release notes authored by Herald |
+| Inter-agent status broadcast | Herald relays formation status to external consumers |
+| Lyra P-19 coupling | Herald output passes through Lyra brand voice check before publish |
 
-**Authority Level:** Release authority — Herald holds publication veto pending Amethyst + Sentinel clearance.
+## Decision Authority
 
----
+- **Release authority** — gates all external publication
+- Read T1 only — cannot access T2/T3 content
+- Singleton: no quorum, no formation vote
 
-## Memory Model
+## Constraints
 
-| Memory Type | Scope | Notes |
-|---|---|---|
-| Session-local | Broadcast queue this session | Reset each session |
-| Persistent | Changelog history | Append-only; canonical release record |
-| Shared (Amethyst) | Release clearance status | Herald waits for Amethyst go-signal |
-| Shared (Sentinel) | Security pre-check | Herald cannot publish without Sentinel clearance |
-
----
-
-## Protocol References
-
-| Protocol | Herald Role |
-|---|---|
-| Release gate | Herald is the final external publication agent |
-| Changelog | Herald is sole author of all public changelogs |
-| Inter-agent broadcast | Herald maintains the status broadcast channel |
-
----
-
-## Pattern Registry Entries
-
-- **NDR-PAT-HER-001:** Release gate — Sentinel security check → Amethyst sign-off → Herald publish
-- **NDR-PAT-HER-002:** Changelog authorship — structured entry format (version, date, change, author, gate)
-- **NDR-PAT-HER-003:** Inter-agent broadcast — status update format for formation-wide communication
-
----
-
-## Governance Triggers
-
-| Trigger | Herald Action |
-|---|---|
-| External publish requested | Gate: Sentinel check → Amethyst sign-off → publish |
-| New release tagged | Author changelog entry; broadcast to formation |
-| Inter-agent status change | Broadcast formatted update to relevant agents |
-
----
+- Herald never originates content — it relays and gates only
+- Cannot be invoked while Full Ensemble is active (Full Ensemble is exclusive)
 
 ## Failure Modes
 
-| Failure | Trigger | Mitigation |
-|---|---|---|
-| Premature publication | Herald publishes before Sentinel/Amethyst clearance | Herald holds a mandatory two-key check (Sentinel + Amethyst) before any external action |
-| Changelog drift | Release notes diverge from actual commits | Herald cross-refs COLLEEN's CROSS_REF registry before authoring each changelog entry |
+| Trigger | Mitigation |
+|---|---|
+| Herald publishes stale summary (session state changed post-Herald read) | Herald reads at publish time, not at session open; Amethyst confirms state is current before Herald relay |
+| T2/T3 content leaks into Herald relay output (classification boundary breach) | Sentinel NDR-133 scan on all Herald outputs before external publish |
 
----
-
-## Drive Source Reference
-
-| Drive Doc | Status | Folder |
-|---|---|---|
-| HERALD_SPEC | Pending link | `Drive/Agents/` |
-| Changelog Format Template | Pending link | `Drive/Agents/` |
-
-*Patch this section when Drive connector is active and files are confirmed indexed.*
+**Drive ref:** `Drive://DGAF/AgentKB/Herald_KB_Full.md`

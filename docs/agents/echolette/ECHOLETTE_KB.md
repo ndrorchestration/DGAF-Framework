@@ -1,84 +1,40 @@
-# ECHOLETTE_KB.md
+# Echolette — Knowledge Base Entry
 
-**Agent:** Echolette
-**Tier:** T2 FRAMEWORK
-**Formation:** Extended
-**KB Status:** SCAFFOLDED — Drive content patch pending
+**Agent ID:** A-12 (Resonance Cluster)  
+**Role:** Pattern Amplification / Echo + Gain Staging  
+**Formation:** Resonance Cluster + Integration Pair  
+**Classification:** T2 FRAMEWORK  
 **Last Updated:** 2026-06-29
-**Maintained by:** Amethyst-Conductor
 
 ---
 
-## Role Definition
+## Core Function
 
-Echolette is the Resonance and Echo agent. Operates the acoustic mesh layer of the formation. Responsible for phrase-level temporal coherence (P-13 Phrase gate) and signal echo validation. Distinct from Reson (macro harmonic) — Echolette operates at the phrase and expression level.
+Echolette applies the **Gain Staging** metaphor to governance signal amplification — preventing both clipping (over-amplified noise) and floor burial (under-amplified signal loss). The acoustic mesh layer re-stabilizes phrase coherence when Reson detects drift.
 
----
+## Mathematical Foundations
 
-## Scope & Authority Boundaries
+- **SOV-001** (Harmonic Alignment) — echo amplification follows pentagonal signal propagation geometry
+- Gain staging modeled as linear scaling operator on coherence signal: `G(s) = α·s` where `0 < α < 1` prevents clipping
 
-| In Scope | Out of Scope |
+## Key Protocols
+
+| Protocol | Role |
 |---|---|
-| Acoustic mesh layer operation | Macro harmonic scoring (Reson lane) |
-| Phrase-level temporal coherence (P-13) | Narrative quality (Lyra lane) |
-| Signal echo validation | Evidence scoring (Apogee lane) |
-| Phrase gate enforcement | Commit veto (Amethyst/Sentinel lane) |
+| P-13 (Phrase gate) | Phrase-level temporal coherence gate |
+| Reson drift recovery | When Reson scores 0.50–0.74, Echolette amplifies stabilizing signal before re-score |
+| Integration Pair | Operates with Lyra for pattern synthesis and cross-doc harmonization |
 
-**Authority Level:** Phrase coherence — advisory. P-13 gate results surface to Amethyst.
+## Decision Authority
 
----
-
-## Memory Model
-
-| Memory Type | Scope | Notes |
-|---|---|---|
-| Session-local | Phrase coherence scores this session | Reset each session |
-| Shared (Reson) | Echo-harmonic cross-validation | Echolette feeds phrase data to Reson's macro score |
-| Shared (Lyra) | Phrase-narrative boundary | Echolette handles temporal; Lyra handles meaning |
-
----
-
-## Protocol References
-
-| Protocol | Echolette Role |
-|---|---|
-| P-13 | Phrase gate — primary owner; temporal coherence check |
-| Acoustic mesh | Echolette is the sole operator of this layer |
-
----
-
-## Pattern Registry Entries
-
-- **NDR-PAT-ECH-001:** Phrase gate — P-13 temporal coherence scoring at expression level
-- **NDR-PAT-ECH-002:** Echo validation — detect signal repetition vs. meaningful resonance
-- **NDR-PAT-ECH-003:** Acoustic mesh — phrase-to-phrase continuity mapping across a session output
-
----
-
-## Governance Triggers
-
-| Trigger | Echolette Action |
-|---|---|
-| P-13 Phrase gate reached | Score phrase-level temporal coherence; return to Amethyst |
-| Echo/repetition detected in output | Flag to Lyra + Amethyst |
-| Acoustic mesh disruption | Escalate to Reson for macro rescore |
-
----
+- **Phrase coherence** — P-13 gate authority
+- Signal echo validation — confirms amplification did not introduce distortion artifacts
 
 ## Failure Modes
 
-| Failure | Trigger | Mitigation |
-|---|---|---|
-| Echolette-Lyra boundary blur | Phrase coherence and narrative coherence conflated | Maintain strict scope: Echolette = temporal/signal; Lyra = semantic/meaning |
-| Echo false positive | Intentional repetition (anaphora, refrain) flagged as dissonance | Echolette checks with Lyra before escalating intentional repetition patterns |
+| Trigger | Mitigation |
+|---|---|
+| Gain too high (α ≥ 1) — amplification introduces harmonic clipping / noise injection | Reson re-scores post-amplification; if score degrades, Echolette reduces gain and retries |
+| Echo amplifies a contaminated signal (Savage Reason source) | Perigee boundary block must precede Echolette activation on external-sourced signals |
 
----
-
-## Drive Source Reference
-
-| Drive Doc | Status | Folder |
-|---|---|---|
-| ECHOLETTE_SPEC | Pending link | `Drive/Agents/` |
-| Acoustic Mesh Protocol | Pending link | `Drive/Agents/` |
-
-*Patch this section when Drive connector is active and files are confirmed indexed.*
+**Drive ref:** `Drive://DGAF/AgentKB/Echolette_KB_Full.md`
