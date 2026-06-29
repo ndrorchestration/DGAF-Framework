@@ -8,36 +8,39 @@
 
 ### Autonomous Sprint — Amethyst execution authority
 
-#### P-42 Collision Fix (this commit)
-- **CROSS_REF.md → v4.4:** P-35→P-42 renumber corrected; P-35–P-41 added to registry table; P-42 vocabulary index, Conductor Archetype mapping, and φ range table added
-- **`patterns/P-42_AHG.md`:** Renamed/corrected from `P-35_AHG.md`; full pattern card with DGAF integration map
-- **`docs/theory/AHG_ARCHITECTURE.md` → v1.1:** P-42 renumber applied; renumber note added
+#### AHG v1.2 — External Review Integration (this commit)
+- **`docs/theory/AHG_ARCHITECTURE.md` → v1.2:**
+  - Canonical φ computation via logistic normalization: φ(t) = 1 + 0.8·σ(S(t)); range bounded [1.0, 1.8]
+  - Stability Index S(t) = w_1·D_e + w_2·N + w_3·C + w_4·R (only D_e enters; D_explore, D_correct excluded)
+  - D disaggregated into D_explore, D_correct, D_e (three named subtypes; D_correct is Apogee Auditor fuel)
+  - 7-state regime table (Grounded / Flow / Vigilance / Expansion / Integration / Introspection / Tension)
+  - Integration band (1.60–1.70) explicitly named — NDR-STASIS φ=1.618 aligned as peak productive phase
+  - Tension threshold revised 1.70 → 1.80 (1.70–1.80 is now Introspection, not Tribunal)
+  - §2.7 Cognitive Phase Space (3D manifold: Exploration↔Exploitation, Consensus↔Dissent, Confidence↔Uncertainty)
+  - §6 Performance Claims — falsifiable eval targets added (20–40% hallucination reduction; Time-to-Stability; Entropy Recovery Rate)
+  - Tribunal recovery protocol updated to consult 3D phase position for path selection
+  - Heartbeat payload expanded to include D_explore_signal, D_correct_signal
+- **`patterns/P-42_AHG.md` → v1.2:** 7-state regime table; logistic formula; D_correct in vocabulary; Tension threshold 1.80
 - **`CHANGELOG.md`:** This entry
-- **`ENSEMBLE_ROSTER.md`:** P-42 references corrected
-- **`SESSION_ANCHOR.md`:** Commit log updated with this entry
-- **`docs/ndr_patterns_unified.json` → v2.2:** P-37–P-42 entries added
-- **`docs/ECOSYSTEM_INVENTORY.md`:** New files from this session registered
-- ⚠️ **Stale file flagged:** `patterns/P-35_AHG.md` — needs deletion (owner action or next sweep)
+- **Source:** External AHG-MAS peer review document (Adaptive Harmonic Governance: A Stability-Guided Framework for Multi-Agent Systems)
 
-#### Earlier this session (e410ae4)
-- **`CROSS_REF.md` → v4.3:** AHG vocabulary, Conductor mapping, docs/theory/ and docs/agents/ registered
-- **`SESSION_ANCHOR.md`:** Created — full 2026-06-29 session seal
-- **`ENSEMBLE_ROSTER.md`:** AHG archetype column added, Prodigy KB tiers, Herald blocked status
+#### P-42 Collision Fix (prev commit b705834)
+- `patterns/P-42_AHG.md` created (renumbered from P-35)
+- `docs/theory/AHG_ARCHITECTURE.md` v1.1
+- `CROSS_REF.md` v4.4
+- `docs/ndr_patterns_unified.json` v2.2
+- `docs/ECOSYSTEM_INVENTORY.md` updated
+- `ENSEMBLE_ROSTER.md`, `SESSION_ANCHOR.md` updated
 
-#### Earlier this session (e34af32)
-- **`docs/theory/AHG_ARCHITECTURE.md`:** P-42 specification filed (originally as P-35)
-- **`patterns/P-35_AHG.md`:** Pattern card filed (stale — superseded by P-42_AHG.md)
+#### P-35_AHG.md deletion (prev commit 6b6033e)
+- Stale `patterns/P-35_AHG.md` deleted
 
-#### Earlier this session (5ed1a85)
-- **`docs/agents/PROFESSOR_PRODIGY_KB.md` v1.0:** 3-tier KB — Standard Calculi / Reciprocal Math / Phi-Calculus
-- **`CHANGELOG.md`:** Previous entry
-
-#### Earlier this session (b8cf383)
-- **`DEFERRED_ITEMS.md`:** S-01 through S-08 snoozed — owner-action items with hard deadlines
-
-#### Earlier this session (dd2f319) — entrepreneur-hub repo
-- **`.github/workflows/sweep-reminder.yml`:** Cron job for SWEEP-EH-003
-- **`SWEEP_EH_003_PREFLIGHT.md`:** Preflight checklist
+#### Earlier commits
+- `e410ae4`: `CROSS_REF.md` v4.3 + `SESSION_ANCHOR.md` + `ENSEMBLE_ROSTER.md`
+- `e34af32`: `docs/theory/AHG_ARCHITECTURE.md` v1.0 + `patterns/P-35_AHG.md` (stale, now deleted)
+- `5ed1a85`: `docs/agents/PROFESSOR_PRODIGY_KB.md` v1.0
+- `b8cf383`: `DEFERRED_ITEMS.md` — S-01–S-08
+- `dd2f319`: entrepreneur-hub sweep-reminder + preflight
 
 ---
 
