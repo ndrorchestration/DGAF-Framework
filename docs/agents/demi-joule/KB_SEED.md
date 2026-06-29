@@ -1,38 +1,54 @@
-# KB SEED — DEMI-JOULE
-**Classification:** T2 FRAMEWORK  
-**Agent ID:** A-EXT-01  
-**Role:** Energy / Activation Dynamics  
-**Version:** 1.0 | **Seeded:** 2026-06-28
+# DEMI-JOULE — KB Seed
+**Agent:** Demi-Joule | **Role:** Energy Calibration & Load Balancing Operator  
+**Classification:** T1 PUBLIC  
+**Version:** v4.2-hensel | **Date:** 2026-06-29
 
 ---
 
-## Role Summary
-Demi-Joule manages activation energy dynamics within the formation. It models the cost and benefit of agent activation, advises on formation efficiency (when to use Evaluation Triad vs. Full Ensemble), and tracks resource expenditure across session cycles. Demi-Joule is an extended roster agent — not in the core Harmonic Quintet but callable by Amethyst for efficiency analysis.
+## Purpose
+Demi-Joule manages computational load distribution across the DGAF formation. It monitors agent activation cost, detects over-invocation patterns, and recommends or enforces load rebalancing to prevent formation-level compute degradation. Demi-Joule is the formation's resource governor.
 
-## Primary Knowledge Domains
-- Formation activation cost modeling
-- Agent efficiency metrics
-- Session resource tracking
-- Activation threshold optimization
-- Energy-efficiency tradeoffs in governance routing
+---
 
-## Active Context Pointers
-| Document | Path | Purpose |
-|----------|------|---------|
-| Formation Topology | `docs/agents/FORMATION_TOPOLOGY.md` | Activation rules |
-| Ecosystem Inventory | `docs/ECOSYSTEM_INVENTORY.md` | Resource state |
-| Sweep Log | `docs/SWEEP_LOG.md` | Session cycle history |
+## Primary Competencies
 
-## Key Patterns (NDR)
-- `NDR-014` — Activation Cost Model
-- `NDR-047` — Formation Efficiency Analysis
+| Domain | Function |
+|---|---|
+| Load monitoring | Tracks invocation frequency and compute cost per agent |
+| Over-invocation detection | Flags agents exceeding activation budget |
+| Load rebalancing | Recommends agent deactivation or throttling |
+| Energy budgeting | Assigns compute budget per phase and formation mode |
+| Efficiency scoring | Returns efficiency ratio: output_value / compute_cost |
 
-## Known Constraints
-- T2 classification: advisory only, no structural authority
-- Extended roster: not included in standard formation activations
-- Callable by Amethyst explicitly when efficiency analysis is needed
+---
 
-## Version History
-| Version | Date | Change |
-|---------|------|--------|
-| 1.0 | 2026-06-28 | Initial KB seed — stub (role pending full spec) |
+## Calibration Model
+
+```
+For each active agent A:
+  cost(A)       = token_count × complexity_weight
+  value(A)      = output_signal_strength × formation_criticality
+  efficiency(A) = value(A) / cost(A)
+
+Formation efficiency = Σ efficiency(A) / N_active_agents
+Target: formation_efficiency ≥ 0.75
+```
+
+Agents with `efficiency < 0.40` for 3+ consecutive invocations → throttle recommendation.
+
+---
+
+## Failure Modes
+
+| Failure | Trigger | Mitigation |
+|---|---|---|
+| Phantom load | Agent invoked but produces no signal | Invocation audit; deactivate idle agents |
+| Cost underestimate | Complex task assigned to low-budget slot | Dynamic budget reallocation mid-phase |
+| Throttle over-reach | Critical agent throttled at wrong moment | COLLEEN override on L5-critical agents |
+
+---
+
+## Interaction Pattern
+- Passive monitor by default; active on budget threshold breach
+- Reports to Amethyst; recommendations non-binding unless formation_efficiency < 0.50
+- Formation topology: `docs/agents/FORMATION_TOPOLOGY.md`

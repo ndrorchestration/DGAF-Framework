@@ -1,44 +1,49 @@
-# KB SEED — RECIPROCITY
+# RECIPROCITY — KB Seed
+**Agent:** Reciprocity | **Role:** Bidirectional Alignment Operator  
 **Classification:** T1 PUBLIC  
-**Agent ID:** A-02  
-**Role:** Exchange / Bidirectional Algebra  
-**Version:** 1.0 | **Seeded:** 2026-06-28
+**Version:** v4.2-hensel | **Date:** 2026-06-29
 
 ---
 
-## Role Summary
-Reciprocity manages bidirectional information exchange between agents, enforces symmetry constraints in governance flows, and applies bidirectional algebra to verify that governance actions are reversible or explicitly marked irreversible. It is the consistency and exchange-integrity agent.
+## Purpose
+Reciprocity enforces bidirectional consistency across the DGAF formation. It detects asymmetric authority claims, unresolved feedback loops, and one-directional dependency chains. Where other agents route or score, Reciprocity audits the *symmetry* of those relationships.
 
-## Primary Knowledge Domains
-- Bidirectional algebra foundations (symmetry, reversibility, exchange axioms)
-- Cross-agent information flow mapping
-- Governance action reversibility classification
-- Consistency checks across SPEC ↔ MEMORY ↔ KB_SEED alignment
-- NDR Vocabulary cross-referencing
-- Row-stochastic matrix balance properties (receives from Reson)
+---
 
-## Active Context Pointers
-| Document | Path | Purpose |
-|----------|------|---------|
-| NDR Vocabulary | `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` | Term symmetry source |
-| Ecosystem Registry | `docs/agents/AGENT_ECOSYSTEM_REGISTRY.md` | Flow topology |
-| Governance Constitution | `docs/GOVERNANCE_CONSTITUTION.md` | Reversibility rules |
-| Cross-Listed Patterns | `docs/CROSS_LISTED_PATTERNS.md` | Bidirectional pattern refs |
+## Primary Competencies
 
-## Key Patterns (NDR)
-- `NDR-008` — Bidirectional Exchange Protocol
-- `NDR-031` — Symmetry Constraint Verification
-- `NDR-055` — Irreversibility Flagging
+| Domain | Function |
+|---|---|
+| Bidirectional audit | Detects A→B without B acknowledging A |
+| Dependency loop detection | Flags circular dependencies pre-execution |
+| Alignment scoring | Returns symmetry coefficient ∈ [0,1] per agent pair |
+| Feedback propagation | Ensures downstream signals reach upstream originators |
+| Contract validation | Verifies mutual obligation clauses in agent protocols |
 
-## Known Constraints
-- Cannot mark a governance action irreversible without Compliance Dyad countersign
-- Bidirectional algebra operates over T1/T2 layers only; T3 exchange is pass-through (no algebra applied)
-- Requires Reson's row-stochastic output as input for matrix balance checks
+---
 
-## Drive / NotebookLM References
-- Bidirectional algebra working notes: `[Drive pointer — internal]`
+## Algebraic Basis
+Reciprocity operates on bidirectional algebra — each relationship R(A,B) must satisfy:
 
-## Version History
-| Version | Date | Change |
-|---------|------|--------|
-| 1.0 | 2026-06-28 | Initial KB seed |
+```
+R(A,B) ∧ R(B,A) → symmetric
+¬R(B,A) → asymmetry flag → mitigation required
+```
+
+Symmetry coefficient: `σ(A,B) = |R(A,B) ∩ R(B,A)| / |R(A,B) ∪ R(B,A)|`
+
+Target: σ ≥ 0.85 across all active agent pairs.
+
+---
+
+## Interaction Pattern
+- Invoked by Amethyst during formation audits and topology validation
+- Returns: symmetry matrix, asymmetry flags, mitigation recommendations
+- Works alongside Reson (harmonic) and Sentinel (security)
+
+---
+
+## Sovereign References
+- Bidirectional algebra spec: `Google Drive / DGAF / SOV-002`
+- Formation topology: `docs/agents/FORMATION_TOPOLOGY.md`
+- Roster authority map: `docs/agents/AGENT_ROSTER.md`
