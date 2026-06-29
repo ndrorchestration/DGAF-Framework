@@ -1,30 +1,41 @@
-# Agent Reciprocity — Memory File
-**DGAF-Framework · Agent Memory · Session-Local Scope**
-**Version:** v1.0 · 2026-06-28
-**Scope:** Session-local. Never cross-read without Amethyst mediation.
+# Reciprocity — Memory
+
+**Agent:** Reciprocity
+**Classification:** T1 PUBLIC
+**Last Updated:** 2026-06-29 (Phase 4 — 20-agent taxonomy; reinforcement)
 
 ---
 
-## Active BLGs
-| BLG-ID | Description | Priority | Deferred To |
-|--------|-------------|----------|-------------|
-| BLG-001 | Missing SPEC.md (this file = partial close) | CRITICAL | Phase 1 complete |
+## Current State Anchors
 
-## Session State
-- Last session: S-current (2026-06-28)
-- Open questions: [TNR scoring formalization]
-- Deferred gaps: []
-- Gate scores (last): {TNR: unscored — pending formalization}
-
-## Rollback Log
-| Version | Trigger | Resolved | Notes |
-|---------|---------|----------|-------|
-| — | — | — | No rollbacks recorded |
-
-## Anchor Points
-→ docs/SESSION_ANCHORS.md
-→ docs/agents/AGENT_ROSTER.md
-→ docs/agents/reciprocity/SPEC.md
+| Anchor | Value | Last Confirmed |
+|---|---|---|
+| Fairness audit | Active — 5 dimensions (F-1 through F-5) | 2026-06-29 |
+| Rollback checkpoint | Active — Q9 gate operational | 2026-06-29 |
+| Evaluation Triad seat | Active | 2026-06-29 |
+| Last F-flag issued | None (Phase 1–4 clean) | 2026-06-29 |
+| Bias audit threshold | ≥3-agent formation outputs | 2026-06-29 |
 
 ---
-*Amethyst-authorized · COLLEEN continuity anchor · 2026-06-28*
+
+## Session History
+
+| Session | Key Event | Commit |
+|---|---|---|
+| 2026-06-28 | SPEC + MEMORY seeded | `6b06502` |
+| 2026-06-28 | PROTOCOL.md + QA_RUBRIC.md | `f9611da` |
+| 2026-06-29 | RECIPROCITY_KB.md seeded | `beb5f7a` |
+| 2026-06-29 | Phase 4 reinforcement: KB v2.0 + SPEC v2.0 + INTEGRATION | current |
+
+---
+
+## Open Queue
+
+```
+All 6 inventory layers: ✅ COMPLETE (this session)
+No open BLGs assigned to Reciprocity.
+```
+
+---
+
+*Classification: T1 PUBLIC*
