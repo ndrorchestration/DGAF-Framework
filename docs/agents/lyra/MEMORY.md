@@ -1,30 +1,39 @@
-# Agent Lyra — Memory File
-**DGAF-Framework · Agent Memory · Session-Local Scope**
-**Version:** v1.0 · 2026-06-28
-**Scope:** Session-local. Never cross-read without Amethyst mediation.
+# Lyra — Memory
+
+**Agent:** Lyra
+**Classification:** T1 PUBLIC
+**Last Updated:** 2026-06-29 (Phase 4 — 20-agent taxonomy; reinforcement)
 
 ---
 
-## Active BLGs
-| BLG-ID | Description | Priority | Deferred To |
-|--------|-------------|----------|-------------|
-| BLG-001 | Missing SPEC.md (this file = partial close) | CRITICAL | Phase 1 complete |
+## Current State Anchors
 
-## Session State
-- Last session: S-current (2026-06-28)
-- Open questions: [IMP-05 brand voice scoring rubric formalization]
-- Deferred gaps: []
-- Gate scores (last): {P-19: unscored — pending formalization}
-
-## Narrative Audit Log
-| Session | Content Reviewed | Voice Score | Notes |
-|---------|-----------------|-------------|-------|
-| S-current | — | — | Baseline |
-
-## Anchor Points
-→ docs/SESSION_ANCHORS.md
-→ docs/agents/AGENT_ROSTER.md
-→ docs/agents/lyra/SPEC.md
+| Anchor | Value | Last Confirmed |
+|---|---|---|
+| Tonal coherence scoring | Active — 4 dimensions | 2026-06-29 |
+| Score routing | Reson primary; Apogee direct if <0.50 | 2026-06-29 |
+| Schizophonic cluster | Member (Reson lead) | 2026-06-29 |
+| Last tonal flag | None (Phase 1–4 clean) | 2026-06-29 |
 
 ---
-*Amethyst-authorized · COLLEEN continuity anchor · 2026-06-28*
+
+## Session History
+
+| Session | Key Event | Commit |
+|---|---|---|
+| 2026-06-28 | SPEC + MEMORY + PROTOCOL + QA_RUBRIC seeded | `6b06502` |
+| 2026-06-29 | LYRA_KB.md seeded | `beb5f7a` |
+| 2026-06-29 | Phase 4 reinforcement: KB v2.0 + SPEC v2.0 + INTEGRATION | current |
+
+---
+
+## Open Queue
+
+```
+All 6 inventory layers: ✅ COMPLETE (this session)
+No open BLGs assigned to Lyra.
+```
+
+---
+
+*Classification: T1 PUBLIC*
