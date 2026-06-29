@@ -1,4 +1,4 @@
-# Momentum — PROTOCOL v1.0
+# Momentum — Protocol v1.0
 
 **Agent:** Momentum
 **Agent ID:** A-23
@@ -8,67 +8,95 @@
 
 ---
 
-## Procedure 1 — Velocity Baseline
+## Procedure 1 — Velocity Monitoring
 
-**Trigger:** New route plan activated by Navigator.
+**Trigger:** Active route received from Navigator; session open with active route.
 
-1. Receive route plan from Navigator
-2. Parse velocity targets per execution step
-3. Establish baseline throughput measurement:
-   - Expected steps per session
-   - Critical path duration
-   - Minimum acceptable throughput threshold (default: 80% of target)
-4. Begin throughput monitoring: log actual completion per session
-5. If actual throughput ≥ threshold: no action
-6. If actual throughput < threshold: trigger Procedure 2 (bottleneck identification)
-7. Update MOMENTUM_MEMORY.md with baseline record
+```
+Step 1: Receive route from Navigator
+        — Extract per-step velocity targets
+        — Confirm velocity floor for this route
 
----
+Step 2: Begin continuous velocity monitoring
+        — Measure step completion rate at each step transition
+        — Compare to per-step velocity target
 
-## Procedure 2 — Bottleneck Identification and Resolution
+Step 3: On velocity floor violation:
+        — Immediately notify Navigator (velocity flag)
+        — Log violation in MEMORY.md
+        — Initiate Procedure 2 (floor violation response)
 
-**Trigger:** Throughput < 80% of target for 1 session, OR Navigator flags execution blocker.
+Step 4: On surge detection:
+        — Initiate Procedure 3 (surge management)
 
-1. Identify the limiting step: where is the execution chain slowing?
-2. Classify bottleneck type:
-   - Route design: unnecessary dependencies or gate sequencing (route to Navigator)
-   - Resource constraint: unavailable input or blocked agent (escalate to Amethyst)
-   - Quality gate: Paragon hold extending beyond expected duration (coordinate with Paragon)
-   - Execution latency: Actualizer throughput below capacity (flag to Amethyst)
-3. For route design: route analysis to Navigator; request velocity target revision
-4. For resource constraint: escalate to Amethyst with impact analysis
-5. For quality gate: coordinate with Paragon on resolution timeline
-6. Log bottleneck and resolution in MOMENTUM_MEMORY.md
-7. Monitor for resolution confirmation before closing bottleneck record
+Step 5: At session close:
+        — Report throughput metrics to Amethyst
+        — Update MEMORY.md metrics log
+```
 
 ---
 
-## Procedure 3 — Acceleration Modeling
+## Procedure 2 — Velocity Floor Violation Response
 
-**Trigger:** Throughput consistently ≥ 120% of target for 2+ sessions (opportunity to accelerate sustainably).
+**Trigger:** Current velocity falls below velocity floor.
 
-1. Confirm acceleration is not masking a quality gap (check Paragon gate status)
-2. Model sustainable acceleration:
-   - What is the maximum throughput that does not require gate bypass?
-   - What is the risk of maintaining accelerated pace for N more sessions?
-3. Propose revised velocity targets to Navigator
-4. On Navigator ACCEPT: update velocity baseline
-5. On Navigator REJECT: maintain current targets
-6. Log acceleration proposal and outcome in MOMENTUM_MEMORY.md
+```
+Step 1: Identify root cause:
+        — Resource constraint: report to Amethyst
+        — Route complexity: request route simplification from Navigator
+        — Quality gate: coordinate with Paragon
+          (do not breach quality floor to recover velocity)
+        — External dependency: log and escalate to Amethyst
+
+Step 2: Notify Navigator with violation analysis
+Step 3: If route simplification resolves violation:
+        — Receive simplified route from Navigator
+        — Resume monitoring with updated targets
+Step 4: If unresolvable within session:
+        — Escalate to Amethyst with full analysis
+        — Log escalation in MEMORY.md
+```
 
 ---
 
-## Procedure 4 — Swarm Coordination Pulse
+## Procedure 3 — Surge Management
 
-**Trigger:** Session opening when active routes exist.
+**Trigger:** Execution velocity significantly exceeds sustainable throughput threshold.
 
-1. Brief check: is throughput on track across all active routes?
-2. Identify any routes approaching stall condition (0% progress last session)
-3. Stall check: has this route stalled 2 sessions in a row?
-   - Yes: auto-escalate to Amethyst (Procedure 2, resource constraint path)
-   - No: flag to Navigator for contingency evaluation
-4. Issue swarm pulse summary to Amethyst (1-line status per active route)
-5. Update MOMENTUM_MEMORY.md
+```
+Step 1: Detect surge: velocity > surge threshold for ≥2 consecutive steps
+
+Step 2: Assess surge impact:
+        — Is Paragon quality floor at risk?
+        — If yes: cap velocity immediately to protect quality floor
+
+Step 3: Log surge in MEMORY.md
+
+Step 4: Notify Paragon that surge is active
+        — Paragon determines whether quality floor is at risk
+
+Step 5: If surge is sustainable (quality floor intact):
+        — Allow surge to continue
+        — Monitor for quality floor breach
+
+Step 6: If surge is unsustainable:
+        — Cap velocity at sustainable threshold
+        — Request route adjustment from Navigator if needed
+```
+
+---
+
+## Procedure 4 — Throughput Reporting
+
+**Trigger:** Session close; Amethyst report request.
+
+```
+Step 1: Compile session throughput metrics:
+        — Steps completed, average velocity, surges, floor violations
+Step 2: Route report to Amethyst
+Step 3: Update MEMORY.md metrics log
+Step 4: Flag persistent velocity floor violations for SWEEP_LOG
+```
 
 ---
 

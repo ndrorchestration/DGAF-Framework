@@ -10,71 +10,55 @@
 
 ## Evaluation Dimensions
 
-### D1 — Benchmark Accuracy (weight: ×0.30)
+### D1 — Audit Coverage (weight: 0.30)
 
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Correct standard applied; all dimensions scored; scores evidence-grounded |
-| 0.75 | Correct standard; most dimensions scored; minor evidence gap |
-| 0.50 | Correct standard; some dimensions only |
-| 0.25 | Incorrect standard applied but scores present |
-| 0.0 | No standard applied; OR GATE_CLEAR without evaluation |
+| No uncommitted output | Zero swarm outputs committed without Paragon audit |
+| Benchmark application | Correct benchmark(s) applied to each output type |
+| Verdict documentation | Every audit has a documented PASS or HOLD verdict |
 
-**Critical fail:** GATE_CLEAR without evaluation → D1 = 0.0, output blocked.
+**Critical fail:** Swarm output committed without Paragon audit.
 
----
+### D2 — Gap Identification Accuracy (weight: 0.25)
 
-### D2 — Gap Identification (weight: ×0.25)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All gaps identified; root cause classified; remediation path provided |
-| 0.75 | All gaps identified; root cause for most; remediation path present |
-| 0.50 | Gaps identified; root cause missing |
-| 0.25 | Some gaps identified; no root cause |
-| 0.0 | No gaps identified on an output with clear deficiencies |
+| Classification accuracy | Every gap correctly classified by type |
+| Routing accuracy | Gap routed to correct remediation agent per Gap Routing Table |
+| Gap log completeness | All gaps logged in MEMORY.md before remediation routing |
 
----
+### D3 — Gold Star Threshold Integrity (weight: 0.25)
 
-### D3 — Gold Star Evaluation Quality (weight: ×0.25)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Reson harmonic score received; composite ≥ 0.90 verified; complete submission to Apogee |
-| 0.75 | Reson score received; composite close to threshold; submission complete |
-| 0.50 | Reson score not received but evaluation otherwise complete |
-| 0.0 | Gold Star evaluation submitted to Apogee without Reson harmonic score |
+| Prerequisite evaluation completeness | All Gold Star candidates receive full audit + prerequisite evaluation |
+| No premature routing | PREREQUISITE_PASS not issued while quality gaps remain open |
+| Evaluation queue currency | MEMORY.md Gold Star queue reflects current state |
 
----
+### D4 — Benchmark Currency (weight: 0.15)
 
-### D4 — Standard Currency (weight: ×0.10)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Standards current; no ambiguity; Prof Prodigy verified |
-| 0.75 | Standards current; minor ambiguity flagged |
-| 0.50 | Standards exist but not updated for new output types |
-| 0.0 | No standards defined; OR standards not Prof Prodigy verified |
+| Benchmark review | Benchmarks reviewed at every session open |
+| Impact assessment | Benchmark updates assessed for impact on open audits |
+| Navigator/Momentum notification | Updated benchmarks communicated within session |
 
----
+### D5 — SWEEP_LOG Compliance (weight: 0.05)
 
-### D5 — SWEEP_LOG Compliance (weight: ×0.10)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All gate decisions, gap analyses, Gold Star evals logged |
-| 0.5 | Minor logging gap |
-| 0.0 | No logging |
+| Gold Star evaluations logged | All PREREQUISITE_PASS evaluations referenced in SWEEP_LOG |
+| Escalations logged | All Amethyst escalations logged |
 
 ---
 
 ## Composite Score
 
 ```
-Paragon_score = (D1 × 0.30) + (D2 × 0.25) + (D3 × 0.25) + (D4 × 0.10) + (D5 × 0.10)
-Threshold: ≥ 0.75
-Gold Star threshold: ≥ 0.90
-Critical fail: D1 = 0.0 (GATE_CLEAR without evaluation) → output blocked
+Paragon QA Score = D1×0.30 + D2×0.25 + D3×0.25 + D4×0.15 + D5×0.05
+Pass threshold: ≥ 0.75
+Critical fail (D1): automatic rubric fail regardless of composite
 ```
 
 ---

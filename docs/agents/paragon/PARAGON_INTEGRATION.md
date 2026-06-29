@@ -10,36 +10,67 @@
 
 ## Integration Contracts
 
-### Paragon → Navigator (quality gate)
-- Navigator route plans submitted to Paragon for quality gate clearance
-- Paragon returns GATE_CLEAR or GATE_HOLD before Actualizer execution
-- Navigator does not hand off to Actualizer without GATE_CLEAR
+### Paragon ↔ Navigator (route quality)
 
-### Paragon → Momentum (velocity constraint)
-- Paragon issues quality-based velocity ceiling to Momentum
-- Momentum does not recommend acceleration beyond Paragon's cleared throughput
-- Bidirectional during quality-throughput negotiation
+| Direction | Signal | Trigger |
+|---|---|---|
+| Paragon → Navigator | Quality gap signal + affected route step | Route/execution path gap identified |
+| Navigator → Paragon | Route adjustment (remediation step added) | Gap signal received |
+| Paragon → Navigator | Quality clearance | Output passes audit |
+| Navigator → Paragon | Route change notification | Contingency activated |
 
-### Paragon ↔ Reson (harmonic score input)
-- Reson provides harmonic coherence score as input to Paragon's Gold Star prerequisite evaluation
-- Paragon does not submit Gold Star evaluation to Apogee without Reson score ≥ 0.75
+### Paragon ↔ Momentum (quality floor protection)
 
-### Paragon → Apogee (Gold Star co-evaluator)
-- Paragon submits prerequisite evaluation to Apogee for Gold Star designation
-- Apogee is the final gate; Paragon is a prerequisite evaluator, not the final authority
-- Apogee may issue Gold Star only after Paragon PASS + Reson score + evidence gate
+| Direction | Signal | Trigger |
+|---|---|---|
+| Momentum → Paragon | Surge notification | Surge detected |
+| Paragon → Momentum | Quality floor status (CLEAR or AT_RISK) | Surge notification received |
+| Paragon → Momentum | Velocity cap directive | Quality floor at risk from surge |
 
-### Paragon → Prof Prodigy (standard rigor verification)
-- New and revised excellence standards submitted to Prof Prodigy for mathematical rigor verification
-- Prof Prodigy verifies: dimension weights sum to 1.0; criteria are unambiguous and consistent
+### Paragon → Prof Prodigy (gap remediation)
+
+| Signal | Condition |
+|---|---|
+| Gap package (description + benchmark + output) | Mathematical or logical error identified |
+| Prof Prodigy → Paragon: CORRECTED or UNRESOLVABLE | Remediation complete |
+
+### Paragon → Lyra (gap remediation)
+
+| Signal | Condition |
+|---|---|
+| Gap package | Synthesis or narrative incoherence identified |
+| Lyra → Paragon: CORRECTED or UNRESOLVABLE | Remediation complete |
+
+### Paragon → Apogee (Gold Star gate)
+
+| Signal | Condition |
+|---|---|
+| Output + PREREQUISITE_PASS evaluation | Gold Star candidate; all gaps resolved |
+| Apogee → Paragon: VERIFIED or HOLD | Evidence gate result |
+
+### Paragon → Reson (harmonic score)
+
+| Signal | Condition |
+|---|---|
+| Candidate output (via Apogee routing) | Apogee VERIFIED; harmonic score required |
+| Reson → Paragon: score value | Score returned |
 
 ### Paragon → Amethyst (escalation)
-- Systemic quality failures (same gap 3+ times) → Amethyst
-- Quality standard conflicts between formations → Amethyst
 
-### Paragon → Apogee (final gate)
-- All Paragon outputs through Apogee evidence gate
-- Threshold: ≥ 0.75 composite (QA Rubric)
+| Signal | Condition |
+|---|---|
+| Quality escalation package (gap log + audit history + remediation attempts) | Gap unresolvable after remediation |
+
+---
+
+## Failure Modes and Escalation
+
+| Failure | Response |
+|---|---|
+| Remediation agent cannot resolve gap | Escalate to Amethyst with full gap analysis |
+| Velocity pressure causes quality floor breach | Immediately cap velocity (Momentum directive); log; escalate to Amethyst |
+| Gold Star candidate fails Apogee gate | Return to Paragon; identify evidence gap; re-route to Apogee |
+| Gold Star candidate fails Reson score | Return to Paragon; identify harmonic gap; re-route to Reson |
 
 ---
 

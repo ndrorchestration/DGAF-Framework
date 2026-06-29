@@ -11,34 +11,47 @@
 ## Integration Contracts
 
 ### Navigator ↔ Momentum (peer)
-- Navigator provides velocity targets per execution step
-- Momentum provides throughput flags when actual progress deviates
-- Bidirectional; continuous during active route execution
 
-### Navigator → Paragon (quality gate)
-- Route plans submitted to Paragon for quality gate clearance before Actualization
-- Paragon returns GATE_CLEAR or GATE_HOLD with specific quality gap
-- Navigator does not hand off to Actualizer without Paragon GATE_CLEAR
+| Direction | Signal | Trigger |
+|---|---|---|
+| Navigator → Momentum | Primary route with per-step velocity targets | Route construction complete |
+| Navigator → Momentum | Route adjustment with revised targets | Hazard detected; contingency activated |
+| Momentum → Navigator | Velocity flag (below floor) | Throughput below minimum |
+| Navigator → Momentum | Contingency route with revised targets | Contingency activated |
 
-### Navigator ← Strategic Quintet (upstream)
-- Receives strategic decisions from Quintet for operational translation
-- Navigator does not generate strategy; translates it into routes
+### Navigator ↔ Paragon (quality signal)
 
-### Navigator → The Auditor (constraint gate)
-- All route plans submitted to The Auditor for constraint verification before execution
-- Auditor verifies: no violated dependencies; all gates sequenced correctly
+| Direction | Signal | Trigger |
+|---|---|---|
+| Paragon → Navigator | Quality gap signal + affected route step | Quality gap identified |
+| Navigator → Paragon | Route adjustment (remediation step added) | Quality gap signal received |
+| Navigator → Paragon | Route change notification | Contingency activated |
+| Paragon → Navigator | Quality clearance | Objective output meets standard |
 
-### Navigator → The Actualizer (execution handoff)
-- Post-gate route plan handed off to Actualizer for execution
-- Handoff includes: complete route plan + velocity targets + contingency paths
+### Navigator ← Strategic Quintet
 
-### Navigator → Apogee (final gate)
-- All Navigator outputs through Apogee evidence gate
-- Threshold: ≥ 0.75 composite (QA Rubric)
+| Direction | Signal | Trigger |
+|---|---|---|
+| Nova/Oracle → Navigator | Strategic objective | Quintet strategic output ready |
+| Amethyst → Navigator | Objective definition or route directive | Amethyst orchestration call |
 
 ### Navigator → Amethyst (escalation)
-- Critical hazards (target state unachievable) → Amethyst
-- Unresolvable route conflicts with Quintet strategy → Amethyst
+
+| Signal | Condition |
+|---|---|
+| Hazard escalation package (hazard log + route status) | Unresolvable hazard |
+| Route completion notification | Objective achieved |
+
+---
+
+## Failure Modes and Escalation
+
+| Failure | Response |
+|---|---|
+| No contingency path available for hazard | Halt route; construct contingency before proceeding; escalate to Amethyst if urgent |
+| Momentum cannot achieve velocity floor on contingency route | Escalate route + velocity analysis to Amethyst |
+| Paragon quality gap cannot be remediated in route | Escalate to Amethyst with gap analysis |
+| Objective not achievable via any known path | Escalate to Amethyst with full path analysis |
 
 ---
 

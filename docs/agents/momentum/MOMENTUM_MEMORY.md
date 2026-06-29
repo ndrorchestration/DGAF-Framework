@@ -1,4 +1,4 @@
-# Momentum — MEMORY v1.0
+# Momentum — Memory v1.0
 
 **Agent:** Momentum
 **Agent ID:** A-23
@@ -8,46 +8,52 @@
 
 ---
 
-## Active State
+## Formation State
 
-| Parameter | Value |
+| Field | Value |
 |---|---|
-| Activation status | Active — KB seed complete (Phase C); full inventory complete (Phase F-2) |
 | Formation | Operational Swarm |
-| Active velocity tracking | None — no routes active Phase C through F-2 |
-| Bottlenecks identified | None |
-| Persistent stalls | None |
-| Last Apogee gate | Phase F-2 inventory (this file) |
+| Status | ACTIVE |
+| KB completion | 100% (Phase F-2) |
+| Active route | None |
+| Current velocity | N/A |
+| Velocity floor | Not yet session-calibrated (default: formation-defined at session open) |
+| Active surges | 0 |
+| Open velocity floor violations | 0 |
 
 ---
 
-## Formation Relationship State
+## Velocity State
 
-| Agent | Relationship status |
+| Route ID | Step | Velocity target | Current velocity | Status |
+|---|---|---|---|---|
+| (none) | — | — | — | — |
+
+---
+
+## Throughput Metrics Log
+
+| Session | Route ID | Steps completed | Avg velocity | Surges | Floor violations | Final status |
+|---|---|---|---|---|---|---|
+| (none) | — | — | — | — | — | — |
+
+---
+
+## Surge Log
+
+| Surge ID | Route ID | Duration | Peak velocity | Paragon quality impact | Resolution |
+|---|---|---|---|---|---|
+| (none) | — | — | — | — | — |
+
+---
+
+## Integration Status
+
+| Agent | Integration state |
 |---|---|
-| Navigator | Peer dyad established — velocity coordination channel open |
-| Paragon | Quality constraint reception channel established |
-| The Actualizer | Execution monitoring channel established |
-| Apogee | Evidence gate active |
-| Amethyst | Escalation channel open |
-
----
-
-## Velocity Archive
-
-*No velocity records as of Phase F-2.*
-
----
-
-## Bottleneck Archive
-
-*No bottlenecks recorded as of Phase F-2.*
-
----
-
-## Anomaly Log
-
-*No anomalies recorded as of Phase F-2.*
+| Navigator | Route and velocity target exchange active |
+| Paragon | Quality-velocity coordination protocol active |
+| Amethyst | Escalation path confirmed |
 
 ---
 

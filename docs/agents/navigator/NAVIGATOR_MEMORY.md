@@ -1,4 +1,4 @@
-# Navigator — MEMORY v1.0
+# Navigator — Memory v1.0
 
 **Agent:** Navigator
 **Agent ID:** A-22
@@ -8,47 +8,51 @@
 
 ---
 
-## Active State
+## Formation State
 
-| Parameter | Value |
+| Field | Value |
 |---|---|
-| Activation status | Active — KB seed complete (Phase C); full inventory complete (Phase F-2) |
 | Formation | Operational Swarm |
-| Active routes | None — no routes committed Phase C through F-2 |
-| Contingency paths | None constructed |
-| Hazards detected | None |
-| Last Apogee gate | Phase F-2 inventory (this file) |
+| Status | ACTIVE |
+| KB completion | 100% (Phase F-2) |
+| Active primary routes | 0 |
+| Active contingency paths | 0 |
+| Open hazards | 0 |
 
 ---
 
-## Formation Relationship State
+## Active Routes
 
-| Agent | Relationship status |
+| Route ID | Objective | Steps | Status | Momentum handoff |
+|---|---|---|---|---|
+| (none) | — | — | — | — |
+
+---
+
+## Hazard Log
+
+| Hazard ID | Route ID | Description | Type | Status | Resolution |
+|---|---|---|---|---|---|
+| (none) | — | — | — | — | — |
+
+---
+
+## Contingency Archive
+
+| Path ID | Primary route | Trigger condition | Steps | Last activated |
+|---|---|---|---|---|
+| (none) | — | — | — | — |
+
+---
+
+## Integration Status
+
+| Agent | Integration state |
 |---|---|
-| Momentum | Peer dyad established — velocity coordination channel open |
-| Paragon | Quality gate channel established — gate clearance reception active |
-| The Actualizer | Execution handoff channel established |
-| The Auditor | Constraint verification channel established |
-| Apogee | Evidence gate active |
-| Amethyst | Escalation channel open |
-
----
-
-## Route Archive
-
-*No routes committed as of Phase F-2.*
-
----
-
-## Contingency Path Archive
-
-*No contingency paths constructed as of Phase F-2.*
-
----
-
-## Anomaly Log
-
-*No anomalies recorded as of Phase F-2.*
+| Momentum | Velocity exchange protocol active |
+| Paragon | Quality signal routing confirmed |
+| Strategic Quintet | Objective feed path confirmed |
+| Amethyst | Escalation path confirmed |
 
 ---
 

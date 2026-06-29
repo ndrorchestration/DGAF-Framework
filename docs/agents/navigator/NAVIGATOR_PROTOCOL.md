@@ -1,4 +1,4 @@
-# Navigator — PROTOCOL v1.0
+# Navigator — Protocol v1.0
 
 **Agent:** Navigator
 **Agent ID:** A-22
@@ -10,63 +10,85 @@
 
 ## Procedure 1 — Route Construction
 
-**Trigger:** Strategic Quintet decision received requiring operational translation.
+**Trigger:** New swarm objective received from Strategic Quintet or Amethyst.
 
-1. Parse the strategic decision: what is the target state?
-2. Assess current ecosystem state
-3. Identify all execution steps required to move from current to target state
-4. Map dependencies between steps
-5. Identify gate checkpoints (Paragon quality gates, Auditor constraint gates)
-6. Construct primary execution path with ordered steps
-7. For each critical step (≥ 2 dependencies), construct one contingency path
-8. Set velocity targets per step in coordination with Momentum
-9. Submit route plan to The Auditor for constraint verification
-10. On Auditor PASS: submit to Apogee evidence gate
-11. On Apogee PASS: hand off to The Actualizer for execution
-12. Log route in NAVIGATOR_MEMORY.md
+```
+Step 1: Define objective state
+        — Receive objective from Nova/Oracle (strategic) or Amethyst
+        — Confirm current state
+        — Define success criteria
+
+Step 2: Construct primary route
+        — Decompose objective into ordered execution steps
+        — Ensure path coherence: every step logically follows prior
+        — Assign Momentum as throughput owner for each step
+
+Step 3: Identify at least one contingency path per critical step
+        — Define trigger condition for each contingency
+        — Log in MEMORY.md contingency archive
+
+Step 4: Handoff to Momentum
+        — Route primary path with step-by-step velocity targets
+        — Include contingency trigger conditions
+
+Step 5: Log active route in MEMORY.md
+```
 
 ---
 
-## Procedure 2 — Hazard Detection and Reroute
+## Procedure 2 — Hazard Detection and Response
 
-**Trigger:** Execution blocker detected during active route execution.
+**Trigger:** Momentum velocity flag; Paragon quality flag; external dependency failure; Amethyst alert.
 
-1. Identify blocker: what dependency is unmet / resource unavailable / gate not cleared?
-2. Classify blocker severity:
-   - Minor: single step affected; contingency path available
-   - Major: multiple steps affected; contingency path required
-   - Critical: target state may be unachievable without strategic revision
-3. On Minor: activate contingency path; notify Momentum of velocity adjustment
-4. On Major: activate contingency path; notify Swarm + Paragon of impact
-5. On Critical: suspend execution; escalate to Amethyst with blocker analysis
-6. Log hazard and response in NAVIGATOR_MEMORY.md
+```
+Step 1: Identify hazard type:
+        — Technical: dependency unavailable, system failure
+        — Resource: throughput below floor (Momentum signal)
+        — Quality: output below Paragon standard
+        — Dependency: upstream agent output delayed
+
+Step 2: Log hazard in MEMORY.md hazard log
+
+Step 3: Determine response:
+        — Minor hazard: adjust route (add remediation step)
+        — Major hazard: activate contingency path (Procedure 3)
+        — Unresolvable: escalate to Amethyst
+
+Step 4: Notify Momentum of route adjustment
+        — Recalculate velocity targets for adjusted route
+```
 
 ---
 
 ## Procedure 3 — Contingency Path Activation
 
-**Trigger:** Primary path blocked (Minor or Major hazard classification).
+**Trigger:** Major hazard detected; Procedure 2 determines contingency required.
 
-1. Retrieve pre-constructed contingency path for the blocked step
-2. Verify contingency path is still valid (no new blockers)
-3. If valid: activate; notify Momentum of revised velocity targets
-4. If invalid: construct new contingency path (Procedure 1 subset for affected steps only)
-5. Notify Paragon of path change for quality gate re-evaluation
-6. Log activation in NAVIGATOR_MEMORY.md
+```
+Step 1: Identify relevant contingency path from archive
+Step 2: Verify contingency trigger condition is met
+Step 3: Activate contingency path:
+        — Suspend primary route at hazard point
+        — Route execution through contingency steps
+Step 4: Notify Momentum with revised velocity targets
+Step 5: Notify Paragon that route has changed (quality checkpoints may shift)
+Step 6: Log activation in MEMORY.md
+Step 7: Resume primary route once hazard is resolved (or adopt contingency as new primary)
+```
 
 ---
 
-## Procedure 4 — Swarm Velocity Review
+## Procedure 4 — Route Handoff
 
-**Trigger:** Momentum flags throughput below threshold, OR scheduled review.
+**Trigger:** Route complete; objective achieved; formation transition.
 
-1. Review all active route steps for velocity alignment
-2. Identify steps where actual progress deviates from planned velocity target
-3. For each deviation: is it a route design issue (Navigator) or throughput issue (Momentum)?
-4. Route design issues: revise step sequencing or remove unnecessary dependencies
-5. Throughput issues: route analysis to Momentum for bottleneck resolution
-6. Update velocity targets across active routes
-7. Log review findings in NAVIGATOR_MEMORY.md
+```
+Step 1: Verify all steps in route are complete
+Step 2: Confirm Paragon quality clearance on outputs
+Step 3: Archive route in MEMORY.md
+Step 4: Notify Amethyst that objective is complete
+Step 5: Clear active route slot for next objective
+```
 
 ---
 

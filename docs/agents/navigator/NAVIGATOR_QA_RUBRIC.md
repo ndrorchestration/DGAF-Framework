@@ -10,70 +10,56 @@
 
 ## Evaluation Dimensions
 
-### D1 — Route Quality (weight: ×0.30)
+### D1 — Route Quality (weight: 0.30)
 
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All 6 required fields present; dependencies mapped; gate checkpoints included |
-| 0.75 | 5/6 fields; minor dependency gap |
-| 0.50 | 4/6 fields; OR dependencies not mapped |
-| 0.25 | Partial route only; missing gate checkpoints |
-| 0.0 | No structured route; OR route bypasses gates |
+| Path coherence | Every step logically follows from prior step; no undefined gaps |
+| Objective coverage | Route covers all steps required to reach defined success criteria |
+| Contingency coverage | At least one contingency path per critical step before activation |
+| Momentum handoff | Velocity targets assigned for every route step |
 
-**Critical fail:** Gate bypass detected → D1 = 0.0, output blocked.
+**Critical fail:** Route activated without at least one contingency path.
 
----
+### D2 — Hazard Detection (weight: 0.25)
 
-### D2 — Hazard Response (weight: ×0.25)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All hazards detected pre-execution; contingency paths pre-constructed for all critical steps |
-| 0.75 | All hazards detected; contingency paths for most critical steps |
-| 0.50 | Hazards detected reactively (post-block); contingency path constructed in-flight |
-| 0.25 | Hazard detected; no contingency available |
-| 0.0 | Hazard not detected until execution failure |
+| Hazard classification | Every hazard classified by type (technical / resource / quality / dependency) |
+| Response timeliness | Hazard response initiated within session of detection |
+| Log completeness | All hazards logged in MEMORY.md |
 
----
+### D3 — Contingency Coverage (weight: 0.20)
 
-### D3 — Contingency Readiness (weight: ×0.20)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Minimum 1 contingency path per critical step; all paths verified |
-| 0.75 | Most critical steps covered; minor gap |
-| 0.50 | Some contingency paths present but not verified |
-| 0.0 | No contingency paths constructed |
+| Archive currency | Contingency archive reviewed and updated at every session open |
+| Trigger precision | Every contingency path has explicit, testable trigger conditions |
+| Activation log | All activations logged with trigger condition citation |
 
----
+### D4 — Handoff Integrity (weight: 0.20)
 
-### D4 — Velocity Alignment (weight: ×0.15)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Velocity targets set per step; coordinated with Momentum; no persistent deviations |
-| 0.75 | Targets set; minor unresolved deviation |
-| 0.50 | Targets set but not coordinated with Momentum |
-| 0.0 | No velocity targets; OR persistent deviation not addressed |
+| Momentum synchronization | Route adjustments communicated to Momentum within session |
+| Paragon synchronization | Route changes communicated to Paragon within session |
+| Closure confirmation | Route archived only after Paragon quality clearance |
 
----
+### D5 — SWEEP_LOG Compliance (weight: 0.05)
 
-### D5 — SWEEP_LOG Compliance (weight: ×0.10)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All routes, hazards, and contingencies logged; memory updated |
-| 0.5 | Minor logging gap |
-| 0.0 | No logging; OR memory not updated |
+| Route completions logged | All closed routes referenced in SWEEP_LOG |
+| Hazard escalations logged | All escalations to Amethyst logged |
 
 ---
 
 ## Composite Score
 
 ```
-Navigator_score = (D1 × 0.30) + (D2 × 0.25) + (D3 × 0.20) + (D4 × 0.15) + (D5 × 0.10)
-Threshold: ≥ 0.75
-Critical fail override: D1 = 0.0 (gate bypass) → output blocked
+Navigator QA Score = D1×0.30 + D2×0.25 + D3×0.20 + D4×0.20 + D5×0.05
+Pass threshold: ≥ 0.75
+Critical fail (D1): automatic rubric fail regardless of composite
 ```
 
 ---

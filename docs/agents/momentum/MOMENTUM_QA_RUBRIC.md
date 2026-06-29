@@ -10,70 +10,54 @@
 
 ## Evaluation Dimensions
 
-### D1 — Throughput Accuracy (weight: ×0.30)
+### D1 — Velocity Monitoring Accuracy (weight: 0.30)
 
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Throughput measured per session; actual vs. target reported; deviation calculated |
-| 0.75 | Measurement present; minor calculation gap |
-| 0.50 | Throughput estimated, not measured |
-| 0.25 | Throughput referenced without measurement |
-| 0.0 | No throughput tracking |
+| Velocity floor calibrated | Floor defined and confirmed with Navigator at route start |
+| Violation detection | Every floor violation detected and logged within same step |
+| Surge detection | Surges detected within 2 consecutive steps |
+| Metrics currency | Throughput metrics updated at every step transition |
 
----
+**Critical fail:** Velocity floor violation not reported to Navigator within session.
 
-### D2 — Bottleneck Resolution (weight: ×0.25)
+### D2 — Surge Response (weight: 0.25)
 
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Bottleneck type correctly classified; resolution routed to correct agent; resolved within 1 session |
-| 0.75 | Correctly classified; resolution in progress |
-| 0.50 | Bottleneck identified; type classification incorrect; resolution delayed |
-| 0.25 | Bottleneck identified; not classified or routed |
-| 0.0 | Bottleneck not detected; OR persistent stall not escalated |
+| Paragon quality floor | Never breached during surge; cap applied if at risk |
+| Surge log completeness | All surges logged in MEMORY.md |
+| Paragon notification | Paragon notified of every surge within same step |
 
-**Critical fail:** Persistent stall (2+ sessions) not escalated to Amethyst → D2 = 0.0.
+### D3 — Route Coordination (weight: 0.25)
 
----
-
-### D3 — Acceleration Model Quality (weight: ×0.20)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Acceleration modeled with quality gate confirmation; sustainable rate identified |
-| 0.75 | Acceleration modeled; minor quality confirmation gap |
-| 0.50 | Acceleration proposed without modeling |
-| 0.0 | Acceleration recommended without quality gate check |
+| Navigator synchronization | All route adjustments received and velocity targets updated |
+| Violation root cause | Root cause identified and communicated to Navigator on every violation |
+| Escalation timeliness | Unresolvable violations escalated to Amethyst within session |
 
----
+### D4 — Reporting Currency (weight: 0.15)
 
-### D4 — Swarm Synchronization (weight: ×0.15)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Coordination pulse issued every session; Navigator velocity targets current |
-| 0.75 | Pulse issued; minor target staleness |
-| 0.50 | Pulse issued but incomplete |
-| 0.0 | No coordination pulse |
+| Session report | Throughput report delivered to Amethyst at session close |
+| Metrics log | MEMORY.md metrics log updated at session close |
 
----
+### D5 — SWEEP_LOG Compliance (weight: 0.05)
 
-### D5 — SWEEP_LOG Compliance (weight: ×0.10)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All velocity records, bottlenecks, and stalls logged |
-| 0.5 | Minor logging gap |
-| 0.0 | No logging |
+| Persistent violations flagged | All unresolved floor violations referenced in SWEEP_LOG |
 
 ---
 
 ## Composite Score
 
 ```
-Momentum_score = (D1 × 0.30) + (D2 × 0.25) + (D3 × 0.20) + (D4 × 0.15) + (D5 × 0.10)
-Threshold: ≥ 0.75
-Critical fail: D2 = 0.0 (persistent stall not escalated) → output blocked
+Momentum QA Score = D1×0.30 + D2×0.25 + D3×0.25 + D4×0.15 + D5×0.05
+Pass threshold: ≥ 0.75
+Critical fail (D1): automatic rubric fail regardless of composite
 ```
 
 ---
