@@ -1,52 +1,126 @@
-# QA Rubric — Agent Apogee
+# Apogee — QA Rubric
 
-**Agent:** Agent Apogee  
-**Role Domain:** Evidence Governance  
-**Formation:** Trio / Quintet  
-**Rubric Version:** 1.0  
-**Authority:** Amethyst-Conductor  
-**Last Updated:** 2026-06-29
+**Agent:** Apogee · **Role:** Prefect B / Quality Gate
+**Rubric version:** v1.0 · **Seeded:** S073 · 2026-06-29
+**Source:** AXIS_METRIC_SPEC.md v1.2 (Njineer ratified 2026-06-27)
+**Classification:** T1 PUBLIC
 
 ---
 
-## Purpose
+## Rubric Overview
 
-Defines quality criteria for Apogee's evidence scoring, source validation, and DGAF/PMP compliance verification outputs. Apogee is the artifact quality oracle — this rubric governs how Apogee itself is evaluated.
-
----
-
-## Evaluation Dimensions
-
-| Dim | Dimension | Weight | Pass Threshold | Scoring Notes |
-|-----|-----------|--------|----------------|---------------|
-| D1 | **11Q Gate Accuracy** | 25% | ≥ 0.90 | Each of the 11 questions scored correctly against artifact content. No false positives (passing a failing artifact). |
-| D2 | **Source Validation Rigor** | 20% | ≥ 0.85 | Citation-to-claim traceability. No hallucinated sources. External refs verified. |
-| D3 | **DGAF/PMP Compliance Check** | 20% | ≥ 0.88 | Framework alignment verified against current DGAF canon. PMP artifact structure validated. |
-| D4 | **CERTIFICATION_INDEX Maintenance** | 15% | ≥ 0.90 | Index updated at every gate event. No stale entries. Schema valid. |
-| D5 | **GAP-07 Content Ownership** | 10% | ≥ 0.85 | AGES content (GAP-07) complete, versioned, and Drive-synced. |
-| D6 | **Score Traceability** | 10% | ≥ 0.88 | Every score output includes dimension breakdown + rationale. No opaque composite-only scores. |
-
-**Composite Pass:** ≥ 0.87 routine; ≥ 0.92 for P-15 seal gate inputs.
+The AXIS composite rubric evaluates formation health across 7 orthogonal dimensions. Each dimension has a weight, a gate floor, and a set of scoring criteria. Composite score is the weighted sum of all dimension scores.
 
 ---
 
-## Failure Modes
+## Dimension Rubrics
 
-| ID | Failure | Trigger | Mitigation |
-|----|---------|---------|------------|
-| F1 | **False positive gate pass** | 11Q returns PASS on artifact with D1 < 0.70 | Hard re-score; Amethyst holds commit pending re-evaluation |
-| F2 | **Stale CERTIFICATION_INDEX** | Gate event occurs without index update | COLLEEN flags at P-02 of next session; Apogee must retroactively update |
-| F3 | **Circular citation** *(non-obvious)* | Apogee validates a source that itself cites an Apogee prior output | Sentinel flags circular reference; external source required |
+### D1 — Structural Completeness (weight: 0.20)
 
----
+| Score | Criteria |
+|-------|----------|
+| 1.0 | All required files present and non-stub; SPEC + MEMORY + PROTOCOL + KB all seeded for active agents |
+| 0.9 | ≤1 file missing or stub; no BLGs open |
+| 0.8 | ≤2 files missing; BLG count ≤1 |
+| 0.7 | 3–5 files missing or BLGs open |
+| < 0.7 | >5 files missing or critical doc absent |
 
-## Gate Ownership
-
-| Gate | Apogee Role |
-|------|-------------|
-| P-11 | 11Q gate — primary owner; delivers composite score to Amethyst |
-| P-15 | Evidence seal confirmation |
+**Gate floor:** 0.80
 
 ---
 
-*Rubric authority: Amethyst-Conductor.*
+### D2 — Vocabulary Coherence (weight: 0.15)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | All terms in Vocab Master v1.3; zero drift detected |
+| 0.9 | ≤2 unregistered terms; no canonical conflicts |
+| 0.8 | ≤5 unregistered terms; no expansion conflicts |
+| 0.7 | 6–10 unregistered or conflicting terms |
+| < 0.7 | Canonical conflicts present or expansion contradictions |
+
+**Gate floor:** 0.85
+
+---
+
+### D3 — IP Boundary Integrity (weight: 0.15)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | All SOV content stubbed; T1/T2/T3 taxonomy enforced; no formulation content in GitHub |
+| 0.9 | Minor stub gap; no formulation leakage |
+| 0.8 | ≤1 T3 item not yet stubbed; no leakage |
+| 0.7 | T3 item partially exposed or stub missing |
+| < 0.7 | Formulation content visible in GitHub |
+
+**Gate floor:** 0.90
+
+---
+
+### D4 — Authority Legibility (weight: 0.15)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | All 8-agent authority bindings in FORMATION_TOPOLOGY; escalation paths clear |
+| 0.9 | ≤1 authority binding undocumented |
+| 0.8 | ≤2 authority gaps; escalation path functional |
+| 0.7 | 3+ authority gaps or ambiguous override chain |
+| < 0.7 | Sovereign authority chain broken |
+
+**Gate floor:** 0.80
+
+---
+
+### D5 — Pattern Registry Currency (weight: 0.15)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | Registry watermark current; JSON sync complete; all layers accounted |
+| 0.9 | JSON sync pending but md-registry current; watermark valid |
+| 0.8 | ≤2 layers with pending updates; watermark valid |
+| 0.7 | Watermark stale or layer gap |
+| < 0.7 | Registry divergence from active patterns |
+
+**Gate floor:** 0.80
+
+---
+
+### D6 — Ethical Gate / COLLEEN (weight: 0.10)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | COLLEEN 1-1-1-1 FULL GREEN |
+| 0.0 | Any COLLEEN dimension < 1 |
+
+**Gate floor:** 1.00 (binary — no partial credit)
+
+---
+
+### D7 — Flag Health (weight: 0.10)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | Zero open flags |
+| 0.9 | 1 open flag, low blast radius |
+| 0.8 | 1–2 open flags, medium blast radius |
+| 0.7 | 3+ open flags or 1 high-blast flag |
+| < 0.7 | Sovereign flag unresolved |
+
+**Gate floor:** 0.85
+
+---
+
+## Composite Computation
+
+```
+composite = (D1×0.20) + (D2×0.15) + (D3×0.15) + (D4×0.15)
+          + (D5×0.15) + (D6×0.10) + (D7×0.10)
+```
+
+**P-15 seal threshold:** ≥ 0.90
+**P-11 attestation threshold:** ≥ 0.85
+**AXIS floor (any gate):** ≥ 0.75
+
+---
+
+*QA_RUBRIC.md · Apogee · v1.0 · S073 · 2026-06-29*

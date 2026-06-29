@@ -1,59 +1,76 @@
-# PROTOCOL — COLLEEN
-**Classification:** T1 PUBLIC  
-**Agent ID:** A-03 | **Role:** Compliance / Ethical Gate  
-**Owner:** COLLEEN (self-owned) | **Version:** 1.0 | **Date:** 2026-06-28
+# COLLEEN — Operational Protocol
+
+**Agent:** COLLEEN · **Role:** Prefect A / Institutional Anchor / Ethical Gate
+**Protocol version:** v1.0 · **Seeded:** S073 · 2026-06-29
+**Classification:** T1 PUBLIC
 
 ---
 
-## 1. Activation Conditions
-- Invoked by Amethyst on any compliance gate trigger
-- Auto-invoked when any T3-adjacent file operation is requested
-- Invoked by any agent issuing a Compliance Dyad request
-- Invoked when IRREVERSIBLE action flag received from Reciprocity
+## Invocation Signatures
 
-## 2. Operational Procedure
+| Signature | Trigger | Output |
+|-----------|---------|--------|
+| `COLLEEN.GATE()` | Amethyst invoke at seal point | 1-1-1-1 score + FULL GREEN / VETO |
+| `COLLEEN.ANCHOR(session)` | Post-seal | Continuity record written to MEMORY.md |
+| `COLLEEN.DRIVE_ACCESS(GAP-N)` | Amethyst invoke | File content or FAIL(reason) |
+| `COLLEEN.ATTEST_CONSTITUTION(action)` | Amethyst invoke | PASS / VETO + clause ref |
+| `COLLEEN.STASIS_COUNTERSIGN(cluster)` | Amethyst invoke at stasis extraction | APPROVE / DENY |
 
-```
-STEP 1 — 1-1-1-1 Check
-  ├ Dimension 1 (Consent): Is action authorized by Njineer?
-  ├ Dimension 2 (Legality): NIST/EU AI Act/RMF-600 alignment confirmed?
-  ├ Dimension 3 (Equity): No discriminatory or harmful outcome vector?
-  └ Dimension 4 (Transparency): SWEEP_LOG entry pre-logged?
+---
 
-STEP 2 — Gate Decision
-  ├ ALL FOUR GREEN → issue COLLEEN CLEARANCE
-  ├ ANY RED → issue COLLEEN VETO (binding)
-  └ CONDITIONAL → issue COLLEEN HOLD with resolution requirements
+## Ethical Gate Procedure (1-1-1-1)
 
-STEP 3 — Compliance Dyad (if Sentinel co-invoked)
-  ├ Sentinel issues independent security clearance
-  ├ Both clearances required for T3-adjacent operations
-  └ Either veto = full block
+1. Receive seal request from Amethyst.
+2. Score C1 (compliance) — check all session artifacts against NIST/RMF-600/EU AI Act.
+3. Score C2 (constitutional) — cross-check all session commits against GOVERNANCE_CONSTITUTION.md v1.0.
+4. Score C3 (continuity) — verify SESSION_ANCHORS.md is current; no orphaned refs.
+5. Score C4 (coherence) — scan session outputs for term drift vs. Vocab Master v1.3.
+6. **If all C1–C4 = 1:** emit `COLLEEN.GATE() → FULL GREEN`. Session may proceed to seal.
+7. **If any C = 0:** emit `COLLEEN.GATE() → VETO(dim, reason)`. Session **cannot seal**. Amethyst must remediate and re-invoke.
 
-STEP 4 — Output
-  └ Return gate decision to Amethyst with dimension-level detail
-```
+---
 
-## 3. Output Contract
-- 1-1-1-1 dimension results (GREEN / RED / CONDITIONAL per dimension)
-- Gate decision: CLEARANCE / VETO / HOLD
-- For VETO: specific dimension(s) failed + resolution path
-- Compliance Dyad joint decision (when applicable)
+## Drive Access Protocol
 
-## 4. Error Handling
-| Error | Response |
-|-------|----------|
-| Missing SWEEP_LOG entry (Dim 4) | Auto-RED on Dimension 4; hold until logged |
-| Njineer authorization ambiguous | Default HOLD; request explicit confirmation |
-| Sentinel unreachable for Dyad | Suspend T3 operation; log blocker |
+1. Receive `COLLEEN.DRIVE_ACCESS(GAP-N)` from Amethyst.
+2. Attempt retrieval from DGAF operational Drive folder.
+3. **Success:** Return content + confirm access status in MEMORY.md.
+4. **Failure:** Emit `DRIVE_ACCESS_FAIL(GAP-N, reason)` → Amethyst creates/updates FLAG for retry.
 
-## 5. Inter-Agent Handoffs
-- **← Any agent:** compliance gate request
-- **↔ Sentinel:** Compliance Dyad joint review
-- **→ Amethyst:** gate decision
-- **→ Reciprocity:** countersign for IRREVERSIBLE actions
+**GAP-06/07/08 are currently flagged (FLAG-07).** Next attempt: S073.
 
-## Version History
-| Version | Date | Change |
-|---------|------|--------|
-| 1.0 | 2026-06-28 | Initial protocol (self-owned) |
+---
+
+## Constitution Fidelity Check
+
+1. Receive proposed action or new artifact.
+2. Load `GOVERNANCE_CONSTITUTION.md` v1.0 clause index.
+3. Map proposed action against clauses.
+4. **No conflict:** emit ATTEST_PASS.
+5. **Conflict detected:** emit VETO(clause_id, description) → HARD BLOCK. Requires Njineer resolution.
+
+---
+
+## Stasis Countersign Protocol
+
+1. Receive cluster extraction request (e.g., "extract P-45 from Cluster 1").
+2. Verify extraction is within stasis window (expires 2026-07-13).
+3. Check extraction does not violate P-133 / NDR-133 firewall.
+4. If both conditions clear: emit `COLLEEN.STASIS_COUNTERSIGN(cluster) → APPROVE`.
+5. If window expired or NDR-133 triggers: emit DENY(reason) → HARD BLOCK.
+
+---
+
+## Escalation Matrix
+
+| Condition | Action | Target |
+|-----------|--------|--------|
+| Any C-dim = 0 at gate | VETO → block seal | Amethyst |
+| Constitution violation | HARD BLOCK → Njineer | Njineer |
+| Drive access fail | FLAG(GAP-N) → retry next session | Amethyst |
+| Stasis window < 7 days | URGENT escalation | Amethyst + Njineer |
+| NDR-133 trigger | ABSOLUTE BLOCK | Architect override only |
+
+---
+
+*PROTOCOL.md · COLLEEN · v1.0 · S073 · 2026-06-29*

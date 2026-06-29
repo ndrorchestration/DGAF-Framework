@@ -1,50 +1,85 @@
-# QA Rubric — Agent Reson
+# Reson — QA Rubric
 
-**Agent:** Agent Reson  
-**Role Domain:** Harmonic Coherence  
-**Formation:** Quintet  
-**Rubric Version:** 1.0  
-**Authority:** Amethyst-Conductor  
-**Last Updated:** 2026-06-29
+**Agent:** Reson · **Role:** Augmenter 1 / Harmonic Integrity Monitor
+**Rubric version:** v1.0 · **Seeded:** S073 · 2026-06-29
+**Classification:** T1 PUBLIC
 
 ---
 
-## Purpose
+## Harmonic Scoring Rubric
 
-Defines quality criteria for Reson's harmonic coherence scoring, drift warnings, and dissonance hard-stop triggers. Reson scores are binding for seal commits (P-15) and sovereign file touches.
-
----
-
-## Evaluation Dimensions
-
-| Dim | Dimension | Weight | Pass Threshold | Scoring Notes |
-|-----|-----------|--------|----------------|---------------|
-| D1 | **Score Accuracy (0.00–1.00)** | 30% | ≥ 0.90 | Harmonic coherence score correctly reflects formation alignment, signal chain integrity, and session-state consistency. |
-| D2 | **Threshold Enforcement** | 25% | ≥ 0.95 | ≥ 0.75 enforced for seal commits. 0.50–0.74 triggers drift warning (not stop). < 0.50 triggers hard stop. No threshold mis-application. |
-| D3 | **Signal Chain Integrity** | 20% | ≥ 0.88 | All agent signals in the formation accounted for before scoring. No scoring on incomplete formations. |
-| D4 | **Dissonance Source Identification** | 15% | ≥ 0.85 | When score < 0.75, Reson identifies the specific dissonance source (agent, file, or decision). |
-| D5 | **NDR-133 Firewall Activation** | 10% | ≥ 0.92 | NDR-133 pattern triggers Sentinel notification within the same turn. |
-
-**Composite Pass:** ≥ 0.88 routine; ≥ 0.92 for P-15 inputs.
+The harmonic score is computed from four sub-dimensions. Each is scored 0.0–1.0. Composite = weighted average.
 
 ---
 
-## Failure Modes
+### H1 — Phi-Alignment (weight: 0.30)
 
-| ID | Failure | Trigger | Mitigation |
-|----|---------|---------|------------|
-| F1 | **Threshold mis-application** | Reson applies seal threshold (0.75) to a non-seal commit, blocking valid work | Amethyst clarifies commit type; Reson re-evaluates with correct threshold scope |
-| F2 | **Score without full formation** | Reson scores while formation is incomplete (e.g., Sentinel not yet activated) | Score voided; Amethyst completes formation; Reson re-scores |
-| F3 | **Score laundering** *(non-obvious)* | Reson absorbs a dissonant signal from one agent by averaging across others, masking a real problem with a passing composite | Amethyst requires dimension-level breakdown; any single-dimension score < 0.50 triggers review regardless of composite |
-
----
-
-## Gate Ownership
-
-| Gate | Reson Role |
-|------|------------|
-| P-15 | Harmonic coherence score — required ≥ 0.75 for seal |
+| Score | Criteria |
+|-------|----------|
+| 1.0 | Session output density and distribution is proportionally balanced per φ-lattice heuristic; no overload or sparsity |
+| 0.9 | Minor density imbalance (1 phase overloaded); no structural phi violations |
+| 0.8 | 2–3 density imbalances; formation outputs still internally coherent |
+| 0.7 | Significant phi drift — one formation node dominates output disproportionately |
+| < 0.7 | Lattice geometry broken — outputs cannot be mapped to φ-structure |
 
 ---
 
-*Rubric authority: Amethyst-Conductor.*
+### H2 — Modal Alignment (weight: 0.25)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | Session maps cleanly to Ionian mode — stable, resolved, no unresolved tensions |
+| 0.9 | Minor unresolved element; resolves within session |
+| 0.8 | Dorian shift detected; tension present but bounded |
+| 0.7 | Mixolydian tension — requires advisory flag |
+| < 0.7 | Phrygian dissonance — escalation required |
+
+---
+
+### H3 — Semantic Coherence (weight: 0.25)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | Zero internal contradictions; all session outputs mutually consistent |
+| 0.9 | 1 minor inconsistency; corrected within session |
+| 0.8 | 1–2 inconsistencies noted; no contradiction in canonical docs |
+| 0.7 | Contradiction in non-canonical doc; advisory flag |
+| < 0.7 | Contradiction in canonical doc — escalation required |
+
+---
+
+### H4 — Resolution Cadence (weight: 0.20)
+
+| Score | Criteria |
+|-------|----------|
+| 1.0 | Session ends in higher integrity state than it started; all opened items closed or properly anchored |
+| 0.9 | 1 item opened and not closed (anchored for next session with clear owner) |
+| 0.8 | 2 items anchored; no regression |
+| 0.7 | Regression on 1 item (state worse at end than start) |
+| < 0.7 | Multiple regressions or orphaned items |
+
+---
+
+## Composite Formula
+
+```
+harmonic_score = (H1 × 0.30) + (H2 × 0.25) + (H3 × 0.25) + (H4 × 0.20)
+```
+
+**Seal floor:** 0.85 · **Ionian sustained target:** ≥ 0.90
+**Phrygian block threshold:** < 0.70 (emits ESCALATE, blocks seal)
+
+---
+
+## Modal State → Action Map
+
+| Score | Modal State | Reson Action | Amethyst Action |
+|-------|-------------|-------------|----------------|
+| ≥ 0.90 | Ionian sustained | Emit score | Proceed to seal |
+| 0.80–0.89 | Dorian shift | Emit score + advisory | Note in SESSION_ANCHORS; proceed |
+| 0.70–0.79 | Mixolydian tension | Emit ALERT | Review before seal |
+| < 0.70 | Phrygian dissonance | Emit ESCALATE | Remediate; re-score before seal |
+
+---
+
+*QA_RUBRIC.md · Reson · v1.0 · S073 · 2026-06-29*

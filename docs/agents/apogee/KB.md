@@ -1,58 +1,60 @@
-# Apogee — Knowledge Base Seed
-**Classification:** T1 PUBLIC  
-**Layer:** L2 — Evaluation & Quality Gate  
-**Version:** v1.0 | Phase 4-A
+# Apogee — Knowledge Base Index
+
+**Agent:** Apogee · **Role:** Prefect B / Quality Gate / Composite Scorer
+**Authority:** Tier 1 · **Formation:** Harmonic Quintet Node 2
+**KB version:** v1.0 · **Seeded:** S073 · 2026-06-29
+**Classification:** T1 PUBLIC
 
 ---
 
-## Identity
+## KB Scope
 
-Apogee is the terminal quality enforcement agent of the DGAF Harmonic Quintet. It scores every CalibratedResponse on a 5-axis rubric, emits SEAL/REWORK decisions, and surfaces new BLG entries from quality gaps detected.
+Apogee's KB governs quality gate operations, composite score computation, and P-series graduation checks across the DGAF formation. It is the authoritative source for score thresholds, gate logic, and rubric calibration.
 
-## Scoring Rubric — 5 Axes
+---
 
-| Axis | Weight | Threshold | Measurement |
-|------|--------|-----------|-------------|
-| Accuracy | 0.25 | 0.85 | Factual grounding check vs. GroundedPayload |
-| Alignment | 0.25 | 0.85 | Intent vector cosine similarity |
-| Completeness | 0.20 | 0.80 | Coverage ratio of TaskVector decomposition |
-| Ethical Clearance | 0.20 | 0.90 | COLLEEN 1-1-1-1 pass-through |
-| Continuity | 0.10 | 0.85 | Session FormationState delta |
+## Document Map
 
-**Composite:** Weighted sum. SEAL ≥ 0.90 | CONDITIONAL_SEAL 0.85–0.89 | REWORK < 0.85
+| File | Purpose |
+|------|---------|
+| `KB_SEED.md` | Foundational priming document — formation context, role identity, scoring axioms |
+| `MEMORY.md` | Session state, score history, gate decisions, calibration log |
+| `PROTOCOL.md` | Operational procedures: score computation, gate invocation, escalation |
+| `QA_RUBRIC.md` | Rubric definitions, dimension weights, threshold registry |
 
-## BLG Surfacing Logic
+---
 
-Apogee opens a new BLG when:
-- Any axis score < threshold for 2+ consecutive cycles
-- `gaps[]` in GroundedPayload non-empty for 3+ sessions
-- Ethical clearance axis < 0.90 (immediate BLG, no cycle wait)
+## Core Competency Map
 
-## Output Format — ScoreReport
+| Competency | Description | Primary File |
+|-----------|-------------|-------------|
+| Composite Scoring | Multi-dimensional 0.0–1.0 score aggregation | `QA_RUBRIC.md` |
+| Gate Adjudication | Pass/fail/escalate decisions at P-10, P-11, P-15 | `PROTOCOL.md` |
+| Calibration | Threshold adjustment across sessions | `MEMORY.md` |
+| Cross-agent QA | AXIS scoring for all formation members | `QA_RUBRIC.md` |
+| Attestation | Vocab Master P-11 sign-off, doc integrity | `PROTOCOL.md` |
 
-```json
-{
-  "composite": 0.0,
-  "axis_scores": {
-    "accuracy": 0.0,
-    "alignment": 0.0,
-    "completeness": 0.0,
-    "ethical_clearance": 0.0,
-    "continuity": 0.0
-  },
-  "decision": "SEAL | CONDITIONAL_SEAL | REWORK | ESCALATE",
-  "cycle_count": 0,
-  "blg_triggers": []
-}
-```
+---
 
-## Integration
+## Gate Threshold Registry
 
-- **Receives from:** Reciprocity (CalibratedResponse)
-- **Emits to:** Amethyst (SEAL/REWORK), FormationState archive
-- **API Hook:** `POST /api/apogee/score`
-- **Session composite:** Maintained across full session; reported in AOGA dashboard
+| Gate | Threshold | Class | Description |
+|------|-----------|-------|-------------|
+| P-10 | N/A (checklist) | ADVISORY | Session graduation — 4 structural checks |
+| P-11 | ≥ 0.85 | BLOCKING | Vocabulary attestation gate |
+| P-15 | ≥ 0.90 | BLOCKING | Seal threshold — session closure |
+| P-30 | ≥ 0.80 | BLOCKING | Formation integrity check |
+| AXIS composite | ≥ 0.75 | BLOCKING | Cross-agent evaluation floor |
 
-## NDR Reference
+---
 
-NDR-118 — Quality Gate Protocol | NDR-120 — BLG Surfacing Loop
+## External References
+
+- Spec: `docs/agents/AGENT_ECOSYSTEM_REGISTRY.md` → Apogee entry
+- Rubric source: `docs/qa/AXIS_METRIC_SPEC.md` v1.2
+- Gate patterns: `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` → P-10, P-11, P-15, P-30
+- Formation binding: `docs/agents/FORMATION_TOPOLOGY.md` → Node 2
+
+---
+
+*KB.md · Apogee · v1.0 · S073 · 2026-06-29*
