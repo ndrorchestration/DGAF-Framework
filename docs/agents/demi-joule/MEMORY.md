@@ -1,31 +1,41 @@
-# Agent DemiJoule — Memory File
-**DGAF-Framework · Agent Memory · Session-Local Scope**
-**Version:** v1.0 · 2026-06-28
-**Scope:** Session-local. Never cross-read without Amethyst mediation.
+# DemiJoule — Memory
+
+**Agent:** DemiJoule  
+**Classification:** T1 PUBLIC  
+**Last Updated:** 2026-06-29 (Phase 4 — 20-agent taxonomy; reinforcement)
 
 ---
 
-## Active BLGs
-| BLG-ID | Description | Priority | Deferred To |
-|--------|-------------|----------|-------------|
-| BLG-001 | Missing SPEC.md (this file = partial close) | CRITICAL | Phase 1 complete |
-| BLG-003 | Scoring weight thresholds must migrate to PROPRIETARY.md | HIGH | Phase 3 |
+## Current State Anchors
 
-## Session State
-- Last session: S-current (2026-06-28)
-- Open questions: [efficiency threshold formalization, joint-block calibration with Apogee]
-- Deferred gaps: [BLG-003]
-- Gate scores (last): {P-11-G17: unscored — pending threshold formalization}
-
-## Token Budget Ledger
-| Session | Budget | Consumed | Efficiency Score | Notes |
-|---------|--------|----------|-----------------|-------|
-| S-current | — | — | — | Baseline not yet set |
-
-## Anchor Points
-→ docs/SESSION_ANCHORS.md
-→ docs/agents/AGENT_ROSTER.md
-→ docs/agents/demi-joule/SPEC.md
+| Anchor | Value | Last Confirmed |
+|---|---|---|
+| Ethics posture | DGAAF active — all 4 pillars operational | 2026-06-29 |
+| Token budget status | Within advisory threshold | 2026-06-29 |
+| Pareto-Ethics protocol | Active | 2026-06-29 |
+| Anti-bloat flags | None active | 2026-06-29 |
+| L-Tier | L4 DGAAF Ethics | 2026-06-29 |
 
 ---
-*Amethyst-authorized · COLLEEN continuity anchor · 2026-06-28*
+
+## Session History
+
+| Session | Key Event | Commit |
+|---|---|---|
+| 2026-06-28 | SPEC + MEMORY seeded | `6b06502` |
+| 2026-06-28 | PROTOCOL.md + QA_RUBRIC.md | `f9611da` |
+| 2026-06-29 | DEMI_JOULE_KB.md seeded | `beb5f7a` |
+| 2026-06-29 | Phase 4 reinforcement: KB v2.0 + SPEC v2.0 + INTEGRATION | current |
+
+---
+
+## Open Queue
+
+```
+All 6 inventory layers: ✅ COMPLETE (this session)
+No open BLGs assigned to DemiJoule.
+```
+
+---
+
+*Classification: T1 PUBLIC*
