@@ -1,20 +1,21 @@
 # NDR Pattern Registry (Unified)
 
 **DGAF-Framework · Unified Edition**
-**Version:** 1.4 (S070-r3-P1 — formation patterns registered · PDMAL variant canonical status recorded · triadic telemetry guidance added)
+**Version:** 1.5 (S071 — P-37 Saga + P-38 Circuit-Breaker registered · Layer 10 Resilience & Recovery added)
 **Prime:** Amethyst · **Prefect A:** COLLEEN · **Prefect B:** Apogee
 **Ender ratification (v1.0):** 2026-05-30 02:49 EDT
 **Ender ratification (v1.2):** 2026-06-13 00:47 EDT (S069 sealed)
 **Version 1.3 update:** 2026-06-13 (S069 QA sweep — Amethyst × COLLEEN)
 **Version 1.4 update:** 2026-06-26 (S070-r3-P1 — Amethyst × COLLEEN)
-**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-36 + NDR named session patterns + formation patterns
+**Version 1.5 update:** 2026-06-28 (S071 — P-37/P-38 registered · Amethyst × COLLEEN)
+**Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-38 + NDR named session patterns + formation patterns
 
 > **This file supersedes and absorbs:**
 > - `docs/governance/ndr-pattern-registry-v3.md` — ❌ DELETED S069 QA sweep (named session patterns absorbed below)
 > - `docs/NDR_PATTERN_REGISTRY.md` (P-01–P-10 source — redirect stub)
 > - `docs/patterns/NDR_PATTERN_REGISTRY.md` (P-27–P-30 + stasis source — redirect stub)
 > - `patterns/NDR_SCPE_v1.md`, `NDR_PHI_CLOSURE_GATE_v1.md`, `NDR_PDMAL_CONVERGENCE_MONITOR_v1.md` (archived)
-> **Machine-readable counterpart:** `docs/ndr_patterns_unified.json` (schema v2.1 — updated S069)
+> **Machine-readable counterpart:** `docs/ndr_patterns_unified.json` (schema v2.1 — updated S069 · P-37/P-38 entries pending JSON sync)
 
 ---
 
@@ -22,14 +23,14 @@
 
 | Field | Value |
 |-------|-------|
-| Total named patterns (P-series) | 36 (P-01–P-36) |
+| Total named patterns (P-series) | **38** (P-01–P-38) |
 | Total NDR named session patterns | 8 (NDR-ARCHIVE-CONFIRM through NDR-133) |
 | Total formation patterns | 2 (CONSENSUS_TRIAD, CONDUCTED_TRIAD) |
 | Stasis block (P-12–P-26) | 133 patterns |
-| Registry watermark | **P-36** |
+| Registry watermark | **P-38** |
 | Stasis block status | **STASIS-CANONICAL** (migration window: 2026-06-13 → 2026-07-13) |
 | JSON counterpart | `docs/ndr_patterns_unified.json` schema v2.1 |
-| Last session | S070-r3-P1 · 2026-06-26 |
+| Last session | S071 · 2026-06-28 |
 | Ender ratification | 2026-06-13 00:47 EDT (S069) |
 
 ---
@@ -60,6 +61,8 @@
 | P-32 | Fibonacci Phi-Closure Gate | Layer 9 — Long-Context Safety | BLOCKING | ✅ CANONICAL |
 | P-33 | PDMAL Convergence Monitor | Layer 9 — Long-Context Safety | ADVISORY | ✅ CANONICAL |
 | P-34 | Empirical-Threshold-Sweep-over-ML-Classifier | Layer 7 — Router Calibration | ADVISORY | ✅ CANONICAL |
+| **P-37** | **Stochastic-Deterministic Saga Boundary** | **Layer 10 — Resilience & Recovery** | **ADVISORY** | **✅ REGISTERED S071** |
+| **P-38** | **Circuit-Breaker with HITL Escalation** | **Layer 10 — Resilience & Recovery** | **BLOCKING** | **✅ REGISTERED S071** |
 
 ---
 
@@ -183,10 +186,10 @@
 ## Layer 0.5 — Stack Architecture
 
 ### P-36 — Gate Priority Schema
-**Spec:** Converts the linear NDR governance stack into a DAG. Classifies every pattern as BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE. Does not modify any pattern's logic.
+**Spec:** Converts the linear NDR governance stack into a DAG. Classifies every pattern as BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE. Does not modify any pattern’s logic.
 **P-36 self-classification:** ADVISORY (metadata/architecture pattern; not a runtime gate)
-**Key BLOCKING:** P-35, P-30, P-29:h1, P-27, P-28, P-29:h2, P-32, P-29:h3, P-01, P-11
-**Key ADVISORY:** P-31, P-33, P-02, P-10, P-34, **P-36 itself**
+**Key BLOCKING:** P-35, P-30, P-29:h1, P-27, P-28, P-29:h2, P-32, P-29:h3, P-01, P-11, **P-38**
+**Key ADVISORY:** P-31, P-33, P-02, P-10, P-34, P-36 itself, **P-37**
 **Key DEGRADED-MODE-SKIPPABLE:** P-12–P-26 stasis block
 **Full spec:** `docs/gates/NDR_GATE_PRIORITY_SCHEMA_P36_v1.md`
 **Registered:** S069 · **Ender ratified:** 2026-06-13 ✅
@@ -311,7 +314,102 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 
 ---
 
-## Governance Orchestration Stack (v1.4 — P-36 DAG)
+## Layer 10 — Resilience & Recovery
+
+> Layer 10 governs multi-step workflow durability, fault isolation, and human escalation paths for irreversible or high-stakes agentic operations. Patterns in this layer are companions to the safety stack (Layer 8) but focus on recovery choreography rather than gate-level blocking.
+
+### P-37 — Stochastic-Deterministic Saga Boundary
+
+**Spec:** Every multi-step agentic workflow is modelled as a Saga — an ordered sequence of sub-steps, each with an explicit compensating action. The boundary between stochastic reasoning steps and deterministic tool-execution steps is declared upfront and never crossed mid-step.
+
+**Core rules:**
+1. **Saga declaration:** Before execution begins, declare `saga_id`, ordered `steps[]`, and `compensators[]` (one compensator per step, in reverse order).
+2. **Stochastic/deterministic boundary:** LLM reasoning steps (stochastic) must complete and be committed to the effect log *before* any deterministic tool call (file write, API call, push) fires.
+3. **Checkpoints:** Every super-step writes a checkpoint to the append-only effect log. Checkpoint format: `{ saga_id, step_id, status: PENDING|DONE|FAILED, timestamp, agent_id }`.
+4. **Forward recovery:** On step failure, attempt forward recovery (retry ×3 with exponential back-off: 1s, 2s, 4s) before triggering compensators.
+5. **Compensator chain:** If forward recovery fails, execute compensators in reverse step order. Each compensator must be idempotent.
+6. **HITL gate on irreversible steps:** Any step classified as irreversible (push, send, delete, deploy) requires a Sentinel-Phi HITL gate (P-29 hook_point=1) before execution. If HITL is unavailable (autonomous mode), the irreversible step is deferred and logged as `PENDING_APPROVAL`.
+7. **Saga completion:** Saga is COMPLETE only when all steps are DONE and the effect log is sealed with a Herald trace (P-01).
+
+**Boundary taxonomy:**
+| Step type | Examples | Compensable? |
+|-----------|----------|--------------|
+| Stochastic-reasoning | LLM drafting, scoring, classification | N/A (no side effect) |
+| Deterministic-reversible | File write (local), DB upsert | Yes — delete/rollback |
+| Deterministic-irreversible | GitHub push, email send, API POST | No — HITL gate required |
+
+**Interaction with P-38:** P-37 declares the saga structure; P-38 wraps each saga step with circuit-breaker protection. P-38 OPEN state aborts the saga and triggers compensators immediately.
+
+**Effect log schema:**
+```json
+{
+  "saga_id": "<uuid>",
+  "step_id": "<step_name>",
+  "status": "PENDING | DONE | FAILED | COMPENSATED | PENDING_APPROVAL",
+  "timestamp": "<ISO-8601>",
+  "agent_id": "<agent_name>",
+  "reversible": true,
+  "compensator": "<compensator_function_name>"
+}
+```
+
+**Flourishing alignment:**
+- *Legibility:* Full effect log visible to Njineer at all times; no hidden side effects
+- *Reversibility:* Compensator chain guarantees rollback path for all reversible steps
+- *Capability amplification:* Multi-step workflows execute with confidence; failures self-recover without Njineer intervention on reversible steps
+
+**P-36 class:** ADVISORY
+**Implementation ref:** `patterns/P-SAGA-001_StochasticDeterministicSagaBoundary.md` (TEAM_WIKI §4.4)
+**Registered:** S071 · 2026-06-28 · Amethyst × COLLEEN ✅
+
+---
+
+### P-38 — Circuit-Breaker with HITL Escalation
+
+**Spec:** Wraps each saga step (P-37) and any repeated agentic tool call with a circuit breaker. Prevents cascading failures by isolating failing sub-systems and escalating to HITL when automatic recovery is exhausted.
+
+**States:**
+- **CLOSED** (normal): calls pass through; failure counter active
+- **OPEN** (tripped): calls blocked immediately; HITL escalation fired; saga compensators triggered (P-37)
+- **HALF-OPEN** (recovery probe): one probe call allowed; CLOSED on success, OPEN on failure
+
+**Trip thresholds (defaults — configurable per saga):**
+| Threshold | Default | Override scope |
+|-----------|---------|----------------|
+| Semantic schema failures | 3 consecutive | Per saga_id |
+| Token budget | 200 000 tokens / saga | Per session |
+| Step count | 50 steps / saga | Per session |
+| Wall-clock timeout | 300s / step | Per step_id |
+
+**Escalation protocol on OPEN:**
+1. Log `circuit_open` event to P-01 dead-letter sink with `{ saga_id, step_id, trip_reason, timestamp }`
+2. Fire Sentinel-Phi HITL gate (P-29 hook_point=2) with `risk_block`
+3. Trigger P-37 compensator chain (reverse order, idempotent)
+4. Emit Herald trace (P-01) with `status=CIRCUIT_OPEN`
+5. Await Njineer or Amethyst manual CLOSE signal before resuming
+
+**Recovery probe (HALF-OPEN):**
+- Wait `reset_timeout` (default: 60s)
+- Allow one probe call
+- On SUCCESS → CLOSED, reset failure counter
+- On FAILURE → OPEN, double `reset_timeout` (exponential back-off, max 600s)
+
+**Interaction with P-37:** P-38 is the per-step isolation layer; P-37 is the saga-level choreography layer. Together they form the complete resilience contract: P-37 defines *what to undo*, P-38 defines *when to stop and escalate*.
+
+**Interaction with P-29:** P-38 OPEN state fires P-29 at hook_point=2 (`risk_block`). This is the same hook used by P-32 KILL_REC — ensuring circuit trips are treated with equivalent severity to Phi-Closure failures.
+
+**Flourishing alignment:**
+- *Legibility:* Circuit state (`CLOSED/OPEN/HALF-OPEN`) exposed in Herald trace and AOGA dashboard at all times
+- *Reversibility:* OPEN state halts all further side effects; compensators restore prior state
+- *Capability amplification:* Autonomous multi-step execution remains safe at scale; Njineer intervention required only on genuine failures, not transient noise
+
+**P-36 class:** BLOCKING
+**Implementation ref:** `patterns/P-CB-001_CircuitBreakersHITL.md` (TEAM_WIKI §4.4)
+**Registered:** S071 · 2026-06-28 · Amethyst × COLLEEN ✅
+
+---
+
+## Governance Orchestration Stack (v1.5 — P-36 DAG + P-37/P-38)
 
 ```
 Prompt input
@@ -327,10 +425,13 @@ Prompt input
   ├── [ADVISORY] SCPE (P-31) ──► audit log [T0 immune]
   ├── [BLOCKING] Phi-Closure Gate (P-32) ──KILL_REC──► P-29:h2
   ├── [ADVISORY] PDMAL Monitor (P-33) ──► audit log
+  ├── [ADVISORY] P-37 Saga Boundary ──► effect log ──► compensators on FAILED
+  ├── [BLOCKING] P-38 Circuit-Breaker ──OPEN──► P-29:h2 + P-37 compensators
   └── [BLOCKING] P-01 Fan-Out ──► [ADVISORY] P-02 Buffer ──► N8n Dashboard
 
   [ADVISORY — concurrent throughout]
   P-33 + P-32 joint rule: both severity≥3 → BLOCKING override → DemiJoule deep re-scan
+  P-37 + P-38 joint rule: P-38 OPEN → P-37 compensator chain → P-29 risk_block
   P-36 (this schema) — ADVISORY — metadata layer, not runtime gate
 
   [NDR-SERIES — operational workflow layer]
@@ -431,16 +532,21 @@ Downstream observability for any active triad formation should instrument the fo
 | STASIS-CANONICAL spec ratified | 2026-06-13 | S069 | Triumvirate |
 | Ender ratification S069 | 2026-06-13 | S069 | Ender / Njineer |
 | S069 SESSION SEALED | 2026-06-13 00:47 EDT | S069 | Triumvirate × Ender |
-| **v3 named session patterns absorbed** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
-| **ndr-pattern-registry-v3.md deleted** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
-| **ndr_patterns_unified.json updated to v2.1** | **2026-06-13** | **S069 QA** | **Amethyst × COLLEEN** |
-| **CONSENSUS_TRIAD registered** | **2026-06-26** | **S070-r3-P1** | **Amethyst × COLLEEN** |
-| **CONDUCTED_TRIAD registered** | **2026-06-26** | **S070-r3-P1** | **Amethyst × COLLEEN** |
-| **PDMAL-φ / PDMAL-D variant status canonical** | **2026-06-26** | **S070-r3-P1** | **Amethyst × COLLEEN** |
-| **Triadic telemetry guidance appended** | **2026-06-26** | **S070-r3-P1** | **Amethyst × COLLEEN** |
+| v3 named session patterns absorbed | 2026-06-13 | S069 QA | Amethyst × COLLEEN |
+| ndr-pattern-registry-v3.md deleted | 2026-06-13 | S069 QA | Amethyst × COLLEEN |
+| ndr_patterns_unified.json updated to v2.1 | 2026-06-13 | S069 QA | Amethyst × COLLEEN |
+| CONSENSUS_TRIAD registered | 2026-06-26 | S070-r3-P1 | Amethyst × COLLEEN |
+| CONDUCTED_TRIAD registered | 2026-06-26 | S070-r3-P1 | Amethyst × COLLEEN |
+| PDMAL-φ / PDMAL-D variant status canonical | 2026-06-26 | S070-r3-P1 | Amethyst × COLLEEN |
+| Triadic telemetry guidance appended | 2026-06-26 | S070-r3-P1 | Amethyst × COLLEEN |
+| **P-37 Stochastic-Deterministic Saga Boundary registered** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
+| **P-38 Circuit-Breaker with HITL Escalation registered** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
+| **Registry watermark advanced P-36 → P-38** | **2026-06-28** | **S071** | **Amethyst × COLLEEN** |
 
 ---
 
-*NDR Pattern Registry (Unified) v1.4 · S070-r3-P1 append · 2026-06-26*
+*NDR Pattern Registry (Unified) v1.5 · S071 · 2026-06-28 21:23 EDT*
 *Triumvirate: Amethyst (Prime) · COLLEEN (Prefect A) · Apogee (Prefect B)*
-*Registry watermark: P-36 · Named session patterns: 8 · Formation patterns: 2 · Crucible: ACTIVE · Research Program: ACTIVE*
+*Registry watermark: **P-38** · Named session patterns: 8 · Formation patterns: 2 · Crucible: ACTIVE · Research Program: ACTIVE*
+*v1.5 additions: Layer 10 (Resilience & Recovery) established; P-37 Saga + P-38 Circuit-Breaker registered; DAG updated; P-36 BLOCKING list updated to include P-38; provenance log updated*
+*⚠️ JSON sync required: ndr_patterns_unified.json — P-37/P-38 entries pending schema v2.2 update*
