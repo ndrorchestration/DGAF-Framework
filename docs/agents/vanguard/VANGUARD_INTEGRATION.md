@@ -11,35 +11,59 @@
 ## Integration Contracts
 
 ### Vanguard ↔ Oracle (peer)
-- Vanguard provides technology signals to Oracle for horizon scan integration
-- Oracle provides temporal framing and adoption probability weighting to Vanguard
-- Bidirectional; continuous within Quintet sessions
+
+| Direction | Signal | Trigger |
+|---|---|---|
+| Vanguard → Oracle | Technology signal (name, TRL, strategic fit, first-mover window estimate) | New technology identified |
+| Oracle → Vanguard | Temporal framing (horizon assignment + adoption probability window) | Technology signal received |
+| Oracle → Vanguard | Active scenario set context | Scenario construction initiated |
 
 ### Vanguard → Nova (downstream)
-- Mature technology assessments (TRL ≥ 5, fit ≥ 0.7) routed to Nova for disruption strategy
-- Nova receives: assessment summary + recommended action + first-mover window status
 
-### Vanguard → Sentinel-Phi (risk gate)
-- All technology assessments submitted to Sentinel-Phi for φ-bounded risk review
-- Sentinel-Phi evaluates: does the technology introduce unbounded risk vectors?
-- On RISK_FLAG: Vanguard revises assessment or escalates to Amethyst
-- Vanguard does not commit assessments without Sentinel-Phi PASS
+| Signal | Condition |
+|---|---|
+| Full technology readiness assessment | TRL 5+; Sentinel-Phi CLEAR; Apogee gate passed |
+| First-mover window alert | Window < near-term horizon; urgent disruption opportunity |
+
+### Vanguard ↔ Sentinel-Phi (risk gate)
+
+| Direction | Signal | Trigger |
+|---|---|---|
+| Vanguard → Sentinel-Phi | Technology assessment for φ-bounded risk review | Assessment complete |
+| Sentinel-Phi → Vanguard | CLEAR or RISK_FLAG + rationale | Risk review complete |
+| Vanguard response to RISK_FLAG | Revise assessment risk profile OR escalate to Amethyst | RISK_FLAG received |
 
 ### Vanguard → Zenith (downstream)
-- Technologies identified as enabling peak performance routed to Zenith
-- Zenith receives: technology name + TRL + performance dimension relevance
 
-### Vanguard → Prof Prodigy (verification)
-- Adoption curve models submitted to Prof Prodigy for mathematical coherence check
-- Prof Prodigy verifies: S-curve model validity; timeline probability distribution coherence
+| Signal | Condition |
+|---|---|
+| Technology assessment with performance optimization application | Sentinel-Phi CLEAR; Apogee gate passed |
+
+### Vanguard ↔ Prof Prodigy (verification)
+
+| Direction | Signal | Trigger |
+|---|---|---|
+| Vanguard → Prof Prodigy | Adoption curve model for mathematical verification | Model involves compound/conditional relationships |
+| Prof Prodigy → Vanguard | VERIFIED or CORRECTION | Verification complete |
 
 ### Vanguard → Apogee (final gate)
-- All Vanguard outputs through Apogee evidence gate before commit
-- Threshold: ≥ 0.75 composite (QA Rubric)
 
-### Vanguard → Amethyst (escalation)
-- RISK_FLAG not resolvable within Quintet → escalate to Amethyst
-- Strategic disagreement on adoption recommendation → escalate to Amethyst
+| Signal | Condition |
+|---|---|
+| Full assessment + Sentinel-Phi CLEAR + Prof Prodigy VERIFIED (if applicable) | Pre-commit |
+| Apogee HOLD | Assessment held; evidence gap addressed; re-submitted |
+
+---
+
+## Failure Modes and Escalation
+
+| Failure | Response |
+|---|---|
+| Sentinel-Phi RISK_FLAG | Revise risk profile; re-submit |
+| Prof Prodigy CORRECTION | Revise adoption curve model; re-submit |
+| Apogee HOLD | Do not route to Nova/Zenith; address gap; re-submit |
+| First-mover window < near-term | Immediate flag to Amethyst; expedite assessment |
+| Oracle temporal framing not received within session | Proceed with default horizon estimates; note in MEMORY.md |
 
 ---
 

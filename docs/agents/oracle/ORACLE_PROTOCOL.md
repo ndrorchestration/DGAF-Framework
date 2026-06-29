@@ -1,4 +1,4 @@
-# Oracle — PROTOCOL v1.0
+# Oracle — Protocol v1.0
 
 **Agent:** Oracle
 **Agent ID:** A-20
@@ -10,64 +10,85 @@
 
 ## Procedure 1 — Scenario Construction
 
-**Trigger:** Strategic decision requiring foresight input, OR Quintet activation of scenario planning cycle.
+**Trigger:** Strategic decision requiring forward context; Vanguard technology signal received; Amethyst scenario request.
 
-1. Identify the strategic question requiring scenario coverage
-2. Determine the key uncertainty axes (2–3 maximum per scenario set)
-3. Construct 3 scenarios minimum: base case · upside · downside
-4. For each scenario, populate all 5 required fields:
-   - Trigger conditions
-   - Probability weight (preliminary — pending Prof Prodigy verification)
-   - Strategic implication
-   - Recommended response
-   - Risk profile stub (pending Sentinel-Phi review)
-5. Submit probability weights to Prof Prodigy for coherence verification
-6. Submit completed scenario set to Sentinel-Phi for risk-bound review
-7. On RISK_FLAG: revise scenario or escalate to Amethyst
-8. Submit final set to Apogee evidence gate
-9. On PASS: route to Nova (innovation response) and Zenith (performance response)
-10. Log scenario set reference in ORACLE_MEMORY.md
+```
+Step 1: Define decision horizon
+        — Assign near / mid / long-term label
+        — Confirm with formation before proceeding
+
+Step 2: Identify key strategic variables
+        — List variables whose outcomes most influence the decision
+        — Request Prof Prodigy probability model coherence check
+          if variables involve mathematical relationships
+
+Step 3: Construct 3-scenario set
+        — BASE CASE: most probable trajectory given current signals
+        — UPSIDE: conditions that produce best-case strategic outcome
+        — DOWNSIDE: conditions that produce worst-case strategic outcome
+        — Assign probability weights (must sum to 100%)
+
+Step 4: Route to Sentinel-Phi for risk review
+        — Attach full scenario set
+        — Wait for CLEAR or RISK_FLAG before routing downstream
+        — On RISK_FLAG: revise downside scenario or flag to Amethyst
+
+Step 5: Route to Nova + Zenith
+        — Attach Sentinel-Phi CLEAR confirmation
+        — Include recommended response set for each scenario
+
+Step 6: Submit to Apogee for final gate verification
+        — Apogee verifies evidence coherence before commit
+```
 
 ---
 
 ## Procedure 2 — Probabilistic Forecast Update
 
-**Trigger:** New information enters the formation that materially changes a probability weight.
+**Trigger:** New information enters the formation; Vanguard adoption curve update; horizon boundary recalibration needed.
 
-1. Identify the affected scenario(s) and probability dimension(s)
-2. Draft revised probability distribution
-3. Submit to Prof Prodigy for coherence re-verification
-4. On PASS: update scenario set; flag change to Nova, Zenith, and Sentinel-Phi
-5. On FAIL: discard revision; log anomaly in ORACLE_MEMORY.md
-6. Re-submit updated scenario set through Apogee gate
+```
+Step 1: Identify affected forecast variables
+Step 2: Update probability distributions
+        — Document prior distribution and update rationale
+Step 3: Request Prof Prodigy coherence check if distributions
+        involve compound probabilities or conditional relationships
+Step 4: Update all active scenario sets affected by the change
+Step 5: Re-route updated scenarios to Sentinel-Phi + Apogee
+```
 
 ---
 
 ## Procedure 3 — Horizon Scan
 
-**Trigger:** Scheduled scan cycle, OR Vanguard signal indicating emerging technology inflection.
+**Trigger:** Scheduled scan; Vanguard weak signal flagged; Amethyst alert.
 
-1. Survey the three horizon bands:
-   - Near-term (0–6 months): operational risk signals
-   - Mid-term (6–24 months): strategic opportunity signals
-   - Long-term (2+ years): structural shift signals
-2. Categorize each signal: technology (→ Vanguard), risk (→ Sentinel-Phi), strategic (→ Quintet)
-3. Route signals to appropriate agents
-4. Update horizon map in ORACLE_MEMORY.md
-5. If signal indicates scenario revision needed: trigger Procedure 1 or 2
+```
+Step 1: Scan for weak signals across relevant strategic domains
+Step 2: Classify each signal:
+        — Technology horizon: route to Vanguard
+        — Risk horizon: route to Sentinel-Phi
+        — Innovation horizon: route to Nova
+        — Performance horizon: route to Zenith
+Step 3: Update horizon scan queue in MEMORY.md
+Step 4: If signal indicates a new scenario set is warranted,
+        initiate Procedure 1
+```
 
 ---
 
-## Procedure 4 — Temporal Anchor Review
+## Procedure 4 — Temporal Anchor Calibration
 
-**Trigger:** Quintet session opening, OR detected temporal myopia / paralysis in formation outputs.
+**Trigger:** Session open; Njineer horizon specification; formation context shift.
 
-1. Review formation's current output set for temporal horizon distribution
-2. Identify imbalance: over-weighting near-term (myopia) or over-weighting uncertainty (paralysis)
-3. Issue temporal anchor directive to formation:
-   - Myopia: extend planning horizon; add long-term scenario
-   - Paralysis: constrain uncertainty bands; force probability commitment
-4. Log directive and formation response in ORACLE_MEMORY.md
+```
+Step 1: Receive or confirm horizon boundary specifications
+Step 2: Update MEMORY.md horizon calibration state
+Step 3: Broadcast updated horizon boundaries to all quintet members
+        via Herald
+Step 4: Review all active scenario sets for horizon consistency
+        — Reassign horizon labels if boundaries have shifted
+```
 
 ---
 

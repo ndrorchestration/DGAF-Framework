@@ -10,47 +10,62 @@
 
 ## Integration Contracts
 
-### Sentinel-Phi ↔ Oracle (parallel gate)
-- Oracle submits all scenario sets to Sentinel-Phi for φ-bounded risk review
-- Sentinel-Phi returns RISK_FLAG or RISK_CLEAR with specific vector analysis
-- Oracle does not commit scenario sets without RISK_CLEAR
+### Sentinel-Phi ↔ Oracle (risk review gate)
 
-### Sentinel-Phi ↔ Vanguard (parallel gate)
-- Vanguard submits all technology assessments to Sentinel-Phi for risk review
-- Sentinel-Phi evaluates all 4 risk dimensions (adoption / disruption / dependency / security)
-- Vanguard does not commit assessments without RISK_CLEAR
+| Direction | Signal | Trigger |
+|---|---|---|
+| Oracle → Sentinel-Phi | Scenario set for φ-bounded risk review | Scenario construction complete |
+| Sentinel-Phi → Oracle | CLEAR or RISK_FLAG + revision guidance | Review complete |
+| Oracle → Sentinel-Phi | Revised scenario set | RISK_FLAG revision complete |
 
-### Sentinel-Phi → Nova (risk gate)
-- Nova's innovation strategies reviewed by Sentinel-Phi before Quintet presentation
-- Sentinel-Phi flags innovation strategies that introduce unbounded competitive risk
+### Sentinel-Phi ↔ Vanguard (risk gate)
 
-### Sentinel-Phi → Zenith (risk gate)
-- Zenith's performance optimization plans reviewed for unbounded resource commitment risk
+| Direction | Signal | Trigger |
+|---|---|---|
+| Vanguard → Sentinel-Phi | Technology assessment for φ-bounded risk review | Assessment complete |
+| Sentinel-Phi → Vanguard | CLEAR or RISK_FLAG + revision guidance | Review complete |
+| Vanguard → Sentinel-Phi | Revised assessment | RISK_FLAG revision complete |
 
-### Sentinel-Phi → Prof Prodigy (φ-calculus verification)
-- Complex α calculations submitted to Prof Prodigy for Tier 3 φ-bounded iteration verification
-- Prof Prodigy confirms: contraction mapping is correctly applied; α < 1 holds
+### Sentinel-Phi → Nova / Zenith
 
-### Sentinel-Phi → Apogee (final gate)
-- All Sentinel-Phi outputs (RISK_FLAGs, RISK_CLEARs, COHERENCE_CLEARs) logged to Apogee
-- Apogee includes Sentinel-Phi gate compliance in composite score
+| Signal | Condition |
+|---|---|
+| Implicit CLEAR (via Oracle/Vanguard routing) | Sentinel-Phi CLEAR allows Oracle/Vanguard to route downstream |
+| RISK_FLAG (holds Nova/Zenith from receiving output) | Divergent risk vector detected in upstream output |
+
+### Sentinel-Phi ↔ Prof Prodigy (mathematical verification)
+
+| Direction | Signal | Trigger |
+|---|---|---|
+| Sentinel-Phi → Prof Prodigy | Contraction mapping model for α < 1 verification | Mathematical risk model used |
+| Prof Prodigy → Sentinel-Phi | VERIFIED or CORRECTION | Verification complete |
 
 ### Sentinel-Phi → Amethyst (escalation)
-- Quintet coherence gate failures (RISK_FLAG on full formation output) → Amethyst
-- NDR-133 trigger → Amethyst alert
-- Unresolvable α ≥ 1 risk vector → Amethyst
 
-### Sentinel-Phi → COLLEEN (NDR-133 peer)
-- NDR-133 firewall authority is shared with COLLEEN for institutional oversight
-- Major personal data incidents reported to COLLEEN
+| Signal | Condition |
+|---|---|
+| RISK_FLAG escalation package (full analysis + originating agent revision attempt) | Unresolvable RISK_FLAG |
+| NDR-133 BLOCK notification | Personal document detected in commit queue |
+| COHERENCE_CLEAR or COHERENCE_FLAG | Quintet pre-commit coherence gate result |
+
+### Sentinel-Phi ↔ The Auditor (inherited QA chain)
+
+| Direction | Signal | Trigger |
+|---|---|---|
+| Sentinel-Phi → Auditor | Security scan results for QA chain integrity | On Auditor request |
+| Auditor → Sentinel-Phi | Constraint verify result relevant to security | Constraint verify run |
 
 ---
 
-## NDR-Protocol-01 Position
+## Failure Modes and Escalation
 
-Sentinel-Phi operates as a **pre-commit security gate** across the Strategic Quintet:
-- Sits before Apogee in the commit chain for all risk-flagged content
-- Inherited NDR-133 firewall from Sentinel A-12: active on all formation outputs
+| Failure | Response |
+|---|---|
+| Oracle revision fails to resolve RISK_FLAG | Escalate to Amethyst with full package |
+| Vanguard revision fails to resolve RISK_FLAG | Escalate to Amethyst |
+| NDR-133 BLOCK — architect override requested | Route override request to Njineer; do not auto-approve |
+| Prof Prodigy CORRECTION on contraction mapping | Revise risk model; re-run α < 1 test |
+| α ≥ 1 vector in committed output detected post-commit | Issue RISK_FLAG retroactively; notify Amethyst; log in SWEEP_LOG correction entry |
 
 ---
 

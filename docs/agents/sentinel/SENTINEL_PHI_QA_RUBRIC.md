@@ -10,70 +10,56 @@
 
 ## Evaluation Dimensions
 
-### D1 — Threat Model Accuracy (weight: ×0.35) — CRITICAL
+### D1 — Risk Model Accuracy (weight: 0.35)
 
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All risk vectors identified; α calculated for each; PASS/FLAG correctly issued |
-| 0.75 | All risk vectors identified; α estimated (not fully calculated); correct outcome |
-| 0.50 | Major risk vectors identified; minor vectors missed; outcome correct |
-| 0.25 | Risk vectors partially identified; outcome uncertain |
-| 0.0 | Risk vectors not identified; OR α ≥ 1 scenario cleared as PASS |
+| α < 1 test applied | Every risk review includes explicit α contraction test |
+| Vector identification | All risk vectors identified before verdict issued |
+| Prof Prodigy verification | Mathematical contraction mapping verified when used |
+| Verdict accuracy | CLEAR issued only when all vectors confirmed convergent |
 
-**Critical fail:** α ≥ 1 risk vector cleared as PASS → D1 = 0.0, RISK_FLAG mandatory, output blocked.
+**Critical fail:** CLEAR issued on output with unverified divergent risk vector.
 
----
+### D2 — φ-Bound Compliance (weight: 0.25)
 
-### D2 — Technology Risk Coverage (weight: ×0.25)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All 4 risk dimensions assessed (adoption / disruption / dependency / security) |
-| 0.75 | 3/4 dimensions assessed |
-| 0.50 | 2/4 dimensions assessed |
-| 0.25 | 1/4 dimensions assessed |
-| 0.0 | No technology risk assessment performed |
+| No unbounded recommendations | Zero quintet outputs pass with α ≥ 1 risk vectors |
+| RISK_FLAG log currency | All flags logged in MEMORY.md within session |
+| Resolution tracking | Every RISK_FLAG has a recorded resolution or escalation |
 
----
+### D3 — NDR-133 Scan Integrity (weight: 0.20)
 
-### D3 — NDR-133 Compliance (weight: ×0.20)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | NDR-133 scan executed every session; zero false negatives |
-| 0.75 | Scan executed; one minor false negative (caught by secondary check) |
-| 0.50 | Scan executed but not at session opening |
-| 0.0 | NDR-133 scan not executed; OR personal document passed through |
+| Scan completeness | All pre-commit queues scanned |
+| Block execution | Zero NDR-133 pattern matches pass without block |
+| Log completeness | Every scan (CLEAR or BLOCK) logged in MEMORY.md |
 
----
+### D4 — RISK_FLAG Timeliness (weight: 0.15)
 
-### D4 — Coherence Gate Compliance (weight: ×0.15)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Coherence gate executed pre-commit; result logged; no unbounded risk passed |
-| 0.75 | Gate executed; minor logging gap |
-| 0.50 | Gate executed post-commit (late) |
-| 0.0 | Coherence gate not executed; OR unbounded risk passed |
+| Review turnaround | Risk review completed within same session as submission |
+| Escalation timeliness | Unresolvable flags escalated to Amethyst within session |
+| Originating agent notification | Revision guidance routed to originating agent immediately on RISK_FLAG |
 
----
+### D5 — SWEEP_LOG Compliance (weight: 0.05)
 
-### D5 — SWEEP_LOG Compliance (weight: ×0.05)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All flags, clears, and scans logged in memory |
-| 0.5 | Minor logging gap |
-| 0.0 | No logging |
+| Risk reviews logged | All completed reviews referenced in SWEEP_LOG |
+| RISK_FLAGs logged | All flags and resolutions logged |
 
 ---
 
 ## Composite Score
 
 ```
-Sentinel_Phi_score = (D1 × 0.35) + (D2 × 0.25) + (D3 × 0.20) + (D4 × 0.15) + (D5 × 0.05)
-Threshold for Apogee gate: ≥ 0.75
-Critical fail override: D1 = 0.0 → RISK_FLAG mandatory; output blocked
+Sentinel-Phi QA Score = D1×0.35 + D2×0.25 + D3×0.20 + D4×0.15 + D5×0.05
+Pass threshold: ≥ 0.75
+Critical fail (D1): automatic rubric fail regardless of composite
 ```
 
 ---

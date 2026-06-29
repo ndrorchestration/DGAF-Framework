@@ -11,51 +11,59 @@
 ## Integration Contracts
 
 ### Oracle ↔ Vanguard (peer)
-- Vanguard provides technology signals to Oracle for horizon scanning integration
-- Oracle provides temporal framing to Vanguard's technology readiness assessments
-- Signal exchange is bidirectional and continuous within Quintet sessions
+
+| Direction | Signal | Trigger |
+|---|---|---|
+| Vanguard → Oracle | Technology signal (TRL 1–4 identification) | New technology identified |
+| Oracle → Vanguard | Temporal framing (horizon + adoption probability window) | Technology signal received |
+| Oracle → Vanguard | Scenario context (which scenarios are active) | Scenario set construction initiated |
 
 ### Oracle → Nova (downstream)
-- Oracle routes completed scenario sets to Nova for innovation response generation
-- Nova receives: scenario set reference + strategic implication + recommended response
-- Nova does not modify Oracle scenario content — generates innovation responses independently
+
+| Signal | Condition |
+|---|---|
+| Completed scenario set with recommended responses | Sentinel-Phi CLEAR received; Apogee gate passed |
+| Scenario update notification | Active scenario set revised due to forecast update |
 
 ### Oracle → Zenith (downstream)
-- Oracle routes completed scenario sets to Zenith for performance optimization response
-- Zenith receives: scenario set reference + strategic implication + performance dimension
 
-### Oracle ↔ Sentinel-Phi (parallel gate)
-- All Oracle scenario sets submitted to Sentinel-Phi for φ-bounded risk review before commit
-- Sentinel-Phi issues RISK_FLAG if any scenario introduces unbounded risk vector (α ≥ 1)
-- On RISK_FLAG: Oracle revises scenario or escalates to Amethyst
-- Oracle does not commit scenario sets without Sentinel-Phi PASS
+| Signal | Condition |
+|---|---|
+| Completed scenario set with performance optimization context | Sentinel-Phi CLEAR; Apogee gate passed |
 
-### Oracle → Prof Prodigy (verification)
-- Oracle submits probability weight distributions to Prof Prodigy for mathematical coherence verification
-- Prof Prodigy verifies: weights sum to 1.0; distributions are well-specified; no logical contradictions
-- Prof Prodigy issues PASS or FAIL with root cause
-- Oracle does not commit probability weights without Prof Prodigy PASS
+### Oracle ↔ Sentinel-Phi (risk review gate)
+
+| Direction | Signal | Trigger |
+|---|---|---|
+| Oracle → Sentinel-Phi | Full scenario set for φ-bounded risk review | Scenario construction complete |
+| Sentinel-Phi → Oracle | CLEAR or RISK_FLAG + rationale | Risk review complete |
+| Oracle response to RISK_FLAG | Revise downside scenario OR escalate to Amethyst | RISK_FLAG received |
+
+### Oracle ↔ Prof Prodigy (verification)
+
+| Direction | Signal | Trigger |
+|---|---|---|
+| Oracle → Prof Prodigy | Probability model for coherence check | Compound/conditional distributions used |
+| Prof Prodigy → Oracle | VERIFIED or CORRECTION + rationale | Check complete |
 
 ### Oracle → Apogee (final gate)
-- All Oracle outputs pass through Apogee evidence gate before formation commit
-- Apogee evaluates: evidence grounding, scenario coherence, gate compliance
-- Oracle score threshold: ≥ 0.75 composite (QA Rubric)
 
-### Oracle → Amethyst (escalation)
-- Unresolvable temporal conflicts (e.g. RISK_FLAG cannot be resolved within Quintet)
-- Persistent temporal myopia or paralysis not corrected by Procedure 4
-- Escalation logged in ORACLE_MEMORY.md
+| Signal | Condition |
+|---|---|
+| Scenario set + Sentinel-Phi CLEAR + Prof Prodigy VERIFIED (if applicable) | Pre-commit |
+| Apogee returns VERIFIED or HOLD | All Oracle outputs held until VERIFIED |
 
 ---
 
-## NDR-Protocol-01 Position
+## Failure Modes and Escalation
 
-Oracle is not in the Archive Trio write chain. Oracle outputs are:
-1. Reviewed by Sentinel-Phi (risk gate)
-2. Verified by Prof Prodigy (probability coherence)
-3. Gated by Apogee (evidence gate)
-4. Routed to Nova + Zenith (downstream)
-5. Archived by The Librarian after Apogee PASS
+| Failure | Response |
+|---|---|
+| Sentinel-Phi RISK_FLAG on scenario set | Revise downside scenario; re-submit for review |
+| Prof Prodigy CORRECTION on probability model | Revise distributions; re-submit |
+| Apogee HOLD | Do not route to Nova/Zenith; address evidence gap; re-submit |
+| Vanguard signal not responded to within session | Log in MEMORY.md scan queue; initiate horizon scan Procedure 3 |
+| Unresolvable RISK_FLAG | Escalate full scenario set to Amethyst |
 
 ---
 

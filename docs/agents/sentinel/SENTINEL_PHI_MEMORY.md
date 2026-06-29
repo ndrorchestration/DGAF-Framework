@@ -1,73 +1,73 @@
-# Sentinel-Phi — MEMORY v1.0
+# Sentinel-Phi — Memory v1.0
 
 **Agent:** Sentinel-Phi
 **Agent ID:** A-12-φ
-**Prior designation:** Sentinel (A-12)
+**Former designation:** Sentinel (A-12)
 **Classification:** T1 PUBLIC
 **Version:** 1.0
-**Last Updated:** 2026-06-29 (Phase F-1 — initial strategic memory state)
+**Last Updated:** 2026-06-29 (Phase F-1 — initial memory state post-upgrade)
 
 ---
 
-## Active State
+## Formation State
 
-| Parameter | Value |
+| Field | Value |
 |---|---|
-| Activation status | Active — rename + upgrade complete (Phase C); full inventory complete (Phase F-1) |
 | Formation | Strategic Quintet — Seat 5 |
-| Prior formation | Compliance Dyad (dissolved Phase C) |
-| Risk architecture mode | φ-bounded — all risk assessments subject to α < 1 contraction constraint |
-| NDR-133 firewall | Active — inherited from Sentinel A-12 |
-| Active RISK_FLAGs issued | None — Phase C through F-1 |
-| Active RISK_FLAGs received | None |
-| Last Quintet coherence gate | Phase F-1 inventory (this file) |
-| Last Apogee gate | Phase F-1 inventory (this file) |
+| Prior formation | Compliance Dyad (dissolved 2026-06-29) |
+| Status | ACTIVE |
+| KB completion | 100% (Phase F-1) |
+| Active RISK_FLAGs | 0 |
+| Active NDR-133 blocks | 0 |
+| Last φ-bounded risk model run | None (Phase F-1 initialization) |
 
 ---
 
-## φ-Calculus Constraint Record
+## φ-Bounded Risk Model State
 
-```
-Active constraint: α < 1 (contraction mapping — Banach Fixed-Point Theorem)
-Interpretation: No strategic recommendation may introduce a risk cascade
-                where each iteration amplifies risk (α ≥ 1 = divergence).
-Professor Prodigy reference: Tier 3 Phi-Bounded Iteration calculus
-Last formal verification: Pending first Quintet strategic output
-```
+| Variable | Value |
+|---|---|
+| α constraint | α < 1 (Banach contraction mapping — all risk models must satisfy) |
+| Last α verification | Not yet run |
+| Divergent risk vectors detected | 0 |
+| Convergent risk vectors confirmed | 0 |
 
----
-
-## NDR-133 Firewall State
-
-```
-Firewall status: ACTIVE (inherited from Sentinel A-12)
-Scope: Strategic Quintet outputs + all formation commits
-Trigger: Filenames matching *resume*, *cv*, *audit_report*, *ResumeApex*
-Last triggered: Never (Phase C–F-1)
-Authority to disable: Architect only
-```
+> α < 1 constraint means: no strategic recommendation may introduce unbounded risk accumulation. All risk vectors must converge to a stable fixed point.
 
 ---
 
-## RISK_FLAG Archive
+## Risk Review Queue
 
-*No RISK_FLAGs issued as of Phase F-1.*
-
----
-
-## Compliance Dyad Dissolution Record
-
-| Event | Date | Commit |
-|---|---|---|
-| Sentinel A-12 upgraded to Sentinel-Phi | 2026-06-29 | `08c6d82` |
-| Compliance Dyad dissolved | 2026-06-29 | `08c6d82` |
-| Strategic Quintet Seat 5 assumed | 2026-06-29 | `08c6d82` |
+| Review ID | Source | Item | Status | Verdict |
+|---|---|---|---|---|
+| (empty) | — | — | — | — |
 
 ---
 
-## Anomaly Log
+## NDR-133 Scan Log
 
-*No anomalies recorded as of Phase F-1.*
+| Scan ID | Trigger | Target | Result | Date |
+|---|---|---|---|---|
+| (no scans run in Phase F-1) | — | — | — | — |
+
+---
+
+## RISK_FLAG Log
+
+| Flag ID | Source | Item | Rationale | Status | Resolution |
+|---|---|---|---|---|---|
+| (no flags issued in Phase F-1) | — | — | — | — | — |
+
+---
+
+## Inherited Capabilities (from Sentinel A-12)
+
+| Capability | Status |
+|---|---|
+| NDR-133 personal document firewall enforcement | ACTIVE |
+| Constraint violation detection | ACTIVE |
+| Security audit trail maintenance | ACTIVE |
+| Integration with The Auditor (Beta/Pulse) for QA chain integrity | ACTIVE |
 
 ---
 

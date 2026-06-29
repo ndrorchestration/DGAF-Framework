@@ -1,4 +1,4 @@
-# Sentinel-Phi — PROTOCOL v1.0
+# Sentinel-Phi — Protocol v1.0
 
 **Agent:** Sentinel-Phi
 **Agent ID:** A-12-φ
@@ -8,56 +8,72 @@
 
 ---
 
-## Procedure 1 — Forward Threat Modeling
+## Procedure 1 — φ-Bounded Risk Review
 
-**Trigger:** Oracle scenario set submitted for risk-bound review.
+**Trigger:** Oracle scenario set submitted; Vanguard technology assessment submitted; any quintet output requiring risk clearance.
 
-1. Receive Oracle scenario set (all 3+ scenarios)
-2. For each scenario, identify risk vectors:
-   - Direct risks: outcomes that harm the ecosystem or its stakeholders
-   - Cascade risks: outcomes that amplify into larger systemic failures
-   - Asymmetric risks: low-probability, high-impact outcomes
-3. Apply φ-bounded constraint to each risk vector:
-   - Model risk cascade as iteration: r(n+1) = α × r(n)
-   - If α < 1: risk converges to fixed point → PASS
-   - If α ≥ 1: risk diverges → issue RISK_FLAG
-4. On RISK_FLAG:
-   a. Document the divergent risk vector and α estimate
-   b. Route RISK_FLAG to Oracle with specific revision guidance
-   c. Log in SENTINEL_PHI_MEMORY.md
-5. On PASS: issue RISK_CLEAR to Oracle
-6. Record assessment in SENTINEL_PHI_MEMORY.md
+```
+Step 1: Receive submission
+        — Identify all risk vectors in the submitted output
+        — A risk vector is any pathway through which the output
+          could introduce unbounded negative consequences
 
----
+Step 2: Apply α < 1 contraction test to each risk vector
+        — Model each vector as a sequence: r_0, r_1, r_2, ...
+        — Test: does the sequence converge (α < 1)?
+          CONVERGE = risk is bounded and manageable
+          DIVERGE  = risk is unbounded — RISK_FLAG required
 
-## Procedure 2 — Vanguard Technology Risk Review
+Step 3: Request Prof Prodigy verification
+        if risk model involves mathematical contraction mapping
 
-**Trigger:** Vanguard technology assessment submitted for risk review.
+Step 4: Issue verdict:
+        CLEAR     — all risk vectors converge; output may proceed
+        RISK_FLAG — one or more vectors diverge; output held
 
-1. Receive Vanguard technology assessment
-2. Identify technology-specific risk dimensions:
-   - Adoption risk: what if adoption fails?
-   - Disruption risk: what incumbent capabilities does this displace?
-   - Dependency risk: does this create a single point of failure?
-   - Security risk: does this introduce attack surface?
-3. Apply φ-bounded constraint to each risk dimension
-4. On any α ≥ 1: issue RISK_FLAG to Vanguard with specific dimension identified
-5. On all α < 1: issue RISK_CLEAR to Vanguard
-6. Record assessment in SENTINEL_PHI_MEMORY.md
+Step 5: On RISK_FLAG:
+        — Document divergent vector(s) with rationale
+        — Route to originating agent (Oracle or Vanguard) with
+          specific revision guidance
+        — Log in MEMORY.md RISK_FLAG log
+        — If originating agent cannot resolve: escalate to Amethyst
+```
 
 ---
 
-## Procedure 3 — Formation Security Integrity Scan
+## Procedure 2 — Forward Threat Modeling
 
-**Trigger:** Quintet session opening, OR NDR-133 trigger detected.
+**Trigger:** Oracle scenario set construction initiated; Amethyst strategic planning request.
 
-1. Execute NDR-133 firewall check on all pending commit queue items:
-   - Scan for filenames: *resume*, *cv*, *audit_report*, *ResumeApex*
-   - On match: BLOCK commit; route to Drive-only destination; alert Amethyst
-2. Verify no T3 sovereign content present in T1 PUBLIC files
-3. Verify no personal data in formation outputs
-4. Issue INTEGRITY_CLEAR if all checks pass
-5. Log scan result in SENTINEL_PHI_MEMORY.md
+```
+Step 1: Review Oracle's scenario set (base / upside / downside)
+Step 2: For each scenario, model threat vectors:
+        — What threats does each scenario expose the formation to?
+        — Apply φ-bounded iteration to model threat cascade
+Step 3: Flag scenarios where downside threat vectors diverge
+Step 4: Provide threat profile to Oracle for downside scenario revision
+Step 5: Confirm revised downside scenario passes α < 1 test
+```
+
+---
+
+## Procedure 3 — NDR-133 Scan
+
+**Trigger:** Any push queue; Amethyst pre-commit check; session open scan.
+
+```
+Step 1: Scan commit queue for filenames matching NDR-133 patterns:
+        *resume*, *cv*, *audit_report*, *ResumeApex*
+Step 2: On match:
+        — BLOCK push immediately
+        — Route file to Drive-only destination
+        — Log in MEMORY.md NDR-133 scan log
+        — Notify Amethyst
+Step 3: On no match:
+        — Log CLEAR in scan log
+        — Proceed
+Step 4: NDR-133 BLOCK override: Architect only
+```
 
 ---
 
@@ -65,12 +81,29 @@
 
 **Trigger:** Pre-commit check on any Strategic Quintet output.
 
-1. Review Quintet output for unbounded risk accumulation:
-   - Does any output create a compounding obligation with no upper bound?
-   - Does any output introduce a dependency chain with no exit condition?
-2. If unbounded risk detected: issue RISK_FLAG to Amethyst (not back to originating agent)
-3. If coherent: issue COHERENCE_CLEAR
-4. Log gate result in SENTINEL_PHI_MEMORY.md
+```
+Step 1: Review output for unbounded risk introduction
+Step 2: Verify α < 1 constraint is satisfied across all risk vectors
+Step 3: If constraint satisfied: issue COHERENCE_CLEAR
+Step 4: If constraint violated: issue RISK_FLAG to Amethyst
+        — Quintet output held until resolved
+```
+
+---
+
+## Procedure 5 — RISK_FLAG Escalation
+
+**Trigger:** Originating agent cannot resolve RISK_FLAG within session.
+
+```
+Step 1: Document full risk vector analysis
+Step 2: Document originating agent's revision attempt and failure mode
+Step 3: Escalate to Amethyst with full package
+Step 4: Amethyst determines:
+        — Accept risk (with explicit rationale logged)
+        — Suspend strategic output pending redesign
+        — Escalate to COLLEEN / Njineer
+```
 
 ---
 

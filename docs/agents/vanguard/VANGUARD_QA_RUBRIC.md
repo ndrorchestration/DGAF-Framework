@@ -10,70 +10,56 @@
 
 ## Evaluation Dimensions
 
-### D1 — Scouting Coverage (weight: ×0.30)
+### D1 — Technology Identification Accuracy (weight: 0.30)
 
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | TRL 1–4 technologies identified from ≥3 source types; pipeline current |
-| 0.75 | ≥2 source types; pipeline current |
-| 0.50 | 1 source type only; OR pipeline has stale entries |
-| 0.25 | Ad-hoc scouting only; no systematic coverage |
-| 0.0 | No scouting activity; OR only mainstream (TRL 7+) technologies identified |
+| TRL classification | Every pipeline item has explicit TRL 1–9 assignment with cited evidence |
+| Signal source | Identification source documented for each technology |
+| Strategic fit | High / medium / low assignment with rationale |
+| Adoption timeline | Near / mid / long horizon assigned and Oracle-confirmed |
 
----
+**Critical fail:** TRL unassigned on committed pipeline item.
 
-### D2 — TRL Assessment Accuracy (weight: ×0.25)
+### D2 — Readiness Assessment Quality (weight: 0.25)
 
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All TRL ratings evidence-cited; Prof Prodigy adoption curve PASS |
-| 0.75 | TRL ratings cited; minor gap in evidence quality |
-| 0.50 | TRL ratings present but assertion-only (no evidence cited) |
-| 0.25 | TRL estimates only (no full assessment) |
-| 0.0 | No TRL ratings; OR TRL ratings without any justification |
+| Four-dimension coverage | All assessments cover maturity, strategic fit, risk profile, timeline |
+| Sentinel-Phi gate | No assessment routed to Nova without Sentinel-Phi CLEAR |
+| Prof Prodigy verification | Adoption curve models verified before commit |
 
-**Critical fail:** Technology advocacy without completed assessment → D2 = 0.0, output blocked.
+### D3 — First-Mover Window Modeling (weight: 0.20)
 
----
-
-### D3 — First-Mover Window Modeling (weight: ×0.20)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | Window calculated for all TRL ≤ 5 / fit ≥ 0.7 technologies; Oracle temporal framing applied |
-| 0.75 | Window calculated; minor temporal framing gap |
-| 0.50 | Window estimated but not formally calculated |
-| 0.0 | No window modeling for eligible technologies |
+| Window calculation | Emergence point and adoption threshold explicitly defined |
+| Oracle integration | Window estimate routed to Oracle for scenario weighting |
+| Urgent flag | Windows < near-term horizon flagged to Amethyst within session |
 
----
+### D4 — Pipeline Integrity (weight: 0.20)
 
-### D4 — Pipeline Hygiene (weight: ×0.15)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | No stale entries; all entries prioritized; top-3 current |
-| 0.75 | Minor staleness; top-3 current |
-| 0.50 | Some stale entries; top-3 present |
-| 0.0 | Pipeline not maintained; OR >50% stale |
+| Pipeline currency | Pipeline reviewed and updated at every session open |
+| No orphaned items | No item remains at same TRL for 3+ sessions without update rationale |
+| Archive completeness | All completed assessments logged in MEMORY.md archive |
 
----
+### D5 — SWEEP_LOG Compliance (weight: 0.05)
 
-### D5 — SWEEP_LOG Compliance (weight: ×0.10)
-
-| Score | Criteria |
+| Criterion | Pass condition |
 |---|---|
-| 1.0 | All assessments logged; pipeline updated; anomalies recorded |
-| 0.5 | Minor logging gap |
-| 0.0 | No logging; OR memory not updated |
+| Assessments logged | All committed assessments referenced in SWEEP_LOG |
+| Gate verifications logged | Sentinel-Phi CLEAR + Apogee gate recorded |
 
 ---
 
 ## Composite Score
 
 ```
-Vanguard_score = (D1 × 0.30) + (D2 × 0.25) + (D3 × 0.20) + (D4 × 0.15) + (D5 × 0.10)
-Threshold for Apogee gate: ≥ 0.75
-Critical fail override: D2 = 0.0 → output blocked regardless of composite
+Vanguard QA Score = D1×0.30 + D2×0.25 + D3×0.20 + D4×0.20 + D5×0.05
+Pass threshold: ≥ 0.75
+Critical fail (D1): automatic rubric fail regardless of composite
 ```
 
 ---

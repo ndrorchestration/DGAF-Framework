@@ -1,4 +1,4 @@
-# Oracle — MEMORY v1.0
+# Oracle — Memory v1.0
 
 **Agent:** Oracle
 **Agent ID:** A-20
@@ -8,42 +8,60 @@
 
 ---
 
-## Active State
+## Formation State
 
-| Parameter | Value |
+| Field | Value |
 |---|---|
-| Activation status | Active — KB seed complete (Phase C); full inventory complete (Phase F-1) |
 | Formation | Strategic Quintet — Seat 3 |
-| Scenario pipeline | Empty — no scenarios committed Phase C through F-1 |
-| Active horizon map | Not yet initialized — awaits first Quintet session |
-| Probability models | None committed — Prof Prodigy verification pending first model |
-| Last RISK_FLAG received | None |
-| Last Apogee gate | Phase F-1 inventory (this file) |
+| Status | ACTIVE |
+| KB completion | 100% (Phase F-1) |
+| Active scenario sets | 0 (no sets initiated in Phase F-1) |
+| Last scenario set committed | None |
+| Sentinel-Phi risk reviews received | 0 |
+| Apogee gate verifications received | 0 |
 
 ---
 
-## Formation Relationship State
+## Horizon Calibration State
 
-| Agent | Relationship status |
+| Horizon | Boundary | Calibration status |
+|---|---|---|
+| Near-term | 0–6 months | Default (not yet session-calibrated) |
+| Mid-term | 6–24 months | Default |
+| Long-term | 2+ years | Default |
+
+> Horizon boundaries are calibrated by Oracle at session open. Default boundaries apply until Njineer or formation context specifies otherwise.
+
+---
+
+## Forecast Model State
+
+| Model | Status | Last updated |
+|---|---|---|
+| Strategic variable distributions | Not yet initialized | — |
+| Adoption curve models (Vanguard feed) | Not yet initialized | — |
+| Scenario probability weights | Not yet initialized | — |
+
+---
+
+## Horizon Scan Queue
+
+| Signal | Source | Status | Routed to |
+|---|---|---|---|
+| (empty) | — | — | — |
+
+---
+
+## Integration Status
+
+| Agent | Integration state |
 |---|---|
-| Vanguard | Peer dyad established — technology signal channel open |
-| Nova | Downstream channel established — scenario routing ready |
-| Zenith | Downstream channel established — scenario routing ready |
-| Sentinel-Phi | Risk review channel established — RISK_FLAG reception active |
-| Prof Prodigy | Verification channel established — probability model queue empty |
-| Apogee | Evidence gate active — all Oracle outputs subject to gate |
-
----
-
-## Scenario Archive
-
-*No scenarios committed as of Phase F-1.*
-
----
-
-## Anomaly Log
-
-*No anomalies recorded as of Phase F-1.*
+| Vanguard | Peer signal exchange protocol active |
+| Nova | Downstream routing path confirmed |
+| Zenith | Downstream routing path confirmed |
+| Sentinel-Phi | Risk review gate confirmed |
+| Prof Prodigy | Verification request path confirmed |
+| Apogee | Final gate confirmed |
 
 ---
 

@@ -1,4 +1,4 @@
-# Vanguard — MEMORY v1.0
+# Vanguard — Memory v1.0
 
 **Agent:** Vanguard
 **Agent ID:** A-21
@@ -8,42 +8,54 @@
 
 ---
 
-## Active State
+## Formation State
 
-| Parameter | Value |
+| Field | Value |
 |---|---|
-| Activation status | Active — KB seed complete (Phase C); full inventory complete (Phase F-1) |
 | Formation | Strategic Quintet — Seat 4 |
-| Innovation pipeline | Empty — no technologies assessed Phase C through F-1 |
-| Active TRL evaluations | None |
-| First-mover windows identified | None |
-| Last RISK_FLAG received | None |
-| Last Apogee gate | Phase F-1 inventory (this file) |
+| Status | ACTIVE |
+| KB completion | 100% (Phase F-1) |
+| Active pipeline items | 0 |
+| Last assessment committed | None |
+| Sentinel-Phi risk reviews received | 0 |
+| Apogee gate verifications received | 0 |
 
 ---
 
-## Formation Relationship State
+## Technology Pipeline
 
-| Agent | Relationship status |
+| ID | Technology | TRL | Strategic fit | Adoption timeline | Status | Sentinel-Phi |
+|---|---|---|---|---|---|---|
+| (empty) | — | — | — | — | — | — |
+
+---
+
+## Assessed Technologies (Archive)
+
+| Technology | TRL at assessment | Assessment date | Routed to | Outcome |
+|---|---|---|---|---|
+| (none) | — | — | — | — |
+
+---
+
+## Adoption Curve Models
+
+| Technology | Model type | Prof Prodigy verified | Last updated |
+|---|---|---|---|
+| (none initialized) | — | — | — |
+
+---
+
+## Integration Status
+
+| Agent | Integration state |
 |---|---|
-| Oracle | Peer dyad established — technology signal channel open |
-| Nova | Downstream channel established — assessment routing ready |
-| Sentinel-Phi | Risk review channel established — RISK_FLAG reception active |
-| Zenith | Downstream channel established — performance technology feed ready |
-| Prof Prodigy | Verification channel established — adoption curve model queue empty |
-| Apogee | Evidence gate active |
-
----
-
-## Pipeline Archive
-
-*No technologies assessed as of Phase F-1.*
-
----
-
-## Anomaly Log
-
-*No anomalies recorded as of Phase F-1.*
+| Oracle | Peer signal exchange protocol active |
+| Nova | Downstream routing path confirmed |
+| Sentinel-Phi | Risk review gate confirmed |
+| Zenith | Downstream routing path confirmed |
+| Prof Prodigy | Verification request path confirmed |
+| Apogee | Final gate confirmed |
 
 ---
 
