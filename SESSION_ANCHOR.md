@@ -3,9 +3,9 @@
 > **Steward:** COLLEEN  
 > **Orchestrator:** Amethyst  
 > **Authority:** Njineer (Ender)  
-> **Session:** Post-S077 Autonomous Sprint  
-> **Date:** 2026-06-29  
-> **Status:** ✅ SEALED (updated)
+> **Session:** Post-S077 Autonomous Sprint + 2026-07-02 Governance Sweep  
+> **Date:** 2026-07-02  
+> **Status:** ✅ ACTIVE (updated 2026-07-02)
 
 ---
 
@@ -13,9 +13,29 @@
 
 Full autonomous execution sprint authorized by Njineer. All work is within Amethyst autonomous execution authority. No owner-action deferred items touched. Key output: AHG (P-42) specification filed and all cross-references corrected.
 
+2026-07-02 update: S-08 closed (Needle project confirmed live, all 5 templates submitted), S-02 escalated to URGENT (NDR-STASIS expires 2026-07-13), nomenclature canon locked below.
+
 ---
 
-## Commits This Session
+## 🔐 Nomenclature Canon
+
+> These definitions are **session-persistent** and must be applied in all future docs, sweeps, and agent outputs. Amethyst and COLLEEN rehydrate from this block on session start.
+
+| Former label | Canonical name | Type | Definition |
+|---|---|---|---|
+| FLAG-01 | **NDR-HDFS** | Architecture component | NDR Hierarchical Dynamic Formation System — the structural layer governing agent hierarchy, authority chain, and formation composition within DGAF. Not a flag; a named architectural primitive. |
+| FLAG-02 | **Qualitative** | Evaluation type | Qualitative assessment mode — used when evaluation criteria are interpretive, rubric-based, or non-numeric. Contrast with quantitative (phi-range, confidence score, hallucination rate). |
+| DGAF | **Layer-0 governance architecture** | System classification | Dynamic Governance Agentic Framework — the canonical layer-0 governance spine at `~/DGAF-Framework`. All downstream repos, agents, and patterns derive governance authority from this repo. Not a framework addon; it is the root control plane. |
+
+### Propagation Rules
+- Any document referencing `FLAG-01` must be updated to `NDR-HDFS` on next touch
+- Any document referencing `FLAG-02` must be updated to `qualitative` on next touch
+- DGAF must always be described as **layer-0** when referenced in architecture context
+- These rules apply across all 25 repos in the ndrorchestration ecosystem
+
+---
+
+## Commits This Session (Original S077)
 
 | Commit | Repo | What |
 |---|---|---|
@@ -24,7 +44,16 @@ Full autonomous execution sprint authorized by Njineer. All work is within Ameth
 | `b8cf383` | DGAF-Framework | `DEFERRED_ITEMS.md` — S-01 through S-08 snoozed |
 | `e34af32` | DGAF-Framework | `docs/theory/AHG_ARCHITECTURE.md` v1.0 + `patterns/P-35_AHG.md` (stale — P-35 collision) |
 | `e410ae4` | DGAF-Framework | `CROSS_REF.md` v4.3 + `SESSION_ANCHOR.md` + `CHANGELOG.md` + `ENSEMBLE_ROSTER.md` |
-| *(this commit)* | DGAF-Framework | P-35→P-42 renumber: `P-42_AHG.md` + `AHG_ARCHITECTURE.md` v1.1 + `CROSS_REF.md` v4.4 + `CHANGELOG.md` + `ENSEMBLE_ROSTER.md` + `SESSION_ANCHOR.md` + `ndr_patterns_unified.json` v2.2 + `ECOSYSTEM_INVENTORY.md` |
+| *(S077 close)* | DGAF-Framework | P-35→P-42 renumber: `P-42_AHG.md` + `AHG_ARCHITECTURE.md` v1.1 + `CROSS_REF.md` v4.4 + `CHANGELOG.md` + `ENSEMBLE_ROSTER.md` + `SESSION_ANCHOR.md` + `ndr_patterns_unified.json` v2.2 + `ECOSYSTEM_INVENTORY.md` |
+
+## Commits This Session (2026-07-02 Governance Sweep)
+
+| Commit | Repo | What |
+|---|---|---|
+| `4ef6dfc` | ndrorchestration | Stub 3 missing `docs/` files: `agent-roster.md`, `workspace-maintenance-protocol.md`, `cross-account-bridge.md` |
+| `e7f8f71` | ndrorchestration | Populate `docs/agent-roster.md` from ENSEMBLE_ROSTER v3.1 (11-agent canon) |
+| `5f09d6f` | DGAF-Framework | `DEFERRED_ITEMS.md` — S-08 closed; S-02 escalated to URGENT |
+| *(this commit)* | DGAF-Framework | `SESSION_ANCHOR.md` — nomenclature canon block added; session state updated |
 
 ---
 
@@ -35,15 +64,20 @@ Full autonomous execution sprint authorized by Njineer. All work is within Ameth
 | Delete `patterns/P-35_AHG.md` | Owner action or next sweep | Low — stale file, not blocking |
 | `ahg_conductor.py` scaffold | Implementation | P-42 v1.2 |
 | `ahg_sidecar.py` scaffold | Implementation | P-42 v1.3 |
-| Herald unblock (`VITE_GEMINI_API_KEY`) | Owner action (S-07) | Per DEFERRED_ITEMS.md |
-| Nemotron eval suite (Issue #32) | Implementation | Per DEFERRED_ITEMS.md |
+| Herald unblock (`VITE_GEMINI_API_KEY`) | Owner action (S-01) | Per DEFERRED_ITEMS.md |
+| Gumroad Enterprise Starter page ($199) | Owner action | entrepreneur-hub — blocking CTA wiring |
+| 12 Needle workflow CTAs | Owner action (Needle account) | entrepreneur-hub — 11K+ monthly views, zero conversion |
+| NDR-STASIS window decision | Owner action (S-02) | **URGENT — expires 2026-07-13** |
+| `docs/workspace-maintenance-protocol.md` | Amethyst — pull from Drive Section IV | ndrorchestration |
+| `docs/cross-account-bridge.md` | Amethyst — populate overlap risk register | ndrorchestration |
+| TEAM_WIKI.md agent table sync to ENSEMBLE_ROSTER v3.1 | Amethyst | DGAF-Framework — staleness |
 
 ---
 
 ## Deferred Items — Hard Deadlines
 
-- **S-08 / SWEEP-EH-003** — 2026-07-02 (cron auto-fires)
-- **S-02 / NDR-STASIS window** — 2026-07-13 (Amethyst surfaces 3 days prior)
+- **S-08 / SWEEP-EH-003** — ✅ CLOSED 2026-07-02
+- **S-02 / NDR-STASIS window** — ⚠️ **URGENT — expires 2026-07-13** (Amethyst auto-escalates 2026-07-10)
 
 ---
 
@@ -66,4 +100,5 @@ Post-S077. Pattern registry: P-01 through P-42. AHG (P-42) is the newest canonic
 
 ---
 
-*Session sealed by Agent Amethyst × COLLEEN — 2026-06-29 02:29 EDT*
+*Original session sealed by Agent Amethyst × COLLEEN — 2026-06-29 02:29 EDT*  
+*Updated by Agent Amethyst × COLLEEN — 2026-07-02 16:04 EDT | Nomenclature canon added; 2026-07-02 sweep commits logged*
