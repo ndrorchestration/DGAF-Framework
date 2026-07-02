@@ -1,15 +1,18 @@
 """
 ahg_sidecar.py — AHG Sidecar Monitor
-P-42 · Layer 12 — Cognitive Control Plane · v1.4
+P-42 · Layer 12 — Cognitive Control Plane · v1.4.1
 Amethyst × COLLEEN · S072 · 2026-07-02
 
 Spec: docs/theory/AHG_ARCHITECTURE.md v1.2 §4
 Pattern card: patterns/P-42_AHG.md v1.3-card
 
-v1.3: scaffold — heartbeat ingestion, aggregation, conductor flush, herald stub
-v1.4: wire_herald_trace(callback) added — replaces herald_sink stub pattern;
-      flush() calls registered herald callback with enriched PhaseIntent;
-      aligned with ahg_herald_trace.py v1.5 AHGHeraldTrace.on_intent() interface
+v1.3:   scaffold — heartbeat ingestion, aggregation, conductor flush, herald stub
+v1.4:   wire_herald_trace(callback) added; flush() calls herald callback;
+        aligned with ahg_herald_trace.py v1.5 AHGHeraldTrace.on_intent()
+v1.4.1: StateVector input clip guards — all six signal axes clipped to [0.0, 1.0]
+        in to_state_vector(); WARNING log on out-of-range agent signals.
+        Closes Apogee Lens AL-PV-01 open item 2.
+        Precondition for PV-01 Gold Star: inputs ∈ [0,1] now enforced.
 
 Architecture:
   [Agent_1 Heartbeat] ──┐
@@ -30,6 +33,24 @@ from typing import Callable, Optional
 from .ahg_conductor import AHGConductor, PhaseIntent, StateVector
 
 logger = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# Clip helper — enforces StateVector precondition (PV-01 / AL-PV-01)
+# ---------------------------------------------------------------------------
+
+def _clip(value: float, lo: float, hi: float, field_name: str, agent_id: str) -> float:
+    """Clip value to [lo, hi]. Emits WARNING if out of range so miscalibrated
+    agents are visible in the Herald trace. Precondition for φ ∈ (1.0, 1.8).
+    """
+    if value < lo or value > hi:
+        logger.warning(
+            "AHGSidecar clip: agent=%s field=%s raw=%.4f clipped to [%.1f, %.1f]. "
+            "Miscalibrated heartbeat signal — check agent normalization.",
+            agent_id, field_name, value, lo, hi,
+        )
+        return max(lo, min(hi, value))
+    return value
 
 
 # ---------------------------------------------------------------------------
@@ -69,6 +90,14 @@ class TurnBuffer:
     def to_state_vector(self, total_possible_constraints: int = 10) -> StateVector:
         """
         Aggregate per-agent heartbeats into a single StateVector.
+
+        All six signal axes are clipped to [0.0, 1.0] (AL-PV-01 hardening).
+        This enforces the precondition required for φ ∈ (1.0, 1.8) by construction
+        (AHG_ARCHITECTURE.md §2.2 / Apogee Lens review AL-PV-01).
+
+        WARNING logs are emitted for any out-of-range raw signal so that
+        miscalibrated agents are visible in the Herald trace.
+
         D_explore and D_correct tracked separately (excluded from S(t) in conductor).
         """
         if not self.heartbeats:
@@ -76,18 +105,28 @@ class TurnBuffer:
 
         n = len(self.heartbeats)
 
-        D_e       = sum(h.D_e_signal       for h in self.heartbeats) / n
-        D_explore = sum(h.D_explore_signal for h in self.heartbeats) / n
-        D_correct = sum(h.D_correct_signal for h in self.heartbeats) / n
-        N         = sum(h.novelty_signal   for h in self.heartbeats) / n
-        C         = sum(h.constraint_count for h in self.heartbeats) / max(
-                        total_possible_constraints, 1
-                    )
-        R         = min(
-                        sum(h.revision_count for h in self.heartbeats) / n / 10.0,
-                        1.0
-                    )
-        K         = sum(h.coherence_signal for h in self.heartbeats) / n
+        # --- raw means ---
+        D_e_raw       = sum(h.D_e_signal       for h in self.heartbeats) / n
+        D_explore_raw = sum(h.D_explore_signal for h in self.heartbeats) / n
+        D_correct_raw = sum(h.D_correct_signal for h in self.heartbeats) / n
+        N_raw         = sum(h.novelty_signal   for h in self.heartbeats) / n
+        C_raw         = sum(h.constraint_count for h in self.heartbeats) / max(
+                            total_possible_constraints, 1
+                        )
+        R_raw         = sum(h.revision_count   for h in self.heartbeats) / n / 10.0
+        K_raw         = sum(h.coherence_signal for h in self.heartbeats) / n
+
+        # Sentinel agent_id for clip logging (use joined list if multi-agent)
+        agent_ids = ", ".join(sorted({h.agent_id for h in self.heartbeats}))
+
+        # --- clip all axes to [0.0, 1.0] (AL-PV-01) ---
+        D_e       = _clip(D_e_raw,       0.0, 1.0, "D_e",       agent_ids)
+        D_explore = _clip(D_explore_raw, 0.0, 1.0, "D_explore", agent_ids)
+        D_correct = _clip(D_correct_raw, 0.0, 1.0, "D_correct", agent_ids)
+        N         = _clip(N_raw,         0.0, 1.0, "N",         agent_ids)
+        C         = _clip(C_raw,         0.0, 1.0, "C",         agent_ids)
+        R         = _clip(R_raw,         0.0, 1.0, "R",         agent_ids)
+        K         = _clip(K_raw,         0.0, 1.0, "K",         agent_ids)
 
         return StateVector(
             D_e=D_e, D_explore=D_explore, D_correct=D_correct,
@@ -200,7 +239,7 @@ class AHGSidecar:
 
         return intent
 
-    def flush_all_pending(self) -> dict[int, Optional[PhaseIntent]]:
+    def flush_all_pending(self) -> dict[int, Optional[PhaseIntent]]:\
         results = {}
         for turn_id in sorted(self._buffers.keys()):
             results[turn_id] = self.flush(turn_id)
