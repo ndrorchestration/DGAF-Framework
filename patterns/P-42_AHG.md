@@ -1,12 +1,12 @@
 # P-42 — Adaptive Harmonic Governance (AHG)
 
-> **Pattern ID:** P-42  
-> **Layer:** 12 — Cognitive Control Plane  
-> **P-36 Class:** ADVISORY (v1.1) → BLOCKING (v2.0 MPHG target)  
-> **Status:** 🟡 Specified — Implementation Pending  
-> **Registered:** 2026-06-29 · Post-S077 autonomous sprint  
-> **Version:** v1.2 (7-state regime, logistic normalization, D_correct subtype)  
-> **Steward:** Amethyst × COLLEEN  
+> **Pattern ID:** P-42
+> **Layer:** 12 — Cognitive Control Plane
+> **P-36 Class:** ADVISORY (v1.1) → BLOCKING (v2.0 MPHG target)
+> **Status:** 🟡 Specified — Implementation Pending
+> **Registered:** 2026-06-29 · Post-S077 autonomous sprint
+> **Version:** v1.3-card (Phase A coherence sync — S072 · 2026-07-02)
+> **Steward:** Amethyst × COLLEEN
 > **Full spec:** [`docs/theory/AHG_ARCHITECTURE.md`](../docs/theory/AHG_ARCHITECTURE.md)
 
 ---
@@ -48,6 +48,10 @@ S(t) = w_1·D_e + w_2·N + w_3·C + w_4·R
 φ(t) = 1 + 0.8 · σ(S(t))        where σ(x) = 1 / (1 + e^(-x))
 ```
 
+**Default weights:** w_1=0.35, w_2=0.20, w_3=0.25, w_4=0.20
+
+Only D_e (destabilizing entropy) enters S(t). D_explore and D_correct are excluded and tracked separately.
+
 This bounds φ ∈ [1.0, 1.8] by construction. φ is derived from measurable agent behaviors, not asserted.
 
 ---
@@ -63,6 +67,31 @@ This bounds φ ∈ [1.0, 1.8] by construction. φ is derived from measurable age
 | **Integration** | **1.60–1.70** | **Consolidate Discoveries** | **Synthesizer + Auditor** | **NDR-STASIS φ=1.618 — peak productive phase** |
 | Introspection | 1.70–1.80 | Self-Audit | Auditor | Apogee Lens mandatory |
 | Tension | > 1.80 | Unstable / Entropy | Tribunal | Amethyst + P-38 OPEN |
+
+---
+
+## 3D Cognitive Phase Space
+
+The 1D φ scalar drives archetype dispatch. The **3D Cognitive Phase Space** provides interpretive context for *why* φ is at a given value and informs Tribunal recovery path selection. Required before MPHG (v2.0).
+
+**Phase Space Axes:**
+
+| Axis | Poles | Role |
+|---|---|---|
+| Axis 1 | Exploration ↔ Exploitation | Is the collective generating new hypotheses or executing known solutions? |
+| Axis 2 | Consensus ↔ Dissent | Are agents converging or diverging on outputs? |
+| Axis 3 | Confidence ↔ Uncertainty | Are agents asserting or hedging? |
+
+**Trajectory examples:**
+
+| State | 3D Position | φ Implication | Tribunal Response |
+|---|---|---|---|
+| Productive research sprint | High Exploration, High Dissent, High Uncertainty | φ ≈ 1.50–1.618 | Explorer archetype, preserve |
+| Deadlock | Low Exploration, High Dissent, High Uncertainty | φ > 1.80 | Tribunal — break symmetry via Herald Explorer injection |
+| False consensus | Low Exploration, High Consensus, Low Uncertainty | φ ≈ 1.10 | Executor — but Auditor forced dissent needed |
+| Hallucination spiral | High Exploration, High Dissent, Low Confidence | φ rising rapidly, high a_φ | Anticipatory Tribunal — ground claims, Executor mode |
+
+> Full formalism: `docs/theory/AHG_ARCHITECTURE.md` §2.7
 
 ---
 
@@ -90,14 +119,18 @@ This bounds φ ∈ [1.0, 1.8] by construction. φ is derived from measurable age
 
 ## Implementation Status
 
-| Component | Status |
-|---|---|
-| `ahg_conductor.py` | 🔴 Planned v1.3 |
-| `ahg_sidecar.py` | 🔴 Planned v1.3 |
-| Heartbeat schema | 🟡 Specified in AHG_ARCHITECTURE.md |
-| Eval targets (hallucination, recovery) | 🟡 Specified — Issue #32 |
-| MPHG (v2.0 target) | 🔴 Roadmap |
+| Component | File | Status |
+|---|---|---|
+| AHG full spec | `docs/theory/AHG_ARCHITECTURE.md` | ✅ v1.2 |
+| Pattern card | `patterns/P-42_AHG.md` | ✅ v1.3-card (this file) |
+| Conductor implementation | `components/ahg_conductor.py` | 🔴 Planned v1.3 |
+| Sidecar Monitor | `components/ahg_sidecar.py` | 🔴 Planned v1.3 |
+| Heartbeat schema | `schemas/ahg_heartbeat.json` | 🔴 Planned v1.3 |
+| Test suite | `tests/test_ahg_conductor.py` | 🔴 Planned v1.3 |
+| Eval tasks (hallucination, recovery) | `tests/dgaf_eval_suite.py` | 🔴 Add in Issue #32 |
+| MPHG optimizer | `components/ahg_mphg.py` | 🔴 Roadmap v2.0 |
 
 ---
 
-*P-42 · AHG · Adaptive Harmonic Governance · v1.2 · 2026-06-29 · Amethyst × COLLEEN*
+*P-42 · AHG · Adaptive Harmonic Governance · v1.3-card · 2026-07-02 · Amethyst × COLLEEN*
+*Phase A coherence sync (S072): 3D Phase Space added (A1), S(t) default weights added (A2), impl table completed (A3)*
