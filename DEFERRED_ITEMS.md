@@ -1,8 +1,8 @@
 # Deferred Items — Owner Action Required
 
 **Maintained by:** Agent Amethyst × COLLEEN  
-**Last Updated:** 2026-07-02  
-**Status:** ACTIVE — 1 item closed today; 1 hard-deadline item now URGENT
+**Last Updated:** 2026-07-02 · S072 post-close escalation  
+**Status:** ACTIVE — S-02 CLOSED (Option A confirmed); 1 hard-deadline item resolved
 
 These items are confirmed, understood, and intentionally parked. They require Njineer credentials, decisions, or hands-on access that cannot be delegated to autonomous agent execution.
 
@@ -10,11 +10,9 @@ These items are confirmed, understood, and intentionally parked. They require Nj
 
 ## 🔴 URGENT — Hard Deadline Approaching
 
-| # | Item | Repo / System | What's Needed | Deadline |
-|---|---|---|---|---|
-| S-02 | NDR-STASIS window closure | DGAF-Framework | **Decision required: close, extend, or let expire** — window expires **2026-07-13** (11 days) | 2026-07-13 |
+*No urgent items at this time.*
 
-> ⚠️ Amethyst will auto-escalate this item at T-3 days (2026-07-10) if still unresolved.
+> ⚠️ STASIS migration session required before **2026-07-13**. See Issue #41 for full checklist.
 
 ---
 
@@ -36,16 +34,15 @@ These items are confirmed, understood, and intentionally parked. They require Nj
 | # | Item | Closed | Resolution |
 |---|---|---|---|
 | S-08 | SWEEP-EH-003 / T-EH-05 Needle + CTA | 2026-07-02 | **RESOLVED** — Needle project created 2026-06-27 (OI-001 cleared); all 5 T-EH templates submitted to Needle Partner Hub (pending review); SWEEP-EH-004 closed 2026-06-27. CTA wiring to 12 Needle workflows and Gumroad creation remain open as active TODO items in `entrepreneur-hub/docs/TODO.md` — not deferred, actively tracked. |
+| S-02 | NDR-STASIS window closure | 2026-07-02 | **RESOLVED — Option A: Close.** Njineer confirmed window closure S072 post-close. Dedicated STASIS migration session scheduled — Issue #41. Window expiry 2026-07-13 superseded by proactive close decision. All 133 patterns (P-12–P-26) to be reviewed and migrated to canonical status in migration session. |
 
 ---
 
 ## How to Reactivate
 
-When ready to action any item, say **“un-snooze S-0X”** or **“pick up [item name]”** and Amethyst will rehydrate full context and execute the next steps.
-
-NDR-STASIS window has a hard expiry (**2026-07-13**) — Amethyst will surface this as a priority at T-3 days (2026-07-10) regardless of snooze status.
+When ready to action any item, say **"un-snooze S-0X"** or **"pick up [item name]"** and Amethyst will rehydrate full context and execute the next steps.
 
 ---
 
-*Updated by Agent Amethyst × COLLEEN — 2026-07-02 16:02 EDT*  
-*S-08 closed; S-02 escalated to URGENT; 6 items remain snoozed*
+*Updated by Agent Amethyst × COLLEEN — 2026-07-02 17:36 EDT*  
+*S-02 closed (Option A); STASIS migration session Issue #41 opened; 6 items remain snoozed*
