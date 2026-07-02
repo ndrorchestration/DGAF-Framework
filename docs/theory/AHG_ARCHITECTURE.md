@@ -2,13 +2,17 @@
 
 > **Pattern:** P-42  
 > **Layer:** 12 — Cognitive Control Plane  
-> **Status:** 🟡 Specified — Implementation Pending  
-> **Version:** v1.2 (logistic normalization + 7-state regime + 3D phase space + D_correct subtype)  
+> **Status:** 🟢 Implementation Live — v1.4 components deployed  
+> **Version:** v1.3 (spec debt closure: φ interval notation, R_c sign convention, §7/§8 status sync)  
 > **Authors:** Amethyst × COLLEEN  
-> **Date:** 2026-06-29 (v1.0 filed; v1.1 P-42 renumber; v1.2 external review integration)  
+> **Date:** 2026-06-29 (v1.0 filed; v1.1 P-42 renumber; v1.2 external review integration; v1.3 S072 spec debt closure)  
 > **DGAF Integration:** P-32 (Phi-Closure), P-29 (Sentinel), P-33 (PDMAL), P-38 (Circuit-Breaker)
 
-> ℹ️ **Version history:** v1.0 filed Post-S077; v1.1 renumbered P-35→P-42; v1.2 integrates external AHG-MAS peer review — adds logistic normalization (canonical φ computation), 7-state regime table, Cognitive Phase Space (3D manifold), and D_correct disaggregation.
+> ℹ️ **Version history:**
+> - v1.0 Post-S077: Full formalism, archetype dispatch, DGAF integration map
+> - v1.1: P-42 renumber (P-35→P-42), CROSS_REF sync
+> - v1.2: Logistic normalization (canonical φ), 7-state regime table, 3D Cognitive Phase Space, D_correct disaggregation, eval targets
+> - v1.3 S072: Spec debt closure — φ range notation (open interval), R_c sign convention explicit, §1 Tribunal threshold corrected (1.70→1.80), §7/§8 implementation status synced to v1.4 live state
 
 ---
 
@@ -23,7 +27,7 @@ AHG provides that signal as **Cognitive Phase Energy (φ)** — a real-valued sc
 | AHG Concept | Maps To | Notes |
 |---|---|---|
 | φ estimation | P-32 Phi-Closure Gate | AHG extends from binary PASS/FAIL to continuous φ estimation |
-| Tribunal archetype | P-29 Sentinel + P-38 Circuit-Breaker | φ > 1.70 fires P-29 risk_block + P-38 OPEN |
+| Tribunal archetype | P-29 Sentinel + P-38 Circuit-Breaker | φ > 1.80 fires P-29 risk_block + P-38 OPEN (v1.3 correction: was 1.70 — aligns with §3 Tension regime) |
 | Governance Momentum M | P-33 PDMAL Frobenius norm | M substrate uses PDMAL edge-weight convergence |
 | Phase Intent broadcast | P-09 Triumvirate Mandate Schema | I_t is a lightweight mandate variant |
 | Sidecar Monitor | P-01 Herald Trace Sink | Heartbeat events route through P-01 fan-out |
@@ -48,6 +52,8 @@ Where:
 - **R_t** — Revision Pressure: rate of self-corrections and retractions
 - **M_t** — Governance Momentum: hysteresis term (decaying EMA of prior archetype weights)
 - **K_t** — Coherence: semantic similarity across agent outputs
+
+**Precondition (implementation invariant):** All state variables must be normalized to [0.0, 1.0] before entering the φ computation pipeline. This is enforced by `TurnBuffer.to_state_vector()` clip guards (v1.4.1 — commit 0ff1f0bc). Violation triggers a WARNING in the Herald trace.
 
 #### 2.1.1 Disaggregation of Divergence (D)
 
@@ -83,7 +89,7 @@ Note: Only D_e (destabilizing entropy) enters S(t). D_explore and D_correct are 
 
 Where σ is the standard logistic function: σ(x) = 1 / (1 + e^(-x))
 
-This bounds φ to the range **[1.0, 1.8]** by construction, grounding the signal in measurable agent behaviors rather than assertion. The previous open-ended linear formula (w_D·D + w_N·N − w_M·M − w_K·K) is superseded for runtime use; the linear decomposition remains valid for component attribution analysis.
+This bounds φ to the open interval **(1.0, 1.8)** by construction — the bounds are asymptotic limits of σ and are never attained for any finite input. *(v1.3 correction: previous notation [1.0, 1.8] used closed brackets, which was imprecise. Prof Prodigy PV-01 / Apogee Lens AL-PV-01 · S072.)* The previous open-ended linear formula (w_D·D + w_N·N − w_M·M − w_K·K) is superseded for runtime use; the linear decomposition remains valid for component attribution analysis.
 
 ### 2.3 Phase Velocity and Acceleration
 
@@ -100,7 +106,7 @@ Phase acceleration enables **predictive intervention** — if a_φ > threshold t
 Archetype(t) = argmax_A [ Score(A, φ_t, v_φ(t), a_φ(t)) ]
 ```
 
-Hysteresis band: transition fires only if φ has crossed the band edge for ≥ 2 consecutive turns, preventing thrashing.
+Hysteresis band: transition fires only if φ has crossed the band edge for ≥ 2 **consecutive** turns, preventing thrashing. The counter resets to zero on any turn that does not meet the crossing condition (consecutive, not cumulative).
 
 ### 2.5 Phase Intent Broadcast
 
@@ -124,7 +130,7 @@ J = λ_Q·Q + λ_E·E + λ_N·N + λ_S·S − λ_G·G
 
 Where: Q=output quality, E=efficiency, N=novelty (bounded), S=safety compliance, G=governance overhead cost.
 
-Stability is not the terminal goal — J is. Tension (φ > 1.70) may be a rational cost to pay if the utility of novelty in high-N regimes outweighs efficiency loss. The Tribunal activates to prevent **collapse**, not to eliminate Tension.
+Stability is not the terminal goal — J is. Tension (φ > 1.80) may be a rational cost to pay if the utility of novelty in high-N regimes outweighs efficiency loss. The Tribunal activates to prevent **collapse**, not to eliminate Tension.
 
 ### 2.7 Cognitive Phase Space (3D Manifold) — v1.2
 
@@ -138,12 +144,20 @@ The 1D φ scalar provides governance dispatch. The **3D Cognitive Phase Space** 
 | Axis 2 | Consensus ↔ Dissent | Are agents converging or diverging on outputs? |
 | Axis 3 | Confidence ↔ Uncertainty | Are agents asserting or hedging? |
 
+**Implementation (v1.4):** Axes computed as ratios relative to coherence signal K, preserving pole semantics:
+```
+Axis 1 (Exploration) = D_explore / (D_explore + K + ε)
+Axis 2 (Dissent)     = (D_e + D_correct) / (D_e + D_correct + K + ε)
+Axis 3 (Uncertainty) = min((C + R) / 2, 1.0)
+```
+All axes ∈ [0, 1) for Axes 1–2 (open at 1, closed at 0); Axis 3 ∈ [0, 1] (closed). Proven bounded by Prof Prodigy RV-01-C · S072.
+
 **Trajectory examples:**
 
 | State | 3D Position | φ Implication | Tribunal Response |
 |---|---|---|---|
 | Productive research sprint | High Exploration, High Dissent, High Uncertainty | φ ≈ 1.50–1.618 | Explorer archetype, preserve |
-| Deadlock | Low Exploration, High Dissent, High Uncertainty | φ > 1.70 | Tribunal — break symmetry |
+| Deadlock | Low Exploration, High Dissent, High Uncertainty | φ > 1.80 | Tribunal — break symmetry |
 | False consensus | Low Exploration, High Consensus, Low Uncertainty | φ ≈ 1.10 | Executor — but Auditor needed |
 | Hallucination spiral | High Exploration, High Dissent, Low Confidence | φ rising rapidly, high a_φ | Anticipatory Tribunal |
 
@@ -167,7 +181,7 @@ The 3D manifold does not replace φ — it is an interpretive layer used by the 
 
 **NDR-STASIS alignment note:** φ=1.61818... (the NDR-STASIS design value) falls precisely within the Integration regime (1.60–1.70). This is not coincidental — Integration is defined as the peak of productive divergence before the system tips into Introspection. NDR-STASIS represents the ideal harmonic operating point: maximum consolidation of discoveries without yet triggering self-audit overhead.
 
-**v1.2 change from v1.1:** Tensor threshold revised. Tribunal now activates at φ > 1.80 (not > 1.70). φ 1.70–1.80 is the Introspection band — Apogee Lens audits without full Tribunal. The old 1.70 threshold maps to the Introspection entry, not collapse.
+**v1.2 change from v1.1:** Tribunal now activates at φ > 1.80 (not > 1.70). φ 1.70–1.80 is the Introspection band — Apogee Lens audits without full Tribunal. The old 1.70 threshold maps to the Introspection entry, not collapse.
 
 ---
 
@@ -200,7 +214,22 @@ Activates when φ > 1.80 for ≥ 2 consecutive turns (revised from v1.1's 1.70 t
    - Deadlock (High Dissent + Low Exploration) → break symmetry via Herald Explorer injection
    - Hallucination spiral (High D_e + High N) → Executor mode, ground claims
    - False confidence (Low Dissent + High C) → Apogee Auditor forced dissent
-6. Recovery Score computed each turn: `R_c = r_1·ΔD_e + r_2·ΔK + r_3·Δv_φ`
+6. Recovery Score computed each turn:
+
+   ```
+   R_c = r_1·ΔD_e + r_2·ΔK + r_3·Δv_φ
+   ```
+
+   **Sign convention (v1.3 — explicit):** All Δ terms are *improvement deltas* — positive value means the system moved toward stability this turn:
+   - `ΔD_e  = D_e(t-1)  − D_e(t)`    — entropy fell → positive
+   - `ΔK    = K(t)      − K(t-1)`    — coherence rose → positive
+   - `Δv_φ  = v_φ(t-1) − v_φ(t)`    — phase decelerated → positive
+
+   Default weights: r_1=0.50, r_2=0.30, r_3=0.20 (sum=1.0, D_e suppression weighted highest)  
+   Default R_threshold = 0.05 (configurable)
+
+   *(PV-03 / Prof Prodigy · S072 — sign convention was previously implicit; now explicit to prevent inverted exit logic in implementations.)*
+
 7. Exit condition: `R_c > R_threshold` AND `φ < 1.70` for 2 turns
 8. Graduated de-escalation: Tribunal → Introspection → Vigilance/Expansion
 
@@ -217,7 +246,7 @@ The following claims are **falsifiable targets** for the eval suite (Issue #32, 
 | Entropy Recovery Rate | Rate of D_e suppression per Tribunal cycle | New eval task: `ahg_entropy_recovery` |
 | Revision loop reduction | Redundant revision loops minimized by anticipatory governance | Proxy: `contraction_proof_fidelity` task |
 
-These claims are currently theoretical. They become falsifiable once `ahg_conductor.py` (P-42 v1.2) is wired to a live multi-agent trace.
+These claims are currently theoretical. They become falsifiable once `ahg_conductor.py` (P-42 v1.4) is wired to a live multi-agent trace.
 
 ---
 
@@ -225,11 +254,12 @@ These claims are currently theoretical. They become falsifiable once `ahg_conduc
 
 | Version | Target | Description |
 |---|---|---|
-| v1.0 | ✅ Specified | Full formalism, archetype dispatch, DGAF integration map |
+| v1.0 | ✅ Done | Full formalism, archetype dispatch, DGAF integration map |
 | v1.1 | ✅ Done | P-42 renumber, CROSS_REF sync |
-| v1.2 | ✅ Current | Logistic normalization, 7-state regime, 3D phase space, D_correct, eval targets |
-| v1.3 | 🔴 Next | `ahg_conductor.py` scaffold + `ahg_sidecar.py` + Heartbeat schema |
-| v1.4 | 🔴 Planned | Wire sidecar to P-01 Herald trace sink; live φ telemetry |
+| v1.2 | ✅ Done | Logistic normalization, 7-state regime, 3D phase space, D_correct, eval targets |
+| v1.3 | ✅ Done | `ahg_conductor.py` scaffold + `ahg_sidecar.py` + Heartbeat schema (commit 3565cf2f) |
+| v1.4 | ✅ Done | Herald wiring + PhaseIntent enrichment + 3D phase computation + StateVector clip guards (commits e73011c, 0ff1f0bc) |
+| v1.5 | 🟡 Next | P-29 risk_block + P-38 Circuit-Breaker stubs → `ahg_tribunal.py`; R_c recovery loop; ndr_patterns.json registration |
 | v2.0 | 🔴 Roadmap | MPHG: `u_t = argmax Σ_{k=0}^{H} J(x_{t+k})` (Model Predictive Harmonic Governance) |
 
 ---
@@ -238,16 +268,17 @@ These claims are currently theoretical. They become falsifiable once `ahg_conduc
 
 | Component | File | Status |
 |---|---|---|
-| AHG full spec | `docs/theory/AHG_ARCHITECTURE.md` | ✅ v1.2 this file |
+| AHG full spec | `docs/theory/AHG_ARCHITECTURE.md` | ✅ v1.3 this file |
 | Pattern card | `patterns/P-42_AHG.md` | ✅ Filed — 7-state table update pending |
-| Conductor implementation | `components/ahg_conductor.py` | 🔴 Planned v1.3 |
-| Sidecar Monitor | `components/ahg_sidecar.py` | 🔴 Planned v1.3 |
-| Heartbeat schema | `schemas/ahg_heartbeat.json` | 🔴 Planned v1.3 |
-| Test suite | `tests/test_ahg_conductor.py` | 🔴 Planned v1.3 |
-| Eval tasks (hallucination, recovery) | `tests/dgaf_eval_suite.py` | 🔴 Add in Issue #32 |
+| Conductor implementation | `components/ahg_conductor.py` | ✅ v1.4 live (commit e73011c) |
+| Sidecar Monitor | `components/ahg_sidecar.py` | ✅ v1.4.1 live (commit 0ff1f0bc) |
+| Heartbeat schema | `schemas/ahg_heartbeat.json` | ✅ v1.3 live (commit 3565cf2f) |
+| Test suite | `tests/test_ahg_conductor.py` | ✅ v1.4 live (commit e73011c) |
+| Tribunal stubs | `components/ahg_tribunal.py` | 🟡 v1.5 in progress — P-29/P-38/R_c |
+| Eval tasks (hallucination, recovery) | `tests/dgaf_eval_suite.py` | 🔴 Issue #32 deferred |
 | MPHG optimizer | `components/ahg_mphg.py` | 🔴 Roadmap v2.0 |
 
 ---
 
-*AHG Architecture Specification v1.2 · P-42 · 2026-06-29*  
-*Amethyst × COLLEEN · Post-S077 — external AHG-MAS peer review integrated*
+*AHG Architecture Specification v1.3 · P-42 · 2026-07-02*  
+*Amethyst × COLLEEN × Prof Prodigy · S072 — spec debt closure (PV-01, PV-03, RV-01-C)*
