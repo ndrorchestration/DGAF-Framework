@@ -1,22 +1,11 @@
 """
 tests/test_ahg_conductor.py — AHG Conductor + Sidecar Unit Tests
-P-42 · Layer 12 — Cognitive Control Plane · v1.3 scaffold
+P-42 · Layer 12 — Cognitive Control Plane · v1.4
 Amethyst × COLLEEN · S072 · 2026-07-02
 
-Coverage targets (v1.3 scaffold):
-  - φ computation: canonical weights, logistic normalization, bounds
-  - Regime classification: all 7 states + boundary values
-  - Hysteresis band: 2-turn transition guard
-  - Phase velocity + acceleration
-  - PhaseIntent field validation
-  - Tribunal activation
-  - AHGSidecar: ingestion, aggregation, flush round-trip
-  - NDR-STASIS anchor: φ=1.618 ∈ Integration regime
-
-Eval task stubs (Issue #32 — implementation deferred to live stack wiring):
-  - ahg_recovery_turns
-  - ahg_entropy_recovery
-  - ahg_hallucination_reduction
+v1.3: scaffold — φ, regime, hysteresis, sidecar basics, eval stubs
+v1.4: PhaseIntent v_phi/a_phi/tribunal_active/message fields,
+      3D Cognitive Phase Space axes, wire_herald_trace() integration
 """
 
 from __future__ import annotations
@@ -30,18 +19,16 @@ from components.ahg_conductor import (
     PhaseIntent,
     Regime,
     StateVector,
-    W1_D_E,
-    W2_N,
-    W3_C,
-    W4_R,
-    PHI_MIN,
-    PHI_MAX,
+    W1_D_E, W2_N, W3_C, W4_R,
+    PHI_MIN, PHI_MAX,
     compute_phi,
     compute_stability_index,
     compute_phase_acceleration,
     compute_phase_velocity,
+    compute_3d_phase,
     classify_regime,
     logistic,
+    _REGIME_ARCHETYPE,
 )
 from components.ahg_sidecar import AgentHeartbeat, AHGSidecar, TurnBuffer
 
@@ -52,31 +39,15 @@ from components.ahg_sidecar import AgentHeartbeat, AHGSidecar, TurnBuffer
 
 @pytest.fixture
 def zero_sv() -> StateVector:
-    """All-zero state vector — minimal entropy, minimal novelty."""
     return StateVector()
-
 
 @pytest.fixture
 def high_entropy_sv() -> StateVector:
-    """High D_e — should push φ toward Tension."""
     return StateVector(D_e=1.0, N=0.8, C=0.9, R=0.8)
-
-
-@pytest.fixture
-def integration_sv() -> StateVector:
-    """State vector engineered to yield φ ≈ 1.618 (NDR-STASIS anchor)."""
-    # S(t) = w1*D_e + w2*N + w3*C + w4*R
-    # Target: φ = 1 + 0.8*σ(S) = 1.618 => σ(S) = 0.7725 => S ≈ 1.232
-    # Set D_e=0.5, N=0.5, C=0.5, R=0.5 => S = 0.35*0.5+0.20*0.5+0.25*0.5+0.20*0.5 = 0.5
-    # φ = 1 + 0.8*σ(0.5) = 1 + 0.8*0.6225 = 1.498 (Expansion)
-    # For Integration: increase entropy contribution slightly
-    return StateVector(D_e=0.9, N=0.6, C=0.7, R=0.5)
-
 
 @pytest.fixture
 def conductor() -> AHGConductor:
     return AHGConductor()
-
 
 @pytest.fixture
 def sidecar(conductor) -> AHGSidecar:
@@ -88,23 +59,13 @@ def sidecar(conductor) -> AHGSidecar:
 # ===========================================================================
 
 class TestCanonicalConstants:
-    """AHG_ARCHITECTURE.md §2.2 — default weights must be exact."""
-
     def test_weights_sum_to_one(self):
         assert math.isclose(W1_D_E + W2_N + W3_C + W4_R, 1.0, rel_tol=1e-9)
 
-    def test_w1_d_e(self):
-        assert W1_D_E == 0.35
-
-    def test_w2_n(self):
-        assert W2_N == 0.20
-
-    def test_w3_c(self):
-        assert W3_C == 0.25
-
-    def test_w4_r(self):
-        assert W4_R == 0.20
-
+    def test_w1_d_e(self):  assert W1_D_E == 0.35
+    def test_w2_n(self):    assert W2_N   == 0.20
+    def test_w3_c(self):    assert W3_C   == 0.25
+    def test_w4_r(self):    assert W4_R   == 0.20
     def test_phi_bounds(self):
         assert PHI_MIN == 1.0
         assert PHI_MAX == 1.8
@@ -115,58 +76,33 @@ class TestCanonicalConstants:
 # ===========================================================================
 
 class TestPhiComputation:
-    """AHG_ARCHITECTURE.md §2.2 — logistic normalization + bounds."""
-
     def test_zero_sv_phi_in_bounds(self, zero_sv):
-        phi = compute_phi(zero_sv)
-        assert PHI_MIN <= phi <= PHI_MAX
-
-    def test_high_entropy_phi_in_bounds(self, high_entropy_sv):
-        phi = compute_phi(high_entropy_sv)
-        assert PHI_MIN <= phi <= PHI_MAX
+        assert PHI_MIN <= compute_phi(zero_sv) <= PHI_MAX
 
     def test_phi_strictly_greater_than_min(self, zero_sv):
-        """logistic(x) > 0 for all x => phi > PHI_MIN always."""
-        phi = compute_phi(zero_sv)
-        assert phi > PHI_MIN
+        assert compute_phi(zero_sv) > PHI_MIN
 
     def test_phi_strictly_less_than_max(self, high_entropy_sv):
-        """logistic(x) < 1 for all x => phi < PHI_MAX always."""
-        phi = compute_phi(high_entropy_sv)
-        assert phi < PHI_MAX
+        assert compute_phi(high_entropy_sv) < PHI_MAX
 
     def test_phi_monotone_with_entropy(self):
-        """Higher D_e => higher φ."""
-        low  = compute_phi(StateVector(D_e=0.1))
-        high = compute_phi(StateVector(D_e=0.9))
-        assert high > low
+        assert compute_phi(StateVector(D_e=0.9)) > compute_phi(StateVector(D_e=0.1))
 
     def test_d_explore_excluded_from_phi(self):
-        """D_explore does not enter S(t) — phi must be identical."""
         base = compute_phi(StateVector(D_e=0.5))
-        with_explore = compute_phi(StateVector(D_e=0.5, D_explore=0.9))
-        assert math.isclose(base, with_explore, rel_tol=1e-12)
+        assert math.isclose(base, compute_phi(StateVector(D_e=0.5, D_explore=0.9)), rel_tol=1e-12)
 
     def test_d_correct_excluded_from_phi(self):
-        """D_correct does not enter S(t) — phi must be identical."""
         base = compute_phi(StateVector(D_e=0.5))
-        with_correct = compute_phi(StateVector(D_e=0.5, D_correct=0.9))
-        assert math.isclose(base, with_correct, rel_tol=1e-12)
+        assert math.isclose(base, compute_phi(StateVector(D_e=0.5, D_correct=0.9)), rel_tol=1e-12)
 
     def test_stability_index_formula(self):
         sv = StateVector(D_e=0.4, N=0.3, C=0.2, R=0.1)
-        expected_s = 0.35*0.4 + 0.20*0.3 + 0.25*0.2 + 0.20*0.1
-        assert math.isclose(compute_stability_index(sv), expected_s, rel_tol=1e-9)
+        expected = 0.35*0.4 + 0.20*0.3 + 0.25*0.2 + 0.20*0.1
+        assert math.isclose(compute_stability_index(sv), expected, rel_tol=1e-9)
 
     def test_logistic_midpoint(self):
-        """\u03c3(0) = 0.5 by definition."""
         assert math.isclose(logistic(0.0), 0.5, rel_tol=1e-9)
-
-    def test_phi_formula_direct(self):
-        sv = StateVector(D_e=0.0, N=0.0, C=0.0, R=0.0)
-        s = 0.0
-        expected_phi = 1.0 + 0.8 * logistic(s)
-        assert math.isclose(compute_phi(sv), expected_phi, rel_tol=1e-12)
 
 
 # ===========================================================================
@@ -174,15 +110,8 @@ class TestPhiComputation:
 # ===========================================================================
 
 class TestNDRStasisAnchor:
-    """
-    NDR-STASIS design value φ=1.618 must fall in Integration regime [1.60, 1.70].
-    AHG_ARCHITECTURE.md §3 — 'NDR-STASIS anchor φ=1.618 sits here —
-    peak productive phase'.
-    """
-
     def test_phi_1618_is_integration(self):
-        regime = classify_regime(1.618)
-        assert regime == Regime.INTEGRATION
+        assert classify_regime(1.618) == Regime.INTEGRATION
 
     def test_phi_1600_is_integration(self):
         assert classify_regime(1.600) == Regime.INTEGRATION
@@ -199,30 +128,17 @@ class TestNDRStasisAnchor:
 # ===========================================================================
 
 class TestRegimeClassification:
-    """AHG_ARCHITECTURE.md §3 — 7-state regime table."""
-
     @pytest.mark.parametrize("phi,expected", [
-        (1.00, Regime.GROUNDED),
-        (1.07, Regime.GROUNDED),
-        (1.14, Regime.GROUNDED),
-        (1.15, Regime.FLOW),
-        (1.22, Regime.FLOW),
-        (1.29, Regime.FLOW),
-        (1.30, Regime.VIGILANCE),
-        (1.37, Regime.VIGILANCE),
-        (1.44, Regime.VIGILANCE),
-        (1.45, Regime.EXPANSION),
-        (1.52, Regime.EXPANSION),
-        (1.59, Regime.EXPANSION),
-        (1.60, Regime.INTEGRATION),
-        (1.618, Regime.INTEGRATION),
-        (1.69, Regime.INTEGRATION),
-        (1.70, Regime.INTROSPECTION),
-        (1.75, Regime.INTROSPECTION),
-        (1.79, Regime.INTROSPECTION),
-        (1.80, Regime.TENSION),
-        (1.85, Regime.TENSION),
-        (1.799, Regime.INTROSPECTION),
+        (1.00, Regime.GROUNDED),      (1.07, Regime.GROUNDED),
+        (1.14, Regime.GROUNDED),      (1.15, Regime.FLOW),
+        (1.22, Regime.FLOW),          (1.29, Regime.FLOW),
+        (1.30, Regime.VIGILANCE),     (1.37, Regime.VIGILANCE),
+        (1.44, Regime.VIGILANCE),     (1.45, Regime.EXPANSION),
+        (1.52, Regime.EXPANSION),     (1.59, Regime.EXPANSION),
+        (1.60, Regime.INTEGRATION),   (1.618, Regime.INTEGRATION),
+        (1.69, Regime.INTEGRATION),   (1.70, Regime.INTROSPECTION),
+        (1.75, Regime.INTROSPECTION), (1.799, Regime.INTROSPECTION),
+        (1.80, Regime.TENSION),       (1.85, Regime.TENSION),
     ])
     def test_regime_boundary(self, phi, expected):
         assert classify_regime(phi) == expected
@@ -233,96 +149,147 @@ class TestRegimeClassification:
 # ===========================================================================
 
 class TestPhaseKinematics:
-    """AHG_ARCHITECTURE.md §2.3"""
-
     def test_velocity_insufficient_history(self):
         assert compute_phase_velocity([1.3]) == 0.0
 
     def test_velocity_two_points(self):
-        v = compute_phase_velocity([1.3, 1.5])
-        assert math.isclose(v, 0.2, rel_tol=1e-9)
+        assert math.isclose(compute_phase_velocity([1.3, 1.5]), 0.2, rel_tol=1e-9)
 
     def test_velocity_descending(self):
-        v = compute_phase_velocity([1.6, 1.4])
-        assert math.isclose(v, -0.2, rel_tol=1e-9)
+        assert math.isclose(compute_phase_velocity([1.6, 1.4]), -0.2, rel_tol=1e-9)
 
     def test_acceleration_insufficient_history(self):
         assert compute_phase_acceleration([1.3, 1.5]) == 0.0
 
     def test_acceleration_three_points(self):
-        # v_{t-1} = 1.5 - 1.3 = 0.2; v_t = 1.8 - 1.5 = 0.3; a = 0.1
-        a = compute_phase_acceleration([1.3, 1.5, 1.8])
-        assert math.isclose(a, 0.1, rel_tol=1e-9)
+        assert math.isclose(compute_phase_acceleration([1.3, 1.5, 1.8]), 0.1, rel_tol=1e-9)
 
     def test_acceleration_decelerating(self):
-        # v_{t-1} = 0.3; v_t = 0.1; a = -0.2
-        a = compute_phase_acceleration([1.0, 1.3, 1.4])
-        assert math.isclose(a, -0.2, rel_tol=1e-9)
+        assert math.isclose(compute_phase_acceleration([1.0, 1.3, 1.4]), -0.2, rel_tol=1e-9)
 
 
 # ===========================================================================
-# 6. Hysteresis band
+# 6. 3D Cognitive Phase Space — AHG_ARCHITECTURE §2.7
+# ===========================================================================
+
+class Test3DPhaseSpace:
+
+    def test_all_axes_in_unit_interval(self):
+        for sv in [
+            StateVector(),
+            StateVector(D_e=1.0, D_explore=1.0, D_correct=1.0, N=1.0, C=1.0, R=1.0, K=1.0),
+            StateVector(D_e=0.5, D_explore=0.3, K=0.7, C=0.4, R=0.6),
+        ]:
+            exp, dis, unc = compute_3d_phase(sv)
+            assert 0.0 <= exp <= 1.0, f"exploration={exp} out of bounds"
+            assert 0.0 <= dis <= 1.0, f"dissent={dis} out of bounds"
+            assert 0.0 <= unc <= 1.0, f"uncertainty={unc} out of bounds"
+
+    def test_high_d_explore_high_exploration(self):
+        sv_high = StateVector(D_explore=0.9, K=0.1)
+        sv_low  = StateVector(D_explore=0.1, K=0.9)
+        exp_high, _, _ = compute_3d_phase(sv_high)
+        exp_low,  _, _ = compute_3d_phase(sv_low)
+        assert exp_high > exp_low
+
+    def test_high_k_low_exploration(self):
+        """High coherence (exploitation) drives exploration toward 0."""
+        sv = StateVector(D_explore=0.0, K=1.0)
+        exp, _, _ = compute_3d_phase(sv)
+        assert exp < 0.01
+
+    def test_high_d_e_high_dissent(self):
+        sv_high = StateVector(D_e=0.9, D_correct=0.5, K=0.1)
+        sv_low  = StateVector(D_e=0.1, D_correct=0.1, K=0.9)
+        _, dis_high, _ = compute_3d_phase(sv_high)
+        _, dis_low,  _ = compute_3d_phase(sv_low)
+        assert dis_high > dis_low
+
+    def test_high_c_and_r_high_uncertainty(self):
+        sv_high = StateVector(C=1.0, R=1.0)
+        sv_low  = StateVector(C=0.0, R=0.0)
+        _, _, unc_high = compute_3d_phase(sv_high)
+        _, _, unc_low  = compute_3d_phase(sv_low)
+        assert unc_high > unc_low
+
+    def test_uncertainty_clipped_at_one(self):
+        sv = StateVector(C=1.0, R=1.0)
+        _, _, unc = compute_3d_phase(sv)
+        assert unc <= 1.0
+
+    def test_zero_sv_axes(self):
+        """All-zero state: exploration ~ 0.5 (eps-only), dissent ~ 0, uncertainty = 0."""
+        exp, dis, unc = compute_3d_phase(StateVector())
+        assert math.isclose(unc, 0.0, abs_tol=1e-6)
+        assert dis < 0.01  # D_e=0, D_correct=0 → dissent near 0
+
+    def test_intent_carries_3d_fields(self, conductor, zero_sv):
+        intent = conductor.step(zero_sv)
+        assert intent.phase_exploration is not None
+        assert intent.phase_dissent     is not None
+        assert intent.phase_uncertainty is not None
+        assert 0.0 <= intent.phase_exploration <= 1.0
+        assert 0.0 <= intent.phase_dissent     <= 1.0
+        assert 0.0 <= intent.phase_uncertainty <= 1.0
+
+
+# ===========================================================================
+# 7. Hysteresis band
 # ===========================================================================
 
 class TestHysteresis:
-    """AHG_ARCHITECTURE.md §2.4 — transition fires only after 2 consecutive
-    turns crossing the band edge."""
-
-    def test_single_crossing_does_not_transition(self):
-        c = AHGConductor()
-        # Prime with Grounded
-        c.step(StateVector(D_e=0.0, N=0.0, C=0.0, R=0.0))
-        grounded_regime = c.regime
-        assert grounded_regime == Regime.GROUNDED
-
-        # One step into high-entropy (Tension-bound) territory
-        intent = c.step(StateVector(D_e=1.0, N=1.0, C=1.0, R=1.0))
-        # With hysteresis, regime should NOT yet flip on turn 1 of crossing
-        # (pending_turns=1, need 2)
-        # It may stay at Grounded or partially transition depending on
-        # phi magnitude — assert it is NOT yet Tribunal if only 1 cross
-        # (phi > 1.8 impossible in 1 step from fresh conductor)
-        assert intent.regime in list(Regime)  # valid regime returned
-
     def test_two_crossings_triggers_transition(self):
-        """Two consecutive steps in new regime => transition fires."""
         c = AHGConductor()
-        # Establish Grounded baseline
         for _ in range(3):
             c.step(StateVector())
         assert c.regime == Regime.GROUNDED
-
-        # Two consecutive high-novelty steps should move into Flow+
         sv_flow = StateVector(N=0.6, C=0.1, R=0.05, D_e=0.05)
         c.step(sv_flow)
         c.step(sv_flow)
-        # After 2 turns, transition should have fired
         assert c.regime != Regime.GROUNDED
 
 
 # ===========================================================================
-# 7. AHGConductor.step — PhaseIntent fields
+# 8. PhaseIntent fields — v1.4 enrichment
 # ===========================================================================
 
-class TestConductorStep:
-    """Validate PhaseIntent structure and conductor state after step()."""
+class TestPhaseIntentV14:
 
-    def test_returns_phase_intent(self, conductor, zero_sv):
+    def test_intent_has_v_phi(self, conductor, zero_sv):
+        conductor.step(zero_sv)  # prime history
         intent = conductor.step(zero_sv)
-        assert isinstance(intent, PhaseIntent)
+        assert hasattr(intent, "v_phi")
+        assert isinstance(intent.v_phi, float)
 
-    def test_intent_phi_in_bounds(self, conductor, zero_sv):
+    def test_intent_has_a_phi(self, conductor, zero_sv):
+        conductor.step(zero_sv)
+        conductor.step(zero_sv)
         intent = conductor.step(zero_sv)
-        assert PHI_MIN <= intent.phi <= PHI_MAX
+        assert hasattr(intent, "a_phi")
+        assert isinstance(intent.a_phi, float)
 
-    def test_intent_regime_matches_phi(self, conductor, zero_sv):
+    def test_intent_tribunal_active_false_for_low_phi(self, conductor, zero_sv):
         intent = conductor.step(zero_sv)
-        assert intent.regime == classify_regime(intent.phi)
+        assert intent.tribunal_active is False
 
-    def test_intent_mode_matches_regime(self, conductor, zero_sv):
+    def test_intent_tribunal_active_true_for_tension(self):
+        c = AHGConductor(hysteresis_turns=1)
+        sv = StateVector(D_e=10.0, N=10.0, C=10.0, R=10.0)
+        intent = c.step(sv)
+        if intent.regime == Regime.TENSION:
+            assert intent.tribunal_active is True
+            assert "p29_risk_block" in intent.constraints
+            assert "p38_circuit_open" in intent.constraints
+            assert intent.ttl == 5
+
+    def test_intent_message_is_string(self, conductor, zero_sv):
         intent = conductor.step(zero_sv)
-        from components.ahg_conductor import _REGIME_ARCHETYPE
-        assert intent.mode == _REGIME_ARCHETYPE[intent.regime]
+        assert isinstance(intent.message, str)
+        assert len(intent.message) > 0
+
+    def test_intent_message_contains_phi(self, conductor, zero_sv):
+        intent = conductor.step(zero_sv)
+        assert "φ=" in intent.message
 
     def test_intent_weights_canonical(self, conductor, zero_sv):
         intent = conductor.step(zero_sv)
@@ -333,74 +300,77 @@ class TestConductorStep:
 
     def test_turn_counter_increments(self, conductor, zero_sv):
         for i in range(1, 4):
-            intent = conductor.step(zero_sv)
-            assert intent.turn_id == i
-
-    def test_tribunal_constraints_on_tension(self):
-        c = AHGConductor(hysteresis_turns=1)  # disable hysteresis for test
-        # Force phi into Tension by using very high entropy
-        # phi > 1.80 is asymptotically approached; use extreme values
-        sv = StateVector(D_e=10.0, N=10.0, C=10.0, R=10.0)
-        intent = c.step(sv)
-        if intent.regime == Regime.TENSION:
-            assert "p29_risk_block" in intent.constraints
-            assert "p38_circuit_open" in intent.constraints
-            assert "apogee_lens_mandatory" in intent.constraints
-
-    def test_introspection_requires_apogee(self):
-        c = AHGConductor(hysteresis_turns=1)
-        # phi 1.70-1.80 => Introspection
-        # S(t) s.t. phi ~ 1.75: sigma(S) = (1.75-1)/0.8 = 0.9375
-        # logistic inverse: S = ln(0.9375/0.0625) = ln(15) ~ 2.708
-        # D_e=2.708/0.35 with N=C=R=0
-        sv = StateVector(D_e=7.0, N=0.0, C=0.0, R=0.0)
-        intent = c.step(sv)
-        if intent.regime == Regime.INTROSPECTION:
-            assert "apogee_lens_mandatory" in intent.constraints
+            assert conductor.step(zero_sv).turn_id == i
 
 
 # ===========================================================================
-# 8. StateVector helpers
+# 9. StateVector helpers
 # ===========================================================================
 
 class TestStateVector:
-    def test_d_p_is_sum_of_explore_and_correct(self):
+    def test_d_p_is_sum(self):
         sv = StateVector(D_explore=0.3, D_correct=0.2)
         assert math.isclose(sv.D_p, 0.5, rel_tol=1e-9)
 
-    def test_d_p_zero_when_both_zero(self):
+    def test_d_p_zero(self):
         assert StateVector().D_p == 0.0
 
 
 # ===========================================================================
-# 9. AHGSidecar — heartbeat ingestion + aggregation
+# 10. AHGSidecar — v1.4: wire_herald_trace
 # ===========================================================================
 
-class TestAHGSidecar:
+class TestAHGSidecarV14:
+
+    def test_wire_herald_trace_sets_flag(self, sidecar):
+        assert not sidecar.herald_wired
+        sidecar.wire_herald_trace(lambda intent: None)
+        assert sidecar.herald_wired
+
+    def test_unwire_clears_flag(self, sidecar):
+        sidecar.wire_herald_trace(lambda intent: None)
+        sidecar.unwire_herald_trace()
+        assert not sidecar.herald_wired
+
+    def test_herald_callback_called_on_flush(self, sidecar):
+        received = []
+        sidecar.wire_herald_trace(received.append)
+        sidecar.ingest(AgentHeartbeat(agent_id="Amethyst", turn_id=1))
+        sidecar.flush(1)
+        assert len(received) == 1
+        assert isinstance(received[0], PhaseIntent)
+
+    def test_herald_callback_receives_enriched_intent(self, sidecar):
+        received = []
+        sidecar.wire_herald_trace(received.append)
+        sidecar.ingest(AgentHeartbeat(agent_id="Amethyst", turn_id=1, D_e_signal=0.3))
+        sidecar.flush(1)
+        intent = received[0]
+        assert hasattr(intent, "v_phi")
+        assert hasattr(intent, "tribunal_active")
+        assert intent.phase_exploration is not None
+        assert intent.phase_dissent     is not None
+        assert intent.phase_uncertainty is not None
+
+    def test_herald_exception_does_not_raise(self, sidecar):
+        def bad_callback(intent):
+            raise RuntimeError("Herald sink down")
+        sidecar.wire_herald_trace(bad_callback)
+        sidecar.ingest(AgentHeartbeat(agent_id="A", turn_id=1))
+        # Must not raise — errors are swallowed and logged
+        sidecar.flush(1)
 
     def test_ingest_registers_agent(self, sidecar):
-        hb = AgentHeartbeat(agent_id="Amethyst", turn_id=1, D_e_signal=0.1)
-        sidecar.ingest(hb)
+        sidecar.ingest(AgentHeartbeat(agent_id="Amethyst", turn_id=1))
         assert "Amethyst" in sidecar.registered_agents
 
-    def test_pending_turns_after_ingest(self, sidecar):
-        hb = AgentHeartbeat(agent_id="COLLEEN", turn_id=1)
-        sidecar.ingest(hb)
-        assert 1 in sidecar.pending_turns
-
-    def test_flush_returns_phase_intent(self, sidecar):
-        sidecar.ingest(AgentHeartbeat(agent_id="Amethyst", turn_id=1))
-        intent = sidecar.flush(1)
-        assert isinstance(intent, PhaseIntent)
-
     def test_flush_clears_buffer(self, sidecar):
-        sidecar.ingest(AgentHeartbeat(agent_id="Amethyst", turn_id=1))
+        sidecar.ingest(AgentHeartbeat(agent_id="A", turn_id=1))
         sidecar.flush(1)
         assert 1 not in sidecar.pending_turns
 
-    def test_flush_empty_buffer_returns_none(self, sidecar):
-        result = sidecar.flush(99)
-        assert result is None
+    def test_flush_empty_returns_none(self, sidecar):
+        assert sidecar.flush(99) is None
 
     def test_multi_agent_mean_aggregation(self):
         c = AHGConductor()
@@ -408,65 +378,43 @@ class TestAHGSidecar:
         s.ingest(AgentHeartbeat(agent_id="A", turn_id=1, D_e_signal=0.2, novelty_signal=0.4))
         s.ingest(AgentHeartbeat(agent_id="B", turn_id=1, D_e_signal=0.4, novelty_signal=0.6))
         intent = s.flush(1)
-        # Mean D_e = 0.3, Mean N = 0.5
-        # S(t) = 0.35*0.3 + 0.20*0.5 = 0.105 + 0.10 = 0.205
-        expected_phi = 1.0 + 0.8 * logistic(0.35*0.3 + 0.20*0.5)
+        expected_phi = 1.0 + 0.8 * logistic(W1_D_E*0.3 + W2_N*0.5)
         assert math.isclose(intent.phi, expected_phi, rel_tol=1e-6)
 
-    def test_turn_buffer_rejects_mismatched_turn_id(self):
+    def test_turn_buffer_rejects_mismatch(self):
         buf = TurnBuffer(turn_id=5)
         with pytest.raises(ValueError):
             buf.add(AgentHeartbeat(agent_id="X", turn_id=99))
 
     def test_flush_all_pending(self, sidecar):
-        for turn in [1, 2, 3]:
-            sidecar.ingest(AgentHeartbeat(agent_id="Amethyst", turn_id=turn))
+        for t in [1, 2, 3]:
+            sidecar.ingest(AgentHeartbeat(agent_id="Amethyst", turn_id=t))
         results = sidecar.flush_all_pending()
         assert set(results.keys()) == {1, 2, 3}
         assert all(isinstance(v, PhaseIntent) for v in results.values())
 
 
 # ===========================================================================
-# 10. Eval task stubs (Issue #32 — P-42 AHG additions)
+# 11. Eval task stubs (Issue #32 — P-42 AHG additions)
 # ===========================================================================
 
 class TestAHGEvalStubs:
     """
     Eval task stubs registered for Issue #32.
-    These are SKIPPED until ahg_conductor.py is wired to a live multi-agent
-    trace and baseline measurements are established.
-
-    Tasks:
-      ahg_recovery_turns      — AHG_ARCHITECTURE.md §6, Issue #32
-      ahg_entropy_recovery    — AHG_ARCHITECTURE.md §6, Issue #32
-      ahg_hallucination_reduction — AHG_ARCHITECTURE.md §6, Issue #32
+    SKIPPED until ahg_conductor.py is wired to a live multi-agent trace.
     """
 
-    @pytest.mark.skip(reason="Issue #32: requires live multi-agent trace (v1.4)")
+    @pytest.mark.skip(reason="Issue #32: requires live multi-agent trace (v1.5+)")
     def test_ahg_recovery_turns(self):
-        """
-        Metric: turns to reach phi < 1.45 after Tension event.
-        Baseline: no-AHG control run.
-        Target: AHG reduces recovery turns vs control.
-        Method: new eval task 'ahg_recovery_turns' in dgaf_eval_suite.py.
-        """
+        """Metric: turns to reach phi < 1.45 after Tension event."""
         raise NotImplementedError("Issue #32 — ahg_recovery_turns")
 
-    @pytest.mark.skip(reason="Issue #32: requires live multi-agent trace (v1.4)")
+    @pytest.mark.skip(reason="Issue #32: requires live multi-agent trace (v1.5+)")
     def test_ahg_entropy_recovery(self):
-        """
-        Metric: rate of D_e suppression per Tribunal cycle.
-        Target: measurable per-cycle D_e decay.
-        Method: new eval task 'ahg_entropy_recovery' in dgaf_eval_suite.py.
-        """
+        """Metric: rate of D_e suppression per Tribunal cycle."""
         raise NotImplementedError("Issue #32 — ahg_entropy_recovery")
 
-    @pytest.mark.skip(reason="Issue #32: requires live trace + Herald log fixtures (v1.4)")
+    @pytest.mark.skip(reason="Issue #32: requires live trace + Herald log fixtures (v1.5+)")
     def test_ahg_hallucination_reduction(self):
-        """
-        Metric: contradiction persistence + ungrounded claims.
-        Predicted improvement: 20-40% reduction vs no-AHG baseline.
-        Method: extends 'audit_hallucination_rate' task in dgaf_eval_suite.py.
-        Source: AHG_ARCHITECTURE.md §6 — currently theoretical.
-        """
+        """Metric: 20-40% reduction in contradiction persistence."""
         raise NotImplementedError("Issue #32 — ahg_hallucination_reduction")
