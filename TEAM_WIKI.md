@@ -1,28 +1,51 @@
 # DGAF Framework — Team Wiki
 
-> **Last updated:** 2026-06-28 · S071 · Amethyst autonomous batch
+> **Last updated:** 2026-07-02 · Post-S077 · Amethyst governance sweep
 
 ---
 
 ## §1 · Overview
 
-The DGAF (Dynamic Governance and Autonomous Framework) orchestrates multi-agent workflows under a formally governed pattern registry. All execution flows through NDR patterns enforced by Amethyst (host), DemiJoule (supervisor), and Apogee Lens (verifier).
+The DGAF (Dynamic Governance Agentic Framework) is the **layer-0 governance architecture** for the ndrorchestration ecosystem, rooted at `~/DGAF-Framework`. It orchestrates multi-agent workflows under a formally governed pattern registry. All execution flows through NDR patterns enforced by Amethyst (host), DemiJoule (supervisor), and Apogee Lens (verifier).
 
-## §2 · Agent Roster
+> **Nomenclature canon** (locked 2026-07-02 in `SESSION_ANCHOR.md`):  
+> • `NDR-HDFS` = NDR Hierarchical Dynamic Formation System (formerly FLAG-01) — the structural layer governing agent hierarchy and formation composition  
+> • `qualitative` = interpretive/rubric-based evaluation mode (formerly FLAG-02)  
+> • DGAF = layer-0 governance architecture — not a framework addon; the root control plane
 
-| Agent | Role | Authority |
-|-------|------|-----------|
-| Amethyst | Host, coordinator, working-memory refresher | Space instruction tier |
-| Apogee Lens | Final verifier for portfolio-grade output | Portfolio governance rules |
-| DemiJoule | Runtime supervisor, ethics/safety | DGAF/PDMAL constraints |
-| COLLEEN | Archive confirmation, Drive integration | Advisory |
-| Ender / Njineer | Human ratification authority | Architect |
+---
+
+## §2 · Agent Roster — Amethyst-Lattice v3.1 (11 canonical agents)
+
+> Authoritative source: `ENSEMBLE_ROSTER.md` (Post-S077, 2026-06-29)  
+> Agent count: **11 canonical** (6 with full detail sheets + 5 operational components)
+
+| Agent | Layer | Role | Status |
+|---|---|---|---|
+| **Amethyst** | L5 | Host, meta-orchestrator, working-memory refresher, tribunal | ✅ Active |
+| **COLLEEN** | L5 | Institutional anchor, 1-1-1-1 Alignment Gate, steward | ✅ Active |
+| **Apogee Lens** | L4 | QA orchestrator, NIST AI RMF compliance, P-30 attestation authority | ✅ On-call |
+| **DemiJoule** | L4 | Runtime supervisor, ethics/safety, AXIS enforcement | ✅ On-call |
+| **Herald** | L3 | Explorer / Synthesizer | 🔴 Blocked (`VITE_GEMINI_API_KEY` — S-01) |
+| **Professor Prodigy** | L3 | Executor / Phi-calculus | 🟡 KB specified, implementation pending |
+| **Agent Sentinel** | L3 | Safety/veto gate, 11Q gates 9–11 | ⬜ Card pending |
+| **KAPPA v3.6** | L3 | Confidence-gated dynamic weight router | ⬜ Component card in `KAPPA/` |
+| **NormativeConstraint v1.0** | L3 | P-10 deontic/ethical cognition layer | ⬜ Component card exists |
+| **Reson #1** | L3 | Schizophonic Studio signal chain — #1 | ⬜ Studio trio |
+| **Echolette #2 / Lyra #3** | L3 | Schizophonic Studio signal chain — #2/#3 | ⬜ Studio trio |
+| **Ender / Njineer** | — | Human ratification authority, Architect | ✅ Active |
+
+---
 
 ## §3 · Pattern Registry
 
 Canonical source: `docs/ndr_patterns_unified.json`  
 Human-readable: `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`  
-Current watermark: **P-41** · Schema **v2.2** · Session **S071**
+Current watermark: **P-42** · Schema **v2.2** · Session **Post-S077**
+
+Newest pattern: **P-42 AHG** (Acoustic Harmonic Gate) — filed 2026-06-29
+
+---
 
 ## §4 · Resilience Stack
 
@@ -59,23 +82,35 @@ Five patterns form an interlocking contract for durable, fault-tolerant multi-st
 
 **Interlock sequence:** P-37 choreographs the saga → P-38 isolates failures → P-39 makes checkpoints durable → P-40 makes individual calls transactional → P-41 gates all irreversible human decisions.
 
+### §4.5 · Acoustic Harmonic Gate (Layer 12) · *Added Post-S077*
+
+- **P-42** AHG — Acoustic Harmonic Gate. Phi-harmonic resonance verification before synthesis output. Newest canonical pattern.
+
+---
+
 ## §5 · Governance Rules
 
 - All repos claiming DGAF governance must carry a `GOVERNANCE.md` with DGAF version, protocol anchor to `GOVERNANCE_CONSTITUTION.md`, φ = 1.61818, and applicable NDR patterns.
 - Personal document firewall (NDR-133) is BLOCKING-ABSOLUTE. Architect override only. No resume/CV/audit files to GitHub.
-- Stasis block (P-12–P-26, 133 patterns) migration window: 2026-06-13 → 2026-07-13.
-- FLAG-01, FLAG-04, FLAG-05 await Njineer response before resolution.
+- Stasis block (P-12–P-26, 133 patterns) migration window: 2026-06-13 → **2026-07-13** ⚠️ EXPIRING.
+- NDR-HDFS (formerly FLAG-01) and qualitative evaluation (formerly FLAG-02) are canonical — see `SESSION_ANCHOR.md` nomenclature canon.
+- FLAG-05 (AXIS pattern scope) awaits Njineer content decision (S-03 in DEFERRED_ITEMS.md).
 - DriftWatch production deployment requires explicit push trigger from Architect.
+
+---
 
 ## §6 · Session Log
 
 | Session | Watermark | Key Additions |
 |---------|-----------|---------------|
-| S069 | P-36 | P-35, P-36, CRUCIBLE_CHARTER, STASIS_CANONICAL_SPEC |
-| S066 | P-34 | P-34 Empirical-Threshold-Sweep |
 | S042 | P-33 | P-31 SCPE, P-32 Phi-Closure, P-33 PDMAL |
-| S071 | **P-41** | P-37 Saga, P-38 Circuit-Breaker, P-39 ACRFence, P-40 Atomix, P-41 HITL Queue · Schema v2.2 |
+| S066 | P-34 | P-34 Empirical-Threshold-Sweep |
+| S069 | P-36 | P-35, P-36, CRUCIBLE_CHARTER, STASIS_CANONICAL_SPEC |
+| S071 | P-41 | P-37 Saga, P-38 Circuit-Breaker, P-39 ACRFence, P-40 Atomix, P-41 HITL Queue · Schema v2.2 |
+| Post-S077 | **P-42** | AHG (P-42), ENSEMBLE_ROSTER v3.1, agent count locked at 11 canonical, ndr_patterns_unified.json v2.2 |
+| 2026-07-02 | — | Nomenclature canon locked (NDR-HDFS, qualitative, DGAF layer-0); SESSION_ANCHOR.md updated; DEFERRED_ITEMS.md patched |
 
 ---
 
-*Governed by DGAF · Amethyst host · φ = 1.61818*
+*Governed by DGAF · Amethyst host · φ = 1.61818*  
+*Updated 2026-07-02 by Agent Amethyst × COLLEEN — synced to Post-S077, P-42 watermark, 11-agent roster*
