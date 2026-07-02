@@ -1,78 +1,113 @@
 """
-ahg_sidecar.py — AHG Sidecar Observability Layer (v1.5)
-Pattern: P-42 — Adaptive Harmonic Governance, Layer 12 — Cognitive Control Plane
-Version: 1.5
-Authors: Amethyst × COLLEEN | 2026-06-29
+ahg_sidecar.py — AHG Sidecar Monitor
+P-42 · Layer 12 — Cognitive Control Plane · v1.3 scaffold
+Amethyst × COLLEEN · S072 · 2026-07-02
 
-Responsibilities:
-  - Accept per-agent HeartbeatVectors each turn (submit_heartbeat)
-  - Aggregate heartbeats and call AHGConductor.observe() on flush_turn()
-  - Broadcast resulting PhaseIntent to all registered trace callbacks
-  - v1.5: wire_herald_trace() fully wired — accepts live AHGHeraldTrace.on_intent
-    Supports multiple callbacks (multi-subscriber fan-out)
+Spec: docs/theory/AHG_ARCHITECTURE.md v1.2 §4
+Pattern card: patterns/P-42_AHG.md v1.3-card
 
-Change log:
-  v1.3: Initial scaffold — wire_herald_trace() stub (no-op)
-  v1.4: In-memory buffer + auto-flush on expected_agents submitted
-  v1.5: wire_herald_trace() fully operational — stores callbacks in list,
-        broadcasts PhaseIntent to all subscribers on every flush_turn()
-        Added: unregister_herald_trace(), list_herald_traces(), broadcast stats
+The Sidecar Monitor is O(n) scalable — it reads only compressed Heartbeat
+signals from each agent, never full context. Aggregates per-agent signals
+each turn, flushes to AHGConductor for φ computation.
+
+Architecture:
+  [Agent_1 Heartbeat] ──┐
+  [Agent_2 Heartbeat] ──┤──► AHGSidecar ──► AHGConductor ──► PhaseIntent
+  [Agent_N Heartbeat] ──┘          │
+                                    └──► P-01 Herald Trace (stub, v1.4)
+
+Status: SCAFFOLD
+  - Heartbeat ingestion: IMPLEMENTED
+  - Turn-level aggregation → StateVector: IMPLEMENTED
+  - AHGConductor flush: IMPLEMENTED
+  - P-01 Herald trace routing: STUBBED (v1.4)
+  - Async transport: STUBBED (v1.4)
 """
 
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Callable, List, Optional
+from typing import Optional
 
-logger = logging.getLogger("ahg.sidecar")
+from .ahg_conductor import AHGConductor, PhaseIntent, StateVector
 
-try:
-    from components.ahg_conductor import AHGConductor, HeartbeatVector, PhaseIntent, AggregatedSignals
-    _CONDUCTOR_AVAILABLE = True
-except ImportError:
-    _CONDUCTOR_AVAILABLE = False
-    AHGConductor = None  # type: ignore
-    HeartbeatVector = None  # type: ignore
-    PhaseIntent = None  # type: ignore
-    AggregatedSignals = None  # type: ignore
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
-# Turn Buffer
+# Heartbeat payload — mirrors schemas/ahg_heartbeat.json
+# ---------------------------------------------------------------------------
+
+@dataclass
+class AgentHeartbeat:
+    """
+    Compressed per-agent signal payload emitted each governance turn.
+    Schema: schemas/ahg_heartbeat.json
+    """
+    agent_id:          str
+    turn_id:           int
+    D_e_signal:        float = 0.0  # Destabilizing Entropy contribution
+    D_explore_signal:  float = 0.0  # Exploratory Divergence contribution
+    D_correct_signal:  float = 0.0  # Corrective Dissent contribution
+    novelty_signal:    float = 0.0  # Novelty contribution
+    constraint_count:  int   = 0    # Active blocking constraints
+    revision_count:    int   = 0    # Self-corrections this turn
+    coherence_signal:  float = 0.0  # Semantic similarity to other agents
+
+
+# ---------------------------------------------------------------------------
+# Turn buffer
 # ---------------------------------------------------------------------------
 
 @dataclass
 class TurnBuffer:
-    """Accumulates HeartbeatVectors for a single turn before flush."""
-    turn_id: int
-    heartbeats: List = field(default_factory=list)
+    """Collects all heartbeats for a single turn before flush."""
+    turn_id:    int
+    heartbeats: list[AgentHeartbeat] = field(default_factory=list)
 
-    def add(self, hb) -> None:
+    def add(self, hb: AgentHeartbeat) -> None:
+        if hb.turn_id != self.turn_id:
+            raise ValueError(
+                f"Heartbeat turn_id {hb.turn_id} does not match "
+                f"buffer turn_id {self.turn_id}"
+            )
         self.heartbeats.append(hb)
 
-    @property
-    def agent_ids(self) -> List[str]:
-        return [hb.agent_id for hb in self.heartbeats]
+    def to_state_vector(self, total_possible_constraints: int = 10) -> StateVector:
+        """
+        Aggregate per-agent heartbeats into a single StateVector.
 
-    def aggregate(self) -> "AggregatedSignals":
-        """Aggregate all heartbeats for this turn into AggregatedSignals."""
+        Aggregation rules:
+          D_e:  mean of D_e_signal across agents   (shared entropy level)
+          N:    mean of novelty_signal              (collective novelty)
+          C:    total constraint_count / total_possible_constraints
+          R:    mean(revision_count) normalised to [0,1] via /10 clip
+          M:    0.0 (updated by Conductor EMA — not agent-reported)
+          K:    mean of coherence_signal
+          D_explore / D_correct: mean of respective signals
+        """
         if not self.heartbeats:
-            raise ValueError(f"TurnBuffer T{self.turn_id}: no heartbeats to aggregate")
+            return StateVector()
+
         n = len(self.heartbeats)
-        return AggregatedSignals(
-            d_e=sum(hb.d_e for hb in self.heartbeats) / n,
-            d_explore=sum(hb.d_explore for hb in self.heartbeats) / n,
-            d_correct=sum(hb.d_correct for hb in self.heartbeats) / n,
-            novelty=sum(hb.novelty for hb in self.heartbeats) / n,
-            constraint_compliance=(
-                sum(hb.constraint_count for hb in self.heartbeats) /
-                max(1, sum(hb.total_constraints for hb in self.heartbeats))
-            ),
-            revision_load=(
-                sum(hb.revision_count for hb in self.heartbeats) /
-                max(1, sum(hb.total_turns for hb in self.heartbeats))
-            ),
+
+        D_e       = sum(h.D_e_signal for h in self.heartbeats) / n
+        D_explore = sum(h.D_explore_signal for h in self.heartbeats) / n
+        D_correct = sum(h.D_correct_signal for h in self.heartbeats) / n
+        N         = sum(h.novelty_signal for h in self.heartbeats) / n
+        C         = sum(h.constraint_count for h in self.heartbeats) / max(
+                        total_possible_constraints, 1
+                    )
+        R         = min(
+                        sum(h.revision_count for h in self.heartbeats) / n / 10.0,
+                        1.0
+                    )
+        K         = sum(h.coherence_signal for h in self.heartbeats) / n
+
+        return StateVector(
+            D_e=D_e, D_explore=D_explore, D_correct=D_correct,
+            N=N, C=C, R=R, M=0.0, K=K,
         )
 
 
@@ -81,208 +116,136 @@ class TurnBuffer:
 # ---------------------------------------------------------------------------
 
 class AHGSidecar:
-    """O(n) Observability Layer for the Adaptive Harmonic Governance system.
-
-    Separates state estimation (heartbeat aggregation) from governance control
-    (AHGConductor.observe). Agents submit lightweight HeartbeatVectors each turn;
-    AHGSidecar aggregates and drives the conductor, then fans out the resulting
-    PhaseIntent to all registered herald trace callbacks.
-
-    v1.5: wire_herald_trace() fully operational with multi-subscriber fan-out.
+    """
+    AHG Sidecar Monitor — O(n) heartbeat aggregation and turn-level flush.
 
     Usage:
         conductor = AHGConductor()
-        sidecar = AHGSidecar(conductor=conductor, expected_agents=["A", "B", "C"])
+        sidecar   = AHGSidecar(conductor=conductor)
 
-        # Wire P-01 Herald trace (v1.5)
-        from components.ahg_herald_trace import AHGHeraldTrace
-        trace = AHGHeraldTrace(session_id="S077")
-        sidecar.wire_herald_trace(trace.on_intent)
+        # Each agent emits once per turn:
+        sidecar.ingest(AgentHeartbeat(agent_id="Amethyst", turn_id=1, ...))
+        sidecar.ingest(AgentHeartbeat(agent_id="COLLEEN",  turn_id=1, ...))
 
-        # Each agent submits heartbeat
-        sidecar.submit_heartbeat(HeartbeatVector(agent_id="A", turn_id=1, ...))
-        sidecar.submit_heartbeat(HeartbeatVector(agent_id="B", turn_id=1, ...))
-        sidecar.submit_heartbeat(HeartbeatVector(agent_id="C", turn_id=1, ...))
-        # Auto-flush fires when all 3 agents submitted
-        intent = sidecar.last_intent  # PhaseIntent for T1
+        # At turn end, flush to conductor:
+        intent = sidecar.flush(turn_id=1)
+
+    v1.3 scaffold:
+        - Heartbeat ingestion + turn buffer: IMPLEMENTED
+        - StateVector aggregation: IMPLEMENTED
+        - AHGConductor flush: IMPLEMENTED
+        - P-01 Herald routing: STUBBED
+        - Async transport: STUBBED
     """
 
     def __init__(
         self,
-        conductor: Optional["AHGConductor"] = None,
-        expected_agents: Optional[List[str]] = None,
-        auto_flush: bool = True,
-    ):
-        """
-        Args:
-            conductor: AHGConductor instance. Required for live operation.
-            expected_agents: List of agent IDs expected each turn.
-                             Auto-flush triggers when all have submitted.
-                             If None, manual flush_turn() required.
-            auto_flush: Enable automatic flush when all expected_agents submitted.
-        """
-        if not _CONDUCTOR_AVAILABLE:
-            logger.warning("[AHGSidecar] ahg_conductor not available — sidecar in stub mode")
-
+        conductor: AHGConductor,
+        herald_sink=None,
+        total_possible_constraints: int = 10,
+    ) -> None:
         self.conductor = conductor
-        self.expected_agents = set(expected_agents) if expected_agents else set()
-        self.auto_flush = auto_flush
-
-        self._buffers: dict[int, TurnBuffer] = {}  # turn_id → TurnBuffer
-        self._herald_callbacks: List[Callable] = []  # v1.5 multi-subscriber
-        self._broadcast_count = 0
-        self._broadcast_errors = 0
-        self.last_intent: Optional["PhaseIntent"] = None
-        self._turn_history: List["PhaseIntent"] = []  # rolling last-100
-
-        logger.info(
-            f"[AHGSidecar] v1.5 ready — "
-            f"auto_flush={auto_flush} "
-            f"expected_agents={sorted(self.expected_agents) if self.expected_agents else 'manual'}"
-        )
+        self.herald_sink = herald_sink
+        self.total_possible_constraints = total_possible_constraints
+        self._buffers: dict[int, TurnBuffer] = {}
+        self._agent_registry: set[str] = set()
 
     # ------------------------------------------------------------------
-    # Heartbeat ingestion
+    # Public API
     # ------------------------------------------------------------------
 
-    def submit_heartbeat(self, hb: "HeartbeatVector") -> None:
-        """Accept a per-agent HeartbeatVector for the current turn.
-
-        Thread-safe for sequential per-turn submission.
-        Triggers auto-flush if all expected_agents have submitted.
+    def ingest(self, heartbeat: AgentHeartbeat) -> None:
         """
-        if hb.turn_id not in self._buffers:
-            self._buffers[hb.turn_id] = TurnBuffer(turn_id=hb.turn_id)
-        self._buffers[hb.turn_id].add(hb)
-        logger.debug(
-            f"[AHGSidecar] Heartbeat T{hb.turn_id} from '{hb.agent_id}' "
-            f"d_e={hb.d_e:.3f} novelty={hb.novelty:.3f}"
-        )
-
-        # Auto-flush when all expected agents have submitted
-        if self.auto_flush and self.expected_agents:
-            submitted = set(self._buffers[hb.turn_id].agent_ids)
-            if self.expected_agents.issubset(submitted):
-                logger.debug(f"[AHGSidecar] Auto-flush T{hb.turn_id} — all agents submitted")
-                self.flush_turn(hb.turn_id)
-
-    # ------------------------------------------------------------------
-    # Flush
-    # ------------------------------------------------------------------
-
-    def flush_turn(self, turn_id: int) -> "PhaseIntent":
-        """Aggregate heartbeats for turn_id, drive AHGConductor, broadcast PhaseIntent.
-
-        Raises:
-            ValueError: if no heartbeats found for turn_id.
-            RuntimeError: if conductor not configured.
+        Accept a single AgentHeartbeat. Thread-safe ingestion is deferred
+        to v1.4 (asyncio / threading.Lock wrapper).
         """
+        turn_id = heartbeat.turn_id
+        self._agent_registry.add(heartbeat.agent_id)
+
         if turn_id not in self._buffers:
-            raise ValueError(f"[AHGSidecar] flush_turn({turn_id}): no heartbeats in buffer")
+            self._buffers[turn_id] = TurnBuffer(turn_id=turn_id)
 
-        buf = self._buffers.pop(turn_id)
-        if not buf.heartbeats:
-            raise ValueError(f"[AHGSidecar] flush_turn({turn_id}): empty buffer")
-
-        if self.conductor is None:
-            raise RuntimeError("[AHGSidecar] flush_turn: conductor not configured")
-
-        signals = buf.aggregate()
-        intent: PhaseIntent = self.conductor.observe(signals)
-
-        self.last_intent = intent
-        self._turn_history.append(intent)
-        if len(self._turn_history) > 100:
-            self._turn_history = self._turn_history[-100:]
-
-        # Fan-out to all herald callbacks (v1.5)
-        self._broadcast(intent)
-
+        self._buffers[turn_id].add(heartbeat)
         logger.debug(
-            f"[AHGSidecar] Flushed T{turn_id} → "
-            f"phi={intent.phi:.4f} archetype={intent.archetype.value} "
-            f"tribunal={intent.tribunal_active} "
-            f"callbacks_fired={len(self._herald_callbacks)}"
+            "AHGSidecar ingested heartbeat agent=%s turn=%d D_e=%.3f",
+            heartbeat.agent_id, turn_id, heartbeat.D_e_signal,
         )
+
+    def flush(self, turn_id: int) -> Optional[PhaseIntent]:
+        """
+        Aggregate all heartbeats for turn_id into a StateVector,
+        flush to AHGConductor, emit herald trace (stub), return PhaseIntent.
+        Cleans up the turn buffer after flush.
+        """
+        buffer = self._buffers.pop(turn_id, None)
+        if buffer is None:
+            logger.warning(
+                "AHGSidecar flush called for turn=%d but no buffer found.",
+                turn_id,
+            )
+            return None
+
+        sv     = buffer.to_state_vector(self.total_possible_constraints)
+        intent = self.conductor.step(sv)
+
+        self._emit_herald_trace(turn_id, sv, intent)
+
         return intent
 
-    def _broadcast(self, intent: "PhaseIntent") -> None:
-        """Fan-out PhaseIntent to all registered herald callbacks."""
-        for cb in self._herald_callbacks:
-            try:
-                cb(intent)
-                self._broadcast_count += 1
-            except Exception as exc:
-                self._broadcast_errors += 1
-                logger.error(
-                    f"[AHGSidecar] Herald callback error "
-                    f"({cb.__qualname__ if hasattr(cb, '__qualname__') else repr(cb)}): {exc}"
-                )
-
-    # ------------------------------------------------------------------
-    # Herald trace wiring (v1.5 — fully operational)
-    # ------------------------------------------------------------------
-
-    def wire_herald_trace(self, callback: Callable) -> None:
-        """Register a callback to receive every PhaseIntent after flush_turn().
-
-        Supports multiple subscribers (fan-out). Call wire_herald_trace() multiple
-        times to register additional callbacks. All are invoked in registration order.
-
-        Primary use: AHGHeraldTrace.on_intent from components.ahg_herald_trace
-
-        Args:
-            callback: Callable that accepts a PhaseIntent instance.
-                      Must not raise — exceptions are caught and logged.
-
-        Example:
-            trace = AHGHeraldTrace(session_id="S077")
-            sidecar.wire_herald_trace(trace.on_intent)
+    def flush_all_pending(self) -> dict[int, Optional[PhaseIntent]]:
         """
-        if callback in self._herald_callbacks:
-            logger.warning(
-                f"[AHGSidecar] wire_herald_trace: callback already registered — "
-                f"{getattr(callback, '__qualname__', repr(callback))}"
-            )
-            return
-        self._herald_callbacks.append(callback)
-        logger.info(
-            f"[AHGSidecar] Herald trace registered "
-            f"({getattr(callback, '__qualname__', repr(callback))}) — "
-            f"total callbacks: {len(self._herald_callbacks)}"
-        )
+        Flush all buffered turns in ascending turn_id order.
+        Used for end-of-session cleanup or replay.
+        """
+        results = {}
+        for turn_id in sorted(self._buffers.keys()):
+            results[turn_id] = self.flush(turn_id)
+        return results
 
-    def unregister_herald_trace(self, callback: Callable) -> bool:
-        """Remove a previously registered herald callback. Returns True if removed."""
-        try:
-            self._herald_callbacks.remove(callback)
-            logger.info(
-                f"[AHGSidecar] Herald trace unregistered — "
-                f"{getattr(callback, '__qualname__', repr(callback))}"
-            )
-            return True
-        except ValueError:
-            return False
+    @property
+    def registered_agents(self) -> set[str]:
+        return set(self._agent_registry)
 
-    def list_herald_traces(self) -> List[str]:
-        """Return list of registered callback names (for diagnostics)."""
-        return [
-            getattr(cb, "__qualname__", repr(cb))
-            for cb in self._herald_callbacks
-        ]
+    @property
+    def pending_turns(self) -> list[int]:
+        return sorted(self._buffers.keys())
 
     # ------------------------------------------------------------------
-    # State accessors
+    # Herald trace stub
     # ------------------------------------------------------------------
 
-    def intent_history(self, n: int = 20) -> List["PhaseIntent"]:
-        """Return last n PhaseIntents from turn history."""
-        return self._turn_history[-n:]
+    def _emit_herald_trace(
+        self,
+        turn_id: int,
+        sv: StateVector,
+        intent: PhaseIntent,
+    ) -> None:
+        """
+        STUB — emit aggregated turn event to P-01 Herald fan-out sink.
+        v1.4: replace stub with live herald_sink.emit() call.
 
-    def broadcast_stats(self) -> dict:
-        return {
-            "registered_callbacks": len(self._herald_callbacks),
-            "callback_names": self.list_herald_traces(),
-            "total_broadcasts": self._broadcast_count,
-            "broadcast_errors": self._broadcast_errors,
+        Payload schema (for v1.4 wiring):
+        {
+          "event": "ahg_turn",
+          "turn_id": int,
+          "phi": float,
+          "regime": str,
+          "archetype": str,
+          "D_e": float,
+          "D_p": float,
+          "N": float,
+          "K": float,
+          "agent_count": int,
+          "pattern_id": "P-42"
         }
+        """
+        if self.herald_sink is not None:
+            # v1.4 wiring point
+            pass
+        logger.debug(
+            "AHGSidecar herald stub: turn=%d phi=%.4f regime=%s archetype=%s "
+            "agents=%d D_e=%.3f D_p=%.3f N=%.3f K=%.3f",
+            turn_id, intent.phi, intent.regime.value, intent.mode.value,
+            len(self._agent_registry),
+            sv.D_e, sv.D_p, sv.N, sv.K,
+        )

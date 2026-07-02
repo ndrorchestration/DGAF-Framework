@@ -1,22 +1,14 @@
 """
-ahg_conductor.py — AHG Phi Stability Controller (PSC)
-Pattern: P-42 — Adaptive Harmonic Governance, Layer 12 — Cognitive Control Plane
-Version: 1.3 (scaffold)
-Authors: Amethyst x COLLEEN | 2026-06-29
+ahg_conductor.py — Adaptive Harmonic Governance Conductor
+P-42 · Layer 12 — Cognitive Control Plane · v1.3 scaffold
+Amethyst × COLLEEN · S072 · 2026-07-02
 
-Responsibilities:
-  - Receive HeartbeatVector entries from AHGSidecar
-  - Compute Stability Index S(t) and canonical phi(t) via logistic normalization
-  - Track phase velocity v_phi and acceleration a_phi for predictive switching
-  - Dispatch Conductor Archetype with hysteresis (>= 2 consecutive turns to transition)
-  - Broadcast PhaseIntent to the multi-agent collective
-  - Manage Tribunal activation, Recovery Score, and graduated de-escalation
+Spec: docs/theory/AHG_ARCHITECTURE.md v1.2
+Pattern card: patterns/P-42_AHG.md v1.3-card
 
-Formalism (AHG_ARCHITECTURE.md v1.2):
-  S(t) = w1*D_e + w2*N + w3*C + w4*R
-  phi(t) = 1 + 0.8 * sigma(S(t))       phi in [1.0, 1.8]
-  v_phi(t) = phi(t) - phi(t-1)
-  a_phi(t) = v_phi(t) - v_phi(t-1)
+Status: SCAFFOLD — φ computation, regime dispatch, and hysteresis
+        are implemented. Tribunal recovery protocol and Phase Intent
+        broadcast are stubbed for v1.4 wiring to live agent stack.
 """
 
 from __future__ import annotations
@@ -27,400 +19,249 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
-logger = logging.getLogger("ahg.conductor")
+logger = logging.getLogger(__name__)
+
 
 # ---------------------------------------------------------------------------
-# Constants
+# Constants — canonical weights from AHG_ARCHITECTURE.md §2.2
 # ---------------------------------------------------------------------------
 
-# Default S(t) weights
-W1_D_E = 0.35   # destabilizing entropy
-W2_N   = 0.20   # novelty
-W3_C   = 0.25   # constraint pressure
-W4_R   = 0.20   # revision pressure
+W1_D_E: float = 0.35   # Destabilizing Entropy weight
+W2_N: float   = 0.20   # Novelty weight
+W3_C: float   = 0.25   # Constraint Pressure weight
+W4_R: float   = 0.20   # Revision Pressure weight
 
-# phi regime boundaries (7-state, v1.2)
-PHI_GROUNDED_MAX    = 1.15
-PHI_FLOW_MAX        = 1.30
-PHI_VIGILANCE_MAX   = 1.45
-PHI_EXPANSION_MAX   = 1.60
-PHI_INTEGRATION_MAX = 1.70   # NDR-STASIS anchor phi=1.618 sits here
-PHI_INTROSPECTION_MAX = 1.80 # Tribunal threshold
-PHI_TENSION_FLOOR   = 1.80
+PHI_MIN: float = 1.0
+PHI_MAX: float = 1.8
 
-# NDR-STASIS canonical anchor
-NDR_STASIS_PHI = (1 + math.sqrt(5)) / 2  # 1.6180339...
-
-# Hysteresis: turns phi must persist in new band before archetype transition fires
-HYSTERESIS_TURNS = 2
-
-# Anticipatory governance: if a_phi >= this threshold AND phi rising toward Tension, pre-empt
-ACCEL_PREEMPT_THRESHOLD = 0.08
-
-# Tribunal exit: phi must drop below this for >= 2 turns
-TRIBUNAL_EXIT_PHI = 1.70
-TRIBUNAL_EXIT_TURNS = 2
+# Hysteresis: archetype transition requires φ to cross band edge for
+# this many consecutive turns before dispatch changes (§2.4)
+HYSTERESIS_TURNS: int = 2
 
 
 # ---------------------------------------------------------------------------
 # Enums
 # ---------------------------------------------------------------------------
 
-class Archetype(str, Enum):
-    EXECUTOR      = "Executor"       # phi 1.00-1.15  | Grounded
-    SYNTHESIZER   = "Synthesizer"    # phi 1.15-1.30  | Flow
-    SENTINEL      = "Sentinel"       # phi 1.30-1.45  | Vigilance
-    EXPLORER      = "Explorer"       # phi 1.45-1.60  | Expansion
-    INTEGRATOR    = "Integrator"     # phi 1.60-1.70  | Integration (NDR-STASIS band)
-    AUDITOR       = "Auditor"        # phi 1.70-1.80  | Introspection
-    TRIBUNAL      = "Tribunal"       # phi > 1.80     | Tension
-
-
 class Regime(str, Enum):
-    GROUNDED      = "Grounded"
-    FLOW          = "Flow"
-    VIGILANCE     = "Vigilance"
-    EXPANSION     = "Expansion"
-    INTEGRATION   = "Integration"    # NDR-STASIS phi=1.618 anchor
-    INTROSPECTION = "Introspection"
-    TENSION       = "Tension"
+    GROUNDED      = "Grounded"       # φ 1.00–1.15
+    FLOW          = "Flow"           # φ 1.15–1.30
+    VIGILANCE     = "Vigilance"      # φ 1.30–1.45
+    EXPANSION     = "Expansion"      # φ 1.45–1.60
+    INTEGRATION   = "Integration"    # φ 1.60–1.70  ← NDR-STASIS φ=1.618
+    INTROSPECTION = "Introspection"  # φ 1.70–1.80
+    TENSION       = "Tension"        # φ > 1.80
+
+
+class Archetype(str, Enum):
+    EXECUTOR      = "Executor"
+    SYNTHESIZER   = "Synthesizer"
+    SENTINEL      = "Sentinel"
+    EXPLORER      = "Explorer"
+    AUDITOR       = "Auditor"
+    TRIBUNAL      = "Tribunal"
+
+
+# Regime → primary archetype mapping (§3 regime table)
+_REGIME_ARCHETYPE: dict[Regime, Archetype] = {
+    Regime.GROUNDED:      Archetype.EXECUTOR,
+    Regime.FLOW:          Archetype.SYNTHESIZER,
+    Regime.VIGILANCE:     Archetype.SENTINEL,
+    Regime.EXPANSION:     Archetype.EXPLORER,
+    Regime.INTEGRATION:   Archetype.SYNTHESIZER,  # + Auditor secondary
+    Regime.INTROSPECTION: Archetype.AUDITOR,
+    Regime.TENSION:       Archetype.TRIBUNAL,
+}
+
+# φ lower-bound for each regime (upper bound = next regime's lower bound)
+_REGIME_THRESHOLDS: list[tuple[float, Regime]] = [
+    (1.80, Regime.TENSION),
+    (1.70, Regime.INTROSPECTION),
+    (1.60, Regime.INTEGRATION),
+    (1.45, Regime.EXPANSION),
+    (1.30, Regime.VIGILANCE),
+    (1.15, Regime.FLOW),
+    (1.00, Regime.GROUNDED),
+]
 
 
 # ---------------------------------------------------------------------------
-# Data types
+# Data classes
 # ---------------------------------------------------------------------------
 
 @dataclass
-class HeartbeatVector:
-    """Compressed cognitive signal emitted by each agent to the Sidecar.
-    Only D_e (destabilizing entropy) enters S(t).
-    D_explore and D_correct are tracked separately and excluded from phi.
-    """
-    agent_id:         str
-    turn_id:          int
-    d_e:              float  # destabilizing entropy signal [0.0, 1.0]
-    d_explore:        float  # exploratory divergence [0.0, 1.0] -- excluded from S(t)
-    d_correct:        float  # corrective dissent [0.0, 1.0] -- excluded from S(t)
-    novelty:          float  # [0.0, 1.0]
-    constraint_count: int    # active blocking constraints
-    total_constraints: int   # total constraints defined (for C fraction)
-    revision_count:   int    # self/other corrections this turn
-    total_turns:      int    # total turns so far (for R rate)
+class StateVector:
+    """x_t = [D_e, D_explore, D_correct, N, C, R, M, K] — AHG_ARCHITECTURE §2.1"""
+    D_e:       float = 0.0  # Destabilizing Entropy
+    D_explore: float = 0.0  # Exploratory Divergence
+    D_correct: float = 0.0  # Corrective Dissent
+    N:         float = 0.0  # Novelty
+    C:         float = 0.0  # Constraint Pressure
+    R:         float = 0.0  # Revision Pressure
+    M:         float = 0.0  # Governance Momentum (hysteresis EMA)
+    K:         float = 0.0  # Coherence
 
-
-@dataclass
-class AggregatedSignals:
-    """Turn-level signals aggregated across all agents."""
-    turn_id:   int
-    D_e:       float  # mean destabilizing entropy
-    D_explore: float  # mean exploratory divergence (tracked, not in S)
-    D_correct: float  # mean corrective dissent (Apogee fuel, not in S)
-    N:         float  # mean novelty
-    C:         float  # constraint pressure fraction
-    R:         float  # revision rate
+    @property
+    def D_p(self) -> float:
+        """Productive Divergence = D_explore + D_correct (2-subtype model)"""
+        return self.D_explore + self.D_correct
 
 
 @dataclass
 class PhaseIntent:
-    """Broadcast packet from Conductor to all agents."""
-    turn_id:     int
-    archetype:   Archetype
-    regime:      Regime
+    """I_t broadcast packet — AHG_ARCHITECTURE §2.5"""
+    mode:        Archetype
+    weights:     dict[str, float]
+    constraints: list[str]
+    ttl:         int  # turns
     phi:         float
-    v_phi:       float
-    a_phi:       float
-    weights:     dict
-    constraints_active: int
-    ttl:         int          # turns this intent is valid
-    tribunal_active: bool
-    message:     str
+    regime:      Regime
+    turn_id:     int
 
 
 @dataclass
 class ConductorState:
-    """Mutable conductor state persisted across turns."""
-    phi_history:       list[float] = field(default_factory=list)
-    v_phi_history:     list[float] = field(default_factory=list)
+    """Internal rolling state for hysteresis and velocity tracking."""
+    phi_history:      list[float]   = field(default_factory=list)
+    regime_history:   list[Regime]  = field(default_factory=list)
     archetype_history: list[Archetype] = field(default_factory=list)
-    regime_history:    list[Regime] = field(default_factory=list)
-    pending_archetype: Optional[Archetype] = None
-    pending_turns:     int = 0
-    tribunal_active:   bool = False
-    tribunal_turns:    int = 0
-    tribunal_exit_turns_met: int = 0
-    momentum:          float = 0.0   # governance momentum M (EMA of archetype stability)
-    turn_count:        int = 0
+    pending_regime:   Optional[Regime] = None
+    pending_turns:    int = 0
+    turn_count:       int = 0
 
 
 # ---------------------------------------------------------------------------
-# Core functions
+# Core: φ computation
 # ---------------------------------------------------------------------------
 
-def _sigma(x: float) -> float:
-    """Standard logistic function."""
+def compute_stability_index(sv: StateVector) -> float:
+    """S(t) = w1·D_e + w2·N + w3·C + w4·R  (AHG_ARCHITECTURE §2.2)
+    Only D_e enters S(t); D_explore and D_correct are excluded.
+    """
+    return W1_D_E * sv.D_e + W2_N * sv.N + W3_C * sv.C + W4_R * sv.R
+
+
+def logistic(x: float) -> float:
+    """Standard logistic σ(x) = 1 / (1 + e^(-x))"""
     return 1.0 / (1.0 + math.exp(-x))
 
 
-def compute_stability_index(
-    D_e: float,
-    N: float,
-    C: float,
-    R: float,
-    w1: float = W1_D_E,
-    w2: float = W2_N,
-    w3: float = W3_C,
-    w4: float = W4_R,
-) -> float:
-    """Compute S(t) = w1*D_e + w2*N + w3*C + w4*R.
-    Note: only D_e enters S(t). D_explore and D_correct are excluded.
+def compute_phi(sv: StateVector) -> float:
+    """φ(t) = 1 + 0.8 · σ(S(t))  →  φ ∈ [1.0, 1.8] by construction.
+    Canonical normalization from AHG_ARCHITECTURE §2.2 v1.2.
     """
-    return w1 * D_e + w2 * N + w3 * C + w4 * R
-
-
-def compute_phi(S: float) -> float:
-    """Canonical phi: phi(t) = 1 + 0.8 * sigma(S(t)). Range [1.0, 1.8]."""
-    return 1.0 + 0.8 * _sigma(S)
+    s = compute_stability_index(sv)
+    return PHI_MIN + (PHI_MAX - PHI_MIN) * logistic(s)
 
 
 def classify_regime(phi: float) -> Regime:
-    """Map phi to the 7-state harmonic regime."""
-    if phi < PHI_GROUNDED_MAX:
-        return Regime.GROUNDED
-    elif phi < PHI_FLOW_MAX:
-        return Regime.FLOW
-    elif phi < PHI_VIGILANCE_MAX:
-        return Regime.VIGILANCE
-    elif phi < PHI_EXPANSION_MAX:
-        return Regime.EXPANSION
-    elif phi < PHI_INTEGRATION_MAX:
-        return Regime.INTEGRATION   # NDR-STASIS phi=1.618 sits here
-    elif phi < PHI_INTROSPECTION_MAX:
-        return Regime.INTROSPECTION
-    else:
-        return Regime.TENSION
+    """Map φ scalar to Regime via threshold table (AHG_ARCHITECTURE §3)."""
+    for threshold, regime in _REGIME_THRESHOLDS:
+        if phi >= threshold:
+            return regime
+    return Regime.GROUNDED
 
 
-def regime_to_archetype(regime: Regime) -> Archetype:
-    """Map regime to default Conductor Archetype."""
-    return {
-        Regime.GROUNDED:      Archetype.EXECUTOR,
-        Regime.FLOW:          Archetype.SYNTHESIZER,
-        Regime.VIGILANCE:     Archetype.SENTINEL,
-        Regime.EXPANSION:     Archetype.EXPLORER,
-        Regime.INTEGRATION:   Archetype.INTEGRATOR,
-        Regime.INTROSPECTION: Archetype.AUDITOR,
-        Regime.TENSION:       Archetype.TRIBUNAL,
-    }[regime]
+def compute_phase_velocity(phi_history: list[float]) -> float:
+    """v_φ(t) = φ_t − φ_{t−1}  (AHG_ARCHITECTURE §2.3)"""
+    if len(phi_history) < 2:
+        return 0.0
+    return phi_history[-1] - phi_history[-2]
 
 
-def aggregate_heartbeats(heartbeats: list[HeartbeatVector], turn_id: int) -> AggregatedSignals:
-    """Aggregate per-agent heartbeats into turn-level signals."""
-    if not heartbeats:
-        raise ValueError(f"No heartbeats for turn {turn_id}")
-
-    n = len(heartbeats)
-    D_e       = sum(h.d_e for h in heartbeats) / n
-    D_explore = sum(h.d_explore for h in heartbeats) / n
-    D_correct = sum(h.d_correct for h in heartbeats) / n
-    N         = sum(h.novelty for h in heartbeats) / n
-
-    # C: fraction of active constraints across all agents
-    total_c = sum(h.total_constraints for h in heartbeats)
-    active_c = sum(h.constraint_count for h in heartbeats)
-    C = (active_c / total_c) if total_c > 0 else 0.0
-
-    # R: revision rate
-    total_t = sum(h.total_turns for h in heartbeats)
-    total_r = sum(h.revision_count for h in heartbeats)
-    R = (total_r / total_t) if total_t > 0 else 0.0
-
-    return AggregatedSignals(
-        turn_id=turn_id,
-        D_e=D_e, D_explore=D_explore, D_correct=D_correct,
-        N=N, C=C, R=R
-    )
-
-
-def compute_recovery_score(
-    delta_D_e: float,
-    delta_K: float,
-    delta_v_phi: float,
-    r1: float = 0.40,
-    r2: float = 0.35,
-    r3: float = 0.25,
-) -> float:
-    """R_c = r1*delta_D_e + r2*delta_K + r3*delta_v_phi.
-    Positive values indicate recovery (D_e falling, K rising, v_phi decelerating).
-    """
-    return r1 * delta_D_e + r2 * delta_K + r3 * delta_v_phi
+def compute_phase_acceleration(phi_history: list[float]) -> float:
+    """a_φ(t) = v_φ(t) − v_φ(t−1)  (AHG_ARCHITECTURE §2.3)"""
+    if len(phi_history) < 3:
+        return 0.0
+    v_t   = phi_history[-1] - phi_history[-2]
+    v_t_1 = phi_history[-2] - phi_history[-3]
+    return v_t - v_t_1
 
 
 # ---------------------------------------------------------------------------
-# Conductor class
+# AHGConductor
 # ---------------------------------------------------------------------------
 
 class AHGConductor:
-    """Phi Stability Controller (PSC).
+    """
+    AHG Conductor — continuous φ estimation and archetype dispatch.
 
     Usage:
-        conductor = AHGConductor()
-        intent = conductor.observe(heartbeats, turn_id)
-        # broadcast intent to all agents
+        conductor = AHGConductor(herald_sink=my_herald)
+        intent = conductor.step(state_vector)
+
+    v1.3 scaffold:
+        - φ computation: IMPLEMENTED
+        - Regime dispatch + hysteresis: IMPLEMENTED
+        - Phase velocity + acceleration: IMPLEMENTED
+        - Phase Intent broadcast: STUBBED (herald_sink hook present)
+        - Tribunal recovery protocol: STUBBED (calls _tribunal_stub)
+        - MPHG optimizer (v2.0): NOT IMPLEMENTED
     """
 
     def __init__(
         self,
-        w1: float = W1_D_E,
-        w2: float = W2_N,
-        w3: float = W3_C,
-        w4: float = W4_R,
+        herald_sink=None,           # P-01 Herald fan-out sink — wired in v1.4
         hysteresis_turns: int = HYSTERESIS_TURNS,
-        accel_preempt_threshold: float = ACCEL_PREEMPT_THRESHOLD,
-        intent_ttl: int = 3,
-    ):
-        self.w1 = w1
-        self.w2 = w2
-        self.w3 = w3
-        self.w4 = w4
+        phi_history_max: int = 10,
+    ) -> None:
+        self.herald_sink = herald_sink
         self.hysteresis_turns = hysteresis_turns
-        self.accel_preempt_threshold = accel_preempt_threshold
-        self.intent_ttl = intent_ttl
+        self.phi_history_max = phi_history_max
         self._state = ConductorState()
-        logger.info("AHGConductor initialised (P-42 v1.3)")
 
     # ------------------------------------------------------------------
-    # Primary interface
+    # Public API
     # ------------------------------------------------------------------
 
-    def observe(
-        self,
-        heartbeats: list[HeartbeatVector],
-        turn_id: int,
-        coherence_delta: float = 0.0,   # delta K for recovery score
-    ) -> PhaseIntent:
-        """Process one turn of heartbeats and return a PhaseIntent.
-
-        Args:
-            heartbeats: list of HeartbeatVector from all agents this turn.
-            turn_id: monotonic turn counter.
-            coherence_delta: change in collective coherence K (positive = improving).
-
-        Returns:
-            PhaseIntent to be broadcast to all agents.
+    def step(self, sv: StateVector) -> PhaseIntent:
         """
-        s = self._state
-        s.turn_count += 1
+        Ingest one StateVector, compute φ, dispatch archetype, emit
+        PhaseIntent.  Call once per governance turn.
+        """
+        self._state.turn_count += 1
+        turn_id = self._state.turn_count
 
-        # 1. Aggregate
-        signals = aggregate_heartbeats(heartbeats, turn_id)
+        phi = compute_phi(sv)
+        self._state.phi_history.append(phi)
+        if len(self._state.phi_history) > self.phi_history_max:
+            self._state.phi_history.pop(0)
 
-        # 2. Stability Index
-        S = compute_stability_index(signals.D_e, signals.N, signals.C, signals.R,
-                                     self.w1, self.w2, self.w3, self.w4)
+        v_phi = compute_phase_velocity(self._state.phi_history)
+        a_phi = compute_phase_acceleration(self._state.phi_history)
 
-        # 3. phi
-        phi = compute_phi(S)
-        s.phi_history.append(phi)
+        regime   = self._resolve_regime_with_hysteresis(phi)
+        archetype = _REGIME_ARCHETYPE[regime]
 
-        # 4. Phase velocity and acceleration
-        v_phi = phi - s.phi_history[-2] if len(s.phi_history) >= 2 else 0.0
-        s.v_phi_history.append(v_phi)
-        a_phi = s.v_phi_history[-1] - s.v_phi_history[-2] if len(s.v_phi_history) >= 2 else 0.0
+        self._state.regime_history.append(regime)
+        self._state.archetype_history.append(archetype)
 
-        # 5. Update governance momentum (decaying EMA)
-        s.momentum = 0.85 * s.momentum + 0.15 * phi
-
-        # 6. Classify regime
-        regime = classify_regime(phi)
-        target_archetype = regime_to_archetype(regime)
-
-        # 7. Anticipatory governance: pre-empt Tension if accelerating hard
-        if (
-            not s.tribunal_active
-            and a_phi >= self.accel_preempt_threshold
-            and phi > PHI_EXPANSION_MAX
-        ):
-            logger.warning(
-                f"[AHG] Anticipatory Tribunal pre-empt: phi={phi:.4f} a_phi={a_phi:.4f}"
-            )
-            target_archetype = Archetype.TRIBUNAL
-            regime = Regime.TENSION
-
-        # 8. Hysteresis: require HYSTERESIS_TURNS consecutive turns in new band
-        current_archetype = s.archetype_history[-1] if s.archetype_history else None
-        if target_archetype != current_archetype:
-            if s.pending_archetype == target_archetype:
-                s.pending_turns += 1
-            else:
-                s.pending_archetype = target_archetype
-                s.pending_turns = 1
-
-            if s.pending_turns >= self.hysteresis_turns:
-                dispatched_archetype = target_archetype
-                s.pending_archetype = None
-                s.pending_turns = 0
-                logger.info(f"[AHG] Archetype transition: {current_archetype} -> {dispatched_archetype} (phi={phi:.4f})")
-            else:
-                # Hold current archetype
-                dispatched_archetype = current_archetype or target_archetype
-        else:
-            dispatched_archetype = target_archetype
-            s.pending_archetype = None
-            s.pending_turns = 0
-
-        # 9. Tribunal activation / management
-        if dispatched_archetype == Archetype.TRIBUNAL:
-            if not s.tribunal_active:
-                s.tribunal_active = True
-                s.tribunal_turns = 0
-                s.tribunal_exit_turns_met = 0
-                logger.warning(f"[AHG] TRIBUNAL ACTIVATED at turn {turn_id} (phi={phi:.4f})")
-            s.tribunal_turns += 1
-        elif s.tribunal_active:
-            # Check exit condition: phi < TRIBUNAL_EXIT_PHI for TRIBUNAL_EXIT_TURNS
-            if phi < TRIBUNAL_EXIT_PHI:
-                s.tribunal_exit_turns_met += 1
-            else:
-                s.tribunal_exit_turns_met = 0
-
-            if s.tribunal_exit_turns_met >= TRIBUNAL_EXIT_TURNS:
-                s.tribunal_active = False
-                s.tribunal_turns = 0
-                logger.info(f"[AHG] Tribunal exit: phi={phi:.4f} -> graduated de-escalation")
-
-        # 10. Record
-        s.archetype_history.append(dispatched_archetype)
-        s.regime_history.append(regime)
-
-        # 11. Build PhaseIntent
         intent = PhaseIntent(
-            turn_id=turn_id,
-            archetype=dispatched_archetype,
-            regime=regime,
+            mode=archetype,
+            weights={"w1_D_e": W1_D_E, "w2_N": W2_N, "w3_C": W3_C, "w4_R": W4_R},
+            constraints=self._active_constraints(regime),
+            ttl=5 if regime == Regime.TENSION else 3,
             phi=phi,
-            v_phi=v_phi,
-            a_phi=a_phi,
-            weights={"w1_D_e": self.w1, "w2_N": self.w2, "w3_C": self.w3, "w4_R": self.w4},
-            constraints_active=signals.C,
-            ttl=self.intent_ttl,
-            tribunal_active=s.tribunal_active,
-            message=self._compose_message(dispatched_archetype, phi, v_phi, a_phi, signals),
+            regime=regime,
+            turn_id=turn_id,
         )
 
-        logger.debug(
-            f"[AHG T{turn_id}] S={S:.4f} phi={phi:.4f} v={v_phi:.4f} a={a_phi:.4f} "
-            f"regime={regime.value} archetype={dispatched_archetype.value} "
-            f"D_e={signals.D_e:.3f} D_exp={signals.D_explore:.3f} D_cor={signals.D_correct:.3f}"
+        logger.info(
+            "AHGConductor turn=%d phi=%.4f v_phi=%.4f a_phi=%.4f "
+            "regime=%s archetype=%s",
+            turn_id, phi, v_phi, a_phi, regime.value, archetype.value,
         )
+
+        if regime == Regime.TENSION:
+            self._tribunal_stub(intent, phi, v_phi, a_phi, sv)
+
+        self._emit_herald(intent, phi, v_phi, a_phi)
 
         return intent
 
-    # ------------------------------------------------------------------
-    # State accessors
-    # ------------------------------------------------------------------
-
     @property
     def phi(self) -> Optional[float]:
+        """Most recent φ value, or None if no steps taken."""
         return self._state.phi_history[-1] if self._state.phi_history else None
 
     @property
@@ -428,27 +269,96 @@ class AHGConductor:
         return self._state.regime_history[-1] if self._state.regime_history else None
 
     @property
-    def archetype(self) -> Optional[Archetype]:
-        return self._state.archetype_history[-1] if self._state.archetype_history else None
-
-    @property
-    def tribunal_active(self) -> bool:
-        return self._state.tribunal_active
-
-    def phi_history(self, n: int = 10) -> list[float]:
-        return self._state.phi_history[-n:]
+    def turn_count(self) -> int:
+        return self._state.turn_count
 
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _compose_message(self, archetype: Archetype, phi: float, v_phi: float, a_phi: float, signals: AggregatedSignals) -> str:
-        regime = classify_regime(phi)
-        ndr_note = " [NDR-STASIS anchor]" if abs(phi - NDR_STASIS_PHI) < 0.02 else ""
-        tribunal_note = " [TRIBUNAL ACTIVE]".format() if self._state.tribunal_active else ""
-        return (
-            f"{archetype.value} | {regime.value}{ndr_note}{tribunal_note} | "
-            f"phi={phi:.4f} v={v_phi:+.4f} a={a_phi:+.4f} | "
-            f"D_e={signals.D_e:.3f} D_exp={signals.D_explore:.3f} D_cor={signals.D_correct:.3f} | "
-            f"N={signals.N:.3f} C={signals.C:.3f} R={signals.R:.3f}"
+    def _resolve_regime_with_hysteresis(self, phi: float) -> Regime:
+        """
+        Hysteresis band: transition fires only if φ has crossed the band
+        edge for >= HYSTERESIS_TURNS consecutive turns (AHG_ARCHITECTURE §2.4).
+        """
+        candidate = classify_regime(phi)
+        current   = self._state.regime_history[-1] if self._state.regime_history else None
+
+        if current is None or candidate == current:
+            self._state.pending_regime = None
+            self._state.pending_turns  = 0
+            return candidate
+
+        if candidate == self._state.pending_regime:
+            self._state.pending_turns += 1
+        else:
+            self._state.pending_regime = candidate
+            self._state.pending_turns  = 1
+
+        if self._state.pending_turns >= self.hysteresis_turns:
+            self._state.pending_regime = None
+            self._state.pending_turns  = 0
+            return candidate
+
+        return current
+
+    def _active_constraints(self, regime: Regime) -> list[str]:
+        """Return active governance constraints for the current regime."""
+        constraints = []
+        if regime in (Regime.INTROSPECTION, Regime.TENSION):
+            constraints.append("apogee_lens_mandatory")
+        if regime == Regime.TENSION:
+            constraints.append("p29_risk_block")
+            constraints.append("p38_circuit_open")
+        if regime == Regime.VIGILANCE:
+            constraints.append("demijole_active")
+        return constraints
+
+    def _tribunal_stub(
+        self,
+        intent: PhaseIntent,
+        phi: float,
+        v_phi: float,
+        a_phi: float,
+        sv: StateVector,
+    ) -> None:
+        """
+        STUB — Tribunal recovery protocol (AHG_ARCHITECTURE §5).
+
+        v1.3: logs intent and 3D phase position for diagnosis.
+        v1.4: wire to P-29 risk_block + P-38 OPEN + recovery R_c loop.
+
+        3D phase position heuristic (AHG_ARCHITECTURE §2.7):
+          Deadlock:            Low N, High D_e, High sv.R
+          Hallucination spiral: High D_e, High N, low K
+          False consensus:     Low D_e, Low sv.D_explore, High K
+        """
+        logger.warning(
+            "AHGConductor TRIBUNAL activated: phi=%.4f v_phi=%.4f a_phi=%.4f. "
+            "P-29 risk_block + P-38 OPEN stubs fired. "
+            "D_e=%.3f N=%.3f K=%.3f — recovery protocol STUBBED v1.3.",
+            phi, v_phi, a_phi, sv.D_e, sv.N, sv.K,
+        )
+        # TODO v1.4: self.herald_sink.emit({"event": "TRIBUNAL", ...})
+        # TODO v1.4: fire P-29 risk_block
+        # TODO v1.4: fire P-38 OPEN signal
+        # TODO v1.4: begin R_c recovery loop
+
+    def _emit_herald(
+        self,
+        intent: PhaseIntent,
+        phi: float,
+        v_phi: float,
+        a_phi: float,
+    ) -> None:
+        """
+        STUB — emit PhaseIntent event to P-01 Herald trace sink.
+        v1.4: replace with live herald_sink.emit() call.
+        """
+        if self.herald_sink is not None:
+            # v1.4 wiring point
+            pass
+        logger.debug(
+            "AHGConductor herald stub: turn=%d phi=%.4f regime=%s archetype=%s",
+            intent.turn_id, phi, intent.regime.value, intent.mode.value,
         )
