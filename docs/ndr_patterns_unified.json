@@ -1,19 +1,30 @@
 {
   "$schema": "https://dgaf.ndrorchestration.com/schemas/ndr_patterns_unified.schema.json",
-  "version": "2.2",
-  "last_updated": "2026-06-29",
-  "session": "Post-S077",
+  "version": "2.3",
+  "last_updated": "2026-07-03",
+  "session": "S072-stasis-promotion",
   "steward": "Amethyst × COLLEEN",
   "registry_watermark": "P-42",
   "total_p_series": 42,
   "total_named_session_patterns": 8,
   "total_formation_patterns": 2,
-  "stasis_block_status": "STASIS-CANONICAL",
-  "stasis_migration_window": "2026-06-13 → 2026-07-13",
+  "stasis_block_status": "CANONICAL",
+  "stasis_migration_window": "2026-06-13 → 2026-07-03 (CLOSED — promoted 2026-07-03)",
   "changelog": [
+    { "version": "2.3", "date": "2026-07-03", "session": "S072-stasis-promotion", "note": "P-12–P-26 stasis block promoted STASIS-CANONICAL → CANONICAL. Njineer ratified Option A (promote all three clusters). Migration window CLOSED 10 days early. FLAG-02 (340% coordination gain) reclassified ILLUSTRATIVE per Njineer DA-01 Option B. DA-04 closed (COLLEEN enforcement gap = non-finding, correct behavior confirmed). DA-05 closed (P-42 v1.5 covered by Part VI implementation exception). Steward: Amethyst × COLLEEN." },
     { "version": "2.2", "date": "2026-06-29", "session": "Post-S077", "note": "P-37–P-42 entries added; P-42 AHG registered (renumbered from P-35 collision); Layer 12 Cognitive Control Plane established" },
     { "version": "2.1", "date": "2026-06-13", "session": "S069", "note": "v3 named session patterns absorbed; P-35 Procluding Premise Gate + P-36 Gate Priority Schema added" },
     { "version": "2.0", "date": "2026-05-30", "session": "S066", "note": "Phase 3 unified merge; P-34 attested A-TIER" }
+  ],
+  "flag_registry": [
+    {
+      "id": "FLAG-02",
+      "claim": "340% coordination gain",
+      "status": "ILLUSTRATIVE",
+      "ratified_by": "Njineer",
+      "ratified_date": "2026-07-03",
+      "note": "Figure is informal and aspirational. Not a measured empirical result. All documents citing FLAG-02 should be read with ILLUSTRATIVE qualifier. No baseline, measurement method, or substrate defined. T1-04 risk resolved by ILLUSTRATIVE classification rather than false-precision definition."
+    }
   ],
   "patterns": [
     { "id": "P-35", "name": "Procluding Premise Gate", "layer": "0 — Pre-Admissibility", "p36_class": "BLOCKING", "status": "CANONICAL", "registered": "S069", "ender_ratified": "2026-06-13" },
@@ -29,7 +40,23 @@
     { "id": "P-09", "name": "Triumvirate Mandate Schema", "layer": "4 — Governance Formation", "p36_class": "ADVISORY", "status": "CANONICAL", "registered": "S041" },
     { "id": "P-10", "name": "Session Graduation Check", "layer": "4 — Governance Formation", "p36_class": "ADVISORY", "status": "CANONICAL", "registered": "S041" },
     { "id": "P-11", "name": "11Q Attestation Scoring", "layer": "5 — Quality Gate", "p36_class": "BLOCKING", "status": "CANONICAL", "registered": "S033" },
-    { "id": "P-12-P-26", "name": "Stasis Patterns (133 entries)", "layer": "6 — Stasis", "p36_class": "DEGRADED-MODE-SKIPPABLE", "status": "STASIS-CANONICAL", "ender_ratified": "2026-06-13" },
+    {
+      "id": "P-12-P-26",
+      "name": "Stasis Patterns (133 entries)",
+      "layer": "6 — Stasis",
+      "p36_class": "DEGRADED-MODE-SKIPPABLE",
+      "status": "CANONICAL",
+      "promoted_from": "STASIS-CANONICAL",
+      "promotion_date": "2026-07-03",
+      "promoted_by": "Njineer (Option A) · Amethyst × COLLEEN execution",
+      "ender_ratified": "2026-06-13",
+      "stasis_window": "2026-06-13 → 2026-07-03 (CLOSED)",
+      "clusters": [
+        { "name": "Individualism & Fractal Agency", "range": "P-01–P-80", "status": "CANONICAL", "note": "Namespace migration; fractal independence; active downstream: P-27/P-28 routing" },
+        { "name": "Phi-Calculus Foundations", "range": "P-81–P-115", "status": "CANONICAL", "note": "0 Hz steady state; φ-operators; active downstream: P-32 Phi-Closure Gate" },
+        { "name": "Authority Sync & Substrate Independence", "range": "P-116–P-132", "status": "CANONICAL", "note": "COLLEEN routing; substrate-agnostic logic; active downstream: P-29 Sentinel, P-33 PDMAL" }
+      ]
+    },
     { "id": "P-27", "name": "Adaptive-Weighting-with-Confidence-Gates", "layer": "7 — Router Calibration", "p36_class": "BLOCKING", "status": "CANONICAL", "registered": "S033" },
     { "id": "P-28", "name": "Pipeline-Composition-with-Confidence-Gated-Routing", "layer": "7 — Router Calibration", "p36_class": "BLOCKING", "status": "CANONICAL", "registered": "S033" },
     { "id": "P-29", "name": "Sentinel-Annotated Risk Pass", "layer": "8 — Safety & Sentinel", "p36_class": "BLOCKING", "status": "CANONICAL", "registered": "S034" },
