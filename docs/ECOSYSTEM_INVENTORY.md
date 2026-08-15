@@ -1,122 +1,95 @@
 # ECOSYSTEM_INVENTORY.md
 
-> **Steward:** COLLEEN · **Orchestrator:** Amethyst  
-> **Last Updated:** 2026-06-29 · Post-S077
+> **Purpose:** canonical repository inventory for the ndrorchestration ecosystem. This document is an inventory, not a validation registry.
+> **Last Updated:** 2026-08-15
 
-Cross-platform inventory of all NDR ecosystem assets.
+## Evidence boundary
 
----
+Repository presence, naming, deployment labels, historical benchmark values, and cross-repository relationships do not establish implementation or validation. Use the evidence ladder maintained by `docs/ECOSYSTEM_AUDIT_STATUS.md` and the engineering audit matrix at `docs/REPOSITORY_QUALITY_AUDIT_MATRIX_2026-08-15.md`.
 
-## GitHub Repositories
+## Live GitHub inventory
 
-| Repo | Purpose | Status |
+29 repositories were enumerated from the live `ndrorchestration` account on 2026-08-15.
+
+| Repository | Visibility | Classification |
 |---|---|---|
-| `ndrorchestration/DGAF-Framework` | Core governance framework, patterns P-01–P-42 | ✅ Active |
-| `ndrorchestration/entrepreneur-hub` | P-34 Entrepreneur Hub Flywheel | ✅ Active |
+| `ndrorchestration` | Public | Canonical portfolio/control surface |
+| `DGAF-Framework` | Public | Governance/evaluation research spine |
+| `ai-governance-frameworks` | Public | Governance research/mapping |
+| `Driftwatch` | Public | Drift detection/evaluation engineering |
+| `resumeapex-eval` | Public | Evaluation protocol/benchmark |
+| `junior-apogee-app` | Public | Evaluation/QA workbench |
+| `sentinel-governance` | Public | Integrity/CI governance |
+| `Acoustic-mesh` | Public | Acoustic/WebRTC engineering |
+| `Meshsense` | Public | MeshSense/RuView runtime/status surface |
+| `3d-visualization-hub` | Public | Visualization |
+| `ai-prompt-systems-portfolio` | Public | Public prompt-systems portfolio |
+| `aoga-dashboard` | Private | Production dashboard/API |
+| `phi-calculus-app` | Public | Mathematical research/application |
+| `AHG-Zeta-Pell-Autonomous-Lattice` | Public | Control/simulation research |
+| `agent-control-plane` | Public | Control-plane architecture |
+| `entrepreneur-hub` | Public | Business/template track |
+| `AI-Prompt-Engineer` | Private | Historical portfolio |
+| `ai-prompt-engineering-portfolio` | Private | Historical portfolio |
+| `prompt-optimization-library` | Private | Historical/research library |
+| `gold-star-qa-framework` | Private / archived | Archived framework |
+| `Gold-star-standards` | Private | Standards/archive support |
+| `Amethyst-Governance-Eval-Stack` | Private | Governance/evaluation stack |
+| `.github` | Public | Account-wide GitHub configuration |
+| `chat-archives` | Private | Archive |
+| `career-positioning` | Private | Career/portfolio support |
+| `automation-scripts` | Private | Automation support |
+| `api` | Private | API support surface |
+| `pptl-governance-dashboard` | Private | Governance dashboard |
+| `dgaf-ops` | Private | DGAF operations/support |
 
----
+## Canonical project boundaries
 
-## DGAF-Framework — Key Files (Post-S077)
+### DGAF
 
-### Root
+`DGAF-Framework` is the canonical governance/evaluation research spine. DGAF terminology does not validate other repositories.
 
-| File | Added / Updated | Session |
-|---|---|---|
-| `CROSS_REF.md` | v4.4 | Post-S077 |
-| `CHANGELOG.md` | Post-S077 entry | Post-S077 |
-| `SESSION_ANCHOR.md` | Created | Post-S077 |
-| `ENSEMBLE_ROSTER.md` | AHG P-42 archetypes | Post-S077 |
-| `DEFERRED_ITEMS.md` | Created — S-01–S-08 | Post-S077 |
-| `BOOTSTRAP.md` | — | Pre-S077 |
-| `TEAM_WIKI.md` | — | Pre-S077 |
-| `README.md` | — | Pre-S077 |
-| `README.governance.md` | — | Pre-S077 |
-| `README.technical.md` | — | Pre-S077 |
+### PDMAL / lattice work
 
-### docs/
+PDMAL is a separate topology/lattice research track. The corrected lattice artifacts establish the current mathematical boundary; empirical validation remains open. The corrected plastic constant and dodecahedral Cheeger result must not be conflated with runtime proof. Unweighted Forman-Ricci curvature remains a research item until useful weighted-edge definitions and evidence exist.
 
-| File | Added / Updated | Session |
-|---|---|---|
-| `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` | P-42 provenance entry | Post-S077 |
-| `docs/ndr_patterns_unified.json` | v2.2 — P-37–P-42 | Post-S077 |
-| `docs/lifecycle_harness_v2.md` | Created | S067 |
-| `docs/DGAF_RECURSIVE_REFINEMENT_ANALYSIS.md` | Created | Post-S077 |
-| `docs/ECOSYSTEM_INVENTORY.md` | This file — updated | Post-S077 |
+### ASIS / Acoustic-Mesh
 
-### docs/theory/ (new Post-S077)
+ASIS means **Acoustic Spatial Insight System**. `Acoustic-mesh` is the acoustic/WebRTC engineering track. Acoustic performance claims require acoustic/signal-processing/network evidence and are not validated by DGAF, PDMAL, or other ecosystem relationships.
 
-| File | Purpose | Session |
-|---|---|---|
-| `docs/theory/AHG_ARCHITECTURE.md` | P-42 AHG full spec v1.1 | Post-S077 |
+### MeshSense / RuView Status
 
-### docs/agents/ (new Post-S077)
+`ndrorchestration/Meshsense` is the canonical GitHub source repository. `meshsense-ruview-status` is the associated Vercel project identifier. GitHub/CI state is documented separately from Vercel runtime verification, which remains pending.
 
-| File | Purpose | Session |
-|---|---|---|
-| `docs/agents/PROFESSOR_PRODIGY_KB.md` | Professor Prodigy 3-tier KB | Post-S077 |
+### AHG Zeta-Pell
 
-### docs/qa/
+`AHG-Zeta-Pell-Autonomous-Lattice` is a separate control/simulation track. Pass 1 audit findings remain active; Pass 2 is outstanding.
 
-| File | Purpose | Session |
-|---|---|---|
-| `docs/qa/APOGEE_11Q_P34.json` | P-34 attestation A-TIER | S066 |
-| `docs/qa/COLLEEN_STASIS_AUDIT_P12_P26.md` | Stasis audit | S066 |
+### Agent Control Plane
 
-### patterns/
+`agent-control-plane` is a separate experimental control-plane architecture track with a minimal executable kernel. It is not a production autonomous control plane and does not inherit DGAF validation.
 
-| File | Purpose | Status |
-|---|---|---|
-| `patterns/P-42_AHG.md` | P-42 Adaptive Harmonic Governance | ✅ Active |
-| `patterns/P-35_AHG.md` | Stale — superseded by P-42_AHG.md | ⚠️ Needs deletion |
-| `patterns/NDR_SCPE_v1.md` | P-31 redirect stub | ✅ Archived |
-| `patterns/NDR_PHI_CLOSURE_GATE_v1.md` | P-32 redirect stub | ✅ Archived |
-| `patterns/NDR_PDMAL_CONVERGENCE_MONITOR_v1.md` | P-33 redirect stub | ✅ Archived |
+## Historical repositories
 
-### components/
+The following repositories remain useful for provenance but are not current authorities merely because they contain older benchmark, certification, or governance language:
 
-| File | Pattern | Status |
-|---|---|---|
-| `scpe_ensemble_v14.py` | P-31 | ✅ Locked |
-| `phi_closure_gate.py` | P-32 | ✅ Wired |
-| `hpg_ionian_gate.py` | P-29 | ✅ Stable |
-| `orchestration_firewall.py` | P-08 | ✅ Active |
-| `topology_router.py` | P-27 v3.6.0 | ✅ Active |
-| `dgaf_semantic_gate.py` | P-03 | ✅ Stable |
-| `amethyst_dual_lock.py` | P-30 | ✅ Stable |
-| `dynamic_weight_router.py` | P-34 | ✅ Active |
-| `ahg_conductor.py` | P-42 | 🔴 Planned |
-| `ahg_sidecar.py` | P-42 Sidecar | 🔴 Planned |
+- `AI-Prompt-Engineer`
+- `ai-prompt-engineering-portfolio`
+- `prompt-optimization-library`
+- `gold-star-qa-framework`
 
-### registry/
+## Current normalization work
 
-| File | Purpose | Session |
-|---|---|---|
-| `registry/ensemble_v16_manifest.json` | V16 manifest | S043 |
-| `registry/lifecycle_stability_report.json` | Phase stability metrics | S067 |
+The engineering quality audit is tracked in:
 
-### tests/
+- `docs/ECOSYSTEM_AUDIT_STATUS.md`
+- `docs/REPOSITORY_QUALITY_AUDIT_MATRIX_2026-08-15.md`
+- `docs/EPISTEMIC_SUPERSESSION_REGISTER.md`
 
-| File | Coverage | Status |
-|---|---|---|
-| `test_orchestration_firewall.py` | Invariants 1–5 | ✅ Passing |
-| `test_router_coverage.py` | TC1–TC8 | ✅ 8/8 S067 |
-| `test_scpe_thresholds.py` | Threshold sweep | ✅ Stable |
-| `test_phi_closure.py` | 16-turn sim | ✅ Stable |
-| `dgaf_eval_suite.py` | Nemotron 3 Ultra 5 tasks | 🟡 Pending #32 |
+Current high-priority unresolved work includes PDMAL empirical validation, Driftwatch detector/benchmark validation, Acoustic-Mesh acoustic evidence, AHG Zeta-Pell Pass 2, MeshSense/RuView runtime verification, weighted Forman-Ricci definition, real-trace `D_a` calibration, and reconstruction of the missing TLA+ containment specification.
 
----
+## Provenance
 
-## Open Implementation Items (Post-S077)
+Developed and maintained by Ndr / Ender Hensel (`ndrorchestration`).
 
-| Item | File | Priority |
-|---|---|---|
-| Delete stale `patterns/P-35_AHG.md` | patterns/ | Low |
-| `ahg_conductor.py` scaffold | components/ | P-42 v1.2 |
-| `ahg_sidecar.py` scaffold | components/ | P-42 v1.3 |
-| `schemas/ahg_heartbeat.json` | schemas/ | P-42 v1.3 |
-| Herald unblock | Vercel env | S-07 |
-| Nemotron eval suite | tests/ | Issue #32 |
-
----
-
-*ECOSYSTEM_INVENTORY.md · Post-S077 · 2026-06-29 · Amethyst × COLLEEN*
+*Inventory reconciliation: 2026-08-15.*
