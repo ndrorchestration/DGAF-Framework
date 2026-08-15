@@ -5,7 +5,17 @@ Mechanical synchronization ledger for the `ndrorchestration` GitHub repository s
 
 Status vocabulary: `VERIFIED`, `NOT_APPLICABLE`, `PENDING`.
 
-`VERIFIED` means the specific connection/identity was directly observed in the current connector surface. It does not imply runtime validation. `NOT_APPLICABLE` means no connection is expected for the repository's role. `PENDING` means a connection may exist or is expected but was not independently verified in this sweep.
+`VERIFIED` means the specific connection/identity was directly observed in the current connector surface. It does not imply capability validation. `NOT_APPLICABLE` means no connection is expected for the repository's role. `PENDING` means a connection may exist or is expected but was not independently verified in this sweep.
+
+## Current Vercel observations
+
+- Vercel team `ndrorchestration` is directly accessible.
+- Eight Vercel projects are currently exposed: `phiknightverticalcorridor`, `driftwatch`, `meshsense-ruview-status`, `ndrorchestration`, `phi-calculus`, `aoga-dashboard`, `dgaf-ruview-mitigation`, and `quintet-hardening-report`.
+- `meshsense-ruview-status` project identity is directly verified as `prj_YrGkdQLGlLAK7aizvz7uPufWokMM`.
+- Its latest production deployment `dpl_uZdP6uzH1puxtZkPPdq5pwfEjJWJ` is `READY` and its build logs show a successful `server.js` root entrypoint build.
+- MeshSense runtime observations are mixed: Vercel runtime logs recorded `/health` HTTP 200, but direct current requests to `/`, `/health`, and `/api/status` returned HTTP 404. Therefore runtime is **PENDING**, not VERIFIED.
+- The latest MeshSense deployment is therefore deployment-verified, but endpoint behavior requires reconciliation before runtime closure.
+- `driftwatch` has current READY production deployments tied directly to `ndrorchestration/Driftwatch` commits; Vercel project identity and Git binding are VERIFIED. No runtime errors were reported for the preceding 24 hours. This does not validate detector effectiveness.
 
 ## GitHub inventory
 
@@ -27,7 +37,7 @@ All repositories below were directly returned by the authenticated GitHub reposi
 | phi-calculus-app | VERIFIED | VERIFIED | VERIFIED | experimental research/visualization |
 | sentinel-governance | VERIFIED | VERIFIED | NOT_APPLICABLE | governance tooling |
 | resumeapex-eval | VERIFIED | VERIFIED | PENDING | evaluation application |
-| Driftwatch | VERIFIED | VERIFIED | VERIFIED | experimental drift/observability |
+| Driftwatch | VERIFIED | VERIFIED | VERIFIED | Vercel project/Git binding verified; detector effectiveness remains unvalidated |
 | Amethyst-Governance-Eval-Stack | VERIFIED | VERIFIED | NOT_APPLICABLE | evaluation/governance |
 | .github | VERIFIED | VERIFIED | NOT_APPLICABLE | organization-level support |
 | Acoustic-mesh | VERIFIED | VERIFIED | NOT_APPLICABLE | acoustic/WebRTC infrastructure; empirical acoustic validation pending |
@@ -41,7 +51,7 @@ All repositories below were directly returned by the authenticated GitHub reposi
 | dgaf-ops | VERIFIED | VERIFIED | NOT_APPLICABLE | operations/support |
 | agent-control-plane | VERIFIED | VERIFIED | NOT_APPLICABLE | specification-stage control-plane project |
 | AHG-Zeta-Pell-Autonomous-Lattice | VERIFIED | VERIFIED | NOT_APPLICABLE | experimental research |
-| Meshsense | VERIFIED | VERIFIED | VERIFIED | MeshSense / RuView Status; Vercel identifier `meshsense-ruview-status` |
+| Meshsense | VERIFIED | VERIFIED | PENDING | MeshSense / RuView Status; Vercel identity and READY deployment verified, endpoint/runtime reconciliation pending |
 
 ## Directly verified canonical mappings
 
@@ -54,7 +64,7 @@ All repositories below were directly returned by the authenticated GitHub reposi
 ## Important evidence boundaries
 
 - MeshSense GitHub/CI evidence is distinct from Vercel deployment and runtime evidence.
-- MeshSense `/health` has been verified as part of the current evidence record; `/api/status` remains authentication-constrained for independent verification.
+- MeshSense deployment is currently READY, but direct endpoint checks returned 404 while runtime logs include a `/health` 200 observation. This discrepancy is explicitly unresolved.
 - Acoustic-Mesh implementation/CI evidence does not establish acoustic localization, spatial reconstruction, synchronization quality, modal-analysis validity, or performance superiority.
 - PDMAL remains experimental and is a DGAF research lineage; it is not promoted by repository presence or visualization.
 - Driftwatch implementation/deployment presence does not establish detector effectiveness; benchmark evidence remains pending.
@@ -63,11 +73,11 @@ All repositories below were directly returned by the authenticated GitHub reposi
 
 ## Notion synchronization result
 
-The AI Systems Portfolio Registry contained 9 project rows before this sweep. The full authenticated GitHub inventory contains 29 repositories. Missing repository rows are therefore a synchronization gap rather than evidence that the repositories are absent from the ecosystem. This manifest records the complete GitHub-side inventory and the intended registry state.
+The AI Systems Portfolio Registry now contains 36 project records, covering the authenticated GitHub inventory plus existing Vercel/system records. The authenticated GitHub inventory contains 29 repositories. No duplicate project-name rows were found in the current registry query.
 
 ## Closure gate
 
-The documentation/connection layer is considered mechanically synchronized only when:
+The documentation/connection layer is considered mechanically synchronized when:
 
 1. every authenticated GitHub repository has a corresponding Notion registry row or an explicit `NOT_APPLICABLE` classification;
 2. every claimed Vercel mapping has a directly observed project identity;
@@ -75,4 +85,4 @@ The documentation/connection layer is considered mechanically synchronized only 
 4. experimental evidence is propagated after experiments actually run;
 5. the manifest is regenerated after material topology changes.
 
-Current sweep conclusion: **GitHub inventory VERIFIED; canonical core mappings VERIFIED; remaining Vercel/runtime bindings are intentionally PENDING or NOT_APPLICABLE; empirical evidence gates remain open.**
+Current sweep conclusion: **GitHub inventory VERIFIED; Notion coverage synchronized; canonical Vercel mappings VERIFIED where directly observed; MeshSense runtime reconciliation remains PENDING; empirical evidence gates remain open.**
