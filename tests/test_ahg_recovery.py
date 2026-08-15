@@ -3,17 +3,13 @@
 import math
 
 from components.ahg_conductor import StateVector
-from components.ahg_recovery import (
-    R_THRESHOLD,
-    compute_recovery_score,
-    recovery_exit_met,
-)
+from components.ahg_recovery import R_THRESHOLD, compute_recovery_score, recovery_exit_met
 
 
 def test_recovery_score_sign_convention():
     prev = StateVector(D_e=0.8, K=0.2)
     curr = StateVector(D_e=0.6, K=0.5)
-    score = compute_recovery_score(prev, curr, [1.80, 1.75, 1.70])
+    score = compute_recovery_score(prev, curr, [1.80, 1.75, 1.65])
     # 0.50*.2 + 0.30*.3 + 0.20*.05 = .205
     assert math.isclose(score, 0.205, rel_tol=1e-9)
 
