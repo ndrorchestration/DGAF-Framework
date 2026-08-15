@@ -45,13 +45,8 @@ Cross-repository relationships never transfer validation status.
 | `career-positioning` | Private | Career/portfolio support | UNKNOWN | NOT TARGETED | NOT TARGETED | N/A | UNKNOWN | P3 |
 | `automation-scripts` | Private | Automation support | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | P2 |
 | `api` | Private | API support surface | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | P2 |
-| `aoga-dashboard` | Private | Production dashboard/API | VERIFIED | UNKNOWN | UNKNOWN | PARTIAL | IN PROGRESS | P1 |
 | `pptl-governance-dashboard` | Private | Governance dashboard | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | P2 |
 | `dgaf-ops` | Private | DGAF operations/support | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | P2 |
-
-## Inventory correction
-
-The repository list above is the live account inventory, but duplicate `aoga-dashboard` rows are not intended. The canonical matrix entry is the first `aoga-dashboard` row; the later duplicate is retained only as a detection note and must be removed in the next matrix edit.
 
 ## Detailed evidence established in this pass
 
@@ -81,14 +76,13 @@ The canonical GitHub repository is `ndrorchestration/Meshsense`. The associated 
 
 ## Immediate P1 actions
 
-1. Remove the duplicate `aoga-dashboard` row in this matrix.
-2. Complete code/test/CI inspection for `DGAF-Framework`, `Driftwatch`, `Acoustic-mesh`, `AHG-Zeta-Pell-Autonomous-Lattice`, `Meshsense`, and `agent-control-plane`.
-3. Correct Driftwatch lockfile package identity before treating dependency reproducibility as clean.
-4. Establish runtime evidence for Meshsense/RuView.
-5. Complete AHG Zeta-Pell Pass 2.
-6. Audit PDMAL implementation and empirical harness evidence.
-7. Audit non-README documentation for inherited unsupported claims.
-8. Add security/provenance checks to the quality baseline where repository technology makes them applicable.
+1. Complete code/test/CI inspection for `DGAF-Framework`, `Driftwatch`, `Acoustic-mesh`, `AHG-Zeta-Pell-Autonomous-Lattice`, `Meshsense`, and `agent-control-plane`.
+2. Correct Driftwatch lockfile package identity before treating dependency reproducibility as clean.
+3. Establish runtime evidence for Meshsense/RuView.
+4. Complete AHG Zeta-Pell Pass 2.
+5. Audit PDMAL implementation and empirical harness evidence.
+6. Audit non-README documentation for inherited unsupported claims.
+7. Add security/provenance checks to the quality baseline where repository technology makes them applicable.
 
 ## Normalization rule
 
