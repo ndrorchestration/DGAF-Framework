@@ -31,6 +31,21 @@ jobs:
       - name: Run P-42 conductor and recovery tests
         run: python -m pytest -q tests/test_ahg_conductor.py tests/test_ahg_recovery.py
 
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Download TLC model checker
+        run: |
+          curl --fail --location --retry 3 --output tla2tools.jar \
+            https://repo1.maven.org/maven2/org/lamport/tla2tools/1.8.0/tla2tools-1.8.0.jar
+
+      - name: Model-check DGAF containment
+        run: |
+          java -cp tla2tools.jar tlc2.TLC -config specs/DGAFContainment.cfg specs/DGAFContainment.tla
+
       - name: Verify governance CI is executable
         run: |
           test -f components/ahg_conductor.py
