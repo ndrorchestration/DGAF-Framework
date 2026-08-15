@@ -37,10 +37,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Download TLC model checker
+      - name: Download pinned TLA+ Tools release
         run: |
           curl --fail --location --retry 3 --output tla2tools.jar \
-            https://repo1.maven.org/maven2/org/lamport/tla2tools/1.8.0/tla2tools-1.8.0.jar
+            https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
+          echo 'ae09269f0f74b9a7f69ac8b1e79f1514328082c6  tla2tools.jar' | sha1sum --check --strict
 
       - name: Model-check DGAF containment
         run: |
