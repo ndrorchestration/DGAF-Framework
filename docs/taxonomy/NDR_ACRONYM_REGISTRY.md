@@ -1,6 +1,6 @@
 # NDR Acronym Registry
 
-**Status:** CANONICAL REGISTRY / epistemic vocabulary control
+**Status:** CANONICAL REGISTRY / epistemic vocabulary control  
 **Date:** 2026-08-15
 
 ## Purpose
@@ -19,10 +19,10 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **SIL** | Spatial Intelligence Layer | Perception/spatial abstraction layer within the ASIS concept | DEFINED | Do not imply a standardized external technology. |
 | **PDMAL / PDMA-L** | Phi-Driven Multi-Agent Lattice | Dodecahedral-graph lattice/control structure and associated formalism | VERIFIED for explicitly tested graph/math quantities; DEFINED for architecture | Not established as a complete BFT consensus protocol. |
 | **DGAF** | Dynamic Governance Agentic Formation | Agentic governance/orchestration framework | DEFINED; implementation evidence is artifact-specific | Do not infer capability from framework name alone. |
-| **SACP** | Semantic/Systems? — **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical term requiring source-of-truth confirmation | AMBIGUOUS | Do not invent an expansion. Preserve the acronym until a canonical source is located. |
+| **AXIS** | Agent X-axis Invariant Spectrum | DGAF invariant measurement/metric spine | DEFINED; operationalization status is artifact-specific | Canonical expansion is explicitly recorded in `docs/qa/AXIS_METRIC_SPEC.md`; the specification itself states that full operationalization remains a roadmap item. fileciteturn231file0 |
+| **SACP** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical/project-local term | AMBIGUOUS | Do not invent an expansion. Preserve the acronym until a canonical source is located. |
 | **BFT** | Byzantine Fault Tolerance | Established distributed-systems fault model/property | EXTERNAL STANDARD TERM | PDMAL is not automatically BFT merely because BFT terminology appears nearby. |
-| **AXIS** | **SOURCE-DEPENDENT / REQUIRES CANONICAL EXPANSION CHECK** | DGAF metric/constraint vocabulary | AMBIGUOUS | Search results establish AXIS as a project term, but this registry does not promote an unverified backronym to canonical status. |
-| **MDAR** | **SOURCE-DEPENDENT / REQUIRES CANONICAL EXPANSION CHECK** | DGAF protocol reference | AMBIGUOUS | Existing documents use the acronym; expansion must be recovered from its canonical protocol document before normalization. |
+| **MDAR** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | DGAF protocol reference | AMBIGUOUS | The repository contains references to an `MDAR_PROTOCOL_v1.md`, but the current search surface did not establish its expansion. Do not infer one. |
 | **KB** | Knowledge Base | Agent knowledge/documentation artifact | STANDARD / DEFINED | Descriptive, not a capability claim. |
 | **QA** | Quality Assurance | Testing/review terminology | STANDARD / DEFINED | Does not imply that quality has been demonstrated unless tests are actually run. |
 | **API** | Application Programming Interface | Software interface | STANDARD / DEFINED | Standard external term. |
@@ -34,7 +34,7 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **AR** | Augmented Reality | Spatial/phone perception context | STANDARD / DEFINED | Do not imply AR capability beyond the implemented platform. |
 | **SLAM** | Simultaneous Localization and Mapping | Spatial-computing method | STANDARD / DEFINED | Do not claim a SLAM implementation unless source code/evaluation supports it. |
 | **PID** | Proportional–Integral–Derivative | Control method | STANDARD / DEFINED | AHG/Zeta-Pell usage must correspond to actual PID implementation. |
-| **FML** | **CONTEXT-DEPENDENT / REQUIRES SOURCE CHECK** | Historical AHG/Zeta-Pell mitigation terminology | AMBIGUOUS | Do not expand from inference. |
+| **FML** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical AHG/Zeta-Pell mitigation terminology | AMBIGUOUS | Do not expand from inference. |
 | **PDM** | **DO NOT ASSUME PDMAL** | Possible project-local abbreviation | AMBIGUOUS | Similar-looking acronyms are not interchangeable. |
 
 ## Critical acronym controls
@@ -75,11 +75,17 @@ Historical hybrid: **Adaptive Harmonic-Hierarchical Hybrid (AH3)**.
 
 The Zeta-Pell audit documented this conflict directly. It must not be silently reintroduced into current taxonomy.
 
+### AXIS
+
+Current canonical expansion: **Agent X-axis Invariant Spectrum**. The authoritative source is `docs/qa/AXIS_METRIC_SPEC.md`. fileciteturn231file0
+
+The acronym is reconciled at the vocabulary level. Separate verification is still required for claims about AXIS's operational deployment, scoring validity, or performance.
+
 ### SACP
 
 The acronym is present in historical project context, but the current repository search did not provide sufficient evidence to safely expand it. Until its canonical source is located, it remains `UNRESOLVED`.
 
-### AXIS / MDAR / FML
+### MDAR / FML
 
 These are established project-local tokens, but their expansions require direct inspection of their canonical specifications. Do not infer expansions from file names or surrounding prose.
 
