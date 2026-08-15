@@ -94,7 +94,7 @@ jobs:
       continue-on-error: true
     
     - name: Upload coverage reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report-py${{ matrix.python-version }}
         path: htmlcov/
@@ -158,7 +158,7 @@ jobs:
       continue-on-error: true
     
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: security-reports
         path: |
