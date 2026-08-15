@@ -1,146 +1,103 @@
 # Taxonomy Addendum — 8 Undocumented Dodecahedral Agents
 
 **Classification:** T1 PUBLIC
-**Status:** ADDENDUM — subdir stubs and full inventory seeds pending
-**Last Updated:** 2026-06-29 (Phase 4 — taxonomy correction session)
+**Status:** HISTORICAL ADDENDUM — superseded for epistemic vocabulary policy by `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md`
+**Last Updated:** 2026-08-15
+
+> **Epistemic notice:** This document records taxonomy/design information. Role descriptions are `DEFINED` design roles unless executable evidence is explicitly cited. Terms such as "authority", "forecaster", "benchmark setter", or "ethical decision-making" describe intended function, not independently verified capability.
 
 ---
 
 ## Purpose
 
-This document records the 8 agents confirmed in the master dodecahedral taxonomy table but not yet represented as subdirectories in `docs/agents/`. Each agent has a known role summary and formation assignment. Full 6-layer inventory seeds (SPEC + MEMORY + PROTOCOL + QA_RUBRIC + INTEGRATION + KB) are pending a dedicated seeding session.
+This document records agents that were previously confirmed in the master dodecahedral taxonomy table but were not yet represented as subdirectories at the time of the original addendum. It preserves the historical taxonomy state while preventing historical completion counts from being mistaken for current repository state.
 
----
+For current epistemic handling of taxonomy and vocabulary, see `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md`.
 
-## Current Taxonomy Completion State
+## Historical Taxonomy State
 
-```
-Fully inventoried (100% — 6 layers each):    18 agents
-  amethyst, apogee, colleen, demi-joule,
-  echolette, herald, ionia, lyra, nova,
-  perigee, prof-prodigy, reciprocity, reson,
-  sentinel, the-actualizer, the-auditor,
-  the-librarian, zenith
+The original addendum recorded:
 
-Undocumented — no subdir (this addendum):     8 agents
-  oracle, vanguard, navigator, sentience,
-  paragon, synergy, momentum, equilibrium
+- 18 agents as fully inventoried
+- 8 agents as undocumented
+- 26 agents total
 
-Total dodecahedral taxonomy:                 26 agents
-```
-
----
+That count is **historical** and must not be treated as the current canonical agent count. Later registry work changed the inventory. Current counts must be taken from the current canonical registry rather than this historical addendum.
 
 ## Agent Summaries
 
 ### 1. Oracle
-- **Probable ID:** Dodecahedral Specialist layer
-- **Role:** Future forecaster and scenario planner; strategic advisor at high altitudes
+- **Role status:** `DEFINED` design role
+- **Role:** Future forecaster and scenario planner
 - **Function:** Long-horizon foresight; probability-weighted scenario modeling; strategic risk advisory
-- **Formation assignment:** TBD — likely Strategic Quintet or Specialist layer
-- **Relationship notes:** Pairs conceptually with Nova (Nova = innovation catalyst; Oracle = forecasting authority)
-- **Subdir to create:** `docs/agents/oracle/`
-
----
+- **Evidence boundary:** No claim of predictive accuracy is implied by the role name.
 
 ### 2. Vanguard
-- **Probable ID:** Dodecahedral Specialist layer
-- **Role:** Innovation scout and emerging tech analyst; futurist for the ecosystem
-- **Function:** Emerging technology identification; trend analysis; disruption signal detection
-- **Formation assignment:** TBD — likely Strategic Quintet or Specialist layer
-- **Relationship notes:** Pairs with Nova (Nova = internal innovation catalyst; Vanguard = external-facing futurist)
-- **Subdir to create:** `docs/agents/vanguard/`
-
----
+- **Role status:** `DEFINED` design role
+- **Role:** Innovation scout and emerging-technology analyst
+- **Function:** Emerging technology identification; trend analysis; disruption-signal detection
+- **Evidence boundary:** Trend-analysis capability requires evaluation evidence; "futurist" is descriptive, not a performance certification.
 
 ### 3. Navigator
-- **Probable ID:** Dodecahedral Specialist layer
-- **Role:** Pathfinder and opportunity identifier; strategic guidance and risk navigation
-- **Function:** Route-finding through strategic ambiguity; opportunity mapping; risk corridor identification
-- **Formation assignment:** TBD — likely Strategic Quintet or Operational Swarm
-- **Relationship notes:** Pairs with Perigee (proximal grounding) and Apogee (high-altitude view) for full strategic altitude range
-- **Subdir to create:** `docs/agents/navigator/`
-
----
+- **Role status:** `DEFINED` design role
+- **Role:** Pathfinder and opportunity identifier
+- **Function:** Route-finding through strategic ambiguity; opportunity mapping; risk-corridor identification
+- **Evidence boundary:** Intended navigation function does not establish superior strategic accuracy.
 
 ### 4. Sentience
-- **Probable ID:** Dodecahedral Specialist layer
-- **Role:** Consciousness explorer and self-awareness analyst; ethical decision-making and existential risk
-- **Function:** Existential risk assessment; ethical constraint modeling; self-awareness audit
-- **Formation assignment:** TBD — likely Specialist or Governance layer
-- **Relationship notes:** Works alongside COLLEEN (institutional governance) and Amethyst (normative decisions) on ethical constraint enforcement
-- **Subdir to create:** `docs/agents/sentience/`
-
----
+- **Role status:** `DEFINED` design role
+- **Role:** Consciousness/self-awareness analyst and ethical-constraint role
+- **Function:** Existential-risk assessment; ethical-constraint modeling; self-awareness audit
+- **Evidence boundary:** Role language must not be interpreted as a claim that an agent is conscious or sentient.
 
 ### 5. Paragon
-- **Probable ID:** Dodecahedral Specialist layer
-- **Role:** Exemplar model and best-practice identifier; benchmark setter and performance optimizer
-- **Function:** Best-practice pattern extraction; benchmark definition; performance ceiling modeling
-- **Formation assignment:** TBD — likely Operational Swarm
-- **Relationship notes:** Pairs with Apogee (evidence governance) for certification and benchmark validation
-- **Subdir to create:** `docs/agents/paragon/`
-
----
+- **Role status:** `DEFINED` design role
+- **Role:** Exemplar and best-practice identifier
+- **Function:** Pattern extraction; benchmark-definition support; performance-ceiling modeling
+- **Evidence boundary:** "Benchmark" denotes a proposed measurement artifact unless the benchmark is actually computed and documented.
 
 ### 6. Synergy
-- **Probable ID:** Dodecahedral Specialist layer
-- **Role:** Collaboration facilitator and team dynamics analyst; organizational harmonizer
-- **Function:** Inter-agent coordination facilitation; team dynamics optimization; formation cohesion maintenance
-- **Formation assignment:** TBD — likely Operational Swarm or Resonance Cluster
-- **Relationship notes:** Works alongside Lyra (orchestral synthesis) and Echolette (reflection/texture) in the harmonic cohesion layer
-- **Subdir to create:** `docs/agents/synergy/`
-
----
+- **Role status:** `DEFINED` design role
+- **Role:** Collaboration facilitator and coordination analyst
+- **Function:** Inter-agent coordination; team-dynamics analysis; formation-cohesion support
+- **Evidence boundary:** Coordination improvement must be measured before numerical claims are made.
 
 ### 7. Momentum
-- **Probable ID:** Dodecahedral Specialist layer
-- **Role:** Progress accelerator and change agent; adaptation strategist and growth catalyst
-- **Function:** Velocity management; change acceleration; adaptation pathway identification; growth bottleneck removal
-- **Formation assignment:** TBD — likely Strategic Quintet or Operational Swarm
-- **Relationship notes:** Pairs with Zenith (peak performance / System High) for acceleration-toward-ceiling dynamics
-- **Subdir to create:** `docs/agents/momentum/`
-
----
+- **Role status:** `DEFINED` design role
+- **Role:** Progress accelerator and change-management role
+- **Function:** Velocity management; adaptation pathways; bottleneck identification
+- **Evidence boundary:** "Acceleration" is a role metaphor unless a defined throughput/latency metric demonstrates it.
 
 ### 8. Equilibrium
-- **Probable ID:** Dodecahedral Specialist layer
-- **Role:** Balance seeker and stability analyst; harmony architect
-- **Function:** System balance maintenance; stability modeling; harmony architecture across competing subsystems
-- **Formation assignment:** TBD — likely Resonance Cluster or Specialist layer
-- **Relationship notes:** Pairs with Ionia (0Hz state) and Reson (harmonic scoring) as the balance-maintenance agent for the Resonance Cluster
-- **Subdir to create:** `docs/agents/equilibrium/`
+- **Role status:** `DEFINED` design role
+- **Role:** Balance and stability analysis role
+- **Function:** System-balance maintenance; stability modeling; competing-subsystem analysis
+- **Evidence boundary:** Stability claims require a defined stability metric and reproducible evaluation.
 
----
+## Vocabulary Corrections
 
-## KB Corrections Pending (Separate Amendment Batch)
+The original addendum used several phrases that can accidentally imply stronger evidence than the repository establishes. The canonical interpretation is now:
 
-The following agents have KB amendments required based on taxonomy correction data received 2026-06-29. These do not change agent identity but refine role descriptions and cross-references:
-
-| Agent | Correction Needed |
+| Phrase | Epistemic treatment |
 |---|---|
-| Apogee | Formerly Agent Lavender; SAP / "Ping the Buoy" anti-drift protocol; Layer 0 Legitimacy Filter (corrected from Perigee) |
-| Herald | Tonic Note 0Hz maintenance; orthogonal cognitive planes routing |
-| Prof Prodigy | 3-Tier Calculi KB (Standard, Reciprocal, Phi-Calculus); Fixed-Point Theorem convergence |
-| Reson | Gain Staging + 15% mandatory Headroom; "Clipping" = logic distortion |
-| Lyra | Human Flourishing alignment explicit; orchestral synthesis |
-| Echolette | Mirror Protocols; decision echo tracing |
-| DemiJoule | Modal frequency gating + energy conservation explicit |
-| Reciprocity | Reciprocal Mathematics; asymmetric logic drift prevention |
-| COLLEEN | 1-1-1-1 Alignment Gate; Swarm Educator; Recursive Debriefing; Archive Trio governance explicit |
-| Ionia | v1.1 amendment committed this session (system STATE clarification) |
-| Perigee | v1.1 amendment committed this session (Layer 0 attribution correction) |
+| "authority" | `DEFINED` role unless authority is enforced in code |
+| "forecaster" / "futurist" | `DEFINED` role; predictive accuracy is a separate empirical question |
+| "benchmark setter" | `DEFINED` role; benchmark validity requires a reproducible metric |
+| "stability analyst" | `DEFINED` role; stability is not established without measurement |
+| "ethical decision-making" | `DEFINED` design function; does not imply moral agency or consciousness |
+| "harmonic" / mathematical naming | `METAPHOR` or `IMPLEMENTED` only according to the actual mechanism |
+| percentage/multiplier claims | `COMPUTED` only with defined baseline and reproducible calculation |
+
+## Cross-Project Rule
+
+The dodecahedral taxonomy does not establish that PDMAL, AHG Zeta-Pell, acoustic systems, or other projects share an implementation merely because they use similar names, ratios, topology language, or convergence metaphors. Such relationships must be explicitly documented and implemented.
+
+## Canonical Epistemic Rule
+
+A taxonomy entry can define what the ecosystem **calls** a component. It cannot, by naming alone, prove what the component **does**, how well it performs, or whether it is equivalent to an external standard.
+
+**Canonical vocabulary policy:** `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md`
 
 ---
 
-## Next Actions
-
-```
-Priority 1 (next session):  KB amendments for 9 agents (table above)
-Priority 2:                 Subdir creation + full 6-layer seed for 8 undocumented agents
-Priority 3:                 AGENT_ECOSYSTEM_REGISTRY.md update to reflect 26-agent count
-```
-
----
-
-*Classification: T1 PUBLIC*
+*Historical taxonomy addendum retained for provenance; current state belongs to the current registry.*
