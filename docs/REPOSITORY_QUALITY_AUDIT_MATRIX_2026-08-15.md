@@ -18,7 +18,7 @@ Cross-repository relationships never transfer validation status.
 
 | Repository | Visibility | Role / class | README boundary | Code/test audit | CI audit | Runtime audit | Security/provenance | Priority |
 |---|---|---|---|---|---|---|---|---|
-| `DGAF-Framework` | Public | Governance/evaluation research spine | VERIFIED | IN PROGRESS | IN PROGRESS | N/A / research | IN PROGRESS | P1 |
+| `DGAF-Framework` | Public | Governance/evaluation research spine | VERIFIED | IN PROGRESS | VERIFIED PARTIAL | N/A / research | IN PROGRESS | P1 |
 | `ai-governance-frameworks` | Public | Governance research/mapping | VERIFIED | UNKNOWN | UNKNOWN | N/A | UNKNOWN | P2 |
 | `Driftwatch` | Public | Drift detection/evaluation engineering | VERIFIED | IN PROGRESS | UNKNOWN | UNKNOWN | IN PROGRESS | P1 |
 | `resumeapex-eval` | Public | Evaluation protocol/benchmark | VERIFIED | UNKNOWN | UNKNOWN | N/A | UNKNOWN | P1 |
@@ -52,15 +52,15 @@ Cross-repository relationships never transfer validation status.
 
 ### DGAF-Framework
 
-The README now explicitly limits claims to repository-local evidence and separates DGAF, PDMAL, Acoustic-Mesh, and other tracks. The repository also contains an ecosystem audit status document and synchronization records. Current audit work is therefore moving from terminology correction into implementation/test/CI verification.
+The repository has a Next.js application package (`1.7.0`) with build/start scripts and a substantial GitHub Actions surface. The Python quality workflow runs deterministic tests, a Python-version matrix, coverage generation, integration tests, and security scans. However, several quality gates are explicitly non-blocking (`continue-on-error`), integration tests are allowed to pass with `|| true`, and coverage is configured with `--cov-fail-under=0`. Therefore CI is **VERIFIED PARTIAL**, not a strong release gate. The root `requirements.txt` is intentionally empty because current API routes are TypeScript/Next.js handlers, so Python CI installs its test tooling directly and should not be interpreted as a fully reproducible Python dependency environment.
 
 ### Agent Control Plane
 
-The repository contains a minimal executable kernel, unit tests, and GitHub Actions CI. Its quality baseline identifies dependency reproducibility, security/coverage gates, broader failure-mode tests, and integration tests as current gaps. This makes ACP a useful reference implementation for the normalization standard rather than a completed production control plane.
+The repository contains a minimal executable kernel, unit tests, and GitHub Actions CI. Its quality baseline identifies dependency reproducibility, security/coverage gates, broader failure-mode testing, and integration tests as current gaps. This makes ACP a useful reference implementation for the normalization standard rather than a completed production control plane.
 
 ### Driftwatch
 
-The repository has a lockfile, but the lockfile root metadata currently identifies the package as `react-example`/`0.0.0` while `package.json` identifies it as `driftwatch`/`0.1.0`. This is a concrete reproducibility/provenance inconsistency requiring correction. The package scripts expose build and TypeScript checking, but a test script is not currently declared in `package.json`.
+The repository has a lockfile. The root package metadata was found inconsistent with `package.json`: the lockfile identified `react-example`/`0.0.0` while the package identified `driftwatch`/`0.1.0`. `package.json` was normalized and the lockfile root metadata was corrected in commits `be2354dd` and `ef3276c`. The package still exposes build and TypeScript checking but no test script. Full dependency-install/build execution remains to be verified.
 
 ### Acoustic-Mesh
 
@@ -77,12 +77,13 @@ The canonical GitHub repository is `ndrorchestration/Meshsense`. The associated 
 ## Immediate P1 actions
 
 1. Complete code/test/CI inspection for `DGAF-Framework`, `Driftwatch`, `Acoustic-mesh`, `AHG-Zeta-Pell-Autonomous-Lattice`, `Meshsense`, and `agent-control-plane`.
-2. Correct Driftwatch lockfile package identity before treating dependency reproducibility as clean.
-3. Establish runtime evidence for Meshsense/RuView.
-4. Complete AHG Zeta-Pell Pass 2.
-5. Audit PDMAL implementation and empirical harness evidence.
-6. Audit non-README documentation for inherited unsupported claims.
-7. Add security/provenance checks to the quality baseline where repository technology makes them applicable.
+2. Verify Driftwatch dependency installation/build after lockfile correction; add meaningful automated tests before elevating its CI status.
+3. Strengthen DGAF CI only after establishing which currently non-blocking checks are intended to be advisory versus release-blocking.
+4. Establish runtime evidence for Meshsense/RuView.
+5. Complete AHG Zeta-Pell Pass 2.
+6. Audit PDMAL implementation and empirical harness evidence.
+7. Audit non-README documentation for inherited unsupported claims.
+8. Add security/provenance checks to the quality baseline where repository technology makes them applicable.
 
 ## Normalization rule
 
