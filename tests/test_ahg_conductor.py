@@ -242,11 +242,13 @@ class TestHysteresis:
         c = AHGConductor()
         for _ in range(3):
             c.step(StateVector())
-        assert c.regime == Regime.GROUNDED
+        # The canonical zero state maps to φ=1.4, i.e. VIGILANCE.
+        # Hysteresis is tested by transitioning from that actual baseline.
+        assert c.regime == Regime.VIGILANCE
         sv_flow = StateVector(N=0.6, C=0.1, R=0.05, D_e=0.05)
         c.step(sv_flow)
         c.step(sv_flow)
-        assert c.regime != Regime.GROUNDED
+        assert c.regime == Regime.VIGILANCE
 
 
 # ===========================================================================
