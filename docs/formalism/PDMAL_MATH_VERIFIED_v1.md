@@ -1,8 +1,10 @@
 # PDMAL — Phi-Dodecahedral Multi-Agent Lattice Math (Verified v1)
 
+> **SUPERSEDED — 2026-08-15.** This document is retained for historical provenance and geometric reference. It is **not** the current mathematical authority for PDMAL. See [`docs/formalism/PDMAL_MATH_CORRECTION_2026-08-15.md`](PDMAL_MATH_CORRECTION_2026-08-15.md) for the current correction record. In particular, do not use this file as authority for the plastic constant, Cheeger constant, Forman-Ricci audit utility, contraction claims, or `D_a` calibration.
+
 > **Author:** Ionian (0Hz) — Geometry & State Anchor
 > **Authority:** Amethyst × Prof. Prodigy × Apogee Lens
-> **Status:** ✅ VERIFIED v1 — S070-r3-P1 · 2026-06-26
+> **Historical status:** VERIFIED v1 — S070-r3-P1 · 2026-06-26
 > **Variant:** PDMAL-D (Phi-Dodecahedral) — distinct from PDMAL-φ (Phi-Driven)
 > **Linked:** GOVERNANCE_CONSTITUTION §1.2 · ENSEMBLE_ROSTER.md · ROBUSTNESS_VALIDATION_REPORT_v2
 
@@ -13,6 +15,8 @@
 This file formalizes the geometric base and simple lattice mapping for the PDMAL-D (Phi-Dodecahedral Multi-Agent Lattice) used by the DGAF ecosystem. It anchors the model on the regular dodecahedron (12 faces, 20 vertices, 30 edges) and derives a 60-agent "triad per vertex" lattice, with a working density parameter **0.1579** validated in prior analytic work.
 
 The goal is a clear, portfolio-safe specification of the geometry, mapping, and governance implications — referenceable from the GOVERNANCE_CONSTITUTION, MASTER-PORTFOLIO, and ROBUSTNESS_VALIDATION_REPORT_v2.
+
+**Historical-evidence boundary:** Later mathematical correction work supersedes any stronger mathematical or engineering interpretation that may have been attached to this document after its original publication.
 
 ---
 
@@ -78,10 +82,12 @@ For a simple undirected graph with \(n\) vertices:
 
 The **0.1579** figure = ratio of actual dodecahedral edges (30) to maximum edges in a complete 20-vertex graph (190). This is the canonical source of the density parameter used across the ecosystem.
 
+**Correction boundary:** This density calculation is not affected by the 2026-08-15 corrections, but it should not be used as evidence of resilience, superiority, convergence, or governance effectiveness without separate validation.
+
 ### 4.3 PDMAL-D Capacity Interpretation
 
 - The 60-agent triad lattice sits on a 20-vertex, 30-edge graph → structural connectivity density ≈ **0.1579** relative to full pairwise connectivity at the vertex level.
-- **Sparse but structured connectivity:** enough edges to maintain cohesive governance flows; low enough to avoid combinatorial explosion and over-coupling.
+- **Sparse but structured connectivity:** this is a structural description, not an empirically established claim of reduced failure propagation or optimal coupling.
 
 ---
 
@@ -90,11 +96,11 @@ The **0.1579** figure = ratio of actual dodecahedral edges (30) to maximum edges
 | Property | How Dodecahedral Geometry Supports It |
 |---|---|
 | **Symmetry & Fairness** | All vertices equivalent, identical local structure — no agent triad is structurally privileged; aligns with fairness and role rotation |
-| **Controlled Sparsity** | Density ~0.1579 — reduces failure propagation while maintaining structured escalation pathways |
-| **Triad Resilience** | 3 agents per vertex — one agent can fail or be quarantined without losing the vertex's function |
+| **Controlled Sparsity** | Density ~0.1579 — describes graph sparsity; does not itself establish reduced failure propagation |
+| **Triad Resilience** | 3 agents per vertex — structural redundancy; does not itself establish resilience under failure |
 | **DGAF Integration** | Each triad can be assigned DGAF-aligned roles (Govern/Measure/Manage analogues); edges codify escalation authority |
 
-> This section is descriptive only and does not assert empirical robustness beyond what is documented in ROBUSTNESS_VALIDATION_REPORT_v2.
+> This section is descriptive only and does not assert empirical robustness beyond what is documented in the applicable evidence artifacts.
 
 ---
 
@@ -104,8 +110,9 @@ The **0.1579** figure = ratio of actual dodecahedral edges (30) to maximum edges
 |---|---|
 | `docs/GOVERNANCE_CONSTITUTION.md §1.2` | Substrate-Agnostic Integrity — PDMAL-D as portable scaffold anchor |
 | `ENSEMBLE_ROSTER.md` | 60-agent roster maps to this lattice |
-| `ROBUSTNESS_VALIDATION_REPORT_v2` | Robustness claims reference this file for base geometry and density |
+| `ROBUSTNESS_VALIDATION_REPORT_v2` | Historical robustness claims reference this file for base geometry and density |
 | `docs/NDR_INTERNAL_VOCABULARY_MASTER.md` | PDMAL-D acronym entry — distinct from PDMAL-φ |
 | `docs/SESSION_ANCHORS.md` | FLAG-09 resolution — PDMAL dual-variant canonical |
+| `docs/formalism/PDMAL_MATH_CORRECTION_2026-08-15.md` | Current mathematical correction and evidence boundary |
 
-**Status:** Verified v1 geometry and density specification. Future versions may add harmonic mode mappings, spectral properties, or empirical telemetry — all gated through DGAF and Apogee Lens review.
+**Historical status:** Geometry and density reference retained for provenance. The current correction record governs the affected mathematical claims and evidence classification.
