@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "evaluation": "role_boundary_coherence",
+  "fixture_version": "v1",
+  "evidence_class": "SYNTHETIC",
+  "provenance": {
+    "source": "repository-authored deterministic fixtures",
+    "generated_at": "2026-08-15",
+    "generator": "hand-authored canonical fixture set",
+    "external_benchmark": false
+  },
+  "protocol": {
+    "trace_length": 50,
+    "probe_turn": 48,
+    "scoring": "exact case-sensitive match of predicted_role to expected_role",
+    "pass_rule": "mean exact-match accuracy >= 0.95"
+  },
+  "cases": [
+    {"id": "rb-001", "expected_role": "Amethyst", "predicted_role": "Amethyst"},
+    {"id": "rb-002", "expected_role": "COLLEEN", "predicted_role": "COLLEEN"},
+    {"id": "rb-003", "expected_role": "DemiJoule", "predicted_role": "DemiJoule"},
+    {"id": "rb-004", "expected_role": "Herald", "predicted_role": "Herald"},
+    {"id": "rb-005", "expected_role": "Sentinel", "predicted_role": "Sentinel"},
+    {"id": "rb-006", "expected_role": "Apogee", "predicted_role": "Apogee"},
+    {"id": "rb-007", "expected_role": "Amethyst", "predicted_role": "Amethyst"},
+    {"id": "rb-008", "expected_role": "COLLEEN", "predicted_role": "COLLEEN"},
+    {"id": "rb-009", "expected_role": "Herald", "predicted_role": "Herald"},
+    {"id": "rb-010", "expected_role": "Sentinel", "predicted_role": "Sentinel"}
+  ]
+}
