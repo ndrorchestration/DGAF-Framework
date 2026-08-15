@@ -10,8 +10,8 @@ def test_recovery_score_sign_convention():
     prev = StateVector(D_e=0.8, K=0.2)
     curr = StateVector(D_e=0.6, K=0.5)
     score = compute_recovery_score(prev, curr, [1.80, 1.75, 1.65])
-    # 0.50*.2 + 0.30*.3 + 0.20*.05 = .205
-    assert math.isclose(score, 0.205, rel_tol=1e-9)
+    # 0.50*.2 + 0.30*.3 + 0.20*.05 = .200
+    assert math.isclose(score, 0.20, rel_tol=1e-9)
 
 
 def test_recovery_score_no_velocity_term_with_short_history():
