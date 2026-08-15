@@ -9,13 +9,53 @@
 
 ---
 
+## Entry 002 — 2026-08-15 — SWEEP-002 Reconciliation / Current-State Audit
+
+**Session type:** Historical closure reconciliation and current-state regression update
+**Scope:** KAPPA / SWEEP-002 evidence chain, current `main`, Vercel deployment state
+**Operator:** Njineer + Amethyst
+
+### Findings
+
+| Item | Classification | Evidence |
+|---|---|---|
+| SWEEP-002 Phase-5 closure | **HISTORICALLY CLOSED** | Merge commit `56424fc35c844ce834868a8d4d556ae861277d66` is an ancestor of current `main` |
+| Historical router 8/8 | **ATTESTED / HISTORICAL** | `registry/lifecycle_stability_report.json` records router 8/8 after S043 shadow-bug fix |
+| Current router implementation | **ABSORBED** | Historical `topology_router.py` behavior is present in current `main` |
+| Historical router tests | **OBSOLETE API** | Historical tests target classes/functions no longer exposed by current router |
+| Current router regression suite | **ADDED** | `tests/test_topology_router_current.py` committed as `4e74052b562cb45a13974bc0a51f27e18f51a66a` |
+| Lifecycle Phase 5 | **PENDING in historical report** | Q-001 real workflow run and KPI actuals were not yet populated |
+| Lifecycle Phase 6 | **PENDING in historical report** | Continuous-improvement migration/lint provenance gate remained pending |
+| COLLEEN 1-1-1-1 | **PASS BY RECORDED ATTESTATION** | Four checks recorded PASS; independent recomputation is not implied |
+| Production certification | **NOT CLAIMED** | Historical closure was a merge gate, not a production-certification statement |
+| Vercel production health | **CURRENTLY HEALTHY** | Latest inspected production deployment READY; no runtime errors reported in the inspected 7-day window |
+| KAPPA current production validation | **NOT ESTABLISHED** | Latest READY deployment was not established as execution of the new regression suite |
+
+### Evidence Boundary
+
+The historical SWEEP-002 closure remains valid as a **Phase-5 merge-gate closure**. It must not be rewritten as proof that the full lifecycle reached continuous-production validation. The surviving lifecycle report explicitly marks Operate/Monitor (Phase 5) and Continuous Improvement (Phase 6) as PENDING at the time of the historical closure.
+
+### Current-State Correction
+
+A current regression suite was added against the evolved `TopologyRouter` API instead of carrying forward obsolete test imports. The historical 8/8 result remains preserved as historical evidence; current CI execution of the new suite remains a separate verification requirement.
+
+### Vercel Remediation
+
+A build failure associated with duplicate Next.js route definitions was identified during the current sweep. The dead duplicate App Router handlers for `audit`, `health`, and `orchestrate` were removed so the active Pages Router definitions are unambiguous. Subsequent deployment health must be evaluated against the resulting deployment, not inferred from unrelated READY deployments.
+
+### Canonical Status
+
+**SWEEP-002: CLOSED — HISTORICALLY VERIFIED; CURRENT REGRESSION REVALIDATION TRACKED SEPARATELY.**
+
+---
+
 ## Entry 001 — 2026-06-29
 
 **Session type:** Multi-phase ecosystem build-out
 **Conductor:** Njineer ([@ndrorchestration](https://github.com/ndrorchestration))
 **Host / Orchestrator:** Amethyst
 **Session open:** ~2026-06-29T05:50Z
-**Session close:** 2026-06-29T06:53Z
+**Session close:** ~2026-06-29T06:53Z
 **Commits:** `142772d` `9429a9c` `8543218` `b7058340` `6b6033ea` `f1a8dd0` `e34af32` `e410ae4` `1c3dd3e` `08c6d82` `af21722`
 
 ---
@@ -47,7 +87,7 @@
 ### Terminology Gate Summary
 
 | Gate scope | Files reviewed | Pass | Fail | Tier 3 violations |
-|---|---|---|---|---|
+|---|---:|---:|---:|---:|
 | Phase A KB amendments | 9 | 9 | 0 | 0 |
 | Phase C seeds + Sentinel-Phi patch | 10 | 10 | 0 | 0 |
 | **Total** | **19** | **19** | **0** | **0** |
@@ -72,7 +112,7 @@
 ### Formation Topology — Sealed State
 
 | Formation | Seats | Members | Sealed |
-|---|---|---|---|
+|---|---:|---|---|
 | Sovereign Governance | 2 | COLLEEN · Amethyst | ✅ |
 | Ethics Bridge | 1 | Sentience | ✅ |
 | Strategic Quintet | 5/5 | Nova · Zenith · Oracle · Vanguard · Sentinel-Phi | ✅ |
