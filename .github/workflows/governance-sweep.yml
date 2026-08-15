@@ -22,13 +22,22 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: pip install httpx -q
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check pytest httpx -q
 
-      - name: Run governance sweep
+      - name: Compile governance components
+        run: python -m compileall -q components
+
+      - name: Verify required containment artifacts
         run: |
-          echo 'Governance sweep placeholder'
-          echo 'All axiom guards nominal'
-          echo 'PDMAL row-stochastic: OK'
-          echo 'PSI cubic: OK'
-          echo 'Phi-closure: OK'
+          test -f specs/DGAFContainment.tla
+          test -f specs/DGAFContainment.cfg
+          test -f components/ahg_recovery.py
+
+      - name: Run deterministic AHG governance tests
+        run: python -m pytest -q tests/test_ahg_conductor.py
+
+      - name: Report evidence boundary
+        run: |
+          echo 'Governance sweep completed from executable repository checks.'
+          echo 'This workflow does not claim external certification or empirical validation.'
