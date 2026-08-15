@@ -26,10 +26,21 @@ jobs:
         run: python -m pip install --upgrade pip pytest numpy
 
       - name: Compile Python components
-        run: python -m compileall -q components tests
+        run: python -m compileall -q components tests evaluations
 
       - name: Run P-42 conductor and recovery tests
         run: python -m pytest -q tests/test_ahg_conductor.py tests/test_ahg_recovery.py
+
+      - name: Run Issue #32 deterministic evaluation slice
+        run: |
+          python -m pytest -q tests/test_role_boundary_coherence.py
+          python evaluations/role_boundary_coherence.py --output artifacts/role_boundary_coherence.json
+
+      - name: Upload evaluation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-role-boundary-coherence
+          path: artifacts/role_boundary_coherence.json
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
