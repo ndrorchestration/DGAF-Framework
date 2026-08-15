@@ -32,7 +32,7 @@ jobs:
         run: python -m pytest -q tests/test_ahg_conductor.py tests/test_ahg_recovery.py
 
       - name: Set up Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -41,7 +41,7 @@ jobs:
         run: |
           curl --fail --location --retry 3 --output tla2tools.jar \
             https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
-          echo 'ae09269f0f74b9a7f69ac8b1e79f1514328082c6  tla2tools.jar' | sha1sum --check --strict
+          echo 'ab323b79802aedc3203b3f9af37c6aca3ed43f4e0225b36f2aa77b26de46c05f  tla2tools.jar' | sha256sum --check --strict
 
       - name: Model-check DGAF containment
         run: |
