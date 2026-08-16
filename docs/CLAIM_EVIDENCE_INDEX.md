@@ -2,11 +2,11 @@
 
 **Last reconciled:** 2026-08-16  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`  
-**Current main commit:** `f619d56ff9de5c120addcf52789bf29404e70377`
+**Current main commit:** `233b2f9c40f8650ccbaed7a6dc61f1fc3419fe72`
 
 This index maps high-impact claims to the evidence class actually supported by current retained evidence. It is intentionally conservative and claim-specific.
 
-The repository also runs a deterministic claim-language audit (`.github/workflows/claim-hygiene.yml`). The initial audit on 2026-08-16 retained 342 textual matches across the configured vocabulary. Most matches are standards language, explicit caveats, historical records, or evidence-status labels; textual presence alone is not treated as an overclaim. Two current registry summaries were identified for focused review because they assert broader status than the retained evidence presently establishes.
+The repository also runs a deterministic claim-language audit (`.github/workflows/claim-hygiene.yml`). The initial audit on 2026-08-16 retained 342 textual matches across the configured vocabulary. Most matches are standards language, explicit caveats, historical records, or evidence-status labels; textual presence alone is not treated as an overclaim. Two current registry summaries were identified for focused review because they assert broader status than the retained evidence presently establishes. The detailed review is recorded in `docs/QUALITY_REGISTRY_CLAIM_REVIEW_2026-08-16.md`.
 
 | Claim | Current status | Evidence | Scope / limitations | Falsifier or revision trigger |
 |---|---|---|---|---|
@@ -22,7 +22,7 @@ The repository also runs a deterministic claim-language audit (`.github/workflow
 | DGAF formatting/type quality is clean. | `PENDING / QUALITY DEBT` | Latest Python 3.11 quality logs record Black on 20 files, isort on 15 files, and 11 mypy errors; these checks remain non-blocking. | Functional pytest is green, but code-quality cleanliness is not established. | Black, isort, and mypy must pass under the documented supported runtime policy/configuration. |
 | DGAF is deployed to Vercel and has current live runtime verification. | `NOT ESTABLISHED` | Deployment workflow `31976717330` on current main succeeded in the explicit configuration-unavailable state: deployment not attempted because required secrets are absent; runtime verification skipped. | This proves workflow-state separation, not deployment or runtime health. | A current deployment with retained deployment provenance plus independent health/regression/runtime evidence. |
 | Repository-local epistemic evidence standard is canonical and current. | `VERIFIED` | `docs/EPISTEMIC_EVIDENCE_STANDARD.md`; commit `e1104fa2cc2dd5c14184d0e0d127430151e179e8`. | Repository-local governance standard, not external scientific authority. | Reconciliation required if evidence classes, claim vocabulary, or closure rules change. |
-| Canonical claim/evidence index is present and current. | `VERIFIED` | `docs/CLAIM_EVIDENCE_INDEX.md`; reconciliation commit `f619d56ff9de5c120addcf52789bf29404e70377`. | The index remains claim-specific and conservative; it does not certify the repository globally. | Any material source/evidence change requires index reconciliation. |
+| Canonical claim/evidence index is present and current. | `VERIFIED` | `docs/CLAIM_EVIDENCE_INDEX.md`; reconciliation commit `233b2f9c40f8650ccbaed7a6dc61f1fc3419fe72`. | The index remains claim-specific and conservative; it does not certify the repository globally. | Any material source/evidence change requires index reconciliation. |
 
 ## Open repository quality backlog
 
