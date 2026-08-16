@@ -71,7 +71,14 @@ Restart ==
     /\ turn' = turn + 1
     /\ mutationAllowed' = FALSE
 
-Next == Activate \/ OpenBreaker \/ Rollback \/ Verify \/ Restart
+(* Once the bounded exploration reaches MaxTurns, allow a stuttering step.  *)
+(* This prevents a model-checker deadlock while keeping the transition      *)
+(* state space finite and preserving all safety invariants.                 *)
+BoundedStutter ==
+    /\ turn >= MaxTurns
+    /\ UNCHANGED vars
+
+Next == Activate \/ OpenBreaker \/ Rollback \/ Verify \/ Restart \/ BoundedStutter
 
 TypeOK ==
     /\ phase \in Phases
