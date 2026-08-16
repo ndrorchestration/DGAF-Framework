@@ -2,7 +2,7 @@
 
 **Last reconciled:** 2026-08-16  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`  
-**Current main commit:** `2afcd488eefd6b43e1cd05761456f728e604a61e`
+**Current main commit:** `51d2ac688efdd7cf72d8208ba4d8d2ac7dde91d4`
 
 This index maps high-impact claims to the evidence class actually supported by current retained evidence. It is intentionally conservative and claim-specific.
 
@@ -22,7 +22,7 @@ The repository runs a deterministic claim-language audit (`.github/workflows/cla
 | DGAF formatting/type quality is clean. | `PENDING / QUALITY DEBT` | Latest Python 3.11 quality logs record Black on 20 files, isort on 15 files, and 11 mypy errors; these checks remain non-blocking. | Functional pytest is green, but code-quality cleanliness is not established. | Black, isort, and mypy must pass under the documented supported runtime policy/configuration. |
 | DGAF is deployed to Vercel and has current live runtime verification. | `NOT ESTABLISHED` | Deployment workflow `31976717330` on main succeeded in the explicit configuration-unavailable state: deployment not attempted because required secrets are absent; runtime verification skipped. | This proves workflow-state separation, not deployment or runtime health. | A current deployment with retained deployment provenance plus independent health/regression/runtime evidence. |
 | Repository-local epistemic evidence standard is canonical and current. | `VERIFIED` | `docs/EPISTEMIC_EVIDENCE_STANDARD.md`; commit `e1104fa2cc2dd5c14184d0e0d127430151e179e8`. | Repository-local governance standard, not external scientific authority. | Reconciliation required if evidence classes, claim vocabulary, or closure rules change. |
-| Canonical claim/evidence index is present and current. | `VERIFIED` | `docs/CLAIM_EVIDENCE_INDEX.md`; reconciliation commit `2afcd488eefd6b43e1cd05761456f728e604a61e`. | The index remains claim-specific and conservative; it does not certify the repository globally. | Any material source/evidence change requires index reconciliation. |
+| Canonical claim/evidence index is present and current. | `VERIFIED` | `docs/CLAIM_EVIDENCE_INDEX.md`; reconciliation commit `51d2ac688efdd7cf72d8208ba4d8d2ac7dde91d4`. | The index remains claim-specific and conservative; it does not certify the repository globally. | Any material source/evidence change requires index reconciliation. |
 
 ## Open repository quality backlog
 
@@ -30,7 +30,6 @@ The repository runs a deterministic claim-language audit (`.github/workflows/cla
 - **#51** — supported-runtime policy and Python matrix alignment.
 - **#53** — repository-wide semantic audit for overclaiming verification language; deterministic scan implemented, residual contextual review remains.
 - **#54** — pin/report toolchain versions used by evidence gates; pin file added, workflow adoption still required.
-- **#59** — semantic triage of residual high-impact claim-language findings.
 
 ## Closed epistemic/quality controls
 
