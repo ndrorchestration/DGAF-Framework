@@ -1,33 +1,42 @@
 # Supported Runtime Policy
 
-**Status:** CI validation policy — not a blanket compatibility guarantee  
+**Status:** Release/support policy
 **Effective:** 2026-08-16
 
-## Current CI validation matrix
+## Officially supported Python versions
 
-The repository currently executes its Python test workflow on:
+The current supported Python runtime range for DGAF-Framework is:
 
-- Python 3.9
 - Python 3.10
 - Python 3.11
 - Python 3.12
 
-The latest successful run is `31976717339` on main commit `810caa34fff606f3b60b585560687f1cd01b70af`.
+These versions are the release/evidence-gate matrix. Required functional, quality, and security checks are expected to execute successfully on all three versions.
+
+## Python 3.9 disposition
+
+Python 3.9 is **legacy / not release-supported**.
+
+The prior CI matrix included Python 3.9, but the pinned evidence-gate toolchain requires Python 3.10 or newer. Rather than weaken the reproducibility controls or silently retain an unsupported runtime claim, Python 3.9 has been removed from the supported evidence matrix.
+
+Python 3.9 compatibility is not claimed, tested as a release gate, or used as evidence for current support.
 
 ## Interpretation
 
-A green CI job establishes that the current tested suite completed under that runner/runtime combination. It does **not**, by itself, establish a product-level promise of full support for every use case on that interpreter version.
+A green CI job establishes that the current tested suite completed under that runner/runtime combination. It does not, by itself, establish product-level efficacy or unrestricted compatibility outside the documented scope.
 
-Until a maintainer explicitly narrows or expands the policy, repository documentation should describe these versions as **CI-validated runtimes**, not as an unconditional compatibility guarantee.
+The supported-runtime claim is limited to the versions listed above and the dependency/configuration state exercised by the current evidence gates.
 
-## Release/support decision
+## Release-gate policy
 
-A future release-level support policy should identify:
+For the supported Python versions:
 
-1. officially supported Python versions;
-2. minimum and maximum dependency/runtime constraints;
-3. versions treated as informational compatibility checks;
-4. end-of-support/deprecation dates; and
-5. whether security and quality gates are release-blocking for each supported version.
+1. Functional pytest execution is release-blocking.
+2. Required integration/security evidence must complete successfully.
+3. Quality checks are retained as explicit evidence and remain subject to the repository quality policy.
+4. Toolchain versions used by evidence gates are pinned and reported.
+5. Any change to the supported runtime range requires a documented policy update and a corresponding CI/evidence review.
 
-Until those decisions are recorded, issue `#51` remains open.
+## Deprecation and expansion
+
+This policy can be revised when a supported runtime reaches end-of-life, dependency constraints require a change, or a new Python version is deliberately adopted. Such a revision must update the CI matrix, toolchain policy, claim/evidence index, and release documentation together.
