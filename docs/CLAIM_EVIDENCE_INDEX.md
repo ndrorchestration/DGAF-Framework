@@ -2,11 +2,11 @@
 
 **Last reconciled:** 2026-08-16  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`  
-**Current main commit:** `802b4bafbb662ca59d99824f8d05d0f69f39309b`
+**Current main commit:** `2afcd488eefd6b43e1cd05761456f728e604a61e`
 
 This index maps high-impact claims to the evidence class actually supported by current retained evidence. It is intentionally conservative and claim-specific.
 
-The repository runs a deterministic claim-language audit (`.github/workflows/claim-hygiene.yml`). The initial audit on 2026-08-16 retained 342 textual matches. The rerun after registry reconciliation also completed successfully and retained a current artifact. Textual presence alone is not treated as proof of overclaiming; contextual review is required.
+The repository runs a deterministic claim-language audit (`.github/workflows/claim-hygiene.yml`). The initial audit on 2026-08-16 retained 342 textual matches. The registry-reconciliation rerun also completed successfully and retained a current artifact. Textual presence alone is not treated as proof of overclaiming; contextual review is required. Residual contextual candidates are documented in `docs/SEMANTIC_CLAIM_REVIEW_2026-08-16.md`.
 
 | Claim | Current status | Evidence | Scope / limitations | Falsifier or revision trigger |
 |---|---|---|---|---|
@@ -22,7 +22,7 @@ The repository runs a deterministic claim-language audit (`.github/workflows/cla
 | DGAF formatting/type quality is clean. | `PENDING / QUALITY DEBT` | Latest Python 3.11 quality logs record Black on 20 files, isort on 15 files, and 11 mypy errors; these checks remain non-blocking. | Functional pytest is green, but code-quality cleanliness is not established. | Black, isort, and mypy must pass under the documented supported runtime policy/configuration. |
 | DGAF is deployed to Vercel and has current live runtime verification. | `NOT ESTABLISHED` | Deployment workflow `31976717330` on main succeeded in the explicit configuration-unavailable state: deployment not attempted because required secrets are absent; runtime verification skipped. | This proves workflow-state separation, not deployment or runtime health. | A current deployment with retained deployment provenance plus independent health/regression/runtime evidence. |
 | Repository-local epistemic evidence standard is canonical and current. | `VERIFIED` | `docs/EPISTEMIC_EVIDENCE_STANDARD.md`; commit `e1104fa2cc2dd5c14184d0e0d127430151e179e8`. | Repository-local governance standard, not external scientific authority. | Reconciliation required if evidence classes, claim vocabulary, or closure rules change. |
-| Canonical claim/evidence index is present and current. | `VERIFIED` | `docs/CLAIM_EVIDENCE_INDEX.md`; reconciliation commit `802b4baf`. | The index remains claim-specific and conservative; it does not certify the repository globally. | Any material source/evidence change requires index reconciliation. |
+| Canonical claim/evidence index is present and current. | `VERIFIED` | `docs/CLAIM_EVIDENCE_INDEX.md`; reconciliation commit `2afcd488eefd6b43e1cd05761456f728e604a61e`. | The index remains claim-specific and conservative; it does not certify the repository globally. | Any material source/evidence change requires index reconciliation. |
 
 ## Open repository quality backlog
 
