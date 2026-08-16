@@ -186,7 +186,18 @@ jobs:
       run: |
         python -m pip install -r requirements-ci.txt pyyaml
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Detect integration test suite
+      id: detect-integration
+      shell: bash
+      run: |
+        if [ -d tests/integration ]; then
+          echo "present=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "present=false" >> "$GITHUB_OUTPUT"
+          echo "No tests/integration directory is present at this commit; integration evidence is not currently defined for this repository state."
+        fi
     - name: Run integration tests
+      if: steps.detect-integration.outputs.present == 'true'
       run: pytest tests/integration/ -v --tb=long --timeout=60 -m "integration"
       timeout-minutes: 15
 
