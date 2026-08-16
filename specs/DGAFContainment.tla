@@ -29,6 +29,7 @@ Init ==
 Activate ==
     /\ phase = "STAGING"
     /\ breaker = FALSE
+    /\ turn < MaxTurns
     /\ phase' = "ACTIVE"
     /\ breaker' = FALSE
     /\ turn' = turn + 1
@@ -37,6 +38,7 @@ Activate ==
 OpenBreaker ==
     /\ phase = "ACTIVE"
     /\ breaker = FALSE
+    /\ turn < MaxTurns
     /\ phase' = "FROZEN"
     /\ breaker' = TRUE
     /\ turn' = turn + 1
@@ -45,6 +47,7 @@ OpenBreaker ==
 Rollback ==
     /\ phase = "FROZEN"
     /\ breaker = TRUE
+    /\ turn < MaxTurns
     /\ phase' = "ROLLBACK"
     /\ breaker' = TRUE
     /\ turn' = turn + 1
@@ -53,6 +56,7 @@ Rollback ==
 Verify ==
     /\ phase = "ROLLBACK"
     /\ breaker = TRUE
+    /\ turn < MaxTurns
     /\ phase' = "VERIFIED"
     /\ breaker' = FALSE
     /\ turn' = turn + 1
@@ -61,6 +65,7 @@ Verify ==
 Restart ==
     /\ phase = "VERIFIED"
     /\ breaker = FALSE
+    /\ turn < MaxTurns
     /\ phase' = "STAGING"
     /\ breaker' = FALSE
     /\ turn' = turn + 1
