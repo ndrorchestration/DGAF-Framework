@@ -1,0 +1,101 @@
+name: Claim Hygiene Audit
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**/*.md'
+      - '**/*.py'
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/*.json'
+      - '.github/workflows/claim-hygiene.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - '**/*.md'
+      - '**/*.py'
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/*.json'
+      - '.github/workflows/claim-hygiene.yml'
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run deterministic claim-language scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-artifacts
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          root = Path('.')
+          allowed_suffixes = {'.md', '.py', '.ts', '.tsx', '.yml', '.yaml', '.json'}
+          excluded_parts = {'.git', 'node_modules', '.venv', 'venv', '__pycache__', 'htmlcov'}
+          patterns = {
+              'production-ready': re.compile(r'\bproduction[- ]ready\b', re.I),
+              'proven': re.compile(r'\bproven\b', re.I),
+              'validated': re.compile(r'\bvalidated\b', re.I),
+              'verified': re.compile(r'\bverified\b', re.I),
+              'empirically supported': re.compile(r'\bempirically supported\b', re.I),
+          }
+
+          findings = []
+          for path in sorted(root.rglob('*')):
+              if not path.is_file() or path.suffix.lower() not in allowed_suffixes:
+                  continue
+              if any(part in excluded_parts for part in path.parts):
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              for line_number, line in enumerate(text.splitlines(), start=1):
+                  for label, pattern in patterns.items():
+                      for match in pattern.finditer(line):
+                          findings.append({
+                              'path': str(path),
+                              'line': line_number,
+                              'term': label,
+                              'text': line.strip(),
+                          })
+
+          result = {
+              'evidence_class': 'DETERMINISTIC_REPOSITORY_TEXT_AUDIT',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'scope': 'UTF-8 repository text files with configured source/document suffixes',
+              'patterns': sorted(patterns),
+              'finding_count': len(findings),
+              'findings': findings,
+              'limitations': [
+                  'A textual match is not itself an overclaim; every finding requires contextual review.',
+                  'Generated, binary, dependency, and excluded workspace directories are not scanned.',
+                  'This audit does not establish scientific or production validity.',
+              ],
+          }
+          Path('ci-artifacts/claim-hygiene.json').write_text(
+              json.dumps(result, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          print(json.dumps({k: result[k] for k in ('source_commit', 'finding_count', 'scope')}, indent=2))
+          PY
+
+      - name: Upload claim hygiene evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: claim-hygiene-evidence-${{ github.sha }}
+          path: ci-artifacts/claim-hygiene.json
