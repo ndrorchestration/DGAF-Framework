@@ -7,17 +7,66 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
+  deployment-readiness:
+    name: Deployment Configuration Check
+    runs-on: ubuntu-latest
+    outputs:
+      configured: ${{ steps.check.outputs.configured }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Vercel configuration
+        id: check
+        shell: bash
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          mkdir -p artifacts
+          configured=true
+          missing=()
+          [ -n "$VERCEL_TOKEN" ] || { configured=false; missing+=(VERCEL_TOKEN); }
+          [ -n "$VERCEL_ORG_ID" ] || { configured=false; missing+=(VERCEL_ORG_ID); }
+          [ -n "$VERCEL_PROJECT_ID" ] || { configured=false; missing+=(VERCEL_PROJECT_ID); }
+          printf '%s\n' "configured=$configured"
+          printf '%s\n' "missing=${missing[*]:-none}"
+          python - <<PY
+          import json
+          from pathlib import Path
+          payload = {
+              'evidence_class': 'DEPLOYMENT_CONFIGURATION_STATUS',
+              'source_commit': '${{ github.sha }}',
+              'workflow_run_id': '${{ github.run_id }}',
+              'scope': 'GitHub Actions Vercel deployment prerequisites',
+              'configured': ${configured@Q}.lower() == 'true',
+              'missing_prerequisites': ${missing[@]+"${missing[*]}"@Q}.split() if "${missing[*]}" else [],
+              'deployment_attempted': False,
+              'limitations': ['Configuration presence is not deployment success and is not runtime evidence.'],
+          }
+          Path('artifacts/deployment_readiness.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
+          PY
+          echo "configured=$configured" >> "$GITHUB_OUTPUT"
+
+      - name: Upload deployment readiness evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-readiness-${{ github.sha }}
+          path: artifacts/deployment_readiness.json
+
   deploy:
     name: Vercel Production Deploy
-    if: ${{ env.VERCEL_TOKEN != '' }}
+    needs: deployment-readiness
+    if: ${{ needs.deployment-readiness.outputs.configured == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       deployment_url: ${{ steps.deploy.outputs.deployment_url }}
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -32,19 +81,51 @@ jobs:
       - name: Deploy to Vercel production
         id: deploy
         run: |
+          mkdir -p artifacts
           URL=$(vercel deploy \
             --prod \
             --yes \
             --token="$VERCEL_TOKEN")
           echo "deployment_url=$URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $URL"
+          python - <<PY
+          import json
+          from pathlib import Path
+          payload = {
+              'evidence_class': 'DEPLOYMENT_ATTESTATION',
+              'source_commit': '${{ github.sha }}',
+              'workflow_run_id': '${{ github.run_id }}',
+              'deployment_url': '${URL}',
+              'command': 'vercel deploy --prod --yes --token=<redacted>',
+              'result': 'DEPLOYMENT_RETURNED_URL',
+              'scope': 'Vercel deployment command result only',
+              'limitations': ['Deployment return does not establish application health or end-to-end runtime behavior.'],
+          }
+          Path('artifacts/deployment_provenance.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
+          PY
 
       - name: Set env vars
         run: |
           echo "1.7.0" | vercel env add ENSEMBLE_VERSION production \
-            --token="$VERCEL_TOKEN" --force || true
+            --token="$VERCEL_TOKEN" --force
           echo "enabled" | vercel env add PSI_CHECK production \
-            --token="$VERCEL_TOKEN" --force || true
+            --token="$VERCEL_TOKEN" --force
+
+      - name: Upload deployment provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-provenance-${{ github.sha }}
+          path: artifacts/deployment_provenance.json
+
+  deployment-unavailable:
+    name: Deployment Evidence Unavailable
+    needs: deployment-readiness
+    if: ${{ needs.deployment-readiness.outputs.configured != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo 'Vercel deployment was not attempted because required GitHub Actions secrets are not configured.'
+          echo 'This job records an explicit evidence boundary; it is not deployment or runtime verification.'
 
   post-deploy-verification:
     name: Health + Regression Check
@@ -103,6 +184,30 @@ jobs:
           [ "$TC" -ge 30 ] \
             && echo "  v audit turn_count=$TC" \
             || { echo "  x turn_count=$TC < 30"; exit 1; }
+
+      - name: Record runtime verification evidence
+        run: |
+          mkdir -p artifacts
+          python - <<PY
+          import json
+          from pathlib import Path
+          payload = {
+              'evidence_class': 'RUNTIME_VERIFICATION',
+              'source_commit': '${{ github.sha }}',
+              'workflow_run_id': '${{ github.run_id }}',
+              'deployment_url': '${DGAF_URL}',
+              'scope': 'health preflight, 30-turn live regression, and audit turn-count check',
+              'result': 'PASS',
+              'limitations': ['Runtime verification applies to the exercised deployment and protocol; it does not establish broad real-world efficacy.'],
+          }
+          Path('artifacts/runtime_verification.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Upload runtime verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-verification-${{ github.sha }}
+          path: artifacts/runtime_verification.json
 
       - name: Print production URL
         run: |
