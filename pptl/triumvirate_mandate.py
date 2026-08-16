@@ -59,7 +59,7 @@ class TriumvirateMandate:
 
     Governance contracts (P-09):
       1. Prime issues signed mandate (task + scope + constraints)
-      2. Prefect domain split is MECE (validated at construction)
+      2. Prefect domain split is MECE (enforced at construction)
       3. Prefects choreograph sub-agents and aggregate results
       4. Prime reviews Prefect aggregates and issues final sign-off
       5. All lifecycle events traced via HeraldAgent (P-01)
@@ -79,14 +79,14 @@ class TriumvirateMandate:
     signoff_note:str = ""
 
     def __post_init__(self) -> None:
-        # Validate MECE: domain names must differ
+        # Enforce MECE as a local construction invariant: domain names must differ.
         if self.prefect_a.domain == self.prefect_b.domain:
             raise ValueError(
                 f"Prefect domains must be distinct. "
                 f"Both set to '{self.prefect_a.domain}'. "
                 "MECE split required — ungoverned agents are a hard failure."
             )
-        # Validate MECE: no agent governed by both prefects
+        # Enforce MECE as a local construction invariant: no agent governed by both prefects.
         overlap = set(self.prefect_a.agents_governed) & set(self.prefect_b.agents_governed)
         if overlap:
             raise ValueError(
@@ -109,7 +109,7 @@ class TriumvirateMandate:
             "mandate_id":        self.mandate_id,
             "prime":             self.prime,
             "task":              self.task,
-            "scope":             self.scope,
+            "scope":              self.scope,
             "constraints":       self.constraints,
             "prefect_a_agent":   self.prefect_a.agent,
             "prefect_a_domain":  self.prefect_a.domain,
