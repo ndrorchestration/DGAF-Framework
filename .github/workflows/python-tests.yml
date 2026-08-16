@@ -30,6 +30,35 @@ jobs:
       run: python -m pip install pytest
     - name: Run deterministic staging circuit-breaker harness
       run: python -m pytest tests/test_staging_circuit_breaker_evidence.py -q
+    - name: Add staging evidence provenance
+      run: |
+        python - <<'PY'
+        import json
+        import os
+        import platform
+        import subprocess
+        from pathlib import Path
+
+        path = Path('test-artifacts/staging-circuit-breaker-evidence.json')
+        data = json.loads(path.read_text(encoding='utf-8'))
+        pytest_version = subprocess.check_output(['python', '-m', 'pytest', '--version'], text=True).strip()
+        data['evidence_record'] = {
+            'evidence_class': 'DETERMINISTIC_LOCAL_CONTROL_FLOW',
+            'source_commit': os.environ['GITHUB_SHA'],
+            'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+            'job': 'staging-evidence',
+            'python_version': platform.python_version(),
+            'pytest_version': pytest_version,
+            'command': 'python -m pytest tests/test_staging_circuit_breaker_evidence.py -q',
+            'scope': 'repository-local deterministic control-flow harness',
+            'production_execution': False,
+            'limitations': [
+                'This artifact is not evidence of production or live-staging execution.',
+                'This artifact does not establish real-world efficacy.',
+            ],
+        }
+        path.write_text(json.dumps(data, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+        PY
     - name: Upload staging evidence
       uses: actions/upload-artifact@v4
       with:
@@ -103,6 +132,39 @@ jobs:
         printf 'pytest_exit_code=%s\n' "$status" > "ci-artifacts/pytest-py${{ matrix.python-version }}.status"
         exit "$status"
       timeout-minutes: 10
+
+    - name: Add staging evidence provenance
+      if: always()
+      run: |
+        if [ -f test-artifacts/staging-circuit-breaker-evidence.json ]; then
+          python - <<'PY'
+          import json
+          import os
+          import platform
+          import subprocess
+          from pathlib import Path
+
+          path = Path('test-artifacts/staging-circuit-breaker-evidence.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          pytest_version = subprocess.check_output(['python', '-m', 'pytest', '--version'], text=True).strip()
+          data['evidence_record'] = {
+              'evidence_class': 'DETERMINISTIC_LOCAL_CONTROL_FLOW',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'job': 'test',
+              'python_version': platform.python_version(),
+              'pytest_version': pytest_version,
+              'command': 'python -m pytest tests/',
+              'scope': 'repository-local deterministic control-flow harness executed within the full test job',
+              'production_execution': False,
+              'limitations': [
+                  'This artifact is not evidence of production or live-staging execution.',
+                  'This artifact does not establish real-world efficacy.',
+              ],
+          }
+          path.write_text(json.dumps(data, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          PY
+        fi
 
     - name: Upload pytest diagnostics
       uses: actions/upload-artifact@v4
