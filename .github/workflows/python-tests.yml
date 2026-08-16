@@ -92,6 +92,24 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
 
+    - name: Capture toolchain manifest
+      run: |
+        mkdir -p ci-artifacts
+        {
+          echo "python=$(python --version)"
+          echo "pip=$(python -m pip --version)"
+          echo "pytest=$(python -m pytest --version 2>/dev/null || true)"
+          echo "pytest-cov=$(python -m pip show pytest-cov | sed -n 's/^Version: //p')"
+          echo "pytest-asyncio=$(python -m pip show pytest-asyncio | sed -n 's/^Version: //p')"
+          echo "pytest-timeout=$(python -m pip show pytest-timeout | sed -n 's/^Version: //p')"
+          echo "mypy=$(mypy --version 2>/dev/null || true)"
+          echo "flake8=$(flake8 --version 2>/dev/null || true)"
+          echo "black=$(black --version 2>/dev/null || true)"
+          echo "isort=$(isort --version-number 2>/dev/null || true)"
+          echo "pydantic=$(python -m pip show pydantic | sed -n 's/^Version: //p')"
+          echo "platform=$(python -c 'import platform; print(platform.platform())')"
+        } | tee "ci-artifacts/toolchain-py${{ matrix.python-version }}.txt"
+
     - name: Lint with flake8
       run: |
         flake8 components --count --select=E9,F63,F82 --show-source --statistics
