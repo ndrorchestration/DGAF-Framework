@@ -1,6 +1,6 @@
 {
   "registry_version": "0.4.0",
-  "generated_at": "2026-05-29T07:03:00Z",
+  "generated_at": "2026-08-16T18:41:00-04:00",
   "projects": [
     {
       "id": "dgaf-framework",
@@ -9,9 +9,7 @@
       "tags": ["ai-governance", "multi-agent", "pattern-registry"],
       "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
       "github": {"owner": "ndrorchestration", "repo": "DGAF-Framework", "url": "https://github.com/ndrorchestration/DGAF-Framework", "default_branch": "main", "private": false, "archived": false, "topics": ["ai-governance","apache-2-0","multi-agent","nist-ai-rmf","phi-harmonic"]},
-      "deployments": [
-        {"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://dgaf-framework.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}
-      ],
+      "deployments": [{"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://dgaf-framework.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
       "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/DGAF-Framework", "status": "silver", "last_reviewed": "2026-05-29T07:03:00Z", "owner": "Amethyst"},
       "governance": {"dgaf_tier": "silver", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
       "lifecycle_state": "active"
@@ -23,9 +21,7 @@
       "tags": ["drift-detection", "multi-agent", "simulation"],
       "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
       "github": {"owner": "ndrorchestration", "repo": "Driftwatch", "url": "https://github.com/ndrorchestration/Driftwatch", "default_branch": "main", "private": false, "archived": false, "topics": ["drift-detection","multi-agent","phi-calculus","simulation","typescript"]},
-      "deployments": [
-        {"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://driftwatch.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}
-      ],
+      "deployments": [{"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://driftwatch.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
       "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/Driftwatch", "status": "bronze", "last_reviewed": "2026-05-29T07:03:00Z", "owner": "Amethyst"},
       "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
       "lifecycle_state": "active"
@@ -37,9 +33,7 @@
       "tags": ["dashboard", "governance", "vercel"],
       "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
       "github": {"owner": "ndrorchestration", "repo": "aoga-dashboard", "url": "https://github.com/ndrorchestration/aoga-dashboard", "default_branch": "main", "private": true, "archived": false, "topics": []},
-      "deployments": [
-        {"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://aoga-dashboard.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}
-      ],
+      "deployments": [{"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://aoga-dashboard.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
       "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/aoga-dashboard", "status": "bronze", "last_reviewed": "2026-05-29T07:03:00Z", "owner": "Amethyst"},
       "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
       "lifecycle_state": "active"
@@ -51,9 +45,7 @@
       "tags": ["dashboard", "governance", "vercel", "neon"],
       "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
       "github": {"owner": "ndrorchestration", "repo": "pptl-governance-dashboard", "url": "https://github.com/ndrorchestration/pptl-governance-dashboard", "default_branch": "main", "private": true, "archived": false, "topics": []},
-      "deployments": [
-        {"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://pptl-governance-dashboard.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}
-      ],
+      "deployments": [{"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://pptl-governance-dashboard.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
       "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/pptl-governance-dashboard", "status": "bronze", "last_reviewed": "2026-05-29T07:03:00Z", "owner": "Amethyst"},
       "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
       "lifecycle_state": "active"
@@ -65,9 +57,7 @@
       "tags": ["ci-cd", "governance", "security"],
       "patterns": ["ndr.ecosystem_manifest_audit"],
       "github": {"owner": "ndrorchestration", "repo": "sentinel-governance", "url": "https://github.com/ndrorchestration/sentinel-governance", "default_branch": "main", "private": false, "archived": false, "topics": ["ci-cd","github-actions","governance","powershell","security"]},
-      "deployments": [
-        {"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://sentinel-governance.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}
-      ],
+      "deployments": [{"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://sentinel-governance.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
       "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/sentinel-governance", "status": "bronze", "last_reviewed": "2026-05-29T07:03:00Z", "owner": "Sentinel"},
       "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
       "lifecycle_state": "active"
@@ -87,13 +77,11 @@
     {
       "id": "junior-apogee-app",
       "name": "Junior Apogee App",
-      "summary": "Production-ready AI agent evaluation and QA platform with multi-agent scoring, automated test execution, real-time dashboards, and OWASP Agentic Top 10 compliance checks.",
+      "summary": "AI agent evaluation and QA platform with multi-agent scoring, automated test execution, real-time dashboards, and OWASP Agentic Top 10–oriented checks. Independent production-readiness and efficacy evidence are not established by this registry entry.",
       "tags": ["evaluation", "qa", "owasp", "multi-agent"],
       "patterns": ["ndr.dual_orchestrator_qa_loop"],
       "github": {"owner": "ndrorchestration", "repo": "junior-apogee-app", "url": "https://github.com/ndrorchestration/junior-apogee-app", "default_branch": "main", "private": false, "archived": false, "topics": ["agent-orchestration","ai-evaluation","multi-agent","owasp","python","qa-testing"]},
-      "deployments": [
-        {"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://junior-apogee-app.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}
-      ],
+      "deployments": [{"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://junior-apogee-app.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
       "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/junior-apogee-app", "status": "bronze", "last_reviewed": "2026-05-29T07:03:00Z", "owner": "Amethyst"},
       "governance": {"dgaf_tier": "bronze", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
       "lifecycle_state": "active"
@@ -105,9 +93,7 @@
       "tags": ["phi-harmonic", "visualization"],
       "patterns": ["ndr.ecosystem_manifest_audit"],
       "github": {"owner": "ndrorchestration", "repo": "phi-calculus-app", "url": "https://github.com/ndrorchestration/phi-calculus-app", "default_branch": "main", "private": true, "archived": false, "topics": []},
-      "deployments": [
-        {"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://phi-calculus-app.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}
-      ],
+      "deployments": [{"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://phi-calculus-app.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
       "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/phi-calculus-app", "status": "bronze", "last_reviewed": "2026-05-29T07:03:00Z", "owner": "Amethyst"},
       "governance": {"dgaf_tier": "experimental", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
       "lifecycle_state": "active"
@@ -139,7 +125,7 @@
     {
       "id": "ai-governance-frameworks",
       "name": "AI Governance Frameworks",
-      "summary": "Validated frameworks for AI governance: Paul-Elder Critical Thinking, NIST AI RMF, ISO 42001, IIA AI Auditing.",
+      "summary": "Reference collection for AI governance frameworks and standards, including Paul-Elder Critical Thinking, NIST AI RMF, ISO 42001, and IIA AI Auditing. Independent validation of the collection is not asserted by this registry entry.",
       "tags": ["ai-governance", "nist-ai-rmf", "iso-42001"],
       "patterns": ["ndr.ecosystem_manifest_audit"],
       "github": {"owner": "ndrorchestration", "repo": "ai-governance-frameworks", "url": "https://github.com/ndrorchestration/ai-governance-frameworks", "default_branch": "main", "private": false, "archived": false, "topics": ["ai-governance","compliance","frameworks","iso-42001","nist-ai-rmf"]},
