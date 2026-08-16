@@ -1,5 +1,6 @@
 # Evidence-gate toolchain pinned from successful CI run 31976717339 (2026-08-16).
-# Review/update deliberately; do not treat these pins as application runtime compatibility guarantees.
+# These pins make evidence-gate execution reproducible; they are not application runtime compatibility guarantees.
+pip==26.2.1
 pytest==9.1.1
 pytest-cov==7.1.0
 pytest-asyncio==1.4.0
@@ -9,3 +10,5 @@ flake8==7.3.0
 black==26.5.1
 isort==8.0.1
 pydantic==2.13.4
+bandit==1.9.4
+safety==3.8.1
