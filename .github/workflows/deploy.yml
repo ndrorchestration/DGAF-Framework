@@ -14,6 +14,7 @@ env:
 jobs:
   deploy:
     name: Vercel Production Deploy
+    if: ${{ env.VERCEL_TOKEN != '' }}
     runs-on: ubuntu-latest
     outputs:
       deployment_url: ${{ steps.deploy.outputs.deployment_url }}
@@ -34,19 +35,20 @@ jobs:
           URL=$(vercel deploy \
             --prod \
             --yes \
-            --token=${{ secrets.VERCEL_TOKEN }})
-          echo "deployment_url=$URL" >> $GITHUB_OUTPUT
+            --token="$VERCEL_TOKEN")
+          echo "deployment_url=$URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $URL"
 
       - name: Set env vars
         run: |
-          echo "1.7.0"   | vercel env add ENSEMBLE_VERSION production \
-            --token=${{ secrets.VERCEL_TOKEN }} --force || true
+          echo "1.7.0" | vercel env add ENSEMBLE_VERSION production \
+            --token="$VERCEL_TOKEN" --force || true
           echo "enabled" | vercel env add PSI_CHECK production \
-            --token=${{ secrets.VERCEL_TOKEN }} --force || true
+            --token="$VERCEL_TOKEN" --force || true
 
   post-deploy-verification:
     name: Health + Regression Check
+    if: ${{ needs.deploy.result == 'success' && needs.deploy.outputs.deployment_url != '' }}
     runs-on: ubuntu-latest
     needs: deploy
     env:
