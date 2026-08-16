@@ -33,16 +33,20 @@ jobs:
           [ -n "$VERCEL_PROJECT_ID" ] || { configured=false; missing+=(VERCEL_PROJECT_ID); }
           printf '%s\n' "configured=$configured"
           printf '%s\n' "missing=${missing[*]:-none}"
-          python - <<PY
+          export EVIDENCE_CONFIGURED="$configured"
+          export EVIDENCE_MISSING="${missing[*]}"
+          python - <<'PY'
           import json
+          import os
           from pathlib import Path
+
           payload = {
               'evidence_class': 'DEPLOYMENT_CONFIGURATION_STATUS',
-              'source_commit': '${{ github.sha }}',
-              'workflow_run_id': '${{ github.run_id }}',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'scope': 'GitHub Actions Vercel deployment prerequisites',
-              'configured': ${configured@Q}.lower() == 'true',
-              'missing_prerequisites': ${missing[@]+"${missing[*]}"@Q}.split() if "${missing[*]}" else [],
+              'configured': os.environ['EVIDENCE_CONFIGURED'] == 'true',
+              'missing_prerequisites': os.environ['EVIDENCE_MISSING'].split() if os.environ['EVIDENCE_MISSING'] else [],
               'deployment_attempted': False,
               'limitations': ['Configuration presence is not deployment success and is not runtime evidence.'],
           }
@@ -88,14 +92,17 @@ jobs:
             --token="$VERCEL_TOKEN")
           echo "deployment_url=$URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $URL"
-          python - <<PY
+          export DEPLOYMENT_URL="$URL"
+          python - <<'PY'
           import json
+          import os
           from pathlib import Path
+
           payload = {
               'evidence_class': 'DEPLOYMENT_ATTESTATION',
-              'source_commit': '${{ github.sha }}',
-              'workflow_run_id': '${{ github.run_id }}',
-              'deployment_url': '${URL}',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'deployment_url': os.environ['DEPLOYMENT_URL'],
               'command': 'vercel deploy --prod --yes --token=<redacted>',
               'result': 'DEPLOYMENT_RETURNED_URL',
               'scope': 'Vercel deployment command result only',
@@ -188,14 +195,16 @@ jobs:
       - name: Record runtime verification evidence
         run: |
           mkdir -p artifacts
-          python - <<PY
+          python - <<'PY'
           import json
+          import os
           from pathlib import Path
+
           payload = {
               'evidence_class': 'RUNTIME_VERIFICATION',
-              'source_commit': '${{ github.sha }}',
-              'workflow_run_id': '${{ github.run_id }}',
-              'deployment_url': '${DGAF_URL}',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'deployment_url': os.environ['DGAF_URL'],
               'scope': 'health preflight, 30-turn live regression, and audit turn-count check',
               'result': 'PASS',
               'limitations': ['Runtime verification applies to the exercised deployment and protocol; it does not establish broad real-world efficacy.'],
