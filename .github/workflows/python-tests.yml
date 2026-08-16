@@ -39,18 +39,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12']
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
         cache: 'pip'
-    
+
+    - name: Establish repository import path
+      run: echo "PYTHONPATH=$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}" >> "$GITHUB_ENV"
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -58,30 +62,33 @@ jobs:
         pip install mypy flake8 black isort pydantic
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-    
+
     - name: Lint with flake8
       run: |
         flake8 components --count --select=E9,F63,F82 --show-source --statistics
         flake8 components --count --exit-zero --statistics --max-line-length=120
       continue-on-error: true
-    
+
     - name: Format check with Black
       run: |
         black --check components/ tests/ --line-length=120
       continue-on-error: true
-    
+
     - name: Sort imports with isort
       run: |
         isort --check-only components/ tests/ --profile=black
       continue-on-error: true
-    
+
     - name: Type check with mypy
       run: |
         mypy components/ --ignore-missing-imports --no-implicit-optional
       continue-on-error: true
-    
-    - name: Run pytest with coverage
+
+    - name: Run pytest with coverage and preserve diagnostics
+      shell: bash
       run: |
+        set +e
+        mkdir -p ci-artifacts
         pytest tests/ \
           --cov=components \
           --cov-report=xml \
@@ -89,9 +96,20 @@ jobs:
           --cov-report=html \
           --cov-fail-under=0 \
           -v \
-          --tb=short \
-          --timeout=30
+          --tb=long \
+          --timeout=30 \
+          2>&1 | tee "ci-artifacts/pytest-py${{ matrix.python-version }}.log"
+        status=${PIPESTATUS[0]}
+        printf 'pytest_exit_code=%s\n' "$status" > "ci-artifacts/pytest-py${{ matrix.python-version }}.status"
+        exit "$status"
       timeout-minutes: 10
+
+    - name: Upload pytest diagnostics
+      uses: actions/upload-artifact@v4
+      with:
+        name: pytest-diagnostics-py${{ matrix.python-version }}
+        path: ci-artifacts/
+      if: always()
 
     - name: Upload staging circuit-breaker evidence
       uses: actions/upload-artifact@v4
@@ -99,7 +117,7 @@ jobs:
         name: staging-circuit-breaker-evidence-py${{ matrix.python-version }}
         path: test-artifacts/staging-circuit-breaker-evidence.json
       if: always()
-    
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -108,7 +126,7 @@ jobs:
         name: codecov-dgaf-py${{ matrix.python-version }}
         fail_ci_if_error: false
       continue-on-error: true
-    
+
     - name: Upload coverage reports
       uses: actions/upload-artifact@v4
       with:
@@ -119,60 +137,50 @@ jobs:
   integration-tests:
     runs-on: ubuntu-latest
     needs: test
-    
+    if: always()
+
     steps:
     - uses: actions/checkout@v4
-    
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
         cache: 'pip'
-    
+    - name: Establish repository import path
+      run: echo "PYTHONPATH=$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}" >> "$GITHUB_ENV"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pytest pytest-asyncio pydantic pyyaml
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    
     - name: Run integration tests
       run: |
-        pytest tests/integration/ \
-          -v \
-          --tb=short \
-          --timeout=60 \
-          -m "integration" || true
+        pytest tests/integration/ -v --tb=long --timeout=60 -m "integration" || true
       timeout-minutes: 15
       continue-on-error: true
 
   security-scan:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v4
-    
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
     - name: Install security tools
       run: |
         pip install bandit safety
-    
     - name: Run Bandit security scan
       run: |
         bandit -r components/ -f json -o bandit-report.json
         bandit -r components/ -f txt
       continue-on-error: true
-    
     - name: Check dependencies with Safety
       run: |
         pip install -r requirements.txt || true
         safety check --json > safety-report.json || true
         safety check || true
       continue-on-error: true
-    
     - name: Upload security reports
       uses: actions/upload-artifact@v4
       with:
