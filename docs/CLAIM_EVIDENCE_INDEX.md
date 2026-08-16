@@ -1,23 +1,45 @@
 # Claim / Evidence Index
 
 **Last reconciled:** 2026-08-16  
-**Canonical source repository:** `ndrorchestration/DGAF-Framework`
+**Canonical source repository:** `ndrorchestration/DGAF-Framework`  
+**Current main commit:** `810caa34fff606f3b60b585560687f1cd01b70af`
 
-This index maps high-impact claims to the evidence class actually supported by current retained evidence. It is intentionally conservative.
+This index maps high-impact claims to the evidence class actually supported by current retained evidence. It is intentionally conservative and claim-specific.
 
 | Claim | Current status | Evidence | Scope / limitations | Falsifier or revision trigger |
 |---|---|---|---|---|
-| DGAF containment specification is executable and checks its configured invariants/state space without TLC error. | `VERIFIED` — bounded model checking | Main Governance CI run `31976439830`; TLC Tools v1.8.0; 12 states generated, 11 distinct, no error. | Bounded state graph defined by the current `DGAFContainment.tla/.cfg`; not an unbounded mathematical proof; not live-production evidence. | TLC failure, counterexample, changed specification, changed bounds, or a materially broader claim than the checked scope. |
-| DGAF deterministic circuit-breaker sequence executes as designed in the repository-local harness. | `VERIFIED` | Main Python CI run `31976439883`; staging artifact SHA-256 `5ecbe157077953b597c979329e92316f1473a2b72d9b3ff2d620ee6dd11b00f8`. | Local deterministic harness only; no production/live-staging execution. | Harness assertion failure, changed transition semantics, or contradictory live-stage observation. |
-| DGAF Python test suite passes under the currently executed Python matrix. | `VERIFIED` for tested behavior | Main Python CI run `31976439883`; test jobs for Python 3.9, 3.10, 3.11, 3.12 all completed successfully; pytest diagnostics retained. | Verifies tested repository behavior under that CI environment. Does not establish efficacy or external workload performance. | Any failing test, unsupported runtime dependency, or behavior outside the tested suite. |
-| DGAF security scan completes successfully. | `VERIFIED` for configured scan | Main Python CI `31976439883`; security reports artifact retained, SHA-256 `aab87a189c348c90b4e772a72712f58d5bc90a16d36e2ff124b65165645d4a18`. | Only the configured Bandit/Safety scope and current dependency state. | New findings, dependency changes, scan-scope changes, or tool-version drift that changes interpretation. |
-| P-42 recovery/conductor behavior matches the repository's deterministic tests. | `VERIFIED` for tested behavior | Governance CI `31976439830`; `78 passed, 3 skipped`. | Unit/regression behavior only; does not establish improved real-world recovery. | Test regression, altered scoring logic, or contradictory independent evaluation. |
-| `role_boundary_coherence` evaluator is reproducible on its canonical fixture corpus. | `VERIFIED` as evaluator/fixture behavior; `SYNTHETIC` evidence class | Governance CI `31976439830`; artifact digest `26d0c7d54eeb186f008fccf9ecc15c984cf9325c9f266d72d85369fdbcf53d15`. | Fixture predictions are repository-authored evaluator inputs; score 1.0 is not DGAF/model performance. | Fixture corruption, scorer mismatch, generated model outputs differing from expected labels, or independent failure. |
-| DGAF has live end-to-end Sentinel → `aoga-dashboard` runtime integration. | `PENDING` | No retained end-to-end transaction trace currently establishes this claim. | Contracts and deployment configuration are not sufficient. | A dated end-to-end trace can establish the claim; contradictory runtime observations would keep it pending. |
-| DGAF breaker sequence has been exercised in a live controlled staging runtime. | `PENDING` | Only the deterministic local harness is currently retained. | Harness verification is not live staging evidence. | Dated staging trace with source ref, environment, injected fault, containment, rollback, and recovery output. |
-| DGAF governance controls are empirically effective on real workloads. | `PENDING` | No independent real-workload efficacy dataset is currently retained. | Synthetic tests and unit tests do not establish efficacy. | Reproducible real-workload evaluation showing defined benefit under a specified protocol; negative or null results require claim downgrade. |
-| DGAF formatting/type quality is clean. | `PENDING / QUALITY DEBT` | Historical and current CI logs show Black/isort/mypy findings, while those checks remain non-blocking. | Passing the overall workflow does not imply these checks passed. | Black, isort, and mypy must pass under documented supported runtimes/configuration. |
-| Deployment of `DGAF-Framework` demonstrates production readiness. | `NOT ESTABLISHED` | Deployment workflow on main currently fails; core verification workflows succeed. | Deployment readiness and application verification are separate evidence classes. | A successful deployment plus independent runtime smoke/e2e evidence can establish a narrower deployment claim. |
+| DGAF containment specification is executable and checks its configured invariants/state space without TLC error. | `VERIFIED` — bounded model checking | Governance CI `31976717328`; current main `810caa34...`; TLC artifact digest `sha256:c0b364f0564b181976a789e11a6477afe63bd44dabd258d3451231df7795d07e`. | Bounded state graph defined by the current `DGAFContainment.tla/.cfg`; not an unbounded mathematical proof; not live-production evidence. TLC gate uses pinned TLA+ Tools v1.8.0. | TLC failure/counterexample, changed specification or bounds, or a broader claim than the checked scope. |
+| DGAF deterministic circuit-breaker sequence executes as designed in the repository-local harness. | `VERIFIED` | Python CI `31976717339`; current main `810caa34...`; staging artifact digest `sha256:7945f7c115d0b24c01be1426d4f12a9a8530345e2e002e3fa32d50bdc61f91e3`. | Repository-local deterministic harness only; artifact explicitly records production execution as false. Not live staging. | Harness assertion failure, changed transition semantics, or contradictory live-stage observation. |
+| DGAF Python test suite passes under the currently executed Python matrix. | `VERIFIED` for tested behavior | Python CI `31976717339`; Python 3.9, 3.10, 3.11, and 3.12 jobs all completed successfully; pytest diagnostics retained. | Verifies tested repository behavior in the CI environments exercised. Does not establish efficacy or external workload performance. Runtime support policy remains separately open in #51. | Failing tests, unsupported runtime dependency, or behavior outside the tested suite. |
+| DGAF security scan completes successfully. | `VERIFIED` for configured scan | Python CI `31976717339`; security artifact digest `sha256:71aa1980a2f9eef732e7a3d9e2af83d4ca77e0ff801fac3bfea39da92fda97be`. | Only the configured Bandit/Safety scope and dependency state at the evaluated commit. | New findings, dependency changes, scan-scope changes, or materially different tool interpretation. |
+| P-42 recovery/conductor behavior matches the repository's deterministic regression tests. | `VERIFIED` for tested behavior | Governance CI `31976717328`; P-42 test stage passed. | Unit/regression behavior only; does not establish improved real-world recovery. | Test regression, altered scoring/control logic, or contradictory independent evaluation. |
+| `role_boundary_coherence` evaluator is reproducible on its canonical fixture corpus. | `VERIFIED` as evaluator/fixture behavior; `SYNTHETIC` evidence class | Governance CI `31976717328`; evaluation artifact digest `sha256:3828726b36bb5f887b085a29adb345524d66089b03e09103ff5cff31aca1f7b4`. | Fixture predictions are repository-authored evaluator inputs; a perfect fixture score is not DGAF/model performance. | Fixture corruption, scorer mismatch, generated model outputs differing from expected labels, or independent failure. |
+| DGAF has live end-to-end Sentinel → `aoga-dashboard` runtime integration. | `PENDING` | No retained end-to-end transaction trace currently establishes this claim. | Contracts/deployment configuration are insufficient. | A dated end-to-end request/event trace at a specific commit and deployment can establish a narrower runtime claim. |
+| DGAF breaker sequence has been exercised in a live controlled staging runtime. | `PENDING` | Only the deterministic local harness is currently retained. | Local harness verification is not live staging evidence. | Dated staging trace with source ref, environment, injected fault, containment, rollback, and recovery output. |
+| DGAF governance controls are empirically effective on real workloads. | `PENDING` | No independent real-workload efficacy dataset is currently retained. | Synthetic tests, fixture evaluation, and unit tests do not establish efficacy. | Reproducible real-workload evaluation showing defined benefit under a specified protocol; negative/null results require claim downgrade. |
+| DGAF formatting/type quality is clean. | `PENDING / QUALITY DEBT` | Latest Python 3.11 quality logs record Black on 20 files, isort on 15 files, and 11 mypy errors; these checks remain non-blocking. | Functional pytest is green, but code-quality cleanliness is not established. | Black, isort, and mypy must pass under the documented supported runtime policy/configuration. |
+| DGAF is deployed to Vercel and has current live runtime verification. | `NOT ESTABLISHED` | Deployment workflow `31976717330` on current main succeeded in the explicit **configuration-unavailable** state: deployment not attempted because required secrets are absent; runtime verification skipped. | This proves workflow-state separation, not deployment or runtime health. | A current deployment with retained deployment provenance plus independent health/regression/runtime evidence. |
+| Repository-local epistemic evidence standard is canonical and current. | `VERIFIED` | `docs/EPISTEMIC_EVIDENCE_STANDARD.md`; commit `e1104fa2...`. | Repository-local governance standard, not external scientific authority. | Reconciliation required if evidence classes, claim vocabulary, or closure rules change. |
+| Canonical claim/evidence index is present and current. | `VERIFIED` | `docs/CLAIM_EVIDENCE_INDEX.md`; this reconciliation commit. | The index remains claim-specific and conservative; it does not certify the repository globally. | Any material source/evidence change requires index reconciliation. |
+
+## Open repository quality backlog
+
+- **#47** — formatting/type debt cleanup.
+- **#51** — supported-runtime policy and Python matrix alignment.
+- **#53** — repository-wide audit for overclaiming verification language.
+- **#54** — pin/report toolchain versions used by evidence gates.
+
+## Closed epistemic/quality controls
+
+- **#44** — bounded TLC/model-check result retained; formal scope controlled.
+- **#46** — canonical epistemic evidence standard.
+- **#48** — self-describing deterministic evidence artifact.
+- **#49** — falsifier/revision conditions.
+- **#50** — separation of correctness/evaluation/formal/security/runtime evidence classes.
+- **#52** — current-state provenance requirement.
+- **#55** — canonical claim/evidence index.
+- **#56** — explicit formal-model scope control.
+- **#57** — explicit deployment-unavailable vs deployment/runtime state separation.
 
 ## Current evidence hierarchy
 
@@ -26,19 +48,6 @@ This index maps high-impact claims to the evidence class actually supported by c
 3. Exact-claim evidence outranks adjacent or proxy evidence.
 4. Independent evidence outranks self-authored assertions when validating efficacy.
 5. Contradictory evidence remains visible and must trigger reconciliation or claim downgrade.
-
-## Repository quality backlog
-
-- **#47** — formatting/type debt cleanup.
-- **#48** — self-describing evidence artifact schema.
-- **#49** — falsifier/revision conditions.
-- **#50** — explicit separation of CI correctness and evidence gates.
-- **#51** — supported-runtime policy.
-- **#52** — current-state provenance.
-- **#53** — overclaiming language scan.
-- **#54** — toolchain version pin/reporting.
-- **#55** — canonical claim/evidence indexing.
-- **#56** — formal-model scope control.
 
 ## Status vocabulary
 
