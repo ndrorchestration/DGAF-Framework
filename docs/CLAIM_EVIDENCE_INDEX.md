@@ -2,7 +2,7 @@
 
 **Last reconciled:** 2026-08-16  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`  
-**Current main commit:** `a6dfcc2f28db641fcd541c32c8b55a3d892f7496`
+**Current main commit:** `7a258f15c7f7b9f153931b19ca9ef107285ced1a`
 
 This index maps high-impact claims to the evidence class actually supported by current retained evidence. It is intentionally conservative and claim-specific.
 
