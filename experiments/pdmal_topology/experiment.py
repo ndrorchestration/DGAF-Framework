@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from artifacts import blind_rows, environment_commit_short, write_csv
@@ -31,7 +32,10 @@ def run_structural_pilot(seed_count: int = 50) -> list[dict]:
 
 def persist_masked_pilot(seed_count: int = 50, output_dir: str | Path = "artifacts/pilot") -> tuple[Path, str]:
     """Persist a topology-masked CSV and SHA-256 digest before any analysis."""
-    rows = blind_rows(run_structural_pilot(seed_count))
+    secret = os.environ.get("PDMAL_BLINDING_KEY")
+    if not secret:
+        raise RuntimeError("PDMAL_BLINDING_KEY must be supplied externally for pilot execution")
+    rows = blind_rows(run_structural_pilot(seed_count), secret)
     return write_csv(rows, environment_commit_short(), output_dir)
 
 
