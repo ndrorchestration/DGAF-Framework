@@ -18,7 +18,7 @@ def build_topologies(seed: int) -> dict[str, nx.Graph]:
         "ring": nx.cycle_graph(20),
         "pdmal": nx.dodecahedral_graph(),
         "random_regular": nx.random_regular_graph(3, 20, seed=seed),
-        "small_world": nx.watts_strogatz_graph(20, 3, 0.3, seed=seed),
+        "small_world": nx.watts_strogatz_graph(20, 4, 0.3, seed=seed),
         "complete": nx.complete_graph(20),
     }
 
@@ -54,6 +54,7 @@ def structural_metrics(
     largest = max((len(c) for c in nx.connected_components(graph)), default=0)
     return {
         "nodes_remaining": remaining,
+        "largest_component_size": largest,
         "largest_component_fraction": largest / original_nodes,
         "connected": nx.is_connected(graph) if remaining else False,
         "connectivity_threshold_met": largest >= original_nodes / 2,
