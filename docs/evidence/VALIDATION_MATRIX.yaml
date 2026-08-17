@@ -1,0 +1,16 @@
+version: 1
+purpose: Map DGAF evidence maturity to required evidence-producing activities.
+states:
+  SPECIFIED:
+    required: [claim, construct, context, metric, method, provenance]
+  TESTED:
+    required: [SPECIFIED, executed_test, observed_result]
+  REPRODUCIBLE:
+    required: [TESTED, frozen_inputs, deterministic_or_seeded_replay, environment_record]
+  VERIFIED:
+    required: [REPRODUCIBLE, expected_behavior, independent_check_or_repeated_execution]
+  VALIDATED:
+    required: [VERIFIED, intended_use_context, validity_argument, uncertainty, limitations]
+  EMPIRICALLY_SUPPORTED:
+    required: [VALIDATED, sufficient_replication, predeclared_analysis, reported_effect_and_uncertainty]
+rule: Never promote maturity automatically from schema validation alone.
