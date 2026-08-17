@@ -32,4 +32,17 @@ jobs:
       - name: Verify persistent artifact path and SHA-256
         working-directory: experiments/pdmal_topology
         run: |
-          python -c "from artifacts import persist if False else write_csv; print('artifact persistence library import verified')"
+          python - <<'PY'
+          from pathlib import Path
+          from artifacts import write_csv
+          path, digest = write_csv(
+              [{"seed": 0, "topology": "Topology_A", "largest_component_fraction": 1.0}],
+              "dryrun1",
+              "/tmp/pdmal-artifact",
+          )
+          assert path.exists()
+          assert len(digest) == 64
+          assert path.with_suffix(path.suffix + ".sha256").exists()
+          print(f"artifact={path}")
+          print(f"sha256={digest}")
+          PY
