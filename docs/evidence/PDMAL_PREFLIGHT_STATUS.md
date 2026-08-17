@@ -15,6 +15,10 @@
 - Independent RNG streams are defined for topology, failure, workload, and initialization conditions.
 - Byte-level determinism, semantic, schema, checksum, and artifact checks are included in the dry-run workflow.
 
+## Epistemic boundary
+
+The pre-flight work establishes that safeguards and execution machinery are implemented and that fail-closed behavior has been observed. It does **not** establish that the experimental protocol is empirically sound, that its metrics are valid for all intended uses, or that PDMAL has any performance advantage. Those questions remain subject to the preregistered experiment and later validation.
+
 ## Blocking condition
 
 The GitHub Actions repository secret `PDMAL_BLINDING_KEY` is not currently available to the workflow. The last dry run therefore stopped at the fail-closed gate. This is a successful safety-gate failure, not an instrumentation pass.
@@ -37,6 +41,19 @@ After configuration, the next dry run must pass:
 8. one-seed execution across all five topologies.
 
 Only then may the state change to **Instrumentation: VERIFIED**.
+
+## Post-verification execution sequence
+
+After instrumentation verification:
+
+1. Execute the frozen 50-seed pilot.
+2. Assess only the preregistered blinded pilot criteria.
+3. Determine final sample size using the preregistered power-analysis method.
+4. Freeze and record any justified protocol amendment before confirmatory execution.
+5. Execute the final blinded experiment.
+6. Archive raw data and checksums before unblinding.
+7. Unblind only after data collection and sample-size decisions are locked.
+8. Run the preregistered analysis and report effect estimates, uncertainty, deviations, and scope limitations.
 
 ## Pilot prohibition
 
