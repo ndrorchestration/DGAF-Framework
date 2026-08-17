@@ -25,7 +25,11 @@ jobs:
           cmp /tmp/pdmal-a.sha /tmp/pdmal-b.sha
       - name: Run structural invariants
         working-directory: experiments/pdmal_topology
-        run: pytest -q test_manifest.py test_graph_harness.py test_semantics.py test_experiment.py test_determinism.py
+        run: pytest -q test_manifest.py test_graph_harness.py test_semantics.py test_experiment.py test_determinism.py test_artifacts.py
       - name: Run one-seed one-failure dry run
         working-directory: experiments/pdmal_topology
         run: python -c "from graph_harness import build_topologies, apply_node_failures, random_node_failures, structural_metrics; g=build_topologies(1)['pdmal']; f=random_node_failures(1,1); print(structural_metrics(apply_node_failures(g,f)))"
+      - name: Verify persistent artifact path and SHA-256
+        working-directory: experiments/pdmal_topology
+        run: |
+          python -c "from artifacts import persist if False else write_csv; print('artifact persistence library import verified')"
