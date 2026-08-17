@@ -15,25 +15,43 @@ This pilot is evidence-producing infrastructure. It does not establish PDMAL sup
 - Primary structural outcomes: largest-component fraction and connectivity probability.
 - Application outcome: scalar-consensus task success.
 - Pilot: 50 seeds.
-- Final sample size: determined after pilot/power analysis; no post-hoc target chosen from observed significance.
+- Final sample size: determined after the preregistered power analysis; no post-hoc target may be selected from observed significance.
+- Small-world control: Watts-Strogatz `n=20, k=4, p=0.3`; `k=3` is not used because the generator requires an even `k`.
 
-## Required artifacts
+## Pilot stopping criteria
 
-Each execution must preserve:
+The pilot is adequate only when the predeclared criteria are evaluated on masked labels:
+
+- runtime per seed <= 300 seconds;
+- primary-metric SD <= 0.15 for at least 4 of 5 masked topology labels;
+- maximum masked paired-comparison 95% CI width <= 0.40.
+
+Failure requires the predeclared action in `manifest.yaml`; criteria cannot be changed after inspecting unmasked topology identities.
+
+## Reproducibility and storage
+
+Each pilot execution must preserve:
 
 1. frozen manifest;
 2. repository commit;
-3. Python/dependency environment;
-4. seed family;
+3. exact experiment dependency versions;
+4. separate seed families for topology, failure, workload, and initialization where applicable;
 5. raw per-trial observations;
 6. analysis code;
 7. generated summary;
 8. deviations and exclusions;
-9. artifact hashes.
+9. SHA-256 checksum of the raw artifact;
+10. persistent CI artifact before analysis begins.
+
+Pilot raw data use the filename pattern `raw_pilot_<commit_short>_<utc_timestamp>.csv` plus a `.sha256` sidecar.
+
+## Blinding
+
+Pilot precision/power preparation uses topology-masked labels generated from an HMAC-SHA256 mapping that requires the external `PDMAL_BLINDING_KEY`. The key is not stored in this repository. The repository therefore cannot reveal which masked label corresponds to PDMAL without the external unblinding key.
 
 ## Comparison rule
 
-Topology generation, failure selection, initial states, workload, protocol, compute budget, and stopping condition must be held constant wherever applicable. Randomized topology families receive deterministic per-seed generation from the manifest.
+Topology generation, failure selection, initial states, workload, protocol, compute budget, and stopping condition must be held constant wherever applicable. Randomized topology families receive deterministic per-seed generation from the manifest. The largest-component fraction uses the original population denominator N, not the number of surviving nodes.
 
 ## Claims prohibited before analysis
 
@@ -41,4 +59,4 @@ Do not state that PDMAL is superior, optimal, more resilient, or Pareto-efficien
 
 ## Execution status
 
-The structural harness and pilot runner are implemented. No pilot result is asserted by the implementation itself. CI must verify the instrumentation before the 50-seed dataset is treated as evidence.
+The structural harness, post-failure semantic tests, persistence layer, masking layer, and deterministic case runner are implemented. The mandatory CI dry-run workflow is present, but the current branch head does not yet expose a completed GitHub Actions run. Therefore instrumentation remains **NOT VERIFIED** and no pilot dataset has been promoted to evidence.
