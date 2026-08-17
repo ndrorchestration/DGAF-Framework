@@ -1,0 +1,35 @@
+id: DGAF-CLAIM-GOV-SCHEMA-CONFORMANCE
+claim: DGAF governance records conform to the canonical governance schema.
+claim_class: HYPOTHESIS
+context:
+  intended_use: Validate schema-level governance record conformance.
+  scope: Repository-native governance fixtures.
+construct: Governance schema conformance
+measurement:
+  metric: conformance_rate
+  unit: fraction of evaluated records
+  baseline: expected schema defined by the repository
+  method: deterministic schema validation against frozen fixtures
+  ground_truth: manually reviewed valid and invalid fixture corpus
+controls:
+  - frozen fixture corpus
+  - deterministic validator version
+  - explicit expected outcomes
+uncertainty:
+  description: Schema conformance does not establish operational governance effectiveness.
+  limitations:
+    - Does not validate real-world agent behavior.
+    - Does not establish reduction in governance failures.
+provenance:
+  source: DGAF repository evaluation fixture
+  recorded_at: 2026-08-17
+external_references:
+  - source: NIST-TEVV
+    role: methodology
+    scope: verification/validation terminology
+  - source: NIST-AIRMF
+    role: background
+    scope: trustworthy AI governance context
+evidence_maturity: SPECIFIED
+validation_status: NOT_VALIDATED
+last_verified: null
