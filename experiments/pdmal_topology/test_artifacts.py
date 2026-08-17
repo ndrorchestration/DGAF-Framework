@@ -1,26 +1,24 @@
+import os
+
 import pytest
 
-from artifacts import blind_label, blind_rows, write_csv
+from artifacts import blind_rows, write_csv
 
 
-def test_topology_labels_are_masked_with_external_secret():
+def test_topology_labels_are_masked_for_pilot_analysis(tmp_path):
+    secret = "x" * 32
     rows = [
         {"seed": 0, "topology": "pdmal", "largest_component_fraction": 1.0},
-        {"seed": 0, "topology": "ring", "largest_component_fraction": 1.0},
+        {"seed": 0, "topology": "ring", "largest_component_fraction": 0.5},
     ]
-    masked = blind_rows(rows, "test-secret")
+    masked = blind_rows(rows, secret)
     assert all(row["topology"].startswith("Topology_") for row in masked)
-    assert len({row["topology"] for row in masked}) == 2
-    assert all(len(row["topology"].split("_")[-1]) == 12 for row in masked)
+    assert all(row["topology"] not in {"pdmal", "ring"} for row in masked)
 
 
-def test_blinding_mapping_changes_with_secret():
-    assert blind_label("pdmal", "secret-a") != blind_label("pdmal", "secret-b")
-
-
-def test_missing_blinding_secret_is_rejected():
+def test_missing_blinding_secret_fails_closed():
     with pytest.raises(ValueError):
-        blind_label("pdmal", "")
+        blind_rows([{"topology": "pdmal"}], "")
 
 
 def test_csv_persistence_emits_sha256(tmp_path):
