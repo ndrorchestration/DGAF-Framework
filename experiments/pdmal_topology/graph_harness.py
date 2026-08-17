@@ -5,6 +5,8 @@ from typing import Callable
 
 import networkx as nx
 
+from seeds import derive_seed
+
 
 @dataclass(frozen=True)
 class TopologySpec:
@@ -13,12 +15,13 @@ class TopologySpec:
 
 
 def build_topologies(seed: int) -> dict[str, nx.Graph]:
-    """Build the preregistered topology family deterministically for a seed."""
+    """Build the preregistered topology family deterministically for a master seed."""
+    topology_seed = derive_seed(seed, "topology")
     return {
         "ring": nx.cycle_graph(20),
         "pdmal": nx.dodecahedral_graph(),
-        "random_regular": nx.random_regular_graph(3, 20, seed=seed),
-        "small_world": nx.watts_strogatz_graph(20, 4, 0.3, seed=seed),
+        "random_regular": nx.random_regular_graph(3, 20, seed=topology_seed),
+        "small_world": nx.watts_strogatz_graph(20, 4, 0.3, seed=topology_seed),
         "complete": nx.complete_graph(20),
     }
 
@@ -29,7 +32,8 @@ def random_node_failures(seed: int, count: int, n: int = 20) -> tuple[int, ...]:
         raise ValueError("failure count must be between 0 and n")
     import random
 
-    rng = random.Random(seed)
+    failure_seed = derive_seed(seed, "failure")
+    rng = random.Random(failure_seed)
     return tuple(sorted(rng.sample(range(n), count)))
 
 
@@ -43,11 +47,7 @@ def apply_node_failures(graph: nx.Graph, failures: tuple[int, ...]) -> nx.Graph:
 def structural_metrics(
     graph: nx.Graph, *, original_nodes: int = 20
 ) -> dict[str, float | int | bool]:
-    """Compute preregistered structural outcomes for a post-failure graph.
-
-    Largest-component fraction uses the original population N, and the
-    connectivity threshold is the preregistered >= N/2 threshold.
-    """
+    """Compute preregistered structural outcomes for a post-failure graph."""
     if original_nodes <= 0:
         raise ValueError("original_nodes must be positive")
     remaining = graph.number_of_nodes()
