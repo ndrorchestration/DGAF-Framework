@@ -1,6 +1,7 @@
 import networkx as nx
 
 from graph_harness import apply_node_failures, build_topologies, random_node_failures, structural_metrics
+from seeds import derive_seed
 
 
 def test_topology_invariants():
@@ -10,6 +11,7 @@ def test_topology_invariants():
     assert graphs["ring"].number_of_edges() == 20
     assert graphs["pdmal"].number_of_edges() == 30
     assert graphs["random_regular"].number_of_edges() == 30
+    assert graphs["small_world"].number_of_edges() == 40
     assert graphs["complete"].number_of_edges() == 190
     assert nx.is_connected(graphs["pdmal"])
     assert nx.node_connectivity(graphs["pdmal"]) == 3
@@ -23,6 +25,12 @@ def test_seed_reproducibility_for_randomized_topologies():
     b = build_topologies(123)
     for name in ("random_regular", "small_world"):
         assert nx.utils.graphs_equal(a[name], b[name])
+
+
+def test_rng_streams_are_deterministic_but_distinct():
+    assert derive_seed(123, "topology") == derive_seed(123, "topology")
+    assert derive_seed(123, "failure") == derive_seed(123, "failure")
+    assert derive_seed(123, "topology") != derive_seed(123, "failure")
 
 
 def test_failure_sets_are_reproducible_and_without_replacement():
