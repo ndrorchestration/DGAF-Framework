@@ -40,3 +40,12 @@ def test_failure_application_and_metrics():
     assert result.number_of_nodes() == 18
     assert 0.0 <= metrics["largest_component_fraction"] <= 1.0
     assert metrics["component_count"] >= 1
+
+
+def test_population_denominator_and_connectivity_threshold_are_frozen():
+    graph = build_topologies(1)["pdmal"]
+    result = apply_node_failures(graph, tuple(range(10)))
+    metrics = structural_metrics(result, original_nodes=20)
+    assert metrics["nodes_remaining"] == 10
+    assert metrics["largest_component_fraction"] <= 0.5
+    assert metrics["connectivity_threshold_met"] is True
