@@ -16,13 +16,13 @@
     "Q02": { "score": 9,  "verdict": "PASS", "evidence": "Trigger clearly defined. Non-overlapping: P-34 is calibration prerequisite FOR P-27, not substitute." },
     "Q03": { "score": 9,  "verdict": "PASS (BLG-P34-01)", "evidence": "Decision gate encodes tradeoffs. Explicit tradeoff block missing vs P-01–P-10 format. Resolve at merge." },
     "Q04": { "score": 10, "verdict": "PASS", "evidence": "KAPPA v3.5→v3.6, 14×12 grid, governance_clear 82.6%→100%, BLG-01 closed. Strongest evidence in P-27+ range." },
-    "Q05": { "score": 8,  "verdict": "PASS (BLG-P34-02)", "evidence": "Validated via KAPPA calibration work. No explicit components/ ref path listed. Add at merge." },
+    "Q05": { "score": 8,  "verdict": "PASS (BLG-P34-02)", "evidence": "KAPPA calibration work supports the attestation; no explicit implementation/reference path is listed, so this is not independent implementation validation." },
     "Q06": { "score": 10, "verdict": "PASS", "evidence": "P-27, P-30, P-03 all cross-referenced by number. Consistent across all registry files." },
     "Q07": { "score": 10, "verdict": "PASS", "evidence": "Layer 7 Router Calibration — correct. Calibration method for P-27 and P-28." },
     "Q08": { "score": 10, "verdict": "PASS", "evidence": "Compositionally distinct from all P-01–P-33. COMPOSE registration correct." },
-    "Q09": { "score": 9,  "verdict": "PASS", "evidence": "NIST Measure + EU AI Act Art.9 — accurate. Art.13 advisory only." },
+    "Q09": { "score": 9, "verdict": "PASS", "evidence": "NIST Measure + EU AI Act Art.9 — accurate. Art.13 advisory only." },
     "Q10": { "score": 10, "verdict": "PASS", "evidence": "Full provenance: S066, SESSION_ANCHOR, ENSEMBLE_ROSTER, CO_ORCH_QUEUE all confirm." },
-    "Q11": { "score": 9,  "verdict": "PASS", "evidence": "Recommended for adoption. Empirical-before-ML is high-value governance heuristic. Advisory: finalize spec format at merge." }
+    "Q11": { "score": 9, "verdict": "PASS", "evidence": "Recommended for adoption. Empirical-before-ML is high-value governance heuristic. Advisory: finalize spec format at merge." }
   },
   "scoring_summary": {
     "total_score": 104,
@@ -48,7 +48,7 @@
     ],
     "open_blg_count": 2,
     "attestation_result": "CONDITIONAL",
-    "attestation_note": "A-TIER 94.5% with 2 minor open BLGs. Both resolvable at Phase 3 merge. Pattern structurally sound, empirically validated, correctly layered, recommended for canonical promotion. Conditional attestation valid per P-30 gate. Ender ratified 2026-05-30."
+    "attestation_note": "A-TIER 94.5% with 2 minor open BLGs. Both resolvable at Phase 3 merge. Pattern structurally sound, empirically supported by the cited KAPPA calibration work, correctly layered, and recommended for canonical promotion. Conditional attestation remains valid per P-30 gate. Ender ratified 2026-05-30."
   },
   "ratification_record": {
     "ratified_by": "Ender (Human Principal)",
