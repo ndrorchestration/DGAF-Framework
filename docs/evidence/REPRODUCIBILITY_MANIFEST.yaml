@@ -1,0 +1,13 @@
+version: 1
+required:
+  - repository_commit
+  - dependency_lock
+  - runtime_version
+  - operating_environment
+  - experiment_manifest
+  - random_seed_family
+  - raw_data_location
+  - analysis_script
+  - result_artifact_hashes
+  - deviations
+status: template
