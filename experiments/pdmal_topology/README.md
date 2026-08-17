@@ -38,3 +38,7 @@ Topology generation, failure selection, initial states, workload, protocol, comp
 ## Claims prohibited before analysis
 
 Do not state that PDMAL is superior, optimal, more resilient, or Pareto-efficient before the corresponding preregistered analysis has been executed.
+
+## Execution status
+
+The structural harness and pilot runner are implemented. No pilot result is asserted by the implementation itself. CI must verify the instrumentation before the 50-seed dataset is treated as evidence.
