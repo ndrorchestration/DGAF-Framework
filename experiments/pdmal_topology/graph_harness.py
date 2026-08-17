@@ -40,13 +40,22 @@ def apply_node_failures(graph: nx.Graph, failures: tuple[int, ...]) -> nx.Graph:
     return result
 
 
-def structural_metrics(graph: nx.Graph) -> dict[str, float | int | bool]:
-    """Compute preregistered structural outcomes for a post-failure graph."""
-    n = graph.number_of_nodes()
+def structural_metrics(
+    graph: nx.Graph, *, original_nodes: int = 20
+) -> dict[str, float | int | bool]:
+    """Compute preregistered structural outcomes for a post-failure graph.
+
+    Largest-component fraction uses the original population N, and the
+    connectivity threshold is the preregistered >= N/2 threshold.
+    """
+    if original_nodes <= 0:
+        raise ValueError("original_nodes must be positive")
+    remaining = graph.number_of_nodes()
     largest = max((len(c) for c in nx.connected_components(graph)), default=0)
     return {
-        "nodes_remaining": n,
-        "largest_component_fraction": largest / n if n else 0.0,
-        "connected": nx.is_connected(graph) if n else False,
-        "component_count": nx.number_connected_components(graph) if n else 0,
+        "nodes_remaining": remaining,
+        "largest_component_fraction": largest / original_nodes,
+        "connected": nx.is_connected(graph) if remaining else False,
+        "connectivity_threshold_met": largest >= original_nodes / 2,
+        "component_count": nx.number_connected_components(graph) if remaining else 0,
     }
