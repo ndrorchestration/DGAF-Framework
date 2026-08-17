@@ -43,9 +43,8 @@ def test_failure_application_and_metrics():
 
 
 def test_population_denominator_and_connectivity_threshold_are_frozen():
-    graph = build_topologies(1)["pdmal"]
-    result = apply_node_failures(graph, tuple(range(10)))
-    metrics = structural_metrics(result, original_nodes=20)
+    graph = nx.path_graph(10)
+    metrics = structural_metrics(graph, original_nodes=20)
     assert metrics["nodes_remaining"] == 10
-    assert metrics["largest_component_fraction"] <= 0.5
+    assert metrics["largest_component_fraction"] == 0.5
     assert metrics["connectivity_threshold_met"] is True
