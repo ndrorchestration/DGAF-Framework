@@ -16,7 +16,7 @@ experiment:
       variance: increase pilot seeds to 100 before power analysis; document amendment and rationale
       precision: increase pilot seeds to 100 before power analysis; document amendment and rationale
 
- topologies:
+topologies:
   ring: cycle_graph(20)
   pdmal: dodecahedral_graph()
   random_regular: random_regular_graph(3,20)
