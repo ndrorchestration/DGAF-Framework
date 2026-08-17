@@ -2,18 +2,25 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import hmac
 import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
 TOPOLOGIES = ("ring", "pdmal", "random_regular", "small_world", "complete")
-BLIND_LABELS = {name: f"Topology_{chr(65 + i)}" for i, name in enumerate(TOPOLOGIES)}
 
 
-def blind_rows(rows: Iterable[dict]) -> list[dict]:
-    """Return copies with topology identities masked for pilot precision work."""
-    return [{**row, "topology": BLIND_LABELS[row["topology"]]} for row in rows]
+def blind_label(topology: str, secret: str) -> str:
+    if not secret:
+        raise ValueError("a non-empty external blinding secret is required")
+    digest = hmac.new(secret.encode("utf-8"), topology.encode("utf-8"), hashlib.sha256).hexdigest()
+    return f"Topology_{digest[:12]}"
+
+
+def blind_rows(rows: Iterable[dict], secret: str) -> list[dict]:
+    """Return copies with topology identities masked using an external secret."""
+    return [{**row, "topology": blind_label(row["topology"], secret)} for row in rows]
 
 
 def write_csv(rows: Iterable[dict], commit_short: str, output_dir: str | Path) -> tuple[Path, str]:
