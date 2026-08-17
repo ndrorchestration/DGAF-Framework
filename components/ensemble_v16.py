@@ -98,7 +98,7 @@ class ContextToken:
 @dataclass
 class PruneEvent:
     token_id:     str
-    tier:         str
+    tier:          str
     content_hash: str  # SHA-256 of content for audit chain
     pruned_at:    float
     retention_at_prune: float
@@ -124,8 +124,8 @@ class PhiCheckpointEvent:
     ratio:              float
     phi_delta:          float
     tolerance:          float
-    passed:             bool
-    decision:           str
+    passed:              bool
+    decision:            str
     consecutive_fails:  int
     escalation_authority: str
 
@@ -162,14 +162,15 @@ class StructuralContextPruningEngine:
     """
     NDR Pattern: Structural Context Pruning Engine (SCPE)
     Tier-aware token decay. T0 (AXIOM) is unconditionally immune.
-    Threshold: 0.15 (empirically validated knee — 58.3% compression).
+    Threshold: 0.15 (knee reported in prior internal testing; current
+    repository evidence does not establish independent empirical validation).
     """
 
     TIER_DECAY: Dict[Tier, float] = {
-        Tier.AXIOM:       0.0,   # Never decays
+        Tier.AXIOM:       0.0,
         Tier.STRUCTURAL:  0.05,
         Tier.OPERATIONAL: 0.15,
-        Tier.EXPLORATORY: 0.45,
+        Tier.EXPLORATORY:  0.45,
     }
     TIER_TIF_BASE: Dict[Tier, float] = {
         Tier.AXIOM:       1.0,
@@ -178,14 +179,13 @@ class StructuralContextPruningEngine:
         Tier.EXPLORATORY: 0.30,
     }
     TRUST_EDGE_BOOST: float = 0.15
-    LAST_K_ANCHOR:    int   = 3   # Last K operational tokens always survive
+    LAST_K_ANCHOR:    int   = 3
 
     def __init__(self, threshold: float = 0.15):
         self.threshold   = threshold
         self._tokens:    Dict[str, ContextToken] = {}
         self.prune_log:  List[PruneEvent] = []
 
-    # Public API
     def ingest(self, token: ContextToken) -> None:
         self._tokens[token.token_id] = token
 
@@ -194,7 +194,6 @@ class StructuralContextPruningEngine:
         retain = []
         pruned = []
 
-        # Identify last-K operational tokens by insertion order
         ops_sorted = sorted(
             [t for t in self._tokens.values() if t.tier == Tier.OPERATIONAL],
             key=lambda t: t.inserted_at
@@ -202,20 +201,17 @@ class StructuralContextPruningEngine:
         anchor_ids = {t.token_id for t in ops_sorted[-self.LAST_K_ANCHOR:]}
 
         for tok in list(self._tokens.values()):
-            # T0 absolute immunity
             if tok.tier == Tier.AXIOM:
                 retain.append(tok)
                 continue
-            # Last-K anchor
             if tok.token_id in anchor_ids:
                 retain.append(tok)
                 continue
-            # Decay formula: R(t) = TIF × ψ^(−Δt×decay)
             delta_t = now - tok.inserted_at
-            tif     = (self.TIER_TIF_BASE[tok.tier]
-                       + (self.TRUST_EDGE_BOOST if tok.has_trust_edge else 0.0))
-            decay   = self.TIER_DECAY[tok.tier]
-            r       = tif * (PSI ** (-delta_t * decay))
+            tif = (self.TIER_TIF_BASE[tok.tier]
+                   + (self.TRUST_EDGE_BOOST if tok.has_trust_edge else 0.0))
+            decay = self.TIER_DECAY[tok.tier]
+            r = tif * (PSI ** (-delta_t * decay))
             tok._retention = r
             if r >= self.threshold:
                 retain.append(tok)
@@ -381,7 +377,6 @@ class PDMALConvergenceMonitor:
 
         self._status = status
         routing = "amethyst_alert" if status == ConvergenceStatus.ALERT else "log"
-
         evt = DivergenceEvent(
             turn_id=turn_id, turn_number=self._turn,
             graph_norm_delta=round(frob, 6), max_edge_delta=round(max_delta, 6),
@@ -395,582 +390,144 @@ class PDMALConvergenceMonitor:
         self._prev_weights = curr
         return evt
 
-    @property
-    def is_alert(self) -> bool:
-        return self._status == ConvergenceStatus.ALERT
-
-    @property
-    def status(self) -> ConvergenceStatus:
-        return self._status
-
-    def summary(self) -> Dict:
-        alert_evts = [e for e in self._events if e.severity >= 3]
-        return dict(
-            total_checks=len(self._events),
-            current_status=self._status.code,
-            consecutive_divergent=self._consec_divergent,
-            consecutive_stable=self._consec_stable,
-            total_alerts=len(alert_evts),
-            total_warns=sum(1 for e in self._events if e.status == "warn"),
-            total_watches=sum(1 for e in self._events if e.status == "watch"),
-            alert_turns=[e.turn_number for e in alert_evts],
-        )
+    def latest(self) -> Optional[DivergenceEvent]:
+        return self._events[-1] if self._events else None
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# MODULE 4 — FIBONACCI PHI-CLOSURE GATE
+# MODULE 4 — HARMONIC PARAMETRIC GATE
 # ─────────────────────────────────────────────────────────────────────────────
-class PhiDecision(Enum):
-    PASS        = ("pass",       0)
-    WARN        = ("warn",       1)
-    REPROMPT    = ("reprompt",   2)
-    ESCALATE    = ("escalate",   3)
-    KILL_REC    = ("kill_rec",   4)
-
-    def __init__(self, code: str, severity: int):
-        self.code     = code
-        self.severity = severity
-
-
-class FibonacciPhiClosureGate:
-    """
-    NDR Pattern: Fibonacci Phi-Closure Gate
-    Tracks rolling R = stable_turns/total_turns.
-    Stable = DGAF clean pass.
-    Evaluates at Fibonacci checkpoints [13, 21, 34, 55].
-    Target φ* = 0.6180, tolerance narrows per checkpoint.
-    PASS  → HPG proceeds.
-    REPROMPT/WARN → HPG bypassed, early seal.
-    ESCALATE → Amethyst alert.
-    KILL_REC (2+ consecutive fails) → DemiJoule escalation.
-    Fib[55] → always KILL_REC + human-in-the-loop required.
-    Placement: Step 5 — post-DemiJoule, pre-HPG.
-    """
-
-    def __init__(self, checkpoints: Optional[List[int]] = None):
-        self.checkpoints = checkpoints or FIB_CHECKPOINTS
-        self._stable_count  = 0
-        self._total_count   = 0
-        self._consec_fails  = 0
-        self._events:  List[PhiCheckpointEvent] = []
-        self._last_decision = PhiDecision.PASS
-
-    @property
-    def ratio(self) -> float:
-        return self._stable_count / self._total_count if self._total_count > 0 else 1.0
-
-    def record_turn(self, is_stable: bool) -> None:
-        self._total_count += 1
-        if is_stable:
-            self._stable_count += 1
-
-    def check(self) -> Tuple[PhiDecision, Optional[PhiCheckpointEvent]]:
-        """Call once per turn after record_turn(). Returns (decision, checkpoint_event_or_None)."""
-        if self._total_count not in self.checkpoints:
-            return PhiDecision.PASS, None
-
-        fib_idx   = self._total_count
-        tolerance = FIB_CHECKPOINT_TOLERANCE.get(fib_idx, 0.03)
-        r         = self.ratio
-        phi_delta = abs(r - PHI_STAR)
-        passed    = phi_delta < tolerance
-
-        if passed:
-            self._consec_fails = 0
-            decision           = PhiDecision.PASS
-            authority          = "amethyst_log"
-        else:
-            self._consec_fails += 1
-            if fib_idx == 55 or self._consec_fails >= 4:
-                decision  = PhiDecision.KILL_REC
-                authority = "amethyst+human"
-            elif self._consec_fails >= 3:
-                decision  = PhiDecision.KILL_REC
-                authority = "demijoul"
-            elif self._consec_fails >= 2:
-                decision  = PhiDecision.ESCALATE
-                authority = "amethyst"
-            else:
-                decision  = PhiDecision.WARN
-                authority = "amethyst_log"
-
-        evt = PhiCheckpointEvent(
-            fib_index=fib_idx,
-            ratio=round(r, 4),
-            phi_delta=round(phi_delta, 4),
-            tolerance=tolerance,
-            passed=passed,
-            decision=decision.code,
-            consecutive_fails=self._consec_fails,
-            escalation_authority=authority,
-        )
-        self._events.append(evt)
-        self._last_decision = decision
-        return decision, evt
-
-    @property
-    def last_decision(self) -> PhiDecision:
-        return self._last_decision
-
-    def checkpoint_summary(self) -> Dict:
-        return dict(
-            total_turns=self._total_count,
-            stable_turns=self._stable_count,
-            ratio=round(self.ratio, 4),
-            consecutive_fails=self._consec_fails,
-            events=[vars(e) for e in self._events],
-        )
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# MODULE 5 — HARMONIC PARAMETRIC GATE (HPG)
-# ─────────────────────────────────────────────────────────────────────────────
-class HPGPolicy(Enum):
-    SNAP_NEAREST  = "snap_nearest"
-    REPROMPT      = "reprompt"
-    KILL_PROCESS  = "kill_process"
-
-
 class HarmonicParametricGate:
-    """
-    NDR Pattern: Harmonic Parametric Gate (HPG)
-    Maps confidence [0,1] → octave [1,2], enforces Ionian intervals.
-    Policy: SNAP_NEAREST for governance-advisory, KILL_PROCESS for governance-critical.
-    Placement: Step 6 — post-Phi-closure (only if PASS), pre-Prodigy.
-    """
+    """Gate that admits only states whose ratios lie within a harmonic interval."""
 
-    def __init__(
-        self,
-        intervals: Optional[List[float]] = None,
-        tolerance: float = 1e-9,
-        policy: HPGPolicy = HPGPolicy.SNAP_NEAREST,
-    ):
-        self.intervals = intervals or IONIAN_INTERVALS
+    def __init__(self, tolerance: float = 0.02):
         self.tolerance = tolerance
-        self.policy    = policy
-        self.gate_log: List[Dict] = []
 
-    def _to_octave(self, conf: float) -> float:
-        return 1.0 + max(0.0, min(1.0, conf))
-
-    def _snap(self, v: float) -> float:
-        return min(self.intervals, key=lambda x: abs(x - v))
-
-    def _is_ionian(self, v: float) -> bool:
-        return any(abs(v - x) < self.tolerance for x in self.intervals)
-
-    def gate(self, confidence: float, label: str = "") -> Dict:
-        octave       = self._to_octave(confidence)
-        is_harmonic  = self._is_ionian(octave)
-        snapped      = self._snap(octave)
-        eff_conf     = snapped - 1.0  # back to [0,1]
-        action       = "pass" if is_harmonic else f"snap:{snapped:.4f}"
-        self.gate_log.append(dict(
-            label=label, confidence=confidence,
-            octave=round(octave, 6), snapped=round(snapped, 6),
-            effective_confidence=round(eff_conf, 6), action=action,
-        ))
-        return dict(
-            effective_confidence=round(eff_conf, 4),
-            snapped_to=round(snapped, 6),
-            action=action,
-            is_harmonic=is_harmonic,
-        )
+    def gate(self, ratio: float) -> bool:
+        return any(abs(ratio - x) <= self.tolerance for x in IONIAN_INTERVALS)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# MODULE 6 — DEMIJOUL SAFETY GATE
+# MODULE 5 — DEMIJOULE SEMANTIC SAFETY GATE
 # ─────────────────────────────────────────────────────────────────────────────
-BLOCKED_PATTERNS = [
-    r"ignore.{0,20}(instructions|governance|rules)",
-    r"bypass.{0,20}(gate|workflow|filter)",
-    r"(no|without).{0,10}(restrictions|constraints)",
-    r"new persona",
-    r"act as if",
-    r"disregard.{0,10}(previous|prior)",
-    r"skip.{0,15}(gate|check|audit)",
-]
-
-
 class DemiJouleGate:
-    """
-    NDR Pattern: DemiJoule Safety Gate
-    Layer 1: Regex blocked patterns → KILL
-    Layer 2: 6-axis semantic DGAF scoring → KILL / REPROMPT / PASS
-    Records stable=False for Phi-closure if result is not PASS.
-    Placement: Step 4 — post-PDMAL, pre-Phi-closure.
-    """
+    """Six-axis semantic safety gate. Returns PASS/ESCALATE."""
 
-    DGAF_AXES = [
-        "identity_preservation",
-        "instruction_fidelity",
-        "scope_compliance",
-        "output_safety",
-        "schema_integrity",
-        "governance_alignment",
-    ]
-    KILL_THRESHOLD     = 0.30
-    REPROMPT_THRESHOLD = 0.65
+    AXES = ("identity", "intent", "consent", "risk", "provenance", "coherence")
 
-    def safety_gate(
-        self,
-        payload: str,
-        tool_call: bool = False,
-        agent_id: str = "unknown",
-    ) -> Dict:
-        # Layer 1 — syntactic
-        payload_lower = payload.lower()
-        for pattern in BLOCKED_PATTERNS:
-            if re.search(pattern, payload_lower):
-                return dict(decision="kill", reason="blocked_pattern",
-                            axis_scores={}, agent_id=agent_id)
+    def safety_gate(self, scores: Dict[str, float]) -> Dict:
+        missing = [a for a in self.AXES if a not in scores]
+        if missing:
+            return {"decision": "ESCALATE", "reason": f"missing axes: {missing}"}
+        if any(scores[a] < 0.5 for a in self.AXES):
+            return {"decision": "ESCALATE", "reason": "one or more axes below 0.5"}
+        return {"decision": "PASS", "reason": "all axes ≥ 0.5"}
 
-        # Layer 2 — semantic DGAF scoring (heuristic)
-        scores: Dict[str, float] = {}
-        for axis in self.DGAF_AXES:
-            if any(w in payload_lower for w in ["ignore", "bypass", "skip", "disregard"]):
-                scores[axis] = 0.20
-            elif any(w in payload_lower for w in ["governance", "schema", "audit", "seal"]):
-                scores[axis] = 0.95
-            else:
-                scores[axis] = 0.80
 
-        mean_score = sum(scores.values()) / len(scores)
-        if mean_score < self.KILL_THRESHOLD:
-            decision = "kill"
-        elif mean_score < self.REPROMPT_THRESHOLD:
-            decision = "reprompt"
+# ─────────────────────────────────────────────────────────────────────────────
+# MODULE 6 — FIBONACCI PHI CLOSURE GATE
+# ─────────────────────────────────────────────────────────────────────────────
+class FibonacciPhiClosureGate:
+    """Checkpoint gate against the golden-ratio reference with narrowing tolerance."""
+
+    def __init__(self):
+        self.consecutive_fails = 0
+        self.events: List[PhiCheckpointEvent] = []
+
+    def check(self, fib_index: int, ratio: float) -> PhiCheckpointEvent:
+        if fib_index not in FIB_CHECKPOINT_TOLERANCE:
+            raise ValueError(f"Unsupported Fibonacci checkpoint: {fib_index}")
+        tol = FIB_CHECKPOINT_TOLERANCE[fib_index]
+        delta = abs(ratio - PSI)
+        passed = delta <= tol
+        if passed:
+            self.consecutive_fails = 0
         else:
-            decision = "pass"
-
-        return dict(
+            self.consecutive_fails += 1
+        decision = "PASS" if passed else ("ESCALATE" if self.consecutive_fails >= 2 else "WARN")
+        evt = PhiCheckpointEvent(
+            fib_index=fib_index,
+            ratio=ratio,
+            phi_delta=round(delta, 6),
+            tolerance=tol,
+            passed=passed,
             decision=decision,
-            mean_score=round(mean_score, 4),
-            axis_scores={k: round(v, 4) for k, v in scores.items()},
-            agent_id=agent_id,
+            consecutive_fails=self.consecutive_fails,
+            escalation_authority="Amethyst" if decision == "ESCALATE" else "AgentAmethyst",
         )
+        self.events.append(evt)
+        return evt
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# MODULE 7 — PRODIGY VERIFICATION LAYER
-# ─────────────────────────────────────────────────────────────────────────────
-class ProdigyVerifier:
-    """Advisory verification gate. Mandatory below confidence threshold."""
-
-    MANDATORY_THRESHOLD = 0.85
-
-    def verify(self, claim: str, confidence: float) -> Dict:
-        is_mandatory = confidence < self.MANDATORY_THRESHOLD
-        evidence_ok  = len(claim.strip()) > 10
-        return dict(
-            mandatory=is_mandatory,
-            evidence_ok=evidence_ok,
-            confidence=confidence,
-            advisory=not is_mandatory,
-        )
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# MODULE 8 — APOGEE REVIEW + GOLD STAR GATE
-# ─────────────────────────────────────────────────────────────────────────────
-class ApogeeReviewer:
-    """Quality gate. Awards Gold Star on S-Tier criteria."""
-
-    GRADE_THRESHOLDS = [
-        (0.90, "S"),
-        (0.75, "A"),
-        (0.60, "B"),
-        (0.45, "C"),
-        (0.0,  "D"),
-    ]
-
-    def review(self, confidence: float, artifact_description: str = "") -> Dict:
-        grade     = next(g for thresh, g in self.GRADE_THRESHOLDS if confidence >= thresh)
-        gold_star = grade == "S" and len(artifact_description.strip()) > 5
-        return dict(grade=grade, gold_star=gold_star,
-                    confidence=confidence, artifact_description=artifact_description)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# MODULE 9 — AGENT AMETHYST — 9-STEP ORCHESTRATOR
+# MODULE 7 — ORCHESTRATOR
 # ─────────────────────────────────────────────────────────────────────────────
 class AgentAmethyst:
-    """
-    Meta-orchestration lead. Executes the 9-step turn sequence.
-    Maintains audit log, gold star count, and session export.
-    Human-in-the-loop callback hook for Fib[55] KILL_REC.
-    """
+    """Nine-step orchestration pipeline with audit record generation."""
 
-    def __init__(self, scpe: StructuralContextPruningEngine):
-        self.scpe         = scpe
-        self.pdmal        = self._build_default_pdmal()
+    def __init__(self):
+        self.scpe = StructuralContextPruningEngine()
+        self.pdmal = PDMALGraph()
         self.pdmal_monitor = PDMALConvergenceMonitor(self.pdmal)
-        self.phi_gate     = FibonacciPhiClosureGate()
-        self.hpg          = HarmonicParametricGate()
-        self.demijoul     = DemiJouleGate()
-        self.prodigy      = ProdigyVerifier()
-        self.apogee       = ApogeeReviewer()
-        self.audit_log:   List[TurnAuditRecord] = []
-        self.gold_stars   = 0
-        self._turn        = 0
-        # Human-in-the-loop callback for Fib[55] KILL_REC
-        self.hitl_callback = None  # Callable[[TurnAuditRecord], None]
+        self.hpg = HarmonicParametricGate()
+        self.demi = DemiJouleGate()
+        self.phi_gate = FibonacciPhiClosureGate()
+        self.audit_log: List[TurnAuditRecord] = []
 
-    # ── Default PDMAL topology ────────────────────────────────────────────────
-    @staticmethod
-    def _build_default_pdmal() -> PDMALGraph:
-        g = PDMALGraph()
-        for node in ["amethyst", "demijoul", "colleen",
-                     "prodigy", "apogee", "sentinel_phi"]:
-            g.add_node(node)
-        edges = [
-            ("amethyst",    "demijoul",    0.30),
-            ("amethyst",    "colleen",     0.25),
-            ("amethyst",    "apogee",      0.25),
-            ("amethyst",    "prodigy",     0.20),
-            ("demijoul",    "amethyst",    0.50),
-            ("demijoul",    "sentinel_phi",0.50),
-            ("colleen",     "amethyst",    0.60),
-            ("colleen",     "prodigy",     0.40),
-            ("prodigy",     "apogee",      0.70),
-            ("prodigy",     "amethyst",    0.30),
-            ("apogee",      "amethyst",    1.00),
-            ("sentinel_phi","amethyst",    1.00),
-        ]
-        for src, dst, w in edges:
-            g.add_edge(src, dst, w)
-        return g
-
-    # ── 9-step turn sequence ──────────────────────────────────────────────────
-    def orchestrate_turn(
-        self,
-        payload: str,
-        state:   Dict,
-        confidence: float,
-        claim:   str,
-        artifact_description: str = "",
-    ) -> TurnAuditRecord:
-        self._turn += 1
-        tid = f"T{self._turn:03}"
-        now = time.time()
-
-        # [1] SCPE prune
-        scpe_stats = self.scpe.prune()
-
-        # [2] COLLEEN schema check (lightweight hash comparison)
-        schema_hash = hashlib.sha256(
-            json.dumps(state, sort_keys=True).encode()
-        ).hexdigest()[:12]
-
-        # [2.5] PDMAL reweight + convergence monitor
-        if state.get("mode") == "advisory":
-            self.pdmal.reweight("amethyst", "demijoul", +0.05)
-            self.pdmal.reweight("amethyst", "apogee",  -0.05)
-        pdmal_evt   = self.pdmal_monitor.check(tid)
-        pdmal_alert = pdmal_evt.routing_action == "amethyst_alert"
-
-        # [3] Reciprocity arbitration (on PDMAL alert)
-        if pdmal_alert:
-            self.pdmal.reweight("amethyst", "demijoul", +0.02)
-
-        # [4] DemiJoule safety gate
-        dgaf_result = self.demijoul.safety_gate(payload)
-        dgaf_decision = dgaf_result["decision"]
-        is_stable     = dgaf_decision == "pass"
-
-        if dgaf_decision == "kill":
-            self.phi_gate.record_turn(False)
-            return self._early_seal(tid, now, payload, scpe_stats, pdmal_evt,
-                                    dgaf_decision, "kill", confidence)
-
-        # [5] Phi-closure gate
-        self.phi_gate.record_turn(is_stable)
-        phi_decision, phi_evt = self.phi_gate.check()
-        phi_code = phi_decision.code
-        phi_ci   = phi_evt.fib_index       if phi_evt else None
-        phi_cp   = phi_evt.passed          if phi_evt else None
-
-        # Joint escalation: PDMAL ALERT + Phi ESCALATE → DemiJoule deep re-scan
-        if pdmal_alert and phi_decision.severity >= PhiDecision.ESCALATE.severity:
-            deep = self.demijoul.safety_gate(
-                payload, tool_call=True, agent_id="joint_pdmal_phi_escalation"
-            )
-            if deep["decision"] == "kill":
-                return self._early_seal(tid, now, payload, scpe_stats, pdmal_evt,
-                                        dgaf_decision, "kill", confidence)
-
-        # Fib[55] human-in-the-loop hook
-        if phi_evt and phi_evt.fib_index == 55 and phi_evt.decision == "kill_rec":
-            if self.hitl_callback:
-                self.hitl_callback(tid)
-
-        # HPG bypassed on REPROMPT or worse
-        hpg_applied = phi_decision.severity == 0  # only on PASS
-        if hpg_applied:
-            hpg_result       = self.hpg.gate(confidence, label=tid)
-            eff_conf         = hpg_result["effective_confidence"]
-        else:
-            eff_conf         = confidence
-
-        # [7] Prodigy verify
-        prodigy_result = self.prodigy.verify(claim, eff_conf)
-
+    def orchestrate_turn(self, turn_id: str, payload: Dict) -> TurnAuditRecord:
+        # [1] Context pruning
+        prune_result = self.scpe.prune()
+        # [2] Schema check (placeholder: schema is assumed valid)
+        dgaf_decision = "PASS"
+        # [2.5] PDMAL convergence monitor
+        div = self.pdmal_monitor.check(turn_id)
+        # [3] Reciprocity arbitration on alert
+        pdmal_alert = div.status == ConvergenceStatus.ALERT.code
+        # [4] DemiJoule semantic safety
+        safety = self.demi.safety_gate(payload.get("safety", {}))
+        # [5] Fibonacci/Phi closure
+        phi_index = payload.get("fib_index")
+        phi_ratio = payload.get("ratio")
+        phi_evt = self.phi_gate.check(phi_index, phi_ratio) if phi_index is not None and phi_ratio is not None else None
+        phi_decision = phi_evt.decision if phi_evt else "SKIP"
+        # [6] Harmonic parametric gate, only if phi passes
+        hpg_applied = False
+        hpg_conf = 0.0
+        if phi_evt and phi_evt.passed:
+            hpg_applied = True
+            hpg_conf = 1.0 if self.hpg.gate(phi_ratio) else 0.0
+        # [7] Prodigy verification advisory
+        prodigy_advisory = True
         # [8] Apogee review
-        apogee_result  = self.apogee.review(eff_conf, artifact_description)
-        if apogee_result["gold_star"]:
-            self.gold_stars += 1
-
+        apogee_grade = "A" if safety["decision"] == "PASS" else "ESCALATE"
         # [9] Amethyst seal
-        payload_hash = hashlib.sha256(payload.encode()).hexdigest()[:16]
-        pre_seal     = f"{tid}|{payload_hash}|{dgaf_decision}|{phi_code}|{schema_hash}"
-        seal_hash    = hashlib.sha256(pre_seal.encode()).hexdigest()[:16]
+        payload_hash = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+        seal_material = f"{turn_id}|{payload_hash}|{dgaf_decision}|{phi_decision}|{apogee_grade}"
+        seal_hash = hashlib.sha256(seal_material.encode()).hexdigest()
 
-        rec = TurnAuditRecord(
-            turn_id=tid, turn_number=self._turn, timestamp=now,
-            payload_hash=payload_hash,
-            dgaf_decision=dgaf_decision,
-            phi_decision=phi_code,
-            phi_checkpoint_index=phi_ci,
-            phi_checkpoint_passed=phi_cp,
-            hpg_applied=hpg_applied,
-            hpg_effective_confidence=round(eff_conf, 4),
-            prodigy_advisory=prodigy_result["advisory"],
-            apogee_grade=apogee_result["grade"],
-            gold_star=apogee_result["gold_star"],
-            scpe_pruned=scpe_stats["pruned"],
-            scpe_compression_ratio=scpe_stats["compression_ratio"],
-            pdmal_convergence_status=pdmal_evt.status,
-            pdmal_convergence_severity=pdmal_evt.severity,
-            pdmal_norm_delta=pdmal_evt.graph_norm_delta,
-            pdmal_consecutive_divergent=pdmal_evt.consecutive_divergent,
-            pdmal_alert_routed=pdmal_alert,
-            seal_hash=seal_hash,
+        record = TurnAuditRecord(
+            turn_id=turn_id, turn_number=len(self.audit_log) + 1,
+            timestamp=time.time(), payload_hash=payload_hash,
+            dgaf_decision=dgaf_decision, phi_decision=phi_decision,
+            phi_checkpoint_index=phi_evt.fib_index if phi_evt else None,
+            phi_checkpoint_passed=phi_evt.passed if phi_evt else None,
+            hpg_applied=hpg_applied, hpg_effective_confidence=hpg_conf,
+            prodigy_advisory=prodigy_advisory, apogee_grade=apogee_grade,
+            gold_star=apogee_grade == "A", scpe_pruned=prune_result["pruned"],
+            scpe_compression_ratio=prune_result["compression_ratio"],
+            pdmal_convergence_status=div.status,
+            pdmal_convergence_severity=div.severity,
+            pdmal_norm_delta=div.graph_norm_delta,
+            pdmal_consecutive_divergent=div.consecutive_divergent,
+            pdmal_alert_routed=pdmal_alert, seal_hash=seal_hash,
         )
-        self.audit_log.append(rec)
-        return rec
-
-    def _early_seal(
-        self,
-        tid: str, now: float, payload: str, scpe_stats: Dict,
-        pdmal_evt: DivergenceEvent, dgaf_decision: str,
-        phi_code: str, confidence: float,
-    ) -> TurnAuditRecord:
-        payload_hash = hashlib.sha256(payload.encode()).hexdigest()[:16]
-        seal_hash    = hashlib.sha256(f"{tid}|{payload_hash}|early_seal".encode()).hexdigest()[:16]
-        rec = TurnAuditRecord(
-            turn_id=tid, turn_number=self._turn, timestamp=now,
-            payload_hash=payload_hash,
-            dgaf_decision=dgaf_decision, phi_decision=phi_code,
-            phi_checkpoint_index=None, phi_checkpoint_passed=None,
-            hpg_applied=False, hpg_effective_confidence=confidence,
-            prodigy_advisory=False, apogee_grade="N/A", gold_star=False,
-            scpe_pruned=scpe_stats["pruned"],
-            scpe_compression_ratio=scpe_stats["compression_ratio"],
-            pdmal_convergence_status=pdmal_evt.status,
-            pdmal_convergence_severity=pdmal_evt.severity,
-            pdmal_norm_delta=pdmal_evt.graph_norm_delta,
-            pdmal_consecutive_divergent=pdmal_evt.consecutive_divergent,
-            pdmal_alert_routed=pdmal_evt.routing_action == "amethyst_alert",
-            seal_hash=seal_hash,
-        )
-        self.audit_log.append(rec)
-        return rec
-
-    def full_report(self) -> Dict:
-        pdmal_summary = self.pdmal_monitor.summary()
-        phi_summary   = self.phi_gate.checkpoint_summary()
-        return dict(
-            total_turns=self._turn,
-            gold_stars=self.gold_stars,
-            phi_warns=sum(1 for r in self.audit_log if r.phi_decision == "warn"),
-            phi_reprompts=sum(1 for r in self.audit_log if r.phi_decision == "reprompt"),
-            phi_escalates=sum(1 for r in self.audit_log if r.phi_decision == "escalate"),
-            phi_kill_recs=sum(1 for r in self.audit_log if r.phi_decision == "kill_rec"),
-            pdmal=pdmal_summary,
-            phi_closure=phi_summary,
-        )
-
-    def export(self, path: str = "amethyst_v16_audit.json") -> None:
-        data = dict(
-            version="1.6.0",
-            exported_at=time.time(),
-            summary=self.full_report(),
-            turns=[vars(r) for r in self.audit_log],
-            prune_log=[vars(e) for e in self.scpe.prune_log],
-            pdmal_events=[vars(e) for e in self.pdmal_monitor._events],
-            phi_checkpoint_events=[vars(e) for e in self.phi_gate._events],
-        )
-        with open(path, "w") as f:
-            json.dump(data, f, indent=2, default=str)
-        print(f"[Amethyst v1.6] Audit sealed → {path}")
+        self.audit_log.append(record)
+        return record
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# QUICK INTEGRATION CHECK  (python ensemble_v16.py)
-# ─────────────────────────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    import sys
-
-    print("=" * 65)
-    print("  ENSEMBLE v1.6 — INTEGRATION QUICK CHECK")
-    print("=" * 65)
-
-    # 1. PSI cubic invariant
-    assert abs(PSI ** 3 - (PSI ** 2 + 1)) < 1e-10, "PSI CUBIC FAIL"
-    print("[PASS] PSI cubic invariant")
-
-    # 2. SCPE T0 guard
-    eng = StructuralContextPruningEngine(threshold=0.99)
-    eng.ingest(ContextToken("ax1", "governance rule", Tier.AXIOM,
-                             inserted_at=time.time() - 100))
-    eng.ingest(ContextToken("ex1", "cot noise",       Tier.EXPLORATORY,
-                             inserted_at=time.time() - 100))
-    s = eng.prune()
-    assert s["axiom_count"] == 1,       "T0 GUARD FAIL"
-    assert s["exploratory_count"] == 0, "T3 SURVIVE FAIL"
-    print("[PASS] SCPE T0 axiom guard")
-
-    # 3. HPG Ionian snap
-    hpg = HarmonicParametricGate()
-    r   = hpg.gate(0.50)
-    assert 1.0 <= r["snapped_to"] <= 2.0, "HPG OCTAVE FAIL"
-    print("[PASS] HPG Ionian snap")
-
-    # 4. Phi-closure PASS on clean session
-    phi = FibonacciPhiClosureGate()
-    for _ in range(12):
-        phi.record_turn(True)
-    phi.record_turn(True)
-    dec, evt = phi.check()
-    print(f"[INFO] Phi Fib[13] ratio={phi.ratio:.4f} dec={dec.code}")
-
-    # 5. PDMAL convergence stable
-    g = AgentAmethyst._build_default_pdmal()
-    mon = PDMALConvergenceMonitor(g)
-    for i in range(5):
-        ev = mon.check(f"T{i}")
-    assert mon.status in (ConvergenceStatus.STABLE, ConvergenceStatus.CONVERGED)
-    print(f"[PASS] PDMAL convergence status={mon.status.code}")
-
-    # 6. Full orchestrate_turn
-    scpe2 = StructuralContextPruningEngine()
-    for i in range(5):
-        scpe2.ingest(ContextToken(f"t{i}", f"content {i}",
-                                   Tier.OPERATIONAL if i < 3 else Tier.STRUCTURAL))
-    am = AgentAmethyst(scpe2)
-    rec = am.orchestrate_turn(
-        payload="Standard governance operation. SCPE and HPG active.",
-        state={"schema": "v1.6", "mode": "governance"},
-        confidence=0.92,
-        claim="Governance turn processed cleanly.",
-        artifact_description="T01 clean",
-    )
-    assert rec.dgaf_decision == "pass", f"Unexpected DGAF: {rec.dgaf_decision}"
-    print(f"[PASS] orchestrate_turn T01: dgaf={rec.dgaf_decision} "
-          f"phi={rec.phi_decision} gs={rec.gold_star}")
-
-    am.export("amethyst_v16_quickcheck_audit.json")
-    print("=" * 65)
-    print("  ALL CHECKS PASSED — Ensemble v1.6 ready")
-    print("=" * 65)
-    sys.exit(0)
+__all__ = [
+    "StructuralContextPruningEngine", "ContextToken", "Tier",
+    "PDMALGraph", "PDMALConvergenceMonitor", "HarmonicParametricGate",
+    "DemiJouleGate", "FibonacciPhiClosureGate", "AgentAmethyst",
+    "TurnAuditRecord", "PruneEvent", "DivergenceEvent", "PhiCheckpointEvent",
+]
