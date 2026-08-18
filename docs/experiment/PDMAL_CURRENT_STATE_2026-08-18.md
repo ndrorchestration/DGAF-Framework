@@ -4,7 +4,7 @@
 
 ```text
 Branch:                         epistemic/evidence-architecture-v1
-Latest documentation commit:   48ba60ae7f89d0673a570b96e7f59a58ef5a1cc8
+Latest documentation commit:   b49a245110e19a99d3f4750496ae5817c9af617b
 Previous verified head:        17a9e2e737f54046a1f1f93dbd70d287825fc6ee
 Epistemic CI on 17a9e2e7:      PASS — run 32098754363
 PDMAL pre-freeze CI on 17a9e2e7: PASS — run 32098754451
@@ -51,6 +51,12 @@ The adapter must:
 7. fail closed on interface, serialization, timeout, or decision-contract errors.
 
 No free-form natural-language interpretation, hidden model call, or discretionary decision may occur in the experimental loop.
+
+## Documentation / issue references
+
+- Candidate adapter specification: `docs/experiment/PDMAL_TGL_ADAPTER_SPEC_v0.7.md`
+- Current-state record: `docs/experiment/PDMAL_CURRENT_STATE_2026-08-18.md`
+- Interface mismatch tracker: GitHub issue `#71`
 
 ## Remaining gates
 
