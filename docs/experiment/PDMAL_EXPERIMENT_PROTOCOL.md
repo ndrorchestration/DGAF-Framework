@@ -13,11 +13,11 @@ supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
 
 ## Status
 
-**PRE-FREEZE / PANEL-ADJUDICATED / NO DATA COLLECTION AUTHORIZED**
+PRE-FREEZE / PANEL-ADJUDICATED / NO DATA COLLECTION AUTHORIZED
 
 This document is the consolidated control document for the planned PDMAL empirical evaluation. The scientific and methodological decisions have been adjudicated. The protocol remains `PRE-FREEZE` until the implementation provenance and execution-control fields identified below are concretely verified and the final contract is committed with a freeze SHA and timestamp.
 
-**No pilot or final experimental seed may be generated while this document is in `PRE-FREEZE` status.**
+No pilot or final experimental seed may be generated while this document is in `PRE-FREEZE` status.
 
 ## v0.7.5 Pilot Matrix Amendment — Incorporated
 
@@ -212,7 +212,7 @@ Exploratory diagnostics:
 
 ## Statistical unit and analysis
 
-**Statistical unit: one seed = one paired experimental block.**
+Statistical unit: one seed = one paired experimental block.
 
 For each seed, all four pilot conditions are executed under the frozen block randomization and common experimental control structure. Each condition yields one FFCR proportion for that seed.
 
@@ -443,4 +443,4 @@ The protocol cannot transition to `FROZEN` until the following are independently
 - durable retention archive and integrity record;
 - final freeze manifest with exact file blob SHAs and tested-run references.
 
-**Status remains PRE-FREEZE. No empirical execution is authorized.**
+Status remains PRE-FREEZE. No empirical execution is authorized.
