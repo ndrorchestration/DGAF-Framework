@@ -18,12 +18,7 @@ from typing import Callable, Protocol
 import numpy as np
 
 from dgaf_tgl_adapter import ConsensusState, DGAF_TGLAdapter
-from harness_contract import (
-    TOPOLOGY_SPECS,
-    generate_topology,
-    make_streams,
-    validate_topology,
-)
+from harness_contract import TOPOLOGY_SPECS, generate_topology, make_streams, validate_topology
 from topology_utils import graph_fingerprint
 
 TRIAL_TIMEOUT_SECONDS = 60.0
@@ -220,11 +215,7 @@ def execute_trial(
             recovery_wait += policy.recovery_window_seconds
             sleeper(policy.recovery_window_seconds)
 
-    return TrialResult(
-        TrialStatus.UNRECOVERED_FAILURE,
-        tuple(results),
-        recovery_wait,
-    )
+    return TrialResult(TrialStatus.UNRECOVERED_FAILURE, tuple(results), recovery_wait)
 
 
 def validate_seed_runtime(elapsed_seconds: float) -> bool:
@@ -277,8 +268,7 @@ class ConsensusTask:
 
     @staticmethod
     def trial_key(seed: int, topology: str, condition: str, failure_count: int) -> str:
-        raw = f"{seed}|{topology}|{condition}|{failure_count}".encode("utf-8")
-        return hashlib.sha256(raw).hexdigest()
+        return hashlib.sha256(f"{seed}|{topology}|{condition}|{failure_count}".encode("utf-8")).hexdigest()
 
     def _build_trial_inputs(self, seed: int):
         streams = make_streams(seed)
@@ -290,10 +280,7 @@ class ConsensusTask:
 
     @staticmethod
     def _active_neighbors(graph, failed: set[int]) -> tuple[tuple[int, ...], ...]:
-        return tuple(
-            tuple(sorted(j for j in graph.neighbors(i) if j not in failed))
-            for i in range(20)
-        )
+        return tuple(tuple(sorted(j for j in graph.neighbors(i) if j not in failed)) for i in range(20))
 
     @staticmethod
     def _null_or_simple_update(values: np.ndarray, active_neighbors: tuple[tuple[int, ...], ...], alpha: float) -> np.ndarray:
@@ -333,7 +320,9 @@ class ConsensusTask:
         graph,
         alive: tuple[bool, ...],
         active_neighbors: tuple[tuple[int, ...], ...],
-        failure_nodes: tuple[int, ...],
+        failure_history: tuple[tuple[int, ...], ...],
+        failure_count_current: int,
+        failure_count_total: int,
     ) -> tuple[np.ndarray, AttemptStatus, str | None]:
         adapter = DGAF_TGLAdapter(
             session_id=f"pdmAL-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}"
@@ -345,9 +334,9 @@ class ConsensusTask:
             alive=alive,
             original_neighbors=tuple(tuple(sorted(graph.neighbors(i))) for i in range(20)),
             active_neighbors=active_neighbors,
-            failure_history=(failure_nodes,) if failure_nodes else (),
-            failure_count_current=len(failure_nodes) if failure_nodes else 0,
-            failure_count_total=len(failure_nodes),
+            failure_history=failure_history,
+            failure_count_current=failure_count_current,
+            failure_count_total=failure_count_total,
             current_final_std=float(np.std(values)),
             current_mean=float(np.mean(values)),
             runtime_budget_remaining_ms=int(SEED_RUNTIME_CEILING_SECONDS * 1000),
@@ -368,16 +357,20 @@ class ConsensusTask:
         graph, initial_values, failure_nodes = self._build_trial_inputs(seed)
         values = np.asarray(initial_values, dtype=float)
         failed: set[int] = set()
+        failure_history: tuple[tuple[int, ...], ...] = ()
         deviation: str | None = None
 
         for iteration in range(CONSENSUS_ITERATIONS):
             if iteration == FAILURE_INJECTION_ITERATION:
                 failed = set(failure_nodes)
+                failure_history = (failure_nodes,) if failure_nodes else ()
             elif iteration == FAILURE_RECOVERY_ITERATION:
                 failed = set()
 
             alive = tuple(i not in failed for i in range(20))
             active_neighbors = self._active_neighbors(graph, failed)
+            failure_count_current = len(failed)
+            failure_count_total = len(failure_history[-1]) if failure_history else 0
 
             if self.condition == "null":
                 values = self._null_or_simple_update(values, active_neighbors, 0.5)
@@ -396,12 +389,10 @@ class ConsensusTask:
                     graph=graph,
                     alive=alive,
                     active_neighbors=active_neighbors,
-                    failure_nodes=failure_nodes if failure_nodes else (),
+                    failure_history=failure_history,
+                    failure_count_current=failure_count_current,
+                    failure_count_total=failure_count_total,
                 )
-
-            # Failed nodes do not update; retaining their current value is explicit.
-            if failed:
-                values[list(failed)] = values[list(failed)]
 
             if status is AttemptStatus.FAILURE:
                 return ConsensusTrialResult(
