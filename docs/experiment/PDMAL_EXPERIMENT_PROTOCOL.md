@@ -2,9 +2,9 @@
 
 ## Status
 
-**PRE-FREEZE / NO DATA COLLECTION AUTHORIZED**
+**PRE-FREEZE / PANEL-ADJUDICATED / NO DATA COLLECTION AUTHORIZED**
 
-This document is the consolidated control document for the planned PDMAL empirical evaluation. It is intentionally **not frozen** until the listed protocol fields are reviewed, explicitly resolved, and committed as the authoritative experimental contract.
+This document is the consolidated control document for the planned PDMAL empirical evaluation. The expert-panel decisions below are recorded, but the protocol is not yet frozen because three implementation-dependent values remain to be resolved and the repository transition rule requires the approved experimental commit to be established before pilot authorization.
 
 No pilot or final experimental seed may be generated while this document remains in `PRE-FREEZE` status.
 
@@ -20,134 +20,174 @@ The experimental phase may begin only after all of the following are true:
 
 1. PR #65 is merged or an equivalent approved experimental commit is established.
 2. This protocol is explicitly frozen with a commit SHA and freeze timestamp.
-3. The topology set and baseline matrix are frozen.
+3. The topology set and baseline matrix are frozen with exact implementation identifiers, parameters, and source SHAs.
 4. The primary endpoint and secondary endpoints are frozen.
-5. Failure, recovery, and rerouting semantics are frozen.
+5. Failure, recovery, rerouting, and timeout semantics are frozen.
 6. RNG/seed generation and stream separation rules are frozen.
 7. Trial ordering is frozen.
 8. Exclusion and stopping rules are frozen.
 9. The blinding mechanism is confirmed operational without exposing the secret.
 10. The unblinding procedure is frozen.
 11. The statistical analysis plan is frozen.
-12. Pilot execution authorization is recorded in the evidence log.
+12. Pilot acceptance criteria, including the numeric runtime ceiling, are frozen.
+13. The pilot-to-final sample-size rule is frozen.
+14. Pilot execution authorization is recorded in the evidence log.
 
-## Protocol fields requiring freeze
+## Panel-adjudicated protocol fields
 
-| Field | Pre-freeze status |
-|---|---|
-| Topology set | Review/freeze required |
-| Baseline matrix | Review/freeze required |
-| Primary endpoint | Review/freeze required |
-| Secondary endpoints | Review/freeze required |
-| Failure model | Review/freeze required |
-| Recovery/rerouting semantics | Review/freeze required |
-| RNG/seed generation | Review/freeze required |
-| RNG stream separation | Review/freeze required |
-| Trial ordering | Review/freeze required |
-| Exclusion rules | Review/freeze required |
-| Stopping rules | Review/freeze required |
-| Blinding mechanism | Confirm before freeze |
-| Unblinding procedure | Review/freeze required |
-| Statistical analysis plan | Review/freeze required |
-| Pilot acceptance criteria | Review/freeze required |
-| Final sample-size rule | Review/freeze required |
+| # | Field | Panel resolution | Status |
+|---|---|---|---|
+| 1 | Topology + baselines | Candidate matrix accepted: Null, Simple, Static, DGAF, DGAF+PDMAL; topology study candidates Ring, PDMAL dodecahedral, random-regular degree 3, Small-world, Complete K20. Exact implementation SHAs and generation parameters must be recorded before freeze. | **PANEL-ADJUDICATED / PENDING PROVENANCE** |
+| 2 | Primary endpoint | Failure-Free Completion Rate (FFCR) = completed trials without unrecovered failure / eligible trials; higher is better; report point estimate and 95% CI; prespecified baseline contrast. | **RESOLVED** |
+| 3 | Secondary endpoints | Recovery success rate, recovery latency, unrecovered failure count, runtime, primary-outcome variance, connectivity/surviving component size, protocol-compliance rate, missing/invalid rate, gate-block frequency; `D_a`/phi/topology diagnostics exploratory only. Secondary multiplicity handled by prespecified correction. | **RESOLVED** |
+| 4 | RNG streams | NumPy `Generator(PCG64)`; domain-separated streams; seed derivation uses SHA-256 over concatenated `seed + stream_id`; exact implementation/version recorded at freeze. | **RESOLVED / VERSION RECORD REQUIRED** |
+| 5 | Trial ordering | Block-randomized within each seed; condition order randomized per block using the dedicated ordering stream; reproducible ordering retained in provenance. | **RESOLVED** |
+| 6 | Failure semantics | Failure = prescribed trial does not complete within the frozen timeout or is classified unrecoverable; recovery/rerouting follow the frozen candidate semantics; exact timeout and recovery window remain implementation-dependent and must be recorded before freeze. | **RESOLVED / TIMEOUT VALUE PENDING** |
+| 7 | Exclusion rules | Objective protocol violations only; exclusions retained with explicit reason; unfavorable valid outcomes are never excluded. | **RESOLVED** |
+| 8 | Stopping rules | No early efficacy stopping. Only predefined safety, blinding, provenance, protocol-integrity, or catastrophic execution halts. | **RESOLVED** |
+| 9 | Statistical analysis | Paired condition-wise comparison of FFCR; effect size = risk difference; 95% CI; secondary outcomes exploratory with prespecified multiplicity correction; missingness handled by frozen rule. | **RESOLVED** |
+| 10 | Sample-size rule | Pilot-derived variance/proportion estimate; target power 0.80, alpha 0.05, minimum detectable risk difference 0.15; final N computed by the frozen formula and fixed rounding rule. | **RESOLVED / FORMULA IMPLEMENTATION REQUIRED** |
+| 11 | Artifact schema | One JSON artifact per seed containing all trial records and provenance; required fields include experiment/protocol identifiers, seed, blinded condition ID, outcomes, failure/recovery, runtime, status, exclusion information, environment fingerprint, and hashes. | **RESOLVED / IMPLEMENTATION SCHEMA REQUIRED** |
+| 12 | Blinding/unblinding | `PDMAL_BLINDING_KEY` controls blinded mapping; mapping stored outside analytical dataset; no secret in artifacts; unblinding only after raw data, preprocessing, and exclusions are frozen and authorization recorded. | **RESOLVED / CUSTODY PROCEDURE REQUIRED** |
+| 13 | Pilot pass/fail | PASS requires 100% expected trials attempted, 0 blinding breaches, missing/invalid <= 5%, all conditions execute, no comparability-affecting protocol deviation, and runtime at or below the frozen ceiling. | **RESOLVED / NUMERIC RUNTIME CEILING PENDING** |
 
-## Planned pilot
+## Topology specification candidate
 
-The first empirical event is a **50-seed blinded pilot**.
+The topology-study candidate matrix is:
 
-The pilot is a feasibility/QC stage and is not itself a claim of efficacy.
+1. Ring
+2. PDMAL dodecahedral
+3. Random-regular degree 3
+4. Small-world
+5. Complete K20
 
-Pilot checks include:
+The PDMAL dodecahedral structure is documented as a 20-vertex, 30-edge, 3-regular graph with three colocated agents/services per vertex (60-service interpretation). The current mathematical correction explicitly separates this topology definition from claims of empirical superiority. Exact topology implementation provenance is mandatory before freeze.
 
-- execution completeness;
-- missing and invalid trial rate;
-- runtime distribution;
-- outcome variance;
-- endpoint stability;
-- reproducibility;
-- artifact/provenance integrity;
-- protocol-compliance failures.
+The Small-world parameters are provisionally proposed as `k=4, p=0.3`, but these values are **not frozen** until the implementation and generated graph are verified against the specification.
 
-Pilot observations must not be used to retroactively alter the primary endpoint, exclusion rules, or stopping criteria.
+## Primary endpoint
 
-## Final experiment
+```text
+FFCR = completed_trials_without_unrecovered_failure / eligible_trials
+```
 
-A final controlled experiment follows the pilot only after the pilot QC decision and the predetermined sample-size rule are satisfied.
+Direction: higher is better.
 
-Before unblinding:
+The primary analysis will report the condition-wise estimate, risk-difference effect size for prespecified contrasts, and 95% confidence intervals.
 
-1. raw observations are frozen;
-2. preprocessing rules are frozen;
-3. exclusions are frozen and recorded;
-4. the analysis dataset is retained with provenance/integrity metadata;
-5. unblinding authorization is recorded.
+## Secondary diagnostics
 
-## Planned comparative matrix
+`D_a` is explicitly a secondary diagnostic and **not** a universal success/failure threshold. The current mathematical correction requires calibration for a defined operating regime before `D_a` can support an operational threshold claim.
 
-The working baseline matrix is:
+Phi/convergence traces, topology metrics, and other internal diagnostics are similarly subordinate to the primary endpoint.
 
-1. Null / no-op control
-2. Simple agent/control topology
-3. Static rules/control
-4. DGAF
-5. DGAF + PDMAL
+## RNG specification
 
-The final matrix must be explicitly frozen before data collection. Any deviation requires documented protocol amendment rather than silent post-hoc substitution.
+Candidate implementation:
 
-## Analysis requirements
+```text
+Library:       NumPy
+Generator:     numpy.random.Generator
+Bit generator: PCG64
+Derivation:    SHA-256(seed + stream_id)
+Streams:       seed-generation, trial-order, failure/perturbation,
+               topology-construction (when applicable), analysis-resampling
+```
 
-The analysis must report, at minimum:
+Exact NumPy version and the precise byte/string serialization used before SHA-256 must be recorded in the freeze manifest.
 
-- sample size;
-- primary endpoint result;
-- effect size;
-- uncertainty/confidence interval as appropriate;
-- variance;
-- missingness/failure rate;
-- runtime cost;
-- baseline comparisons;
-- protocol deviations;
-- limitations.
+## Trial ordering
 
-The analysis must distinguish implementation behavior from empirical efficacy and must not promote unsupported causal or generalization claims.
+For each seed, all conditions form one randomized block. The dedicated ordering stream generates a permutation of condition IDs. Every condition occurs exactly once in the block.
 
-## Blinding controls
+## Failure / recovery / rerouting
 
-`PDMAL_BLINDING_KEY` is an operational secret used by the instrumentation layer. It must never be committed, printed, or included in retained artifacts.
+A failure is an incomplete trial after the frozen timeout or an explicitly classified unrecoverable state. A recovery succeeds only if the prescribed task state is restored within the frozen recovery window and the trial completes. A reroute is a topology-controlled path change triggered by the prescribed failure semantics.
 
-Blinded topology labels must remain blinded throughout collection and through the pre-unblinding dataset freeze.
+The exact timeout, retry count, and recovery window are implementation-dependent and remain pending until the runner is pinned.
 
-Unblinding must occur only after the collection dataset and preprocessing/exclusion decisions are frozen.
+## Exclusions
 
-## RNG controls
+Exclude only objectively invalid protocol executions, including corrupted inputs, missing mandatory provenance, invalid seed/protocol records, environment-integrity failures, or executions outside the frozen protocol. Exclusions remain in the provenance dataset with reasons.
 
-The protocol must explicitly separate:
+## Stopping
 
-- seed generation;
-- trial/failure sampling;
-- topology construction where randomness is used;
-- trial ordering/randomization;
-- any analysis resampling or bootstrap streams.
+No efficacy-based early stopping. A halt may occur for blinding breach, provenance corruption, systematic protocol violation, catastrophic runner instability, secret exposure, or loss of condition comparability.
 
-Exact RNG libraries, algorithms, seeds/seed lists, and stream derivation rules must be frozen before pilot execution.
+## Statistical plan
 
-## Evidence classification
+Primary:
 
-The experiment may support increasingly strong evidence only to the extent justified by the retained data:
+- paired comparison of FFCR across prespecified conditions;
+- effect size: risk difference;
+- uncertainty: 95% CI;
+- one prespecified primary contrast, with secondary contrasts treated as exploratory unless the frozen multiplicity procedure states otherwise.
 
-`VERIFIED` → `VALIDATED` → `EMPIRICALLY SUPPORTED`
+Final sample size:
 
-These classes are not interchangeable.
+- target power: 0.80;
+- alpha: 0.05;
+- minimum detectable risk difference: 0.15;
+- pilot-derived event proportion/variance estimate;
+- fixed mathematical formula and rounding rule;
+- no favorable post-hoc target selection.
 
-A passing pilot or final experiment does not automatically establish broader real-world effectiveness.
+## Blinding
+
+`PDMAL_BLINDING_KEY` must never be committed, printed, or included in retained artifacts. The blinded condition mapping is held outside the analytical dataset. The mapping is revealed only after dataset freeze, preprocessing freeze, exclusion freeze, integrity verification, and recorded unblinding authorization.
+
+The exact custody mechanism and unblinding authority are pending final operationalization.
+
+## Canonical artifact
+
+One JSON artifact per seed should contain:
+
+```json
+{
+  "experiment_id": "...",
+  "protocol_version": "...",
+  "experiment_commit_sha": "...",
+  "seed_id": "...",
+  "blinded_condition_id": "...",
+  "trial_id": "...",
+  "primary_outcome": "...",
+  "secondary_outcomes": {},
+  "failure": {},
+  "recovery": {},
+  "runtime_ms": 0,
+  "status": "...",
+  "excluded": false,
+  "exclusion_reason": null,
+  "environment_fingerprint": "...",
+  "artifact_sha256": "..."
+}
+```
+
+The final schema, artifact naming convention, and retention location must be implemented and verified before freeze.
+
+## Pilot acceptance criteria
+
+The 50-seed pilot passes only if:
+
+- 100% expected trials are attempted;
+- zero blinding breaches occur;
+- missing/invalid trial rate is <= 5%;
+- every condition executes;
+- no protocol deviation affects comparability;
+- runtime remains at or below the frozen ceiling;
+- required provenance and artifact integrity checks pass.
+
+The numeric runtime ceiling is pending characterization of the pinned runner/environment and must be frozen before data collection.
+
+## H4 historical boundary
+
+The earlier H4 Task-Stratified Topology × Orchestration experiment is methodological precedent only. Its simulated scores, verdicts, and historical outcomes are excluded from the present PDMAL evidence base and are not priors for the present analysis.
 
 ## Freeze record
 
-This section is intentionally blank until the protocol is reviewed and frozen.
-
 ```text
-Protocol status:       PRE-FREEZE
+Protocol status:       PRE-FREEZE / PANEL-ADJUDICATED
+Panel decision record: CURRENT SESSION ADJUDICATION
 Freeze commit SHA:     NOT YET ASSIGNED
 Freeze timestamp:      NOT YET ASSIGNED
 Pilot authorization:   NOT YET GRANTED
