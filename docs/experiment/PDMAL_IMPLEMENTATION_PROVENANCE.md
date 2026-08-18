@@ -10,8 +10,9 @@ This record distinguishes implementation existence from implementation verificat
 
 - PR: `#65`
 - Branch: `epistemic/evidence-architecture-v1`
-- Last known implementation head when this record was updated: `b74228644af9d9966c2b17aa5a43e74178bd75ce`
-- Harness/runner CI execution: **NOT OBSERVED THROUGH CURRENT CONNECTOR SURFACE**
+- Latest task-engine implementation commit: `7eb3d510b693a5f737bb494bb9e1b10dc22e3479`
+- Pre-freeze CI workflow update: `e810a6c49759fb08c547b34bbbc9ac0647ff0b75`
+- Harness/prefreeze CI execution: **NOT OBSERVED THROUGH CURRENT CONNECTOR SURFACE**
 
 ## Implemented controls
 
@@ -66,12 +67,26 @@ The harness validates node count, edge count, connectivity, regularity where spe
 `experiments/pdmal_pilot/run_pilot.py`
 
 - `PDMAL_MODE=contract` is the only mode that can currently execute.
-- Contract mode is fixed to 2 validation seeds and emits no empirical data.
+- Contract mode is fixed to exactly 2 validation seeds and emits contract artifacts only.
 - `PDMAL_MODE=pilot` requires both `PDMAL_PROTOCOL_FROZEN=1` and `PDMAL_PILOT_AUTHORIZED=1`.
-- Even with those flags, pilot mode currently fails closed because the real experimental task executor has not yet been implemented.
+- Even with those flags, pilot mode currently fails closed because the real experimental task adapter is not implemented.
 - Unset/unknown mode fails closed.
 
-This creates two independent controls: protocol-freeze authorization and explicit pilot authorization.
+### Task/retry engine
+
+`experiments/pdmal_pilot/task_engine.py`
+
+The pre-freeze task engine implements and unit-tests the protocol state semantics:
+
+- first-attempt success;
+- failure followed by successful recovery;
+- retry exhaustion → unrecovered failure;
+- successful attempt exceeding the configured timeout → timeout classification;
+- 3-attempt retry budget;
+- 30-second recovery-window parameter;
+- separate 300-second seed-runtime ceiling predicate.
+
+**Important boundary:** the current engine measures elapsed time around the task adapter call but does not yet forcibly terminate a hung external task at exactly 60 seconds. A true wall-clock timeout/isolation mechanism remains required before pilot authorization.
 
 ### Blinding contract
 
@@ -101,8 +116,9 @@ Provides an append-oriented in-memory register and JSON serialization for deviat
 
 `experiments/pdmal_pilot/test_harness_contract.py`
 `experiments/pdmal_pilot/test_execution_contract.py`
+`experiments/pdmal_pilot/test_task_engine.py`
 
-These cover deterministic streams, topology contracts, blinding behavior, explicit mode requirements, pilot fail-closed behavior, sample-size reference/error cases, and deviation serialization.
+These cover deterministic streams, topology contracts, blinding behavior, explicit mode requirements, pilot fail-closed behavior, retry/timeout state semantics, sample-size reference/error cases, and deviation serialization.
 
 ### CI validation workflows
 
@@ -122,8 +138,9 @@ Both are contract-validation workflows. They must not be treated as empirical ex
 | Deterministic RNG tests | IMPLEMENTED / CI PENDING |
 | Topology generation/validation | IMPLEMENTED / CI PENDING |
 | Fail-closed contract runner | IMPLEMENTED / CI PENDING |
-| Trial timeout/retry/recovery engine | NOT YET IMPLEMENTED |
-| Real experimental task executor | NOT YET IMPLEMENTED |
+| Retry/recovery state engine | IMPLEMENTED / CI PENDING |
+| True wall-clock task timeout/isolation | NOT YET IMPLEMENTED |
+| Real experimental task adapter | NOT YET IMPLEMENTED |
 | Paired-seed FFCR execution | NOT YET IMPLEMENTED |
 | Sample-size planning utility | IMPLEMENTED / CI PENDING |
 | Canonical experimental artifact validator | PARTIALLY IMPLEMENTED |
@@ -147,7 +164,7 @@ Pilot authorized = TRUE
 
 ## Freeze criterion
 
-Protocol freeze remains prohibited until the implementation controls marked `NOT YET IMPLEMENTED`, `NOT YET VERIFIED`, or equivalent are resolved and independently observed, including the exact execution environment, complete artifact/provenance architecture, real task executor, timeout/recovery semantics, blinding custody, runtime characterization, and CI verification.
+Protocol freeze remains prohibited until the implementation controls marked `NOT YET IMPLEMENTED`, `NOT YET VERIFIED`, or equivalent are resolved and independently observed, including the exact execution environment, complete artifact/provenance architecture, real task adapter, true timeout/isolation semantics, blinding custody, runtime characterization, and CI verification.
 
 ## No-data-collection invariant
 
