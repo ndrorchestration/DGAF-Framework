@@ -9,6 +9,7 @@ DGAF evaluation is divided into evidence tiers so that deterministic tests, synt
 Purpose: verify local functions and pure transformations.
 
 Examples:
+
 - schema validation;
 - evidence-tier ordering;
 - deterministic hashing/replay;
@@ -22,6 +23,7 @@ Permitted evidence: implementation/test correctness only.
 Purpose: test system behavior under controlled synthetic fixtures.
 
 Examples:
+
 - generated malformed requests;
 - controlled agent disagreement;
 - synthetic graph failures;
@@ -48,6 +50,7 @@ Prohibited interpretation: empirical effectiveness or generalization.
 Purpose: measure real model/system behavior on frozen datasets or workloads.
 
 Required metadata:
+
 - model identifier/version;
 - inference configuration;
 - dataset/workload version;
@@ -66,6 +69,7 @@ Permitted evidence: bounded empirical statements about the tested conditions.
 Purpose: test whether DGAF provides incremental benefit relative to predeclared baselines.
 
 Required systems:
+
 - NULL;
 - SIMPLE_AGENT;
 - STATIC_RULES;
