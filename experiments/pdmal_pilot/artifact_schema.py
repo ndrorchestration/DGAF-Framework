@@ -9,6 +9,8 @@ import hashlib
 import json
 from typing import Any, Mapping
 
+ARTIFACT_SCHEMA_VERSION = "1.0"
+
 REQUIRED_SEED_FIELDS = {
     "experiment_id",
     "protocol_version",
@@ -63,10 +65,20 @@ def validate_seed_record(record: Mapping[str, Any]) -> None:
 
 def validate_artifact_document(document: Mapping[str, Any]) -> None:
     """Validate a per-seed document without recomputing its external sidecar."""
-    required_document = {"artifact_version", "protocol_status", "empirical_data_collection", "records"}
+    required_document = {
+        "schema_version",
+        "artifact_version",
+        "protocol_status",
+        "empirical_data_collection",
+        "records",
+    }
     missing = required_document - set(document)
     if missing:
         raise AssertionError(f"artifact document missing fields: {sorted(missing)}")
+    if document["schema_version"] != ARTIFACT_SCHEMA_VERSION:
+        raise AssertionError(
+            f"unsupported artifact schema_version: {document['schema_version']!r}"
+        )
     if document["protocol_status"] != "PRE-FREEZE":
         raise AssertionError("pre-freeze artifact must declare PRE-FREEZE")
     if document["empirical_data_collection"] is not False:
