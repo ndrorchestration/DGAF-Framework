@@ -6,7 +6,7 @@ This record defines the evidence boundary for live end-to-end verification of `/
 
 ## Target
 
-- Commit under test: `4dca67ba75ddab0f977c03270711370e1a380953` (current branch head at the initial P2 gate)
+- Commit under test: `685872bd6edb7a85603b070b6cfe5470dbfaa06d` (current PR #65 head)
 - Endpoint: `/api/orchestrate`
 - Required environment: controlled staging or Vercel deployment built from the exact commit under test
 - Runner: `scripts/p2_runtime_matrix.py`
