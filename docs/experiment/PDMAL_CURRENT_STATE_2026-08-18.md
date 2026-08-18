@@ -1,10 +1,11 @@
 # PDMAL Current State — 2026-08-18
 
-## Authoritative state
+## Authoritative state snapshot
 
 ```text
 Branch:                         epistemic/evidence-architecture-v1
-Latest documentation commit:   b49a245110e19a99d3f4750496ae5817c9af617b
+State snapshot commit:         b49a245110e19a99d3f4750496ae5817c9af617b
+Documentation maintenance:    2a24aad09fc2c1bf50abc3207b9ae1f974596d04
 Previous verified head:        17a9e2e737f54046a1f1f93dbd70d287825fc6ee
 Epistemic CI on 17a9e2e7:      PASS — run 32098754363
 PDMAL pre-freeze CI on 17a9e2e7: PASS — run 32098754451
