@@ -28,7 +28,7 @@ jobs:
         env:
           PYTHONPATH: .
         run: |
-          python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py -q
+          python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py test_dgaf_tgl_adapter.py -q
       - name: Verify runner has no empirical authorization by default
         env:
           PDMAL_MODE: contract
