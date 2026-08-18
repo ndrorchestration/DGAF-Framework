@@ -1,6 +1,7 @@
 name: PDMAL Pre-Freeze Runner Validation
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - epistemic/evidence-architecture-v1
