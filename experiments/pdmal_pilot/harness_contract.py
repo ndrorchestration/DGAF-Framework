@@ -35,11 +35,14 @@ TOPOLOGY_SPECS = {
     "complete": {"nodes": 20, "edges": 190, "regular_degree": 19, "connected": True},
 }
 
+# The first four child streams are already part of the verified contract.
+# task_initialization is appended so their identities and spawn keys remain stable.
 STREAM_IDS = (
     "trial_order",
     "failure_injection",
     "topology_construction",
     "analysis_resampling",
+    "task_initialization",
 )
 
 
@@ -147,7 +150,6 @@ def deterministic_contract_run(root_seed: int, key: bytes) -> list[HarnessResult
     """Validate all topology contracts once; this is not an efficacy run."""
     streams = make_streams(root_seed)
     order = streams["trial_order"].permutation(list(EXPERIMENT_CONDITIONS)).tolist()
-    # The condition/topology axes intentionally remain separate at this stage.
     outputs: list[HarnessResult] = []
     for topology in TOPOLOGY_SPECS:
         graph = generate_topology(topology, streams["topology_construction"])
