@@ -10,8 +10,10 @@ and explicit authorization.
 
 from __future__ import annotations
 
+import multiprocessing
 from dataclasses import dataclass, field
 from enum import Enum
+from queue import Empty
 from time import monotonic, sleep
 from typing import Callable, Protocol
 
@@ -43,6 +45,8 @@ class AttemptResult:
     attempt: int
     status: AttemptStatus
     elapsed_seconds: float
+    isolated: bool = False
+    termination_reason: str | None = None
 
 
 @dataclass(frozen=True)
@@ -71,6 +75,72 @@ class RetryPolicy:
             raise ValueError("max_attempts must be at least 1")
 
 
+def _task_worker(result_queue, task: TaskAdapter, seed: int, condition: str, attempt: int) -> None:
+    """Run one isolated task attempt in a child process."""
+    try:
+        status = task.run(seed=seed, condition=condition, attempt=attempt)
+        if not isinstance(status, AttemptStatus):
+            status = AttemptStatus(status)
+        result_queue.put((status.value, None))
+    except Exception as exc:
+        result_queue.put((AttemptStatus.FAILURE.value, f"{type(exc).__name__}: {exc}"))
+
+
+def run_task_with_timeout(
+    task: TaskAdapter,
+    *,
+    seed: int,
+    condition: str,
+    attempt: int,
+    timeout_seconds: float,
+    clock: Callable[[], float] = monotonic,
+) -> tuple[AttemptStatus, float, str | None]:
+    """Run one task attempt in an isolated process and enforce a hard timeout.
+
+    The task adapter must be process-safe/picklable under the platform's spawn
+    semantics. When the deadline expires, the child process is terminated and
+    the parent classifies the attempt as TIMEOUT without waiting for the task.
+    """
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
+
+    ctx = multiprocessing.get_context("spawn")
+    result_queue = ctx.Queue(maxsize=1)
+    process = ctx.Process(
+        target=_task_worker,
+        args=(result_queue, task, seed, condition, attempt),
+    )
+
+    started = clock()
+    process.start()
+    process.join(timeout_seconds)
+    elapsed = max(0.0, clock() - started)
+
+    if process.is_alive():
+        process.terminate()
+        process.join(1.0)
+        if process.is_alive() and hasattr(process, "kill"):
+            process.kill()
+            process.join()
+        return AttemptStatus.TIMEOUT, elapsed, "process-terminated-on-timeout"
+
+    try:
+        raw_status, error = result_queue.get(timeout=1.0)
+    except Empty:
+        if process.exitcode == 0:
+            return AttemptStatus.FAILURE, elapsed, "child-exited-without-result"
+        return AttemptStatus.FAILURE, elapsed, f"child-exit-code:{process.exitcode}"
+    finally:
+        result_queue.close()
+        result_queue.join_thread()
+
+    if raw_status == AttemptStatus.TIMEOUT.value:
+        return AttemptStatus.TIMEOUT, elapsed, error
+    if raw_status == AttemptStatus.FAILURE.value:
+        return AttemptStatus.FAILURE, elapsed, error
+    return AttemptStatus.SUCCESS, elapsed, None
+
+
 def execute_trial(
     task: TaskAdapter,
     *,
@@ -79,11 +149,13 @@ def execute_trial(
     policy: RetryPolicy = RetryPolicy(),
     monotonic_clock: Callable[[], float] = monotonic,
     sleeper: Callable[[float], None] = sleep,
+    isolate: bool = True,
 ) -> TrialResult:
     """Execute a trial under the frozen retry semantics.
 
-    The task adapter returns SUCCESS/FAILURE/TIMEOUT. The engine owns retry,
-    recovery-window accounting, and final FFCR classification.
+    By default, each task attempt executes in a separate process. Contract tests
+    may set ``isolate=False`` when they need deterministic clock injection for
+    pure state-machine tests. The pilot/contract runner uses the isolated path.
     """
     policy.validate()
     results: list[AttemptResult] = []
@@ -91,13 +163,34 @@ def execute_trial(
 
     for attempt in range(1, policy.max_attempts + 1):
         started = monotonic_clock()
-        status = task.run(seed=seed, condition=condition, attempt=attempt)
-        elapsed = max(0.0, monotonic_clock() - started)
+        termination_reason: str | None = None
 
-        if elapsed > policy.timeout_seconds and status == AttemptStatus.SUCCESS:
-            status = AttemptStatus.TIMEOUT
+        if isolate:
+            status, isolated_elapsed, termination_reason = run_task_with_timeout(
+                task,
+                seed=seed,
+                condition=condition,
+                attempt=attempt,
+                timeout_seconds=policy.timeout_seconds,
+                clock=monotonic,
+            )
+            elapsed = isolated_elapsed
+        else:
+            status = task.run(seed=seed, condition=condition, attempt=attempt)
+            elapsed = max(0.0, monotonic_clock() - started)
+            if elapsed > policy.timeout_seconds and status == AttemptStatus.SUCCESS:
+                status = AttemptStatus.TIMEOUT
+                termination_reason = "elapsed-time-classification"
 
-        results.append(AttemptResult(attempt, status, elapsed))
+        results.append(
+            AttemptResult(
+                attempt,
+                status,
+                elapsed,
+                isolated=isolate,
+                termination_reason=termination_reason,
+            )
+        )
 
         if status == AttemptStatus.SUCCESS:
             final = TrialStatus.SUCCESS if attempt == 1 else TrialStatus.RECOVERED
