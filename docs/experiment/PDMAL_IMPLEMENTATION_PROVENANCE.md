@@ -2,7 +2,7 @@
 
 ## Status
 
-**PRE-FREEZE / TOPOLOGY FINGERPRINTS IMPLEMENTED / PILOT NOT AUTHORIZED**
+PRE-FREEZE / TOPOLOGY FINGERPRINTS IMPLEMENTED / PILOT NOT AUTHORIZED
 
 This record distinguishes implementation existence from implementation verification. The pre-freeze contract path remains separate from empirical execution.
 
