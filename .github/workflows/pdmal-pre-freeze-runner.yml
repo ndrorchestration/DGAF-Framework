@@ -34,8 +34,8 @@ jobs:
             echo 'committed=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            echo 'Full lockfile is absent on a pull request ref; generation/push is intentionally disallowed.' >&2
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ "$GITHUB_HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" ]; then
+            echo 'Full lock generation is disallowed for fork pull requests.' >&2
             exit 1
           fi
           python -m pip install --upgrade pip
@@ -51,7 +51,11 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add experiments/pdmal_pilot/requirements-full-lock.txt
           git commit -m 'chore: add genuine resolver-generated hash lock for PDMAL pilot'
-          git push origin HEAD:epistemic/evidence-architecture-v1
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            git push origin "HEAD:${GITHUB_HEAD_REF}"
+          else
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
           echo 'committed=true' >> "$GITHUB_OUTPUT"
       - name: Dispatch fresh current-head validation after lock commit
         if: steps.lock.outputs.committed == 'true'
