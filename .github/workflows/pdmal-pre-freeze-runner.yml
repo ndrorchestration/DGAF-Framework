@@ -1,0 +1,58 @@
+name: PDMAL Pre-Freeze Runner Validation
+
+on:
+  push:
+    branches:
+      - epistemic/evidence-architecture-v1
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  runner-contract:
+    name: Fail-closed runner and provenance contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - name: Install harness dependencies
+        run: python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt pytest==8.4.2
+      - name: Run pre-freeze contract suite
+        working-directory: experiments/pdmal_pilot
+        env:
+          PYTHONPATH: .
+        run: python -m pytest test_harness_contract.py test_execution_contract.py -q
+      - name: Verify runner has no empirical authorization by default
+        env:
+          PDMAL_MODE: contract
+        run: python experiments/pdmal_pilot/run_pilot.py --seeds 2
+      - name: Emit pre-freeze manifest
+        run: |
+          mkdir -p test-artifacts
+          python - <<'PY'
+          import json, os, platform
+          from pathlib import Path
+          Path('test-artifacts/pre-freeze-runner-manifest.json').write_text(
+              json.dumps({
+                  'status': 'PRE-FREEZE',
+                  'empirical_data_collection': False,
+                  'runner_mode_tested': os.environ.get('PDMAL_MODE'),
+                  'commit': os.environ.get('GITHUB_SHA'),
+                  'workflow_run_id': os.environ.get('GITHUB_RUN_ID'),
+                  'python': platform.python_version(),
+              }, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+      - name: Upload pre-freeze manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-pre-freeze-runner-${{ github.sha }}
+          path: test-artifacts/pre-freeze-runner-manifest.json
+          if-no-files-found: error
+          retention-days: 30
