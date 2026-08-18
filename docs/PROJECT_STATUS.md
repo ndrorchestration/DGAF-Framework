@@ -1,0 +1,155 @@
+# DGAF/PDMAL Project Status
+
+**Status date:** 2026-08-18  
+**Repository:** `ndrorchestration/DGAF-Framework`  
+**Current main:** `93f535c1eb822244ab4e7d3646cadfb9e28a9876`  
+**Pilot status:** PRE-FREEZE; authorization not granted
+
+## Purpose
+
+This document is the current operational status record for the DGAF/PDMAL experimental track. It supersedes informal status summaries while preserving historical release and session records.
+
+## Current Gate Board
+
+| Gate / control | Status | Evidence / state |
+|---|---|---|
+| v0.7.5 runtime characterization | CLOSED | Published release `v0.7.5-pdmal-runtime-characterization` |
+| Durable retention | PUBLISHED | GitHub Release exists with runtime characterization asset |
+| Blinding operational test | CLOSED | Verified synthetic custody dry-run; no production secret or empirical data |
+| Environment lock | CLOSED | Runs #67/#68 |
+| Topology provenance | VERIFIED | Runs #67/#68 |
+| Artifact schema/integrity | VERIFIED | Run #74 |
+| ConsensusTask implementation | VERIFIED | Run #74; SHA `08500a7` |
+| Runtime 300-second ceiling | VERIFIED | Characterized maximum 646 ms; mean 503 ms |
+| Evidence Card schema | PRESENT | `docs/evidence/EVIDENCE_CARD_SCHEMA.json` |
+| Evidence Index | RECONCILED | Corrected SHA prefix `5b94a07c...` |
+| Protocol matrix | FROZEN IN DESIGN | `4 × 5 × 9 = 180` observations/seed; 9,000 for 50 seeds |
+| `dgaf_pdmal` | OUT OF SCOPE | Explicitly excluded from the pilot scope |
+| Empirical data | ZERO | No pilot data generated |
+| Security hardening #70 | MERGED | Main baseline `93f535c1eb822244ab4e7d3646cadfb9e28a9876` |
+| Epistemic architecture #65 | BLOCKED | Open PR with merge conflicts after #70; not yet merged |
+| Release ZIP SHA-256 | PENDING | Requires download of the published asset and local hashing |
+| Inner artifact SHA-256 | PENDING | Expected digest is recorded separately; must be recomputed from the extracted artifact |
+| Freeze manifest | PENDING | Must use post-#65 freeze HEAD, not v0.7.5 tag SHA |
+| Protocol freeze | BLOCKED | Depends on #65, provenance checks, and freeze commit |
+| Pilot authorization | NOT GRANTED | Must reference the final freeze state |
+
+## Provenance Identities
+
+These identities must remain separate:
+
+1. **v0.7.5 release/tag identity** — immutable runtime-characterization baseline.
+2. **Published release asset identity** — SHA-256 of the ZIP asset itself.
+3. **Inner runtime artifact identity** — SHA-256 of `runtime_characterization.json` if that is the authoritative artifact contained by the ZIP.
+4. **Pilot freeze identity** — post-#65 Git `HEAD` SHA that defines the exact state authorized for the pilot.
+
+The expected inner-artifact SHA supplied by the prior CI provenance record is:
+
+```text
+f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250
+```
+
+This value is **expected provenance**, not a substitute for a fresh local computation. The ZIP's SHA-256 must also be computed independently because the ZIP and its contents are different byte objects.
+
+## Release Baseline
+
+Release: `v0.7.5-pdmal-runtime-characterization`  
+Release title: `PDMAL Runtime Characterization Artifact – v0.7.5`
+
+The release is treated as an immutable historical baseline. Subsequent governance and security changes are not retroactively attributed to that release.
+
+## Post-Release Repository State
+
+### PR #70 — Security hardening
+
+Merged into `main`.
+
+```text
+93f535c1eb822244ab4e7d3646cadfb9e28a9876
+```
+
+The change addresses the workflow permissions/code-scanning issue and establishes the current security baseline.
+
+### PR #65 — Epistemic Alignment + Evidence Card architecture
+
+Still open and currently blocked by merge conflicts because its branch predates the #70 merge. Its scope includes epistemic alignment policy, claim/evidence distinctions, Evidence Card architecture, validation controls, and associated documentation/tests.
+
+It must be rebased or otherwise updated against current `main`, conflicts resolved, and CI rerun before merge.
+
+### PR #42 — Fractal Agency enumeration
+
+Separate research-characterization track. It does not block the immediate security/evidence hardening sequence.
+
+## Required Final Sequence
+
+```text
+1. Resolve/rebase PR #65 against current main
+2. Resolve conflicts and rerun CI
+3. Merge #65
+4. Record post-#65 HEAD SHA
+5. Download the published v0.7.5 ZIP
+6. Compute ZIP SHA-256
+7. Extract authoritative inner artifact
+8. Compute inner artifact SHA-256 and compare to expected provenance
+9. Populate freeze manifest
+10. Mark protocol/spec frozen in the freeze commit
+11. Record pilot authorization
+12. Execute the 50-seed blinded pilot
+```
+
+No step in this sequence establishes empirical validity before the pilot is run and analyzed.
+
+## Cryptographic Verification Procedure
+
+Use the exact filename shown by the GitHub release UI.
+
+```bash
+curl -L -o release.zip '<published-release-asset-download-url>'
+sha256sum release.zip
+unzip release.zip runtime_characterization.json
+sha256sum runtime_characterization.json
+```
+
+Record both computed digests. The inner artifact is expected to match:
+
+```text
+f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250
+```
+
+Do not claim the gate is closed until the actual computed values are recorded.
+
+## Freeze Manifest Requirements
+
+The final freeze manifest should record at minimum:
+
+```yaml
+freeze_commit_sha: <post-#65 HEAD>
+protocol_blob_sha: <protocol file/blob identity at freeze>
+spec_blob_sha: <task spec file/blob identity at freeze>
+runner_blob_sha: <pilot runner identity at freeze>
+lockfile_blob_sha: <full lockfile identity at freeze>
+runtime_artifact_id: 9315467977
+runtime_artifact_digest: f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250
+runtime_release_tag: v0.7.5-pdmal-runtime-characterization
+release_asset_filename: <exact published ZIP filename>
+release_asset_sha256: <computed ZIP SHA-256>
+release_inner_artifact: runtime_characterization.json
+release_inner_artifact_sha256: <computed JSON SHA-256>
+blinding_run_id: 32113226935
+blinding_artifact_id: 9315675249
+blinding_artifact_digest: <verified blinding artifact digest>
+freeze_timestamp_utc: <UTC timestamp>
+authorization_record: <authorization record link>
+```
+
+## Epistemic Boundary
+
+The repository currently establishes engineering, provenance, governance, and runtime-characterization evidence at the levels documented above. It does **not** establish empirical validity of the DGAF/PDMAL hypothesis.
+
+```text
+Empirical validity:   NOT ESTABLISHED
+Pilot authorization:  NOT GRANTED
+Empirical data:       0
+```
+
+The blinded pilot, once authorized and executed, is an empirical test. Its outcome must remain distinct from prior engineering verification and provenance evidence.
