@@ -26,11 +26,22 @@ jobs:
         working-directory: experiments/pdmal_pilot
         env:
           PYTHONPATH: .
-        run: python -m pytest test_harness_contract.py test_execution_contract.py -q
+        run: python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py -q
       - name: Verify runner has no empirical authorization by default
         env:
           PDMAL_MODE: contract
         run: python experiments/pdmal_pilot/run_pilot.py --seeds 2
+      - name: Verify pilot mode fails closed without freeze/authorization
+        env:
+          PDMAL_MODE: pilot
+          PDMAL_PROTOCOL_FROZEN: "0"
+          PDMAL_PILOT_AUTHORIZED: "0"
+        run: |
+          set +e
+          python experiments/pdmal_pilot/run_pilot.py --seeds 50
+          rc=$?
+          set -e
+          test "$rc" -ne 0
       - name: Emit pre-freeze manifest
         run: |
           mkdir -p test-artifacts
