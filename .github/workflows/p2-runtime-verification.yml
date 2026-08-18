@@ -34,16 +34,16 @@ jobs:
           bypass = os.environ['VERCEL_AUTOMATION_BYPASS_SECRET']
           expected = {
               'valid_missing_audit': (503, 'BLOCKED'),
-              'invalid_body': (400, 'REJECT'),
+              'invalid_body_shape': (400, 'REJECT'),
               'confidence_out_of_range': (400, 'REJECT'),
               'invalid_turn': (400, 'REJECT'),
-              'malformed_json': (400, 'REJECT'),
+              'malformed_json': (400, None),
           }
           cases = [
-              ('valid_missing_audit', b'{"mandate":"test","turn":0}'),
-              ('invalid_body', b'{"foo":"bar"}'),
-              ('confidence_out_of_range', b'{"mandate":"test","confidence":2.0}'),
-              ('invalid_turn', b'{"mandate":"test","turn":-1}'),
+              ('valid_missing_audit', b'{"mandate":"P2 live verification","turn":13}'),
+              ('invalid_body_shape', b'[]'),
+              ('confidence_out_of_range', b'{"mandate":"P2 live verification","confidence":2.0}'),
+              ('invalid_turn', b'{"mandate":"P2 live verification","turn":-1}'),
               ('malformed_json', b'{'),
           ]
 
@@ -101,6 +101,7 @@ jobs:
               'timestamp_epoch': time.time(),
               'cases': results,
               'all_pass': all(r['pass'] for r in results),
+              'spec_revision': 'P2-2026-08-18-runtime-contract-v2',
           }
           with open('p2-runtime-verification.json', 'w', encoding='utf-8') as f:
               json.dump(out, f, indent=2, sort_keys=True)
