@@ -4,6 +4,20 @@
 
 > **Epistemic status:** This README describes repository scope and implemented artifacts. Individual claims of validation, certification, performance, or standards alignment require the evidence identified in the corresponding artifact. Historical certifications are not treated as current certification without a fresh evidence-backed run.
 
+## Current project state — 2026-08-18
+
+The DGAF/PDMAL experimental track is **PRE-FREEZE**. The runtime-characterization baseline is published, the blinding operational test is closed, and security hardening PR #70 has been merged. Epistemic architecture PR #65 remains open and is currently blocked by merge conflicts against the post-#70 `main` branch.
+
+Current security baseline:
+
+```text
+main: 93f535c1eb822244ab4e7d3646cadfb9e28a9876
+```
+
+Pilot authorization has **not** been granted and no empirical pilot data exists.
+
+For the authoritative gate board, provenance identities, remaining sequence, and freeze requirements, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md).
+
 ## Repository scope
 
 DGAF contains governance and evaluation components, agent specifications, control/gate definitions, provenance practices, and related research artifacts. It is the canonical home for the project's current governance vocabulary and epistemic classification standard.
@@ -35,6 +49,7 @@ A mathematical term, external framework name, benchmark number, or agent role do
 
 ## Documentation
 
+- [Current Project Status](docs/PROJECT_STATUS.md)
 - [Technical README](README.technical.md)
 - [Governance README](README.governance.md)
 - [Agent Registry](ENSEMBLE_ROSTER.md)
@@ -46,6 +61,8 @@ A mathematical term, external framework name, benchmark number, or agent role do
 ## Status and validation
 
 This repository contains artifacts at different maturity levels. Do not infer repository-wide validation from a component-level test, a historical attestation, or a README badge. Current verification should identify the exact commit, test/evaluation run, and evidence supporting the claim.
+
+The v0.7.5 runtime-characterization release is an immutable historical baseline. Later security and epistemic-governance changes are not retroactively included in that release.
 
 ## Related ecosystem
 
