@@ -21,16 +21,19 @@ jobs:
         with:
           python-version: '3.12.0'
       - name: Install harness dependencies
-        run: python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt pytest==8.4.2
+        run: |
+          python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt
       - name: Run pre-freeze contract suite
         working-directory: experiments/pdmal_pilot
         env:
           PYTHONPATH: .
-        run: python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py -q
+        run: |
+          python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py -q
       - name: Verify runner has no empirical authorization by default
         env:
           PDMAL_MODE: contract
-        run: python experiments/pdmal_pilot/run_pilot.py --seeds 2
+        run: |
+          python experiments/pdmal_pilot/run_pilot.py --seeds 2
       - name: Verify pilot mode fails closed without freeze/authorization
         env:
           PDMAL_MODE: pilot
@@ -42,6 +45,12 @@ jobs:
           rc=$?
           set -e
           test "$rc" -ne 0
+      - name: Verify artifact schema and integrity contract
+        working-directory: experiments/pdmal_pilot
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest test_harness_contract.py -q
       - name: Emit pre-freeze manifest
         run: |
           mkdir -p test-artifacts
