@@ -1,0 +1,60 @@
+name: PDMAL Blinding Operational Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - epistemic/evidence-architecture-v1
+    paths:
+      - 'experiments/pdmal_pilot/blinding_operational_test.py'
+      - 'docs/experiment/PDMAL_BLINDING_OPERATIONAL_VERIFICATION.md'
+      - '.github/workflows/pdmal-blinding-operational-test.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  blinding-operational-test:
+    name: Non-production blinding custody dry-run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run synthetic blinding custody dry-run
+        env:
+          PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_pilot
+        run: |
+          python experiments/pdmal_pilot/blinding_operational_test.py \
+            --output-dir blinding_artifacts
+
+      - name: Validate dry-run artifact
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('blinding_artifacts/blinding_operational_test.json').read_text())
+          assert data['protocol_status'] == 'PRE-FREEZE'
+          assert data['empirical_data_collection'] is False
+          assert data['production_secret_accessed'] is False
+          assert data['mock_dataset_frozen'] is True
+          assert data['recovered_labels_match'] is True
+          assert data['blinded_ids_unique'] is True
+          assert data['result'] == 'PASS'
+          print('Blinding operational dry-run artifact: PASS')
+          PY
+
+      - name: Upload dry-run evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-blinding-operational-test-${{ github.sha }}
+          path: blinding_artifacts/
+          if-no-files-found: error
+          retention-days: 30
