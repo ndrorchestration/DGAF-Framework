@@ -80,8 +80,8 @@ def test_successful_attempt_over_timeout_becomes_timeout():
         task,
         seed=1,
         condition="contract",
-        policy=RetryPolicy(timeout_seconds=2.0),
-        monotonic_clock=fake_clock_factory([0.0, 3.0, 4.0, 5.0, 6.0]),
+        policy=RetryPolicy(timeout_seconds=2.0, recovery_window_seconds=0.0, max_attempts=1),
+        monotonic_clock=fake_clock_factory([0.0, 3.0]),
         sleeper=lambda _: None,
         isolate=False,
     )
