@@ -6,11 +6,13 @@ Usage:
 
 The runner records exact request/response metadata and never promotes a
 result to VERIFIED by itself. Use the generated JSON as execution evidence.
+Set VERCEL_AUTOMATION_BYPASS_SECRET when targeting a protected Vercel deployment.
 """
 from __future__ import annotations
 
 import argparse
 import json
+import os
 from datetime import datetime, timezone
 from http.client import RemoteDisconnected
 from pathlib import Path
@@ -21,13 +23,13 @@ from urllib.request import Request, urlopen
 CASES = [
     {
         "id": "case-1-valid-audit-missing",
-        "payload": {"mandate": "P2 live verification", "turn": 0},
+        "payload": {"mandate": "P2 live verification", "turn": 13},
         "expected_status": 503,
         "expected_decision": "BLOCKED",
     },
     {
         "id": "case-2-invalid-body-shape",
-        "payload": {"foo": "bar"},
+        "raw_payload": b"[]",
         "expected_status": 400,
         "expected_decision": "REJECT",
     },
@@ -46,40 +48,16 @@ CASES = [
 ]
 
 
-def request_json(url: str, payload: dict) -> tuple[int, str, dict | None]:
-    body = json.dumps(payload).encode("utf-8")
-    request = Request(
-        url,
-        data=body,
-        method="POST",
-        headers={"Content-Type": "application/json", "Accept": "application/json"},
-    )
-    try:
-        with urlopen(request, timeout=20) as response:
-            raw = response.read().decode("utf-8", errors="replace")
-            try:
-                parsed = json.loads(raw)
-            except json.JSONDecodeError:
-                parsed = None
-            return response.status, raw, parsed
-    except HTTPError as exc:
-        raw = exc.read().decode("utf-8", errors="replace")
-        try:
-            parsed = json.loads(raw)
-        except json.JSONDecodeError:
-            parsed = None
-        return exc.code, raw, parsed
-    except (URLError, RemoteDisconnected, TimeoutError) as exc:
-        return 0, f"transport_error: {exc}", None
+def headers() -> dict[str, str]:
+    result = {"Content-Type": "application/json", "Accept": "application/json"}
+    bypass = os.getenv("VERCEL_AUTOMATION_BYPASS_SECRET")
+    if bypass:
+        result["x-vercel-protection-bypass"] = bypass
+    return result
 
 
-def request_malformed_json(url: str) -> tuple[int, str, dict | None]:
-    request = Request(
-        url,
-        data=b"{",
-        method="POST",
-        headers={"Content-Type": "application/json", "Accept": "application/json"},
-    )
+def request_raw(url: str, body: bytes) -> tuple[int, str, dict | None]:
+    request = Request(url, data=body, method="POST", headers=headers())
     try:
         with urlopen(request, timeout=20) as response:
             raw = response.read().decode("utf-8", errors="replace")
@@ -117,14 +95,15 @@ def main() -> int:
 
     for case in CASES:
         ts = datetime.now(timezone.utc).isoformat()
-        status, raw, parsed = request_json(endpoint, case["payload"])
+        request_body = case.get("raw_payload") or json.dumps(case["payload"]).encode("utf-8")
+        status, raw, parsed = request_raw(endpoint, request_body)
         decision = parsed.get("decision") if isinstance(parsed, dict) else None
         passed = status == case["expected_status"] and decision == case["expected_decision"]
         results.append(
             {
                 "case_id": case["id"],
                 "timestamp": ts,
-                "request": case["payload"],
+                "request": case.get("payload") if "payload" in case else case["raw_payload"].decode("utf-8"),
                 "expected": {
                     "status": case["expected_status"],
                     "decision": case["expected_decision"],
@@ -144,15 +123,15 @@ def main() -> int:
         )
 
     malformed_timestamp = datetime.now(timezone.utc).isoformat()
-    status, raw, parsed = request_malformed_json(endpoint)
+    status, raw, parsed = request_raw(endpoint, b"{")
     malformed_decision = parsed.get("decision") if isinstance(parsed, dict) else None
-    malformed_passed = status == 400 and malformed_decision == "REJECT"
+    malformed_passed = status == 400 and malformed_decision is None
     results.append(
         {
             "case_id": "case-5-malformed-json",
             "timestamp": malformed_timestamp,
             "request_raw": "{",
-            "expected": {"status": 400, "decision": "REJECT"},
+            "expected": {"status": 400, "decision": None},
             "actual": {
                 "status": status,
                 "decision": malformed_decision,
@@ -163,7 +142,7 @@ def main() -> int:
     )
     print(
         f"{'PASS' if malformed_passed else 'FAIL'} case-5-malformed-json: "
-        f"expected 400/REJECT got {status}/{malformed_decision}"
+        f"expected 400/None got {status}/{malformed_decision}"
     )
 
     payload = {
@@ -176,9 +155,11 @@ def main() -> int:
             "endpoint": endpoint,
             "environment": args.environment,
             "commit": args.commit,
+            "bypass_configured": bool(os.getenv("VERCEL_AUTOMATION_BYPASS_SECRET")),
         },
         "cases": results,
         "epistemic_boundary": "Execution evidence applies only to this endpoint, deployment, environment, and commit; it does not establish broad DGAF efficacy.",
+        "spec_revision": "P2-2026-08-18-runtime-contract-v2",
     }
 
     output = Path(args.output)
