@@ -112,33 +112,45 @@ def run_task_with_timeout(
     )
 
     started = clock()
-    process.start()
+    try:
+        process.start()
+    except Exception as exc:
+        result_queue.close()
+        result_queue.join_thread()
+        return AttemptStatus.FAILURE, max(0.0, clock() - started), f"process-start-failed:{type(exc).__name__}: {exc}"
+
     process.join(timeout_seconds)
     elapsed = max(0.0, clock() - started)
 
     if process.is_alive():
         process.terminate()
-        process.join(1.0)
+        process.join(0.1)
         if process.is_alive() and hasattr(process, "kill"):
             process.kill()
-            process.join()
+            process.join(0.1)
+        result_queue.close()
+        result_queue.join_thread()
         return AttemptStatus.TIMEOUT, elapsed, "process-terminated-on-timeout"
 
     try:
         raw_status, error = result_queue.get(timeout=1.0)
     except Empty:
         if process.exitcode == 0:
-            return AttemptStatus.FAILURE, elapsed, "child-exited-without-result"
-        return AttemptStatus.FAILURE, elapsed, f"child-exit-code:{process.exitcode}"
+            result = AttemptStatus.FAILURE, elapsed, "child-exited-without-result"
+        else:
+            result = AttemptStatus.FAILURE, elapsed, f"child-exit-code:{process.exitcode}"
+    else:
+        if raw_status == AttemptStatus.TIMEOUT.value:
+            result = AttemptStatus.TIMEOUT, elapsed, error
+        elif raw_status == AttemptStatus.FAILURE.value:
+            result = AttemptStatus.FAILURE, elapsed, error
+        else:
+            result = AttemptStatus.SUCCESS, elapsed, None
     finally:
         result_queue.close()
         result_queue.join_thread()
 
-    if raw_status == AttemptStatus.TIMEOUT.value:
-        return AttemptStatus.TIMEOUT, elapsed, error
-    if raw_status == AttemptStatus.FAILURE.value:
-        return AttemptStatus.FAILURE, elapsed, error
-    return AttemptStatus.SUCCESS, elapsed, None
+    return result
 
 
 def execute_trial(
