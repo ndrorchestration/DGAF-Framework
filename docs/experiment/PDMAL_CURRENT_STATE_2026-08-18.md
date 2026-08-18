@@ -4,11 +4,11 @@
 
 ```text
 Branch:                         epistemic/evidence-architecture-v1
-State snapshot commit:         b49a245110e19a99d3f4750496ae5817c9af617b
-Documentation maintenance:    2a24aad09fc2c1bf50abc3207b9ae1f974596d04
+Current implementation head:   f9cab0d0585c0f33ce42cfe9313e3133969f88e4
 Previous verified head:        17a9e2e737f54046a1f1f93dbd70d287825fc6ee
 Epistemic CI on 17a9e2e7:      PASS — run 32098754363
 PDMAL pre-freeze CI on 17a9e2e7: PASS — run 32098754451
+Current-head CI:               PENDING
 Protocol:                      PRE-FREEZE
 Pilot authorization:           NOT GRANTED
 Empirical data:                0
@@ -29,7 +29,7 @@ pptl.triadic_governance_loop.TriadicGovernanceLoop.run_turn(
 
 The primitive is text/context-oriented and returns a sealed governance audit record rather than numeric consensus weights.
 
-`pptl/orchestrator.py` references `TGLConfig` and `TurnContext`, while the verified TGL implementation exposes `TGLHooks` and `run_turn`. This repository interface mismatch is a pre-freeze blocker and must be resolved or explicitly bypassed by pinning the verified `run_turn` interface directly.
+`pptl/orchestrator.py` references `TGLConfig` and `TurnContext`, while the verified TGL implementation exposes `TGLHooks` and `run_turn`. This repository interface mismatch remains a pre-freeze integration concern and is tracked by Issue #71. The new adapter deliberately imports the verified `run_turn` interface directly rather than relying on the inconsistent orchestrator path.
 
 ## Design decision
 
@@ -41,17 +41,30 @@ Candidate specification:
  docs/experiment/PDMAL_TGL_ADAPTER_SPEC_v0.7.md
 ```
 
-The adapter must:
+Implemented pre-freeze component:
 
-1. canonicalize consensus state, topology, failure, and runtime context;
-2. serialize that state deterministically;
-3. invoke the exact pinned TGL `run_turn` interface;
-4. convert only structured audit fields into a finite decision vocabulary;
-5. apply a bounded deterministic numeric update operator;
-6. record full provenance;
-7. fail closed on interface, serialization, timeout, or decision-contract errors.
+```text
+experiments/pdmal_pilot/dgaf_tgl_adapter.py
+experiments/pdmal_pilot/test_dgaf_tgl_adapter.py
+```
 
-No free-form natural-language interpretation, hidden model call, or discretionary decision may occur in the experimental loop.
+The adapter:
+
+1. canonicalizes consensus state, topology, failure, and runtime context;
+2. serializes that state deterministically;
+3. invokes the exact pinned TGL `run_turn` interface;
+4. converts only structured audit fields into a finite decision vocabulary;
+5. applies a bounded deterministic numeric update operator;
+6. records input/audit hashes through the adapter result;
+7. fails closed on interface, serialization, timeout, or decision-contract errors.
+
+No free-form natural-language interpretation, hidden model call, or discretionary decision occurs in the adapter. The canonical text representation is deterministic machine-readable input, not a natural-language prompt.
+
+## CI integration
+
+`.github/workflows/pdmal-pre-freeze-runner.yml` now includes `test_dgaf_tgl_adapter.py` in the pre-freeze contract suite.
+
+The current head therefore requires a fresh CI run before any implementation-gate advancement.
 
 ## Documentation / issue references
 
@@ -63,10 +76,10 @@ No free-form natural-language interpretation, hidden model call, or discretionar
 
 ```text
 v0.7 panel approval                   PENDING
-TGL interface mismatch resolution    OPEN
-Adapter implementation               BLOCKED
+TGL interface mismatch resolution    OPEN / tracked by #71
+Adapter implementation               IMPLEMENTED / PRE-FREEZE
 2-seed contract validation            PENDING
-Current-head CI after adapter         PENDING
+Current-head CI                       PENDING
 Runtime characterization              PENDING
 Artifact/custody verification         PENDING
 Protocol freeze                       BLOCKED
@@ -75,6 +88,6 @@ Pilot authorization                   BLOCKED
 
 ## Evidence boundary
 
-Current CI success proves the covered software gates execute in the tested environment. It does not establish PDMAL efficacy, superiority, convergence, robustness, causal attribution, or real-world benefit.
+Current CI success on `17a9e2e7` proves the previously covered software gates execute in the tested environment. It does not verify the new adapter or establish PDMAL efficacy, superiority, convergence, robustness, causal attribution, or real-world benefit.
 
 No pilot or final experimental seed may be generated while the protocol remains PRE-FREEZE and pilot authorization is absent.
