@@ -2,7 +2,7 @@
 
 ## Status
 
-**CANDIDATE / PRE-FREEZE / NOT APPROVED FOR PILOT**
+CANDIDATE / PRE-FREEZE / NOT APPROVED FOR PILOT
 
 This document defines the proposed Path A bridge between the numeric PDMAL consensus workload and the repository's verified text-oriented DGAF governance primitive. It is a candidate adapter contract, not an authorization to collect empirical data.
 
