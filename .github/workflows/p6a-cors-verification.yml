@@ -1,0 +1,102 @@
+name: P6a Live CORS Verification
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  p6a-cors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    env:
+      P6A_BASE_URL: https://dynamicgovernanceagenticformation-dp3baqm9p-ndrorchestration.vercel.app
+      EXPECTED_COMMIT: e1f077fec746acd6066db689ef40db000e027f2f
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      ALLOWED_ORIGIN: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
+      DISALLOWED_ORIGIN: https://untrusted.com
+    steps:
+      - name: Verify bypass secret is available
+        run: |
+          if [ -z "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
+            echo "VERCEL_AUTOMATION_BYPASS_SECRET is not configured; refusing to test protected deployment."
+            exit 1
+          fi
+          echo "Vercel automation bypass secret is present (value withheld)."
+
+      - name: Execute live CORS checks
+        run: |
+          python - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+
+          base = os.environ['P6A_BASE_URL'].rstrip('/')
+          endpoint = base + '/api/orchestrate'
+          bypass = os.environ['VERCEL_AUTOMATION_BYPASS_SECRET']
+          allowed = os.environ['ALLOWED_ORIGIN']
+          disallowed = os.environ['DISALLOWED_ORIGIN']
+
+          def request(method, origin, body=None, extra=None):
+              headers = {
+                  'Origin': origin,
+                  'Accept': 'application/json',
+                  'x-vercel-protection-bypass': bypass,
+              }
+              if body is not None:
+                  headers['Content-Type'] = 'application/json'
+              if extra:
+                  headers.update(extra)
+              req = urllib.request.Request(endpoint, data=body, method=method, headers=headers)
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r:
+                      return r.status, dict(r.headers.items()), r.read().decode('utf-8', 'replace')
+              except urllib.error.HTTPError as e:
+                  return e.code, dict(e.headers.items()), e.read().decode('utf-8', 'replace')
+
+          checks = []
+
+          status, headers, _ = request('POST', allowed, b'{"mandate":"P6a","turn":13}')
+          passed = status in (200, 400, 503) and headers.get('Access-Control-Allow-Origin') == allowed
+          checks.append({'case': 'allowed_origin_post', 'status': status, 'allow_origin': headers.get('Access-Control-Allow-Origin'), 'passed': passed})
+          print(json.dumps(checks[-1], sort_keys=True))
+
+          status, headers, _ = request('POST', disallowed, b'{"mandate":"P6a","turn":13}')
+          passed = 'Access-Control-Allow-Origin' not in headers
+          checks.append({'case': 'disallowed_origin_post', 'status': status, 'allow_origin': headers.get('Access-Control-Allow-Origin'), 'passed': passed})
+          print(json.dumps(checks[-1], sort_keys=True))
+
+          status, headers, _ = request('OPTIONS', allowed, extra={'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'Content-Type,Authorization'})
+          passed = status == 204 and headers.get('Access-Control-Allow-Origin') == allowed and 'POST' in headers.get('Access-Control-Allow-Methods', '') and 'Content-Type' in headers.get('Access-Control-Allow-Headers', '')
+          checks.append({'case': 'allowed_origin_preflight', 'status': status, 'allow_origin': headers.get('Access-Control-Allow-Origin'), 'allow_methods': headers.get('Access-Control-Allow-Methods'), 'allow_headers': headers.get('Access-Control-Allow-Headers'), 'passed': passed})
+          print(json.dumps(checks[-1], sort_keys=True))
+
+          status, headers, _ = request('OPTIONS', disallowed, extra={'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'Content-Type,Authorization'})
+          passed = status == 403 and 'Access-Control-Allow-Origin' not in headers
+          checks.append({'case': 'disallowed_origin_preflight', 'status': status, 'allow_origin': headers.get('Access-Control-Allow-Origin'), 'passed': passed})
+          print(json.dumps(checks[-1], sort_keys=True))
+
+          evidence = {
+              'evidence_class': 'P6A_CORS_RUNTIME_EXECUTION',
+              'status': 'PASS' if all(item['passed'] for item in checks) else 'FAIL',
+              'source_commit': os.environ['EXPECTED_COMMIT'],
+              'deployment_url': base,
+              'endpoint': endpoint,
+              'timestamp_epoch': time.time(),
+              'checks': checks,
+              'epistemic_boundary': 'CORS evidence applies only to this endpoint, deployment, environment, and configured origins; it does not establish broader security or production hardening claims.'
+          }
+          with open('p6a-cors-verification.json', 'w', encoding='utf-8') as f:
+              json.dump(evidence, f, indent=2, sort_keys=True)
+          if evidence['status'] != 'PASS':
+              raise SystemExit(1)
+          PY
+
+      - name: Upload P6a provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p6a-cors-verification-e1f077f
+          path: p6a-cors-verification.json
+          if-no-files-found: error
+          retention-days: 14
