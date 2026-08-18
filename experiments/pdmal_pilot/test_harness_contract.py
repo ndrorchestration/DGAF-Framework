@@ -2,7 +2,12 @@
 
 import hashlib
 
-from artifact_schema import sha256_sidecar, validate_artifact_document, validate_seed_record
+from artifact_schema import (
+    ARTIFACT_SCHEMA_VERSION,
+    sha256_sidecar,
+    validate_artifact_document,
+    validate_seed_record,
+)
 from harness_contract import (
     EXPERIMENT_CONDITIONS,
     TOPOLOGY_SPECS,
@@ -77,20 +82,47 @@ def _valid_seed_record() -> dict:
     }
 
 
-def test_seed_artifact_schema_and_sidecar() -> None:
-    record = _valid_seed_record()
-    validate_seed_record(record)
-    document = {
+def _valid_artifact_document() -> dict:
+    return {
+        "schema_version": ARTIFACT_SCHEMA_VERSION,
         "artifact_version": "1",
         "protocol_status": "PRE-FREEZE",
         "empirical_data_collection": False,
-        "records": [record],
+        "records": [_valid_seed_record()],
     }
+
+
+def test_seed_artifact_schema_and_sidecar() -> None:
+    record = _valid_seed_record()
+    validate_seed_record(record)
+    document = _valid_artifact_document()
     validate_artifact_document(document)
     raw = canonical_json_bytes(document)
     sidecar = sha256_sidecar(raw, "seed-0001.json")
     assert sidecar.endswith("  seed-0001.json\n")
     assert len(sidecar.split()[0]) == 64
+
+
+def test_artifact_schema_version_is_required() -> None:
+    document = _valid_artifact_document()
+    del document["schema_version"]
+    try:
+        validate_artifact_document(document)
+    except AssertionError as exc:
+        assert "schema_version" in str(exc)
+    else:
+        raise AssertionError("artifact without schema_version must fail closed")
+
+
+def test_invalid_artifact_schema_version_fails_closed() -> None:
+    document = _valid_artifact_document()
+    document["schema_version"] = "0.9"
+    try:
+        validate_artifact_document(document)
+    except AssertionError as exc:
+        assert "schema_version" in str(exc)
+    else:
+        raise AssertionError("unsupported schema_version must fail closed")
 
 
 def test_excluded_artifact_requires_reason() -> None:
