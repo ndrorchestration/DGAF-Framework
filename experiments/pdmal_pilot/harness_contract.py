@@ -17,6 +17,8 @@ import networkx as nx
 import numpy as np
 from numpy.random import Generator, PCG64, SeedSequence
 
+from topology_utils import graph_fingerprint
+
 EXPERIMENT_CONDITIONS = (
     "null",
     "simple",
@@ -137,6 +139,7 @@ class HarnessResult:
     blinded_condition_id: str
     topology: str
     topology_valid: bool
+    topology_fingerprint: str
     status: str
 
 
@@ -155,6 +158,7 @@ def deterministic_contract_run(root_seed: int, key: bytes) -> list[HarnessResult
                 blinded_condition_id=blind_condition(order[0], key),
                 topology=topology,
                 topology_valid=True,
+                topology_fingerprint=graph_fingerprint(graph),
                 status="CONTRACT_VALIDATED_ONLY",
             )
         )
