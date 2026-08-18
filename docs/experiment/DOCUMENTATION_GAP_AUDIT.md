@@ -2,35 +2,49 @@
 
 ## Status
 
-Audit performed before empirical execution. This document records documentation gaps that must be resolved or explicitly accepted before protocol freeze and pilot authorization.
+Audit performed before empirical execution and updated after expert-panel adjudication. The panel has resolved the substantive protocol choices; remaining items are implementation/provenance fields required before freeze.
 
 ## Findings
 
 | Area | Status | Required action |
 |---|---|---|
 | P6a CORS verification | CLOSED | Verified run `32092041579`, artifact `9308650112`; no further P6a work required. |
-| PDMAL experiment protocol | PRE-FREEZE | Resolve all protocol fields with concrete values and freeze with commit SHA/timestamp before any seed generation. |
-| Topology/baseline matrix | PARTIALLY SPECIFIED | Freeze exact implementation identifiers/versions for Null, Simple, Static, DGAF, DGAF+PDMAL conditions and mapping to blinded labels. |
-| Primary endpoint | OPEN | Name the exact metric, formula, denominator, directionality, aggregation rule, and decision rule. |
-| Secondary endpoints | OPEN | Define exact metrics, formulas, aggregation, and multiplicity treatment where applicable. |
-| RNG specification | OPEN | Freeze exact RNG libraries/algorithms, stream derivation, seed list generation, and separation between trial/failure/order/analysis streams. |
-| Trial ordering/randomization | OPEN | Freeze deterministic ordering/randomization procedure and reproducibility command. |
-| Failure/recovery semantics | OPEN | Freeze exact injected failure model, recovery/rerouting behavior, and what counts as a failure/recovery event. |
-| Exclusion rules | OPEN | Enumerate objective exclusion criteria and handling of invalid/missing trials. |
-| Stopping rules | OPEN | Define pilot/final stopping boundaries and who/what can authorize termination. |
-| Statistical analysis plan | OPEN | Specify primary test/model, effect size, uncertainty interval, multiple-comparison handling, missing-data treatment, and sensitivity analyses. |
-| Sample-size rule | OPEN | Define how pilot variance maps to the final sample size; prevent post-hoc favorable target selection. |
-| Blinding/unblinding | PARTIALLY VERIFIED | Secret is operational; freeze exact blinded-label mapping, custody, dataset-freeze gate, and authorization procedure for unblinding. |
-| Pilot acceptance criteria | OPEN | Convert feasibility checks into explicit pass/fail thresholds before the 50-seed pilot. |
-| Data/artifact schema | PARTIALLY SPECIFIED | Freeze canonical raw-result schema, provenance fields, hashes, artifact naming, and retention location. |
-| Evidence classification | PRESENT | Maintain separation of VERIFIED / VALIDATED / EMPIRICALLY SUPPORTED and tie any promoted claim to exact tested conditions. |
-| Metrics provenance registry | LEGACY GAP | `docs/qa/METRICS_PROVENANCE.md` remains an active skeleton with unverified legacy metrics and a planned-but-not-created linter. This is not a pilot blocker if the pilot uses newly registered metrics, but it remains technical documentation debt. |
+| PDMAL experiment protocol | PRE-FREEZE / PANEL-ADJUDICATED | Decisions are recorded in `PDMAL_EXPERIMENT_PROTOCOL.md`; freeze only after remaining operational fields and approved experimental commit are established. |
+| Topology/baseline matrix | PANEL-ADJUDICATED / PROVENANCE PENDING | Candidate matrix accepted. Record exact implementation SHAs, dependency/version identifiers, generation parameters, and graph validation results for every topology. |
+| Primary endpoint | RESOLVED | FFCR: completed trials without unrecovered failure / eligible trials; higher is better; prespecified contrasts with 95% CI. |
+| Secondary endpoints | RESOLVED | Recovery success, recovery latency, unrecovered failures, runtime, variance, connectivity/surviving component size, protocol compliance, missing/invalid rate, gate-block frequency; `D_a`/phi/topology diagnostics exploratory. |
+| RNG specification | RESOLVED / VERSION RECORD PENDING | NumPy `Generator(PCG64)` with domain-separated streams and SHA-256 seed+stream derivation. Record exact NumPy version and serialization details. |
+| Trial ordering/randomization | RESOLVED | Block-randomized within seed using dedicated ordering stream; retain reproducible ordering in provenance. |
+| Failure/recovery semantics | RESOLVED / TIMEOUT VALUES PENDING | Failure definition and recovery/reroute semantics fixed; exact timeout, retry count, and recovery window must be frozen from the pinned runner. |
+| Exclusion rules | RESOLVED | Objective protocol violations only; retain exclusions with reasons; no outcome-based exclusion. |
+| Stopping rules | RESOLVED | No efficacy stopping; only predefined safety, provenance, blinding, protocol-integrity, or catastrophic execution halts. |
+| Statistical analysis plan | RESOLVED / IMPLEMENTATION PENDING | Paired FFCR comparisons, risk difference, 95% CI, prespecified primary contrast, exploratory secondary contrasts with correction. Implement exact analysis formula before freeze. |
+| Sample-size rule | RESOLVED / FORMULA IMPLEMENTATION PENDING | Target power 0.80, alpha 0.05, minimum detectable risk difference 0.15; final N from pilot estimate using fixed formula/rounding rule. |
+| Blinding/unblinding | RESOLVED / CUSTODY PROCEDURE PENDING | `PDMAL_BLINDING_KEY` remains secret; mapping external to analytical dataset; freeze custody and authorization procedure. |
+| Pilot acceptance criteria | RESOLVED / RUNTIME CEILING PENDING | 100% attempted, 0 blinding breaches, missing/invalid <=5%, all conditions execute, no comparability-affecting deviation, runtime <= frozen ceiling. Numeric ceiling still needs characterization and freeze. |
+| Data/artifact schema | RESOLVED / IMPLEMENTATION PENDING | One JSON artifact per seed with trial records + provenance; verify exact schema, naming, hashes, environment fingerprint, and retention path. |
+| Evidence classification | PRESENT | Maintain VERIFIED / VALIDATED / EMPIRICALLY SUPPORTED separation and condition-specific claims. |
+| Metrics provenance registry | LEGACY GAP | `docs/qa/METRICS_PROVENANCE.md` remains a separate technical-debt item and is not a pilot blocker when new pilot metrics are explicitly registered. |
 | Issue #76 | UNVERIFIED | GitHub returned 404; do not infer state until repository identity/reference is resolved. |
+
+## Remaining pre-freeze blockers
+
+Only these implementation-dependent items remain before the protocol can legitimately enter `FROZEN` status:
+
+1. Exact topology implementation/source SHAs and graph validation records.
+2. Exact NumPy version and RNG serialization/derivation details.
+3. Exact failure timeout/retry/recovery-window values from the pinned runner.
+4. Final sample-size formula implementation and fixed rounding rule.
+5. Final artifact schema implementation/validation and retention location.
+6. Exact blinded-label custody/unblinding authorization procedure.
+7. Numeric runtime ceiling based on the pinned execution environment.
+
+These are not empirical results; they are protocol implementation/provenance controls.
 
 ## Gate rule
 
-No empirical seed generation is authorized until all rows marked OPEN or PARTIALLY SPECIFIED that affect the pilot are resolved and the protocol is frozen with a commit SHA and timestamp.
+No empirical seed generation is authorized until the remaining blockers above are resolved, the protocol is frozen with a commit SHA and timestamp, and pilot authorization is explicitly recorded.
 
 ## Evidence boundary
 
-This audit identifies documentation completeness requirements. It does not constitute evidence that PDMAL is effective.
+This audit identifies documentation completeness and protocol controls. It does not constitute evidence that PDMAL is effective.
