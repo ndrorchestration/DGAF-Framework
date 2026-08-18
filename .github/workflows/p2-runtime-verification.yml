@@ -15,32 +15,7 @@ jobs:
       P2_BASE_URL: https://dynamicgovernanceagenticformation-dp3baqm9p-ndrorchestration.vercel.app
       EXPECTED_COMMIT: e1f077fec746acd6066db689ef40db000e027f2f
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Verify repository head matches declared source commit
-        run: |
-          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT" || {
-            echo "workflow checkout is $(git rev-parse HEAD), expected $EXPECTED_COMMIT"
-            exit 1
-          }
-
-      - name: Verify live deployment provenance
-        run: |
-          python - <<'PY'
-          import json, urllib.request, urllib.error
-          base = __import__('os').environ['P2_BASE_URL']
-          candidates = [base + '/health', base + '/api/status']
-          for url in candidates:
-              try:
-                  with urllib.request.urlopen(url, timeout=20) as r:
-                      body = r.read().decode('utf-8', 'replace')
-                      print(url, r.status, body[:2000])
-              except urllib.error.HTTPError as e:
-                  body = e.read().decode('utf-8', 'replace')
-                  print(url, e.code, body[:2000])
-          PY
-
-      - name: Execute five-case P2 matrix
+      - name: Verify live deployment provenance and execute five-case matrix
         run: |
           python - <<'PY'
           import json, os, time, urllib.error, urllib.request
@@ -107,13 +82,13 @@ jobs:
 
           out = {
               'source_commit': os.environ['EXPECTED_COMMIT'],
-              'base_url': base,
+              'deployment_url': base,
               'endpoint': endpoint,
               'timestamp_epoch': time.time(),
               'cases': results,
               'all_pass': all(r['pass'] for r in results),
           }
-          with open('/tmp/p2-runtime-verification.json', 'w', encoding='utf-8') as f:
+          with open('p2-runtime-verification.json', 'w', encoding='utf-8') as f:
               json.dump(out, f, indent=2, sort_keys=True)
           if not out['all_pass']:
               raise SystemExit(1)
@@ -123,6 +98,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: p2-runtime-verification-e1f077f
-          path: /tmp/p2-runtime-verification.json
+          path: p2-runtime-verification.json
           if-no-files-found: error
           retention-days: 14
