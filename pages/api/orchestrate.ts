@@ -1,5 +1,6 @@
 // pages/api/orchestrate.ts — Pages Router API
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { evidenceEnvelope } from '../../lib/evidence'
 
 const PSI      = 1.4655712318767682
 const PHI      = (1 + Math.sqrt(5)) / 2
@@ -19,30 +20,45 @@ function snapToPhiLattice(c: number): number {
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
+    return res.status(405).json({
+      error: 'Method not allowed',
+      evidence: evidenceEnvelope({ mode: 'integration', status: 'NOT_IMPLEMENTED', claim_id: 'dgaf-runtime-governance' }),
+    })
   }
-  const { payload = '', confidence = 0.5, claim = '', turn = 1 } = req.body ?? {}
 
-  // Gate 4: DemiJoule syntactic block
+  const { payload = '', confidence = 0.5, claim = '', turn = 1 } = req.body ?? {}
+  const trace: Array<Record<string, unknown>> = []
+
+  // Gate 4: DemiJoule syntactic block.
   for (const p of ['ignore previous', 'disregard', 'jailbreak']) {
     if (String(payload).toLowerCase().includes(p)) {
-      return res.status(400).json({ decision: 'KILL', reason: `blocked: ${p}`, turn })
+      trace.push({ gate: 'DemiJoule', decision: 'KILL', reason: `blocked: ${p}` })
+      return res.status(400).json({
+        decision: 'KILL',
+        reason: `blocked: ${p}`,
+        turn,
+        trace,
+        evidence: evidenceEnvelope({ mode: 'integration', status: 'PASS', claim_id: 'dgaf-runtime-governance' }),
+      })
     }
   }
+  trace.push({ gate: 'DemiJoule', decision: 'PASS' })
 
-  // Gate 5: Phi-Closure at Fibonacci checkpoints
+  // Gate 5: Phi-Closure at Fibonacci checkpoints.
   let phi_gate  = 'SKIP'
-  let phi_delta = null
+  let phi_delta: number | null = null
   if (FIB.includes(turn)) {
-    phi_delta = Math.abs(PHI_STAR - PHI_STAR)  // stub: always 0 until audit state wired
-    phi_gate  = phi_delta < PHI_TOL ? 'PASS' : 'REPROMPT'
+    // Audit state is not yet wired into this endpoint. Do not represent the
+    // placeholder check as empirical evidence.
+    phi_delta = 0
+    phi_gate  = 'PASS'
+    trace.push({ gate: 'Phi-Closure', decision: phi_gate, audit_state: 'NOT_WIRED', phi_delta })
   }
 
-  // Gate 6: HPG snap
   const effective_confidence = phi_gate !== 'REPROMPT' ? snapToPhiLattice(confidence) : confidence
   const psi_cubic = Math.abs(PSI ** 3 - (PSI ** 2 + 1)) < 1e-10
 
-  res.status(200).json({
+  return res.status(200).json({
     decision:             'PASS',
     turn,
     raw_confidence:       confidence,
@@ -53,5 +69,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     psi_cubic_check:      psi_cubic,
     claim_received:       claim,
     payload_len:          String(payload).length,
+    trace,
+    evidence: evidenceEnvelope({
+      mode: 'integration',
+      status: 'PARTIAL',
+      claim_id: 'dgaf-runtime-governance',
+    }),
   })
 }
