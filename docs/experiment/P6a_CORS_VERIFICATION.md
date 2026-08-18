@@ -2,7 +2,7 @@
 
 ## Status
 
-**Gate: VERIFIED for designated deployment/source binding**
+Gate: VERIFIED for designated deployment/source binding
 
 The live P6a CORS verification completed successfully. The retained GitHub Actions artifact demonstrates all four predeclared assertions against the designated immutable deployment and deployed application source.
 
