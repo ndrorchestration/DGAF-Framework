@@ -4,7 +4,7 @@
 
 ```text
 Branch:                         epistemic/evidence-architecture-v1
-Current implementation head:   273135e2898563f446d1a0751984afdda4d18111
+Current implementation head:   4e6387f333c6c8a6038201a5a77c3943ff79da26
 Previous verified head:        17a9e2e737f54046a1f1f93dbd70d287825fc6ee
 Epistemic CI on 17a9e2e7:      PASS — run 32098754363
 PDMAL pre-freeze CI on 17a9e2e7: PASS — run 32098754451
@@ -44,6 +44,7 @@ Implemented pre-freeze components:
 ```text
 experiments/pdmal_pilot/dgaf_tgl_adapter.py
 experiments/pdmal_pilot/test_dgaf_tgl_adapter.py
+experiments/pdmal_pilot/task_engine.py (existing contract engine)
 ```
 
 Implementation contract:
@@ -71,7 +72,7 @@ No free-form natural-language interpretation, hidden model call, or discretionar
 
 `.github/workflows/pdmal-pre-freeze-runner.yml` now includes `test_dgaf_tgl_adapter.py` in the pre-freeze contract suite.
 
-The latest adapter implementation has not yet received a fresh CI run. GitHub returned no workflow runs for the latest documentation/implementation head when checked.
+The latest adapter implementation has not yet received a fresh CI run. GitHub returned no workflow runs for commit `4e6387f333c6c8a6038201a5a77c3943ff79da26` when checked.
 
 ## Documentation / issue references
 
