@@ -2,7 +2,7 @@
 
 ## Audit status
 
-**PRE-FREEZE / AUDIT COMPLETED / FREEZE NOT AUTHORIZED**
+PRE-FREEZE / AUDIT COMPLETED / FREEZE NOT AUTHORIZED
 
 This audit checks the current protocol text against the implementation visible on `epistemic/evidence-architecture-v1`. It does not promote unresolved controls to final status.
 
