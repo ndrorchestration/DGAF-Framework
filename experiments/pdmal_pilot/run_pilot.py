@@ -3,7 +3,7 @@
 
 Contract mode is the only executable mode while the protocol is PRE-FREEZE.
 Pilot mode is intentionally unavailable until both protocol freeze and explicit
-pilot authorization are present. This module never silently upgrades modes.
+authorization are present. This module never silently upgrades modes.
 """
 from __future__ import annotations
 
@@ -71,7 +71,18 @@ def run_contract(output_dir: Path) -> int:
                 "topology_contracts": [result.__dict__ for result in results],
                 "retry_contract": {
                     "status": trial.status.value,
-                    "attempts": len(trial.attempts),
+                    "ffcr_success": trial.ffcr_success,
+                    "recovery_wait_seconds": trial.recovery_wait_seconds,
+                    "attempts": [
+                        {
+                            "attempt": attempt.attempt,
+                            "status": attempt.status.value,
+                            "elapsed_seconds": attempt.elapsed_seconds,
+                            "isolated": attempt.isolated,
+                            "termination_reason": attempt.termination_reason,
+                        }
+                        for attempt in trial.attempts
+                    ],
                 },
             },
         )
