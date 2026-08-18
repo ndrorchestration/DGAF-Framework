@@ -4,11 +4,33 @@
 
 ---
 
+## [2026-08-18] — Post-v0.7.5 Pre-Freeze Status
+
+### DGAF/PDMAL runtime-characterization and pilot readiness
+
+- Published and retained the `v0.7.5-pdmal-runtime-characterization` release as the immutable runtime-characterization baseline.
+- Closed the synthetic blinding operational test; no production secret was accessed and no empirical pilot data was generated.
+- Merged security hardening PR **#70** into `main`.
+- Security baseline established at commit `93f535c1eb822244ab4e7d3646cadfb9e28a9876`.
+- PR **#65 — Epistemic Alignment + Evidence Card architecture** remains open and is blocked by merge conflicts because its branch predates the #70 merge.
+- PR #65 must be rebased/updated against current `main`, conflicts resolved, and CI rerun before merge.
+- Release asset provenance remains split into two byte-level checks: SHA-256 of the published ZIP and SHA-256 of the authoritative inner runtime artifact.
+- Expected inner-artifact digest from the authoritative CI provenance record is `f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250`; this value remains an expected reference until the released inner artifact is freshly hashed.
+- Added `docs/PROJECT_STATUS.md` as the current authoritative operational gate board and provenance handoff.
+- Pilot remains PRE-FREEZE and **not authorized**.
+- Empirical data remains **0**.
+
+### Provenance rule
+
+The v0.7.5 release identity, published release-asset SHA-256, inner runtime-artifact SHA-256, and eventual post-#65 freeze HEAD SHA are distinct identities and must not be substituted for one another.
+
+---
+
 ## [Post-S077] — 2026-06-29
 
 ### Autonomous Sprint — Amethyst execution authority
 
-#### AHG v1.2 — External Review Integration (this commit)
+#### AHG v1.2 — External Review Integration
 - **`docs/theory/AHG_ARCHITECTURE.md` → v1.2:**
   - Canonical φ computation via logistic normalization: φ(t) = 1 + 0.8·σ(S(t)); range bounded [1.0, 1.8]
   - Stability Index S(t) = w_1·D_e + w_2·N + w_3·C + w_4·R (only D_e enters; D_explore, D_correct excluded)
@@ -88,4 +110,4 @@
 
 ---
 
-*CHANGELOG · Amethyst × COLLEEN · Updated 2026-06-29*
+*CHANGELOG · Amethyst × COLLEEN · Updated 2026-08-18*
