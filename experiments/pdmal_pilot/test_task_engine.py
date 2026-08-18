@@ -13,6 +13,15 @@ from task_engine import (
 )
 
 
+class HangingTask:
+    """Pickle-safe deterministic adapter used only to test hard timeout isolation."""
+
+    def run(self, *, seed: int, condition: str, attempt: int) -> AttemptStatus:
+        del seed, condition, attempt
+        sleep(5.0)
+        return AttemptStatus.SUCCESS
+
+
 def fake_clock_factory(values):
     iterator = iter(values)
     return lambda: next(iterator)
@@ -82,12 +91,6 @@ def test_successful_attempt_over_timeout_becomes_timeout():
 
 
 def test_hung_task_is_terminated_and_classified_timeout():
-    class HangingTask:
-        def run(self, *, seed: int, condition: str, attempt: int) -> AttemptStatus:
-            del seed, condition, attempt
-            sleep(5.0)
-            return AttemptStatus.SUCCESS
-
     started = monotonic()
     status, elapsed, termination_reason = run_task_with_timeout(
         HangingTask(),
@@ -105,12 +108,6 @@ def test_hung_task_is_terminated_and_classified_timeout():
 
 
 def test_isolated_execute_trial_records_hard_timeout():
-    class HangingTask:
-        def run(self, *, seed: int, condition: str, attempt: int) -> AttemptStatus:
-            del seed, condition, attempt
-            sleep(5.0)
-            return AttemptStatus.SUCCESS
-
     result = execute_trial(
         HangingTask(),
         seed=1,
