@@ -27,6 +27,7 @@ jobs:
       - name: Install harness dependencies
         run: |
           python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt
+          python -m pip install -r pptl/requirements.txt
       - name: Run pre-freeze contract suite
         working-directory: experiments/pdmal_pilot
         run: |
