@@ -26,7 +26,7 @@ def state() -> ConsensusState:
         agent_values=(0.1, -0.2, 0.3, 0.4),
         alive=(True, True, True, True),
         original_neighbors=((1, 3), (0, 2), (1, 3), (0, 2)),
-        active_neighbors=((1, 3), (0, 2), (1, 2)), (0, 2)),
+        active_neighbors=((1, 3), (0, 2), (1, 2), (0, 2)),
         failure_history=((1,),),
         failure_count_current=1,
         failure_count_total=1,
@@ -77,7 +77,7 @@ def test_decision_mapping_is_structured_and_finite() -> None:
     assert decision_from_audit(audit) == "FAIL_CLOSED"
 
 
-def test_pdmAL_gate_controls_isolation_decision() -> None:
+def test_pdmal_gate_controls_isolation_decision() -> None:
     audit = TurnAuditRecord(
         session_id="s",
         turn_index=1,
