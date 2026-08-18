@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/experiments/pdmal_pilot
+
 jobs:
   runner-contract:
     name: Fail-closed runner and provenance contract
@@ -25,8 +28,6 @@ jobs:
           python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt
       - name: Run pre-freeze contract suite
         working-directory: experiments/pdmal_pilot
-        env:
-          PYTHONPATH: .
         run: |
           python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py test_dgaf_tgl_adapter.py -q
       - name: Verify runner has no empirical authorization by default
@@ -47,8 +48,6 @@ jobs:
           test "$rc" -ne 0
       - name: Verify artifact schema and integrity contract
         working-directory: experiments/pdmal_pilot
-        env:
-          PYTHONPATH: .
         run: |
           python -m pytest test_harness_contract.py -q
       - name: Emit pre-freeze manifest
