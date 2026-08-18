@@ -3,7 +3,8 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-18
-applies_to_sha: 2dc0ce49c30b06807f3d57ce3eac775620b31eb5
+applies_to_sha: 08500a7a129a39c21dc890a71a85e5d996e4c4b3
+verification_evidence: Run #74 (32111556449)
 ---
 
 # PDMAL Evidence Index
