@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-18
-applies_to_sha: 2dc0ce49c30b06807f3d57ce3eac775620b31eb5
+applies_to_sha: 6680bc95ddbf4fc430973c8eb78e736a28329a38
 ---
 
 # PDMAL Current Control State
@@ -13,10 +13,12 @@ This document is the detailed operational gate record. GitHub Actions evidence i
 ## Current branch and implementation
 
 - Branch: `epistemic/evidence-architecture-v1`
-- Current head at this synchronization: `2dc0ce49c30b06807f3d57ce3eac775620b31eb5`
+- Current documentation head at this synchronization: `6680bc95ddbf4fc430973c8eb78e736a28329a38`
 - Authoritative task specification: `v0.7.4`
 - ConsensusTask implementation: CI-verified by Run #74 on `08500a7`
-- Runtime characterization harness/workflow: implemented, execution evidence still open
+- Runtime characterization: operationally verified by Run #14 on `a0ff248`
+- Blinding operational test: workflow/script implemented; dedicated execution evidence not yet observed
+- Retention: policy recorded; durable archive implementation remains open
 
 ## Gate board
 
@@ -28,32 +30,31 @@ This document is the detailed operational gate record. GitHub Actions evidence i
 | Artifact schema/integrity | VERIFIED | Schema versioning, fail-closed validation, and current pre-freeze artifact checks |
 | Task specification | APPROVED | v0.7.4 approved for implementation |
 | ConsensusTask | VERIFIED | Run #74, commit `08500a7` |
-| Runtime characterization | OPEN | Dedicated workflow exists; no characterization execution/artifact observed |
-| 300-second seed ceiling | NOT VERIFIED | Must be supported by runtime characterization evidence |
-| Blinding custody | OPEN | Protected mapping, separation of duties, and dry-run evidence pending |
-| Long-term retention | OPEN | 30-day Actions retention documented; durable policy pending |
-| Freeze packet | PENDING | Dependent on remaining controls |
+| Runtime characterization | OPERATIONALLY CHARACTERIZED | Run #14 `32112658368`; 72/72 trials completed; artifact validated |
+| 300-second seed ceiling | VERIFIED FOR CHARACTERIZATION MATRIX | Runtime artifact shows all measured seed runtimes within ceiling |
+| Blinding custody | OPEN | Synthetic dry-run implementation exists; workflow execution and procedural custody evidence pending |
+| Long-term retention | OPEN | Policy decided; durable research archive not yet established/verified |
+| Freeze packet | PENDING | Dependent on blinding and durable-retention closure |
 | Protocol freeze | BLOCKED | Not all required controls closed |
 | Pilot authorization | NOT GRANTED | Requires explicit post-freeze authorization |
 | Empirical data | 0 | No empirical execution authorized |
 
 ## Evidence boundaries
 
-Run #67 (`32108612515`) executed SHA `584862645ea9e033ac6e33b0dc6364c731eba7b0` and passed. Run #68 (`32108821363`) executed SHA `46c0d4b04025983e1d997094a4d9d404ace31928` and passed. Both are valid historical evidence for the environment/infrastructure state they tested; they are not evidence for the later current branch head.
+Run #14 is non-empirical operational verification. It does not authorize empirical execution. Its artifact is `9315467977` with digest `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27`.
 
-Run #73 (`32111238613`) failed because of a circular import during test collection. Run #74 (`32111556449`) passed on `08500a7` and closes that implementation defect.
+Run #67, Run #68, and Run #74 remain scoped to their exact executed SHAs. Later documentation commits do not inherit their verification automatically.
 
-The runtime characterization harness is an implementation artifact until a dedicated workflow run generates and validates its runtime artifact. Its presence does not close the runtime gate.
+The blinding dry-run uses only synthetic labels and a mock key. It must not access or print `PDMAL_BLINDING_KEY`. A passing synthetic dry-run is technical/procedural evidence, not authorization to use the production secret.
 
 ## Critical path
 
-1. Execute dedicated runtime characterization.
-2. Review runtime artifact and 300-second ceiling verdict.
-3. Complete blinding operational verification.
-4. Resolve long-term retention.
-5. Assemble freeze packet.
-6. Freeze protocol/implementation/environment/analysis plan with exact SHAs and timestamp.
-7. Explicitly authorize the pilot.
-8. Execute empirical work only after authorization.
+1. Execute the dedicated blinding operational dry-run workflow.
+2. Review its evidence artifact and document the procedural custody outcome.
+3. Establish and verify the durable research archive required by the retention policy.
+4. Assemble the freeze packet.
+5. Freeze protocol, implementation, environment, and analysis plan with exact SHAs and timestamp.
+6. Obtain explicit pilot authorization.
+7. Only then execute empirical work.
 
 No empirical execution is authorized by this state record.
