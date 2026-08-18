@@ -2,7 +2,7 @@
 
 ## Status
 
-**PRE-FREEZE / CONFIGURATION RECORDED / DURABLE LONG-TERM RETENTION NOT YET VERIFIED**
+PRE-FREEZE / CONFIGURATION RECORDED / DURABLE LONG-TERM RETENTION NOT YET VERIFIED
 
 This document records the artifact-retention configuration that is actually present in the PDMAL pre-freeze workflow. It does not claim that a separate durable research archive has been configured.
 
