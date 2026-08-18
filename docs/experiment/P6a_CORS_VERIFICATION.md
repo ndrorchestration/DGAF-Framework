@@ -118,6 +118,6 @@ Allowed OPTIONS    204 + required headers   PASS
 Disallowed OPTIONS 403 + ACAO absent        PASS
 ```
 
-**P6a = VERIFIED for `e1f077f` / `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7`.**
+P6a = VERIFIED for `e1f077f` / `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7`.
 
 The current PR head remains a separate provenance/required-check question and must be reassessed before merge.
