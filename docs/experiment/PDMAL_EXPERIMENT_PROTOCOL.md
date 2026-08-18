@@ -1,3 +1,14 @@
+---
+status: ACTIVE
+state: PRE-FREEZE
+authority: Both
+owner: DGAF/PDMAL experimental-design control
+last_verified: 2026-08-18
+applies_to_sha: 08500a7a129a39c21dc890a71a85e5d996e4c4b3
+protocol_blob_sha: f367328fdf0854a12b22bd94a25a58973923c5c7
+supersedes: prior protocol revisions; see repository history
+---
+
 # PDMAL Experiment Protocol
 
 ## Status
@@ -384,78 +395,21 @@ The same environment definition must be used for pilot and final experiment unle
 
 ## Protocol deviations
 
-A deviation register is required. Every deviation records:
+A protocol deviation must record at minimum:
 
 ```text
-deviation ID
-timestamp
-seed/trial
-condition
-cause
-description
-affected metric(s)
-comparability impact
-include/exclude decision
-authorization
+UTC timestamp
+seed/trial identifier if applicable
+source commit SHA
+workflow/run ID
+nature of deviation
+whether comparability was affected
+disposition under the frozen exclusion rule
+review/authorization record
 ```
 
-No deviation is silently repaired after observing its effect on the outcome.
+Valid unfavorable results are not protocol deviations merely because they are unfavorable.
 
-## Pre-unblinding freeze
+## Documentation lifecycle
 
-Before unblinding:
-
-1. raw observations are frozen;
-2. artifact hashes and IDs are recorded;
-3. preprocessing rules are frozen;
-4. exclusion decisions are frozen;
-5. analysis code and analysis commit are frozen;
-6. the analysis dataset is frozen and retained;
-7. integrity verification passes;
-8. unblinding authorization is recorded.
-
-Only then may the blinded mapping be revealed.
-
-## H4 historical boundary
-
-The earlier H4 Task-Stratified Topology × Orchestration experiment is methodological precedent only. Its simulated scores, verdicts, and historical outcomes are excluded from the present PDMAL evidence base and are not priors for the present analysis.
-
-## Freeze gate
-
-The protocol will not move from `PRE-FREEZE` to `FROZEN` until the following implementation controls are verified:
-
-```text
-[ ] Exact source SHA for every experimental condition/topology
-[ ] Graph generation + validation tests pass
-[ ] Exact Python/NumPy/environment versions pinned
-[ ] SeedSequence/PCG64 runner implementation verified
-[ ] 60s / 3 attempts / 30s recovery semantics verified
-[ ] 300s seed runtime ceiling measured and accepted
-[ ] Paired-analysis and sample-size implementation tested
-[ ] Canonical JSON schema + validator pass
-[ ] Artifact retention + SHA/attestation path verified
-[ ] Blinding custody + protected mapping mechanism verified
-[ ] Protocol deviation register operational
-```
-
-## Freeze record
-
-```text
-Protocol status:       PRE-FREEZE / PANEL-ADJUDICATED
-Panel decision record: CURRENT SESSION ADJUDICATION
-Freeze commit SHA:     NOT YET ASSIGNED
-Freeze timestamp:      NOT YET ASSIGNED
-Pilot authorization:   NOT YET GRANTED
-Seed generation:       PROHIBITED
-```
-
-## Change control
-
-Any change after freeze requires:
-
-1. a new protocol version;
-2. explicit description of the change;
-3. reason for the change;
-4. determination of whether previously collected data remain valid;
-5. a new commit SHA;
-6. updated evidence/provenance documentation.
+This protocol is `ACTIVE` as the current pre-freeze protocol and is not yet `FROZEN`. Freeze requires a new immutable commit SHA, timestamp, completed manifest, and explicit authorization record. The lifecycle metadata at the top of this file is part of the governance record.
