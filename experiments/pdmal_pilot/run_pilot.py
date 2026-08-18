@@ -8,11 +8,11 @@ pilot authorization are present. This module never silently upgrades modes.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
-import sys
-import hashlib
 from pathlib import Path
+from time import monotonic
 
 from harness_contract import deterministic_contract_run, stream_fingerprint
 from task_engine import AttemptStatus, RetryPolicy, ScriptedTask, execute_trial
@@ -29,12 +29,18 @@ def require_contract_mode() -> None:
 
 def write_contract_artifact(output_dir: Path, seed: int, payload: dict) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
-    payload = {**payload, "protocol_status": "PRE-FREEZE", "empirical_data_collection": False}
+    payload = {
+        **payload,
+        "protocol_status": "PRE-FREEZE",
+        "empirical_data_collection": False,
+    }
     path = output_dir / f"contract_seed_{seed}.json"
     raw = json.dumps(payload, indent=2, sort_keys=True).encode("utf-8") + b"\n"
     path.write_bytes(raw)
     digest = hashlib.sha256(raw).hexdigest()
-    path.with_suffix(path.suffix + ".sha256").write_text(f"{digest}  {path.name}\n", encoding="utf-8")
+    path.with_suffix(path.suffix + ".sha256").write_text(
+        f"{digest}  {path.name}\n", encoding="utf-8"
+    )
 
 
 def run_contract(output_dir: Path) -> int:
@@ -50,7 +56,7 @@ def run_contract(output_dir: Path) -> int:
             seed=seed,
             condition="CONTRACT_ONLY",
             policy=RetryPolicy(recovery_window_seconds=0.0),
-            monotonic_clock=iter((lambda: 0.0), (lambda: 0.0)).__next__ if False else __import__("time").monotonic,
+            monotonic_clock=monotonic,
             sleeper=lambda _: None,
         )
         if not trial.ffcr_success:
@@ -70,17 +76,25 @@ def run_contract(output_dir: Path) -> int:
             },
         )
 
-    print("CONTRACT_MODE_PASS: two validation seeds exercised; no empirical data collection performed")
+    print(
+        "CONTRACT_MODE_PASS: two validation seeds exercised; "
+        "no empirical data collection performed"
+    )
     return 0
 
 
 def run_pilot() -> int:
     if os.getenv("PDMAL_PROTOCOL_FROZEN") != "1":
-        raise SystemExit("pilot execution prohibited: PDMAL_PROTOCOL_FROZEN=1 is required")
+        raise SystemExit(
+            "pilot execution prohibited: PDMAL_PROTOCOL_FROZEN=1 is required"
+        )
     if os.getenv("PDMAL_PILOT_AUTHORIZED") != "1":
-        raise SystemExit("pilot execution prohibited: PDMAL_PILOT_AUTHORIZED=1 is required")
+        raise SystemExit(
+            "pilot execution prohibited: PDMAL_PILOT_AUTHORIZED=1 is required"
+        )
     raise SystemExit(
-        "pilot execution unavailable: real experimental task executor is not implemented; no data collected"
+        "pilot execution unavailable: real experimental task executor is not implemented; "
+        "no data collected"
     )
 
 
