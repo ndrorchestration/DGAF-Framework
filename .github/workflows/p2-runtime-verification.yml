@@ -1,0 +1,128 @@
+name: P2 Live Runtime Verification
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  p2-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    env:
+      P2_BASE_URL: https://dynamicgovernanceagenticformation-dp3baqm9p-ndrorchestration.vercel.app
+      EXPECTED_COMMIT: e1f077fec746acd6066db689ef40db000e027f2f
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify repository head matches declared source commit
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT" || {
+            echo "workflow checkout is $(git rev-parse HEAD), expected $EXPECTED_COMMIT"
+            exit 1
+          }
+
+      - name: Verify live deployment provenance
+        run: |
+          python - <<'PY'
+          import json, urllib.request, urllib.error
+          base = __import__('os').environ['P2_BASE_URL']
+          candidates = [base + '/health', base + '/api/status']
+          for url in candidates:
+              try:
+                  with urllib.request.urlopen(url, timeout=20) as r:
+                      body = r.read().decode('utf-8', 'replace')
+                      print(url, r.status, body[:2000])
+              except urllib.error.HTTPError as e:
+                  body = e.read().decode('utf-8', 'replace')
+                  print(url, e.code, body[:2000])
+          PY
+
+      - name: Execute five-case P2 matrix
+        run: |
+          python - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+
+          base = os.environ['P2_BASE_URL'].rstrip('/')
+          endpoint = base + '/api/orchestrate'
+          expected = {
+              'valid_missing_audit': (503, 'BLOCKED'),
+              'invalid_body': (400, 'REJECT'),
+              'confidence_out_of_range': (400, 'REJECT'),
+              'invalid_turn': (400, 'REJECT'),
+              'malformed_json': (400, 'REJECT'),
+          }
+          cases = [
+              ('valid_missing_audit', b'{"mandate":"test","turn":0}'),
+              ('invalid_body', b'{"foo":"bar"}'),
+              ('confidence_out_of_range', b'{"mandate":"test","confidence":2.0}'),
+              ('invalid_turn', b'{"mandate":"test","turn":-1}'),
+              ('malformed_json', b'{'),
+          ]
+
+          results = []
+          for name, payload in cases:
+              req = urllib.request.Request(
+                  endpoint,
+                  data=payload,
+                  method='POST',
+                  headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
+              )
+              started = time.time()
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r:
+                      status = r.status
+                      body = r.read().decode('utf-8', 'replace')
+              except urllib.error.HTTPError as e:
+                  status = e.code
+                  body = e.read().decode('utf-8', 'replace')
+              elapsed = time.time() - started
+              try:
+                  parsed = json.loads(body)
+              except json.JSONDecodeError:
+                  parsed = None
+
+              decision = parsed.get('decision') if isinstance(parsed, dict) else None
+              evidence_status = None
+              if isinstance(parsed, dict) and isinstance(parsed.get('evidence'), dict):
+                  evidence_status = parsed['evidence'].get('status')
+
+              exp_status, exp_decision = expected[name]
+              passed = status == exp_status and decision == exp_decision
+              row = {
+                  'case': name,
+                  'expected_http': exp_status,
+                  'expected_decision': exp_decision,
+                  'actual_http': status,
+                  'actual_decision': decision,
+                  'evidence_status': evidence_status,
+                  'elapsed_seconds': round(elapsed, 3),
+                  'response_body': parsed if parsed is not None else body,
+                  'pass': passed,
+              }
+              print(json.dumps(row, sort_keys=True))
+              results.append(row)
+
+          out = {
+              'source_commit': os.environ['EXPECTED_COMMIT'],
+              'base_url': base,
+              'endpoint': endpoint,
+              'timestamp_epoch': time.time(),
+              'cases': results,
+              'all_pass': all(r['pass'] for r in results),
+          }
+          with open('/tmp/p2-runtime-verification.json', 'w', encoding='utf-8') as f:
+              json.dump(out, f, indent=2, sort_keys=True)
+          if not out['all_pass']:
+              raise SystemExit(1)
+          PY
+
+      - name: Upload P2 provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: p2-runtime-verification-e1f077f
+          path: /tmp/p2-runtime-verification.json
+          if-no-files-found: error
+          retention-days: 14
