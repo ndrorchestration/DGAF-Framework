@@ -3,7 +3,8 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-18
-applies_to_sha: 2dc0ce49c30b06807f3d57ce3eac775620b31eb5
+applies_to_sha: 08500a7a129a39c21dc890a71a85e5d996e4c4b3
+verification_evidence: Run #74 (32111556449)
 ---
 
 # DGAF-Framework / PDMAL — Current State
@@ -15,9 +16,9 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 | Field | Value |
 |---|---|
 | Current branch | `epistemic/evidence-architecture-v1` |
-| Current head SHA | `2dc0ce49c30b06807f3d57ce3eac775620b31eb5` |
+| Current verified implementation SHA | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
 | Protocol document | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` |
-| Protocol blob SHA | `see current file metadata; not yet frozen` |
+| Protocol state | PRE-FREEZE / NO DATA COLLECTION AUTHORIZED |
 | Task specification | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` |
 | Task specification blob SHA | `555b81e9e30420479d26125b958d54764d648957` |
 | Latest PDMAL implementation CI | Run #74 (`32111556449`) on `08500a7` |
@@ -29,7 +30,7 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 
 | Gate | Status | Evidence / blocker |
 |---|---|---|
-| Environment lock | CLOSED | Runs #67 and #68 passed; run #67 generated the full hash lock on `584862645ea9e033ac6e33b0dc6364c731eba7b0` |
+| Environment lock | CLOSED | Run #67 generated the full hash lock; locked installation passed and Run #68 corroborated infrastructure state |
 | Topology provenance | VERIFIED | Fresh PDMAL CI coverage in the pre-freeze series |
 | Artifact schema/integrity | VERIFIED | Run #74 |
 | v0.7.4 task specification | APPROVED | Expert-panel approval recorded; implementation spec is current |
@@ -50,7 +51,7 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 - Run #73 (`32111238613`) — FAILED on `0e7ecd03`; circular-import defect.
 - Run #74 (`32111556449`) — SUCCESS on `08500a7`; verifies the implementation after the circular-import correction.
 
-Run #67/#68 are valid evidence for the environment/infrastructure state they executed. They are not current-head evidence for later commits.
+Runs #67/#68 are valid evidence for the environment/infrastructure state they executed. They are not current-head evidence for later commits.
 
 ## Current Next Action
 
