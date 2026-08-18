@@ -4,48 +4,47 @@
 
 This record defines the evidence boundary for live end-to-end verification of `/api/orchestrate`.
 
-## Target
+## Deployment under test
 
-- Commit under test: `3159a99184138fe753acc924c687a1cf9b2a7554` (current PR #65 head)
+- Application source commit deployed: `e1f077fec746acd6066db689ef40db000e027f2f`
+- Vercel deployment: `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7`
 - Endpoint: `/api/orchestrate`
-- Required environment: controlled staging or Vercel deployment built from the exact commit under test
-- Runner: `scripts/p2_runtime_matrix.py`
+- Verification runner: GitHub Actions `P2 Live Runtime Verification`
 
-## Predeclared cases
+## Runtime contract derived from source
 
-| Case | Expected HTTP | Expected decision |
-|---|---:|---|
-| Valid request with audit state unavailable | 503 | BLOCKED |
-| Invalid body shape | 400 | REJECT |
-| Confidence out of range | 400 | REJECT |
-| Invalid turn | 400 | REJECT |
-| Malformed JSON | 400 | REJECT |
+The deployed endpoint requires `turn >= 1`. Phi-Closure checkpoints are Fibonacci turns `13`, `21`, `34`, and `55`; when live audit state is unavailable at a checkpoint, the endpoint must fail closed with `503 / BLOCKED`.
 
-## Evidence requirements
+An arbitrary JSON object is not an invalid body shape by itself because omitted fields default to supported values. The invalid-shape case therefore uses a JSON array.
 
-Each execution must record:
+Malformed JSON is rejected with HTTP 400 and the current endpoint returns the plain body `Invalid JSON` without a `decision` field.
 
-- exact base URL
-- exact commit SHA running in the environment
-- environment type
-- UTC timestamps
-- exact request payload or raw body
-- actual HTTP status
-- actual response body
-- `decision`
-- `evidence.status`
-- trace when present
+## P2 cases
 
-## Current status
+| Case | Request | Expected HTTP | Expected decision |
+|---|---|---:|---|
+| Valid request with audit state unavailable | `{"mandate":"P2 live verification","turn":13}` | 503 | BLOCKED |
+| Invalid body shape | `[]` | 400 | REJECT |
+| Confidence out of range | `{"mandate":"P2 live verification","confidence":2.0}` | 400 | REJECT |
+| Invalid turn | `{"mandate":"P2 live verification","turn":-1}` | 400 | REJECT |
+| Malformed JSON | `{` | 400 | None; body `Invalid JSON` |
 
-**BLOCKED / NOT VERIFIED.**
+## First live execution result
 
-The current repository head has source-level and CI evidence for the fail-closed orchestrator behavior, but no direct live execution evidence for the exact current head is available yet. The latest READY Vercel deployment observed during this gate was built from an earlier commit and is therefore not valid current-head P2 evidence.
+GitHub Actions run `32089025430` successfully injected the Vercel automation-bypass secret and reached the deployed application. This establishes that deployment protection was bypassed for CI; it does not by itself establish P2.
 
-A successful historical deployment may be used for diagnostic comparison only and must not promote P2.
+Observed on the first authenticated run:
+
+- Valid + `turn: 0`: `400 / REJECT` because the runtime contract requires a positive turn. This exposed an outdated matrix fixture, not an application defect.
+- `{"foo":"bar"}`: `200 / PASS` with `evidence.status=PARTIAL`. This is valid according to the source because arbitrary JSON objects are accepted and omitted fields use defaults. This exposed an incorrect "invalid body shape" fixture.
+- Confidence `2.0`: `400 / REJECT` — PASS against the declared validation rule.
+- Turn `-1`: `400 / REJECT` — PASS against the declared validation rule.
+- Malformed JSON: `400`, body `Invalid JSON`, no `decision` field. The HTTP behavior is correct; the former verifier incorrectly required `decision=REJECT` for this transport-level parse failure.
+
+**Disposition: NOT VERIFIED.** The live execution path is now proven, but the original P2 matrix contained three specification/fixture mismatches. The matrix and runner have been corrected in follow-up commits; the pinned deployed source remains `e1f077fec...` until a new application deployment is intentionally created.
 
 ## Promotion rule
 
-P2 may be promoted to **VERIFIED** only when all five predeclared cases pass against the exact commit under test in a documented execution environment.
+P2 may be promoted to **VERIFIED** only when all five corrected cases pass against the exact application commit under test in a documented execution environment.
 
 P2 verification does not establish broad DGAF efficacy, comparative superiority, or empirical PDMAL validity.
