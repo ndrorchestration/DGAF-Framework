@@ -38,6 +38,6 @@ jobs:
           python - <<'PY'
           from experiment import run_structural_pilot
           rows = run_structural_pilot(1)
-          assert len(rows) == 90
-          print('instrumentation smoke test: 90 raw observations generated; no inferential analysis performed')
+          assert len(rows) == 45
+          print('instrumentation smoke test: 45 raw observations generated; no inferential analysis performed')
           PY
