@@ -2,7 +2,7 @@
 
 ## Status
 
-**PRE-FREEZE / BLINDING PRIMITIVE VERIFIED / OPERATIONAL CUSTODY NOT YET VERIFIED**
+PRE-FREEZE / BLINDING PRIMITIVE VERIFIED / OPERATIONAL CUSTODY NOT YET VERIFIED
 
 This record distinguishes the existence of the deterministic blinding primitive from operational custody of the secret, protected mapping, and unblinding event. It does not claim that those operational controls have already been exercised.
 
