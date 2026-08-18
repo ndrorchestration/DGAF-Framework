@@ -12,6 +12,7 @@ jobs:
       contents: read
     env:
       PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
+      PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
