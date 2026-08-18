@@ -26,8 +26,14 @@ jobs:
           python-version: '3.12.0'
       - name: Install harness dependencies
         run: |
-          python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt
-          python -m pip install -r pptl/requirements.txt
+          python -m pip install --upgrade pip
+          if [ -f experiments/pdmal_pilot/requirements-full-lock.txt ]; then
+            python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+          else
+            echo "requirements-full-lock.txt not yet present; using current verified direct-pin manifests." >&2
+            python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt
+            python -m pip install -r pptl/requirements.txt
+          fi
       - name: Run pre-freeze contract suite
         working-directory: experiments/pdmal_pilot
         run: |
@@ -58,6 +64,7 @@ jobs:
           python - <<'PY'
           import json, os, platform
           from pathlib import Path
+          lock_present = Path('experiments/pdmal_pilot/requirements-full-lock.txt').exists()
           Path('test-artifacts/pre-freeze-runner-manifest.json').write_text(
               json.dumps({
                   'status': 'PRE-FREEZE',
@@ -66,6 +73,7 @@ jobs:
                   'commit': os.environ.get('GITHUB_SHA'),
                   'workflow_run_id': os.environ.get('GITHUB_RUN_ID'),
                   'python': platform.python_version(),
+                  'hash_locked_environment_present': lock_present,
               }, indent=2, sort_keys=True) + '\n',
               encoding='utf-8',
           )
