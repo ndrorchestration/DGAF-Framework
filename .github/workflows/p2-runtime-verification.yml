@@ -14,7 +14,16 @@ jobs:
     env:
       P2_BASE_URL: https://dynamicgovernanceagenticformation-dp3baqm9p-ndrorchestration.vercel.app
       EXPECTED_COMMIT: e1f077fec746acd6066db689ef40db000e027f2f
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
     steps:
+      - name: Verify bypass secret is available
+        run: |
+          if [ -z "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
+            echo "VERCEL_AUTOMATION_BYPASS_SECRET is not configured; refusing to test a protected deployment without authentication bypass."
+            exit 1
+          fi
+          echo "Vercel automation bypass secret is present (value withheld)."
+
       - name: Verify live deployment provenance and execute five-case matrix
         run: |
           python - <<'PY'
@@ -22,6 +31,7 @@ jobs:
 
           base = os.environ['P2_BASE_URL'].rstrip('/')
           endpoint = base + '/api/orchestrate'
+          bypass = os.environ['VERCEL_AUTOMATION_BYPASS_SECRET']
           expected = {
               'valid_missing_audit': (503, 'BLOCKED'),
               'invalid_body': (400, 'REJECT'),
@@ -43,7 +53,11 @@ jobs:
                   endpoint,
                   data=payload,
                   method='POST',
-                  headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
+                  headers={
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json',
+                      'x-vercel-protection-bypass': bypass,
+                  },
               )
               started = time.time()
               try:
@@ -95,6 +109,7 @@ jobs:
           PY
 
       - name: Upload P2 provenance
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: p2-runtime-verification-e1f077f
