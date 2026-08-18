@@ -1,9 +1,13 @@
 ---
 status: ACTIVE
+state: APPROVED
 authority: Both
 owner: DGAF/PDMAL experimental-design control
 last_verified: 2026-08-18
-applies_to_sha: 2dc0ce49c30b06807f3d57ce3eac775620b31eb5
+applies_to_sha: 08500a7a129a39c21dc890a71a85e5d996e4c4b3
+approved_by: Expert Panel
+approval_evidence: Run #74 (32111556449) verifies implementation against this specification
+supersedes: v0.7.0, v0.7.1, v0.7.2, v0.7.3 review iterations
 ---
 
 # PDMAL Experimental Task Specification v0.7.4
