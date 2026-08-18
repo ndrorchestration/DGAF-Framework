@@ -14,9 +14,11 @@ from harness_contract import (
     blind_condition,
     canonical_json_bytes,
     deterministic_contract_run,
+    generate_topology,
     make_streams,
     stream_fingerprint,
 )
+from topology_utils import graph_fingerprint
 
 
 def test_condition_and_topology_axes_are_distinct() -> None:
@@ -53,6 +55,24 @@ def test_topology_contracts_and_deterministic_output() -> None:
     assert len(a) == 5
     assert all(result.topology_valid for result in a)
     assert all(result.status == "CONTRACT_VALIDATED_ONLY" for result in a)
+
+
+def test_topology_fingerprints_are_reproducible() -> None:
+    seed = 20260817
+    stream_a = make_streams(seed)["topology_construction"]
+    stream_b = make_streams(seed)["topology_construction"]
+    for name in TOPOLOGY_SPECS:
+        graph_a = generate_topology(name, stream_a)
+        graph_b = generate_topology(name, stream_b)
+        assert graph_fingerprint(graph_a) == graph_fingerprint(graph_b)
+
+
+def test_contract_results_include_topology_fingerprints() -> None:
+    results = deterministic_contract_run(
+        20260817, b"contract-only-test-key-000000000000000000"
+    )
+    assert all(len(result.topology_fingerprint) == 64 for result in results)
+    assert all(int(result.topology_fingerprint, 16) >= 0 for result in results)
 
 
 def test_canonical_json_hash_is_stable() -> None:
