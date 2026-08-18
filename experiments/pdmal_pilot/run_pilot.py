@@ -58,6 +58,7 @@ def run_contract(output_dir: Path) -> int:
             policy=RetryPolicy(recovery_window_seconds=0.0),
             monotonic_clock=monotonic,
             sleeper=lambda _: None,
+            isolate=False,
         )
         if not trial.ffcr_success:
             raise SystemExit(f"retry contract failed for seed {seed}")
