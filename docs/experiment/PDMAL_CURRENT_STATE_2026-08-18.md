@@ -4,21 +4,22 @@
 
 ```text
 Branch:                         epistemic/evidence-architecture-v1
-Current documentation head:    fe325c8a5d083db02acf8284ddafcec68a6fedb5
-Latest code correction:         ffde0b9a52d114649a5a0603d9499cecfcd3e7c6
-Earlier CI dependency fix:      067f8706f4bd720e16fb4676cf6e2f75295dd3b8
-Previous verified head:         17a9e2e737f54046a1f1f93dbd70d287825fc6ee
-Epistemic CI on 17a9e2e7:      PASS — run 32098754363
-PDMAL pre-freeze CI on 17a9e2e7: PASS — run 32098754451
-Fresh adapter CI:               OBSERVED FAILURE DURING COLLECTION; latest corrected head pending
+Latest adapter CI run:          32102382285 (#42)
+Verified checkout SHA:          ffde0b9a52d114649a5a0603d9499cecfcd3e7c6
+Adapter CI conclusion:          SUCCESS
+Contract suite:                 30 passed
+Adapter test:                   PASS
+Contract mode:                  PASS — 2 validation seeds; no empirical collection
+Pilot fail-closed check:        PASS — pilot rejected while freeze/authorization absent
+Artifact:                       9312000148
+Artifact SHA-256:               2af2a89124b699be2175f767552a1f58fb32864268b4e4c5d98dc9124a6b3184
+Latest documentation update:    9711543
 Protocol:                       PRE-FREEZE
 Pilot authorization:            NOT GRANTED
 Empirical data:                 0
 ```
 
 ## Runtime and interface findings
-
-The repository does not expose the previously proposed numeric `dgaf.engine.run_governance_cycle` interface.
 
 The verified governance primitive is:
 
@@ -39,7 +40,7 @@ The primitive is text/context-oriented and returns a sealed governance audit rec
 
 The first observed blocker was `ModuleNotFoundError: pandas` during collection of `test_dgaf_tgl_adapter.py`.
 
-Repository verification showed `pptl/requirements.txt` declares `pandas>=2.0.0`, while the PDMAL direct-pin manifest omits it by design. Commit `067f8706...` corrected the workflow to install both dependency manifests.
+Repository verification showed `pptl/requirements.txt` declares `pandas>=2.0.0`, while the PDMAL direct-pin manifest omits transitive dependencies by design. Commit `067f8706...` corrected the workflow to install both dependency manifests.
 
 ### PPTL import mismatch
 
@@ -47,9 +48,9 @@ After the dependency correction, collection progressed to a PPTL API mismatch: `
 
 Because the adapter does not use `IntegratedOrchestrator`, commit `ffde0b9a...` removed that unrelated orchestrator import/export from `pptl/__init__.py` rather than introducing compatibility classes or rewriting the adapter.
 
-### Current validation boundary
+### Current validation result
 
-The latest observed CI evidence in this sequence demonstrated the dependency issue was resolved sufficiently to expose the PPTL API mismatch. A fresh CI result for the corrected import boundary (`ffde0b9a...`) has not yet been observed through the connected workflow-run interface.
+The corrected import boundary was subsequently verified on the exact `ffde0b9a...` checkout by pre-freeze workflow run `32102382285` / `#42`. The run checked out `ffde0b9a...` directly, installed `pptl/requirements.txt` including `pandas-3.0.5`, and completed the four-test contract suite with `30 passed`.
 
 ## Path A implementation
 
@@ -64,7 +65,7 @@ Implemented pre-freeze components:
 ```text
 experiments/pdmal_pilot/dgaf_tgl_adapter.py
 experiments/pdmal_pilot/test_dgaf_tgl_adapter.py
-experiments/pdmal_pilot/task_engine.py (existing contract engine)
+experiments/pdmal_pilot/task_engine.py (contract engine)
 ```
 
 Implementation contract:
@@ -99,33 +100,35 @@ experiments/pdmal_pilot/requirements-lock.txt
 pptl/requirements.txt
 ```
 
-A fresh run of the corrected current head is still required. The documentation commit `fe325c8...` contains documentation only and does not alter adapter, TGL, or workflow implementation behavior.
+Verified run `32102382285` demonstrates that this installation path is functional on the corrected source.
 
-## Documentation / issue references
+## Freeze-control assessment
 
-- Candidate adapter specification: `docs/experiment/PDMAL_TGL_ADAPTER_SPEC_v0.7.md`
-- Adapter implementation note: `docs/experiment/PDMAL_TGL_ADAPTER_IMPLEMENTATION_NOTE.md`
-- Current-state record: `docs/experiment/PDMAL_CURRENT_STATE_2026-08-18.md`
-- CI evidence log: `docs/experiment/PDMAL_CI_EVIDENCE_LOG_2026-08-18.md`
-- Documentation gap audit: `docs/experiment/DOCUMENTATION_GAP_AUDIT.md`
-- Interface mismatch tracker: GitHub issue `#71`
+The adapter/CI control is closed, but protocol freeze remains blocked by independent controls:
 
-## Remaining gates
+| Control | Current state |
+|---|---|
+| Adapter contract CI | VERIFIED — run 32102382285 |
+| Direct dependency pins | VERIFIED |
+| Full resolver/hash lock | NOT GENERATED; requires network-enabled trusted environment |
+| Timeout/retry/runtime values | IMPLEMENTED as 60s / 3 attempts / 30s recovery / 300s seed ceiling; dedicated characterization still required |
+| Sample-size implementation | IMPLEMENTED to the protocol's paired-difference normal-approximation formula; dedicated verification evidence still required |
+| Artifact schema/retention | PARTIALLY IMPLEMENTED; exact schema/retention verification still required |
+| Blinding custody/separation | NOT YET OPERATIONALLY VERIFIED |
+| Topology implementation SHAs/graph fingerprints | NOT YET FULLY RECORDED/VERIFIED |
+| Exact execution environment | NOT FULLY PINNED |
+| Protocol internal-consistency audit | PENDING |
+| Protocol freeze | BLOCKED |
+| Pilot authorization | BLOCKED |
 
-```text
-v0.7 panel approval                   PENDING
-TGL interface mismatch resolution    BLOCKED until corrected import path is CI-verified
-Adapter implementation               IMPLEMENTED / PRE-FREEZE
-Adapter contract CI                  PENDING FRESH CURRENT-HEAD RESULT
-Current-head CI                       PENDING
-Runtime characterization              PENDING
-Artifact/custody verification         PENDING
-Protocol freeze                       BLOCKED
-Pilot authorization                   BLOCKED
-```
+## Experimental task boundary
+
+The verified DGAF/TGL governance adapter is not the experimental workload itself. `task_engine.py` defines protocol mechanics and a `TaskAdapter` interface, but explicitly does not define a real empirical workload. The actual experimental task adapter remains unimplemented and is therefore a material pre-freeze boundary.
 
 ## Evidence boundary
 
-Green CI evidence from `17a9e2e7` is historical for the earlier verified head. The later dependency and import-boundary corrections have not yet been validated by a fresh successful current-head run. No CI result in this sequence establishes PDMAL efficacy, superiority, convergence, robustness, causal attribution, or real-world benefit.
+The successful pre-freeze CI run demonstrates implementation/runner-contract behavior under the tested environment. It does not establish PDMAL efficacy, superiority, convergence, robustness, causal attribution, or real-world benefit.
+
+Contract-mode execution generated no empirical observations. Pilot execution remains fail-closed until protocol freeze and explicit authorization.
 
 No pilot or final experimental seed may be generated while the protocol remains PRE-FREEZE and pilot authorization is absent.
