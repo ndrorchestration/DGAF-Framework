@@ -2,9 +2,9 @@
 
 ## Status
 
-**Gate: NOT VERIFIED**
+**Gate: VERIFIED for designated deployment/source binding**
 
-This document records the current evidence boundary for live CORS verification of PR #65. The gate is intentionally not promoted until a retained GitHub Actions execution artifact demonstrates all four predeclared assertions against the designated immutable deployment.
+The live P6a CORS verification completed successfully. The retained GitHub Actions artifact demonstrates all four predeclared assertions against the designated immutable deployment and deployed application source.
 
 ## Current provenance
 
@@ -12,85 +12,112 @@ This document records the current evidence boundary for live CORS verification o
 |---|---|
 | Repository | `ndrorchestration/DGAF-Framework` |
 | PR | `#65` |
-| Current PR head | `485d7882069df39520c44fc8c9a810d92e7ee3ae` |
-| Previous PR head | `e94bfb5c2ae01ce21642fee5b01d88db620b2878` |
+| Current PR head at latest documentation sync | `c55476746126ca29f3963887c1c81ad6110c5738` |
 | Verification workflow | `.github/workflows/p6a-cors-verification.yml` |
 | Workflow commit containing P6a | `e94bfb5c` |
-| Documentation update commit | `485d7882` |
 | Deployment under test | `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7` |
 | Deployed application source | `e1f077fec746acd6066db689ef40db000e027f2f` |
 | Deployed URL | `https://dynamicgovernanceagenticformation-dp3baqm9p-ndrorchestration.vercel.app` |
 | Allowed origin | `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app` |
 | Disallowed origin | `https://untrusted.com` |
-
-The current PR head is now **eight commits ahead** of `e1f077f`: seven implementation/verification commits plus this documentation-only commit. The documentation commit does not alter the deployed application under test, but it does move the PR head and therefore requires the current-head provenance boundary to remain explicit.
+| P6a workflow run | `32092041579` |
+| P6a job | `95576028593` |
+| P6a artifact | `p6a-cors-verification-e1f077f` (ID `9308650112`) |
+| Artifact SHA-256 | `d9f21fd1202ac220d987fa7a0f15526fb3e874c8f889f39921669e983284d6eb` |
 
 ## Evidence class boundary
 
-The following evidence is already retained but remains scoped to the deployed application source `e1f077f` and is not silently promoted to the current PR head `485d7882`:
+The P6a artifact is explicitly scoped to the deployed application source `e1f077f` and immutable deployment `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7`. It establishes live CORS behavior for that endpoint, deployment, environment, and configured origins.
 
-- Python Tests & Quality Checks: GitHub Actions run `32088344498` — success.
-- PDMAL instrumentation dry run: GitHub Actions run `32088344456` — success.
-- P2 live runtime verification: GitHub Actions run `32090160638`, artifact `9308051857` — success for deployment/source `e1f077f`.
+It does **not** certify the later PR head `c5547674` as a general source/CI state. Historical P0/P2/PDMAL evidence remains scoped to the exact source/deployment it tested. Current-head required checks and PR mergeability remain separate controls.
 
-The current PR head contains additional verification/documentation commits. Historical evidence remains valid for `e1f077f` but does not independently certify the later PR head.
-
-## Frozen P6a matrix
+## Frozen P6a matrix and observed results
 
 ### 1. Allowed-origin POST
 
-**Request:** `POST` with `Origin: <allowed>`.
+**Expected:** normal application status and `Access-Control-Allow-Origin` exactly matching the allowed origin.
 
-**Expected:** normal application status (`200`, `400`, or `503` depending on request/application state) and `Access-Control-Allow-Origin` exactly matching the allowed origin.
+**Observed:** HTTP `503`; `Access-Control-Allow-Origin` matched the allowed origin; **PASS**.
 
 ### 2. Disallowed-origin POST
 
-**Request:** `POST` with `Origin: <untrusted>`.
+**Expected:** normal application status; `Access-Control-Allow-Origin` absent.
 
-**Expected:** normal application status; `Access-Control-Allow-Origin` is absent. The server may execute the application request; browser enforcement prevents a disallowed origin from reading the response.
+**Observed:** HTTP `503`; `Access-Control-Allow-Origin` absent; **PASS**.
 
 ### 3. Allowed-origin OPTIONS preflight
 
-**Request:** `OPTIONS` with the allowed origin and preflight headers.
+**Expected:** HTTP `204` and required CORS headers.
 
-**Expected:** HTTP `204` and the required CORS headers, including the allowed origin.
+**Observed:** HTTP `204`; `Access-Control-Allow-Origin` matched the allowed origin; `Access-Control-Allow-Methods` included `POST`; `Access-Control-Allow-Headers` included `Content-Type`; **PASS**.
+
+Observed negotiated headers:
+
+```text
+Access-Control-Allow-Origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
+Access-Control-Allow-Methods: GET,POST,OPTIONS
+Access-Control-Allow-Headers: Content-Type,Authorization,X-AHG-Session,X-AHG-Turn
+```
 
 ### 4. Disallowed-origin OPTIONS preflight
 
-**Request:** `OPTIONS` with the untrusted origin and preflight headers.
+**Expected:** HTTP `403`; `Access-Control-Allow-Origin` absent.
 
-**Expected:** HTTP `403` and no `Access-Control-Allow-Origin` header.
+**Observed:** HTTP `403`; `Access-Control-Allow-Origin` absent; **PASS**.
 
-## Execution requirement
+## Retained provenance artifact
 
-The workflow supports `workflow_dispatch`, `push`, and `pull_request`. A manual `workflow_dispatch` on `epistemic/evidence-architecture-v1` is the planned execution mechanism when a repository maintainer needs to produce the retained run record.
+GitHub Actions artifact:
 
-The currently exposed GitHub connector does not provide a workflow-dispatch mutation or repository-wide workflow-run enumeration. An empty result from the PR-only run query is therefore an observational limitation, not evidence that no dispatch run exists.
+`p6a-cors-verification-e1f077f` — artifact ID `9308650112`
 
-No synthetic commit or artificial branch movement should be created solely to manufacture a workflow event. Documentation commits made for legitimate provenance maintenance are not verification evidence and do not close the P6a gate.
+The artifact contains machine-readable evidence with:
+
+- evidence class `P6A_CORS_RUNTIME_EXECUTION`;
+- `status: PASS`;
+- source commit `e1f077fec746acd6066db689ef40db000e027f2f`;
+- deployment URL and endpoint;
+- all four case results;
+- explicit epistemic boundary limiting the claim to the tested endpoint/deployment/environment/origins.
+
+Artifact ZIP SHA-256:
+
+`d9f21fd1202ac220d987fa7a0f15526fb3e874c8f889f39921669e983284d6eb`
+
+## Workflow execution note
+
+The workflow run itself reports the retained artifact against the designated immutable application source `e1f077f`. The workflow run's GitHub ref metadata is separate from the application source under test. This distinction is preserved rather than treating the workflow ref as application provenance.
 
 ## Promotion rule
 
-P6a may be promoted to **VERIFIED** only when a retained GitHub Actions run provides:
+P6a is promoted to **VERIFIED** for the designated immutable deployment/source binding because the retained run provides:
 
-1. a run ID and job execution record;
-2. the four HTTP cases above;
-3. response header evidence for each case;
-4. a retained `p6a-cors-verification.json` artifact; and
+1. a run ID and completed job record;
+2. all four HTTP cases;
+3. response-header evidence for each case;
+4. the retained `p6a-cors-verification.json` artifact; and
 5. all four frozen assertions passing against the designated deployment/source binding.
 
-Until then:
+The following remain separate and are not promoted by P6a:
+
+- current PR-head CI verification;
+- general application security hardening;
+- production-wide CORS claims beyond the tested endpoint/configuration;
+- empirical DGAF/PDMAL efficacy.
+
+## 2026-08-18 verification update
+
+P6a Live CORS Verification run `32092041579` completed successfully. Job `95576028593` completed successfully. Artifact `9308650112` was retained and independently inspected.
+
+All four frozen assertions passed:
 
 ```text
-P6a = NOT VERIFIED
+Allowed POST       503 + matching ACAO       PASS
+Disallowed POST    503 + ACAO absent        PASS
+Allowed OPTIONS    204 + required headers   PASS
+Disallowed OPTIONS 403 + ACAO absent        PASS
 ```
 
-## Current next action
+**P6a = VERIFIED for `e1f077f` / `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7`.**
 
-Trigger `P6a Live CORS Verification` manually from GitHub Actions on branch `epistemic/evidence-architecture-v1`. After the run exists, inspect the job logs and provenance artifact before changing the gate.
-
-## 2026-08-18 evidence update
-
-Current GitHub inspection confirms PR #65 is open at head `485d7882069df39520c44fc8c9a810d92e7ee3ae`. The prior head was `e94bfb5c`; the intervening commit only adds this P6a evidence-boundary document. Vercel deployment `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7` is READY and bound to application source `e1f077fec746acd6066db689ef40db000e027f2f`. No P6a provenance artifact has been observed through the currently exposed connector surface.
-
-This record deliberately distinguishes source/CI verification, deployment evidence, runtime evidence, and live CORS header evidence. No higher evidence class is inferred from an adjacent lower class.
+The current PR head remains a separate provenance/required-check question and must be reassessed before merge.
