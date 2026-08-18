@@ -1,0 +1,67 @@
+name: PDMAL Runtime Characterization
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - epistemic/evidence-architecture-v1
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-characterization:
+    name: Non-empirical runtime characterization
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/experiments/pdmal_pilot
+    steps:
+      - name: Checkout current branch head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install locked harness dependencies
+        shell: bash
+        run: |
+          test -s experiments/pdmal_pilot/requirements-full-lock.txt
+          grep -Eq '^[[:space:]]*--hash=sha256:' experiments/pdmal_pilot/requirements-full-lock.txt
+          python -m pip install --upgrade pip
+          python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run non-empirical runtime characterization
+        run: |
+          python experiments/pdmal_pilot/runtime_characterization.py \
+            --output-dir runtime_artifacts
+
+      - name: Validate characterization artifact
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('runtime_artifacts/runtime_characterization.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          assert data['protocol_status'] == 'PRE-FREEZE'
+          assert data['empirical_data_collection'] is False
+          assert data['non_empirical_operational_verification'] is True
+          assert data['all_trials_completed'] is True
+          assert data['ceiling_passed'] is True
+          assert data['completed_trial_count'] == data['expected_trial_count']
+          print('Runtime characterization artifact: PASS')
+          print(json.dumps(data['seed_runtime_stats'], indent=2, sort_keys=True))
+          PY
+
+      - name: Upload runtime characterization artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-runtime-characterization-${{ github.sha }}
+          path: runtime_artifacts/
+          if-no-files-found: error
+          retention-days: 30
