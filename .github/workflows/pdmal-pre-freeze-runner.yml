@@ -30,8 +30,14 @@ jobs:
       - name: Generate and persist genuine full dependency lock
         id: lock
         run: |
-          if [ -s experiments/pdmal_pilot/requirements-full-lock.txt ]; then
-            echo 'Existing full lockfile detected; no resolver write required.'
+          lock_path="experiments/pdmal_pilot/requirements-full-lock.txt"
+          if test -s "$lock_path" \
+            && grep -Eq '^[[:space:]]*--hash=sha256:' "$lock_path" \
+            && grep -Eq '^numpy==[0-9]' "$lock_path" \
+            && grep -Eq '^networkx==[0-9]' "$lock_path" \
+            && grep -Eq '^pytest==[0-9]' "$lock_path" \
+            && grep -Eq '^pandas==[0-9]' "$lock_path"; then
+            echo 'Valid full lockfile detected; no resolver write required.'
             echo 'committed=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -43,14 +49,17 @@ jobs:
           python -m pip install pip-tools==7.6.1
           python -m piptools compile \
             --generate-hashes \
-            --output-file experiments/pdmal_pilot/requirements-full-lock.txt \
+            --output-file "$lock_path" \
             experiments/pdmal_pilot/requirements.in
-          test -s experiments/pdmal_pilot/requirements-full-lock.txt
-          grep -q '^--hash=sha256:' experiments/pdmal_pilot/requirements-full-lock.txt
-          grep -E '^numpy==|^networkx==|^pytest==|^pandas==' experiments/pdmal_pilot/requirements-full-lock.txt
+          test -s "$lock_path"
+          grep -Eq '^[[:space:]]*--hash=sha256:' "$lock_path"
+          grep -Eq '^numpy==[0-9]' "$lock_path"
+          grep -Eq '^networkx==[0-9]' "$lock_path"
+          grep -Eq '^pytest==[0-9]' "$lock_path"
+          grep -Eq '^pandas==[0-9]' "$lock_path"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add experiments/pdmal_pilot/requirements-full-lock.txt
+          git add "$lock_path"
           git commit -m 'chore: add genuine resolver-generated hash lock for PDMAL pilot'
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
             git push origin "HEAD:${GITHUB_HEAD_REF}"
