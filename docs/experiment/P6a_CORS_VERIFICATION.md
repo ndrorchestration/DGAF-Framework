@@ -12,24 +12,28 @@ This document records the current evidence boundary for live CORS verification o
 |---|---|
 | Repository | `ndrorchestration/DGAF-Framework` |
 | PR | `#65` |
-| Current PR head | `e94bfb5c2ae01ce21642fee5b01d88db620b2878` |
+| Current PR head | `485d7882069df39520c44fc8c9a810d92e7ee3ae` |
+| Previous PR head | `e94bfb5c2ae01ce21642fee5b01d88db620b2878` |
 | Verification workflow | `.github/workflows/p6a-cors-verification.yml` |
 | Workflow commit containing P6a | `e94bfb5c` |
+| Documentation update commit | `485d7882` |
 | Deployment under test | `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7` |
 | Deployed application source | `e1f077fec746acd6066db689ef40db000e027f2f` |
 | Deployed URL | `https://dynamicgovernanceagenticformation-dp3baqm9p-ndrorchestration.vercel.app` |
 | Allowed origin | `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app` |
 | Disallowed origin | `https://untrusted.com` |
 
+The current PR head is now **eight commits ahead** of `e1f077f`: seven implementation/verification commits plus this documentation-only commit. The documentation commit does not alter the deployed application under test, but it does move the PR head and therefore requires the current-head provenance boundary to remain explicit.
+
 ## Evidence class boundary
 
-The following evidence is already retained but remains scoped to the deployed application source `e1f077f` and is not silently promoted to the later PR head `e94bfb5c`:
+The following evidence is already retained but remains scoped to the deployed application source `e1f077f` and is not silently promoted to the current PR head `485d7882`:
 
 - Python Tests & Quality Checks: GitHub Actions run `32088344498` — success.
 - PDMAL instrumentation dry run: GitHub Actions run `32088344456` — success.
 - P2 live runtime verification: GitHub Actions run `32090160638`, artifact `9308051857` — success for deployment/source `e1f077f`.
 
-The current PR head is seven commits ahead of `e1f077f`. The difference includes the P6a and P2 verification workflows plus related P2 documentation/runner changes. The historical evidence therefore does not close the current-head provenance gap by itself.
+The current PR head contains additional verification/documentation commits. Historical evidence remains valid for `e1f077f` but does not independently certify the later PR head.
 
 ## Frozen P6a matrix
 
@@ -63,7 +67,7 @@ The workflow supports `workflow_dispatch`, `push`, and `pull_request`. A manual 
 
 The currently exposed GitHub connector does not provide a workflow-dispatch mutation or repository-wide workflow-run enumeration. An empty result from the PR-only run query is therefore an observational limitation, not evidence that no dispatch run exists.
 
-No synthetic commit or artificial branch movement should be created solely to manufacture a workflow event.
+No synthetic commit or artificial branch movement should be created solely to manufacture a workflow event. Documentation commits made for legitimate provenance maintenance are not verification evidence and do not close the P6a gate.
 
 ## Promotion rule
 
@@ -87,6 +91,6 @@ Trigger `P6a Live CORS Verification` manually from GitHub Actions on branch `epi
 
 ## 2026-08-18 evidence update
 
-Current GitHub inspection confirms PR #65 is open with head `e94bfb5c2ae01ce21642fee5b01d88db620b2878`. Vercel deployment `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7` is READY and bound to source `e1f077fec746acd6066db689ef40db000e027f2f`. No P6a provenance artifact has been observed through the currently exposed connector surface.
+Current GitHub inspection confirms PR #65 is open at head `485d7882069df39520c44fc8c9a810d92e7ee3ae`. The prior head was `e94bfb5c`; the intervening commit only adds this P6a evidence-boundary document. Vercel deployment `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7` is READY and bound to application source `e1f077fec746acd6066db689ef40db000e027f2f`. No P6a provenance artifact has been observed through the currently exposed connector surface.
 
 This record deliberately distinguishes source/CI verification, deployment evidence, runtime evidence, and live CORS header evidence. No higher evidence class is inferred from an adjacent lower class.
