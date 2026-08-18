@@ -4,37 +4,55 @@ authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-18
 applies_to_sha: 458bb346569937455b796977dc571af17b64da65
-verification_evidence: Runtime Run #14 (32112658368)
+verification_evidence:
+  - Runtime Run #14 (32112658368)
+scope_note: >
+  This index records evidence and gate state synchronized at
+  458bb346569937455b796977dc571af17b64da65. Individual evidence
+  remains scoped to its exact tested SHA; later documentation commits
+  do not inherit verification automatically.
 ---
 
 # PDMAL Evidence Index
 
-This index maps material controls to the strongest retained evidence currently available. A passing run is scoped to its exact executed SHA; later commits do not inherit its verification automatically.
+## Purpose
 
-| Control | Status | Evidence | Tested SHA | Run / artifact |
+This index records the evidence boundary for the PDMAL pre-freeze control plane. GitHub is authoritative for exact implementation and CI evidence; Notion is authoritative for governance state and cross-project control state. Evidence is never promoted by documentation alone.
+
+## Evidence Boundary
+
+A passing run is scoped to its exact executed SHA. Later commits do not inherit verification automatically.
+
+## Current Evidence
+
+| Evidence | Status | Exact executed SHA | Run / artifact | Scope |
 |---|---|---|---|---|
-| Environment lock | VERIFIED | Resolver-generated full lock produced and locked installation succeeded | `584862645ea9e033ac6e33b0dc6364c731eba7b0` | Run #67 `32108612515`; corroborated by Run #68 `32108821363` |
-| Topology provenance | VERIFIED | Fingerprints, integration, and reproducibility tests exercised in fresh PDMAL CI | Run-specific; see CI history | Runs #67/#68 and subsequent pre-freeze evidence |
-| Artifact schema/integrity | VERIFIED | Schema versioning, fail-closed checks, artifact validation | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` | Run #74 `32111556449` |
-| v0.7.4 task specification | APPROVED | Expert-panel adjudication and repository specification | `e421bb48ae02080119685d0de7241288fafc90d7` | Notion governance record |
-| ConsensusTask implementation | VERIFIED | Contract suite passed after implementation and circular-import correction | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` | Run #74 `32111556449` |
-| Runtime characterization | OPERATIONALLY CHARACTERIZED | 72/72 matrix trials completed; dedicated artifact validated | `a0ff248eadb736f9b5835f2436791dc6ab5f66cc` | Run #14 `32112658368`; artifact `9315467977` |
-| 300-second ceiling | VERIFIED FOR CHARACTERIZATION MATRIX | All measured seed runtimes below 300 seconds | `a0ff248eadb736f9b5835f2436791dc6ab5f66cc` | Artifact digest `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
-| Blinding operational verification | OPEN | Synthetic dry-run workflow implemented; execution evidence not yet observed | — | Workflow pending execution |
-| Long-term retention | OPEN | Retention policy decided; durable research archive not yet established/verified | `004ec9aa6b3ee1fc30b6f0fa22098be5cdedf0fa` | Policy document |
-| Freeze packet | PENDING | Upstream controls remain open | — | — |
-| Protocol freeze | BLOCKED | Freeze prerequisites remain open | — | — |
-| Pilot authorization | NOT GRANTED | Requires explicit post-freeze authorization | — | — |
+| Environment lock | VERIFIED | `7ba0e1c` | Pre-freeze runner validation | Locked installation / resolver reproducibility |
+| PDMAL implementation | VERIFIED | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` | Run #74 (`32111556449`) | ConsensusTask implementation and artifact integrity |
+| Runtime characterization | OPERATIONALLY CHARACTERIZED | `a0ff248` | Run #14 (`32112658368`) | 72/72 seed matrix trials; ceiling characterization |
+| Blinding operational verification | OPEN | — | No dedicated run yet | Synthetic dry-run required |
+| Durable retention | OPEN | — | No durable archive verification yet | Research archive required |
 
-## Runtime characterization details
+## Runtime Characterization
 
-Run #14 executed on `a0ff248eadb736f9b5835f2436791dc6abf66cc` and completed 72/72 expected trials. The dedicated workflow validated `protocol_status=PRE-FREEZE`, `empirical_data_collection=false`, artifact completeness, and the 300-second ceiling predicate before upload. Artifact `9315467977` has digest `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27`.
+Run #14 (`32112658368`) completed the registered 72/72 runtime characterization matrix. The retained artifact is `runtime_characterization.json` and its file SHA-256 is:
 
-## Historical evidence
+`42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea`
 
-- Run #73 (`32111238613`) failed on `0e7ecd03` due to a circular import during test collection. It remains diagnostic history and does not represent the current implementation after `08500a7`.
-- Earlier CI remains scoped to its own executed source and is never silently promoted to current-head verification.
+The runtime characterization is operational evidence only. It does not authorize empirical execution.
 
-## Evidence classes
+## Blinding Gate
 
-Use the repository's evidence ladder policy in `docs/evidence/EVIDENCE_LADDER_POLICY.md` when assigning or promoting labels.
+The blinding operational dry-run remains OPEN. The synthetic workflow must demonstrate that the blinding mechanism can execute without exposing the secret key and that custody evidence is retained.
+
+## Retention Gate
+
+The durable retention gate remains OPEN until the research archive is established and independently verified according to `docs/experiment/PDMAL_RETENTION_POLICY.md`.
+
+## Empirical Boundary
+
+Empirical data remains `0`. No pilot execution is authorized until the protocol freeze and explicit pilot authorization are complete.
+
+## Evidence Rule
+
+`IMPLEMENTED` does not mean `VERIFIED`; `VERIFIED` does not mean `OPERATIONALLY CHARACTERIZED`; operational verification does not mean empirical support. Documentation alone cannot promote a gate.
