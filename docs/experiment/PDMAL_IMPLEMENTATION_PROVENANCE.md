@@ -2,17 +2,17 @@
 
 ## Status
 
-**PRE-FREEZE / IMPLEMENTATION VALIDATION IN PROGRESS**
+**PRE-FREEZE / IMPLEMENTATION VERIFICATION CLOSED FOR CURRENT CI PATH / PILOT NOT AUTHORIZED**
 
-This record distinguishes implementation existence from implementation verification. The harness and pre-freeze runner changes below are not empirical results and do not authorize pilot execution.
+This record distinguishes implementation existence from implementation verification. The current authoritative DGAF/PDMAL CI evidence closes the verified CI path, but does not by itself freeze the protocol, authorize the pilot, or establish empirical efficacy.
 
 ## Current branch/head
 
 - PR: `#65`
 - Branch: `epistemic/evidence-architecture-v1`
-- Latest task-engine implementation commit: `7eb3d510b693a5f737bb494bb9e1b10dc22e3479`
-- Pre-freeze CI workflow update: `e810a6c49759fb08c547b34bbbc9ac0647ff0b75`
-- Harness/prefreeze CI execution: **NOT OBSERVED THROUGH CURRENT CONNECTOR SURFACE**
+- Current PR head: `8677ea090b47b352a8acf76692f1aa548f6fe392`
+- Authoritative DGAF/PDMAL-related CI evidence: GitHub Actions run `32098237208` — **SUCCESS**
+- Important scope boundary: run `32098237208` validates the epistemic/PDMAL structural path; it does **not** by itself constitute observation of the dedicated `pdmal-harness-validation.yml` or `pdmal-pre-freeze-runner.yml` workflows.
 
 ## Implemented controls
 
@@ -24,7 +24,7 @@ This record distinguishes implementation existence from implementation verificat
 - NumPy: `2.5.1`
 - NetworkX: `3.6.1`
 
-`requirements-lock.txt` currently represents **direct dependency pins**, not a resolver-generated hash-complete lockfile. A full resolver/hash-locked environment remains a verification task.
+`requirements-lock.txt` represents direct dependency pins, not a resolver-generated hash-complete lockfile. A full resolver/hash-locked environment remains a verification task.
 
 ### RNG contract
 
@@ -66,7 +66,7 @@ The harness validates node count, edge count, connectivity, regularity where spe
 
 `experiments/pdmal_pilot/run_pilot.py`
 
-- `PDMAL_MODE=contract` is the only mode that can currently execute.
+- `PDMAL_MODE=contract` is the only mode that currently produces validation artifacts.
 - Contract mode is fixed to exactly 2 validation seeds and emits contract artifacts only.
 - `PDMAL_MODE=pilot` requires both `PDMAL_PROTOCOL_FROZEN=1` and `PDMAL_PILOT_AUTHORIZED=1`.
 - Even with those flags, pilot mode currently fails closed because the real experimental task adapter is not implemented.
@@ -76,21 +76,24 @@ The harness validates node count, edge count, connectivity, regularity where spe
 
 `experiments/pdmal_pilot/task_engine.py`
 
-The pre-freeze task engine implements and unit-tests the protocol state semantics:
+The current engine implements protocol state semantics and a hard process-isolated timeout path:
 
 - first-attempt success;
 - failure followed by successful recovery;
 - retry exhaustion → unrecovered failure;
-- successful attempt exceeding the configured timeout → timeout classification;
+- successful attempt exceeding configured timeout → timeout classification;
+- hard timeout enforcement via isolated child process termination;
 - 3-attempt retry budget;
 - 30-second recovery-window parameter;
 - separate 300-second seed-runtime ceiling predicate.
 
-**Important boundary:** the current engine measures elapsed time around the task adapter call but does not yet forcibly terminate a hung external task at exactly 60 seconds. A true wall-clock timeout/isolation mechanism remains required before pilot authorization.
+**Remaining boundary:** true timeout/isolation semantics are implemented in the task engine and require dedicated CI observation and runtime characterization before protocol freeze. The real experimental task adapter remains unimplemented.
 
 ### Blinding contract
 
 A deterministic HMAC-SHA256 mapping primitive exists for blinded labels. The real secret is not stored in source. The validation path uses test-only keys and never produces pilot evidence.
+
+**Remaining boundary:** operational secret custody and separation of duties must be verified before freeze.
 
 ### Sample-size implementation
 
@@ -106,11 +109,13 @@ A deterministic paired-difference planning function is implemented using:
 
 This is a planning utility only; it does not consume or generate experimental observations.
 
+**Remaining boundary:** implementation should be exercised by the dedicated pre-freeze validation workflow and its evidence retained before freeze.
+
 ### Protocol-deviation register
 
 `experiments/pdmal_pilot/deviations.py`
 
-Provides an append-oriented in-memory register and JSON serialization for deviation ID, timestamp, seed/trial, condition, cause, description, affected metrics, comparability impact, inclusion/exclusion decision, and authorization.
+Provides an append-oriented in-memory register and JSON serialization for deviation ID, timestamp, seed/trial, condition, cause, description, affected metrics, inclusion/exclusion decision, and authorization.
 
 ### Pre-freeze validation tests
 
@@ -124,8 +129,9 @@ These cover deterministic streams, topology contracts, blinding behavior, explic
 
 `.github/workflows/pdmal-harness-validation.yml`
 `.github/workflows/pdmal-pre-freeze-runner.yml`
+`.github/workflows/epistemic-evidence-validation.yml`
 
-Both are contract-validation workflows. They must not be treated as empirical execution.
+Run `32098237208` is authoritative evidence that the epistemic/evidence-validation path passed. Dedicated PDMAL harness/pre-freeze workflow observations remain separate gates unless directly evidenced by their own successful run IDs.
 
 ## Current verification status
 
@@ -135,23 +141,23 @@ Both are contract-validation workflows. They must not be treated as empirical ex
 | Exact direct dependency pins | IMPLEMENTED |
 | Full hash-complete resolver lock | NOT YET IMPLEMENTED |
 | SeedSequence/PCG64 harness | IMPLEMENTED |
-| Deterministic RNG tests | IMPLEMENTED / CI PENDING |
-| Topology generation/validation | IMPLEMENTED / CI PENDING |
-| Fail-closed contract runner | IMPLEMENTED / CI PENDING |
-| Retry/recovery state engine | IMPLEMENTED / CI PENDING |
-| True wall-clock task timeout/isolation | NOT YET IMPLEMENTED |
+| Deterministic RNG tests | IMPLEMENTED; exact dedicated harness CI observation NOT YET RECORDED |
+| Topology generation/validation | IMPLEMENTED; exact dedicated harness CI observation NOT YET RECORDED |
+| Fail-closed contract runner | IMPLEMENTED; exact dedicated harness CI observation NOT YET RECORDED |
+| Retry/recovery state engine | IMPLEMENTED; exact dedicated harness CI observation NOT YET RECORDED |
+| True wall-clock task timeout/isolation | IMPLEMENTED in `task_engine.py`; dedicated CI/runtime characterization NOT YET RECORDED |
 | Real experimental task adapter | NOT YET IMPLEMENTED |
 | Paired-seed FFCR execution | NOT YET IMPLEMENTED |
-| Sample-size planning utility | IMPLEMENTED / CI PENDING |
+| Sample-size planning utility | IMPLEMENTED; dedicated CI observation NOT YET RECORDED |
 | Canonical experimental artifact validator | PARTIALLY IMPLEMENTED |
 | Protected mapping custody | NOT YET VERIFIED |
-| Protocol deviation register | IMPLEMENTED / CI PENDING |
+| Protocol deviation register | IMPLEMENTED; dedicated CI observation NOT YET RECORDED |
 | 300-second runtime characterization | NOT YET VERIFIED |
-| Harness/prefreeze CI execution observed | NOT OBSERVED |
+| Harness/pre-freeze CI execution observed | NOT YET RECORDED |
 
 ## Evidence boundary
 
-A green pre-freeze validation workflow would establish that the implementation controls execute as specified in the validation environment. It would **not** establish PDMAL efficacy, topology superiority, or validation of the scientific hypothesis.
+A green validation workflow establishes only that the covered controls execute as specified in the validation environment. It does **not** establish PDMAL efficacy, topology superiority, or validation of the scientific hypothesis.
 
 The following must remain false until the corresponding evidence exists:
 
@@ -164,8 +170,18 @@ Pilot authorized = TRUE
 
 ## Freeze criterion
 
-Protocol freeze remains prohibited until the implementation controls marked `NOT YET IMPLEMENTED`, `NOT YET VERIFIED`, or equivalent are resolved and independently observed, including the exact execution environment, complete artifact/provenance architecture, real task adapter, true timeout/isolation semantics, blinding custody, runtime characterization, and CI verification.
+Protocol freeze remains prohibited until the remaining controls marked `NOT YET IMPLEMENTED`, `NOT YET VERIFIED`, or `NOT YET RECORDED` are resolved and independently observed, including:
+
+- real experimental task adapter;
+- complete artifact/provenance validation;
+- protected mapping custody and separation of duties;
+- dedicated PDMAL harness/pre-freeze CI evidence;
+- runtime characterization against the frozen ceiling;
+- exact execution-environment record;
+- exact implementation identifiers and topology provenance;
+- final analysis/sample-size implementation evidence;
+- explicit pilot authorization record.
 
 ## No-data-collection invariant
 
-Until the protocol is explicitly frozen and pilot authorization is recorded, no command in this pre-freeze implementation is permitted to generate the 50-seed pilot dataset. The default and contract execution paths are validation-only.
+Until the protocol is explicitly frozen and pilot authorization is recorded, no command in this pre-freeze implementation is permitted to generate the 50-seed pilot dataset. Contract and validation execution paths remain non-empirical.
