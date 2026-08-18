@@ -2,7 +2,7 @@
 
 ## Status
 
-Audit performed before empirical execution and updated after expert-panel adjudication. The substantive scientific and methodological protocol choices are resolved. Remaining work is limited to implementation/provenance verification required before the protocol can legitimately enter `FROZEN` status.
+Audit performed before empirical execution and updated after expert-panel adjudication and subsequent CI troubleshooting. The substantive scientific and methodological protocol choices are resolved. Remaining work is limited to implementation/provenance verification required before the protocol can legitimately enter `FROZEN` status.
 
 ## Findings
 
@@ -26,21 +26,39 @@ Audit performed before empirical execution and updated after expert-panel adjudi
 | Environment reproducibility | RESOLVED / VERSION RECORD PENDING | Pin exact Python/NumPy/dependencies/runner image and retain environment fingerprint/lock hash. |
 | Protocol deviation register | RESOLVED / IMPLEMENTATION PENDING | Operationalize deviation ID, seed/trial, cause, impact, include/exclude decision, and authorization record. |
 | Evidence classification | PRESENT | Maintain VERIFIED / VALIDATED / EMPIRICALLY SUPPORTED separation and condition-specific claims. |
+| CI dependency boundary | DOCUMENTED / CORRECTED | Workflow now installs the PDMAL direct-pin manifest plus `pptl/requirements.txt`; `pandas` is declared by PPTL and is no longer treated as an undocumented direct PDMAL dependency. |
+| PPTL import boundary | DOCUMENTED / CORRECTED / CI PENDING | `pptl/__init__.py` no longer imports the inconsistent legacy `IntegratedOrchestrator` path for adapter loading. Fresh current-head CI is still required. |
+| CI evidence log | ADDED | `docs/experiment/PDMAL_CI_EVIDENCE_LOG_2026-08-18.md` records observed failures, corrections, evidence boundaries, and the next verification gate. |
 | Metrics provenance registry | LEGACY GAP | `docs/qa/METRICS_PROVENANCE.md` remains separate technical debt and is not a pilot blocker when new pilot metrics are explicitly registered. |
 | Issue #76 | UNVERIFIED | GitHub returned 404; do not infer state until repository identity/reference is resolved. |
+
+## CI evidence now documented
+
+The current troubleshooting sequence establishes the following without promoting it to functional verification:
+
+1. `ModuleNotFoundError: pandas` was observed during adapter-test collection.
+2. `pptl/requirements.txt` was verified to declare `pandas>=2.0.0`.
+3. Commit `067f8706...` corrected CI dependency installation to include both dependency manifests.
+4. The subsequent collection failure moved to `ImportError: cannot import name 'TGLConfig'`, demonstrating that the dependency boundary had advanced and exposing the inconsistent legacy orchestrator import path.
+5. Repository inspection confirmed the adapter directly uses `TriadicGovernanceLoop`, `TGLHooks`, and `run_turn()` and does not require `IntegratedOrchestrator`.
+6. Commit `ffde0b9a...` removed the unrelated orchestrator import/export from `pptl/__init__.py`.
+7. A fresh CI result for the corrected head remains pending.
+
+These findings are implementation/provenance evidence only. They do not establish PDMAL efficacy.
 
 ## Remaining pre-freeze verification blockers
 
 Only these implementation/provenance controls remain before the protocol can legitimately enter `FROZEN` status:
 
-1. Exact topology implementation/source SHAs, parameters, graph validation, and fingerprints.
-2. Exact Python/NumPy/environment versions and RNG manifest.
-3. Verification of 60s timeout / 3 attempts / 30s recovery semantics in the pinned runner.
-4. Verification of the paired-analysis implementation, bootstrap CI, and paired-difference sample-size implementation.
-5. Canonical artifact schema validator, retention path, integrity manifest, and attestation path.
-6. Blinded-label custody and protected mapping/unblinding mechanism.
-7. Characterization and freeze of the numeric 300s seed-runtime ceiling in the pinned execution environment.
-8. Operational protocol deviation register.
+1. Fresh current-head CI verification after the dependency and import-boundary corrections, including `test_dgaf_tgl_adapter.py`.
+2. Exact topology implementation/source SHAs, parameters, graph validation, and fingerprints.
+3. Exact Python/NumPy/environment versions and RNG manifest.
+4. Verification of 60s timeout / 3 attempts / 30s recovery semantics in the pinned runner.
+5. Verification of the paired-analysis implementation, bootstrap CI, and paired-difference sample-size implementation.
+6. Canonical artifact schema validator, retention path, integrity manifest, and attestation path.
+7. Blinded-label custody and protected mapping/unblinding mechanism.
+8. Characterization and freeze of the numeric 300s seed-runtime ceiling in the pinned execution environment.
+9. Operational protocol deviation register.
 
 These are control/provenance requirements, not empirical results.
 
