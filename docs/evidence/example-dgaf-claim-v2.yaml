@@ -22,7 +22,7 @@ uncertainty:
     - Does not establish reduction in governance failures.
 provenance:
   source: DGAF repository evaluation fixture
-  recorded_at: 2026-08-17
+  recorded_at: '2026-08-17'
 external_references:
   - source: NIST-TEVV
     role: methodology
