@@ -4,9 +4,9 @@ state: PRE-FREEZE
 authority: Both
 owner: DGAF/PDMAL experimental-design control
 last_verified: 2026-08-18
-applies_to_sha: 08500a7a129a39c21dc890a71a85e5d996e4c4b3
-protocol_blob_sha: f367328fdf0854a12b22bd94a25a58973923c5c7
-supersedes: prior protocol revisions; see repository history
+applies_to_sha: PENDING-FREEZE-SHA
+protocol_blob_sha: PENDING-AFTER-COMMIT
+supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
 ---
 
 # PDMAL Experiment Protocol
@@ -17,7 +17,50 @@ supersedes: prior protocol revisions; see repository history
 
 This document is the consolidated control document for the planned PDMAL empirical evaluation. The scientific and methodological decisions have been adjudicated. The protocol remains `PRE-FREEZE` until the implementation provenance and execution-control fields identified below are concretely verified and the final contract is committed with a freeze SHA and timestamp.
 
-**No pilot or final experimental seed may be generated while this document remains in `PRE-FREEZE` status.**
+**No pilot or final experimental seed may be generated while this document is in `PRE-FREEZE` status.**
+
+## v0.7.5 Pilot Matrix Amendment — Incorporated
+
+The pre-registered pilot scope is explicitly limited to the following matrix:
+
+### Conditions
+
+1. `null`
+2. `simple`
+3. `static`
+4. `dgaf`
+
+The repository-recognized `dgaf_pdmal` condition is explicitly **out of scope for this pilot** and reserved for later experimentation.
+
+### Topologies
+
+1. `ring`
+2. `pdmal`
+3. `random_regular`
+4. `small_world`
+5. `complete`
+
+### Failure counts
+
+```text
+0, 1, 2, 3, 4, 5, 6, 8, 10
+```
+
+### Observation count
+
+Each seed contains:
+
+```text
+4 conditions × 5 topologies × 9 failure-count levels = 180 observations
+```
+
+The planned 50-seed pilot therefore contains:
+
+```text
+50 × 180 = 9,000 raw observations before exclusions
+```
+
+This matrix is incorporated from `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md`. It is **pre-freeze** until final expert-panel acceptance and freeze commit.
 
 ## Evidence boundary
 
@@ -50,45 +93,54 @@ The experimental phase may begin only after all of the following are true:
 
 | # | Field | Panel resolution | Status |
 |---|---|---|---|
-| 1 | Topology + baselines | Candidate matrix accepted: Null, Simple, Static, DGAF, DGAF+PDMAL; topology-study candidates Ring, PDMAL dodecahedral, random-regular degree 3, Small-world, Complete K20. Exact implementation SHAs, parameters, and graph-validation results required before freeze. | **PANEL-ADJUDICATED / PROVENANCE REQUIRED** |
+| 1 | Pilot matrix | Four conditions (`null`, `simple`, `static`, `dgaf`) across five topologies (`ring`, `pdmal`, `random_regular`, `small_world`, `complete`) and nine failure counts (`0,1,2,3,4,5,6,8,10`); 180 observations per seed; 9,000 for 50 seeds before exclusions. | **PENDING FINAL PANEL ACCEPTANCE / FREEZE** |
 | 2 | Primary endpoint | Failure-Free Completion Rate (FFCR) = completed trials without unrecovered failure / eligible trials; higher is better; report condition-wise estimate and prespecified risk-difference contrasts with 95% CIs. | **RESOLVED** |
 | 3 | Secondary endpoints | Recovery success rate, recovery latency, unrecovered failure count, runtime, primary-outcome variance, connectivity/surviving component size, protocol-compliance rate, missing/invalid rate, gate-block frequency; `D_a`, phi/convergence traces, and topology diagnostics are exploratory only. Prespecified multiplicity treatment applies. | **RESOLVED** |
-| 4 | RNG streams | NumPy `Generator(PCG64)` with a root `SeedSequence` and domain-separated child streams via `SeedSequence.spawn()`. Streams: trial-order, failure/perturbation, topology-construction (when applicable), analysis-resampling. Exact NumPy/Python versions and stream manifest recorded at freeze. | **RESOLVED / ENVIRONMENT RECORD REQUIRED** |
+| 4 | RNG streams | NumPy `Generator(PCG64)` with a root `SeedSequence` and domain-separated child streams via `SeedSequence.spawn()`. Streams: trial-order, failure/perturbation, topology-construction, analysis-resampling, and the appended `task_initialization` stream from v0.7.4. Exact NumPy/Python versions and stream manifest recorded at freeze. | **RESOLVED / ENVIRONMENT RECORD REQUIRED** |
 | 5 | Trial ordering | Block-randomized within each seed; one randomized condition permutation per seed using the dedicated ordering stream; exact permutation retained in provenance without exposing blinded labels to the analyst. | **RESOLVED** |
-| 6 | Failure semantics | A trial attempt fails when it exceeds the frozen per-attempt timeout or enters an explicitly unrecoverable state. A trial is unrecovered only after exhausting the frozen retry budget without successful completion. Recovery-window and rerouting rules are distinct from the per-attempt timeout. | **RESOLVED / VALUES PENDING IMPLEMENTATION PIN** |
+| 6 | Failure semantics | A trial attempt fails when it exceeds the frozen per-attempt timeout or enters an explicitly unrecoverable state. A trial is unrecovered only after exhausting the frozen retry budget without successful completion. Recovery-window and rerouting rules are distinct from the per-attempt timeout. | **RESOLVED / VALUES VERIFIED IN RUNNER** |
 | 7 | Exclusion rules | Objective protocol violations only; excluded records remain retained with explicit reason. Valid unfavorable outcomes are never excluded. | **RESOLVED** |
 | 8 | Stopping rules | No efficacy-based early stopping. Halts are limited to predefined safety, blinding, provenance, protocol-integrity, secret-exposure, catastrophic execution, or loss-of-comparability conditions. | **RESOLVED** |
 | 9 | Statistical unit + analysis | One seed = one paired experimental block. Each seed produces one FFCR value per condition. Primary analysis uses paired raw FFCR differences on the original 0–1 proportion scale; effect size is the mean paired difference (risk difference). 95% CI is obtained by a prespecified paired bootstrap procedure. Secondary contrasts are exploratory unless included in the frozen multiplicity procedure. | **RESOLVED** |
 | 10 | Sample-size rule | Pilot estimates the within-seed standard deviation of the paired FFCR difference. Target power 0.80, alpha 0.05, minimum detectable absolute FFCR difference 0.15. Final N is determined by the frozen paired-difference power equation using the pilot SD and rounded upward with `math.ceil`. The exact analysis/power implementation must be verified before freeze. | **RESOLVED / IMPLEMENTATION VERIFICATION REQUIRED** |
 | 11 | Artifact schema | One JSON artifact per seed containing all trial records and provenance; required fields include experiment/protocol identifiers, seed, blinded condition ID, outcome data, failure/recovery state, runtime, status, exclusion information, environment fingerprint, and hashes. Raw artifacts are retained in GitHub Actions artifacts/durable artifact storage; repository stores protocol/manifests rather than the canonical raw dataset. | **RESOLVED / SCHEMA+RETENTION VERIFICATION REQUIRED** |
 | 12 | Blinding/unblinding | `PDMAL_BLINDING_KEY` controls blinded mapping. Repository owner holds the operational secret and does not participate in analysis. Executor and analyst see blinded IDs only. Panel chair is unblinder after raw-data freeze, preprocessing freeze, exclusion freeze, integrity verification, and explicit authorization. Mapping is held separately as a protected object. | **RESOLVED / CUSTODY VERIFICATION REQUIRED** |
-| 13 | Pilot pass/fail | PASS requires 100% expected trials attempted, zero blinding breaches, missing/invalid <= 5%, all conditions execute, no comparability-affecting protocol deviation, all required provenance/artifact checks pass, and seed runtime is at or below the frozen ceiling. | **RESOLVED / RUNTIME CEILING PENDING** |
+| 13 | Pilot pass/fail | PASS requires 100% expected trials attempted, zero blinding breaches, missing/invalid <= 5%, all conditions execute, no comparability-affecting protocol deviation, all required provenance/artifact checks pass, and seed runtime is at or below the frozen ceiling. | **RESOLVED / RUNTIME CHARACTERIZATION VERIFIED** |
 
 ## Topology and baseline specification
 
-### Experimental conditions
+### Pilot experimental conditions
 
-The initial controlled matrix is:
+The pilot uses exactly four conditions:
 
-1. Null / no-op control
-2. Simple agent/control topology
-3. Static-rule control
-4. DGAF
-5. DGAF + PDMAL
+1. `null` — baseline
+2. `simple` — slow-mixing control
+3. `static` — fixed Metropolis-Hastings weights without failure-time renormalization
+4. `dgaf` — governance runtime via the verified DGAF adapter
 
-### Topology-study candidates
+`dgaf_pdmal` is reserved for later work and is not part of this pilot.
 
-The topology-study candidate set is:
+### Pilot topology set
 
-1. Ring
-2. PDMAL dodecahedral
-3. Random-regular degree 3
-4. Small-world
-5. Complete K20
+The pilot uses exactly five topologies:
 
-The PDMAL dodecahedral structure is the documented 20-vertex, 30-edge, 3-regular graph with three colocated agents/services per vertex (60-service interpretation). Mathematical correctness of this structure is distinct from claims of empirical superiority.
+1. `ring`
+2. `pdmal`
+3. `random_regular`
+4. `small_world`
+5. `complete`
 
-The Small-world candidate is provisionally parameterized as `k=4, p=0.3`. This parameterization is not frozen until the implemented graph and validation test are inspected.
+All five must use the verified topology generators and provenance/fingerprint controls.
+
+### Failure-count set
+
+The pilot uses exactly:
+
+```text
+0, 1, 2, 3, 4, 5, 6, 8, 10
+```
+
+No other failure-count level enters the pre-registered pilot without a protocol amendment before data collection.
 
 ### Required topology provenance record
 
@@ -108,6 +160,18 @@ validation-test result
 ```
 
 No topology may enter the pilot merely because it is named in documentation; the exact implementation and generated graph must be inspectable.
+
+## Deterministic workload specification
+
+The authoritative workload is defined by `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md`. A trial is identified by `(seed, topology, condition, failure_count)` and retries reproduce the same trial state.
+
+Consensus dynamics:
+
+- 20 nodes.
+- Initial values `Uniform(-1,1)` from the dedicated `task_initialization` RNG stream.
+- Exactly 100 iterations; no convergence-based early stopping.
+- Failure injection at iteration 33; recovery at iteration 66.
+- Failed nodes retain state and are excluded from active-neighbor sets while failed.
 
 ## Primary endpoint
 
@@ -150,7 +214,7 @@ Exploratory diagnostics:
 
 **Statistical unit: one seed = one paired experimental block.**
 
-For each seed, all conditions are executed under the frozen block randomization and common experimental control structure. Each condition yields one FFCR proportion for that seed.
+For each seed, all four pilot conditions are executed under the frozen block randomization and common experimental control structure. Each condition yields one FFCR proportion for that seed.
 
 Primary analysis:
 
@@ -169,10 +233,6 @@ Confidence interval:
 The paired t-test is used only as an analytical sensitivity/reference calculation if the frozen diagnostics indicate its assumptions are sufficiently reasonable. The primary inference does not require an arcsin transformation; the estimand remains the raw FFCR risk difference on the original 0–1 scale.
 
 Secondary contrasts are exploratory unless the final multiplicity procedure explicitly promotes them to confirmatory status.
-
-### Missing/excluded data
-
-Missingness and exclusions are not silently converted into success or failure. The primary analysis uses only the prespecified eligible-trial denominator. Missingness rates are separately reported and any analysis change arising from exclusion or missingness is documented.
 
 ## Pilot-to-final sample-size rule
 
@@ -216,11 +276,14 @@ Child streams: SeedSequence.spawn()
 Required domain-separated child streams:
 
 ```text
-trial-order
-failure-perturbation
-topology-construction (if randomized)
-analysis-resampling
+trial_order
+failure_injection
+topology_construction
+analysis_resampling
+task_initialization
 ```
+
+`task_initialization` is appended after the existing streams so prior stream identities remain stable.
 
 Record in the environment/seed manifest:
 
@@ -234,15 +297,11 @@ BitGenerator type
 checkpoint state where required
 ```
 
-The experiment does not use an ad-hoc hash convention as its primary stream-splitting mechanism. Any SHA-256 hashes used for manifests or provenance are integrity identifiers, not substitutes for the RNG stream mechanism.
-
 ## Trial ordering
 
-Within each seed, the five experimental conditions form one randomized block. A dedicated ordering stream generates a permutation in which each condition appears exactly once. The realized order is retained in provenance in a form that preserves auditability while maintaining blinded analytical labels.
+Within each seed, the four pilot conditions form one randomized block. A dedicated ordering stream generates a permutation in which each condition appears exactly once. The realized order is retained in provenance in a form that preserves auditability while maintaining blinded analytical labels.
 
 ## Failure, retry, recovery, and rerouting semantics
-
-### Candidate fixed semantics
 
 ```text
 Trial timeout per attempt:       60 seconds
@@ -251,7 +310,7 @@ Recovery window between attempts: 30 seconds
 Seed runtime ceiling:            300 seconds
 ```
 
-These values remain **PENDING IMPLEMENTATION VERIFICATION** until the exact runner is pinned and tested.
+These values are implemented in the verified runner and runtime characterization has confirmed the 300-second ceiling for the characterization matrix. The values remain part of the frozen protocol control set.
 
 Definitions:
 
@@ -259,10 +318,9 @@ Definitions:
 - **Successful trial:** an attempt completes the prescribed task within the timeout before the retry budget is exhausted.
 - **Unrecovered trial failure:** all allowed attempts fail without successful completion.
 - **Recovery window:** the maximum allowed interval for prescribed reset/recovery between attempts.
-- **Reroute:** a topology-controlled execution-path change triggered by the frozen failure semantics.
-- **Seed runtime ceiling:** maximum wall-clock time for the entire seed across all conditions and retries.
+- **Seed runtime ceiling:** maximum wall-clock time for the entire characterized seed execution.
 
-The 300-second seed runtime ceiling is a **protocol/runtime integrity control**, not an automatic FFCR failure. A ceiling violation is retained as a protocol deviation/runtime outcome and is handled under the frozen deviation rule.
+The 300-second seed runtime ceiling is a **protocol/runtime integrity control**, not an automatic FFCR failure.
 
 ## Exclusion rules
 
@@ -366,50 +424,23 @@ The unblinding event itself must be logged without revealing the secret.
 
 The 50-seed pilot passes only if all of the following are true:
 
-- 100% of expected trials are attempted;
+- 100% of the planned 9,000 raw observations are attempted;
 - zero blinding breaches;
 - missing/invalid trial rate <= 5%;
-- every condition executes;
+- all four conditions execute;
+- all five topologies execute;
+- all nine failure-count levels execute;
 - no protocol deviation affecting comparability;
 - all required provenance and artifact-integrity checks pass;
 - seed runtime remains at or below the frozen runtime ceiling.
 
-The pilot must not be declared a success because the observed efficacy results are favorable. Pilot acceptance is an operational/feasibility gate.
+## Current pre-freeze controls
 
-## Environment reproducibility
+The protocol cannot transition to `FROZEN` until the following are independently verified:
 
-Before freeze, the execution environment must record:
+- expert-panel acceptance of the incorporated v0.7.5 matrix;
+- blinding operational dry-run;
+- durable retention archive and integrity record;
+- final freeze manifest with exact file blob SHAs and tested-run references.
 
-```text
-Python version
-NumPy version
-all direct experiment dependencies and versions
-OS / runner image
-CPU architecture where material
-lockfile / environment fingerprint
-experiment runner commit SHA
-protocol commit SHA
-```
-
-The same environment definition must be used for pilot and final experiment unless a documented protocol amendment establishes equivalence.
-
-## Protocol deviations
-
-A protocol deviation must record at minimum:
-
-```text
-UTC timestamp
-seed/trial identifier if applicable
-source commit SHA
-workflow/run ID
-nature of deviation
-whether comparability was affected
-disposition under the frozen exclusion rule
-review/authorization record
-```
-
-Valid unfavorable results are not protocol deviations merely because they are unfavorable.
-
-## Documentation lifecycle
-
-This protocol is `ACTIVE` as the current pre-freeze protocol and is not yet `FROZEN`. Freeze requires a new immutable commit SHA, timestamp, completed manifest, and explicit authorization record. The lifecycle metadata at the top of this file is part of the governance record.
+**Status remains PRE-FREEZE. No empirical execution is authorized.**
