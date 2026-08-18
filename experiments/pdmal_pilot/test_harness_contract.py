@@ -2,6 +2,7 @@
 
 import hashlib
 
+from artifact_schema import sha256_sidecar, validate_artifact_document, validate_seed_record
 from harness_contract import (
     EXPERIMENT_CONDITIONS,
     TOPOLOGY_SPECS,
@@ -53,3 +54,51 @@ def test_canonical_json_hash_is_stable() -> None:
     payload = {"b": 2, "a": [3, 1]}
     expected = hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
     assert hashlib.sha256(canonical_json_bytes(payload)).hexdigest() == expected
+
+
+def _valid_seed_record() -> dict:
+    return {
+        "experiment_id": "PDMAL-PREFREEZE",
+        "protocol_version": "1.1",
+        "experiment_commit_sha": "a" * 40,
+        "seed_id": "seed-0001",
+        "blinded_condition_id": "blind_0123456789abcdef",
+        "trial_id": "trial-0001",
+        "primary_outcome": 1.0,
+        "secondary_outcomes": {},
+        "failure": {},
+        "recovery": {},
+        "runtime_ms": 10,
+        "status": "SUCCESS",
+        "excluded": False,
+        "exclusion_reason": None,
+        "environment_fingerprint": "env-abc",
+        "artifact_sha256": "b" * 64,
+    }
+
+
+def test_seed_artifact_schema_and_sidecar() -> None:
+    record = _valid_seed_record()
+    validate_seed_record(record)
+    document = {
+        "artifact_version": "1",
+        "protocol_status": "PRE-FREEZE",
+        "empirical_data_collection": False,
+        "records": [record],
+    }
+    validate_artifact_document(document)
+    raw = canonical_json_bytes(document)
+    sidecar = sha256_sidecar(raw, "seed-0001.json")
+    assert sidecar.endswith("  seed-0001.json\n")
+    assert len(sidecar.split()[0]) == 64
+
+
+def test_excluded_artifact_requires_reason() -> None:
+    record = _valid_seed_record()
+    record["excluded"] = True
+    try:
+        validate_seed_record(record)
+    except AssertionError as exc:
+        assert "exclusion_reason" in str(exc)
+    else:
+        raise AssertionError("excluded artifact without reason must fail closed")
