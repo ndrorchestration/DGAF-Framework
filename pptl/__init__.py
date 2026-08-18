@@ -9,7 +9,6 @@ from .herald_agent        import HeraldAgent, TraceEventType
 from .sinks               import JSONLSink, StdoutSink, N8nWebhookSink
 from .n8n_herald_sink     import N8nHeraldSink          # OPP-005: production sink
 from .rag_verifier        import SentinelRAGVerifier
-from .orchestrator        import IntegratedOrchestrator
 from .topology            import PHI, PENTAGON_EDGES
 from .attestation_gate    import (
     AttestationGate, AttestationRecord, AttestationResult, AttestationStatus,
@@ -26,7 +25,7 @@ __all__ = [
     # Sinks
     "JSONLSink", "StdoutSink", "N8nWebhookSink", "N8nHeraldSink",
     # Governance
-    "SentinelRAGVerifier", "IntegratedOrchestrator",
+    "SentinelRAGVerifier",
     "AttestationGate", "AttestationRecord", "AttestationResult", "AttestationStatus",
     # Topology
     "PHI", "PENTAGON_EDGES",
