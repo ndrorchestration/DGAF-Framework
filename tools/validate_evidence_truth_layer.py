@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import json
 import re
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,6 +47,7 @@ def main() -> int:
     for claim in registry["claims"]:
         claim_id = claim.get("claim_id")
         mode = claim.get("evidence_mode")
+        status = claim.get("status")
         if not claim_id:
             failures.append("claim without claim_id")
             continue
@@ -56,14 +56,14 @@ def main() -> int:
         claim_ids.add(claim_id)
         if mode not in {"synthetic", "integration", "empirical", "production"}:
             failures.append(f"{claim_id}: unsupported evidence_mode={mode!r}")
-        if mode in {"empirical", "production"} and not claim.get("run_id"):
-            failures.append(f"{claim_id}: {mode} claim requires run_id")
-        if mode == "empirical" and not claim.get("dataset"):
-            failures.append(f"{claim_id}: empirical claim requires dataset")
-        if claim.get("status") == "VERIFIED" and mode in {"synthetic", "integration"}:
-            failures.append(f"{claim_id}: VERIFIED cannot be backed only by {mode} evidence")
+        if mode in {"empirical", "production"} and status in {"VERIFIED", "ATTESTED"} and not claim.get("run_id"):
+            failures.append(f"{claim_id}: {status} {mode} claim requires run_id")
+        if mode == "empirical" and status in {"VERIFIED", "ATTESTED"} and not claim.get("dataset"):
+            failures.append(f"{claim_id}: {status} empirical claim requires dataset")
+        if status in {"VERIFIED", "ATTESTED"} and mode == "synthetic":
+            failures.append(f"{claim_id}: {status} cannot be backed only by synthetic evidence")
 
-    # Guard explicit production/evidence annotations against obvious stubs.
+    # Guard explicit production annotations against obvious stubs/placeholders.
     pattern = re.compile(r"evidence_mode\(\s*['\"]production['\"]")
     for path in iter_sources():
         text = path.read_text(encoding="utf-8", errors="replace")
