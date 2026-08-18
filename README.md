@@ -33,6 +33,18 @@ A mathematical term, external framework name, benchmark number, or agent role do
 - Epistemic auditing and vocabulary management
 - Experimental mathematical and structural research
 
+## Current project state
+
+For PDMAL/DGAF work, start with the documentation spine below:
+
+1. [Current State — machine-adjacent snapshot](docs/CURRENT_STATE.md)
+2. [PDMAL Current Control State](docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md)
+3. [Authoritative PDMAL Task Specification v0.7.4](docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md)
+4. [PDMAL Evidence Index](docs/evidence/PDMAL_EVIDENCE_INDEX.md)
+5. [Evidence Ladder Policy](docs/evidence/EVIDENCE_LADDER_POLICY.md)
+6. [Freeze Manifest Template](docs/experiment/FREEZE_MANIFEST_TEMPLATE.md)
+7. [PDMAL Experiment Protocol](docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md)
+
 ## Documentation
 
 - [Technical README](README.technical.md)
