@@ -11,8 +11,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
-import time
 from datetime import datetime, timezone
 from http.client import RemoteDisconnected
 from pathlib import Path
@@ -139,15 +137,16 @@ def main() -> int:
                 "passed": passed,
             }
         )
-
-        if not passed:
-            print(f"FAIL {case['id']}: expected {case['expected_status']}/{case['expected_decision']} got {status}/{decision}")
-        else:
-            print(f"PASS {case['id']}: {status}/{decision}")
+        print(
+            f"{'PASS' if passed else 'FAIL'} {case['id']}: "
+            f"expected {case['expected_status']}/{case['expected_decision']} "
+            f"got {status}/{decision}"
+        )
 
     malformed_timestamp = datetime.now(timezone.utc).isoformat()
     status, raw, parsed = request_malformed_json(endpoint)
-    malformed_passed = status == 400 and (not isinstance(parsed, dict) or parsed.get("decision") == "REJECT")
+    malformed_decision = parsed.get("decision") if isinstance(parsed, dict) else None
+    malformed_passed = status == 400 and malformed_decision == "REJECT"
     results.append(
         {
             "case_id": "case-5-malformed-json",
@@ -156,13 +155,16 @@ def main() -> int:
             "expected": {"status": 400, "decision": "REJECT"},
             "actual": {
                 "status": status,
-                "decision": parsed.get("decision") if isinstance(parsed, dict) else None,
+                "decision": malformed_decision,
                 "body": parsed if parsed is not None else raw,
             },
             "passed": malformed_passed,
         }
     )
-    print(f"{'PASS' if malformed_passed else 'FAIL'} case-5-malformed-json: expected 400/REJECT got {status}/{results[-1]['actual']['decision']}")
+    print(
+        f"{'PASS' if malformed_passed else 'FAIL'} case-5-malformed-json: "
+        f"expected 400/REJECT got {status}/{malformed_decision}"
+    )
 
     payload = {
         "evidence_class": "P2_RUNTIME_MATRIX_EXECUTION",
