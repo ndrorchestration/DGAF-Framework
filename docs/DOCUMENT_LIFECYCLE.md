@@ -26,12 +26,19 @@ This registry prevents documentation drift by making lifecycle state and authori
 | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` | ACTIVE / PRE-FREEZE | Both | Authoritative experimental protocol; remains unfrozen |
 | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` | ACTIVE | Both | Authoritative implementation workload specification |
 | `docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` | ACTIVE / INCORPORATED / PRE-FREEZE | Both | Accepted matrix amendment; does not authorize execution |
+| `docs/experiment/PRIMARY_CONTRAST_ADJUDICATION.md` | ACTIVE / OPEN / PRE-FREEZE | Expert panel / statistical-design authority | Primary confirmatory contrast is not yet adjudicated |
 | `docs/evidence/PDMAL_EVIDENCE_INDEX.md` | ACTIVE | Both | Current evidence-to-control mapping |
 | `docs/evidence/EVIDENCE_LADDER_POLICY.md` | ACTIVE | Both | Permanent evidence-promotion policy |
 | `docs/experiment/FREEZE_MANIFEST_TEMPLATE.md` | TEMPLATE | Both | Preparation template for freeze metadata |
 | `docs/experiment/FREEZE_MANIFEST.md` | ACTIVE / PRE-FREEZE | Both | Current freeze-control manifest; becomes the frozen manifest only after formal freeze |
 | `docs/experiment/PDMAL_FREEZE_READINESS_RECONCILIATION.md` | ACTIVE / PRE-FREEZE | Both | Reconciliation record for final documentation/adjudication seams |
 | `docs/DOCUMENT_LIFECYCLE.md` | ACTIVE | Both | Lifecycle registry itself |
+
+## Lifecycle reconciliation rule
+
+Pre-freeze documents that have passed a verification gate remain `ACTIVE` and `PRE-FREEZE` until the dedicated freeze commit exists. They are not marked `FROZEN` merely because their underlying implementation or operational control has been verified.
+
+The transition from `pending-next-verification-commit` to `pending-freeze-commit` is used only where an exact lifecycle field with the former value exists. No nonexistent lifecycle entry is invented in order to force the transition.
 
 ## Task-specification history
 
