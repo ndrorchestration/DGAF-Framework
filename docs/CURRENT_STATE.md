@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-18
-applies_to_sha: 781e5e3fd44f953c67057fb5afd105ee8cb8bd70
+last_verified: 2026-08-19
+applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
 ---
 
 # DGAF-Framework / PDMAL — Current State
@@ -14,20 +14,22 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 
 | Field | Value |
 |---|---|
-| Current branch | `epistemic/evidence-architecture-v1` |
-| Current head at this synchronization | `781e5e3fd44f953c67057fb5afd105ee8cb8bd70` |
+| Current branch | `main` |
+| Current head at this synchronization | `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Current verified implementation SHA | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
+| PR #65 merge | `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Protocol document | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` |
 | Protocol state | PRE-FREEZE / NO DATA COLLECTION AUTHORIZED |
 | Task specification | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` |
 | Matrix amendment | `docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` — `f34129d8ecc2c8287bfb5a4f0433f551a9ce8894` |
-| Freeze manifest | `docs/experiment/FREEZE_MANIFEST.md` — PRE-FREEZE |
+| Freeze manifest | `docs/experiment/FREEZE_MANIFEST.md` — PRE-FREEZE / PENDING FINAL CONTROLS |
 | Latest implementation CI | Run #74 (`32111556449`) on `08500a7` |
 | Runtime characterization | Run #14 (`32112658368`) on `a0ff248`; 72/72 trials completed, ceiling PASS |
-| Runtime artifact | GitHub artifact `9315467977`; digest `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
+| Runtime artifact | GitHub artifact `9315467977`; ZIP digest `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
+| Runtime inner JSON | `runtime_characterization.json`; SHA-256 `f6db24e5dd2659d4395c0752845e23f182a8ae6b304433e56ae9c2f4c155f6ea` |
 | Blinding dry-run workflow | `.github/workflows/pdmal-blinding-operational-test.yml` |
-| Blinding dry-run evidence | OPEN — no dedicated run observed yet |
-| Retention policy | `docs/experiment/PDMAL_RETENTION_POLICY.md`; policy decided, durable archive implementation still open |
+| Blinding dry-run evidence | CLOSED / PASS — Run `32113226935`, artifact `9328114023` |
+| Retention policy | `docs/experiment/PDMAL_RETENTION_POLICY.md`; durable archive implementation/verification remains open |
 
 ## Pilot Matrix
 
@@ -46,6 +48,7 @@ Out of scope:    dgaf_pdmal
 
 | Gate | Status | Evidence / blocker |
 |---|---|---|
+| PR #65 merge | CLOSED | Merge commit `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Environment lock | CLOSED | Run #67 generated the full hash lock; locked installation passed and Run #68 corroborated infrastructure state |
 | Topology provenance | VERIFIED | Fresh PDMAL CI coverage in the pre-freeze series |
 | Artifact schema/integrity | VERIFIED | Run #74 |
@@ -53,31 +56,31 @@ Out of scope:    dgaf_pdmal
 | ConsensusTask implementation | VERIFIED | Run #74 on `08500a7` |
 | Runtime characterization | OPERATIONALLY CHARACTERIZED | Run #14; 72/72 trials completed and artifact validated |
 | 300-second ceiling | VERIFIED FOR CHARACTERIZATION MATRIX | All measured seed runtimes remained below 300 seconds |
-| Pilot matrix reconciliation | OPEN | Amendment v0.7.5 committed; final protocol incorporation and panel record pending |
-| Blinding operational verification | OPEN | Synthetic dry-run workflow implemented; execution evidence not yet observed |
-| Long-term retention | OPEN | Policy decided; durable research archive not yet established/verified |
-| Freeze packet | PENDING | Waits for matrix, blinding, and durable-retention closure |
-| Protocol freeze | BLOCKED | Required controls remain open |
-| Pilot authorization | NOT GRANTED | Explicit authorization required after freeze |
+| Matrix amendment | OPEN | Final incorporation/acceptance record still pending |
+| Blinding operational verification | CLOSED / PASS | Run `32113226935`; synthetic custody dry-run; no production secret access; no empirical data |
+| Long-term retention | OPEN | Durable research archive not yet independently verified |
+| Freeze packet | PENDING | Remaining matrix, retention, and exact freeze-state metadata |
+| Protocol freeze | BLOCKED | Required final controls remain open |
+| Pilot authorization | NOT GRANTED | Separate governance decision after freeze |
 | Empirical data | 0 | No pilot execution authorized |
 
 ## Evidence boundary
 
-Run #14 is operational characterization evidence only. It does not authorize empirical execution. Run #67/#68 and Run #74 remain scoped to their exact executed SHAs. Documentation changes after those runs do not inherit verification automatically.
+The merge of PR #65 is a repository-state event, not empirical evidence. Runtime characterization remains scoped to its exact executed SHA `a0ff248eadb736f9b5835f2436791dc6ab5f66cc`; the blinding operational run remains scoped to `1d8c62386ea09f09c1dac768e1e59d4df284edee`.
 
-The blinding dry-run uses only synthetic labels and a mock key. It must not access or print `PDMAL_BLINDING_KEY`.
+The ZIP artifact digest and inner `runtime_characterization.json` digest are distinct provenance identities and must not be substituted for one another.
 
-The matrix amendment is a specification artifact, not yet the frozen protocol. The final pilot scope must be incorporated into the protocol and recorded as accepted before freeze.
+Empirical data remains `0`. Pilot authorization remains `NOT GRANTED`.
 
 ## Current Next Actions
 
-1. Obtain expert-panel acceptance of the matrix amendment and incorporate it into the final protocol.
-2. Execute the dedicated blinding operational dry-run workflow.
-3. Review its artifact and custody evidence.
-4. Establish and verify the durable research archive required by the retention policy.
-5. Assemble the freeze packet and populate the final freeze manifest with exact blob SHAs.
-6. Freeze protocol, implementation, environment, and analysis plan with exact SHAs and timestamp.
-7. Obtain explicit pilot authorization.
+1. Obtain and record final matrix-amendment acceptance into the protocol.
+2. Establish and directly verify durable retention for the research artifact set.
+3. Reconcile the freeze manifest to the final pre-freeze control state without making pilot authorization a freeze prerequisite.
+4. Populate exact protocol, task-spec, runner/component, topology, and environment blob SHAs.
+5. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
+6. Record the freeze commit SHA and timestamp.
+7. Make a separate explicit pilot-authorization decision after freeze.
 8. Only then execute empirical work.
 
 **Empirical data remains 0 until explicit pilot authorization is recorded.**
