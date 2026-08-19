@@ -3,18 +3,22 @@ status: PRE-FREEZE
 state: PENDING FINAL CONTROLS
 authority: Both
 owner: DGAF/PDMAL experimental-control
-last_verified: 2026-08-18
+last_verified: 2026-08-19
+freeze_target_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
 freeze_commit_sha: TBD
 ---
 
 # PDMAL Experiment — Freeze Manifest
 
-This is the pre-freeze manifest. It is not evidence of protocol freeze and does not authorize pilot execution. Every value marked `TBD` or `PENDING` must be resolved with direct evidence before the freeze commit.
+This is the pre-freeze manifest for the merged DGAF/PDMAL control plane. It is not evidence of protocol freeze and does not authorize pilot execution. Every value marked `TBD` or `PENDING` must be resolved with direct evidence before the dedicated freeze commit.
+
+The **freeze state is independent of pilot authorization**. Pilot authorization is a separate governance decision that may occur only after the protocol and associated freeze controls are actually frozen. Pilot authorization is therefore **not a freeze precondition** and remains `NOT GRANTED` unless explicitly recorded after freeze.
 
 ## 1. Protocol / Design
 
 | Item | Value |
 |---|---|
+| PR #65 merge baseline | `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Protocol | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` — PRE-FREEZE |
 | Task specification | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` — APPROVED |
 | Matrix amendment | `docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` — `f34129d8ecc2c8287bfb5a4f0433f551a9ce8894` |
@@ -25,7 +29,7 @@ This is the pre-freeze manifest. It is not evidence of protocol freeze and does 
 
 ## 2. Pilot Matrix
 
-| Field | Frozen pre-freeze value |
+| Field | Pre-freeze value |
 |---|---|
 | Conditions | `null`, `simple`, `static`, `dgaf` |
 | Topologies | `ring`, `pdmal`, `random_regular`, `small_world`, `complete` |
@@ -39,6 +43,7 @@ This is the pre-freeze manifest. It is not evidence of protocol freeze and does 
 
 | Item | Value |
 |---|---|
+| PR #65 merge commit | `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Verified ConsensusTask implementation commit | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
 | Verified implementation CI | Run #74 — `32111556449` |
 | DGAF adapter | Verified; do not modify without new adjudication |
@@ -65,11 +70,13 @@ This is the pre-freeze manifest. It is not evidence of protocol freeze and does 
 |---|---|
 | Runtime characterization run | #14 — `32112658368` |
 | Runtime artifact | `9315467977` |
-| Runtime artifact digest | `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
+| Runtime artifact ZIP digest | `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
+| Inner `runtime_characterization.json` SHA-256 | `f6db24e5dd2659d4395c0752845e23f182a8ae6b304433e56ae9c2f4c155f6ea` |
 | 300-second ceiling | VERIFIED for characterization matrix |
 | Blinding workflow | `.github/workflows/pdmal-blinding-operational-test.yml` |
-| Blinding run | `TBD` |
-| Blinding artifact | `TBD` |
+| Blinding run | `32113226935` |
+| Blinding artifact | `9328114023` |
+| Blinding interpretation | CLOSED / PASS; synthetic custody verification only; no empirical data |
 
 ## 6. Durable Retention
 
@@ -90,7 +97,7 @@ This is the pre-freeze manifest. It is not evidence of protocol freeze and does 
 | Matrix amendment panel approval | `PENDING` |
 | Freeze timestamp | `TBD` |
 | Freeze author | `Ndr Orchestration` |
-| Pilot authorization record | `TBD — NOT GRANTED` |
+| Pilot authorization record | `NOT GRANTED — separate post-freeze decision` |
 
 ## 8. Freeze Preconditions
 
@@ -101,7 +108,8 @@ The freeze manifest may only be promoted to `FROZEN` after:
 3. the blinding operational workflow passes and its artifact is retained;
 4. durable retention is implemented and directly verified;
 5. all protocol/document lifecycle metadata is updated to `FROZEN`;
-6. a final freeze commit is created and its SHA recorded;
-7. explicit pilot authorization is recorded.
+6. a final freeze commit is created and its SHA recorded.
+
+**Pilot authorization is deliberately excluded from the freeze preconditions.** It is a separate governance gate evaluated only after the freeze state is established.
 
 **Current status: PRE-FREEZE. Empirical execution remains prohibited.**
