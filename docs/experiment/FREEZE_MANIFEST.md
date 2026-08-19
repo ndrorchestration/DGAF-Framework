@@ -21,10 +21,13 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 | PR #65 merge baseline | `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Protocol | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` — PRE-FREEZE |
 | Task specification | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` — APPROVED |
-| Matrix amendment | `docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` — `f34129d8ecc2c8287bfb5a4f0433f551a9ce8894` |
+| Matrix amendment | `docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` — ACCEPTED / INCORPORATED into `915e454e...` |
+| Matrix acceptance evidence | Notion governance record — DGAF-Framework Operational Control Center / post-merge freeze reconciliation |
 | Primary endpoint | FFCR |
-| Secondary endpoint | `final_std` |
-| Consensus threshold | `< 0.01` |
+| Secondary endpoint family | `final_std`; recovery success; recovery latency; unrecovered failure count; runtime; primary-outcome variance; connectivity/surviving component size; protocol-compliance rate; missing/invalid rate; gate-block frequency |
+| Consensus-quality diagnostic | `final_std < 0.01`; secondary only, not the overall success definition |
+| Exploratory diagnostics | `D_a`; phi/convergence traces; topology-specific graph diagnostics; other internal instrumentation values |
+| Primary contrast hierarchy | PENDING EXPLICIT PRE-FREEZE ADJUDICATION; current protocol does not independently establish `dgaf` vs `null` as the sole primary contrast |
 | Iterations | 100 |
 
 ## 2. Pilot Matrix
@@ -39,6 +42,23 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 | Planned raw observations | `9000` |
 | `dgaf_pdmal` | OUT OF SCOPE for this pilot |
 
+### Seed-level FFCR aggregation
+
+Each condition produces one seed-level FFCR from the 45 component workload cells spanning the five topologies and nine failure-count levels:
+
+```text
+FFCR_condition,seed =
+    successful eligible component trials
+    /
+    eligible component trials
+```
+
+Each component trial has equal weight. There is no topology-first or failure-level-first averaging before the seed-level FFCR is calculated.
+
+A trial is **eligible** when it is attempted, including execution-level retries, and is not excluded under the frozen objective exclusion rules. An excluded trial remains retained with an explicit reason and is removed from the denominator only when a pre-registered exclusion rule applies. A valid unfavorable outcome is never excluded because of its result.
+
+Failure count `0` is included in the primary workload and contributes equally to the denominator as a no-failure baseline condition.
+
 ## 3. Implementation Provenance
 
 | Item | Value |
@@ -49,8 +69,9 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 | DGAF adapter | Verified; do not modify without new adjudication |
 | Protocol final blob SHA | `TBD at freeze` |
 | v0.7.4 task-spec blob SHA | `TBD at freeze` |
-| Runner/component blob SHAs | `TBD at freeze` |
-| Topology provenance SHAs | `TBD at freeze` |
+| Runner/component tree and critical-file blob SHAs | `TBD at freeze` |
+| Topology generator/provenance SHAs | `TBD at freeze` |
+| Generated topology fingerprints | `TBD at freeze` |
 | Freeze commit SHA | `TBD` |
 
 ## 4. Environment
@@ -62,7 +83,7 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 | NetworkX | Exact pinned version from lockfile — `TBD verify at freeze` |
 | Full lockfile | `experiments/pdmal_pilot/requirements-full-lock.txt` |
 | Lockfile blob SHA | `TBD at freeze` |
-| Runtime CI SHA | `a0ff248eadb736f9b5835f2436791dc6ab5f66cc` |
+| Runtime characterization source SHA | `a0ff248eadb736f9b5835f2436791dc6ab5f66cc` |
 
 ## 5. Characterization Evidence
 
@@ -85,30 +106,42 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 | CI artifact retention | 30 days |
 | Durable archive provider | `TBD` |
 | Durable archive record / DOI | `TBD` |
-| Archived runtime artifact digest | `TBD` |
+| Archived artifact digest(s) | `TBD` |
 | Archive retention period | `TBD` |
 | Access-control owner | `TBD` |
+| Retrieval verification | `TBD` |
 
 ## 7. Governance
 
 | Item | Value |
 |---|---|
 | Expert-panel approval of v0.7.4 | Recorded in governance record |
-| Matrix amendment panel approval | `PENDING` |
+| Matrix amendment acceptance | ACCEPTED / INCORPORATED; evidence recorded in governance record |
 | Freeze timestamp | `TBD` |
 | Freeze author | `Ndr Orchestration` |
 | Pilot authorization record | `NOT GRANTED — separate post-freeze decision` |
 
-## 8. Freeze Preconditions
+## 8. Architectural Boundary
+
+The `dgaf` condition tests the verified `DGAF_TGLAdapter` behavior under this workload. It does **not** establish that the broader DGAF/PDMAL architecture is generally effective, validated, or empirically supported.
+
+## 9. NotebookLM Boundary
+
+NotebookLM is a research-synthesis and source-interrogation environment. Material originating there has no evidentiary authority unless independently incorporated into an authoritative protocol, implementation, or evidence record.
+
+## 10. Freeze Preconditions
 
 The freeze manifest may only be promoted to `FROZEN` after:
 
-1. the matrix amendment is accepted into the final protocol;
-2. the exact implementation/topology/environment blob SHAs are recorded;
-3. the blinding operational workflow passes and its artifact is retained;
-4. durable retention is implemented and directly verified;
-5. all protocol/document lifecycle metadata is updated to `FROZEN`;
-6. a final freeze commit is created and its SHA recorded.
+1. the matrix amendment acceptance is represented consistently in the final protocol and governance records;
+2. the exact implementation/topology/environment identifiers are recorded;
+3. the seed-level FFCR aggregation rule is incorporated into the final protocol;
+4. the primary contrast hierarchy is explicitly adjudicated before freeze;
+5. the blinding operational workflow passes and its artifact is retained;
+6. durable retention is implemented and directly verified;
+7. all protocol/document lifecycle metadata is updated to `FROZEN`;
+8. a final freeze commit is created and its SHA is recorded;
+9. the resulting freeze commit is independently checked for exact-state consistency.
 
 **Pilot authorization is deliberately excluded from the freeze preconditions.** It is a separate governance gate evaluated only after the freeze state is established.
 
