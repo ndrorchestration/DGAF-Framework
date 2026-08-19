@@ -99,7 +99,7 @@ Failure count `0` is included in the primary workload and contributes equally to
 | Runtime characterization run | #14 — `32112658368` |
 | Runtime artifact | `9315467977` |
 | Runtime artifact ZIP digest | `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
-| Inner `runtime_characterization.json` SHA-256 | `f6db24e5dd2659d4395c0752845e23f1823aa6749809...` |
+| Inner `runtime_characterization.json` SHA-256 | `f6db24e5dd2659d4395c0752845e23f182a8ae6b304433e56ae9c2f4c155f6ea` |
 | 300-second ceiling | VERIFIED for characterization matrix |
 | Blinding workflow | `.github/workflows/pdmal-blinding-operational-test.yml` |
 | Blinding run | `32113226935` |
