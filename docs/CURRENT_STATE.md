@@ -15,8 +15,7 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 | Field | Value |
 |---|---|
 | Authoritative repository baseline | `915e454e27eb2770e7f40a067a881b0783feaae4` — PR #65 merge baseline / freeze target baseline |
-| Current reconciliation branch | `epistemic/pdmal-freeze-readiness-reconciliation` |
-| Current reconciliation branch head | `cd620af806d4cf2830efbc55283891c9e5f239e8` |
+| Current reconciliation branch | `epistemic/pdmal-freeze-readiness-reconciliation` — current head is the Git ref, not a value embedded in this file |
 | Latest main documentation synchronization commit | `7ed2cd072ee26d12d9417b0e9b41508b76a75d83` |
 | Current verified implementation SHA | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
 | Protocol document | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` |
@@ -38,7 +37,7 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 The repository identifiers above have distinct meanings:
 
 - **Authoritative repository baseline:** the merged PR #65 commit used as the current experimental freeze target/baseline.
-- **Current reconciliation branch head:** the latest documentation/reconciliation commit on the working branch; it is not itself the freeze commit.
+- **Current reconciliation branch:** the named Git ref containing the mechanical pre-freeze reconciliation; its current head is resolved from Git rather than embedded here.
 - **Latest main documentation synchronization commit:** the newest committed documentation state on `main`; it does not retroactively change the SHA of historical execution evidence.
 - **Historical execution SHA:** the exact source commit actually exercised by a retained workflow run or artifact.
 
