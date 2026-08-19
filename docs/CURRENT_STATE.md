@@ -15,8 +15,9 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 | Field | Value |
 |---|---|
 | Authoritative repository baseline | `915e454e27eb2770e7f40a067a881b0783feaae4` — PR #65 merge baseline / freeze target baseline |
-| Latest main documentation synchronization commit | `7ed2cd072ee26d12d9417b0e9b41508b76a75d83` |
 | Current reconciliation branch | `epistemic/pdmal-freeze-readiness-reconciliation` |
+| Current reconciliation branch head | `ce44c20aadfbb6758da7bf346c7ed3951d93e307` |
+| Latest main documentation synchronization commit | `7ed2cd072ee26d12d9417b0e9b41508b76a75d83` |
 | Current verified implementation SHA | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
 | Protocol document | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` |
 | Protocol state | PRE-FREEZE / NO DATA COLLECTION AUTHORIZED |
@@ -37,14 +38,11 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 The repository identifiers above have distinct meanings:
 
 - **Authoritative repository baseline:** the merged PR #65 commit used as the current experimental freeze target/baseline.
+- **Current reconciliation branch head:** the latest documentation/reconciliation commit on the working branch; it is not itself the freeze commit.
 - **Latest main documentation synchronization commit:** the newest committed documentation state on `main`; it does not retroactively change the SHA of historical execution evidence.
-- **Current reconciliation branch:** a working branch used to reconcile freeze-readiness documentation before any merge into `main`.
+- **Historical execution SHA:** the exact source commit actually exercised by a retained workflow run or artifact.
 
 Historical execution SHAs must always remain attached to their exact runs and artifacts.
-
-## Merge Record
-
-PR #65 merged at `915e454e27eb2770e7f40a067a881b0783feaae4`. This merge establishes the current repository baseline and freeze target baseline. It does **not** constitute the protocol freeze, does not establish the eventual freeze commit SHA, and does not authorize empirical execution.
 
 ## Pilot Matrix
 
@@ -111,12 +109,11 @@ Empirical data remains `0`. Pilot authorization remains `NOT GRANTED`.
 1. Resolve the exact primary contrast hierarchy through the existing statistical/panel authority or an explicit pre-freeze adjudication.
 2. Establish and directly verify durable retention for the research artifact set.
 3. Populate exact protocol, task-spec, runner/component, topology, and environment blob SHAs in the freeze manifest.
-4. Complete the remaining lifecycle/provenance reconciliation and run a final contradiction scan.
-5. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
-6. Record the freeze commit SHA and timestamp after Git produces it; do not self-reference it inside the same commit.
-7. Verify the resulting freeze tree and then declare the protocol `FROZEN`.
+4. Complete the P1 documentation reconciliation and run a final contradiction scan.
+5. Harden the pilot runner so authorization also verifies the requested execution source against the recorded freeze commit/reference.
+6. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
+7. Record the freeze commit SHA and timestamp only after Git produces the freeze commit.
 8. Make a separate explicit pilot-authorization decision after freeze.
-9. Verify that pilot authorization is enforced fail-closed by the runner and is bound to the recorded freeze baseline.
-10. Only then execute empirical work.
+9. Only then execute empirical work.
 
 **Empirical data remains 0 until explicit pilot authorization is recorded.**
