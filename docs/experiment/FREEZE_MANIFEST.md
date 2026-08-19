@@ -27,7 +27,7 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 | Secondary endpoint family | `final_std`; recovery success; recovery latency; unrecovered failure count; runtime; primary-outcome variance; connectivity/surviving component size; protocol-compliance rate; missing/invalid rate; gate-block frequency |
 | Consensus-quality diagnostic | `final_std < 0.01`; secondary only, not the overall success definition |
 | Exploratory diagnostics | `D_a`; phi/convergence traces; topology-specific graph diagnostics; other internal instrumentation values |
-| Primary contrast hierarchy | PENDING EXPLICIT PRE-FREEZE ADJUDICATION; current protocol does not independently establish `dgaf` vs `null` as the sole primary contrast |
+| Primary contrast hierarchy | OPEN — explicit pre-freeze adjudication required; `dgaf` vs `null` is not silently treated as the primary contrast |
 | Iterations | 100 |
 
 ## 2. Pilot Matrix
@@ -64,14 +64,13 @@ Failure count `0` is included in the primary workload and contributes equally to
 | Item | Value |
 |---|---|
 | PR #65 merge commit | `915e454e27eb2770e7f40a067a881b0783feaae4` |
-| Verified ConsensusTask implementation commit | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
-| Verified implementation CI | Run #74 — `32111556449` |
-| DGAF adapter | Verified; do not modify without new adjudication |
-| Protocol final blob SHA | `TBD at freeze` |
-| v0.7.4 task-spec blob SHA | `TBD at freeze` |
-| Runner/component tree and critical-file blob SHAs | `TBD at freeze` |
-| Topology generator/provenance SHAs | `TBD at freeze` |
-| Generated topology fingerprints | `TBD at freeze` |
+| Protocol blob SHA at current pre-freeze revision | `411386afdbb57ac5cb5a24150b1a618cc4c8b084` |
+| v0.7.4 task-spec blob SHA | `06a8386979fc8f1e3483d8ea76a5754b4a6ce487` |
+| Runner `run_pilot.py` blob SHA | `4e69a96fc7b2afa47bb24ea0bbbe62e6f70c0dd3` |
+| Task engine `task_engine.py` blob SHA | `b8a6df25238055e8131c0944e2896d82ef61fd2f` |
+| Topology provenance helper `topology_utils.py` blob SHA | `7ae92ba8a9ab964537e5dafa5e12de36b841391e` |
+| Artifact schema `artifact_schema.py` blob SHA | `41a90485246bbc1e7e13829fc1791133da5c3d4c` |
+| Generated topology fingerprints | `TBD — exact per-configuration fingerprints from final provenance manifest` |
 | Freeze commit SHA | `TBD` |
 
 ## 4. Environment
@@ -79,10 +78,10 @@ Failure count `0` is included in the primary workload and contributes equally to
 | Item | Value |
 |---|---|
 | Python | `3.12.0` in verified characterization workflow |
-| NumPy | Exact pinned version from lockfile — `TBD verify at freeze` |
-| NetworkX | Exact pinned version from lockfile — `TBD verify at freeze` |
+| NumPy | `2.5.1` |
+| NetworkX | `3.6.1` |
 | Full lockfile | `experiments/pdmal_pilot/requirements-full-lock.txt` |
-| Lockfile blob SHA | `TBD at freeze` |
+| Lockfile blob SHA | `TBD — direct blob identifier still required for final freeze manifest` |
 | Runtime characterization source SHA | `a0ff248eadb736f9b5835f2436791dc6ab5f66cc` |
 
 ## 5. Characterization Evidence
@@ -111,13 +110,16 @@ Failure count `0` is included in the primary workload and contributes equally to
 | Access-control owner | `TBD` |
 | Retrieval verification | `TBD` |
 
+Durable retention must establish the destination and retention controls for the eventual research record. The existing runtime characterization archive, when created, is separate from the future pilot raw dataset that does not yet exist.
+
 ## 7. Governance
 
 | Item | Value |
 |---|---|
 | Expert-panel approval of v0.7.4 | Recorded in governance record |
 | Matrix amendment acceptance | ACCEPTED / INCORPORATED; evidence recorded in governance record |
-| Freeze timestamp | `TBD` |
+| Primary contrast adjudication | OPEN — see `docs/experiment/PRIMARY_CONTRAST_ADJUDICATION.md` |
+| Freeze timestamp | `TBD` — must be the actual freeze-commit timestamp, not the PR merge timestamp |
 | Freeze author | `Ndr Orchestration` |
 | Pilot authorization record | `NOT GRANTED — separate post-freeze decision` |
 
@@ -140,8 +142,9 @@ The freeze manifest may only be promoted to `FROZEN` after:
 5. the blinding operational workflow passes and its artifact is retained;
 6. durable retention is implemented and directly verified;
 7. all protocol/document lifecycle metadata is updated to `FROZEN`;
-8. a final freeze commit is created and its SHA is recorded;
-9. the resulting freeze commit is independently checked for exact-state consistency.
+8. a final freeze commit is created;
+9. the resulting freeze commit SHA is recorded **after Git produces it** and its exact tree is independently verified;
+10. pilot authorization remains separate and ungranted until a post-freeze governance decision.
 
 **Pilot authorization is deliberately excluded from the freeze preconditions.** It is a separate governance gate evaluated only after the freeze state is established.
 
