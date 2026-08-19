@@ -7,12 +7,15 @@ P6a is the minimum safety and integrity boundary required before using DGAF's AP
 ## Required gates
 
 ### Authentication
+
 Protected evaluation endpoints MUST require the configured test authentication mechanism. Authentication failures must return structured errors and must not reveal protected state.
 
 ### CORS
+
 Production-like evaluation environments MUST use an explicit allowed-origin policy. `*` is prohibited for authenticated/state-changing evaluation paths.
 
 ### Request validation
+
 Every externally callable evaluation endpoint must validate:
 
 - HTTP method;
@@ -25,6 +28,7 @@ Every externally callable evaluation endpoint must validate:
 Invalid input must fail closed without executing governance side effects.
 
 ### Audit integrity
+
 Every evidence-producing runtime execution must emit or reference:
 
 - run/session identifier;
@@ -52,4 +56,5 @@ Audit records must not claim stronger evidence than the endpoint actually execut
 10. Repeated identical request under identical state → deterministic response fields except explicitly documented timestamps/IDs.
 
 ## Boundary
+
 Passing P6a does not establish production readiness. It establishes that the runtime is sufficiently controlled to serve as an honest integration/experimental surface.
