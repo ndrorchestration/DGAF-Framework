@@ -30,10 +30,11 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 | Blinding dry-run workflow | `.github/workflows/pdmal-blinding-operational-test.yml` |
 | Blinding dry-run evidence | CLOSED / PASS — Run `32113226935`, artifact `9328114023` |
 | Retention policy | `docs/experiment/PDMAL_RETENTION_POLICY.md`; durable archive implementation/verification remains open |
+| Pilot executor | OPEN — `run_pilot.py` fail-closes pilot mode because the real experimental task executor is not yet implemented |
 
 ## Pilot Matrix
 
-The v0.7.5 amendment is incorporated into the current protocol and accepted by governance. The protocol remains pre-freeze because other final controls and the primary contrast decision remain open.
+The v0.7.5 amendment is incorporated into the current protocol and accepted by governance. The protocol remains pre-freeze because other final controls, the primary contrast decision, and the actual pilot executor remain open.
 
 ```text
 Conditions:      null, simple, static, dgaf
@@ -60,9 +61,11 @@ Out of scope:    dgaf_pdmal
 | Primary contrast | OPEN | `PRIMARY_CONTRAST_ADJUDICATION.md`; expert/statistical adjudication required |
 | Blinding operational verification | CLOSED / PASS | Run `32113226935`; synthetic custody dry-run; no production secret access; no empirical data |
 | Long-term retention | OPEN | Durable research archive not yet independently verified |
+| Topology fingerprints | OPEN | Fingerprint function exists; final values not yet recorded in freeze manifest |
 | Freeze manifest | PENDING | Exact provenance, fingerprints, retention, primary contrast, and execution hardening remain open |
 | Runner freeze-SHA binding | OPEN | Environment gates exist; execution is not yet bound to the recorded freeze commit SHA |
-| Protocol freeze | BLOCKED | Primary contrast + retention + exact freeze metadata + execution hardening remain open |
+| Pilot executor implementation | OPEN | `run_pilot.py` explicitly refuses pilot mode because the real experimental task executor is not implemented |
+| Protocol freeze | BLOCKED | Primary contrast + retention + exact freeze metadata + execution hardening + pilot executor remain open |
 | Pilot authorization | NOT GRANTED | Separate governance decision after freeze |
 | Empirical data | 0 | No pilot execution authorized |
 
@@ -81,10 +84,12 @@ Empirical data remains `0`. Pilot authorization remains `NOT GRANTED`.
 3. Generate and record the deterministic topology fingerprints required by the freeze manifest.
 4. Populate the remaining exact protocol, task-spec, runner/component, topology, and environment provenance fields in the freeze manifest.
 5. Implement and test exact freeze-SHA binding in the pilot runner so execution cannot proceed from an unintended code state.
-6. Perform the final adversarial freeze audit.
-7. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
-8. Record the freeze commit SHA and timestamp and verify the frozen tree.
-9. Make a separate explicit pilot-authorization decision after freeze.
-10. Only then execute empirical work.
+6. Implement and verify the real experimental task executor required for pilot mode.
+7. Reconcile the stale pre-freeze wording in `PDMAL_EXPERIMENT_PROTOCOL.md` so it reflects matrix acceptance and the still-open primary contrast before the freeze packet is finalized.
+8. Perform the final adversarial freeze audit.
+9. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
+10. Record the freeze commit SHA and timestamp and verify the frozen tree.
+11. Make a separate explicit pilot-authorization decision after freeze.
+12. Only then execute empirical work.
 
 **Empirical data remains 0 until explicit pilot authorization is recorded.**
