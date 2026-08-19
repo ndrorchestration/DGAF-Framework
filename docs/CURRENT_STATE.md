@@ -15,9 +15,9 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 | Field | Value |
 |---|---|
 | Current branch | `main` |
-| Current head at this synchronization | `915e454e27eb2770e7f40a067a881b0783feaae4` |
+| Current documentation-sync head | `038a4fa56bf8e71b137896226a9d94a1bbd8c99a` |
+| PR #65 merge baseline | `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Current verified implementation SHA | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
-| PR #65 merge | `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Protocol document | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` |
 | Protocol state | PRE-FREEZE / NO DATA COLLECTION AUTHORIZED |
 | Task specification | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` |
@@ -76,11 +76,10 @@ Empirical data remains `0`. Pilot authorization remains `NOT GRANTED`.
 
 1. Obtain and record final matrix-amendment acceptance into the protocol.
 2. Establish and directly verify durable retention for the research artifact set.
-3. Reconcile the freeze manifest to the final pre-freeze control state without making pilot authorization a freeze prerequisite.
-4. Populate exact protocol, task-spec, runner/component, topology, and environment blob SHAs.
-5. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
-6. Record the freeze commit SHA and timestamp.
-7. Make a separate explicit pilot-authorization decision after freeze.
-8. Only then execute empirical work.
+3. Populate exact protocol, task-spec, runner/component, topology, and environment blob SHAs in the freeze manifest.
+4. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
+5. Record the freeze commit SHA and timestamp.
+6. Make a separate explicit pilot-authorization decision after freeze.
+7. Only then execute empirical work.
 
 **Empirical data remains 0 until explicit pilot authorization is recorded.**
