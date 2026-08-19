@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL documentation control
-last_verified: 2026-08-18
-applies_to_sha: current branch head at update time
+last_verified: 2026-08-19
+applies_to_sha: reconciliation branch; final main synchronization occurs after review
 ---
 
 # Documentation Lifecycle Registry
@@ -25,9 +25,12 @@ This registry prevents documentation drift by making lifecycle state and authori
 | `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | ACTIVE | Both | Detailed PDMAL operational control record |
 | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` | ACTIVE / PRE-FREEZE | Both | Authoritative experimental protocol; remains unfrozen |
 | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` | ACTIVE | Both | Authoritative implementation workload specification |
+| `docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` | ACTIVE / INCORPORATED / PRE-FREEZE | Both | Accepted matrix amendment; does not authorize execution |
 | `docs/evidence/PDMAL_EVIDENCE_INDEX.md` | ACTIVE | Both | Current evidence-to-control mapping |
 | `docs/evidence/EVIDENCE_LADDER_POLICY.md` | ACTIVE | Both | Permanent evidence-promotion policy |
-| `docs/experiment/FREEZE_MANIFEST_TEMPLATE.md` | TEMPLATE | Both | Becomes `FREEZE_MANIFEST.md` only at freeze |
+| `docs/experiment/FREEZE_MANIFEST_TEMPLATE.md` | TEMPLATE | Both | Preparation template for freeze metadata |
+| `docs/experiment/FREEZE_MANIFEST.md` | ACTIVE / PRE-FREEZE | Both | Current freeze-control manifest; becomes the frozen manifest only after formal freeze |
+| `docs/experiment/PDMAL_FREEZE_READINESS_RECONCILIATION.md` | ACTIVE / PRE-FREEZE | Both | Reconciliation record for final documentation/adjudication seams |
 | `docs/DOCUMENT_LIFECYCLE.md` | ACTIVE | Both | Lifecycle registry itself |
 
 ## Task-specification history
@@ -42,6 +45,7 @@ The expert-panel review progressed through v0.7.0/v0.7.1/v0.7.2/v0.7.3 drafts be
 - Notion records are authoritative for governance decisions, panel adjudication, and control-plane state.
 - Historical documents remain useful for provenance but cannot override current active documents.
 - A document marked `SUPERSEDED` or `HISTORICAL` must never be cited as the current implementation specification.
+- NotebookLM is a research-synthesis/reference environment; material originating there has no evidentiary authority unless independently incorporated into an authoritative protocol, implementation, or evidence record.
 
 ## Update rule
 
