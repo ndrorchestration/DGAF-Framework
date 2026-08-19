@@ -16,7 +16,7 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 |---|---|
 | Authoritative repository baseline | `915e454e27eb2770e7f40a067a881b0783feaae4` — PR #65 merge baseline / freeze target baseline |
 | Current reconciliation branch | `epistemic/pdmal-freeze-readiness-reconciliation` |
-| Current reconciliation branch head | `ce44c20aadfbb6758da7bf346c7ed3951d93e307` |
+| Current reconciliation branch head | `cd620af806d4cf2830efbc55283891c9e5f239e8` |
 | Latest main documentation synchronization commit | `7ed2cd072ee26d12d9417b0e9b41508b76a75d83` |
 | Current verified implementation SHA | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
 | Protocol document | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` |
