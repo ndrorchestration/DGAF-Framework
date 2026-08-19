@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL evidence control
-last_verified: 2026-08-18
-applies_to_sha: pending-next-verification-commit
+last_verified: 2026-08-19
+applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
 state: POLICY DECIDED / IMPLEMENTATION SCOPE DEFINED
 ---
 
@@ -29,6 +29,8 @@ A 30-day CI retention period is not represented as permanent research archival.
 The durable record for protocol freeze consists of repository-controlled source, protocol, configuration, lockfile, freeze manifest, evidence index, artifact identifiers/digests, and authorization records.
 
 The canonical raw empirical dataset, when eventually authorized and generated, must be copied before expiration to a separately approved durable research repository or institutional/object storage location. The location, identifier, access policy, checksum, and retention period must be recorded in the freeze manifest before pilot authorization.
+
+For the currently existing characterization evidence, durable archiving of the runtime artifact and checksum sidecar is a separate retention task and does not constitute archival of a future empirical dataset that does not yet exist.
 
 ## Access control
 
