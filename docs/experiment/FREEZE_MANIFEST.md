@@ -14,6 +14,8 @@ This is the pre-freeze manifest for the merged DGAF/PDMAL control plane. It is n
 
 The **freeze state is independent of pilot authorization**. Pilot authorization is a separate governance decision that may occur only after the protocol and associated freeze controls are actually frozen. Pilot authorization is therefore **not a freeze precondition** and remains `NOT GRANTED` unless explicitly recorded after freeze.
 
+**Freeze-target clarification:** `915e454e27eb2770e7f40a067a881b0783feaae4` is the PR #65 merge baseline from which freeze preparation proceeds. It is **not** the freeze commit. `freeze_commit_sha` remains `TBD` until Git creates the dedicated freeze commit; the resulting SHA is recorded only after that commit exists.
+
 ## 1. Protocol / Design
 
 | Item | Value |
@@ -25,6 +27,7 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 | Primary endpoint | FFCR |
 | Secondary endpoint | `final_std` |
 | Consensus threshold | `< 0.01` |
+| Primary contrast | `OPEN — see docs/experiment/PRIMARY_CONTRAST_ADJUDICATION.md` |
 | Iterations | 100 |
 
 ## 2. Pilot Matrix
@@ -95,6 +98,7 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 |---|---|
 | Expert-panel approval of v0.7.4 | Recorded in governance record |
 | Matrix amendment panel approval | `PENDING` |
+| Primary contrast adjudication | `OPEN — see docs/experiment/PRIMARY_CONTRAST_ADJUDICATION.md` |
 | Freeze timestamp | `TBD` |
 | Freeze author | `Ndr Orchestration` |
 | Pilot authorization record | `NOT GRANTED — separate post-freeze decision` |
@@ -104,11 +108,12 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 The freeze manifest may only be promoted to `FROZEN` after:
 
 1. the matrix amendment is accepted into the final protocol;
-2. the exact implementation/topology/environment blob SHAs are recorded;
-3. the blinding operational workflow passes and its artifact is retained;
-4. durable retention is implemented and directly verified;
-5. all protocol/document lifecycle metadata is updated to `FROZEN`;
-6. a final freeze commit is created and its SHA recorded.
+2. the primary contrast is explicitly adjudicated under the current FFCR estimand and incorporated into the freeze packet;
+3. the exact implementation/topology/environment blob SHAs are recorded;
+4. the blinding operational workflow passes and its artifact is retained;
+5. durable retention is implemented and directly verified;
+6. all protocol/document lifecycle metadata is updated to `FROZEN`;
+7. a final freeze commit is created and its SHA recorded only after Git produces it.
 
 **Pilot authorization is deliberately excluded from the freeze preconditions.** It is a separate governance gate evaluated only after the freeze state is established.
 
