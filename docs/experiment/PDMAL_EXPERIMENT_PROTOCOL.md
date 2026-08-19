@@ -3,8 +3,8 @@ status: ACTIVE
 state: PRE-FREEZE
 authority: Both
 owner: DGAF/PDMAL experimental-design control
-last_verified: 2026-08-18
-applies_to_sha: PENDING-FREEZE-SHA
+last_verified: 2026-08-19
+applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
 protocol_blob_sha: PENDING-AFTER-COMMIT
 supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
 ---
@@ -18,6 +18,10 @@ PRE-FREEZE / PANEL-ADJUDICATED / NO DATA COLLECTION AUTHORIZED
 This document is the consolidated control document for the planned PDMAL empirical evaluation. The scientific and methodological decisions have been adjudicated. The protocol remains `PRE-FREEZE` until the implementation provenance and execution-control fields identified below are concretely verified and the final contract is committed with a freeze SHA and timestamp.
 
 No pilot or final experimental seed may be generated while this document is in `PRE-FREEZE` status.
+
+## Merge baseline record
+
+PR #65 merged at `915e454e27eb2770e7f40a067a881b0783feaae4`. This commit is the current repository merge baseline / freeze-target baseline. It is not the eventual freeze commit, does not make this protocol `FROZEN`, and does not authorize empirical execution. Historical execution evidence remains scoped to its exact executed SHA.
 
 ## v0.7.5 Pilot Matrix Amendment — Incorporated
 
@@ -60,7 +64,7 @@ The planned 50-seed pilot therefore contains:
 50 × 180 = 9,000 raw observations before exclusions
 ```
 
-This matrix is incorporated from `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md`. It is **pre-freeze** until final expert-panel acceptance and freeze commit.
+This matrix is incorporated from `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md`. It remains **PRE-FREEZE** until the documented acceptance record, remaining freeze controls, and dedicated freeze commit are complete.
 
 ## Evidence boundary
 
@@ -93,7 +97,7 @@ The experimental phase may begin only after all of the following are true:
 
 | # | Field | Panel resolution | Status |
 |---|---|---|---|
-| 1 | Pilot matrix | Four conditions (`null`, `simple`, `static`, `dgaf`) across five topologies (`ring`, `pdmal`, `random_regular`, `small_world`, `complete`) and nine failure counts (`0,1,2,3,4,5,6,8,10`); 180 observations per seed; 9,000 for 50 seeds before exclusions. | **PENDING FINAL PANEL ACCEPTANCE / FREEZE** |
+| 1 | Pilot matrix | Four conditions (`null`, `simple`, `static`, `dgaf`) across five topologies (`ring`, `pdmal`, `random_regular`, `small_world`, `complete`) and nine failure counts (`0,1,2,3,4,5,6,8,10`); 180 observations per seed; 9,000 for 50 seeds before exclusions. | **ACCEPTED / INCORPORATED / PRE-FREEZE** |
 | 2 | Primary endpoint | Failure-Free Completion Rate (FFCR) = completed trials without unrecovered failure / eligible trials; higher is better; report condition-wise estimate and prespecified risk-difference contrasts with 95% CIs. | **RESOLVED** |
 | 3 | Secondary endpoints | Recovery success rate, recovery latency, unrecovered failure count, runtime, primary-outcome variance, connectivity/surviving component size, protocol-compliance rate, missing/invalid rate, gate-block frequency; `D_a`, phi/convergence traces, and topology diagnostics are exploratory only. Prespecified multiplicity treatment applies. | **RESOLVED** |
 | 4 | RNG streams | NumPy `Generator(PCG64)` with a root `SeedSequence` and domain-separated child streams via `SeedSequence.spawn()`. Streams: trial-order, failure/perturbation, topology-construction, analysis-resampling, and the appended `task_initialization` stream from v0.7.4. Exact NumPy/Python versions and stream manifest recorded at freeze. | **RESOLVED / ENVIRONMENT RECORD REQUIRED** |
@@ -104,7 +108,7 @@ The experimental phase may begin only after all of the following are true:
 | 9 | Statistical unit + analysis | One seed = one paired experimental block. Each seed produces one FFCR value per condition. Primary analysis uses paired raw FFCR differences on the original 0–1 proportion scale; effect size is the mean paired difference (risk difference). 95% CI is obtained by a prespecified paired bootstrap procedure. Secondary contrasts are exploratory unless included in the frozen multiplicity procedure. | **RESOLVED** |
 | 10 | Sample-size rule | Pilot estimates the within-seed standard deviation of the paired FFCR difference. Target power 0.80, alpha 0.05, minimum detectable absolute FFCR difference 0.15. Final N is determined by the frozen paired-difference power equation using the pilot SD and rounded upward with `math.ceil`. The exact analysis/power implementation must be verified before freeze. | **RESOLVED / IMPLEMENTATION VERIFICATION REQUIRED** |
 | 11 | Artifact schema | One JSON artifact per seed containing all trial records and provenance; required fields include experiment/protocol identifiers, seed, blinded condition ID, outcome data, failure/recovery state, runtime, status, exclusion information, environment fingerprint, and hashes. Raw artifacts are retained in GitHub Actions artifacts/durable artifact storage; repository stores protocol/manifests rather than the canonical raw dataset. | **RESOLVED / SCHEMA+RETENTION VERIFICATION REQUIRED** |
-| 12 | Blinding/unblinding | `PDMAL_BLINDING_KEY` controls blinded mapping. Repository owner holds the operational secret and does not participate in analysis. Executor and analyst see blinded IDs only. Panel chair is unblinder after raw-data freeze, preprocessing freeze, exclusion freeze, integrity verification, and explicit authorization. Mapping is held separately as a protected object. | **RESOLVED / CUSTODY VERIFICATION REQUIRED** |
+| 12 | Blinding/unblinding | `PDMAL_BLINDING_KEY` controls blinded mapping. Repository owner holds the operational secret and does not participate in analysis. Executor and analyst see blinded IDs only. Panel chair is unblinder after raw-data freeze, preprocessing freeze, exclusion freeze, integrity verification, and explicit authorization. Mapping is held separately as a protected object. | **RESOLVED / OPERATIONAL DRY-RUN PASS; CUSTODY RETAINED AS FREEZE CONTROL** |
 | 13 | Pilot pass/fail | PASS requires 100% expected trials attempted, zero blinding breaches, missing/invalid <= 5%, all conditions execute, no comparability-affecting protocol deviation, all required provenance/artifact checks pass, and seed runtime is at or below the frozen ceiling. | **RESOLVED / RUNTIME CHARACTERIZATION VERIFIED** |
 
 ## Topology and baseline specification
@@ -176,14 +180,20 @@ Consensus dynamics:
 ## Primary endpoint
 
 ```text
-FFCR_condition(seed) =
-  successful_trials_without_unrecovered_failure /
-  eligible_trials
+FFCR_condition,seed =
+  successful eligible component trials /
+  eligible component trials
 ```
+
+Each condition produces one seed-level FFCR from the 45 component workload cells spanning five topologies and nine failure-count levels. Each component trial has equal weight; no topology-first or failure-level-first averaging is performed before the seed-level FFCR is calculated.
+
+A trial is **eligible** when it is attempted, including execution-level retries, and is not excluded under the frozen objective exclusion rules. An excluded trial remains retained with an explicit reason and is removed from the denominator only when a pre-registered exclusion rule applies. A valid unfavorable outcome is never excluded because of its result.
+
+Failure count `0` is included in the primary workload and contributes equally to the denominator as a no-failure baseline condition.
 
 Direction: **higher is better**.
 
-The primary estimand is the mean paired difference in FFCR across seeds for each prespecified primary contrast.
+The primary estimand is the mean paired difference in FFCR across seeds for each explicitly adjudicated primary contrast. The primary contrast hierarchy itself remains an open pre-freeze methodological decision recorded in `docs/experiment/PRIMARY_CONTRAST_ADJUDICATION.md`.
 
 The primary result is not a claim about arbitrary real-world performance; it is scoped to the frozen workload, environment, conditions, perturbation model, and execution protocol.
 
@@ -199,7 +209,8 @@ Secondary outcomes:
 - connectivity / surviving component size;
 - protocol-compliance rate;
 - missing/invalid rate;
-- gate-block frequency.
+- gate-block frequency;
+- `final_std` as a consensus-quality secondary endpoint, with the diagnostic threshold `final_std < 0.01`.
 
 Exploratory diagnostics:
 
@@ -208,7 +219,7 @@ Exploratory diagnostics:
 - topology-specific graph diagnostics;
 - other internal instrumentation values.
 
-`D_a` is explicitly **not** a universal success/failure threshold. The current mathematical correction requires operating-regime calibration before an operational threshold claim can be made.
+`final_std < 0.01` is not the definition of overall experimental success. `D_a` is explicitly **not** a universal success/failure threshold. The current mathematical correction requires operating-regime calibration before an operational threshold claim can be made.
 
 ## Statistical unit and analysis
 
@@ -219,7 +230,7 @@ For each seed, all four pilot conditions are executed under the frozen block ran
 Primary analysis:
 
 ```text
-For each primary contrast:
+For each explicitly adjudicated primary contrast:
   d_i = FFCR_treatment(seed_i) - FFCR_baseline(seed_i)
 
 Effect size = mean(d_i)
@@ -434,13 +445,19 @@ The 50-seed pilot passes only if all of the following are true:
 - all required provenance and artifact-integrity checks pass;
 - seed runtime remains at or below the frozen runtime ceiling.
 
+## NotebookLM boundary
+
+NotebookLM is a research-synthesis and source-interrogation environment. Material originating there has no evidentiary authority unless independently incorporated into an authoritative protocol, implementation, or evidence record.
+
 ## Current pre-freeze controls
 
 The protocol cannot transition to `FROZEN` until the following are independently verified:
 
 - expert-panel acceptance of the incorporated v0.7.5 matrix;
+- explicit adjudication of the primary contrast hierarchy;
 - blinding operational dry-run;
 - durable retention archive and integrity record;
-- final freeze manifest with exact file blob SHAs and tested-run references.
+- final freeze manifest with exact file blob SHAs and tested-run references;
+- authorization guard review demonstrating that pilot execution is fail-closed and bound to the recorded frozen state rather than environment variables alone.
 
 Status remains PRE-FREEZE. No empirical execution is authorized.
