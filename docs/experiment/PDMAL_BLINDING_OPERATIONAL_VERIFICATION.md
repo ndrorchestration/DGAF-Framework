@@ -2,9 +2,9 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL experimental-control
-last_verified: 2026-08-18
-applies_to_sha: pending-next-verification-commit
-state: PLAN / EXECUTION PENDING
+last_verified: 2026-08-19
+applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
+state: VERIFIED OPERATIONAL / PRE-FREEZE
 ---
 
 # PDMAL Blinding Operational Verification
@@ -61,19 +61,8 @@ The control remains OPEN if any of the following occur:
 - the test requires a production secret;
 - role separation cannot be demonstrated.
 
-## Evidence record
+## Verified evidence
 
-The successful test must produce an immutable record containing:
+The operational custody dry-run passed under workflow run `32113226935` with artifact `9328114023`. The evidence is synthetic operational control verification only: no production secret was accessed and no empirical pilot data were collected.
 
-```text
-control_id: PDMAL-BLINDING-OPS-v1
-commit_sha: <executed SHA>
-workflow_run_id: <run ID>
-mock_dataset_sha256: <digest>
-result: PASS | FAIL
-timestamp_utc: <timestamp>
-production_secret_accessed: false
-notes: <bounded notes>
-```
-
-This test is operational control verification. It is not empirical validation and does not authorize pilot execution.
+The execution record is scoped to its exact tested source SHA. It does not authorize pilot execution and does not establish empirical validation.
