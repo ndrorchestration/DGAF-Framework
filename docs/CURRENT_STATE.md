@@ -8,21 +8,21 @@ applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
 
 # DGAF-Framework / PDMAL — Current State
 
-This is the repository's concise current-state snapshot. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact executed SHA.
+This is the repository's concise current-state snapshot. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact executed SHA. The current main branch head is authoritative from the Git ref and is not duplicated here as self-referential document metadata.
 
 ## Repository Metadata
 
 | Field | Value |
 |---|---|
 | Current branch | `main` |
-| Current documentation-sync head | `038a4fa56bf8e71b137896226a9d94a1bbd8c99a` |
-| PR #65 merge baseline | `915e454e27eb2770e7f40a067a881b0783feaae4` |
+| PR #65 merge baseline / freeze target | `915e454e27eb2770e7f40a067a881b0783feaae4` |
 | Current verified implementation SHA | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` |
 | Protocol document | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` |
 | Protocol state | PRE-FREEZE / NO DATA COLLECTION AUTHORIZED |
 | Task specification | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` |
-| Matrix amendment | `docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` — `f34129d8ecc2c8287bfb5a4f0433f551a9ce8894` |
+| Matrix amendment | `docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` — `f34129d8ecc2c8287bfb5a4f0433f551a9ce8894` — ACCEPTED / INCORPORATED per governance record |
 | Freeze manifest | `docs/experiment/FREEZE_MANIFEST.md` — PRE-FREEZE / PENDING FINAL CONTROLS |
+| Primary-contrast record | `docs/experiment/PRIMARY_CONTRAST_ADJUDICATION.md` — OPEN / METHODOLOGICAL ADJUDICATION REQUIRED |
 | Latest implementation CI | Run #74 (`32111556449`) on `08500a7` |
 | Runtime characterization | Run #14 (`32112658368`) on `a0ff248`; 72/72 trials completed, ceiling PASS |
 | Runtime artifact | GitHub artifact `9315467977`; ZIP digest `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
@@ -33,7 +33,7 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 
 ## Pilot Matrix
 
-The pre-freeze amendment defines the intended pilot matrix pending final protocol incorporation and expert-panel record:
+The v0.7.5 amendment is incorporated into the current protocol and accepted by governance. The protocol remains pre-freeze because other final controls and the primary contrast decision remain open.
 
 ```text
 Conditions:      null, simple, static, dgaf
@@ -56,17 +56,19 @@ Out of scope:    dgaf_pdmal
 | ConsensusTask implementation | VERIFIED | Run #74 on `08500a7` |
 | Runtime characterization | OPERATIONALLY CHARACTERIZED | Run #14; 72/72 trials completed and artifact validated |
 | 300-second ceiling | VERIFIED FOR CHARACTERIZATION MATRIX | All measured seed runtimes remained below 300 seconds |
-| Matrix amendment | OPEN | Final incorporation/acceptance record still pending |
+| Matrix amendment | ACCEPTED / INCORPORATED | v0.7.5 incorporated; governance acceptance recorded separately; not the same as protocol freeze |
+| Primary contrast | OPEN | `PRIMARY_CONTRAST_ADJUDICATION.md`; expert/statistical adjudication required |
 | Blinding operational verification | CLOSED / PASS | Run `32113226935`; synthetic custody dry-run; no production secret access; no empirical data |
 | Long-term retention | OPEN | Durable research archive not yet independently verified |
-| Freeze packet | PENDING | Remaining matrix, retention, and exact freeze-state metadata |
-| Protocol freeze | BLOCKED | Required final controls remain open |
+| Freeze manifest | PENDING | Exact provenance, fingerprints, retention, primary contrast, and execution hardening remain open |
+| Runner freeze-SHA binding | OPEN | Environment gates exist; execution is not yet bound to the recorded freeze commit SHA |
+| Protocol freeze | BLOCKED | Primary contrast + retention + exact freeze metadata + execution hardening remain open |
 | Pilot authorization | NOT GRANTED | Separate governance decision after freeze |
 | Empirical data | 0 | No pilot execution authorized |
 
 ## Evidence boundary
 
-The merge of PR #65 is a repository-state event, not empirical evidence. Runtime characterization remains scoped to its exact executed SHA `a0ff248eadb736f9b5835f2436791dc6ab5f66cc`; the blinding operational run remains scoped to `1d8c62386ea09f09c1dac768e1e59d4df284edee`.
+The merge of PR #65 is a repository-state event, not empirical evidence. Runtime characterization remains scoped to its exact executed SHA `a0ff248eadb736f9b5835f2436791dc6ab5f66cc`; the blinding operational run remains scoped to its recorded execution evidence.
 
 The ZIP artifact digest and inner `runtime_characterization.json` digest are distinct provenance identities and must not be substituted for one another.
 
@@ -74,12 +76,15 @@ Empirical data remains `0`. Pilot authorization remains `NOT GRANTED`.
 
 ## Current Next Actions
 
-1. Obtain and record final matrix-amendment acceptance into the protocol.
+1. Obtain and record the expert/statistical adjudication of the primary contrast.
 2. Establish and directly verify durable retention for the research artifact set.
-3. Populate exact protocol, task-spec, runner/component, topology, and environment blob SHAs in the freeze manifest.
-4. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
-5. Record the freeze commit SHA and timestamp.
-6. Make a separate explicit pilot-authorization decision after freeze.
-7. Only then execute empirical work.
+3. Generate and record the deterministic topology fingerprints required by the freeze manifest.
+4. Populate the remaining exact protocol, task-spec, runner/component, topology, and environment provenance fields in the freeze manifest.
+5. Implement and test exact freeze-SHA binding in the pilot runner so execution cannot proceed from an unintended code state.
+6. Perform the final adversarial freeze audit.
+7. Create the dedicated freeze commit once all freeze preconditions are genuinely satisfied.
+8. Record the freeze commit SHA and timestamp and verify the frozen tree.
+9. Make a separate explicit pilot-authorization decision after freeze.
+10. Only then execute empirical work.
 
 **Empirical data remains 0 until explicit pilot authorization is recorded.**
