@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/blob/main/docs/evidence/EVIDENCE_CARD_SCHEMA.json",
+  "title": "DGAF Evidence Card",
+  "type": "object",
+  "required": ["id", "claim", "claim_class", "context", "measurement", "provenance", "evidence_maturity", "validation_status"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^DGAF-CLAIM-[A-Z0-9-]+$"},
+    "claim": {"type": "string", "minLength": 1},
+    "claim_class": {"enum": ["DEFINED", "IMPLEMENTED", "COMPUTED", "VERIFIED", "ATTESTED", "HISTORICAL", "HYPOTHESIS", "METAPHOR", "UNSUPPORTED", "DEPRECATED"]},
+    "context": {"type": "object", "required": ["intended_use"], "properties": {"intended_use": {"type": "string"}, "scope": {"type": "string"}, "population": {"type": "string"}}},
+    "construct": {"type": "string"},
+    "measurement": {"type": "object", "required": ["metric", "method"], "properties": {"metric": {"type": "string"}, "unit": {"type": "string"}, "baseline": {"type": "string"}, "method": {"type": "string"}, "ground_truth": {"type": "string"}}},
+    "controls": {"type": "array", "items": {"type": "string"}},
+    "uncertainty": {"type": "object", "properties": {"description": {"type": "string"}, "confidence_interval": {"type": "string"}, "limitations": {"type": "array", "items": {"type": "string"}}}},
+    "provenance": {"type": "object", "required": ["source", "recorded_at"], "properties": {"source": {"type": "string"}, "commit": {"type": "string"}, "artifact": {"type": "string"}, "recorded_at": {"type": "string"}}},
+    "external_references": {"type": "array", "items": {"type": "object", "required": ["source", "role"], "properties": {"source": {"type": "string"}, "role": {"enum": ["methodology", "benchmark", "background", "independent_evidence"]}, "scope": {"type": "string"}}}},
+    "evidence_maturity": {"enum": ["SPECIFIED", "TESTED", "REPRODUCIBLE", "VERIFIED", "VALIDATED", "EMPIRICALLY_SUPPORTED"]},
+    "validation_status": {"enum": ["NOT_VALIDATED", "VALIDATED_FOR_CONTEXT", "INDEPENDENTLY_REPLICATED"]},
+    "last_verified": {"type": "string"}
+  },
+  "additionalProperties": false
+}

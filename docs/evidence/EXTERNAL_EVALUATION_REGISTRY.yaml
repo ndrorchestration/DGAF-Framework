@@ -1,0 +1,32 @@
+version: 1
+last_updated: 2026-08-17
+references:
+  - id: NIST-TEVV
+    source: NIST AI Test, Evaluation, Validation and Verification
+    role: methodology
+    scope: test/evaluation/verification/validation terminology and practice
+    dgaf_use: epistemic crosswalk; not evidence of DGAF effectiveness
+  - id: NIST-AIRMF
+    source: NIST AI Risk Management Framework
+    role: methodology
+    scope: trustworthy-AI risk management and measurement context
+    dgaf_use: governance and measurement alignment; not DGAF empirical evidence
+  - id: NIST-ARIA
+    source: NIST Assessing Risks and Impacts of AI / ARIA evaluation work
+    role: methodology
+    scope: structured evaluation, scenarios, measurements, and validity considerations
+    dgaf_use: measurement-tree design; not DGAF empirical evidence
+  - id: AGENT-EVAL-RESEARCH
+    source: Agentic AI evaluation and benchmark literature
+    role: background
+    scope: capability, reliability, robustness, planning, tool use, and governance evaluation
+    dgaf_use: metric and benchmark design; individual sources must be cited per claim
+  - id: METR-EVAL
+    source: METR autonomous AI evaluation methodology
+    role: methodology
+    scope: empirical evaluation of autonomous-agent capabilities and evaluation integrity
+    dgaf_use: agent-evaluation and evaluator-awareness threat modeling; not DGAF empirical evidence
+rules:
+  - External methodology does not establish a DGAF result.
+  - Independent evidence may support a DGAF claim only when its construct, context, and method are demonstrably applicable.
+  - Every external reference must state its role and scope.

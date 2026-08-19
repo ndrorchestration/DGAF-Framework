@@ -60,20 +60,33 @@ jobs:
           # CORS must nevertheless expose the allowed origin.
           status, headers, body = request('POST', allowed, b'{"mandate":"P6a","turn":13}')
           passed = status in (200, 400, 503) and headers.get('Access-Control-Allow-Origin') == allowed
-          checks.append({'case': 'allowed_origin_post', 'status': status, 'allow_origin': headers.get('Access-Control-Allow-Origin'), 'passed': passed})
+          checks.append({
+              'case': 'allowed_origin_post',
+              'status': status,
+              'allow_origin': headers.get('Access-Control-Allow-Origin'),
+              'passed': passed
+          })
           print(json.dumps(checks[-1], sort_keys=True))
 
           # Disallowed origin: application response must not expose CORS permission.
           status, headers, body = request('POST', disallowed, b'{"mandate":"P6a","turn":13}')
           passed = 'Access-Control-Allow-Origin' not in headers
-          checks.append({'case': 'disallowed_origin_post', 'status': status, 'allow_origin': headers.get('Access-Control-Allow-Origin'), 'passed': passed})
+          checks.append({
+              'case': 'disallowed_origin_post',
+              'status': status,
+              'allow_origin': headers.get('Access-Control-Allow-Origin'),
+              'passed': passed
+          })
           print(json.dumps(checks[-1], sort_keys=True))
 
           # Allowed preflight must return 204 and the negotiated headers.
           status, headers, body = request(
               'OPTIONS',
               allowed,
-              extra={'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'Content-Type,Authorization'},
+              extra={
+                  'Access-Control-Request-Method': 'POST',
+                  'Access-Control-Request-Headers': 'Content-Type,Authorization'
+              },
           )
           passed = (
               status == 204
@@ -81,15 +94,33 @@ jobs:
               and 'POST' in headers.get('Access-Control-Allow-Methods', '')
               and 'Content-Type' in headers.get('Access-Control-Allow-Headers', '')
           )
-          checks.append({'case': 'allowed_origin_preflight', 'status': status, 'allow_origin': headers.get('Access-Control-Allow-Origin'), 'allow_methods': headers.get('Access-Control-Allow-Methods'), 'allow_headers': headers.get('Access-Control-Allow-Headers'), 'passed': passed})
+          checks.append({
+              'case': 'allowed_origin_preflight',
+              'status': status,
+              'allow_origin': headers.get('Access-Control-Allow-Origin'),
+              'allow_methods': headers.get('Access-Control-Allow-Methods'),
+              'allow_headers': headers.get('Access-Control-Allow-Headers'),
+              'passed': passed
+          })
           print(json.dumps(checks[-1], sort_keys=True))
 
           # Disallowed preflight must be rejected and must not expose allow headers.
           status, headers, body = request(
               'OPTIONS',
               disallowed,
-              extra={'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'Content-Type,Authorization'},
+              extra={
+                  'Access-Control-Request-Method': 'POST',
+                  'Access-Control-Request-Headers': 'Content-Type,Authorization'
+              },
           )
+          passed = status == 403 and 'Access-Control-Allow-Origin' not in headers
+          checks.append({
+              'case': 'disallowed_origin_preflight',
+              'status': status,
+              'allow_origin': headers.get('Access-Control-Allow-Origin'),
+              'passed': passed
+          })
+          print(json.dumps(checks[-1], sort_keys=True))
           passed = status == 403 and 'Access-Control-Allow-Origin' not in headers
           checks.append({'case': 'disallowed_origin_preflight', 'status': status, 'allow_origin': headers.get('Access-Control-Allow-Origin'), 'passed': passed})
           print(json.dumps(checks[-1], sort_keys=True))

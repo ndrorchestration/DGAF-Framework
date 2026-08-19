@@ -1,0 +1,69 @@
+# PR-scoped documentation gate.
+# Purpose: block PR-introduced Markdown defects without conflating them with
+# repository-wide baseline documentation debt tracked separately in issue #73.
+
+name: Doc Lint (PR Scope)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.md'
+      - '.markdownlint.yml'
+      - '.markdownlint.json'
+      - '.github/workflows/doc-lint-pr-scope.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  markdownlint-pr-scope:
+    name: Markdown Lint — PR Scope
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli@0.39.0
+
+      - name: Collect changed Markdown files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only --diff-filter=ACMR "origin/${{ github.event.repository.default_branch }}...${{ github.event.pull_request.head.sha }}" -- '*.md' > /tmp/changed-md.txt
+          cat /tmp/changed-md.txt
+
+      - name: Run markdownlint on PR-introduced Markdown
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < /tmp/changed-md.txt
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No changed Markdown files in this pull request."
+            exit 0
+          fi
+          markdownlint \
+            --config .markdownlint.yml \
+            --ignore node_modules \
+            --ignore CHANGELOG.md \
+            --ignore SWEEP_LOG.md \
+            "${files[@]}"
+
+      - name: Report scope
+        if: always()
+        run: |
+          {
+            echo "## PR-Scoped Doc Lint Summary"
+            echo "- Linter: markdownlint-cli 0.39.0"
+            echo "- Scope: Markdown files introduced or modified by this PR"
+            echo "- Baseline repository-wide documentation debt: tracked separately in #73"
+            echo "- This gate does not alter .markdownlint.yml or the full-tree Doc Lint workflow"
+          } >> "$GITHUB_STEP_SUMMARY"

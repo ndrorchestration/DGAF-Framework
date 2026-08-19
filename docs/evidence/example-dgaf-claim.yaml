@@ -1,0 +1,41 @@
+id: DGAF-CLAIM-EXAMPLE-001
+claim:
+  statement: "DGAF schema validation rejects malformed governance records according to the declared schema."
+  class: HYPOTHESIS
+  scope: "Repository schema-validation test suite only"
+construct:
+  name: governance-schema conformance
+  definition: "Whether malformed records are rejected and conforming records are accepted by the declared schema validator."
+measurement:
+  metric: validation_decision_accuracy
+  unit: proportion
+  baseline: "Expected decision for each ground-truth fixture"
+  direction: higher_is_better
+test:
+  method: "Schema conformance fixture suite"
+  version: "repository-current"
+  inputs: "Version-controlled valid and invalid governance fixtures"
+  seeds: "not applicable"
+  controls: "Same schema, validator, and fixture corpus across runs"
+ground_truth:
+  source: "Human-authored fixture labels reviewed against schema requirements"
+  known: true
+results:
+  summary: "Populate only after execution; no result is asserted by this fixture."
+  artifact: "pending"
+uncertainty:
+  method: "Not applicable until repeated empirical measurement is performed"
+  value: null
+provenance:
+  repository: "ndrorchestration/DGAF-Framework"
+  commit: "populate-at-execution"
+  date: "2026-08-17"
+external_references: []
+evidence:
+  maturity: SPECIFIED
+  limitations:
+    - "This card defines a testable claim but does not establish that the test currently passes."
+    - "Schema correctness does not establish governance effectiveness in deployed systems."
+validation:
+  intended_use: "Repository-level governance schema validation"
+  status: NOT_VALIDATED

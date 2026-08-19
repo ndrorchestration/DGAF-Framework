@@ -1,0 +1,30 @@
+version: 1
+threats:
+  - id: TV-01
+    name: benchmark_gaming
+    status: planned
+    mitigation: hold out evaluation cases and rotate hidden fixtures where feasible
+  - id: TV-02
+    name: measurement_leakage
+    status: planned
+    mitigation: separate optimization signals from evaluation metrics
+  - id: TV-03
+    name: evaluator_awareness
+    status: planned
+    mitigation: blind evaluation conditions where feasible
+  - id: TV-04
+    name: test_set_contamination
+    status: planned
+    mitigation: provenance-controlled fixtures and held-out cases
+  - id: TV-05
+    name: stochastic_seed_artifact
+    status: planned
+    mitigation: paired seeds plus independent seed families
+  - id: TV-06
+    name: topology_specificity
+    status: planned
+    mitigation: multiple topology controls and explicit scope limits
+  - id: TV-07
+    name: simulation_to_deployment_gap
+    status: open
+    mitigation: separate simulation evidence from runtime/physical validation

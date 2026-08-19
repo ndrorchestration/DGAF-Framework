@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "claims": [
+    {
+      "claim_id": "dgaf-runtime-build",
+      "statement": "The DGAF web application builds successfully as a Next.js deployment.",
+      "status": "VERIFIED",
+      "evidence_mode": "integration",
+      "run_id": "dpl_2MoqAfD6J7jQoCtMrLHmdZjMJqE4",
+      "dataset": "deployment-build"
+    },
+    {
+      "claim_id": "dgaf-root-route",
+      "statement": "The DGAF root route renders successfully in the deployed preview.",
+      "status": "VERIFIED",
+      "evidence_mode": "integration",
+      "run_id": "dpl_2MoqAfD6J7jQoCtMrLHmdZjMJqE4",
+      "dataset": "root-route-smoke"
+    },
+    {
+      "claim_id": "pdmal-empirical-validation",
+      "statement": "PDMAL experimental results are empirically validated and reproducible.",
+      "status": "BLOCKED",
+      "evidence_mode": "empirical",
+      "run_id": null,
+      "dataset": "experiments/pdmal_topology"
+    },
+    {
+      "claim_id": "dgaf-governance-effectiveness",
+      "statement": "DGAF improves governance outcomes relative to simpler baselines.",
+      "status": "HYPOTHESIS",
+      "evidence_mode": "empirical",
+      "run_id": null,
+      "dataset": "to-be-established"
+    }
+  ]
+}

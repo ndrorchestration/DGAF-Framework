@@ -1,0 +1,66 @@
+---
+status: ACTIVE
+authority: Both
+owner: DGAF/PDMAL control plane
+last_verified: 2026-08-18
+applies_to_sha: 458bb346569937455b796977dc571af17b64da65
+verification_evidence:
+  - Runtime Run #14 (32112658368)
+  - Durable artifact checksum verified from Run #14 artifact 9315467977
+scope_note: >
+  This index records evidence and gate state synchronized at
+  458bb346569937455b796977dc571af17b64da65. Individual evidence
+  remains scoped to its exact tested SHA; later documentation commits
+  do not inherit verification automatically.
+---
+
+# PDMAL Evidence Index
+
+## Purpose
+
+This index records the evidence boundary for the PDMAL pre-freeze control plane. GitHub is authoritative for exact implementation and CI evidence; Notion is authoritative for governance state and cross-project control state. Evidence is never promoted by documentation alone.
+
+## Evidence Boundary
+
+A passing run is scoped to its exact executed SHA. Later commits do not inherit verification automatically.
+
+## Current Evidence
+
+| Evidence | Status | Exact executed SHA | Run / artifact | Scope |
+|---|---|---|---|---|
+| Environment lock | VERIFIED | `7ba0e1c` | Pre-freeze runner validation | Locked installation / resolver reproducibility |
+| PDMAL implementation | VERIFIED | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` | Run #74 (`32111556449`) | ConsensusTask implementation and artifact integrity |
+| Runtime characterization | OPERATIONALLY CHARACTERIZED | `a0ff248` | Run #14 (`32112658368`) | 72/72 seed matrix trials; ceiling characterization |
+| Blinding operational verification | CLOSED / PASS | `1d8c623` | Dedicated operational test | Synthetic custody dry-run; no production secret access; no empirical data |
+| Durable retention | OPEN | — | Release pending | Durable archive requires published release assets and checksum verification |
+
+## Runtime Characterization
+
+Run #14 (`32112658368`) completed the registered 72/72 runtime characterization matrix. The retained artifact is `runtime_characterization.json` and its authoritative file SHA-256 is:
+
+`f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250`
+
+The earlier recorded digest beginning `42da1112` was incorrect and is superseded. Direct extraction of artifact `9315467977` from Run #14 produced `runtime_characterization.json` with SHA-256 `f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250`; the accompanying `runtime_characterization.json.sha256` sidecar contains the same digest.
+
+The runtime characterization is operational evidence only. It does not authorize empirical execution.
+
+## Blinding Gate
+
+The dedicated blinding operational test passed on the specified synthetic custody dry-run. No production secret was accessed and no empirical data was collected. This closes the blinding operational verification control without changing the empirical boundary.
+
+## Retention Gate
+
+The durable retention gate remains OPEN until the research archive is established and independently verified according to `docs/experiment/PDMAL_RETENTION_POLICY.md`. The intended release assets are:
+
+- `runtime_characterization.json`
+- `runtime_characterization.json.sha256`
+
+The release must be created against source commit `a0ff248eadb736f9b5835f2436791dc6ab5f66cc`, workflow run `32112658368`, with the authoritative file SHA above recorded in the release description. The gate closes only after the published release asset is independently checked and the sidecar digest matches.
+
+## Empirical Boundary
+
+Empirical data remains `0`. No pilot execution is authorized until the protocol freeze and explicit pilot authorization are complete.
+
+## Evidence Rule
+
+`IMPLEMENTED` does not mean `VERIFIED`; `VERIFIED` does not mean `OPERATIONALLY CHARACTERIZED`; operational verification does not mean empirical support. Documentation alone cannot promote a gate.

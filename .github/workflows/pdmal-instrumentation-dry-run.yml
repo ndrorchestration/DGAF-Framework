@@ -1,0 +1,82 @@
+name: PDMAL Instrumentation Dry Run
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pdmal-dry-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: read
+    env:
+      PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
+      PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install experiment dependencies
+        working-directory: experiments/pdmal_topology
+        run: python -m pip install -r requirements.txt
+      - name: Fail fast if blinding secret is unavailable
+        run: |
+          python - <<'PY'
+          import os
+          key = os.getenv("PDMAL_BLINDING_KEY", "")
+          if len(key) < 32:
+              raise SystemExit("PDMAL_BLINDING_KEY missing or shorter than 32 characters; refusing to run unblinded")
+          print("PDMAL_BLINDING_KEY is present (value withheld)")
+          PY
+      - name: Run deterministic smoke case twice
+        working-directory: experiments/pdmal_topology
+        run: |
+          python determinism.py --seed 42 --topology pdmal --failures 0 --output /tmp/pdmal-a.json > /tmp/pdmal-a.sha
+          python determinism.py --seed 42 --topology pdmal --failures 0 --output /tmp/pdmal-b.json > /tmp/pdmal-b.sha
+          cmp /tmp/pdmal-a.json /tmp/pdmal-b.json
+          cmp /tmp/pdmal-a.sha /tmp/pdmal-b.sha
+      - name: Run structural invariants and artifact tests
+        working-directory: experiments/pdmal_topology
+        run: pytest -q test_manifest.py test_graph_harness.py test_semantics.py test_experiment.py test_determinism.py test_artifacts.py
+      - name: Generate one-seed masked dry-run CSV
+        working-directory: experiments/pdmal_topology
+        run: |
+          python - <<'PY'
+          from experiment import run_structural_pilot
+          from artifacts import blind_rows, environment_commit_short, write_csv
+          import os
+          rows = run_structural_pilot(1)
+          masked = blind_rows(rows, os.environ["PDMAL_BLINDING_KEY"])
+          path, digest = write_csv(masked, environment_commit_short(), "/tmp/pdmal-artifact")
+          print(path)
+          print(digest)
+          PY
+      - name: Validate dry-run CSV schema
+        working-directory: experiments/pdmal_topology
+        run: python output_schema.py /tmp/pdmal-artifact/raw_pilot_*.csv
+      - name: Verify checksum sidecar
+        working-directory: experiments/pdmal_topology
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          files = list(Path('/tmp/pdmal-artifact').glob('raw_pilot_*.csv'))
+          assert len(files) == 1, f"expected one CSV, found {files}"
+          csv_path = files[0]
+          expected = csv_path.with_suffix(csv_path.suffix + '.sha256').read_text().split()[0]
+          actual = hashlib.sha256(csv_path.read_bytes()).hexdigest()
+          assert expected == actual, 'SHA-256 sidecar mismatch'
+          print(f'checksum: PASS {actual}')
+          PY
+      - name: Upload dry-run artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-instrumentation-dry-run
+          path: /tmp/pdmal-artifact/raw_pilot_*.csv*
+          if-no-files-found: error
+          retention-days: 14
+      - name: One-seed structural dry run
+        working-directory: experiments/pdmal_topology
+        run: python -c "from graph_harness import build_topologies, apply_node_failures, random_node_failures, structural_metrics; g=build_topologies(1)['pdmal']; f=random_node_failures(1,1); print(structural_metrics(apply_node_failures(g,f)))"

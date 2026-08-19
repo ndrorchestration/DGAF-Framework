@@ -1,0 +1,54 @@
+version: 1
+status: preregistration-template
+purpose: Define comparative systems before empirical DGAF effectiveness testing.
+
+systems:
+  - id: NULL
+    description: Random/no-op decision baseline.
+    required: true
+  - id: SIMPLE_AGENT
+    description: Basic agent workflow without explicit governance controls.
+    required: true
+  - id: STATIC_RULES
+    description: Deterministic rule-based governance without DGAF dynamic orchestration.
+    required: true
+  - id: DGAF
+    description: DGAF governance runtime without PDMAL augmentation.
+    required: true
+  - id: DGAF_PDMAL
+    description: DGAF governance runtime with PDMAL topology/instrumentation augmentation.
+    required: true
+
+comparison_controls:
+  task_corpus: frozen_before_confirmatory_run
+  prompt_set: identical_across_systems_where_applicable
+  model_version: identical_across_model_based_systems_where_applicable
+  compute_budget: matched_or_reported_explicitly
+  seed_family: paired_by_case_where_semantically_valid
+  evaluator: fixed_before_run
+
+primary_outcomes:
+  - governance_decision_accuracy
+  - constraint_violation_rate
+  - escalation_accuracy
+  - unsupported_claim_rate
+  - audit_trace_completeness
+
+secondary_outcomes:
+  - latency
+  - token_cost
+  - recovery_turns
+  - false_positive_intervention_rate
+  - false_negative_governance_failure_rate
+
+analysis_rules:
+  - Primary endpoints must be fixed before observing confirmatory outcomes.
+  - Null baseline is a comparator, not evidence of useful governance by itself.
+  - Statistical significance does not establish practical significance.
+  - Any post-hoc metric becomes exploratory and must be labeled as such.
+  - Missing or failed system runs are reported; they are not silently dropped.
+
+claim_boundary:
+  pre_execution: HYPOTHESIS
+  post_execution: Must remain bound to measured outcomes, uncertainty, and tested scope.
+  note: A DGAF win against one baseline does not establish general superiority over all governance approaches.

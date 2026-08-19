@@ -1,0 +1,43 @@
+name: Epistemic Evidence Validation
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-validation:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install epistemic and experiment dependencies
+        run: |
+          python -m pip install -r requirements-epistemic.txt -r experiments/pdmal_topology/requirements.txt
+
+      - name: Validate Evidence Cards
+        run: |
+          pytest -q tests/test_evidence_card_schema.py
+
+      - name: Verify PDMAL structural harness and manifest
+        working-directory: experiments/pdmal_topology
+        run: |
+          pytest -q test_manifest.py test_graph_harness.py test_experiment.py
+
+      - name: Execute instrumentation-only smoke test
+        working-directory: experiments/pdmal_topology
+        run: |
+          python - <<'PY'
+          from experiment import run_structural_pilot
+          rows = run_structural_pilot(1)
+          assert len(rows) == 45
+          print('instrumentation smoke test: 45 raw observations generated; no inferential analysis performed')
+          PY

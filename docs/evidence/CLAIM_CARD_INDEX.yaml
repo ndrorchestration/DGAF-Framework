@@ -1,0 +1,31 @@
+version: 1
+cards:
+  - id: DGAF-CLAIM-GOV-SCHEMA-CONFORMANCE
+    card: docs/evidence/example-dgaf-claim-v2.yaml
+    claim_class: HYPOTHESIS
+    evidence_maturity: SPECIFIED
+    validation_status: NOT_VALIDATED
+  - id: DGAF-CLAIM-PDMAL-RESILIENCE
+    card: pending
+    claim_class: HYPOTHESIS
+    evidence_maturity: SPECIFIED
+    validation_status: NOT_VALIDATED
+    note: Requires the preregistered topology experiment; no result is asserted.
+  - id: DGAF-CLAIM-DRIFTWATCH-DETECTION
+    card: pending
+    claim_class: HYPOTHESIS
+    evidence_maturity: SPECIFIED
+    validation_status: NOT_VALIDATED
+    note: Requires a ground-truth drift benchmark.
+  - id: DGAF-CLAIM-RUNTIME-GOVERNANCE
+    card: pending
+    claim_class: HYPOTHESIS
+    evidence_maturity: SPECIFIED
+    validation_status: NOT_VALIDATED
+    note: Requires controlled runtime evidence.
+  - id: DGAF-CLAIM-REPRODUCIBILITY
+    card: pending
+    claim_class: HYPOTHESIS
+    evidence_maturity: SPECIFIED
+    validation_status: NOT_VALIDATED
+    note: Requires deterministic replay and environment evidence.

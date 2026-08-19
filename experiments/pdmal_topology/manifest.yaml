@@ -1,0 +1,85 @@
+experiment:
+  name: PDMAL Topology Comparison
+  version: 1.2-pilot
+  status: preregistered-pilot
+  nodes: 20
+  pilot_seeds: 50
+  final_seeds: determined_by_preregistered_power_analysis_after_pilot
+  pilot:
+    success_criteria:
+      runtime_per_seed_seconds_max: 300
+      sd_largest_component_fraction_max: 0.15
+      sd_criterion_minimum_topologies: 4
+      max_masked_pairwise_ci_width: 0.40
+    failure_actions:
+      runtime: optimize implementation without changing protocol; if unresolved, pause and amend protocol before data collection
+      variance: increase pilot seeds to 100 before power analysis; document amendment and rationale
+      precision: increase pilot seeds to 100 before power analysis; document amendment and rationale
+
+topologies:
+  ring: cycle_graph(20)
+  pdmal: dodecahedral_graph()
+  random_regular: random_regular_graph(3,20)
+  small_world: watts_strogatz_graph(20,4,0.3)
+  complete: complete_graph(20)
+
+failures:
+  primary_class: random_node
+  counts: [0,1,2,3,4,5,6,8,10]
+  selection: uniform_without_replacement
+  rng_stream: failure_seed_family_independent_of_topology_seed
+
+controls:
+  agent_count: 20
+  workload: scalar_consensus
+  initial_state: seed_deterministic
+  protocol: reliable_broadcast
+  max_iterations: 1000
+  convergence_tolerance: 0.0001
+  topology_rng_stream: independent
+  failure_rng_stream: independent
+  workload_rng_stream: independent
+  initialization_rng_stream: independent
+
+primary_metrics:
+  - largest_component_fraction
+  - connectivity_probability
+  - task_success
+
+secondary_metrics:
+  - partition_count
+  - global_efficiency
+  - time_to_consensus
+  - message_cost
+
+analysis:
+  paired_by_seed: true
+  primary_test: paired_sign_flip_permutation
+  confidence_interval: bootstrap_95_percent
+  multiplicity: predeclared_comparison_families_with_fdr_control
+  pilot_blinding: topology_labels_masked_with_external_hmac_secret_during_precision_and_power_preparation
+
+storage:
+  format: csv
+  filename_pattern: raw_pilot_<commit_short>_<utc_timestamp>.csv
+  checksum: sha256
+  persistent_artifact_required_before_analysis: true
+  persistent_locations:
+    - github_actions_artifact
+  output_schema: experiments/pdmal_topology/output_schema.py
+
+secrets:
+  blinding_key:
+    environment_variable: PDMAL_BLINDING_KEY
+    minimum_length: 32
+    storage: GitHub Actions secret
+    required_before_execution: true
+    fail_closed_if_missing: true
+
+exclusions:
+  graph_construction_failure: regenerate_deterministically_from_prespecified_seed_rule
+  statistical_outliers: retained; sensitivity_analysis_only
+
+provenance:
+  protocol_frozen_at: 2026-08-17
+  results: none

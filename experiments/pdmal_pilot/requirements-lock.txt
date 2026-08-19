@@ -1,0 +1,7 @@
+# Direct dependency lock for the pre-freeze harness.
+# Transitive dependencies are intentionally absent until a resolver-generated,
+# hash-locked environment is produced and verified in CI.
+# Python: 3.12.0
+numpy==2.5.1
+networkx==3.6.1
+pytest==8.4.1

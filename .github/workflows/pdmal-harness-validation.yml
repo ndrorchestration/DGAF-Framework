@@ -1,0 +1,91 @@
+name: PDMAL Harness Validation
+
+on:
+  push:
+    branches:
+      - epistemic/evidence-architecture-v1
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  contract-validation:
+    name: Pre-freeze PDMAL contract validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+          cache: pip
+          cache-dependency-path: experiments/pdmal_pilot/requirements-lock.txt
+
+      - name: Assert interpreter version
+        run: |
+          python -c 'import sys; assert sys.version_info[:3] == (3,12,0), sys.version'
+
+      - name: Install pilot-harness dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt
+
+      - name: Verify dependency versions
+        run: |
+          python - <<'PY'
+          import networkx
+          import numpy
+          assert numpy.__version__ == '2.5.1', numpy.__version__
+          assert networkx.__version__ == '3.6.1', networkx.__version__
+          print('numpy=', numpy.__version__)
+          print('networkx=', networkx.__version__)
+          PY
+
+      - name: Run deterministic contract tests
+        working-directory: experiments/pdmal_pilot
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest test_harness_contract.py -q
+
+      - name: Emit environment manifest
+        run: |
+          mkdir -p test-artifacts
+          python - <<'PY'
+          import json
+          import platform
+          import sys
+          import networkx
+          import numpy
+          from pathlib import Path
+
+          manifest = {
+              'protocol_status': 'PRE-FREEZE',
+              'empirical_data_collection': False,
+              'python': platform.python_version(),
+              'numpy': numpy.__version__,
+              'networkx': networkx.__version__,
+              'platform': platform.platform(),
+              'implementation': platform.python_implementation(),
+              'commit': __import__('os').environ.get('GITHUB_SHA'),
+              'workflow_run_id': __import__('os').environ.get('GITHUB_RUN_ID'),
+              'runner_image': __import__('os').environ.get('ImageOS'),
+          }
+          Path('test-artifacts/environment-manifest.json').write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+
+      - name: Upload validation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-harness-validation-${{ github.sha }}
+          path: test-artifacts/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,20 @@
+name: Truth Layer Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  truth-layer-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install evidence-test dependencies
+        run: python -m pip install -r requirements-epistemic.txt
+      - name: Run evidence-tier and runtime truth tests
+        run: pytest -q tests/test_evidence_mode.py tests/test_evidence_card_schema.py tests/test_runtime_truth_contract.py

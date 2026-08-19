@@ -1,0 +1,7 @@
+# Direct PDMAL dependencies
+numpy==2.5.1
+networkx==3.6.1
+pytest==8.4.1
+
+# PPTL runtime dependency required by the governance adapter
+pandas>=2.0.0

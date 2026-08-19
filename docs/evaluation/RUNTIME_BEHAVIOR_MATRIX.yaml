@@ -1,0 +1,38 @@
+version: 1
+status: test-specification
+endpoint: /api/orchestrate
+
+cases:
+  - id: PASS-001
+    input: clean payload, confidence in [0,1], non-checkpoint turn
+    expected_http: 200
+    expected_decision: PASS
+    evidence_status: PARTIAL
+  - id: REJECT-001
+    input: malformed body or invalid field type
+    expected_http: 400
+    expected_decision: REJECT
+    evidence_status: PASS
+  - id: KILL-001
+    input: payload containing configured prompt-injection marker
+    expected_http: 400
+    expected_decision: KILL
+    evidence_status: PASS
+  - id: BLOCK-001
+    input: configured Fibonacci checkpoint before live audit-state integration
+    expected_http: 503
+    expected_decision: BLOCKED
+    evidence_status: BLOCKED
+  - id: METHOD-001
+    input: non-POST request
+    expected_http: 405
+    expected_decision: none
+    evidence_status: NOT_IMPLEMENTED
+
+invariants:
+  - No malformed input executes governance side effects.
+  - No unimplemented governance checkpoint may return PASS.
+  - Every result contains an evidence envelope.
+  - Every result contains a trace for gates actually executed.
+  - Integration evidence never implies empirical effectiveness.
+  - Exact replay should be deterministic apart from explicitly documented volatile fields.
