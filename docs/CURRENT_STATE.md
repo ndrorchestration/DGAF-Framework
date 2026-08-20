@@ -10,6 +10,18 @@ applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
 
 This is the repository's concise current-state snapshot. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact executed SHA. The current main branch head is authoritative from the Git ref and is not duplicated here as self-referential document metadata.
 
+## Release Asset Verification (2026-08-20)
+
+The v0.7.5 runtime characterization release was downloaded and verified on 2026-08-20:
+
+- Asset: `pdmal-runtime-characterization-4a7d00b84693807306f639e9c818f4604517e840.zip`
+- ZIP SHA-256: `ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20` (corrected; prior `cbd2cb...` was INCORRECT)
+- Inner artifact: `runtime_characterization.json`
+- Inner artifact SHA-256: `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea` (corrected; prior `f6db24e...` was INCORRECT)
+- ZIP-shipped sidecar: confirms inner SHA
+
+The v0.7.5 release is a 3-seed, 2-topology characterization (72/72 trials), not the 50-seed pilot.
+
 ## Repository Metadata
 
 | Field | Value |
@@ -25,8 +37,8 @@ This is the repository's concise current-state snapshot. GitHub is authoritative
 | Primary-contrast record | `docs/experiment/PRIMARY_CONTRAST_ADJUDICATION.md` — OPEN / METHODOLOGICAL ADJUDICATION REQUIRED |
 | Latest implementation CI | Run #74 (`32111556449`) on `08500a7` |
 | Runtime characterization | Run #14 (`32112658368`) on `a0ff248`; 72/72 trials completed, ceiling PASS |
-| Runtime artifact | GitHub artifact `9315467977`; ZIP digest `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
-| Runtime inner JSON | `runtime_characterization.json`; SHA-256 `f6db24e5dd2659d4395c0752845e23f182a8ae6b304433e56ae9c2f4c155f6ea` |
+| Runtime artifact | GitHub artifact `9315467977`; ZIP digest `sha256:ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20` (corrected 2026-08-20; prior `cbd2cb...` was INCORRECT) |
+| Runtime inner JSON | `runtime_characterization.json`; SHA-256 `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea` (corrected 2026-08-20; prior `f6db24e...` was INCORRECT) |
 | Blinding dry-run workflow | `.github/workflows/pdmal-blinding-operational-test.yml` |
 | Blinding dry-run evidence | CLOSED / PASS — Run `32113226935`, artifact `9328114023` |
 | Retention policy | `docs/experiment/PDMAL_RETENTION_POLICY.md`; durable archive implementation/verification remains open |

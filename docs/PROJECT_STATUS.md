@@ -29,9 +29,9 @@ This document is the current operational status record for the DGAF/PDMAL experi
 | Security hardening #70 | MERGED | Main baseline `93f535c1eb822244ab4e7d3646cadfb9e28a9876` |
 | Epistemic architecture #65 | MERGED | Main baseline `915e454e27eb2770e7f40a067a881b0783feaae4`; PR #65 merged 2026-08-19 |
 | PR #75 | MERGED | Squash-merged at `a44e42cd3040` on 2026-08-20; 113 files, 7427 insertions; executor gap remains OPEN |
-| Release ZIP SHA-256 | PENDING | Requires download of the published asset and local hashing |
-| Inner artifact SHA-256 | PENDING | Expected digest is recorded separately; must be recomputed from the extracted artifact |
-| Freeze manifest | PENDING | Uses post-#65 freeze HEAD `915e454e`; freeze commit not yet created |
+| Release ZIP SHA-256 | VERIFIED | `ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20` — computed from downloaded `pdmal-runtime-characterization-4a7d00b84693807306f639e9c818f4604517e840.zip` on 2026-08-20; prior record `cbd2cb...` was INCORRECT — corrected |
+| Inner artifact SHA-256 | VERIFIED | `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea` — computed from extracted `runtime_characterization.json`; ZIP-shipped sidecar confirms; prior record `f6db24e...` was INCORRECT — corrected |
+| Freeze manifest | UPDATED | Post-#65 freeze HEAD `915e454e`; release asset digests verified and corrected on 2026-08-20; freeze commit not yet created |
 | Protocol freeze | BLOCKED | Depends on #65, provenance checks, and freeze commit |
 | Pilot authorization | NOT GRANTED | Must reference the final freeze state |
 
@@ -51,6 +51,11 @@ f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250
 ```
 
 This value is **expected provenance**, not a substitute for a fresh local computation. The ZIP's SHA-256 must also be computed independently because the ZIP and its contents are different byte objects.
+
+**Correction (2026-08-20):** Fresh computation from the downloaded release asset yields different values:
+- ZIP SHA-256: `ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20` (prior record `cbd2cb...` was INCORRECT)
+- Inner artifact SHA-256: `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea` (prior record `f6db24e...` was INCORRECT)
+- ZIP-shipped sidecar `runtime_characterization.json.sha256` confirms the inner SHA.
 
 ## Release Baseline
 
@@ -120,8 +125,10 @@ sha256sum runtime_characterization.json
 Record both computed digests. The inner artifact is expected to match:
 
 ```text
-f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250
+42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea
 ```
+
+**Correction (2026-08-20):** The prior expected value `f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250` was INCORRECT. Fresh computation from the downloaded release asset yields `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea`. The ZIP-shipped sidecar `runtime_characterization.json.sha256` independently confirms this value.
 
 Do not claim the gate is closed until the actual computed values are recorded.
 
@@ -136,12 +143,12 @@ spec_blob_sha: <task spec file/blob identity at freeze>
 runner_blob_sha: <pilot runner identity at freeze>
 lockfile_blob_sha: <full lockfile identity at freeze>
 runtime_artifact_id: 9315467977
-runtime_artifact_digest: f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250
+runtime_artifact_digest: 42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea (corrected; prior f6db24e... was INCORRECT)
 runtime_release_tag: v0.7.5-pdmal-runtime-characterization
-release_asset_filename: <exact published ZIP filename>
-release_asset_sha256: <computed ZIP SHA-256>
+release_asset_filename: pdmal-runtime-characterization-4a7d00b84693807306f639e9c818f4604517e840.zip
+release_asset_sha256: ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20 (corrected; prior cbd2cb... was INCORRECT)
 release_inner_artifact: runtime_characterization.json
-release_inner_artifact_sha256: <computed JSON SHA-256>
+release_inner_artifact_sha256: 42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea (corrected; prior f6db24e... was INCORRECT)
 blinding_run_id: 32113226935
 blinding_artifact_id: 9315675249
 blinding_artifact_digest: <verified blinding artifact digest>

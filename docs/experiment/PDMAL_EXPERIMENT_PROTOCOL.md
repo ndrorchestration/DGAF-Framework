@@ -69,4 +69,18 @@ The protocol is pre-freeze. The following remain open:
 
 ## 6. Evidence boundary
 
+This protocol is a specification artifact.
+
+### Release asset verification
+
+The v0.7.5 runtime characterization release asset was downloaded and verified on 2026-08-20:
+
+- Release asset: `pdmal-runtime-characterization-4a7d00b84693807306f639e9c818f4604517e840.zip`
+- ZIP SHA-256: `ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20`
+- Inner artifact: `runtime_characterization.json`
+- Inner artifact SHA-256: `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea`
+- ZIP-shipped sidecar confirms inner SHA: YES
+
+The v0.7.5 release is a 3-seed, 2-topology operational characterization (72/72 trials completed). It is NOT the 50-seed blinded pilot. Protocol status remains PRE-FREEZE.
+
 This protocol is a specification artifact. It does not authorize empirical execution. N = 0 throughout. Pilot authorization is NOT GRANTED.

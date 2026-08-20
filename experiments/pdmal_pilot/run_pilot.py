@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import numpy as np
 import json
 import os
 import sys

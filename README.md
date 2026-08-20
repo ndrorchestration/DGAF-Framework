@@ -6,7 +6,7 @@
 
 ## Current project state — 2026-08-20
 
-The DGAF/PDMAL experimental track is **PRE-FREEZE**. The runtime-characterization baseline is published, the blinding operational test is closed, and security hardening PR #70 has been merged. Epistemic architecture PR #65 has been **merged** at `915e454e27eb2770e7f40a067a881b0783feaae4`. PR #75 (evidence architecture and governance doc updates) is **open** against `main`.
+The DGAF/PDMAL experimental track is **PRE-FREEZE**. The runtime-characterization baseline is published, the blinding operational test is closed, and security hardening PR #70 has been merged. Epistemic architecture PR #65 has been **merged** at `915e454e27eb2770e7f40a067a881b0783feaae4`. PR #75 (evidence architecture and governance doc updates) has been **merged** at `a44e42cd3040`.
 
 Current security baseline:
 

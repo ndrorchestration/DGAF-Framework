@@ -145,8 +145,11 @@ The topology fingerprints in `docs/experiment/PDMAL_TOPOLOGY_FINGERPRINT_MANIFES
 |---|---|
 | Runtime characterization run | #14 — `32112658368` |
 | Runtime artifact | `9315467977` |
-| Runtime artifact ZIP digest | `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27` |
-| Inner `runtime_characterization.json` SHA-256 | `f6db24e5dd2659d4395c0752845e23f182a8ae6b304433e56ae9c2f4c155f6ea` |
+| Runtime artifact ZIP digest | `sha256:ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20` |
+| ZIP digest verification | Computed 2026-08-20 from downloaded release asset; prior record `cbd2cb...` was INCORRECT — corrected on 2026-08-20 |
+| Inner `runtime_characterization.json` SHA-256 | `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea` |
+| Inner SHA verification | Computed 2026-08-20 from extracted ZIP artifact; ZIP-shipped sidecar confirms inner SHA; prior record `f6db24e...` was INCORRECT — corrected on 2026-08-20 |
+| Release asset verification | COMPLETED 2026-08-20; ZIP and inner artifact downloaded and hashed; ZIP-shipped sidecar confirms inner SHA |
 | 300-second ceiling | VERIFIED for characterization matrix |
 | Blinding workflow | `.github/workflows/pdmal-blinding-operational-test.yml` |
 | Blinding run | `32113226935` |
@@ -158,8 +161,9 @@ The topology fingerprints in `docs/experiment/PDMAL_TOPOLOGY_FINGERPRINT_MANIFES
 | Item | Value |
 |---|---|
 | Manifest file | `docs/experiment/FREEZE_MANIFEST.md` |
-| Manifest SHA-256 | `sha256:95575dcc4d19cd79b3414e65570fb67c6e6c35c6671b54f65fb7b57d34f269f3` |
+| Manifest SHA-256 | `sha256:TBD` |
 | Side-car file | `docs/experiment/FREEZE_MANIFEST.md.sha256` |
+| Side-car content | PENDING — to be updated after this edit |
 | Verification | See `docs/experiment/PDMAL_FREEZE_MANIFEST_INTEGRITY_REPORT.md` |
 | Deterministics companion | `docs/experiment/UPDATED_FREEZE_MANIFEST_DRAFT.md` |
 | Topology fingerprints | `docs/experiment/PDMAL_TOPOLOGY_FINGERPRINT_MANIFEST.md` |
@@ -205,6 +209,6 @@ The freeze manifest may only be promoted to `FROZEN` after:
 
 ## Appendix A: Claim Boundary
 
-This manifest was prepared from the `915e454e27eb2770e7f40a067a881b0783feaae4` merge baseline. All blob SHAs were extracted from `git ls-tree 915e454e` on 2026-08-19. Topology fingerprints were computed from the deterministic seed `20260817` using the exact topology generators and fingerprint function in the committed codebase. The manifest SHA-256 was computed from the final text and verified by an independent Python computation and the side-car file.
+This manifest was prepared from the `915e454e27eb2770e7f40a067a881b0783feaae4` merge baseline. All blob SHAs were extracted from `git ls-tree 915e454e` on 2026-08-19. Topology fingerprints were computed from the deterministic seed `20260817` using the exact topology generators and fingerprint function in the committed codebase. The manifest SHA-256 was computed from the final text and verified by an independent Python computation and the side-car file. Release asset digests were recomputed on 2026-08-20 from the published v0.7.5 asset; the prior recorded values `cbd2cb...` (ZIP SHA-256) and `f6db24e...` (inner artifact SHA-256) were found to be incorrect and have been corrected to the freshly computed values `ba2d440...` and `42da111...` respectively.
 
 **This manifest is not a protocol freeze. It is not pilot authorization. It does not authorize empirical data collection. N = 0 throughout. Pilot authorization is NOT GRANTED.**
