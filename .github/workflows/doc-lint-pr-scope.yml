@@ -1,7 +1,3 @@
-# PR-scoped documentation gate.
-# Purpose: block PR-introduced Markdown defects without conflating them with
-# repository-wide baseline documentation debt tracked separately in issue #73.
-
 name: Doc Lint (PR Scope)
 
 on:

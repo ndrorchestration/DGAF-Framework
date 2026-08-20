@@ -4,14 +4,14 @@
 
 > **Epistemic status:** This README describes repository scope and implemented artifacts. Individual claims of validation, certification, performance, or standards alignment require the evidence identified in the corresponding artifact. Historical certifications are not treated as current certification without a fresh evidence-backed run.
 
-## Current project state — 2026-08-18
+## Current project state — 2026-08-20
 
-The DGAF/PDMAL experimental track is **PRE-FREEZE**. The runtime-characterization baseline is published, the blinding operational test is closed, and security hardening PR #70 has been merged. Epistemic architecture PR #65 remains open and is currently blocked by merge conflicts against the post-#70 `main` branch.
+The DGAF/PDMAL experimental track is **PRE-FREEZE**. The runtime-characterization baseline is published, the blinding operational test is closed, and security hardening PR #70 has been merged. Epistemic architecture PR #65 has been **merged** at `915e454e27eb2770e7f40a067a881b0783feaae4`. PR #75 (evidence architecture and governance doc updates) is **open** against `main`.
 
 Current security baseline:
 
 ```text
-main: 93f535c1eb822244ab4e7d3646cadfb9e28a9876
+main: df7d5fd8c8595cbb9d0c04caeaace13738d760ae
 ```
 
 Pilot authorization has **not** been granted and no empirical pilot data exists.

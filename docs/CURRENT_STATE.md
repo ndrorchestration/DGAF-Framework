@@ -39,13 +39,8 @@ The v0.7.5 amendment is incorporated into the current protocol and accepted by g
 ```text
 Conditions:      null, simple, static, dgaf
 Topologies:      ring, pdmal, random_regular, small_world, complete
-Failure counts:  0,1,2,3,4,5,6,8,10
-Per seed:        4 × 5 × 9 = 180 observations
-50-seed plan:    9,000 planned raw observations before exclusions
 Out of scope:    dgaf_pdmal
 ```
-
-## Gate Board
 
 | Gate | Status | Evidence / blocker |
 |---|---|---|
@@ -53,7 +48,6 @@ Out of scope:    dgaf_pdmal
 | Environment lock | CLOSED | Run #67 generated the full hash lock; locked installation passed and Run #68 corroborated infrastructure state |
 | Topology provenance | VERIFIED | Fresh PDMAL CI coverage in the pre-freeze series |
 | Artifact schema/integrity | VERIFIED | Run #74 |
-| v0.7.4 task specification | APPROVED | Expert-panel approval recorded |
 | ConsensusTask implementation | VERIFIED | Run #74 on `08500a7` |
 | Runtime characterization | OPERATIONALLY CHARACTERIZED | Run #14; 72/72 trials completed and artifact validated |
 | 300-second ceiling | VERIFIED FOR CHARACTERIZATION MATRIX | All measured seed runtimes remained below 300 seconds |
@@ -67,7 +61,6 @@ Out of scope:    dgaf_pdmal
 | Pilot executor implementation | OPEN | `run_pilot.py` explicitly refuses pilot mode because the real experimental task executor is not implemented |
 | Protocol freeze | BLOCKED | Primary contrast + retention + exact freeze metadata + execution hardening + pilot executor remain open |
 | Pilot authorization | NOT GRANTED | Separate governance decision after freeze |
-| Empirical data | 0 | No pilot execution authorized |
 
 ## Evidence boundary
 
