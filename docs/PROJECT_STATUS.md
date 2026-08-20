@@ -1,8 +1,8 @@
 # DGAF/PDMAL Project Status
 
-**Status date:** 2026-08-18  
+**Status date:** 2026-08-20  
 **Repository:** `ndrorchestration/DGAF-Framework`  
-**Current main:** `93f535c1eb822244ab4e7d3646cadfb9e28a9876`  
+**Current main:** `df7d5fd8c8595cbb9d0c04caeaace13738d760ae`  
 **Pilot status:** PRE-FREEZE; authorization not granted
 
 ## Purpose
@@ -27,10 +27,11 @@ This document is the current operational status record for the DGAF/PDMAL experi
 | `dgaf_pdmal` | OUT OF SCOPE | Explicitly excluded from the pilot scope |
 | Empirical data | ZERO | No pilot data generated |
 | Security hardening #70 | MERGED | Main baseline `93f535c1eb822244ab4e7d3646cadfb9e28a9876` |
-| Epistemic architecture #65 | BLOCKED | Open PR with merge conflicts after #70; not yet merged |
+| Epistemic architecture #65 | MERGED | Main baseline `915e454e27eb2770e7f40a067a881b0783feaae4`; PR #65 merged 2026-08-19 |
+| PR #75 | OPEN | Evidence architecture + governance doc updates; head `2c6fd80`→`22b769a`; mergeable=True, mergeable_state=blocked (CI `pptl pytest — governance` pending) |
 | Release ZIP SHA-256 | PENDING | Requires download of the published asset and local hashing |
 | Inner artifact SHA-256 | PENDING | Expected digest is recorded separately; must be recomputed from the extracted artifact |
-| Freeze manifest | PENDING | Must use post-#65 freeze HEAD, not v0.7.5 tag SHA |
+| Freeze manifest | PENDING | Uses post-#65 freeze HEAD `915e454e`; freeze commit not yet created |
 | Protocol freeze | BLOCKED | Depends on #65, provenance checks, and freeze commit |
 | Pilot authorization | NOT GRANTED | Must reference the final freeze state |
 
@@ -72,9 +73,17 @@ The change addresses the workflow permissions/code-scanning issue and establishe
 
 ### PR #65 — Epistemic Alignment + Evidence Card architecture
 
-Still open and currently blocked by merge conflicts because its branch predates the #70 merge. Its scope includes epistemic alignment policy, claim/evidence distinctions, Evidence Card architecture, validation controls, and associated documentation/tests.
+Merged into `main` at `915e454e27eb2770e7f40a067a881b0783feaae4` on 2026-08-19.
 
-It must be rebased or otherwise updated against current `main`, conflicts resolved, and CI rerun before merge.
+```text
+915e454e27eb2770e7f40a067a881b0783feaae4
+```
+
+The change delivers epistemic alignment policy, claim/evidence distinctions, Evidence Card architecture, validation controls, and associated documentation.
+
+### PR #75 — Evidence architecture + governance doc updates
+
+Open against `main`. Head `22b769a` (rebased on `origin/main` `df7d5fd`). Contains 4 modified governance/evidence documents (CURRENT_STATE.md, PDMALESPERIMENT_INDEX.md, FREEZE_MANIFEST.md, PDMAMESPERIMENT_PROTOCOL.md). PR-scope markdownlint clean. mergeable=True, mergeable_state=blocked pending CI `pptl pytest — governance`.
 
 ### PR #42 — Fractal Agency enumeration
 
@@ -83,18 +92,16 @@ Separate research-characterization track. It does not block the immediate securi
 ## Required Final Sequence
 
 ```text
-1. Resolve/rebase PR #65 against current main
-2. Resolve conflicts and rerun CI
-3. Merge #65
-4. Record post-#65 HEAD SHA
-5. Download the published v0.7.5 ZIP
-6. Compute ZIP SHA-256
-7. Extract authoritative inner artifact
-8. Compute inner artifact SHA-256 and compare to expected provenance
-9. Populate freeze manifest
-10. Mark protocol/spec frozen in the freeze commit
-11. Record pilot authorization
-12. Execute the 50-seed blinded pilot
+1. Merge PR #75 (evidence architecture + governance docs)
+2. Verify post-#75 HEAD on main
+3. Download the published v0.7.5 ZIP
+4. Compute ZIP SHA-256
+5. Extract authoritative inner artifact
+6. Compute inner artifact SHA-256 and compare to expected provenance
+7. Populate freeze manifest
+8. Mark protocol/spec frozen in the freeze commit
+9. Record pilot authorization
+10. Execute the 50-seed blinded pilot
 ```
 
 No step in this sequence establishes empirical validity before the pilot is run and analyzed.
