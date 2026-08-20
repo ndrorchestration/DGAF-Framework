@@ -28,7 +28,7 @@ This document is the current operational status record for the DGAF/PDMAL experi
 | Empirical data | ZERO | No pilot data generated |
 | Security hardening #70 | MERGED | Main baseline `93f535c1eb822244ab4e7d3646cadfb9e28a9876` |
 | Epistemic architecture #65 | MERGED | Main baseline `915e454e27eb2770e7f40a067a881b0783feaae4`; PR #65 merged 2026-08-19 |
-| PR #75 | OPEN | Evidence architecture + governance doc updates; head `2c6fd80`→`22b769a`; mergeable=True, mergeable_state=blocked (CI `pptl pytest — governance` pending) |
+| PR #75 | MERGED | Squash-merged at `a44e42cd3040` on 2026-08-20; 113 files, 7427 insertions; executor gap remains OPEN |
 | Release ZIP SHA-256 | PENDING | Requires download of the published asset and local hashing |
 | Inner artifact SHA-256 | PENDING | Expected digest is recorded separately; must be recomputed from the extracted artifact |
 | Freeze manifest | PENDING | Uses post-#65 freeze HEAD `915e454e`; freeze commit not yet created |
