@@ -13,7 +13,7 @@
 
 ---
 
-# PDMAL Experiment — Freeze Manifest
+## Table of Contents
 
 This is the pre-freeze manifest for the merged DGAF/PDMAL control plane. It is not evidence of protocol freeze and does not authorize pilot execution. Every value marked `TBD` or `PENDING` must be resolved with direct evidence before the dedicated freeze commit.
 
@@ -122,6 +122,7 @@ The **freeze state is independent of pilot authorization**. Pilot authorization 
 ### Environment version verification
 
 The lockfile `requirements-full-lock.txt` pins:
+
 - `networkx==3.6.1` (lines 11-14)
 - `numpy==2.5.1` (lines 15-59)
 

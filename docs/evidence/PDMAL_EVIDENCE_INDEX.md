@@ -22,12 +22,12 @@ This index records evidence and gate state for the PDMAL experimental-control tr
 
 ## Evidence Inventory
 
-| Evidence | Status | SHA / Run | Notes |
-|---|---|---|---|
-| Environment lock | VERIFIED | `7ba0e1c` | Pre-freeze runner validation | Locked installation / resolver reproducibility |
-| PDMAL implementation | VERIFIED | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` | Run #74 (`32111556449`) | ConsensusTask implementation and artifact integrity |
-| Runtime characterization | OPERATIONALLY CHARACTERIZED | `a0ff248` | Run #14 (`32112658368`) | 72/72 seed matrix trials; ceiling characterization |
-| Blinding operational verification | CLOSED / PASS | `1d8c62386ea09f09c1dac768e1e59d4df284edee` | Run `32113226935`, artifact `9328114023` | Synthetic custody dry-run; no production secret access; no empirical data |
+| Evidence | Status | SHA / Run | Sub-status | Notes |
+|---|---|---|---|---|---|
+| Environment lock | VERIFIED | `7ba0e1c` | Locked | Pre-freeze runner validation; locked installation / resolver reproducibility |
+| PDMAL implementation | VERIFIED | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` | Run #74 | ConsensusTask implementation and artifact integrity (`32111556449`) |
+| Runtime characterization | OPERATIONALLY CHARACTERIZED | `a0ff248` | Run #14 | 72/72 seed matrix trials; ceiling characterization (`32112658368`) |
+| Blinding operational verification | CLOSED / PASS | `1d8c62386ea09f09c1dac768e1e59d4df284edee` | Run `32113226935` | Synthetic custody dry-run; no production secret access; no empirical data; artifact `9328114023` |
 | Durable retention | OPEN | — | Release pending | Durable archive requires published release assets and checksum verification |
 
 ## Runtime Characterization
