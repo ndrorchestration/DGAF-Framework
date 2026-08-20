@@ -271,8 +271,8 @@ class TestHappyPath:
     def test_all_events_committed(self, clean_state):
         aid, env = "A1", "prod"
         results = [
-            apply_event(clean_state, new_event(EventType.CODEGEN, aid, "code_agent")),
-            apply_event(clean_state, new_event(EventType.REVIEW_APPROVE, aid, "review_agent")),
+            apply_event(clean_state, new_event(EventType.CODEGEN, aid, "code_agent", test_passed=True)),
+            apply_event(clean_state, new_event(EventType.REVIEW_APPROVE, aid, "review_agent", test_passed=True)),
             apply_event(clean_state, new_event(EventType.TEST_PASS, aid, "test_agent")),
             apply_event(clean_state, new_event(EventType.DEPLOY_ATTEMPT, aid, "deploy_agent", {"environment": env})),
             apply_event(clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": env})),
@@ -282,8 +282,8 @@ class TestHappyPath:
     def test_artifact_status_deployed(self, clean_state):
         aid, env = "A2", "prod"
         for et, actor, meta in [
-            (EventType.CODEGEN, "code_agent", {}),
-            (EventType.REVIEW_APPROVE, "review_agent", {}),
+            (EventType.CODEGEN, "code_agent", {"test_passed": True}),
+            (EventType.REVIEW_APPROVE, "review_agent", {"test_passed": True}),
             (EventType.TEST_PASS, "test_agent", {}),
             (EventType.DEPLOY_ATTEMPT, "deploy_agent", {"environment": env}),
             (EventType.DEPLOY_SUCCESS, "deploy_agent", {"environment": env}),
@@ -294,8 +294,8 @@ class TestHappyPath:
     def test_invariants_hold_after_happy_path(self, clean_state):
         aid, env = "A3", "prod"
         for et, actor, meta in [
-            (EventType.CODEGEN, "code_agent", {}),
-            (EventType.REVIEW_APPROVE, "review_agent", {}),
+            (EventType.CODEGEN, "code_agent", {"test_passed": True}),
+            (EventType.REVIEW_APPROVE, "review_agent", {"test_passed": True}),
             (EventType.TEST_PASS, "test_agent", {}),
             (EventType.DEPLOY_ATTEMPT, "deploy_agent", {"environment": env}),
             (EventType.DEPLOY_SUCCESS, "deploy_agent", {"environment": env}),
@@ -390,8 +390,8 @@ class TestProvenanceCompleteness:
         """Full provenance chain must be accepted."""
         aid, env = "C2", "prod"
         for et, actor, meta in [
-            (EventType.CODEGEN, "code_agent", {}),
-            (EventType.REVIEW_APPROVE, "review_agent", {}),
+            (EventType.CODEGEN, "code_agent", {"test_passed": True}),
+            (EventType.REVIEW_APPROVE, "review_agent", {"test_passed": True}),
             (EventType.TEST_PASS, "test_agent", {}),
             (EventType.DEPLOY_ATTEMPT, "deploy_agent", {"environment": env}),
         ]:
