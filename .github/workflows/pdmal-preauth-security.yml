@@ -38,6 +38,10 @@ jobs:
         env:
           PYTHONPATH: experiments/pdmal_pilot
         run: python -m pytest experiments/pdmal_pilot/test_execution_contract.py -q
+      - name: Run durable retention tests
+        env:
+          PYTHONPATH: experiments/pdmal_pilot
+        run: python -m pytest experiments/pdmal_pilot/test_durable_retention.py -q
       - name: Verify contract mode remains non-empirical
         env:
           PDMAL_MODE: contract
