@@ -1,0 +1,31 @@
+name: Propagation Consistency (Advisory)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  propagation-consistency:
+    name: Propagation consistency — advisory
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run propagation consistency checker
+        run: |
+          python3 scripts/propagation_check.py \
+            --registry registry/propagation_registry.json \
+            --root . \
+            --json > propagation-report.json
+          python3 scripts/propagation_check.py \
+            --registry registry/propagation_registry.json \
+            --root .
+
+      - name: Upload propagation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: propagation-consistency-report
+          path: propagation-report.json
