@@ -2,52 +2,56 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-20
-applies_to_sha: 3510b86889cd341f7a7cf9ab684fd37b2fafd758
+last_verified: 2026-08-21
+applies_to_sha: 23ab411d6113b3281f011f6891fb9335c7b6972e
 ---
 
 # PDMAL Current Control State
 
-This document is the operational gate record. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact executed SHA. The experimental apparatus was frozen at `3510b86889cd341f7a7cf9ab684fd37b2fafd758`; this post-freeze control record is documentation-only and does not modify that frozen apparatus.
+This is the current pre-authorization gate record. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact tested SHA.
 
-## Gate board
+## Current state
 
 | Control | State | Evidence / blocker |
 |---|---|---|
-| Environment lock | VERIFY | Frozen lock specifies Python 3.12.0, NumPy 2.5.1, NetworkX 3.6.1; verify in a fresh matching environment before pilot |
-| Frozen executor | CLOSED | `75a7f18`; `run_pilot.py` invokes `ConsensusTask` |
-| Executor acceptance | CLOSED | 2 seeds × 180 trials = 360; all SUCCESS; acceptance evidence only |
-| Topology provenance | VERIFY | Fingerprint generation/provenance exists; reconcile final values against frozen manifest |
-| Artifact schema/integrity | VERIFIED | Frozen component SHA and acceptance artifacts recorded |
-| Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368`; 300s ceiling characterized; not pilot evidence |
-| Blinding custody | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935`; production secret not exposed |
-| Security adversarial controls | FINAL VERIFICATION | Execute remaining controls externally against frozen apparatus |
-| Durable retention | VERIFY | Policy exists; directly verify pilot archive destination/checksum path |
-| Primary contrast | OPEN / MUST CLOSE | Explicit methodological adjudication required before pilot authorization |
-| Analysis implementation | PENDING FREEZE | Statistical plan exists; implementation/configuration SHA must be frozen before unblinding |
-| Protocol freeze | CLOSED | Freeze commit `3510b86889cd341f7a7cf9ab684fd37b2fafd758` |
+| Current main | CURRENT | `23ab411d6113b3281f011f6891fb9335c7b6972e` |
+| Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` |
+| Corrected runner | CANDIDATE | PR #77 lineage; candidate must be refreshed against current `main` |
+| Environment lock | VERIFY | Target Python 3.12.0, NumPy 2.5.1, NetworkX 3.6.1 |
+| Executor contract | PARTIAL | Test #5 reconciled; fresh CI still required |
+| Artifact contract | PARTIAL | Pilot schema exists; runtime validation wiring added on PR #77 branch; fresh candidate verification required |
+| Topology provenance | VERIFY | Current-source fingerprints require repository manifest restoration and candidate-scoped verification |
+| Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368`; historical operational evidence only |
+| Blinding custody | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935`; production key custody still requires operational evidence |
+| Security controls | VERIFY | Pre-authorization workflow exists on PR #77; CI execution required |
+| Durable retention | OPEN | Implementation/archive destination not yet established on current mainline |
+| Primary contrast | OPEN / MUST CLOSE | Explicit methodological adjudication required |
+| Analysis implementation | OPEN | Exact implementation/configuration SHA required before unblinding |
+| New freeze | NOT CREATED | No corrected apparatus freeze exists |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
-| Empirical data | 0 | No authorized pilot execution |
+| Empirical data | ZERO | No authorized pilot execution |
 
-## Frozen apparatus rule
+## Canonical predicate taxonomy
 
-The frozen experimental apparatus is the implementation tree at freeze commit `3510b86889cd341f7a7cf9ab684fd37b2fafd758`, with executor implementation `75a7f18`. Post-freeze verification must not modify experimental apparatus code. If a verification finding requires an apparatus change, the freeze is invalidated and a new freeze must be established after repair and re-verification.
+P1 Candidate integrity; P2 Execution contract; P3 Artifact contract; P4 Security/blinding integrity; P5 Provenance/reproducibility; P6 Durable evidence custody; P7 Scientific target specification; P8 Analysis lock; P9 Independent verification.
 
-## Acceptance evidence boundary
+Experimental-design integrity is covered by P5 + P7 and is not a tenth predicate. Authorization is a separate governance transition after freeze verification.
 
-The 360-observation acceptance run establishes execution-path fidelity, artifact production, provenance, and validation. It does not constitute empirical PDMAL evidence. Empirical N remains `0`.
+## Historical freeze boundary
 
-## Critical path
+`3510b86889cd341f7a7cf9ab684fd37b2fafd758` is historical evidence only. It must not be described as the current freeze of the corrected runner. If candidate verification requires apparatus changes, a new freeze must be created after repair and re-verification.
 
-1. Verify the locked Python 3.12.0 environment.
-2. Run the final one-seed smoke test against the frozen apparatus.
-3. Execute the remaining adversarial/security controls externally.
-4. Reconcile primary contrast, topology fingerprints, and durable retention.
-5. Freeze the analysis implementation/configuration SHA before unblinding.
-6. Produce the pre-authorization verification record.
-7. Obtain explicit pilot authorization.
-8. Execute the 50-seed pilot.
-9. Validate and lock raw data before unblinding.
-10. Perform formal unblinding and execute the frozen analysis.
+## Required next evidence events
 
-**No empirical execution is authorized by this state record.**
+1. Refresh PR #77 against current `main`.
+2. Run fresh candidate CI including the reconciled execution contract, security controls, schema tests, and contract mode.
+3. Verify the canonical artifact serializer/validator path on the refreshed candidate.
+4. Establish durable evidence custody and direct retrieval/hash verification.
+5. Restore/reconcile topology fingerprint provenance on the current candidate.
+6. Adjudicate the primary contrast and lock the analysis implementation/configuration.
+7. Evaluate P1–P8 from candidate-scoped evidence.
+8. Execute P9 independent verification.
+9. Create a new freeze and verify that new freeze.
+10. Obtain explicit pilot authorization.
+
+**No empirical execution is authorized by this record. N = 0.**
