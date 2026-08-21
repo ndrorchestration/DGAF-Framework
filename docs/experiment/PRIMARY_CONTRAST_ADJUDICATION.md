@@ -3,8 +3,8 @@ status: OPEN
 state: PRE-FREEZE
 authority: DGAF/PDMAL experimental-control
 owner: DGAF/PDMAL experimental-control
-last_verified: 2026-08-19
-applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
+last_verified: 2026-08-21
+applies_to_sha: 2824d4974567532f3a0579e15b63e9c860edac21
 ---
 
 # PDMAL Primary Contrast Adjudication
@@ -13,55 +13,50 @@ applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
 
 **OPEN / METHODOLOGICAL ADJUDICATION REQUIRED**
 
-This document records an unresolved methodological decision required before the PDMAL scalar-consensus experiment can be frozen. It does **not** select a primary contrast, authorize pilot execution, establish efficacy, or change the current empirical state.
+This document records an unresolved methodological decision required before the PDMAL scalar-consensus experiment can be frozen. It does not select a primary contrast, authorize pilot execution, establish efficacy, or change the current empirical state.
 
 ## Current protocol framework
 
-The current PDMAL pilot defines:
-
 - Primary endpoint: **FFCR**.
 - Statistical unit: one seed.
-- Seed-level effect: paired difference in condition-level FFCR according to the frozen aggregation rule.
-- Primary inference framework: the prespecified paired seed-level analysis and paired-bootstrap confidence interval.
+- Seed-level effect: paired difference in condition-level FFCR according to the approved aggregation rule.
+- Primary inference framework: seed-level paired analysis with paired-bootstrap confidence interval, subject to final adjudication.
 - Pilot matrix: 4 conditions × 5 topologies × 9 failure-count levels.
 - Planned seeds: 50.
 
-The primary contrast must be selected so that it is compatible with this current estimand and analysis framework.
+The primary contrast must be selected so that it is compatible with the final estimand, pairing structure, and multiplicity plan.
 
-## Historical contrast that must not be silently inherited
+## Historical contrast boundary
 
-An earlier PDMAL topology-comparison protocol identified **PDMAL vs Ring** as a primary structural comparison for a different endpoint/framework. That historical decision must not be silently promoted into the current scalar-consensus experiment because the current protocol uses FFCR and a different analysis framework.
+An earlier PDMAL topology-comparison protocol identified **PDMAL vs Ring** as a primary structural comparison for a different endpoint/framework. That decision must not be silently inherited into the current FFCR experiment.
 
-## Candidate primary contrasts for adjudication
+## Candidate contrasts
 
-The expert/statistical authority may consider, at minimum:
+1. `dgaf` vs `null` at the condition level.
+2. PDMAL topology vs Ring under a fixed condition with the current FFCR endpoint.
+3. A combined condition/topology contrast if scientifically justified and explicitly defined.
+4. Another prespecified contrast with explicit estimand, reference, direction, and multiplicity treatment.
 
-1. `dgaf` vs `null` at the condition level, aggregated according to the current FFCR estimand.
-2. PDMAL topology vs Ring topology under a fixed condition, with the current FFCR endpoint.
-3. A combined condition/topology contrast, if justified and explicitly defined under the current seed-level estimand.
-4. Another prespecified contrast, provided its estimand, reference condition, directionality, and multiplicity treatment are explicitly documented.
-
-These are **candidate options only**, not approved hypotheses or primary analyses.
+These are candidates only, not approved hypotheses.
 
 ## Required adjudication record
 
 Before freeze, the authoritative decision must specify:
 
 - chosen primary contrast;
-- treatment and reference definitions;
-- exact mathematical estimand;
+- treatment/reference definitions;
+- exact mathematical estimand and aggregation rule;
 - direction of improvement;
-- relationship to the seed-level pairing;
-- compatibility with the paired-bootstrap analysis;
+- relationship to seed-level pairing;
+- compatibility with paired-bootstrap inference;
 - secondary contrasts;
 - multiplicity treatment;
+- success and falsification criteria;
 - decision authority and date;
-- exact protocol/manifest SHA to which the decision applies.
+- exact protocol/manifest identity to which the decision applies.
 
 ## Freeze boundary
 
-The protocol must remain **PRE-FREEZE** until this methodological decision is explicitly adjudicated and incorporated into the freeze packet.
+The protocol remains **PRE-FREEZE** until this decision is explicitly adjudicated and incorporated into the freeze packet.
 
-Pilot authorization remains separate and is **NOT GRANTED** by this document.
-
-Empirical data remain `N = 0` until authorized pilot execution occurs.
+Pilot authorization remains separate and is **NOT GRANTED**. Empirical data remain `N = 0` until authorized pilot execution occurs.
