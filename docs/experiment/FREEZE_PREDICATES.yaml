@@ -1,0 +1,57 @@
+schema_version: "1.0"
+state: PRE-FREEZE
+self_authorizing: false
+authority_note: >-
+  Predicate status is derived from underlying Git, governance, evidence, and
+  verification records. This file is a declarative inventory, not an authority
+  that can make a predicate true.
+predicates:
+  - id: P1
+    name: candidate_integrity
+    status: PARTIAL
+    blocking: true
+  - id: P2
+    name: execution_contract
+    status: PARTIAL
+    blocking: true
+  - id: P3
+    name: artifact_contract
+    status: PARTIAL
+    blocking: true
+  - id: P4
+    name: security_blinding_integrity
+    status: PARTIAL
+    blocking: true
+  - id: P5
+    name: provenance_reproducibility
+    status: PARTIAL
+    blocking: true
+  - id: P6
+    name: durable_evidence_custody
+    status: OPEN
+    blocking: true
+  - id: P7
+    name: scientific_target_specification
+    status: PARTIAL
+    blocking: true
+  - id: P8
+    name: analysis_lock
+    status: OPEN
+    blocking: true
+  - id: P9
+    name: independent_verification
+    status: NOT_EXECUTED
+    blocking: true
+
+experimental_design_integrity:
+  disposition: FOLDED_INTO_P5_P7
+  blocking_as_separate_predicate: false
+
+authorization:
+  status: NOT_GRANTED
+  separate_governance_transition: true
+
+empirical_n: 0
+new_freeze_created: false
+historical_freeze_sha: 3510b86889cd341f7a7cf9ab684fd37b2fafd758
+current_main_sha: 23ab411d6113b3281f011f6891fb9335c7b6972e
