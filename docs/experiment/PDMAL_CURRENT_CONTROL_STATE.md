@@ -3,31 +3,30 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-21
-applies_to_sha: 23ab411d6113b3281f011f6891fb9335c7b6972e
+applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
 ---
 
 # PDMAL Current Control State
 
-This is the current pre-authorization gate record. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact tested SHA.
+This is the current pre-authorization gate record. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact tested SHA. This document describes the moving pre-freeze state and therefore does not pin a mutable main SHA.
 
 ## Current state
 
 | Control | State | Evidence / blocker |
 |---|---|---|
-| Current main | CURRENT | `23ab411d6113b3281f011f6891fb9335c7b6972e` |
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` |
-| Corrected runner | CANDIDATE | PR #77 lineage; candidate must be refreshed against current `main` |
+| Corrected runner | CANDIDATE | Exact-SHA gating and pilot artifact validation are now present on mainline; fresh candidate verification required |
 | Environment lock | VERIFY | Target Python 3.12.0, NumPy 2.5.1, NetworkX 3.6.1 |
-| Executor contract | PARTIAL | Test #5 reconciled; fresh CI still required |
-| Artifact contract | PARTIAL | Pilot schema exists; runtime validation wiring added on PR #77 branch; fresh candidate verification required |
-| Topology provenance | VERIFY | Current-source fingerprints require repository manifest restoration and candidate-scoped verification |
-| Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368`; historical operational evidence only |
-| Blinding custody | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935`; production key custody still requires operational evidence |
-| Security controls | VERIFY | Pre-authorization workflow exists on PR #77; CI execution required |
-| Durable retention | OPEN | Implementation/archive destination not yet established on current mainline |
+| Executor contract | PARTIAL | Stale test reconciled; fresh CI required |
+| Artifact contract | PARTIAL | Pilot schema and inline validator/sidecar checks present; fresh candidate verification required |
+| Topology provenance | VERIFY | Current-source fingerprint manifest restored; final candidate re-computation required |
+| Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical Run #14; non-empirical |
+| Blinding custody | CLOSED FOR SYNTHETIC VERIFICATION | Historical synthetic custody evidence; production key custody still requires operational evidence |
+| Security controls | VERIFY | Pre-authorization workflow/tests present; fresh CI required |
+| Durable retention | OPEN | Archive destination and direct retrieval/hash proof not established |
 | Primary contrast | OPEN / MUST CLOSE | Explicit methodological adjudication required |
 | Analysis implementation | OPEN | Exact implementation/configuration SHA required before unblinding |
-| New freeze | NOT CREATED | No corrected apparatus freeze exists |
+| New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | ZERO | No authorized pilot execution |
 
@@ -39,19 +38,18 @@ Experimental-design integrity is covered by P5 + P7 and is not a tenth predicate
 
 ## Historical freeze boundary
 
-`3510b86889cd341f7a7cf9ab684fd37b2fafd758` is historical evidence only. It must not be described as the current freeze of the corrected runner. If candidate verification requires apparatus changes, a new freeze must be created after repair and re-verification.
+`3510b86889cd341f7a7cf9ab684fd37b2fafd758` is historical evidence only. It must not be described as the current freeze of the corrected runner. If verification identifies a defect requiring an apparatus change, a new freeze must be established after repair and re-verification.
 
 ## Required next evidence events
 
-1. Refresh PR #77 against current `main`.
-2. Run fresh candidate CI including the reconciled execution contract, security controls, schema tests, and contract mode.
-3. Verify the canonical artifact serializer/validator path on the refreshed candidate.
-4. Establish durable evidence custody and direct retrieval/hash verification.
-5. Restore/reconcile topology fingerprint provenance on the current candidate.
-6. Adjudicate the primary contrast and lock the analysis implementation/configuration.
-7. Evaluate P1–P8 from candidate-scoped evidence.
-8. Execute P9 independent verification.
-9. Create a new freeze and verify that new freeze.
-10. Obtain explicit pilot authorization.
+1. Run fresh candidate CI and smoke/contract checks.
+2. Verify canonical artifact serialization and runtime validation.
+3. Establish durable evidence custody and direct retrieval/hash evidence.
+4. Reconcile topology fingerprints and environment identity on the exact candidate.
+5. Adjudicate the primary contrast and lock the analysis.
+6. Derive P1–P8 from candidate-scoped evidence.
+7. Execute P9 independent verification.
+8. Create and verify a new freeze.
+9. Obtain separate pilot authorization.
 
 **No empirical execution is authorized by this record. N = 0.**
