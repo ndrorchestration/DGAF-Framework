@@ -3,24 +3,24 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-21
-applies_to_sha: 526a106268cdd744e25a55de8c7384444f6ee72e
+applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
 ---
 
 # DGAF-Framework / PDMAL — Current State
 
-GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to the exact SHA/run that produced it.
+GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to the exact SHA/run that produced it. This document describes the moving pre-freeze state and therefore does not hard-code a mutable `main` SHA.
 
 ## Authoritative current state
 
 | Gate | Status | Evidence / note |
 |---|---|---|
-| Current main | CURRENT | `526a106268cdd744e25a55de8c7384444f6ee72e` |
+| Current main | CURRENT | Resolve from GitHub `main` at verification time |
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` retained unchanged as historical evidence |
-| Corrected pilot apparatus | CANDIDATE | PR #77 lineage; stale relative to current main and must be refreshed before freeze evaluation |
-| New freeze | NOT CREATED | No current freeze commit exists for the corrected apparatus |
+| Corrected pilot apparatus | CANDIDATE | Candidate now exists on mainline after engineering hardening; fresh candidate verification required |
+| New freeze | NOT CREATED | No corrected-apparatus freeze commit exists |
 | Protocol | PRE-FREEZE / BLOCKED | Primary contrast, analysis lock, retention, candidate verification, and freeze remain open |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
-| Empirical data | ZERO | Acceptance/characterization observations are non-empirical; pilot N remains 0 |
+| Empirical data | ZERO | No authorized pilot execution |
 
 ## Canonical predicates
 
@@ -42,16 +42,15 @@ Experimental-design integrity is covered by P5 + P7 and is not a separate tenth 
 
 ## Candidate boundary
 
-PR #77 currently points to `4983f44a1867d8ab2f18295a1ce23877ff8ea928`. Current main has advanced beyond the PR base and candidate, so the PR must be refreshed/rebased and re-verified before its code can be treated as the current candidate apparatus.
+PR #77 remains an historical engineering vehicle and requires refresh/reconciliation against the corrected mainline. The current mainline contains the corrected SHA-binding, artifact-validation, execution-contract, and security-workflow changes, but those changes are not yet freeze-verified.
 
 ## Required next evidence events
 
-- refresh PR #77 against current main;
-- execute fresh candidate CI, including execution-contract, security, schema, and contract-mode checks;
+- run fresh candidate CI and candidate-scoped smoke/contract checks;
 - verify canonical artifact serialization and runtime validation;
 - establish durable retention and direct retrieval/hash evidence;
 - reconcile topology fingerprints and environment identity on the exact candidate;
-- adjudicate the primary contrast and lock analysis;
+- adjudicate the primary contrast and lock the analysis;
 - derive P1–P8 from candidate-scoped evidence;
 - execute P9 independent verification;
 - create and verify a new freeze;
