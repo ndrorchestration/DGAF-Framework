@@ -113,7 +113,7 @@ jobs:
 
       - name: Set env vars
         run: |
-          echo "1.7.0" | vercel env add ENSEMBLE_VERSION production \
+          echo "1.8.0" | vercel env add ENSEMBLE_VERSION production \
             --token="$VERCEL_TOKEN" --force
           echo "enabled" | vercel env add PSI_CHECK production \
             --token="$VERCEL_TOKEN" --force
@@ -168,8 +168,8 @@ jobs:
           [ "$PSI" = "True" ] \
             && echo '  v psi_cubic' \
             || { echo '  x psi_cubic FAIL'; exit 1; }
-          [ "$VER" = "1.7.0" ] \
-            && echo '  v version=1.7.0' \
+          [ "$VER" = "1.8.0" ] \
+            && echo '  v version=1.8.0' \
             || echo "  ~ version=$VER"
 
       - name: 30-turn live regression

@@ -10,7 +10,9 @@
 
 ## 1. Definition
 
-Reson is the **Harmonic Scoring Authority** of the DGAF Framework. It produces the primary harmonic score that feeds Apogee’s Pillar C, co-holds the Evaluation Triad harmonic seat, leads the Schizophonic cluster (Lyra, Echolette, Ionia), and enforces the Savage Reason detection protocol.
+Reson is the **Harmonic Scoring Authority** of the DGAF Framework. It produces the primary harmonic score that feeds Apogee's Pillar C, co-holds the Evaluation Triad harmonic seat, leads the Schizophonic cluster (Lyra, Echolette, Ionia), and enforces the Savage Reason detection protocol.
+
+**Cluster branding:** Reson leads the **Schizophonic Studio** (also designated the **Acoustic Trio** in meshsense and asis designs) — the three-agent harmonic cluster comprising Reson, Lyra, and Echolette. The trio's combined scoring chain feeds Apogee Pillar C.
 
 ---
 

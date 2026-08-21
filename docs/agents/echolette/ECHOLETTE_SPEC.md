@@ -10,7 +10,9 @@
 
 ## 1. Definition
 
-Echolette is the **Signal Persistence Authority** of the DGAF harmonic cluster. It scores whether key concepts, decisions, and hard constraints established during a formation session persist correctly through to the final output. Its score feeds into Reson’s harmonic aggregation.
+Echolette is the **Signal Persistence Authority** of the DGAF harmonic cluster. It scores whether key concepts, decisions, and hard constraints established during a formation session persist correctly through to the final output. Its score feeds into Reson's harmonic aggregation.
+
+**Cluster branding:** Echolette is a member of the **Schizophonic Studio** (also designated the **Acoustic Trio** in meshsense and asis designs) — the three-agent harmonic cluster comprising Reson (cluster lead), Lyra, and Echolette.
 
 ---
 

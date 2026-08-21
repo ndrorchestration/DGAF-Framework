@@ -81,7 +81,7 @@ def run():
     with httpx.Client(timeout=TIMEOUT) as client:
         h = client.get(f"{BASE_URL}/api/health").json()
     assert h.get("psi_cubic") is True,  f"Health: psi_cubic not True — {h}"
-    assert h.get("version")   == "1.7.0", f"Health: version mismatch — {h}"
+    assert h.get("version")   == "1.8.0", f"Health: version mismatch — {h}"
     print(f"  ✓ health: psi_cubic=True  version={h['version']}  phi_star={h.get('phi_star')}")
     print("─" * 72)
 

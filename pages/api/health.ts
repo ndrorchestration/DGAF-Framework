@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 const PSI      = 1.4655712318767682
 const PHI      = (1 + Math.sqrt(5)) / 2
 const PHI_STAR = PHI - 1
-const VERSION  = process.env.ENSEMBLE_VERSION ?? '1.7.0'
+const VERSION  = process.env.ENSEMBLE_VERSION ?? '1.8.0'
 const PSI_ON   = (process.env.PSI_CHECK ?? 'enabled').toLowerCase() === 'enabled'
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
