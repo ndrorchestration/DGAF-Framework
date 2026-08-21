@@ -2,9 +2,9 @@
 
 ## Current disposition
 
-**BLOCKED / NOT AUTHORIZED**
+### BLOCKED / NOT AUTHORIZED
 
-This record is the consolidated closure checklist for the corrected pilot apparatus. It deliberately distinguishes verified engineering properties from items that require execution evidence or human methodological/governance decisions.
+This record is the consolidated closure checklist for the corrected pilot apparatus. It distinguishes verified engineering properties from items requiring execution evidence or human methodological/governance decisions.
 
 ## Historical evidence boundary
 
@@ -55,7 +55,7 @@ The repository-local planning utility specifies a paired-difference normal appro
 
 ## Analysis control
 
-The repository contains the planning utility but the previously reported external analysis-plan and pipeline documents were not located at their expected repository paths during the audit. Exact authoritative paths/SHAs must be established before unblinding. The analysis implementation and configuration must be frozen before unblinding.
+The repository contains the planning utility, but the previously reported external analysis-plan and pipeline documents were not located at their expected repository paths during the audit. Exact authoritative paths/SHAs must be established before unblinding. The analysis implementation and configuration must be frozen before unblinding.
 
 ## Authorization rule
 
