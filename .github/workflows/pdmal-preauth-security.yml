@@ -24,10 +24,15 @@ jobs:
       - name: Install locked dependencies
         run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
       - name: Run adversarial controls
+        env:
+          PYTHONPATH: experiments/pdmal_pilot
         run: python -m pytest experiments/pdmal_pilot/test_security_controls.py -q
       - name: Run pilot artifact schema tests
+        env:
+          PYTHONPATH: experiments/pdmal_pilot
         run: python -m pytest experiments/pdmal_pilot/test_artifact_schema.py -q
       - name: Verify contract mode remains non-empirical
         env:
           PDMAL_MODE: contract
-        run: python -m experiments.pdmal_pilot.run_pilot --seeds 2
+          PYTHONPATH: experiments/pdmal_pilot
+        run: python experiments/pdmal_pilot/run_pilot.py --seeds 2
