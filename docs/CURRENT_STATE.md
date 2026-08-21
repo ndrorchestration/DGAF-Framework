@@ -1,72 +1,64 @@
 ---
 status: ACTIVE
- authority: Both
+authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-20
-applies_to_sha: 3510b86889cd341f7a7cf9ab684fd37b2fafd758
+last_verified: 2026-08-21
+applies_to_sha: 23ab411d6113b3281f011f6891fb9335c7b6972e
 ---
 
 # DGAF-Framework / PDMAL — Current State
 
-This is the concise operational snapshot. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact executed SHA. The frozen experimental apparatus is bound to freeze commit `3510b86889cd341f7a7cf9ab684fd37b2fafd758`; subsequent documentation-only commits do not modify or redefine that frozen apparatus.
+GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to the exact SHA/run that produced it.
 
-## Current authoritative state
+## Authoritative current state
 
 | Gate | Status | Evidence / note |
 |---|---|---|
-| PR #75 | MERGED | `a44e42cd3040a822656e724c8b47aa02221baf3f` |
-| Executor implementation | CLOSED | `75a7f18c2d5268075e6fc8064eb9a79018845da0`; `run_pilot.py` invokes `ConsensusTask` |
-| Executor acceptance | CLOSED | 2 seeds × 180 trials = 360 acceptance observations; all SUCCESS; N remains 0 |
-| Freeze | CLOSED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` |
-| Frozen apparatus | VERIFIED | Exact executor/component SHAs recorded in `FREEZE_MANIFEST.md` |
-| Blinding operational verification | CLOSED / PASS | Run `32113226935`; synthetic custody verification only |
-| Runtime characterization | VERIFIED FOR CHARACTERIZATION | Run `32112658368`; artifact `9315467977`; 300s ceiling characterized |
-| Environment | VERIFY | Frozen lock specifies Python 3.12.0, NumPy 2.5.1, NetworkX 3.6.1; current dev environment may differ |
-| Security adversarial suite | FINAL VERIFICATION | Security report controls should be executable tests against the frozen apparatus; no apparatus modification after freeze |
-| Primary contrast | MUST BE CLOSED BEFORE PILOT | Must be explicitly adjudicated before authorization/execution |
-| Topology fingerprints | VERIFY / RECONCILE | Fingerprint provenance exists; final frozen values must be checked against the freeze manifest and protocol |
-| Durable retention | VERIFY / RECONCILE | Retention policy exists; pilot archive location and checksum procedure must be directly verified |
-| Analysis implementation | MUST BE FROZEN BEFORE UNBLINDING | Statistical plan exists; implementation/configuration SHA must be recorded before unblinding |
-| Pilot authorization | NOT GRANTED | Separate governance decision after pre-authorization verification |
-| Empirical data | 0 | Acceptance/characterization observations are not pilot data |
+| Current main | CURRENT | `23ab411d6113b3281f011f6891fb9335c7b6972e` (v1.8.0 pre-authorization hardening release) |
+| Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` retained unchanged as historical evidence |
+| Corrected pilot apparatus | CANDIDATE | PR #77 lineage; candidate must be refreshed against current `main` before any freeze evaluation |
+| New freeze | NOT CREATED | No current freeze commit exists for the corrected apparatus |
+| Protocol | PRE-FREEZE / BLOCKED | Primary contrast, analysis lock, retention, candidate verification, and freeze remain open |
+| Pilot authorization | NOT GRANTED | Separate governance decision |
+| Empirical data | ZERO | Acceptance/characterization observations are non-empirical; pilot N remains 0 |
 
-## Frozen apparatus boundary
+## Canonical pre-freeze predicates
 
-Freeze commit: `3510b86889cd341f7a7cf9ab684fd37b2fafd758`.
+1. Candidate integrity — PARTIAL
+2. Execution contract — PARTIAL
+3. Artifact contract — PARTIAL
+4. Security / blinding integrity — PARTIAL
+5. Provenance / reproducibility — PARTIAL
+6. Durable evidence custody — OPEN
+7. Scientific target specification — PARTIAL / primary contrast OPEN
+8. Analysis lock — OPEN
+9. Independent verification — NOT YET EXECUTED
 
-Executor implementation: `75a7f18c2d5268075e6fc8064eb9a79018845da0`.
+All nine are required to be supported by candidate-scoped evidence before a new freeze is eligible.
 
-Post-freeze rule: do not modify the experimental apparatus. Verification tests may be added/run externally. If verification identifies an apparatus defect requiring code changes, the freeze must be invalidated and a new freeze created after repair and re-verification.
+## Historical boundary
 
-## Pilot matrix
+`3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical implementation freeze. It must not be described as the current freeze of the corrected pilot apparatus. Any apparatus change that requires a new freeze must produce a new immutable freeze commit.
 
-```text
-Conditions:      null, simple, static, dgaf
-Topologies:      ring, pdmal, random_regular, small_world, complete
-Failure counts:  0, 1, 2, 3, 4, 5, 6, 8, 10
-Trials/seed:     180
-Pilot seeds:     50
-Expected pilot records: 9,000
-Out of scope:    dgaf_pdmal
-```
+## Candidate branch boundary
 
-## Evidence boundary
+PR #77 currently points to `4983f44a1867d8ab2f18295a1ce23877ff8ea928` and is open/draft. Current `main` has since advanced to `23ab411d6113b3281f011f6891fb9335c7b6972e`; therefore PR #77 must be refreshed/rebased and re-verified before its changes can be treated as the current candidate apparatus.
 
-The 360-observation executor acceptance run demonstrates that the frozen task path can execute and produce valid artifacts. It does not establish PDMAL efficacy. Empirical N remains `0` until an explicitly authorized pilot is executed.
+## Experimental design boundary
 
-Runtime characterization and blinding evidence remain scoped to their exact workflow runs and artifacts. They are operational/governance evidence, not efficacy evidence.
+The pilot matrix remains 4 conditions × 5 topologies × 9 failure-count levels = 180 trials per seed, 50 planned seeds, 9,000 planned raw trial records. Experimental-design integrity is covered by the provenance/reproducibility and scientific-target predicates; it is not a separate tenth gate.
 
-## Immediate next actions
+## Required next evidence events
 
-1. Complete environment verification in the locked Python 3.12.0 environment.
-2. Run the final one-seed smoke test against the frozen apparatus.
-3. Formalize and execute the remaining security/adversarial tests without modifying frozen experimental code.
-4. Reconcile primary contrast, topology fingerprints, and durable-retention controls against the frozen manifest/protocol.
-5. Freeze the statistical analysis implementation/configuration SHA before unblinding.
-6. Produce the pre-authorization verification record.
-7. Obtain explicit pilot authorization.
-8. Execute the 50-seed pilot only after authorization.
-9. Validate and lock raw data before unblinding.
-10. Perform formal unblinding, then execute the frozen analysis.
+- refresh the corrected candidate against current `main`;
+- reconcile stale tests and workflow permissions;
+- wire the canonical pilot artifact validator into the runtime write path;
+- reconcile canonical serialization/hash computation;
+- establish durable retention implementation and archive destination;
+- adjudicate the primary contrast and complete the analysis lock;
+- execute fresh CI and candidate-scoped operational checks;
+- perform independent verification;
+- only then create and verify a new freeze;
+- obtain separate pilot authorization.
 
-**Empirical data remains 0. No pilot authorization is currently granted.**
+**No empirical pilot execution is authorized. Empirical N remains 0.**
