@@ -12,8 +12,11 @@ jobs:
     permissions:
       contents: read
     env:
-      P2_BASE_URL: https://dynamicgovernanceagenticformation-dp3baqm9p-ndrorchestration.vercel.app
-      EXPECTED_COMMIT: e1f077fec746acd6066db689ef40db000e027f2f
+      # Candidate-bound runtime verification. Update these together with every
+      # candidate deployment; never reuse historical runtime evidence.
+      P2_BASE_URL: https://dynamicgovernanceagenticformation-8j8u5mw2f-ndrorchestration.vercel.app
+      EXPECTED_COMMIT: 94fb6fdff64f2919d35938c5b1cb506625cf1139
+      EXPECTED_DEPLOYMENT_ID: dpl_G5uLJy8gibitJ6xRbQNfn3PYVm5F
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
     steps:
       - name: Verify bypass secret is available
@@ -96,6 +99,7 @@ jobs:
 
           out = {
               'source_commit': os.environ['EXPECTED_COMMIT'],
+              'deployment_id': os.environ['EXPECTED_DEPLOYMENT_ID'],
               'deployment_url': base,
               'endpoint': endpoint,
               'timestamp_epoch': time.time(),
@@ -113,7 +117,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: p2-runtime-verification-e1f077f
+          name: p2-runtime-verification-94fb6fd
           path: p2-runtime-verification.json
           if-no-files-found: error
           retention-days: 14
