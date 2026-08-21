@@ -2,8 +2,19 @@ name: P2 Live Runtime Verification
 
 on:
   workflow_dispatch:
-  push:
-  pull_request:
+    inputs:
+      candidate_sha:
+        description: 'Exact Git SHA of the candidate being verified'
+        required: true
+        type: string
+      deployment_id:
+        description: 'Exact Vercel deployment ID for candidate_sha'
+        required: true
+        type: string
+      base_url:
+        description: 'Exact deployment URL for deployment_id'
+        required: true
+        type: string
 
 jobs:
   p2-runtime:
@@ -12,13 +23,18 @@ jobs:
     permissions:
       contents: read
     env:
-      # Candidate-bound runtime verification. Update these together with every
-      # candidate deployment; never reuse historical runtime evidence.
-      P2_BASE_URL: https://dynamicgovernanceagenticformation-8j8u5mw2f-ndrorchestration.vercel.app
-      EXPECTED_COMMIT: 94fb6fdff64f2919d35938c5b1cb506625cf1139
-      EXPECTED_DEPLOYMENT_ID: dpl_G5uLJy8gibitJ6xRbQNfn3PYVm5F
+      CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+      EXPECTED_DEPLOYMENT_ID: ${{ inputs.deployment_id }}
+      P2_BASE_URL: ${{ inputs.base_url }}
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
     steps:
+      - name: Verify candidate identity
+        run: |
+          test "${#CANDIDATE_SHA}" -eq 40
+          echo "$CANDIDATE_SHA" | grep -Eq '^[0-9a-f]{40}$'
+          test -n "$EXPECTED_DEPLOYMENT_ID"
+          test -n "$P2_BASE_URL"
+
       - name: Verify bypass secret is available
         run: |
           if [ -z "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
@@ -27,7 +43,7 @@ jobs:
           fi
           echo "Vercel automation bypass secret is present (value withheld)."
 
-      - name: Verify live deployment provenance and execute five-case matrix
+      - name: Execute five-case runtime matrix
         run: |
           python - <<'PY'
           import json, os, time, urllib.error, urllib.request
@@ -49,75 +65,42 @@ jobs:
               ('invalid_turn', b'{"mandate":"P2 live verification","turn":-1}'),
               ('malformed_json', b'{'),
           ]
-
           results = []
           for name, payload in cases:
-              req = urllib.request.Request(
-                  endpoint,
-                  data=payload,
-                  method='POST',
-                  headers={
-                      'Content-Type': 'application/json',
-                      'Accept': 'application/json',
-                      'x-vercel-protection-bypass': bypass,
-                  },
-              )
+              req = urllib.request.Request(endpoint, data=payload, method='POST', headers={
+                  'Content-Type': 'application/json', 'Accept': 'application/json',
+                  'x-vercel-protection-bypass': bypass,
+              })
               started = time.time()
               try:
                   with urllib.request.urlopen(req, timeout=20) as r:
-                      status = r.status
-                      body = r.read().decode('utf-8', 'replace')
+                      status = r.status; body = r.read().decode('utf-8', 'replace')
               except urllib.error.HTTPError as e:
-                  status = e.code
-                  body = e.read().decode('utf-8', 'replace')
-              elapsed = time.time() - started
-              try:
-                  parsed = json.loads(body)
-              except json.JSONDecodeError:
-                  parsed = None
-
+                  status = e.code; body = e.read().decode('utf-8', 'replace')
+              try: parsed = json.loads(body)
+              except json.JSONDecodeError: parsed = None
               decision = parsed.get('decision') if isinstance(parsed, dict) else None
-              evidence_status = None
-              if isinstance(parsed, dict) and isinstance(parsed.get('evidence'), dict):
-                  evidence_status = parsed['evidence'].get('status')
-
+              evidence_status = parsed.get('evidence', {}).get('status') if isinstance(parsed, dict) and isinstance(parsed.get('evidence'), dict) else None
               exp_status, exp_decision = expected[name]
               passed = status == exp_status and decision == exp_decision
-              row = {
-                  'case': name,
-                  'expected_http': exp_status,
-                  'expected_decision': exp_decision,
-                  'actual_http': status,
-                  'actual_decision': decision,
-                  'evidence_status': evidence_status,
-                  'elapsed_seconds': round(elapsed, 3),
-                  'response_body': parsed if parsed is not None else body,
-                  'pass': passed,
-              }
-              print(json.dumps(row, sort_keys=True))
-              results.append(row)
-
-          out = {
-              'source_commit': os.environ['EXPECTED_COMMIT'],
-              'deployment_id': os.environ['EXPECTED_DEPLOYMENT_ID'],
-              'deployment_url': base,
-              'endpoint': endpoint,
-              'timestamp_epoch': time.time(),
-              'cases': results,
-              'all_pass': all(r['pass'] for r in results),
-              'spec_revision': 'P2-2026-08-18-runtime-contract-v2',
-          }
-          with open('p2-runtime-verification.json', 'w', encoding='utf-8') as f:
-              json.dump(out, f, indent=2, sort_keys=True)
-          if not out['all_pass']:
-              raise SystemExit(1)
+              results.append({'case': name, 'expected_http': exp_status, 'expected_decision': exp_decision,
+                              'actual_http': status, 'actual_decision': decision, 'evidence_status': evidence_status,
+                              'elapsed_seconds': round(time.time() - started, 3), 'pass': passed,
+                              'response_body': parsed if parsed is not None else body})
+              print(json.dumps(results[-1], sort_keys=True))
+          out = {'evidence_class': 'P2_RUNTIME_EXECUTION', 'source_commit': os.environ['CANDIDATE_SHA'],
+                 'deployment_id': os.environ['EXPECTED_DEPLOYMENT_ID'], 'deployment_url': base, 'endpoint': endpoint,
+                 'timestamp_epoch': time.time(), 'cases': results, 'all_pass': all(r['pass'] for r in results),
+                 'spec_revision': 'P2-2026-08-18-runtime-contract-v2'}
+          with open('p2-runtime-verification.json', 'w', encoding='utf-8') as f: json.dump(out, f, indent=2, sort_keys=True)
+          if not out['all_pass']: raise SystemExit(1)
           PY
 
       - name: Upload P2 provenance
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: p2-runtime-verification-94fb6fd
+          name: p2-runtime-verification-${{ inputs.candidate_sha }}
           path: p2-runtime-verification.json
           if-no-files-found: error
           retention-days: 14
