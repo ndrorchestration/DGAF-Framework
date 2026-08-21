@@ -7,7 +7,7 @@ authority: Both
 owner: DGAF/PDMAL experimental-control
 last_verified: 2026-08-21
 historical_freeze_sha: 3510b86889cd341f7a7cf9ab684fd37b2fafd758
-candidate_sha: TBD — refreshed candidate required
+candidate_sha: CURRENT_MAIN_CANDIDATE_AT_VERIFICATION
 freeze_commit_sha: NONE
 freeze_timestamp_utc: NONE
 freeze_author: Ndr Orchestration
@@ -15,15 +15,15 @@ freeze_author: Ndr Orchestration
 
 ## State boundary
 
-This file is the **pre-freeze manifest**, not evidence that the corrected apparatus is frozen. The historical implementation freeze at `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is retained as historical evidence and is superseded for the corrected pilot apparatus.
+This file is the **pre-freeze manifest**. It is not evidence that the corrected apparatus is frozen. The historical implementation freeze at `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is retained as historical evidence and is superseded for the corrected pilot apparatus.
 
-A new freeze commit must be created only after the blocking predicates are satisfied and independently verified. No value in this file authorizes pilot execution.
+A new freeze commit may be created only after the blocking predicates are satisfied and independently verified. No value in this file authorizes pilot execution.
 
-## Current repository identity
+## Current candidate identity
 
-- Current `main`: `23ab411d6113b3281f011f6891fb9335c7b6972e`
-- PR #77 candidate: `4983f44a1867d8ab2f18295a1ce23877ff8ea928` before refresh
-- Candidate relationship: PR #77 is stale relative to current `main` and must be refreshed/re-verified.
+The candidate is the current mainline tree at the time of the freeze-readiness evaluation. A final freeze packet must replace `CURRENT_MAIN_CANDIDATE_AT_VERIFICATION` with the exact immutable Git SHA of the tree being frozen.
+
+PR #77 remains a historical engineering vehicle; its earlier head must not be treated as the current freeze candidate without refresh/re-verification.
 
 ## Experimental design
 
@@ -39,7 +39,7 @@ A new freeze commit must be created only after the blocking predicates are satis
 
 ## Candidate provenance requirements
 
-The future freeze manifest must record the exact candidate SHA and the exact blob/file identities for:
+The future freeze manifest must record exact immutable identities for:
 
 - experiment protocol and task specification;
 - pilot runner and executor;
@@ -68,18 +68,15 @@ The future freeze manifest must record the exact candidate SHA and the exact blo
 
 Experimental-design integrity is covered by P5 + P7. Authorization is a separate governance transition after freeze verification.
 
-## Historical evidence
-
-Historical characterization and acceptance evidence remains scoped to its exact runs and SHAs. It does not transfer automatically to the corrected candidate and does not constitute empirical efficacy evidence.
-
 ## Promotion rule
 
-This manifest may be promoted to a true frozen manifest only when:
+A true frozen manifest requires:
 
-1. P1–P8 are supported by candidate-scoped evidence;
-2. P9 independently verifies the required evidence chain;
-3. the resulting candidate SHA is committed and recorded here;
-4. the protocol, analysis, retention, blinding, and provenance state are internally coherent;
-5. a separate authorization decision is still required after freeze verification.
+1. P1–P8 supported by candidate-scoped evidence;
+2. P9 independently verifies the evidence chain;
+3. the exact candidate SHA is committed and recorded;
+4. protocol, analysis, retention, blinding, and provenance state are internally coherent;
+5. freeze verification succeeds;
+6. authorization remains a separate decision.
 
 **Pilot authorization: NOT GRANTED. Empirical N: 0.**
