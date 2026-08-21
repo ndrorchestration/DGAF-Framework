@@ -139,6 +139,7 @@ def run_contract(output_dir: Path) -> int:
 def run_pilot(output_dir: Path, seeds: int) -> int:
     frozen_sha = require_frozen_commit()
     blinding_key = require_pilot_authorization()
+    os.environ.pop("PDMAL_BLINDING_KEY", None)
     if seeds < 1:
         raise SystemExit("--seeds must be >= 1")
 
@@ -154,11 +155,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
 
         for trial_idx, (topology, condition, failure_count) in enumerate(combinations):
             trial_start = monotonic()
-            task = ConsensusTask(
-                topology=topology,
-                failure_count=failure_count,
-                condition=condition,
-            )
+            task = ConsensusTask(topology=topology, failure_count=failure_count, condition=condition)
             try:
                 result = task.run_detailed(seed=seed, attempt=1)
                 status = result.attempt_status
@@ -180,9 +177,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "topology_fingerprint": (
                     result.topology_fingerprint
                     if result
-                    else graph_fingerprint(
-                        generate_topology(topology, streams["topology_construction"])
-                    )
+                    else graph_fingerprint(generate_topology(topology, streams["topology_construction"]))
                 ),
                 "iterations_completed": result.iterations_completed if result else 0,
                 "attempt_status": status.value,
@@ -197,11 +192,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "trial_id": trial_idx,
                 "primary_outcome": raw_trial["final_std"],
                 "secondary_outcomes": {
-                    "final_mean": (
-                        float(np.mean(raw_trial["final_values"]))
-                        if raw_trial["final_values"]
-                        else 0.0
-                    ),
+                    "final_mean": float(np.mean(raw_trial["final_values"])) if raw_trial["final_values"] else 0.0,
                     "topology": topology,
                     "failure_count": failure_count,
                 },
@@ -220,9 +211,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
 
         elapsed = monotonic() - seed_start
         if elapsed > SEED_RUNTIME_CEILING_SECONDS:
-            raise SystemExit(
-                f"pilot execution prohibited: seed {seed} exceeded runtime ceiling ({elapsed:.3f}s)"
-            )
+            raise SystemExit(f"pilot execution prohibited: seed {seed} exceeded runtime ceiling ({elapsed:.3f}s)")
 
         document = {
             "schema_version": "1.0",
