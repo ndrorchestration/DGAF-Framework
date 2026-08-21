@@ -3,7 +3,7 @@
 
 Pilot execution requires protocol freeze, explicit authorization, an exact
 frozen git SHA, and an out-of-band blinding key. Pilot artifacts contain only
-blinded condition identifiers.
+blinded condition identifiers and are validated before the write is accepted.
 """
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ from harness_contract import (
     generate_topology,
     make_streams,
 )
+from pilot_artifact_schema import canonical_json_bytes, validate_artifact, verify_sidecar
 from task_engine import (
     AttemptStatus,
     CONDITION_VALUES,
@@ -108,11 +109,21 @@ def _environment_fingerprint() -> str:
     ).hexdigest()
 
 
-def _write_sidecar(path: Path) -> None:
+def _write_sidecar(path: Path) -> str:
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
-    path.with_suffix(path.suffix + ".sha256").write_text(
-        f"{digest}  {path.name}\n", encoding="utf-8"
-    )
+    sidecar = f"{digest}  {path.name}\n"
+    path.with_suffix(path.suffix + ".sha256").write_text(sidecar, encoding="utf-8")
+    return sidecar
+
+
+def _write_and_validate_artifact(path: Path, document: dict, expected_seed: int) -> None:
+    raw = canonical_json_bytes(document)
+    path.write_bytes(raw)
+    sidecar = _write_sidecar(path)
+
+    # Enforce the same contract at runtime that CI independently tests.
+    validate_artifact(document, expected_seed=expected_seed)
+    verify_sidecar(raw, sidecar, path.name)
 
 
 def run_contract(output_dir: Path) -> int:
@@ -204,9 +215,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "exclusion_reason": None,
                 "environment_fingerprint": environment_fingerprint,
             }
-            record["artifact_sha256"] = hashlib.sha256(
-                (json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n").encode()
-            ).hexdigest()
+            record["artifact_sha256"] = hashlib.sha256(canonical_json_bytes(record)).hexdigest()
             records.append(record)
 
         elapsed = monotonic() - seed_start
@@ -224,8 +233,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
             "records": records,
         }
         path = output_dir / f"pilot_seed_{seed}.json"
-        path.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        _write_sidecar(path)
+        _write_and_validate_artifact(path, document, expected_seed=seed)
 
     summary = {
         "schema_version": "1.0",
@@ -239,7 +247,8 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
         "environment_fingerprint": environment_fingerprint,
     }
     summary_path = output_dir / "pilot_summary.json"
-    summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    raw_summary = canonical_json_bytes(summary)
+    summary_path.write_bytes(raw_summary)
     _write_sidecar(summary_path)
     print(f"PILOT_MODE_COMPLETE: {seeds} seeds; {seeds * len(combinations)} observations")
     return 0
