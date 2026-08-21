@@ -1,0 +1,28 @@
+name: Full Repository Coverage Audit
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  full-repo-audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run exhaustive tracked-file audit
+        run: python scripts/full_repo_audit.py
+
+      - name: Upload complete coverage manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-repo-audit-${{ github.sha }}
+          path: full_repo_audit.json
+          if-no-files-found: error
+          retention-days: 30
