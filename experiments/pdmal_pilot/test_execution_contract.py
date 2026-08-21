@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from deviations import DeviationRegister
@@ -33,12 +31,22 @@ def test_pilot_mode_fails_closed_without_freeze_and_authorization(monkeypatch):
         main(["--seeds", "50"])
 
 
-def test_pilot_mode_fails_closed_even_when_flags_are_present(monkeypatch):
+def test_pilot_mode_requires_explicit_precondition_before_executor(monkeypatch):
     monkeypatch.setenv("PDMAL_MODE", "pilot")
     monkeypatch.setenv("PDMAL_PROTOCOL_FROZEN", "1")
     monkeypatch.setenv("PDMAL_PILOT_AUTHORIZED", "1")
-    with pytest.raises(SystemExit, match="real experimental task executor is not implemented"):
+    # Current mainline runner requires the exact freeze gate before execution.
+    # A deliberately wrong SHA must fail closed before any executor work.
+    monkeypatch.setenv("PDMAL_FROZEN_COMMIT_SHA", "0" * 40)
+    with pytest.raises(SystemExit, match="PDMAL_FROZEN_COMMIT_SHA|frozen SHA"):
         main(["--seeds", "50"])
+
+
+def test_pilot_executor_path_is_present():
+    import run_pilot
+
+    assert hasattr(run_pilot, "ConsensusTask")
+    assert run_pilot.ConsensusTask.__name__ == "ConsensusTask"
 
 
 def test_sample_size_reference_case():
