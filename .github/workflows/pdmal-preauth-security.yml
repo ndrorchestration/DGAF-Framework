@@ -13,6 +13,9 @@ on:
       - 'docs/experiment/**'
       - '.github/workflows/pdmal-preauth-security.yml'
 
+permissions:
+  contents: read
+
 jobs:
   security-and-schema:
     runs-on: ubuntu-latest
