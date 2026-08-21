@@ -12,7 +12,7 @@ The historical implementation freeze `3510b86889cd341f7a7cf9ab684fd37b2fafd758` 
 
 The repository is currently in documentation, provenance, and verification closure. The required execution events are candidate-bound tests, runtime verification, durable evidence custody, primary-contrast adjudication, analysis lock, and independent verification. Documentation changes do not themselves advance those gates.
 
-For the authoritative gate board and remaining sequence, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md).
+For the authoritative gate board and remaining sequence, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the documentation temporal-boundary policy, see [`docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md`](docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md).
 
 ## Repository scope
 
@@ -56,11 +56,13 @@ A mathematical term, external framework name, benchmark number, deployment, or a
 7. [PDMAL Experiment Protocol](docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md)
 8. [Freeze Manifest Template](docs/experiment/FREEZE_MANIFEST_TEMPLATE.md)
 9. [Propagation Consistency Control](docs/governance/PROPAGATION_CONSISTENCY_CONTROL.md)
-10. [Test Execution Readiness](docs/governance/TEST_EXECUTION_READINESS_2026-08-21.md)
-11. [P3–P6 Freeze Readiness](docs/governance/P3_P4_P5_P6_FREEZE_READINESS_2026-08-21.md)
-12. [P7 Primary Contrast Adjudication](docs/governance/P7_PRIMARY_CONTRAST_ADJUDICATION_PACKET_2026-08-21.md)
-13. [Candidate Runtime Verification](docs/governance/CANDIDATE_RUNTIME_VERIFICATION_2026-08-21.md)
-14. [Freeze Packet Template](docs/governance/FREEZE_PACKET_TEMPLATE.md)
+10. [Documentation Reconciliation](docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md)
+11. [Test Execution Readiness](docs/governance/TEST_EXECUTION_READINESS_2026-08-21.md)
+12. [P3–P6 Freeze Readiness](docs/governance/P3_P4_P5_P6_FREEZE_READINESS_2026-08-21.md)
+13. [P7 Primary Contrast Adjudication](docs/governance/P7_PRIMARY_CONTRAST_ADJUDICATION_PACKET_2026-08-21.md)
+14. [Candidate Runtime Verification](docs/governance/CANDIDATE_RUNTIME_VERIFICATION_2026-08-21.md)
+15. [NDR Research Program Charter — Current Status Addendum](docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_CURRENT_STATUS_2026-08-21.md)
+16. [Freeze Packet Template](docs/governance/FREEZE_PACKET_TEMPLATE.md)
 
 ## Verification and test status
 
