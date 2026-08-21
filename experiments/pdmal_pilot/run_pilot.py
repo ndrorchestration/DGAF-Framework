@@ -2,8 +2,9 @@
 """Fail-closed PDMAL pilot runner.
 
 Pilot execution requires protocol freeze, explicit authorization, an exact
-frozen git SHA, and an out-of-band blinding key. Pilot artifacts contain only
-blinded condition identifiers and are validated before the write is accepted.
+frozen git SHA, an out-of-band blinding key, and a configured durable archive.
+Pilot artifacts contain only blinded condition identifiers and are validated
+before the write is accepted.
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ from time import monotonic
 
 import numpy as np
 
+from durable_retention import archive_artifact, require_archive_root
 from harness_contract import (
     TOPOLOGY_SPECS,
     deterministic_contract_run,
@@ -75,7 +77,7 @@ def require_frozen_commit() -> str:
     return actual
 
 
-def require_pilot_authorization() -> str:
+def require_pilot_authorization() -> tuple[str, Path]:
     if os.getenv("PDMAL_PROTOCOL_FROZEN") != "1":
         raise SystemExit("pilot execution prohibited: PDMAL_PROTOCOL_FROZEN=1 is required")
     if os.getenv("PDMAL_PILOT_AUTHORIZED") != "1":
@@ -83,7 +85,11 @@ def require_pilot_authorization() -> str:
     key = os.getenv("PDMAL_BLINDING_KEY", "")
     if not key:
         raise SystemExit("pilot execution prohibited: PDMAL_BLINDING_KEY must be supplied out-of-band")
-    return key
+    try:
+        archive_root = require_archive_root()
+    except RuntimeError as exc:
+        raise SystemExit(f"pilot execution prohibited: {exc}") from exc
+    return key, archive_root
 
 
 def blind_condition(condition: str, key: str) -> str:
@@ -124,6 +130,15 @@ def _write_and_validate_artifact(path: Path, document: dict, expected_seed: int)
     verify_sidecar(raw, sidecar, path.name)
 
 
+def _retain(path: Path, archive_root: Path, frozen_sha: str, *, kind: str) -> None:
+    archive_artifact(
+        path,
+        archive_root=archive_root,
+        freeze_sha=frozen_sha,
+        metadata={"artifact_kind": kind},
+    )
+
+
 def run_contract(output_dir: Path) -> int:
     key = b"contract-only-test-key-000000000000000000"
     for seed in CONTRACT_ROOT_SEEDS:
@@ -147,7 +162,7 @@ def run_contract(output_dir: Path) -> int:
 
 def run_pilot(output_dir: Path, seeds: int) -> int:
     frozen_sha = require_frozen_commit()
-    blinding_key = require_pilot_authorization()
+    blinding_key, archive_root = require_pilot_authorization()
     os.environ.pop("PDMAL_BLINDING_KEY", None)
     if seeds < 1:
         raise SystemExit("--seeds must be >= 1")
@@ -232,6 +247,8 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
         }
         path = output_dir / f"pilot_seed_{seed}.json"
         _write_and_validate_artifact(path, document, expected_seed=seed)
+        _retain(path, archive_root, frozen_sha, kind="pilot_seed")
+        _retain(path.with_suffix(path.suffix + ".sha256"), archive_root, frozen_sha, kind="pilot_seed_sidecar")
 
     summary = {
         "schema_version": "1.0",
@@ -248,6 +265,8 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
     raw_summary = canonical_json_bytes(summary)
     summary_path.write_bytes(raw_summary)
     _write_sidecar(summary_path)
+    _retain(summary_path, archive_root, frozen_sha, kind="pilot_summary")
+    _retain(summary_path.with_suffix(summary_path.suffix + ".sha256"), archive_root, frozen_sha, kind="pilot_summary_sidecar")
     print(f"PILOT_MODE_COMPLETE: {seeds} seeds; {seeds * len(combinations)} observations")
     return 0
 
