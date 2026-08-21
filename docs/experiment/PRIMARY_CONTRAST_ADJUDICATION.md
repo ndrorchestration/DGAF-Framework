@@ -4,7 +4,7 @@ state: PRE-FREEZE
 authority: DGAF/PDMAL experimental-control
 owner: DGAF/PDMAL experimental-control
 last_verified: 2026-08-21
-applies_to_sha: 2824d4974567532f3a0579e15b63e9c860edac21
+applies_to_sha: CURRENT_PROTOCOL_AND_MAIN_AT_ADJUDICATION
 ---
 
 # PDMAL Primary Contrast Adjudication
