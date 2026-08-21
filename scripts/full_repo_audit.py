@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Full tracked-file repository coverage and consistency audit.
 
-This is a QA/reporting control, not an epistemic authorization gate.
-It inventories every Git-tracked file, hashes each file, scans readable text,
-and records findings without silently rewriting historical evidence.
+QA/reporting control only. This inventories every Git-tracked file, hashes each
+file, scans readable text, and reports possible consistency/provenance findings.
+It never promotes evidence, rewrites history, or authorizes a freeze.
 """
 from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -21,6 +22,8 @@ PATTERNS = {
     "empirical_zero": "Empirical N = 0",
     "new_freeze_false": "new_freeze_created: false",
 }
+
+FULL_SHA = re.compile(r"(?<![0-9a-f])[0-9a-f]{40}(?![0-9a-f])")
 
 
 def tracked_files() -> list[Path]:
@@ -40,6 +43,7 @@ def read_text(path: Path) -> tuple[str | None, bytes]:
 
 def main() -> int:
     files = tracked_files()
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     records = []
     findings = []
     counts = {name: 0 for name in PATTERNS}
@@ -59,7 +63,21 @@ def main() -> int:
                 if count:
                     record.setdefault("matches", {})[name] = count
 
-            if "EXPECTED_COMMIT:" in text and "e1f077f" in text:
+            # Workflow files are operational apparatus, so any literal full SHA
+            # other than the checked-out HEAD is a review finding. Historical
+            # documents are allowed to contain historical SHAs.
+            if str(path).startswith(".github/workflows/"):
+                for referenced in sorted(set(FULL_SHA.findall(text))):
+                    if referenced != head:
+                        findings.append({
+                            "severity": "HIGH",
+                            "type": "workflow_stale_commit_reference",
+                            "path": str(path),
+                            "referenced_commit": referenced,
+                            "audit_head": head,
+                        })
+
+            if "EXPECTED_COMMIT" in text and "e1f077f" in text:
                 findings.append({
                     "severity": "CRITICAL",
                     "type": "workflow_historical_commit_binding",
@@ -91,9 +109,8 @@ def main() -> int:
             "paths": ["SESSION_ANCHOR.md", "docs/SESSION_ANCHORS.md"],
         })
 
-    head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     report = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "audit_head": head,
         "tracked_file_count": len(files),
         "text_file_count": sum(r["text"] for r in records),
@@ -106,14 +123,15 @@ def main() -> int:
         json.dumps(report, indent=2, sort_keys=True), encoding="utf-8"
     )
 
-    print(json.dumps({
+    summary = {
         "audit_head": head,
         "tracked_file_count": len(files),
         "text_file_count": report["text_file_count"],
         "binary_or_unreadable_count": report["binary_or_unreadable_count"],
         "pattern_counts": counts,
         "finding_count": len(findings),
-    }, indent=2, sort_keys=True))
+    }
+    print(json.dumps(summary, indent=2, sort_keys=True))
     for finding in findings:
         print(json.dumps(finding, sort_keys=True))
     return 0
