@@ -2,7 +2,7 @@
 
 **Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, evaluation, provenance, and governance controls.
 
-> **Epistemic status:** This README describes repository scope and implemented artifacts. Individual claims of validation, certification, performance, or standards alignment require the evidence identified in the corresponding artifact. Historical certifications are not treated as current certification without a fresh evidence-backed run.
+> **Epistemic status:** This README describes repository scope and implemented artifacts. Individual claims of validation, certification, performance, or standards alignment require the evidence identified in the corresponding artifact. Historical certifications are not treated as current certification without a fresh evidence-backed run. Content status reflects the latest committed revision; changes in progress are tracked in the changelog.
 
 ## Current project state — 2026-08-20
 

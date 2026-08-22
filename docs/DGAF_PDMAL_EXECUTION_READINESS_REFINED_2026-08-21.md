@@ -79,6 +79,10 @@ If a YAML file's status field can close a predicate, configuration becomes evide
 || `PDMAL_CURRENT_CONTROL_STATE.md` | body: protocol freeze=BLOCKED (no protocol_freeze frontmatter field — gate board is in body text) | BLOCKED |
 ||| `PRIMARY_CONTRAST_ADJUDICATION.md` | OPEN | OPEN |
 ||| `PDMAL_EXPERIMENT_PROTOCOL.md` | PRESENT at PR #77 (blob `2650e436`); PRE-FREEZE | PRE-FREEZE |
+||| `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` | PRESENT at PR #77 (blob `a686366c`) AND at local HEAD (same blob); APPROVED PENDING PANEL RECORD (applies_to_sha: pending-amendment-commit) | PRE-FREEZE AMENDMENT |
+||| `pdmal-freeze-preparation.yml` | PRESENT at PR #77 (blob `4b6a1e45`); NOT executed | NOT at local HEAD |
+||| `PDM_ANALYSIS_PLAN_CERTIFICATE.md` | PRESENT at PR #77 (blob `9a443087`); analysis plan certificate, planning record | Not at local HEAD; analysis SHA unknown |
+||| `PDMAL_ANALYSIS_CONTROL_PLAN.md` | PRESENT at PR #77 (blob `3e556882`); partial estimand chain, does NOT adjudicate primary contrast | Not at local HEAD; planning record, not binding specification |
 ||| `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` | PRESENT at PR #77 (blob `a686366c`); APPROVED PENDING PANEL RECORD (applies_to_sha: pending-amendment-commit) | PRE-FREEZE AMENDMENT |
 ||| `pdmal-freeze-preparation.yml` | PRESENT at PR #77 (blob `4b6a1e45`); NOT executed | NOT at local HEAD |
 ||| `PDM_ANALYSIS_PLAN_CERTIFICATE.md` | PRESENT at PR #77 (blob `9a443087`); analysis plan certificate, planning record | Not at local HEAD; analysis SHA unknown |
