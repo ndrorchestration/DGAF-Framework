@@ -1,0 +1,208 @@
+{
+  "manifest_version": "1.0",
+  "candidate_identity": {
+    "candidate_sha": "4983f44a1867d8ab2f18295a1ce23877ff8ea928",
+    "candidate_label": "PR77-corrected-pilot-apparatus",
+    "freeze_target_sha": "915e454e27eb2770e7f40a067a881b0783feaae4",
+    "established_at": "2026-08-21",
+    "established_by": "ndrorchestration",
+    "github_pr_number": 77,
+    "github_pr_head_sha": "b25a914c0e86333a9af4b216a9acdfaec28e42b0",
+    "local_pr_head_sha": "4983f44a1867d8ab2f18295a1ce23877ff8ea928",
+    "local_pr_branch": "pr-77-head",
+    "status": "IDENTIFIED — NOT YET IMMUTABLE"
+  },
+  "components": {
+    "runner": {
+      "path": "experiments/pdmal_pilot/run_pilot.py",
+      "blob_sha": "184f4aa72e4eb0a0ad254aee57b6cbdd5d13f9fd",
+      "notes": "Uses ConsensusTask (not ScriptedTask). Does NOT import artifact_schema or pilot_artifact_schema. Has require_frozen_commit() and require_pilot_authorization() gating functions. Writes FROZEN artifacts with blinded condition labels."
+    },
+    "pilot_artifact_schema": {
+      "path": "experiments/pdmal_pilot/pilot_artifact_schema.py",
+      "blob_sha": "2918a9d506ab39e6a0514608618f02f7f4de400d",
+      "notes": "FROZEN pilot validation: 180 records/seed, SHA recomputation, sidecar verification. NOT imported by run_pilot.py. Validates protocol_status=FROZEN, empirical_data_collection=True, 40-char frozen_commit_sha."
+    },
+    "artifact_schema": {
+      "path": "experiments/pdmal_pilot/artifact_schema.py",
+      "blob_sha": "41a90485246bbc1e7e13829fc1791133da5c3d4c",
+      "notes": "PRE-FREEZE contract validation: 16 required fields, no SHA recomputation, canonical_json_bytes(). Unchanged from local HEAD. Semantically incompatible with pilot_artifact_schema (both v1.0 but mutually exclusive protocol_status/empirical_data_collection)."
+    },
+    "test_security_controls": {
+      "path": "experiments/pdmal_pilot/test_security_controls.py",
+      "blob_sha": "ddc595713e433469fa7c01d8918a03518e3e37b5",
+      "notes": "6 adversarial tests. Imports validate_artifact from pilot_artifact_schema, blind_condition and require_frozen_commit from run_pilot. Tests env var gating via monkeypatching — does NOT test actual env var state."
+    },
+    "pdmal_preauth_security_workflow": {
+      "path": ".github/workflows/pdmal-preauth-security.yml",
+      "blob_sha": "9cff92a5c05703dbae636fb4b091ea89906cbcb0",
+      "notes": "Python 3.12.0, installs from requirements-full-lock.txt, runs test_security_controls.py + test_artifact_schema.py. Triggers on pull_request (paths: experiments/pdmal_pilot/**, docs/experiment/**, .github/workflows/pdmal-preauth-security.yml) and push to main."
+    },
+    "pdmal_blinding_operational_test_workflow": {
+      "path": ".github/workflows/pdmal-blinding-operational-test.yml",
+      "blob_sha": "7506f41207ba231750d14f0f43ddff83d8d2cd3c",
+      "notes": "Blinding operational test workflow. Triggers on pull_request."
+    },
+    "pdmal_freeze_preparation_workflow": {
+      "path": ".github/workflows/pdmal-freeze-preparation.yml",
+      "blob_sha": null,
+      "notes": "NOT FOUND at PR#77 (4983f44a). Referenced in corrected report but does not exist at this commit."
+    },
+    "protocol": {
+      "path": "docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md",
+      "blob_sha": null,
+      "notes": "NOT at PR#77 (4983f44a). Present at local HEAD (3510b86). 86 lines, status=ACTIVE, state=PRE-FREEZE."
+    },
+    "task_spec": {
+      "path": "docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md",
+      "blob_sha": null,
+      "notes": "NOT at PR#77 (4983f44a). Referenced in freeze manifest for topology definitions."
+    },
+    "matrix_amendment": {
+      "path": "docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md",
+      "blob_sha": null,
+      "notes": "NOT at PR#77 (4983f44a). Present at local HEAD. status=APPROVED PENDING PANEL RECORD, applies_to_sha=pending-amendment-commit."
+    },
+    "analysis_control_plan": {
+      "path": "docs/experiment/PDMAL_ANALYSIS_CONTROL_PLAN.md",
+      "blob_sha": "3e556882fdc2de7b0d4fa91f519bc74e3924a57f",
+      "notes": "Records partial estimand chain. Records that PDMAL_STATISTICAL_ANALYSIS_PLAN.md and PDMAL_PIPELINE_SPEC.md were NOT FOUND at expected paths during 2026-08-20 GitHub audit. Does NOT adjudicate primary contrast."
+    },
+    "pre_authorization_record": {
+      "path": "docs/experiment/PRE_AUTHORIZATION_VERIFICATION_RECORD_2026-08-20.md",
+      "blob_sha": "f51aea7aad12e3a9b9953eeebc8d440bbfe99c01",
+      "notes": "Most honest doc: 'Corrected apparatus verified: NO; New freeze created: NO; Pilot authorized: NO; Empirical N: 0.' Distinguishes IMPLEMENTED from VERIFIED."
+    },
+    "freeze_manifest": {
+      "path": "docs/experiment/FREEZE_MANIFEST.md",
+      "blob_sha": "1a143b293317a2c8b26e9e1358e2eec975d4c226",
+      "notes": "At PR#77: status=FROZEN, state=FROZEN — post-freeze verification in progress, primary_contrast=OPEN, N=0, pilot authorization=NOT GRANTED. freeze_commit_sha=PLACEHOLDER. This is the FROZEN version (corrected), distinct from local HEAD version which has PRE-FREEZE body text."
+    },
+    "current_state": {
+      "path": "docs/CURRENT_STATE.md",
+      "blob_sha": "f48bfe4a297d148f049dd6349e54458aaa0eb490",
+      "notes": "At PR#77: protocol_state=PRE-FREEZE, executor_state=OPEN (run_pilot.py fail-closes pilot mode), empirical=0."
+    },
+    "pdmal_current_control_state": {
+      "path": "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md",
+      "blob_sha": "8f763eb80b6f2a6b6857310e335435602e9d91be",
+      "notes": "At PR#77: protocol_freeze=BLOCKED, pilot_authorization=NOT GRANTED, empirical_data=0, blinding_custody=OPEN, long_term_retention=OPEN, freeze_packet=PENDING."
+    },
+    "documentation_gap_audit": {
+      "path": "docs/experiment/DOCUMENTATION_GAP_AUDIT.md",
+      "blob_sha": "524eb7592a3a3ee80e862e5adfe95c4a5cf7458b",
+      "notes": "At PR#77. Documents doc-vs-commit mismatches. Claims 'Protocol freeze CLOSED' for historical freeze — corrected report clarifies this refers to historical freeze for old runner, not corrected runner."
+    },
+    "freeze_manifest_reconciliation": {
+      "path": "docs/experiment/FREEZE_MANIFEST_RECONCILIATION_2026-08-20.md",
+      "blob_sha": "968b05df4143c7aa4154bceb60b32b2ce929b7df",
+      "notes": "At PR#77. States historical freeze (3510b86889) must NOT be reused for corrected runner — retained as historical evidence."
+    },
+    "post_freeze_reconciliation": {
+      "path": "docs/experiment/POST_FREEZE_DOCUMENTATION_RECONCILIATION_2026-08-20.md",
+      "blob_sha": "e5bdb5244634fccd229279e614d66c48b1a360b3",
+      "notes": "At PR#77. Post-freeze documentation reconciliation plan."
+    },
+    "durable_retention": {
+      "path": "experiments/pdmal_pilot/durable_retention.py",
+      "blob_sha": null,
+      "notes": "NOT at PR#77 (4983f44a). Present on disk at local HEAD (11,666 bytes, 338 lines, 12 functions, hashlib/json/pathlib/shutil). committed at local HEAD but NOT at PR#77. Status: committed at HEAD, not at PR#77 candidate."
+    }
+  },
+  "topology_components": {
+    "note": "Topology SHAs from FREEZE_MANIFEST.md appendix (lines 84-109), referencing freeze_target_sha 915e454e27eb2770e7f40a067a881b0783feaae4. These were verified at the original freeze and are carried forward as candidate topology references.",
+    "manifest": {
+      "path": "experiments/pdmal_topology/manifest.yaml",
+      "blob_sha": null,
+      "notes": "SHA not individually verified at PR#77. Referenced in freeze manifest appendix."
+    }
+  },
+  "environment": {
+    "python_version": "3.12.0",
+    "numpy": "2.5.1",
+    "networkx": "3.6.1",
+    "lockfile_sha": "3ac4bd2851864af3a5a5ddb8ef707c26e7e81200",
+    "lockfile_path": "experiments/pdmal_pilot/requirements-full-lock.txt"
+  },
+  "gaps_identified": [
+    {
+      "gap": "inline_validation_wiring",
+      "description": "run_pilot.py does NOT import artifact_schema or pilot_artifact_schema. No inline validation of written artifacts.",
+      "severity": "high",
+      "step_affected": "Step 6 (finish PR#77)"
+    },
+    {
+      "gap": "sha_computation_consistency",
+      "description": "run_pilot.py uses json.dumps + hashlib.sha256 for artifact SHA. pilot_artifact_schema.py uses canonical_json_bytes() (sort_keys, compact separators). Equivalence unverified.",
+      "severity": "high",
+      "step_affected": "Step 6 (finish PR#77)"
+    },
+    {
+      "gap": "primary_contrast_unadjudicated",
+      "description": "4 contrast candidates identified (dgaf vs null, PDMAL vs Ring, combined, other). NONE selected. Direction, success criterion, falsification criterion, multiplicity all undefined.",
+      "severity": "critical",
+      "step_affected": "Step 1 (Gate 1)"
+    },
+    {
+      "gap": "candidate_manifest_not_immutable",
+      "description": "This manifest identifies the candidate but is not yet committed to the repository. Immutability requires commit + dev/candidate separation.",
+      "severity": "high",
+      "step_affected": "Steps 2-4 (Gate 2)"
+    },
+    {
+      "gap": "dev_candidate_separation_not_established",
+      "description": "No separation between development HEAD (3510b86) and candidate (4983f44a). Merging PR#77 to main collapses them.",
+      "severity": "medium",
+      "step_affected": "Step 4 (Gate 2)"
+    },
+    {
+      "gap": "p2_not_bound_to_candidate",
+      "description": "pdmal-preauth-security.yml runs on pull_request paths — tests whatever is in the PR, not a specific candidate SHA.",
+      "severity": "medium",
+      "step_affected": "Step 5 (Gate 2)"
+    },
+    {
+      "gap": "analysis_plan_certificate_not_found",
+      "description": "PDMAL_ANALYSIS_PLAN_CERTIFICATE.md NOT FOUND at PR#77 or local HEAD. P8 (analysis lock) cannot be closed without this.",
+      "severity": "high",
+      "step_affected": "Step 19 (scientific lock)"
+    },
+    {
+      "gap": "blinding_key_custody_chain_not_established",
+      "description": "No documentation of blinding key existence, custody, or supply mechanism. Independent verification design assumes key exists but it's not established.",
+      "severity": "high",
+      "step_affected": "Step 20 (independent verification)"
+    },
+    {
+      "gap": "runtime_authentication_not_cryptographic",
+      "description": "run_pilot.py has env var gating (PDMAL_PROTOCOL_FROZEN, PDMERAL_PILOT_AUTHORIZED) but no cryptographic SHA binding to verify it's running the right candidate.",
+      "severity": "medium",
+      "step_affected": "Step 7 (Gate 3)"
+    },
+    {
+      "gap": "ci_not_executed",
+      "description": "pdmal-preauth-security.yml exists but has NOT been executed. No CI run results available. Green by absence, not by passing.",
+      "severity": "high",
+      "step_affected": "Steps 12-13, 17 (evidence machinery + Gate 4)"
+    },
+    {
+      "gap": "pr77_not_mergeable",
+      "description": "PR#77 on GitHub is draft=true, mergeable=false. Cannot be merged as-is. Needs work before merge.",
+      "severity": "critical",
+      "step_affected": "Step 6 (Gate 3)"
+    },
+    {
+      "gap": "pr77_shas_diverged_from_injected_values",
+      "description": "Several injected blob SHAs were stale. Actual values used above from git ls-tree at 4983f44a. test_security_controls.py: injected 5edd3a6c, actual ddc59571. pdmal-preauth-security.yml: injected 4ffe0d53, actual 9cff92a5.",
+      "severity": "low",
+      "step_affected": "All (documentation accuracy)"
+    }
+  ],
+  "n_invariant": 0,
+  "authorization_status": "NOT GRANTED",
+  "protocol_state": "PRE-FREEZE",
+  "primary_contrast": "OPEN — 4 candidates, none selected",
+  "established_by": "ndrorchestration",
+  "established_via": "git ls-tree verification at 4983f44a + source file reads",
+  "verification_basis": "All blob SHAs verified against git ls-tree 4983f44a. All claims traceable to source files at local HEAD (3510b86889) or PR#77 (4983f44a). N=0 throughout. No empirical claims."
+}
