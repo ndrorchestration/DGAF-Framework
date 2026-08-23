@@ -6,17 +6,17 @@ The primary estimand is the mean paired seed-level FFCR difference:
 
     Delta_s = FFCR_s(dgaf) - FFCR_s(null)
 
-FFCR is the proportion of complete matrix cells whose recorded ``ffcr_success``
-is true. Bootstrap resampling is over complete paired seed effects, never
-individual trials.
+Pilot artifacts remain blinded until an explicit unblinding step supplies the
+condition mapping. FFCR is the proportion of complete matrix cells whose
+recorded ``ffcr_success`` is true. Bootstrap resampling is over complete
+paired seed effects, never individual trials.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
 import json
-from pathlib import Path
-from typing import Iterable, Mapping, Sequence
+from typing import Mapping, Sequence
 
 import numpy as np
 
@@ -41,29 +41,40 @@ class SeedEffect:
         return self.ffcr_dgaf - self.ffcr_null
 
 
-def _expected_keys(condition: str) -> set[tuple[str, int]]:
+def _expected_keys() -> set[tuple[str, int]]:
     return {(topology, failure_count) for topology in TOPOLOGIES for failure_count in FAILURE_COUNTS}
 
 
-def condition_ffcr(records: Sequence[Mapping[str, object]], condition: str) -> float:
+def condition_ffcr(
+    records: Sequence[Mapping[str, object]],
+    condition: str,
+    *,
+    condition_map: Mapping[str, str],
+) -> float:
     """Return FFCR for one condition from one complete seed artifact.
 
-    The caller must provide records for exactly one seed. Every expected
-    topology/failure-count cell must occur exactly once. Missing, duplicate,
-    malformed, or outcome-unusable records raise rather than being repaired.
+    ``condition_map`` is supplied only after explicit unblinding and maps the
+    blinded artifact identifier to one of the canonical condition identifiers.
+    Every expected topology/failure-count cell must occur exactly once.
+    Missing, duplicate, malformed, or outcome-unusable records raise rather
+    than being repaired.
     """
     if condition not in CONDITIONS:
         raise ValueError(f"unsupported condition: {condition!r}")
-    expected = _expected_keys(condition)
+    expected = _expected_keys()
     seen: set[tuple[str, int]] = set()
     successes: list[bool] = []
     for record in records:
-        if record.get("condition") != condition:
+        blinded_id = record.get("blinded_condition_id")
+        if not isinstance(blinded_id, str):
+            raise ValueError("record missing blinded_condition_id")
+        mapped = condition_map.get(blinded_id)
+        if mapped != condition:
             continue
         topology = record.get("topology")
         failure_count = record.get("failure_count")
         if not isinstance(topology, str) or not isinstance(failure_count, int):
-            raise ValueError("malformed topology/failure_count")
+            raise ValueError("analysis input requires unblinded topology/failure_count fields")
         key = (topology, failure_count)
         if key not in expected or key in seen:
             raise ValueError(f"invalid or duplicate matrix cell: {key!r}")
@@ -78,15 +89,17 @@ def condition_ffcr(records: Sequence[Mapping[str, object]], condition: str) -> f
     return sum(successes) / len(successes)
 
 
-def seed_effect_from_artifact(document: Mapping[str, object]) -> SeedEffect:
+def seed_effect_from_artifact(
+    document: Mapping[str, object], *, condition_map: Mapping[str, str]
+) -> SeedEffect:
     records = document.get("records")
     seed = document.get("seed_id")
     if not isinstance(seed, int) or not isinstance(records, list):
         raise ValueError("invalid seed artifact")
     return SeedEffect(
         seed=seed,
-        ffcr_dgaf=condition_ffcr(records, "dgaf"),
-        ffcr_null=condition_ffcr(records, "null"),
+        ffcr_dgaf=condition_ffcr(records, "dgaf", condition_map=condition_map),
+        ffcr_null=condition_ffcr(records, "null", condition_map=condition_map),
     )
 
 
