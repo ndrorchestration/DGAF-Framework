@@ -1,8 +1,10 @@
 # P8 Verification Checklist
 
 **Status:** OPEN / PRE-FREEZE / FAIL-CLOSED
+**Exact candidate tree for verification:** `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f`
+**Documentation update:** `c6f4bbd2e02dc2d6e35b43e5c99a551452378db2` (documentation-only; does not redefine the candidate apparatus)
 
-This checklist distinguishes implemented controls from executed verification evidence.
+This checklist distinguishes implemented controls from executed verification evidence. Historical candidate references (`94fb6fd...`, PR #77 `b25a914c...`, and pre-correction P8 binding `b681c87...`) are provenance only and must not be substituted for the exact candidate tree above.
 
 ## Candidate artifact contract
 
@@ -15,7 +17,7 @@ This checklist distinguishes implemented controls from executed verification evi
 
 ## Candidate CI evidence
 
-- [ ] Governance CI executed against the corrected exact candidate.
+- [ ] Governance CI executed against exact candidate `2a80f819...`.
 - [ ] P8 analysis tests passed in that execution.
 - [ ] P8 artifact-schema/security tests passed in that execution.
 - [ ] Compilation passed in that execution.
