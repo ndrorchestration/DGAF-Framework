@@ -25,9 +25,9 @@ The first canonical analysis implementation is `experiments/pdmal_pilot/analysis
 | Binding | Current value | State |
 |---|---|---|
 | Analysis implementation path | `experiments/pdmal_pilot/analysis.py` | CANDIDATE |
-| Analysis implementation blob SHA | `24e7375f5ac907713460269ea2b65408ea6f0455` | CANDIDATE — final candidate commit binding still required |
+| Analysis implementation blob SHA | `24e7375f5ac907713460269ea2b65408ea6f0455` | CANDIDATE |
 | Configuration | Canonical configuration emitted by `analysis_config_bytes()` | CANDIDATE |
-| Configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | CANDIDATE — final candidate binding still required |
+| Configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | CANDIDATE |
 | Bootstrap | Paired seed effects; percentile interval | SELECTED |
 | Bootstrap resamples | `10,000` | SELECTED |
 | Bootstrap RNG seed | `20260823` | SELECTED |
@@ -37,8 +37,12 @@ The first canonical analysis implementation is `experiments/pdmal_pilot/analysis
 | Secondary multiplicity | Holm if a secondary family is presented with confirmatory inference; otherwise descriptive/exploratory | SELECTED |
 | Exclusion/missingness | Complete paired seed required; no outcome-aware exclusion; infrastructure failures recorded separately | SELECTED |
 | Protocol version | `0.7.5` | CANDIDATE — reconciled |
-| Protocol blob SHA | `c391f45d57e8957a13df946f185fec521c3363dd` | CANDIDATE — final candidate binding still required |
+| Protocol blob SHA | `d986923643b1ef6f17d4099a628e0dfd2e20c147` | CANDIDATE |
+| Candidate apparatus base commit | `ac3c1899bdd85c2af186ad6971376fe250dad993` | CANDIDATE |
+| P8 CI workflow blob SHA | `305ec08ef17f5026c53cdd53b2f099a0b5127eb3` | CANDIDATE |
 | Manifest identity | Exact new freeze/manifest binding | OPEN |
+
+The candidate apparatus base commit is the exact repository state after the protocol identity repair and before this control-document reconciliation. Subsequent control-document commits do not alter the apparatus bindings above.
 
 ## Execution/artifact dependency discovered during P8
 
@@ -73,9 +77,7 @@ The canonical analysis:
 
 P8 is materially advanced but remains **OPEN** pending:
 
-- final candidate commit identity;
-- final candidate implementation/configuration binding;
-- candidate-scoped CI and analysis-test verification;
+- candidate-scoped CI execution and recorded result;
 - independent verification of the analysis implementation;
 - exact manifest/freeze identity;
 - durable evidence custody and direct retrieval/hash proof.
