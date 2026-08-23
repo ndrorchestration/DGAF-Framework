@@ -25,9 +25,11 @@ This is the current pre-authorization gate record. GitHub is authoritative for i
 | Security controls | VERIFY | Pre-authorization workflow/tests present; fresh CI required |
 | Durable retention | OPEN | Archive destination and direct retrieval/hash proof not established |
 | Primary contrast | ADOPTED / P7 | Full `dgaf` vs `null`; FFCR; seed-paired primary analysis |
-| Analysis implementation | CANDIDATE / P8 | `experiments/pdmal_pilot/analysis.py`; paired percentile bootstrap and decision bindings specified; candidate SHA and independent verification still required |
-| Analysis configuration | CANDIDATE / P8 | Canonical configuration SHA: `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`; final binding still required |
-| Protocol identity | OPEN / P8 | Protocol reconciled to explicit `ffcr_success` and P8 boundary; exact post-commit blob SHA must be bound |
+| Analysis implementation | CANDIDATE / P8 | `experiments/pdmal_pilot/analysis.py`; paired percentile bootstrap and decision bindings specified; implementation blob SHA bound; independent verification still required |
+| Analysis configuration | CANDIDATE / P8 | Canonical configuration SHA: `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`; bound to candidate apparatus |
+| Analysis CI gate | CANDIDATE / P8 | `governance-ci.yml` now explicitly executes `experiments/pdmal_pilot/test_analysis.py`; fresh run on candidate apparatus required |
+| Protocol identity | CANDIDATE / P8 | Protocol v0.7.5 blob SHA externally bound by P8 lock; fresh candidate verification required |
+| Candidate apparatus base | CANDIDATE | `ac3c1899bdd85c2af186ad6971376fe250dad993`; subsequent commits are control-document reconciliation only |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | ZERO | No authorized pilot execution |
@@ -52,7 +54,7 @@ The pilot runner was amended to emit explicit `ffcr_success`, because the previo
 
 The initial P8 implementation constants are now explicit: 10,000 percentile-bootstrap resamples, RNG seed `20260823`, two-sided 95% interval, alpha `0.05`, and positive-estimate/positive-CI primary support criterion. Secondary confirmatory claims use Holm if such claims are made; otherwise secondary results remain exploratory/descriptive.
 
-Adversarial analysis tests have been added for incomplete matrices, duplicates, malformed outcome values, missing unblinding mappings, deterministic bootstrap behavior, and decision logic.
+Adversarial analysis tests have been added for incomplete matrices, duplicates, malformed outcome values, missing unblinding mappings, deterministic bootstrap behavior, and decision logic. Governance CI now explicitly invokes this P8 test module, making analysis verification a CI gate rather than an existence-only repository artifact.
 
 ## Historical freeze boundary
 
@@ -60,10 +62,10 @@ Adversarial analysis tests have been added for incomplete matrices, duplicates, 
 
 ## Required next evidence events
 
-1. Run fresh candidate CI and analysis tests on the exact current candidate.
+1. Execute fresh candidate CI, including the explicit P8 analysis-test gate, on the candidate apparatus base.
 2. Verify canonical artifact serialization and runtime validation, including the new `ffcr_success` field.
-3. Bind the exact analysis implementation SHA and configuration SHA.
-4. Bind the exact protocol blob SHA after the current protocol reconciliation commit.
+3. Verify the bound analysis implementation and configuration hashes.
+4. Verify the bound protocol blob SHA and v0.7.5 identity.
 5. Establish durable evidence custody and direct retrieval/hash evidence.
 6. Reconcile topology fingerprints and environment identity on the exact candidate.
 7. Derive P1–P8 from candidate-scoped evidence.
