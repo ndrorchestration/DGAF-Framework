@@ -15,12 +15,14 @@ from analysis import (
 
 TOPOLOGIES = ("ring", "pdmal", "random_regular", "small_world", "complete")
 FAILURES = (0, 1, 2, 3, 4, 5, 6, 8, 10)
+BLIND_DGAF = "blind_dgaf"
+BLIND_NULL = "blind_null"
 
 
-def _records(condition: str, success: bool = True) -> list[dict]:
+def _records(blind_id: str, success: bool = True) -> list[dict]:
     return [
         {
-            "condition": condition,
+            "blinded_condition_id": blind_id,
             "topology": topology,
             "failure_count": failure_count,
             "ffcr_success": success,
@@ -30,23 +32,33 @@ def _records(condition: str, success: bool = True) -> list[dict]:
     ]
 
 
+def _map() -> dict[str, str]:
+    return {BLIND_DGAF: "dgaf", BLIND_NULL: "null"}
+
+
 def test_condition_ffcr_requires_complete_matrix() -> None:
-    records = _records("dgaf")
-    assert condition_ffcr(records, "dgaf") == 1.0
+    records = _records(BLIND_DGAF)
+    assert condition_ffcr(records, "dgaf", condition_map=_map()) == 1.0
     with pytest.raises(ValueError, match="incomplete condition matrix"):
-        condition_ffcr(records[:-1], "dgaf")
+        condition_ffcr(records[:-1], "dgaf", condition_map=_map())
 
 
 def test_condition_ffcr_rejects_duplicate_or_malformed_cells() -> None:
-    records = _records("null")
+    records = _records(BLIND_NULL)
     records.append(records[0])
     with pytest.raises(ValueError, match="invalid or duplicate"):
-        condition_ffcr(records, "null")
+        condition_ffcr(records, "null", condition_map=_map())
 
-    malformed = _records("null")
+    malformed = _records(BLIND_NULL)
     malformed[0]["ffcr_success"] = "true"
     with pytest.raises(ValueError, match="boolean ffcr_success"):
-        condition_ffcr(malformed, "null")
+        condition_ffcr(malformed, "null", condition_map=_map())
+
+
+def test_condition_ffcr_requires_explicit_unblinding_map() -> None:
+    records = _records(BLIND_DGAF)
+    with pytest.raises(ValueError, match="incomplete condition matrix"):
+        condition_ffcr(records, "dgaf", condition_map={})
 
 
 def test_primary_estimate_is_equal_weighted_over_seeds() -> None:
