@@ -25,9 +25,9 @@ The first canonical analysis implementation is `experiments/pdmal_pilot/analysis
 | Binding | Current value | State |
 |---|---|---|
 | Analysis implementation path | `experiments/pdmal_pilot/analysis.py` | CANDIDATE |
-| Analysis implementation SHA | Pending final candidate commit binding | OPEN |
+| Analysis implementation blob SHA | `24e7375f5ac907713460269ea2b65408ea6f0455` | CANDIDATE — final candidate commit binding still required |
 | Configuration | Canonical configuration emitted by `analysis_config_bytes()` | CANDIDATE |
-| Configuration SHA | Produced by `analysis_config_sha256()` | OPEN — bind exact value |
+| Configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | CANDIDATE — final candidate binding still required |
 | Bootstrap | Paired seed effects; percentile interval | SELECTED |
 | Bootstrap resamples | `10,000` | SELECTED |
 | Bootstrap RNG seed | `20260823` | SELECTED |
@@ -36,16 +36,15 @@ The first canonical analysis implementation is `experiments/pdmal_pilot/analysis
 | Primary decision | Estimate > 0 and CI lower bound > 0 | SELECTED |
 | Secondary multiplicity | Holm if a secondary family is presented with confirmatory inference; otherwise descriptive/exploratory | SELECTED |
 | Exclusion/missingness | Complete paired seed required; no outcome-aware exclusion; infrastructure failures recorded separately | SELECTED |
-| Protocol identity | Exact protocol blob SHA after final protocol commit | OPEN |
+| Protocol version | `0.7.5` | CANDIDATE — reconciled |
+| Protocol blob SHA | `c391f45d57e8957a13df946f185fec521c3363dd` | CANDIDATE — final candidate binding still required |
 | Manifest identity | Exact new freeze/manifest binding | OPEN |
 
 ## Execution/artifact dependency discovered during P8
 
 The existing pilot runner previously recorded `final_std` as `primary_outcome` but did not emit an explicit boolean `ffcr_success`. Because P7 defines FFCR as failure-free completion proportion, an explicit `ffcr_success` field is required for the canonical analysis to consume the immutable artifacts without reconstructing execution semantics.
 
-The runner has therefore been amended to record `consensus_success` as `ffcr_success`. This is an apparatus change and therefore must be included in candidate verification before any freeze.
-
-The runner also currently reports protocol version `0.7.4` while the governing protocol incorporates the v0.7.5 matrix amendment. This version identity must be reconciled before P8 closure/freeze rather than silently ignored.
+The runner has now been amended to record `consensus_success` as `ffcr_success`. The current runner declares protocol version `0.7.5`, matching the governing v0.7.5 matrix amendment. These are apparatus changes and therefore must be included in candidate verification before any freeze.
 
 ## Analysis boundaries
 
@@ -57,6 +56,7 @@ The canonical analysis:
 - does not repair incomplete records;
 - rejects duplicate/missing matrix cells;
 - rejects malformed `ffcr_success` values;
+- requires an explicit post-unblinding condition mapping;
 - resamples complete paired seed effects, never individual trials;
 - reports exclusions and missingness explicitly;
 - cannot convert exploratory secondary results into the primary conclusion.
@@ -74,11 +74,11 @@ The canonical analysis:
 P8 is materially advanced but remains **OPEN** pending:
 
 - final candidate commit identity;
-- configuration digest binding;
-- protocol version/identity reconciliation;
+- final candidate implementation/configuration binding;
 - candidate-scoped CI and analysis-test verification;
 - independent verification of the analysis implementation;
-- exact manifest/freeze identity.
+- exact manifest/freeze identity;
+- durable evidence custody and direct retrieval/hash proof.
 
 **Pilot authorization:** NOT GRANTED.
 **Empirical N:** 0.
