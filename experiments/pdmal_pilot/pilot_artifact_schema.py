@@ -2,6 +2,8 @@
 
 Separate from the pre-freeze contract schema. This validates artifact
 structure and record hashes; it does not authorize execution or unblind labels.
+The explicit FFCR outcome and its matrix coordinates are part of the pilot
+artifact contract because P8 analysis consumes them directly after unblinding.
 """
 from __future__ import annotations
 
@@ -12,9 +14,10 @@ from typing import Any, Mapping
 ARTIFACT_SCHEMA_VERSION = "1.0"
 REQUIRED_RECORD_FIELDS = {
     "experiment_id", "protocol_version", "experiment_commit_sha", "seed_id",
-    "blinded_condition_id", "trial_id", "primary_outcome", "secondary_outcomes",
-    "failure", "recovery", "runtime_ms", "status", "excluded",
-    "exclusion_reason", "environment_fingerprint", "artifact_sha256",
+    "blinded_condition_id", "trial_id", "topology", "failure_count",
+    "primary_outcome", "secondary_outcomes", "failure", "recovery", "ffcr_success",
+    "runtime_ms", "status", "excluded", "exclusion_reason",
+    "environment_fingerprint", "artifact_sha256",
 }
 ALLOWED_STATUS = {"SUCCESS", "RECOVERED", "UNRECOVERED_FAILURE"}
 
@@ -38,6 +41,14 @@ def validate_record(record: Mapping[str, Any]) -> None:
         raise AssertionError("artifact_sha256 does not match canonical record payload")
     if record["status"] not in ALLOWED_STATUS:
         raise AssertionError(f"invalid status: {record['status']!r}")
+    if not isinstance(record["topology"], str) or not record["topology"]:
+        raise AssertionError("topology must be a non-empty string")
+    if not isinstance(record["failure_count"], int) or isinstance(record["failure_count"], bool) or record["failure_count"] < 0:
+        raise AssertionError("failure_count must be a non-negative integer")
+    if not isinstance(record["ffcr_success"], bool):
+        raise AssertionError("ffcr_success must be boolean")
+    if record["ffcr_success"] and record["status"] != "SUCCESS":
+        raise AssertionError("ffcr_success requires SUCCESS status")
     if not isinstance(record["excluded"], bool):
         raise AssertionError("excluded must be boolean")
     if record["excluded"] and not record["exclusion_reason"]:
