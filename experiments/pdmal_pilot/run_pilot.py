@@ -41,6 +41,7 @@ from topology_utils import graph_fingerprint
 SUPPORTED_MODES = {"contract", "pilot"}
 CONTRACT_ROOT_SEEDS = (20260817, 20260818)
 FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
+PROTOCOL_VERSION = "0.7.5"
 
 
 def require_mode() -> str:
@@ -210,7 +211,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
             }
             record = {
                 "experiment_id": "PDMAL-PILOT-V1",
-                "protocol_version": "0.7.4",
+                "protocol_version": PROTOCOL_VERSION,
                 "experiment_commit_sha": frozen_sha,
                 "seed_id": seed,
                 "blinded_condition_id": blind_condition(condition, blinding_key),
