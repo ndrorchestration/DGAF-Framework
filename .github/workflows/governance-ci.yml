@@ -26,10 +26,13 @@ jobs:
         run: python -m pip install --upgrade pip pytest numpy
 
       - name: Compile Python components
-        run: python -m compileall -q components tests evaluations
+        run: python -m compileall -q components tests evaluations experiments/pdmal_pilot
 
       - name: Run P-42 conductor and recovery tests
         run: python -m pytest -q tests/test_ahg_conductor.py tests/test_ahg_recovery.py
+
+      - name: Run P8 canonical analysis tests
+        run: python -m pytest -q experiments/pdmal_pilot/test_analysis.py
 
       - name: Run Issue #32 deterministic evaluation slice
         run: |
@@ -138,4 +141,6 @@ jobs:
           test -f components/ahg_recovery.py
           test -f specs/DGAFContainment.tla
           test -f specs/DGAFContainment.cfg
+          test -f experiments/pdmal_pilot/analysis.py
+          test -f experiments/pdmal_pilot/test_analysis.py
           echo 'Governance CI checks completed.'
