@@ -151,7 +151,7 @@
     },
     {
       "gap": "dev_candidate_separation_not_established",
-      "description": "No separation between development HEAD (3510b86) and candidate (4983f44a). Merging PR#77 to main collapses them.",
+      "description": "No separation between development HEAD (3510b86) and candidate (94fb6fd). Merging PR#77 to main collapses them.",
       "severity": "medium",
       "step_affected": "Step 4 (Gate 2)"
     },

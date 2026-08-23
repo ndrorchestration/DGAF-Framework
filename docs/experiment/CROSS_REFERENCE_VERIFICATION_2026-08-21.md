@@ -114,7 +114,7 @@ Every document states N=0 explicitly. No document makes empirical claims.
 
 **Result: CONSISTENT.** All documents agree on local HEAD SHA.
 
-### 2.6 PR #77 Local Head SHA: 4983f44a (Confirmed Across All 16)
+### 2.6 PR #77 Local Head SHA: 94fb6fd (Confirmed Across All 16)
 
 | Document | PR #77 SHA |
 |----------|------------|
@@ -396,7 +396,7 @@ All 16 documents are internally consistent and cross-consistent. No material con
 | Protocol PRE-FREEZE (all 16) | ✅ CONSISTENT |
 | Primary contrast OPEN (all 16) | ✅ CONSISTENT |
 | HEAD SHA 3510b86889 (all 16) | ✅ CONSISTENT |
-| PR #77 local SHA 4983f44a (all 16) | ✅ CONSISTENT |
+| PR #77 local SHA 94fb6fd (all 16) | ✅ CONSISTENT |
 | GitHub SHA b25a914c divergence (documented) | ✅ CONSISTENT |
 | Blob SHAs for 16 key files | ✅ CONSISTENT |
 | What PR #77 provides (all 16) | ✅ CONSISTENT |
@@ -426,7 +426,7 @@ All 16 documents are internally consistent and cross-consistent. No material con
 The 16-document set committed in `d8848d1` is **cross-reference consistent**. All documents agree on:
 
 - The current state (N=0, NOT GRANTED, PRE-FREEZE, primary contrast OPEN)
-- The candidate identity (SHA 4983f44a locally, b25a914c on GitHub)
+- The candidate identity (SHA 94fb6fd locally, b25a914c on GitHub)
 - What PR #77 provides (engineering corrections) and does not provide (governance closure, execution evidence)
 - The 0/9 predicate scoring
 - The estimand chain status

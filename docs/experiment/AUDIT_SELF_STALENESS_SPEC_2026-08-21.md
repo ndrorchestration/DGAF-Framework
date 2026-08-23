@@ -13,10 +13,10 @@ An audit can look valid even after the repository has changed, creating false co
 Example:
 
 ```
-2026-08-20: Audit examined candidate at SHA 4983f44a. Conclusion: "P2 IMPLEMENTED."
+2026-08-20: Audit examined candidate at SHA 94fb6fd. Conclusion: "P2 IMPLEMENTED."
 2026-08-21: Someone force-pushes a new commit to pr-77-head. Now pr-77-head = b25a914c.
 2026-08-21: Reviewer reads the 2026-08-20 audit. Sees "P2 IMPLEMENTED." Assumes it applies to current state.
-2026-08-21: The audit's conclusion is about 4983f44a, not b25a914c. The audit is stale.
+2026-08-21: The audit's conclusion is about 94fb6fd, not b25a914c. The audit is stale.
 ```
 
 The audit hasn't been invalidated — it's still accurate about what it examined. But it's been **misapplied** to a state it didn't examine.
@@ -90,16 +90,16 @@ The audit should make its temporal scope explicit:
 ### Legitimate historical audit
 
 ```
-Audit examined: 4983f44a (2026-08-20)
-Current candidate: 4983f44a (unchanged)
+Audit examined: 94fb6fd (2026-08-20)
+Current candidate: 94fb6fd (unchanged)
 → Audit is current. No staleness.
 ```
 
 ```
-Audit examined: 4983f44a (2026-08-20)
+Audit examined: 94fb6fd (2026-08-20)
 Current candidate: b25a914c (changed)
 → Audit is stale for current-state conclusions.
-→ If marked as historical: "As of 2026-08-20, candidate 4983f44a had P2 IMPLEMENTED."
+→ If marked as historical: "As of 2026-08-20, candidate 94fb6fd had P2 IMPLEMENTED."
   This is a legitimate historical statement.
 → If NOT marked: reader might assume it applies to b25a914c. Misleading.
 ```

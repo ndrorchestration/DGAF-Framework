@@ -20,7 +20,7 @@
 
 | Step | Status in PR #77 | What PR #77 Contains | What's Still Needed |
 |---|---|---|---|
-| **2. Establish candidate** | PARTIALLY PROVIDED | PR #77 head (4983f44a) is the candidate. CANDIDATE_DEFINITION_2026-08-21.md defines it. | Commit the candidate definition. Establish candidate as a distinct reference. |
+| **2. Establish candidate** | PARTIALLY PROVIDED | PR #77 head (94fb6fd) is the candidate. CANDIDATE_DEFINITION_2026-08-21.md defines it. | Commit the candidate definition. Establish candidate as a distinct reference. |
 | **3. Create candidate manifest** | PARTIALLY PROVIDED | CANDIDATE_MANIFEST_2026-08-21.json exists (written by hand). | Commit manifest to repository. Make it immutable. |
 | **4. Separate development from candidate** | NOT PROVIDED | pr-77-head branch exists locally. No protected candidate reference. | Create protected candidate tag/branch. Commit manifest. Document separation. |
 | **5. Bind P2 to candidate** | NOT PROVIDED | pdmal-preauth-security.yml runs on pull_request/push paths — not pinned to candidate. | Pin CI workflow to candidate SHA. Record SHA in workflow output. |
