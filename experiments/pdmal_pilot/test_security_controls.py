@@ -3,12 +3,11 @@ from __future__ import annotations
 
 import ast
 import hashlib
-import json
 from pathlib import Path
 
 import pytest
 
-from pilot_artifact_schema import validate_artifact
+from pilot_artifact_schema import canonical_json_bytes, validate_artifact
 from run_pilot import blind_condition, require_frozen_commit
 from task_engine import SEED_RUNTIME_CEILING_SECONDS, validate_seed_runtime
 
@@ -57,39 +56,55 @@ def test_runtime_ceiling_is_fail_closed() -> None:
 def _record() -> dict:
     record = {
         "experiment_id": "PDMAL-PILOT-V1",
-        "protocol_version": "0.7.4",
+        "protocol_version": "0.7.5",
         "experiment_commit_sha": "a" * 40,
         "seed_id": 20260819,
         "blinded_condition_id": "blind_0123456789abcdef",
         "trial_id": 0,
+        "topology": "ring",
+        "failure_count": 0,
         "primary_outcome": 0.1,
-        "secondary_outcomes": {"topology": "ring", "failure_count": 0, "final_mean": 0.0},
+        "secondary_outcomes": {"final_mean": 0.0},
         "failure": False,
         "recovery": True,
+        "ffcr_success": True,
         "runtime_ms": 1,
         "status": "SUCCESS",
         "excluded": False,
         "exclusion_reason": None,
         "environment_fingerprint": "env",
     }
-    record["artifact_sha256"] = hashlib.sha256(
-        (json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n").encode()
-    ).hexdigest()
+    record["artifact_sha256"] = hashlib.sha256(canonical_json_bytes(record)).hexdigest()
     return record
 
 
 def test_artifact_substitution_is_detectable() -> None:
     document = {
-        "schema_version": "1.0",
-        "artifact_version": "seed-20260819",
-        "protocol_status": "FROZEN",
-        "empirical_data_collection": True,
-        "frozen_commit_sha": "a" * 40,
-        "seed_id": 20260819,
-        "runtime_seconds": 1.0,
-        "records": [_record() for _ in range(180)],
+        "schema_version": "1.0", "artifact_version": "seed-20260819",
+        "protocol_status": "FROZEN", "empirical_data_collection": True,
+        "frozen_commit_sha": "a" * 40, "seed_id": 20260819,
+        "runtime_seconds": 1.0, "records": [_record() for _ in range(180)],
     }
     validate_artifact(document, expected_seed=20260819)
     document["records"][0]["primary_outcome"] = 999.0
     with pytest.raises(AssertionError, match="artifact_sha256"):
+        validate_artifact(document, expected_seed=20260819)
+
+
+def test_ffcr_contract_fields_are_required_and_semantically_fail_closed() -> None:
+    document = {
+        "schema_version": "1.0", "artifact_version": "seed-20260819",
+        "protocol_status": "FROZEN", "empirical_data_collection": True,
+        "frozen_commit_sha": "a" * 40, "seed_id": 20260819,
+        "runtime_seconds": 1.0, "records": [_record() for _ in range(180)],
+    }
+    document["records"][0].pop("ffcr_success")
+    with pytest.raises(AssertionError, match="missing required record fields"):
+        validate_artifact(document, expected_seed=20260819)
+
+    bad = _record()
+    bad["status"] = "UNRECOVERED_FAILURE"
+    bad["artifact_sha256"] = hashlib.sha256(canonical_json_bytes({k: v for k, v in bad.items() if k != "artifact_sha256"})).hexdigest()
+    document["records"] = [bad for _ in range(180)]
+    with pytest.raises(AssertionError, match="ffcr_success requires SUCCESS status"):
         validate_artifact(document, expected_seed=20260819)
