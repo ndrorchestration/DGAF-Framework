@@ -1,6 +1,6 @@
 # DGAF/PDMAL Project Status
 
-**Status date:** 2026-08-21
+**Status date:** 2026-08-23
 **Repository:** `ndrorchestration/DGAF-Framework`
 **Current main:** resolve from GitHub `main` at verification time
 **Pilot status:** PRE-FREEZE; authorization not granted
@@ -10,7 +10,9 @@
 
 The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. The corrected pilot apparatus and governance controls are present on mainline, but no corrected apparatus has been independently freeze-verified. No new freeze exists and no empirical pilot has been authorized or executed.
 
-The repository has now undergone targeted and expanding documentation/provenance reconciliation. The remaining work is evidence production, not permission to infer evidence from implementation or documentation.
+P7 primary scientific adjudication is now adopted. The protocol has been reconciled so that the experiment is explicitly described as controlled runtime characterization containing a pre-specified comparative DGAF-versus-null analysis, without converting the characterization into a production-efficacy claim. P8 remains open until the executable analysis implementation/configuration is bound to the exact candidate apparatus.
+
+The remaining work is evidence production, implementation/configuration binding, independent verification, freeze, and authorization—not permission to infer evidence from implementation or documentation.
 
 ## Gate board
 
@@ -26,8 +28,8 @@ The repository has now undergone targeted and expanding documentation/provenance
 | Topology provenance | PARTIAL | Fingerprint machinery present; exact candidate recomputation pending |
 | Provenance / reproducibility | PARTIAL | Candidate provenance chain defined; execution artifact packet pending |
 | Durable retention | OPEN | Archive destination and direct custody/retrieval proof not established |
-| Primary contrast | OPEN | Methodological adjudication required |
-| Analysis lock | OPEN | Requires P7 decision and exact implementation/configuration identity |
+| Primary contrast | ADOPTED | P7: full `dgaf` vs `null`, FFCR primary endpoint, seed-paired primary analysis |
+| Analysis lock | OPEN / P8 | Exact executable implementation/configuration identity and candidate binding required |
 | Independent verification | NOT EXECUTED | Separate candidate/evidence audit required |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
@@ -53,8 +55,8 @@ Living/current documents must use current terminology and current gate status. H
 6. Complete synthetic operational blinding verification.
 7. Establish durable evidence custody and direct retrieval/hash verification.
 8. Reconcile topology fingerprints and environment identity on the exact candidate.
-9. Adjudicate the primary contrast.
-10. Lock the analysis implementation/configuration.
+9. **P7 primary scientific target specification — ADOPTED.**
+10. **P8 analysis lock — NEXT GATE.** Bind the executable analysis implementation/configuration to the exact candidate and protocol identity.
 11. Derive P1–P8 from candidate-scoped evidence.
 12. Perform P9 independent verification.
 13. Create a new immutable freeze and independently verify that exact freeze.
