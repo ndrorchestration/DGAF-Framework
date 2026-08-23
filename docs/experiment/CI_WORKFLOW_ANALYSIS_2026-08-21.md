@@ -1,7 +1,7 @@
 # CI Workflow Analysis: pdmal-preauth-security.yml
 
 **Analyzed:** 2026-08-21  
-**Workflow blob SHA:** `9cff92a5c05703dbae636fb4b091ea89906cbcb0` (at PR #77, `4983f44a`)  
+**Workflow blob SHA:** `9cff92a5c05703dbae636fb4b091ea89906cbcb0` (at PR #77, `94fb6fd`)  
 **Status:** ANALYSIS COMPLETE — WORKFLOW EXISTS BUT NOT EXECUTED
 
 ---

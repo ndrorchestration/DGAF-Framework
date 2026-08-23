@@ -14,7 +14,7 @@ For P2 to close against this candidate, the verification must establish:
 ```
 P2 result
     ↓
-candidate SHA (4983f44a / b25a914c)
+candidate SHA (94fb6fd / b25a914c)
     ↓
 candidate manifest (CANDIDATE_MANIFEST_2026-08-21.json)
 ```

@@ -135,10 +135,10 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 
 **Attack:** An audit from an earlier state is used to draw conclusions about the current state.
 
-**Scenario:** The 2026-08-20 audit says "P2 IMPLEMENTED" for candidate `4983f44a`. Someone updates the candidate to `b25a914c` and uses the 2026-08-20 audit to claim "P2 is implemented" for the new candidate.
+**Scenario:** The 2026-08-20 audit says "P2 IMPLEMENTED" for candidate `94fb6fd`. Someone updates the candidate to `b25a914c` and uses the 2026-08-20 audit to claim "P2 is implemented" for the new candidate.
 
 **Expected detection:**
-- The audit should carry `examined_candidate_sha: 4983f44a`.
+- The audit should carry `examined_candidate_sha: 94fb6fd`.
 - The reviewer should compare this to the current candidate SHA (`b25a914c`).
 - If they don't match, the audit is stale for current-state conclusions.
 
@@ -146,7 +146,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 
 **Gap:** No audit self-staleness detection. See `AUDIT_SELF_STALENESS_SPEC_2026-08-21.md`.
 
-**Test:** Create an audit for candidate `4983f44a`. Update the candidate to `b25a914c`. Present the audit as applying to `b25a914c`. Expected: staleness detection flags the mismatch.
+**Test:** Create an audit for candidate `94fb6fd`. Update the candidate to `b25a914c`. Present the audit as applying to `b25a914c`. Expected: staleness detection flags the mismatch.
 
 ---
 

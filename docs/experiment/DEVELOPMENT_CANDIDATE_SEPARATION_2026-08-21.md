@@ -14,7 +14,7 @@ There is currently **no separation** between development and the candidate in th
 | Artifact | Location | SHA |
 |---|---|---|
 | Development HEAD | `main` branch | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` |
-| Candidate (local) | `pr-77-head` branch | `4983f44a1867d8ab2f18295a1ce23877ff8ea928` |
+| Candidate (local) | `pr-77-head` branch | `94fb6fdff64f2919d35938c5b1cb506625cf1139` |
 | Candidate (GitHub) | PR #77 head | `b25a914c0e86333a9af4b216a9acdfaec28e42b0` |
 | Uncommitted changes | Working tree | `DGAF_PDMAL_EXECUTION_READINESS_REFINED_2026-08-21.md`, `DGAF_QA_ASSERTION_REPORT.md` |
 
@@ -34,7 +34,7 @@ There is currently **no separation** between development and the candidate in th
 
 If PR #77 is merged to `main` without first establishing separation:
 
-1. The candidate (`4983f44a` / `b25a914c`) becomes indistinguishable from development HEAD.
+1. The candidate (`94fb6fd` / `b25a914c`) becomes indistinguishable from development HEAD.
 2. Any subsequent development change to `main` silently changes the "candidate."
 3. The experiment later points to "whatever is on main" — which is ambiguous.
 4. The evidence chain (`candidate SHA → source`) becomes untraceable because `main` moves.
@@ -54,7 +54,7 @@ git add docs/experiment/CANDIDATE_MANIFEST_2026-08-21.json
 git commit -m "docs(pdmal): establish candidate manifest for PR #77 corrected apparatus
 
 This manifest identifies the PR #77 corrected pilot apparatus as a
-specific candidate (SHA 4983f44a locally, b25a914c on GitHub) with
+specific candidate (SHA 94fb6fd locally, b25a914c on GitHub) with
 all component blob SHAs verified against git ls-tree.
 
 N=0. NOT AUTHORIZED. PRE-FREEZE. This manifest identifies the
@@ -67,10 +67,10 @@ Create a named reference that points to the candidate SHA:
 
 ```
 # Option A: tag (immutable by convention)
-git tag pdmal-candidate-2026-08-21 4983f44a1867d8ab2f18295a1ce23877ff8ea928
+git tag pdmal-candidate-2026-08-21 94fb6fdff64f2919d35938c5b1cb506625cf1139
 
 # Option B: dedicated branch (can be updated, needs protection)
-git branch pdmal-candidate-2026-08-21 4983f44a1867d8ab2f18295a1ce23877ff8ea928
+git branch pdmal-candidate-2026-08-21 94fb6fdff64f2919d35938c5b1cb506625cf1139
 ```
 
 A tag is preferred because it's conventionally immutable — you cannot move a tag without explicit force.

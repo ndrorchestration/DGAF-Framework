@@ -118,12 +118,12 @@ Every document states N=0 explicitly. No document makes empirical claims.
 
 | Document | PR #77 SHA |
 |----------|------------|
-| DGAF_PDMAL_EXECUTION_READINESS_REFINED | Line 9: `4983f44a1867d8ab2f18295a1ce23877ff8ea928` |
-| DGAF_QA_ASSERTION_REPORT | Line 6: `4983f44a1867d8ab2f18295a1ce23877ff8ea928` |
-| CANDIDATE_DEFINITION | Line 4: `4983f44a1867d8ab2f18295a1ce23877ff8ea928` |
-| PR77_COMPREHENSIVE_AUDIT | Line 4: `4983f44a1867d8ab2f18295a1ce23877ff8ea928` |
-| PR77_GAP_ANALYSIS | Line 4: `4983f44a1867d8ab2f18295a1ce23877ff8ea928` |
-| SYNTHESIS_BRIEFING | Line 50: `4983f44a` |
+| DGAF_PDMAL_EXECUTION_READINESS_REFINED | Line 9: `94fb6fdff64f2919d35938c5b1cb506625cf1139` |
+| DGAF_QA_ASSERTION_REPORT | Line 6: `94fb6fdff64f2919d35938c5b1cb506625cf1139` |
+| CANDIDATE_DEFINITION | Line 4: `94fb6fdff64f2919d35938c5b1cb506625cf1139` |
+| PR77_COMPREHENSIVE_AUDIT | Line 4: `94fb6fdff64f2919d35938c5b1cb506625cf1139` |
+| PR77_GAP_ANALYSIS | Line 4: `94fb6fdff64f2919d35938c5b1cb506625cf1139` |
+| SYNTHESIS_BRIEFING | Line 50: `94fb6fd` |
 
 **Result: CONSISTENT.** All documents agree on PR #77 local SHA.
 
@@ -137,7 +137,7 @@ Every document states N=0 explicitly. No document makes empirical claims.
 | PR77_COMPREHENSIVE_AUDIT | Line 5 |
 | SYNTHESIS_BRIEFING | Line 51 |
 
-**Result: CONSISTENT.** All documents acknowledge divergence: local `4983f44a`, GitHub `b25a914c`. SYNTHESIS_BRIEFING line 110 explicitly notes this as an unresolved tension.
+**Result: CONSISTENT.** All documents acknowledge divergence: local `94fb6fd`, GitHub `b25a914c`. SYNTHESIS_BRIEFING line 110 explicitly notes this as an unresolved tension.
 
 ---
 
@@ -415,7 +415,7 @@ All 16 documents are internally consistent and cross-consistent. No material con
 
 ### 7.3 KNOWN UNRESOLVED TENSIONS (Documented, Not Errors)
 
-1. **Local vs GitHub PR #77 divergence:** `4983f44a` (local) vs `b25a914c` (GitHub). All documents acknowledge this. SYNTHESIS_BRIEFING recommends sync before Gate 3 work.
+1. **Local vs GitHub PR #77 divergence:** `94fb6fd` (local) vs `b25a914c` (GitHub). All documents acknowledge this. SYNTHESIS_BRIEFING recommends sync before Gate 3 work.
 
 2. **PR #77 not mergeable on GitHub:** draft=true, mergeable=false. All documents consistently note this as a remaining item.
 

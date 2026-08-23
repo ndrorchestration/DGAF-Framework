@@ -134,7 +134,7 @@ A reviewer starts with a claim and walks backward to its underlying evidence. Ev
 
 **What exists today:**
 
-At PR #77 (`4983f44a`, blob `1a143b29`):
+At PR #77 (`94fb6fd`, blob `1a143b29`):
 - Status: FROZEN
 - State: FROZEN — post-freeze verification in progress
 - Freeze target SHA: `915e454e27eb2770e7f40a067a881b0783feaae4`
@@ -172,7 +172,7 @@ At local HEAD (`3510b86889`):
 
 **What exists today:**
 
-- Local candidate SHA: `4983f44a1867d8ab2f18295a1ce23877ff8ea928` (PR #77, `pr-77-head`)
+- Local candidate SHA: `94fb6fdff64f2919d35938c5b1cb506625cf1139` (PR #77, `pr-77-head`)
 - GitHub candidate SHA: `b25a914c0e86333a9af4b216a9acdfaec28e42b0` (PR #77 head, diverged from local)
 - Candidate manifest: `CANDIDATE_MANIFEST_2026-08-21.json` (written by hand, NOT YET COMMITTED)
 
@@ -187,7 +187,7 @@ At local HEAD (`3510b86889`):
 - Create protected candidate reference (Step 4)
 - Separate development from candidate (Step 4)
 
-**Status:** IDENTIFIED BUT NOT IMMUTABLE. The candidate SHA exists (4983f44a locally, b25a914c on GitHub), and the manifest identifies the components. But the candidate is not yet an immutable reference — the manifest is not committed, and there's no separation between development and candidate.
+**Status:** IDENTIFIED BUT NOT IMMUTABLE. The candidate SHA exists (94fb6fd locally, b25a914c on GitHub), and the manifest identifies the components. But the candidate is not yet an immutable reference — the manifest is not committed, and there's no separation between development and candidate.
 
 ---
 
@@ -200,7 +200,7 @@ Local HEAD (`3510b86889cd341f7a7cf9ab684fd37b2fafd758`):
 - `artifact_schema.py`: blob `41a9048` — PRE-FREEZE contract validation
 - No `pilot_artifact_schema.py`, no `test_security_controls.py`, no `durable_retention.py` (only on disk, not committed)
 
-PR #77 (`4983f44a`):
+PR #77 (`94fb6fd`):
 - `run_pilot.py`: blob `184f4aa7` — uses `ConsensusTask`, pilot mode with gating
 - `artifact_schema.py`: blob `41a9048` (unchanged)
 - `pilot_artifact_schema.py`: blob `2918a9d` — FROZEN pilot validation
@@ -241,11 +241,11 @@ FREEZE MANIFEST ── [PLACEHOLDER] ── FROZEN document exists at PR #77
          │                            freeze_commit_sha = PLACEHOLDER
          │                            primary_contrast = OPEN
          │
-CANDIDATE SHA ── [IDENTIFIED] ── 4983f44a (local) / b25a914c (GitHub)
+CANDIDATE SHA ── [IDENTIFIED] ── 94fb6fd (local) / b25a914c (GitHub)
          │                         Manifest exists but NOT committed
          │                         No dev/candidate separation
          │
-SOURCE ── [EXISTS] ── Repository at 3510b86889 (main) + PR #77 at 4983f44a
+SOURCE ── [EXISTS] ── Repository at 3510b86889 (main) + PR #77 at 94fb6fd
 ```
 
 ---

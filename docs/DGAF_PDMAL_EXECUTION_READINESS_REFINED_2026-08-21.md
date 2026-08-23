@@ -6,7 +6,7 @@
 
 **HEAD:** `3510b86889cd341f7a7cf9ab684fd37b2fafd758` (main)
 
-**PR #77 branch:** `chore/preauth-completeness-2026-08-20`, head `4983f44a1867d8ab2f18295a1ce23877ff8ea928`
+**PR #77 branch:** `chore/preauth-completeness-2026-08-20`, head `94fb6fdff64f2919d35938c5b1cb506625cf1139`
 
 **N = 0 throughout.** Pilot authorization NOT GRANTED. `3510b868...` is the historical superseded freeze; the corrected apparatus is PRE-FREEZE and not yet frozen.
 
@@ -19,7 +19,7 @@ This document is the corrected execution readiness assessment. It supersedes the
 - Agent-submitted artifacts from 5 surgical agents deployed post-sprint (5/5 JSONs on disk: schema_resolution, estimand_chain, pr77_doc_briefing, independent_verification_design, experimental_design_integrity)
 - Expert-panel corrections from a structured critique (~90% agreement, 8 material corrections)
 - Updated agent orchestration patterns logged during the sprint
-- Current GitHub state (PR #77 open/draft/mergeable, head `4983f44a`)
+- **Current GitHub state** (PR #77 open/draft/**NOT MERGEABLE**, head `94fb6fd`)
 
 The project is in **structured pre-freeze closure**, with remaining work bounded to identifiable engineering, provenance, scientific, operational, and independent-verification predicates. The 9-predicate model is the right abstraction — it turns 30+ checks into 9 material invariants.
 
@@ -56,7 +56,7 @@ The sprint report proposed making the Predicate Matrix YAML the authoritative, m
 
 If a YAML file's status field can close a predicate, configuration becomes evidence. P-EXP-2: Configuration must not become evidence.
 
-**Verification against source files:** `run_pilot.py` at PR #77 head (`4983f44a`) does NOT import `artifact_schema` or `pilot_artifact_schema` (grep count: 0 for both). The runner's SHA computation path (`_compute_artifact_sha256` using `json.dumps` + `hashlib.sha256`) is independent of the schema module's `canonical_json_bytes()`. This confirms that schema status/declaration files are NOT self-authorizing evidence of artifact validity — the actual artifact must be validated independently.
+**Verification against source files:** `run_pilot.py` at PR #77 head (`94fb6fd`) does NOT import `artifact_schema` or `pilot_artifact_schema` (grep count: 0 for both). The runner's SHA computation path (`_compute_artifact_sha256` using `json.dumps` + `hashlib.sha256`) is independent of the schema module's `canonical_json_bytes()`. This confirms that schema status/declaration files are NOT self-authorizing evidence of artifact validity — the actual artifact must be validated independently.
 
 ---
 
@@ -80,14 +80,12 @@ If a YAML file's status field can close a predicate, configuration becomes evide
 ||| `PRIMARY_CONTRAST_ADJUDICATION.md` | OPEN | OPEN |
 ||| `PDMAL_EXPERIMENT_PROTOCOL.md` | PRESENT at PR #77 (blob `2650e436`); PRE-FREEZE | PRE-FREEZE |
 ||| `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` | PRESENT at PR #77 (blob `a686366c`) AND at local HEAD (same blob); APPROVED PENDING PANEL RECORD (applies_to_sha: pending-amendment-commit) | PRE-FREEZE AMENDMENT |
-||| `pdmal-freeze-preparation.yml` | PRESENT at PR #77 (blob `4b6a1e45`); NOT executed | NOT at local HEAD |
-||| `PDM_ANALYSIS_PLAN_CERTIFICATE.md` | PRESENT at PR #77 (blob `9a443087`); analysis plan certificate, planning record | Not at local HEAD; analysis SHA unknown |
-||| `PDMAL_ANALYSIS_CONTROL_PLAN.md` | PRESENT at PR #77 (blob `3e556882`); partial estimand chain, does NOT adjudicate primary contrast | Not at local HEAD; planning record, not binding specification |
-||| `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` | PRESENT at PR #77 (blob `a686366c`); APPROVED PENDING PANEL RECORD (applies_to_sha: pending-amendment-commit) | PRE-FREEZE AMENDMENT |
-||| `pdmal-freeze-preparation.yml` | PRESENT at PR #77 (blob `4b6a1e45`); NOT executed | NOT at local HEAD |
-||| `PDM_ANALYSIS_PLAN_CERTIFICATE.md` | PRESENT at PR #77 (blob `9a443087`); analysis plan certificate, planning record | Not at local HEAD; analysis SHA unknown |
+||| `pdmal-freeze-preparation.yml` | NOT FOUND at PR #77 or at local HEAD (referenced in corrected report but does not exist) | NOT FOUND |
+||| `PRE_AUTHORIZATION_VERIFICATION_RECORD_2026-08-20.md` | PRESENT at PR #77 (blob `f51aea7a`); consolidated closure checklist; explicitly states "Corrected apparatus verified: NO; New freeze created: NO; Pilot authorized: NO; Empirical N: 0" | Not at local HEAD |
+||| `PRE_FLIGHT_RUNTIMES.md` | PRESENT at PR #77 (blob `5d172a19`); 2 dry-run runtimes (300s ceiling) | Not at local HEAD |
+||| `DOCUMENTATION_GAP_AUDIT.md` | PRESENT at PR #77 (blob `524eb759`); reconciliation of historical vs current state | Not at local HEAD |
 
-**State at PR #77 Head `4983f44a`:**
+**State at PR #77 Head `94fb6fd`:**
 
 PR #77 adds a forward branch that:
 - Retains `3510b86889` as historical evidence (executor implementation at `75a7f18`)
@@ -97,7 +95,7 @@ PR #77 adds a forward branch that:
 - Adds 5 new docs + modifies 2 docs
 - Explicitly states: NOT GRANTED, N=0, primary contrast OPEN
 
-**Important:** `artifact_schema.py` at `4983f44a` is blob `41a9048` (same as local HEAD) — the existing module is NOT wired into the runner. PR #77 adds a NEW module `pilot_artifact_schema.py` instead. The existing module remains for pre-freeze artifacts; the new module handles FROZEN pilot artifacts.
+**Important:** `artifact_schema.py` at `94fb6fd` is blob `41a9048` (same as local HEAD) — the existing module is NOT wired into the runner. PR #77 adds a NEW module `pilot_artifact_schema.py` instead. The existing module remains for pre-freeze artifacts; the new module handles FROZEN pilot artifacts.
 
 ---
 
@@ -146,7 +144,7 @@ Both modules declare `ARTIFACT_SCHEMA_VERSION = "1.0"` — **semantically incomp
 
 ### Agent #3: PR #77 Doc Briefing (`pr77_doc_briefing.json`, 30,447 bytes)
 
-**7 docs from PR #77 branch: 5 new + 2 modified. Total: 373 lines.**
+**7 docs from PR #77 branch: 5 new + 2 modified. Total: 373 lines.** (These are the 7 documents the earlier Phase 1 briefing agent analyzed from the PR #77 branch — NOT to be confused with the 16 evidence-preparation documents committed in this session's `ec7de74`.)
 
 New documents:
 
@@ -224,7 +222,7 @@ Modified documents:
 
 ## 4b. Sixteen-Document Evidence-Preparation Set (Committed 2026-08-21)
 
-**Commit `d8848d1`** (docs(pdmal): evidence-preparation documentation — Gates 2–4 + engineering design) adds 16 files to the repository (3,374 lines total, including the corrected report). This set establishes the evidence-preparation baseline for the DGAF/PDMAL completion journey. All documents produced from source-file verification (git ls-tree at `4983f44a`, file reads, corrected report, expert review) with no empirical claims (N=0) and no assertions of closed gates.
+**Commit `d8848d1`** (docs(pdmal): evidence-preparation documentation — Gates 2–4 + engineering design) adds 16 files to the repository (3,374 lines total, including the corrected report). This set establishes the evidence-preparation baseline for the DGAF/PDMAL completion journey. All documents produced from source-file verification (git ls-tree at `94fb6fd`, file reads, corrected report, expert review) with no empirical claims (N=0) and no assertions of closed gates.
 
 **All documents carry N=0, NOT GRANTED, PRE-FREEZE invariants explicitly.**
 
@@ -232,8 +230,8 @@ Modified documents:
 
 | Document | Size | Purpose | Key finding |
 |---|---|---|---|
-| `CANDIDATE_MANIFEST_2026-08-21.json` | 208 lines, 11,879 B | Canonical candidate reference: 18 components, all blob SHAs verified against `git ls-tree` at `4983f44a` | Candidate **IDENTIFIED — NOT YET IMMUTABLE**. `freeze_commit_sha` is PLACEHOLDER. `status: "IDENTIFIED — NOT YET IMMUTABLE"`. 11 gaps identified including inline validation, SHA consistency, primary contrast, candidate not committed, dev/candidate not separated, P2 not bound, analysis certificate not found, blinding key not established, runtime auth not cryptographic, CI not executed, PR#77 not mergeable. |
-| `CANDIDATE_DEFINITION_2026-08-21.md` | 155 lines, 8,632 B | Defines what constitutes the candidate (15 files at `4983f44a`) and what does NOT | 13 items missing from candidate: primary contrast, manifest committed, dev/candidate separation, P2 bound, runtime auth, FLAG-02 migration, propagation checking, audit self-staleness, false-green CI elimination, inline validation, SHA consistency, blinding key custody, analysis plan certificate. Candidate is **identified but not yet complete**. |
+| `CANDIDATE_MANIFEST_2026-08-21.json` | 208 lines, 11,879 B | Canonical candidate reference: 18 components, all blob SHAs verified against `git ls-tree` at `94fb6fd` | Candidate **IDENTIFIED — NOT YET IMMUTABLE**. `freeze_commit_sha` is PLACEHOLDER. `status: "IDENTIFIED — NOT YET IMMUTABLE"`. 11 gaps identified including inline validation, SHA consistency, primary contrast, candidate not committed, dev/candidate not separated, P2 not bound, analysis certificate not found, blinding key not established, runtime auth not cryptographic, CI not executed, PR#77 not mergeable. |
+| `CANDIDATE_DEFINITION_2026-08-21.md` | 155 lines, 8,632 B | Defines what constitutes the candidate (15 files at `94fb6fd`) and what does NOT | 13 items missing from candidate: primary contrast, manifest committed, dev/candidate separation, P2 bound, runtime auth, FLAG-02 migration, propagation checking, audit self-staleness, false-green CI elimination, inline validation, SHA consistency, blinding key custody, analysis plan certificate. Candidate is **identified but not yet complete**. |
 
 ### 4b.2. Development/Candidate Separation (Gate 2, Step 4)
 
@@ -276,7 +274,7 @@ Modified documents:
 | Document | Size | Purpose | Key finding |
 |---|---|---|---|
 | `SYNTHESIS_BRIEFING_2026-08-21.md` | 182 lines, 13,344 B | 12-source cross-reference synthesis | All sources agree on N=0, NOT GRANTED, PRE-FREEZE, OPEN primary contrast. No material disagreement. 5 source-to-claim confirmations documented. Resolves local vs GitHub PR#77 divergence, sprint fragment incompleteness, injected content staleness, provenance confusion (on disk vs committed vs at HEAD). Expert panel verdict (9/10) vs corrected scoring (0/9) NOT contradictory. |
-| `EVIDENCE_GRAPH_DRAFT_2026-08-21.md` | 292 lines, 12,520 B | 8-node evidence chain draft (claim → primary result → locked analysis → pilot artifact → pilot run → freeze manifest → candidate SHA → source) | **MOST NODES EMPTY (N=0).** Claim: PARTIALLY DEFINED (construct+estimand+endpoint exist; contrast+direction+success+falsification+multiplicity OPEN). Primary result: EMPTY. Locked analysis: NOT LOCKED (control plan is planning record, not locked spec; analysis plan certificate NOT FOUND). Pilot artifact: EMPTY. Pilot run: EMPTY. Freeze manifest: PARTIALLY PRESENT (FROZEN doc exists at PR#77 but PLACEHOLDER commit SHA, OPEN primary contrast). Candidate SHA: IDENTIFIED (`4983f44a`). Source: AVAILABLE. |
+| `EVIDENCE_GRAPH_DRAFT_2026-08-21.md` | 292 lines, 12,520 B | 8-node evidence chain draft (claim → primary result → locked analysis → pilot artifact → pilot run → freeze manifest → candidate SHA → source) | **MOST NODES EMPTY (N=0).** Claim: PARTIALLY DEFINED (construct+estimand+endpoint exist; contrast+direction+success+falsification+multiplicity OPEN). Primary result: EMPTY. Locked analysis: NOT LOCKED (control plan is planning record, not locked spec; analysis plan certificate NOT FOUND). Pilot artifact: EMPTY. Pilot run: EMPTY. Freeze manifest: PARTIALLY PRESENT (FROZEN doc exists at PR#77 but PLACEHOLDER commit SHA, OPEN primary contrast). Candidate SHA: IDENTIFIED (`94fb6fd`). Source: AVAILABLE. |
 | `ADVERSARIAL_PREFLIGHT_DESIGN_2026-08-21.md` | 295 lines, 19,948 B | 12 attack vectors with expected responses and current status | Each attack vector assessed: 1. Wrong SHA (PARTIAL — env var check, not cryptographic). 2. Wrong topology (unclear if runner validates against frozen set). 3. Wrong config/env vars (runner checks existence not value). 4. Missing artifact (no automated count check). 5. Modified artifact (sidecar detection exists but auditor must actively run). 6. Exposed condition (blinding key custody NOT established). 7. Stale audit (NOT IMPLEMENTED). 8. Missing test (CI doesn't verify test content). 9. Incorrect analysis binding (NOT IMPLEMENTED, no analysis plan certificate). 10. Environment fingerprint mismatch (fingerprint method vs auditor method may not match). 11. Sidecar hash mismatch (detectable via `verify_sidecar()` if auditor runs it). 12. Record count mismatch (detectable via `validate_artifact()` count assertion). |
 
 ---
@@ -293,14 +291,14 @@ The sprint report scored 1/9 closed (Candidate Integrity: CLOSED). The expert pa
 
 | Predicate | Sprint score | Corrected score | Basis |
 |---|---|---|---|
-| **P1: Candidate Integrity** | CLOSED (1/9) | **PARTIAL** — SHA identified, full verification pending | SHA identified (4983f44a) ≠ verification. PRE_AUTHORIZATION_RECORD says "verified: NO" |
+| **P1: Candidate Integrity** | CLOSED (1/9) | **PARTIAL** — SHA identified, full verification pending | SHA identified (94fb6fd) ≠ verification. PRE_AUTHORIZATION_RECORD says "verified: NO" |
 | **P2: Execution Governance** | PARTIAL | **PARTIAL** — gating functions exist, CI not executed, blinding key mechanism not fully specified | Gating functions (`require_frozen_commit`, `require_pilot_authorization`, `blind_condition`) exist in PR #77 runner; CI execution of test_security_controls.py not yet performed; out-of-band blinding key mechanism not fully specified |
 | **P3: Artifact Integrity** | PARTIAL | **PARTIAL** — schema exists, inline validation NOT wired, runner SHA path independent of schema, consistency unverified | `pilot_artifact_schema.py` provides validation contract; inline validation NOT wired into runner; runner's inline SHA computation must match schema's `canonical_json_bytes()` — unverified |
 | **P4: Security/Blinding Integrity** | PARTIAL | **PARTIAL** — tests exist (6 adversarial), CI not executed, blinding custody OPEN (synthetic only) | `test_security_controls.py` (6 tests) and `pdmal-preauth-security.yml` (CI workflow) exist at PR #77; CI execution not yet performed; tests use monkeypatching; blinding key out-of-band mechanism not fully specified |
 | **P5: Provenance/Reproducibility** | PARTIAL | **PARTIAL** — provenance recorded, env/sidecar not fully verified | Provenance blob SHAs recorded; runtime characterization evidence exists (Run #14, 300s ceiling verified); blinding operational evidence exists (Run 32113226935, synthetic custody only); env fingerprint consistency not deeply tested in CI; sidecar integrity not verified (no artifacts from PR #77 candidate) |
-**P6: Durable Evidence Custody** | OPEN | **OPEN** — file committed at local HEAD but NOT at PR #77; archive root TBD | `durable_retention.py` EXISTS on disk at local HEAD (11,666 bytes, 338 lines, 12 functions), committed at local HEAD `3510b86889` but NOT at PR #77 head `4983f44a`. Importable. Archive root NOT SET — TBD. Retention policy document exists. Status: committed at development HEAD, absent from candidate branch.
+**P6: Durable Evidence Custody** | OPEN | **OPEN** — file committed at local HEAD but NOT at PR #77; archive root TBD | `durable_retention.py` EXISTS on disk at local HEAD (11,666 bytes, 338 lines, 12 functions), committed at local HEAD `3510b86889` but NOT at PR #77 head `94fb6fd`. Importable. Archive root NOT SET — TBD. Retention policy document exists. Status: committed at development HEAD, absent from candidate branch.
 | **P7: Scientific Target Specification** | PARTIAL | **PARTIAL** — construct/estimand/endpoint specified, contrast/direction/success/falsification/multiplicity OPEN | Construct ✓, estimand ✓, endpoint ✓; primary contrast (4 candidates, none selected) ✗ OPEN; direction (NOT YET DECLARED) ✗; success criterion (NOT YET DECLARED) ✗; falsification criterion (NOT YET DECLARED) ✗; statistical unit (one seed, confirmed) ✓; multiplicity treatment (NOT YET CLOSED) ✗ |
-| **P8: Analysis Lock** | OPEN | **OPEN** — analysis SHA not recorded, analysis plan certificate present at PR#77 but planning-record only, statistical analysis plan and pipeline spec NOT FOUND | Analysis implementation/configuration SHA not yet recorded. `PDMAL_ANALYSIS_PLAN_CERTIFICATE.md` EXISTS at PR #77 (`4983f44a`) — blob `9a443087` — but is a planning record, not a locked specification with frozen SHA. `PDMAL_STATISTICAL_ANALYSIS_PLAN.md` and `PDMAL_PIPELINE_SPEC.md` were NOT FOUND at expected repository paths during 2026-08-20 GitHub audit. Exact authoritative paths/SHAs must be established before they can be treated as repository-authoritative evidence.
+|| **P8: Analysis Lock** | OPEN | **OPEN** — analysis SHA not recorded, analysis plan NOT FOUND at PR #77, statistical analysis plan and pipeline spec NOT FOUND | Analysis implementation/configuration SHA not yet recorded. `PDMAL_ANALYSIS_PLAN_CERTIFICATE.md` was NOT FOUND at PR #77, HEAD, or on disk (no file exists; `git ls-tree 94fb6fd docs/experiment/PDMAL_ANALYSIS_PLAN_CERTIFICATE.md` produces no output). `PDMAL_STATISTICAL_ANALYSIS_PLAN.md` and `PDMAL_PIPELINE_SPEC.md` were NOT FOUND at expected repository paths during 2026-08-20 GitHub audit. Exact authoritative paths/SHAs must be established before they can be treated as repository-authoritative evidence.
 | **P9: Independent Verification** | NOT EXECUTED | **NOT EXECUTED** — 7-layer architecture designed, not executed, N=0 | 7-layer verification architecture designed (CI + separate audit for each layer); 10 CI-appropriate checks defined; 8 separate-audit checks defined; 8-step freeze verification procedure with PASS/FAIL/INCONCLUSIVE; evidence chain defined; critical gaps documented; cannot execute until pilot data exists (N=0) |
 
 **All predicates are PARTIAL or OPEN.** No predicate is CLOSED. No predicate is unambiguously closed. This is the honest assessment consistent with N=0 throughout and the sprint report's own disclaimer.
@@ -410,7 +408,7 @@ The sprint report proposed "retrospective document consolidation" — collapsing
 || `PDMAL_CURRENT_CONTROL_STATE.md` | Control plane | Current | Control state tracking | **Preserve** — different purpose (in `docs/experiment/`) |
 || `FROZEN_STATE_COMMIT_2026-08-20.md` | Historical | Historical | Frozen state snapshot | **Preserve** as immutable evidence (at PR #77, not at local HEAD) |
 
-**Historical records should be preserved** when they establish what was frozen when. Temporal/provenance separation is legitimate — `CURRENT_STATE.md` answers "what is the current state?" while `FROZEN_STATE_COMMIT_2026-08-20.md` answers "what was frozen at this time?" — different questions, different documents. Note: `FROZEN_STATE_COMMIT_2026-08-20.md` exists at PR #77 (`4983f44a`) but is NOT at local HEAD (`3510b86889`) — it is a historical artifact retained in the candidate branch.
+**Historical records should be preserved** when they establish what was frozen when. Temporal/provenance separation is legitimate — `CURRENT_STATE.md` answers "what is the current state?" while `FROZEN_STATE_COMMIT_2026-08-20.md` answers "what was frozen at this time?" — different questions, different documents. Note: `FROZEN_STATE_COMMIT_2026-08-20.md` exists at PR #77 (`94fb6fd`) but is NOT at local HEAD (`3510b86889`) — it is a historical artifact retained in the candidate branch.
 
 The dangerous move would be to optimize the documentation tree so aggressively that historical traceability is destroyed. The anti-yellow-tape rule applies: consolidation is justified only when it reduces uncertainty or prevents a material failure mode not already covered.
 

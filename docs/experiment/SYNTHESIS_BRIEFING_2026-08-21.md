@@ -47,21 +47,21 @@
 | Claim | Source | Status |
 |---|---|---|
 | HEAD = 3510b86889cd341f7a7cf9ab684fd37b2fafd758 | `git rev-parse HEAD` | ✅ CONFIRMED |
-| PR #77 local head = 4983f44a | `git ls-tree pr-77-head` | ✅ CONFIRMED |
+**PR #77 local head = 94fb6fd** | `git ls-tree pr-77-head` | ✅ CONFIRMED |
 | PR #77 GitHub head = b25a914c | GitHub API | ✅ CONFIRMED |
 | artifact_schema.py blob = 41a9048 at HEAD | `git ls-tree HEAD` | ✅ CONFIRMED |
-| artifact_schema.py blob = 41a9048 at PR #77 | `git ls-tree 4983f44a` | ✅ CONFIRMED (unchanged) |
-| pilot_artifact_schema.py blob = 2918a9d at PR #77 | `git ls-tree 4983f44a` | ✅ CONFIRMED |
-| run_pilot.py blob = 184f4aa7 at PR #77 | `git ls-tree 4983f44a` | ✅ CONFIRMED |
-| test_security_controls.py blob = ddc59571 at PR #77 | `git ls-tree 4983f44a` | ✅ CONFIRMED (actual: ddc59571, not injected 5edd3a6c) |
-| pdmal-preauth-security.yml blob = 9cff92a5 at PR #77 | `git ls-tree 4983f44a` | ✅ CONFIRMED (actual: 9cff92a5, not injected 4ffe0d53) |
+| artifact_schema.py blob = 41a9048 at PR #77 | `git ls-tree 94fb6fd` | ✅ CONFIRMED (unchanged) |
+| pilot_artifact_schema.py blob = 2918a9d at PR #77 | `git ls-tree 94fb6fd` | ✅ CONFIRMED |
+| run_pilot.py blob = 184f4aa7 at PR #77 | `git ls-tree 94fb6fd` | ✅ CONFIRMED |
+| test_security_controls.py blob = ddc59571 at PR #77 | `git ls-tree 94fb6fd` | ✅ CONFIRMED (actual: ddc59571, not injected 5edd3a6c) |
+| pdmal-preauth-security.yml blob = 9cff92a5 at PR #77 | `git ls-tree 94fb6fd` | ✅ CONFIRMED (actual: 9cff92a5, not injected 4ffe0d53) |
 | run_pilot.py does NOT import schema modules | `grep` on `run_pilot.py` | ✅ CONFIRMED (grep: 0) |
-| PRE_AUTHORIZATION_RECORD: "verified: NO" | `git show 4983f44a:.../PRE_AUTHORIZATION...` | ✅ CONFIRMED |
+| PRE_AUTHORIZATION_RECORD: "verified: NO" | `git show 94fb6fd:.../PRE_AUTHORIZATION...` | ✅ CONFIRMED |
 | PRIMARY_CONTRAST_ADJUDICATION: status=OPEN, state=PRE-FREEZE | file read | ✅ CONFIRMED |
 | PDM_PROTOCOL_MATRIX_AMENDMENT: status=APPROVED PENDING PANEL RECORD | file read | ✅ CONFIRMED |
-| PDM_ANALYSIS_PLAN_CERTIFICATE.md: NOT FOUND | `git ls-tree 4983f44a` | ✅ CONFIRMED |
-| durable_retention.py: NOT at PR #77 | `git ls-tree 4983f44a` | ✅ CONFIRMED (only on disk at local HEAD) |
-|| pdmal-freeze-preparation.yml: EXISTS at PR #77 (blob `4b6a1e45`) | `git ls-tree 4983f44a` | ✅ CONFIRMED |
+| PDM_ANALYSIS_PLAN_CERTIFICATE.md: NOT FOUND | `git ls-tree 94fb6fd` | ✅ CONFIRMED |
+| durable_retention.py: NOT at PR #77 | `git ls-tree 94fb6fd` | ✅ CONFIRMED (only on disk at local HEAD) |
+|| pdmal-freeze-preparation.yml: EXISTS at PR #77 (blob `4b6a1e45`) | `git ls-tree 94fb6fd` | ✅ CONFIRMED |
 | PDM_CURRENT_CONTROL_STATE: protocol_freeze=BLOCKED, pilot_auth=NOT GRANTED, empirical=0 | file read | ✅ CONFIRMED |
 | CURRENT_STATE: protocol_state=PRE-FREEZE, executor_state=OPEN, empirical=0 | file read | ✅ CONFIRMED |
 | FREEZE_MANIFEST: primary_contrast=OPEN, N=0, auth=NOT GRANTED | file read | ✅ CONFIRMED |
@@ -109,8 +109,8 @@ These discrepancies do NOT affect the corrected report's core claims (which used
 
 ### 1. Local vs GitHub PR #77 divergence
 
-Local `pr-77-head` = `4983f44a`. GitHub PR #77 head = `b25a914c`. The GitHub head has moved forward with additional commits not yet fetched locally. This means:
-- The corrected report's claims about PR #77 contents are based on `4983f44a`, which may be stale relative to GitHub.
+Local `pr-77-head` = `94fb6fd`. GitHub PR #77 head = `b25a914c`. The GitHub head has moved forward with additional commits not yet fetched locally. This means:
+- The corrected report's claims about PR #77 contents are based on `94fb6fd`, which may be stale relative to GitHub.
 - Before any Gate 3 work, the repo must be synced (`git fetch origin pull/77/head`).
 - The baseline snapshot documents this discrepancy.
 
@@ -149,7 +149,7 @@ The expert panel scored the sprint report 9/10 and said the corrections are soun
 
 ### High Priority
 
-1. **Sync the repo:** `git fetch origin pull/77/head` to get `b25a914c` locally. Verify that the additional commits between `4983f44a` and `b25a914c` don't change the candidate materially.
+1. **Sync the repo:** `git fetch origin pull/77/head` to get `b25a914c` locally. Verify that the additional commits between `94fb6fd` and `b25a914c` don't change the candidate materially.
 
 2. **Verify the 6 adversarial tests:** Read `test_security_controls.py` (blob `ddc59571`) and enumerate the exact tests. Verify they cover the claimed surfaces.
 

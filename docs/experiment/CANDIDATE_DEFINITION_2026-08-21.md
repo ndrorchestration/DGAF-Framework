@@ -1,7 +1,7 @@
 # DGAF/PDMAL Experiment Candidate Definition
 
 **Established:** 2026-08-21  
-**Candidate SHA:** `4983f44a1867d8ab2f18295a1ce23877ff8ea928` (PR #77, local `pr-77-head`)  
+**Candidate SHA:** `94fb6fdff64f2919d35938c5b1cb506625cf1139` (PR #77, local `pr-77-head`)  
 **GitHub PR #77 head:** `b25a914c0e86333a9af4b216a9acdfaec28e42b0` (diverged from local)  
 **Local HEAD:** `3510b86889cd341f7a7cf9ab684fd37b2fafd758` (main)  
 **Freeze target SHA:** `915e454e27eb2770e7f40a067a881b0783feaae4` (from freeze manifest)  
@@ -13,7 +13,7 @@
 
 This is the PR #77 corrected pilot apparatus — the engineering response to the DGAF/PDMAL sprint findings. It is a **collection of code, configuration, documentation, and workflow files** that together form the proposed corrected pilot boundary.
 
-The candidate is identified by the PR #77 head SHA (`4983f44a` locally, `b25a914c` on GitHub). Everything at that SHA constitutes the candidate. Anything not at that SHA is NOT part of the candidate (even if it's on local HEAD or on disk).
+The candidate is identified by the PR #77 head SHA (`94fb6fd` locally, `b25a914c` on GitHub). Everything at that SHA constitutes the candidate. Anything not at that SHA is NOT part of the candidate (even if it's on local HEAD or on disk).
 
 ---
 
@@ -115,8 +115,8 @@ The candidate is identified by the PR #77 head SHA (`4983f44a` locally, `b25a914
 ## What Is NOT Part of This Candidate
 
 - Local HEAD (`3510b86889`) — the historical superseded freeze. Retained as historical evidence.
-- Anything on disk that is not committed at `4983f44a` — including `durable_retention.py` (on disk, not at PR#77).
-- The GitHub PR #77 head (`b25a914c`) — diverged from local `4983f44a` with additional commits not yet fetched.
+- Anything on disk that is not committed at `94fb6fd` — including `durable_retention.py` (on disk, not at PR#77).
+- The GitHub PR #77 head (`b25a914c`) — diverged from local `94fb6fd` with additional commits not yet fetched.
 - `PDMAL_STATISTICAL_ANALYSIS_PLAN.md` — does not exist at any path.
 - `PDMAL_PIPELINE_SPEC.md` — does not exist at any path.
 - `PDMAL_ANALYSIS_PLAN_CERTIFICATE.md` — does not exist at any path.

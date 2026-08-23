@@ -50,7 +50,7 @@ Every audit document should carry the SHA of the candidate/source it examined:
 ```yaml
 ---
 audit_id: "PDMAL-P2-AUDIT-2026-08-21"
-examined_candidate_sha: "4983f44a1867d8ab2f18295a1ce23877ff8ea928"
+examined_candidate_sha: "94fb6fdff64f2919d35938c5b1cb506625cf1139"
 examined_at: "2026-08-21T12:00:00Z"
 examined_by: "ndrorchestration"
 status: "PASS"  # or FAIL, INCONCLUSIVE
@@ -123,7 +123,7 @@ Current candidate: b25a914c (changed)
 # PDMAL P2 Audit — 2026-08-21
 
 **Audit ID:** PDMAL-P2-AUDIT-2026-08-21  
-**Examined candidate SHA:** 4983f44a1867d8ab2f18295a1ce23877ff8ea928  
+**Examined candidate SHA:** 94fb6fdff64f2919d35938c5b1cb506625cf1139  
 **Examined at:** 2026-08-21  
 **Examined by:** ndrorchestration  
 

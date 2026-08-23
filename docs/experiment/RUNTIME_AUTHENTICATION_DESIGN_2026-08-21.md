@@ -87,7 +87,7 @@ exec python experiments/pdmal_pilot/run_pilot.py "$@"
 The expected candidate SHA is embedded in the runner code itself (or in a companion file that is part of the candidate):
 
 ```python
-EXPECTED_CANDIDATE_SHA = "4983f44a1867d8ab2f18295a1ce23877ff8ea928"
+EXPECTED_CANDIDATE_SHA = "94fb6fdff64f2919d35938c5b1cb506625cf1139"
 
 def verify_self() -> None:
     # Verify runner's own SHA against embedded expectation
