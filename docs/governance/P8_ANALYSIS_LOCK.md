@@ -2,85 +2,57 @@
 
 **Status:** OPEN / PRE-FREEZE
 **Authority:** DGAF/PDMAL experimental-design control
-**Purpose:** Bind the executable primary analysis to the adopted P7 scientific target before any unblinding or empirical interpretation.
+**Purpose:** Bind the executable primary analysis and its artifact contract to the adopted P7 scientific target before any unblinding or empirical interpretation.
 
-## P7 inputs now fixed
+## P7 inputs fixed
 
 - Primary contrast: full `dgaf` versus `null`.
 - Primary endpoint: FFCR.
-- Statistical unit: seed.
-- Seed pairing key: root seed identity with matched frozen matrix coordinates.
-- Seed-level primary difference: `Delta_s = FFCR_s(dgaf) - FFCR_s(null)`.
-- Primary estimand: equal-weight mean seed-level paired difference over analyzable paired seeds.
-- Positive difference favors DGAF.
-- FFCR is computed as the proportion of complete topology × failure-count matrix cells whose recorded `ffcr_success` is true.
-- Secondary/exploratory family: PDMAL vs Ring; condition × topology interaction; structural/execution diagnostics.
-- No post-observation weighting changes are permitted.
-- No outcome-dependent seed exclusion or silent seed-level imputation is permitted.
+- Statistical unit: seed, paired by root seed identity.
+- Seed-level effect: `Delta_s = FFCR_s(dgaf) - FFCR_s(null)`.
+- Primary estimand: equal-weight mean of complete paired seed effects.
+- FFCR: proportion of complete topology × failure-count cells whose recorded `ffcr_success` is true.
+- No outcome-dependent weighting, exclusion, or silent imputation.
 
-## P8 implementation decisions now fixed
+## Current candidate bindings
 
-The first canonical analysis implementation is `experiments/pdmal_pilot/analysis.py`.
-
-| Binding | Current value | State |
+| Binding | Value | State |
 |---|---|---|
-| Analysis implementation path | `experiments/pdmal_pilot/analysis.py` | CANDIDATE |
-| Analysis implementation blob SHA | `24e7375f5ac907713460269ea2b65408ea6f0455` | CANDIDATE |
-| Configuration | Canonical configuration emitted by `analysis_config_bytes()` | CANDIDATE |
-| Configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | CANDIDATE |
-| Bootstrap | Paired seed effects; percentile interval | SELECTED |
-| Bootstrap resamples | `10,000` | SELECTED |
-| Bootstrap RNG seed | `20260823` | SELECTED |
-| Confidence interval | Two-sided percentile 95% CI | SELECTED |
-| Alpha | `0.05` | SELECTED |
-| Primary decision | Estimate > 0 and CI lower bound > 0 | SELECTED |
-| Secondary multiplicity | Holm if a secondary family is presented with confirmatory inference; otherwise descriptive/exploratory | SELECTED |
-| Exclusion/missingness | Complete paired seed required; no outcome-aware exclusion; infrastructure failures recorded separately | SELECTED |
-| Protocol version | `0.7.5` | CANDIDATE — reconciled |
-| Protocol blob SHA | `d986923643b1ef6f17d4099a628e0dfd2e20c147` | CANDIDATE |
-| Candidate apparatus base commit | `ac3c1899bdd85c2af186ad6971376fe250dad993` | CANDIDATE |
-| P8 CI workflow blob SHA | `305ec08ef17f5026c53cdd53b2f099a0b5127eb3` | CANDIDATE |
-| Manifest identity | Exact new freeze/manifest binding | OPEN |
+| Analysis implementation | `experiments/pdmal_pilot/analysis.py` | CANDIDATE |
+| Analysis blob | `24e7375f5ac907713460269ea2b65408ea6f0455` | CANDIDATE |
+| Analysis configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | CANDIDATE |
+| Artifact schema | `experiments/pdmal_pilot/pilot_artifact_schema.py` | CANDIDATE — corrected in current candidate |
+| Runner | `experiments/pdmal_pilot/run_pilot.py` | CANDIDATE — corrected in current candidate |
+| Protocol | v`0.7.5`, blob `d986923643b1ef6f17d4099a628e0dfd2e20c147` | CANDIDATE |
+| Bootstrap | 10,000 paired-seed percentile resamples, seed `20260823` | SELECTED |
+| CI | two-sided 95%, `alpha=0.05` | SELECTED |
+| Directional support | estimate > 0 and CI lower bound > 0 | SELECTED |
+| Secondary policy | Holm if confirmatory; otherwise exploratory/descriptive | SELECTED |
 
-The candidate apparatus base commit is the exact repository state after the protocol identity repair and before this control-document reconciliation. Subsequent control-document commits do not alter the apparatus bindings above.
+## P8 discrepancy and correction
 
-## Execution/artifact dependency discovered during P8
+Candidate audit found that the first P8 implementation pass was still not end-to-end compatible: the runner emitted `ffcr_success`, but the pilot artifact schema did not require it, and the analysis required top-level `topology` and `failure_count` coordinates that the runner had not exposed at those locations.
 
-The existing pilot runner previously recorded `final_std` as `primary_outcome` but did not emit an explicit boolean `ffcr_success`. Because P7 defines FFCR as failure-free completion proportion, an explicit `ffcr_success` field is required for the canonical analysis to consume the immutable artifacts without reconstructing execution semantics.
+The current candidate corrects this by making `ffcr_success`, `topology`, and `failure_count` required, integrity-covered artifact fields. The runner now emits those fields directly and defines `ffcr_success` as successful execution **and** satisfied consensus criterion, matching the governing protocol. The schema rejects malformed outcomes and impossible `ffcr_success=true` / non-`SUCCESS` combinations. Adversarial tests cover the contract.
 
-The runner has now been amended to record `consensus_success` as `ffcr_success`. The current runner declares protocol version `0.7.5`, matching the governing v0.7.5 matrix amendment. These are apparatus changes and therefore must be included in candidate verification before any freeze.
+This correction invalidates the earlier apparatus-base identity as a closure candidate. Earlier candidate hashes remain historical provenance only. The exact post-correction candidate identity must be established from the executed tree.
 
 ## Analysis boundaries
 
-The canonical analysis:
+The canonical analysis consumes validated seed artifacts plus an explicit post-unblinding condition mapping. It does not execute trials, regenerate observations, repair incomplete records, infer missing outcomes, or unblind labels. It rejects missing or duplicate matrix cells and malformed outcomes, and resamples complete paired seed effects rather than individual trials.
 
-- consumes validated seed artifacts only;
-- does not execute trials;
-- does not regenerate observations;
-- does not repair incomplete records;
-- rejects duplicate/missing matrix cells;
-- rejects malformed `ffcr_success` values;
-- requires an explicit post-unblinding condition mapping;
-- resamples complete paired seed effects, never individual trials;
-- reports exclusions and missingness explicitly;
-- cannot convert exploratory secondary results into the primary conclusion.
+## Closure blockers
 
-## Lock rules
+P8 remains **OPEN** pending all of:
 
-1. No empirical observation may be used to choose any open binding.
-2. No unblinding may occur before every required binding is populated and independently checked.
-3. Changing a locked binding after unblinding invalidates the current analysis lock and requires a new governance decision.
-4. Historical analysis or characterization artifacts cannot substitute for the exact candidate implementation/configuration binding.
-5. P8 closure does not authorize the pilot; authorization remains a separate governance transition after freeze and P9 verification.
+1. Candidate-scoped Governance CI execution on the corrected apparatus.
+2. Inspection of the explicit P8 artifact-schema and analysis test results.
+3. Exact executed-tree SHA/provenance reconciliation and binding update.
+4. Environment/topology reproducibility evidence.
+5. Durable evidence retention with direct retrieval and integrity verification.
+6. Independent verification required by the governing acceptance process.
 
-## Current blocker
-
-P8 is materially advanced but remains **OPEN** pending:
-
-- candidate-scoped CI execution and recorded result;
-- independent verification of the analysis implementation;
-- exact manifest/freeze identity;
-- durable evidence custody and direct retrieval/hash proof.
+A successful CI run is necessary evidence, not by itself P8 closure.
 
 **Pilot authorization:** NOT GRANTED.
 **Empirical N:** 0.
