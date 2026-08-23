@@ -1,14 +1,14 @@
 {
   "manifest_version": "1.0",
   "candidate_identity": {
-    "candidate_sha": "4983f44a1867d8ab2f18295a1ce23877ff8ea928",
+    "candidate_sha": "94fb6fdff64f2919d35938c5b1cb506625cf1139",
     "candidate_label": "PR77-corrected-pilot-apparatus",
     "freeze_target_sha": "915e454e27eb2770e7f40a067a881b0783feaae4",
     "established_at": "2026-08-21",
     "established_by": "ndrorchestration",
     "github_pr_number": 77,
     "github_pr_head_sha": "b25a914c0e86333a9af4b216a9acdfaec28e42b0",
-    "local_pr_head_sha": "4983f44a1867d8ab2f18295a1ce23877ff8ea928",
+    "local_pr_head_sha": "94fb6fdff64f2919d35938c5b1cb506625cf1139",
     "local_pr_branch": "pr-77-head",
     "status": "IDENTIFIED — NOT YET IMMUTABLE"
   },
@@ -193,7 +193,7 @@
     },
     {
       "gap": "pr77_shas_diverged_from_injected_values",
-      "description": "Several injected blob SHAs were stale. Actual values used above from git ls-tree at 4983f44a. test_security_controls.py: injected 5edd3a6c, actual ddc59571. pdmal-preauth-security.yml: injected 4ffe0d53, actual 9cff92a5.",
+      "description": "Several injected blob SHAs were stale. Actual values used above from git ls-tree at 94fb6fd. test_security_controls.py: injected 5edd3a6c, actual ddc59571. pdmal-preauth-security.yml: injected 4ffe0d53, actual 9cff92a5.",
       "severity": "low",
       "step_affected": "All (documentation accuracy)"
     }
@@ -203,6 +203,6 @@
   "protocol_state": "PRE-FREEZE",
   "primary_contrast": "OPEN — 4 candidates, none selected",
   "established_by": "ndrorchestration",
-  "established_via": "git ls-tree verification at 4983f44a + source file reads",
-  "verification_basis": "All blob SHAs verified against git ls-tree 4983f44a. All claims traceable to source files at local HEAD (3510b86889) or PR#77 (4983f44a). N=0 throughout. No empirical claims."
+  "established_via": "git ls-tree verification at 94fb6fd + source file reads",
+  "verification_basis": "All blob SHAs verified against git ls-tree 94fb6fd. All claims traceable to source files at local HEAD (3510b86889) or PR#77 (4983f44a). N=0 throughout. No empirical claims."
 }
