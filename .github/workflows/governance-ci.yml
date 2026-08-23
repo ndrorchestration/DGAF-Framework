@@ -31,8 +31,8 @@ jobs:
       - name: Run P-42 conductor and recovery tests
         run: python -m pytest -q tests/test_ahg_conductor.py tests/test_ahg_recovery.py
 
-      - name: Run P8 canonical analysis tests
-        run: python -m pytest -q experiments/pdmal_pilot/test_analysis.py
+      - name: Run P8 pilot artifact and analysis tests
+        run: python -m pytest -q experiments/pdmal_pilot/test_analysis.py experiments/pdmal_pilot/test_security_controls.py
 
       - name: Run Issue #32 deterministic evaluation slice
         run: |
@@ -45,15 +45,12 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-
           path = Path('artifacts/role_boundary_coherence.json')
           data = json.loads(path.read_text(encoding='utf-8'))
           data['evidence_record'] = {
               'evidence_class': data.get('evidence_class', 'SYNTHETIC'),
-              'source_commit': '${{ github.sha }}',
-              'workflow_run_id': '${{ github.run_id }}',
-              'job': 'governance-ci',
-              'python_version': '3.12',
+              'source_commit': '${{ github.sha }}', 'workflow_run_id': '${{ github.run_id }}',
+              'job': 'governance-ci', 'python_version': '3.12',
               'command': 'python evaluations/role_boundary_coherence.py --output artifacts/role_boundary_coherence.json',
               'scope': 'repository-authored deterministic fixture evaluation',
               'retained_artifact': 'artifacts/role_boundary_coherence.json',
@@ -89,39 +86,27 @@ jobs:
       - name: Record TLC evidence metadata
         run: |
           python - <<'PY'
-          import json
-          import re
+          import json, re
           from pathlib import Path
-
           text = Path('artifacts/tlc_model_check.txt').read_text(encoding='utf-8', errors='replace')
           distinct = re.search(r'(\d+) distinct states found', text)
           generated = re.search(r'(\d+) states generated', text)
           depth = re.search(r'depth of the complete state graph is (\d+)', text)
           version = re.search(r'TLC2 Version ([^\n]+)', text)
           no_error = 'Model checking completed. No error has been found.' in text
-
           evidence = {
-              'evidence_class': 'BOUNDED_FORMAL_MODEL_CHECK',
-              'source_commit': '${{ github.sha }}',
-              'workflow_run_id': '${{ github.run_id }}',
-              'job': 'governance-ci',
-              'java_version': '17',
-              'tool': 'TLA+ Tools',
-              'tool_release': 'v1.8.0',
+              'evidence_class': 'BOUNDED_FORMAL_MODEL_CHECK', 'source_commit': '${{ github.sha }}',
+              'workflow_run_id': '${{ github.run_id }}', 'job': 'governance-ci',
+              'java_version': '17', 'tool': 'TLA+ Tools', 'tool_release': 'v1.8.0',
               'tool_sha256': 'ab323b79802aedc3203b3f9af37c6aca3ed43f4e0225b36f2aa77b26de46c05f',
               'command': 'java -cp tla2tools.jar tlc2.TLC -config specs/DGAFContainment.cfg specs/DGAFContainment.tla',
-              'result': 'PASS' if no_error else 'FAIL',
-              'no_error_found': no_error,
+              'result': 'PASS' if no_error else 'FAIL', 'no_error_found': no_error,
               'states_generated': int(generated.group(1)) if generated else None,
               'distinct_states': int(distinct.group(1)) if distinct else None,
               'graph_depth': int(depth.group(1)) if depth else None,
               'tlc_version': version.group(1).strip() if version else None,
               'scope': 'bounded state-space/model checking defined by the current TLA+ specification and configuration',
-              'not_claimed': [
-                  'unbounded mathematical proof',
-                  'live production execution',
-                  'real-world efficacy',
-              ],
+              'not_claimed': ['unbounded mathematical proof', 'live production execution', 'real-world efficacy'],
               'raw_log': 'artifacts/tlc_model_check.txt',
           }
           Path('artifacts/tlc_evidence.json').write_text(json.dumps(evidence, indent=2, sort_keys=True) + '\n', encoding='utf-8')
@@ -142,5 +127,7 @@ jobs:
           test -f specs/DGAFContainment.tla
           test -f specs/DGAFContainment.cfg
           test -f experiments/pdmal_pilot/analysis.py
+          test -f experiments/pdmal_pilot/pilot_artifact_schema.py
           test -f experiments/pdmal_pilot/test_analysis.py
+          test -f experiments/pdmal_pilot/test_security_controls.py
           echo 'Governance CI checks completed.'
