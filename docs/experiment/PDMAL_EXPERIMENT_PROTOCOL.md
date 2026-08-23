@@ -5,7 +5,7 @@ authority: Both
 owner: DGAF/PDMAL experimental-design control
 last_verified: 2026-08-23
 applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
-protocol_blob_sha: PENDING-AFTER-COMMIT
+protocol_blob_sha: BOUND_EXTERNALLY_BY_P8_LOCK
 supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
 ---
 
@@ -79,7 +79,7 @@ Historical characterization artifacts remain evidence only for the exact SHA and
 The protocol remains pre-freeze. The following remain open:
 
 - Candidate-scoped P8 implementation/configuration verification and hash binding
-- Exact protocol blob SHA after this final protocol commit
+- Exact protocol blob SHA is bound externally by the P8 analysis lock after this commit
 - Freeze commit SHA
 - Independent verification
 - Separate pilot authorization
