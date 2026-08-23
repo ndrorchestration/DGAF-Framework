@@ -205,6 +205,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 ),
                 "iterations_completed": result.iterations_completed if result else 0,
                 "attempt_status": status.value,
+                "consensus_success": bool(result.consensus_success) if result else False,
                 "deviation": result.deviation if result else None,
             }
             record = {
@@ -222,6 +223,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 },
                 "failure": failure_count > 0,
                 "recovery": status is AttemptStatus.SUCCESS,
+                "ffcr_success": raw_trial["consensus_success"],
                 "runtime_ms": runtime_ms,
                 "status": "SUCCESS" if status is AttemptStatus.SUCCESS else "UNRECOVERED_FAILURE",
                 "excluded": False,
