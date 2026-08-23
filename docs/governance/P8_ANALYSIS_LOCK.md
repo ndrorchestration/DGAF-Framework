@@ -9,32 +9,57 @@
 - Primary contrast: full `dgaf` versus `null`.
 - Primary endpoint: FFCR.
 - Statistical unit: seed.
-- Seed pairing key: seed identity.
+- Seed pairing key: root seed identity with matched frozen matrix coordinates.
 - Seed-level primary difference: `Delta_s = FFCR_s(dgaf) - FFCR_s(null)`.
-- Primary estimand: expected seed-level paired difference over the pre-specified seed population.
+- Primary estimand: equal-weight mean seed-level paired difference over analyzable paired seeds.
 - Positive difference favors DGAF.
+- FFCR is computed as the proportion of complete topology × failure-count matrix cells whose recorded `ffcr_success` is true.
 - Secondary/exploratory family: PDMAL vs Ring; condition × topology interaction; structural/execution diagnostics.
 - No post-observation weighting changes are permitted.
 - No outcome-dependent seed exclusion or silent seed-level imputation is permitted.
 
-## Required P8 bindings
+## P8 implementation decisions now fixed
 
-The following values must be populated from the executable analysis implementation before P8 can close:
+The first canonical analysis implementation is `experiments/pdmal_pilot/analysis.py`.
 
-| Binding | Required state |
-|---|---|
-| Analysis implementation path | OPEN — exact repository path required |
-| Analysis implementation SHA | OPEN — exact candidate commit/blob required |
-| Configuration path | OPEN — exact repository path or canonical configuration required |
-| Configuration SHA | OPEN — canonical digest required |
-| Bootstrap resample count | OPEN — must be fixed before unblinding |
-| Bootstrap RNG policy | OPEN — must be fixed before unblinding |
-| Confidence interval convention | OPEN — must be fixed before unblinding |
-| Alpha / decision threshold | OPEN — must be fixed before unblinding |
-| Exclusion/missing-data executable behavior | OPEN — must match adopted P7 contract |
-| Secondary multiplicity procedure | OPEN — must be fixed before confirmatory interpretation |
-| Protocol identity | OPEN — exact protocol blob SHA required after final protocol commit |
-| Manifest identity | OPEN — exact freeze/manifest binding required |
+| Binding | Current value | State |
+|---|---|---|
+| Analysis implementation path | `experiments/pdmal_pilot/analysis.py` | CANDIDATE |
+| Analysis implementation SHA | Pending final candidate commit binding | OPEN |
+| Configuration | Canonical configuration emitted by `analysis_config_bytes()` | CANDIDATE |
+| Configuration SHA | Produced by `analysis_config_sha256()` | OPEN — bind exact value |
+| Bootstrap | Paired seed effects; percentile interval | SELECTED |
+| Bootstrap resamples | `10,000` | SELECTED |
+| Bootstrap RNG seed | `20260823` | SELECTED |
+| Confidence interval | Two-sided percentile 95% CI | SELECTED |
+| Alpha | `0.05` | SELECTED |
+| Primary decision | Estimate > 0 and CI lower bound > 0 | SELECTED |
+| Secondary multiplicity | Holm if a secondary family is presented with confirmatory inference; otherwise descriptive/exploratory | SELECTED |
+| Exclusion/missingness | Complete paired seed required; no outcome-aware exclusion; infrastructure failures recorded separately | SELECTED |
+| Protocol identity | Exact protocol blob SHA after final protocol commit | OPEN |
+| Manifest identity | Exact new freeze/manifest binding | OPEN |
+
+## Execution/artifact dependency discovered during P8
+
+The existing pilot runner previously recorded `final_std` as `primary_outcome` but did not emit an explicit boolean `ffcr_success`. Because P7 defines FFCR as failure-free completion proportion, an explicit `ffcr_success` field is required for the canonical analysis to consume the immutable artifacts without reconstructing execution semantics.
+
+The runner has therefore been amended to record `consensus_success` as `ffcr_success`. This is an apparatus change and therefore must be included in candidate verification before any freeze.
+
+The runner also currently reports protocol version `0.7.4` while the governing protocol incorporates the v0.7.5 matrix amendment. This version identity must be reconciled before P8 closure/freeze rather than silently ignored.
+
+## Analysis boundaries
+
+The canonical analysis:
+
+- consumes validated seed artifacts only;
+- does not execute trials;
+- does not regenerate observations;
+- does not repair incomplete records;
+- rejects duplicate/missing matrix cells;
+- rejects malformed `ffcr_success` values;
+- resamples complete paired seed effects, never individual trials;
+- reports exclusions and missingness explicitly;
+- cannot convert exploratory secondary results into the primary conclusion.
 
 ## Lock rules
 
@@ -46,17 +71,14 @@ The following values must be populated from the executable analysis implementati
 
 ## Current blocker
 
-The repository currently contains the P7 scientific target and analysis-control boundary, but an independently identifiable executable analysis implementation/configuration with all required P8 parameters is not yet established as the locked artifact. Therefore P8 is intentionally **OPEN**, not inferred closed from documentation.
+P8 is materially advanced but remains **OPEN** pending:
 
-## Required next actions
-
-1. Locate or implement the executable seed-level primary analysis.
-2. Add deterministic configuration for bootstrap, RNG, interval, alpha/decision threshold, exclusions, and secondary multiplicity.
-3. Add tests covering the adopted P7 contract and negative-path behavior.
-4. Compute canonical implementation/configuration hashes.
-5. Bind those hashes to the exact protocol and candidate manifest.
-6. Run candidate-scoped verification.
-7. Close P8 only after the resulting lock record is internally consistent.
+- final candidate commit identity;
+- configuration digest binding;
+- protocol version/identity reconciliation;
+- candidate-scoped CI and analysis-test verification;
+- independent verification of the analysis implementation;
+- exact manifest/freeze identity.
 
 **Pilot authorization:** NOT GRANTED.
 **Empirical N:** 0.
