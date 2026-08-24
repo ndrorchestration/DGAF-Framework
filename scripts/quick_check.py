@@ -21,7 +21,7 @@ def chk(name, cond, msg=""):
     print(f"  {icon} {name}" + (f": {msg}" if msg else ""))
     if not cond: ERRORS.append(name)
 
-print("[DGAF] Quick Check — resonant_decay package v1.7.0")
+print("[DGAF] Quick Check — resonant_decay package v1.8.0")
 print("─" * 60)
 
 # 1. PSI cubic
@@ -93,4 +93,4 @@ if ERRORS:
     print(f"  ✗ FAILED — {len(ERRORS)} check(s): {ERRORS}")
     sys.exit(1)
 else:
-    print("  ✓ ALL CHECKS PASSED — resonant_decay v1.7.0 is regression-clean.")
+    print("  ✓ ALL CHECKS PASSED — resonant_decay v1.8.0 is regression-clean.")

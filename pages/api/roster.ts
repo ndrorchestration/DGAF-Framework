@@ -31,7 +31,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     ? AGENTS.filter(a => a.status === filter || a.tier === filter)
     : AGENTS
   res.status(200).json({
-    version:      process.env.ENSEMBLE_VERSION ?? '1.7.0',
+    version:      process.env.ENSEMBLE_VERSION ?? '1.8.0',
     agent_count:  agents.length,
     triad_count:  TRIADS.length,
     ndr_patterns: 33,

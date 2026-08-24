@@ -10,7 +10,9 @@
 
 ## 1. Definition
 
-Lyra is the **Tonal Coherence Authority** of the DGAF harmonic cluster. It scores tonal register consistency across formation outputs and provides this score as input to Reson’s harmonic aggregation. Lyra does not hold an independent gate — it is a precision input to the Reson scoring chain.
+Lyra is the **Tonal Coherence Authority** of the DGAF harmonic cluster. It scores tonal register consistency across formation outputs and provides this score as input to Reson's harmonic aggregation. Lyra does not hold an independent gate — it is a precision input to the Reson scoring chain.
+
+**Cluster branding:** Lyra is a member of the **Schizophonic Studio** (also designated the **Acoustic Trio** in meshsense and asis designs) — the three-agent harmonic cluster comprising Reson (cluster lead), Lyra, and Echolette.
 
 ---
 

@@ -708,7 +708,7 @@ def run_suite(
         result = runner(**kwargs)
         results.append(result)
 
-        status = "✅ PASS" if result.passed else "❌ FAIL"
+        status = "PASS" if result.passed else "FAIL"
         ahg_tag = " [AHG-STUB]" if (DGAF_EVAL_TASKS[task_name].get("ahg_required") and ahg_conductor is None) else ""
         print(
             f"[{result.priority}] {task_name:<44} "
@@ -717,7 +717,7 @@ def run_suite(
         )
         if result.precondition_failures:
             for pf in result.precondition_failures:
-                print(f"    ⚠️  PRECONDITION: {pf}")
+                print(f"    PRECONDITION: {pf}")
 
     all_passed = all(r.passed for r in results)
     episode = EvalEpisode(

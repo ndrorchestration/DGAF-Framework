@@ -2,40 +2,47 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-19
-applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
-verification_evidence:
-  - Runtime Run #14 (32112658368)
-  - Durable artifact checksum verified from Run #14 artifact 9315467977
-  - Blinding operational verification Run 32113226935 / artifact 9328114023
-scope_note: >
-  This index is synchronized to the PR #65 merge baseline
-  915e454e27eb2770e7f40a067a881b0783feaae4. Individual evidence remains
-  scoped to its exact tested SHA; later documentation commits do not
-  retroactively change or promote historical evidence.
-
+last_verified: 2026-08-21
+applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
+scope_note: >-
+  This index records evidence and gate state. Historical evidence remains
+  scoped to the exact SHA/run that produced it. Candidate verification does
+  not inherit historical verification automatically.
 ---
 
 # PDMAL Evidence Index
 
-This index records evidence and gate state for the PDMAL experimental-control track. It is a control-plane document, not empirical evidence. Every entry is scoped to its exact tested SHA; later documentation changes do not inherit verification automatically.
+This is a control-plane registry, not empirical evidence and not a self-authorizing freeze record.
 
-## Evidence Inventory
+## Evidence inventory
 
-| Evidence | Status | SHA / Run | Sub-status | Notes |
-|---|---|---|---|---|---|
-| Environment lock | VERIFIED | `7ba0e1c` | Locked | Pre-freeze runner validation; locked installation / resolver reproducibility |
-| PDMAL implementation | VERIFIED | `08500a7a129a39c21dc890a71a85e5d996e4c4b3` | Run #74 | ConsensusTask implementation and artifact integrity (`32111556449`) |
-| Runtime characterization | OPERATIONALLY CHARACTERIZED | `a0ff248` | Run #14 | 72/72 seed matrix trials; ceiling characterization (`32112658368`) |
-| Blinding operational verification | CLOSED / PASS | `1d8c62386ea09f09c1dac768e1e59d4df284edee` | Run `32113226935` | Synthetic custody dry-run; no production secret access; no empirical data; artifact `9328114023` |
-| Durable retention | OPEN | — | Release pending | Durable archive requires published release assets and checksum verification |
+| Evidence | State | Identity | Interpretation |
+|---|---|---|---|
+| Current repository | CURRENT | Resolve `main` at verification time | Pre-authorization mainline |
+| Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` | Historical apparatus only |
+| Corrected pilot runner | CANDIDATE | Current mainline runner | Exact candidate verification pending |
+| Environment lock | VERIFY | Python 3.12.0; NumPy 2.5.1; NetworkX 3.6.1 | Fresh matching environment required |
+| Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368` | Operational characterization, not efficacy evidence |
+| Blinding operational verification | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935` | Synthetic custody only |
+| Artifact contract | PARTIAL | `pilot_artifact_schema.py` + tests + inline runner enforcement | Fresh candidate CI/audit pending |
+| Security controls | VERIFY | `test_security_controls.py` + pre-authorization workflow | Fresh CI pending |
+| Topology provenance | VERIFY | `PDMAL_TOPOLOGY_FINGERPRINT_MANIFEST.md` | Recompute against exact freeze candidate |
+| Durable retention | OPEN | Policy present; operational archive not established | Direct write/retrieval/hash evidence required |
+| Primary contrast | OPEN | `PRIMARY_CONTRAST_ADJUDICATION.md` | Scientific decision required |
+| Analysis lock | OPEN | `PDMAL_ANALYSIS_CONTROL_PLAN.md` | Implementation/configuration SHA required |
+| Independent verification | NOT EXECUTED | P9 audit design | Must verify candidate-scoped evidence |
 
-## Runtime Characterization
+## Runtime characterization provenance
 
-Run #14 (`32112658368`) completed the registered 72/72 runtime characterization matrix. The retained artifact is `runtime_characterization.json` and its authoritative file SHA-256 is:
+Latest recorded reconciliation:
 
-`f6db24e5dd2659d4395c0752845e23f182a8ae6b304433e56ae9c2f4c155f6ea`
+- Release ZIP SHA-256: `ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20`
+- Inner `runtime_characterization.json` SHA-256: `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea`
+- Run: `32112658368`
+- Artifact: `9315467977`
 
-The earlier recorded digest beginning `42da1112` was incorrect and is superseded. Direct extraction of artifact `9315467977` from Run #14 produced `runtime_characterization.json` with SHA-256 `f6db24e5dd2659d4395c0752845e23f182a8ae6b304433e56ae9c2f4c155f6ea`; the accompanying `runtime_characterization.json.sha256` sidecar contains the same digest.
+These values supersede the older conflicting `f6db...` record in this registry. A fresh byte-level recomputation from the release asset should be performed before the final freeze packet when the asset is available.
 
-The runtime characterization is operational evidence only. It does not authorize empirical execution.
+## Evidence boundary
+
+Historical acceptance, characterization, synthetic blinding, topology, and security evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until an explicitly authorized 50-seed pilot occurs.

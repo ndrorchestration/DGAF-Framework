@@ -2,70 +2,72 @@
 
 ## Status
 
-Audit performed before empirical execution and updated after expert-panel adjudication and subsequent CI troubleshooting. The substantive scientific and methodological protocol choices are resolved. Remaining work is limited to implementation/provenance verification required before the protocol can legitimately enter `FROZEN` status.
+Audit reconciled on 2026-08-20 against the frozen experimental apparatus at `3510b86889cd341f7a7cf9ab684fd37b2fafd758`. Earlier pre-freeze findings remain historical evidence; they must not be read as the current gate state. The genuine executor gap is CLOSED. The apparatus is frozen. Remaining work is post-freeze verification, methodological closure, analysis implementation locking, and authorization.
 
-## Findings
+## Current findings
 
-| Area | Status | Required action |
+| Area | Current status | Required action |
 |---|---|---|
-| P6a CORS verification | CLOSED | Verified run `32092041579`, artifact `9308650112`; no further P6a work required. |
-| PDMAL experiment protocol | PRE-FREEZE / PANEL-ADJUDICATED | Decisions are recorded in `PDMAL_EXPERIMENT_PROTOCOL.md`; freeze only after the remaining implementation controls and approved experimental commit are established. |
-| Topology/baseline matrix | PANEL-ADJUDICATED / PROVENANCE PENDING | Record exact implementation SHAs, generation parameters, dependency/version identifiers, graph validation results, and canonical graph fingerprints for every topology. |
-| Primary endpoint | RESOLVED | FFCR: completed trials without unrecovered failure / eligible trials; higher is better; primary estimand is the mean paired seed-level FFCR difference. |
-| Secondary endpoints | RESOLVED | Recovery success, recovery latency, unrecovered failures, runtime, variance, connectivity/surviving component size, protocol compliance, missing/invalid rate, gate-block frequency; `D_a`/phi/topology diagnostics exploratory. |
-| RNG specification | RESOLVED / VERSION RECORD PENDING | NumPy `Generator(PCG64)` using a root `SeedSequence` with domain-separated `spawn()` child streams. Record exact Python/NumPy versions, stream manifest, and checkpoint-state requirements. |
-| Trial ordering/randomization | RESOLVED | Block-randomized within seed using dedicated ordering stream; realized order retained in auditable provenance without exposing analytical mapping. |
-| Failure/recovery semantics | RESOLVED / RUNNER VERIFICATION PENDING | Candidate fixed values: 60s per-attempt timeout, 3 attempts, 30s recovery window; verify semantics against the pinned runner. |
-| Exclusion rules | RESOLVED | Objective protocol violations only; retain exclusions with reasons; no outcome-based exclusion. |
-| Stopping rules | RESOLVED | No efficacy stopping; only predefined safety, provenance, blinding, protocol-integrity, secret-exposure, catastrophic execution, or comparability halts. |
-| Statistical analysis plan | RESOLVED / IMPLEMENTATION PENDING | One seed = one paired block; raw FFCR differences are the primary estimand; mean paired difference with 95% paired bootstrap CI; paired t-test is sensitivity/reference only. Implement and test the frozen analysis. |
-| Sample-size rule | RESOLVED / IMPLEMENTATION PENDING | Target power 0.80, two-sided alpha 0.05, MDD 0.15; pilot estimates within-seed SD of paired FFCR difference; fixed paired-difference power approximation; round upward with `math.ceil`. Verify implementation and consistency with the primary estimand. |
-| Blinding/unblinding | RESOLVED / CUSTODY VERIFICATION PENDING | Owner holds secret and does not analyze; executor/analyst see blinded IDs; panel chair unblinds after dataset/preprocessing/exclusion/integrity freeze; mapping stored separately as protected object. |
-| Pilot acceptance criteria | RESOLVED / RUNTIME CEILING PENDING | 100% attempted, 0 blinding breaches, missing/invalid <=5%, all conditions execute, no comparability-affecting deviation, artifact/provenance checks pass, runtime <= frozen ceiling. |
-| Data/artifact schema | RESOLVED / IMPLEMENTATION PENDING | One JSON artifact per seed; GitHub Actions artifact or approved durable storage; retain artifact ID, SHA-256, protocol/runner SHA, environment fingerprint, workflow/run ID, and attestation where supported. |
-| Environment reproducibility | RESOLVED / VERSION RECORD PENDING | Pin exact Python/NumPy/dependencies/runner image and retain environment fingerprint/lock hash. |
-| Protocol deviation register | RESOLVED / IMPLEMENTATION PENDING | Operationalize deviation ID, seed/trial, cause, impact, include/exclude decision, and authorization record. |
-| Evidence classification | PRESENT | Maintain VERIFIED / VALIDATED / EMPIRICALLY SUPPORTED separation and condition-specific claims. |
-| CI dependency boundary | DOCUMENTED / CORRECTED | Workflow now installs the PDMAL direct-pin manifest plus `pptl/requirements.txt`; `pandas` is declared by PPTL and is no longer treated as an undocumented direct PDMAL dependency. |
-| PPTL import boundary | DOCUMENTED / CORRECTED / CI PENDING | `pptl/__init__.py` no longer imports the inconsistent legacy `IntegratedOrchestrator` path for adapter loading. Fresh current-head CI is still required. |
-| CI evidence log | ADDED | `docs/experiment/PDMAL_CI_EVIDENCE_LOG_2026-08-18.md` records observed failures, corrections, evidence boundaries, and the next verification gate. |
-| Metrics provenance registry | LEGACY GAP | `docs/qa/METRICS_PROVENANCE.md` remains separate technical debt and is not a pilot blocker when new pilot metrics are explicitly registered. |
-| Issue #76 | UNVERIFIED | GitHub returned 404; do not infer state until repository identity/reference is resolved. |
+| PR #75 / evidence architecture | CLOSED | Squash-merged at `a44e42cd3040a822656e724c8b47aa02221baf3f`. |
+| Genuine experimental executor | CLOSED | `run_pilot.py` invokes `ConsensusTask`; frozen implementation is `75a7f18`. |
+| Executor acceptance | CLOSED | 2 seeds × 180 trials = 360; all SUCCESS; acceptance evidence only; N = 0. |
+| Protocol freeze | CLOSED | Freeze commit `3510b86889cd341f7a7cf9ab684fd37b2fafd758`. |
+| Frozen apparatus integrity | VERIFY | Post-freeze checks must verify exact SHAs without modifying apparatus code. |
+| Environment reproducibility | VERIFY | Reproduce Python 3.12.0 / NumPy 2.5.1 / NetworkX 3.6.1 from the locked environment before pilot. |
+| Topology fingerprints | VERIFY / RECONCILE | Confirm final fingerprint values and provenance against the frozen manifest/protocol. |
+| Failure/recovery semantics | VERIFY | Confirm pinned runner semantics remain 60s timeout / 3 attempts / 30s recovery window where specified. |
+| Primary endpoint | RESOLVED | FFCR remains the primary endpoint. |
+| Primary contrast | OPEN / MUST CLOSE | Explicit methodological adjudication is required before pilot authorization. |
+| Secondary/exploratory endpoints | RESOLVED | Preserve endpoint classification; topology/phi diagnostics are not efficacy endpoints unless explicitly adjudicated. |
+| RNG specification | RESOLVED / VERIFY | Confirm exact Python/NumPy versions and stream manifest in the pilot environment. |
+| Statistical analysis plan | RESOLVED | Frozen plan exists; implementation/configuration SHA must be recorded before unblinding. |
+| Sample-size rule | DOCUMENTED / VERIFY | Existing protocol rationale must be verified; do not invent a post-freeze power claim or use acceptance data as an implicit pilot for design. |
+| Blinding custody | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935` passed with synthetic custody only; mock unblinding rehearsal may be used without touching production secret. |
+| Security/adversarial controls | FINAL VERIFICATION | Formalize remaining controls as tests against the frozen apparatus; no apparatus modification after freeze. |
+| Runtime ceiling | VERIFIED FOR CHARACTERIZATION | 300s ceiling characterized; scalability verification only if existing evidence is insufficient for operational feasibility. |
+| Artifact schema/integrity | VERIFIED | Frozen schema/component provenance recorded; final smoke test should revalidate. |
+| Durable retention | VERIFY / CLOSE | Verify pilot archive destination, checksum procedure, and retrieval path before authorization. |
+| Protocol deviation register | VERIFY | Confirm operational deviation capture is executable and auditable. |
+| Evidence classification | PRESENT | Maintain VERIFIED / VALIDATED / EMPIRICALLY SUPPORTED separation; N remains 0. |
+| CI dependency boundary | HISTORICAL / RESOLVED | Earlier dependency/import corrections are historical evidence; current-head CI must remain scoped to its executed SHA. |
+| Metrics provenance registry | LEGACY GAP | Separate technical debt; not a pilot blocker when pilot metrics are explicitly registered. |
+| Issue #76 | UNVERIFIED | Do not infer state without a resolvable repository reference. |
+| Hermes / expert-agent reports | NOT PRESENT IN REPO | GitHub search found no `Hermes` or `expert-agent` report files in `ndrorchestration/DGAF-Framework`; reports supplied elsewhere must be separately incorporated if they are intended to be repository evidence. |
 
-## CI evidence now documented
+## Cross-gap reconciliation
 
-The current troubleshooting sequence establishes the following without promoting it to functional verification:
+The previous audit's nine pre-freeze blockers are no longer the current gate list because the project subsequently implemented and froze the executor. In particular:
 
-1. `ModuleNotFoundError: pandas` was observed during adapter-test collection.
-2. `pptl/requirements.txt` was verified to declare `pandas>=2.0.0`.
-3. Commit `067f8706...` corrected CI dependency installation to include both dependency manifests.
-4. The subsequent collection failure moved to `ImportError: cannot import name 'TGLConfig'`, demonstrating that the dependency boundary had advanced and exposing the inconsistent legacy orchestrator import path.
-5. Repository inspection confirmed the adapter directly uses `TriadicGovernanceLoop`, `TGLHooks`, and `run_turn()` and does not require `IntegratedOrchestrator`.
-6. Commit `ffde0b9a...` removed the unrelated orchestrator import/export from `pptl/__init__.py`.
-7. A fresh CI result for the corrected head remains pending.
+- the executor implementation gap is closed;
+- the freeze exists and is bound to `3510b868...`;
+- synthetic blinding verification is closed;
+- executor acceptance evidence exists and remains classified as non-empirical;
+- environment, topology, retention, primary-contrast, security, and analysis-lock items remain verification/adjudication concerns rather than evidence of efficacy.
 
-These findings are implementation/provenance evidence only. They do not establish PDMAL efficacy.
+## Frozen apparatus boundary
 
-## Remaining pre-freeze verification blockers
+The freeze commit is the authoritative experimental apparatus boundary. Documentation-only reconciliation after the freeze does not redefine the frozen apparatus. If any verification finding requires modifying `run_pilot.py`, `task_engine.py`, or another experimental component, the freeze must be invalidated and a new freeze created after repair and full re-verification.
 
-Only these implementation/provenance controls remain before the protocol can legitimately enter `FROZEN` status:
+## Current pre-authorization gate
 
-1. Fresh current-head CI verification after the dependency and import-boundary corrections, including `test_dgaf_tgl_adapter.py`.
-2. Exact topology implementation/source SHAs, parameters, graph validation, and fingerprints.
-3. Exact Python/NumPy/environment versions and RNG manifest.
-4. Verification of 60s timeout / 3 attempts / 30s recovery semantics in the pinned runner.
-5. Verification of the paired-analysis implementation, bootstrap CI, and paired-difference sample-size implementation.
-6. Canonical artifact schema validator, retention path, integrity manifest, and attestation path.
-7. Blinded-label custody and protected mapping/unblinding mechanism.
-8. Characterization and freeze of the numeric 300s seed-runtime ceiling in the pinned execution environment.
-9. Operational protocol deviation register.
+Before authorization, the project should close the following:
 
-These are control/provenance requirements, not empirical results.
+1. fresh Python 3.12.0 environment verification;
+2. final one-seed smoke test;
+3. remaining adversarial/security tests against frozen code;
+4. topology fingerprint reconciliation;
+5. primary-contrast adjudication;
+6. durable retention verification;
+7. protocol-deviation operational verification;
+8. statistical analysis implementation/configuration SHA lock;
+9. consolidated pre-authorization verification record.
 
-## Gate rule
+A five-seed scalability run is conditional: perform it only if existing runtime characterization does not establish operational feasibility of the 50-seed pilot. It remains infrastructure verification, not empirical evidence.
 
-No empirical seed generation is authorized until the remaining blockers above are resolved, the protocol is frozen with a commit SHA and timestamp, and pilot authorization is explicitly recorded.
+## Authorization boundary
+
+Pilot authorization remains a separate governance decision. No empirical seed generation is authorized until the pre-authorization controls are closed and explicit authorization is recorded.
 
 ## Evidence boundary
 
-This audit identifies documentation completeness and protocol controls. It does not constitute evidence that PDMAL is effective.
+This audit identifies documentation completeness, control coverage, and provenance requirements. It does not constitute evidence that PDMAL is effective. The current empirical state remains **N = 0**.

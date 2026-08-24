@@ -29,7 +29,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   res.status(200).json({
     status:   'ok',
-    version:  process.env.ENSEMBLE_VERSION ?? '1.7.0',
+    version:  process.env.ENSEMBLE_VERSION ?? '1.8.0',
     ...state,
     _warning: state.cold_start ? COLD_START_WARNING : null,
   })

@@ -2,59 +2,75 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-18
-applies_to_sha: 6680bc95ddbf4fc430973c8eb78e736a28329a38
+last_verified: 2026-08-23
+applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
 ---
 
 # PDMAL Current Control State
 
-This document is the detailed operational gate record. GitHub Actions evidence is authoritative for execution state; historical runs are never promoted to current-head evidence. Use `docs/CURRENT_STATE.md` for the concise snapshot and `docs/evidence/PDMAL_EVIDENCE_INDEX.md` for evidence mapping.
+This is the current pre-authorization gate record. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact tested SHA. This document describes the moving pre-freeze state and therefore does not pin a mutable main SHA.
 
-## Current branch and implementation
-
-- Branch: `epistemic/evidence-architecture-v1`
-- Current documentation head at this synchronization: `6680bc95ddbf4fc430973c8eb78e736a28329a38`
-- Authoritative task specification: `v0.7.4`
-- ConsensusTask implementation: CI-verified by Run #74 on `08500a7`
-- Runtime characterization: operationally verified by Run #14 on `a0ff248`
-- Blinding operational test: workflow/script implemented; dedicated execution evidence not yet observed
-- Retention: policy recorded; durable archive implementation remains open
-
-## Gate board
+## Current state
 
 | Control | State | Evidence / blocker |
 |---|---|---|
-| Environment lock | CLOSED | Runs #67/#68 passed; genuine resolver lock generation and locked installation observed |
-| Fresh contract verification | CLOSED | Run #74 passed after circular-import correction |
-| Topology provenance | VERIFIED | Fingerprint/reproducibility tests exercised in the PDMAL CI series |
-| Artifact schema/integrity | VERIFIED | Schema versioning, fail-closed validation, and current pre-freeze artifact checks |
-| Task specification | APPROVED | v0.7.4 approved for implementation |
-| ConsensusTask | VERIFIED | Run #74, commit `08500a7` |
-| Runtime characterization | OPERATIONALLY CHARACTERIZED | Run #14 `32112658368`; 72/72 trials completed; artifact validated |
-| 300-second seed ceiling | VERIFIED FOR CHARACTERIZATION MATRIX | Runtime artifact shows all measured seed runtimes within ceiling |
-| Blinding custody | OPEN | Synthetic dry-run implementation exists; workflow execution and procedural custody evidence pending |
-| Long-term retention | OPEN | Policy decided; durable research archive not yet established/verified |
-| Freeze packet | PENDING | Dependent on blinding and durable-retention closure |
-| Protocol freeze | BLOCKED | Not all required controls closed |
-| Pilot authorization | NOT GRANTED | Requires explicit post-freeze authorization |
-| Empirical data | 0 | No empirical execution authorized |
+| Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` |
+| Corrected runner | CANDIDATE | Exact-SHA gating and pilot artifact validation are present; runner now emits explicit `ffcr_success`; fresh candidate verification required |
+| Environment lock | VERIFY | Target Python 3.12.0, NumPy 2.5.1, NetworkX 3.6.1 |
+| Executor contract | PARTIAL | Stale test reconciled; fresh CI required |
+| Artifact contract | PARTIAL | Pilot schema and inline validator/sidecar checks present; `ffcr_success` is an additional explicit outcome field; fresh candidate verification required |
+| Topology provenance | VERIFY | Current-source fingerprint manifest restored; final candidate re-computation required |
+| Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical Run #14; non-empirical |
+| Blinding custody | CLOSED FOR SYNTHETIC VERIFICATION | Historical synthetic custody evidence; production key custody still requires operational evidence |
+| Security controls | VERIFY | Pre-authorization workflow/tests present; fresh CI required |
+| Durable retention | OPEN | Archive destination and direct retrieval/hash proof not established |
+| Primary contrast | ADOPTED / P7 | Full `dgaf` vs `null`; FFCR; seed-paired primary analysis |
+| Analysis implementation | CANDIDATE / P8 | `experiments/pdmal_pilot/analysis.py`; paired percentile bootstrap and decision bindings specified; implementation blob SHA bound; independent verification still required |
+| Analysis configuration | CANDIDATE / P8 | Canonical configuration SHA: `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`; bound to candidate apparatus |
+| Analysis CI gate | CANDIDATE / P8 | `governance-ci.yml` now explicitly executes `experiments/pdmal_pilot/test_analysis.py`; fresh run on candidate apparatus required |
+| Protocol identity | CANDIDATE / P8 | Protocol v0.7.5 blob SHA externally bound by P8 lock; fresh candidate verification required |
+| Candidate apparatus base | CANDIDATE | `ac3c1899bdd85c2af186ad6971376fe250dad993`; subsequent commits are control-document reconciliation only |
+| New freeze | NOT CREATED | Historical freeze cannot be reused |
+| Pilot authorization | NOT GRANTED | Separate governance decision |
+| Empirical data | ZERO | No authorized pilot execution |
 
-## Evidence boundaries
+## Canonical predicate taxonomy
 
-Run #14 is non-empirical operational verification. It does not authorize empirical execution. Its artifact is `9315467977` with digest `sha256:cbd2cb866e958b8e85684db7e20a0228f3c439e3921c7da7e408045650a21e27`.
+P1 Candidate integrity; P2 Execution contract; P3 Artifact contract; P4 Security/blinding integrity; P5 Provenance/reproducibility; P6 Durable evidence custody; P7 Scientific target specification; P8 Analysis lock; P9 Independent verification.
 
-Run #67, Run #68, and Run #74 remain scoped to their exact executed SHAs. Later documentation commits do not inherit their verification automatically.
+Experimental-design integrity is covered by P5 + P7 and is not a tenth predicate. Authorization is a separate governance transition after freeze verification.
 
-The blinding dry-run uses only synthetic labels and a mock key. It must not access or print `PDMAL_BLINDING_KEY`. A passing synthetic dry-run is technical/procedural evidence, not authorization to use the production secret.
+## P7 closure boundary
 
-## Critical path
+P7 is adopted. The primary contrast is the full `dgaf` condition versus the `null` condition, using FFCR and a seed-level paired difference. The adopted P7 decision defines the treatment/reference boundary, aggregation concept, direction, exclusion/missing-data boundary, and secondary/exploratory family.
 
-1. Execute the dedicated blinding operational dry-run workflow.
-2. Review its evidence artifact and document the procedural custody outcome.
-3. Establish and verify the durable research archive required by the retention policy.
-4. Assemble the freeze packet.
-5. Freeze protocol, implementation, environment, and analysis plan with exact SHAs and timestamp.
-6. Obtain explicit pilot authorization.
-7. Only then execute empirical work.
+P7 adoption does not authorize execution and does not create a freeze.
 
-No empirical execution is authorized by this state record.
+## P8 progress
+
+P8 implementation work has begun. The canonical analysis path is `experiments/pdmal_pilot/analysis.py`. It consumes validated seed artifacts only, preserves the blinded-condition boundary until explicit unblinding, rejects incomplete/duplicate matrix cells, and performs paired bootstrap over complete seed effects.
+
+The pilot runner was amended to emit explicit `ffcr_success`, because the previous artifact recorded `final_std` but did not expose the protocol's failure-free completion outcome directly. The runner protocol version was also reconciled from `0.7.4` to `0.7.5` to match the governing matrix amendment. These are candidate apparatus changes and therefore require fresh verification before they can participate in a freeze.
+
+The initial P8 implementation constants are now explicit: 10,000 percentile-bootstrap resamples, RNG seed `20260823`, two-sided 95% interval, alpha `0.05`, and positive-estimate/positive-CI primary support criterion. Secondary confirmatory claims use Holm if such claims are made; otherwise secondary results remain exploratory/descriptive.
+
+Adversarial analysis tests have been added for incomplete matrices, duplicates, malformed outcome values, missing unblinding mappings, deterministic bootstrap behavior, and decision logic. Governance CI now explicitly invokes this P8 test module, making analysis verification a CI gate rather than an existence-only repository artifact.
+
+## Historical freeze boundary
+
+`3510b86889cd341f7a7cf9ab684fd37b2fafd758` is historical evidence only. It must not be described as the current freeze of the corrected runner. If verification identifies a defect requiring an apparatus change, a new freeze must be established after repair and re-verification.
+
+## Required next evidence events
+
+1. Execute fresh candidate CI, including the explicit P8 analysis-test gate, on the candidate apparatus base.
+2. Verify canonical artifact serialization and runtime validation, including the new `ffcr_success` field.
+3. Verify the bound analysis implementation and configuration hashes.
+4. Verify the bound protocol blob SHA and v0.7.5 identity.
+5. Establish durable evidence custody and direct retrieval/hash evidence.
+6. Reconcile topology fingerprints and environment identity on the exact candidate.
+7. Derive P1–P8 from candidate-scoped evidence.
+8. Execute P9 independent verification.
+9. Create and verify a new freeze.
+10. Obtain separate pilot authorization.
+
+**No empirical execution is authorized by this record. N = 0.**

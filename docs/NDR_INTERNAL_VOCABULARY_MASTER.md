@@ -1,7 +1,7 @@
 # NDR INTERNAL VOCABULARY MASTER LIBRARY
 
 > **Epistemic status:** Canonical terminology registry; vocabulary mappings are not evidence of implementation or validation.
-> **Last updated:** 2026-08-15 — epistemic standards pass
+> **Last updated:** 2026-08-21 — documentation/provenance reconciliation
 
 ## Epistemic standard
 
@@ -30,6 +30,29 @@ Every substantive claim should be interpreted using the following evidence class
 6. Historical attestations remain historical unless revalidated against the current implementation.
 7. Cross-project terminology does not establish that two systems are the same system.
 8. Where an external term is only an analogy, label it **METAPHOR** or **CLOSE ANALOGY**, not as an identity.
+9. A historical identifier may remain in historical records for provenance but must not be silently reused as a current canonical label.
+
+## Current terminology correction: FLAG-02
+
+**FLAG-02 is a historical identifier.** It was previously associated with the 340% coordination-gain claim in S069/S072 governance records. Later governance reassigned the current evaluation-mode terminology to **qualitative**.
+
+Therefore:
+
+- Historical documents may retain `FLAG-02` when necessary to preserve provenance.
+- Current/living documents must use **qualitative** for the evaluation mode.
+- New documents must not introduce `FLAG-02` as a current identifier.
+- `FLAG-02 = 340% coordination gain = CLOSED` is a historical session statement, not a current verification statement.
+
+## Current status of the former 340% coordination-gain claim
+
+The former 340% figure is **NOT A CURRENT VERIFIED RESULT**. It remains a historical/provenance item subject to the propagation consistency control and claim-evidence requirements.
+
+Any current recurrence must either:
+
+1. explicitly identify the statement as historical and preserve its provenance; or
+2. use a current qualified formulation such as `unverified`, `illustrative`, or another qualifier that is actually applicable to the surrounding claim.
+
+The repository must not treat proximity to a qualifier as semantic proof that the qualifier applies. Propagation checks are advisory QA controls and require contextual adjudication.
 
 ## High-priority corrections
 
@@ -75,7 +98,9 @@ For each future entry, use this form:
 
 The following are retained for traceability and must not be used as current capability claims without revalidation:
 
-- BFT consensus characterization of PDMAL
+- historical BFT consensus characterization of PDMAL
+- historical FLAG-02 identifier
+- the former 340% coordination-gain claim
 - ungrounded percentage or `Nx` performance claims
 - unverified mathematical-operator labels
 - historical lifecycle benchmark values copied from generated artifacts

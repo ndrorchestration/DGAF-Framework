@@ -121,6 +121,10 @@ class TestHysteresis:
         second = c.step(high)
         assert second.regime == Regime.EXPANSION
 
+# ===========================================================================
+# 8. PhaseIntent fields — v1.4 enrichment
+# ===========================================================================
+
 class TestPhaseIntentV14:
     def test_intent_has_v_phi(self, conductor, zero_sv):
         conductor.step(zero_sv); intent = conductor.step(zero_sv)

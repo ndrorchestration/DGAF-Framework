@@ -3,9 +3,9 @@ status: ACTIVE
 state: PRE-FREEZE
 authority: Both
 owner: DGAF/PDMAL experimental-design control
-last_verified: 2026-08-19
-applies_to_sha: 915e454e27eb2770e7f40a067a881b0783feaae4
-protocol_blob_sha: PENDING-AFTER-COMMIT
+last_verified: 2026-08-23
+applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
+protocol_blob_sha: BOUND_EXTERNALLY_BY_P8_LOCK
 supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
 ---
 
@@ -15,15 +15,15 @@ This is the PDMAL experiment protocol. It is pre-freeze. No empirical data colle
 
 ## 1. Purpose
 
-The PDMAL experiment is designed to characterize the runtime behavior of the DGAF/PDMAL topology stack under controlled conditions. It is an operational characterization, not an efficacy demonstration.
+The PDMAL experiment is designed to characterize the runtime behavior of the DGAF/PDMAL topology stack under controlled conditions, including a pre-specified comparative analysis of the full DGAF condition against the null condition. The comparative analysis is a controlled experimental hypothesis test within the characterization protocol; it is not a claim of production-scale efficacy, real-world effectiveness, or deployment readiness.
 
 ## 2. Scope
 
-The protocol covers the topology generators, the harness, the task engine, the DGAF adapter, and the runtime characterization pipeline. It does not cover production-scale operations, long-term persistence, or any empirical claim about DGAF's effectiveness in any real-world setting.
+The protocol covers the topology generators, the harness, the task engine, the DGAF adapter, and the runtime characterization and analysis pipeline. It does not cover production-scale operations, long-term persistence, or any empirical claim about DGAF's effectiveness in any real-world setting.
 
 ## 3. Protocol Version
 
-This protocol incorporates the v0.7.5 matrix amendment (`docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md`). The matrix amendment is accepted by governance but is not the same as a protocol freeze.
+This protocol incorporates the v0.7.5 matrix amendment (`docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md`) and the P7 primary-analysis adjudication. These governance decisions are not themselves a protocol freeze.
 
 ## 4. Methodology
 
@@ -50,24 +50,41 @@ The experiment executes the ConsensusTask across the registered topology and con
 | static | Static DGAF configuration |
 | dgaf | Full DGAF configuration |
 
-### 4.4 Endpoint
+### 4.4 Endpoint and primary contrast
 
-- **Primary:** FFCR (Failure-Free Completion Rate) — higher is better; per-condition, per-seed
-- **Secondary (structural/execution):** `final_std`, `D_a`-style diagnostics, phi-convergence traces — transparency metrics, not success endpoints
+- **Primary endpoint:** FFCR (Failure-Free Completion Rate), higher is better, recorded per condition per seed.
+- **Primary contrast:** full `dgaf` condition versus `null` condition.
+- The primary contrast is a pre-specified comparative analysis within this operational-characterization experiment. It does not convert historical characterization results into efficacy evidence.
+- For each trial artifact, `ffcr_success` is the explicit boolean execution outcome used to construct FFCR. It is true only when the ConsensusTask's convergence criterion is satisfied and the execution status is successful. The analysis does not reconstruct this outcome from `final_std` or repair missing outcome fields.
+- **Secondary/exploratory measures:** `final_std`, `D_a`-style diagnostics, phi-convergence traces, and non-primary condition/topology contrasts. These are not primary success endpoints.
 
 ### 4.5 Convergence
 
 Consensus threshold `< 0.01` is the convergence criterion for task execution, not an efficacy threshold. Iterations are fixed at 100; there is no convergence-based early stopping.
 
-## 5. Pre-freeze status
+## 5. Analysis boundary
 
-The protocol is pre-freeze. The following remain open:
+The P7 adjudication defines the scientific target and primary analysis contract. P8 binds the executable analysis implementation/configuration to the exact candidate apparatus before any unblinding or empirical interpretation.
 
-- Primary contrast adjudication
-- Exact protocol blob SHA (pending after commit)
+The canonical analysis implementation is `experiments/pdmal_pilot/analysis.py`. It consumes validated seed artifacts and an explicit post-unblinding condition mapping; it does not execute trials, regenerate observations, repair incomplete records, or infer missing outcomes.
+
+The primary analysis is seed-paired. For each analyzable seed, condition-level FFCR is the proportion of the complete topology × failure-count matrix cells with `ffcr_success=true`. The primary paired effect is `FFCR_dgaf(seed) - FFCR_null(seed)`. The primary point estimate is the equal-weight mean of these paired seed effects.
+
+The current pre-freeze analysis configuration uses a two-sided 95% percentile paired-bootstrap interval over complete seed effects, with 10,000 resamples, bootstrap RNG seed `20260823`, and alpha `0.05`. The primary directional support criterion is a positive point estimate with the confidence interval wholly above zero. These implementation bindings remain subject to candidate-scoped verification and final P8 lock.
+
+Historical characterization artifacts remain evidence only for the exact SHA and execution conditions under which they were produced.
+
+## 6. Pre-freeze status
+
+The protocol remains pre-freeze. The following remain open:
+
+- Candidate-scoped P8 implementation/configuration verification and hash binding
+- Exact protocol blob SHA is bound externally by the P8 analysis lock after this commit
 - Freeze commit SHA
+- Independent verification
+- Separate pilot authorization
 
-## 6. Evidence boundary
+## 7. Evidence boundary
 
 This protocol is a specification artifact.
 

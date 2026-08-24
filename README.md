@@ -2,33 +2,35 @@
 
 **Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, evaluation, provenance, and governance controls.
 
+<<<<<<< HEAD
 > **Epistemic status:** This README describes repository scope and implemented artifacts. Individual claims of validation, certification, performance, or standards alignment require the evidence identified in the corresponding artifact. Historical certifications are not treated as current certification without a fresh evidence-backed run. Content status reflects the latest committed revision; changes in progress are tracked in the changelog.
+=======
+> **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims of validation, certification, performance, or standards alignment require exact evidence. Historical certifications remain scoped to the SHA/run/deployment that produced them and are not current certification without fresh evidence.
+>>>>>>> pr-83-head
 
-## Current project state — 2026-08-20
+## Current project state — 2026-08-21
 
-The DGAF/PDMAL experimental track is **PRE-FREEZE**. The runtime-characterization baseline is published, the blinding operational test is closed, and security hardening PR #70 has been merged. Epistemic architecture PR #65 has been **merged** at `915e454e27eb2770e7f40a067a881b0783feaae4`. PR #75 (evidence architecture and governance doc updates) has been **merged** at `a44e42cd3040`.
+The DGAF/PDMAL experimental track is **PRE-FREEZE**. The corrected pilot apparatus and supporting governance controls are present on `main`, but the current candidate has **not** been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
-Current security baseline:
+The historical implementation freeze `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains preserved as historical evidence only. It must not be described as the current freeze of the corrected apparatus.
 
-```text
-main: df7d5fd8c8595cbb9d0c04caeaace13738d760ae
-```
+The repository is currently in documentation, provenance, and verification closure. The required execution events are candidate-bound tests, runtime verification, durable evidence custody, primary-contrast adjudication, analysis lock, and independent verification. Documentation changes do not themselves advance those gates.
 
-Pilot authorization has **not** been granted and no empirical pilot data exists.
-
-For the authoritative gate board, provenance identities, remaining sequence, and freeze requirements, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md).
+For the authoritative gate board and remaining sequence, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the documentation temporal-boundary policy, see [`docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md`](docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md).
 
 ## Repository scope
 
-DGAF contains governance and evaluation components, agent specifications, control/gate definitions, provenance practices, and related research artifacts. It is the canonical home for the project's current governance vocabulary and epistemic classification standard.
+DGAF contains governance and evaluation components, agent specifications, control/gate definitions, provenance practices, epistemic auditing, vocabulary management, and experimental research artifacts. It is the canonical home of the project's current governance vocabulary and epistemic classification standard.
 
 ### Canonical terminology
 
 - **DGAF** — Dynamic Governance Agentic Formation.
-- **AHG** — Adaptive Harmonic Governance. Historical/conflicting expansions are retained in the acronym registry rather than used as current definitions.
-- **PDMAL / PDMA-L** — Phi-Driven Multi-Agent Lattice. This term refers to the project's lattice/control research track; the current evidence does not establish a complete Byzantine Fault Tolerance (BFT) consensus protocol merely from the lattice topology.
-- **AXIS** — Agent X-axis Invariant Spectrum. The expansion is canonical; operational or empirical claims require their own evidence.
-- **SACP, MDAR, and FML** — project-local acronyms whose expansions remain source-controlled; consult `docs/taxonomy/NDR_ACRONYM_REGISTRY.md` rather than inferring an expansion.
+- **AHG** — Adaptive Harmonic Governance. Historical/conflicting expansions remain historical unless explicitly promoted by current governance.
+- **PDMAL / PDMA-L** — Phi-Driven Multi-Agent Lattice. The term refers to the lattice/control research track; current evidence does not establish a complete Byzantine Fault Tolerance protocol merely from the topology.
+- **AXIS** — Agent X-axis Invariant Spectrum.
+- **FLAG-02** — historical identifier associated with the former 340% coordination-gain claim. Current evaluation-mode terminology is **qualitative**. New documents must not introduce FLAG-02 as a current identifier for either meaning.
+
+Historical documents may retain their original terminology when necessary for provenance, but they must be treated as historical rather than silently reinterpreted as current state.
 
 ## Epistemic standard
 
@@ -36,7 +38,7 @@ Claims are classified according to the repository standard:
 
 `DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`
 
-A mathematical term, external framework name, benchmark number, or agent role does not by itself establish implementation, validation, or equivalence.
+A mathematical term, external framework name, benchmark number, deployment, or agent role does not by itself establish implementation, validation, or equivalence.
 
 ## Core areas
 
@@ -47,38 +49,55 @@ A mathematical term, external framework name, benchmark number, or agent role do
 - Epistemic auditing and vocabulary management
 - Experimental mathematical and structural research
 
-## Current project state
+## PDMAL/DGAF documentation spine
 
-For PDMAL/DGAF work, start with the documentation spine below:
-
-1. [Current State — machine-adjacent snapshot](docs/CURRENT_STATE.md)
-2. [PDMAL Current Control State](docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md)
-3. [Authoritative PDMAL Task Specification v0.7.4](docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md)
-4. [PDMAL Evidence Index](docs/evidence/PDMAL_EVIDENCE_INDEX.md)
-5. [Evidence Ladder Policy](docs/evidence/EVIDENCE_LADDER_POLICY.md)
-6. [Freeze Manifest Template](docs/experiment/FREEZE_MANIFEST_TEMPLATE.md)
+1. [Current State](docs/CURRENT_STATE.md)
+2. [Project Status](docs/PROJECT_STATUS.md)
+3. [PDMAL Current Control State](docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md)
+4. [Authoritative PDMAL Task Specification](docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md)
+5. [PDMAL Evidence Index](docs/evidence/PDMAL_EVIDENCE_INDEX.md)
+6. [Evidence Ladder Policy](docs/evidence/EVIDENCE_LADDER_POLICY.md)
 7. [PDMAL Experiment Protocol](docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md)
+8. [Freeze Manifest Template](docs/experiment/FREEZE_MANIFEST_TEMPLATE.md)
+9. [Propagation Consistency Control](docs/governance/PROPAGATION_CONSISTENCY_CONTROL.md)
+10. [Documentation Reconciliation](docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md)
+11. [Test Execution Readiness](docs/governance/TEST_EXECUTION_READINESS_2026-08-21.md)
+12. [P3–P6 Freeze Readiness](docs/governance/P3_P4_P5_P6_FREEZE_READINESS_2026-08-21.md)
+13. [P7 Primary Contrast Adjudication](docs/governance/P7_PRIMARY_CONTRAST_ADJUDICATION_PACKET_2026-08-21.md)
+14. [Candidate Runtime Verification](docs/governance/CANDIDATE_RUNTIME_VERIFICATION_2026-08-21.md)
+15. [NDR Research Program Charter — Current Status Addendum](docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_CURRENT_STATUS_2026-08-21.md)
+16. [Freeze Packet Template](docs/governance/FREEZE_PACKET_TEMPLATE.md)
 
-## Documentation
+## Verification and test status
 
-- [Current Project Status](docs/PROJECT_STATUS.md)
-- [Technical README](README.technical.md)
-- [Governance README](README.governance.md)
-- [Agent Registry](ENSEMBLE_ROSTER.md)
-- [Ecosystem Map](CROSS_REF.md)
-- [Epistemic Vocabulary Standard](docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md)
-- [Acronym Registry](docs/taxonomy/NDR_ACRONYM_REGISTRY.md)
-- [GATE-11Q](docs/gates/GATE_11Q.md)
+The repository contains deterministic/unit tests, pilot execution-contract tests, artifact/schema controls, governance consistency checks, propagation checks, and CI workflows. **Existence of a test is not evidence that the test has passed.** Current candidate verification must identify the exact candidate SHA, execution environment, deployment where applicable, run identifier, and retained evidence artifact.
 
-## Status and validation
+The full-repository audit mechanism is present and designed to inventory every Git-tracked file, hash it, classify text/binary content, and detect stale historical bindings and documentation-state collisions. Its authoritative coverage artifact still requires an actual GitHub Actions execution against a fixed candidate.
 
-This repository contains artifacts at different maturity levels. Do not infer repository-wide validation from a component-level test, a historical attestation, or a README badge. Current verification should identify the exact commit, test/evaluation run, and evidence supporting the claim.
+### Current gate boundary
 
-The v0.7.5 runtime-characterization release is an immutable historical baseline. Later security and epistemic-governance changes are not retroactively included in that release.
+- P1 Candidate integrity — PARTIAL
+- P2 Execution contract — PARTIAL
+- P3 Artifact contract — PARTIAL
+- P4 Security/blinding integrity — PARTIAL
+- P5 Provenance/reproducibility — PARTIAL
+- P6 Durable evidence custody — OPEN
+- P7 Scientific target specification — PARTIAL; primary contrast OPEN
+- P8 Analysis lock — OPEN
+- P9 Independent verification — NOT EXECUTED
+- New freeze — NOT CREATED
+- Pilot authorization — NOT GRANTED
+- Empirical N — 0
+
+Do not infer repository-wide validation from a component-level test, historical attestation, deployment existence, README text, or badge.
+
+## Historical evidence boundary
+
+Historical runtime, P2, P6a, and characterization records remain valid only for the exact source/deployment/run they document. In particular, the retained P6a result for `e1f077f` / `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7` is historical evidence and is not current-candidate verification.
 
 ## Related ecosystem
 
-Related repositories include Acoustic-mesh, Driftwatch, Amethyst-Governance-Eval-Stack, agent-control-plane, phi-calculus-app, and other ndrorchestration projects. They are separate repositories and tracks; shared terminology does not imply that their implementations are equivalent or that one repository validates another.
+Related repositories are separate tracks. Shared terminology does not imply implementation equivalence or cross-repository validation.
 
 ## License
 
