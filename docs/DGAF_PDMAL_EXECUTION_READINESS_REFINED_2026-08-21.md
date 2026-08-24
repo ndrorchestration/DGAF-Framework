@@ -4,7 +4,7 @@
 
 **Working directory:** `D:/DGAF-Framework`
 
-**HEAD:** `3510b86889cd341f7a7cf9ab684fd37b2fafd758` (main)
+**HEAD:** `cf4cdb58078125207bea564291278f3e9af15f27` (main) — 3 commits of stale-SHA cleanup and P7 adjudication reconciliation since this report's baseline
 
 **PR #77 branch:** `chore/preauth-completeness-2026-08-20`, head `94fb6fdff64f2919d35938c5b1cb506625cf1139`
 
@@ -79,7 +79,7 @@ If a YAML file's status field can close a predicate, configuration becomes evide
 || `PDMAL_CURRENT_CONTROL_STATE.md` | body: protocol freeze=BLOCKED (no protocol_freeze frontmatter field — gate board is in body text) | BLOCKED |
 ||| `PRIMARY_CONTRAST_ADJUDICATION.md` | OPEN | OPEN |
 ||| `PDMAL_EXPERIMENT_PROTOCOL.md` | PRESENT at PR #77 (blob `2650e436`); PRE-FREEZE | PRE-FREEZE |
-||| `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` | PRESENT at PR #77 (blob `a686366c`) AND at local HEAD (same blob); APPROVED PENDING PANEL RECORD (applies_to_sha: pending-amendment-commit) | PRE-FREEZE AMENDMENT |
+||| `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md` | PRESENT at PR #77 (blob `a686366c`) AND at local HEAD (same blob `a686366c`); APPROVED PENDING PANEL RECORD (applies_to_sha: pending-amendment-commit) | PRE-FREEZE AMENDMENT |
 ||| `pdmal-freeze-preparation.yml` | NOT FOUND at PR #77 or at local HEAD (referenced in corrected report but does not exist) | NOT FOUND |
 ||| `PRE_AUTHORIZATION_VERIFICATION_RECORD_2026-08-20.md` | PRESENT at PR #77 (blob `f51aea7a`); consolidated closure checklist; explicitly states "Corrected apparatus verified: NO; New freeze created: NO; Pilot authorized: NO; Empirical N: 0" | Not at local HEAD |
 ||| `PRE_FLIGHT_RUNTIMES.md` | PRESENT at PR #77 (blob `5d172a19`); 2 dry-run runtimes (300s ceiling) | Not at local HEAD |
@@ -459,12 +459,19 @@ The dangerous move would be to optimize the documentation tree so aggressively t
 
 ## 10. Conclusion
 
-The sprint report is structurally sound and captures the right architecture. It receives a 9/10 from the expert panel. The corrected document should fully supersede the sprint report, not patch it.
+- **Conclusion:** The sprint report is structurally sound and captures the right architecture. It receives a 9/10 from the expert panel. The corrected document should fully supersede the sprint report, not patch it.
 
 The project is in structured pre-freeze closure, with remaining work bounded to identifiable engineering, provenance, scientific, operational, and independent-verification predicates. The most important remaining items are:
 
 1. **Predicate 7 — primary contrast adjudication** (blocks protocol freeze and authorization; correctly out of scope for any engineering PR)
 2. **Candidate mechanism (#1–#3) before final freeze candidate** (merging PR #77 before this adds another layer of ambiguity)
+
+**Post-report update (2026-08-24):** Since this report's baseline at `3510b86889`, three commits have been added to `main` (`cf4cdb5` current HEAD):
+- `b53e846` — P7 adjudication reconciliation: Candidate A (DGAF vs null) selected, P7 OPEN, stale `4983f44a` refs removed from P7 brief/exec path/manifest, N=0/NOT GRANTED/PRE-FREEZE preserved
+- `1af00ec` — Propagate `94fb6fd` candidate SHA to all stale references in 15 supporting documents
+- `cf4cdb5` — Complete stale SHA cleanup: remaining 6 references in CROSS_REFERENCE, PR77_GAP_ANALYSIS, AUDIT_SELF_STALENESS_SPEC, CI_WORKFLOW_ANALYSIS, and CANDIDATE_MANIFEST gap description
+
+The three target documents (P7 brief, exec path spec, candidate manifest) have been verified clean: zero stale `4983f44a` references, zero nonexistent `PDMAL_ANALYSIS_CONTROL_PLAN.md` references in P7/exec path, Candidate A consistently selected, P7 OPEN, N=0 throughout.
 
 N = 0 throughout. Pilot authorization NOT GRANTED. `3510b868...` is the historical superseded freeze; the corrected apparatus is PRE-FREEZE and not yet frozen.
 
