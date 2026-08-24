@@ -2,65 +2,67 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-21
+last_verified: 2026-08-24
 applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
 ---
 
 # DGAF-Framework / PDMAL — Current State
 
-GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to the exact SHA/run/deployment that produced it. This document intentionally does not hard-code a mutable `main` SHA.
+GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it. This document describes current state without retroactively transferring historical evidence.
 
 ## Authoritative current state
 
-| Gate | Status | Evidence / note |
+| Gate / boundary | Status | Current meaning |
 |---|---|---|
-| Current main | CURRENT | Resolve from GitHub `main` at verification time |
-| Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` retained unchanged as historical evidence |
-| Corrected pilot apparatus | CANDIDATE | Apparatus and governance controls exist on mainline; exact-candidate verification remains required |
-| New freeze | NOT CREATED | No corrected-apparatus freeze commit exists |
-| Protocol | PRE-FREEZE / BLOCKED | Candidate execution evidence, durable retention, primary contrast, analysis lock, P9, and freeze remain open |
-| Pilot authorization | NOT GRANTED | Separate governance decision |
-| Empirical data | ZERO | No authorized pilot execution |
+| Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains provenance only for the corrected apparatus |
+| P7 scientific specification | ADOPTED | Primary scientific target is `dgaf` vs `null`, FFCR, seed-paired analysis; adoption does not authorize execution |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Implementation and controls exist, but executed candidate-scoped verification is incomplete |
+| Exact verification candidate | IDENTIFIED | `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` is the candidate tree named by the current P8 checklist |
+| New immutable freeze | NOT CREATED | Candidate has not yet crossed the freeze boundary |
+| Operational evidence closure | INCOMPLETE | Durable retention, candidate-scoped runtime evidence, and remaining custody/provenance checks require closure |
+| P9 independent verification | NOT EXECUTED | Downstream of candidate evidence closure |
+| Pilot authorization | NOT GRANTED | Separate governance transition after required predicates and freeze verification |
+| Empirical data | N = 0 | No authorized empirical pilot has been executed |
 
-## Canonical predicates
+## Candidate identity boundary
 
-P1 Candidate integrity — PARTIAL
-P2 Execution contract — PARTIAL
-P3 Artifact contract — PARTIAL
-P4 Security / blinding integrity — PARTIAL
-P5 Provenance / reproducibility — PARTIAL
-P6 Durable evidence custody — OPEN
-P7 Scientific target specification — PARTIAL / primary contrast OPEN
-P8 Analysis lock — OPEN
-P9 Independent verification — NOT EXECUTED
+The P8 verification checklist identifies `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` as the exact candidate tree for verification. Later documentation-only commits do not silently redefine that apparatus. Any substantive apparatus change requires a new candidate identity and re-verification.
 
-Experimental-design integrity is covered by P5 + P7 and is not a separate tenth predicate. Authorization is a separate governance transition.
+Historical SHA references, including earlier PR #77 and pre-correction P8 bindings, remain provenance where they describe what was actually examined; they are not current-state assertions.
 
-## Historical boundary
+## Canonical predicate state
 
-`3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical implementation freeze. It must not be described as the current freeze of the corrected pilot apparatus.
+- **P1 Candidate integrity:** PARTIAL — candidate exists; executed candidate evidence still required.
+- **P2 Execution contract:** PARTIAL — implementation controls exist; current runtime evidence remains incomplete.
+- **P3 Artifact contract:** PARTIAL — executable contract is strengthened; candidate-scoped verification remains required.
+- **P4 Security / blinding integrity:** PARTIAL — controls and synthetic evidence exist; operational custody boundary remains to be fully evidenced.
+- **P5 Provenance / reproducibility:** PARTIAL — bindings exist; candidate-scoped reproduction and environment evidence remain incomplete.
+- **P6 Durable evidence custody:** OPEN — durable archive plus independent retrieval/hash evidence remains required.
+- **P7 Scientific target specification:** ADOPTED — must remain traceable to the authoritative adjudication record and protocol.
+- **P8 Analysis lock:** OPEN / FAIL-CLOSED — no closure by implementation presence alone.
+- **P9 Independent verification:** NOT EXECUTED.
 
-Historical P2/P6a evidence is likewise scoped to its exact tested source/deployment/run. In particular, P6a `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7` / `e1f077f...` remains historical and does not certify current mainline behavior.
+Authorization is separate from predicate status. Freeze is separate from authorization. Merge is not freeze, and execution is not empirical validation.
 
-## Documentation vocabulary boundary
+## Current documentation and hygiene rules
 
-`FLAG-02` is a historical identifier associated with the former 340% coordination-gain claim. The current canonical evaluation-mode terminology is **qualitative**. Historical records may retain FLAG-02 when needed to preserve provenance, but living documents must not use it as a current label.
-
-The former 340% coordination-gain result is not a current verified result. Any current recurrence must be qualified according to the propagation/provenance controls.
+1. Current-state assertions must identify the current candidate or explicitly say that a SHA is historical.
+2. Historical evidence must retain the SHA/run/deployment actually examined.
+3. Status documents cannot create closure by assertion; closure requires the evidence specified by the relevant predicate.
+4. A frozen candidate tree is immutable. Later documentation corrections may clarify the record but do not rewrite the frozen apparatus.
+5. P7 adoption, P8 implementation, freeze, authorization, execution, and empirical efficacy are distinct state transitions.
+6. The current empirical boundary remains **N = 0** and no efficacy claim is authorized.
 
 ## Required next evidence events
 
-- execute the full repository audit against an immutable candidate and retain the coverage manifest;
-- run fresh candidate unit/contract/determinism/invariant tests;
-- verify canonical artifact serialization and runtime validation;
-- execute current-candidate P2 and P6a runtime checks;
-- complete synthetic operational blinding verification;
-- establish durable retention and direct retrieval/hash evidence;
-- reconcile topology fingerprints and environment identity on the exact candidate;
-- adjudicate the primary contrast and lock the analysis;
-- derive P1–P8 from candidate-scoped evidence;
-- execute P9 independent verification;
-- create and verify a new freeze;
-- obtain separate pilot authorization.
+1. Execute the applicable CI/test hierarchy against exact candidate `2a80f819...` and retain run IDs, logs, artifacts, and executed-tree identity.
+2. Complete candidate-scoped P8 verification, including analysis, artifact, schema/security, compilation, provenance, determinism, and environment checks as applicable.
+3. Establish durable evidence retention and independently verify retrieval and integrity.
+4. Complete remaining operational blinding custody and runtime-dependent verification according to explicit applicability/fallback rules.
+5. Derive and evidence P1–P8 from the exact candidate; do not infer closure from configuration alone.
+6. Create an immutable freeze only after required pre-freeze predicates are satisfied.
+7. Execute independent/adversarial verification against the frozen candidate.
+8. Make a separate authorization decision.
+9. Only then execute the blinded empirical pilot and proceed to formal unblinding and locked analysis.
 
-**No empirical pilot execution is authorized. Empirical N remains 0.**
+**No empirical pilot execution is authorized. Empirical N remains 0. Authorization remains NOT GRANTED.**

@@ -2,75 +2,73 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
 ---
 
 # PDMAL Current Control State
 
-This is the current pre-authorization gate record. GitHub is authoritative for implementation and CI; Notion is authoritative for governance decisions. Historical evidence remains scoped to its exact tested SHA. This document describes the moving pre-freeze state and therefore does not pin a mutable main SHA.
+This is the current pre-authorization control record. Historical evidence remains scoped to its exact tested SHA; implemented controls are not equivalent to executed verification evidence.
 
 ## Current state
 
 | Control | State | Evidence / blocker |
 |---|---|---|
-| Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` |
-| Corrected runner | CANDIDATE | Exact-SHA gating and pilot artifact validation are present; runner now emits explicit `ffcr_success`; fresh candidate verification required |
-| Environment lock | VERIFY | Target Python 3.12.0, NumPy 2.5.1, NetworkX 3.6.1 |
-| Executor contract | PARTIAL | Stale test reconciled; fresh CI required |
-| Artifact contract | PARTIAL | Pilot schema and inline validator/sidecar checks present; `ffcr_success` is an additional explicit outcome field; fresh candidate verification required |
-| Topology provenance | VERIFY | Current-source fingerprint manifest restored; final candidate re-computation required |
-| Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical Run #14; non-empirical |
-| Blinding custody | CLOSED FOR SYNTHETIC VERIFICATION | Historical synthetic custody evidence; production key custody still requires operational evidence |
-| Security controls | VERIFY | Pre-authorization workflow/tests present; fresh CI required |
-| Durable retention | OPEN | Archive destination and direct retrieval/hash proof not established |
-| Primary contrast | ADOPTED / P7 | Full `dgaf` vs `null`; FFCR; seed-paired primary analysis |
-| Analysis implementation | CANDIDATE / P8 | `experiments/pdmal_pilot/analysis.py`; paired percentile bootstrap and decision bindings specified; implementation blob SHA bound; independent verification still required |
-| Analysis configuration | CANDIDATE / P8 | Canonical configuration SHA: `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`; bound to candidate apparatus |
-| Analysis CI gate | CANDIDATE / P8 | `governance-ci.yml` now explicitly executes `experiments/pdmal_pilot/test_analysis.py`; fresh run on candidate apparatus required |
-| Protocol identity | CANDIDATE / P8 | Protocol v0.7.5 blob SHA externally bound by P8 lock; fresh candidate verification required |
-| Candidate apparatus base | CANDIDATE | `ac3c1899bdd85c2af186ad6971376fe250dad993`; subsequent commits are control-document reconciliation only |
+| Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is not the corrected-apparatus freeze |
+| Exact P8 verification candidate | IDENTIFIED | `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` per the fail-closed P8 checklist |
+| Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented |
+| P7 scientific specification | ADOPTED | `dgaf` vs `null`; FFCR; seed-paired primary analysis |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Implementation/configuration controls exist; candidate-scoped execution evidence is incomplete |
+| Candidate CI evidence | OPEN | Required applicable CI/test runs must execute against the exact candidate and be retained |
+| Artifact contract | PARTIAL | End-to-end semantics and adversarial tests exist; fresh candidate evidence required |
+| Blinding custody | PARTIAL | Synthetic/control evidence exists; operational custody and unblinding procedure remain evidence-bound |
+| Durable retention | OPEN | Archive destination plus independent retrieval/hash proof required |
+| Runtime-dependent verification | PARTIAL / APPLICABILITY REQUIRED | Candidate-scoped P2/P6a evidence or a pre-specified justified applicability decision is required |
+| P9 independent verification | NOT EXECUTED | Must be independent of candidate self-validation |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
-| Empirical data | ZERO | No authorized pilot execution |
+| Empirical data | N = 0 | No authorized pilot execution |
 
-## Canonical predicate taxonomy
+## Candidate and documentation boundary
 
-P1 Candidate integrity; P2 Execution contract; P3 Artifact contract; P4 Security/blinding integrity; P5 Provenance/reproducibility; P6 Durable evidence custody; P7 Scientific target specification; P8 Analysis lock; P9 Independent verification.
+The current P8 verification checklist names `2a80f819...` as the exact candidate tree. Documentation-only commits after that candidate may clarify verification records but do not redefine the apparatus. A substantive protocol, analysis, runner, artifact, or evidence change creates a new candidate cycle.
 
-Experimental-design integrity is covered by P5 + P7 and is not a tenth predicate. Authorization is a separate governance transition after freeze verification.
+Historical references must retain the identity of what was actually examined. Zero-count cleanup is not a valid reason to rewrite historical provenance.
 
-## P7 closure boundary
+## P7 boundary
 
-P7 is adopted. The primary contrast is the full `dgaf` condition versus the `null` condition, using FFCR and a seed-level paired difference. The adopted P7 decision defines the treatment/reference boundary, aggregation concept, direction, exclusion/missing-data boundary, and secondary/exploratory family.
+P7 is adopted as a scientific specification, not as pilot authorization. The primary treatment/reference boundary is the full `dgaf` condition versus `null`; FFCR is the primary outcome and seed is the independent paired analysis unit. Any remaining detail that affects confirmatory inference must be traceable to the authoritative adjudication/protocol record before P8 closure.
 
-P7 adoption does not authorize execution and does not create a freeze.
+## P8 boundary
 
-## P8 progress
+P8 is explicitly fail-closed. Candidate implementation work—including analysis code, explicit FFCR artifact semantics, adversarial contract tests, CI wiring, and candidate bindings—does not close P8 until the applicable checklist items have executed candidate-scoped evidence.
 
-P8 implementation work has begun. The canonical analysis path is `experiments/pdmal_pilot/analysis.py`. It consumes validated seed artifacts only, preserves the blinded-condition boundary until explicit unblinding, rejects incomplete/duplicate matrix cells, and performs paired bootstrap over complete seed effects.
+Required evidence includes, as applicable:
 
-The pilot runner was amended to emit explicit `ffcr_success`, because the previous artifact recorded `final_std` but did not expose the protocol's failure-free completion outcome directly. The runner protocol version was also reconciled from `0.7.4` to `0.7.5` to match the governing matrix amendment. These are candidate apparatus changes and therefore require fresh verification before they can participate in a freeze.
+1. Governance CI/test hierarchy on exact candidate `2a80f819...`.
+2. Analysis, artifact-schema/security, and compilation evidence with retained run identity and inspected logs.
+3. Executed-tree reconciliation with P8 bindings.
+4. Environment, topology fingerprint, seed/RNG separation, and trial-ordering evidence.
+5. Durable retention plus independent retrieval/hash verification.
+6. Blinding custody evidence that does not expose the key.
 
-The initial P8 implementation constants are now explicit: 10,000 percentile-bootstrap resamples, RNG seed `20260823`, two-sided 95% interval, alpha `0.05`, and positive-estimate/positive-CI primary support criterion. Secondary confirmatory claims use Holm if such claims are made; otherwise secondary results remain exploratory/descriptive.
+## Independent audit and authorization boundary
 
-Adversarial analysis tests have been added for incomplete matrices, duplicates, malformed outcome values, missing unblinding mappings, deterministic bootstrap behavior, and decision logic. Governance CI now explicitly invokes this P8 test module, making analysis verification a CI gate rather than an existence-only repository artifact.
+Independent verification should include adversarial preflight appropriate to the candidate's claims, including candidate identity reconciliation, artifact substitution resistance, blinding-boundary checks, and enforcement of relevant runtime constraints. Independent audit must not merely repeat candidate self-validation through the same assumptions.
 
-## Historical freeze boundary
-
-`3510b86889cd341f7a7cf9ab684fd37b2fafd758` is historical evidence only. It must not be described as the current freeze of the corrected runner. If verification identifies a defect requiring an apparatus change, a new freeze must be established after repair and re-verification.
+Authorization is considered only after the required predicate evidence and freeze boundary are satisfied. Freeze is not authorization; authorization is not empirical efficacy.
 
 ## Required next evidence events
 
-1. Execute fresh candidate CI, including the explicit P8 analysis-test gate, on the candidate apparatus base.
-2. Verify canonical artifact serialization and runtime validation, including the new `ffcr_success` field.
-3. Verify the bound analysis implementation and configuration hashes.
-4. Verify the bound protocol blob SHA and v0.7.5 identity.
-5. Establish durable evidence custody and direct retrieval/hash evidence.
-6. Reconcile topology fingerprints and environment identity on the exact candidate.
-7. Derive P1–P8 from candidate-scoped evidence.
-8. Execute P9 independent verification.
-9. Create and verify a new freeze.
-10. Obtain separate pilot authorization.
+1. Execute and inspect applicable CI/test workflows against exact candidate `2a80f819...`.
+2. Retain run IDs, exact SHA/ref/event, logs, and artifact integrity values.
+3. Complete durable evidence custody with independent retrieval/hash proof.
+4. Complete operational blinding custody and formal unblinding readiness without exposing the key.
+5. Resolve runtime verification applicability or retain the relevant predicate OPEN.
+6. Reconcile topology, environment, seed/RNG, and analysis bindings against the exact candidate.
+7. Derive P1–P8 only from candidate-scoped evidence.
+8. Create an immutable freeze after pre-freeze closure.
+9. Perform independent/adversarial verification of the frozen candidate.
+10. Obtain explicit pilot authorization before empirical execution.
 
-**No empirical execution is authorized by this record. N = 0.**
+**No empirical execution is authorized by this record. N = 0. Authorization is NOT GRANTED.**
