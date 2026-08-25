@@ -22,13 +22,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install evidence-gate and harness dependencies
+      - name: Install evidence-gate dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-ci.txt
-          python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt
 
-      - name: Verify dependency declarations are consistent
+      - name: Verify PDMAL harness dependency declarations are consistent
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -36,7 +35,7 @@ jobs:
 
           lock = Path('experiments/pdmal_pilot/requirements-lock.txt').read_text(encoding='utf-8')
           assert 'networkx==3.6.1' in lock, 'PDMAL lock must declare networkx==3.6.1'
-          assert metadata.version('networkx') == '3.6.1', 'installed networkx must match PDMAL lock'
+          assert metadata.version('networkx') == '3.6.1', 'installed networkx must match governance CI declaration'
           print('Dependency consistency: PASS')
           PY
 
