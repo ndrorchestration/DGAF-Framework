@@ -3,6 +3,7 @@
 import hashlib
 
 from artifact_schema import (
+    ARTIFACT_PROFILE,
     ARTIFACT_SCHEMA_VERSION,
     sha256_sidecar,
     validate_artifact_document,
@@ -105,6 +106,7 @@ def _valid_seed_record() -> dict:
 def _valid_artifact_document() -> dict:
     return {
         "schema_version": ARTIFACT_SCHEMA_VERSION,
+        "artifact_profile": ARTIFACT_PROFILE,
         "artifact_version": "1",
         "protocol_status": "PRE-FREEZE",
         "empirical_data_collection": False,
@@ -143,6 +145,17 @@ def test_invalid_artifact_schema_version_fails_closed() -> None:
         assert "schema_version" in str(exc)
     else:
         raise AssertionError("unsupported schema_version must fail closed")
+
+
+def test_invalid_artifact_profile_fails_closed() -> None:
+    document = _valid_artifact_document()
+    document["artifact_profile"] = "PDMAL_AUTHORIZED_PILOT_V1"
+    try:
+        validate_artifact_document(document)
+    except AssertionError as exc:
+        assert "artifact_profile" in str(exc)
+    else:
+        raise AssertionError("wrong lifecycle profile must fail closed")
 
 
 def test_excluded_artifact_requires_reason() -> None:
