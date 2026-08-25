@@ -15,7 +15,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | Gate / boundary | Status | Current meaning |
 |---|---|---|
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains provenance only for the corrected apparatus |
-| P7 scientific specification | ADOPTED | Primary scientific target is `dgaf` vs `null`, FFCR, seed-paired analysis; adoption does not authorize execution |
+| P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Panel-ready record (`P7_ADJUDICATION_RECORD_PANEL_READY_2026-08-23.md`) presents 11 proposed decisions all OPEN / PENDING AUTHORITY ADOPTION; primary contrast (DGAF vs null) selected but formal adoption not evidenced; see `P7_SCIENTIFIC_SPECIFICATION_TRACEABILITY_MATRIX.md` |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Implementation and controls exist, but executed candidate-scoped verification is incomplete |
 | Exact verification candidate | IDENTIFIED | `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` is the candidate tree named by the current P8 checklist |
 | New immutable freeze | NOT CREATED | Candidate has not yet crossed the freeze boundary |
@@ -38,7 +38,7 @@ Historical SHA references, including earlier PR #77 and pre-correction P8 bindin
 - **P4 Security / blinding integrity:** PARTIAL — controls and synthetic evidence exist; operational custody boundary remains to be fully evidenced.
 - **P5 Provenance / reproducibility:** PARTIAL — bindings exist; candidate-scoped reproduction and environment evidence remain incomplete.
 - **P6 Durable evidence custody:** OPEN — durable archive plus independent retrieval/hash evidence remains required.
-- **P7 Scientific target specification:** ADOPTED — must remain traceable to the authoritative adjudication record and protocol.
+- **P7 Scientific target specification:** TECHNICALLY ADJUDICATED / FORMALLY OPEN — the panel-ready record presents all 11 scientific decisions as OPEN / PENDING AUTHORITY ADOPTION; the primary contrast (DGAF vs null) has been selected but formal authority adoption is not evidenced; must remain traceable to the authoritative adjudication record and protocol before P8 closure claims scientific closure.
 - **P8 Analysis lock:** OPEN / FAIL-CLOSED — no closure by implementation presence alone.
 - **P9 Independent verification:** NOT EXECUTED.
 
