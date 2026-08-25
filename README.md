@@ -2,31 +2,29 @@
 
 **Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, evaluation, provenance, and governance controls.
 
-<<<<<<< HEAD
-> **Epistemic status:** This README describes repository scope and implemented artifacts. Individual claims of validation, certification, performance, or standards alignment require the evidence identified in the corresponding artifact. Historical certifications are not treated as current certification without a fresh evidence-backed run. Content status reflects the latest committed revision; changes in progress are tracked in the changelog.
-=======
-> **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims of validation, certification, performance, or standards alignment require exact evidence. Historical certifications remain scoped to the SHA/run/deployment that produced them and are not current certification without fresh evidence.
->>>>>>> pr-83-head
+> **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims of validation, certification, performance, standards alignment, or commercial suitability require exact evidence and defined scope. Historical certifications remain scoped to the SHA/run/deployment that produced them and are not current certification without fresh evidence.
 
-## Current project state — 2026-08-21
+## Current project state — 2026-08-25
 
-The DGAF/PDMAL experimental track is **PRE-FREEZE**. The corrected pilot apparatus and supporting governance controls are present on `main`, but the current candidate has **not** been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
+The DGAF/PDMAL experimental track remains **PRE-FREEZE**. The corrected pilot apparatus and supporting governance controls are present on `main`, but the current candidate has not been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
 The historical implementation freeze `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains preserved as historical evidence only. It must not be described as the current freeze of the corrected apparatus.
 
-The repository is currently in documentation, provenance, and verification closure. The required execution events are candidate-bound tests, runtime verification, durable evidence custody, primary-contrast adjudication, analysis lock, and independent verification. Documentation changes do not themselves advance those gates.
+The repository is also undergoing an ecosystem architecture pass separating DGAF implementation from the broader Pattern Commons and from commercialization, trademark, privacy, and security boundaries. These documentation changes do not themselves advance experimental gates.
 
-For the authoritative gate board and remaining sequence, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the documentation temporal-boundary policy, see [`docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md`](docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md).
+For the authoritative gate board and remaining sequence, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
 
 ## Repository scope
 
-DGAF contains governance and evaluation components, agent specifications, control/gate definitions, provenance practices, epistemic auditing, vocabulary management, and experimental research artifacts. It is the canonical home of the project's current governance vocabulary and epistemic classification standard.
+DGAF contains governance and evaluation components, agent specifications, control/gate definitions, provenance practices, epistemic auditing, vocabulary management, and experimental research artifacts. DGAF is the implementation/governance substrate; it is **not** the universal owner of every pattern, taxonomy, template, or research artifact in the surrounding ecosystem.
 
 ### Canonical terminology
 
 - **DGAF** — Dynamic Governance Agentic Formation.
 - **AHG** — Adaptive Harmonic Governance. Historical/conflicting expansions remain historical unless explicitly promoted by current governance.
 - **PDMAL / PDMA-L** — Phi-Driven Multi-Agent Lattice. The term refers to the lattice/control research track; current evidence does not establish a complete Byzantine Fault Tolerance protocol merely from the topology.
+- **NDR** — a project pattern namespace/family within the broader Pattern Commons architecture, not the entire ecosystem pattern corpus.
+- **Pattern Commons** — proposed ecosystem-level layer for pattern identity, provenance, aliases/equivalence, epistemic status, and evidence relationships across repositories.
 - **AXIS** — Agent X-axis Invariant Spectrum.
 - **FLAG-02** — historical identifier associated with the former 340% coordination-gain claim. Current evaluation-mode terminology is **qualitative**. New documents must not introduce FLAG-02 as a current identifier for either meaning.
 
@@ -38,7 +36,7 @@ Claims are classified according to the repository standard:
 
 `DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`
 
-A mathematical term, external framework name, benchmark number, deployment, or agent role does not by itself establish implementation, validation, or equivalence.
+A mathematical term, external framework name, benchmark number, deployment, registry entry, commercial status, or agent role does not by itself establish implementation, validation, legal compliance, safety, certification, or independent verification.
 
 ## Core areas
 
@@ -47,7 +45,15 @@ A mathematical term, external framework name, benchmark number, deployment, or a
 - Provenance and traceability
 - Governance gates and deployment controls
 - Epistemic auditing and vocabulary management
+- Pattern Commons integration and cross-repository reconciliation
 - Experimental mathematical and structural research
+- Open-source commercialization and evidence-preserving governance
+
+## Open-source / commercialization posture
+
+DGAF aims to keep the public reference implementation sufficiently complete for independent cloning, inspection, execution, and evaluation. Legitimate commercial differentiation may reside in managed operations, integration, assurance, support, hosting, specialized tooling, customer-specific configurations, training, and future certification programs. Public scientific/technical claims must retain enough evidence for independent evaluation even when adjacent operational assets are commercial or private.
+
+The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the legal terms. The license does not grant trademark rights; future “Official DGAF,” “DGAF Certified,” or endorsement claims require separate governance and should not be inferred from repository status or project attestation.
 
 ## PDMAL/DGAF documentation spine
 
@@ -67,12 +73,14 @@ A mathematical term, external framework name, benchmark number, deployment, or a
 14. [Candidate Runtime Verification](docs/governance/CANDIDATE_RUNTIME_VERIFICATION_2026-08-21.md)
 15. [NDR Research Program Charter — Current Status Addendum](docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_CURRENT_STATUS_2026-08-21.md)
 16. [Freeze Packet Template](docs/governance/FREEZE_PACKET_TEMPLATE.md)
+17. [Pattern Commons Architecture](docs/PATTERN_COMMONS_ARCHITECTURE.md)
+18. [Commercialization & Openness Boundary](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md)
+19. [Trademark & Certification Policy](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md)
+20. [CROSS_REF](CROSS_REF.md)
 
 ## Verification and test status
 
 The repository contains deterministic/unit tests, pilot execution-contract tests, artifact/schema controls, governance consistency checks, propagation checks, and CI workflows. **Existence of a test is not evidence that the test has passed.** Current candidate verification must identify the exact candidate SHA, execution environment, deployment where applicable, run identifier, and retained evidence artifact.
-
-The full-repository audit mechanism is present and designed to inventory every Git-tracked file, hash it, classify text/binary content, and detect stale historical bindings and documentation-state collisions. Its authoritative coverage artifact still requires an actual GitHub Actions execution against a fixed candidate.
 
 ### Current gate boundary
 
@@ -89,15 +97,19 @@ The full-repository audit mechanism is present and designed to inventory every G
 - Pilot authorization — NOT GRANTED
 - Empirical N — 0
 
-Do not infer repository-wide validation from a component-level test, historical attestation, deployment existence, README text, or badge.
+Do not infer repository-wide validation from a component-level test, historical attestation, deployment existence, README text, funding badge, commercial status, or certification language.
 
 ## Historical evidence boundary
 
-Historical runtime, P2, P6a, and characterization records remain valid only for the exact source/deployment/run they document. In particular, the retained P6a result for `e1f077f` / `dpl_8YCHnqd4ZLGXnk9U2CuAJozUYLZ7` is historical evidence and is not current-candidate verification.
+Historical runtime, P2, P6a, and characterization records remain valid only for the exact source/deployment/run they document. In particular, retained historical results are not current-candidate verification.
 
 ## Related ecosystem
 
-Related repositories are separate tracks. Shared terminology does not imply implementation equivalence or cross-repository validation.
+Related repositories are separate tracks. Shared terminology does not imply implementation equivalence or cross-repository validation. See [`CROSS_REF.md`](CROSS_REF.md) for the current cross-reference and epistemic boundary index.
+
+## Support / funding
+
+GitHub Sponsors configuration is present through `.github/FUNDING.yml`. Sponsorship supports maintenance and development; it does not confer ownership, certification, endorsement, or special evidence status.
 
 ## License
 

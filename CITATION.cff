@@ -19,10 +19,16 @@ keywords:
   - phi-harmonic
   - nist-ai-rmf
   - agentic-systems
+  - pattern-commons
   - pattern-registry
+  - epistemic-governance
   - constitutional-ai
 abstract: >
-  DGAF (Dynamic Governance Agentic Formation) is a layer-0 governance architecture
-  for multi-agent AI orchestration systems. It provides a pattern registry (NDR P-01
-  through P-33+), phi-harmonic convergence gates, NIST AI RMF alignment, and
-  enterprise-grade governance protocols for agentic system deployment.
+  DGAF (Dynamic Governance Agentic Formation) is a research and implementation
+  architecture for multi-agent governance, evaluation, provenance, and epistemic
+  controls. The repository contains the DGAF implementation/governance substrate,
+  research artifacts, and references to the broader Pattern Commons ecosystem.
+  Project claims are explicitly bounded by their evidence status; repository
+  publication does not itself establish empirical validation, certification, or
+  production readiness. Commercialization, privacy, security, and trademark
+  boundaries are governed separately from the Apache-2.0 software license.

@@ -1,6 +1,6 @@
 # DGAF Commercialization & Openness Boundary
 
-**Status:** Proposed strategic governance specification
+**Status:** Proposed strategic governance specification  
 **Date:** 2026-08-25
 
 ## Purpose
@@ -21,27 +21,27 @@ Commercial differentiation should primarily come from services, operational capa
 
 Appropriate for public GitHub publication:
 
-- reference implementation
-- core specifications and schemas
-- reproducible examples
-- public test harnesses
-- benchmark definitions
-- public evidence and negative results
-- governance principles
-- public research protocols
-- non-sensitive Pattern Commons material
-- contribution and extension interfaces
+- reference implementation;
+- core specifications and schemas;
+- reproducible examples;
+- public test harnesses;
+- benchmark definitions;
+- public evidence and negative results;
+- governance principles;
+- public research protocols;
+- non-sensitive Pattern Commons material;
+- contribution and extension interfaces.
 
 ### RESEARCH / EXPERIMENTAL
 
 Public by default when publication improves reproducibility, but explicitly labeled as hypothesis, candidate, experimental, or unresolved:
 
-- candidate NDR patterns
-- experimental metrics
-- proposed algorithms
-- preliminary benchmarks
-- failed approaches
-- unresolved epistemic questions
+- candidate NDR patterns;
+- experimental metrics;
+- proposed algorithms;
+- preliminary benchmarks;
+- failed approaches;
+- unresolved epistemic questions.
 
 Experimental status must not be represented as validation.
 
@@ -49,14 +49,14 @@ Experimental status must not be represented as validation.
 
 May legitimately remain non-public when it represents independently developed commercial differentiation, subject to applicable licenses and law:
 
-- private deployment automation
-- proprietary operational tooling
-- specialized enterprise integrations
-- managed evaluation infrastructure
-- premium service tooling
-- private implementation accelerators
-- customer-specific configurations
-- private benchmark programs
+- private deployment automation;
+- proprietary operational tooling;
+- specialized enterprise integrations;
+- managed evaluation infrastructure;
+- premium service tooling;
+- private implementation accelerators;
+- customer-specific configurations;
+- private benchmark programs.
 
 The existence of a commercial boundary does not justify withholding evidence necessary to substantiate public claims about the open implementation.
 
@@ -64,13 +64,13 @@ The existence of a commercial boundary does not justify withholding evidence nec
 
 Never publish by default:
 
-- customer data
-- credentials or secrets
-- private deployment information
-- confidential contracts
-- private security findings before responsible disclosure
-- personally identifiable information
-- protected customer telemetry
+- customer data;
+- credentials or secrets;
+- private deployment information;
+- confidential contracts;
+- private security findings before responsible disclosure;
+- personally identifiable information;
+- protected customer telemetry.
 
 ### SECURITY-SENSITIVE
 
@@ -78,9 +78,9 @@ Withhold or delay publication when disclosure creates a material security risk. 
 
 ### TRADEMARK / CERTIFICATION-GOVERNED
 
-The DGAF name, marks, certification terminology, and claims of official status should be governed separately from software licensing. Open-source use of the software does not by itself establish entitlement to represent a product or service as officially DGAF-certified or endorsed.
+The DGAF name, marks, certification terminology, and claims of official status are governed separately from software licensing. Open-source use of the software does not by itself establish entitlement to represent a product or service as officially DGAF-certified or endorsed.
 
-Any future certification program must define objective criteria, evidence requirements, scope, limitations, appeal/review procedures, and explicit non-guarantees before commercial use.
+See [`DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md). No active certification program is established by that policy.
 
 ## Commercialization model
 
@@ -98,9 +98,21 @@ Potential revenue channels include:
 
 These are candidate business models, not claims of current revenue or market validation.
 
-## Questions that remain open
+## Pattern Commons relationship
 
-- Which open-source license best matches DGAF's intended freedoms and commercial ecosystem?
+Pattern Commons is the ecosystem-level knowledge and provenance layer. Commercialization status is an attribute of an asset or offering, not evidence that a pattern is valid. Pattern Commons records should preserve provenance and epistemic status independently of commercial ownership.
+
+See [`../PATTERN_COMMONS_ARCHITECTURE.md`](../PATTERN_COMMONS_ARCHITECTURE.md) and [`DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md`](DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md).
+
+## Public evidence rule
+
+When a commercial or private component is necessary to support a public claim, disclose enough evidence to substantiate the claim without exposing protected implementation details, customer data, credentials, or security-sensitive material.
+
+The commercial boundary must never become an epistemic loophole.
+
+## Open questions
+
+- Which open-source license best matches DGAF's intended long-term freedoms and ecosystem strategy?
 - What exact capabilities constitute the public reference implementation?
 - Which assets, if any, have genuine proprietary value rather than merely perceived value?
 - What may competitors commercially provide using DGAF?
@@ -115,16 +127,12 @@ These are candidate business models, not claims of current revenue or market val
 
 DGAF should avoid:
 
-- calling withheld core functionality "open source";
+- calling withheld core functionality “open source”;
 - using secrecy as a substitute for product differentiation;
 - claiming universal guarantees from empirical evidence;
 - treating certification as proof of safety or correctness beyond its defined scope;
 - using proprietary status to obscure unsupported claims;
 - publishing customer/private/security-sensitive material merely to appear transparent.
-
-## Relationship to Pattern Commons
-
-Pattern Commons remains the ecosystem-level pattern knowledge layer. Commercialization status is an attribute of an asset or offering, not evidence that a pattern is valid. Pattern Commons records should preserve provenance and epistemic status independently of commercial ownership.
 
 ## Decision rule
 
@@ -135,6 +143,6 @@ When deciding whether an artifact should be public, ask in order:
 3. Does withholding it create a misleading impression about the public implementation?
 4. Does it constitute legitimate commercial differentiation rather than arbitrary restriction?
 5. Can the commercial value instead be delivered through services, operations, support, integration, or assurance?
-6. Is the resulting boundary clearly documented?
+6. Is the resulting boundary clearly documented and cross-linked to the relevant Pattern Commons/evidence record?
 
 The default for core scientific/technical claims is **evidence-preserving openness**. The default for private data, secrets, security-sensitive material, and legitimate customer-specific or operational assets is **controlled disclosure**.

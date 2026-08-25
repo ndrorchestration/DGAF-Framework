@@ -4,6 +4,28 @@
 
 ---
 
+## [2026-08-25] — Ecosystem Boundary Alignment
+
+### Pattern Commons / commercialization / cross-disciplinary governance
+
+- Established `docs/PATTERN_COMMONS_ARCHITECTURE.md` as the DGAF-side architectural boundary for an ecosystem-level Pattern Commons.
+- Established `docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md` defining evidence-preserving openness and controlled commercial/private/security boundaries.
+- Added `docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md` as a proposed future governance policy; no active DGAF certification program is claimed.
+- Clarified that NDR is a pattern namespace/family within the broader Pattern Commons, not the universal pattern corpus.
+- Clarified that `registry/PATTERN_REGISTRY_v2.md` is a distinct DGAF orchestration-pattern namespace and is not a competing NDR registry merely because it contains the word “registry”.
+- Added repository-level cross-links for Pattern Commons, commercialization/openness, trademark/certification, and the canonical cross-reference index.
+- Updated contributor guidance to require registry/provenance searches, semantic-equivalence checks, evidence boundaries, and openness/security classification.
+- Corrected public README merge-conflict markers and refreshed its ecosystem/commercialization documentation spine.
+- Preserved the Apache-2.0 license boundary and its separate trademark reservation; no proprietary restriction has been retroactively imposed on already-public open-source material.
+- Confirmed `.github/FUNDING.yml` already exposes GitHub Sponsors; sponsorship is treated as funding rather than certification or ownership.
+- No existing pattern artifact was moved, deleted, or reclassified solely for commercialization. Asset-by-asset classification remains an audit task.
+
+### Epistemic boundary
+
+Commercial status, repository visibility, sponsorship, project attestation, and trademark/certification status are independent dimensions and must not be used as evidence of technical validity or empirical support.
+
+---
+
 ## [2026-08-18] — Post-v0.7.5 Pre-Freeze Status
 
 ### DGAF/PDMAL runtime-characterization and pilot readiness
@@ -110,4 +132,4 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 
 ---
 
-*CHANGELOG · Amethyst × COLLEEN · Updated 2026-08-18*
+*CHANGELOG · Amethyst × COLLEEN · Updated 2026-08-25*
