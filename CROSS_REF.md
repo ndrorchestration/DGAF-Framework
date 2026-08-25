@@ -71,6 +71,8 @@ A mathematically valid definition does not establish empirical efficacy. A succe
 
 See [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md).
 
+**Asset-level inventory:** [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md).
+
 Default public candidates include the reference implementation, core specifications/schemas, reproducible examples, public tests, research protocols, and non-sensitive Pattern Commons material.
 
 Legitimate non-public categories include customer/confidential data, secrets, security-sensitive material, and independently developed commercial operational differentiation. Withheld implementation must not be described as “open source,” and commercial status must never be used to obscure unsupported claims.
@@ -103,6 +105,7 @@ A relationship across disciplines does not establish equivalence across them. Ea
 |---|---|
 | Pattern Commons | `docs/PATTERN_COMMONS_ARCHITECTURE.md` |
 | Commercialization/open source | `docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md` |
+| Asset-level boundary inventory | `docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md` |
 | Trademark/certification | `docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md` |
 | Cross-disciplinary boundary | `docs/GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md` |
 | Current project status | `docs/PROJECT_STATUS.md`, `docs/CURRENT_STATE.md` |
@@ -126,7 +129,7 @@ Historical sweep logs, old deadlines, attestation percentages, tier labels, and 
 
 1. Reconcile the NDR Markdown P-41 watermark against the machine-readable P-42 registry.
 2. Continue ecosystem-wide pattern provenance/alias analysis before any physical consolidation.
-3. Classify assets against the commercialization/openness boundary.
+3. Continue file/path-level classification against the commercialization/openness boundary inventory.
 4. Keep Notion architecture/evidence records synchronized with GitHub source changes.
 5. Preserve historical evidence while correcting current-state labels.
 
