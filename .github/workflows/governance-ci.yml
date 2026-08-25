@@ -22,14 +22,32 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install test dependencies
-        run: python -m pip install --upgrade pip pytest numpy
+      - name: Install evidence-gate and harness dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-ci.txt
+          python -m pip install -r experiments/pdmal_pilot/requirements-lock.txt
+
+      - name: Verify dependency declarations are consistent
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import importlib.metadata as metadata
+
+          lock = Path('experiments/pdmal_pilot/requirements-lock.txt').read_text(encoding='utf-8')
+          assert 'networkx==3.6.1' in lock, 'PDMAL lock must declare networkx==3.6.1'
+          assert metadata.version('networkx') == '3.6.1', 'installed networkx must match PDMAL lock'
+          print('Dependency consistency: PASS')
+          PY
 
       - name: Compile Python components
-        run: python -m compileall -q components tests evaluations
+        run: python -m compileall -q components tests evaluations experiments/pdmal_pilot
 
       - name: Run P-42 conductor and recovery tests
         run: python -m pytest -q tests/test_ahg_conductor.py tests/test_ahg_recovery.py
+
+      - name: Run PDMAL pilot artifact/security tests
+        run: python -m pytest -q experiments/pdmal_pilot/tests/test_security_controls.py
 
       - name: Run Issue #32 deterministic evaluation slice
         run: |
