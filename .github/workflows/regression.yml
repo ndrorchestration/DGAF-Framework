@@ -42,7 +42,6 @@ jobs:
           print(f'PSI cubic OK: PSI={PSI:.10f}')
           EOF
   live-regression:
-    continue-on-error: true
     name: Live Regression (Vercel)
     runs-on: ubuntu-latest
     if: >
@@ -65,8 +64,13 @@ jobs:
       - name: Install httpx
         run: pip install httpx -q
 
+      - name: Initialize verification state
+        run: |
+          printf '{"status":"NOT_EXECUTED","reason":"preflight pending","candidate_sha":"%s","run_id":"%s"}\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > regression_results_v17.json
+
       - name: Health preflight
         run: |
+          set -euo pipefail
           curl -sf "$DGAF_URL/api/health" | python3 -m json.tool
           PSIOK=$(curl -sf "$DGAF_URL/api/health" | \
             python3 -c \
@@ -75,8 +79,43 @@ jobs:
             && echo 'psi_cubic OK' \
             || { echo 'psi_cubic FAIL'; exit 1; }
 
+      - name: Mark preflight passed
+        run: |
+          python3 - <<'EOF'
+          import json
+          p='regression_results_v17.json'
+          d=json.load(open(p))
+          d.update(status='EXECUTION_READY', preflight='PASS')
+          json.dump(d, open(p,'w'), indent=2, sort_keys=True)
+          EOF
+
       - name: 30-turn live regression
         run: python3 scripts/live_regression_v17.py
+
+      - name: Mark execution complete
+        if: success()
+        run: |
+          python3 - <<'EOF'
+          import json
+          p='regression_results_v17.json'
+          d=json.load(open(p))
+          d.update(status='PASS', execution='PASS')
+          json.dump(d, open(p,'w'), indent=2, sort_keys=True)
+          EOF
+
+      - name: Mark verification failure
+        if: failure()
+        run: |
+          python3 - <<'EOF'
+          import json
+          p='regression_results_v17.json'
+          d=json.load(open(p))
+          if d.get('status') == 'NOT_EXECUTED':
+              d.update(status='FAIL', verification='BLOCKED_OR_FAILED')
+          else:
+              d.update(status='FAIL', verification='FAILED')
+          json.dump(d, open(p,'w'), indent=2, sort_keys=True)
+          EOF
 
       - name: Upload regression results
         if: always()
@@ -84,9 +123,11 @@ jobs:
         with:
           name: regression-results-${{ github.run_id }}
           path: regression_results_v17.json
+          if-no-files-found: error
 
       - name: Audit log check
         run: |
+          set -euo pipefail
           curl -sf "$DGAF_URL/api/audit" | python3 -m json.tool
           TC=$(curl -sf "$DGAF_URL/api/audit" | \
             python3 -c \
@@ -94,7 +135,3 @@ jobs:
           [ "$TC" -ge 30 ] \
             && echo "audit: turn_count=$TC OK" \
             || { echo "audit: turn_count=$TC < 30"; exit 1; }
-
-      - name: Notify on live-regression failure
-        if: failure()
-        run: echo DGAF live-regression failed run ${{ github.run_id }} Vercel unavailable suite passing via continue-on-error
