@@ -80,23 +80,24 @@ The P8 verification checklist (`P8_VERIFICATION_CHECKLIST.md`) has **21 items**,
 
 ### Unchecked items (candidate-scoped evidence required):
 
+The P8 checklist has 20 checkbox items total: 6 checked (artifact contract, locally verified) and 14 unchecked (CI evidence, reproducibility, and custody sections). The 14 unchecked items are listed below with their actual P8 checklist numbers.
+
 | Checklist # | Item | Required evidence | Corresponds to workflow/test | Status |
 |-------------|------|-------------------|------------------------------|--------|
-| 7 | Governance CI against exact candidate tree | Run ID, workflow name, pass/fail, retained logs | `governance-ci.yml` | **UNCHECKED** |
-| 8 | Python test suite against exact candidate | Test run ID, pass/fail per test, coverage | `python-tests.yml` + 7 test files | **UNCHECKED** |
-| 9 | Analysis reproducibility (deterministic output from same inputs) | Reproduction run ID, identical output hash | `pdmal-pre-freeze-runner.yml`, `analysis.py` | **UNCHECKED** |
-| 10 | Artifact schema validation in CI | Schema validation run ID, pass/fail | `pdmal-harness-validation.yml` | **UNCHECKED** |
-| 11 | FFCR contract enforcement in CI | Contract test run ID, pass/fail | `pdmal-harness-validation.yml`, `test_security_controls.py` | **UNCHECKED** |
-| 12 | Truth layer integrity check | Truth layer run ID, pass/fail | `truth-layer.yml`, `truth-layer-tests.yml` | **UNCHECKED** |
-| 13 | Epistemic evidence validation | Evidence validation run ID, pass/fail | `epistemic-evidence-validation.yml` | **UNCHECKED** |
-| 14 | Blinding operational test | Blinding test run ID, pass/fail, key custody verification | `pdmal-blinding-operational-test.yml` | **UNCHECKED** |
-| 15 | Runtime characterization | Characterization run ID, metrics, pass/fail | `pdmal-runtime-characterization.yml` | **UNCHECKED** |
-| 16 | P2 runtime verification (applicability decision required) | Per panel: (1) succeeds, (2) justified alternative, or (3) OPEN with conditions | `p2-runtime-verification.yml` | **UNCHECKED — applicability decision pending** |
-| 17 | P6a CORS verification (applicability decision required) | Same tripartite choice as P2 | `p6a-cors-verification.yml` | **UNCHECKED — applicability decision pending** |
-| 18 | Instrumentation dry-run | Dry-run run ID, data collection path validation | `pdmal-instrumentation-dry-run.yml` | **UNCHECKED** |
-| 19 | Pre-authorization security check | Security check run ID, pass/fail | `pdmal-preauth-security.yml` | **UNCHECKED** |
-| 20 | PPL/PPtL environment verification | Environment check run ID, dependency versions, pass/fail | `pptl-ci.yml` | **UNCHECKED** |
-| 21 | Regression test suite | Regression run ID, pass/fail, any failures | `regression.yml` | **UNCHECKED** |
+| 7 | Governance CI executed against exact candidate `2a80f819...` | Run ID, workflow name, pass/fail, retained logs | `governance-ci.yml` | **UNCHECKED** |
+| 8 | P8 analysis tests passed in that execution | Test run ID, pass/fail per test, any failures documented | `python-tests.yml` + `test_analysis.py` | **UNCHECKED** |
+| 9 | P8 artifact-schema/security tests passed in that execution | Test run ID, pass/fail per test, any failures documented | `python-tests.yml` + `test_security_controls.py` + `test_harness_contract.py` | **UNCHECKED** |
+| 10 | Compilation passed in that execution | Compilation run ID, pass/fail | `python-tests.yml` (compilation step) | **UNCHECKED** |
+| 11 | Run ID, URL, exact SHA, ref, and event retained | Run metadata artifact with all fields populated | CI run metadata (from `governance-ci.yml` execution) | **UNCHECKED** |
+| 12 | Job logs inspected rather than inferred from a commit/check placeholder | Inspection record: which logs were checked, what was verified | CI job logs (from `governance-ci.yml` execution) | **UNCHECKED** |
+| 13 | Executed-tree identity reconciled with all P8 bindings | Reconciliation record: executed SHA vs. P8 analysis lock bindings | CI run metadata + P8 analysis lock cross-reference | **UNCHECKED** |
+| 14 | Environment fingerprint evidence captured and assessed | Environment fingerprint artifact (OS, Python version, dependency versions, etc.) | CI environment metadata (from `governance-ci.yml` execution) | **UNCHECKED** |
+| 15 | Deterministic topology fingerprints reproduced for the candidate | Reproduction run ID showing identical topology fingerprint output | `pdmal-pre-freeze-runner.yml` or `governance-ci.yml` + `topology_utils.py` | **UNCHECKED** |
+| 16 | Seed/RNG separation and trial ordering independently verified | Verification record: analysis RNG separated from topology/failure-injection/task RNG | CI run metadata + analysis code verification | **UNCHECKED** |
+| 17 | CI logs/artifacts retained at a durable location | Retention record: where logs/artifacts are stored, access mechanism | Durable archive (TBD) | **UNCHECKED** |
+| 18 | Retained artifacts retrieved independently | Retrieval record: independent retrieval of retained artifacts | Durable archive retrieval (TBD) | **UNCHECKED** |
+| 19 | Retrieval hashes verified against recorded integrity values | Hash verification record: retrieved artifact hash vs. recorded value | Durable archive hash verification (TBD) | **UNCHECKED** |
+| 20 | Blinding custody boundary documented without exposing the key | Blinding custody documentation: executor isolation, blinded IDs, custody separation (key not exposed) | `pdmal-blinding-operational-test.yml` + blinding policy documentation | **UNCHECKED** |
 
 ---
 
