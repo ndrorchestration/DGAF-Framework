@@ -2,7 +2,9 @@ name: Governance CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - epistemic/evidence-architecture-v1
   pull_request:
     branches: [main]
   workflow_dispatch:
