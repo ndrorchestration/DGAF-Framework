@@ -10,24 +10,13 @@ import json
 from typing import Any, Mapping
 
 ARTIFACT_SCHEMA_VERSION = "1.0"
+ARTIFACT_PROFILE = "PDMAL_PRE_FREEZE_V1"
 
 REQUIRED_SEED_FIELDS = {
-    "experiment_id",
-    "protocol_version",
-    "experiment_commit_sha",
-    "seed_id",
-    "blinded_condition_id",
-    "trial_id",
-    "primary_outcome",
-    "secondary_outcomes",
-    "failure",
-    "recovery",
-    "runtime_ms",
-    "status",
-    "excluded",
-    "exclusion_reason",
-    "environment_fingerprint",
-    "artifact_sha256",
+    "experiment_id", "protocol_version", "experiment_commit_sha", "seed_id",
+    "blinded_condition_id", "trial_id", "primary_outcome", "secondary_outcomes",
+    "failure", "recovery", "runtime_ms", "status", "excluded", "exclusion_reason",
+    "environment_fingerprint", "artifact_sha256",
 }
 
 ALLOWED_STATUS = {"SUCCESS", "RECOVERED", "UNRECOVERED_FAILURE"}
@@ -64,21 +53,18 @@ def validate_seed_record(record: Mapping[str, Any]) -> None:
 
 
 def validate_artifact_document(document: Mapping[str, Any]) -> None:
-    """Validate a per-seed document without recomputing its external sidecar."""
+    """Validate a per-seed document without authorizing empirical collection."""
     required_document = {
-        "schema_version",
-        "artifact_version",
-        "protocol_status",
-        "empirical_data_collection",
-        "records",
+        "schema_version", "artifact_profile", "artifact_version", "protocol_status",
+        "empirical_data_collection", "records",
     }
     missing = required_document - set(document)
     if missing:
         raise AssertionError(f"artifact document missing fields: {sorted(missing)}")
     if document["schema_version"] != ARTIFACT_SCHEMA_VERSION:
-        raise AssertionError(
-            f"unsupported artifact schema_version: {document['schema_version']!r}"
-        )
+        raise AssertionError(f"unsupported artifact schema_version: {document['schema_version']!r}")
+    if document["artifact_profile"] != ARTIFACT_PROFILE:
+        raise AssertionError("artifact_profile does not identify the pre-freeze contract")
     if document["protocol_status"] != "PRE-FREEZE":
         raise AssertionError("pre-freeze artifact must declare PRE-FREEZE")
     if document["empirical_data_collection"] is not False:
@@ -93,5 +79,4 @@ def validate_artifact_document(document: Mapping[str, Any]) -> None:
 
 
 def sha256_sidecar(raw_artifact: bytes, filename: str) -> str:
-    """Return the canonical sidecar line for a raw artifact."""
     return f"{sha256_bytes(raw_artifact)}  {filename}\n"
