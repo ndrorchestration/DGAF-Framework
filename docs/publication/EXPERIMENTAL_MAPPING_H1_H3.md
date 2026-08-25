@@ -78,3 +78,11 @@ Current state remains:
 ## Decision gate before empirical work
 
 The experiment may proceed only after the repository contains a frozen protocol covering topology, endpoints, failure model, recovery semantics, RNG separation, trial ordering, exclusions, stopping rules, blinding, unblinding, statistical analysis, baselines, artifact schema, SHA binding, and environment fingerprinting.
+
+## Execution Gate Audit — 2026-08-25
+
+The corrected verification branch is intentionally ready for repository-triggered CI execution. The absence of a workflow run is itself recorded as **NOT EXECUTED**, not PASS. This document remains design-only and does not authorize empirical execution.
+
+**Current execution status:** NOT EXECUTED  
+**Current authorization status:** NOT GRANTED  
+**Current empirical N:** 0
