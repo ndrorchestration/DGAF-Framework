@@ -12,7 +12,7 @@ The historical implementation freeze `3510b86889cd341f7a7cf9ab684fd37b2fafd758` 
 
 The repository is also undergoing an ecosystem architecture pass separating DGAF implementation from the broader Pattern Commons and from commercialization, trademark, privacy, and security boundaries. These documentation changes do not themselves advance experimental gates.
 
-For the authoritative gate board and remaining sequence, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
+For the authoritative gate board and remaining sequence, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
 
 ## Repository scope
 
@@ -75,8 +75,9 @@ The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the le
 16. [Freeze Packet Template](docs/governance/FREEZE_PACKET_TEMPLATE.md)
 17. [Pattern Commons Architecture](docs/PATTERN_COMMONS_ARCHITECTURE.md)
 18. [Commercialization & Openness Boundary](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md)
-19. [Trademark & Certification Policy](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md)
-20. [CROSS_REF](CROSS_REF.md)
+19. [Asset-Level Boundary Inventory](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md)
+20. [Trademark & Certification Policy](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md)
+21. [CROSS_REF](CROSS_REF.md)
 
 ## Verification and test status
 
