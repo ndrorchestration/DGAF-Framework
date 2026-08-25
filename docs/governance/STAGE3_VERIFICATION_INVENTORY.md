@@ -4,11 +4,13 @@
 
 **Candidate tree (P8 checklist binding):** `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f`
 
-**Current HEAD:** `222fb4c9832b77c88791363ad7923646801b9a4a` (19 commits ahead of candidate; 1 new commit since candidate — governance documentation incorporation; all post-candidate commits are documentation/control reconciliation — no substantive apparatus change)
+**Current HEAD:** `39c138bb29697a561b49ef206c9f9a185e8a9c7b` (22 commits ahead of candidate; 3 new governance commits since candidate — P8 checklist count correction, Stage 3 verification inventory, and operating governance consistency statement; all post-candidate commits are documentation/control reconciliation — no substantive apparatus change)
 
 **Date compiled:** 2026-08-24
 
-**Note on HEAD vs candidate:** The candidate tree and current HEAD contain identical CI workflow files and Python source files. The 18 commits between candidate and HEAD are documentation/control reconciliation commits (PR #83, PR #84, PR #76, and the local readiness report update). No substantive code, protocol, or apparatus change has occurred. Verification inventory is therefore the same for both trees, but must be recorded against the candidate SHA per P8 fail-closed rules.
+**Note on HEAD vs candidate:** The candidate tree `2a80f819...` and current HEAD `39c138b...` contain identical CI workflow files and Python source files (verified by comparing tree contents — 24 CI workflows and 7 test files are identical at both SHAs). The 21 commits between the candidate and HEAD are documentation/control reconciliation commits and the 3 subsequent governance documentation commits (P8 checklist count correction, Stage 3 verification inventory, and operating governance consistency statement). No substantive code, protocol, or apparatus change has occurred. Verification inventory is therefore valid for both trees, but must be recorded against the candidate SHA `2a80f819...` per P8 fail-closed rules. The inventory documents were created post-candidate; they record what exists at the candidate but do not alter the candidate apparatus.
+
+**GitHub provenance:** Local HEAD `39c138b...` was pushed to GitHub `origin/main` on 2026-08-25, but GitHub API verification was unavailable (rate-limited unauthenticated access). Until GitHub API confirms the push, treat GitHub provenance as UNVERIFIED. The inventory documents are correct as local artifacts; their GitHub provenance is pending.
 
 ---
 
@@ -104,18 +106,14 @@ The following 6 items are from the artifact contract section of the P8 checklist
 | Category | Implemented (code/config exists) | Evidenced (executed against candidate, retained) | Gap |
 |----------|----------------------------------|--------------------------------------------------|-----|
 | P8 artifact contract (6 checklist items) | YES | NO — local verification only | Must execute Governance CI + python-tests against `2a80f819` |
-| P8 analysis verification (items 7-13) | YES — analysis.py, CI workflows exist | NO — none executed against candidate | 7 workflows + test suite need execution |
-| P8 blinding (item 14) | YES — blinding_operational_test.py exists | NO — not executed against candidate | Dry-run needed |
-| P8 runtime (items 15-17) | YES — characterization + P2/P6a workflows exist | NO — not executed; applicability decisions pending for P2/P6a | Characterization + applicability decisions needed |
-| P8 instrumentation (item 18) | YES — dry-run workflow exists | NO — not executed | Dry-run needed |
-| P8 security (item 19) | YES — preauth-security.yml exists | NO — not executed | Security check needed |
-| P8 environment (item 20) | YES — pptl-ci.yml exists | NO — not executed | Environment check needed |
-| P8 regression (item 21) | YES — regression.yml exists | NO — not executed | Regression run needed |
+| P8 CI evidence (6 checklist items) | YES — governance-ci.yml, python-tests.yml exist | NO — none executed against candidate | 2 CI workflows need execution + artifact retention |
+| P8 reproducibility (4 checklist items) | YES — analysis.py, CI workflows exist | NO — none executed against candidate | 4 reproducibility items need execution + tree/environment/RNG verification |
+| P8 evidence custody (4 checklist items) | Policy documents exist | NO — no durable archive + retrieval + hash proof | Operational proof needed for all 4 custody items |
 | P6 durable custody | Policy document exists | NO — no archive destination + retrieval/hash proof | Operational proof needed |
 | P2/P6a runtime | Workflows exist | NO — not executed; applicability decisions pending | Applicability decision + execution or OPEN with conditions |
 | P9 independent verification | Architecture documented | NO — not executed | Must be independent of candidate self-validation |
 
-**Key finding (confirms panel's assessment):** The system has **implemented controls** (code, CI workflows, test suites, policy documents) but has **zero executed candidate-scoped evidence**. Every P8 checklist item from 7-21 is UNCHECKED. A successful CI run against `2a80f819` is necessary evidence, not by itself P8 closure.
+**Key finding (confirms panel's assessment):** The system has **implemented controls** (code, CI workflows, test suites, policy documents) but has **zero executed candidate-scoped evidence**. A successful CI run against `2a80f819` is necessary evidence, not by itself P8 closure. The P8 checklist explicitly states: "P8 remains open until every applicable unchecked item has candidate-scoped evidence."
 
 ---
 
