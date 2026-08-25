@@ -4,7 +4,7 @@
 
 **Candidate tree (P8 checklist binding):** `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f`
 
-**Current HEAD:** `b16be6f9680bf4153aa159f91c37fd41f2938d7d` (18 commits ahead of candidate; all post-candidate commits are documentation/control reconciliation — no substantive apparatus change)
+**Current HEAD:** `222fb4c9832b77c88791363ad7923646801b9a4a` (19 commits ahead of candidate; 1 new commit since candidate — governance documentation incorporation; all post-candidate commits are documentation/control reconciliation — no substantive apparatus change)
 
 **Date compiled:** 2026-08-24
 
