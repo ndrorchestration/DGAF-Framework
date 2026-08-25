@@ -9,6 +9,10 @@ Define the boundary between what DGAF should publish for reproducibility, indepe
 
 This document does **not** establish a proprietary claim over material that is already open-source or otherwise publicly committed under an existing license. It establishes a decision framework for future work and commercialization.
 
+## Canonical asset-level inventory
+
+The repository-level and subsequent file-level asset boundary review is tracked in [`DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). The inventory treats access classification, epistemic status, provenance, licensing, security/privacy sensitivity, and commercial differentiation as independent dimensions.
+
 ## Core principle
 
 DGAF should be sufficiently open that an independent user can clone, inspect, run, and evaluate the public reference implementation without requiring access to undisclosed core functionality.
@@ -57,8 +61,6 @@ May legitimately remain non-public when it represents independently developed co
 - private implementation accelerators;
 - customer-specific configurations;
 - private benchmark programs.
-
-The existence of a commercial boundary does not justify withholding evidence necessary to substantiate public claims about the open implementation.
 
 ### PRIVATE / CONFIDENTIAL
 
@@ -143,6 +145,6 @@ When deciding whether an artifact should be public, ask in order:
 3. Does withholding it create a misleading impression about the public implementation?
 4. Does it constitute legitimate commercial differentiation rather than arbitrary restriction?
 5. Can the commercial value instead be delivered through services, operations, support, integration, or assurance?
-6. Is the resulting boundary clearly documented and cross-linked to the relevant Pattern Commons/evidence record?
+6. Is the resulting boundary clearly documented and cross-linked to the relevant Pattern Commons/evidence record and asset inventory?
 
 The default for core scientific/technical claims is **evidence-preserving openness**. The default for private data, secrets, security-sensitive material, and legitimate customer-specific or operational assets is **controlled disclosure**.
