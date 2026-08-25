@@ -65,22 +65,20 @@ There are **7 tracked Python test files** in `experiments/pdmal_pilot/`:
 
 ## Section 3: P8 Checklist Reconciliation
 
-The P8 verification checklist (`P8_VERIFICATION_CHECKLIST.md`) has **21 items**, of which **6 are checked** (artifact contract) and **15 are unchecked** (remaining verification categories).
+The P8 verification checklist (`P8_VERIFICATION_CHECKLIST.md`) has **20 checkbox items**: **6 checked** (artifact contract section, locally verified) and **14 unchecked** (CI evidence section, reproducibility section, and evidence custody section).
 
 ### Checked items (artifact contract — already verified locally, not candidate-scoped):
 
-| Checklist # | Item | Status | Local verification | Candidate-scoped evidence? |
-|-------------|------|---------|-------------------|---------------------------|
-| 1 | Analysis implementation matches P7 estimand/estimator | CHECKED | Verified: `analysis.py` consistent with P7 record | NO — local verification only |
-| 2 | Artifact schema validates FFCR contract | CHECKED | Verified: artifact schema enforces `ffcr_success`, completeness | NO — local verification only |
-| 3 | Runner emits required sidecar fields | CHECKED | Verified: `run_pilot.py` emits runtime_id, seed_id, etc. | NO — local verification only |
-| 4 | FFCR contract fields are required and semantically fail-closed | CHECKED | Verified: `harness_contract.py` defines required fields | NO — local verification only |
-| 5 | Topology fingerprint definitions are consistent | CHECKED | Verified: 5 topologies, fingerprint constants consistent | NO — local verification only |
-| 6 | Run metadata fields are present and non-nullable | CHECKED | Verified: runtime_id, seed_id, condition_id, topology_id, failure_count, ffcr_success, matrix_checksum, artifact_sha | NO — local verification only |
+The following 6 items are from the artifact contract section of the P8 checklist (lines 11-16). They are CHECKED locally but have NOT been executed against the candidate `2a80f819...`.
 
-### Unchecked items (candidate-scoped evidence required):
-
-The P8 checklist has 20 checkbox items total: 6 checked (artifact contract, locally verified) and 14 unchecked (CI evidence, reproducibility, and custody sections). The 14 unchecked items are listed below with their actual P8 checklist numbers.
+| Checklist # | Item (exact P8 checklist text) | Status | Local verification | Candidate-scoped evidence? |
+|-------------|--------------------------------|--------|-------------------|---------------------------|
+| 1 | Explicit `ffcr_success` outcome is emitted by the runner. | CHECKED | Verified: `run_pilot.py` emits `ffcr_success` with topology, failure_count, and matrix checksum | NO — local verification only |
+| 2 | `ffcr_success` is integrity-covered and required by the pilot artifact schema. | CHECKED | Verified: `pilot_artifact_schema.py` defines `ffcr_success` as required, schema validation rejects missing `ffcr_success` | NO — local verification only |
+| 3 | Matrix coordinates consumed by analysis (`topology`, `failure_count`) are explicit, required artifact fields. | CHECKED | Verified: `pilot_artifact_schema.py` defines `topology` and `failure_count` as required artifact fields | NO — local verification only |
+| 4 | Schema rejects malformed FFCR outcomes and `ffcr_success=true` with non-success status. | CHECKED | Verified: `pilot_artifact_schema.py` schema validation rejects malformed FFCR (missing fields, inconsistent status) | NO — local verification only |
+| 5 | Analysis requires complete, non-duplicate condition matrices and an explicit unblinding map. | CHECKED | Verified: `analysis.py` requires complete matrix (all cells present) and raises if duplicate cells or missing unblinding map | NO — local verification only |
+| 6 | Canonical record serialization is shared by runner and schema validation. | CHECKED | Verified: `run_pilot.py` emits canonical JSON records; `pilot_artifact_schema.py` validates against the same canonical schema | NO — local verification only |\n\n### Unchecked items (candidate-scoped evidence required):\n\nThe P8 checklist has 20 checkbox items total: 6 checked (artifact contract, locally verified) and 14 unchecked (CI evidence, reproducibility, and custody sections). The 14 unchecked items are listed below with their actual P8 checklist numbers.
 
 | Checklist # | Item | Required evidence | Corresponds to workflow/test | Status |
 |-------------|------|-------------------|------------------------------|--------|
