@@ -28,6 +28,7 @@ CONSENSUS_ITERATIONS = 100
 FAILURE_INJECTION_ITERATION = 33
 FAILURE_RECOVERY_ITERATION = 66
 CONDITION_VALUES = ("null", "simple", "static", "dgaf")
+PILOT_FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
 CONSENSUS_THRESHOLD = 0.01
 
 
@@ -223,8 +224,8 @@ class ConsensusTask:
             raise ValueError(f"unsupported topology: {topology!r}")
         if condition not in CONDITION_VALUES:
             raise ValueError(f"unsupported pilot condition: {condition!r}")
-        if not 0 <= failure_count <= 20:
-            raise ValueError("failure_count must be between 0 and 20")
+        if not isinstance(failure_count, int) or isinstance(failure_count, bool) or failure_count not in PILOT_FAILURE_COUNTS:
+            raise ValueError(f"failure_count must be one of {PILOT_FAILURE_COUNTS!r}")
         self.topology = topology
         self.failure_count = failure_count
         self.condition = condition
