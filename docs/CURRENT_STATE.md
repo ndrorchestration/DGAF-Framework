@@ -3,13 +3,13 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-26
-applies_to_sha: 190a205002e9a9014005793a346324b5fb08ec76
+applies_to_sha: e6beeb66335e1b50a239697badab22dab50eb5ba
 ---
 # DGAF-Framework / PDMAL — Current State
 
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it. This document describes current state without retroactively transferring historical evidence.
 
-> **What this document does NOT claim (2026-08-26 update):** The current verification candidate contains post-`83e1678f...` P8 integrity fixes. It does **not** constitute a freeze, P8 closure, pilot authorization, or empirical validation. P7 is technically adjudicated but formally OPEN pending authority adoption and exact binding. P8 remains OPEN / FAIL-CLOSED. Empirical **N = 0**. No efficacy claim is authorized. Merge ≠ freeze; execution ≠ empirical validation.
+> **What this document does NOT claim (2026-08-26 update):** The current corrected verification candidate is `e6beeb66335e1b50a239697badab22dab50eb5ba`. It is a pre-freeze candidate, not a freeze, P8 closure, pilot authorization, or empirical validation. P7 is technically adjudicated but formally OPEN pending authority adoption and exact binding. P8 remains OPEN / FAIL-CLOSED. Empirical **N = 0**. No efficacy claim is authorized. Merge ≠ freeze; execution ≠ empirical validation.
 
 ## Authoritative current state
 
@@ -17,9 +17,9 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 |---|---|---|
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains provenance only |
 | P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Scientific decisions are resolved; authority adoption and exact binding remain open |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Integrity fixes are present, but fresh candidate-scoped execution and binding are incomplete |
-| Exact verification candidate | IDENTIFIED (corrected P8 basis) | `190a205002e9a9014005793a346324b5fb08ec76` is the current executable candidate requiring verification |
-| Prior candidate | SUPERSEDED | `83e1678f55d16f32b5ce363e091ac74479cbfe1f` remains historical candidate provenance |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Corrective implementation work is present, but fresh candidate-scoped execution and binding are incomplete |
+| Exact verification candidate | IDENTIFIED (corrected) | `e6beeb66335e1b50a239697badab22dab50eb5ba` includes executable integrity fixes and regression coverage |
+| Prior candidate | SUPERSEDED | `190a205002e9a9014005793a346324b5fb08ec76` and earlier SHAs remain historical provenance |
 | New immutable freeze | NOT CREATED | Candidate has not crossed the freeze boundary |
 | Operational evidence closure | INCOMPLETE | Candidate-scoped runtime evidence, durable retention, and custody/provenance checks remain open |
 | P9 independent verification | NOT EXECUTED | Downstream of candidate evidence closure |
@@ -28,21 +28,26 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 ## Candidate transition record
 
-`83e1678f...` was previously the corrected verification candidate. Subsequent executable integrity fixes require a new candidate identity:
+`83e1678f...` was the earlier corrected candidate. Subsequent executable fixes changed the verification surface, so the candidate advanced through the following chain:
 
-- `d65df466...` — P8 analysis rejects boolean numeric inputs;
-- `141d02a4...` — pilot artifact records are bound to document identity and duplicate matrix cells are rejected;
-- `c70d0691...` — each blinded condition must contain the complete 45-cell matrix;
+- `d65df466...` — reject boolean numeric inputs in P8 analysis;
+- `141d02a4...` — bind pilot records to document identity and reject duplicate matrix cells;
+- `c70d0691...` — require complete 45-cell matrices for each blinded condition;
 - `60a33634...` — isolated retry timing honors the injected clock;
-- `190a2050...` — pilot recovery/status semantics distinguish zero-failure success from recovered failures.
+- `190a2050...` — distinguish success from recovery semantics;
+- `4e60085f...` — durable-retention overwrite protection and fail-closed round-trip verification;
+- `6773aac2...` — reject duplicate protocol-deviation identifiers;
+- `b90b9902...` — enforce canonical pilot failure-count matrix in the task engine;
+- `39029304...` — enforce bijective unblinding and unique/finite paired-seed analysis inputs;
+- `e6beeb66...` — expand P8 regression coverage for the corrected analysis invariants.
 
-These are executable changes, so `190a205002e9a9014005793a346324b5fb08ec76` is the current verification candidate. Earlier SHAs remain historical provenance for what was actually examined.
+These are executable/verification-surface changes, so `e6beeb66335e1b50a239697badab22dab50eb5ba` is the current verification candidate. Earlier SHAs remain historical provenance for what was actually examined.
 
 ## Canonical predicate state
 
 - **P1 Candidate integrity:** PARTIAL — current candidate identified; fresh execution evidence required.
 - **P2 Execution contract:** PARTIAL — implementation exists; candidate-scoped runtime evidence remains incomplete.
-- **P3 Artifact contract:** PARTIAL — identity, uniqueness, and balanced-matrix checks strengthened; candidate-scoped validation remains required.
+- **P3 Artifact contract:** PARTIAL — identity, uniqueness, balance, and canonical-matrix checks strengthened; candidate-scoped validation remains required.
 - **P4 Security / blinding integrity:** PARTIAL — controls exist; operational custody evidence remains incomplete.
 - **P5 Provenance / reproducibility:** PARTIAL — record/document bindings strengthened; fresh candidate environment evidence remains required.
 - **P6 Durable evidence custody:** OPEN — durable archive plus independent retrieval/hash evidence remains required.
@@ -64,19 +69,18 @@ Semantic/ontological detection is not automatically a blocking gate. A detector 
 
 ## Required next evidence events
 
-1. Execute the full verification suite against `190a205002e9a9014005793a346324b5fb08ec76`.
-2. Execute candidate-scoped P2 runtime verification and retain deployment identity, logs, and artifacts.
-3. Verify P3 artifact schema, exact record/document identity binding, balanced matrix completeness, and sidecar integrity.
-4. Verify deterministic retry/timing behavior after the clock correction.
-5. Complete synthetic and operational blinding verification as applicable.
-6. Establish durable evidence custody and direct retrieval/hash verification.
-7. Reconcile topology fingerprints and environment identity on the exact candidate.
-8. Complete formal P7 authority adoption and exact binding.
-9. Lock P8 analysis implementation/configuration to the exact candidate and protocol identity.
-10. Derive P1–P8 from candidate-scoped evidence.
-11. Perform P9 independent verification.
-12. Create a new immutable freeze and independently verify that exact freeze.
-13. Obtain explicit pilot authorization.
-14. Only then execute the authorized 50-seed blinded pilot.
+1. Execute fresh Governance CI against `e6beeb66335e1b50a239697badab22dab50eb5ba` and retain exact workflow/run/artifact identity.
+2. Execute the pre-authorization security workflow, including P8 analysis and pilot-schema regression suites.
+3. Execute candidate-scoped P2 runtime verification and P6a CORS verification.
+4. Reconcile topology fingerprints, environment identity, deterministic behavior, and artifact provenance on the exact candidate.
+5. Verify durable retention through an actual archive/retrieval/hash event.
+6. Complete synthetic and operational blinding verification as applicable.
+7. Complete formal P7 authority adoption and exact binding.
+8. Lock P8 analysis implementation/configuration to the exact candidate and protocol identity.
+9. Derive P1–P8 from candidate-scoped evidence.
+10. Perform P9 independent verification.
+11. Create a new immutable freeze and independently verify that exact freeze.
+12. Obtain explicit pilot authorization.
+13. Only then execute the authorized 50-seed blinded pilot.
 
 **No empirical pilot execution is authorized. Empirical N remains 0. Authorization remains NOT GRANTED.**
