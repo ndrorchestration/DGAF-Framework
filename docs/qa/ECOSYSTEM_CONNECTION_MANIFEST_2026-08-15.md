@@ -1,6 +1,7 @@
 # Ecosystem Connection Manifest — 2026-08-15
 
 ## Purpose
+
 Mechanical synchronization ledger for the `ndrorchestration` GitHub repository set and its Notion/Vercel connection layer.
 
 Status vocabulary: `VERIFIED`, `NOT_APPLICABLE`, `PENDING`.

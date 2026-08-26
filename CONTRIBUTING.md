@@ -27,6 +27,7 @@ DGAF is the implementation and governance substrate for agent orchestration, eva
 Changes must be considered against `docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`.
 
 Public by default when needed for reproducibility:
+
 - core reference implementation;
 - schemas/specifications;
 - public tests and reproducible examples;
@@ -34,6 +35,7 @@ Public by default when needed for reproducibility:
 - non-sensitive Pattern Commons material.
 
 Do not publish:
+
 - secrets, credentials, customer data, private telemetry, confidential contracts, or sensitive personal information;
 - security-sensitive exploit details before responsible disclosure;
 - customer-specific confidential material.
@@ -60,6 +62,7 @@ The Apache-2.0 license does not grant trademark rights. See `docs/GOVERNANCE/DGA
 ## Pull requests
 
 Explain:
+
 1. which governance or research component is affected;
 2. whether the change affects patterns, evidence, taxonomy, experimentation, commercialization, security, or certification boundaries;
 3. what evidence supports any changed claim;

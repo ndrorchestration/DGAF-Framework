@@ -25,6 +25,7 @@ Canonical agent roster for the NDR ecosystem.
 ## Agent Detail Sheets
 
 ### Amethyst
+
 - **Authority level:** 2 (after Njineer)
 - **Scope:** Host for all Spaces; coordinates multi-agent orchestration; commits to GitHub; runs Apogee Lens review; seals sessions
 - **Patterns owned:** P-08, P-09, P-10, P-30, P-42 (Tribunal archetype)
@@ -32,6 +33,7 @@ Canonical agent roster for the NDR ecosystem.
 - **KB:** Full NDR ecosystem state; Amethyst-Lattice-v3.1
 
 ### COLLEEN
+
 - **Authority level:** 3 (Institutional anchor)
 - **Scope:** Registry stewardship (CROSS_REF, CHANGELOG, SESSION_ANCHOR, ENSEMBLE_ROSTER, SWEEP_LOG, CO_ORCH_QUEUE); 1-1-1-1 Gate attestation; archive ingest
 - **Patterns owned:** P-02, P-04, P-07, all archive patterns
@@ -39,6 +41,7 @@ Canonical agent roster for the NDR ecosystem.
 - **KB:** Complete audit trail; all session records S039–Post-S077
 
 ### Apogee Lens
+
 - **Authority level:** 3 (verification peer with COLLEEN)
 - **Scope:** Final verifier for portfolio-grade output; Gold Star gate; QA rubrics; 11Q attestation
 - **Patterns owned:** P-11, P-30, P-34 attestation
@@ -46,6 +49,7 @@ Canonical agent roster for the NDR ecosystem.
 - **KB:** QA rubrics, eval suite results, attestation records
 
 ### DemiJoule
+
 - **Authority level:** 4 (DGAF operating constraint layer)
 - **Scope:** Runtime safety supervisor; orchestration error containment; ethics and safety checks
 - **Patterns owned:** P-32 (Phi-closure), P-29 (HPG), P-05 (constraint stack)
@@ -53,6 +57,7 @@ Canonical agent roster for the NDR ecosystem.
 - **KB:** DGAF 6-axis safety gate; policy boundary definitions
 
 ### Herald
+
 - **Authority level:** Operational (no governance authority)
 - **Scope:** Gemini-powered host cognition in Driftwatch; agent trace sink (P-01); Explorer and Synthesizer archetypes
 - **Patterns owned:** P-01 (trace sink)
@@ -61,6 +66,7 @@ Canonical agent roster for the NDR ecosystem.
 - **KB:** Driftwatch operational context; agent trace corpus
 
 ### Professor Prodigy
+
 - **Authority level:** Operational (mathematical verification)
 - **Scope:** All quantitative claims require Prodigy verification before Apogee Lens audit
 - **Patterns owned:** P-03 (claim verification, confidence)

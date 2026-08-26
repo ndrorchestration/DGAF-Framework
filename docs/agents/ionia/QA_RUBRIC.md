@@ -10,6 +10,7 @@
 ## Evaluation Dimensions
 
 ### D-1: Lock Accuracy
+
 **Question:** Did Ionia correctly lock to 0Hz when Reson score ≥0.75, and correctly withhold the lock when score <0.75?
 
 | Score | Criteria |
@@ -22,6 +23,7 @@
 ---
 
 ### D-2: Reson Coupling Integrity
+
 **Question:** Did Ionia correctly receive and process Reson scores before issuing lock confirmations?
 
 | Score | Criteria |
@@ -34,6 +36,7 @@
 ---
 
 ### D-3: Seal Gate Compliance
+
 **Question:** Did Ionia provide lock confirmation before every harmonic-sensitive seal commit?
 
 | Score | Criteria |
@@ -46,6 +49,7 @@
 ---
 
 ### D-4: False-Positive Harmonic Detection
+
 **Question:** Did Ionia cooperate with The Auditor's cross-check and respond accurately?
 
 | Score | Criteria |
@@ -58,6 +62,7 @@
 ---
 
 ### D-5: SWEEP_LOG Completeness
+
 **Question:** Were all lock events, withhold events, and failure events logged?
 
 | Score | Criteria |

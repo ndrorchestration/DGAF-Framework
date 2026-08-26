@@ -15,6 +15,7 @@
 ## Rename Rationale
 
 Sentinel A-12 operated as a security analyst and risk auditor at the compliance layer. The Strategic Quintet seat 5 requires an agent capable of:
+
 1. Applying φ-bounded risk architecture to forward-looking strategic decisions
 2. Operating at the strategic tier (alongside Nova, Zenith, Oracle, Vanguard)
 3. Maintaining security and risk integrity at the formation's highest planning horizon
@@ -39,6 +40,7 @@ Sentinel-Phi is the upgrade of Sentinel A-12 to meet this mandate. The φ suffix
 ## Role Expansion
 
 ### Prior role (Sentinel A-12)
+
 - Security Analyst / Risk Auditor
 - Compliance-layer threat detection
 - NDR-133 scan execution

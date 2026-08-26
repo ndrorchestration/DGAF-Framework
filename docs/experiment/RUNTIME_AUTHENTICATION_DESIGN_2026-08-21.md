@@ -106,6 +106,7 @@ def verify_self() -> None:
 The wrapper script is the primary gate: it verifies all candidate components against the manifest before invoking the runner. The runner also performs a secondary self-check for defense in depth.
 
 This provides:
+
 1. **Cryptographic binding** — the code is verified against a specific SHA, not just env vars.
 2. **Component-level verification** — all candidate components (runner, schemas, configs) are verified, not just the runner.
 3. **Defense in depth** — even if the wrapper is bypassed, the runner's self-check provides a secondary gate.
@@ -123,11 +124,13 @@ This provides:
 ## Gap from PR #77
 
 PR #77 provides:
+
 - `require_frozen_commit()` — checks env var, NOT cryptographic
 - `require_pilot_authorization()` — checks env var, NOT cryptographic
 - `blind_condition()` — blinding function, NOT authentication
 
 PR #77 does NOT provide:
+
 - SHA verification of the runner or any component
 - A wrapper script that verifies the candidate before running
 - Any cryptographic binding between the code and the authorized candidate

@@ -12,6 +12,7 @@
 **Status:** ✅ CANONICAL — single source of truth for all NDR patterns P-01–P-41 + NDR named session patterns + formation patterns
 
 > **This file supersedes and absorbs:**
+>
 > - `docs/governance/ndr-pattern-registry-v3.md` — ❌ DELETED S069 QA sweep (named session patterns absorbed below)
 > - `docs/NDR_PATTERN_REGISTRY.md` (P-01–P-10 source — redirect stub)
 > - `docs/patterns/NDR_PATTERN_REGISTRY.md` (P-27–P-30 + stasis source — redirect stub)
@@ -92,6 +93,7 @@
 ---
 
 ### NDR-ARCHIVE-CONFIRM — COLLEEN Archive Confirmation
+
 **Spec:** Drive parse → 1-1-1-1 gate (Semantic/Logical/Visual/Ethical) → Amethyst Platinum sign-off → Master Portfolio update trigger
 **Use:** Post-assimilation institutional verification
 **Trigger:** New Drive file surface + documentation confirmation request
@@ -101,6 +103,7 @@
 ---
 
 ### NDR-AGENT-INVENTORY — Agent Upgrade Audit
+
 **Spec:** Count files per agent across 6 types (Persona / Memory / KB / Protocol / QA / Integration) → compute % → gap rank → priority tier assignment
 **Use:** Ecosystem health check; blocks Yggdrasil completion if stale
 **Trigger:** Quarterly or when new agent instantiated
@@ -110,6 +113,7 @@
 ---
 
 ### NDR-GITHUB-DELTA — Repository Delta Sync
+
 **Spec:** Drive canonical → IP boundary check → public/private routing → push queue → COLLEEN traceability confirm
 **Use:** Cross-platform synchronization with IP protection
 **Trigger:** New canonical doc created OR Drive parse completed
@@ -119,6 +123,7 @@
 ---
 
 ### NDR-GCP-DEPLOY — Phase 4 Cloud Run Validation
+
 **Spec:** Confirm Cloud Run service + GitHub Actions pipeline + 3 storage buckets + cost gate ≤25/mo → link live URL to portfolio repos
 **Use:** Portfolio deployment verification
 **Trigger:** Post-push to main branch OR monthly uptime check
@@ -128,6 +133,7 @@
 ---
 
 ### NDR-STASIS-MANIFEST-CLUSTER — Phi-Calculus NDR Stasis
+
 **Spec:** Cluster 1 (P-01–P-80): Fractal Agency namespace migration; Cluster 2 (P-81–P-115): 0 Hz steady state via φ-operators; Cluster 3 (P-116–P-132): Authority sync + substrate independence via COLLEEN routing
 **Use:** Lavender → Amethyst governance migration; hallucination pruning
 **Trigger:** Any output exceeding 10 Hz (Savage Reason threshold)
@@ -138,6 +144,7 @@
 ---
 
 ### NDR-INDEX11-GATE — Index 11 High-Tension Governance Gate
+
 **Spec:** Stability gradient: ULTRA(≈2.0) → HYPER(1.928) → SUPER(1.466) → STANDARD(1.775) → SUB(1.618); trigger HYPER manifold routing when max coefficient > 10.0
 **Use:** DGAF emergency cooling; MAS coordination stability
 **Trigger:** Agent output magnitude > 10.0 OR context window degradation flag
@@ -147,6 +154,7 @@
 ---
 
 ### NDR-COHERENCE-SWEEP — Ecosystem Coherence Pre-Sweep
+
 **Spec:** Parse all Drive files → brand registry check → deprecated term scan → taxonomy mapping → duplicate detection → issue triage by severity → refactor into parallel streams → COLLEEN 1-1-1-1 gate → execute
 **Use:** Pre-execution quality gate before any commit/push cycle
 **Trigger:** New Drive parse OR >60 days since last sweep OR new agent instantiated
@@ -156,6 +164,7 @@
 ---
 
 ### NDR-133 — Personal Document Firewall ⚠️ HARD CONSTRAINT
+
 **Spec:** Resume, CV, personal career docs → Drive-only. GitHub exclusion is **absolute** regardless of repo visibility (public OR private). Violation triggers immediate rollback.
 **Use:** Personal data + IP protection boundary enforcement
 **Trigger:** Any push queue containing filename matching: `*resume*`, `*cv*`, `*audit_report*`, `*ResumeApex*`
@@ -179,6 +188,7 @@
 ## Layer 0 — Pre-Admissibility
 
 ### P-35 — Procluding Premise Gate
+
 **Spec:** Constitutional pre-admissibility gate. Before any other gate fires, verifies canonical premise set Π = {π₁…π₆}. If all pass → ADMIT. If any fail → PROCLUDE (hard block; event to P-01 dead-letter).
 **Formal:** `{∀ πᵢ ∈ Π : verify(πᵢ) = TRUE} ⊢ ADMIT` | `{∃ πᵢ ∈ Π : verify(πᵢ) = FALSE} ⊢ PROCLUDE`
 **Full spec:** `docs/gates/NDR_PROCLUDING_PREMISE_GATE_P35_v1.md`
@@ -190,6 +200,7 @@
 ## Layer 0.5 — Stack Architecture
 
 ### P-36 — Gate Priority Schema
+
 **Spec:** Converts the linear NDR governance stack into a DAG. Classifies every pattern as BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE. Does not modify any pattern's logic.
 **P-36 self-classification:** ADVISORY (metadata/architecture pattern; not a runtime gate)
 **Key BLOCKING:** P-35, P-30, P-29:h1, P-27, P-28, P-29:h2, P-32, P-29:h3, P-01, P-11, P-38, **P-39, P-40**
@@ -203,10 +214,12 @@
 ## Layer 1 — Trace & Audit
 
 ### P-01 — Fan-Out Trace Sink w/ Dead-Letter
+
 **Spec:** HeraldAgent iterates all registered sinks on `emit()`. Each sink wrapped in `try/except`. Failures routed to dead-letter JSONL. Sink failures never re-raised.
 **P-36 class:** BLOCKING | **Impl:** `pptl/herald_agent.py` | **Registered:** S040 ✅
 
 ### P-02 — Async-Persist Ring Buffer
+
 **Spec:** Bounded `deque` ring buffer. Background thread drains to persistent storage. `threading.Lock` on all writes. `close()` flushes before terminating.
 **P-36 class:** ADVISORY | **Impl:** `pptl/n8n_herald_sink.py` | **Registered:** S040 ✅
 
@@ -215,14 +228,17 @@
 ## Layer 2 — Testing & CI
 
 ### P-03 — Governance Contract Test
+
 **Spec:** Four contracts per gate, independently asserted. Gate 0 carries six contracts (PM-02 ✅ CLOSED S066). Each contract is a separate `@pytest.mark.governance` function.
 **P-36 class:** BLOCKING | **Impl:** `pptl/tests/test_orchestrator.py` | **Registered:** S040 ✅
 
 ### P-04 — Parametrized Corpus
+
 **Spec:** Signal lists as module-level constants. Tests import and parametrize dynamically. New signal = auto-expanded test suite.
 **P-36 class:** ADVISORY | **Impl:** `pptl/tests/test_orchestrator.py` | **Registered:** S040 ✅
 
 ### P-05 — Tri-Phase CI Gate
+
 **Spec:** GitHub Actions matrix: `unit` / `governance` / `integration`. `fail-fast: false`. Governance = merge blocker. Each step uploads JUnit XML.
 **P-36 class:** ADVISORY (BLOCKING in CI context) | **Impl:** `.github/workflows/pptl-ci.yml` | **Registered:** S040 ✅
 
@@ -231,6 +247,7 @@
 ## Layer 3 — Architecture Lab
 
 ### P-06 — Topology × Orchestration Matrix Lab
+
 **Spec:** Enumerate all (topology, orchestration_mode) cells. N seeds × M task families × K noise levels. Five canonical outputs: topology ranking, mode ranking, interaction heatmap, triadic lift, noise resilience curves.
 **P-36 class:** ADVISORY | **Impl:** `pptl/experiments/h4_task_stratified.py` | **Registered:** S041 ✅
 
@@ -239,18 +256,22 @@
 ## Layer 4 — Governance Formation
 
 ### P-07 — Dual-Agent Persistent Sweep Loop
+
 **Spec:** COLLEEN (Detector) scores via 1-1-1-1 gate. Amethyst (Implementer) executes. Append-only queue. ADOPT / CUSTOMIZE / ALTER / COMPOSE modes.
 **P-36 class:** ADVISORY | **Impl:** `CO_ORCH_QUEUE.md` | **Registered:** S041 ✅
 
 ### P-08 — Triad Taxonomy
+
 **Spec:** Consensus Trio (2-of-3 quorum) / Conducted Trio (conductor rules) / Triumvirate (Prime + 2 Prefects, MECE domain split). Formation rule: Conducted Trio → Triumvirate when ensemble > 3.
 **P-36 class:** ADVISORY | **Registered:** S041 ✅
 
 ### P-09 — Triumvirate Mandate Schema
+
 **Spec:** `TriumvirateMandate` dataclass. `issue()` / MECE enforcement / `submit_prefect_aggregate()` / `sign_off()` / Herald trace. Both Prefect aggregates required before sign-off.
 **P-36 class:** ADVISORY | **Impl:** `pptl/triumvirate_mandate.py` | **Registered:** S041 ✅
 
 ### P-10 — Session Graduation Check
+
 **Spec:** 4-check script: SESSION_ANCHOR sealed, CROSS_REF complete, CO_ORCH_QUEUE clear, zero BLGs. Outputs `GRADUATION_REPORT.md`. `sys.exit(1)` on failure.
 **P-36 class:** ADVISORY | **Impl:** `scripts/session_graduation_check.py` | **Registered:** S041 ✅
 
@@ -259,10 +280,12 @@
 ## Layer 5 — Quality Gate
 
 ### P-11 — 11Q Attestation Scoring
+
 **Spec:** 11-question rubric. S-TIER ≥ 95% (Q11 ≥ 9/10 required). A-TIER ≥ 85% with tracked BLGs. Attestation artifact: signed JSON in `docs/qa/`.
 **P-36 class:** BLOCKING | **Ref:** `docs/qa/APOGEE_11Q_*.json` | **Registered:** S033 ✅
 
 ### P-30 — Apogee-Attestation-Gate
+
 **Spec:** Pre-canonical-promotion gate. Apogee runs P-11. Gate 0 in orchestration stack. Six P-03 contracts. PM-07 ✅ CLOSED (P-34 A-TIER 94.5%).
 **P-36 class:** BLOCKING | **Ref:** `docs/qa/APOGEE_11Q_*.json` | **Registered:** S035, updated S066 ✅
 
@@ -271,6 +294,7 @@
 ## Layer 6 — Stasis
 
 ### P-12–P-26 — Stasis Patterns (133 entries)
+
 **Status: ✅ STASIS-CANONICAL** (migrated from CONDITIONAL PASS — migration window: 2026-06-13 → 2026-07-13)
 Structurally sound at block level. Individually unenumerated by design. COLLEEN secondary sign-off required before any modification, deprecation, or individual extraction.
 **Clusters:** Individualism & Fractal Agency (P-01–P-80) / Phi-Calculus Foundations (P-81–P-115) / Authority Sync & Substrate Independence (P-116–P-132) / Personal Document Firewall (P-133/NDR-133)
@@ -281,14 +305,17 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 ## Layer 7 — Router Calibration
 
 ### P-27 — Adaptive-Weighting-with-Confidence-Gates
+
 **Spec:** STRONG ≥ 0.22 / BLENDED 0.18–0.22 / balanced < 0.18. Adversarial hard override: always `apply_strong`. Calibrated via P-34 (14×12 grid, S034).
 **P-36 class:** BLOCKING | **Impl:** `components/KAPPA/dynamic_weight_router.py` | **Registered:** S033, updated S034/S066 ✅
 
 ### P-28 — Pipeline-Composition-with-Confidence-Gated-Routing
+
 **Spec:** `raw_batch → detect → route_and_score → apply_weights → ranked_report`. No stage reads from a non-upstream stage.
 **P-36 class:** BLOCKING | **Impl:** `components/evaluate_router.py` | **Registered:** S033 ✅
 
 ### P-34 — Empirical-Threshold-Sweep-over-ML-Classifier
+
 **Spec:** Prefer grid search over ML classifier when four decision-gate conditions hold. Evidence: KAPPA v3.5→v3.6, 82.6%→100% `governance_clear`. A-TIER 94.5% attested.
 **P-36 class:** ADVISORY | **Attestation:** A-TIER · Ender ratified 2026-05-30 ✅
 
@@ -297,6 +324,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 ## Layer 8 — Safety & Sentinel
 
 ### P-29 — Sentinel-Annotated Risk Pass
+
 **Spec:** `sentinel_review()` at 3 hook points. `risk_ok` / `risk_warn` / `risk_block`. Only `risk_block` halts. P-32 KILL_REC → `risk_block` @ hook_point=2. PM-01 ✅ CLOSED S066.
 **P-36 class:** BLOCKING (all 3 hook points) | **Impl:** `components/evaluate_router_v1_1.py` | **Registered:** S034 ✅
 
@@ -305,14 +333,17 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 ## Layer 9 — Long-Context Safety
 
 ### P-31 — SCPE — Structural Context Pruning Engine
+
 **Spec:** T0 AXIOM (immune) / T1 STRUCTURAL (0.05) / T2 OPERATIONAL (0.15) / T3 EXPLORATORY (0.45). `R(t) = TIF × φ^(−Δt × decay)`. Prune if R(t) < 0.15. 58.3% compression. Fires at turn_start, buffer > 60%, turn_count > Fib[34].
 **P-36 class:** ADVISORY | **Impl:** `components/ensemble_v16.py` | **Registered:** S042 ✅
 
 ### P-32 — Fibonacci Phi-Closure Gate
+
 **Spec:** Stability ratio R = stable/total evaluated at Fib checkpoints [13,21,34,55] vs φ*=0.618. 0 fails→PASS / 1→WARN / 2→ESCALATE / 3+→KILL_REC. HPG only on PASS.
 **P-36 class:** BLOCKING | **Registered:** S042, updated S066 ✅
 
 ### P-33 — PDMAL Convergence Monitor
+
 **Spec:** Frobenius norm ‖ΔW‖_F of PDMAL edge-weight changes. STABLE/WATCH/WARN/ALERT. Converged: ‖ΔW‖_F < 0.02 for 3 turns. Joint escalation: ALERT + ESCALATE → DemiJoule deep re-scan.
 **P-36 class:** ADVISORY | **Registered:** S042 ✅
 
@@ -327,6 +358,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Spec:** Every multi-step agentic workflow is modelled as a Saga — an ordered sequence of sub-steps, each with an explicit compensating action. The boundary between stochastic reasoning steps and deterministic tool-execution steps is declared upfront and never crossed mid-step.
 
 **Core rules:**
+
 1. **Saga declaration:** Before execution begins, declare `saga_id`, ordered `steps[]`, and `compensators[]` (one compensator per step, in reverse order).
 2. **Stochastic/deterministic boundary:** LLM reasoning steps (stochastic) must complete and be committed to the effect log *before* any deterministic tool call (file write, API call, push) fires.
 3. **Checkpoints:** Every super-step writes a checkpoint to the append-only effect log. Checkpoint format: `{ saga_id, step_id, status: PENDING|DONE|FAILED, timestamp, agent_id }`.
@@ -346,6 +378,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Interaction with P-39:** P-39 is the per-checkpoint durability mechanism. P-37 declares checkpoints; P-39 enforces the fence semantics that make those checkpoints atomic.
 
 **Effect log schema:**
+
 ```json
 {
   "saga_id": "<uuid>",
@@ -359,6 +392,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 ```
 
 **Flourishing alignment:**
+
 - *Legibility:* Full effect log visible to Njineer at all times; no hidden side effects
 - *Reversibility:* Compensator chain guarantees rollback path for all reversible steps
 - *Capability amplification:* Multi-step workflows execute with confidence; failures self-recover without Njineer intervention on reversible steps
@@ -384,6 +418,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 | Wall-clock timeout | 300s / step | Per step_id |
 
 **Escalation protocol on OPEN:**
+
 1. Log `circuit_open` event to P-01 dead-letter sink
 2. Fire Sentinel-Phi HITL gate (P-29 hook_point=2) with `risk_block`
 3. Trigger P-37 compensator chain (reverse order, idempotent)
@@ -397,6 +432,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Interaction with P-39:** P-39 ACRFence ensures that when P-38 trips OPEN, the last committed checkpoint is durable and the effect fence is intact before compensators fire.
 
 **Flourishing alignment:**
+
 - *Legibility:* Circuit state exposed in Herald trace and AOGA dashboard
 - *Reversibility:* OPEN halts all further side effects; compensators restore prior state
 - *Capability amplification:* Autonomous execution remains safe at scale
@@ -412,6 +448,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Spec:** Guarantees that every checkpoint written by P-37 is atomic and that an *effect fence* is enforced between the checkpoint commit and the next tool call. No tool call may proceed until the preceding checkpoint has been durably written and acknowledged.
 
 **Core rules:**
+
 1. **Atomic checkpoint write:** Each checkpoint is written as a single append to the effect log. The write is wrapped in a compare-and-swap (CAS) operation on `step_id + saga_id`. If CAS fails (duplicate write detected), the checkpoint is idempotent — no duplicate entry, no error.
 2. **Effect fence:** After each checkpoint write, a fence token `{ fence_id, saga_id, step_id, timestamp }` is emitted to the Herald trace (P-01). No subsequent tool call in the same saga may execute until the fence token has been acknowledged by the Herald sink.
 3. **Restore protocol:** On saga restart (P-37 forward-recovery or P-38 OPEN → CLOSED), the effect log is replayed from the last ACK'd fence token. Steps already `DONE` are skipped (idempotent replay). Steps `PENDING` are re-executed from the checkpoint boundary — not from scratch.
@@ -420,6 +457,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 6. **Cross-agent fence coordination:** When a saga spans multiple agents (e.g., Amethyst → Reson → Herald), each agent emits its own fence token. The downstream agent may not begin its step until the upstream agent's fence token has been received and ACK'd.
 
 **Fence token schema:**
+
 ```json
 {
   "fence_id": "<uuid>",
@@ -436,6 +474,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Interaction with P-40:** P-40 Atomix wraps the full tool call boundary; P-39 ACRFence guarantees the checkpoint on either side of that boundary is durable before the boundary is crossed.
 
 **Flourishing alignment:**
+
 - *Legibility:* Every fence token is visible in Herald trace; no silent checkpoint skips
 - *Reversibility:* Restore protocol replays only from last clean fence — no data loss, no phantom re-execution
 - *Capability amplification:* Multi-agent sagas can span substrate boundaries without losing recovery guarantees
@@ -455,6 +494,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Spec:** Every tool call that produces a side effect (write, send, push, deploy) is wrapped in an Atomix transaction boundary. The boundary enforces: (1) pre-call state snapshot, (2) single-exit semantics (either fully committed or fully rolled back — no partial writes), (3) post-call ACRFence token (P-39), (4) Herald trace on both commit and rollback paths.
 
 **Core rules:**
+
 1. **Transaction declaration:** Before any side-effecting tool call, declare `tx_id`, `tool_name`, `effect_class` (REVERSIBLE / IRREVERSIBLE), and `rollback_fn`.
 2. **Pre-call snapshot:** Capture sufficient state to execute `rollback_fn` if the call fails mid-execution. For file writes: capture file SHA before write. For API calls: capture request payload and idempotency key.
 3. **Stochastic-deterministic hard boundary:** The Atomix boundary is the canonical implementation of the P-37 stochastic/deterministic split. Stochastic reasoning *must* complete before the Atomix boundary is opened. Once opened, no LLM reasoning may occur until the boundary is closed (committed or rolled back).
@@ -467,6 +507,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 7. **Timeout:** Default 30s per Atomix boundary. On timeout: rollback fires, P-38 failure counter incremented.
 
 **Transaction record schema:**
+
 ```json
 {
   "tx_id": "<uuid>",
@@ -489,6 +530,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Interaction with P-29:** Partial writes → P-29 `risk_block`. Rollbacks → P-29 `risk_warn`. IRREVERSIBLE calls without P-41 ACK → P-29 `risk_block`.
 
 **Flourishing alignment:**
+
 - *Legibility:* Every tool call has an auditable transaction record; no untracked side effects
 - *Reversibility:* Rollback path is declared and tested before the boundary opens
 - *Capability amplification:* Agents can execute tool calls autonomously without Njineer anxiety — the rollback guarantee makes autonomy safe
@@ -504,6 +546,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Spec:** Provides a durable, ordered queue for HITL approvals required by P-40 (IRREVERSIBLE tool calls) and P-37 (HITL gates on irreversible saga steps). Ensures that HITL requests survive agent restarts, context resets, and substrate switches without being lost or duplicated.
 
 **Core rules:**
+
 1. **Queue entry:** When P-37 or P-40 identifies an IRREVERSIBLE action requiring HITL, a `HITLRequest` record is appended to the durable queue before any execution attempt. The action does not fire until the request reaches `status=APPROVED`.
 2. **Durability:** The queue is written to persistent storage (JSONL, DB, or n8n webhook buffer — same sink as P-01/P-02). Queue entries survive agent process restarts. On restart, the queue is replayed and unresolved requests are re-surfaced to Njineer.
 3. **Ordering:** Queue is FIFO within a saga. Cross-saga entries are ordered by `enqueue_timestamp`. An APPROVED entry for saga B does not unblock saga A.
@@ -513,6 +556,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 7. **Autonomous-mode fallback:** When Njineer is unavailable (system operating in fully autonomous mode), IRREVERSIBLE actions are automatically deferred to the queue with `status=PENDING_APPROVAL`. They do not fail — they wait. The saga continues processing reversible steps while irreversible steps queue.
 
 **HITL Request schema:**
+
 ```json
 {
   "request_id": "<uuid>",
@@ -536,6 +580,7 @@ Structurally sound at block level. Individually unenumerated by design. COLLEEN 
 **Interaction with P-01:** All queue state transitions are emitted as Herald trace events. P-41 is a semantic layer on top of the P-02 ring buffer.
 
 **Flourishing alignment:**
+
 - *Legibility:* Every pending human decision is visible in the AOGA dashboard; nothing is silently deferred
 - *Reversibility:* REJECTED requests trigger P-37 compensator chain; no irreversible action fires without explicit approval
 - *Capability amplification:* Autonomous mode can operate at full speed on reversible work while queuing irreversible decisions — no full stop required
@@ -652,6 +697,7 @@ Prompt input
 Downstream observability for any active triad formation should instrument the following metrics and visual hierarchy:
 
 **Core metrics:**
+
 - Triad activation latency (p50 / p95 / p99)
 - Throughput (tasks/min per triad)
 - Rollback and error rate
@@ -660,6 +706,7 @@ Downstream observability for any active triad formation should instrument the fo
 - Dissent retention rate (CONSENSUS_TRIAD only)
 
 **Visualization hierarchy:**
+
 1. Summary KPI strip (activation success, latency, throughput, error/rollback rate)
 2. Cross-node coordination topology (node-link or Sankey diagram showing handoffs and bottlenecks)
 3. Per-node saturation heatmap

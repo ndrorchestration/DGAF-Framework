@@ -49,12 +49,14 @@ This is the QA assertion report for the DGAF/PDMAL pre-authorization completenes
 | Independent verification path | Load artifact JSON → call `pilot_artifact_schema.validate_artifact(document)` → call `pilot_artifact_schema.verify_sidecar(raw_bytes, sidecar_text, filename)` → optionally recompute `artifact_sha256` independently. Distinct from runner (no trial execution, no auth required). CI exercises this path through `test_artifact_schema.py` but uses hand-constructed documents, not real artifacts. |
 
 ### What it does NOT establish
+
 - That the runner's inline SHA-256 computation matches the schema module's canonical computation
 - That the artifact field sets are compatible between runner and schema
 - That `artifact_schema.py` and `pilot_artifact_schema.py` are version-compatible (they are not)
 - That inline validation has been wired (it has not)
 
 ### 5-point recommendation
+
 1. Differentiate schema versions (`1.0-prefreeze` vs `1.0-pilot`) or unify into one module with dispatch on `protocol_status`
 2. Wire `pilot_artifact_schema.validate_artifact()` and `verify_sidecar()` into `run_pilot.py`'s `run_pilot()` immediately after each artifact write — fail-closed self-check
 3. Add standalone `verify_artifacts.py` (or extend `test_artifact_schema.py`) that can load and validate artifact files from any directory — independent verification path
@@ -82,6 +84,7 @@ This is the QA assertion report for the DGAF/PDMAL pre-authorization completenes
 | Not an engineering fix | Executor acceptance evidence demonstrates apparatus works (2 dry-run seeds, 360 trials, all success, artifact validation PASSED). FFCR computation, seed-level pairing, and paired-bootstrap framework are fully specified in protocol. Missing is scientific-target choice: **which contrast answers the question.** No code change resolves this. Attempting to resolve by modifying executor, aggregation, or bootstrap would constitute apparatus modification after freeze — prohibited. |
 
 ### What it does NOT establish
+
 - A chosen primary contrast
 - A success criterion
 - A falsification criterion
@@ -121,6 +124,7 @@ All 7 docs consistent in core claims: (1) historical freeze RETAINED AS EVIDENCE
 **Most honest statement:** `PRE_AUTHORIZATION_VERIFICATION_RECORD_2026-08-20.md` — "Corrected apparatus verified: NO; New freeze created: NO; Pilot authorized: NO; Empirical N: 0. No combination of passing engineering tests changes authorization state. Authorization requires an explicit governance decision after the pre-authorization matrix is closed."
 
 ### What the docs do NOT establish
+
 - Verification of any OPEN gate
 - That the corrected runner has been independently verified end-to-end
 - That a new freeze has been created
@@ -169,11 +173,13 @@ All 7 docs consistent in core claims: (1) historical freeze RETAINED AS EVIDENCE
 | Artifact substitution detection | Tampering detectable via `artifact_sha256` mismatch | CI: tamper test. Separate audit: inherent in validation step — if `validate_artifact()` passes, substitution ruled out | Real independence payoff: CI proves detector correct; audit shows artifacts pass it |
 
 **Evidence chain:**
+
 - **Creation path:** Protocol freeze → SHA set → env vars + key → runner executes → artifacts with blinded IDs + SHA-256 + sidecars → CI tests source code
 - **Verification path:** CI: pytest on source code (code invariants, schema tests, contract mode). Separate audit: independently resolve HEAD → compare SHA → verify env vars + key custody → recompute blinded IDs (if key) → validate actual artifacts → verify sidecars → check runtime ceiling → check record count → check fingerprint consistency → cross-check all SHA references
 - **Independence gaps:** CI validates the validator but cannot verify actual production run's SHA, env vars, key supply, or artifact integrity. Without blinding key, auditor can only do structural checks. Environment fingerprint verification requires auditor to know runtime versions.
 
 **What CI cannot provide (6 items):**
+
 1. Proof of actual run's SHA (CI checks code that does the check, not actual HEAD at runtime)
 2. Proof of env vars at runtime (CI monkeypatches for testing)
 3. Proof of out-of-band key supply (key is secret, never in CI)
@@ -182,6 +188,7 @@ All 7 docs consistent in core claims: (1) historical freeze RETAINED AS EVIDENCE
 6. Independent recomputation of blinded IDs (CI doesn't hold custody key)
 
 **Freeze verification procedure (8 steps + final decision):**
+
 1. Obtain declared `PDMAL_FROZEN_COMMIT_SHA`
 2. Independently resolve HEAD from artifact-producing checkout; compare SHA
 3. Verify runner source contains `require_frozen_commit()` + `require_pilot_authorization()`
@@ -210,7 +217,7 @@ All 7 docs consistent in core claims: (1) historical freeze RETAINED AS EVIDENCE
 | Failure semantics | FREEZE_MANIFEST.md sec 8 (executor acceptance: failure at iteration 33, recovery at iteration 66) | COVERED — failure/recovery model recorded |
 | Stopping rules | Protocol sec 4.5 (fixed 100 iterations, no convergence-based early stopping; consensus threshold < 0.01 is convergence criterion for task execution, not efficacy threshold) | COVERED — stopping rule explicitly documented |
 
-### Conclusion: Fold into predicates 5 and 7. No 10th predicate needed.
+### Conclusion: Fold into predicates 5 and 7. No 10th predicate needed
 
 All six design integrity dimensions are already covered by existing evidence in the frozen apparatus. No dimension represents a material failure mode not already covered by an existing control. The stopping rule (P-EXP-8) is satisfied.
 

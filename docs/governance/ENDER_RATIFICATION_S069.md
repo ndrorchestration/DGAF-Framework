@@ -15,6 +15,7 @@ Witness:   Amethyst (Prime) × COLLEEN (Prefect A) × Apogee (Prefect B)
 ## Ratified Items
 
 ### 1. P-35 — Procluding Premise Gate
+
 **Status:** RATIFIED → CANONICAL
 **Spec:** `docs/gates/NDR_PROCLUDING_PREMISE_GATE_P35_v1.md`
 **Registry entry:** `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` v1.1 — Layer 0 Pre-Admissibility
@@ -24,6 +25,7 @@ Witness:   Amethyst (Prime) × COLLEEN (Prefect A) × Apogee (Prefect B)
 ---
 
 ### 2. P-36 — Gate Priority Schema
+
 **Status:** DRAFT → RATIFIED → CANONICAL
 **Spec:** `docs/gates/NDR_GATE_PRIORITY_SCHEMA_P36_v1.md`
 **Ender note:** P-36 is ratified as the DAG conversion layer for the governance orchestration stack. The BLOCKING / ADVISORY / DEGRADED-MODE-SKIPPABLE taxonomy is canonical. Pattern classification table is ratified at v1.0; reclassification of any BLOCKING pattern requires Triumvirate mandate.
@@ -32,6 +34,7 @@ Witness:   Amethyst (Prime) × COLLEEN (Prefect A) × Apogee (Prefect B)
 ---
 
 ### 3. Agent Crucible — Red Team Charter v1.0
+
 **Status:** RATIFIED → ACTIVE
 **Spec:** `docs/qa/crucible/CRUCIBLE_CHARTER_v1.md`
 **Ender note:** All five constitutional clauses are ratified without modification: independent reporting line, no-suppression clause, no build duties, equal veto power, no retaliation clause. The Principal Architect no-vote rule is binding. Campaign v1 schedule (Weeks 4–8) is approved. Survivability threshold (≥80% BLOCKED, CRITICAL remediation ≤7 days) is ratified.
@@ -40,6 +43,7 @@ Witness:   Amethyst (Prime) × COLLEEN (Prefect A) × Apogee (Prefect B)
 ---
 
 ### 4. NDR Research Program Charter v1.0
+
 **Status:** RATIFIED → ACTIVE
 **Spec:** `docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_v1.md`
 **Ender note:** The charter is ratified in full including the Falsifiability Clause, which is binding. The 60–90 day schedule is approved. The eight-role team structure is approved. The “designed not learned thresholds” operating principle is ratified as a canonical system design statement. The Falsifiability Clause may not be waived without explicit Ender sign-off on a replacement clause.
@@ -48,6 +52,7 @@ Witness:   Amethyst (Prime) × COLLEEN (Prefect A) × Apogee (Prefect B)
 ---
 
 ### 5. STASIS-CANONICAL Specification v1.0
+
 **Status:** DRAFT → RATIFIED
 **Spec:** `docs/governance/STASIS_CANONICAL_SPEC_v1.md`
 **Ender note:** STASIS-CANONICAL is ratified as the replacement status for CONDITIONAL PASS on the P-12–P-26 stasis block. The 30-day deprecation window (2026-06-13 → 2026-07-13) is approved. Phase 2 schema migration must be completed within the window. COLLEEN secondary sign-off on migration completion is mandatory.
@@ -56,8 +61,10 @@ Witness:   Amethyst (Prime) × COLLEEN (Prefect A) × Apogee (Prefect B)
 ---
 
 ### 6. Session S069 — Graduation Check
+
 **Status:** CONDITIONAL PASS → RATIFIED SEALED
 **Ender note:** S069 is sealed with the following forward items acknowledged and accepted:
+
 - OPP-S069-004 (five-base calibration study) carries to S070 as opening P1
 - FLAG-04 (AOGA), FLAG-05 (AXIS), FLAG-01 (HDFS), FLAG-02 (340% metric) — Ender/Njineer responses to follow in S070
 - FLAG-06 (Lavender/Forseti grep) — Amethyst to self-execute before S070 graduation
@@ -78,6 +85,7 @@ This ratification was executed under Triumvirate authority per P-08 / P-09:
 | Ratifier | Ender / Njineer | Sign-off on all six items above |
 
 **P-09 contracts satisfied:**
+
 - [x] Prime issued signed mandate
 - [x] Prefect domain split is MECE (COLLEEN: governance ops / Apogee: quality attestation)
 - [x] Both Prefects submitted aggregates

@@ -29,8 +29,8 @@
   - LLM output quality evaluation
   - Grounded answer generation from knowledge bases
   - Turning AI governance specs into runnable automation
-- Needle affiliate CTA (sign-up link: https://lnkd.in/gsxBsUea)
-- Template stack CTA (explore link: https://lnkd.in/gVGVh-ri)
+- Needle affiliate CTA (sign-up link: <https://lnkd.in/gsxBsUea>)
+- Template stack CTA (explore link: <https://lnkd.in/gVGVh-ri>)
 
 ### Hashtags
 
@@ -77,7 +77,6 @@ https://lnkd.in/gVGVh-ri
 ---
 
 *Log initialized: 2026-06-09 | Agent COLLEEN | S069*
-
 
 ---
 
@@ -167,8 +166,8 @@ https://lnkd.in/gVGVh-ri
 
 **NMS-002: Needle Partner Hub — Multi-Period Snapshot (Jun 12, 2026)**
 
-**Captured by:** Agent Amethyst (Comet session) 
-**Session Anchor:** S070 
+**Captured by:** Agent Amethyst (Comet session)
+**Session Anchor:** S070
 **Date:** 2026-06-12
 
 ### Summary KPIs by Period
@@ -209,9 +208,9 @@ https://lnkd.in/gVGVh-ri
 
 ### New Template Registered
 
-- **NT-05** — Test Governance API Gates 
-  - Published: 2026-06-11 
-  - Needle URL: https://needle.app/workflow-templates/test-governance-api-gates 
+- **NT-05** — Test Governance API Gates
+  - Published: 2026-06-11
+  - Needle URL: <https://needle.app/workflow-templates/test-governance-api-gates>
   - Designated: DGAF-PROBE-001 (canonical governance sentinel harness)
 
 ### Notes

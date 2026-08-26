@@ -43,11 +43,13 @@ A reviewer starts with a claim and walks backward to its underlying evidence. Ev
 ### 1. CLAIM
 
 **What exists today:** The claim is defined in the estimand chain:
+
 - Construct: FFCR (Failure-Free Completion Rate) — proportion of trials completing without failure per condition per seed
 - Estimand: E[FFCR(T) - FFCR(R)] — mean of seed-level paired differences
 - Primary endpoint: FFCR per condition, per seed, 180 trials/seed, higher is better
 
 **What's missing:** The claim is NOT yet fully specified:
+
 - Primary contrast NOT adjudicated (4 candidates, none selected)
 - Direction NOT defined
 - Success criterion NOT defined
@@ -74,15 +76,18 @@ A reviewer starts with a claim and walks backward to its underlying evidence. Ev
 
 ### 3. LOCKED ANALYSIS
 
-**What exists today:** 
+**What exists today:**
+
 - `PDMAL_ANALYSIS_CONTROL_PLAN.md` (blob `3e556882` at PR #77) — records partial estimand chain and planning basis.
 - `sample_size.py` — implements paired-difference normal approximation power calculation.
 
 **What's missing:**
+
 - `PDMAL_ANALYSIS_PLAN_CERTIFICATE.md` — NOT FOUND at any path. This would bind the analysis implementation + configuration to an exact SHA.
 - The analysis procedure is NOT locked: what will be calculated, how, what counts as success/failure — none of this is finalized because the primary contrast is not adjudicated.
 
 **What's needed:**
+
 - Adjudicate primary contrast (Step 1)
 - Create analysis plan certificate (Step 19)
 - Lock analysis before unblinding (Step 25)
@@ -96,6 +101,7 @@ A reviewer starts with a claim and walks backward to its underlying evidence. Ev
 **What exists today:** EMPTY. No pilot artifacts exist.
 
 **What's missing:**
+
 - Per-seed artifact JSON files with blinded_condition_id, trial outcomes, SHA-256, sidecars
 - 180 records per seed × 50 seeds = 9,000 trial records
 - Each artifact validated by `pilot_artifact_schema.py:validate_artifact()` and `verify_sidecar()`
@@ -105,6 +111,7 @@ A reviewer starts with a claim and walks backward to its underlying evidence. Ev
 **Status:** EMPTY — requires empirical execution. The schema for artifacts exists (`pilot_artifact_schema.py`, blob `2918a9d`), but no artifacts have been produced.
 
 **Pre-existing evidence (NOT pilot data):**
+
 - 360 observations from executor acceptance run (2 seeds × 180 trials, all SUCCESS) — classified as executor acceptance evidence, N=0, NOT pilot data.
 
 ---
@@ -114,11 +121,13 @@ A reviewer starts with a claim and walks backward to its underlying evidence. Ev
 **What exists today:** EMPTY. No pilot run has occurred.
 
 **What's missing:**
+
 - A `run_pilot.py` execution in pilot mode (not contract mode)
 - Requires: protocol freeze + explicit authorization + candidate SHA + blinding key
 - Produces: artifacts, sidecars, logs, environment fingerprint
 
 **What's needed:**
+
 - Protocol freeze (Step 22)
 - Pilot authorization (Step 23)
 - Blinded execution (Step 24)
@@ -126,6 +135,7 @@ A reviewer starts with a claim and walks backward to its underlying evidence. Ev
 **Status:** EMPTY — requires authorization and freeze, neither of which exists.
 
 **Pre-existing evidence:**
+
 - `run_pilot.py` in contract mode: 360 observations (2 seeds × 180 trials, all SUCCESS) — executor acceptance test, N=0.
 
 ---
@@ -135,6 +145,7 @@ A reviewer starts with a claim and walks backward to its underlying evidence. Ev
 **What exists today:**
 
 At PR #77 (`94fb6fd`, blob `1a143b29`):
+
 - Status: FROZEN
 - State: FROZEN — post-freeze verification in progress
 - Freeze target SHA: `915e454e27eb2770e7f40a067a881b0783feaae4`
@@ -146,6 +157,7 @@ At PR #77 (`94fb6fd`, blob `1a143b29`):
 - All success: YES
 
 At local HEAD (`3510b86889`):
+
 - Status: FROZEN (frontmatter)
 - Body text: PRE-FREEZE (preconditions listed as OPEN/IN PROGRESS)
 - Primary contrast: OPEN
@@ -153,11 +165,13 @@ At local HEAD (`3510b86889`):
 - Pilot authorization: NOT GRANTED
 
 **What's missing:**
+
 - Actual freeze commit SHA (PLACEHOLDER — needs a real git commit that freezes the candidate)
 - Primary contrast adjudication (OPEN — must be closed before freeze)
 - All gates closed (currently BLOCKED/OPEN/NOT GRANTED)
 
 **What's needed:**
+
 - Close all gates (Steps 1-21)
 - Create freeze commit (Step 22)
 - Replace PLACEHOLDER with actual SHA
@@ -177,12 +191,14 @@ At local HEAD (`3510b86889`):
 - Candidate manifest: `CANDIDATE_MANIFEST_2026-08-21.json` (written by hand, NOT YET COMMITTED)
 
 **What's missing:**
+
 - Candidate manifest committed to repository (currently on disk only)
 - Development/candidate separation (not established)
 - Protected candidate reference (tag or branch)
 - The manifest identifies the candidate but does NOT make it immutable
 
 **What's needed:**
+
 - Commit candidate manifest (Step 3)
 - Create protected candidate reference (Step 4)
 - Separate development from candidate (Step 4)
@@ -196,11 +212,13 @@ At local HEAD (`3510b86889`):
 **What exists today:**
 
 Local HEAD (`3510b86889cd341f7a7cf9ab684fd37b2fafd758`):
+
 - `run_pilot.py`: blob `1e6ba2e0` — uses `ScriptedTask`, contract mode only
 - `artifact_schema.py`: blob `41a9048` — PRE-FREEZE contract validation
 - No `pilot_artifact_schema.py`, no `test_security_controls.py`, no `durable_retention.py` (only on disk, not committed)
 
 PR #77 (`94fb6fd`):
+
 - `run_pilot.py`: blob `184f4aa7` — uses `ConsensusTask`, pilot mode with gating
 - `artifact_schema.py`: blob `41a9048` (unchanged)
 - `pilot_artifact_schema.py`: blob `2918a9d` — FROZEN pilot validation
@@ -212,6 +230,7 @@ PR #77 (`94fb6fd`):
 - 7 documentation files (see PR #77 audit)
 
 **What's missing:**
+
 - The source is the current state of the repository. The candidate is the PR #77 state. The source for a future pilot is the frozen candidate (after Step 22).
 - `PDMAL_STATISTICAL_ANALYSIS_PLAN.md` — not found at any path
 - `PDMAL_PIPELINE_SPEC.md` — not found at any path

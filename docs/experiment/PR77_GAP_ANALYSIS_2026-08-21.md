@@ -103,6 +103,7 @@
 ## What PR #77 Achieves
 
 PR #77 provides the **engineering infrastructure** for the corrected pilot apparatus:
+
 - Corrected runner with gating functions and blinding
 - FROZEN pilot artifact schema with validation and sidecar verification
 - Security controls tests (adversarial)
@@ -111,6 +112,7 @@ PR #77 provides the **engineering infrastructure** for the corrected pilot appar
 - Pre-authorization verification record (honestly stating verification status as NO)
 
 PR #77 does NOT provide:
+
 - Primary contrast adjudication (scientific/governance decision)
 - Candidate immutability (manifest not committed, no separation)
 - P2 execution evidence (CI not executed)
@@ -125,6 +127,7 @@ PR #77 does NOT provide:
 PR #77 is an **engineering response** to the sprint findings. It provides code and documentation that addresses the implementation gaps. It does NOT close the governance gap (primary contrast) or provide execution evidence (CI not run, no artifacts).
 
 The 28-step path requires:
+
 - **Gate 1 (Step 1):** Primary contrast adjudication — NOT in PR #77 scope. Human decision.
 - **Gate 2 (Steps 2-5):** Candidate immutability — PARTIALLY in PR #77 (candidate exists as code, but not as immutable reference).
 - **Gate 3 (Steps 6-11):** Engineering closure — PARTIALLY in PR #77 (code exists, but not executed, not mergeable, gaps remain).

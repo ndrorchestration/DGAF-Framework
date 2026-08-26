@@ -1,4 +1,5 @@
 # Hensel General Formalism
+
 **Version:** 1.1  
 **Status:** CANONICAL — Apogee Lens Approved  
 **Architect:** Andrew Vance Hensel  
@@ -53,6 +54,7 @@ The foundational governing rule-set at the heart of the formalism. It mandates t
 Hensel Formalism utilizes specific **triadic formations** as structural techniques to manage reasoning and prevent logic fragmentation. Three canonical triads are defined:
 
 #### Consensus Triad
+
 **Formation:** Peer-based decentralized validation  
 **Formula:** `y* = S(f₁(x), f₂(x), f₃(x))`  
 **Purpose:** Surfaces hidden assumptions; no single agent has authority — outputs converge by vote/synthesis  
@@ -60,6 +62,7 @@ Hensel Formalism utilizes specific **triadic formations** as structural techniqu
 **Failure mode:** Majority error propagation if agents share contaminated context
 
 #### Conducted Triad
+
 **Formation:** Hierarchical; one conductor + two augmenters  
 **Formula:** `y = f_lead(x, f_A(x), f_B(x))`  
 **Purpose:** Prevents "role-bleeding" during complex tasks; conductor manages internal augmenters  
@@ -67,6 +70,7 @@ Hensel Formalism utilizes specific **triadic formations** as structural techniqu
 **Failure mode:** Conductor bottleneck; single point of reasoning failure if lead agent drifts
 
 #### Metacollaboration Triad
+
 **Formation:** Signal refinement  
 **Roles:** Generator → Critic → Optimizer  
 **Purpose:** Suppresses "Savage Reason" (>10 Hz dissonance) to achieve **Harmonic Closure**  

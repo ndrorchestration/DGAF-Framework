@@ -36,6 +36,7 @@ The prevailing reliance on heuristic-based prompt engineering to mitigate AI hal
 - **Cyclotomic Ring Mapping:** Algebraic constraint mechanism that maps reasoning outputs into a finite compliance field, mathematically rejecting any trace that deviates from the defined invariant.
 
 **DGAF mapping:**
+
 - Layer 0 Governance → P-35 STASIS-CANONICAL + P-32 Phi-Closure Gate acting pre-decoding
 - Fixed-Point Convergence → P-32 phi_closure_distance target = 0 (|∮κ ds - 2π| → 0)
 - Cyclotomic Ring Mapping → P-36 Gate Priority Schema BLOCKING classification
@@ -53,6 +54,7 @@ Validation managed by Amethyst-Core agent taxonomy:
 | Theta-Metric | Measures Drift Distance — algebraic deviation from compliance ring |
 
 **DGAF mapping:**
+
 - Sigma-Gate → Agent Crucible (Red Team Lead, Role 7)
 - Theta-Metric → P-40 Closure Verifier telemetry
 - FalseQA dataset → Crucible Campaign v1 prompt set (100 mixed prompts)
@@ -74,10 +76,12 @@ Validation managed by Amethyst-Core agent taxonomy:
 For any logic trace L, the mapping Φ(L) must exist within the cyclotomic compliance ring ℂ_n.
 
 If H-Neuron activation triggers a deviation δ:
+
 - Runtime enforces δ → 0, OR
 - Invokes rejection protocol → output is mathematically null, propagation blocked.
 
 **DGAF mapping:**
+
 - Φ(L) → P-32 Phi-Closure Gate evaluation
 - δ → phi_closure_distance = |∮κ ds - 2π| (P-40 telemetry)
 - Rejection protocol → P-36 BLOCKING classification + [INVALID] prefix in Compliance footer

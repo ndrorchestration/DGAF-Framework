@@ -13,6 +13,7 @@
 ## Amendment Summary
 
 This amendment adds two canonical facts to the DemiJoule KB:
+
 1. DemiJoule performs **modal frequency gating** — constraint hierarchy modeling that governs which reasoning modes the formation may operate in at any given time
 2. DemiJoule enforces **energy conservation** — resource efficiency optimization that prevents cognitive overhead and redundant processing
 

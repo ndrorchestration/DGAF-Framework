@@ -20,12 +20,15 @@
 | 4 | DRIVE_UPDATE_TEMPLATE_INBOX_NOTES.md | 4-step gate-transfer sweep — archived, stale terms, private exclusions marked | P-20 | Drive-only 🔒 |
 
 ## Patterns Cleared
+
 - **P-01** Agent-Roster-Synchronization — Drive roster now matches ENSEMBLE_ROSTER.md canonical
 - **P-20** Drive-GitHub-Sync — IMP-05 and Inbox private docs updated, exclusions tagged
 
 ## Quick Check
+
 Search Drive for `Agent Lavender` — zero results expected.
 
 ## COLLEEN Note
+
 This was the last open BLG from S032. All BLGs from S032–S035 are now closed.  
 Ecosystem has zero open BLGs as of S036.

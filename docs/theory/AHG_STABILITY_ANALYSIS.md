@@ -158,6 +158,7 @@ CPS_t = (E_t, C_t_consensus, F_t)
 ```
 
 Where:
+
 - **E_t** (Exploration): `E_t = w_EN·N_t + w_ED·D_explore_t` — normalized to [0,1]
 - **C_t_consensus** (Consensus): `C_t_consensus = 1 − (D_t / D_max)` — normalized to [0,1]
 - **F_t** (Confidence): `F_t = 1 − (w_FR·R_t + w_FC·C_t)` — normalized to [0,1]
@@ -191,6 +192,7 @@ The proposed response is to weight D_entropy in S(t) and use a_φ pre-emption.
 This is a **prediction to be tested**, not an observed result.
 
 **Falsifiability conditions:**
+
 - Null hypothesis: AHG produces no statistically significant change in `audit_hallucination_rate` vs. ungoverned baseline.
 - Test design: 50-turn triadic traces with and without AHG active; measure D_entropy carry-over across turn boundaries.
 - Significance threshold: p < 0.05, effect size ≥ 0.20 reduction.

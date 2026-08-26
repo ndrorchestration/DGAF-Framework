@@ -41,6 +41,7 @@ constrained = run_normative_pass(batch)
 ---
 
 ## Notes
+
 - All components require P-30 attestation before canonical promotion.
 - New components stage in `docs/drafts/` until P-11 11Q scoring ≥ 85%.
 - CROSS_REF.md v3.3 is the authoritative ecosystem map.

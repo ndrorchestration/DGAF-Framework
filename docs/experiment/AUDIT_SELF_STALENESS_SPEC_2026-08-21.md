@@ -171,6 +171,7 @@ PR #77 documentation does NOT include:
 The `PDMAL_ANALYSIS_CONTROL_PLAN.md` at PR #77 (`3e556882`) is a planning record, not an audit. It does not carry an examined SHA. The `PRE_AUTHORIZATION_VERIFICATION_RECORD_2026-08-20.md` at PR #77 (`f51aea7a`) records current disposition but doesn't bind to a specific candidate SHA.
 
 This means:
+
 - PR #77's documentation is not yet audit-ready.
 - There is no mechanism to detect when PR #77 documentation becomes stale.
 - A reviewer cannot easily determine whether PR #77 documentation applies to the current state or a historical state.

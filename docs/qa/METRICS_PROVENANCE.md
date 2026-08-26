@@ -1,4 +1,5 @@
 # METRICS_PROVENANCE.md
+
 ## NDR Governance Stack — Metrics Provenance Registry
 
 ```
@@ -55,6 +56,7 @@ All 🔴 UNVERIFIED metrics must be resolved before QA bundle v1 is published. P
 File: `scripts/lint_provenance.py`
 
 Behavior:
+
 - Scans all `.md` files in `docs/` for metric references matching patterns: `[0-9]+%`, `[0-9]+x improvement`, `[0-9]+ gain`
 - Cross-references each match against `METRICS_PROVENANCE.md` metric names
 - Exits with code 1 if any metric is referenced in docs but absent from provenance table, or present with status 🔴 UNVERIFIED

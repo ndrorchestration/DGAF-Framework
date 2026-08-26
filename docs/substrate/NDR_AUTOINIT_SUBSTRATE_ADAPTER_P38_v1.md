@@ -31,6 +31,7 @@ Var[W] = g^2 / (n_in * second_moment(φ))
 ```
 
 Where:
+
 - `g` = analytic gain derived from φ's second moment
 - `n_in` = number of input connections
 - `second_moment(φ)` = E[φ(x)^2] for x ~ N(0, 1)
@@ -46,6 +47,7 @@ Where:
 ### Gain Computation
 
 AutoInit computes g analytically by:
+
 1. Symbolically evaluating E[φ(x)^2] for x ~ N(0,1)
 2. Setting g = 1 / sqrt(E[φ(x)^2])
 3. Applying corrective scaling to W initialization
@@ -88,11 +90,13 @@ The constant ρ_P ≈ 1.774732 (Standard Platinum, hendecagon form) emerges natu
 ## DGAF Integration
 
 ### What P-38 provides to DGAF agents
+
 - Substrate-agnostic initialization: same governance logic, different substrate → same variance properties
 - Cross-substrate replication enablement: identical a_n replay guarantee when P-38 + P-37 used together
 - Reduced dependency on Batch/Layer Normalization in analytically initialized networks
 
 ### What P-38 does NOT touch
+
 - P-27/P-28 KAPPA routing confidence thresholds (governance plane)
 - P-31 SCPE decay parameters (governance plane)
 - P-32 Phi-Closure Gate thresholds (governance plane)

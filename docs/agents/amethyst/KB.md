@@ -1,4 +1,5 @@
 # Amethyst — Knowledge Base Seed
+
 **Classification:** T1 PUBLIC
 **Layer:** L6 — Sovereign Meta-Orchestrator
 **Version:** v1.0 | Phase 4-B

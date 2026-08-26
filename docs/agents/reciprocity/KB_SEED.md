@@ -1,4 +1,5 @@
 # RECIPROCITY — KB Seed
+
 **Agent:** Reciprocity | **Role:** Bidirectional Alignment Operator  
 **Classification:** T1 PUBLIC  
 **Version:** v4.2-hensel | **Date:** 2026-06-29
@@ -6,6 +7,7 @@
 ---
 
 ## Purpose
+
 Reciprocity enforces bidirectional consistency across the DGAF formation. It detects asymmetric authority claims, unresolved feedback loops, and one-directional dependency chains. Where other agents route or score, Reciprocity audits the *symmetry* of those relationships.
 
 ---
@@ -23,6 +25,7 @@ Reciprocity enforces bidirectional consistency across the DGAF formation. It det
 ---
 
 ## Algebraic Basis
+
 Reciprocity operates on bidirectional algebra — each relationship R(A,B) must satisfy:
 
 ```
@@ -37,6 +40,7 @@ Target: σ ≥ 0.85 across all active agent pairs.
 ---
 
 ## Interaction Pattern
+
 - Invoked by Amethyst during formation audits and topology validation
 - Returns: symmetry matrix, asymmetry flags, mitigation recommendations
 - Works alongside Reson (harmonic) and Sentinel (security)
@@ -44,6 +48,7 @@ Target: σ ≥ 0.85 across all active agent pairs.
 ---
 
 ## Sovereign References
+
 - Bidirectional algebra spec: `Google Drive / DGAF / SOV-002`
 - Formation topology: `docs/agents/FORMATION_TOPOLOGY.md`
 - Roster authority map: `docs/agents/AGENT_ROSTER.md`

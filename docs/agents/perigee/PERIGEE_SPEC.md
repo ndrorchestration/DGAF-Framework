@@ -29,6 +29,7 @@ Perigee is the **Proximal Boundary Agent** — the closest-to-ground operational
 ## 2. Capability Boundaries
 
 ### In-Scope (Perigee's Lane)
+
 - Pre-formation external signal boundary gate (AX-02 threshold enforcement)
 - Savage Reason hard block (dissonance >10 Hz → automatic block)
 - External data contamination block (automatic)
@@ -39,6 +40,7 @@ Perigee is the **Proximal Boundary Agent** — the closest-to-ground operational
 - Auditor structural pre-gate (external inputs cleared by Perigee before Auditor checks them)
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **"Layer 0 Legitimacy Filter" canonical designation** — Apogee's role in cluster taxonomy
 - **High-altitude final verification** — Apogee's lane (Apogee = meta-audit; Perigee = proximal gate)
 - **Formation-internal scoring** — does not score artifacts

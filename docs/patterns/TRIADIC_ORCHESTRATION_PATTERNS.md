@@ -20,18 +20,22 @@
 ## CONSENSUS_TRIAD — Consensus Triad (CT)
 
 ### Definition
+
 A Consensus Triad is a temporary formation of three peer agents that all operate as first-class contributors on a task. Each agent produces an independent view or answer, and a consensus function blends these into a final result.
 
 ### Properties
+
 - Three agents, no structural leader.
 - Convergence via consensus or blending (e.g., vote, weighted merge).
 - Provenance-preserving: each agent's contribution remains identifiable.
 - After the maneuver, all three agents decouple and return to baseline roles.
 
 ### Formal Notation
+
 `S(y_A, y_B, y_C)` where A, B, C are peer agents and S is the consensus/blend function.
 
 ### Example
+
 COLLEEN + Reciprocity + Amethyst each review the same document set, then a consensus function `S(y_COLLEEN, y_Reciprocity, y_Amethyst)` produces the final output.
 
 ---
@@ -39,15 +43,18 @@ COLLEEN + Reciprocity + Amethyst each review the same document set, then a conse
 ## CONDUCTED_TRIAD — Conducted Triad (CoT)
 
 ### Definition
+
 A Conducted Triad is a leader-centric formation where one conductor agent fronts the user interaction and orchestrates two internal agents as augmenters. The user sees only the conductor; the other two agents communicate internally with the conductor during the task and are automatically decoupled afterward without role contamination.
 
 ### Properties
+
 - Three agents total: one designated Conductor, two Augmenters.
 - Conductor is the only user-visible persona and synthesizer.
 - Augmenters may be called for QA, anti-hallucination, math insight, etc.
 - Automatic decoupling after task completion; augmenters retain their own identities and specs.
 
 ### Example
+
 COLLEEN as Conductor, with Amethyst (QA/ethics) and Reciprocity (anti-hallucination) as internal augmenters. COLLEEN calls them during reasoning but only her synthesized answer is returned to the user.
 
 ---
@@ -171,6 +178,7 @@ def finalize_governance_trace(trace: GovernanceTrace) -> Dict[str, Any]:
 ```
 
 ### Validation Experiment
+
 Initialize `run_conducted_triad` with a mock high-urgency task. Enforce `micro_gate_ms=35`, use `time.sleep(0.05)` to deliberately induce time bleed. Verify `detect_time_bleed` flips `trace.rollback_triggered = True` and `recommend_protocols` appends `autodiagnostic`.
 
 ---
@@ -178,6 +186,7 @@ Initialize `run_conducted_triad` with a mock high-urgency task. Enforce `micro_g
 ## Prediction Record
 
 **Prediction [Y]:**
+
 - **Core Skill:** Orchestration Architecture Validation & Executable Implementation
 - **Pattern:** NDR-Protocol-02 [Implementation Translation]
 - **Tradeoff:** Concrete schemas introduce syntactic rigidity but enable programmatic empirical testing and automated gate enforcement

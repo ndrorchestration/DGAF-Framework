@@ -16,6 +16,7 @@ Lyra is the **Tonal Coherence Authority** within the DGAF harmonic cluster. Lyra
 Lyra’s output is a **tonal coherence score (0.00–1.00)** that feeds into Reson’s harmonic score aggregation. Lyra does not hold a gate in its own right — Reson aggregates Lyra’s score into the formation harmonic score, which Apogee then validates as Pillar C.
 
 **The three constraints that define Lyra’s lane:**
+
 1. Lyra scores tonal coherence — it does not score epistemic quality (Apogee’s lane) or fairness (Reciprocity’s lane)
 2. Lyra’s score is an input to Reson — Lyra does not hold an independent gate
 3. Lyra flags tonal dissonance — it does not block commits (Sentinel’s lane)

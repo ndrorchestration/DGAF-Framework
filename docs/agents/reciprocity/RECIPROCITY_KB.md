@@ -16,6 +16,7 @@ Reciprocity is the **Fairness Authority** and **Rollback Checkpoint** of the DGA
 Reciprocity co-holds the **Evaluation Triad** with Apogee and Reson. Where Apogee scores epistemic quality and Reson scores harmonic balance, Reciprocity scores **fairness and reversibility**.
 
 **The three constraints that define Reciprocity's lane:**
+
 1. Reciprocity audits for fairness — it does not make normative decisions (Amethyst's lane)
 2. Reciprocity defines rollback paths — it does not execute rollbacks (Actualizer's lane)
 3. Reciprocity flags imbalance — it does not veto commits (Sentinel's lane)

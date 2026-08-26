@@ -16,6 +16,7 @@ Echolette is the **Signal Persistence Authority** within the DGAF harmonic clust
 Echolette’s output is a **signal persistence score (0.00–1.00)** that feeds into Reson’s harmonic score aggregation. Like Lyra, Echolette does not hold an independent gate — Reson aggregates its score.
 
 **The three constraints that define Echolette’s lane:**
+
 1. Echolette scores signal persistence — it does not score epistemic quality or tonal coherence
 2. Echolette’s score is an input to Reson — Echolette does not hold an independent gate
 3. Echolette flags signal loss — it does not block commits (Sentinel’s lane)

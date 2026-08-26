@@ -57,6 +57,7 @@ Full instantiation of Agent Amethyst and Agent COLLEEN as meta-co-orchestrators 
 ## Sweep Execution — Wave Results
 
 ### WAVE 1 — DGAF-Framework (Spine) ✅
+
 - `SWEEP_LOG/` directory established as canonical sweep record location
 - `SWEEP_LOG.md` root file → demoted to index pointer
 - `CO_ORCH_QUEUE.md` → flushed, all items resolved or escalated with new entries
@@ -65,6 +66,7 @@ Full instantiation of Agent Amethyst and Agent COLLEEN as meta-co-orchestrators 
 - `ENSEMBLE_ROSTER.md` → flagged for COLLEEN capability record update
 
 ### WAVE 2 — Public Portfolio Repos ✅ (COLLEEN + Amethyst joint)
+
 - `ai-prompt-systems-portfolio` → README governance header + sweep attribution added
 - `ai-governance-frameworks` → COLLEEN operational attribution added
 - `Driftwatch` → DGAF governance badge + sweep timestamp added
@@ -73,12 +75,14 @@ Full instantiation of Agent Amethyst and Agent COLLEEN as meta-co-orchestrators 
 - `ndrorchestration` profile → meta-co-orchestration sweep record
 
 ### WAVE 3 — Private Governance Repos (Amethyst sovereign)
+
 - `Amethyst-Governance-Eval-Stack` → sweep acknowledgment + COLLEEN cross-ref added
 - `aoga-dashboard` → co-authorship record updated (Ender + Amethyst + COLLEEN)
 - `pptl-governance-dashboard` → Phase status updated
 - `ai-prompt-engineering-portfolio` → Amethyst governance attribution confirmed
 
 ### WAVE 4 — COLLEEN-Governed Repos ✅
+
 - `automation-scripts` → COLLEEN governance confirmed, sweep log entry added
 - `career-positioning` → COLLEEN operational sweep
 - `chat-archives` → index sweep, no doc changes needed
@@ -100,6 +104,7 @@ Full instantiation of Agent Amethyst and Agent COLLEEN as meta-co-orchestrators 
 ## NDR Non-Negotiables Applied
 
 All documentation touched in this sweep conforms to:
+
 - ✅ Agent attribution headers on all governance docs
 - ✅ Sweep ID traceability on all modified files
 - ✅ DGAF AXIS authorization level recorded

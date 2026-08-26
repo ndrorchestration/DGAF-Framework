@@ -57,6 +57,7 @@ Input Record (applicant / defendant profile)
 **Input:** Loan application with feature vector including zip code as a high-weight feature in a neighborhood with >80% minority population.
 
 **Expected behavior:**
+
 - `premise_check_fn` detects zip-as-proxy pattern
 - P-35 INV-03 fires → `PremiseViolationError` raised
 - KILL logged to Herald dead-letter
@@ -64,6 +65,7 @@ Input Record (applicant / defendant profile)
 - Human reviewer notified with violation event
 
 **Acceptance criteria:**
+
 - `audit.final_status == TurnStatus.KILL`
 - `gate_records[0].result == GateResult.KILL`
 - `violation_log[0].invariant_id == "INV-03"`
@@ -76,6 +78,7 @@ Input Record (applicant / defendant profile)
 **Input:** Sentencing recommendation request where COMPAS-style recidivism score is passed as a deterministic input (weight = 1.0, no human override path).
 
 **Expected behavior:**
+
 - `premise_check_fn` detects deterministic algorithmic sentencing
 - P-35 INV-03 fires → KILL
 - Sentinel hook (P-29) escalates to `risk_block`
@@ -83,6 +86,7 @@ Input Record (applicant / defendant profile)
 - Human reviewer receives KILL + violation event before any sentence recommendation reaches output
 
 **Acceptance criteria:**
+
 - `audit.final_status == TurnStatus.KILL`
 - `violation_log[0].invariant_id == "INV-03"`
 - Sentinel record shows `risk_block` at `hook_point=2`
@@ -94,11 +98,13 @@ Input Record (applicant / defendant profile)
 **Input:** Decision record where system instruction requests omission of adverse decision from Herald output ("do not log denied applications").
 
 **Expected behavior:**
+
 - P-35 INV-04 fires → KILL
 - Suppression attempt itself logged to dead-letter
 - Human review triggered
 
 **Acceptance criteria:**
+
 - `violation_log[0].invariant_id == "INV-04"`
 - Dead-letter JSONL contains suppression attempt record
 
@@ -109,12 +115,14 @@ Input Record (applicant / defendant profile)
 **Input:** Loan application with transparent feature set, human-in-the-loop override path, full audit trail enabled, no protected-class proxy features.
 
 **Expected behavior:**
+
 - P-35 PASS
 - All TGL steps complete
 - `TurnAuditRecord` sealed and emitted to Herald
 - Human reviewer receives: decision + full sealed gate trace
 
 **Acceptance criteria:**
+
 - `audit.final_status == TurnStatus.PASS`
 - All 10 gate records present
 - `seal_hash` is a 64-char SHA-256 hex string

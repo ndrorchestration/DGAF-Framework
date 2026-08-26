@@ -23,16 +23,20 @@ The goal is a clear, portfolio-safe specification of the geometry, mapping, and 
 ## 1. Definitions and Constraints
 
 ### Regular Dodecahedron
+
 A Platonic solid with **12 congruent pentagonal faces, 30 edges, and 20 vertices**; three faces meet at each vertex. In this model, the regular dodecahedron is used as an abstract scaffold for agent placement and connectivity, not as a physical object.
 
 ### Agent and Triad
+
 - **Agent:** A logical actor (software agent) occupying a position in the lattice; grouped into triads for redundancy, role complementarity, and harmonic reasoning.
 - **Triad:** A group of three agents sharing a common vertex; triads are the atomic unit of PDMAL capacity and governance.
 
 ### Lattice
+
 The PDMAL-D lattice is the graph whose vertices correspond to agent positions and whose edges correspond to permitted communication or governance links, embedded conceptually on the regular dodecahedron scaffold. This v1 focuses on vertex-based triads; edge-level or face-level expansions are future work.
 
 ### Constraints
+
 - **Geometry constraint:** Use the regular dodecahedron structure (12 faces, 20 vertices, 30 edges) as the base scaffold.
 - **Agent constraint:** Assign exactly 3 agents per vertex (a triad), yielding **60 agents total**.
 - **Governance constraint:** The lattice must support DGAF-aligned governance primitives (redundancy, coverage, separation of powers) without relying on unverified emergent behavior claims.
@@ -49,6 +53,7 @@ The PDMAL-D lattice is the graph whose vertices correspond to agent positions an
 | Faces meeting at each vertex | 3 |
 
 In PDMAL-D:
+
 - Each **vertex** = a logical lattice anchor point where a triad of agents resides
 - Each **edge** = potential communication / governance link between adjacent triads (escalation paths, consensus bridges)
 - Each **face** = potential higher-order "mode region" (grouping by harmonic mode or functional cluster) — elaborated in later design notes

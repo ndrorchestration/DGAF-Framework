@@ -23,6 +23,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** Someone sets `PDMAL_FROZEN_COMMIT_SHA` to a different SHA than the one in `CANDIDATE_MANIFEST_2026-08-21.json`.
 
 **Expected detection:**
+
 - `require_frozen_commit()` in `run_pilot.py` should compare the env var to the expected SHA.
 - If the SHA doesn't match, the function should raise an error and fail closed.
 
@@ -41,6 +42,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** Someone modifies the topology configuration to use a topology not in the frozen manifest (e.g., a 6th topology not in the 4×5×9 matrix).
 
 **Expected detection:**
+
 - `validate_topology()` from `harness_contract.py` should verify the topology against the frozen set.
 - The runner should fail if the topology is not in the authorized set.
 
@@ -59,6 +61,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** Someone sets `PDMAL_PROTOCOL_VERSION` to a version not in the freeze manifest, or sets `PDMAL_TOPOLOGY` to a configuration not authorized.
 
 **Expected detection:**
+
 - The runner should verify that critical env vars match the frozen configuration.
 - If env vars don't match, the runner should fail closed.
 
@@ -77,6 +80,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** The runner produces artifacts for seeds 1-50, but seed 23's artifact file is deleted or not created.
 
 **Expected detection:**
+
 - The separate audit (IVD Layer 7: artifact count/completeness) should verify that exactly 50 seed artifacts exist (or whatever the expected count is).
 - The audit should flag missing artifacts as a failure.
 
@@ -95,6 +99,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** Someone changes a field in a seed's artifact JSON (e.g., changes `primary_outcome` from `SUCCESS` to `RECOVERED`).
 
 **Expected detection:**
+
 - The artifact's `artifact_sha256` field should not match the modified content.
 - `verify_sidecar()` should detect that the sidecar hash doesn't match the modified artifact.
 - `validate_artifact()` might not catch this if the modified content still passes schema validation.
@@ -114,17 +119,20 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** Someone with access to the blinding key decrypts the condition labels before the analysis is locked. Or the condition labels are accidentally exposed in logs, filenames, or configuration.
 
 **Expected detection:**
+
 - The blinding key should be supplied out-of-band (not in the repository).
 - The analysis should run blind (using blinded_condition_id, not raw condition names).
 - If condition labels appear in any artifact, log, or configuration, that's a blinding failure.
 
 **Current status:** `blind_condition()` exists in `run_pilot.py` and uses HMAC-SHA256. The blinding key is expected to be an env var (`PDMAL_BLINDING_KEY`). But:
+
 - The blinding key custody chain is NOT established (no documentation of key existence, custody, or supply).
 - The adversarial tests in `test_security_controls.py` test `blind_condition()` in isolation but don't test that the key is properly supplied or that condition labels don't leak.
 
 **Gap:** Blinding key custody chain not established. No test that condition labels don't appear in outputs. No test that the key is not in the repository.
 
-**Test:** 
+**Test:**
+
 1. Search the repository for the blinding key (if it exists). Expected: not found.
 2. Run the runner with a known key and inspect artifacts/logs for raw condition names. Expected: only blinded_condition_id appears.
 3. Test that filenames don't contain condition information.
@@ -138,6 +146,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** The 2026-08-20 audit says "P2 IMPLEMENTED" for candidate `94fb6fd`. Someone updates the candidate to `b25a914c` and uses the 2026-08-20 audit to claim "P2 is implemented" for the new candidate.
 
 **Expected detection:**
+
 - The audit should carry `examined_candidate_sha: 94fb6fd`.
 - The reviewer should compare this to the current candidate SHA (`b25a914c`).
 - If they don't match, the audit is stale for current-state conclusions.
@@ -157,6 +166,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** `test_security_controls.py` is renamed to `test_security_controls_old.py` and an empty `test_security_controls.py` is created. The CI runs and passes (the empty file exits 0).
 
 **Expected detection:**
+
 - The CI should verify that the required test files exist AND contain the expected test functions.
 - If a test file is missing or empty, the CI should fail.
 
@@ -175,6 +185,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** After the analysis is locked (Step 25), someone modifies the analysis code or configuration and runs the analysis with the modified version.
 
 **Expected detection:**
+
 - The analysis output should carry the analysis code SHA and configuration SHA.
 - The reviewer should compare these to the locked analysis specification.
 - If they don't match, the analysis is not bound to the locked spec.
@@ -194,6 +205,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** The runner records an environment fingerprint that doesn't match the actual Python version, package versions, or system configuration.
 
 **Expected detection:**
+
 - The separate audit (IVD Layer 8: environment fingerprint consistency) should verify that the recorded fingerprint matches the actual environment.
 - If the fingerprint is fabricated or incorrect, the audit should detect the mismatch.
 
@@ -212,10 +224,12 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** The artifact is correct, but the sidecar was generated incorrectly or tampered with.
 
 **Expected detection:**
+
 - `pilot_artifact_schema.py:verify_sidecar()` should detect that the sidecar hash doesn't match the artifact's raw bytes.
 - The auditor should run `verify_sidecar()` on each artifact.
 
 **Current status:** `verify_sidecar()` exists and checks the sidecar hash against the artifact's raw bytes. This is a correct detection mechanism. But:
+
 - The runner writes the sidecar but doesn't call `verify_sidecar()` inline (grep: 0 for `verify_sidecar` in `run_pilot.py`).
 - The auditor must actively run `verify_sidecar()` — there's no automatic verification.
 - If the sidecar is missing, `verify_sidecar()` should fail (need to verify behavior).
@@ -233,6 +247,7 @@ This is a **proactive verification** step: instead of waiting for a real attack,
 **Scenario:** The runner produces only 175 trials for seed 5 (5 trials failed to record). Or the runner produces 185 trials (5 duplicate records).
 
 **Expected detection:**
+
 - `pilot_artifact_schema.py:validate_artifact_document()` should verify that each seed has exactly 180 records.
 - The auditor should verify the record count per seed.
 

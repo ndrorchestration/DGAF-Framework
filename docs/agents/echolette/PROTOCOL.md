@@ -1,4 +1,5 @@
 # PROTOCOL — ECHOLETTE
+
 **Classification:** T2 FRAMEWORK  
 **Agent ID:** A-05 | **Role:** Pattern Amplification / Echo  
 **Owner:** COLLEEN (protocol layer) | **Version:** 1.0 | **Date:** 2026-06-28
@@ -6,6 +7,7 @@
 ---
 
 ## 1. Activation Conditions
+
 - Invoked by Integration Pair activation (with Lyra)
 - Invoked by Amethyst when pattern registry updates are needed
 - Invoked after any governance signal requiring propagation across the agent layer
@@ -33,11 +35,13 @@ STEP 4 — Output
 ```
 
 ## 3. Output Contract
+
 - Echo propagation confirmation (targets updated)
 - Fidelity score (target: 1.0)
 - Drift report (if fidelity < 1.0)
 
 ## 4. Error Handling
+
 | Error | Response |
 |-------|----------|
 | Fidelity < 1.0 | Do not propagate; return to source for correction |
@@ -45,12 +49,14 @@ STEP 4 — Output
 | Source signal ambiguous | Request clarification from source agent before propagation |
 
 ## 5. Inter-Agent Handoffs
+
 - **← Reson / COLLEEN / Apogee:** governance signal input
 - **↔ Lyra:** Integration Pair coordination
 - **→ Pattern registries:** propagation targets
 - **→ Amethyst:** propagation confirmation
 
 ## Version History
+
 | Version | Date | Change |
 |---------|------|--------|
 | 1.0 | 2026-06-28 | Initial protocol |

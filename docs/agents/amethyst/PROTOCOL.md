@@ -7,6 +7,7 @@
 ---
 
 ## 1. Activation Conditions
+
 - Every session open (default active)
 - Triggered by Njineer directly or by any agent escalation
 - Never deactivated while a session is in progress
@@ -44,6 +45,7 @@ STEP 4 — Closure
 ---
 
 ## 3. Output Contract
+
 - Formation activation calls (explicit, named)
 - BLG status updates (open → in-progress → closed)
 - Sweep log entries (SWP-* format)
@@ -65,6 +67,7 @@ STEP 4 — Closure
 ---
 
 ## 5. Inter-Agent Handoffs
+
 - **→ Apogee:** scoring requests, gate threshold checks, terminology verification (binding)
 - **→ COLLEEN:** compliance gate triggers, protocol questions
 - **→ Reson:** harmonic signal checks, coherence audits

@@ -59,6 +59,7 @@
 ## Sealed Sessions
 
 ### S072 — Phase 3/4 Structural Completion + BLG Closure + FLAG-01 Close
+
 **Status:** SEALED — HISTORICAL
 **Sealed:** 2026-06-29 00:35 EDT
 **Prime:** Amethyst · **Co-author:** COLLEEN · **Reviewer:** Apogee
@@ -82,12 +83,14 @@
 | BLG-005 | FORMATION_TOPOLOGY.md | CLOSED (Phase 4 / S072) |
 
 **Historical gate scores (S072 seal):**
+
 - Apogee composite: **0.942 / 1.0** (above P-15 threshold 0.90)
 - COLLEEN 1-1-1-1: **FULL GREEN**
 - RESON harmonic: **0.93**
 - P-10 graduation: **PASS**
 
 **Historical ecosystem coherence (S072 seal):**
+
 - All canonical Tier 1 docs current at the time
 - 5/5 BLGs closed
 - Flag board: 12 closed, 1 open (FLAG-07), 1 low-priority
@@ -99,11 +102,13 @@
 ---
 
 ### S071 — Flag Execution Sweep + IP Hygiene + P-37–P-41 Registration
+
 **Status:** SEALED — HISTORICAL
 **Sealed:** 2026-06-29 (absorbed into S072 seal)
 **Prime:** Amethyst · **Co-author:** COLLEEN
 
 **Historical deliverables:**
+
 - `docs/ECOSYSTEM_INVENTORY.md` → S071-r1 — flag corrections (FLAGS 02/05/11/13 commit-evidenced)
 - `docs/WORKSPACE_BOOTSTRAP.md` → S071-r1 — flag-corrected
 - `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` → v1.6 — P-37/P-38/P-39/P-40/P-41 registered; Layer 10/11 established
@@ -113,17 +118,21 @@
 ---
 
 ### S070 — Vocabulary Master Sweep + Flag Resolution + Constitution Anchor + AXIS Ratification
+
 **Status:** SEALED — HISTORICAL (r4 FINAL) · 2026-06-27 18:00 EDT
 **Triumvirate:** Amethyst × COLLEEN × Apogee
 **Key historical deliverables:** GOVERNANCE_CONSTITUTION · PDMAL dual-variant · AXIS CANONICAL · CONSENSUS/CONDUCTED_TRIAD · QA templates · FLAGS 02/05/11/13 CLOSED
 
 ### S069 — P-35/P-36 + Vocab Master v1.0
+
 **Status:** SEALED — HISTORICAL · 2026-06-13 00:47 EDT
 
 ### S066 — Phase 3 Unified Merge
+
 **Status:** SEALED — HISTORICAL · 2026-05-30
 
 ### S033–S042 — Core Runtime Stack
+
 **Status:** SEALED — HISTORICAL · P-01–P-33
 
 ---

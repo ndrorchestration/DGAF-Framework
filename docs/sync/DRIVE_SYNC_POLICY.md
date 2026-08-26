@@ -42,11 +42,13 @@ Device-local state is treated as ephemeral working memory; Drive is the source o
 ## Desktop Sync Policy
 
 ### Client
+
 - **Google Drive for Desktop** on Windows and macOS
 - Set My Drive to **Stream files** (default)
 - Right-click only critical active folders → mark **Available offline**
 
 ### macOS-Specific
+
 - Grant Privacy & Security full disk access for Drive helper
 - Verify Apple File Provider behavior on macOS 12.1+ (some stream/mirror mode interactions vary)
 - Do not use Finder integration for repos — GitHub Desktop or CLI handles git; Drive handles docs only
