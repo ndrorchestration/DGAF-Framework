@@ -73,6 +73,9 @@ def test_duplicate_matrix_cell_is_rejected() -> None:
     document = _document()
     duplicate = dict(document["records"][0])
     duplicate["trial_id"] = document["records"][-1]["trial_id"]
+    duplicate["artifact_sha256"] = hashlib.sha256(
+        canonical_json_bytes({k: v for k, v in duplicate.items() if k != "artifact_sha256"})
+    ).hexdigest()
     document["records"][-1] = duplicate
     with pytest.raises(AssertionError, match="duplicate pilot matrix cell"):
         validate_artifact(document, expected_seed=20260819)
