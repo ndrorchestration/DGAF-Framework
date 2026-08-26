@@ -25,6 +25,7 @@ CANDIDATE_PATHS = (
     "experiments/pdmal_pilot/run_pilot.py",
     "experiments/pdmal_pilot/requirements-full-lock.txt",
     "docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md",
+    "docs/experiment/FREEZE_MANIFEST.md",
 )
 
 
@@ -74,7 +75,7 @@ def pip_version() -> str:
 
 
 def observed_negative_state() -> dict[str, Any]:
-    freeze_manifest = ROOT / "docs" / "FREEZE_MANIFEST.md"
+    freeze_manifest = ROOT / "docs" / "experiment" / "FREEZE_MANIFEST.md"
     current_state = ROOT / "docs" / "CURRENT_STATE.md"
     freeze_text = freeze_manifest.read_text(encoding="utf-8") if freeze_manifest.exists() else ""
     state_text = current_state.read_text(encoding="utf-8") if current_state.exists() else ""
@@ -92,6 +93,7 @@ def observed_negative_state() -> dict[str, Any]:
     blinding_key_present = bool(os.getenv("PDMAL_BLINDING_KEY"))
 
     observed = {
+        "freeze_manifest_exists": freeze_manifest.exists(),
         "freeze_manifest_declares_pre_freeze": "PRE-FREEZE" in freeze_text,
         "current_state_mentions_n_zero": "N = 0" in state_text or "N=0" in state_text,
         "current_state_mentions_not_granted": "NOT GRANTED" in state_text,
@@ -105,6 +107,7 @@ def observed_negative_state() -> dict[str, Any]:
     }
 
     required = (
+        observed["freeze_manifest_exists"],
         observed["freeze_manifest_declares_pre_freeze"],
         observed["pilot_authorization_env_absent"],
         observed["protocol_frozen_env_absent"],
