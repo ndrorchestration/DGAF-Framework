@@ -38,6 +38,11 @@ The following `main` commits are documentation-only and do not advance the execu
 - `70b4b14805ad00668f9132b496a457f3f6bc4ba4` — H1–H3 preauthorization mapping and controls.
 - `80ae53ab522bcbb64df0c60d172b3ff13626fc33` — current-state synchronization.
 - `4e886d55402d138c6b399e5b25601440698c8316` — final H1–H3 mapping reconciliation.
+- `0175b2270f71c02802ffdba7454eef93b5ba58b2` — P7 adjudication candidate-binding correction.
+- `0b2f79e96fbc2d26b7722ce2b220d71ac112420b` — protocol candidate-binding correction.
+- `2b6deed5706b74c302b500e5effd157b06669fe3` — README candidate synchronization.
+- `9a6b26247d7ae727e4d65442bad5a8d4f6e7f260` — project-status candidate/deployment synchronization.
+- `af0b14299aa82349fdc7fd10e2630de6bba0fd8e` — consolidated P8/P9/freeze readiness control.
 
 Any executable change after `e6beeb...` would require candidate transition and fresh verification.
 
@@ -56,5 +61,7 @@ Required before authorization:
 - independent P9 verification;
 - new immutable freeze creation and verification;
 - explicit authorization decision.
+
+The consolidated checklist is [`docs/governance/P8_P9_FREEZE_READINESS_2026-08-26.md`](governance/P8_P9_FREEZE_READINESS_2026-08-26.md).
 
 **No empirical pilot execution is authorized. Empirical N remains 0. Authorization remains NOT GRANTED.**
