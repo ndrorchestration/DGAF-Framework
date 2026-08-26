@@ -1,4 +1,8 @@
 name: DGAF Regression Suite
+
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]

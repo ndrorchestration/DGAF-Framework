@@ -1,5 +1,8 @@
 name: Deploy to Vercel + Live Regression
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]

@@ -1,5 +1,8 @@
 name: IP Hygiene Sweep
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]

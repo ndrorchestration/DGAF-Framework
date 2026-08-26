@@ -1,5 +1,8 @@
 name: Propagation Consistency (Advisory)
 
+permissions:
+  contents: read
+
 on:
   pull_request:
   push:
