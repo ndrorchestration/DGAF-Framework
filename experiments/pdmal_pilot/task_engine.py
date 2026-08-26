@@ -166,7 +166,7 @@ def execute_trial(
         if isolate:
             status, isolated_elapsed, termination_reason = run_task_with_timeout(
                 task, seed=seed, condition=condition, attempt=attempt,
-                timeout_seconds=policy.timeout_seconds, clock=monotonic,
+                timeout_seconds=policy.timeout_seconds, clock=monotonic_clock,
             )
             elapsed = isolated_elapsed
         else:
@@ -273,7 +273,6 @@ class ConsensusTask:
     def _dgaf_update(self, *, seed: int, iteration: int, values: np.ndarray, graph, alive: tuple[bool, ...],
                      active_neighbors: tuple[tuple[int, ...], ...], failure_history: tuple[tuple[int, ...], ...],
                      failure_count_current: int, failure_count_total: int):
-        # Lazy import prevents task_engine <-> dgaf_tgl_adapter import cycles.
         from dgaf_tgl_adapter import ConsensusState, DGAF_TGLAdapter
 
         adapter = DGAF_TGLAdapter(session_id=f"pdmAL-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}")
