@@ -32,8 +32,8 @@ jobs:
         run: python -m pytest experiments/pdmal_pilot/test_security_controls.py -q
       - name: Run pilot artifact schema tests
         env:
-          PYTHONPATH: experiments/pdmal_pilot
-        run: python -m pytest experiments/pdmal_pilot/test_artifact_schema.py -q
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python -m pytest tests/test_evidence_card_schema.py -q
       - name: Run execution contract tests
         env:
           PYTHONPATH: experiments/pdmal_pilot
