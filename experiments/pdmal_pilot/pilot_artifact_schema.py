@@ -22,7 +22,8 @@ REQUIRED_RECORD_FIELDS = {
 ALLOWED_STATUS = {"SUCCESS", "RECOVERED", "UNRECOVERED_FAILURE"}
 CANONICAL_TOPOLOGIES = {"ring", "pdmal", "random_regular", "small_world", "complete"}
 CANONICAL_FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
-EXPECTED_RECORD_COUNT = 4 * len(CANONICAL_TOPOLOGIES) * len(CANONICAL_FAILURE_COUNTS)
+EXPECTED_CELLS_PER_CONDITION = len(CANONICAL_TOPOLOGIES) * len(CANONICAL_FAILURE_COUNTS)
+EXPECTED_RECORD_COUNT = 4 * EXPECTED_CELLS_PER_CONDITION
 
 
 def canonical_json_bytes(value: Any) -> bytes:
@@ -136,6 +137,7 @@ def validate_artifact(document: Mapping[str, Any], *, expected_seed: int | None 
 
     seen_matrix: set[tuple[str, str, int]] = set()
     seen_trial_ids: set[int] = set()
+    condition_counts: dict[str, int] = {}
     expected_experiment_id: str | None = None
     expected_protocol_version: str | None = None
     expected_environment_fingerprint: str | None = None
@@ -160,11 +162,14 @@ def validate_artifact(document: Mapping[str, Any], *, expected_seed: int | None 
         if trial_id in seen_trial_ids:
             raise AssertionError(f"duplicate trial_id: {trial_id}")
         seen_trial_ids.add(trial_id)
+        condition_counts[record["blinded_condition_id"]] = condition_counts.get(record["blinded_condition_id"], 0) + 1
 
     if seen_trial_ids != set(range(EXPECTED_RECORD_COUNT)):
         raise AssertionError(f"trial_id values must be exactly 0..{EXPECTED_RECORD_COUNT - 1}")
-    if len({record["blinded_condition_id"] for record in records}) != 4:
+    if set(condition_counts) != {record["blinded_condition_id"] for record in records} or len(condition_counts) != 4:
         raise AssertionError("artifact must contain exactly four distinct blinded condition identifiers")
+    if set(condition_counts.values()) != {EXPECTED_CELLS_PER_CONDITION}:
+        raise AssertionError(f"each blinded condition must contain exactly {EXPECTED_CELLS_PER_CONDITION} matrix cells")
 
 
 def verify_sidecar(raw: bytes, sidecar: str, filename: str) -> None:
