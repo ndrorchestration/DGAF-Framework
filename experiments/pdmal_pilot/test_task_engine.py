@@ -176,6 +176,12 @@ def test_consensus_task_accepts_only_pilot_condition_set():
         assert task.condition == condition
 
 
+def test_consensus_task_rejects_out_of_contract_failure_counts():
+    for bad in (-1, 7, 11, 20, True):
+        with pytest.raises(ValueError):
+            ConsensusTask(topology="ring", failure_count=bad, condition="null")
+
+
 def test_consensus_trial_identity_excludes_attempt():
     task_a = ConsensusTask(topology="complete", failure_count=3, condition="simple")
     task_b = ConsensusTask(topology="complete", failure_count=3, condition="simple")
