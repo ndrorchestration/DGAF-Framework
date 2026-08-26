@@ -1,7 +1,7 @@
 # Pattern Commons Architecture
 
 **Status:** Proposed / audit phase  
-**Date:** 2026-08-25
+**Date:** 2026-08-26
 
 ## Purpose
 
@@ -16,6 +16,30 @@ The intended architecture is a **federated source model with a normalized govern
 - **DGAF:** framework implementation, governance mechanisms, enforcement, evaluation, and references to applicable patterns.
 - **Notion:** governance/index layer linking patterns to repositories, claims, decisions, implementations, evidence, and asset-boundary decisions.
 - **Commercialization boundary:** determines whether an artifact is open, research, proprietary, private, security-sensitive, or trademark/certification governed; this is independent of epistemic validity.
+
+## Semantic authority boundary
+
+Pattern Commons must distinguish **semantic representation from semantic authority**. An agent or repository may consume and reason over an approved ontology or vocabulary, but generated terminology must not silently become canonical.
+
+The governing semantic progression is:
+
+**defined → observed → supported → verified → authorized → canonical**
+
+A pattern record should distinguish, where applicable:
+
+- representation;
+- classification;
+- policy status;
+- epistemic status;
+- ontological assertion;
+- candidate vocabulary;
+- canonical vocabulary.
+
+New terminology or semantic categories are candidate vocabulary until provenance and authorization establish canonical status. Shared terminology, repeated model output, registry membership, or confidence does not establish ontological truth.
+
+**Ontology drift** is a distinct semantic-drift class meaning an unauthorized change in effective vocabulary, entity boundaries, relations, or semantic commitments. It is tracked alongside definition drift, epistemic drift, policy drift, and provenance drift.
+
+Semantic/ontological detection is not inherently a gate. Any detector promoted to threshold-bearing or blocking use requires empirical characterization and evidence of control value.
 
 ## Registry family map
 
@@ -112,4 +136,5 @@ The dedicated Pattern Commons repository decision remains deferred until the eco
 - [`GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md)
 - [`GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md`](GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md)
 - [`CROSS_REF.md`](../CROSS_REF.md)
+- [`CURRENT_STATE.md`](CURRENT_STATE.md)
 - Apache-2.0 [`LICENSE`](../LICENSE)
