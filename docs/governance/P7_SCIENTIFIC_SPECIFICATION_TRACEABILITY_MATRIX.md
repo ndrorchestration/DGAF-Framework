@@ -6,7 +6,7 @@
 
 **Epistemic boundary:** N=0, NOT GRANTED, PRE-FREEZE. Pilot authorization is not granted. No empirical execution has occurred. P7 cannot be formally closed until the designated authority adopts all 11 decisions and binds the adopted record to the exact candidate.
 
-**Date compiled:** 2026-08-24 (post-PR #83/#84/#76 integration and post-governance-documentation-incorporation, HEAD `222fb4c9832b77c88791363ad7923646801b9a4a`)
+**Date compiled:** 2026-08-24 (post-PR #83/#84/#76 integration and post-governance-documentation-incorporation, HEAD `9ceab592f8be97b15d1c655ccd72cfb6998234ac`)
 
 ---
 

@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-24
-applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
+last_verified: 2026-08-25
+applies_to_sha: 39c138bb29697a561b49ef206c9f9a185e8a9c7b
 ---
 
 # PDMAL Current Control State
@@ -12,12 +12,12 @@ This is the current pre-authorization control record. Historical evidence remain
 
 ## Current state
 
-| Control | State | Evidence / blocker |
+|| Control | State | Evidence / blocker |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is not the corrected-apparatus freeze |
 | Exact P8 verification candidate | IDENTIFIED | `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` per the fail-closed P8 checklist |
 | Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented |
-|| P7 scientific specification | TECHNICALLY ADJUDICATED / PROPOSED AUTHORITATIVE SPECIFICATION / FORMALLY OPEN | Panel-ready record presents all 11 decisions as OPEN / PENDING AUTHORITY ADOPTION; primary contrast (DGAF vs null) selected but formal adoption not evidenced; see `P7_SCIENTIFIC_SPECIFICATION_TRACEABILITY_MATRIX.md` for decision-level breakdown | P7 record (`P7_ADJUDICATION_RECORD_PANEL_READY_2026-08-23.md`) + traceability matrix | P8 analysis lock must not claim scientific closure beyond the OPEN P7 state |
+| P7 scientific specification | TECHNICALLY ADJUDICATED / PROPOSED AUTHORITATIVE SPECIFICATION / FORMALLY OPEN | Panel-ready record presents all 11 decisions as OPEN / PENDING AUTHORITY ADOPTION; primary contrast (DGAF vs null) selected but formal adoption not evidenced; see `P7_SCIENTIFIC_SPECIFICATION_TRACEABILITY_MATRIX.md` for decision-level breakdown | P7 record (`P7_ADJUDICATION_RECORD_PANEL_READY_2026-08-23.md`) + traceability matrix | P8 analysis lock must not claim scientific closure beyond the OPEN P7 state |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Implementation/configuration controls exist; candidate-scoped execution evidence is incomplete |
 | Candidate CI evidence | OPEN | Required applicable CI/test runs must execute against the exact candidate and be retained |
 | Artifact contract | PARTIAL | End-to-end semantics and adversarial tests exist; fresh candidate evidence required |

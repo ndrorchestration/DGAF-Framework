@@ -2,17 +2,16 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-24
-applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
+last_verified: 2026-08-25
+applies_to_sha: 39c138bb29697a561b49ef206c9f9a185e8a9c7b
 ---
-
 # DGAF-Framework / PDMAL — Current State
 
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it. This document describes current state without retroactively transferring historical evidence.
 
 ## Authoritative current state
 
-| Gate / boundary | Status | Current meaning |
+|| Gate / boundary | Status | Current meaning |
 |---|---|---|
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains provenance only for the corrected apparatus |
 | P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Panel-ready record (`P7_ADJUDICATION_RECORD_PANEL_READY_2026-08-23.md`) presents 11 proposed decisions all OPEN / PENDING AUTHORITY ADOPTION; primary contrast (DGAF vs null) selected but formal adoption not evidenced; see `P7_SCIENTIFIC_SPECIFICATION_TRACEABILITY_MATRIX.md` |
