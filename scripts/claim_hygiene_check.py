@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Block active public claim-language that exceeds the current DGAF evidence policy.
 
-Historical records are allowed when the same artifact explicitly labels the status
-as historical/attested. Policy and governance documents are excluded from direct
-status scanning because they define the rules rather than claim conformance.
+The checker scans the same text/source suffix family used by CI and distinguishes
+historical records by artifact context rather than permitting a match solely because
+the triggering line contains the word 'historical'.
 """
 from __future__ import annotations
 
@@ -18,34 +18,60 @@ EXCLUDED = {
     Path("docs/evidence/EPISTEMIC_CONSISTENCY_RULES.md"),
     Path("docs/EPISTEMIC_EVIDENCE_STANDARD.md"),
 }
+ALLOWED_SUFFIXES = {".md", ".py", ".ts", ".tsx", ".yml", ".yaml", ".json"}
+EXCLUDED_PARTS = {".git", "node_modules", ".venv", "venv", "__pycache__", "htmlcov"}
 
 PATTERNS = [
     re.compile(r"\bDGAF\s+(?:Certified|Official|Endorsed|Verified|Approved)\b", re.I),
     re.compile(r"\b(?:production[- ]ready|guarantees? convergence|guaranteed convergence)\b", re.I),
     re.compile(r"\b(?:universally safe|universal safety|proven efficacy|empirically superior)\b", re.I),
 ]
-
-HISTORICAL_MARKERS = re.compile(
-    r"\b(?:historical|historically|historical metadata|attested project metadata|legacy)\b",
+HISTORICAL_CONTEXT = re.compile(
+    r"\b(?:historical record|historical metadata|historically|legacy attestation|attested project metadata|historical certification|historical snapshot)\b",
+    re.I,
+)
+ACTIVE_CONTEXT = re.compile(
+    r"\b(?:current|active|production|live|present|now|today|status:\s*(?:certified|verified|approved))\b",
     re.I,
 )
 
-for path in ROOT.rglob("*.md"):
+
+def artifact_is_historical(text: str, line_number: int) -> bool:
+    """Allow a flagged term only when the surrounding artifact is clearly historical.
+
+    Look at the document header and a bounded context window around the finding.
+    A single historical word on the same line as an active claim is insufficient.
+    """
+    lines = text.splitlines()
+    header = "\n".join(lines[:40])
+    start = max(0, line_number - 6)
+    end = min(len(lines), line_number + 5)
+    context = "\n".join(lines[start:end])
+    return bool(
+        HISTORICAL_CONTEXT.search(header)
+        or (HISTORICAL_CONTEXT.search(context) and not ACTIVE_CONTEXT.search(context))
+    )
+
+
+for path in sorted(ROOT.rglob("*")):
+    if not path.is_file() or path.suffix.lower() not in ALLOWED_SUFFIXES:
+        continue
     rel = path.relative_to(ROOT)
-    if rel in EXCLUDED or ".git" in rel.parts:
+    if rel in EXCLUDED or any(part in EXCLUDED_PARTS for part in rel.parts):
         continue
     try:
         text = path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         continue
-    for lineno, line in enumerate(text.splitlines(), 1):
-        if not any(p.search(line) for p in PATTERNS):
-            continue
-        # Historical records are permitted only when the artifact itself labels the
-        # surrounding record historical/attested; current-looking claims remain fatal.
-        if HISTORICAL_MARKERS.search(line):
-            continue
-        print(f"::error file={rel},line={lineno}::{line.strip()}")
-        raise SystemExit(1)
+
+    lines = text.splitlines()
+    for lineno, line in enumerate(lines, 1):
+        for pattern in PATTERNS:
+            if not pattern.search(line):
+                continue
+            if artifact_is_historical(text, lineno):
+                continue
+            print(f"::error file={rel},line={lineno}::Unsupported active claim-language: {line.strip()}")
+            raise SystemExit(1)
 
 print("Claim-hygiene check passed: no unbounded active certification/efficacy/convergence language detected.")
