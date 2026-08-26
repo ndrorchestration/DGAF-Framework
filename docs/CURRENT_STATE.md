@@ -19,7 +19,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Scientific decisions are resolved; authority adoption and exact binding remain open |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Corrective implementation work is present; formal runtime verification and binding remain incomplete |
 | Exact verification candidate | IDENTIFIED | `e6beeb66335e1b50a239697badab22dab50eb5ba` is the executable candidate |
-| Latest documentation successors | NON-APPARATUS | Added negative-control and publication-mapping documentation only; do not redefine the apparatus |
+| Latest documentation successors | NON-APPARATUS | Baseline/negative-control/publication documentation only; do not redefine the apparatus |
 | Vercel production deployment | READY | `dpl_HgSv9hTrvMNBHxboDhkkvHKeogc5` is bound to `e6beeb...`; `/api/health` passed |
 | P2 formal runtime verification | NOT EXECUTED | Authenticated five-case matrix still required |
 | P6a formal CORS verification | NOT EXECUTED | Authenticated CORS matrix still required |
@@ -34,7 +34,8 @@ The following `main` commits are documentation-only and do not advance the execu
 
 - `93b10d084ddb563d88b11818baad8b40565cb0ce` — negative-control matrix.
 - `3d8b769aef2386efd8041d65eb187e61e6a7e7d1` — current-state candidate/documentation reconciliation.
-- `340457c006610996eea0f89064ed64fa4e3a16c2` — H1–H3 publication mapping bound to baseline/negative-control controls.
+- `340457c006610996eea0f89064ed64fa4e3a16c2` — H1–H3 publication mapping draft.
+- `70b4b14805ad00668f9132b496a457f3f6bc4ba4` — finalized H1–H3 preauthorization mapping and controls.
 
 Any executable change after `e6beeb...` would require candidate transition and fresh verification.
 
