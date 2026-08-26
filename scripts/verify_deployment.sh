@@ -14,7 +14,7 @@ echo "$HEALTH" | python3 -m json.tool
 PSI_OK=$(echo "$HEALTH" | python3 -c "import sys,json; d=json.load(sys.stdin); print(str(d.get('psi_cubic',False)).lower())")
 [ "$PSI_OK" = "true" ] && echo "  ✓ psi_cubic" || { echo "  ✗ psi_cubic FAIL"; exit 1; }
 VER=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('version',''))")
-[ "$VER" = "1.7.0" ] && echo "  ✓ version=1.7.0" || echo "  ⚠  version=$VER (expected 1.7.0)"
+[ "$VER" = "1.8.0" ] && echo "  ✓ version=1.8.0" || echo "  ⚠  version=$VER (expected 1.8.0)"
 echo ""
 
 # 2 — Orchestrate

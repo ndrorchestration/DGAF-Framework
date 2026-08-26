@@ -38,7 +38,7 @@ Full 10-step turn sequence (v1.7):
   [8]   ApogeeReviewer.review()
   [9]   AgentAmethyst.seal()
 
-Version: 1.7.0
+Version: 1.8.0
 Date: 2026-05-29
 Owner: ndrorchestration / Andrew (Ender) Hensel
 License: Apache-2.0
@@ -870,7 +870,7 @@ class AgentAmethyst:
 
     def export(self, path: str = "amethyst_v17_audit.json") -> None:
         data = dict(
-            version="1.7.0", exported_at=time.time(),
+            version="1.8.0", exported_at=time.time(),
             summary=self.full_report(),
             turns=[vars(r) for r in self.audit_log],
             prune_log=[vars(e) for e in self.scpe.prune_log],
