@@ -10,7 +10,7 @@ on:
 
 jobs:
   ip-hygiene:
-    name: IP & PR Hygiene Check
+    name: IP & Claim Hygiene Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,9 +27,10 @@ jobs:
       - name: Check for SESSION_ANCHOR.md in root
         run: |
           if [ -f "SESSION_ANCHOR.md" ]; then
-            echo "::warning::SESSION_ANCHOR.md found in public root. Consider moving to dgaf-ops."
+            echo "::error::SESSION_ANCHOR.md found in public root. Move operational session state to dgaf-ops (private) or replace with a sanitized pointer."
+            exit 1
           fi
-          echo "OK: SESSION_ANCHOR check complete"
+          echo "OK: No SESSION_ANCHOR.md in public root"
 
       - name: Check CITATION.cff exists
         run: |
@@ -50,13 +51,17 @@ jobs:
       - name: Check for secrets patterns
         run: |
           # Basic secret pattern check (supplements GitHub secret scanning)
-          PATTERNS=("PRIVATE_KEY" "SECRET_KEY" "API_KEY=" "password=" "token=" "Bearer ")  
+          PATTERNS=("PRIVATE_KEY" "SECRET_KEY" "API_KEY=" "password=" "token=" "Bearer ")
           for pattern in "${PATTERNS[@]}"; do
             if grep -r --include="*.json" --include="*.yml" --include="*.yaml" -l "$pattern" . 2>/dev/null | grep -v ".github" | grep -v "node_modules"; then
               echo "::warning::Potential secret pattern '$pattern' found. Review flagged files."
             fi
           done
           echo "OK: Secret pattern scan complete"
+
+      - name: Blocking claim-hygiene scan
+        run: |
+          python3 scripts/claim_hygiene_check.py
 
       - name: Portfolio staleness check
         run: |
