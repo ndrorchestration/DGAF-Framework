@@ -88,7 +88,7 @@ This review does not establish that DGAF is:
 - the first governance framework for agentic AI;
 - the first multi-agent orchestration framework;
 - the first system to provide runtime assurance or provenance;
-- empirically superior to alternative approaches;
+- empirically better than alternative approaches;
 - novel in an absolute sense.
 
 ## Research questions opened by the adjudication

@@ -49,7 +49,7 @@ This statement is a **definition of the proposed contribution**, not a claim of 
 ## What is not currently defensible
 
 - That DGAF is the first framework to combine these concerns.
-- That the architecture is empirically superior to alternatives.
+- That the architecture is empirically better than alternatives.
 - That repository-local verification establishes production readiness or general correctness.
 - That conceptual similarity or difference can be determined from names alone.
 

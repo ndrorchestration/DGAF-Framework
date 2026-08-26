@@ -74,7 +74,7 @@ This overview does **not** claim that DGAF or PDMAL:
 - eliminates hallucination, drift, coordination failure, or other failure classes;
 - constitutes a complete Byzantine Fault Tolerance protocol merely because of its topology;
 - is independently validated as a complete framework;
-- is production-ready as a whole; or
+- is ready for production deployment as a whole; or
 - is absolutely novel.
 
 Such claims require claim-specific evidence and, where relevant, comparison and independent scrutiny.

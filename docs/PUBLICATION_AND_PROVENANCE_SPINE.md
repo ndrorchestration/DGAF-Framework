@@ -50,7 +50,7 @@ Every significant public statement should be classified before publication:
 | Hypothesis | A prediction awaiting testing | Use conditional language |
 | Unsupported | Evidence is absent or inadequate | Do not promote as a result |
 
-Repository-wide adjectives such as “proven,” “validated,” or “production-ready” must not be inferred from component-level evidence.
+Repository-wide adjectives such as “proven,” “validated,” or readiness for production must not be inferred from component-level evidence.
 
 ## 4. Canonical publication sequence
 
