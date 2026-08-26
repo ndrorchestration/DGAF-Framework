@@ -155,6 +155,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "deviation": result.deviation if result else None,
             }
             execution_success = status is AttemptStatus.SUCCESS
+            recovered = failure_count > 0 and execution_success
             record = {
                 "experiment_id": "PDMAL-PILOT-V1", "protocol_version": PROTOCOL_VERSION,
                 "experiment_commit_sha": frozen_sha, "seed_id": seed,
@@ -162,10 +163,10 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "topology": topology, "failure_count": failure_count,
                 "primary_outcome": raw_trial["final_std"],
                 "secondary_outcomes": {"final_mean": float(np.mean(raw_trial["final_values"])) if raw_trial["final_values"] else 0.0},
-                "failure": failure_count > 0, "recovery": execution_success,
+                "failure": failure_count > 0, "recovery": recovered,
                 "ffcr_success": bool(raw_trial["consensus_success"] and execution_success),
                 "runtime_ms": runtime_ms,
-                "status": "SUCCESS" if execution_success else "UNRECOVERED_FAILURE",
+                "status": "RECOVERED" if recovered else ("SUCCESS" if execution_success else "UNRECOVERED_FAILURE"),
                 "excluded": False, "exclusion_reason": None,
                 "environment_fingerprint": environment_fingerprint,
             }
