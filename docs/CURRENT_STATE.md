@@ -35,7 +35,9 @@ The following `main` commits are documentation-only and do not advance the execu
 - `93b10d084ddb563d88b11818baad8b40565cb0ce` — negative-control matrix.
 - `3d8b769aef2386efd8041d65eb187e61e6a7e7d1` — current-state candidate/documentation reconciliation.
 - `340457c006610996eea0f89064ed64fa4e3a16c2` — H1–H3 publication mapping draft.
-- `70b4b14805ad00668f9132b496a457f3f6bc4ba4` — finalized H1–H3 preauthorization mapping and controls.
+- `70b4b14805ad00668f9132b496a457f3f6bc4ba4` — H1–H3 preauthorization mapping and controls.
+- `80ae53ab522bcbb64df0c60d172b3ff13626fc33` — current-state synchronization.
+- `4e886d55402d138c6b399e5b25601440698c8316` — final H1–H3 mapping reconciliation.
 
 Any executable change after `e6beeb...` would require candidate transition and fresh verification.
 
