@@ -17,6 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # E2b/M6 evidence compares the current verification source against
+          # an exact historical apparatus candidate, so the candidate object
+          # must be available locally. This is provenance support, not an
+          # apparatus mutation or candidate rebinding.
+          fetch-depth: 0
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
