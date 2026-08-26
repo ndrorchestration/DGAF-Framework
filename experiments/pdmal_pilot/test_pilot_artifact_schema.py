@@ -60,9 +60,20 @@ def test_valid_complete_artifact_passes() -> None:
     validate_artifact(_document(), expected_seed=20260819)
 
 
+def test_recovered_success_is_valid_ffcr_outcome() -> None:
+    document = _document()
+    recovered = document["records"][1]
+    assert recovered["status"] == "RECOVERED"
+    assert recovered["recovery"] is True
+    assert recovered["ffcr_success"] is True
+    validate_artifact(document, expected_seed=20260819)
+
+
 def test_duplicate_matrix_cell_is_rejected() -> None:
     document = _document()
-    document["records"][-1] = dict(document["records"][0])
+    duplicate = dict(document["records"][0])
+    duplicate["trial_id"] = document["records"][-1]["trial_id"]
+    document["records"][-1] = duplicate
     with pytest.raises(AssertionError, match="duplicate pilot matrix cell"):
         validate_artifact(document, expected_seed=20260819)
 
