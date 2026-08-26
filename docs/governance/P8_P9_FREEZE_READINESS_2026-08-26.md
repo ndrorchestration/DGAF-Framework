@@ -34,6 +34,10 @@ Every gate is treated as a predicate with explicit scope, prerequisite set, evid
 | E2b verifier toolchain | pinned dependency/toolchain identity for evidence judge | **OPEN — tracked by #105; required before freeze admissibility** |
 | M6 negative-state observability | machine-retained proof of N=0/no authorization/no pilot/no unblinding | **OPEN — tracked by #106** |
 
+## Epistemic Evidence Validation boundary
+
+The functional Epistemic Evidence Validation workflow intentionally installs the current source requirement files without `--require-hashes`, because those files are not a complete immutable transitive lock. It runs `pip check` and explicitly records `E2b = NOT PASS`. This prevents a broken `--require-hashes` invocation from being mistaken for a passing verifier provenance control.
+
 ## P6a runtime evidence
 
 P6a requires an authenticated four-case CORS matrix against the same candidate/deployment identity as P2:
