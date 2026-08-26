@@ -15,6 +15,7 @@ This directory is a staging area for DGAF governance artifacts that have been cr
 Presence here signals **draft/in-review status**. Promotion to a named `docs/` location is a project workflow action; it does not by itself establish external certification, independent validation, or governance authority.
 
 Anything in `drafts/` is:
+
 - Visible to repository collaborators
 - NOT automatically part of the current public specification
 - NOT externally certified merely by passing a project-local gate

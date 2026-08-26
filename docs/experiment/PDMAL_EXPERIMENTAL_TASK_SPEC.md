@@ -18,12 +18,14 @@ A **single experimental observation** is one complete `ConsensusTask` trial:
 ```
 
 Where:
+
 - `seed` — root entropy seed (deterministic stream spawning)
 - `topology` — one of: `ring`, `pdmal`, `random_regular`, `small_world`, `complete`
 - `condition` — one of: `null`, `simple`, `static`, `dgaf`
 - `failure_count` — one of: 0, 1, 2, 3, 4, 5, 6, 8, 10 (uniform without replacement from 20 nodes)
 
 The trial runs 100 consensus iterations on 20 agents:
+
 - Iteration 33: inject `failure_count` node failures
 - Iteration 66: recover (remove failures)
 - Iterations 67-99: post-recovery convergence

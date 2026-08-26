@@ -48,21 +48,27 @@ jobs:
 ## What the Workflow CAN Verify
 
 ### 1. Code presence
+
 The workflow checks out the code and runs tests. If the code files don't exist, `pytest` fails. This verifies that the required files are present in the checked-out commit.
 
 ### 2. Python environment
+
 The workflow uses Python 3.12.0 (matching the candidate's environment specification). The lockfile is installed with `--require-hashes`, ensuring dependency integrity.
 
 ### 3. Test execution
+
 The workflow runs `pytest` with verbose output. If the tests fail, the workflow fails. This verifies that the test code runs and passes against the checked-out source code.
 
 ### 4. Schema validation correctness
+
 `test_artifact_schema.py` tests that `validate_artifact()` and related functions behave correctly. This verifies that the schema validation code is correct in isolation.
 
 ### 5. Security control existence
+
 `test_security_controls.py` tests that `require_frozen_commit()`, `require_pilot_authorization()`, `blind_condition()`, and related functions exist and behave as expected under monkeypatching.
 
 ### 6. Dependency integrity
+
 `--require-hashes` ensures that the installed packages match the locked hashes. If the lockfile is tampered with, the install fails.
 
 ---
@@ -70,24 +76,31 @@ The workflow runs `pytest` with verbose output. If the tests fail, the workflow 
 ## What the Workflow CANNOT Verify
 
 ### 1. Actual artifact validity
+
 The workflow runs tests on the source code, not on actual artifacts produced by a runner execution. It verifies that the validation code works, but not that actual artifacts pass validation. This is a structural limitation: CI tests code, not artifacts.
 
 ### 2. SHA computation consistency
+
 The workflow does not compare `run_pilot.py`'s SHA computation (`json.dumps` + `hashlib.sha256`) with `pilot_artifact_schema.py`'s `canonical_json_bytes()`. Both methods exist in the code, but their equivalence is not tested by the CI.
 
 ### 3. Inline validation
+
 The workflow does not verify that `run_pilot.py` actually calls `validate_artifact()` or `verify_sidecar()` after writing artifacts. The test files test those functions in isolation, but the runner's use of them is not tested.
 
 ### 4. Env var state
+
 The workflow sets `PYTHONPATH` but does not set `PDMAL_FROZEN_COMMIT_SHA` or `PDMAL_PILOT_AUTHORIZED`. The adversarial tests use monkeypatching to simulate env var behavior, but the actual env var state in a real runner environment is not verified.
 
 ### 5. Blinding key custody
+
 The workflow does not verify that a blinding key exists, is supplied correctly, or is custodied properly. The blinding function is tested in isolation, but the key supply mechanism is not part of the CI.
 
 ### 6. Runtime authenticiation
+
 The workflow does not verify that the runner performs SHA-based runtime authentication. The gating functions are tested, but the cryptographic binding between the running code and the authorized candidate is not tested.
 
 ### 7. CI execution status
+
 Most fundamentally: the workflow has NOT been executed. No CI run results exist. The workflow code is present (blob `9cff92a5`), but there is no evidence that it has ever run and passed.
 
 ---
@@ -104,6 +117,7 @@ Separate audit validates the ARTIFACTS (the output of the runner).
 The CI workflow (`pdmal-preauth-security.yml`) does the first. It does not do the second.
 
 This is not a bug — it's a design distinction from `independent_verification_design.json`:
+
 - **CI-appropriate checks (10 items):** Deterministic code invariants — schema validation correctness, security control existence, dependency integrity, etc.
 - **Separate-audit checks (12 items):** Evidence-level verification — actual artifact validation, sidecar verification, runtime_seconds check, blinded ID recomputation, fingerprint consistency, etc.
 

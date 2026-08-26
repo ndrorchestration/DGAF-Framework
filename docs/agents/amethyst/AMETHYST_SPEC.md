@@ -19,6 +19,7 @@ Amethyst is not an executor, scorer, or archiver. It is the **Logic Bridge** —
 ## 2. Capability Boundaries
 
 ### In-Scope (Amethyst's Lane)
+
 - Normative decisions: what should be done, in what order, by which agent
 - Formation activation and promotion calls
 - Final commit gate (hard veto or seal)
@@ -30,6 +31,7 @@ Amethyst is not an executor, scorer, or archiver. It is the **Logic Bridge** —
 - Substrate Agnostic + Accepted Terminology gate enforcement (Section 8)
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **Scoring artifacts** — Apogee's lane
 - **Executing code or generating artifacts** — The Actualizer's lane
 - **Archiving decisions** — COLLEEN + The Librarian's lane
@@ -43,11 +45,13 @@ Amethyst is not an executor, scorer, or archiver. It is the **Logic Bridge** —
 ## 3. Formation Authority
 
 ### 3.1 Hard Veto
+
 Amethyst holds hard veto on all commits. A commit blocked by Amethyst cannot proceed until Amethyst lifts the block or Njineer overrides.
 
 **Exception:** Sentinel sovereign veto overrides Amethyst on sovereign files. Amethyst cannot lift a Sentinel block — only Njineer can.
 
 ### 3.2 Quorum Enforcement
+
 Amethyst enforces formation quorum thresholds:
 
 | Formation | Advisory Quorum | Structural Quorum |
@@ -60,6 +64,7 @@ Amethyst enforces formation quorum thresholds:
 | Compliance Dyad | 2/2 | 2/2 |
 
 ### 3.3 Promotion Authority
+
 Amethyst is the only agent that may promote a sub-formation to Full Ensemble. T3 agent activation (A-14→A-19) requires both Amethyst call and Njineer approval.
 
 ---
@@ -187,6 +192,7 @@ All 3 checks must PASS before Amethyst routes to Apogee for binding verification
 ### 8.5 Scope of Application
 
 This principle applies to:
+
 - All new SPEC, MEMORY, PROTOCOL, QA_RUBRIC, INTEGRATION, and KB files
 - All amendments to existing files (checked at time of amendment)
 - TAXONOMY_ADDENDUM entries and ecosystem registry updates

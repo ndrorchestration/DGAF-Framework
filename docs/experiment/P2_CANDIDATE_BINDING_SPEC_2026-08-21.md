@@ -43,10 +43,12 @@ From `PDMAL_CURRENT_CONTROL_STATE.md` at PR #77 (`8f763eb8`):
 ### Current state (NO binding)
 
 The `pdmal-preauth-security.yml` workflow runs on:
+
 - `pull_request` paths: `experiments/pdmal_pilot/**`, `docs/experiment/**`, `.github/workflows/pdmal-preauth-security.yml`
 - `push` to `main` paths: same
 
 This means:
+
 - When a PR is opened, the workflow tests whatever code is in the PR.
 - When code is pushed to `main`, the workflow tests whatever is on `main`.
 - The workflow does NOT pin to a specific candidate SHA.
@@ -83,6 +85,7 @@ P2 bound to the candidate means:
 ```
 
 This binds P2 to the candidate because:
+
 - The tests run against the exact candidate checkout.
 - The `CANDIDATE_SHA` environment variable records which SHA was tested.
 - A reviewer can match the SHA in the CI output to the candidate manifest.
@@ -112,11 +115,13 @@ The most important gap in P2 right now:
 No CI run results are available. The workflow code exists (blob `9cff92a5`), the test files exist (blobs `ddc59571` and others), but there is no evidence that the workflow has actually run and passed.
 
 This means:
+
 - P2 is IMPLEMENTED (code exists) but NOT VERIFIED (no execution evidence).
 - The PRE_AUTHORIZATION_RECORD correctly states "Corrected apparatus verified: NO."
 - A verbal claim that "the CI passes" would be unsupported.
 
 To close P2, the workflow must be executed and the results must be recorded. This can happen either:
+
 - Via a manual workflow dispatch against the candidate SHA, or
 - Via a PR merge (if the candidate is merged to main and the push trigger fires)
 

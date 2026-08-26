@@ -1,4 +1,5 @@
 # Phi-Calculus Formal Specification
+
 ## Definitions, Theorem, and Proof
 
 **Version:** 1.0-draft  
@@ -135,6 +136,7 @@ Furthermore, at convergence, drift is bounded below the critical threshold:
 ```
 
 **Proof Sketch:**  
+
 1. `S` is a complete lattice (Definition 1) ✓  
 2. `Γ` is monotone on `(S, ≤)` (Definition 3, to be verified by Prof Prodigy) ⟳  
 3. By the Knaster–Tarski fixed-point theorem: every monotone function on a complete lattice has a fixed point ✓  

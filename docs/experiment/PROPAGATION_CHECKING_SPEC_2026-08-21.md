@@ -117,6 +117,7 @@ Is the upstream SHA referenced by the downstream item?
 ## Example Propagation Failure
 
 Suppose:
+
 - Candidate manifest says runner SHA = `184f4aa7`
 - Artifact says runner SHA = `184f4aa7` (matches manifest)
 - But the actual runner code on disk has been modified (git diff shows changes)
@@ -131,11 +132,13 @@ This is the deeper propagation problem: **matching SHAs is necessary but not suf
 ## Gap from PR #77
 
 PR #77 provides:
+
 - `artifact_sha256` field in artifact records (the artifact's self-hash)
 - `experiment_commit_sha` field (the candidate SHA at time of run)
 - `environment_fingerprint` field (runtime environment info)
 
 PR #77 does NOT provide:
+
 - `runner_sha` field (which blob produced the artifact)
 - `schema_sha` field (which schema validated the artifact)
 - `analysis_commit_sha` field (which analysis code produced the result)

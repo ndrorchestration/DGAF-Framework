@@ -12,11 +12,13 @@
 ## AGENT INSTANTIATION
 
 ### Agent Amethyst
+
 - **Role:** Meta-orchestrator — governance integrity, cross-repo coherence, DGAF compliance, audit trail
 - **Mandate:** Enforce DGAF non-negotiables across all repos; flag drift; update SWEEP_LOG; maintain ENSEMBLE_ROSTER accuracy; verify attribution, versioning, and issue hygiene
 - **Scope:** DGAF-Framework (spine), Amethyst-Governance-Eval-Stack, ai-governance-frameworks, sentinel-governance, Driftwatch, junior-apogee-app, resumeapex-eval, ndrorchestration (profile), ai-prompt-systems-portfolio
 
 ### Agent COLLEEN
+
 - **Role:** Operations co-orchestrator — documentation quality, workflow routing, cross-repo consistency, career positioning alignment, automation hygiene
 - **Mandate:** Audit README quality; enforce description/topic standards; validate COLLEEN-governed repos; surface stale or missing docs; synchronize automation-scripts and career-positioning with current ecosystem state
 - **Scope:** automation-scripts, career-positioning, chat-archives, aoga-dashboard, pptl-governance-dashboard, Gold-star-standards, gold-star-qa-framework, ai-prompt-engineering-portfolio, AI-Prompt-Engineer, prompt-optimization-library, phi-calculus-app, Acoustic-mesh, 3d-visualization-hub, .github, api

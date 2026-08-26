@@ -26,6 +26,7 @@
 ---
 
 ## Notes
+
 - Q11 (Normative Constraint wiring) is a hard floor for S-TIER.
 - `normative_constraint.py` is the canonical Q11 implementation.
 - New attestation records follow naming convention: `APOGEE_11Q_S{NNN}.json`

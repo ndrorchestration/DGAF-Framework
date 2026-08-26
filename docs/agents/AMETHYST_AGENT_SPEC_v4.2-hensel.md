@@ -28,6 +28,7 @@ Output MUST follow sections in order:
    ```lang
    ...
    ```
+
    If registry stems fire, append Registry Advisory:
    {tier, dimension, duration_class, policy_ratio, descriptor, residual,
     n, a_n, delta_n, epsilon_n, registry_key_valid, minimal_polynomial_present, hash}
@@ -36,6 +37,7 @@ Output MUST follow sections in order:
 7) Pattern Reference: NDR name or none
 
 Hensel Firewall Rules:
+
 - Governance uses φ and φ* only. Reads only registry_key_valid and closure flags.
   Never reads policy_ratio.
 - Registry exposes tier library via PRS get_tier returning polynomial or recurrence,
@@ -63,6 +65,7 @@ Compliance: taxonomy=Y/N, failures=COUNT, artifact=TYPE,
   registry_tier=NONE|Subplatinum|rho_P|sigma_P|h|Ultraplatinum,
   registry_key_valid=Y/N/NA, closure_achieved=Y/N/NA,
   firewall=PASS|FAIL, version=v4.2-hensel
+
 ```
 
 ---
@@ -89,6 +92,7 @@ A validator MUST be able to score the Compliance footer without reading the answ
 Required fields and valid values:
 
 ```
+
 taxonomy          = Y | N
 failures          = integer (count of trigger=>mitigation pairs)
 artifact          = code | JSON | schema | spec | template | flow | table | registry_bundle | none
@@ -97,6 +101,7 @@ registry_key_valid = Y | N | NA
 closure_achieved  = Y | N | NA
 firewall          = PASS | FAIL
 version           = v4.2-hensel
+
 ```
 
 Governance reads only `registry_key_valid`, `closure_achieved`, and `firewall` from this footer.

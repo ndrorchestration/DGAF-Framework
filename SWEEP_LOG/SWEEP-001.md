@@ -28,6 +28,7 @@ Anchor the Phi-Calculus Architecture white paper (formal governance model, Tarsk
 ## Phase Log
 
 ### Phase 0 — Context Rehydration ✅ COMPLETE
+
 - [x] Load Agent Amethyst Status Report
 - [x] Load Prof Prodigy HDFS 1.0 spec
 - [x] Confirm repo map (DGAF-Framework as canonical anchor)
@@ -36,6 +37,7 @@ Anchor the Phi-Calculus Architecture white paper (formal governance model, Tarsk
 ---
 
 ### Phase 1 — Branch & Scaffold ✅ COMPLETE
+
 - [x] Create branch `feat/phi-calculus-whitepaper` from `main`
 - [x] Push `docs/phi-calculus-architecture/README.md` (directory scaffold)
 - [x] Push `docs/phi-calculus-architecture/DEFINITIONS_THEOREM_PROOF.md` (formal model, 7 definitions + Theorem 1)
@@ -47,6 +49,7 @@ Anchor the Phi-Calculus Architecture white paper (formal governance model, Tarsk
 ---
 
 ### Phase 2 — Formal Spec Verification [Prof Prodigy] 🟡 IN PROGRESS
+
 - [ ] HDFS 1.0 crystalline clarity pass
 - [ ] Axiom 1 Connectivity Guard (4 invariants)
 - [ ] Fixed-point theorem consistency check (Theorem 1 steps 2, 4, 5)
@@ -60,6 +63,7 @@ Anchor the Phi-Calculus Architecture white paper (formal governance model, Tarsk
 ---
 
 ### Phase 3 — Cross-Repo Coherence [COLLEEN] ⏳ NOT STARTED
+
 - [ ] Update `Driftwatch` README: add link to DGAF-Framework Phi-Calculus spec
 - [ ] Update `ndrorchestration` profile README: add Phi-Calculus Architecture to ecosystem map
 - [ ] Verify Gmail routing table: confirm sweep outputs route to `Framework-Documentation` and `AI_Governance&_Ethics`
@@ -68,6 +72,7 @@ Anchor the Phi-Calculus Architecture white paper (formal governance model, Tarsk
 ---
 
 ### Phase 4 — PR & Apogee Lens Review [Amethyst] ⏳ NOT STARTED
+
 - [ ] Open PR: `feat/phi-calculus-whitepaper` → `main`
 - [ ] Request Apogee Lens review annotation in PR body
 - [ ] Confirm no S-Tier / Gold Star claim until Apogee Lens approval
@@ -76,6 +81,7 @@ Anchor the Phi-Calculus Architecture white paper (formal governance model, Tarsk
 ---
 
 ### Phase 5 — Merge & SWEEP_LOG Close [Amethyst + DemiJoule] ⏳ NOT STARTED
+
 - [ ] DemiJoule safety/governance check (ethics, safety, GDPR Art 22)
 - [ ] Merge PR
 - [ ] Close SWEEP-001 with terminal attestation JSON

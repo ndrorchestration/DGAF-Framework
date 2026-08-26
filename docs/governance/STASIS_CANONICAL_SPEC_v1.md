@@ -25,6 +25,7 @@ Any external audit encountering CONDITIONAL PASS on 133 patterns will flag it as
 ## STASIS-CANONICAL Definition
 
 > **STASIS-CANONICAL** — a pattern block status indicating that the block is:
+>
 > 1. **Structurally sound at block level** — no gaps in P-number range, no duplicates, no conflicting specs at range level, verified by COLLEEN audit
 > 2. **Individually unenumerated by design** — per-pattern enumeration is not a planned deliverable; the block is declared as a unit and governed as a unit
 > 3. **Protected by COLLEEN secondary sign-off** — no pattern in the block may be deprecated, modified, or individually extracted without COLLEEN secondary sign-off and a Triumvirate mandate
@@ -51,11 +52,13 @@ Any external audit encountering CONDITIONAL PASS on 133 patterns will flag it as
 ## Migration Plan
 
 ### Phase 1 — Definition (S069, complete)
+
 - [x] STASIS-CANONICAL defined in this spec
 - [x] Status comparison table published
 - [x] 30-day CONDITIONAL PASS deprecation window opened: **2026-06-13 → 2026-07-13**
 
 ### Phase 2 — Schema Migration ✅ COMPLETE 2026-07-03
+
 - [x] `ndr_patterns_unified.json` — P-12–P-26 status updated STASIS-CANONICAL → CANONICAL (commit `747cfae0`, v2.3)
 - [x] P-116–P-132 cluster enriched with COLLEEN AFP metadata (commit `be17e680`, v2.4)
 - [x] COLLEEN secondary sign-off granted — COLLEEN spec v53.2 certified 2026-07-03
@@ -65,6 +68,7 @@ Any external audit encountering CONDITIONAL PASS on 133 patterns will flag it as
 - [ ] CI schema validators updated (queued with lint_provenance.py — DA-06 Sentinel queue)
 
 ### Phase 3 — CONDITIONAL PASS Retirement ✅ EFFECTIVELY COMPLETE 2026-07-03
+
 - [x] CONDITIONAL PASS superseded by CANONICAL promotion; migration window closed 10 days early
 - [x] Njineer ratification of migration: **2026-07-03 18:51 EDT · Option A**
 - [ ] CI linter (`scripts/lint_provenance.py`) updated to reject CONDITIONAL PASS — queued DA-06 Sentinel
@@ -89,11 +93,13 @@ COLLEEN spec:     v53.2 · ANCHORED · ACTIVE
 ## COLLEEN Sign-Off Protocol for Stasis Block Modifications
 
 Before any pattern in P-12–P-26 is:
+
 - **Deprecated:** COLLEEN must review the deprecation rationale and issue a signed deprecation memo; Triumvirate mandate required
 - **Modified:** COLLEEN must confirm the modification does not conflict with any range-level invariant; Amethyst executes
 - **Individually extracted** (promoted to standalone CANONICAL spec): COLLEEN runs 1-1-1-1 gate on the extraction; Apogee runs P-11 attestation on the extracted pattern
 
 COLLEEN sign-off format:
+
 ```
 COLLEEN-SIGNOFF: [action]
 Pattern range: P-[XX]

@@ -73,6 +73,7 @@ DGAF-Framework/
 **Instruction order** is separate from **epistemic evidence strength**.
 
 ### Operating instruction order
+
 1. User instruction
 2. Project-local host/space instructions
 3. Current project operating constraints
@@ -80,6 +81,7 @@ DGAF-Framework/
 5. Default assistant behavior
 
 ### Evidence ladder
+
 **DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
 
 A project-local approval, Gold Star/S-Tier designation, persona sign-off, or rubric score does not automatically upgrade a claim on this ladder.

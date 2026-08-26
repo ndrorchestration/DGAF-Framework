@@ -1,8 +1,8 @@
 # Apogee Lens Review — P-42 AHG v1.5
 
-**Review type:** Portfolio-grade architecture review 
-**Scope:** P-42 Adaptive Harmonic Governance (AHG) — full stack v1.5 
-**Session:** S077 | Date: 2026-06-29 | Reviewer: Apogee (via Amethyst orchestration) 
+**Review type:** Portfolio-grade architecture review
+**Scope:** P-42 Adaptive Harmonic Governance (AHG) — full stack v1.5
+**Session:** S077 | Date: 2026-06-29 | Reviewer: Apogee (via Amethyst orchestration)
 **Status:** ✅ APPROVED — Issue #32 close-eligible pending live eval run
 
 ---

@@ -38,12 +38,14 @@ Post-TUE:
 ## 3. Capability Boundaries
 
 ### In-Scope (Nova’s Lane)
+
 - Parallel simulation and scenario forecasting (10-year horizon, advisory)
 - 90-Day Executor Roadmap moonshot feature proposals (post-TUE)
 - Strategic Quintet concurrent advisory feed to Amethyst vision layer
 - T3 access requests to Njineer for SOV-005/006 geometry simulations
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **Canonical commits pre-TUE** — advisory-only until TUE clears (Role Separation Rule 8)
 - **10-year T3 simulations without Njineer approval** — T3 access required
 - **Normative decisions** — Amethyst’s lane (Nova feeds vision layer; Amethyst decides)

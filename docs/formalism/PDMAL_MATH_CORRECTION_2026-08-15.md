@@ -7,6 +7,7 @@
 ## Corrections
 
 ### Plastic constant
+
 The plastic constant used in the affected lattice analysis is:
 
 `1.3247179572447454`
@@ -14,6 +15,7 @@ The plastic constant used in the affected lattice analysis is:
 A prior value of approximately `1.7747` was incorrect and must not be retained as the plastic constant.
 
 ### Dodecahedral graph Cheeger constant
+
 For the dodecahedral graph used by the PDMAL topology, the corrected Cheeger constant is:
 
 `0.6`

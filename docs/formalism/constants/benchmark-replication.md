@@ -49,23 +49,28 @@ The following benchmark claims originate from Yggdrasil system evaluations and *
 ## Replication Protocol (Required Before External Publication)
 
 ### Step 1 — Baseline Specification
+
 - Define exact baseline system (N agents, topology, task set, hardware)
 - Version and commit baseline spec to `docs/qa/baselines/`
 
 ### Step 2 — Task Set Specification  
+
 - Define task taxonomy (Tier 1: simple chains, Tier 2: parallel branches, Tier 3: adversarial/contested)
 - Minimum: 100 task instances per tier, 3 independent runs
 
 ### Step 3 — Independent Run
+
 - Execute on environment with no prior optimization for the benchmark
 - Log: all DAG executions, Phi-Knight triggers, topology selections, attractor states
 
 ### Step 4 — Apogee Lens Review
+
 - Apogee reviews raw logs vs. claimed metrics
 - If deviation > 10% from claimed values: flag as UNVERIFIED; quarantine from external use
 - If within 10%: promote to REPLICATED status
 
 ### Step 5 — COLLEEN Packaging
+
 - COLLEEN formats verified results with full methodology section for external use
 - Sentinel reviews for privacy / competitive sensitivity before release
 

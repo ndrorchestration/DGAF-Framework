@@ -19,6 +19,7 @@
 **Purpose:** Verify dominant eigenvalue convergence of the orchestration operator.
 
 **Process:**
+
 1. Identify orchestration operator O (must be defined before calling)
 2. Compute dominant eigenvalue λ_1 of O
 3. Verify |λ_1 - h| ≤ 0.001 for k consecutive iterations
@@ -26,6 +27,7 @@
 5. Emit: `hensel_platinum_seal = {achieved: Y/N, lambda_1, delta, k, operator_hash, solver_version}`
 
 **Required log fields (validation fails if absent):**
+
 ```json
 {
   "closure_type": "hensel_platinum",
@@ -45,11 +47,13 @@
 **Purpose:** Track discrete curvature integral deviation from 2π (topological health metric).
 
 **Process:**
+
 1. Compute discrete curvature integral ∮κ ds
 2. Emit: `phi_closure_distance = |∮κ ds - 2π|`
 3. LOG ONLY — do not gate governance on this value
 
 **Required log fields:**
+
 ```json
 {
   "closure_type": "phi_closure",
@@ -67,9 +71,11 @@
 Do not embed the literal string `Andrew Vance Hensel` as a runtime invariant.
 
 Store cryptographic commitment:
+
 ```
 intent_hash = SHA256(canonical_author_id || domain_salt || version)
 ```
+
 With key rotation schedule and multi-signature quorum. This preserves signature of intent while keeping the system transferable and auditable.
 
 ---

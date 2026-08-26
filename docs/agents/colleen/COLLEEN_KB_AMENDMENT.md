@@ -13,6 +13,7 @@
 ## Amendment Summary
 
 This amendment adds four canonical facts to the COLLEEN KB:
+
 1. COLLEEN enforces the **1-1-1-1 Alignment Gate** — a four-factor governance gate applied to all ecosystem trajectory decisions
 2. COLLEEN is the **Swarm Educator** — applies Recursive Debriefing to neutralize Savage Reason (runaway dissonant reasoning, >10 Hz)
 3. COLLEEN governs the **Perpetual Archive Trio** (Librarian + Auditor + Actualizer) as their sovereign authority

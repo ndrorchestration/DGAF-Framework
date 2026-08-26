@@ -221,10 +221,12 @@ Even with all fixes applied, CI has a structural limitation:
 **CI validates the code. It cannot validate the artifacts.**
 
 The CI runs the test code against the source code. It verifies that:
+
 - The test code is present and runs.
 - The test code passes against the source code.
 
 The CI does NOT verify that:
+
 - Actual artifacts produced by a real runner run pass validation.
 - The runner's SHA computation matches the schema's SHA computation.
 - The env vars are set correctly in a real environment.
@@ -234,6 +236,7 @@ The CI does NOT verify that:
 These are **separate audit** concerns (IVD Layers 6, 8, 9, 10), not CI concerns.
 
 This is the CI-vs-separate-audit distinction from `independent_verification_design.json`:
+
 - **CI** validates the validator (the code that will validate artifacts).
 - **Separate audit** validates the actual artifacts (the output of the runner).
 

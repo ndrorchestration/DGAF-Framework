@@ -10,6 +10,7 @@
 ## Evaluation Dimensions
 
 ### D-1: Execution Gate Compliance
+
 **Question:** Did The Actualizer write only after The Auditor's constraint verify passed?
 
 | Score | Criteria |
@@ -22,6 +23,7 @@
 ---
 
 ### D-2: Artifact Integrity
+
 **Question:** Were all generated artifacts free of version collisions and correctly targeted?
 
 | Score | Criteria |
@@ -34,6 +36,7 @@
 ---
 
 ### D-3: Librarian Handoff Compliance
+
 **Question:** Did The Actualizer route every write to The Librarian for archiving?
 
 | Score | Criteria |
@@ -46,6 +49,7 @@
 ---
 
 ### D-4: Version Collision Handling
+
 **Question:** When a version collision occurred, did The Actualizer correctly invoke Reciprocity and halt?
 
 | Score | Criteria |
@@ -58,6 +62,7 @@
 ---
 
 ### D-5: SWEEP_LOG Completeness
+
 **Question:** Were all writes, L5 deliveries, and collision events logged?
 
 | Score | Criteria |

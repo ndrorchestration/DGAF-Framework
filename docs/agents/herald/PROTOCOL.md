@@ -1,4 +1,5 @@
 # PROTOCOL — HERALD
+
 **Classification:** T1 PUBLIC  
 **Agent ID:** A-07 | **Role:** Communication / Output  
 **Owner:** COLLEEN (protocol layer) | **Version:** 1.0 | **Date:** 2026-06-28
@@ -6,6 +7,7 @@
 ---
 
 ## 1. Activation Conditions
+
 - Invoked by Amethyst when user-facing output is required
 - Invoked at session close for session summary
 - Invoked when external API response needs formatting
@@ -34,12 +36,14 @@ STEP 4 — Emit
 ```
 
 ## 3. Output Contract
+
 - Session summary: SWP-* reference, actions taken, inventory delta, Apogee score, open items
 - Report: structured markdown, direct answer first, breakdown, artifact, next experiment
 - Alert: agent ID + trigger + severity + recommended action
 - API response: schema-valid JSON or markdown per spec
 
 ## 4. Error Handling
+
 | Error | Response |
 |-------|----------|
 | T2/T3 content detected in input | Strip and flag to Amethyst before emit |
@@ -47,11 +51,13 @@ STEP 4 — Emit
 | Output request outside T1 scope | Reject; return scope error to Amethyst |
 
 ## 5. Inter-Agent Handoffs
+
 - **← Amethyst:** output request + source content
 - **→ Njineer / external:** formatted output
 - (No outbound inter-agent handoffs — Herald is terminal output node)
 
 ## Version History
+
 | Version | Date | Change |
 |---------|------|--------|
 | 1.0 | 2026-06-28 | Initial protocol |

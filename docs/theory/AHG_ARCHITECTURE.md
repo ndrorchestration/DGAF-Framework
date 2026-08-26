@@ -9,6 +9,7 @@
 > **DGAF Integration:** P-32 (Phi-Closure), P-29 (Sentinel), P-33 (PDMAL), P-38 (Circuit-Breaker)
 
 > ℹ️ **Version history:**
+>
 > - v1.0 Post-S077: Full formalism, archetype dispatch, DGAF integration map
 > - v1.1: P-42 renumber (P-35→P-42), CROSS_REF sync
 > - v1.2: Logistic normalization (canonical φ), 7-state regime table, 3D Cognitive Phase Space, D_correct disaggregation, eval targets
@@ -46,6 +47,7 @@ x_t = [D_t, N_t, C_t, R_t, M_t, K_t]
 ```
 
 Where:
+
 - **D_t** — Divergence: degree of agent disagreement, decomposed into three subtypes (see §2.1.1)
 - **N_t** — Novelty: proportion of turn content not present in prior turns
 - **C_t** — Constraint Pressure: active blocking constraints as fraction of total
@@ -145,11 +147,13 @@ The 1D φ scalar provides governance dispatch. The **3D Cognitive Phase Space** 
 | Axis 3 | Confidence ↔ Uncertainty | Are agents asserting or hedging? |
 
 **Implementation (v1.4):** Axes computed as ratios relative to coherence signal K, preserving pole semantics:
+
 ```
 Axis 1 (Exploration) = D_explore / (D_explore + K + ε)
 Axis 2 (Dissent)     = (D_e + D_correct) / (D_e + D_correct + K + ε)
 Axis 3 (Uncertainty) = min((C + R) / 2, 1.0)
 ```
+
 All axes ∈ [0, 1) for Axes 1–2 (open at 1, closed at 0); Axis 3 ∈ [0, 1] (closed). Proven bounded by Prof Prodigy RV-01-C · S072.
 
 **Trajectory examples:**

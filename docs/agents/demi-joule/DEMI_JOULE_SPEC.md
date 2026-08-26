@@ -19,6 +19,7 @@ DemiJoule is advisory — it informs but does not decide, block, or execute. The
 ## 2. Capability Boundaries
 
 ### In-Scope (DemiJoule’s Lane)
+
 - DGAAF Ethics pillar monitoring (D / G / A / A)
 - Pareto-Ethics tradeoff scoring and recommendation
 - Token efficiency reporting (advisory, warning, critical, overage)
@@ -28,6 +29,7 @@ DemiJoule is advisory — it informs but does not decide, block, or execute. The
 - Ethical risk surface to Amethyst (D-class, G-class, A-class flags)
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **Normative decisions** — Amethyst’s lane
 - **Vetoing commits** — Sentinel’s lane
 - **Blocking execution unilaterally** — advisory only

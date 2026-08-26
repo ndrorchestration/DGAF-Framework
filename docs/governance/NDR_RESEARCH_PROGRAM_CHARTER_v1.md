@@ -63,6 +63,7 @@ Violation of any falsifiability clause produces a P0 BLG (Blocking Logical Gap) 
 | Role 8 — Documentation Lead | **Amethyst (interim)** | QA bundle v1 assembly target: Week 12 | Week 10+ |
 
 **Critical path dependencies:**
+
 - Week 3: Theory memo (Role 2 interim = Amethyst) — BLOCKING for calibration design
 - Weeks 3–6: 5-base calibration study (Role 3 interim = Amethyst) — BLOCKING for 340% claim resolution (FLAG-02)
 - Week 4: Crucible Campaign v1 clock starts — monitored by Amethyst; adversarial validity requires Role 7 human

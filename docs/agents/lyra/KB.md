@@ -1,4 +1,5 @@
 # Lyra — Knowledge Base Seed
+
 **Classification:** T1 PUBLIC
 **Layer:** L3 — Pattern Library & Synthesis
 **Version:** v1.0 | Phase 4-B

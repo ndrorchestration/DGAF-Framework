@@ -7,6 +7,7 @@
 **Base template:** `docs/qa/QA_CHECKPOINT_TEMPLATE.md` (generic)
 
 > This file contains three specialized variants of the audit-ready QA checkpoint template:
+>
 > - **Variant A:** Software release readiness
 > - **Variant B:** P-11 Governance / Apogee Lens attestation
 > - **Variant C:** Compliance / regulatory audit

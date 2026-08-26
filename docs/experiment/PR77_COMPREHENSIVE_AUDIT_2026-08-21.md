@@ -19,6 +19,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 ## Workflows (3 files)
 
 ### 1. `pdmal-preauth-security.yml`
+
 - **Path:** `.github/workflows/pdmal-preauth-security.yml`
 - **Blob SHA:** `9cff92a5c05703dbae636fb4b091ea89906cbcb0`
 - **Status:** NEW at PR #77
@@ -39,6 +40,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
   - No lockfile SHA verification
 
 ### 2. `pdmal-blinding-operational-test.yml`
+
 - **Path:** `.github/workflows/pdmal-blinding-operational-test.yml`
 - **Blob SHA:** `7506f41207ba231750d14f0f43ddff83d8d2cd3c`
 - **Status:** NEW at PR #77
@@ -48,6 +50,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 - **Gaps:** Has NOT been executed. Specific test content not examined in this audit.
 
 ### 3. `pdmal-freeze-preparation.yml`
+
 - **Path:** `.github/workflows/pdmal-freeze-preparation.yml`
 - **Blob SHA:** `4b6a1e45b340ca64f6c6fe978ea8cd2f7eefdca6`
 - **Status:** NEW at PR #77
@@ -64,6 +67,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 ## Runner and Schema (3 files)
 
 ### 4. `run_pilot.py`
+
 - **Path:** `experiments/pdmal_pilot/run_pilot.py`
 - **Blob SHA:** `184f4aa72e4eb0a0ad254aee57b6cbdd5d13f9fd`
 - **Status:** NEW at PR #77
@@ -86,6 +90,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
   - No runtime authentication / SHA binding (MEDIUM)
 
 ### 5. `pilot_artifact_schema.py`
+
 - **Path:** `experiments/pdmal_pilot/pilot_artifact_schema.py`
 - **Blob SHA:** `2918a9d506ab39e6a0514608618f02f7f4de400d`
 - **Status:** NEW at PR #77
@@ -103,6 +108,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
   - SHA computation method (`canonical_json_bytes()`) may not match runner's method (HIGH)
 
 ### 6. `artifact_schema.py`
+
 - **Path:** `experiments/pdmal_pilot/artifact_schema.py`
 - **Blob SHA:** `41a90485246bbc1e7e13829fc1791133da5c3d4c`
 - **Status:** UNCHANGED from local HEAD (same blob at PR #77)
@@ -124,6 +130,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 ## Tests (2 files)
 
 ### 7. `test_security_controls.py`
+
 - **Path:** `experiments/pdmal_pilot/test_security_controls.py`
 - **Blob SHA:** `ddc595713e433469fa7c01d8918a03518e3e37b5`
 - **Status:** NEW at PR #77
@@ -147,6 +154,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
   - No integrated end-to-end test (MEDIUM)
 
 ### 8. `test_artifact_schema.py`
+
 - **Path:** `experiments/pdmal_pilot/test_artifact_schema.py`
 - **Blob SHA:** NOT INDIVIDUALLY VERIFIED in this audit (present at PR #77 per `git ls-tree -r`)
 - **Status:** NEW at PR #77
@@ -159,6 +167,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 ## Documentation — New Files (5 files)
 
 ### 9. `PRE_AUTHORIZATION_VERIFICATION_RECORD_2026-08-20.md`
+
 - **Path:** `docs/experiment/PRE_AUTHORIZATION_VERIFICATION_RECORD_2026-08-20.md`
 - **Blob SHA:** `f51aea7aad12e3a9b9953eeebc8d440bbfe99c01`
 - **Status:** NEW at PR #77
@@ -173,6 +182,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 - **Assessment:** Most honest document in PR #77. Explicitly states verification status is NO.
 
 ### 10. `DOCUMENTATION_GAP_AUDIT.md`
+
 - **Path:** `docs/experiment/DOCUMENTATION_GAP_AUDIT.md`
 - **Blob SHA:** `524eb7592a3a3ee80e862e5adfe95c4a5cf7458b`
 - **Status:** NEW at PR #77
@@ -181,6 +191,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 - **Assessment:** Contains a claim that could be misread as the corrected apparatus being frozen. Requires careful reading.
 
 ### 11. `FREEZE_MANIFEST_RECONCILIATION_2026-08-20.md`
+
 - **Path:** `docs/experiment/FREEZE_MANIFEST_RECONCILIATION_2026-08-20.md`
 - **Blob SHA:** `968b05df4143c7aa4154bceb60b32b2ce929b7df`
 - **Status:** NEW at PR #77
@@ -189,6 +200,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 - **Assessment:** Correct. Aligns with expert panel correction C3 (preservation, not consolidation).
 
 ### 12. `PDMAL_ANALYSIS_CONTROL_PLAN.md`
+
 - **Path:** `docs/experiment/PDMAL_ANALYSIS_CONTROL_PLAN.md`
 - **Blob SHA:** `3e556882fdc2de7b0d4fa91f519bc74e3924a57f`
 - **Status:** NEW at PR #77
@@ -201,6 +213,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 - **Assessment:** Honest about what's missing. Does not claim to be a complete analysis specification.
 
 ### 13. `POST_FREEZE_DOCUMENTATION_RECONCILIATION_2026-08-20.md`
+
 - **Path:** `docs/experiment/POST_FREEZE_DOCUMENTATION_RECONCILIATION_2026-08-20.md`
 - **Blob SHA:** `e5bdb5244634fccd229279e614d66c48b1a360b3`
 - **Status:** NEW at PR #77
@@ -212,6 +225,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 ## Documentation — Modified Files (3 files)
 
 ### 14. `CURRENT_STATE.md`
+
 - **Path:** `docs/CURRENT_STATE.md`
 - **Blob SHA:** `f48bfe4a297d148f049dd6349e54458aaa0eb490`
 - **Status:** MODIFIED at PR #77
@@ -222,6 +236,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 - **Assessment:** Correctly reflects PRE-FREEZE state.
 
 ### 15. `PDMAL_CURRENT_CONTROL_STATE.md`
+
 - **Path:** `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`
 - **Blob SHA:** `8f763eb80b6f2a6b6857310e335435602e9d91be`
 - **Status:** MODIFIED at PR #77
@@ -235,6 +250,7 @@ PR #77 ("Pre-authorization completeness: corrected pilot boundary and security c
 - **Assessment:** Correctly reflects BLOCKED/NOT GRANTED state.
 
 ### 16. `FREEZE_MANIFEST.md`
+
 - **Path:** `docs/experiment/FREEZE_MANIFEST.md`
 - **Blob SHA:** `1a143b293317a2c8b26e9e1358e2eec975d4c226`
 - **Status:** MODIFIED at PR #77

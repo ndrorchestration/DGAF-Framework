@@ -14,6 +14,7 @@ Consolidate three active NDR pattern registries into a single unified file
 a machine-readable JSON export (`docs/ndr_patterns_unified.json`).
 
 The merge does **not** change any pattern specs. It changes only:
+
 - File location (one file, not three)
 - Navigation (unified TOC + anchor links)
 - Cross-references (explicit pattern-number references, not layer-name references)
@@ -122,6 +123,7 @@ The merge does **not** change any pattern specs. It changes only:
 ## Merge Governance
 
 Triumvirate-governed per P-08 + P-09:
+
 - **Prime:** Amethyst
 - **Prefect A:** COLLEEN (stasis block expansion secondary review; archival integrity)
 - **Prefect B:** Apogee (BLG-P34-01/02 resolution; final attestation ATTESTED promotion)

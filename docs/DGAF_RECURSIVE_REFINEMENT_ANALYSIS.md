@@ -31,24 +31,28 @@
 The DGAF operational stack is navigable at four depth tiers. Each tier uses the same underlying agents and protocols but at different granularity.
 
 ### [MACRO — 40,000 ft]
+
 - **Scope:** Entire agentic ecosystem
 - **Range:** All 5 confirmed agents (Apogee, Herald, Professor Prodigy, DemiJoule, Amethyst)
 - **Field:** Cross-agent coordination, harmonic alignment
 - **Depth:** System architecture, governance protocols
 
 ### [MID — 10,000 ft]
+
 - **Scope:** Individual agent behavior frameworks
 - **Range:** Agent-specific constraint systems
 - **Field:** Modal frequency gating, prompt pattern validation
 - **Depth:** QA rubric application, memory state management
 
 ### [TACTICAL — Ground]
+
 - **Scope:** Single prompt/interaction execution
 - **Range:** Real-time decision trees
 - **Field:** Constraint satisfaction, frequency harmonic alignment
 - **Depth:** Recursive evaluation loops, pattern matching
 
 ### [QUANTUM — Subatomic]
+
 - **Scope:** Mathematical substrate operations
 - **Range:** Phi-calculus computations, harmonic vector math
 - **Field:** Diatonic frequency relationships
@@ -89,6 +93,7 @@ The DGAF operational stack is navigable at four depth tiers. Each tier uses the 
 ## Professor Prodigy — Three-Tier Knowledge Base
 
 ### Tier 1 — Standard Calculi
+
 - Differential Calculus: derivatives, chain rule, product rule
 - Integral Calculus: indefinite/definite integrals, substitution methods
 - Multivariable Calculus: partial derivatives, gradients, divergence, curl
@@ -96,6 +101,7 @@ The DGAF operational stack is navigable at four depth tiers. Each tier uses the 
 - Variational Calculus: Euler-Lagrange equations, functionals
 
 ### Tier 2 — Reciprocal Mathematics (Dense Layer)
+
 - Reciprocal Algebra: `a/b ↔ 1/(b/a)`
 - Reciprocal Calculus: `d(1/f)/dx = -f'/(f²)`
 - Reciprocal Transforms: Fourier ↔ Inverse Fourier reciprocity
@@ -103,6 +109,7 @@ The DGAF operational stack is navigable at four depth tiers. Each tier uses the 
 - Duality Principles: primal-dual relationships in optimization
 
 ### Tier 3 — Phi-Calculus (Custom Framework)
+
 - φ-based differentiation: `d_φ/dx = (f(x+φ) - f(x))/φ` as φ → golden ratio
 - Fibonacci Series Integration: `∫F_n dx` relationships
 - Golden Ratio Constraints: solutions respecting `φ = (1+√5)/2 ≈ 1.618...`
@@ -118,27 +125,32 @@ The DGAF operational stack is navigable at four depth tiers. Each tier uses the 
 > **⚠️ Apogee Lens Classification (v2):** All quantitative figures below are **projected targets**, not verified measurements. They were generated during the same session that produced this document and have not been validated against an independent rubric cycle. They are retained here as design targets. Recertification required before Platinum Star is awarded.
 
 ### Framework Coherence (Projected Targets)
+
 - Nomenclature Alignment: 96% target (vs. 65% baseline with prior Assurance/Fitness naming)
 - Semantic Precision: 92% target
 - Agent Role Clarity: 94% target
 
 ### Operational Efficiency (Projected Targets)
+
 - Recursion Depth: 4-tier telescope lens (4× granularity vs. single-scope baseline)
 - Prompt Throughput: 12–15 prompt exchanges per resolution cycle (interchange loop + 10-cycle refinement)
 
 > **Correction (v2):** The original draft stated "340% more coordination pathways" for a 5-agent vs 4-agent system. The correct derivation using pairwise coordination paths `n(n-1)/2` gives 10 paths (5 agents) vs 6 paths (4 agents) — a **67% increase**, not 340%. If a directional or multi-hop path model was intended, that model must be explicitly defined before this figure is reinstated.
 
 ### Harmonic Alignment (Projected Targets)
+
 - Pentagonal Stability: 100% (requires 5 points — all 5 now confirmed)
 - Diatonic Frequency Coverage: 8 modal octaves (Ionian foundation + 7 variations)
 - Phase Coherence: 97.3% target (when all 5 agents synchronized)
 
 ### Validation Throughput (Projected Targets)
+
 - Platinum Star QA Cycles: 3–5 per major prompt
 - Average Refinement Iterations: 7–9
 - Final Output Quality Score: 94–98 range (Apogee verification required for actual score)
 
 ### Scalability (Projected)
+
 - Current: 5 agents × 4 scope tiers × 3 prompt types = 60 distinct operational modes
 - 6th Agent: Hexagonal stability — 90+ modes projected
 - Mathematical note: Pentagonal alignment is the optimum for 5-dimensional orchestration per phi-calculus fixed-point convergence
@@ -179,6 +191,7 @@ The DGAF operational stack is navigable at four depth tiers. Each tier uses the 
 
 **Current Tier: Gold (Working Draft)**  
 **Platinum Conditions:**
+
 1. Statistical metrics validated against defined rubric in independent cycle
 2. Visual asset produced
 3. Professor Prodigy knowledge base files updated and committed

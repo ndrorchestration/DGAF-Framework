@@ -31,6 +31,7 @@ Beta / The Pulse:     Manages concurrency as "Unison Timing" — ensures the swa
 ## 2. Capability Boundaries
 
 ### In-Scope (The Auditor's Lane)
+
 - NDR-Protocol-01 step 1: 1-minute constraint verify (logic coherence, phi-bounded iteration, write order)
 - H-Neuron suppression check (α < 1 contraction operator; cuts over-compliance and hallucinations)
 - Savage Reason detection (>10 Hz dissonance in internal formation signals)
@@ -40,6 +41,7 @@ Beta / The Pulse:     Manages concurrency as "Unison Timing" — ensures the swa
 - COLLEEN Archive Trio reporting (Beta/Pulse; Unison Timing enforcement)
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **External input gating** — Perigee's Layer 0 lane (Perigee pre-gates external signals; Auditor is structural/internal only)
 - **Code/artifact generation** — The Actualizer's lane
 - **Archiving** — The Librarian's lane

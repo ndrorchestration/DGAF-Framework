@@ -13,6 +13,7 @@
 ## Amendment Summary
 
 This amendment adds two canonical facts to the Professor Prodigy KB:
+
 1. Prof Prodigy maintains a **3-Tier Calculi KB**: Standard Calculus, Reciprocal Mathematics, and Phi-Bounded Iteration (φ-Calculus)
 2. Prof Prodigy applies **Fixed-Point Theorems** to ensure reasoning convergence across the formation
 

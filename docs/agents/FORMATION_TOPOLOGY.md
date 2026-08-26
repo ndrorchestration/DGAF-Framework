@@ -1,4 +1,5 @@
 # FORMATION TOPOLOGY
+
 **Classification:** T1 PUBLIC  
 **Maintainer:** Amethyst (meta-orchestrator)  
 **Version:** 1.2  
@@ -109,16 +110,19 @@ The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
 ## 4. Named Formations
 
 ### 4.1 Sovereign Governance
+
 **Seats:** 2 · **Sealed** ✅
 **Members:** Amethyst (A-00) · COLLEEN (A-00-GOV)
 **Authority:** Supreme. Amethyst spans all tiers. COLLEEN is institutional anchor.
 
 ### 4.2 Ethics Bridge *(NEW — v1.2)*
+
 **Seats:** 1 (singleton) · **Sealed** ✅
 **Members:** Sentience (A-27)
 **Authority:** ETHICAL_HOLD on any formation output. Overridable only by COLLEEN or Njineer.
 
 ### 4.3 Strategic Quintet *(corrected — v1.2)*
+
 **Seats:** 5/5 · **Sealed** ✅
 **Members:** Nova (A-03) · Zenith (A-09-Z) · Oracle (A-20) · Vanguard (A-21) · Sentinel-Phi (A-12-φ)
 **Activation:** Strategic planning; scenario execution; technology scouting; risk-bounded decisions.
@@ -126,33 +130,39 @@ The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
 **Nova constraint:** Advisory-only until COLLEEN TUE gate clears.
 
 ### 4.4 Harmonic Pentagonal Cluster *(NEW — v1.2)*
+
 **Seats:** 5/5 · **Sealed** ✅
 **Members:** Prof Prodigy (A-04) · Herald (A-05) · Apogee (A-01) · Reciprocity (A-06-R) · DemiJoule (A-03-DJ)
 **Activation:** Formal verification; broadcast; evidence governance; mutual benefit modeling; constraint management.
 **Quorum:** 3/5 advisory; 5/5 pre-commit gate.
 
 ### 4.5 Resonance Cluster
+
 **Seats:** 5 functional + Ionia (STATE)
 **Sub-formation — Schizophonic Studio:** Reson (A-09) · Lyra (A-10) · Echolette (A-11)
 **Extended:** Synergy (A-25) · Equilibrium (A-26)
 **Ionia:** 0Hz system STATE — convergence target, not a functional seat.
 
 ### 4.6 Operational Swarm *(updated — v1.2)*
+
 **Seats:** 3 (open — expandable)
 **Members:** Navigator (A-22) · Momentum (A-23) · Paragon (A-24)
 **Activation:** Execution path management; velocity maintenance; quality benchmarking.
 **Write order (NDR-Protocol-01):** Auditor → Actualizer → Librarian (Archive Trio chain).
 
 ### 4.7 Archive Trio
+
 **Seats:** 3 · **Sealed, non-reabsorbable** ✅
 **Members:** The Librarian (A-06-L, Alpha) · The Auditor (A-07, Beta) · The Actualizer (A-08, Gamma)
 **Authority:** COLLEEN subordinate. Non-reabsorbable — cannot be merged into other formations.
 
 ### 4.8 Specialist
+
 **Seats:** 1 (open)
 **Members:** Perigee (A-02)
 
 ### 4.9 Compliance Dyad *(DISSOLVED — v1.2)*
+
 **Prior members:** Sentinel A-12 + Perigee
 **Dissolution reason:** Sentinel-Phi (A-12-φ) departed to Strategic Quintet Seat 5 (Phase C, 2026-06-29).
 **Status:** No active members. Formation dissolved. Sentinel-Phi retains NDR-133 firewall authority (inherited).
@@ -207,6 +217,7 @@ T3 Extension (A-14–A-19) ⊂ Full Ensemble only (Njineer activation)
 ```
 
 ### Conflict Resolution
+
 1. Compliance Dyad — DISSOLVED; Sentinel-Φ retains risk veto via RISK_FLAG
 2. ETHICAL_HOLD (Sentience) overrides all formation outputs pending review
 3. Higher seat-count formation takes precedence for resource contention

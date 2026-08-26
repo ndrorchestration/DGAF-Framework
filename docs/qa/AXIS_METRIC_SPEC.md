@@ -1,4 +1,5 @@
 # AXIS_METRIC_SPEC.md
+
 ## Agent X-axis Invariant Spectrum — Full Specification v1.2 CANONICAL
 
 ```

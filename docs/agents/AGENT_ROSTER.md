@@ -103,6 +103,7 @@ Agents A-14 through A-19 complete the 20-agent taxonomy. Names and specs are T3 
 ## NDR-Protocol-01 State Sync Rule
 
 Only one agent tier may write to the Canonical Protocol at a time. Write order:
+
 1. The Auditor validates (constraint check)
 2. The Actualizer writes (code/artifact generation)
 3. COLLEEN archives (Provenance Traceability)

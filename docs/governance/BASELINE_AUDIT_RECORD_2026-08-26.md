@@ -56,6 +56,7 @@ The current P8 checklist remains fail-closed. Candidate-scoped evidence is still
 ## 6. Pull-request baseline
 
 ### PR #85
+
 - State: open
 - Head: `0760f6a553ea5f41cccf8ba516e06ea311287d7c`
 - Base: `main` at recorded PR base `284e6406b11c7e850ef477488de13a55536eb6a2`
@@ -64,12 +65,14 @@ The current P8 checklist remains fail-closed. Candidate-scoped evidence is still
 - Current API mergeability: previously observed as mergeable in current metadata; final merge decision requires current checks and terminology review.
 
 ### PR #74
+
 - State: open
 - Scope: dependency maintenance in PDMAL pilot/topology requirements
 - Declared upgrades: setuptools `82.0.0 -> 83.0.0`; pytest `8.4.1 -> 9.0.3` in the identified groups
 - Current API mergeability: observed as mergeable in current metadata; candidate-scoped reproducibility/lock validation remains required.
 
 ### PR #42
+
 - State: open
 - Head: `2a1c90d8098b3fd9449bbf2f17a20cf43b761fef`
 - Scope: one additive STASIS draft document, `+667/-0`

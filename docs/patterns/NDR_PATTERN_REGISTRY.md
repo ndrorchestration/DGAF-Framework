@@ -1,5 +1,7 @@
 # NDR Pattern Registry
+
 ## DGAF-Framework · Canonical Pattern Set
+
 **Version:** 2.3
 **Maintained by:** COLLEEN (Archival Authority) | Amethyst (Meta-Orchestrator)
 **Updated:** 2026-05-30
@@ -8,6 +10,7 @@
 ---
 
 ## Registry Status
+
 - Patterns P-01 through P-26: Canonical (stasis)
 - **P-27:** S033 — Adaptive-Weighting-with-Confidence-Gates
 - **P-28:** S033 — Pipeline-Composition-with-Confidence-Gated-Routing
@@ -26,6 +29,7 @@
 ---
 
 ## P-07 — Co-Orchestration Sweep
+
 **Spec:** A conducted Amethyst[C/impl] + COLLEEN[detect] + Herald[comms] triad continuously detects and implements best-practice improvements across the ecosystem. COMPOSE mode issues are resolved directly by the implementing agent within the same session that raised them (not deferred to a separate resolution session). PM items that cannot be resolved within the raising session are carried forward as explicit queue entries in CO_ORCH_QUEUE.md and owned by a named agent.
 **Source clarification (PM-04):** Issue-resolution source = the implementing agent acting within the current session. COMPOSE mode does not imply deferred or external resolution.
 **Ref:** `ENSEMBLE_ROSTER.md` · Triad Configurations table
@@ -35,6 +39,7 @@
 ---
 
 ## P-27 — Adaptive-Weighting-with-Confidence-Gates
+
 **Spec:** Dynamically adjust evaluation weights per input record based on a confidence score. Apply strong weights when confidence ≥ STRONG_THRESH; blend when BLENDED_THRESH ≤ confidence < STRONG_THRESH; fall back to balanced when confidence < BLENDED_THRESH. Adversarial category always routes to apply_strong regardless of confidence (hard override).
 **Ref:** `components/KAPPA/dynamic_weight_router.py`
 **Thresholds (v3.6, empirical via P-34):** STRONG=0.22 | BLENDED=0.18
@@ -45,6 +50,7 @@
 ---
 
 ## P-28 — Pipeline-Composition-with-Confidence-Gated-Routing
+
 **Spec:** Compose evaluation pipeline: raw_batch → detect → route_and_score (P-27) → apply_weights → ranked_report. Each stage independently auditable. No stage may read from a stage it did not receive output from.
 **Ref:** `components/evaluate_router.py`
 **NIST:** Measure | **EU AI Act:** Art.9
@@ -53,6 +59,7 @@
 ---
 
 ## P-29 — Sentinel-Annotated Risk Pass
+
 **Spec:** Invoke sentinel_review(record, routing, hook_point) at 3 hook points. Emits per-record audit log with risk classification (risk_ok / risk_warn / risk_block). Only risk_block halts pipeline. Integrates P-10 deontic gate at hook point 1.
 **Cross-ref:** P-32 Phi-Closure Gate KILL_REC action triggers risk_block at hook point 2 (PM-01 ✅ CLOSED S066).
 **Ref:** `components/evaluate_router_v1_1.py`
@@ -63,6 +70,7 @@
 ---
 
 ## P-30 — Apogee-Attestation-Gate
+
 **Spec:** Before any component is declared governance-ready, Apogee runs a P-11 11Q scoring pass. Gate passes when: (a) S-TIER (≥95%), or (b) A-TIER (≥85%) with open BLGs. Q11 must score ≥9/10 for S-TIER attestation. Attestation emitted as signed JSON artifact in docs/qa/.
 **Pending (PM-07):** P-34 (Empirical-Threshold-Sweep-over-ML-Classifier) requires Apogee attestation pass before canonical promotion.
 **Ref:** `docs/qa/APOGEE_11Q_*.json`
@@ -92,6 +100,7 @@
 ---
 
 ## Carry-Forward Notes (COLLEEN)
+
 - P-01 through P-26: Canonical stasis
 - P-27, P-28: S033 | P-29: S034 | P-30: S035
 - P-31–P-33: S042 runtime cards | P-34: S066 COMPOSE

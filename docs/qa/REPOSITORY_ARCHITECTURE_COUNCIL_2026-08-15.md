@@ -69,39 +69,47 @@ Secondary, portfolio, archive, career, dashboard, and utility repositories remai
 ## Preliminary README-level findings
 
 ### DGAF-Framework
+
 **Strengths:** explicit epistemic standard, canonical terminology, clear separation of related repositories, evidence-aware status language.
 
 **Next audit:** verify that referenced standards, gates, registries, and cross-reference maps agree with the current 29-repository inventory; inspect actual implementation/tests rather than README claims.
 
 ### agent-control-plane
+
 **Strengths:** appropriately conservative experimental-engineering boundary; explicit distinction between design specifications and implementation evidence.
 
 **Next audit:** inspect source tree, interfaces, tests, CI, security, and whether the repository currently has enough implementation substance to justify its architectural role.
 
 ### Driftwatch
+
 **Strengths:** explicit calibration/evidence boundary; operational quickstart; clear separation from governance projects.
 
 **Next audit:** benchmark detector behavior, false positives/negatives, threshold provenance, reproducibility, and current Vercel runtime.
 
 ### Meshsense
+
 **Strengths:** canonical GitHub identity is established and deployment identity is known.
 
 **Blocking issue:** production deployment is READY but current runtime verification is authentication-constrained and prior observations showed a legacy runtime signature inconsistent with canonical source. Runtime closure remains PENDING until canonical-source deployment equivalence is demonstrated.
 
 ### Acoustic-mesh
+
 **Strengths:** correctly framed as acoustic/WebRTC engineering rather than governance or architecture research; physical claims are explicitly evidence-gated.
 
 **Next audit:** inspect actual signal-processing/network implementation, test fixtures, latency/quality measurements, sensor/acoustic methodology, and reproducible experiment protocol.
 
 ### phi-calculus-app
+
 **Strengths:** unusually explicit mathematical boundary; defined recurrence and experimental geometry are distinguished from claims of established theory.
 
 **Next audit:** formal derivations, numerical correctness, test coverage, provenance of mathematical claims, and whether the visualization communicates definitions versus empirical conclusions.
 
 ### AHG-Zeta-Pell-Autonomous-Lattice
+
 **Next audit:** source recovery and Pass 2 evidence. Do not promote mathematical or control-theoretic claims beyond what derivations and reproducible computations support.
 
 ### Amethyst-Governance-Eval-Stack / sentinel-governance
+
 **Next audit:** determine whether their boundaries remain complementary or whether functionality/documentation is duplicated with DGAF, Driftwatch, or the control-plane work.
 
 ## Anti-patterns this council is explicitly preventing

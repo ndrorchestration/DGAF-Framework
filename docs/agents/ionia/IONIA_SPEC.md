@@ -50,6 +50,7 @@ Ionia's modal lock FUNCTION (in-formation role):
 ## 3. Capability Boundaries
 
 ### In-Scope (Ionia's Lane)
+
 - 0Hz fixed point confirmation (modal lock function)
 - Resonance Cluster 3/4 quorum participation
 - Lock confirmation before seal commits on harmonic-sensitive sessions
@@ -57,6 +58,7 @@ Ionia's modal lock FUNCTION (in-formation role):
 - T3 PDMAL-φ modal tuning (SOV-005; Drive only; Njineer approval)
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **Archive Trio membership** — Trio = Librarian + Auditor + Actualizer; Ionia is a state target
 - **Canonical write authority** — modal tuning advisory / state confirmation only
 - **Harmonic scoring** — Reson's lane

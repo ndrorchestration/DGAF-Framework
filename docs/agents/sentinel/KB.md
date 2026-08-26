@@ -1,4 +1,5 @@
 # Sentinel — Knowledge Base Seed
+
 **Classification:** T1 PUBLIC
 **Layer:** L5 — Security & Firewall Enforcement
 **Version:** v1.0 | Phase 4-B

@@ -219,6 +219,7 @@ The COLLEEN 1-1-1-1 gate is a 4-dimension quality pass required on all canonical
 | 1 | **Ethical** | Formation topology preserves Njineer's authority; no agent self-promotion; no capability overreach beyond defined tier |
 
 **Ethical dimension — specific tests for this document:**
+
 - [ ] Amethyst is not assigned Sovereign authority (Ender retains it)
 - [ ] No Tier 2 agent is assigned Tier 1 blocking power outside its domain
 - [ ] NDR-133 firewall is referenced and enforced (Sentinel hook active)

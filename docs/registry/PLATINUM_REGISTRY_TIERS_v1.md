@@ -47,12 +47,14 @@
 
 **Purpose:** 2D logic-map tuning primitive.
 **Two valid definitions — declare which you adopt, never mix:**
+
 - **Hendecagon form:** ρ_P = 1/(2sin(π/11)) ≈ 1.774732 (circumradius-to-side ratio of regular 11-gon)
 - **Sqrt-pi form:** ρ_P = √π ≈ 1.772454
 
 **Critical:** ρ_P does NOT belong to the quadratic metallic-mean family (silver, bronze, copper, etc.). Do not claim membership.
 
 **If ρ_P² ≈ π heuristic is used:**
+
 - Residual REQUIRED: ρ_P² ≈ 3.1497 vs π ≈ 3.1416, error ≈ 0.0081
 - This is a *useful approximation*, not an identity. Validation fails if residual field is absent.
 
@@ -105,11 +107,13 @@ First values:
 **Validation:** Accept registry key when δ_n ≤ ε_n for context-specific ε_n.
 
 ### Storage Rule
+
 - **Persist:** n, a_n only
 - **NEVER log:** h^n (h^10 ≈ 2.6×10^10 overflows logs)
 - **Before exposure as public key:** Hash a_n with context salt
 
 ### Minimal Polynomial
+
 `x^4 - 11x^3 - 1 = 0`
 Coefficients: [1, -11, 0, 0, -1]
 All non-dominant roots: modulus < 1 (PV proof pending formal memo from Role 2)

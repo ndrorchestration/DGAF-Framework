@@ -69,7 +69,7 @@ There are **7 tracked Python test files** in `experiments/pdmal_pilot/`:
 
 The P8 verification checklist (`P8_VERIFICATION_CHECKLIST.md`) has **20 checkbox items**: **6 checked** (artifact contract section, locally verified) and **14 unchecked** (CI evidence section, reproducibility section, and evidence custody section).
 
-### Checked items (artifact contract — already verified locally, not candidate-scoped):
+### Checked items (artifact contract — already verified locally, not candidate-scoped)
 
 The following 6 items are from the artifact contract section of the P8 checklist (lines 11-16). They are CHECKED locally but have NOT been executed against the candidate `2a80f819...`.
 

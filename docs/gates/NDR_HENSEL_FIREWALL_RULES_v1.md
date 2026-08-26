@@ -58,15 +58,19 @@ SUB-03: Complex-valued layer initialization tracks real and imaginary variance c
 ## Trigger Stems (Literal Match Required)
 
 ### Taxonomy REQUIRED triggers
+
 ```
 architect|system|framework|orchestrat|topolog|multi-agent
 ```
+
 When any of these stems appear in a query, add `Taxonomy: CS/systems/gov` to output.
 
 ### Registry Advisory block REQUIRED triggers
+
 ```
 registry|closure|platinum|hyperplatinum|rho_P|hensel|a_n|delta_n
 ```
+
 When any of these stems appear, append Registry Advisory block with schema:
 `{tier, dimension, duration_class, policy_ratio, descriptor, residual, n, a_n, delta_n, epsilon_n, registry_key_valid, minimal_polynomial_present, hash}`
 

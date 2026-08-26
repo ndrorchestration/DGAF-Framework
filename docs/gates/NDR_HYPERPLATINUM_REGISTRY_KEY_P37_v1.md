@@ -14,6 +14,7 @@
 
 **Input:** n (integer), tensor descriptor, precision context
 **Process:**
+
 1. Compute a_n via recurrence: `a_{n+4} = 11*a_{n+3} + a_n`, seeds [0,0,0,1]
 2. Compute δ_n = |h^n - a_n| (approximated via conjugate bound, never direct h^n computation)
 3. Compare δ_n to ε_n (context-specific tolerance)

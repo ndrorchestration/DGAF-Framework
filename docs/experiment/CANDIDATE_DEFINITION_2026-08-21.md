@@ -20,6 +20,7 @@ The candidate is identified by the PR #77 head SHA (`94fb6fd` locally, `b25a914c
 ## Candidate Components
 
 ### Runner
+
 - **Path:** `experiments/pdmal_pilot/run_pilot.py`
 - **Blob SHA:** `184f4aa72e4eb0a0ad254aee57b6cbdd5d13f9fd`
 - **Key properties:**
@@ -31,6 +32,7 @@ The candidate is identified by the PR #77 head SHA (`94fb6fd` locally, `b25a914c
   - Computes artifact SHA via `json.dumps` + `hashlib.sha256` (not `canonical_json_bytes()`)
 
 ### Pilot Artifact Schema (FROZEN)
+
 - **Path:** `experiments/pdmal_pilot/pilot_artifact_schema.py`
 - **Blob SHA:** `2918a9d506ab39e6a0514608618f02f7f4de400d`
 - **Key properties:**
@@ -41,6 +43,7 @@ The candidate is identified by the PR #77 head SHA (`94fb6fd` locally, `b25a914c
   - NOT imported by `run_pilot.py`
 
 ### Artifact Schema (PRE-FREEZE)
+
 - **Path:** `experiments/pdmal_pilot/artifact_schema.py`
 - **Blob SHA:** `41a90485246bbc1e7e13829fc1791133da5c3d4c`
 - **Key properties:**
@@ -52,6 +55,7 @@ The candidate is identified by the PR #77 head SHA (`94fb6fd` locally, `b25a914c
   - Semantically incompatible with `pilot_artifact_schema` (both v1.0 but mutually exclusive requirements)
 
 ### Security Controls Test
+
 - **Path:** `experiments/pdmal_pilot/test_security_controls.py`
 - **Blob SHA:** `ddc595713e433469fa7c01d8918a03518e3e37b5`
 - **Key properties:**
@@ -61,6 +65,7 @@ The candidate is identified by the PR #77 head SHA (`94fb6fd` locally, `b25a914c
   - Does NOT test actual env var state (only that gating functions exist)
 
 ### CI Workflow (Pre-Authorization Security)
+
 - **Path:** `.github/workflows/pdmal-preauth-security.yml`
 - **Blob SHA:** `9cff92a5c05703dbae636fb4b091ea89906cbcb0`
 - **Key properties:**
@@ -72,6 +77,7 @@ The candidate is identified by the PR #77 head SHA (`94fb6fd` locally, `b25a914c
   - Has NOT been executed (no CI run results available)
 
 ### Blinding Operational Test Workflow
+
 - **Path:** `.github/workflows/pdmal-blinding-operational-test.yml`
 - **Blob SHA:** `7506f41207ba231750d14f0f43ddff83d8d2cd3c`
 - **Key properties:**
@@ -150,6 +156,7 @@ This candidate is **identified but not yet complete**. The following are missing
 This candidate definition does NOT constitute a freeze. It does NOT authorize empirical data collection. It does NOT close any predicate unambiguously. It is a description of what exists at PR #77, nothing more.
 
 The candidate is IDENTIFIED. It is NOT YET IMMUTABLE. Immutability requires:
+
 1. This manifest committed to the repository
 2. Development separated from candidate
 3. A freeze manifest created with an actual freeze commit SHA
