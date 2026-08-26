@@ -59,3 +59,10 @@ jobs:
           echo "- Pattern gates: P-24 (CPU surface consistency) + P-11 gate 7" >> $GITHUB_STEP_SUMMARY
           echo "- Owner: Agent Sentinel | Spine repo: DGAF-Framework" >> $GITHUB_STEP_SUMMARY
           echo "- Mirror of: sentinel-governance/.github/workflows/doc-lint.yml (S029)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Later-state document drift guard (A5, report-only)
+        if: always()
+        run: |
+          python scripts/doc_state_guard.py --max-drift-commits 4
+        env:
+          PYTHONPATH: ${{ github.workspace }}

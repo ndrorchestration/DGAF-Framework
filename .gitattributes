@@ -1,0 +1,19 @@
+# LF normalization for all text files.
+# Ensures reproducible checksums and lockfile integrity across platforms.
+# 'text=auto eol=lf' on the glob[*] anchor covers any file git identifies as text.
+# Explicit 'text eol=lf' entries ensure normalization even where git's auto
+# detection would be uncertain (e.g. files without a common extension).
+* text=auto eol=lf
+*.txt text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.in text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+*.toml text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf
+*.yml text eol=lf

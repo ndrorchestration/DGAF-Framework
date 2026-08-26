@@ -58,8 +58,12 @@ def main() -> int:
             failures.append(f"{claim_id}: unsupported evidence_mode={mode!r}")
         if mode in {"empirical", "production"} and status in {"VERIFIED", "ATTESTED"} and not claim.get("run_id"):
             failures.append(f"{claim_id}: {status} {mode} claim requires run_id")
+        if mode in {"empirical", "production"} and status in {"VERIFIED", "ATTESTED"} and not claim.get("artifact_sha256") and not claim.get("artifact_sha256_custom"):
+            failures.append(f"{claim_id}: {status} {mode} claim requires artifact_sha256")
         if mode == "empirical" and status in {"VERIFIED", "ATTESTED"} and not claim.get("dataset"):
             failures.append(f"{claim_id}: {status} empirical claim requires dataset")
+        if mode == "production" and status in {"VERIFIED", "ATTESTED"} and not claim.get("production_identity"):
+            failures.append(f"{claim_id}: {status} production claim requires production_identity")
         if status in {"VERIFIED", "ATTESTED"} and mode == "synthetic":
             failures.append(f"{claim_id}: {status} cannot be backed only by synthetic evidence")
 
