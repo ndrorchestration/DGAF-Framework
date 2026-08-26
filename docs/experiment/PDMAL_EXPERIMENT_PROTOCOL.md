@@ -4,7 +4,7 @@ state: PRE-FREEZE
 authority: Both
 owner: DGAF/PDMAL experimental-design control
 last_verified: 2026-08-26
-applies_to_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f
+applies_to_sha: e6beeb66335e1b50a239697badab22dab50eb5ba
 protocol_blob_sha: BOUND_EXTERNALLY_BY_P8_LOCK
 supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
 ---
