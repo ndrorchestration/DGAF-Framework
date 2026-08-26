@@ -23,7 +23,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install test dependencies
-        run: python -m pip install --upgrade pip pytest numpy
+        run: python -m pip install --upgrade pip pytest numpy networkx
 
       - name: Compile Python components
         run: python -m compileall -q components tests evaluations experiments/pdmal_pilot
@@ -75,7 +75,7 @@ jobs:
         run: |
           curl --fail --location --retry 3 --output tla2tools.jar \
             https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
-          echo 'ab323b79802aedc3203b3f9af37c6aca3ed43f4e0225b36f2aa77b26de46c05f  tla2tools.jar' | sha256sum --check --strict
+          echo 'eabd140a70f49eb9305a3bd3f3df944eddf87e5a90d329789085f8953a80533a  tla2tools.jar' | sha256sum --check --strict
 
       - name: Model-check DGAF containment
         run: |
