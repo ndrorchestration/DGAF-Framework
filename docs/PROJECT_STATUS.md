@@ -8,33 +8,43 @@
 
 ## Executive state
 
-The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. The corrected pilot apparatus and governance controls are present on mainline, but no corrected apparatus has been independently freeze-verified. No new freeze exists and no empirical pilot has been authorized or executed.
+The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. The current corrected verification candidate is `e6beeb66335e1b50a239697badab22dab50eb5ba`; it has a READY production deployment, but no corrected apparatus has been independently freeze-verified. No new freeze exists and no empirical pilot has been authorized or executed.
 
-P7 is **technically adjudicated but formally OPEN pending authority adoption**. The panel-ready P7 record presents the 11 scientific decisions that must be explicitly adopted and bound to the exact protocol/candidate identity before P7 can be represented as closed. The protocol has been reconciled so that the experiment is explicitly described as controlled runtime characterization containing a pre-specified comparative DGAF-versus-null analysis, without converting the characterization into a production-efficacy claim. P8 remains open until the executable analysis implementation/configuration is bound to the exact candidate apparatus and candidate-scoped evidence is retained.
+P7 is **technically adjudicated but formally OPEN pending authority adoption and exact binding**. The P7 record now resolves the scientific decisions against the current candidate; formal closure still requires authority adoption and cryptographic binding to the exact protocol/apparatus identity. The protocol has been reconciled so that the experiment is explicitly described as controlled runtime characterization containing a pre-specified comparative DGAF-versus-null analysis, without converting the characterization into a production-efficacy claim. P8 remains open until executable analysis implementation/configuration, candidate-scoped runtime predicates, custody, and provenance are fully evidenced.
 
-The remaining work is evidence production, implementation/configuration binding, independent verification, freeze, and authorization—not permission to infer evidence from implementation or documentation.
+The remaining work is evidence production, implementation/configuration binding, authenticated runtime verification, independent verification, freeze, and authorization—not permission to infer evidence from implementation or documentation.
 
 ## Gate board
 
 | Gate / control | Status | Evidence / state |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` |
-| Corrected runner | CANDIDATE | Exact-SHA gate, task adapter, artifact validation, and security controls present; fresh candidate verification pending |
+| Corrected executable candidate | `e6beeb...` | Candidate-scoped governance/repository checks passed; READY Vercel deployment exists; formal P2/P6a execution and downstream verification remain pending |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical characterization; non-empirical pilot evidence |
 | Environment | VERIFY | Candidate environment identity must be captured and reconciled at execution time |
-| Execution contract | PARTIAL | Contract tests exist; fresh exact-candidate CI execution pending |
-| Artifact contract | PARTIAL | Schema/sidecar validation present; candidate artifact execution and retained evidence pending |
-| Security / blinding | PARTIAL | Fail-closed controls and synthetic operational procedure present; fresh operational verification pending |
+| Execution contract | PARTIAL | Contract tests and governance CI exist; authenticated exact-candidate P2 runtime evidence pending |
+| Artifact contract | PARTIAL | Schema/identity/balance controls strengthened; candidate artifact execution and retained evidence pending |
+| Security / blinding | PARTIAL | Fail-closed controls and synthetic procedures present; fresh operational custody verification pending |
 | Topology provenance | PARTIAL | Fingerprint machinery present; exact candidate recomputation pending |
-| Provenance / reproducibility | PARTIAL | Candidate provenance chain defined; execution artifact packet pending |
-| Durable retention | OPEN | Archive destination and direct custody/retrieval proof not established |
-| Primary contrast | SELECTED / P7 TECHNICALLY ADJUDICATED | Full `dgaf` vs `null`, FFCR primary endpoint, seed-paired primary analysis; formal P7 adoption pending |
-| P7 scientific specification | OPEN / PENDING AUTHORITY ADOPTION | All 11 decisions in the panel-ready adjudication record remain open until explicit authority adoption and binding |
-| Analysis lock | OPEN / P8 | Exact executable implementation/configuration identity and candidate binding required |
+| Provenance / reproducibility | PARTIAL | Candidate provenance chain defined; final execution artifact packet pending |
+| Durable retention | OPEN | Archive/retrieval/hash proof not yet established for the current candidate |
+| Primary contrast | SELECTED / P7 TECHNICALLY ADJUDICATED | Full `dgaf` vs `null`, FFCR primary endpoint, seed-paired primary analysis; formal P7 adoption/binding pending |
+| P7 scientific specification | OPEN / PENDING AUTHORITY ADOPTION | Scientific decisions resolved; formal adoption and exact cryptographic binding remain open |
+| Analysis lock | OPEN / P8 | Exact executable analysis implementation/configuration identity and candidate binding required |
 | Independent verification | NOT EXECUTED | Separate candidate/evidence audit required |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | ZERO | No authorized pilot execution |
+
+## Current deployment boundary
+
+- Candidate SHA: `e6beeb66335e1b50a239697badab22dab50eb5ba`
+- Vercel deployment ID: `dpl_HgSv9hTrvMNBHxboDhkkvHKeogc5`
+- Deployment target: production
+- Deployment state: READY
+- `/api/health`: HTTP 200; `psi_cubic=true`; version `1.8.0`
+
+The READY deployment is deployment evidence only. Formal P2 and P6a workflows still require authenticated execution against this exact deployment identity.
 
 ## Historical evidence boundary
 
@@ -48,21 +58,19 @@ Living/current documents must use current terminology and current gate status. H
 
 ## Required closure sequence
 
-1. Establish a new immutable candidate identity from the corrected post-merge apparatus; do not reuse the superseded `2a80f819...` candidate for corrected-CI closure.
-2. Execute the full repository audit on that immutable candidate and retain its coverage manifest.
-3. Run fresh engineering/unit/contract tests on that exact candidate.
-4. Run candidate-scoped artifact, negative-path, determinism, and topology-invariant tests.
-5. Execute current-candidate P2 runtime verification.
-6. Execute current-candidate P6a CORS verification.
-7. Complete synthetic and operational blinding verification as applicable.
-8. Establish durable evidence custody and direct retrieval/hash verification.
-9. Reconcile topology fingerprints and environment identity on the exact candidate.
-10. **P7 scientific target specification — TECHNICALLY ADJUDICATED / FORMALLY OPEN until authority adoption.**
-11. **P8 analysis lock — NEXT GATE.** Bind the executable analysis implementation/configuration to the exact candidate and protocol identity.
-12. Derive P1–P8 from candidate-scoped evidence.
-13. Perform P9 independent verification.
-14. Create a new immutable freeze and independently verify that exact freeze.
-15. Obtain explicit pilot authorization.
-16. Only then execute the authorized 50-seed blinded pilot.
+1. Complete authenticated P2 runtime verification against `e6beeb66335e1b50a239697badab22dab50eb5ba` and deployment `dpl_HgSv9hTrvMNBHxboDhkkvHKeogc5`.
+2. Complete authenticated P6a CORS verification against the same deployment identity.
+3. Execute candidate-scoped artifact, negative-path, determinism, and topology-invariant tests and retain evidence.
+4. Complete synthetic and operational blinding verification as applicable.
+5. Establish durable evidence custody and direct retrieval/hash verification.
+6. Reconcile topology fingerprints and environment identity on the exact candidate.
+7. Complete formal P7 authority adoption and cryptographic binding to protocol/runner/analysis/freeze identities.
+8. Bind the executable analysis implementation/configuration to the exact candidate and protocol identity.
+9. Freeze canonical protocol, artifact schema, endpoints, statistical analysis plan, baselines, and negative controls.
+10. Derive P1–P8 from candidate-scoped evidence.
+11. Perform P9 independent verification.
+12. Create a new immutable freeze and independently verify that exact freeze.
+13. Obtain explicit pilot authorization.
+14. Only then execute the authorized 50-seed blinded pilot.
 
 **Empirical validity is NOT ESTABLISHED. Pilot authorization is NOT GRANTED. N = 0.**
