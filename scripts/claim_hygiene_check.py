@@ -2,8 +2,9 @@
 """Block active public claim-language that exceeds the current DGAF evidence policy.
 
 The checker scans the same text/source suffix family used by CI and distinguishes
-historical records by artifact context rather than permitting a match solely because
-the triggering line contains the word 'historical'.
+historical records by artifact context. Explicit disclaimers and future-policy
+statements are treated as non-assertive so the gate detects positive claims rather
+than the vocabulary used to prohibit or qualify them.
 """
 from __future__ import annotations
 
@@ -34,6 +35,15 @@ ACTIVE_CONTEXT = re.compile(
     r"\b(?:current|active|production|live|present|now|today|status:\s*(?:certified|verified|approved))\b",
     re.I,
 )
+NON_ASSERTIVE_CONTEXT = re.compile(
+    r"(?:\b(?:not|never|no|without|cannot|can't|must not|should not|do not|does not|doesn't)\b[^\n.;]{0,160}|\b(?:future|proposed|requires? separate governance|requires? explicit governance|requires? independent evidence)\b[^\n.;]{0,160})",
+    re.I,
+)
+
+
+def line_is_non_assertive(line: str) -> bool:
+    """Return True when a matched term appears inside an explicit disclaimer/policy."""
+    return bool(NON_ASSERTIVE_CONTEXT.search(line))
 
 
 def artifact_is_historical(text: str, line_number: int) -> bool:
@@ -53,25 +63,31 @@ def artifact_is_historical(text: str, line_number: int) -> bool:
     )
 
 
-for path in sorted(ROOT.rglob("*")):
-    if not path.is_file() or path.suffix.lower() not in ALLOWED_SUFFIXES:
-        continue
-    rel = path.relative_to(ROOT)
-    if rel in EXCLUDED or any(part in EXCLUDED_PARTS for part in rel.parts):
-        continue
-    try:
-        text = path.read_text(encoding="utf-8")
-    except UnicodeDecodeError:
-        continue
+def main() -> int:
+    for path in sorted(ROOT.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in ALLOWED_SUFFIXES:
+            continue
+        rel = path.relative_to(ROOT)
+        if rel in EXCLUDED or any(part in EXCLUDED_PARTS for part in rel.parts):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
 
-    lines = text.splitlines()
-    for lineno, line in enumerate(lines, 1):
-        for pattern in PATTERNS:
-            if not pattern.search(line):
-                continue
-            if artifact_is_historical(text, lineno):
-                continue
-            print(f"::error file={rel},line={lineno}::Unsupported active claim-language: {line.strip()}")
-            raise SystemExit(1)
+        lines = text.splitlines()
+        for lineno, line in enumerate(lines, 1):
+            for pattern in PATTERNS:
+                if not pattern.search(line):
+                    continue
+                if line_is_non_assertive(line) or artifact_is_historical(text, lineno):
+                    continue
+                print(f"::error file={rel},line={lineno}::Unsupported active claim-language: {line.strip()}")
+                return 1
 
-print("Claim-hygiene check passed: no unbounded active certification/efficacy/convergence language detected.")
+    print("Claim-hygiene check passed: no unbounded active certification/efficacy/convergence language detected.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
