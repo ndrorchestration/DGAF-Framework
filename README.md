@@ -4,11 +4,13 @@
 
 > **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims of validation, certification, performance, standards alignment, or commercial suitability require exact evidence and defined scope. Historical certifications remain scoped to the SHA/run/deployment that produced them and are not current certification without fresh evidence.
 
-## Current project state — 2026-08-25
+## Current project state — 2026-08-26
 
 The DGAF/PDMAL experimental track remains **PRE-FREEZE**. The corrected pilot apparatus and supporting governance controls are present on `main`, but the current candidate has not been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
 The historical implementation freeze `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains preserved as historical evidence only. It must not be described as the current freeze of the corrected apparatus.
+
+The corrected live candidate basis is `83e1678f55d16f32b5ce363e091ac74479cbfe1f`. Because the corrected tree includes verification-apparatus changes, it requires candidate-scoped re-verification before any P8 closure or new freeze claim. Later documentation-only changes do not redefine the apparatus; any further substantive apparatus change requires a new candidate identity and re-verification.
 
 The repository is also undergoing an ecosystem architecture pass separating DGAF implementation from the broader Pattern Commons and from commercialization, trademark, privacy, and security boundaries. These documentation changes do not themselves advance experimental gates.
 
@@ -30,6 +32,20 @@ DGAF contains governance and evaluation components, agent specifications, contro
 
 Historical documents may retain their original terminology when necessary for provenance, but they must be treated as historical rather than silently reinterpreted as current state.
 
+## Semantic / ontological boundary
+
+DGAF permits agents and components to consume and reason over an approved ontology. They must not silently introduce, redefine, or assert ontology outside the authorized semantic layer.
+
+The governing progression is:
+
+**defined → observed → supported → verified → authorized → canonical**
+
+Operational documentation must distinguish **representation**, **classification**, **policy status**, **epistemic status**, and **ontological assertion**. New terminology or semantic categories are candidate vocabulary until provenance and authorization establish canonical status. Agent repetition, confidence, or wording does not create semantic authority.
+
+**Ontology drift** is treated as a distinct semantic-drift class: an unauthorized change in effective vocabulary, entity boundaries, relations, or semantic commitments. The broader semantic-risk taxonomy is **definition drift, ontology drift, epistemic drift, policy drift, and provenance drift**.
+
+Semantic/ontological detection is not automatically a blocking gate. A detector must be empirically characterized before it becomes threshold-bearing or gate-bearing. This control does not alter the experimental state: **PRE-FREEZE / FAIL-CLOSED / N=0 / NO FREEZE / PILOT AUTHORIZATION NOT GRANTED**.
+
 ## Epistemic standard
 
 Claims are classified according to the repository standard:
@@ -45,6 +61,7 @@ A mathematical term, external framework name, benchmark number, deployment, regi
 - Provenance and traceability
 - Governance gates and deployment controls
 - Epistemic auditing and vocabulary management
+- Semantic/ontological boundary governance
 - Pattern Commons integration and cross-repository reconciliation
 - Experimental mathematical and structural research
 - Open-source commercialization and evidence-preserving governance
@@ -91,8 +108,8 @@ The repository contains deterministic/unit tests, pilot execution-contract tests
 - P4 Security/blinding integrity — PARTIAL
 - P5 Provenance/reproducibility — PARTIAL
 - P6 Durable evidence custody — OPEN
-- P7 Scientific target specification — PARTIAL; primary contrast OPEN
-- P8 Analysis lock — OPEN
+- P7 Scientific target specification — PARTIAL / FORMALLY OPEN; primary contrast technically selected, authority adoption pending
+- P8 Analysis lock — OPEN / FAIL-CLOSED
 - P9 Independent verification — NOT EXECUTED
 - New freeze — NOT CREATED
 - Pilot authorization — NOT GRANTED
