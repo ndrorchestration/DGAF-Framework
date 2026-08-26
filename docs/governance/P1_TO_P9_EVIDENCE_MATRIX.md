@@ -2,7 +2,7 @@
 
 **Purpose:** Map each of the 9 Deliberative Predicates to its required claim, exact evidence, current status, and notes. This is a planning artifact — it records what evidence is needed and what state each predicate is currently in. It does NOT constitute executed evidence.
 
-**Current HEAD SHA:** `222fb4c9832b77c88791363ad7923646801b9a4a` (19 commits ahead of `origin/main`; 1 new commit since candidate — governance documentation incorporation)
+**Current HEAD SHA:** `39c138bb29697a561b49ef206c9f9a185e8a9c7b` (22 commits ahead of `origin/main`; 3 governance documentation commits since candidate — P8 checklist count correction, Stage 3 verification inventory, operating consistency statement. Post-candidate commits are documentation/control reconciliation — no substantive apparatus change.)
 
 **Exact candidate tree (P8 binding):** `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f`
 

@@ -1,10 +1,10 @@
 # Operating Governance Consistency Statement
 
-**Statement date:** 2026-08-25 (post HEAD `648e838fac0312401154604f2d8e7e4eff058378`)
+**Statement date:** 2026-08-25 (post HEAD `9ceab592f8be97b15d1c655ccd72cfb6998234ac`)
 
 **Authoritative candidate tree (P8 binding):** `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f`
 
-**Head SHA:** `648e838fac0312401154604f2d8e7e4eff058378` (20 commits ahead of `origin/main`)
+**Head SHA:** `9ceab592f8be97b15d1c655ccd72cfb6998234ac` (22 commits ahead of `origin/main`)
 
 **Epistemic boundary:** N=0, NOT GRANTED, PRE-FREEZE — throughout this statement.
 
@@ -13,16 +13,16 @@
 **Author identity:** ndrorchestration (repository owner)
 
 **Governing documents referenced:**
-- `docs/governance/P1_TO_P9_EVIDENCE_MATRIX.md` (HEAD `648e838`)
-- `docs/governance/DELIBERATIVE_OPERATIONAL_POLICIES.md` (HEAD `648e838`)
-- `docs/governance/P7_SCIENTIFIC_SPECIFICATION_TRACEABILITY_MATRIX.md` (HEAD `648e838`)
-- `docs/governance/STAGE3_VERIFICATION_INVENTORY.md` (HEAD `648e838`)
-- `docs/governance/P8_VERIFICATION_CHECKLIST.md` (HEAD `648e838`)
-- `docs/governance/P8_ANALYSIS_LOCK.md` (HEAD `648e838`)
-- `docs/governance/P7_ADJUDICATION_RECORD_PANEL_READY_2026-08-23.md` (HEAD `648e838`)
-- `docs/governance/ADVERSARIAL_PANEL_REVIEW_2026-08-21.md` (HEAD `648e838`)
-- `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` (HEAD `648e838`)
-- `docs/experiment/P3_P4_P5_P6_FREEZE_READINESS_2026-08-21.md` (HEAD `648e838`)
+- `docs/governance/P1_TO_P9_EVIDENCE_MATRIX.md` (HEAD `9ceab59`)
+- `docs/governance/DELIBERATIVE_OPERATIONAL_POLICIES.md` (HEAD `9ceab59`)
+- `docs/governance/P7_SCIENTIFIC_SPECIFICATION_TRACEABILITY_MATRIX.md` (HEAD `9ceab59`)
+- `docs/governance/STAGE3_VERIFICATION_INVENTORY.md` (HEAD `9ceab59`)
+- `docs/governance/P8_VERIFICATION_CHECKLIST.md` (HEAD `9ceab59`)
+- `docs/governance/P8_ANALYSIS_LOCK.md` (HEAD `9ceab59`)
+- `docs/governance/P7_ADJUDICATION_RECORD_PANEL_READY_2026-08-23.md` (HEAD `9ceab59`)
+- `docs/governance/ADVERSARIAL_PANEL_REVIEW_2026-08-21.md` (HEAD `9ceab59`)
+- `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` (HEAD `9ceab59`)
+- `docs/experiment/P3_P4_P5_P6_FREEZE_READINESS_2026-08-21.md` (HEAD `9ceab59`)
 
 ---
 
