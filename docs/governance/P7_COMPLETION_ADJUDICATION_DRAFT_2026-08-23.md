@@ -2,7 +2,7 @@
 status: FORMALLY_OPEN
 state: PRE-FREEZE
 authority: DGAF/PDMAL experimental-control
-base_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f
+base_sha: e6beeb66335e1b50a239697badab22dab50eb5ba
 empirical_n: 0
 ---
 
@@ -36,11 +36,11 @@ Candidates B (PDMAL vs Ring) and C (condition × topology interaction) remain se
 
 ## Candidate and protocol binding
 
-The apparatus candidate remains `83e1678f55d16f32b5ce363e091ac74479cbfe1f`.
+The current executable verification candidate is `e6beeb66335e1b50a239697badab22dab50eb5ba`.
 
-An audit of the ten commits from this candidate through the current documentation revision found changes only to documentation/README/cross-reference material; no executable apparatus, schema, workflow, dependency, or runtime source file changed in that interval. Therefore those descendants are documentation-only successors and do not redefine the apparatus candidate. This finding is an audit result, not a freeze claim.
+Earlier candidate `83e1678f55d16f32b5ce363e091ac74479cbfe1f` is historical provenance only. Subsequent executable integrity corrections advanced the apparatus through a documented candidate chain culminating in `e6beeb...`; documentation-only successors do not redefine the executable candidate.
 
-The current protocol is `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md`. It remains **PRE-FREEZE** and records `applies_to_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f`. The protocol blob SHA must be bound explicitly by the P8 analysis lock; a moving branch/reference is insufficient.
+The current protocol is `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md`. It remains **PRE-FREEZE** and records applicability to the current candidate. The protocol blob SHA must be bound explicitly by the P8 analysis lock; a moving branch/reference is insufficient.
 
 This P7 record is not itself a freeze identity. Any material change to treatment/reference definitions, estimand, endpoint, exclusion rules, or statistical method requires re-adjudication.
 
