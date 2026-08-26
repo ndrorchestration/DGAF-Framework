@@ -73,7 +73,11 @@ def condition_ffcr(
             continue
         topology = record.get("topology")
         failure_count = record.get("failure_count")
-        if not isinstance(topology, str) or not isinstance(failure_count, int):
+        if (
+            not isinstance(topology, str)
+            or not isinstance(failure_count, int)
+            or isinstance(failure_count, bool)
+        ):
             raise ValueError("analysis input requires unblinded topology/failure_count fields")
         key = (topology, failure_count)
         if key not in expected or key in seen:
@@ -94,7 +98,7 @@ def seed_effect_from_artifact(
 ) -> SeedEffect:
     records = document.get("records")
     seed = document.get("seed_id")
-    if not isinstance(seed, int) or not isinstance(records, list):
+    if not isinstance(seed, int) or isinstance(seed, bool) or not isinstance(records, list):
         raise ValueError("invalid seed artifact")
     return SeedEffect(
         seed=seed,
