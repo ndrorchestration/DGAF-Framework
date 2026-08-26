@@ -14,99 +14,43 @@ This is a readiness/control artifact. It is not evidence that any unchecked pred
 
 ## Dynamic control model
 
-The execution order and dependency rules are governed by [`DYNAMIC_FREEZE_ADMISSIBILITY_CONTROL_2026-08-26.md`](DYNAMIC_FREEZE_ADMISSIBILITY_CONTROL_2026-08-26.md).
+Every gate is a predicate with explicit scope, prerequisites, evidence requirements, freshness conditions, invalidation triggers, and closure rules. Independent READY lanes may proceed in parallel when they cannot mutate the experimental dataset or silently alter the apparatus. Documentation repetition does not increase epistemic strength.
 
-Every gate is treated as a predicate with explicit scope, prerequisite set, evidence requirement, freshness rule, invalidation rule, and closure rule. Independent `READY` lanes may proceed in parallel; `BLOCKED`, `STALE`, `INVALIDATED`, `REVIEW`, and authorization states are fail-closed and cannot be bypassed by documentation.
+## Predicate matrix
 
-## P8 candidate evidence matrix
-
-| Predicate | Required evidence | Current state |
+| Predicate | State | Closure requirement |
 |---|---|---|
-| P1 candidate identity | exact SHA/tree binding | Candidate identified; fresh closure evidence pending |
-| P2 runtime | authenticated five-case runtime matrix on exact deployment | **OPEN — requires `VERCEL_AUTOMATION_BYPASS_SECRET`** |
-| P3 artifact | schema, identity, uniqueness, balance, canonical matrix, deviation integrity | Controls implemented; candidate-scoped evidence pending |
-| P4 blinding | custody, bijection, access separation, operational procedure | Controls implemented; operational evidence pending |
-| P5 reproducibility | environment fingerprint and deterministic reproduction | Partially specified; execution-time fingerprint pending |
-| P6 custody | archive → retrieve → hash verification | **OPEN** |
-| P6a runtime | authenticated four-case CORS matrix on exact deployment | **OPEN — blocked by authenticated deployment path** |
-| P7 scientific target | authority adoption + cryptographic binding | **FORMALLY OPEN** |
-| P8 analysis lock | exact analysis implementation/configuration + protocol binding | **OPEN / FAIL-CLOSED** |
-| E2b verifier toolchain | pinned dependency/toolchain identity for evidence judge | **OPEN — tracked by #105; required before freeze admissibility** |
-| M6 negative-state observability | machine-retained proof of N=0/no authorization/no pilot/no unblinding | **OPEN — tracked by #106** |
+| P1 candidate identity | PARTIAL | Exact candidate/tree/source binding and retained evidence package |
+| P2 runtime | BLOCKED | Authenticated five-case runtime matrix on exact READY deployment |
+| P3 artifact contract | PARTIAL | Candidate-scoped schema/identity/uniqueness/balance evidence |
+| P4 blinding/security | OPEN | Operational custody, access separation, bijection, and unblinding procedure evidence |
+| P5 reproducibility | OPEN | Environment fingerprint plus deterministic reproduction |
+| P6 durable custody | OPEN | Archive/retrieve/hash round trip with retained evidence |
+| P6a CORS | BLOCKED | Authenticated four-case CORS matrix on same deployment |
+| P7 scientific target | FORMALLY OPEN | Authority adoption + exact cryptographic binding |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Exact analysis/configuration/protocol/candidate binding |
+| E2b verifier toolchain | OPEN | Complete immutable transitive verifier dependency lock and executed fingerprint |
+| M6 negative state | OPEN | Machine-retained, independently hash-verifiable PRE-FREEZE/N=0/no-authorization evidence |
+| P9 independent verification | NOT EXECUTED | Independent verification of the complete evidence chain |
 
-## P6a runtime evidence
+## E2b verifier boundary
 
-P6a requires an authenticated four-case CORS matrix against the same candidate/deployment identity as P2:
+The apparatus dependency lock and verifier-policy dependency set are separate control surfaces. Governance CI uses the PDMAL full lock in an isolated Python 3.12 environment with `--require-hashes`; the evidence emitter separately records the verifier commit and the explicit target apparatus candidate and hashes target source objects directly from the target Git SHA.
 
-1. allowed-origin POST;
-2. disallowed-origin POST;
-3. allowed-origin preflight;
-4. disallowed-origin preflight.
+The functional Epistemic Evidence Validation workflow intentionally does **not** use `--require-hashes` against `requirements-epistemic.txt` and `experiments/pdmal_topology/requirements.txt`, because those files are not a complete immutable transitive hash lock. It runs functional validation with `pip check` and explicitly records `E2b = NOT PASS`.
 
-No historical P6a result may be substituted for current-candidate execution.
+E2b therefore remains open until the verifier-policy dependency surface itself has a complete reproducible pinning strategy.
 
-## P7 formal closure
+## M6 negative-state boundary
 
-P7 scientific decisions are technically adjudicated. Formal closure still requires:
+M6 records the observed state of the current verification workspace/job only. It must not be interpreted as retrospective proof of global historical absence. The artifact records PRE-FREEZE, N=0, no authorization, no pilot mode, no blinding key, no pilot artifacts, and no pilot invocation in the current job, and fails closed when those conditions are not met.
 
-1. explicit experimental-control authority adoption;
-2. treatment/reference verification against the eventual frozen apparatus;
-3. cryptographic binding of the adopted record to the protocol, runner/apparatus, analysis specification, and freeze manifest;
-4. recording the authority, adoption date, and adopted decision identity.
+## P2 / P6a boundary
 
-P7 closure does not authorize the pilot.
+The READY Vercel deployment is supporting deployment evidence, not runtime-predicate closure. P2 and P6a require authenticated execution against the exact deployment identity. Current external blocker: `VERCEL_AUTOMATION_BYPASS_SECRET`.
 
-## Freeze inputs
+## P7 / freeze boundary
 
-The freeze manifest must bind, at minimum:
+P7 scientific adjudication is technically complete but formal adoption remains open. Freeze requires P1–P9 plus E2b/M6, frozen baselines/negative controls/endpoints/statistical analysis plan, immutable manifest creation, and independent verification. Pilot authorization remains a separate explicit state transition.
 
-- executable candidate SHA and tree identity;
-- canonical protocol blob SHA;
-- artifact-schema SHA/hash;
-- analysis configuration hash;
-- runner identity/hash;
-- environment fingerprint;
-- deployment ID and deployment URL;
-- P7 decision-record hash;
-- H1–H3 publication mapping hash;
-- baseline matrix hash;
-- negative-control matrix hash;
-- verification-toolchain/E2b lock hash;
-- machine-retained negative-state/M6 artifact hash;
-- exact workflow run IDs;
-- retained evidence artifact IDs;
-- durable custody/retrieval hashes;
-- blinding/custody control identifier.
-
-## P9 independent verification checklist
-
-The independent verifier must establish, without relying solely on the same evidence path used to construct the candidate:
-
-- candidate identity is stable;
-- protocol and analysis hashes correspond to the intended specification;
-- runner and schema are mutually consistent;
-- P2 and P6a evidence is exact-candidate and exact-deployment scoped;
-- artifact identity and canonical SHA calculation are consistent;
-- blinding boundary remains intact;
-- custody evidence is independently retrievable and hash-verifiable;
-- environment fingerprint is recorded and reproducible;
-- E2b verifier toolchain is pinned and reproducible;
-- M6 negative-state evidence is machine-retained and independently hash-verifiable;
-- P7 authority adoption is explicit;
-- freeze manifest represents exactly the apparatus being verified;
-- no post-freeze executable mutation exists.
-
-## Authorization boundary
-
-Authorization requires all P1–P9 predicates plus E2b and M6 where applicable, an independently verified immutable freeze, and an explicit authorization decision. Until then:
-
-- no pilot execution;
-- no unblinding;
-- no efficacy claim;
-- N remains `0`.
-
-## Dynamic invalidation rule
-
-Any substantive change to executable code, workflow behavior, dependencies, schemas, protocol semantics, analysis semantics, blinding semantics, failure/recovery semantics, deployment behavior, or verification-toolchain provenance invalidates the affected candidate/predicate bindings and requires candidate transition or affected-predicate re-verification.
-
-Documentation-only successors may update living governance records without advancing the executable candidate, provided an audit confirms that none of those substantive surfaces changed.
+**No pilot execution. No unblinding. No efficacy claim. Empirical N remains 0.**
