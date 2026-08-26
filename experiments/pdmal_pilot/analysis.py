@@ -16,6 +16,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
+import math
 from typing import Mapping, Sequence
 
 import numpy as np
@@ -45,6 +46,25 @@ def _expected_keys() -> set[tuple[str, int]]:
     return {(topology, failure_count) for topology in TOPOLOGIES for failure_count in FAILURE_COUNTS}
 
 
+def _validate_condition_map(condition_map: Mapping[str, str]) -> None:
+    if set(condition_map.values()) != set(CONDITIONS):
+        raise ValueError("condition_map must map blinded identifiers bijectively to the four canonical conditions")
+    if len(condition_map) != len(CONDITIONS):
+        raise ValueError("condition_map must contain exactly four blinded identifiers")
+
+
+def _validate_effects(effects: Sequence[SeedEffect]) -> np.ndarray:
+    if not effects:
+        raise ValueError("at least one analyzable paired seed is required")
+    seeds = [effect.seed for effect in effects]
+    if len(set(seeds)) != len(seeds):
+        raise ValueError("paired seed effects must contain unique seed identifiers")
+    deltas = np.asarray([effect.delta for effect in effects], dtype=float)
+    if not np.all(np.isfinite(deltas)):
+        raise ValueError("paired seed effects must be finite")
+    return deltas
+
+
 def condition_ffcr(
     records: Sequence[Mapping[str, object]],
     condition: str,
@@ -61,6 +81,7 @@ def condition_ffcr(
     """
     if condition not in CONDITIONS:
         raise ValueError(f"unsupported condition: {condition!r}")
+    _validate_condition_map(condition_map)
     expected = _expected_keys()
     seen: set[tuple[str, int]] = set()
     successes: list[bool] = []
@@ -100,6 +121,7 @@ def seed_effect_from_artifact(
     seed = document.get("seed_id")
     if not isinstance(seed, int) or isinstance(seed, bool) or not isinstance(records, list):
         raise ValueError("invalid seed artifact")
+    _validate_condition_map(condition_map)
     return SeedEffect(
         seed=seed,
         ffcr_dgaf=condition_ffcr(records, "dgaf", condition_map=condition_map),
@@ -108,9 +130,8 @@ def seed_effect_from_artifact(
 
 
 def primary_estimate(effects: Sequence[SeedEffect]) -> float:
-    if not effects:
-        raise ValueError("at least one analyzable paired seed is required")
-    return float(np.mean([effect.delta for effect in effects]))
+    deltas = _validate_effects(effects)
+    return float(np.mean(deltas))
 
 
 def paired_bootstrap_ci(
@@ -121,22 +142,32 @@ def paired_bootstrap_ci(
     alpha: float = ALPHA,
 ) -> tuple[float, float]:
     """Two-sided percentile paired-bootstrap CI over complete seed effects."""
-    if not effects:
-        raise ValueError("at least one analyzable paired seed is required")
-    if resamples < 1:
-        raise ValueError("resamples must be positive")
-    if not 0 < alpha < 1:
-        raise ValueError("alpha must be between 0 and 1")
-    deltas = np.asarray([effect.delta for effect in effects], dtype=float)
+    deltas = _validate_effects(effects)
+    if not isinstance(resamples, int) or isinstance(resamples, bool) or resamples < 1:
+        raise ValueError("resamples must be a positive integer")
+    if not isinstance(seed, int) or isinstance(seed, bool):
+        raise ValueError("bootstrap seed must be an integer")
+    if not isinstance(alpha, (int, float)) or isinstance(alpha, bool) or not 0 < alpha < 1 or not math.isfinite(float(alpha)):
+        raise ValueError("alpha must be finite and between 0 and 1")
     rng = np.random.default_rng(seed)
     indices = rng.integers(0, len(deltas), size=(resamples, len(deltas)))
     boot_means = deltas[indices].mean(axis=1)
-    return tuple(float(x) for x in np.quantile(boot_means, [alpha / 2, 1 - alpha / 2]))
+    low, high = (float(x) for x in np.quantile(boot_means, [float(alpha) / 2, 1 - float(alpha) / 2]))
+    if not math.isfinite(low) or not math.isfinite(high) or low > high:
+        raise ValueError("bootstrap confidence interval is invalid")
+    return low, high
 
 
 def decision(effects: Sequence[SeedEffect], ci: tuple[float, float]) -> str:
     estimate = primary_estimate(effects)
+    if not isinstance(ci, tuple) or len(ci) != 2:
+        raise ValueError("confidence interval must be a two-element tuple")
     low, high = ci
+    if not all(isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(float(value)) for value in ci):
+        raise ValueError("confidence interval bounds must be finite numbers")
+    low, high = float(low), float(high)
+    if low > high:
+        raise ValueError("confidence interval lower bound exceeds upper bound")
     if estimate > 0 and low > 0:
         return "SUPPORTS_DIRECTIONAL_DGAF"
     if estimate <= 0 and high < 0:
