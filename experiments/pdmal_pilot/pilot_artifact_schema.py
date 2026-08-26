@@ -98,8 +98,8 @@ def validate_record(
         raise AssertionError("failure_count is not in the canonical pilot matrix")
     if not isinstance(record["ffcr_success"], bool):
         raise AssertionError("ffcr_success must be boolean")
-    if record["ffcr_success"] and record["status"] != "SUCCESS":
-        raise AssertionError("ffcr_success requires SUCCESS status")
+    if record["ffcr_success"] and record["status"] not in {"SUCCESS", "RECOVERED"}:
+        raise AssertionError("ffcr_success requires SUCCESS or RECOVERED status")
     if not isinstance(record["excluded"], bool):
         raise AssertionError("excluded must be boolean")
     if record["excluded"] and not record["exclusion_reason"]:
