@@ -99,7 +99,7 @@ def observed_negative_state() -> dict[str, Any]:
         observed["pilot_mode_not_selected"],
         observed["blinding_key_absent"],
         observed["pilot_artifact_scan_count"] == 0,
-        observed["pilot_invocation_in_this_job"],
+        not observed["pilot_invocation_in_this_job"],
     )
     if not all(required):
         raise RuntimeError(f"M6 negative-state predicate failed: {observed}")
