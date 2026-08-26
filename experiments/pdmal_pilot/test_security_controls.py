@@ -122,15 +122,21 @@ def test_ffcr_contract_fields_are_required_and_semantically_fail_closed() -> Non
     bad["status"] = "UNRECOVERED_FAILURE"
     bad["artifact_sha256"] = hashlib.sha256(canonical_json_bytes({k: v for k, v in bad.items() if k != "artifact_sha256"})).hexdigest()
     document["records"][0] = bad
-    with pytest.raises(AssertionError, match="ffcr_success requires SUCCESS status"):
+    with pytest.raises(AssertionError, match="ffcr_success requires SUCCESS or RECOVERED status"):
         validate_artifact(document, expected_seed=20260819)
 
 
 def test_artifact_rejects_duplicate_matrix_cells() -> None:
     document = _document()
-    document["records"][1]["topology"] = document["records"][0]["topology"]
-    document["records"][1]["artifact_sha256"] = hashlib.sha256(
-        canonical_json_bytes({k: v for k, v in document["records"][1].items() if k != "artifact_sha256"})
+    # Records 0 and 9 are in the same blinded condition ("null") and differ
+    # only by topology in the canonical matrix. Make record 9 a true duplicate
+    # of record 0 by copying its topology, condition and failure count while
+    # keeping a distinct trial_id.
+    document["records"][9]["blinded_condition_id"] = document["records"][0]["blinded_condition_id"]
+    document["records"][9]["topology"] = document["records"][0]["topology"]
+    document["records"][9]["failure_count"] = document["records"][0]["failure_count"]
+    document["records"][9]["artifact_sha256"] = hashlib.sha256(
+        canonical_json_bytes({k: v for k, v in document["records"][9].items() if k != "artifact_sha256"})
     ).hexdigest()
     with pytest.raises(AssertionError, match="duplicate pilot matrix cell"):
         validate_artifact(document, expected_seed=20260819)

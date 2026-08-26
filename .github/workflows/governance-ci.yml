@@ -9,6 +9,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  PDMAL_TARGET_CANDIDATE_SHA: e6beeb66335e1b50a239697badab22dab50eb5ba
 
 jobs:
   governance-ci:
@@ -16,6 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # E2b/M6 evidence compares the current verification source against
+          # an exact historical apparatus candidate, so the candidate object
+          # must be available locally. This is provenance support, not an
+          # apparatus mutation or candidate rebinding.
+          fetch-depth: 0
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -25,8 +32,28 @@ jobs:
       - name: Install test dependencies
         run: python -m pip install --upgrade pip pytest numpy networkx
 
+      - name: Emit E2b/M6 evidence in isolated hash-pinned verifier environment
+        run: |
+          python -m venv .e2b-venv
+          . .e2b-venv/bin/activate
+          python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+          python scripts/emit_freeze_control_evidence.py
+          mkdir -p artifacts/e2b_environment
+          python -m pip freeze > artifacts/e2b_environment/pip_freeze.txt
+          python -m pip --version > artifacts/e2b_environment/pip_version.txt
+        env:
+          PDMAL_MODE: contract
+
+      - name: Upload E2b/M6 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-freeze-control-evidence
+          path: |
+            artifacts/freeze_controls/*.json
+            artifacts/e2b_environment/*
+
       - name: Compile Python components
-        run: python -m compileall -q components tests evaluations experiments/pdmal_pilot
+        run: python -m compileall -q components tests evaluations experiments/pdmal_pilot scripts
 
       - name: Run P-42 conductor and recovery tests
         run: python -m pytest -q tests/test_ahg_conductor.py tests/test_ahg_recovery.py
@@ -130,4 +157,5 @@ jobs:
           test -f experiments/pdmal_pilot/pilot_artifact_schema.py
           test -f experiments/pdmal_pilot/test_analysis.py
           test -f experiments/pdmal_pilot/test_security_controls.py
+          test -f scripts/emit_freeze_control_evidence.py
           echo 'Governance CI checks completed.'
