@@ -10,7 +10,7 @@ empirical_n: 0
 
 ## Purpose and authority boundary
 
-This document is a proposed authoritative decision record, not evidence of execution and not pilot authorization. P7 is technically adjudicated but remains formally open until the designated experimental-control authority adopts the record and it is bound to the exact frozen protocol/apparatus identity.
+This is a proposed authoritative decision record, not evidence of execution and not pilot authorization. P7 is technically adjudicated but remains formally open until the designated experimental-control authority adopts the record and it is bound to the exact frozen protocol/apparatus identity.
 
 ## Primary decision
 
@@ -36,9 +36,9 @@ Candidates B (PDMAL vs Ring) and C (condition × topology interaction) remain se
 
 ## Current protocol binding
 
-The current protocol is `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md`, which is presently **PRE-FREEZE**. It records the v0.7.5 matrix amendment, the P7 primary analysis decision, the FFCR construction rule, and the current pre-freeze statistical configuration. The protocol's current blob SHA is `d986923643b1ef6f17d4099a628e0dfd2e20c147` at the audited documentation revision.
+The current protocol is `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md`. It remains **PRE-FREEZE** and now records `applies_to_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f`. Its current blob SHA after the candidate-binding documentation update is tracked by Git history; the P8 lock must bind the exact final protocol blob SHA rather than relying on a moving reference.
 
-This P7 record is reconciled to the current apparatus candidate `83e1678f55d16f32b5ce363e091ac74479cbfe1f`. It is not itself a freeze identity. Any material change to treatment/reference definitions, estimand, endpoint, exclusion rules, or statistical method requires re-adjudication.
+This P7 record is reconciled to the current apparatus candidate. It is not itself a freeze identity. Any material change to treatment/reference definitions, estimand, endpoint, exclusion rules, or statistical method requires re-adjudication.
 
 ## Closure matrix
 
