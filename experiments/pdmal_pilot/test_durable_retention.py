@@ -1,4 +1,4 @@
-from pathlib import Path
+import pytest
 
 from durable_retention import (
     archive_artifact,
@@ -56,3 +56,47 @@ def test_archive_copy_is_checksum_verified(tmp_path):
         destination=tmp_path / "retrieved.json",
     )
     assert compute_sha256_file(source) == compute_sha256_file(retrieved)
+
+
+def test_archive_does_not_overwrite_different_bytes(tmp_path):
+    source = tmp_path / "artifact.json"
+    source.write_text("first\n", encoding="utf-8")
+    archive_root = tmp_path / "archive"
+    archive_artifact(source, archive_root=archive_root, freeze_sha="c" * 40)
+
+    source.write_text("different\n", encoding="utf-8")
+    with pytest.raises(FileExistsError, match="different SHA-256"):
+        archive_artifact(source, archive_root=archive_root, freeze_sha="c" * 40)
+
+
+def test_round_trip_fails_closed_on_checksum_mismatch(tmp_path, monkeypatch):
+    source = tmp_path / "artifact.json"
+    source.write_text("payload\n", encoding="utf-8")
+    archive_root = tmp_path / "archive"
+    destination = tmp_path / "retrieved.json"
+
+    original = compute_sha256_file
+    calls = {"count": 0}
+
+    def tampered_hash(path):
+        calls["count"] += 1
+        digest = original(path)
+        if calls["count"] >= 4:
+            return "0" * 64
+        return digest
+
+    monkeypatch.setattr("durable_retention.compute_sha256_file", tampered_hash)
+    with pytest.raises(RuntimeError, match="round-trip checksum"):
+        verify_retention_round_trip(
+            source,
+            archive_root=archive_root,
+            destination=destination,
+            freeze_sha="d" * 40,
+        )
+
+
+def test_invalid_freeze_sha_is_rejected(tmp_path):
+    source = tmp_path / "artifact.json"
+    source.write_text("payload\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="full 40-character"):
+        archive_artifact(source, archive_root=tmp_path / "archive", freeze_sha="not-a-sha")
