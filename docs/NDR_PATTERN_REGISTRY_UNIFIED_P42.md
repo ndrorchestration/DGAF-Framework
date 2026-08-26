@@ -1,8 +1,9 @@
 # NDR Pattern Registry — P-42 Current-State Reconciliation
 
-**Status:** Current-state reconciliation companion to `docs/ndr_patterns_unified.json`
-**Date:** 2026-08-26
-**Current main baseline:** `83e1678f55d16f32b5ce363e091ac74479cbfe1f`
+**Status:** Current-state reconciliation companion to `docs/ndr_patterns_unified.json`  
+**Date:** 2026-08-26  
+**Current main baseline at reconciliation:** `0770a3ea825430b7d8847e3c737f674561e86474`  
+**Prior baseline referenced by the original companion:** `83e1678f55d16f32b5ce363e091ac74479cbfe1f`
 
 ## Current registry state
 
