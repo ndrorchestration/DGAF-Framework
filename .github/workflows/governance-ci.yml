@@ -22,11 +22,24 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install test dependencies
-        run: python -m pip install --upgrade pip pytest numpy networkx
+      - name: Install hash-pinned verifier toolchain (E2b)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Emit candidate evidence, verifier fingerprint, and negative-state proof (E2b/M6)
+        run: python scripts/emit_freeze_control_evidence.py
+        env:
+          PDMAL_MODE: contract
+
+      - name: Upload freeze-control evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-freeze-control-evidence
+          path: artifacts/freeze_controls/*.json
 
       - name: Compile Python components
-        run: python -m compileall -q components tests evaluations experiments/pdmal_pilot
+        run: python -m compileall -q components tests evaluations experiments/pdmal_pilot scripts
 
       - name: Run P-42 conductor and recovery tests
         run: python -m pytest -q tests/test_ahg_conductor.py tests/test_ahg_recovery.py
@@ -130,4 +143,5 @@ jobs:
           test -f experiments/pdmal_pilot/pilot_artifact_schema.py
           test -f experiments/pdmal_pilot/test_analysis.py
           test -f experiments/pdmal_pilot/test_security_controls.py
+          test -f scripts/emit_freeze_control_evidence.py
           echo 'Governance CI checks completed.'
