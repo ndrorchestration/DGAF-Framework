@@ -1,5 +1,5 @@
 ---
-status: READY_FOR_AUTHORIZATION
+status: FORMALLY_OPEN
 state: PRE-FREEZE
 authority: DGAF/PDMAL experimental-control
 base_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f
@@ -34,11 +34,15 @@ Candidates B (PDMAL vs Ring) and C (condition × topology interaction) remain se
 12. **Success criterion:** valid authorized dataset + positive primary estimate + two-sided 95% CI wholly above zero.
 13. **Falsification/non-support:** CI including zero or non-positive estimate does not support the directional hypothesis; a CI wholly below zero opposes it under the frozen conditions.
 
-## Current protocol binding
+## Candidate and protocol binding
 
-The current protocol is `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md`. It remains **PRE-FREEZE** and now records `applies_to_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f`. Its current blob SHA after the candidate-binding documentation update is tracked by Git history; the P8 lock must bind the exact final protocol blob SHA rather than relying on a moving reference.
+The apparatus candidate remains `83e1678f55d16f32b5ce363e091ac74479cbfe1f`.
 
-This P7 record is reconciled to the current apparatus candidate. It is not itself a freeze identity. Any material change to treatment/reference definitions, estimand, endpoint, exclusion rules, or statistical method requires re-adjudication.
+An audit of the ten commits from this candidate through the current documentation revision found changes only to documentation/README/cross-reference material; no executable apparatus, schema, workflow, dependency, or runtime source file changed in that interval. Therefore those descendants are documentation-only successors and do not redefine the apparatus candidate. This finding is an audit result, not a freeze claim.
+
+The current protocol is `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md`. It remains **PRE-FREEZE** and records `applies_to_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f`. The protocol blob SHA must be bound explicitly by the P8 analysis lock; a moving branch/reference is insufficient.
+
+This P7 record is not itself a freeze identity. Any material change to treatment/reference definitions, estimand, endpoint, exclusion rules, or statistical method requires re-adjudication.
 
 ## Closure matrix
 
