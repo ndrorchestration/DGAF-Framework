@@ -27,7 +27,7 @@ def test_pilot_mode_fails_closed_without_freeze_and_authorization(monkeypatch):
     monkeypatch.setenv("PDMAL_MODE", "pilot")
     monkeypatch.delenv("PDMAL_PROTOCOL_FROZEN", raising=False)
     monkeypatch.delenv("PDMAL_PILOT_AUTHORIZED", raising=False)
-    with pytest.raises(SystemExit, match="PDMAL_PROTOCOL_FROZEN"):
+    with pytest.raises(SystemExit, match="PDMAL_FROZEN_COMMIT_SHA must be a full 40-character SHA"):
         main(["--seeds", "50"])
 
 
