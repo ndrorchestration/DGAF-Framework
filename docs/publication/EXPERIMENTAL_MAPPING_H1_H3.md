@@ -15,7 +15,7 @@ No pilot execution, unblinding, efficacy claim, or post-hoc protocol change is p
 
 ## Apparatus identity
 
-`e6beeb66335e1b50a239697badab22dab50eb5ba` remains the executable verification candidate. Documentation-only successors, including `93b10d084ddb563d88b11818baad8b40565cb0ce` and the subsequent current-state reconciliation commit `3d8b769aef2386efd8041d65eb187e61e6a7e7d1`, do not redefine the executable apparatus.
+`e6beeb66335e1b50a239697badab22dab50eb5ba` remains the executable verification candidate. Documentation-only successors do not redefine the executable apparatus.
 
 A future immutable freeze must bind the final executable SHA, tree identity, canonical protocol, artifact schema, analysis configuration, runner, environment fingerprint, deployment identity, and evidence registry.
 
@@ -34,22 +34,20 @@ The P7 statistical analysis is a two-sided 95% percentile paired bootstrap with 
 
 The preregistered comparison matrix includes `NULL`, `SIMPLE_AGENT`, `STATIC_RULES`, `DGAF`, and `DGAF_PDMAL`. Comparison controls require a frozen task corpus, identical prompts where applicable, matched model versions where applicable, matched or explicitly reported compute budget, paired seeds where semantically valid, and a fixed evaluator.
 
-The governance-only/static-rule comparator remains a comparator, not proof of DGAF efficacy.
-
 ## H3 — Evidence-coupling / topology comparison
 
 H3 remains comparative/exploratory until its exact endpoint and confirmatory status are explicitly frozen. Topology and interaction diagnostics must not silently become primary efficacy evidence.
 
 ## Negative controls
 
-The preauthorization matrix defines these diagnostic controls:
+The preauthorization control surface includes:
 
-1. **NC-01 Null decision:** no-op/random governance output; reported separately from efficacy.
-2. **NC-02 Evidence-decoupled:** same nominal task input without the DGAF evidence-coupling path.
-3. **NC-03 Governance-signal falsification:** synthetic/invalid governance signal; expected fail-closed.
-4. **NC-04 Provenance falsification:** altered/mismatched provenance identity; expected fail-closed.
-5. **NC-05 Semantic-boundary:** unsupported ontology/entity assertion; must not alter canonical semantic state.
-6. **NC-06 Recovery-state:** invalid recovery transition; must fail closed.
+1. **NC-01 Null decision** — no-op/random governance output; reported separately from efficacy.
+2. **NC-02 Evidence-decoupled** — same nominal task input without the DGAF evidence-coupling path.
+3. **NC-03 Governance-signal falsification** — synthetic/invalid governance signal; expected fail-closed.
+4. **NC-04 Provenance falsification** — altered/mismatched provenance identity; expected fail-closed.
+5. **NC-05 Semantic-boundary** — unsupported ontology/entity assertion; must not alter canonical semantic state.
+6. **NC-06 Recovery-state** — invalid recovery transition; expected fail-closed.
 
 Negative controls are diagnostic unless explicitly promoted into the frozen experimental design. They are analyzed separately from the primary efficacy estimate.
 
