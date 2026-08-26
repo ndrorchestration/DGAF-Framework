@@ -31,7 +31,8 @@ Every gate is treated as a predicate with explicit scope, prerequisite set, evid
 | P6a runtime | authenticated four-case CORS matrix on exact deployment | **OPEN — blocked by authenticated deployment path** |
 | P7 scientific target | authority adoption + cryptographic binding | **FORMALLY OPEN** |
 | P8 analysis lock | exact analysis implementation/configuration + protocol binding | **OPEN / FAIL-CLOSED** |
-| E2b verifier toolchain | pinned dependency/toolchain identity for evidence judge | **OPEN — required before freeze admissibility** |
+| E2b verifier toolchain | pinned dependency/toolchain identity for evidence judge | **OPEN — tracked by #105; required before freeze admissibility** |
+| M6 negative-state observability | machine-retained proof of N=0/no authorization/no pilot/no unblinding | **OPEN — tracked by #106** |
 
 ## P6a runtime evidence
 
@@ -50,7 +51,8 @@ P7 scientific decisions are technically adjudicated. Formal closure still requir
 
 1. explicit experimental-control authority adoption;
 2. treatment/reference verification against the eventual frozen apparatus;
-3. cryptographic binding of the adopted record to the protocol, runner/apparatus, analysis specification, and freeze manifest.
+3. cryptographic binding of the adopted record to the protocol, runner/apparatus, analysis specification, and freeze manifest;
+4. recording the authority, adoption date, and adopted decision identity.
 
 P7 closure does not authorize the pilot.
 
@@ -70,6 +72,7 @@ The freeze manifest must bind, at minimum:
 - baseline matrix hash;
 - negative-control matrix hash;
 - verification-toolchain/E2b lock hash;
+- machine-retained negative-state/M6 artifact hash;
 - exact workflow run IDs;
 - retained evidence artifact IDs;
 - durable custody/retrieval hashes;
@@ -88,13 +91,14 @@ The independent verifier must establish, without relying solely on the same evid
 - custody evidence is independently retrievable and hash-verifiable;
 - environment fingerprint is recorded and reproducible;
 - E2b verifier toolchain is pinned and reproducible;
+- M6 negative-state evidence is machine-retained and independently hash-verifiable;
 - P7 authority adoption is explicit;
 - freeze manifest represents exactly the apparatus being verified;
 - no post-freeze executable mutation exists.
 
 ## Authorization boundary
 
-Authorization requires all P1–P9 predicates plus E2b, an independently verified immutable freeze, and an explicit authorization decision. Until then:
+Authorization requires all P1–P9 predicates plus E2b and M6 where applicable, an independently verified immutable freeze, and an explicit authorization decision. Until then:
 
 - no pilot execution;
 - no unblinding;
