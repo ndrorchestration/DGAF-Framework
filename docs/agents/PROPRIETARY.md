@@ -99,7 +99,7 @@
 ### SOV-003 — Fixed-Point Contraction Operators
 **Category:** Convergence proof layer | **Classification:** T3 SOVEREIGN | **Status:** Active  
 **Drive ref:** `Drive://DGAF/Sovereign/SOV-003_FixedPointContractionOperators.md`  
-> *Agent-to-agent handoffs modeled as contraction operators on complete metric space. Fixed-point existence guarantees convergence.*
+> *Agent-to-agent handoffs modeled as contraction operators on a complete metric space. Under the contraction condition (Banach fixed-point theorem), fixed-point existence supports convergence.*
 
 ### SOV-004 — Row-Stochastic Governance Matrices
 **Category:** Probability-preserving orchestration math | **Classification:** T3 SOVEREIGN | **Status:** Active  
