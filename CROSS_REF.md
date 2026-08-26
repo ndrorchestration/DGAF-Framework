@@ -1,6 +1,6 @@
 # CROSS_REF.md
 
-> **Last reviewed:** 2026-08-25  
+> **Last reviewed:** 2026-08-26  
 > **Purpose:** Canonical cross-reference index for project-local patterns, files, agents, terminology, evidence boundaries, and ecosystem relationships.
 
 ## Epistemic policy
@@ -12,6 +12,20 @@ Use the evidence states consistently:
 **DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
 
 Commercialization, legal/trademark status, and epistemic status are independent dimensions.
+
+## Semantic / ontological boundary
+
+DGAF permits agents to consume and reason over an approved ontology, but agents must not silently introduce, redefine, or assert ontology outside the authorized semantic layer.
+
+Operational records must distinguish **representation, classification, policy status, epistemic status, and ontological assertion**. New semantic categories or terminology are candidate vocabulary until provenance and authorization establish canonical status. Repetition, confidence, or model wording does not create semantic authority.
+
+The canonical semantic progression is:
+
+**defined → observed → supported → verified → authorized → canonical**
+
+**Ontology drift** is a distinct semantic-drift class: an unauthorized change in effective vocabulary, entity boundaries, relations, or semantic commitments. The broader semantic-risk taxonomy is **definition drift, ontology drift, epistemic drift, policy drift, and provenance drift**.
+
+A semantic/ontological detector is not automatically a gate. Threshold-bearing or blocking use requires empirical characterization, including representative traces, adversarial evaluation, error characterization, independence analysis, reproducibility, and demonstrated control value.
 
 ## Pattern Commons boundary
 
@@ -71,7 +85,7 @@ A mathematically valid definition does not establish empirical efficacy. A succe
 
 See [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md).
 
-**Asset-level inventory:** [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md).
+**Asset-level inventory:** `docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`.
 
 Default public candidates include the reference implementation, core specifications/schemas, reproducible examples, public tests, research protocols, and non-sensitive Pattern Commons material.
 
@@ -103,6 +117,7 @@ A relationship across disciplines does not establish equivalence across them. Ea
 
 | Concern | Canonical reference |
 |---|---|
+| Semantic/ontological boundary | `docs/CURRENT_STATE.md`, this index, vocabulary/taxonomy governance |
 | Pattern Commons | `docs/PATTERN_COMMONS_ARCHITECTURE.md` |
 | Commercialization/open source | `docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md` |
 | Asset-level boundary inventory | `docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md` |
@@ -124,6 +139,7 @@ Historical sweep logs, old deadlines, attestation percentages, tier labels, and 
 - Exact percentages require a source run, not a copied literal.
 - Mathematical vocabulary must describe the implemented operation; metaphorical names must be marked as metaphor.
 - A planned component must not be described elsewhere as active merely because a specification exists.
+- Ontological language must describe authorized semantic state rather than silently converting representation or classification into an assertion about what an entity fundamentally is.
 
 ## Current cleanup priorities
 
@@ -132,5 +148,6 @@ Historical sweep logs, old deadlines, attestation percentages, tier labels, and 
 3. Continue file/path-level classification against the commercialization/openness boundary inventory.
 4. Keep Notion architecture/evidence records synchronized with GitHub source changes.
 5. Preserve historical evidence while correcting current-state labels.
+6. Empirically characterize any semantic/ontological detector before promoting it to a threshold-bearing or blocking control.
 
-*Reviewed 2026-08-25 as part of the repository-wide epistemic, temporal, terminology, traceability, and commercialization-boundary audit.*
+*Reviewed 2026-08-26 as part of the repository-wide epistemic, temporal, terminology, semantic, traceability, and commercialization-boundary audit.*
