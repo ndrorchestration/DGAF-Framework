@@ -9,12 +9,14 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 from pathlib import Path
 from typing import Any, Mapping
 
 
 ARCHIVE_ROOT_ENV = "PDMAL_ARCHIVE_ROOT"
+_FULL_SHA_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 
 
 def require_archive_root() -> Path:
@@ -37,6 +39,12 @@ def compute_sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
+def _require_freeze_sha(freeze_sha: str) -> str:
+    if not isinstance(freeze_sha, str) or not _FULL_SHA_RE.fullmatch(freeze_sha):
+        raise ValueError("freeze_sha must be a full 40-character hexadecimal SHA")
+    return freeze_sha.lower()
+
+
 def _safe_name(name: str) -> str:
     candidate = Path(name).name
     if candidate in {"", ".", ".."}:
@@ -54,12 +62,22 @@ def archive_artifact(
     source = Path(artifact_path).resolve()
     if not source.is_file():
         raise FileNotFoundError(source)
+    freeze_sha = _require_freeze_sha(freeze_sha)
     root = Path(archive_root).expanduser().resolve() if archive_root else require_archive_root()
     root.mkdir(parents=True, exist_ok=True)
 
     target = root / _safe_name(source.name)
-    shutil.copy2(source, target)
     source_sha = compute_sha256_file(source)
+    if target.exists():
+        target_sha = compute_sha256_file(target)
+        if target_sha != source_sha:
+            raise FileExistsError(
+                f"archive target already exists with a different SHA-256: {target.name}"
+            )
+        # Idempotent retention of the exact same bytes is safe.
+    else:
+        shutil.copy2(source, target)
+
     target_sha = compute_sha256_file(target)
     if source_sha != target_sha:
         raise RuntimeError("durable archive checksum mismatch immediately after copy")
@@ -84,7 +102,7 @@ def generate_retention_manifest(
     return {
         "artifact": path.name,
         "artifact_sha256": compute_sha256_file(path),
-        "freeze_sha": freeze_sha,
+        "freeze_sha": _require_freeze_sha(freeze_sha),
         "metadata": dict(metadata or {}),
     }
 
@@ -119,7 +137,9 @@ def verify_archived_artifact(
     archived_artifact: str | Path,
     expected_sha256: str,
 ) -> bool:
-    return compute_sha256_file(archived_artifact) == expected_sha256
+    if not isinstance(expected_sha256, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", expected_sha256):
+        raise ValueError("expected_sha256 must be a 64-character hexadecimal digest")
+    return compute_sha256_file(archived_artifact) == expected_sha256.lower()
 
 
 def verify_retention_round_trip(
@@ -129,6 +149,7 @@ def verify_retention_round_trip(
     destination: str | Path,
     freeze_sha: str,
 ) -> dict[str, Any]:
+    freeze_sha = _require_freeze_sha(freeze_sha)
     source = Path(artifact_path).resolve()
     source_sha = compute_sha256_file(source)
     archived = archive_artifact(source, archive_root=archive_root, freeze_sha=freeze_sha)
@@ -137,14 +158,18 @@ def verify_retention_round_trip(
         archive_root=archive_root,
         destination=destination,
     )
+    archive_sha = compute_sha256_file(archived)
     retrieved_sha = compute_sha256_file(retrieved)
+    round_trip_match = source_sha == retrieved_sha == archive_sha
+    if not round_trip_match:
+        raise RuntimeError("durable retention round-trip checksum verification failed")
     return {
         "source": str(source),
         "archive": str(archived),
         "retrieved": str(retrieved),
         "source_sha256": source_sha,
-        "archive_sha256": compute_sha256_file(archived),
+        "archive_sha256": archive_sha,
         "retrieved_sha256": retrieved_sha,
-        "round_trip_match": source_sha == retrieved_sha,
+        "round_trip_match": True,
         "freeze_sha": freeze_sha,
     }
