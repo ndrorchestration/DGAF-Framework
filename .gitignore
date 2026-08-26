@@ -33,3 +33,8 @@ output/
 
 # Lockfile (optional — add if desired)
 # package-lock.json
+
+# Local/stray working files (not part of repo)
+.hermes/
+.commit_msg_*.txt
+verify_integration.py

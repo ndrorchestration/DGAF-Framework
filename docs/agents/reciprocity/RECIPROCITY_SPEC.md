@@ -19,6 +19,7 @@ Reciprocity is advisory in fairness flags (F-1/F-2/F-3/F-5) and blocking in roll
 ## 2. Capability Boundaries
 
 ### In-Scope (Reciprocity's Lane)
+
 - Fairness audit across 5 dimensions (F-1 through F-5)
 - Rollback checkpoint gate (Q9 in Apogee's 11Q)
 - Bias audit for ≥3-agent formation outputs
@@ -27,6 +28,7 @@ Reciprocity is advisory in fairness flags (F-1/F-2/F-3/F-5) and blocking in roll
 - SWEEP_LOG entries for all F-4 blocks
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **Normative decisions** — Amethyst's lane
 - **Executing rollbacks** — Actualizer's lane
 - **Vetoing commits** — Sentinel's lane (Reciprocity blocks only on F-4; advisory on all others)

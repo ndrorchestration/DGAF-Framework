@@ -113,6 +113,7 @@ candidate SHA (94fb6fd)
 **Workflow:** `pdmal-pre-freeze-runner.yml`
 
 **What it verifies:**
+
 - Protocol freeze declared (env var or configuration)
 - Candidate SHA matches authorized value (`require_frozen_commit()`)
 - Pilot authorization present (`require_pilot_authorization()`)
@@ -121,6 +122,7 @@ candidate SHA (94fb6fd)
 **Current state:** Workflow exists but NOT EXECUTED against candidate. `require_frozen_commit()` checks env var, not cryptographic binding to specific SHA.
 
 **Required evidence:** Workflow run record that explicitly includes:
+
 - Candidate SHA tested: `94fb6fd`
 - Protocol freeze status at time of run
 - Authorization status at time of run
@@ -135,6 +137,7 @@ candidate SHA (94fb6fd)
 **Workflow:** `p2-runtime-verification.yml`
 
 **What it verifies:**
+
 - Live deployment provenance (Vercel deployment at `dynamicgovernanceagenticformation-dp3baqm9p-ndrorchestration.vercel.app`)
 - Five-case P2 verification matrix against live endpoint
 - Runtime endpoint behavior under candidate code
@@ -142,6 +145,7 @@ candidate SHA (94fb6fd)
 **Current state:** Workflow exists but NOT EXECUTED. Requires `VERCEL_AUTOMATION_BYPASS_SECRET` (Vercel SSO-protected). EXPECTED_COMMIT is `e1f077fec746acd6066db689ef40db000e027f2f` — must be updated to candidate SHA before execution.
 
 **Required evidence:** Workflow run record with:
+
 - Candidate SHA tested: `94fb6fd`
 - Deployment URL tested
 - Five-case matrix results
@@ -156,6 +160,7 @@ candidate SHA (94fb6fd)
 **Workflow:** `p6a-cors-verification.yml`
 
 **What it verifies:**
+
 - Live deployment CORS policy enforcement
 - Allowed origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
 - Disallowed origin test: `https://untrusted.com`
@@ -163,6 +168,7 @@ candidate SHA (94fb6fd)
 **Current state:** Workflow exists but NOT EXECUTED. Requires `VERCEL_AUTOMATION_BYPASS_SECRET`.
 
 **Required evidence:** Workflow run record with:
+
 - Candidate SHA tested: `94fb6fd`
 - CORS test results (allowed/disallowed outcomes)
 - Candidate SHA attribution
@@ -176,12 +182,14 @@ candidate SHA (94fb6fd)
 **Workflow:** `pdmal-instrumentation-dry-run.yml`
 
 **What it verifies:**
+
 - Blinding operational test under controlled conditions
 - Fail-closed when `PDMAL_BLINDING_KEY` < 32 chars (refuses to run unblinded)
 
 **Current state:** Workflow exists but NOT EXECUTED.
 
 **Required evidence:** Workflow run record with:
+
 - Candidate SHA tested: `94fb6fd`
 - Blinding key availability (present/absent, length if present)
 - Dry-run output
@@ -196,12 +204,14 @@ candidate SHA (94fb6fd)
 **Workflow:** `pdmal-runtime-characterization.yml`
 
 **What it verifies:**
+
 - Non-empirical runtime characterization of candidate apparatus
 - No data collection, no efficacy claim
 
 **Current state:** Workflow exists but NOT EXECUTED. Triggers on `workflow_dispatch` or push to `epistemic/evidence-architecture-v1`.
 
 **Required evidence:** Workflow run record with:
+
 - Candidate SHA tested: `94fb6fd`
 - Characterization output
 - Candidate SHA attribution
@@ -215,6 +225,7 @@ candidate SHA (94fb6fd)
 **Workflow:** `pdmal-pre-freeze-runner.yml`
 
 **What it verifies:**
+
 - Fail-closed runner contract
 - Dependency lock integrity (requires genuine full dependency lock generation)
 - Artifact schema validation
@@ -222,10 +233,12 @@ candidate SHA (94fb6fd)
 **Current state:** Workflow exists but NOT EXECUTED.
 
 **Artifact produced:** `test-artifacts/pre-freeze-runner-manifest.json`
+
 - Retention: 30 days
 - Missing-file behavior: error (`if-no-files-found: error`)
 
 **Required evidence:** Workflow run record with:
+
 - Candidate SHA tested: `94fb6fd`
 - Pre-freeze-runner-manifest.json (stored as workflow artifact)
 - Dependency lock integrity verification
@@ -238,6 +251,7 @@ candidate SHA (94fb6fd)
 **Workflow:** `pdmal-preauth-security.yml`
 
 **What it verifies:**
+
 - Artifact schema validation (`test_artifact_schema.py`)
 - Adversarial security tests (`test_security_controls.py`, 6 tests)
 - Python 3.12.0 environment
@@ -246,6 +260,7 @@ candidate SHA (94fb6fd)
 **Current state:** Workflow exists but NOT EXECUTED. On disk at `.github/workflows/pdmal-preauth-security.yml`. At PR #77: blob `9cff92a5`.
 
 **Required evidence:** Workflow run record with:
+
 - Candidate SHA tested: `94fb6fd`
 - Schema test results
 - Security test results (6 tests)
@@ -260,6 +275,7 @@ candidate SHA (94fb6fd)
 **Status:** OPEN — NOT YET ESTABLISHED
 
 **What it requires:**
+
 1. Artifact written to durable storage
 2. Artifact independently retrieved from storage
 3. SHA-256 recomputed from retrieved bytes
@@ -267,12 +283,14 @@ candidate SHA (94fb6fd)
 5. PASS or FAIL recorded
 
 **Current state:**
+
 - `durable_retention.py` exists on disk at local HEAD (11,666 bytes, 338 lines, 12 functions) but NOT at PR #77
 - Archive root NOT SET — TBD
 - No retention policy document at PR #77
 - No write→retrieve→SHA-verification round-trip has occurred
 
 **Required evidence:**
+
 - Write receipt (timestamp, storage location, original SHA)
 - Retrieval receipt (timestamp, retrieved bytes, recomputed SHA)
 - Comparison result (PASS/FAIL)
@@ -287,6 +305,7 @@ candidate SHA (94fb6fd)
 **Status:** DESIGN ONLY — NOT EXECUTED
 
 **What it requires:**
+
 - Independent verifier (distinct from CI creation path)
 - Re-resolves candidate SHA independently
 - Re-executes validation against candidate
@@ -296,6 +315,7 @@ candidate SHA (94fb6fd)
 - Produces PASS/FAIL/INCONCLUSIVE record
 
 **Current state:**
+
 - 7-layer verification architecture designed (in prior documentation)
 - 10 CI-appropriate checks defined
 - 8 separate-audit checks defined
@@ -304,6 +324,7 @@ candidate SHA (94fb6fd)
 - Critical gaps documented
 
 **Required input for P9 execution:**
+
 - Candidate SHA: `94fb6fd`
 - Workflow run records (Stages 1-7)
 - Runtime artifacts (response JSONs, characterization output, manifests)
@@ -320,6 +341,7 @@ candidate SHA (94fb6fd)
 ### Stage 10: Retained evidence package
 
 **Output:** Complete evidence package containing:
+
 - All workflow run records (Stages 1-7) with candidate SHA attribution
 - All runtime artifacts (response JSONs, characterization output, manifests)
 - All provenance records (run IDs, timestamps, runner environments)

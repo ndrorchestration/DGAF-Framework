@@ -17,6 +17,7 @@
 This pattern defines the canonical prompt templates for operating GPT-5.4 Thinking within the DGAF/PDMAL/Amethyst governance stack. GPT-5.4 Thinking exposes its reasoning plan before executing — these templates are structured to front-load constraints so the plan can be redirected before computation completes.
 
 **Dual-model workflow:**
+
 - **Perplexity (Amethyst host):** Live GitHub data retrieval, search, citation, priority auditing
 - **GPT-5.4 Thinking:** Deep synthesis, code generation, long-horizon governance reasoning, document drafting from full-context artifact paste
 

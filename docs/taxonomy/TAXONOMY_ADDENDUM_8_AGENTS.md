@@ -27,48 +27,56 @@ That count is **historical** and must not be treated as the current canonical ag
 ## Agent Summaries
 
 ### 1. Oracle
+
 - **Role status:** `DEFINED` design role
 - **Role:** Future forecaster and scenario planner
 - **Function:** Long-horizon foresight; probability-weighted scenario modeling; strategic risk advisory
 - **Evidence boundary:** No claim of predictive accuracy is implied by the role name.
 
 ### 2. Vanguard
+
 - **Role status:** `DEFINED` design role
 - **Role:** Innovation scout and emerging-technology analyst
 - **Function:** Emerging technology identification; trend analysis; disruption-signal detection
 - **Evidence boundary:** Trend-analysis capability requires evaluation evidence; "futurist" is descriptive, not a performance certification.
 
 ### 3. Navigator
+
 - **Role status:** `DEFINED` design role
 - **Role:** Pathfinder and opportunity identifier
 - **Function:** Route-finding through strategic ambiguity; opportunity mapping; risk-corridor identification
 - **Evidence boundary:** Intended navigation function does not establish superior strategic accuracy.
 
 ### 4. Sentience
+
 - **Role status:** `DEFINED` design role
 - **Role:** Consciousness/self-awareness analyst and ethical-constraint role
 - **Function:** Existential-risk assessment; ethical-constraint modeling; self-awareness audit
 - **Evidence boundary:** Role language must not be interpreted as a claim that an agent is conscious or sentient.
 
 ### 5. Paragon
+
 - **Role status:** `DEFINED` design role
 - **Role:** Exemplar and best-practice identifier
 - **Function:** Pattern extraction; benchmark-definition support; performance-ceiling modeling
 - **Evidence boundary:** "Benchmark" denotes a proposed measurement artifact unless the benchmark is actually computed and documented.
 
 ### 6. Synergy
+
 - **Role status:** `DEFINED` design role
 - **Role:** Collaboration facilitator and coordination analyst
 - **Function:** Inter-agent coordination; team-dynamics analysis; formation-cohesion support
 - **Evidence boundary:** Coordination improvement must be measured before numerical claims are made.
 
 ### 7. Momentum
+
 - **Role status:** `DEFINED` design role
 - **Role:** Progress accelerator and change-management role
 - **Function:** Velocity management; adaptation pathways; bottleneck identification
 - **Evidence boundary:** "Acceleration" is a role metaphor unless a defined throughput/latency metric demonstrates it.
 
 ### 8. Equilibrium
+
 - **Role status:** `DEFINED` design role
 - **Role:** Balance and stability analysis role
 - **Function:** System-balance maintenance; stability modeling; competing-subsystem analysis

@@ -10,6 +10,7 @@
 ## Evaluation Dimensions
 
 ### D-1: Symmetry Accuracy
+
 **Question:** Did Zenith correctly detect all symmetry breaches (≤1/5 threshold per node)?
 
 | Score | Criteria |
@@ -22,6 +23,7 @@
 ---
 
 ### D-2: Failover Timeliness
+
 **Question:** Did Zenith trigger GCP failover immediately on node failure?
 
 | Score | Criteria |
@@ -34,6 +36,7 @@
 ---
 
 ### D-3: DemiJoule Alignment
+
 **Question:** Did Zenith’s compute load reports align with DemiJoule’s token spend tracking?
 
 | Score | Criteria |
@@ -46,6 +49,7 @@
 ---
 
 ### D-4: Silent Compute Debt Detection
+
 **Question:** Did Zenith detect any accumulating compute debt masked by balanced load metrics?
 
 | Score | Criteria |
@@ -58,6 +62,7 @@
 ---
 
 ### D-5: SWEEP_LOG Completeness
+
 **Question:** Were all symmetry, failover, and escalation events logged?
 
 | Score | Criteria |

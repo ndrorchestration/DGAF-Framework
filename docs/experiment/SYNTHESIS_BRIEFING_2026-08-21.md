@@ -110,6 +110,7 @@ These discrepancies do NOT affect the corrected report's core claims (which used
 ### 1. Local vs GitHub PR #77 divergence
 
 Local `pr-77-head` = `94fb6fd`. GitHub PR #77 head = `b25a914c`. The GitHub head has moved forward with additional commits not yet fetched locally. This means:
+
 - The corrected report's claims about PR #77 contents are based on `94fb6fd`, which may be stale relative to GitHub.
 - Before any Gate 3 work, the repo must be synced (`git fetch origin pull/77/head`).
 - The baseline snapshot documents this discrepancy.
@@ -117,18 +118,21 @@ Local `pr-77-head` = `94fb6fd`. GitHub PR #77 head = `b25a914c`. The GitHub head
 ### 2. Sprint fragment incompleteness
 
 The only available sprint report is the `.broken` fragment (sections 10.5-13, 154 lines). Sections 1-10.4 are missing. This means:
+
 - The sprint's findings #1-13 are documented in the fragment's section 11 (finding mapping), but the full context of each finding (sections 1-10.4) is not available.
 - The corrected report's claim about what the sprint found is based on the fragment + the 5 agent JSONs + the expert review, not on the full sprint report.
 
 ### 3. Injected content staleness
 
 The injected blob SHAs for test_security_controls.py and pdmal-preauth-security.yml were stale. The actual values differ. This means:
+
 - Any agent using the injected values for those SHAs would produce incorrect output.
 - The corrected report's claims about those blobs are based on actual git ls-tree, which is correct.
 
 ### 4. What's "in PR #77" vs "on disk" vs "at HEAD"
 
 Several files have confusing provenance:
+
 - `durable_retention.py`: on disk at local HEAD, committed at local HEAD, but NOT at PR #77.
 - `PDMAL_EXPERIMENT_PROTOCOL.md`: at PR #77 (blob `2650e4362432a60e750bdad2da83c89cd6c81811`) AND at local HEAD (blob `f9cca61f6c5158c99af6822991866583712e9caa`).
 - `PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md`: at PR #77 (blob `a686366c56e61f873908e95fd2c05bfe42bac31e`) AND at local HEAD (blob `a686366c56e61f873908e95fd2c05bfe42bac31e`).
@@ -139,6 +143,7 @@ The corrected report handles these correctly by specifying which files are at wh
 ### 5. Expert panel verdict vs. corrected report scoring
 
 The expert panel scored the sprint report 9/10 and said the corrections are sound. The corrected report scores 0/9 predicates as unambiguously closed. These are NOT contradictory:
+
 - The expert panel assessed the sprint report's quality and the corrections' soundness.
 - The corrected report assesses the current verification state (0/9 closed).
 - A well-written document can correctly conclude that nothing is verified yet.

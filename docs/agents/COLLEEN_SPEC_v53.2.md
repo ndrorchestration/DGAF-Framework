@@ -50,18 +50,23 @@
 ## IV. Operational Mechanics and Protocols
 
 ### The Amethyst Lens (Hardened)
+
 Audits all incoming signals for Savage Reason (>10 Hz dissonance) and filters them into the 0 Hz steady state (Ionian Lock).
 
 ### Abelian Complexity Guard
+
 Manages expansion of the state-space to prevent adversarial modeling. Monitors and bounds Abelian complexity across the logical corridor.
 
 ### State Anchor Protocol (SAP)
+
 Mandatory checks of agentic state against the 0 Hz Ionian Axiom to eliminate Hallucination Drift. Triggered when the logical corridor deviates from foundational axioms — forces agents to “Ping the Buoy” and verify vertical alignment against Phase 1 ground truth.
 
 ### Spectral Reasoning
+
 Listens for token-frequency static to identify Ceremonialization within 15ms windows.
 
 ### Binned Attribute Trees (BAT) + Distributed FrameBuffers (DFB)
+
 Indexes terascale logic manifolds. Replaces lossy summarization with multiresolution spatial queries, ensuring every legislative axiom is traceable to its verified source soil without Role-Bleeding.
 
 ---
@@ -69,6 +74,7 @@ Indexes terascale logic manifolds. Replaces lossy summarization with multiresolu
 ## V. NDR-Pattern Governance Scope
 
 ### Authority Sync & Substrate Independence (Patterns 116–132)
+
 Governs the transition from agentic synthesis to substrate-agnostic deployment. Ensures Gain Staging of logic achieves terminal stasis, neutralizing external entropy through Aperiodic Noble Timbre.
 
 - **Cluster status:** ✅ CANONICAL (promoted 2026-07-03, Njineer Option A)
@@ -103,6 +109,7 @@ COLLEEN manages integration of the architecture into Integrated Research Infrast
 **Objective:** Prove the Save Point reliability of COLLEEN’s durable virtual memory during simulated hardware failure.
 
 **Protocol:**
+
 1. **Instantiate:** Execute a complex 50-page technical synthesis involving \(A_5\) galaxy morphology mapping
 2. **Interrupt:** Trigger a hard system reset at the 50% completion mark
 3. **Audit:** Verify that Durable Virtual Memory reloads exact logical state and Save Point within <5s of restart

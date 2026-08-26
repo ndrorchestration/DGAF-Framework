@@ -14,6 +14,7 @@
 This session resolved the DGAF/PDMAL execution readiness assessment by integrating five surgical subagent artifacts with an expert-panel structured critique. The sprint report (`DGAF_3NODE_META_ORCHESTRATION_SPRINT_2026-08-21.md`) was superseded by a corrected document incorporating validated expert corrections and agent findings. All orchestration patterns observed during this session are logged below for the pattern registry.
 
 **Key outcomes:**
+
 - Sprint report scored 9/10 by expert panel; corrected document fully supersedes it
 - Predicate scoring corrected from 1/9 to 0/9 unambiguously closed
 - 8 material expert corrections identified, validated, and applied
@@ -130,6 +131,7 @@ This session resolved the DGAF/PDMAL execution readiness assessment by integrati
 ```
 
 **Authority assignments:**
+
 - **Git SHA** → Git is authoritative
 - **Governance decision** → governance record is authoritative
 - **Artifact hash** → retained artifact + independently computed hash
@@ -194,6 +196,7 @@ This session resolved the DGAF/PDMAL execution readiness assessment by integrati
 | 10. Artifact substitution detection | Tamper detection test | Inherent in separate audit validation |
 
 **6 items CI cannot provide:**
+
 - Proof of actual run's SHA
 - Proof of env vars at runtime
 - Proof of out-of-band key supply
@@ -210,11 +213,13 @@ This session resolved the DGAF/PDMAL execution readiness assessment by integrati
 **Observed:** The sprint report's roadmap began with merge steps before schema authority and contrast adjudication. The expert panel corrected this: the candidate mechanism (#1–#3) must be implemented BEFORE the final freeze candidate is created.
 
 **Candidate mechanism triad:**
+
 1. **Immutable candidate** — create fixed reference; manifest SHA = candidate identity
 2. **Separate development HEAD** — main is development state, not experimental identity
 3. **Candidate manifest** — machine-readable, versioned, cryptographically bound JSON/YAML
 
 **Corrected sequencing:**
+
 ```
 ENGINEERING HARDENING (Phase A) — BEFORE final freeze candidate
     ├── #1–#3 Candidate mechanism (MUST exist before final freeze candidate)
@@ -243,6 +248,7 @@ Construct → Estimand → Endpoint → Contrast → Direction → Success crite
 ```
 
 **Status from Agent #2:**
+
 - Construct (FFCR — execution robustness, NOT efficacy claim) ✅ Specified
 - Estimand (E[FFCR(T) − FFCR(R)], paired differences) ✅ Specified
 - Primary endpoint (FFCR per-condition per-seed, 180 trials/seed) ✅ Specified
@@ -262,6 +268,7 @@ Construct → Estimand → Endpoint → Contrast → Direction → Success crite
 **Observed throughout:** Every artifact, every correction, every assessment carries the explicit N=0 qualifier. No empirical claims are made. Pilot authorization is NOT GRANTED. The corrected apparatus is PRE-FREEZE.
 
 **Discipline applied:**
+
 - Every "Does NOT establish" caveat attached to agent findings
 - Every predicate score includes the evidence basis and what remains unverified
 - Expert corrections validated against source files, not accepted on authority

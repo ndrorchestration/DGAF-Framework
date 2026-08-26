@@ -11,6 +11,7 @@
 **Epistemic boundary:** N=0, NOT GRANTED, PRE-FREEZE. No empirical execution has occurred. No predicate is closed. Pilot authorization is not granted.
 
 **Reference documents:**
+
 - P3/P4/P5/P6 Freeze Readiness (2026-08-21)
 - P8 Analysis Lock (governance)
 - P8 Verification Checklist (governance)
@@ -73,17 +74,20 @@
 ## Residual OPEN Items (must be resolved before any predicate is closed)
 
 ### P1 — Freeze
+
 - Create immutable freeze commit after pre-freeze closure
 - Bind source, analysis config, environment, and verification evidence to freeze
 - Re-run required verification against immutable reference
 - Separate future development from frozen experimental apparatus
 
 ### P2/P6a — Runtime Verification
+
 - Execute candidate runtime verification OR select justified alternative OR retain OPEN with defined conditions
 - Per panel: cannot convert "unavailable" → "N/A" → closed
 - Must record choice (A/B/C) and rationale in evidence matrix
 
 ### P4 — Blinding Operational
+
 - Demonstrate executor cannot obtain unblinding key under any execution path
 - Demonstrate blinded IDs consistently applied across artifacts
 - Demonstrate custody of unblinding mapping is separated from executor and analysis
@@ -91,12 +95,14 @@
 - Document key distribution mechanism
 
 ### P5 — Full Reproducibility
+
 - Execute candidate-scoped reproduction: same inputs → same outputs
 - Capture environment fingerprint
 - Verify topology fingerprints are deterministic for candidate
 - Verify seed/RNG separation and trial ordering
 
 ### P6 — Durable Custody
+
 - Establish archive destination
 - Write evidence to archive
 - Retrieve independently
@@ -104,6 +110,7 @@
 - Document custody chain
 
 ### P7 — Formal Scientific Adjudication
+
 - Authority adopts all 11 decisions explicitly
 - Verify treatment/reference identifiers match candidate apparatus
 - Reconcile adopted decisions with protocol SHA and P8 analysis spec SHA
@@ -113,6 +120,7 @@
 - Update CURRENT_STATE.md and PDMAL_CURRENT_CONTROL_STATE.md accordingly
 
 ### P8 — Candidate-Scoped CI Evidence
+
 - Execute all 14 unchecked checklist items against exact candidate `2a80f819...`:
   - **CI evidence section (6 items):** Governance CI, P8 analysis tests, P8 artifact-schema/security tests, compilation, run ID/URL/SHA/ref/event retention, job logs inspected
   - **Reproducibility section (4 items):** Executed-tree identity reconciled, environment fingerprint, deterministic topology fingerprints, seed/RNG separation and trial ordering
@@ -121,6 +129,7 @@
 For each: retain run ID, URL, exact SHA/ref/event, job logs (inspected, not inferred), and artifact integrity values.
 
 ### P9 — Independent Verification
+
 - Designate independent auditor (not using candidate's own schema/analysis/hashes/assumptions)
 - Independently reproduce: candidate identity, artifact integrity, key analysis calculations, critical invariants, adversarial failures
 - Record findings and resolution

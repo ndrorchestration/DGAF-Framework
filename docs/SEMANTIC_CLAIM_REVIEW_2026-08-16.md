@@ -35,13 +35,13 @@ The document is explicitly marked **SUPERSEDED** and states that it is not the c
 
 The implementation performs deterministic construction-time checks: domain names must differ and governed-agent sets must not overlap. Here “validated at construction” describes local invariant enforcement, not independent empirical validation of the governance design. The surrounding implementation and error paths support that interpretation. This occurrence is therefore not evidence of external efficacy or fitness.
 
-### 4. `docs/qa/APOGEE_11Q_P34.json` — “empirically validated” attestation language.
+### 4. `docs/qa/APOGEE_11Q_P34.json` — “empirically validated” attestation language
 
 **Status: UNRESOLVED — provenance reconciliation required.**
 
 The phrase remains a candidate until its historical source, scope, method, and retained evidence are identified. It must not be promoted as current empirical efficacy evidence merely because it appears in an attestation record.
 
-### 5. `docs/agents/prof-prodigy/*` — recurring “validated” terminology in agent-memory/formalization context.
+### 5. `docs/agents/prof-prodigy/*` — recurring “validated” terminology in agent-memory/formalization context
 
 **Status: UNRESOLVED / PROJECT-LOCAL METADATA.**
 

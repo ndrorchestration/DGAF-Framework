@@ -67,6 +67,7 @@ DGAF (**Deterministic Governance for Agentic Frameworks**) is a governance-align
 ## 4. Core Workflows
 
 ### 4.1 Session Bootstrap
+
 1. Read `BOOTSTRAP.md` → confirm workspace identity
 2. Read `SESSION_ANCHOR.md` → confirm last state
 3. Read `CO_ORCH_QUEUE.md` → confirm active OPP cycle
@@ -74,6 +75,7 @@ DGAF (**Deterministic Governance for Agentic Frameworks**) is a governance-align
 5. Proceed with task
 
 ### 4.2 Pattern-First Implementation
+
 1. COLLEEN detects improvement opportunity (OPP)
 2. COLLEEN sources best-practice pattern (adopt / customize / compose)
 3. Pattern registered in `PATTERN_REGISTRY_v2.md` with ID
@@ -82,12 +84,14 @@ DGAF (**Deterministic Governance for Agentic Frameworks**) is a governance-align
 6. Commit with pattern ID in message
 
 ### 4.3 Co-Orchestration Loop
+
 - COLLEEN runs **detect + audit** pass (Librarian/Auditor roles)
 - Amethyst runs **implement + commit** pass (QA/Architect roles)
 - Queue is append-only; completed entries archived, never deleted
 - New patterns discovered during implementation proposed back as COMPOSE entries
 
 ### 4.4 Saga + Recovery (New — 2026-06-26)
+
 - Every multi-step workflow is a Saga with explicit compensators
 - Irreversible actions require HITL gate before commit
 - Checkpoints per super-step; append-only effect log per run
@@ -132,6 +136,7 @@ Every session MUST produce:
 See `docs/RD_GAPS.md` for the living R&D gap log.
 
 Top items as of 2026-06-27:
+
 - 22% fluent hallucination gap → DemiJoule RAG closure (Phase 3B complete; needs production wiring)
 - RAG collection taxonomy design → 6-8 governance-bounded collections
 - Saga harness end-to-end fault injection test

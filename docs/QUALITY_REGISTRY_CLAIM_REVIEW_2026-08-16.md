@@ -13,6 +13,7 @@ The deterministic claim-hygiene audit identified two current registry summaries 
 This document records the finding; it does not itself alter the registry values.
 
 Audit provenance:
+
 - Workflow: `Claim Hygiene Audit`
 - Run: `31976921517`
 - Source commit: `3823a8b0f8992490c47c9495cc436138b3fefdf0`

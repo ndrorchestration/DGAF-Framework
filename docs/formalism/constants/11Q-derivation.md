@@ -258,7 +258,7 @@ Testing: `ρ_P - 1.2335 = 0.5412` — difference 0.5412 matches to 4 decimal pla
        = 1.10180
 ```
 
-Not matching. 
+Not matching.
 
 ```
 1.2335 ≈ ρ_P · sin(2π/11)

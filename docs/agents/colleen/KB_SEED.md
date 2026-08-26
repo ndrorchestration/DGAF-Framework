@@ -30,6 +30,7 @@ COLLEEN is the institutional anchor of the DGAF formation. Where Apogee scores q
 ### C1 — Compliance Alignment
 
 Every new pattern (P-series), governance artifact, or agent spec must be mappable to at least one of:
+
 - NIST AI RMF (Govern, Map, Measure, Manage)
 - RMF-600 (agency-specific controls)
 - EU AI Act (risk tier classification)

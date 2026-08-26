@@ -13,6 +13,7 @@
 **Author identity:** ndrorchestration (repository owner)
 
 **Governing documents referenced:**
+
 - `docs/governance/P1_TO_P9_EVIDENCE_MATRIX.md` (HEAD `9ceab59`)
 - `docs/governance/DELIBERATIVE_OPERATIONAL_POLICIES.md` (HEAD `9ceab59`)
 - `docs/governance/P7_SCIENTIFIC_SPECIFICATION_TRACEABILITY_MATRIX.md` (HEAD `9ceab59`)
@@ -98,6 +99,7 @@ Reference condition, estimand, unit of analysis, direction of effect, endpoint a
 Bootstrap resample count (10,000), analysis bootstrap seed (20260823)
 
 **Boundary case:**
+
 - CI alpha level (0.05): Stated as P8 implementation constant in Policy 1 because it is the numeric instantiation of the P7 scientific decision (95% CI convention). Changing alpha independently of the CI convention would constitute a substantive change requiring re-adjudication.
 
 ---
@@ -107,6 +109,7 @@ Bootstrap resample count (10,000), analysis bootstrap seed (20260823)
 The 2026-08-21 Adversarial Expert Panel Review (`docs/governance/ADVERSARIAL_PANEL_REVIEW_2026-08-21.md`) remains the most recent formal governance review on record. Its 10 findings (A1-A10) and required adversarial pre-flight conditions remain applicable.
 
 The 2026-08-24 expert-panel assessment (user-provided, not yet a formal governance record) identified additional weaknesses addressed by the four governance documents committed at HEAD `222fb4c`:
+
 - P7 contradiction → resolved by traceability matrix + control state corrections
 - Parameter boundary mismatch → resolved by Policy 1
 - P2/P6a applicability gap → resolved by Policy 3

@@ -70,6 +70,7 @@ curl -X POST https://<your-vercel-domain>/api/ahg_herald \
 ```
 
 Expected response:
+
 ```json
 { "accepted": 1, "tribunal_alerts": 0, "ndr_stasis_events": 1, "session_id": "S077" }
 ```
@@ -107,6 +108,7 @@ Key: `ahg:session:<session_id>:latest`
 
 This is the primary data source for a real-time governance dashboard.
 Read it from any Vercel route via:
+
 ```typescript
 import { kv } from '@vercel/kv'
 const state = await kv.get(`ahg:session:${sessionId}:latest`)

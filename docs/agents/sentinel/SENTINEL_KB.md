@@ -16,6 +16,7 @@ Sentinel is the **Sovereign Security Authority** of the DGAF Framework. Sentinel
 Sentinel’s veto is the **only authority that overrides Amethyst**. This is the defining constraint of Sentinel’s lane: Sentinel does not coordinate, score, or execute — it **guards and blocks**.
 
 **The three constraints that define Sentinel’s lane:**
+
 1. Sentinel guards sovereign files and IP boundaries — it does not coordinate operations
 2. Sentinel’s sovereign veto overrides Amethyst — only Njineer resolves the conflict
 3. Sentinel does not self-invoke the Compliance Dyad — COLLEEN co-signal required
@@ -92,6 +93,7 @@ Invoke:  Requires both Sentinel + COLLEEN co-signal
 ```
 
 Dyad trigger conditions:
+
 - Repeated NDR-133 bypass attempt by same agent
 - T3 content persistently re-proposed for GitHub
 - Agent impersonation of Sentinel or Amethyst detected

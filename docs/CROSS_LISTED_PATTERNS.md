@@ -44,6 +44,7 @@ This index tracks patterns that are relevant across multiple repos in the ndrorc
 7. `confidence_bound` field required on all scores
 
 ### Related Patterns
+
 `P-31 SCPE` · `P-32 Phi-Closure Gate` · `P-33 PDMAL Monitor` · `ndr.dual_orchestrator_qa_loop` · `P-LOCK-001`
 
 ---

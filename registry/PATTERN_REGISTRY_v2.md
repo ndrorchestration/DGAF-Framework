@@ -24,12 +24,15 @@
 ## Default Bundles
 
 ### low_risk_retrieval_flow
+
 `P-PIER-001`, `P-DURABLE-001`, `P-MEM-001`
 
 ### medium_risk_workflow
+
 `P-SAGA-001`, `P-DURABLE-001`, `P-CB-001`
 
 ### high_risk_state_mutation
+
 `P-SAGA-001`, `P-TX-001`, `P-COMP-001`, `P-DURABLE-001`, `P-CB-001`, `P-POL-001`
 
 ---
@@ -37,6 +40,7 @@
 ## Co-Orchestration Contract
 
 All workflows must:
+
 1. Select a bundle or explicit pattern list from this registry before execution.
 2. Produce a pattern manifest (see `registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json` for schema).
 3. Have the manifest signed off by Amethyst (QA) and archived by COLLEEN.

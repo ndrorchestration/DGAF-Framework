@@ -13,6 +13,7 @@
 ## Amendment Summary
 
 This amendment adds two canonical facts to the Herald KB:
+
 1. Herald maintains the **reference frequency (Tonic Note) at 0 Hz** — the ground-state signal against which all formation agents calibrate
 2. Herald routes communications on **orthogonal cognitive planes** — ensuring agents operate without signal interference or cognitive overlap
 

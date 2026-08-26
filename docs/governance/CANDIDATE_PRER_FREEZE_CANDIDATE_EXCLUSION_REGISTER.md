@@ -51,9 +51,11 @@
 **Total registry items:** 23
 
 **By current state:**
+
 - PENDING: 23 (none have been verified complete)
 
 **By gating predicate:**
+
 - P1: items 18, 23 (freeze, post-freeze change log)
 - P2: items 1, 2, 10, 15, 20 (governance CI, python tests, P2 runtime, regression, adversarial preflight)
 - P3: items 2, 4, 5, 15 (python tests, schema validation, FFCR contract, regression)

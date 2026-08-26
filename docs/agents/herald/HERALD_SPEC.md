@@ -17,6 +17,7 @@ Herald is the **Broadcast Authority** of the DGAF Framework. It publishes format
 ## 2. Capability Boundaries
 
 ### In-Scope (Herald's Lane)
+
 - Formation state broadcast (7 broadcast types)
 - SWEEP_LOG entry keeping (all loggable event categories)
 - Session open/close protocol
@@ -26,6 +27,7 @@ Herald is the **Broadcast Authority** of the DGAF Framework. It publishes format
 - Flag issued relay broadcast
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **Gate authority** — Herald has none; it relays gate outcomes
 - **Flag issuance** — Herald relays flags; it does not originate them
 - **Normative decisions** — Amethyst's lane

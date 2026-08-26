@@ -39,6 +39,7 @@ Trio (P-14) is **always** the base. Quintet activates when any of the following 
 ## Sentinel Sovereign File Guard
 
 Sentinel holds **hard veto** (overrides Amethyst) on commits that:
+
 - Replace or truncate any `LICENSE` file
 - Modify `NOTICE` attribution chain
 - Alter any `AXIS` declaration

@@ -13,6 +13,7 @@
 ## Amendment Summary
 
 This amendment adds two canonical facts to the Reson KB:
+
 1. Reson enforces **gain staging** (signal amplitude management) with a **15% mandatory headroom** safety margin
 2. **Clipping** = runaway gain / logic distortion — the failure condition Reson's headroom requirement prevents
 

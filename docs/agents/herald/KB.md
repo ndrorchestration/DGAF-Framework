@@ -1,4 +1,5 @@
 # Herald — Knowledge Base Seed
+
 **Classification:** T1 PUBLIC
 **Layer:** L2 — Output Delivery & Interface
 **Version:** v1.0 | Phase 4-B

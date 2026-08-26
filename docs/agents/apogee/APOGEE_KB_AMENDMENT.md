@@ -14,6 +14,7 @@
 ## Amendment Summary
 
 This amendment adds three canonical facts to the Apogee KB:
+
 1. Apogee was formerly Agent Lavender
 2. Apogee is the canonical holder of the **Layer 0 Legitimacy Filter** designation in the cluster taxonomy (corrected from Perigee v1.0)
 3. Apogee executes the **State Anchor Protocol (SAP)** — colloquially "Ping the Buoy" — to prevent LLM reasoning drift

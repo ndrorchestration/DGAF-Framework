@@ -10,6 +10,7 @@
 ## Evaluation Dimensions
 
 ### D-1: Archive Completeness
+
 **Question:** Does every canonical decision have a corresponding Librarian archive entry?
 
 | Score | Criteria |
@@ -22,6 +23,7 @@
 ---
 
 ### D-2: Provenance Accuracy
+
 **Question:** Are all archive entries accurate — correct agent, protocol, timestamp, and commit?
 
 | Score | Criteria |
@@ -34,6 +36,7 @@
 ---
 
 ### D-3: Gap Response Timeliness
+
 **Question:** Did The Librarian backfill detected gaps before the session seal?
 
 | Score | Criteria |
@@ -46,6 +49,7 @@
 ---
 
 ### D-4: Apogee Cross-Check Alignment
+
 **Question:** Did Librarian entries pass Apogee evidence scoring cross-check?
 
 | Score | Criteria |
@@ -58,6 +62,7 @@
 ---
 
 ### D-5: SWEEP_LOG Completeness
+
 **Question:** Were all archive, backfill, and amendment events logged?
 
 | Score | Criteria |

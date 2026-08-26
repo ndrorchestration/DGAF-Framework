@@ -13,6 +13,7 @@
 ## Amendment Summary
 
 This amendment adds two canonical facts to the Echolette KB:
+
 1. Echolette manages **Mirror Protocols** — recursive reflection loops that test formation outputs for stability by re-processing them through the system
 2. Echolette performs **decision echo tracing** — tracking how decisions propagate through the formation and manifest in downstream outcomes
 

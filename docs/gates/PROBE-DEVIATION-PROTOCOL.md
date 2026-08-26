@@ -1,8 +1,8 @@
 # PROBE Deviation Protocol
 
-**File:** `docs/gates/PROBE-DEVIATION-PROTOCOL.md` 
-**Owned by:** Agent Amethyst / DGAF-Framework 
-**Established:** 2026-06-12 
+**File:** `docs/gates/PROBE-DEVIATION-PROTOCOL.md`
+**Owned by:** Agent Amethyst / DGAF-Framework
+**Established:** 2026-06-12
 **Authority:** NDR-Protocol-03, DGAF-PROBE-001 canonical rule
 
 ---

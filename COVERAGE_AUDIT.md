@@ -7,7 +7,7 @@ DGAF-Framework Component Analysis
 
 File: components/ensemble_v17.py (977 lines)
 ├─ Status: ⚠️ NO UNIT TESTS FOUND
-├─ Critical Classes: 
+├─ Critical Classes:
 │  ├─ AgentAmethyst (10-step orchestrator)
 │  ├─ HarmonicParametricGate (routing logic)
 │  ├─ FibonacciPhiClosureGate (phi validation)
@@ -78,6 +78,7 @@ PRIORITY TEST FILES TO CREATE
 ==============================
 
 DGAF-Framework:
+
 1. tests/test_ensemble_v17.py
    └─ Coverage targets:
       • AgentAmethyst.orchestrate_turn() [10-step sequence]
@@ -103,6 +104,7 @@ DGAF-Framework:
    └─ Estimated LOC: 150-250
 
 Junior Apogee App:
+
 1. Expand test_smoke.py (currently 4KB)
 2. Create tests/unit/ directory with 1000+ LOC
 3. Create tests/integration/ directory

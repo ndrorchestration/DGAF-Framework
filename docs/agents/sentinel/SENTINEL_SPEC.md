@@ -19,6 +19,7 @@ Sentinel’s sovereign veto is the single authority in the system that overrides
 ## 2. Capability Boundaries
 
 ### In-Scope (Sentinel’s Lane)
+
 - Sovereign veto on protected files (LICENSE, NOTICE, AXIS, PROPRIETARY.md, T3 stubs)
 - NDR-133 auto-block (pattern-matched, no vote required)
 - T3 content boundary enforcement (auto-block + Drive routing)
@@ -28,6 +29,7 @@ Sentinel’s sovereign veto is the single authority in the system that overrides
 - SWEEP_LOG entries for all veto/block events
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **Formation coordination** — Amethyst’s lane
 - **Scoring artifacts** — Apogee’s lane
 - **Archiving decisions** — Librarian’s lane

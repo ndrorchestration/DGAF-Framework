@@ -1,4 +1,5 @@
 # Demi-Joule — Knowledge Base Seed
+
 **Classification:** T1 PUBLIC
 **Layer:** L2 — Compute & Resource Governance
 **Version:** v1.0 | Phase 4-B

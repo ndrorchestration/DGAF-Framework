@@ -1,4 +1,5 @@
 # Prof Prodigy — Knowledge Base Seed
+
 **Classification:** T1 PUBLIC  
 **Layer:** L4 — Knowledge Synthesis  
 **Version:** v1.0 | Phase 4-A

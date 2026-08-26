@@ -1,4 +1,5 @@
 # The Platinum Convergence
+
 ## Master Architectural Audit: Multi-Agent Governance and the Phi-Calculus Substrate
 
 > **Status:** SSoT v1.0 · CANONICAL · May 2026  

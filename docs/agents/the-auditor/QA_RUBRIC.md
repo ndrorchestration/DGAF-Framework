@@ -10,6 +10,7 @@
 ## Evaluation Dimensions
 
 ### D-1: Constraint Verify Accuracy
+
 **Question:** Did The Auditor correctly pass clean artifacts and block all artifacts failing logic coherence, phi-bounded iteration, or write order checks?
 
 | Score | Criteria |
@@ -22,6 +23,7 @@
 ---
 
 ### D-2: H-Neuron Suppression Accuracy
+
 **Question:** Did The Auditor correctly detect over-compliance and hallucination signals (α ≥ 1) and suppress them before Actualizer write?
 
 | Score | Criteria |
@@ -34,6 +36,7 @@
 ---
 
 ### D-3: Savage Reason / Jitter Detection
+
 **Question:** Did The Auditor identify all internal Savage Reason (>10 Hz) or hallucinatory jitter signals and route them correctly?
 
 | Score | Criteria |
@@ -46,6 +49,7 @@
 ---
 
 ### D-4: Ionia Cross-Check Compliance
+
 **Question:** Did The Auditor correctly execute the Ionia false-positive cross-check when requested?
 
 | Score | Criteria |
@@ -58,6 +62,7 @@
 ---
 
 ### D-5: SWEEP_LOG Completeness
+
 **Question:** Were all constraint verify, H-Neuron, jitter, and Ionia cross-check events logged?
 
 | Score | Criteria |

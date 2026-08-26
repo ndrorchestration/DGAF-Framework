@@ -12,6 +12,7 @@
 ## Audit Mandate (PM-05)
 
 Before the unified registry merge (Phase 1), COLLEEN must verify:
+
 1. No P-numbering gaps in P-12–P-26
 2. No duplicate pattern specs
 3. All cross-references to P-01–P-10 and P-27+ are by pattern number, not prose only

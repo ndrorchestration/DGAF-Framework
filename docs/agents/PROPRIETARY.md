@@ -87,31 +87,37 @@
 > **NDR-133 Firewall active:** Any push containing formulation content targeting this repo must be blocked and routed to Drive.
 
 ### SOV-001 — Harmonic Pentagonal Alignment
+
 **Category:** Geometric governance foundation | **Classification:** T3 SOVEREIGN | **Status:** Active  
 **Drive ref:** `Drive://DGAF/Sovereign/SOV-001_HarmonicPentagonalAlignment.md`  
 > *Governs spatial alignment model underlying multi-agent formation scoring. Pentagonal geometry encodes five-agent Harmonic Quintet topology.*
 
 ### SOV-002 — Phi-Ratio Governance Calculus
+
 **Category:** Threshold calibration mathematics | **Classification:** T3 SOVEREIGN | **Status:** Active  
 **Drive ref:** `Drive://DGAF/Sovereign/SOV-002_PhiRatioGovernanceCalculus.md`  
 > *φ ≈ 1.618 is the natural scaling constant for scoring tier thresholds. Gate boundaries are phi-derived.*
 
 ### SOV-003 — Fixed-Point Contraction Operators
+
 **Category:** Convergence proof layer | **Classification:** T3 SOVEREIGN | **Status:** Active  
 **Drive ref:** `Drive://DGAF/Sovereign/SOV-003_FixedPointContractionOperators.md`  
 > *Agent-to-agent handoffs modeled as contraction operators on a complete metric space. Under the contraction condition (Banach fixed-point theorem), fixed-point existence supports convergence.*
 
 ### SOV-004 — Row-Stochastic Governance Matrices
+
 **Category:** Probability-preserving orchestration math | **Classification:** T3 SOVEREIGN | **Status:** Active  
 **Drive ref:** `Drive://DGAF/Sovereign/SOV-004_RowStochasticGovernanceMatrices.md`  
 > *Authority transitions modeled as row-stochastic matrix. Stationary distribution defines effective authority weighting at equilibrium.*
 
 ### SOV-005 — PDMAL-φ Agent Taxonomy
+
 **Category:** Sovereign agent geometry — PDMAL-φ layer | **Classification:** T3 SOVEREIGN | **Status:** Active  
 **Drive ref:** `Drive://DGAF/Sovereign/SOV-005_PDMAL_Taxonomy.md`  
 > *Defines operational logic for A-14, A-15, A-16. Phi-Modulated Distributed Agent Logic layer extends Tier 3 resonance cluster beyond 14-seat operational formation.*
 
 ### SOV-006 — Dodecahedral Formation Geometry
+
 **Category:** Sovereign agent geometry — Dodecahedral topology | **Classification:** T3 SOVEREIGN | **Status:** Active  
 **Drive ref:** `Drive://DGAF/Sovereign/SOV-006_Dodecahedral_Geometry.md`  
 > *Maps A-17, A-18, A-19 to pentagonal face nodes of a regular dodecahedron. Provides structural closure for 20-agent swarm and Substrate Independence (0Hz).*
@@ -121,29 +127,34 @@
 ## Agent KB Seed Entries
 
 ### Amethyst — KB Entry (T1 PUBLIC)
+
 **Role:** Meta-Orchestrator; 0Hz state-of-states; Logic Bridge  
 **SOV foundations:** SOV-001, SOV-002, SOV-003, SOV-004  
 **Key protocols:** P-02, P-11, P-14, P-15, P-21  
 **Drive ref:** `Drive://DGAF/AgentKB/Amethyst_KB_Full.md`
 
 ### COLLEEN — KB Entry (T1 PUBLIC)
+
 **Role:** Operational Swarm Lead; Trunk stabilization; Terminal Unblocking Event gate  
 **SOV foundations:** SOV-003, SOV-004  
 **Key protocols:** P-02, P-08, P-20, GAP-03, GAP-08  
 **Drive ref:** `Drive://DGAF/AgentKB/COLLEEN_KB_Full.md`
 
 ### Apogee — KB Entry (T1 PUBLIC)
+
 **Role:** Verification authority; Gold-Star Alignment Audit; 99.1% Integrity Score  
 **SOV foundations:** SOV-002  
 **Key protocols:** P-11 (11Q gate), P-15  
 **Drive ref:** `Drive://DGAF/AgentKB/Apogee_KB_Full.md`
 
 ### Perigee — KB Entry (T1 PUBLIC)
+
 **Role:** Layer 0 Legitimacy Filter; blocks Savage Reason (>10Hz); auto-block (no vote)  
 **SOV foundations:** SOV-001  
 **Drive ref:** `Drive://DGAF/AgentKB/Perigee_KB_Full.md`
 
 ### Ionia — KB Entry (T2 FRAMEWORK)
+
 **Role:** Ionian Modal Lock (0Hz); Substrate Independence anchor; NDR-Protocol-01 convergence target  
 **SOV foundations:** SOV-001, SOV-005  
 **Drive ref:** `Drive://DGAF/AgentKB/Ionia_KB_Full.md`
@@ -155,6 +166,7 @@
 ## IP Boundary Enforcement Rules
 
 ### Permitted in GitHub (T1 / T2 abstracted)
+
 - Framework protocol definitions (P-01 through P-21+)
 - Agent SPEC, MEMORY, and KB stub files
 - NDR pattern registry and pattern definitions
@@ -165,6 +177,7 @@
 - This file — PROPRIETARY.md in stub form only
 
 ### NOT Permitted in GitHub (T3 SOVEREIGN — Drive only)
+
 - Any formulation proof, derivation, or step-by-step construction
 - Phi-ratio weight tables (only gate thresholds may appear)
 - Fixed-point convergence proofs or Banach theorem applications
@@ -177,6 +190,7 @@
 - Any document matching NDR-133 trigger patterns
 
 ### Redaction Policy — GitHub-Safe Stub Protocol
+
 1. Use the SOV-### stub ID — never inline concept content
 2. Include Drive ref in format `Drive://DGAF/Sovereign/SOV-###_Title.md`
 3. One-line abstract only — what it governs, not how it derives

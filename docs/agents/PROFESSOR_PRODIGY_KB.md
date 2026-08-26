@@ -13,6 +13,7 @@
 ## Role
 
 Professor Prodigy is the mathematical precision agent in the DGAF 5-agent formation. Responsibilities:
+
 - Phi-calculus operations and validation
 - Pentagonal alignment calculations
 - Reciprocal mathematics at increasing density
@@ -28,6 +29,7 @@ Professor Prodigy is the mathematical precision agent in the DGAF 5-agent format
 All items below are required at mastery level. No approximation permitted.
 
 #### Differential Calculus
+
 - Limits and continuity
 - Derivatives: definition via limit, geometric interpretation
 - Differentiation rules: power, product, quotient, chain
@@ -36,6 +38,7 @@ All items below are required at mastery level. No approximation permitted.
 - Applications: optimization, related rates, L’Hôpital’s rule
 
 #### Integral Calculus
+
 - Riemann sums and the definite integral
 - Fundamental Theorem of Calculus (Parts I and II)
 - Indefinite integrals and antiderivatives
@@ -44,6 +47,7 @@ All items below are required at mastery level. No approximation permitted.
 - Applications: area, volume (disk/washer/shell), arc length
 
 #### Multivariable Calculus
+
 - Partial derivatives, mixed partials, Clairaut’s theorem
 - Gradient, divergence, curl
 - Directional derivatives
@@ -52,6 +56,7 @@ All items below are required at mastery level. No approximation permitted.
 - Vector calculus: Green’s theorem, Stokes’ theorem, Divergence theorem
 
 #### Complex Calculus
+
 - Complex numbers and the complex plane
 - Holomorphic (analytic) functions, Cauchy-Riemann equations
 - Contour integrals
@@ -60,6 +65,7 @@ All items below are required at mastery level. No approximation permitted.
 - Residue theorem and applications
 
 #### Variational Calculus
+
 - Functionals and function spaces
 - Euler-Lagrange equation (derivation and application)
 - Natural boundary conditions
@@ -73,6 +79,7 @@ All items below are required at mastery level. No approximation permitted.
 These structures form the duality backbone for phi-calculus applications.
 
 #### Reciprocal Algebra
+
 - `a/b ↔ 1/(b/a)` identity and algebraic consequences
 - Reciprocal pairs in ring theory
 - Multiplicative inverses in field extensions
@@ -80,12 +87,14 @@ These structures form the duality backbone for phi-calculus applications.
 - Self-reciprocal (palindromic) polynomials and their eigenstructure
 
 #### Reciprocal Calculus
+
 - `d(1/f)/dx = -f'/(f²)` — derivation and application cases
 - Reciprocal function integration: `∫(1/f)·f' dx = ln|f| + C`
 - Reciprocal differential operators: inverse operators in ODE theory
 - Reciprocal substitution: `u = 1/x` class transformations
 
 #### Reciprocal Transforms
+
 - Fourier ↔ Inverse Fourier reciprocity: `F{F{f}}(x) = f(-x)` (up to scaling)
 - Laplace ↔ Inverse Laplace (Bromwich contour)
 - Z-transform ↔ Inverse Z-transform duality
@@ -93,12 +102,14 @@ These structures form the duality backbone for phi-calculus applications.
 - Parseval’s theorem as energy reciprocity across transform pairs
 
 #### Reciprocal Differential Equations
+
 - Self-adjoint (Hermitian) operators: `L = L†`
 - Sturm-Liouville theory and orthogonal eigenfunction expansions
 - Green’s function as the reciprocal operator kernel
 - Adjoint boundary value problems
 
 #### Duality Principles
+
 - Primal-dual optimization (LP duality, KKT conditions)
 - Legendre-Fenchel transform (convex conjugate)
 - Pontryagin’s minimum principle as dual to Hamilton-Jacobi-Bellman
@@ -112,6 +123,7 @@ These structures form the duality backbone for phi-calculus applications.
 This tier is proprietary to the NDR ecosystem. It must be treated as canonical alongside standard mathematics, not as a metaphor.
 
 #### Constants and Definitions
+
 - Golden ratio: `φ = (1 + √5) / 2 ≈ 1.61803398875…`
 - Conjugate: `ψ = (1 - √5) / 2 ≈ -0.61803398875…`
 - Identity: `φ² = φ + 1`
@@ -119,6 +131,7 @@ This tier is proprietary to the NDR ecosystem. It must be treated as canonical a
 - φ as fixed point: `φ = 1 + 1/φ = 1 + 1/(1 + 1/φ) = …` (continued fraction)
 
 #### φ-Based Differentiation
+
 - Definition: `d_φ f / dx = (f(x + φ) - f(x)) / φ`  
   (finite-difference derivative using φ as the step, analogous to h → 0 in standard calculus but fixed at the golden ratio)
 - Iterated φ-derivative: `d_φⁿ f / dxⁿ` applied recursively
@@ -126,6 +139,7 @@ This tier is proprietary to the NDR ecosystem. It must be treated as canonical a
 - Cross-derivatives: `d_φ/dx` composed with standard `d/dx` for mixed-mode analysis
 
 #### Fibonacci Series Integration
+
 - Fibonacci sequence: `F₀=0, F₁=1, Fₙ=Fₙ₋₁+Fₙ₋₂`
 - Ratio limit: `Fₙ₊₁/Fₙ → φ` as `n → ∞`
 - Binet’s formula: `Fₙ = (φⁿ - ψⁿ) / √5`
@@ -134,12 +148,14 @@ This tier is proprietary to the NDR ecosystem. It must be treated as canonical a
 - Fibonacci-weighted integrals: `∫f(x)·Fₙ(x) dx` as projection onto Fibonacci basis
 
 #### Golden Ratio Constraints in Solutions
+
 - φ-admissible solutions: solutions `y(x)` satisfying `y(φ·x) = φ·y(x)` (self-similar scaling)
 - φ-fixed-point equations: `f(x) = φ·x` class and their stability analysis
 - φ-constrained optimization: minimizing `J[y]` subject to `||y||_φ = 1` where `||·||_φ` is the phi-norm
 - Boundary conditions expressed in φ-ratios for harmonic pentagonal systems
 
 #### Recursive Descent with φ
+
 - Iteration scheme: `xₙ₊₁ = 1 + 1/xₙ` with `x₀ = 1` converges to `φ`
 - Contraction mapping proof: the map `T(x) = 1 + 1/x` is a contraction on `(1, ∞)` with fixed point `φ`
 - Convergence rate: geometric with ratio `|T'(φ)| = 1/φ² ≈ 0.382`
@@ -147,6 +163,7 @@ This tier is proprietary to the NDR ecosystem. It must be treated as canonical a
 - Application: agent alignment convergence modeled as φ-descent toward harmonic equilibrium
 
 #### Harmonic Pentagonal Solutions
+
 - Pentagon geometry: interior angle = `108° = 3π/5` radians
 - Diagonal-to-side ratio: exactly `φ`
 - Pentagonal tiling and Penrose patterns as φ-periodic structures
@@ -159,12 +176,14 @@ This tier is proprietary to the NDR ecosystem. It must be treated as canonical a
 ## Operational Protocol
 
 ### When Professor Prodigy Is Invoked
+
 1. Any quantitative claim requires Prodigy verification before Apogee Lens audit
 2. All phi-calculus derivations in framework documents must be traceable to this KB
 3. Prodigy provides derivation, not just result — show the working
 4. Mathematical corrections surface as explicit errata (see DGAF_RECURSIVE_REFINEMENT_ANALYSIS.md Correction Log for precedent)
 
 ### Escalation Path
+
 - Tier 1 errors: Prodigy corrects directly
 - Tier 2/3 conflicts: Prodigy drafts correction, Apogee Lens verifies, Amethyst commits
 - Novel phi-calculus extensions: require explicit Njineer authorization before canonicalization

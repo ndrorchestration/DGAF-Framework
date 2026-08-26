@@ -1,4 +1,5 @@
 # PROTOCOL — LYRA
+
 **Classification:** T2 FRAMEWORK  
 **Agent ID:** A-06 | **Role:** Synthesis / Integration  
 **Owner:** COLLEEN (protocol layer) | **Version:** 1.0 | **Date:** 2026-06-28
@@ -6,6 +7,7 @@
 ---
 
 ## 1. Activation Conditions
+
 - Invoked by Integration Pair activation (with Echolette)
 - Invoked by Amethyst when cross-document synthesis is needed
 - Invoked when RD_GAPS.md requires update
@@ -34,12 +36,14 @@ STEP 4 — Output
 ```
 
 ## 3. Output Contract
+
 - Unified synthesis report (structured markdown)
 - Gap list with severity classifications
 - Updated RD_GAPS.md
 - Conflict flags requiring Amethyst resolution
 
 ## 4. Error Handling
+
 | Error | Response |
 |-------|----------|
 | Unresolvable source conflict | Flag to Amethyst; do not synthesize conflicting content |
@@ -47,12 +51,14 @@ STEP 4 — Output
 | Source document missing | Note in gap list; proceed with available sources |
 
 ## 5. Inter-Agent Handoffs
+
 - **← Amethyst:** activation + synthesis scope
 - **↔ Echolette:** Integration Pair coordination
 - **→ Amethyst:** synthesis report + gap list
 - **→ RD_GAPS.md:** direct update
 
 ## Version History
+
 | Version | Date | Change |
 |---------|------|--------|
 | 1.0 | 2026-06-28 | Initial protocol |

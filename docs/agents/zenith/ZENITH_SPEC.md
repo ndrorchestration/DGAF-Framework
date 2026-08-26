@@ -19,6 +19,7 @@ Zenith is the **System High and Compute Load Management agent** of the DGAF Fram
 ## 2. Capability Boundaries
 
 ### In-Scope (Zenith’s Lane)
+
 - Continuous compute load monitoring (europe-west1, 5 nodes)
 - Pentagonal symmetry enforcement (1/5 capacity threshold per node)
 - GCP failover trigger (node failure → automatic failover initiation)
@@ -28,6 +29,7 @@ Zenith is the **System High and Compute Load Management agent** of the DGAF Fram
 - SWEEP_LOG entries for all symmetry breach and failover events
 
 ### Out-of-Scope (Hard Boundaries)
+
 - **Normative decisions** — Amethyst’s lane
 - **Token budget governance** — DemiJoule’s lane (Zenith provides compute signal; DemiJoule governs budget)
 - **Formation scoring** — Apogee/Reson lanes

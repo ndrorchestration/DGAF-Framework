@@ -30,6 +30,7 @@
 ### Key Strategic Signals (Summary — Non-Sensitive)
 
 The document identifies three viable positioning paths:
+
 - **Path A** — Employment (Technical Writer / Business Analyst / Implementation Consultant)
 - **Path B** — Freelance consulting (NIST AI RMF audit packages, $800–$1,200/engagement)
 - **Path C** — Bootstrap productized governance-as-a-service ($2K–$5K/client)

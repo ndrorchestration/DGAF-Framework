@@ -17,6 +17,7 @@ This document defines Amethyst’s integration contracts with every agent in the
 ### Tier 1 — Strategic Quintet Peers
 
 #### Amethyst ↔ Apogee (A-01)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Amethyst → Apogee | Score request (artifact ref + context) | P-11 |
@@ -25,6 +26,7 @@ This document defines Amethyst’s integration contracts with every agent in the
 | **Conflict:** | Amethyst cannot override Apogee score — must re-trigger scoring cycle | — |
 
 #### Amethyst ↔ Perigee (A-02)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Perigee → Amethyst | Post-hoc block notification (auto-executed) | NDR-133 peer |
@@ -32,6 +34,7 @@ This document defines Amethyst’s integration contracts with every agent in the
 | **Gate:** | Perigee blocks auto-execute — Amethyst receives result, does not pre-approve | — |
 
 #### Amethyst ↔ Nova (A-03)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Amethyst → Nova | TUE clearance signal (when COLLEEN L5 achieved) | TUE gate |
@@ -40,6 +43,7 @@ This document defines Amethyst’s integration contracts with every agent in the
 | **Constraint:** | Amethyst must not activate Nova before COLLEEN TUE — Rule 8 |
 
 #### Amethyst ↔ Professor Prodigy (A-04)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Amethyst → Prof Prodigy | Proof request (formal verification task) | P-10 |
@@ -51,6 +55,7 @@ This document defines Amethyst’s integration contracts with every agent in the
 ### Tier 2 — Operational Swarm
 
 #### Amethyst ↔ COLLEEN (A-05)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Amethyst → COLLEEN | Session open instruction; BLG surface request | P-02 |
@@ -59,6 +64,7 @@ This document defines Amethyst’s integration contracts with every agent in the
 | **TUE:** | COLLEEN signals L5 Executor status to Amethyst → Amethyst unlocks Nova | TUE gate |
 
 #### Amethyst ↔ The Auditor (A-07)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Auditor → Amethyst | Constraint verify pass/fail | NDR-Protocol-01 step 1 |
@@ -66,12 +72,14 @@ This document defines Amethyst’s integration contracts with every agent in the
 | **Gate:** | Amethyst cannot bypass Auditor without explicit override + SWEEP_LOG entry | — |
 
 #### Amethyst ↔ The Actualizer (A-08)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Amethyst → Actualizer | Indirect — via NDR-Protocol-01 chain (Auditor must pass first) | NDR-Protocol-01 |
 | Actualizer → Amethyst | Artifact delivery (for Apogee scoring + Amethyst seal) | NDR-Protocol-01 step 5 |
 
 #### Amethyst ↔ Zenith (A-09)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Zenith → Amethyst | System High alert (load imbalance, symmetry broken) | Escalation |
@@ -82,6 +90,7 @@ This document defines Amethyst’s integration contracts with every agent in the
 ### Tier 3 — Resonance Cluster
 
 #### Amethyst ↔ Reson (A-10)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Reson → Amethyst | Harmonic score (0.00–1.00) | P-15 pre-condition |
@@ -89,6 +98,7 @@ This document defines Amethyst’s integration contracts with every agent in the
 | **Gate:** | Amethyst gates on ≥0.75 for seal commits; <0.50 is hard stop | P-15 |
 
 #### Amethyst ↔ Ionia (A-13)
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Ionia → Amethyst | Modal lock confirmation (0Hz state achieved) | NDR-Protocol-01 convergence |
@@ -99,18 +109,21 @@ This document defines Amethyst’s integration contracts with every agent in the
 ### Legacy Extended Formation
 
 #### Amethyst ↔ Sentinel
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Sentinel → Amethyst | Sovereign veto notification | P-15 sovereign guard |
 | **Conflict:** | Sentinel veto overrides Amethyst — Njineer resolves. Amethyst cannot lift Sentinel block. | Rule 2 |
 
 #### Amethyst ↔ Reciprocity
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Reciprocity → Amethyst | Rollback path definition | P-15 checkpoint 9 |
 | Amethyst → Reciprocity | Rollback execution confirmation | Amethyst normative |
 
 #### Amethyst ↔ Herald
+
 | Direction | Content | Protocol |
 |---|---|---|
 | Amethyst → Herald | State confirmation (current state is final before relay) | Herald Relay activation |

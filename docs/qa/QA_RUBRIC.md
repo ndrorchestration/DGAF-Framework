@@ -14,6 +14,7 @@
 ## Purpose
 
 The QA_RUBRIC provides the canonical scoring framework for:
+
 1. **Artifact quality** — any file submitted for commit to DGAF-Framework
 2. **Agent output quality** — structured evaluation of any agent’s response or action
 3. **Session seal eligibility** — composite score threshold for P-15 seal commits
@@ -41,6 +42,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ## Domain A — Structural Integrity
 
 ### Q1 — Schema Conformance
+
 **Question:** Does the artifact conform to its declared schema or template?
 
 | Score | Criterion |
@@ -55,6 +57,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ---
 
 ### Q2 — Heading Hierarchy
+
 **Question:** Does the document maintain a valid, non-skipping heading hierarchy (H1 → H2 → H3)?
 
 | Score | Criterion |
@@ -69,6 +72,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ---
 
 ### Q3 — Cross-Reference Integrity
+
 **Question:** Are all internal links, file references, and CROSS_REF pointers valid and resolvable?
 
 | Score | Criterion |
@@ -85,6 +89,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ## Domain B — Governance Compliance
 
 ### Q4 — Classification Tagging
+
 **Question:** Is the artifact correctly tagged with its T1/T2/T3 classification tier per PROPRIETARY.md?
 
 | Score | Criterion |
@@ -99,6 +104,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ---
 
 ### Q5 — Authority Attribution
+
 **Question:** Does the artifact correctly declare its maintaining agent and authority level?
 
 | Score | Criterion |
@@ -113,6 +119,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ---
 
 ### Q6 — Deprecated Reference Scan
+
 **Question:** Does the artifact contain any deprecated agent names (Lavender, Forseti) or superseded file references?
 
 | Score | Criterion |
@@ -128,6 +135,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ## Domain C — Content Quality
 
 ### Q7 — Role Boundary Adherence
+
 **Question:** Does the artifact’s content respect declared agent role boundaries (no lane violations)?
 
 | Score | Criterion |
@@ -142,6 +150,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ---
 
 ### Q8 — Completeness
+
 **Question:** Are all declared sections and stubs either fully populated or explicitly marked as pending with a patch instruction?
 
 | Score | Criterion |
@@ -156,6 +165,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ---
 
 ### Q9 — Vocabulary Consistency
+
 **Question:** Does the artifact use canonical DGAF vocabulary (per GAP-03 vocab scan)?
 
 | Score | Criterion |
@@ -172,6 +182,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ## Domain D — Operational Readiness
 
 ### Q10 — Protocol Linkage
+
 **Question:** Does the artifact correctly reference all protocols it is governed by or participates in?
 
 | Score | Criterion |
@@ -186,6 +197,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ---
 
 ### Q11 — Failure Mode Coverage
+
 **Question:** Does the artifact document ≥2 failure modes, each with trigger + mitigation?
 
 | Score | Criterion |
@@ -202,6 +214,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 ## Domain E — Efficiency Gate (Gate 17)
 
 ### Gate 17 — DemiJoule Efficiency Score
+
 **Question:** Is the artifact’s production compute cost within acceptable efficiency bounds?
 
 | Score | Criterion |

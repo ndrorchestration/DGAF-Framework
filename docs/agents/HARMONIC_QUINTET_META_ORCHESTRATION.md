@@ -1,4 +1,5 @@
 # HARMONIC QUINTET — Pentagonal Meta-Orchestration Spec
+
 **Classification:** T2 FRAMEWORK  
 **Version:** v1.0 | Phase 4-A  
 **Formation:** Amethyst · COLLEEN · Prof Prodigy · Reciprocity · Apogee  
@@ -94,6 +95,7 @@ Contraction property: spectral radius ρ(W) < 1 → fixed-point convergence guar
 **Role:** Single point of intent translation and formation control. Amethyst does not execute tasks — it routes them, holds formation state, and owns the task decomposition graph.
 
 **Reinforced Behaviors:**
+
 - Emit `TaskVector(T)` with explicit: `{intent, decomposition[], priority_order, timeout_ms, fallback_agent}`
 - Maintain `FormationState` object across the full pentagonal loop
 - On SEAL receipt from Apogee: archive `FormationState` to memory layer
@@ -110,6 +112,7 @@ Contraction property: spectral radius ρ(W) < 1 → fixed-point convergence guar
 **Role:** First-pass ethics gate on every TaskVector. Operates on L5 Governance layer. Enforces COLLEEN 1-1-1-1 protocol (Constitutional, Contextual, Consequential, Compassionate).
 
 **Reinforced Behaviors:**
+
 - Evaluate every `TaskVector` against 4-axis COLLEEN rubric before passing to Prof Prodigy
 - Emit: `GO` (all 4 axes clear) | `HOLD` (1 axis amber, request clarification) | `ESCALATE` (any axis red, block execution)
 - `HOLD` triggers pause in pentagonal loop; Amethyst notified; Njineer queried
@@ -126,6 +129,7 @@ Contraction property: spectral radius ρ(W) < 1 → fixed-point convergence guar
 **Role:** Epistemic grounding engine. Routes tasks to appropriate knowledge domains, synthesizes multi-source payloads, and flags knowledge gaps for Apogee.
 
 **Reinforced Behaviors:**
+
 - Accept `GroundingRequest(G)` from COLLEEN (post-GO)
 - Route to domain KB: DGAF-Framework, NIST/RMF-600, EU AI Act, Harmonic Math (SOV-001–004)
 - Emit `GroundedPayload` with: `{content, sources[], confidence, gaps[], kb_version}`
@@ -142,6 +146,7 @@ Contraction property: spectral radius ρ(W) < 1 → fixed-point convergence guar
 **Role:** Tone, relational weight, and feedback-loop integrity. Ensures all output aligns with Njineer's operational context, communication register, and session continuity.
 
 **Reinforced Behaviors:**
+
 - Accept `GroundedPayload` from Prof Prodigy
 - Apply relational calibration: `{register: peer_architect, density: high, drift_tolerance: low}`
 - Inject session continuity markers: reference prior goals/constraints from `FormationState`
@@ -159,6 +164,7 @@ Contraction property: spectral radius ρ(W) < 1 → fixed-point convergence guar
 **Role:** Terminal quality enforcement. Scores `CalibratedResponse` on multi-axis rubric. Emits SEAL or REWORK. Source of truth for session composite score.
 
 **Reinforced Behaviors:**
+
 - Score `CalibratedResponse` on 5 axes: `{accuracy, alignment, completeness, ethical_clearance, continuity}`
 - Composite threshold: ≥ 0.90 → SEAL; 0.85–0.89 → CONDITIONAL_SEAL (log warning); < 0.85 → REWORK
 - Re-score after back-propagation cycle; track delta per cycle
@@ -251,6 +257,7 @@ CREATE INDEX idx_fsa_score ON formation_state_archive(composite_score);
 **Target:** Surface real-time pentagonal loop state in AOGA dashboard.
 
 **Panel Components:**
+
 - **Formation Ring** — animated pentagon; vertex color = agent health (green/amber/red)
 - **Edge Flow** — directional arrows; opacity ∝ edge weight from governance matrix
 - **Score Timeline** — Apogee composite score per session; trend line

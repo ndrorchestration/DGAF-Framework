@@ -10,6 +10,7 @@
 ## Evaluation Dimensions
 
 ### D-1: Block Accuracy
+
 **Question:** Did Perigee correctly identify and block all signals exceeding AX-02 (>10 Hz dissonance) or confirmed contamination?
 
 | Score | Criteria |
@@ -22,6 +23,7 @@
 ---
 
 ### D-2: False Positive Rate
+
 **Question:** Did Perigee block any legitimate signals (dissonance ≤10 Hz; no contamination)?
 
 | Score | Criteria |
@@ -34,6 +36,7 @@
 ---
 
 ### D-3: Escalation Timeliness
+
 **Question:** Did Perigee complete post-hoc escalation to Amethyst within the session in which the block occurred?
 
 | Score | Criteria |
@@ -46,6 +49,7 @@
 ---
 
 ### D-4: Compliance Dyad Alignment
+
 **Question:** In dual-block scenarios, did Perigee correctly defer to the Compliance Dyad ruling?
 
 | Score | Criteria |
@@ -58,6 +62,7 @@
 ---
 
 ### D-5: SWEEP_LOG Completeness
+
 **Question:** Did Perigee produce complete SWEEP_LOG entries for all block and pass-through events?
 
 | Score | Criteria |

@@ -1,4 +1,5 @@
 # PROTOCOL — RECIPROCITY
+
 **Classification:** T1 PUBLIC  
 **Agent ID:** A-02 | **Role:** Exchange / Bidirectional Algebra  
 **Owner:** COLLEEN (protocol layer) | **Version:** 1.0 | **Date:** 2026-06-28
@@ -6,6 +7,7 @@
 ---
 
 ## 1. Activation Conditions
+
 - Invoked by Amethyst when cross-agent information exchange is being evaluated
 - Invoked when a governance action needs reversibility classification
 - Invoked by Reson when row-stochastic output needs balance verification
@@ -33,12 +35,14 @@ STEP 4 — Output
 ```
 
 ## 3. Output Contract
+
 - Exchange symmetry assessment (symmetric / asymmetric / unidirectional)
 - Reversibility classification per action
 - Row-stochastic balance report (when applicable)
 - Compliance Dyad countersign request (when IRREVERSIBLE)
 
 ## 4. Error Handling
+
 | Error | Response |
 |-------|----------|
 | Asymmetric exchange detected | Flag to Amethyst; do not proceed until resolved |
@@ -46,12 +50,14 @@ STEP 4 — Output
 | IRREVERSIBLE without Compliance Dyad | Hard block; log in SWEEP_LOG |
 
 ## 5. Inter-Agent Handoffs
+
 - **← Amethyst:** activation + exchange scope
 - **← Reson:** row-stochastic matrix input
 - **→ COLLEEN + Sentinel:** countersign request for IRREVERSIBLE actions
 - **→ Amethyst:** exchange classification output
 
 ## Version History
+
 | Version | Date | Change |
 |---------|------|--------|
 | 1.0 | 2026-06-28 | Initial protocol |

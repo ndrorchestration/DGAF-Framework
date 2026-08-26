@@ -13,6 +13,7 @@
 ## Amendment Summary
 
 This amendment adds two canonical facts to the Reciprocity KB:
+
 1. Reciprocity applies **Reciprocal Mathematics** (cooperative/mutual-benefit mathematical modeling, grounded in game theory) to ensure balanced resource allocation
 2. Reciprocity prevents **asymmetric logic drift** — the condition where one agent's reasoning advantage compounds at the expense of formation balance
 

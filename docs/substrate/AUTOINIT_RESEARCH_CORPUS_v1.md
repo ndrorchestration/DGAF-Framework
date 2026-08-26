@@ -28,17 +28,21 @@
 Designed for linear or approximately-linear activations (tanh). Keeps variance of activations and backpropagated gradients constant across layers.
 
 For layer with n_in inputs and n_out outputs:
+
 ```
 Var[W] = 2 / (n_in + n_out)
 ```
+
 **Limitation:** Fails for ReLU (halves variance of incoming signal).
 
 ### He / Kaiming Initialization
 
 Accounts for ReLU non-linearity:
+
 ```
 Var[W] = 2 / n_in
 ```
+
 **Limitation:** Hard-coded to ReLU; fails for novel activation functions (NAS environments).
 
 ### AutoInit (P-38) — Universal Analytic Approach
@@ -46,6 +50,7 @@ Var[W] = 2 / n_in
 ```
 Var[W] = g^2 / n_in
 ```
+
 Where g = 1 / sqrt(E[φ(x)^2]) for x ~ N(0,1).
 
 AutoInit analytically computes the second moment of any activation function φ, derives g automatically, and applies corrective scaling. No topology-specific assumptions.
@@ -117,9 +122,9 @@ The constant 1.7747 was first identified as a benchmark RMSE in signal-preservin
 
 ## External Citations
 
-1. Garrett Bingham’s research works | UT Austin — https://www.researchgate.net/scientific-contributions/Garrett-Bingham-2170752827
-2. Garrett Bingham — Google Scholar — https://scholar.google.com/citations?user=yyrZ2SQAAAAJ&hl=en
-3. Peer-Reviewed AI Research Papers | Cognizant AI Lab — https://www.cognizant.com/us/en/ai-lab/publications
+1. Garrett Bingham’s research works | UT Austin — <https://www.researchgate.net/scientific-contributions/Garrett-Bingham-2170752827>
+2. Garrett Bingham — Google Scholar — <https://scholar.google.com/citations?user=yyrZ2SQAAAAJ&hl=en>
+3. Peer-Reviewed AI Research Papers | Cognizant AI Lab — <https://www.cognizant.com/us/en/ai-lab/publications>
 4. Vera de Spinadel metallic means research — Osaka Institute of Technology (2021)
 
 ---
