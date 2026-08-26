@@ -53,7 +53,7 @@ A mathematical term, external framework name, benchmark number, deployment, regi
 
 DGAF aims to keep the public reference implementation sufficiently complete for independent cloning, inspection, execution, and evaluation. Legitimate commercial differentiation may reside in managed operations, integration, assurance, support, hosting, specialized tooling, customer-specific configurations, training, and future certification programs. Public scientific/technical claims must retain enough evidence for independent evaluation even when adjacent operational assets are commercial or private.
 
-The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the legal terms. The license does not grant trademark rights; future “Official DGAF,” “DGAF Certified,” or endorsement claims require separate governance and should not be inferred from repository status or project attestation.
+The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the legal terms. The license does not grant trademark rights; future official, certification, or endorsement claims bearing the DGAF name require separate governance and should not be inferred from repository status or project attestation.
 
 ## PDMAL/DGAF documentation spine
 

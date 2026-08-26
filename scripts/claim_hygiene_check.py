@@ -13,14 +13,33 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-EXCLUDED = {
-    Path("docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md"),
-    Path("docs/evidence/EVIDENCE_LADDER_POLICY.md"),
-    Path("docs/evidence/EPISTEMIC_CONSISTENCY_RULES.md"),
-    Path("docs/EPISTEMIC_EVIDENCE_STANDARD.md"),
+# Definitional policy / vocabulary / register docs whose purpose is to
+# ENUMERATE the prohibited claim-language as rules or audit records. These are
+# not active claims and would self-flag the checker's own vocabulary.
+EXCLUDED_RAW = {
+    "docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md",
+    "docs/evidence/EVIDENCE_LADDER_POLICY.md",
+    "docs/evidence/EPISTEMIC_CONSISTENCY_RULES.md",
+    "docs/EPISTEMIC_EVIDENCE_STANDARD.md",
+    "docs/EPISTEMIC_SUPERSESSION_REGISTER.md",
+    "docs/QUALITY_REGISTRY_CLAIM_REVIEW_2026-08-16.md",
+    "docs/SEMANTIC_CLAIM_REVIEW_2026-08-16.md",
+    "docs/gates/ACOUSTIC_GATES.md",
+    "docs/gates/GATE_1111.md",
+    "docs/gates/GATE_11Q.md",
+    "docs/gates/TELESCOPIC_LENS.md",
+    "docs/taxonomy/EPISTEMIC_CROSS_REPO_SWEEP_2026-08-15.md",
+    "docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md",
 }
+# Case-insensitive so exclusions apply on case-sensitive Linux CI regardless of
+# on-disk casing (files are stored UPPERCASE, e.g. docs/EPISTEMIC_EVIDENCE_STANDARD.md).
+EXCLUDED = {p.lower() for p in EXCLUDED_RAW}
 ALLOWED_SUFFIXES = {".md", ".py", ".ts", ".tsx", ".yml", ".yaml", ".json"}
-EXCLUDED_PARTS = {".git", "node_modules", ".venv", "venv", "__pycache__", "htmlcov"}
+# CI workflows and this checker's own scripts are configuration, not publishable
+# claim-language. The checker must not scan its own definition file
+# (claim-hygiene.yml defines the 'production-ready' regex string and would
+# self-flag) nor its own source/comment lines (which contain the lexicon).
+EXCLUDED_PARTS = {".git", "node_modules", ".venv", "venv", "__pycache__", "htmlcov", ".github", "scripts"}
 
 PATTERNS = [
     re.compile(r"\bDGAF\s+(?:Certified|Official|Endorsed|Verified|Approved)\b", re.I),
@@ -68,7 +87,7 @@ def main() -> int:
         if not path.is_file() or path.suffix.lower() not in ALLOWED_SUFFIXES:
             continue
         rel = path.relative_to(ROOT)
-        if rel in EXCLUDED or any(part in EXCLUDED_PARTS for part in rel.parts):
+        if rel.as_posix().lower() in EXCLUDED or any(part in EXCLUDED_PARTS for part in rel.parts):
             continue
         try:
             text = path.read_text(encoding="utf-8")

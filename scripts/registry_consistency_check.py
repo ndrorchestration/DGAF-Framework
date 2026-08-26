@@ -13,8 +13,15 @@ MACHINE = ROOT / "docs" / "ndr_patterns_unified.json"
 md = MARKDOWN.read_text(encoding="utf-8")
 data = json.loads(MACHINE.read_text(encoding="utf-8"))
 
-md_match = re.search(r"\*\*Registry watermark:\*\*\s+\*\*(P-\d+)\*\*", md)
-md_total = re.search(r"\*\*Total named patterns \(P-series\)\*\*\s+\*\*(\d+)\*\*", md)
+# Tolerant parsing: the canonical metadata appears both as prose
+# ("**Registry watermark:** **P-XX**") and as a table row
+# ("| Registry watermark | **P-XX** |"). Match either form.
+md_match = re.search(r"\*\*Registry watermark:\*\*\s+\*\*(P-\d+)\*\*", md) or re.search(
+    r"Registry watermark\s*\|\s*\*\*(P-\d+)\*\*", md
+)
+md_total = re.search(r"\*\*Total named patterns \(P-series\)\*\*\s+\*\*(\d+)\*\*", md) or re.search(
+    r"Total named patterns \(P-series\)\s*\|\s*\*\*(\d+)", md
+)
 if not md_match or not md_total:
     raise SystemExit("Registry consistency check failed: canonical Markdown metadata is not parseable.")
 
