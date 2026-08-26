@@ -25,6 +25,7 @@ class Deviation:
 class DeviationRegister:
     def __init__(self) -> None:
         self._items: list[Deviation] = []
+        self._ids: set[str] = set()
 
     def record(
         self,
@@ -40,6 +41,10 @@ class DeviationRegister:
         include_exclude_decision: str = "pending",
         authorization: str = "unreviewed",
     ) -> Deviation:
+        if not isinstance(deviation_id, str) or not deviation_id.strip():
+            raise ValueError("deviation_id must be a non-empty string")
+        if deviation_id in self._ids:
+            raise ValueError(f"duplicate deviation_id: {deviation_id}")
         deviation = Deviation(
             deviation_id=deviation_id,
             timestamp=datetime.now(timezone.utc).isoformat(),
@@ -54,6 +59,7 @@ class DeviationRegister:
             authorization=authorization,
         )
         self._items.append(deviation)
+        self._ids.add(deviation_id)
         return deviation
 
     def to_dicts(self) -> list[dict]:
