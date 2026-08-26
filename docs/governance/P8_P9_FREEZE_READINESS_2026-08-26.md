@@ -12,6 +12,12 @@
 
 This is a readiness/control artifact. It is not evidence that any unchecked predicate has passed and it does not authorize execution.
 
+## Dynamic control model
+
+The execution order and dependency rules are governed by [`DYNAMIC_FREEZE_ADMISSIBILITY_CONTROL_2026-08-26.md`](DYNAMIC_FREEZE_ADMISSIBILITY_CONTROL_2026-08-26.md).
+
+Every gate is treated as a predicate with explicit scope, prerequisite set, evidence requirement, freshness rule, invalidation rule, and closure rule. Independent `READY` lanes may proceed in parallel; `BLOCKED`, `STALE`, `INVALIDATED`, `REVIEW`, and authorization states are fail-closed and cannot be bypassed by documentation.
+
 ## P8 candidate evidence matrix
 
 | Predicate | Required evidence | Current state |
@@ -22,8 +28,10 @@ This is a readiness/control artifact. It is not evidence that any unchecked pred
 | P4 blinding | custody, bijection, access separation, operational procedure | Controls implemented; operational evidence pending |
 | P5 reproducibility | environment fingerprint and deterministic reproduction | Partially specified; execution-time fingerprint pending |
 | P6 custody | archive → retrieve → hash verification | **OPEN** |
+| P6a runtime | authenticated four-case CORS matrix on exact deployment | **OPEN — blocked by authenticated deployment path** |
 | P7 scientific target | authority adoption + cryptographic binding | **FORMALLY OPEN** |
 | P8 analysis lock | exact analysis implementation/configuration + protocol binding | **OPEN / FAIL-CLOSED** |
+| E2b verifier toolchain | pinned dependency/toolchain identity for evidence judge | **OPEN — required before freeze admissibility** |
 
 ## P6a runtime evidence
 
@@ -61,6 +69,7 @@ The freeze manifest must bind, at minimum:
 - H1–H3 publication mapping hash;
 - baseline matrix hash;
 - negative-control matrix hash;
+- verification-toolchain/E2b lock hash;
 - exact workflow run IDs;
 - retained evidence artifact IDs;
 - durable custody/retrieval hashes;
@@ -78,21 +87,22 @@ The independent verifier must establish, without relying solely on the same evid
 - blinding boundary remains intact;
 - custody evidence is independently retrievable and hash-verifiable;
 - environment fingerprint is recorded and reproducible;
+- E2b verifier toolchain is pinned and reproducible;
 - P7 authority adoption is explicit;
 - freeze manifest represents exactly the apparatus being verified;
 - no post-freeze executable mutation exists.
 
 ## Authorization boundary
 
-Authorization requires all P1–P9 predicates, an independently verified immutable freeze, and an explicit authorization decision. Until then:
+Authorization requires all P1–P9 predicates plus E2b, an independently verified immutable freeze, and an explicit authorization decision. Until then:
 
 - no pilot execution;
 - no unblinding;
 - no efficacy claim;
 - N remains `0`.
 
-## Drift rule
+## Dynamic invalidation rule
 
-Any substantive change to executable code, workflow behavior, dependencies, schemas, protocol semantics, analysis semantics, blinding semantics, failure/recovery semantics, or deployment behavior invalidates the current candidate binding and requires a new candidate plus affected-predicate re-verification.
+Any substantive change to executable code, workflow behavior, dependencies, schemas, protocol semantics, analysis semantics, blinding semantics, failure/recovery semantics, deployment behavior, or verification-toolchain provenance invalidates the affected candidate/predicate bindings and requires candidate transition or affected-predicate re-verification.
 
-Documentation-only successors may update living governance records without advancing the executable candidate, provided the changes do not alter those substantive surfaces.
+Documentation-only successors may update living governance records without advancing the executable candidate, provided an audit confirms that none of those substantive surfaces changed.
