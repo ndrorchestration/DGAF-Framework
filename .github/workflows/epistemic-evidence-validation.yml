@@ -23,7 +23,9 @@ jobs:
         run: |
           # Functional validation only. These source requirement files are not
           # a complete immutable transitive hash lock, so this step is not E2b evidence.
-          python -m pip install -r requirements-epistemic.txt -r experiments/pdmal_topology/requirements.txt
+          python -m pip install -r requirements-epistemic.txt
+          awk '!/--hash=/{ sub(/[[:space:]]+\\[[:space:]]*$/, ""); print }' experiments/pdmal_topology/requirements.txt > /tmp/pdmal-topology-functional.txt
+          python -m pip install -r /tmp/pdmal-topology-functional.txt
           python -m pip check
 
       - name: Record E2b dependency-provenance boundary
