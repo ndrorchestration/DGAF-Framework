@@ -23,9 +23,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install hash-pinned verifier toolchain (E2b)
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
 
       - name: Emit candidate evidence, verifier fingerprint, and negative-state proof (E2b/M6)
         run: python scripts/emit_freeze_control_evidence.py
