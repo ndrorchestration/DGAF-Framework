@@ -32,7 +32,19 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Run deterministic claim-language scan
+      - name: Run repository claim-hygiene gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/claim_hygiene_check.py
+
+      - name: Run NDR registry consistency gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/registry_consistency_check.py
+
+      - name: Run deterministic claim-language inventory
         shell: bash
         run: |
           set -euo pipefail
@@ -66,7 +78,7 @@ jobs:
                   continue
               for line_number, line in enumerate(text.splitlines(), start=1):
                   for label, pattern in patterns.items():
-                      for match in pattern.finditer(line):
+                      for _ in pattern.finditer(line):
                           findings.append({
                               'path': str(path),
                               'line': line_number,
@@ -83,7 +95,7 @@ jobs:
               'finding_count': len(findings),
               'findings': findings,
               'limitations': [
-                  'A textual match is not itself an overclaim; every finding requires contextual review.',
+                  'A textual match is not itself an overclaim; contextual claim-hygiene gate is authoritative.',
                   'Generated, binary, dependency, and excluded workspace directories are not scanned.',
                   'This audit does not establish scientific or production validity.',
               ],
