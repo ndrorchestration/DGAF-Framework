@@ -21,7 +21,15 @@ jobs:
 
       - name: Install epistemic and experiment dependencies
         run: |
-          python -m pip install --require-hashes -r requirements-epistemic.txt -r experiments/pdmal_topology/requirements.txt
+          # Functional validation only. These source requirement files are not
+          # a complete immutable transitive hash lock, so this step is not E2b evidence.
+          python -m pip install -r requirements-epistemic.txt -r experiments/pdmal_topology/requirements.txt
+          python -m pip check
+
+      - name: Record E2b dependency-provenance boundary
+        run: |
+          echo 'E2b status: NOT PASS'
+          echo 'Reason: verifier-policy dependency inputs are not yet a complete immutable transitive hash lock.'
 
       - name: Validate Evidence Cards
         run: |
