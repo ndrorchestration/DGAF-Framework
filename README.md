@@ -10,7 +10,7 @@ The DGAF/PDMAL experimental track remains **PRE-FREEZE**. The corrected pilot ap
 
 The historical implementation freeze `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains preserved as historical evidence only. It must not be described as the current freeze of the corrected apparatus.
 
-The corrected live candidate basis is `83e1678f55d16f32b5ce363e091ac74479cbfe1f`. Because the corrected tree includes verification-apparatus changes, it requires candidate-scoped re-verification before any P8 closure or new freeze claim. Later documentation-only changes do not redefine the apparatus; any further substantive apparatus change requires a new candidate identity and re-verification.
+The current executable verification candidate is `e6beeb66335e1b50a239697badab22dab50eb5ba`. It incorporates the current P8 integrity corrections and regression coverage. The candidate is deployed to Vercel as production deployment `dpl_HgSv9hTrvMNBHxboDhkkvHKeogc5` and is READY, but formal authenticated P2/P6a runtime verification, P7 formal adoption/binding, durable custody, P9 independent verification, and new freeze verification remain incomplete. Documentation-only successors do not redefine the executable apparatus; any further substantive apparatus change requires a new candidate identity and re-verification.
 
 The repository is also undergoing an ecosystem architecture pass separating DGAF implementation from the broader Pattern Commons and from commercialization, trademark, privacy, and security boundaries. These documentation changes do not themselves advance experimental gates.
 
