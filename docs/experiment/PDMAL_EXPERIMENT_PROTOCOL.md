@@ -3,8 +3,8 @@ status: ACTIVE
 state: PRE-FREEZE
 authority: Both
 owner: DGAF/PDMAL experimental-design control
-last_verified: 2026-08-23
-applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
+last_verified: 2026-08-26
+applies_to_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f
 protocol_blob_sha: BOUND_EXTERNALLY_BY_P8_LOCK
 supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
 ---
@@ -78,6 +78,7 @@ Historical characterization artifacts remain evidence only for the exact SHA and
 
 The protocol remains pre-freeze. The following remain open:
 
+- Formal adoption/closure of the P7 decision record
 - Candidate-scoped P8 implementation/configuration verification and hash binding
 - Exact protocol blob SHA is bound externally by the P8 analysis lock after this commit
 - Freeze commit SHA
