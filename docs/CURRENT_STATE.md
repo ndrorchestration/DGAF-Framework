@@ -9,16 +9,16 @@ applies_to_sha: 83e1678f55d16f32b5ce363e091ac74479cbfe1f
 
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it. This document describes current state without retroactively transferring historical evidence.
 
-> **What this document does NOT claim (2026-08-26 update):** This revision records the corrected live candidate basis after the CI/doc-hygiene PRs merged on 2026-08-26. It does **not** constitute a freeze, a P8 closure, pilot authorization, or empirical validation. P8 remains OPEN / FAIL-CLOSED. Empirical **N = 0**. No efficacy claim is authorized. Merge ≠ freeze; execution ≠ empirical validation.
+> **What this document does NOT claim (2026-08-26 update):** The current apparatus candidate is `83e1678f55d16f32b5ce363e091ac74479cbfe1f`. Later commits inspected in the candidate-to-current comparison are documentation/README/cross-reference changes only and do not redefine the apparatus candidate. This document does **not** constitute a freeze, a P8 closure, pilot authorization, or empirical validation. P7 is technically adjudicated but formally OPEN pending authority adoption and exact binding. P8 remains OPEN / FAIL-CLOSED. Empirical **N = 0**. No efficacy claim is authorized. Merge ≠ freeze; execution ≠ empirical validation.
 
 ## Authoritative current state
 
 | Gate / boundary | Status | Current meaning |
 |---|---|---|
-| Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains provenance only for the corrected apparatus |
-| P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Panel-ready record presents 11 proposed decisions all OPEN / PENDING AUTHORITY ADOPTION; primary contrast (DGAF vs null) selected but formal adoption not evidenced |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Implementation and controls exist, but executed candidate-scoped verification is incomplete |
-| Exact verification candidate | IDENTIFIED (corrected basis) | `83e1678f55d16f32b5ce363e091ac74479cbfe1f` is the corrected live candidate basis; re-verification is required before closure |
+| Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains provenance only |
+| P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Scientific decisions are resolved in the current P7 record; explicit authority adoption and exact protocol/apparatus/freeze binding remain outstanding |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Implementation and controls exist, but executed candidate-scoped verification and analysis binding are incomplete |
+| Exact apparatus candidate | IDENTIFIED | `83e1678f55d16f32b5ce363e091ac74479cbfe1f` remains the candidate; later inspected descendants are documentation-only |
 | New immutable freeze | NOT CREATED | Candidate has not crossed the freeze boundary |
 | Operational evidence closure | INCOMPLETE | Durable retention, candidate-scoped runtime evidence, and remaining custody/provenance checks require closure |
 | P9 independent verification | NOT EXECUTED | Downstream of candidate evidence closure |
@@ -27,7 +27,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 ## Candidate identity boundary
 
-The corrected live candidate basis is `83e1678f55d16f32b5ce363e091ac74479cbfe1f`, following the 2026-08-26 CI/doc-hygiene merges. The prior immutable apparatus reference `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` is retained as HISTORICAL PROVENANCE for the pre-correction apparatus and must not be reused as the current corrected candidate. Because the correction included verification-apparatus test-contract changes, the corrected tree is a NEW candidate identity requiring re-verification. Later documentation-only commits do not redefine that apparatus. Any further substantive apparatus change requires a new candidate identity and re-verification.
+The apparatus candidate is `83e1678f55d16f32b5ce363e091ac74479cbfe1f`. The prior immutable apparatus reference `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` remains historical provenance and must not be reused as the current corrected candidate. The candidate-to-current audit inspected the subsequent documentation revisions and found only documentation/README/cross-reference changes; no executable apparatus, schema, workflow, dependency, or runtime source file changed in that interval. Those commits therefore do not advance the apparatus candidate. This is an audit result, not a freeze or execution verification. Any future substantive apparatus change requires a new candidate identity and re-verification.
 
 Historical SHA references, including earlier PR #77 and pre-correction P8 bindings, remain provenance where they describe what was actually examined; they are not current-state assertions.
 
@@ -39,7 +39,7 @@ Historical SHA references, including earlier PR #77 and pre-correction P8 bindin
 - **P4 Security / blinding integrity:** PARTIAL — controls and synthetic evidence exist; operational custody boundary remains to be fully evidenced.
 - **P5 Provenance / reproducibility:** PARTIAL — bindings exist; candidate-scoped reproduction and environment evidence remain incomplete.
 - **P6 Durable evidence custody:** OPEN — durable archive plus independent retrieval/hash evidence remains required.
-- **P7 Scientific target specification:** TECHNICALLY ADJUDICATED / FORMALLY OPEN — primary contrast selected, but formal authority adoption is not evidenced.
+- **P7 Scientific target specification:** TECHNICALLY ADJUDICATED / FORMALLY OPEN — primary contrast selected; formal authority adoption and exact binding remain outstanding.
 - **P8 Analysis lock:** OPEN / FAIL-CLOSED — no closure by implementation presence alone.
 - **P9 Independent verification:** NOT EXECUTED.
 
@@ -68,7 +68,7 @@ Semantic/ontological detection is not automatically a blocking gate. A detector 
 
 ## Required next evidence events
 
-1. Establish a new immutable candidate identity from the corrected post-merge apparatus.
+1. Retain `83e1678f55d16f32b5ce363e091ac74479cbfe1f` as the apparatus candidate unless a substantive apparatus change is discovered.
 2. Execute the full repository audit on that immutable candidate and retain its coverage manifest.
 3. Run fresh engineering/unit/contract tests on that exact candidate.
 4. Run candidate-scoped artifact, negative-path, determinism, and topology-invariant tests.
