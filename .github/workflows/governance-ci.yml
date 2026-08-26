@@ -9,6 +9,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  PDMAL_TARGET_CANDIDATE_SHA: e6beeb66335e1b50a239697badab22dab50eb5ba
 
 jobs:
   governance-ci:
