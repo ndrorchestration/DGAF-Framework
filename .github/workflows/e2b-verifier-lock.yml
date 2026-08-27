@@ -8,6 +8,11 @@ on:
       - 'docs/governance/E2B_VERIFIER_LOCK_POLICY.md'
       - '.github/workflows/e2b-verifier-lock.yml'
   workflow_dispatch:
+    inputs:
+      expected_target_sha:
+        description: 'Optional exact Git commit SHA to require for this verification run'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -40,6 +45,15 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --require-hashes -r requirements-epistemic.lock
 
+      - name: Assert exact target when explicitly requested
+        if: ${{ inputs.expected_target_sha != '' }}
+        shell: bash
+        run: |
+          test "$GITHUB_SHA" = "${{ inputs.expected_target_sha }}" || {
+            echo "E2b target mismatch: expected ${{ inputs.expected_target_sha }}, found $GITHUB_SHA"
+            exit 1
+          }
+
       - name: Emit exact-tree E2b provenance
         shell: bash
         run: |
@@ -55,15 +69,6 @@ jobs:
             printf 'workflow_sha256=%s\n' "$workflow_sha"
             printf '%s\n%s\n%s\n%s\n' "$target_sha" "$source_sha" "$lock_sha" "$workflow_sha" | sha256sum | awk '{print "e2b_dependency_fingerprint=" $1}'
           } | tee e2b-dependency-fingerprint.txt
-
-      - name: Assert exact target when explicitly requested
-        if: ${{ inputs.expected_target_sha != '' }}
-        shell: bash
-        run: |
-          test "$GITHUB_SHA" = "${{ inputs.expected_target_sha }}" || {
-            echo "E2b target mismatch: expected ${{ inputs.expected_target_sha }}, found $GITHUB_SHA"
-            exit 1
-          }
 
       - name: Upload dependency fingerprint evidence
         uses: actions/upload-artifact@v4
