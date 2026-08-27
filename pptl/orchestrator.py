@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Optional
 
 from .triadic_governance_loop import (
+    GateRecord,
     GateResult,
     TGLHooks,
     TriadicGovernanceLoop,
@@ -98,7 +99,15 @@ class IntegratedOrchestrator:
                 turn_id=turn_id,
                 domain=self.config.domain,
                 tgl_passed=False,
-                gate_records=[],
+                gate_records=[
+                    GateRecord(
+                        step=0,
+                        pattern="P-35",
+                        gate_name="ProcludingPremiseGate",
+                        result=GateResult.KILL,
+                        notes=str(exc)[:120],
+                    )
+                ],
                 response=None,
                 blocked_reason=str(exc),
                 phi_score=None,
