@@ -1,11 +1,12 @@
-# P8 / P9 / Freeze Readiness — 2026-08-26
+# P8 / P9 / Freeze Readiness — Reconciled 2026-08-27
 
 ## Control status
 
 - State: `PRE-FREEZE / FAIL-CLOSED`
-- Current executable verification candidate: `e6beeb66335e1b50a239697badab22dab50eb5ba`
-- Current Vercel deployment: `dpl_HgSv9hTrvMNBHxboDhkkvHKeogc5`
-- Deployment state: `READY`
+- Current `main`: `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
+- Current-tree verification boundary: `ac8ea26…`
+- E2b exact-tree closure: `d299dd152…` / run `33047380487` / artifact `9636185725`
+- Current-tree M6: `OPEN / VERIFICATION REQUIRED`
 - Freeze: `NOT CREATED`
 - Authorization: `NOT GRANTED`
 - Empirical N: `0`
@@ -20,34 +21,32 @@ Every gate is a predicate with explicit scope, prerequisites, evidence requireme
 
 | Predicate | State | Closure requirement |
 |---|---|---|
-| P1 candidate identity | PARTIAL | Exact candidate/tree/source binding and retained evidence package |
-| P2 runtime | BLOCKED | Authenticated five-case runtime matrix on exact READY deployment |
-| P3 artifact contract | PARTIAL | Candidate-scoped schema/identity/uniqueness/balance evidence |
-| P4 blinding/security | OPEN | Operational custody, access separation, bijection, and unblinding procedure evidence |
+| P1 candidate identity | OPEN | Exact current-tree/source binding and retained evidence |
+| P2 runtime | BLOCKED / OPEN | Authenticated five-case runtime matrix on exact deployment |
+| P3 artifact contract | OPEN | Current-candidate schema/identity/uniqueness/balance evidence |
+| P4 blinding/security | OPEN | Operational custody, access separation, bijection, and unblinding evidence |
 | P5 reproducibility | OPEN | Environment fingerprint plus deterministic reproduction |
 | P6 durable custody | OPEN | Archive/retrieve/hash round trip with retained evidence |
-| P6a CORS | BLOCKED | Authenticated four-case CORS matrix on same deployment |
+| P6a CORS | BLOCKED / OPEN | Authenticated four-case CORS matrix on same deployment |
 | P7 scientific target | FORMALLY OPEN | Authority adoption + exact cryptographic binding |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Exact analysis/configuration/protocol/candidate binding |
-| E2b verifier toolchain | OPEN | Complete immutable transitive verifier dependency lock and executed fingerprint |
-| M6 negative state | OPEN | Machine-retained, independently hash-verifiable PRE-FREEZE/N=0/no-authorization evidence |
-| P9 independent verification | NOT EXECUTED | Independent verification of the complete evidence chain |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Exact analysis/configuration/protocol/current-tree binding |
+| E2b verifier toolchain | CLOSED / VERIFIED @ `d299dd1…` | Historical exact-tree verification retained; current-tree applicability requires affected-boundary re-verification |
+| M6 negative state | OPEN / CURRENT-TREE VERIFICATION REQUIRED | Machine-retained, independently hash-verifiable PRE-FREEZE/N=0/no-authorization evidence for `ac8ea26…` |
+| P9 independent verification | NOT EXECUTED | Independent verification of complete evidence chain |
 
-## E2b verifier boundary
+## E2b provenance boundary
 
-The apparatus dependency lock and verifier-policy dependency set are separate control surfaces. Governance CI uses the PDMAL full lock in an isolated Python 3.12 environment with `--require-hashes`; the evidence emitter separately records the verifier commit and the explicit target apparatus candidate and hashes target source objects directly from the target Git SHA.
+Run `33047380487` successfully verified exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167`, including exact checkout/target assertion, source requirements fingerprint, hash-pinned installation, exact-tree provenance, and artifact retention. Artifact `9636185725` has digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
 
-The functional Epistemic Evidence Validation workflow intentionally does **not** use `--require-hashes` against `requirements-epistemic.txt` and `experiments/pdmal_topology/requirements.txt`, because those files are not a complete immutable transitive hash lock. It runs functional validation with `pip check` and explicitly records `E2b = NOT PASS`.
-
-E2b therefore remains open until the verifier-policy dependency surface itself has a complete reproducible pinning strategy.
+This closure remains valid for its executed tree. The subsequent Governance CI change at `ac8ea26…` binds `PDMAL_TARGET_CANDIDATE_SHA` to `${{ github.sha }}` and therefore establishes a new current-tree verification boundary.
 
 ## M6 negative-state boundary
 
-M6 records the observed state of the current verification workspace/job only. It must not be interpreted as retrospective proof of global historical absence. The artifact records PRE-FREEZE, N=0, no authorization, no pilot mode, no blinding key, no pilot artifacts, and no pilot invocation in the current job, and fails closed when those conditions are not met.
+M6 must establish the observed current verification workspace state only: PRE-FREEZE, N=0, no authorization, no pilot mode, no blinding key, no pilot artifacts, and no pilot invocation. Historical M6 evidence targeting `e6beeb…` and verifier merge-ref `2516f32…` is non-closing for `ac8ea26…`.
 
 ## P2 / P6a boundary
 
-The READY Vercel deployment is supporting deployment evidence, not runtime-predicate closure. P2 and P6a require authenticated execution against the exact deployment identity. Current external blocker: `VERCEL_AUTOMATION_BYPASS_SECRET`.
+The READY deployment remains supporting deployment evidence, not runtime-predicate closure. P2 and P6a require authenticated execution against the exact deployment identity. The automation-bypass secret must be configured out-of-band before those lanes can execute.
 
 ## P7 / freeze boundary
 
