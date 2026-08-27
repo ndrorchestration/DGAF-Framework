@@ -1,9 +1,8 @@
 # P1–P9 Deliberative Predicate Evidence Matrix
 
 **Status:** CURRENT / PRE-FREEZE / FAIL-CLOSED
-**Current `main`:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
-**Current-tree verification boundary:** `ac8ea26…`
-**E2b exact-tree closure:** `d299dd152fb82d48a066d66a64bf0917e20d6167` / run `33047380487`
+**Current verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
+**Documentation successor(s):** do not redefine the executable boundary
 **Empirical N:** `0`
 **Pilot authorization:** `NOT GRANTED`
 **Freeze:** `NOT CREATED`
@@ -12,9 +11,9 @@ This matrix is the current planning/control surface for P1–P9. It does not con
 
 ## State precedence
 
-`current live main > current executable verification boundary > historical candidate/freeze`.
+`current verified executable boundary > documentation-only successors > historical candidate/freeze`
 
-The historical candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` and historical verifier merge-ref `2516f32…` remain provenance only for current freeze decisions. The prior M6 evidence targeting that historical candidate is non-closing for `ac8ea26…`.
+The historical executable candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` remains provenance only for current freeze decisions. The current exact-tree verification boundary is `ac8ea267…`.
 
 ## Predicate matrix
 
@@ -27,7 +26,7 @@ The historical candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` and historic
 | P5 Provenance / Reproducibility | environment/toolchain/topology/RNG fingerprints and reproduction | **OPEN** | current candidate evidence retained |
 | P6 Durable Evidence Custody | archive → independent retrieval → hash verification | **BLOCKED / OPEN** | end-to-end current evidence verified |
 | P6a Runtime/CORS | authenticated four-case CORS matrix on exact deployment | **BLOCKED / OPEN** | matrix passes on same deployment as P2 |
-| P7 Scientific Target | explicit authority adoption + exact binding | **FORMALLY OPEN** | authority/date/decision identity recorded and cryptographically bound |
+| P7 Scientific Target | adopted scientific decision + exact binding | **ADOPTED / BINDING PENDING** | adopted record cryptographically bound to exact frozen protocol/apparatus/analysis/freeze identity |
 | P8 Analysis Lock | analysis/schema/runner/protocol bindings + candidate-scoped verification | **OPEN / FAIL-CLOSED** | all applicable P8 predicates evidenced and inspected |
 | P9 Independent Verification | independent reproduction/audit of identity, artifacts, analysis, invariants, adversarial cases | **NOT EXECUTED** | independent verifier passes without monoculture |
 
@@ -35,37 +34,44 @@ The historical candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` and historic
 
 | Predicate | Requirement | State |
 |---|---|---|
-| E2b | immutable verifier-toolchain runtime/dependency/workflow/environment fingerprint | **CLOSED / VERIFIED @ `d299dd1…`** |
-| M6 | machine-retained proof of N=0/no authorization/no pilot/no unblinding | **OPEN / CURRENT-TREE VERIFICATION REQUIRED @ `ac8ea26…`** |
+| E2b | immutable verifier-toolchain runtime/dependency/workflow/environment fingerprint | **CLOSED / VERIFIED** for its recorded exact execution boundary |
+| M6 | machine-retained proof of N=0/no authorization/no pilot/no unblinding | **CLOSED / VERIFIED** for Governance CI run `33050398324` on `ac8ea267…` |
 
-E2b closure is retained historical exact-tree evidence. Because the Governance CI workflow subsequently changed at `ac8ea26…`, current-tree applicability requires execution of the corrected binding before it is used as current freeze evidence. This does not retroactively invalidate the `d299dd1…` result.
+### M6 retained evidence
 
-## Verified E2b evidence
+- Run: `33050398324`
+- Exact executed candidate/tree: `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
+- Retained artifact digest: `sha256:dabe2f1909535671e795bb8c1cad0ef0840be4732acebff8f1a340c62b4943b6`
+- Independently recomputed digest: **MATCH**
+- Observed N: `0`
+- Authorization: `NOT_GRANTED`
+- Freeze: `NOT_CREATED`
+- Pilot invocation: `false`
 
-- Run: `33047380487` — **SUCCESS**
-- Exact tree: `d299dd152fb82d48a066d66a64bf0917e20d6167`
-- Artifact: `9636185725`
-- Artifact digest: `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`
-- Exact checkout/target assertion: **PASS**
-- Hash-pinned installation: **PASS**
-- Exact-tree provenance emission: **PASS**
+## Current deployment evidence
 
-## Current-tree verification boundary
+The exact current deployment is READY and source-bound to `ac8ea267…`, with `/api/health` returning HTTP 200. This is deployment/health evidence and is not a substitute for authenticated P2/P6a matrices.
 
-At `ac8ea26…`, Governance CI binds `PDMAL_TARGET_CANDIDATE_SHA` to `${{ github.sha }}`. This removes the previous hard-coded historical-candidate rebinding path. A successful current-tree execution and independent inspection remain required.
+## P7 adoption
+
+The scientific decision is formally adopted by the designated experimental-control authority in commit `98db6563aad9a7afb45cdd064172efa7f221ef0d`. Its content is governance decision material, not empirical evidence. The adopted decision remains pending exact cryptographic binding to the final freeze identity.
+
+## P8 boundary
+
+The P8 lock has been reconciled to the current verification boundary. Analysis implementation, schema, runner, protocol, and configuration must be cryptographically rebound in the eventual freeze packet. Documentation-only successors do not silently inherit current experimental evidence as new execution evidence.
 
 ## Remaining critical path
 
-1. Execute current-tree E2b/M6 verification on `ac8ea26…`.
-2. Inspect and retain the resulting artifact.
-3. Independently verify integrity, scope, and negative-state claims.
-4. Complete authenticated P2/P6a runtime verification against the exact deployment identity.
-5. Complete P4 blinding/custody, P5 reproducibility, and P6 durable custody.
-6. Complete formal P7 authority adoption/binding.
-7. Close P8 only after exact-candidate evidence inspection.
-8. Execute P9 independent verification.
-9. Create and independently verify a new immutable freeze.
-10. Obtain explicit pilot authorization.
-11. Only then execute the authorized blinded pilot.
+1. Authenticated P2 five-case runtime verification.
+2. Authenticated P6a four-case CORS verification.
+3. Candidate-scoped P3 artifact-contract verification.
+4. P4 blinding/custody verification.
+5. P5 environment/topology/RNG reproducibility verification.
+6. P6 durable archive/retrieval/hash verification.
+7. P8 exact binding and closure.
+8. Independent P9 verification.
+9. New immutable freeze and independent freeze verification.
+10. Separate explicit pilot authorization.
+11. Only then authorized blinded pilot execution.
 
 **No freeze exists. No pilot is authorized. Empirical N = 0.**
