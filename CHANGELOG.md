@@ -94,7 +94,7 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 - P-38 Circuit-Breaker with HITL Escalation registered
 - P-39 ACRFence registered
 - P-40 Atomix Transactional Tool Boundary registered
-- P-41 Sentinel-Phi HITL Durable Queue registered
+- P-41 Sentinel-Phi HITL Durable Queue established
 - Layer 10 (Resilience & Recovery) and Layer 11 (Transactional Integrity) established
 - Registry watermark advanced to P-41
 - `topology_router.py` v3.6.0 — 8/8 TC passing
