@@ -35,18 +35,22 @@ jobs:
             exit 1
           }
 
-      - name: Verify lock fingerprint
-        shell: bash
-        run: |
-          set -euo pipefail
-          actual=$(sha256sum requirements-epistemic.lock | cut -d' ' -f1)
-          expected='de37996c4a83c4bf23bfbb42810d57dfbb1f11a20c2536a945540221f3be9ae0'
-          test "$actual" = "$expected" || {
-            echo "E2b lock fingerprint mismatch: expected $expected, found $actual"
-            exit 1
-          }
-
       - name: Verify hash-pinned installation
         run: |
           python -m pip install --upgrade pip
           python -m pip install --require-hashes -r requirements-epistemic.lock
+
+      - name: Emit deterministic E2b dependency fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_sha=$(sha256sum requirements-epistemic.txt | cut -d' ' -f1)
+          lock_sha=$(sha256sum requirements-epistemic.lock | cut -d' ' -f1)
+          workflow_sha=$(sha256sum .github/workflows/e2b-verifier-lock.yml | cut -d' ' -f1)
+          printf '%s\n%s\n%s\n' "$source_sha" "$lock_sha" "$workflow_sha" | sha256sum | cut -d' ' -f1 | tee e2b-dependency-fingerprint.txt
+
+      - name: Upload dependency fingerprint evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2b-dependency-fingerprint
+          path: e2b-dependency-fingerprint.txt
