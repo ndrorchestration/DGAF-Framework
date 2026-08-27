@@ -1,0 +1,52 @@
+name: E2b Verifier Lock
+
+on:
+  pull_request:
+    paths:
+      - 'requirements-epistemic.txt'
+      - 'requirements-epistemic.lock'
+      - 'docs/governance/E2B_VERIFIER_LOCK_POLICY.md'
+      - '.github/workflows/e2b-verifier-lock.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Verify source requirements fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual=$(sha256sum requirements-epistemic.txt | cut -d' ' -f1)
+          expected='3bcac33804dbadca931bf15667b4eb2eade42c0708ed9d0e0831fd842af869fc'
+          test "$actual" = "$expected" || {
+            echo "E2b source fingerprint mismatch: expected $expected, found $actual"
+            exit 1
+          }
+
+      - name: Verify lock fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual=$(sha256sum requirements-epistemic.lock | cut -d' ' -f1)
+          expected='de37996c4a83c4bf23bfbb42810d57dfbb1f11a20c2536a945540221f3be9ae0'
+          test "$actual" = "$expected" || {
+            echo "E2b lock fingerprint mismatch: expected $expected, found $actual"
+            exit 1
+          }
+
+      - name: Verify hash-pinned installation
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --require-hashes -r requirements-epistemic.lock
