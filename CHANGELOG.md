@@ -64,13 +64,13 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
   - §6 Performance Claims — falsifiable eval targets added (20–40% hallucination reduction; Time-to-Stability; Entropy Recovery Rate)
   - Tribunal recovery protocol updated to consult 3D phase position for path selection
   - Heartbeat payload expanded to include D_explore_signal, D_correct_signal
-- **`patterns/P-42_AHG.md` → v1.2:** 7-state regime table; D_correct in vocabulary; Tension threshold 1.80
+- **`patterns/P-42_AHG.md` → v1.2:** 7-state regime table; logistic formula; D_correct in vocabulary; Tension threshold 1.80
 - **`CHANGELOG.md`:** This entry
 - **Source:** External AHG-MAS peer review document (Adaptive Harmonic Governance: A Stability-Guided Framework for Multi-Agent Systems)
 
 #### P-42 Collision Fix (prev commit b705834)
 - `patterns/P-42_AHG.md` created (renumbered from P-35)
-- **`docs/theory/AHG_ARCHITECTURE.md` v1.1**
+- `docs/theory/AHG_ARCHITECTURE.md` v1.1
 - `CROSS_REF.md` v4.4
 - `docs/ndr_patterns_unified.json` v2.2
 - `docs/ECOSYSTEM_INVENTORY.md` updated
@@ -128,7 +128,7 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 
 - P-34 Empirical-Threshold-Sweep A-TIER 94.5% attested
 - Phase 3 unified merge — Triumvirate
-- Registry watermark advanced to P-41
+- Registry watermark P-34
 
 ---
 
