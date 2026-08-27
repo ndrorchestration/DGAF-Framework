@@ -40,14 +40,30 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --require-hashes -r requirements-epistemic.lock
 
-      - name: Emit deterministic E2b dependency fingerprint
+      - name: Emit exact-tree E2b provenance
         shell: bash
         run: |
           set -euo pipefail
           source_sha=$(sha256sum requirements-epistemic.txt | cut -d' ' -f1)
           lock_sha=$(sha256sum requirements-epistemic.lock | cut -d' ' -f1)
           workflow_sha=$(sha256sum .github/workflows/e2b-verifier-lock.yml | cut -d' ' -f1)
-          printf '%s\n%s\n%s\n' "$source_sha" "$lock_sha" "$workflow_sha" | sha256sum | cut -d' ' -f1 | tee e2b-dependency-fingerprint.txt
+          target_sha="$GITHUB_SHA"
+          {
+            printf 'target_commit=%s\n' "$target_sha"
+            printf 'source_requirements_sha256=%s\n' "$source_sha"
+            printf 'lock_sha256=%s\n' "$lock_sha"
+            printf 'workflow_sha256=%s\n' "$workflow_sha"
+            printf '%s\n%s\n%s\n%s\n' "$target_sha" "$source_sha" "$lock_sha" "$workflow_sha" | sha256sum | awk '{print "e2b_dependency_fingerprint=" $1}'
+          } | tee e2b-dependency-fingerprint.txt
+
+      - name: Assert exact target when explicitly requested
+        if: ${{ inputs.expected_target_sha != '' }}
+        shell: bash
+        run: |
+          test "$GITHUB_SHA" = "${{ inputs.expected_target_sha }}" || {
+            echo "E2b target mismatch: expected ${{ inputs.expected_target_sha }}, found $GITHUB_SHA"
+            exit 1
+          }
 
       - name: Upload dependency fingerprint evidence
         uses: actions/upload-artifact@v4
