@@ -82,7 +82,7 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 #### Earlier commits
 - `e410ae4`: `CROSS_REF.md` v4.3 + `SESSION_ANCHOR.md` + `ENSEMBLE_ROSTER.md`
 - `e34af32`: `docs/theory/AHG_ARCHITECTURE.md` v1.0 + `patterns/P-35_AHG.md` (stale, now deleted)
-- `5ed1a85`: `docs/agents/PROFESSOR_PRODIGY_KB.md` v1.0
+- `5ed1a85`: `docs/agents/PROFESSOR_PRODIGY_KB.md v1.0
 - `b8cf383`: `DEFERRED_ITEMS.md` — S-01–S-08
 - `dd2f319`: entrepreneur-hub sweep-reminder + preflight
 
