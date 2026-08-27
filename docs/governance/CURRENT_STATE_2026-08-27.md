@@ -4,7 +4,7 @@
 
 This record is a current-state reconciliation of the live DGAF/PDMAL control plane. It is subordinate to exact execution evidence and does not itself create experimental evidence, freeze, or authorization.
 
-**GitHub `main`:** `6338619d8313b0e320833b26b5e9db525de49f6e`
+**Current GitHub `main` tip:** this documentation record is maintained on the protected mainline; the immediately prior documentation-reconciliation tip was `6338619d8313b0e320833b26b5e9db525de49f6e`.
 
 **Exact experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
 
