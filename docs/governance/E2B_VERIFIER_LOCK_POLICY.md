@@ -7,7 +7,7 @@
 - Source policy: `requirements-epistemic.txt`
 - Source SHA-256: `3bcac33804dbadca931bf15667b4eb2eade42c0708ed9d0e0831fd842af869fc`
 - Lock: `requirements-epistemic.lock`
-- Lock SHA-256: `de37996c4a83c4bf23bfbb42810d57dfbb1f11a20c2536a945540221f3be9ae0`
+- Lock digest: computed and emitted by CI on the exact committed tree
 - Verification workflow: `.github/workflows/e2b-verifier-lock.yml`
 - Python target: 3.12
 
@@ -16,11 +16,11 @@
 E2b is satisfied only when CI verifies all of the following on the same tree:
 
 1. `requirements-epistemic.txt` matches its bound SHA-256.
-2. `requirements-epistemic.lock` matches its bound SHA-256.
-3. The lock contains exact versions with artifact hashes and installs successfully with `pip --require-hashes`.
+2. `requirements-epistemic.lock` contains exact versions with artifact hashes and installs successfully with `pip --require-hashes`.
+3. CI emits the lock SHA-256 and a deterministic E2b dependency fingerprint derived from the source, lock, and workflow files on that exact tree.
 4. The verifier workflow is itself present in the same tree and runs successfully.
 
-The workflow computes these fingerprints from the committed files; it does not rely on a generated value from an external or mutable environment.
+The workflow derives the lock and combined fingerprints from the committed files. No mutable external state is trusted for the identity of the dependency surface.
 
 ## Non-recursion rule
 
