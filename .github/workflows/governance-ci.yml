@@ -12,7 +12,9 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  PDMAL_TARGET_CANDIDATE_SHA: e6beeb66335e1b50a239697badab22dab50eb5ba
+  # E2b/M6 must verify the exact tree executing this workflow. Using the
+  # workflow commit prevents stale historical candidate rebinding.
+  PDMAL_TARGET_CANDIDATE_SHA: ${{ github.sha }}
 
 jobs:
   governance-ci:
@@ -21,10 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # E2b/M6 evidence compares the current verification source against
-          # an exact historical apparatus candidate, so the candidate object
-          # must be available locally. This is provenance support, not an
-          # apparatus mutation or candidate rebinding.
           fetch-depth: 0
 
       - name: Set up Python 3.12
