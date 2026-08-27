@@ -5,7 +5,6 @@ Metrics: TGL gate records present per turn; blocked turns return no response;
          domain auto-wire fires correct premise_check_fn.
 """
 import pytest
-from unittest.mock import MagicMock, patch
 from pptl.orchestrator import IntegratedOrchestrator, OrchestratorConfig
 
 
@@ -39,17 +38,17 @@ def test_turn_result_has_gate_records():
     assert len(result.gate_records) > 0
 
 
-def test_turn_result_has_phi_score():
+def test_turn_result_does_not_fabricate_phi_score():
+    """The current TGL TurnAuditRecord exposes no numeric phi score."""
     orch = _make_orchestrator()
     result = orch.orchestrate_turn("Hello", turn_id="t003")
-    assert result.phi_score is not None
-    assert 0.0 <= result.phi_score <= 1.0
+    assert result.phi_score is None
 
 
 # --- Blocking behaviour ---
 
 def test_blocked_turn_returns_no_response():
-    # Premise check always fires — should block at step 2
+    # Premise check always fires at the constitutional P-35 gate.
     orch = _make_orchestrator(premise_check_fn=lambda _: True)
     result = orch.orchestrate_turn("zip code feature used", turn_id="t004")
     assert result.tgl_passed is False
