@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
     inputs:
       expected_target_sha:
-        description: 'Optional exact Git commit SHA to require for this verification run'
-        required: false
+        description: 'Exact Git commit SHA required for this verification run'
+        required: true
         type: string
 
 permissions:
@@ -20,9 +20,23 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      TARGET_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
     steps:
-      - name: Checkout
+      - name: Checkout exact target tree
         uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Assert checkout matches target
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          test "$checked_out_sha" = "$TARGET_SHA" || {
+            echo "E2b checkout mismatch: expected $TARGET_SHA, found $checked_out_sha"
+            exit 1
+          }
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v6
@@ -45,12 +59,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --require-hashes -r requirements-epistemic.lock
 
-      - name: Assert exact target when explicitly requested
-        if: ${{ inputs.expected_target_sha != '' }}
+      - name: Assert exact target when manually requested
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         shell: bash
         run: |
-          test "$GITHUB_SHA" = "${{ inputs.expected_target_sha }}" || {
-            echo "E2b target mismatch: expected ${{ inputs.expected_target_sha }}, found $GITHUB_SHA"
+          set -euo pipefail
+          test "$TARGET_SHA" = "${{ inputs.expected_target_sha }}" || {
+            echo "E2b target mismatch: expected ${{ inputs.expected_target_sha }}, found $TARGET_SHA"
             exit 1
           }
 
@@ -61,13 +76,12 @@ jobs:
           source_sha=$(sha256sum requirements-epistemic.txt | cut -d' ' -f1)
           lock_sha=$(sha256sum requirements-epistemic.lock | cut -d' ' -f1)
           workflow_sha=$(sha256sum .github/workflows/e2b-verifier-lock.yml | cut -d' ' -f1)
-          target_sha="$GITHUB_SHA"
           {
-            printf 'target_commit=%s\n' "$target_sha"
+            printf 'target_commit=%s\n' "$TARGET_SHA"
             printf 'source_requirements_sha256=%s\n' "$source_sha"
             printf 'lock_sha256=%s\n' "$lock_sha"
             printf 'workflow_sha256=%s\n' "$workflow_sha"
-            printf '%s\n%s\n%s\n%s\n' "$target_sha" "$source_sha" "$lock_sha" "$workflow_sha" | sha256sum | awk '{print "e2b_dependency_fingerprint=" $1}'
+            printf '%s\n%s\n%s\n%s\n' "$TARGET_SHA" "$source_sha" "$lock_sha" "$workflow_sha" | sha256sum | awk '{print "e2b_dependency_fingerprint=" $1}'
           } | tee e2b-dependency-fingerprint.txt
 
       - name: Upload dependency fingerprint evidence
