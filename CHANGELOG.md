@@ -128,7 +128,7 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 
 - P-34 Empirical-Threshold-Sweep A-TIER 94.5% attested
 - Phase 3 unified merge — Triumvirate
-- Registry watermark P-34
+- Registry watermark advanced to P-41
 
 ---
 
