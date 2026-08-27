@@ -18,16 +18,16 @@
 
 The current `main` verification boundary is **`ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`**.
 
-The prior executable candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` is historical provenance only for current verification. The later workflow change at `ac8ea26…` changes candidate binding and therefore requires affected-predicate re-verification under the dynamic invalidation rule.
+The prior executable candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` is historical provenance only for current verification. The later workflow change at `ac8ea26…` changed candidate binding and therefore required affected-predicate re-verification under the dynamic invalidation rule.
 
 | Binding | Value | State |
 |---|---|---|
 | Current verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | CURRENT |
 | Historical candidate | `e6beeb66335e1b50a239697badab22dab50eb5ba` | HISTORICAL |
-| Analysis implementation | `experiments/pdmal_pilot/analysis.py` | CANDIDATE; must be re-bound to current tree |
+| Analysis implementation | `experiments/pdmal_pilot/analysis.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
 | Analysis configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | SELECTED / PRE-FREEZE |
-| Artifact schema | `experiments/pdmal_pilot/pilot_artifact_schema.py` | CANDIDATE; current-tree binding required |
-| Runner | `experiments/pdmal_pilot/run_pilot.py` | CANDIDATE; current-tree binding required |
+| Artifact schema | `experiments/pdmal_pilot/pilot_artifact_schema.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
+| Runner | `experiments/pdmal_pilot/run_pilot.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
 | Governance CI | `.github/workflows/governance-ci.yml` | CURRENT; corrected exact-SHA binding |
 | Canonical protocol | v`0.7.5` | CURRENT SPECIFICATION / PRE-FREEZE |
 | Bootstrap | 10,000 paired-seed percentile resamples, seed `20260823` | SELECTED |
@@ -46,15 +46,14 @@ The prior P8 implementation corrections remain part of provenance: `ffcr_success
 
 P8 remains **OPEN / FAIL-CLOSED** pending:
 
-1. Current-tree Governance CI execution and inspection on `ac8ea26…`.
-2. Candidate-scoped re-binding of analysis/schema/runner/protocol identities.
-3. P2 authenticated five-case runtime verification against the exact deployment.
-4. P6a authenticated four-case CORS verification against the same deployment identity.
-5. Environment/topology reproducibility evidence.
-6. Durable evidence retention with direct retrieval and integrity verification.
-7. Current-tree E2b/M6 evidence; E2b historical closure remains scoped to `d299dd1…`.
-8. Formal P7 authority adoption and cryptographic binding.
-9. Independent P9 verification.
+1. Re-binding analysis/schema/runner/protocol identities to the current verification boundary.
+2. P2 authenticated five-case runtime verification against the exact deployment.
+3. P6a authenticated four-case CORS verification against the same deployment identity.
+4. Environment/topology reproducibility evidence.
+5. Durable evidence retention with direct retrieval and integrity verification.
+6. Current-tree evidence review for E2b/M6, retaining their exact execution boundaries.
+7. Formal P7 authority adoption and cryptographic binding; scientific decision is now adopted but not freeze-bound.
+8. Independent P9 verification.
 
 A successful CI run or deployment readiness is necessary evidence, not by itself P8 closure.
 
