@@ -3,7 +3,6 @@
 **Status date:** 2026-08-28  
 **Repository:** `ndrorchestration/DGAF-Framework`  
 **Current main:** active documentation/evidence lineage; not experimental apparatus identity  
-**Current main tip:** `1414ab33cd631a737338682faf2686977b8f9a69`  
 **Experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
 **Pilot status:** PRE-FREEZE; authorization not granted  
 **Empirical N:** 0
@@ -12,7 +11,7 @@
 
 The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the retained artifact is `9636185725` with digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
 
-Repository `main` is an active documentation/evidence lineage. Its current tip is `1414ab3…`; it must not be substituted for the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
+Repository `main` is an active documentation/evidence lineage; resolve the current branch tip from Git rather than treating a documentation commit as the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
 
 The corrected Governance CI boundary at `ac8ea26…` binds the candidate target to the executing workflow SHA. E2b current-boundary verification remains required where a current freeze decision depends on the executing workflow boundary. M6 is separately **CLOSED / VERIFIED** for the exact candidate `ac8ea267…` via run `33050398324`; that closure is scoped to the exact verification workspace/job and does not authorize execution.
 
@@ -25,7 +24,7 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Gate / control | Status | Evidence / state |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b868…` |
-| Current repository main | CURRENT LINEAGE | `1414ab3…`; documentation/evidence lineage, not apparatus identity |
+| Current repository main | CURRENT LINEAGE | Resolve `main` directly; documentation/evidence lineage, not apparatus identity |
 | Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267…` |
 | E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd1…`, run `33047380487`, artifact `9636185725` |
 | Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Execute/retain evidence for the exact workflow boundary used for the eventual freeze decision |
@@ -78,7 +77,7 @@ GitHub-visible claims must distinguish implementation, computation, verification
 
 ## Historical evidence boundary
 
-Historical evidence remains scoped to the exact application source, deployment, workflow run, and artifact that produced it. The E2b run `33047380487` proves `d299dd1…`; it does not automatically certify `ac8ea26…` or the later `1414ab33…` documentation lineage. M6 is a separate closed candidate-scoped verification at `ac8ea267…` via run `33050398324`; older M6 evidence targeting `e6beeb…` and verifier merge-ref `2516f32…` remains non-closing for the current candidate boundary.
+Historical evidence remains scoped to the exact application source, deployment, workflow run, and artifact that produced it. The E2b run `33047380487` proves `d299dd1…`; it does not automatically certify `ac8ea26…` or any later documentation lineage. M6 is a separate closed candidate-scoped verification at `ac8ea267…` via run `33050398324`; older M6 evidence targeting `e6beeb…` and verifier merge-ref `2516f32…` remains non-closing for the current candidate boundary.
 
 ## Required closure sequence
 
