@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-21
-applies_to_sha: CURRENT_MAIN_AT_VERIFICATION
+last_verified: 2026-08-28
+applies_to_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
 scope_note: >-
   This index records evidence and gate state. Historical evidence remains
   scoped to the exact SHA/run that produced it. Candidate verification does
@@ -18,9 +18,9 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 
 | Evidence | State | Identity | Interpretation |
 |---|---|---|---|
-| Current repository | CURRENT | Resolve `main` at verification time | Pre-authorization mainline |
+| Current repository | CURRENT | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` verification boundary | Pre-authorization mainline/evidence lineage |
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` | Historical apparatus only |
-| Corrected pilot runner | CANDIDATE | Current mainline runner | Exact candidate verification pending |
+| Corrected pilot runner | CANDIDATE | Current verification boundary | Exact candidate verification pending |
 | Environment lock | VERIFY | Python 3.12.0; NumPy 2.5.1; NetworkX 3.6.1 | Fresh matching environment required |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368` | Operational characterization, not efficacy evidence |
 | Blinding operational verification | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935` | Synthetic custody only |
@@ -28,8 +28,8 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 | Security controls | VERIFY | `test_security_controls.py` + pre-authorization workflow | Fresh CI pending |
 | Topology provenance | VERIFY | `PDMAL_TOPOLOGY_FINGERPRINT_MANIFEST.md` | Recompute against exact freeze candidate |
 | Durable retention | OPEN | Policy present; operational archive not established | Direct write/retrieval/hash evidence required |
-| Primary contrast | OPEN | `PRIMARY_CONTRAST_ADJUDICATION.md` | Scientific decision required |
-| Analysis lock | OPEN | `PDMAL_ANALYSIS_CONTROL_PLAN.md` | Implementation/configuration SHA required |
+| Primary contrast | ADJUDICATED / BINDING PENDING | `dgaf` vs `null`; FFCR; paired seed | Scientific target selected; exact freeze binding remains required |
+| Analysis lock | OPEN / FAIL-CLOSED | `PDMAL_ANALYSIS_CONTROL_PLAN.md` / P8 lock | Candidate implementation/configuration SHA required |
 | Independent verification | NOT EXECUTED | P9 audit design | Must verify candidate-scoped evidence |
 
 ## Runtime characterization provenance
