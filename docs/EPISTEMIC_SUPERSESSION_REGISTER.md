@@ -73,7 +73,33 @@ Project acronyms must have one canonical expansion per active system. Historical
 
 GitHub repository descriptions are a separate documentation layer from README files. The current sweep identified stale descriptions including certification, governance-authority, and production-readiness language. These descriptions require repository-settings write access to reconcile; they must not be represented as corrected until the metadata itself changes.
 
-## 8. Operating rule
+## 8. PDMAL platinum-ratio supersession
+
+The current PDMAL mathematical correction establishes **ρP = 1.3247179572447454** as the corrected plastic constant. Earlier repository material uses **1.7747 / 1.77473** as a "Platinum Ratio" and, in some artifacts, assigns it a verified mathematical role. Those historical references are retained for provenance but are **not current PDMAL mathematical authority**.
+
+Known affected historical/current-surface artifacts include:
+
+- `docs/formalism/constants/11Q-derivation.md`
+- `docs/formalism/hensel-general-formalism.md`
+- `docs/registry/PLATINUM_REGISTRY_TIERS_v1.md`
+- `docs/architecture/platinum-convergence-audit-v1.md`
+- related pattern, substrate, gate, agent, and registry documents surfaced by the repository-wide `Platinum Ratio` search.
+
+Treatment:
+
+**RETIRE → CLASSIFY → SUPERSEDE → PREVENT DOWNSTREAM USE**
+
+Do not silently delete historical evidence. Any artifact that presents `1.7747`/`1.77473` as a current verified PDMAL constant must be revised or explicitly marked historical/superseded before it is treated as a current specification. Until that remediation is complete, the affected material remains a documentation-consistency finding and must not be used to support current mathematical claims.
+
+The correction does **not** establish PDMAL convergence, global contraction, production robustness, security, baseline superiority, or empirical efficacy. The contraction monitor remains an observational proxy; unweighted Forman–Ricci has no discriminating variance on the current unweighted topology; and the real-trace `Da` threshold remains uncalibrated.
+
+## 9. Public-surface publication rule
+
+Historical or internal material must not be promoted to a public-facing GitHub surface merely because it is available or technically accurate in isolation. Public artifacts must pass the repository's Public Surface QA Standard for audience relevance, usefulness, placement, navigation, professional representation, privacy/disclosure, community fit, maintainability, identity integrity, and reader friction.
+
+Personal/private Notion records and internal operational-control pages are not public GitHub navigation targets by default. Internal records may inform public documentation without becoming public destinations.
+
+## 10. Operating rule
 
 When evidence conflicts with inherited project language:
 
