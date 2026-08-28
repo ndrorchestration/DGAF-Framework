@@ -100,10 +100,10 @@ The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the le
 1. [Current State](docs/CURRENT_STATE.md)
 2. [Project Status](docs/PROJECT_STATUS.md)
 3. [PDMAL Current Control State](docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md)
-4. [Authoritative PDMAL Task Specification](docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md)
+4. [Authoritative PDMAL Task Specification](docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md) — task contract; see the v0.7.5 protocol matrix amendment for the current acceptance-layer changes.
 5. [PDMAL Evidence Index](docs/evidence/PDMAL_EVIDENCE_INDEX.md)
 6. [Evidence Ladder Policy](docs/evidence/EVIDENCE_LADDER_POLICY.md)
-7. [PDMAL Experiment Protocol](docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md)
+7. [PDMAL Experiment Protocol](docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md) — current pre-freeze protocol incorporating the v0.7.5 matrix amendment.
 8. [Freeze Manifest Template](docs/experiment/FREEZE_MANIFEST_TEMPLATE.md)
 9. [Propagation Consistency Control](docs/governance/PROPAGATION_CONSISTENCY_CONTROL.md)
 10. [Documentation Reconciliation](docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md)
