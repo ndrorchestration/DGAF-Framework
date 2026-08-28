@@ -1,6 +1,6 @@
 # CROSS_REF.md
 
-> **Last reviewed:** 2026-08-26  
+> **Last reviewed:** 2026-08-28  
 > **Purpose:** Canonical cross-reference index for project-local patterns, files, agents, terminology, evidence boundaries, and ecosystem relationships.
 
 ## Epistemic policy
@@ -79,6 +79,8 @@ The current audited PDMAL work is bounded to its corrected lattice formalization
 
 Benchmark names and percentages must never be used as proof that the named benchmark was actually run. The authoritative evidence is the corresponding test code plus a reproducible run artifact.
 
+Repository-native deterministic evaluator fixtures may establish evaluator/mechanism correctness for their exact executed tree. They do not by themselves establish model capability, adversarial robustness, deployment validity, PDMAL efficacy, or generalization to real workloads.
+
 A mathematically valid definition does not establish empirical efficacy. A successful implementation test does not establish universal effectiveness. A project attestation is not independent certification.
 
 ## Commercialization / openness boundary
@@ -144,10 +146,12 @@ Historical sweep logs, old deadlines, attestation percentages, tier labels, and 
 ## Current cleanup priorities
 
 1. Reconcile the NDR Markdown P-41 watermark against the machine-readable P-42 registry.
-2. Continue ecosystem-wide pattern provenance/alias analysis before any physical consolidation.
-3. Continue file/path-level classification against the commercialization/openness boundary inventory.
-4. Keep Notion architecture/evidence records synchronized with GitHub source changes.
-5. Preserve historical evidence while correcting current-state labels.
-6. Empirically characterize any semantic/ontological detector before promoting it to a threshold-bearing or blocking control.
+2. Verify the newly added deterministic evaluation-integrity fixture execution on the exact Governance CI tree before promoting #64 beyond IMPLEMENTED.
+3. Continue weighted Forman–Ricci falsification under Issue #72; do not promote the single-trial result to validation.
+4. Continue file/path-level classification against the commercialization/openness boundary inventory.
+5. Keep Notion architecture/evidence records synchronized with GitHub source changes.
+6. Preserve historical evidence while correcting current-state labels.
+7. Empirically characterize any semantic/ontological detector before promoting it to a threshold-bearing or blocking control.
+8. Keep #117 and #122 open until their respective implementation/provenance prerequisites are genuinely satisfied.
 
-*Reviewed 2026-08-26 as part of the repository-wide epistemic, temporal, terminology, semantic, traceability, and commercialization-boundary audit.*
+*Reviewed 2026-08-28 as part of the repository-wide epistemic, temporal, terminology, semantic, traceability, evaluation-integrity, and commercialization-boundary audit.*
