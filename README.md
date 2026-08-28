@@ -4,17 +4,38 @@
 
 > **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims of validation, certification, performance, standards alignment, or commercial suitability require exact evidence and defined scope. Historical certifications remain scoped to the SHA/run/deployment that produced them and are not current certification without fresh evidence.
 
-## Current project state — 2026-08-26
+## Current project state — 2026-08-28
 
-The DGAF/PDMAL experimental track remains **PRE-FREEZE**. The corrected pilot apparatus and supporting governance controls are present on `main`, but the current candidate has not been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
+The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. The corrected pilot apparatus and supporting governance controls are present in the repository, but the current experimental candidate has not been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
-The historical implementation freeze `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains preserved as historical evidence only. It must not be described as the current freeze of the corrected apparatus.
+The current repository `main` is `42d3afdb240718c82a5cc0530585e90db5728f55`. This current tip contains documentation/governance reconciliation. Repository `main` must not be substituted for the experimental apparatus candidate merely because the documentation tree advances.
 
-The current executable verification candidate is `e6beeb66335e1b50a239697badab22dab50eb5ba`. It incorporates the current P8 integrity corrections and regression coverage. The candidate is deployed to Vercel as production deployment `dpl_HgSv9hTrvMNBHxboDhkkvHKeogc5` and is READY, but formal authenticated P2/P6a runtime verification, P7 formal adoption/binding, durable custody, P9 independent verification, and new freeze verification remain incomplete. Documentation-only successors do not redefine the executable apparatus; any further substantive apparatus change requires a new candidate identity and re-verification.
+The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. The associated production deployment is READY, but formal authenticated P2/P6a runtime verification and the remaining freeze predicates are incomplete. Documentation-only successors do not redefine the executable apparatus; any substantive apparatus change requires a new candidate identity and affected-predicate re-verification.
 
-The repository is also undergoing an ecosystem architecture pass separating DGAF implementation from the broader Pattern Commons and from commercialization, trademark, privacy, and security boundaries. These documentation changes do not themselves advance experimental gates.
+Historical candidates, freezes, run identifiers, and acceptance records remain provenance only unless explicitly rebound to the current authoritative candidate and evidence boundary.
 
-For the authoritative gate board and remaining sequence, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
+For the authoritative project state, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the public-facing publication-quality control, see [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
+
+## Public-surface standard
+
+GitHub is an external representation of the project and its maintainer. Every GitHub-visible artifact therefore passes a **public-surface QA lens** before publication. Accuracy is necessary but not sufficient.
+
+Public-facing changes must be evaluated for:
+
+- truth and evidence scope;
+- authoritative-source correctness;
+- audience relevance and usefulness;
+- expected placement and navigation;
+- professional representation;
+- privacy and disclosure boundaries;
+- open-source/community norms;
+- maintainability and link stability;
+- identity integrity and avoidance of overclaiming;
+- reader friction and next-step clarity.
+
+Personal Notion pages, private working records, internal control notes, and temporary coordination artifacts are **not public GitHub navigation targets by default**. Internal records may inform public documentation, but a public landing page should resolve to repository-local documentation, stable public resources, or an intentionally designated public project surface.
+
+See [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md) for the complete publication gate.
 
 ## Repository scope
 
@@ -94,7 +115,8 @@ The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the le
 18. [Commercialization & Openness Boundary](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md)
 19. [Asset-Level Boundary Inventory](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md)
 20. [Trademark & Certification Policy](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md)
-21. [CROSS_REF](CROSS_REF.md)
+21. [Public Surface QA Standard](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md)
+22. [CROSS_REF](CROSS_REF.md)
 
 ## Verification and test status
 
@@ -103,12 +125,12 @@ The repository contains deterministic/unit tests, pilot execution-contract tests
 ### Current gate boundary
 
 - P1 Candidate integrity — PARTIAL
-- P2 Execution contract — PARTIAL
-- P3 Artifact contract — PARTIAL
-- P4 Security/blinding integrity — PARTIAL
-- P5 Provenance/reproducibility — PARTIAL
+- P2 Execution contract — BLOCKED for authenticated runtime verification
+- P3 Artifact contract — OPEN
+- P4 Security/blinding integrity — OPEN
+- P5 Provenance/reproducibility — OPEN
 - P6 Durable evidence custody — OPEN
-- P7 Scientific target specification — PARTIAL / FORMALLY OPEN; primary contrast technically selected, authority adoption pending
+- P7 Scientific target specification — ADOPTED in substance; exact freeze binding pending
 - P8 Analysis lock — OPEN / FAIL-CLOSED
 - P9 Independent verification — NOT EXECUTED
 - New freeze — NOT CREATED
