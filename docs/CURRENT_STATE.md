@@ -71,6 +71,34 @@ For the unweighted regular dodecahedral topology, Forman–Ricci curvature is `R
 
 Issue #122 tracks the incomplete P-38 substrate-study tail. A Git history audit on 2026-08-28 confirmed that the earliest retained P-38 commit (`8807dc5c…`, 2026-06-13) already ends at the same `Bit-identical a_n replay va...` boundary. The later correction commit therefore did not remove recoverable source text from the retained history; no authoritative remainder has been reconstructed. The issue remains open pending a provenance-controlled external or otherwise authoritative source. This is documentation/source-integrity remediation only and does not advance experimental gates.
 
+## Expert Panel — 2026-08-28
+
+The **Ecosystem Expert Panel** is the cross-agent governance review mechanism defined in the Notion operating charter. Its role specifications are maintained in the Notion Agent Registry; GitHub remains implementation/evidence truth. The panel disposition is **PROCEED, FAIL-CLOSED**.
+
+Panel seats:
+- **Amethyst:** meta-orchestration, normative governance, dependency/closure ledger.
+- **COLLEEN:** continuity, archive, provenance, durable state, routing integrity.
+- **Professor Prodigy:** formalization/proof and mathematical claim verification; non-orchestrating.
+- **Apogee:** independent evidence review, integrity scoring, and P9 preparation.
+- **DemiJoule:** constraint/resource and governance-boundary review.
+- **Sentinel-Phi:** strategic security, risk containment, and fail-closed monitoring.
+- **Herald:** evidence/public-surface synchronization and classification hygiene.
+- **Reciprocity:** reciprocal-mathematics and adversarial asymmetry review.
+
+### Panel execution decision
+
+1. Continue all non-blocked engineering, documentation, provenance, analysis, and research-hygiene work in parallel.
+2. Keep P2/P6a behind their protected credential/dispatch requirements and exact candidate/deployment identity.
+3. Treat M6 as closed only for its exact `ac8ea267…` candidate verification scope; do not transfer it to later `main` documentation lineage.
+4. Keep E2b scoped to its exact executed tree; later workflow changes require their own evidence where applicable.
+5. Advance P7 exact binding, P8 candidate-scoped closure, and independent P9 preparation.
+6. Create a new immutable freeze only after all applicable predicates pass.
+7. Authorization remains a separate explicit transition; only then may the blinded pilot execute.
+
+### Hard panel constraints
+
+No freeze, authorization, unblinding, or empirical-N increase may be inferred from CI success, deployment readiness, health checks, synthetic fixtures, historical evidence, or narrative state alone.
+
 ## Authorization boundary
 
 Required before authorization include authenticated P2 and P6a execution on the same deployment identity; blinding custody and unblinding verification; durable archive/retrieval/hash evidence; environment and reproducibility fingerprints; formal P7 exact binding; frozen baseline/negative-control definitions; P8 closure; independent P9 verification; a new immutable freeze; and an explicit authorization decision.
