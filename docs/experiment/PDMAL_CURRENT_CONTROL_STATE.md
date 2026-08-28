@@ -14,13 +14,15 @@ This is the current pre-authorization control record. Historical evidence remain
 
 | Control | State | Evidence / blocker |
 |---|---|---|
-| Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is not the corrected-apparatus freeze |
+| Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is provenance only |
 | Current verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
-| Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented; execution evidence remains pending |
+| Exact-tree E2b | CLOSED / VERIFIED | Exact-tree run `33047380487` is valid for `d299dd152…`; the corrected workflow boundary is separately scoped and must not be conflated with that historical exact-tree record |
+| Exact-candidate M6 | CLOSED / VERIFIED | Governance CI run `33050398324`; exact candidate `ac8ea267…`; retained negative-state artifact independently hash-verified with digest `sha256:dabe2f1909535671e795bb8c1cad0ef0840be4732acebff8f1a340c62b4943b6` |
+| Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented; empirical execution evidence remains absent |
 | P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN FOR FREEZE BINDING | Primary contrast selected; exact protocol/candidate/freeze binding remains required |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Implementation/configuration controls exist; candidate-scoped execution evidence is incomplete |
-| Candidate CI evidence | OPEN | Required applicable CI/test runs must execute against the exact candidate and be retained |
-| Artifact contract | PARTIAL | End-to-end semantics and adversarial tests exist; fresh candidate evidence required |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Implementation/configuration controls exist; complete candidate-scoped closure package remains incomplete |
+| Candidate governance verification | PARTIALLY CLOSED | Exact-scope E2b/M6 are closed for their stated boundaries; later repository documentation commits do not inherit that evidence automatically |
+| Artifact contract | PARTIAL | End-to-end semantics and adversarial tests exist; fresh candidate-scoped evidence for the full artifact contract remains required |
 | Blinding custody | PARTIAL | Synthetic/control evidence exists; operational custody and unblinding procedure remain evidence-bound |
 | Durable retention | OPEN | Archive destination plus independent retrieval/hash proof required |
 | Runtime-dependent verification | PARTIAL / APPLICABILITY REQUIRED | Candidate-scoped P2/P6a evidence or a pre-specified justified applicability decision is required |
@@ -45,12 +47,13 @@ P8 is explicitly fail-closed. Candidate implementation work—including analysis
 
 Required evidence includes, as applicable:
 
-1. Governance CI/test hierarchy on exact candidate `ac8ea267...`.
+1. Exact candidate control/verification evidence and retained run identity.
 2. Analysis, artifact-schema/security, and compilation evidence with retained run identity and inspected logs.
 3. Executed-tree reconciliation with P8 bindings.
 4. Environment, topology fingerprint, seed/RNG separation, and trial-ordering evidence.
 5. Durable retention plus independent retrieval/hash verification.
 6. Blinding custody evidence that does not expose the key.
+7. Authenticated runtime evidence or a formally justified applicability determination for P2/P6a.
 
 ## Independent audit and authorization boundary
 
@@ -60,15 +63,16 @@ Authorization is considered only after the required predicate evidence and freez
 
 ## Required next evidence events
 
-1. Execute and inspect applicable CI/test workflows against exact candidate `ac8ea267...`.
-2. Retain run IDs, exact SHA/ref/event, logs, and artifact integrity values.
-3. Complete durable evidence custody with independent retrieval/hash proof.
-4. Complete operational blinding custody and formal unblinding readiness without exposing the key.
-5. Resolve runtime verification applicability or retain the relevant predicate OPEN.
-6. Reconcile topology, environment, seed/RNG, and analysis bindings against the exact candidate.
-7. Derive P1–P8 only from candidate-scoped evidence.
-8. Create an immutable freeze after pre-freeze closure.
-9. Perform independent/adversarial verification of the frozen candidate.
-10. Obtain explicit pilot authorization before empirical execution.
+1. Complete P7 exact candidate/protocol/analysis binding.
+2. Complete remaining P8 artifact, environment, reproducibility, custody, and runtime-dependent evidence.
+3. Complete authenticated P2/P6a where required, using the exact candidate/deployment identity.
+4. Retain run IDs, exact SHA/ref/event, logs, and artifact integrity values.
+5. Complete durable evidence custody with independent retrieval/hash proof.
+6. Complete operational blinding custody and formal unblinding readiness without exposing the key.
+7. Prepare and execute independent P9 verification.
+8. Derive the complete pre-freeze predicate matrix only from candidate-scoped evidence.
+9. Create an immutable freeze after pre-freeze closure.
+10. Independently verify the freeze.
+11. Obtain explicit pilot authorization before empirical execution.
 
 **No empirical execution is authorized by this record. N = 0. Authorization is NOT GRANTED.**
