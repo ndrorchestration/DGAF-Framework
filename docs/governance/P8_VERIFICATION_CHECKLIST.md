@@ -22,7 +22,7 @@ This checklist distinguishes implemented controls from executed verification evi
 
 - [x] Issue #32 deterministic slices executed and retained on exact tree `061286b1…` via Governance CI `33162492796`.
 - [x] Issue #64 deterministic evaluation-integrity fixture suite executed and retained on exact tree `061286b1…` via Governance CI `33162492796`.
-- [ ] These synthetic evaluator results are candidate-bound experimental evidence. They are not.
+- [x] These results are synthetic, repository-authored evaluator-mechanism evidence only; they are not candidate-bound experimental efficacy evidence and do not close P8.
 
 ## Current candidate-tree CI evidence
 
