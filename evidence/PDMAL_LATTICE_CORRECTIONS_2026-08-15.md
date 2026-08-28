@@ -6,7 +6,7 @@ This note records independently reproduced corrections from the lattice formaliz
 
 ## Reproduced results
 
-Using the supplied `lattice_harness.py`:
+Using the **supplied external `lattice_harness.py` artifact**:
 
 - Plastic constant (real root of `x^3 = x + 1`): `1.3247179572447454`.
 - Dodecahedral base graph: 20 vertices, 30 edges, 3-regular, vertex connectivity 3.
@@ -26,11 +26,16 @@ These computations correct source-document constants and demonstrate reproducibi
 - superiority to a baseline,
 - validity of a Forman-Ricci audit signal on an unweighted dodecahedral graph.
 
+## Provenance clarification
+
+The supplied `lattice_harness.py` is an external execution artifact identified by SHA-256 `f8382b68bbf155fe574bd76118db6fc2142c558c21d0f109e3b92103a1611216`. It is not present as a repository file on the current `main` tree under that name. Its computations therefore remain evidence about that supplied artifact, not proof of current repository implementation.
+
 ## Required follow-up
 
 1. Define real edge weights before treating Forman-Ricci as an operational audit signal.
 2. Calibrate `D_a` against real healthy traces and test against held-out/adversarial cases.
 3. Run a baseline comparison for the PDMAL topology claim.
 4. Preserve the corrected plastic constant and Cheeger constant in all downstream documentation.
+5. If a repository-native lattice helper is introduced, treat it as a new source/evidence boundary and validate it independently.
 
-Source artifacts: `lattice_harness.py` and `lattice_formalization_corrected.md` supplied for the 2026-08-15 quality pass.
+Source artifacts: supplied `lattice_harness.py` and `lattice_formalization_corrected.md` used for the 2026-08-15 quality pass.
