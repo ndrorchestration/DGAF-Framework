@@ -20,7 +20,7 @@ Exit status: `0`.
 Observed output:
 
 - φ = `1.6180339887` (golden ratio).
-- ρP = `1.3247179572` (real root of x^3 = x + 1).
+- ρ = `1.3247179572` (plastic number; real root of x^3 = x + 1).
 - Synthetic contraction demo: `n=2000`, `mean_L=0.1082460436`, `p95_L=0.1507066772`, `P(L>=1)=0.0`; verdict explicitly reports **proxy only, not proven**.
 - Synthetic admission calibration: `200` healthy-run samples, τ = `0.1122`; noisier synthetic test `D_a=0.6912` → `REJECT`.
 - Dodecahedral base graph: `20` nodes, `30` edges, degree set `{3}`, vertex connectivity `3`.
