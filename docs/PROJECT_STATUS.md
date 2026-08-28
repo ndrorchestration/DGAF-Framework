@@ -2,7 +2,7 @@
 
 **Status date:** 2026-08-28  
 **Repository:** `ndrorchestration/DGAF-Framework`  
-**Current main:** `00e4a20d86f17b9ea2145b123c1db997d2ffd205`  
+**Current main:** active documentation/evidence lineage; not experimental apparatus identity  
 **Experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
 **Pilot status:** PRE-FREEZE; authorization not granted  
 **Empirical N:** 0
@@ -11,11 +11,11 @@
 
 The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the retained artifact is `9636185725` with digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
 
-Repository `main` has since advanced through documentation/evidence reconciliation. The current `main` is `00e4a20d86f17b9ea2145b123c1db997d2ffd205`. This documentation successor must not be substituted for the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
+Repository `main` is an active documentation/evidence lineage. It must not be substituted for the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
 
-A current Governance CI run on the preceding evidence-reconciliation tip `eb189c9bc18b82df25696cf353669a2ecaec8000` completed successfully, including E2b/M6 evidence emission, P-42 tests, P8 artifact/analysis tests, evaluation provenance, bounded TLC model checking, and evidence artifact uploads. These results verify the executed governance/test scope at that exact commit; they do not freeze or authorize the experimental apparatus. Retained artifacts include `dgaf-tlc-model-check`, `dgaf-role-boundary-coherence`, and `dgaf-freeze-control-evidence`.
+A Governance CI run on the 2026-08-28 evidence-reconciliation tip completed successfully, including E2b/M6 evidence emission, P-42 tests, P8 artifact/analysis tests, evaluation provenance, bounded TLC model checking, and evidence artifact uploads. These results verify the executed governance/test scope at that exact commit; they do not freeze or authorize the experimental apparatus. Retained artifacts include `dgaf-tlc-model-check`, `dgaf-role-boundary-coherence`, and `dgaf-freeze-control-evidence`.
 
-The current Doc Lint run on that same tip failed deterministically across a broad repository documentation surface. This remains documentation-quality debt, not experimental failure. Representative findings include missing fenced-code languages, emphasis-as-heading violations, multiple H1s, malformed table structures, ordered-list formatting, blockquote spacing, reference-link definitions, and trailing-newline issues. The existing documentation debt remains tracked separately.
+The corresponding Doc Lint run failed deterministically across a broad repository documentation surface. This remains documentation-quality debt, not experimental failure. Findings include missing fenced-code languages, emphasis-as-heading violations, multiple H1s, malformed table structures, ordered-list formatting, blockquote spacing, reference-link definitions, and trailing-newline issues. The documentation debt remains tracked separately.
 
 P7 is scientifically adopted in substance, but exact cryptographic binding to the eventual freeze apparatus remains OPEN. P8 remains OPEN/FAIL-CLOSED. P2/P6a remain pending authenticated execution. P4/P5/P6 and P9 remain open. No new freeze exists, no pilot has been authorized or executed, and N remains 0.
 
@@ -24,10 +24,10 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Gate / control | Status | Evidence / state |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b868…` |
-| Current repository main | CURRENT | `00e4a20…` |
+| Current repository main | CURRENT LINEAGE | Documentation/evidence lineage; not apparatus identity |
 | Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267…` |
 | E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd1…`, run `33047380487`, artifact `9636185725` |
-| Current-tree E2b/M6 | OPEN / VERIFICATION REQUIRED | Latest Governance CI evidence is scoped to the preceding documentation/evidence tip; candidate-scoped applicability still requires exact binding/inspection |
+| Current-tree E2b/M6 | OPEN / VERIFICATION REQUIRED | Candidate-scoped applicability requires exact binding/inspection |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical/non-empirical characterization only |
 | Execution contract | PARTIAL | Authenticated exact-current-tree P2 evidence pending |
 | Artifact contract | PARTIAL | Corrective controls present; current candidate execution evidence pending |
@@ -42,7 +42,7 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | ZERO | No authorized pilot execution |
-| Documentation quality | OPEN DEBT | Current Doc Lint run fails; tracked separately from experimental efficacy |
+| Documentation quality | OPEN DEBT | Current Doc Lint failure is tracked separately from efficacy |
 
 ## Current deployment boundary
 
