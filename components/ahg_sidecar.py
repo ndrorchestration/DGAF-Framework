@@ -1,6 +1,6 @@
 """
 ahg_sidecar.py — AHG Sidecar Monitor
-P-42 · Layer 12 — Cognitive Control Plane · v1.4.1
+P-42 · Layer 12 — Cognitive Control Plane · v1.5
 Amethyst × COLLEEN · S072 · 2026-07-02
 
 Spec: docs/theory/AHG_ARCHITECTURE.md v1.2 §4
@@ -9,16 +9,18 @@ Pattern card: patterns/P-42_AHG.md v1.3-card
 v1.3:   scaffold — heartbeat ingestion, aggregation, conductor flush, herald stub
 v1.4:   wire_herald_trace(callback) added; flush() calls herald callback;
         aligned with ahg_herald_trace.py v1.5 AHGHeraldTrace.on_intent()
-v1.4.1: StateVector input clip guards — all six signal axes clipped to [0.0, 1.0]
+v1.4.1: StateVector input clip guards — all signal axes clipped to [0.0, 1.0]
         in to_state_vector(); WARNING log on out-of-range agent signals.
         Closes Apogee Lens AL-PV-01 open item 2.
         Precondition for PV-01 Gold Star: inputs ∈ [0,1] now enforced.
+v1.5:   metadata normalization to reflect the reviewed Herald-v1.5 integration
+        and retained v1.4.1 signal-clipping behavior. No runtime semantics changed.
 
 Architecture:
   [Agent_1 Heartbeat] ──┐
   [Agent_2 Heartbeat] ──┤──► AHGSidecar ──► AHGConductor ──► PhaseIntent
   [Agent_N Heartbeat] ──┘         │
-                                   └──► AHGHeraldTrace.on_intent() (v1.4)
+                                   └──► AHGHeraldTrace.on_intent() (v1.5)
                                          ├── in-memory buffer
                                          ├── JSONL file sink
                                          └── P-01 HTTP push (if configured)
@@ -79,7 +81,7 @@ class TurnBuffer:
         """
         Aggregate per-agent heartbeats into a single StateVector.
 
-        All six signal axes are clipped to [0.0, 1.0] (AL-PV-01 hardening).
+        All signal axes are clipped to [0.0, 1.0] (AL-PV-01 hardening).
         This enforces the precondition required for φ ∈ (1.0, 1.8) by construction
         (AHG_ARCHITECTURE.md §2.2 / Apogee Lens review AL-PV-01).
 
@@ -200,5 +202,5 @@ class AHGSidecar:
 
     @property
     def herald_wired(self) -> bool:
-        """True if a v1.4 herald callback is registered."""
+        """True if a v1.5 herald callback is registered."""
         return self._herald_callback is not None
