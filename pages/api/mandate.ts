@@ -21,7 +21,17 @@ const mandates: Map<string, Mandate> = new Map()
 
 function signMandate(m: Omit<Mandate, 'sha256'>): string {
   return createHash('sha256')
-    .update(JSON.stringify({ mandate_id: m.mandate_id, task: m.task, issued_at: m.issued_at }))
+    .update(JSON.stringify({
+      mandate_id: m.mandate_id,
+      task: m.task,
+      scope: m.scope,
+      constraints: m.constraints,
+      issued_by: m.issued_by,
+      prefects: m.prefects,
+      triad_type: m.triad_type,
+      issued_at: m.issued_at,
+      status: m.status,
+    }))
     .digest('hex')
 }
 
@@ -75,6 +85,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: 'status must be aggregating or signed_off' })
     }
     m.status = status
+    m.sha256 = signMandate(m)
     return res.status(200).json(m)
   }
 
