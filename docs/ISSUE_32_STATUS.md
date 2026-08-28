@@ -1,14 +1,14 @@
 # Issue #32 — Status Tracker
 
 **Issue:** EVAL-001 — DGAF reproducible evaluation suite — baseline and evidence protocol  
-**Last updated:** 2026-08-15  
+**Last updated:** 2026-08-28  
 **Status:** OPEN / EMPIRICAL EVIDENCE GATE
 
 ---
 
 ## Epistemic boundary
 
-Issue #32 no longer treats external Nemotron or other published benchmark scores as DGAF validation. External benchmarks are contextual baselines only.
+Issue #32 does not treat external model benchmarks as DGAF validation. External benchmarks are contextual baselines only.
 
 The repository-native protocol separates:
 
@@ -18,37 +18,39 @@ A result is not promoted to `VERIFIED` without reproducible inputs, expected res
 
 ---
 
-## First reproducible slice — implemented
+## Reproducible slices
 
 ### `role_boundary_coherence`
 
+Existing deterministic fixture slice remains implemented. Its evaluator uses explicit expected labels and predictions; it is synthetic reproducibility evidence, not DGAF/model performance evidence.
+
+### `governance_schema_conformance` — newly implemented
+
 | Deliverable | Location | Status |
 |---|---|---|
-| Deterministic fixture corpus | `evaluations/fixtures/role_boundary_coherence_v1.json` | ✅ Implemented |
-| Independent expected labels | fixture corpus | ✅ Implemented |
-| Canonical protocol | 50-turn trace / turn-48 probe | ✅ Defined |
-| Scoring | exact role match / target 0.95 | ✅ Implemented |
-| Provenance | fixture SHA-256 + source metadata | ✅ Implemented |
-| Failure analysis | per-case machine-readable results | ✅ Implemented |
-| Regression test | `tests/test_role_boundary_coherence.py` | ✅ Implemented |
-| CI execution | `.github/workflows/governance-ci.yml` | ✅ Implemented |
-| Retained result | CI artifact `dgaf-role-boundary-coherence` | 🟡 Pending successful workflow run |
+| Deterministic evaluator | `evaluations/governance_schema_conformance.py` | ✅ Implemented |
+| Versioned schema under test | `schemas/governance.yml.schema.json` | ✅ Bound |
+| Deterministic corpus generator | evaluator, fixed seed `20260828` | ✅ Implemented |
+| Corpus size | 1,000 cases (500 expected-valid, 500 expected-invalid) | ✅ Defined |
+| Mutation coverage | extra fields, missing fields, type errors, bounds, enum/pattern violations | ✅ Implemented |
+| Regression gate | `tests/test_governance_schema_conformance.py` | ✅ Implemented |
+| CI execution | Python Tests & Quality / PPTL CI triggered on `60936730824c296725817bccfdfa243513eddba3` | 🟡 RUNNING / QUEUED |
+| Retained result | machine-readable evaluator output | 🟡 Pending successful CI execution |
 | DGAF/model performance claim | — | 🔴 Not established |
 | Real-world efficacy | — | 🔴 Not established |
 
-The current predictions are explicit evaluator inputs, not model-generated outputs. A passing fixture run therefore establishes evaluator reproducibility, not DGAF role-boundary efficacy.
+The conformance metric is **correct accept/reject classification against the versioned JSON Schema**. This avoids treating invalid test fixtures as failed "valid outputs" while still exercising the schema boundary. The evaluator explicitly states that this is synthetic evidence and does not establish production reliability or DGAF efficacy.
 
 ---
 
 ## Remaining slices
 
 1. `contraction_proof_fidelity` — deterministic specification corpus with independently computed spectral expected results.
-2. `governance_schema_conformance` — schema corpus/fuzz cases with explicit valid/invalid labels.
-3. `audit_hallucination_rate` — ground-truth audit fixture corpus before any rate is reported.
-4. `taubench_banking_mitigation` — only if the external benchmark/data are available and reproducible in the repository environment.
-5. Real-workload evaluation — separate evidence track after repository-native synthetic slices are stable.
+2. `audit_hallucination_rate` — ground-truth audit fixture corpus before any rate is reported.
+3. `taubench_banking_mitigation` — only if the external benchmark/data are available and reproducible in the repository environment.
+4. Real-workload evaluation — separate evidence track after repository-native synthetic slices are stable.
 
-The historical AHG Tasks 6–8 remain separate empirical claims and must not inherit validation merely because the deterministic evaluator infrastructure passes.
+The historical AHG Tasks 6–8 remain separate empirical claims and must not inherit validation merely because deterministic evaluator infrastructure passes.
 
 ---
 
@@ -72,6 +74,8 @@ Closure must not be based solely on:
 ```bash
 python -m pytest -q tests/test_role_boundary_coherence.py
 python evaluations/role_boundary_coherence.py --output artifacts/role_boundary_coherence.json
+python -m pytest -q tests/test_governance_schema_conformance.py
+python evaluations/governance_schema_conformance.py --variants 1000 --output artifacts/governance_schema_conformance.json
 ```
 
-The evaluator emits a machine-readable result containing the fixture hash, protocol metadata, score, target, per-case results, failure analysis, evidence classification, and limitations.
+The schema-conformance evaluator emits a machine-readable result containing the schema hash, fixed seed, sample count, correct classifications, score, target, failure analysis, evidence classification, and limitations.
