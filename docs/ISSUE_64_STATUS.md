@@ -18,27 +18,35 @@ The fixture suite contains 12 cases with explicit expected detections.
 
 ### Exact verification evidence
 
-Governance CI run `33152927234` completed **SUCCESS** against exact `main` tree `7a1b0f36892be760420d5f72ac9118e0644db79f`.
+Governance CI run `33162492796` completed **SUCCESS** against exact source tree `061286b1c17fe671cd5c58df025767befbeb55cd`.
 
-The run also completed:
+The retained evaluation artifact `dgaf-evaluation-evidence` contains:
+- `evaluation_integrity_fixture_suite.json` — 12/12 correct, `accuracy = 1.0`;
+- `role_boundary_coherence.json` — 10/10, score `1.0`;
+- `governance_schema_conformance.json` — 1000/1000, score `1.0`;
+- `contraction_proof_fidelity.json` — 100/100, score `1.0`.
+
+The same exact Governance CI run also completed:
 - exact checkout identity assertion;
 - E2b/M6 evidence emission and artifact upload;
 - Python compilation;
-- P-42 conductor/recovery tests (`78 passed, 3 skipped`);
-- P8 analysis/security tests (`20 passed`);
-- bounded TLA+ containment model check (`12 states generated`, `11 distinct`, depth `11`);
+- P-42 conductor/recovery tests;
+- P8 analysis/security tests;
+- bounded TLA+ containment model check;
 - governance executability verification.
 
-However, the retained Governance CI log does **not** show `tests/test_evaluation_integrity_fixture_suite.py` being executed. The logged repository-native evaluation command is limited to the existing `role_boundary_coherence` slice. Therefore this CI run verifies the containing governance workflow and current tree, but does not provide fixture-specific execution evidence for #64.
+### Evidence boundary
 
-**Fixture status:** IMPLEMENTED / EXACT-TREE GOVERNANCE CI VERIFIED / FIXTURE-SPECIFIC TEST EXECUTION PENDING.
+The #64 fixture result establishes repository-native deterministic evaluator/mechanism correctness for the exact executed tree. It does **not** establish model-facing adversarial robustness, resistance to benchmark gaming, leakage resistance, contamination resistance, topology invariance, DGAF efficacy, or real-world performance.
+
+**Fixture status:** VERIFIED / SYNTHETIC / EXACT-TREE `061286b1…` / Governance CI `33162492796`.
 
 ## Remaining work
 
-- execute the fixture regression test on an exact tree and retain its machine-readable result;
 - retain model-facing adversarial execution if adversarial robustness is to be claimed;
 - obtain a provenance-controlled ground-truth corpus for `audit_hallucination_rate`;
-- perform reproducible external benchmark execution where applicable.
+- perform reproducible external benchmark execution where applicable;
+- complete any independent verification required by the applicable governance predicate.
 
 ## Epistemic boundary
 
