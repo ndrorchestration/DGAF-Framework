@@ -35,7 +35,7 @@ Pattern Commons is the proposed ecosystem-level layer for pattern identity, prov
 
 ### Pattern namespaces
 
-- **NDR P-series / named-session patterns:** canonical family currently represented by `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`.
+- **NDR P-series / named-session patterns:** current registry identity is represented by `docs/ndr_patterns_unified.json`, with `docs/NDR_PATTERN_REGISTRY_UNIFIED_P42.md` serving as the current human-readable P-42 reconciliation companion. `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` remains a historical P-41 snapshot until separately reconciled.
 - **DGAF orchestration patterns:** `registry/PATTERN_REGISTRY_v2.md`, using identifiers such as `P-SAGA-001`, `P-TX-001`, `P-CB-001`; this is distinct from the NDR P-series.
 - **External/cross-listed patterns:** repositories such as `ai-governance-frameworks`, `ai-prompt-systems-portfolio`, `Amethyst-Governance-Eval-Stack`, `aoga-dashboard`, and `sentinel-governance` may contain independent, adapted, or cross-reference artifacts. Canonical-source evidence is required before consolidation.
 
@@ -43,12 +43,13 @@ Shared identifiers or terminology do not establish semantic equivalence.
 
 ## NDR registry boundary
 
-**Canonical Markdown source:** `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`  
-**Machine-readable counterpart:** `docs/ndr_patterns_unified.json`
+**Current machine-readable registry:** `docs/ndr_patterns_unified.json`  
+**Current human-readable reconciliation:** `docs/NDR_PATTERN_REGISTRY_UNIFIED_P42.md`  
+**Historical Markdown snapshot requiring reconciliation:** `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`  
+**P-42 pattern card:** `patterns/P-42_AHG.md`  
+**Reconciliation record:** `docs/governance/NDR_REGISTRY_RECONCILIATION_2026-08-28.md`
 
-Known reconciliation issue: the Markdown registry declares a P-41 watermark while the machine-readable registry has advanced to P-42. This is a synchronization issue until explicitly reconciled; do not silently promote either artifact as the sole current sequence without documenting the discrepancy.
-
-Current canonical P-series represented in the source registry include P-01–P-42, with P-42 AHG specified and implementation status explicitly bounded by evidence.
+The machine-readable registry declares P-42 / 42 P-series entries. The dedicated P-42 reconciliation companion explicitly records the older unified Markdown file as historical until its canonical text is reconciled. This is a documentation synchronization issue, not evidence of empirical efficacy.
 
 ## P-35–P-38 research candidates
 
@@ -127,8 +128,8 @@ A relationship across disciplines does not establish equivalence across them. Ea
 | Cross-disciplinary boundary | `docs/GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md` |
 | Current project status | `docs/PROJECT_STATUS.md`, `docs/CURRENT_STATE.md` |
 | Evidence policy | `docs/evidence/` |
-| NDR registry | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` |
-| Machine-readable NDR registry | `docs/ndr_patterns_unified.json` |
+| NDR registry | `docs/ndr_patterns_unified.json`, `docs/NDR_PATTERN_REGISTRY_UNIFIED_P42.md` |
+| Historical NDR registry snapshot | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` |
 | License | `LICENSE` |
 | Funding | `.github/FUNDING.yml` |
 
@@ -145,7 +146,7 @@ Historical sweep logs, old deadlines, attestation percentages, tier labels, and 
 
 ## Current cleanup priorities
 
-1. Reconcile the NDR Markdown P-41 watermark against the machine-readable P-42 registry.
+1. Reconcile the historical human-readable NDR registry with the P-42 machine-readable registry and current human-readable companion.
 2. Verify the newly added deterministic evaluation-integrity fixture execution on the exact Governance CI tree before promoting #64 beyond IMPLEMENTED.
 3. Continue weighted Forman–Ricci falsification under Issue #72; do not promote the single-trial result to validation.
 4. Continue file/path-level classification against the commercialization/openness boundary inventory.
@@ -154,4 +155,4 @@ Historical sweep logs, old deadlines, attestation percentages, tier labels, and 
 7. Empirically characterize any semantic/ontological detector before promoting it to a threshold-bearing or blocking control.
 8. Keep #117 and #122 open until their respective implementation/provenance prerequisites are genuinely satisfied.
 
-*Reviewed 2026-08-28 as part of the repository-wide epistemic, temporal, terminology, semantic, traceability, evaluation-integrity, and commercialization-boundary audit.*
+*Reviewed 2026-08-28 as part of the repository-wide epistemic, temporal, terminology, semantic, traceability, evaluation-integrity, registry, and commercialization-boundary audit.*
