@@ -50,9 +50,17 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 
 The previously identified READY deployment remains supporting deployment evidence. Formal P2 and P6a workflows require authenticated execution against the exact deployment identity and must not be inferred from readiness alone.
 
-## Semantic terminology correction
+## Canonical mathematical notation
 
-`pP` / **Platinum Mean** is intentional DGAF notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. `ρP` / **plastic constant** is `1.3247179572447454`, the real root of `x³ = x + 1`. Historical references to `1.7747` require contextual classification and must not be imported into PDMAL plastic-constant convergence mathematics.
+`φ` is the conventional symbol for the Golden Ratio, `(1+√5)/2 ≈ 1.618033989`.
+
+`σ_{p,q}` denotes the Spinadel metallic-means family, the positive solution of `x² - px - q = 0`. For the ordinary sequence, `σ_n = σ_{n,1}`; `σ_{2,1}` is silver and `σ_{3,1}` is bronze.
+
+`ρ` denotes the mathematical plastic number, `≈1.3247179572447454`, the unique real root of `x³ - x - 1 = 0`. `P` is an attested alternative notation. `ρP` is not the canonical mathematical notation.
+
+`pP` / **Platinum Mean** is intentional DGAF-specific notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. It is not a standard member of the quadratic metallic-means family and must not be substituted for `ρ` in plastic-number mathematics.
+
+The authoritative notation policy is `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`.
 
 ## Forman–Ricci evidence boundary
 
