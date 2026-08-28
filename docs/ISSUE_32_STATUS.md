@@ -8,7 +8,7 @@
 
 ## Epistemic boundary
 
-Issue #32 does not treat external model benchmarks as DGAF validation. External benchmarks are contextual baselines only.
+Issue #32 does not treat external benchmarks as DGAF validation. External benchmarks are contextual baselines only.
 
 The repository-native protocol separates:
 
@@ -16,66 +16,57 @@ The repository-native protocol separates:
 
 A result is not promoted to `VERIFIED` without reproducible inputs, expected results, command/environment provenance, retained machine-readable output, and failure analysis.
 
----
+## Repository-native slices
 
-## Reproducible slices
-
-### `role_boundary_coherence`
-
-Existing deterministic fixture slice remains implemented. Its evaluator uses explicit expected labels and predictions; it is synthetic reproducibility evidence, not DGAF/model performance evidence.
-
-### `governance_schema_conformance` — newly implemented
-
-| Deliverable | Location | Status |
+| Slice | Status | Scope |
 |---|---|---|
-| Deterministic evaluator | `evaluations/governance_schema_conformance.py` | ✅ Implemented |
-| Versioned schema under test | `schemas/governance.yml.schema.json` | ✅ Bound |
-| Deterministic corpus generator | evaluator, fixed seed `20260828` | ✅ Implemented |
-| Corpus size | 1,000 cases (500 expected-valid, 500 expected-invalid) | ✅ Defined |
-| Mutation coverage | extra fields, missing fields, type errors, bounds, enum/pattern violations | ✅ Implemented |
-| Regression gate | `tests/test_governance_schema_conformance.py` | ✅ Implemented |
-| CI execution | Python Tests & Quality / PPTL CI triggered on `60936730824c296725817bccfdfa243513eddba3` | 🟡 RUNNING / QUEUED |
-| Retained result | machine-readable evaluator output | 🟡 Pending successful CI execution |
-| DGAF/model performance claim | — | 🔴 Not established |
-| Real-world efficacy | — | 🔴 Not established |
+| `role_boundary_coherence` | IMPLEMENTED | deterministic synthetic fixture/evaluator |
+| `governance_schema_conformance` | IMPLEMENTED | deterministic 1,000-case schema classification; fixed seed `20260828` |
+| `contraction_proof_fidelity` | IMPLEMENTED | deterministic 100-case analytic spectral-radius fixture/evaluator |
+| `audit_hallucination_rate` | BLOCKED ON FIXTURE | requires provenance-controlled ground-truth audit corpus |
+| `taubench_banking_mitigation` | CONDITIONAL | requires reproducible external benchmark/data |
+| Real-workload evaluation | LATER | separate evidence track |
 
-The conformance metric is **correct accept/reject classification against the versioned JSON Schema**. This avoids treating invalid test fixtures as failed "valid outputs" while still exercising the schema boundary. The evaluator explicitly states that this is synthetic evidence and does not establish production reliability or DGAF efficacy.
+### Governance schema conformance
 
----
+Implemented in `evaluations/governance_schema_conformance.py` with regression coverage in `tests/test_governance_schema_conformance.py`.
 
-## Remaining slices
+- fixed seed: `20260828`
+- cases: `1000` (`500` expected-valid / `500` expected-invalid)
+- validator: versioned `schemas/governance.yml.schema.json` via `jsonschema.Draft7Validator`
+- metric: correct accept/reject classification
+- evidence class: `SYNTHETIC`
 
-1. `contraction_proof_fidelity` — deterministic specification corpus with independently computed spectral expected results.
-2. `audit_hallucination_rate` — ground-truth audit fixture corpus before any rate is reported.
-3. `taubench_banking_mitigation` — only if the external benchmark/data are available and reproducible in the repository environment.
-4. Real-workload evaluation — separate evidence track after repository-native synthetic slices are stable.
+### Contraction proof fidelity
 
-The historical AHG Tasks 6–8 remain separate empirical claims and must not inherit validation merely because deterministic evaluator infrastructure passes.
+Implemented in `evaluations/contraction_proof_fidelity.py` with fixture `evaluations/fixtures/contraction_proof_fidelity_v1.json` and regression coverage in `tests/test_contraction_proof_fidelity.py`.
 
----
+- cases: `100`
+- construction: deterministic diagonal matrices with independently specified spectral radii
+- metric: correct contraction/non-contraction classification
+- evidence class: `SYNTHETIC`
 
-## Closure conditions
+## CI verification state
 
-Issue #32 remains open until the repository-native evaluation protocol has sufficient executable slices and retained evidence to support the claims being evaluated.
+A prior schema-conformance run on `6093673…` failed at test collection because `jsonschema` was absent from `requirements-ci.txt`. The dependency contract was corrected in commit `e46ffb3913794b506bf413e837fcf5be99d8f426` by adding `jsonschema==4.26.0` and constraining `setuptools>=83.0.0,<84`.
 
-Closure must not be based solely on:
+The combined evaluator tree at `352dd166…` and the corrected dependency tree at `e46ffb3…` must be evaluated on their exact current commits before the new slices are promoted to `VERIFIED`. Subsequent P-42 metadata normalization advanced `main` again to `bcc893f6…`; no earlier CI result is transferred automatically to that later tree.
 
-- code existence,
-- unit-test success,
-- external benchmark scores,
-- synthetic fixture success,
-- deployment status, or
-- historical attestations.
+## Evidence boundary
 
----
+Repository-native fixtures validate evaluator/scoring behavior under synthetic conditions. They do not establish model capability, DGAF efficacy, production reliability, or real-world performance. No result is promoted beyond its actual execution scope.
 
 ## Reproducibility commands
 
 ```bash
 python -m pytest -q tests/test_role_boundary_coherence.py
-python evaluations/role_boundary_coherence.py --output artifacts/role_boundary_coherence.json
 python -m pytest -q tests/test_governance_schema_conformance.py
-python evaluations/governance_schema_conformance.py --variants 1000 --output artifacts/governance_schema_conformance.json
+python -m pytest -q tests/test_contraction_proof_fidelity.py
+python evaluations/role_boundary_coherence.py --output artifacts/role_boundary_coherence.json
+python evaluations/governance_schema_conformance.py --output artifacts/governance_schema_conformance.json
+python evaluations/contraction_proof_fidelity.py --output artifacts/contraction_proof_fidelity.json
 ```
 
-The schema-conformance evaluator emits a machine-readable result containing the schema hash, fixed seed, sample count, correct classifications, score, target, failure analysis, evidence classification, and limitations.
+**Pilot authorization:** NOT GRANTED  
+**Empirical N:** 0  
+**Freeze:** NOT CREATED
