@@ -5,7 +5,10 @@ robustness or real-world adversarial resistance.
 """
 from __future__ import annotations
 
+import argparse
+import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable, Sequence
 
 
@@ -85,3 +88,39 @@ def validate_fixture_set(cases: Sequence[IntegrityCase] = CASES) -> None:
     for case in cases:
         if not isinstance(case.expected_detected, bool):
             raise TypeError("expected_detected must be boolean")
+
+
+def build_report() -> dict[str, object]:
+    """Build a deterministic machine-readable synthetic evidence record."""
+    validate_fixture_set(CASES)
+    score = evaluate(CASES)
+    return {
+        "evaluation": "evaluation_integrity_fixture_suite",
+        "evidence_class": "SYNTHETIC",
+        "fixture_version": "v1",
+        "threats": list(THREATS),
+        "case_count": len(CASES),
+        "expected_detection_count": sum(case.expected_detected for case in CASES),
+        "score": score,
+        "passed": score["incorrect"] == 0,
+        "limitations": [
+            "Synthetic repository fixture only; not model-facing adversarial evaluation.",
+            "Successful fixture detection does not establish adversarial robustness.",
+            "No external benchmark or real workload is used as validation evidence.",
+        ],
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    report = build_report()
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
