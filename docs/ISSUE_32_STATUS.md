@@ -16,69 +16,39 @@ The repository-native protocol separates:
 
 A result is not promoted to `VERIFIED` without reproducible inputs, expected results, command/environment provenance, retained machine-readable output, and failure analysis.
 
-## Repository-native slices — exact verified execution
+## Exact-tree repository-native verification
 
-Governance CI run `33162492796` completed **SUCCESS** on exact tree `061286b1c17fe671cd5c58df025767befbeb55cd` and retained the following results:
+Governance CI run `33162492796` completed **SUCCESS** on exact tree `061286b1c17fe671cd5c58df025767befbeb55cd` and retained:
 
-| Slice | Status | Scope |
-|---|---|---|
-| `role_boundary_coherence` | VERIFIED @ `061286b1…` | deterministic synthetic fixture/evaluator; 10/10, score `1.0` |
-| `governance_schema_conformance` | VERIFIED @ `061286b1…` | deterministic 1,000-case schema classification; 1000/1000, score `1.0`; fixed seed `20260828` |
-| `contraction_proof_fidelity` | VERIFIED @ `061286b1…` | deterministic 100-case analytic spectral-radius fixture/evaluator; 100/100, score `1.0` |
-| `audit_hallucination_rate` | BLOCKED ON FIXTURE | requires provenance-controlled ground-truth audit corpus |
-| `taubench_banking_mitigation` | CONDITIONAL | requires reproducible external benchmark/data |
-| Real-workload evaluation | LATER | separate evidence track |
+- `role_boundary_coherence`: 10/10, score `1.0`
+- `governance_schema_conformance`: 1000/1000, score `1.0`, fixed seed `20260828`
+- `contraction_proof_fidelity`: 100/100, score `1.0`
 
-### Exact evaluation artifact
+Retained artifact: `dgaf-evaluation-evidence`.
 
-Retained artifact: `dgaf-evaluation-evidence` from run `33162492796`.
-
-It contains:
-- `role_boundary_coherence.json`
-- `governance_schema_conformance.json`
-- `contraction_proof_fidelity.json`
-- `evaluation_integrity_fixture_suite.json`
-
-All four evaluation records identify the source commit as `061286b1c17fe671cd5c58df025767befbeb55cd` and the workflow run as `33162492796`.
+All three records identify the same exact source commit and workflow run. They are **SYNTHETIC** repository-authored mechanism/evaluator evidence only.
 
 ## Evaluation-integrity fixture track (#64)
 
-The deterministic fixture suite covers benchmark-gaming, measurement-leakage, evaluator-awareness, test-set-contamination, stochastic-seed-artifact, and topology-specificity threats.
+The separate #64 fixture suite is also verified on the same exact run:
 
-- fixture implementation: `evaluations/evaluation_integrity_fixture_suite.py`
+- fixture: `evaluations/evaluation_integrity_fixture_suite.py`
 - regression coverage: `tests/test_evaluation_integrity_fixture_suite.py`
-- cases: `12`
-- exact result: `12/12` correct, accuracy `1.0`
-- status: **VERIFIED / SYNTHETIC / EXACT-TREE `061286b1…`**
+- 12 cases
+- 12/12 correct, accuracy `1.0`
+- six registered threat classes
 
-This verifies the fixture/evaluator mechanism under repository-authored synthetic conditions. It does not establish model-facing adversarial robustness.
+## Remaining slices
 
-## CI verification state
-
-- Governance CI run `33162492796`: **SUCCESS** on exact tree `061286b1c17fe671cd5c58df025767befbeb55cd`.
-- Exact-tree E2b/M6 evidence emitted and retained for that execution.
-- P-42 conductor/recovery tests passed.
-- P8 analysis/security tests passed.
-- TLA+ containment model check passed.
-- Governance executability verification passed.
-- The four repository-native synthetic evaluation slices were executed and retained on the same exact run.
+- `audit_hallucination_rate`: BLOCKED ON FIXTURE — provenance-controlled ground-truth audit corpus required.
+- `taubench_banking_mitigation`: CONDITIONAL — reproducible external benchmark/data required.
+- Real-workload evaluation remains a separate evidence track.
 
 ## Evidence boundary
 
-Repository-native fixtures validate evaluator/scoring behavior under synthetic conditions. They do not establish model capability, DGAF efficacy, production reliability, or real-world performance. No result is promoted beyond its actual execution scope.
+The verified results establish evaluator/scoring behavior under repository-authored deterministic synthetic conditions. They do not establish model capability, DGAF efficacy, production reliability, adversarial robustness, or real-world performance.
 
-## Reproducibility commands
-
-```bash
-python -m pytest -q tests/test_role_boundary_coherence.py
-python -m pytest -q tests/test_governance_schema_conformance.py
-python -m pytest -q tests/test_contraction_proof_fidelity.py
-python -m pytest -q tests/test_evaluation_integrity_fixture_suite.py
-python evaluations/role_boundary_coherence.py --output artifacts/role_boundary_coherence.json
-python evaluations/governance_schema_conformance.py --output artifacts/governance_schema_conformance.json
-python evaluations/contraction_proof_fidelity.py --output artifacts/contraction_proof_fidelity.json
-python evaluations/evaluation_integrity_fixture_suite.py --output artifacts/evaluation_integrity_fixture_suite.json
-```
+The successful Governance CI run also emitted exact-run E2b/M6, P-42, P8, formal-model, and provenance artifacts. Those are not automatically transferable to later commits.
 
 **Pilot authorization:** NOT GRANTED  
 **Empirical N:** 0  
