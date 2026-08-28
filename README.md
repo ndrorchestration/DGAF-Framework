@@ -8,7 +8,7 @@
 
 The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. The corrected pilot apparatus and supporting governance controls are present in the repository, but the current experimental candidate has not been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
-The current repository `main` is `42d3afdb240718c82a5cc0530585e90db5728f55`. This current tip contains documentation/governance reconciliation. Repository `main` must not be substituted for the experimental apparatus candidate merely because the documentation tree advances.
+The current repository `main` is `eb189c9bc18b82df25696cf353669a2ecaec8000`. This current tip records the 2026-08-28 direct lattice-harness reproduction/evidence reconciliation. Repository `main` must not be substituted for the experimental apparatus candidate merely because the documentation/evidence tree advances.
 
 The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. The associated production deployment is READY, but formal authenticated P2/P6a runtime verification and the remaining freeze predicates are incomplete. Documentation-only successors do not redefine the executable apparatus; any substantive apparatus change requires a new candidate identity and affected-predicate re-verification.
 
