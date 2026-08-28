@@ -3,6 +3,7 @@
 **Status date:** 2026-08-28  
 **Repository:** `ndrorchestration/DGAF-Framework`  
 **Current main:** active documentation/evidence lineage; not experimental apparatus identity  
+**Current main tip:** `3f2d16a45871b25cd98cd5f7ae69451abc523543`  
 **Experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
 **Pilot status:** PRE-FREEZE; authorization not granted  
 **Empirical N:** 0
@@ -11,11 +12,11 @@
 
 The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the retained artifact is `9636185725` with digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
 
-Repository `main` is an active documentation/evidence lineage. It must not be substituted for the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
+Repository `main` is an active documentation/evidence lineage. Its current tip is `3f2d16a…`; it must not be substituted for the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
 
-A Governance CI run on the 2026-08-28 evidence-reconciliation tip completed successfully, including E2b/M6 evidence emission, P-42 tests, P8 artifact/analysis tests, evaluation provenance, bounded TLC model checking, and evidence artifact uploads. These results verify the executed governance/test scope at that exact commit; they do not freeze or authorize the experimental apparatus. Retained artifacts include `dgaf-tlc-model-check`, `dgaf-role-boundary-coherence`, and `dgaf-freeze-control-evidence`.
+The corrected Governance CI boundary at `ac8ea26…` binds the candidate target to the executing workflow SHA and is the next required current-tree E2b/M6 verification target. No later documentation-only or semantic-correction commit retroactively inherits that verification result as apparatus evidence.
 
-The corresponding Doc Lint run failed deterministically across a broad repository documentation surface. This remains documentation-quality debt, not experimental failure. Findings include missing fenced-code languages, emphasis-as-heading violations, multiple H1s, malformed table structures, ordered-list formatting, blockquote spacing, reference-link definitions, and trailing-newline issues. The documentation debt remains tracked separately.
+The corresponding Doc Lint run remains deterministic documentation-quality debt. Findings include missing fenced-code languages, emphasis-as-heading violations, multiple H1s, malformed table structures, ordered-list formatting, blockquote spacing, reference-link definitions, and trailing-newline issues. The documentation debt remains tracked separately from experimental validity.
 
 P7 is scientifically adopted in substance, but exact cryptographic binding to the eventual freeze apparatus remains OPEN. P8 remains OPEN/FAIL-CLOSED. P2/P6a remain pending authenticated execution. P4/P5/P6 and P9 remain open. No new freeze exists, no pilot has been authorized or executed, and N remains 0.
 
@@ -24,10 +25,10 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Gate / control | Status | Evidence / state |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b868…` |
-| Current repository main | CURRENT LINEAGE | Documentation/evidence lineage; not apparatus identity |
+| Current repository main | CURRENT LINEAGE | `3f2d16a…`; documentation/evidence lineage, not apparatus identity |
 | Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267…` |
 | E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd1…`, run `33047380487`, artifact `9636185725` |
-| Current-tree E2b/M6 | OPEN / VERIFICATION REQUIRED | Candidate-scoped applicability requires exact binding/inspection |
+| Current-tree E2b/M6 | OPEN / VERIFICATION REQUIRED | Exact candidate binding/inspection on `ac8ea26…` remains required |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical/non-empirical characterization only |
 | Execution contract | PARTIAL | Authenticated exact-current-tree P2 evidence pending |
 | Artifact contract | PARTIAL | Corrective controls present; current candidate execution evidence pending |
@@ -39,6 +40,7 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | P7 exact binding | OPEN | Final freeze identity binding remains required |
 | Analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | Independent verification | NOT EXECUTED | P9 remains pending |
+| Forman–Ricci lattice helper semantics | OPEN / ISSUE #117 | Unweighted dodecahedral `Ric_F(e) = -2` is constant/zero-variance and must produce `NO_DISCRIMINATING_SIGNAL`, not 30 anomaly flags |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | ZERO | No authorized pilot execution |
@@ -62,11 +64,11 @@ GitHub-visible claims must distinguish implementation, computation, verification
 
 ## Historical evidence boundary
 
-Historical evidence remains scoped to the exact application source, deployment, workflow run, and artifact that produced it. The E2b run `33047380487` proves `d299dd1…`; it does not automatically certify `ac8ea26…`. Historical M6 evidence targeting `e6beeb…` and verifier merge-ref `2516f32…` remains non-closing for the current tree.
+Historical evidence remains scoped to the exact application source, deployment, workflow run, and artifact that produced it. The E2b run `33047380487` proves `d299dd1…`; it does not automatically certify `ac8ea26…` or the later `3f2d16a…` documentation lineage. Historical M6 evidence targeting `e6beeb…` and verifier merge-ref `2516f32…` remains non-closing for the current candidate boundary.
 
 ## Required closure sequence
 
-1. Execute corrected current-tree E2b/M6 verification on `ac8ea26…` and retain artifacts.
+1. Execute corrected current-tree E2b/M6 verification against candidate boundary `ac8ea267…` with the required exact-target binding and retain artifacts.
 2. Independently inspect exact SHA, scope, integrity, and negative-state claims.
 3. Execute authenticated P2 and P6a against the exact deployment identity.
 4. Complete P4, P5, and P6 evidence/custody.
