@@ -13,7 +13,7 @@ This matrix is the current planning/control surface for P1–P9. It does not con
 
 `current verified executable boundary > documentation-only successors > historical candidate/freeze`
 
-The historical executable candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` remains provenance only for current freeze decisions. The current exact-tree verification boundary is `ac8ea267…`.
+The historical executable candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` remains provenance only for current freeze decisions. The current experimental verification boundary is `ac8ea267…`.
 
 ## Predicate matrix
 
@@ -29,6 +29,17 @@ The historical executable candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` r
 | P7 Scientific Target | adopted scientific decision + exact binding | **ADOPTED / BINDING PENDING** | adopted record cryptographically bound to exact frozen protocol/apparatus/analysis/freeze identity |
 | P8 Analysis Lock | analysis/schema/runner/protocol bindings + candidate-scoped verification | **OPEN / FAIL-CLOSED** | all applicable P8 predicates evidenced and inspected |
 | P9 Independent Verification | independent reproduction/audit of identity, artifacts, analysis, invariants, adversarial cases | **NOT EXECUTED** | independent verifier passes without monoculture |
+
+## Supporting repository-native evaluator evidence
+
+Governance CI run `33162492796` on exact tree `061286b1c17fe671cd5c58df025767befbeb55cd` retained the current repository-native evaluator results:
+
+- `role_boundary_coherence`: 10/10
+- `governance_schema_conformance`: 1000/1000, deterministic seed `20260828`
+- `contraction_proof_fidelity`: 100/100
+- `evaluation_integrity_fixture_suite`: 12/12 across six registered threat classes
+
+These results are `SYNTHETIC` / repository-authored evaluator-mechanism evidence. They support implementation/evaluator correctness only; they do not close P1–P9, establish model-facing robustness, prove production reliability, establish DGAF/PDMAL efficacy, or change authorization/freeze state.
 
 ## Additional freeze-admissibility predicates
 
@@ -50,7 +61,7 @@ The historical executable candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` r
 
 ## Current deployment evidence
 
-The exact current deployment is READY and source-bound to `ac8ea267…`, with `/api/health` returning HTTP 200. This is deployment/health evidence and is not a substitute for authenticated P2/P6a matrices.
+The exact experimental candidate deployment is READY and source-bound to `ac8ea267…`, with `/api/health` returning HTTP 200. This is deployment/health evidence and is not a substitute for authenticated P2/P6a matrices.
 
 ## P7 adoption
 
@@ -58,7 +69,7 @@ The scientific decision is formally adopted by the designated experimental-contr
 
 ## P8 boundary
 
-The P8 lock has been reconciled to the current verification boundary. Analysis implementation, schema, runner, protocol, and configuration must be cryptographically rebound in the eventual freeze packet. Documentation-only successors do not silently inherit current experimental evidence as new execution evidence.
+The P8 lock has been reconciled to the experimental verification boundary. Analysis implementation, schema, runner, protocol, and configuration must be cryptographically rebound in the eventual freeze packet. Documentation-only successors do not silently inherit candidate evidence as new execution evidence.
 
 ## Remaining critical path
 
