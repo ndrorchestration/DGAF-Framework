@@ -2,7 +2,7 @@
 
 **Status:** OPEN / PRE-FREEZE / FAIL-CLOSED
 **Authority:** DGAF/PDMAL experimental-design control
-**Purpose:** Bind the executable primary analysis and its artifact contract to the adopted P7 scientific target before any unblinding or empirical interpretation.
+**Purpose:** Bind the executable primary analysis and its artifact contract to the P7 scientific target before any unblinding or empirical interpretation.
 
 ## P7 inputs fixed
 
@@ -52,7 +52,7 @@ P8 remains **OPEN / FAIL-CLOSED** pending:
 4. Environment/topology reproducibility evidence.
 5. Durable evidence retention with direct retrieval and integrity verification.
 6. Current-tree evidence review for E2b/M6, retaining their exact execution boundaries.
-7. Formal P7 authority adoption and cryptographic binding; scientific decision is now adopted but not freeze-bound.
+7. P7 exact freeze binding and formal closure of the adopted scientific decision record.
 8. Independent P9 verification.
 
 A successful CI run or deployment readiness is necessary evidence, not by itself P8 closure.
