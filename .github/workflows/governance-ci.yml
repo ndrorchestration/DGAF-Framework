@@ -12,9 +12,9 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # E2b/M6 must verify the exact tree executing this workflow. Using the
-  # workflow commit prevents stale historical candidate rebinding.
-  PDMAL_TARGET_CANDIDATE_SHA: ${{ github.sha }}
+  # E2b/M6 must verify the exact tree executing this workflow. On pull_request,
+  # github.sha is the synthetic merge commit, so bind to the PR head instead.
+  PDMAL_TARGET_CANDIDATE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   governance-ci:
@@ -77,7 +77,7 @@ jobs:
           data = json.loads(path.read_text(encoding='utf-8'))
           data['evidence_record'] = {
               'evidence_class': data.get('evidence_class', 'SYNTHETIC'),
-              'source_commit': '${{ github.sha }}', 'workflow_run_id': '${{ github.run_id }}',
+              'source_commit': '${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}', 'workflow_run_id': '${{ github.run_id }}',
               'job': 'governance-ci', 'python_version': '3.12',
               'command': 'python evaluations/role_boundary_coherence.py --output artifacts/role_boundary_coherence.json',
               'scope': 'repository-authored deterministic fixture evaluation',
@@ -123,7 +123,7 @@ jobs:
           version = re.search(r'TLC2 Version ([^\n]+)', text)
           no_error = 'Model checking completed. No error has been found.' in text
           evidence = {
-              'evidence_class': 'BOUNDED_FORMAL_MODEL_CHECK', 'source_commit': '${{ github.sha }}',
+              'evidence_class': 'BOUNDED_FORMAL_MODEL_CHECK', 'source_commit': '${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}',
               'workflow_run_id': '${{ github.run_id }}', 'job': 'governance-ci',
               'java_version': '17', 'tool': 'TLA+ Tools', 'tool_release': 'v1.8.0',
               'tool_sha256': 'ab323b79802aedc3203b3f9af37c6aca3ed43f4e0225b36f2aa77b26de46c05f',

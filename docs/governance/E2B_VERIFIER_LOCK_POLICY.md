@@ -1,6 +1,8 @@
 # E2b Verifier-Policy Dependency Lock
 
 **Status:** Candidate closure implementation; independent verification required before E2b is declared CLOSED.
+**Execution boundary note:** This branch is a fresh exact-tree verification candidate rooted at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`; the policy-only amendment does not alter the PDMAL trial implementation.
+**Verification trigger note:** This file is intentionally changed only to invoke the workflow's PR-path verifier; no PDMAL trial code is modified.
 
 ## Bound inputs
 
