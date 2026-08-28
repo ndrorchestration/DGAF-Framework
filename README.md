@@ -12,7 +12,7 @@ The repository `main` is an active documentation/evidence lineage and must not b
 
 Historical candidates, freezes, run identifiers, and acceptance records remain provenance only unless explicitly rebound to the current authoritative candidate and evidence boundary.
 
-For the authoritative project state, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the public-facing publication-quality control, see [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
+For the authoritative project state, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the canonical mathematical notation policy, see [`docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md). For the public-facing publication-quality control, see [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
 
 ## Public-surface standard
 
@@ -48,9 +48,12 @@ DGAF contains governance and evaluation components, agent specifications, contro
 - **Pattern Commons** — proposed ecosystem-level layer for pattern identity, provenance, aliases/equivalence, epistemic status, and evidence relationships across repositories.
 - **AXIS** — Agent X-axis Invariant Spectrum.
 - **FLAG-02** — historical identifier associated with the former 340% coordination-gain claim. Current evaluation-mode terminology is **qualitative**. New documents must not introduce FLAG-02 as a current identifier for either meaning.
-- **pP / Platinum Mean** — intentional DGAF notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. It is distinct from **ρP / the plastic constant**, `1.3247179572447454`, the real root of `x³ = x + 1`.
+- **φ / Golden Ratio** — `(1+√5)/2 ≈ 1.618033989`; canonical mathematical notation.
+- **σ_{p,q} / Metallic Means Family** — positive solution of `x² - px - q = 0`, `(p + √(p² + 4q))/2`; for the ordinary sequence, `σ_n = σ_{n,1}`. `σ_{2,1}` is silver and `σ_{3,1}` is bronze.
+- **ρ / Plastic Number** — `≈ 1.3247179572447454`, the unique real root of `x³ - x - 1 = 0`. `ρ` is the preferred canonical mathematical notation; `P` is an attested alternative. `ρP` is not the canonical symbol.
+- **pP / Platinum Mean** — intentional DGAF notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. This is DGAF-specific notation, not a claim of a universal standard mathematical symbol or membership in the quadratic metallic-means family.
 
-Historical documents may retain their original terminology when necessary for provenance, but they must be treated as historical rather than silently reinterpreted as current state. In particular, pP must not be substituted for ρP in PDMAL plastic-constant convergence mathematics.
+Historical documents may retain their original terminology when necessary for provenance, but they must be treated as historical rather than silently reinterpreted as current state. In particular, pP must not be substituted for ρ in PDMAL plastic-number convergence mathematics.
 
 ## Semantic / ontological boundary
 
@@ -117,6 +120,7 @@ The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the le
 21. [Public Surface QA Standard](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md)
 22. [CROSS_REF](CROSS_REF.md)
 23. [Platinum Mean Semantic Correction](docs/governance/PLATINUM_MEAN_SEMANTIC_CORRECTION_2026-08-28.md)
+24. [Metallic Means Mathematical Notation Policy](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md)
 
 ## Verification and test status
 
