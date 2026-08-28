@@ -1,0 +1,66 @@
+{
+  "manifest_version": "2.0",
+  "candidate_identity": {
+    "candidate_sha": "ec8ee06afbe1fe29e93802a3e7319813f943e46d",
+    "parent_candidate_sha": "ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a",
+    "candidate_label": "P7-binding-remediation-2026-08-28",
+    "status": "BINDING-REMEDIATION CANDIDATE — NOT FROZEN",
+    "established_at": "2026-08-28",
+    "established_by": "ndrorchestration",
+    "reason": "Correct protocol applicability metadata and replace the superseded 2026-08-21 candidate-manifest identity with a fresh exact candidate boundary.",
+    "freeze_commit_sha": null
+  },
+  "scientific_binding": {
+    "primary_contrast": "dgaf vs null",
+    "primary_endpoint": "FFCR",
+    "unit": "root seed",
+    "estimand": "mean paired seed-level FFCR difference",
+    "inference": "two-sided 95% percentile paired bootstrap",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260823,
+    "alpha": 0.05,
+    "directional_support": "positive estimate and confidence interval lower bound > 0"
+  },
+  "components": {
+    "runner": {"path": "experiments/pdmal_pilot/run_pilot.py", "blob_sha": "6b604d4eabaaf42b1dc9bd46099c8a09893ba1e9"},
+    "analysis": {"path": "experiments/pdmal_pilot/analysis.py", "blob_sha": "a269ed226b1d261663994fc3ef0e8a1a96da6cd3"},
+    "pilot_artifact_schema": {"path": "experiments/pdmal_pilot/pilot_artifact_schema.py", "blob_sha": "c620d3755a645c5f2ad14124f42ce07a1c670c5f"},
+    "durable_retention": {"path": "experiments/pdmal_pilot/durable_retention.py", "blob_sha": "b2d889838b29ef74e1a6774db191c7a1b3c9e0ba"},
+    "harness_contract": {"path": "experiments/pdmal_pilot/harness_contract.py", "blob_sha": "bb97c54ddf087fef568b1b3c8f8df72c30dad11e"},
+    "task_engine": {"path": "experiments/pdmal_pilot/task_engine.py", "blob_sha": "4afb49ffbcbdfea2929c8c899b43568a8c42a300"},
+    "topology_utils": {"path": "experiments/pdmal_pilot/topology_utils.py", "blob_sha": "7ae92ba8a9ab964537e5dafa5e12de36b841391e"},
+    "topology_manifest": {"path": "experiments/pdmal_topology/manifest.yaml", "blob_sha": "3abeeabc71fc0921cd9af6c53cfad1e6118bb2d1"},
+    "task_spec": {"path": "docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md", "blob_sha": "06a8386979fc8f1e3483d8ea76a5754b4a6ce487"},
+    "protocol": {"path": "docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md", "blob_sha": "69d11e4426ad52ee38a3c4d18019de32ebf11464", "applies_to_sha": "ec8ee06afbe1fe29e93802a3e7319813f943e46d"},
+    "protocol_amendment": {"path": "docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md", "blob_sha": "a686366c4754c3532d46118f55739ddd0685c558"},
+    "p7_adjudication": {"path": "docs/experiment/PRIMARY_CONTRAST_ADJUDICATION.md", "blob_sha": "db728dbd8e34426bbf2d3c20d01116883d6f3a19", "status": "OPEN / PRE-FREEZE"},
+    "governance_ci": {"path": ".github/workflows/governance-ci.yml", "blob_sha": "fd4d29b79d8d31ca42c11660ce8efa4b6678dfbd"},
+    "p2_workflow": {"path": ".github/workflows/p2-runtime-verification.yml", "blob_sha": "76e0a3014127ec1ebe164a0c1c5b45b8388eef02"},
+    "requirements_lock": {"path": "experiments/pdmal_pilot/requirements-full-lock.txt", "blob_sha": "00c1f779e97030f9b25ae494642edb31b5b09de5"}
+  },
+  "deployment_binding": {
+    "existing_ready_deployment_id": "dpl_DND15HJ45s1d5eFcGmVr4SWNpGaC",
+    "existing_deployment_source_sha": "ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a",
+    "status": "NOT BOUND TO THIS REMEDIATION CANDIDATE",
+    "reason": "Deployment is source-bound to parent candidate ac8ea267…; exact P2/P6a evidence must target the same candidate SHA as the deployment or a newly deployed remediation candidate."
+  },
+  "historical_manifest": {
+    "path": "docs/experiment/CANDIDATE_MANIFEST_2026-08-21.json",
+    "blob_sha_at_current_main": "9cf56f09ad3a614fa7af3bf208de428122f414fd",
+    "status": "HISTORICAL / DO NOT REBIND",
+    "historical_candidate_sha": "94fb6fdff64f2919d35938c5b1cb506625cf1139"
+  },
+  "governance_state": {
+    "protocol_state": "PRE-FREEZE",
+    "authorization_status": "NOT GRANTED",
+    "empirical_n": 0,
+    "freeze_status": "NOT CREATED"
+  },
+  "evidence_class": "INTERNAL GOVERNANCE / CANDIDATE-BINDING PREPARATION",
+  "limitations": [
+    "This manifest is not a freeze manifest.",
+    "It does not authorize execution or unblinding.",
+    "Existing deployment readiness is not P2/P6a authenticated evidence.",
+    "P9 independence, P3-P6 custody/reproducibility, and final freeze binding remain open."
+  ]
+}
