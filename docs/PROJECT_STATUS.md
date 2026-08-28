@@ -3,7 +3,7 @@
 **Status date:** 2026-08-28  
 **Repository:** `ndrorchestration/DGAF-Framework`  
 **Current main:** active documentation/evidence lineage; not experimental apparatus identity  
-**Current main tip:** `45efd0ef1a7a19f343d3999a59f07b65e1329aba`  
+**Current main tip:** `3a2a92f95e2e617cccd97df0dd2747671d5638da`  
 **Experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
 **Pilot status:** PRE-FREEZE; authorization not granted  
 **Empirical N:** 0
@@ -12,11 +12,11 @@
 
 The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the retained artifact is `9636185725` with digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
 
-Repository `main` is an active documentation/evidence lineage. Its current tip is `45efd0e…`; it must not be substituted for the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
+Repository `main` is an active documentation/evidence lineage. Its current tip is `3a2a92f…`; it must not be substituted for the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
 
-The corrected Governance CI boundary at `ac8ea26…` binds the candidate target to the executing workflow SHA. E2b current-tree verification remains required where a current freeze decision depends on the executing workflow boundary. M6 is separately **CLOSED / VERIFIED** for the exact candidate `ac8ea267…` via run `33050398324`; that closure is scoped to the exact verification workspace/job and does not authorize execution.
+The corrected Governance CI boundary at `ac8ea26…` binds the candidate target to the executing workflow SHA. E2b current-boundary verification remains required where a current freeze decision depends on the executing workflow boundary. M6 is separately **CLOSED / VERIFIED** for the exact candidate `ac8ea267…` via run `33050398324`; that closure is scoped to the exact verification workspace/job and does not authorize execution.
 
-The corresponding Doc Lint run remains deterministic documentation-quality debt. Findings include missing fenced-code languages, emphasis-as-heading violations, multiple H1s, malformed table structures, ordered-list formatting, blockquote spacing, reference-link definitions, and trailing-newline issues. The documentation debt remains tracked separately from experimental validity.
+The documentation correction pass also canonicalized the remaining named Platinum/Plastic notation surfaces and quarantined several historical overclaiming records. Documentation-quality debt remains tracked separately from experimental validity.
 
 P7 is scientifically adopted in substance, but exact cryptographic binding to the eventual freeze apparatus remains OPEN. P8 remains OPEN/FAIL-CLOSED. P2/P6a remain pending authenticated execution. P4/P5/P6 and P9 remain open. No new freeze exists, no pilot has been authorized or executed, and N remains 0.
 
@@ -25,7 +25,7 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Gate / control | Status | Evidence / state |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b868…` |
-| Current repository main | CURRENT LINEAGE | `45efd0e…`; documentation/evidence lineage, not apparatus identity |
+| Current repository main | CURRENT LINEAGE | `3a2a92f…`; documentation/evidence lineage, not apparatus identity |
 | Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267…` |
 | E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd1…`, run `33047380487`, artifact `9636185725` |
 | Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Execute/retain evidence for the exact workflow boundary used for the eventual freeze decision |
@@ -42,10 +42,11 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | Independent verification | NOT EXECUTED | P9 remains pending |
 | Forman–Ricci lattice helper semantics | OPEN / ISSUE #117 | Unweighted dodecahedral `Ric_F(e) = -2` is constant/zero-variance and must produce `NO_DISCRIMINATING_SIGNAL`, not 30 anomaly flags |
+| P-38 source integrity | OPEN / ISSUE TRACKING REQUIRED | `NDR_AUTOINIT_SUBSTRATE_ADAPTER_P38_v1.md` was truncated at the tail; missing source text must be recovered before the research-program section is treated as complete |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | ZERO | No authorized pilot execution |
-| Documentation quality | OPEN DEBT | Current Doc Lint failure is tracked separately from efficacy |
+| Documentation quality | OPEN DEBT | Current Doc Lint findings remain separate from efficacy |
 
 ## Current deployment boundary
 
@@ -73,7 +74,7 @@ GitHub-visible claims must distinguish implementation, computation, verification
 
 ## Historical evidence boundary
 
-Historical evidence remains scoped to the exact application source, deployment, workflow run, and artifact that produced it. The E2b run `33047380487` proves `d299dd1…`; it does not automatically certify `ac8ea26…` or the later `45efd0e…` documentation lineage. M6 is a separate closed candidate-scoped verification at `ac8ea267…` via run `33050398324`; older M6 evidence targeting `e6beeb…` and verifier merge-ref `2516f32…` remains non-closing for the current candidate boundary.
+Historical evidence remains scoped to the exact application source, deployment, workflow run, and artifact that produced it. The E2b run `33047380487` proves `d299dd1…`; it does not automatically certify `ac8ea26…` or the later `3a2a92f…` documentation lineage. M6 is a separate closed candidate-scoped verification at `ac8ea267…` via run `33050398324`; older M6 evidence targeting `e6beeb…` and verifier merge-ref `2516f32…` remains non-closing for the current candidate boundary.
 
 ## Required closure sequence
 
