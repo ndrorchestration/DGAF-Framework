@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-25
-applies_to_sha: 39c138bb29697a561b49ef206c9f9a185e8a9c7b
+last_verified: 2026-08-28
+applies_to_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
 ---
 
 # PDMAL Current Control State
@@ -12,12 +12,12 @@ This is the current pre-authorization control record. Historical evidence remain
 
 ## Current state
 
-|| Control | State | Evidence / blocker |
+| Control | State | Evidence / blocker |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is not the corrected-apparatus freeze |
-| Exact P8 verification candidate | IDENTIFIED | `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` per the fail-closed P8 checklist |
-| Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented |
-| P7 scientific specification | TECHNICALLY ADJUDICATED / PROPOSED AUTHORITATIVE SPECIFICATION / FORMALLY OPEN | Panel-ready record presents all 11 decisions as OPEN / PENDING AUTHORITY ADOPTION; primary contrast (DGAF vs null) selected but formal adoption not evidenced; see `P7_SCIENTIFIC_SPECIFICATION_TRACEABILITY_MATRIX.md` for decision-level breakdown | P7 record (`P7_ADJUDICATION_RECORD_PANEL_READY_2026-08-23.md`) + traceability matrix | P8 analysis lock must not claim scientific closure beyond the OPEN P7 state |
+| Current verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
+| Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented; execution evidence remains pending |
+| P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN FOR FREEZE BINDING | Primary contrast selected; exact protocol/candidate/freeze binding remains required |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Implementation/configuration controls exist; candidate-scoped execution evidence is incomplete |
 | Candidate CI evidence | OPEN | Required applicable CI/test runs must execute against the exact candidate and be retained |
 | Artifact contract | PARTIAL | End-to-end semantics and adversarial tests exist; fresh candidate evidence required |
@@ -31,13 +31,13 @@ This is the current pre-authorization control record. Historical evidence remain
 
 ## Candidate and documentation boundary
 
-The current P8 verification checklist names `2a80f819...` as the exact candidate tree. Documentation-only commits after that candidate may clarify verification records but do not redefine the apparatus. A substantive protocol, analysis, runner, artifact, or evidence change creates a new candidate cycle.
+The current verification boundary is `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Documentation-only commits may clarify verification records but do not redefine the apparatus. A substantive protocol, analysis, runner, artifact, or evidence change creates a new candidate cycle.
 
 Historical references must retain the identity of what was actually examined. Zero-count cleanup is not a valid reason to rewrite historical provenance.
 
 ## P7 boundary
 
-P7 is **technically adjudicated as a proposed authoritative scientific specification, but formally OPEN pending authority adoption and candidate binding.** The panel-ready P7 adjudication record (`P7_ADJUDICATION_RECORD_PANEL_READY_2026-08-23.md`) presents proposals for all 11 scientific decisions. The primary treatment/reference boundary — the full `dgaf` condition versus `null` — has been selected in prior reconciliation, and FFCR is the primary outcome with seed as the independent paired analysis unit. However, formal authority adoption has not occurred, the adopted record has not been bound to the exact candidate, and none of the five formal closure conditions in the P7 record are satisfied.
+P7 is **technically adjudicated but formally open for freeze binding**. The primary treatment/reference boundary — full `dgaf` versus `null` — is selected, and FFCR is the primary outcome with seed as the paired analysis unit. Formal closure for the experimental freeze still requires exact candidate/protocol/analysis binding and the remaining governance predicates. P7 content must not be treated as empirical evidence or authorization.
 
 ## P8 boundary
 
@@ -45,7 +45,7 @@ P8 is explicitly fail-closed. Candidate implementation work—including analysis
 
 Required evidence includes, as applicable:
 
-1. Governance CI/test hierarchy on exact candidate `2a80f819...`.
+1. Governance CI/test hierarchy on exact candidate `ac8ea267...`.
 2. Analysis, artifact-schema/security, and compilation evidence with retained run identity and inspected logs.
 3. Executed-tree reconciliation with P8 bindings.
 4. Environment, topology fingerprint, seed/RNG separation, and trial-ordering evidence.
@@ -60,7 +60,7 @@ Authorization is considered only after the required predicate evidence and freez
 
 ## Required next evidence events
 
-1. Execute and inspect applicable CI/test workflows against exact candidate `2a80f819...`.
+1. Execute and inspect applicable CI/test workflows against exact candidate `ac8ea267...`.
 2. Retain run IDs, exact SHA/ref/event, logs, and artifact integrity values.
 3. Complete durable evidence custody with independent retrieval/hash proof.
 4. Complete operational blinding custody and formal unblinding readiness without exposing the key.
