@@ -125,10 +125,10 @@ class TGLHooks:
     scpe_fn: Optional[Callable] = None              # Step 1 — P-31
     pdmal_fn: Optional[Callable] = None             # Step 2 — P-33
     demijoul_fn: Optional[Callable] = None          # Step 3
-    kappa_fn: Optional[Callable] = None             # Step 4 — P-27/P-28
+    kappa_fn: Optional[Callable] = None              # Step 4 — P-27/P-28
     sentinel_fn: Optional[Callable] = None          # Step 5 — P-29
     phi_closure_fn: Optional[Callable] = None       # Step 6 — P-32
-    hpg_fn: Optional[Callable] = None              # Step 7
+    hpg_fn: Optional[Callable] = None               # Step 7
     apogee_fn: Optional[Callable] = None            # Step 8 — P-30
     herald_fn: Optional[Callable] = None            # Step 9 — P-01
 
@@ -214,6 +214,10 @@ class TriadicGovernanceLoop:
         """
         Execute full 10-step governance sequence for one turn.
 
+        HPG is strictly downstream-gated: step 7 executes only when the
+        Phi-Closure gate at step 6 returns PASS. When step 6 is WARN or SKIP,
+        step 7 is recorded as SKIP and no HPG hook is invoked.
+
         Returns TurnAuditRecord sealed with SHA-256.
         Raises PremiseViolationError at Step 0 if constitutional invariant violated.
         Raises RuntimeError for terminal gate failures at steps 3–6.
@@ -256,33 +260,59 @@ class TriadicGovernanceLoop:
         # Steps 1–9 — sequential gate chain
         # ------------------------------------------------------------------ #
         hook_sequence = [
-            (1, "P-31", "SCPE_Prune",              self.hooks.scpe_fn),
+            (1, "P-31", "SCPE_Prune",               self.hooks.scpe_fn),
             (2, "P-33", "PDMAL_ConvergenceMonitor", self.hooks.pdmal_fn),
-            (3, "N/A",  "DemiJoule_SafetyGate",     self.hooks.demijoul_fn),
-            (4, "P-27", "KAPPA_Router",             self.hooks.kappa_fn),
-            (5, "P-29", "Sentinel_RiskPass",        self.hooks.sentinel_fn),
-            (6, "P-32", "PhiClosure_Gate",          self.hooks.phi_closure_fn),
-            (7, "N/A",  "HPG_OctaveGate",           self.hooks.hpg_fn),
-            (8, "P-30", "Apogee_AttestationGate",   self.hooks.apogee_fn),
+            (3, "N/A",  "DemiJoule_SafetyGate",      self.hooks.demijoul_fn),
+            (4, "P-27", "KAPPA_Router",              self.hooks.kappa_fn),
+            (5, "P-29", "Sentinel_RiskPass",         self.hooks.sentinel_fn),
+            (6, "P-32", "PhiClosure_Gate",           self.hooks.phi_closure_fn),
         ]
 
+        phi_closure_result = GateResult.SKIP
         for step, pattern, gate_name, hook_fn in hook_sequence:
             rec = self._run_hook(hook_fn, input_text, context, step, pattern, gate_name)
             gates.append(rec)
 
-            # Step 6 P-32 KILL_REC is terminal
-            if step == 6 and rec.result == GateResult.KILL:
-                final_status = TurnStatus.KILL_REC
-                break
+            if step == 6:
+                phi_closure_result = rec.result
+                if rec.result == GateResult.KILL:
+                    final_status = TurnStatus.KILL_REC
+                    break
 
-            # Any other KILL is terminal
             if rec.result == GateResult.KILL:
                 final_status = TurnStatus.KILL
                 break
 
-            # HPG (step 7) only runs if Phi-Closure PASSED
-            if step == 5 and rec.result != GateResult.PASS:  # post-sentinel
-                pass  # sentinel WARN does not block HPG
+        # Step 7 — HPG is PASS-gated by Phi-Closure.
+        if not any(g.step == 6 and g.result == GateResult.KILL for g in gates):
+            if phi_closure_result == GateResult.PASS:
+                rec = self._run_hook(
+                    self.hooks.hpg_fn,
+                    input_text,
+                    context,
+                    7,
+                    "N/A",
+                    "HPG_OctaveGate",
+                )
+            else:
+                rec = GateRecord(7, "N/A", "HPG_OctaveGate", GateResult.SKIP, "Phi-Closure did not PASS")
+            gates.append(rec)
+            if rec.result == GateResult.KILL:
+                final_status = TurnStatus.KILL
+
+        # Step 8 — Apogee, when execution has not already terminated.
+        if final_status in {TurnStatus.PASS, TurnStatus.WARN, TurnStatus.ESCALATE}:
+            rec = self._run_hook(
+                self.hooks.apogee_fn,
+                input_text,
+                context,
+                8,
+                "P-30",
+                "Apogee_AttestationGate",
+            )
+            gates.append(rec)
+            if rec.result == GateResult.KILL:
+                final_status = TurnStatus.KILL
 
         # ------------------------------------------------------------------ #
         # Step 9 — P-01 Herald Fan-Out (always fires, even on KILL)
