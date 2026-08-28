@@ -73,9 +73,15 @@ Project acronyms must have one canonical expansion per active system. Historical
 
 GitHub repository descriptions are a separate documentation layer from README files. The current sweep identified stale descriptions including certification, governance-authority, and production-readiness language. These descriptions require repository-settings write access to reconcile; they must not be represented as corrected until the metadata itself changes.
 
-## 8. PDMAL platinum-ratio supersession
+## 8. PDMAL platinum-notation supersession
 
-The current PDMAL mathematical correction establishes **ρP = 1.3247179572447454** as the corrected plastic constant. Earlier repository material uses **1.7747 / 1.77473** as a "Platinum Ratio" and, in some artifacts, assigns it a verified mathematical role. Those historical references are retained for provenance but are **not current PDMAL mathematical authority**.
+The current mathematical-notation policy distinguishes two different quantities that must not be conflated:
+
+- **pP / Platinum Mean** — a project-defined notation for the regular-hendecagon unit-side circumradius,
+  \(pP = 1/(2\sin(\pi/11)) \approx 1.774732842\). This is intentionally retained as the project's **Platinum Mean** notation; it is not the standard plastic constant.
+- **ρP / plastic constant** — the standard mathematical constant \(\rho_P \approx 1.3247179572447454\), the real root of \(x^3=x+1\).
+
+Earlier repository material uses **1.7747 / 1.77473** under labels such as "Platinum Ratio" and, in some artifacts, assigns that value a verified mathematical role. Those references must now be classified according to the definition actually intended. Where they refer to the hendecagon circumradius, they are historical uses of the project-defined **pP / Platinum Mean**; where they incorrectly identify that value as the plastic constant or another standard mathematical constant, that claim is superseded and must not be propagated.
 
 Known affected historical/current-surface artifacts include:
 
@@ -87,11 +93,11 @@ Known affected historical/current-surface artifacts include:
 
 Treatment:
 
-**RETIRE → CLASSIFY → SUPERSEDE → PREVENT DOWNSTREAM USE**
+**RETAIN PROVENANCE → CLASSIFY SEMANTICS → SUPERSEDE INCORRECT IDENTIFICATION → PREVENT DOWNSTREAM MISUSE**
 
-Do not silently delete historical evidence. Any artifact that presents `1.7747`/`1.77473` as a current verified PDMAL constant must be revised or explicitly marked historical/superseded before it is treated as a current specification. Until that remediation is complete, the affected material remains a documentation-consistency finding and must not be used to support current mathematical claims.
+Do not silently delete historical evidence. Any artifact that presents `1.7747`/`1.77473` as the plastic constant, or assigns it an unsupported current mathematical authority, must be revised or explicitly marked historical/superseded. Artifacts using the value for the defined hendecagon circumradius may retain it when explicitly labeled **pP / Platinum Mean** and given its defining equation. Until that semantic remediation is complete, affected material remains a documentation-consistency finding and must not be used to support unrelated current mathematical claims.
 
-The correction does **not** establish PDMAL convergence, global contraction, production robustness, security, baseline superiority, or empirical efficacy. The contraction monitor remains an observational proxy; unweighted Forman–Ricci has no discriminating variance on the current unweighted topology; and the real-trace `Da` threshold remains uncalibrated.
+This notation correction does **not** establish PDMAL convergence, global contraction, production robustness, security, baseline superiority, or empirical efficacy. The contraction monitor remains an observational proxy; unweighted Forman–Ricci has no discriminating variance on the current unweighted topology; and the real-trace `Da` threshold remains uncalibrated.
 
 ## 9. Public-surface publication rule
 
