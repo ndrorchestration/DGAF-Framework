@@ -25,6 +25,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped implementation/configuration and verification remain incomplete |
 | P2 formal runtime verification | NOT EXECUTED | Authenticated five-case matrix still required |
 | P6a formal CORS verification | NOT EXECUTED | Authenticated CORS matrix still required |
+| P-07 co-orchestration sweep | REMEDIATED / OPERATIONALLY CLOSED | Sweep `08670C3FDE59`: deprecated `api/health.py` removed; `app/api/health/route.ts` absent on current `main`; `requirements.txt` retained as intentionally empty/documentary; production deployment for `21f043b7…` reached READY and live `/api/health` returned HTTP 200 with the expected health contract |
 | Forman–Ricci lattice helper semantics | OPEN / ISSUE #117 | Unweighted dodecahedral `Ric_F(e) = -2` is constant/zero-variance and must produce `NO_DISCRIMINATING_SIGNAL`, not 30 anomaly flags |
 | P-38 source integrity | OPEN / ISSUE #122 | `NDR_AUTOINIT_SUBSTRATE_ADAPTER_P38_v1.md` has a truncated historical tail; history audit confirms the earliest retained version is already truncated |
 | New immutable freeze | NOT CREATED | No current candidate has crossed the freeze boundary |
@@ -50,6 +51,18 @@ The corrected Governance CI workflow at `ac8ea26…` binds the target candidate 
 The current `main` lineage contains subsequent documentation/semantic corrections, including canonical mathematical notation, bounded Hensel/registry claims, historical-audit corrections, AutoInit provenance corrections, and the lattice reproduction notation correction. Those documentation-lineage changes do not retroactively change candidate-scoped verification results and must not be represented as experimental apparatus verification.
 
 The earlier M6 artifact targeting historical `e6beeb663…` and verifier merge-ref `2516f32…` remains **NON-CLOSING** for the current candidate boundary; that historical artifact is not the basis for the closed M6 state above.
+
+## P-07 remediation boundary
+
+Sweep `08670C3FDE59` found three repository/deployment candidates. Cross-connection against current `main` and the production deployment resolved them as follows:
+
+1. `api/health.py` was a deprecated Python stub explicitly directing users to `pages/api/health.ts`. It was removed on commit `21f043b7d9a845b3477c4f3bf4a5a66d7d813e9e`.
+2. `app/api/health/route.ts` is absent from the current `main` tree; the operational health handler is `pages/api/health.ts`.
+3. `requirements.txt` is retained because the repository documents it as intentionally empty and non-operative for the Next.js API deployment path.
+
+The resulting Vercel production deployment was READY and source-bound to the same exact `21f043b7…` commit. The deployed `/api/health` endpoint returned HTTP 200 with `psi_cubic=true`, version `1.8.0`, `phi_star=0.618034`, `psi=1.4655712319`, `t0_axiom_guard=true`, and the five declared adapters. This is operational deployment evidence only; it does not substitute for authenticated P2/P6a execution.
+
+The GitHub `Deploy to Vercel + Live Regression` workflow remains unable to perform its own authenticated deployment/live-regression branch because `VERCEL_TOKEN` is not configured. The dedicated P2 workflow separately requires `VERCEL_AUTOMATION_BYPASS_SECRET`. Neither missing credential is treated as a code defect.
 
 ## Canonical mathematical notation boundary
 
