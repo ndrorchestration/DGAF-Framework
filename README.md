@@ -48,8 +48,9 @@ DGAF contains governance and evaluation components, agent specifications, contro
 - **Pattern Commons** — proposed ecosystem-level layer for pattern identity, provenance, aliases/equivalence, epistemic status, and evidence relationships across repositories.
 - **AXIS** — Agent X-axis Invariant Spectrum.
 - **FLAG-02** — historical identifier associated with the former 340% coordination-gain claim. Current evaluation-mode terminology is **qualitative**. New documents must not introduce FLAG-02 as a current identifier for either meaning.
+- **pP / Platinum Mean** — intentional DGAF notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. It is distinct from **ρP / the plastic constant**, `1.3247179572447454`, the real root of `x³ = x + 1`.
 
-Historical documents may retain their original terminology when necessary for provenance, but they must be treated as historical rather than silently reinterpreted as current state.
+Historical documents may retain their original terminology when necessary for provenance, but they must be treated as historical rather than silently reinterpreted as current state. In particular, pP must not be substituted for ρP in PDMAL plastic-constant convergence mathematics.
 
 ## Semantic / ontological boundary
 
@@ -96,7 +97,7 @@ The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the le
 1. [Current State](docs/CURRENT_STATE.md)
 2. [Project Status](docs/PROJECT_STATUS.md)
 3. [PDMAL Current Control State](docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md)
-4. [Authoritative PDMAL Task Specification](docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md)
+4. [Authoritative PDMAL Task Specification](docs/experiment/PDMAL_TASK_SPEC_V0.7.5.md)
 5. [PDMAL Evidence Index](docs/evidence/PDMAL_EVIDENCE_INDEX.md)
 6. [Evidence Ladder Policy](docs/evidence/EVIDENCE_LADDER_POLICY.md)
 7. [PDMAL Experiment Protocol](docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md)
