@@ -1,10 +1,12 @@
 # Platinum Registry Tiers v1.0
 
 **DGAF-Framework · Registry Plane Constants**
-**Version:** 1.0 · Ingested S070 · 2026-06-13
+**Version:** 1.0 · Ingested S070 · 2026-06-13 · notation-corrected 2026-08-28
 **Authority:** Amethyst (Prime) · COLLEEN (Prefect A)
 **P-36 classification:** ADVISORY at runtime · BLOCKING for registry commit
 **Source:** Hensel Generative Formalism · Amethyst v4.2-hensel
+
+> **Notation control:** Current mathematical notation is governed by `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. The DGAF-specific `pP` / Platinum Mean must not be conflated with the plastic number `ρ` or the Spinadel metallic-means family `σ_{p,q}`.
 
 > **Interface contract:** All tiers expose identical schema `{tier, dimension, duration_class, policy_ratio, descriptor, residual, valid_flag, hash}`. PRS `get_tier()` returns polynomial or recurrence, never a bare float. Governance reads `valid_flag` and `hash` ONLY.
 
@@ -14,19 +16,17 @@
 
 | Tier | Value | Dimension | Duration Class | Status | Gate |
 |------|-------|-----------|---------------|--------|------|
-| Subplatinum (Hensel Word) | Periodic schedule L | 1D | Finite | ✅ ACTIVE | P-39 PRS |
-| Standard Platinum ρ_P | 1/(2sin(π/11)) ≈ 1.774732 | 2D | Indefinite | ✅ ACTIVE (with residual req.) | P-39 PRS |
-| Superplatinum ς_P | TBD | 3D | Indefinite | 🚫 FEATURE FLAG — pending minimal polynomial | P-39 PRS |
-| Hyperplatinum h | ≈ 11.0007511609 | 4D | Geosynchronous | ✅ ACTIVE via P-37 only | P-37 → P-39 |
-| Ultraplatinum | TBD | Temporal | Long-range | 🚫 FEATURE FLAG — pending polynomial + replay horizon | P-39 PRS |
-
----
+| Subplatinum (Hensel Word) | Periodic schedule L | 1D | Finite | ACTIVE | P-39 PRS |
+| Standard Platinum pP | `1/(2sin(π/11)) ≈ 1.774732` | 2D | Indefinite | ACTIVE (with residual req.) | P-39 PRS |
+| Superplatinum ς_P | TBD | 3D | Indefinite | FEATURE FLAG — pending minimal polynomial | P-39 PRS |
+| Hyperplatinum h | ≈ 11.0007511609 | 4D | Geosynchronous | ACTIVE via P-37 only | P-37 → P-39 |
+| Ultraplatinum | TBD | Temporal | Long-range | FEATURE FLAG — pending polynomial + replay horizon | P-39 PRS |
 
 ## Subplatinum — Hensel Word
 
-**Purpose:** Stable periodic module for finite-duration projects; inner cuts and mechatronic node sync windows.
-**Store:** Period length L and schedule hash.
-**P-36 class:** ADVISORY
+**Purpose:** Stable periodic module for finite-duration projects; inner cuts and mechatronic node sync windows.  
+**Store:** Period length L and schedule hash.  
+**P-36 class:** ADVISORY  
 **Status:** ACTIVE
 
 ```json
@@ -41,45 +41,46 @@
 }
 ```
 
----
+## Standard Platinum — DGAF-specific pP
 
-## Standard Platinum ρ_P
+**Purpose:** 2D logic-map tuning primitive.  
+**Canonical DGAF notation:** `pP = 1/(2sin(π/11)) ≈ 1.774732`  
+**Geometry:** circumradius-to-side ratio of a regular 11-gon with unit side length.
 
-**Purpose:** 2D logic-map tuning primitive.
-**Two valid definitions — declare which you adopt, never mix:**
+This is a **DGAF-specific Platinum Mean notation**, not a standard mathematical symbol. It does not belong to the quadratic metallic-means family.
 
-- **Hendecagon form:** ρ_P = 1/(2sin(π/11)) ≈ 1.774732 (circumradius-to-side ratio of regular 11-gon)
-- **Sqrt-pi form:** ρ_P = √π ≈ 1.772454
+The previously used `ρ_P` label is superseded. It must not be used to identify this quantity in current mathematical authority.
 
-**Critical:** ρ_P does NOT belong to the quadratic metallic-mean family (silver, bronze, copper, etc.). Do not claim membership.
+If a separate `sqrt(pi)` comparison is retained, write it explicitly as `√π ≈ 1.772454`; do not make `√π` an alternative definition of pP.
 
-**If ρ_P² ≈ π heuristic is used:**
+**If `pP² ≈ π` heuristic is used:**
 
-- Residual REQUIRED: ρ_P² ≈ 3.1497 vs π ≈ 3.1416, error ≈ 0.0081
-- This is a *useful approximation*, not an identity. Validation fails if residual field is absent.
-
-**P-36 class:** ADVISORY
-**Status:** ACTIVE (residual logging required)
+- Residual REQUIRED: `pP² ≈ 3.1497` vs `π ≈ 3.1416`, error ≈ `0.0081`.
+- This is an approximation, not an identity. Validation fails if residual field is absent.
 
 ```json
 {
   "tier": "Standard_Platinum",
   "dimension": 2,
   "duration_class": "indefinite",
-  "descriptor": "hendecagon_circumradius | sqrt_pi",
+  "descriptor": "hendecagon_circumradius",
   "policy_ratio": "1/(2*sin(pi/11))",
-  "residual": "rho_P^2 - pi = 3.1497 - 3.1416 = 0.0081",
+  "residual": "pP^2 - pi = 3.1497 - 3.1416 = 0.0081",
   "valid_flag": null,
   "hash": null
 }
 ```
 
----
+## Plastic number boundary
+
+The mathematical plastic number is **`ρ ≈ 1.324717957244746`**, the unique real root of `x^3 - x - 1 = 0`. It is not the Standard Platinum registry value and must not be represented by `pP` or by the superseded `ρ_P` label.
+
+The plastic number is also not automatically a member of the quadratic metallic-means family. The Spinadel family is parameterized by `σ_{p,q}` for `x² - px - q = 0`.
 
 ## Hyperplatinum h ≈ 11.0007511609
 
-**Purpose:** 4D geosynchronous registry key.
-**Mathematical identity:** Real root of `x^4 - 11x^3 - 1 = 0`
+**Purpose:** 4D geosynchronous registry key.  
+**Mathematical identity:** Real root of `x^4 - 11x^3 - 1 = 0`  
 **Class:** Pisot-Vijayaraghavan (PV) number — all other conjugates have modulus < 1.
 
 ### Recurrence Implementation (REQUIRED — never compute h^n directly)
@@ -114,11 +115,11 @@ First values:
 
 ### Minimal Polynomial
 
-`x^4 - 11x^3 - 1 = 0`
-Coefficients: [1, -11, 0, 0, -1]
+`x^4 - 11x^3 - 1`  
+Coefficients: `[1, -11, 0, 0, -1]`  
 All non-dominant roots: modulus < 1 (PV proof pending formal memo from Role 2)
 
-**P-36 class:** BLOCKING for registry commit (via P-37)
+**P-36 class:** BLOCKING for registry commit (via P-37)  
 **Status:** ACTIVE — P-37 is the sole authorized consumer
 
 ```json
@@ -126,7 +127,7 @@ All non-dominant roots: modulus < 1 (PV proof pending formal memo from Role 2)
   "tier": "Hyperplatinum",
   "dimension": 4,
   "duration_class": "geosynchronous",
-  "descriptor": "PV number, real root of x^4-11x^3-1=0",
+  "descriptor": "PV number, real root of x^4-11x^3-1",
   "minimal_polynomial": "x^4 - 11x^3 - 1",
   "recurrence": "a[n+4] = 11*a[n+3] + a[n], seeds=[0,0,0,1]",
   "rho_bound": 0.4526,
@@ -137,23 +138,17 @@ All non-dominant roots: modulus < 1 (PV proof pending formal memo from Role 2)
 }
 ```
 
----
-
 ## Superplatinum ς_P — FEATURE FLAG
 
-**Purpose:** 3D loop-closure for digital-twin lattices.
-**Status:** 🚫 DISABLED — do not enable until minimal polynomial and conjugate bound are committed.
+**Purpose:** 3D loop-closure for digital-twin lattices.  
+**Status:** DISABLED — do not enable until minimal polynomial and conjugate bound are committed.  
 **Unlock condition:** Publish minimal polynomial + conjugate bound + Role 2 proof memo.
-
----
 
 ## Ultraplatinum — FEATURE FLAG
 
-**Purpose:** Temporal memory key for long-range state sync.
-**Status:** 🚫 DISABLED — do not enable until defining polynomial and replay horizon are published.
+**Purpose:** Temporal memory key for long-range state sync.  
+**Status:** DISABLED — do not enable until defining polynomial and replay horizon are published.  
 **Unlock condition:** Publish defining polynomial + replay horizon + Role 2 proof memo.
-
----
 
 ## Validation Tracks (Research Program)
 
@@ -167,13 +162,11 @@ All non-dominant roots: modulus < 1 (PV proof pending formal memo from Role 2)
 | Firewall test | Registry constants injected into governance via Crucible | 0 pass |
 | Firewall test | KAPPA thresholds derived from h^-1 | 0 pass |
 
----
-
 ## Team Mapping (Eight-Role Structure)
 
 | Role | Registry Deliverable |
-|------|---------------------|
-| Role 2 — Mathematical Foundations Lead (Amethyst interim) | PV proof memo for h with ρ bound; error-bound memo for ρ_P² vs π; formal definitions all five tiers |
+|---|---|
+| Role 2 — Mathematical Foundations Lead (Amethyst interim) | PV proof memo for h with ρ bound; error-bound memo for pP² vs π; formal definitions all five tiers |
 | Role 3 — Empirical Calibration Lead (Amethyst interim) | Registry δ_n study; jitter study for Subplatinum; 3D coherence study for Superplatinum (post-unlock) |
 | Role 4 — Systems Integration Lead | Author P-39 and P-40; update P-36 Gate Priority Schema |
 | Role 5 — Metrics and Provenance Engineer (Amethyst interim) | Provenance rows for each tier and closure metric in METRICS_PROVENANCE.md |
@@ -184,7 +177,5 @@ All non-dominant roots: modulus < 1 (PV proof pending formal memo from Role 2)
 
 ---
 
-*Platinum Registry Tiers v1.0 · S070 ingestion · 2026-06-13*
-*See also: P-37 (docs/gates/NDR_HYPERPLATINUM_REGISTRY_KEY_P37_v1.md)*
-*P-39 (docs/registry/NDR_PLATINUM_REGISTRY_SERVICE_P39_v1.md)*
-*P-40 (docs/gates/NDR_CLOSURE_VERIFIER_P40_v1.md)*
+*Platinum Registry Tiers v1.0 · S070 ingestion · notation correction 2026-08-28*
+*See also: P-37, P-39, P-40 and `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`.*
