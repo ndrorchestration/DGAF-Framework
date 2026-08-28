@@ -3,27 +3,8 @@ triadic_governance_loop.py — Triadic Governance Loop (TGL)
 DGAF-Framework · pptl package · S068 · 2026-05-31
 
 The TGL is the canonical execution harness that sequences all governance
-gates for a single agent turn in strict constitutional order:
-
-  Step 0  (P-35)  Procluding Premise Gate     — KILL before any work
-  Step 1  (P-31)  SCPE Prune                  — token decay, T0 immune
-  Step 2  (P-33)  PDMAL Convergence Monitor   — trust graph health
-  Step 3          DemiJoule Safety Gate        — syntactic + 6-axis semantic
-  Step 4  (P-27)  KAPPA Router                — confidence-gated weighting
-  Step 5  (P-29)  Sentinel Risk Pass          — 3-hook risk annotation
-  Step 6  (P-32)  Phi-Closure Gate            — temporal stability
-  Step 7          HPG Octave Gate             — PASS-gated by step 6
-  Step 8  (P-30)  Apogee Attestation          — evidence grade + QA seal
-  Step 9  (P-01)  Herald Fan-Out              — audit trace emit
-
-Triadic authority (P-08 Triumvirate):
-  Prime:    Amethyst — orchestration, mandate issuance
-  Prefect A: COLLEEN  — schema integrity, PDMAL state, SCPE audit
-  Prefect B: Apogee   — attestation, evidence grade, Gold Star gate
-
-NDR Patterns invoked: P-01, P-08, P-09, P-27, P-28, P-29, P-30, P-31, P-32, P-33, P-35
+gates for a single agent turn in strict constitutional order.
 """
-
 from __future__ import annotations
 
 import hashlib
@@ -44,13 +25,13 @@ class TurnStatus(str, Enum):
     WARN = "WARN"
     ESCALATE = "ESCALATE"
     KILL = "KILL"
-    KILL_REC = "KILL_REC"  # P-32 terminal
+    KILL_REC = "KILL_REC"
 
 
 class GateResult(str, Enum):
     PASS = "PASS"
     WARN = "WARN"
-    SKIP = "SKIP"   # gate not wired in this deployment
+    SKIP = "SKIP"
     KILL = "KILL"
 
 
@@ -65,11 +46,6 @@ class GateRecord:
 
 @dataclass
 class TurnAuditRecord:
-    """
-    SHA-256 sealed audit record for a single TGL turn.
-    Emitted to Herald sink (P-01) on PASS.
-    Emitted with KILL status to dead-letter on any terminal failure.
-    """
     session_id: str
     turn_index: int
     agent_id: str
@@ -80,11 +56,15 @@ class TurnAuditRecord:
     seal_hash: str = field(default="", init=False)
 
     def seal(self) -> str:
+        gate_payload = "|".join(
+            f"{g.step}:{g.pattern}:{g.gate_name}:{g.result.value}:{g.notes}"
+            for g in self.gate_records
+        )
         payload = (
             f"{self.session_id}|{self.turn_index}|{self.agent_id}|"
-            f"{self.input_hash}|{self.final_status}|{self.timestamp}"
+            f"{self.input_hash}|{self.final_status.value}|{self.timestamp}|{gate_payload}"
         )
-        self.seal_hash = hashlib.sha256(payload.encode()).hexdigest()
+        self.seal_hash = hashlib.sha256(payload.encode("utf-8")).hexdigest()
         return self.seal_hash
 
     def to_dict(self) -> dict[str, Any]:
@@ -113,64 +93,33 @@ class TurnAuditRecord:
 
 @dataclass
 class TGLHooks:
-    """
-    Hook functions wired to each TGL step.
-    Each hook: (input_text: str, context: dict) -> GateResult
-    None = SKIP (gate not wired in this deployment, passes through).
-
-    Minimum viable wiring: premise_gate is always populated.
-    All other gates are optional for incremental integration.
-    """
-    premise_check_fn: Optional[Callable] = None     # Step 0 invariant evaluator
-    scpe_fn: Optional[Callable] = None              # Step 1 — P-31
-    pdmal_fn: Optional[Callable] = None             # Step 2 — P-33
-    demijoul_fn: Optional[Callable] = None          # Step 3
-    kappa_fn: Optional[Callable] = None              # Step 4 — P-27/P-28
-    sentinel_fn: Optional[Callable] = None          # Step 5 — P-29
-    phi_closure_fn: Optional[Callable] = None       # Step 6 — P-32
-    hpg_fn: Optional[Callable] = None               # Step 7
-    apogee_fn: Optional[Callable] = None            # Step 8 — P-30
-    herald_fn: Optional[Callable] = None            # Step 9 — P-01
+    premise_check_fn: Optional[Callable] = None
+    scpe_fn: Optional[Callable] = None
+    pdmal_fn: Optional[Callable] = None
+    demijoul_fn: Optional[Callable] = None
+    kappa_fn: Optional[Callable] = None
+    sentinel_fn: Optional[Callable] = None
+    phi_closure_fn: Optional[Callable] = None
+    hpg_fn: Optional[Callable] = None
+    apogee_fn: Optional[Callable] = None
+    herald_fn: Optional[Callable] = None
 
 
 class TriadicGovernanceLoop:
-    """
-    Canonical 10-step governance turn sequencer.
-
-    Authority: Triumvirate (P-08/P-09)
-      Prime:     Amethyst
-      Prefect A: COLLEEN
-      Prefect B: Apogee
-
-    Usage:
-        tgl = TriadicGovernanceLoop(
-            session_id="S068",
-            agent_id="amethyst",
-            hooks=TGLHooks(premise_check_fn=my_checker, ...),
-        )
-        audit = tgl.run_turn(input_text, context={})
-    """
-
     GATE_MANIFEST = [
-        (0,  "P-35",  "ProcludingPremiseGate"),
-        (1,  "P-31",  "SCPE_Prune"),
-        (2,  "P-33",  "PDMAL_ConvergenceMonitor"),
-        (3,  "N/A",   "DemiJoule_SafetyGate"),
-        (4,  "P-27",  "KAPPA_Router"),
-        (5,  "P-29",  "Sentinel_RiskPass"),
-        (6,  "P-32",  "PhiClosure_Gate"),
-        (7,  "N/A",   "HPG_OctaveGate"),
-        (8,  "P-30",  "Apogee_AttestationGate"),
-        (9,  "P-01",  "Herald_FanOut"),
+        (0, "P-35", "ProcludingPremiseGate"),
+        (1, "P-31", "SCPE_Prune"),
+        (2, "P-33", "PDMAL_ConvergenceMonitor"),
+        (3, "N/A", "DemiJoule_SafetyGate"),
+        (4, "P-27", "KAPPA_Router"),
+        (5, "P-29", "Sentinel_RiskPass"),
+        (6, "P-32", "PhiClosure_Gate"),
+        (7, "N/A", "HPG_OctaveGate"),
+        (8, "P-30", "Apogee_AttestationGate"),
+        (9, "P-01", "Herald_FanOut"),
     ]
 
-    def __init__(
-        self,
-        session_id: str,
-        agent_id: str,
-        hooks: TGLHooks,
-        turn_counter: int = 0,
-    ) -> None:
+    def __init__(self, session_id: str, agent_id: str, hooks: TGLHooks, turn_counter: int = 0) -> None:
         self.session_id = session_id
         self.agent_id = agent_id
         self.hooks = hooks
@@ -186,17 +135,9 @@ class TriadicGovernanceLoop:
         return self._turn_counter
 
     def _hash_input(self, text: str) -> str:
-        return hashlib.sha256(text.encode()).hexdigest()[:16]
+        return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-    def _run_hook(
-        self,
-        hook_fn: Optional[Callable],
-        input_text: str,
-        context: dict,
-        step: int,
-        pattern: str,
-        gate_name: str,
-    ) -> GateRecord:
+    def _run_hook(self, hook_fn: Optional[Callable], input_text: str, context: dict, step: int, pattern: str, gate_name: str) -> GateRecord:
         if hook_fn is None:
             return GateRecord(step, pattern, gate_name, GateResult.SKIP, "not wired")
         try:
@@ -206,117 +147,62 @@ class TriadicGovernanceLoop:
         except Exception as exc:
             return GateRecord(step, pattern, gate_name, GateResult.KILL, str(exc)[:120])
 
-    def run_turn(
-        self,
-        input_text: str,
-        context: Optional[dict] = None,
-    ) -> TurnAuditRecord:
-        """
-        Execute full 10-step governance sequence for one turn.
-
-        HPG is strictly downstream-gated: step 7 executes only when the
-        Phi-Closure gate at step 6 returns PASS. When step 6 is WARN or SKIP,
-        step 7 is recorded as SKIP and no HPG hook is invoked.
-
-        Returns TurnAuditRecord sealed with SHA-256.
-        Raises PremiseViolationError at Step 0 if constitutional invariant violated.
-        Raises RuntimeError for terminal gate failures at steps 3–6.
-        """
+    def run_turn(self, input_text: str, context: Optional[dict] = None) -> TurnAuditRecord:
         if context is None:
             context = {}
-
         self._turn_counter += 1
         input_hash = self._hash_input(input_text)
         timestamp = datetime.now(timezone.utc).isoformat()
         gates: list[GateRecord] = []
         final_status = TurnStatus.PASS
 
-        # ------------------------------------------------------------------ #
-        # Step 0 — P-35 Procluding Premise Gate (constitutional KILL)
-        # ------------------------------------------------------------------ #
         try:
-            self._premise_gate.evaluate(
-                input_text,
-                check_fn=self.hooks.premise_check_fn,
-            )
+            self._premise_gate.evaluate(input_text, check_fn=self.hooks.premise_check_fn)
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS))
         except PremiseViolationError as exc:
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, str(exc)[:120]))
-            rec = TurnAuditRecord(
-                session_id=self.session_id,
-                turn_index=self._turn_counter,
-                agent_id=self.agent_id,
-                input_hash=input_hash,
-                gate_records=gates,
-                final_status=TurnStatus.KILL,
-                timestamp=timestamp,
-            )
+            rec = TurnAuditRecord(self.session_id, self._turn_counter, self.agent_id, input_hash, gates, TurnStatus.KILL, timestamp)
             rec.seal()
             if self.hooks.herald_fn:
                 self.hooks.herald_fn(rec.to_dict(), context)
             raise
 
-        # ------------------------------------------------------------------ #
-        # Steps 1–9 — sequential gate chain
-        # ------------------------------------------------------------------ #
         hook_sequence = [
-            (1, "P-31", "SCPE_Prune",               self.hooks.scpe_fn),
+            (1, "P-31", "SCPE_Prune", self.hooks.scpe_fn),
             (2, "P-33", "PDMAL_ConvergenceMonitor", self.hooks.pdmal_fn),
-            (3, "N/A",  "DemiJoule_SafetyGate",      self.hooks.demijoul_fn),
-            (4, "P-27", "KAPPA_Router",              self.hooks.kappa_fn),
-            (5, "P-29", "Sentinel_RiskPass",         self.hooks.sentinel_fn),
-            (6, "P-32", "PhiClosure_Gate",           self.hooks.phi_closure_fn),
+            (3, "N/A", "DemiJoule_SafetyGate", self.hooks.demijoul_fn),
+            (4, "P-27", "KAPPA_Router", self.hooks.kappa_fn),
+            (5, "P-29", "Sentinel_RiskPass", self.hooks.sentinel_fn),
+            (6, "P-32", "PhiClosure_Gate", self.hooks.phi_closure_fn),
         ]
-
         phi_closure_result = GateResult.SKIP
         for step, pattern, gate_name, hook_fn in hook_sequence:
             rec = self._run_hook(hook_fn, input_text, context, step, pattern, gate_name)
             gates.append(rec)
-
             if step == 6:
                 phi_closure_result = rec.result
                 if rec.result == GateResult.KILL:
                     final_status = TurnStatus.KILL_REC
                     break
-
             if rec.result == GateResult.KILL:
                 final_status = TurnStatus.KILL
                 break
 
-        # Step 7 — HPG is PASS-gated by Phi-Closure.
         if not any(g.step == 6 and g.result == GateResult.KILL for g in gates):
             if phi_closure_result == GateResult.PASS:
-                rec = self._run_hook(
-                    self.hooks.hpg_fn,
-                    input_text,
-                    context,
-                    7,
-                    "N/A",
-                    "HPG_OctaveGate",
-                )
+                rec = self._run_hook(self.hooks.hpg_fn, input_text, context, 7, "N/A", "HPG_OctaveGate")
             else:
                 rec = GateRecord(7, "N/A", "HPG_OctaveGate", GateResult.SKIP, "Phi-Closure did not PASS")
             gates.append(rec)
             if rec.result == GateResult.KILL:
                 final_status = TurnStatus.KILL
 
-        # Step 8 — Apogee, when execution has not already terminated.
         if final_status in {TurnStatus.PASS, TurnStatus.WARN, TurnStatus.ESCALATE}:
-            rec = self._run_hook(
-                self.hooks.apogee_fn,
-                input_text,
-                context,
-                8,
-                "P-30",
-                "Apogee_AttestationGate",
-            )
+            rec = self._run_hook(self.hooks.apogee_fn, input_text, context, 8, "P-30", "Apogee_AttestationGate")
             gates.append(rec)
             if rec.result == GateResult.KILL:
                 final_status = TurnStatus.KILL
 
-        # ------------------------------------------------------------------ #
-        # Step 9 — P-01 Herald Fan-Out (always fires, even on KILL)
-        # ------------------------------------------------------------------ #
         audit = TurnAuditRecord(
             session_id=self.session_id,
             turn_index=self._turn_counter,
@@ -326,8 +212,6 @@ class TriadicGovernanceLoop:
             final_status=final_status,
             timestamp=timestamp,
         )
-        audit.seal()
-
         herald_rec = self._run_hook(
             self.hooks.herald_fn,
             input_text,
@@ -335,5 +219,5 @@ class TriadicGovernanceLoop:
             9, "P-01", "Herald_FanOut",
         )
         gates.append(herald_rec)
-
+        audit.seal()
         return audit
