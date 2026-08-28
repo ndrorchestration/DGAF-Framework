@@ -14,12 +14,12 @@ Receives batched AHGTraceRecord payloads from HeraldHTTPSink
 
 Auth:
   Requests must include header: Authorization: Bearer <AHG_HERALD_API_KEY>
-  Set AHG_HERALD_API_KEY as a Vercel environment variable.
-  If not set, auth is bypassed (dev/open mode — not recommended for production).
+  In production, AHG_HERALD_API_KEY is mandatory and the endpoint fails closed
+  when the secret is absent. Local/dev environments may remain open.
 
 Expected request body:
   {
-    "records": [ <AHGTraceRecord dict>, ... ],
+    "records": [ <AHGTraceRecord dict>, ...],
     "count": <int>
   }
 
@@ -99,13 +99,20 @@ def _post_webhook(url: str, payload: dict) -> bool:
 # Auth
 # ---------------------------------------------------------------------------
 
+def _is_production() -> bool:
+    """Return True when the function is executing in Vercel production."""
+    return os.environ.get("VERCEL_ENV", "").strip().lower() == "production"
+
+
 def _check_auth(headers: dict) -> bool:
     """Validate Bearer token against AHG_HERALD_API_KEY env var.
-    If env var not set, passes in open/dev mode.
+
+    Production fails closed when the key is absent. Local/dev environments
+    may remain open for integration testing.
     """
     expected = os.environ.get("AHG_HERALD_API_KEY")
     if not expected:
-        return True  # open mode — dev only
+        return not _is_production()
     auth = headers.get("authorization", headers.get("Authorization", ""))
     if not auth.startswith("Bearer "):
         return False
@@ -128,7 +135,6 @@ def _process_records(records: list) -> dict:
     latest = records[-1]  # most recent record in batch for KV update
 
     for rec in records:
-        # 1. Structured stdout log (always — captured by Vercel runtime)
         log_entry = {
             "p01": "ahg_trace",
             "session": rec.get("session_id"),
@@ -141,18 +147,15 @@ def _process_records(records: list) -> dict:
         }
         if log_full:
             log_entry["full"] = rec
-        print(json.dumps(log_entry))  # Vercel captures stdout as runtime logs
+        print(json.dumps(log_entry))
 
-        # 2. Tribunal alert counting
         if rec.get("tribunal_active"):
             tribunal_alerts += 1
 
-        # 3. NDR-STASIS proximity
         phi = rec.get("phi", 0.0)
         if abs(phi - NDR_STASIS_PHI) <= NDR_STASIS_TOLERANCE:
             ndr_stasis_events += 1
 
-    # 4. Vercel KV — update latest session state (for dashboard)
     kv_key = f"ahg:session:{session_id}:latest"
     _kv_set(kv_key, {
         "session_id": session_id,
@@ -166,7 +169,6 @@ def _process_records(records: list) -> dict:
         "tribunal_alerts_in_batch": tribunal_alerts,
     })
 
-    # 5. Tribunal webhook (if any tribunal alerts in batch)
     webhook_url = os.environ.get("AHG_TRIBUNAL_WEBHOOK_URL")
     if tribunal_alerts > 0 and webhook_url:
         tribunal_recs = [r for r in records if r.get("tribunal_active")]
@@ -198,7 +200,7 @@ def _process_records(records: list) -> dict:
 class handler(BaseHTTPRequestHandler):
     """Vercel Python serverless function handler for POST /api/ahg_herald."""
 
-    def log_message(self, format, *args):  # suppress default access log
+    def log_message(self, format, *args):
         pass
 
     def _send_json(self, status: int, body: dict) -> None:
@@ -210,18 +212,15 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
 
     def do_OPTIONS(self):
-        # Preflight — CORS headers set by vercel.json
         self.send_response(204)
         self.end_headers()
 
     def do_POST(self):
-        # Auth check
         headers = dict(self.headers)
         if not _check_auth(headers):
             self._send_json(401, {"error": "Unauthorized"})
             return
 
-        # Parse body
         try:
             length = int(self.headers.get("Content-Length", 0))
             raw = self.rfile.read(length)
@@ -233,18 +232,16 @@ class handler(BaseHTTPRequestHandler):
             self._send_json(400, {"error": f"Bad request: {exc}"})
             return
 
-        # Process
         result = _process_records(records)
         self._send_json(200, result)
 
     def do_GET(self):
-        # Health probe for Herald endpoint
         self._send_json(200, {
             "status": "ok",
             "endpoint": "P-01 AHG Herald Fan-Out",
             "version": "1.0",
             "kv_configured": bool(os.environ.get("AHG_KV_REST_API_URL")),
-            "auth_required": bool(os.environ.get("AHG_HERALD_API_KEY")),
+            "auth_required": bool(os.environ.get("AHG_HERALD_API_KEY")) or _is_production(),
             "tribunal_webhook": bool(os.environ.get("AHG_TRIBUNAL_WEBHOOK_URL")),
         })
 
