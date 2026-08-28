@@ -116,7 +116,7 @@ The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the le
 20. [Trademark & Certification Policy](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md)
 21. [Public Surface QA Standard](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md)
 22. [CROSS_REF](CROSS_REF.md)
-23. [Platinum Mean Semantic Correction](docs/governance/PPLATINUM_MEAN_SEMANTIC_CORRECTION_2026-08-28.md)
+23. [Platinum Mean Semantic Correction](docs/governance/PLATINUM_MEAN_SEMANTIC_CORRECTION_2026-08-28.md)
 
 ## Verification and test status
 
