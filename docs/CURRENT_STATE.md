@@ -40,13 +40,23 @@ This closure is not retroactively invalidated. It is simply scoped to the tree t
 
 The corrected Governance CI workflow at `ac8ea26…` binds the target candidate SHA to the executing GitHub workflow SHA. This removes the previous hard-coded historical-candidate rebinding path. Current-tree M6/E2b evidence must be produced and independently checked before it can support current freeze admissibility.
 
-The current `main` tip `3f2d16a…` contains subsequent documentation/semantic corrections, including the Platinum Mean terminology correction and the open Forman–Ricci helper semantics issue. Those documentation-lineage changes do not retroactively change the candidate-scoped verification result for `ac8ea26…` and must not be represented as experimental apparatus verification.
+The current `main` tip `3f2d16a…` contains subsequent documentation/semantic corrections, including the canonical mathematical-notation policy and the open Forman–Ricci helper semantics issue. Those documentation-lineage changes do not retroactively change the candidate-scoped verification result for `ac8ea26…` and must not be represented as experimental apparatus verification.
 
 The earlier M6 artifact targeting historical `e6beeb663…` and verifier merge-ref `2516f32…` remains **NON-CLOSING** for the current candidate boundary.
 
-## Semantic correction boundary
+## Canonical mathematical notation boundary
 
-`pP` / **Platinum Mean** is intentional DGAF notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. `ρP` / **plastic constant** is `1.3247179572447454`, the real root of `x³ = x + 1`. The notation is intentional; the correction is that `1.7747…` must not be misidentified as the plastic constant in mathematical convergence claims.
+`φ` is the conventional symbol for the Golden Ratio, `(1+√5)/2 ≈ 1.618033989`.
+
+`σ_{p,q}` denotes the Spinadel metallic-means family, the positive solution of `x² - px - q = 0`; `σ_n = σ_{n,1}` for the ordinary sequence. `σ_{2,1}` is silver and `σ_{3,1}` is bronze.
+
+`ρ` denotes the mathematical plastic number, `≈1.3247179572447454`, the unique real root of `x³ - x - 1 = 0`. `P` is an attested alternative notation. `ρP` is not the canonical mathematical notation.
+
+`pP` / **Platinum Mean** is intentional DGAF-specific notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. It is not a standard member of the quadratic metallic-means family and must not be substituted for `ρ` in plastic-number mathematics.
+
+The authoritative notation policy is `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`. Historical `ρP` references are retained only as provenance/supersession evidence and must not be treated as current mathematical authority.
+
+## Forman–Ricci evidence boundary
 
 For the unweighted regular dodecahedral topology, Forman–Ricci curvature is `Ric_F(e) = -2` for every edge. This is a constant metric with zero variance and therefore **NO_DISCRIMINATING_SIGNAL**. Issue #117 remains open until the helper's output semantics are corrected and regression-tested. Weighted Forman–Ricci remains separately governed as a falsification track; no validation claim follows from the current single-configuration computation.
 
