@@ -3,7 +3,7 @@
 ## Control status
 
 - State: `PRE-FREEZE / FAIL-CLOSED`
-- Current `main` documentation/evidence lineage: `5ef72695a60008d5d5a96c6d630821bca97390e4`
+- Current `main` tip: `66bdf8017e73ba10d3e417ee0d7e5a2ff5286b39`
 - Experimental verification boundary: `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
 - Current-tree E2b: `OPEN / VERIFICATION REQUIRED`
 - Candidate-scoped M6: `CLOSED / VERIFIED` for `ac8ea267…` / run `33050398324`
@@ -36,7 +36,7 @@ Every gate is a predicate with explicit scope, prerequisites, evidence requireme
 
 ## Current lineage versus experimental boundary
 
-The current `main` tip is a documentation/evidence lineage boundary and must not be silently substituted for the candidate verification boundary. The experimental verification boundary remains `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Subsequent documentation corrections on `main`, including mathematical notation and lattice reproduction corrections, do not retroactively change candidate-scoped verification results.
+The current `main` tip is `66bdf8017e73ba10d3e417ee0d7e5a2ff5286b39` and is a documentation/evidence lineage boundary. It must not be silently substituted for the candidate verification boundary. The experimental verification boundary remains `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Subsequent documentation corrections on `main`, including mathematical notation and lattice reproduction corrections, do not retroactively change candidate-scoped verification results.
 
 ## E2b provenance boundary
 
