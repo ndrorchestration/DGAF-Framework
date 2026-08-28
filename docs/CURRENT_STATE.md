@@ -3,24 +3,24 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-28
-applies_to_sha: 3f2d16a45871b25cd98cd5f7ae69451abc523543
+applies_to_sha: 45efd0ef1a7a19f343d3999a59f07b65e1329aba
 ---
 # DGAF-Framework / PDMAL — Current State
 
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it. This document describes current state without retroactively transferring historical evidence.
 
-> **Current boundary:** `3f2d16a45871b25cd98cd5f7ae69451abc523543` is the current `main` documentation/evidence lineage boundary. The experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the later workflow-binding correction at `ac8ea26…` requires current-tree execution before that evidence can be used as current-tree freeze evidence. M6 remains open. P7 is technically adjudicated but formally open; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
+> **Current boundary:** `45efd0ef1a7a19f343d3999a59f07b65e1329aba` is the current `main` documentation/evidence lineage boundary. The experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the later workflow-binding correction at `ac8ea26…` is a separate verification boundary. M6 is CLOSED/VERIFIED for exact candidate `ac8ea267…` via run `33050398324` and remains scoped to that exact verification workspace/job. P7 is technically adjudicated but formally open; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
 
 ## Authoritative current state
 
 | Gate / boundary | Status | Current meaning |
 |---|---|---|
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains provenance only |
-| Current `main` | CURRENT DOCUMENTATION/EVIDENCE LINEAGE | `3f2d16a45871b25cd98cd5f7ae69451abc523543` |
+| Current `main` | CURRENT DOCUMENTATION/EVIDENCE LINEAGE | `45efd0ef1a7a19f343d3999a59f07b65e1329aba` |
 | Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
 | E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd152…`; run `33047380487`; artifact `9636185725`; digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd` |
-| Current-tree E2b/M6 binding | READY / VERIFICATION PENDING | Governance CI binds the candidate target to the executing workflow SHA at `ac8ea26…`; exact current-boundary execution remains required |
-| M6 | OPEN / CURRENT-TREE VERIFICATION REQUIRED | Historical `e6beeb…` evidence is non-closing; current-tree evidence not yet observed |
+| M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324`; retained negative-state artifact independently hash-verified; closure does not authorize execution |
+| Current-tree E2b/M6 binding | E2b pending; M6 closed | E2b current-boundary evidence must remain scoped to the workflow SHA that is actually executed; M6 closure is already recorded for candidate `ac8ea267…` |
 | P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Scientific decisions resolved; authority adoption and exact binding remain open |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped implementation/configuration and verification remain incomplete |
 | P2 formal runtime verification | NOT EXECUTED | Authenticated five-case matrix still required |
@@ -34,15 +34,21 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 Run `33047380487` is retained as exact-tree evidence for `d299dd152fb82d48a066d66a64bf0917e20d6167`. It passed exact checkout/target assertions, source requirements fingerprint verification, hash-pinned installation, exact-tree provenance emission, and evidence retention. Artifact `9636185725` has digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
 
-This closure is not retroactively invalidated. It is simply scoped to the tree that was actually executed. The subsequent `ac8ea26…` workflow change is a new verification boundary.
+This closure is not retroactively invalidated. It is scoped to the tree that was actually executed. The subsequent `ac8ea26…` workflow change is a separate verification boundary.
 
-## Current-tree verification boundary
+## M6 provenance boundary
 
-The corrected Governance CI workflow at `ac8ea26…` binds the target candidate SHA to the executing GitHub workflow SHA. This removes the previous hard-coded historical-candidate rebinding path. Current-tree M6/E2b evidence must be produced and independently checked before it can support current freeze admissibility.
+M6 is CLOSED/VERIFIED for exact candidate/tree `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` via Governance CI run `33050398324`. Checkout SHA, workflow target SHA, and verifier target SHA matched exactly; the hash-pinned verifier environment completed successfully; machine-readable negative-state evidence was emitted and retained; and the retained artifact digest was independently recomputed as `sha256:dabe2f1909535671e795bb8c1cad0ef0840be4732acebff8f1a340c62b4943b6`.
 
-The current `main` tip `3f2d16a…` contains subsequent documentation/semantic corrections, including the canonical mathematical-notation policy and the open Forman–Ricci helper semantics issue. Those documentation-lineage changes do not retroactively change the candidate-scoped verification result for `ac8ea26…` and must not be represented as experimental apparatus verification.
+The observed negative state included empirical N = 0, pilot authorization not granted, no protocol/freeze created, pilot mode not selected, blinding key absent, zero pilot seed/summary artifacts, and no pilot invocation in the verification job. M6 proves that observed negative state for that exact verification workspace/job; it does not constitute proof of absence elsewhere and does not authorize execution.
 
-The earlier M6 artifact targeting historical `e6beeb663…` and verifier merge-ref `2516f32…` remains **NON-CLOSING** for the current candidate boundary.
+## Current verification boundary
+
+The corrected Governance CI workflow at `ac8ea26…` binds the target candidate SHA to the executing GitHub workflow SHA. Current E2b evidence must be produced and independently checked against the exact executing boundary before it can support current freeze admissibility.
+
+The current `main` tip `45efd0e…` contains subsequent documentation/semantic corrections, including the canonical mathematical-notation policy and the Platinum Mean/plastic-constant distinction. Those documentation-lineage changes do not retroactively change candidate-scoped verification results and must not be represented as experimental apparatus verification.
+
+The earlier M6 artifact targeting historical `e6beeb663…` and verifier merge-ref `2516f32…` remains **NON-CLOSING** for the current candidate boundary; that historical artifact is not the basis for the closed M6 state above.
 
 ## Canonical mathematical notation boundary
 
