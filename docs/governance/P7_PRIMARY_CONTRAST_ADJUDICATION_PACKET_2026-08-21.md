@@ -2,7 +2,9 @@
 
 ## Purpose
 
-Provide the bounded scientific decision record for the current FFCR experiment. P7 is now **ADOPTED**. This packet does not authorize execution and does not create a protocol freeze.
+Provide the bounded scientific decision record for the current FFCR experiment. The primary contrast and associated scientific decisions were adjudicated through the P7 process. This packet does not authorize execution and does not create a protocol freeze.
+
+> **Current-status clarification:** P7 scientific content is treated as technically adjudicated, but formal freeze binding remains OPEN. The older panel-ready traceability record is retained as provenance; current P7 status must be read together with the completion adjudication and exact candidate-binding evidence.
 
 ## Adopted primary contrast
 
@@ -37,7 +39,7 @@ No topology or failure-level weighting may be changed after observing pilot resu
 - Primary inference unit: the 50 pre-specified seeds.
 - Pairing: `dgaf` and `null` observations from the same seed are paired; seed identity is the pairing key.
 - Confidence interval: paired bootstrap over the 50 seed-level differences, resampling seeds with replacement.
-- The executable bootstrap count, interval convention, RNG policy, and exact implementation/configuration identity must be recorded in P8 before unblinding. These are implementation-lock fields, not post-hoc analysis choices.
+- The executable bootstrap count, interval convention, RNG policy, and exact implementation/configuration identity must be recorded and verified in P8 before unblinding or empirical interpretation.
 - Empirical data remain `N = 0` until separate pilot authorization and execution.
 
 ## Secondary / exploratory family
@@ -62,7 +64,7 @@ No secondary contrast is a confirmatory success criterion unless separately adju
 
 The primary result must be reported with its point estimate and confidence interval. A result supports the pre-specified directional DGAF hypothesis only when the locked decision rule is satisfied; absence of such support is not evidence of production efficacy or ineffectiveness.
 
-The exact numerical success threshold, interval convention, bootstrap count, and RNG policy are intentionally carried as P8 implementation-lock fields until they are bound to the executable analysis implementation. No value may be selected after observing pilot outcomes.
+The exact numerical success threshold, interval convention, bootstrap count, and RNG policy are implementation-lock fields where applicable and must be bound before observing pilot outcomes.
 
 ## Historical boundary
 
@@ -70,12 +72,12 @@ The historical PDMAL-vs-Ring contrast is evidence about the historical apparatus
 
 ## Protocol reconciliation
 
-The governing experiment protocol now explicitly describes the study as controlled runtime characterization containing a pre-specified comparative DGAF-versus-null analysis. The comparative analysis does not convert historical characterization artifacts into efficacy evidence and does not establish production or real-world effectiveness.
+The governing experiment protocol describes the study as controlled runtime characterization containing a pre-specified comparative DGAF-versus-null analysis. The comparative analysis does not convert historical characterization artifacts into efficacy evidence and does not establish production or real-world effectiveness.
 
 ## Status
 
-**P7 ADOPTED — P8 NEXT GATE.**
+**P7 scientific specification: TECHNICALLY ADJUDICATED / FORMALLY OPEN FOR FREEZE BINDING.**
 
-P8 must bind the executable analysis implementation path, implementation SHA, configuration SHA, bootstrap parameters, RNG policy, interval convention, and exact protocol/manifest identity before any unblinding or empirical interpretation.
+The primary contrast is selected and the scientific decision record is available for binding. P8 must bind the executable analysis implementation path, implementation SHA, configuration SHA, bootstrap parameters, RNG policy, interval convention, and exact protocol/manifest identity before any unblinding or empirical interpretation.
 
 Pilot authorization remains **NOT GRANTED**. Empirical `N = 0`. New freeze remains **NOT CREATED**.
