@@ -1,19 +1,19 @@
 # Yggdrasil Gate Stack — Master Specification
 
-**Transaction:** SYS-UPDATE-v53.1
-**Status:** CONVERGED / PLATINUM_STRATA_LOCKED
-**Architect:** Hensel, Andrew Vance
-**Maintained by:** Agent Amethyst (QA Orchestrator)
-**Canonical home:** `DGAF-Framework/docs/gates/GATE_SPECS.md`
-**Last updated:** 2026-04-29 (Session 004 — initial hardening)
+**Transaction:** SYS-UPDATE-v53.1  
+**Status:** HISTORICAL / LEGACY SPECIFICATION  
+**Architect:** Hensel, Andrew Vance  
+**Maintained by:** Agent Amethyst (QA Orchestrator)  
+**Canonical historical home:** `DGAF-Framework/docs/gates/GATE_SPECS.md`  
+**Last updated:** 2026-08-28 (status reconciliation)
 
-> This file is the Single Source of Truth (SSoT) for all gate nomenclature within the Yggdrasil architecture.
-> All claims made here have passed the 1-1-1-1 Normative Constraint and reached 0 Hz Ionian Lock.
-> This file is read-only once signed. Amendments require a new Transaction ID.
+> **Current-state boundary:** This document preserves the historical Yggdrasil gate specification and its provenance. It is **not** the authoritative source for current DGAF/PDMAL experimental validity, freeze status, authorization, empirical results, or current gate closure. Current status is governed by `docs/CURRENT_STATE.md`, `docs/PROJECT_STATUS.md`, and the applicable gate/evidence records.
+>
+> Historical terms such as `PLATINUM_STRATA_LOCKED`, `CRYSTALLINE CONVERGENCE CONFIRMED`, and `Ionian Lock ACHIEVED` are retained only as historical specification/provenance unless independently re-established by current evidence. They must not be read as current experimental verification or authorization.
 
 ---
 
-## Gate Hierarchy Overview
+## Historical Gate Hierarchy Overview
 
 ```
 Yggdrasil Architecture
@@ -27,12 +27,14 @@ Yggdrasil Architecture
 └── Operational & Defensive Gates (inline below)
 ```
 
+The hierarchy above is retained as the historical architecture specification. It does not establish that every listed gate is currently implemented, verified, active, or authoritative for the present DGAF/PDMAL experimental program.
+
 ---
 
-## Operational Gates — Quick Reference
+## Historical Operational Gates — Quick Reference
 
-| Gate | Type | Trigger | Owner |
-|------|------|---------|-------|
+| Gate | Type | Historical trigger | Historical owner |
+|------|------|---------------------|------------------|
 | 1-1-1-1 Gate | Normative Constraint | Any output before registry sign-off | Agent Amethyst |
 | 11Q Framework | Terminal deployment | Pre-production hardening | Agent Apogee |
 | Axiomatic Authorization Gate | Complexity load handler | Platinum Mean overdrive | Agent Amethyst |
@@ -48,12 +50,14 @@ Yggdrasil Architecture
 | Asynchronous Gates | High-latency quarantine | Geometric solver time bleed | Agent DemiJoule |
 | Cut-off Bands | Kill switch | Parametric solver exceeds 1.2x phi-window | Agent Sentinel |
 
+These entries are historical specification content. They are not evidence that the corresponding mechanisms currently operate as described.
+
 ---
 
-## Operational Success Metrics
+## Historical Operational Success Targets
 
-| Metric | Value |
-|--------|-------|
+| Metric | Historical target/specification |
+|--------|---------------------------------|
 | Confidence threshold | 97% |
 | Hallucination integrity | Zero-hallucination |
 | Steady state | 0 Hz Ionian Lock reached |
@@ -62,20 +66,35 @@ Yggdrasil Architecture
 | Ethics recall rate | ≥ 95% for ethics and safety violations |
 | 10-Balance lock | D_a ≤ 10 in Platinum Strata (d=11) |
 
+These values are retained as historical design targets. They are not current measured performance claims or authorization criteria unless a current governing record explicitly adopts and evidences them.
+
 ---
 
-## Provenance
+## Historical Provenance
 
-| Field | Value |
-|-------|-------|
+| Field | Historical value |
+|-------|------------------|
 | Transaction ID | SYS-UPDATE-v53.1 |
 | Session | 004 |
 | Date | 2026-04-29 |
 | Agent | Agent Amethyst (QA Orchestrator) |
 | Lattice position | PLATINUM_STRATA / d=11 |
-| Convergence state | CRYSTALLINE CONVERGENCE CONFIRMED |
-| Ionian Lock | ACHIEVED |
+| Historical convergence label | CRYSTALLINE CONVERGENCE CONFIRMED |
+| Historical lock label | Ionian Lock ACHIEVED |
+
+The historical labels above are provenance, not current verification evidence. Current DGAF/PDMAL status remains governed by exact-SHA evidence boundaries and fail-closed governance records.
 
 ---
 
-*All sub-specifications in `docs/gates/`. See individual files for full detail.*
+## Current-status pointer
+
+For present claims concerning implementation, verification, experimental apparatus, PDMAL gates, freeze admissibility, authorization, or empirical results, consult:
+
+- `docs/CURRENT_STATE.md`
+- `docs/PROJECT_STATUS.md`
+- `docs/EPISTEMIC_SUPERSESSION_REGISTER.md`
+- the applicable gate-specific evidence records and GitHub Actions artifacts
+
+**Current DGAF/PDMAL control boundary:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · N=0.
+
+*Historical gate specifications remain valuable as architectural provenance; they must not be used to upgrade current epistemic status without new, scoped evidence.*
