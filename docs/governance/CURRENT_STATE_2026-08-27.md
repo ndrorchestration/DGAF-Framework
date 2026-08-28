@@ -1,10 +1,10 @@
-# DGAF/PDMAL Current State — 2026-08-27
+# DGAF/PDMAL Current State — 2026-08-28
 
 ## Authority
 
 This record is a current-state reconciliation of the live DGAF/PDMAL control plane. It is subordinate to exact execution evidence and does not itself create experimental evidence, freeze, or authorization.
 
-**Current GitHub `main` tip:** this documentation record is maintained on the protected mainline; the immediately prior documentation-reconciliation tip was `6338619d8313b0e320833b26b5e9db525de49f6e`.
+**Current GitHub `main` tip:** this documentation record is maintained on the protected mainline; the immediately prior documentation-reconciliation tip was `66edb65c458d472cf417b1fe74030de5f65412fd`.
 
 **Exact experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
 
@@ -44,6 +44,14 @@ The primary scientific contrast is `dgaf` versus `null`, with FFCR as the primar
 ## P8 boundary
 
 P8 remains explicitly fail-closed. Required evidence must be generated against the exact experimental verification boundary and inspected before P8 closure can be asserted.
+
+## Current CI correction boundary
+
+The current governance workflow includes the pinned `jsonschema==4.26.0` dependency required by the governance evaluation schema path. This is a CI executability correction only; it does not alter the experimental verification boundary, freeze state, authorization state, or empirical N.
+
+## Recent live verification
+
+At the current `main` tip, `PPTL CI`, `Truth Layer Validation`, `Truth Layer Tests`, `Epistemic Evidence Validation`, `Governance Sweep`, `Claim Hygiene Audit`, `Full Repository Coverage Audit`, and `Deploy to Vercel + Live Regression` completed successfully for the push-triggered workflows observed on `66bdf801…`. The scheduled `DGAF Regression Suite` also ran on that SHA; its local quick check passed, while its live regression health preflight failed and the 30-turn live regression was skipped. This does not close P2/P6a because those predicates require authenticated exact-deployment execution.
 
 ## Remaining execution sequence
 
