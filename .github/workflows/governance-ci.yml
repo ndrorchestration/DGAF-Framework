@@ -31,7 +31,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install test dependencies
-        run: python -m pip install --upgrade pip pytest numpy networkx
+        run: python -m pip install --upgrade pip pytest numpy networkx jsonschema==4.26.0
 
       - name: Emit E2b/M6 evidence in isolated hash-pinned verifier environment
         run: |
