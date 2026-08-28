@@ -16,15 +16,16 @@
 
 ## Current verification boundary
 
-The current `main` verification boundary is **`ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`**.
+The current `main` branch is a living documentation/evidence lineage and is not itself the experimental apparatus identity. The experimental verification boundary remains candidate-scoped at **`ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`**.
 
 The prior executable candidate `e6beeb66335e1b50a239697badab22dab50eb5ba` is historical provenance only for current verification. The later workflow change at `ac8ea26…` changed candidate binding and therefore required affected-predicate re-verification under the dynamic invalidation rule.
 
 | Binding | Value | State |
 |---|---|---|
-| Current verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | CURRENT |
+| Experimental verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | CURRENT CANDIDATE BOUNDARY |
 | Historical candidate | `e6beeb66335e1b50a239697badab22dab50eb5ba` | HISTORICAL |
 | Analysis implementation | `experiments/pdmal_pilot/analysis.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
+| Analysis implementation blob SHA | `a269ed226b1d261663994fc3ef0e8a1a96da6cd3` | CURRENT-TREE OBSERVATION |
 | Analysis configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | SELECTED / PRE-FREEZE |
 | Artifact schema | `experiments/pdmal_pilot/pilot_artifact_schema.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
 | Runner | `experiments/pdmal_pilot/run_pilot.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
@@ -46,12 +47,12 @@ The prior P8 implementation corrections remain part of provenance: `ffcr_success
 
 P8 remains **OPEN / FAIL-CLOSED** pending:
 
-1. Re-binding analysis/schema/runner/protocol identities to the current verification boundary.
+1. Re-binding analysis/schema/runner/protocol identities to the candidate verification boundary.
 2. P2 authenticated five-case runtime verification against the exact deployment.
 3. P6a authenticated four-case CORS verification against the same deployment identity.
 4. Environment/topology reproducibility evidence.
 5. Durable evidence retention with direct retrieval and integrity verification.
-6. Current-tree evidence review for E2b/M6, retaining their exact execution boundaries.
+6. Current-boundary evidence review for E2b/M6, retaining their exact execution boundaries.
 7. P7 exact freeze binding and formal closure of the adopted scientific decision record.
 8. Independent P9 verification.
 
