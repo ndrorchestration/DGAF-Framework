@@ -96,6 +96,7 @@ class ControlPlane:
         self._transition(self._task(task_id), TaskState.EVALUATING)
 
     def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
+        """Evaluate the task through the configured TGL runner from EVALUATING state only."""
         if self.tgl_runner is None:
             raise ControlPlaneViolation("no TGL runner configured")
         task = self._task(task_id)
@@ -104,8 +105,8 @@ class ControlPlane:
         result = self.tgl_runner(input_text, context or {})
         status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
         self.events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status})
-        if status == "KILL":
-            self.veto(task_id, "TGL KILL")
+        if status in {"KILL", "KILL_REC"}:
+            self.veto(task_id, "TGL terminal failure")
         elif status == "ESCALATE":
             self._transition(task, TaskState.ESCALATED)
         return result
@@ -122,7 +123,8 @@ class ControlPlane:
     def veto(self, task_id: str, reason: str) -> None:
         task = self._task(task_id)
         self.events.append({"event": "VETO", "task_id": task_id, "reason": reason})
-        self._transition(task, TaskState.ESCALATED)
+        if task.state is not TaskState.ESCALATED:
+            self._transition(task, TaskState.ESCALATED)
 
     def terminate(self, task_id: str) -> None:
         self._transition(self._task(task_id), TaskState.TERMINATED)
@@ -173,11 +175,6 @@ class ControlPlane:
                 "merge_status": branch.merge_status,
             }
         )
-        if branch.policy_verdict in {"KILL", "ESCALATE"} and branch.parent_branch_id:
-            parent_branch = self.branches.get(branch.parent_branch_id)
-            parent_task = self.tasks.get(parent_branch.metadata.get("task_id", ""))
-            if parent_task is not None:
-                self.veto(parent_task.task_id, branch.policy_verdict)
 
     def consume(self, task_id: str, amount: Consumption) -> None:
         try:
