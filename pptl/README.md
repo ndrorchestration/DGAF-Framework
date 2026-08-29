@@ -72,5 +72,5 @@ These are design goals and tested behaviors, not universal guarantees.
 
 ## Related projects
 
-- urlPPTL governance dashboardhttps://github.com/ndrorchestration/pptl-governance-dashboard
-- urlDGAF-Frameworkhttps://github.com/ndrorchestration/DGAF-Framework
+- [PPTL governance dashboard](https://github.com/ndrorchestration/pptl-governance-dashboard)
+- [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)
