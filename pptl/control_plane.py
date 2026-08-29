@@ -10,6 +10,7 @@ from .branch_registry import BranchRecord, BranchRegistry
 from .budget_ledger import BudgetExceeded, Consumption, BudgetLedger
 from .governance_envelope import GovernanceEnvelope, ResourceBudget
 from .state_identity import StateRegistry
+from .triadic_governance_loop import TurnAuditRecord
 
 
 class TaskState(str, Enum):
@@ -154,8 +155,8 @@ class ControlTask:
 class ControlPlane:
     """Single-run deterministic controller; external actions remain prohibited by default."""
 
-    def __init__(self, *, tgl_runner: Callable[..., Any] | None = None) -> None:
-        self.tgl_runner = tgl_runner
+    def __init__(self, *, tgl_runner: Callable[..., TurnAuditRecord] | None = None) -> None:
+        self._tgl_runner = tgl_runner
         self._state_registry = StateRegistry()
         self._branches = BranchRegistry()
         self._tasks: dict[str, ControlTask] = {}
@@ -163,6 +164,10 @@ class ControlPlane:
         self._events: list[dict[str, object]] = []
         self._lineage_active: dict[str, int] = {}
         self._lineage_limits: dict[str, int] = {}
+
+    @property
+    def tgl_runner(self) -> Callable[..., TurnAuditRecord] | None:
+        return self._tgl_runner
 
     @property
     def tasks(self) -> Mapping[str, ControlTask]:
@@ -259,26 +264,25 @@ class ControlPlane:
         self._transition(task, TaskState.EVALUATING)
         self._set_runtime(task, reset_tgl=True)
 
-    def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
-        if self.tgl_runner is None:
+    def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> TurnAuditRecord:
+        if self._tgl_runner is None:
             raise ControlPlaneViolation("no TGL runner configured")
         task = self._task(task_id)
         if task.state is not TaskState.EVALUATING:
             raise ControlPlaneViolation("TGL evaluation requires EVALUATING state")
         try:
-            result = self.tgl_runner(input_text, context or {})
+            result = self._tgl_runner(input_text, context or {})
         except Exception as exc:
             self._events.append({"event": "TGL_RUNNER_FAILURE", "task_id": task_id, "reason": str(exc)})
             self._escalate(task, "TGL runner exception")
             raise ControlPlaneViolation("TGL runner failed; task escalated") from exc
-        status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
-        seal = getattr(result, "seal_hash", None)
-        if status is None or not isinstance(seal, str) or len(seal) != 64:
+        if not isinstance(result, TurnAuditRecord) or not isinstance(result.seal_hash, str) or len(result.seal_hash) != 64:
             self._set_runtime(task, reset_tgl=True)
-            self._escalate(task, "TGL result lacks a valid cryptographic seal")
-            raise ControlPlaneViolation("TGL result lacks valid sealed evidence")
-        self._set_runtime(task, tgl_status=status, tgl_seal=seal)
-        self._events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
+            self._escalate(task, "TGL result lacks a valid canonical audit seal")
+            raise ControlPlaneViolation("TGL result lacks valid canonical sealed evidence")
+        status = result.final_status.value
+        self._set_runtime(task, tgl_status=status, tgl_seal=result.seal_hash)
+        self._events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": result.seal_hash})
         if status in {"KILL", "KILL_REC"}:
             self.veto(task_id, "TGL terminal failure")
         elif status == "ESCALATE":
