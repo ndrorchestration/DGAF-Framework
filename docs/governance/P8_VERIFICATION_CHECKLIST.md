@@ -7,6 +7,17 @@
 
 This checklist distinguishes implemented controls from executed verification evidence. Historical candidates and historical verifier runs remain provenance only and must not be substituted for the experimental verification boundary.
 
+## TGL/P-35 contract prerequisite
+
+- [ ] TGL/P-35 contract blocker resolved by an isolated remediation candidate.
+- [ ] Established P-35 constructor and `evaluate(..., check_fn=...)` contract restored and tested.
+- [ ] Premise-hook injection exercised by regression tests.
+- [ ] Fail-closed exception containment exercised by regression tests.
+- [ ] `PASS/WARN/SKIP/ESCALATE/KILL` reduction semantics explicitly tested.
+- [ ] Unwired required-gate `SKIP` distinguished from dependency-caused or intentionally non-applicable `SKIP`.
+- [ ] Final audit seal proven to represent exactly the authoritative returned audit state.
+- [ ] Exact remediation-head CI run, SHA, ref, event, logs, and artifacts retained.
+
 ## Candidate artifact contract
 
 - [x] Explicit `ffcr_success` outcome is emitted by the runner.
