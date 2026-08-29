@@ -8,11 +8,9 @@
 **Freeze:** NOT CREATED  
 **Empirical N:** 0
 
-## Current control-plane blocker
+## Current engineering boundary
 
-The pre-freeze TGL contract suite exposed a substantive regression associated with PR #132: 41 tests passed and 2 failed at the PDMAL → TGL → P-35 boundary. The failure is treated as a contract signal, not as transient test noise.
-
-PR #132 remains **BLOCKED / DRAFT / UNMERGED**. PR #133 is the isolated remediation candidate. It is intended to restore the established TGL/P-35 contract and related fail-closed semantics; it does not authorize execution, create a freeze, or redefine the experimental apparatus.
+The previously identified TGL/P-35 regression remains an engineering/governance prerequisite, but the active remediation lane is now PR #134, based on current `main`. PRs #132 and #133 remain historical diagnostic/remediation records. The DGAF v1 control-plane PR #136 is a separate generic engineering layer and its passing deterministic contract CI does not authorize execution or change the experimental candidate identity.
 
 The current experimental verification boundary remains `ac8ea267…` until a separately governed candidate identity is created and affected predicates are re-verified after any substantive apparatus change.
 
@@ -36,7 +34,10 @@ The candidate copy of `PDMAL_EXPERIMENT_PROTOCOL.md` has an older `applies_to_sh
 Historical P8 material naming superseded candidates remains provenance. Current planning records must use the active verification boundary or explicitly label historical scope.
 
 ### 4. TGL remediation boundary
-TGL/P-35 contract repair is a prerequisite to candidate verification, not an authorization transition. Any resulting executable change to the experimental apparatus requires a new candidate identity and affected-predicate re-verification rather than silently inheriting `ac8ea267…` evidence.
+PR #134 is the current-main TGL/P-35 engineering remediation lane. TGL remediation is a prerequisite to candidate verification, not an authorization transition. Any resulting executable change to the experimental apparatus requires a new candidate identity and affected-predicate re-verification rather than silently inheriting `ac8ea267…` evidence.
+
+### 5. DGAF v1 control-plane boundary
+PR #136 is generic engineering/governance infrastructure. Its deterministic contract verification must not be promoted to experimental evidence. If the control plane or an adapter changes the executable PDMAL apparatus, the apparatus must receive a new candidate identity and the affected P7/P8/P2/P6a predicates must be re-bound.
 
 ## P7/P8 implication
 
@@ -48,4 +49,4 @@ This record is an **internal governance** artifact. It must not be copied verbat
 
 ## Non-authorizing conclusion
 
-This record documents identity reconciliation and the current TGL blocker. It does not create a freeze, grant authorization, produce empirical observations, or increase empirical N.
+This record documents identity reconciliation and the current engineering prerequisites. It does not create a freeze, grant authorization, produce empirical observations, or increase empirical N.
