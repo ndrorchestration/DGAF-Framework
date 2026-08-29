@@ -18,9 +18,11 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 
 | Evidence | State | Identity | Interpretation |
 |---|---|---|---|
-| Current repository | CURRENT | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` verification boundary | Pre-authorization mainline/evidence lineage |
+| Current repository lineage | CURRENT | `main` | Active documentation/evidence lineage; not experimental apparatus identity |
+| Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | Current pre-freeze candidate verification boundary; later documentation commits do not inherit its evidence automatically |
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` | Historical apparatus only |
 | Corrected pilot runner | CANDIDATE | Current verification boundary | Exact candidate verification pending |
+| TGL contract | BLOCKED / ADVERSARIAL REVIEW | PR #132 / PR #133 | 41-pass / 2-fail regression at TGL → P-35 seam; isolated contract-restoration remediation remains pending exact-head validation |
 | Environment lock | VERIFY | Python 3.12.0; NumPy 2.5.1; NetworkX 3.6.1 | Fresh matching environment required |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368` | Operational characterization, not efficacy evidence |
 | Blinding operational verification | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935` | Synthetic custody only |
@@ -46,3 +48,9 @@ These values supersede the older conflicting `f6db...` record in this registry. 
 ## Evidence boundary
 
 Historical acceptance, characterization, synthetic blinding, topology, and security evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until an explicitly authorized 50-seed pilot occurs.
+
+## TGL/P-35 boundary
+
+The TGL review is an implementation/governance control issue, not experimental evidence. PR #132 remains blocked/draft. Its 41-pass / 2-fail result is retained as a substantive regression signal. The isolated remediation candidate must pass its own exact-head validation before the execution-contract predicate can advance.
+
+The remediation boundary does not create a freeze, authorize execution, close P7/P8, or increase empirical N.
