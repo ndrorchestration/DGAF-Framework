@@ -79,6 +79,16 @@ def test_budget_reservation_is_fail_closed() -> None:
     assert ledger.reserved.tool_calls == 3
 
 
+def test_active_concurrency_is_independent_of_node_count() -> None:
+    ledger = BudgetLedger(envelope().budget)
+    ledger.acquire_concurrency(2)
+    with pytest.raises(BudgetExceeded):
+        ledger.acquire_concurrency()
+    assert ledger.active_concurrency == 2
+    ledger.release_concurrency()
+    assert ledger.active_concurrency == 1
+
+
 def test_state_identity_is_deterministic() -> None:
     state = {"b": 2, "a": [1, 2]}
     assert canonical_state(state) == canonical_state({"a": [1, 2], "b": 2})
@@ -117,6 +127,7 @@ def test_control_plane_legal_transitions_and_veto() -> None:
     assert task.state is TaskState.ESCALATED
     plane.terminate("t1")
     assert task.state is TaskState.TERMINATED
+    assert plane.ledgers["t1"].active_concurrency == 0
 
 
 def test_illegal_transition_fails_closed() -> None:
@@ -125,6 +136,17 @@ def test_illegal_transition_fails_closed() -> None:
     plane.submit(task)
     with pytest.raises(ControlPlaneViolation):
         plane.terminate("t1")
+
+
+def test_commit_ready_requires_envelope_permission() -> None:
+    plane = ControlPlane()
+    task = ControlTask("t1", envelope(task_id="t1", trace_id="t1-trace", side_effect_mode="PROPOSE_ONLY"))
+    plane.submit(task)
+    plane.admit("t1")
+    plane.begin_evaluation("t1")
+    plane.mark_merge_ready("t1")
+    with pytest.raises(ControlPlaneViolation):
+        plane.mark_commit_ready("t1")
 
 
 def test_child_reuses_parent_boundary_without_escalation() -> None:
