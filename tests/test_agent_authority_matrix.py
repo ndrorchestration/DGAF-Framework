@@ -10,6 +10,22 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _active_agent_rows(matrix: str) -> set[str]:
+    rows = set()
+    in_baseline = False
+    for line in matrix.splitlines():
+        if line.strip() == "## 2. Current Authority Baseline":
+            in_baseline = True
+            continue
+        if in_baseline and line.startswith("## "):
+            break
+        if in_baseline and line.startswith("|"):
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            if len(cells) >= 1 and cells[0] not in {"Agent", "---"}:
+                rows.add(cells[0])
+    return rows
+
+
 def test_authority_matrix_is_present_and_scoped():
     matrix = _read(MATRIX)
     invariant = _read(INVARIANT)
@@ -36,6 +52,7 @@ def test_matrix_preserves_non_delegation_boundaries():
 
 def test_matrix_contains_current_specialists():
     matrix = _read(MATRIX)
+    active_agents = _active_agent_rows(matrix)
     for agent in (
         "Amethyst",
         "Apogee",
@@ -55,9 +72,9 @@ def test_matrix_contains_current_specialists():
         "Reciprocity",
         "Sentinel-Φ",
     ):
-        assert agent in matrix
-    assert "Sentience" not in matrix
-    assert "Sentinel-Φ / Sentinel" not in matrix
+        assert agent in active_agents
+    assert "Sentience" not in active_agents
+    assert "Sentinel-Φ / Sentinel" not in active_agents
 
 
 def test_reconciliation_targets_are_explicit():
