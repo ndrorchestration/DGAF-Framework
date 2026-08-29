@@ -15,6 +15,7 @@ on:
       - "pptl/commit_gate.py"
       - "pptl/tests/test_v1_control_plane.py"
       - "pptl/tests/test_v1_tgl_integration.py"
+      - "pptl/tests/test_v1_adversarial_contract.py"
       - ".github/workflows/control-plane-contract.yml"
   workflow_dispatch:
 
@@ -37,4 +38,4 @@ jobs:
         run: python -m pip install --upgrade pip pytest pandas
 
       - name: Run control-plane contracts
-        run: python -m pytest -q pptl/tests/test_v1_control_plane.py pptl/tests/test_v1_tgl_integration.py
+        run: python -m pytest -q pptl/tests/test_v1_control_plane.py pptl/tests/test_v1_tgl_integration.py pptl/tests/test_v1_adversarial_contract.py
