@@ -18,7 +18,7 @@ def envelope():
     )
 
 
-def tgl(result=GateResult.PASS):
+def tgl(result=GateResult.PASS, herald_result=GateResult.PASS):
     hooks = TGLHooks(
         premise_check_fn=lambda _text, _invariant: True,
         scpe_fn=lambda _t, _c: result,
@@ -29,7 +29,7 @@ def tgl(result=GateResult.PASS):
         phi_closure_fn=lambda _t, _c: GateResult.PASS,
         hpg_fn=lambda _t, _c: GateResult.PASS,
         apogee_fn=lambda _t, _c: GateResult.PASS,
-        herald_fn=lambda _t, _c: GateResult.PASS,
+        herald_fn=lambda _t, _c: herald_result,
     )
     return TriadicGovernanceLoop("session", "agent", hooks)
 
@@ -61,3 +61,13 @@ def test_tgl_evaluation_requires_evaluating_state():
     plane.submit(task); plane.admit("root")
     with pytest.raises(RuntimeError):
         plane.evaluate_turn("root", "premature")
+
+
+@pytest.mark.governance
+def test_herald_warning_is_reflected_in_final_status():
+    plane = ControlPlane(tgl_runner=tgl(herald_result=GateResult.WARN).run_turn)
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.begin_evaluation("root")
+    result = plane.evaluate_turn("root", "warn-at-publication")
+    assert result.final_status is TurnStatus.WARN
+    assert result.gate_records[-1].gate_name == "Herald_FanOut"
