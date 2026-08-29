@@ -1,4 +1,4 @@
-# CROSS_REF.md
+# DGAF Cross-Reference & Epistemic Boundary Index
 
 > **Last reviewed:** 2026-08-29  
 > **Purpose:** Canonical cross-reference index for project-local patterns, files, agents, terminology, evidence boundaries, and ecosystem relationships.
