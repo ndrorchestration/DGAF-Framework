@@ -56,8 +56,14 @@ def test_matrix_contains_current_specialists():
         "Sentinel-Φ",
     ):
         assert agent in matrix
-    assert "Sentience" not in matrix
-    assert "Sentinel-Φ / Sentinel" not in matrix
+    # Historical aliases may be retained for provenance, but cannot appear as
+    # active authority entries. The matrix's explicit normalization section is
+    # the machine-checkable boundary for those names.
+    assert "Sentinel-Φ is the active canonical identity." in matrix
+    assert "Sentinel is a historical alias only." in matrix
+    assert "Sentience is a historical/merged identity and is not a separate active seat." in matrix
+    assert "| Sentience |" not in matrix
+    assert "| Sentinel-Φ / Sentinel |" not in matrix
 
 
 def test_reconciliation_targets_are_explicit():
