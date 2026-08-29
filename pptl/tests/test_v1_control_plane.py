@@ -49,6 +49,15 @@ def test_budget_reservation_is_atomic_and_fail_closed():
     assert ledger.reserved.tool_calls == 2
 
 
+def test_budget_consumption_accounts_for_outstanding_reservations():
+    ledger = BudgetLedger(budget(max_tool_calls=5))
+    ledger.reserve(Consumption(tool_calls=3))
+    with pytest.raises(BudgetExceeded):
+        ledger.consume(Consumption(tool_calls=3))
+    assert ledger.consumed.tool_calls == 0
+    assert ledger.reserved.tool_calls == 3
+
+
 def test_concurrency_ceiling_is_enforced():
     ledger = BudgetLedger(budget(max_concurrency=2))
     ledger.acquire_concurrency(2)
