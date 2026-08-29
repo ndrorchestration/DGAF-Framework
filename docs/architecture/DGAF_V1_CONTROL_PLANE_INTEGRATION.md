@@ -28,14 +28,14 @@ optional execution substrate (including PDMAL)
 
 ## Implemented v1 contracts
 
-- `pptl/governance_envelope.py` — immutable inherited authority/tool/data/resource scope, including bounded depth and concurrency metadata.
+- `pptl/governance_envelope.py` — immutable inherited authority/tool/data/resource scope, including bounded depth/concurrency metadata and non-increasing risk.
 - `pptl/state_identity.py` — canonical state representation and SHA-256 identity for exact cycle detection.
 - `pptl/budget_ledger.py` — fail-closed reservation and actual resource consumption accounting.
 - `pptl/branch_registry.py` — append-oriented branch lineage and retained outcome metadata.
 - `pptl/commit_gate.py` — explicit proposal/authorization/commit boundary.
-- `pptl/control_plane.py` — deterministic lifecycle state machine, bounded child creation, and optional TGL invocation from the evaluation state.
+- `pptl/control_plane.py` — deterministic lifecycle state machine, bounded child creation, budget-overrun escalation, and optional TGL invocation from `EVALUATING`.
 - `pptl/tests/test_v1_control_plane.py` — deterministic core contract tests.
-- `pptl/tests/test_v1_tgl_integration.py` — cross-module TGL/control-plane tests.
+- `pptl/tests/test_v1_tgl_integration.py` — cross-module TGL/control-plane contract tests.
 - `.github/workflows/control-plane-contract.yml` — dedicated contract CI lane covering both suites.
 
 These modules are implementation candidates on the current integration branch; their existence is not itself evidence of merge-level verification.
@@ -77,16 +77,16 @@ RECEIVED
    -> COMMIT_READY
    -> TERMINATED
 
-Any governed failure may enter ESCALATED; ESCALATED -> TERMINATED.
+Governed failures may enter ESCALATED; ESCALATED -> TERMINATED.
 ```
 
-`COMMIT_READY` only means the lifecycle has passed its controller checks. The actual consequential side effect remains owned by `CommitGate` and its explicit authorization artifact.
+`COMMIT_READY` only means the lifecycle has passed its controller checks. The consequential side effect remains owned by `CommitGate` and its explicit authorization artifact.
 
 ## Resource accounting
 
 The v1 ledger is telemetry-based. It tracks input tokens, output tokens, tool calls, elapsed time, rounds, and nodes. Reservations are atomic within the ledger object; an over-budget reservation fails closed. Provider pricing is not part of the safety boundary.
 
-`max_depth` and `max_concurrency` are governance-envelope constraints. Concurrency accounting is reserved for the next controller hardening step rather than being inferred from node counts.
+`max_depth` and `max_concurrency` are envelope constraints. Concurrency consumption is intentionally not inferred from node counts; a dedicated active-branch reservation model is a later hardening step.
 
 ## TGL relationship
 
@@ -117,7 +117,7 @@ PROPOSE
   -> COMMIT
 ```
 
-A model response is never itself treated as authorization.
+A model response is never treated as authorization.
 
 ## Explicit exclusions
 
@@ -139,7 +139,7 @@ PDMAL remains an optional governed execution substrate. The control plane must b
 4. TGL/P-35 integration;
 5. only then live provider/substrate adapters.
 
-The current branch has deterministic core and TGL integration coverage; CI execution and adversarial review remain the next verification boundary.
+The current branch contains deterministic core and TGL integration coverage. CI execution and adversarial review remain the next verification boundary.
 
 ## Non-authorizing boundary
 
