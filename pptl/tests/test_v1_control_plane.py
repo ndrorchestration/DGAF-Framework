@@ -243,5 +243,16 @@ def test_illegal_start_expansion_has_no_resource_side_effects():
     assert ledger.consumed.nodes == 0
 
 
+def test_terminal_task_cannot_consume_resources():
+    plane = ControlPlane()
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.terminate("root")
+    ledger = plane.ledgers["root"]
+    before = ledger.consumed
+    with pytest.raises(ControlPlaneViolation, match="terminal task cannot consume"):
+        plane.consume("root", Consumption(tool_calls=1))
+    assert ledger.consumed == before
+
+
 def root_lineage(task: ControlTask) -> str:
     return task.lineage_id or task.envelope.trace_id
