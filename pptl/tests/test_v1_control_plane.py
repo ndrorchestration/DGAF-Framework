@@ -69,13 +69,20 @@ def test_metadata_is_inherited_without_override():
 
 
 def test_side_effect_authority_can_only_narrow():
-    parent = envelope(side_effect_mode="COMMIT_ALLOWED")
+    parent = envelope(side_effect_mode="PROPOSE_ONLY")
     child = parent.derive_child(
         trace_id="child", task_id="child", authority_scope={"research"},
         permitted_tools={"read"}, data_classes={"public"}, budget=budget(max_depth=1),
         side_effect_mode="PROPOSE_ONLY",
     )
     assert child.side_effect_mode == "PROPOSE_ONLY"
+    narrowed_parent = envelope(side_effect_mode="COMMIT_ALLOWED")
+    narrowed = narrowed_parent.derive_child(
+        trace_id="narrowed", task_id="narrowed", authority_scope={"research"},
+        permitted_tools={"read"}, data_classes={"public"}, budget=budget(max_depth=1),
+        side_effect_mode="PROPOSE_ONLY",
+    )
+    assert narrowed.side_effect_mode == "PROPOSE_ONLY"
     with pytest.raises(PermissionError):
         parent.derive_child(
             trace_id="bad", task_id="bad", authority_scope={"research"},
