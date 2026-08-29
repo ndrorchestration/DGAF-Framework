@@ -13,7 +13,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 ## DGAF v1 control-plane lane
 
-The viable implementation-oriented subset of the Governed Recursive Lattice / compiler-trace proposal is now **implemented as a candidate engineering layer** in the existing `pptl/` tree.
+The viable implementation-oriented subset of the Governed Recursive Lattice / compiler-trace proposal is now implemented as a candidate engineering layer in the existing `pptl/` tree.
 
 Candidate modules:
 
@@ -29,12 +29,7 @@ Candidate modules:
 
 The implementation includes inherited authority/tool/data/resource constraints, explicit recursion depth bounds, deterministic lifecycle transitions, exact-state cycle detection, branch provenance retention, explicit plan/commit separation, active-concurrency accounting across recursive lineage, and optional TGL invocation from the lifecycle evaluation state.
 
-The canonical architecture and placement records are:
-
-- `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`
-- `docs/architecture/DGAF_V1_FILE_TREE_PLAN.md`
-
-The dedicated v1 control-plane contract lane has passed on the current integration head. This is engineering verification only; it does not establish experimental authorization or merge-level scientific evidence. Adapter bypass auditing and cross-layer reconciliation remain separate verification obligations.
+The v1 control-plane contract suite has previously passed, and the latest branch has since added CommitGate request-identity hardening. Exact-head validation is therefore required again before the current branch is described as CI-verified.
 
 The v1 control plane does not alter PDMAL candidate identity, protocol, freeze state, authorization state, or empirical N.
 
@@ -46,7 +41,9 @@ The v1 control plane does not alter PDMAL candidate identity, protocol, freeze s
 | Current `main` | CURRENT DOCUMENTATION/EVIDENCE LINEAGE | Resolve `main` directly; not apparatus identity |
 | Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267…` remains current until a governed transition is created |
 | TGL contract | REMEDIATION CANDIDATE | PR #134 is the current-main remediation lane; validation must be exact-head and independently observed |
-| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / CI-VERIFIED | PR #136; deterministic contracts + TGL integration coverage pass |
+| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / VALIDATION IN PROGRESS | PR #136; prior contracts passed, latest head contains CommitGate hardening and requires fresh validation |
+| Control-plane adapter boundary | IN PROGRESS / ENGINEERING VERIFICATION | Prior adapter contract passed; latest head must be revalidated |
+| CommitGate request identity | HARDENED / VALIDATION PENDING | Duplicate request IDs fail closed; authorization resolves to exactly one proposal identity |
 | P7 scientific specification | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Exact freeze binding remains required |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | P2 formal runtime verification | NOT EXECUTED | Authenticated five-case matrix required |
