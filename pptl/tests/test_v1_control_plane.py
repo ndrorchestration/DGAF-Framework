@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import pytest
 
 from pptl.branch_registry import BranchRecord, BranchRegistry
@@ -95,7 +97,7 @@ def test_branch_metadata_is_immutable():
 
 def test_commit_gate_requires_explicit_authorization():
     gate = CommitGate()
-    request = gate.propose(CommitRequest("r1", "t1", "send", "external", {"channel": "x"}))
+    gate.propose(CommitRequest("r1", "t1", "send", "external", {"channel": "x"}))
     with pytest.raises(CommitDenied):
         gate.commit("r1")
     gate.authorize("r1", "operator", "AUTH-1")
@@ -145,12 +147,55 @@ def test_child_requires_active_parent_and_inherits_lineage():
     assert child.lineage_id == root.lineage_id
 
 
-def test_commit_ready_requires_explicit_envelope_permission():
-    plane = ControlPlane()
+def test_commit_ready_requires_explicit_envelope_permission_after_tgl_pass():
+    runner = lambda _input, _context: SimpleNamespace(final_status="PASS")
+    plane = ControlPlane(tgl_runner=runner)
     task = ControlTask("root", envelope())
-    plane.submit(task); plane.admit("root"); plane.begin_evaluation("root"); plane.mark_merge_ready("root")
+    plane.submit(task); plane.admit("root"); plane.begin_evaluation("root"); plane.evaluate_turn("root", "input"); plane.mark_merge_ready("root")
     with pytest.raises(ControlPlaneViolation):
         plane.mark_commit_ready("root")
+
+
+def test_merge_ready_requires_successful_tgl_evaluation():
+    plane = ControlPlane()
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.begin_evaluation("root")
+    with pytest.raises(ControlPlaneViolation, match="successful TGL evaluation"):
+        plane.mark_merge_ready("root")
+
+
+def test_merge_ready_rejects_warn_status():
+    runner = lambda _input, _context: SimpleNamespace(final_status="WARN")
+    plane = ControlPlane(tgl_runner=runner)
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.begin_evaluation("root"); plane.evaluate_turn("root", "input")
+    with pytest.raises(ControlPlaneViolation, match="successful TGL evaluation"):
+        plane.mark_merge_ready("root")
+
+
+def test_merge_ready_accepts_only_pass_status():
+    runner = lambda _input, _context: SimpleNamespace(final_status="PASS")
+    plane = ControlPlane(tgl_runner=runner)
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.begin_evaluation("root"); plane.evaluate_turn("root", "input")
+    plane.mark_merge_ready("root")
+    assert task.state is TaskState.MERGE_READY
+
+
+def test_new_evaluation_replaces_previous_tgl_status():
+    statuses = iter(("PASS", "ESCALATE"))
+    runner = lambda _input, _context: SimpleNamespace(final_status=next(statuses))
+    plane = ControlPlane(tgl_runner=runner)
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.begin_evaluation("root")
+    plane.evaluate_turn("root", "first")
+    assert task.last_tgl_status == "PASS"
+    plane.start_expansion("root"); plane.begin_evaluation("root")
+    plane.evaluate_turn("root", "second")
+    assert task.state is TaskState.ESCALATED
+    assert task.last_tgl_status == "ESCALATE"
+    with pytest.raises(ControlPlaneViolation, match="successful TGL evaluation"):
+        plane.mark_merge_ready("root")
 
 
 def test_tgl_exception_escalates_and_releases_slot():
