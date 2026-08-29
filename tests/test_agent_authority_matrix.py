@@ -56,12 +56,18 @@ def test_matrix_contains_current_specialists():
         "Sentinel-Φ",
     ):
         assert agent in matrix
+
     # Historical aliases may be retained for provenance, but cannot appear as
-    # active authority entries. The matrix's explicit normalization section is
-    # the machine-checkable boundary for those names.
-    assert "Sentinel-Φ is the active canonical identity." in matrix
-    assert "Sentinel is a historical alias only." in matrix
-    assert "Sentience is a historical/merged identity and is not a separate active seat." in matrix
+    # active authority entries. Check the governed normalization boundary rather
+    # than coupling the test to exact editorial punctuation in that document.
+    assert "## 7. Current Identity Normalization" in matrix
+    normalization = matrix.split("## 7. Current Identity Normalization", 1)[1].split(
+        "## 8.", 1
+    )[0]
+    assert "Sentinel-Φ" in normalization
+    assert "active canonical identity" in normalization
+    assert "Sentinel" in normalization and "historical alias" in normalization
+    assert "Sentience" in normalization and "not a separate active seat" in normalization
     assert "| Sentience |" not in matrix
     assert "| Sentinel-Φ / Sentinel |" not in matrix
 
