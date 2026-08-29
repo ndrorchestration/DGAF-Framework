@@ -100,6 +100,19 @@ def test_branch_registry_preserves_shared_state_identity():
     assert {record.branch_id for record in registry.by_state("same-state")} == {"verify-a", "verify-b"}
 
 
+def test_branch_provenance_collections_are_frozen():
+    claims = ["claim-1"]
+    evidence = ["evidence-1"]
+    assumptions = ["assumption-1"]
+    record = BranchRecord("verify", None, "VERIFY", "s1", claims=claims, evidence_ids=evidence, assumptions=assumptions)
+    claims.append("tampered")
+    evidence.append("tampered")
+    assumptions.append("tampered")
+    assert record.claims == ("claim-1",)
+    assert record.evidence_ids == ("evidence-1",)
+    assert record.assumptions == ("assumption-1",)
+
+
 def test_branch_metadata_is_immutable():
     source = {"authorization": "AUTH-1"}
     record = BranchRecord("verify", None, "VERIFY", "s1", metadata=source)
@@ -136,6 +149,20 @@ def test_commit_cannot_be_replayed():
     assert gate.commit("r1") == "operator:AUTH-1"
     with pytest.raises(CommitDenied, match="already committed"):
         gate.commit("r1")
+
+
+def test_control_task_identity_is_immutable_after_construction():
+    task = ControlTask("root", envelope())
+    with pytest.raises(ControlPlaneViolation, match="immutable task identity field"):
+        task.envelope = envelope(trace_id="attacker-trace", task_id="root")
+    with pytest.raises(ControlPlaneViolation, match="immutable task identity field"):
+        task.depth = 99
+    with pytest.raises(ControlPlaneViolation, match="immutable task identity field"):
+        task.lineage_id = "attacker-lineage"
+    with pytest.raises(ControlPlaneViolation, match="immutable task identity field"):
+        task.task_id = "attacker-task"
+    task.state = TaskState.PREFLIGHT
+    assert task.state is TaskState.PREFLIGHT
 
 
 def test_control_plane_lifecycle_and_cleanup():
