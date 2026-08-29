@@ -29,4 +29,4 @@ The latest operational record still shows exact current-main → Vercel source b
 
 No freeze, authorization, unblinding, or empirical execution is implied by the v1 implementation.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
+PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
