@@ -2,72 +2,102 @@
 
 ## Purpose
 
-This standard governs any DGAF artifact that is visible to a GitHub visitor, contributor, evaluator, recruiter, collaborator, customer, or other external reader. Public-facing repository material represents both the project and its maintainer; internal correctness alone is not sufficient for publication.
+This standard governs material visible to a GitHub visitor, contributor, evaluator, recruiter, collaborator, customer, funder, or other external reader. Public material represents both the project and its maintainer; technical correctness alone is not enough.
 
-GitHub's repository guidance treats the README as a primary visitor entry point and recommends clear project purpose, usefulness, getting-started guidance, support paths, and maintainer/contributor information. DGAF applies that expectation as a publication-quality control, not merely as a documentation suggestion.
+The companion [Documentation Style Guide](DOCUMENTATION_STYLE_GUIDE.md) defines the editorial rules. This document defines the publication-quality control.
 
 ## Publication principle
 
-> **A public artifact must be true, appropriately scoped, useful to its intended audience, professionally presented, correctly placed, safely disclosed, and maintainable.**
+> **A public artifact must be true, appropriately scoped, useful to its audience, professionally presented, correctly placed, safely disclosed, and maintainable.**
 
-An internal artifact does not become public-facing merely because it is accurate or authoritative internally.
+Public quality has two independent dimensions:
+
+- **Epistemic quality:** the claims are accurate and properly evidenced.
+- **Communication quality:** the reader can understand what matters, why it matters, and what to do next.
+
+A document can satisfy one without satisfying the other.
+
+## Public-surface tiers
+
+| Tier | Examples | Expected treatment |
+|---|---|---|
+| **Landing** | README, repository description, top-level navigation | value, orientation, quick paths; minimal internal process |
+| **Project** | current state, project status, architecture overview | precise status and useful context |
+| **Technical** | specifications, contracts, implementation notes | technical depth and explicit semantics |
+| **Research** | protocols, analysis plans, experiment records | reproducibility, scope, methodological precision |
+| **Evidence** | run records, audit reports, evidence indexes | exact identity, provenance, forensic detail |
+| **Historical** | superseded records, reconciliation logs | preserved detail with clear temporal scope |
+
+A lower-level document may contain more detail than a higher-level document. Do not copy lower-level detail upward merely for completeness.
 
 ## Public-surface lens
 
-Before merging a GitHub-visible change, review it through all of these lenses:
+Before merging a GitHub-visible change, review:
 
-1. **Truth** — Are factual, technical, mathematical, and status claims supported by the appropriate evidence?
-2. **Authority** — Is the cited artifact actually authoritative for the claim being made?
-3. **Audience** — Is the material written for the people who will encounter it?
-4. **Utility** — Does it help a visitor understand, evaluate, use, reproduce, contribute to, or appropriately interpret the project?
-5. **Placement** — Is it located where a reasonable GitHub user would expect to find it?
-6. **Navigation** — Do links lead to stable, intentional, audience-appropriate destinations?
-7. **Professional representation** — Does the surface represent the maintainer's work at the expected engineering/open-source quality bar?
-8. **Disclosure** — Does it avoid unnecessary personal information, private workspace material, credentials, internal deliberation, operational clutter, or unfinished work?
-9. **Community fit** — Is it consistent with normal open-source expectations for clarity, accessibility, contribution, attribution, licensing, and respectful project maintenance?
-10. **Maintenance** — Can the information and its destinations remain coherent as the repository evolves?
-11. **Identity integrity** — Does the artifact accurately represent the project and the maintainer rather than overstating capability, validation, status, or maturity?
-12. **Friction** — Does it reduce the reader's next-step uncertainty rather than forcing them through internal process or irrelevant detail?
+1. **Truth** — Are factual, technical, mathematical, and status claims supported?
+2. **Authority** — Is the cited source authoritative for the claim?
+3. **Audience** — Is the document written for the people who will encounter it?
+4. **Utility** — Does it help readers understand, use, evaluate, reproduce, or contribute?
+5. **Hierarchy** — Does the most important information appear before supporting detail?
+6. **Placement** — Is the information where a reasonable GitHub user expects it?
+7. **Navigation** — Are links stable, public, intentional, and useful?
+8. **Professional representation** — Does the surface meet a credible engineering/open-source quality bar?
+9. **Disclosure** — Does it avoid unnecessary personal, private, credential, or internal-deliberation exposure?
+10. **Community fit** — Is it readable, accessible, maintainable, and consistent with open-source norms?
+11. **Identity integrity** — Does it accurately represent capability, maturity, evidence, and project boundaries?
+12. **Friction** — Does it reduce uncertainty about the reader's next step?
 
-## Internal versus public authority
+## Claim presentation
 
-DGAF distinguishes internal operational authority from public project navigation.
+Use the repository's evidence vocabulary consistently:
 
-- Personal Notion pages, private working records, internal control notes, and temporary coordination artifacts are **not public navigation targets by default**.
-- A GitHub landing page should preferentially resolve to repository-local documentation, stable public project resources, or an intentionally designated public project surface.
-- An internal control record may inform public documentation without being exposed as the public destination.
-- If an external service is linked, the destination must be intentionally designated for public consumption and must not expose private workspace context merely because the internal team uses it.
+`DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`
 
-## Evidence and presentation boundary
+Do not collapse these states into generic terms such as `validated`, `proven`, `production-ready`, `certified`, or `safe` unless the precise scope and supporting evidence establish that language.
 
-Public documentation must preserve DGAF's epistemic distinctions. In particular:
-
-`defined → implemented → computed → verified → attested → historical`
-
-must not collapse into a generic claim of "validated" or "production-ready."
-
-A mathematical correction can establish a mathematical result without establishing a system-level claim. A passing component test can establish the tested component result without establishing repository-wide validation. A deployment can establish deployment state without establishing experimental authorization or efficacy.
+For public-facing documents, prefer bounded positive statements over repeated prohibitions. State what was measured, what it supports, and where the boundary ends. Use explicit warnings when a reasonable reader could otherwise form a materially false conclusion.
 
 ## Historical material
 
-Incorrect or superseded values should normally be **retired, classified, superseded, and prevented from downstream use**, not silently erased when their historical presence is relevant to provenance. Historical material must be visibly scoped so a normal visitor cannot mistake it for current project truth.
+Historical material may be retained when it has provenance value. It should be visibly dated, labeled, superseded, or otherwise scoped so a normal reader cannot mistake it for current project truth.
 
-## Required pre-merge review
+Do not silently rewrite historical evidence to match current state. Do not allow historical claims to remain visually indistinguishable from current claims.
 
-For every externally visible documentation or navigation change, answer:
+## Internal versus public authority
 
-- What will a first-time visitor believe after reading this?
-- Is that belief exactly supported by the evidence?
-- Is this the right information for this surface?
-- Is the destination public, stable, and intentionally maintained?
-- Does anything internal or personal become visible unnecessarily?
-- Does the change improve comprehension and next-step usability?
-- Does it remain coherent with the current README, project status, evidence index, governance records, and terminology?
+- Personal Notion pages, private working records, internal control notes, and temporary coordination artifacts are not public navigation targets by default.
+- Public landing surfaces should resolve to repository-local documentation, stable public resources, or intentionally designated public project surfaces.
+- Internal records may inform public documentation without becoming the public destination.
+- External services should be linked only when their destination is intentionally public and appropriately maintained.
 
-If any answer is materially uncertain, the change should remain internal or be revised before publication.
+## Documentation anti-patterns
 
-## Relationship to DGAF governance
+The following are publication-quality risks:
 
-This standard is a **publication-surface control**. It does not grant experimental authorization, create a freeze, upgrade evidence, or change empirical N. It operates as a lens over changes that represent DGAF externally.
+- audit-ledger content placed on a landing page;
+- long lists of internal predicates where a status summary would suffice;
+- repeated `must not` / `do not infer` warnings that duplicate one canonical policy;
+- closed PRs presented as current engineering work;
+- stale SHAs, dates, branch names, or candidate identifiers;
+- unexplained acronyms introduced faster than they can be understood;
+- agent/persona names used as though they were external authorities;
+- marketing language that outruns evidence;
+- technical caveats that obscure the project's actual purpose;
+- private workspace links or internal deliberation presented as public documentation.
 
-Current experimental state remains independently governed by the authoritative gate/evidence records.
+## Pre-merge reader test
+
+Ask:
+
+- What will a first-time visitor believe after the first minute?
+- Is that belief accurate?
+- Can the reader find the architecture, current status, evidence, and contribution path without knowing internal project vocabulary?
+- Are the important caveats present without overwhelming the primary purpose?
+- Are historical and current states distinguishable?
+- Is every public link intentional and maintainable?
+
+If a detailed caveat is important but not appropriate for the current surface, move it to the canonical lower-level record and link to it.
+
+## Governance boundary
+
+This is a publication-surface control. It does not grant experimental authorization, create a freeze, upgrade evidence, change empirical N, or alter technical authority. Technical and experimental state remain governed by their authoritative records.
