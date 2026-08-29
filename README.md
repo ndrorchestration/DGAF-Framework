@@ -4,7 +4,7 @@
 
 > **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims of validation, certification, performance, standards alignment, or commercial suitability require exact evidence and defined scope. Historical certifications remain scoped to the SHA/run/deployment that produced them and are not current certification without fresh evidence.
 
-## Current project state — 2026-08-28
+## Current project state — 2026-08-29
 
 The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. The corrected pilot apparatus and supporting governance controls are present in the repository, but the current experimental candidate has not been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
@@ -21,6 +21,16 @@ PR #132 remains **BLOCKED / DRAFT / UNMERGED**. A separate draft remediation can
 PR #133 is a **draft diagnostic/remediation candidate only**. Its existence or eventual test success must not be interpreted as experimental authorization, freeze verification, empirical evidence, certification, or proof of the complete DGAF architecture. CI validation remains required before any merge decision.
 
 For the authoritative project state, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the TGL contract and adversarial review record, see the repository's current PR #132/#133 evidence and associated governance documentation. For the canonical mathematical notation policy, see [`docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md). For the public-facing publication-quality control, see [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
+
+## Layer-0 human / rights / societal boundary
+
+DGAF treats human dignity, human rights, safety, lawful operation, privacy, non-discrimination, human agency, legitimate oversight, public accountability, and appropriate disclosure as a **shared constitutional substrate** that precedes technical optimization. This is governed by [`docs/agents/LAYER_0_CONSTITUTION.md`](docs/agents/LAYER_0_CONSTITUTION.md) and [`docs/agents/AGENT_AUTHORITY_INVARIANT.md`](docs/agents/AGENT_AUTHORITY_INVARIANT.md).
+
+Layer 0 is deliberately distributed rather than delegated to one persona. Perigee, Sentinel-Phi, Reciprocity, Professor Prodigy, Amethyst, DemiJoule, Herald, Apogee, COLLEEN, and the Resonance agents may contribute within their distinct contracts, but shared vocabulary does not grant shared authority.
+
+DGAF distinguishes **law/regulation**, **recognized standard**, **governance framework**, **human-rights instrument**, **best practice**, **social expectation**, **engineering convention**, and **DGAF design choice**. Framework resemblance is not a legal-compliance claim. External references are maintained as a living, versioned layer; NIST AI RMF 1.0 is currently being revised, and EU AI Act applicability/enforcement depends on the system role, classification, jurisdiction, and applicable date.
+
+Public-facing material is governed by the sequence **Accessibility → Comprehensibility → Appropriateness of Disclosure**. Repository visibility is reviewed for security, privacy, sovereign/IP exposure, human comprehension, and truthful evidence/maturity representation. Public documentation must not promote implementation, testing, verification, authorization, or efficacy beyond the evidence actually established.
 
 ## Public-surface standard
 
@@ -129,7 +139,10 @@ The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the le
 22. [CROSS_REF](CROSS_REF.md)
 23. [Platinum Mean Semantic Correction](docs/governance/PLATINUM_MEAN_SEMANTIC_CORRECTION_2026-08-28.md)
 24. [Metallic Means Mathematical Notation Policy](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md)
-25. **TGL adversarial contract review / remediation** — PR #132 remains blocked; PR #133 is the isolated minimal-contract-restoration candidate. This work is diagnostic and pre-freeze only and does not authorize experimentation.
+25. [Layer-0 Human / Rights / Societal Constitution](docs/agents/LAYER_0_CONSTITUTION.md)
+26. [Agent Authority Separation Invariant](docs/agents/AGENT_AUTHORITY_INVARIANT.md)
+27. [Agent Authority Matrix](docs/agents/AGENT_AUTHORITY_MATRIX.md)
+28. **TGL adversarial contract review / remediation** — PR #132 remains blocked; PR #133 is the isolated minimal-contract-restoration candidate. This work is diagnostic and pre-freeze only and does not authorize experimentation.
 
 ## Verification and test status
 
