@@ -185,7 +185,7 @@ def test_commit_cannot_be_replayed():
         gate.commit("r1")
 
 
-def test_control_task_identity_is_immutable_after_construction():
+def test_control_task_identity_and_runtime_state_are_controller_managed():
     task = ControlTask("root", envelope())
     with pytest.raises(ControlPlaneViolation, match="immutable task identity field"):
         task.envelope = envelope(trace_id="attacker-trace", task_id="root")
@@ -195,8 +195,16 @@ def test_control_task_identity_is_immutable_after_construction():
         task.lineage_id = "attacker-lineage"
     with pytest.raises(ControlPlaneViolation, match="immutable task identity field"):
         task.task_id = "attacker-task"
-    task.state = TaskState.PREFLIGHT
-    assert task.state is TaskState.PREFLIGHT
+    with pytest.raises(AttributeError, match="controller-managed"):
+        task.state = TaskState.PREFLIGHT
+    with pytest.raises(AttributeError, match="controller-managed"):
+        task.last_tgl_status = "PASS"
+    with pytest.raises(AttributeError, match="controller-managed"):
+        task.last_tgl_seal = VALID_SEAL
+    with pytest.raises(AttributeError, match="controller-managed"):
+        task.concurrency_acquired = True
+    assert task.state is TaskState.RECEIVED
+    assert task.state_history == ()
 
 
 def test_control_plane_lifecycle_and_cleanup():
