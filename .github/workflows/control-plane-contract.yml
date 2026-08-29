@@ -13,12 +13,15 @@ on:
       - "pptl/branch_registry.py"
       - "pptl/control_plane.py"
       - "pptl/commit_gate.py"
+      - "pptl/triadic_governance_loop.py"
       - "pptl/tests/test_v1_control_plane.py"
       - "pptl/tests/test_v1_tgl_integration.py"
       - "pptl/tests/test_v1_adversarial_contract.py"
+      - "pptl/tests/test_v1_capability_boundaries.py"
       - "docs/architecture/DGAF_V1_AGENT_ROLE_MAPPING.md"
       - "docs/governance/DGAF_V1_FINALIZATION_GATE.md"
       - "docs/architecture/DGAF_V1_EXECUTION_READINESS.md"
+      - "requirements-ci.txt"
       - ".github/workflows/control-plane-contract.yml"
   workflow_dispatch:
 
@@ -28,10 +31,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Assert exact candidate checkout
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip pytest pandas
+      - name: Install pinned CI dependencies
+        run: python -m pip install -r requirements-ci.txt pandas==3.0.5
       - name: Run deterministic contracts
-        run: python -m pytest -q pptl/tests/test_v1_control_plane.py pptl/tests/test_v1_tgl_integration.py pptl/tests/test_v1_adversarial_contract.py
+        run: >-
+          python -m pytest -q
+          pptl/tests/test_v1_control_plane.py
+          pptl/tests/test_v1_tgl_integration.py
+          pptl/tests/test_v1_adversarial_contract.py
+          pptl/tests/test_v1_capability_boundaries.py
