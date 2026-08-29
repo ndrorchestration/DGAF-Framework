@@ -49,6 +49,7 @@ class ControlTask:
     state_history: list[str] = field(default_factory=list)
     lineage_id: str | None = None
     concurrency_acquired: bool = False
+    last_tgl_status: str | None = None
 
     def snapshot(self) -> dict[str, object]:
         return {
@@ -124,7 +125,9 @@ class ControlPlane:
         self._transition(task, TaskState.EXPANDING)
 
     def begin_evaluation(self, task_id: str) -> None:
-        self._transition(self._task(task_id), TaskState.EVALUATING)
+        task = self._task(task_id)
+        self._transition(task, TaskState.EVALUATING)
+        task.last_tgl_status = None
 
     def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
         if self.tgl_runner is None:
@@ -139,6 +142,7 @@ class ControlPlane:
             self._escalate(task, "TGL runner exception")
             raise ControlPlaneViolation("TGL runner failed; task escalated") from exc
         status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
+        task.last_tgl_status = status
         self.events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status})
         if status in {"KILL", "KILL_REC"}:
             self.veto(task_id, "TGL terminal failure")
@@ -147,7 +151,12 @@ class ControlPlane:
         return result
 
     def mark_merge_ready(self, task_id: str) -> None:
-        self._transition(self._task(task_id), TaskState.MERGE_READY)
+        task = self._task(task_id)
+        if task.state is not TaskState.EVALUATING:
+            raise ControlPlaneViolation("merge readiness requires EVALUATING state")
+        if task.last_tgl_status != "PASS":
+            raise ControlPlaneViolation("merge readiness requires successful TGL evaluation")
+        self._transition(task, TaskState.MERGE_READY)
 
     def mark_commit_ready(self, task_id: str) -> None:
         task = self._task(task_id)
