@@ -38,7 +38,7 @@ class BranchRecord:
 class BranchRegistry:
     def __init__(self) -> None:
         self._branches: list[BranchRecord] = []
-        self._states: dict[str, str] = {}
+        self._states: dict[str, set[str]] = {}
 
     @property
     def count(self) -> int:
@@ -48,7 +48,7 @@ class BranchRegistry:
         if any(b.branch_id == record.branch_id for b in self._branches):
             raise ValueError(f"duplicate branch_id: {record.branch_id}")
         self._branches.append(record)
-        self._states[record.state_id] = record.branch_id
+        self._states.setdefault(record.state_id, set()).add(record.branch_id)
 
     def get(self, branch_id: str) -> BranchRecord:
         for branch in self._branches:
@@ -61,6 +61,11 @@ class BranchRegistry:
 
     def by_status(self, merge_status: str) -> tuple[BranchRecord, ...]:
         return tuple(b for b in self._branches if b.merge_status == merge_status)
+
+    def by_state(self, state_id: str) -> tuple[BranchRecord, ...]:
+        """Return every branch recorded for a state without collapsing branch identity."""
+        branch_ids = self._states.get(state_id, set())
+        return tuple(b for b in self._branches if b.branch_id in branch_ids)
 
     def lineage(self, branch_id: str) -> tuple[BranchRecord, ...]:
         chain: list[BranchRecord] = []
