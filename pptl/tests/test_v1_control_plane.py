@@ -283,7 +283,7 @@ def test_new_evaluation_replaces_previous_tgl_status():
     plane.evaluate_turn("root", "second")
     assert task.state is TaskState.ESCALATED
     assert task.last_tgl_status == "ESCALATE"
-    with pytest.raises(ControlPlaneViolation, match="successful sealed TGL evaluation"):
+    with pytest.raises(ControlPlaneViolation, match="merge readiness requires EVALUATING state"):
         plane.mark_merge_ready("root")
 
 
