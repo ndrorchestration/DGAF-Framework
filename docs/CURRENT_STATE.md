@@ -13,9 +13,9 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 ## DGAF v1 control-plane lane
 
-The viable implementation-oriented subset of the Governed Recursive Lattice / compiler-trace proposal is now both **mapped and implemented as a candidate engineering layer** in the existing `pptl/` tree.
+The viable implementation-oriented subset of the Governed Recursive Lattice / compiler-trace proposal is now **mapped and implemented as a candidate engineering layer** in the existing `pptl/` tree.
 
-Current candidate modules:
+Candidate modules:
 
 - `pptl/governance_envelope.py`
 - `pptl/control_plane.py`
@@ -26,12 +26,12 @@ Current candidate modules:
 - `pptl/tests/test_v1_control_plane.py`
 - `.github/workflows/control-plane-contract.yml`
 
-The architecture/file-tree authority remains:
+The canonical architecture and placement records are:
 
 - `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`
 - `docs/architecture/DGAF_V1_FILE_TREE_PLAN.md`
 
-This lane extends existing DGAF/TGL boundaries rather than creating a parallel runtime. The modules are engineering candidates pending exact-head CI and adversarial review; they are not automatically `VERIFIED` merely because source files exist.
+These modules remain implementation candidates pending exact-head CI and adversarial review; source presence is not equivalent to verified merge-level capability.
 
 The v1 control plane does not alter PDMAL candidate identity, protocol, freeze state, authorization state, or empirical N.
 
@@ -45,7 +45,7 @@ The v1 control plane does not alter PDMAL candidate identity, protocol, freeze s
 | Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Exact executing boundary required for later freeze admissibility |
 | M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324` |
 | TGL contract | REMEDIATION IMPLEMENTATION CANDIDATE | PR #134 current-main repair; exact-head CI/adversarial validation required |
-| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / NON-AUTHORIZING | PR #136 contains candidate modules, deterministic tests, and control-plane CI |
+| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / NON-AUTHORIZING | PR #136 contains candidate contracts, tests, CI, and architecture mapping |
 | P7 scientific specification | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Exact freeze binding remains required |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped verification remains incomplete |
 | P2 formal runtime verification | NOT EXECUTED | Authenticated five-case matrix required |
