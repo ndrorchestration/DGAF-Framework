@@ -1,0 +1,42 @@
+name: Control-Plane Adapter Boundary Audit
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'pptl/**'
+      - '.github/workflows/**'
+      - 'docs/governance/CONTROL_PLANE_ADAPTER_BOUNDARY_AUDIT.md'
+
+jobs:
+  adapter-boundary-contract:
+    name: Adapter Boundary Contract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install contract dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest pandas
+
+      - name: Run control-plane and TGL contract tests
+        run: |
+          pytest -q pptl/tests/test_v1_control_plane.py pptl/tests/test_v1_tgl_integration.py
+
+      - name: Assert non-authorizing boundary text
+        run: |
+          grep -q 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0' docs/governance/CONTROL_PLANE_ADAPTER_BOUNDARY_AUDIT.md
+          grep -q 'CommitGate' docs/governance/CONTROL_PLANE_ADAPTER_BOUNDARY_AUDIT.md
+          grep -q 'COMMIT_READY' docs/governance/CONTROL_PLANE_ADAPTER_BOUNDARY_AUDIT.md
