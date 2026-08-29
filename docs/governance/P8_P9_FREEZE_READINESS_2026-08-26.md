@@ -1,4 +1,4 @@
-# P8 / P9 / Freeze Readiness — Reconciled 2026-08-28
+# P8 / P9 / Freeze Readiness — Reconciled 2026-08-29
 
 ## Control status
 
@@ -7,7 +7,8 @@
 - Experimental verification boundary: `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
 - Current-tree E2b: `OPEN / VERIFICATION REQUIRED`
 - Candidate-scoped M6: `CLOSED / VERIFIED` for `ac8ea267…` / run `33050398324`
-- TGL contract: `BLOCKED / ADVERSARIAL REVIEW` — PR #132 41-pass / 2-fail regression; isolated remediation candidate pending exact-head validation
+- TGL contract: `REMEDIATION / VALIDATION IN PROGRESS` — PR #134 is current-main remediation; PRs #132/#133 are historical diagnostic/remediation records
+- DGAF v1 control-plane: `ENGINEERING CANDIDATE / VALIDATION IN PROGRESS` — PR #136 current head requires fresh exact-head CI after the latest regression-fixture correction
 - Freeze: `NOT CREATED`
 - Authorization: `NOT GRANTED`
 - Empirical N: `0`
@@ -33,15 +34,20 @@ Every gate is a predicate with explicit scope, prerequisites, evidence requireme
 | P8 analysis lock | OPEN / FAIL-CLOSED | Exact analysis/configuration/protocol/current-tree binding |
 | E2b verifier toolchain | CLOSED / VERIFIED @ `d299dd1…` | Historical exact-tree verification retained; current-tree applicability requires affected-boundary re-verification |
 | M6 negative state | CLOSED / VERIFIED @ `ac8ea26…` | Candidate exact-tree/workspace negative-state evidence retained; does not authorize execution |
+| DGAF v1 control-plane | ENGINEERING / VALIDATION IN PROGRESS | Current PR head must complete dedicated contract CI and adversarial adapter-boundary review; this lane is non-authorizing |
 | P9 independent verification | NOT EXECUTED | Independent verification of complete evidence chain |
 
 ## TGL/P-35 contract boundary
 
-PR #132 is a governance/implementation blocker, not an experimental apparatus identity. Its 41-pass / 2-fail result is retained as a substantive regression signal at the TGL → P-35 boundary. The review identified constructor/method incompatibility, missing premise-hook injection, weakened exception containment, incomplete `PASS/WARN/SKIP/ESCALATE/KILL` reduction, ambiguous conditional versus unwired `SKIP`, and audit-seal sequencing concerns.
+The PR #132 41-pass / 2-fail result remains a historical diagnostic signal at the TGL → P-35 integration boundary. PR #134 is the current-main remediation lane; PRs #132/#133 are historical diagnostic/remediation records. The remediation must be validated independently at its exact head before candidate-scoped experimental rebinding.
 
-The selected remediation is intentionally minimal. The isolated remediation candidate must restore the established P-35 constructor and `evaluate(..., check_fn=...)` contract, fail-closed exception containment, explicit required/conditional gate semantics, deterministic status reduction, and exact final audit sealing, with regression coverage. This remediation must be validated independently at its exact head.
+The remediation remains intentionally minimal: restore the established P-35 API and TGL fail-closed behavior, make required/conditional gate semantics explicit, implement deterministic status reduction, make the final seal correspond to the authoritative returned audit state, and expand regression coverage.
 
 No TGL remediation changes the experimental treatment, creates a freeze, closes P7/P8, grants authorization, or increases empirical N.
+
+## DGAF v1 control-plane boundary
+
+PR #136 is generic engineering infrastructure. Its lifecycle, resource, provenance, concurrency, and commit-boundary checks are engineering evidence only. `COMMIT_READY` is not execution, and control-plane CI is not PDMAL evidence. Any adapter that changes the experimental apparatus requires a new candidate identity and affected-predicate re-verification.
 
 ## Current lineage versus experimental boundary
 
@@ -51,7 +57,7 @@ The current `main` branch is a living documentation/evidence lineage and must no
 
 Run `33047380487` successfully verified exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167`, including exact checkout/target assertion, source requirements fingerprint, hash-pinned installation, exact-tree provenance, and artifact retention. Artifact `9636185725` has digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
 
-This closure remains valid for its executed tree. The subsequent `ac8ea26…` workflow change binds the candidate target SHA to the executing workflow SHA and therefore establishes a separate current candidate verification boundary.
+This closure remains valid for its executed tree. The corrected `ac8ea26…` workflow change binds the candidate target SHA to the executing workflow SHA and therefore establishes a separate current candidate verification boundary.
 
 ## M6 boundary
 
@@ -59,7 +65,7 @@ M6 is CLOSED/VERIFIED for exact candidate/tree `ac8ea267…` via run `3305039832
 
 ## P2 / P6a boundary
 
-The READY deployment remains supporting deployment evidence, not runtime-predicate closure. P2 and P6a require authenticated execution against the exact deployment identity. The automation-bypass secret must be configured out-of-band before those lanes can execute.
+The READY deployment remains supporting deployment evidence, not runtime-predicate closure. P2 and P6a require authenticated execution against the exact deployment identity. The automation-bypass secret must be configured out-of-band before those lanes can execute. Issue #137 separately tracks the current GitHub-main versus Vercel-source SHA mismatch.
 
 ## P7 / P8 boundary
 
