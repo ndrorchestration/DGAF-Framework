@@ -2,188 +2,73 @@
 
 **Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, evaluation, provenance, and governance controls.
 
-> **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims of validation, certification, performance, standards alignment, or commercial suitability require exact evidence and defined scope. Historical certifications remain scoped to the SHA/run/deployment that produced them and are not current certification without fresh evidence.
+> **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims require exact evidence and defined scope. Historical evidence remains scoped to the SHA/run/deployment that produced it.
 
 ## Current project state — 2026-08-29
 
-The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. The corrected pilot apparatus and supporting governance controls are present in the repository, but the current experimental candidate has not been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
+The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
-The repository `main` is an active documentation/evidence lineage and must not be treated as the experimental apparatus identity. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Documentation/evidence successors do not redefine the executable apparatus; any substantive apparatus change requires a new candidate identity and affected-predicate re-verification.
+`main` is documentation/evidence lineage, not experimental apparatus identity. The experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Any substantive apparatus change requires a new candidate identity and affected-predicate re-verification.
 
-Historical candidates, freezes, run identifiers, and acceptance records remain provenance only unless explicitly rebound to the current authoritative candidate and evidence boundary.
+### Canonical engineering lane
 
-### Current TGL contract-review state
+**PR #139** (`feat/dgaf-v1-control-plane-finalize-20260829`) is the current combined engineering candidate for the governed recursive control plane and TGL contract remediation. It is based on current `main` and is non-authorizing.
 
-An adversarial review of PR #132 identified a concrete TGL/P-35 contract regression rather than an isolated constructor defect. The observed pre-freeze **41-pass / 2-fail** result is being treated as a regression signal requiring causal and cross-layer analysis. The review covers TGL state-machine semantics, `PASS / WARN / SKIP / ESCALATE / KILL` reduction, adapter/API contracts, exception containment, audit sealing, cryptographic provenance, PDMAL ↔ TGL integration, CI/CD source identity, Vercel runtime identity, dependency relationships, stale SHA/candidate references, overlapping changes, regression coverage, and P6/P6a/P7/P8 governance boundaries.
+The candidate covers inherited governance scope, deterministic lifecycle control, state identity, budget/concurrency accounting, branch provenance, explicit CommitGate authorization, TGL integration, adversarial regression coverage, and dedicated CI. It does not rebind PDMAL or authorize experimentation.
 
-PR #132 remains **BLOCKED / DRAFT / UNMERGED**. A separate draft remediation candidate, **PR #133**, was created from the established `main`/post-#131 implementation rather than mutating #132. PR #133 is intentionally scoped to minimal TGL contract restoration and regression coverage: restoration of the established `ProcludingPremiseGate` constructor and `evaluate(check_fn=...)` contract, premise-hook injection, fail-closed exception containment, explicit required-gate semantics, deterministic status reduction, conditional-versus-unwired `SKIP` distinction, and exact audit sealing. It deliberately does **not** change PDMAL experimental treatment hooks, pilot execution, freeze state, authorization, or empirical state.
+### Current TGL contract boundary
 
-PR #133 is a **draft diagnostic/remediation candidate only**. Its existence or eventual test success must not be interpreted as experimental authorization, freeze verification, empirical evidence, certification, or proof of the complete DGAF architecture. CI validation remains required before any merge decision.
+The TGL contract is fail-closed:
 
-For the authoritative project state, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the TGL contract and adversarial review record, see the repository's current PR #132/#133 evidence and associated governance documentation. For the canonical mathematical notation policy, see [`docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md). For the public-facing publication-quality control, see [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
+- required unwired gates are `SKIP` and reduce the turn to `ESCALATE`;
+- `WARN` propagates to `TurnStatus.WARN` unless a stronger failure applies;
+- HPG is conditional on Phi-Closure and cannot run after terminal failure;
+- the final audit seal covers the complete gate set, including Herald;
+- gate outcomes are validated rather than silently coerced to PASS.
+
+PR #132 is historical diagnostic material. PR #133 is historical remediation material. PR #134 is superseded by PR #139 and is not a separate current engineering authority.
 
 ## Layer-0 human / rights / societal boundary
 
-DGAF treats human dignity, human rights, safety, lawful operation, privacy, non-discrimination, human agency, legitimate oversight, public accountability, and appropriate disclosure as a **shared constitutional substrate** that precedes technical optimization. This is governed by [`docs/agents/LAYER_0_CONSTITUTION.md`](docs/agents/LAYER_0_CONSTITUTION.md) and [`docs/agents/AGENT_AUTHORITY_INVARIANT.md`](docs/agents/AGENT_AUTHORITY_INVARIANT.md).
+DGAF treats human dignity, human rights, safety, lawful operation, privacy, non-discrimination, human agency, legitimate oversight, public accountability, and appropriate disclosure as a shared constitutional substrate preceding technical optimization.
 
-Layer 0 is deliberately distributed rather than delegated to one persona. Perigee, Sentinel-Phi, Reciprocity, Professor Prodigy, Amethyst, DemiJoule, Herald, Apogee, COLLEEN, and the Resonance agents may contribute within their distinct contracts, but shared vocabulary does not grant shared authority.
+The current authority mapping remains:
 
-DGAF distinguishes **law/regulation**, **recognized standard**, **governance framework**, **human-rights instrument**, **best practice**, **social expectation**, **engineering convention**, and **DGAF design choice**. Framework resemblance is not a legal-compliance claim. External references are maintained as a living, versioned layer; NIST AI RMF 1.0 is currently being revised, and EU AI Act applicability/enforcement depends on the system role, classification, jurisdiction, and applicable date.
+- Sentinel-Phi — canonical governance/security identity.
+- Professor Prodigy — formalization/proof; non-orchestrating.
+- DemiJoule — advisory resource/constraint analysis.
+- Reciprocity — fairness and affected-party review.
+- Herald — evidence/public-surface publication; cannot manufacture evidence or approval.
+- Amethyst — meta-orchestration/lifecycle coordination.
+- COLLEEN — continuity/archive/provenance/routing integrity.
+- Apogee — independent evidence/integrity review.
 
-Public-facing material is governed by the sequence **Accessibility → Comprehensibility → Appropriateness of Disclosure**. Repository visibility is reviewed for security, privacy, sovereign/IP exposure, human comprehension, and truthful evidence/maturity representation. Public documentation must not promote implementation, testing, verification, authorization, or efficacy beyond the evidence actually established.
-
-## Public-surface standard
-
-GitHub is an external representation of the project and its maintainer. Every GitHub-visible artifact therefore passes a **public-surface QA lens** before publication. Accuracy is necessary but not sufficient.
-
-Public-facing changes must be evaluated for:
-
-- truth and evidence scope;
-- authoritative-source correctness;
-- audience relevance and usefulness;
-- expected placement and navigation;
-- professional representation;
-- privacy and disclosure boundaries;
-- open-source/community norms;
-- maintainability and link stability;
-- identity integrity and avoidance of overclaiming;
-- reader friction and next-step clarity.
-
-Personal Notion pages, private working records, internal control notes, and temporary coordination artifacts are **not public GitHub navigation targets by default**. Internal records may inform public documentation, but a public landing page should resolve to repository-local documentation, stable public resources, or an intentionally designated public project surface.
-
-See [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md) for the complete publication gate.
-
-## Repository scope
-
-DGAF contains governance and evaluation components, agent specifications, control/gate definitions, provenance practices, epistemic auditing, vocabulary management, and experimental research artifacts. DGAF is the implementation/governance substrate; it is **not** the universal owner of every pattern, taxonomy, template, or research artifact in the surrounding ecosystem.
-
-### Canonical terminology
-
-- **DGAF** — Dynamic Governance Agentic Formation.
-- **AHG** — Adaptive Harmonic Governance. Historical/conflicting expansions remain historical unless explicitly promoted by current governance.
-- **PDMAL / PDMA-L** — Phi-Driven Multi-Agent Lattice. The term refers to the lattice/control research track; current evidence does not establish a complete Byzantine Fault Tolerance protocol merely from the topology.
-- **NDR** — a project pattern namespace/family within the broader Pattern Commons architecture, not the entire ecosystem pattern corpus.
-- **Pattern Commons** — proposed ecosystem-level layer for pattern identity, provenance, aliases/equivalence, epistemic status, and evidence relationships across repositories.
-- **AXIS** — Agent X-axis Invariant Spectrum.
-- **FLAG-02** — historical identifier associated with the former 340% coordination-gain claim. Current evaluation-mode terminology is **qualitative**. New documents must not introduce FLAG-02 as a current identifier for either meaning.
-- **φ / Golden Ratio** — `(1+√5)/2 ≈ 1.618033989`; canonical mathematical notation.
-- **σ_{p,q} / Metallic Means Family** — positive solution of `x² - px - q = 0`, `(p + √(p² + 4q))/2`; for the ordinary sequence, `σ_n = σ_{n,1}`. `σ_{2,1}` is silver and `σ_{3,1}` is bronze.
-- **ρ / Plastic Number** — `≈ 1.3247179572447454`, the unique real root of `x³ - x - 1 = 0`. `ρ` is the preferred canonical mathematical notation; `P` is an attested alternative. `ρP` is not the canonical symbol.
-- **pP / Platinum Mean** — intentional DGAF notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. This is DGAF-specific notation, not a claim of a universal standard mathematical symbol or membership in the quadratic metallic-means family.
-
-Historical documents may retain their original terminology when necessary for provenance, but they must be treated as historical rather than silently reinterpreted as current state. In particular, pP must not be substituted for ρ in PDMAL plastic-number convergence mathematics.
-
-## Semantic / ontological boundary
-
-DGAF permits agents and components to consume and reason over an approved ontology. They must not silently introduce, redefine, or assert ontology outside the authorized semantic layer.
-
-The governing progression is:
-
-**defined → observed → supported → verified → authorized → canonical**
-
-Operational documentation must distinguish **representation**, **classification**, **policy status**, **epistemic status**, and **ontological assertion**. New terminology or semantic categories are candidate vocabulary until provenance and authorization establish canonical status. Agent repetition, confidence, or wording does not create semantic authority.
-
-**Ontology drift** is treated as a distinct semantic-drift class: an unauthorized change in effective vocabulary, entity boundaries, relations, or semantic commitments. The broader semantic-risk taxonomy is **definition drift, ontology drift, epistemic drift, policy drift, and provenance drift**.
-
-Semantic/ontological detection is not automatically a blocking gate. A detector must be empirically characterized before it becomes threshold-bearing or gate-bearing. This control does not alter the experimental state: **PRE-FREEZE / FAIL-CLOSED / N=0 / NO FREEZE / PILOT AUTHORIZATION NOT GRANTED**.
+Generic control-plane roles do not create or elevate agent authority.
 
 ## Epistemic standard
 
-Claims are classified according to the repository standard:
+Claims progress through defined → implemented → computed → verified → attested → authorized → canonical. Similarity, repetition, confidence, deployment readiness, or synthetic tests do not by themselves establish independent validation, efficacy, safety, certification, or legal compliance.
 
-`DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`
+## PDMAL/DGAF status
 
-A mathematical term, external framework name, benchmark number, deployment, registry entry, commercial status, or agent role does not by itself establish implementation, validation, legal compliance, safety, certification, or independent verification.
+| Boundary | Status |
+|---|---|
+| Current `main` | Documentation/evidence lineage |
+| Experimental verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
+| P7 scientific decision | Adopted in substance; exact freeze binding open |
+| P8 analysis lock | Open / fail-closed |
+| P2 runtime verification | Not executed |
+| P6a CORS verification | Not executed |
+| New immutable freeze | Not created |
+| Pilot authorization | Not granted |
+| Empirical N | 0 |
 
-## Core areas
+## Deployment identity
 
-- Agent orchestration and control-plane design
-- Evaluation and quality-assurance tooling
-- Provenance and traceability
-- Governance gates and deployment controls
-- Epistemic auditing and vocabulary management
-- Semantic/ontological boundary governance
-- Pattern Commons integration and cross-repository reconciliation
-- Experimental mathematical and structural research
-- Open-source commercialization and evidence-preserving governance
+The observed READY Vercel production deployment is not current-main evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal the current GitHub `main` identity. Issue #137 is the canonical deployment-provenance tracker.
 
-## Open-source / commercialization posture
+## Evidence boundary
 
-DGAF aims to keep the public reference implementation sufficiently complete for independent cloning, inspection, execution, and evaluation. Legitimate commercial differentiation may reside in managed operations, integration, assurance, support, hosting, specialized tooling, customer-specific configurations, training, and future certification programs. Public scientific/technical claims must retain enough evidence for independent evaluation even when adjacent operational assets are commercial or private.
+CI results and engineering changes remain exact-head evidence. Historical results are not transferred to later commits without new exact-scope execution. Engineering completion never creates experimental authorization.
 
-The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the legal terms. The license does not grant trademark rights; future official, certification, or endorsement claims bearing the DGAF name require separate governance and should not be inferred from repository status or project attestation.
-
-## PDMAL/DGAF documentation spine
-
-1. [Current State](docs/CURRENT_STATE.md)
-2. [Project Status](docs/PROJECT_STATUS.md)
-3. [PDMAL Current Control State](docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md)
-4. [Authoritative PDMAL Task Specification](docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md) — task contract; see the v0.7.5 protocol matrix amendment for the current acceptance-layer changes.
-5. [PDMAL Evidence Index](docs/evidence/PDMAL_EVIDENCE_INDEX.md)
-6. [Evidence Ladder Policy](docs/evidence/EVIDENCE_LADDER_POLICY.md)
-7. [PDMAL Experiment Protocol](docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md) — current pre-freeze protocol incorporating the v0.7.5 matrix amendment.
-8. [Freeze Manifest Template](docs/experiment/FREEZE_MANIFEST_TEMPLATE.md)
-9. [Propagation Consistency Control](docs/governance/PROPAGATION_CONSISTENCY_CONTROL.md)
-10. [Documentation Reconciliation](docs/governance/DOCUMENTATION_RECONCILIATION_2026-08-21.md)
-11. [Test Execution Readiness](docs/governance/TEST_EXECUTION_READINESS_2026-08-21.md)
-12. [P3–P6 Freeze Readiness](docs/governance/P3_P4_P5_P6_FREEZE_READINESS_2026-08-21.md)
-13. [P7 Primary Contrast Adjudication](docs/governance/P7_PRIMARY_CONTRAST_ADJUDICATION_PACKET_2026-08-21.md)
-14. [Candidate Runtime Verification](docs/governance/CANDIDATE_RUNTIME_VERIFICATION_2026-08-21.md)
-15. [NDR Research Program Charter — Current Status Addendum](docs/governance/NDR_RESEARCH_PROGRAM_CHARTER_CURRENT_STATUS_2026-08-21.md)
-16. [Freeze Packet Template](docs/governance/FREEZE_PACKET_TEMPLATE.md)
-17. [Pattern Commons Architecture](docs/PATTERN_COMMONS_ARCHITECTURE.md)
-18. [Commercialization & Openness Boundary](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md)
-19. [Asset-Level Boundary Inventory](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md)
-20. [Trademark & Certification Policy](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md)
-21. [Public Surface QA Standard](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md)
-22. [CROSS_REF](CROSS_REF.md)
-23. [Platinum Mean Semantic Correction](docs/governance/PLATINUM_MEAN_SEMANTIC_CORRECTION_2026-08-28.md)
-24. [Metallic Means Mathematical Notation Policy](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md)
-25. [Layer-0 Human / Rights / Societal Constitution](docs/agents/LAYER_0_CONSTITUTION.md)
-26. [Agent Authority Separation Invariant](docs/agents/AGENT_AUTHORITY_INVARIANT.md)
-27. [Agent Authority Matrix](docs/agents/AGENT_AUTHORITY_MATRIX.md)
-28. **TGL adversarial contract review / remediation** — PR #132 remains blocked; PR #133 is the isolated minimal-contract-restoration candidate. This work is diagnostic and pre-freeze only and does not authorize experimentation.
-
-## Verification and test status
-
-The repository contains deterministic/unit tests, pilot execution-contract tests, artifact/schema controls, governance consistency checks, propagation checks, and CI workflows. **Existence of a test is not evidence that the test has passed.** Current candidate verification must identify the exact candidate SHA, execution environment, deployment where applicable, run identifier, and retained evidence artifact.
-
-### Current gate boundary
-
-- TGL contract validation — **BLOCKED / UNDER ADVERSARIAL REVIEW**
-- PR #132 — **BLOCKED / DRAFT / UNMERGED**
-- PR #133 — **DRAFT / REMEDIATION CANDIDATE / CI VALIDATION PENDING**
-- P1 Candidate integrity — PARTIAL
-- P2 Execution contract — BLOCKED for authenticated runtime verification
-- P3 Artifact contract — OPEN
-- P4 Security/blinding integrity — OPEN
-- P5 Provenance/reproducibility — OPEN
-- P6 Durable evidence custody — OPEN
-- P7 Scientific target specification — ADOPTED in substance; exact freeze binding pending
-- P8 Analysis lock — OPEN / FAIL-CLOSED
-- P9 Independent verification — NOT EXECUTED
-- New freeze — NOT CREATED
-- Pilot authorization — NOT GRANTED
-- Empirical N — 0
-
-Do not infer repository-wide validation from a component-level test, historical attestation, deployment existence, README text, funding badge, commercial status, or certification language. In particular, successful TGL contract tests or a successful remediation PR do not establish experimental authorization or empirical efficacy.
-
-## Historical evidence boundary
-
-Historical runtime, P2, P6a, and characterization records remain valid only for the exact source/deployment/run they document. In particular, retained historical results are not current-candidate verification.
-
-## Related ecosystem
-
-Related repositories are separate tracks. Shared terminology does not imply implementation equivalence or cross-repository validation. See [`CROSS_REF.md`](CROSS_REF.md) for the current cross-reference and epistemic boundary index.
-
-## Support / funding
-
-GitHub Sponsors configuration is present through `.github/FUNDING.yml`. Sponsorship supports maintenance and development; it does not confer ownership, certification, endorsement, or special evidence status.
-
-## License
-
-See [LICENSE](LICENSE) for the repository's applicable license.
-
-## Provenance
-
-Developed by Ndr / Ender Hensel (`ndrorchestration`).
+**Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
