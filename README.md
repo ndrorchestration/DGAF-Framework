@@ -77,15 +77,16 @@ The architecture is intentionally layered: an experimental result is not allowed
 
 ## Current engineering state
 
-The current engineering lane is **PR #139**, which consolidates the governed control-plane work and TGL hardening. Its substantive implementation checkpoint passed **41/41** control-plane, TGL, adversarial, and capability-boundary tests at the exact checkpoint `a728ce3ee8a024646c0971c9d4f392abaa3d691a`. Subsequent changes on the current PR head are documentation, governance, CI, and provenance-hardening changes; claims from the earlier checkpoint are therefore kept scoped to that exact SHA.
+The current engineering lane is **PR #139**, which consolidates the governed control-plane work and TGL hardening. A documented implementation checkpoint passed **41/41** control-plane, TGL, adversarial, and capability-boundary tests. That result is scoped to its recorded source and execution boundary; subsequent work continues the documentation, governance, CI, and provenance-hardening effort.
 
 The experimental boundary is intentionally separate:
 
 - **PDMAL experimental state:** PRE-FREEZE / FAIL-CLOSED
 - **Pilot authorization:** NOT GRANTED
 - **Empirical N:** 0
-- **Current experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
 - **New immutable freeze:** NOT CREATED
+
+Exact candidate identities, verification boundaries, and retained evidence are maintained in the authoritative current-state record rather than duplicated in this overview.
 
 These constraints are not a statement that the engineering work is inactive. They are the boundary between **building the apparatus** and **claiming experimental evidence from it**.
 
