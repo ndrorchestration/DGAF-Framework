@@ -2,7 +2,7 @@
 
 ## Current candidate
 
-Current PR #139 head: `2df8c0601d83488a305f211f510953ea81edcb01`
+Current PR #139 head: `be3203868a9fe7a4c156a4c52885a15872a63fa0`
 
 All findings below are engineering-control findings. They do not authorize PDMAL execution or transfer experimental evidence across SHA boundaries.
 
@@ -52,18 +52,24 @@ Active nonterminal lifecycle states can be explicitly terminated. This is a term
 
 The dedicated v1 control-plane workflow is configured to check out `${{ github.event.pull_request.head.sha || github.sha }}`, assert that the working tree SHA matches that exact value, install the pinned repository CI requirements plus a pinned pandas version, and execute the control-plane, TGL integration, adversarial, and capability-boundary suites.
 
+### Herald final-status reduction
+
+After Herald is appended, the TGL recomputes the monotonic final status over the complete gate set before sealing. A Herald `WARN` therefore cannot be hidden behind an earlier `PASS`, and a Herald `KILL` remains terminal.
+
 ## Verification-only findings
 
-An earlier dedicated v1 contract execution exposed three contract-test failures on an earlier PR merge ref. The failures were fully diagnosed: a stale side-effect inheritance expectation, an assertion using the wrong post-escalation error branch, and a test assuming `ADMITTED → TERMINATED` before that abort path was formalized. Those failures are historical diagnostics; they are not current-head verification.
+An earlier dedicated v1 contract execution exposed three contract-test failures on an earlier PR merge ref. The failures were fully diagnosed and corrected. A later exact-head run then exposed and corrected the side-effect narrowing test contract, and the substantive implementation checkpoint `7807d956…` passed the dedicated 40/40 suite before the integrated branch was reconciled with current `main`.
 
-For the current head `2df8c060…`, GitHub has successful CodeQL and truth-layer checks. The dedicated `DGAF v1 Control-Plane Contract` check currently has no exact-head check record, so the consolidated v1 contract remains validation-pending.
+The current branch contains a later TGL semantic correction for Herald status reduction, so fresh exact-head validation is required before claiming the final integrated head is fully verified.
 
 ## External deployment boundary
 
-Current-main → production exact source binding remains separately open under Issue #137. The current aggregate status includes the Vercel deployment-rate-limit failure condition; this is an infrastructure blocker and is not a code-test verdict.
+Current-main → production exact source binding remains separately open under Issue #137. A green or rate-limited Vercel status is not itself proof of exact deployment-source identity.
 
 ## Experimental boundary
 
 No experimental execution or PDMAL state transition is permitted by this document.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
+## Current experimental state
+
+PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
