@@ -29,7 +29,7 @@ class ControlPlaneViolation(RuntimeError):
 
 _ALLOWED: dict[TaskState, frozenset[TaskState]] = {
     TaskState.RECEIVED: frozenset({TaskState.PREFLIGHT, TaskState.TERMINATED}),
-    TaskState.PREFLIGHT: frozenset({TaskState.ADMITTED, TaskState.ESCALATED, TaskState.TERMINATED}),
+    TaskState.PREFLIGHT: frozenset({TaskState.ADMITTED, TaskState.ESCALATED}),
     TaskState.ADMITTED: frozenset({TaskState.EXPANDING, TaskState.EVALUATING, TaskState.ESCALATED}),
     TaskState.EXPANDING: frozenset({TaskState.EVALUATING, TaskState.ESCALATED, TaskState.TERMINATED}),
     TaskState.EVALUATING: frozenset({TaskState.EXPANDING, TaskState.MERGE_READY, TaskState.ESCALATED, TaskState.TERMINATED}),
