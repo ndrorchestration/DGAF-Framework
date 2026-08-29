@@ -48,6 +48,7 @@ class ControlTask:
     depth: int = 0
     state_history: list[str] = field(default_factory=list)
     concurrency_acquired: bool = False
+    lineage_id: str | None = None
 
     def snapshot(self) -> dict[str, object]:
         return {
@@ -69,10 +70,18 @@ class ControlPlane:
         self.tasks: dict[str, ControlTask] = {}
         self.ledgers: dict[str, BudgetLedger] = {}
         self.events: list[dict[str, object]] = []
+        self._lineage_active: dict[str, int] = {}
+        self._lineage_limits: dict[str, int] = {}
 
     def submit(self, task: ControlTask) -> None:
         if task.task_id in self.tasks:
             raise ControlPlaneViolation(f"duplicate task_id: {task.task_id}")
+        if task.lineage_id is None:
+            task.lineage_id = task.envelope.trace_id
+        self._lineage_limits.setdefault(task.lineage_id, task.envelope.budget.max_concurrency)
+        self._lineage_limits[task.lineage_id] = min(
+            self._lineage_limits[task.lineage_id], task.envelope.budget.max_concurrency
+        )
         self.tasks[task.task_id] = task
         self.ledgers[task.task_id] = BudgetLedger(task.envelope.budget)
         self._transition(task, TaskState.PREFLIGHT)
@@ -85,6 +94,12 @@ class ControlPlane:
         if task.depth >= task.envelope.budget.max_depth:
             self._transition(task, TaskState.ESCALATED)
             return
+        lineage = task.lineage_id or task.envelope.trace_id
+        limit = self._lineage_limits[lineage]
+        if self._lineage_active.get(lineage, 0) >= limit:
+            self.events.append({"event": "CONCURRENCY_EXCEEDED", "task_id": task_id, "lineage_id": lineage})
+            self._transition(task, TaskState.ESCALATED)
+            return
         try:
             self.ledgers[task_id].acquire_concurrency()
             self.ledgers[task_id].reserve(Consumption(rounds=1, nodes=1))
@@ -94,6 +109,7 @@ class ControlPlane:
             self.events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
             self._transition(task, TaskState.ESCALATED)
             return
+        self._lineage_active[lineage] = self._lineage_active.get(lineage, 0) + 1
         task.concurrency_acquired = True
         self._transition(task, TaskState.EXPANDING)
 
@@ -136,6 +152,8 @@ class ControlPlane:
         self._transition(task, TaskState.TERMINATED)
         if task.concurrency_acquired:
             self.ledgers[task_id].release_concurrency()
+            lineage = task.lineage_id or task.envelope.trace_id
+            self._lineage_active[lineage] = max(0, self._lineage_active.get(lineage, 0) - 1)
             task.concurrency_acquired = False
 
     def create_child(
@@ -158,6 +176,7 @@ class ControlPlane:
         child = ControlTask(
             task_id=task_id,
             depth=child_depth,
+            lineage_id=parent.lineage_id,
             envelope=parent.envelope.derive_child(
                 trace_id=trace_id,
                 task_id=task_id,
