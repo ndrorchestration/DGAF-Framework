@@ -22,12 +22,16 @@ class ResourceBudget:
     max_elapsed_ms: int = 0
     max_rounds: int = 0
     max_nodes: int = 0
+    max_depth: int = 0
+    max_concurrency: int = 1
 
     def __post_init__(self) -> None:
         for name in self.__dataclass_fields__:
             value = getattr(self, name)
             if not isinstance(value, int) or value < 0:
                 raise ValueError(f"{name} must be a non-negative integer")
+        if self.max_concurrency < 1:
+            raise ValueError("max_concurrency must be at least 1")
 
     def child_allowed(self, child: "ResourceBudget") -> bool:
         return all(
@@ -86,7 +90,8 @@ class GovernanceEnvelope:
         if not self.budget.child_allowed(budget):
             raise PermissionError("child budget exceeds parent budget")
         child_risk = risk_tier or self.risk_tier
-        if child_risk == "critical" and self.risk_tier != "critical":
+        risk_rank = {"low": 0, "medium": 1, "high": 2, "critical": 3}
+        if risk_rank[child_risk] > risk_rank[self.risk_tier]:
             raise PermissionError("child risk tier cannot increase")
         return GovernanceEnvelope(
             trace_id=trace_id,
