@@ -30,11 +30,29 @@ def make_tgl(hooks: TGLHooks = None) -> TriadicGovernanceLoop:
 
 
 @pytest.mark.governance
-def test_full_skip_turn_returns_pass():
-    """All hooks None (SKIP) → final_status PASS."""
+def test_full_skip_turn_escalates():
+    """An unwired governance chain (SKIP) must never produce final PASS."""
     tgl = make_tgl()
     audit = tgl.run_turn("safe input")
-    assert audit.final_status == TurnStatus.PASS
+    assert audit.final_status == TurnStatus.ESCALATE
+
+
+@pytest.mark.governance
+def test_partial_skip_turn_escalates():
+    """Any missing required governance gate prevents a final PASS."""
+    hooks = TGLHooks(
+        scpe_fn=lambda text, ctx: GateResult.PASS,
+        pdmal_fn=lambda text, ctx: GateResult.PASS,
+        demijoul_fn=lambda text, ctx: GateResult.PASS,
+        kappa_fn=lambda text, ctx: GateResult.PASS,
+        sentinel_fn=lambda text, ctx: GateResult.PASS,
+        phi_closure_fn=lambda text, ctx: GateResult.PASS,
+        hpg_fn=lambda text, ctx: GateResult.PASS,
+        apogee_fn=lambda text, ctx: GateResult.PASS,
+    )
+    audit = make_tgl(hooks).run_turn("partial wiring")
+    assert audit.final_status == TurnStatus.ESCALATE
+    assert any(g.step == 9 and g.result == GateResult.SKIP for g in audit.gate_records)
 
 
 @pytest.mark.governance
