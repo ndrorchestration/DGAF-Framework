@@ -63,6 +63,7 @@ def test_tgl_kill_propagates_to_control_plane() -> None:
     result = plane.evaluate_turn("root", "input")
     assert result.final_status is TurnStatus.KILL
     assert task.state is TaskState.ESCALATED
+    assert plane.ledgers["root"].active_concurrency == 0
 
 
 @pytest.mark.governance
@@ -85,10 +86,11 @@ def test_concurrency_ceiling_is_lineage_wide() -> None:
     plane.start_expansion("child")
     assert child.state is TaskState.ESCALATED
     assert plane.ledgers["root"].active_concurrency == 1
+    assert plane.ledgers["child"].active_concurrency == 0
 
 
 @pytest.mark.governance
-def test_budget_overrun_escalates_and_releases_slot_on_termination() -> None:
+def test_budget_overrun_escalates_and_releases_slot_immediately() -> None:
     plane = ControlPlane()
     task = ControlTask("root", envelope(budget=budget(max_tool_calls=1)))
     plane.submit(task)
@@ -97,8 +99,12 @@ def test_budget_overrun_escalates_and_releases_slot_on_termination() -> None:
     with pytest.raises(BudgetExceeded):
         plane.consume("root", Consumption(tool_calls=2))
     assert task.state is TaskState.ESCALATED
-    plane.terminate("root")
     assert plane.ledgers["root"].active_concurrency == 0
+    assert plane._lineage_active[root_lineage(task)] == 0
+
+
+def root_lineage(task: ControlTask) -> str:
+    return task.lineage_id or task.envelope.trace_id
 
 
 def test_child_creation_requires_active_parent() -> None:
