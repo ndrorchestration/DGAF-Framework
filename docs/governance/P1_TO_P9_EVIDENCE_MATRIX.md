@@ -3,7 +3,7 @@
 **Status:** CURRENT / PRE-FREEZE / FAIL-CLOSED  
 **Current documentation/evidence lineage:** `main`  
 **Experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
-**TGL contract remediation:** PR #133 candidate; PR #132 remains BLOCKED / DRAFT / UNMERGED  
+**TGL contract remediation:** PR #134 current-main candidate; PR #132/#133 are closed historical remediation lanes  
 **Empirical N:** `0`  
 **Pilot authorization:** `NOT GRANTED`  
 **Freeze:** `NOT CREATED`
@@ -35,7 +35,7 @@ The current experimental verification boundary remains `ac8ea267…`. Documentat
 
 The pre-freeze contract suite exposed a substantive TGL/P-35 regression: 41 tests passed and 2 failed because the PR #132 implementation called `ProcludingPremiseGate` through an incompatible constructor/method contract and bypassed the established premise-hook injection path.
 
-The remediation is isolated in PR #133 and is classified as **control-plane contract restoration**, not experimental authorization. Required closure includes:
+The remediation is now isolated in current-main PR #134 and is classified as **control-plane contract restoration**, not experimental authorization. Required closure includes:
 
 - established P-35 constructor compatibility;
 - `evaluate(..., check_fn=...)` callback injection;
@@ -47,7 +47,7 @@ The remediation is isolated in PR #133 and is classified as **control-plane cont
 - regression coverage for the above;
 - exact candidate/source identity validation.
 
-PR #132 remains unmerged and must not be treated as authoritative executable state. PR #133 must not be treated as a freeze or as authorization evidence merely because its tests pass.
+PR #132 and PR #133 are closed and must not be treated as authoritative executable state. PR #134 is the current remediation candidate and must not be treated as a freeze or authorization evidence merely because its tests pass.
 
 ## Supporting repository-native evaluator evidence
 
