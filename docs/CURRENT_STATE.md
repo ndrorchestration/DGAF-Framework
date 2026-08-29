@@ -2,7 +2,7 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-28
+last_verified: 2026-08-29
 applies_to_ref: main
 ---
 # DGAF-Framework / PDMAL — Current State
@@ -10,6 +10,20 @@ applies_to_ref: main
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it. This document describes current state without retroactively transferring historical evidence.
 
 > **Current boundary:** `main` is the current documentation/evidence lineage boundary. The experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the later workflow-binding correction at `ac8ea26…` is a separate verification boundary. M6 is CLOSED/VERIFIED for exact candidate `ac8ea267…` via run `33050398324` and remains scoped to that exact verification workspace/job. P7 is scientifically adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
+
+## v1 control-plane planning boundary
+
+A new non-authorizing architecture lane is now documented for **DGAF v1 Governed Recursive Control Plane Integration**. Its purpose is to operationalize the viable parts of the governed-recursive/compile-trace concept without redefining PDMAL or transferring experimental evidence.
+
+Canonical planning records:
+
+- `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`
+- `docs/architecture/DGAF_V1_FILE_TREE_PLAN.md`
+- Issue #135 — `ARCHITECTURE: DGAF v1 governed recursive control plane integration`
+
+The v1 plan proposes a Governance Envelope, deterministic lifecycle state machine, bounded recursive dispatch, inherited scope enforcement, resource accounting, branch provenance records, repeated-state detection, terminal veto propagation, and plan/commit separation. These are design/planning items until executable code and tests establish implementation status.
+
+The planned location is the existing `pptl/` control plane, extending `orchestrator.py` and existing schemas/TGL/Herald boundaries rather than creating a parallel recursive runtime tree. PDMAL remains a governed experimental substrate below this control-plane boundary.
 
 ## Authoritative current state
 
@@ -21,7 +35,8 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd152…`; run `33047380487`; artifact `9636185725`; digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd` |
 | M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324`; retained negative-state artifact independently hash-verified; closure does not authorize execution |
 | Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Current E2b evidence must be produced against the exact executing workflow boundary used for freeze admissibility |
-| TGL contract | BLOCKED / ADVERSARIAL REVIEW | PR #132 produced a 41-pass / 2-fail regression at the TGL → P-35 boundary; PR #133 is the isolated remediation candidate |
+| TGL contract | BLOCKED / ADVERSARIAL REVIEW | PR #132 produced a 41-pass / 2-fail regression at the TGL → P-35 boundary; current-main remediation is PR #134 |
+| DGAF v1 control-plane | PLANNING / NOT YET IMPLEMENTED | Issue #135; canonical architecture/file-tree plans added; no experimental state change |
 | P7 scientific specification | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Scientific decision resolved; exact freeze binding remains open |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped implementation/configuration and verification remain incomplete |
 | P2 formal runtime verification | NOT EXECUTED | Authenticated five-case matrix still required |
@@ -37,7 +52,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 PR #132 is **BLOCKED / DRAFT / UNMERGED**. Its observed 41-pass / 2-fail pre-freeze result is treated as a substantive contract-regression signal. The failure is at the TGL → P-35 seam and includes incompatible constructor/method invocation. The review also identified missing `premise_check_fn` injection, weakened exception containment, incomplete `PASS/WARN/SKIP/ESCALATE/KILL` reduction, ambiguous SKIP semantics, and audit-seal sequencing concerns.
 
-The required remediation is contract restoration rather than broad architectural refactoring. PR #133 is the isolated remediation candidate. It must restore the established P-35 constructor and `evaluate(..., check_fn=...)` contract, fail-closed exception containment, explicit required/conditional gate semantics, deterministic status reduction, and exact final audit sealing, with regression coverage for the identified failure modes.
+The current-main remediation lane is PR #134. It restores the established P-35 API, fail-closed TGL behavior, explicit required/conditional gate semantics, deterministic status reduction, and exact final audit sealing, with regression coverage. PR #134 remains an engineering-control candidate pending exact-head CI/adversarial validation.
 
 This review does not authorize any experimental action. It does not create a freeze, close P7/P8, establish runtime verification, or increase empirical N.
 
@@ -116,16 +131,25 @@ Panel seats:
 5. Advance P7 exact binding, P8 candidate-scoped closure, and independent P9 preparation.
 6. Create a new immutable freeze only after all applicable predicates pass.
 7. Authorization remains a separate explicit transition; only then may the blinded pilot execute.
+8. Advance the DGAF v1 control-plane plan as a separate engineering lane; do not use it to infer experimental readiness.
 
 ### Hard panel constraints
 
-No freeze, authorization, unblinding, or empirical-N increase may be inferred from CI success, deployment readiness, health checks, synthetic fixtures, historical evidence, or narrative state alone.
+No freeze, authorization, unblinding, or empirical-N increase may be inferred from CI success, deployment readiness, health checks, synthetic fixtures, historical evidence, narrative state, or the existence of the v1 control-plane plan.
 
 ## Authorization boundary
 
 Required before authorization include authenticated P2 and P6a execution on the same deployment identity; blinding custody and unblinding verification; durable archive/retrieval/hash evidence; environment and reproducibility fingerprints; formal P7 exact binding; frozen baseline/negative-control definitions; P8 closure; independent P9 verification; a new immutable freeze; and an explicit authorization decision.
 
 **No empirical pilot execution is authorized. Empirical N remains 0. Authorization remains NOT GRANTED.**
+
+## Related planning records
+
+- `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`
+- `docs/architecture/DGAF_V1_FILE_TREE_PLAN.md`
+- `DGAF_RECURSIVE_REFINEMENT_ANALYSIS.md`
+- `DGAF_RELATED_WORK_MATRIX.md`
+- Issue #135
 
 ## Related adversarial-review record
 
