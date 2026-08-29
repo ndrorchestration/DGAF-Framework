@@ -50,6 +50,40 @@ def test_scope_and_risk_can_only_narrow():
             data_classes={"public"}, budget=budget(max_depth=1))
 
 
+def test_metadata_is_inherited_without_override():
+    parent = envelope(metadata={"candidate_sha": "abc123", "protocol": "v0.7.5"})
+    child = parent.derive_child(
+        trace_id="child", task_id="child", authority_scope={"research"},
+        permitted_tools={"read"}, data_classes={"public"}, budget=budget(max_depth=1),
+        metadata={"component": "child"},
+    )
+    assert child.metadata["candidate_sha"] == "abc123"
+    assert child.metadata["protocol"] == "v0.7.5"
+    assert child.metadata["component"] == "child"
+    with pytest.raises(PermissionError):
+        parent.derive_child(
+            trace_id="tamper", task_id="tamper", authority_scope={"research"},
+            permitted_tools={"read"}, data_classes={"public"}, budget=budget(max_depth=1),
+            metadata={"candidate_sha": "attacker"},
+        )
+
+
+def test_side_effect_authority_can_only_narrow():
+    parent = envelope(side_effect_mode="COMMIT_ALLOWED")
+    child = parent.derive_child(
+        trace_id="child", task_id="child", authority_scope={"research"},
+        permitted_tools={"read"}, data_classes={"public"}, budget=budget(max_depth=1),
+        side_effect_mode="PROPOSE_ONLY",
+    )
+    assert child.side_effect_mode == "PROPOSE_ONLY"
+    with pytest.raises(PermissionError):
+        parent.derive_child(
+            trace_id="bad", task_id="bad", authority_scope={"research"},
+            permitted_tools={"read"}, data_classes={"public"}, budget=budget(max_depth=1),
+            side_effect_mode="COMMIT_ALLOWED",
+        )
+
+
 def test_budget_reservation_is_atomic_and_fail_closed():
     ledger = BudgetLedger(budget(max_tool_calls=4))
     ledger.reserve(Consumption(tool_calls=2))
