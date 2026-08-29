@@ -1,8 +1,6 @@
 # DGAF v1 File-Tree and Ownership Plan
 
-**Status:** IMPLEMENTATION IN PROGRESS / NON-AUTHORIZING  
-**Parent architecture:** `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`  
-**Date:** 2026-08-29
+**Status:** IMPLEMENTATION IN PROGRESS / NON-AUTHORIZING
 
 This is the canonical physical-placement and ownership map for the viable v1 Governed Recursive Control Plane. It extends existing DGAF/PPTL boundaries rather than creating a parallel runtime tree.
 
