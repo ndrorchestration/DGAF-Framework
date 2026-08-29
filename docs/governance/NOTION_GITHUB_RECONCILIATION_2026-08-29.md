@@ -17,7 +17,7 @@ The latest Notion Operational Control Center and agent-registry records were che
 
 PR #139 is the clean current-main-based implementation candidate for the viable Governed Recursive Control Plane subset and current TGL contract remediation.
 
-**Current PR #139 head:** `b65312db66dc4009b7754226c47345e7ce7808b2`
+**Current PR #139 head:** `a728ce3ee8a024646c0971c9d4f392abaa3d691a`
 
 PR #136 was superseded and closed. PRs #132/#133/#134 are historical or superseded engineering records rather than parallel current execution authorities.
 
@@ -33,10 +33,10 @@ These controls are engineering implementation facts, not experimental authorizat
 
 Notion governance records do not transfer GitHub CI, deployment, PDMAL, or experimental evidence. Exact SHA/run/deployment identity remains mandatory.
 
-The current deployment-provenance gate remains Issue #137. For current PR #139 engineering head `b65312d…`, Vercel reports `Deployment rate limited — retry in 24 hours.` This prevents current-head live deployment verification. The failure is an infrastructure blocker and does not change the experimental state.
+The current deployment-provenance gate remains Issue #137. The current PR #139 branch is reconciled to the latest `main` lineage; Vercel source identity remains separately unproven and must not be inherited from historical READY deployments or green status contexts.
 
 ## Experimental boundary
 
 No freeze, authorization, unblinding, or empirical execution is implied by the v1 implementation or CI.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
+PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
