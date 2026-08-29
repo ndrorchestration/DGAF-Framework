@@ -192,10 +192,12 @@ class ControlPlane:
         self.events.append({"event": "BRANCH_RECORDED", "branch_id": branch.branch_id, "policy_verdict": branch.policy_verdict, "merge_status": branch.merge_status})
 
     def consume(self, task_id: str, amount: Consumption) -> None:
+        task = self._task(task_id)
+        if task.state in {TaskState.ESCALATED, TaskState.TERMINATED}:
+            raise ControlPlaneViolation("terminal task cannot consume additional resources")
         try:
             self.ledgers[task_id].consume(amount)
         except BudgetExceeded as exc:
-            task = self._task(task_id)
             self.events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
             self._escalate(task, str(exc))
             raise
