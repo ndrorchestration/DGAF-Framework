@@ -4,7 +4,7 @@
 
 `feat/dgaf-v1-control-plane-finalize-20260829`
 
-**Current head:** `b65312db66dc4009b7754226c47345e7ce7808b2`
+**Current head:** `d2c24054edfc44cbb2620e6b2b19eb8df8e23850`
 
 This packet is the reviewer-facing contract summary for the v1 governed control plane. It does not authorize experimental execution.
 
@@ -30,8 +30,10 @@ This packet is the reviewer-facing contract summary for the v1 governed control 
 - Terminal/escalated tasks cannot consume resources.
 - Child creation observes the post-submit `PREFLIGHT` state and avoids failed-creation registry pollution.
 - Child governance scope can only remain equal or narrow.
+- Branch provenance preserves distinct branch identities when state IDs coincide.
 - CommitGate remains a separate authorization barrier.
 - Safe terminal abort does not create an authorization path.
+- Herald WARN/KILL participates in the final monotonic status reduction before sealing.
 
 ## Required evidence
 
@@ -43,12 +45,16 @@ This packet is the reviewer-facing contract summary for the v1 governed control 
 
 ## Current verification state
 
-An earlier exact PR merge ref produced a historical 32-pass / 3-fail contract result; all three failures were diagnosed and corrected. That historical result is not current-head verification.
+The substantive implementation checkpoint `7807d956…` passed the dedicated v1 suite **40/40**. The integrated branch subsequently incorporated current `main` through a non-destructive two-parent merge and received the Herald-status reduction correction. Fresh exact-head validation of the resulting code head remains required; documentation-only changes do not transfer or expand code verification claims.
 
-Current head `b65312db…` has independent successful security/repository checks from the current engineering wave, but the current-head dedicated control-plane verification remains pending/re-running after the final fixes. Vercel currently reports `Deployment rate limited — retry in 24 hours.` for the current engineering head, so exact live deployment verification is blocked by infrastructure.
+## Deployment boundary
+
+Issue #137 remains the canonical production/source-provenance gate. Vercel status success or rate limiting does not itself establish exact deployment-source identity.
 
 ## Experimental boundary
 
 No freeze, pilot authorization, unblinding, or empirical execution is created or implied by PR #139.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
+## Current experimental state
+
+PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
