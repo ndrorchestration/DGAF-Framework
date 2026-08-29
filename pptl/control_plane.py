@@ -101,6 +101,8 @@ class ControlPlane:
 
     def start_expansion(self, task_id: str) -> None:
         task = self._task(task_id)
+        if TaskState.EXPANDING not in _ALLOWED[task.state]:
+            raise ControlPlaneViolation(f"illegal transition {task.state.value} -> {TaskState.EXPANDING.value}")
         lineage = task.lineage_id or task.envelope.trace_id
         if task.depth >= task.envelope.budget.max_depth:
             self._escalate(task, "maximum recursion depth reached")
@@ -163,35 +165,13 @@ class ControlPlane:
         self._transition(task, TaskState.TERMINATED)
         self._release_concurrency(task)
 
-    def create_child(
-        self,
-        parent_id: str,
-        *,
-        task_id: str,
-        trace_id: str,
-        authority_scope: set[str],
-        permitted_tools: set[str],
-        data_classes: set[str],
-        envelope_budget: ResourceBudget,
-    ) -> ControlTask:
+    def create_child(self, parent_id: str, *, task_id: str, trace_id: str, authority_scope: set[str], permitted_tools: set[str], data_classes: set[str], envelope_budget: ResourceBudget) -> ControlTask:
         parent = self._task(parent_id)
         if parent.state not in {TaskState.ADMITTED, TaskState.EXPANDING, TaskState.EVALUATING}:
             raise ControlPlaneViolation("child creation requires an active parent task")
         if parent.depth + 1 > parent.envelope.budget.max_depth:
             raise ControlPlaneViolation("child exceeds maximum recursion depth")
-        child = ControlTask(
-            task_id=task_id,
-            depth=parent.depth + 1,
-            lineage_id=parent.lineage_id,
-            envelope=parent.envelope.derive_child(
-                trace_id=trace_id,
-                task_id=task_id,
-                authority_scope=authority_scope,
-                permitted_tools=permitted_tools,
-                data_classes=data_classes,
-                budget=envelope_budget,
-            ),
-        )
+        child = ControlTask(task_id=task_id, depth=parent.depth + 1, lineage_id=parent.lineage_id, envelope=parent.envelope.derive_child(trace_id=trace_id, task_id=task_id, authority_scope=authority_scope, permitted_tools=permitted_tools, data_classes=data_classes, budget=envelope_budget))
         if self.state_registry.contains(child.snapshot()):
             raise ControlPlaneViolation("repeated orchestration state")
         self.state_registry.observe(child.snapshot())
