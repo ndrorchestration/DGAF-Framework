@@ -9,15 +9,13 @@
 
 ## Executive state
 
-The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the retained artifact is `9636185725` with digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
+The DGAF/PDMAL experimental track remains in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. E2b remains historical exact-tree evidence and M6 is closed for the exact candidate boundary; neither transfers automatically to later documentation or implementation commits.
 
-Repository `main` is an active documentation/evidence lineage; resolve the current branch tip from Git rather than treating a documentation commit as the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` until a separately governed candidate transition is created.
+Repository `main` is an active documentation/evidence lineage; resolve the current branch tip from Git rather than treating a documentation commit as the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
 
-The corrected Governance CI boundary at `ac8ea26…` binds the candidate target to the executing workflow SHA. E2b current-boundary verification remains required where a current freeze decision depends on the executing workflow boundary. M6 is separately CLOSED / VERIFIED for the exact candidate `ac8ea267…` via run `33050398324`; that closure is scoped to the exact verification workspace/job and does not authorize execution.
+The corrected Governance/TGL engineering lane is PR #134 on current `main`; PRs #132/#133 remain historical diagnostic/remediation records. DGAF v1 control-plane work is PR #136 and remains a separate generic engineering layer. Its dedicated deterministic contract lane has passed a prior exact-head run, but the current PR head has changed and requires fresh exact-head validation after the latest concurrency-fixture correction and documentation changes.
 
-The documentation correction pass canonicalized the remaining named Platinum/Plastic notation surfaces and quarantined several historical overclaiming records. Documentation-quality debt remains tracked separately from experimental validity.
-
-P7 is scientifically adopted in substance, but exact cryptographic binding to the eventual freeze apparatus remains OPEN. P8 remains OPEN/FAIL-CLOSED. P2/P6a remain pending authenticated execution. P4/P5/P6 and P9 remain open. No new freeze exists, no pilot has been authorized or executed, and N remains 0.
+P7 is scientifically adopted in substance, but exact cryptographic binding to the eventual freeze apparatus remains OPEN. P8 remains OPEN/FAIL-CLOSED. P2/P6a remain pending authenticated execution against the exact deployment identity. P4/P5/P6 and P9 remain open. No new freeze exists, no pilot has been authorized or executed, and N remains 0.
 
 ## Gate board
 
@@ -26,11 +24,11 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b868…` |
 | Current repository main | CURRENT LINEAGE | Resolve `main` directly; documentation/evidence lineage, not apparatus identity |
 | Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267…` |
-| E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd1…`, run `33047380487`, artifact `9636185725` |
-| Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Execute/retain evidence for the exact workflow boundary used for the eventual freeze decision |
-| M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324`; retained negative-state artifact independently hash-verified |
+| E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd1…`, run `33047380487`, retained artifact `9636185725` |
+| Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Exact executing workflow boundary still required for eventual freeze admissibility |
+| M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324` |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical/non-empirical characterization only |
-| Execution contract | PARTIAL / TGL REMEDIATION | PR #134 is current-main remediation; exact-current-tree authenticated P2 evidence pending |
+| Execution contract | PARTIAL / VALIDATION IN PROGRESS | PR #134 is current-main remediation; authenticated exact-current-tree P2 evidence remains pending |
 | Artifact contract | PARTIAL | Corrective controls present; current candidate execution evidence pending |
 | Security / blinding | PARTIAL | Fresh operational custody verification pending |
 | Topology provenance | PARTIAL | Exact current-candidate recomputation pending |
@@ -40,71 +38,50 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | P7 exact binding | OPEN | Final freeze identity binding remains required |
 | Analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | Independent verification | NOT EXECUTED | P9 remains pending |
-| TGL contract review | REMEDIATION CANDIDATE | PR #134 is current-main remediation; PRs #132/#133 are historical diagnostic/remediation records |
-| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / CI-VERIFIED | PR #136 deterministic core + TGL integration contract lane passes; does not authorize experiments |
+| TGL contract review | REMEDIATION / VALIDATION IN PROGRESS | PR #134 current-main remediation; #132/#133 historical |
+| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / VALIDATION IN PROGRESS | PR #136; prior contract run passed, current head requires fresh exact-head validation |
+| Control-plane adapter boundary | OPEN / ENGINEERING VERIFICATION | Dedicated audit specification and CI lane added on PR #136 |
 | Forman–Ricci lattice helper semantics | OPEN / ISSUE #117 | Unweighted dodecahedral `Ric_F(e) = -2` is constant/zero-variance and must produce `NO_DISCRIMINATING_SIGNAL`, not 30 anomaly flags |
-| P-38 source integrity | OPEN / ISSUE #122 | `NDR_AUTOINIT_SUBSTRATE_ADAPTER_P38_v1.md` has a truncated historical tail; history audit confirms the earliest retained version is already truncated |
+| P-38 source integrity | OPEN / ISSUE #122 | Truncated historical tail remains unrecovered from authoritative source |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | ZERO | No authorized pilot execution |
-| Documentation quality | OPEN DEBT | Current Doc Lint findings remain separate from efficacy |
+| Documentation quality | OPEN DEBT | Repository-wide Doc Lint remains separate from experimental validity |
 
 ## TGL / P-35 adversarial review
 
-The 41-pass / 2-fail result associated with PR #132 remains a historical regression signal at the TGL → P-35 integration boundary. PR #134 is the current-main remediation lane. Its engineering correctness must be validated on its exact head before candidate-scoped experimental rebinding. Neither the historical diagnostic records nor the generic DGAF v1 control-plane CI result authorizes experimental execution.
+The PR #132 41-pass / 2-fail result remains a concrete historical regression signal at the TGL → P-35 integration boundary. The current-main remediation is PR #134. The remediation is limited to restoring established constructor/API compatibility, premise-hook injection, fail-closed exception containment, required/conditional gate semantics, deterministic status reduction, and exact audit sealing. It does not change the PDMAL apparatus or authorize experimentation.
 
-The remediation remains intentionally minimal: restore the established P-35 API and TGL fail-closed behavior, make required/conditional gate semantics explicit, implement deterministic status reduction, make the final seal correspond to the authoritative returned audit state, and expand regression coverage.
+## DGAF v1 control-plane
 
-## DGAF v1 control-plane boundary
-
-PR #136 provides a generic bounded recursive control plane with explicit authority inheritance, state identity, resource accounting, branch retention, and proposal/authorization/commit separation. Its dedicated deterministic contract lane is CI-verified. The implementation remains non-authorizing: `COMMIT_READY` is not execution, control-plane CI is not PDMAL evidence, and any adapter that changes the experimental apparatus requires a new candidate identity and affected-predicate re-verification.
-
-Active concurrency is now accounted separately from node counts and bounded across recursive lineage. Provider/tool adapter bypass remains an explicit integration-audit requirement rather than an implied closure from the kernel tests.
+PR #136 implements inherited governance envelopes, deterministic lifecycle states, exact-state cycle protection, resource accounting, recursive-lineage concurrency bounds, branch provenance retention, explicit proposal/authorization/commit separation, and TGL integration. This is engineering infrastructure only. `COMMIT_READY` is not execution, and control-plane CI is not PDMAL evidence. The current head is a fresh validation target after the latest fixture correction.
 
 ## Current deployment boundary
 
-The previously identified READY deployment remains supporting deployment evidence. Formal P2 and P6a workflows require authenticated execution against the exact deployment identity and must not be inferred from readiness alone.
+Issue #137 tracks a source-identity mismatch between current GitHub `main` and the observed READY Vercel production deployment. Production readiness and `/api/health` success do not constitute exact-current-tree P2/P6a verification.
 
 ## Canonical mathematical notation
 
 `φ` is the conventional symbol for the Golden Ratio, `(1+√5)/2 ≈ 1.618033989`.
 
-`σ_{p,q}` denotes the Spinadel metallic-means family, the positive solution of `x² - px - q = 0`. For the ordinary sequence, `σ_n = σ_{n,1}`; `σ_{2,1}` is silver and `σ_{3,1}` is bronze.
+`σ_{p,q}` denotes the Spinadel metallic-means family, the positive solution of `x² - px - q = 0`.
 
-`ρ` denotes the mathematical plastic number, `≈1.3247179572447454`, the unique real root of `x³ - x - 1 = 0`. `P` is an attested alternative notation. `ρP` is not the canonical mathematical notation.
+`ρ` denotes the mathematical plastic number, `≈1.3247179572447454`, the unique real root of `x³ - x - 1 = 0`.
 
 `pP` / **Platinum Mean** is intentional DGAF-specific notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. It is not a standard member of the quadratic metallic-means family and must not be substituted for `ρ` in plastic-number mathematics.
 
-The authoritative notation policy is `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`.
+## Remaining closure sequence
 
-## Forman–Ricci evidence boundary
-
-The unweighted dodecahedral topology produces `Ric_F(e) = -2` for every edge. The resulting zero variance is a **NO_DISCRIMINATING_SIGNAL** condition; it is not anomaly detection and must not be represented as 30 anomalies. Issue #117 tracks the implementation/output semantics correction. Weighted Forman–Ricci remains a falsification track under #72; the existing rank-based top-3 success is a single computed configuration, not general validation.
-
-## P-38 source-integrity boundary
-
-Issue #122 tracks the incomplete P-38 substrate-study tail. A Git history audit on 2026-08-28 confirmed that the earliest retained P-38 commit (`8807dc5c…`, 2026-06-13) already ends at the same `Bit-identical a_n replay va...` boundary. The later correction commit therefore did not remove recoverable source text from the retained history; no authoritative remainder has been reconstructed. The issue remains open pending a provenance-controlled external or otherwise authoritative source. This is documentation/source-integrity remediation only and does not advance experimental gates.
-
-## Public-surface rule
-
-GitHub-visible claims must distinguish implementation, computation, verification, attestation, validation, hypothesis, and historical context. Internal Notion/control records are not default public navigation targets. Public landing surfaces should resolve to repository-local documentation or intentionally designated public resources. Deployment readiness, unit/CI success, a single research trial, or historical certification must not be presented as validated capability without the required evidence scope.
-
-## Historical evidence boundary
-
-Historical evidence remains scoped to the exact application source, deployment, workflow run, and artifact that produced it. The E2b run `33047380487` proves `d299dd1…`; it does not automatically certify `ac8ea26…` or any later documentation lineage. M6 is a separate closed candidate-scoped verification at `ac8ea267…` via run `33050398324`; older M6 evidence targeting `e6beeb…` and verifier merge-ref `2516f32…` remains non-closing for the current candidate boundary.
-
-## Required closure sequence
-
-1. Resolve the TGL/P-35 contract blocker through PR #134 and exact-head validation.
-2. Execute/retain the current-boundary E2b verification needed for freeze admissibility against the exact executing workflow SHA.
-3. Independently inspect exact SHA, scope, integrity, and negative-state claims; M6 closure is already recorded for candidate `ac8ea267…`.
+1. Validate PR #134 on its exact head.
+2. Validate PR #136 current head and the adapter/evidence boundary audit.
+3. Reconcile exact current deployment source identity.
 4. Execute authenticated P2 and P6a against the exact deployment identity.
-5. Complete P4, P5, and P6 evidence/custody.
-6. Complete P7 exact binding.
-7. Reconcile and close P8 only from candidate-scoped evidence.
+5. Complete P3, P4, P5, and P6 candidate-scoped evidence.
+6. Complete exact P7 binding.
+7. Close P8 only from candidate-scoped evidence.
 8. Execute P9 independent verification.
 9. Create and independently verify a new immutable freeze.
 10. Obtain explicit pilot authorization.
-11. Only then execute the authorized blinded pilot.
+11. Execute only the authorized blinded pilot.
 
 **Empirical validity is NOT ESTABLISHED. Pilot authorization is NOT GRANTED. N = 0.**
