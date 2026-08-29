@@ -51,6 +51,21 @@ class ControlTask:
     concurrency_acquired: bool = False
     last_tgl_status: str | None = None
     last_tgl_seal: str | None = None
+    _identity_sealed: bool = field(default=False, init=False, repr=False)
+
+    _IMMUTABLE_FIELDS = frozenset({"task_id", "envelope", "depth", "lineage_id"})
+
+    def __post_init__(self) -> None:
+        if self.lineage_id is None:
+            object.__setattr__(self, "lineage_id", self.envelope.trace_id)
+        object.__setattr__(self, "_identity_sealed", True)
+
+    def __setattr__(self, name: str, value: object) -> None:
+        if getattr(self, "_identity_sealed", False) and name in self._IMMUTABLE_FIELDS:
+            current = getattr(self, name)
+            if value != current:
+                raise ControlPlaneViolation(f"immutable task identity field: {name}")
+        object.__setattr__(self, name, value)
 
     def snapshot(self) -> dict[str, object]:
         return {
@@ -78,7 +93,6 @@ class ControlPlane:
     def submit(self, task: ControlTask) -> None:
         if task.task_id in self.tasks:
             raise ControlPlaneViolation(f"duplicate task_id: {task.task_id}")
-        task.lineage_id = task.lineage_id or task.envelope.trace_id
         self._lineage_limits.setdefault(task.lineage_id, task.envelope.budget.max_concurrency)
         self.tasks[task.task_id] = task
         self.ledgers[task.task_id] = BudgetLedger(task.envelope.budget)
