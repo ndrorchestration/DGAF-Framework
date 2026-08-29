@@ -1,9 +1,12 @@
 """Contract tests for the pre-freeze DGAF/TGL adapter.
 
-CI trigger note: this file is otherwise semantically unchanged; the marker
-forces a non-empty push so the pre-freeze workflow executes on the current head.
+These tests validate deterministic serialization, structured decision mapping,
+bounded state updates, and exact provenance identity across the adapter/TGL
+boundary. They do not authorize pilot execution or generate empirical data.
 """
 from __future__ import annotations
+
+import hashlib
 
 import pytest
 
@@ -119,3 +122,12 @@ def test_adapter_invokes_verified_tgl_without_pilot_authorization(state: Consens
     }
     assert len(result.input_hash) == 64
     assert len(result.audit_seal_hash) == 64
+
+
+def test_adapter_and_tgl_share_exact_input_identity(state: ConsensusState) -> None:
+    """The adapter and canonical TGL must bind the identical full SHA-256 digest."""
+    adapter = DGAF_TGLAdapter(session_id="provenance-test")
+    result = adapter.run_turn(state)
+    expected = hashlib.sha256(result.input_text.encode("utf-8")).hexdigest()
+    assert result.input_hash == expected
+    assert result.audit.input_hash == expected
