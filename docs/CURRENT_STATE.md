@@ -26,7 +26,7 @@ The current kernel contract is explicitly fail-closed:
 - conditional HPG `SKIP` does not itself escalate when Phi-Closure did not pass;
 - terminal `KILL` stops downstream gate execution;
 - the final audit seal covers the complete gate set, including Herald;
-- duplicate or invalid gate outcomes do not silently become PASS.
+- invalid gate outcomes do not silently become PASS.
 
 ### Canonical agent-role boundary
 
