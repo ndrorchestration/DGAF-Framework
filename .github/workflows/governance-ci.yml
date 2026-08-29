@@ -62,8 +62,8 @@ jobs:
       - name: Run P8 pilot artifact and analysis tests
         run: python -m pytest -q experiments/pdmal_pilot/test_analysis.py experiments/pdmal_pilot/test_security_controls.py
 
-      - name: Run agent authority invariant tests
-        run: python -m pytest -q tests/test_agent_authority_invariant.py tests/test_agent_authority_matrix.py tests/test_agent_authority_reconciliation.py
+      - name: Run agent authority and Layer-0 governance tests
+        run: python -m pytest -q tests/test_agent_authority_invariant.py tests/test_agent_authority_matrix.py tests/test_agent_authority_reconciliation.py tests/test_layer0_constitution.py
 
       - name: Run Issue #32 deterministic evaluation slices
         run: |
@@ -191,7 +191,9 @@ jobs:
           test -f tests/test_agent_authority_invariant.py
           test -f tests/test_agent_authority_matrix.py
           test -f tests/test_agent_authority_reconciliation.py
+          test -f tests/test_layer0_constitution.py
           test -f docs/agents/AGENT_AUTHORITY_INVARIANT.md
           test -f docs/agents/AGENT_AUTHORITY_MATRIX.md
           test -f docs/agents/AGENT_AUTHORITY_RECONCILIATION.md
+          test -f docs/agents/LAYER_0_CONSTITUTION.md
           echo 'Governance CI checks completed.'
