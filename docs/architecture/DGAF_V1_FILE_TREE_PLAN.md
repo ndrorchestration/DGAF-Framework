@@ -40,13 +40,13 @@ DGAF-Framework/
 | Capability | Canonical implementation | Integration | Test/CI |
 |---|---|---|---|
 | Governance Envelope | `pptl/governance_envelope.py` | controller/orchestrator | `test_v1_control_plane.py` |
-| Lifecycle controller | `pptl/control_plane.py` | orchestrator + TGL | `test_v1_control_plane.py` + TGL integration |
+| Lifecycle controller | `pptl/control_plane.py` | orchestrator + TGL | core + TGL integration suites |
 | State identity | `pptl/state_identity.py` | controller | `test_v1_control_plane.py` |
-| Branch provenance | `pptl/branch_registry.py` | controller + Herald | `test_v1_control_plane.py` + evidence |
-| Resource accounting | `pptl/budget_ledger.py` | controller/dispatch | `test_v1_control_plane.py` |
-| Plan/commit barrier | `pptl/commit_gate.py` | controller/tool adapters | `test_v1_control_plane.py` |
-| Per-turn governance | existing `pptl/triadic_governance_loop.py` | controller | existing TGL suite + `test_v1_tgl_integration.py` |
-| Constitutional admission | existing `pptl/procluding_premise.py` | TGL/controller | P-35 tests + `test_v1_tgl_integration.py` |
+| Branch provenance | `pptl/branch_registry.py` | controller + Herald | core tests + evidence |
+| Resource accounting | `pptl/budget_ledger.py` | controller/dispatch | core tests |
+| Plan/commit barrier | `pptl/commit_gate.py` | controller/tool adapters | core tests |
+| Per-turn governance | existing `pptl/triadic_governance_loop.py` | controller | existing TGL suite + integration |
+| Constitutional admission | existing `pptl/procluding_premise.py` | TGL/controller | P-35 tests + integration |
 
 ## Canonical ownership rules
 
@@ -54,11 +54,11 @@ One concept has one canonical schema and one semantic owner. Do not duplicate TG
 
 ## Current implementation candidate
 
-The integration branch contains the first executable v1 contract layer: GovernanceEnvelope, ControlTask/ControlPlane/TaskState, StateRegistry, BudgetLedger/Consumption, BranchRecord/BranchRegistry, CommitRequest/CommitGate, deterministic tests, a TGL integration test, dedicated control-plane CI, and package exports.
+The integration branch contains the first executable v1 contract layer: GovernanceEnvelope, ControlTask/ControlPlane/TaskState, StateRegistry, BudgetLedger/Consumption, BranchRecord/BranchRegistry, CommitRequest/CommitGate, deterministic core tests, TGL integration tests, dedicated control-plane CI, and package exports.
 
-The Governance Envelope now explicitly carries `max_depth` and `max_concurrency`; depth and risk inheritance are fail-closed. The controller can invoke a supplied TGL runner only from `EVALUATING`, and terminal TGL failure maps to lifecycle escalation.
+The Governance Envelope carries explicit depth/concurrency limits and enforces non-increasing risk. The controller enforces active-parent child creation, bounded depth, exact-state checks, budget overrun escalation, and TGL terminal-failure propagation.
 
-These remain candidate implementation changes until CI and adversarial review close their corresponding engineering predicates.
+These remain candidate implementation changes until exact-head CI and adversarial review close their corresponding engineering predicates.
 
 ## Cross-repository boundary
 
@@ -78,7 +78,7 @@ The control plane must remain usable without PDMAL. No v1 implementation may alt
 
 ## CI boundary
 
-`pptl-ci.yml` remains the per-turn governance lane. `control-plane-contract.yml` is the deterministic v1 control-plane lane and now executes both the core contract suite and the TGL integration suite. Neither workflow is an authorization mechanism.
+`pptl-ci.yml` remains the per-turn governance lane. `control-plane-contract.yml` is the deterministic v1 control-plane lane and executes both the core contract and TGL integration suites. Neither workflow is an authorization mechanism.
 
 ## Admission rule
 
