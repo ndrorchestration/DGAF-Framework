@@ -23,10 +23,6 @@ class TaskState(str, Enum):
     TERMINATED = "TERMINATED"
 
 
-class ControlPlaneViolation(RuntimeError):
-    """Raised when a lifecycle or governance invariant is violated."""
-
-
 _ALLOWED: dict[TaskState, frozenset[TaskState]] = {
     TaskState.RECEIVED: frozenset({TaskState.PREFLIGHT, TaskState.TERMINATED}),
     TaskState.PREFLIGHT: frozenset({TaskState.ADMITTED, TaskState.ESCALATED}),
@@ -40,6 +36,10 @@ _ALLOWED: dict[TaskState, frozenset[TaskState]] = {
 }
 
 
+class ControlPlaneViolation(RuntimeError):
+    """Raised when a lifecycle or governance invariant is violated."""
+
+
 @dataclass
 class ControlTask:
     task_id: str
@@ -47,6 +47,7 @@ class ControlTask:
     state: TaskState = TaskState.RECEIVED
     depth: int = 0
     state_history: list[str] = field(default_factory=list)
+    concurrency_acquired: bool = False
 
     def snapshot(self) -> dict[str, object]:
         return {
@@ -85,11 +86,15 @@ class ControlPlane:
             self._transition(task, TaskState.ESCALATED)
             return
         try:
+            self.ledgers[task_id].acquire_concurrency()
             self.ledgers[task_id].reserve(Consumption(rounds=1, nodes=1))
         except BudgetExceeded as exc:
+            if self.ledgers[task_id].active_concurrency:
+                self.ledgers[task_id].release_concurrency()
             self.events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
             self._transition(task, TaskState.ESCALATED)
             return
+        task.concurrency_acquired = True
         self._transition(task, TaskState.EXPANDING)
 
     def begin_evaluation(self, task_id: str) -> None:
@@ -127,7 +132,11 @@ class ControlPlane:
             self._transition(task, TaskState.ESCALATED)
 
     def terminate(self, task_id: str) -> None:
-        self._transition(self._task(task_id), TaskState.TERMINATED)
+        task = self._task(task_id)
+        self._transition(task, TaskState.TERMINATED)
+        if task.concurrency_acquired:
+            self.ledgers[task_id].release_concurrency()
+            task.concurrency_acquired = False
 
     def create_child(
         self,
