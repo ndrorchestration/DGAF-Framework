@@ -2,42 +2,43 @@
 
 ## Current status
 
-CI EXECUTION IN PROGRESS / NON-AUTHORIZING
+CI EXECUTION / NON-AUTHORIZING
 
-**Current candidate head:** `b65312db66dc4009b7754226c47345e7ce7808b2`
+**Current confirmed PR #139 head:** `2df8c0601d83488a305f211f510953ea81edcb01`
 
 The v1 candidate contains the deterministic control-plane suite, TGL integration suite, adversarial contract suite, capability-boundary suite, and dedicated security/evidence workflows.
 
 ## Candidate binding
 
-The authoritative engineering candidate is the exact PR #139 head SHA reported by GitHub. Historical run results must not be relabeled as evidence for a later head.
+The authoritative engineering candidate is the exact PR head SHA reported by GitHub. Historical run results must not be relabeled as evidence for a later head.
 
-## Observed execution
+## Historical diagnostic execution
 
-A dedicated v1 control-plane contract run on an earlier PR merge ref executed 35 tests and reported **32 passed / 3 failed**. The failures were concrete contract mismatches: a stale side-effect inheritance expectation, a stale post-escalation assertion, and an abort-transition expectation inconsistent with the then-current lattice. These findings were diagnosed and corrected.
+An earlier dedicated v1 contract execution on a PR merge ref observed **32 passed / 3 failed**. The failures were diagnosed as contract-test mismatches: a stale side-effect inheritance expectation, a stale post-escalation assertion, and an abort-transition expectation inconsistent with the then-current lattice. The corresponding controls/tests were corrected.
 
-Independent completed evidence on the same engineering era includes:
+An earlier PR #132 adversarial execution remains a separate historical signal: **41 passed / 2 failed** at the TGL → P-35 seam. The current consolidated implementation is in PR #139; the earlier result remains diagnostic provenance.
 
-- PDMAL Pre-Authorization Security: success, including adversarial controls, locked P8 analysis tests, pilot-artifact schema tests, execution-contract tests, durable-retention tests, and explicit non-empirical-mode verification.
-- DGAF Regression Suite local/no-network checks: success; live Vercel regression skipped because the live deployment boundary is not currently eligible.
-- CodeQL and repository/evidence/truth-layer checks observed successful on an exact PR #139 merge ref.
+## Current exact-head evidence
 
-These results remain exact-ref evidence and are not promoted to current-head verification after subsequent commits.
+For `2df8c060…`, exact-head CodeQL completed successfully and exact-head Truth Layer Validation completed successfully. Other repository-wide checks may be triggered independently.
 
-## Current deployment blocker
+The dedicated `DGAF v1 Control-Plane Contract` check currently has **no exact-head check-run record** for `2df8c060…`. Therefore the consolidated v1 control-plane contract is **not currently verified** on the authoritative head.
 
-For current head `b65312db66dc4009b7754226c47345e7ce7808b2`, GitHub status reports Vercel **failure** with description: `Deployment rate limited — retry in 24 hours.` This is an infrastructure-side blocker and does not constitute a code-test failure, but it prevents current-head live deployment verification.
+## CI hardening
 
-## Expected core execution
+The dedicated workflow definition is configured to:
 
-`python -m pytest -q pptl/tests/test_v1_control_plane.py pptl/tests/test_v1_tgl_integration.py pptl/tests/test_v1_adversarial_contract.py`
+- check out `${{ github.event.pull_request.head.sha || github.sha }}`;
+- assert `git rev-parse HEAD` exactly equals the expected candidate SHA;
+- install pinned repository CI dependencies plus pinned pandas;
+- execute core control-plane, TGL integration, adversarial, and capability-boundary suites.
 
-## Observation rule
+## Deployment blocker
 
-No test, workflow, deployment, or review result may be recorded here as current verification unless it is tied to the exact executed candidate SHA. A later SHA requires fresh evidence or an explicit, scope-preserving lineage record.
+GitHub's aggregate status includes a Vercel failure associated with deployment quota/rate-limit conditions. A same-branch READY preview has been observed, but no READY deployment has been accepted as exact-current-main production identity without source-SHA matching. Issue #137 remains the canonical deployment/source-binding gate.
 
-## Non-authorizing boundary
+## Interpretation
 
-CI execution is engineering verification only. It does not create a PDMAL freeze, authorize a pilot, increase empirical N, or establish PDMAL efficacy.
+CI success, deployment readiness, deterministic fixtures, synthetic evaluator results, and documentation consistency are engineering evidence only. None constitutes PDMAL efficacy evidence, a new freeze, or pilot authorization.
 
 **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
