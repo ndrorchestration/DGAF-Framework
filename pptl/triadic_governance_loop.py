@@ -64,13 +64,7 @@ class TurnAuditRecord:
 
     def _canonical_gate_payload(self) -> list[dict[str, Any]]:
         return [
-            {
-                "step": g.step,
-                "pattern": g.pattern,
-                "gate": g.gate_name,
-                "result": g.result.value,
-                "notes": g.notes,
-            }
+            {"step": g.step, "pattern": g.pattern, "gate": g.gate_name, "result": g.result.value, "notes": g.notes}
             for g in self.gate_records
         ]
 
@@ -85,12 +79,7 @@ class TurnAuditRecord:
             "timestamp": self.timestamp,
             "gates": self._canonical_gate_payload(),
         }
-        canonical = json.dumps(
-            payload,
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-        ).encode("utf-8")
+        canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
         self.seal_hash = hashlib.sha256(canonical).hexdigest()
         return self.seal_hash
 
@@ -158,15 +147,7 @@ class TriadicGovernanceLoop:
     def _hash_input(self, text: str) -> str:
         return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-    def _run_hook(
-        self,
-        hook_fn: Optional[Callable],
-        input_text: str,
-        context: dict[str, Any],
-        step: int,
-        pattern: str,
-        gate_name: str,
-    ) -> GateRecord:
+    def _run_hook(self, hook_fn: Optional[Callable], input_text: str, context: dict[str, Any], step: int, pattern: str, gate_name: str) -> GateRecord:
         if hook_fn is None:
             return GateRecord(step, pattern, gate_name, GateResult.SKIP, "Hook not wired")
         try:
@@ -192,24 +173,12 @@ class TriadicGovernanceLoop:
             return TurnStatus.WARN
         return current
 
-    def _seal_and_emit_terminal_premise_failure(
-        self,
-        input_text: str,
-        gates: list[GateRecord],
-        input_hash: str,
-        timestamp: str,
-        context: dict[str, Any],
-    ) -> None:
+    def _seal_and_emit_terminal_premise_failure(self, input_text: str, gates: list[GateRecord], input_hash: str, timestamp: str, context: dict[str, Any]) -> None:
         """Record P-35 terminal state and contain any Herald failure."""
-        rec = TurnAuditRecord(
-            self.session_id,
-            self._turn_counter,
-            self.agent_id,
-            input_hash,
-            gates,
-            TurnStatus.KILL,
-            timestamp,
-        )
+        rec = TurnAuditRecord(self.session_id, self._turn_counter, self.agent_id, input_hash, gates, TurnStatus.KILL, timestamp)
+        # The pre-Herald seal is retained in the emitted event; the returned chain is
+        # then extended with Herald and sealed again, exactly as in the normal path.
+        rec.seal()
         herald_rec = self._run_hook(
             self.hooks.herald_fn,
             input_text,
@@ -235,8 +204,8 @@ class TriadicGovernanceLoop:
         try:
             self._premise_gate.evaluate(input_text, check_fn=self.hooks.premise_check_fn)
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS))
-        except PremiseViolationError:
-            gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL))
+        except PremiseViolationError as exc:
+            gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, str(exc)[:120]))
             self._seal_and_emit_terminal_premise_failure(input_text, gates, input_hash, timestamp, context)
             raise
         except Exception as exc:
