@@ -254,5 +254,18 @@ def test_terminal_task_cannot_consume_resources():
     assert ledger.consumed == before
 
 
+def test_create_child_duplicate_id_does_not_pollute_state_registry():
+    plane = ControlPlane()
+    root = ControlTask("root", envelope()); plane.submit(root); plane.admit("root")
+    existing = ControlTask("child", envelope(trace_id="existing-trace", task_id="child"))
+    plane.submit(existing)
+    before = plane.state_registry.count
+    with pytest.raises(ControlPlaneViolation, match="duplicate task_id: child"):
+        plane.create_child("root", task_id="child", trace_id="new-child-trace",
+                           authority_scope={"research"}, permitted_tools={"read"},
+                           data_classes={"public"}, envelope_budget=budget(max_depth=1))
+    assert plane.state_registry.count == before
+
+
 def root_lineage(task: ControlTask) -> str:
     return task.lineage_id or task.envelope.trace_id
