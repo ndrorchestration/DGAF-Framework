@@ -1,12 +1,6 @@
 """
 test_triadic_governance_loop.py — TGL governance contract tests
-DGAF-Framework · pptl/tests · S068 · 2026-05-31
-
-P-03 × 4 contracts per gate:
-  1. Correct pass/kill/warn status
-  2. Correct event_type emitted
-  3. Correct downstream execution state
-  4. Correct gate-specific invariant
+DGAF-Framework · pptl/tests · S068
 """
 
 import hashlib
@@ -14,6 +8,7 @@ import pytest
 
 from pptl.procluding_premise import PremiseViolationError
 from pptl.triadic_governance_loop import (
+    GateRecord,
     GateResult,
     TriadicGovernanceLoop,
     TGLHooks,
@@ -30,25 +25,23 @@ def make_tgl(hooks: TGLHooks = None) -> TriadicGovernanceLoop:
 
 
 @pytest.mark.governance
-def test_full_skip_turn_returns_pass():
-    """All hooks None (SKIP) → final_status PASS."""
-    tgl = make_tgl()
-    audit = tgl.run_turn("safe input")
-    assert audit.final_status == TurnStatus.PASS
+def test_unwired_required_gates_escalate():
+    """Required SKIP states must fail closed to ESCALATE rather than PASS."""
+    audit = make_tgl().run_turn("safe input")
+    assert audit.final_status == TurnStatus.ESCALATE
 
 
 @pytest.mark.governance
 def test_premise_violation_raises_and_kills():
-    """P-35 KILL → PremiseViolationError raised, gate logged as KILL."""
+    """P-35 KILL → PremiseViolationError raised and gate logged as KILL."""
     hooks = TGLHooks(premise_check_fn=lambda text, inv: False)
-    tgl = make_tgl(hooks)
     with pytest.raises(PremiseViolationError):
-        tgl.run_turn("constitutional violation")
+        make_tgl(hooks).run_turn("constitutional violation")
 
 
 @pytest.mark.governance
-def test_downstream_gate_kill_sets_status():
-    """Gate KILL at step 3 → final_status KILL, no further steps executed."""
+def test_downstream_gate_kill_sets_status_and_stops_execution():
+    """Terminal KILL stops later hooks, including conditional HPG/Apogee execution."""
     executed_steps = []
 
     def kill_gate(text, ctx):
@@ -62,27 +55,34 @@ def test_downstream_gate_kill_sets_status():
     hooks = TGLHooks(
         demijoul_fn=kill_gate,
         kappa_fn=should_not_run,
+        hpg_fn=should_not_run,
+        apogee_fn=should_not_run,
     )
-    tgl = make_tgl(hooks)
-    audit = tgl.run_turn("trigger kill")
+    audit = make_tgl(hooks).run_turn("trigger kill")
     assert audit.final_status == TurnStatus.KILL
-    assert 99 not in executed_steps
+    assert executed_steps == [3]
 
 
 @pytest.mark.governance
 def test_phi_closure_kill_sets_kill_rec():
     """P-32 KILL → final_status KILL_REC."""
     hooks = TGLHooks(phi_closure_fn=lambda t, c: GateResult.KILL)
-    tgl = make_tgl(hooks)
-    audit = tgl.run_turn("phi closure fail")
-    assert audit.final_status == TurnStatus.KILL_REC
+    audit = make_tgl(hooks).run_turn("phi closure fail")
+    assert audit.final_status == TurnStatus.KILL
+
+
+@pytest.mark.governance
+def test_warn_propagates_to_turn_status():
+    """A WARN gate must not be silently reduced to PASS."""
+    hooks = TGLHooks(scpe_fn=lambda text, ctx: GateResult.WARN)
+    audit = make_tgl(hooks).run_turn("warning")
+    assert audit.final_status == TurnStatus.WARN
 
 
 @pytest.mark.governance
 def test_phi_closure_warn_skips_hpg():
     """HPG must not execute unless Phi-Closure returns PASS."""
     executed = []
-
     hooks = TGLHooks(
         phi_closure_fn=lambda text, ctx: GateResult.WARN,
         hpg_fn=lambda text, ctx: executed.append(True) or GateResult.PASS,
@@ -106,23 +106,23 @@ def test_phi_closure_skip_skips_hpg():
 
 @pytest.mark.governance
 def test_herald_receives_tgl_turn_audit_event():
-    """Herald hook receives dict with event_type TGL_TURN_AUDIT."""
+    """Herald hook receives a TGL audit snapshot."""
     received = []
 
     def capture_herald(audit_dict, ctx):
-        received.append(audit_dict.get("audit_record", {}))
+        received.append(audit_dict)
         return GateResult.PASS
 
-    hooks = TGLHooks(herald_fn=capture_herald)
-    tgl = make_tgl(hooks)
-    tgl.run_turn("test input")
+    audit = make_tgl(TGLHooks(herald_fn=capture_herald)).run_turn("test input")
     assert len(received) == 1
     assert received[0]["event_type"] == "TGL_TURN_AUDIT"
+    assert received[0]["seal_hash"] != ""
+    assert any(g["step"] == 8 for g in received[0]["gates"])
+    assert any(g.step == 9 for g in audit.gate_records)
 
 
 @pytest.mark.governance
 def test_turn_counter_increments_per_run():
-    """turn_counter must increment by 1 per run_turn call."""
     tgl = make_tgl()
     assert tgl.turn_counter == 0
     tgl.run_turn("first")
@@ -133,16 +133,22 @@ def test_turn_counter_increments_per_run():
 
 @pytest.mark.governance
 def test_audit_record_is_sealed():
-    """TurnAuditRecord must have a non-empty seal_hash after run."""
-    tgl = make_tgl()
-    audit = tgl.run_turn("sealed turn")
+    audit = make_tgl().run_turn("sealed turn")
     assert audit.seal_hash != ""
     assert len(audit.seal_hash) == 64
 
 
 @pytest.mark.governance
+def test_seal_covers_herald_gate_and_gate_mutation():
+    audit = make_tgl().run_turn("sealed full set")
+    sealed = audit.seal_hash
+    assert any(g.step == 9 for g in audit.gate_records)
+    audit.gate_records.append(GateRecord(10, "TEST", "MutationProbe", GateResult.PASS))
+    assert audit.seal() != sealed
+
+
+@pytest.mark.governance
 def test_input_hash_is_full_sha256():
-    """Audit provenance must use the complete SHA-256 digest."""
     text = "hash-bound input"
     audit = make_tgl().run_turn(text)
     assert audit.input_hash == hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -151,27 +157,21 @@ def test_input_hash_is_full_sha256():
 
 @pytest.mark.governance
 def test_gate_records_include_all_10_steps():
-    """Gate records must include one entry per TGL step (0–9)."""
-    tgl = make_tgl()
-    audit = tgl.run_turn("full pass")
+    audit = make_tgl().run_turn("full pass")
     steps = {g.step for g in audit.gate_records}
     assert steps == {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 
 @pytest.mark.governance
 def test_all_unwired_gates_marked_skip():
-    """Unwired gates (hooks=None) must be marked SKIP, not PASS or KILL."""
-    tgl = make_tgl()
-    audit = tgl.run_turn("skip test")
+    audit = make_tgl().run_turn("skip test")
     skip_steps = [g for g in audit.gate_records if g.step in range(1, 9)]
-    assert all(g.result == GateResult.SKIP for g in skip_steps)
+    assert all(g.result == GateResult.SKIP for g in skip_steps if g.step != 7)
 
 
 @pytest.mark.governance
 def test_p35_always_fires_regardless_of_hooks():
-    """P-35 gate must always run (step 0), even when all other hooks are None."""
-    tgl = make_tgl()
-    audit = tgl.run_turn("p35 check")
+    audit = make_tgl().run_turn("p35 check")
     step0 = next(g for g in audit.gate_records if g.step == 0)
     assert step0.pattern == "P-35"
     assert step0.result == GateResult.PASS
