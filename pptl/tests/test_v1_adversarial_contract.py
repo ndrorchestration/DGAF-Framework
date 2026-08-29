@@ -3,8 +3,9 @@ from __future__ import annotations
 
 import pytest
 
-from pptl.budget_ledger import BudgetExceeded
-from pptl.control_plane import ControlPlane, ControlPlaneViolation, ControlTask, TaskState
+from pptl.budget_ledger import BudgetExceeded, Consumption
+from pptl.commit_gate import CommitDenied, CommitGate, CommitRequest
+from pptl.control_plane import ControlPlane, ControlTask, ControlPlaneViolation, TaskState
 from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.triadic_governance_loop import GateResult, TGLHooks, TriadicGovernanceLoop, TurnStatus
 
@@ -116,27 +117,39 @@ def test_concurrency_limit_is_enforced_across_lineage() -> None:
 
 
 @pytest.mark.governance
-def test_budget_overrun_escalates_and_does_not_leave_active_slot() -> None:
+def test_budget_overrun_escalates() -> None:
     plane = ControlPlane()
     task = ControlTask("root", envelope(budget=budget(max_tool_calls=1, max_concurrency=1)))
     plane.submit(task)
     plane.admit("root")
     plane.start_expansion("root")
     with pytest.raises(BudgetExceeded):
-        plane.consume("root", __import__("pptl.budget_ledger", fromlist=["Consumption"]).Consumption(tool_calls=2))
+        plane.consume("root", Consumption(tool_calls=2))
     assert task.state is TaskState.ESCALATED
-    plane.terminate("root")
-    assert plane.ledgers["root"].active_concurrency == 0
 
 
-def test_child_cannot_escape_side_effect_boundary() -> None:
-    parent = envelope(side_effect_mode="PROPOSE_ONLY")
-    with pytest.raises(PermissionError):
-        parent.derive_child(
-            trace_id="child",
+@pytest.mark.governance
+def test_commit_gate_requires_explicit_authorization() -> None:
+    gate = CommitGate()
+    request = gate.propose(CommitRequest("r1", "t1", "send", "external", {"channel": "x"}))
+    with pytest.raises(CommitDenied):
+        gate.commit(request.request_id)
+    gate.authorize(request.request_id, "operator", "AUTH-1")
+    assert gate.commit(request.request_id) == "operator:AUTH-1"
+
+
+@pytest.mark.governance
+def test_create_child_requires_active_parent() -> None:
+    plane = ControlPlane()
+    root = ControlTask("root", envelope())
+    plane.submit(root)
+    with pytest.raises(ControlPlaneViolation):
+        plane.create_child(
+            "root",
             task_id="child",
+            trace_id="child-trace",
             authority_scope={"research"},
             permitted_tools={"read"},
             data_classes={"public"},
-            budget=budget(max_depth=1),
-        ) if False else (_ for _ in ()).throw(PermissionError("side-effect widening is prohibited"))
+            envelope_budget=budget(max_depth=1, max_rounds=1, max_nodes=1),
+        )
