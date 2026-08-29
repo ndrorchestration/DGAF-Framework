@@ -104,4 +104,6 @@ Historical evidence remains scoped to the exact application source, deployment, 
 10. Obtain explicit pilot authorization.
 11. Only then execute the authorized blinded pilot.
 
-**Empirical validity is NOT ESTABLISHED. Pilot authorization is NOT GRANTED. N = 0.**
+## Current experimental state
+
+Empirical validity is NOT ESTABLISHED. Pilot authorization is NOT GRANTED. N = 0.
