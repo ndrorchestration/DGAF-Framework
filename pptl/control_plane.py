@@ -26,8 +26,8 @@ class TaskState(str, Enum):
 
 _ALLOWED = {
     TaskState.RECEIVED: {TaskState.PREFLIGHT, TaskState.TERMINATED},
-    TaskState.PREFLIGHT: {TaskState.ADMITTED, TaskState.ESCALATED},
-    TaskState.ADMITTED: {TaskState.EXPANDING, TaskState.EVALUATING, TaskState.ESCALATED},
+    TaskState.PREFLIGHT: {TaskState.ADMITTED, TaskState.ESCALATED, TaskState.TERMINATED},
+    TaskState.ADMITTED: {TaskState.EXPANDING, TaskState.EVALUATING, TaskState.ESCALATED, TaskState.TERMINATED},
     TaskState.EXPANDING: {TaskState.EVALUATING, TaskState.ESCALATED, TaskState.TERMINATED},
     TaskState.EVALUATING: {TaskState.EXPANDING, TaskState.MERGE_READY, TaskState.ESCALATED, TaskState.TERMINATED},
     TaskState.MERGE_READY: {TaskState.COMMIT_READY, TaskState.ESCALATED, TaskState.TERMINATED},
@@ -319,7 +319,8 @@ class ControlPlane:
         if parent.depth + 1 > parent.envelope.budget.max_depth:
             raise ControlPlaneViolation("child exceeds maximum recursion depth")
         child = ControlTask(task_id=task_id, depth=parent.depth + 1, lineage_id=parent.lineage_id, envelope=parent.envelope.derive_child(trace_id=trace_id, task_id=task_id, authority_scope=authority_scope, permitted_tools=permitted_tools, data_classes=data_classes, budget=envelope_budget, side_effect_mode=side_effect_mode))
-        if self._state_registry.contains(child.snapshot()):
+        candidate_snapshot = child.snapshot()
+        if self._state_registry.contains(candidate_snapshot):
             raise ControlPlaneViolation("repeated orchestration state")
         self.submit(child)
         self._state_registry.observe(child.snapshot())
