@@ -2,8 +2,8 @@
 
 **Invariant:** DGAF-AUTH-001  
 **Status:** ACTIVE — BASELINE DERIVATIVE  
-**Version:** 1.0.0  
-**Purpose:** Machine-readable-by-inspection derivative of the canonical roster, formation topology, and agent specifications. This matrix does not grant authority; it records existing authority boundaries and identifies where reconciliation is required.
+**Version:** 1.1.0  
+**Purpose:** Machine-readable-by-inspection derivative of canonical agent authority sources. This matrix records authority boundaries; it does not grant authority.
 
 > **Core invariant:** Shared governance ontology MUST NOT imply shared authority.
 
@@ -20,31 +20,64 @@
 | PUBLICATION | May control or execute outward-facing publication within its defined contract |
 | STATE | Represents a system condition, not an independent agent authority |
 
-## 2. Canonical Baseline
+## 2. Current Authority Baseline
 
 | Agent | Current documented role | Authority class | Explicit boundary | Source |
 |---|---|---|---|---|
-| Amethyst | Meta-orchestration; final commit/normative governance | SOVEREIGN / GATE | Cannot silently inherit another specialist's lane | AGENT_ROSTER.md |
-| Apogee | Evidence governance; verification; Layer-0 legitimacy gate | GATE / VERIFICATION | Owns scoring/verification lane; does not become execution authority | AGENT_ROSTER.md; FORMATION_TOPOLOGY.md |
-| Perigee | Proximal boundary/security filter | GATE | Automatic boundary blocks within its documented scope | AGENT_ROSTER.md; FORMATION_TOPOLOGY.md |
-| Nova | Innovation/simulation | ADVISORY / SIMULATION | Advisory until applicable governance gate clears | AGENT_ROSTER.md |
-| Professor Prodigy | Mathematical/formalization authority | VERIFICATION / ADVISORY | Does not orchestrate | AGENT_ROSTER.md; PROFESSOR_PRODIGY_KB.md |
-| COLLEEN | Institutional anchor; swarm/continuity/archive governance | GOVERNANCE / ARCHIVAL | Surfaces and manages governance state; normative authority remains governed by canonical assignments | AGENT_ROSTER.md |
-| The Librarian | Provenance/archive | ARCHIVAL | Preserves records; does not alter decision authority | AGENT_ROSTER.md |
-| The Auditor | Constraint verification / QA | VERIFICATION / GATE | Validates; does not silently execute | AGENT_ROSTER.md |
-| The Actualizer | Code/artifact execution | EXECUTION | Implements authorized changes; cannot infer authorization from feasibility | AGENT_ROSTER.md |
-| Zenith | Compute/system-high optimization | ADVISORY / INFRASTRUCTURE | Resource/compute lane only | AGENT_ROSTER.md |
-| Reson | Harmonic coherence | VERIFICATION / GATE | Harmonic score lane; threshold semantics remain scoped | AGENT_ROSTER.md |
-| Lyra | Narrative/synthesis | ADVISORY / PUBLIC-FACING SUPPORT | No authority to change governance state | AGENT_ROSTER.md |
-| Echolette | Pattern amplification/echo validation | VERIFICATION / ADVISORY | Phrase/coherence lane only | AGENT_ROSTER.md |
-| Ionia | 0Hz convergence state | STATE | Not a functional seat; no independent decision authority | FORMATION_TOPOLOGY.md; AGENT_ECOSYSTEM_REGISTRY.md |
-| DemiJoule | Token/compute efficiency; quality-cost analysis | ADVISORY | Normal operation non-blocking; joint block only with specified Apogee failure | DEMIJOULÉ SPEC / roster |
-| Herald | External publication/release communication | PUBLICATION / EXECUTION | Executes publication authority within release contract; cannot publish sovereign data | HERALD SPEC |
-| Reciprocity | Fairness/rollback/TNR/feedback integrity | GATE / ADVISORY | Owns Q9/F-4 rollback lane; fairness flags remain distinct from governance authority | RECIPROCITY SPEC / INTEGRATION |
-| Sentinel-Φ / Sentinel | Security/IP/T3 boundary | GATE / HARD BLOCK | Sovereign/security boundary only; conflict resolution follows canonical contract | SENTINEL SPEC / FORMATION_TOPOLOGY |
-| Sentience | Ethics Bridge / ETHICAL_HOLD | GATE | Holds ethical review authority within its sealed Ethics Bridge contract | FORMATION_TOPOLOGY / REGISTRY |
+| Amethyst | Meta-orchestration; normative governance/final commit gate | SOVEREIGN / GATE | Cannot silently inherit another specialist's lane | AGENT_ROSTER.md; Control Center |
+| Apogee | Verification / evidence governance; 11Q integrity lane | GATE / VERIFICATION | Verification is distinct from execution and authorship | AGENT_ROSTER.md; FORMATION_TOPOLOGY.md |
+| Perigee | Legitimacy / boundary / security filter | GATE | Layer-0 legitimacy and contaminated-input blocking remain scoped to its contract | AGENT_ROSTER.md |
+| Nova | Innovation / simulation | ADVISORY / SIMULATION | Advisory until applicable governance gate clears | AGENT_ROSTER.md |
+| Professor Prodigy | Formalization / proof / mathematical claim review | VERIFICATION / ADVISORY | Non-orchestrating; does not acquire normative authority from analysis | AGENT_ROSTER.md; Notion Agent Registry |
+| COLLEEN | Continuity / archive / swarm routing | GOVERNANCE / ARCHIVAL | Does not make unassigned normative decisions | AGENT_ROSTER.md |
+| The Librarian | Provenance / archive | ARCHIVAL | Preserves records; cannot alter authority | AGENT_ROSTER.md |
+| The Auditor | Constraint verification / QA | VERIFICATION / GATE | Validates within its QA lane; cannot silently execute | AGENT_ROSTER.md |
+| The Actualizer | Code / artifact execution | EXECUTION | Implements authorized decisions; cannot infer authorization from feasibility | AGENT_ROSTER.md |
+| Zenith | System-high / compute optimization | ADVISORY / INFRASTRUCTURE | Resource/compute lane only | AGENT_ROSTER.md |
+| Reson | Harmonic coherence | VERIFICATION / GATE | Harmonic threshold lane; no general governance authority | AGENT_ROSTER.md |
+| Lyra | Synthesis / narrative | ADVISORY / PUBLIC-FACING SUPPORT | Cannot change governance state | AGENT_ROSTER.md |
+| Echolette | Pattern amplification / echo validation | VERIFICATION / ADVISORY | Phrase/coherence lane only | AGENT_ROSTER.md |
+| Ionia | Modal lock / convergence state | STATE / ADVISORY | State representation; no independent governance authority | FORMATION_TOPOLOGY.md; REGISTRY |
+| DemiJoule | Ethics/resource-efficiency advisory; cost/bloat analysis | ADVISORY | Cannot independently veto, authorize, or execute; reports constraints to governing authority | DEMI_JOULE_SPEC.md; Notion profile |
+| Herald | Broadcast / release communication | PUBLICATION / EXECUTION | Relays/records and executes publication within release contract; cannot create evidence or approval | HERALD_SPEC.md; Notion profile |
+| Reciprocity | Fairness / rollback / asymmetry review | GATE / ADVISORY | F-4 rollback block and fairness lane only; no general normative authority | RECIPROCITY_SPEC.md; Notion profile |
+| Sentinel-Φ | Strategic security / sovereign-IP boundary | GATE / HARD BLOCK | Security, sovereign/IP, protected-disclosure, and fail-closed containment within contract | SENTINEL_SPEC.md; Notion Sentinel-Phi profile |
 
-## 3. Non-Delegation Rules
+## 3. Shared Layer-0 Constitutional Substrate
+
+Layer 0 is a distributed constitutional constraint, not a single-agent ownership claim. The authoritative Layer-0 contract is `docs/agents/LAYER_0_CONSTITUTION.md` and is constrained by DGAF-AUTH-001.
+
+Layer 0 covers, as applicable:
+
+- human dignity and human rights;
+- lawful-operation constraints;
+- safety and security;
+- privacy and data protection;
+- non-discrimination and fairness;
+- human agency and legitimate oversight;
+- public accountability;
+- transparency and contestability where applicable;
+- protection against inappropriate disclosure of sensitive or sovereign material;
+- public comprehension and truthful maturity/evidence representation.
+
+Domain responsibilities are distributed. No agent receives total Layer-0 authority merely because it is capable of reasoning about Layer-0 issues.
+
+## 4. Layer-0 Specialist Composition
+
+| Specialist | Layer-0 contribution | Authority limit |
+|---|---|---|
+| Perigee | Legitimacy / boundary filtering | Scope limited to its defined legitimacy/security gate |
+| Sentinel-Φ | Security, sovereign boundary, protected disclosure, fail-closed containment | Does not become general ethics or normative authority |
+| Reciprocity | Fairness, asymmetry, affected-party and reciprocal-impact analysis | Does not become general normative authority |
+| Professor Prodigy | Formal/category analysis of rights, policy, mathematical, and epistemic claims | Non-orchestrating; no authority inferred from expertise |
+| Amethyst | Governance disposition where canonically assigned | Cannot impersonate specialist verification/security authority |
+| DemiJoule | Convert approved constraints into efficient engineering recommendations | Advisory; no unilateral veto/authorization |
+| Herald | Make approved status/evidence understandable and control public release | Cannot manufacture evidence or governance approval |
+| Apogee | Independent evidence/quality verification where assigned | Verification is not normative authorization |
+| COLLEEN / Librarian | Preserve governance state, provenance, and historical distinctions | Records do not themselves authorize action |
+| Reson / Lyra / Echolette | Domain-specific observations, synthesis, communication and coherence | Domain output cannot silently become governance state |
+
+## 5. Non-Delegation Rules
 
 1. Capability overlap does not create authority overlap.
 2. Advisory output MUST NOT silently become authorization.
@@ -52,73 +85,64 @@
 4. Execution MUST require the authorization defined by the governing contract.
 5. Publication MUST preserve classification and truthful evidence status.
 6. Layer-0 constraints propagate downstream; no single agent is presumed to own all Layer-0 meaning.
-7. A system STATE such as Ionia/0Hz MUST NOT be treated as an agent with independent authority.
-8. T3/SOVEREIGN material remains subject to the repository's IP firewall and Drive-only rules.
+7. State representations such as Ionia/0Hz MUST NOT be treated as independent agents with authority.
+8. T3/SOVEREIGN material remains subject to the repository IP firewall and Drive-only rules.
+9. Historical aliases or merged identities MUST NOT be treated as additional active seats.
 
-## 4. Layer-0 Shared Substrate
-
-Layer 0 is a **shared constitutional substrate**, not a single-persona role. It includes:
-
-- human dignity and human rights;
-- lawful-operation constraints;
-- safety and security;
-- privacy;
-- non-discrimination and fairness;
-- human agency and oversight;
-- public accountability;
-- legitimate disclosure/transparency;
-- contestability/recourse where applicable;
-- protection against inappropriate exposure of sensitive or sovereign material.
-
-Specialist interpretation is divided by domain. Canonical gate ownership remains defined by the roster and topology.
-
-## 5. Public Legibility & Visibility
+## 6. Public Legibility & Visibility
 
 For public-facing DGAF surfaces, evaluate independently:
 
-**Accessibility → Comprehensibility → Appropriateness of disclosure.**
+**Accessibility → Comprehensibility → Appropriateness of Disclosure.**
 
-Agents must preserve explicit status distinctions:
+Preserve status distinctions:
 
 `IMPLEMENTED · TESTED · VERIFIED · EXPERIMENTALLY DEMONSTRATED · PROPOSED · HYPOTHETICAL · HISTORICAL · NOT ESTABLISHED`
 
-Public presentation must optimize for accurate comprehension, not persuasion.
+Repository/account visibility review should consider source code, branches, pull requests, issues, Actions logs, artifacts, releases, deployment metadata, generated files, historical commits, external integrations, credentials/secrets exposure, personal information, and sovereign/IP material.
 
-## 6. Reconciliation Requirements
+## 7. Current Identity Normalization
 
-The following are known sources requiring explicit reconciliation before authority changes are canonicalized:
+**Sentinel-Φ** is the active canonical identity. **Sentinel** is a historical alias only. **Sentience** is a historical/merged identity and is not a separate active seat. These labels MUST NOT create duplicated authority.
 
-- legacy role text in `AGENT_ROSTER.md` versus newer role-specific specs;
-- Layer-0 attribution/ownership language across roster, topology, and agent documents;
-- Sentinel versus Sentinel-Φ naming and authority continuity;
-- historical IDs versus current formation IDs;
-- agent specification naming conventions;
-- any Drive/GitHub representation drift.
+## 8. Reconciliation Targets
 
-These are **reconciliation targets**, not permission to silently rewrite canonical authority.
+The following remain explicit reconciliation targets:
 
-## 7. Required Change Procedure
+- legacy `AGENT_ROSTER.md` text versus newer Notion taxonomy/registry state;
+- historical versus current formation IDs;
+- expanded registry agent count versus visible enumerations;
+- per-agent SPEC naming and completeness;
+- Layer-0 ownership language across legacy gates, roster, topology, and current profiles;
+- Drive/GitHub representation drift;
+- exact source SHA/provenance for current claims.
 
-For a proposed authority change:
+These are discrepancies to resolve under governance, not permission to infer a winner.
 
-1. identify the affected agent and current authority source;
-2. compare roster, topology, registry, and SPEC/KB/PROTOCOL/INTEGRATION artifacts;
-3. identify conflicts and historical provenance;
-4. define the proposed delta and its scope;
-5. obtain the authorization required by the canonical governance contract;
-6. update all affected artifacts atomically where practical;
-7. add or update deterministic tests;
-8. verify exact commit identity and CI evidence;
-9. update public-facing documentation without overstating evidence.
+## 9. Change Procedure
 
-## 8. Conformance Target
+For every proposed authority change:
 
-A future automated check should fail when:
+1. identify the current authority source;
+2. compare roster, topology, registry, SPEC/KB/PROTOCOL/INTEGRATION artifacts, and current Control Center state;
+3. identify historical/superseded material;
+4. define the proposed delta and affected contracts;
+5. obtain required authorization;
+6. update affected artifacts coherently;
+7. add deterministic tests;
+8. verify exact commit/runtime evidence;
+9. update public-facing material without overstating evidence;
+10. retain the provenance trail.
 
-- an agent claims an authority absent from the canonical matrix;
-- two agents are assigned the same exclusive authority without an explicit shared-gate contract;
-- an execution agent is permitted to proceed without required authorization;
-- a publication artifact crosses its classification boundary;
-- a documented role change is missing its required provenance/authorization record.
+## 10. Conformance Target
 
-**The matrix is descriptive at this stage. It does not supersede the sovereign roster or sealed formation contracts.**
+Future automated checks SHOULD fail when:
+
+- an agent claims authority absent from canonical sources;
+- an exclusive gate is duplicated without an explicit shared-gate contract;
+- an execution agent lacks required authorization;
+- publication crosses a classification boundary;
+- a merged/historical identity is treated as active;
+- a material role change lacks provenance and authorization evidence.
+
+**This matrix remains a governed derivative. It does not supersede the current Control Center, sealed formation contracts, or explicitly authoritative source documents within their defined scope.**
