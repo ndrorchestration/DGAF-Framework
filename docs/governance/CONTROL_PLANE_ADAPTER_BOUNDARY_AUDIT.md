@@ -1,8 +1,8 @@
 # DGAF Control-Plane Adapter Boundary Audit
 
-**Status:** ENGINEERING AUDIT / NON-AUTHORIZING
-**Date:** 2026-08-29
-**Current PR #139 head:** `228cf8db6f9f811574dc24310e822a2a2a882fff`
+**Status:** ENGINEERING AUDIT / NON-AUTHORIZING  
+**Date:** 2026-08-29  
+**Current PR #139 head:** `2df8c0601d83488a305f211f510953ea81edcb01`
 
 ## Scope
 
@@ -28,16 +28,16 @@ This audit covers the boundary between the generic DGAF v1 recursive control pla
 
 ## Evidence
 
-The dedicated adapter-boundary and v1 control-plane workflows have produced historical successful checks on earlier PR merge refs. The first exact control-plane contract execution also exposed three concrete test-contract mismatches; those were diagnosed and corrected. No historical result is being relabeled as current-head verification.
+The first dedicated v1 contract execution on an earlier PR merge ref produced 32 passed / 3 failed. The failures were contract-test mismatches and were diagnosed/corrected. That result is historical diagnostic evidence and is not relabeled as validation of the current head.
 
-Fresh exact-head CI remains required for `228cf8db…` after the latest hardening/documentation commits. The engineering audit therefore remains implemented but not promoted to stable current-head verification.
+For exact current head `2df8c060…`, CodeQL and truth-layer checks completed successfully. The dedicated `DGAF v1 Control-Plane Contract` exact-head check currently has no check-run record, so the control-plane implementation remains validation-pending. Historical successful workflow results on other SHAs are not automatically transferable.
 
-## Known external boundary
+## Deployment boundary
 
-Production source identity remains separately governed under Issue #137. A READY Vercel preview or production deployment does not establish exact-current-main provenance unless the deployment source SHA exactly matches the intended Git SHA.
+GitHub's aggregate status for the current engineering line retains the Vercel deployment-rate-limit failure condition. Issue #137 remains the canonical deployment/source-binding tracker. A same-branch READY preview is supporting evidence only and does not establish current-main production identity.
 
 ## Disposition
 
-The boundary is implemented and covered by executable assertions. Current-head closure remains contingent on fresh CI after the latest commits and exact deployment identity where live adapters are involved.
+The adapter boundary is implemented and adversarially specified. Current-head engineering closure remains contingent on fresh dedicated contract execution and any required exact deployment verification.
 
 **Experimental state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
