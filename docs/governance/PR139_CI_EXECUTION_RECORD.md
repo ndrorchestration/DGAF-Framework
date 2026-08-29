@@ -4,7 +4,7 @@
 
 CI EXECUTION / NON-AUTHORIZING
 
-**Current confirmed PR #139 head:** `2df8c0601d83488a305f211f510953ea81edcb01`
+**Current confirmed PR #139 head:** `b7d1fe4e49f4e126b7033d3341e7d831e67dff28`
 
 The v1 candidate contains the deterministic control-plane suite, TGL integration suite, adversarial contract suite, capability-boundary suite, and dedicated security/evidence workflows.
 
@@ -20,9 +20,9 @@ An earlier PR #132 adversarial execution remains a separate historical signal: *
 
 ## Current exact-head evidence
 
-For `2df8c060…`, exact-head CodeQL completed successfully and exact-head Truth Layer Validation completed successfully. Other repository-wide checks may be triggered independently.
+For `7807d956…`, the dedicated `DGAF v1 Control-Plane Contract` run `33246694071` completed **SUCCESS**, with exact candidate checkout and pinned dependency setup passing and the deterministic control-plane/TGL/adversarial/capability-boundary suite passing **40/40**.
 
-The dedicated `DGAF v1 Control-Plane Contract` check currently has **no exact-head check-run record** for `2df8c060…`. Therefore the consolidated v1 control-plane contract is **not currently verified** on the authoritative head.
+The current candidate later received documentation/governance reconciliation commits and a non-destructive merge commit incorporating current `main`, followed by a Herald-status regression correction. Fresh exact-head verification of the latest code-changing head remains required where that head changes implementation semantics.
 
 ## CI hardening
 
@@ -35,10 +35,12 @@ The dedicated workflow definition is configured to:
 
 ## Deployment blocker
 
-GitHub's aggregate status includes a Vercel failure associated with deployment quota/rate-limit conditions. A same-branch READY preview has been observed, but no READY deployment has been accepted as exact-current-main production identity without source-SHA matching. Issue #137 remains the canonical deployment/source-binding gate.
+Vercel source identity remains a separate provenance gate under Issue #137. Green or rate-limited status contexts do not establish exact deployment-source identity by themselves.
 
 ## Interpretation
 
 CI success, deployment readiness, deterministic fixtures, synthetic evaluator results, and documentation consistency are engineering evidence only. None constitutes PDMAL efficacy evidence, a new freeze, or pilot authorization.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
+## Current experimental state
+
+PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
