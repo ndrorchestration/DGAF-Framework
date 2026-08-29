@@ -30,7 +30,8 @@ def root_envelope() -> GovernanceEnvelope:
 
 def passing_tgl() -> TriadicGovernanceLoop:
     hooks = TGLHooks(
-        premise_check_fn=lambda _text: False,
+        # ProcludingPremiseGate check_fn returns whether the invariant is satisfied.
+        premise_check_fn=lambda _text, _invariant: True,
         scpe_fn=lambda _t, _c: GateResult.PASS,
         pdmal_fn=lambda _t, _c: GateResult.PASS,
         demijoul_fn=lambda _t, _c: GateResult.PASS,
