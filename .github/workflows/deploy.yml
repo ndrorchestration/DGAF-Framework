@@ -70,6 +70,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       deployment_url: ${{ steps.deploy.outputs.deployment_url }}
+      deployment_id: ${{ steps.provenance.outputs.deployment_id }}
+      source_sha: ${{ steps.provenance.outputs.source_sha }}
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -95,24 +97,63 @@ jobs:
             --token="$VERCEL_TOKEN")
           echo "deployment_url=$URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $URL"
-          export DEPLOYMENT_URL="$URL"
+
+      - name: Verify exact Vercel deployment identity
+        id: provenance
+        shell: bash
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          HOST="${DEPLOYMENT_URL#https://}"
+          HOST="${HOST#http://}"
+          RESPONSE=$(curl -fsS --get \
+            --data-urlencode "teamId=$VERCEL_ORG_ID" \
+            --data-urlencode "withGitRepoInfo=true" \
+            "https://api.vercel.com/v13/deployments/$HOST" \
+            -H "Authorization: Bearer $VERCEL_TOKEN")
+
+          echo "$RESPONSE" > artifacts/deployment_metadata.json
+          READY_STATE=$(echo "$RESPONSE" | jq -r '.readyState // empty')
+          DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.id // empty')
+          META_SHA=$(echo "$RESPONSE" | jq -r '.meta.githubCommitSha // empty')
+          GIT_SHA=$(echo "$RESPONSE" | jq -r '.gitSource.sha // empty')
+          SOURCE_SHA="${META_SHA:-$GIT_SHA}"
+
+          [ -n "$DEPLOYMENT_ID" ] || { echo 'x deployment id missing'; exit 1; }
+          [ "$READY_STATE" = "READY" ] || { echo "x deployment state=$READY_STATE"; exit 1; }
+          [ -n "$SOURCE_SHA" ] || { echo 'x Vercel Git source SHA missing'; exit 1; }
+          [ "$SOURCE_SHA" = "$GITHUB_SHA" ] || {
+            echo "x source SHA mismatch: Vercel=$SOURCE_SHA GitHub=$GITHUB_SHA"
+            exit 1
+          }
+
           python - <<'PY'
           import json
           import os
           from pathlib import Path
 
+          raw = json.loads(Path('artifacts/deployment_metadata.json').read_text(encoding='utf-8'))
+          source_sha = raw.get('meta', {}).get('githubCommitSha') or raw.get('gitSource', {}).get('sha')
           payload = {
-              'evidence_class': 'DEPLOYMENT_ATTESTATION',
+              'evidence_class': 'DEPLOYMENT_EXACT_SOURCE_ATTESTATION',
               'source_commit': os.environ['GITHUB_SHA'],
+              'vercel_source_commit': source_sha,
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'deployment_id': raw.get('id'),
               'deployment_url': os.environ['DEPLOYMENT_URL'],
-              'command': 'vercel deploy --prod --yes --token=<redacted>',
-              'result': 'DEPLOYMENT_RETURNED_URL',
-              'scope': 'Vercel deployment command result only',
-              'limitations': ['Deployment return does not establish application health or end-to-end runtime behavior.'],
+              'ready_state': raw.get('readyState'),
+              'target': raw.get('target'),
+              'git_ref': raw.get('meta', {}).get('githubCommitRef') or raw.get('gitSource', {}).get('ref'),
+              'repository': raw.get('meta', {}).get('githubRepo'),
+              'exact_source_match': source_sha == os.environ['GITHUB_SHA'],
           }
           Path('artifacts/deployment_provenance.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
+
+          echo "deployment_id=$DEPLOYMENT_ID" >> "$GITHUB_OUTPUT"
+          echo "source_sha=$SOURCE_SHA" >> "$GITHUB_OUTPUT"
 
       - name: Set env vars
         run: |
@@ -208,9 +249,9 @@ jobs:
               'source_commit': os.environ['GITHUB_SHA'],
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'deployment_url': os.environ['DGAF_URL'],
-              'scope': 'health preflight, 30-turn live regression, and audit turn-count check',
+              'scope': 'exact-source deployment identity, health preflight, 30-turn live regression, and audit turn-count check',
               'result': 'PASS',
-              'limitations': ['Runtime verification applies to the exercised deployment and protocol; it does not establish broad real-world efficacy.'],
+              'limitations': ['Runtime verification applies to the exercised exact-source deployment and protocol; it does not establish broad real-world efficacy.'],
           }
           Path('artifacts/runtime_verification.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
