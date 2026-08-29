@@ -70,6 +70,23 @@ def test_commit_requires_explicit_authorization() -> None:
     gate.authorize("r1", "operator", "AUTH-1"); assert gate.commit("r1") == "operator:AUTH-1"
 
 
+def test_commit_gate_rejects_duplicate_request_identity() -> None:
+    gate = CommitGate()
+    request = CommitRequest("duplicate", "trace-1", "send", "external", {"channel": "x"})
+    gate.propose(request)
+    with pytest.raises(ValueError, match="duplicate commit request_id"):
+        gate.propose(request)
+
+
+def test_commit_authorization_remains_bound_to_exact_request_identity() -> None:
+    gate = CommitGate()
+    first = gate.propose(CommitRequest("r1", "t1", "send", "external", {"channel": "x"}))
+    gate.authorize(first.request_id, "operator", "AUTH-1")
+    with pytest.raises(KeyError):
+        gate.commit("r2")
+    assert gate.commit("r1") == "operator:AUTH-1"
+
+
 def test_control_plane_legal_transitions_and_veto() -> None:
     plane = ControlPlane(); task = ControlTask("t1", envelope(task_id="t1", trace_id="t1-trace")); plane.submit(task); plane.admit("t1"); plane.start_expansion("t1"); plane.begin_evaluation("t1")
     plane.veto("t1", "governance failure"); assert task.state is TaskState.ESCALATED
