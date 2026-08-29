@@ -28,6 +28,6 @@ This packet is the reviewer-facing contract summary for the v1 governed control 
 
 ## Current status
 
-Implementation candidate. CI and adversarial review pending.
+Implementation candidate. CI and adversarial review remain exact-head verification requirements.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
+PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
