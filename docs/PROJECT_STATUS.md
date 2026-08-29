@@ -1,6 +1,6 @@
 # DGAF/PDMAL Project Status
 
-**Status date:** 2026-08-28  
+**Status date:** 2026-08-29  
 **Repository:** `ndrorchestration/DGAF-Framework`  
 **Current main:** active documentation/evidence lineage; not experimental apparatus identity  
 **Experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
@@ -11,7 +11,7 @@
 
 The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is the historical superseded implementation freeze. E2b is CLOSED/VERIFIED for exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167` via run `33047380487`; the retained artifact is `9636185725` with digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
 
-Repository `main` is an active documentation/evidence lineage; resolve the current branch tip from Git rather than treating a documentation commit as the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
+Repository `main` is an active documentation/evidence lineage; resolve the current branch tip from Git rather than treating a documentation commit as the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` until a separately governed candidate transition is created.
 
 The corrected Governance CI boundary at `ac8ea26…` binds the candidate target to the executing workflow SHA. E2b current-boundary verification remains required where a current freeze decision depends on the executing workflow boundary. M6 is separately CLOSED / VERIFIED for the exact candidate `ac8ea267…` via run `33050398324`; that closure is scoped to the exact verification workspace/job and does not authorize execution.
 
@@ -30,7 +30,7 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Execute/retain evidence for the exact workflow boundary used for the eventual freeze decision |
 | M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324`; retained negative-state artifact independently hash-verified |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical/non-empirical characterization only |
-| Execution contract | PARTIAL / TGL BLOCKED | Authenticated exact-current-tree P2 evidence pending; TGL/P-35 contract regression under remediation |
+| Execution contract | PARTIAL / TGL REMEDIATION | PR #134 is current-main remediation; exact-current-tree authenticated P2 evidence pending |
 | Artifact contract | PARTIAL | Corrective controls present; current candidate execution evidence pending |
 | Security / blinding | PARTIAL | Fresh operational custody verification pending |
 | Topology provenance | PARTIAL | Exact current-candidate recomputation pending |
@@ -40,7 +40,8 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | P7 exact binding | OPEN | Final freeze identity binding remains required |
 | Analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | Independent verification | NOT EXECUTED | P9 remains pending |
-| TGL contract review | BLOCKED / DRAFT REMEDIATION | PR #132 41-pass / 2-fail regression; PR #133 is isolated remediation candidate |
+| TGL contract review | REMEDIATION CANDIDATE | PR #134 is current-main remediation; PRs #132/#133 are historical diagnostic/remediation records |
+| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / CI-VERIFIED | PR #136 deterministic core + TGL integration contract lane passes; does not authorize experiments |
 | Forman–Ricci lattice helper semantics | OPEN / ISSUE #117 | Unweighted dodecahedral `Ric_F(e) = -2` is constant/zero-variance and must produce `NO_DISCRIMINATING_SIGNAL`, not 30 anomaly flags |
 | P-38 source integrity | OPEN / ISSUE #122 | `NDR_AUTOINIT_SUBSTRATE_ADAPTER_P38_v1.md` has a truncated historical tail; history audit confirms the earliest retained version is already truncated |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
@@ -50,13 +51,15 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 
 ## TGL / P-35 adversarial review
 
-The 41-pass / 2-fail result associated with PR #132 is a concrete regression signal at the TGL → P-35 integration boundary. The observed failure is not being treated as a transient test issue. The review identified constructor/method incompatibility, missing premise-hook injection, weakened exception containment, incomplete `PASS/WARN/SKIP/ESCALATE/KILL` reduction, ambiguous conditional versus unwired `SKIP`, and audit-seal sequencing concerns.
+The 41-pass / 2-fail result associated with PR #132 remains a historical regression signal at the TGL → P-35 integration boundary. PR #134 is the current-main remediation lane. Its engineering correctness must be validated on its exact head before candidate-scoped experimental rebinding. Neither the historical diagnostic records nor the generic DGAF v1 control-plane CI result authorizes experimental execution.
 
-The selected remediation is intentionally minimal: restore the established P-35 API and TGL fail-closed behavior, make required/conditional gate semantics explicit, implement deterministic status reduction, make the final seal correspond to the authoritative returned audit state, and expand regression coverage. Broad architectural refactoring is out of scope for PR #132/#133.
+The remediation remains intentionally minimal: restore the established P-35 API and TGL fail-closed behavior, make required/conditional gate semantics explicit, implement deterministic status reduction, make the final seal correspond to the authoritative returned audit state, and expand regression coverage.
 
-PR #132 remains blocked/draft. PR #133 is the isolated remediation candidate and must obtain its own exact-head validation. Neither PR changes the experimental apparatus identity, creates a freeze, closes P7/P8, grants authorization, or increases empirical N.
+## DGAF v1 control-plane boundary
 
-The detailed diagnostic record is `docs/governance/TGL_PR132_ADVERSARIAL_REVIEW_2026-08-28.md`.
+PR #136 provides a generic bounded recursive control plane with explicit authority inheritance, state identity, resource accounting, branch retention, and proposal/authorization/commit separation. Its dedicated deterministic contract lane is CI-verified. The implementation remains non-authorizing: `COMMIT_READY` is not execution, control-plane CI is not PDMAL evidence, and any adapter that changes the experimental apparatus requires a new candidate identity and affected-predicate re-verification.
+
+Active concurrency is now accounted separately from node counts and bounded across recursive lineage. Provider/tool adapter bypass remains an explicit integration-audit requirement rather than an implied closure from the kernel tests.
 
 ## Current deployment boundary
 
@@ -92,12 +95,12 @@ Historical evidence remains scoped to the exact application source, deployment, 
 
 ## Required closure sequence
 
-1. Resolve the TGL/P-35 contract blocker through the isolated remediation candidate and exact-head validation.
+1. Resolve the TGL/P-35 contract blocker through PR #134 and exact-head validation.
 2. Execute/retain the current-boundary E2b verification needed for freeze admissibility against the exact executing workflow SHA.
 3. Independently inspect exact SHA, scope, integrity, and negative-state claims; M6 closure is already recorded for candidate `ac8ea267…`.
 4. Execute authenticated P2 and P6a against the exact deployment identity.
 5. Complete P4, P5, and P6 evidence/custody.
-6. Complete formal P7 exact binding.
+6. Complete P7 exact binding.
 7. Reconcile and close P8 only from candidate-scoped evidence.
 8. Execute P9 independent verification.
 9. Create and independently verify a new immutable freeze.
