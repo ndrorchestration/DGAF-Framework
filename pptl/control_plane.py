@@ -3,9 +3,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any, Callable
 
 from .branch_registry import BranchRecord, BranchRegistry
-from .budget_ledger import Consumption, BudgetLedger
+from .budget_ledger import BudgetExceeded, Consumption, BudgetLedger
 from .governance_envelope import GovernanceEnvelope
 from .state_identity import StateRegistry
 
@@ -60,7 +61,8 @@ class ControlTask:
 class ControlPlane:
     """Single-run deterministic controller; external actions remain prohibited by default."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, tgl_runner: Callable[..., Any] | None = None) -> None:
+        self.tgl_runner = tgl_runner
         self.state_registry = StateRegistry()
         self.branches = BranchRegistry()
         self.tasks: dict[str, ControlTask] = {}
@@ -79,14 +81,34 @@ class ControlPlane:
 
     def start_expansion(self, task_id: str) -> None:
         task = self._task(task_id)
-        if task.depth >= task.envelope.budget.max_rounds:
+        if task.depth >= task.envelope.budget.max_depth:
             self._transition(task, TaskState.ESCALATED)
             return
-        self.ledgers[task_id].reserve(Consumption(rounds=1, nodes=1))
+        try:
+            self.ledgers[task_id].reserve(Consumption(rounds=1, nodes=1))
+        except BudgetExceeded as exc:
+            self.events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
+            self._transition(task, TaskState.ESCALATED)
+            return
         self._transition(task, TaskState.EXPANDING)
 
     def begin_evaluation(self, task_id: str) -> None:
         self._transition(self._task(task_id), TaskState.EVALUATING)
+
+    def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
+        if self.tgl_runner is None:
+            raise ControlPlaneViolation("no TGL runner configured")
+        task = self._task(task_id)
+        if task.state is not TaskState.EVALUATING:
+            raise ControlPlaneViolation("TGL evaluation requires EVALUATING state")
+        result = self.tgl_runner(input_text, context or {})
+        status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
+        self.events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status})
+        if status == "KILL":
+            self.veto(task_id, "TGL KILL")
+        elif status == "ESCALATE":
+            self._transition(task, TaskState.ESCALATED)
+        return result
 
     def mark_merge_ready(self, task_id: str) -> None:
         self._transition(self._task(task_id), TaskState.MERGE_READY)
@@ -117,9 +139,14 @@ class ControlPlane:
         envelope_budget,
     ) -> ControlTask:
         parent = self._task(parent_id)
+        if parent.state not in {TaskState.ADMITTED, TaskState.EXPANDING, TaskState.EVALUATING}:
+            raise ControlPlaneViolation("child creation requires an active parent task")
+        child_depth = parent.depth + 1
+        if child_depth > parent.envelope.budget.max_depth:
+            raise ControlPlaneViolation("child exceeds maximum recursion depth")
         child = ControlTask(
             task_id=task_id,
-            depth=parent.depth + 1,
+            depth=child_depth,
             envelope=parent.envelope.derive_child(
                 trace_id=trace_id,
                 task_id=task_id,
@@ -129,8 +156,6 @@ class ControlPlane:
                 budget=envelope_budget,
             ),
         )
-        if child.depth > parent.envelope.budget.max_rounds:
-            raise ControlPlaneViolation("child exceeds maximum recursion depth")
         snapshot = child.snapshot()
         if self.state_registry.contains(snapshot):
             raise ControlPlaneViolation("repeated orchestration state")
@@ -148,9 +173,21 @@ class ControlPlane:
                 "merge_status": branch.merge_status,
             }
         )
+        if branch.policy_verdict in {"KILL", "ESCALATE"} and branch.parent_branch_id:
+            parent_branch = self.branches.get(branch.parent_branch_id)
+            parent_task = self.tasks.get(parent_branch.metadata.get("task_id", ""))
+            if parent_task is not None:
+                self.veto(parent_task.task_id, branch.policy_verdict)
 
     def consume(self, task_id: str, amount: Consumption) -> None:
-        self.ledgers[task_id].consume(amount)
+        try:
+            self.ledgers[task_id].consume(amount)
+        except BudgetExceeded as exc:
+            task = self._task(task_id)
+            self.events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
+            if task.state is not TaskState.ESCALATED:
+                self._transition(task, TaskState.ESCALATED)
+            raise
 
     def _transition(self, task: ControlTask, new_state: TaskState) -> None:
         if new_state not in _ALLOWED[task.state]:
