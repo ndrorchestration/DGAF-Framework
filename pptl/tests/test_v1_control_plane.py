@@ -158,5 +158,16 @@ def test_tgl_exception_escalates_and_releases_slot():
     assert plane._lineage_active[root_lineage(task)] == 0
 
 
+def test_start_expansion_consumes_round_and_node_without_leaking_reservation():
+    plane = ControlPlane()
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.start_expansion("root")
+    assert task.state is TaskState.EXPANDING
+    assert plane.ledgers["root"].consumed.rounds == 1
+    assert plane.ledgers["root"].consumed.nodes == 1
+    assert plane.ledgers["root"].reserved.rounds == 0
+    assert plane.ledgers["root"].reserved.nodes == 0
+
+
 def root_lineage(task: ControlTask) -> str:
     return task.lineage_id or task.envelope.trace_id
