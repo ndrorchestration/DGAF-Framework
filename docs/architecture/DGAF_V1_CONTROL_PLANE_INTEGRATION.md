@@ -28,14 +28,15 @@ optional execution substrate (including PDMAL)
 
 ## Implemented v1 contracts
 
-- `pptl/governance_envelope.py` — immutable inherited authority/tool/data/resource scope.
+- `pptl/governance_envelope.py` — immutable inherited authority/tool/data/resource scope, including bounded depth and concurrency metadata.
 - `pptl/state_identity.py` — canonical state representation and SHA-256 identity for exact cycle detection.
 - `pptl/budget_ledger.py` — fail-closed reservation and actual resource consumption accounting.
 - `pptl/branch_registry.py` — append-oriented branch lineage and retained outcome metadata.
 - `pptl/commit_gate.py` — explicit proposal/authorization/commit boundary.
-- `pptl/control_plane.py` — deterministic lifecycle state machine and bounded child creation.
-- `pptl/tests/test_v1_control_plane.py` — deterministic contract tests.
-- `.github/workflows/control-plane-contract.yml` — dedicated contract CI lane.
+- `pptl/control_plane.py` — deterministic lifecycle state machine, bounded child creation, and optional TGL invocation from the evaluation state.
+- `pptl/tests/test_v1_control_plane.py` — deterministic core contract tests.
+- `pptl/tests/test_v1_tgl_integration.py` — cross-module TGL/control-plane tests.
+- `.github/workflows/control-plane-contract.yml` — dedicated contract CI lane covering both suites.
 
 These modules are implementation candidates on the current integration branch; their existence is not itself evidence of merge-level verification.
 
@@ -43,14 +44,16 @@ These modules are implementation candidates on the current integration branch; t
 
 1. Child authority/tool/data scope cannot exceed parent scope.
 2. Child budget cannot exceed parent budget.
-3. Illegal lifecycle transitions fail closed.
-4. Hard vetoes escalate rather than being averaged away or recursively bypassed.
-5. Exact repeated states cannot recurse indefinitely.
-6. Rejected/correlated/escalated/vetoing branch evidence remains retained.
-7. Consequential actions require explicit authorization.
-8. Generic control-plane lifecycle does not replace or bypass TGL/P-35.
-9. Semantic distance or agent consensus is not treated as proof of independence.
-10. PDMAL topology and harmonic/geometric motifs are not authorization signals.
+3. Child risk tier cannot increase.
+4. Child recursion depth cannot exceed the parent envelope ceiling.
+5. Illegal lifecycle transitions fail closed.
+6. Hard vetoes escalate rather than being averaged away or recursively bypassed.
+7. Exact repeated states cannot recurse indefinitely.
+8. Rejected/correlated/escalated/vetoing branch evidence remains retained.
+9. Consequential actions require explicit authorization.
+10. Generic control-plane lifecycle cannot bypass TGL/P-35.
+11. Semantic distance or agent consensus is not treated as proof of independence.
+12. PDMAL topology and harmonic/geometric motifs are not authorization signals.
 
 ## Typed branch roles
 
@@ -61,9 +64,64 @@ The initial role contracts are:
 - `VERIFY` — challenge claims, evidence, premises, and contradictions;
 - `GOVERN` — check authority, safety, policy, budget, and action constraints.
 
+These are role contracts, not guarantees of independent reasoning.
+
+## Lifecycle state machine
+
+```text
+RECEIVED
+   -> PREFLIGHT
+   -> ADMITTED
+   -> EXPANDING / EVALUATING
+   -> MERGE_READY
+   -> COMMIT_READY
+   -> TERMINATED
+
+Any governed failure may enter ESCALATED; ESCALATED -> TERMINATED.
+```
+
+`COMMIT_READY` only means the lifecycle has passed its controller checks. The actual consequential side effect remains owned by `CommitGate` and its explicit authorization artifact.
+
+## Resource accounting
+
+The v1 ledger is telemetry-based. It tracks input tokens, output tokens, tool calls, elapsed time, rounds, and nodes. Reservations are atomic within the ledger object; an over-budget reservation fails closed. Provider pricing is not part of the safety boundary.
+
+`max_depth` and `max_concurrency` are governance-envelope constraints. Concurrency accounting is reserved for the next controller hardening step rather than being inferred from node counts.
+
+## TGL relationship
+
+The lifecycle controller and TGL have different scopes:
+
+- **Lifecycle controller:** governs whether a task may exist, expand, recur, merge, escalate, terminate, or enter commit.
+- **TGL:** governs the ordered gate evaluation inside an execution turn.
+- **P-35:** remains the constitutional Layer-0 gate.
+- **Herald:** remains evidence/fan-out infrastructure and must remain on the correct side of the sealed audit boundary.
+
+No replacement of TGL is proposed.
+
+## Evidence and provenance model
+
+Every branch should produce one durable `BranchRecord` containing branch identity, parent lineage, role, state identity, claims, evidence identifiers, assumptions, uncertainty, policy verdict, merge status, terminal state, and metadata. Rejected and correlated work is retained rather than discarded during synthesis.
+
+Independence metadata may describe source overlap, dependency overlap, prompt lineage, model identity, toolchain identity, and common assumptions. These fields are descriptive and must not be promoted to an unvalidated proof of independence.
+
+## Plan / commit boundary
+
+All action-capable tooling follows:
+
+```text
+PROPOSE
+  -> GOVERN
+  -> VERIFY
+  -> AUTHORIZE
+  -> COMMIT
+```
+
+A model response is never itself treated as authorization.
+
 ## Explicit exclusions
 
-V1 does not include adaptive topology optimization, learned sycophancy classification, semantic-diversity scoring as proof of independence, autonomous policy learning, harmonic/geometric authorization logic, distributed execution, or live provider integrations as a precondition of the deterministic kernel.
+V1 does not include adaptive topology optimization, learned sycophancy classification, semantic-diversity scoring as proof of independence, autonomous policy learning, harmonic/geometric authorization logic, distributed execution, or live-provider integrations as a precondition of the deterministic kernel.
 
 ## PDMAL boundary
 
@@ -80,6 +138,8 @@ PDMAL remains an optional governed execution substrate. The control plane must b
 3. adversarial control-plane tests;
 4. TGL/P-35 integration;
 5. only then live provider/substrate adapters.
+
+The current branch has deterministic core and TGL integration coverage; CI execution and adversarial review remain the next verification boundary.
 
 ## Non-authorizing boundary
 
