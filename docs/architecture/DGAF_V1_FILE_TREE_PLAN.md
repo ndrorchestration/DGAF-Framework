@@ -49,14 +49,6 @@ DGAF-Framework/
 
 One concept has one canonical schema and one semantic owner. Do not duplicate TGL gate semantics or create another recursive engine.
 
-```text
-GovernanceEnvelope -> one schema
-TaskState -> one transition table
-BranchRecord -> one schema
-BudgetLedger -> one ledger contract
-CommitRequest -> one authorization contract
-```
-
 ## Current implementation candidate
 
 The integration branch contains the first executable v1 contract layer: GovernanceEnvelope, ControlTask/ControlPlane/TaskState, StateRegistry, BudgetLedger/Consumption, BranchRecord/BranchRegistry, CommitRequest/CommitGate, deterministic tests, dedicated control-plane CI, and package exports.
@@ -83,6 +75,6 @@ The control plane must remain usable without PDMAL. No v1 implementation may alt
 
 `pptl-ci.yml` remains the per-turn governance lane. `control-plane-contract.yml` is the deterministic v1 control-plane lane. Neither workflow is an authorization mechanism.
 
-## Future PR admission
+## Admission rule
 
-Every new v1 module must specify its owner path, contract, reused components, invariants, failure behavior, provenance fields, test/CI lane, documentation owner, and PDMAL-boundary impact.
+Every new v1 module must specify owner path, contract, reused components, invariants, failure behavior, provenance fields, test/CI lane, documentation owner, and PDMAL-boundary impact.
