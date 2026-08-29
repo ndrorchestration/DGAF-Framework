@@ -23,6 +23,23 @@ on:
       - "docs/architecture/DGAF_V1_EXECUTION_READINESS.md"
       - "requirements-ci.txt"
       - ".github/workflows/control-plane-contract.yml"
+  push:
+    branches:
+      - "feat/dgaf-v1-control-plane-finalize-20260829"
+    paths:
+      - "pptl/governance_envelope.py"
+      - "pptl/state_identity.py"
+      - "pptl/budget_ledger.py"
+      - "pptl/branch_registry.py"
+      - "pptl/control_plane.py"
+      - "pptl/commit_gate.py"
+      - "pptl/triadic_governance_loop.py"
+      - "pptl/tests/test_v1_control_plane.py"
+      - "pptl/tests/test_v1_tgl_integration.py"
+      - "pptl/tests/test_v1_adversarial_contract.py"
+      - "pptl/tests/test_v1_capability_boundaries.py"
+      - "requirements-ci.txt"
+      - ".github/workflows/control-plane-contract.yml"
   workflow_dispatch:
 
 jobs:
