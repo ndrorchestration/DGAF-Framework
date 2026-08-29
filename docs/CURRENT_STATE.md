@@ -7,7 +7,7 @@ applies_to_ref: main
 ---
 # DGAF-Framework / PDMAL — Current State
 
-GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it. This document describes current state without retroactively transferring historical evidence.
+GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it.
 
 > **Current boundary:** `main` is the documentation/evidence lineage. The experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. P7 is scientifically adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
 
@@ -59,9 +59,9 @@ Generic v1 roles are execution contracts and do not create or elevate agent auth
 
 The observed READY Vercel production deployment remains historical/supporting evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal the current GitHub `main` SHA. Issue #137 remains the canonical deployment-provenance tracker. A READY preview does not establish exact-current-main production identity.
 
-## Redundant engineering lanes
+## Engineering-lane consolidation
 
-PR #132/#133 are historical diagnostic/remediation records. PR #134 is superseded by PR #139. Their existence must not be treated as parallel current authority.
+PR #132/#133 are historical diagnostic/remediation records. PR #134 is superseded by PR #139. PR #139 is the single current engineering lane for the v1 recursive control plane plus the TGL contract remediation.
 
 ## Evidence boundary
 
