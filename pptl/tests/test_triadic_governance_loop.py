@@ -39,7 +39,7 @@ def test_full_skip_turn_escalates():
 
 @pytest.mark.governance
 def test_partial_skip_turn_escalates():
-    """Any missing required governance gate prevents a final PASS."""
+    """A missing required governance gate prevents a final PASS."""
     hooks = TGLHooks(
         scpe_fn=lambda text, ctx: GateResult.PASS,
         pdmal_fn=lambda text, ctx: GateResult.PASS,
@@ -48,11 +48,11 @@ def test_partial_skip_turn_escalates():
         sentinel_fn=lambda text, ctx: GateResult.PASS,
         phi_closure_fn=lambda text, ctx: GateResult.PASS,
         hpg_fn=lambda text, ctx: GateResult.PASS,
-        apogee_fn=lambda text, ctx: GateResult.PASS,
+        # Apogee intentionally unwired: required step 8 must prevent PASS.
     )
     audit = make_tgl(hooks).run_turn("partial wiring")
     assert audit.final_status == TurnStatus.ESCALATE
-    assert any(g.step == 9 and g.result == GateResult.SKIP for g in audit.gate_records)
+    assert any(g.step == 8 and g.result == GateResult.SKIP for g in audit.gate_records)
 
 
 @pytest.mark.governance
@@ -193,3 +193,13 @@ def test_p35_always_fires_regardless_of_hooks():
     step0 = next(g for g in audit.gate_records if g.step == 0)
     assert step0.pattern == "P-35"
     assert step0.result == GateResult.PASS
+
+
+@pytest.mark.governance
+def test_seal_changes_when_gate_records_change():
+    """Audit seal must cover the recorded governance gate set."""
+    tgl = make_tgl()
+    audit = tgl.run_turn("seal coverage")
+    original = audit.seal_hash
+    audit.gate_records.append(audit.gate_records[-1])
+    assert audit.seal() != original
