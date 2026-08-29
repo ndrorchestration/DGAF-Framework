@@ -14,9 +14,9 @@ DGAF-Framework/
 ├── docs/architecture/
 │   ├── DGAF_V1_CONTROL_PLANE_INTEGRATION.md
 │   └── DGAF_V1_FILE_TREE_PLAN.md
-├── docs/governance/                 # existing governance/evidence records
-├── docs/experiment/                 # PDMAL experiment only
-├── docs/evidence/                   # evidence indexes/artifacts
+├── docs/governance/
+├── docs/experiment/
+├── docs/evidence/
 └── pptl/
     ├── orchestrator.py
     ├── triadic_governance_loop.py
@@ -42,8 +42,8 @@ DGAF-Framework/
 | Branch provenance | `pptl/branch_registry.py` | controller + Herald | same + evidence |
 | Resource accounting | `pptl/budget_ledger.py` | controller/dispatch | same |
 | Plan/commit barrier | `pptl/commit_gate.py` | controller/tool adapters | same |
-| Per-turn governance | `pptl/triadic_governance_loop.py` | controller | existing TGL suite |
-| Constitutional admission | `pptl/procluding_premise.py` | TGL/controller | P-35 tests |
+| Per-turn governance | existing `pptl/triadic_governance_loop.py` | controller | existing TGL suite |
+| Constitutional admission | existing `pptl/procluding_premise.py` | TGL/controller | P-35 tests |
 
 ## Canonical ownership rules
 
@@ -59,13 +59,13 @@ CommitRequest -> one authorization contract
 
 ## Current implementation candidate
 
-The integration branch contains the first executable v1 contract layer: GovernanceEnvelope, ControlTask/ControlPlane/TaskState, StateRegistry, BudgetLedger, BranchRecord/BranchRegistry, CommitRequest/CommitGate, deterministic tests, dedicated contract CI, and package exports.
+The integration branch contains the first executable v1 contract layer: GovernanceEnvelope, ControlTask/ControlPlane/TaskState, StateRegistry, BudgetLedger/Consumption, BranchRecord/BranchRegistry, CommitRequest/CommitGate, deterministic tests, dedicated control-plane CI, and package exports.
 
-These remain candidate implementation changes until CI/adversarial evidence closes the corresponding engineering predicates.
+These remain candidate implementation changes until CI and adversarial review close their corresponding engineering predicates.
 
 ## Cross-repository boundary
 
-`ndrorchestration/agent-control-plane` remains a separate experimental asset. Its lifecycle, dispatch, policy, evaluation, and provenance components are reference material for contract comparison, not an implicit dependency. Any extraction or reuse requires explicit ownership and compatibility review.
+The separate `ndrorchestration/agent-control-plane` project is a reference/integration asset. Its lifecycle, dispatch, policy, evaluation, and provenance components can inform contract comparison, but DGAF does not depend on or silently copy that implementation.
 
 ## PDMAL boundary
 
@@ -77,11 +77,11 @@ DGAF control plane
                +--> PDMAL experiment
 ```
 
-The generic control plane must operate without PDMAL. v1 work must not alter PDMAL candidate identity, freeze state, authorization, protocol, or empirical N.
+The control plane must remain usable without PDMAL. No v1 implementation may alter PDMAL candidate identity, freeze state, authorization, or empirical N.
 
 ## CI boundary
 
-`pptl-ci.yml` remains the per-turn governance lane. `control-plane-contract.yml` is the deterministic v1 control-plane lane. Neither lane is an authorization mechanism.
+`pptl-ci.yml` remains the per-turn governance lane. `control-plane-contract.yml` is the deterministic v1 control-plane lane. Neither workflow is an authorization mechanism.
 
 ## Future PR admission
 
