@@ -8,50 +8,46 @@ This is the canonical physical-placement and ownership map for the viable v1 Gov
 
 ```text
 DGAF-Framework/
-├── .github/
-│   └── workflows/
-│       ├── pptl-ci.yml
-│       └── control-plane-contract.yml
-├── docs/
-│   ├── architecture/
-│   │   ├── DGAF_V1_CONTROL_PLANE_INTEGRATION.md
-│   │   ├── DGAF_V1_FILE_TREE_PLAN.md
-│   │   └── [future distinct ADR/spec files only]
-│   ├── governance/
-│   ├── experiment/
-│   └── evidence/
-├── pptl/
-│   ├── orchestrator.py
-│   ├── triadic_governance_loop.py
-│   ├── procluding_premise.py
-│   ├── co_orchestration_schema.py
-│   ├── herald_agent.py
-│   ├── sinks.py
-│   ├── governance_envelope.py
-│   ├── control_plane.py
-│   ├── state_identity.py
-│   ├── branch_registry.py
-│   ├── budget_ledger.py
-│   └── commit_gate.py
-└── scripts/
+├── .github/workflows/
+│   ├── pptl-ci.yml
+│   └── control-plane-contract.yml
+├── docs/architecture/
+│   ├── DGAF_V1_CONTROL_PLANE_INTEGRATION.md
+│   └── DGAF_V1_FILE_TREE_PLAN.md
+├── docs/governance/                 # existing governance/evidence records
+├── docs/experiment/                 # PDMAL experiment only
+├── docs/evidence/                   # evidence indexes/artifacts
+└── pptl/
+    ├── orchestrator.py
+    ├── triadic_governance_loop.py
+    ├── procluding_premise.py
+    ├── co_orchestration_schema.py
+    ├── herald_agent.py
+    ├── sinks.py
+    ├── governance_envelope.py
+    ├── control_plane.py
+    ├── state_identity.py
+    ├── branch_registry.py
+    ├── budget_ledger.py
+    └── commit_gate.py
 ```
 
-## Ownership matrix
+## Ownership
 
-| Capability | Canonical implementation | Existing integration | Test/evidence |
+| Capability | Canonical implementation | Integration | Test/CI |
 |---|---|---|---|
-| Governance Envelope | `pptl/governance_envelope.py` | orchestrator/controller | `pptl/tests/test_v1_control_plane.py` |
-| Lifecycle controller | `pptl/control_plane.py` | orchestrator + TGL | same contract suite |
-| State identity | `pptl/state_identity.py` | controller | same contract suite |
-| Branch provenance | `pptl/branch_registry.py` | controller + Herald | same contract suite + evidence layer |
-| Resource accounting | `pptl/budget_ledger.py` | controller/dispatch | same contract suite |
-| Plan/commit barrier | `pptl/commit_gate.py` | controller/tool adapters | same contract suite |
-| Per-turn governance | existing `pptl/triadic_governance_loop.py` | controller | existing TGL tests |
-| Constitutional admission | existing `pptl/procluding_premise.py` | TGL/controller | existing P-35 tests |
+| Governance Envelope | `pptl/governance_envelope.py` | controller/orchestrator | `test_v1_control_plane.py` |
+| Lifecycle controller | `pptl/control_plane.py` | orchestrator + TGL | same |
+| State identity | `pptl/state_identity.py` | controller | same |
+| Branch provenance | `pptl/branch_registry.py` | controller + Herald | same + evidence |
+| Resource accounting | `pptl/budget_ledger.py` | controller/dispatch | same |
+| Plan/commit barrier | `pptl/commit_gate.py` | controller/tool adapters | same |
+| Per-turn governance | `pptl/triadic_governance_loop.py` | controller | existing TGL suite |
+| Constitutional admission | `pptl/procluding_premise.py` | TGL/controller | P-35 tests |
 
-## Schema ownership rule
+## Canonical ownership rules
 
-One concept has one canonical schema and one semantic owner. Adapters may serialize these contracts but may not redefine them.
+One concept has one canonical schema and one semantic owner. Do not duplicate TGL gate semantics or create another recursive engine.
 
 ```text
 GovernanceEnvelope -> one schema
@@ -61,43 +57,15 @@ BudgetLedger -> one ledger contract
 CommitRequest -> one authorization contract
 ```
 
-## Integration rules
-
-- Extend `pptl/orchestrator.py`; do not create a second recursive runtime.
-- Reuse TGL; do not duplicate gate semantics.
-- Use Herald/sinks for publication rather than inventing a second evidence channel.
-- Keep PDMAL below the generic control-plane boundary.
-- Keep experimental evidence separate from engineering implementation evidence.
-
 ## Current implementation candidate
 
-The integration branch now contains the first executable v1 contract layer:
+The integration branch contains the first executable v1 contract layer: GovernanceEnvelope, ControlTask/ControlPlane/TaskState, StateRegistry, BudgetLedger, BranchRecord/BranchRegistry, CommitRequest/CommitGate, deterministic tests, dedicated contract CI, and package exports.
 
-- `GovernanceEnvelope` / `ResourceBudget`
-- `ControlTask` / `ControlPlane` / `TaskState`
-- `StateRegistry`
-- `BudgetLedger` / `Consumption`
-- `BranchRecord` / `BranchRegistry`
-- `CommitRequest` / `CommitGate`
-- deterministic contract tests
-- dedicated control-plane CI
-- package exports through `pptl.__init__`
-
-These changes remain candidate implementation until CI and adversarial review close their corresponding engineering predicates.
+These remain candidate implementation changes until CI/adversarial evidence closes the corresponding engineering predicates.
 
 ## Cross-repository boundary
 
-The separate `ndrorchestration/agent-control-plane` project is a reference/integration asset. Its existing task lifecycle, dispatch, policy, evaluation, and provenance components can inform contract comparison, but DGAF does not depend on or silently copy that implementation.
-
-Potential later extraction:
-
-```text
-DGAF governance/evidence semantics
-        |
-        +--> reusable control-plane package
-```
-
-Extraction is not a v1 prerequisite.
+`ndrorchestration/agent-control-plane` remains a separate experimental asset. Its lifecycle, dispatch, policy, evaluation, and provenance components are reference material for contract comparison, not an implicit dependency. Any extraction or reuse requires explicit ownership and compatibility review.
 
 ## PDMAL boundary
 
@@ -109,12 +77,12 @@ DGAF control plane
                +--> PDMAL experiment
 ```
 
-The control plane must remain usable without PDMAL. No v1 implementation may alter PDMAL candidate identity, freeze state, authorization, or empirical N.
+The generic control plane must operate without PDMAL. v1 work must not alter PDMAL candidate identity, freeze state, authorization, protocol, or empirical N.
 
-## CI
+## CI boundary
 
-`pptl-ci.yml` remains the per-turn governance test lane. `control-plane-contract.yml` is the dedicated deterministic v1 contract lane. Neither workflow is an authorization mechanism.
+`pptl-ci.yml` remains the per-turn governance lane. `control-plane-contract.yml` is the deterministic v1 control-plane lane. Neither lane is an authorization mechanism.
 
-## Admission checklist
+## Future PR admission
 
-Every future v1 implementation PR must specify its owner path, contract, reused existing components, invariants, failure behavior, provenance fields, test/CI lane, documentation owner, and any effect on the PDMAL candidate boundary.
+Every new v1 module must specify its owner path, contract, reused components, invariants, failure behavior, provenance fields, test/CI lane, documentation owner, and PDMAL-boundary impact.
