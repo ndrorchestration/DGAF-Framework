@@ -26,6 +26,8 @@ def envelope(**kwargs) -> GovernanceEnvelope:
             max_elapsed_ms=1000,
             max_rounds=3,
             max_nodes=8,
+            max_depth=2,
+            max_concurrency=2,
         ),
     )
     defaults.update(kwargs)
@@ -40,9 +42,10 @@ def test_child_scope_must_narrow_parent() -> None:
         authority_scope={"research"},
         permitted_tools={"read"},
         data_classes={"public"},
-        budget=ResourceBudget(max_input_tokens=50, max_output_tokens=50, max_tool_calls=4, max_elapsed_ms=500, max_rounds=1, max_nodes=1),
+        budget=ResourceBudget(max_input_tokens=50, max_output_tokens=50, max_tool_calls=4, max_elapsed_ms=500, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1),
     )
     assert child.parent_trace_id == parent.trace_id
+    assert child.risk_tier == parent.risk_tier
     with pytest.raises(PermissionError):
         parent.derive_child(
             trace_id="bad",
@@ -51,6 +54,20 @@ def test_child_scope_must_narrow_parent() -> None:
             permitted_tools={"read"},
             data_classes={"public"},
             budget=child.budget,
+        )
+
+
+def test_child_risk_cannot_increase() -> None:
+    parent = envelope(risk_tier="low")
+    with pytest.raises(PermissionError):
+        parent.derive_child(
+            trace_id="bad-risk",
+            task_id="bad-risk",
+            authority_scope={"research"},
+            permitted_tools={"read"},
+            data_classes={"public"},
+            budget=ResourceBudget(max_input_tokens=10, max_output_tokens=10, max_tool_calls=1, max_elapsed_ms=100, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1),
+            risk_tier="medium",
         )
 
 
@@ -122,8 +139,52 @@ def test_child_reuses_parent_boundary_without_escalation() -> None:
         authority_scope={"research"},
         permitted_tools={"read"},
         data_classes={"public"},
-        envelope_budget=ResourceBudget(max_input_tokens=25, max_output_tokens=25, max_tool_calls=2, max_elapsed_ms=250, max_rounds=1, max_nodes=1),
+        envelope_budget=ResourceBudget(max_input_tokens=25, max_output_tokens=25, max_tool_calls=2, max_elapsed_ms=250, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1),
     )
     assert child.envelope.authority_scope == frozenset({"research"})
     assert child.envelope.permitted_tools == frozenset({"read"})
     assert child.envelope.parent_trace_id == root.envelope.trace_id
+
+
+def test_child_creation_requires_active_parent() -> None:
+    plane = ControlPlane()
+    root = ControlTask("root", envelope())
+    plane.submit(root)
+    with pytest.raises(ControlPlaneViolation):
+        plane.create_child(
+            "root",
+            task_id="child",
+            trace_id="child-trace",
+            authority_scope={"research"},
+            permitted_tools={"read"},
+            data_classes={"public"},
+            envelope_budget=ResourceBudget(max_input_tokens=10, max_output_tokens=10, max_tool_calls=1, max_elapsed_ms=100, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1),
+        )
+
+
+def test_cycle_detection_rejects_same_child_state() -> None:
+    plane = ControlPlane()
+    root = ControlTask("root", envelope())
+    plane.submit(root)
+    plane.admit("root")
+    child = plane.create_child(
+        "root",
+        task_id="child",
+        trace_id="child-trace",
+        authority_scope={"research"},
+        permitted_tools={"read"},
+        data_classes={"public"},
+        envelope_budget=ResourceBudget(max_input_tokens=10, max_output_tokens=10, max_tool_calls=1, max_elapsed_ms=100, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1),
+    )
+    assert child.task_id == "child"
+    child.state = TaskState.ADMITTED
+    with pytest.raises(ControlPlaneViolation):
+        plane.create_child(
+            "root",
+            task_id="child2",
+            trace_id="child-trace",
+            authority_scope={"research"},
+            permitted_tools={"read"},
+            data_classes={"public"},
+            envelope_budget=ResourceBudget(max_input_tokens=10, max_output_tokens=10, max_tool_calls=1, max_elapsed_ms=100, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1),
+        )
