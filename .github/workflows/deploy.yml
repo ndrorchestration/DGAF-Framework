@@ -116,6 +116,7 @@ jobs:
 
           echo "$RESPONSE" > artifacts/deployment_metadata.json
           READY_STATE=$(echo "$RESPONSE" | jq -r '.readyState // empty')
+          TARGET=$(echo "$RESPONSE" | jq -r '.target // empty')
           DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.id // empty')
           META_SHA=$(echo "$RESPONSE" | jq -r '.meta.githubCommitSha // empty')
           GIT_SHA=$(echo "$RESPONSE" | jq -r '.gitSource.sha // empty')
@@ -123,6 +124,7 @@ jobs:
 
           [ -n "$DEPLOYMENT_ID" ] || { echo 'x deployment id missing'; exit 1; }
           [ "$READY_STATE" = "READY" ] || { echo "x deployment state=$READY_STATE"; exit 1; }
+          [ "$TARGET" = "production" ] || { echo "x deployment target=$TARGET; expected production"; exit 1; }
           [ -n "$SOURCE_SHA" ] || { echo 'x Vercel Git source SHA missing'; exit 1; }
           [ "$SOURCE_SHA" = "$GITHUB_SHA" ] || {
             echo "x source SHA mismatch: Vercel=$SOURCE_SHA GitHub=$GITHUB_SHA"
@@ -249,9 +251,9 @@ jobs:
               'source_commit': os.environ['GITHUB_SHA'],
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'deployment_url': os.environ['DGAF_URL'],
-              'scope': 'exact-source deployment identity, health preflight, 30-turn live regression, and audit turn-count check',
+              'scope': 'exact-source production deployment identity, health preflight, 30-turn live regression, and audit turn-count check',
               'result': 'PASS',
-              'limitations': ['Runtime verification applies to the exercised exact-source deployment and protocol; it does not establish broad real-world efficacy.'],
+              'limitations': ['Runtime verification applies to the exercised exact-source production deployment and protocol; it does not establish broad real-world efficacy.'],
           }
           Path('artifacts/runtime_verification.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
