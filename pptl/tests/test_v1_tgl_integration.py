@@ -67,14 +67,14 @@ def test_control_plane_evaluate_turn_records_tgl_result() -> None:
 
 
 @pytest.mark.governance
-def test_tgl_failure_is_representable_as_control_plane_escalation() -> None:
-    plane = ControlPlane()
+def test_control_plane_maps_tgl_terminal_failure_to_escalation() -> None:
+    failing = lambda text, context: type("Audit", (), {"final_status": TurnStatus.KILL})()
+    plane = ControlPlane(tgl_runner=failing)
     task = ControlTask("root", root_envelope())
     plane.submit(task)
     plane.admit("root")
-    plane.start_expansion("root")
     plane.begin_evaluation("root")
-    plane.veto("root", "TGL KILL")
+    plane.evaluate_turn("root", "unsafe")
     assert task.state is TaskState.ESCALATED
 
 
