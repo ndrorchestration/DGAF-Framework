@@ -1,4 +1,4 @@
-"""Deterministic resource reservation and consumption ledger for v1."""
+"""Deterministic resource and active-concurrency ledger for v1."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -23,16 +23,17 @@ class Consumption:
 
 
 class BudgetExceeded(RuntimeError):
-    """Raised when a reservation or consumption would exceed its ceiling."""
+    """Raised when a reservation, consumption, or concurrency acquisition exceeds its ceiling."""
 
 
 class BudgetLedger:
-    """Single-owner ledger; reservations are atomic within this object."""
+    """Single-owner ledger with atomic resource and active-branch accounting."""
 
     def __init__(self, budget: ResourceBudget) -> None:
         self.budget = budget
         self.consumed = Consumption()
         self.reserved = Consumption()
+        self.active_concurrency = 0
 
     @staticmethod
     def _add(a: Consumption, b: Consumption) -> Consumption:
@@ -61,6 +62,21 @@ class BudgetLedger:
             "nodes": self.budget.max_nodes,
         }
         return Consumption(**{k: max(0, v - getattr(used, k)) for k, v in limits.items()})
+
+    def acquire_concurrency(self, slots: int = 1) -> None:
+        if not isinstance(slots, int) or slots < 1:
+            raise ValueError("slots must be a positive integer")
+        candidate = self.active_concurrency + slots
+        if candidate > self.budget.max_concurrency:
+            raise BudgetExceeded("active concurrency exceeds budget")
+        self.active_concurrency = candidate
+
+    def release_concurrency(self, slots: int = 1) -> None:
+        if not isinstance(slots, int) or slots < 1:
+            raise ValueError("slots must be a positive integer")
+        if slots > self.active_concurrency:
+            raise ValueError("cannot release more active concurrency than acquired")
+        self.active_concurrency -= slots
 
     def reserve(self, amount: Consumption) -> None:
         candidate = self._add(self._add(self.consumed, self.reserved), amount)
