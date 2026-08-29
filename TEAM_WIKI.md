@@ -1,145 +1,68 @@
-# DGAF Framework — Team Wiki
+# DGAF Framework — Collaboration and Architecture Guide
 
-> **Last updated:** 2026-07-02 · S072 · P-42 v1.4 Apogee Lens APPROVED
+> **Status:** Reference guide for collaboration and architectural orientation. For current project status, use [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) and [`docs/PROJECT_STATUS.md`](./docs/PROJECT_STATUS.md). Historical session details are retained in repository history and evidence records.
 
----
+## Overview
 
-## §1 · Overview
+DGAF is a research and implementation framework for governed agent orchestration, evaluation, provenance, and control design. Collaboration is organized around explicit responsibilities, evidence boundaries, and review procedures rather than informal assumptions about authority.
 
-The DGAF (Dynamic Governance Agentic Framework) is the **layer-0 governance architecture** for the ndrorchestration ecosystem, rooted at `~/DGAF-Framework`. It orchestrates multi-agent workflows under a formally governed pattern registry. All execution flows through NDR patterns enforced by Amethyst (host), DemiJoule (supervisor), and Apogee Lens (verifier).
+Named agents and components are project architecture abstractions. Their names do not independently grant authority or establish autonomous capability. Current authority boundaries are defined by the [`Agent Authority Matrix`](./docs/agents/AGENT_AUTHORITY_MATRIX.md) and [`Agent Authority Invariant`](./docs/agents/AGENT_AUTHORITY_INVARIANT.md).
 
-> **Nomenclature canon** (locked 2026-07-02 in `SESSION_ANCHOR.md`):  
-> • `NDR-HDFS` = NDR Hierarchical Dynamic Formation System (formerly FLAG-01) — the structural layer governing agent hierarchy and formation composition  
-> • `qualitative` = interpretive/rubric-based evaluation mode (formerly FLAG-02)  
-> • DGAF = layer-0 governance architecture — not a framework addon; the root control plane
+## Collaboration model
 
----
+DGAF work generally separates five concerns:
 
-## §2 · Agent Roster — Amethyst-Lattice v3.1 (11 canonical agents)
+- **Orchestration:** coordinating tasks and workflow state.
+- **Implementation:** developing and maintaining repository artifacts.
+- **Evaluation:** testing contracts and examining outputs against defined criteria.
+- **Governance:** applying project controls, authority boundaries, and escalation rules.
+- **Evidence:** recording what was done and what a result supports.
 
-> Authoritative source: `ENSEMBLE_ROSTER.md` (Post-S077, 2026-06-29)  
-> Agent count: **11 canonical** (6 with full detail sheets + 5 operational components)
+The same role may contribute to multiple concerns, but a contribution does not automatically constitute approval, verification, or authorization.
 
-| Agent | Layer | Role | Status |
-|---|---|---|---|
-| **Amethyst** | L5 | Host, meta-orchestrator, working-memory refresher, tribunal | ✅ Active |
-| **COLLEEN** | L5 | Institutional anchor, 1-1-1-1 Alignment Gate, steward | ✅ Active |
-| **Apogee Lens** | L4 | QA orchestrator, NIST AI RMF compliance, P-30 attestation authority | ✅ On-call |
-| **DemiJoule** | L4 | Runtime supervisor, ethics/safety, AXIS enforcement | ✅ On-call |
-| **Herald** | L3 | Explorer / Synthesizer | 🔴 Blocked (`VITE_GEMINI_API_KEY` — S-01) |
-| **Professor Prodigy** | L3 | Executor / Phi-calculus / Independent verifier | 🟡 Active (S072 — RV-01 audit pass) |
-| **Agent Sentinel** | L3 | Safety/veto gate, 11Q gates 9–11 | ⬜ Card pending |
-| **KAPPA v3.6** | L3 | Confidence-gated dynamic weight router | ⬜ Component card in `KAPPA/` |
-| **NormativeConstraint v1.0** | L3 | P-10 deontic/ethical cognition layer | ⬜ Component card exists |
-| **Reson #1** | L3 | Schizophonic Studio signal chain — #1 | ⬜ Studio trio |
-| **Echolette #2 / Lyra #3** | L3 | Schizophonic Studio signal chain — #2/#3 | ⬜ Studio trio |
-| **Ender / Njineer** | — | Human ratification authority, Architect | ✅ Active |
+## Agent and component references
 
----
+The repository uses named roles such as Amethyst, COLLEEN, Apogee, DemiJoule, Herald, Professor Prodigy, Sentinel-Phi, and the Resonance agents. These names help organize responsibilities and interfaces.
 
-## §3 · Pattern Registry
+For the current roster and role contracts, see [`ENSEMBLE_ROSTER.md`](./ENSEMBLE_ROSTER.md). For authority questions, the authority matrix is controlling. Human decision authority remains outside agent-role naming conventions.
 
-Canonical source: `docs/ndr_patterns_unified.json`  
-Human-readable: `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`  
-Current watermark: **P-42** · Schema **v2.2** · Session **S072**
+## Pattern architecture
 
-Newest pattern: **P-42 AHG** (Adaptive Harmonic Governance) — v1.4 implementation live, Apogee Lens APPROVED S072.
+DGAF maintains project patterns and control definitions for recurring engineering and governance problems. Pattern identifiers provide a stable way to reference a design; they do not by themselves establish that a pattern is effective in every environment.
 
----
+Current pattern information is maintained in the relevant pattern registry and specifications. When older terminology appears in historical documents, consult the current terminology and supersession records before treating it as canonical.
 
-## §4 · Resilience Stack
+## Governance and review
 
-### §4.1 · Core Gates (Layer 0–5)
+Work affecting controls, evidence, or promotion should identify:
 
-- **P-35** Procluding Premise Gate — blocks execution if premise is unsound
-- **P-36** Gate Priority Schema — defines evaluation order for all gates
-- **P-30** Apogee-Attestation-Gate — final quality gate before portfolio output
-- **P-11** 11Q Attestation Scoring — quantitative quality scoring
+1. the applicable contract or specification;
+2. the evidence required for the claim being made;
+3. the authority responsible for review or authorization;
+4. the provenance needed to reproduce or audit the result.
 
-### §4.2 · Confidence & Routing (Layer 7–8)
+A passing test, design review, or project-local attestation has the scope defined by its evidence. Broader claims require broader evidence.
 
-- **P-27** Adaptive-Weighting-with-Confidence-Gates — routes by confidence threshold (STRONG: 0.22, BLENDED: 0.18)
-- **P-28** Pipeline-Composition-with-Confidence-Gated-Routing — composes pipelines conditionally
-- **P-29** Sentinel-Annotated Risk Pass — annotates risk at 3 hook points before irreversible actions
+## Current work
 
-### §4.3 · Convergence & Compression (Layer 9)
+Do not use this guide as a backlog or live session tracker. Current priorities and experimental boundaries change over time and are maintained in the project's current-state records and active issues/pull requests.
 
-- **P-31** SCPE — Structural Context Pruning Engine (58.3% compression, T0-immune)
-- **P-32** Fibonacci Phi-Closure Gate — φ-checkpoints at Fib[13, 21, 34, 55]
-- **P-33** PDMAL Convergence Monitor — joint escalation with P-32
+## Historical material
 
-### §4.4 · Distributed Resilience Stack (Layer 10–11) · *Added S071*
+DGAF preserves earlier session records, architecture proposals, terminology, and operational decisions where they are useful for provenance. Historical availability does not make a record a current authority.
 
-Five patterns form an interlocking contract for durable, fault-tolerant multi-step execution:
+See [`docs/HISTORICAL_RECORDS_INDEX.md`](./docs/HISTORICAL_RECORDS_INDEX.md) and [`docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md`](./docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md) for repository-wide handling of historical material.
 
-| Pattern | Layer | Class | Role |
-|---------|-------|-------|------|
-| **P-37** Saga Boundary Declaration | 10 | ADVISORY | Declares step sequence, compensators, stochastic/deterministic split. Must precede P-38. |
-| **P-38** Circuit-Breaker Gate | 10 | BLOCKING | Trips on ≥3 failures → suspends execution, fires P-29 + P-37 compensators. States: CLOSED / OPEN / HALF-OPEN (30s probe). |
-| **P-39** ACRFence | 10 | BLOCKING | Atomically writes SHA-256 checkpoint before each tool call. Next call blocked until ACK. Restarts resume from last ACK'd checkpoint. |
-| **P-40** Atomix | 11 | BLOCKING | BEGIN → EXECUTE → COMMIT \| ROLLBACK per tool call. Idempotency key required for all writes. Compensator sourced from P-37. |
-| **P-41** HITL Durable Approval Queue | 11 | ADVISORY | Holds irreversible approvals across restarts. TIMED_OUT → P-38. No irreversible action fires without APPROVED state. |
+## Useful entry points
 
-**Interlock sequence:** P-37 choreographs the saga → P-38 isolates failures → P-39 makes checkpoints durable → P-40 makes individual calls transactional → P-41 gates all irreversible human decisions.
-
-### §4.5 · Adaptive Harmonic Governance (Layer 12) · *P-42 · v1.4 live S072*
-
-- **P-42** AHG — Adaptive Harmonic Governance. Continuous φ estimation, 7-state regime dispatch, 3D Cognitive Phase Space, hysteresis-gated archetype transitions, Tribunal recovery protocol.
-- **φ range:** (1.0, 1.8) open interval · **NDR-STASIS anchor:** φ=1.618 → Integration regime
-- **Tribunal threshold:** φ > 1.80 for ≥ 2 consecutive turns → fires P-29 risk_block + P-38 OPEN
-- **v1.4 live components:**
-  - `components/ahg_conductor.py` v1.4 — φ computation, regime dispatch, hysteresis, 3D phase (commit `e73011c`)
-  - `components/ahg_sidecar.py` v1.4.1 — heartbeat aggregation, StateVector clip guards, Herald wiring (commit `0ff1f0bc`)
-  - `schemas/ahg_heartbeat.json` v1.3 — heartbeat payload schema (commit `3565cf2f`)
-  - `tests/test_ahg_conductor.py` v1.4 — full unit suite (commit `e73011c`)
-  - `docs/theory/AHG_ARCHITECTURE.md` v1.3 — spec debt closed: φ open interval, R_c sign convention, §7/§8 synced (commit `4737bf9b`)
-- **v1.4 tag:** `4737bf9b` — pending `git push origin v1.4` (one CLI step)
-- **v1.5 next:** Issue #39 — `ahg_tribunal.py` R_c recovery loop (OB-01, primary deliverable) + 4 housekeeping obligations
+- [`README.md`](./README.md) — public project overview
+- [`README.technical.md`](./README.technical.md) — technical reference
+- [`README.governance.md`](./README.governance.md) — governance reference
+- [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) — current state
+- [`docs/PROJECT_STATUS.md`](./docs/PROJECT_STATUS.md) — project status
+- [`docs/agents/AGENT_AUTHORITY_MATRIX.md`](./docs/agents/AGENT_AUTHORITY_MATRIX.md) — authority boundaries
+- [`docs/HISTORICAL_RECORDS_INDEX.md`](./docs/HISTORICAL_RECORDS_INDEX.md) — historical navigation
 
 ---
 
-## §5 · Governance Rules
-
-- All repos claiming DGAF governance must carry a `GOVERNANCE.md` with DGAF version, protocol anchor to `GOVERNANCE_CONSTITUTION.md`, φ = 1.61818, and applicable NDR patterns.
-- Personal document firewall (NDR-133) is BLOCKING-ABSOLUTE. Architect override only. No resume/CV/audit files to GitHub.
-- Stasis block (P-12–P-26, 133 patterns) migration window: 2026-06-13 → **2026-07-13** ⚠️ EXPIRING IN 11 DAYS.
-- NDR-HDFS (formerly FLAG-01) and qualitative evaluation (formerly FLAG-02) are canonical — see `SESSION_ANCHOR.md` nomenclature canon.
-- FLAG-05 (AXIS pattern scope) awaits Njineer content decision (S-03 in DEFERRED_ITEMS.md).
-- DriftWatch production deployment requires explicit push trigger from Architect.
-- **P-42 governance hook (S072):** Introspection regime (φ 1.70–1.80) requires `apogee_lens_mandatory` constraint. Tension regime (φ > 1.80) additionally requires `p29_risk_block` + `p38_circuit_open`. Both enforced in `_active_constraints()` in `ahg_conductor.py`.
-
----
-
-## §6 · Session Log
-
-| Session | Watermark | Key Additions |
-|---------|-----------|---------------|
-| S042 | P-33 | P-31 SCPE, P-32 Phi-Closure, P-33 PDMAL |
-| S066 | P-34 | P-34 Empirical-Threshold-Sweep |
-| S069 | P-36 | P-35, P-36, CRUCIBLE_CHARTER, STASIS_CANONICAL_SPEC |
-| S071 | P-41 | P-37 Saga, P-38 Circuit-Breaker, P-39 ACRFence, P-40 Atomix, P-41 HITL Queue · Schema v2.2 |
-| Post-S077 | **P-42** | AHG (P-42) filed, ENSEMBLE_ROSTER v3.1, 11 canonical agents, ndr_patterns_unified.json v2.2 |
-| 2026-07-02 | — | Nomenclature canon locked (NDR-HDFS, qualitative, DGAF layer-0); SESSION_ANCHOR.md + DEFERRED_ITEMS.md patched |
-| **S072** | **P-42 v1.4** | **AHG full implementation: ahg_conductor.py v1.4 + ahg_sidecar.py v1.4.1 + spec v1.3. Proofs PV-01–05 + Apogee Lens AL-v1.4 APPROVED. Prof Prodigy RV-01 independent audit. Spec debt closed: φ open interval (PV-01), R_c sign convention (PV-03), Tribunal threshold 1.70→1.80. Issue #39 opened for v1.5. Tag v1.4 pending git push.** |
-
----
-
-## §7 · Open Items Entering Next Session
-
-| ID | Item | Priority | Ref |
-|---|---|---|---|
-| OB-01 | `ahg_tribunal.py` — R_c recovery loop, P-29/P-38 wiring | 🔴 HIGH | Issue #39 |
-| OB-02 | `REVISION_SCALE` constant in `ahg_sidecar.py` | 🟡 LOW | Issue #39 |
-| OB-03 | `round(uncertainty, 6)` in `compute_3d_phase()` | 🟡 LOW | Issue #39 |
-| OB-04 | Trailing `\` on `flush_all_pending` def | 🟡 LOW | Issue #39 |
-| OB-05 | Sidecar docstring spec ref v1.2→v1.3 | 🟡 LOW | Issue #39 |
-| TAG | Push `git push origin v1.4` | 🔴 HIGH | CLI only |
-| M=0.0 | StateVector M EMA carry-forward | ℹ️ v2.0 | Roadmap |
-| #32 | Eval tasks (ahg_recovery_turns etc.) | 🔴 HIGH | Issue #32 |
-| S-03 | FLAG-05 AXIS scope — Njineer decision | ⬜ | DEFERRED_ITEMS |
-| STASIS | P-12–P-26 migration window expires | ⚠️ | 2026-07-13 |
-
----
-
-*Governed by DGAF · Amethyst host · φ = 1.61818*  
-*S072 state saved 2026-07-02 by Amethyst × COLLEEN × Prof Prodigy — P-42 v1.4 Apogee Lens APPROVED*
+*This guide explains collaboration and architecture. It does not supersede current technical contracts, evidence records, or project authority controls.*
