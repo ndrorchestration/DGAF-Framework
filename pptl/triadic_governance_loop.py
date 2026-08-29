@@ -103,7 +103,7 @@ class TGLHooks:
     """
     Hook functions wired to each TGL step.
     Each hook: (input_text: str, context: dict) -> GateResult
-    None = SKIP (gate not wired in this deployment, passes through).
+    None = SKIP (gate not wired in this deployment).
 
     Minimum viable wiring: premise_gate is always populated.
     All other gates are optional for incremental integration.
@@ -191,9 +191,12 @@ class TriadicGovernanceLoop:
         Phi-Closure gate at step 6 returns PASS. When step 6 is WARN or SKIP,
         step 7 is recorded as SKIP and no HPG hook is invoked.
 
+        A successful governed turn requires every required governance gate
+        (steps 1–8) to be wired. Any SKIP in that required chain prevents a
+        PASS outcome and produces ESCALATE, making incomplete wiring explicit.
+
         Returns TurnAuditRecord sealed with SHA-256.
         Raises PremiseViolationError at Step 0 if constitutional invariant violated.
-        Raises RuntimeError for terminal gate failures at steps 3–6.
         """
         if context is None:
             context = {}
@@ -249,6 +252,11 @@ class TriadicGovernanceLoop:
             if rec.result == GateResult.KILL:
                 final_status = TurnStatus.KILL
                 break
+
+        if final_status == TurnStatus.PASS:
+            required_skip_steps = [g.step for g in gates if 1 <= g.step <= 6 and g.result == GateResult.SKIP]
+            if required_skip_steps:
+                final_status = TurnStatus.ESCALATE
 
         if not any(g.step == 6 and g.result == GateResult.KILL for g in gates):
             if phi_closure_result == GateResult.PASS:
