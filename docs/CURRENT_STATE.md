@@ -21,6 +21,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | E2b | CLOSED / VERIFIED (historical exact-tree scope) | `d299dd152…`; run `33047380487`; artifact `9636185725`; digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd` |
 | M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324`; retained negative-state artifact independently hash-verified; closure does not authorize execution |
 | Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Current E2b evidence must be produced against the exact executing workflow boundary used for freeze admissibility |
+| TGL contract | BLOCKED / ADVERSARIAL REVIEW | PR #132 produced a 41-pass / 2-fail regression at the TGL → P-35 boundary; PR #133 is the isolated remediation candidate |
 | P7 scientific specification | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Scientific decision resolved; exact freeze binding remains open |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped implementation/configuration and verification remain incomplete |
 | P2 formal runtime verification | NOT EXECUTED | Authenticated five-case matrix still required |
@@ -31,6 +32,14 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | New immutable freeze | NOT CREATED | No current candidate has crossed the freeze boundary |
 | Pilot authorization | NOT GRANTED | Separate governance transition after required predicates and freeze verification |
 | Empirical data | N = 0 | No authorized empirical pilot has been executed |
+
+## TGL / P-35 adversarial review boundary
+
+PR #132 is **BLOCKED / DRAFT / UNMERGED**. Its observed 41-pass / 2-fail pre-freeze result is treated as a substantive contract-regression signal. The failure is at the TGL → P-35 seam and includes incompatible constructor/method invocation. The review also identified missing `premise_check_fn` injection, weakened exception containment, incomplete `PASS/WARN/SKIP/ESCALATE/KILL` reduction, ambiguous SKIP semantics, and audit-seal sequencing concerns.
+
+The required remediation is contract restoration rather than broad architectural refactoring. PR #133 is the isolated remediation candidate. It must restore the established P-35 constructor and `evaluate(..., check_fn=...)` contract, fail-closed exception containment, explicit required/conditional gate semantics, deterministic status reduction, and exact final audit sealing, with regression coverage for the identified failure modes.
+
+This review does not authorize any experimental action. It does not create a freeze, close P7/P8, establish runtime verification, or increase empirical N.
 
 ## E2b provenance boundary
 
@@ -117,3 +126,7 @@ No freeze, authorization, unblinding, or empirical-N increase may be inferred fr
 Required before authorization include authenticated P2 and P6a execution on the same deployment identity; blinding custody and unblinding verification; durable archive/retrieval/hash evidence; environment and reproducibility fingerprints; formal P7 exact binding; frozen baseline/negative-control definitions; P8 closure; independent P9 verification; a new immutable freeze; and an explicit authorization decision.
 
 **No empirical pilot execution is authorized. Empirical N remains 0. Authorization remains NOT GRANTED.**
+
+## Related adversarial-review record
+
+See `docs/governance/TGL_PR132_ADVERSARIAL_REVIEW_2026-08-28.md` for the complete TGL/P-35 contract findings, state-machine analysis, audit/provenance findings, CI/CD identity risks, remediation boundary, and required regression coverage.
