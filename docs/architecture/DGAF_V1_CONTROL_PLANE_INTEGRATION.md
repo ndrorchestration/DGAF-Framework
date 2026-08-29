@@ -30,11 +30,11 @@ optional execution substrate (including PDMAL)
 
 - `pptl/governance_envelope.py` — immutable inherited authority/tool/data/resource scope, including bounded depth/concurrency metadata and non-increasing risk.
 - `pptl/state_identity.py` — canonical state representation and SHA-256 identity for exact cycle detection.
-- `pptl/budget_ledger.py` — fail-closed reservation and actual resource consumption accounting.
+- `pptl/budget_ledger.py` — fail-closed reservation, actual resource consumption accounting, and explicit active-concurrency accounting.
 - `pptl/branch_registry.py` — append-oriented branch lineage and retained outcome metadata.
 - `pptl/commit_gate.py` — explicit proposal/authorization/commit boundary.
-- `pptl/control_plane.py` — deterministic lifecycle state machine, bounded child creation, budget-overrun escalation, and optional TGL invocation from `EVALUATING`.
-- `pptl/tests/test_v1_control_plane.py` — deterministic core contract tests.
+- `pptl/control_plane.py` — deterministic lifecycle state machine, bounded child creation, lineage-wide concurrency enforcement, budget-overrun escalation, and optional TGL invocation from `EVALUATING`.
+- `pptl/tests/test_v1_control_plane.py` — deterministic core contract tests, including negative authorization and concurrency cases.
 - `pptl/tests/test_v1_tgl_integration.py` — cross-module TGL/control-plane contract tests.
 - `.github/workflows/control-plane-contract.yml` — dedicated contract CI lane covering both suites.
 
@@ -54,6 +54,8 @@ These modules are implementation candidates on the current integration branch; t
 10. Generic control-plane lifecycle cannot bypass TGL/P-35.
 11. Semantic distance or agent consensus is not treated as proof of independence.
 12. PDMAL topology and harmonic/geometric motifs are not authorization signals.
+13. Active concurrency is accounted separately from node counts and is bounded across a recursive lineage.
+14. A task marked `COMMIT_READY` does not itself execute a side effect; execution remains behind `CommitGate` and explicit authorization.
 
 ## Typed branch roles
 
@@ -84,9 +86,9 @@ Governed failures may enter ESCALATED; ESCALATED -> TERMINATED.
 
 ## Resource accounting
 
-The v1 ledger is telemetry-based. It tracks input tokens, output tokens, tool calls, elapsed time, rounds, and nodes. Reservations are atomic within the ledger object; an over-budget reservation fails closed. Provider pricing is not part of the safety boundary.
+The v1 ledger is telemetry-based. It tracks input tokens, output tokens, tool calls, elapsed time, rounds, and nodes. Reservations are atomic within the ledger object; an over-budget reservation fails closed. Active concurrency is tracked independently from node counts, and the control plane enforces a root-lineage ceiling while each task ledger records its own acquired slot. Provider pricing is not part of the safety boundary.
 
-`max_depth` and `max_concurrency` are envelope constraints. Concurrency consumption is intentionally not inferred from node counts; a dedicated active-branch reservation model is a later hardening step.
+`max_depth` and `max_concurrency` are envelope constraints. The current implementation explicitly accounts for active branch slots and releases them on task termination. Distributed scheduling remains outside the deterministic kernel.
 
 ## TGL relationship
 
@@ -97,11 +99,11 @@ The lifecycle controller and TGL have different scopes:
 - **P-35:** remains the constitutional Layer-0 gate.
 - **Herald:** remains evidence/fan-out infrastructure and must remain on the correct side of the sealed audit boundary.
 
-No replacement of TGL is proposed.
+No replacement of TGL is proposed. A TGL result is interpreted only from the `EVALUATING` state, and terminal `KILL`/`ESCALATE` outcomes cannot be converted into commit readiness by the generic controller.
 
 ## Evidence and provenance model
 
-Every branch should produce one durable `BranchRecord` containing branch identity, parent lineage, role, state identity, claims, evidence identifiers, assumptions, uncertainty, policy verdict, merge status, terminal state, and metadata. Rejected and correlated work is retained rather than discarded during synthesis.
+Every branch should produce one durable `BranchRecord` containing branch identity, parent lineage, role, state identity, claims, evidence identifiers, assumptions, uncertainty, policy verdict, merge status, terminal state, and metadata. Rejected and correlated work is retained rather than discarded during synthesis. The current registry enforces retention when branch records are registered; adapter-level automatic persistence remains an integration responsibility and is not claimed as closed by these core contracts.
 
 Independence metadata may describe source overlap, dependency overlap, prompt lineage, model identity, toolchain identity, and common assumptions. These fields are descriptive and must not be promoted to an unvalidated proof of independence.
 
@@ -117,7 +119,7 @@ PROPOSE
   -> COMMIT
 ```
 
-A model response is never treated as authorization.
+A model response is never treated as authorization. `CommitGate.commit()` is the final kernel-side authorization check; concrete provider/tool adapters must call it before consequential side effects and must not infer authorization from `COMMIT_READY` alone.
 
 ## Explicit exclusions
 
@@ -125,11 +127,11 @@ V1 does not include adaptive topology optimization, learned sycophancy classific
 
 ## PDMAL boundary
 
-PDMAL remains an optional governed execution substrate. The control plane must be operable without PDMAL; PDMAL-specific experiments remain below the generic control-plane boundary and retain their existing candidate/evidence rules.
+PDMAL remains an optional governed execution substrate. The control plane must be operable without PDMAL; PDMAL-specific experiments remain below the generic control-plane boundary and retain their existing candidate/evidence rules. Control-plane verification does not constitute PDMAL experimental evidence, freeze, authorization, unblinding, or an increase in empirical N.
 
 ## Agent Control Plane boundary
 
-`ndrorchestration/agent-control-plane` remains a separate experimental implementation asset. Its task lifecycle, dispatch, policy, evaluation, and provenance components are reference material for contract comparison rather than an automatic dependency or copied implementation.
+`ndrorchestration/agent-control-plane` remains a separate experimental implementation asset. Its task lifecycle, dispatch, policy, evaluation, and provenance components are reference material for contract comparison rather than an automatic dependency or copied implementation. Any duplicated concept must have an explicitly declared canonical owner before being treated as synchronized behavior.
 
 ## Verification sequence
 
@@ -137,9 +139,11 @@ PDMAL remains an optional governed execution substrate. The control plane must b
 2. dedicated v1 CI;
 3. adversarial control-plane tests;
 4. TGL/P-35 integration;
-5. only then live provider/substrate adapters.
+5. adapter bypass audit and provider/tool side-effect boundary verification;
+6. cross-repository authority/identity/documentation reconciliation;
+7. only then live provider/substrate adapters.
 
-The current branch contains deterministic core and TGL integration coverage. CI execution and adversarial review remain the next verification boundary.
+The current branch contains deterministic core and TGL integration coverage. Dedicated CI has verified the v1 core contract suite; adversarial adapter-boundary review and cross-layer reconciliation remain separate verification gates.
 
 ## Non-authorizing boundary
 
