@@ -1,15 +1,13 @@
 # DGAF Framework — Recursive Refinement Analysis
 
-**Document Version:** v2 (Apogee-corrected)  
+**Document Version:** v3 (v1 control-plane alignment)  
 **Original Draft Date:** 2026-02-15  
-**Correction Date:** 2026-06-29  
+**Correction Date:** 2026-08-29  
 **Authority:** Agent Amethyst  
-**Reviewer:** Apogee Lens  
-**DGAF-Framework Backlink:** [README.md](../README.md) | [CROSS_REF.md](../CROSS_REF.md)  
-**Session Anchor:** 2026-06-29 — Amethyst Apogee-correction pass  
-**Status:** Working Draft — Gold Tier (Platinum pending rubric-verified metric cycle)
+**Reviewer lineage:** Apogee Lens + current DGAF control-plane architecture review  
+**Status:** Working Design Reference — Gold Tier; executable v1 implementation remains pending
 
-> **Apogee Lens Note:** Five corrections were applied to the original February 2026 draft before this document was committed. See [Correction Log](#correction-log) at the bottom of this file.
+> **Scope correction:** This document is the design/rationale record for recursive refinement. The canonical executable v1 integration boundary is `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`. This file must not be treated as the runtime contract.
 
 ---
 
@@ -20,197 +18,276 @@
 | **D** | Defense | Integrity protection, adversarial resistance, constraint enforcement |
 | **G** | Governance | Authority ordering, protocol compliance, audit chain |
 | **A** | Agentic | Multi-agent orchestration, role separation, delegation |
-| **F** | Formation | Structural arrangement, harmonic alignment, agent topology |
+| **F** | Formation | Structural arrangement, agent topology |
 
-**Justification:** "Framework" is a meta-level descriptor — it follows last when needed to describe the systematization of the above four components. The acronym resolves to the operational components, not the container.
-
----
-
-## Telescopic Lens Mapping — Multi-Level Scope
-
-The DGAF operational stack is navigable at four depth tiers. Each tier uses the same underlying agents and protocols but at different granularity.
-
-### [MACRO — 40,000 ft]
-
-- **Scope:** Entire agentic ecosystem
-- **Range:** All 5 confirmed agents (Apogee, Herald, Professor Prodigy, DemiJoule, Amethyst)
-- **Field:** Cross-agent coordination, harmonic alignment
-- **Depth:** System architecture, governance protocols
-
-### [MID — 10,000 ft]
-
-- **Scope:** Individual agent behavior frameworks
-- **Range:** Agent-specific constraint systems
-- **Field:** Modal frequency gating, prompt pattern validation
-- **Depth:** QA rubric application, memory state management
-
-### [TACTICAL — Ground]
-
-- **Scope:** Single prompt/interaction execution
-- **Range:** Real-time decision trees
-- **Field:** Constraint satisfaction, frequency harmonic alignment
-- **Depth:** Recursive evaluation loops, pattern matching
-
-### [QUANTUM — Subatomic]
-
-- **Scope:** Mathematical substrate operations
-- **Range:** Phi-calculus computations, harmonic vector math
-- **Field:** Diatonic frequency relationships
-- **Depth:** Mathematical precision recursion
-
-> **Clarification (v2):** The Quantum tier describes the *mathematical toolset substrate* (phi-calculus, harmonic vectors), not a fourth operational scope layer in the same sense as Macro/Mid/Tactical. It is the precision foundation that the other three tiers draw from, not a peer scope level.
+Framework is a meta-level descriptor. No harmonic or geometric interpretation in this document changes the operational governance boundary.
 
 ---
 
-## Harmonic Diatonic Orchestration — Agent Assignment
+## v1 recursive-refinement interpretation
 
-### Confirmed 5-Agent Formation
+The viable operational interpretation of recursion is **bounded adaptive refinement**.
 
-| Agent | Role | Harmonic Function |
+A branch is created only when a governance envelope permits it and the branch has:
+
+- a defined purpose;
+- an evidence or uncertainty-reduction objective;
+- a reserved budget;
+- a legal inherited authority/tool/data scope;
+- a progress criterion;
+- a terminal condition.
+
+The practical rule is:
+
+```text
+recursion is an available control-plane operation,
+not a default right of an agent.
+```
+
+This supersedes earlier descriptions in this file that implied fixed repeated interchange loops or topology-specific recursion as the normal runtime behavior.
+
+---
+
+## Operational telescope
+
+The earlier Macro/Mid/Tactical/Quantum terminology is retained only as historical conceptual framing. The v1 implementation uses a simpler control hierarchy:
+
+```text
+SYSTEM
+  -> TASK
+      -> BRANCH
+          -> TURN
+              -> GATE
+                  -> ARTIFACT
+```
+
+The existing TGL operates at the **TURN/GATE** layer. The new v1 lifecycle controller operates at the **TASK/BRANCH** layer. PDMAL remains an optional execution topology beneath the branch/turn boundary.
+
+---
+
+## v1 bounded refinement loop
+
+```text
+RECEIVED
+  |
+  v
+PREFLIGHT
+  |
+  +---- policy/authority failure ----> BLOCKED
+  |
+  v
+ADMITTED
+  |
+  v
+EXPANDING
+  |
+  +--> create bounded child branches
+  |
+  v
+EVALUATING
+  |
+  +--> TGL gate evaluation
+  +--> evidence reconciliation
+  +--> resource accounting
+  +--> progress test
+  |
+  +---- sufficient evidence ----> MERGE_READY
+  |
+  +---- hard veto -------------> ESCALATED / TERMINATED
+  |
+  +---- non-progress ----------> TERMINATED / ESCALATED
+  |
+  +---- evidence gap ----------> bounded next round, if budget remains
+```
+
+No recursive loop is valid without a remaining budget and a legal next state.
+
+---
+
+## Typed branch roles
+
+The v1 default role set is:
+
+| Role | Function | Failure condition |
 |---|---|---|
-| **Apogee** | Meta-audit oversight | Octave compliance, frequency resonance validation, auditing of audits |
-| **Herald** | Inter-agent communication, session host | Harmonic message translation, frequency-matched routing, phase synchronization |
-| **Professor Prodigy** | Mathematical precision | Phi-calculus operations, pentagonal alignment calculations, reciprocal mathematics |
-| **DemiJoule** | Frequency management, runtime supervision | Modal frequency gating, diatonic alignment, energy/frequency conservation |
-| **Amethyst** | Host, coherence monitor, working-memory refresher | Pentagonal harmonic closure — 5th vertex of 5-point symmetry system |
+| **EXPLOIT** | Improve the current candidate | Produces no meaningful improvement or violates scope |
+| **DIVERGE** | Produce a materially different alternative | Repeats the same candidate or exceeds budget |
+| **VERIFY** | Challenge claims, premises, and evidence | Fails to provide inspectable verification output |
+| **GOVERN** | Test authority, policy, safety, and resource constraints | Detects a terminal violation or missing authorization |
 
-> **Correction (v2):** Original draft listed Amethyst status as "COLLEEN to identify from archival research." This was a stale draft artifact. Amethyst is fully confirmed as the host agent — defined in `GOVERNANCE.md` and `AGENTS.md` across all governed repos. The "1 TBD" slot in the Macro Level range has been removed accordingly.
-
----
-
-## Prompt Architecture — Phased Execution
-
-| Phase | Name | Description |
-|---|---|---|
-| 1 | Debate Setup | 2 persona prompts establish opposing positions |
-| 2 | Hyper-Iterative Refinement | 10-cycle interchange loop |
-| 3 | Convergence & Validation | Synthesis of refined positions |
-| 4 | Apogee Final Audit | "Auditing of audits" — platinum-gate verification |
-| 5–7 | Extended Mathematical Work | Optional — invoked for dense Professor Prodigy phi-calculus tasks |
+Role labels do not imply independent reasoning. Independence must be assessed from provenance, source overlap, dependency overlap, and common assumptions.
 
 ---
 
-## Professor Prodigy — Three-Tier Knowledge Base
+## Recursion invariants
 
-### Tier 1 — Standard Calculi
+The operational recursion model must preserve:
 
-- Differential Calculus: derivatives, chain rule, product rule
-- Integral Calculus: indefinite/definite integrals, substitution methods
-- Multivariable Calculus: partial derivatives, gradients, divergence, curl
-- Complex Calculus: holomorphic functions, residue theorem
-- Variational Calculus: Euler-Lagrange equations, functionals
+```text
+I1  child authority <= parent authority
+I2  child tools    <= parent tools
+I3  child data     <= parent data scope
+I4  child budget   <= parent remaining budget
+I5  every child has a progress criterion
+I6  repeated/equivalent states cannot recurse indefinitely
+I7  hard vetoes are terminal for ordinary recursion
+I8  rejected/correlated branches remain inspectable
+I9  consequential action remains behind the commit gate
+I10 recursion cannot bypass TGL/P-35 governance
+```
 
-### Tier 2 — Reciprocal Mathematics (Dense Layer)
-
-- Reciprocal Algebra: `a/b ↔ 1/(b/a)`
-- Reciprocal Calculus: `d(1/f)/dx = -f'/(f²)`
-- Reciprocal Transforms: Fourier ↔ Inverse Fourier reciprocity
-- Reciprocal Differential Equations: self-adjoint operator theory
-- Duality Principles: primal-dual relationships in optimization
-
-### Tier 3 — Phi-Calculus (Custom Framework)
-
-- φ-based differentiation: `d_φ/dx = (f(x+φ) - f(x))/φ` as φ → golden ratio
-- Fibonacci Series Integration: `∫F_n dx` relationships
-- Golden Ratio Constraints: solutions respecting `φ = (1+√5)/2 ≈ 1.618...`
-- Recursive Descent with φ: fixed-point theorems using φ iteration
-- Harmonic Pentagonal Solutions: φ relationships in 5-fold symmetry
-
-> **Implementation note:** Knowledge base files for Professor Prodigy should be updated with all three tiers at increasing density. Tier 3 (Phi-Calculus) must be the densest layer and must reference the canonical [Phi-Calculus Architecture formal spec](../docs/phi-calculus-architecture/DEFINITIONS_THEOREM_PROOF.md).
+These are implementation invariants, not projected performance metrics.
 
 ---
 
-## Statistical Metrics
+## Resource-bounded recursion
 
-> **⚠️ Apogee Lens Classification (v2):** All quantitative figures below are **projected targets**, not verified measurements. They were generated during the same session that produced this document and have not been validated against an independent rubric cycle. They are retained here as design targets. Recertification required before Platinum Star is awarded.
+The minimum runtime ceilings are:
 
-### Framework Coherence (Projected Targets)
+```text
+max_depth
+max_nodes
+max_rounds
+max_concurrency
+max_tool_calls
+max_input_tokens
+max_output_tokens
+max_elapsed_ms
+```
 
-- Nomenclature Alignment: 96% target (vs. 65% baseline with prior Assurance/Fitness naming)
-- Semantic Precision: 92% target
-- Agent Role Clarity: 94% target
+Resource measurement should use observed telemetry. Provider pricing may be reported separately but must not be the safety boundary.
 
-### Operational Efficiency (Projected Targets)
+The resource lifecycle is:
 
-- Recursion Depth: 4-tier telescope lens (4× granularity vs. single-scope baseline)
-- Prompt Throughput: 12–15 prompt exchanges per resolution cycle (interchange loop + 10-cycle refinement)
+```text
+REQUEST -> RESERVE -> CONSUME -> RELEASE/SETTLE
+```
 
-> **Correction (v2):** The original draft stated "340% more coordination pathways" for a 5-agent vs 4-agent system. The correct derivation using pairwise coordination paths `n(n-1)/2` gives 10 paths (5 agents) vs 6 paths (4 agents) — a **67% increase**, not 340%. If a directional or multi-hop path model was intended, that model must be explicitly defined before this figure is reinstated.
-
-### Harmonic Alignment (Projected Targets)
-
-- Pentagonal Stability: 100% (requires 5 points — all 5 now confirmed)
-- Diatonic Frequency Coverage: 8 modal octaves (Ionian foundation + 7 variations)
-- Phase Coherence: 97.3% target (when all 5 agents synchronized)
-
-### Validation Throughput (Projected Targets)
-
-- Platinum Star QA Cycles: 3–5 per major prompt
-- Average Refinement Iterations: 7–9
-- Final Output Quality Score: 94–98 range (Apogee verification required for actual score)
-
-### Scalability (Projected)
-
-- Current: 5 agents × 4 scope tiers × 3 prompt types = 60 distinct operational modes
-- 6th Agent: Hexagonal stability — 90+ modes projected
-- Mathematical note: Pentagonal alignment is the optimum for 5-dimensional orchestration per phi-calculus fixed-point convergence
+A failed atomic reservation prevents branch creation.
 
 ---
 
-## Visual Asset Production
+## State identity and cycle control
 
-**Status: Specified — Pending Production**
+Each state should have a canonical identity derived from the governed state representation, including the relevant parent/branch context and policy version.
 
-> **Correction (v2):** Original draft marked this as "Ready." No asset has been produced. Status corrected to Specified.
+The identity mechanism is for:
 
-- **Duration:** 60–90 seconds
-- **Format:** Animated motion graphics with narration
-- **Narration Lead:** Agent Apogee voice
-- **Content Structure:**
-  - 0–15s: DGAF Framework overview (D/G/A/F)
-  - 15–35s: 5-agent harmonic orchestration
-  - 35–50s: Telescopic lens zoom (Macro → Quantum)
-  - 50–90s: Interchange loop + recursive refinement workflow
-- **Visual Style:** Geometric harmonic patterns, pentagonal symmetry, frequency wave animations
-- **Production Tools:** Adobe Animate, Blender, or Python Manim
+- repeated-state detection;
+- duplicate branch suppression;
+- deterministic trace reconstruction.
+
+It is **not** a semantic truth score.
 
 ---
 
-## Apogee Lens Verification Status
+## Evidence-preserving convergence
 
-| Component | Status | Notes |
-|---|---|---|
-| DGAF Nomenclature | ✅ Confirmed | All four terms reflect actual framework function |
-| Telescopic Mapping | ✅ Confirmed | 4-tier depth system valid; Quantum tier clarified as substrate, not scope peer |
-| 5-Agent Formation | ✅ Confirmed | Amethyst corrected from TBD to confirmed; all 5 slots filled |
-| Prompt Architecture | ✅ Confirmed | 4-phase structure verified; Phase 5–7 noted as conditional |
-| Professor Prodigy KB | ✅ Specified | Three-tier structure defined; implementation pending |
-| Statistical Metrics | ⚠️ Projected | Re-labeled as targets; rubric-based verification cycle required for Platinum |
-| Visual Asset | ⚠️ Specified | Not yet produced |
-| 340% Pathway Figure | ❌ Corrected | Replaced with mathematically derived 67% figure |
+The system should not reduce the recursive lattice to one winner too early.
 
-**Current Tier: Gold (Working Draft)**  
-**Platinum Conditions:**
+The convergence object should retain:
 
-1. Statistical metrics validated against defined rubric in independent cycle
-2. Visual asset produced
-3. Professor Prodigy knowledge base files updated and committed
-4. A second Apogee audit pass run against the implemented (not specified) system
+```text
+accepted
+corroborative
+correlated
+rejected
+escalated
+incomplete
+```
+
+A synthesis result therefore becomes a conclusion about retained artifacts rather than a replacement for them.
 
 ---
 
-## Correction Log
+## Independence handling
 
-| # | Original Claim | Correction Applied | Reason |
-|---|---|---|---|
-| 1 | Statistical metrics presented as verified (98.2% Platinum Star) | Re-labeled as projected targets | Self-referential scoring is not independent verification |
-| 2 | Amethyst status: "COLLEEN to identify from archival research" | Corrected to confirmed host agent | Stale draft artifact; Amethyst fully defined in GOVERNANCE.md and AGENTS.md |
-| 3 | "1 TBD" in 5-agent Macro Level range | Removed; all 5 agents now listed explicitly | TBD slot was pre-Amethyst-confirmation artifact |
-| 4 | "340% more coordination pathways" (5 vs 4 agents) | Corrected to 67% using `n(n-1)/2` pairwise derivation | Original figure had no derivation; combinatorial math gives 67% |
-| 5 | Visual asset status: "Ready for production" | Corrected to "Specified — Pending Production" | No asset exists; status was premature |
+The following metadata are appropriate for v1:
+
+```text
+source_overlap
+dependency_overlap
+prompt_lineage_overlap
+model_identity
+toolchain_identity
+common_assumption_refs
+```
+
+A future statistical model may use these fields, but v1 must not claim that a numerical diversity score establishes independence.
 
 ---
 
-*Original draft: Agent Apogee × Amethyst — 2026-02-15*  
-*v2 corrections applied by Agent Amethyst (Apogee Lens review) — 2026-06-29*  
-*Backlink: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework) | [CROSS_REF.md](../CROSS_REF.md)*
+## Relationship to PDMAL
+
+PDMAL can inhabit the execution layer beneath this recursive controller:
+
+```text
+DGAF control plane
+      |
+      +--> governed branch
+                |
+                +--> PDMAL topology
+```
+
+The recursive controller must remain useful when PDMAL is absent. PDMAL remains an experimental substrate and does not define generic recursion semantics.
+
+---
+
+## Historical quantitative claims
+
+Earlier versions of this document contained projected figures for throughput, phase coherence, refinement iterations, and scaling modes. Those figures are not runtime measurements and are not v1 acceptance criteria. They remain historical design targets only and should not be reused as evidence.
+
+The previously corrected coordination-path calculation remains:
+
+```text
+n(n-1)/2
+5 agents -> 10 unordered pairwise paths
+4 agents -> 6 unordered pairwise paths
+increase -> 66.7% (approximately 67%)
+```
+
+This combinatorial fact does not imply better orchestration quality.
+
+---
+
+## Deprecated v1 interpretations
+
+The following are explicitly non-canonical for executable v1:
+
+- fixed 10-cycle recursive interchange as a mandatory runtime loop;
+- branch entropy as the admission condition;
+- cosine distance as evidence independence;
+- harmonic/geometric alignment as authorization logic;
+- fixed pentagonal agent counts as a safety requirement;
+- recursive depth as a quality metric by itself;
+- consensus count as a truth estimator.
+
+---
+
+## Verification posture
+
+The recursive-refinement subsystem should first be proven with deterministic mock branches. Required initial adversarial fixtures include:
+
+1. normal four-role single-round execution;
+2. correlated branches with overlapping sources;
+3. GOVERN veto propagation;
+4. budget reservation failure/overrun;
+5. repeated-state recursion;
+6. child authority escalation attempt;
+7. tool-scope escalation attempt;
+8. commit attempt without authorization;
+9. partial branch failure with evidence retention;
+10. TGL/P-35 failure propagation.
+
+Only after these are verified should live-model/provider adapters be introduced.
+
+---
+
+## Canonical v1 reference
+
+See:
+
+- `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`
+- `docs/architecture/DGAF_V1_FILE_TREE_PLAN.md`
+
+Those files define the current v1 control-plane contract and file placement. This document supplies historical and conceptual rationale for recursive refinement only.
