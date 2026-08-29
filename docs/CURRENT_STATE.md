@@ -9,13 +9,13 @@ applies_to_ref: main
 
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it.
 
-> **Current boundary:** `main` remains the documentation/evidence lineage. PR #139 is the current engineering candidate at `a728ce3ee8a024646c0971c9d4f392abaa3d691a`. The experimental verification boundary remains candidate-scoped; P7 is scientifically adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
+> **Current boundary:** `main` remains the documentation/evidence lineage. PR #139 is the current engineering candidate at `d2c24054edfc44cbb2620e6b2b19eb8df8e23850`. The experimental verification boundary remains candidate-scoped; P7 is scientifically adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
 
 ## Canonical engineering lane — 2026-08-29
 
 PR #139 (`feat/dgaf-v1-control-plane-finalize-20260829`) is the canonical combined engineering candidate for the governed recursive control plane and TGL contract remediation.
 
-**Current PR #139 head:** `a728ce3ee8a024646c0971c9d4f392abaa3d691a`
+**Current PR #139 head:** `d2c24054edfc44cbb2620e6b2b19eb8df8e23850`
 
 The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskState`, `StateRegistry`, `BudgetLedger`, `BranchRegistry`, `CommitGate`, hardened TGL status/sealing semantics, adversarial regression tests, capability-boundary tests, and dedicated CI lanes. It does not rebind PDMAL, create a freeze, authorize a pilot, unblind data, or increase empirical N.
 
@@ -44,13 +44,13 @@ The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskS
 
 ### Exact-head engineering verification
 
-The dedicated `DGAF v1 Control-Plane Contract` run `33246694071` completed **SUCCESS** on substantive implementation checkpoint `7807d956e90d4e5fec79fcbe2146618c815fed51`. Exact candidate checkout passed, pinned CI dependency installation passed, and the deterministic control-plane/TGL/adversarial/capability-boundary suite passed **40/40**.
+The dedicated `DGAF v1 Control-Plane Contract` run `33247361730` completed **SUCCESS** on implementation head `a728ce3ee8a024646c0971c9d4f392abaa3d691a`. Exact candidate checkout passed, pinned CI dependency installation passed, and the deterministic control-plane/TGL/adversarial/capability-boundary suite passed **41/41**.
 
-That result is scoped to `7807d956…`. The current integrated candidate `a728ce3…` contains a subsequent TGL regression correction and therefore requires its own completed exact-head validation before merge-level closure.
+That result is scoped to `a728ce3…`. The current integrated candidate `d2c24054…` contains only documentation/governance reconciliation after the tested code head; no later code-changing claim is transferred without fresh exact-head validation.
 
 ### Current-main integration
 
-A non-destructive two-parent merge commit incorporated current `main` commit `cf9d2738f2210f270855869e7ccd0eb660838025` into the PR branch without force-moving the ref. The candidate is now 0 commits behind current `main`; the mainline capability-boundary commit is content-covered by the PR's expanded capability suite.
+A non-destructive two-parent merge commit incorporated current `main` commit `cf9d2738f2210f270855869e7ccd0eb660838025` into the PR branch without force-moving the ref. The candidate is 0 commits behind current `main`; the mainline capability-boundary commit is content-covered by the PR's expanded capability suite.
 
 ### Canonical agent-role boundary
 
@@ -72,7 +72,7 @@ Generic v1 roles are execution contracts and do not create or elevate agent auth
 | Boundary | Status | Meaning |
 |---|---|---|
 | Current `main` | CURRENT DOCUMENTATION/EVIDENCE LINEAGE | `cf9d2738…`; resolve `main` directly for latest repository state |
-| PR #139 engineering candidate | VALIDATED IMPLEMENTATION CHECKPOINT / FRESH HEAD VERIFICATION OPEN | `a728ce3…`; last substantive code checkpoint `7807d956…` passed 40/40 |
+| PR #139 engineering candidate | VALIDATED IMPLEMENTATION CHECKPOINT / FRESH HEAD VERIFICATION OPEN | `d2c24054…`; last substantive code checkpoint `a728ce3…` passed 41/41 |
 | P7 scientific specification | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Exact freeze binding remains required |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure incomplete |
 | P2 runtime verification | OPEN / NOT EXECUTED | Exact-source deployment and authenticated runtime matrix still required |
