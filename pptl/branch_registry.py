@@ -6,6 +6,10 @@ from types import MappingProxyType
 from typing import Iterable, Mapping
 
 
+def _freeze_strings(values: Iterable[str]) -> tuple[str, ...]:
+    return tuple(str(value) for value in values)
+
+
 @dataclass(frozen=True)
 class BranchRecord:
     branch_id: str
@@ -32,6 +36,9 @@ class BranchRecord:
                 raise ValueError(f"{name} must be between 0 and 1")
         if self.policy_verdict not in {"PASS", "WARN", "KILL", "ESCALATE"}:
             raise ValueError("invalid policy_verdict")
+        object.__setattr__(self, "claims", _freeze_strings(self.claims))
+        object.__setattr__(self, "evidence_ids", _freeze_strings(self.evidence_ids))
+        object.__setattr__(self, "assumptions", _freeze_strings(self.assumptions))
         object.__setattr__(self, "metadata", MappingProxyType(dict(self.metadata or {})))
 
 
