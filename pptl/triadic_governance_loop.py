@@ -194,6 +194,7 @@ class TriadicGovernanceLoop:
 
     def _seal_and_emit_terminal_premise_failure(
         self,
+        input_text: str,
         gates: list[GateRecord],
         input_hash: str,
         timestamp: str,
@@ -211,7 +212,7 @@ class TriadicGovernanceLoop:
         )
         herald_rec = self._run_hook(
             self.hooks.herald_fn,
-            "",
+            input_text,
             {**context, "audit_record": rec.to_dict()},
             9,
             "P-01",
@@ -236,11 +237,11 @@ class TriadicGovernanceLoop:
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS))
         except PremiseViolationError:
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL))
-            self._seal_and_emit_terminal_premise_failure(gates, input_hash, timestamp, context)
+            self._seal_and_emit_terminal_premise_failure(input_text, gates, input_hash, timestamp, context)
             raise
         except Exception as exc:
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, str(exc)[:120]))
-            self._seal_and_emit_terminal_premise_failure(gates, input_hash, timestamp, context)
+            self._seal_and_emit_terminal_premise_failure(input_text, gates, input_hash, timestamp, context)
             raise RuntimeError("P-35 governance failure") from exc
 
         hook_sequence = [
