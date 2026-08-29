@@ -62,6 +62,9 @@ jobs:
       - name: Run P8 pilot artifact and analysis tests
         run: python -m pytest -q experiments/pdmal_pilot/test_analysis.py experiments/pdmal_pilot/test_security_controls.py
 
+      - name: Run agent authority invariant tests
+        run: python -m pytest -q tests/test_agent_authority_invariant.py tests/test_agent_authority_matrix.py
+
       - name: Run Issue #32 deterministic evaluation slices
         run: |
           mkdir -p artifacts
@@ -185,4 +188,8 @@ jobs:
           test -f scripts/emit_freeze_control_evidence.py
           test -f evaluations/evaluation_integrity_fixture_suite.py
           test -f tests/test_evaluation_integrity_fixture_suite.py
+          test -f tests/test_agent_authority_invariant.py
+          test -f tests/test_agent_authority_matrix.py
+          test -f docs/agents/AGENT_AUTHORITY_INVARIANT.md
+          test -f docs/agents/AGENT_AUTHORITY_MATRIX.md
           echo 'Governance CI checks completed.'
