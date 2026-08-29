@@ -18,13 +18,13 @@
 
 The current `main` branch is a living documentation/evidence lineage and is not itself the experimental apparatus identity. The experimental verification boundary remains candidate-scoped at **`ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`** pending any separately governed candidate transition.
 
-PR #132 exposed a TGL/P-35 control-plane contract regression (41 passed / 2 failed). PR #133 is an isolated remediation candidate. TGL remediation is a prerequisite to reliable candidate verification, not a P8 closure event and not an authorization transition.
+PR #134 is the current-main TGL/P-35 remediation lane. Its engineering validation is distinct from P8 closure. PRs #132 and #133 remain historical diagnostic/remediation records and are not current experimental authority.
 
 | Binding | Value | State |
 |---|---|---|
 | Experimental verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | CURRENT CANDIDATE BOUNDARY |
-| TGL remediation | PR #133 | DRAFT / VALIDATION PENDING |
-| Blocked regression | PR #132 | DRAFT / UNMERGED |
+| TGL remediation | PR #134 | CURRENT-MAIN ENGINEERING REMEDIATION / EXACT-HEAD VALIDATION REQUIRED |
+| Historical TGL candidates | PRs #132/#133 | HISTORICAL |
 | Historical candidate | `e6beeb66335e1b50a239697badab22dab50eb5ba` | HISTORICAL |
 | Analysis implementation | `experiments/pdmal_pilot/analysis.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
 | Analysis configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | SELECTED / PRE-FREEZE |
@@ -68,6 +68,7 @@ P8 remains **OPEN / FAIL-CLOSED** pending:
 7. Current-boundary evidence review for E2b/M6, retaining their exact execution boundaries.
 8. P7 exact freeze binding and formal closure of the adopted scientific decision record.
 9. Independent P9 verification.
+10. Reconciliation of any control-plane/adaptor changes that could alter the executable apparatus before freeze.
 
 A successful CI run or deployment readiness is necessary evidence, not by itself P8 closure.
 
