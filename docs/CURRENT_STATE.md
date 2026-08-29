@@ -9,13 +9,13 @@ applies_to_ref: main
 
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it.
 
-> **Current boundary:** `main` remains the documentation/evidence lineage. PR #139 is the current engineering candidate at `7807d956e90d4e5fec79fcbe2146618c815fed51`. The experimental verification boundary remains candidate-scoped; P7 is scientifically adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
+> **Current boundary:** `main` remains the documentation/evidence lineage. PR #139 is the current engineering candidate at `250de1c76e4dfd105207523ae2e46aa83b5a5153`. The experimental verification boundary remains candidate-scoped; P7 is scientifically adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
 
 ## Canonical engineering lane — 2026-08-29
 
 PR #139 (`feat/dgaf-v1-control-plane-finalize-20260829`) is the canonical combined engineering candidate for the governed recursive control plane and TGL contract remediation.
 
-**Current PR #139 head:** `7807d956e90d4e5fec79fcbe2146618c815fed51`
+**Current PR #139 head:** `250de1c76e4dfd105207523ae2e46aa83b5a5153`
 
 The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskState`, `StateRegistry`, `BudgetLedger`, `BranchRegistry`, `CommitGate`, hardened TGL status/sealing semantics, adversarial regression tests, capability-boundary tests, and dedicated CI lanes. It does not rebind PDMAL, create a freeze, authorize a pilot, unblind data, or increase empirical N.
 
@@ -43,9 +43,11 @@ The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskS
 
 ### Exact-head engineering verification
 
-The dedicated `DGAF v1 Control-Plane Contract` run `33246694071` completed **SUCCESS** on `7807d956e90d4e5fec79fcbe2146618c815fed51`. Exact candidate checkout passed, pinned CI dependency installation passed, and the deterministic control-plane/TGL/adversarial/capability-boundary suite passed **40/40**.
+The dedicated `DGAF v1 Control-Plane Contract` run `33246694071` completed **SUCCESS** on the implementation checkpoint `7807d956e90d4e5fec79fcbe2146618c815fed51`. Exact candidate checkout passed, pinned CI dependency installation passed, and the deterministic control-plane/TGL/adversarial/capability-boundary suite passed **40/40**.
 
-Additional current-wave checks completed successfully across Truth Layer Tests/Validation, Full Repository Coverage Audit, PDMAL Instrumentation Dry Run, Epistemic Evidence Validation, and CodeQL. These are engineering/evidence controls, not experimental efficacy evidence.
+Subsequent branch commits through the current PR head are documentation/governance reconciliation commits; no claim is made that the 40/40 result verifies a later code SHA unless that later SHA contains only those non-code changes.
+
+Additional successful engineering/evidence lanes included Truth Layer Tests/Validation, Full Repository Coverage Audit, PDMAL Instrumentation Dry Run, Epistemic Evidence Validation, and CodeQL. These are engineering/evidence controls, not experimental efficacy evidence.
 
 ### Canonical agent-role boundary
 
@@ -67,7 +69,7 @@ Generic v1 roles are execution contracts and do not create or elevate agent auth
 | Boundary | Status | Meaning |
 |---|---|---|
 | Current `main` | CURRENT DOCUMENTATION/EVIDENCE LINEAGE | Resolve `main` directly for latest repository state |
-| PR #139 engineering candidate | VERIFIED ENGINEERING CANDIDATE | `7807d956e90d4e5fec79fcbe2146618c815fed51`; 40/40 v1 contract suite PASS |
+| PR #139 engineering candidate | VERIFIED ENGINEERING CANDIDATE | `250de1c76e4dfd105207523ae2e46aa83b5a5153`; last substantive code verification checkpoint `7807d956…` |
 | P7 scientific specification | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Exact freeze binding remains required |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure incomplete |
 | P2 runtime verification | OPEN / NOT EXECUTED | Exact-source deployment and authenticated runtime matrix still required |
@@ -78,9 +80,9 @@ Generic v1 roles are execution contracts and do not create or elevate agent auth
 
 ## Deployment identity boundary
 
-The observed READY Vercel production deployment remains historical/supporting evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal the current GitHub `main` SHA `087f3d3050085c465a2beda96e12bc33537ca368`. Issue #137 is the canonical deployment-provenance tracker.
+The observed READY Vercel production deployment remains historical/supporting evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal current `main`. Issue #137 is the canonical deployment-provenance tracker.
 
-For PR #139 head `7807d956e90d4e5fec79fcbe2146618c815fed51`, GitHub currently reports the Vercel status context **success**. This proves only that the Vercel status context is passing; the available GitHub-side evidence does not expose deployment metadata proving that the successful deployment's source SHA exactly matches the intended PR head. Exact deployment/source verification therefore remains open.
+For the verified implementation checkpoint `7807d956…`, GitHub reported the Vercel status context **success**; available GitHub-side evidence does not expose deployment metadata proving exact source-SHA identity. For the later current PR head, deployment provenance remains open and is not inherited from the earlier status.
 
 ## Engineering-lane consolidation
 
