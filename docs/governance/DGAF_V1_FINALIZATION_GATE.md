@@ -3,6 +3,8 @@
 **Status:** IMPLEMENTATION CANDIDATE / NON-AUTHORIZING  
 **Date:** 2026-08-29
 
+PR #139 is the canonical combined engineering lane for DGAF v1 recursive control-plane implementation and current TGL contract remediation. Earlier PRs #132/#133/#134 are historical or superseded and are not separate current execution authorities.
+
 ## Closure conditions
 
 1. Current-main-based candidate branch exists with no divergence at creation.
@@ -12,7 +14,7 @@
 5. Branch provenance retains accepted, rejected, correlated, escalated, and terminal outcomes.
 6. CommitGate requires explicit proposal and authorization before commit, with unique request identity and one-way authorization.
 7. TGL/P-35 remains the per-turn governance kernel and is not bypassed by the control plane.
-8. TGL required `SKIP` states escalate rather than reduce to PASS; `WARN` propagates; terminal failure stops downstream execution; final audit sealing covers the complete gate set including Herald.
+8. Required TGL `SKIP` states escalate rather than reduce to PASS; `WARN` propagates; terminal failure stops downstream execution; final audit sealing covers the complete gate set including Herald.
 9. Agent-role mapping preserves current authority semantics.
 10. PDMAL remains an optional governed substrate and its experimental state is not altered.
 11. Exact-head CI execution and adversarial review are required before verification claims.
