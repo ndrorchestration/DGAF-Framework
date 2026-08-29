@@ -86,6 +86,13 @@ def test_branch_registry_retains_correlated_and_vetoing_records():
     assert registry.by_status("correlated")[0].branch_id == "verify"
 
 
+def test_branch_registry_preserves_shared_state_identity():
+    registry = BranchRegistry()
+    registry.add(BranchRecord("verify-a", None, "VERIFY", "same-state"))
+    registry.add(BranchRecord("verify-b", None, "VERIFY", "same-state", merge_status="correlated"))
+    assert {record.branch_id for record in registry.by_state("same-state")} == {"verify-a", "verify-b"}
+
+
 def test_branch_metadata_is_immutable():
     source = {"authorization": "AUTH-1"}
     record = BranchRecord("verify", None, "VERIFY", "s1", metadata=source)
