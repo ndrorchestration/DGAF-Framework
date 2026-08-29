@@ -79,9 +79,6 @@ class ControlPlane:
         if task.lineage_id is None:
             task.lineage_id = task.envelope.trace_id
         self._lineage_limits.setdefault(task.lineage_id, task.envelope.budget.max_concurrency)
-        self._lineage_limits[task.lineage_id] = min(
-            self._lineage_limits[task.lineage_id], task.envelope.budget.max_concurrency
-        )
         self.tasks[task.task_id] = task
         self.ledgers[task.task_id] = BudgetLedger(task.envelope.budget)
         self._transition(task, TaskState.PREFLIGHT)
