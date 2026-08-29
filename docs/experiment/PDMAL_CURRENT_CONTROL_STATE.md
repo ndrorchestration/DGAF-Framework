@@ -39,6 +39,7 @@ The historical PR #132 regression remains a provenance record: its 41-pass / 2-f
 Those remediation concerns are now consolidated into **PR #139**, the current combined engineering lane for DGAF v1 control-plane and TGL contract hardening. PRs #132/#133/#134 are closed historical/superseded records and must not be treated as current execution authorities or experimental apparatus identities.
 
 The current TGL implementation distinguishes:
+
 - unwired required-gate `SKIP` → `ESCALATE`;
 - `WARN` propagation;
 - terminal failure → downstream stop;
