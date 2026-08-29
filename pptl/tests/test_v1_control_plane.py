@@ -99,7 +99,7 @@ def test_child_creation_requires_active_parent() -> None:
 
 def test_recursive_lineage_respects_root_concurrency_ceiling() -> None:
     plane = ControlPlane(); root = ControlTask("root", envelope()); plane.submit(root); plane.admit("root"); plane.start_expansion("root")
-    child = plane.create_child("root", task_id="child", trace_id="child-trace", authority_scope={"research"}, permitted_tools={"read"}, data_classes={"public"}, envelope_budget=ResourceBudget(max_input_tokens=25, max_output_tokens=25, max_tool_calls=2, max_elapsed_ms=250, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1)); plane.admit("child"); plane.start_expansion("child")
+    child = plane.create_child("root", task_id="child", trace_id="child-trace", authority_scope={"research"}, permitted_tools={"read"}, data_classes={"public"}, envelope_budget=ResourceBudget(max_input_tokens=25, max_output_tokens=25, max_tool_calls=2, max_elapsed_ms=250, max_rounds=1, max_nodes=1, max_depth=2, max_concurrency=1)); plane.admit("child"); plane.start_expansion("child")
     assert plane._lineage_active[root.lineage_id] == 2
     grandchild = plane.create_child("child", task_id="grandchild", trace_id="grandchild-trace", authority_scope={"research"}, permitted_tools={"read"}, data_classes={"public"}, envelope_budget=ResourceBudget(max_input_tokens=10, max_output_tokens=10, max_tool_calls=1, max_elapsed_ms=100, max_rounds=1, max_nodes=1, max_depth=2, max_concurrency=1)); plane.admit("grandchild"); plane.start_expansion("grandchild")
     assert grandchild.state is TaskState.ESCALATED
