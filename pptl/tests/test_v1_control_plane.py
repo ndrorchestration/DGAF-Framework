@@ -178,5 +178,18 @@ def test_start_expansion_consumes_round_and_node_without_leaking_reservation():
     assert plane.ledgers["root"].reserved.nodes == 0
 
 
+def test_illegal_start_expansion_has_no_resource_side_effects():
+    plane = ControlPlane()
+    task = ControlTask("root", envelope())
+    plane.submit(task)
+    with pytest.raises(ControlPlaneViolation, match="illegal transition PREFLIGHT -> EXPANDING"):
+        plane.start_expansion("root")
+    ledger = plane.ledgers["root"]
+    assert task.state is TaskState.PREFLIGHT
+    assert ledger.active_concurrency == 0
+    assert ledger.consumed.rounds == 0
+    assert ledger.consumed.nodes == 0
+
+
 def root_lineage(task: ControlTask) -> str:
     return task.lineage_id or task.envelope.trace_id
