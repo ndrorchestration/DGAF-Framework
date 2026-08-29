@@ -44,13 +44,13 @@ class ControlPlaneViolation(RuntimeError):
 class ControlTask:
     task_id: str
     envelope: GovernanceEnvelope
-    state: TaskState = TaskState.RECEIVED
     depth: int = 0
-    state_history: list[str] = field(default_factory=list)
     lineage_id: str | None = None
-    concurrency_acquired: bool = False
-    last_tgl_status: str | None = None
-    last_tgl_seal: str | None = None
+    _state: TaskState = field(default=TaskState.RECEIVED, init=False, repr=False)
+    _state_history: list[str] = field(default_factory=list, init=False, repr=False)
+    _concurrency_acquired: bool = field(default=False, init=False, repr=False)
+    _last_tgl_status: str | None = field(default=None, init=False, repr=False)
+    _last_tgl_seal: str | None = field(default=None, init=False, repr=False)
     _identity_sealed: bool = field(default=False, init=False, repr=False)
 
     _IMMUTABLE_FIELDS = frozenset({"task_id", "envelope", "depth", "lineage_id"})
@@ -58,6 +58,8 @@ class ControlTask:
     def __post_init__(self) -> None:
         if self.lineage_id is None:
             object.__setattr__(self, "lineage_id", self.envelope.trace_id)
+        if self.depth < 0:
+            raise ValueError("depth must be non-negative")
         object.__setattr__(self, "_identity_sealed", True)
 
     def __setattr__(self, name: str, value: object) -> None:
@@ -65,7 +67,29 @@ class ControlTask:
             current = getattr(self, name)
             if value != current:
                 raise ControlPlaneViolation(f"immutable task identity field: {name}")
+        if name in {"state", "state_history", "concurrency_acquired", "last_tgl_status", "last_tgl_seal"}:
+            raise AttributeError(f"{name} is controller-managed")
         object.__setattr__(self, name, value)
+
+    @property
+    def state(self) -> TaskState:
+        return self._state
+
+    @property
+    def state_history(self) -> tuple[str, ...]:
+        return tuple(self._state_history)
+
+    @property
+    def concurrency_acquired(self) -> bool:
+        return self._concurrency_acquired
+
+    @property
+    def last_tgl_status(self) -> str | None:
+        return self._last_tgl_status
+
+    @property
+    def last_tgl_seal(self) -> str | None:
+        return self._last_tgl_seal
 
     def snapshot(self) -> dict[str, object]:
         return {
@@ -101,13 +125,26 @@ class ControlPlane:
     def admit(self, task_id: str) -> None:
         self._transition(self._task(task_id), TaskState.ADMITTED)
 
+    def _set_runtime(self, task: ControlTask, *, state: TaskState | None = None, concurrency: bool | None = None, tgl_status: str | None = None, tgl_seal: str | None = None, reset_tgl: bool = False) -> None:
+        if state is not None:
+            object.__setattr__(task, "_state", state)
+        if concurrency is not None:
+            object.__setattr__(task, "_concurrency_acquired", concurrency)
+        if reset_tgl:
+            object.__setattr__(task, "_last_tgl_status", None)
+            object.__setattr__(task, "_last_tgl_seal", None)
+        if tgl_status is not None:
+            object.__setattr__(task, "_last_tgl_status", tgl_status)
+        if tgl_seal is not None:
+            object.__setattr__(task, "_last_tgl_seal", tgl_seal)
+
     def _release_concurrency(self, task: ControlTask) -> None:
         if not task.concurrency_acquired:
             return
         self.ledgers[task.task_id].release_concurrency()
         lineage = task.lineage_id or task.envelope.trace_id
         self._lineage_active[lineage] = max(0, self._lineage_active.get(lineage, 0) - 1)
-        task.concurrency_acquired = False
+        self._set_runtime(task, concurrency=False)
 
     def _escalate(self, task: ControlTask, reason: str) -> None:
         if task.state is not TaskState.ESCALATED:
@@ -136,14 +173,13 @@ class ControlPlane:
             self._escalate(task, str(exc))
             return
         self._lineage_active[lineage] = self._lineage_active.get(lineage, 0) + 1
-        task.concurrency_acquired = True
+        self._set_runtime(task, concurrency=True)
         self._transition(task, TaskState.EXPANDING)
 
     def begin_evaluation(self, task_id: str) -> None:
         task = self._task(task_id)
         self._transition(task, TaskState.EVALUATING)
-        task.last_tgl_status = None
-        task.last_tgl_seal = None
+        self._set_runtime(task, reset_tgl=True)
 
     def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
         if self.tgl_runner is None:
@@ -160,12 +196,10 @@ class ControlPlane:
         status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
         seal = getattr(result, "seal_hash", None)
         if status is None or not isinstance(seal, str) or len(seal) != 64:
-            task.last_tgl_status = None
-            task.last_tgl_seal = None
+            self._set_runtime(task, reset_tgl=True)
             self._escalate(task, "TGL result lacks a valid cryptographic seal")
             raise ControlPlaneViolation("TGL result lacks valid sealed evidence")
-        task.last_tgl_status = status
-        task.last_tgl_seal = seal
+        self._set_runtime(task, tgl_status=status, tgl_seal=seal)
         self.events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
         if status in {"KILL", "KILL_REC"}:
             self.veto(task_id, "TGL terminal failure")
@@ -229,8 +263,8 @@ class ControlPlane:
     def _transition(self, task: ControlTask, new_state: TaskState) -> None:
         if new_state not in _ALLOWED[task.state]:
             raise ControlPlaneViolation(f"illegal transition {task.state.value} -> {new_state.value}")
-        task.state_history.append(task.state.value)
-        task.state = new_state
+        task._state_history.append(task.state.value)
+        self._set_runtime(task, state=new_state)
         self.events.append({"event": "STATE", "task_id": task.task_id, "state": new_state.value})
 
     def _task(self, task_id: str) -> ControlTask:
