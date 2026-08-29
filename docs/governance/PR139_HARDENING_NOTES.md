@@ -2,7 +2,7 @@
 
 ## Current candidate
 
-Current PR #139 head: `ce93394302e64d7d4f687846a9b6e7c24567ab3e`
+Current PR #139 head: `2df8c0601d83488a305f211f510953ea81edcb01`
 
 All findings below are engineering-control findings. They do not authorize PDMAL execution or transfer experimental evidence across SHA boundaries.
 
@@ -48,27 +48,19 @@ Escalated and terminated tasks cannot consume additional resources.
 
 Active nonterminal lifecycle states can be explicitly terminated. This is a terminal abort path, not an authorization path, and does not bypass TGL or CommitGate requirements.
 
-### CI completeness
+### CI exact-head/reproducibility hardening
 
-The v1 control-plane CI lane executes core, TGL integration, and adversarial contract suites. Missing test files are treated as repository errors rather than silently skipped.
-
-## Resource accounting
-
-Expansion startup consumes one round and one node through `BudgetLedger.consume()`. Reservations remain explicit and budget-aware; concurrency acquisition/release is bounded and validated.
-
-## Commit integrity
-
-Commit requests are immutable after proposal, request IDs are unique within a gate instance, authorization is one-way, and a successfully committed request cannot be replayed through the same gate.
+The dedicated v1 control-plane workflow is configured to check out `${{ github.event.pull_request.head.sha || github.sha }}`, assert that the working tree SHA matches that exact value, install the pinned repository CI requirements plus a pinned pandas version, and execute the control-plane, TGL integration, adversarial, and capability-boundary suites.
 
 ## Verification-only findings
 
-The first dedicated v1 contract execution exposed three contract-test failures on an earlier PR merge ref. The failures were fully diagnosed: a stale side-effect inheritance expectation, an assertion using the wrong post-escalation error branch, and a test assuming `ADMITTED → TERMINATED` before that abort path was formalized. Those failures are historical diagnostics; they are not current-head verification.
+An earlier dedicated v1 contract execution exposed three contract-test failures on an earlier PR merge ref. The failures were fully diagnosed: a stale side-effect inheritance expectation, an assertion using the wrong post-escalation error branch, and a test assuming `ADMITTED → TERMINATED` before that abort path was formalized. Those failures are historical diagnostics; they are not current-head verification.
 
-Current candidate `ce933943…` requires a fresh exact-head CI matrix after the latest hardening commits.
+For the current head `2df8c060…`, GitHub has successful CodeQL and truth-layer checks. The dedicated `DGAF v1 Control-Plane Contract` check currently has no exact-head check record, so the consolidated v1 contract remains validation-pending.
 
 ## External deployment boundary
 
-Current-main → production exact source binding remains separately open under Issue #137. Deployment readiness cannot be promoted to exact-current-main evidence without source-SHA binding.
+Current-main → production exact source binding remains separately open under Issue #137. The current aggregate status includes the Vercel deployment-rate-limit failure condition; this is an infrastructure blocker and is not a code-test verdict.
 
 ## Experimental boundary
 
