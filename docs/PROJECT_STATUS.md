@@ -13,7 +13,7 @@ The DGAF/PDMAL experimental track remains in structured pre-freeze closure. `351
 
 Repository `main` is an active documentation/evidence lineage; resolve the current branch tip from Git rather than treating a documentation commit as the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
 
-The corrected Governance/TGL engineering lane is PR #134 on current `main`; PRs #132/#133 remain historical diagnostic/remediation records. DGAF v1 control-plane work is PR #136 and remains a separate generic engineering layer. Its dedicated deterministic contract lane has passed a prior exact-head run, but the current PR head has changed and requires fresh exact-head validation after the latest concurrency-fixture correction and documentation changes.
+The corrected Governance/TGL engineering lane is PR #134 on current `main`; PRs #132/#133 remain historical diagnostic/remediation records. DGAF v1 control-plane work is PR #136 and remains a separate generic engineering layer. Its dedicated deterministic contract lane has passed prior exact-head validation; the current PR head has changed again because the CommitGate request-identity integrity contract was strengthened and requires fresh exact-head validation.
 
 P7 is scientifically adopted in substance, but exact cryptographic binding to the eventual freeze apparatus remains OPEN. P8 remains OPEN/FAIL-CLOSED. P2/P6a remain pending authenticated execution against the exact deployment identity. P4/P5/P6 and P9 remain open. No new freeze exists, no pilot has been authorized or executed, and N remains 0.
 
@@ -39,8 +39,9 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | Independent verification | NOT EXECUTED | P9 remains pending |
 | TGL contract review | REMEDIATION / VALIDATION IN PROGRESS | PR #134 current-main remediation; #132/#133 historical |
-| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / VALIDATION IN PROGRESS | PR #136; prior contract run passed, current head requires fresh exact-head validation |
-| Control-plane adapter boundary | OPEN / ENGINEERING VERIFICATION | Dedicated audit specification and CI lane added on PR #136 |
+| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / VALIDATION IN PROGRESS | PR #136; fresh exact-head validation required after CommitGate identity-integrity hardening |
+| Control-plane adapter boundary | IN PROGRESS / ENGINEERING VERIFICATION | Prior adapter contract run passed; latest head requires revalidation |
+| CommitGate request identity | HARDENED / AWAITING EXACT-HEAD VALIDATION | Duplicate request IDs now fail closed; authorization resolves only to one proposal identity |
 | Forman–Ricci lattice helper semantics | OPEN / ISSUE #117 | Unweighted dodecahedral `Ric_F(e) = -2` is constant/zero-variance and must produce `NO_DISCRIMINATING_SIGNAL`, not 30 anomaly flags |
 | P-38 source integrity | OPEN / ISSUE #122 | Truncated historical tail remains unrecovered from authoritative source |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
@@ -54,7 +55,7 @@ The PR #132 41-pass / 2-fail result remains a concrete historical regression sig
 
 ## DGAF v1 control-plane
 
-PR #136 implements inherited governance envelopes, deterministic lifecycle states, exact-state cycle protection, resource accounting, recursive-lineage concurrency bounds, branch provenance retention, explicit proposal/authorization/commit separation, and TGL integration. This is engineering infrastructure only. `COMMIT_READY` is not execution, and control-plane CI is not PDMAL evidence. The current head is a fresh validation target after the latest fixture correction.
+PR #136 implements inherited governance envelopes, deterministic lifecycle states, exact-state cycle protection, resource accounting, recursive-lineage concurrency bounds, branch provenance retention, explicit proposal/authorization/commit separation, and TGL integration. CommitGate now rejects duplicate request identities so authorization cannot ambiguously resolve across proposals. This is engineering infrastructure only. `COMMIT_READY` is not execution, and control-plane CI is not PDMAL evidence. The current head requires fresh validation after the latest hardening.
 
 ## Current deployment boundary
 
