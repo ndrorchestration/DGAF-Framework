@@ -13,9 +13,24 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 ## Canonical engineering lane — 2026-08-29
 
-PR #139 (`feat/dgaf-v1-control-plane-finalize-20260829`) is the canonical combined engineering candidate for the governed recursive control plane and TGL contract remediation. It is based on current `main` and remains non-authorizing.
+PR #139 (`feat/dgaf-v1-control-plane-finalize-20260829`) is the canonical combined engineering candidate for the governed recursive control plane and TGL contract remediation.
 
-The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskState`, `StateRegistry`, `BudgetLedger`, `BranchRegistry`, `CommitGate`, hardened TGL status/sealing semantics, adversarial regression tests, and dedicated CI lanes. It does not rebind PDMAL, create a freeze, authorize a pilot, unblind data, or increase empirical N.
+**Current PR #139 head:** `b65312db66dc4009b7754226c47345e7ce7808b2`
+
+The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskState`, `StateRegistry`, `BudgetLedger`, `BranchRegistry`, `CommitGate`, hardened TGL status/sealing semantics, adversarial regression tests, capability-boundary tests, and dedicated CI lanes. It does not rebind PDMAL, create a freeze, authorize a pilot, unblind data, or increase empirical N.
+
+### Current engineering invariants
+
+- governance scope can only remain equal or narrow across child derivation;
+- task identity and controller-managed runtime state cannot be externally reassigned;
+- public task/ledger/registry/event surfaces are read-only;
+- merge readiness requires a current sealed TGL `PASS`;
+- terminal/escalated tasks cannot consume additional resources;
+- child state identity is observed after successful `PREFLIGHT` submission;
+- failed child creation cannot pollute the state registry;
+- branch provenance preserves distinct branch identities when state IDs coincide;
+- CommitGate remains a separate explicit authorization boundary;
+- safe terminal abort does not create an authorization path.
 
 ### TGL contract boundary
 
@@ -57,11 +72,13 @@ Generic v1 roles are execution contracts and do not create or elevate agent auth
 
 ## Deployment identity boundary
 
-The observed READY Vercel production deployment remains historical/supporting evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal the current GitHub `main` SHA. Issue #137 remains the canonical deployment-provenance tracker. A READY preview does not establish exact-current-main production identity.
+The observed READY Vercel production deployment remains historical/supporting evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal the current GitHub `main` SHA. Issue #137 is the canonical deployment-provenance tracker.
+
+For current PR #139 engineering head `b65312d…`, GitHub reports Vercel status **failure** with description `Deployment rate limited — retry in 24 hours.` This is an infrastructure blocker and does not constitute a code-test failure or experimental transition. Current-head live deployment verification therefore remains unavailable.
 
 ## Engineering-lane consolidation
 
-PR #132/#133 are historical diagnostic/remediation records. PR #134 is superseded by PR #139. PR #139 is the single current engineering lane for the v1 recursive control plane plus the TGL contract remediation.
+PR #132/#133/#134 are historical diagnostic/remediation records. PR #139 is the single current engineering lane for the v1 recursive control plane plus the TGL contract remediation.
 
 ## Evidence boundary
 
