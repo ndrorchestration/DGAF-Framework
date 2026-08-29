@@ -1,6 +1,6 @@
 # DGAF v1 File-Tree and Ownership Plan
 
-**Status:** IMPLEMENTATION IN PROGRESS / NON-AUTHORIZING
+**Status:** IMPLEMENTATION CANDIDATE / NON-AUTHORIZING
 
 This is the canonical physical-placement and ownership map for the viable v1 Governed Recursive Control Plane. It extends existing DGAF/PPTL boundaries rather than creating a parallel runtime tree.
 
@@ -29,7 +29,10 @@ DGAF-Framework/
     ├── state_identity.py
     ├── branch_registry.py
     ├── budget_ledger.py
-    └── commit_gate.py
+    ├── commit_gate.py
+    └── tests/
+        ├── test_v1_control_plane.py
+        └── test_v1_tgl_integration.py
 ```
 
 ## Ownership
@@ -37,13 +40,13 @@ DGAF-Framework/
 | Capability | Canonical implementation | Integration | Test/CI |
 |---|---|---|---|
 | Governance Envelope | `pptl/governance_envelope.py` | controller/orchestrator | `test_v1_control_plane.py` |
-| Lifecycle controller | `pptl/control_plane.py` | orchestrator + TGL | same |
-| State identity | `pptl/state_identity.py` | controller | same |
-| Branch provenance | `pptl/branch_registry.py` | controller + Herald | same + evidence |
-| Resource accounting | `pptl/budget_ledger.py` | controller/dispatch | same |
-| Plan/commit barrier | `pptl/commit_gate.py` | controller/tool adapters | same |
-| Per-turn governance | existing `pptl/triadic_governance_loop.py` | controller | existing TGL suite |
-| Constitutional admission | existing `pptl/procluding_premise.py` | TGL/controller | P-35 tests |
+| Lifecycle controller | `pptl/control_plane.py` | orchestrator + TGL | `test_v1_control_plane.py` + TGL integration |
+| State identity | `pptl/state_identity.py` | controller | `test_v1_control_plane.py` |
+| Branch provenance | `pptl/branch_registry.py` | controller + Herald | `test_v1_control_plane.py` + evidence |
+| Resource accounting | `pptl/budget_ledger.py` | controller/dispatch | `test_v1_control_plane.py` |
+| Plan/commit barrier | `pptl/commit_gate.py` | controller/tool adapters | `test_v1_control_plane.py` |
+| Per-turn governance | existing `pptl/triadic_governance_loop.py` | controller | existing TGL suite + `test_v1_tgl_integration.py` |
+| Constitutional admission | existing `pptl/procluding_premise.py` | TGL/controller | P-35 tests + `test_v1_tgl_integration.py` |
 
 ## Canonical ownership rules
 
@@ -51,7 +54,9 @@ One concept has one canonical schema and one semantic owner. Do not duplicate TG
 
 ## Current implementation candidate
 
-The integration branch contains the first executable v1 contract layer: GovernanceEnvelope, ControlTask/ControlPlane/TaskState, StateRegistry, BudgetLedger/Consumption, BranchRecord/BranchRegistry, CommitRequest/CommitGate, deterministic tests, dedicated control-plane CI, and package exports.
+The integration branch contains the first executable v1 contract layer: GovernanceEnvelope, ControlTask/ControlPlane/TaskState, StateRegistry, BudgetLedger/Consumption, BranchRecord/BranchRegistry, CommitRequest/CommitGate, deterministic tests, a TGL integration test, dedicated control-plane CI, and package exports.
+
+The Governance Envelope now explicitly carries `max_depth` and `max_concurrency`; depth and risk inheritance are fail-closed. The controller can invoke a supplied TGL runner only from `EVALUATING`, and terminal TGL failure maps to lifecycle escalation.
 
 These remain candidate implementation changes until CI and adversarial review close their corresponding engineering predicates.
 
@@ -73,8 +78,12 @@ The control plane must remain usable without PDMAL. No v1 implementation may alt
 
 ## CI boundary
 
-`pptl-ci.yml` remains the per-turn governance lane. `control-plane-contract.yml` is the deterministic v1 control-plane lane. Neither workflow is an authorization mechanism.
+`pptl-ci.yml` remains the per-turn governance lane. `control-plane-contract.yml` is the deterministic v1 control-plane lane and now executes both the core contract suite and the TGL integration suite. Neither workflow is an authorization mechanism.
 
 ## Admission rule
 
 Every new v1 module must specify owner path, contract, reused components, invariants, failure behavior, provenance fields, test/CI lane, documentation owner, and PDMAL-boundary impact.
+
+## Non-authorizing boundary
+
+This plan does not create a freeze, authorize a pilot, change the PDMAL candidate boundary, or increase empirical N.
