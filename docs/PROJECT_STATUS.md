@@ -13,7 +13,7 @@ The repository is in structured pre-freeze closure. `3510b86889cd341f7a7cf9ab684
 
 Repository `main` is an active documentation/evidence lineage; resolve the current branch tip from Git rather than treating a documentation commit as the experimental apparatus candidate. The current experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`.
 
-The corrected Governance CI boundary at `ac8ea26…` binds the candidate target to the executing workflow SHA. E2b current-boundary verification remains required where a current freeze decision depends on the executing workflow boundary. M6 is separately **CLOSED / VERIFIED** for the exact candidate `ac8ea267…` via run `33050398324`; that closure is scoped to the exact verification workspace/job and does not authorize execution.
+The corrected Governance CI boundary at `ac8ea26…` binds the candidate target to the executing workflow SHA. E2b current-boundary verification remains required where a current freeze decision depends on the executing workflow boundary. M6 is separately CLOSED / VERIFIED for the exact candidate `ac8ea267…` via run `33050398324`; that closure is scoped to the exact verification workspace/job and does not authorize execution.
 
 The documentation correction pass canonicalized the remaining named Platinum/Plastic notation surfaces and quarantined several historical overclaiming records. Documentation-quality debt remains tracked separately from experimental validity.
 
@@ -30,7 +30,7 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Execute/retain evidence for the exact workflow boundary used for the eventual freeze decision |
 | M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324`; retained negative-state artifact independently hash-verified |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical/non-empirical characterization only |
-| Execution contract | PARTIAL | Authenticated exact-current-tree P2 evidence pending |
+| Execution contract | PARTIAL / TGL BLOCKED | Authenticated exact-current-tree P2 evidence pending; TGL/P-35 contract regression under remediation |
 | Artifact contract | PARTIAL | Corrective controls present; current candidate execution evidence pending |
 | Security / blinding | PARTIAL | Fresh operational custody verification pending |
 | Topology provenance | PARTIAL | Exact current-candidate recomputation pending |
@@ -40,12 +40,23 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | P7 exact binding | OPEN | Final freeze identity binding remains required |
 | Analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | Independent verification | NOT EXECUTED | P9 remains pending |
+| TGL contract review | BLOCKED / DRAFT REMEDIATION | PR #132 41-pass / 2-fail regression; PR #133 is isolated remediation candidate |
 | Forman–Ricci lattice helper semantics | OPEN / ISSUE #117 | Unweighted dodecahedral `Ric_F(e) = -2` is constant/zero-variance and must produce `NO_DISCRIMINATING_SIGNAL`, not 30 anomaly flags |
 | P-38 source integrity | OPEN / ISSUE #122 | `NDR_AUTOINIT_SUBSTRATE_ADAPTER_P38_v1.md` has a truncated historical tail; history audit confirms the earliest retained version is already truncated |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | ZERO | No authorized pilot execution |
 | Documentation quality | OPEN DEBT | Current Doc Lint findings remain separate from efficacy |
+
+## TGL / P-35 adversarial review
+
+The 41-pass / 2-fail result associated with PR #132 is a concrete regression signal at the TGL → P-35 integration boundary. The observed failure is not being treated as a transient test issue. The review identified constructor/method incompatibility, missing premise-hook injection, weakened exception containment, incomplete `PASS/WARN/SKIP/ESCALATE/KILL` reduction, ambiguous conditional versus unwired `SKIP`, and audit-seal sequencing concerns.
+
+The selected remediation is intentionally minimal: restore the established P-35 API and TGL fail-closed behavior, make required/conditional gate semantics explicit, implement deterministic status reduction, make the final seal correspond to the authoritative returned audit state, and expand regression coverage. Broad architectural refactoring is out of scope for PR #132/#133.
+
+PR #132 remains blocked/draft. PR #133 is the isolated remediation candidate and must obtain its own exact-head validation. Neither PR changes the experimental apparatus identity, creates a freeze, closes P7/P8, grants authorization, or increases empirical N.
+
+The detailed diagnostic record is `docs/governance/TGL_PR132_ADVERSARIAL_REVIEW_2026-08-28.md`.
 
 ## Current deployment boundary
 
@@ -81,15 +92,16 @@ Historical evidence remains scoped to the exact application source, deployment, 
 
 ## Required closure sequence
 
-1. Execute/retain the current-boundary E2b verification needed for freeze admissibility against the exact executing workflow SHA.
-2. Independently inspect exact SHA, scope, integrity, and negative-state claims; M6 closure is already recorded for candidate `ac8ea267…`.
-3. Execute authenticated P2 and P6a against the exact deployment identity.
-4. Complete P4, P5, and P6 evidence/custody.
-5. Complete formal P7 exact binding.
-6. Reconcile and close P8 only from candidate-scoped evidence.
-7. Execute P9 independent verification.
-8. Create and independently verify a new immutable freeze.
-9. Obtain explicit pilot authorization.
-10. Only then execute the authorized blinded pilot.
+1. Resolve the TGL/P-35 contract blocker through the isolated remediation candidate and exact-head validation.
+2. Execute/retain the current-boundary E2b verification needed for freeze admissibility against the exact executing workflow SHA.
+3. Independently inspect exact SHA, scope, integrity, and negative-state claims; M6 closure is already recorded for candidate `ac8ea267…`.
+4. Execute authenticated P2 and P6a against the exact deployment identity.
+5. Complete P4, P5, and P6 evidence/custody.
+6. Complete formal P7 exact binding.
+7. Reconcile and close P8 only from candidate-scoped evidence.
+8. Execute P9 independent verification.
+9. Create and independently verify a new immutable freeze.
+10. Obtain explicit pilot authorization.
+11. Only then execute the authorized blinded pilot.
 
 **Empirical validity is NOT ESTABLISHED. Pilot authorization is NOT GRANTED. N = 0.**
