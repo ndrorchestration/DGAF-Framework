@@ -1,49 +1,28 @@
-"""
-CI/CD Template Matrix for All 25 Repositories
-==============================================
+# CI/CD Template Matrix — Historical Planning Record
 
-DEPLOYMENT COMPLETE — SECTION C
-===============================
+> **Status:** Historical planning/session record. This file does not describe the repository's current CI/CD coverage or current workflow configuration.
+>
+> **Current CI/CD:** Inspect [`.github/workflows/`](./.github/workflows/) and the relevant GitHub Actions runs for the authoritative implementation and execution state.
 
-✅ DEPLOYED IN THIS SESSION (8 workflows):
-  ├─ DGAF-Framework (Python)
-  ├─ junior-apogee-app (Python)
-  ├─ resumeapex-eval (Python)
-  ├─ 3d-visualization-hub (Python)
-  ├─ sentinel-governance (Python + Governance)
-  ├─ Driftwatch (TypeScript)
-  ├─ pptl-governance-dashboard (TypeScript)
-  └─ ndrorchestration (TypeScript)
+## Purpose of this record
 
-STATUS: All Tier 1 production repos now have CI/CD
-Coverage: 8/25 repos (32% of portfolio)
-Quality Gates: Testing, coverage, linting, type-checking, security scanning
+This document preserves an earlier portfolio-wide CI/CD planning snapshot. Its repository counts, deployment statements, workflow inventory, and graph-analysis notes reflect the state of that planning session and should not be generalized to the current portfolio.
 
----
+## Historical context
 
-SECTION D: GRAPH ALGORITHMS REVIEW
-===================================
+The record documented an effort to establish baseline testing, coverage, linting, type checking, and security scanning across a group of repositories. It also captured proposed graph-analysis areas involving PDMAL topology and orchestration structures.
 
-Ready to analyze graph structures in your codebase:
+Those statements are retained as historical planning context, not as current deployment certification or portfolio-wide coverage evidence.
 
-1. PDMALGraph (DGAF-Framework)
-   ├─ Adjacency list representation
-   ├─ Edge weight normalization
-   └─ Convergence monitoring
+## Current use
 
-2. Ensemble routing patterns
-   ├─ Sequential traversal (10-step gates)
-   ├─ Multi-agent synthesis
-   └─ Convergence detection
+For current work:
 
-3. Agent orchestration
-   ├─ Trust graph topology
-   ├─ Path finding (amethyst → destination)
-   └─ Conflict resolution
+1. inspect the workflow files that are actually present;
+2. inspect the status of the relevant commit or pull request;
+3. treat a workflow definition separately from a successful execution;
+4. use current project-status and evidence documents for claims about verification.
 
----
+## Related policy
 
-STARTING SECTION D NOW
-======================
-
-"""
+See [`docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md`](./docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md) for the repository policy governing historical operational records.
