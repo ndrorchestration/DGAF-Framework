@@ -179,9 +179,11 @@ For mathematical notation, historical terminology, and semantic corrections, see
 | Evidence policy | [`EVIDENCE_LADDER_POLICY.md`](docs/evidence/EVIDENCE_LADDER_POLICY.md) |
 | PDMAL experiment | [`PDMAL_EXPERIMENT_PROTOCOL.md`](docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md) |
 | Agent authority | [`AGENT_AUTHORITY_MATRIX.md`](docs/agents/AGENT_AUTHORITY_MATRIX.md) |
+| Documentation style guide | [`DOCUMENTATION_STYLE_GUIDE.md`](docs/governance/DOCUMENTATION_STYLE_GUIDE.md) |
 | Public documentation standard | [`PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md) |
 | Commercialization boundary | [`DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md) |
 | Cross-repository relationships | [`CROSS_REF.md`](CROSS_REF.md) |
+| Contribution guide | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 
 The repository contains substantially more detailed governance and evidence records. The README deliberately acts as the **public entry point**, not as the complete control ledger.
 
@@ -191,7 +193,7 @@ DGAF is released under the **Apache License 2.0**. See [`LICENSE`](LICENSE).
 
 The public repository is intended to remain inspectable and reproducible enough for independent technical evaluation. Commercial differentiation, where applicable, may exist in managed operations, integration, assurance, support, hosting, specialized tooling, customer-specific configurations, training, or future certification programs; those possibilities do not change the evidence requirements for public technical claims.
 
-For contribution and community expectations, see the repository's contribution and governance documentation. Issues and pull requests should identify the affected component, evidence boundary, and expected behavioral change rather than relying on broad claims about the system as a whole.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution expectations.
 
 ## Support and project navigation
 
