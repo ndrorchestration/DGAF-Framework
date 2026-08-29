@@ -1,6 +1,6 @@
 # DGAF v1 Control-Plane Adapter Boundary Audit
 
-**Status:** OPEN / ENGINEERING VERIFICATION
+**Status:** IN PROGRESS / ENGINEERING VERIFICATION
 **Scope:** PR #136 generic control-plane integration
 **Experimental state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
 
@@ -17,6 +17,7 @@ Establish an explicit engineering audit boundary between the generic DGAF v1 con
 5. External `agent-control-plane` components remain reference/integration material unless a separately governed adapter contract makes them canonical.
 6. PDMAL experiment adapters cannot mutate candidate identity, freeze state, authorization state, blinding state, or empirical N without the separate experimental governance transition.
 7. Provider, deployment, storage, and messaging integrations must expose provenance for the exact action request and authorization reference.
+8. Commit request identities must be unique within a gate instance; authorization must resolve to exactly one proposal identity.
 
 ## Audit method
 
@@ -31,9 +32,17 @@ Any path that reaches a consequential effect without the complete chain is an en
 - Static path inventory of consequential adapters.
 - Negative tests for unauthorized direct invocation.
 - Positive tests showing authorization identity is bound to the committed request.
+- Duplicate request-identity tests proving ambiguity fails closed.
 - Herald boundary tests proving evidence publication cannot mutate governance authority.
 - PDMAL adapter tests proving experimental state is unchanged by generic control-plane execution.
-- Exact-tree CI evidence for the audit suite.
+- Exact-tree CI evidence for the audit suite after the latest integrity corrections.
+
+## Current findings
+
+- Adapter-boundary contract workflow has passed on the prior integration head.
+- Current source now enforces unique `CommitRequest.request_id` values within a `CommitGate` instance.
+- Current test suite now covers duplicate request identity and exact-request authorization lookup.
+- Full audit remains open until the latest exact-head CI wave and any remaining external integration evidence are resolved.
 
 ## Non-authorizing boundary
 
