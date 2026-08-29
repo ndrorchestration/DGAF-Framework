@@ -18,6 +18,7 @@ The viable implementation-oriented subset of the Governed Recursive Control Plan
 Candidate implementation modules include `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskState`, `StateRegistry`, `BudgetLedger`, `BranchRegistry`, `CommitGate`, deterministic control-plane tests, TGL lifecycle integration tests, and the dedicated v1 contract workflow. This work is implementation engineering only until exact-head CI and adversarial review establish verified capability.
 
 Canonical architecture records:
+
 - `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`
 - `docs/architecture/DGAF_V1_FILE_TREE_PLAN.md`
 - `docs/architecture/DGAF_V1_AGENT_ROLE_MAPPING.md`
