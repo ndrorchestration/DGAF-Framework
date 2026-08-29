@@ -4,7 +4,7 @@
 
 > **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims of validation, certification, performance, standards alignment, or commercial suitability require exact evidence and defined scope. Historical certifications remain scoped to the SHA/run/deployment that produced them and are not current certification without fresh evidence.
 
-## Current project state — 2026-08-28
+## Current project state — 2026-08-29
 
 The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. The corrected pilot apparatus and supporting governance controls are present in the repository, but the current experimental candidate has not been freeze-verified. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
@@ -14,13 +14,15 @@ Historical candidates, freezes, run identifiers, and acceptance records remain p
 
 ### Current TGL contract-review state
 
-An adversarial review of PR #132 identified a concrete TGL/P-35 contract regression rather than an isolated constructor defect. The observed pre-freeze **41-pass / 2-fail** result is being treated as a regression signal requiring causal and cross-layer analysis. The review covers TGL state-machine semantics, `PASS / WARN / SKIP / ESCALATE / KILL` reduction, adapter/API contracts, exception containment, audit sealing, cryptographic provenance, PDMAL ↔ TGL integration, CI/CD source identity, Vercel runtime identity, dependency relationships, stale SHA/candidate references, overlapping changes, regression coverage, and P6/P6a/P7/P8 governance boundaries.
+An adversarial review of PR #132 identified a concrete TGL/P-35 contract regression rather than an isolated constructor defect. The observed pre-freeze **41-pass / 2-fail** result remains a historical diagnostic signal requiring causal and cross-layer analysis. The review covers TGL state-machine semantics, `PASS / WARN / SKIP / ESCALATE / KILL` reduction, adapter/API contracts, exception containment, audit sealing, cryptographic provenance, PDMAL ↔ TGL integration, CI/CD source identity, Vercel runtime identity, dependency relationships, stale SHA/candidate references, overlapping changes, regression coverage, and P6/P6a/P7/P8 governance boundaries.
 
-PR #132 remains **BLOCKED / DRAFT / UNMERGED**. A separate draft remediation candidate, **PR #133**, was created from the established `main`/post-#131 implementation rather than mutating #132. PR #133 is intentionally scoped to minimal TGL contract restoration and regression coverage: restoration of the established `ProcludingPremiseGate` constructor and `evaluate(check_fn=...)` contract, premise-hook injection, fail-closed exception containment, explicit required-gate semantics, deterministic status reduction, conditional-versus-unwired `SKIP` distinction, and exact audit sealing. It deliberately does **not** change PDMAL experimental treatment hooks, pilot execution, freeze state, authorization, or empirical state.
+PR #132 and PR #133 are historical diagnostic/remediation records. **PR #134 is the current-main TGL/P-35 remediation lane.** It is intentionally scoped to minimal TGL contract restoration and regression coverage: restoration of the established `ProcludingPremiseGate` constructor and `evaluate(check_fn=...)` contract, premise-hook injection, fail-closed exception containment, explicit required-gate semantics, deterministic status reduction, conditional-versus-unwired `SKIP` distinction, and exact audit sealing. It does **not** change PDMAL experimental treatment hooks, pilot execution, freeze state, authorization, or empirical state.
 
-PR #133 is a **draft diagnostic/remediation candidate only**. Its existence or eventual test success must not be interpreted as experimental authorization, freeze verification, empirical evidence, certification, or proof of the complete DGAF architecture. CI validation remains required before any merge decision.
+### DGAF v1 control-plane state
 
-For the authoritative project state, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the TGL contract and adversarial review record, see the repository's current PR #132/#133 evidence and associated governance documentation. For the canonical mathematical notation policy, see [`docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md). For the public-facing publication-quality control, see [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
+**PR #136** implements the generic bounded recursive control-plane layer: inherited governance envelopes, deterministic lifecycle transitions, exact state identity/cycle detection, resource accounting, recursive-lineage concurrency bounds, branch provenance retention, explicit proposal/authorization/commit separation, and TGL integration. Its dedicated deterministic contract lane has passed a prior exact-head run, while the current head requires fresh exact-head validation after subsequent test and documentation corrections. This engineering lane is separate from the PDMAL experimental apparatus and is non-authorizing.
+
+For the authoritative project state, see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) and [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md). For the TGL contract and current remediation boundary, see PR #134 and associated governance documentation. For the v1 control-plane architecture, see [`docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`](docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md). For the adapter/evidence integration boundary, see [`docs/governance/CONTROL_PLANE_ADAPTER_BOUNDARY_AUDIT.md`](docs/governance/CONTROL_PLANE_ADAPTER_BOUNDARY_AUDIT.md). For the canonical mathematical notation policy, see [`docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md). For the public-facing publication-quality control, see [`docs/governance/PUBLIC_SURFACE_QA_STANDARD.md`](docs/governance/PUBLIC_SURFACE_QA_STANDARD.md). For pattern architecture, see [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md). For openness/commercialization boundaries, see [`docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md). For the asset-level ecosystem inventory, see [`docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md`](docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md). For future trademark/certification governance, see [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
 
 ## Public-surface standard
 
@@ -129,7 +131,8 @@ The repository is licensed under Apache-2.0. See [`LICENSE`](LICENSE) for the le
 22. [CROSS_REF](CROSS_REF.md)
 23. [Platinum Mean Semantic Correction](docs/governance/PLATINUM_MEAN_SEMANTIC_CORRECTION_2026-08-28.md)
 24. [Metallic Means Mathematical Notation Policy](docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md)
-25. **TGL adversarial contract review / remediation** — PR #132 remains blocked; PR #133 is the isolated minimal-contract-restoration candidate. This work is diagnostic and pre-freeze only and does not authorize experimentation.
+25. [DGAF v1 Control-Plane Architecture](docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md)
+26. [Control-Plane Adapter Boundary Audit](docs/governance/CONTROL_PLANE_ADAPTER_BOUNDARY_AUDIT.md)
 
 ## Verification and test status
 
@@ -137,9 +140,9 @@ The repository contains deterministic/unit tests, pilot execution-contract tests
 
 ### Current gate boundary
 
-- TGL contract validation — **BLOCKED / UNDER ADVERSARIAL REVIEW**
-- PR #132 — **BLOCKED / DRAFT / UNMERGED**
-- PR #133 — **DRAFT / REMEDIATION CANDIDATE / CI VALIDATION PENDING**
+- TGL contract validation — **REMEDIATION / VALIDATION IN PROGRESS** via current-main PR #134
+- Historical PR #132 / PR #133 — **DIAGNOSTIC / REMEDIATION RECORDS**
+- DGAF v1 control-plane — **IMPLEMENTATION CANDIDATE / CURRENT-HEAD VALIDATION IN PROGRESS** via PR #136
 - P1 Candidate integrity — PARTIAL
 - P2 Execution contract — BLOCKED for authenticated runtime verification
 - P3 Artifact contract — OPEN
@@ -153,7 +156,7 @@ The repository contains deterministic/unit tests, pilot execution-contract tests
 - Pilot authorization — NOT GRANTED
 - Empirical N — 0
 
-Do not infer repository-wide validation from a component-level test, historical attestation, deployment existence, README text, funding badge, commercial status, or certification language. In particular, successful TGL contract tests or a successful remediation PR do not establish experimental authorization or empirical efficacy.
+Do not infer repository-wide validation from a component-level test, historical attestation, deployment existence, README text, funding badge, commercial status, or certification language. In particular, successful TGL contract tests or v1 control-plane tests do not establish experimental authorization or empirical efficacy.
 
 ## Historical evidence boundary
 
