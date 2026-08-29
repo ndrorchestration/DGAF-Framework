@@ -27,4 +27,6 @@ Required unwired `SKIP` remains fail-closed to escalation; `WARN` propagates unl
 
 The control plane does not rebind PDMAL, create a freeze, grant pilot authorization, unblind data, or increase empirical N.
 
-**Experimental state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
+## Current experimental state
+
+PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
