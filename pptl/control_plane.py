@@ -43,15 +43,24 @@ class ControlPlane:
         if task.task_id in self.tasks: raise ControlPlaneViolation(f"duplicate task_id: {task.task_id}")
         task.lineage_id=task.lineage_id or task.envelope.trace_id; self._lineage_limits.setdefault(task.lineage_id,task.envelope.budget.max_concurrency); self.tasks[task.task_id]=task; self.ledgers[task.task_id]=BudgetLedger(task.envelope.budget); self._transition(task,TaskState.PREFLIGHT)
     def admit(self,task_id:str)->None:self._transition(self._task(task_id),TaskState.ADMITTED)
+    def _escalate(self, task:ControlTask, reason:str)->None:
+        if task.state is not TaskState.ESCALATED:
+            self._transition(task,TaskState.ESCALATED)
+        self.events.append({"event":"ESCALATION","task_id":task.task_id,"reason":reason})
+        if task.concurrency_acquired:
+            self.ledgers[task.task_id].release_concurrency()
+            lineage=task.lineage_id or task.envelope.trace_id
+            self._lineage_active[lineage]=max(0,self._lineage_active.get(lineage,0)-1)
+            task.concurrency_acquired=False
     def start_expansion(self,task_id:str)->None:
         task=self._task(task_id); lineage=task.lineage_id or task.envelope.trace_id
-        if task.depth>=task.envelope.budget.max_depth: self._transition(task,TaskState.ESCALATED); return
-        if self._lineage_active.get(lineage,0)>=self._lineage_limits[lineage]: self.events.append({"event":"CONCURRENCY_EXCEEDED","task_id":task_id}); self._transition(task,TaskState.ESCALATED); return
+        if task.depth>=task.envelope.budget.max_depth: self._escalate(task,"maximum recursion depth reached"); return
+        if self._lineage_active.get(lineage,0)>=self._lineage_limits[lineage]: self._escalate(task,"active concurrency limit reached"); return
         try:
             self.ledgers[task_id].acquire_concurrency(); self.ledgers[task_id].reserve(Consumption(rounds=1,nodes=1))
         except BudgetExceeded as exc:
             if self.ledgers[task_id].active_concurrency:self.ledgers[task_id].release_concurrency()
-            self.events.append({"event":"BUDGET_EXCEEDED","task_id":task_id,"reason":str(exc)}); self._transition(task,TaskState.ESCALATED); return
+            self.events.append({"event":"BUDGET_EXCEEDED","task_id":task_id,"reason":str(exc)}); self._escalate(task,str(exc)); return
         self._lineage_active[lineage]=self._lineage_active.get(lineage,0)+1; task.concurrency_acquired=True; self._transition(task,TaskState.EXPANDING)
     def begin_evaluation(self,task_id:str)->None:self._transition(self._task(task_id),TaskState.EVALUATING)
     def evaluate_turn(self,task_id:str,input_text:str,context:dict[str,Any]|None=None)->Any:
@@ -60,7 +69,7 @@ class ControlPlane:
         if task.state is not TaskState.EVALUATING: raise ControlPlaneViolation("TGL evaluation requires EVALUATING state")
         result=self.tgl_runner(input_text,context or {}); status=getattr(getattr(result,"final_status",None),"value",getattr(result,"final_status",None)); self.events.append({"event":"TGL_EVALUATED","task_id":task_id,"status":status})
         if status in {"KILL","KILL_REC"}: self.veto(task_id,"TGL terminal failure")
-        elif status=="ESCALATE": self._transition(task,TaskState.ESCALATED)
+        elif status=="ESCALATE": self._escalate(task,"TGL escalation")
         return result
     def mark_merge_ready(self,task_id:str)->None:self._transition(self._task(task_id),TaskState.MERGE_READY)
     def mark_commit_ready(self,task_id:str)->None:
@@ -68,8 +77,7 @@ class ControlPlane:
         if task.envelope.side_effect_mode!="COMMIT_ALLOWED": raise ControlPlaneViolation("task envelope does not permit commit")
         self._transition(task,TaskState.COMMIT_READY)
     def veto(self,task_id:str,reason:str)->None:
-        task=self._task(task_id); self.events.append({"event":"VETO","task_id":task_id,"reason":reason})
-        if task.state is not TaskState.ESCALATED:self._transition(task,TaskState.ESCALATED)
+        task=self._task(task_id); self.events.append({"event":"VETO","task_id":task_id,"reason":reason}); self._escalate(task,reason)
     def terminate(self,task_id:str)->None:
         task=self._task(task_id); self._transition(task,TaskState.TERMINATED)
         if task.concurrency_acquired:
@@ -86,9 +94,7 @@ class ControlPlane:
     def consume(self,task_id:str,amount:Consumption)->None:
         try:self.ledgers[task_id].consume(amount)
         except BudgetExceeded as exc:
-            task=self._task(task_id); self.events.append({"event":"BUDGET_EXCEEDED","task_id":task_id,"reason":str(exc)}); 
-            if task.state is not TaskState.ESCALATED:self._transition(task,TaskState.ESCALATED)
-            raise
+            task=self._task(task_id); self.events.append({"event":"BUDGET_EXCEEDED","task_id":task_id,"reason":str(exc)}); self._escalate(task,str(exc)); raise
     def _transition(self,task:ControlTask,new_state:TaskState)->None:
         if new_state not in _ALLOWED[task.state]: raise ControlPlaneViolation(f"illegal transition {task.state.value} -> {new_state.value}")
         task.state_history.append(task.state.value); task.state=new_state; self.events.append({"event":"STATE","task_id":task.task_id,"state":new_state.value})
