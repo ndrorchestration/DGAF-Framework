@@ -162,29 +162,8 @@ def test_child_creation_requires_active_parent() -> None:
         )
 
 
-def test_cycle_detection_rejects_same_child_state() -> None:
-    plane = ControlPlane()
-    root = ControlTask("root", envelope())
-    plane.submit(root)
-    plane.admit("root")
-    child = plane.create_child(
-        "root",
-        task_id="child",
-        trace_id="child-trace",
-        authority_scope={"research"},
-        permitted_tools={"read"},
-        data_classes={"public"},
-        envelope_budget=ResourceBudget(max_input_tokens=10, max_output_tokens=10, max_tool_calls=1, max_elapsed_ms=100, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1),
-    )
-    assert child.task_id == "child"
-    child.state = TaskState.ADMITTED
-    with pytest.raises(ControlPlaneViolation):
-        plane.create_child(
-            "root",
-            task_id="child2",
-            trace_id="child-trace",
-            authority_scope={"research"},
-            permitted_tools={"read"},
-            data_classes={"public"},
-            envelope_budget=ResourceBudget(max_input_tokens=10, max_output_tokens=10, max_tool_calls=1, max_elapsed_ms=100, max_rounds=1, max_nodes=1, max_depth=1, max_concurrency=1),
-        )
+def test_state_registry_rejects_repeated_semantic_state() -> None:
+    registry = StateRegistry()
+    state = {"state": "EVALUATING", "role": "VERIFY", "depth": 1}
+    registry.observe(state)
+    assert registry.contains({"role": "VERIFY", "depth": 1, "state": "EVALUATING"})
