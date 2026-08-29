@@ -20,7 +20,7 @@ def envelope():
 
 def tgl(result=GateResult.PASS):
     hooks = TGLHooks(
-        premise_check_fn=lambda _text: False,
+        premise_check_fn=lambda _text, _invariant: True,
         scpe_fn=lambda _t, _c: result,
         pdmal_fn=lambda _t, _c: GateResult.PASS,
         demijoul_fn=lambda _t, _c: GateResult.PASS,
