@@ -3,12 +3,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable
 
 from .branch_registry import BranchRecord, BranchRegistry
-from .budget_ledger import BudgetExceeded, BudgetLedger, Consumption
+from .budget_ledger import Consumption, BudgetLedger
 from .governance_envelope import GovernanceEnvelope
-from .state_identity import StateRegistry, state_id
+from .state_identity import StateRegistry
 
 
 class TaskState(str, Enum):
@@ -48,7 +47,7 @@ class ControlTask:
     depth: int = 0
     state_history: list[str] = field(default_factory=list)
 
-    def snapshot(self) -> dict[str, Any]:
+    def snapshot(self) -> dict[str, object]:
         return {
             "task_id": self.task_id,
             "state": self.state.value,
@@ -61,13 +60,12 @@ class ControlTask:
 class ControlPlane:
     """Single-run deterministic controller; external actions remain prohibited by default."""
 
-    def __init__(self, *, tgl_runner: Callable[..., Any] | None = None) -> None:
-        self.tgl_runner = tgl_runner
+    def __init__(self) -> None:
         self.state_registry = StateRegistry()
         self.branches = BranchRegistry()
         self.tasks: dict[str, ControlTask] = {}
         self.ledgers: dict[str, BudgetLedger] = {}
-        self.events: list[dict[str, Any]] = []
+        self.events: list[dict[str, object]] = []
 
     def submit(self, task: ControlTask) -> None:
         if task.task_id in self.tasks:
@@ -77,8 +75,7 @@ class ControlPlane:
         self._transition(task, TaskState.PREFLIGHT)
 
     def admit(self, task_id: str) -> None:
-        task = self._task(task_id)
-        self._transition(task, TaskState.ADMITTED)
+        self._transition(self._task(task_id), TaskState.ADMITTED)
 
     def start_expansion(self, task_id: str) -> None:
         task = self._task(task_id)
@@ -143,10 +140,14 @@ class ControlPlane:
 
     def register_branch(self, branch: BranchRecord) -> None:
         self.branches.add(branch)
-        if branch.policy_verdict in {"KILL", "ESCALATE"}:
-            parent = self.tasks.get(branch.parent_branch_id or "")
-            if parent is not None:
-                self.veto(parent.task_id, branch.policy_verdict)
+        self.events.append(
+            {
+                "event": "BRANCH_RECORDED",
+                "branch_id": branch.branch_id,
+                "policy_verdict": branch.policy_verdict,
+                "merge_status": branch.merge_status,
+            }
+        )
 
     def consume(self, task_id: str, amount: Consumption) -> None:
         self.ledgers[task_id].consume(amount)
