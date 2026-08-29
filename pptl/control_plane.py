@@ -50,6 +50,7 @@ class ControlTask:
     lineage_id: str | None = None
     concurrency_acquired: bool = False
     last_tgl_status: str | None = None
+    last_tgl_seal: str | None = None
 
     def snapshot(self) -> dict[str, object]:
         return {
@@ -128,6 +129,7 @@ class ControlPlane:
         task = self._task(task_id)
         self._transition(task, TaskState.EVALUATING)
         task.last_tgl_status = None
+        task.last_tgl_seal = None
 
     def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
         if self.tgl_runner is None:
@@ -142,8 +144,15 @@ class ControlPlane:
             self._escalate(task, "TGL runner exception")
             raise ControlPlaneViolation("TGL runner failed; task escalated") from exc
         status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
+        seal = getattr(result, "seal_hash", None)
+        if status is None or not isinstance(seal, str) or len(seal) != 64:
+            task.last_tgl_status = None
+            task.last_tgl_seal = None
+            self._escalate(task, "TGL result lacks a valid cryptographic seal")
+            raise ControlPlaneViolation("TGL result lacks valid sealed evidence")
         task.last_tgl_status = status
-        self.events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status})
+        task.last_tgl_seal = seal
+        self.events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
         if status in {"KILL", "KILL_REC"}:
             self.veto(task_id, "TGL terminal failure")
         elif status == "ESCALATE":
@@ -154,8 +163,8 @@ class ControlPlane:
         task = self._task(task_id)
         if task.state is not TaskState.EVALUATING:
             raise ControlPlaneViolation("merge readiness requires EVALUATING state")
-        if task.last_tgl_status != "PASS":
-            raise ControlPlaneViolation("merge readiness requires successful TGL evaluation")
+        if task.last_tgl_status != "PASS" or not task.last_tgl_seal:
+            raise ControlPlaneViolation("merge readiness requires successful sealed TGL evaluation")
         self._transition(task, TaskState.MERGE_READY)
 
     def mark_commit_ready(self, task_id: str) -> None:
@@ -181,10 +190,11 @@ class ControlPlane:
         if parent.depth + 1 > parent.envelope.budget.max_depth:
             raise ControlPlaneViolation("child exceeds maximum recursion depth")
         child = ControlTask(task_id=task_id, depth=parent.depth + 1, lineage_id=parent.lineage_id, envelope=parent.envelope.derive_child(trace_id=trace_id, task_id=task_id, authority_scope=authority_scope, permitted_tools=permitted_tools, data_classes=data_classes, budget=envelope_budget))
-        if self.state_registry.contains(child.snapshot()):
+        candidate_snapshot = child.snapshot()
+        if self.state_registry.contains(candidate_snapshot):
             raise ControlPlaneViolation("repeated orchestration state")
-        self.state_registry.observe(child.snapshot())
         self.submit(child)
+        self.state_registry.observe(candidate_snapshot)
         return child
 
     def register_branch(self, branch: BranchRecord) -> None:
