@@ -200,9 +200,21 @@ The v1 integration documents must not become substitutes for current-state or ev
 
 ## Cross-repository boundary
 
-The separate `ndrorchestration/agent-control-plane` repository is an existing implementation asset and can inform API/schema extraction. For the present plan, DGAF remains the canonical governed-system integration target.
+The separate `ndrorchestration/agent-control-plane` repository is an existing implementation asset and can inform API/schema extraction. Its current README describes a minimal executable control-plane kernel with task identity/lifecycle, capability registration/dispatch, policy hooks, provenance/observability, cancellation, and CI; it explicitly says it is not a complete governance or production-ready platform. The current source tree contains `core.py`, `evaluation.py`, `policy.py`, and `provenance.py` beneath `src/agent_control_plane/`.
 
-Do not copy implementation from the separate repository into DGAF without a direct contract comparison and an explicit ownership decision.
+The v1 implication is:
+
+| ACP capability already present | DGAF v1 relationship |
+|---|---|
+| `Task` identity/lifecycle | candidate source material for DGAF `TaskState` contract |
+| `ControlPlane` dispatch | candidate source material for lifecycle controller boundaries |
+| policy decision hooks | compatible with Governance Envelope policy evaluation |
+| provenance events | candidate input to BranchRecord/evidence lineage |
+| evaluation hooks | compatible with deterministic verification harness |
+
+These components are **not automatically imported**. Their contracts must be compared against DGAF/TGL semantics before reuse. DGAF remains the canonical governed-system integration target for this v1 plan.
+
+Do not copy implementation from ACP into DGAF without a direct contract comparison and an explicit ownership decision.
 
 Potential future extraction direction:
 
