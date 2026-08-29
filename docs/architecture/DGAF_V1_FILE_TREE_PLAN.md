@@ -1,6 +1,6 @@
 # DGAF v1 File-Tree and Ownership Plan
 
-**Status:** PLANNING / NON-AUTHORIZING  
+**Status:** IMPLEMENTATION IN PROGRESS / NON-AUTHORIZING  
 **Parent architecture:** `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`  
 **Date:** 2026-08-29
 
@@ -17,11 +17,11 @@ DGAF-Framework/
 ├── .github/
 │   └── workflows/
 │       ├── pptl-ci.yml
-│       └── control-plane-contract.yml                 # future
+│       └── control-plane-contract.yml                 # v1 contract lane
 ├── docs/
 │   ├── architecture/
 │   │   ├── DGAF_V1_CONTROL_PLANE_INTEGRATION.md
-│   │   ├── DGAF_V1_FILE_TREE_PLAN.md                  # this file
+│   │   ├── DGAF_V1_FILE_TREE_PLAN.md
 │   │   └── [future distinct ADR/spec files only]
 │   ├── governance/
 │   │   ├── P1_TO_P9_EVIDENCE_MATRIX.md
@@ -40,12 +40,12 @@ DGAF-Framework/
 │   ├── co_orchestration_schema.py
 │   ├── herald_agent.py
 │   ├── sinks.py
-│   ├── [governance_envelope.py]                         # future v1
-│   ├── [control_plane.py]                              # future v1
-│   ├── [state_identity.py]                             # future v1
-│   ├── [branch_registry.py]                            # future v1
-│   ├── [budget_ledger.py]                              # future v1
-│   └── [commit_gate.py]                                # future v1
+│   ├── governance_envelope.py                     # v1 implemented
+│   ├── control_plane.py                            # v1 implemented
+│   ├── state_identity.py                           # v1 implemented
+│   ├── branch_registry.py                          # v1 implemented
+│   ├── budget_ledger.py                            # v1 implemented
+│   └── commit_gate.py                              # v1 implemented
 ├── scripts/
 │   ├── [claim/evidence validators]
 │   └── [future control-plane validators]
@@ -57,12 +57,12 @@ DGAF-Framework/
 
 | Capability | Canonical implementation location | Primary existing integration | Evidence/test location |
 |---|---|---|---|
-| Governance envelope | `pptl/governance_envelope.py` | `pptl/orchestrator.py` | `pptl/tests/` |
-| Lifecycle controller | `pptl/control_plane.py` | `pptl/orchestrator.py` + TGL | `pptl/tests/` |
-| State identity / cycle detection | `pptl/state_identity.py` | controller | `pptl/tests/` |
-| Branch registry/provenance | `pptl/branch_registry.py` | controller + Herald | `pptl/tests/` + evidence artifacts |
-| Resource ledger | `pptl/budget_ledger.py` | controller + dispatch | `pptl/tests/` |
-| Plan/commit barrier | `pptl/commit_gate.py` | controller + tool adapters | `pptl/tests/` |
+| Governance envelope | `pptl/governance_envelope.py` | `pptl/orchestrator.py` | `pptl/tests/test_v1_control_plane.py` |
+| Lifecycle controller | `pptl/control_plane.py` | `pptl/orchestrator.py` + TGL | `pptl/tests/test_v1_control_plane.py` |
+| State identity / cycle detection | `pptl/state_identity.py` | controller | `pptl/tests/test_v1_control_plane.py` |
+| Branch registry/provenance | `pptl/branch_registry.py` | controller + Herald | `pptl/tests/test_v1_control_plane.py` |
+| Resource ledger | `pptl/budget_ledger.py` | controller + dispatch | `pptl/tests/test_v1_control_plane.py` |
+| Plan/commit barrier | `pptl/commit_gate.py` | controller + tool adapters | `pptl/tests/test_v1_control_plane.py` |
 | Per-turn gate semantics | existing `pptl/triadic_governance_loop.py` | controller | existing TGL tests |
 | Constitutional admission | existing `pptl/procluding_premise.py` | TGL/controller | existing P-35 tests |
 | Evidence publication | existing `pptl/herald_agent.py`, `pptl/sinks.py` | branch registry/TGL | evidence layer |
@@ -73,20 +73,15 @@ DGAF-Framework/
 
 ### `governance_envelope.py`
 
-Owns validation and immutable representation of the inherited scope contract.
+Owns validation and immutable representation of inherited authority, tool, data, policy, and resource scope.
 
-Must not own:
-
-- model prompting;
-- experiment statistics;
-- deployment credentials;
-- autonomous authorization decisions outside the explicit commit contract.
+Must not own prompting, experiment statistics, deployment credentials, or autonomous authorization outside the explicit commit contract.
 
 ### `control_plane.py`
 
 Owns lifecycle states and legal transitions.
 
-It may invoke TGL, but must not duplicate TGL gate definitions.
+It may be integrated with TGL, but must not duplicate TGL gate definitions.
 
 ### `state_identity.py`
 
@@ -98,7 +93,7 @@ It must not infer semantic truth from identity alone.
 
 Owns branch lineage and retained branch artifacts.
 
-It should be append-oriented and capable of preserving rejected and vetoing records.
+It is append-oriented and retains rejected, correlated, escalated, and vetoing records.
 
 ### `budget_ledger.py`
 
@@ -110,7 +105,7 @@ It measures actual telemetry. Pricing is optional reporting metadata.
 
 Owns proposal-to-action separation.
 
-It should accept only an explicitly authorized `CommitRequest` and should never infer authorization from a model response.
+It accepts only an explicitly authorized `CommitRequest` and never infers authorization from a model response.
 
 ## Existing-file modification policy
 
@@ -118,7 +113,7 @@ Prefer minimal modifications to:
 
 - `pptl/orchestrator.py` for lifecycle integration;
 - `pptl/co_orchestration_schema.py` if existing schema fields can be extended rather than duplicated;
-- `pptl/herald_agent.py` / `pptl/sinks.py` only where the new branch provenance must be published;
+- `pptl/herald_agent.py` / `pptl/sinks.py` only where new branch provenance must be published;
 - existing TGL code only when a new lifecycle invariant genuinely crosses the per-turn boundary.
 
 Do not fork or copy TGL semantics into a second controller.
@@ -143,35 +138,27 @@ Adapters may serialize/deserialize these structures, but they must not redefine 
 
 ### Unit tests
 
-Place focused contract tests beside the existing PPTL tests:
+The first executable contract suite is centralized in:
 
 ```text
-pptl/tests/test_governance_envelope.py
-pptl/tests/test_control_plane.py
-pptl/tests/test_state_identity.py
-pptl/tests/test_branch_registry.py
-pptl/tests/test_budget_ledger.py
-pptl/tests/test_commit_gate.py
+pptl/tests/test_v1_control_plane.py
 ```
 
-### Integration tests
+It currently covers scope inheritance, budget reservation failure, deterministic state identity, branch retention, explicit commit authorization, lifecycle transitions, illegal transitions, and child derivation.
 
-Add only when a true cross-module boundary needs coverage, for example:
-
-```text
-pptl/tests/test_control_plane_tgl_integration.py
-pptl/tests/test_control_plane_provenance.py
-```
+Additional module-local tests may be split out later when the test surface becomes large enough to justify it.
 
 ### Deterministic harness
 
-The first harness should use mocks and fixed telemetry. It should not require live model calls, external credentials, or the PDMAL experimental candidate.
+The first harness uses mocks and fixed telemetry. It does not require live model calls, external credentials, or the PDMAL experimental candidate.
 
 ## CI placement
 
-The existing `PPTL CI` workflow remains the authoritative basic governance test lane. A dedicated control-plane workflow should be added only when enough executable v1 code exists to justify a separate lane.
+The existing `PPTL CI` workflow remains the per-turn governance test lane.
 
-The workflow should cover:
+The new `DGAF v1 Control-Plane Contract` workflow is the dedicated control-plane contract lane and currently covers the deterministic v1 suite. It must remain independent of PDMAL experimental authorization.
+
+Future extensions should cover:
 
 1. schema/contract validation;
 2. lifecycle transition tests;
@@ -181,8 +168,6 @@ The workflow should cover:
 6. veto propagation;
 7. commit-gate enforcement;
 8. deterministic trace reconstruction.
-
-Do not make the new workflow a second source of truth for PDMAL experimental authorization.
 
 ## Documentation ownership
 
@@ -200,7 +185,7 @@ The v1 integration documents must not become substitutes for current-state or ev
 
 ## Cross-repository boundary
 
-The separate `ndrorchestration/agent-control-plane` repository is an existing implementation asset and can inform API/schema extraction. Its current README describes a minimal executable control-plane kernel with task identity/lifecycle, capability registration/dispatch, policy hooks, provenance/observability, cancellation, and CI; it explicitly says it is not a complete governance or production-ready platform. The current source tree contains `core.py`, `evaluation.py`, `policy.py`, and `provenance.py` beneath `src/agent_control_plane/`.
+The separate `ndrorchestration/agent-control-plane` repository is an existing experimental implementation asset. Its current implementation includes a task lifecycle object, deterministic capability dispatch, policy decision hooks, provenance events, and evaluation hooks. It explicitly states that it is not a complete governance or production-ready platform. These components may inform DGAF contracts, but are not automatically imported or treated as equivalent. 
 
 The v1 implication is:
 
@@ -211,10 +196,6 @@ The v1 implication is:
 | policy decision hooks | compatible with Governance Envelope policy evaluation |
 | provenance events | candidate input to BranchRecord/evidence lineage |
 | evaluation hooks | compatible with deterministic verification harness |
-
-These components are **not automatically imported**. Their contracts must be compared against DGAF/TGL semantics before reuse. DGAF remains the canonical governed-system integration target for this v1 plan.
-
-Do not copy implementation from ACP into DGAF without a direct contract comparison and an explicit ownership decision.
 
 Potential future extraction direction:
 
@@ -256,23 +237,22 @@ The control plane must be able to operate without PDMAL. PDMAL must never become
 9. Every new workflow must have a defined evidence purpose.
 10. Speculative topology or mathematical features remain research lanes unless independently validated and explicitly promoted.
 
-## Admission checklist for future implementation PRs
+## Implementation status
 
-A proposed v1 module should not be merged merely because it is useful. The PR should identify:
+The v1 contract layer currently exists on the integration branch:
 
-- exact owner file/path;
-- schema/contract it implements;
-- existing code it reuses;
-- invariants it enforces;
-- failure behavior;
-- audit/provenance fields;
-- unit/integration tests;
-- CI lane;
-- documentation owner;
-- whether it affects the PDMAL candidate boundary.
+- `GovernanceEnvelope` / `ResourceBudget`
+- `StateRegistry`
+- `BudgetLedger` / `Consumption`
+- `BranchRecord` / `BranchRegistry`
+- `CommitRequest` / `CommitGate`
+- `ControlTask` / `ControlPlane` / `TaskState`
+- deterministic contract tests
+- dedicated control-plane CI workflow
+- package-level exports through `pptl.__init__`
 
-If the final item is yes, candidate identity and evidence scope must be handled explicitly rather than implicitly through merge history.
+These are **candidate implementation changes**, not yet independently verified as merged `main` capabilities.
 
 ## Non-authorizing status
 
-This planning artifact does not modify candidate identity, freeze state, authorization state, or empirical N.
+This planning/implementation artifact does not modify candidate identity, freeze state, authorization state, or empirical N.
