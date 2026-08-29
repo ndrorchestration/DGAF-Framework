@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable
+from types import MappingProxyType
+from typing import Any, Callable, Mapping
 
 from .branch_registry import BranchRecord, BranchRegistry
 from .budget_ledger import BudgetExceeded, Consumption, BudgetLedger
@@ -38,6 +39,55 @@ _ALLOWED = {
 
 class ControlPlaneViolation(RuntimeError):
     pass
+
+
+@dataclass(frozen=True)
+class LedgerView:
+    """Read-only snapshot of a task ledger."""
+
+    budget: ResourceBudget
+    consumed: Consumption
+    reserved: Consumption
+    active_concurrency: int
+
+
+class StateRegistryView:
+    def __init__(self, registry: StateRegistry) -> None:
+        self._registry = registry
+
+    @property
+    def count(self) -> int:
+        return self._registry.count
+
+    def contains(self, state: dict[str, Any]) -> bool:
+        return self._registry.contains(state)
+
+    def ids(self) -> tuple[str, ...]:
+        return tuple(self._registry.ids())
+
+
+class BranchRegistryView:
+    def __init__(self, registry: BranchRegistry) -> None:
+        self._registry = registry
+
+    @property
+    def count(self) -> int:
+        return self._registry.count
+
+    def all(self) -> tuple[BranchRecord, ...]:
+        return self._registry.all()
+
+    def by_status(self, merge_status: str) -> tuple[BranchRecord, ...]:
+        return self._registry.by_status(merge_status)
+
+    def by_state(self, state_id: str) -> tuple[BranchRecord, ...]:
+        return self._registry.by_state(state_id)
+
+    def lineage(self, branch_id: str) -> tuple[BranchRecord, ...]:
+        return self._registry.lineage(branch_id)
+
+    def ids(self) -> tuple[str, ...]:
+        return tuple(self._registry.ids())
 
 
 @dataclass
@@ -106,20 +156,48 @@ class ControlPlane:
 
     def __init__(self, *, tgl_runner: Callable[..., Any] | None = None) -> None:
         self.tgl_runner = tgl_runner
-        self.state_registry = StateRegistry()
-        self.branches = BranchRegistry()
-        self.tasks = {}
-        self.ledgers = {}
-        self.events = []
-        self._lineage_active = {}
-        self._lineage_limits = {}
+        self._state_registry = StateRegistry()
+        self._branches = BranchRegistry()
+        self._tasks: dict[str, ControlTask] = {}
+        self._ledgers: dict[str, BudgetLedger] = {}
+        self._events: list[dict[str, object]] = []
+        self._lineage_active: dict[str, int] = {}
+        self._lineage_limits: dict[str, int] = {}
+
+    @property
+    def tasks(self) -> Mapping[str, ControlTask]:
+        return MappingProxyType(self._tasks)
+
+    @property
+    def ledgers(self) -> Mapping[str, LedgerView]:
+        return MappingProxyType({
+            task_id: LedgerView(
+                budget=ledger.budget,
+                consumed=ledger.consumed,
+                reserved=ledger.reserved,
+                active_concurrency=ledger.active_concurrency,
+            )
+            for task_id, ledger in self._ledgers.items()
+        })
+
+    @property
+    def events(self) -> tuple[dict[str, object], ...]:
+        return tuple(dict(event) for event in self._events)
+
+    @property
+    def state_registry(self) -> StateRegistryView:
+        return StateRegistryView(self._state_registry)
+
+    @property
+    def branches(self) -> BranchRegistryView:
+        return BranchRegistryView(self._branches)
 
     def submit(self, task: ControlTask) -> None:
-        if task.task_id in self.tasks:
+        if task.task_id in self._tasks:
             raise ControlPlaneViolation(f"duplicate task_id: {task.task_id}")
         self._lineage_limits.setdefault(task.lineage_id, task.envelope.budget.max_concurrency)
-        self.tasks[task.task_id] = task
-        self.ledgers[task.task_id] = BudgetLedger(task.envelope.budget)
+        self._tasks[task.task_id] = task
+        self._ledgers[task.task_id] = BudgetLedger(task.envelope.budget)
         self._transition(task, TaskState.PREFLIGHT)
 
     def admit(self, task_id: str) -> None:
@@ -141,7 +219,7 @@ class ControlPlane:
     def _release_concurrency(self, task: ControlTask) -> None:
         if not task.concurrency_acquired:
             return
-        self.ledgers[task.task_id].release_concurrency()
+        self._ledgers[task.task_id].release_concurrency()
         lineage = task.lineage_id or task.envelope.trace_id
         self._lineage_active[lineage] = max(0, self._lineage_active.get(lineage, 0) - 1)
         self._set_runtime(task, concurrency=False)
@@ -149,7 +227,7 @@ class ControlPlane:
     def _escalate(self, task: ControlTask, reason: str) -> None:
         if task.state is not TaskState.ESCALATED:
             self._transition(task, TaskState.ESCALATED)
-        self.events.append({"event": "ESCALATION", "task_id": task.task_id, "reason": reason})
+        self._events.append({"event": "ESCALATION", "task_id": task.task_id, "reason": reason})
         self._release_concurrency(task)
 
     def start_expansion(self, task_id: str) -> None:
@@ -164,12 +242,12 @@ class ControlPlane:
             self._escalate(task, "active concurrency limit reached")
             return
         try:
-            self.ledgers[task_id].acquire_concurrency()
-            self.ledgers[task_id].consume(Consumption(rounds=1, nodes=1))
+            self._ledgers[task_id].acquire_concurrency()
+            self._ledgers[task_id].consume(Consumption(rounds=1, nodes=1))
         except BudgetExceeded as exc:
-            if self.ledgers[task_id].active_concurrency:
-                self.ledgers[task_id].release_concurrency()
-            self.events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
+            if self._ledgers[task_id].active_concurrency:
+                self._ledgers[task_id].release_concurrency()
+            self._events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
             self._escalate(task, str(exc))
             return
         self._lineage_active[lineage] = self._lineage_active.get(lineage, 0) + 1
@@ -190,7 +268,7 @@ class ControlPlane:
         try:
             result = self.tgl_runner(input_text, context or {})
         except Exception as exc:
-            self.events.append({"event": "TGL_RUNNER_FAILURE", "task_id": task_id, "reason": str(exc)})
+            self._events.append({"event": "TGL_RUNNER_FAILURE", "task_id": task_id, "reason": str(exc)})
             self._escalate(task, "TGL runner exception")
             raise ControlPlaneViolation("TGL runner failed; task escalated") from exc
         status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
@@ -200,7 +278,7 @@ class ControlPlane:
             self._escalate(task, "TGL result lacks a valid cryptographic seal")
             raise ControlPlaneViolation("TGL result lacks valid sealed evidence")
         self._set_runtime(task, tgl_status=status, tgl_seal=seal)
-        self.events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
+        self._events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
         if status in {"KILL", "KILL_REC"}:
             self.veto(task_id, "TGL terminal failure")
         elif status == "ESCALATE":
@@ -223,7 +301,7 @@ class ControlPlane:
 
     def veto(self, task_id: str, reason: str) -> None:
         task = self._task(task_id)
-        self.events.append({"event": "VETO", "task_id": task_id, "reason": reason})
+        self._events.append({"event": "VETO", "task_id": task_id, "reason": reason})
         self._escalate(task, reason)
 
     def terminate(self, task_id: str) -> None:
@@ -231,32 +309,32 @@ class ControlPlane:
         self._transition(task, TaskState.TERMINATED)
         self._release_concurrency(task)
 
-    def create_child(self, parent_id: str, *, task_id: str, trace_id: str, authority_scope: set[str], permitted_tools: set[str], data_classes: set[str], envelope_budget: ResourceBudget) -> ControlTask:
+    def create_child(self, parent_id: str, *, task_id: str, trace_id: str, authority_scope: set[str], permitted_tools: set[str], data_classes: set[str], envelope_budget: ResourceBudget, side_effect_mode: str | None = None) -> ControlTask:
         parent = self._task(parent_id)
         if parent.state not in {TaskState.ADMITTED, TaskState.EXPANDING, TaskState.EVALUATING}:
             raise ControlPlaneViolation("child creation requires an active parent task")
         if parent.depth + 1 > parent.envelope.budget.max_depth:
             raise ControlPlaneViolation("child exceeds maximum recursion depth")
-        child = ControlTask(task_id=task_id, depth=parent.depth + 1, lineage_id=parent.lineage_id, envelope=parent.envelope.derive_child(trace_id=trace_id, task_id=task_id, authority_scope=authority_scope, permitted_tools=permitted_tools, data_classes=data_classes, budget=envelope_budget))
+        child = ControlTask(task_id=task_id, depth=parent.depth + 1, lineage_id=parent.lineage_id, envelope=parent.envelope.derive_child(trace_id=trace_id, task_id=task_id, authority_scope=authority_scope, permitted_tools=permitted_tools, data_classes=data_classes, budget=envelope_budget, side_effect_mode=side_effect_mode))
         candidate_snapshot = child.snapshot()
-        if self.state_registry.contains(candidate_snapshot):
+        if self._state_registry.contains(candidate_snapshot):
             raise ControlPlaneViolation("repeated orchestration state")
         self.submit(child)
-        self.state_registry.observe(candidate_snapshot)
+        self._state_registry.observe(candidate_snapshot)
         return child
 
     def register_branch(self, branch: BranchRecord) -> None:
-        self.branches.add(branch)
-        self.events.append({"event": "BRANCH_RECORDED", "branch_id": branch.branch_id, "policy_verdict": branch.policy_verdict, "merge_status": branch.merge_status})
+        self._branches.add(branch)
+        self._events.append({"event": "BRANCH_RECORDED", "branch_id": branch.branch_id, "policy_verdict": branch.policy_verdict, "merge_status": branch.merge_status})
 
     def consume(self, task_id: str, amount: Consumption) -> None:
         task = self._task(task_id)
         if task.state in {TaskState.ESCALATED, TaskState.TERMINATED}:
             raise ControlPlaneViolation("terminal task cannot consume additional resources")
         try:
-            self.ledgers[task_id].consume(amount)
+            self._ledgers[task_id].consume(amount)
         except BudgetExceeded as exc:
-            self.events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
+            self._events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
             self._escalate(task, str(exc))
             raise
 
@@ -265,10 +343,10 @@ class ControlPlane:
             raise ControlPlaneViolation(f"illegal transition {task.state.value} -> {new_state.value}")
         task._state_history.append(task.state.value)
         self._set_runtime(task, state=new_state)
-        self.events.append({"event": "STATE", "task_id": task.task_id, "state": new_state.value})
+        self._events.append({"event": "STATE", "task_id": task.task_id, "state": new_state.value})
 
     def _task(self, task_id: str) -> ControlTask:
         try:
-            return self.tasks[task_id]
+            return self._tasks[task_id]
         except KeyError as exc:
             raise KeyError(task_id) from exc
