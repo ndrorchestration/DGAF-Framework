@@ -1,48 +1,32 @@
-# Deferred Items — Owner Action Required
+# Deferred Items — Historical Operations Record
 
-**Maintained by:** Agent Amethyst × COLLEEN  
-**Last Updated:** 2026-07-02 · S072 post-close escalation  
-**Status:** ACTIVE — S-02 CLOSED (Option A confirmed); 1 hard-deadline item resolved
+> **Status:** Historical operational record. This file is retained for provenance and should not be treated as the current project backlog or an authoritative source of repository status.
+>
+> **Current project status:** See [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) and [`docs/PROJECT_STATUS.md`](./docs/PROJECT_STATUS.md).
 
-These items are confirmed, understood, and intentionally parked. They require Njineer credentials, decisions, or hands-on access that cannot be delegated to autonomous agent execution.
+## Purpose of this record
 
----
+This document preserves a July 2026 snapshot of items that were intentionally deferred because they required a maintainer decision, credentials, or access to an external service. The terminology, dates, repository counts, agent references, and deadlines reflect that historical operating context.
 
-## 🔴 URGENT — Hard Deadline Approaching
+Some referenced deadlines and operational states have necessarily expired or changed. They are retained here as part of the record rather than silently rewritten.
 
-*No urgent items at this time.*
+## Historical snapshot
 
-> ⚠️ STASIS migration session required before **2026-07-13**. See Issue #41 for full checklist.
+The deferred-item register included:
 
----
+- external service configuration requiring maintainer access;
+- documentation and taxonomy decisions awaiting review;
+- external-file discovery and repository linkage work;
+- dependency-review decisions requiring owner approval;
+- visual-asset production decisions;
+- a previously scheduled pattern migration session.
 
-## Snoozed Items
+The detailed historical entries remain available through repository history if needed for reconstruction.
 
-| # | Item | Repo / System | What's Needed | Snooze Date |
-|---|---|---|---|---|
-| S-01 | `VITE_GEMINI_API_KEY` in Vercel | Driftwatch (Vercel dashboard) | Add env var in Vercel project settings — unlocks Herald agent cognition | 2026-06-29 |
-| S-03 | FLAG-05 (AXIS pattern doc) | DGAF-Framework | Content decision on AXIS pattern scope | 2026-06-29 |
-| S-04 | FLAG-07 (Drive files) | External (Google Drive) | Owner access required to locate and link files | 2026-06-29 |
-| S-05 | FLAG-11 (Vercel project linkage) | Vercel | Credential / dashboard access required | 2026-06-29 |
-| S-06 | FLAG-12 (Dependabot PR) | TBD repo | PR review and merge requires owner approval | 2026-06-29 |
-| S-07 | Visual asset (60–90s motion graphic) | DGAF-Framework | Tooling choice (Blender/Manim/Adobe) + final output approval | 2026-06-29 |
+## How to handle a historical deferred item
 
----
+Do not reactivate an item based solely on this document. Confirm that it remains relevant, identify its current authoritative tracking location, and create or update a current issue/task if work is still required.
 
-## ✅ Closed Items
+## Related policy
 
-| # | Item | Closed | Resolution |
-|---|---|---|---|
-| S-08 | SWEEP-EH-003 / T-EH-05 Needle + CTA | 2026-07-02 | **RESOLVED** — Needle project created 2026-06-27 (OI-001 cleared); all 5 T-EH templates submitted to Needle Partner Hub (pending review); SWEEP-EH-004 closed 2026-06-27. CTA wiring to 12 Needle workflows and Gumroad creation remain open as active TODO items in `entrepreneur-hub/docs/TODO.md` — not deferred, actively tracked. |
-| S-02 | NDR-STASIS window closure | 2026-07-02 | **RESOLVED — Option A: Close.** Njineer confirmed window closure S072 post-close. Dedicated STASIS migration session scheduled — Issue #41. Window expiry 2026-07-13 superseded by proactive close decision. All 133 patterns (P-12–P-26) to be reviewed and migrated to canonical status in migration session. |
-
----
-
-## How to Reactivate
-
-When ready to action any item, say **"un-snooze S-0X"** or **"pick up [item name]"** and Amethyst will rehydrate full context and execute the next steps.
-
----
-
-*Updated by Agent Amethyst × COLLEEN — 2026-07-02 17:36 EDT*  
-*S-02 closed (Option A); STASIS migration session Issue #41 opened; 6 items remain snoozed*
+See [`docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md`](./docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md) for the repository's policy on retained operational and historical documentation.
