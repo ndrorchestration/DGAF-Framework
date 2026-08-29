@@ -319,11 +319,10 @@ class ControlPlane:
         if parent.depth + 1 > parent.envelope.budget.max_depth:
             raise ControlPlaneViolation("child exceeds maximum recursion depth")
         child = ControlTask(task_id=task_id, depth=parent.depth + 1, lineage_id=parent.lineage_id, envelope=parent.envelope.derive_child(trace_id=trace_id, task_id=task_id, authority_scope=authority_scope, permitted_tools=permitted_tools, data_classes=data_classes, budget=envelope_budget, side_effect_mode=side_effect_mode))
-        candidate_snapshot = child.snapshot()
-        if self._state_registry.contains(candidate_snapshot):
+        if self._state_registry.contains(child.snapshot()):
             raise ControlPlaneViolation("repeated orchestration state")
         self.submit(child)
-        self._state_registry.observe(candidate_snapshot)
+        self._state_registry.observe(child.snapshot())
         return child
 
     def register_branch(self, branch: BranchRecord) -> None:
