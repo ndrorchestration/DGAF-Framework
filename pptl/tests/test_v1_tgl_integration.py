@@ -22,6 +22,8 @@ def root_envelope() -> GovernanceEnvelope:
             max_elapsed_ms=1000,
             max_rounds=2,
             max_nodes=4,
+            max_depth=2,
+            max_concurrency=2,
         ),
     )
 
@@ -43,14 +45,25 @@ def passing_tgl() -> TriadicGovernanceLoop:
 
 
 @pytest.mark.governance
-def test_control_plane_cannot_bypass_tgl_p35() -> None:
-    plane = ControlPlane()
+def test_control_plane_evaluate_turn_requires_evaluating_state() -> None:
+    plane = ControlPlane(tgl_runner=lambda text, context: passing_tgl().run_turn(text, context))
     task = ControlTask("root", root_envelope())
     plane.submit(task)
     plane.admit("root")
-    audit = passing_tgl().run_turn("safe input")
+    with pytest.raises(ControlPlaneViolation):
+        plane.evaluate_turn("root", "safe input")
+
+
+@pytest.mark.governance
+def test_control_plane_evaluate_turn_records_tgl_result() -> None:
+    plane = ControlPlane(tgl_runner=lambda text, context: passing_tgl().run_turn(text, context))
+    task = ControlTask("root", root_envelope())
+    plane.submit(task)
+    plane.admit("root")
+    plane.begin_evaluation("root")
+    audit = plane.evaluate_turn("root", "safe input")
     assert audit.final_status is TurnStatus.PASS
-    assert any(g.gate_name == "ProcludingPremiseGate" for g in audit.gate_records)
+    assert any(event["event"] == "TGL_EVALUATED" for event in plane.events)
 
 
 @pytest.mark.governance
