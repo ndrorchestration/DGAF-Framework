@@ -21,7 +21,7 @@ class CommitDenied(PermissionError):
 
 
 class CommitGate:
-    """Stores uniquely identified proposals and permits commit only after explicit authorization."""
+    """Stores uniquely identified proposals and permits commit only after one explicit authorization."""
 
     def __init__(self) -> None:
         self._authorized: dict[str, str] = {}
@@ -45,6 +45,8 @@ class CommitGate:
             raise ValueError("explicit authorization identity and reference are required")
         if request_id not in self._proposals:
             raise KeyError(request_id)
+        if request_id in self._authorized:
+            raise CommitDenied(f"commit request already authorized: {request_id}")
         self._authorized[request_id] = f"{authorized_by}:{authorization_ref}"
 
     def commit(self, request_id: str) -> str:
