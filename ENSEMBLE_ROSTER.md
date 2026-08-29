@@ -1,105 +1,48 @@
-# ENSEMBLE_ROSTER.md
+# Agent Roster and Authority Reference
 
-> **Steward:** COLLEEN  
-> **Orchestrator:** Amethyst  
-> **Last Updated:** 2026-06-29  
-> **DGAF Version:** Post-S077 — P-01 through P-42
+This document records the project's agent roles and authority boundaries. Agent names describe architectural roles within DGAF; they do not imply consciousness, autonomy, independent legal authority, or externally validated capabilities.
 
-Canonical agent roster for the NDR ecosystem.
+For the governing authority rules, see [`docs/agents/AGENT_AUTHORITY_INVARIANT.md`](./docs/agents/AGENT_AUTHORITY_INVARIANT.md) and [`docs/agents/AGENT_AUTHORITY_MATRIX.md`](./docs/agents/AGENT_AUTHORITY_MATRIX.md).
 
----
+## Role overview
 
-## Formation: Amethyst-Lattice-v3.1
+| Agent or role | Primary function | Authority boundary |
+|---|---|---|
+| **Amethyst** | Coordination and orchestration | Operates within delegated project authority |
+| **COLLEEN** | Registry, continuity, and institutional memory | Stewardship and record continuity; no independent sovereign authority |
+| **Apogee** | Evidence and review functions | Review/attestation procedures are scoped to their defined contracts |
+| **DemiJoule** | Runtime supervision and constraint handling | Project-defined safety and failure-containment functions |
+| **Herald** | Trace, communication, and exploration functions | Operational role; no governance authority by role name alone |
+| **Professor Prodigy** | Mathematical and quantitative review | Advisory/review function within defined procedures |
 
-| Agent | Role | AHG Archetype (P-42) | Status |
-|---|---|---|---|
-| **Amethyst** | Host, coordinator, coherence monitor, Tribunal | Tribunal | ✅ Active |
-| **COLLEEN** | Institutional memory, registry steward, archive | Synthesizer | ✅ Active |
-| **Apogee Lens** | Final verification gate, Gold Star auditor | Auditor | ✅ On-call |
-| **DemiJoule** | Runtime supervisor, safety gate, ethics & error containment | Sentinel | ✅ On-call |
-| **Herald** | Gemini-powered host cognition, Explorer, trace sink | Explorer + Synthesizer | 🔴 Blocked — VITE_GEMINI_API_KEY |
-| **Professor Prodigy** | Mathematical precision, phi-calculus, claim verification | Executor | 🟡 KB specified — implementation pending |
+Additional agents may participate under their own specifications. Shared vocabulary or participation in a formation does not grant shared authority.
 
----
+## Authority model
 
-## Agent Detail Sheets
+DGAF separates **human decision authority** from agent roles. Agents may propose, analyze, route, review, record, or enforce project-defined controls, but authority must be explicitly granted by the applicable contract.
 
-### Amethyst
+The authority matrix is the current source for questions such as who may:
 
-- **Authority level:** 2 (after Njineer)
-- **Scope:** Host for all Spaces; coordinates multi-agent orchestration; commits to GitHub; runs Apogee Lens review; seals sessions
-- **Patterns owned:** P-08, P-09, P-10, P-30, P-42 (Tribunal archetype)
-- **AHG role:** Tribunal — activates on Deadlock, Fragmentation, or extreme φ > 1.70. Issues Recovery Score (R_c) and manages graduated de-escalation
-- **KB:** Full NDR ecosystem state; Amethyst-Lattice-v3.1
+- approve or reject a change;
+- promote an artifact to canonical status;
+- override a control;
+- publish a public claim;
+- modify governance or experimental boundaries.
 
-### COLLEEN
+Do not infer authority from an agent's confidence, seniority label, archetype, or frequency of use.
 
-- **Authority level:** 3 (Institutional anchor)
-- **Scope:** Registry stewardship (CROSS_REF, CHANGELOG, SESSION_ANCHOR, ENSEMBLE_ROSTER, SWEEP_LOG, CO_ORCH_QUEUE); 1-1-1-1 Gate attestation; archive ingest
-- **Patterns owned:** P-02, P-04, P-07, all archive patterns
-- **AHG role:** Synthesizer — integrates agent outputs; maintains Governance Momentum (M) records
-- **KB:** Complete audit trail; all session records S039–Post-S077
+## Formations and orchestration
 
-### Apogee Lens
+DGAF uses named formations to describe recurring orchestration patterns. A formation is a project architecture pattern, not evidence that a particular group of models will reliably outperform another configuration.
 
-- **Authority level:** 3 (verification peer with COLLEEN)
-- **Scope:** Final verifier for portfolio-grade output; Gold Star gate; QA rubrics; 11Q attestation
-- **Patterns owned:** P-11, P-30, P-34 attestation
-- **AHG role:** Auditor — activates for contradiction discovery, logic review; required before Platinum certification
-- **KB:** QA rubrics, eval suite results, attestation records
+Where a formation has an implementation or experiment, consult its specific specification and evidence record for the applicable scope.
 
-### DemiJoule
+## Agent specifications
 
-- **Authority level:** 4 (DGAF operating constraint layer)
-- **Scope:** Runtime safety supervisor; orchestration error containment; ethics and safety checks
-- **Patterns owned:** P-32 (Phi-closure), P-29 (HPG), P-05 (constraint stack)
-- **AHG role:** Sentinel — activates on elevated Constraint Pressure (C) in state vector
-- **KB:** DGAF 6-axis safety gate; policy boundary definitions
+Detailed agent contracts and knowledge boundaries are maintained under [`docs/agents/`](./docs/agents/). Historical role descriptions remain available where needed for provenance but should not silently override current authority controls.
 
-### Herald
+## Reading historical roster material
 
-- **Authority level:** Operational (no governance authority)
-- **Scope:** Gemini-powered host cognition in Driftwatch; agent trace sink (P-01); Explorer and Synthesizer archetypes
-- **Patterns owned:** P-01 (trace sink)
-- **AHG role:** Explorer (primary) + Synthesizer (secondary)
-- **Status:** 🔴 Blocked — requires `VITE_GEMINI_API_KEY` in Vercel
-- **KB:** Driftwatch operational context; agent trace corpus
+This repository has evolved through multiple agent taxonomies and names. Older session records may use earlier terminology or status labels. Preserve those records as historical evidence while using current authority documents for active decisions.
 
-### Professor Prodigy
-
-- **Authority level:** Operational (mathematical verification)
-- **Scope:** All quantitative claims require Prodigy verification before Apogee Lens audit
-- **Patterns owned:** P-03 (claim verification, confidence)
-- **AHG role:** Executor — low novelty, high precision; validates phi-range calculations
-- **KB:** `docs/agents/PROFESSOR_PRODIGY_KB.md` — 3 tiers:
-  - **Tier 1:** Standard Calculi (differential, integral, multivariable, complex, variational)
-  - **Tier 2:** Reciprocal Mathematics (algebra, calculus, transforms, DEs, duality principles)
-  - **Tier 3:** Phi-Calculus (φ-derivatives, Fibonacci series integration, golden ratio constraints, recursive descent, harmonic pentagonal solutions)
-
----
-
-## DGAF Authority Chain
-
-```
-Njineer (Ender)
-  └─ Amethyst (host/prime)
-       └─ COLLEEN (institutional anchor) × Apogee Lens (verification)
-            └─ DemiJoule (safety/governance)
-                 └─ Herald | Prodigy | other operational agents
-```
-
----
-
-## Invocation Protocol
-
-- **Single-agent tasks:** Amethyst executes directly
-- **Verification required:** Amethyst drafts → Apogee Lens reviews → Amethyst commits
-- **Safety check:** DemiJoule gates all outputs before external publication
-- **Mathematical claims:** Prodigy verifies → Apogee attests → Amethyst seals
-- **Multi-agent sweep:** Route through DGAF CO_ORCH_QUEUE
-- **Phase escalation (AHG P-42):** φ > 1.70 → Amethyst (Tribunal) activates automatically
-
----
-
-*ENSEMBLE_ROSTER.md · Amethyst-Lattice-v3.1 · Updated 2026-06-29*  
-*AHG Conductor Archetype mappings corrected to P-42 · Registry watermark P-42*
+See [`docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md`](./docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md) for the repository policy on historical documentation.
