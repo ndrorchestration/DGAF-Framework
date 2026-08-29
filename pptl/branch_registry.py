@@ -30,6 +30,9 @@ class BranchRegistry:
     def __init__(self) -> None:
         self._branches: list[BranchRecord] = []
         self._states: dict[str, str] = {}
+    @property
+    def count(self) -> int:
+        return len(self._branches)
     def add(self, record: BranchRecord) -> None:
         if any(b.branch_id == record.branch_id for b in self._branches): raise ValueError(f"duplicate branch_id: {record.branch_id}")
         self._branches.append(record); self._states[record.state_id] = record.branch_id
