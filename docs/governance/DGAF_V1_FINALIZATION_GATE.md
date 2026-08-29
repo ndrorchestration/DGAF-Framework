@@ -23,7 +23,7 @@
 - Placement: CLOSED FOR V1 SCOPE
 - Implementation candidate: PRESENT
 - Deterministic test coverage: PRESENT
-- Exact-head CI: prior hardened head verified; fresh validation required after the latest TGL/state/public-surface commits
+- Exact-head CI: prior hardened head verified; fresh validation required after latest TGL/state/public-surface commits
 - Adversarial review: ACTIVE / CONTINUING
 - Production source binding: SEPARATE OPEN GATE (#137)
 - PDMAL freeze: NOT CREATED
