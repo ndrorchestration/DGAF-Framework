@@ -64,8 +64,8 @@ def test_downstream_gate_kill_sets_status_and_stops_execution():
 
 
 @pytest.mark.governance
-def test_phi_closure_kill_sets_kill_rec():
-    """P-32 KILL → final_status KILL_REC."""
+def test_phi_closure_kill_sets_terminal_kill():
+    """P-32 KILL is reduced to terminal KILL."""
     hooks = TGLHooks(phi_closure_fn=lambda t, c: GateResult.KILL)
     audit = make_tgl(hooks).run_turn("phi closure fail")
     assert audit.final_status == TurnStatus.KILL
@@ -106,7 +106,7 @@ def test_phi_closure_skip_skips_hpg():
 
 @pytest.mark.governance
 def test_herald_receives_tgl_turn_audit_event():
-    """Herald hook receives a TGL audit snapshot."""
+    """Herald receives a pre-Herald audit snapshot; final audit is sealed afterward."""
     received = []
 
     def capture_herald(audit_dict, ctx):
@@ -118,6 +118,7 @@ def test_herald_receives_tgl_turn_audit_event():
     assert received[0]["event_type"] == "TGL_TURN_AUDIT"
     assert received[0]["seal_hash"] != ""
     assert any(g["step"] == 8 for g in received[0]["gates"])
+    assert received[0]["seal_hash"] != audit.seal_hash
     assert any(g.step == 9 for g in audit.gate_records)
 
 
