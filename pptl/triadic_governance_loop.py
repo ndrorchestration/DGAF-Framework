@@ -189,7 +189,7 @@ class TriadicGovernanceLoop:
 
     @staticmethod
     def _reduce_status(gates: list[GateRecord], initial: TurnStatus = TurnStatus.PASS) -> TurnStatus:
-        """Apply the monotonic gate lattice: KILL/KILL_REC > ESCALATE > WARN > PASS."""
+        """Apply the monotonic gate lattice: KILL > ESCALATE > WARN > PASS."""
         if any(g.result == GateResult.KILL for g in gates):
             return TurnStatus.KILL
         if any(g.step in TriadicGovernanceLoop.REQUIRED_STEPS and g.result == GateResult.SKIP for g in gates):
@@ -204,7 +204,7 @@ class TriadicGovernanceLoop:
         context: dict,
         raise_premise: Exception | None = None,
     ) -> TurnAuditRecord:
-        """Publish a pre-Herald snapshot, append Herald result, then final-seal the complete set."""
+        """Publish a pre-Herald snapshot, append Herald result, reduce again, then final-seal the complete set."""
         herald_record = self._run_hook(
             self.hooks.herald_fn,
             "",
@@ -214,8 +214,7 @@ class TriadicGovernanceLoop:
             "Herald_FanOut",
         )
         audit.gate_records.append(herald_record)
-        if herald_record.result == GateResult.KILL:
-            audit.final_status = TurnStatus.KILL
+        audit.final_status = self._reduce_status(audit.gate_records, initial=audit.final_status)
         audit.seal()
         if raise_premise is not None:
             raise raise_premise
