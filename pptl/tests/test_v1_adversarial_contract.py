@@ -39,7 +39,7 @@ def envelope(**kwargs) -> GovernanceEnvelope:
 
 def _tgl(status: GateResult) -> TriadicGovernanceLoop:
     hooks = TGLHooks(
-        premise_check_fn=lambda _text: False,
+        premise_check_fn=lambda _text, _invariant: True,
         scpe_fn=lambda _t, _c: status,
         pdmal_fn=lambda _t, _c: GateResult.PASS,
         demijoul_fn=lambda _t, _c: GateResult.PASS,
