@@ -75,6 +75,15 @@ def test_branch_registry_retains_correlated_and_vetoing_records():
     assert registry.by_status("correlated")[0].branch_id == "verify"
 
 
+def test_branch_metadata_is_immutable():
+    source = {"authorization": "AUTH-1"}
+    record = BranchRecord("verify", None, "VERIFY", "s1", metadata=source)
+    source["authorization"] = "tampered"
+    assert record.metadata["authorization"] == "AUTH-1"
+    with pytest.raises(TypeError):
+        record.metadata["authorization"] = "tampered"
+
+
 def test_commit_gate_requires_explicit_authorization():
     gate = CommitGate()
     request = gate.propose(CommitRequest("r1", "t1", "send", "external", {"channel": "x"}))
@@ -84,6 +93,24 @@ def test_commit_gate_requires_explicit_authorization():
     assert gate.commit("r1") == "operator:AUTH-1"
     with pytest.raises(CommitDenied):
         gate.authorize("r1", "other", "AUTH-2")
+
+
+def test_commit_request_parameters_are_immutable_after_proposal():
+    parameters = {"channel": "x"}
+    request = CommitRequest("r1", "t1", "send", "external", parameters)
+    parameters["channel"] = "tampered"
+    assert request.parameters["channel"] == "x"
+    with pytest.raises(TypeError):
+        request.parameters["channel"] = "tampered"
+
+
+def test_commit_cannot_be_replayed():
+    gate = CommitGate()
+    gate.propose(CommitRequest("r1", "t1", "send", "external", {"channel": "x"}))
+    gate.authorize("r1", "operator", "AUTH-1")
+    assert gate.commit("r1") == "operator:AUTH-1"
+    with pytest.raises(CommitDenied, match="already committed"):
+        gate.commit("r1")
 
 
 def test_control_plane_lifecycle_and_cleanup():
@@ -115,3 +142,21 @@ def test_commit_ready_requires_explicit_envelope_permission():
     plane.submit(task); plane.admit("root"); plane.begin_evaluation("root"); plane.mark_merge_ready("root")
     with pytest.raises(ControlPlaneViolation):
         plane.mark_commit_ready("root")
+
+
+def test_tgl_exception_escalates_and_releases_slot():
+    def failing_tgl(_input, _context):
+        raise RuntimeError("synthetic TGL failure")
+
+    plane = ControlPlane(tgl_runner=failing_tgl)
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.start_expansion("root"); plane.begin_evaluation("root")
+    with pytest.raises(ControlPlaneViolation, match="TGL runner failed"):
+        plane.evaluate_turn("root", "input")
+    assert task.state is TaskState.ESCALATED
+    assert plane.ledgers["root"].active_concurrency == 0
+    assert plane._lineage_active[root_lineage(task)] == 0
+
+
+def root_lineage(task: ControlTask) -> str:
+    return task.lineage_id or task.envelope.trace_id
