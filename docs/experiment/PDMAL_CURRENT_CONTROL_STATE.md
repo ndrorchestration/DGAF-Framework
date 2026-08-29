@@ -2,7 +2,7 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-28
+last_verified: 2026-08-29
 applies_to_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
 ---
 
@@ -17,9 +17,10 @@ This is the current pre-authorization control record. Historical evidence remain
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is provenance only |
 | Current verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
 | Exact-tree E2b | CLOSED / VERIFIED | Exact-tree run `33047380487` is valid for `d299dd152…`; the corrected workflow boundary is separately scoped and must not be conflated with that historical exact-tree record |
-| Exact-candidate M6 | CLOSED / VERIFIED | Governance CI run `33050398324`; exact candidate `ac8ea267…`; retained negative-state artifact independently hash-verified with digest `sha256:dabe2f1909535671e795bb8c1cad0ef0840be4732acebff8f1a340c62b4943b6` |
+| Exact-candidate M6 | CLOSED / VERIFIED | Governance CI run `33050398324`; exact candidate `ac8ea267…`; retained negative-state artifact independently hash-verified |
 | Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented; empirical execution evidence remains absent |
-| TGL contract | BLOCKED / ADVERSARIAL REVIEW | PR #132 produced a 41-pass / 2-fail regression at the TGL → P-35 boundary; PR #133 is the isolated remediation candidate |
+| TGL contract | REMEDIATION / VALIDATION IN PROGRESS | PR #134 is current-main remediation; PRs #132/#133 are historical diagnostic/remediation records; exact-head validation remains required |
+| DGAF v1 control-plane | ENGINEERING CANDIDATE / VALIDATION IN PROGRESS | PR #136 has deterministic control-plane contracts, TGL integration, and explicit concurrency controls; current head requires fresh exact-head CI after the latest fixture correction |
 | P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN FOR FREEZE BINDING | Primary contrast selected; exact protocol/candidate/freeze binding remains required |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Implementation/configuration controls exist; complete candidate-scoped closure package remains incomplete |
 | Candidate governance verification | PARTIALLY CLOSED | Exact-scope E2b/M6 are closed for their stated boundaries; later repository documentation commits do not inherit that evidence automatically |
@@ -34,11 +35,13 @@ This is the current pre-authorization control record. Historical evidence remain
 
 ## TGL / P-35 remediation boundary
 
-PR #132 remains blocked and must not be treated as an experimental apparatus identity. The 41-pass / 2-fail result is a concrete contract-regression signal. The identified defects include P-35 constructor/method incompatibility, missing premise-hook injection, weakened exception containment, incomplete status reduction, ambiguous SKIP semantics, and audit-seal sequencing.
+The PR #132 regression (41-pass / 2-fail) remains a historical diagnostic signal at the TGL → P-35 boundary. PR #134 is the current-main remediation lane. PRs #132/#133 must not be treated as current experimental apparatus identity or authorization.
 
-PR #133 is an isolated remediation candidate. Its scope is limited to restoring the established TGL/P-35 contract and adding regression coverage. It does not authorize pilot execution, create a freeze, change the PDMAL treatment, or advance empirical N.
+TGL remediation remains limited to restoring the established P-35 API and fail-closed behavior, explicit required/conditional gate semantics, deterministic status reduction, exact final audit sealing, and regression coverage. It does not authorize pilot execution, create a freeze, change the PDMAL treatment, or advance empirical N.
 
-TGL must distinguish unwired required-gate `SKIP` from dependency-caused or intentionally non-applicable `SKIP`. Requiredness should be declared rather than inferred solely from step numbers. The final audit seal must represent exactly the authoritative audit object returned to downstream consumers.
+## DGAF v1 control-plane boundary
+
+PR #136 is generic engineering/governance infrastructure. Its CI verification is not PDMAL experimental evidence. `COMMIT_READY` is not execution; concrete side-effect adapters must remain behind explicit `CommitGate` authorization. Any control-plane or adapter change that modifies the experimental apparatus requires a new candidate identity and affected-predicate re-verification.
 
 ## Candidate and documentation boundary
 
@@ -62,7 +65,7 @@ Authorization is considered only after the required predicate evidence and freez
 
 ## Required next evidence events
 
-1. Resolve the TGL/P-35 contract blocker through the isolated remediation candidate and exact-head validation.
+1. Validate PR #134 on its exact head and preserve the TGL/P-35 remediation boundary.
 2. Complete P7 exact candidate/protocol/analysis binding.
 3. Complete remaining P8 artifact, environment, reproducibility, custody, and runtime-dependent evidence.
 4. Complete authenticated P2/P6a where required, using the exact candidate/deployment identity.
