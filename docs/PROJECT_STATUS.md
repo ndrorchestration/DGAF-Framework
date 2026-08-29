@@ -1,6 +1,6 @@
 # DGAF/PDMAL Project Status
 
-**Status date:** 2026-08-28  
+**Status date:** 2026-08-29  
 **Repository:** `ndrorchestration/DGAF-Framework`  
 **Current main:** active documentation/evidence lineage; not experimental apparatus identity  
 **Experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
@@ -30,7 +30,7 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Execute/retain evidence for the exact workflow boundary used for the eventual freeze decision |
 | M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324`; retained negative-state artifact independently hash-verified |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Historical/non-empirical characterization only |
-| Execution contract | PARTIAL / TGL BLOCKED | Authenticated exact-current-tree P2 evidence pending; TGL/P-35 contract regression under remediation |
+| Execution contract | PARTIAL / TGL CURRENT-HEAD VALIDATION PENDING | Hardened DGAF v1 control/TGL lane in PR #139; authenticated exact-current-tree P2 evidence pending |
 | Artifact contract | PARTIAL | Corrective controls present; current candidate execution evidence pending |
 | Security / blinding | PARTIAL | Fresh operational custody verification pending |
 | Topology provenance | PARTIAL | Exact current-candidate recomputation pending |
@@ -40,7 +40,7 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 | P7 exact binding | OPEN | Final freeze identity binding remains required |
 | Analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | Independent verification | NOT EXECUTED | P9 remains pending |
-| TGL contract review | BLOCKED / DRAFT REMEDIATION | PR #132 41-pass / 2-fail regression; PR #133 is isolated remediation candidate |
+| TGL historical contract review | HISTORICAL / SUPERSEDED | PR #132 produced 41-pass / 2-fail regression; PR #133 was isolated remediation; current consolidated engineering lane is PR #139 |
 | Forman–Ricci lattice helper semantics | OPEN / ISSUE #117 | Unweighted dodecahedral `Ric_F(e) = -2` is constant/zero-variance and must produce `NO_DISCRIMINATING_SIGNAL`, not 30 anomaly flags |
 | P-38 source integrity | OPEN / ISSUE #122 | `NDR_AUTOINIT_SUBSTRATE_ADAPTER_P38_v1.md` has a truncated historical tail; history audit confirms the earliest retained version is already truncated |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
@@ -52,9 +52,9 @@ P7 is scientifically adopted in substance, but exact cryptographic binding to th
 
 The 41-pass / 2-fail result associated with PR #132 is a concrete regression signal at the TGL → P-35 integration boundary. The observed failure is not being treated as a transient test issue. The review identified constructor/method incompatibility, missing premise-hook injection, weakened exception containment, incomplete `PASS/WARN/SKIP/ESCALATE/KILL` reduction, ambiguous conditional versus unwired `SKIP`, and audit-seal sequencing concerns.
 
-The selected remediation is intentionally minimal: restore the established P-35 API and TGL fail-closed behavior, make required/conditional gate semantics explicit, implement deterministic status reduction, make the final seal correspond to the authoritative returned audit state, and expand regression coverage. Broad architectural refactoring is out of scope for PR #132/#133.
+PR #133 was the isolated historical remediation candidate created to restore the established TGL/P-35 contract. Its evidence remains useful as diagnostic provenance, but it is no longer a current execution authority. PR #139 is the consolidated engineering lane carrying the current control-plane and TGL contract implementation. Exact-current-head CI and adversarial review remain required before any verification claim.
 
-PR #132 remains blocked/draft. PR #133 is the isolated remediation candidate and must obtain its own exact-head validation. Neither PR changes the experimental apparatus identity, creates a freeze, closes P7/P8, grants authorization, or increases empirical N.
+Neither the historical TGL remediation work nor PR #139 changes the experimental apparatus identity, creates a freeze, closes P7/P8, grants authorization, or increases empirical N.
 
 The detailed diagnostic record is `docs/governance/TGL_PR132_ADVERSARIAL_REVIEW_2026-08-28.md`.
 
@@ -92,7 +92,7 @@ Historical evidence remains scoped to the exact application source, deployment, 
 
 ## Required closure sequence
 
-1. Resolve the TGL/P-35 contract blocker through the isolated remediation candidate and exact-head validation.
+1. Complete exact-current-head validation of PR #139's consolidated control/TGL contract.
 2. Execute/retain the current-boundary E2b verification needed for freeze admissibility against the exact executing workflow SHA.
 3. Independently inspect exact SHA, scope, integrity, and negative-state claims; M6 closure is already recorded for candidate `ac8ea267…`.
 4. Execute authenticated P2 and P6a against the exact deployment identity.
