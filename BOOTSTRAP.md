@@ -1,132 +1,58 @@
-# BOOTSTRAP.md — DGAF Workspace Quickstart
+# DGAF Workspace Bootstrap
 
-> **Version:** 2.1.0 | **Last updated:** 2026-08-15 | **Status:** Project-local operating document
+> **Audience:** maintainers and contributors starting a project work session.
+> **Scope:** project-local operating guidance. For public project orientation, start with [`README.md`](README.md).
 
-This is the workspace bootstrap for a new session, agent instantiation, or onboarding run. It identifies the current project-local operating order and points to the evidence and audit surfaces that must be checked before synthesis.
+This document provides a lightweight starting sequence for working inside the DGAF repository. It is an operating aid, not a statement of external certification, compliance, or system capability.
 
----
+## Start here
 
-## 1. Workspace Identity
+Before making a substantive change:
 
-| Field | Value |
+1. Check [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) for the current authoritative project state.
+2. Review the files and specifications relevant to the task rather than loading unrelated historical material.
+3. Check [`CHANGELOG.md`](CHANGELOG.md) and applicable open issues or pull requests when recent changes matter.
+4. Classify new claims and results according to the repository's evidence policy before presenting them as established.
+
+For a research or experimental task, follow the applicable protocol and governance record; this bootstrap does not override candidate, freeze, authorization, or evidence boundaries.
+
+## Repository orientation
+
+| Need | Starting point |
 |---|---|
-| Framework | DGAF — Dynamic Governance Agentic Formation |
-| Primary repo | `ndrorchestration/DGAF-Framework` |
-| Governance model | Project-local multi-agent governance/orchestration model |
-| Co-orchestration pair | Amethyst (QA lens) × COLLEEN (Evaluation/Archive lens) |
-| Safety supervisor | Sentinel-Phi (project role) |
-| Trace/audit sink | Herald → JSONL + n8n webhook |
-| Pattern authority | COLLEEN (project-local Librarian/Auditor/Actualizer role) |
+| Public project overview | [`README.md`](README.md) |
+| Current project state | [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) |
+| Project status and evidence boundary | [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) |
+| Technical architecture | [`README.technical.md`](README.technical.md) |
+| Governance model | [`README.governance.md`](README.governance.md) |
+| Agent authority | [`docs/agents/AGENT_AUTHORITY_MATRIX.md`](docs/agents/AGENT_AUTHORITY_MATRIX.md) |
+| Experimental work | [`docs/experiment/`](docs/experiment/) |
+| Evidence policy | [`docs/evidence/EVIDENCE_LADDER_POLICY.md`](docs/evidence/EVIDENCE_LADDER_POLICY.md) |
+| Historical material | [`docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md`](docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md) |
 
-**Epistemic boundary:** Project personas, governance roles, tiers, and approval labels are internal mechanisms. They are not independent certification authorities and do not establish legal compliance, external accreditation, or production readiness by themselves.
+## Working principles
 
----
+- **Use the current authority for the question at hand.** Do not infer current state from an older summary when a living record exists.
+- **Separate instruction from evidence.** A project workflow may direct an action without establishing that a resulting claim has been verified.
+- **Keep authority explicit.** Project agent roles and automation components operate under repository-defined contracts; they are not independent authorities.
+- **Preserve provenance.** Do not silently rewrite historical claims or results to make them appear current.
+- **Scope results correctly.** Tests and evaluations establish only the behavior and evidence boundary they actually cover.
+- **Use human approval where the applicable control requires it.**
 
-## 2. First-Run Checklist (Every Session)
+## Evidence vocabulary
 
-- [ ] Read `SESSION_ANCHOR.md` — confirms last known state, open items, active cycle
-- [ ] Read `CO_ORCH_QUEUE.md` — confirms active OPP batch and cycle number
-- [ ] Read `registry/PATTERN_REGISTRY_v2.md` — confirms active patterns
-- [ ] Read `CROSS_REF.md` — confirms cross-repo alignment
-- [ ] Read `CHANGELOG.md` — confirms last committed changes
-- [ ] Check `SWEEP_LOG/` — read most recent sweep file
-- [ ] Confirm `docs/RD_GAPS.md` — check open R&D items before proceeding
-- [ ] Classify new material using the project evidence ladder before treating it as established fact
+The repository uses explicit epistemic classifications. Consult the evidence policy for authoritative definitions and promotion rules. In particular, implementation, a passing test, an attestation, and a demonstrated real-world result are different kinds of evidence.
 
----
+## Session hygiene
 
-## 3. Canonical File Map
+For changes that materially affect repository behavior, governance, experiment design, or public claims:
 
-```
-DGAF-Framework/
-├── BOOTSTRAP.md                    ← YOU ARE HERE
-├── SESSION_ANCHOR.md               ← Session state, open items, last stamp
-├── CHANGELOG.md                    ← All commits, versioned
-├── CO_ORCH_PROTOCOL.md             ← Execution flow, triad roles
-├── CO_ORCH_QUEUE.md                ← Active OPP improvement queue
-├── CROSS_REF.md                    ← Cross-repo alignment map
-├── ENSEMBLE_ROSTER.md              ← Agents, roles, L-levels
-├── AGENT_MANIFEST.md               ← Agent instantiation contracts
-├── AGENT_INSTANTIATION.md          ← Instantiation procedures
-├── GRADUATION_REPORT.md             ← Historical graduation record
-├── README.md                       ← Public-facing overview
-├── README.governance.md            ← Governance protocol reference
-├── README.technical.md             ← Technical architecture reference
-├── patterns/                       ← NDR pattern files (P-*.md)
-├── registry/
-│   ├── PATTERN_REGISTRY_v2.md      ← Master pattern registry
-│   └── AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json
-├── docs/
-│   ├── TEAM_WIKI.md                ← Team onboarding, roles, governance map
-│   └── RD_GAPS.md                  ← Open R&D gap log
-├── SWEEP_LOG/
-│   └── SWEEP_*.md                  ← Per-session sweep logs
-├── pptl/                           ← Phi-pentagon test layer
-├── tests/                          ← pytest governance harness
-└── scripts/                        ← Automation scripts
-```
+- update the appropriate authoritative documentation;
+- add or update tests when behavior changes;
+- preserve links between evidence and the artifact or execution that produced it;
+- avoid promoting historical evidence to current verification without an explicit basis;
+- review the public surface when a change affects reader-facing material.
 
----
+## Historical workspace records
 
-## 4. Authority and Evidence Order
-
-**Instruction order** is separate from **epistemic evidence strength**.
-
-### Operating instruction order
-
-1. User instruction
-2. Project-local host/space instructions
-3. Current project operating constraints
-4. Repository-local documentation
-5. Default assistant behavior
-
-### Evidence ladder
-
-**DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
-
-A project-local approval, Gold Star/S-Tier designation, persona sign-off, or rubric score does not automatically upgrade a claim on this ladder.
-
----
-
-## 5. Non-Negotiables
-
-- Refresh relevant context before synthesis.
-- Update the pattern registry before implementation when a new pattern is actually introduced.
-- Pair substantive outputs with a coherence and quality sweep.
-- Do not represent S-Tier or Gold Star as external certification.
-- Update logging and documentation when the change materially affects project state.
-- Irreversible actions require the applicable HITL gate.
-- Preserve failed experiments and superseded claims as historical evidence rather than silently converting them into current facts.
-- Numeric thresholds must identify their provenance: computed, externally sourced, empirically fitted, arbitrary engineering parameter, or other appropriate category.
-- Named mathematical constructs must correspond to the mathematics actually implemented; metaphorical labels must be marked as such.
-
----
-
-## 6. Quick-Start for Agents
-
-```python
-# Minimal session bootstrap
-from dgaf.bootstrap import load_session_anchor, load_co_orch_queue, load_pattern_registry
-
-anchor = load_session_anchor()
-queue  = load_co_orch_queue()
-reg    = load_pattern_registry()
-
-print(f"Active cycle: {queue['active_cycle']}")
-print(f"Open OPPs: {[o for o in queue['opps'] if o['status'] == 'OPEN']}")
-print(f"Active patterns: {len(reg['patterns'])}")
-```
-
----
-
-## 7. Escalation Contacts
-
-| Trigger | Route To |
-|---|---|
-| Governance breach | Sentinel-Phi → Amethyst (project roles) |
-| Coherence failure | COLLEEN → Amethyst (project roles) |
-| Safety / ethics | DemiJoule (project role) |
-| Architectural decision | Reson → Amethyst (project roles) |
-| Human approval required | HITL queue → User |
-
-*Historical project roles and terminology are retained for provenance. They should not be represented as independent authorities.*
+Older session anchors, orchestration queues, sweep logs, and agent-role records remain part of the repository's history. They may be useful for provenance or recovery, but should not automatically be treated as current operating authority. See the [Legacy Documentation Status Policy](docs/governance/LEGACY_DOCUMENTATION_STATUS_POLICY.md).
