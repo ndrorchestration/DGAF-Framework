@@ -11,15 +11,13 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 > **Current boundary:** `main` is the documentation/evidence lineage. The experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. P7 is scientifically adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
 
-## 2026-08-29 — Canonical DGAF v1 + TGL engineering lane
+## Canonical engineering lane — 2026-08-29
 
-PR #139 (`feat/dgaf-v1-control-plane-finalize-20260829`) is the canonical combined engineering candidate for the governed recursive control plane and the current TGL semantic remediation. It is based on current `main` and remains non-authorizing.
+PR #139 (`feat/dgaf-v1-control-plane-finalize-20260829`) is the canonical combined engineering candidate for the governed recursive control plane and TGL contract remediation. It is based on current `main` and remains non-authorizing.
 
 The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskState`, `StateRegistry`, `BudgetLedger`, `BranchRegistry`, `CommitGate`, hardened TGL status/sealing semantics, adversarial regression tests, and dedicated CI lanes. It does not rebind PDMAL, create a freeze, authorize a pilot, unblind data, or increase empirical N.
 
-### TGL remediation boundary
-
-The current kernel contract is explicitly fail-closed:
+### TGL contract boundary
 
 - required unwired gates are `SKIP` and reduce the turn to `ESCALATE`;
 - `WARN` propagates to `TurnStatus.WARN` unless a stronger failure state applies;
@@ -63,7 +61,7 @@ The observed READY Vercel production deployment remains historical/supporting ev
 
 ## Redundant engineering lanes
 
-PR #132/#133 are historical diagnostic/remediation records. PR #134 is superseded by the combined current engineering lane in PR #139. Their existence must not be treated as parallel authority or separate current remediation requirements.
+PR #132/#133 are historical diagnostic/remediation records. PR #134 is superseded by PR #139. Their existence must not be treated as parallel current authority.
 
 ## Evidence boundary
 
