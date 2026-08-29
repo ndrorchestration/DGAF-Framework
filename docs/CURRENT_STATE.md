@@ -13,7 +13,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 
 ## DGAF v1 control-plane lane
 
-The viable implementation-oriented subset of the Governed Recursive Lattice / compiler-trace proposal is now **mapped and implemented as a candidate engineering layer** in the existing `pptl/` tree.
+The viable implementation-oriented subset of the Governed Recursive Lattice / compiler-trace proposal is now **implemented as a candidate engineering layer** in the existing `pptl/` tree.
 
 Candidate modules:
 
@@ -24,14 +24,17 @@ Candidate modules:
 - `pptl/branch_registry.py`
 - `pptl/commit_gate.py`
 - `pptl/tests/test_v1_control_plane.py`
+- `pptl/tests/test_v1_tgl_integration.py`
 - `.github/workflows/control-plane-contract.yml`
+
+The current implementation includes inherited authority/tool/data/resource constraints, explicit recursion depth bounds, deterministic lifecycle transitions, exact-state cycle detection, branch provenance retention, explicit plan/commit separation, and optional TGL invocation from the lifecycle evaluation state.
 
 The canonical architecture and placement records are:
 
 - `docs/architecture/DGAF_V1_CONTROL_PLANE_INTEGRATION.md`
 - `docs/architecture/DGAF_V1_FILE_TREE_PLAN.md`
 
-These modules remain implementation candidates pending exact-head CI and adversarial review; source presence is not equivalent to verified merge-level capability.
+The implementation is still a candidate pending exact-head CI and adversarial review. Source presence and authored tests do not by themselves establish verified merge-level capability.
 
 The v1 control plane does not alter PDMAL candidate identity, protocol, freeze state, authorization state, or empirical N.
 
@@ -39,45 +42,23 @@ The v1 control plane does not alter PDMAL candidate identity, protocol, freeze s
 
 | Gate / boundary | Status | Current meaning |
 |---|---|---|
-| Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` remains provenance only |
+| Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b868…` remains provenance only |
 | Current `main` | CURRENT DOCUMENTATION/EVIDENCE LINEAGE | Resolve `main` directly; not apparatus identity |
-| Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
-| Current-boundary E2b | OPEN / VERIFICATION REQUIRED | Exact executing boundary required for later freeze admissibility |
-| M6 | CLOSED / VERIFIED (candidate exact-tree scope) | `ac8ea267…`; run `33050398324` |
-| TGL contract | REMEDIATION IMPLEMENTATION CANDIDATE | PR #134 current-main repair; exact-head CI/adversarial validation required |
-| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE / NON-AUTHORIZING | PR #136 contains candidate contracts, tests, CI, and architecture mapping |
+| Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267…` |
+| TGL contract | REMEDIATION CANDIDATE | PR #134; exact-head validation pending |
+| DGAF v1 control-plane | IMPLEMENTATION CANDIDATE | PR #136; deterministic contracts + TGL integration coverage added |
 | P7 scientific specification | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Exact freeze binding remains required |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped verification remains incomplete |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure pending |
 | P2 formal runtime verification | NOT EXECUTED | Authenticated five-case matrix required |
-| P6a formal CORS verification | NOT EXECUTED | Authenticated CORS matrix required |
-| New immutable freeze | NOT CREATED | No current candidate crossed freeze boundary |
+| P6a formal CORS verification | NOT EXECUTED | Authenticated matrix required |
+| New immutable freeze | NOT CREATED | No current candidate has crossed freeze boundary |
 | Pilot authorization | NOT GRANTED | Separate governance transition |
-| Empirical data | N = 0 | No authorized empirical pilot executed |
+| Empirical data | N = 0 | No authorized pilot execution |
 
-## Architectural relationship
+## Verification boundary
 
-```text
-DGAF governance / evidence plane
-            |
-            v
-     v1 Control Plane
-            |
-     +------+------+
-     |      |      |
-   TGL    Budget  Evidence
-     |      |      |
-     +------+------+
-            |
-     governed adapter
-            |
-      PDMAL or other
-       execution substrate
-```
+The v1 control-plane CI workflow is a deterministic engineering-validation lane. It is not an experimental authorization mechanism, and it does not close P1–P9 merely by passing.
 
-TGL remains the per-turn governance kernel. The v1 control plane governs task lifecycle, scope inheritance, bounded recursion, state identity, resources, branch provenance, and consequential-action authorization around it.
-
-## Experimental boundary
-
-The v1 control-plane lane is a separate engineering path. It does not establish PDMAL efficacy, topology superiority, production reliability, freeze eligibility, pilot authorization, or empirical evidence.
+The separate `ndrorchestration/agent-control-plane` repository remains an external reference/integration asset rather than an implicit dependency.
 
 **No empirical pilot execution is authorized. Empirical N remains 0. Authorization remains NOT GRANTED.**
