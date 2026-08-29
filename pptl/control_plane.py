@@ -110,7 +110,7 @@ class ControlPlane:
             return
         try:
             self.ledgers[task_id].acquire_concurrency()
-            self.ledgers[task_id].reserve(Consumption(rounds=1, nodes=1))
+            self.ledgers[task_id].consume(Consumption(rounds=1, nodes=1))
         except BudgetExceeded as exc:
             if self.ledgers[task_id].active_concurrency:
                 self.ledgers[task_id].release_concurrency()
