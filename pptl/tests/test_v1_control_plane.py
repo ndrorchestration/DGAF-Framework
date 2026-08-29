@@ -12,6 +12,13 @@ from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.state_identity import StateRegistry, canonical_state, state_id
 
 
+VALID_SEAL = "0" * 64
+
+
+def tgl_result(status: str) -> SimpleNamespace:
+    return SimpleNamespace(final_status=status, seal_hash=VALID_SEAL)
+
+
 def budget(**overrides):
     values = dict(max_input_tokens=100, max_output_tokens=100, max_tool_calls=4,
                   max_elapsed_ms=1000, max_rounds=3, max_nodes=8, max_depth=2,
@@ -155,8 +162,7 @@ def test_child_requires_active_parent_and_inherits_lineage():
 
 
 def test_commit_ready_requires_explicit_envelope_permission_after_tgl_pass():
-    runner = lambda _input, _context: SimpleNamespace(final_status="PASS")
-    plane = ControlPlane(tgl_runner=runner)
+    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("PASS"))
     task = ControlTask("root", envelope())
     plane.submit(task); plane.admit("root"); plane.begin_evaluation("root"); plane.evaluate_turn("root", "input"); plane.mark_merge_ready("root")
     with pytest.raises(ControlPlaneViolation):
@@ -167,31 +173,38 @@ def test_merge_ready_requires_successful_tgl_evaluation():
     plane = ControlPlane()
     task = ControlTask("root", envelope())
     plane.submit(task); plane.admit("root"); plane.begin_evaluation("root")
-    with pytest.raises(ControlPlaneViolation, match="successful TGL evaluation"):
+    with pytest.raises(ControlPlaneViolation, match="successful sealed TGL evaluation"):
         plane.mark_merge_ready("root")
 
 
 def test_merge_ready_rejects_warn_status():
-    runner = lambda _input, _context: SimpleNamespace(final_status="WARN")
-    plane = ControlPlane(tgl_runner=runner)
+    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("WARN"))
     task = ControlTask("root", envelope())
     plane.submit(task); plane.admit("root"); plane.begin_evaluation("root"); plane.evaluate_turn("root", "input")
-    with pytest.raises(ControlPlaneViolation, match="successful TGL evaluation"):
+    with pytest.raises(ControlPlaneViolation, match="successful sealed TGL evaluation"):
         plane.mark_merge_ready("root")
 
 
 def test_merge_ready_accepts_only_pass_status():
-    runner = lambda _input, _context: SimpleNamespace(final_status="PASS")
-    plane = ControlPlane(tgl_runner=runner)
+    plane = ControlPlane(tgl_runner=lambda _input, _context: tgl_result("PASS"))
     task = ControlTask("root", envelope())
     plane.submit(task); plane.admit("root"); plane.begin_evaluation("root"); plane.evaluate_turn("root", "input")
     plane.mark_merge_ready("root")
     assert task.state is TaskState.MERGE_READY
 
 
+def test_tgl_missing_seal_fails_closed():
+    plane = ControlPlane(tgl_runner=lambda _input, _context: SimpleNamespace(final_status="PASS", seal_hash=""))
+    task = ControlTask("root", envelope())
+    plane.submit(task); plane.admit("root"); plane.begin_evaluation("root")
+    with pytest.raises(ControlPlaneViolation, match="valid sealed evidence"):
+        plane.evaluate_turn("root", "input")
+    assert task.state is TaskState.ESCALATED
+
+
 def test_new_evaluation_replaces_previous_tgl_status():
     statuses = iter(("PASS", "ESCALATE"))
-    runner = lambda _input, _context: SimpleNamespace(final_status=next(statuses))
+    runner = lambda _input, _context: tgl_result(next(statuses))
     plane = ControlPlane(tgl_runner=runner)
     task = ControlTask("root", envelope())
     plane.submit(task); plane.admit("root"); plane.begin_evaluation("root")
@@ -201,7 +214,7 @@ def test_new_evaluation_replaces_previous_tgl_status():
     plane.evaluate_turn("root", "second")
     assert task.state is TaskState.ESCALATED
     assert task.last_tgl_status == "ESCALATE"
-    with pytest.raises(ControlPlaneViolation, match="successful TGL evaluation"):
+    with pytest.raises(ControlPlaneViolation, match="successful sealed TGL evaluation"):
         plane.mark_merge_ready("root")
 
 
