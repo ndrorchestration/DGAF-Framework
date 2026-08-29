@@ -19,6 +19,7 @@ This is the current pre-authorization control record. Historical evidence remain
 | Exact-tree E2b | CLOSED / VERIFIED | Exact-tree run `33047380487` is valid for `d299dd152…`; the corrected workflow boundary is separately scoped and must not be conflated with that historical exact-tree record |
 | Exact-candidate M6 | CLOSED / VERIFIED | Governance CI run `33050398324`; exact candidate `ac8ea267…`; retained negative-state artifact independently hash-verified with digest `sha256:dabe2f1909535671e795bb8c1cad0ef0840be4732acebff8f1a340c62b4943b6` |
 | Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented; empirical execution evidence remains absent |
+| TGL contract | BLOCKED / ADVERSARIAL REVIEW | PR #132 produced a 41-pass / 2-fail regression at the TGL → P-35 boundary; PR #133 is the isolated remediation candidate |
 | P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN FOR FREEZE BINDING | Primary contrast selected; exact protocol/candidate/freeze binding remains required |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Implementation/configuration controls exist; complete candidate-scoped closure package remains incomplete |
 | Candidate governance verification | PARTIALLY CLOSED | Exact-scope E2b/M6 are closed for their stated boundaries; later repository documentation commits do not inherit that evidence automatically |
@@ -30,6 +31,14 @@ This is the current pre-authorization control record. Historical evidence remain
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | N = 0 | No authorized pilot execution |
+
+## TGL / P-35 remediation boundary
+
+PR #132 remains blocked and must not be treated as an experimental apparatus identity. The 41-pass / 2-fail result is a concrete contract-regression signal. The identified defects include P-35 constructor/method incompatibility, missing premise-hook injection, weakened exception containment, incomplete status reduction, ambiguous SKIP semantics, and audit-seal sequencing.
+
+PR #133 is an isolated remediation candidate. Its scope is limited to restoring the established TGL/P-35 contract and adding regression coverage. It does not authorize pilot execution, create a freeze, change the PDMAL treatment, or advance empirical N.
+
+TGL must distinguish unwired required-gate `SKIP` from dependency-caused or intentionally non-applicable `SKIP`. Requiredness should be declared rather than inferred solely from step numbers. The final audit seal must represent exactly the authoritative audit object returned to downstream consumers.
 
 ## Candidate and documentation boundary
 
@@ -45,16 +54,6 @@ P7 is **technically adjudicated but formally open for freeze binding**. The prim
 
 P8 is explicitly fail-closed. Candidate implementation work—including analysis code, explicit FFCR artifact semantics, adversarial contract tests, CI wiring, and candidate bindings—does not close P8 until the applicable checklist items have executed candidate-scoped evidence.
 
-Required evidence includes, as applicable:
-
-1. Exact candidate control/verification evidence and retained run identity.
-2. Analysis, artifact-schema/security, and compilation evidence with retained run identity and inspected logs.
-3. Executed-tree reconciliation with P8 bindings.
-4. Environment, topology fingerprint, seed/RNG separation, and trial-ordering evidence.
-5. Durable retention plus independent retrieval/hash verification.
-6. Blinding custody evidence that does not expose the key.
-7. Authenticated runtime evidence or a formally justified applicability determination for P2/P6a.
-
 ## Independent audit and authorization boundary
 
 Independent verification should include adversarial preflight appropriate to the candidate's claims, including candidate identity reconciliation, artifact substitution resistance, blinding-boundary checks, and enforcement of relevant runtime constraints. Independent audit must not merely repeat candidate self-validation through the same assumptions.
@@ -63,16 +62,17 @@ Authorization is considered only after the required predicate evidence and freez
 
 ## Required next evidence events
 
-1. Complete P7 exact candidate/protocol/analysis binding.
-2. Complete remaining P8 artifact, environment, reproducibility, custody, and runtime-dependent evidence.
-3. Complete authenticated P2/P6a where required, using the exact candidate/deployment identity.
-4. Retain run IDs, exact SHA/ref/event, logs, and artifact integrity values.
-5. Complete durable evidence custody with independent retrieval/hash proof.
-6. Complete operational blinding custody and formal unblinding readiness without exposing the key.
-7. Prepare and execute independent P9 verification.
-8. Derive the complete pre-freeze predicate matrix only from candidate-scoped evidence.
-9. Create an immutable freeze after pre-freeze closure.
-10. Independently verify the freeze.
-11. Obtain explicit pilot authorization before empirical execution.
+1. Resolve the TGL/P-35 contract blocker through the isolated remediation candidate and exact-head validation.
+2. Complete P7 exact candidate/protocol/analysis binding.
+3. Complete remaining P8 artifact, environment, reproducibility, custody, and runtime-dependent evidence.
+4. Complete authenticated P2/P6a where required, using the exact candidate/deployment identity.
+5. Retain run IDs, exact SHA/ref/event, logs, and artifact integrity values.
+6. Complete durable evidence custody with independent retrieval/hash proof.
+7. Complete operational blinding custody and formal unblinding readiness without exposing the key.
+8. Prepare and execute independent P9 verification.
+9. Derive the complete pre-freeze predicate matrix only from candidate-scoped evidence.
+10. Create an immutable freeze after pre-freeze closure.
+11. Independently verify the freeze.
+12. Obtain explicit pilot authorization before empirical execution.
 
 **No empirical execution is authorized by this record. N = 0. Authorization is NOT GRANTED.**
