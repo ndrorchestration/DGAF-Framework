@@ -18,7 +18,7 @@ prior_candidate:
 historical_evidence_marker: docs/experiment/CANDIDATE_RECONCILIATION_RECORD.md
 designation_control_commit: 02c146d1e0cdc423948ac0dfa11e98f812edfb44
 designation_control_commit_role: CONTROL RECORD ONLY; NOT APPARATUS IDENTITY
-current_main_documentation_lineage: 9a07fd8d285330952a9082527753b6170d3a92e3
+current_main_documentation_lineage: e88d4a026ad96bc5341a6bff23795c65d2bc7b9f
 recovery_basis:
   r1_r4_matrix: .hermes/work/R1_R4_GATE_RECOVERY_MATRIX.md
   issue: 152
@@ -43,7 +43,7 @@ empirical_n: 0
 
 - `05fa2866…` — post-#151 apparatus/candidate source identity.
 - `02c146d1…` — designation/control record; not the apparatus identity.
-- `9a07fd8d…` — current `main` documentation/evidence lineage at the latest manifest reconciliation; documentation-only relative to the designated apparatus unless executable apparatus changes occur.
+- `e88d4a02…` — current `main` documentation/evidence lineage at the latest manifest reconciliation; documentation-only relative to the designated apparatus unless executable apparatus changes occur.
 - `c6157158…` — superseded pre-remediation candidate; provenance only.
 - `303f4424…` — prior production/runtime evidence boundary for P2/P6a.
 
