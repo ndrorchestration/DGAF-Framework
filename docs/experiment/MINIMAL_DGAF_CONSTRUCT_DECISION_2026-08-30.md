@@ -26,7 +26,7 @@ The canonical `TriadicGovernanceLoop.REQUIRED_STEPS` is `{1, 2, 3, 4, 5, 6, 8}`.
 | 6 | P-32 | `PhiClosure_Gate` | **A — required** |
 | 8 | P-30 | `Apogee_AttestationGate` | **A — required** |
 
-The TGL source explicitly defines an absent hook as `SKIP`; required `SKIP` transitions the turn to `ESCALATE`. The PDMAL adapter additionally converts a required skipped gate into `FAIL_CLOSED`, preventing an unwired required gate from becoming a treatment outcome.
+The TGL source defines an absent hook as `SKIP`; required `SKIP` transitions the turn to `ESCALATE`. The PDMAL adapter additionally converts a required skipped gate into `FAIL_CLOSED`, preventing an unwired required gate from becoming a treatment outcome.
 
 ## Out-of-scope boundary
 
