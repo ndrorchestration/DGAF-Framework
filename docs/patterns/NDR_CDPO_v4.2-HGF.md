@@ -1,6 +1,8 @@
 # NDR Pattern: CDPO-v4.2-HGF
 
-**Constraint-Dense Prompt Optimization v4.2 with Hensel Generative Firewall**
+## Full pattern name
+
+Constraint-Dense Prompt Optimization v4.2 with Hensel Generative Firewall
 
 **DGAF-Framework · NDR Pattern Registry**  
 **Registered:** S070 · 2026-06-13  
