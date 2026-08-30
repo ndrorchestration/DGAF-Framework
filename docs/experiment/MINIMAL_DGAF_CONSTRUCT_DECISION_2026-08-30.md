@@ -26,7 +26,7 @@ The canonical `TriadicGovernanceLoop.REQUIRED_STEPS` is `{1, 2, 3, 4, 5, 6, 8}`.
 | 6 | P-32 | `PhiClosure_Gate` | **A — required** |
 | 8 | P-30 | `Apogee_AttestationGate` | **A — required** |
 
-The TGL source explicitly defines an absent hook as `SKIP`; required `SKIP` transitions the turn to `ESCALATE`. The PDMAL adapter additionally treats a required skipped gate as `FAIL_CLOSED`, preventing an unwired required gate from becoming a treatment outcome.
+The TGL source explicitly defines an absent hook as `SKIP`; required `SKIP` transitions the turn to `ESCALATE`. The PDMAL adapter additionally converts a required skipped gate into `FAIL_CLOSED`, preventing an unwired required gate from becoming a treatment outcome.
 
 ## Out-of-scope boundary
 
@@ -40,12 +40,20 @@ They remain operationally fail-closed or observational infrastructure as impleme
 
 ## Consequence for Issue #152
 
-Issue #152 therefore resolves the central A/B ambiguity as follows:
+Issue #152 resolves the construct-membership question as follows:
 
 - **A for P-31, P-33, DemiJoule, P-27, P-29, P-32, and P-30.** These are required treatment components under the canonical TGL contract.
 - **B for non-required historical governance capabilities outside the selected minimal treatment.** They remain FAIL-CLOSED and deferred.
 - **No invented adapters.** A historical gate may only be adapted after R2–R4 establish a defensible semantic translation from the historical contract to the current `ConsensusState`.
 - **Unresolved semantics remain a genuine blocker.** If a required gate cannot be semantically adapted without inventing or changing its meaning, that gate remains FAIL-CLOSED and N=1 cannot claim execution of the full defined treatment.
+
+## R1–R4 semantic-recovery result
+
+The bounded read-only semantic-recovery map is recorded in `docs/experiment/R5_R7_GATE_SEMANTIC_RECOVERY_MAP_2026-08-30.md`.
+
+Current result: **no seven-gate adapter is yet justified solely from available substrate evidence**. The current `ConsensusState` supplies useful fields, but field presence does not establish historical semantic equivalence. Gate-specific historical contract extraction, contradiction reconciliation, and information-loss analysis therefore remain prerequisites to R5 wiring.
+
+This is a **bounded semantic blocker**, not authorization to reconstruct the wider historical DGAF ecosystem.
 
 ## Anti-trap constraint
 
@@ -68,9 +76,10 @@ If a required gate cannot satisfy either condition, the experiment remains **PRE
 
 - Historical gate existence: **RECOVERED** where documented by Issue #152.
 - Required status: **VERIFIED FROM CANONICAL TGL CONTRACT**.
+- Current semantic adapter suitability: **NOT YET ESTABLISHED** for the seven required gates.
 - Current candidate execution: **NOT CANDIDATE-BOUND** for the post-remediation cycle.
 - Scientific efficacy: **NOT ESTABLISHED**.
 
 ## Source boundary
 
-This decision is derived from the canonical TGL implementation and the governed recovery taxonomy in Issue #152. It does not promote historical claims of validation into current evidence and does not authorize experimental execution.
+This decision is derived from the canonical TGL implementation, PDMAL protocol, and governed recovery taxonomy in Issue #152. It does not promote historical claims of validation into current evidence and does not authorize experimental execution.
