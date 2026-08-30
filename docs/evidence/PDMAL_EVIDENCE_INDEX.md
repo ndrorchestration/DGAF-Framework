@@ -2,12 +2,14 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-29
-applies_to_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
+last_verified: 2026-08-30
+applies_to_sha: 303f4424d2198f0d0cf76305c589263dd1e417dc
 scope_note: >-
   This index records evidence and gate state. Historical evidence remains
   scoped to the exact SHA/run that produced it. Candidate verification does
-  not inherit historical verification automatically.
+  not inherit historical verification automatically. Production provenance
+  is closed for the merged engineering source, but experimental evidence
+  remains separately gated.
 ---
 
 # PDMAL Evidence Index
@@ -18,39 +20,58 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 
 | Evidence | State | Identity | Interpretation |
 |---|---|---|---|
-| Current repository lineage | CURRENT | `main` | Active documentation/evidence lineage; not experimental apparatus identity |
-| Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | Current pre-freeze candidate verification boundary; later documentation commits do not inherit its evidence automatically |
+| Current repository lineage | CURRENT | `main` / `303f4424…` | Active engineering and documentation lineage |
+| Production source provenance | CLOSED / VERIFIED | Vercel `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8` | Production target READY; Vercel Git SHA exactly matches `303f4424…`; `/api/health` HTTP 200 |
+| Historical experimental verification boundary | HISTORICAL / CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | Historical pre-freeze apparatus evidence; not silently promoted |
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` | Historical apparatus only |
-| Corrected pilot runner | CANDIDATE | Current verification boundary | Exact candidate verification pending |
-| TGL contract | CURRENT ENGINEERING PREREQUISITE | PR #139; historical regression PR #132 / remediation PR #133 | The 41-pass / 2-fail result at the TGL → P-35 seam is retained as diagnostic provenance; current consolidated control/TGL implementation is in PR #139 and still requires exact-head validation |
-| Environment lock | VERIFY | Python 3.12.0; NumPy 2.5.1; NetworkX 3.6.1 | Fresh matching environment required |
+| Corrected pilot runner | IMPLEMENTED / EVIDENCE GATED | `pilot_artifact_schema.py` + runner controls | Explicit FFCR outcome, schema/sidecar validation, matrix semantics; pilot execution evidence still gated |
+| TGL contract | CURRENT ENGINEERING CONTROL / VERIFIED | Merged PR #148 via `303f4424…` | Required-gate SKIP semantics, fail-closed handling, authority semantics, and final audit sealing validated in current engineering CI |
+| Environment lock | VERIFY | CI dependency/runtime configuration | Final freeze candidate must bind exact environment fingerprint |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368` | Operational characterization, not efficacy evidence |
-| Blinding operational verification | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935` | Synthetic custody only |
-| Artifact contract | PARTIAL | `pilot_artifact_schema.py` + tests + inline runner enforcement | Fresh candidate CI/audit pending |
-| Security controls | VERIFY | `test_security_controls.py` + pre-authorization workflow | Fresh CI pending |
-| Topology provenance | VERIFY | `PDMAL_TOPOLOGY_FINGERPRINT_MANIFEST.md` | Recompute against exact freeze candidate |
-| Durable retention | OPEN | Policy present; operational archive not established | Direct write/retrieval/hash evidence required |
+| Blinding operational verification | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935` | Synthetic/control evidence only |
+| Artifact contract | IMPLEMENTED / OPEN | `pilot_artifact_schema.py` + tests | Structural contract implemented; fresh authorized execution evidence required |
+| Security controls | VERIFIED FOR ENGINEERING SCOPE | Current Governance/PDMAL security CI | Does not substitute for P4 operational custody |
+| Topology provenance | VERIFY | `PDMAL_TOPOLOGY_FINGERPRINT_MANIFEST.md` | Recompute/bind against exact final freeze candidate |
+| Durable retention | OPEN | Policy present | Operational archive + independent retrieval/hash proof required |
 | Primary contrast | ADJUDICATED / BINDING PENDING | `dgaf` vs `null`; FFCR; paired seed | Scientific target selected; exact freeze binding remains required |
-| Analysis lock | OPEN / FAIL-CLOSED | `PDMAL_ANALYSIS_CONTROL_PLAN.md` / P8 lock | Candidate implementation/configuration SHA required |
-| Independent verification | NOT EXECUTED | P9 audit design | Must verify candidate-scoped evidence |
+| Analysis lock | OPEN / FAIL-CLOSED | `PDMAL_ANALYSIS_CONTROL_PLAN.md` / P8 | Exact final apparatus/configuration binding required |
+| Independent verification | NOT EXECUTED | P9 design | Must verify candidate-scoped evidence independently |
 
-## Runtime characterization provenance
+## Production provenance
 
-Latest recorded reconciliation:
+- Main merge SHA: `303f4424d2198f0d0cf76305c589263dd1e417dc`
+- Vercel production deployment: `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`
+- Target: `production`
+- State: `READY`
+- Source Git SHA: exact match
+- `/api/health`: HTTP `200 OK`
+- Runtime: Node `v24.18.0`
+- Selected production log window: no error/warning entries returned
 
-- Release ZIP SHA-256: `ba2d44016a9ef7f76546746bd03cd2964776e735ce4bbd5034d28f8cebee6f20`
-- Inner `runtime_characterization.json` SHA-256: `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea`
-- Run: `32112658368`
-- Artifact: `9315467977`
-
-These values supersede the older conflicting `f6db...` record in this registry. A fresh byte-level recomputation from the release asset should be performed before the final freeze packet when the asset is available.
+This is verified deployment/source evidence only. It does not close P2/P6a or authorize experimental execution.
 
 ## Evidence boundary
 
-Historical acceptance, characterization, synthetic blinding, topology, and security evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until an explicitly authorized 50-seed pilot occurs.
+Historical acceptance, characterization, synthetic blinding, topology, and security evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until the explicit authorization chain is completed and a valid paired pilot observation is accepted.
 
 ## TGL/P-35 boundary
 
-The TGL review is an implementation/governance control issue, not experimental evidence. PR #132 remains historical blocked/draft provenance. PR #133 is a historical isolated remediation record and is not a current execution authority. PR #139 is the current consolidated engineering lane and must pass exact-head validation before any dependent execution-contract predicate can advance.
+The TGL/P-35 remediation is now integrated into the current production engineering source. Historical PR #132/#133/#134 records remain provenance only. Current governance validation demonstrates the repaired semantics; they do not redefine the experimental apparatus or authorize execution.
 
-The remediation boundary does not create a freeze, authorize execution, close P7/P8, or increase empirical N.
+## Remaining gate sequence
+
+1. Establish final experimental apparatus identity atop `303f4424…`.
+2. Authenticated P2 five-case runtime verification.
+3. Authenticated P6a four-case CORS verification.
+4. P3 candidate-scoped artifact-contract execution evidence.
+5. P4 operational blinding/custody evidence.
+6. P5 environment/topology/RNG reproducibility.
+7. P6 durable archive/retrieval/hash evidence.
+8. P7 exact scientific/protocol/apparatus binding.
+9. P8 exact analysis lock and closure.
+10. Independent P9 verification.
+11. New immutable freeze and independent freeze verification.
+12. Explicit pilot authorization.
+13. Authorized blinded pilot execution.
+
+**Empirical N: 0. Pilot authorization: NOT GRANTED. Freeze: NOT CREATED.**
