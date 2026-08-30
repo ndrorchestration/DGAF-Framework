@@ -10,8 +10,10 @@ last_verified: 2026-08-30
 historical_freeze_sha: 3510b86889cd341f7a7cf9ab684fd37b2fafd758
 production_engineering_source: 303f4424d2198f0d0cf76305c589263dd1e417dc
 mainline_tip_at_reconciliation: 255d76f6775caf40e758de4d41920f9ce40fda0c
-current_experimental_verification_boundary: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
-freeze_candidate_sha: NONE — must be explicitly designated after candidate-scoped re-verification
+prior_experimental_verification_boundary: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
+pre_freeze_candidate_sha: c6157158bf0ee4840e99a381a4b99bd2febe2302
+pre_freeze_candidate_ref: experimental-candidate/2026-08-30-reconciled
+candidate_status: DESIGNATED / NOT FROZEN / REQUIRES FRESH CANDIDATE-SCOPED VERIFICATION
 freeze_commit_sha: NONE
 freeze_timestamp_utc: NONE
 freeze_author: Ndr Orchestration
@@ -21,17 +23,17 @@ freeze_author: Ndr Orchestration
 
 This file is the **pre-freeze manifest**. It is not evidence that the corrected apparatus is frozen. The historical implementation freeze at `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is retained as historical provenance and is not current apparatus authority.
 
-The prior experimental verification boundary is `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. The integrated DGAF v1 engineering/production source is `303f4424d2198f0d0cf76305c589263dd1e417dc`, which is an ancestor of the `main` tip observed at reconciliation (`255d76f6775caf40e758de4d41920f9ce40fda0c`). A comparison of `303f4424…` to that main tip shows only documentation/evidence-surface changes after the engineering integration; no executable apparatus files are changed in that interval.
+`2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` is an ancestor of `303f4424…` and represents earlier P8 checklist lineage. `303f4424d2198f0d0cf76305c589263dd1e417dc` is the integrated DGAF v1 engineering/production source and the exact source bound by prior verified P2/P6a runtime evidence. The `main` tip observed during reconciliation was `255d76f6775caf40e758de4d41920f9ce40fda0c`, a descendant of `303f4424…`, with documentation/evidence-surface changes in the compared interval.
 
-`2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` is also an ancestor of `303f4424…` and therefore is not a competing mainline apparatus tree. References that name `2a80f819…` as the current P8 candidate are superseded lineage references and must not be used as the active verification target.
+The next experimental evidence cycle is explicitly designated at `c6157158bf0ee4840e99a381a4b99bd2febe2302` on `experimental-candidate/2026-08-30-reconciled`. This designation does not create a freeze. Prior P2/P6a evidence at `303f4424…` remains exact prior-candidate evidence and cannot be silently transferred.
 
-These identities remain distinct by role:
+## Identity roles
 
 - `2a80f819…` — historical P8 checklist ancestor;
-- `303f4424…` — integrated DGAF v1 engineering/production source and verified runtime deployment source;
-- `255d76f6…` — mainline documentation/evidence tip at reconciliation time;
-- `ac8ea267…` — prior experimental verification boundary, retained as historical/provenance state;
-- **freeze candidate** — not yet designated; must be explicitly established and then verified as one immutable candidate before freeze.
+- `303f4424…` — integrated engineering/production source and prior P2/P6a runtime evidence boundary;
+- `255d76f6…` — mainline documentation/evidence tip observed during reconciliation;
+- `ac8ea267…` — prior experimental verification boundary, historical/provenance only;
+- `c6157158…` — designated current pre-freeze candidate, not frozen and not yet execution-verified.
 
 No value in this file authorizes pilot execution.
 
@@ -70,18 +72,18 @@ The future freeze manifest must record exact immutable identities for:
 | E2b verifier-toolchain provenance | CLOSED / VERIFIED for recorded exact executions |
 | M6 negative-state observability | CLOSED / VERIFIED for recorded exact executions |
 | Production source provenance | CLOSED / VERIFIED — `303f4424…` → Vercel `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8` |
-| P1 Candidate integrity | OPEN — final freeze candidate not yet designated |
-| P2 Execution contract | VERIFIED — exact prior runtime evidence is bound to `303f4424…`; fresh execution is required for any newly designated freeze candidate |
+| P1 Candidate integrity | OPEN / CURRENT CANDIDATE DESIGNATED |
+| P2 Execution contract | PRIOR VERIFIED / CURRENT CANDIDATE OPEN |
 | P3 Artifact contract | IMPLEMENTED / OPEN — fresh candidate-scoped execution evidence required |
 | P4 Security / blinding integrity | OPEN |
 | P5 Provenance / reproducibility | OPEN |
 | P6 Durable evidence custody | BLOCKED / OPEN |
-| P6a Runtime/CORS | VERIFIED — exact prior runtime evidence is bound to `303f4424…`; fresh execution is required for any newly designated freeze candidate |
+| P6a Runtime/CORS | PRIOR VERIFIED / CURRENT CANDIDATE OPEN |
 | P7 Scientific target specification | ADOPTED / BINDING PENDING |
 | P8 Analysis lock | OPEN / FAIL-CLOSED |
 | P9 Independent verification | NOT EXECUTED |
 
-## Verified production provenance
+## Verified prior production provenance
 
 - Production Git commit: `303f4424d2198f0d0cf76305c589263dd1e417dc`
 - Vercel deployment: `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`
@@ -90,15 +92,14 @@ The future freeze manifest must record exact immutable identities for:
 - Vercel Git SHA: exact match to production Git commit
 - `/api/health`: HTTP `200 OK`
 - Runtime: Node `v24.18.0`
-- Selected production runtime window: no error or warning entries returned
 
-This closes production source/provenance only. P2 and P6a are separately verified for the exact `303f4424…` runtime boundary as recorded in the current control state; neither result silently transfers to a future freeze candidate.
+This closes production source/provenance only for `303f4424…`. It does not establish current-candidate runtime verification.
 
-## Candidate designation rule
+## Current candidate execution boundary
 
-The next experimental candidate must be an explicitly designated immutable Git identity after substantive apparatus work is complete. Because the current `main` tip observed at reconciliation contained only documentation/evidence changes relative to `303f4424…`, those changes do not themselves establish that a new executable apparatus was produced; nevertheless, any predicate requiring exact candidate SHA binding must be freshly verified against the formally designated candidate.
+The designated candidate is `c6157158bf0ee4840e99a381a4b99bd2febe2302`. A candidate-specific Vercel deployment must reach `READY` and report exact Git source SHA `c6157158…` before current-candidate P2/P6a runtime evidence can be accepted.
 
-Accordingly, **303f4424… is not being silently promoted to the final experimental freeze**, and the mainline documentation tips are not being silently treated as already verified experimental candidates. A new candidate designation must precede downstream closure.
+The first observed Vercel deployment for this candidate, `dpl_8iYrzqsf729RSZRXj698pa4ptbWZ`, was still `BUILDING` during inspection. No current-candidate runtime completion is therefore claimed.
 
 ## Promotion rule
 
