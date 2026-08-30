@@ -52,7 +52,7 @@ This checklist distinguishes implemented controls from executed verification evi
 
 ## Runtime verification
 
-- [ ] Authenticated P2 five-case POST matrix executed against exact current candidate/deployment identity.
+- [x] Authenticated P2 five-case POST matrix executed against the exact production candidate/deployment identity; run `33300481208`, job `99227568599`, artifact `9728767844`, digest `sha256:cdbf23bf2a754034c9f5f5651b9242c22814669962a43bd59c409a0f7bf610a5`. Candidate `303f4424d2198f0d0cf76305c589263dd1e417dc`; deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`; artifact reports `all_pass=true` for all five cases.
 - [x] Authenticated P6a four-case CORS matrix executed against the same production candidate/deployment boundary; run `33302495240`, artifact `9729387603`, digest `sha256:4abaf5d1c32930738296a85d38f5489b2068127795e2ce5e2c30565f2308533c`.
 
 ## Reproducibility and provenance
@@ -76,4 +76,4 @@ This checklist distinguishes implemented controls from executed verification evi
 
 P8 remains open until every applicable unchecked item has current candidate-scoped evidence. Repository-native synthetic evaluator verification is supportive evidence only and does not itself establish candidate efficacy or close P8.
 
-**P6a runtime evidence verified. P2 remains unverified. No freeze. No authorization. No unblinding. Empirical N = 0.**
+**P2 VERIFIED. P6a VERIFIED. P3–P6 remain evidence-gated. P8 remains OPEN / FAIL-CLOSED. No freeze. No authorization. No unblinding. Empirical N = 0.**
