@@ -17,7 +17,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 - `303f4424…` — integrated DGAF v1 engineering/production source and prior P2/P6a evidence boundary.
 - `ac8ea267…` — prior historical experimental verification boundary.
 - `c6157158…` — superseded pre-remediation candidate; retained for provenance only.
-- `05fa286614bd80576c1f7f4b01f1bdd7fe57ef37` — **post-#151 apparatus commit / new candidate candidate-source boundary**.
+- `05fa286614bd80576c1f7f4b01f1bdd7fe57ef37` — **post-#151 apparatus candidate / new candidate-source boundary**.
 - `02c146d1…` — subsequent candidate-designation/control commit; not the apparatus identity itself.
 - `8625238bb47b9c1c68fcfe8e4a06ce205578d8bd` — current `main` documentation/evidence lineage at last verification.
 
