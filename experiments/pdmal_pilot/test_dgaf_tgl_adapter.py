@@ -51,34 +51,32 @@ def test_canonical_serialization_is_deterministic(state: ConsensusState) -> None
 
 def test_decision_mapping_is_structured_and_finite() -> None:
     audit = TurnAuditRecord(
-        session_id="s",
-        turn_index=1,
-        agent_id="a",
-        input_hash="x",
-        gate_records=[],
-        final_status=TurnStatus.PASS,
+        session_id="s", turn_index=1, agent_id="a", input_hash="x",
+        gate_records=[], final_status=TurnStatus.PASS,
         timestamp="2026-01-01T00:00:00+00:00",
     )
     assert decision_from_audit(audit) == "NO_CHANGE"
 
     audit = TurnAuditRecord(
-        session_id="s",
-        turn_index=1,
-        agent_id="a",
-        input_hash="x",
-        gate_records=[],
-        final_status=TurnStatus.WARN,
+        session_id="s", turn_index=1, agent_id="a", input_hash="x",
+        gate_records=[], final_status=TurnStatus.WARN,
         timestamp="2026-01-01T00:00:00+00:00",
     )
     assert decision_from_audit(audit) == "CONSERVATIVE_MIX"
 
     audit = TurnAuditRecord(
-        session_id="s",
-        turn_index=1,
-        agent_id="a",
-        input_hash="x",
-        gate_records=[],
-        final_status=TurnStatus.KILL,
+        session_id="s", turn_index=1, agent_id="a", input_hash="x",
+        gate_records=[], final_status=TurnStatus.KILL,
+        timestamp="2026-01-01T00:00:00+00:00",
+    )
+    assert decision_from_audit(audit) == "FAIL_CLOSED"
+
+
+def test_unwired_required_gate_is_not_treated_as_treatment_outcome() -> None:
+    audit = TurnAuditRecord(
+        session_id="s", turn_index=1, agent_id="a", input_hash="x",
+        gate_records=[GateRecord(1, "P-31", "SCPE_Prune", GateResult.SKIP, "not wired")],
+        final_status=TurnStatus.ESCALATE,
         timestamp="2026-01-01T00:00:00+00:00",
     )
     assert decision_from_audit(audit) == "FAIL_CLOSED"
@@ -86,13 +84,8 @@ def test_decision_mapping_is_structured_and_finite() -> None:
 
 def test_pdmal_gate_controls_isolation_decision() -> None:
     audit = TurnAuditRecord(
-        session_id="s",
-        turn_index=1,
-        agent_id="a",
-        input_hash="x",
-        gate_records=[
-            GateRecord(2, "P-33", "PDMAL_ConvergenceMonitor", GateResult.WARN)
-        ],
+        session_id="s", turn_index=1, agent_id="a", input_hash="x",
+        gate_records=[GateRecord(2, "P-33", "PDMAL_ConvergenceMonitor", GateResult.WARN)],
         final_status=TurnStatus.PASS,
         timestamp="2026-01-01T00:00:00+00:00",
     )
@@ -115,17 +108,15 @@ def test_adapter_invokes_verified_tgl_without_pilot_authorization(state: Consens
     result = adapter.run_turn(state)
     assert result.attempt_status.value in {"SUCCESS", "FAILURE"}
     assert result.decision in {
-        "NO_CHANGE",
-        "CONSERVATIVE_MIX",
-        "ISOLATE_FAILED_NEIGHBORS",
-        "FAIL_CLOSED",
+        "NO_CHANGE", "CONSERVATIVE_MIX", "ISOLATE_FAILED_NEIGHBORS", "FAIL_CLOSED",
     }
+    assert result.decision == "FAIL_CLOSED"
     assert len(result.input_hash) == 64
     assert len(result.audit_seal_hash) == 64
+    assert result.audit.turn_index == state.iteration + 1
 
 
 def test_adapter_and_tgl_share_exact_input_identity(state: ConsensusState) -> None:
-    """The adapter and canonical TGL must bind the identical full SHA-256 digest."""
     adapter = DGAF_TGLAdapter(session_id="provenance-test")
     result = adapter.run_turn(state)
     expected = hashlib.sha256(result.input_text.encode("utf-8")).hexdigest()

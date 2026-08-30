@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from queue import Empty
 from time import monotonic, sleep
-from typing import Callable, Protocol
+from typing import Any, Callable, Protocol
 
 import numpy as np
 
@@ -206,6 +206,7 @@ class ConsensusTrialResult:
     iterations_completed: int
     attempt_status: AttemptStatus
     deviation: str | None = None
+    governance_trace: tuple[dict[str, Any], ...] = ()
 
     @property
     def consensus_success(self) -> bool:
@@ -295,10 +296,13 @@ class ConsensusTask:
         try:
             result = adapter.run_turn(state)
         except Exception as exc:
-            return values, AttemptStatus.FAILURE, f"dgaf-adapter-error:{type(exc).__name__}: {exc}"
+            return values, AttemptStatus.FAILURE, f"dgaf-adapter-error:{type(exc).__name__}: {exc}", None
+        governance_trace = result.audit.to_dict()
+        governance_trace["decision"] = result.decision
+        governance_trace["outcome"] = result.attempt_status.value
         if result.decision == "FAIL_CLOSED" or result.next_values is None:
-            return values, AttemptStatus.FAILURE, "dgaf-fail-closed"
-        return np.asarray(result.next_values, dtype=float), AttemptStatus.SUCCESS, None
+            return values, AttemptStatus.FAILURE, "dgaf-fail-closed", governance_trace
+        return np.asarray(result.next_values, dtype=float), AttemptStatus.SUCCESS, None, governance_trace
 
     def run_detailed(self, *, seed: int, attempt: int = 1) -> ConsensusTrialResult:
         del attempt
@@ -308,6 +312,7 @@ class ConsensusTask:
         failed: set[int] = set()
         failure_history: tuple[tuple[int, ...], ...] = ()
         deviation: str | None = None
+        governance_trace: list[dict[str, Any]] = []
 
         for iteration in range(CONSENSUS_ITERATIONS):
             if iteration == FAILURE_INJECTION_ITERATION:
@@ -328,23 +333,27 @@ class ConsensusTask:
             elif self.condition == "static":
                 values, status = self._static_update(values, graph, active_neighbors), AttemptStatus.SUCCESS
             else:
-                values, status, deviation = self._dgaf_update(
+                values, status, deviation, trace = self._dgaf_update(
                     seed=seed, iteration=iteration, values=values, graph=graph, alive=alive,
                     active_neighbors=active_neighbors, failure_history=failure_history,
                     failure_count_current=failure_count_current, failure_count_total=failure_count_total,
                 )
+                if trace is not None:
+                    governance_trace.append(trace)
 
             if status is AttemptStatus.FAILURE:
                 return ConsensusTrialResult(
                     trial_key, self.condition, self.topology, self.failure_count, failure_nodes,
                     initial_values, tuple(float(x) for x in values), float(np.std(values)),
                     graph_fingerprint(graph), iteration + 1, AttemptStatus.FAILURE, deviation,
+                    tuple(governance_trace),
                 )
 
         return ConsensusTrialResult(
             trial_key, self.condition, self.topology, self.failure_count, failure_nodes,
             initial_values, tuple(float(x) for x in values), float(np.std(values)),
             graph_fingerprint(graph), CONSENSUS_ITERATIONS, AttemptStatus.SUCCESS, deviation,
+            tuple(governance_trace),
         )
 
     def run(self, *, seed: int, condition: str, attempt: int) -> AttemptStatus:
