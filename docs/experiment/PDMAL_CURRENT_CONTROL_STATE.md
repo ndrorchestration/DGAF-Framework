@@ -2,86 +2,65 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-29
-applies_to_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
+last_verified: 2026-08-30
+applies_to_sha: 303f4424d2198f0d0cf76305c589263dd1e417dc
 ---
 
 # PDMAL Current Control State
 
-This is the current pre-authorization control record. Historical evidence remains scoped to its exact tested SHA; implemented controls are not equivalent to executed verification evidence.
+This is the current pre-authorization control record. Historical evidence remains scoped to its exact tested SHA; implemented controls are not equivalent to executed experimental verification evidence.
 
 ## Current state
 
 | Control | State | Evidence / blocker |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is provenance only |
-| Current verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
-| Exact-tree E2b | CLOSED / VERIFIED | Exact-tree run `33047380487` is valid for `d299dd152…`; the corrected workflow boundary is separately scoped and must not be conflated with that historical exact-tree record |
-| Exact-candidate M6 | CLOSED / VERIFIED | Governance CI run `33050398324`; exact candidate `ac8ea267…`; retained negative-state artifact independently hash-verified with digest `sha256:dabe2f1909535671e795bb8c1cad0ef0840be4732acebff8f1a340c62b4943b6` |
-| Corrected runner | CANDIDATE | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates are implemented; empirical execution evidence remains absent |
-| TGL contract | ENGINEERING REMEDIATION PRESENT / EXACT-HEAD VERIFICATION PENDING | The prior 41-pass / 2-fail regression at the TGL → P-35 boundary was isolated and remediated in current PR #139. PRs #132/#133/#134 are historical/superseded records. The current v1/TGL implementation adds explicit required-gate semantics, deterministic WARN/ESCALATE/KILL reduction, exception containment, and exact final audit sealing. Fresh exact-head CI remains required before the engineering implementation is described as verified. |
-| P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN FOR FREEZE BINDING | Primary contrast selected; exact protocol/candidate/freeze binding remains required |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Implementation/configuration controls exist; complete candidate-scoped closure package remains incomplete |
-| Candidate governance verification | PARTIALLY CLOSED | Exact-scope E2b/M6 are closed for their stated boundaries; later repository/engineering commits do not inherit that evidence automatically |
-| Artifact contract | PARTIAL | End-to-end semantics and adversarial tests exist; fresh candidate-scoped evidence for the full artifact contract remains required |
-| Blinding custody | PARTIAL | Synthetic/control evidence exists; operational custody and unblinding procedure remain evidence-bound |
+| Current engineering/production source | VERIFIED | `303f4424d2198f0d0cf76305c589263dd1e417dc`; production Vercel deployment is READY and exact SHA-bound |
+| Historical experimental verification boundary | HISTORICAL / CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`; not silently promoted |
+| Corrected runner | IMPLEMENTED / EVIDENCE GATED | Explicit `ffcr_success`, schema validation, sidecar verification, and matrix coordinates implemented; authorized execution evidence absent |
+| TGL contract | VERIFIED ENGINEERING CONTROL | Current integrated implementation has required-gate SKIP escalation, fail-closed handling, authority semantics, and final audit sealing; current exact engineering CI passed |
+| P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN FOR FREEZE BINDING | `dgaf` vs `null`, FFCR, paired root-seed estimand adopted; exact freeze binding remains required |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Implementation exists; complete final-apparatus evidence package remains incomplete |
+| Artifact contract | IMPLEMENTED / OPEN | `pilot_artifact_schema.py` enforces structure/hash/matrix/FFCR integrity; fresh authorized execution evidence required |
+| Blinding custody | OPEN | Operational custody evidence and separation still required |
 | Durable retention | OPEN | Archive destination plus independent retrieval/hash proof required |
-| Runtime-dependent verification | PARTIAL / APPLICABILITY REQUIRED | Candidate-scoped P2/P6a evidence or a pre-specified justified applicability decision is required |
-| P9 independent verification | NOT EXECUTED | Must be independent of candidate self-validation |
+| P2 runtime | BLOCKED / OPEN | Authenticated workflow dispatch required against exact production deployment |
+| P6a CORS | BLOCKED / OPEN | Authenticated workflow dispatch required against same deployment |
+| P9 independent verification | NOT EXECUTED | Independent audit/reproduction still required |
 | New freeze | NOT CREATED | Historical freeze cannot be reused |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | N = 0 | No authorized pilot execution |
 
+## Production provenance
+
+- Main merge SHA: `303f4424d2198f0d0cf76305c589263dd1e417dc`
+- Vercel deployment: `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`
+- Target: `production`
+- State: `READY`
+- Vercel Git SHA: exact match
+- `/api/health`: HTTP `200 OK`
+- Runtime: Node `v24.18.0`
+
+Production provenance is CLOSED. This does not close P2/P6a or authorize experimental execution.
+
 ## TGL / P-35 remediation boundary
 
-The historical PR #132 regression remains a provenance record: its 41-pass / 2-fail result identified concrete TGL/P-35 contract failures, including constructor/method incompatibility, missing premise-hook injection, weakened exception containment, incomplete status reduction, ambiguous SKIP semantics, and audit-seal sequencing.
-
-Those remediation concerns are now consolidated into **PR #139**, the current combined engineering lane for DGAF v1 control-plane and TGL contract hardening. PRs #132/#133/#134 are closed historical/superseded records and must not be treated as current execution authorities or experimental apparatus identities.
-
-The current TGL implementation distinguishes:
-
-- unwired required-gate `SKIP` → `ESCALATE`;
-- `WARN` propagation;
-- terminal failure → downstream stop;
-- conditional HPG `SKIP` when Phi-Closure is not `PASS`;
-- invalid hook results and hook exceptions → fail-closed terminal failure;
-- exact final returned gate-set sealing, including Herald.
-
-Requiredness is declared rather than inferred solely from step numbers. The final audit seal must represent exactly the authoritative audit object returned to downstream consumers.
-
-## Candidate and documentation boundary
-
-The current verification boundary is `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Documentation-only commits may clarify verification records but do not redefine the apparatus. A substantive protocol, analysis, runner, artifact, or evidence change creates a new candidate cycle.
-
-Historical references must retain the identity of what was actually examined. Zero-count cleanup is not a valid reason to rewrite historical provenance.
-
-## P7 boundary
-
-P7 is **technically adjudicated but formally open for freeze binding**. The primary treatment/reference boundary — full `dgaf` versus `null` — is selected, and FFCR is the primary outcome with seed as the paired analysis unit. Formal closure for the experimental freeze still requires exact candidate/protocol/analysis binding and the remaining governance predicates. P7 content must not be treated as empirical evidence or authorization.
-
-## P8 boundary
-
-P8 is explicitly fail-closed. Candidate implementation work—including analysis code, explicit FFCR artifact semantics, adversarial contract tests, CI wiring, and candidate bindings—does not close P8 until the applicable checklist items have executed candidate-scoped evidence.
-
-## Independent audit and authorization boundary
-
-Independent verification should include adversarial preflight appropriate to the candidate's claims, including candidate identity reconciliation, artifact substitution resistance, blinding-boundary checks, and enforcement of relevant runtime constraints. Independent audit must not merely repeat candidate self-validation through the same assumptions.
-
-Authorization is considered only after the required predicate evidence and freeze boundary are satisfied. Freeze is not authorization; authorization is not empirical efficacy.
+Historical PR #132/#133/#134 records remain diagnostic/provenance records. The repaired semantics are integrated in current main and were validated in current engineering CI. No historical record is promoted across SHA boundaries.
 
 ## Required next evidence events
 
-1. Complete exact-head validation of PR #139's consolidated TGL/control-plane remediation.
-2. Complete P7 exact candidate/protocol/analysis binding.
-3. Complete remaining P8 artifact, environment, reproducibility, custody, and runtime-dependent evidence.
-4. Complete authenticated P2/P6a where required, using the exact candidate/deployment identity.
-5. Retain run IDs, exact SHA/ref/event, logs, and artifact integrity values.
-6. Complete durable evidence custody with independent retrieval/hash proof.
-7. Complete operational blinding custody and formal unblinding readiness without exposing the key.
-8. Prepare and execute independent P9 verification.
-9. Derive the complete pre-freeze predicate matrix only from candidate-scoped evidence.
-10. Create an immutable freeze after pre-freeze closure.
-11. Independently verify the freeze.
-12. Obtain explicit pilot authorization before empirical execution.
+1. Execute authenticated P2 against the exact production deployment.
+2. Execute authenticated P6a against the same deployment identity.
+3. Retain and independently inspect P2/P6a artifacts/logs.
+4. Complete P3 candidate-scoped artifact execution evidence.
+5. Complete P4 operational blinding/custody evidence.
+6. Complete P5 environment/topology/RNG reproducibility evidence.
+7. Complete P6 durable archive/retrieval/hash evidence.
+8. Bind P7 to the exact final protocol/apparatus/analysis/freeze identity.
+9. Close P8 from candidate-scoped evidence.
+10. Prepare and execute independent P9 verification.
+11. Create and independently verify a new immutable freeze.
+12. Obtain explicit pilot authorization.
+13. Only then perform the blinded pilot.
 
 **No empirical execution is authorized by this record. N = 0. Authorization is NOT GRANTED.**
