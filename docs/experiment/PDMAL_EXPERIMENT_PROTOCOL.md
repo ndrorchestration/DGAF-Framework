@@ -3,7 +3,7 @@ status: ACTIVE
 state: PRE-FREEZE
 authority: Both
 owner: DGAF/PDMAL experimental-design control
-last_verified: 2026-08-28
+last_verified: 2026-08-30
 applies_to_sha: CURRENT_SPECIFICATION; EXECUTABLE_CANDIDATE_BOUND_SEPARATELY_BY_P8
 protocol_blob_sha: BOUND_EXTERNALLY_BY_P8_LOCK
 supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
@@ -19,7 +19,9 @@ The PDMAL experiment is designed to characterize the runtime behavior of the DGA
 
 ## 2. Scope
 
-The protocol covers the topology generators, the harness, the task engine, the DGAF adapter, and the runtime characterization and analysis pipeline. It does not cover production-scale operations, long-term persistence, or any empirical claim about DGAF's effectiveness in any real-world setting.
+The protocol covers the topology generators, the harness, the task engine, the seven constitutive components of the canonical DGAF/TGL treatment, the DGAF adapter, and the runtime characterization and analysis pipeline. It does not cover production-scale operations, long-term persistence, or any empirical claim about DGAF's effectiveness in any real-world setting.
+
+The seven constitutive treatment components are P-31 SCPE, P-33 PDMAL Convergence, DemiJoule Safety, P-27 KAPPA, P-29 Sentinel, P-32 Phi Closure, and P-30 Apogee. HPG/step 7, Herald/step 9, and other historical governance mechanisms not required by the selected canonical treatment remain outside the minimal construct and fail-closed/deferred unless separately adopted in a future governed construct.
 
 ## 3. Protocol Version
 
@@ -48,7 +50,7 @@ The experiment executes the ConsensusTask across the registered topology and con
 | null | Baseline, no DGAF |
 | simple | Simple DGAF configuration |
 | static | Static DGAF configuration |
-| dgaf | Full DGAF configuration |
+| dgaf | Full DGAF configuration using the canonical TGL treatment |
 
 ### 4.4 Endpoint and primary contrast
 
@@ -61,6 +63,12 @@ The experiment executes the ConsensusTask across the registered topology and con
 ### 4.5 Convergence
 
 Consensus threshold `< 0.01` is the convergence criterion for task execution, not an efficacy threshold. Iterations are fixed at 100; there is no convergence-based early stopping.
+
+### 4.6 DGAF treatment semantics
+
+The `dgaf` condition invokes the canonical `DGAF_TGLAdapter` during consensus execution. The canonical TGL required-step set is `{1, 2, 3, 4, 5, 6, 8}`: P-31 SCPE, P-33 convergence, DemiJoule safety, P-27 KAPPA, P-29 Sentinel, P-32 Phi Closure, and P-30 Apogee. A required gate that is not wired is not treated as an implicit pass; it yields `SKIP`, which escalates the turn, and the DGAF adapter fails closed rather than silently substituting a different comparator.
+
+Historical recovery/adaptation of these seven gates must preserve their defined semantics. No numerical proxy or field substitution is accepted merely for convenience. Gate-specific semantic recovery is governed by `docs/experiment/R5_R7_GATE_SEMANTIC_RECOVERY_MAP_2026-08-30.md`.
 
 ## 5. Analysis boundary
 
@@ -78,12 +86,16 @@ Historical characterization artifacts remain evidence only for the exact SHA and
 
 The protocol remains pre-freeze. The following remain open:
 
+- R1–R4 semantic recovery for each of the seven constitutive gates
+- R5–R7 implementation, candidate binding, and verification of any gate requiring restoration/adaptation
 - Formal P7 freeze binding and closure
 - Candidate-scoped P8 implementation/configuration verification and hash binding
 - Exact protocol blob SHA binding through the P8 analysis lock
 - Freeze commit SHA
 - Independent verification
 - Separate pilot authorization
+
+Non-required historical governance mechanisms remain deferred and are not pre-N=1 blockers.
 
 ## 7. Evidence boundary
 
