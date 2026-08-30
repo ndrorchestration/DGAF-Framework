@@ -4,7 +4,7 @@
 
 **Base:** `main` at current tip `cf9d2738f2210f270855869e7ccd0eb660838025`
 
-**Current confirmed head:** `941c9361c9770078b9eccde70a97ea53a569c8d4`
+**Current confirmed head:** `235d4a951bc05d92e188a3e256cd683bc7e9b372`
 
 **Scope:** DGAF v1 governed recursive control-plane contracts and tests, TGL contract remediation, governance documentation, and dedicated CI.
 
@@ -27,13 +27,22 @@ Architecture mapping, file-tree placement, agent-role mapping, immutable Governa
 
 ## Verification state
 
-The substantive implementation checkpoint `a728ce3…` passed the dedicated v1 contract suite **41/41**. The integrated branch subsequently incorporated current `main` through a non-destructive two-parent merge and later documentation/governance/CI provenance-hardening changes.
+The substantive implementation checkpoint `a728ce3…` passed the dedicated v1 contract suite **41/41**. The integrated branch subsequently incorporated current `main` through a non-destructive two-parent merge and received later documentation/governance/CI provenance corrections.
 
-The current candidate head is `941c9361…`, created solely to reconcile the candidate-internal status document with the actual GitHub PR head. Fresh exact-head validation has been triggered for this resulting SHA; historical verification is not being generalized across the SHA boundary.
+Fresh exact-head validation was executed for the current candidate `235d4a95…`. The current exact-head wave passed all substantive DGAF/PDMAL engineering, governance, security, pre-freeze, evidence, regression, and integrity workflows. The repository-wide generic Doc Lint workflow remains a separate legacy documentation-quality failure and is not treated as a DGAF apparatus failure.
 
 ## External deployment boundary
 
-Issue #137 is the canonical deployment/source-provenance tracker. A green or rate-limited Vercel status does not by itself establish exact deployment-source identity.
+Issue #137 is the canonical deployment/source-provenance tracker. A Vercel deployment sourced from the exact current candidate SHA has now been observed:
+
+- Deployment: `dpl_DZDtPT1RyZ5x2RrYij59Xzy95KZt`
+- State: `READY`
+- Git SHA: `235d4a951bc05d92e188a3e256cd683bc7e9b372`
+- PR: `#139`
+- Target: Vercel API reports `target=null`, therefore this is a branch/preview deployment, not a production deployment.
+- `/api/health`: HTTP 200 with runtime metadata and no current project runtime errors detected in the selected 24-hour window.
+
+This closes exact candidate-source preview provenance and runtime-health evidence, but it does **not** close the production deployment predicate. Production-source verification remains a post-merge requirement.
 
 ## Experimental boundary
 
