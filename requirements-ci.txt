@@ -11,6 +11,7 @@ black==26.5.1
 isort==8.0.1
 pydantic==2.13.4
 jsonschema==4.26.0
+numpy==2.5.1
 setuptools>=83.0.0,<84
 bandit==1.9.4
 safety==3.8.1
