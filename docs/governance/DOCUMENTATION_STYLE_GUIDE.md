@@ -114,9 +114,9 @@ Detailed records may use exact filenames when precision is useful.
 
 Technical detail belongs in technical documents. Do not simplify away information required to reproduce a result, understand a contract, or audit provenance. Instead, separate layers so readers can choose their depth.
 
-A good hierarchy is:
+### Documentation depth hierarchy
 
-**overview → architecture → contract → implementation → evidence → audit trail**
+`overview → architecture → contract → implementation → evidence → audit trail`
 
 ## 11. Public-facing social quality
 
