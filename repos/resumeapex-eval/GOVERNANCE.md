@@ -15,7 +15,7 @@
 ## Applicable NDR Patterns
 
 | Pattern | Class | Role in this repo |
-|---------|-------|-------------------|
+|---|---|---|
 | NDR-133 | BLOCKING-ABSOLUTE | Personal Document Firewall — no PII/resume data to GitHub |
 | P-30 Apogee-Attestation-Gate | BLOCKING | Final gate before any eval output is promoted |
 | P-11 11Q Attestation Scoring | BLOCKING | Quantitative scoring for all evaluations |
@@ -30,4 +30,6 @@
 
 ---
 
-*φ = 1.61818 · Amethyst host · DemiJoule supervisor · Apogee Lens verifier*
+### Governance signatures
+
+φ = 1.61818 · Amethyst host · DemiJoule supervisor · Apogee Lens verifier
