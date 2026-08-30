@@ -13,7 +13,9 @@ This index distinguishes project records from externally validated facts. A regi
 
 Use the evidence states consistently:
 
-**DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
+### Evidence state progression
+
+`DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`
 
 Commercialization, legal/trademark status, and epistemic status are independent dimensions.
 
@@ -25,7 +27,9 @@ Operational records distinguish **representation, classification, policy status,
 
 The canonical semantic progression is:
 
-**defined → observed → supported → verified → authorized → canonical**
+### Semantic progression
+
+`defined → observed → supported → verified → authorized → canonical`
 
 Ontology drift is an unauthorized change in effective vocabulary, entity boundaries, relations, or semantic commitments. The broader semantic-risk taxonomy is **definition drift, ontology drift, epistemic drift, policy drift, and provenance drift**.
 
