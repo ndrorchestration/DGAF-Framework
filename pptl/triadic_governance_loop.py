@@ -67,9 +67,13 @@ class TurnAuditRecord:
     seal_hash: str = field(default="", init=False)
 
     def seal(self) -> str:
+        gates_payload = "|".join(
+            f"{g.step}:{g.pattern}:{g.gate_name}:{g.result.value}:{g.notes}"
+            for g in self.gate_records
+        )
         payload = (
             f"{self.session_id}|{self.turn_index}|{self.agent_id}|"
-            f"{self.input_hash}|{self.final_status}|{self.timestamp}"
+            f"{self.input_hash}|{self.final_status}|{self.timestamp}|{gates_payload}"
         )
         self.seal_hash = hashlib.sha256(payload.encode()).hexdigest()
         return self.seal_hash
@@ -103,7 +107,7 @@ class TGLHooks:
     """
     Hook functions wired to each TGL step.
     Each hook: (input_text: str, context: dict) -> GateResult
-    None = SKIP (gate not wired in this deployment, passes through).
+    None = SKIP (gate not wired in this deployment).
 
     Minimum viable wiring: premise_gate is always populated.
     All other gates are optional for incremental integration.
@@ -136,13 +140,7 @@ class TriadicGovernanceLoop:
         (9, "P-01", "Herald_FanOut"),
     ]
 
-    def __init__(
-        self,
-        session_id: str,
-        agent_id: str,
-        hooks: TGLHooks,
-        turn_counter: int = 0,
-    ) -> None:
+    def __init__(self, session_id: str, agent_id: str, hooks: TGLHooks, turn_counter: int = 0) -> None:
         self.session_id = session_id
         self.agent_id = agent_id
         self.hooks = hooks
@@ -158,18 +156,10 @@ class TriadicGovernanceLoop:
         return self._turn_counter
 
     def _hash_input(self, text: str) -> str:
-        # Full SHA-256 is required for candidate/provenance identity binding.
         return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-    def _run_hook(
-        self,
-        hook_fn: Optional[Callable],
-        input_text: str,
-        context: dict,
-        step: int,
-        pattern: str,
-        gate_name: str,
-    ) -> GateRecord:
+    def _run_hook(self, hook_fn: Optional[Callable], input_text: str, context: dict,
+                  step: int, pattern: str, gate_name: str) -> GateRecord:
         if hook_fn is None:
             return GateRecord(step, pattern, gate_name, GateResult.SKIP, "not wired")
         try:
@@ -179,25 +169,9 @@ class TriadicGovernanceLoop:
         except Exception as exc:
             return GateRecord(step, pattern, gate_name, GateResult.KILL, str(exc)[:120])
 
-    def run_turn(
-        self,
-        input_text: str,
-        context: Optional[dict] = None,
-    ) -> TurnAuditRecord:
-        """
-        Execute full 10-step governance sequence for one turn.
-
-        HPG is strictly downstream-gated: step 7 executes only when the
-        Phi-Closure gate at step 6 returns PASS. When step 6 is WARN or SKIP,
-        step 7 is recorded as SKIP and no HPG hook is invoked.
-
-        Returns TurnAuditRecord sealed with SHA-256.
-        Raises PremiseViolationError at Step 0 if constitutional invariant violated.
-        Raises RuntimeError for terminal gate failures at steps 3–6.
-        """
+    def run_turn(self, input_text: str, context: Optional[dict] = None) -> TurnAuditRecord:
         if context is None:
             context = {}
-
         self._turn_counter += 1
         input_hash = self._hash_input(input_text)
         timestamp = datetime.now(timezone.utc).isoformat()
@@ -205,22 +179,11 @@ class TriadicGovernanceLoop:
         final_status = TurnStatus.PASS
 
         try:
-            self._premise_gate.evaluate(
-                input_text,
-                check_fn=self.hooks.premise_check_fn,
-            )
+            self._premise_gate.evaluate(input_text, check_fn=self.hooks.premise_check_fn)
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.PASS))
         except PremiseViolationError as exc:
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, str(exc)[:120]))
-            rec = TurnAuditRecord(
-                session_id=self.session_id,
-                turn_index=self._turn_counter,
-                agent_id=self.agent_id,
-                input_hash=input_hash,
-                gate_records=gates,
-                final_status=TurnStatus.KILL,
-                timestamp=timestamp,
-            )
+            rec = TurnAuditRecord(self.session_id, self._turn_counter, self.agent_id, input_hash, gates, TurnStatus.KILL, timestamp)
             rec.seal()
             if self.hooks.herald_fn:
                 self.hooks.herald_fn(rec.to_dict(), context)
@@ -239,27 +202,18 @@ class TriadicGovernanceLoop:
         for step, pattern, gate_name, hook_fn in hook_sequence:
             rec = self._run_hook(hook_fn, input_text, context, step, pattern, gate_name)
             gates.append(rec)
-
             if step == 6:
                 phi_closure_result = rec.result
                 if rec.result == GateResult.KILL:
                     final_status = TurnStatus.KILL_REC
                     break
-
             if rec.result == GateResult.KILL:
                 final_status = TurnStatus.KILL
                 break
 
         if not any(g.step == 6 and g.result == GateResult.KILL for g in gates):
             if phi_closure_result == GateResult.PASS:
-                rec = self._run_hook(
-                    self.hooks.hpg_fn,
-                    input_text,
-                    context,
-                    7,
-                    "N/A",
-                    "HPG_OctaveGate",
-                )
+                rec = self._run_hook(self.hooks.hpg_fn, input_text, context, 7, "N/A", "HPG_OctaveGate")
             else:
                 rec = GateRecord(7, "N/A", "HPG_OctaveGate", GateResult.SKIP, "Phi-Closure did not PASS")
             gates.append(rec)
@@ -267,17 +221,15 @@ class TriadicGovernanceLoop:
                 final_status = TurnStatus.KILL
 
         if final_status in {TurnStatus.PASS, TurnStatus.WARN, TurnStatus.ESCALATE}:
-            rec = self._run_hook(
-                self.hooks.apogee_fn,
-                input_text,
-                context,
-                8,
-                "P-30",
-                "Apogee_AttestationGate",
-            )
+            rec = self._run_hook(self.hooks.apogee_fn, input_text, context, 8, "P-30", "Apogee_AttestationGate")
             gates.append(rec)
             if rec.result == GateResult.KILL:
                 final_status = TurnStatus.KILL
+
+        if final_status == TurnStatus.PASS:
+            required_skip_steps = [g.step for g in gates if 1 <= g.step <= 8 and g.result == GateResult.SKIP]
+            if required_skip_steps:
+                final_status = TurnStatus.ESCALATE
 
         audit = TurnAuditRecord(
             session_id=self.session_id,
@@ -294,8 +246,10 @@ class TriadicGovernanceLoop:
             self.hooks.herald_fn,
             input_text,
             {**context, "audit_record": audit.to_dict()},
-            9, "P-01", "Herald_FanOut",
+            9,
+            "P-01",
+            "Herald_FanOut",
         )
         gates.append(herald_rec)
-
+        audit.seal()
         return audit

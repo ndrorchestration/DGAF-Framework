@@ -10,6 +10,14 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _active_authority_section(matrix: str) -> str:
+    start_marker = "## 2. Current Authority Baseline"
+    end_marker = "## 3. Shared Layer-0 Constitutional Substrate"
+    start = matrix.index(start_marker) + len(start_marker)
+    end = matrix.index(end_marker, start)
+    return matrix[start:end]
+
+
 def test_authority_matrix_is_present_and_scoped():
     matrix = _read(MATRIX)
     invariant = _read(INVARIANT)
@@ -36,6 +44,7 @@ def test_matrix_preserves_non_delegation_boundaries():
 
 def test_matrix_contains_current_specialists():
     matrix = _read(MATRIX)
+    active = _active_authority_section(matrix)
     for agent in (
         "Amethyst",
         "Apogee",
@@ -55,9 +64,10 @@ def test_matrix_contains_current_specialists():
         "Reciprocity",
         "Sentinel-Φ",
     ):
-        assert agent in matrix
-    assert "Sentience" not in matrix
-    assert "Sentinel-Φ / Sentinel" not in matrix
+        assert agent in active
+    assert "Sentience" not in active
+    assert "Sentinel-Φ / Sentinel" not in active
+    assert "**Sentience** is a historical/merged identity" in matrix
 
 
 def test_reconciliation_targets_are_explicit():
