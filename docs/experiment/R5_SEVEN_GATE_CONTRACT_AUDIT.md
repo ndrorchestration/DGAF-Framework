@@ -115,3 +115,6 @@
 **Result:** 7/7 FAIL-CLOSED. Per `ee529878` A-classification, a single FAIL-CLOSED constitutive gate blocks the full dgaf N=1 treatment — here **all seven** block it. No RESTORE and no ADAPT-WITH-EXPLICIT-CONTRACT verdicts were issuable: every gate's historical input dimension is absent from `ConsensusState`, and for P-33/DemiJoule the tempting `current_final_std`/`agent_values` sources were explicitly rejected as proxies under the operator invariants. Compounding code-vs-doc contradictions were verified for P-27 (thresholds), P-29 (halt semantics), P-32 (KILL_REC band), P-30 (stub vs CLOSED), and P-31 (firing guard).
 
 **Note on proxy rejection (P-33 & DemiJoule):** `current_final_std` (ensemble std of `agent_values`) and `agent_values` (per-agent agreement scalars) are at best loosely correlated with P-33's weight-graph Frobenius convergence and DemiJoule's six semantic axes. Under `Correlation(X,Y) ≠ Restoration(G_X,Y)` they are **proxies and must be rejected**; no ADAPT mapping was authored.
+
+---
+**SUPERSEDED BY CANONICAL MAIN RECORD:** `docs/experiment/R5_R7_GATE_SEMANTIC_RECOVERY_MAP_2026-08-30.md` (on `main`), which is the authoritative R5 deliverable for Issue #154. This file agrees with it (7/7 FAIL-CLOSED) and is retained only as an independent cross-check. Do not treat this file as the governing record.
