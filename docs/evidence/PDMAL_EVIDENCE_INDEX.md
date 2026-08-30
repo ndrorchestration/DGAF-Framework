@@ -35,15 +35,21 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 | Durable retention | OPEN | Policy present | Operational archive + independent retrieval/hash proof required |
 | Primary contrast | ADJUDICATED / BINDING PENDING | `dgaf` vs `null`; FFCR; paired seed | Scientific target selected; exact freeze binding remains required |
 | Analysis lock | OPEN / FAIL-CLOSED | `PDMAL_ANALYSIS_CONTROL_PLAN.md` / P8 | Exact final apparatus/configuration binding required |
+| P2 runtime | VERIFIED | Run `33300481208`; job `99227568599`; artifact `9728767844`; digest `sha256:cdbf23bf2a754034c9f5f5651b9242c22814669962a43bd59c409a0f7bf610a5` | Authenticated five-case runtime matrix passed against candidate `303f4424d2198f0d0cf76305c589263dd1e417dc` / deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`; artifact `all_pass=true` |
 | P6a CORS runtime | VERIFIED | Run `33302495240`; artifact `9729387603`; digest `sha256:4abaf5d1c32930738296a85d38f5489b2068127795e2ce5e2c30565f2308533c` | Four live CORS cases passed on candidate `303f4424d2198f0d0cf76305c589263dd1e417dc` / deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`; protected Vercel bypass secret consumed; scoped to exact runtime boundary |
-| P2 runtime | BLOCKED / OPEN | P2 workflow present; no qualifying run/artifact established | Authenticated five-case live-runtime evidence remains required |
 | Independent verification | NOT EXECUTED | P9 design | Must verify candidate-scoped evidence independently |
+
+## P2 evidence boundary
+
+P2 is **VERIFIED** for the exact production runtime boundary exercised by authenticated workflow run `33300481208`. The `p2-runtime` job `99227568599` completed successfully and retained artifact `9728767844` with digest `sha256:cdbf23bf2a754034c9f5f5651b9242c22814669962a43bd59c409a0f7bf610a5`. The artifact records `evidence_class = P2_RUNTIME_EXECUTION`, source commit `303f4424d2198f0d0cf76305c589263dd1e417dc`, deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`, endpoint `https://project-7ybao.vercel.app/api/orchestrate`, and `all_pass = true` for the five specified cases.
+
+This is authenticated runtime-contract evidence only. It does not close P3–P6, P8, or P9, establish empirical PDMAL efficacy, create a freeze, grant pilot authorization, or increase empirical N.
 
 ## P6a evidence boundary
 
 P6a is **VERIFIED** for the exact candidate/deployment/origin boundary exercised by run `33302495240`. The retained artifact is `9729387603` with recorded upload digest `sha256:4abaf5d1c32930738296a85d38f5489b2068127795e2ce5e2c30565f2308533c`.
 
-This is runtime/CORS evidence only. It does not close P2, P3, P4, P5, P6, P8, P9, establish empirical efficacy, create a freeze, or grant pilot authorization.
+This is runtime/CORS evidence only. It does not close P3, P4, P5, P6, P8, P9, establish empirical efficacy, create a freeze, or grant pilot authorization.
 
 ## Production provenance
 
@@ -56,11 +62,11 @@ This is runtime/CORS evidence only. It does not close P2, P3, P4, P5, P6, P8, P9
 - Runtime: Node `v24.18.0`
 - Selected production log window: no error/warning entries returned
 
-This is verified deployment/source evidence only. It does not close P2 or authorize experimental execution.
+This is verified deployment/source evidence only. It does not authorize experimental execution.
 
 ## Evidence boundary
 
-Historical acceptance, characterization, synthetic blinding, topology, security, and P6a runtime evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until the explicit authorization chain is completed and a valid paired pilot observation is accepted.
+Historical acceptance, characterization, synthetic blinding, topology, security, P2, and P6a runtime evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until the explicit authorization chain is completed and a valid paired pilot observation is accepted.
 
 ## TGL/P-35 boundary
 
@@ -69,16 +75,15 @@ The TGL/P-35 remediation is now integrated into the current production engineeri
 ## Remaining gate sequence
 
 1. Establish final experimental apparatus identity atop `303f4424…`.
-2. Authenticated P2 five-case runtime verification.
-3. Candidate-scoped P3 artifact-contract execution evidence.
-4. P4 operational blinding/custody evidence.
-5. P5 environment/topology/RNG reproducibility.
-6. P6 durable archive/retrieval/hash evidence.
-7. P7 exact scientific/protocol/apparatus binding.
-8. P8 exact analysis lock and closure.
-9. Independent P9 verification.
-10. New immutable freeze and independent freeze verification.
-11. Explicit pilot authorization.
-12. Authorized blinded pilot execution.
+2. Candidate-scoped P3 artifact-contract execution evidence.
+3. P4 operational blinding/custody evidence.
+4. P5 environment/topology/RNG reproducibility.
+5. P6 durable archive/retrieval/hash evidence.
+6. P7 exact scientific/protocol/apparatus binding.
+7. P8 exact analysis lock and closure.
+8. Independent P9 verification.
+9. New immutable freeze and independent freeze verification.
+10. Explicit pilot authorization.
+11. Authorized blinded pilot execution.
 
-**P6a: VERIFIED. P2: UNVERIFIED. Empirical N: 0. Pilot authorization: NOT GRANTED. Freeze: NOT CREATED.**
+**P2: VERIFIED. P6a: VERIFIED. P3–P6: evidence-gated. P8: OPEN / FAIL-CLOSED. Empirical N: 0. Pilot authorization: NOT GRANTED. Freeze: NOT CREATED.**
