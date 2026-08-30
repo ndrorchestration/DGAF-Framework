@@ -4,7 +4,7 @@
 
 **Base:** `main` at current tip `cf9d2738f2210f270855869e7ccd0eb660838025`
 
-**Current confirmed head:** `dad96fc74c052b6251fc2fe4ae79205b024a741b`
+**Current confirmed head:** `941c9361c9770078b9eccde70a97ea53a569c8d4`
 
 **Scope:** DGAF v1 governed recursive control-plane contracts and tests, TGL contract remediation, governance documentation, and dedicated CI.
 
@@ -29,7 +29,7 @@ Architecture mapping, file-tree placement, agent-role mapping, immutable Governa
 
 The substantive implementation checkpoint `a728ce3…` passed the dedicated v1 contract suite **41/41**. The integrated branch subsequently incorporated current `main` through a non-destructive two-parent merge and later documentation/governance/CI provenance-hardening changes.
 
-The current head is `dad96fc…`. Exact-head evidence is retained separately for this SHA; historical verification from earlier checkpoints must not be generalized to this head without an explicit current-run relationship.
+The current candidate head is `941c9361…`, created solely to reconcile the candidate-internal status document with the actual GitHub PR head. Fresh exact-head validation has been triggered for this resulting SHA; historical verification is not being generalized across the SHA boundary.
 
 ## External deployment boundary
 
