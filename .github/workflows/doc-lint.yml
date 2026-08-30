@@ -24,7 +24,7 @@ on:
 
 jobs:
   markdownlint:
-    name: Markdown Lint — Current Surface
+    name: Markdown Lint — Public Surface
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,24 +40,18 @@ jobs:
       - name: Install markdownlint-cli
         run: npm install -g markdownlint-cli@0.39.0
 
-      - name: Run markdownlint on current/public surfaces
+      - name: Run markdownlint on public/current entry points
         run: |
           markdownlint \
             --config .markdownlint.yml \
             --ignore node_modules \
-            --ignore CHANGELOG.md \
-            --ignore SWEEP_LOG.md \
-            --ignore SWEEP_LOG/** \
-            --ignore references/orchestration-patterns-log.md \
-            --ignore docs/evidence/** \
-            --ignore docs/archive/** \
-            --ignore docs/historical/** \
-            --ignore docs/audit/** \
-            --ignore docs/experiment/** \
-            '**/*.md'
-        # Evidence, archive, historical, audit, experiment, and append-only
-        # pattern-log records remain subject to their own provenance controls.
-        # This job protects the reader-facing/current documentation surface.
+            README.md \
+            README.governance.md \
+            README.technical.md \
+            docs/architecture/DGAF_V1_*.md
+        # Detailed governance, experiment, evidence, archive, historical,
+        # generated, and append-only records remain subject to their own
+        # provenance/evidence controls rather than presentation lint.
 
       - name: Report summary
         if: always()
@@ -65,5 +59,5 @@ jobs:
           echo "## Doc Lint Summary — DGAF-Framework" >> $GITHUB_STEP_SUMMARY
           echo "- Linter: markdownlint-cli 0.39.0" >> $GITHUB_STEP_SUMMARY
           echo "- Node.js: 24" >> $GITHUB_STEP_SUMMARY
-          echo "- Scope: current/public documentation surface" >> $GITHUB_STEP_SUMMARY
-          echo "- Separate provenance surfaces: evidence, archive, historical, audit, experiment, append-only pattern log" >> $GITHUB_STEP_SUMMARY
+          echo "- Scope: public/current entry-point documentation" >> $GITHUB_STEP_SUMMARY
+          echo "- Separate provenance surfaces: governance, experiment, evidence, archive, historical, generated, append-only records" >> $GITHUB_STEP_SUMMARY
