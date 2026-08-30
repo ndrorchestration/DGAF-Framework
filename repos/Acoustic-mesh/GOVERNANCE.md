@@ -28,4 +28,6 @@
 
 ---
 
-*φ = 1.61818 · Amethyst host · DemiJoule supervisor · Apogee Lens verifier*
+### Governance signatures
+
+φ = 1.61818 · Amethyst host · DemiJoule supervisor · Apogee Lens verifier
