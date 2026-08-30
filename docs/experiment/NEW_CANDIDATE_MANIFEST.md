@@ -4,8 +4,9 @@
 manifest_version: 1
 designation_event: NEW_CANDIDATE
 state: PRE-FREEZE / FAIL-CLOSED   # until independent P9 passes
-new_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
-new_candidate_tree_sha: dd662325149c42843d5ca99178ca4399fde6f440
+new_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37   # designated APPARATUS commit (PR #151 merge)
+new_candidate_tree_sha: dd662325149c42843d5ca99178ca4399fde6f440  # designated APPARATUS tree (experiments bind here)
+designation_record_commit: 02c146d1e0cdc423948ac0dfa11e98f812edfb44  # this manifest doc's commit (metadata, NOT apparatus)
 remediation_source:
   pr: 151
   pr_state: MERGED
