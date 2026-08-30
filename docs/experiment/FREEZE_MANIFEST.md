@@ -9,7 +9,7 @@ owner: DGAF/PDMAL experimental-control
 last_verified: 2026-08-30
 historical_freeze_sha: 3510b86889cd341f7a7cf9ab684fd37b2fafd758
 production_engineering_source: 303f4424d2198f0d0cf76305c589263dd1e417dc
-current_mainline_tip: 255d76f6775caf40e758de4d41920f9ce40fda0c
+mainline_tip_at_reconciliation: 255d76f6775caf40e758de4d41920f9ce40fda0c
 current_experimental_verification_boundary: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
 freeze_candidate_sha: NONE — must be explicitly designated after candidate-scoped re-verification
 freeze_commit_sha: NONE
@@ -21,7 +21,7 @@ freeze_author: Ndr Orchestration
 
 This file is the **pre-freeze manifest**. It is not evidence that the corrected apparatus is frozen. The historical implementation freeze at `3510b86889cd341f7a7cf9ab684fd37b2fafd758` is retained as historical provenance and is not current apparatus authority.
 
-The prior experimental verification boundary is `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. The integrated DGAF v1 engineering/production source is `303f4424d2198f0d0cf76305c589263dd1e417dc`, which is an ancestor of the current `main` tip `255d76f6775caf40e758de4d41920f9ce40fda0c`. A comparison of `303f4424…` to current `main` shows only documentation/evidence-surface changes after the engineering integration; no executable apparatus files are changed in that interval.
+The prior experimental verification boundary is `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. The integrated DGAF v1 engineering/production source is `303f4424d2198f0d0cf76305c589263dd1e417dc`, which is an ancestor of the `main` tip observed at reconciliation (`255d76f6775caf40e758de4d41920f9ce40fda0c`). A comparison of `303f4424…` to that main tip shows only documentation/evidence-surface changes after the engineering integration; no executable apparatus files are changed in that interval.
 
 `2a80f8193f4222658c01b1bfe8a94e3ecae8af9f` is also an ancestor of `303f4424…` and therefore is not a competing mainline apparatus tree. References that name `2a80f819…` as the current P8 candidate are superseded lineage references and must not be used as the active verification target.
 
@@ -29,7 +29,7 @@ These identities remain distinct by role:
 
 - `2a80f819…` — historical P8 checklist ancestor;
 - `303f4424…` — integrated DGAF v1 engineering/production source and verified runtime deployment source;
-- `255d76f6…` — current `main` documentation/evidence tip;
+- `255d76f6…` — mainline documentation/evidence tip at reconciliation time;
 - `ac8ea267…` — prior experimental verification boundary, retained as historical/provenance state;
 - **freeze candidate** — not yet designated; must be explicitly established and then verified as one immutable candidate before freeze.
 
@@ -96,9 +96,9 @@ This closes production source/provenance only. P2 and P6a are separately verifie
 
 ## Candidate designation rule
 
-The next experimental candidate must be an explicitly designated immutable Git identity after substantive apparatus work is complete. Because the current `main` tip contains only documentation/evidence changes relative to `303f4424…`, those changes do not by themselves establish a new experimental verification candidate; however, the freeze process must still bind one exact immutable candidate and re-execute any predicates whose evidence requires exact SHA matching.
+The next experimental candidate must be an explicitly designated immutable Git identity after substantive apparatus work is complete. Because the current `main` tip observed at reconciliation contained only documentation/evidence changes relative to `303f4424…`, those changes do not themselves establish that a new executable apparatus was produced; nevertheless, any predicate requiring exact candidate SHA binding must be freshly verified against the formally designated candidate.
 
-Accordingly, **303f4424… is not being silently promoted to the final experimental freeze**, and `255d76f6…` is not being silently treated as already verified. A new candidate designation must precede downstream closure.
+Accordingly, **303f4424… is not being silently promoted to the final experimental freeze**, and the mainline documentation tips are not being silently treated as already verified experimental candidates. A new candidate designation must precede downstream closure.
 
 ## Promotion rule
 
