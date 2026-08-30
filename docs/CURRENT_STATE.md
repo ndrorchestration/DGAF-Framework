@@ -2,22 +2,20 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-29
+last_verified: 2026-08-30
 applies_to_ref: main
 ---
 # DGAF-Framework / PDMAL — Current State
 
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it.
 
-> **Current boundary:** `main` remains the documentation/evidence lineage. PR #139 is the current engineering candidate at `d2c24054edfc44cbb2620e6b2b19eb8df8e23850`. The experimental verification boundary remains candidate-scoped; P7 is scientifically adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
+> **Current boundary:** `main` is the current documentation/evidence lineage. The integrated DGAF v1 engineering/production source is `303f4424d2198f0d0cf76305c589263dd1e417dc`. The designated PDMAL pre-freeze candidate is `c6157158bf0ee4840e99a381a4b99bd2febe2302`; its Vercel production deployment `dpl_8iYrzqsf729RSZRXj698pa4ptbWZ` is READY and exact SHA-bound. Prior P2/P6a runtime evidence remains exact for `303f4424…` and has not been transferred to `c6157158…`. P7 is adopted in substance but formally open pending exact freeze binding; P8 remains open/fail-closed; empirical N = 0; authorization is not granted.
 
-## Canonical engineering lane — 2026-08-29
+## Current engineering/control-plane source
 
-PR #139 (`feat/dgaf-v1-control-plane-finalize-20260829`) is the canonical combined engineering candidate for the governed recursive control plane and TGL contract remediation.
+`303f4424d2198f0d0cf76305c589263dd1e417dc` is the integrated DGAF v1 engineering/production source. It remains the exact source identity for the prior verified production deployment and prior P2/P6a runtime evidence. This engineering identity is not itself a freeze declaration.
 
-**Current PR #139 head:** `d2c24054edfc44cbb2620e6b2b19eb8df8e23850`
-
-The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskState`, `StateRegistry`, `BudgetLedger`, `BranchRegistry`, `CommitGate`, hardened TGL status/sealing semantics, adversarial regression tests, capability-boundary tests, and dedicated CI lanes. It does not rebind PDMAL, create a freeze, authorize a pilot, unblind data, or increase empirical N.
+The earlier PR #139 engineering candidate records remain useful implementation provenance. They must not be interpreted as replacing the current mainline or as experimental freeze evidence unless an exact current predicate is re-established.
 
 ### Current engineering invariants
 
@@ -42,17 +40,42 @@ The candidate includes `GovernanceEnvelope`, deterministic `ControlPlane`/`TaskS
 - invalid gate outcomes do not silently become PASS;
 - final status is reduced again after Herald, so a Herald `WARN`/`KILL` cannot be hidden by an earlier `PASS`.
 
-### Exact-head engineering verification
+## Authoritative experimental state
 
-The dedicated `DGAF v1 Control-Plane Contract` run `33247361730` completed **SUCCESS** on implementation head `a728ce3ee8a024646c0971c9d4f392abaa3d691a`. Exact candidate checkout passed, pinned CI dependency installation passed, and the deterministic control-plane/TGL/adversarial/capability-boundary suite passed **41/41**.
+| Boundary | Status | Meaning |
+|---|---|---|
+| Current `main` | CURRENT DOCUMENTATION/EVIDENCE LINEAGE | `0ced2b0126a89c80acb89228e9a1b4478c276289`; resolve `main` directly for latest repository state |
+| Engineering/production source | VERIFIED | `303f4424…`; integrated DGAF v1 source and exact source of prior production deployment |
+| Designated pre-freeze PDMAL candidate | DESIGNATED / NOT FROZEN | `c6157158…` on `experimental-candidate/2026-08-30-reconciled` |
+| Candidate deployment provenance | VERIFIED | `dpl_8iYrzqsf729RSZRXj698pa4ptbWZ`; READY; Vercel Git SHA exactly matches `c6157158…` |
+| P2 runtime verification | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33300481208` is exact evidence for `303f4424…`; fresh current-candidate execution remains required |
+| P6a CORS verification | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33302495240` is exact evidence for `303f4424…`; fresh current-candidate execution remains required |
+| P3 Artifact Contract | IMPLEMENTED / OPEN | Fresh candidate-scoped execution evidence required |
+| P4 Security / Blinding | OPEN | Operational custody/separation evidence required |
+| P5 Provenance / Reproducibility | OPEN | Candidate-bound environment/topology/RNG evidence required |
+| P6 Durable Evidence Custody | BLOCKED / OPEN | End-to-end archive/retrieval/hash proof required |
+| P7 Scientific Target | ADOPTED / BINDING PENDING | Exact protocol/apparatus/analysis/freeze binding required |
+| P8 Analysis Lock | OPEN / FAIL-CLOSED | Candidate-scoped closure incomplete |
+| P9 Independent Verification | NOT EXECUTED | Independent reproduction/audit required |
+| New immutable freeze | NOT CREATED | No candidate has crossed the freeze boundary |
+| Pilot authorization | NOT GRANTED | Separate explicit governance transition required |
+| Empirical data | N = 0 | No authorized pilot has executed |
 
-That result is scoped to `a728ce3…`. The current integrated candidate `d2c24054…` contains only documentation/governance reconciliation after the tested code head; no later code-changing claim is transferred without fresh exact-head validation.
+## Candidate identity and evidence boundary
 
-### Current-main integration
+The historical identity discrepancy among `2a80f819…`, `303f4424…`, and the `main` lineage has been reconciled. `2a80f819…` is an earlier P8 checklist ancestor; `303f4424…` is the integrated engineering/production source; `ac8ea267…` is a prior experimental verification boundary; and `c6157158…` is the explicitly designated current pre-freeze candidate.
 
-A non-destructive two-parent merge commit incorporated current `main` commit `cf9d2738f2210f270855869e7ccd0eb660838025` into the PR branch without force-moving the ref. The candidate is 0 commits behind current `main`; the mainline capability-boundary commit is content-covered by the PR's expanded capability suite.
+P2 run `33300481208` and P6a run `33302495240` remain exact, valid evidence for `303f4424…` and deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`. They do not become evidence for `c6157158…` merely because the candidate is a descendant or shares the same engineering lineage.
 
-### Canonical agent-role boundary
+## Deployment identity boundary
+
+The designated candidate deployment `dpl_8iYrzqsf729RSZRXj698pa4ptbWZ` is READY and records exact Vercel Git source SHA `c6157158…`. This closes candidate deployment/source provenance only. It does not close P2/P6a runtime predicates, P3–P6, P8, or P9, and it does not authorize experimental execution.
+
+## Candidate-scoped N=1 gate
+
+A bounded N=1 operational-characterization gate is defined for `c6157158…`. The gate is explicitly non-authorizing. It is intended to produce at most an operational characterization and cannot establish DGAF efficacy. N=1 remains unexecuted and empirical N remains 0.
+
+## Canonical agent-role boundary
 
 The current Notion agent registry is authoritative for role identity/intent, while GitHub remains implementation/evidence truth.
 
@@ -66,30 +89,6 @@ The current Notion agent registry is authoritative for role identity/intent, whi
 - Apogee — independent evidence/integrity review and loop validation.
 
 Generic v1 roles are execution contracts and do not create or elevate agent authority.
-
-## Authoritative experimental state
-
-| Boundary | Status | Meaning |
-|---|---|---|
-| Current `main` | CURRENT DOCUMENTATION/EVIDENCE LINEAGE | `cf9d2738…`; resolve `main` directly for latest repository state |
-| PR #139 engineering candidate | VALIDATED IMPLEMENTATION CHECKPOINT / FRESH HEAD VERIFICATION OPEN | `d2c24054…`; last substantive code checkpoint `a728ce3…` passed 41/41 |
-| P7 scientific specification | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Exact freeze binding remains required |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Candidate-scoped closure incomplete |
-| P2 runtime verification | OPEN / NOT EXECUTED | Exact-source deployment and authenticated runtime matrix still required |
-| P6a CORS verification | OPEN / NOT EXECUTED | Exact-source deployment and authenticated runtime matrix still required |
-| New immutable freeze | NOT CREATED | No candidate has crossed freeze boundary |
-| Pilot authorization | NOT GRANTED | Explicit separate governance transition required |
-| Empirical data | N = 0 | No authorized pilot has executed |
-
-## Deployment identity boundary
-
-The observed READY Vercel production deployment remains historical/supporting evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal current `main` `cf9d2738…`. Issue #137 is the canonical deployment-provenance tracker.
-
-Vercel status is not treated as proof of exact deployment source identity. Exact deployment/source verification therefore remains open.
-
-## Engineering-lane consolidation
-
-PR #132/#133/#134 are historical diagnostic/remediation records. PR #139 is the single current engineering lane for the v1 recursive control plane plus the TGL contract remediation.
 
 ## Evidence boundary
 
