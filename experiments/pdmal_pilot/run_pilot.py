@@ -153,6 +153,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "attempt_status": status.value,
                 "consensus_success": bool(result.consensus_success) if result else False,
                 "deviation": result.deviation if result else None,
+                "governance_trace": list(result.governance_trace) if result else [],
             }
             execution_success = status is AttemptStatus.SUCCESS
             recovered = failure_count > 0 and execution_success
@@ -169,6 +170,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "status": "RECOVERED" if recovered else ("SUCCESS" if execution_success else "UNRECOVERED_FAILURE"),
                 "excluded": False, "exclusion_reason": None,
                 "environment_fingerprint": environment_fingerprint,
+                "governance_trace": raw_trial["governance_trace"],
             }
             record["artifact_sha256"] = hashlib.sha256(canonical_json_bytes(record)).hexdigest()
             records.append(record)

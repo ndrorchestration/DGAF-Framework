@@ -138,8 +138,19 @@ def _pdmall_failure_event_requires_isolation(audit: TurnAuditRecord) -> bool:
     return False
 
 
+def _has_unwired_required_gate(audit: TurnAuditRecord) -> bool:
+    """A required SKIP is a configuration defect, never a treatment outcome."""
+    required = TriadicGovernanceLoop.REQUIRED_STEPS
+    return any(
+        gate.step in required and gate.result is GateResult.SKIP
+        for gate in audit.gate_records
+    )
+
+
 def decision_from_audit(audit: TurnAuditRecord) -> str:
-    """Map a verified TGL audit into the finite, frozen decision vocabulary."""
+    """Map a verified TGL audit into the finite, fail-closed decision vocabulary."""
+    if _has_unwired_required_gate(audit):
+        return "FAIL_CLOSED"
     status = audit.final_status
     if status in {TurnStatus.KILL, TurnStatus.KILL_REC}:
         return "FAIL_CLOSED"
@@ -206,11 +217,14 @@ class DGAF_TGLAdapter:
         context = _context_for_state(state)
         input_hash = sha256(input_text.encode("utf-8")).hexdigest()
 
-        # Explicit hooks: unset hooks remain SKIP and cannot become implicit policy.
+        # The adapter is intentionally stateless between process-isolated calls.
+        # Bind the TGL counter to the semantic iteration so the audit index does
+        # not reset to 1 every time a new adapter instance is constructed.
         tgl = TriadicGovernanceLoop(
             session_id=self.session_id,
             agent_id=self.agent_id,
             hooks=TGLHooks(),
+            turn_counter=state.iteration,
         )
         audit = tgl.run_turn(input_text, context=context)
         decision = decision_from_audit(audit)

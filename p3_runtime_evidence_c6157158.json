@@ -1,0 +1,13 @@
+{
+  "candidate": "c6157158bf0ee4840e99a381a4b99bd2febe2302",
+  "deployment": "dpl_8iYrzqsf729RSZRXj698pa4ptbWZ",
+  "endpoint": "https://project-7ybao.vercel.app/api/orchestrate",
+  "all_pass": true,
+  "results": [
+    {"case": "valid_request", "status": 200, "passed": true, "body": "{\"decision\":\"PASS\",\"turn\":1,\"raw_confidence\":0.5,\"effective_confidence\":0.618034,\"hpg_fired\":true}"},
+    {"case": "invalid_body_shape", "status": 400, "passed": true, "body": "{\"decision\":\"REJECT\",\"reason\":\"request body must be a JSON object\"}"},
+    {"case": "confidence_out_of_range", "status": 400, "passed": true, "body": "{\"decision\":\"REJECT\",\"reason\":\"confidence must be a finite number in [0,1]\"}"},
+    {"case": "invalid_turn", "status": 400, "passed": true, "body": "{\"decision\":\"REJECT\",\"reason\":\"turn must be a positive integer\"}"},
+    {"case": "malformed_json", "status": 400, "passed": true, "body": "Invalid JSON"}
+  ]
+}
