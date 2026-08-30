@@ -3,13 +3,13 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-30
-applies_to_sha: c6157158bf0ee4840e99a381a4b99bd2febe2302
+applies_to_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
 scope_note: >-
   This index records evidence and gate state. Historical evidence remains
   scoped to the exact SHA/run that produced it. Candidate verification does
-  not inherit historical verification automatically. Production provenance
-  is closed for the merged engineering source, while experimental evidence
-  for the designated candidate remains separately gated.
+  not inherit historical verification automatically. The post-#151 apparatus
+  candidate is the current designated evidence target; no freeze or
+  authorization is implied.
 ---
 
 # PDMAL Evidence Index
@@ -21,69 +21,61 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 | Evidence | State | Identity | Interpretation |
 |---|---|---|---|
 | Current documentation lineage | CURRENT | `main` | Active control/documentation lineage |
-| Current designated pre-freeze candidate | DESIGNATED / NOT FROZEN | `c6157158…` / `experimental-candidate/2026-08-30-reconciled` | Exact target for the next candidate-scoped evidence cycle |
-| Candidate deployment provenance | CLOSED / VERIFIED | `c6157158…` → Vercel `dpl_8iYrzqsf729RSZRXj698pa4ptbWZ` | Production deployment READY; Vercel Git SHA exactly matches candidate |
-| Production source provenance | CLOSED / VERIFIED | `303f4424…` → Vercel `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8` | Prior engineering/production source; not current experimental candidate |
-| Historical experimental verification boundary | HISTORICAL / CANDIDATE-SCOPED | `ac8ea267…` | Historical pre-freeze apparatus evidence; not silently promoted |
+| Current post-#151 apparatus candidate | DESIGNATED / NOT FROZEN | `05fa286…` | Exact target for the current candidate-scoped evidence cycle |
+| Candidate designation/control record | CONTROL RECORD | `02c146d1…` | Records designation only; not apparatus identity |
+| Prior pre-remediation candidate | SUPERSEDED / HISTORICAL | `c6157158…` | Prior candidate cycle; evidence does not transfer |
+| Candidate deployment provenance | VERIFY REQUIRED | post-#151 candidate | Exact deployment must be checked against `05fa286…` before runtime closure |
+| Production source provenance | CLOSED / VERIFIED | `303f4424…` → `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8` | Prior engineering/runtime boundary |
+| Historical experimental verification boundary | HISTORICAL / CANDIDATE-SCOPED | `ac8ea267…` | Historical provenance only |
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b868…` | Historical apparatus only |
-| P8 checklist ancestor | HISTORICAL LINEAGE | `2a80f819…` | Ancestor of integrated engineering source; not a competing apparatus identity |
-| Corrected pilot runner | IMPLEMENTED / EVIDENCE GATED | `pilot_artifact_schema.py` + runner controls | Explicit FFCR outcome, schema/sidecar validation, matrix semantics; current candidate execution evidence still gated |
-| TGL contract | CURRENT ENGINEERING CONTROL / VERIFIED | `303f4424…` lineage | Repaired semantics validated in engineering CI; not experimental authorization |
+| Corrected pilot runner | IMPLEMENTED / EVIDENCE GATED | runner/schema controls | Current candidate execution evidence still required |
+| TGL contract | CURRENT ENGINEERING CONTROL / VERIFIED | post-#151 lineage | Engineering control evidence; not experimental authorization |
 | Environment lock | VERIFY | CI dependency/runtime configuration | Final candidate must bind exact environment fingerprint |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368` | Operational characterization, not efficacy evidence |
 | Blinding operational verification | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935` | Synthetic/control evidence only |
-| Artifact contract | IMPLEMENTED / OPEN | `pilot_artifact_schema.py` + tests | Structural contract implemented; fresh current-candidate execution evidence required |
-| Security controls | VERIFIED FOR ENGINEERING SCOPE | Current Governance/PDMAL security CI | Does not substitute for P4 operational custody |
-| Topology provenance | VERIFY | `PDMAL_TOPOLOGY_FINGERPRINT_MANIFEST.md` | Recompute/bind against exact designated candidate |
-| Durable retention | OPEN | Policy present | Operational archive + independent retrieval/hash proof required |
-| Primary contrast | ADJUDICATED / BINDING PENDING | `dgaf` vs `null`; FFCR; paired seed | Scientific target selected; exact candidate/freeze binding remains required |
+| Artifact contract | IMPLEMENTED / OPEN | `pilot_artifact_schema.py` + tests | Fresh current-candidate execution evidence required |
+| Security controls | VERIFIED FOR ENGINEERING SCOPE | current Governance/PDMAL security CI | Does not substitute for P4 operational custody |
+| Topology provenance | VERIFY | `PDMAL_TOPOLOGY_FINGERPRINT_MANIFEST.md` | Recompute/bind against exact current candidate |
+| Durable retention | OPEN | policy | Operational archive + independent retrieval/hash proof required |
+| Primary contrast | ADJUDICATED / BINDING PENDING | `dgaf` vs `null`; FFCR; paired seed | Exact final candidate/freeze binding remains required |
 | Analysis lock | OPEN / FAIL-CLOSED | P8 control plan | Exact final candidate/configuration binding required |
-| P2 runtime | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33300481208`; artifact `9728767844`; candidate `303f4424…` | Authenticated five-case matrix passed; exact prior-candidate evidence only |
-| P6a CORS runtime | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33302495240`; artifact `9729387603`; candidate `303f4424…` | Four live CORS cases passed; exact prior-candidate evidence only |
-| Independent verification | NOT EXECUTED | P9 design | Must verify the designated candidate evidence chain independently |
+| P2 runtime | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33300481208`; artifact `9728767844`; candidate `303f4424…` | Five-case authenticated runtime evidence; prior-candidate scope only |
+| P6a CORS runtime | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33302495240`; artifact `9729387603`; candidate `303f4424…` | Four-case authenticated CORS evidence; prior-candidate scope only |
+| Independent verification | NOT EXECUTED | P9 design | Must verify the current candidate evidence chain independently |
 
-## Candidate identity reconciliation
+## Candidate identity boundary
 
-The SHA discrepancy has been resolved as a lineage issue rather than two competing mainline apparatus trees.
+- `303f4424…` is the exact prior P2/P6a production/runtime evidence boundary.
+- `c6157158…` is the superseded pre-remediation candidate.
+- `05fa286…` is the post-#151 apparatus/source identity and current designated candidate.
+- `02c146d1…` is the designation/control record for `05fa286…`.
+- `main` is the documentation/evidence lineage and is not itself the apparatus identity.
 
-- `2a80f819…` is an ancestor of `303f4424…` and represents the earlier P8 checklist lineage.
-- `303f4424…` is the integrated engineering/production source and the exact source bound by the verified prior P2/P6a runtime evidence.
-- `255d76f6…` was the mainline documentation/evidence tip observed during reconciliation and descended from `303f4424…`.
-- `c6157158…` is the explicitly designated current pre-freeze candidate and the target for fresh candidate-scoped evidence.
+## Evidence inheritance rule
 
-## P2 evidence boundary
+Historical P2/P6a evidence bound to `303f4424…` is not evidence for `05fa286…`. Pre-#151 P3–P9 evidence bound to `c6157158…` is historical/pre-remediation evidence and is not closure for `05fa286…`.
 
-P2 is **VERIFIED** for run `33300481208`, job `99227568599`, artifact `9728767844`, digest `sha256:cdbf23bf2a754034c9f5f5651b9242c22814669962a43bd59c409a0f7bf610a5`, candidate `303f4424…`, and deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`. All five required cases passed and the artifact records `all_pass = true`.
-
-This is exact prior-candidate evidence. It is not current-candidate evidence for `c6157158…`.
-
-## P6a evidence boundary
-
-P6a is **VERIFIED** for run `33302495240`, artifact `9729387603`, digest `sha256:4abaf5d1c32930738296a85d38f5489b2068127795e2ce5e2c30565f2308533c`, candidate `303f4424…`, and deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`. It remains exact prior-candidate runtime/CORS evidence and does not silently transfer to `c6157158…`.
+A later documentation/control commit does not redefine the apparatus candidate unless executable apparatus behavior changes.
 
 ## Current candidate execution boundary
 
-The designated candidate is `c6157158bf0ee4840e99a381a4b99bd2febe2302`. Vercel deployment `dpl_8iYrzqsf729RSZRXj698pa4ptbWZ` is `READY` and reports Git source SHA exactly matching the designated candidate. This closes candidate deployment/source provenance only; it does not execute P2 or P6a.
+The current designated apparatus candidate is `05fa286614bd80576c1f7f4b01f1bdd7fe57ef37`.
 
-No current-candidate P2 or P6a completion is recorded yet. The existing workflow-dispatch evidence remains bound to `303f4424…`.
-
-## Evidence boundary
-
-Historical acceptance, characterization, synthetic blinding, topology, security, P2, and P6a runtime evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until the explicit authorization chain is completed and a valid paired pilot observation is accepted.
+Before current-candidate P2/P6a closure, an exact deployment identity must be verified against this SHA. Deployment readiness is necessary provenance, not runtime verification.
 
 ## Remaining gate sequence
 
-1. Fresh P2 runtime verification on `c6157158…` using `dpl_8iYrzqsf729RSZRXj698pa4ptbWZ`.
-2. Fresh P6a CORS verification on the same exact candidate/deployment boundary.
-3. Candidate-scoped P3 artifact-contract execution evidence.
-4. P4 operational blinding/custody verification.
-5. P5 environment/topology/RNG reproducibility verification.
-6. P6 durable archive/retrieval/hash verification.
-7. P7 exact scientific/protocol/apparatus/analysis binding.
-8. P8 exact analysis lock and closure.
+1. Verify exact current candidate/deployment identity.
+2. Fresh P2 runtime verification.
+3. Fresh P6a CORS verification.
+4. Candidate-scoped P3 artifact evidence.
+5. Issue #152 gate-contract reconciliation/adaptation work.
+6. P4/P5/P6 current-cycle evidence.
+7. P7 exact scientific/protocol/apparatus binding.
+8. P8 analysis lock and closure.
 9. Independent P9 verification.
-10. New immutable freeze and independent freeze verification.
+10. New immutable freeze and independent verification.
 11. Explicit pilot authorization.
 12. Authorized blinded pilot execution.
 
-**Prior P2/P6a: VERIFIED at `303f4424…`. Current candidate: `c6157158…`, with READY exact-source deployment provenance but no current-candidate runtime verification. P3–P6 evidence-gated. P8 OPEN / FAIL-CLOSED. P9 NOT EXECUTED. Empirical N: 0. Pilot authorization: NOT GRANTED. Freeze: NOT CREATED.**
+**Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
