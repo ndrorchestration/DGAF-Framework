@@ -25,15 +25,15 @@ c6157158…   (designated pre-remediation candidate)
 These artifacts exist on the PR #151 branch and reference `c6157158bf0ee4840e99a381a4b99bd2febe2302`.
 They are **pre-remediation evidence** and MUST NOT be promoted as closure for the post-#151 candidate:
 
-| Artifact | Binding line | Status |
-|----------|--------------|--------|
-| `p3_runtime_evidence_c6157158.json` | `:2 candidate: c6157158…` | HISTORICAL |
-| `P4_Security_Blinding_Attestation.md` | `:3 Candidate SHA c6157158…` | HISTORICAL |
-| `docs/experiment/P5_REPRODUCIBILITY_RECORD.md` | `:1,:4,:10 c6157158…` | HISTORICAL |
-| `docs/experiment/P6_DURABLE_CUSTODY_ATTESTATION.md` | `:5 c6157158…` | HISTORICAL |
-| `docs/GOVERNANCE/P7_BINDING_RECORD_2026-08-30.md` | `:3,:15 c6157158…` | HISTORICAL |
-| `docs/GOVERNANCE/P8_ANALYSIS_LOCK_RECORD_2026-08-30.md` | `:3,:13 c6157158…` | HISTORICAL |
-| `docs/GOVERNANCE/P9_SECOND_PASS_2026-08-30.md` | `:5,:16,:20,:33–34,:50–51,:56–57,:62,:71,:83,:113,:132,:137–138 c6157158…` | HISTORICAL |
+|Artifact|Binding line|Status|
+|---|---|---|
+|`p3_runtime_evidence_c6157158.json`|`:2 candidate: c6157158…`|HISTORICAL|
+|`P4_Security_Blinding_Attestation.md`|`:3 Candidate SHA c6157158…`|HISTORICAL|
+|`docs/experiment/P5_REPRODUCIBILITY_RECORD.md`|`:1,:4,:10 c6157158…`|HISTORICAL|
+|`docs/experiment/P6_DURABLE_CUSTODY_ATTESTATION.md`|`:5 c6157158…`|HISTORICAL|
+|`docs/GOVERNANCE/P7_BINDING_RECORD_2026-08-30.md`|`:3,:15 c6157158…`|HISTORICAL|
+|`docs/GOVERNANCE/P8_ANALYSIS_LOCK_RECORD_2026-08-30.md`|`:3,:13 c6157158…`|HISTORICAL|
+|`docs/GOVERNANCE/P9_SECOND_PASS_2026-08-30.md`|`:5,:16,:20,:33–34,:50–51,:56–57,:62,:71,:83,:113,:132,:137–138 c6157158…`|HISTORICAL|
 
 **Note on P9 (`4b62916`):** the prior freeze commit `4b62916` named `c6157158` as its candidate.
 Per the corrected state, `4b62916` is a **candidate-binding evidence checkpoint**, NOT an authoritative experiment freeze
