@@ -46,6 +46,22 @@ Advance exactly one state when its acceptance predicates have evidence. Do not c
 
 **Research enhancement:** useful future work but not required for the current observation; defer.
 
+## Required-gate semantic boundary
+
+The seven canonical TGL required gates are constitutive of the selected `dgaf` treatment. Their membership is therefore not optional. However, constitutive membership does not mean historical semantics may be approximated.
+
+Before R5 wiring, each gate must pass the bounded R1–R4 semantic-recovery test recorded in `docs/experiment/R5_R7_GATE_SEMANTIC_RECOVERY_MAP_2026-08-30.md`:
+
+`historical contract → current ConsensusState mapping → information-loss analysis → semantic-fidelity decision`
+
+Allowed results are:
+
+- **RESTORE** — historical semantics can be reinstated without semantic change;
+- **ADAPT** — an explicit governed adapter preserves the treatment definition and declares information loss;
+- **FAIL_CLOSED** — faithful translation is not established.
+
+No proxy substitution is permitted.
+
 ## Evidence inheritance
 
 Evidence does not transfer across apparatus identity changes by default. Historical evidence remains historical unless an explicit inheritance rule demonstrates same apparatus, relevant configuration, execution semantics, evidence predicate, and provenance continuity.
@@ -58,13 +74,7 @@ A material change to treatment semantics, control behavior, execution semantics,
 
 Use: `OBSERVED`, `VERIFIED`, `OPERATIONALLY CHARACTERIZED`, `INFERRED`, `HYPOTHESIZED`, `PLANNED`, `NOT ESTABLISHED`.
 
-Never compress:
-
-- implementation into proof;
-- CI success into efficacy;
-- deployment readiness into validation;
-- N=1 into generalizable effect;
-- verification into empirical support.
+Never compress implementation into proof, CI success into efficacy, deployment readiness into validation, N=1 into generalizable effect, or verification into empirical support.
 
 ## N=1 execution mode
 
@@ -90,6 +100,6 @@ The existence of further desirable rigor is not sufficient to stop a valid state
 
 For the present study:
 
-`F1–F3 remediation → semantic recovery of seven constitutive gates → new candidate → candidate-scoped verification → freeze → authorization → N=1`
+`F1–F3 remediation → R1–R4 semantic recovery of seven constitutive gates → new apparatus candidate → candidate-scoped verification → freeze → authorization → N=1`
 
 HPG, Herald, and unrelated historical governance capabilities remain out of the minimal treatment unless separately adopted by a future governed construct.
