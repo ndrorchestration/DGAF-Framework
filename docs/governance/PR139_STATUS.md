@@ -4,7 +4,7 @@
 
 **Base:** `main` at current tip `cf9d2738f2210f270855869e7ccd0eb660838025`
 
-**Current confirmed head:** `6ecfdf021be0c0883936fbdbfbf01d1625fbca63`
+**Current confirmed head:** `dad96fc74c052b6251fc2fe4ae79205b024a741b`
 
 **Scope:** DGAF v1 governed recursive control-plane contracts and tests, TGL contract remediation, governance documentation, and dedicated CI.
 
@@ -27,9 +27,9 @@ Architecture mapping, file-tree placement, agent-role mapping, immutable Governa
 
 ## Verification state
 
-The substantive implementation checkpoint `7807d956…` passed the dedicated v1 contract suite **40/40**. The integrated branch subsequently incorporated current `main` through a non-destructive two-parent merge and received a TGL Herald-status correction.
+The substantive implementation checkpoint `a728ce3…` passed the dedicated v1 contract suite **41/41**. The integrated branch subsequently incorporated current `main` through a non-destructive two-parent merge and later documentation/governance/CI provenance-hardening changes.
 
-The resulting integrated code head requires fresh exact-head validation because the TGL correction changes implementation semantics. Documentation-only reconciliation does not transfer verification claims across code-changing heads.
+The current head is `dad96fc…`. Exact-head evidence is retained separately for this SHA; historical verification from earlier checkpoints must not be generalized to this head without an explicit current-run relationship.
 
 ## External deployment boundary
 
