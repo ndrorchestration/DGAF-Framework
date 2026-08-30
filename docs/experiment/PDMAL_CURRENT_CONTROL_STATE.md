@@ -58,7 +58,7 @@ The post-#151 candidate requires an exact deployment identity check before curre
 2. Execute fresh P2 runtime verification against that exact candidate/deployment.
 3. Execute fresh P6a CORS verification against the same exact candidate/deployment.
 4. Complete P3 candidate-scoped artifact-contract execution evidence.
-5. Reconcile/reify historical P-31/P-27/P-29/P-32/P-30/P-33/DemiJoule contracts under Issue #152 before any gate is restored.
+5. No gate restoration occurs unless genuinely new authoritative semantics for P-31/P-27/P-29/P-32/P-30/P-33/DemiJoule appear. Both the recovery tracking issue (#152) and the R5 planning item (#154) are CLOSED with a 7/7 FAIL-CLOSED determination; do not reopen semantic recovery or repeat R1–R4.
 6. Complete P4 operational blinding/custody evidence.
 7. Complete P5 environment/topology/RNG reproducibility evidence.
 8. Complete P6 durable archive/retrieval/hash evidence.
