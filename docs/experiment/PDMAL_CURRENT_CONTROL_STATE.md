@@ -42,13 +42,15 @@ PR #151 merged as apparatus-changing commit `05fa286…`. That merge establishes
 
 The subsequent designation/control commit `02c146d1…` records candidate designation but is not itself the apparatus identity. Documentation commits after designation do not alter the designated apparatus unless executable apparatus changes occur.
 
+The current `main` documentation/evidence lineage is `291b2adb…` at the last reconciled point; documentation-only commits do not redefine the designated apparatus identity.
+
 ## Historical runtime evidence
 
 P2 run `33300481208` and P6a run `33302495240` remain valid, exact evidence for candidate `303f4424…` and deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`. They are not evidence for `05fa286…`.
 
 ## Candidate deployment/runtime boundary
 
-The post-#151 candidate must have an exact deployment identity verified before current-candidate P2/P6a can close. Deployment readiness alone does not establish runtime predicate completion.
+The post-#151 candidate requires an exact deployment identity check before current-candidate P2/P6a can close. Deployment readiness alone does not establish runtime predicate completion.
 
 ## Required next evidence events
 
