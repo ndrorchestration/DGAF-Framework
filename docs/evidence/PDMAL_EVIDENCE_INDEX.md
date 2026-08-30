@@ -35,7 +35,15 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 | Durable retention | OPEN | Policy present | Operational archive + independent retrieval/hash proof required |
 | Primary contrast | ADJUDICATED / BINDING PENDING | `dgaf` vs `null`; FFCR; paired seed | Scientific target selected; exact freeze binding remains required |
 | Analysis lock | OPEN / FAIL-CLOSED | `PDMAL_ANALYSIS_CONTROL_PLAN.md` / P8 | Exact final apparatus/configuration binding required |
+| P6a CORS runtime | VERIFIED | Run `33302495240`; artifact `9729387603`; digest `sha256:4abaf5d1c32930738296a85d38f5489b2068127795e2ce5e2c30565f2308533c` | Four live CORS cases passed on candidate `303f4424d2198f0d0cf76305c589263dd1e417dc` / deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`; protected Vercel bypass secret consumed; scoped to exact runtime boundary |
+| P2 runtime | BLOCKED / OPEN | P2 workflow present; no qualifying run/artifact established | Authenticated five-case live-runtime evidence remains required |
 | Independent verification | NOT EXECUTED | P9 design | Must verify candidate-scoped evidence independently |
+
+## P6a evidence boundary
+
+P6a is **VERIFIED** for the exact candidate/deployment/origin boundary exercised by run `33302495240`. The retained artifact is `9729387603` with recorded upload digest `sha256:4abaf5d1c32930738296a85d38f5489b2068127795e2ce5e2c30565f2308533c`.
+
+This is runtime/CORS evidence only. It does not close P2, P3, P4, P5, P6, P8, P9, establish empirical efficacy, create a freeze, or grant pilot authorization.
 
 ## Production provenance
 
@@ -48,11 +56,11 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 - Runtime: Node `v24.18.0`
 - Selected production log window: no error/warning entries returned
 
-This is verified deployment/source evidence only. It does not close P2/P6a or authorize experimental execution.
+This is verified deployment/source evidence only. It does not close P2 or authorize experimental execution.
 
 ## Evidence boundary
 
-Historical acceptance, characterization, synthetic blinding, topology, and security evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until the explicit authorization chain is completed and a valid paired pilot observation is accepted.
+Historical acceptance, characterization, synthetic blinding, topology, security, and P6a runtime evidence may establish engineering or operational properties. None establishes empirical PDMAL efficacy. Empirical N remains `0` until the explicit authorization chain is completed and a valid paired pilot observation is accepted.
 
 ## TGL/P-35 boundary
 
@@ -62,16 +70,15 @@ The TGL/P-35 remediation is now integrated into the current production engineeri
 
 1. Establish final experimental apparatus identity atop `303f4424…`.
 2. Authenticated P2 five-case runtime verification.
-3. Authenticated P6a four-case CORS verification.
-4. P3 candidate-scoped artifact-contract execution evidence.
-5. P4 operational blinding/custody evidence.
-6. P5 environment/topology/RNG reproducibility.
-7. P6 durable archive/retrieval/hash evidence.
-8. P7 exact scientific/protocol/apparatus binding.
-9. P8 exact analysis lock and closure.
-10. Independent P9 verification.
-11. New immutable freeze and independent freeze verification.
-12. Explicit pilot authorization.
-13. Authorized blinded pilot execution.
+3. Candidate-scoped P3 artifact-contract execution evidence.
+4. P4 operational blinding/custody evidence.
+5. P5 environment/topology/RNG reproducibility.
+6. P6 durable archive/retrieval/hash evidence.
+7. P7 exact scientific/protocol/apparatus binding.
+8. P8 exact analysis lock and closure.
+9. Independent P9 verification.
+10. New immutable freeze and independent freeze verification.
+11. Explicit pilot authorization.
+12. Authorized blinded pilot execution.
 
-**Empirical N: 0. Pilot authorization: NOT GRANTED. Freeze: NOT CREATED.**
+**P6a: VERIFIED. P2: UNVERIFIED. Empirical N: 0. Pilot authorization: NOT GRANTED. Freeze: NOT CREATED.**
