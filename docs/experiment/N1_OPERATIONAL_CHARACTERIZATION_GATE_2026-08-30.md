@@ -8,7 +8,9 @@ This gate deliberately separates a minimum viable N=1 operational characterizati
 
 ## Epistemic boundary
 
-N=1 does **not** test or establish DGAF efficacy. It establishes only whether the frozen candidate apparatus can execute the specified PDMAL procedure end-to-end and produce a coherent, preserved, analyzable observation.
+N=1 does **not** test or establish DGAF efficacy. It establishes only whether the **designated pre-freeze candidate apparatus** can execute the specified PDMAL procedure end-to-end and produce a coherent, preserved, analyzable observation.
+
+The candidate is **not frozen**. N=1 characterization therefore does not imply that a later freeze will use the same identity if a substantive apparatus change occurs.
 
 Implementation != Verification != Empirical Validation.
 
@@ -19,6 +21,7 @@ A successful N=1 observation must therefore be classified as **Operationally Cha
 - Candidate SHA: `c6157158bf0ee4840e99a381a4b99bd2febe2302`
 - Candidate branch: `experimental-candidate/2026-08-30-reconciled`
 - Deployment: `dpl_8iYrzqsf729RSZRXj698pa4ptbWZ`
+- Candidate deployment state: READY
 - Protocol: v0.7.5
 - Primary contrast: `dgaf` versus `null`
 - Primary endpoint: FFCR
@@ -28,14 +31,14 @@ A successful N=1 observation must therefore be classified as **Operationally Cha
 
 ## Required N=1 observation
 
-Execute one bounded PDMAL synchronization run using the exact candidate apparatus and the governing protocol. Preserve the complete raw output and its integrity metadata. Do not modify the apparatus between execution and archival.
+Execute one bounded PDMAL synchronization run using the exact designated candidate apparatus and the governing protocol. Preserve the complete raw output and its integrity metadata. Do not modify the apparatus between execution and archival.
 
 The N=1 run is a characterization run, not the 50-seed efficacy pilot and not a substitute for the preregistered statistical study.
 
 ## Minimum acceptance predicates
 
 1. Exact candidate identity is recorded.
-2. Execution uses the candidate apparatus without source modification.
+2. Execution uses the designated candidate apparatus without source modification.
 3. The specified PDMAL execution completes or terminates under its defined failure semantics.
 4. Required artifact fields are emitted according to the bound schema.
 5. Artifact integrity/hash is recorded.
@@ -51,9 +54,9 @@ The following are explicitly **not prerequisites for this bounded N=1 characteri
 - Phi-calculus refinement;
 - README/public presentation refinement;
 - grant prospecting or narrative development;
-- exhaustive comparative-baseline mapping;
+- exhaustive comparative-baseline research;
 - additional governance layers invented after this gate;
-- expansion of the experimental sample beyond N=1;
+- expansion of the empirical sample beyond N=1;
 - perfection of the full independent-verification architecture.
 
 These remain legitimate post-N=1 work where applicable.
@@ -93,3 +96,5 @@ This document defines the execution gate. It does not itself grant authorization
 ## Completion condition
 
 This gate is complete only when one candidate-scoped N=1 execution artifact exists and has been durably preserved with the candidate identity and integrity metadata above.
+
+**Current state:** Candidate designated; deployment provenance READY; N=1 execution NOT RECORDED.
