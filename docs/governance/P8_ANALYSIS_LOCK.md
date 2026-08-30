@@ -18,13 +18,14 @@
 
 The current `main` branch is a living documentation/evidence lineage and is not itself the experimental apparatus identity. The experimental verification boundary remains candidate-scoped at **`ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`** pending any separately governed candidate transition.
 
-PR #132 exposed a TGL/P-35 control-plane contract regression (41 passed / 2 failed). PR #133 is an isolated remediation candidate. TGL remediation is a prerequisite to reliable candidate verification, not a P8 closure event and not an authorization transition.
+PR #132 exposed a TGL/P-35 control-plane contract regression (41 passed / 2 failed). PR #133 was the isolated historical remediation candidate. The consolidated current engineering lane is PR #139. TGL remediation remains a prerequisite to reliable candidate verification, not a P8 closure event and not an authorization transition.
 
 | Binding | Value | State |
 |---|---|---|
-| Experimental verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | CURRENT CANDIDATE BOUNDARY |
-| TGL remediation | PR #133 | DRAFT / VALIDATION PENDING |
-| Blocked regression | PR #132 | DRAFT / UNMERGED |
+| Experimental verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | CURRENT EXPERIMENTAL BOUNDARY |
+| Current TGL/control-plane engineering lane | PR #139 | CURRENT / EXACT-HEAD VALIDATION REQUIRED |
+| Historical regression | PR #132 | HISTORICAL DIAGNOSTIC |
+| Historical isolated remediation | PR #133 | HISTORICAL / SUPERSEDED |
 | Historical candidate | `e6beeb66335e1b50a239697badab22dab50eb5ba` | HISTORICAL |
 | Analysis implementation | `experiments/pdmal_pilot/analysis.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
 | Analysis configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | SELECTED / PRE-FREEZE |
@@ -49,7 +50,7 @@ Before candidate-scoped P8 closure, the TGL/P-35 contract must be validated on t
 - audit seal coverage of the exact returned audit object;
 - regression coverage for these semantics.
 
-A passing TGL remediation test suite does not itself close P8, alter P7, create a freeze, or authorize the pilot.
+A passing TGL/control-plane remediation test suite does not itself close P8, alter P7, create a freeze, or authorize the pilot.
 
 ## Protocol/candidate separation rule
 

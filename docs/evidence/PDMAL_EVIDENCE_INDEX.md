@@ -2,7 +2,7 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-28
+last_verified: 2026-08-29
 applies_to_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
 scope_note: >-
   This index records evidence and gate state. Historical evidence remains
@@ -22,7 +22,7 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 | Experimental verification boundary | CANDIDATE-SCOPED | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | Current pre-freeze candidate verification boundary; later documentation commits do not inherit its evidence automatically |
 | Historical implementation freeze | HISTORICAL / SUPERSEDED | `3510b86889cd341f7a7cf9ab684fd37b2fafd758` | Historical apparatus only |
 | Corrected pilot runner | CANDIDATE | Current verification boundary | Exact candidate verification pending |
-| TGL contract | BLOCKED / ADVERSARIAL REVIEW | PR #132 / PR #133 | 41-pass / 2-fail regression at TGL → P-35 seam; isolated contract-restoration remediation remains pending exact-head validation |
+| TGL contract | CURRENT ENGINEERING PREREQUISITE | PR #139; historical regression PR #132 / remediation PR #133 | The 41-pass / 2-fail result at the TGL → P-35 seam is retained as diagnostic provenance; current consolidated control/TGL implementation is in PR #139 and still requires exact-head validation |
 | Environment lock | VERIFY | Python 3.12.0; NumPy 2.5.1; NetworkX 3.6.1 | Fresh matching environment required |
 | Runtime characterization | CLOSED FOR CHARACTERIZATION | Run `32112658368` | Operational characterization, not efficacy evidence |
 | Blinding operational verification | CLOSED FOR SYNTHETIC VERIFICATION | Run `32113226935` | Synthetic custody only |
@@ -51,6 +51,6 @@ Historical acceptance, characterization, synthetic blinding, topology, and secur
 
 ## TGL/P-35 boundary
 
-The TGL review is an implementation/governance control issue, not experimental evidence. PR #132 remains blocked/draft. Its 41-pass / 2-fail result is retained as a substantive regression signal. The isolated remediation candidate must pass its own exact-head validation before the execution-contract predicate can advance.
+The TGL review is an implementation/governance control issue, not experimental evidence. PR #132 remains historical blocked/draft provenance. PR #133 is a historical isolated remediation record and is not a current execution authority. PR #139 is the current consolidated engineering lane and must pass exact-head validation before any dependent execution-contract predicate can advance.
 
 The remediation boundary does not create a freeze, authorize execution, close P7/P8, or increase empirical N.

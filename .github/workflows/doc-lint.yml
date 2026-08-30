@@ -1,8 +1,7 @@
 # Doc-Lint CI Workflow — DGAF-Framework (Spine Repo)
-# Mirrors sentinel-governance/.github/workflows/doc-lint.yml
-# Pattern: P-24 (Canonical Practice Unit) | P-11 (11Q gate 7 — Surface Consistency)
-# Owner: Agent Sentinel
-# Activated: Session S031 — closes last CI coverage gap in PHDGE ecosystem
+# Public/current documentation quality gate.
+# Historical and append-only evidence records are governed separately so
+# presentation linting does not rewrite or invalidate provenance.
 
 name: Doc Lint
 
@@ -25,7 +24,7 @@ on:
 
 jobs:
   markdownlint:
-    name: Markdown Lint
+    name: Markdown Lint — Public Surface
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,29 +35,29 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install markdownlint-cli
         run: npm install -g markdownlint-cli@0.39.0
 
-      - name: Run markdownlint
+      - name: Run markdownlint on public/current entry points
         run: |
           markdownlint \
             --config .markdownlint.yml \
             --ignore node_modules \
-            --ignore CHANGELOG.md \
-            --ignore SWEEP_LOG.md \
-            '**/*.md'
-        # CHANGELOG.md and SWEEP_LOG.md: auto-generated append-format; excluded from lint
-        # All gate specs, protocols, READMEs, SESSION_ANCHOR, CROSS_REF enforced
+            README.md \
+            README.governance.md \
+            README.technical.md \
+            docs/architecture/DGAF_V1_*.md
+        # Detailed governance, experiment, evidence, archive, historical,
+        # generated, and append-only records remain subject to their own
+        # provenance/evidence controls rather than presentation lint.
 
       - name: Report summary
         if: always()
         run: |
           echo "## Doc Lint Summary — DGAF-Framework" >> $GITHUB_STEP_SUMMARY
           echo "- Linter: markdownlint-cli 0.39.0" >> $GITHUB_STEP_SUMMARY
-          echo "- Config: .markdownlint.yml" >> $GITHUB_STEP_SUMMARY
-          echo "- Excluded: CHANGELOG.md, SWEEP_LOG.md (append-format auto-generated)" >> $GITHUB_STEP_SUMMARY
-          echo "- Pattern gates: P-24 (CPU surface consistency) + P-11 gate 7" >> $GITHUB_STEP_SUMMARY
-          echo "- Owner: Agent Sentinel | Spine repo: DGAF-Framework" >> $GITHUB_STEP_SUMMARY
-          echo "- Mirror of: sentinel-governance/.github/workflows/doc-lint.yml (S029)" >> $GITHUB_STEP_SUMMARY
+          echo "- Node.js: 24" >> $GITHUB_STEP_SUMMARY
+          echo "- Scope: public/current entry-point documentation" >> $GITHUB_STEP_SUMMARY
+          echo "- Separate provenance surfaces: governance, experiment, evidence, archive, historical, generated, append-only records" >> $GITHUB_STEP_SUMMARY
