@@ -68,7 +68,7 @@ Consensus threshold `< 0.01` is the convergence criterion for task execution, no
 
 The `dgaf` condition invokes the canonical `DGAF_TGLAdapter` during consensus execution. The canonical TGL required-step set is `{1, 2, 3, 4, 5, 6, 8}`: P-31 SCPE, P-33 convergence, DemiJoule safety, P-27 KAPPA, P-29 Sentinel, P-32 Phi Closure, and P-30 Apogee. A required gate that is not wired is not treated as an implicit pass; it yields `SKIP`, which escalates the turn, and the DGAF adapter fails closed rather than silently substituting a different comparator.
 
-Historical recovery/adaptation of these seven gates must preserve their defined semantics. No numerical proxy or field substitution is accepted merely for convenience. Gate-specific semantic recovery is governed by `docs/experiment/R5_R7_GATE_SEMANTIC_RECOVERY_MAP_2026-08-30.md`.
+Historical recovery/adaptation of these seven gates must preserve their defined semantics. No numerical proxy or field substitution is accepted merely for convenience. **R1–R4 semantic recovery for the current evidence epoch is complete; all seven required gates remain constitutive + FAIL-CLOSED. No R1–R4 repeat work is required unless genuinely new authoritative semantic evidence appears.** Gate-specific recovery state is governed by `docs/experiment/R5_R7_GATE_SEMANTIC_RECOVERY_MAP_2026-08-30.md` and Issue #152.
 
 ## 5. Analysis boundary
 
@@ -84,10 +84,9 @@ Historical characterization artifacts remain evidence only for the exact SHA and
 
 ## 6. Pre-freeze status
 
-The protocol remains pre-freeze. The following remain open:
+The protocol remains pre-freeze. **R1–R4 semantic recovery is CLOSED for the current evidence epoch.** The remaining pre-freeze gates are:
 
-- R1–R4 semantic recovery for each of the seven constitutive gates
-- R5–R7 implementation, candidate binding, and verification of any gate requiring restoration/adaptation
+- Seven-gate R5–R7 implementation, candidate binding, and verification **only if new authoritative semantics justify restoration/adaptation**; otherwise the seven required gates remain FAIL-CLOSED.
 - Formal P7 freeze binding and closure
 - Candidate-scoped P8 implementation/configuration verification and hash binding
 - Exact protocol blob SHA binding through the P8 analysis lock
@@ -95,7 +94,7 @@ The protocol remains pre-freeze. The following remain open:
 - Independent verification
 - Separate pilot authorization
 
-Non-required historical governance mechanisms remain deferred and are not pre-N=1 blockers.
+Non-required historical governance mechanisms remain deferred and are not pre-N=1 blockers. Documentation or audit work that does not introduce new apparatus semantics must not reopen R1–R4 or create a new candidate.
 
 ## 7. Evidence boundary
 
