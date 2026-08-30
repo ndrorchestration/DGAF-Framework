@@ -7,6 +7,7 @@ This repository contains implementation, research, governance, and provenance ma
 ## Documentation layers
 
 ### 1. Landing
+
 For first-time visitors.
 
 Answer: **What is this, why does it matter, and where should I start?**
@@ -14,6 +15,7 @@ Answer: **What is this, why does it matter, and where should I start?**
 Primary surface: `README.md`.
 
 ### 2. Project
+
 For readers evaluating current direction and maturity.
 
 Answer: **What is the current state and what is being worked on?**
@@ -21,6 +23,7 @@ Answer: **What is the current state and what is being worked on?**
 Primary surfaces: `docs/CURRENT_STATE.md`, `docs/PROJECT_STATUS.md`.
 
 ### 3. Technical
+
 For implementers and reviewers.
 
 Answer: **How is this designed and how do the components fit together?**
@@ -28,6 +31,7 @@ Answer: **How is this designed and how do the components fit together?**
 Primary surfaces: technical references, module READMEs, specifications, and tests.
 
 ### 4. Research and experiment
+
 For readers evaluating hypotheses and methods.
 
 Answer: **What question is being investigated, under what protocol, and what evidence exists?**
@@ -35,6 +39,7 @@ Answer: **What question is being investigated, under what protocol, and what evi
 Primary surfaces: experiment protocols, analysis plans, and evidence indexes.
 
 ### 5. Governance and evidence
+
 For auditors and rigorous review.
 
 Answer: **What authority, evidence, provenance, and controls support a specific claim?**
@@ -42,6 +47,7 @@ Answer: **What authority, evidence, provenance, and controls support a specific 
 Primary surfaces: governance policies, manifests, verification records, and retained artifacts.
 
 ### 6. Historical
+
 For provenance and project archaeology.
 
 Answer: **What did the project previously contain or claim?**
