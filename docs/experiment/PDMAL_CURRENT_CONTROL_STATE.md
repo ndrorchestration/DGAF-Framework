@@ -29,6 +29,7 @@ This is the current pre-authorization control record. Historical evidence remain
 | Artifact contract | IMPLEMENTED / OPEN | Fresh candidate-scoped execution evidence required |
 | Blinding custody | OPEN | Operational custody/separation evidence required |
 | Durable retention | OPEN | Archive/retrieval/hash proof required |
+| R1–R4 semantic recovery | CLOSED / FAIL-CLOSED | Seven constitutive gates investigated for current evidence epoch; reopen only for genuinely new authoritative semantic evidence |
 | P2 runtime | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33300481208` remains exact for `303f4424…`; fresh current-candidate execution required |
 | P6a CORS | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33302495240` remains exact for `303f4424…`; fresh current-candidate execution required |
 | P9 independent verification | NOT EXECUTED FOR CURRENT CANDIDATE | Independent audit/reproduction required |
@@ -42,7 +43,7 @@ PR #151 merged as apparatus-changing commit `05fa286…`. That merge establishes
 
 The subsequent designation/control commit `02c146d1…` records candidate designation but is not itself the apparatus identity. Documentation commits after designation do not alter the designated apparatus unless executable apparatus changes occur.
 
-The current `main` documentation/evidence lineage is `291b2adb…` at the last reconciled point; documentation-only commits do not redefine the designated apparatus identity.
+The current `main` documentation/evidence lineage may advance independently; documentation-only commits do not redefine the designated apparatus identity.
 
 ## Historical runtime evidence
 
@@ -54,11 +55,11 @@ The post-#151 candidate requires an exact deployment identity check before curre
 
 ## Required next evidence events
 
-1. Verify exact candidate/deployment identity for `05fa286…`.
+1. Verify exact candidate/deployment identity for `05fa286614bd80576c1f7f4b01f1bdd7fe57ef37`.
 2. Execute fresh P2 runtime verification against that exact candidate/deployment.
 3. Execute fresh P6a CORS verification against the same exact candidate/deployment.
 4. Complete P3 candidate-scoped artifact-contract execution evidence.
-5. Reconcile/reify historical P-31/P-27/P-29/P-32/P-30/P-33/DemiJoule contracts under Issue #152 before any gate is restored.
+5. **Do not repeat R1–R4.** The seven constitutive gates are already classified as FAIL-CLOSED for the current evidence epoch. Gate restoration/adaptation requires genuinely new authoritative semantic evidence or an explicitly adopted new governed specification.
 6. Complete P4 operational blinding/custody evidence.
 7. Complete P5 environment/topology/RNG reproducibility evidence.
 8. Complete P6 durable archive/retrieval/hash evidence.
@@ -70,3 +71,7 @@ The post-#151 candidate requires an exact deployment identity check before curre
 14. Only then execute the blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
+
+## Anti-loop rule
+
+A documentation-only commit, CI fan-out, deployment-health success, historical evidence artifact, or repeated semantic audit does not create a new apparatus candidate or reopen a completed recovery determination. A new candidate cycle is created only by an executable apparatus change or an explicitly governed treatment-specification change.
