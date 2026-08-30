@@ -40,30 +40,36 @@ They remain operationally fail-closed or observational infrastructure as impleme
 
 ## Consequence for Issue #152
 
-Issue #152 resolves the construct-membership question as follows:
+Issue #152 has completed its R1–R4 recovery determination for the current evidence epoch:
 
 - **A for P-31, P-33, DemiJoule, P-27, P-29, P-32, and P-30.** These are required treatment components under the canonical TGL contract.
 - **B for non-required historical governance capabilities outside the selected minimal treatment.** They remain FAIL-CLOSED and deferred.
-- **No invented adapters.** A historical gate may only be adapted after R2–R4 establish a defensible semantic translation from the historical contract to the current `ConsensusState`.
-- **Unresolved semantics remain a genuine blocker.** If a required gate cannot be semantically adapted without inventing or changing its meaning, that gate remains FAIL-CLOSED and N=1 cannot claim execution of the full defined treatment.
+- **No invented adapters.** A historical gate may only be adapted if genuinely new authoritative semantic evidence or an explicitly adopted new governed specification establishes a defensible translation to the current `ConsensusState`.
+- **Unresolved semantics remain a genuine treatment-integrity blocker.** If a required gate cannot satisfy restoration or governed adaptation without changing its meaning, the defined full treatment remains FAIL-CLOSED and N=1 cannot claim execution of that treatment.
 
 ## R1–R4 semantic-recovery result
 
 The bounded read-only semantic-recovery map is recorded in `docs/experiment/R5_R7_GATE_SEMANTIC_RECOVERY_MAP_2026-08-30.md`.
 
-Current result: **no seven-gate adapter is yet justified solely from available substrate evidence**. The current `ConsensusState` supplies useful fields, but field presence does not establish historical semantic equivalence. Gate-specific historical contract extraction, contradiction reconciliation, and information-loss analysis therefore remain prerequisites to R5 wiring.
+Current result: **no seven-gate adapter is justified from the available evidence epoch**. The current `ConsensusState` supplies useful fields, but field presence does not establish historical semantic equivalence. The recovery determination is therefore **CLOSED / FAIL-CLOSED for this evidence epoch**, not an invitation to repeat the same investigation.
 
-This is a **bounded semantic blocker**, not authorization to reconstruct the wider historical DGAF ecosystem.
+Reopening the recovery determination requires a genuine state change: newly recovered authoritative historical contract material or an explicitly adopted new governed treatment specification. Documentation churn, CI fan-out, deployment-health success, or repeated review of the same evidence does not reopen R1–R4.
 
 ## Anti-trap constraint
 
 This decision does **not** authorize reconstruction of every historical DGAF component.
 
-For each required gate, R1–R4 must produce only the minimum information necessary to establish a semantically faithful executable contract. Any historical capability outside the minimal construct is explicitly deferred.
+For each required gate, only the minimum information necessary to establish a semantically faithful executable contract is relevant. Any historical capability outside the minimal construct is explicitly deferred.
 
 The existence of further possible governance refinement is not a blocker.
 
-## N=1 implication
+## Candidate and N=1 boundary
+
+The post-#151 apparatus candidate is designated separately as:
+
+`05fa286614bd80576c1f7f4b01f1bdd7fe57ef37`
+
+Candidate designation is **not** a freeze and does not itself constitute candidate-scoped experimental verification. The apparatus identity remains stable across documentation-only commits; only an executable apparatus change or an explicitly governed treatment-specification change creates a new candidate cycle.
 
 The first N=1 observation may begin only after the seven required treatment components have either:
 
@@ -76,8 +82,10 @@ If a required gate cannot satisfy either condition, the experiment remains **PRE
 
 - Historical gate existence: **RECOVERED** where documented by Issue #152.
 - Required status: **VERIFIED FROM CANONICAL TGL CONTRACT**.
-- Current semantic adapter suitability: **NOT YET ESTABLISHED** for the seven required gates.
-- Current candidate execution: **NOT CANDIDATE-BOUND** for the post-remediation cycle.
+- R1–R4 recovery determination: **CLOSED / FAIL-CLOSED FOR CURRENT EVIDENCE EPOCH**.
+- Current semantic adapter suitability: **NOT ESTABLISHED** for the seven required gates.
+- Candidate designation: **ESTABLISHED** for `05fa286614bd80576c1f7f4b01f1bdd7fe57ef37`.
+- Candidate-scoped experimental execution: **NOT YET VERIFIED**.
 - Scientific efficacy: **NOT ESTABLISHED**.
 
 ## Source boundary
