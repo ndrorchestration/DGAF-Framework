@@ -65,4 +65,4 @@ No additional pre-N=1 prerequisite may be added unless it is demonstrated to aff
 
 **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · N=0**
 
-The R1–R4 semantic determination does not yet justify wiring any of the seven gates based solely on the current substrate fields. The immediate next action is gate-specific historical contract extraction and contradiction reconciliation, followed by an explicit adapter contract only where semantic fidelity can be demonstrated.
+The R1–R4 semantic determination does not yet justify wiring any of the seven gates based solely on the current substrate fields. The next work is gate-specific historical contract extraction and contradiction reconciliation, followed by an explicit adapter contract only where semantic fidelity can be demonstrated.
