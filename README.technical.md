@@ -2,7 +2,6 @@
 
 > **Claim-status boundary:** This document is a technical/project reference, not a certification, validation, regulatory-conformance statement, or efficacy report. Project-local gate names, targets, thresholds, and attestation labels describe internal procedures or historical records unless current claim-specific evidence says otherwise.
 > **Current certification policy:** There is no active DGAF certification program. See [`docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](./docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md).
-
 > **Audience:** Agent Amethyst, Agent Apogee, Agent COLLEEN, Agent Sentinel, and all ensemble members; engineers integrating with DGAF  
 > **Entry point for:** Gate specs · Pattern registry · Runtime components · Formation protocols · Session open/close procedures  
 > **Compliance/governance entry point:** [`README.governance.md`](./README.governance.md)  
