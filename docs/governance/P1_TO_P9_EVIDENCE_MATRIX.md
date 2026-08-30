@@ -26,10 +26,16 @@ The prior `ac8ea267…` experimental record remains historical apparatus evidenc
 | P4 Security / Blinding | custody, bijection, access separation, operational procedure | **OPEN** | operational evidence retained and independently checked |
 | P5 Provenance / Reproducibility | environment/toolchain/topology/RNG fingerprints and reproduction | **OPEN** | current apparatus evidence retained |
 | P6 Durable Evidence Custody | archive → independent retrieval → hash verification | **BLOCKED / OPEN** | end-to-end current evidence verified |
-| P6a Runtime/CORS | authenticated four-case CORS matrix on exact deployment | **BLOCKED / OPEN** | matrix passes on same deployment as P2 |
+| P6a Runtime/CORS | authenticated four-case CORS matrix on exact deployment | **VERIFIED** | run `33302495240` passed four live cases on exact candidate/deployment and retained artifact `9729387603` |
 | P7 Scientific Target | adopted scientific decision + exact binding | **ADOPTED / BINDING PENDING** | adopted record cryptographically bound to exact frozen protocol/apparatus/analysis/freeze identity |
 | P8 Analysis Lock | analysis/schema/runner/protocol bindings + candidate-scoped verification | **OPEN / FAIL-CLOSED** | all applicable P8 predicates evidenced and inspected |
 | P9 Independent Verification | independent reproduction/audit of identity, artifacts, analysis, invariants, adversarial cases | **NOT EXECUTED** | independent verifier passes without monoculture |
+
+## P6a evidence record
+
+P6a is **VERIFIED** for the exact runtime boundary exercised by run `33302495240` (`P6a Live CORS Verification`, `workflow_dispatch`). Candidate SHA: `303f4424d2198f0d0cf76305c589263dd1e417dc`. Deployment: `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`. Retained artifact: `9729387603`. Recorded artifact upload digest: `sha256:4abaf5d1c32930738296a85d38f5489b2068127795e2ce5e2c30565f2308533c`. The protected Vercel automation bypass secret was present and consumed without exposing its value; all four live CORS checks passed.
+
+This verifies only P6a. It does not promote P2, close P3–P6, close P8, establish empirical efficacy, create a freeze, or grant authorization.
 
 ## TGL contract prerequisite
 
@@ -60,7 +66,7 @@ Production source/provenance predicate is **CLOSED** for the merged DGAF v1 engi
 - `/api/health`: HTTP `200 OK`
 - Runtime: Node `v24.18.0`
 
-This closes deployment/source provenance only. It does not close P2/P6a or authorize an experiment.
+This closes deployment/source provenance only. It does not close P2 or authorize an experiment.
 
 ## P7 adoption
 
@@ -70,16 +76,15 @@ The scientific decision remains adopted in substance: `dgaf` vs `null`, FFCR pri
 
 1. Establish the final experimental apparatus identity on top of the merged production source.
 2. Authenticated P2 five-case runtime verification.
-3. Authenticated P6a four-case CORS verification.
-4. Candidate-scoped P3 artifact-contract execution evidence.
-5. P4 blinding/custody verification.
-6. P5 environment/topology/RNG reproducibility verification.
-7. P6 durable archive/retrieval/hash verification.
-8. P7 exact binding.
-9. P8 exact binding and closure.
-10. Independent P9 verification.
-11. New immutable freeze and independent freeze verification.
-12. Separate explicit pilot authorization.
-13. Only then authorized blinded pilot execution.
+3. Candidate-scoped P3 artifact-contract execution evidence.
+4. P4 blinding/custody verification.
+5. P5 environment/topology/RNG reproducibility verification.
+6. P6 durable archive/retrieval/hash verification.
+7. P7 exact binding.
+8. P8 exact binding and closure.
+9. Independent P9 verification.
+10. New immutable freeze and independent freeze verification.
+11. Separate explicit pilot authorization.
+12. Only then authorized blinded pilot execution.
 
-**No freeze exists. No pilot is authorized. Empirical N = 0.**
+**P6a VERIFIED. P2 UNVERIFIED. No freeze exists. No pilot is authorized. Empirical N = 0.**
