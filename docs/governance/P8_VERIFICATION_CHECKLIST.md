@@ -53,7 +53,7 @@ This checklist distinguishes implemented controls from executed verification evi
 ## Runtime verification
 
 - [ ] Authenticated P2 five-case POST matrix executed against exact current candidate/deployment identity.
-- [ ] Authenticated P6a four-case CORS matrix executed against the same identity.
+- [x] Authenticated P6a four-case CORS matrix executed against the same production candidate/deployment boundary; run `33302495240`, artifact `9729387603`, digest `sha256:4abaf5d1c32930738296a85d38f5489b2068127795e2ce5e2c30565f2308533c`.
 
 ## Reproducibility and provenance
 
@@ -76,4 +76,4 @@ This checklist distinguishes implemented controls from executed verification evi
 
 P8 remains open until every applicable unchecked item has current candidate-scoped evidence. Repository-native synthetic evaluator verification is supportive evidence only and does not itself establish candidate efficacy or close P8.
 
-**No freeze. No authorization. No unblinding. Empirical N = 0.**
+**P6a runtime evidence verified. P2 remains unverified. No freeze. No authorization. No unblinding. Empirical N = 0.**
