@@ -13,7 +13,7 @@
 
 ## MDAR Loop — Project Protocol
 
-```
+```text
 Map → Diagnose → Act → Review
   ↑                        |
   └────────────────────────┘
@@ -105,7 +105,7 @@ An attestation record is not automatically an independent certification or valid
 
 ## Session Open Protocol (COLLEEN — P-02)
 
-```
+```text
 1. Read session-state reference → rehydrate open BLGs + priority queue
 2. Run .operations/gate_compliance_check.py → surface P-24 gaps
 3. Emit session priority queue to Amethyst
@@ -120,7 +120,7 @@ Checklist: [`.operations/sweep_session_init.md`](./.operations/sweep_session_ini
 
 ## Session Close Protocol (Amethyst — P-06 + P-21)
 
-```
+```text
 1. All repo fixes committed
 2. SWEEP_LOG.md updated + buoy appended
 3. CHANGELOG.md versioned
@@ -147,7 +147,7 @@ Formation names and role assignments are project architecture. They do not estab
 
 ## Key File Locations
 
-```
+```text
 DGAF-Framework/
 ├── README.md                          ← Public-facing entry point
 ├── README.governance.md               ← Governance reference
