@@ -14,7 +14,9 @@ The principal correction is **not to remove evidence**. It is to place informati
 
 Documentation now follows this hierarchy:
 
-**landing → project → technical → research → evidence → historical**
+### Information hierarchy
+
+`landing → project → technical → research → evidence → historical`
 
 Higher-level surfaces summarize and route. Lower-level surfaces preserve detail.
 
