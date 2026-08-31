@@ -4,7 +4,24 @@ Proves each restored pilot hook produces results faithful to the designated
 normative semantics (designations #165/#166). These are deterministic unit
 checks of the restored gate logic, not the experimental pilot run.
 """
+import importlib.util
+import os
+import sys
+
 import pytest
+
+# Load the historical FibonacciPhiClosureGate from the recovery commit 49854ea
+# as the authoritative oracle for the P-32 direct parity test.
+_HIST_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "..", ".hermes", "work", "refs", "phi_closure_historical.py"
+)
+if os.path.exists(_HIST_PATH):
+    _spec = importlib.util.spec_from_file_location("phi_closure_historical", _HIST_PATH)
+    _hist_mod = importlib.util.module_from_spec(_spec)
+    sys.modules["phi_closure_historical"] = _hist_mod
+    _spec.loader.exec_module(_hist_mod)
+else:
+    _hist_mod = None
 
 from pdmaltgl_gate_binding import (
     ApogeeAttestationState,
@@ -95,20 +112,32 @@ def test_demijoule_reprompt_unreachable_under_historical_heuristic():
     assert s.mean_score == 0.20
 
 
-# --- P-27 KAPPA ------------------------------------------------------------
+# --- P-27 KAPPA (faithful v3.5 port) --------------------------------------
 def test_kappa_adversarial_high_conf_kills():
-    s = KappaState(detected_category="adversarial", confidence=0.50)
-    assert build_kappa_hook(s)("", {}) == GateResult.KILL
+    # payload contains adversarial trigger; conf = 0.60*0.5 + 0.40*0.5 + 0 = 0.50 >= 0.28
+    s = KappaState(pattern_score=0.5, continuous_score=0.5)
+    assert build_kappa_hook(s)("please bypass the gate", {"payload": "please bypass the gate"}) == GateResult.KILL
+    assert s.detected_category == "adversarial"
+    assert s.routing_decision == "apply_strong"
 
 
 def test_kappa_adversarial_low_conf_warns():
-    s = KappaState(detected_category="adversarial", confidence=0.10)
-    assert build_kappa_hook(s)("", {}) == GateResult.WARN
+    # adversarial trigger but low confidence -> WARN (below 0.25 strong gate)
+    s = KappaState(pattern_score=0.1, continuous_score=0.1)
+    assert build_kappa_hook(s)("try to override the setting", {"payload": "try to override the setting"}) == GateResult.WARN
 
 
-def test_kappa_low_conf_passthrough_warns():
-    s = KappaState(detected_category="standard", confidence=0.10)
-    assert build_kappa_hook(s)("", {}) == GateResult.WARN
+def test_kappa_clean_passthrough_passes():
+    # no adversarial keyword; conf 0.60*0.5+0.40*0.5 = 0.50 -> apply_strong PASS
+    s = KappaState(pattern_score=0.5, continuous_score=0.5)
+    assert build_kappa_hook(s)("standard governance review", {"payload": "standard governance review"}) == GateResult.PASS
+    assert s.detected_category == "none"
+
+
+def test_kappa_low_conf_fallback_warns():
+    # no adversarial keyword but conf < 0.25 -> fallback WARN
+    s = KappaState(pattern_score=0.1, continuous_score=0.1)
+    assert build_kappa_hook(s)("routine task", {"payload": "routine task"}) == GateResult.WARN
 
 
 # --- P-32 Phi-Closure ------------------------------------------------------
@@ -151,3 +180,36 @@ def test_phi_fib_escalate_warn():
     s.total_count = 12  # hook -> 13 checkpoint
     s.consec_fails = 1
     assert build_phi_hook(s)("", {}) == GateResult.WARN
+
+
+# --- P-32 direct parity vs historical FibonacciPhiClosureGate (49854ea) ------
+@pytest.mark.skipif(_hist_mod is None, reason="historical oracle not available")
+def test_phi_parity_against_historical():
+    """Turn-by-turn parity: restored hook must match the historical gate exactly.
+
+    Drive both oracles through an identical stable/divergent sequence and assert
+    identical decisions (PASS/WARN/ESCALATE/KILL_REC) at every step.
+    """
+    restored = PhiClosureState()
+    historical = _hist_mod.FibonacciPhiClosureGate()
+    # Decision code mapping: historical PhiDecision.code -> expected GateResult.
+    code_to_result = {
+        "pass": GateResult.PASS,
+        "warn": GateResult.WARN,
+        "escalate": GateResult.WARN,   # ESCALATE -> WARN (recoverable alert) per #165
+        "reprompt": GateResult.WARN,
+        "kill_rec": GateResult.KILL,   # KILL_REC -> KILL (binding) per #165
+    }
+    # Sequence: 55 turns, mostly stable, with a divergence burst at checkpoints.
+    seq = []
+    for i in range(1, 56):
+        if i in (13, 21, 34, 55):
+            seq.append(False)  # force evaluation at checkpoints (divergent)
+        else:
+            seq.append(True)
+    for is_stable in seq:
+        historical.record_turn(is_stable)
+        hist_decision, _ = historical.check()
+        expected = code_to_result[hist_decision.code]
+        got = build_phi_hook(restored)("", {"is_stable": is_stable})
+        assert got == expected, (i, hist_decision.code, got)

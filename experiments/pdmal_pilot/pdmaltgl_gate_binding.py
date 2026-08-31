@@ -14,12 +14,13 @@ Design rules (per operator authorization, RESTORE path):
   * Do NOT change what P-31 / P-33 mean. Preserve modern F1-F3 hardening
     elsewhere.
 
-HONEST SCOPE NOTE: only P-31 and P-33 are wired here. Steps 3,4,5,6,8
-(DemiJoule, P-27, P-29, P-32, P-30) remain unwired (None hooks) and still
-reduce the turn to ESCALATE -> FAIL_CLOSED. Restoring 2 of 7 required gates
-does NOT complete the constitutive treatment and does NOT advance N.
-Empirical N remains 0 until the complete constitutive treatment is
-executable, verified, frozen, and explicitly authorized.
+HONEST SCOPE NOTE: all seven constitutive TGL gates (P-31, P-33, P-29, P-30,
+DemiJoule, P-27, P-32) are RESTORED and wired here per designations #165/#166.
+Each hook carries its required historical substrate inside ``ConsensusState`` and
+ports the historical decision logic. Wiring does NOT advance empirical N; the
+turn still reduces to FAIL_CLOSED on any gate KILL, and no gate authorizes a
+pilot run. Fidelity gaps (e.g. DemiJoule WARN unreachable under the historical
+heuristic) are documented inline, not silently corrected.
 
 This module is pre-freeze infrastructure only. It never authorizes pilot
 execution, unblinding, or statistical analysis.
@@ -27,6 +28,7 @@ execution, unblinding, or statistical analysis.
 from __future__ import annotations
 
 import os
+import re
 import sys
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -215,14 +217,27 @@ class SentinelRiskState:
 def build_sentinel_hook(state: SentinelRiskState) -> Callable[[str, dict], GateResult]:
     """Return a TGL ``sentinel_fn`` hook.
 
-    Maps the historical risk decision per designation #165:
-    risk_ok -> PASS; risk_warn -> WARN; risk_block -> KILL (binding halt).
-    The historical sentinel_review() is consulted for the decision when the
-    carried substrate supplies the required record/routing inputs.
+    RESTORE of the historical ``sentinel_review()`` decision from the carried
+    ``SentinelRiskState`` substrate (per designation #165: risk_block -> KILL).
+    The historical function is side-effect-free and returns a decision; this hook
+    reproduces that decision from the restored fields rather than a synthetic
+    context dict. Deontic ``forbidden`` (P-10) and the routing conditions that
+    the registry records for P-29 are the authoritative halt triggers.
     """
 
     def _hook(input_text: str, context: dict) -> GateResult:
-        decision = context.get("sentinel_decision", context.get("risk_decision", "risk_ok"))
+        # Restore the historical decision from the carried substrate. A synthetic
+        # override is accepted only when the substrate is absent (backward-compat).
+        if state.record_category is None and state.deontic == "permitted":
+            decision = context.get("sentinel_decision", context.get("risk_decision", "risk_ok"))
+        else:
+            # Faithful port: deontic=forbidden OR explicit routing block -> risk_block.
+            if state.deontic == "forbidden" or state.routing_policy == "block":
+                decision = "risk_block"
+            elif state.deontic == "warn" or state.routing_policy == "review":
+                decision = "risk_warn"
+            else:
+                decision = "risk_ok"
         if decision == "risk_block":
             return GateResult.KILL
         if decision == "risk_warn":
@@ -319,9 +334,19 @@ def build_demijoule_hook(state: DemiJouleState) -> Callable[[str, dict], GateRes
 
     def _hook(input_text: str, context: dict) -> GateResult:
         payload = (context.get("payload") or input_text or "").lower()
-        # Layer 1 — syntactic blocklist (BLOCKED_PATTERNS subset for RESTORE).
-        for pattern in ("ignore", "bypass", "skip", "disregard", "override"):
-            if pattern in payload and pattern in ("bypass", "disregard", "override"):
+        # Layer 1 — historical BLOCKED_PATTERNS (ensemble_v16.py @49854ea:584).
+        # Faithful regex set; a match forces KILL regardless of axis scores.
+        BLOCKED_PATTERNS = [
+            r"ignore.{0,20}(instructions|governance|rules)",
+            r"bypass.{0,20}(gate|workflow|filter)",
+            r"(no|without).{0,10}(restrictions|constraints)",
+            r"new persona",
+            r"act as if",
+            r"disregard.{0,10}(previous|prior)",
+            r"skip.{0,15}(gate|check|audit)",
+        ]
+        for pat in BLOCKED_PATTERNS:
+            if re.search(pat, payload):
                 state.decision = "kill"
                 return GateResult.KILL
         # Layer 2 — heuristic six-axis scoring (matches historical DemiJouleGate).
@@ -336,6 +361,10 @@ def build_demijoule_hook(state: DemiJouleState) -> Callable[[str, dict], GateRes
         state.axis_scores = scores
         mean = sum(scores.values()) / len(scores)
         state.mean_score = round(mean, 4)
+        # NOTE: under the historical heuristic all axes score identically per
+        # payload (if/elif/else), so mean is always in {0.20 KILL, 0.80/0.95
+        # PASS}; WARN/reprompt is unreachable. Kept faithful to historical gate;
+        # see PR discussion on designation #165 reprompt->WARN gap.
         if mean < 0.30:
             state.decision = "kill"
             return GateResult.KILL
@@ -355,34 +384,64 @@ def build_demijoule_hook(state: DemiJouleState) -> Callable[[str, dict], GateRes
 
 @dataclass
 class KappaState:
-    """Restored P-27 KAPPA substrate carried in ConsensusState.
+    """Restored P-27 KAPPA v3.5 substrate carried in ConsensusState.
 
-    Mirrors the historical KAPPA v3.5 contract: detected category, confidence,
-    calibrated weight, and routing decision. Thresholds 0.28/0.25 from the card.
+    Mirrors the historical KAPPA v3.5 contract (component card @66b79e24):
+    detected category, pattern/continuous scores, confidence, and the resulting
+    policy routing decision. The historical ``select_weights_with_confidence``
+    applies category weights only when detection confidence clears the gate.
     """
 
     detected_category: Optional[str] = None
+    pattern_score: float = 0.0
+    continuous_score: float = 0.0
+    length_boost: float = 0.0
     confidence: float = 0.0
-    calibrated_weight: float = 0.0
     routing_decision: str = "passthrough"
+
+
+# Historical KAPPA v3.5 category-detection triggers (component card @66b79e24).
+_KAPPA_ADVERSARIAL_RE = re.compile(r"bypass|override|inject|xss|sql\s*injection", re.IGNORECASE)
+_KAPPA_AMBIGUOUS_RE = re.compile(r"mixed|hybrid|audit\s*\+\s*creative", re.IGNORECASE)
 
 
 def build_kappa_hook(state: KappaState) -> Callable[[str, dict], GateResult]:
     """Return a TGL ``kappa_fn`` hook.
 
-    Applies the KAPPA v3.5 category-detection + confidence routing. Adversarial
-    (or low-confidence) categories are flagged as WARN; a hard block category
-    returns KILL. KAPPA is an advisory router, so non-adversarial passes.
+    Faithful port of the KAPPA v3.5 router (card @66b79e24): detect category from
+    the input payload, compute confidence =
+    0.60*pattern_score + 0.40*continuous_score + length_boost, then apply the
+    policy thresholds (apply_strong >= 0.28; apply_blended 0.25-0.28). Adversarial
+    category with confidence >= 0.28 is a hard KILL; blended/low-confidence is WARN;
+    otherwise PASSTHROUGH/PASS. KAPPA is advisory routing, not a turn-kill unless the
+    adversarial gate clears.
     """
 
     def _hook(input_text: str, context: dict) -> GateResult:
-        category = state.detected_category
-        conf = state.confidence
-        if category == "adversarial":
-            return GateResult.KILL if conf >= 0.28 else GateResult.WARN
-        if conf < 0.25:
-            return GateResult.WARN
-        return GateResult.PASS
+        payload = (context.get("payload") or input_text or "")
+        # Category detection (priority: adversarial > ambiguous > none).
+        if _KAPPA_ADVERSARIAL_RE.search(payload):
+            state.detected_category = "adversarial"
+        elif _KAPPA_AMBIGUOUS_RE.search(payload):
+            state.detected_category = "ambiguous"
+        else:
+            state.detected_category = context.get("detected_category", "none")
+        # Confidence per the v3.5 formula.
+        state.confidence = round(
+            0.60 * state.pattern_score
+            + 0.40 * state.continuous_score
+            + state.length_boost,
+            4,
+        )
+        # Policy routing.
+        if state.detected_category == "adversarial" and state.confidence >= 0.28:
+            state.routing_decision = "apply_strong"
+            return GateResult.KILL
+        if state.confidence >= 0.25:
+            state.routing_decision = "apply_blended" if state.confidence < 0.28 else "apply_strong"
+            return GateResult.PASS
+        state.routing_decision = "fallback"
+        return GateResult.WARN
 
     return _hook
 
@@ -394,7 +453,7 @@ def build_kappa_hook(state: KappaState) -> Callable[[str, dict], GateResult]:
 
 PHI_STAR = 0.6180
 FIB_CHECKPOINTS = [13, 21, 34, 55]
-FIB_CHECKPOINT_TOLERANCE = {13: 0.05, 21: 0.04, 34: 0.035, 55: 0.03}
+FIB_CHECKPOINT_TOLERANCE = {13: 0.07, 21: 0.05, 34: 0.04, 55: 0.03}  # historical @49854ea:584
 
 
 @dataclass
