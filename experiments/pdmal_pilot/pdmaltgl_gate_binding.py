@@ -31,12 +31,7 @@ import sys
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-# Resolve repo root so `components` and the pilot package import flat,
-# matching the existing test harness (tests import `dgaf_tgl_adapter` and
-# `pptl` as top-level modules).
-_REPO_ROOT = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..")
-)
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
@@ -52,7 +47,6 @@ from components.ensemble_v16 import (  # noqa: E402
 )
 from pptl.triadic_governance_loop import GateResult  # noqa: E402
 
-# Map string tier names -> reference Tier enum members.
 _TIER_MAP = {
     "AXIOM": Tier.AXIOM,
     "STRUCTURAL": Tier.STRUCTURAL,
@@ -63,44 +57,34 @@ _TIER_MAP = {
 
 @dataclass
 class SCPEState:
-    """Restored P-31 token/tier substrate carried in ConsensusState.
-
-    Mirrors the historical SCPE required state: per-token tier, content,
-    insertion time, trust-edge flag, and a monotonic token store.
-    """
+    """Restored P-31 token/tier substrate carried in ConsensusState."""
 
     tokens: List[Dict[str, Any]] = field(default_factory=list)
     threshold: float = 0.15
     trust_edge_boost: float = 0.15
     last_k_anchor: int = 3
+    # Explicit evaluation anchor closes the hidden wall-clock nondeterminism:
+    # candidate/replay callers must provide the instant at which retention is evaluated.
+    evaluation_time: Optional[float] = None
 
     def to_reference_tokens(self) -> List[ContextToken]:
-        out: List[ContextToken] = []
-        for t in self.tokens:
-            out.append(
-                ContextToken(
-                    token_id=t["token_id"],
-                    content=t.get("content", ""),
-                    tier=_TIER_MAP[t["tier"]],
-                    inserted_at=t.get("inserted_at", 0.0),
-                    has_trust_edge=bool(t.get("has_trust_edge", False)),
-                )
+        return [
+            ContextToken(
+                token_id=t["token_id"],
+                content=t.get("content", ""),
+                tier=_TIER_MAP[t["tier"]],
+                inserted_at=t.get("inserted_at", 0.0),
+                has_trust_edge=bool(t.get("has_trust_edge", False)),
             )
-        return out
+            for t in self.tokens
+        ]
 
 
 @dataclass
 class ConvergenceState:
-    """Restored P-33 weighted-graph substrate carried in ConsensusState.
+    """Restored P-33 weighted-graph substrate carried in ConsensusState."""
 
-    Mirrors the historical PDMAL Convergence Monitor required state:
-    current edge-weight matrix ``W_t`` keyed by (src, dst), retained prior
-    snapshot ``W_{t-1}``, and consecutive divergence counters.
-    """
-
-    # W_t: edge identity (src, dst) -> weight
     weights: Dict[Tuple[str, str], float] = field(default_factory=dict)
-    # W_{t-1}: prior snapshot retained across turns
     prev_weights: Dict[Tuple[str, str], float] = field(default_factory=dict)
     alert_thresh: float = 0.08
     conv_thresh: float = 0.02
@@ -118,24 +102,30 @@ class ConvergenceState:
 
 
 def build_scpe_hook(scpe_state: SCPEState) -> Callable[[str, dict], GateResult]:
-    """Return a TGL ``scpe_fn`` hook that runs the historical SCPE engine.
-
-    Replays the restored token substrate through the reference
-    ``StructuralContextPruningEngine`` and emits the historical prune/audit
-    fields (content_hash present per contract). Returns ``GateResult.PASS``
-    (pruning is a maintenance action, not a turn-terminating decision).
-    Returns ``GateResult.KILL`` only on an unrecoverable engine error.
-    """
+    """Return a TGL hook that executes historical SCPE at an explicit evaluation time."""
 
     def _hook(input_text: str, context: dict) -> GateResult:
+        if scpe_state.tokens and scpe_state.evaluation_time is None:
+            raise ValueError("SCPE evaluation_time must be supplied for token-bearing state")
         engine = StructuralContextPruningEngine(threshold=scpe_state.threshold)
         for tok in scpe_state.to_reference_tokens():
             engine.ingest(tok)
         try:
-            engine.prune()
+            # The historical implementation calls time.time() internally. Patch only
+            # the imported module reference for this bounded invocation so replay uses
+            # the frozen/evidence-bound evaluation instant rather than host wall clock.
+            if scpe_state.evaluation_time is None:
+                engine.prune()
+            else:
+                import components.ensemble_v16 as reference_module
+                original_time = reference_module.time.time
+                reference_module.time.time = lambda: scpe_state.evaluation_time  # type: ignore[assignment]
+                try:
+                    engine.prune()
+                finally:
+                    reference_module.time.time = original_time
         except Exception:
             return GateResult.KILL
-        # Persist surviving tokens back into the carried substrate.
         pruned_ids = {e.token_id for e in engine.prune_log}
         scpe_state.tokens = [
             t for t in scpe_state.tokens if t["token_id"] not in pruned_ids
@@ -146,15 +136,7 @@ def build_scpe_hook(scpe_state: SCPEState) -> Callable[[str, dict], GateResult]:
 
 
 def build_pdmal_hook(conv_state: ConvergenceState) -> Callable[[str, dict], GateResult]:
-    """Return a TGL ``pdmal_fn`` hook running the historical Convergence engine.
-
-    Replays the restored weighted graph through ``PDMALConvergenceMonitor``,
-    retaining ``W_{t-1}`` across turns. Maps the historical status ladder to
-    the TGL lattice: STABLE/CONVERGED/WATCH -> PASS; WARN/ALERT -> WARN
-    (routing action ``amethyst_alert``, not a turn-kill). This matches the
-    historical contract, in which P-33 ALERT routes to ``amethyst_alert`` and
-    only joint escalation with Phi-Closure triggers a deeper scan.
-    """
+    """Return a TGL hook running the historical P-33 Convergence monitor."""
 
     def _hook(input_text: str, context: dict) -> GateResult:
         graph = conv_state.to_reference_graph()
@@ -164,25 +146,25 @@ def build_pdmal_hook(conv_state: ConvergenceState) -> Callable[[str, dict], Gate
             conv_thresh=conv_state.conv_thresh,
             n_consec=conv_state.n_consec,
         )
-        # Seed prior snapshot + counters so this turn computes a real delta
-        # when W_{t-1} was supplied by the harness.
         monitor._prev_weights = dict(conv_state.prev_weights)
         monitor._consec_divergent = conv_state._consec_divergent
         monitor._consec_stable = conv_state._consec_stable
         monitor._turn = conv_state._turn
         monitor._events = list(conv_state._events)
+        context_state = context.get("pdmaltgl", {}).get("state", {})
+        seed_id = context_state.get("seed_id", "?")
+        iteration = context_state.get("iteration", monitor._turn + 1)
+        turn_id = f"seed:{seed_id}:iteration:{iteration}"
         try:
-            evt = monitor.check(turn_id=input_text[:32])
+            evt = monitor.check(turn_id=turn_id)
         except Exception:
             return GateResult.KILL
-        # Persist advanced state for the next turn.
         conv_state.prev_weights = dict(monitor._prev_weights)
         conv_state._consec_divergent = monitor._consec_divergent
         conv_state._consec_stable = monitor._consec_stable
         conv_state._turn = monitor._turn
         conv_state._events = list(monitor._events)
         conv_state.weights = dict(monitor._current_weights())
-        # evt.status is a string code ("stable", "alert", ...).
         if evt.status in (ConvergenceStatus.WARN.code, ConvergenceStatus.ALERT.code):
             return GateResult.WARN
         return GateResult.PASS
