@@ -1,23 +1,25 @@
 # N=1 Operational Characterization Gate — 2026-08-30
 
-**Status:** EXECUTION GATE DEFINED / CURRENT CANDIDATE HOLD
+**Status:** EXECUTION GATE DEFINED / CURRENT APPARATUS PROVISIONAL / CANDIDATE NOT YET EXECUTION-VALID
 
 ## Candidate identity
 
-- Pre-correction apparatus source: `d56b5b3c44e39ddb8c883259584432ab39259306`
-- Active provenance correction: PR #172 / head `3c489459e09d2d9fb9d31239d9bae05df4b3548b`
+- Corrected apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- Corrected apparatus tree: `973c92335caf84f37fc2b3c4df6dd83b3b855087`
+- Provenance correction: PR #174 / merge `2a54a67d…`
 - Current documentation lineage: `main` — resolve directly
-- Prior candidate: `05fa286…` — superseded post-#151 candidate
+- Pre-correction apparatus source: `d56b5b3c…` — invalidated for candidate use
+- Prior candidate: `05fa286…` — superseded historical candidate
 - Prior P2/P6a evidence boundary: `303f4424…` — historical scope only
-- Pre-correction deployment: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
-- Pre-correction deployment URL: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
+- Current deployment: **NOT YET ESTABLISHED for `2a54a67d…`**
+- Pre-correction deployment: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb` — historical/non-closing
 - Configured allowed CORS origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
 
 ## Current candidate hold
 
-`d56b5b3c…` is not an execution-valid candidate because its canonical provenance identity omitted five restored behavior-affecting gate-state substrates. No N=1 observation may be run against that pre-correction candidate for closure purposes.
+`2a54a67d…` is the corrected apparatus source and the basis for the new candidate cycle, but it is **not yet an execution-valid candidate** because an exact source-matched current deployment and fresh candidate-scoped P1–P9 evidence do not yet exist.
 
-If PR #172 merges, the resulting corrected apparatus source becomes a **new candidate-cycle boundary**. A new exact production deployment must be established before P2/P6a, and all downstream evidence must bind to that corrected candidate.
+No N=1 observation may be run for closure purposes until the candidate identity, deployment, P2/P6a, P3–P8 evidence, independent P9 verification, freeze, and authorization predicates are satisfied.
 
 ## Purpose
 
@@ -41,9 +43,9 @@ Execute one bounded PDMAL synchronization run using the exact designated **corre
 
 ## Candidate-chain prerequisites
 
-- PR #172 provenance correction must be validated and merged.
-- A new exact corrected apparatus/candidate SHA must be established.
-- A new production deployment must be built from that corrected source and source-matched.
+- PR #174 provenance correction is merged and verified.
+- Corrected apparatus source `2a54a67d…` is the sole current apparatus basis.
+- A new exact production deployment must be built from `2a54a67d…` and source-matched.
 - Fresh P2 runtime verification must pass for that exact candidate/deployment.
 - Fresh P6a CORS verification must pass for that exact candidate/deployment/origin.
 - P3–P8 current-candidate evidence must be retained and provenance-linked.
@@ -63,4 +65,4 @@ This document does not grant authorization. Explicit authorization must precede 
 
 N=1 remains 0 until one candidate-scoped observation exists with complete retained evidence under the authorized frozen apparatus. A pre-authorization, pre-correction, or identity-mismatched execution does not advance empirical N.
 
-**Current state:** Provenance correction #172 is active; no execution-valid candidate is designated; fresh runtime verification, freeze, and authorization remain pending.
+**Current state:** Corrected apparatus `2a54a67d…` is provisionally established; current deployment, candidate-scoped runtime verification, freeze, and authorization remain pending.
