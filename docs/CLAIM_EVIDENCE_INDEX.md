@@ -3,20 +3,20 @@
 **Current reconciliation:** 2026-08-31  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`  
 **Current main control-plane lineage:** resolve `main` directly in GitHub; the literal tip SHA is intentionally not embedded here.  
-**Current apparatus source:** `d56b5b3c44e39ddb8c883259584432ab39259306` (PR #170 merge; seven-gate restoration + P-31/P-33 provenance integration).
+**Current apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` (PR #174 merge; seven-gate restoration + complete seven-gate provenance binding).
 
-> **Reconciliation notice:** The claim/evidence rows below were last substantively reconciled on 2026-08-16 and therefore contain historical evidence references. They must not be read as a current-candidate status ledger. The current apparatus source is `d56b5b3c…` after PR #170 restored the complete seven-gate constitutive substrate. Fresh runtime and experimental evidence is required for the current candidate.
+> **Reconciliation notice:** Historical claim/evidence rows below preserve their original evidence scope. They must not be read as a current-candidate status ledger. The current apparatus source is `2a54a67d…` after PR #174 completed provenance binding for all restored gate-state substrates. Fresh runtime and experimental evidence is required for the post-#174 candidate cycle.
 >
-> **Current experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. Engineering restoration is complete; candidate-scoped verification remains outstanding. Historical P2/P6a/P3–P9 evidence remains source-bound and is not transferred.
+> **Current experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. Engineering restoration and provenance integrity are complete; candidate-scoped runtime and scientific verification remain outstanding. Historical P2/P6a/P3–P9 evidence remains source-bound and is not transferred.
 
-**Last substantive evidence reconciliation:** 2026-08-16  
+**Last substantive evidence reconciliation:** 2026-08-31  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`
 
 This index maps high-impact claims to the evidence class actually supported by retained evidence. It is intentionally conservative and claim-specific. Historical rows below preserve their original evidence scope; current-state assertions should be taken from `docs/CURRENT_STATE.md` and exact current GitHub/Vercel evidence.
 
 The repository runs a deterministic claim-language audit (`.github/workflows/claim-hygiene.yml`). Textual presence alone is not treated as proof of overclaiming; contextual review is required. Residual contextual candidates remain historical audit material unless separately reconciled.
 
-The evidence-gate toolchain and quality rows below preserve historical scope. Current-candidate status is controlled by exact source/deployment binding and fresh verification.
+The evidence-gate toolchain and quality rows below preserve historical scope. Current-candidate status is controlled by exact apparatus/deployment binding and fresh verification.
 
 | Claim | Current status | Evidence | Scope / limitations | Falsifier or revision trigger |
 |---|---|---|---|---|
@@ -31,27 +31,27 @@ The evidence-gate toolchain and quality rows below preserve historical scope. Cu
 | DGAF governance controls are empirically effective on real workloads. | `PENDING` | No independent real-workload efficacy dataset is retained. | Synthetic tests and engineering validation do not establish efficacy. | Reproducible real-workload evaluation under the defined protocol. |
 | DGAF formatting/type quality is clean. | `PENDING / QUALITY DEBT` | Historical quality logs. | Functional tests do not establish global formatting/type cleanliness. | Current configured formatting/type gates fail or pass. |
 | Evidence-gate toolchain is pinned and fully verified across the supported Python matrix. | `IMPLEMENTED / PENDING CURRENT-CANDIDATE VERIFICATION` | `requirements-ci.txt` and historical runs. | Historical verification does not by itself establish current-candidate runtime support. | Current-candidate full matrix success or policy revision. |
-| DGAF is deployed to Vercel and has current live runtime verification. | `DEPLOYMENT READY / RUNTIME VERIFICATION PENDING` | Current Vercel deployment `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb` is READY/production and source-matched to `d56b5b3c…`. | Deployment readiness is not P2/P6a runtime verification. | Fresh candidate-bound P2/P6a/runtime evidence. |
+| DGAF is deployed to Vercel and has current live runtime verification. | `CURRENT DEPLOYMENT PENDING / RUNTIME VERIFICATION PENDING` | Pre-correction deployment is historical only; new deployment must be source-matched to `2a54a67d…`. | Deployment readiness is not P2/P6a runtime verification. | Fresh candidate-bound P2/P6a/runtime evidence. |
 | Repository-local epistemic evidence standard is canonical. | `VERIFIED` — standard scope | `docs/EPISTEMIC_EVIDENCE_STANDARD.md`. | Repository-local governance standard, not external scientific authority. | Reconciliation required if evidence classes/closure rules change. |
 | Canonical claim/evidence index is current in lineage metadata. | `RECONCILED 2026-08-31; substantive evidence rows remain historical` | This document. | Historical rows preserve exact original evidence scope. | Any material source/evidence change requires reconciliation. |
 
 ## Current apparatus additions requiring candidate-scoped evidence
 
-- **P-31:** restored by PR #170; historical parity and provenance binding are present. Engineering completion, not experimental verification.
-- **P-33:** restored by PR #170; historical parity and provenance binding are present. Engineering completion, not experimental verification.
-- **P-27:** restored and parity-tested against the recovered v3.5 behavior; candidate-scoped verification remains required.
-- **P-29:** restored under the authorized Sentinel risk/halt designation; candidate-scoped verification remains required.
+- **P-31:** restored and provenance-bound; engineering completion, not experimental verification.
+- **P-33:** restored and provenance-bound; engineering completion, not experimental verification.
+- **P-27:** restored and parity-tested against recovered v3.5 behavior; candidate-scoped verification remains required.
+- **P-29:** restored under the authorized Sentinel risk/halt designation; substrate path and provenance binding are tested; candidate-scoped verification remains required.
 - **P-30:** restored under the authorized acceptance-schema/gold-star designation; candidate-scoped verification remains required.
 - **P-32:** restored under historical PHI_STAR/KILL_REC behavior with direct parity coverage; candidate-scoped verification remains required.
 - **DemiJoule:** restored as the authorized six-axis semantic-safety gate. The historical heuristic's WARN/reprompt reachability limitation remains documented and is not silently altered.
 
 ## Current candidate runtime binding
 
-- Apparatus source: `d56b5b3c44e39ddb8c883259584432ab39259306`
-- Production deployment: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
-- Deployment URL: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
+- Apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- Production deployment: **NOT YET ESTABLISHED FOR THIS APPARATUS**
 - Allowed CORS origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
-- Prior P2/P6a evidence: historical and non-transferable.
+- The pre-correction deployment `dpl_76UU8mCm…` and all evidence derived from it are historical/non-closing.
+- Fresh P2/P6a inputs must be generated only after a deployment is verified READY and source-matched to `2a54a67d…`.
 
 ## Open repository quality backlog
 
