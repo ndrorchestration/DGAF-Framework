@@ -3,10 +3,10 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-08-31
-applies_to_sha: d56b5b3c44e39ddb8c883259584432ab39259306
-pre_freeze_candidate_sha: d56b5b3c44e39ddb8c883259584432ab39259306
-pre_freeze_candidate_ref: main / post-#170 restored apparatus boundary
-candidate_status: PROVISIONAL / NOT FROZEN / REQUIRES FRESH CANDIDATE-SCOPED VERIFICATION
+applies_to_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
+pre_freeze_candidate_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
+pre_freeze_candidate_ref: main / post-#174 provenance-corrected apparatus boundary
+candidate_status: PROVISIONAL / NOT FROZEN / REQUIRES FRESH DEPLOYMENT + CANDIDATE-SCOPED VERIFICATION
 ---
 
 # PDMAL Current Control State
@@ -18,23 +18,23 @@ This is the current pre-authorization control record. Historical evidence remain
 | Control | State | Evidence / blocker |
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b868…` is provenance only |
-| Prior engineering/production source | VERIFIED / HISTORICAL SCOPE | `303f4424…`; prior P2/P6a deployment and evidence |
-| Prior pre-remediation candidate | SUPERSEDED / HISTORICAL | `c6157158…`; evidence does not transfer |
-| Superseded post-#151 candidate | SUPERSEDED / HISTORICAL | `05fa286…`; prior P2/P6a/P3-P9 package does not transfer |
-| **Current restored apparatus / provisional candidate** | **DESIGNATED / NOT FROZEN** | `d56b5b3c44e39ddb8c883259584432ab39259306` from merged #170 |
-| Current apparatus tree | IDENTIFIED | `8c13900c4ce2a503414f9dddf1d7ef7debead57e` |
-| Current production deployment | IDENTIFIED / READY | `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb` |
-| Corrected runner | IMPLEMENTED / EVIDENCE GATED | Fresh candidate execution evidence still required |
-| Seven-gate constitutive restoration | IMPLEMENTED / PRE-FREEZE VALIDATED | P-31/P-33/P-27/P-29/P-30/P-32/DemiJoule restored and validated on pre-merge exact head |
+| Prior engineering/production source | VERIFIED / HISTORICAL SCOPE | `303f4424…`; prior runtime boundary |
+| Superseded post-#151 candidate | SUPERSEDED / HISTORICAL | `05fa286…`; evidence does not transfer |
+| Pre-correction restored apparatus | INVALIDATED / HISTORICAL | `d56b5b3c…`; provenance identity omitted five restored gate-state blocks |
+| **Current corrected apparatus / provisional candidate basis** | **IDENTIFIED / NOT FROZEN** | `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` from merged #174 |
+| Current apparatus tree | IDENTIFIED | `973c92335caf84f37fc2b3c4df6dd83b3b855087` |
+| Current production deployment | NOT YET ESTABLISHED | No authoritative deployment for `2a54a67d…` captured yet |
+| Provenance identity | COMPLETE / VALIDATED | All seven restored gate-state blocks included in canonical identity |
+| Seven-gate constitutive restoration | IMPLEMENTED / PRE-FREEZE VALIDATED | Semantic restoration and provenance integrity validated; no current-candidate runtime evidence yet |
 | P7 scientific specification | ADOPTED / BINDING PENDING | Must bind to eventual final freeze identity |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Final candidate evidence incomplete |
 | Artifact contract | IMPLEMENTED / OPEN | Fresh candidate-scoped execution evidence required |
 | Blinding custody | OPEN | Current-cycle operational custody/separation evidence required |
 | Durable retention | OPEN | Archive/retrieval/hash proof required |
 | R1–R4 semantic recovery | CLOSED / FAIL-CLOSED | Do not reopen absent genuinely new authoritative semantic evidence |
-| P2 runtime | NEW CANDIDATE OPEN | Fresh run required for `d56b5b3c…` + exact deployment |
-| P6a CORS | NEW CANDIDATE OPEN | Fresh run required for same deployment + configured origin |
-| P3 | IMPLEMENTED / OPEN | Current candidate evidence required |
+| P2 runtime | BLOCKED UNTIL DEPLOYMENT | Fresh run required for `2a54a67d…` + exact deployment |
+| P6a CORS | BLOCKED UNTIL DEPLOYMENT | Fresh run required for same candidate/deployment + configured origin |
+| P3 | IMPLEMENTED / OPEN | Current-candidate evidence required |
 | P4 | OPEN | Current-cycle blinding/custody evidence required |
 | P5 | OPEN | Current-cycle reproducibility evidence required |
 | P6 | OPEN / FAIL-CLOSED | Current-cycle durable custody proof required |
@@ -45,41 +45,35 @@ This is the current pre-authorization control record. Historical evidence remain
 
 ## Candidate identity boundary
 
-PR #170 merged the completed seven-gate restoration and provenance integration as apparatus-changing commit `d56b5b3c…`. This is the current restored apparatus/source boundary and provisional candidate basis.
+PR #174 merged the provenance-integrity correction as apparatus-changing commit `2a54a67d…`. This is the current corrected apparatus/source boundary and the basis for the new candidate cycle.
 
-The superseded post-#151 candidate `05fa286…` and its designation record `02c146d1…` remain historical. No evidence bound to either transfers to `d56b5b3c…`.
+The prior `d56b5b3c…` source is invalidated as an execution candidate because its canonical identity was incomplete. Its deployment `dpl_76UU8mCm…` and all evidence derived from that source are historical/non-closing.
 
-Documentation commits may advance the `main` control-plane lineage without changing `d56b5b3c…` as the apparatus source. The eventual frozen identity must additionally bind the exact candidate tree/protocol/dependencies/deployment and final P1-P9 state.
+The eventual frozen identity must additionally bind the exact candidate tree/protocol/dependencies/deployment and final P1-P9 state.
 
 ## Current deployment/runtime boundary
 
-Current deployment identity:
-
-- deployment ID: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
-- deployment URL: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
-- allowed CORS origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
-- Vercel source SHA must equal candidate SHA at every runtime verification.
-
-These are candidate inputs, not P2/P6a evidence until the fresh authenticated workflows execute and emit retained artifacts.
+No current deployment identity is established yet for `2a54a67d…`. A deployment is usable for P2/P6a only after Vercel reports READY, production target as required, and exact Git source SHA equality with `2a54a67d…`.
 
 ## Historical runtime evidence
 
-P2 run `33300481208` and P6a run `33302495240` remain exact historical evidence for `303f4424…` and its deployment boundary. They are not evidence for the current candidate.
+P2 run `33300481208` and P6a run `33302495240` remain exact historical evidence for earlier apparatus/deployment boundaries. They are not evidence for the post-#174 candidate.
 
 ## Required next evidence events
 
-1. Execute fresh P2 runtime verification against `d56b5b3c…`, `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`, and the exact deployment URL.
-2. Execute fresh P6a CORS verification against the same candidate/deployment and the configured allowed origin.
-3. Complete P3 current-candidate artifact-contract evidence.
-4. Complete P4 operational blinding/custody evidence.
-5. Complete P5 environment/topology/RNG reproducibility evidence.
-6. Complete P6 durable archive/retrieval/hash evidence.
-7. Bind P7 to the exact candidate/protocol/analysis/freeze identity.
-8. Close P8 from current-candidate evidence.
-9. Execute independent P9 verification.
-10. Create and independently verify a new immutable freeze.
-11. Obtain explicit pilot authorization.
-12. Only then execute the blinded pilot.
+1. Establish and verify an exact deployment sourced from `2a54a67d…`.
+2. Execute fresh P2 runtime verification against that exact deployment.
+3. Execute fresh P6a CORS verification against the same deployment and configured origin.
+4. Complete P3 current-candidate artifact-contract evidence.
+5. Complete P4 operational blinding/custody evidence.
+6. Complete P5 environment/topology/RNG reproducibility evidence.
+7. Complete P6 durable archive/retrieval/hash evidence.
+8. Bind P7 to the exact candidate/protocol/analysis/freeze identity.
+9. Close P8 from current-candidate evidence.
+10. Execute independent P9 verification.
+11. Create and independently verify a new immutable freeze.
+12. Obtain explicit pilot authorization.
+13. Only then execute the blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
 
