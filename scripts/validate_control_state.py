@@ -33,16 +33,29 @@ def field(text: str, key: str) -> str | None:
     return match.group(1) if match else None
 
 
+def nested_field(text: str, block: str, key: str) -> str | None:
+    match = re.search(
+        rf"^{re.escape(block)}:\s*\n(?P<body>(?:^[ \t]+.*\n?)*)",
+        text,
+        flags=re.MULTILINE,
+    )
+    if not match:
+        return None
+    return field(match.group("body"), key)
+
+
 def manifest_identity(manifest: str) -> dict[str, str]:
     fields: dict[str, str] = {}
-    for key in (
-        "apparatus_source_sha",
-        "apparatus_source_tree_sha",
-        "deployment_id",
-        "deployment_url",
-        "allowed_origin",
-    ):
+    for key in ("apparatus_source_sha", "apparatus_source_tree_sha"):
         value = field(manifest, key)
+        if value:
+            fields[key] = value
+
+    # Only read deployment identity from the active deployment_binding block.
+    # Historical deployment IDs elsewhere in the manifest must never satisfy
+    # or invalidate the current deployment-state invariant.
+    for key in ("deployment_id", "deployment_url", "deployment_target", "deployment_state", "source_sha_match"):
+        value = nested_field(manifest, "deployment_binding", key)
         if value:
             fields[key] = value
     return fields
@@ -74,10 +87,10 @@ def main() -> int:
     if deployment_id and deployment_url:
         unresolved = {"NONE_YET", "NONE", "NOT_ESTABLISHED"}
         if deployment_id not in unresolved and deployment_url not in unresolved:
-            deployment_sha = field(manifest, "source_sha_match")
+            deployment_sha = identity.get("source_sha_match")
             if deployment_sha and deployment_sha not in {"true", "TRUE", "YES", "MATCHED"}:
                 failures.append(
-                    "candidate manifest: deployment identity is concrete but source_sha_match is not affirmative"
+                    "candidate manifest: active deployment identity is concrete but source_sha_match is not affirmative"
                 )
 
     prior_sha = None
@@ -129,6 +142,7 @@ def main() -> int:
     print("CONTROL STATE VALIDATION PASSED")
     print(f"apparatus_sha={apparatus_sha}")
     print(f"apparatus_tree_sha={tree_sha}")
+    print("active deployment binding is internally scoped")
     print("superseded candidate is not presented as live")
     print("cross-document apparatus identity is present")
     print("pre-freeze authorization/N invariants are present")
