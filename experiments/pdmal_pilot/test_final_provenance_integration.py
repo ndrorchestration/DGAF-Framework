@@ -64,3 +64,45 @@ def test_historical_p31_invariants_are_enforced() -> None:
         pass
     else:
         raise AssertionError("historical trust_edge_boost drift was not rejected")
+
+
+def test_p29_sentinel_state_changes_provenance_identity() -> None:
+    base = _state()
+    changed = _state(
+        sentinel_state=type(base.sentinel_state)(record_category="X", routing_policy="Y", deontic="block")
+    )
+    assert canonicalize_state(base) != canonicalize_state(changed)
+
+
+def test_p30_apogee_state_changes_provenance_identity() -> None:
+    base = _state()
+    changed = _state(
+        apogee_state=type(base.apogee_state)(confidence=0.9, grade="S", gold_star=True)
+    )
+    assert canonicalize_state(base) != canonicalize_state(changed)
+
+
+def test_demijoule_state_changes_provenance_identity() -> None:
+    base = _state()
+    changed = _state(
+        demijoule_state=type(base.demijoule_state)(decision="kill", mean_score=0.20)
+    )
+    assert canonicalize_state(base) != canonicalize_state(changed)
+
+
+def test_p27_kappa_state_changes_provenance_identity() -> None:
+    base = _state()
+    changed = _state(
+        kappa_state=type(base.kappa_state)(
+            detected_category="adversarial", pattern_score=0.5, continuous_score=0.5, confidence=0.5
+        )
+    )
+    assert canonicalize_state(base) != canonicalize_state(changed)
+
+
+def test_p32_phi_state_changes_provenance_identity() -> None:
+    base = _state()
+    changed = _state(
+        phi_state=type(base.phi_state)(stable_count=13, total_count=13, consec_fails=0, last_decision="pass")
+    )
+    assert canonicalize_state(base) != canonicalize_state(changed)
