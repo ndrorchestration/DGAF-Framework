@@ -99,6 +99,43 @@ Branch names and passing checks do not confer experimental authority. The curren
 | `feat/epistemic-evidence-architecture-v1` / #87 | KEEP-HISTORICAL | Evidence architecture predecessor. |
 | `feat/openai-dgaf-evaluator` / #76 | KEEP-HISTORICAL | Evaluator implementation; separate evidence boundary. |
 
+## Additional branches requiring explicit review
+
+The live branch inventory contains additional refs not yet assigned to a finalized lineage class above. They are intentionally **REVIEW**, not assumed current or historical, until PR/ancestor/reference inspection is complete:
+
+| Branch | Preliminary class | Review target |
+|---|---|---|
+| `audit/complete-historical-gate-recovery-2026-08-30` | REVIEW | Confirm relationship to #161 and later restoration lineage. |
+| `alert-autofix-38` | REVIEW | Determine whether generated/security-only and superseded. |
+| `alert-autofix-49` | REVIEW | Determine whether generated/security-only and superseded. |
+| `chore/preauth-completeness-2026-08-20` | REVIEW | Map to pre-authorization control lineage. |
+| `chore/repository-structure-normalization` | REVIEW | Map to structural cleanup lineage and current references. |
+| `ci/pytest-diagnostics` | REVIEW | Determine whether obsolete diagnostic tooling remains referenced. |
+| `docs/dgaf-v1-control-plane-integration-20260829` | REVIEW | Compare with merged #139/control-plane integration. |
+| `docs/fix-control-record-stale-gate-wording` | REVIEW | Verify whether superseded by later wording corrections. |
+| `docs/fix-current-state-phrasing` | REVIEW | Verify whether superseded by current-state reconciliation. |
+| `docs/fix-post-merge-main-sha` | REVIEW | Compare against current main-SHA corrections. |
+| `docs/lint-md040-md036-20260830` | REVIEW | Map against current markdownlint debt/remediation. |
+| `epistemic/pdmal-freeze-readiness-reconciliation` | REVIEW | Map to freeze-readiness lineage; verify non-authority. |
+| `feat/kappa-v3.6-governance-classifier` | REVIEW | Research/implementation branch; verify whether it changes candidate semantics. |
+| `feat/phi-calculus-whitepaper` | REVIEW | Research/publication branch; no experimental authority by default. |
+| `feature/amethyst-expert-panel-consensus` | REVIEW | Panel/evidence branch; map to P7 adjudication lineage. |
+| `fix/authority-matrix-historical-alias-test-20260830` | REVIEW | Likely governance invariant test; confirm whether merged elsewhere. |
+| `fix/claim-hygiene-self-scan` | REVIEW | Claim-audit tooling; determine active lineage. |
+| `fix/orchestration-firewall-test-contract` | REVIEW | Runtime/security test contract; determine whether merged/superseded. |
+| `fix/p7-status-consistency` | REVIEW | P7 status-control remediation; map to current P7 record. |
+| `noop-temporary-check` | REVIEW | Determine whether intentionally retained for required-check compatibility. |
+| `rebuild/pr42-stasis-doc` | REVIEW | P42 historical/rebuild lineage. |
+| `rebuild/pr74-pip-lockfiles` | REVIEW | Dependency rebuild lineage. |
+| `rebuild/pr85-publication-spine` | REVIEW | Publication/provenance rebuild lineage. |
+| `reconcile/pr139-with-main-20260830` | REVIEW | Reconciliation predecessor/descendant of #139. |
+| `recovery/p31-p33-contract-evidence-2026-08-30` | REVIEW | P31/P33 evidence recovery lineage. |
+| `review/pr139-ready-20260830` | REVIEW | Review/readiness snapshot around #139. |
+| `stasis-cluster1-enumeration` | REVIEW | Stasis/historical enumeration track. |
+| `tools/hermes-review-agents-20260830` | REVIEW | Tooling/review-only branch. |
+
+These branches are **not counted as additional candidates**. Their review status is a guard against false completeness in this map.
+
 ## Patch and legacy branches
 
 `ndrorchestration-patch-1` through `ndrorchestration-patch-22` are historical June maintenance branches. Several correspond to merged PRs (#17–#31). Classify as **KEEP-HISTORICAL** until a reference scan proves they are not needed for provenance; deletion is not authorized by this map.
@@ -136,4 +173,4 @@ PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · N=0
 
 ## Source basis
 
-This map was created from the live GitHub branch inventory and PR metadata checked on 2026-08-31. It is a classification artifact, not a deletion authorization. Where complete ancestry/reference inspection was not available, the disposition is intentionally conservative (`REVIEW` or `KEEP-HISTORICAL`).
+This map was created from the live GitHub branch inventory and PR metadata checked on 2026-08-31. It is a classification artifact, not a deletion authorization. The full inventory includes a residual-review section so that unmapped branches cannot be mistaken for absent branches. Where complete ancestry/reference inspection was not available, the disposition is intentionally conservative (`REVIEW` or `KEEP-HISTORICAL`).
