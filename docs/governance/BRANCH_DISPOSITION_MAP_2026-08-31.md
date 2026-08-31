@@ -173,4 +173,4 @@ PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · N=0
 
 ## Source basis
 
-This map was created from the live GitHub branch inventory and PR metadata checked on 2026-08-31. It is a classification artifact, not a deletion authorization. The full inventory includes a residual-review section so that unmapped branches cannot be mistaken for absent branches. Where complete ancestry/reference inspection was not available, the disposition is intentionally conservative (`REVIEW` or `KEEP-HISTORICAL`).
+This map was created from the live GitHub branch inventory and PR metadata checked on 2026-08-31. The full inventory includes a residual-review section so that unmapped branches cannot be mistaken for absent branches. Where complete ancestry/reference inspection was not available, the disposition is intentionally conservative (`REVIEW` or `KEEP-HISTORICAL`).
