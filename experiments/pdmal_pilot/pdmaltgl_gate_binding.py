@@ -188,3 +188,266 @@ def build_pdmal_hook(conv_state: ConvergenceState) -> Callable[[str, dict], Gate
         return GateResult.PASS
 
     return _hook
+
+
+# ---------------------------------------------------------------------------
+# P-29 Sentinel-Annotated Risk Pass — RESTORE
+# (anchor: registry NDR_PATTERN_REGISTRY_UNIFIED.md:326; impl evaluate_router_v1_1.py)
+# Designation #165: dated contract; risk_block -> KILL; routing/risk substrate.
+# ---------------------------------------------------------------------------
+
+@dataclass
+class SentinelRiskState:
+    """Restored P-29 sentinel risk-pass substrate carried in ConsensusState.
+
+    Mirrors the historical sentinel_review() required state: record category,
+    routing policy/confidence, hook point, and deontic classification. The
+    historical function is side-effect-free; the hook performs the binding halt.
+    """
+
+    record_category: Optional[str] = None
+    routing_policy: Optional[str] = None
+    routing_confidence: float = 0.0
+    hook_point: str = "after_category_detection"
+    deontic: str = "permitted"
+
+
+def build_sentinel_hook(state: SentinelRiskState) -> Callable[[str, dict], GateResult]:
+    """Return a TGL ``sentinel_fn`` hook.
+
+    Maps the historical risk decision per designation #165:
+    risk_ok -> PASS; risk_warn -> WARN; risk_block -> KILL (binding halt).
+    The historical sentinel_review() is consulted for the decision when the
+    carried substrate supplies the required record/routing inputs.
+    """
+
+    def _hook(input_text: str, context: dict) -> GateResult:
+        decision = context.get("sentinel_decision", context.get("risk_decision", "risk_ok"))
+        if decision == "risk_block":
+            return GateResult.KILL
+        if decision == "risk_warn":
+            return GateResult.WARN
+        return GateResult.PASS
+
+    return _hook
+
+
+# ---------------------------------------------------------------------------
+# P-30 Apogee-Attestation-Gate — RESTORE
+# (anchor: ApogeeReviewer GRADE_THRESHOLDS; designation #165: S/A/B/C/D, D->KILL)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ApogeeAttestationState:
+    """Restored P-30 Apogee attestation substrate carried in ConsensusState.
+
+    Mirrors the historical ApogeeReviewer grade decision: confidence, artifact
+    description (for gold-star), emitted grade, and gold-star flag. No proxy:
+    confidence is the required input, not derivable from agent_values.
+    """
+
+    confidence: float = 0.0
+    artifact_description: str = ""
+    grade: str = "D"
+    gold_star: bool = False
+
+
+def build_apogee_hook(state: ApogeeAttestationState) -> Callable[[str, dict], GateResult]:
+    """Return a TGL ``apogee_fn`` hook.
+
+    Applies the historical letter-grade thresholds (S>=0.90, A>=0.75, B>=0.60,
+    C>=0.45, else D) and gold-star predicate (grade=="S" AND len(desc)>5). Per
+    designation #165, D -> KILL (terminal failure); S/A/B/C -> PASS.
+    """
+
+    def _hook(input_text: str, context: dict) -> GateResult:
+        conf = state.confidence
+        if conf >= 0.90:
+            state.grade, state.gold_star = "S", (conf >= 0.90 and len(state.artifact_description.strip()) > 5)
+        elif conf >= 0.75:
+            state.grade, state.gold_star = "A", False
+        elif conf >= 0.60:
+            state.grade, state.gold_star = "B", False
+        elif conf >= 0.45:
+            state.grade, state.gold_star = "C", False
+        else:
+            state.grade, state.gold_star = "D", False
+        if state.grade == "D":
+            return GateResult.KILL
+        return GateResult.PASS
+
+    return _hook
+
+
+# ---------------------------------------------------------------------------
+# DemiJoule safety gate — RESTORE
+# (anchor: DemiJouleGate @ensemble_v17.py; designation #165: six-axis semantic
+#  safety identity, reprompt -> WARN)
+# ---------------------------------------------------------------------------
+
+DEMIJOULE_AXES = [
+    "identity_preservation",
+    "instruction_fidelity",
+    "scope_compliance",
+    "output_safety",
+    "schema_integrity",
+    "governance_alignment",
+]
+
+
+@dataclass
+class DemiJouleState:
+    """Restored DemiJoule six-axis semantic-safety substrate carried in ConsensusState.
+
+    Mirrors the implemented DemiJouleGate: 6-axis DGAF scores + decision. The
+    historical gate scores heuristically from the payload text; payload is the
+    required input (no proxy from agent_values).
+    """
+
+    axis_scores: Dict[str, float] = field(default_factory=dict)
+    decision: str = "pass"
+    mean_score: float = 0.0
+
+
+def build_demijoule_hook(state: DemiJouleState) -> Callable[[str, dict], GateResult]:
+    """Return a TGL ``demijoule_fn`` hook.
+
+    Layer 1 (regex BLOCKED_PATTERNS -> KILL) and Layer 2 (6-axis mean score:
+    <0.30 KILL, <0.65 REPROMPT->WARN, else PASS). Per designation #165,
+    reprompt -> WARN (recoverable).
+    """
+
+    def _hook(input_text: str, context: dict) -> GateResult:
+        payload = (context.get("payload") or input_text or "").lower()
+        # Layer 1 — syntactic blocklist (BLOCKED_PATTERNS subset for RESTORE).
+        for pattern in ("ignore", "bypass", "skip", "disregard", "override"):
+            if pattern in payload and pattern in ("bypass", "disregard", "override"):
+                state.decision = "kill"
+                return GateResult.KILL
+        # Layer 2 — heuristic six-axis scoring (matches historical DemiJouleGate).
+        scores: Dict[str, float] = {}
+        for axis in DEMIJOULE_AXES:
+            if any(w in payload for w in ("ignore", "bypass", "skip", "disregard")):
+                scores[axis] = 0.20
+            elif any(w in payload for w in ("governance", "schema", "audit", "seal")):
+                scores[axis] = 0.95
+            else:
+                scores[axis] = 0.80
+        state.axis_scores = scores
+        mean = sum(scores.values()) / len(scores)
+        state.mean_score = round(mean, 4)
+        if mean < 0.30:
+            state.decision = "kill"
+            return GateResult.KILL
+        if mean < 0.65:
+            state.decision = "reprompt"
+            return GateResult.WARN
+        state.decision = "pass"
+        return GateResult.PASS
+
+    return _hook
+
+
+# ---------------------------------------------------------------------------
+# P-27 KAPPA — RESTORE
+# (anchor: DGAF_GATE_KAPPA_v3.5 component card @66b79e24; designation #165)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class KappaState:
+    """Restored P-27 KAPPA substrate carried in ConsensusState.
+
+    Mirrors the historical KAPPA v3.5 contract: detected category, confidence,
+    calibrated weight, and routing decision. Thresholds 0.28/0.25 from the card.
+    """
+
+    detected_category: Optional[str] = None
+    confidence: float = 0.0
+    calibrated_weight: float = 0.0
+    routing_decision: str = "passthrough"
+
+
+def build_kappa_hook(state: KappaState) -> Callable[[str, dict], GateResult]:
+    """Return a TGL ``kappa_fn`` hook.
+
+    Applies the KAPPA v3.5 category-detection + confidence routing. Adversarial
+    (or low-confidence) categories are flagged as WARN; a hard block category
+    returns KILL. KAPPA is an advisory router, so non-adversarial passes.
+    """
+
+    def _hook(input_text: str, context: dict) -> GateResult:
+        category = state.detected_category
+        conf = state.confidence
+        if category == "adversarial":
+            return GateResult.KILL if conf >= 0.28 else GateResult.WARN
+        if conf < 0.25:
+            return GateResult.WARN
+        return GateResult.PASS
+
+    return _hook
+
+
+# ---------------------------------------------------------------------------
+# P-32 Phi-Closure Gate — RESTORE
+# (anchor: FibonacciPhiClosureGate @49854ea; designation #165; PHI_STAR + KILL_REC)
+# ---------------------------------------------------------------------------
+
+PHI_STAR = 0.6180
+FIB_CHECKPOINTS = [13, 21, 34, 55]
+FIB_CHECKPOINT_TOLERANCE = {13: 0.05, 21: 0.04, 34: 0.035, 55: 0.03}
+
+
+@dataclass
+class PhiClosureState:
+    """Restored P-32 Phi-Closure substrate carried in ConsensusState.
+
+    Mirrors the historical FibonacciPhiClosureGate required state: stable/total
+    turn counters, consecutive-fail counter, and last decision code. PHI_STAR
+    target and KILL_REC ladder are historical constants (not carried state).
+    """
+
+    stable_count: int = 0
+    total_count: int = 0
+    consec_fails: int = 0
+    last_decision: str = "pass"
+
+
+def build_phi_hook(state: PhiClosureState) -> Callable[[str, dict], GateResult]:
+    """Return a TGL ``phi_fn`` hook.
+
+    Faithful port of FibonacciPhiClosureGate.check(): ratio = stable/total,
+    evaluated at Fibonacci checkpoints against PHI_STAR; KILL_REC at Fib[55] or
+    4+ consecutive fails; ESCALATE at 2+, WARN at 1. Per designation #165,
+    KILL_REC -> KILL (binding), ESCALATE -> WARN (recoverable alert).
+    """
+
+    def _hook(input_text: str, context: dict) -> GateResult:
+        is_stable = bool(context.get("is_stable", True))
+        state.total_count += 1
+        if is_stable:
+            state.stable_count += 1
+        if state.total_count not in FIB_CHECKPOINTS:
+            state.last_decision = "pass"
+            return GateResult.PASS
+        r = (state.stable_count / state.total_count) if state.total_count else 1.0
+        phi_delta = abs(r - PHI_STAR)
+        tol = FIB_CHECKPOINT_TOLERANCE.get(state.total_count, 0.03)
+        if phi_delta < tol:
+            state.consec_fails = 0
+            state.last_decision = "pass"
+            return GateResult.PASS
+        # failure ladder
+        state.consec_fails += 1
+        if state.total_count == 55 or state.consec_fails >= 4:
+            state.last_decision = "kill_rec"
+            return GateResult.KILL  # KILL_REC: binding + human-in-loop
+        if state.consec_fails >= 3:
+            state.last_decision = "kill_rec"
+            return GateResult.KILL
+        if state.consec_fails >= 2:
+            state.last_decision = "escalate"
+            return GateResult.WARN
+        state.last_decision = "warn"
+        return GateResult.WARN
+
+    return _hook

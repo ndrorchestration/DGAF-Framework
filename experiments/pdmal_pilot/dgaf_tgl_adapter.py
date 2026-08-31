@@ -20,13 +20,23 @@ from pptl.triadic_governance_loop import (
 from task_engine import AttemptStatus
 
 from pdmaltgl_gate_binding import (
+    ApogeeAttestationState,
     ConvergenceState,
+    DemiJouleState,
+    KappaState,
+    PhiClosureState,
     SCPEState,
+    SentinelRiskState,
+    build_apogee_hook,
+    build_demijoule_hook,
+    build_kappa_hook,
     build_pdmal_hook,
+    build_phi_hook,
     build_scpe_hook,
+    build_sentinel_hook,
 )
 
-ADAPTER_VERSION = "0.7.1"
+ADAPTER_VERSION = "0.7.2"
 DECISIONS = (
     "NO_CHANGE",
     "CONSERVATIVE_MIX",
@@ -56,6 +66,13 @@ class ConsensusState:
     # is stateless between calls; required historical state is carried here.
     scpe_state: SCPEState = field(default_factory=SCPEState)
     convergence_state: ConvergenceState = field(default_factory=ConvergenceState)
+    # RESTORE (2026-08-31): P-29/P-30/DemiJoule/P-27/P-32 constitutive substrate,
+    # per designations #165/#166. Defaults empty so pre-existing callers unaffected.
+    sentinel_state: SentinelRiskState = field(default_factory=SentinelRiskState)
+    apogee_state: ApogeeAttestationState = field(default_factory=ApogeeAttestationState)
+    demijoule_state: DemiJouleState = field(default_factory=DemiJouleState)
+    kappa_state: KappaState = field(default_factory=KappaState)
+    phi_state: PhiClosureState = field(default_factory=PhiClosureState)
 
     def validate(self) -> None:
         n = len(self.agent_values)
@@ -232,12 +249,19 @@ class DGAF_TGLAdapter:
         # The adapter is intentionally stateless between process-isolated calls.
         # Bind the TGL counter to the semantic iteration so the audit index does
         # not reset to 1 every time a new adapter instance is constructed.
-        # RESTORE (2026-08-30): wire P-31 SCPE + P-33 Convergence hooks from the
-        # carried substrate. Other required gates (DemiJoule, P-27, P-29, P-32,
-        # P-30) remain unwired (None) and still reduce the turn to FAIL_CLOSED.
+        # RESTORE (2026-08-30/31): wire P-31 SCPE + P-33 Convergence + P-29 Sentinel
+        # + P-30 Apogee + DemiJoule + P-27 KAPPA + P-32 Phi-Closure hooks from the
+        # carried substrate, per designations #165/#166. All seven constitutive
+        # gates are now wired; the turn reduces to FAIL_CLOSED only on a KILL from
+        # any gate, not on unwired SKIP.
         hooks = TGLHooks(
             scpe_fn=build_scpe_hook(state.scpe_state),
             pdmal_fn=build_pdmal_hook(state.convergence_state),
+            sentinel_fn=build_sentinel_hook(state.sentinel_state),
+            apogee_fn=build_apogee_hook(state.apogee_state),
+            demijoul_fn=build_demijoule_hook(state.demijoule_state),
+            kappa_fn=build_kappa_hook(state.kappa_state),
+            phi_closure_fn=build_phi_hook(state.phi_state),
         )
         tgl = TriadicGovernanceLoop(
             session_id=self.session_id,
