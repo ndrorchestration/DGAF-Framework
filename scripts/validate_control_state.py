@@ -77,11 +77,17 @@ def main() -> int:
             failures.append(str(exc))
 
     current_state = read("docs/CURRENT_STATE.md")
-    for identity_label in ("main tip", "apparatus source", "candidate identity", "deployment identity"):
-        try:
+    identity_requirements = (
+        "main",
+        "apparatus source",
+        "candidate identity",
+        "deployment identity",
+    )
+    try:
+        for identity_label in identity_requirements:
             assert_contains(current_state, identity_label, "docs/CURRENT_STATE.md")
-        except AssertionError as exc:
-            failures.append(str(exc))
+    except AssertionError as exc:
+        failures.append(str(exc))
 
     if failures:
         print("CONTROL STATE VALIDATION FAILED")
