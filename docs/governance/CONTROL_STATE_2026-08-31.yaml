@@ -1,6 +1,6 @@
 schema_version: 4
 last_reconciled_utc: 2026-08-31
-current_main_tip: a7079f51d6d8cdf5359cb058ad2ce0851dafde9c
+last_reconciled_main_tip: 79a56a63b850839321debbf4d0071c083a131a3f
 source_of_truth:
   implementation: github
   ci: github_actions
