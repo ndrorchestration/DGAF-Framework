@@ -19,7 +19,6 @@ jobs:
       configured: ${{ steps.check.outputs.configured }}
     steps:
       - uses: actions/checkout@v4
-
       - name: Check Vercel configuration
         id: check
         shell: bash
@@ -39,8 +38,7 @@ jobs:
           export EVIDENCE_CONFIGURED="$configured"
           export EVIDENCE_MISSING="${missing[*]}"
           python - <<'PY'
-          import json
-          import os
+          import json, os
           from pathlib import Path
           payload = {
               'evidence_class': 'DEPLOYMENT_CONFIGURATION_STATUS',
@@ -55,7 +53,6 @@ jobs:
           Path('artifacts/deployment_readiness.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
           echo "configured=$configured" >> "$GITHUB_OUTPUT"
-
       - name: Upload deployment readiness evidence
         uses: actions/upload-artifact@v4
         with:
@@ -75,23 +72,21 @@ jobs:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      EXPECTED_ENSEMBLE_VERSION: 1.8.0
+      EXPECTED_PSI_CHECK: enabled
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
-
       - name: Establish production runtime configuration
         run: |
           set -euo pipefail
-          echo "1.8.0" | vercel env add ENSEMBLE_VERSION production --token="$VERCEL_TOKEN" --force
-          echo "enabled" | vercel env add PSI_CHECK production --token="$VERCEL_TOKEN" --force
-
+          echo "$EXPECTED_ENSEMBLE_VERSION" | vercel env add ENSEMBLE_VERSION production --token="$VERCEL_TOKEN" --force
+          echo "$EXPECTED_PSI_CHECK" | vercel env add PSI_CHECK production --token="$VERCEL_TOKEN" --force
       - name: Deploy to Vercel production
         id: deploy
         run: |
@@ -99,7 +94,6 @@ jobs:
           URL=$(vercel deploy --prod --yes --token="$VERCEL_TOKEN")
           echo "deployment_url=$URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $URL"
-
       - name: Verify exact Vercel deployment identity
         id: provenance
         shell: bash
@@ -126,13 +120,9 @@ jobs:
           [ "$READY_STATE" = "READY" ] || { echo "x deployment state=$READY_STATE"; exit 1; }
           [ "$TARGET" = "production" ] || { echo "x deployment target=$TARGET; expected production"; exit 1; }
           [ -n "$SOURCE_SHA" ] || { echo 'x Vercel Git source SHA missing'; exit 1; }
-          [ "$SOURCE_SHA" = "$GITHUB_SHA" ] || {
-            echo "x source SHA mismatch: Vercel=$SOURCE_SHA GitHub=$GITHUB_SHA"
-            exit 1
-          }
+          [ "$SOURCE_SHA" = "$GITHUB_SHA" ] || { echo "x source SHA mismatch: Vercel=$SOURCE_SHA GitHub=$GITHUB_SHA"; exit 1; }
           python - <<'PY'
-          import json
-          import os
+          import json, os
           from pathlib import Path
           raw = json.loads(Path('artifacts/deployment_metadata.json').read_text(encoding='utf-8'))
           source_sha = raw.get('meta', {}).get('githubCommitSha') or raw.get('gitSource', {}).get('sha')
@@ -148,12 +138,15 @@ jobs:
               'git_ref': raw.get('meta', {}).get('githubCommitRef') or raw.get('gitSource', {}).get('ref'),
               'repository': raw.get('meta', {}).get('githubRepo'),
               'exact_source_match': source_sha == os.environ['GITHUB_SHA'],
+              'expected_runtime_configuration': {
+                  'ENSEMBLE_VERSION': os.environ['EXPECTED_ENSEMBLE_VERSION'],
+                  'PSI_CHECK': os.environ['EXPECTED_PSI_CHECK'],
+              },
           }
           Path('artifacts/deployment_provenance.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
           echo "deployment_id=$DEPLOYMENT_ID" >> "$GITHUB_OUTPUT"
           echo "source_sha=$SOURCE_SHA" >> "$GITHUB_OUTPUT"
-
       - name: Upload deployment provenance
         uses: actions/upload-artifact@v4
         with:
@@ -177,6 +170,8 @@ jobs:
     needs: deploy
     env:
       DGAF_URL: ${{ needs.deploy.outputs.deployment_url }}
+      EXPECTED_ENSEMBLE_VERSION: 1.8.0
+      EXPECTED_PSI_CHECK: enabled
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
@@ -188,15 +183,45 @@ jobs:
         run: pip install httpx -q
       - name: Wait for deployment to warm
         run: sleep 20
-      - name: Health preflight
+      - name: Health preflight and runtime configuration attestation
         run: |
+          set -euo pipefail
           echo "Checking: $DGAF_URL/api/health"
-          HEALTH=$(curl -sf "$DGAF_URL/api/health" || echo '{}')
+          HEALTH=$(curl -sf "$DGAF_URL/api/health")
           echo "$HEALTH" | python3 -m json.tool
           PSI=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('psi_cubic',''))")
           VER=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('version',''))")
           [ "$PSI" = "True" ] && echo '  v psi_cubic' || { echo '  x psi_cubic FAIL'; exit 1; }
-          [ "$VER" = "1.8.0" ] && echo '  v version=1.8.0' || echo "  ~ version=$VER"
+          [ "$VER" = "$EXPECTED_ENSEMBLE_VERSION" ] || { echo "  x version=$VER; expected $EXPECTED_ENSEMBLE_VERSION"; exit 1; }
+          mkdir -p artifacts
+          python3 - "$VER" "$PSI" <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          version, psi = sys.argv[1:]
+          payload = {
+              'evidence_class': 'EFFECTIVE_RUNTIME_CONFIGURATION_ATTESTATION',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'deployment_url': os.environ['DGAF_URL'],
+              'expected': {
+                  'ENSEMBLE_VERSION': os.environ['EXPECTED_ENSEMBLE_VERSION'],
+                  'PSI_CHECK': os.environ['EXPECTED_PSI_CHECK'],
+              },
+              'observed': {
+                  'version': version,
+                  'psi_cubic': psi == 'True',
+              },
+              'checks': {
+                  'version_matches_expected': version == os.environ['EXPECTED_ENSEMBLE_VERSION'],
+                  'psi_cubic_enabled': psi == 'True',
+              },
+              'limitations': ['Public health output attests exposed effective behavior, not secret values or unexposed deployment configuration.'],
+          }
+          payload['result'] = 'PASS' if all(payload['checks'].values()) else 'FAIL'
+          Path('artifacts/runtime_configuration_attestation.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
+          if payload['result'] != 'PASS':
+              raise SystemExit(1)
+          PY
       - name: 30-turn live regression
         run: python3 scripts/live_regression_v17.py
       - name: Upload regression results
@@ -215,15 +240,14 @@ jobs:
         run: |
           mkdir -p artifacts
           python - <<'PY'
-          import json
-          import os
+          import json, os
           from pathlib import Path
           payload = {
               'evidence_class': 'RUNTIME_VERIFICATION',
               'source_commit': os.environ['GITHUB_SHA'],
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'deployment_url': os.environ['DGAF_URL'],
-              'scope': 'exact-source production deployment identity, health preflight, 30-turn live regression, and audit turn-count check',
+              'scope': 'exact-source production deployment identity, effective runtime configuration, health preflight, 30-turn live regression, and audit turn-count check',
               'result': 'PASS',
               'limitations': ['Runtime verification applies to the exercised exact-source production deployment and protocol; it does not establish broad real-world efficacy.'],
           }
@@ -234,6 +258,11 @@ jobs:
         with:
           name: runtime-verification-${{ github.sha }}
           path: artifacts/runtime_verification.json
+      - name: Upload runtime configuration attestation
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-configuration-attestation-${{ github.sha }}
+          path: artifacts/runtime_configuration_attestation.json
       - name: Print production URL
         run: |
           echo "================================================"
