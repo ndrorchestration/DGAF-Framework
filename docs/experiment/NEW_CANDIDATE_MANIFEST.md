@@ -1,55 +1,53 @@
-# NEW CANDIDATE MANIFEST — post-#151 reconciliation cycle
+# NEW CANDIDATE MANIFEST — post-#170 restoration cycle
 
 ```yaml
-manifest_version: 1
+manifest_version: 2
 designation_event: NEW_CANDIDATE
-state: PRE-FREEZE / FAIL-CLOSED   # until independent P9 passes
-new_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
-new_candidate_tree_sha: dd662325149c42843d5ca99178ca4399fde6f440
-remediation_source:
-  pr: 151
-  pr_state: MERGED
-  merge_commit: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
-  merged_at: 2026-08-30T19:55:05Z
+state: PRE-FREEZE / FAIL-CLOSED
+apparatus_source_sha: d56b5b3c44e39ddb8c883259584432ab39259306
+apparatus_source_tree_sha: 8c13900c4ce2a503414f9dddf1d7ef7debead57e
+candidate_designation: PROVISIONAL / POST-RESTORE
+candidate_designation_rule: exact restored apparatus source; no prior empirical evidence transfers
 prior_candidate:
-  sha: c6157158bf0ee4840e99a381a4b99bd2febe2302
-  status: HISTORICAL / PRE-REMEDIATION
-  note: its P3-P9 package is NOT transferred; see docs/experiment/CANDIDATE_RECONCILIATION_RECORD.md
-historical_evidence_marker: docs/experiment/CANDIDATE_RECONCILIATION_RECORD.md
-designation_control_commit: 02c146d1e0cdc423948ac0dfa11e98f812edfb44
-designation_control_commit_role: CONTROL RECORD ONLY; NOT APPARATUS IDENTITY
-current_main_documentation_lineage: e88d4a026ad96bc5341a6bff23795c65d2bc7b9f
-recovery_basis:
-  r1_r4_matrix: .hermes/work/R1_R4_GATE_RECOVERY_MATRIX.md
-  issue: 152
-  operator_corroboration: measurement-identity != statistical-association; FAIL-CLOSED preferred over false restoration
+  sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
+  status: HISTORICAL / SUPERSEDED BY #170 RESTORATION
+  note: prior P3-P9 package is NOT transferred
+restoration_source:
+  pr: 170
+  pr_state: MERGED
+  merge_commit: d56b5b3c44e39ddb8c883259584432ab39259306
+  merged_at: 2026-08-31T07:03:16Z
+provenance_source:
+  pr: 169
+  state: ABSORBED INTO #170
+  head: 9123dc4a2b5b9859e3cf0ebde4d18202ba6b01d7
 gate_ledger:
-  P31_SCPE: FAIL-CLOSED
-  P27_KAPPA: FAIL-CLOSED (contradiction: code 0.28/0.25 vs docs 0.22/0.18)
-  P29_SENTINEL: FAIL-CLOSED (contradiction: doc HALT vs audit-only code)
-  P32_PHI: FAIL-CLOSED (missing KILL_REC band; phi anchor consistent conjugate)
-  P30_APOGEE: FAIL-CLOSED (partial recovery; stub insufficient)
-  P33_CONVERGENCE: FAIL-CLOSED (W_t substrate absent; current_final_std != proxy)
-  DEMIJOULE: FAIL-CLOSED (six-axis substrate absent)
-  P2_RUNTIME: VERIFIED (scope 303f4424 — re-execute for this candidate)
-  P6a_CORS: VERIFIED (scope 303f4424 — re-execute for this candidate)
-  P3_P8: OPEN / FAIL-CLOSED (require candidate-bound verification)
-  P9: NOT EXECUTED (require independent pass post-designation)
+  P31_SCPE: RESTORED_ON_APPARATUS
+  P27_KAPPA: RESTORED_ON_APPARATUS
+  P29_SENTINEL: RESTORED_ON_APPARATUS
+  P32_PHI: RESTORED_ON_APPARATUS
+  P30_APOGEE: RESTORED_ON_APPARATUS
+  P33_CONVERGENCE: RESTORED_ON_APPARATUS
+  DEMIJOULE: RESTORED_ON_APPARATUS
+  P2_RUNTIME: NOT_VERIFIED_FOR_THIS_CANDIDATE
+  P6a_CORS: NOT_VERIFIED_FOR_THIS_CANDIDATE
+  P3_P9: NOT_VERIFIED_FOR_THIS_CANDIDATE
+  P9: NOT_EXECUTED
 authorization: NOT GRANTED
 empirical_n: 0
 ```
 
 ## Identity roles
 
-- `05fa2866…` — post-#151 apparatus/candidate source identity.
-- `02c146d1…` — designation/control record; not the apparatus identity.
-- `e88d4a02…` — current `main` documentation/evidence lineage at the latest manifest reconciliation; documentation-only relative to the designated apparatus unless executable apparatus changes occur.
-- `c6157158…` — superseded pre-remediation candidate; provenance only.
-- `303f4424…` — prior production/runtime evidence boundary for P2/P6a.
+- `d56b5b3c…` — current restored apparatus source and provisional candidate designation basis.
+- `9123dc4a…` — provenance-integration head absorbed into #170; not the final apparatus identity.
+- `05fa2866…` — superseded historical post-#151 candidate; no empirical package transfers.
+- Any subsequent documentation-only commit changes `main` documentation lineage, not `apparatus_source_sha`.
+- Deployment identity must be recorded separately from both `main` tip and apparatus source SHA.
 
 ## Promotion rule
 
-This manifest records candidate designation only. It does not create a freeze, authorize the pilot, or promote prior P2/P6a evidence. Any substantive apparatus change after `05fa2866…` requires candidate re-identification.
+This manifest designates the exact restored apparatus source for the new candidate cycle. It does **not** create a freeze, authorize the pilot, or promote prior P2/P6a/P3-P9 evidence. All runtime and experimental predicates must be freshly established against this exact apparatus and its candidate-bound deployment.
 
 ## Boundary
 
