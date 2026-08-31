@@ -6,7 +6,7 @@ the verified ``pptl.triadic_governance_loop.TriadicGovernanceLoop.run_turn`` API
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any, Mapping, Sequence
 
@@ -19,7 +19,14 @@ from pptl.triadic_governance_loop import (
 )
 from task_engine import AttemptStatus
 
-ADAPTER_VERSION = "0.7.0"
+from pdmaltgl_gate_binding import (
+    ConvergenceState,
+    SCPEState,
+    build_pdmal_hook,
+    build_scpe_hook,
+)
+
+ADAPTER_VERSION = "0.7.1"
 DECISIONS = (
     "NO_CHANGE",
     "CONSERVATIVE_MIX",
@@ -44,6 +51,11 @@ class ConsensusState:
     runtime_budget_remaining_ms: int
     protocol_id: str
     adapter_version: str = ADAPTER_VERSION
+    # RESTORE (2026-08-30): P-31 SCPE + P-33 Convergence historical substrate.
+    # Both default to empty so pre-existing callers are unaffected. The adapter
+    # is stateless between calls; required historical state is carried here.
+    scpe_state: SCPEState = field(default_factory=SCPEState)
+    convergence_state: ConvergenceState = field(default_factory=ConvergenceState)
 
     def validate(self) -> None:
         n = len(self.agent_values)
@@ -220,10 +232,17 @@ class DGAF_TGLAdapter:
         # The adapter is intentionally stateless between process-isolated calls.
         # Bind the TGL counter to the semantic iteration so the audit index does
         # not reset to 1 every time a new adapter instance is constructed.
+        # RESTORE (2026-08-30): wire P-31 SCPE + P-33 Convergence hooks from the
+        # carried substrate. Other required gates (DemiJoule, P-27, P-29, P-32,
+        # P-30) remain unwired (None) and still reduce the turn to FAIL_CLOSED.
+        hooks = TGLHooks(
+            scpe_fn=build_scpe_hook(state.scpe_state),
+            pdmal_fn=build_pdmal_hook(state.convergence_state),
+        )
         tgl = TriadicGovernanceLoop(
             session_id=self.session_id,
             agent_id=self.agent_id,
-            hooks=TGLHooks(),
+            hooks=hooks,
             turn_counter=state.iteration,
         )
         audit = tgl.run_turn(input_text, context=context)
