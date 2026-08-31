@@ -1,7 +1,7 @@
 # NEW CANDIDATE MANIFEST — post-#170 restoration cycle
 
 ```yaml
-manifest_version: 3
+manifest_version: 4
 designation_event: NEW_CANDIDATE
 state: PRE-FREEZE / FAIL-CLOSED
 apparatus_source_sha: d56b5b3c44e39ddb8c883259584432ab39259306
@@ -31,6 +31,11 @@ deployment_binding:
   provenance_basis: Vercel deployment metadata + prior successful P6a CORS record for configured allowed origin
   prior_p6a_evidence: HISTORICAL / NON-TRANSFERABLE
   prior_p6a_candidate_sha: 303f4424d2198f0d0cf76305c589263dd1e417dc
+assurance:
+  control_state: docs/governance/CONTROL_STATE_2026-08-31.yaml
+  adversarial_matrix: docs/governance/ADVERSARIAL_PRE_FREEZE_ASSURANCE_MATRIX_2026-08-31.md
+  consistency_validator: scripts/validate_control_state.py
+  drift_guard_workflow: .github/workflows/control-state-consistency.yml
 gate_ledger:
   P31_SCPE: RESTORED_ON_APPARATUS
   P27_KAPPA: RESTORED_ON_APPARATUS
@@ -57,6 +62,10 @@ empirical_n: 0
 - `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app` — configured allowed CORS origin recovered from the prior successful P6a contract execution; it is an input value, not new evidence.
 - Any subsequent documentation-only commit changes `main` documentation lineage, not `apparatus_source_sha`.
 - Deployment identity remains separate from both `main` tip and apparatus source SHA.
+
+## Assurance controls
+
+The candidate is subject to the machine-readable control state, adversarial pre-freeze assurance matrix, and automated control-state consistency validator named above. Core identity, null-integrity, blinding, artifact-integrity, protocol, analysis, independence, and authorization failures remain fail-closed.
 
 ## Promotion rule
 
