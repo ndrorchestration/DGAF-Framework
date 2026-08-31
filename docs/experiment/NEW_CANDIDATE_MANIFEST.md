@@ -1,7 +1,7 @@
 # NEW CANDIDATE MANIFEST — post-#170 restoration cycle
 
 ```yaml
-manifest_version: 2
+manifest_version: 3
 designation_event: NEW_CANDIDATE
 state: PRE-FREEZE / FAIL-CLOSED
 apparatus_source_sha: d56b5b3c44e39ddb8c883259584432ab39259306
@@ -21,6 +21,16 @@ provenance_source:
   pr: 169
   state: ABSORBED INTO #170
   head: 9123dc4a2b5b9859e3cf0ebde4d18202ba6b01d7
+deployment_binding:
+  deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
+  deployment_url: https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app
+  deployment_target: production
+  deployment_state: READY
+  source_sha_match: true
+  allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
+  provenance_basis: Vercel deployment metadata + prior successful P6a CORS record for configured allowed origin
+  prior_p6a_evidence: HISTORICAL / NON-TRANSFERABLE
+  prior_p6a_candidate_sha: 303f4424d2198f0d0cf76305c589263dd1e417dc
 gate_ledger:
   P31_SCPE: RESTORED_ON_APPARATUS
   P27_KAPPA: RESTORED_ON_APPARATUS
@@ -42,8 +52,11 @@ empirical_n: 0
 - `d56b5b3c…` — current restored apparatus source and provisional candidate designation basis.
 - `9123dc4a…` — provenance-integration head absorbed into #170; not the final apparatus identity.
 - `05fa2866…` — superseded historical post-#151 candidate; no empirical package transfers.
+- `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb` — exact current production deployment for the restored apparatus source.
+- `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app` — exact current deployment URL.
+- `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app` — configured allowed CORS origin recovered from the prior successful P6a contract execution; it is an input value, not new evidence.
 - Any subsequent documentation-only commit changes `main` documentation lineage, not `apparatus_source_sha`.
-- Deployment identity must be recorded separately from both `main` tip and apparatus source SHA.
+- Deployment identity remains separate from both `main` tip and apparatus source SHA.
 
 ## Promotion rule
 
