@@ -2,33 +2,36 @@
 
 ## Exact candidate binding
 
-- Apparatus source SHA: `d56b5b3c44e39ddb8c883259584432ab39259306`
-- Production deployment ID: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
-- Production deployment URL: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
+- Apparatus source SHA: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- Apparatus source tree SHA: `973c92335caf84f37fc2b3c4df6dd83b3b855087`
+- Production deployment ID: `NOT_ESTABLISHED`
+- Production deployment URL: `NOT_ESTABLISHED`
 - Allowed CORS origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
 
 ## Fresh P2 inputs
 
 ```text
-candidate_sha=d56b5b3c44e39ddb8c883259584432ab39259306
-deployment_id=dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
-base_url=https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app
+candidate_sha=2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
+deployment_id=NOT_ESTABLISHED
+base_url=NOT_ESTABLISHED
 ```
 
 ## Fresh P6a inputs
 
 ```text
-candidate_sha=d56b5b3c44e39ddb8c883259584432ab39259306
-deployment_id=dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
-base_url=https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app
+candidate_sha=2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
+deployment_id=NOT_ESTABLISHED
+base_url=NOT_ESTABLISHED
 allowed_origin=https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
 ```
 
 ## Evidence rule
 
-These values identify the current post-#170 candidate deployment. They do not constitute runtime evidence. P2 and P6a must be freshly dispatched and must emit artifacts whose `source_commit` and `deployment_id` match these values exactly.
+These values identify the corrected post-#174 candidate apparatus. They do not constitute runtime evidence. P2 and P6a must be freshly dispatched only after an authenticated production deployment exists whose source SHA matches `2a54a67d…` exactly and whose effective behavior-affecting environment has been attested.
 
-Historical P6a run `33302495240` is retained only as prior evidence of the configured CORS contract. Its candidate SHA `303f4424…` and deployment ID `dpl_FbPSc3K9…` are non-transferable.
+The previously listed `d56b5b3c…` / `dpl_76UU8mCm…` runtime values are invalidated pre-correction identities and MUST NOT be used for current-cycle dispatch.
+
+The observed production deployment `dpl_HUtax6JJiSfCm1RX6351fSkSwP9j` sourced from `a7079f51…` is also non-closing for this candidate because its source SHA does not equal the candidate SHA.
 
 ## Boundary
 
