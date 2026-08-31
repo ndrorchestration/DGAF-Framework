@@ -140,6 +140,56 @@ def _canonical_convergence_state(state: ConvergenceState) -> str:
     ))
 
 
+def _canonical_sentinel_state(state: SentinelRiskState) -> str:
+    return "|".join((
+        f"record_category={state.record_category}",
+        f"routing_policy={state.routing_policy}",
+        f"routing_confidence={_float_repr(state.routing_confidence)}",
+        f"hook_point={state.hook_point}",
+        f"deontic={state.deontic}",
+    ))
+
+
+def _canonical_apogee_state(state: ApogeeAttestationState) -> str:
+    return "|".join((
+        f"confidence={_float_repr(state.confidence)}",
+        f"artifact_description={state.artifact_description}",
+        f"grade={state.grade}",
+        f"gold_star={'1' if state.gold_star else '0'}",
+    ))
+
+
+def _canonical_demijoule_state(state: DemiJouleState) -> str:
+    axes = ";".join(
+        f"{k}={_float_repr(v)}" for k, v in sorted(state.axis_scores.items())
+    )
+    return "|".join((
+        f"axes={axes}",
+        f"decision={state.decision}",
+        f"mean_score={_float_repr(state.mean_score)}",
+    ))
+
+
+def _canonical_kappa_state(state: KappaState) -> str:
+    return "|".join((
+        f"detected_category={state.detected_category}",
+        f"pattern_score={_float_repr(state.pattern_score)}",
+        f"continuous_score={_float_repr(state.continuous_score)}",
+        f"length_boost={_float_repr(state.length_boost)}",
+        f"confidence={_float_repr(state.confidence)}",
+        f"routing_decision={state.routing_decision}",
+    ))
+
+
+def _canonical_phi_state(state: PhiClosureState) -> str:
+    return "|".join((
+        f"stable_count={state.stable_count}",
+        f"total_count={state.total_count}",
+        f"consec_fails={state.consec_fails}",
+        f"last_decision={state.last_decision}",
+    ))
+
+
 def canonicalize_state(state: ConsensusState) -> str:
     """Return the canonical byte-stable TGL representation including restored P31/P33 state."""
     state.validate()
@@ -164,6 +214,11 @@ def canonicalize_state(state: ConsensusState) -> str:
         f"budget_ms={state.runtime_budget_remaining_ms}",
         "scpe=" + _canonical_scpe_state(state.scpe_state).replace("\n", "|"),
         "convergence=" + _canonical_convergence_state(state.convergence_state).replace("\n", "|"),
+        "sentinel=" + _canonical_sentinel_state(state.sentinel_state).replace("\n", "|"),
+        "apogee=" + _canonical_apogee_state(state.apogee_state).replace("\n", "|"),
+        "demijoule=" + _canonical_demijoule_state(state.demijoule_state).replace("\n", "|"),
+        "kappa=" + _canonical_kappa_state(state.kappa_state).replace("\n", "|"),
+        "phi=" + _canonical_phi_state(state.phi_state).replace("\n", "|"),
     ]
     return "\n".join(lines) + "\n"
 
