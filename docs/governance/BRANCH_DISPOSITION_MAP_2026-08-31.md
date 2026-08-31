@@ -62,7 +62,7 @@ Branch names and passing checks do not confer experimental authority. The curren
 | `docs/publication-provenance-spine` | KEEP-HISTORICAL | Publication/provenance architecture predecessor. |
 | `docs/governance-architecture-audit` | KEEP-HISTORICAL | Audit artifact; not apparatus authority. |
 | `docs/forward-plan` | KEEP-HISTORICAL | Planning artifact. |
-| `docs/readme-public-surface-20260829` / #140 | KEEP-ACTIVE | Only currently open PR; documentation/public-surface scope, not experimental apparatus. |
+| `docs/readme-public-surface-20260829` / #140 | KEEP-ACTIVE | Documentation/public-surface scope, not experimental apparatus. |
 
 ## Engineering / security / verification branches
 
@@ -129,6 +129,8 @@ The following branches all point to `103a40779954bb79f869413cc994de2636941b7f`:
 7. Branch cleanup must never delete the only retained copy of unique historical evidence.
 
 ## Current experimental boundary
+
+### Experimental state
 
 **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · N=0**
 
