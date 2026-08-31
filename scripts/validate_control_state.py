@@ -19,6 +19,23 @@ CONTROL_DOCS = {
     "docs/experiment/N1_OPERATIONAL_CHARACTERIZATION_GATE_2026-08-30.md": "N=1 gate",
     "docs/experiment/FREEZE_MANIFEST.md": "freeze manifest",
     "docs/governance/P1_TO_P9_EVIDENCE_MATRIX.md": "P1-P9 matrix",
+    "docs/DRIFT_CORRECTION_NOTE_2026-08-31.md": "documentation drift correction note",
+    "docs/evidence/PDMAL_EVIDENCE_INDEX.md": "evidence index",
+}
+
+# Phrases that, if present, assert a STALE SHA is the CURRENT apparatus/candidate.
+# These must never appear with a non-current SHA (02e4c958 is pre-#170 P-31/P-33
+# only; 05fa286 is the superseded post-#151 candidate). The current apparatus is
+# d56b5b3c (PR #170).
+FORBIDDEN_LIVE_PHRASES = {
+    "docs/DRIFT_CORRECTION_NOTE_2026-08-31.md": [
+        "Current apparatus source: `02e4c958",
+        "Current `main` documentation tip: `34e1a057",
+    ],
+    "docs/evidence/PDMAL_EVIDENCE_INDEX.md": [
+        "current designated apparatus candidate is `05fa286",
+        "Current post-#151 apparatus candidate | DESIGNATED / NOT FROZEN | `05fa286",
+    ],
 }
 
 
@@ -41,6 +58,16 @@ def main() -> int:
         try:
             text = read(path)
             assert_contains(text, APPARATUS_SHA, path)
+        except AssertionError as exc:
+            failures.append(str(exc))
+
+        try:
+            text = read(path)
+            for forbidden in FORBIDDEN_LIVE_PHRASES.get(path, []):
+                if forbidden in text:
+                    raise AssertionError(
+                        f"{path}: forbidden stale-SHA-as-current phrase present: {forbidden!r}"
+                    )
         except AssertionError as exc:
             failures.append(str(exc))
 
@@ -77,7 +104,7 @@ def main() -> int:
             failures.append(str(exc))
 
     current_state = read("docs/CURRENT_STATE.md")
-    for identity_label in ("main tip", "apparatus source", "candidate identity", "deployment identity"):
+    for identity_label in ("`main` tip", "apparatus source", "candidate identity", "deployment identity"):
         try:
             assert_contains(current_state, identity_label, "docs/CURRENT_STATE.md")
         except AssertionError as exc:

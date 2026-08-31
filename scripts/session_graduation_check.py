@@ -127,10 +127,12 @@ def run_graduation_check(session: str, anchor_path: Path = None, queue_path: Pat
 
 def write_graduation_report(result: dict, report_path: Path = None) -> Path:
     report_path = report_path or REPO_ROOT / "GRADUATION_REPORT.md"
+    verdict_pass = "\u2705 GRADUATED"
+    verdict_fail = "\u274c NOT READY"
     lines = [
         f"# GRADUATION REPORT — {result['session']}",
         f"**Generated:** {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
-        f"**Verdict:** {'\u2705 GRADUATED' if result['all_pass'] else '\u274c NOT READY'}",
+        f"**Verdict:** {verdict_pass if result['all_pass'] else verdict_fail}",
         "",
         "## Check Results",
         "",

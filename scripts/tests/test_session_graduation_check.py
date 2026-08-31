@@ -17,7 +17,7 @@ SCRIPT = Path(__file__).parent.parent / "session_graduation_check.py"
 
 def make_anchor(tmp_path: Path, session: str = "S042", has_blg_closed: bool = True) -> Path:
     blg_line = "| S041-BLG-01 | ✅ CLOSED S041 |" if has_blg_closed else "| S041-BLG-01 | OPEN |"
-    content = f"""# SESSION ANCHOR — {session}
+    content = """# SESSION ANCHOR — {session}
 **Seal status:** ✅ GRADUATED
 
 ## BLG Status — ALL CLEAR
@@ -25,7 +25,7 @@ def make_anchor(tmp_path: Path, session: str = "S042", has_blg_closed: bool = Tr
 | ID | Status |
 |---|---|
 {blg_line}
-"""
+""".format(session=session, blg_line=blg_line)
     p = tmp_path / "SESSION_ANCHOR.md"
     p.write_text(content, encoding="utf-8")
     return p
