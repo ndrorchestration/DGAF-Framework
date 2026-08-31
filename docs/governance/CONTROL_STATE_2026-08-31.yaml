@@ -1,5 +1,6 @@
-schema_version: 3
+schema_version: 4
 last_reconciled_utc: 2026-08-31
+current_main_tip: a7079f51d6d8cdf5359cb058ad2ce0851dafde9c
 source_of_truth:
   implementation: github
   ci: github_actions
@@ -21,7 +22,7 @@ prior_apparatus:
   status: INVALIDATED_BY_PROVENANCE_CORRECTION
   deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
   note: historical_only_non_closing
-historical_boundaries:
+authoritative_historical_boundaries:
   prior_production_source_sha: 303f4424d2198f0d0cf76305c589263dd1e417dc
   prior_experimental_boundary_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
   superseded_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
@@ -33,6 +34,14 @@ deployment:
   source_sha_must_equal: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
   pre_correction_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
   pre_correction_status: HISTORICAL_NON_CLOSING
+  required_github_actions_secrets:
+    - VERCEL_TOKEN
+    - VERCEL_ORG_ID
+    - VERCEL_PROJECT_ID
+  configuration_binding_status: BLOCKED_PENDING_EFFECTIVE_ENV_ATTESTATION
+  behavior_affecting_environment:
+    ENSEMBLE_VERSION: "1.8.0"
+    PSI_CHECK: enabled
 gates:
   P31: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
   P33: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
@@ -61,6 +70,7 @@ failure_policy:
   independent_verification_failure: FAIL_CLOSED
   unauthorized_execution: DO_NOT_COUNT_N
   incomplete_restored_gate_provenance: FAIL_CLOSED
+  deployment_configuration_mismatch: FAIL_CLOSED
 stopping_rule:
   block_execution_if_any_core_validity_predicate_unresolved: true
   accept_residual_unknowns_after_p9: true
