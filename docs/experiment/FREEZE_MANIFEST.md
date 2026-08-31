@@ -13,12 +13,13 @@ prior_pre_remediation_candidate: c6157158bf0ee4840e99a381a4b99bd2febe2302
 prior_experimental_verification_boundary: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
 superseded_post151_apparatus_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
 superseded_candidate_designation_commit_sha: 02c146d1e0cdc423948ac0dfa11e98f812edfb44
-current_restored_apparatus_source_sha: d56b5b3c44e39ddb8c883259584432ab39259306
-current_restored_apparatus_tree_sha: 8c13900c4ce2a503414f9dddf1d7ef7debead57e
-current_candidate_status: PROVISIONAL / NOT FROZEN / REQUIRES FRESH CANDIDATE-SCOPED VERIFICATION
-current_deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
-current_deployment_url: https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app
-current_allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
+pre_correction_restored_apparatus_source_sha: d56b5b3c44e39ddb8c883259584432ab39259306
+active_provenance_correction_pr: 172
+active_provenance_correction_head: 3c489459e09d2d9fb9d31239d9bae05df4b3548b
+current_candidate_status: BLOCKED / PRE-CORRECTION / NOT EXECUTION-VALID
+pre_correction_deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
+pre_correction_deployment_url: https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app
+pre_correction_allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
 freeze_commit_sha: NONE
 freeze_timestamp_utc: NONE
 freeze_author: Ndr Orchestration
@@ -28,9 +29,9 @@ freeze_author: Ndr Orchestration
 
 This file is the **pre-freeze manifest**. It is not evidence that the restored apparatus is frozen. The historical implementation freeze at `3510b868…` is retained as provenance only.
 
-PR #170 introduced the completed seven-gate constitutive restoration and provenance integration. The merge commit `d56b5b3c…` is the current restored apparatus/source identity. Later documentation-only commits may advance the `main` tip without changing that apparatus source.
+PR #170 restored the seven constitutive gates, but adversarial review found that its canonical provenance identity omitted five behavior-affecting restored gate-state substrates. PR #172 is the active correction. Until #172 is validated and merged, `d56b5b3c…` is a pre-correction apparatus source and is not an execution-valid candidate.
 
-The superseded `05fa286…` candidate cycle and the `02c146d1…` designation record remain historical. Their runtime/experimental evidence does not transfer to `d56b5b3c…`.
+If #172 merges, the resulting apparatus SHA creates a new candidate-cycle boundary. The pre-correction deployment and all evidence tied to it become historical/non-closing for that new cycle.
 
 ## Experimental design
 
@@ -51,40 +52,34 @@ The superseded `05fa286…` candidate cycle and the `02c146d1…` designation re
 | E2b verifier-toolchain provenance | CLOSED / VERIFIED for recorded exact executions |
 | M6 negative-state observability | CLOSED / VERIFIED for recorded exact executions |
 | Prior production source provenance | CLOSED / VERIFIED — historical `303f4424…` boundary |
-| Seven-gate constitutive restoration | IMPLEMENTED / PRE-FREEZE VALIDATED — `d56b5b3c…` |
-| Candidate deployment provenance | IDENTIFIED — `dpl_76UU8mCm…` / production / READY |
-| P1 Candidate integrity | OPEN — fresh candidate evidence required |
-| P2 Execution contract / runtime | NEW CANDIDATE OPEN — fresh run required |
-| P3 Artifact contract | IMPLEMENTED / OPEN — fresh candidate-scoped evidence required |
-| P4 Security / blinding integrity | OPEN — current-cycle operational evidence required |
-| P5 Provenance / reproducibility | OPEN — current-cycle evidence required |
-| P6 Durable evidence custody | OPEN / FAIL-CLOSED — current-cycle archive/retrieval/hash proof required |
-| P6a Runtime/CORS | NEW CANDIDATE OPEN — fresh run required |
-| P7 Scientific target specification | ADOPTED / BINDING PENDING — bind to final candidate/freeze |
-| P8 Analysis lock | OPEN / FAIL-CLOSED — current-cycle exact-candidate evidence required |
-| P9 Independent verification | NOT EXECUTED — independent verification required |
+| Seven-gate constitutive restoration | IMPLEMENTED / CORRECTION REQUIRED — provenance identity incomplete in `d56b5b3c…` |
+| P1 Candidate integrity | BLOCKED ON #172 |
+| P2 Execution contract / runtime | PAUSED — new candidate required after #172 |
+| P3 Artifact contract | PAUSED — new candidate required after #172 |
+| P4 Security / blinding integrity | PAUSED — new candidate required after #172 |
+| P5 Provenance / reproducibility | BLOCKED — identity correction required |
+| P6 Durable evidence custody | PAUSED — new candidate required after #172 |
+| P6a Runtime/CORS | PAUSED — new candidate required after #172 |
+| P7 Scientific target specification | ADOPTED / BINDING PENDING — bind to corrected final candidate/freeze |
+| P8 Analysis lock | PAUSED / FAIL-CLOSED |
+| P9 Independent verification | PAUSED |
 
-## Current runtime identity
+## Provenance correction
+
+The #170 canonicalization bound P-31/P-33 state but omitted the restored P-29 Sentinel, P-30 Apogee, DemiJoule, P-27 KAPPA, and P-32 Phi state. PR #172 binds these states into canonical identity and adds per-gate identity-change regression tests. This is an apparatus integrity correction, not an experimental observation.
+
+## Pre-correction runtime identity
+
+The following values belong only to the pre-correction `d56b5b3c…` deployment and must not close the post-#172 candidate cycle:
 
 - Apparatus source SHA: `d56b5b3c44e39ddb8c883259584432ab39259306`
-- Apparatus tree SHA: `8c13900c4ce2a503414f9dddf1d7ef7debead57e`
 - Production deployment ID: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
 - Production deployment URL: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
 - Allowed CORS origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
 
-These values are candidate inputs, not evidence of P2/P6a success. P2/P6a workflows must verify them at execution time and emit retained provenance artifacts.
-
-## Historical runtime evidence
-
-P2 run `33300481208` / artifact `9728767844` and P6a run `33302495240` / artifact `9729387603` remain exact evidence for the historical `303f4424…` source/deployment boundary. They are not evidence for `d56b5b3c…`.
-
 ## Candidate boundary
 
-Current provisional experimental candidate basis:
-
-`d56b5b3c44e39ddb8c883259584432ab39259306`
-
-This is intentionally distinct from the mutable `main` documentation tip and from the eventual immutable freeze identity.
+No execution-valid candidate is designated during the #172 correction hold. A new candidate must be derived from the resulting post-correction apparatus source and its exact production deployment.
 
 ## Promotion rule
 
