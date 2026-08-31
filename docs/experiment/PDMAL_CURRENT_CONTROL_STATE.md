@@ -2,11 +2,11 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-30
-applies_to_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
-pre_freeze_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
-pre_freeze_candidate_ref: main / post-#151 apparatus boundary
-candidate_status: DESIGNATED / NOT FROZEN / REQUIRES FRESH CANDIDATE-SCOPED VERIFICATION
+last_verified: 2026-08-31
+applies_to_sha: d56b5b3c44e39ddb8c883259584432ab39259306
+pre_freeze_candidate_sha: d56b5b3c44e39ddb8c883259584432ab39259306
+pre_freeze_candidate_ref: main / post-#170 restored apparatus boundary
+candidate_status: PROVISIONAL / NOT FROZEN / REQUIRES FRESH CANDIDATE-SCOPED VERIFICATION
 ---
 
 # PDMAL Current Control State
@@ -19,56 +19,67 @@ This is the current pre-authorization control record. Historical evidence remain
 |---|---|---|
 | Historical freeze | HISTORICAL / SUPERSEDED | `3510b868…` is provenance only |
 | Prior engineering/production source | VERIFIED / HISTORICAL SCOPE | `303f4424…`; prior P2/P6a deployment and evidence |
-| Prior pre-remediation candidate | SUPERSEDED / HISTORICAL | `c6157158…`; post-#151 evidence does not inherit this identity |
-| **Current post-#151 apparatus candidate** | **DESIGNATED / NOT FROZEN** | `05fa286614bd80576c1f7f4b01f1bdd7fe57ef37` |
-| Candidate designation/control commit | CONTROL RECORD | `02c146d1…`; not apparatus identity |
-| Corrected runner | IMPLEMENTED / EVIDENCE GATED | Exact candidate execution evidence still required |
-| TGL contract | VERIFIED ENGINEERING CONTROL | F1 fail-closed remediation and F2/F3 controls merged in #151 |
+| Prior pre-remediation candidate | SUPERSEDED / HISTORICAL | `c6157158…`; evidence does not transfer |
+| Superseded post-#151 candidate | SUPERSEDED / HISTORICAL | `05fa286…`; prior P2/P6a/P3-P9 package does not transfer |
+| **Current restored apparatus / provisional candidate** | **DESIGNATED / NOT FROZEN** | `d56b5b3c44e39ddb8c883259584432ab39259306` from merged #170 |
+| Current apparatus tree | IDENTIFIED | `8c13900c4ce2a503414f9dddf1d7ef7debead57e` |
+| Current production deployment | IDENTIFIED / READY | `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb` |
+| Corrected runner | IMPLEMENTED / EVIDENCE GATED | Fresh candidate execution evidence still required |
+| Seven-gate constitutive restoration | IMPLEMENTED / PRE-FREEZE VALIDATED | P-31/P-33/P-27/P-29/P-30/P-32/DemiJoule restored and validated on pre-merge exact head |
 | P7 scientific specification | ADOPTED / BINDING PENDING | Must bind to eventual final freeze identity |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Final apparatus/candidate evidence incomplete |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Final candidate evidence incomplete |
 | Artifact contract | IMPLEMENTED / OPEN | Fresh candidate-scoped execution evidence required |
-| Blinding custody | OPEN | Operational custody/separation evidence required |
+| Blinding custody | OPEN | Current-cycle operational custody/separation evidence required |
 | Durable retention | OPEN | Archive/retrieval/hash proof required |
-| R1–R4 semantic recovery | CLOSED / FAIL-CLOSED | Seven constitutive gates investigated for current evidence epoch; reopen only for genuinely new authoritative semantic evidence |
-| P2 runtime | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33300481208` remains exact for `303f4424…`; fresh current-candidate execution required |
-| P6a CORS | PRIOR VERIFIED / CURRENT CANDIDATE OPEN | Run `33302495240` remains exact for `303f4424…`; fresh current-candidate execution required |
+| R1–R4 semantic recovery | CLOSED / FAIL-CLOSED | Do not reopen absent genuinely new authoritative semantic evidence |
+| P2 runtime | NEW CANDIDATE OPEN | Fresh run required for `d56b5b3c…` + exact deployment |
+| P6a CORS | NEW CANDIDATE OPEN | Fresh run required for same deployment + configured origin |
+| P3 | IMPLEMENTED / OPEN | Current candidate evidence required |
+| P4 | OPEN | Current-cycle blinding/custody evidence required |
+| P5 | OPEN | Current-cycle reproducibility evidence required |
+| P6 | OPEN / FAIL-CLOSED | Current-cycle durable custody proof required |
 | P9 independent verification | NOT EXECUTED FOR CURRENT CANDIDATE | Independent audit/reproduction required |
-| New freeze | NOT CREATED | Candidate is designated, not frozen |
+| New freeze | NOT CREATED | Candidate is provisional, not frozen |
 | Pilot authorization | NOT GRANTED | Separate governance transition |
 | Empirical data | N = 0 | No authorized pilot execution |
 
 ## Candidate identity boundary
 
-PR #151 merged as apparatus-changing commit `05fa286…`. That merge establishes the new candidate-cycle boundary. The previous candidate `c6157158…` and all evidence bound to it are retained as historical provenance and do not transfer automatically.
+PR #170 merged the completed seven-gate restoration and provenance integration as apparatus-changing commit `d56b5b3c…`. This is the current restored apparatus/source boundary and provisional candidate basis.
 
-The subsequent designation/control commit `02c146d1…` records candidate designation but is not itself the apparatus identity. Documentation commits after designation do not alter the designated apparatus unless executable apparatus changes occur.
+The superseded post-#151 candidate `05fa286…` and its designation record `02c146d1…` remain historical. No evidence bound to either transfers to `d56b5b3c…`.
 
-The current `main` documentation/evidence lineage may advance independently; documentation-only commits do not redefine the designated apparatus identity.
+Documentation commits may advance the `main` control-plane lineage without changing `d56b5b3c…` as the apparatus source. The eventual frozen identity must additionally bind the exact candidate tree/protocol/dependencies/deployment and final P1-P9 state.
+
+## Current deployment/runtime boundary
+
+Current deployment identity:
+
+- deployment ID: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
+- deployment URL: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
+- allowed CORS origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
+- Vercel source SHA must equal candidate SHA at every runtime verification.
+
+These are candidate inputs, not P2/P6a evidence until the fresh authenticated workflows execute and emit retained artifacts.
 
 ## Historical runtime evidence
 
-P2 run `33300481208` and P6a run `33302495240` remain valid, exact evidence for candidate `303f4424…` and deployment `dpl_FbPSc3K9VFWESXuUuWDepBKwKra8`. They are not evidence for `05fa286…`.
-
-## Candidate deployment/runtime boundary
-
-The post-#151 candidate requires an exact deployment identity check before current-candidate P2/P6a can close. Deployment readiness alone does not establish runtime predicate completion.
+P2 run `33300481208` and P6a run `33302495240` remain exact historical evidence for `303f4424…` and its deployment boundary. They are not evidence for the current candidate.
 
 ## Required next evidence events
 
-1. Verify exact candidate/deployment identity for `05fa286614bd80576c1f7f4b01f1bdd7fe57ef37`.
-2. Execute fresh P2 runtime verification against that exact candidate/deployment.
-3. Execute fresh P6a CORS verification against the same exact candidate/deployment.
-4. Complete P3 candidate-scoped artifact-contract execution evidence.
-5. **Do not repeat R1–R4.** The seven constitutive gates are already classified as FAIL-CLOSED for the current evidence epoch. Gate restoration/adaptation requires genuinely new authoritative semantic evidence or an explicitly adopted new governed specification.
-6. Complete P4 operational blinding/custody evidence.
-7. Complete P5 environment/topology/RNG reproducibility evidence.
-8. Complete P6 durable archive/retrieval/hash evidence.
-9. Bind P7 to the exact final candidate/protocol/analysis/freeze identity.
-10. Close P8 from current-candidate evidence.
-11. Execute independent P9 verification.
-12. Create and independently verify a new immutable freeze.
-13. Obtain explicit pilot authorization.
-14. Only then execute the blinded pilot.
+1. Execute fresh P2 runtime verification against `d56b5b3c…`, `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`, and the exact deployment URL.
+2. Execute fresh P6a CORS verification against the same candidate/deployment and the configured allowed origin.
+3. Complete P3 current-candidate artifact-contract evidence.
+4. Complete P4 operational blinding/custody evidence.
+5. Complete P5 environment/topology/RNG reproducibility evidence.
+6. Complete P6 durable archive/retrieval/hash evidence.
+7. Bind P7 to the exact candidate/protocol/analysis/freeze identity.
+8. Close P8 from current-candidate evidence.
+9. Execute independent P9 verification.
+10. Create and independently verify a new immutable freeze.
+11. Obtain explicit pilot authorization.
+12. Only then execute the blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
 
