@@ -42,7 +42,6 @@ jobs:
           import json
           import os
           from pathlib import Path
-
           payload = {
               'evidence_class': 'DEPLOYMENT_CONFIGURATION_STATUS',
               'source_commit': os.environ['GITHUB_SHA'],
@@ -87,14 +86,17 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
+      - name: Establish production runtime configuration
+        run: |
+          set -euo pipefail
+          echo "1.8.0" | vercel env add ENSEMBLE_VERSION production --token="$VERCEL_TOKEN" --force
+          echo "enabled" | vercel env add PSI_CHECK production --token="$VERCEL_TOKEN" --force
+
       - name: Deploy to Vercel production
         id: deploy
         run: |
           mkdir -p artifacts
-          URL=$(vercel deploy \
-            --prod \
-            --yes \
-            --token="$VERCEL_TOKEN")
+          URL=$(vercel deploy --prod --yes --token="$VERCEL_TOKEN")
           echo "deployment_url=$URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $URL"
 
@@ -113,7 +115,6 @@ jobs:
             --data-urlencode "withGitRepoInfo=true" \
             "https://api.vercel.com/v13/deployments/$HOST" \
             -H "Authorization: Bearer $VERCEL_TOKEN")
-
           echo "$RESPONSE" > artifacts/deployment_metadata.json
           READY_STATE=$(echo "$RESPONSE" | jq -r '.readyState // empty')
           TARGET=$(echo "$RESPONSE" | jq -r '.target // empty')
@@ -121,7 +122,6 @@ jobs:
           META_SHA=$(echo "$RESPONSE" | jq -r '.meta.githubCommitSha // empty')
           GIT_SHA=$(echo "$RESPONSE" | jq -r '.gitSource.sha // empty')
           SOURCE_SHA="${META_SHA:-$GIT_SHA}"
-
           [ -n "$DEPLOYMENT_ID" ] || { echo 'x deployment id missing'; exit 1; }
           [ "$READY_STATE" = "READY" ] || { echo "x deployment state=$READY_STATE"; exit 1; }
           [ "$TARGET" = "production" ] || { echo "x deployment target=$TARGET; expected production"; exit 1; }
@@ -130,12 +130,10 @@ jobs:
             echo "x source SHA mismatch: Vercel=$SOURCE_SHA GitHub=$GITHUB_SHA"
             exit 1
           }
-
           python - <<'PY'
           import json
           import os
           from pathlib import Path
-
           raw = json.loads(Path('artifacts/deployment_metadata.json').read_text(encoding='utf-8'))
           source_sha = raw.get('meta', {}).get('githubCommitSha') or raw.get('gitSource', {}).get('sha')
           payload = {
@@ -153,16 +151,8 @@ jobs:
           }
           Path('artifacts/deployment_provenance.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
-
           echo "deployment_id=$DEPLOYMENT_ID" >> "$GITHUB_OUTPUT"
           echo "source_sha=$SOURCE_SHA" >> "$GITHUB_OUTPUT"
-
-      - name: Set env vars
-        run: |
-          echo "1.8.0" | vercel env add ENSEMBLE_VERSION production \
-            --token="$VERCEL_TOKEN" --force
-          echo "enabled" | vercel env add PSI_CHECK production \
-            --token="$VERCEL_TOKEN" --force
 
       - name: Upload deployment provenance
         uses: actions/upload-artifact@v4
@@ -190,54 +180,37 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Install httpx
         run: pip install httpx -q
-
       - name: Wait for deployment to warm
         run: sleep 20
-
       - name: Health preflight
         run: |
           echo "Checking: $DGAF_URL/api/health"
           HEALTH=$(curl -sf "$DGAF_URL/api/health" || echo '{}')
           echo "$HEALTH" | python3 -m json.tool
-          PSI=$(echo "$HEALTH" | python3 -c \
-            "import sys,json; print(json.load(sys.stdin).get('psi_cubic',''))")
-          VER=$(echo "$HEALTH" | python3 -c \
-            "import sys,json; print(json.load(sys.stdin).get('version',''))")
-          [ "$PSI" = "True" ] \
-            && echo '  v psi_cubic' \
-            || { echo '  x psi_cubic FAIL'; exit 1; }
-          [ "$VER" = "1.8.0" ] \
-            && echo '  v version=1.8.0' \
-            || echo "  ~ version=$VER"
-
+          PSI=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('psi_cubic',''))")
+          VER=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('version',''))")
+          [ "$PSI" = "True" ] && echo '  v psi_cubic' || { echo '  x psi_cubic FAIL'; exit 1; }
+          [ "$VER" = "1.8.0" ] && echo '  v version=1.8.0' || echo "  ~ version=$VER"
       - name: 30-turn live regression
         run: python3 scripts/live_regression_v17.py
-
       - name: Upload regression results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: regression-${{ github.sha }}
           path: regression_results_v17.json
-
       - name: Audit log final check
         run: |
           AUDIT=$(curl -sf "$DGAF_URL/api/audit" || echo '{}')
           echo "$AUDIT" | python3 -m json.tool
-          TC=$(echo "$AUDIT" | python3 -c \
-            "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
-          [ "$TC" -ge 30 ] \
-            && echo "  v audit turn_count=$TC" \
-            || { echo "  x turn_count=$TC < 30"; exit 1; }
-
+          TC=$(echo "$AUDIT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
+          [ "$TC" -ge 30 ] && echo "  v audit turn_count=$TC" || { echo "  x turn_count=$TC < 30"; exit 1; }
       - name: Record runtime verification evidence
         run: |
           mkdir -p artifacts
@@ -245,7 +218,6 @@ jobs:
           import json
           import os
           from pathlib import Path
-
           payload = {
               'evidence_class': 'RUNTIME_VERIFICATION',
               'source_commit': os.environ['GITHUB_SHA'],
@@ -257,13 +229,11 @@ jobs:
           }
           Path('artifacts/runtime_verification.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
-
       - name: Upload runtime verification evidence
         uses: actions/upload-artifact@v4
         with:
           name: runtime-verification-${{ github.sha }}
           path: artifacts/runtime_verification.json
-
       - name: Print production URL
         run: |
           echo "================================================"
