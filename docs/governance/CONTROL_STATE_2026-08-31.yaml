@@ -1,0 +1,56 @@
+schema_version: 1
+last_reconciled_utc: 2026-08-31
+source_of_truth:
+  implementation: github
+  ci: github_actions
+  deployment: vercel
+  governance: project_governance_records
+experimental_boundary:
+  phase: PRE-FREEZE
+  status: FAIL-CLOSED
+  authorization: NOT_GRANTED
+  empirical_n: 0
+identities:
+  main_tip: RESOLVE_MAIN_DIRECTLY
+  apparatus_source_sha: d56b5b3c44e39ddb8c883259584432ab39259306
+  apparatus_tree_sha: 8c13900c4ce2a503414f9dddf1d7ef7debead57e
+  candidate_basis_sha: d56b5b3c44e39ddb8c883259584432ab39259306
+  deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
+  deployment_url: https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app
+  allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
+historical_boundaries:
+  prior_production_source_sha: 303f4424d2198f0d0cf76305c589263dd1e417dc
+  prior_experimental_boundary_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
+  superseded_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
+  superseded_candidate_designation_sha: 02c146d1e0cdc423948ac0dfa11e98f812edfb44
+gates:
+  P31: RESTORED_IMPLEMENTED_CANDIDATE_VERIFICATION_PENDING
+  P33: RESTORED_IMPLEMENTED_CANDIDATE_VERIFICATION_PENDING
+  P27: RESTORED_IMPLEMENTED_CANDIDATE_VERIFICATION_PENDING
+  P29: RESTORED_IMPLEMENTED_CANDIDATE_VERIFICATION_PENDING
+  P30: RESTORED_IMPLEMENTED_CANDIDATE_VERIFICATION_PENDING
+  P32: RESTORED_IMPLEMENTED_CANDIDATE_VERIFICATION_PENDING
+  DemiJoule: RESTORED_IMPLEMENTED_CANDIDATE_VERIFICATION_PENDING
+  P2: FRESH_CANDIDATE_RUN_REQUIRED
+  P6a: FRESH_CANDIDATE_RUN_REQUIRED
+  P3: FRESH_CANDIDATE_EVIDENCE_REQUIRED
+  P4: CURRENT_CYCLE_EVIDENCE_REQUIRED
+  P5: CURRENT_CYCLE_REPRODUCIBILITY_REQUIRED
+  P6: CURRENT_CYCLE_CUSTODY_REQUIRED
+  P7: FINAL_CANDIDATE_BINDING_REQUIRED
+  P8: CURRENT_CANDIDATE_ANALYSIS_LOCK_REQUIRED
+  P9: INDEPENDENT_VERIFICATION_REQUIRED
+  Freeze: NOT_CREATED
+failure_policy:
+  unresolved_identity_mismatch: FAIL_CLOSED
+  evidence_scope_mismatch: FAIL_CLOSED
+  protocol_deviation: RECORD_AND_REVIEW
+  missing_artifact_integrity: FAIL_CLOSED
+  null_condition_contamination: FAIL_CLOSED
+  blinding_failure: FAIL_CLOSED
+  independent_verification_failure: FAIL_CLOSED
+  unauthorized_execution: DO_NOT_COUNT_N
+stopping_rule:
+  block_execution_if_any_core_validity_predicate_unresolved: true
+  accept_residual_unknowns_after_p9: true
+  require_known_limitations_to_be_recorded_before_freeze: true
