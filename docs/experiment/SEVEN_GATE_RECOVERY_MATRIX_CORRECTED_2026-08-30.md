@@ -13,7 +13,7 @@
 | P-32 Phi   | `patterns/NDR_PHI_CLOSURE_GATE_v1.md` (Prod v1.0 @49854ea)            | `ensemble_v16.FibonacciPhiClosureGate` @49854ea (faithful)        | CONTRACT-QUALIFIED   | MISSING        | pending RESTORE           |
 | P-27 KAPPA | `components/KAPPA/DGAF_GATE_KAPPA_v3_5_component_card.json` (@66b79e24) | `components/KAPPA/dynamic_weight_router.py` (v3.6)                | CONTRACT-QUALIFIED*  | MISSING        | pending RESTORE           |
 | P-29 Sentinel | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md:326` (canonical registry entry) | `components/evaluate_router_v1_1.py:sentinel_review()`            | REGISTRY-QUALIFIED (lead-grade) | MISSING | pending extraction        |
-| P-30 Apogee | `docs/specs/attestation_gate_spec.md` + `docs/qa/APOGEE_11Q_*.json`   | `components/ensemble_v17.py:ApogeeReviewer` (grade thresholds)    | LEAD (schema-grade)  | MISSING        | pending extraction        |
+| P-30 Apogee | `docs/specs/attestation_gate_spec.md` + `docs/qa/APOGEE_11Q_*.json` + `d786731f`: `normative_constraint.py` (deontic states + audit) + P-30 gate registration (NDR v2.1, S-TIER) | `components/ensemble_v17.py:ApogeeReviewer` (grade thresholds)    | LEAD (schema+deontic-impl, below RESTORE-ready) | MISSING | pending extraction |
 | DemiJoule  | NONE (role specs only; no dated gate contract)                        | `ensemble_v16.DemiJouleGate` & `ensemble_v17.DemiJouleGate` (CONTRADICTORY) | LEAD            | MISSING        | pending extraction        |
 
 *P-27 caveat: card is v3.5.0; code is v3.6.0 with new categories (sequential/fan_out) absent from the card. Thresholds (0.28/0.25) and formula are consistent card↔code. RESTORE should pin to v3.5 card as the normative source.
