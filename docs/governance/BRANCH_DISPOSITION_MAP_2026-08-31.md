@@ -132,7 +132,7 @@ The following branches all point to `103a40779954bb79f869413cc994de2636941b7f`:
 
 ### Experimental state
 
-**PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · N=0**
+PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · N=0
 
 ## Source basis
 
