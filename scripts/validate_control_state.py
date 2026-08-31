@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-import re
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,15 +36,14 @@ def assert_contains(text: str, needle: str, path: str) -> None:
 
 def main() -> int:
     failures: list[str] = []
-    for path, role in CONTROL_DOCS.items():
+
+    for path in CONTROL_DOCS:
         try:
             text = read(path)
             assert_contains(text, APPARATUS_SHA, path)
         except AssertionError as exc:
             failures.append(str(exc))
 
-        # The superseded candidate may appear only as historical/non-transferable
-        # provenance; it must not be presented as the current apparatus/candidate.
         try:
             text = read(path)
             if SUPERSEDED_CANDIDATE in text:
@@ -79,16 +76,12 @@ def main() -> int:
         except AssertionError as exc:
             failures.append(str(exc))
 
-    # Four-identity rule: control documents may state that main is mutable,
-    # but the apparatus identity must remain distinct from the documentation tip.
     current_state = read("docs/CURRENT_STATE.md")
-    try:
-        assert_contains(current_state, "main tip", "docs/CURRENT_STATE.md")
-        assert_contains(current_state, "apparatus source", "docs/CURRENT_STATE.md")
-        assert_contains(current_state, "candidate identity", "docs/CURRENT_STATE.md")
-        assert_contains(current_state, "deployment identity", "docs/CURRENT_STATE.md")
-    except AssertionError as exc:
-        failures.append(str(exc))
+    for identity_label in ("main tip", "apparatus source", "candidate identity", "deployment identity"):
+        try:
+            assert_contains(current_state, identity_label, "docs/CURRENT_STATE.md")
+        except AssertionError as exc:
+            failures.append(str(exc))
 
     if failures:
         print("CONTROL STATE VALIDATION FAILED")
