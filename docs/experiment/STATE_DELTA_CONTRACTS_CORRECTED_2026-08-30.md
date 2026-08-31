@@ -1,7 +1,9 @@
 # State-Delta Contracts — P-27 / P-29 / P-30 / P-32 / DemiJoule
 
 **Date:** 2026-08-30 · READ-ONLY analysis artifact (no apparatus change)
+
 **Boundary:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · N=0
+
 **Companion:** SEVEN_GATE_RECOVERY_MATRIX_2026-08-30.md
 
 Format per gate: `historical required field → current ConsensusState field → missing state → required addition → semantic-preservation test`.
@@ -88,7 +90,9 @@ Format per gate: `historical required field → current ConsensusState field →
 | DemiJoule | lead | NO | no authoritative contract; v16≠v17 |
 
 4/7 ready-or-done for RESTORE (P-31,P-33 done; P-32,P-27 ready pending impl). 3/7 blocked on extraction/resolution.
+
 N remains 0 until all seven RESTORE/ADAPT and the full candidate verifies.
 
----
-*Amethyst-governed · fail-closed enforced · no empirical claim while N=0*
+## Governance boundary
+
+Amethyst-governed · fail-closed enforced · no empirical claim while N=0
