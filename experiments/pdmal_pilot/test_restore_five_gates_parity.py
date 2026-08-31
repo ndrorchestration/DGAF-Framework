@@ -54,6 +54,32 @@ def test_p29_risk_ok_passes():
     assert h("", {"sentinel_decision": "risk_ok"}) == GateResult.PASS
 
 
+def test_p29_substrate_risk_block_overrides_legacy_context():
+    state = SentinelRiskState(
+        record_category="security",
+        routing_policy="block",
+        routing_confidence=0.99,
+        hook_point="after_category_detection",
+        deontic="permitted",
+    )
+    hook = build_sentinel_hook(state)
+    # Conflicting legacy context must not override an explicitly populated substrate.
+    assert hook("", {"sentinel_decision": "risk_ok"}) == GateResult.KILL
+
+
+def test_p29_substrate_risk_ok_ignores_legacy_context_block():
+    state = SentinelRiskState(
+        record_category="benign",
+        routing_policy="allow",
+        routing_confidence=0.99,
+        hook_point="after_category_detection",
+        deontic="permitted",
+    )
+    hook = build_sentinel_hook(state)
+    # Explicit substrate state wins even when legacy context asks for a block.
+    assert hook("", {"sentinel_decision": "risk_block"}) == GateResult.PASS
+
+
 # --- P-30 Apogee -----------------------------------------------------------
 def test_p30_grade_boundaries():
     for conf, exp_grade, exp_kill in [
