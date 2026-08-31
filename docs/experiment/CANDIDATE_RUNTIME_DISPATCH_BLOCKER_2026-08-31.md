@@ -15,7 +15,7 @@
 
 The repository contains candidate-bound `workflow_dispatch` definitions for P2 and P6a. Their required runtime inputs are fully known and exact. The connected GitHub integration available to the orchestration agent does not expose a workflow-dispatch write action, so the workflows cannot be triggered from this interface.
 
-This is an execution-plumbing limitation, not a missing candidate identity or missing contract.
+This is an execution-plumbing limitation, not a missing candidate identity, deployment identity, URL, CORS origin, or constitutive contract.
 
 ## Required P2 inputs
 
