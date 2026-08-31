@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from hashlib import sha256
-from typing import Any, Mapping, Sequence
+from typing import Any, Sequence
 
 from pptl.triadic_governance_loop import (
     GateResult,
@@ -27,6 +27,7 @@ from pdmaltgl_gate_binding import (
 )
 
 ADAPTER_VERSION = "0.7.1"
+PROVENANCE_STATE_VERSION = "1"
 DECISIONS = (
     "NO_CHANGE",
     "CONSERVATIVE_MIX",
@@ -51,9 +52,6 @@ class ConsensusState:
     runtime_budget_remaining_ms: int
     protocol_id: str
     adapter_version: str = ADAPTER_VERSION
-    # RESTORE (2026-08-30): P-31 SCPE + P-33 Convergence historical substrate.
-    # Both default to empty so pre-existing callers are unaffected. The adapter
-    # is stateless between calls; required historical state is carried here.
     scpe_state: SCPEState = field(default_factory=SCPEState)
     convergence_state: ConvergenceState = field(default_factory=ConvergenceState)
 
@@ -77,9 +75,70 @@ class ConsensusState:
             if not set(neighbors).issubset(expected_nodes):
                 raise ValueError("neighbor index out of range")
 
+        if self.scpe_state.threshold <= 0:
+            raise ValueError("SCPE threshold must be positive")
+        if self.scpe_state.trust_edge_boost != 0.15:
+            raise ValueError("SCPE trust_edge_boost must equal historical contract constant 0.15")
+        if self.scpe_state.last_k_anchor != 3:
+            raise ValueError("SCPE last_k_anchor must equal historical contract constant 3")
+        if self.scpe_state.tokens and self.scpe_state.evaluation_time is None:
+            raise ValueError("SCPE evaluation_time is required when tokens are present")
+        if self.convergence_state.alert_thresh < 0 or self.convergence_state.conv_thresh < 0:
+            raise ValueError("P-33 thresholds cannot be negative")
+        if self.convergence_state.n_consec < 1:
+            raise ValueError("P-33 n_consec must be positive")
+
 
 def _float_repr(value: float) -> str:
     return format(float(value), ".17g")
+
+
+def _canonical_scpe_state(state: SCPEState) -> str:
+    """Canonicalize P-31 state, including all carried semantic inputs."""
+    token_lines = []
+    for token in sorted(state.tokens, key=lambda item: str(item["token_id"])):
+        token_lines.append(
+            ":".join(
+                (
+                    str(token["token_id"]),
+                    str(token.get("tier", "")),
+                    str(token.get("content", "")),
+                    _float_repr(float(token.get("inserted_at", 0.0))),
+                    "1" if bool(token.get("has_trust_edge", False)) else "0",
+                )
+            )
+        )
+    return "\n".join(
+        (
+            f"threshold={_float_repr(state.threshold)}",
+            f"trust_edge_boost={_float_repr(state.trust_edge_boost)}",
+            f"last_k_anchor={state.last_k_anchor}",
+            f"evaluation_time={_float_repr(state.evaluation_time) if state.evaluation_time is not None else 'UNSET'}",
+            "tokens=" + ";".join(token_lines),
+        )
+    )
+
+
+def _canonical_convergence_state(state: ConvergenceState) -> str:
+    """Canonicalize P-33 state, including current/prior graphs and counters."""
+    def _weights(values: dict[tuple[str, str], float]) -> str:
+        return ";".join(
+            f"{src}->{dst}={_float_repr(weight)}"
+            for (src, dst), weight in sorted(values.items())
+        )
+
+    return "\n".join(
+        (
+            f"alert_thresh={_float_repr(state.alert_thresh)}",
+            f"conv_thresh={_float_repr(state.conv_thresh)}",
+            f"n_consec={state.n_consec}",
+            f"consec_divergent={state._consec_divergent}",
+            f"consec_stable={state._consec_stable}",
+            f"turn={state._turn}",
+            "weights=" + _weights(state.weights),
+            "prev_weights=" + _weights(state.prev_weights),
+        )
+    )
 
 
 def canonicalize_state(state: ConsensusState) -> str:
@@ -87,6 +146,7 @@ def canonicalize_state(state: ConsensusState) -> str:
     state.validate()
     lines = [
         "PDMAL_DGAF_ADAPTER_V1",
+        f"provenance_state_version={PROVENANCE_STATE_VERSION}",
         f"protocol={state.protocol_id}",
         f"adapter={state.adapter_version}",
         f"seed={state.seed_id}",
@@ -114,6 +174,8 @@ def canonicalize_state(state: ConsensusState) -> str:
             )
         ),
         f"budget_ms={state.runtime_budget_remaining_ms}",
+        "scpe=" + _canonical_scpe_state(state.scpe_state).replace("\n", "|"),
+        "convergence=" + _canonical_convergence_state(state.convergence_state).replace("\n", "|"),
     ]
     return "\n".join(lines) + "\n"
 
@@ -229,12 +291,6 @@ class DGAF_TGLAdapter:
         context = _context_for_state(state)
         input_hash = sha256(input_text.encode("utf-8")).hexdigest()
 
-        # The adapter is intentionally stateless between process-isolated calls.
-        # Bind the TGL counter to the semantic iteration so the audit index does
-        # not reset to 1 every time a new adapter instance is constructed.
-        # RESTORE (2026-08-30): wire P-31 SCPE + P-33 Convergence hooks from the
-        # carried substrate. Other required gates (DemiJoule, P-27, P-29, P-32,
-        # P-30) remain unwired (None) and still reduce the turn to FAIL_CLOSED.
         hooks = TGLHooks(
             scpe_fn=build_scpe_hook(state.scpe_state),
             pdmal_fn=build_pdmal_hook(state.convergence_state),
