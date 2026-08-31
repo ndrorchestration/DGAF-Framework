@@ -1,4 +1,4 @@
-schema_version: 2
+schema_version: 3
 last_reconciled_utc: 2026-08-31
 source_of_truth:
   implementation: github
@@ -10,44 +10,46 @@ experimental_boundary:
   status: FAIL-CLOSED
   authorization: NOT_GRANTED
   empirical_n: 0
-restoration_state:
-  seven_gate_substrate: IMPLEMENTED
-  provenance_identity: CORRECTION_REQUIRED
-  active_correction_pr: 172
-  correction_head_sha: 3c489459e09d2d9fb9d31239d9bae05df4b3548b
-  correction_scope: bind_all_behavior_affecting_restored_gate_state
-  candidate_promotion_blocked: true
-identities:
-  main_tip: RESOLVE_MAIN_DIRECTLY
-  pre_correction_apparatus_source_sha: d56b5b3c44e39ddb8c883259584432ab39259306
-  pre_correction_apparatus_tree_sha: 8c13900c4ce2a503414f9dddf1d7ef7debead57e
-  pre_correction_candidate_basis_sha: d56b5b3c44e39ddb8c883259584432ab39259306
-  pre_correction_deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
-  pre_correction_deployment_url: https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app
-  configured_allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
-  new_candidate_after_correction: REQUIRED
+apparatus:
+  current_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
+  current_source_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
+  provenance_binding: COMPLETE_FOR_ALL_SEVEN_RESTORED_GATES
+  candidate_status: PROVISIONAL_PRE_FREEZE
+  candidate_promotion_requires: exact_ready_deployment_and_fresh_p1_p9_evidence
+prior_apparatus:
+  sha: d56b5b3c44e39ddb8c883259584432ab39259306
+  status: INVALIDATED_BY_PROVENANCE_CORRECTION
+  deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
+  note: historical_only_non_closing
 historical_boundaries:
   prior_production_source_sha: 303f4424d2198f0d0cf76305c589263dd1e417dc
   prior_experimental_boundary_sha: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
   superseded_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
   superseded_candidate_designation_sha: 02c146d1e0cdc423948ac0dfa11e98f812edfb44
+deployment:
+  current_id: NOT_ESTABLISHED
+  current_url: NOT_ESTABLISHED
+  current_allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
+  source_sha_must_equal: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
+  pre_correction_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
+  pre_correction_status: HISTORICAL_NON_CLOSING
 gates:
-  P31: RESTORED_IMPLEMENTED_PROVENANCE_CORRECTION_PENDING
-  P33: RESTORED_IMPLEMENTED_PROVENANCE_CORRECTION_PENDING
-  P27: RESTORED_IMPLEMENTED_PROVENANCE_CORRECTION_PENDING
-  P29: RESTORED_IMPLEMENTED_PROVENANCE_CORRECTION_PENDING
-  P30: RESTORED_IMPLEMENTED_PROVENANCE_CORRECTION_PENDING
-  P32: RESTORED_IMPLEMENTED_PROVENANCE_CORRECTION_PENDING
-  DemiJoule: RESTORED_IMPLEMENTED_PROVENANCE_CORRECTION_PENDING
-  P2: PAUSED_UNTIL_NEW_CANDIDATE
-  P6a: PAUSED_UNTIL_NEW_CANDIDATE
-  P3: PAUSED_UNTIL_NEW_CANDIDATE
-  P4: PAUSED_UNTIL_NEW_CANDIDATE
-  P5: PAUSED_UNTIL_NEW_CANDIDATE
-  P6: PAUSED_UNTIL_NEW_CANDIDATE
-  P7: PAUSED_UNTIL_NEW_CANDIDATE
-  P8: PAUSED_UNTIL_NEW_CANDIDATE
-  P9: PAUSED_UNTIL_NEW_CANDIDATE
+  P31: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
+  P33: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
+  P27: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
+  P29: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
+  P30: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
+  P32: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
+  DemiJoule: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
+  P2: BLOCKED_UNTIL_EXACT_CURRENT_DEPLOYMENT
+  P6a: BLOCKED_UNTIL_EXACT_CURRENT_DEPLOYMENT
+  P3: NOT_VERIFIED_FOR_CURRENT_CANDIDATE
+  P4: NOT_VERIFIED_FOR_CURRENT_CANDIDATE
+  P5: NOT_VERIFIED_FOR_CURRENT_CANDIDATE
+  P6: NOT_VERIFIED_FOR_CURRENT_CANDIDATE
+  P7: ADOPTED_BINDING_PENDING
+  P8: NOT_VERIFIED_FOR_CURRENT_CANDIDATE
+  P9: NOT_EXECUTED_FOR_CURRENT_CANDIDATE
   Freeze: NOT_CREATED
 failure_policy:
   unresolved_identity_mismatch: FAIL_CLOSED
@@ -63,4 +65,10 @@ stopping_rule:
   block_execution_if_any_core_validity_predicate_unresolved: true
   accept_residual_unknowns_after_p9: true
   require_known_limitations_to_be_recorded_before_freeze: true
-  do_not_designate_new_candidate_until_provenance_correction_is_merged: true
+  do_not_designate_execution_valid_candidate_until_current_deployment_and_p1_p9_controls_are_complete: true
+assurance_layers:
+  L0_identity: PREVENT_AND_DETECT
+  L1_treatment_integrity: PREVENT_AND_DETECT
+  L2_execution_integrity: DETECT_AND_FAIL_CLOSED
+  L3_scientific_integrity: INDEPENDENTLY_VERIFY
+  L4_governance_integrity: FREEZE_AND_AUTHORIZATION
