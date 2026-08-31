@@ -1,8 +1,9 @@
 """Contract tests for the pre-freeze DGAF/TGL adapter.
 
 These tests validate deterministic serialization, structured decision mapping,
-bounded state updates, and exact provenance identity across the adapter/TGL
-boundary. They do not authorize pilot execution or generate empirical data.
+bounded state updates, exact provenance identity across the adapter/TGL boundary,
+and binding of restored gate state into provenance identity. They do not
+authorize pilot execution or generate empirical data.
 """
 from __future__ import annotations
 
@@ -11,8 +12,10 @@ import hashlib
 import pytest
 
 from dgaf_tgl_adapter import (
+    ConvergenceState,
     ConsensusState,
     DGAF_TGLAdapter,
+    SCPEState,
     apply_decision,
     canonicalize_state,
     decision_from_audit,
@@ -25,9 +28,8 @@ from pptl.triadic_governance_loop import (
 )
 
 
-@pytest.fixture
-def state() -> ConsensusState:
-    return ConsensusState(
+def _state(**overrides) -> ConsensusState:
+    values = dict(
         seed_id=20260817,
         iteration=3,
         agent_values=(0.1, -0.2, 0.3, 0.4),
@@ -42,11 +44,62 @@ def state() -> ConsensusState:
         runtime_budget_remaining_ms=290000,
         protocol_id="PDMAL-PREFREEZE-V1",
     )
+    values.update(overrides)
+    return ConsensusState(**values)
+
+
+@pytest.fixture
+def state() -> ConsensusState:
+    return _state()
 
 
 def test_canonical_serialization_is_deterministic(state: ConsensusState) -> None:
     assert canonicalize_state(state) == canonicalize_state(state)
     assert canonicalize_state(state).startswith("PDMAL_DGAF_ADAPTER_V1\n")
+    assert "provenance_state_version=1" in canonicalize_state(state)
+
+
+def test_restored_scpe_state_changes_provenance_identity(state: ConsensusState) -> None:
+    baseline = canonicalize_state(state)
+    restored = _state(
+        scpe_state=SCPEState(
+            tokens=[{
+                "token_id": "ax1",
+                "tier": "AXIOM",
+                "content": "governance invariant",
+                "inserted_at": 100.0,
+                "has_trust_edge": False,
+            }],
+            threshold=0.15,
+            trust_edge_boost=0.15,
+            last_k_anchor=3,
+        )
+    )
+    assert canonicalize_state(restored) != baseline
+
+
+def test_restored_convergence_state_changes_provenance_identity(state: ConsensusState) -> None:
+    baseline = canonicalize_state(state)
+    restored = _state(
+        convergence_state=ConvergenceState(
+            weights={("a", "b"): 0.75, ("a", "c"): 0.25},
+            prev_weights={("a", "b"): 0.80, ("a", "c"): 0.20},
+            alert_thresh=0.08,
+            conv_thresh=0.02,
+            n_consec=3,
+            _consec_divergent=1,
+            _consec_stable=0,
+            _turn=4,
+        )
+    )
+    assert canonicalize_state(restored) != baseline
+
+
+def test_gate_state_hash_changes_are_exactly_recomputable(state: ConsensusState) -> None:
+    canonical = canonicalize_state(state)
+    expected = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    assert canonicalize_state(state) == canonical
+    assert expected == hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def test_decision_mapping_is_structured_and_finite() -> None:
