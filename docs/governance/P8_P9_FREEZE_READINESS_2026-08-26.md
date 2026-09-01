@@ -1,72 +1,74 @@
-# P8 / P9 / Freeze Readiness — Reconciled 2026-08-28
+# P8 / P9 / Freeze Readiness — Reconciled 2026-09-01
 
 ## Control status
 
 - State: `PRE-FREEZE / FAIL-CLOSED`
-- Current `main`: active documentation/evidence lineage; resolve the branch directly rather than freezing a documentation tip into the apparatus identity
-- Experimental verification boundary: `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`
-- Current-tree E2b: `OPEN / VERIFICATION REQUIRED`
-- Candidate-scoped M6: `CLOSED / VERIFIED` for `ac8ea267…` / run `33050398324`
-- TGL contract: `BLOCKED / ADVERSARIAL REVIEW` — PR #132 41-pass / 2-fail regression; isolated remediation candidate pending exact-head validation
+- Current `main`: active documentation/evidence lineage; do not freeze a documentation tip into apparatus identity
+- Corrected apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- Current mainline runtime candidate: `92ff830b1c67413df745e37087e6447c9c251b9a` / tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`
+- Latest controlled completion candidate: `562753b3053b3566b0fcad1b0b1df151d7de119a`
+- P2 current runtime predicate: `VERIFIED` — run `33509348174`, artifact `9800942933`
+- P6a current runtime predicate: `VERIFIED` — run `33509416955`, artifact `9800972819`
+- P3: `OPEN`
+- P4: `OPEN`
+- P5: `OPEN`
+- P6: `OPEN / FAIL-CLOSED`
+- P7: `ADOPTED / FINAL BINDING OPEN`
+- P8: `OPEN / FAIL-CLOSED`
+- P9: `SCOPED PASS / BROADER CLOSURE OPEN`
 - Freeze: `NOT CREATED`
 - Authorization: `NOT GRANTED`
 - Empirical N: `0`
 
-This is a readiness/control artifact. It is not evidence that any unchecked predicate has passed and it does not authorize execution.
+This is a readiness/control artifact. It is not evidence that every predicate has passed and it does not authorize execution.
 
 ## Dynamic control model
 
-Every gate is a predicate with explicit scope, prerequisites, evidence requirements, freshness conditions, invalidation triggers, and closure rules. Independent READY lanes may proceed in parallel when they cannot mutate the experimental dataset or silently alter the apparatus. Documentation repetition does not increase epistemic strength.
+Every gate is a predicate with explicit scope, prerequisites, evidence requirements, freshness conditions, invalidation triggers, and closure rules. Documentation repetition does not increase epistemic strength.
 
 ## Predicate matrix
 
 | Predicate | State | Closure requirement |
 |---|---|---|
-| P1 candidate identity | OPEN | Exact current-tree/source binding and retained evidence |
-| P2 runtime | BLOCKED / OPEN | Authenticated five-case runtime matrix on exact deployment |
-| P3 artifact contract | OPEN | Current-candidate schema/identity/uniqueness/balance evidence |
-| P4 blinding/security | OPEN | Operational custody, access separation, bijection, and unblinding evidence |
-| P5 reproducibility | OPEN | Environment fingerprint plus deterministic reproduction |
-| P6 durable custody | OPEN | Archive/retrieve/hash round trip with retained evidence |
-| P6a CORS | BLOCKED / OPEN | Authenticated four-case CORS matrix on same deployment identity |
-| P7 scientific target | ADOPTED IN SUBSTANCE / FORMALLY OPEN | Exact cryptographic binding of adopted decision to frozen protocol/apparatus/analysis/manifest |
-| P8 analysis lock | OPEN / FAIL-CLOSED | Exact analysis/configuration/protocol/current-tree binding |
-| E2b verifier toolchain | CLOSED / VERIFIED @ `d299dd1…` | Historical exact-tree verification retained; current-tree applicability requires affected-boundary re-verification |
-| M6 negative state | CLOSED / VERIFIED @ `ac8ea26…` | Candidate exact-tree/workspace negative-state evidence retained; does not authorize execution |
-| P9 independent verification | NOT EXECUTED | Independent verification of complete evidence chain |
+| P1 candidate identity | OPEN | Exact selected candidate/source/tree/deployment binding and retained provenance |
+| P2 runtime | VERIFIED | Current evidence is bound to `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`; re-run if selected pilot candidate changes |
+| P3 artifact contract | OPEN | Current selected candidate artifact-contract evidence |
+| P4 blinding/security | OPEN | Operational custody, access separation, bijection, and negative-state evidence |
+| P5 reproducibility | OPEN | Current selected candidate environment/topology/RNG reproduction |
+| P6 durable custody | OPEN / FAIL-CLOSED | Durable write/retrieve/hash round trip for the selected candidate |
+| P6a CORS | VERIFIED | Current evidence is bound to `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`; re-run if selected pilot candidate changes |
+| P7 scientific target | ADOPTED / FORMALLY OPEN | Exact selected candidate/protocol/analysis/freeze binding |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Exact analysis/configuration/protocol/current-tree binding and required TGL/P-35 predicates |
+| P9 independent verification | SCOPED PASS / BROADER CLOSURE OPEN | Complete evidence-chain verification for the selected candidate; scoped run `33567199896` verifies `562753b…` identity, alternate canonicalization/hash, and authority identity |
 
-## TGL/P-35 contract boundary
+## P9 update
 
-PR #132 is a governance/implementation blocker, not an experimental apparatus identity. Its 41-pass / 2-fail result is retained as a substantive regression signal at the TGL → P-35 boundary. The review identified constructor/method incompatibility, missing premise-hook injection, weakened exception containment, incomplete `PASS/WARN/SKIP/ESCALATE/KILL` reduction, ambiguous conditional versus unwired `SKIP`, and audit-seal sequencing concerns.
+Run `33567199896` completed successfully on 2026-09-01 for candidate `562753b3053b3566b0fcad1b0b1df151d7de119a`.
 
-The selected remediation is intentionally minimal. The isolated remediation candidate must restore the established P-35 constructor and `evaluate(..., check_fn=...)` contract, fail-closed exception containment, explicit required/conditional gate semantics, deterministic status reduction, and exact final audit sealing, with regression coverage. This remediation must be validated independently at its exact head.
+Verified:
 
-No TGL remediation changes the experimental treatment, creates a freeze, closes P7/P8, grants authorization, or increases empirical N.
+- exact checkout identity (`HEAD == GITHUB_SHA`);
+- independent `jq -S -c` plus `sha256sum` canonicalization/hash path;
+- authority-identity regression (`4 passed`);
+- independent P9 evidence JSON plus SHA-256 sidecar upload.
 
-## Current lineage versus experimental boundary
+Artifact: `9823570326`  
+Artifact ZIP digest: `sha256:8e3435a3af0dc5de7376d970b9f1665a18db8ff04b26a2c0eaae8acf8b095d85`.
 
-The current `main` branch is a living documentation/evidence lineage and must not be silently substituted for the experimental verification boundary. The experimental verification boundary remains `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Subsequent documentation corrections do not retroactively change candidate-scoped verification results.
+This is scoped verification evidence. It does not establish P9 closure for a different candidate, and it does not itself establish authorization, empirical execution, external archive, or efficacy.
 
-## E2b provenance boundary
+## Candidate selection boundary
 
-Run `33047380487` successfully verified exact tree `d299dd152fb82d48a066d66a64bf0917e20d6167`, including exact checkout/target assertion, source requirements fingerprint, hash-pinned installation, exact-tree provenance, and artifact retention. Artifact `9636185725` has digest `sha256:723aa9d5a1b60242212a8d7533ccf296de37a36349b4a60f53714bb6898ca1fd`.
+The latest P9 run targets `562753b…`, while current mainline runtime evidence targets `92ff830b…`. These identities must remain separate until a governance decision explicitly selects and rebinds the candidate for the next freeze cycle. No evidence transfers merely because the branch/repository is shared.
 
-This closure remains valid for its executed tree. The subsequent `ac8ea26…` workflow change binds the candidate target SHA to the executing workflow SHA and therefore establishes a separate current candidate verification boundary.
+## Historical-priority boundary
 
-## M6 boundary
+The historical-priority review is separate from freeze readiness. Current adjudication establishes external prior art for individual governance, formation, provenance, artifact-identity, veto, escalation, and idempotency mechanisms. The remaining historical hypothesis concerns a potentially distinctive cross-domain integration, not primitive firstness.
 
-M6 is CLOSED/VERIFIED for exact candidate/tree `ac8ea267…` via run `33050398324`. Its retained negative-state evidence establishes only the observed PRE-FREEZE/N=0/no-authorization state for that exact verification workspace/job. It does not authorize execution.
+Primary record: `docs/research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`.
 
-## P2 / P6a boundary
+## Freeze and authorization boundary
 
-The READY deployment remains supporting deployment evidence, not runtime-predicate closure. P2 and P6a require authenticated execution against the exact deployment identity. The automation-bypass secret must be configured out-of-band before those lanes can execute.
-
-## P7 / P8 boundary
-
-P7 scientific content has been adopted: primary contrast is full `dgaf` versus `null` on FFCR, with paired root-seed analysis, 10,000-resample percentile bootstrap, seed `20260823`, alpha `0.05`, and positive-estimate/CI-above-zero directional support. Formal P7 closure remains pending exact freeze identity binding. P8 remains fail-closed until the executable analysis, schema, runner, protocol, candidate identity, and required verification evidence are bound to the same admissible freeze target.
-
-## Independent verification / freeze boundary
-
-P9 has not executed. No new immutable freeze exists. Pilot authorization remains a separate explicit transition after all required predicates and freeze verification close.
+No new immutable freeze exists. Pilot authorization remains a separate explicit governance transition after all required predicates and freeze verification close.
 
 **No pilot execution. No unblinding. No efficacy claim. Empirical N remains 0.**
