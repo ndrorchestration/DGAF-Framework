@@ -1,20 +1,18 @@
 # DGAF-Framework
 
-**Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, evaluation, provenance, and governance controls.
+**Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, formation governance, evaluation, provenance, and governance controls.
 
 > **Epistemic status:** This README describes repository scope and current pre-freeze governance state. Individual claims require exact evidence and defined scope. Historical evidence remains scoped to the SHA/run/deployment that produced it.
 
-## Current project state — 2026-08-29
+## Current project state — 2026-09-01
 
-The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
+The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. No pilot authorization has been granted and empirical **N = 0**.
 
-`main` is documentation/evidence lineage, not experimental apparatus identity. The experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Any substantive apparatus change requires a new candidate identity and affected-predicate re-verification.
+`main` is documentation/control-plane lineage. The current mainline runtime candidate is `92ff830b1c67413df745e37087e6447c9c251b9a` with exact tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`. The latest controlled completion candidate is `562753b3053b3566b0fcad1b0b1df151d7de119a` on `completion/2026-09-01-exact-candidate`; these identities are not interchangeable.
 
 ## Canonical engineering lane
 
-**PR #139** is the current combined engineering candidate for DGAF v1 recursive control-plane implementation and TGL contract remediation. Earlier PRs #132/#133/#134 are historical or superseded records and are not separate current execution authorities.
-
-The candidate covers inherited governance scope, deterministic lifecycle control, state identity, budget/concurrency accounting, branch provenance, explicit CommitGate authorization, fail-closed TGL semantics, complete audit sealing, adversarial regression coverage, and dedicated CI. It does not rebind PDMAL or authorize experimentation.
+The completion work is maintained in controlled candidate branches and must be explicitly rebound before any freeze or experiment. Current engineering controls include candidate identity checks, provenance binding, fail-closed governance, and independent verification paths. Documentation commits do not silently redefine the experimental candidate.
 
 ## Current TGL contract boundary
 
@@ -42,21 +40,47 @@ Generic execution roles do not create or elevate agent authority.
 
 | Boundary | Status |
 |---|---|
-| Experimental verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
-| P7 scientific decision | Adopted in substance; exact freeze binding open |
-| P8 analysis lock | Open / fail-closed |
-| P2 runtime verification | Not executed |
-| P6a CORS verification | Not executed |
+| Corrected apparatus source | `2a54a67d…` |
+| Mainline runtime candidate | `92ff830b…` / tree `73cf3ad…` |
+| Latest completion candidate | `562753b…` / branch `completion/2026-09-01-exact-candidate` |
+| P2 runtime verification | `VERIFIED` for `92ff830b…` / deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
+| P6a CORS verification | `VERIFIED` for `92ff830b…` / deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
+| P9 scoped independent verification | `PASS` for `562753b…` via run `33567199896` |
+| P3 | Open |
+| P4 | Open |
+| P5 | Open |
+| P6 | Open / fail-closed |
+| P7 | Adopted / final exact binding open |
+| P8 | Open / fail-closed |
+| Broader P9 closure | Open / conditional |
 | New immutable freeze | Not created |
 | Pilot authorization | Not granted |
 | Empirical N | 0 |
 
-## Deployment identity
+## Latest P9 scoped result
 
-The observed READY Vercel production deployment is not exact-current-main evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal the current GitHub `main` identity. Issue #137 remains the canonical deployment-provenance tracker.
+Run `33567199896` completed successfully for exact candidate `562753b3053b3566b0fcad1b0b1df151d7de119a`.
+
+The independent verification workflow:
+
+- verified `git rev-parse HEAD == GITHUB_SHA`;
+- generated a deterministic case through the DGAF/Python path;
+- independently canonicalized it with `jq -S -c` and hashed it with `sha256sum`;
+- required digest equality;
+- ran `tests/test_agent_authority_matrix.py` with `4 passed`;
+- emitted and uploaded an independent P9 evidence artifact.
+
+Artifact ID: `9823570326`  
+Artifact digest: `sha256:8e3435a3af0dc5de7376d970b9f1665a18db8ff04b26a2c0eaae8acf8b095d85`
+
+This is **scoped verification evidence**, not a declaration that all P9 prerequisites are closed. It does not establish empirical efficacy, authorization, or a freeze.
 
 ## Evidence boundary
 
-Engineering CI success, synthetic fixtures, deployment readiness, or documentation updates do not constitute PDMAL efficacy evidence or experimental authorization. Historical evidence is not transferable across SHA/run/deployment boundaries without fresh exact-scope evidence.
+Engineering CI success, synthetic fixtures, deployment readiness, runtime predicate verification, or documentation updates do not constitute PDMAL efficacy evidence or experimental authorization. Historical evidence is not transferable across SHA/run/deployment boundaries without fresh exact-scope evidence.
+
+## Historical-priority boundary
+
+DGAF is not established as first in the individual mechanisms of agent governance, dynamic formation, authority, veto, escalation, idempotency, provenance, exact artifact identity, candidate immutability, or independent verification. The remaining historical hypothesis is a potentially distinctive cross-domain integration coupling formation-state governance to candidate-bound experimental verification and authorization. See `docs/research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
