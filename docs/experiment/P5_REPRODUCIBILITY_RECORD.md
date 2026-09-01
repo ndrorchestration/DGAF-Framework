@@ -1,26 +1,34 @@
-# P5 Reproducibility / Provenance Record — Candidate `45074856e82fc8e9c97153c41091c7fbc800d42c`
+# P5 Reproducibility / Provenance Record
 
 ## Status
 
-**VERIFIED for the controlled candidate.** This record is current-candidate evidence only; it does not authorize freeze, pilot execution, or production deployment.
+**PENDING FRESH CANDIDATE EXECUTION.**
 
-## Evidence binding
+This document is a record template and boundary statement. The historical dry-run evidence previously recorded here belonged to an earlier candidate and is intentionally not transferred to the current controlled candidate.
 
-- Candidate SHA: `45074856e82fc8e9c97153c41091c7fbc800d42c`
-- Source workflow: `PDMAL Instrumentation Dry Run`
-- Source run: `33558082367`
-- Instrumentation artifact: `9820126686`
-- Instrumentation artifact digest: `sha256:887fecad61ece397a0d4ce454a4fdd21a08745a7bb42e9a6b63e86187c78c1c0`
-- Evidence-registry artifact: `9820128042`
-- Evidence-registry digest: `sha256:adf32374797b9a9e78b7ebc80557f06058ba8b3a916ddd3f223523dbff8563f5`
+## Current evidence rule
 
-## Reproducibility checks
+A P5 verification claim is admissible only when the fresh source workflow records the exact candidate SHA under test and binds the resulting run, artifact ID, and artifact digest to that same candidate. Historical evidence may remain useful as background but must not be promoted as current-candidate evidence.
+
+## Required reproducibility checks
 
 1. **RNG stream separation:** `experiments/pdmal_topology/seeds.py` derives named streams from `pdmal-v1|<master_seed>|<stream>` using SHA-256, with distinct topology and failure streams used by the graph harness.
-2. **Determinism:** the same seed/topology/failure-count case was executed twice in the source workflow and both JSON output and digest matched.
-3. **Artifact integrity:** the masked one-seed artifact passed schema and checksum validation, was uploaded, downloaded again, and its inner CSV SHA-256 was recomputed and matched the recorded sidecar.
-4. **Exact-candidate binding:** the evidence registry records the same candidate SHA, workflow run, artifact ID, and artifact digest used by the controller.
+2. **Determinism:** the same seed/topology/failure-count case must be executed twice and both canonical JSON output and digest must match.
+3. **Artifact integrity:** the instrumentation artifact must pass schema and checksum validation, survive upload/download custody, and have its recorded SHA-256 independently recomputed.
+4. **Exact-candidate binding:** the evidence registry must record the same candidate SHA, workflow run, artifact ID, and artifact digest used by the completion controller.
+
+## Fresh execution record
+
+Populate this section only from a successful run against the current controlled candidate:
+
+- Candidate SHA: `<fresh candidate SHA>`
+- Source workflow: `<workflow name>`
+- Source run: `<run ID>`
+- Instrumentation artifact: `<artifact ID>`
+- Instrumentation artifact digest: `sha256:<digest>`
+- Evidence-registry artifact: `<artifact ID>`
+- Evidence-registry digest: `sha256:<digest>`
 
 ## Boundary
 
-This closes **P5 reproducibility/provenance evidence for the controlled candidate** at the level established by the current dry-run apparatus. It does not claim production deployment provenance (P2), scientific freeze (P7), analysis lock (P8), or independent reconstruction (P9). Empirical execution remains unauthorized and empirical N remains zero.
+P5 must remain **OPEN** until the fresh candidate-bound execution succeeds. This record does not authorize freeze, pilot execution, production deployment, or empirical experiment execution. Empirical execution remains unauthorized and empirical N remains zero.
