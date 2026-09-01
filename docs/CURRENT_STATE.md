@@ -2,68 +2,78 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-08-31
+last_verified: 2026-09-01
 applies_to_ref: main
+corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
+runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
+runtime_candidate_tree: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
 ---
 # DGAF-Framework / PDMAL — Current State
 
 GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it.
 
-> **Current boundary:** `main` is the documentation/control-plane lineage. The current corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`, the signed squash merge of PR #174. This correction binds all seven restored gate-state substrates into canonical provenance identity and adds the substrate-driven P-29 regression coverage.
+> **Current boundary:** `main` is the documentation/control-plane lineage. The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` and remains the canonical provenance anchor for the seven restored behavior-affecting DGAF/TGL gate-state substrates.
 >
-> **Candidate status:** `2a54a67d…` is **PROVISIONAL / POST-PROVENANCE-CORRECTION**. It is not execution-valid until a fresh deployment identity is created and candidate-scoped P1–P9 predicates are established.
+> **Runtime candidate:** `92ff830b1c67413df745e37087e6447c9c251b9a` is the distinct production/runtime candidate. Its exact tree is `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`. Git history establishes the corrected apparatus source as the candidate's lineage basis; these identities are not interchangeable.
 >
-> **Current experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. No prior runtime or experimental evidence transfers across the provenance-correction boundary.
+> **Current experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. No empirical or unblinded pilot state has been created.
 
 ## Identity roles
 
-- `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` — current corrected seven-gate apparatus source and provisional candidate-cycle basis.
-- `4e345c03…` — pre-merge PR #174 head; engineering validation lineage only.
-- `d56b5b3c44e39ddb8c883259584432ab39259306` — pre-correction restored apparatus source from #170; invalidated as an execution candidate because canonical provenance identity omitted five restored gate-state blocks.
-- `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb` — deployment bound to `d56b5b3c…`; historical/pre-correction only.
-- `05fa286614bd80576c1f7f4b01f1bdd7fe57ef37` — superseded historical post-#151 candidate; no evidence transfers.
+- `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` — corrected seven-gate apparatus provenance anchor.
+- `92ff830b1c67413df745e37087e6447c9c251b9a` — current production/runtime candidate and deployment-workflow repair commit.
+- `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae` — exact tree of the current runtime candidate.
+- `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — current production deployment identity recorded by both P2 and P6a runtime evidence.
+- Pre-correction candidates/deployments remain historical/non-closing and must not be reused as current dispatch inputs.
 - Documentation commits advance `main` documentation lineage but do not silently redefine apparatus identity.
-
-## Current engineering/control-plane source
-
-PR #174 completed the provenance-integrity correction identified after the #170 restoration. Canonical state now includes P-31/P-33, Sentinel, Apogee, DemiJoule, KAPPA, and Phi state. The correction preserves gate semantics and adds identity regression tests plus substrate-driven P-29 tests.
-
-The corrected apparatus is now the sole current apparatus source. No candidate runtime evidence has been generated for it yet.
 
 ## Authoritative experimental state
 
 | Boundary | Status | Meaning |
 |---|---|---|
-| Current `main` ref | CURRENT APPARATUS + CONTROL-PLANE LINEAGE | Resolve `main` directly in GitHub for the latest source and control documents. |
-| Corrected apparatus source | PROVISIONAL / PRE-FREEZE | `2a54a67d…`; seven-gate restoration plus complete provenance binding. |
-| Candidate identity | PROVISIONAL / NOT FROZEN | Must bind exact source tree, protocol, dependencies, deployment, and evidence state. |
-| Deployment identity | NOT YET ESTABLISHED | No deployment for `2a54a67d…` has been authoritatively captured yet. |
-| P2 runtime verification | NOT EXECUTED | Fresh candidate-bound run required after exact deployment exists. |
-| P6a CORS verification | NOT EXECUTED | Fresh candidate-bound run required after exact deployment exists. |
-| P3–P6 | BLOCKED / FAIL-CLOSED | Await current-candidate runtime/evidence identity. |
-| P7 | ADOPTED / BINDING PENDING | Bind only to final candidate/protocol/freeze identity. |
-| P8 | BLOCKED / FAIL-CLOSED | Await current-candidate evidence. |
-| P9 | NOT EXECUTED | Independent verification follows candidate formation. |
-| Freeze | NOT CREATED | No frozen identity is authoritative. |
+| Current `main` ref | CURRENT CONTROL-PLANE LINEAGE | Resolve `main` directly in GitHub for latest source and control documents. |
+| Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…`; seven-gate restoration plus complete provenance binding. |
+| Runtime candidate identity | CURRENT / NOT FROZEN | `92ff830b…`; exact tree `73cf3ad…`. |
+| Candidate lineage | ESTABLISHED | `2a54a67d…` is the ancestor/lineage basis of `92ff830b…`. |
+| Deployment identity | CAPTURED IN P2/P6A EVIDENCE | `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
+| P2 runtime verification | VERIFIED | Run `33509348174`; artifact `9800942933`; five required cases passed. |
+| P6a CORS verification | VERIFIED | Run `33509416955`; artifact `9800972819`; four required checks passed. |
+| P3 | IMPLEMENTATION PRESENT / OPEN | Current-candidate evidence remains required. |
+| P4 | OPEN | Current-cycle blinding/custody evidence required. |
+| P5 | OPEN | Current-cycle environment/topology/RNG reproducibility evidence required. |
+| P6 | OPEN / FAIL-CLOSED | Current-cycle durable custody proof required. |
+| P7 | ADOPTED / FINAL BINDING OPEN | Bind exact apparatus/candidate/deployment/protocol/analysis/freeze identity. |
+| P8 | OPEN / FAIL-CLOSED | TGL/P-35 current-candidate verification required. |
+| P9 | NOT EXECUTED | Independent verification remains outstanding. |
+| Freeze | NOT ESTABLISHED | No frozen identity is authoritative. |
 | Authorization | NOT GRANTED | Separate governance transition required. |
 | Empirical N | 0 | No authorized pilot execution. |
 
+## Current runtime evidence
+
+P2 and P6a both recorded the same production deployment identity `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` and candidate SHA `92ff830b1c67413df745e37087e6447c9c251b9a`.
+
+P2 artifact digest: `sha256:00519533edcaa4c09410b3ed29e49437a5ce8a23ea341a2b798490e110f056c2`.  
+P6a artifact digest: `sha256:9e78ebef5eaa7f33027ec09c0cb922f57bc43dab2fcc694a823ac504c611fcdd`.
+
+P2's valid-missing-audit case remained correctly fail-closed (`BLOCKED`, HTTP 503). P6a's allowed-origin preflight returned 204 and disallowed-origin preflight returned 403; the POST checks matched their expected results. These are runtime predicate results, not efficacy evidence.
+
 ## Historical runtime inputs
 
-The following belong only to the invalidated pre-correction `d56b5b3c…` deployment and must not be reused:
-
-- deployment ID: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
-- deployment URL: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
-- allowed CORS origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
-
-A new exact deployment identity must be generated from `2a54a67d…` before P2/P6a execution.
+Historical candidates, deployment IDs, URLs, and runs remain scoped to their original evidence and are non-closing unless explicitly rebound through a new governance/evidence record. In particular, the pre-correction `d56b5b3c…` / `dpl_76UU8mCm…` boundary remains retired.
 
 ## Documentation and provenance control rule
 
-This document distinguishes four identities: **`main` tip, apparatus source, candidate identity, and deployment identity**. When executable apparatus state changes, including provenance semantics, the candidate cycle resets. Documentation-only commits do not create a candidate. Historical evidence remains bound to its original source/run/deployment.
+This document distinguishes **main tip, apparatus source, runtime candidate, candidate tree, and deployment identity**. Executable apparatus state changes reset the candidate cycle. Documentation-only commits do not create a candidate. Evidence does not transfer across identities merely because the branch, repository, URL, or documentation lineage is shared.
+
+Older audit records that state inline artifact validation is missing are **historical/stale claims**, not current implementation defects. The current implementation performs inline artifact validation. Historical records remain preserved as historical snapshots; current-state documents state the present implementation and separately track remaining candidate-scoped evidence gaps.
 
 ## Assurance boundary
 
-CI success, deterministic tests, deployment readiness, synthetic evaluator results, and engineering PRs do not constitute PDMAL efficacy evidence or experimental authorization. Any unresolved identity, blinding, null-integrity, artifact-custody, reproducibility, analysis, or independent-verification predicate remains FAIL-CLOSED.
+CI success, deterministic tests, deployment readiness, runtime PASS, historical artifacts, synthetic evaluator results, and engineering PRs do not constitute PDMAL efficacy evidence or experimental authorization. Any unresolved blinding, null-integrity, artifact-custody, reproducibility, analysis, P7 binding, P8, or independent-verification predicate remains FAIL-CLOSED.
+
+## Required closure sequence
+
+`P2/P6a VERIFIED → P3/P4/P5/P6 current-cycle evidence → P7 final candidate binding → P8 TGL/P-35 verification → independent P9 → new immutable freeze → explicit authorization → blinded pilot`.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
