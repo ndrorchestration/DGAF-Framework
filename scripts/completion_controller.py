@@ -32,6 +32,7 @@ class Predicate:
     notes: str = ""
     custody_verified: bool = False
     source_workflow: str | None = None
+    evidence: dict | None = None
 
     def exact_identity_complete(self, candidate_sha: str) -> bool:
         if self.status != VERIFIED:
