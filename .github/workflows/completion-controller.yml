@@ -1,8 +1,8 @@
 name: DGAF Completion Controller
 
 # The completion controller is an evaluator, not the candidate under evaluation.
-# It therefore runs only as a trusted/default-branch workflow and never checks out
-# or executes candidate-controlled source. Candidate SHA is treated as data.
+# It runs only from a trusted workflow_run trigger and never checks out or executes
+# candidate-controlled source. Candidate SHA is treated strictly as data.
 
 on:
   workflow_run:
@@ -10,17 +10,16 @@ on:
       - "PDMAL Instrumentation Dry Run"
       - "P9 Independent Verification"
     types: [completed]
-  workflow_dispatch:
 
 jobs:
   completion-controller:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: read
     env:
-      CANDIDATE_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+      CANDIDATE_SHA: ${{ github.event.workflow_run.head_sha }}
     steps:
       - name: Verify candidate identifier is immutable input
         shell: bash
@@ -101,30 +100,27 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json
+          import json, os
           from pathlib import Path
 
           p = Path('/tmp/evidence-registry/dgaf-evidence-registry.json')
           payload = json.loads(p.read_text(encoding='utf-8'))
-          candidate = __import__('os').environ['CANDIDATE_SHA']
+          candidate = os.environ['CANDIDATE_SHA']
           if payload.get('candidate_sha') != candidate:
               raise SystemExit('candidate mismatch in evidence registry')
 
           required = [x for x in payload.get('predicates', []) if x.get('required')]
+          blocking = [x for x in required if x.get('status') not in {'VERIFIED', 'CLOSED', 'ADOPTED'}]
           report = {
               'schema_version': 1,
               'candidate_sha': candidate,
               'required_predicates': required,
+              'blocking_predicates': blocking,
               'freeze_authorized': False,
               'pilot_authorized': False,
               'empirical_execution_requested': False,
+              'decision': 'OPEN_GAPS' if blocking else 'READY_FOR_SEPARATE_GOVERNANCE_REVIEW',
           }
-          blocking = [
-              x for x in required
-              if x.get('status') not in {'VERIFIED', 'CLOSED', 'ADOPTED'}
-          ]
-          report['blocking_predicates'] = blocking
-          report['decision'] = 'OPEN_GAPS' if blocking else 'READY_FOR_SEPARATE_GOVERNANCE_REVIEW'
           Path('/tmp/completion-report.json').write_text(
               json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8'
           )
