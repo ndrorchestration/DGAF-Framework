@@ -87,18 +87,16 @@ jobs:
           fi
           test -f "$p9_dir/p9-independent-evidence.json"
           test -f "$p9_dir/p9-independent-evidence.sha256"
-          p9_payload_candidate="$(jq -r '.candidate_sha' "$p9_dir/p9-independent-evidence.json")"
-          p9_payload_run="$(jq -r '.run_id' "$p9_dir/p9-independent-evidence.json")"
-          test "$p9_payload_candidate" = "$CANDIDATE_SHA"
-          test "$p9_payload_run" = "$p9_run_id"
+          test "$(jq -r '.candidate_sha' "$p9_dir/p9-independent-evidence.json")" = "$CANDIDATE_SHA"
+          test "$(jq -r '.run_id' "$p9_dir/p9-independent-evidence.json")" = "$p9_run_id"
           actual_p9_sha="$(sha256sum "$p9_dir/p9-independent-evidence.json" | awk '{print $1}')"
-          recorded_p9_sha="$(cat "$p9_dir/p9-independent-evidence.sha256")"
-          test "$actual_p9_sha" = "$recorded_p9_sha"
+          test "$actual_p9_sha" = "$(cat "$p9_dir/p9-independent-evidence.sha256")"
           artifact_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${p9_run_id}/artifacts?per_page=100")"
           p9_artifact_id="$(printf '%s' "$artifact_json" | jq -r '.artifacts[] | select(.name == "dgaf-p9-independent-evidence") | .id' | head -n1)"
           p9_artifact_digest="$(printf '%s' "$artifact_json" | jq -r '.artifacts[] | select(.name == "dgaf-p9-independent-evidence") | .digest' | head -n1)"
           test -n "$p9_artifact_id" && test "$p9_artifact_id" != "null"
           test -n "$p9_artifact_digest" && test "$p9_artifact_digest" != "null"
+          export P9_RUN_ID="$p9_run_id" P9_ARTIFACT_ID="$p9_artifact_id" P9_ARTIFACT_DIGEST="$p9_artifact_digest"
           python - <<'PY'
           import json, os
           from pathlib import Path
@@ -117,10 +115,6 @@ jobs:
           echo "p9_source_run=$p9_run_id" >> "$GITHUB_STEP_SUMMARY"
           echo "p9_artifact_id=$p9_artifact_id" >> "$GITHUB_STEP_SUMMARY"
           echo "p9_artifact_digest=$p9_artifact_digest" >> "$GITHUB_STEP_SUMMARY"
-        env:
-          P9_RUN_ID: ${{ steps.reconcile-p9.outputs.p9_run_id }}
-          P9_ARTIFACT_ID: ${{ steps.reconcile-p9.outputs.p9_artifact_id }}
-          P9_ARTIFACT_DIGEST: ${{ steps.reconcile-p9.outputs.p9_artifact_digest }}
       - name: Evaluate actual workflow/artifact evidence registry
         shell: bash
         run: |
@@ -133,7 +127,6 @@ jobs:
           fi
           cat /tmp/completion-report.json
           echo "controller_exit=$rc" >> "$GITHUB_STEP_SUMMARY"
-          echo "Exit 2 is an expected gap signal while required predicates remain open."
       - name: Upload completion report
         uses: actions/upload-artifact@v4
         with:
