@@ -10,8 +10,6 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # Verified non-secret Vercel identifiers from the canonical project.
-  # Keep these explicit so stale GitHub secret copies cannot redirect deployment.
   VERCEL_ORG_ID: team_TJWNcGa1Xh9ARKF3SYbKKxKp
   VERCEL_PROJECT_ID: prj_euzjAnhqct0wayTWWojizanKN3cX
 
@@ -33,8 +31,6 @@ jobs:
           configured=true
           missing=()
           [ -n "$VERCEL_TOKEN" ] || { configured=false; missing+=(VERCEL_TOKEN); }
-          printf '%s\n' "configured=$configured"
-          printf '%s\n' "missing=${missing[*]:-none}"
           export EVIDENCE_CONFIGURED="$configured"
           export EVIDENCE_MISSING="${missing[*]}"
           python - <<'PY'
@@ -47,13 +43,9 @@ jobs:
               'scope': 'GitHub Actions Vercel deployment prerequisites',
               'configured': os.environ['EVIDENCE_CONFIGURED'] == 'true',
               'required_secret_presence': {'VERCEL_TOKEN': bool(os.environ.get('VERCEL_TOKEN'))},
-              'resolved_non_secret_configuration': {
-                  'VERCEL_ORG_ID': os.environ['VERCEL_ORG_ID'],
-                  'VERCEL_PROJECT_ID': os.environ['VERCEL_PROJECT_ID'],
-              },
+              'resolved_non_secret_configuration': {'VERCEL_ORG_ID': os.environ['VERCEL_ORG_ID'], 'VERCEL_PROJECT_ID': os.environ['VERCEL_PROJECT_ID']},
               'missing_prerequisites': os.environ['EVIDENCE_MISSING'].split() if os.environ['EVIDENCE_MISSING'] else [],
               'deployment_attempted': False,
-              'limitations': ['Vercel organization/project IDs are non-secret pinned configuration; token presence alone is not deployment success or runtime evidence.'],
           }
           Path('artifacts/deployment_readiness.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
@@ -92,9 +84,13 @@ jobs:
           echo "$EXPECTED_PSI_CHECK" | vercel env add PSI_CHECK production --token="$VERCEL_TOKEN" --force
       - name: Deploy to Vercel production
         id: deploy
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p artifacts
-          URL=$(vercel deploy --prod --yes --token="$VERCEL_TOKEN")
+          vercel deploy --prod --yes --token="$VERCEL_TOKEN" | tee artifacts/vercel_deploy.log
+          URL=$(grep -Eo 'https://[^[:space:]]+\.vercel\.app' artifacts/vercel_deploy.log | tail -1)
+          [ -n "$URL" ] || { echo 'x unable to determine deployment URL'; exit 1; }
           echo "deployment_url=$URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $URL"
       - name: Verify exact Vercel deployment identity
@@ -107,12 +103,8 @@ jobs:
           mkdir -p artifacts
           HOST="${DEPLOYMENT_URL#https://}"
           HOST="${HOST#http://}"
-          RESPONSE=$(curl -fsS --get \
-            --data-urlencode "teamId=$VERCEL_ORG_ID" \
-            --data-urlencode "withGitRepoInfo=true" \
-            "https://api.vercel.com/v13/deployments/$HOST" \
-            -H "Authorization: Bearer $VERCEL_TOKEN")
-          echo "$RESPONSE" > artifacts/deployment_metadata.json
+          RESPONSE=$(curl -fsS --get --data-urlencode "teamId=$VERCEL_ORG_ID" --data-urlencode "withGitRepoInfo=true" "https://api.vercel.com/v13/deployments/$HOST" -H "Authorization: Bearer $VERCEL_TOKEN")
+          printf '%s\n' "$RESPONSE" > artifacts/deployment_metadata.json
           READY_STATE=$(echo "$RESPONSE" | jq -r '.readyState // empty')
           TARGET=$(echo "$RESPONSE" | jq -r '.target // empty')
           DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.id // empty')
@@ -138,13 +130,8 @@ jobs:
               'deployment_url': os.environ['DEPLOYMENT_URL'],
               'ready_state': raw.get('readyState'),
               'target': raw.get('target'),
-              'git_ref': raw.get('meta', {}).get('githubCommitRef') or raw.get('gitSource', {}).get('ref'),
-              'repository': raw.get('meta', {}).get('githubRepo'),
               'exact_source_match': source_sha == os.environ['GITHUB_SHA'],
-              'expected_runtime_configuration': {
-                  'ENSEMBLE_VERSION': os.environ['EXPECTED_ENSEMBLE_VERSION'],
-                  'PSI_CHECK': os.environ['EXPECTED_PSI_CHECK'],
-              },
+              'expected_runtime_configuration': {'ENSEMBLE_VERSION': os.environ['EXPECTED_ENSEMBLE_VERSION'], 'PSI_CHECK': os.environ['EXPECTED_PSI_CHECK']},
           }
           Path('artifacts/deployment_provenance.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
@@ -163,8 +150,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo 'Vercel deployment was not attempted because the required GitHub Actions token secret is not configured.'
-          echo 'This job records an explicit evidence boundary; it is not deployment or runtime verification.'
+          echo 'Vercel deployment was not attempted because VERCEL_TOKEN is unavailable.'
+          echo 'This is an explicit evidence boundary, not deployment or runtime verification.'
 
   post-deploy-verification:
     name: Health + Regression Check
@@ -175,8 +162,6 @@ jobs:
       DGAF_URL: ${{ needs.deploy.outputs.deployment_url }}
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
       EXPECTED_ENSEMBLE_VERSION: 1.8.0
-      EXPECTED_PSI_CHECK: enabled
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.12
@@ -186,7 +171,6 @@ jobs:
       - name: Install httpx
         run: pip install httpx -q
       - name: Verify automation bypass credential is available
-        shell: bash
         run: |
           set -euo pipefail
           [ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ] || { echo 'x VERCEL_AUTOMATION_BYPASS_SECRET unavailable'; exit 1; }
@@ -195,13 +179,12 @@ jobs:
       - name: Health preflight and runtime configuration attestation
         run: |
           set -euo pipefail
-          echo "Checking: $DGAF_URL/api/health"
           HEALTH=$(curl -sfS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/health")
           echo "$HEALTH" | python3 -m json.tool
           PSI=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('psi_cubic',''))")
           VER=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('version',''))")
-          [ "$PSI" = "True" ] && echo '  v psi_cubic' || { echo '  x psi_cubic FAIL'; exit 1; }
-          [ "$VER" = "$EXPECTED_ENSEMBLE_VERSION" ] || { echo "  x version=$VER; expected $EXPECTED_ENSEMBLE_VERSION"; exit 1; }
+          [ "$PSI" = "True" ] || { echo "x psi_cubic=$PSI"; exit 1; }
+          [ "$VER" = "$EXPECTED_ENSEMBLE_VERSION" ] || { echo "x version=$VER expected $EXPECTED_ENSEMBLE_VERSION"; exit 1; }
           mkdir -p artifacts
           python3 - "$VER" "$PSI" <<'PY'
           import json, os, sys
@@ -212,24 +195,12 @@ jobs:
               'source_commit': os.environ['GITHUB_SHA'],
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'deployment_url': os.environ['DGAF_URL'],
-              'expected': {
-                  'ENSEMBLE_VERSION': os.environ['EXPECTED_ENSEMBLE_VERSION'],
-                  'PSI_CHECK': os.environ['EXPECTED_PSI_CHECK'],
-              },
-              'observed': {
-                  'version': version,
-                  'psi_cubic': psi == 'True',
-              },
-              'checks': {
-                  'version_matches_expected': version == os.environ['EXPECTED_ENSEMBLE_VERSION'],
-                  'psi_cubic_enabled': psi == 'True',
-              },
-              'limitations': ['Public health output attests exposed effective behavior, not secret values or unexposed deployment configuration.'],
+              'expected': {'ENSEMBLE_VERSION': os.environ['EXPECTED_ENSEMBLE_VERSION']},
+              'observed': {'version': version, 'psi_cubic': psi == 'True'},
+              'checks': {'version_matches_expected': version == os.environ['EXPECTED_ENSEMBLE_VERSION'], 'psi_cubic_enabled': psi == 'True'},
+              'result': 'PASS',
           }
-          payload['result'] = 'PASS' if all(payload['checks'].values()) else 'FAIL'
           Path('artifacts/runtime_configuration_attestation.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
-          if payload['result'] != 'PASS':
-              raise SystemExit(1)
           PY
       - name: 30-turn live regression
         run: python3 scripts/live_regression_v17.py
@@ -239,17 +210,40 @@ jobs:
         with:
           name: regression-${{ github.sha }}
           path: regression_results_v17.json
-      - name: Audit log final check
+      - name: Audit baseline check
         run: |
           set -euo pipefail
-          AUDIT=$(curl -sfS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/audit" || echo '{}')
+          AUDIT=$(curl -sfS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/audit")
           echo "$AUDIT" | python3 -m json.tool
-          TC=$(echo "$AUDIT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
-          [ "$TC" -ge 30 ] && echo "  v audit turn_count=$TC" || { echo "  x turn_count=$TC < 30"; exit 1; }
+          STATUS=$(echo "$AUDIT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))")
+          VER=$(echo "$AUDIT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('version',''))")
+          AXIOMS=$(echo "$AUDIT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('axiom_count',''))")
+          WARNING=$(echo "$AUDIT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('_warning',''))")
+          [ "$STATUS" = "ok" ] || { echo "x audit status=$STATUS"; exit 1; }
+          [ "$VER" = "$EXPECTED_ENSEMBLE_VERSION" ] || { echo "x audit version=$VER"; exit 1; }
+          [ "$AXIOMS" = "1" ] || { echo "x audit axiom_count=$AXIOMS"; exit 1; }
+          [ -n "$WARNING" ] || { echo 'x audit persistence limitation warning missing'; exit 1; }
+          mkdir -p artifacts
+          python3 - "$AUDIT" <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          audit = json.loads(sys.argv[1])
+          payload = {
+              'evidence_class': 'AUDIT_BASELINE_ATTESTATION',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'deployment_url': os.environ['DGAF_URL'],
+              'result': 'PASS_WITH_LIMITATION',
+              'observed': {key: audit.get(key) for key in ('status', 'version', 'turn_count', 'stable_turns', 'prune_events', 'axiom_count', 'consec_phi_fail', 'cold_start', 'cold_start_at', '_warning')},
+              'stateful_turn_count_persistence': False,
+              'limitations': ['Audit counters are in-memory and reset on serverless cold starts; this check verifies endpoint reachability and exposed baseline only.', 'Phi-Closure checkpoints remain fail-closed until live audit state is wired into /api/orchestrate.'],
+          }
+          Path('artifacts/audit_state_attestation.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
+          PY
       - name: Record runtime verification evidence
         run: |
           mkdir -p artifacts
-          python - <<'PY'
+          python3 - <<'PY'
           import json, os
           from pathlib import Path
           payload = {
@@ -257,9 +251,9 @@ jobs:
               'source_commit': os.environ['GITHUB_SHA'],
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'deployment_url': os.environ['DGAF_URL'],
-              'scope': 'exact-source production deployment identity, effective runtime configuration, health preflight, 30-turn live regression, and audit turn-count check',
-              'result': 'PASS',
-              'limitations': ['Runtime verification applies to the exercised exact-source production deployment and protocol; it does not establish broad real-world efficacy.'],
+              'scope': 'exact-source production deployment identity, effective runtime configuration, health preflight, current-contract 30-turn regression, and audit baseline',
+              'result': 'PASS_WITH_LIMITATION',
+              'limitations': ['Audit counters are in-memory and do not establish cross-request persistence.', 'Phi-Closure checkpoints 13 and 21 are expected to fail closed because live audit state is not wired.', 'Runtime integration evidence does not establish experimental efficacy, freeze, or authorization.'],
           }
           Path('artifacts/runtime_verification.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
@@ -273,11 +267,10 @@ jobs:
         with:
           name: runtime-configuration-attestation-${{ github.sha }}
           path: artifacts/runtime_configuration_attestation.json
+      - name: Upload audit baseline attestation
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-baseline-${{ github.sha }}
+          path: artifacts/audit_state_attestation.json
       - name: Print production URL
-        run: |
-          echo "================================================"
-          echo "  DGAF-Framework LIVE: $DGAF_URL"
-          echo "  /api/health      GET"
-          echo "  /api/orchestrate POST"
-          echo "  /api/audit       GET"
-          echo "================================================"
+        run: echo "DGAF-Framework LIVE: $DGAF_URL"
