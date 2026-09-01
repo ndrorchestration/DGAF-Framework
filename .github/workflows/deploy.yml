@@ -10,6 +10,10 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  # Verified non-secret Vercel identifiers from the canonical project.
+  # Keep these explicit so stale GitHub secret copies cannot redirect deployment.
+  VERCEL_ORG_ID: team_TJWNcGa1Xh9ARKF3SYbKKxKp
+  VERCEL_PROJECT_ID: prj_euzjAnhqct0wayTWWojizanKN3cX
 
 jobs:
   deployment-readiness:
@@ -24,15 +28,11 @@ jobs:
         shell: bash
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           mkdir -p artifacts
           configured=true
           missing=()
           [ -n "$VERCEL_TOKEN" ] || { configured=false; missing+=(VERCEL_TOKEN); }
-          [ -n "$VERCEL_ORG_ID" ] || { configured=false; missing+=(VERCEL_ORG_ID); }
-          [ -n "$VERCEL_PROJECT_ID" ] || { configured=false; missing+=(VERCEL_PROJECT_ID); }
           printf '%s\n' "configured=$configured"
           printf '%s\n' "missing=${missing[*]:-none}"
           export EVIDENCE_CONFIGURED="$configured"
@@ -46,9 +46,14 @@ jobs:
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'scope': 'GitHub Actions Vercel deployment prerequisites',
               'configured': os.environ['EVIDENCE_CONFIGURED'] == 'true',
+              'required_secret_presence': {'VERCEL_TOKEN': bool(os.environ.get('VERCEL_TOKEN'))},
+              'resolved_non_secret_configuration': {
+                  'VERCEL_ORG_ID': os.environ['VERCEL_ORG_ID'],
+                  'VERCEL_PROJECT_ID': os.environ['VERCEL_PROJECT_ID'],
+              },
               'missing_prerequisites': os.environ['EVIDENCE_MISSING'].split() if os.environ['EVIDENCE_MISSING'] else [],
               'deployment_attempted': False,
-              'limitations': ['Configuration presence is not deployment success and is not runtime evidence.'],
+              'limitations': ['Vercel organization/project IDs are non-secret pinned configuration; token presence alone is not deployment success or runtime evidence.'],
           }
           Path('artifacts/deployment_readiness.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
           PY
@@ -70,8 +75,6 @@ jobs:
       source_sha: ${{ steps.provenance.outputs.source_sha }}
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       EXPECTED_ENSEMBLE_VERSION: 1.8.0
       EXPECTED_PSI_CHECK: enabled
     steps:
@@ -160,7 +163,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo 'Vercel deployment was not attempted because required GitHub Actions secrets are not configured.'
+          echo 'Vercel deployment was not attempted because the required GitHub Actions token secret is not configured.'
           echo 'This job records an explicit evidence boundary; it is not deployment or runtime verification.'
 
   post-deploy-verification:
