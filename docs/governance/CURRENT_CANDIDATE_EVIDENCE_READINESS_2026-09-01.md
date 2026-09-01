@@ -2,9 +2,11 @@
 
 ## Scope
 
-This record is a non-authorizing control/evidence assessment for the current runtime candidate. It does not create empirical observations, freeze the apparatus, grant authorization, or change empirical N.
+This record is a non-authorizing control/evidence assessment for the current runtime and completion candidates. It does not create empirical observations, freeze the apparatus, grant authorization, or change empirical N.
 
-## Exact identity chain
+## Exact identity chains
+
+### Mainline runtime candidate
 
 - Corrected apparatus provenance anchor: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
 - Corrected apparatus tree: `973c92335caf84f37fc2b3c4df6dd83b3b855087`
@@ -13,7 +15,17 @@ This record is a non-authorizing control/evidence assessment for the current run
 - Current P2/P6a production deployment: `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`
 - Candidate lineage: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 → 92ff830b1c67413df745e37087e6447c9c251b9a`
 
-## Verified runtime evidence
+### Completion candidate
+
+- Latest completion candidate before reseed: `562753b3053b3566b0fcad1b0b1df151d7de119a`
+- Latest reseeded completion candidate: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`
+- Branch: `completion/2026-09-01-exact-candidate`
+- PR: `#187`
+- The prior P9 result `33567199896` is scoped exclusively to `562753b…`.
+- Fresh P9 run for `a43219b…`: `33572123857`, queued at the latest reconciliation check.
+- No prior P9 result transfers to `a43219b…`.
+
+## Verified mainline runtime evidence
 
 ### P2
 - Run: `33509348174`
@@ -32,52 +44,31 @@ This record is a non-authorizing control/evidence assessment for the current run
 - Allowed-origin preflight: HTTP 204
 - Disallowed-origin preflight: HTTP 403
 
-## P3 assessment
+## P3–P6 current-candidate rule
 
-Implementation is present on the current runtime candidate. The frozen/pilot artifact contract `experiments/pdmal_pilot/pilot_artifact_schema.py` enforces the current package-level structural predicates identified in the control record, and `run_pilot.py` invokes artifact and sidecar validation before retention.
+The mainline PDMAL dry-run `33516447975` is valid supporting evidence for candidate `da40b085…` only. It does not close P3–P6 for `92ff830b…` or the completion candidates.
 
-A successful instrumentation dry run also exists:
-- Run: `33516447975`
-- Artifact: `9803868540`
-- Digest: `sha256:c3a615301222d64d6fe53537eb242af288c311d241035341439a987131683391`
+The completion branch contains the PDMAL instrumentation workflow and has been reseeded with candidate `a43219b…`. Its resulting workflow evidence must be judged exclusively by the exact new run SHA/artifact pair. The P9 workflow for this candidate is also independently triggered and remains subject to exact-SHA reconciliation.
 
-However, that dry run executed on documentation/control-plane commit `da40b085…`, not exact candidate `92ff830b…`. It is therefore supporting evidence and does not close current-candidate P3.
-
-**Disposition: IMPLEMENTATION PRESENT / EVIDENCE OPEN.**
-
-## P4 assessment
-
-Existing P4 closure records are historical and explicitly bound to candidate `c6157158…`. They are not transferable to the current runtime candidate. Current P4 requires fresh operational evidence covering custody, access separation, bijection, and the current blinding procedure.
-
-**Disposition: OPEN.**
-
-## P5 assessment
-
-Existing P5 closure records are historical and explicitly bound to candidate `c6157158…` / tree `6195063e…`. Current implementation provides deterministic topology/failure RNG stream separation and deterministic serialization, but current-candidate execution/reproducibility evidence must be retained against the exact current candidate boundary.
-
-The instrumentation dry run provides supporting evidence but is not a substitute for candidate-scoped P5 closure because its workflow head is `da40b085…`.
-
-**Disposition: OPEN.**
-
-## P6 assessment
-
-Existing P6 closure is historical and explicitly bound to candidate `c6157158…`. The historical attestation proves the retention/hash mechanism, but not current-candidate custody. Current P6 requires a retained current-candidate artifact plus independent retrieval and hash verification at the applicable evidence boundary.
-
-**Disposition: OPEN / FAIL-CLOSED.**
+P3, P4, P5, and P6 remain open for the intended pilot candidate until fresh exact-candidate evidence is retained and reconciled.
 
 ## P7 / P8 / P9
 
 - P7 scientific target: adopted; exact final candidate/protocol/analysis/freeze binding remains open.
-- P8: OPEN / FAIL-CLOSED until TGL/P-35 prerequisites and exact candidate analysis/protocol bindings are verified.
-- P9: NOT EXECUTED; independent verification must operate after the current candidate evidence package is complete.
+- P8: OPEN / FAIL-CLOSED until current candidate TGL/P-35 and analysis/protocol bindings are verified.
+- P9: `562753b…` has scoped independent verification PASS from run `33567199896`; fresh candidate `a43219b…` has run `33572123857` queued. Broader P9 closure remains conditional on the full evidence graph and final candidate selection.
 
-## Stale documentation rule
+## Candidate reseed rule
 
-Older records stating that inline artifact validation is missing are historical/stale observations. They remain preserved as historical snapshots. They are not current implementation defects. Current evidence status is determined by the current implementation and exact candidate-scoped execution records.
+Any commit after a candidate-bound verification creates a new exact candidate identity for closure purposes. Documentation-only changes are still candidate identity changes when committed to the controlled completion branch because the verification boundary is the exact Git commit under test. Evidence must therefore be regenerated or explicitly re-established for the new SHA rather than inherited.
+
+## Historical-priority boundary
+
+The historical-priority adjudication remains a separate research track. It does not authorize execution and must not be strengthened by post-cutoff implementation evidence.
 
 ## Critical path
 
-`P3 current-candidate evidence → P4 current custody/blinding evidence → P5 current reproducibility evidence → P6 current durable-custody proof → P7 exact binding → P8 TGL/P-35 verification → independent P9 → new immutable freeze → explicit authorization → blinded pilot`
+`select intended candidate → current-cycle P3/P4/P5/P6 evidence → P7 exact binding → P8 verification → P9 scoped + broader closure → new immutable freeze → explicit authorization → blinded pilot`
 
 ## Hard boundary
 
