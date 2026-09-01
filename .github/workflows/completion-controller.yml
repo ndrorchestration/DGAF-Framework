@@ -40,7 +40,7 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/evidence-registry
           runs_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${CANDIDATE_SHA}&status=success&per_page=100")"
-          registry_run_id="$(printf '%s' "$runs_json" | jq -r '.workflow_runs[] | select(.name == "PDMAL Instrumentation Dry Run") | .id' | head -n1)"
+          registry_run_id="$(printf '%s' "$runs_json" | jq -r '[.workflow_runs[] | select(.name == "PDMAL Instrumentation Dry Run")] | sort_by(.run_started_at) | last | .id // empty')"
           if [ -n "$registry_run_id" ] && [ "$registry_run_id" != "null" ]; then
             if gh run download "$registry_run_id" --repo "$GITHUB_REPOSITORY" --name "dgaf-evidence-registry" --dir /tmp/evidence-registry; then
               test -f /tmp/evidence-registry/dgaf-evidence-registry.json
@@ -77,7 +77,7 @@ jobs:
           rm -rf "$p9_dir"
           mkdir -p "$p9_dir"
           runs_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${CANDIDATE_SHA}&status=success&per_page=100")"
-          p9_run_id="$(printf '%s' "$runs_json" | jq -r '.workflow_runs[] | select(.name == "P9 Independent Verification") | .id' | head -n1)"
+          p9_run_id="$(printf '%s' "$runs_json" | jq -r '[.workflow_runs[] | select(.name == "P9 Independent Verification")] | sort_by(.run_started_at) | last | .id // empty')"
           if [ -z "$p9_run_id" ] || [ "$p9_run_id" = "null" ]; then
             echo "p9_source=missing" >> "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -90,12 +90,69 @@ jobs:
           test -f "$p9_dir/p9-independent-evidence.sha256"
           test "$(jq -r '.candidate_sha' "$p9_dir/p9-independent-evidence.json")" = "$CANDIDATE_SHA"
           test "$(jq -r '.run_id' "$p9_dir/p9-independent-evidence.json")" = "$p9_run_id"
+          test "$(jq -r '.source_workflow' "$p9_dir/p9-independent-evidence.json")" = "P9 Independent Verification"
+          test "$(jq -r '.independent_canonicalization' "$p9_dir/p9-independent-evidence.json")" = "jq -S -c"
+          test "$(jq -r '.authority_identity_regression' "$p9_dir/p9-independent-evidence.json")" = "PASS"
+          test "$(jq -r '.authorization_is_external' "$p9_dir/p9-independent-evidence.json")" = "true"
+          test "$(jq -r '.empirical_execution_requested' "$p9_dir/p9-independent-evidence.json")" = "false"
           actual_p9_sha="$(sha256sum "$p9_dir/p9-independent-evidence.json" | awk '{print $1}')"
           test "$actual_p9_sha" = "$(cat "$p9_dir/p9-independent-evidence.sha256")"
           echo "p9_source_run=$p9_run_id" >> "$GITHUB_STEP_SUMMARY"
           echo "p9_evidence_custody=PASS" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Evaluate evidence registry with trusted evaluator
+      - name: Reconcile independently completed evidence into candidate registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          registry_path = Path('/tmp/evidence-registry/dgaf-evidence-registry.json')
+          p9_path = Path('/tmp/p9-evidence/p9-independent-evidence.json')
+          registry = json.loads(registry_path.read_text(encoding='utf-8'))
+          candidate = os.environ['CANDIDATE_SHA']
+          if registry.get('candidate_sha') != candidate:
+              raise SystemExit('candidate mismatch in evidence registry')
+
+          if p9_path.exists():
+              p9 = json.loads(p9_path.read_text(encoding='utf-8'))
+              if p9.get('candidate_sha') != candidate:
+                  raise SystemExit('candidate mismatch in P9 evidence')
+              predicates = registry.setdefault('predicates', [])
+              p9_predicates = [x for x in predicates if x.get('id') == 'P9' and x.get('required')]
+              if len(p9_predicates) != 1:
+                  raise SystemExit('expected exactly one required P9 predicate in registry')
+              p9_predicate = p9_predicates[0]
+              p9_predicate.update({
+                  'status': 'VERIFIED',
+                  'candidate_sha': candidate,
+                  'run_id': p9['run_id'],
+                  'source_workflow': p9['source_workflow'],
+                  'independent_canonicalization': p9['independent_canonicalization'],
+                  'independent_canonical_sha256': p9['independent_canonical_sha256'],
+                  'authority_identity_regression': p9['authority_identity_regression'],
+                  'authorization_is_external': p9['authorization_is_external'],
+                  'empirical_execution_requested': p9['empirical_execution_requested'],
+                  'notes': 'Reconciled from exact-candidate P9 evidence artifact after independent workflow completion.'
+              })
+              registry['reconciliation'] = {
+                  'p9_reconciled': True,
+                  'p9_run_id': p9['run_id'],
+                  'p9_evidence_digest': Path('/tmp/p9-evidence/p9-independent-evidence.sha256').read_text().strip(),
+              }
+          else:
+              registry['reconciliation'] = {
+                  'p9_reconciled': False,
+                  'notes': 'No validated exact-candidate P9 evidence artifact was available at controller evaluation time.'
+              }
+
+          registry_path.write_text(json.dumps(registry, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps(registry.get('reconciliation', {}), indent=2, sort_keys=True))
+          PY
+          cat /tmp/evidence-registry/dgaf-evidence-registry.json
+
+      - name: Evaluate reconciled evidence registry with trusted evaluator
         shell: bash
         run: |
           set -euo pipefail
@@ -116,6 +173,7 @@ jobs:
               'candidate_sha': candidate,
               'required_predicates': required,
               'blocking_predicates': blocking,
+              'reconciliation': payload.get('reconciliation', {}),
               'freeze_authorized': False,
               'pilot_authorized': False,
               'empirical_execution_requested': False,
