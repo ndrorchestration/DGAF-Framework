@@ -8,9 +8,8 @@
 **Current runtime candidate:** `92ff830b1c67413df745e37087e6447c9c251b9a`  
 **Current runtime candidate tree:** `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`  
 **Current production deployment:** `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`  
-**Latest completion candidate:** `562753b3053b3566b0fcad1b0b1df151d7de119a` on `completion/2026-09-01-exact-candidate`  
-**Pre-correction apparatus source:** `d56b5b3c44e39ddb8c883259584432ab39259306` — historical/invalidated  
-**Pre-correction deployment:** `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb` — historical/non-closing  
+**Latest completion candidate:** `a43219b4ed91fff8615f6c655ab3d17ca871fc29` on `completion/2026-09-01-exact-candidate`  
+**Prior completion candidate:** `562753b3053b3566b0fcad1b0b1df151d7de119a` — superseded/historical  
 **Empirical N:** `0`  
 **Pilot authorization:** `NOT GRANTED`  
 **Freeze:** `NOT CREATED`
@@ -23,89 +22,104 @@ This matrix is the current planning/control surface. It does not itself constitu
 - `973c9233…` — corrected apparatus tree.
 - `92ff830b…` — current production/runtime candidate on mainline state.
 - `73cf3ad…` — exact runtime candidate tree.
-- `562753b3…` — latest controlled completion-candidate SHA used for scoped P9 verification; not the current mainline runtime candidate unless separately selected and rebound.
+- `a43219b…` — latest controlled completion-candidate SHA and current exact-candidate verification target.
+- `562753b…` — superseded completion-candidate SHA with historical scoped P9 evidence.
 - `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — current production deployment recorded by current P2/P6a runtime evidence.
-- `d56b5b3c…` — pre-correction apparatus source; invalidated current candidate.
-- `dpl_76UU8mCm…` — deployment bound to invalidated `d56b5b3c…`; historical/non-closing.
-- `303f4424…` — prior integrated engineering/runtime boundary.
-- `ac8ea267…` — historical experimental verification boundary.
+- `d56b5b3c…` / `dpl_76UU8mCm…` — historical pre-correction boundary, invalidated/non-closing.
 - `c6157158…` — superseded pre-remediation candidate.
-- `05fa286…` — superseded post-#151 candidate; no evidence transfers.
 
 ## Predicate matrix
 
 | Predicate | Required evidence | Current state | Closure condition |
 |---|---|---|---|
 | P1 Candidate Integrity | exact final apparatus/source identity, candidate identity, tree, deployment identity, and complete provenance | **CURRENT-CANDIDATE EVIDENCE OPEN** | exact final candidate/provenance/deployment binding retained and reconciled |
-| P2 Execution Contract / Runtime | authenticated five-case runtime matrix on exact deployment | **VERIFIED** | Run `33509348174`; artifact `9800942933`; five required cases passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
-| P3 Artifact Contract | schema/identity/uniqueness/balance/canonical matrix/deviation integrity | **IMPLEMENTED / OPEN** | current-candidate execution evidence retained and provenance-linked |
-| P4 Security / Blinding | custody, bijection, access separation, operational procedure | **OPEN** | current-cycle operational evidence retained and independently checked |
-| P5 Provenance / Reproducibility | environment/toolchain/topology/RNG fingerprints and reproduction | **OPEN** | current-candidate reproducibility evidence retained/checked |
-| P6 Durable Evidence Custody | archive → independent retrieval → hash verification | **OPEN / FAIL-CLOSED** | current candidate evidence archived, independently retrieved, and hash-verified |
-| P6a Runtime/CORS | authenticated four-case CORS matrix on exact deployment | **VERIFIED** | Run `33509416955`; artifact `9800972819`; four required checks passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
+| P2 Execution Contract / Runtime | authenticated five-case runtime matrix on exact deployment | **VERIFIED — MAINLINE ONLY** | Run `33509348174`; artifact `9800942933`; five required cases passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`; rebind for `a43219b…` if selected |
+| P3 Artifact Contract | schema/identity/uniqueness/balance/canonical matrix/deviation integrity | **VERIFIED — COMPLETION CANDIDATE** | Run `33572123862`; artifact `9825367738`; exact-candidate dry-run contract passed |
+| P4 Security / Blinding | custody, bijection, access separation, operational procedure | **WORKFLOW-LEVEL VERIFIED / OPERATIONAL CLOSURE OPEN** | current-cycle operational blinding/custody evidence independently checked |
+| P5 Provenance / Reproducibility | environment/toolchain/topology/RNG fingerprints and reproduction | **VERIFIED — COMPLETION CANDIDATE** | Run `33572123862`; exact candidate/artifact binding, RNG separation, deterministic digest, environment fingerprint retained |
+| P6 Durable Evidence Custody | archive → independent retrieval → hash verification | **WORKFLOW-LEVEL VERIFIED / DURABLE ARCHIVE OPEN** | durable current-candidate archive plus independent retrieval/hash proof |
+| P6a Runtime/CORS | authenticated four-case CORS matrix on exact deployment | **VERIFIED — MAINLINE ONLY** | Run `33509416955`; artifact `9800972819`; four required checks passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`; rebind for `a43219b…` if selected |
 | P7 Scientific Target | adopted scientific decision + exact binding | **ADOPTED / FINAL BINDING OPEN** | exact corrected apparatus/candidate/protocol/analysis/freeze binding |
 | P8 Analysis Lock | analysis/schema/runner/protocol bindings + candidate-scoped verification | **OPEN / FAIL-CLOSED** | candidate and analysis identities evidenced and TGL/P-35 predicates verified |
-| P9 Independent Verification | independent reproduction/audit of identity, artifacts, analysis, invariants, adversarial cases | **SCOPED PASS / BROADER CLOSURE OPEN** | current candidate undergoes the complete P9 evidence-chain review; run `33567199896` separately verifies exact candidate identity, alternate canonicalization/hash path, and authority identity for `562753b…` |
+| P9 Independent Verification | independent reproduction/audit of identity, artifacts, analysis, invariants, adversarial cases | **SCOPED PASS / BROADER CLOSURE OPEN** | current candidate undergoes complete P9 evidence-chain review after prerequisites are current |
 
-## Latest P9 evidence
+## Current completion-candidate evidence
 
-Run `33567199896` completed successfully on 2026-09-01 for exact candidate `562753b3053b3566b0fcad1b0b1df151d7de119a`.
+### PDMAL dry run — Run `33572123862`
 
-Verified predicates in that run:
+Exact candidate: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
+
+Result: **SUCCESS**.
+
+- Blinding secret was present; value withheld.
+- Deterministic smoke cases matched.
+- P5 RNG stream-separation and deterministic-digest checks passed.
+- Structural/artifact test suite: `19 passed`.
+- Masked one-seed CSV schema validation passed.
+- CSV SHA-256 sidecar matched recomputation.
+- Uploaded artifact was downloaded and inner CSV checksum reverified.
+- Evidence registry marked P3/P4/P5/P6 `VERIFIED` for the exact candidate.
+
+Artifact ID: `9825367738`.  
+Artifact ZIP digest: `sha256:51b89e5321674ff19eecc53a4445237677025649fe36ed5ddc762835a24c2c6c`.  
+Inner CSV digest: `c12098da63ae1508edbb350799360e1edccfebb16c9d0faf0db4d593ffea8ce2`.
+
+P4 and P6 above are deliberately qualified: they establish workflow-level/synthetic evidence, not the full operational closure predicates.
+
+### P9 independent verification — Run `33572123857`
+
+Exact candidate: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
+
+Result: **SUCCESS / SCOPED PASS**.
+
+Verified:
 
 - checkout `HEAD` matched `GITHUB_SHA`;
-- independent `jq -S -c` canonicalization plus `sha256sum` matched the DGAF/Python digest;
-- `tests/test_agent_authority_matrix.py` returned `4 passed` against the exact candidate;
-- independent P9 JSON and SHA-256 sidecar were uploaded with `if-no-files-found: error`.
+- independent `jq -S -c` canonicalization plus `sha256sum` matched the deterministic-case digest;
+- `tests/test_agent_authority_matrix.py`: `4 passed`;
+- evidence declared authorization external and empirical execution not requested;
+- P9 evidence JSON and SHA-256 sidecar were uploaded successfully.
 
 Independent canonical digest: `f235fc6ef241379f295676d257c22c7b17a47ace47377506fac9a7e5d490215a`.  
-P9 artifact ID: `9823570326`.  
-P9 artifact ZIP digest: `sha256:8e3435a3af0dc5de7376d970b9f1665a18db8ff04b26a2c0eaae8acf8b095d85`.
+P9 artifact ID: `9825316781`.  
+P9 artifact ZIP digest: `sha256:15e5ba72dd524f90b0bb3499c9b0b3f7de602f0e1905b0734183e830c22af671`.
 
-This result is **scoped** to `562753b…`. It does not transfer to `92ff830b…`, `c6157158…`, or `main` merely because the repository and workflows are shared.
+This scoped pass does not close P2/P6a for the completion candidate, P7, P8, durable archive, freeze, authorization, empirical execution, or the broader P9 evidence-chain predicate.
 
-## Provenance correction closure
+## Historical P9 evidence
 
-PR #174 merged the bounded correction after independent review found that #170's canonicalization bound P-31/P-33 but omitted Sentinel, Apogee, DemiJoule, KAPPA, and Phi state. The corrected apparatus at `2a54a67d…` includes all seven gate-state blocks and regression tests proving each affects canonical identity, plus substrate-driven P-29 tests.
-
-The mainline runtime candidate is a distinct successor identity: `92ff830b…`, tree `73cf3ad…`. Git history establishes `2a54a67d…` as its recorded lineage basis. The separate completion candidate `562753b…` is independently tracked and must not be silently substituted.
+Run `33567199896` successfully verified superseded candidate `562753b3053b3566b0fcad1b0b1df151d7de119a` with the same independent canonical digest `f235fc…`, authority regression `4 passed`, and artifact `9823570326` (`sha256:8e3435a3af0dc5de7376d970b9f1665a18db8ff04b26a2c0eaae8acf8b095d85`). This remains historical and does not transfer to `a43219b…`.
 
 ## Runtime identity and evidence rule
 
-Current P2/P6a execution evidence is bound to candidate `92ff830b…`, exact tree `73cf3ad…`, and production deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`.
+Current P2/P6a execution evidence is bound to candidate `92ff830b…`, exact tree `73cf3ad…`, and deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`.
 
 P2 artifact digest: `sha256:00519533edcaa4c09410b3ed29e49437a5ce8a23ea341a2b798490e110f056c2`.  
 P6a artifact digest: `sha256:9e78ebef5eaa7f33027ec09c0cb922f57bc43dab2fcc694a823ac504c611fcdd`.
 
-P2's required five-case matrix passed, including its fail-closed missing-audit case. P6a's required four-check matrix passed, including allowed-origin preflight 204 and disallowed-origin preflight 403. These are runtime predicate results only and do not constitute efficacy evidence.
+No runtime evidence transfers to `a43219b…` merely because the repository/workflow is shared.
+
+## Provenance correction closure
+
+The corrected apparatus at `2a54a67d…` remains the canonical provenance anchor. The current mainline runtime candidate `92ff830b…` is its recorded successor lineage. The completion candidate `a43219b…` is a separate exact verification target.
 
 ## Seven-gate restoration status
 
-All seven constitutive gates are **implemented, provenance-complete, and pre-freeze validated**. This is engineering/provenance status, not experimental efficacy evidence.
-
-## Stale documentation classification
-
-Older audit records stating that inline artifact validation is missing are historical/stale observations, not current implementation defects. Historical records remain preserved and exact in their original scope; current-state documents carry the present implementation and current evidence status.
+All seven constitutive gates remain **implemented, provenance-complete, and pre-freeze validated**. This is engineering/provenance status, not experimental efficacy evidence.
 
 ## Historical-priority boundary
 
 The historical-priority adjudication dated 2026-09-01 establishes substantial external prior art for the individual DGAF mechanisms. The remaining historical question is the narrower cross-domain integration connecting formation-state governance to candidate-bound experimental verification and authorization. No absolute firstness claim is established.
 
-Primary record: `docs/research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`.
-
 ## Remaining critical path
 
-1. Select/rebind the intended current completion candidate for the pilot cycle.
-2. Complete current-candidate P3 artifact-contract evidence.
-3. Complete P4 operational blinding/custody evidence.
-4. Complete P5 environment/topology/RNG reproducibility evidence.
-5. Complete P6 durable archive/retrieval/hash evidence.
-6. Finalize P7 exact candidate/protocol/analysis/freeze binding.
-7. Verify P8 TGL/P-35 predicates against the exact selected candidate.
-8. Complete broader P9 evidence-chain closure using exact selected candidate evidence.
-9. Create and independently verify the immutable freeze.
-10. Obtain separate explicit pilot authorization.
-11. Only then execute the blinded pilot and allow empirical N to advance from 0.
+1. Rebind/verify P2 and P6a for the completion candidate if `a43219b…` remains the selected pilot target.
+2. Finalize P7 exact scientific/protocol/apparatus binding.
+3. Close P8 TGL/P-35 and analysis-lock predicates.
+4. Complete broader P9 evidence-chain closure against the same selected candidate.
+5. Create and independently verify the immutable freeze.
+6. Obtain separate explicit pilot authorization.
+7. Only then execute the blinded pilot and allow empirical N to advance from 0.
 
 ## Anti-transfer / fail-closed rule
 
