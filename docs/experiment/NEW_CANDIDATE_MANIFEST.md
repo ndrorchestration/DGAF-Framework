@@ -1,13 +1,16 @@
 # NEW CANDIDATE MANIFEST — post-#174 provenance-corrected apparatus cycle
 
 ```yaml
-manifest_version: 5
-designation_event: NEW_CANDIDATE_PENDING_RUNTIME_BINDING
+manifest_version: 6
+designation_event: CURRENT_RUNTIME_CANDIDATE_BOUND
 state: PRE-FREEZE / FAIL-CLOSED
 apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 apparatus_source_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
-candidate_designation: PROVISIONAL / POST-PROVENANCE-CORRECTION
-candidate_designation_rule: exact merged apparatus source; promotion to execution-valid candidate requires a fresh exact deployment identity and candidate-scoped P1-P9 evidence
+candidate_designation: CURRENT PRODUCTION/RUNTIME CANDIDATE
+candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
+candidate_tree_sha: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
+candidate_designation_rule: exact runtime candidate commit/tree used by current candidate-bound execution evidence; it must remain traceable to the corrected apparatus source
+candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 92ff830b1c67413df745e37087e6447c9c251b9a
 restoration_source:
   prior_pr: 170
   prior_merge_commit: d56b5b3c44e39ddb8c883259584432ab39259306
@@ -30,13 +33,13 @@ displaced_pre_correction_candidate:
   allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
   note: these runtime identities and all evidence derived from them are non-closing for this post-#174 cycle
 deployment_binding:
-  deployment_id: NONE_YET
-  deployment_url: NONE_YET
-  deployment_target: NONE_YET
-  deployment_state: NOT_YET_ESTABLISHED
-  source_sha_match: NOT_YET_CHECKED
-  allowed_cors_origin: NONE_YET
-  status: BLOCKED_UNTIL_EXACT_DEPLOYMENT_EXISTS
+  deployment_id: dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc
+  deployment_url: https://dynamicgovernanceagenticformation-3y3d8o5dp-ndrorchestration.vercel.app
+  deployment_target: production
+  deployment_state: READY_AS_RECORDED_BY_RUNTIME_VERIFICATION_SCOPE
+  source_sha_match: candidate_bound_in_p2_p6a_runtime_artifacts
+  allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
+  status: CURRENT_CANDIDATE_RUNTIME_EVIDENCE
 
 gate_ledger:
   P31_SCPE: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
@@ -46,9 +49,14 @@ gate_ledger:
   DEMIJOULE: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
   P27_KAPPA: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
   P32_PHI: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
-  P2_RUNTIME: NOT_VERIFIED_FOR_THIS_CYCLE
-  P6a_CORS: NOT_VERIFIED_FOR_THIS_CYCLE
-  P3_P9: NOT_VERIFIED_FOR_THIS_CYCLE
+  P2_RUNTIME: VERIFIED
+  P6a_CORS: VERIFIED
+  P3: IMPLEMENTED / OPEN
+  P4: OPEN
+  P5: OPEN
+  P6: OPEN / FAIL-CLOSED
+  P7: ADOPTED / FINAL BINDING OPEN
+  P8: OPEN / FAIL-CLOSED
   P9: NOT_EXECUTED
 
 authorization: NOT GRANTED
@@ -58,15 +66,25 @@ freeze_status: NOT_CREATED
 
 ## Identity roles
 
-- `2a54a67d…` — corrected seven-gate apparatus source from merged PR #174 and the basis for the new candidate cycle.
+- `2a54a67d…` — corrected seven-gate apparatus source from merged PR #174 and canonical provenance anchor.
+- `973c9233…` — exact tree of the corrected apparatus source.
+- `92ff830b…` — current production/runtime candidate used by P2/P6a.
+- `73cf3ad…` — exact tree of the current runtime candidate.
+- `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — production deployment recorded by both current runtime evidence artifacts.
 - `d56b5b3c…` — pre-correction apparatus source; invalidated as an execution candidate when #174 corrected canonical provenance identity.
 - `dpl_76UU8mCm…` — pre-correction deployment; historical/non-closing.
 - `4e345c03…` — pre-merge #174 head; validation evidence only, not the merged apparatus identity.
 - `05fa2866…` — superseded historical candidate; no evidence transfers.
 
-## Promotion rule
+## Promotion / binding rule
 
-This manifest establishes the apparatus identity for the post-#174 candidate cycle but does not create an execution-valid candidate by itself. A fresh production deployment must be created from the exact apparatus source, verified as READY and source-SHA-matched, then bound to candidate-scoped P2/P6a/P3-P9 evidence. No evidence from the pre-correction `d56b5b3c…` deployment transfers.
+The corrected apparatus source establishes scientific apparatus provenance. The runtime candidate establishes the exact executable candidate identity. A candidate-bound runtime result must identify the exact candidate commit/tree and exact deployment identity; downstream evidence must then be bound to that same candidate lineage before P7/P8/P9/freeze transitions can occur.
+
+P2 and P6a are now verified for the recorded runtime evidence scope. Their closure does not create a freeze, authorization, or empirical data. P3–P6, final P7 binding, P8, and independent P9 remain outstanding.
+
+## Documentation hygiene
+
+Older documents stating that inline artifact validation is missing are historical/stale observations, not current defects. The current implementation performs inline artifact validation. Historical documents remain preserved; this manifest records the current state separately.
 
 ## Boundary
 
