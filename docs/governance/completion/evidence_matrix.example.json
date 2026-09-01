@@ -10,49 +10,56 @@
       "name": "runtime verification",
       "required": true,
       "status": "OPEN",
-      "notes": "Populate only with evidence produced against this exact candidate."
+      "notes": "Fresh execution must bind run, candidate SHA, deployment where applicable, and artifact evidence."
     },
     {
       "id": "P3",
       "name": "artifact contract",
       "required": true,
-      "status": "OPEN"
+      "status": "OPEN",
+      "notes": "Candidate-bound artifact and schema/checksum validation required."
     },
     {
       "id": "P4",
       "name": "blinding/security",
       "required": true,
-      "status": "OPEN"
+      "status": "OPEN",
+      "notes": "Candidate-bound operational blinding evidence required; secret value must remain withheld."
     },
     {
       "id": "P5",
       "name": "provenance/reproducibility",
       "required": true,
-      "status": "OPEN"
+      "status": "OPEN",
+      "notes": "Bind candidate, apparatus/protocol identity, workflow run, deployment, environment, and artifact hashes."
     },
     {
       "id": "P6",
       "name": "durable evidence custody",
       "required": true,
-      "status": "OPEN"
+      "status": "OPEN",
+      "notes": "Archive, retrieve, recompute hashes, and retain round-trip evidence."
     },
     {
       "id": "P7",
       "name": "scientific decision",
       "required": true,
-      "status": "OPEN"
+      "status": "OPEN",
+      "notes": "Exact freeze binding remains separate from substantive adoption."
     },
     {
       "id": "P8",
       "name": "analysis lock",
       "required": true,
-      "status": "FAIL_CLOSED"
+      "status": "FAIL_CLOSED",
+      "notes": "Must be locked to exact candidate and preregistered statistical configuration."
     },
     {
       "id": "P9",
       "name": "independent verification",
       "required": true,
-      "status": "NOT_EXECUTED"
+      "status": "NOT_EXECUTED",
+      "notes": "Independent reconstruction is required before final authorization."
     }
   ]
 }
