@@ -1,12 +1,12 @@
 # DGAF Publication and Provenance Spine
 
-**Status:** Active publication architecture; not an empirical validation claim  
-**Created:** 2026-08-25  
-**Purpose:** Make DGAF and related research externally legible without overstating novelty, efficacy, or maturity.
+**Status:** Active publication architecture; not an empirical validation or absolute novelty claim  
+**Updated:** 2026-09-01  
+**Purpose:** Make DGAF and related research externally legible without overstating novelty, efficacy, maturity, or historical priority.
 
 ## 1. Publication principle
 
-DGAF's public record should permit an external reader to determine what is **defined**, **implemented**, **tested**, and **not yet established** without relying on authorial authority. Publication is therefore treated as a provenance and audit mechanism, not as proof of correctness or priority.
+DGAF's public record should permit an external reader to determine what is **defined**, **implemented**, **tested**, **verified**, **empirically established**, and **historically supported** without relying on authorial authority. Publication is therefore treated as a provenance and audit mechanism, not as proof of correctness, priority, or effectiveness.
 
 A public timestamp can establish that a particular formulation existed publicly at a particular time. It does not by itself establish novelty, exclusive priority, validity, or empirical effectiveness.
 
@@ -19,7 +19,8 @@ Publish stable definitions of:
 - Dynamic Governance Agentic Formation (DGAF);
 - Phi-Driven Multi-Agent Lattice (PDMAL/PDMA-L);
 - the governance, provenance, and evaluation boundaries between them;
-- explicit assumptions, non-goals, and failure conditions.
+- assumptions, non-goals, and failure conditions;
+- established prior art and explicitly bounded candidate distinctions.
 
 Conceptual documents must distinguish original synthesis from established techniques and identify dependencies on prior work where known.
 
@@ -27,7 +28,7 @@ Conceptual documents must distinguish original synthesis from established techni
 
 The public repository is the inspectable implementation substrate. A cloneable implementation should be accompanied by enough configuration and documentation to reproduce the claimed repository-local behavior.
 
-Implementation existence is not evidence of real-world efficacy.
+Implementation existence is not evidence of real-world efficacy or historical firstness.
 
 ### Layer C — Experimental record
 
@@ -47,56 +48,64 @@ Every significant public statement should be classified before publication:
 | Implementation | Code or artifact exists | “The repository implements…” |
 | Verification | A bounded test or check passed | Name the exact scope and evidence |
 | Empirical result | A protocol produced data | State N, comparator, endpoint, and limitations |
-| Hypothesis | A prediction awaiting testing | Use conditional language |
+| Historical provenance | A formulation is documented at a dated point | Name the exact source/date; do not infer firstness |
+| Historical prior-art adjudication | A predecessor/composition has been compared | State the comparison universe and limitations |
+| Hypothesis | A prediction or possible distinction awaiting stronger testing/comparison | Use conditional language |
 | Unsupported | Evidence is absent or inadequate | Do not promote as a result |
 
-Repository-wide adjectives such as “proven,” “validated,” or readiness for production must not be inferred from component-level evidence.
+Repository-wide adjectives such as “proven,” “validated,” “unique,” “first,” or “production-ready” must not be inferred from component-level evidence.
 
 ## 4. Canonical publication sequence
 
-1. **Canonical technical overview** — a concise entry point explaining the problem, architecture, terminology, and evidence boundaries.
-2. **Versioned specification** — stable definitions and interfaces with changelog/provenance.
-3. **Reproducibility packet** — instructions, dependencies, test commands, expected outputs, and known limitations.
-4. **Experimental paper or technical report** — only after the relevant protocol and evidence support the claims made.
-5. **Independent comparison and replication** — publish favorable, null, and unfavorable results under the same evidence policy.
+1. **Canonical technical overview** — problem, architecture, terminology, contribution boundaries.
+2. **Versioned specification** — stable definitions/interfaces with changelog/provenance.
+3. **Reproducibility packet** — dependencies, test commands, expected outputs, known limitations.
+4. **Related-work/prior-art record** — dated primary-source comparison that separates primitives from architecture-level composition.
+5. **Experimental paper or technical report** — only after protocol/evidence support the empirical claims made.
+6. **Independent comparison and replication** — publish favorable, null, and unfavorable results under the same evidence policy.
 
-The first three stages may proceed now. Stage four must not imply empirical findings that do not yet exist.
+The first four stages can proceed before empirical authorization. Stage five must not imply empirical findings that do not yet exist.
 
 ## 5. Priority and prior-art discipline
 
-Before claiming novelty, perform and retain a scoped prior-art review across relevant disciplines, including multi-agent orchestration, distributed systems, AI governance, evaluation, control theory, and related research.
+Prior-art review must compare both mechanisms and the **governed object/lifecycle**. The current review establishes substantial external prior art for multi-agent formation, organizational authority, governance gates, veto/escalation, idempotency, provenance, exact artifact identity, and independent verification.
+
+The remaining historical question is narrower: whether an earlier public system implemented a materially equivalent cross-domain lifecycle coupling formation governance to candidate-bound experimental verification and authorization.
 
 Use calibrated conclusions:
 
-- “We are not aware of…” is not “this has never existed.”
-- “This formulation is publicly documented as of…” is a provenance claim, not a priority verdict.
-- Similarity of terminology does not establish conceptual equivalence; mechanism, scope, and evidence must be compared.
+- “publicly documented by” is a provenance claim;
+- “external prior” is a source-level adjudication;
+- “near-composition prior” means major components overlap but the governed object or lifecycle differs;
+- “potentially distinctive integration” means no equivalent predecessor has been located in the bounded review;
+- none of these phrases establishes global firstness.
 
-Where overlap exists, describe DGAF as a synthesis, implementation, adaptation, or distinct formulation as supported by the comparison.
+See `research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md` for the current adjudication baseline.
 
 ## 6. Recommended external-facing artifacts
 
 ### Immediate
 
-- Repository landing page with a one-paragraph problem statement and evidence boundary.
-- `CITATION.cff` or equivalent citation metadata identifying the software/research artifact and version.
-- Versioned release notes for meaningful public milestones.
+- Repository landing page with problem statement and evidence boundary.
+- `CITATION.cff` or equivalent citation metadata.
+- Versioned release notes for meaningful milestones.
+- Related-work/prior-art record with stable primary-source references.
 - This publication/provenance spine linked from the documentation index.
 
 ### After candidate freeze and pilot authorization
 
 - Archived protocol and freeze manifest.
-- Reproducibility instructions tied to the exact candidate SHA.
+- Reproducibility instructions tied to exact candidate SHA.
 - Results report containing pre-specified analyses and complete result accounting.
 
 ### After evidence matures
 
-- A formal technical white paper or preprint with related-work review and precise claim/evidence mapping.
+- Formal technical white paper or preprint with related-work review and claim/evidence mapping.
 - Independent replication package and comparative baseline results where feasible.
 
 ## 7. Authorship and provenance
 
-The repository's existing provenance identifies Ndr / Ender Hensel (`ndrorchestration`) as developer. Public attribution should identify contribution roles precisely and preserve commit/release history rather than attempting to convert repository authorship into unsupported claims of sole conceptual priority.
+The repository's provenance identifies Ndr / Ender Hensel (`ndrorchestration`) as developer. Public attribution should identify contribution roles precisely and preserve commit/release history rather than converting repository authorship into unsupported claims of sole conceptual priority.
 
 For collaborative work, record authorship, contribution roles, review boundaries, and AI assistance where materially relevant to interpretation or reproducibility.
 
@@ -110,22 +119,31 @@ A public artifact is publication-ready when it answers:
 4. What evidence supports each important claim?
 5. What would falsify, narrow, or revise the claim?
 6. How can another party inspect or reproduce the relevant behavior?
-7. What prior work or adjacent concepts may overlap?
+7. What prior work or adjacent concepts overlap?
 8. What remains unknown?
+9. Is any historical-priority language supported by a bounded, dated primary-source review?
 
 Failure to answer one of these questions should result in narrowing the artifact's claims, not filling the gap with confidence language.
 
 ## 9. Current DGAF publication boundary
 
-As of this document's creation, the public record supports publication of DGAF as an **open research and implementation framework for agent orchestration, evaluation, provenance, and governance controls**. It does not support presenting the current PDMAL research track as empirically effective, independently validated, production-proven, or novel in an absolute sense.
+The public record supports publication of DGAF as an **open research and implementation framework for agent orchestration, formation governance, evaluation, provenance, and explicit claim/evidence management**.
 
-The immediate objective is therefore **discoverability with epistemic integrity**: create a durable, navigable record that lets others inspect the framework now and evaluate stronger claims as evidence becomes available.
+The record does **not** support presenting DGAF as first in the individual mechanisms of agent governance, dynamic formation, authority, veto, escalation, idempotency, provenance, exact artifact identity, or independent verification.
+
+A narrower architecture-level hypothesis remains under review: DGAF may have independently coupled formation-state governance with candidate-bound experimental evidence, verification, and authorization. This remains conditional on completion of a broader cross-domain prior-art comparison.
+
+The current PDMAL research track remains PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
 
 ## Cross-references
 
-- [`README.md`](../README.md)
+- [`../README.md`](../README.md)
 - [`CLAIM_EVIDENCE_INDEX.md`](CLAIM_EVIDENCE_INDEX.md)
 - [`CURRENT_STATE.md`](CURRENT_STATE.md)
+- [`DGAF_RELATED_WORK_MATRIX.md`](DGAF_RELATED_WORK_MATRIX.md)
+- [`research/DGAF_RELATED_WORK_SOURCE_ADJUDICATION.md`](research/DGAF_RELATED_WORK_SOURCE_ADJUDICATION.md)
+- [`research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`](research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md)
+- [`PRIOR_ART_AND_RELATED_WORK_SCOPE.md`](PRIOR_ART_AND_RELATED_WORK_SCOPE.md)
 - [`PATTERN_COMMONS_ARCHITECTURE.md`](PATTERN_COMMONS_ARCHITECTURE.md)
 - [`experiment/PDMAL_CURRENT_CONTROL_STATE.md`](experiment/PDMAL_CURRENT_CONTROL_STATE.md)
 - [`experiment/PDMAL_EXPERIMENT_PROTOCOL.md`](experiment/PDMAL_EXPERIMENT_PROTOCOL.md)
