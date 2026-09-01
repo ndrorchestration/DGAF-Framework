@@ -71,10 +71,85 @@ jobs:
           print(f'checksum: PASS {actual}')
           PY
       - name: Upload dry-run artifacts
+        id: upload_instrumentation
         uses: actions/upload-artifact@v4
         with:
           name: pdmal-instrumentation-dry-run
           path: /tmp/pdmal-artifact/raw_pilot_*.csv*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Round-trip retrieve instrumentation artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pdmal-instrumentation-dry-run
+          path: /tmp/pdmal-roundtrip
+      - name: Recompute inner CSV digest after retrieval
+        shell: bash
+        run: |
+          set -euo pipefail
+          csv="$(find /tmp/pdmal-roundtrip -maxdepth 1 -name 'raw_pilot_*.csv' -print -quit)"
+          test -n "$csv"
+          inner_digest="$(sha256sum "$csv" | awk '{print $1}')"
+          expected_inner="$(awk '{print $1}' "${csv}.sha256")"
+          test "$inner_digest" = "$expected_inner"
+          printf '%s\n' "$inner_digest" > /tmp/pdmal-inner-sha256.txt
+          echo "inner_csv_sha256=$inner_digest" >> "$GITHUB_STEP_SUMMARY"
+      - name: Emit actual workflow/artifact evidence registry
+        env:
+          ARTIFACT_ID: ${{ steps.upload_instrumentation.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.upload_instrumentation.outputs.artifact-digest }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          candidate = os.environ["GITHUB_SHA"]
+          artifact_id = os.environ["ARTIFACT_ID"]
+          artifact_digest = os.environ["ARTIFACT_DIGEST"]
+          inner_digest = Path('/tmp/pdmal-inner-sha256.txt').read_text().strip()
+          registry = {
+              "schema_version": 1,
+              "candidate_sha": candidate,
+              "source_workflow": os.environ["GITHUB_WORKFLOW"],
+              "source_run_id": os.environ["GITHUB_RUN_ID"],
+              "controls": {"freeze_authorized": False, "pilot_authorized": False},
+              "predicates": [
+                  {"id":"P2","name":"runtime verification","required":True,"status":"OPEN","notes":"Deployment lane remains separate; this workflow is not production runtime verification."},
+                  {"id":"P3","name":"artifact contract","required":True,"status":"VERIFIED","candidate_sha":candidate,"run_id":os.environ["GITHUB_RUN_ID"],"artifact_id":artifact_id,"artifact_sha256":artifact_digest,"source_workflow":os.environ["GITHUB_WORKFLOW"],"notes":"Exact-candidate PDMAL instrumentation artifact passed secret presence, deterministic smoke, structural tests, schema validation, and checksum validation."},
+                  {"id":"P4","name":"blinding/security","required":True,"status":"VERIFIED","candidate_sha":candidate,"run_id":os.environ["GITHUB_RUN_ID"],"artifact_id":artifact_id,"artifact_sha256":artifact_digest,"source_workflow":os.environ["GITHUB_WORKFLOW"],"notes":"Blinding key presence was checked without emitting its value; artifact is the masked dry-run output."},
+                  {"id":"P5","name":"provenance/reproducibility","required":True,"status":"OPEN","notes":"Current run establishes candidate/artifact linkage; broader apparatus/deployment provenance remains incomplete."},
+                  {"id":"P6","name":"durable evidence custody","required":True,"status":"VERIFIED","candidate_sha":candidate,"run_id":os.environ["GITHUB_RUN_ID"],"artifact_id":artifact_id,"artifact_sha256":artifact_digest,"custody_verified":True,"source_workflow":os.environ["GITHUB_WORKFLOW"],"notes":"The exact artifact was downloaded in a separate workflow step and its inner CSV checksum was recomputed and matched."},
+                  {"id":"P7","name":"scientific decision","required":True,"status":"OPEN","notes":"No exact freeze binding or authorization is asserted."},
+                  {"id":"P8","name":"analysis lock","required":True,"status":"FAIL_CLOSED","notes":"No current-candidate analysis lock is established by this structural dry run."},
+                  {"id":"P9","name":"independent verification","required":True,"status":"NOT_EXECUTED","notes":"Independent reconstruction remains outstanding."}
+              ]
+          }
+          Path('/tmp/dgaf-evidence-registry.json').write_text(json.dumps(registry, indent=2, sort_keys=True)+'\n', encoding='utf-8')
+          PY
+          cat /tmp/dgaf-evidence-registry.json
+      - name: Upload actual evidence registry
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-evidence-registry
+          path: /tmp/dgaf-evidence-registry.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Evaluate completion controller against actual registry
+        shell: bash
+        run: |
+          set +e
+          python scripts/completion_controller.py /tmp/dgaf-evidence-registry.json --actual-candidate-sha "$GITHUB_SHA" --output /tmp/dgaf-completion-controller-report.json
+          rc=$?
+          set -e
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 2 ]; then exit "$rc"; fi
+          cat /tmp/dgaf-completion-controller-report.json
+          echo "completion_controller_exit=$rc" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload completion-controller report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-completion-controller-report
+          path: /tmp/dgaf-completion-controller-report.json
           if-no-files-found: error
           retention-days: 14
       - name: One-seed structural dry run
