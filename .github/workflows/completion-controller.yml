@@ -166,13 +166,27 @@ jobs:
           if payload.get('candidate_sha') != candidate:
               raise SystemExit('candidate mismatch in evidence registry')
 
+          # The instrumentation dry-run registry is structural evidence. It may
+          # establish candidate-bound implementation properties, but it must not
+          # promote P4/P5/P6 to closure: the current governance checklist requires
+          # candidate-bound operational evidence, independent checks, and (for P6)
+          # durable external archive retrieval before those predicates can close.
           required = [x for x in payload.get('predicates', []) if x.get('required')]
+          controller_notes = []
+          for item in required:
+              if item.get('id') in {'P4', 'P5', 'P6'} and item.get('status') in {'VERIFIED', 'CLOSED', 'ADOPTED'}:
+                  item['status'] = 'OPEN'
+                  item['controller_reclassification'] = 'STRUCTURAL_DRY_RUN_NOT_CLOSURE'
+                  controller_notes.append(
+                      f"{item['id']} retained as OPEN: dry-run evidence does not satisfy the current-candidate closure predicate."
+                  )
           blocking = [x for x in required if x.get('status') not in {'VERIFIED', 'CLOSED', 'ADOPTED'}]
           report = {
               'schema_version': 1,
               'candidate_sha': candidate,
               'required_predicates': required,
               'blocking_predicates': blocking,
+              'controller_notes': controller_notes,
               'reconciliation': payload.get('reconciliation', {}),
               'freeze_authorized': False,
               'pilot_authorized': False,
