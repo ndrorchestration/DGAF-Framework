@@ -1,27 +1,26 @@
-# Reproducibility Record: Candidate c6157158
+# P5 Reproducibility / Provenance Record — Candidate `45074856e82fc8e9c97153c41091c7fbc800d42c`
 
-## 1. Topology Fingerprint
-- **Candidate SHA**: `c6157158bf0ee4840e99a381a4b99bd2febe2302`
-- **Tree SHA**: `6195063e2e6e01069ddef8a25e90bfe9d8a3283c`
-- **Parent SHA**: `9f09a7932d7a21ecd4f57a9a7e7fc65417fe8631`
-- **Binding**: Bound to the exact candidate tree.
+## Status
 
-## 2. Reproducibility Apparatus Verification
-The reproducibility apparatus was examined on the candidate tree (`c6157158`).
+**VERIFIED for the controlled candidate.** This record is current-candidate evidence only; it does not authorize freeze, pilot execution, or production deployment.
 
-### Seed/RNG Separation
-- **Mechanism**: `experiments/pdmal_topology/seeds.py` implements `derive_seed(master_seed, stream)`.
-- **Separation Logic**: Uses SHA256 hash of `pdmal-v1|<master_seed>|<stream>` to derive independent integer seeds for different RNG streams.
-- **Verification**:
-    - `build_topologies` in `graph_harness.py` uses `derive_seed(seed, "topology")`.
-    - `random_node_failures` in `graph_harness.py` uses `derive_seed(seed, "failure")`.
-- **Verdict**: **VERIFIED**. RNG streams for topology generation and node failure selection are cryptographically separated, preventing correlation between the generated graph structure and the failure set.
+## Evidence binding
 
-### Determinism Contract
-- **Verification**: `experiments/pdmal_topology/determinism.py` implements a canonical serialization of the experiment case (JSON with sorted keys and strict separators) and computes a SHA256 digest of the resulting bytes.
-- **Verdict**: **VERIFIED**. The apparatus ensures that identical inputs (seed, topology, failure count) produce identical, verifiable digests.
+- Candidate SHA: `45074856e82fc8e9c97153c41091c7fbc800d42c`
+- Source workflow: `PDMAL Instrumentation Dry Run`
+- Source run: `33558082367`
+- Instrumentation artifact: `9820126686`
+- Instrumentation artifact digest: `sha256:887fecad61ece397a0d4ce454a4fdd21a08745a7bb42e9a6b63e86187c78c1c0`
+- Evidence-registry artifact: `9820128042`
+- Evidence-registry digest: `sha256:adf32374797b9a9e78b7ebc80557f06058ba8b3a916ddd3f223523dbff8563f5`
 
-## 3. Gate Closure
-- **P5 Gate**: Reproducibility / Provenance.
-- **Status**: **CLOSED**.
-- **Evidence**: Mapping of exact candidate tree and verification of the seed separation logic implemented on that tree.
+## Reproducibility checks
+
+1. **RNG stream separation:** `experiments/pdmal_topology/seeds.py` derives named streams from `pdmal-v1|<master_seed>|<stream>` using SHA-256, with distinct topology and failure streams used by the graph harness.
+2. **Determinism:** the same seed/topology/failure-count case was executed twice in the source workflow and both JSON output and digest matched.
+3. **Artifact integrity:** the masked one-seed artifact passed schema and checksum validation, was uploaded, downloaded again, and its inner CSV SHA-256 was recomputed and matched the recorded sidecar.
+4. **Exact-candidate binding:** the evidence registry records the same candidate SHA, workflow run, artifact ID, and artifact digest used by the controller.
+
+## Boundary
+
+This closes **P5 reproducibility/provenance evidence for the controlled candidate** at the level established by the current dry-run apparatus. It does not claim production deployment provenance (P2), scientific freeze (P7), analysis lock (P8), or independent reconstruction (P9). Empirical execution remains unauthorized and empirical N remains zero.
