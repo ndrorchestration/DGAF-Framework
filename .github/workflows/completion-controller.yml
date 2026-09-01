@@ -1,0 +1,42 @@
+name: DGAF Completion Controller
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  completion-controller:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: python -m pip install pytest
+      - name: Test controller invariants
+        run: pytest -q tests/test_completion_controller.py
+      - name: Evaluate current completion matrix
+        shell: bash
+        run: |
+          set +e
+          python scripts/completion_controller.py docs/governance/completion/evidence_matrix.example.json --output /tmp/completion-report.json
+          rc=$?
+          set -e
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 2 ]; then
+            exit "$rc"
+          fi
+          cat /tmp/completion-report.json
+          echo "controller_exit=$rc" >> "$GITHUB_STEP_SUMMARY"
+          echo "The controller intentionally returns 2 while required predicates remain open; this is a gap signal, not a CI fault." >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload completion report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-completion-controller-report
+          path: /tmp/completion-report.json
+          if-no-files-found: error
+          retention-days: 14
