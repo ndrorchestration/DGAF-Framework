@@ -203,6 +203,11 @@ def run() -> None:
     pass_turns = sum(1 for m in metrics if m["decision"] == "PASS")
     blocked_turns = sum(1 for m in metrics if m["decision"] == "BLOCKED")
     kill_turns = sum(1 for m in metrics if m["decision"] == "KILL")
+    expected_counts = {"PASS": 25, "BLOCKED": 2, "KILL": 3}
+    observed_counts = {"PASS": pass_turns, "BLOCKED": blocked_turns, "KILL": kill_turns}
+    if observed_counts != expected_counts:
+        all_errors.append(f"aggregate decisions={observed_counts!r}, expected {expected_counts!r}")
+
     mean_latency = statistics.mean(latencies)
     p95_latency = sorted(latencies)[max(0, int(len(latencies) * 0.95) - 1)]
 
