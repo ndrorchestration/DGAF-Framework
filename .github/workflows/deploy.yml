@@ -173,6 +173,7 @@ jobs:
     needs: deploy
     env:
       DGAF_URL: ${{ needs.deploy.outputs.deployment_url }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
       EXPECTED_ENSEMBLE_VERSION: 1.8.0
       EXPECTED_PSI_CHECK: enabled
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -184,13 +185,18 @@ jobs:
           python-version: '3.12'
       - name: Install httpx
         run: pip install httpx -q
+      - name: Verify automation bypass credential is available
+        shell: bash
+        run: |
+          set -euo pipefail
+          [ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ] || { echo 'x VERCEL_AUTOMATION_BYPASS_SECRET unavailable'; exit 1; }
       - name: Wait for deployment to warm
         run: sleep 20
       - name: Health preflight and runtime configuration attestation
         run: |
           set -euo pipefail
           echo "Checking: $DGAF_URL/api/health"
-          HEALTH=$(curl -sf "$DGAF_URL/api/health")
+          HEALTH=$(curl -sfS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/health")
           echo "$HEALTH" | python3 -m json.tool
           PSI=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('psi_cubic',''))")
           VER=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('version',''))")
@@ -235,7 +241,8 @@ jobs:
           path: regression_results_v17.json
       - name: Audit log final check
         run: |
-          AUDIT=$(curl -sf "$DGAF_URL/api/audit" || echo '{}')
+          set -euo pipefail
+          AUDIT=$(curl -sfS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/audit" || echo '{}')
           echo "$AUDIT" | python3 -m json.tool
           TC=$(echo "$AUDIT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
           [ "$TC" -ge 30 ] && echo "  v audit turn_count=$TC" || { echo "  x turn_count=$TC < 30"; exit 1; }
