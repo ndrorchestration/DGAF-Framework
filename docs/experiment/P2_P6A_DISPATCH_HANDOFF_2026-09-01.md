@@ -38,10 +38,32 @@ The apparatus source and runtime candidate are deliberately distinct identities.
 
 These P2/P6a results close only the respective runtime predicates in the recorded endpoint/deployment/environment scope. They do not establish efficacy, freeze, authorization, unblinding, or empirical execution.
 
-## Downstream requirements
+## Latest downstream status
 
-`P3/P4/P5/P6 current-cycle evidence → P7 final candidate binding → P8 TGL/P-35 verification → independent P9 → new immutable freeze → explicit authorization → blinded pilot`.
+- P3: `OPEN`
+- P4: `OPEN`
+- P5: `OPEN`
+- P6: `OPEN / FAIL-CLOSED`
+- P7: `ADOPTED / FINAL BINDING OPEN`
+- P8: `OPEN / FAIL-CLOSED`
+- P9: `SCOPED PASS / BROADER CLOSURE OPEN` via run `33567199896` against separate completion candidate `562753b…`
+- Freeze: `NOT ESTABLISHED`
+- Authorization: `NOT GRANTED`
+- Empirical N: `0`
+
+The P9 result does not transfer to this mainline runtime candidate. A candidate change requires explicit rebinding and fresh affected-predicate evidence.
+
+## Current closure sequence
+
+`selected candidate → P3/P4/P5/P6 → P7 exact binding → P8 → broader P9 → immutable freeze → explicit authorization → blinded pilot`.
 
 ## Historical handoff rule
 
-The prior `P2_P6A_DISPATCH_HANDOFF_2026-08-31.md` is a superseded snapshot and should be interpreted as historical evidence of the pre-verification state. Its `2a54a67d…` / `NOT_ESTABLISHED` dispatch boundary must not override this current handoff. Historical candidate/deployment values remain non-closing and are not valid current dispatch inputs.
+The prior `P2_P6A_DISPATCH_HANDOFF_2026-08-31.md` is a superseded snapshot and should be interpreted as historical evidence of the pre-verification state. Its earlier `NOT_ESTABLISHED` dispatch boundary must not override this current handoff. Historical candidate/deployment values remain non-closing and are not valid current dispatch inputs.
+
+## Cross-references
+
+- `../CURRENT_STATE.md`
+- `../CLAIM_EVIDENCE_INDEX.md`
+- `../governance/P1_TO_P9_EVIDENCE_MATRIX.md`
+- `../governance/P9_LATEST_RECONCILIATION_2026-09-01.md`
