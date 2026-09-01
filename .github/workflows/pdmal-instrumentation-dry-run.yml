@@ -186,4 +186,10 @@ jobs:
           retention-days: 14
       - name: One-seed structural dry run
         working-directory: experiments/pdmal_topology
-        run: python -c "from graph_harness import build_topologies, apply_node_failures, random_node_failures, structural_metrics; g=build_topologies(1)['pdmal']; f=random_node_failures(1,1); print(structural_metrics(apply_node_failures(g,f)))
+        run: |
+          python - <<'PY'
+          from graph_harness import build_topologies, apply_node_failures, random_node_failures, structural_metrics
+          g = build_topologies(1)["pdmal"]
+          f = random_node_failures(1, 1)
+          print(structural_metrics(apply_node_failures(g, f)))
+          PY
