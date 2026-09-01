@@ -2,61 +2,57 @@
 
 **Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, evaluation, provenance, and governance controls.
 
-> **Epistemic status:** This README describes repository scope and current pre-freeze governance state. Individual claims require exact evidence and defined scope. Historical evidence remains scoped to the SHA/run/deployment that produced it.
+> **Epistemic status:** This README describes repository scope and the current pre-freeze governance state. Individual claims require exact evidence and defined scope. Historical evidence remains scoped to the SHA/run/deployment/artifact that produced it.
 
-## Current project state — 2026-08-29
+## Current project state — 2026-09-01
 
-The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. No new experimental freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
+The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. The currently controlled completion candidate is `566273c6c2906bdf71827381493a26ee7697034c` on draft PR #187. It is not merged to `main`, no new immutable freeze exists, pilot authorization has not been granted, and empirical **N = 0**.
 
-`main` is documentation/evidence lineage, not experimental apparatus identity. The experimental verification boundary remains candidate-scoped at `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`. Any substantive apparatus change requires a new candidate identity and affected-predicate re-verification.
+The current candidate contains governance/completion-control and independent-verification machinery. Evidence produced by earlier candidates is not transferred to this SHA. The latest candidate-bound PDMAL cycle exposed a CI-only quoting defect in the final one-seed structural dry-run command after the substantive deterministic verification machinery had passed; this remains an engineering defect to repair, not experimental evidence.
 
-## Canonical engineering lane
+## Current verification architecture
 
-**PR #139** is the current combined engineering candidate for DGAF v1 recursive control-plane implementation and TGL contract remediation. Earlier PRs #132/#133/#134 are historical or superseded records and are not separate current execution authorities.
+- **PDMAL Instrumentation Dry Run:** deterministic structural/instrumentation verification only; it does not execute the 9,000-observation empirical experiment.
+- **P9 Independent Verification:** independently checks candidate identity, canonicalization/hash equality, authority identity, and durable P9 evidence integrity.
+- **Completion Controller:** reconciles exact-candidate evidence and remains fail-closed; it cannot manufacture authorization, freeze, or empirical results.
+- **Evidence binding:** candidate SHA, workflow run, artifact ID, and artifact digest are treated as distinct provenance dimensions and are checked before evidence is promoted into the completion registry.
+- **Stale-evidence prevention:** evidence from a superseded candidate remains historical and cannot be silently inherited by the current candidate.
 
-The candidate covers inherited governance scope, deterministic lifecycle control, state identity, budget/concurrency accounting, branch provenance, explicit CommitGate authorization, fail-closed TGL semantics, complete audit sealing, adversarial regression coverage, and dedicated CI. It does not rebind PDMAL or authorize experimentation.
+## Current gate state
 
-## Current TGL contract boundary
-
-- required unwired gates are `SKIP` and reduce the turn to `ESCALATE`;
-- `WARN` propagates to `TurnStatus.WARN` unless a stronger failure applies;
-- HPG is conditional on Phi-Closure and cannot run after terminal failure;
-- terminal failures stop downstream gate execution;
-- the final audit seal covers the complete gate set, including Herald;
-- invalid gate outcomes do not silently become PASS.
-
-## Canonical agent-role boundary
-
-- Sentinel-Phi — canonical governance/security identity.
-- Professor Prodigy — formalization/proof; non-orchestrating.
-- DemiJoule — advisory resource/constraint analysis; no independent normative authorization.
-- Reciprocity — fairness and affected-party review.
-- Herald — evidence/public-surface publication; cannot manufacture evidence or approval.
-- Amethyst — meta-orchestration/lifecycle coordination.
-- COLLEEN — continuity/archive/provenance/routing integrity.
-- Apogee — independent evidence/integrity review.
-
-Generic execution roles do not create or elevate agent authority.
-
-## Experimental gate state
-
-| Boundary | Status |
+| Gate / control | Current state |
 |---|---|
-| Experimental verification boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` |
-| P7 scientific decision | Adopted in substance; exact freeze binding open |
-| P8 analysis lock | Open / fail-closed |
-| P2 runtime verification | Not executed |
-| P6a CORS verification | Not executed |
-| New immutable freeze | Not created |
-| Pilot authorization | Not granted |
+| E2b | CLOSED / VERIFIED at its historical exact execution boundary |
+| M6 | CLOSED / VERIFIED at its historical exact candidate boundary |
+| P2 | OPEN / fresh exact-candidate runtime evidence required |
+| P3 | OPEN / fresh exact-candidate artifact evidence required |
+| P4 | OPEN / fresh exact-candidate security/blinding evidence required |
+| P5 | OPEN / fresh exact-candidate reproducibility evidence required |
+| P6 | OPEN / fresh exact-candidate custody/retrieval/hash evidence required |
+| P6a | OPEN / fresh exact-candidate authenticated CORS evidence required |
+| P7 | OPEN / external scientific decision and exact final binding required |
+| P8 | OPEN / FAIL-CLOSED |
+| P9 | OPEN / current-candidate independent verification required |
+| Freeze | NOT CREATED |
+| Pilot authorization | NOT GRANTED |
 | Empirical N | 0 |
 
-## Deployment identity
+## Governance boundary
 
-The observed READY Vercel production deployment is not exact-current-main evidence because its source SHA `42346ecc34565502ebff02ead55a33b0d74246b8` does not equal the current GitHub `main` identity. Issue #137 remains the canonical deployment-provenance tracker.
+Engineering CI success, deterministic fixtures, deployment readiness, documentation updates, artifact custody, or independent structural verification do **not** constitute PDMAL efficacy evidence or experimental authorization. P7 remains a scientific/governance decision; P8 remains fail-closed until its exact prerequisites are satisfied; freeze and pilot authorization remain separate transitions.
+
+## Canonical mathematical notation
+
+`φ` is the conventional Golden Ratio, `(1+√5)/2 ≈ 1.618033989`.
+
+`σ_{p,q}` denotes the Spinadel metallic-means family, the positive solution of `x² - px - q = 0`.
+
+`ρ` denotes the mathematical plastic number, `≈1.3247179572447454`, the unique real root of `x³ - x - 1 = 0`.
+
+`pP` / **Platinum Mean** is intentional DGAF-specific notation for the regular-hendecagon unit-side circumradius, `1/(2 sin(π/11)) ≈ 1.774732842`. It must not be substituted for `ρ` in plastic-number mathematics.
 
 ## Evidence boundary
 
-Engineering CI success, synthetic fixtures, deployment readiness, or documentation updates do not constitute PDMAL efficacy evidence or experimental authorization. Historical evidence is not transferable across SHA/run/deployment boundaries without fresh exact-scope evidence.
+Historical evidence remains scoped to the exact application source, deployment, workflow run, and artifact that produced it. A successful verification on a prior candidate does not certify `566273c6c2906bdf71827381493a26ee7697034c`.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
