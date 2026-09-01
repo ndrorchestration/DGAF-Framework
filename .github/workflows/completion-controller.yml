@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
           printf 'candidate_sha=%s\n' "$CANDIDATE_SHA" >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/setup-python@v5
