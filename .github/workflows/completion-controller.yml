@@ -1,18 +1,20 @@
 name: DGAF Completion Controller
 
+# The completion controller is an evaluator, not the candidate under evaluation.
+# It therefore runs only as a trusted/default-branch workflow and never checks out
+# or executes candidate-controlled source. Candidate SHA is treated as data.
+
 on:
-  push:
-  pull_request:
-  workflow_dispatch:
   workflow_run:
     workflows:
       - "PDMAL Instrumentation Dry Run"
       - "P9 Independent Verification"
     types: [completed]
+  workflow_dispatch:
 
 jobs:
   completion-controller:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,19 +22,17 @@ jobs:
     env:
       CANDIDATE_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          ref: ${{ env.CANDIDATE_SHA }}
+      - name: Verify candidate identifier is immutable input
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$
+          printf 'candidate_sha=%s\n' "$CANDIDATE_SHA" >> "$GITHUB_STEP_SUMMARY"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install test dependencies
-        run: python -m pip install pytest
-      - name: Test controller invariants
-        env:
-          GITHUB_SHA: ${{ env.CANDIDATE_SHA }}
-        run: pytest -q tests/test_completion_controller.py
+
       - name: Retrieve exact-candidate evidence registry
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,6 +45,7 @@ jobs:
           if [ -n "$registry_run_id" ] && [ "$registry_run_id" != "null" ]; then
             if gh run download "$registry_run_id" --repo "$GITHUB_REPOSITORY" --name "dgaf-evidence-registry" --dir /tmp/evidence-registry; then
               test -f /tmp/evidence-registry/dgaf-evidence-registry.json
+              test "$(jq -r '.candidate_sha' /tmp/evidence-registry/dgaf-evidence-registry.json)" = "$CANDIDATE_SHA"
               echo "registry_source_run=$registry_run_id" >> "$GITHUB_STEP_SUMMARY"
             else
               registry_run_id=""
@@ -66,7 +67,8 @@ jobs:
           PY
             echo "registry_source=missing" >> "$GITHUB_STEP_SUMMARY"
           fi
-      - name: Reconcile exact-candidate P9 evidence into registry
+
+      - name: Retrieve and validate exact-candidate P9 evidence as untrusted data
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -91,42 +93,44 @@ jobs:
           test "$(jq -r '.run_id' "$p9_dir/p9-independent-evidence.json")" = "$p9_run_id"
           actual_p9_sha="$(sha256sum "$p9_dir/p9-independent-evidence.json" | awk '{print $1}')"
           test "$actual_p9_sha" = "$(cat "$p9_dir/p9-independent-evidence.sha256")"
-          artifact_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${p9_run_id}/artifacts?per_page=100")"
-          p9_artifact_id="$(printf '%s' "$artifact_json" | jq -r '.artifacts[] | select(.name == "dgaf-p9-independent-evidence") | .id' | head -n1)"
-          p9_artifact_digest="$(printf '%s' "$artifact_json" | jq -r '.artifacts[] | select(.name == "dgaf-p9-independent-evidence") | .digest' | head -n1)"
-          test -n "$p9_artifact_id" && test "$p9_artifact_id" != "null"
-          test -n "$p9_artifact_digest" && test "$p9_artifact_digest" != "null"
-          export P9_RUN_ID="$p9_run_id" P9_ARTIFACT_ID="$p9_artifact_id" P9_ARTIFACT_DIGEST="$p9_artifact_digest"
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          p = Path('/tmp/evidence-registry/dgaf-evidence-registry.json')
-          payload = json.loads(p.read_text(encoding='utf-8'))
-          p9 = {
-              'id':'P9', 'name':'independent verification', 'required':True, 'status':'VERIFIED',
-              'candidate_sha':payload['candidate_sha'], 'run_id':os.environ['P9_RUN_ID'],
-              'artifact_id':os.environ['P9_ARTIFACT_ID'], 'artifact_sha256':os.environ['P9_ARTIFACT_DIGEST'],
-              'source_workflow':'P9 Independent Verification',
-              'notes':'Independent candidate identity, jq canonicalization/hash equality, authority identity regression, and retrieved evidence checksum all passed.'
-          }
-          payload['predicates'] = [x for x in payload.get('predicates', []) if x.get('id') != 'P9'] + [p9]
-          p.write_text(json.dumps(payload, indent=2, sort_keys=True)+'\n', encoding='utf-8')
-          PY
           echo "p9_source_run=$p9_run_id" >> "$GITHUB_STEP_SUMMARY"
-          echo "p9_artifact_id=$p9_artifact_id" >> "$GITHUB_STEP_SUMMARY"
-          echo "p9_artifact_digest=$p9_artifact_digest" >> "$GITHUB_STEP_SUMMARY"
-      - name: Evaluate actual workflow/artifact evidence registry
+          echo "p9_evidence_custody=PASS" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Evaluate evidence registry with trusted evaluator
         shell: bash
         run: |
-          set +e
-          python scripts/completion_controller.py /tmp/evidence-registry/dgaf-evidence-registry.json --actual-candidate-sha "$CANDIDATE_SHA" --output /tmp/completion-report.json
-          rc=$?
-          set -e
-          if [ "$rc" -ne 0 ] && [ "$rc" -ne 2 ]; then
-            exit "$rc"
-          fi
-          cat /tmp/completion-report.json
-          echo "controller_exit=$rc" >> "$GITHUB_STEP_SUMMARY"
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path('/tmp/evidence-registry/dgaf-evidence-registry.json')
+          payload = json.loads(p.read_text(encoding='utf-8'))
+          candidate = __import__('os').environ['CANDIDATE_SHA']
+          if payload.get('candidate_sha') != candidate:
+              raise SystemExit('candidate mismatch in evidence registry')
+
+          required = [x for x in payload.get('predicates', []) if x.get('required')]
+          report = {
+              'schema_version': 1,
+              'candidate_sha': candidate,
+              'required_predicates': required,
+              'freeze_authorized': False,
+              'pilot_authorized': False,
+              'empirical_execution_requested': False,
+          }
+          blocking = [
+              x for x in required
+              if x.get('status') not in {'VERIFIED', 'CLOSED', 'ADOPTED'}
+          ]
+          report['blocking_predicates'] = blocking
+          report['decision'] = 'OPEN_GAPS' if blocking else 'READY_FOR_SEPARATE_GOVERNANCE_REVIEW'
+          Path('/tmp/completion-report.json').write_text(
+              json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+
       - name: Upload completion report
         uses: actions/upload-artifact@v4
         with:
