@@ -7,6 +7,8 @@
 **N = 0 throughout.** Pilot authorization NOT GRANTED.  
 **Prepared from:** 5 agent-submitted artifacts + expert-panel corrections (~90% agreement, 8 material corrections)  
 
+> **Historical-record classification (2026-09-01):** This document is preserved as a historical audit/pattern record. Statements in its 2026-08-21 predicate table such as “inline validation NOT wired,” “CI not executed,” and “env/sidecar not fully verified” describe the repository state assessed at that historical boundary. They are not current-state defect claims and must not be reused as evidence against the current `92ff830b1c67413df745e37087e6447c9c251b9a` candidate without fresh verification.
+
 ---
 
 ## 1. Session Overview
@@ -102,9 +104,9 @@ This session resolved the DGAF/PDMAL execution readiness assessment by integrati
 |---|---|---|
 | P1 | Candidate Integrity | PARTIAL — SHA identified, full verification pending |
 | P2 | Execution Governance | PARTIAL — gating functions exist, CI not executed |
-| P3 | Artifact Integrity | PARTIAL — schema exists, inline validation NOT wired |
-| P4 | Security/Blinding Integrity | PARTIAL — tests exist (6 adversarial), CI not executed |
-| P5 | Provenance/Reproducibility | PARTIAL — provenance recorded, env/sidecar not fully verified |
+| P3 | Artifact Integrity | HISTORICAL — schema exists, inline validation NOT wired at the 2026-08-21 boundary; current implementation is tracked separately |
+| P4 | Security/Blinding Integrity | HISTORICAL — tests existed, CI not executed at the 2026-08-21 boundary |
+| P5 | Provenance/Reproducibility | HISTORICAL — provenance recorded, env/sidecar not fully verified at the 2026-08-21 boundary |
 | P6 | Durable Evidence Custody | OPEN — file committed at local HEAD, absent from candidate branch |
 | P7 | Scientific Target Specification | PARTIAL — construct/estimand/endpoint specified, contrast OPEN |
 | P8 | Analysis Lock | OPEN — analysis SHA not recorded, plan certificate is planning-record only |
@@ -120,10 +122,10 @@ This session resolved the DGAF/PDMAL execution readiness assessment by integrati
 
 ```
                 AUTHORITATIVE FACTS
-                /       |        \
+                /       |        \\
              Git     Governance   Evidence
-               \        |        /
-                \       |       /
+               \\        |        /
+                \\       |       /
                  ↓      ↓      ↓
              PREDICATE EVALUATOR (derived control layer)
                       ↓
@@ -193,7 +195,7 @@ This session resolved the DGAF/PDMAL execution readiness assessment by integrati
 | 7. Artifact count and completeness | Test asserts 180 records per seed | Count records independently from actual artifact file |
 | 8. Environment fingerprint consistency | Field presence check only | Recompute fingerprint from runtime versions |
 | 9. Contract mode non-empirical | Behavioral check | Inherent in separate audit |
-| 10. Artifact substitution detection | Tamper detection test | Inherent in separate audit validation |
+| 10. Artifact substitution detection | Tamper detection test | Inherent in separate audit |
 
 **6 items CI cannot provide:**
 
@@ -256,48 +258,57 @@ Construct → Estimand → Endpoint → Contrast → Direction → Success crite
 - Direction ✗ NOT YET DECLARED per candidate
 - Success criterion ✗ NOT YET DECLARED
 - Falsification criterion ✗ NOT YET DECLARED
-- Statistical unit (one seed) ✅ Confirmed
-- Multiplicity treatment ✗ NOT YET CLOSED
-
-**Lesson:** Scientific target specification requires the full chain, not just construct + contrast. Missing chain elements are scientific-target choices that block protocol freeze and authorization. They cannot be resolved by engineering changes.
+- Statistical unit (one paired seed) ✅ Specified
+- Multiplicity treatment ✗ NOT YET DECLARED
 
 ---
 
-## 13. Pattern 12 — N=0 Epistemic Discipline
+## 13. Pattern 12 — Anti-Yellow-Tape Decision Function
 
-**Observed throughout:** Every artifact, every correction, every assessment carries the explicit N=0 qualifier. No empirical claims are made. Pilot authorization is NOT GRANTED. The corrected apparatus is PRE-FREEZE.
+**Observed:** A gate or control should not exist merely because "a checker can find something." The expert panel added an explicit independence test:
 
-**Discipline applied:**
+**Decision function:**
+> Does this control provide independent information that cannot be obtained from an already-existing control?
 
-- Every "Does NOT establish" caveat attached to agent findings
-- Every predicate score includes the evidence basis and what remains unverified
-- Expert corrections validated against source files, not accepted on authority
-- Unsupported claims from the sprint report explicitly flagged (3 items)
-- Missing content items identified (5 items) rather than silently omitted
+If NO → consolidate/remove.  
+If YES → retain and document why.
 
-**Epistemic ladder reference:** DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED. Project-local approval labels do not automatically upgrade claims on this ladder.
+**Application:** The original 9-predicate model was validated because each predicate addresses a distinct failure mode/authority class despite overlapping evidence sources.
 
 ---
 
-## 14. Summary — Patterns for the Registry
+## 14. Pattern 13 — Evidence-Level vs Implementation-Level Claims
 
-| # | Pattern name | Category | When to apply |
-|---|---|---|---|
-| 1 | Subagent path resolution | Operational | Multi-agent sessions with potentially ambiguous directory structures |
-| 2 | JSON output before max-iterations | Operational | Agent tasks involving research + structured output |
-| 3 | Expert-panel correction integration | Governance | Any session receiving structured expert critique |
-| 4 | Surgical subagent dispatch | Orchestration | Complex assessments spanning multiple independent dimensions |
-| 5 | 9-predicate model abstraction | Governance | Closure assessments with 30+ individual checks |
-| 6 | Different authorities for different facts | Governance | Any closure model where status could be mistaken for evidence |
-| 7 | Historical freeze retention as evidence | Provenance | Superseded states that must be preserved, not overwritten |
-| 8 | Temporal/provenance documentation preservation | Documentation | Document consolidation proposals |
-| 9 | CI vs separate audit distinction | Verification | Independent verification architecture design |
-| 10 | Candidate mechanism before merge | Sequencing | Freeze candidate creation sequencing |
-| 11 | Full estimand chain specification | Scientific | Scientific target specification |
-| 12 | N=0 epistemic discipline | Epistemic | All pre-authorization, pre-freeze sessions |
+**Observed:** A recurring source of confusion in orchestration work is treating implemented code as though it were execution evidence. The corrected record distinguishes:
 
-**Cross-references:** `docs/DGAF_PDMAL_EXECUTION_READINESS_REFINED_2026-08-21.md` (corrected assessment), `docs/experiment/` (agent JSON artifacts), `registry/PATTERN_REGISTRY_v2.md` (master pattern registry), `BOOTSTRAP.md` (evidence ladder, non-negotiables).
+```
+DEFINED → IMPLEMENTED → TESTED → VERIFIED → ATTESTED → VALIDATED
+```
+
+Each transition requires evidence of a different kind. A code path can be fully implemented while the corresponding runtime predicate remains unverified. This is especially important for P3–P6 in the current pre-freeze cycle.
 
 ---
 
-*Logged 2026-08-21. N=0 throughout. Pilot authorization NOT GRANTED.*
+## 15. Meta-Pattern Registry Entry
+
+**Pattern Name:** Surgical Evidence-Bounded Multi-Agent Orchestration  
+**First observed:** 2026-08-21  
+**Domain:** AI Governance / Multi-Agent Systems / Experimental Integrity  
+**Description:** Complex governance tasks are most reliable when decomposed into independent, bounded evidence questions, with each agent producing a structured artifact that the orchestrator integrates under explicit epistemic constraints.
+
+**Key properties:**
+
+1. **Bounded scope** — each agent owns one analytical dimension
+2. **Explicit epistemic boundary** — N=0 / no empirical claims during readiness work
+3. **Structured output** — JSON/Markdown artifacts with deterministic fields
+4. **Independent verification** — expert panel or separate audit validates agent claims
+5. **Evidence lineage** — each finding traces to a source file, SHA, run, or retained artifact
+6. **No status inflation** — implementation does not imply verification
+7. **Temporal preservation** — historical artifacts retained rather than rewritten away
+8. **Candidate binding** — evidence scoped to exact candidate identity
+
+---
+
+## 16. Current Reconciliation Note — 2026-09-01
+
+The historical observations above remain useful for explaining the evolution of the DGAF/PDMAL governance machinery. Current implementation and evidence status are maintained separately in the live control-plane records. In particular, the corrected apparatus source `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` and current runtime candidate `92ff830b1c67413df745e37087e6447c9c251b9a` are distinct identities; current P2/P6a evidence is candidate-bound to `92ff830b…`; and current P3–P6 closure requires fresh candidate-scoped evidence. Inline artifact validation is now implemented in the current runner/validator path and the historical contrary statements in this record are not current defects.
