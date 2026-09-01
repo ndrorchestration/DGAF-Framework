@@ -4,17 +4,24 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["PDMAL Instrumentation Dry Run"]
+    types: [completed]
 
 jobs:
   completion-controller:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: read
+    env:
+      CANDIDATE_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          ref: ${{ env.CANDIDATE_SHA }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -29,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/evidence-registry
-          runs_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${GITHUB_SHA}&status=success&per_page=100")"
+          runs_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${CANDIDATE_SHA}&status=success&per_page=100")"
           registry_run_id="$(printf '%s' "$runs_json" | jq -r '.workflow_runs[] | select(.name == "PDMAL Instrumentation Dry Run") | .id' | head -n1)"
           if [ -n "$registry_run_id" ] && [ "$registry_run_id" != "null" ]; then
             if gh run download "$registry_run_id" --repo "$GITHUB_REPOSITORY" --name "dgaf-evidence-registry" --dir /tmp/evidence-registry; then
@@ -53,7 +60,7 @@ jobs:
               ('P6','durable evidence custody','OPEN'),('P7','scientific decision','OPEN'),
               ('P8','analysis lock','FAIL_CLOSED'),('P9','independent verification','NOT_EXECUTED')]:
               predicates.append({'id':pid,'name':name,'required':True,'status':status,'candidate_sha':None,'notes':'No exact-candidate workflow evidence registry artifact was available to the controller.'})
-          p.write_text(json.dumps({'schema_version':1,'candidate_sha':os.environ['GITHUB_SHA'],'controls':{'freeze_authorized':False,'pilot_authorized':False},'predicates':predicates},indent=2,sort_keys=True)+'\n')
+          p.write_text(json.dumps({'schema_version':1,'candidate_sha':os.environ['CANDIDATE_SHA'],'controls':{'freeze_authorized':False,'pilot_authorized':False},'predicates':predicates},indent=2,sort_keys=True)+'\n')
           PY
             echo "registry_source=missing" >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -61,7 +68,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          python scripts/completion_controller.py /tmp/evidence-registry/dgaf-evidence-registry.json --actual-candidate-sha "$GITHUB_SHA" --output /tmp/completion-report.json
+          python scripts/completion_controller.py /tmp/evidence-registry/dgaf-evidence-registry.json --actual-candidate-sha "$CANDIDATE_SHA" --output /tmp/completion-report.json
           rc=$?
           set -e
           if [ "$rc" -ne 0 ] && [ "$rc" -ne 2 ]; then
@@ -69,7 +76,7 @@ jobs:
           fi
           cat /tmp/completion-report.json
           echo "controller_exit=$rc" >> "$GITHUB_STEP_SUMMARY"
-          echo "Exit 2 is an expected gap signal while required predicates remain open." >> "$GITHUB_STEP_SUMMARY"
+          echo "Exit 2 is an expected gap signal while required predicates remain open."
       - name: Upload completion report
         uses: actions/upload-artifact@v4
         with:
