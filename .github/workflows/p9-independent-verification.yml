@@ -1,0 +1,84 @@
+name: P9 Independent Verification
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  independent-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Verify candidate identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$GITHUB_SHA"
+          git rev-parse HEAD > /tmp/head.sha
+          test "$(cat /tmp/head.sha)" = "$GITHUB_SHA"
+          printf 'candidate_sha=%s\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Independently canonicalize and hash determinism case
+        working-directory: experiments/pdmal_topology
+        shell: bash
+        run: |
+          set -euo pipefail
+          python determinism.py --seed 42 --topology pdmal --failures 0 --output /tmp/case.json > /tmp/python.sha
+          python_sha="$(cat /tmp/python.sha)"
+          jq -S -c . /tmp/case.json > /tmp/jq-canonical.json
+          jq_sha="$(printf '%s\n' "$(cat /tmp/jq-canonical.json)" | sha256sum | awk '{print $1}')"
+          test "$python_sha" = "$jq_sha"
+          printf '%s\n' "$jq_sha" > /tmp/independent-canonical.sha256
+          printf 'independent_canonical_sha256=%s\n' "$jq_sha" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run authority identity regression against exact candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          pytest -q tests/test_agent_authority_matrix.py
+          printf 'authority_identity_regression=PASS\n' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Produce independent P9 evidence record
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          candidate = os.environ['GITHUB_SHA']
+          independent_sha = Path('/tmp/independent-canonical.sha256').read_text().strip()
+          payload = {
+              'schema_version': 1,
+              'candidate_sha': candidate,
+              'run_id': os.environ['GITHUB_RUN_ID'],
+              'source_workflow': os.environ['GITHUB_WORKFLOW'],
+              'independent_canonicalization': 'jq -S -c',
+              'independent_canonical_sha256': independent_sha,
+              'authority_identity_regression': 'PASS',
+              'authorization_is_external': True,
+              'empirical_execution_requested': False,
+          }
+          encoded = (json.dumps(payload, sort_keys=True, indent=2) + '\n').encode()
+          Path('/tmp/p9-independent-evidence.json').write_bytes(encoded)
+          Path('/tmp/p9-independent-evidence.sha256').write_text(hashlib.sha256(encoded).hexdigest() + '\n')
+          PY
+          cat /tmp/p9-independent-evidence.json
+          cat /tmp/p9-independent-evidence.sha256
+
+      - name: Upload independent P9 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-p9-independent-evidence
+          path: |
+            /tmp/p9-independent-evidence.json
+            /tmp/p9-independent-evidence.sha256
+          if-no-files-found: error
+          retention-days: 14
