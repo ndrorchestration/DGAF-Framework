@@ -15,6 +15,20 @@ except ImportError:
 
 BASE_URL = os.environ.get("DGAF_URL", "https://dgaf-framework.vercel.app").rstrip("/")
 TIMEOUT  = 30
+VERCEL_AUTOMATION_BYPASS_SECRET = os.environ.get("VERCEL_AUTOMATION_BYPASS_SECRET")
+
+
+def request_headers() -> dict[str, str]:
+    headers = {"Accept": "application/json"}
+    if VERCEL_AUTOMATION_BYPASS_SECRET:
+        headers["x-vercel-protection-bypass"] = VERCEL_AUTOMATION_BYPASS_SECRET
+    return headers
+
+
+def post_headers() -> dict[str, str]:
+    headers = request_headers()
+    headers["Content-Type"] = "application/json"
+    return headers
 
 # ── KAPPA phase schedule ──────────────────────────────────────────────────────
 KAPPA_PHASES = [
@@ -78,7 +92,7 @@ def run():
     print("─" * 72)
 
     # Pre-flight health check
-    with httpx.Client(timeout=TIMEOUT) as client:
+    with httpx.Client(timeout=TIMEOUT, headers=request_headers()) as client:
         h = client.get(f"{BASE_URL}/api/health").json()
     assert h.get("psi_cubic") is True,  f"Health: psi_cubic not True — {h}"
     assert h.get("version")   == "1.8.0", f"Health: version mismatch — {h}"
@@ -90,7 +104,7 @@ def run():
     all_errors: list[str] = []
     latencies: list[float] = []
 
-    with httpx.Client(timeout=TIMEOUT) as client:
+    with httpx.Client(timeout=TIMEOUT, headers=request_headers()) as client:
         for turn in range(1, 31):
             cat     = kappa_for(turn)
             payload = build_payload(turn, history)
@@ -98,7 +112,7 @@ def run():
             t0 = time.perf_counter()
             resp = client.post(f"{BASE_URL}/api/orchestrate",
                                json=payload,
-                               headers={"Content-Type": "application/json"})
+                               headers=post_headers())
             latency = time.perf_counter() - t0
             latencies.append(latency)
 
@@ -164,7 +178,7 @@ def run():
 
     # ── final audit call ──────────────────────────────────────────────────────
     print("\n[AUDIT]")
-    with httpx.Client(timeout=TIMEOUT) as client:
+    with httpx.Client(timeout=TIMEOUT, headers=request_headers()) as client:
         audit = client.get(f"{BASE_URL}/api/audit").json()
     print(f"  turn_count:   {audit.get('turn_count', '—')}")
     print(f"  prune_events: {audit.get('prune_events', '—')}")
