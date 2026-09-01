@@ -1,9 +1,14 @@
-from pathlib import Path
 import json
+import os
+from pathlib import Path
 
 from scripts.completion_controller import Predicate, evaluate, load_registry, render_report
 
-CANDIDATE = "86d839947e9d29d58dabc6a9c91c9ff678f148c6"
+# In CI, bind exact-candidate tests to the commit actually under test. The
+# fallback keeps local unit tests deterministic without pretending to identify
+# a repository commit.
+CANDIDATE = os.environ.get("GITHUB_SHA", "candidate-under-test")
+HISTORICAL_CANDIDATE = "86d839947e9d29d58dabc6a9c91c9ff678f148c6"
 
 
 def test_stale_verified_evidence_cannot_promote():
@@ -13,7 +18,7 @@ def test_stale_verified_evidence_cannot_promote():
             name="artifact contract",
             required=True,
             status="VERIFIED",
-            candidate_sha="historical-sha",
+            candidate_sha=HISTORICAL_CANDIDATE,
             run_id="123",
             artifact_id="456",
             artifact_sha256="a" * 64,
