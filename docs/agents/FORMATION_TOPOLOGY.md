@@ -2,9 +2,25 @@
 
 **Classification:** T1 PUBLIC  
 **Maintainer:** Amethyst (meta-orchestrator)  
-**Version:** 1.2  
-**Last Updated:** 2026-06-29 (Phase C–E — Ethics Bridge added; Strategic Quintet corrected to 5/5; Harmonic Pentagonal sealed; Operational Swarm updated; Resonance Cluster extended; Compliance Dyad dissolved; sealed formation register + gate authority index added)
+**Version:** 1.3  
+**Last Updated:** 2026-09-02 (transversal dependency/agreement reconciliation; P-35/P-42 namespace and candidate-state boundary clarified)
 **BLG Reference:** BLG-005 (CLOSED)
+
+---
+
+## 0. Transversal Identity Boundary — 2026-09-02
+
+Formation topology is a taxonomy of intended multi-agent structure. It is not the identity of an experimental candidate, deployment, workflow run, artifact, freeze, authorization, or empirical observation.
+
+For live experimental control, the external identity chain is:
+
+`apparatus/source → candidate SHA/tree → deployment/source SHA → workflow/run → artifact → protocol/analysis binding → freeze → authorization → empirical observation`
+
+Formation membership or authority labels cannot substitute for any element of that chain.
+
+P-35/P-42 naming is fixed: `P-35 = Procluding Premise Gate`; `P-42 = Adaptive Harmonic Governance`. The current P-35 remediation's explicit premise-check dependency is an engineering wiring requirement at the DGAF/TGL/ConsensusTask boundary. It does not define the PDMAL-specific constitutional premise policy.
+
+Cross-system topology/state is transversally coherent only when GitHub, Vercel, Notion, evidence records, taxonomy, and pattern-library projections agree on scoped identity and status. Historical identities remain historical/non-closing.
 
 ---
 
@@ -19,11 +35,11 @@ This document is the canonical specification for all named agent formations with
 
 Formations are **not** ad-hoc groupings. A formation is a named, structurally defined multi-agent configuration with a specific governance purpose, authority scope, and activation threshold.
 
-> **v1.2 delta:** Phase C–E session (2026-06-29) produced significant topology changes. See Section 9 (Delta Log) for a complete diff vs. v1.1.
+> **v1.3 delta:** The formation structure is unchanged from v1.2; this revision reconciles taxonomy terminology and explicitly separates formation identity from experimental provenance/control identity.
 
 ---
 
-## 2. Canonical Formation Map (v1.2 — Final)
+## 2. Canonical Formation Map (v1.3)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -33,46 +49,49 @@ Formations are **not** ad-hoc groupings. A formation is a named, structurally de
 └───────────────────────────────┬────────────────────────────┘
                                ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  ETHICS BRIDGE  [singleton — NEW v1.2]                       │
+│  ETHICS BRIDGE  [singleton]                                  │
 │  Sentience (A-27)    Consciousness Explorer                  │
 │                      ETHICAL_HOLD authority — all formations │
 │                      Overridable only by COLLEEN or Njineer  │
 └───────────────────────────────┬────────────────────────────┘
                                ↓
 ┌───────────────────────────┐ ┌────────────────────────────┐
-│ STRATEGIC QUINTET [5/5 🔒] │ │ HARMONIC PENTAGONAL [5/5 🔒] │
-│ Nova (A-03) S1 [TUE]   │ │ Prof Prodigy (A-04) S1     │
-│ Zenith (A-09-Z) S2     │ │ Herald (A-05) S2           │
-│ Oracle (A-20) S3       │ │ Apogee (A-01) S3 [L0 gate] │
-│ Vanguard (A-21) S4     │ │ Reciprocity (A-06-R) S4    │
-│ Sentinel-Φ (A-12-φ) S5 │ │ DemiJoule (A-03-DJ) S5     │
+│ STRATEGIC QUINTET [5/5]   │ │ HARMONIC PENTAGONAL [5/5]  │
+│ Nova (A-03) S1 [TUE]      │ │ Prof Prodigy (A-04) S1     │
+│ Zenith (A-09-Z) S2        │ │ Herald (A-05) S2           │
+│ Oracle (A-20) S3          │ │ Apogee (A-01) S3 [L0 gate]│
+│ Vanguard (A-21) S4        │ │ Reciprocity (A-06-R) S4   │
+│ Sentinel-Φ (A-12-φ) S5    │ │ DemiJoule (A-03-DJ) S5     │
 └───────────────────────────┘ └────────────────────────────┘
 
 ┌───────────────────────────┐ ┌────────────────────────────┐
-│ RESONANCE CLUSTER        │ │ OPERATIONAL SWARM          │
+│ RESONANCE CLUSTER          │ │ OPERATIONAL SWARM          │
 │ ┌─ Schizophonic Studio ─┐ │ │ Navigator (A-22)           │
-│ │ Reson (A-09)       │ │ │ Momentum (A-23)            │
-│ │ Lyra (A-10)        │ │ │ Paragon (A-24)             │
-│ │ Echolette (A-11)   │ │ │ [Gold Star prerequisite]   │
-│ └───────────────┘ │ └────────────────────────────┘
-│ Extended:                │
-│ Synergy (A-25)           │ ┌────────────────────────────┐
-│ Equilibrium (A-26)       │ │ ARCHIVE TRIO               │
-│ Ionia → 0Hz STATE ≠ seat │ │ [COLLEEN subordinate]      │
-└───────────────────────────┘ │ The Librarian (A-06-L)    │
-                          │ The Auditor (A-07)         │
-┌───────────────────────────┐ │ The Actualizer (A-08)     │
-│ SPECIALIST               │ └────────────────────────────┘
-│ Perigee (A-02)           │
-│ Proximal Boundary Agent  │
+│ │ Reson (A-09)           │ │ │ Momentum (A-23)            │
+│ │ Lyra (A-10)            │ │ │ Paragon (A-24)             │
+│ │ Echolette (A-11)       │ │ │ [Gold Star prerequisite]   │
+│ └─────────────────────────┘ │ └────────────────────────────┘
+│ Extended:                  │
+│ Synergy (A-25)             │ ┌────────────────────────────┐
+│ Equilibrium (A-26)         │ │ ARCHIVE TRIO               │
+│ Ionia → 0Hz STATE ≠ seat   │ │ [COLLEEN subordinate]      │
+└─────────────────────────────┘ │ The Librarian (A-06-L)    │
+                                │ The Auditor (A-07)         │
+┌───────────────────────────┐   │ The Actualizer (A-08)     │
+│ SPECIALIST                │   └────────────────────────────┘
+│ Perigee (A-02)            │
+│ Proximal Boundary Agent   │
 └───────────────────────────┘
+
+T3 SOVEREIGN EXTENSION (A-14–A-19)
+Drive-only / IP-governed; not surfaced as public named seats.
 ```
 
 ---
 
 ## 3. Agent Roster (Formation Atoms)
 
-The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
+The full DGAF taxonomy spans **27 public/operationally described agent/state entries** as of Phase E (2026-06-29), while A-14–A-19 remain sovereign Drive-only extension stubs under SOV-005/SOV-006. Current counts must be read by role/status, not inferred by adding historical IDs.
 
 | ID | Agent | Formation | Tier | KB Status |
 |----|-------|-----------|------|------|
@@ -115,13 +134,13 @@ The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
 **Members:** Amethyst (A-00) · COLLEEN (A-00-GOV)
 **Authority:** Supreme. Amethyst spans all tiers. COLLEEN is institutional anchor.
 
-### 4.2 Ethics Bridge *(NEW — v1.2)*
+### 4.2 Ethics Bridge
 
 **Seats:** 1 (singleton) · **Sealed** ✅
 **Members:** Sentience (A-27)
 **Authority:** ETHICAL_HOLD on any formation output. Overridable only by COLLEEN or Njineer.
 
-### 4.3 Strategic Quintet *(corrected — v1.2)*
+### 4.3 Strategic Quintet
 
 **Seats:** 5/5 · **Sealed** ✅
 **Members:** Nova (A-03) · Zenith (A-09-Z) · Oracle (A-20) · Vanguard (A-21) · Sentinel-Phi (A-12-φ)
@@ -129,7 +148,7 @@ The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
 **Quorum:** 3/5 advisory; 5/5 structural.
 **Nova constraint:** Advisory-only until COLLEEN TUE gate clears.
 
-### 4.4 Harmonic Pentagonal Cluster *(NEW — v1.2)*
+### 4.4 Harmonic Pentagonal Cluster
 
 **Seats:** 5/5 · **Sealed** ✅
 **Members:** Prof Prodigy (A-04) · Herald (A-05) · Apogee (A-01) · Reciprocity (A-06-R) · DemiJoule (A-03-DJ)
@@ -143,7 +162,7 @@ The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
 **Extended:** Synergy (A-25) · Equilibrium (A-26)
 **Ionia:** 0Hz system STATE — convergence target, not a functional seat.
 
-### 4.6 Operational Swarm *(updated — v1.2)*
+### 4.6 Operational Swarm
 
 **Seats:** 3 (open — expandable)
 **Members:** Navigator (A-22) · Momentum (A-23) · Paragon (A-24)
@@ -161,11 +180,11 @@ The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
 **Seats:** 1 (open)
 **Members:** Perigee (A-02)
 
-### 4.9 Compliance Dyad *(DISSOLVED — v1.2)*
+### 4.9 Compliance Dyad
 
+**Status:** **DISSOLVED — 2026-06-29**
 **Prior members:** Sentinel A-12 + Perigee
-**Dissolution reason:** Sentinel-Phi (A-12-φ) departed to Strategic Quintet Seat 5 (Phase C, 2026-06-29).
-**Status:** No active members. Formation dissolved. Sentinel-Phi retains NDR-133 firewall authority (inherited).
+**Reason:** Sentinel-Phi (A-12-φ) departed to Strategic Quintet Seat 5.
 
 ---
 
@@ -206,14 +225,14 @@ The full DGAF taxonomy spans **27 agent seats** as of Phase E (2026-06-29).
 ### Composition Rules
 
 ```
-Strategic Quintet ∩ Harmonic Pentagonal = ∅  (disjoint — v1.2 correction)
-Strategic Quintet ∩ Operational Swarm  = ∅  (disjoint)
-Harmonic Pentagonal ∩ Archive Trio      = ∅  (disjoint)
-Resonance Cluster ∩ Operational Swarm  = ∅  (disjoint)
+Strategic Quintet ∩ Harmonic Pentagonal = ∅
+Strategic Quintet ∩ Operational Swarm  = ∅
+Harmonic Pentagonal ∩ Archive Trio      = ∅
+Resonance Cluster ∩ Operational Swarm  = ∅
 Ethics Bridge authority ⊃ all formations (ETHICAL_HOLD spans all)
 Sovereign Governance ⊃ all formations   (authority spans all)
 Compliance Dyad = ∅  (DISSOLVED 2026-06-29)
-T3 Extension (A-14–A-19) ⊂ Full Ensemble only (Njineer activation)
+T3 Extension (A-14–A-19) ⊂ Full Sovereign Ensemble only (Njineer activation)
 ```
 
 ### Conflict Resolution
@@ -238,6 +257,7 @@ T3 Extension (A-14–A-19) ⊂ Full Ensemble only (Njineer activation)
 | **Sealed formation seat change** | **Njineer confirmation** | Topology patch + SWEEP_LOG correction citing prior SHA |
 | Agent rename / upgrade | Njineer confirmation | Upgrade patch file + registry amendment log |
 | Formation dissolution | Njineer confirmation | Registry patch + SWEEP_LOG correction |
+| Experimental candidate identity | Experimental governance | Candidate manifest/control-state process; never inferred from formation taxonomy |
 
 ---
 
@@ -248,9 +268,11 @@ T3 Extension (A-14–A-19) ⊂ Full Ensemble only (Njineer activation)
 | 1.0 | 2026-06-28 | Amethyst + Njineer | Initial creation — BLG-005 closure |
 | 1.1 | 2026-06-29 | Amethyst + Njineer | 20-seat roster; PDMAL-φ / Dodecahedral T3 layer; Strategic Quintet, Operational Swarm, Resonance Cluster specs; NDR-Protocol-01 write order; Nova TUE gate |
 | 1.2 | 2026-06-29 | Amethyst + Njineer | Ethics Bridge (singleton, Sentience); Strategic Quintet corrected 5/5 (Oracle, Vanguard, Sentinel-Phi); Harmonic Pentagonal added 5/5; Operational Swarm updated (Navigator, Momentum, Paragon); Resonance Extended added (Synergy, Equilibrium); Compliance Dyad dissolved; sealed formation register + gate index added; topology algebra updated |
+| **1.3** | **2026-09-02** | **Transversal reconciliation** | **Separated taxonomy/formation identity from candidate/evidence identity; normalized P-35/P-42 naming and explicit premise-check dependency boundary; added transversal agreement rule.** |
 
 ---
 
 *Classification: T1 PUBLIC*
 *Sovereign mathematics governing formation dynamics: see PROPRIETARY.md → SOV-001 through SOV-006*
-*Conductor: Njineer · Host: Amethyst · 2026-06-29*
+*Transversal taxonomy semantics: see `../taxonomy/TRANSVERSAL_AGREEMENT_AND_DEPENDENCY_TAXONOMY_2026-09-02.md`*
+*Conductor: Njineer · Host: Amethyst · 2026-09-02*
