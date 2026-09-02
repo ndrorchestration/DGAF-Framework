@@ -5,142 +5,92 @@ owner: DGAF/PDMAL control plane
 last_verified: 2026-09-02
 applies_to_ref: main
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
-runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
-runtime_candidate_tree: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
-latest_completion_candidate_sha: a43219b4ed91fff8615f6c655ab3d17ca871fc29
-latest_completion_candidate_branch: completion/2026-09-01-exact-candidate
-latest_completion_candidate_deployment: dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17
-active_p35_remediation_branch: remediation/p35-premise-hook-2026-09-01
+selected_experimental_candidate_sha: 58ba9a072f40e94638b0332eeec19dd882a7ff95
+selected_experimental_candidate_tree: abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb
+selected_experimental_candidate_pr: 192
+selected_experimental_candidate_branch: candidate/p35-integrated-current-20260902
+historical_runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
+historical_runtime_candidate_tree: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
+historical_runtime_deployment: dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc
 active_p35_remediation_pr: 188
-active_p35_remediation_head: d83ea74c0f7ef7dd3e39a25345d6b201770a370c
-active_p35_pre_freeze_run: 33590352168
-active_p35_pre_freeze_artifact: 9831586822
+pilot_authorization: NOT_GRANTED
+empirical_n: 0
+freeze_status: NOT_CREATED
 ---
 # DGAF-Framework / PDMAL — Current State
 
-GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment/artifact that produced it.
+GitHub is authoritative for implementation and CI; governance decisions are recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment/artifact that produced it. Documentation may advance independently of the experimental candidate; it must not silently transfer experimental evidence.
 
-> **Current boundary:** `main` is the documentation/control-plane lineage. The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` and remains the canonical provenance anchor for the seven restored behavior-affecting DGAF/TGL gate-state substrates.
+> **Current control-plane lineage:** `main` = `275756fd81c975f17ae3d16d24e599db0617cf85`.
 >
-> **Runtime candidate:** `92ff830b1c67413df745e37087e6447c9c251b9a` is the current production/runtime candidate recorded by the current mainline state. Its exact tree is `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`.
+> **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` remains the canonical provenance anchor for the restored behavior-affecting DGAF/TGL gate-state substrates.
 >
-> **Latest completion candidate:** `a43219b4ed91fff8615f6c655ab3d17ca871fc29` remains the controlled exact candidate on branch `completion/2026-09-01-exact-candidate`. Its prior PDMAL/P9 evidence remains scoped to that exact tree and is not transferred to the remediation branch.
+> **Selected experimental candidate:** PR #192 / `58ba9a072f40e94638b0332eeec19dd882a7ff95`, tree `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb`. This is the September 2 pre-freeze verification boundary and is not frozen.
 >
-> **Active remediation:** PR #188 / branch `remediation/p35-premise-hook-2026-09-01` is currently at `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`. The candidate-scoped P-35 defect remediation has passed exact-current-head pre-freeze runner validation in run `33590352168`, with artifact `9831586822` (digest `sha256:dedacba56b8430fd995c4230e52fe208d2380f5e5015fa3816073cda3e9d774e`). This is engineering/pre-freeze evidence only; it does not make `d83ea74…` the experimental candidate, create a freeze, or transfer evidence to `a43219b…`.
+> **Historical runtime candidate:** `92ff830b…` / tree `73cf3ad…` with deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` is retained only as prior exact-scoped P2/P6a evidence. It is not the current candidate and its runtime evidence does not transfer.
 >
-> **Current experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. No empirical or unblinded pilot state has been created.
+> **Experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
 
-## Identity roles
+## Current candidate verification
 
-- `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` — corrected seven-gate apparatus provenance anchor.
-- `92ff830b1c67413df745e37087e6447c9c251b9a` — current production/runtime candidate on the mainline control-state record; exact tree `73cf3ad…`.
-- `a43219b4ed91fff8615f6c655ab3d17ca871fc29` — controlled completion candidate; exact-candidate PDMAL/P9 verification target.
-- `562753b3053b3566b0fcad1b0b1df151d7de119a` — superseded completion candidate with historical scoped P9 verification.
-- `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae` — exact tree of the current mainline runtime candidate.
-- `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — production deployment identity recorded by P2/P6a evidence for `92ff830b…`.
-- `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17` — exact-candidate preview deployment for `a43219b…`; READY / PREVIEW, with independent Git-SHA confirmation and authenticated P2/P6a verification still required.
-- PR #188 / branch `remediation/p35-premise-hook-2026-09-01` — candidate-scoped engineering remediation for the P-35 premise-hook injection defect; current head `d83ea74c…`; verified at pre-freeze contract scope; not a new experimental candidate and not authorization.
-- `d83ea74c0f7ef7dd3e39a25345d6b201770a370c` — current P-35 remediation head with successful exact-head pre-freeze runner validation.
-- `cf84ca30cf34dce406ba80ab624ff24e38b181d3` — prior remediation head; historical and non-authoritative for the current PR head.
-- Pre-correction candidates/deployments remain historical/non-closing and must not be reused as current dispatch inputs.
-- Documentation commits advance `main` documentation lineage but do not silently redefine apparatus or completion-candidate identity.
+PR #192 integrates the verified P-35 production boundary into a clean candidate derived from current `main`. The exact candidate has 18/18 successful GitHub Actions workflows, including Governance CI `33616403706`, Pre-Freeze Runner Validation `33616403754`, Pre-Authorization Security `33616403843`, Instrumentation Dry Run `33616403724`, and Harness Validation `33616403784`.
+
+Candidate-bound artifacts include pre-freeze runner evidence (`9841238710`, ZIP digest `sha256:4948b6889b2e691d794a6d7dd3b8d600f15b16ccabebec330b44380120dbcf5e`), governance evaluation evidence (`9841231335`, ZIP digest `sha256:0658a9c3acde62fcb9d5634d7ccd7f90d1a209b403bd9db8331f9ac020e962`), freeze-control evidence (`9841228966`, ZIP digest `sha256:14585aae73c232ab8a927623dee3971d4c6e5cfb8abb63dd2907fc522aeaed09`), and instrumentation dry-run evidence (`9841100424`, ZIP digest `sha256:7cfb548a48105571c8a61e27a3af4b579d9d875cfcd94b11d45d8893f9d09841`).
+
+The candidate workflow artifacts may carry GitHub's PR merge-ref execution identity (`fb1f4669…`) internally. That execution identity is retained as workflow provenance and is not substituted for the selected candidate head `58ba9a…`.
+
+## Current deployment boundary
+
+The exact selected candidate has not yet been bound to a READY Vercel deployment. The GitHub combined status reports Vercel `failure` at the build/deployment-rate-limit target. The latest Vercel deployment inventory contains READY deployments for other SHAs, including documentation-branch commits, but none with recorded Git SHA `58ba9a072f40e94638b0332eeec19dd882a7ff95`.
+
+Therefore P2 and P6a remain OPEN and deployment-bound. The historical `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` runtime evidence remains non-transferable.
 
 ## Authoritative experimental state
 
 | Boundary | Status | Meaning |
 |---|---|---|
-| Current `main` ref | CURRENT CONTROL-PLANE LINEAGE | Resolve `main` directly in GitHub for latest source and control documents. |
-| Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…`; seven-gate restoration plus complete provenance binding. |
-| Runtime candidate identity | CURRENT / NOT FROZEN | `92ff830b…`; exact tree `73cf3ad…`. |
-| Latest completion candidate | CONTROLLED / NOT FROZEN | `a43219b…`; prior exact-candidate evidence remains scoped to that tree. |
-| Active P-35 remediation | OPEN / ENGINEERING ONLY | PR #188, current head `d83ea74c…`; exact-head pre-freeze validation passed; no freeze or authorization effect. |
-| Pre-freeze runner implementation | VERIFIED ON REMEDIATION HEAD | Run `33590352168` on exact head `d83ea74c…`; all runner-contract steps passed and PRE-FREEZE manifest artifact `9831586822` was uploaded. |
-| P2 runtime verification | VERIFIED — MAINLINE ONLY | Run `33509348174`; artifact `9800942933`; five required cases passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
-| P6a CORS verification | VERIFIED — MAINLINE ONLY | Run `33509416955`; artifact `9800972819`; four required checks passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
-| P3 | VERIFIED — HISTORICAL COMPLETION-CANDIDATE SCOPE | Run `33572123862`; artifact `9825740072`; exact candidate `a43219b…`; not transferable to PR #188 or a successor candidate. |
-| P4 | WORKFLOW-LEVEL VERIFIED / OPERATIONAL CLOSURE OPEN | Prior completion-candidate evidence only; fresh current-candidate operational evidence remains required. |
-| P5 | WORKFLOW-LEVEL VERIFIED / FULL CLOSURE OPEN | Prior completion-candidate evidence only; fresh current-candidate reproducibility closure remains required. |
-| P6 | WORKFLOW-LEVEL VERIFIED / DURABLE ARCHIVE OPEN | Prior completion-candidate evidence only; durable external archive closure remains required. |
-| P7 | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Exact apparatus/candidate/protocol/analysis authority binding remains required. |
-| P8 | OPEN / FAIL-CLOSED | The P-35 defect has been remediated and verified at pre-freeze engineering scope on `d83ea74…`; P8 still requires a new exact experimental candidate and full current-cycle evidence. |
-| P9 | HISTORICAL SCOPED PASS / NEW CANDIDATE REVERIFY REQUIRED | Run `33572123857` verified `a43219b…`; all successor/remediation candidates require fresh exact-candidate P9 evidence. |
-| Freeze | NOT ESTABLISHED | No frozen identity is currently authoritative for pilot execution. |
-| Authorization | NOT GRANTED | Separate governance transition required. |
-| Empirical N | 0 | No authorized pilot execution. |
+| Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…` |
+| Selected experimental candidate | CURRENT / NOT FROZEN | PR #192 / `58ba9a…`; tree `abdbc9b…` |
+| Exact deployment for selected candidate | NOT ESTABLISHED | No READY deployment with Git SHA `58ba9a…` |
+| P2 runtime verification | OPEN / DEPLOYMENT-BOUND | Fresh authenticated 5-case matrix required on exact candidate deployment |
+| P6a CORS verification | OPEN / DEPLOYMENT-BOUND | Fresh authenticated 4-case matrix required on same deployment |
+| P3 | VERIFIED — ENGINEERING/CONTROL SCOPE | Current candidate CI, artifact, and instrumentation controls pass |
+| P4 | OPEN | Current-cycle operational blinding/custody closure required |
+| P5 | VERIFIED — VERIFIER/TOOLCHAIN SCOPE | Exact candidate hashes, lock, package/toolchain and deterministic instrumentation retained; full closure remains open |
+| P6 | OPEN / FAIL-CLOSED | Durable independent archive/retrieval/hash proof required |
+| P7 | EXACT-CANDIDATE BINDING RECORDED PRE-FREEZE | Scientific specification retained; final freeze identity not established |
+| P8 | OPEN / FAIL-CLOSED | Requires current-candidate TGL/P-35, analysis, operational, and predecessor predicates |
+| P9 | OPEN | Fresh independent final-candidate verification required |
+| Freeze | NOT ESTABLISHED | No immutable frozen identity is authoritative |
+| Authorization | NOT GRANTED | Separate governance transition required |
+| Empirical N | 0 | No authorized pilot execution |
 
-## P-35 integration finding and remediation
+## P-35 remediation boundary
 
-The exact completion candidate `a43219b…` was audited against the established P-35/TGL interface. The TGL core passes `premise_check_fn` into `ProcludingPremiseGate.evaluate`, but the experimental `DGAF_TGLAdapter` did not previously provide a premise checker. The underlying P-35 implementation permits a missing checker to pass through all constitutional invariants, so the adapter boundary did not actually enforce premise-hook injection.
+PR #188 remains an engineering remediation lineage. Its verified exact-head evidence establishes the explicit P-35 premise-hook boundary and fail-closed behavior, but the remediation head itself is not the selected experimental candidate and does not create a freeze or authorization state.
 
-This was classified as a **candidate-scoped implementation defect / P8 closure blocker**, not experimental failure. The pilot task path also instantiated the DGAF task without a premise checker.
+The remediation does not define an approved PDMAL-specific constitutional premise policy. That scientific-control decision remains separate.
 
-PR #188 remediates the defect by requiring explicit callable injection, propagating it through `TGLHooks` and `ConsensusTask`, sealing unexpected checker exceptions as `KILL`, and adding regression coverage for missing-checker refusal, injection, premise KILL, and checker-exception containment. Its current head `d83ea74c…` additionally corrected the sealed-audit return path for premise KILL. The exact-current-head pre-freeze runner validation (`33590352168`) passed the P-35 runner-boundary regression, contract mode, fail-closed pilot-mode check, artifact integrity check, and manifest emission.
+## Historical evidence boundary
 
-No PDMAL-specific constitutional policy is invented by this remediation. A real pilot remains blocked until the experimental-control design supplies and approves the appropriate premise checker. The remediation branch is engineering/pre-freeze evidence only; it does not replace the current completion candidate or create a freeze.
+Historical runtime, completion-candidate, remediation, deployment, artifact, and P9 records remain valid only for their exact recorded identities. Earlier records may state `92ff830b…`, `a43219b…`, or other predecessor identities as current within their original temporal scope; such statements are not rewritten into the September 2 current boundary unless they are active control-plane assertions.
 
-## Current remediation verification boundary
-
-The prior remediation heads `cf84ca30…` and `61f1be82…` are historical evidence only. The current remediation head is `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`.
-
-Run `33590352168` completed successfully against that exact SHA. The workflow completed checkout, hash-locked dependency installation, the full pre-freeze contract suite including `test_run_pilot_p35.py`, contract-mode execution, pilot-mode fail-closed verification without freeze/authorization, artifact schema/integrity checks, and PRE-FREEZE manifest upload. The manifest artifact is `9831586822` with digest `sha256:dedacba56b8430fd995c4230e52fe208d2380f5e5015fa3816073cda3e9d774e`.
-
-This establishes **pre-freeze engineering verification for the remediation head**. It does not make the remediation head the experimental candidate, does not establish P8 closure, and does not create freeze or authorization.
-
-## Current exact-candidate PDMAL evidence
-
-Run `33572123862` completed successfully on 2026-09-01 for exact candidate `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
-
-The run verified exact checkout identity, presence of the withheld blinding secret, deterministic smoke reproduction, P5 RNG-stream separation, a `19 passed` structural/artifact suite, masked one-seed CSV generation, schema validation, CSV checksum integrity, artifact download round-trip, and inner-CSV checksum re-verification.
-
-These results remain historical completion-candidate evidence and cannot certify the remediated branch.
-
-Latest PDMAL artifact: `9825740072`.  
-Artifact ZIP digest: `sha256:1a9f520bac2bf12ca8386c5c050489620028657866e4fee66e64905507ec31ae`.  
-Evidence registry artifact: `9825740649`; ZIP digest `sha256:c6c2fda4ce18d476ef95927a1430193ef34631dcce928c15695d43826678a205`.  
-Inner CSV digest: `c12098da63ae1508edbb350799360e1edccfebb16c9d0faf0db4d593ffea8ce2`.
-
-## Current exact-candidate P9 evidence
-
-Run `33572123857` completed successfully on 2026-09-01 for candidate `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
-
-Verified exact identity, independent `jq -S -c` canonicalization plus `sha256sum`, authority regression, external authorization representation, and explicit non-execution representation. This is **historical scoped independent verification evidence** for `a43219b…`. It cannot certify PR #188 or a successor candidate after material P-35 remediation.
-
-Latest P9 artifact: `9825660346`, ZIP digest `sha256:cf5e475c31bd9258731dcec3e6f36588f9fbfa80c3bb787419b54770ccae7976`.
-
-Independent canonical digest: `f235fc6ef241379f295676d257c22c7b17a47ace47377506fac9a7e5d490215a`.
-
-## Exact completion-candidate deployment
-
-Deployment `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17` remains the exact-candidate preview deployment associated with `a43219b…`. It reports READY / PREVIEW. Independent Vercel Git-SHA confirmation and authenticated P2/P6a workflow execution against that deployment remain required.
-
-## Current runtime evidence
-
-P2 and P6a both recorded production deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` and candidate SHA `92ff830b1c67413df745e37087e6447c9c251b9a`.
-
-These runtime results are not transferable to `a43219b…`, PR #188, or any remediated successor candidate merely because repository/workflow structure is shared.
-
-## Historical-priority boundary
-
-The historical review is parked in `docs/research/DGAF_HISTORICAL_RESEARCH_PARKED_2026-09-01.md`.
-
-Current position: DGAF is not established as first in the individual mechanisms of agent governance, dynamic formation, organizational authority, veto/escalation, idempotency, provenance, exact artifact identity, candidate immutability, or independent verification. The remaining hypothesis is a potentially distinctive **cross-domain integration** coupling formation-state governance to candidate-bound experimental verification and authorization. This is not an absolute novelty claim.
+The prior `92ff830b…` runtime evidence is specifically preserved as historical P2/P6a evidence for deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. The prior `a43219b…` completion-candidate PDMAL/P9 evidence is likewise historical and non-transferable.
 
 ## Assurance boundary
 
-CI success, deterministic tests, deployment readiness, runtime PASS, historical artifacts, synthetic evaluator results, and engineering PRs do not constitute PDMAL efficacy evidence or experimental authorization. Any unresolved blinding, null-integrity, artifact-custody, reproducibility, analysis, P7 binding, P8, broader P9, freeze, or authorization predicate remains FAIL-CLOSED.
+CI success, deterministic dry runs, synthetic evaluator results, deployment readiness for another SHA, historical runtime PASS, or documentation reconciliation do not constitute efficacy evidence or pilot authorization. Current unresolved predicates remain FAIL-CLOSED.
 
 ## Required closure sequence
 
-1. Complete PR #188 remediation review and retain its current exact-head pre-freeze verification as engineering evidence.
-2. Select a new exact experimental candidate derived from the approved remediation lineage.
-3. Rerun PDMAL instrumentation/P3–P6 and P9 against that exact candidate.
-4. Independently confirm the exact Vercel deployment Git SHA.
-5. Execute authenticated P2/P6a against the same exact candidate/deployment.
-6. Complete current-cycle P4/P5/P6 operational evidence.
-7. Resolve P7 as the external scientific decision and bind it exactly.
-8. Close P8 only from current-candidate evidence.
-9. Create and independently verify a new immutable freeze.
-10. Obtain explicit pilot authorization.
-11. Only then execute the authorized blinded pilot.
+1. Establish an exact READY deployment whose recorded Git SHA equals `58ba9a…`.
+2. Run authenticated P2 and P6a against that exact deployment.
+3. Complete current-cycle P4 and durable-custody P6 evidence.
+4. Preserve the exact P7 binding and close only against the final protocol/analysis/freeze identity.
+5. Close P8 from current-candidate evidence.
+6. Execute fresh independent P9 verification.
+7. Create and independently verify a new immutable freeze.
+8. Obtain explicit pilot authorization.
+9. Only then execute the blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
