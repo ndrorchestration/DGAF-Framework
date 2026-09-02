@@ -2,19 +2,21 @@
 """Fail-closed PDMAL pilot runner.
 
 Pilot execution requires protocol freeze, explicit authorization, an exact
-frozen git SHA, an out-of-band blinding key, and a configured durable archive.
-Pilot artifacts contain only blinded condition identifiers and are validated
-before the write is accepted.
+frozen git SHA, an out-of-band blinding key, a configured durable archive, and
+an explicit P-35 premise checker. Pilot artifacts contain only blinded
+condition identifiers and are validated before the write is accepted.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import hmac
+import importlib
 import os
 import subprocess
 from pathlib import Path
 from time import monotonic
+from typing import Any, Callable
 
 import numpy as np
 
@@ -69,6 +71,33 @@ def require_pilot_authorization() -> tuple[str, Path]:
     return key, archive_root
 
 
+def require_pilot_premise_checker() -> Callable[[str, Any], bool]:
+    """Load an explicitly approved P-35 checker from ``module:attribute``.
+
+    No permissive or synthetic default is supplied. The experimental control
+    design must name the approved PDMAL-specific checker explicitly before pilot
+    execution can construct DGAF treatment tasks.
+    """
+    spec = os.getenv("PDMAL_PREMISE_CHECKER", "").strip()
+    if not spec:
+        raise SystemExit(
+            "pilot execution prohibited: PDMAL_PREMISE_CHECKER must name the approved P-35 checker as module:attribute"
+        )
+    if ":" not in spec:
+        raise SystemExit("pilot execution prohibited: PDMAL_PREMISE_CHECKER must use module:attribute syntax")
+    module_name, attribute_name = spec.split(":", 1)
+    if not module_name or not attribute_name or ":" in attribute_name:
+        raise SystemExit("pilot execution prohibited: malformed PDMAL_PREMISE_CHECKER")
+    try:
+        module = importlib.import_module(module_name)
+        checker = getattr(module, attribute_name)
+    except (ImportError, AttributeError) as exc:
+        raise SystemExit(f"pilot execution prohibited: unable to load P-35 checker {spec}: {exc}") from exc
+    if not callable(checker):
+        raise SystemExit(f"pilot execution prohibited: configured P-35 checker is not callable: {spec}")
+    return checker
+
+
 def blind_condition(condition: str, key: str) -> str:
     digest = hmac.new(key.encode(), condition.encode(), hashlib.sha256).hexdigest()
     return f"blind_{digest[:16]}"
@@ -120,6 +149,7 @@ def run_contract(output_dir: Path) -> int:
 def run_pilot(output_dir: Path, seeds: int) -> int:
     frozen_sha = require_frozen_commit()
     blinding_key, archive_root = require_pilot_authorization()
+    premise_check_fn = require_pilot_premise_checker()
     os.environ.pop("PDMAL_BLINDING_KEY", None)
     if seeds < 1:
         raise SystemExit("--seeds must be >= 1")
@@ -133,7 +163,12 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
         records: list[dict] = []
         for trial_idx, (topology, condition, failure_count) in enumerate(combinations):
             trial_start = monotonic()
-            task = ConsensusTask(topology=topology, failure_count=failure_count, condition=condition)
+            task = ConsensusTask(
+                topology=topology,
+                failure_count=failure_count,
+                condition=condition,
+                premise_check_fn=premise_check_fn,
+            )
             try:
                 result = task.run_detailed(seed=seed, attempt=1)
                 status = result.attempt_status

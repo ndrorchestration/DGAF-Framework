@@ -5,11 +5,15 @@ This harness measures operational runtime only. It does not invoke ``run_pilot``
 contract/pilot modes, does not authorize pilot execution, and does not write
 pilot artifacts. Each trial is executed once with the deterministic
 ``ConsensusTask`` using a fixed trial identity.
+
+DGAF characterization requires the same explicit P-35 checker boundary as the
+pilot runner. No permissive or synthetic default checker is supplied.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib
 import json
 import math
 import os
@@ -17,6 +21,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean, pstdev
 from time import monotonic
+from typing import Any, Callable
 
 from task_engine import (
     CONSENSUS_ITERATIONS,
@@ -28,9 +33,33 @@ from task_engine import (
 
 CHARACTERIZATION_ID = "PDMAL_RUNTIME_CHAR_v1"
 DEFAULT_SEEDS = (20260817, 20260818, 20260819)
-DEFAULT_CONDITIONS = ("null", "simple", "static", "dgaf")
+DEFAULT_CONDITIONS = ("null", "simple", "static")
 DEFAULT_TOPOLOGIES = ("ring", "pdmal")
 DEFAULT_FAILURE_COUNTS = (0, 2, 5)
+
+
+def _load_explicit_checker() -> Callable[[str, Any], bool]:
+    spec = os.getenv("PDMAL_PREMISE_CHECKER", "").strip()
+    if not spec or ":" not in spec:
+        raise SystemExit(
+            "runtime characterization prohibited: DGAF characterization requires "
+            "PDMAL_PREMISE_CHECKER=module:attribute"
+        )
+    module_name, attribute_name = spec.split(":", 1)
+    if not module_name or not attribute_name or ":" in attribute_name:
+        raise SystemExit("runtime characterization prohibited: malformed PDMAL_PREMISE_CHECKER")
+    try:
+        module = importlib.import_module(module_name)
+        checker = getattr(module, attribute_name)
+    except (ImportError, AttributeError) as exc:
+        raise SystemExit(
+            f"runtime characterization prohibited: unable to load P-35 checker {spec}: {exc}"
+        ) from exc
+    if not callable(checker):
+        raise SystemExit(
+            f"runtime characterization prohibited: configured P-35 checker is not callable: {spec}"
+        )
+    return checker
 
 
 def _stats(values: list[float]) -> dict[str, float | None]:
@@ -57,6 +86,8 @@ def run_characterization(
     if not conditions or not topologies or not failure_counts:
         raise ValueError("characterization matrix must not be empty")
 
+    premise_check_fn = _load_explicit_checker() if "dgaf" in conditions else None
+
     output_dir.mkdir(parents=True, exist_ok=True)
     trial_results: list[dict] = []
     seed_results: list[dict] = []
@@ -66,11 +97,14 @@ def run_characterization(
         for condition in conditions:
             for topology in topologies:
                 for failure_count in failure_counts:
-                    task = ConsensusTask(
-                        topology=topology,
-                        failure_count=failure_count,
-                        condition=condition,
-                    )
+                    task_kwargs = {
+                        "topology": topology,
+                        "failure_count": failure_count,
+                        "condition": condition,
+                    }
+                    if condition == "dgaf":
+                        task_kwargs["premise_check_fn"] = premise_check_fn
+                    task = ConsensusTask(**task_kwargs)
                     trial_started = monotonic()
                     result = task.run_detailed(seed=seed, attempt=1)
                     runtime_ms = (monotonic() - trial_started) * 1000.0
@@ -129,6 +163,7 @@ def run_characterization(
         "ceiling_passed": all(entry["ceiling_met"] for entry in seed_results),
         "all_trials_completed": len(failed_trials) == 0 and len(trial_results) == len(seeds) * len(conditions) * len(topologies) * len(failure_counts),
         "failed_trial_count": len(failed_trials),
+        "p35_checker_configured": premise_check_fn is not None,
         "git_sha": os.environ.get("GITHUB_SHA", "unknown"),
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     }

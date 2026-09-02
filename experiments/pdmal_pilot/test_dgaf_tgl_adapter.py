@@ -1,8 +1,9 @@
 """Contract tests for the pre-freeze DGAF/TGL adapter.
 
 These tests validate deterministic serialization, structured decision mapping,
-bounded state updates, and exact provenance identity across the adapter/TGL
-boundary. They do not authorize pilot execution or generate empirical data.
+bounded state updates, explicit P-35 injection, and exact provenance identity
+across the adapter/TGL boundary. They do not authorize pilot execution or
+generate empirical data.
 """
 from __future__ import annotations
 
@@ -42,6 +43,10 @@ def state() -> ConsensusState:
         runtime_budget_remaining_ms=290000,
         protocol_id="PDMAL-PREFREEZE-V1",
     )
+
+
+def allow_all_premises(_text, _invariant) -> bool:
+    return True
 
 
 def test_canonical_serialization_is_deterministic(state: ConsensusState) -> None:
@@ -103,8 +108,30 @@ def test_fail_closed_never_returns_success(state: ConsensusState) -> None:
         apply_decision("FAIL_CLOSED", state.agent_values, state.active_neighbors)
 
 
+def test_adapter_requires_explicit_premise_checker(state: ConsensusState) -> None:
+    with pytest.raises(TypeError, match="premise_check_fn"):
+        DGAF_TGLAdapter(session_id="contract-test", premise_check_fn=None)
+
+
+def test_adapter_injects_premise_checker_and_records_kill(state: ConsensusState) -> None:
+    seen = []
+
+    def reject_first_invariant(text, invariant):
+        seen.append((text, invariant.id))
+        return False
+
+    adapter = DGAF_TGLAdapter(session_id="premise-injection-test", premise_check_fn=reject_first_invariant)
+    result = adapter.run_turn(state)
+    assert seen
+    assert result.decision == "FAIL_CLOSED"
+    premise = next(g for g in result.audit.gate_records if g.step == 0)
+    assert premise.pattern == "P-35"
+    assert premise.result is GateResult.KILL
+    assert result.attempt_status.value == "FAILURE"
+
+
 def test_adapter_invokes_verified_tgl_without_pilot_authorization(state: ConsensusState) -> None:
-    adapter = DGAF_TGLAdapter(session_id="contract-test")
+    adapter = DGAF_TGLAdapter(session_id="contract-test", premise_check_fn=allow_all_premises)
     result = adapter.run_turn(state)
     assert result.attempt_status.value in {"SUCCESS", "FAILURE"}
     assert result.decision in {
@@ -117,7 +144,7 @@ def test_adapter_invokes_verified_tgl_without_pilot_authorization(state: Consens
 
 
 def test_adapter_and_tgl_share_exact_input_identity(state: ConsensusState) -> None:
-    adapter = DGAF_TGLAdapter(session_id="provenance-test")
+    adapter = DGAF_TGLAdapter(session_id="provenance-test", premise_check_fn=allow_all_premises)
     result = adapter.run_turn(state)
     expected = hashlib.sha256(result.input_text.encode("utf-8")).hexdigest()
     assert result.input_hash == expected
