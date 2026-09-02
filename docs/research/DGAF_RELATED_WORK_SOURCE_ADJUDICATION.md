@@ -6,52 +6,45 @@
 
 ## Method
 
-This document applies the mechanism-level comparison rule in the publication and provenance spine. A source is not treated as equivalent merely because it uses terms such as *governance*, *orchestration*, *formation*, or *provenance*.
-
-Comparison dimensions now include:
-
-1. governed object;
-2. formation and membership state;
-3. topology and organization;
-4. authority and delegation;
-5. transition lifecycle;
-6. veto/conflict/escalation;
-7. idempotency at the relevant state boundary;
-8. runtime control/enforcement;
-9. provenance and evidence custody;
-10. candidate identity and immutability;
-11. verification/authorization;
-12. reproducibility and experimental governance.
+Comparison dimensions include governed object; formation and membership; topology; authority and delegation; transition lifecycle; veto/conflict/escalation; idempotency at the relevant boundary; runtime control; provenance/evidence custody; candidate identity/immutability; verification/authorization; and reproducibility/experimental governance.
 
 Classifications are **external prior**, **near-composition prior**, **candidate distinction**, or **unresolved**. A candidate distinction is a hypothesis for review, not a novelty verdict.
 
 ## Source adjudications
 
-### A. Dynamic Reorganization of Agent Societies (Dignum, Sonenberg, Dignum, 2004)
+### A. Dynamic Reorganization of Decision-Making Groups (Barber & Martin, 2001)
 
-**Established overlap:** The paper explicitly studies dynamic organizational reorganization, how and why organizations change, authority to modify organizational structure, and how reorganization decisions are made.
+The ACM record describes organizational structures specifying decision-making frameworks and authority, with adaptive frameworks dynamically changing who decides and who carries out decisions; experiments evaluate the reorganized systems.
 
-**DGAF implication:** Dynamic formation/reorganization and authority over organizational structure are longstanding multi-agent-systems prior art.
+**DGAF implication:** Dynamic organizational reorganization + authority + experimental evaluation is longstanding prior art. The inspected record does not establish immutable candidate identity, candidate-scoped cryptographic evidence, independent candidate verification, or authorization of a frozen software/research candidate.
+
+**Status:** **External prior / boundary-adjacent comparator.**
+
+Primary source: https://doi.org/10.1145/375735.376432
+
+### B. Dynamic Reorganization of Agent Societies (Dignum, Sonenberg, Dignum, 2004)
+
+The work explicitly studies dynamic organizational reorganization, organizational structure, authority to modify that structure, and how reorganization decisions are made.
 
 **Status:** **External prior.**
 
 Primary source: https://www.researchgate.net/publication/27694396_Dynamic_Reorganization_of_Agent_Societies
 
-### B. Organizational multi-agent system frameworks (AGR / OMACS and related work)
+### C. Negotiating team formation using deep reinforcement learning (2020)
 
-**Established overlap:** Organizational MAS work models agents, roles, groups, capabilities, assignments, policies, and adaptive organizational state. These frameworks treat organizational structure as more than an incidental collection of actions.
+Agents negotiate to form teams and the team-formation mechanisms are experimentally evaluated.
 
-**DGAF implication:** “Formation as a governed organizational object” is not a sufficient DGAF novelty claim without substantially narrower semantics.
+**DGAF implication:** Dynamic team formation + experimental evaluation predates DGAF. The inspected record does not establish a governed organizational state whose transition freezes an exact software/research candidate and gates authorization using independently verified candidate evidence.
 
-**Status:** **External prior.**
+**Status:** **Near/boundary-adjacent prior.**
 
-### C. TB-CSPN / organizational theory for multi-agent interaction (2025)
+Primary source: https://doi.org/10.1016/j.artint.2020.103356
 
-**Established overlap:** TB-CSPN provides dynamic group formation, threshold-driven membership changes, hierarchical Supervisor/Consultant/Worker roles, supervisor authorization, multi-stage validation before structural integration, and traceability-oriented coordination. It therefore overlaps substantially with dynamic formation plus supervisory governance.
+### D. TB-CSPN / organizational theory for multi-agent interaction (2025)
 
-**DGAF implication:** The broad proposition that formation, role hierarchy, adaptive membership, authorization, and auditable coordination can be one architecture is prior to DGAF.
+TB-CSPN provides dynamic group formation, threshold-driven membership changes, hierarchical Supervisor/Consultant/Worker roles, authorization, multi-stage validation before structural integration, and traceability-oriented coordination.
 
-**Candidate distinction:** The inspected public material does not establish the complete DGAF candidate composition of sovereign authority conflict resolution + veto + explicit formation idempotency + exact software-candidate experimental authorization.
+**DGAF implication:** The broad proposition that formation, role hierarchy, adaptive membership, authorization, validation, and auditable coordination can coexist in one architecture is prior to DGAF. The inspected material does not establish the complete DGAF candidate lifecycle.
 
 **Status:** **Near-composition prior.**
 
@@ -60,28 +53,47 @@ Primary sources:
 - https://link.springer.com/article/10.1007/s10791-025-09667-2
 - https://www.mdpi.com/1999-5903/17/8/363
 
-### D. Microsoft Agent Governance Toolkit (AGT), March-April 2026
+### E. Microsoft Agent Governance Toolkit (AGT), March-April 2026
 
-**Established overlap:** AGT public repository history predates DGAF's first located named formulation. March 7 records a production Agent Control Plane with constraint graphs, flight recorder, supervisor agents, shadow mode, and time-travel replay. A separate March 7 commit records MerkleAuditChain with SHA-256 and Ed25519 delegation verification. March 16 adds AuthorityResolver and multi-state authority decisions. An April 18 ADR describes a critic-with-veto layer, decision-boundary checks, and blast-radius escalation integrated with GovernanceGate.
+AGT history includes constraint graphs, supervisor agents, flight recorder/replay, MerkleAuditChain, SHA-256/Ed25519 delegation verification, AuthorityResolver, multi-state authority decisions, critic-with-veto, decision-boundary checks, and blast-radius escalation.
 
-**DGAF implication:** Runtime governance, supervisory structures, authority resolution, cryptographic audit/delegation, veto, escalation, and topology-sensitive risk escalation cannot be presented as DGAF inventions.
-
-**Candidate distinction:** In the inspected AGT material, governance is organized primarily around agents/actions/decisions and governance gates. Whether AGT also makes a dynamically changing formation the persistent primary governed object, with the exact DGAF lifecycle semantics, remains unresolved.
+**DGAF implication:** Runtime governance, supervision, authority resolution, cryptographic audit/delegation, veto, escalation, and topology-sensitive risk escalation cannot be presented as DGAF inventions. Whether AGT makes dynamic formation the persistent primary governed object and connects it to the complete candidate lifecycle remains unresolved.
 
 **Status:** **Strong external prior / near-composition comparator.**
 
-Primary sources:
+### F. Authenticated Workflows (Rajagopalan & Rao), February 2026
 
-- https://github.com/microsoft/agent-governance-toolkit/commit/f8113811c33f2ff7c54465c71bb503c5dbdd5f21
-- https://github.com/microsoft/agent-governance-toolkit/commit/b9d1a5aae203d65e4cb3dabe23755360b0035abc
-- https://github.com/microsoft/agent-governance-toolkit/commit/3155b34371ac0521a31987b5583a21c49f8bc46e
-- https://github.com/microsoft/agent-governance-toolkit/blob/359a2332f57d9000924baba269ed24e4e15ad8b0/docs/adr/0006-constitutional-constraint-layer-as-community-extension.md
+The February 11, 2026 arXiv record describes cryptographically authenticated agent workflows, organizational-policy enforcement, deterministic integrity checks, dynamically changing constraints as agents evolve, hierarchical policy composition, and cryptographic attestations for workflow dependencies.
 
-### E. SLSA
+**DGAF implication:** Organizational policy + evolving agent workflows + cryptographic integrity/authentication predates DGAF. The inspected record does not establish formation-state governance crossing into an exact frozen software/research candidate and subsequent candidate-bound independent verification/authorization.
 
-**Established overlap:** SLSA verification binds evidence to the artifact or source revision actually under verification. Source verification explicitly asks whether an attestation applies to the fetched revision; source attestations carry immutable revision identifiers/digests and can include tree digests.
+**Status:** **Strong boundary-adjacent external prior; not an exact Q predecessor.**
 
-**DGAF implication:** Exact source/artifact identity, immutable revision binding, evidence applicability, and verification against the actual object are established external principles.
+Primary source: https://arxiv.org/abs/2602.10465
+
+### G. OrgForge, March 2026
+
+OrgForge's March 11, 2026 whitepaper describes a machine-readable organizational constitution, deterministic policy evaluation, signed authorization artifacts, replay safety, and execution-side verification of authorization artifacts for human, software, and AI-agent actors.
+
+**DGAF implication:** Organizational policy → signed authorization artifact → verified execution is external prior. The inspected material does not establish dynamic formation as the governed state or a formation transition producing an exact experimental/software candidate whose evidence is independently verified before authorization.
+
+**Status:** **Strong boundary-adjacent external prior; not an exact Q predecessor.**
+
+Primary source: https://orgforge.io/paper/
+
+### H. Trusted-execution team formation / attested team membership, April 2, 2026
+
+A public patent record dated April 2, 2026 includes a team-formation embodiment in which a team specification identifies a coordinator and members, member identity evidence includes unique identifiers and device attestations, member attributes are determined, and a team proposal is generated.
+
+**DGAF implication:** Team formation + coordinator authority + identity/attestation evidence is pre-DGAF prior. The inspected claims do not establish the complete formation-to-software/research-candidate-freeze-to-independent-verification-to-authorization lifecycle.
+
+**Status:** **Near/boundary-adjacent prior; not an exact Q predecessor.**
+
+Primary source: https://patents.justia.com/patent/20260095308
+
+### I. SLSA
+
+SLSA verification binds evidence to the artifact or source revision actually under verification. Immutable revision identifiers/digests establish applicability of evidence to the exact object.
 
 **Status:** **Strong external prior.**
 
@@ -91,127 +103,113 @@ Primary sources:
 - https://slsa.dev/spec/v1.2/verifying-source
 - https://slsa.dev/spec/v1.2/source-requirements
 
-### F. in-toto attestation validation
+### J. in-toto attestation validation
 
-**Established overlap:** The validation model hashes the artifact and matches it against attested subjects; if no acceptable subject digest matches, validation rejects the attestation.
-
-**DGAF implication:** Subject/digest binding and independent verification of artifact-scoped evidence are external prior art.
+in-toto validates artifact identity by digest against attested subjects and rejects when an acceptable subject does not match.
 
 **Status:** **Strong external prior.**
 
 Primary source: https://github.com/in-toto/attestation/blob/main/docs/validation.md
 
-### G. Runtime action-boundary governance and related agent-assurance work
+### K. Clarus, June 29 2026
 
-**Established overlap:** Pre-execution policy mediation, fail-closed control, provenance, authorization, runtime assurance, deterministic replay, and trace evidence are all established research/engineering directions.
+Clarus describes auditable multi-phase research collaboration involving teams, agents, artifacts/evidence, audit, attribution, and checkpoints.
 
-**DGAF implication:** Individual runtime governance mechanisms are not sufficient grounds for a DGAF novelty claim.
+**Status:** **Later convergence comparator; not prior art against April/May DGAF chronology.**
+
+Primary source: https://arxiv.org/abs/2606.30246
+
+### L. LOGOS, July 12 2026
+
+LOGOS describes persistent agent teams evolving artifacts, versioned agent packs, auditable traces, fail-closed verification, untrusted release candidates, held-out evidence, human policy, and explicit authorization before promotion.
+
+**DGAF implication:** Close later convergence on the candidate/evidence/authorization side. It cannot defeat the April/May chronology because it is later.
+
+**Status:** **Later convergence comparator.**
+
+Primary source: https://arxiv.org/abs/2607.10878
+
+### M. Artifact-centered scientific-agent observability, August 18 2026
+
+This work proposes first-class claim/evidence bindings, verification records, artifact lineage, run records, archives, and steering commands for autonomous scientific agents.
+
+**Status:** **Later convergence comparator.**
+
+Primary source: https://arxiv.org/abs/2608.18312
+
+### N. Runtime action-boundary governance and related agent-assurance work
+
+Pre-execution policy mediation, fail-closed control, provenance, authorization, runtime assurance, deterministic replay, and trace evidence are established directions.
 
 **Status:** **External prior / broad overlap.**
 
 ## DGAF source adjudication
 
-### H. DGAF named formulation — 2026-04-29
+### O. DGAF named formulation — 2026-04-29
 
 Commit `bb5c8f19d393cf04eacac66ba3a58df97671bfdb` changes the public expansion to **Dynamic Governance Agentic Formation**. The repository issue created that day records the framework as identified during Session 004.
 
 **What this establishes:** Earliest currently located public repository evidence for the named DGAF formulation.
 
-**What it does not establish:** Firstness of agent governance, dynamic formation, organizational authority, veto, provenance, or any other primitive.
-
-Primary sources:
-
-- https://github.com/ndrorchestration/DGAF-Framework/commit/bb5c8f19d393cf04eacac66ba3a58df97671bfdb
-- https://github.com/ndrorchestration/DGAF-Framework/issues/1
+**What it does not establish:** Firstness of agent governance, dynamic formation, organizational authority, veto, provenance, or any primitive.
 
 **Status:** **Historical provenance fact; not a novelty verdict.**
 
-### I. DGAF formation semantics — 2026-05-01
+### P. DGAF formation semantics — 2026-05-01
 
-Commit `edc9f93da03747cfab3a6610d3349a122ba5f128` adds to the Harmonic Quintet specification:
+Commit `edc9f93da03747cfab3a6610d3349a122ba5f128` adds explicit authority conflict resolution, sovereign veto, sole resolver semantics, timeout escalation/blocking, idempotent formation-wave replay, and duplicate-audit prevention.
 
-- explicit authority conflict resolution;
-- sovereign veto semantics;
-- a sole resolver;
-- timeout escalation and blocking;
-- idempotency guarantee for rerunning the same formation wave state;
-- avoidance of duplicate sovereign audit-log entries.
-
-**What this establishes:** Concrete DGAF implementation/specification evidence for formation-level authority conflict, veto, escalation, and idempotent replay.
-
-**Temporal limitation:** Because this is dated May 1, it cannot establish that the complete composition existed before the April 29 named formulation unless earlier evidence is found.
-
-Primary source: https://github.com/ndrorchestration/DGAF-Framework/commit/edc9f93da03747cfab3a6610d3349a122ba5f128
+**Temporal limitation:** This is May 1 evidence and cannot establish that the complete composition existed before April 29 unless earlier evidence is found.
 
 **Status:** **DGAF implementation evidence; historical priority unresolved.**
 
-### J. DGAF development/candidate separation — 2026-08-21
+### Q. DGAF development/candidate separation — 2026-08-21
 
-The candidate-separation document explicitly distinguishes moving development state from an identified candidate and states that allowing development to collapse into the candidate would make subsequent evidence ambiguous. It proposes a candidate manifest/reference and exact SHA attribution before freeze/authorization.
+The candidate-separation document distinguishes moving development state from an identified candidate and requires exact SHA attribution before freeze/authorization.
 
 **Established external baseline:** release engineering and provenance systems already use immutable/revision-scoped candidate identity and stale-evidence rejection.
 
 **Potential DGAF distinction:** Using that separation explicitly as an **experimental evidentiary control** in the authorization lifecycle.
 
-Primary source: `docs/experiment/DEVELOPMENT_CANDIDATE_SEPARATION_2026-08-21.md`
-
 **Status:** **Potentially distinctive application; not a novel provenance primitive.**
 
 ## Current contribution hypothesis
 
-The strongest remaining DGAF contribution hypothesis is not a novel mechanism. It is a cross-domain integration:
+The strongest remaining DGAF contribution hypothesis is:
 
-> DGAF may have independently coupled organizational formation governance with software/experimental identity governance, so that formation state, authority transitions, evidence provenance, exact candidate identity, verification, and authorization participate in one continuously constrained lifecycle.
+> DGAF may have independently coupled organizational formation governance with software/experimental identity governance, so that formation state and authority transitions are carried forward into an exact experimental candidate, whose evidence is independently verified and whose authorization resolves against that same identity.
 
-This hypothesis is conditional. A prior system can defeat it only if it materially matches the same governed object and lifecycle, not merely because it contains similar components.
+This is narrower than “formation + provenance + authorization.” Pre-DGAF systems already demonstrate substantial combinations of those components.
 
 ## Explicit non-claims
 
-This review does not establish that DGAF is:
-
-- the first governance framework for agentic AI;
-- the first multi-agent orchestration framework;
-- the first system to treat organizational formation dynamically;
-- the first system to assign authority to organizational structure;
-- the first system to use veto or escalation;
-- the first system to use idempotency in distributed agent systems;
-- the first system to bind evidence to exact artifacts or revisions;
-- the first system to distinguish candidates from moving development;
-- empirically better than alternative approaches;
-- novel in an absolute sense.
+This review does not establish that DGAF is the first governance framework for agentic AI, the first multi-agent orchestration framework, the first dynamic organizational formation system, the first authority/veto/escalation system, the first cryptographic authorization system, the first exact-artifact evidence-binding system, or empirically superior.
 
 ## Current research questions
 
-1. Did any public pre-2026-04-29 system implement the full formation-level composition `formation + authority + veto/conflict + idempotent transition + evidence` as one explicit architecture?
+1. Did any public pre-2026-04-29 system implement the complete formation-to-candidate lifecycle with the same governed-object continuity?
 2. Did any public system before the relevant DGAF milestone connect formation-governance state directly to exact experimental candidate identity and authorization?
-3. Does any predecessor preserve governed-object identity continuously across formation transitions, execution evidence, candidate verification, and promotion/authorization?
-4. Are any claimed DGAF distinctions merely established release/provenance patterns reapplied to a new domain?
+3. Does any predecessor preserve governed-object identity continuously across formation transitions, candidate creation, execution evidence, independent verification, and promotion/authorization?
+4. Are remaining DGAF distinctions merely established release/provenance/authorization patterns reapplied to a new domain?
 
 ## Adjudication standard
 
-A strong historical predecessor must be:
-
-1. publicly accessible before the comparison cutoff;
-2. reliably dated through a primary source;
-3. concrete enough to demonstrate implementation or a specific formal architecture;
-4. materially equivalent in governed object and transition semantics;
-5. accompanied by enough evidence to distinguish mechanism-level overlap from architectural equivalence.
+A strong historical predecessor must be publicly accessible before the comparison cutoff, reliably dated through a primary source, concrete enough to demonstrate implementation or a specific formal architecture, materially equivalent in governed object and transition semantics, and supported sufficiently to distinguish mechanism-level overlap from architectural equivalence.
 
 “No match located” means only that the bounded search has not located an equivalent. It is not evidence of global absence.
 
-## Next actions
+## Latest audit tranches
 
-1. Preserve the 2026-09-01 historical-priority adjudication as the current baseline.
-2. Expand primary-source searches across organizational MAS, agent governance, distributed reconfiguration, software supply-chain security, and research workflow provenance.
-3. Inspect implementation-level evidence for the closest near-composition candidates.
-4. Keep historical-priority claims independent from current PDMAL empirical status.
-5. Update the contribution statement only when new primary evidence changes the adjudication.
+- `DGAF_HISTORICAL_PRIORITY_TRANCHE_2026-09-01_02.md`
+- `DGAF_HISTORICAL_PRIORITY_TRANCHE_2026-09-01_03.md`
 
 ## Cross-references
 
-- [`DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`](DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md)
-- [`DGAF_RELATED_WORK_MATRIX.md`](../DGAF_RELATED_WORK_MATRIX.md)
-- [`../PRIOR_ART_AND_RELATED_WORK_SCOPE.md`](../PRIOR_ART_AND_RELATED_WORK_SCOPE.md)
-- [`../PUBLICATION_AND_PROVENANCE_SPINE.md`](../PUBLICATION_AND_PROVENANCE_SPINE.md)
-- [`../CLAIM_EVIDENCE_INDEX.md`](../CLAIM_EVIDENCE_INDEX.md)
-- [`../EPISTEMIC_EVIDENCE_STANDARD.md`](../EPISTEMIC_EVIDENCE_STANDARD.md)
+- `DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`
+- `DGAF_HISTORICAL_PRIORITY_TRANCHE_2026-09-01_02.md`
+- `DGAF_HISTORICAL_PRIORITY_TRANCHE_2026-09-01_03.md`
+- `../DGAF_RELATED_WORK_MATRIX.md`
+- `../PRIOR_ART_AND_RELATED_WORK_SCOPE.md`
+- `../PUBLICATION_AND_PROVENANCE_SPINE.md`
+- `../CLAIM_EVIDENCE_INDEX.md`
+- `../EPISTEMIC_EVIDENCE_STANDARD.md`
