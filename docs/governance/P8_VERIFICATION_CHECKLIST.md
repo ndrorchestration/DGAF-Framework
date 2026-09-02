@@ -1,95 +1,88 @@
 # P8 Verification Checklist
 
 **Status:** OPEN / PRE-FREEZE / FAIL-CLOSED  
-**Current `main`:** documentation/evidence lineage; do not treat the branch tip as experimental apparatus identity.  
-**Current mainline runtime candidate:** `92ff830b1c67413df745e37087e6447c9c251b9a` / tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`  
-**Latest controlled completion candidate:** `562753b3053b3566b0fcad1b0b1df151d7de119a` / branch `completion/2026-09-01-exact-candidate`  
-**Historical experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
-**Prior pre-remediation candidate:** `c6157158bf0ee4840e99a381a4b99bd2febe2302` (historical/superseded)
+**Selected pilot candidate:** PR #192 / `58ba9a072f40e94638b0332eeec19dd882a7ff95`  
+**Selected candidate tree:** `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb`  
+**Corrected apparatus/source anchor:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
+**Empirical N:** `0`  
+**Pilot authorization:** `NOT GRANTED`  
+**Freeze:** `NOT CREATED`
 
-This checklist distinguishes implemented controls from executed verification evidence. Historical candidates and historical verifier runs remain provenance only. The selected pilot candidate must receive fresh candidate-scoped evidence before P8 closure.
+This checklist distinguishes implemented controls from executed verification evidence. Historical candidates and historical verifier runs remain provenance only. No historical result transfers to the selected candidate.
 
 ## Candidate identity reconciliation
 
 - [x] Historical candidate identities are retained without evidence transfer.
-- [x] Current mainline runtime candidate `92ff830b…` is explicitly distinguished from the latest completion candidate `562753b…`.
-- [x] Completion candidate branch is controlled but not frozen.
-- [ ] Intended pilot candidate is explicitly selected and rebound through P7/P8.
-- [ ] New candidate reaches a verified freeze state.
+- [x] Selected candidate is explicitly identified as `58ba9a…` with tree `abdbc9b…`.
+- [x] Selected candidate remains pre-freeze and fail-closed.
+- [x] P7 exact-candidate provenance binding is recorded separately for the adopted scientific specification.
+- [ ] New candidate reaches a verified immutable freeze state.
 
 ## TGL/P-35 contract prerequisite
 
 - [x] Fail-closed remediation path is implemented.
-- [ ] Complete candidate-scoped verification of the resulting TGL/P-35 contract.
-- [ ] Premise-hook injection exercised by regression tests for the selected candidate.
-- [ ] Fail-closed exception containment exercised by regression tests for the selected candidate.
-- [ ] `PASS/WARN/SKIP/ESCALATE/KILL` reduction semantics explicitly tested for the selected candidate.
-- [ ] Unwired required-gate `SKIP` distinguished from dependency-caused or intentionally non-applicable `SKIP`.
-- [ ] Final audit seal proven to represent exactly the authoritative returned audit state.
-- [ ] Current selected-candidate CI run, SHA, ref, event, logs, and artifacts retained.
+- [x] Selected-candidate regression callers provide the explicit premise checker.
+- [x] Selected-candidate CI wave completed successfully, including DGAF regression and pre-authorization/pre-freeze validation.
+- [ ] Full production-cycle exercise under an approved PDMAL constitutional premise policy.
+- [ ] All remaining semantic skip/audit-state predicates independently demonstrated for final frozen execution.
 
 ## Candidate artifact contract
 
 - [x] Explicit `ffcr_success` outcome is emitted by the runner.
 - [x] `ffcr_success` is integrity-covered and required by the pilot artifact schema.
-- [x] Matrix coordinates consumed by analysis (`topology`, `failure_count`) are explicit, required artifact fields.
-- [x] Schema rejects malformed FFCR outcomes and `ffcr_success=true` with non-success status.
+- [x] Matrix coordinates consumed by analysis are explicit required fields.
+- [x] Schema rejects malformed FFCR outcomes and inconsistent success status.
 - [x] Analysis requires complete, non-duplicate condition matrices and an explicit unblinding map.
 - [x] Canonical record serialization is shared by runner and schema validation.
-- [x] Numeric Boolean values are rejected where integer identifiers/counts are required.
 - [x] Corrective tests cover artifact/document identity, matrix uniqueness, blinded balance, retention integrity, unblinding bijection, bootstrap invariants, and recovery-state semantics.
-- [ ] Fresh current-selected-candidate execution evidence exists.
+- [x] Current selected candidate has successful instrumentation/schema/control evidence.
 
 ## Current candidate-tree CI evidence
 
-- [ ] Governance CI executed against the selected pilot candidate or exact descendant with unchanged executable apparatus and explicit provenance.
-- [ ] P8 analysis tests passed in that exact candidate execution.
-- [ ] P8 artifact-schema/security tests passed in that exact candidate execution.
-- [ ] Compilation passed in that exact candidate execution.
-- [ ] Run ID, URL, exact SHA, ref, and event retained.
-- [ ] Job logs inspected rather than inferred from a commit/check placeholder.
+- [x] Governance CI executed for selected candidate `58ba9a…` — run `33616403706`.
+- [x] P8-relevant pre-freeze validation executed for selected candidate — run `33616403754`.
+- [x] P8-relevant pre-authorization security executed for selected candidate — run `33616403843`.
+- [x] Artifact/schema/security and regression checks passed in the September 2 workflow wave.
+- [x] Run IDs and candidate SHA are retained in the current evidence dossier.
+- [x] Pre-freeze job logs were directly inspected for the fail-closed runner/provenance contract job.
 
 ## Historical evidence boundaries
 
-- [x] Historical E2b verification retained as provenance for its recorded execution.
-- [ ] Selected-candidate E2b applicability re-verified after candidate changes.
-- [x] Prior P2/P6a evidence retained as exact evidence for `92ff830b…` only.
-- [x] P2/P6a status is current for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`.
+- [x] Historical E2b/M6/P2/P6a/P9 evidence remains explicitly scoped to its producing identity.
+- [x] Prior P2/P6a evidence for `92ff830b…` is not reused for `58ba9a…`.
+- [x] Prior completion-candidate P3/P4/P5/P6/P9 evidence is not reused for `58ba9a…`.
 
 ## Runtime verification
 
-- [x] Current mainline P2 five-case matrix: run `33509348174`, artifact `9800942933`, candidate `92ff830b…`.
-- [x] Current mainline P6a four-case CORS matrix: run `33509416955`, artifact `9800972819`, candidate `92ff830b…`.
-- [ ] Fresh P2/P6a evidence for the selected pilot candidate if it differs from `92ff830b…`.
+- [ ] Fresh authenticated P2 five-case matrix for `58ba9a…` on an exact-Git-SHA deployment.
+- [ ] Fresh authenticated P6a four-case CORS matrix for `58ba9a…` on that same deployment.
+- [ ] Exact deployment Git SHA independently confirmed.
+- [ ] Provider rate-limit blocker cleared sufficiently to establish the required deployment identity.
 
-## P9 scoped verification
+## P9 final-candidate verification
 
-- [x] Exact candidate identity verified by `git rev-parse HEAD == GITHUB_SHA` for `562753b…` — run `33567199896`.
-- [x] Independent canonicalization path (`jq -S -c` + `sha256sum`) matched the DGAF/Python digest — run `33567199896`.
-- [x] Authority identity regression passed (`4 passed`) against exact candidate `562753b…` — run `33567199896`.
-- [x] Independent P9 evidence artifact uploaded — artifact `9823570326`.
-- [ ] Full broader P9 evidence-chain closure against the selected pilot candidate.
+- [ ] Fresh independent P9 verification for `58ba9a…` after the P-35 remediation is incorporated.
+- [ ] Broader P9 evidence-chain closure against the selected candidate.
 - [ ] External durable archive/custody requirements independently satisfied where required.
 
 ## Reproducibility and provenance
 
-- [ ] Executed candidate-tree identity reconciled with all P8 bindings for the selected candidate.
-- [ ] Canonical protocol blob SHA bound to the eventual frozen candidate identity.
-- [ ] Current candidate-bound E2b/M6 toolchain evidence captured and retained.
-- [ ] Environment fingerprint evidence captured and assessed.
-- [ ] Deterministic topology fingerprints reproduced for the selected candidate.
-- [ ] Seed/RNG separation and trial ordering independently verified.
+- [x] Selected-candidate source/tree identity is recorded.
+- [x] Environment/dependency/toolchain fingerprints are retained in current candidate evidence.
+- [x] Deterministic instrumentation and artifact hashes are retained.
+- [ ] Final candidate-bound reproduction chain is independently closed.
+- [ ] Seed/RNG separation and final trial ordering independently verified for the eventual frozen execution.
 
 ## Evidence custody and negative state
 
-- [ ] Selected-candidate CI logs/artifacts retained at a durable location.
-- [ ] Retained candidate artifacts retrieved independently.
-- [ ] Retrieval hashes verified against recorded integrity values.
-- [ ] Blinding custody boundary documented without exposing the key.
-- [ ] Current selected candidate has a machine-retained negative-state artifact proving N=0, no authorization, no pilot, and no unblinding.
+- [x] Current candidate CI artifacts are retained by GitHub Actions.
+- [ ] Current candidate artifacts are independently retrieved from a durable external archive.
+- [ ] Retrieval hashes are independently verified against the durable archive record.
+- [x] Current verification artifacts retain negative-state evidence: N=0, no authorization, no pilot, no unblinding in the verification job/workspace.
+- [ ] Full operational blinding custody boundary is independently closed.
 
 ## Closure rule
 
 P8 remains open until every applicable unchecked item has current candidate-scoped evidence. Historical or synthetic evidence cannot substitute for current-candidate verification.
 
-**Current state:** `P8 OPEN / FAIL-CLOSED`; P9 has a scoped PASS on completion candidate `562753b…`, while broader P9 closure remains open; no new freeze; no authorization; empirical N = 0.
+**Current state:** `P8 OPEN / FAIL-CLOSED`; GitHub CI is green for `58ba9a…`, while deployment-bound P2/P6a, operational P4, durable P6, final P9, freeze, authorization, and empirical execution remain open.
