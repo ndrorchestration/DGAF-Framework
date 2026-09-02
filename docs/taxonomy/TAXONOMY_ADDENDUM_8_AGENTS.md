@@ -2,7 +2,7 @@
 
 **Classification:** T1 PUBLIC
 **Status:** HISTORICAL ADDENDUM — superseded for epistemic vocabulary policy by `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md`
-**Last Updated:** 2026-08-15
+**Last Updated:** 2026-09-02 — transversal dependency/agreement reconciliation
 
 > **Epistemic notice:** This document records taxonomy/design information. Role descriptions are `DEFINED` design roles unless executable evidence is explicitly cited. Terms such as "authority", "forecaster", "benchmark setter", or "ethical decision-making" describe intended function, not independently verified capability.
 
@@ -100,11 +100,35 @@ The original addendum used several phrases that can accidentally imply stronger 
 
 The dodecahedral taxonomy does not establish that PDMAL, AHG Zeta-Pell, acoustic systems, or other projects share an implementation merely because they use similar names, ratios, topology language, or convergence metaphors. Such relationships must be explicitly documented and implemented.
 
+## Transversal Candidate-State Rule — 2026-09-02
+
+This historical addendum must remain separate from the current candidate/evidence state. A taxonomy entry is not a candidate identity, deployment identity, workflow identity, or verification artifact.
+
+Current candidate-state terms are role-qualified as follows:
+
+`apparatus/source` → provenance anchor
+`candidate` → exact executable identity
+`deployment` → execution substrate identity
+`workflow head` → CI execution identity
+`artifact` → retained evidence object
+`freeze` → immutable experimental identity
+`authorization` → explicit governance transition
+`empirical` → accepted observation after required controls
+
+Historical agent names, roles, and formation descriptions must never be used to infer present authorization, experimental completion, standards equivalence, or empirical competence.
+
+## P-35 / P-42 Boundary
+
+`P-35` denotes **Procluding Premise Gate**. `P-42` denotes **Adaptive Harmonic Governance (AHG)**. These namespaces are intentionally distinct.
+
+The current P-35 remediation adds an explicit premise-check dependency at the DGAF/TGL/ConsensusTask boundary. This is an engineering/wiring dependency. It does not define the PDMAL-specific constitutional premise policy; that checker remains an explicit experimental-control prerequisite.
+
 ## Canonical Epistemic Rule
 
 A taxonomy entry can define what the ecosystem **calls** a component. It cannot, by naming alone, prove what the component **does**, how well it performs, or whether it is equivalent to an external standard.
 
 **Canonical vocabulary policy:** `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md`
+**Transversal dependency/agreement taxonomy:** `docs/taxonomy/TRANSVERSAL_AGREEMENT_AND_DEPENDENCY_TAXONOMY_2026-09-02.md`
 
 ---
 
