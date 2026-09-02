@@ -24,15 +24,7 @@
 | P8 Analysis Lock | **OPEN / FAIL-CLOSED** |
 | P9 Independent Verification | **OPEN — fresh final-candidate verification required** |
 
-## Exact-candidate CI
-
-All 18 reported GitHub Actions workflows associated with `58ba9a…` completed successfully. Pre-Freeze Runner Validation run `33616403754` emitted artifact `9841238710`; its manifest records `status=PRE-FREEZE` and `empirical_data_collection=false`. Its merge-ref execution identity is not substituted for candidate head `58ba9a…`.
-
-## Deployment finding
-
 A READY Vercel deployment exists for superseded candidate `a43219b4ed91fff8615f6c655ab3d17ca871fc29` (`dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`). Vercel records Git SHA `a43219b…`; this cannot satisfy `58ba9a…` P2/P6a. No READY deployment with recorded Git SHA `58ba9a…` has been established.
-
-## Support lanes
 
 PR #197 and PR #198 contain clean support diffs already incorporated into selected candidate `58ba9a…`; they are redundant support lanes, not separate candidate lineage.
 
