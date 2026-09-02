@@ -1,8 +1,8 @@
-# Epistemic Cross-Repository Vocabulary Sweep — 2026-08-15
+# Epistemic Cross-Repository Vocabulary Sweep — 2026-09-02
 
 ## Scope
 
-This sweep covers the DGAF taxonomy/vocabulary surface and the recently audited PDMAL and AHG Zeta-Pell tracks. It establishes the canonical rule for terminology propagation.
+This sweep covers the DGAF taxonomy/vocabulary surface and the audited PDMAL and AHG/Zeta-Pell tracks, including cross-registry identity and transversal agreement semantics.
 
 ## Required treatment
 
@@ -26,23 +26,54 @@ This sweep covers the DGAF taxonomy/vocabulary surface and the recently audited 
 - Quantitative claims require provenance and reproducibility.
 - Historical claims must retain their historical qualifier after migration into current documentation.
 - Agent names and role descriptions do not establish capability.
-- PDMAL and AHG Zeta-Pell remain separate tracks unless an explicit technical bridge is implemented and documented.
+- PDMAL and AHG/Zeta-Pell remain separate tracks unless an explicit technical bridge is implemented and documented.
 - PDMAL is not to be described as a complete BFT protocol based solely on its current lattice/math evidence.
-- AHG Zeta-Pell's silver-ratio mathematics does not by itself establish stability, entropy reduction, or performance properties.
+- AHG/Zeta-Pell's silver-ratio mathematics does not by itself establish stability, entropy reduction, or performance properties.
 - Hecke-operator terminology must not be used for a stochastic threshold implementation.
+
+## Transversal agreement controls — 2026-09-02
+
+A live state is transversally coherent only when independent projections resolve to the same scoped identity and compatible status.
+
+Required identity tuple:
+
+`apparatus/source SHA + candidate SHA/tree + deployment identity/source SHA + workflow/evidence run + artifact identity + protocol/analysis binding + freeze identity + authorization state`
+
+Use these agreement classes:
+
+- `ROLE DIFFERENCE` — distinct semantic roles intentionally retained.
+- `HISTORICAL DIFFERENCE` — prior identity retained for provenance/non-closing use.
+- `TRANSVERSAL DRIFT` — incompatible live projections.
+- `BLOCKING CONTRADICTION` — discrepancy capable of invalid evidence transfer or governance transition.
+
+Shared repository, branch, workflow name, deployment URL, ancestry, or apparent behavioral similarity does not establish candidate equivalence.
+
+## P-35 / P-42 namespace control
+
+`P-35 = Procluding Premise Gate`.
+`P-42 = Adaptive Harmonic Governance`.
+
+The current P-35 engineering remediation adds an explicit `premise_check_fn` at the DGAF/TGL/ConsensusTask boundary. This is an engineering/wiring dependency and not a PDMAL-specific constitutional premise policy. Any PDMAL-specific premise checker remains a separate experimental-control prerequisite.
 
 ## Current remediation state
 
-- `docs/EPISTEMIC_VOCABULARY_STANDARD.md`: canonical policy added.
-- `docs/taxonomy/TAXONOMY_ADDENDUM_8_AGENTS.md`: historical/design-role boundary established.
-- `docs/NDR_INTERNAL_VOCABULARY_MASTER.md`: epistemic boundary and PDMAL correction applied.
-- `AHG-Zeta-Pell-Autonomous-Lattice`: Pass 1 findings and generated-document evidence boundary updated.
-- `DGAF-Framework`: SWEEP-002 historical closure separated from current validation.
+- `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md`: canonical epistemic + transversal vocabulary.
+- `docs/taxonomy/TAXONOMY_ADDENDUM_8_AGENTS.md`: historical/design-role boundary + candidate-state separation.
+- `docs/NDR_INTERNAL_VOCABULARY_MASTER.md`: candidate/deployment/workflow evidence-state semantics.
+- `docs/taxonomy/NDR_ACRONYM_REGISTRY.md`: acronym semantics + transversal participation rule.
+- `docs/agents/AGENT_ECOSYSTEM_REGISTRY.md`: taxonomy/control-plane separation.
+- `docs/agents/AGENT_ROSTER.md`: taxonomy authority does not authorize experimental execution.
+- `docs/agents/FORMATION_TOPOLOGY.md`: formation identity separated from experimental identity.
+- Pattern Commons and NDR/DGAF pattern registries: transversal overlay applied.
+
+## Current candidate context
+
+PR #192 candidate `edd3b5c8266e2680b9bb94301c2623a3f1ac0cf0` remains PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. Exact-candidate Vercel deployment is not evidenced. Fresh downstream evidence remains required after the P-35 remediation.
 
 ## Remaining search targets
 
 Any future terminology sweep should search for:
 
-`BFT`, `Hecke`, `Lyapunov`, `spectral`, `Ricci`, `production-ready`, `%`, `x jitter`, `verified benchmark`, `theorem`, `proof`, `authority`, `sentience`, `equivalent`
+`BFT`, `Hecke`, `Lyapunov`, `spectral`, `Ricci`, `production-ready`, `%`, `x jitter`, `verified benchmark`, `theorem`, `proof`, `authority`, `sentience`, `equivalent`, `candidate`, `deployment`, `freeze`, `authorized`, `current`
 
-Each hit must be classified rather than automatically rewritten. Historical records should be preserved when they are useful evidence.
+Each hit must be classified rather than automatically rewritten. Historical records should be preserved when useful provenance.
