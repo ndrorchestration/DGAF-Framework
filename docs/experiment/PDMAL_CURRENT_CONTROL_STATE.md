@@ -2,12 +2,13 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 applies_to_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
-runtime_candidate_tree: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
 candidate_status: CURRENT RUNTIME CANDIDATE / NOT FROZEN / P3-P8 EVIDENCE REMAINING
+active_p35_remediation_head: d83ea74c0f7ef7dd3e39a25345d6b201770a370c
+active_p35_pre_freeze_run: 33590352168
 ---
 
 # PDMAL Current Control State
@@ -19,6 +20,8 @@ This is the current pre-authorization control record. Historical evidence remain
 The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. It is the canonical provenance anchor for the seven restored behavior-affecting DGAF/TGL gate-state substrates.
 
 The current production/runtime candidate is `92ff830b1c67413df745e37087e6447c9c251b9a`, with exact tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`. Git history establishes the corrected apparatus source as its lineage basis. These identities remain distinct: apparatus provenance is not the same thing as executable candidate identity.
+
+The active P-35 remediation is a separate engineering lineage: PR #188 / branch `remediation/p35-premise-hook-2026-09-01`, current head `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`. Its exact-head pre-freeze runner validation passed in run `33590352168`, but that remediation head is not the current runtime candidate and does not inherit or transfer runtime evidence.
 
 ## Current state
 
@@ -32,6 +35,7 @@ The current production/runtime candidate is `92ff830b1c67413df745e37087e6447c9c2
 | Current production deployment | CAPTURED | `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` in P2/P6a artifacts |
 | Provenance identity | COMPLETE / VALIDATED | All seven restored gate-state blocks included in canonical identity |
 | Seven-gate constitutive restoration | IMPLEMENTED / PRE-FREEZE VALIDATED | Semantic restoration and provenance integrity validated |
+| Active P-35 remediation | VERIFIED / ENGINEERING ONLY | `d83ea74c…`; pre-freeze run `33590352168`; no candidate/freeze/authorization effect |
 | P2 runtime | VERIFIED | Run `33509348174`; artifact `9800942933`; five required cases passed |
 | P6a CORS | VERIFIED | Run `33509416955`; artifact `9800972819`; four required checks passed |
 | P3 | IMPLEMENTED / OPEN | Current-candidate evidence required |
@@ -39,7 +43,7 @@ The current production/runtime candidate is `92ff830b1c67413df745e37087e6447c9c2
 | P5 | OPEN | Current-cycle reproducibility evidence required |
 | P6 | OPEN / FAIL-CLOSED | Current-cycle durable custody proof required |
 | P7 scientific specification | ADOPTED / FINAL BINDING OPEN | Must bind exact candidate/protocol/analysis/freeze identity |
-| P8 analysis lock | OPEN / FAIL-CLOSED | TGL/P-35 current-candidate verification required |
+| P8 analysis lock | OPEN / FAIL-CLOSED | Runtime candidate still requires current-candidate TGL/P-35 and analysis binding; remediation is a prerequisite repair, not P8 closure |
 | P9 independent verification | NOT EXECUTED FOR CURRENT CANDIDATE | Independent audit/reproduction required |
 | New freeze | NOT CREATED | Candidate is not frozen |
 | Pilot authorization | NOT GRANTED | Separate governance transition |
@@ -67,7 +71,7 @@ Older audit records that say inline artifact validation is missing are historica
 3. Complete P5 environment/topology/RNG reproducibility evidence.
 4. Complete P6 durable archive/retrieval/hash evidence.
 5. Bind P7 to the exact candidate/protocol/analysis/final-freeze identity.
-6. Close P8 from current-candidate TGL/P-35 evidence only.
+6. Close P8 from current-candidate TGL/P-35 evidence only; the remediation run is prerequisite engineering evidence, not closure.
 7. Execute independent P9 verification.
 8. Create and independently verify a new immutable freeze.
 9. Obtain explicit pilot authorization.
