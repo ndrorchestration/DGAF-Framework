@@ -1,26 +1,27 @@
 # DGAF/PDMAL Project Status
 
-**Status date:** 2026-09-01  
+**Status date:** 2026-09-02  
 **Repository:** `ndrorchestration/DGAF-Framework`  
-**Current main:** active documentation/control-plane lineage; resolve `main` directly for latest source  
+**Current main:** `275756fd81c975f17ae3d16d24e599db0617cf85` — documentation/control-plane lineage  
+**Selected experimental candidate:** PR #192 / `58ba9a072f40e94638b0332eeec19dd882a7ff95`  
+**Selected candidate tree:** `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb`  
 **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
-**Current production/runtime candidate:** `92ff830b1c67413df745e37087e6447c9c251b9a`  
-**Current candidate tree:** `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`  
-**Current production deployment observed in P2/P6a evidence:** `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`  
 **Pilot status:** PRE-FREEZE; authorization not granted  
 **Empirical N:** 0
 
 ## Executive state
 
-The repository is in structured post-provenance-correction, pre-freeze closure. Commit `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` is the corrected apparatus source that binds the seven restored behavior-affecting DGAF/TGL gate-state substrates into canonical provenance identity. It is distinct from the current production/runtime candidate.
+The repository is in structured post-provenance-correction, pre-freeze closure. Commit `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` remains the corrected apparatus provenance anchor and is distinct from the executable candidate.
 
-The current production/runtime candidate is `92ff830b1c67413df745e37087e6447c9c251b9a`, a deployment-workflow repair commit whose exact tree is `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`. Git history comparison establishes the corrected apparatus source as the candidate's ancestor/lineage basis; the two identities must remain distinct in all scientific binding.
+The September 2 selected experimental candidate is PR #192 / `58ba9a072f40e94638b0332eeec19dd882a7ff95`, exact tree `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb`. This candidate integrates the verified P-35 production boundary and remains pre-freeze. Its GitHub Actions verification wave is green, but deployment identity is not established for this exact SHA.
 
-Fresh P2 and P6a verification have now executed against candidate `92ff830b…` and recorded the same production deployment identity `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` in their artifacts. P2 run `33509348174` produced artifact `9800942933` with digest `sha256:00519533edcaa4c09410b3ed29e49437a5ce8a23ea341a2b798490e110f056c2`. P6a run `33509416955` produced artifact `9800972819` with digest `sha256:9e78ebef5eaa7f33027ec09c0cb922f57bc43dab2fcc694a823ac504c611fcdd`. These close the P2 and P6a runtime-verification gates for their stated evidence scope; they do not by themselves close P3–P6, P7, P8, P9, freeze, authorization, or the empirical boundary.
+The previously verified runtime candidate `92ff830b1c67413df745e37087e6447c9c251b9a` and production deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` remain historical evidence for their exact scope. Their P2/P6a results do not transfer to `58ba9a…`.
 
-The canonical scientific lineage is:
+The selected candidate has 18/18 successful GitHub Actions workflows, including Governance CI `33616403706`, Pre-Freeze Runner Validation `33616403754`, Pre-Authorization Security `33616403843`, Instrumentation Dry Run `33616403724`, and Harness Validation `33616403784`. The GitHub combined status still reports Vercel `failure` at the provider build/deployment-rate-limit target, and the latest Vercel inventory contains no READY deployment whose recorded Git SHA is `58ba9a…`.
 
-`corrected apparatus source → candidate provenance/lineage → exact candidate commit → exact candidate tree → exact production deployment → P2/P6a → P3–P6 evidence → P7 final candidate binding → P8 TGL/P-35 verification → P9 → freeze → authorization → blinded pilot`.
+The canonical scientific/control lineage is:
+
+`corrected apparatus source → selected candidate → exact candidate tree → exact deployment binding → fresh P2/P6a → P3–P6 evidence → P7 final binding → P8 → P9 → freeze → authorization → blinded pilot`.
 
 No empirical data have been collected. No freeze has been created or crossed, authorization has not been granted, and the unblinding/empirical boundary remains untouched. Empirical N remains 0.
 
@@ -28,62 +29,61 @@ No empirical data have been collected. No freeze has been created or crossed, au
 
 | Gate / control | Status | Evidence / state |
 |---|---|---|
-| Historical freeze | HISTORICAL / SUPERSEDED | `3510b868…` |
-| Current repository main | CURRENT CONTROL-PLANE LINEAGE | Resolve `main` directly |
-| Corrected apparatus source | CANONICAL APPARATUS PROVENANCE | `2a54a67d…`; seven restored gate-state substrates bound |
-| Current runtime candidate | CURRENT / NOT FROZEN | `92ff830b…`; tree `73cf3ad…` |
-| Candidate → apparatus lineage | ESTABLISHED | `2a54a67d…` is ancestor/lineage basis of `92ff830b…` |
-| Current production deployment identity | CAPTURED IN RUNTIME EVIDENCE | `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
-| P2 | VERIFIED | Run `33509348174`; artifact `9800942933`; candidate-bound |
-| P6a | VERIFIED | Run `33509416955`; artifact `9800972819`; candidate-bound |
-| P3 | IMPLEMENTATION PRESENT / OPEN | Current-candidate evidence still required |
-| P4 | OPEN | Current-cycle blinding/custody evidence required |
-| P5 | OPEN | Current-cycle environment/topology/RNG reproducibility evidence required |
-| P6 | OPEN / FAIL-CLOSED | Current-cycle durable custody proof required |
-| P7 | SPECIFICATION ADOPTED / FINAL BINDING OPEN | Bind exact apparatus/candidate/deployment/protocol/analysis identity |
-| P8 | OPEN / FAIL-CLOSED | TGL/P-35 current-candidate verification required |
-| P9 | NOT EXECUTED | Independent current-candidate verification required |
+| Historical freeze | HISTORICAL / SUPERSEDED | Preserved historical record |
+| Current repository main | CURRENT CONTROL-PLANE LINEAGE | `275756fd…`; resolve `main` directly |
+| Corrected apparatus source | CANONICAL APPARATUS PROVENANCE | `2a54a67d…` |
+| Selected experimental candidate | CURRENT / NOT FROZEN | PR #192 / `58ba9a…`; tree `abdbc9b…` |
+| Candidate → apparatus lineage | ESTABLISHED | Selected candidate descends from corrected apparatus lineage |
+| Exact current deployment identity | NOT ESTABLISHED | No READY Vercel deployment recorded with Git SHA `58ba9a…` |
+| P2 | OPEN / DEPLOYMENT-BOUND | Fresh exact-candidate runtime matrix required |
+| P6a | OPEN / DEPLOYMENT-BOUND | Fresh exact-candidate CORS matrix required |
+| P3 | VERIFIED — ENGINEERING/CONTROL SCOPE | Current candidate CI, artifact, and instrumentation controls pass; full experimental execution remains separate |
+| P4 | OPEN | Current-cycle operational blinding/custody closure required |
+| P5 | VERIFIED — TOOLCHAIN/REPRODUCIBILITY SCOPE | Current candidate hashes, lock, package/toolchain and deterministic instrumentation retained; final closure remains open |
+| P6 | OPEN / FAIL-CLOSED | Durable independent archive/retrieval proof required |
+| P7 | EXACT-CANDIDATE BINDING RECORDED PRE-FREEZE | Scientific target preserved; freeze/authorization identity not established |
+| P8 | OPEN / FAIL-CLOSED | Depends on current-candidate runtime/TGL/P-35, operational, binding, and P9 predicates |
+| P9 | OPEN | Fresh independent verification of `58ba9a…` required |
 | Freeze | NOT ESTABLISHED | No immutable frozen identity is authoritative |
 | Pilot authorization | NOT GRANTED | Separate governance transition |
 | Empirical data | ZERO | No authorized pilot execution |
-| Documentation quality | ACTIVE RECONCILIATION | Historical claims retained; current-state claims corrected |
+| Documentation quality | ACTIVE RECONCILIATION | Historical claims preserved; current assertions corrected |
 
 ## Deployment provenance controls
 
-The current runtime candidate is `92ff830b1c67413df745e37087e6447c9c251b9a` with tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`. The production deployment identity recorded by both P2 and P6a is `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`, with deployment URL `https://dynamicgovernanceagenticformation-3y3d8o5dp-ndrorchestration.vercel.app`.
+The selected experimental candidate is `58ba9a072f40e94638b0332eeec19dd882a7ff95` with tree `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb`. No current deployment binding has been established for that exact SHA.
 
-The deployment workflow in the current candidate requires authenticated Vercel deployment, establishes behavior-affecting runtime configuration before deployment attestation, checks READY/production state, and verifies source SHA equality before emitting deployment provenance evidence. Runtime verification artifacts separately record their candidate SHA and deployment ID. These are complementary controls and must not be collapsed into a single assertion.
+The historical runtime candidate `92ff830b…` had P2/P6a evidence against deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. That deployment/evidence pair remains exact-scoped historical evidence and is explicitly non-transferable to `58ba9a…`.
 
-Operational dispatch documents must contain only the current candidate's exact dispatch values. Superseded SHA/deployment pairs remain historical/non-closing evidence and must not be reused as current dispatch inputs.
+A current candidate-bound runtime result must identify the exact candidate commit/tree and exact deployment identity. Successful CI, a READY deployment for another SHA, or repository ancestry cannot substitute for that binding.
 
 ## Evidence boundary by gate
 
-P2 verifies the current runtime execution contract for the candidate/deployment scope recorded in its artifact. Its five required cases passed, including expected fail-closed behavior for the live-audit-missing case.
+P2 and P6a remain open because their last verified runtime evidence belongs to `92ff830b…`, not `58ba9a…`.
 
-P6a verifies the current CORS behavior for the candidate/deployment/endpoint scope recorded in its artifact. Allowed-origin preflight returned 204, disallowed-origin preflight returned 403, and both POST cases passed their expected checks.
+P3 is verified at current engineering/control scope. P4 remains open pending full operational blinding and custody evidence. P5 has current verifier/toolchain evidence but final closure remains open. P6 remains fail-closed pending durable external archive/retrieval/hash evidence. P7 has an exact-candidate pre-freeze binding record, but freeze identity is not established. P8 remains fail-closed and P9 requires fresh independent verification.
 
-P3 is implemented but remains open pending current-candidate evidence. P4, P5, and P6 remain open at their respective evidence boundaries. P7 is adopted as the scientific specification but remains open for final immutable candidate binding. P8 remains fail-closed until its TGL/P-35 predicates are verified against the final candidate. P9 is independent and has not been executed.
-
-No CI success, deterministic dry run, runtime PASS, deployment readiness, historical artifact, semantic audit, or documentation update constitutes efficacy evidence or pilot authorization.
+No CI success, deterministic dry run, historical runtime PASS, documentation update, READY deployment for a different SHA, or synthetic evaluator result constitutes efficacy evidence or pilot authorization.
 
 ## Documentation hygiene and stale-claim policy
 
-Historical audit records must retain their original findings and exact scope. Older documents that state that inline artifact validation is missing are therefore classified as **historical/stale claims**, not current implementation defects, because the current implementation now performs the inline validation.
+Historical audit records must retain their original findings and exact scope. Documents that describe `92ff830b…` and `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` as the current runtime must therefore be corrected when they function as active control-plane assertions; their underlying evidence remains preserved as historical/non-transferable evidence.
 
-Those historical records should not be silently rewritten to erase the former finding. Current-state documents must instead state the present implementation and independently identify any remaining current-candidate evidence gap. Contradictory operational claims such as “current candidate,” “ready to dispatch,” or “verified” are corrected only where they function as current control-plane assertions.
+Current-state documents must identify `58ba9a…` as the selected experimental candidate and explicitly separate candidate identity from workflow merge-ref identity and deployment identity.
 
 ## Required closure sequence
 
-1. Preserve the corrected apparatus source `2a54a67d…` as the canonical apparatus provenance anchor.
-2. Preserve the distinct runtime candidate `92ff830b…` and exact tree `73cf3ad…` as the current candidate identity.
-3. Bind the exact production deployment identity and P2/P6a evidence to that candidate.
-4. Complete P3–P6 current-cycle artifact, blinding, reproducibility, and durable-custody evidence.
-5. Close P7 only when the final candidate/protocol/analysis/freeze identity is immutably bound.
-6. Close P8 only from current-candidate TGL/P-35 evidence.
-7. Execute independent P9 verification.
-8. Create and independently verify a new immutable freeze.
-9. Obtain explicit pilot authorization.
-10. Only then execute the authorized blinded pilot.
+1. Preserve the corrected apparatus source `2a54a67d…` as the canonical provenance anchor.
+2. Preserve the selected candidate `58ba9a…` / tree `abdbc9b…` as the current experimental boundary.
+3. Establish a READY deployment whose recorded Git SHA exactly matches `58ba9a…`.
+4. Run fresh authenticated P2/P6a against that same deployment.
+5. Complete current-cycle P4/P5/P6 closure evidence.
+6. Maintain the exact P7 binding and close only with final protocol/analysis/freeze identity.
+7. Close P8 only from current-candidate evidence.
+8. Execute independent fresh P9 verification.
+9. Create and independently verify a new immutable freeze.
+10. Obtain explicit pilot authorization.
+11. Only then execute the authorized blinded pilot.
 
 ## Current experimental state
 
