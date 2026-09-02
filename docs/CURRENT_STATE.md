@@ -9,6 +9,7 @@ corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 validated_p35_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
 validated_p35_pr: 199
 validated_p35_runs: 33684805409,33684805218,33684805269,33684805422,33684805339,33684805302,33684805311,33684805272,33684805190,33684805285,33684805328
+candidate_deployment_identity: NOT ESTABLISHED
 ---
 # DGAF-Framework / PDMAL — Current State
 
@@ -26,6 +27,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 - `275756fd…` — current `main` control-plane base used by the P-35 remediation lineage.
 - `643dc77a…` — validated P-35 remediation boundary; PR #199; immutable evidence scope.
 - `candidate/p35-validated-control-state-2026-09-02` — successor candidate derived directly from `643dc77a…`.
+- `NOT ESTABLISHED` — successor deployment identity; no deployment is promoted or treated as candidate-bound yet.
 - `92ff830b…` — superseded runtime candidate; prior P2/P6a evidence remains bound to its exact tree/deployment.
 - `a43219b…` — superseded completion candidate; prior PDMAL/P9 evidence remains bound to its exact tree.
 - Historical deployment identities remain historical and are not promoted to the successor candidate.
@@ -37,6 +39,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…` |
 | P-35 remediation boundary | VALIDATED / IMMUTABLE EVIDENCE BOUNDARY | PR #199; `643dc77a…` |
 | Successor candidate | CONTROL-STATE RECONCILIATION CANDIDATE / NOT FROZEN | branch derived from `643dc77a…` |
+| Successor deployment | NOT ESTABLISHED | no candidate-bound deployment identity yet |
 | P-35 | VALIDATED | exact-head implementation, regression, harness, pre-freeze, security, governance, provenance and control-state validation wave passed at `643dc77a…` |
 | P2 | HISTORICAL / RE-RUN REQUIRED | prior evidence is candidate-bound |
 | P3 | OPEN / RE-RUN REQUIRED | fresh artifact-contract evidence against successor/final candidate |
@@ -61,17 +64,18 @@ P-35 is adjudicated VALIDATED at exact head `643dc77a56d3b5a92d16981d5d8ca01c3ed
 
 1. Complete candidate identity reconciliation and establish the successor's exact head.
 2. Rerun only validations made stale by the reconciliation commit(s), then confirm candidate readiness.
-3. Complete fresh P3 artifact-contract evidence.
-4. Complete P4 operational blinding/custody evidence.
-5. Complete P5 environment/topology/RNG reproducibility evidence.
-6. Complete P6 durable archive/retrieval/hash evidence.
-7. Re-run authenticated P2 and P6a against the same exact candidate and deployment.
-8. Bind P7 to the exact candidate/protocol/analysis/final-freeze identity.
-9. Close P8 from current-candidate TGL/P-35 evidence only.
-10. Execute independent P9 verification against the final exact candidate.
-11. Create and independently verify a new immutable freeze.
-12. Obtain explicit pilot authorization.
-13. Only then execute the blinded pilot.
+3. Establish and independently verify a deployment identity for the exact successor candidate before any deployment-bound gate is claimed.
+4. Complete fresh P3 artifact-contract evidence.
+5. Complete P4 operational blinding/custody evidence.
+6. Complete P5 environment/topology/RNG reproducibility evidence.
+7. Complete P6 durable archive/retrieval/hash evidence.
+8. Re-run authenticated P2 and P6a against the same exact candidate and deployment.
+9. Bind P7 to the exact candidate/protocol/analysis/final-freeze identity.
+10. Close P8 from current-candidate TGL/P-35 evidence only.
+11. Execute independent P9 verification against the final exact candidate.
+12. Create and independently verify a new immutable freeze.
+13. Obtain explicit pilot authorization.
+14. Only then execute the blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
 
