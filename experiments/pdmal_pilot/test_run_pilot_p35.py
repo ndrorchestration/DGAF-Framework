@@ -1,6 +1,6 @@
 """Tests for the explicit pilot-time P-35 checker boundary.
 
-These tests validate configuration and pilot-run precondition wiring only. They
+These tests validate configuration and real pilot-run precondition wiring only. They
 never enable empirical execution or bypass freeze/authorization controls.
 """
 from __future__ import annotations
@@ -38,6 +38,10 @@ def test_non_callable_premise_checker_is_fail_closed(monkeypatch: pytest.MonkeyP
 
 def allow_premises(_text, _invariant) -> bool:
     return True
+
+
+def reject_premises(_text, _invariant) -> bool:
+    return False
 
 
 def test_explicit_premise_checker_is_loaded(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -104,3 +108,40 @@ def test_run_pilot_passes_explicit_checker_to_dgaf_task(monkeypatch: pytest.Monk
     checker, kwargs = captured[0]
     assert checker is allow_premises
     assert kwargs["condition"] == "dgaf"
+
+
+def test_run_pilot_real_consensus_task_invokes_explicit_p35_checker(
+    monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    """Exercise run_pilot -> real ConsensusTask -> DGAF adapter -> TGL/P-35."""
+    monkeypatch.setattr("run_pilot.require_frozen_commit", lambda: "c" * 40)
+    monkeypatch.setattr(
+        "run_pilot.require_pilot_authorization",
+        lambda: ("test-key", tmp_path),
+    )
+    monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "test_run_pilot_p35:reject_premises")
+    monkeypatch.setattr("run_pilot._trial_combinations", lambda: [("ring", "dgaf", 0)])
+    monkeypatch.setattr("run_pilot._environment_fingerprint", lambda: "environment-test")
+    monkeypatch.setattr("run_pilot.SEED_RUNTIME_CEILING_SECONDS", 60.0)
+    monkeypatch.setattr("run_pilot._retain", lambda *args, **kwargs: None)
+
+    captured: list[dict] = []
+
+    def capture(records, *args, **kwargs):
+        captured.extend(records)
+
+    monkeypatch.setattr("run_pilot._write_and_validate_artifact", capture)
+
+    assert run_pilot(tmp_path / "output", seeds=1) == 0
+    assert captured
+    record = captured[0]
+    assert record["condition"] == "dgaf"
+    assert record["attempt_status"] == AttemptStatus.FAILURE.value
+    assert record["ffcr_success"] is False
+    trace = record["governance_trace"]
+    assert trace
+    assert trace[0]["final_status"] in {"KILL", "KILL_REC"}
+    assert any(
+        gate["pattern"] == "P-35" and gate["result"] == "KILL"
+        for gate in trace[0]["gate_records"]
+    )
