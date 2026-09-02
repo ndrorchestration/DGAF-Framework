@@ -8,7 +8,7 @@ This record audits the current remediation branch for the P-35 premise-hook inte
 
 - PR: #188
 - Branch: `remediation/p35-premise-hook-2026-09-01`
-- Current head: `df307e8e9f36062923e92c826b0a7ae06b870e58`
+- Current head: `2c4b251d2924029b6f53fb71f71a15ee671365af`
 - Historical completion candidate that motivated remediation: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`
 
 ## Verified P-35 boundary
@@ -27,11 +27,11 @@ The non-empirical runtime characterization harness still constructed DGAF tasks 
 - A DGAF characterization may only be requested when `PDMAL_PREMISE_CHECKER=module:attribute` is explicitly supplied.
 - No permissive or synthetic checker is inserted.
 - Runtime characterization workflow now runs on the remediation branch and asserts that its default artifact contains no DGAF condition and no configured P-35 checker.
-- Added `test_runtime_characterization_p35.py` covering the missing-checker refusal and explicit-checker propagation boundary without empirical execution.
+- Added `test_runtime_characterization_p35.py` covering missing-checker refusal and explicit-checker propagation without empirical execution.
 
 ## Evidence status
 
-The previously successful exact-head pre-freeze run `33592005918` and artifact `9832129713` are bound to `d460dea0e920a616269a1a929be42e0bd2535c13`. Because subsequent commits changed the remediation branch, that evidence does not transfer to `df307e8e9f36062923e92c826b0a7ae06b870e58`.
+The previously successful exact-head pre-freeze run `33592005918` and artifact `9832129713` are bound to `d460dea0e920a616269a1a929be42e0bd2535c13`. Because subsequent commits changed the remediation branch, that evidence does not transfer to `2c4b251d2924029b6f53fb71f71a15ee671365af`.
 
 A fresh aggregate verification is therefore required for the current head.
 
