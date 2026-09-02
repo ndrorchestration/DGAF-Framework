@@ -23,7 +23,7 @@ This record is a non-authorizing control/evidence assessment for the current run
 - PR: `#187`
 - Prior P9 `33567199896` is scoped exclusively to `562753b…`.
 - Fresh P9 run for `a43219b…`: `33572123857`, completed successfully.
-- Fresh PDMAL dry run for `a43219b…`: `33572123862`, completed successfully.
+- Fresh PDMAL dry run for `a43219b…`: `33572123862`, completed successfully after rerun.
 - No prior candidate evidence transfers to `a43219b…` without explicit re-binding.
 
 ## Verified mainline runtime evidence
@@ -49,22 +49,28 @@ This record is a non-authorizing control/evidence assessment for the current run
 
 Fresh exact-candidate PDMAL run `33572123862` succeeded on `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
 
-- P3: VERIFIED in the workflow registry; artifact `9825367738`, ZIP digest `sha256:51b89e5321674ff19eecc53a4445237677025649fe36ed5ddc762835a24c2c6c`.
-- P4: VERIFIED at workflow/synthetic scope; the blinding secret was present without disclosure and masked output was generated. Full operational custody/separation closure remains distinct.
-- P5: VERIFIED in the workflow registry; RNG stream separation, deterministic reproduction, exact artifact binding, and environment fingerprint were recorded. Inner CSV digest: `c12098da63ae1508edbb350799360e1edccfebb16c9d0faf0db4d593ffea8ce2`.
-- P6: VERIFIED at workflow custody scope; the exact artifact was downloaded and the inner CSV checksum was recomputed successfully. Durable external archive closure remains separate.
+- P3: structural/dry-run evidence present; latest artifact `9825740072`, ZIP digest `sha256:1a9f520bac2bf12ca8386c5c050489620028657866e4fee66e64905507ec31ae`.
+- P4: workflow/synthetic evidence present; blinding secret was present without disclosure and masked output was generated. Full operational custody/separation closure remains OPEN.
+- P5: workflow/synthetic evidence present; RNG stream separation, deterministic reproduction, exact artifact binding, and environment fingerprint were recorded. Inner CSV digest: `c12098da63ae1508edbb350799360e1edccfebb16c9d0faf0db4d593ffea8ce2`.
+- P6: workflow custody evidence present; the exact artifact was downloaded and the inner CSV checksum was recomputed successfully. Durable external archive closure remains OPEN / FAIL-CLOSED.
+- Latest evidence-registry artifact: `9825740649`, ZIP digest `sha256:c6c2fda4ce18d476ef95927a1430193ef34631dcce928c15695d43826678a205`.
 - Structural/artifact suite: `19 passed`.
-- Controller evaluation promoted P3/P4/P5/P6 as exact-candidate evidence while keeping P2/P7/P8/P9 blocking.
 
-The prior mainline PDMAL dry run `33516447975` remains supporting evidence only for `da40b085…`; it does not substitute for the fresh exact-candidate run.
+The trusted external completion controller is conservative: it must not promote P4/P5/P6 from dry-run `VERIFIED` labels to closure because the current governance checklist requires candidate-bound operational evidence and, for P6, durable external archive retrieval and retention binding.
 
 ## P7 / P8 / P9
 
-- P7 scientific target: adopted; exact final candidate/protocol/analysis/freeze binding remains open.
-- P8: OPEN / FAIL-CLOSED until current candidate TGL/P-35 and analysis/protocol bindings are verified.
-- P9 current scoped pass: run `33572123857` against `a43219b…` completed successfully. It verified exact checkout identity, independent `jq -S -c` + `sha256sum` canonicalization/hash, 4 authority-identity regression tests, external authorization representation, and no empirical execution request. Artifact `9825316781`; ZIP digest `sha256:15e5ba72dd524f90b0bb3499c9b0b3f7de602f0e1905b0734183e830c22af671`.
+- P7 scientific target: technically adjudicated / proposed authoritative specification / **FORMALLY OPEN**. The authoritative traceability matrix records all 11 decisions as OPEN / pending authority adoption; exact candidate/protocol/analysis/freeze binding remains required.
+- P8: OPEN / FAIL-CLOSED until current-candidate TGL/P-35 and analysis/protocol bindings are verified.
+- P9 current scoped pass: run `33572123857` against `a43219b…` completed successfully. It verified exact checkout identity, independent `jq -S -c` + `sha256sum` canonicalization/hash, 4 authority-identity regression tests, external authorization representation, and no empirical execution request. Latest artifact `9825660346`; ZIP digest `sha256:cf5e475c31bd9258731dcec3e6f36588f9fbfa80c3bb787419b54770ccae7976`.
 - P9 independent canonical digest: `f235fc6ef241379f295676d257c22c7b17a47ace47377506fac9a7e5d490215a`.
 - Broader P9 closure remains open because the full evidence graph, including current-candidate runtime/binding and analysis-lock prerequisites, is not yet closed.
+
+## Trusted completion-controller state
+
+Trusted controller run `33573171970` successfully evaluated candidate SHA `a43219b4ed91fff8615f6c655ab3d17ca871fc29` as immutable workflow-run input and reconciled P9. That run was produced before the later conservative controller fix `436da0a8fa5ea417778919a37d19eb12a8ad3285`, so its P4/P5/P6 promotability result is superseded by the fixed evaluator logic. No new external controller event was emitted by the subsequent reruns observed in this audit.
+
+The current trusted-evaluator contract therefore treats the blocking set as at least: **P2 OPEN, P4 OPEN, P5 OPEN, P6 OPEN, P7 OPEN, P8 FAIL_CLOSED**, while P3 and scoped P9 have exact-candidate evidence present. Freeze and pilot authorization remain false.
 
 ## Candidate reseed rule
 
@@ -76,7 +82,7 @@ The historical-priority adjudication remains a separate research track. It does 
 
 ## Critical path
 
-`select intended candidate → current-cycle P2/P6a binding if needed → P3/P4/P5/P6 evidence → P7 exact binding → P8 verification → broader P9 closure → immutable freeze → explicit authorization → blinded pilot`
+`select intended candidate → exact-candidate deployment + P2/P6a binding → P3/P4/P5/P6 closure evidence → P7 exact authority binding → P8 verification → broader P9 closure → immutable freeze → explicit authorization → blinded pilot`
 
 ## Hard boundary
 
