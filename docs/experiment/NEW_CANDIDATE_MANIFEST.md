@@ -1,7 +1,7 @@
 # NEW CANDIDATE MANIFEST — post-#174 provenance-corrected apparatus cycle
 
 ```yaml
-manifest_version: 6
+manifest_version: 7
 designation_event: CURRENT_RUNTIME_CANDIDATE_BOUND
 state: PRE-FREEZE / FAIL-CLOSED
 apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
@@ -55,9 +55,24 @@ gate_ledger:
   P4: OPEN
   P5: OPEN
   P6: OPEN / FAIL-CLOSED
-  P7: ADOPTED / FINAL BINDING OPEN
+  P7: TECHNICALLY ADJUDICATED / FORMALLY OPEN
   P8: OPEN / FAIL-CLOSED
-  P9: NOT_EXECUTED
+  P9: NOT YET REVERIFIED FOR THIS RUNTIME CANDIDATE
+
+controlled_completion_candidate:
+  sha: a43219b4ed91fff8615f6c655ab3d17ca871fc29
+  branch: completion/2026-09-01-exact-candidate
+  status: CONTROLLED / NOT FROZEN / HISTORICAL FOR FUTURE SUCCESSOR CANDIDATES
+  p3_run: 33572123862
+  p9_run: 33572123857
+  p9_artifact: 9825660346
+
+superseded_completion_candidate:
+  sha: 562753b3053b3566b0fcad1b0b1df151d7de119a
+  status: HISTORICAL / SUPERSEDED
+  p9_run: 33567199896
+  p9_artifact: 9823570326
+  evidence_transfer: PROHIBITED
 
 authorization: NOT GRANTED
 empirical_n: 0
@@ -71,6 +86,8 @@ freeze_status: NOT_CREATED
 - `92ff830b…` — current production/runtime candidate used by P2/P6a.
 - `73cf3ad…` — exact tree of the current runtime candidate.
 - `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — production deployment recorded by both current runtime evidence artifacts.
+- `a43219b…` — controlled completion candidate with scoped P3/P9 evidence; remains non-frozen and evidence does not transfer to successor candidates.
+- `562753b…` — superseded historical completion candidate; its P9 evidence remains provenance only.
 - `d56b5b3c…` — pre-correction apparatus source; invalidated as an execution candidate when #174 corrected canonical provenance identity.
 - `dpl_76UU8mCm…` — pre-correction deployment; historical/non-closing.
 - `4e345c03…` — pre-merge #174 head; validation evidence only, not the merged apparatus identity.
@@ -80,11 +97,13 @@ freeze_status: NOT_CREATED
 
 The corrected apparatus source establishes scientific apparatus provenance. The runtime candidate establishes the exact executable candidate identity. A candidate-bound runtime result must identify the exact candidate commit/tree and exact deployment identity; downstream evidence must then be bound to that same candidate lineage before P7/P8/P9/freeze transitions can occur.
 
-P2 and P6a are now verified for the recorded runtime evidence scope. Their closure does not create a freeze, authorization, or empirical data. P3–P6, final P7 binding, P8, and independent P9 remain outstanding.
+P2 and P6a are verified for the recorded runtime evidence scope only. Their closure does not create a freeze, authorization, or empirical data. P3–P6, final P7 binding, P8, and current-candidate independent P9 remain outstanding for any eventual pilot candidate.
 
 ## Documentation hygiene
 
-Older documents stating that inline artifact validation is missing are historical/stale observations, not current defects. The current implementation performs inline artifact validation. Historical documents remain preserved; this manifest records the current state separately.
+This manifest is a living current-cycle manifest. Superseded candidates may be retained only as explicitly historical records. In particular, `562753b…` is historical and `a43219b…` is the prior controlled completion candidate; neither is the current runtime candidate.
+
+The current P7 state is **TECHNICALLY ADJUDICATED / FORMALLY OPEN**. The scientific specification has been adjudicated, but exact final-candidate/freeze binding remains open.
 
 ## Boundary
 
