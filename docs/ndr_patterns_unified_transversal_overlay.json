@@ -1,0 +1,75 @@
+{
+  "$schema": "https://dgaf.ndrorchestration.com/schemas/ndr_patterns_unified.schema.json",
+  "overlay_version": "2026-09-02.1",
+  "registry_family": "NDR",
+  "source_registries": [
+    "docs/NDR_PATTERN_REGISTRY_UNIFIED.md",
+    "docs/ndr_patterns_unified.json"
+  ],
+  "pattern": {
+    "id": "NDR-TRANSVERSAL-CANDIDATE-AGREEMENT",
+    "name": "Transversal Candidate Agreement",
+    "class": "ADVISORY",
+    "blocking_when_prerequisite": true,
+    "status": "CANONICAL_OVERLAY",
+    "purpose": "Prevent live cross-registry state divergence from being mistaken for candidate equivalence.",
+    "identity_tuple": [
+      "apparatus/source SHA",
+      "candidate SHA/tree",
+      "deployment identity/source SHA",
+      "workflow/evidence run",
+      "artifact identity",
+      "protocol/analysis binding",
+      "freeze identity",
+      "authorization state"
+    ],
+    "agreement_classes": [
+      "ROLE_DIFFERENCE",
+      "HISTORICAL_DIFFERENCE",
+      "TRANSVERSAL_DRIFT",
+      "BLOCKING_CONTRADICTION"
+    ],
+    "non_substitution": [
+      "shared ancestry",
+      "shared repository",
+      "shared branch name",
+      "shared workflow name",
+      "shared deployment URL",
+      "behavioral similarity",
+      "prior PASS on another SHA"
+    ],
+    "p35_boundary": {
+      "pattern_id": "P-35",
+      "pattern_name": "Procluding Premise Gate",
+      "engineering_dependency": "explicit premise_check_fn at DGAF/TGL/ConsensusTask boundary",
+      "pdmAL_specific_policy_defined_here": false,
+      "pdmAL_policy_status": "SEPARATE_EXPERIMENTAL_CONTROL_PREREQUISITE"
+    },
+    "p42_boundary": {
+      "pattern_id": "P-42",
+      "pattern_name": "Adaptive Harmonic Governance",
+      "relationship_to_p35": "distinct namespace/mechanism after P-35 collision renumbering"
+    },
+    "current_candidate_scope": {
+      "candidate_sha": "edd3b5c8266e2680b9bb94301c2623a3f1ac0cf0",
+      "pre_freeze_runner": "BLOCKED_BY_LEGACY_TEST_CALLERS",
+      "pre_authorization_security": "PASS",
+      "governance_ci": "BLOCKED_BY_UNVERIFIED_TLA_RELEASE_SHA",
+      "exact_vercel_deployment": "NOT_EVIDENCED",
+      "freeze": "NOT_CREATED",
+      "authorization": "NOT_GRANTED",
+      "empirical_n": 0
+    },
+    "evidence_state_order": [
+      "DEFINED",
+      "IMPLEMENTED",
+      "TESTED",
+      "CANDIDATE-BOUND",
+      "VERIFIED",
+      "FROZEN",
+      "AUTHORIZED",
+      "EMPIRICAL"
+    ],
+    "default_disposition": "FAIL-CLOSED"
+  }
+}
