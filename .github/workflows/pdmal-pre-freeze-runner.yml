@@ -87,7 +87,7 @@ jobs:
       - name: Run pre-freeze contract suite
         working-directory: experiments/pdmal_pilot
         run: |
-          python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py test_dgaf_tgl_adapter.py -q
+          python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py test_dgaf_tgl_adapter.py test_run_pilot_p35.py -q
       - name: Verify runner has no empirical authorization by default
         env:
           PDMAL_MODE: contract
@@ -128,11 +128,13 @@ jobs:
               }, indent=2, sort_keys=True) + '\n',
               encoding='utf-8',
           )
-          PY
+      - name: Validate pre-freeze manifest and artifact contract
+        working-directory: experiments/pdmal_pilot
+        run: |
+          test -s ../../test-artifacts/pre-freeze-runner-manifest.json
+          python -m pytest test_harness_contract.py -q
       - name: Upload pre-freeze manifest
         uses: actions/upload-artifact@v4
         with:
           name: pdmal-pre-freeze-runner-${{ github.sha }}
           path: test-artifacts/pre-freeze-runner-manifest.json
-          if-no-files-found: error
-          retention-days: 30
