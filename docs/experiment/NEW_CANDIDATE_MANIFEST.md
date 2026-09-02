@@ -1,16 +1,16 @@
 # NEW CANDIDATE MANIFEST — post-#174 provenance-corrected apparatus cycle
 
 ```yaml
-manifest_version: 6
-designation_event: CURRENT_RUNTIME_CANDIDATE_BOUND
+manifest_version: 7
+designation_event: P35_REMEDIATION_CANDIDATE_REBOUND
 state: PRE-FREEZE / FAIL-CLOSED
 apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 apparatus_source_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
-candidate_designation: CURRENT PRODUCTION/RUNTIME CANDIDATE
-candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
-candidate_tree_sha: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
-candidate_designation_rule: exact runtime candidate commit/tree used by current candidate-bound execution evidence; it must remain traceable to the corrected apparatus source
-candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 92ff830b1c67413df745e37087e6447c9c251b9a
+candidate_designation: ACTIVE P-35 REMEDIATION / PRE-FREEZE CANDIDATE
+candidate_sha: fcdfa0180625c413e692d7fa405ea361c05dc53f
+candidate_tree_sha: a81faf976de029734772b81a3615e3316ddf7641
+candidate_designation_rule: exact current PR #199 head used by the active pre-freeze validation wave; it must remain traceable to the corrected apparatus source
+candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> fcdfa0180625c413e692d7fa405ea361c05dc53f
 restoration_source:
   prior_pr: 170
   prior_merge_commit: d56b5b3c44e39ddb8c883259584432ab39259306
@@ -33,13 +33,13 @@ displaced_pre_correction_candidate:
   allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
   note: these runtime identities and all evidence derived from them are non-closing for this post-#174 cycle
 deployment_binding:
-  deployment_id: dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc
-  deployment_url: https://dynamicgovernanceagenticformation-3y3d8o5dp-ndrorchestration.vercel.app
+  deployment_id: NONE_YET
+  deployment_url: NONE_YET
   deployment_target: production
-  deployment_state: READY_AS_RECORDED_BY_RUNTIME_VERIFICATION_SCOPE
-  source_sha_match: candidate_bound_in_p2_p6a_runtime_artifacts
+  deployment_state: NOT_ESTABLISHED
+  source_sha_match: NOT_ESTABLISHED
   allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
-  status: CURRENT_CANDIDATE_RUNTIME_EVIDENCE
+  status: NO_EXACT_CANDIDATE_DEPLOYMENT_CLAIMED
 
 gate_ledger:
   P31_SCPE: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
@@ -49,15 +49,15 @@ gate_ledger:
   DEMIJOULE: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
   P27_KAPPA: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
   P32_PHI: RESTORED_IMPLEMENTED_PROVENANCE_COMPLETE
-  P2_RUNTIME: VERIFIED
-  P6a_CORS: VERIFIED
-  P3: IMPLEMENTED / OPEN
+  P2_RUNTIME: HISTORICAL VERIFIED / RE-RUN REQUIRED
+  P6a_CORS: HISTORICAL VERIFIED / RE-RUN REQUIRED
+  P3: HISTORICAL WORKFLOW EVIDENCE / RE-RUN REQUIRED
   P4: OPEN
   P5: OPEN
   P6: OPEN / FAIL-CLOSED
   P7: ADOPTED / FINAL BINDING OPEN
   P8: OPEN / FAIL-CLOSED
-  P9: NOT_EXECUTED
+  P9: HISTORICAL SCOPED PASS / RE-VERIFY REQUIRED
 
 authorization: NOT GRANTED
 empirical_n: 0
@@ -66,25 +66,25 @@ freeze_status: NOT_CREATED
 
 ## Identity roles
 
-- `2a54a67d…` — corrected seven-gate apparatus source from merged PR #174 and canonical provenance anchor.
+- `2a54a67d…` — corrected seven-gate apparatus source and canonical provenance anchor.
 - `973c9233…` — exact tree of the corrected apparatus source.
-- `92ff830b…` — current production/runtime candidate used by P2/P6a.
-- `73cf3ad…` — exact tree of the current runtime candidate.
-- `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — production deployment recorded by both current runtime evidence artifacts.
-- `d56b5b3c…` — pre-correction apparatus source; invalidated as an execution candidate when #174 corrected canonical provenance identity.
-- `dpl_76UU8mCm…` — pre-correction deployment; historical/non-closing.
-- `4e345c03…` — pre-merge #174 head; validation evidence only, not the merged apparatus identity.
-- `05fa2866…` — superseded historical candidate; no evidence transfers.
+- `fcdfa018…` — active PR #199 P-35 remediation candidate used by the current pre-freeze validation wave.
+- `a81faf97…` — exact tree of the active candidate.
+- `92ff830b…` — superseded runtime candidate; P2/P6a evidence remains bound to its exact tree/deployment.
+- `a43219b…` — superseded completion candidate; PDMAL/P9 evidence remains bound to its exact tree.
+- `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — historical deployment for `92ff830b…`.
+- `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17` — historical preview deployment for `a43219b…`.
+- `9b104b28…` — PR #199 merge-ref workflow execution identity for the superseded validation attempt; it is not the candidate SHA.
 
 ## Promotion / binding rule
 
-The corrected apparatus source establishes scientific apparatus provenance. The runtime candidate establishes the exact executable candidate identity. A candidate-bound runtime result must identify the exact candidate commit/tree and exact deployment identity; downstream evidence must then be bound to that same candidate lineage before P7/P8/P9/freeze transitions can occur.
+The corrected apparatus source establishes scientific apparatus provenance. The active candidate establishes the exact executable candidate identity. A candidate-bound runtime result must identify the exact candidate commit/tree and exact deployment identity before P2/P6a closure; downstream evidence must then be bound to that same candidate lineage before P7/P8/P9/freeze transitions can occur.
 
-P2 and P6a are now verified for the recorded runtime evidence scope. Their closure does not create a freeze, authorization, or empirical data. P3–P6, final P7 binding, P8, and independent P9 remain outstanding.
+No historical runtime, completion, deployment, or P9 evidence transfers to `fcdfa018…`. The current pre-freeze wave is validation evidence only; it does not create a freeze, authorization, or empirical data.
 
 ## Documentation hygiene
 
-Older documents stating that inline artifact validation is missing are historical/stale observations, not current defects. The current implementation performs inline artifact validation. Historical documents remain preserved; this manifest records the current state separately.
+Older documents stating that inline artifact validation is missing are historical/stale observations, not current defects. Historical documents remain preserved; this manifest records the active candidate state separately.
 
 ## Boundary
 
