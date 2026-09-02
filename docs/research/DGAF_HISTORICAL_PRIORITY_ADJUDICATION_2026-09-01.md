@@ -39,11 +39,11 @@ Public repository evidence predates the first located DGAF-named repository evid
 
 Primary links:
 
-- https://github.com/microsoft/agent-governance-toolkit/commit/93ae721acd4b7bd276480490e7932d210c400508
-- https://github.com/microsoft/agent-governance-toolkit/commit/f8113811c33f2ff7c54465c71bb503c5dbdd5f21
-- https://github.com/microsoft/agent-governance-toolkit/commit/b9d1a5aae203d65e4cb3dabe23755360b0035abc
-- https://github.com/microsoft/agent-governance-toolkit/commit/3155b34371ac0521a31987b5583a21c49f8bc46e
-- https://github.com/microsoft/agent-governance-toolkit/blob/359a2332f57d9000924baba269ed24e4e15ad8b0/docs/adr/0006-constitutional-constraint-layer-as-community-extension.md
+- [Microsoft AGT commit 93ae721](https://github.com/microsoft/agent-governance-toolkit/commit/93ae721acd4b7bd276480490e7932d210c400508)
+- [Microsoft AGT commit f811381](https://github.com/microsoft/agent-governance-toolkit/commit/f8113811c33f2ff7c54465c71bb503c5dbdd5f21)
+- [Microsoft AGT commit b9d1a5a](https://github.com/microsoft/agent-governance-toolkit/commit/b9d1a5aae203d65e4cb3dabe23755360b0035abc)
+- [Microsoft AGT commit 3155b34](https://github.com/microsoft/agent-governance-toolkit/commit/3155b34371ac0521a31987b5583a21c49f8bc46e)
+- [Microsoft AGT ADR 0006](https://github.com/microsoft/agent-governance-toolkit/blob/359a2332f57d9000924baba269ed24e4e15ad8b0/docs/adr/0006-constitutional-constraint-layer-as-community-extension.md)
 
 **Adjudication:** AGT establishes strong external prior for runtime governance, supervision, constraint graphs, authority resolution, audit/replay, cryptographic audit/delegation, veto, and escalation.
 
@@ -55,7 +55,7 @@ A 2004 paper, *Dynamic Reorganization of Agent Societies*, explicitly studies ho
 
 Primary record:
 
-- https://www.researchgate.net/publication/27694396_Dynamic_Reorganization_of_Agent_Societies
+- [Dynamic Reorganization of Agent Societies](https://www.researchgate.net/publication/27694396_Dynamic_Reorganization_of_Agent_Societies)
 
 **Adjudication:** dynamic organizational change plus authority over organizational structure is established external prior.
 
@@ -65,8 +65,8 @@ The 2025 TB-CSPN work provides a close modern near-composition. It describes dyn
 
 Primary records:
 
-- https://link.springer.com/article/10.1007/s10791-025-09667-2
-- https://www.mdpi.com/1999-5903/17/8/363
+- [Springer record](https://link.springer.com/article/10.1007/s10791-025-09667-2)
+- [MDPI record](https://www.mdpi.com/1999-5903/17/8/363)
 
 **Adjudication:** dynamic formation, hierarchical oversight, authorization, and adaptive organization are established before DGAF. No exact match has been established for DGAF's later explicit combination of sovereign veto conflict resolution plus formation replay idempotency plus candidate-bound experimental authorization.
 
@@ -78,9 +78,9 @@ SLSA's verification model requires evidence to apply to the artifact or source r
 
 Primary records:
 
-- https://slsa.dev/spec/v1.0/verifying-artifacts
-- https://slsa.dev/spec/v1.2/verifying-source
-- https://slsa.dev/spec/v1.2/source-requirements
+- [SLSA verifying artifacts](https://slsa.dev/spec/v1.0/verifying-artifacts)
+- [SLSA verifying source](https://slsa.dev/spec/v1.2/verifying-source)
+- [SLSA source requirements](https://slsa.dev/spec/v1.2/source-requirements)
 
 **Adjudication:** exact artifact/revision binding, immutable source identity, and rejection of mismatched evidence are external prior. DGAF must not claim these as original primitives.
 
@@ -90,7 +90,7 @@ in-toto's validation model requires the verifier to hash the artifact and identi
 
 Primary record:
 
-- https://github.com/in-toto/attestation/blob/main/docs/validation.md
+- [in-toto validation](https://github.com/in-toto/attestation/blob/main/docs/validation.md)
 
 **Adjudication:** exact subject-digest evidence binding and independent attestation validation are external prior.
 
@@ -102,8 +102,8 @@ Commit `bb5c8f19d393cf04eacac66ba3a58df97671bfdb` changes the framework expansio
 
 Primary records:
 
-- https://github.com/ndrorchestration/DGAF-Framework/commit/bb5c8f19d393cf04eacac66ba3a58df97671bfdb
-- https://github.com/ndrorchestration/DGAF-Framework/issues/1
+- [DGAF commit bb5c8f1](https://github.com/ndrorchestration/DGAF-Framework/commit/bb5c8f19d393cf04eacac66ba3a58df97671bfdb)
+- [DGAF issue #1](https://github.com/ndrorchestration/DGAF-Framework/issues/1)
 
 **Adjudication:** 2026-04-29 is the earliest currently located public repository evidence identifying the named DGAF formulation. It is **not** the earliest known public occurrence of the underlying mechanisms.
 
@@ -120,7 +120,7 @@ Commit `edc9f93da03747cfab3a6610d3349a122ba5f128` adds to the Harmonic Quintet s
 
 Primary record:
 
-- https://github.com/ndrorchestration/DGAF-Framework/commit/edc9f93da03747cfab3a6610d3349a122ba5f128
+- [DGAF commit edc9f93](https://github.com/ndrorchestration/DGAF-Framework/commit/edc9f93da03747cfab3a6610d3349a122ba5f128)
 
 **Adjudication:** this is concrete DGAF evidence for a formation object with authority conflict, veto, escalation, and idempotent replay. Because it is dated 2026-05-01, it cannot retroactively establish that the full composition existed before 2026-04-29.
 
