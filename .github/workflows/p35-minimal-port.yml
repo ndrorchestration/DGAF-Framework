@@ -13,30 +13,49 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: remediation/p35-minimal-mainline-2026-09-02
-      - name: Apply minimal P-35 production delta
+      - name: Apply minimal P-35 production and test delta
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path('experiments/pdmal_pilot/dgaf_tgl_adapter.py')
-          s = p.read_text()
-          a='from typing import Any, Mapping, Sequence'; b='from typing import Any, Callable, Mapping, Sequence'; assert a in s; s=s.replace(a,b,1)
-          a='def __init__(self, session_id: str, agent_id: str = "pdmAL-agent") -> None:'; b='def __init__(self, session_id: str, premise_check_fn: Callable[[str, Any], bool], agent_id: str = "pdmAL-agent") -> None:'; assert a in s; s=s.replace(a,b,1)
-          a='        self.session_id = session_id\n        self.agent_id = agent_id'; b='        if not callable(premise_check_fn):\n            raise TypeError("premise_check_fn must be an explicit callable; omission is fail-closed")\n        self.session_id = session_id\n        self.agent_id = agent_id\n        self.premise_check_fn = premise_check_fn'; assert a in s; s=s.replace(a,b,1)
-          a='        hooks = TGLHooks(\n            scpe_fn=build_scpe_hook(state.scpe_state),'; b='        hooks = TGLHooks(\n            premise_check_fn=self.premise_check_fn,\n            scpe_fn=build_scpe_hook(state.scpe_state),'; assert a in s; s=s.replace(a,b,1); p.write_text(s)
-          p=Path('experiments/pdmal_pilot/task_engine.py'); s=p.read_text()
-          a='    def __init__(self, *, topology: str, failure_count: int, condition: str) -> None:'; b='    def __init__(self, *, topology: str, failure_count: int, condition: str, premise_check_fn: Callable[[str, Any], bool] | None = None) -> None:'; assert a in s; s=s.replace(a,b,1)
-          a='        self.failure_count = failure_count\n        self.condition = condition'; b='        if condition == "dgaf" and not callable(premise_check_fn):\n            raise ValueError("dgaf condition requires an explicit P-35 premise_check_fn; omission is fail-closed")\n        self.failure_count = failure_count\n        self.condition = condition\n        self.premise_check_fn = premise_check_fn'; assert a in s; s=s.replace(a,b,1)
-          a='        adapter = DGAF_TGLAdapter(session_id=f"pdmAL-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}")'; b='        adapter = DGAF_TGLAdapter(\n            session_id=f"pdmAL-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}",\n            premise_check_fn=self.premise_check_fn,\n        )'; assert a in s; s=s.replace(a,b,1); p.write_text(s)
-          p=Path('experiments/pdmal_pilot/run_pilot.py'); s=p.read_text()
-          a='import hmac\nimport os'; b='import hmac\nimport importlib\nimport os'; assert a in s; s=s.replace(a,b,1)
-          a='from time import monotonic\n\nimport numpy as np'; b='from time import monotonic\nfrom typing import Any, Callable\n\nimport numpy as np'; assert a in s; s=s.replace(a,b,1)
-          marker='def blind_condition(condition: str, key: str) -> str:\n'; assert marker in s
-          fn='def require_pilot_premise_checker() -> Callable[[str, Any], bool]:\n    spec = os.getenv("PDMAL_PREMISE_CHECKER", "").strip()\n    if not spec:\n        raise SystemExit("pilot execution prohibited: PDMAL_PREMISE_CHECKER must name the approved P-35 checker as module:attribute")\n    if ":" not in spec:\n        raise SystemExit("pilot execution prohibited: PDMAL_PREMISE_CHECKER must use module:attribute syntax")\n    module_name, attribute_name = spec.split(":", 1)\n    if not module_name or not attribute_name or ":" in attribute_name:\n        raise SystemExit("pilot execution prohibited: malformed PDMAL_PREMISE_CHECKER")\n    try:\n        module = importlib.import_module(module_name)\n        checker = getattr(module, attribute_name)\n    except (ImportError, AttributeError) as exc:\n        raise SystemExit(f"pilot execution prohibited: unable to load P-35 checker {spec}: {exc}") from exc\n    if not callable(checker):\n        raise SystemExit(f"pilot execution prohibited: configured P-35 checker is not callable: {spec}")\n    return checker\n\n\n'; s=s.replace(marker,fn+marker,1)
-          a='    blinding_key, archive_root = require_pilot_authorization()\n    os.environ.pop("PDMAL_BLINDING_KEY", None)'; b='    blinding_key, archive_root = require_pilot_authorization()\n    premise_check_fn = require_pilot_premise_checker()\n    os.environ.pop("PDMAL_BLINDING_KEY", None)'; assert a in s; s=s.replace(a,b,1)
-          a='task = ConsensusTask(topology=topology, failure_count=failure_count, condition=condition)'; b='task = ConsensusTask(topology=topology, failure_count=failure_count, condition=condition, premise_check_fn=premise_check_fn)'; assert a in s; s=s.replace(a,b,1); p.write_text(s)
-          PY
+          p=Path('experiments/pdmal_pilot/runtime_characterization.py'); s=p.read_text()
+          s=s.replace('import hashlib\nimport json', 'import hashlib\nimport importlib\nimport json', 1)
+          s=s.replace('from time import monotonic\n\nfrom task_engine', 'from time import monotonic\nfrom typing import Any, Callable\n\nfrom task_engine', 1)
+          s=s.replace('DEFAULT_CONDITIONS = ("null", "simple", "static", "dgaf")', 'DEFAULT_CONDITIONS = ("null", "simple", "static")', 1)
+          marker='def _stats(values: list[float]) -> dict[str, float | None]:\n'
+          fn='def _load_explicit_checker() -> Callable[[str, Any], bool]:\n    spec = os.getenv("PDMAL_PREMISE_CHECKER", "").strip()\n    if not spec or ":" not in spec:\n        raise SystemExit("runtime characterization prohibited: DGAF characterization requires PDMAL_PREMISE_CHECKER=module:attribute")\n    module_name, attribute_name = spec.split(":", 1)\n    if not module_name or not attribute_name or ":" in attribute_name:\n        raise SystemExit("runtime characterization prohibited: malformed PDMAL_PREMISE_CHECKER")\n    try:\n        module = importlib.import_module(module_name); checker = getattr(module, attribute_name)\n    except (ImportError, AttributeError) as exc:\n        raise SystemExit(f"runtime characterization prohibited: unable to load P-35 checker {spec}: {exc}") from exc\n    if not callable(checker):\n        raise SystemExit(f"runtime characterization prohibited: configured P-35 checker is not callable: {spec}")\n    return checker\n\n\n'
+          if marker in s and 'def _load_explicit_checker' not in s: s=s.replace(marker,fn+marker,1)
+          s=s.replace('    output_dir.mkdir(parents=True, exist_ok=True)', '    premise_check_fn = _load_explicit_checker() if "dgaf" in conditions else None\n\n    output_dir.mkdir(parents=True, exist_ok=True)', 1)
+          old='''                    task = ConsensusTask(\n                        topology=topology,\n                        failure_count=failure_count,\n                        condition=condition,\n                    )'''
+          new='''                    task_kwargs = {"topology": topology, "failure_count": failure_count, "condition": condition}\n                    if condition == "dgaf":\n                        task_kwargs["premise_check_fn"] = premise_check_fn\n                    task = ConsensusTask(**task_kwargs)'''
+          if old in s: s=s.replace(old,new,1)
+          p.write_text(s)
+
+          p=Path('experiments/pdmal_pilot/test_dgaf_tgl_adapter.py'); s=p.read_text()
+          s=s.replace('def test_canonical_serialization_is_deterministic(state: ConsensusState) -> None:', 'def allow_all_premises(_text, _invariant) -> bool:\n    return True\n\n\ndef test_canonical_serialization_is_deterministic(state: ConsensusState) -> None:', 1)
+          s=s.replace('DGAF_TGLAdapter(session_id="contract-test")', 'DGAF_TGLAdapter(session_id="contract-test", premise_check_fn=allow_all_premises)', 1)
+          s=s.replace('DGAF_TGLAdapter(session_id="provenance-test")', 'DGAF_TGLAdapter(session_id="provenance-test", premise_check_fn=allow_all_premises)', 1)
+          p.write_text(s)
+
+          p=Path('experiments/pdmal_pilot/test_task_engine.py'); s=p.read_text()
+          s=s.replace('def test_first_attempt_success():', 'def allow_all_premises(_text, _invariant) -> bool:\n    return True\n\n\ndef test_first_attempt_success():', 1)
+          old='''def test_consensus_task_is_deterministic_across_attempts():\n    for condition in ("null", "simple", "static", "dgaf"):\n        task = ConsensusTask(topology="ring", failure_count=2, condition=condition)'''
+          new='''def test_consensus_task_is_deterministic_across_attempts():\n    for condition in ("null", "simple", "static"):\n        task = ConsensusTask(topology="ring", failure_count=2, condition=condition)'''
+          if old in s: s=s.replace(old,new,1)
+          insert='''\n\ndef test_dgaf_consensus_task_requires_explicit_premise_checker():\n    with pytest.raises(ValueError, match="explicit P-35 premise_check_fn"):\n        ConsensusTask(topology="ring", failure_count=2, condition="dgaf")\n\n\ndef test_dgaf_consensus_task_is_deterministic_across_attempts_with_explicit_checker():\n    task = ConsensusTask(topology="ring", failure_count=2, condition="dgaf", premise_check_fn=allow_all_premises)\n    first = task.run_detailed(seed=20260817, attempt=1)\n    second = task.run_detailed(seed=20260817, attempt=2)\n    assert first.trial_key == second.trial_key\n    assert first.failure_nodes == second.failure_nodes\n    assert first.initial_values == second.initial_values\n    assert first.final_values == second.final_values\n    assert first.final_std == second.final_std\n    assert first.topology_fingerprint == second.topology_fingerprint\n    assert first.iterations_completed == second.iterations_completed\n    assert first.attempt_status is second.attempt_status\n'''
+          marker='def test_consensus_task_is_deterministic_across_attempts():'
+          if 'test_dgaf_consensus_task_requires_explicit_premise_checker' not in s: s=s.replace(marker,insert+'\n\n'+marker,1)
+          old='''    for condition in ("null", "simple", "static", "dgaf"):\n        task = ConsensusTask(topology="ring", failure_count=0, condition=condition)\n        assert task.condition == condition'''
+          new='''    for condition in ("null", "simple", "static"):\n        task = ConsensusTask(topology="ring", failure_count=0, condition=condition)\n        assert task.condition == condition\n    task = ConsensusTask(topology="ring", failure_count=0, condition="dgaf", premise_check_fn=allow_all_premises)\n    assert task.condition == "dgaf"'''
+          if old in s: s=s.replace(old,new,1)
+          p.write_text(s)
+
+          p=Path('experiments/pdmal_pilot/test_governance_trace.py'); s=p.read_text()
+          s=s.replace('from task_engine import AttemptStatus, ConsensusTask', 'from task_engine import AttemptStatus, ConsensusTask\n\n\ndef allow_all_premises(_text, _invariant) -> bool:\n    return True',1)
+          s=s.replace('ConsensusTask(topology="ring", failure_count=0, condition="dgaf")', 'ConsensusTask(topology="ring", failure_count=0, condition="dgaf", premise_check_fn=allow_all_premises)',1)
+          p.write_text(s)
+
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add experiments/pdmal_pilot/dgaf_tgl_adapter.py experiments/pdmal_pilot/task_engine.py experiments/pdmal_pilot/run_pilot.py
-          git commit -m 'fix: enforce explicit P-35 premise checker'
+          git add experiments/pdmal_pilot/runtime_characterization.py experiments/pdmal_pilot/test_dgaf_tgl_adapter.py experiments/pdmal_pilot/test_task_engine.py experiments/pdmal_pilot/test_governance_trace.py
+          git commit -m 'test: align P-35 dependents with explicit checker'
           git push
