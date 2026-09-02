@@ -50,9 +50,28 @@ The previous experimental verification boundary `ac8ea267a9f0d995626cf9c3eaf9e6b
 | CI | two-sided 95%, `alpha=0.05` | SELECTED |
 | Directional support | estimate > 0 and CI lower bound > 0 | SELECTED |
 
-## TGL prerequisite
+## TGL/P-35 prerequisite — CURRENT FINDING
 
-Before candidate-scoped P8 closure, the TGL/P-35 contract must be validated on the exact source tree intended for subsequent candidate binding. The required contract surface includes:
+The exact candidate exposes the established P-35 interface and the TGL core correctly calls `ProcludingPremiseGate.evaluate(..., check_fn=...)`. However, the experimental `DGAF_TGLAdapter` currently constructs `TGLHooks` without assigning `premise_check_fn`. Because the P-35 implementation treats a missing `check_fn` as pass-through, the adapter path does not demonstrate the required premise-hook injection. The pilot `ConsensusTask._dgaf_update` likewise instantiates the adapter without a premise checker.
+
+This is a **candidate-scoped implementation defect / closure blocker**, not a runtime efficacy result.
+
+The exact candidate tests corroborate the gap: TGL unit tests explicitly exercise injected premise hooks, while `experiments/pdmal_pilot/test_dgaf_tgl_adapter.py` exercises the adapter without supplying a premise hook and has no assertion that adapter-level P-35 injection actually occurs.
+
+The remediation must establish, on a new exact candidate derived from the current candidate or its approved successor:
+
+- an explicit, non-implicit `premise_check_fn` path into `DGAF_TGLAdapter`;
+- propagation of that function into `TGLHooks.premise_check_fn`;
+- fail-closed handling of unexpected premise-hook exceptions;
+- a candidate-bound regression proving that a deliberately failing premise hook produces a P-35 KILL rather than silent pass-through;
+- confirmation that the pilot task path supplies the intended premise checker rather than relying on the P-35 default;
+- fresh exact-candidate PDMAL/P9 verification after remediation.
+
+Until those conditions are demonstrated, P8 remains fail-closed and the current candidate must not be promoted to freeze.
+
+## TGL prerequisite — broader contract
+
+The required contract surface includes:
 
 - established P-35 constructor and `evaluate(..., check_fn=...)` compatibility;
 - premise-hook injection actually reaching P-35;
@@ -85,7 +104,7 @@ The deployment must first be independently confirmed as serving the exact candid
 
 P8 remains **OPEN / FAIL-CLOSED** pending:
 
-1. Closure of the TGL/P-35 prerequisite on the exact intended candidate tree.
+1. Remediation and exact-candidate verification of the P-35 premise-hook defect identified above.
 2. Re-binding analysis/schema/runner/protocol identities to the resulting candidate verification boundary if the apparatus changes.
 3. P2 authenticated five-case runtime verification against deployment `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`.
 4. P6a authenticated four-case CORS verification against the same deployment identity.
