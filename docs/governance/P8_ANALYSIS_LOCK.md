@@ -18,7 +18,7 @@
 
 The `main` branch is a living documentation/evidence lineage and is not itself the experimental apparatus identity. The current controlled completion candidate is **`a43219b4ed91fff8615f6c655ab3d17ca871fc29`** on branch `completion/2026-09-01-exact-candidate`. Its exact tree is the candidate identity for the current completion verification cycle.
 
-An exact candidate deployment now exists for that same source lineage:
+An exact candidate deployment exists for that same source lineage:
 
 - Vercel deployment: `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
 - Deployment URL: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
@@ -50,24 +50,15 @@ The previous experimental verification boundary `ac8ea267a9f0d995626cf9c3eaf9e6b
 | CI | two-sided 95%, `alpha=0.05` | SELECTED |
 | Directional support | estimate > 0 and CI lower bound > 0 | SELECTED |
 
-## TGL/P-35 prerequisite — CURRENT FINDING
+## TGL/P-35 prerequisite — verified remediation boundary
 
-The exact candidate exposes the established P-35 interface and the TGL core correctly calls `ProcludingPremiseGate.evaluate(..., check_fn=...)`. However, the experimental `DGAF_TGLAdapter` currently constructs `TGLHooks` without assigning `premise_check_fn`. Because the P-35 implementation treats a missing `check_fn` as pass-through, the adapter path does not demonstrate the required premise-hook injection. The pilot `ConsensusTask._dgaf_update` likewise instantiates the adapter without a premise checker.
+The exact completion candidate `a43219b…` was found to have a candidate-scoped P-35 integration defect: the experimental `DGAF_TGLAdapter` did not provide a premise checker, and the pilot task path likewise did not supply one. The generic P-35 implementation treats a missing checker as pass-through, so the candidate did not demonstrate the required premise-hook injection.
 
-This is a **candidate-scoped implementation defect / closure blocker**, not a runtime efficacy result.
+PR #188 remediated that defect. The current remediation head is `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`. It requires an explicit callable premise checker through the DGAF adapter and pilot runner, propagates the checker into `TGLHooks`/`ConsensusTask`, handles unexpected checker exceptions fail-closed, and preserves a sealed P-35/KILL audit result on premise violation.
 
-The exact candidate tests corroborate the gap: TGL unit tests explicitly exercise injected premise hooks, while `experiments/pdmal_pilot/test_dgaf_tgl_adapter.py` exercises the adapter without supplying a premise hook and has no assertion that adapter-level P-35 injection actually occurs.
+The exact-current-head pre-freeze runner validation run `33590352168` completed successfully for `d83ea74…`. Its contract suite included `test_run_pilot_p35.py`, and the workflow also verified contract-mode execution, pilot-mode failure without freeze/authorization, artifact schema/integrity checks, and PRE-FREEZE manifest emission. Artifact `9831586822` is the uploaded manifest; its workflow artifact digest is `sha256:dedacba56b8430fd995c4230e52fe208d2380f5e5015fa3816073cda3e9d774e`.
 
-The remediation must establish, on a new exact candidate derived from the current candidate or its approved successor:
-
-- an explicit, non-implicit `premise_check_fn` path into `DGAF_TGLAdapter`;
-- propagation of that function into `TGLHooks.premise_check_fn`;
-- fail-closed handling of unexpected premise-hook exceptions;
-- a candidate-bound regression proving that a deliberately failing premise hook produces a P-35 KILL rather than silent pass-through;
-- confirmation that the pilot task path supplies the intended premise checker rather than relying on the P-35 default;
-- fresh exact-candidate PDMAL/P9 verification after remediation.
-
-Until those conditions are demonstrated, P8 remains fail-closed and the current candidate must not be promoted to freeze.
+This is **pre-freeze engineering verification of the remediation head**, not verification of an experimental candidate. Because `d83ea74…` materially changes the apparatus relative to `a43219b…`, the prior completion-candidate PDMAL/P9 evidence does not transfer. A new exact experimental candidate must be selected after remediation review, followed by fresh candidate-bound P3–P9 and affected P2/P6a verification.
 
 ## TGL prerequisite — broader contract
 
@@ -82,7 +73,7 @@ The required contract surface includes:
 - audit seal coverage of the exact returned audit object;
 - regression coverage for these semantics.
 
-A passing TGL/control-plane remediation test suite does not itself close P8, alter P7, create a freeze, or authorize the pilot.
+The remediation now has exact-head pre-freeze evidence for these P-35 integration paths, but that evidence does not itself close P8, alter P7, create a freeze, or authorize the pilot.
 
 ## Protocol/candidate separation rule
 
@@ -104,15 +95,16 @@ The deployment must first be independently confirmed as serving the exact candid
 
 P8 remains **OPEN / FAIL-CLOSED** pending:
 
-1. Remediation and exact-candidate verification of the P-35 premise-hook defect identified above.
-2. Re-binding analysis/schema/runner/protocol identities to the resulting candidate verification boundary if the apparatus changes.
-3. P2 authenticated five-case runtime verification against deployment `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`.
-4. P6a authenticated four-case CORS verification against the same deployment identity.
-5. Environment/topology reproducibility evidence.
-6. Durable evidence retention with direct retrieval and integrity verification.
-7. Current-boundary evidence review for E2b/M6, retaining their exact execution boundaries.
-8. P7 exact freeze binding and formal closure of the adopted scientific decision record.
-9. Independent P9 verification covering the final pre-freeze evidence chain.
+1. Selection of a new exact experimental candidate after the verified P-35 remediation.
+2. Re-binding analysis/schema/runner/protocol identities to that resulting candidate verification boundary.
+3. Fresh candidate-bound PDMAL/P3–P6 and independent P9 verification.
+4. P2 authenticated five-case runtime verification against the exact candidate deployment.
+5. P6a authenticated four-case CORS verification against the same deployment identity.
+6. Environment/topology reproducibility evidence.
+7. Durable evidence retention with direct retrieval and integrity verification.
+8. Current-boundary evidence review for E2b/M6, retaining their exact execution boundaries.
+9. P7 exact freeze binding and formal closure of the adopted scientific decision record.
+10. Independent P9 verification covering the final pre-freeze evidence chain.
 
 A successful CI run or deployment readiness is necessary evidence, not by itself P8 closure.
 
