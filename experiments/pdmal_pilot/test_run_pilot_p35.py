@@ -9,7 +9,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from run_pilot import require_pilot_premise_checker, run_pilot
+from run_pilot import AttemptStatus, require_pilot_premise_checker, run_pilot
 
 
 def test_missing_premise_checker_is_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -71,13 +71,13 @@ def test_run_pilot_passes_explicit_checker_to_dgaf_task(monkeypatch: pytest.Monk
     monkeypatch.setattr("run_pilot._retain", lambda *args, **kwargs: None)
     monkeypatch.setattr("run_pilot.graph_fingerprint", lambda _graph: "fallback-topology")
     monkeypatch.setattr("run_pilot.generate_topology", lambda *_args: object())
+    monkeypatch.setattr("run_pilot.SEED_RUNTIME_CEILING_SECONDS", 60.0)
 
     captured: list[object] = []
 
     class FakeTask:
         def __init__(self, *, premise_check_fn, **kwargs):
             captured.append((premise_check_fn, kwargs))
-            self.condition = kwargs["condition"]
 
         @staticmethod
         def trial_key(seed, topology, condition, failure_count):
@@ -85,7 +85,7 @@ def test_run_pilot_passes_explicit_checker_to_dgaf_task(monkeypatch: pytest.Monk
 
         def run_detailed(self, *, seed, attempt):
             return SimpleNamespace(
-                attempt_status=SimpleNamespace(value="SUCCESS"),
+                attempt_status=AttemptStatus.SUCCESS,
                 failure_nodes=[],
                 initial_values=[0.0],
                 final_values=[0.0],
