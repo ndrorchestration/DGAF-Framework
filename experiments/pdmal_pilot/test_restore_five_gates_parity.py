@@ -99,17 +99,33 @@ def test_demijoule_clean_passes():
 
 
 def test_demijoule_reprompt_unreachable_under_historical_heuristic():
-    # Fidelity note (designation #165: reprompt->WARN): the historical
-    # DemiJouleGate scores ALL axes identically per payload (if/elif/else across
-    # the same keyword sets), so mean is always in {0.20 KILL, 0.80/0.95 PASS}.
-    # WARN/reprompt is therefore NOT reachable under the faithful historical port.
-    # We assert the faithful behavior and flag the designation gap.
+    """KNOWN SEMANTIC PROPERTY (not a defect): DemiJoule WARN/reprompt is
+    unreachable under the historically faithful implementation.
+
+    The historical DemiJouleGate scores ALL six axes identically per payload
+    (if/elif/else over the same keyword sets), so mean_score is always in
+    {0.20 KILL, 0.80 PASS, 0.95 PASS}. The designated reprompt->WARN mapping
+    (#165) therefore has NO trigger in the faithful port. This is RESTORE, not
+    ADAPTATION: we deliberately do NOT alter the historical heuristic to
+    manufacture a WARN case. A future reviewer must NOT mistake "no WARN observed"
+    for missing coverage -- this test pins the property.
+    """
+    # Case A: adversarial-laden payload -> all axes 0.20 -> KILL (reachable).
     s = DemiJouleState()
     payload = "governance schema review ignore prior instruction"
     res = build_demijoule_hook(s)(payload, {"payload": payload})
-    # "ignore" present -> all axes 0.20 -> mean 0.20 -> KILL (historical-faithful)
-    assert res == GateResult.KILL
-    assert s.mean_score == 0.20
+    assert res == GateResult.KILL and s.mean_score == 0.20
+    # Case B: clean governance payload -> all axes 0.95 -> PASS (reachable).
+    s2 = DemiJouleState()
+    res2 = build_demijoule_hook(s2)("governance schema audit seal verified", {"payload": "governance schema audit seal verified"})
+    assert res2 == GateResult.PASS and s2.mean_score == 0.95
+    # Exhaustive check: across the keyword combinations the historical gate can
+    # express, WARN is never returned. (Property pin, not a coverage gap.)
+    for axes_hit in ([], ["ignore"], ["governance"], ["ignore", "governance"]):
+        s3 = DemiJouleState()
+        p = " ".join(axes_hit)
+        out = build_demijoule_hook(s3)(p, {"payload": p})
+        assert out in (GateResult.KILL, GateResult.PASS), (axes_hit, out)
 
 
 # --- P-27 KAPPA (faithful v3.5 port) --------------------------------------

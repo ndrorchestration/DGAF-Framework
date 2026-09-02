@@ -1,0 +1,11 @@
+{
+  "authority_identity_regression": "PASS",
+  "authorization_is_external": true,
+  "candidate_sha": "566273c6c2906bdf71827381493a26ee7697034c",
+  "empirical_execution_requested": false,
+  "independent_canonical_sha256": "f235fc6ef241379f295676d257c22c7b17a47ace47377506fac9a7e5d490215a",
+  "independent_canonicalization": "jq -S -c",
+  "run_id": "33562042960",
+  "schema_version": 1,
+  "source_workflow": "P9 Independent Verification"
+}
