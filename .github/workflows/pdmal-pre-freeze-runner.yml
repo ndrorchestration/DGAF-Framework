@@ -111,23 +111,28 @@ jobs:
       - name: Emit pre-freeze manifest
         run: |
           mkdir -p test-artifacts
+          CANONICAL_HEAD_SHA="$(git rev-parse HEAD)"
+          test "$CANONICAL_HEAD_SHA" = "$(git log -1 --format=%H)"
           python - <<'PY'
-          import json, os, platform
+          import json, os, platform, subprocess
           from pathlib import Path
           lock_present = Path('experiments/pdmal_pilot/requirements-full-lock.txt').is_file()
           lock_nonempty = Path('experiments/pdmal_pilot/requirements-full-lock.txt').stat().st_size > 0 if lock_present else False
+          checked_out_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
           Path('test-artifacts/pre-freeze-runner-manifest.json').write_text(
               json.dumps({
                   'status': 'PRE-FREEZE',
                   'empirical_data_collection': False,
                   'runner_mode_tested': os.environ.get('PDMAL_MODE'),
-                  'commit': os.environ.get('GITHUB_SHA'),
+                  'commit': checked_out_sha,
+                  'github_sha': os.environ.get('GITHUB_SHA'),
                   'workflow_run_id': os.environ.get('GITHUB_RUN_ID'),
                   'python': platform.python_version(),
                   'hash_locked_environment_present': lock_nonempty,
               }, indent=2, sort_keys=True) + '\n',
               encoding='utf-8',
           )
+          PY
       - name: Validate pre-freeze manifest and artifact contract
         working-directory: experiments/pdmal_pilot
         run: |
@@ -136,5 +141,5 @@ jobs:
       - name: Upload pre-freeze manifest
         uses: actions/upload-artifact@v4
         with:
-          name: pdmal-pre-freeze-runner-${{ github.sha }}
+          name: pdmal-pre-freeze-runner-${{ steps.lock.outputs.committed }}-${{ github.sha }}
           path: test-artifacts/pre-freeze-runner-manifest.json
