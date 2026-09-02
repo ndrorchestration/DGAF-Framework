@@ -36,8 +36,10 @@ The relevant comparison target is **architecture-level composition**, not a coun
 
 | Work / family | Primary contribution | Material overlap with DGAF | Historical adjudication |
 |---|---|---|---|
+| Dynamic reorganization of decision-making groups (Barber & Martin, 2001) | Runtime modification of organizational decision-making frameworks; changes who decides and who executes; experimental evaluation | Strong overlap with dynamic organizational formation/reorganization + authority; also shows experimental evaluation of the reorganization mechanism | **External prior; boundary-adjacent, not exact Q predecessor** |
 | Dynamic organization/reorganization MAS | Organizations as explicit structures; dynamic reorganization; authority over organizational change | Strong overlap with formation as an organizational object and authority over structural change | **External prior** |
 | OMACS / organizational MAS | Roles, agents, capabilities, assignments, policies, adaptive organization state | Strong overlap with governed organizational state and role assignment | **External prior** |
+| Negotiating team formation using deep reinforcement learning (2020) | Agents negotiate to form teams; team-formation mechanisms experimentally evaluated | Dynamic team formation + experimental evaluation | **Near/boundary-adjacent prior; no candidate-freeze/evidence/authorization lifecycle established** |
 | TB-CSPN / organizational agent architecture (2025) | Dynamic group formation, hierarchical supervisor oversight, threshold-driven membership, validation, traceability | Strong overlap with dynamic groups, roles, supervisory authority, transition validation | **Near-composition prior**; no exact match yet for the full DGAF cross-domain lifecycle |
 | Microsoft Agent Governance Toolkit (AGT), March-April 2026 | Runtime governance, constraint graphs, supervisors, authority resolution, audit/replay, cryptographic audit/delegation, veto and escalation | Very strong overlap with governance, authority, supervision, veto, escalation, audit, and runtime enforcement | **Strong external prior**; formation itself as the persistent primary governed object remains unresolved in the inspected record |
 | Runtime action-boundary governance | Pre-execution mediation, fail-closed control, provenance, non-unilateral authorization | Strong overlap in action gating and trust boundaries | **External prior** |
@@ -45,6 +47,7 @@ The relevant comparison target is **architecture-level composition**, not a coun
 | in-toto | Attestation validation by exact subject digest and recognized attester | Strong overlap in candidate/artifact evidence binding and independent validation | **Strong external prior** |
 | Research workflow provenance | Version-bound experiment provenance and traceability | Overlap with evidence scoped to a specific version/revision | **External prior** |
 | Distributed reconfiguration/idempotency literature | Idempotent recovery/reconfiguration and state-transition safety | Partial overlap with formation-transition idempotency | **External prior at mechanism level; formation-governance composition remains open** |
+| Clarus (submitted 2026-06-29) | Dynamic research team formation; multi-phase project state; artifact/evidence collection; audit; attribution; checkpoints | Strong later convergence on formation + research artifacts/evidence + lifecycle checkpoints | **Later convergence comparator; not prior art against April/May DGAF chronology** |
 
 ## DGAF historical composition under review
 
@@ -70,7 +73,7 @@ A source with only some of these properties is a **near-composition prior**, not
 - **2026-05-01 09:28 UTC:** commit `edc9f93da03747cfab3a6610d3349a122ba5f128` explicitly adds authority conflict resolution, sovereign veto semantics, timeout escalation/blocking, and an idempotency guarantee to the Harmonic Quintet formation specification.
 - **2026-08-21:** DGAF documents development/candidate separation and exact-candidate execution requirements.
 
-These dates establish a development lineage but do not establish historical firstness.
+These dates establish a development lineage but do not establish historical firstness. In particular, the May 1 formation semantics must not be back-projected into the April 29 named-identity evidence, and the August 21 candidate-governance semantics must not be back-projected into the April/May formation evidence.
 
 ## Candidate contribution statement — revised
 
@@ -96,6 +99,7 @@ DGAF's narrower candidate distinction is the possible use of those established p
 - DGAF publicly documents an integrated implementation and governance approach for orchestration, formation, evaluation, provenance, and epistemic controls.
 - The repository contains candidate-bound evidence controls and a documented development/candidate separation model.
 - The repository contains explicit formation-level authority conflict, veto, escalation, and idempotency semantics by 2026-05-01.
+- Pre-DGAF literature independently demonstrates dynamic organizational reconfiguration with authority and dynamic team formation with experimental evaluation.
 - The current PDMAL efficacy claim remains unestablished: the experimental boundary is PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
 
 ## What is not currently defensible
@@ -112,7 +116,11 @@ The highest-value remaining research target is the exact cross-domain lifecycle:
 
 `formation state → formation authority → governed transition → evidence → exact candidate identity → independent verification → authorization`
 
-The search should test this composition against organizational MAS, agent-governance systems, distributed reconfiguration, software supply-chain security, and research workflow provenance. Results must be dated to primary sources.
+The next sweep should concentrate on primary-source implementation/formal records that explicitly connect **organizational-state transitions** to **artifact/research-candidate creation or promotion** and then bind **verification/authorization** to that same identity. General team formation, general provenance, ordinary CI/CD release engineering, and ordinary runtime policy enforcement should be treated as background prior unless the source crosses this boundary.
+
+## Latest audit tranche
+
+See `docs/research/DGAF_HISTORICAL_PRIORITY_TRANCHE_2026-09-01_02.md` for the narrow 2026-09-01 sweep covering Barber & Martin (2001), 2020 negotiated team formation, TB-CSPN, and later Clarus convergence. The tranche found no inspected pre-2026-04-29 source establishing the full continuous formation-to-candidate verification/authorization lifecycle, while explicitly treating that negative result as bounded rather than proof of absence.
 
 ## Publication rule
 
@@ -121,6 +129,7 @@ External-facing materials may describe DGAF as a **distinct formulation or imple
 ## Cross-references
 
 - `research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`
+- `research/DGAF_HISTORICAL_PRIORITY_TRANCHE_2026-09-01_02.md`
 - `research/DGAF_RELATED_WORK_SOURCE_ADJUDICATION.md`
 - `PRIOR_ART_AND_RELATED_WORK_SCOPE.md`
 - `PUBLICATION_AND_PROVENANCE_SPINE.md`
