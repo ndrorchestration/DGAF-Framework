@@ -1,6 +1,6 @@
 # CROSS_REF.md
 
-> **Last reviewed:** 2026-08-28  
+> **Last reviewed:** 2026-09-02  
 > **Purpose:** Canonical cross-reference index for project-local patterns, files, agents, terminology, evidence boundaries, and ecosystem relationships.
 
 ## Epistemic policy
@@ -27,6 +27,25 @@ The canonical semantic progression is:
 
 A semantic/ontological detector is not automatically a gate. Threshold-bearing or blocking use requires empirical characterization, including representative traces, adversarial evaluation, error characterization, independence analysis, reproducibility, and demonstrated control value.
 
+## Transversal dependency / agreement boundary — 2026-09-02
+
+A live state is transversally coherent only when independently maintained projections resolve to the same scoped identity and compatible status.
+
+Required identity tuple:
+
+`apparatus/source SHA + candidate SHA/tree + deployment identity/source SHA + workflow/evidence run + artifact identity + protocol/analysis binding + freeze identity + authorization state`
+
+Agreement classes:
+
+- `ROLE DIFFERENCE` — intentional semantic distinction between identities.
+- `HISTORICAL DIFFERENCE` — prior identity retained for provenance and explicitly non-closing.
+- `TRANSVERSAL DRIFT` — live projections can reasonably be read as different current states.
+- `BLOCKING CONTRADICTION` — discrepancy capable of permitting invalid evidence transfer or governance transition.
+
+GitHub, Vercel, Notion, evidence registries, taxonomies, vocabulary registries, pattern registries, and public/current documentation are independent projections. Shared ancestry, repository, branch, workflow name, deployment URL, or apparent behavioral equivalence does not establish candidate equivalence.
+
+This is a consistency property, not an evidentiary class and not an authorization mechanism.
+
 ## Pattern Commons boundary
 
 **Architecture:** [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](docs/PATTERN_COMMONS_ARCHITECTURE.md)
@@ -35,7 +54,7 @@ Pattern Commons is the proposed ecosystem-level layer for pattern identity, prov
 
 ### Pattern namespaces
 
-- **NDR P-series / named-session patterns:** current registry identity is represented by `docs/ndr_patterns_unified.json`, with `docs/NDR_PATTERN_REGISTRY_UNIFIED_P42.md` serving as the current human-readable P-42 reconciliation companion. `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` remains a historical P-41 snapshot until separately reconciled.
+- **NDR P-series / named-session patterns:** current machine-readable registry is `docs/ndr_patterns_unified.json`; the current human-readable P-42 reconciliation companion is `docs/NDR_PATTERN_REGISTRY_UNIFIED_P42.md`; the non-destructive transversal overlay is `docs/NDR_PATTERN_REGISTRY_UNIFIED_TRANSVERSAL_OVERLAY_2026-09-02.md` with machine counterpart `docs/ndr_patterns_unified_transversal_overlay.json`. `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` remains a historical P-41 snapshot until separately reconciled.
 - **DGAF orchestration patterns:** `registry/PATTERN_REGISTRY_v2.md`, using identifiers such as `P-SAGA-001`, `P-TX-001`, `P-CB-001`; this is distinct from the NDR P-series.
 - **External/cross-listed patterns:** repositories such as `ai-governance-frameworks`, `ai-prompt-systems-portfolio`, `Amethyst-Governance-Eval-Stack`, `aoga-dashboard`, and `sentinel-governance` may contain independent, adapted, or cross-reference artifacts. Canonical-source evidence is required before consolidation.
 
@@ -45,11 +64,14 @@ Shared identifiers or terminology do not establish semantic equivalence.
 
 **Current machine-readable registry:** `docs/ndr_patterns_unified.json`  
 **Current human-readable reconciliation:** `docs/NDR_PATTERN_REGISTRY_UNIFIED_P42.md`  
+**Current transversal overlay:** `docs/NDR_PATTERN_REGISTRY_UNIFIED_TRANSVERSAL_OVERLAY_2026-09-02.md`  
+**Machine-readable transversal overlay:** `docs/ndr_patterns_unified_transversal_overlay.json`  
+**Transversal pattern card:** `patterns/NDR_TRANSVERSAL_CANDIDATE_AGREEMENT_v1.md`  
 **Historical Markdown snapshot requiring reconciliation:** `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`  
 **P-42 pattern card:** `patterns/P-42_AHG.md`  
 **Reconciliation record:** `docs/governance/NDR_REGISTRY_RECONCILIATION_2026-08-28.md`
 
-The machine-readable registry declares P-42 / 42 P-series entries. The dedicated P-42 reconciliation companion explicitly records the older unified Markdown file as historical until its canonical text is reconciled. This is a documentation synchronization issue, not evidence of empirical efficacy.
+The machine-readable registry declares P-42 / 42 P-series entries. The current human-readable reconciliation companion and transversal overlay explicitly record the older unified Markdown file as historical until its canonical text is reconciled. This is a documentation synchronization issue, not evidence of empirical efficacy.
 
 ## P-35–P-38 research candidates
 
@@ -61,6 +83,13 @@ The following concepts are research candidates, not currently assigned canonical
 - Observational Perturbation
 
 They must not override the existing P-35–P-42 namespace without an explicit registry decision.
+
+## P-35 / P-42 vocabulary boundary
+
+**P-35:** Procluding Premise Gate.  
+**P-42:** Adaptive Harmonic Governance (AHG).
+
+These are distinct namespaces. The current P-35 engineering remediation introduces an explicit premise-check dependency at the DGAF/TGL/ConsensusTask boundary. That is an engineering/wiring requirement, not a PDMAL-specific constitutional premise policy. PDMAL premise-policy approval remains a separate experimental-control prerequisite.
 
 ## AHG / P-42 vocabulary boundary
 
@@ -121,6 +150,7 @@ A relationship across disciplines does not establish equivalence across them. Ea
 | Concern | Canonical reference |
 |---|---|
 | Semantic/ontological boundary | `docs/CURRENT_STATE.md`, this index, vocabulary/taxonomy governance |
+| Transversal dependency/agreement | `docs/taxonomy/TRANSVERSAL_AGREEMENT_AND_DEPENDENCY_TAXONOMY_2026-09-02.md` |
 | Pattern Commons | `docs/PATTERN_COMMONS_ARCHITECTURE.md` |
 | Commercialization/open source | `docs/GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md` |
 | Asset-level boundary inventory | `docs/GOVERNANCE/DGAF_ASSET_LEVEL_BOUNDARY_INVENTORY_2026-08-25.md` |
@@ -128,7 +158,7 @@ A relationship across disciplines does not establish equivalence across them. Ea
 | Cross-disciplinary boundary | `docs/GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md` |
 | Current project status | `docs/PROJECT_STATUS.md`, `docs/CURRENT_STATE.md` |
 | Evidence policy | `docs/evidence/` |
-| NDR registry | `docs/ndr_patterns_unified.json`, `docs/NDR_PATTERN_REGISTRY_UNIFIED_P42.md` |
+| NDR registry | `docs/ndr_patterns_unified.json`, `docs/NDR_PATTERN_REGISTRY_UNIFIED_P42.md`, transversal overlay |
 | Historical NDR registry snapshot | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` |
 | License | `LICENSE` |
 | Funding | `.github/FUNDING.yml` |
@@ -154,5 +184,6 @@ Historical sweep logs, old deadlines, attestation percentages, tier labels, and 
 6. Preserve historical evidence while correcting current-state labels.
 7. Empirically characterize any semantic/ontological detector before promoting it to a threshold-bearing or blocking control.
 8. Keep #117 and #122 open until their respective implementation/provenance prerequisites are genuinely satisfied.
+9. Require transversal agreement checks before promoting a candidate state across GitHub, Vercel, Notion, taxonomy, pattern registries, and retained evidence.
 
-*Reviewed 2026-08-28 as part of the repository-wide epistemic, temporal, terminology, semantic, traceability, evaluation-integrity, registry, and commercialization-boundary audit.*
+*Reviewed 2026-09-02 as part of the repository-wide epistemic, temporal, terminology, semantic, transversal-dependency, traceability, evaluation-integrity, registry, and commercialization-boundary audit.*
