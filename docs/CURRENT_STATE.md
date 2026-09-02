@@ -21,6 +21,13 @@ freeze_status: NOT_CREATED
 
 GitHub is authoritative for implementation and CI; governance decisions are recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment/artifact that produced it. Documentation may advance independently of the experimental candidate; it must not silently transfer experimental evidence.
 
+## Machine-readable identity boundary
+
+- **main:** `275756fd81c975f17ae3d16d24e599db0617cf85`
+- **candidate identity:** PR #192 / `58ba9a072f40e94638b0332eeec19dd882a7ff95` / tree `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb`
+- **deployment identity:** `NOT_ESTABLISHED` — no READY Vercel deployment has recorded Git SHA `58ba9a072f40e94638b0332eeec19dd882a7ff95`
+- **corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+
 > **Current control-plane lineage:** `main` = `275756fd81c975f17ae3d16d24e599db0617cf85`.
 >
 > **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` remains the canonical provenance anchor for the restored behavior-affecting DGAF/TGL gate-state substrates.
