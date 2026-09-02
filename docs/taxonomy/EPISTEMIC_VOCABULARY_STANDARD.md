@@ -1,8 +1,8 @@
 # Epistemic Vocabulary Standard
 
 **Status:** Canonical policy for taxonomy and vocabulary artifacts
-**Effective:** 2026-08-15
-**Scope:** `docs/NDR_INTERNAL_VOCABULARY_MASTER.md`, `docs/taxonomy/**`, agent role vocabularies, external-equivalent mappings, benchmark language, and generated taxonomy documents.
+**Effective:** 2026-09-02 reconciliation extension
+**Scope:** `docs/NDR_INTERNAL_VOCABULARY_MASTER.md`, `docs/taxonomy/**`, agent role vocabularies, external-equivalent mappings, benchmark language, generated taxonomy documents, and transversal candidate-state terminology.
 
 ## Purpose
 
@@ -104,6 +104,43 @@ This preserves the audit trail without laundering historical assertions into cur
 
 A term shared by two projects does not establish architectural identity. Shared mathematical motifs, names, metaphors, or control patterns must be recorded as similarity only until an explicit bridge is implemented and documented.
 
+## Transversal Agreement Vocabulary — 2026-09-02
+
+A live governance state is **transversally coherent** only when the independently maintained projections of that state resolve to the same scoped identity and compatible status.
+
+Required identity tuple:
+
+`apparatus/source SHA + candidate SHA/tree + deployment identity/source SHA + workflow/evidence run + artifact identity + protocol/analysis binding + freeze identity + authorization state`
+
+Use the following distinct terms:
+
+| Term | Meaning |
+|---|---|
+| `ROLE DIFFERENCE` | Two identifiers intentionally describe different semantic roles in the same candidate cycle. |
+| `HISTORICAL DIFFERENCE` | A prior candidate/run/deployment is retained for provenance and explicitly marked historical/non-closing. |
+| `TRANSVERSAL DRIFT` | Independent live projections can reasonably be read as describing different current states. |
+| `BLOCKING CONTRADICTION` | A projection would permit invalid evidence transfer, downstream closure, freeze, or authorization. |
+| `CANDIDATE-BOUND` | Evidence explicitly names the exact candidate identity that produced it. |
+| `CURRENT-CYCLE` | Evidence belongs to the selected candidate cycle and its upstream dependencies. |
+
+Transversal agreement is a **consistency property**, not an evidence class. A successful consistency check cannot upgrade `DEFINED`, `IMPLEMENTED`, `VERIFIED`, or historical material by itself.
+
+### P-35 / P-42 namespace rule
+
+`P-35` is **Procluding Premise Gate**.
+
+`P-42` is **Adaptive Harmonic Governance (AHG)**.
+
+The current P-35 engineering remediation enforces an explicit premise-check dependency at the DGAF/TGL/ConsensusTask boundary. That wiring rule is not a PDMAL-specific constitutional premise policy. A PDMAL-specific checker remains an explicit scientific-control dependency and must be approved separately before pilot execution.
+
+### Evidence transition vocabulary
+
+Keep these transitions distinct:
+
+`DEFINED → IMPLEMENTED → TESTED → CANDIDATE-BOUND → VERIFIED → FROZEN → AUTHORIZED → EMPIRICAL`
+
+No transition is implied by naming, ancestry, deployment readiness, or shared workflow identity.
+
 ## Minimum Review Checklist
 
 Before merging a taxonomy/vocabulary change:
@@ -117,5 +154,8 @@ Before merging a taxonomy/vocabulary change:
 - [ ] Certification language identifies scope and evidence.
 - [ ] Cross-project similarities are not presented as identity.
 - [ ] Deprecated terminology is explicitly marked.
+- [ ] Candidate, apparatus, deployment, workflow, artifact, freeze, and authorization identities are role-qualified.
+- [ ] Cross-system live projections are checked for transversal agreement.
+- [ ] New dependencies are identified and their downstream invalidation scope is recorded.
 
-**Canonical rule:** Vocabulary organizes claims; it does not upgrade their epistemic status.
+**Canonical rule:** Vocabulary organizes claims; it does not upgrade their epistemic status. Transversal agreement organizes state projections; it does not create authorization.
