@@ -3,11 +3,31 @@
 **Authority:** COLLEEN (Institutional Anchor / Sovereign Governance)
 **Scope:** Ecosystem tier taxonomy · Agent KB inventory tracking · Formation assignments · Amendment log
 **Status:** ACTIVE · CANONICAL
-**Version:** 2.1
-**Last Updated:** 2026-06-29 (Phase E — Phase C 9-agent inventory patch; formation topology finalized; Apogee Lens verdict recorded)
+**Version:** 2.2
+**Last Updated:** 2026-09-02 — transversal dependency/agreement reconciliation added
 
 > **Scope boundary:** This file tracks *ecosystem metadata* (formation, inventory, amendment history).
 > For sovereign agent identity, formation rules, and gate ownership, see [`AGENT_ROSTER.md`](./AGENT_ROSTER.md) — that file is the SSoT and is Sentinel-guarded.
+
+---
+
+## Transversal Reconciliation Addendum — 2026-09-02
+
+Taxonomy identity and experimental-control identity are distinct. Agent/formation labels describe designed roles and topology; they do not by themselves establish capability, evidence, deployment readiness, freeze, authorization, or empirical execution.
+
+For current candidate cycles, use role-qualified identities:
+
+`apparatus/source SHA` = provenance anchor
+`candidate SHA/tree` = exact executable identity
+`deployment ID/source SHA` = execution substrate identity
+`workflow head/run` = CI execution identity
+`artifact` = retained evidence object
+`freeze SHA` = immutable experimental identity
+`authorization` = explicit governance transition
+
+Cross-system state is **transversally coherent** only when GitHub, Vercel, Notion, evidence records, taxonomy, and pattern-library projections agree on the same scoped identity and compatible status. Historical or superseded identities must be explicitly marked and never substituted for the current cycle.
+
+P-35/P-42 namespace distinction is canonical: `P-35 = Procluding Premise Gate`; `P-42 = Adaptive Harmonic Governance`. Current P-35 remediation enforces an explicit premise-check dependency at the DGAF/TGL/ConsensusTask boundary. That is an engineering dependency, not a PDMAL-specific constitutional premise policy; the PDMAL checker remains a separate experimental-control prerequisite.
 
 ---
 
@@ -19,6 +39,8 @@
 | [`AGENT_ECOSYSTEM_REGISTRY.md`](./AGENT_ECOSYSTEM_REGISTRY.md) | **This file** — taxonomy counts, inventory tracking, amendment log |
 | [`FORMATION_TOPOLOGY.md`](./FORMATION_TOPOLOGY.md) | Formation specs, topology algebra, activation state machine |
 | [`PROPRIETARY.md`](./PROPRIETARY.md) | IP partition — SOV-005/SOV-006 stubs for T3 sovereign agents |
+| [`../taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md`](../taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md) | Epistemic handling of taxonomy claims |
+| [`../taxonomy/TRANSVERSAL_AGREEMENT_AND_DEPENDENCY_TAXONOMY_2026-09-02.md`](../taxonomy/TRANSVERSAL_AGREEMENT_AND_DEPENDENCY_TAXONOMY_2026-09-02.md) | Cross-system dependency/agreement semantics |
 
 ---
 
@@ -197,6 +219,8 @@ SPECIALIST
 | Archive Trio = Librarian + Auditor + Actualizer | Multiple v1.1 amendments | All files referencing the Trio |
 | Paragon sign-off = Gold Star prerequisite | Paragon KB v1.0 §4 | All Gold Star / S-Tier designation workflows |
 | ETHICAL_HOLD authority = Sentience | Sentience KB v1.0 | All formation outputs; overridable only by COLLEEN or Njineer |
+| Transversal candidate agreement | 2026-09-02 reconciliation | All live candidate-state projections across GitHub/Vercel/Notion/taxonomy/pattern registries |
+| P-35 premise-check dependency | 2026-09-02 P-35 remediation boundary | Engineering wiring only; PDMAL premise policy remains separately approved |
 
 ---
 
