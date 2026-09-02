@@ -33,8 +33,8 @@ This is the current planning/control surface. It does not itself constitute effi
 | P5 Provenance / Reproducibility | **VERIFIED — verifier/toolchain scope; final closure open** | Current candidate hashes, environment/dependency fingerprints, and deterministic instrumentation are retained; final reproduction chain remains open. |
 | P6 Durable Evidence Custody | **OPEN / FAIL-CLOSED** | GitHub Actions artifacts exist, but durable independent archive/retrieval/hash verification is not yet established. |
 | P6a Runtime/CORS | **OPEN — deployment-bound** | No authenticated four-case CORS matrix exists for `58ba9a…`; prior mainline evidence does not transfer. Vercel currently reports provider build/deployment rate limiting. |
-| P7 Scientific Target | **ADOPTED / exact-candidate binding pending** | Existing scientific specification remains authoritative; a September 2 exact-candidate provenance binding record is to be maintained separately from freeze/authorization. |
-| P8 Analysis Lock | **OPEN / FAIL-CLOSED** | Exact candidate CI prerequisites now pass, but P2/P6a, P4/P6, final P7 binding, and fresh P9 remain open. |
+| P7 Scientific Target | **EXACT-CANDIDATE BINDING RECORDED / PRE-FREEZE** | Adopted scientific specification is explicitly bound to `58ba9a…` / `abdbc9b…` in the September 2 P7 binding record. Formal frozen-apparatus identity remains pending the later immutable freeze procedure. |
+| P8 Analysis Lock | **OPEN / FAIL-CLOSED** | Exact candidate CI prerequisites now pass, but P2/P6a, P4/P6, final frozen-state P7, and fresh P9 remain open. |
 | P9 Independent Verification | **OPEN — fresh final-candidate verification required** | Prior scoped P9 belongs to `a43219b…`/`562753b…`; it cannot certify `58ba9a…`. |
 
 ## September 2 exact-candidate CI evidence
@@ -87,7 +87,7 @@ The selected candidate contains the reviewed P-35 production-boundary remediatio
 
 1. Establish an exact Vercel deployment/runtime identity for `58ba9a…` and execute authenticated P2/P6a.
 2. Complete operational P4 and durable-custody P6 evidence.
-3. Record the exact-candidate P7 provenance binding without changing the already-adopted scientific values.
+3. Maintain the recorded exact-candidate P7 provenance binding and later bind the immutable frozen apparatus without changing the adopted scientific values.
 4. Execute fresh final-candidate P9 and close P8 only from current evidence.
 5. Create and independently verify the immutable freeze.
 6. Obtain separate explicit pilot authorization.
