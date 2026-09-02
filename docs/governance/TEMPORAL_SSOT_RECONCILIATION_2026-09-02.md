@@ -8,7 +8,8 @@
 | Role | Current identity | State |
 |---|---|---|
 | GitHub `main` documentation/control-plane lineage | `275756fd81c975f17ae3d16d24e599db0617cf85` | CURRENT |
-| Current experimental candidate under active remediation cycle | PR #192 / `edd3b5c8266e2680b9bb94301c2623a3f1ac0cf0` | CANDIDATE / PRE-FREEZE |
+| Current experimental candidate under active remediation cycle | PR #192 / `58ba9a072f40e94638b0332eeec19dd882a7ff95` | CANDIDATE / PRE-FREEZE |
+| Candidate tree | `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb` | CURRENT CANDIDATE TREE |
 | Corrected apparatus provenance anchor | `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | CANONICAL SOURCE ANCHOR |
 | Prior mainline runtime candidate | `92ff830b1c67413df745e37087e6447c9c251b9a` | HISTORICAL / SCOPED |
 | Prior controlled completion candidate | `a43219b4ed91fff8615f6c655ab3d17ca871fc29` | HISTORICAL / SCOPED |
@@ -49,7 +50,7 @@ Agreement classes:
 - `TRANSVERSAL DRIFT` — live projections can reasonably be read as different current states.
 - `BLOCKING CONTRADICTION` — discrepancy capable of invalid evidence transfer or governance transition.
 
-Current finding: GitHub and Notion agree on the non-authorizing/pre-freeze posture, but older current-candidate labels remain in historical/role-specific projections. Exact candidate convergence with Vercel is not established because no exact-source deployment is evidenced for PR #192 head `edd3b5c...`.
+Current finding: GitHub and Notion agree on the non-authorizing/pre-freeze posture. Exact candidate convergence with Vercel is not established because no exact-source deployment is evidenced for PR #192 head `58ba9a…`; the provider is reporting the build/deployment rate-limit condition.
 
 ## 6. Timeline and progress-document rule
 
@@ -93,7 +94,15 @@ The following identities remain present in older repository files and are not to
 
 The required repair is role qualification and explicit historical status, not deletion of provenance.
 
-## 9. Timeline integrity requirement
+## 9. Current exact-candidate verification summary
+
+The current candidate received a complete successful September 2 GitHub Actions wave. Governance CI, Pre-Freeze Runner Validation, Pre-Authorization Security, PDMAL Harness Validation, instrumentation dry run, truth-layer checks, regression, control-state, coverage, epistemic, claim-hygiene, IP-hygiene, and documentation checks all completed successfully.
+
+Candidate-bound artifacts include current pre-freeze runner evidence, deterministic instrumentation, governance evaluation evidence, and freeze-control evidence. The freeze-control evidence explicitly records candidate `58ba9a…`, freeze `NOT_CREATED`, authorization `NOT_GRANTED`, and empirical N `0`.
+
+Some workflow artifacts preserve GitHub's pull-request merge-ref commit as an execution-context field. That field is retained as a separate workflow identity; it does not replace the candidate head SHA.
+
+## 10. Timeline integrity requirement
 
 A timeline entry may report engineering progress, documentation progress, evidence progress, or experimental progress. These are different axes.
 
@@ -101,7 +110,7 @@ A timeline entry may report engineering progress, documentation progress, eviden
 
 In particular, successful CI, documentation reconciliation, taxonomy updates, deployment health, or pre-freeze runner verification do not advance empirical N.
 
-## 10. P-35 / P-42 vocabulary boundary
+## 11. P-35 / P-42 vocabulary boundary
 
 `P-35` = **Procluding Premise Gate**.
 
@@ -109,7 +118,7 @@ In particular, successful CI, documentation reconciliation, taxonomy updates, de
 
 The explicit `premise_check_fn` required by the P-35 remediation is an engineering/wiring dependency at the DGAF/TGL/ConsensusTask boundary. It does not constitute approval of a PDMAL-specific constitutional premise policy.
 
-## 11. Authoritative usage rule
+## 12. Authoritative usage rule
 
 When a current-state question conflicts with an older timeline or status snapshot:
 
