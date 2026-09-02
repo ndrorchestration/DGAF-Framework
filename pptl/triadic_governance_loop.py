@@ -202,7 +202,7 @@ class TriadicGovernanceLoop:
         self,
         audit: TurnAuditRecord,
         context: dict,
-        raise_premise: Exception | None = None,
+        
     ) -> TurnAuditRecord:
         """Publish a pre-Herald snapshot, append Herald result, reduce again, then final-seal the complete set."""
         herald_record = self._run_hook(
@@ -216,8 +216,6 @@ class TriadicGovernanceLoop:
         audit.gate_records.append(herald_record)
         audit.final_status = self._reduce_status(audit.gate_records, initial=audit.final_status)
         audit.seal()
-        if raise_premise is not None:
-            raise raise_premise
         return audit
 
     def run_turn(
@@ -241,7 +239,7 @@ class TriadicGovernanceLoop:
                 self.session_id, self._turn_counter, self.agent_id, input_hash,
                 gates, TurnStatus.KILL, timestamp,
             )
-            self._emit_herald_and_seal(audit, context, raise_premise=exc)
+            self._emit_herald_and_seal(audit, context)
             return audit
         except Exception as exc:
             # P-35 is fail-closed even when the supplied checker itself fails.
