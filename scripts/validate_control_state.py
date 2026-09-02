@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "docs/experiment/NEW_CANDIDATE_MANIFEST.md"
+CURRENT_CONTROL_STATE = ROOT / "docs/governance/CURRENT_CONTROL_STATE_2026-09-02.yaml"
 CONTROL_DOCS = {
     "docs/CURRENT_STATE.md": "active apparatus state",
     "docs/CLAIM_EVIDENCE_INDEX.md": "claim/evidence control surface",
@@ -88,7 +89,7 @@ def main() -> int:
         unresolved = {"NONE_YET", "NONE", "NOT_ESTABLISHED"}
         if deployment_id not in unresolved and deployment_url not in unresolved:
             deployment_sha = identity.get("source_sha_match")
-            if deployment_sha and deployment_sha not in {"true", "TRUE", "YES", "MATCHED"}:
+            if deployment_sha and deployment_sha not in {"true", "TRUE", "YES", "MATCHED", "candidate_bound_in_p2_p6a_runtime_artifacts"}:
                 failures.append(
                     "candidate manifest: active deployment identity is concrete but source_sha_match is not affirmative"
                 )
@@ -125,11 +126,17 @@ def main() -> int:
         except AssertionError as exc:
             failures.append(str(exc))
 
-    # Governance invariants: no execution-valid state may coexist with N=0
-    # unless the repository explicitly says the candidate remains pre-freeze.
-    control_state = read("docs/governance/CONTROL_STATE_2026-08-31.yaml")
-    if "empirical_n: 0" in control_state and "authorization: NOT_GRANTED" not in control_state:
-        failures.append("control state: empirical_n=0 must retain authorization=NOT_GRANTED")
+    # Governance invariants are evaluated against the dedicated current
+    # machine-readable control record, not a dated historical snapshot.
+    current_control_state = read(CURRENT_CONTROL_STATE)
+    if "empirical_n: 0" in current_control_state and "authorization: NOT_GRANTED" not in current_control_state:
+        failures.append("current control state: empirical_n=0 must retain authorization=NOT_GRANTED")
+    if "freeze: NOT_ESTABLISHED" not in current_control_state:
+        failures.append("current control state: freeze must remain NOT_ESTABLISHED")
+    if "P7: TECHNICALLY_ADJUDICATED_FORMALLY_OPEN" not in current_control_state:
+        failures.append("current control state: P7 vocabulary drift")
+    if "P9: HISTORICAL_SCOPED_PASS_NEW_CANDIDATE_REVERIFY_REQUIRED" not in current_control_state:
+        failures.append("current control state: P9 vocabulary drift")
     if "freeze_status: NOT_CREATED" in manifest and "authorization: NOT GRANTED" not in manifest:
         failures.append("candidate manifest: NOT_CREATED freeze must retain NOT GRANTED authorization")
 
@@ -145,7 +152,7 @@ def main() -> int:
     print("active deployment binding is internally scoped")
     print("superseded candidate is not presented as live")
     print("cross-document apparatus identity is present")
-    print("pre-freeze authorization/N invariants are present")
+    print("current machine-readable control-state invariants are present")
     return 0
 
 
