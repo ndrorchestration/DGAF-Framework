@@ -1,7 +1,7 @@
 # NDR Acronym Registry
 
 **Status:** CANONICAL REGISTRY / epistemic vocabulary control  
-**Date:** 2026-08-15
+**Date:** 2026-09-02 — transversal dependency/agreement reconciliation
 
 ## Purpose
 
@@ -19,7 +19,7 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **SIL** | Spatial Intelligence Layer | Perception/spatial abstraction layer within the ASIS concept | DEFINED | Do not imply a standardized external technology. |
 | **PDMAL / PDMA-L** | Phi-Driven Multi-Agent Lattice | Dodecahedral-graph lattice/control structure and associated formalism | VERIFIED for explicitly tested graph/math quantities; DEFINED for architecture | Not established as a complete BFT consensus protocol. |
 | **DGAF** | Dynamic Governance Agentic Formation | Agentic governance/orchestration framework | DEFINED; implementation evidence is artifact-specific | Do not infer capability from framework name alone. |
-| **AXIS** | Agent X-axis Invariant Spectrum | DGAF invariant measurement/metric spine | DEFINED; operationalization status is artifact-specific | Canonical expansion is explicitly recorded in `docs/qa/AXIS_METRIC_SPEC.md`; the specification itself states that full operationalization remains a roadmap item. fileciteturn231file0 |
+| **AXIS** | Agent X-axis Invariant Spectrum | DGAF invariant measurement/metric spine | DEFINED; operationalization status is artifact-specific | Canonical expansion is recorded in `docs/qa/AXIS_METRIC_SPEC.md`; separate verification is required for operational claims. |
 | **SACP** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical/project-local term | AMBIGUOUS | Do not invent an expansion. Preserve the acronym until a canonical source is located. |
 | **BFT** | Byzantine Fault Tolerance | Established distributed-systems fault model/property | EXTERNAL STANDARD TERM | PDMAL is not automatically BFT merely because BFT terminology appears nearby. |
 | **MDAR** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | DGAF protocol reference | AMBIGUOUS | The repository contains references to an `MDAR_PROTOCOL_v1.md`, but the current search surface did not establish its expansion. Do not infer one. |
@@ -63,6 +63,18 @@ If source evidence does not establish what an acronym expands to, mark it `AMBIG
 
 A mathematical or scientific acronym can be correctly expanded while its use in a project remains only analogous. The external definition and the project's implementation must be documented separately.
 
+## Transversal candidate-state vocabulary
+
+Acronym registries participate in the same cross-system identity discipline as taxonomy and pattern registries.
+
+Acronym/term status must be distinguished from candidate evidence state. In particular:
+
+`DEFINED != IMPLEMENTED != TESTED != CANDIDATE-BOUND != VERIFIED != FROZEN != AUTHORIZED != EMPIRICAL`
+
+`P-35 = Procluding Premise Gate` and `P-42 = Adaptive Harmonic Governance`; these are distinct namespaces.
+
+The current P-35 remediation's explicit `premise_check_fn` is an engineering/wiring dependency at the DGAF/TGL/ConsensusTask boundary. It is not a PDMAL-specific constitutional premise policy.
+
 ## Known conflicts requiring source-level resolution
 
 ### AHG
@@ -77,9 +89,7 @@ The Zeta-Pell audit documented this conflict directly. It must not be silently r
 
 ### AXIS
 
-Current canonical expansion: **Agent X-axis Invariant Spectrum**. The authoritative source is `docs/qa/AXIS_METRIC_SPEC.md`. fileciteturn231file0
-
-The acronym is reconciled at the vocabulary level. Separate verification is still required for claims about AXIS's operational deployment, scoring validity, or performance.
+Current canonical expansion: **Agent X-axis Invariant Spectrum**. The acronym is reconciled at the vocabulary level. Separate verification is still required for claims about operational deployment, scoring validity, or performance.
 
 ### SACP
 
@@ -99,6 +109,7 @@ Future acronym sweeps must report:
 4. source file(s);
 5. evidence class;
 6. whether the expansion is current, historical, ambiguous, or deprecated;
-7. whether the acronym is being used as an external-standard term or an NDR-local term.
+7. whether the acronym is being used as an external-standard term or an NDR-local term;
+8. whether the acronym participates in a live candidate-state projection and, if so, whether that projection agrees transversally with the other control surfaces.
 
 **No acronym is considered reconciled merely because one plausible expansion exists.**
