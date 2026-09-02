@@ -8,11 +8,13 @@
 
 The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. No pilot authorization has been granted and empirical **N = 0**.
 
-`main` is documentation/control-plane lineage. The current mainline runtime candidate is `92ff830b1c67413df745e37087e6447c9c251b9a` with exact tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`. The latest controlled completion candidate is `562753b3053b3566b0fcad1b0b1df151d7de119a` on `completion/2026-09-01-exact-candidate`; these identities are not interchangeable.
+`main` is documentation/control-plane lineage. The current mainline runtime candidate is `92ff830b1c67413df745e37087e6447c9c251b9a` with exact tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`. The latest controlled completion candidate is `a43219b4ed91fff8615f6c655ab3d17ca871fc29` on `completion/2026-09-01-exact-candidate`; these identities are not interchangeable.
 
 ## Canonical engineering lane
 
 The completion work is maintained in controlled candidate branches and must be explicitly rebound before any freeze or experiment. Current engineering controls include candidate identity checks, provenance binding, fail-closed governance, and independent verification paths. Documentation commits do not silently redefine the experimental candidate.
+
+The trusted completion controller is active on `main`. Its latest successful evaluation used the workflow-run candidate input `a43219b4ed91fff8615f6c655ab3d17ca871fc29`, reconciled exact-candidate P9 evidence, and returned `OPEN_GAPS`. It does not freeze or authorize a pilot.
 
 ## Current TGL contract boundary
 
@@ -42,38 +44,65 @@ Generic execution roles do not create or elevate agent authority.
 |---|---|
 | Corrected apparatus source | `2a54a67d…` |
 | Mainline runtime candidate | `92ff830b…` / tree `73cf3ad…` |
-| Latest completion candidate | `562753b…` / branch `completion/2026-09-01-exact-candidate` |
+| Latest completion candidate | `a43219b…` / branch `completion/2026-09-01-exact-candidate` |
 | P2 runtime verification | `VERIFIED` for `92ff830b…` / deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
 | P6a CORS verification | `VERIFIED` for `92ff830b…` / deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
-| P9 scoped independent verification | `PASS` for `562753b…` via run `33567199896` |
-| P3 | Open |
-| P4 | Open |
-| P5 | Open |
-| P6 | Open / fail-closed |
-| P7 | Adopted / final exact binding open |
-| P8 | Open / fail-closed |
-| Broader P9 closure | Open / conditional |
+| P3 | Candidate-bound structural/dry-run evidence present; operational closure remains OPEN |
+| P4 | OPEN — dry-run blinding evidence is not operational closure |
+| P5 | OPEN — dry-run reproducibility evidence is not full closure |
+| P6 | OPEN / fail-closed — durable external archive round-trip still required |
+| P7 | Technically adjudicated / formally OPEN; exact authority adoption and freeze binding remain required |
+| P8 | OPEN / fail-closed |
+| P9 scoped independent verification | `PASS` for `a43219b…` via run `33572123857`; broader closure remains OPEN |
+| Trusted completion controller | `SUCCESS` — `OPEN_GAPS` for `a43219b…` |
 | New immutable freeze | Not created |
 | Pilot authorization | Not granted |
 | Empirical N | 0 |
 
-## Latest P9 scoped result
+## Latest exact-candidate evidence
 
-Run `33567199896` completed successfully for exact candidate `562753b3053b3566b0fcad1b0b1df151d7de119a`.
+### PDMAL instrumentation dry run
+
+Run `33572123862` completed successfully against exact candidate `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
+
+Latest rerun evidence:
+
+- artifact ID `9825740072`, ZIP digest `sha256:1a9f520bac2bf12ca8386c5c050489620028657866e4fee66e64905507ec31ae`;
+- inner CSV SHA-256 `c12098da63ae1508edbb350799360e1edccfebb16c9d0faf0db4d593ffea8ce2`;
+- evidence registry artifact `9825740649`, ZIP digest `sha256:c6c2fda4ce18d476ef95927a1430193ef34631dcce928c15695d43826678a205`.
+
+The rerun verified exact checkout identity, deterministic smoke behavior, RNG stream separation, structural tests, schema/checksum validation, artifact round-trip retrieval, and environment fingerprint capture. These are engineering/structural controls, not efficacy evidence. The source registry still emits P4/P5/P6 as `VERIFIED`; the trusted external controller conservatively reclassifies those statuses to `OPEN` because the current governance contract requires stronger candidate-bound closure evidence.
+
+### P9 independent verification
+
+Run `33572123857` completed successfully against exact candidate `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
 
 The independent verification workflow:
 
-- verified `git rev-parse HEAD == GITHUB_SHA`;
-- generated a deterministic case through the DGAF/Python path;
-- independently canonicalized it with `jq -S -c` and hashed it with `sha256sum`;
+- verified exact checkout identity (`HEAD == GITHUB_SHA`);
+- independently canonicalized the deterministic case with `jq -S -c` and hashed it with `sha256sum`;
 - required digest equality;
-- ran `tests/test_agent_authority_matrix.py` with `4 passed`;
-- emitted and uploaded an independent P9 evidence artifact.
+- ran the authority-identity regression with `4 passed`;
+- retained exact-candidate P9 evidence with authorization marked external and empirical execution requested as false.
 
-Artifact ID: `9823570326`  
-Artifact digest: `sha256:8e3435a3af0dc5de7376d970b9f1665a18db8ff04b26a2c0eaae8acf8b095d85`
+The latest P9 evidence artifact is `9825660346` with ZIP digest `sha256:cf5e475c31bd9258731dcec3e6f36588f9fbfa80c3bb787419b54770ccae7976`.
 
 This is **scoped verification evidence**, not a declaration that all P9 prerequisites are closed. It does not establish empirical efficacy, authorization, or a freeze.
+
+## Trusted completion-controller result
+
+The trusted controller run `33573171970` successfully accepted the exact candidate SHA as workflow-run data, retrieved the exact-candidate evidence registry, retrieved and validated P9 evidence, reconciled P9 into the registry, and produced `OPEN_GAPS`.
+
+The controller's blocking predicates were:
+
+- **P2 — OPEN:** exact completion-candidate runtime verification is still required.
+- **P4 — OPEN:** structural/dry-run evidence does not satisfy the current operational closure predicate.
+- **P5 — OPEN:** structural/dry-run reproducibility evidence does not satisfy the full closure predicate.
+- **P6 — OPEN:** the current run performed artifact round-trip custody, but the governance checklist requires durable external archive write, independent retrieval, hash equality, and retention binding.
+- **P7 — OPEN:** formal authority adoption and exact freeze binding remain outstanding.
+- **P8 — FAIL_CLOSED:** current-candidate analysis lock is not established.
+
+P3 and scoped P9 were present as exact-candidate evidence. The controller explicitly reported `freeze_authorized=false`, `pilot_authorized=false`, and `empirical_execution_requested=false`.
 
 ## Evidence boundary
 
