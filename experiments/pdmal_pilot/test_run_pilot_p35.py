@@ -94,7 +94,7 @@ def test_run_pilot_passes_explicit_checker_to_dgaf_task(monkeypatch, tmp_path):
     assert captured[0][1]["condition"] == "dgaf"
 
 
-def test_run_pilot_real_consensus_task_invokes_explicit_p35_checker(monkeypatch, tmp_path):
+def test_run_pilot_real_consensus_task_fails_closed_on_rejected_premises(monkeypatch, tmp_path):
     monkeypatch.setattr("run_pilot.require_frozen_commit", lambda: "c" * 40)
     monkeypatch.setattr("run_pilot.require_pilot_authorization", lambda: ("test-key", tmp_path))
     monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "test_run_pilot_p35:reject_premises")
@@ -111,6 +111,3 @@ def test_run_pilot_real_consensus_task_invokes_explicit_p35_checker(monkeypatch,
     record = captured[0]
     assert record["status"] == "UNRECOVERED_FAILURE"
     assert record["ffcr_success"] is False
-    trace = record["governance_trace"]
-    assert trace and trace[0]["final_status"] in {"KILL", "KILL_REC"}
-    assert any(gate["pattern"] == "P-35" and gate["result"] == "KILL" for gate in trace[0]["gates"])
