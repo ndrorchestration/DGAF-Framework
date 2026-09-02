@@ -28,6 +28,17 @@ LIVING_PATHS = [
     ROOT / "docs" / "governance" / "P1_TO_P9_EVIDENCE_MATRIX.md",
 ]
 
+HISTORICAL_MARKERS = (
+    "historical",
+    "superseded",
+    "prior candidate",
+    "previous candidate",
+    "former",
+    "provenance only",
+    "evidence does not transfer",
+    "must not be used",
+)
+
 
 def state_value(name: str) -> str:
     text = STATE.read_text(encoding="utf-8")
@@ -35,6 +46,29 @@ def state_value(name: str) -> str:
     if not match:
         raise RuntimeError(f"Missing {name} in {STATE}")
     return match.group(1)
+
+
+def bounded_context(lines: list[str], line_number: int, radius: int = 6) -> str:
+    start = max(0, line_number - 1 - radius)
+    end = min(len(lines), line_number + radius)
+    return "\n".join(lines[start:end])
+
+
+def has_historical_context(context: str) -> bool:
+    lower = context.lower()
+    return any(marker in lower for marker in HISTORICAL_MARKERS)
+
+
+def deprecated_p9_is_active_reference(line: str) -> bool:
+    """Return true only when the deprecated P9 record is presented as a live reference."""
+    return bool(
+        re.search(
+            r"(?i)(?:\[[^\]]*\]\([^)]*P9_LATEST_RECONCILIATION_2026-09-01\.md|"
+            r"(?:current|authoritative|latest|active)\s+(?:p9\s+)?(?:authority|record|reconciliation)|"
+            r"(?:current|latest)\s+p9[^\n]{0,80}P9_LATEST_RECONCILIATION_2026-09-01\.md)",
+            line,
+        )
+    )
 
 
 def main() -> int:
@@ -62,24 +96,14 @@ def main() -> int:
 
         text = path.read_text(encoding="utf-8")
         rel = path.relative_to(ROOT)
+        lines = text.splitlines()
 
-        # The superseded candidate is permitted only in explicitly historical
-        # context. This prevents a stale SHA from masquerading as current.
-        for lineno, line in enumerate(text.splitlines(), 1):
+        # A superseded candidate remains legal in living docs when the nearby
+        # prose explicitly identifies it as historical/superseded evidence.
+        for lineno, line in enumerate(lines, 1):
             if superseded in line:
-                lower = line.lower()
-                historical = any(
-                    marker in lower
-                    for marker in (
-                        "historical",
-                        "superseded",
-                        "prior candidate",
-                        "previous candidate",
-                        "evidence does not transfer",
-                        "provenance only",
-                    )
-                )
-                if not historical:
+                context = bounded_context(lines, lineno)
+                if not has_historical_context(context):
                     violations.append(
                         f"{rel}:{lineno}: superseded candidate appears without historical context"
                     )
@@ -87,8 +111,14 @@ def main() -> int:
         if obsolete_p7 in text:
             violations.append(f"{rel}: obsolete current P7 wording: {obsolete_p7}")
 
-        if obsolete_p9_name in text:
-            violations.append(f"{rel}: references deprecated P9 latest authority record")
+        # Explanatory mentions of the former filename are allowed when explicitly
+        # historical. Only an active/live cross-reference is a violation.
+        for lineno, line in enumerate(lines, 1):
+            if obsolete_p9_name not in line:
+                continue
+            context = bounded_context(lines, lineno)
+            if not has_historical_context(context) or deprecated_p9_is_active_reference(line):
+                violations.append(f"{rel}:{lineno}: references deprecated P9 latest authority record")
 
         if re.search(r"(?i)\bfreeze\s*[:=]\s*(?:established|created|frozen)\b", text):
             violations.append(f"{rel}: claims an established freeze; current state is NOT ESTABLISHED")
