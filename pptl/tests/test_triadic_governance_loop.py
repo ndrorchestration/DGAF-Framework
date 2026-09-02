@@ -112,7 +112,7 @@ def test_phi_closure_skip_skips_hpg():
     """An unwired Phi-Closure gate must also prevent HPG execution."""
     executed = []
     hooks = TGLHooks(hpg_fn=lambda text, ctx: executed.append(True) or GateResult.PASS)
-    audit = make_tgl().run_turn("phi skipped")
+    audit = make_tgl(hooks).run_turn("phi skipped")
     hpg = next(g for g in audit.gate_records if g.step == 7)
     assert hpg.result == GateResult.SKIP
     assert executed == []
