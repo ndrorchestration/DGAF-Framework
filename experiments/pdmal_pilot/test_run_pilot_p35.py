@@ -127,8 +127,8 @@ def test_run_pilot_real_consensus_task_invokes_explicit_p35_checker(
 
     captured: list[dict] = []
 
-    def capture(records, *args, **kwargs):
-        captured.extend(records)
+    def capture(_path, document, *args, **kwargs):
+        captured.extend(document["records"])
 
     monkeypatch.setattr("run_pilot._write_and_validate_artifact", capture)
 
