@@ -24,7 +24,7 @@ No evidence from an existing deployment may be silently rebound to a different c
 
 PDMAL instrumentation run `33572123862` completed successfully against exact candidate `a43219b…`. The latest rerun produced artifact `9825740072` with ZIP digest `sha256:1a9f520bac2bf12ca8386c5c050489620028657866e4fee66e64905507ec31ae` and evidence registry artifact `9825740649` with ZIP digest `sha256:c6c2fda4ce18d476ef95927a1430193ef34631dcce928c15695d43826678a205`.
 
-P9 run `33572123857` completed successfully against exact candidate `a43219b…`. The latest P9 evidence artifact is `9825660346` with ZIP digest `sha256:cf5e475c31bd9258731dcec3e6f36588f9fbfa80c3bb787419b54770ccae7976d`, and its independent canonicalization/hash path plus authority-identity regression passed.
+P9 run `33572123857` completed successfully against exact candidate `a43219b…`. The latest P9 evidence artifact is `9825660346` with ZIP digest `sha256:cf5e475c31bd9258731dcec3e6f36588f9fbfa80c3bb787419b54770ccae7976`, and its independent canonicalization/hash path plus authority-identity regression passed.
 
 The trusted completion controller is active on `main`. Its successful evaluation bound the triggering workflow evidence to `a43219b…` and returned `OPEN_GAPS`; no freeze or pilot authorization was granted.
 
