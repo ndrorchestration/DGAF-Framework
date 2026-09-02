@@ -3,11 +3,17 @@ from __future__ import annotations
 from task_engine import AttemptStatus, ConsensusTask
 
 
+def allow_all_premises(_text, _invariant) -> bool:
+    return True
+
+
 def test_dgaf_failure_retains_governance_audit_trace() -> None:
-    result = ConsensusTask(topology="ring", failure_count=0, condition="dgaf").run_detailed(
-        seed=20260817,
-        attempt=1,
-    )
+    result = ConsensusTask(
+        topology="ring",
+        failure_count=0,
+        condition="dgaf",
+        premise_check_fn=allow_all_premises,
+    ).run_detailed(seed=20260817, attempt=1)
 
     assert result.attempt_status is AttemptStatus.FAILURE
     assert result.governance_trace
