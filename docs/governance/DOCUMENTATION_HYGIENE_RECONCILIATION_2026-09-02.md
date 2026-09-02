@@ -1,5 +1,5 @@
 ---
-status: ACTIVE
+status: CLOSED
 scope: documentation hygiene
 verified: 2026-09-02
 current_control_ref: main
@@ -12,9 +12,9 @@ active_pre_freeze_artifact: 9831586822
 
 ## Purpose
 
-Maintain the repository's control-plane documentation after the P-35 remediation advanced and the exact-current-head pre-freeze runner completed successfully.
+Close the documentation-hygiene pass after the P-35 remediation advanced and the exact-current-head pre-freeze runner completed successfully.
 
-The earlier state of this document named `61f1be82…` and recorded the pre-freeze runner as unverified. That was correct for the earlier snapshot but is superseded by the verification recorded below.
+The earlier state of this document named `61f1be82…` and recorded the pre-freeze runner as unverified. That snapshot is superseded by the verification recorded below.
 
 ## Corrections applied
 
@@ -36,14 +36,15 @@ The earlier state of this document named `61f1be82…` and recorded the pre-free
 - Active P-35 remediation: PR #188, current head `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`.
 - Pre-freeze runner: **VERIFIED ON REMEDIATION HEAD** via run `33590352168`; manifest artifact `9831586822`.
 - P8: remains **OPEN / FAIL-CLOSED** because the verified remediation head is not yet a selected experimental candidate and the full current-cycle candidate evidence chain is not complete.
+- PR #188: **OPEN / DRAFT / NOT MERGED**.
 - Freeze: not established.
 - Authorization: not granted.
 - Empirical N: 0.
 
 ## Required next evidence
 
-1. Review/closure of PR #188 without treating engineering remediation as experimental authorization.
-2. Selection of a new exact experimental candidate after remediation.
+1. Formal review/acceptance of PR #188 without treating engineering remediation as experimental authorization.
+2. Selection of a new exact experimental candidate after remediation acceptance.
 3. Fresh candidate-bound P3–P9 and affected P2/P6a verification.
 4. Exact freeze binding, independent verification, and explicit pilot authorization before any empirical execution.
 
