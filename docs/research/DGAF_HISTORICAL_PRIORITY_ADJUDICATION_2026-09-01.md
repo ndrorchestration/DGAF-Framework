@@ -199,7 +199,7 @@ This document does **not** establish that DGAF:
 - invented idempotency;
 - invented provenance or exact artifact binding;
 - invented candidate/release separation;
-- is empirically superior;
+- does not establish empirical superiority;
 - is production-validated;
 - has a globally unique architecture.
 
