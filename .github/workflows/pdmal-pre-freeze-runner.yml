@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - epistemic/evidence-architecture-v1
+      - remediation/p35-premise-hook-2026-09-01
   pull_request:
 
 permissions:
@@ -72,13 +73,32 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          curl --fail-with-body \
-            -X POST \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pdmal-pre-freeze-runner.yml/dispatches" \
-            -d '{"ref":"epistemic/evidence-architecture-v1"}'
+          set -euo pipefail
+          ref_name="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          test -n "$ref_name"
+          python - <<'PY'
+          import json, os
+          from urllib.request import Request, urlopen
+          ref = os.environ["REF_NAME"]
+          payload = json.dumps({"ref": ref}).encode()
+          request = Request(
+              f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/actions/workflows/pdmal-pre-freeze-runner.yml/dispatches",
+              data=payload,
+              headers={
+                  "Accept": "application/vnd.github+json",
+                  "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "Content-Type": "application/json",
+              },
+              method="POST",
+          )
+          with urlopen(request, timeout=20) as response:
+              if response.status not in (201, 204):
+                  raise SystemExit(f"workflow dispatch failed with status {response.status}")
+          print(f"Dispatched fresh current-head validation for ref {ref}")
+          PY
+        env:
+          REF_NAME: ${{ github.head_ref || github.ref_name }}
       - name: Install harness dependencies from full lock only
         run: |
           test -s experiments/pdmal_pilot/requirements-full-lock.txt
