@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from hashlib import sha256
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from pptl.triadic_governance_loop import (
     GateResult,
@@ -307,15 +307,19 @@ class AdapterResult:
 
 
 class DGAF_TGLAdapter:
-    def __init__(self, session_id: str, agent_id: str = "pdmAL-agent") -> None:
+    def __init__(self, session_id: str, premise_check_fn: Callable[[str, Any], bool], agent_id: str = "pdmAL-agent") -> None:
+        if not callable(premise_check_fn):
+            raise TypeError("premise_check_fn must be an explicit callable; omission is fail-closed")
         self.session_id = session_id
         self.agent_id = agent_id
+        self.premise_check_fn = premise_check_fn
 
     def run_turn(self, state: ConsensusState) -> AdapterResult:
         input_text = canonicalize_state(state)
         context = _context_for_state(state)
         input_hash = sha256(input_text.encode("utf-8")).hexdigest()
         hooks = TGLHooks(
+            premise_check_fn=self.premise_check_fn,
             scpe_fn=build_scpe_hook(state.scpe_state),
             pdmal_fn=build_pdmal_hook(state.convergence_state),
             sentinel_fn=build_sentinel_hook(state.sentinel_state),

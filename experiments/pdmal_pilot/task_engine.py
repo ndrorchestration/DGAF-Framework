@@ -220,7 +220,7 @@ class ConsensusTask:
     never influences topology, initial state, or failure selection.
     """
 
-    def __init__(self, *, topology: str, failure_count: int, condition: str) -> None:
+    def __init__(self, *, topology: str, failure_count: int, condition: str, premise_check_fn: Callable[[str, Any], bool] | None = None) -> None:
         if topology not in TOPOLOGY_SPECS:
             raise ValueError(f"unsupported topology: {topology!r}")
         if condition not in CONDITION_VALUES:
@@ -228,8 +228,11 @@ class ConsensusTask:
         if not isinstance(failure_count, int) or isinstance(failure_count, bool) or failure_count not in PILOT_FAILURE_COUNTS:
             raise ValueError(f"failure_count must be one of {PILOT_FAILURE_COUNTS!r}")
         self.topology = topology
+        if condition == "dgaf" and not callable(premise_check_fn):
+            raise ValueError("dgaf condition requires an explicit P-35 premise_check_fn; omission is fail-closed")
         self.failure_count = failure_count
         self.condition = condition
+        self.premise_check_fn = premise_check_fn
 
     @staticmethod
     def trial_key(seed: int, topology: str, condition: str, failure_count: int) -> str:
@@ -277,7 +280,10 @@ class ConsensusTask:
                      failure_count_current: int, failure_count_total: int):
         from dgaf_tgl_adapter import ConsensusState, DGAF_TGLAdapter
 
-        adapter = DGAF_TGLAdapter(session_id=f"pdmAL-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}")
+        adapter = DGAF_TGLAdapter(
+            session_id=f"pdmAL-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}",
+            premise_check_fn=self.premise_check_fn,
+        )
         state = ConsensusState(
             seed_id=seed,
             iteration=iteration,
