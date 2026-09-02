@@ -30,6 +30,11 @@ def fake_clock_factory(values):
     return lambda: next(iterator)
 
 
+def p35_test_checker(_label, _payload):
+    """Synthetic wiring fixture; no PDMAL constitutional policy is asserted."""
+    return True
+
+
 def test_first_attempt_success():
     task = ScriptedTask([AttemptStatus.SUCCESS])
     result = execute_trial(
@@ -141,7 +146,8 @@ def test_policy_validation_rejects_invalid_values():
 
 def test_consensus_task_is_deterministic_across_attempts():
     for condition in ("null", "simple", "static", "dgaf"):
-        task = ConsensusTask(topology="ring", failure_count=2, condition=condition)
+        kwargs = {"premise_check_fn": p35_test_checker} if condition == "dgaf" else {}
+        task = ConsensusTask(topology="ring", failure_count=2, condition=condition, **kwargs)
         first = task.run_detailed(seed=20260817, attempt=1)
         second = task.run_detailed(seed=20260817, attempt=2)
 
@@ -172,7 +178,8 @@ def test_consensus_task_accepts_only_pilot_condition_set():
         ConsensusTask(topology="ring", failure_count=1, condition="dgaf_pdmal")
 
     for condition in ("null", "simple", "static", "dgaf"):
-        task = ConsensusTask(topology="ring", failure_count=0, condition=condition)
+        kwargs = {"premise_check_fn": p35_test_checker} if condition == "dgaf" else {}
+        task = ConsensusTask(topology="ring", failure_count=0, condition=condition, **kwargs)
         assert task.condition == condition
 
 
