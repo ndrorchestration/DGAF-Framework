@@ -30,6 +30,10 @@ def fake_clock_factory(values):
     return lambda: next(iterator)
 
 
+def allow_all_premises(_text, _invariant) -> bool:
+    return True
+
+
 def test_first_attempt_success():
     task = ScriptedTask([AttemptStatus.SUCCESS])
     result = execute_trial(
@@ -139,8 +143,13 @@ def test_policy_validation_rejects_invalid_values():
         RetryPolicy(max_attempts=0).validate()
 
 
+def test_dgaf_consensus_task_requires_explicit_premise_checker():
+    with pytest.raises(ValueError, match="explicit P-35 premise_check_fn"):
+        ConsensusTask(topology="ring", failure_count=2, condition="dgaf")
+
+
 def test_consensus_task_is_deterministic_across_attempts():
-    for condition in ("null", "simple", "static", "dgaf"):
+    for condition in ("null", "simple", "static"):
         task = ConsensusTask(topology="ring", failure_count=2, condition=condition)
         first = task.run_detailed(seed=20260817, attempt=1)
         second = task.run_detailed(seed=20260817, attempt=2)
@@ -153,6 +162,26 @@ def test_consensus_task_is_deterministic_across_attempts():
         assert first.topology_fingerprint == second.topology_fingerprint
         assert first.iterations_completed == second.iterations_completed
         assert first.attempt_status is second.attempt_status
+
+
+def test_dgaf_consensus_task_is_deterministic_across_attempts_with_explicit_checker():
+    task = ConsensusTask(
+        topology="ring",
+        failure_count=2,
+        condition="dgaf",
+        premise_check_fn=allow_all_premises,
+    )
+    first = task.run_detailed(seed=20260817, attempt=1)
+    second = task.run_detailed(seed=20260817, attempt=2)
+
+    assert first.trial_key == second.trial_key
+    assert first.failure_nodes == second.failure_nodes
+    assert first.initial_values == second.initial_values
+    assert first.final_values == second.final_values
+    assert first.final_std == second.final_std
+    assert first.topology_fingerprint == second.topology_fingerprint
+    assert first.iterations_completed == second.iterations_completed
+    assert first.attempt_status is second.attempt_status
 
 
 def test_consensus_task_completes_exactly_100_iterations_for_non_dgaf_conditions():
@@ -171,9 +200,17 @@ def test_consensus_task_accepts_only_pilot_condition_set():
     with pytest.raises(ValueError):
         ConsensusTask(topology="ring", failure_count=1, condition="dgaf_pdmal")
 
-    for condition in ("null", "simple", "static", "dgaf"):
+    for condition in ("null", "simple", "static"):
         task = ConsensusTask(topology="ring", failure_count=0, condition=condition)
         assert task.condition == condition
+
+    task = ConsensusTask(
+        topology="ring",
+        failure_count=0,
+        condition="dgaf",
+        premise_check_fn=allow_all_premises,
+    )
+    assert task.condition == "dgaf"
 
 
 def test_consensus_task_rejects_out_of_contract_failure_counts():
