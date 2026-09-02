@@ -26,7 +26,5 @@ Non-authorizing control record for selected experimental candidate `58ba9a072f40
 - [ ] Retention manifest bound to exact freeze/candidate identity.
 - [ ] No secrets in retained evidence.
 
-## Promotion rule
-No P4/P5/P6 gate may be promoted from open merely from implementation, historical evidence, successful documentation deployment, or related-candidate results.
-
-**Current boundary: P4 OPEN · P5 FINAL CLOSURE OPEN · P6 OPEN / FAIL-CLOSED · PRE-FREEZE · NOT AUTHORIZED · N=0.**
+## Current boundary
+**P4 OPEN · P5 FINAL CLOSURE OPEN · P6 OPEN / FAIL-CLOSED · PRE-FREEZE · NOT AUTHORIZED · N=0.**
