@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-02
-applies_to_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
+applies_to_sha: 92ff830b1c67413df745e37087d6447c9c251b9a
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
 candidate_status: CURRENT RUNTIME CANDIDATE / NOT FROZEN / P3-P8 EVIDENCE REMAINING
@@ -42,10 +42,10 @@ The active P-35 remediation is a separate engineering lineage: PR #188 / branch 
 | P4 | OPEN | Current-cycle blinding/custody evidence required |
 | P5 | OPEN | Current-cycle reproducibility evidence required |
 | P6 | OPEN / FAIL-CLOSED | Current-cycle durable custody proof required |
-| P7 scientific specification | ADOPTED / FINAL BINDING OPEN | Must bind exact candidate/protocol/analysis/freeze identity |
+| P7 scientific specification | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Must bind exact candidate/protocol/analysis/freeze identity |
 | P8 analysis lock | OPEN / FAIL-CLOSED | Runtime candidate still requires current-candidate TGL/P-35 and analysis binding; remediation is a prerequisite repair, not P8 closure |
-| P9 independent verification | NOT EXECUTED FOR CURRENT CANDIDATE | Independent audit/reproduction required |
-| New freeze | NOT CREATED | Candidate is not frozen |
+| P9 independent verification | HISTORICAL SCOPED PASS / NEW CANDIDATE REVERIFY REQUIRED | `a43219b…` only; independent verification required for the selected pilot candidate |
+| New freeze | NOT ESTABLISHED | Candidate is not frozen |
 | Pilot authorization | NOT GRANTED | Separate governance transition |
 | Empirical data | N = 0 | No authorized pilot execution |
 
@@ -72,7 +72,7 @@ Older audit records that say inline artifact validation is missing are historica
 4. Complete P6 durable archive/retrieval/hash evidence.
 5. Bind P7 to the exact candidate/protocol/analysis/final-freeze identity.
 6. Close P8 from current-candidate TGL/P-35 evidence only; the remediation run is prerequisite engineering evidence, not closure.
-7. Execute independent P9 verification.
+7. Execute independent P9 verification for the selected pilot candidate.
 8. Create and independently verify a new immutable freeze.
 9. Obtain explicit pilot authorization.
 10. Only then execute the blinded pilot.
