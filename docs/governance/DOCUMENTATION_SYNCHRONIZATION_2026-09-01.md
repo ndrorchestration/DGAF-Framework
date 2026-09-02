@@ -53,3 +53,15 @@ This is not empirical failure, does not increase empirical N, and does not justi
 ## Next action
 
 Repair the malformed PDMAL structural dry-run invocation using unambiguous shell quoting (preferably a heredoc), create the resulting new candidate, and rerun the candidate-bound PDMAL → P9 → completion-controller chain.
+
+## Addendum — P-35 remediation lane, 2026-09-02
+
+The completion candidate `a43219b4ed91fff8615f6c655ab3d17ca871fc29` was found to have a P-35 premise-hook integration defect: the experimental DGAF adapter constructed `TGLHooks` without an explicit `premise_check_fn`, so the underlying gate's missing-checker behavior could act as pass-through. The defect was isolated to the candidate and did not constitute empirical failure.
+
+PR #188 was opened as a separate remediation lane. Its current head is `cf84ca30cf34dce406ba80ab624ff24e38b181d3`. The remediation requires an explicitly configured PDMAL-specific P-35 checker, propagates it through `ConsensusTask` and `DGAF_TGLAdapter`, and tests missing-checker refusal and premise-KILL behavior. The pilot runner now resolves the checker before constructing any pilot task and fails closed when the configuration is absent or invalid.
+
+A second audit pass identified that loader-only tests were insufficient to prove runner-level dependency injection. The remediation therefore adds direct `run_pilot()` boundary tests and includes `test_run_pilot_p35.py` in the pre-freeze contract workflow. These tests use mocked execution boundaries and do not enable empirical collection.
+
+The remediation lane has not yet received fresh workflow verification at its current head through the available GitHub status interface. A Vercel status for the current head is failing because the project's deployment quota has been exceeded; this is infrastructure/deployment evidence and is not treated as proof of P-35 behavior.
+
+The controlled candidate remains unchanged. The remediation does not create a freeze, authorization, unblinding event, or empirical observation. Empirical N remains `0`.
