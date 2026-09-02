@@ -18,6 +18,7 @@ from dgaf_tgl_adapter import (
     canonicalize_state,
     decision_from_audit,
 )
+from pptl.procluding_premise import PremiseViolationError
 from pptl.triadic_governance_loop import (
     GateRecord,
     GateResult,
@@ -91,17 +92,19 @@ def test_adapter_requires_explicit_premise_checker(state: ConsensusState) -> Non
 
 def test_adapter_injects_premise_checker_and_records_kill(state: ConsensusState) -> None:
     seen = []
+
     def reject_first_invariant(text, invariant):
         seen.append((text, invariant.id))
         return False
+
     adapter = DGAF_TGLAdapter(session_id="premise-injection-test", premise_check_fn=reject_first_invariant)
-    result = adapter.run_turn(state)
+    with pytest.raises(PremiseViolationError, match=r"\[P-35 KILL\]") as exc_info:
+        adapter.run_turn(state)
+
     assert seen
-    assert result.decision == "FAIL_CLOSED"
-    premise = next(g for g in result.audit.gate_records if g.step == 0)
-    assert premise.pattern == "P-35"
-    assert premise.result is GateResult.KILL
-    assert result.attempt_status.value == "FAILURE"
+    assert exc_info.value.event.invariant_id == "INV-01"
+    assert exc_info.value.event.policy_applied == "KILL"
+    assert exc_info.value.event.session_id == "premise-injection-test"
 
 
 def test_adapter_invokes_verified_tgl_without_pilot_authorization(state: ConsensusState) -> None:
