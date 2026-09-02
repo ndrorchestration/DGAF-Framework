@@ -1,7 +1,7 @@
 # Pattern Commons Architecture
 
 **Status:** Proposed / audit phase  
-**Date:** 2026-08-26
+**Date:** 2026-09-02
 
 ## Purpose
 
@@ -41,6 +41,43 @@ New terminology or semantic categories are candidate vocabulary until provenance
 
 Semantic/ontological detection is not inherently a gate. Any detector promoted to threshold-bearing or blocking use requires empirical characterization and evidence of control value.
 
+## Transversal candidate agreement boundary — 2026-09-02
+
+Pattern Commons now treats candidate agreement as a cross-registry consistency property.
+
+The minimum identity tuple for a live experimental candidate is:
+
+`apparatus/source SHA + candidate SHA/tree + deployment identity/source SHA + workflow/evidence run + artifact identity + protocol/analysis binding + freeze identity + authorization state`
+
+Independent projections are expected to agree across GitHub, Vercel, Notion, evidence registries, taxonomy/vocabulary registries, pattern registries, and public/current documentation.
+
+Agreement classes:
+
+- `ROLE DIFFERENCE` — distinct identifiers with intentionally distinct semantic roles.
+- `HISTORICAL DIFFERENCE` — prior identity retained for provenance and explicitly non-closing.
+- `TRANSVERSAL DRIFT` — live projections can reasonably be interpreted as different current states.
+- `BLOCKING CONTRADICTION` — a discrepancy could permit invalid evidence transfer or a governance transition.
+
+The Pattern Commons must not resolve a disagreement by selecting whichever registry is newer or more convenient. The source-specific role and provenance must be preserved.
+
+## P-35 / P-42 namespace boundary
+
+`P-35` is **Procluding Premise Gate** and `P-42` is **Adaptive Harmonic Governance (AHG)**. The renumbering is canonical and must remain synchronized across pattern documents, cross-reference indexes, and machine-readable registries.
+
+The current P-35 remediation adds an explicit premise-check dependency at the DGAF/TGL/ConsensusTask boundary. Pattern Commons records this as an engineering/wiring dependency. It must not be represented as a PDMAL-specific constitutional premise policy unless that policy is separately approved by experimental-control governance.
+
+## Current synchronization overlay
+
+The existing NDR registry markdown and machine-readable registry have historically moved at different watermarks. The repository therefore uses an explicit reconciliation overlay rather than silently rewriting historical registry state.
+
+Canonical current overlay:
+
+- `docs/NDR_PATTERN_REGISTRY_UNIFIED_TRANSVERSAL_OVERLAY_2026-09-02.md`
+- `docs/ndr_patterns_unified_transversal_overlay.json`
+- `patterns/NDR_TRANSVERSAL_CANDIDATE_AGREEMENT_v1.md`
+
+These artifacts do not replace the historical registry. They establish the current transversal/dependency semantics to be consumed alongside the source-specific registries until a governed registry-version merge is performed.
+
 ## Registry family map
 
 The census currently distinguishes at least:
@@ -57,12 +94,6 @@ The census currently distinguishes at least:
 10. **Historical/deprecated registries.**
 
 These must not be merged merely because they share the term `registry` or use similar identifiers.
-
-## Current NDR synchronization boundary
-
-The NDR Markdown registry currently declares P-01–P-41 as its canonical P-series watermark, while the machine-readable registry has advanced to P-42. This is a known synchronization discrepancy and must be treated as a **consistency issue**, not resolved by silently choosing whichever artifact is newer.
-
-Until reconciled, no new pattern should rely on an implicit assumption that the two representations are synchronized.
 
 ## Equivalence rule
 
@@ -137,4 +168,6 @@ The dedicated Pattern Commons repository decision remains deferred until the eco
 - [`GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md`](GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md)
 - [`CROSS_REF.md`](../CROSS_REF.md)
 - [`CURRENT_STATE.md`](CURRENT_STATE.md)
+- `../taxonomy/TRANSVERSAL_AGREEMENT_AND_DEPENDENCY_TAXONOMY_2026-09-02.md`
+- `NDR_PATTERN_REGISTRY_UNIFIED_TRANSVERSAL_OVERLAY_2026-09-02.md`
 - Apache-2.0 [`LICENSE`](../LICENSE)
