@@ -135,8 +135,8 @@ def test_run_pilot_real_consensus_task_invokes_explicit_p35_checker(
     assert run_pilot(tmp_path / "output", seeds=1) == 0
     assert captured
     record = captured[0]
-    assert record["condition"] == "dgaf"
-    assert record["attempt_status"] == AttemptStatus.FAILURE.value
+    assert record["blinded_condition_id"].startswith("blind_")
+    assert record["status"] == "UNRECOVERED_FAILURE"
     assert record["ffcr_success"] is False
     trace = record["governance_trace"]
     assert trace
