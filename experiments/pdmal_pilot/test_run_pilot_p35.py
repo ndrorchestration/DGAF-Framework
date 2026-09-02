@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -36,6 +38,9 @@ def allow_premises(_text, _invariant):
 
 
 def reject_premises(_text, _invariant):
+    marker = os.environ.get("PDMAL_P35_TEST_MARKER")
+    if marker:
+        Path(marker).write_text("invoked\n", encoding="utf-8")
     return False
 
 
@@ -94,10 +99,12 @@ def test_run_pilot_passes_explicit_checker_to_dgaf_task(monkeypatch, tmp_path):
     assert captured[0][1]["condition"] == "dgaf"
 
 
-def test_run_pilot_real_consensus_task_fails_closed_on_rejected_premises(monkeypatch, tmp_path):
+def test_run_pilot_real_consensus_task_invokes_explicit_p35_checker(monkeypatch, tmp_path):
     monkeypatch.setattr("run_pilot.require_frozen_commit", lambda: "c" * 40)
     monkeypatch.setattr("run_pilot.require_pilot_authorization", lambda: ("test-key", tmp_path))
     monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "test_run_pilot_p35:reject_premises")
+    marker = tmp_path / "p35-checker-invoked.marker"
+    monkeypatch.setenv("PDMAL_P35_TEST_MARKER", str(marker))
     monkeypatch.setattr("run_pilot._trial_combinations", lambda: [("ring", "dgaf", 0)])
     monkeypatch.setattr("run_pilot._environment_fingerprint", lambda: "environment-test")
     monkeypatch.setattr("run_pilot._retain", lambda *args, **kwargs: None)
@@ -109,5 +116,6 @@ def test_run_pilot_real_consensus_task_fails_closed_on_rejected_premises(monkeyp
     monkeypatch.setattr("run_pilot._write_and_validate_artifact", capture)
     assert run_pilot(tmp_path / "output", seeds=1) == 0
     record = captured[0]
+    assert marker.read_text(encoding="utf-8").strip() == "invoked"
     assert record["status"] == "UNRECOVERED_FAILURE"
     assert record["ffcr_success"] is False
