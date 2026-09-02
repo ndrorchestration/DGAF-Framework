@@ -30,6 +30,7 @@ EXCLUDED_RAW = {
     "docs/gates/TELESCOPIC_LENS.md",
     "docs/taxonomy/EPISTEMIC_CROSS_REPO_SWEEP_2026-08-15.md",
     "docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md",
+    "docs/research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md",
 }
 # Case-insensitive so exclusions apply on case-sensitive Linux CI regardless of
 # on-disk casing (files are stored UPPERCASE, e.g. docs/EPISTEMIC_EVIDENCE_STANDARD.md).
