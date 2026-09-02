@@ -1,0 +1,59 @@
+name: P-35 Minimal Mainline Port
+on:
+  push:
+    branches:
+      - remediation/p35-minimal-mainline-2026-09-02
+permissions:
+  contents: write
+jobs:
+  port:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: remediation/p35-minimal-mainline-2026-09-02
+      - name: Apply minimal P-35 behavioral delta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('experiments/pdmal_pilot/dgaf_tgl_adapter.py')
+          s = p.read_text()
+          s = s.replace('from typing import Any, Mapping, Sequence', 'from typing import Any, Callable, Mapping, Sequence')
+          s = s.replace('def __init__(self, session_id: str, agent_id: str = "pdmAL-agent") -> None:\n        self.session_id = session_id\n        self.agent_id = agent_id', 'def __init__(self, session_id: str, premise_check_fn: Callable[[str, Any], bool], agent_id: str = "pdmAL-agent") -> None:\n        if not callable(premise_check_fn):\n            raise TypeError("premise_check_fn must be an explicit callable; omission is fail-closed")\n        self.session_id = session_id\n        self.agent_id = agent_id\n        self.premise_check_fn = premise_check_fn')
+          s = s.replace('hooks = TGLHooks(\n            scpe_fn=build_scpe_hook(state.scpe_state),', 'hooks = TGLHooks(\n            premise_check_fn=self.premise_check_fn,\n            scpe_fn=build_scpe_hook(state.scpe_state),')
+          p.write_text(s)
+
+          p = Path('experiments/pdmal_pilot/task_engine.py')
+          s = p.read_text()
+          old = '''    def __init__(self, *, topology: str, failure_count: int, condition: str) -> None:\n        if topology not in TOPOLOGY_SPECS:\n            raise ValueError(f"unsupported topology: {topology!r}")\n        if condition not in CONDITION_VALUES:\n            raise ValueError(f"unsupported pilot condition: {condition!r}")\n        if not isinstance(failure_count, int) or isinstance(failure_count, bool) or failure_count not in PILOT_FAILURE_COUNTS:\n            raise ValueError(f"failure_count must be one of {PILOT_FAILURE_COUNTS!r}")\n        self.topology = topology\n        self.failure_count = failure_count\n        self.condition = condition'''
+          new = '''    def __init__(self, *, topology: str, failure_count: int, condition: str, premise_check_fn: Callable[[str, Any], bool] | None = None) -> None:\n        if topology not in TOPOLOGY_SPECS:\n            raise ValueError(f"unsupported topology: {topology!r}")\n        if condition not in CONDITION_VALUES:\n            raise ValueError(f"unsupported pilot condition: {condition!r}")\n        if not isinstance(failure_count, int) or isinstance(failure_count, bool) or failure_count not in PILOT_FAILURE_COUNTS:\n            raise ValueError(f"failure_count must be one of {PILOT_FAILURE_COUNTS!r}")\n        if condition == "dgaf" and not callable(premise_check_fn):\n            raise ValueError("dgaf condition requires an explicit P-35 premise_check_fn; omission is fail-closed")\n        self.topology = topology\n        self.failure_count = failure_count\n        self.condition = condition\n        self.premise_check_fn = premise_check_fn'''
+          assert old in s
+          s = s.replace(old, new)
+          old = 'adapter = DGAF_TGLAdapter(session_id=f"pdmAL-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}")'
+          new = '''adapter = DGAF_TGLAdapter(\n            session_id=f"pdmAL-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}",\n            premise_check_fn=self.premise_check_fn,\n        )'''
+          assert old in s
+          s = s.replace(old, new)
+          p.write_text(s)
+
+          p = Path('experiments/pdmal_pilot/run_pilot.py')
+          s = p.read_text()
+          s = s.replace('import hmac\nimport os', 'import hmac\nimport importlib\nimport os')
+          s = s.replace('from time import monotonic\n\nimport numpy as np', 'from time import monotonic\nfrom typing import Any, Callable\n\nimport numpy as np')
+          marker = '''def blind_condition(condition: str, key: str) -> str:\n'''
+          fn = '''def require_pilot_premise_checker() -> Callable[[str, Any], bool]:\n    spec = os.getenv("PDMAL_PREMISE_CHECKER", "").strip()\n    if not spec:\n        raise SystemExit("pilot execution prohibited: PDMAL_PREMISE_CHECKER must name the approved P-35 checker as module:attribute")\n    if ":" not in spec:\n        raise SystemExit("pilot execution prohibited: PDMAL_PREMISE_CHECKER must use module:attribute syntax")\n    module_name, attribute_name = spec.split(":", 1)\n    if not module_name or not attribute_name or ":" in attribute_name:\n        raise SystemExit("pilot execution prohibited: malformed PDMAL_PREMISE_CHECKER")\n    try:\n        module = importlib.import_module(module_name)\n        checker = getattr(module, attribute_name)\n    except (ImportError, AttributeError) as exc:\n        raise SystemExit(f"pilot execution prohibited: unable to load P-35 checker {spec}: {exc}") from exc\n    if not callable(checker):\n        raise SystemExit(f"pilot execution prohibited: configured P-35 checker is not callable: {spec}")\n    return checker\n\n\n'''
+          assert marker in s
+          s = s.replace(marker, fn + marker)
+          s = s.replace('    blinding_key, archive_root = require_pilot_authorization()\n    os.environ.pop("PDMAL_BLINDING_KEY", None)', '    blinding_key, archive_root = require_pilot_authorization()\n    premise_check_fn = require_pilot_premise_checker()\n    os.environ.pop("PDMAL_BLINDING_KEY", None)')
+          s = s.replace('task = ConsensusTask(topology=topology, failure_count=failure_count, condition=condition)', 'task = ConsensusTask(topology=topology, failure_count=failure_count, condition=condition, premise_check_fn=premise_check_fn)')
+          p.write_text(s)
+
+          test = Path('experiments/pdmal_pilot/test_run_pilot_p35.py')
+          test.write_text('''from __future__ import annotations\n\nfrom types import SimpleNamespace\n\nimport pytest\n\nfrom run_pilot import AttemptStatus, require_pilot_premise_checker, run_pilot\n\n\ndef test_missing_premise_checker_is_fail_closed(monkeypatch):\n    monkeypatch.delenv("PDMAL_PREMISE_CHECKER", raising=False)\n    with pytest.raises(SystemExit, match="PDMAL_PREMISE_CHECKER"):\n        require_pilot_premise_checker()\n\n\ndef test_malformed_premise_checker_is_fail_closed(monkeypatch):\n    monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "not-module-attribute")\n    with pytest.raises(SystemExit, match="module:attribute"):\n        require_pilot_premise_checker()\n\n\ndef test_unknown_premise_checker_is_fail_closed(monkeypatch):\n    monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "module_that_does_not_exist:checker")\n    with pytest.raises(SystemExit, match="unable to load P-35 checker"):\n        require_pilot_premise_checker()\n\n\ndef test_non_callable_premise_checker_is_fail_closed(monkeypatch):\n    monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "os:path")\n    with pytest.raises(SystemExit, match="not callable"):\n        require_pilot_premise_checker()\n\n\ndef allow_premises(_text, _invariant):\n    return True\n\n\ndef reject_premises(_text, _invariant):\n    return False\n\n\ndef test_explicit_premise_checker_is_loaded(monkeypatch):\n    monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "test_run_pilot_p35:allow_premises")\n    checker = require_pilot_premise_checker()\n    assert checker("input", object()) is True\n\n\ndef test_run_pilot_requires_checker_before_task_construction(monkeypatch, tmp_path):\n    monkeypatch.setattr("run_pilot.require_frozen_commit", lambda: "a" * 40)\n    monkeypatch.setattr("run_pilot.require_pilot_authorization", lambda: ("test-key", tmp_path))\n    monkeypatch.delenv("PDMAL_PREMISE_CHECKER", raising=False)\n    class UnexpectedTaskConstruction:\n        def __init__(self, **_kwargs):\n            raise AssertionError("ConsensusTask must not be constructed when the P-35 checker is absent")\n    monkeypatch.setattr("run_pilot.ConsensusTask", UnexpectedTaskConstruction)\n    with pytest.raises(SystemExit, match="PDMAL_PREMISE_CHECKER"):\n        run_pilot(tmp_path / "output", seeds=1)\n\n\ndef test_run_pilot_passes_explicit_checker_to_dgaf_task(monkeypatch, tmp_path):\n    monkeypatch.setattr("run_pilot.require_frozen_commit", lambda: "b" * 40)\n    monkeypatch.setattr("run_pilot.require_pilot_authorization", lambda: ("test-key", tmp_path))\n    monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "test_run_pilot_p35:allow_premises")\n    monkeypatch.setattr("run_pilot._trial_combinations", lambda: [("ring", "dgaf", 0)])\n    monkeypatch.setattr("run_pilot._environment_fingerprint", lambda: "environment-test")\n    monkeypatch.setattr("run_pilot.make_streams", lambda _seed: {"topology_construction": SimpleNamespace()})\n    monkeypatch.setattr("run_pilot._write_and_validate_artifact", lambda *args, **kwargs: None)\n    monkeypatch.setattr("run_pilot._retain", lambda *args, **kwargs: None)\n    monkeypatch.setattr("run_pilot.graph_fingerprint", lambda _graph: "fallback-topology")\n    monkeypatch.setattr("run_pilot.generate_topology", lambda *_args: object())\n    captured = []\n    class FakeTask:\n        def __init__(self, *, premise_check_fn, **kwargs):\n            captured.append((premise_check_fn, kwargs))\n        @staticmethod\n        def trial_key(seed, topology, condition, failure_count):\n            return f"trial-{seed}-{topology}-{condition}-{failure_count}"\n        def run_detailed(self, *, seed, attempt):\n            return SimpleNamespace(attempt_status=AttemptStatus.SUCCESS, failure_nodes=[], initial_values=[0.0], final_values=[0.0], final_std=0.0, topology_fingerprint="topology-test", iterations_completed=1, consensus_success=True, deviation=0.0, governance_trace=[])\n    monkeypatch.setattr("run_pilot.ConsensusTask", FakeTask)\n    assert run_pilot(tmp_path / "output", seeds=1) == 0\n    assert captured[0][0] is allow_premises\n\n\ndef test_run_pilot_real_consensus_task_invokes_explicit_p35_checker(monkeypatch, tmp_path):\n    monkeypatch.setattr("run_pilot.require_frozen_commit", lambda: "c" * 40)\n    monkeypatch.setattr("run_pilot.require_pilot_authorization", lambda: ("test-key", tmp_path))\n    monkeypatch.setenv("PDMAL_PREMISE_CHECKER", "test_run_pilot_p35:reject_premises")\n    monkeypatch.setattr("run_pilot._trial_combinations", lambda: [("ring", "dgaf", 0)])\n    monkeypatch.setattr("run_pilot._environment_fingerprint", lambda: "environment-test")\n    monkeypatch.setattr("run_pilot._retain", lambda *args, **kwargs: None)\n    captured = []\n    def capture(_path, document, *args, **kwargs):\n        captured.extend(document["records"])\n    monkeypatch.setattr("run_pilot._write_and_validate_artifact", capture)\n    assert run_pilot(tmp_path / "output", seeds=1) == 0\n    record = captured[0]\n    assert record["status"] == "UNRECOVERED_FAILURE"\n    assert record["ffcr_success"] is False\n    trace = record["governance_trace"]\n    assert trace and trace[0]["final_status"] in {"KILL", "KILL_REC"}\n    assert any(gate["pattern"] == "P-35" and gate["result"] == "KILL" for gate in trace[0]["gates"])\n''')\n          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add experiments/pdmal_pilot .github/workflows/p35-minimal-port.yml
+          git commit -m 'fix: enforce explicit P-35 premise checker' || exit 0
+          git push
