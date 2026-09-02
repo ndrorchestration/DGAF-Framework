@@ -44,6 +44,11 @@ def state() -> ConsensusState:
     )
 
 
+def p35_test_checker(_label, _payload):
+    """Synthetic wiring fixture; no PDMAL constitutional policy is asserted."""
+    return True
+
+
 def test_canonical_serialization_is_deterministic(state: ConsensusState) -> None:
     assert canonicalize_state(state) == canonicalize_state(state)
     assert canonicalize_state(state).startswith("PDMAL_DGAF_ADAPTER_V1\n")
@@ -104,7 +109,7 @@ def test_fail_closed_never_returns_success(state: ConsensusState) -> None:
 
 
 def test_adapter_invokes_verified_tgl_without_pilot_authorization(state: ConsensusState) -> None:
-    adapter = DGAF_TGLAdapter(session_id="contract-test")
+    adapter = DGAF_TGLAdapter(session_id="contract-test", premise_check_fn=p35_test_checker)
     result = adapter.run_turn(state)
     assert result.attempt_status.value in {"SUCCESS", "FAILURE"}
     assert result.decision in {
@@ -117,7 +122,7 @@ def test_adapter_invokes_verified_tgl_without_pilot_authorization(state: Consens
 
 
 def test_adapter_and_tgl_share_exact_input_identity(state: ConsensusState) -> None:
-    adapter = DGAF_TGLAdapter(session_id="provenance-test")
+    adapter = DGAF_TGLAdapter(session_id="provenance-test", premise_check_fn=p35_test_checker)
     result = adapter.run_turn(state)
     expected = hashlib.sha256(result.input_text.encode("utf-8")).hexdigest()
     assert result.input_hash == expected
