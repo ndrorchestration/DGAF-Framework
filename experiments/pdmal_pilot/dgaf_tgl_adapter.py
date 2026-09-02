@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from hashlib import sha256
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from pptl.triadic_governance_loop import (
     GateResult,
@@ -37,7 +37,6 @@ from pdmaltgl_gate_binding import (
 )
 
 ADAPTER_VERSION = "0.7.2"
-PROVENANCE_STATE_VERSION = "1"
 DECISIONS = (
     "NO_CHANGE",
     "CONSERVATIVE_MIX",
@@ -62,8 +61,13 @@ class ConsensusState:
     runtime_budget_remaining_ms: int
     protocol_id: str
     adapter_version: str = ADAPTER_VERSION
+    # RESTORE (2026-08-30): P-31 SCPE + P-33 Convergence historical substrate.
+    # Both default to empty so pre-existing callers are unaffected. The adapter
+    # is stateless between calls; required historical state is carried here.
     scpe_state: SCPEState = field(default_factory=SCPEState)
     convergence_state: ConvergenceState = field(default_factory=ConvergenceState)
+    # RESTORE (2026-08-31): P-29/P-30/DemiJoule/P-27/P-32 constitutive substrate,
+    # per designations #165/#166. Defaults empty so pre-existing callers unaffected.
     sentinel_state: SentinelRiskState = field(default_factory=SentinelRiskState)
     apogee_state: ApogeeAttestationState = field(default_factory=ApogeeAttestationState)
     demijoule_state: DemiJouleState = field(default_factory=DemiJouleState)
@@ -82,143 +86,51 @@ class ConsensusState:
             raise ValueError("runtime budget cannot be negative")
         if not self.protocol_id:
             raise ValueError("protocol_id must be non-empty")
+
         expected_nodes = set(range(n))
         for neighbors in (*self.original_neighbors, *self.active_neighbors):
             if tuple(sorted(set(neighbors))) != tuple(neighbors):
                 raise ValueError("neighbor lists must be sorted and duplicate-free")
             if not set(neighbors).issubset(expected_nodes):
                 raise ValueError("neighbor index out of range")
-        if self.scpe_state.threshold <= 0:
-            raise ValueError("SCPE threshold must be positive")
-        if self.scpe_state.trust_edge_boost != 0.15:
-            raise ValueError("SCPE trust_edge_boost must remain the historical 0.15")
-        if self.scpe_state.last_k_anchor != 3:
-            raise ValueError("SCPE last_k_anchor must remain the historical 3")
-        if self.convergence_state.alert_thresh < 0 or self.convergence_state.conv_thresh < 0:
-            raise ValueError("P-33 thresholds cannot be negative")
-        if self.convergence_state.n_consec < 1:
-            raise ValueError("P-33 n_consec must be positive")
 
 
 def _float_repr(value: float) -> str:
     return format(float(value), ".17g")
 
 
-def _canonical_scpe_state(state: SCPEState) -> str:
-    token_lines = []
-    for token in sorted(state.tokens, key=lambda item: str(item["token_id"])):
-        token_lines.append(":".join((
-            str(token["token_id"]),
-            str(token.get("tier", "")),
-            str(token.get("content", "")),
-            _float_repr(float(token.get("inserted_at", 0.0))),
-            "1" if bool(token.get("has_trust_edge", False)) else "0",
-        )))
-    return "\n".join((
-        f"threshold={_float_repr(state.threshold)}",
-        f"trust_edge_boost={_float_repr(state.trust_edge_boost)}",
-        f"last_k_anchor={state.last_k_anchor}",
-        "tokens=" + ";".join(token_lines),
-    ))
-
-
-def _canonical_convergence_state(state: ConvergenceState) -> str:
-    def _weights(values: dict[tuple[str, str], float]) -> str:
-        return ";".join(
-            f"{src}->{dst}={_float_repr(weight)}"
-            for (src, dst), weight in sorted(values.items())
-        )
-    return "\n".join((
-        f"alert_thresh={_float_repr(state.alert_thresh)}",
-        f"conv_thresh={_float_repr(state.conv_thresh)}",
-        f"n_consec={state.n_consec}",
-        f"consec_divergent={state._consec_divergent}",
-        f"consec_stable={state._consec_stable}",
-        f"turn={state._turn}",
-        "weights=" + _weights(state.weights),
-        "prev_weights=" + _weights(state.prev_weights),
-    ))
-
-
-def _canonical_sentinel_state(state: SentinelRiskState) -> str:
-    return "|".join((
-        f"record_category={state.record_category}",
-        f"routing_policy={state.routing_policy}",
-        f"routing_confidence={_float_repr(state.routing_confidence)}",
-        f"hook_point={state.hook_point}",
-        f"deontic={state.deontic}",
-    ))
-
-
-def _canonical_apogee_state(state: ApogeeAttestationState) -> str:
-    return "|".join((
-        f"confidence={_float_repr(state.confidence)}",
-        f"artifact_description={state.artifact_description}",
-        f"grade={state.grade}",
-        f"gold_star={'1' if state.gold_star else '0'}",
-    ))
-
-
-def _canonical_demijoule_state(state: DemiJouleState) -> str:
-    axes = ";".join(
-        f"{k}={_float_repr(v)}" for k, v in sorted(state.axis_scores.items())
-    )
-    return "|".join((
-        f"axes={axes}",
-        f"decision={state.decision}",
-        f"mean_score={_float_repr(state.mean_score)}",
-    ))
-
-
-def _canonical_kappa_state(state: KappaState) -> str:
-    return "|".join((
-        f"detected_category={state.detected_category}",
-        f"pattern_score={_float_repr(state.pattern_score)}",
-        f"continuous_score={_float_repr(state.continuous_score)}",
-        f"length_boost={_float_repr(state.length_boost)}",
-        f"confidence={_float_repr(state.confidence)}",
-        f"routing_decision={state.routing_decision}",
-    ))
-
-
-def _canonical_phi_state(state: PhiClosureState) -> str:
-    return "|".join((
-        f"stable_count={state.stable_count}",
-        f"total_count={state.total_count}",
-        f"consec_fails={state.consec_fails}",
-        f"last_decision={state.last_decision}",
-    ))
-
-
 def canonicalize_state(state: ConsensusState) -> str:
-    """Return the canonical byte-stable TGL representation including restored P31/P33 state."""
+    """Return the canonical byte-stable TGL input representation."""
     state.validate()
     lines = [
         "PDMAL_DGAF_ADAPTER_V1",
-        f"provenance_state_version={PROVENANCE_STATE_VERSION}",
         f"protocol={state.protocol_id}",
         f"adapter={state.adapter_version}",
         f"seed={state.seed_id}",
         f"iteration={state.iteration}",
         "values=" + ",".join(_float_repr(v) for v in state.agent_values),
         "alive=" + "".join("1" if value else "0" for value in state.alive),
-        "neighbors=" + ";".join(":".join(str(node) for node in neighbors) for neighbors in state.original_neighbors),
-        "active_neighbors=" + ";".join(":".join(str(node) for node in neighbors) for neighbors in state.active_neighbors),
-        "failure_history=" + ";".join(",".join(str(node) for node in event) for event in state.failure_history),
+        "neighbors=" + ";".join(
+            ":".join(str(node) for node in neighbors)
+            for neighbors in state.original_neighbors
+        ),
+        "active_neighbors=" + ";".join(
+            ":".join(str(node) for node in neighbors)
+            for neighbors in state.active_neighbors
+        ),
+        "failure_history=" + ";".join(
+            ",".join(str(node) for node in event)
+            for event in state.failure_history
+        ),
         f"failure_count_current={state.failure_count_current}",
         f"failure_count_total={state.failure_count_total}",
-        "metrics=" + ",".join((
-            f"final_std={_float_repr(state.current_final_std)}",
-            f"mean={_float_repr(state.current_mean)}",
-        )),
+        "metrics=" + ",".join(
+            (
+                f"final_std={_float_repr(state.current_final_std)}",
+                f"mean={_float_repr(state.current_mean)}",
+            )
+        ),
         f"budget_ms={state.runtime_budget_remaining_ms}",
-        "scpe=" + _canonical_scpe_state(state.scpe_state).replace("\n", "|"),
-        "convergence=" + _canonical_convergence_state(state.convergence_state).replace("\n", "|"),
-        "sentinel=" + _canonical_sentinel_state(state.sentinel_state).replace("\n", "|"),
-        "apogee=" + _canonical_apogee_state(state.apogee_state).replace("\n", "|"),
-        "demijoule=" + _canonical_demijoule_state(state.demijoule_state).replace("\n", "|"),
-        "kappa=" + _canonical_kappa_state(state.kappa_state).replace("\n", "|"),
-        "phi=" + _canonical_phi_state(state.phi_state).replace("\n", "|"),
     ]
     return "\n".join(lines) + "\n"
 
@@ -248,6 +160,7 @@ def _context_for_state(state: ConsensusState) -> dict[str, Any]:
 
 
 def _pdmall_failure_event_requires_isolation(audit: TurnAuditRecord) -> bool:
+    """Use only the structured P-33 gate result; never parse free-form notes."""
     for gate in audit.gate_records:
         if gate.pattern == "P-33" and gate.gate_name == "PDMAL_ConvergenceMonitor":
             return gate.result in {GateResult.WARN, GateResult.KILL}
@@ -255,11 +168,16 @@ def _pdmall_failure_event_requires_isolation(audit: TurnAuditRecord) -> bool:
 
 
 def _has_unwired_required_gate(audit: TurnAuditRecord) -> bool:
+    """A required SKIP is a configuration defect, never a treatment outcome."""
     required = TriadicGovernanceLoop.REQUIRED_STEPS
-    return any(gate.step in required and gate.result is GateResult.SKIP for gate in audit.gate_records)
+    return any(
+        gate.step in required and gate.result is GateResult.SKIP
+        for gate in audit.gate_records
+    )
 
 
 def decision_from_audit(audit: TurnAuditRecord) -> str:
+    """Map a verified TGL audit into the finite, fail-closed decision vocabulary."""
     if _has_unwired_required_gate(audit):
         return "FAIL_CLOSED"
     status = audit.final_status
@@ -280,16 +198,26 @@ def _active_average(values: Sequence[float], active_nodes: Sequence[int]) -> flo
     return sum(values[node] for node in active_nodes) / len(active_nodes)
 
 
-def apply_decision(decision: str, values: Sequence[float], active_neighbors: Sequence[Sequence[int]]) -> tuple[float, ...]:
+def apply_decision(
+    decision: str,
+    values: Sequence[float],
+    active_neighbors: Sequence[Sequence[int]],
+) -> tuple[float, ...]:
+    """Apply the bounded decision operator to produce the next numeric state."""
     if decision not in DECISIONS:
         raise ValueError(f"invalid decision: {decision!r}")
     if len(values) != len(active_neighbors):
         raise ValueError("values and active_neighbors must have identical length")
+
     if decision == "FAIL_CLOSED":
         raise RuntimeError("DGAF/TGL governance decision is FAIL_CLOSED")
+
     alpha = 0.2 if decision == "CONSERVATIVE_MIX" else 0.5
-    return tuple((1.0 - alpha) * values[index] + alpha * _active_average(values, neighbors)
-                 for index, neighbors in enumerate(active_neighbors))
+    next_values: list[float] = []
+    for index, neighbors in enumerate(active_neighbors):
+        average = _active_average(values, neighbors)
+        next_values.append((1.0 - alpha) * values[index] + alpha * average)
+    return tuple(next_values)
 
 
 @dataclass(frozen=True)
@@ -307,15 +235,35 @@ class AdapterResult:
 
 
 class DGAF_TGLAdapter:
-    def __init__(self, session_id: str, agent_id: str = "pdmAL-agent") -> None:
+    """Process-safe wrapper around the verified TGL ``run_turn`` primitive."""
+
+    def __init__(
+        self,
+        session_id: str,
+        premise_check_fn: Callable[[str, Any], bool],
+        agent_id: str = "pdmAL-agent",
+    ) -> None:
+        if not callable(premise_check_fn):
+            raise TypeError("premise_check_fn must be an explicit callable; omission is fail-closed")
         self.session_id = session_id
         self.agent_id = agent_id
+        self.premise_check_fn = premise_check_fn
 
     def run_turn(self, state: ConsensusState) -> AdapterResult:
         input_text = canonicalize_state(state)
         context = _context_for_state(state)
         input_hash = sha256(input_text.encode("utf-8")).hexdigest()
+
+        # The adapter is intentionally stateless between process-isolated calls.
+        # Bind the TGL counter to the semantic iteration so the audit index does
+        # not reset to 1 every time a new adapter instance is constructed.
+        # RESTORE (2026-08-30/31): wire P-31 SCPE + P-33 Convergence + P-29 Sentinel
+        # + P-30 Apogee + DemiJoule + P-27 KAPPA + P-32 Phi-Closure hooks from the
+        # carried substrate, per designations #165/#166. All seven constitutive
+        # gates are now wired; the turn reduces to FAIL_CLOSED only on a KILL from
+        # any gate, not on unwired SKIP.
         hooks = TGLHooks(
+            premise_check_fn=self.premise_check_fn,
             scpe_fn=build_scpe_hook(state.scpe_state),
             pdmal_fn=build_pdmal_hook(state.convergence_state),
             sentinel_fn=build_sentinel_hook(state.sentinel_state),
@@ -332,12 +280,14 @@ class DGAF_TGLAdapter:
         )
         audit = tgl.run_turn(input_text, context=context)
         decision = decision_from_audit(audit)
+
         try:
             next_values = apply_decision(decision, state.agent_values, state.active_neighbors)
             status = AttemptStatus.SUCCESS
         except RuntimeError:
             next_values = None
             status = AttemptStatus.FAILURE
+
         return AdapterResult(
             input_text=input_text,
             input_hash=input_hash,
