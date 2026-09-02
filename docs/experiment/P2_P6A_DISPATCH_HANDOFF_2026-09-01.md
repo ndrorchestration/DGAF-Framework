@@ -1,69 +1,69 @@
-# P2 / P6a Dispatch Handoff — Verified Runtime Candidate
+# P2 / P6a Dispatch Handoff — Exact Completion Candidate
 
-**Status:** VERIFIED RUNTIME EVIDENCE / PRE-FREEZE / FAIL-CLOSED / N=0
+**Status:** READY FOR DISPATCH / PRE-FREEZE / FAIL-CLOSED / N=0
 
-## Candidate binding
+This file supersedes the earlier contents of this dated handoff. Historical P2/P6a verification records remain evidence for their original candidate/deployment identities only and do not transfer to the current completion candidate.
 
-- `apparatus_source_sha`: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
-- `candidate_sha`: `92ff830b1c67413df745e37087e6447c9c251b9a`
-- `candidate_tree_sha`: `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`
-- `deployment_id`: `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`
-- `base_url`: `https://dynamicgovernanceagenticformation-3y3d8o5dp-ndrorchestration.vercel.app`
-- `allowed_origin`: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
+## Exact candidate binding
 
-The apparatus source and runtime candidate are deliberately distinct identities. The candidate descends from the corrected apparatus source, but runtime evidence is bound to the exact candidate commit/tree and deployment above.
+- `candidate_sha`: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`
+- `candidate_branch`: `completion/2026-09-01-exact-candidate`
+- deployment branch: `deploy/exact-candidate-a43219b`
+- `deployment_id`: `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
+- `base_url`: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `allowed_origin`: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `disallowed_origin`: `https://untrusted.com`
 
-## Verified P2
+The deployment is READY/preview. Runtime paths are SSO-protected from the current unauthenticated session, so SSO redirects are not runtime-failure evidence. Vercel Git-SHA confirmation for the deployment remains pending.
 
-- Workflow: `.github/workflows/p2-runtime-verification.yml`
-- Run: `33509348174`
-- Artifact: `9800942933`
-- Digest: `sha256:00519533edcaa4c09410b3ed29e49437a5ce8a23ea341a2b798490e110f056c2`
-- Result: `VERIFIED`
-- Five required cases passed.
-- Required fail-closed case `valid_missing_audit`: HTTP 503, decision `BLOCKED`.
+## P2 dispatch contract
 
-## Verified P6a
+Workflow: `.github/workflows/p2-runtime-verification.yml`
 
-- Workflow: `.github/workflows/p6a-cors-verification.yml`
-- Run: `33509416955`
-- Artifact: `9800972819`
-- Digest: `sha256:9e78ebef5eaa7f33027ec09c0cb922f57bc43dab2fcc694a823ac504c611fcdd`
-- Result: `VERIFIED`
-- Allowed-origin preflight: HTTP 204.
-- Disallowed-origin preflight: HTTP 403.
-- Allowed and disallowed POST cases matched expected checks.
+Required inputs:
+
+- `candidate_sha = a43219b4ed91fff8615f6c655ab3d17ca871fc29`
+- `deployment_id = dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
+- `base_url = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+
+The workflow independently verifies the SHA format and requires `VERCEL_AUTOMATION_BYPASS_SECRET`. It then executes five cases against `/api/orchestrate` and writes candidate/deployment-bound provenance.
+
+## P6a dispatch contract
+
+Workflow: `.github/workflows/p6a-cors-verification.yml`
+
+Required inputs:
+
+- `candidate_sha = a43219b4ed91fff8615f6c655ab3d17ca871fc29`
+- `deployment_id = dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
+- `base_url = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `allowed_origin = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+
+The workflow independently verifies the SHA/input presence and requires `VERCEL_AUTOMATION_BYPASS_SECRET`. It then executes allowed/disallowed POST and preflight checks and writes candidate/deployment-bound provenance.
+
+## Current execution state
+
+No fresh P2 or P6a runtime result is asserted here. The available GitHub integration exposes workflow inspection and rerun operations but no workflow-dispatch write operation. Therefore these workflows remain awaiting authenticated manual dispatch or another authorized dispatch path.
+
+The earlier invalid P2 run is not evidence of runtime behavior because its supplied candidate/deployment/base-URL inputs were malformed and did not bind to the exact candidate.
 
 ## Evidence boundary
 
-These P2/P6a results close only the respective runtime predicates in the recorded endpoint/deployment/environment scope. They do not establish efficacy, freeze, authorization, unblinding, or empirical execution.
+P2/P6a completion requires successful execution against the exact candidate and exact deployment above. No historical P2/P6a result transfers across candidate or deployment identity. These predicates do not establish efficacy, freeze, authorization, unblinding, or empirical execution.
 
-## Latest downstream status
+## Downstream state
 
-- P3: `OPEN`
-- P4: `OPEN`
-- P5: `OPEN`
-- P6: `OPEN / FAIL-CLOSED`
-- P7: `ADOPTED / FINAL BINDING OPEN`
-- P8: `OPEN / FAIL-CLOSED`
-- P9: `SCOPED PASS / BROADER CLOSURE OPEN` via run `33567199896` against separate completion candidate `562753b…`
+- P3: `VERIFIED` for the completion candidate
+- P4: workflow-level evidence; operational closure open
+- P5: workflow-level evidence; full closure open
+- P6: workflow-level evidence; durable archive/retention closure open
+- P7: technically adjudicated; formal adoption/exact freeze binding open
+- P8: `OPEN / PRE-FREEZE / FAIL-CLOSED`
+- P9: scoped pass for exact candidate; broader closure open
 - Freeze: `NOT ESTABLISHED`
 - Authorization: `NOT GRANTED`
 - Empirical N: `0`
 
-The P9 result does not transfer to this mainline runtime candidate. A candidate change requires explicit rebinding and fresh affected-predicate evidence.
-
 ## Current closure sequence
 
-`selected candidate → P3/P4/P5/P6 → P7 exact binding → P8 → broader P9 → immutable freeze → explicit authorization → blinded pilot`.
-
-## Historical handoff rule
-
-The prior `P2_P6A_DISPATCH_HANDOFF_2026-08-31.md` is a superseded snapshot and should be interpreted as historical evidence of the pre-verification state. Its earlier `NOT_ESTABLISHED` dispatch boundary must not override this current handoff. Historical candidate/deployment values remain non-closing and are not valid current dispatch inputs.
-
-## Cross-references
-
-- `../CURRENT_STATE.md`
-- `../CLAIM_EVIDENCE_INDEX.md`
-- `../governance/P1_TO_P9_EVIDENCE_MATRIX.md`
-- `../governance/P9_LATEST_RECONCILIATION_2026-09-01.md`
+`P2 + P6a exact runtime → operational P4/P5/P6 → P7 exact adoption/binding → P8 → final broader P9 → immutable freeze → explicit authorization → blinded pilot`.
