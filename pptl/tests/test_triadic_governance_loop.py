@@ -6,7 +6,6 @@ DGAF-Framework · pptl/tests · S068
 import hashlib
 import pytest
 
-from pptl.procluding_premise import PremiseViolationError
 from pptl.triadic_governance_loop import (
     GateRecord,
     GateResult,
@@ -32,11 +31,15 @@ def test_unwired_required_gates_escalate():
 
 
 @pytest.mark.governance
-def test_premise_violation_raises_and_kills():
-    """P-35 KILL → PremiseViolationError raised and gate logged as KILL."""
+def test_premise_violation_returns_sealed_kill_audit():
+    """P-35 KILL returns the sealed audit so downstream adapter layers can package it fail-closed."""
     hooks = TGLHooks(premise_check_fn=lambda text, inv: False)
-    with pytest.raises(PremiseViolationError):
-        make_tgl(hooks).run_turn("constitutional violation")
+    audit = make_tgl(hooks).run_turn("constitutional violation")
+    step0 = next(g for g in audit.gate_records if g.step == 0)
+    assert audit.final_status == TurnStatus.KILL
+    assert step0.pattern == "P-35"
+    assert step0.result is GateResult.KILL
+    assert audit.seal_hash
 
 
 @pytest.mark.governance
