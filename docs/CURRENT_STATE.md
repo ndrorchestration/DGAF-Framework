@@ -9,7 +9,10 @@ corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 validated_p35_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
 validated_p35_pr: 199
 validated_p35_runs: 33684805409,33684805218,33684805269,33684805422,33684805339,33684805302,33684805311,33684805272,33684805190,33684805285,33684805328
-candidate_deployment_identity: NOT ESTABLISHED
+candidate_deployment_identity: dpl_DVGBVKn3PbLZsTNEUhPjYtkqPSco
+candidate_deployment_sha: 0de8ef419925f46ab9a6033060b154422e4e6b42
+candidate_deployment_state: READY
+candidate_deployment_alias: dynamicgovernanceagenticformation-git-c-cab2e6-ndrorchestration.vercel.app
 ---
 # DGAF-Framework / PDMAL — Current State
 
@@ -27,7 +30,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 - `275756fd…` — current `main` control-plane base used by the P-35 remediation lineage.
 - `643dc77a…` — validated P-35 remediation boundary; PR #199; immutable evidence scope.
 - `candidate/p35-validated-control-state-2026-09-02` — successor candidate derived directly from `643dc77a…`.
-- `NOT ESTABLISHED` — successor deployment identity; no deployment is promoted or treated as candidate-bound yet.
+- `dpl_DVGBVKn3PbLZsTNEUhPjYtkqPSco` — successor deployment identity for exact candidate `0de8ef419925f46ab9a6033060b154422e4e6b42`; Vercel state `READY`; independently verified through deployment metadata.
 - `92ff830b…` — superseded runtime candidate; prior P2/P6a evidence remains bound to its exact tree/deployment.
 - `a43219b…` — superseded completion candidate; prior PDMAL/P9 evidence remains bound to its exact tree.
 - Historical deployment identities remain historical and are not promoted to the successor candidate.
@@ -38,8 +41,8 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 |---|---|---|
 | Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…` |
 | P-35 remediation boundary | VALIDATED / IMMUTABLE EVIDENCE BOUNDARY | PR #199; `643dc77a…` |
-| Successor candidate | CONTROL-STATE RECONCILIATION CANDIDATE / NOT FROZEN | branch derived from `643dc77a…` |
-| Successor deployment | NOT ESTABLISHED | no candidate-bound deployment identity yet |
+| Successor candidate | VALIDATED CONTROL-STATE CANDIDATE / NOT FROZEN | exact head `0de8ef419…`; validation wave passed |
+| Successor deployment | ESTABLISHED / READY | `dpl_DVGBVKn3PbLZsTNEUhPjYtkqPSco`; exact SHA `0de8ef419…` |
 | P-35 | VALIDATED | exact-head implementation, regression, harness, pre-freeze, security, governance, provenance and control-state validation wave passed at `643dc77a…` |
 | P2 | HISTORICAL / RE-RUN REQUIRED | prior evidence is candidate-bound |
 | P3 | OPEN / RE-RUN REQUIRED | fresh artifact-contract evidence against successor/final candidate |
@@ -62,9 +65,9 @@ P-35 is adjudicated VALIDATED at exact head `643dc77a56d3b5a92d16981d5d8ca01c3ed
 
 ## Required closure sequence
 
-1. Complete candidate identity reconciliation and establish the successor's exact head.
-2. Rerun only validations made stale by the reconciliation commit(s), then confirm candidate readiness.
-3. Establish and independently verify a deployment identity for the exact successor candidate before any deployment-bound gate is claimed.
+1. Candidate identity reconciliation and exact successor head are complete at `0de8ef419925f46ab9a6033060b154422e4e6b42`.
+2. Successor validation wave is complete and green; candidate readiness is established for the current control-state transition.
+3. Successor deployment identity is established and independently verified as `dpl_DVGBVKn3PbLZsTNEUhPjYtkqPSco`, Vercel `READY`, bound to exact SHA `0de8ef419925f46ab9a6033060b154422e4e6b42`.
 4. Complete fresh P3 artifact-contract evidence.
 5. Complete P4 operational blinding/custody evidence.
 6. Complete P5 environment/topology/RNG reproducibility evidence.
