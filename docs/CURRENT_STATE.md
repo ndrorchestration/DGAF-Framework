@@ -45,11 +45,11 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | Deployment identity | CAPTURED IN P2/P6A EVIDENCE | `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
 | P2 runtime verification | VERIFIED — MAINLINE ONLY | Run `33509348174`; artifact `9800942933`; five required cases passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
 | P6a CORS verification | VERIFIED — MAINLINE ONLY | Run `33509416955`; artifact `9800972819`; four required checks passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
-| P3 | VERIFIED — COMPLETION CANDIDATE | Run `33572123862`; artifact `9825367738`; exact candidate `a43219b…`; 19-test suite and artifact contract checks passed. |
+| P3 | VERIFIED — COMPLETION CANDIDATE | Run `33572123862`; latest artifact `9825740072`; exact candidate `a43219b…`; 19-test suite and artifact contract checks passed. |
 | P4 | WORKFLOW-LEVEL VERIFIED / OPERATIONAL CLOSURE OPEN | Run `33572123862`; blinding secret presence verified without disclosure and masked dry-run produced. Full operational custody/separation remains required. |
-| P5 | VERIFIED — COMPLETION CANDIDATE | Run `33572123862`; exact artifact binding, RNG stream separation, deterministic digest, and environment fingerprint recorded. |
+| P5 | WORKFLOW-LEVEL VERIFIED / FULL CLOSURE OPEN | Run `33572123862`; exact artifact binding, RNG stream separation, deterministic digest, and environment fingerprint recorded. Full reproducibility closure remains required. |
 | P6 | WORKFLOW-LEVEL VERIFIED / DURABLE ARCHIVE OPEN | Run `33572123862`; artifact download plus inner checksum re-verification passed. Durable external archive closure remains required. |
-| P7 | ADOPTED / FINAL BINDING OPEN | Bind exact apparatus/candidate/deployment/protocol/analysis/freeze identity for intended pilot cycle. |
+| P7 | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Adopted/final freeze binding is not yet evidenced; exact apparatus/candidate/protocol/analysis authority binding remains required. |
 | P8 | OPEN / FAIL-CLOSED | TGL/P-35 current-candidate analysis-lock verification required. |
 | P9 | SCOPED PASS / BROADER CLOSURE OPEN | Run `33572123857` passed exact identity, independent `jq -S -c`/`sha256sum` check, and 4-test authority regression for `a43219b…`; broader P9 evidence-chain closure remains open. |
 | Freeze | NOT ESTABLISHED | No frozen identity is currently authoritative for pilot execution. |
@@ -62,10 +62,11 @@ Run `33572123862` completed successfully on 2026-09-01 for exact candidate `a432
 
 The run verified exact checkout identity, presence of the withheld blinding secret, deterministic smoke reproduction, P5 RNG-stream separation, a `19 passed` structural/artifact suite, masked one-seed CSV generation, schema validation, CSV checksum integrity, artifact download round-trip, and inner-CSV checksum re-verification.
 
-The run emitted an evidence registry marking P3/P4/P5/P6 `VERIFIED` for this exact candidate and a controller evaluation that kept P2/P7/P8/P9 blocking. P4 and P6 are explicitly workflow-level/synthetic custody evidence rather than full operational closure.
+The run emitted an evidence registry marking P3/P4/P5/P6 `VERIFIED` at workflow scope and a controller evaluation that kept P2/P7/P8/P9 blocking. P4 and P6 are explicitly workflow-level/synthetic custody evidence rather than full operational closure; P5 is also not full closure until the remaining reproducibility and candidate-binding requirements are satisfied.
 
-PDMAL artifact: `9825367738`.  
-Artifact ZIP digest: `sha256:51b89e5321674ff19eecc53a4445237677025649fe36ed5ddc762835a24c2c6c`.  
+Latest PDMAL artifact: `9825740072`.  
+Artifact ZIP digest: `sha256:1a9f520bac2bf12ca8386c5c050489620028657866e4fee66e64905507ec31ae`.  
+Evidence registry artifact: `9825740649`; ZIP digest `sha256:c6c2fda4ce18d476ef95927a1430193ef34631dcce928c15695d43826678a205`.  
 Inner CSV digest: `c12098da63ae1508edbb350799360e1edccfebb16c9d0faf0db4d593ffea8ce2`.
 
 ## Current exact-candidate P9 evidence
@@ -80,8 +81,9 @@ Verified:
 - evidence represented authorization as external and empirical execution as explicitly false;
 - independent P9 evidence JSON and SHA-256 sidecar were successfully uploaded.
 
-Independent canonical digest: `f235fc6ef241379f295676d257c22c7b17a47ace47377506fac9a7e5d490215a`.  
-P9 artifact: `9825316781`, digest `sha256:15e5ba72dd524f90b0bb3499c9b0b3f7de602f0e1905b0734183e830c22af671`.
+Latest P9 artifact: `9825660346`, ZIP digest `sha256:cf5e475c31bd9258731dcec3e6f36588f9fbfa80c3bb787419b54770ccae7976`.
+
+Independent canonical digest: `f235fc6ef241379f295676d257c22c7b17a47ace47377506fac9a7e5d490215a`.
 
 This is **scoped independent verification evidence**, not full P9 closure. It does not establish P2/P6a for the completion candidate, P7 exact freeze binding, P8 analysis lock, durable external archive, experimental authorization, empirical execution, or efficacy.
 
