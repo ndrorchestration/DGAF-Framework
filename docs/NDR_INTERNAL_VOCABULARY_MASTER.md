@@ -1,7 +1,7 @@
 # NDR INTERNAL VOCABULARY MASTER LIBRARY
 
 > **Epistemic status:** Canonical terminology registry; vocabulary mappings are not evidence of implementation or validation.
-> **Last updated:** 2026-08-21 — documentation/provenance reconciliation
+> **Last updated:** 2026-09-02 — transversal dependency and candidate-state reconciliation
 
 ## Epistemic standard
 
@@ -107,3 +107,40 @@ The following are retained for traceability and must not be used as current capa
 - historical agent capability descriptions not backed by current implementation/evaluation
 
 See `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md` for the full policy and `docs/taxonomy/TAXONOMY_ADDENDUM_8_AGENTS.md` for the historical taxonomy addendum.
+
+## Transversal Candidate-State Vocabulary — 2026-09-02
+
+A **candidate** is the exact executable identity selected for a verification cycle. An **apparatus/source** is the provenance anchor from which the candidate lineage is derived. A **deployment** is an execution substrate identity and is not synonymous with a candidate. A **workflow head** is the CI execution identity and is not synonymous with either the candidate or deployment. An **artifact** is a retained evidence object produced by a scoped execution. A **freeze** is an immutable experimental identity. **Authorization** is a separate governance transition. **Empirical** denotes accepted observations produced only after the required freeze and authorization state exists.
+
+Required identity tuple:
+
+`apparatus/source SHA + candidate SHA/tree + deployment identity/source SHA + workflow/evidence run + artifact identity + protocol/analysis binding + freeze identity + authorization state`
+
+Use:
+
+- `ROLE DIFFERENCE` when two identities intentionally serve different semantic roles.
+- `HISTORICAL` when a prior identity is retained for provenance and cannot close the current cycle.
+- `TRANSVERSAL DRIFT` when live projections can reasonably be interpreted as different current states.
+- `BLOCKING CONTRADICTION` when the discrepancy could permit invalid evidence transfer, closure, freeze, or authorization.
+- `CANDIDATE-BOUND` only when evidence names the exact candidate that produced it.
+- `CURRENT-CYCLE` only for evidence whose upstream dependencies all resolve to the selected candidate cycle.
+
+### P-35 / P-42 namespace and remediation boundary
+
+`P-35` is **Procluding Premise Gate**. `P-42` is **Adaptive Harmonic Governance (AHG)**. P-35 was retained as the canonical pre-admissibility name after the AHG collision was resolved by renumbering AHG to P-42.
+
+The current remediation additionally requires an explicit `premise_check_fn` at the DGAF/TGL/ConsensusTask boundary. This is an **engineering dependency / wiring contract**. It is not a declaration of the PDMAL-specific constitutional premise policy. The latter remains an experimental-control dependency requiring explicit approval before pilot execution.
+
+### Evidence-state ordering
+
+The preferred lifecycle vocabulary is:
+
+`DEFINED → IMPLEMENTED → TESTED → CANDIDATE-BOUND → VERIFIED → FROZEN → AUTHORIZED → EMPIRICAL`
+
+These are non-equivalent states. A READY deployment is not runtime verification; verification is not freezing; freezing is not authorization; authorization is not an empirical observation.
+
+### Cross-system rule
+
+GitHub, Vercel, Notion, taxonomies, pattern registries, and retained evidence must use role-qualified identities and compatible status language. Shared URLs, shared repositories, branch ancestry, or behavioral similarity do not establish candidate equivalence.
+
+**Canonical reconciliation addendum:** `docs/taxonomy/TRANSVERSAL_AGREEMENT_AND_DEPENDENCY_TAXONOMY_2026-09-02.md`
