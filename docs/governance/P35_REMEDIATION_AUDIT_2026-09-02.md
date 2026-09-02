@@ -8,7 +8,7 @@ This record audits the current remediation branch for the P-35 premise-hook inte
 
 - PR: #188
 - Branch: `remediation/p35-premise-hook-2026-09-01`
-- Current head: `7887871c7f0c1bdcb9a80390d981e388567858d4`
+- Current head: `cde71b160bb4316ad2cf2fb5b0f1a07efaddd579`
 - Historical completion candidate that motivated remediation: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`
 
 ## Verified P-35 boundary
@@ -31,7 +31,7 @@ The non-empirical runtime characterization harness still constructed DGAF tasks 
 
 ## Evidence status
 
-The previously successful exact-head pre-freeze run `33592005918` and artifact `9832129713` are bound to `d460dea0e920a616269a1a929be42e0bd2535c13`. Because subsequent commits changed the remediation branch, that evidence does not transfer to `7887871c7f0c1bdcb9a80390d981e388567858d4`.
+The previously successful exact-head pre-freeze run `33592005918` and artifact `9832129713` are bound to `d460dea0e920a616269a1a929be42e0bd2535c13`. Because subsequent commits changed the remediation branch, that evidence does not transfer to `cde71b160bb4316ad2cf2fb5b0f1a07efaddd579`.
 
 A fresh aggregate verification is therefore required for the current head.
 
