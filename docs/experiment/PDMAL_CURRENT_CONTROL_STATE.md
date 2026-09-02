@@ -10,6 +10,12 @@ candidate_status: POST-P-35 VALIDATION / PRE-FREEZE / FAIL-CLOSED / P3-P9 EVIDEN
 active_p35_remediation_pr: 199
 active_p35_validated_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
 active_p35_validation_runs: 33684805409,33684805218,33684805269,33684805422,33684805339,33684805302,33684805311,33684805272,33684805190,33684805285,33684805328
+candidate_head_sha: 0de8ef419925f46ab9a6033060b154422e4e6b42
+candidate_validation_wave: 33687034500,33687034551,33687034589,33687034609,33687034673,33687034634,33687034549,33687034593,33687034462,33687034469,33687034449,33687034503,33687034611,33687034617,33687034620,33687034636,33687034606,33687034550
+candidate_deployment_identity: dpl_DVGBVKn3PbLZsTNEUhPjYtkqPSco
+candidate_deployment_sha: 0de8ef419925f46ab9a6033060b154422e4e6b42
+candidate_deployment_state: READY
+candidate_deployment_alias: dynamicgovernanceagenticformation-git-c-cab2e6-ndrorchestration.vercel.app
 ---
 
 # PDMAL Current Control State
@@ -22,7 +28,9 @@ The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. It
 
 The validated P-35 boundary is PR #199 / branch `remediation/p35-minimal-mainline-2026-09-02` at exact head `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`. That SHA is evidence-immutable for P-35 adjudication and is not modified by this successor transition.
 
-The active successor candidate is branch `candidate/p35-validated-control-state-2026-09-02`, created directly from `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`. Its purpose is control-state reconciliation and exact-candidate establishment. No pilot authorization or empirical execution is enabled.
+The active successor candidate is branch `candidate/p35-validated-control-state-2026-09-02`, exact head `0de8ef419925f46ab9a6033060b154422e4e6b42`, created directly from `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`. Its validation wave is green. No pilot authorization or empirical execution is enabled.
+
+The successor deployment is independently identified as Vercel deployment `dpl_DVGBVKn3PbLZsTNEUhPjYtkqPSco`, state `READY`, with deployment metadata binding it to GitHub commit SHA `0de8ef419925f46ab9a6033060b154422e4e6b42` and PR #200. Its branch alias is `dynamicgovernanceagenticformation-git-c-cab2e6-ndrorchestration.vercel.app`.
 
 Historical candidates remain non-closing for the current cycle. Their evidence does not transfer to the successor candidate merely because documentation references them.
 
@@ -32,8 +40,8 @@ Historical candidates remain non-closing for the current cycle. Their evidence d
 |---|---|---|
 | Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…` |
 | Validated P-35 boundary | VALIDATED / IMMUTABLE EVIDENCE BOUNDARY | PR #199; `643dc77a…`; validation set recorded above |
-| Successor candidate | CONTROL-STATE RECONCILIATION CANDIDATE / NOT FROZEN | branch `candidate/p35-validated-control-state-2026-09-02`, parent `643dc77a…` |
-| P-35 implementation | VALIDATED | exact-head implementation/regression/harness/pre-freeze/security/governance/provenance checks passed at `643dc77a…` |
+| Successor candidate | VALIDATED CONTROL-STATE CANDIDATE / NOT FROZEN | exact head `0de8ef419…`; validation wave green |
+| Successor deployment | ESTABLISHED / READY | `dpl_DVGBVKn3PbLZsTNEUhPjYtkqPSco`; bound to exact SHA `0de8ef419…` |
 | P2 runtime | HISTORICAL / RE-RUN REQUIRED | prior evidence is candidate-bound and does not transfer |
 | P6a CORS | HISTORICAL / RE-RUN REQUIRED | prior evidence is candidate/deployment-bound and does not transfer |
 | P3 | OPEN | Fresh evidence required against final exact candidate |
@@ -55,19 +63,20 @@ P-35 is now adjudicated VALIDATED at exact head `643dc77a56d3b5a92d16981d5d8ca01
 
 ## Required closure sequence
 
-1. Establish the successor candidate's exact head after control-state reconciliation.
-2. Run only validations made stale by the reconciliation commit(s), then adjudicate candidate readiness.
-3. Complete current-candidate P3 artifact-contract evidence.
-4. Complete P4 operational blinding/custody evidence.
-5. Complete P5 environment/topology/RNG reproducibility evidence.
-6. Complete P6 durable archive/retrieval/hash evidence.
-7. Re-run authenticated P2 and P6a against the same exact candidate and deployment.
-8. Bind P7 to the exact candidate/protocol/analysis/final-freeze identity.
-9. Close P8 from current-candidate TGL/P-35 evidence only.
-10. Execute independent P9 verification against the final exact candidate.
-11. Create and independently verify a new immutable freeze.
-12. Obtain explicit pilot authorization.
-13. Only then execute the blinded pilot.
+1. Establish the successor candidate's exact head after control-state reconciliation — COMPLETE at `0de8ef419925f46ab9a6033060b154422e4e6b42`.
+2. Run only validations made stale by the reconciliation commit(s), then adjudicate candidate readiness — COMPLETE; current successor validation wave is green.
+3. Establish and independently verify a deployment identity for the exact successor candidate — COMPLETE: Vercel `dpl_DVGBVKn3PbLZsTNEUhPjYtkqPSco`, `READY`, bound to exact SHA `0de8ef419925f46ab9a6033060b154422e4e6b42`.
+4. Complete current-candidate P3 artifact-contract evidence.
+5. Complete P4 operational blinding/custody evidence.
+6. Complete P5 environment/topology/RNG reproducibility evidence.
+7. Complete P6 durable archive/retrieval/hash evidence.
+8. Re-run authenticated P2 and P6a against the same exact candidate and deployment.
+9. Bind P7 to the exact candidate/protocol/analysis/final-freeze identity.
+10. Close P8 from current-candidate TGL/P-35 evidence only.
+11. Execute independent P9 verification against the final exact candidate.
+12. Create and independently verify a new immutable freeze.
+13. Obtain explicit pilot authorization.
+14. Only then execute the blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
 
