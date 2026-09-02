@@ -5,8 +5,6 @@ execute the empirical pilot.
 """
 from __future__ import annotations
 
-import os
-
 import pytest
 
 from run_pilot import require_pilot_premise_checker
