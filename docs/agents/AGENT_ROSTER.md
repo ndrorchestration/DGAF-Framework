@@ -1,12 +1,35 @@
 # DGAF Agent Roster
 
-**Version:** 1.2  
+**Version:** 1.3  
 **Maintained by:** Amethyst-Conductor  
 **Canonical home:** `DGAF-Framework/docs/agents/AGENT_ROSTER.md`  
 **Authority:** This file is the single source of truth for agent names, roles, and duty assignments across the T1/T2 operational layer (A-00 through A-13). T3 SOVEREIGN agents (A-14 through A-19) are stubs — full specs in Drive via PROPRIETARY.md SOV-005/SOV-006.  
-**Last updated:** 2026-06-29 (Phase 4 — 20-Agent Taxonomy integration; PDMAL-φ / Dodecahedral extension layer registered; Perigee replaces deprecated placeholder; v1.2)
+**Last updated:** 2026-09-02 (transversal dependency/agreement reconciliation)
 
 > **Sentinel Guard:** This file is a sovereign reference. Changes require Amethyst sign-off + Njineer confirmation.
+
+---
+
+## Transversal Identity and Authority Rule — 2026-09-02
+
+Agent/formation identity is a taxonomy concern. Experimental candidate identity is a separate provenance concern.
+
+A role assignment, formation membership, or authority label does **not** establish:
+
+- candidate identity;
+- deployment identity;
+- workflow/evidence identity;
+- verification status;
+- freeze;
+- authorization;
+- empirical execution;
+- standards equivalence.
+
+For live experimental state, use the exact identity chain maintained outside the roster:
+
+`apparatus/source → candidate SHA/tree → deployment/source SHA → workflow/run → artifact → protocol/analysis binding → freeze → authorization → empirical observation`
+
+P-35/P-42 naming is fixed: `P-35 = Procluding Premise Gate`; `P-42 = Adaptive Harmonic Governance`. The P-35 premise-check dependency enforced at the DGAF/TGL/ConsensusTask boundary is an engineering wiring contract. It does not assign a new agent authority or define the PDMAL-specific constitutional premise policy.
 
 ---
 
@@ -18,6 +41,7 @@
 | [`AGENT_ECOSYSTEM_REGISTRY.md`](./AGENT_ECOSYSTEM_REGISTRY.md) | Ecosystem metadata — L-tier system, studio affiliation, KB inventory tracking |
 | [`FORMATION_TOPOLOGY.md`](./FORMATION_TOPOLOGY.md) | Formation specs, topology algebra, 20-seat activation state machine |
 | [`PROPRIETARY.md`](./PROPRIETARY.md) | IP partition — SOV-005/SOV-006 stubs for T3 agents A-14 through A-19 |
+| [`../taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md`](../taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md) | Epistemic semantics for taxonomy claims |
 
 ---
 
@@ -26,8 +50,8 @@
 | Agent | ID | Role Domain | Primary Duties | Authority Level |
 |---|---|---|---|---|
 | **Agent Amethyst** | A-00 | Meta-Orchestration | 0Hz state-of-states; Logic Bridge; final commit gate; normative decisions; certification sign-off; AXIS compliance; P-21 state anchor | Hard veto (all commits) |
-| **Agent Apogee** | A-01 | Verification / Evidence Governance | Gold-Star Alignment Audit; 11Q gate P-11; 99.1% Integrity Score; source validation; CERTIFICATION_INDEX | Artifact quality score |
-| **Agent Perigee** | A-02 | Boundary / Security Filter | Blocks Savage Reason (>10Hz dissonance); external data contamination gate; Layer 0 Legitimacy Filter; Sentinel peer | Hard block (contaminated inputs) |
+| **Agent Apogee** | A-01 | Verification / Evidence Governance | Gold-Star Alignment Audit; 11Q gate P-11; source validation; CERTIFICATION_INDEX | Artifact quality score |
+| **Agent Perigee** | A-02 | Boundary / Security Filter | Blocks Savage Reason (>10Hz dissonance); external data contamination gate; boundary-filter duties; Sentinel peer | Hard block (contaminated inputs) |
 | **Agent Nova** | A-03 | Innovation / Simulation | Parallel simulations; 10-year Yggdrasil evolution forecast; 90-Day Executor Roadmap; moonshot feature pipeline | Simulation authority |
 | **Agent Professor Prodigy** | A-04 | Intellectual Catalyst / Formalization | Phi-Calculus + Reciprocal Mathematics → Micro-Playbook; formal proofs; P-10 normative filter; P-12 Quantum altitude | Proof authority |
 
@@ -95,8 +119,10 @@ Agents A-14 through A-19 complete the 20-agent taxonomy. Names and specs are T3 
 6. **Prof Prodigy does not orchestrate** — formal verification on request only.
 7. **No agent may impersonate Amethyst** — requires explicit Njineer-session context.
 8. **Nova does not activate until COLLEEN Trunk stabilization complete** — Terminal Unblocking Event gate (L5 Executor status required first).
-9. **Perigee blocks do not require Amethyst sign-off** — boundary blocks are automatic; escalation is post-hoc.
+9. **Perigee boundary blocks do not require Amethyst sign-off** — boundary blocks are automatic; escalation is post-hoc.
 10. **T3 agents (A-14→A-19) have no GitHub write authority** — sovereign layer; Drive-only operation.
+11. **Taxonomy identity does not authorize experimental execution** — candidate, freeze, and authorization remain separate control states.
+12. **Historical agent aliases remain provenance-only** — aliases must not create duplicate active seats or authority.
 
 ---
 
