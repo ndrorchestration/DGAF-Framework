@@ -30,10 +30,12 @@ A document is not required to be rewritten merely because a later candidate exis
 As of 2026-09-02:
 
 - `main` documentation/control-plane lineage: `275756fd81c975f17ae3d16d24e599db0617cf85`.
-- Active experimental candidate: PR #192 head `edd3b5c8266e2680b9bb94301c2623a3f1ac0cf0`.
+- Active experimental candidate: PR #192 head `58ba9a072f40e94638b0332eeec19dd882a7ff95`.
+- Candidate tree: `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb`.
 - Corrected apparatus/source anchor: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`.
-- No exact-source Vercel deployment is evidenced for PR #192.
+- Exact candidate Vercel deployment: not evidenced; current provider status is rate-limited.
 - Experimental boundary: `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`.
+- Fresh exact-head CI wave: all reported workflows PASS, including Pre-Freeze Runner Validation and Pre-Authorization Security.
 
 ## Temporal integrity principle
 
