@@ -31,14 +31,8 @@ EXCLUDED_RAW = {
     "docs/taxonomy/EPISTEMIC_CROSS_REPO_SWEEP_2026-08-15.md",
     "docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md",
 }
-# Case-insensitive so exclusions apply on case-sensitive Linux CI regardless of
-# on-disk casing (files are stored UPPERCASE, e.g. docs/EPISTEMIC_EVIDENCE_STANDARD.md).
 EXCLUDED = {p.lower() for p in EXCLUDED_RAW}
 ALLOWED_SUFFIXES = {".md", ".py", ".ts", ".tsx", ".yml", ".yaml", ".json"}
-# CI workflows and this checker's own scripts are configuration, not publishable
-# claim-language. The checker must not scan its own definition file
-# (claim-hygiene.yml defines the 'production-ready' regex string and would
-# self-flag) nor its own source/comment lines (which contain the lexicon).
 EXCLUDED_PARTS = {".git", "node_modules", ".venv", "venv", "__pycache__", "htmlcov", ".github", "scripts"}
 
 PATTERNS = [
@@ -58,11 +52,12 @@ NON_ASSERTIVE_CONTEXT = re.compile(
     r"(?:\b(?:not|never|no|without|cannot|can't|must not|should not|do not|does not|doesn't)\b[^\n.;]{0,160}|\b(?:future|proposed|requires? separate governance|requires? explicit governance|requires? independent evidence)\b[^\n.;]{0,160})",
     re.I,
 )
+FRAGMENT_CONTEXT = re.compile(r"^\s*[-*]\s+(?:is|are|was|were)\b", re.I)
 
 
 def line_is_non_assertive(line: str) -> bool:
     """Return True when a matched term appears inside an explicit disclaimer/policy."""
-    return bool(NON_ASSERTIVE_CONTEXT.search(line))
+    return bool(NON_ASSERTIVE_CONTEXT.search(line) or FRAGMENT_CONTEXT.search(line))
 
 
 def artifact_is_historical(text: str, line_number: int) -> bool:
