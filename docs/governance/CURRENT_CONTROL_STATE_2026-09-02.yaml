@@ -1,0 +1,29 @@
+meta:
+  authority_class: LIVING_CONTROL
+  status: CURRENT
+  last_reconciled: 2026-09-02
+state:
+  phase: PRE-FREEZE
+  status: FAIL-CLOSED
+  authorization: NOT_GRANTED
+  empirical_n: 0
+identities:
+  corrected_apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
+  corrected_apparatus_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
+  current_runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
+  current_runtime_candidate_tree_sha: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
+  current_production_deployment: dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc
+  latest_controlled_completion_candidate_sha: a43219b4ed91fff8615f6c655ab3d17ca871fc29
+gates:
+  P2: VERIFIED
+  P3: IMPLEMENTATION_PRESENT_CURRENT_CANDIDATE_EVIDENCE_OPEN
+  P4: OPEN
+  P5: OPEN
+  P6: OPEN_FAIL_CLOSED
+  P7: TECHNICALLY_ADJUDICATED_FORMALLY_OPEN
+  P8: OPEN_FAIL_CLOSED
+  P9: HISTORICAL_SCOPED_PASS_NEW_CANDIDATE_REVERIFY_REQUIRED
+notes:
+  evidence_transfer: PROHIBITED_ACROSS_CANDIDATE_SHA_TREE_DEPLOYMENT_RUN_ARTIFACT
+  freeze: NOT_ESTABLISHED
+  authorization: NOT_GRANTED
