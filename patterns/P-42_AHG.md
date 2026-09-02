@@ -5,15 +5,32 @@
 > **P-36 Class:** ADVISORY (v1.1) → BLOCKING (v2.0 MPHG target)
 > **Status:** 🟡 Partially Implemented — live recovery/evaluation evidence pending
 > **Registered:** 2026-06-29 · Post-S077 autonomous sprint
-> **Version:** v1.5-status-sync · 2026-08-15
+> **Version:** v1.6-transversal-sync · 2026-09-02
 > **Steward:** Amethyst × COLLEEN
 > **Full spec:** [`docs/theory/AHG_ARCHITECTURE.md`](../docs/theory/AHG_ARCHITECTURE.md)
+> **Transversal registry overlay:** [`docs/NDR_PATTERN_REGISTRY_UNIFIED_TRANSVERSAL_OVERLAY_2026-09-02.md`](../docs/NDR_PATTERN_REGISTRY_UNIFIED_TRANSVERSAL_OVERLAY_2026-09-02.md)
 
 ## Summary
 
-AHG is a control-theoretic governance layer that continuously estimates the **Cognitive Phase Energy** (φ) of the multi-agent collective and dispatches **Conductor Archetypes** to steer the ensemble toward productive divergence and away from destabilizing entropy.
+AHG is a project-defined governance layer that continuously estimates the **Cognitive Phase Energy** (φ) of the multi-agent collective and dispatches **Conductor Archetypes** to steer the ensemble toward productive divergence and away from destabilizing entropy.
 
-It sits above the existing gate stack (P-35–P-41) as a meta-governance signal. The current repository contains a substantive conductor implementation and test/evaluation harness. The remaining evidence gap is live Tribunal recovery wiring and production evaluation, not the existence of the core AHG conductor.
+It sits above the existing gate stack (P-35–P-41) as a meta-governance signal. The current repository contains a substantive conductor implementation and test/evaluation harness. Remaining evidence gaps concern live recovery wiring and current-cycle evaluation; names and implementation status do not establish empirical efficacy.
+
+## Transversal identity boundary
+
+P-42 is a pattern identity, not an experimental candidate identity. Its registry entry does not substitute for candidate/deployment/workflow/artifact identity.
+
+Required candidate identity tuple when P-42 participates in a live experimental cycle:
+
+`apparatus/source SHA + candidate SHA/tree + deployment identity/source SHA + workflow/evidence run + artifact identity + protocol/analysis binding + freeze identity + authorization state`
+
+The same P-42 definition must be interpreted consistently across GitHub, Vercel, Notion, evidence registries, taxonomy/vocabulary registries, and Pattern Commons. A historical P-42 implementation or verification result does not transfer to another candidate SHA.
+
+## P-35 relationship
+
+`P-35` is **Procluding Premise Gate**. `P-42` is **Adaptive Harmonic Governance (AHG)**. They are distinct namespaces and mechanisms.
+
+The current P-35 remediation adds an explicit `premise_check_fn` dependency at the DGAF/TGL/ConsensusTask boundary. That is an engineering/wiring contract. It is not a PDMAL-specific constitutional premise policy and must not be documented as one without separate experimental-control approval.
 
 ## Core Concepts
 
@@ -115,4 +132,4 @@ The architecture review records P-42 as approved/close-eligible **only after a s
 
 ---
 
-*P-42 · AHG · Adaptive Harmonic Governance · v1.5-status-sync · 2026-08-15*
+*P-42 · AHG · Adaptive Harmonic Governance · v1.6-transversal-sync · 2026-09-02*
