@@ -243,6 +243,24 @@ class TriadicGovernanceLoop:
             )
             self._emit_herald_and_seal(audit, context, raise_premise=exc)
             return audit
+        except Exception as exc:
+            # P-35 is fail-closed even when the supplied checker itself fails.
+            # An unexpected checker exception becomes a sealed KILL audit rather
+            # than bypassing the constitutional gate or escaping the TGL boundary.
+            gates.append(
+                GateRecord(
+                    0,
+                    "P-35",
+                    "ProcludingPremiseGate",
+                    GateResult.KILL,
+                    f"premise-check-exception:{type(exc).__name__}: {exc}"[:120],
+                )
+            )
+            audit = TurnAuditRecord(
+                self.session_id, self._turn_counter, self.agent_id, input_hash,
+                gates, TurnStatus.KILL, timestamp,
+            )
+            return self._emit_herald_and_seal(audit, context)
 
         hook_sequence = [
             (1, "P-31", "SCPE_Prune", self.hooks.scpe_fn),
@@ -264,35 +282,20 @@ class TriadicGovernanceLoop:
                 terminated = True
                 break
 
-        # HPG is conditional and cannot run after any terminal failure.
+        # Conditional HPG: only after a PASS from Phi-Closure.
         if not terminated:
             if phi_closure_result == GateResult.PASS:
-                gates.append(
-                    self._run_hook(
-                        self.hooks.hpg_fn, input_text, context, 7, "N/A", "HPG_OctaveGate"
-                    )
-                )
+                gates.append(self._run_hook(self.hooks.hpg_fn, input_text, context, 7, "N/A", "HPG_OctaveGate"))
             else:
-                gates.append(
-                    GateRecord(7, "N/A", "HPG_OctaveGate", GateResult.SKIP, "Phi-Closure did not PASS")
-                )
+                gates.append(GateRecord(7, "N/A", "HPG_OctaveGate", GateResult.SKIP, "conditional on Phi-Closure PASS"))
 
-            # Apogee is allowed to inspect an escalated/warned turn, but not a KILL.
-            if not any(g.result == GateResult.KILL for g in gates):
-                gates.append(
-                    self._run_hook(
-                        self.hooks.apogee_fn, input_text, context, 8, "P-30", "Apogee_AttestationGate"
-                    )
-                )
+        # Apogee step 8 is only reachable if no prior KILL and all required gates are wired.
+        if not terminated:
+            gates.append(self._run_hook(self.hooks.apogee_fn, input_text, context, 8, "P-30", "Apogee_AttestationGate"))
 
         final_status = self._reduce_status(gates)
         audit = TurnAuditRecord(
-            self.session_id,
-            self._turn_counter,
-            self.agent_id,
-            input_hash,
-            gates,
-            final_status,
-            timestamp,
+            self.session_id, self._turn_counter, self.agent_id, input_hash,
+            gates, final_status, timestamp,
         )
         return self._emit_herald_and_seal(audit, context)
