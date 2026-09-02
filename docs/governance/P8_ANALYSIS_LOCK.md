@@ -50,15 +50,15 @@ The previous experimental verification boundary `ac8ea267a9f0d995626cf9c3eaf9e6b
 | CI | two-sided 95%, `alpha=0.05` | SELECTED |
 | Directional support | estimate > 0 and CI lower bound > 0 | SELECTED |
 
-## TGL/P-35 prerequisite — verified remediation boundary
+## TGL/P-35 prerequisite — current remediation boundary
 
 The exact completion candidate `a43219b…` was found to have a candidate-scoped P-35 integration defect: the experimental `DGAF_TGLAdapter` did not provide a premise checker, and the pilot task path likewise did not supply one. The generic P-35 implementation treats a missing checker as pass-through, so the candidate did not demonstrate the required premise-hook injection.
 
-PR #188 remediated that defect. The current remediation head is `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`. It requires an explicit callable premise checker through the DGAF adapter and pilot runner, propagates the checker into `TGLHooks`/`ConsensusTask`, handles unexpected checker exceptions fail-closed, and preserves a sealed P-35/KILL audit result on premise violation.
+PR #188 remediated that defect. The current remediation head is `9ba7677c98c2eb8502ca141b70ff59104ad89fea`. It requires an explicit callable premise checker through the DGAF adapter and pilot runner, propagates the checker into `TGLHooks`/`ConsensusTask`, handles unexpected checker exceptions fail-closed, and preserves a sealed P-35/KILL audit result on premise violation. The latest head additionally corrects `p9-independent-evidence.sha256` for Windows CRLF/on-disk hashing.
 
-The exact-current-head pre-freeze runner validation run `33590352168` completed successfully for `d83ea74…`. Its contract suite included `test_run_pilot_p35.py`, and the workflow also verified contract-mode execution, pilot-mode failure without freeze/authorization, artifact schema/integrity checks, and PRE-FREEZE manifest emission. Artifact `9831586822` is the uploaded manifest; its workflow artifact digest is `sha256:dedacba56b8430fd995c4230e52fe208d2380f5e5015fa3816073cda3e9d774e`.
+The exact-current-head runtime characterization run `33604135832` completed successfully for `9ba7677…` as PRE-FREEZE/non-empirical verification. Artifact `9836428941` contains `runtime_characterization.json` and its SHA-256 sidecar; the inner digest is `4f2d3193a3a008c22d26f4c4d52bc84d04eb0292117acf969c01ee4f7003e3aa`, matching the sidecar. The characterization covers 54 expected trials with 54 completed and 0 failed. This is engineering/runtime characterization, not experimental efficacy evidence.
 
-This is **pre-freeze engineering verification of the remediation head**, not verification of an experimental candidate. Because `d83ea74…` materially changes the apparatus relative to `a43219b…`, the prior completion-candidate PDMAL/P9 evidence does not transfer. A new exact experimental candidate must be selected after remediation review, followed by fresh candidate-bound P3–P9 and affected P2/P6a verification.
+Formal P-35 acceptance remains pending a runner-boundary predicate showing that `run_pilot()` rejects a missing premise checker before task construction and that an explicit checker reaches DGAF `ConsensusTask`. Because `9ba7677…` materially changes the apparatus relative to `a43219b…`, prior completion-candidate PDMAL/P9 evidence does not transfer. A new exact experimental candidate must be selected after remediation review, followed by fresh candidate-bound P3–P9 and affected P2/P6a verification.
 
 ## TGL prerequisite — broader contract
 
@@ -73,7 +73,7 @@ The required contract surface includes:
 - audit seal coverage of the exact returned audit object;
 - regression coverage for these semantics.
 
-The remediation now has exact-head pre-freeze evidence for these P-35 integration paths, but that evidence does not itself close P8, alter P7, create a freeze, or authorize the pilot.
+The current remediation has exact-head non-empirical characterization for the P-35 integration paths, but formal P-35 acceptance and P8 closure remain open.
 
 ## Protocol/candidate separation rule
 
