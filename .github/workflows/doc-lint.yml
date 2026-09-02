@@ -13,14 +13,18 @@ on:
     branches: [main]
     paths:
       - '**.md'
+      - '**.py'
       - '.markdownlint.yml'
       - '.markdownlint.json'
+      - '.github/workflows/doc-lint.yml'
   pull_request:
     branches: [main]
     paths:
       - '**.md'
+      - '**.py'
       - '.markdownlint.yml'
       - '.markdownlint.json'
+      - '.github/workflows/doc-lint.yml'
 
 jobs:
   markdownlint:
@@ -53,11 +57,15 @@ jobs:
         # generated, and append-only records remain subject to their own
         # provenance/evidence controls rather than presentation lint.
 
+      - name: Run semantic document-authority lint
+        run: python scripts/lint_document_authority.py
+
       - name: Report summary
         if: always()
         run: |
           echo "## Doc Lint Summary — DGAF-Framework" >> $GITHUB_STEP_SUMMARY
           echo "- Linter: markdownlint-cli 0.39.0" >> $GITHUB_STEP_SUMMARY
+          echo "- Semantic authority lint: scripts/lint_document_authority.py" >> $GITHUB_STEP_SUMMARY
           echo "- Node.js: 24" >> $GITHUB_STEP_SUMMARY
-          echo "- Scope: public/current entry-point documentation" >> $GITHUB_STEP_SUMMARY
+          echo "- Scope: public/current entry-point documentation plus living authority surfaces" >> $GITHUB_STEP_SUMMARY
           echo "- Separate provenance surfaces: governance, experiment, evidence, archive, historical, generated, append-only records" >> $GITHUB_STEP_SUMMARY
