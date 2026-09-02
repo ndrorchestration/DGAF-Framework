@@ -40,6 +40,20 @@ def test_premise_violation_raises_and_kills():
 
 
 @pytest.mark.governance
+def test_unexpected_premise_checker_exception_is_sealed_kill():
+    """A checker failure must not escape P-35 as a bypassable exception."""
+    def broken_checker(_text, _invariant):
+        raise RuntimeError("checker unavailable")
+
+    audit = make_tgl(TGLHooks(premise_check_fn=broken_checker)).run_turn("checker failure")
+    step0 = next(g for g in audit.gate_records if g.step == 0)
+    assert audit.final_status == TurnStatus.KILL
+    assert step0.result is GateResult.KILL
+    assert "premise-check-exception:RuntimeError" in step0.notes
+    assert audit.seal_hash
+
+
+@pytest.mark.governance
 def test_downstream_gate_kill_sets_status_and_stops_execution():
     """Terminal KILL stops later hooks, including conditional HPG/Apogee execution."""
     executed_steps = []
@@ -98,7 +112,7 @@ def test_phi_closure_skip_skips_hpg():
     """An unwired Phi-Closure gate must also prevent HPG execution."""
     executed = []
     hooks = TGLHooks(hpg_fn=lambda text, ctx: executed.append(True) or GateResult.PASS)
-    audit = make_tgl(hooks).run_turn("phi skipped")
+    audit = make_tgl().run_turn("phi skipped")
     hpg = next(g for g in audit.gate_records if g.step == 7)
     assert hpg.result == GateResult.SKIP
     assert executed == []
