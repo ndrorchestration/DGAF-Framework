@@ -8,11 +8,13 @@
 
 The DGAF/PDMAL experimental track remains **PRE-FREEZE / FAIL-CLOSED**. No pilot authorization has been granted and empirical **N = 0**.
 
-`main` is documentation/control-plane lineage. The current mainline runtime candidate is `92ff830b1c67413df745e37087e6447c9c251b9a` with exact tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`. The latest controlled completion candidate is `a43219b4ed91fff8615f6c655ab3d17ca871fc29` on `completion/2026-09-01-exact-candidate`; these identities are not interchangeable.
+`main` is documentation/control-plane lineage. The current mainline runtime candidate is `92ff830b1c67413df745e37087e6447c9c251b9a` with exact tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`; the latest controlled completion candidate is `a43219b4ed91fff8615f6c655ab3d17ca871fc29` on `completion/2026-09-01-exact-candidate`. These identities are not interchangeable.
 
 ## Active remediation boundary
 
-PR #188 / branch `remediation/p35-premise-hook-2026-09-01` is currently at `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`. The candidate-scoped P-35 remediation has passed exact-head pre-freeze runner validation in run `33590352168`. The uploaded PRE-FREEZE manifest is artifact `9831586822` with workflow artifact digest `sha256:dedacba56b8430fd995c4230e52fe208d2380f5e5015fa3816073cda3e9d774e`.
+PR #188 / branch `remediation/p35-premise-hook-2026-09-01` is currently at `9ba7677c98c2eb8502ca141b70ff59104ad89fea`. The latest head is an evidence-integrity follow-up correcting `p9-independent-evidence.sha256` for Windows CRLF/on-disk hashing; it does not constitute a new behavioral P-35 change.
+
+The latest exact-head runtime characterization of this remediation is recorded as PRE-FREEZE/non-empirical evidence: 54/54 characterization trials completed with zero failed trials. The artifact is internally hash-consistent. Formal P-35 remediation acceptance remains pending the runner-boundary predicate: missing premise checker must fail before task construction, and an explicit checker must reach the DGAF `ConsensusTask` path.
 
 This remediation evidence is engineering/pre-freeze evidence only. It does not redefine the current runtime/completion candidate, establish P8 closure, create a freeze, authorize the pilot, or transfer evidence from `a43219b…`.
 
@@ -51,8 +53,9 @@ Generic execution roles do not create or elevate agent authority.
 | Corrected apparatus source | `2a54a67d…` |
 | Mainline runtime candidate | `92ff830b…` / tree `73cf3ad…` |
 | Latest completion candidate | `a43219b…` / branch `completion/2026-09-01-exact-candidate` |
-| Active P-35 remediation | `d83ea74c…` / PR #188 / engineering only |
-| P-35 pre-freeze runner verification | `PASS` for `d83ea74c…` via run `33590352168`; manifest artifact `9831586822` |
+| Active P-35 remediation | `9ba7677c…` / PR #188 / engineering only |
+| P-35 runtime characterization | `PASS` at exact remediation head; PRE-FREEZE/non-empirical, 54/54, zero failed |
+| P-35 formal acceptance | `PENDING` — runner-boundary verification predicate remains required |
 | P2 runtime verification | `VERIFIED` for `92ff830b…` / deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
 | P6a CORS verification | `VERIFIED` for `92ff830b…` / deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
 | P3 | Candidate-bound structural/dry-run evidence present; operational closure remains OPEN |
@@ -60,8 +63,8 @@ Generic execution roles do not create or elevate agent authority.
 | P5 | OPEN — dry-run reproducibility evidence is not full closure |
 | P6 | OPEN / fail-closed — durable external archive round-trip still required |
 | P7 | Technically adjudicated / formally OPEN; exact authority adoption and freeze binding remain required |
-| P8 | OPEN / fail-closed; P-35 remediation is verified at engineering/pre-freeze scope but a new experimental candidate is still required |
-| P9 scoped independent verification | `PASS` for `a43219b…` via run `33572123857`; new candidate re-verification required |
+| P8 | OPEN / fail-closed; P-35 remediation is not yet formally accepted and a new experimental candidate is still required |
+| P9 scoped independent verification | `PASS` for `a43219b…`; new candidate re-verification required |
 | Trusted completion controller | `SUCCESS` — `OPEN_GAPS` for `a43219b…` |
 | New immutable freeze | Not created |
 | Pilot authorization | Not granted |
@@ -69,13 +72,9 @@ Generic execution roles do not create or elevate agent authority.
 
 ## Latest remediation evidence
 
-The exact-head PDMAL Pre-Freeze Runner Validation run `33590352168` completed successfully against `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`.
+The active P-35 remediation head is `9ba7677c98c2eb8502ca141b70ff59104ad89fea`. Its latest characterization is exact-head, PRE-FREEZE, and non-empirical. The evidence establishes engineering behavior/runtime characterization only and remains scoped to the remediation lineage.
 
-The workflow completed exact checkout, hash-locked dependency installation, the full pre-freeze contract suite including `test_run_pilot_p35.py`, contract-mode execution, pilot-mode failure without freeze/authorization, artifact schema/integrity checks, and PRE-FREEZE manifest upload.
-
-The new remediation head also corrected the P-35 premise-KILL audit-return path so that a sealed KILL audit is retained and returned to the adapter rather than re-raised and discarded.
-
-This evidence establishes the remediation behavior at engineering/pre-freeze scope. It is not efficacy evidence, does not close P8, and does not authorize experimentation.
+A prior predecessor, `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`, and its associated pre-freeze run/artifact remain historical evidence for that exact predecessor. They must not be represented as current-head evidence and must not be transferred to the experimental candidate.
 
 ## Latest exact-candidate evidence
 
@@ -95,17 +94,11 @@ The rerun verified exact checkout identity, deterministic smoke behavior, RNG st
 
 Run `33572123857` completed successfully against exact candidate `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
 
-The independent verification workflow:
-
-- verified exact checkout identity (`HEAD == GITHUB_SHA`);
-- independently canonicalized the deterministic case with `jq -S -c` and hashed it with `sha256sum`;
-- required digest equality;
-- ran the authority-identity regression with `4 passed`;
-- retained exact-candidate P9 evidence with authorization marked external and empirical execution requested as false.
+The independent verification workflow verified exact checkout identity, independently canonicalized the deterministic case, required digest equality, ran the authority-identity regression with 4 passed, and retained exact-candidate P9 evidence with authorization marked external and empirical execution requested as false.
 
 The latest P9 evidence artifact is `9825660346` with ZIP digest `sha256:cf5e475c31bd9258731dcec3e6f36588f9fbfa80c3bb787419b54770ccae7976`.
 
-This is **scoped verification evidence**, not a declaration that all P9 prerequisites are closed. It does not establish empirical efficacy, authorization, or a freeze.
+This is scoped verification evidence, not a declaration that all P9 prerequisites are closed. It does not establish empirical efficacy, authorization, or a freeze.
 
 ## Trusted completion-controller result
 
@@ -118,16 +111,3 @@ The controller's blocking predicates were:
 - **P5 — OPEN:** structural/dry-run reproducibility evidence does not satisfy the full closure predicate.
 - **P6 — OPEN:** the current run performed artifact round-trip custody, but the governance checklist requires durable external archive write, independent retrieval, hash equality, and retention binding.
 - **P7 — OPEN:** formal authority adoption and exact freeze binding remain outstanding.
-- **P8 — FAIL_CLOSED:** current-candidate analysis lock is not established.
-
-P3 and scoped P9 were present as exact-candidate evidence. The controller explicitly reported `freeze_authorized=false`, `pilot_authorized=false`, and `empirical_execution_requested=false`.
-
-## Evidence boundary
-
-Engineering CI success, synthetic fixtures, deployment readiness, runtime predicate verification, or documentation updates do not constitute PDMAL efficacy evidence or experimental authorization. Historical evidence is not transferable across SHA/run/deployment boundaries without fresh exact-scope evidence.
-
-## Historical-priority boundary
-
-DGAF is not established as first in the individual mechanisms of agent governance, dynamic formation, authority, veto, escalation, idempotency, provenance, exact artifact identity, candidate immutability, or independent verification. The remaining historical hypothesis is a potentially distinctive cross-domain integration coupling formation-state governance to candidate-bound experimental verification and authorization. See `docs/research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`.
-
-**Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
