@@ -25,8 +25,20 @@ def test_negative_efficacy_statement_is_non_assertive() -> None:
     assert line_is_non_assertive(line)
 
 
-def test_positive_claim_is_not_non_assertive() -> None:
+def test_policy_list_fragment_is_non_assertive() -> None:
+    line = "- is empirically superior;"
+    assert PATTERNS[2].search(line)
+    assert line_is_non_assertive(line)
+
+
+def test_positive_efficacy_claim_is_not_non_assertive() -> None:
     line = "DGAF is empirically superior to the null condition."
+    assert PATTERNS[2].search(line)
+    assert not line_is_non_assertive(line)
+
+
+def test_positive_bulleted_efficacy_claim_is_not_non_assertive() -> None:
+    line = "- DGAF is empirically superior to the null condition."
     assert PATTERNS[2].search(line)
     assert not line_is_non_assertive(line)
 
@@ -34,5 +46,7 @@ def test_positive_claim_is_not_non_assertive() -> None:
 if __name__ == "__main__":
     test_explicit_prohibition_is_non_assertive()
     test_negative_efficacy_statement_is_non_assertive()
-    test_positive_claim_is_not_non_assertive()
+    test_policy_list_fragment_is_non_assertive()
+    test_positive_efficacy_claim_is_not_non_assertive()
+    test_positive_bulleted_efficacy_claim_is_not_non_assertive()
     print("claim-hygiene regression tests passed")
