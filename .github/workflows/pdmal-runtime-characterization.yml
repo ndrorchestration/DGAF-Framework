@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - epistemic/evidence-architecture-v1
+      - remediation/p35-premise-hook-2026-09-01
 
 permissions:
   contents: read
@@ -54,6 +55,8 @@ jobs:
           assert data['all_trials_completed'] is True
           assert data['ceiling_passed'] is True
           assert data['completed_trial_count'] == data['expected_trial_count']
+          assert data['p35_checker_configured'] is False
+          assert 'dgaf' not in data['conditions']
           print('Runtime characterization artifact: PASS')
           print(json.dumps(data['seed_runtime_stats'], indent=2, sort_keys=True))
           PY
