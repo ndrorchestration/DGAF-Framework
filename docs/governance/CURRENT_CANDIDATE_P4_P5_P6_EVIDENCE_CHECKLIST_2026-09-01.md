@@ -2,14 +2,16 @@
 
 ## Scope
 
-Non-authorizing evidence-planning/control record for the current runtime candidate. This document does not create empirical observations, freeze the apparatus, grant authorization, unblind any condition, or change empirical N.
+Non-authorizing evidence-planning/control record for the selected experimental candidate. This document does not create empirical observations, freeze the apparatus, grant authorization, unblind any condition, or change empirical N.
 
 ## Exact identity boundary
 
 - Corrected apparatus provenance anchor: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
-- Current runtime candidate: `92ff830b1c67413df745e37087e6447c9c251b9a`
-- Candidate tree: `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`
-- P2/P6a verified deployment: `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`
+- Selected experimental candidate: `58ba9a072f40e94638b0332eeec19dd882a7ff95`
+- Selected candidate tree: `abdbc9b33c0fe3341280dfbc1c4a7c0f41df4deb`
+- Candidate PR: `#192` (`candidate/p35-integrated-current-20260902`)
+- Exact candidate deployment: **NOT ESTABLISHED**
+- Historical runtime candidate `92ff830b…` and deployment `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` remain historical/non-transferable.
 
 ## P4 — Security / blinding
 
@@ -20,7 +22,7 @@ Non-authorizing evidence-planning/control record for the current runtime candida
 - Condition identifiers are HMAC-derived and emitted as blinded identifiers.
 - Pilot execution removes the blinding key from the process environment after obtaining it, reducing downstream exposure.
 
-### Current-cycle closure evidence still required
+### Current-candidate closure evidence still required
 
 - [ ] Exact candidate-bound execution demonstrating the blinding procedure.
 - [ ] Evidence of operational key custody and access separation.
@@ -30,19 +32,17 @@ Non-authorizing evidence-planning/control record for the current runtime candida
 
 ## P5 — Provenance / reproducibility
 
-### Implementation evidence
+### Current-candidate evidence now present
 
-- Separate topology and failure RNG streams are derived deterministically.
-- Runner records an environment fingerprint from runtime versions.
-- Pilot artifact records require a frozen commit SHA and environment fingerprint.
-- Artifact records bind experiment ID, protocol version, candidate SHA, seed, and environment fingerprint.
+- [x] Exact candidate-bound pre-freeze workflow execution: run `33616403754` on candidate `58ba9a…`.
+- [x] Candidate CI verification wave completed 18/18 successfully.
+- [x] Candidate-bound instrumentation, harness, truth-layer, and toolchain checks passed.
 
-### Current-cycle closure evidence still required
+### Final closure evidence still required
 
-- [ ] Exact-candidate reproducibility execution retained.
 - [ ] Independently recomputed environment fingerprint.
-- [ ] Topology/failure stream separation independently checked at the candidate boundary.
-- [ ] Deterministic rerun comparison retained.
+- [ ] Independent topology/failure stream separation check tied to the final closure packet.
+- [ ] Deterministic rerun comparison retained for the final candidate state.
 - [ ] Exact protocol/environment/dependency identity captured without secret disclosure.
 
 ## P6 — Durable evidence custody
@@ -54,7 +54,7 @@ Non-authorizing evidence-planning/control record for the current runtime candida
 - Archive writes are checksum-verified immediately after copy.
 - Retrieval and independent SHA-256 round-trip verification are implemented.
 
-### Current-cycle closure evidence still required
+### Current-candidate closure evidence still required
 
 - [ ] Current-candidate evidence artifact placed into the configured durable archive.
 - [ ] Independent retrieval from that archive.
@@ -72,5 +72,5 @@ No P4/P5/P6 gate may be promoted from `OPEN` merely because implementation exist
 
 ## Current boundary
 
-**P4 OPEN · P5 OPEN · P6 OPEN / FAIL-CLOSED**  
+**P4 OPEN · P5 ENGINEERING/WORKFLOW EVIDENCE COMPLETE; FINAL REPRODUCIBILITY CLOSURE OPEN · P6 OPEN / FAIL-CLOSED**  
 **PRE-FREEZE · NOT AUTHORIZED · empirical N = 0**
