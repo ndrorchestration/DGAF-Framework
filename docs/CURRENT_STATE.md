@@ -2,7 +2,7 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 applies_to_ref: main
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
@@ -10,16 +10,18 @@ runtime_candidate_tree: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
 latest_completion_candidate_sha: a43219b4ed91fff8615f6c655ab3d17ca871fc29
 latest_completion_candidate_branch: completion/2026-09-01-exact-candidate
 latest_completion_candidate_deployment: dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17
+active_p35_remediation_branch: remediation/p35-premise-hook-2026-09-01
+active_p35_remediation_pr: 188
 ---
 # DGAF-Framework / PDMAL — Current State
 
-GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment that produced it.
+GitHub is authoritative for implementation and CI; governance decisions must be recorded through the project's governance process. Historical evidence remains scoped to the exact SHA/run/deployment/artifact that produced it.
 
 > **Current boundary:** `main` is the documentation/control-plane lineage. The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` and remains the canonical provenance anchor for the seven restored behavior-affecting DGAF/TGL gate-state substrates.
 >
 > **Runtime candidate:** `92ff830b1c67413df745e37087e6447c9c251b9a` is the current production/runtime candidate recorded by the current mainline state. Its exact tree is `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`.
 >
-> **Latest completion candidate:** `a43219b4ed91fff8615f6c655ab3d17ca871fc29` is the current exact candidate on branch `completion/2026-09-01-exact-candidate`. It has fresh successful PDMAL and scoped P9 verification runs. An exact-candidate Vercel preview deployment now exists as `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`; deployment Git-SHA confirmation remains an external verification step.
+> **Latest completion candidate:** `a43219b4ed91fff8615f6c655ab3d17ca871fc29` is the current exact candidate on branch `completion/2026-09-01-exact-candidate`. It has fresh successful PDMAL and scoped P9 verification runs. An exact-candidate Vercel preview deployment exists as `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`; deployment Git-SHA confirmation remains an external verification step.
 >
 > **Current experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. No empirical or unblinded pilot state has been created.
 
@@ -32,6 +34,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 - `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae` — exact tree of the current mainline runtime candidate.
 - `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — current production deployment identity recorded by both P2 and P6a runtime evidence for `92ff830b…`.
 - `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17` — exact-candidate preview deployment created from `deploy/exact-candidate-a43219b`; READY; pending independent Vercel Git-SHA confirmation and authenticated P2/P6a verification.
+- PR #188 / branch `remediation/p35-premise-hook-2026-09-01` — candidate-scoped engineering remediation for the P-35 premise-hook injection defect found on `a43219b…`; not a new experimental candidate and not authorization.
 - Pre-correction candidates/deployments remain historical/non-closing and must not be reused as current dispatch inputs.
 - Documentation commits advance `main` documentation lineage but do not silently redefine apparatus or completion-candidate identity.
 
@@ -43,20 +46,35 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…`; seven-gate restoration plus complete provenance binding. |
 | Runtime candidate identity | CURRENT / NOT FROZEN | `92ff830b…`; exact tree `73cf3ad…`. |
 | Latest completion candidate | CONTROLLED / NOT FROZEN | `a43219b…`; exact-candidate verification target on completion branch. |
-| Candidate lineage | ESTABLISHED | `2a54a67d…` is the recorded lineage basis of the current runtime candidate. |
 | Exact completion deployment | READY / PREVIEW / PENDING VERIFICATION | `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`; source branch `deploy/exact-candidate-a43219b`; Vercel Git SHA still requires independent confirmation. |
 | P2 runtime verification | VERIFIED — MAINLINE ONLY | Run `33509348174`; artifact `9800942933`; five required cases passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
 | P6a CORS verification | VERIFIED — MAINLINE ONLY | Run `33509416955`; artifact `9800972819`; four required checks passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
-| P3 | VERIFIED — COMPLETION CANDIDATE | Run `33572123862`; latest artifact `9825740072`; exact candidate `a43219b…`; 19-test suite and artifact contract checks passed. |
+| P3 | VERIFIED — COMPLETION CANDIDATE WORKFLOW SCOPE | Run `33572123862`; artifact `9825740072`; exact candidate `a43219b…`; structural/artifact checks passed. |
 | P4 | WORKFLOW-LEVEL VERIFIED / OPERATIONAL CLOSURE OPEN | Run `33572123862`; blinding secret presence verified without disclosure and masked dry-run produced. Full operational custody/separation remains required. |
 | P5 | WORKFLOW-LEVEL VERIFIED / FULL CLOSURE OPEN | Run `33572123862`; exact artifact binding, RNG stream separation, deterministic digest, and environment fingerprint recorded. Full reproducibility closure remains required. |
 | P6 | WORKFLOW-LEVEL VERIFIED / DURABLE ARCHIVE OPEN | Run `33572123862`; artifact download plus inner checksum re-verification passed. Durable external archive closure remains required. |
 | P7 | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Adopted/final freeze binding is not yet evidenced; exact apparatus/candidate/protocol/analysis authority binding remains required. |
-| P8 | OPEN / FAIL-CLOSED | Current analysis-lock boundary is rebound to `a43219b…`; TGL/P-35, candidate-bound runtime, reproducibility, archive, P7, and final P9 predicates remain. |
-| P9 | SCOPED PASS / BROADER CLOSURE OPEN | Run `33572123857` passed exact identity, independent `jq -S -c`/`sha256sum` check, and 4-test authority regression for `a43219b…`; broader P9 evidence-chain closure remains open. |
+| P8 | OPEN / FAIL-CLOSED | `a43219b…` exposed a concrete P-35 adapter wiring defect; PR #188 supplies the scoped remediation, but fresh candidate verification and all remaining P8 predicates are outstanding. |
+| P9 | SCOPED PASS / REMEDIATION-BOUND REVERIFY REQUIRED | Run `33572123857` passed exact identity, independent `jq -S -c`/`sha256sum` check, and 4-test authority regression for `a43219b…`; after a material remediation, the resulting candidate requires fresh P9 evidence. |
 | Freeze | NOT ESTABLISHED | No frozen identity is currently authoritative for pilot execution. |
 | Authorization | NOT GRANTED | Separate governance transition required. |
 | Empirical N | 0 | No authorized pilot execution. |
+
+## P-35 integration finding and remediation
+
+The exact completion candidate `a43219b…` was audited against the established P-35/TGL interface. The TGL core passes `premise_check_fn` into `ProcludingPremiseGate.evaluate`, but the experimental `DGAF_TGLAdapter` did not previously provide a premise checker. The underlying P-35 implementation permits a missing checker to pass through all constitutional invariants, so the adapter boundary did not actually enforce premise-hook injection.
+
+This was classified as a **candidate-scoped implementation defect / P8 closure blocker**, not experimental failure. The pilot task path also instantiated the DGAF task without a premise checker.
+
+PR #188 (`remediation/p35-premise-hook-2026-09-01`) addresses the defect by:
+
+- requiring an explicit callable `premise_check_fn` at the adapter boundary;
+- propagating it into `TGLHooks.premise_check_fn`;
+- requiring the checker for `ConsensusTask(condition="dgaf")`;
+- containing unexpected P-35 checker exceptions as a sealed `KILL` rather than permitting bypass;
+- adding regression coverage for missing-checker refusal, injection, premise KILL, and checker-exception containment.
+
+No PDMAL-specific constitutional policy is invented by this remediation. A real pilot remains blocked until the experimental-control design supplies and approves the appropriate premise checker. The remediation branch is therefore engineering evidence only; it does not replace the current completion candidate or create a freeze.
 
 ## Current exact-candidate PDMAL evidence
 
@@ -87,7 +105,7 @@ Latest P9 artifact: `9825660346`, ZIP digest `sha256:cf5e475c31bd9258731dcec3e6f
 
 Independent canonical digest: `f235fc6ef241379f295676d257c22c7b17a47ace47377506fac9a7e5d490215a`.
 
-This is **scoped independent verification evidence**, not full P9 closure. It does not establish P2/P6a for the completion candidate, P7 exact freeze binding, P8 analysis lock, durable external archive, experimental authorization, empirical execution, or efficacy.
+This is **scoped independent verification evidence**, not full P9 closure. Because PR #188 materially changes the P-35 adapter/task boundary, its P9 evidence cannot certify the remediated tree; fresh exact-candidate P9 evidence is required after the remediation becomes the selected candidate.
 
 ## Exact completion-candidate deployment
 
@@ -95,11 +113,7 @@ Deployment `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17` was created from the exact-candida
 
 The deployment reports **READY** with target **preview**. Its URL is `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`.
 
-Unauthenticated root and API probes from the available environment receive Vercel SSO redirects. This is treated as a deployment-authentication property, not as runtime failure. The remaining deployment predicate is independent confirmation that Vercel's recorded Git source SHA is exactly `a43219b…`, followed by authenticated P2/P6a workflow execution against this deployment.
-
-## Superseded P9 evidence
-
-Run `33567199896` remains scoped to superseded candidate `562753b3053b3566b0fcad1b0b1df151d7de119a`. Its artifact was `9823570326` with ZIP digest `sha256:8e3435a3af0dc5de7376d970b9f1665a18db8ff04b26a2c0eaae8acf8b095d85`. This historical evidence does not transfer to `a43219b…`.
+Unauthenticated root and API paths receive Vercel SSO redirects. This is treated as a deployment-authentication property, not runtime failure. The remaining deployment predicate is independent confirmation that Vercel's recorded Git source SHA is exactly `a43219b…`, followed by authenticated P2/P6a workflow execution against this deployment.
 
 ## Current runtime evidence
 
@@ -108,13 +122,7 @@ P2 and P6a both recorded the same production deployment identity `dpl_Br3muEJGN8
 P2 artifact digest: `sha256:00519533edcaa4c09410b3ed29e49437a5ce8a23ea341a2b798490e110f056c2`.  
 P6a artifact digest: `sha256:9e78ebef5eaa7f33027ec09c0cb922f57bc43dab2fcc694a823ac504c611fcdd`.
 
-These runtime results are not transferable to `a43219b…` merely because the repository/workflows are shared.
-
-## Documentation and provenance control rule
-
-This document distinguishes **main tip, apparatus source, runtime candidate, completion candidate, candidate tree, and deployment identity**. Executable apparatus state changes reset the candidate cycle. Documentation-only commits do not silently redefine apparatus behavior. Evidence does not transfer across identities merely because the branch, repository, URL, or documentation lineage is shared.
-
-Older audit records that state inline artifact validation is missing are **historical/stale claims**, not current implementation defects. Historical records remain preserved as historical snapshots; current-state documents state the present implementation and separately track remaining candidate-scoped evidence gaps.
+These runtime results are not transferable to `a43219b…` or to any remediated successor candidate merely because repository/workflow structure is shared.
 
 ## Historical-priority boundary
 
@@ -128,6 +136,15 @@ CI success, deterministic tests, deployment readiness, runtime PASS, historical 
 
 ## Required closure sequence
 
-`Current candidate selection → bind/reverify P2/P6a if needed → operational P3/P4/P5/P6 closure → P7 final binding → P8 verification → broader P9 evidence-chain closure → new immutable freeze → explicit authorization → blinded pilot`.
+1. Complete PR #188 remediation review and candidate-bound tests.
+2. Select a resulting exact candidate and rerun PDMAL instrumentation/P3–P6 and P9.
+3. Independently confirm the exact Vercel deployment Git SHA.
+4. Execute authenticated P2/P6a against the same exact candidate/deployment.
+5. Complete current-cycle P4/P5/P6 operational evidence.
+6. Resolve P7 as the external scientific decision and bind it exactly.
+7. Close P8 only from current-candidate evidence.
+8. Create and independently verify a new immutable freeze.
+9. Obtain explicit pilot authorization.
+10. Only then execute the authorized blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
