@@ -9,6 +9,7 @@ runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
 runtime_candidate_tree: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
 latest_completion_candidate_sha: a43219b4ed91fff8615f6c655ab3d17ca871fc29
 latest_completion_candidate_branch: completion/2026-09-01-exact-candidate
+latest_completion_candidate_deployment: dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17
 ---
 # DGAF-Framework / PDMAL — Current State
 
@@ -18,7 +19,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 >
 > **Runtime candidate:** `92ff830b1c67413df745e37087e6447c9c251b9a` is the current production/runtime candidate recorded by the current mainline state. Its exact tree is `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`.
 >
-> **Latest completion candidate:** `a43219b4ed91fff8615f6c655ab3d17ca871fc29` is the current exact candidate on branch `completion/2026-09-01-exact-candidate`. It has fresh successful PDMAL and scoped P9 verification runs. The superseded candidate `562753b3053b3566b0fcad1b0b1df151d7de119a` remains historical.
+> **Latest completion candidate:** `a43219b4ed91fff8615f6c655ab3d17ca871fc29` is the current exact candidate on branch `completion/2026-09-01-exact-candidate`. It has fresh successful PDMAL and scoped P9 verification runs. An exact-candidate Vercel preview deployment now exists as `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`; deployment Git-SHA confirmation remains an external verification step.
 >
 > **Current experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. No empirical or unblinded pilot state has been created.
 
@@ -30,6 +31,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 - `562753b3053b3566b0fcad1b0b1df151d7de119a` — superseded completion candidate with historical scoped P9 verification.
 - `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae` — exact tree of the current mainline runtime candidate.
 - `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — current production deployment identity recorded by both P2 and P6a runtime evidence for `92ff830b…`.
+- `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17` — exact-candidate preview deployment created from `deploy/exact-candidate-a43219b`; READY; pending independent Vercel Git-SHA confirmation and authenticated P2/P6a verification.
 - Pre-correction candidates/deployments remain historical/non-closing and must not be reused as current dispatch inputs.
 - Documentation commits advance `main` documentation lineage but do not silently redefine apparatus or completion-candidate identity.
 
@@ -42,7 +44,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | Runtime candidate identity | CURRENT / NOT FROZEN | `92ff830b…`; exact tree `73cf3ad…`. |
 | Latest completion candidate | CONTROLLED / NOT FROZEN | `a43219b…`; exact-candidate verification target on completion branch. |
 | Candidate lineage | ESTABLISHED | `2a54a67d…` is the recorded lineage basis of the current runtime candidate. |
-| Deployment identity | CAPTURED IN P2/P6A EVIDENCE | `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
+| Exact completion deployment | READY / PREVIEW / PENDING VERIFICATION | `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`; source branch `deploy/exact-candidate-a43219b`; Vercel Git SHA still requires independent confirmation. |
 | P2 runtime verification | VERIFIED — MAINLINE ONLY | Run `33509348174`; artifact `9800942933`; five required cases passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
 | P6a CORS verification | VERIFIED — MAINLINE ONLY | Run `33509416955`; artifact `9800972819`; four required checks passed for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`. |
 | P3 | VERIFIED — COMPLETION CANDIDATE | Run `33572123862`; latest artifact `9825740072`; exact candidate `a43219b…`; 19-test suite and artifact contract checks passed. |
@@ -50,7 +52,7 @@ GitHub is authoritative for implementation and CI; governance decisions must be 
 | P5 | WORKFLOW-LEVEL VERIFIED / FULL CLOSURE OPEN | Run `33572123862`; exact artifact binding, RNG stream separation, deterministic digest, and environment fingerprint recorded. Full reproducibility closure remains required. |
 | P6 | WORKFLOW-LEVEL VERIFIED / DURABLE ARCHIVE OPEN | Run `33572123862`; artifact download plus inner checksum re-verification passed. Durable external archive closure remains required. |
 | P7 | TECHNICALLY ADJUDICATED / FORMALLY OPEN | Adopted/final freeze binding is not yet evidenced; exact apparatus/candidate/protocol/analysis authority binding remains required. |
-| P8 | OPEN / FAIL-CLOSED | TGL/P-35 current-candidate analysis-lock verification required. |
+| P8 | OPEN / FAIL-CLOSED | Current analysis-lock boundary is rebound to `a43219b…`; TGL/P-35, candidate-bound runtime, reproducibility, archive, P7, and final P9 predicates remain. |
 | P9 | SCOPED PASS / BROADER CLOSURE OPEN | Run `33572123857` passed exact identity, independent `jq -S -c`/`sha256sum` check, and 4-test authority regression for `a43219b…`; broader P9 evidence-chain closure remains open. |
 | Freeze | NOT ESTABLISHED | No frozen identity is currently authoritative for pilot execution. |
 | Authorization | NOT GRANTED | Separate governance transition required. |
@@ -87,6 +89,14 @@ Independent canonical digest: `f235fc6ef241379f295676d257c22c7b17a47ace47377506f
 
 This is **scoped independent verification evidence**, not full P9 closure. It does not establish P2/P6a for the completion candidate, P7 exact freeze binding, P8 analysis lock, durable external archive, experimental authorization, empirical execution, or efficacy.
 
+## Exact completion-candidate deployment
+
+Deployment `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17` was created from the exact-candidate deployment branch `deploy/exact-candidate-a43219b`, which points to `a43219b4ed91fff8615f6c655ab3d17ca871fc29`.
+
+The deployment reports **READY** with target **preview**. Its URL is `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`.
+
+Unauthenticated root and API probes from the available environment receive Vercel SSO redirects. This is treated as a deployment-authentication property, not as runtime failure. The remaining deployment predicate is independent confirmation that Vercel's recorded Git source SHA is exactly `a43219b…`, followed by authenticated P2/P6a workflow execution against this deployment.
+
 ## Superseded P9 evidence
 
 Run `33567199896` remains scoped to superseded candidate `562753b3053b3566b0fcad1b0b1df151d7de119a`. Its artifact was `9823570326` with ZIP digest `sha256:8e3435a3af0dc5de7376d970b9f1665a18db8ff04b26a2c0eaae8acf8b095d85`. This historical evidence does not transfer to `a43219b…`.
@@ -108,7 +118,7 @@ Older audit records that state inline artifact validation is missing are **histo
 
 ## Historical-priority boundary
 
-The historical review has been reconciled separately in `docs/research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`.
+The historical review has been reconciled separately and is now explicitly parked for later resumption in `docs/research/DGAF_HISTORICAL_RESEARCH_PARKED_2026-09-01.md`.
 
 Current position: DGAF is not established as first in the individual mechanisms of agent governance, dynamic formation, organizational authority, veto/escalation, idempotency, provenance, exact artifact identity, candidate immutability, or independent verification. The remaining hypothesis is a potentially distinctive **cross-domain integration** coupling formation-state governance to candidate-bound experimental verification and authorization. This is not an absolute novelty claim.
 
