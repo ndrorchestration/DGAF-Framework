@@ -41,15 +41,15 @@ This is the current pre-authorization control record. The control-plane successo
 
 ## Runtime evidence boundary
 
-P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. The later `637023…` control-plane change is documentation-only with respect to the runtime surfaces covered by those predicates, so they remain closed.
+P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. The later `637023…` control-plane change is documentation-only with respect to those runtime surfaces, so the closed predicates remain closed.
 
 ## Pre-freeze validation
 
-PR #214's pre-freeze runner validation completed successfully with 44 harness tests passing, contract mode exercised, unauthorized pilot mode failing closed, artifact schema/integrity checks passing, and a pre-freeze manifest artifact uploaded. This validates engineering/control contracts; it does not advance empirical N.
+The PDMAL pre-freeze runner validation completed successfully on the governance branch with 44 harness tests passing, contract-mode validation passing, unauthorized pilot mode failing closed, artifact schema/integrity checks passing, and a retained pre-freeze manifest artifact. This is engineering/control evidence, not empirical efficacy evidence.
 
 ## Instrumentation workflow isolation
 
-The PDMAL instrumentation workflow is restricted to experiment-path changes and deliberate `workflow_dispatch`, preventing documentation-only changes from becoming experimental candidates. The earlier successful PR #213 instrumentation run is therefore treated as trigger-isolation validation, not current efficacy evidence.
+The PDMAL instrumentation workflow is restricted to experiment-path changes and deliberate `workflow_dispatch`, preventing documentation-only changes from becoming experimental candidates. The earlier successful PR instrumentation run remains trigger-isolation validation and does not advance empirical N.
 
 ## Required closure sequence
 
