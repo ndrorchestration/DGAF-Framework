@@ -6,8 +6,7 @@ last_verified: 2026-09-03
 applies_to_ref: main
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
-current_mainline_control_plane_head: 637023b28492783f50d77550d4ed8e0867cbcc3d
-candidate identity: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
+current_mainline_control_plane_head: 0e993c8db6973ff0b468a13dc44c0b4780a77e32
 verified_runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 verified_runtime_deployment: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
 deployment identity: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
@@ -23,16 +22,16 @@ GitHub is authoritative for implementation and CI; governance decisions are reco
 
 The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 
-The current mainline control-plane head is `637023b28492783f50d77550d4ed8e0867cbcc3d`. The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to that exact Git SHA.
+The current mainline control-plane head is `0e993c8db6973ff0b468a13dc44c0b4780a77e32`, the squash merge of PR #214. The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to that exact Git SHA.
 
-The later `637023…` change is documentation/control-plane reconciliation and does not modify the runtime surfaces covered by the closed P2/P6a predicates. Those gates therefore remain closed; they are not reopened by documentation-only changes.
+The `0e993c8…` change is governance/control-plane reconciliation and does not modify the runtime surfaces covered by the closed P2/P6a predicates. Those gates therefore remain closed; they are not reopened by documentation-only changes.
 
 ## Runtime gate state
 
 | Boundary | Status | Scope |
 |---|---|---|
 | P-35 | VALIDATED | immutable boundary `643dc77a…` |
-| Mainline control-plane head | CURRENT | `637023…` |
+| Mainline control-plane head | CURRENT | `0e993c8…` |
 | Verified executable runtime candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Candidate deployment | VERIFIED READY | `dpl_8Msuf…` bound to `7c1cc4…` |
 | P2 | CLOSED / VERIFIED | run `33730195621`, artifact `9883521704` |
