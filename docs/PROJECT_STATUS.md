@@ -36,9 +36,9 @@ The repository is in post-P6a-remediation, pre-freeze closure. The control-plane
 
 ## Evidence execution status
 
-The PDMAL pre-freeze runner validation on PR #214 completed successfully with the fail-closed contract exercised, 44 harness tests passing, pilot mode rejecting execution without a frozen authorized identity, and a retained pre-freeze manifest artifact. This is engineering/control evidence for the PR candidate, not empirical efficacy evidence.
+The PDMAL pre-freeze runner validation completed successfully on the governance branch with 44 harness tests passing, contract mode exercised, unauthorized pilot mode failing closed, artifact schema/integrity checks passing, and a retained pre-freeze manifest artifact. This is engineering/control evidence, not empirical efficacy evidence.
 
-The separate PDMAL instrumentation dry run on PR #213 also passed its deterministic, structural, masked-artifact, schema, and checksum checks. It remains PR-candidate validation and does not advance empirical N.
+The PDMAL instrumentation dry run on PR #213 also passed its deterministic, structural, masked-artifact, schema, and checksum checks. It remains PR-candidate validation and does not advance empirical N.
 
 ## Evidence boundary
 
