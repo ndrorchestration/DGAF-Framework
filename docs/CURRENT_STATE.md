@@ -20,7 +20,7 @@ GitHub is authoritative for implementation and CI; governance decisions are reco
 
 The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 
-The current mainline candidate is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`. Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` is READY and bound to that exact Git SHA. The canonical production origin used for P6a is `https://dynamicgovernanceagenticformation.vercel.app`; the exact deployment URL is retained separately for deployment identity.
+The current **candidate identity** is the mainline SHA `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`. Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` is READY and bound to that exact Git SHA. The canonical production origin used for P6a is `https://dynamicgovernanceagenticformation.vercel.app`; the exact deployment URL is retained separately for deployment identity.
 
 The former executable candidate `48c12c6660df7decb61f9aac4d8560526a8754eb` and deployment `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K` are historical/non-transferable. Earlier candidates and control-plane heads remain provenance only.
 
