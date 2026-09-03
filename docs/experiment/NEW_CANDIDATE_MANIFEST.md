@@ -15,27 +15,10 @@ control_plane_successor:
   sha: 637023b28492783f50d77550d4ed8e0867cbcc3d
   status: DOCUMENTATION / CONTROL-PLANE ONLY
   note: does not alter the runtime surfaces covered by P2/P6a
-restoration_source:
-  prior_pr: 170
-  prior_merge_commit: d56b5b3c44e39ddb8c883259584432ab39259306
-  status: HISTORICAL / SUPERSEDED_BY_PROVENANCE_CORRECTION
 provenance_correction:
   pr: 174
   state: MERGED
   merge_commit: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
-  scope: bind_all_seven_behavior_affecting_gate_states_into_canonical_identity
-  additional_hardening: substrate_driven_p29_regression; manifest_derived_control_state_identity
-prior_candidate:
-  sha: 92ff830b1c67413df745e37087e6447c9c251b9a
-  status: HISTORICAL / SUPERSEDED
-  note: no evidence transfers merely by documentation equivalence
-displaced_pre_correction_candidate:
-  sha: d56b5b3c44e39ddb8c883259584432ab39259306
-  status: HISTORICAL / INVALIDATED_BY_PROVENANCE_CORRECTION
-  deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
-  deployment_url: https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app
-  allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
-  note: these runtime identities and all evidence derived from them are non-closing for this cycle
 deployment_binding:
   deployment_id: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
   deployment_url: https://dynamicgovernanceagenticformation-9u712s0cq-ndrorchestration.vercel.app
