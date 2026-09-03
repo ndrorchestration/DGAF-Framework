@@ -1,10 +1,10 @@
 # P1–P9 Deliberative Predicate Evidence Matrix
 
 **Status:** CURRENT / PRE-FREEZE / FAIL-CLOSED  
-**Last reconciled:** 2026-09-02  
+**Last reconciled:** 2026-09-03  
 **Documentation lineage:** `main`  
 **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
-**Active completion/remediation candidate:** `fb485e9e0fd253be03e6937a448f4818eb8d54a1`  
+**Active completion/remediation candidate:** `0b1190fe91db6b963da0b31492d61fa1a34381e3`  
 **Active candidate branch:** `remediation/p35-minimal-mainline-2026-09-02`  
 **Active candidate PR:** `#199`  
 **Candidate deployment:** none claimed  
@@ -18,7 +18,7 @@ This matrix is the current planning/control surface. It does not itself constitu
 
 - `2a54a67d…` — corrected seven-gate apparatus provenance anchor.
 - `275756fd…` — current `main` control-plane base for the active remediation.
-- `fb485e9e…` — active P-35 remediation/completion candidate, PR #199.
+- `0b1190fe…` — exact candidate validated by the fresh P-35/pre-freeze/governance wave, PR #199.
 - `92ff830b…` — superseded runtime candidate; P2/P6a evidence remains bound to its exact deployment.
 - `a43219b…` — superseded completion candidate; PDMAL/P9 evidence remains bound to its exact tree.
 - `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` — historical deployment for `92ff830b…`.
@@ -30,22 +30,24 @@ This matrix is the current planning/control surface. It does not itself constitu
 |---|---|---|---|
 | P1 Candidate Integrity | exact final apparatus/source identity, candidate identity, tree, deployment identity, and complete provenance | **OPEN** | exact final candidate/provenance/deployment binding retained and reconciled |
 | P2 Execution Contract / Runtime | authenticated five-case runtime matrix on exact deployment | **HISTORICAL VERIFIED / RE-RUN REQUIRED** | fresh run against final selected candidate/deployment |
-| P3 Artifact Contract | schema/identity/uniqueness/balance/canonical matrix/deviation integrity | **HISTORICAL WORKFLOW EVIDENCE / RE-RUN REQUIRED** | fresh candidate-bound evidence after remediation |
+| P3 Artifact Contract | schema/identity/uniqueness/balance/canonical matrix/deviation integrity | **HISTORICAL WORKFLOW EVIDENCE / RE-RUN REQUIRED** | fresh candidate-bound evidence after candidate selection |
 | P4 Security / Blinding | custody, bijection, access separation, operational procedure | **OPEN** | current-cycle operational blinding/custody evidence independently checked |
 | P5 Provenance / Reproducibility | environment/toolchain/topology/RNG fingerprints and reproduction | **OPEN** | full current-candidate reproducibility evidence |
 | P6 Durable Evidence Custody | archive → independent retrieval → hash verification | **OPEN / FAIL-CLOSED** | durable current-candidate archive plus independent retrieval/hash proof |
 | P6a Runtime/CORS | authenticated four-case CORS matrix on exact deployment | **HISTORICAL VERIFIED / RE-RUN REQUIRED** | fresh run against final selected candidate/deployment |
 | P7 Scientific Target | adopted scientific decision + exact binding | **ADOPTED / FINAL BINDING OPEN** | exact apparatus/candidate/protocol/analysis/freeze binding |
 | P8 Analysis Lock | analysis/schema/runner/protocol bindings + candidate-scoped verification | **OPEN / FAIL-CLOSED** | all current-candidate prerequisites and final P9 evidence satisfied |
-| P9 Independent Verification | independent reproduction/audit of identity, artifacts, analysis, invariants, adversarial cases | **HISTORICAL SCOPED PASS / RE-VERIFY REQUIRED** | fresh exact-candidate P9 after remediation and candidate rebinding |
+| P9 Independent Verification | independent reproduction/audit of identity, artifacts, analysis, invariants, adversarial cases | **HISTORICAL SCOPED PASS / RE-VERIFY REQUIRED** | fresh exact-candidate P9 after candidate rebinding |
 
-## P-35 remediation boundary
+## P-35 remediation boundary and adjudication
 
-The prior completion candidate omitted explicit premise-checker injection at the DGAF adapter/task boundary. The active PR #199 is a minimal current-mainline remediation: DGAF pilot execution requires an explicit callable `PDMAL_PREMISE_CHECKER`; omission or invalid configuration is fail-closed; `ConsensusTask(condition="dgaf")` requires the checker; and the checker is propagated into `DGAF_TGLAdapter` and `TGLHooks`.
+PR #199 is the minimal current-mainline P-35 remediation: DGAF pilot execution requires an explicit callable `PDMAL_PREMISE_CHECKER`; omission or invalid configuration is fail-closed; `ConsensusTask(condition="dgaf")` requires the checker; and the checker is propagated into `DGAF_TGLAdapter` and `TGLHooks`.
 
-Regression coverage includes missing/malformed/non-callable configuration, explicit checker loading, task-level refusal, adapter injection, premise KILL, and the real runner/task/adapter/TGL path. This is implementation evidence only until an exact-head pre-freeze run is produced and P-35 is formally adjudicated.
+The exact candidate `0b1190fe91db6b963da0b31492d61fa1a34381e3` completed the fresh validation wave successfully. Exact-head evidence includes PDMAL Pre-Freeze Runner Validation run `33697643625` and Governance CI run `33697643702`; the full candidate-bound wave also passed DGAF Regression Suite `33697643471`, PDMAL Instrumentation Dry Run `33697643655`, PDMAL Harness Validation `33697643751`, PDMAL Pre-Authorization Security `33697643468`, Control-State HEAD Binding `33697643580`, Truth Layer Tests `33697643604`, Truth Layer Validation `33697643704`, Epistemic Evidence Validation `33697643577`, Full Repository Coverage Audit `33697643710`, IP Hygiene Sweep `33697643554`, Claim Hygiene Audit `33697643585`, Doc Lint `33697643560`, Doc Lint (PR Scope) `33697643614`, PPTL CI `33697643790`, and Propagation Consistency `33697643546`.
 
-No PDMAL-specific constitutional policy is invented by the remediation. Pilot execution remains blocked until an approved checker is supplied by the experimental-control design.
+The P-35 integration regression now proves explicit checker invocation through the real runner/task/adapter/TGL path while preserving the fail-closed `UNRECOVERED_FAILURE` / `ffcr_success=False` contract. P-35 is therefore **CLOSED / VALIDATED for exact candidate `0b1190fe…`**.
+
+This adjudication does not create a freeze, grant authorization, transfer historical evidence, or permit empirical execution.
 
 ## Historical evidence boundary
 
@@ -53,16 +55,17 @@ Previous P2/P6a evidence on `92ff830b…` and previous PDMAL/P9 evidence on `a43
 
 ## Remaining critical path
 
-1. Exact-head pre-freeze validation of PR #199.
-2. P-35 adjudication.
-3. Select the resulting exact experimental candidate.
-4. Fresh P3–P6 and affected P2/P6a evidence against that candidate/deployment.
-5. Final P7 binding.
-6. P8 closure.
-7. Independent P9 verification against the final candidate.
-8. New immutable freeze and independent verification.
-9. Separate explicit pilot authorization.
-10. Only then execute the blinded pilot and allow empirical N to advance from 0.
+1. Establish/reconcile the final experimental candidate identity from the validated remediation candidate without transferring evidence across SHAs.
+2. Complete fresh current-candidate P3 artifact-contract evidence.
+3. Complete P4 operational blinding/custody evidence.
+4. Complete P5 environment/topology/RNG reproducibility evidence.
+5. Complete P6 durable archive/retrieval/hash evidence.
+6. Bind P7 to the exact candidate/protocol/analysis/final-freeze identity.
+7. Close P8 from current-candidate evidence only.
+8. Independently verify P9 against the final exact candidate.
+9. Create and independently verify a new immutable freeze.
+10. Obtain separate explicit pilot authorization.
+11. Only then execute the blinded pilot and allow empirical N to advance from 0.
 
 **Current experimental boundary: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
 
