@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const DEFAULT_ALLOWED_ORIGINS = new Set([
+  "https://dynamicgovernanceagenticformation.vercel.app",
   "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app",
   "https://dynamicgovernanceagenticformation-git-main-ndrorchestration.vercel.app",
 ]);
