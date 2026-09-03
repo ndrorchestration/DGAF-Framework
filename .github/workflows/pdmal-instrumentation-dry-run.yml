@@ -1,8 +1,17 @@
 name: PDMAL Instrumentation Dry Run
 
+# Experiment evidence workflow: documentation-only changes must not become
+# experimental candidates. Use workflow_dispatch for deliberate candidate runs.
 on:
   push:
+    paths:
+      - 'experiments/pdmal_topology/**'
+      - '.github/workflows/pdmal-instrumentation-dry-run.yml'
   pull_request:
+    paths:
+      - 'experiments/pdmal_topology/**'
+      - '.github/workflows/pdmal-instrumentation-dry-run.yml'
+  workflow_dispatch:
 
 jobs:
   pdmal-dry-run:
