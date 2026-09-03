@@ -21,15 +21,17 @@ The current mainline commit adds the canonical production origin to the middlewa
 
 ## P2 / P6a runtime boundary
 
-P2 and P6a must be evaluated against the same exact current candidate/deployment binding. The historical P2 PASS for `48c12c...` is not current evidence after the mainline changed. P6a has been freshly verified for `7c1cc4...`.
+P2 and P6a are now verified against the same exact current candidate/deployment binding. Historical P2/P6a results for superseded candidates remain provenance only.
 
-### P2 — OPEN
+### P2 — CLOSED / VERIFIED
 
 - candidate SHA: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
 - deployment ID: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
 - base URL: `https://dynamicgovernanceagenticformation-9u712s0cq-ndrorchestration.vercel.app`
-- required suite: five authenticated POST cases against `/api/orchestrate`
-- required secret: `VERCEL_AUTOMATION_BYPASS_SECRET` (value never recorded)
+- run: `33730195621`
+- artifact: `9883521704`
+- artifact digest: `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`
+- required suite: five authenticated POST cases against `/api/orchestrate`; all five passed their defined predicates, including expected fail-closed behavior when live audit state was absent
 
 ### P6a — CLOSED / VERIFIED
 
@@ -49,9 +51,9 @@ P2 and P6a must be evaluated against the same exact current candidate/deployment
 | P-35 implementation | VALIDATED at immutable boundary `643dc77a…` |
 | Current mainline candidate | `7c1cc4…` / PRE-FREEZE |
 | Exact candidate deployment | READY / exact Git SHA verified |
-| P2 | OPEN — fresh exact-current-candidate workflow execution required |
+| P2 | CLOSED / VERIFIED — run `33730195621` |
 | P6a | CLOSED / VERIFIED — run `33728695806` |
-| P3 | VERIFIED at applicable engineering/workflow scope; operational closure remains required where specified |
+| P3 | VERIFIED at applicable engineering/workflow scope; current exact-candidate operational closure remains required where specified |
 | P4 | OPEN — operational blinding/custody closure required |
 | P5 | OPEN — final exact-candidate reproducibility closure required |
 | P6 | OPEN / FAIL-CLOSED — durable archive/retrieval/hash proof required |
@@ -74,6 +76,6 @@ Evidence does not transfer across candidate SHA, deployment identity, triggering
 
 ## Current closure sequence
 
-`P2 exact runtime → operational P4/P5/P6 → exact P7 binding → P8 → current-candidate P9 → immutable freeze → explicit authorization → blinded pilot`
+`operational P4/P5/P6 → exact P7 binding → P8 → current-candidate P9 → immutable freeze → explicit authorization → blinded pilot`
 
 No step in this documentation lane grants experimental authorization or advances empirical N.
