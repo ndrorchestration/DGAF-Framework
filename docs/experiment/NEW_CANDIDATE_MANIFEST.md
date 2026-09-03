@@ -8,7 +8,7 @@ apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 apparatus_source_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
 candidate_designation: VERIFIED EXECUTABLE RUNTIME CANDIDATE
 candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
-candidate_tree_sha: d969f7b5c2c00000000000000000000000000000
+candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
 candidate_designation_rule: exact executable candidate commit used by the current verified P2/P6a runtime evidence; the control-plane successor is documentation-only and does not reopen closed runtime predicates
 candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 control_plane_successor:
@@ -73,6 +73,7 @@ freeze_status: NOT_CREATED
 - `2a54a67d…` — corrected apparatus provenance anchor.
 - `973c9233…` — corrected apparatus source tree.
 - `7c1cc4bb…` — verified executable runtime candidate bound to P2/P6a.
+- `586c00d6…` — exact tree of that executable candidate.
 - `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` — exact deployment bound to that runtime candidate.
 - `637023b2…` — later documentation/control-plane successor; not a new runtime candidate.
 - Older candidate/deployment identities are historical/non-transferable.
