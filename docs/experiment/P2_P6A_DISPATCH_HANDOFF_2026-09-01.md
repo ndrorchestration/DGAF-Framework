@@ -6,12 +6,12 @@ This file supersedes the earlier contents of this dated handoff. Historical P2/P
 
 ## Exact candidate binding
 
-- `candidate_sha`: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`
-- `candidate_branch`: `completion/2026-09-01-exact-candidate`
-- deployment branch: `deploy/exact-candidate-a43219b`
-- `deployment_id`: `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
-- `base_url`: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
-- `allowed_origin`: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `candidate_sha`: `48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `candidate_branch`: `candidate/p35-validated-control-state-2026-09-02`
+- deployment branch: `deploy/exact-candidate-48c12c6`
+- `deployment_id`: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- `allowed_origin`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 - `disallowed_origin`: `https://untrusted.com`
 
 The deployment is READY/preview. Runtime paths are SSO-protected from the current unauthenticated session, so SSO redirects are not runtime-failure evidence. Vercel Git-SHA confirmation for the deployment remains pending.
@@ -22,9 +22,9 @@ Workflow: `.github/workflows/p2-runtime-verification.yml`
 
 Required inputs:
 
-- `candidate_sha = a43219b4ed91fff8615f6c655ab3d17ca871fc29`
-- `deployment_id = dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
-- `base_url = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `candidate_sha = 48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `deployment_id = dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 
 The workflow independently verifies the SHA format and requires `VERCEL_AUTOMATION_BYPASS_SECRET`. It then executes five cases against `/api/orchestrate` and writes candidate/deployment-bound provenance.
 
@@ -34,10 +34,10 @@ Workflow: `.github/workflows/p6a-cors-verification.yml`
 
 Required inputs:
 
-- `candidate_sha = a43219b4ed91fff8615f6c655ab3d17ca871fc29`
-- `deployment_id = dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
-- `base_url = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
-- `allowed_origin = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `candidate_sha = 48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `deployment_id = dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- `allowed_origin = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 
 The workflow independently verifies the SHA/input presence and requires `VERCEL_AUTOMATION_BYPASS_SECRET`. It then executes allowed/disallowed POST and preflight checks and writes candidate/deployment-bound provenance.
 
