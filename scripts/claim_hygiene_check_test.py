@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from claim_hygiene_check import line_is_non_assertive
+from claim_hygiene_check import artifact_is_historical, line_is_non_assertive
 
 PATTERNS = [
     re.compile(r"\bDGAF\s+(?:Certified|Official|Endorsed|Verified|Approved)\b", re.I),
@@ -31,8 +31,21 @@ def test_positive_claim_is_not_non_assertive() -> None:
     assert not line_is_non_assertive(line)
 
 
+def test_historical_priority_adjudication_is_historical_context() -> None:
+    text = """# DGAF Historical-Priority Adjudication — 2026-09-01
+
+## Executive conclusion
+
+The defensible historical thesis is narrower.
+
+- is empirically superior;
+"""
+    assert artifact_is_historical(text, 7)
+
+
 if __name__ == "__main__":
     test_explicit_prohibition_is_non_assertive()
     test_negative_efficacy_statement_is_non_assertive()
     test_positive_claim_is_not_non_assertive()
+    test_historical_priority_adjudication_is_historical_context()
     print("claim-hygiene regression tests passed")
