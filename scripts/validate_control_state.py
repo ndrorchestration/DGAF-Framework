@@ -46,7 +46,7 @@ def nested_field(text: str, block: str, key: str) -> str | None:
 
 def manifest_identity(manifest: str) -> dict[str, str]:
     fields: dict[str, str] = {}
-    for key in ("apparatus_source_sha", "apparatus_source_tree_sha"):
+    for key in ("apparatus_source_sha", "apparatus_source_tree_sha", "candidate_sha", "candidate_tree_sha"):
         value = field(manifest, key)
         if value:
             fields[key] = value
@@ -54,7 +54,7 @@ def manifest_identity(manifest: str) -> dict[str, str]:
     # Only read deployment identity from the active deployment_binding block.
     # Historical deployment IDs elsewhere in the manifest must never satisfy
     # or invalidate the current deployment-state invariant.
-    for key in ("deployment_id", "deployment_url", "deployment_target", "deployment_state", "source_sha_match"):
+    for key in ("deployment_id", "deployment_url", "deployment_target", "deployment_state", "source_sha_match", "source_sha"):
         value = nested_field(manifest, "deployment_binding", key)
         if value:
             fields[key] = value
@@ -81,7 +81,7 @@ def main() -> int:
                 failures.append(str(exc))
 
     # Deployment identity must remain explicitly unresolved until an exact,
-    # candidate-matched production deployment has actually been established.
+    # candidate-matched deployment has actually been established.
     deployment_id = identity.get("deployment_id")
     deployment_url = identity.get("deployment_url")
     if deployment_id and deployment_url:
@@ -91,6 +91,12 @@ def main() -> int:
             if deployment_sha and deployment_sha not in {"true", "TRUE", "YES", "MATCHED"}:
                 failures.append(
                     "candidate manifest: active deployment identity is concrete but source_sha_match is not affirmative"
+                )
+            candidate_sha = identity.get("candidate_sha")
+            bound_source_sha = identity.get("source_sha")
+            if candidate_sha and bound_source_sha and candidate_sha != bound_source_sha:
+                failures.append(
+                    f"candidate manifest: deployment source_sha {bound_source_sha} does not match candidate_sha {candidate_sha}"
                 )
 
     prior_sha = None
@@ -119,9 +125,41 @@ def main() -> int:
                 failures.append(f"{path}: superseded candidate presented as live: {live_lines}")
 
     current_state = read("docs/CURRENT_STATE.md")
-    for label in ("main", "apparatus source", "candidate identity", "deployment identity"):
+    # Prefer canonical frontmatter identity fields over brittle prose wording.
+    # Legacy wording remains accepted when present, but it is not required.
+    candidate_identity = (
+        field(current_state, "current_successor_candidate_sha")
+        or field(current_state, "candidate_sha")
+        or field(current_state, "runtime_candidate_sha")
+    )
+    deployment_identity = (
+        field(current_state, "current_successor_deployment")
+        or field(current_state, "candidate_deployment_identity")
+        or field(current_state, "deployment_id")
+    )
+    if not candidate_identity:
         try:
-            assert_contains(current_state.lower(), label.lower(), "docs/CURRENT_STATE.md")
+            assert_contains(current_state.lower(), "candidate identity", "docs/CURRENT_STATE.md")
+        except AssertionError as exc:
+            failures.append(str(exc))
+    if not deployment_identity:
+        try:
+            assert_contains(current_state.lower(), "deployment identity", "docs/CURRENT_STATE.md")
+        except AssertionError as exc:
+            failures.append(str(exc))
+    if field(current_state, "applies_to_ref"):
+        try:
+            assert_contains(current_state.lower(), "main", "docs/CURRENT_STATE.md")
+        except AssertionError as exc:
+            failures.append(str(exc))
+    else:
+        try:
+            assert_contains(current_state.lower(), "main", "docs/CURRENT_STATE.md")
+        except AssertionError as exc:
+            failures.append(str(exc))
+    if not (field(current_state, "corrected_apparatus_source") or field(current_state, "apparatus_source_sha")):
+        try:
+            assert_contains(current_state.lower(), "apparatus source", "docs/CURRENT_STATE.md")
         except AssertionError as exc:
             failures.append(str(exc))
 
@@ -142,6 +180,8 @@ def main() -> int:
     print("CONTROL STATE VALIDATION PASSED")
     print(f"apparatus_sha={apparatus_sha}")
     print(f"apparatus_tree_sha={tree_sha}")
+    print(f"candidate_identity={candidate_identity or identity.get('candidate_sha')}" )
+    print(f"deployment_identity={deployment_identity or identity.get('deployment_id')}" )
     print("active deployment binding is internally scoped")
     print("superseded candidate is not presented as live")
     print("cross-document apparatus identity is present")
