@@ -11,7 +11,7 @@ This file supersedes the earlier contents of this dated handoff. Historical P2/P
 - deployment branch: `deploy/exact-candidate-48c12c6`
 - `deployment_id`: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
 - `base_url`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
-- `allowed_origin`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- `allowed_origin`: `https://dynamicgovernanceagenticformation-ndrorchestrration.vercel.app`
 - `disallowed_origin`: `https://untrusted.com`
 
 The deployment is READY/preview. Runtime paths are SSO-protected from the current unauthenticated session, so SSO redirects are not runtime-failure evidence. Vercel Git-SHA confirmation for the deployment remains pending.
@@ -37,7 +37,7 @@ Required inputs:
 - `candidate_sha = 48c12c6660df7decb61f9aac4d8560526a8754eb`
 - `deployment_id = dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
 - `base_url = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
-- `allowed_origin = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- `allowed_origin = https://dynamicgovernanceagenticformation-ndrorchestrration.vercel.app`
 
 The workflow independently verifies the SHA/input presence and requires `VERCEL_AUTOMATION_BYPASS_SECRET`. It then executes allowed/disallowed POST and preflight checks and writes candidate/deployment-bound provenance.
 
