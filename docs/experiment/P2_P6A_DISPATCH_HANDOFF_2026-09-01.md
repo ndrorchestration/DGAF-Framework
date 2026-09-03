@@ -10,7 +10,7 @@ This handoff records the currently verified executable candidate/deployment pair
 - `candidate_branch`: `candidate/p35-validated-control-state-2026-09-02`
 - `deployment_id`: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
 - `base_url`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
-- `allowed_origin`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- `allowed_origin`: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
 - `disallowed_origin`: `https://untrusted.com`
 - deployment state: `READY`
 - verified deployment Git SHA: `48c12c6660df7decb61f9aac4d8560526a8754eb`
@@ -44,7 +44,7 @@ Required inputs:
 - `candidate_sha = 48c12c6660df7decb61f9aac4d8560526a8754eb`
 - `deployment_id = dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
 - `base_url = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
-- `allowed_origin = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- `allowed_origin = https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
 
 The workflow requires `VERCEL_AUTOMATION_BYPASS_SECRET`, executes the four required CORS checks, and uploads a candidate/deployment-bound provenance artifact.
 
