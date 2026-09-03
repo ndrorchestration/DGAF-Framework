@@ -1,20 +1,27 @@
-# P2 / P6a Dispatch Handoff — Exact Completion Candidate
+# P2 / P6a Dispatch Handoff — Verified Executable Candidate
 
-**Status:** READY FOR DISPATCH / PRE-FREEZE / FAIL-CLOSED / N=0
+**Status:** READY FOR DISPATCH / PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
 
-This file supersedes the earlier contents of this dated handoff. Historical P2/P6a verification records remain evidence for their original candidate/deployment identities only and do not transfer to the current completion candidate.
+This handoff records the currently verified executable candidate/deployment pair. Historical P2/P6a records remain scoped to their original identities and do not transfer across candidate, deployment, or workflow-trigger identity.
 
-## Exact candidate binding
+## Exact executable candidate binding
 
-- `candidate_sha`: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`
-- `candidate_branch`: `completion/2026-09-01-exact-candidate`
-- deployment branch: `deploy/exact-candidate-a43219b`
-- `deployment_id`: `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
-- `base_url`: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
-- `allowed_origin`: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `candidate_sha`: `48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `candidate_branch`: `candidate/p35-validated-control-state-2026-09-02`
+- `deployment_id`: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- `allowed_origin`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 - `disallowed_origin`: `https://untrusted.com`
+- deployment state: `READY`
+- verified deployment Git SHA: `48c12c6660df7decb61f9aac4d8560526a8754eb`
 
-The deployment is READY/preview. Runtime paths are SSO-protected from the current unauthenticated session, so SSO redirects are not runtime-failure evidence. Vercel Git-SHA confirmation for the deployment remains pending.
+Vercel independently reports the deployment as a Git deployment of the exact candidate SHA. The deployment is therefore valid for candidate-bound runtime execution.
+
+## Later control-plane head
+
+PR #200 subsequently advanced to control-plane/documentation commit `fc45d95e5cdae4026e4e50e2746d48e1cc3b7389`.
+
+That later commit is **not** substituted for the executable candidate because no independently verified deployment is bound to that SHA. Its own dispatch-handoff revision preserves the `48c12c...` execution candidate/deployment pair.
 
 ## P2 dispatch contract
 
@@ -22,11 +29,11 @@ Workflow: `.github/workflows/p2-runtime-verification.yml`
 
 Required inputs:
 
-- `candidate_sha = a43219b4ed91fff8615f6c655ab3d17ca871fc29`
-- `deployment_id = dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
-- `base_url = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `candidate_sha = 48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `deployment_id = dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 
-The workflow independently verifies the SHA format and requires `VERCEL_AUTOMATION_BYPASS_SECRET`. It then executes five cases against `/api/orchestrate` and writes candidate/deployment-bound provenance.
+The workflow requires `VERCEL_AUTOMATION_BYPASS_SECRET`, executes the five required `/api/orchestrate` POST cases, and uploads a candidate/deployment-bound provenance artifact.
 
 ## P6a dispatch contract
 
@@ -34,36 +41,34 @@ Workflow: `.github/workflows/p6a-cors-verification.yml`
 
 Required inputs:
 
-- `candidate_sha = a43219b4ed91fff8615f6c655ab3d17ca871fc29`
-- `deployment_id = dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
-- `base_url = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
-- `allowed_origin = https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
+- `candidate_sha = 48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `deployment_id = dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- `allowed_origin = https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 
-The workflow independently verifies the SHA/input presence and requires `VERCEL_AUTOMATION_BYPASS_SECRET`. It then executes allowed/disallowed POST and preflight checks and writes candidate/deployment-bound provenance.
+The workflow requires `VERCEL_AUTOMATION_BYPASS_SECRET`, executes the four required CORS checks, and uploads a candidate/deployment-bound provenance artifact.
+
+## Runtime observation already established
+
+A live observation against this exact deployment exercised the four P6a request classes and matched the workflow predicates:
+
+- allowed-origin POST: `503` with expected `Access-Control-Allow-Origin`;
+- disallowed-origin POST: `503` without `Access-Control-Allow-Origin`;
+- allowed-origin preflight: `204` with required origin/method/header allowances;
+- disallowed-origin preflight: `403` without `Access-Control-Allow-Origin`.
+
+This is deployment-scoped runtime observation only. It does not substitute for the designated exact-candidate workflow artifact.
 
 ## Current execution state
 
-No fresh P2 or P6a runtime result is asserted here. The available GitHub integration exposes workflow inspection and rerun operations but no workflow-dispatch write operation. Therefore these workflows remain awaiting authenticated manual dispatch or another authorized dispatch path.
+Fresh P2 and P6a workflow artifacts have **not** been produced for this exact candidate/deployment pair. The GitHub connection available to the execution operator exposes workflow inspection/rerun capabilities but not `workflow_dispatch` for these manual workflows.
 
-The earlier invalid P2 run is not evidence of runtime behavior because its supplied candidate/deployment/base-URL inputs were malformed and did not bind to the exact candidate.
+No freeze, authorization, pilot execution, unblinding, or empirical N is established by this handoff.
 
 ## Evidence boundary
 
-P2/P6a completion requires successful execution against the exact candidate and exact deployment above. No historical P2/P6a result transfers across candidate or deployment identity. These predicates do not establish efficacy, freeze, authorization, unblinding, or empirical execution.
+Do not reuse P2/P6a evidence from `92ff830b...`, `a43219b...`, `fc45d95e...`, or any earlier deployment. Closure requires the designated workflow execution itself to bind the exact candidate and exact deployment and preserve its resulting provenance artifact.
 
-## Downstream state
+## Closure sequence
 
-- P3: `VERIFIED` for the completion candidate
-- P4: workflow-level evidence; operational closure open
-- P5: workflow-level evidence; full closure open
-- P6: workflow-level evidence; durable archive/retention closure open
-- P7: technically adjudicated; formal adoption/exact freeze binding open
-- P8: `OPEN / PRE-FREEZE / FAIL-CLOSED`
-- P9: scoped pass for exact candidate; broader closure open
-- Freeze: `NOT ESTABLISHED`
-- Authorization: `NOT GRANTED`
-- Empirical N: `0`
-
-## Current closure sequence
-
-`P2 + P6a exact runtime → operational P4/P5/P6 → P7 exact adoption/binding → P8 → final broader P9 → immutable freeze → explicit authorization → blinded pilot`.
+`P2 + P6a exact workflow execution → operational P3/P4/P5/P6 closure → exact P7 binding → P8 → independent P9 → immutable freeze → explicit authorization → blinded pilot`.
