@@ -7,12 +7,14 @@ on:
       - epistemic/evidence-architecture-v1
   pull_request:
 
+# Validation must not be able to mutate repository state or workflow state.
 permissions:
-  contents: write
-  actions: write
+  contents: read
+  actions: read
 
 env:
   PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/experiments/pdmal_pilot
+  PDMAL_MODE: contract
 
 jobs:
   runner-contract:
@@ -23,76 +25,33 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref || github.ref }}
-          persist-credentials: true
+          persist-credentials: false
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12.0'
-      - name: Generate and persist genuine full dependency lock
-        id: lock
+
+      - name: Require genuine full dependency lock
         run: |
           lock_path="experiments/pdmal_pilot/requirements-full-lock.txt"
-          if test -s "$lock_path" \
-            && grep -Eq '^[[:space:]]*--hash=sha256:' "$lock_path" \
-            && grep -Eq '^numpy==[0-9]' "$lock_path" \
-            && grep -Eq '^networkx==[0-9]' "$lock_path" \
-            && grep -Eq '^pytest==[0-9]' "$lock_path" \
-            && grep -Eq '^pandas==[0-9]' "$lock_path"; then
-            echo 'Valid full lockfile detected; no resolver write required.'
-            echo 'committed=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ "$GITHUB_HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" ]; then
-            echo 'Full lock generation is disallowed for fork pull requests.' >&2
-            exit 1
-          fi
-          python -m pip install --upgrade pip
-          python -m pip install pip-tools==7.6.1
-          python -m piptools compile \
-            --generate-hashes \
-            --output-file "$lock_path" \
-            experiments/pdmal_pilot/requirements.in
           test -s "$lock_path"
           grep -Eq '^[[:space:]]*--hash=sha256:' "$lock_path"
           grep -Eq '^numpy==[0-9]' "$lock_path"
           grep -Eq '^networkx==[0-9]' "$lock_path"
           grep -Eq '^pytest==[0-9]' "$lock_path"
           grep -Eq '^pandas==[0-9]' "$lock_path"
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$lock_path"
-          git commit -m 'chore: add genuine resolver-generated hash lock for PDMAL pilot'
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            git push origin "HEAD:${GITHUB_HEAD_REF}"
-          else
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
-          echo 'committed=true' >> "$GITHUB_OUTPUT"
-      - name: Dispatch fresh current-head validation after lock commit
-        if: steps.lock.outputs.committed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          curl --fail-with-body \
-            -X POST \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pdmal-pre-freeze-runner.yml/dispatches" \
-            -d '{"ref":"epistemic/evidence-architecture-v1"}'
+
       - name: Install harness dependencies from full lock only
-        run: |
-          test -s experiments/pdmal_pilot/requirements-full-lock.txt
-          python -m pip install --upgrade pip
-          python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
       - name: Run pre-freeze contract suite
         working-directory: experiments/pdmal_pilot
         run: |
           python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py test_dgaf_tgl_adapter.py -q
+
       - name: Verify runner has no empirical authorization by default
-        env:
-          PDMAL_MODE: contract
-        run: |
-          python experiments/pdmal_pilot/run_pilot.py --seeds 2
+        run: python experiments/pdmal_pilot/run_pilot.py --seeds 2
+
       - name: Verify pilot mode fails closed without freeze/authorization
         env:
           PDMAL_MODE: pilot
@@ -104,10 +63,11 @@ jobs:
           rc=$?
           set -e
           test "$rc" -ne 0
+
       - name: Verify artifact schema and integrity contract
         working-directory: experiments/pdmal_pilot
-        run: |
-          python -m pytest test_harness_contract.py -q
+        run: python -m pytest test_harness_contract.py -q
+
       - name: Emit pre-freeze manifest
         run: |
           mkdir -p test-artifacts
@@ -129,6 +89,7 @@ jobs:
               encoding='utf-8',
           )
           PY
+
       - name: Upload pre-freeze manifest
         uses: actions/upload-artifact@v4
         with:
