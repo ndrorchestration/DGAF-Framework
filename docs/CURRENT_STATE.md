@@ -6,7 +6,7 @@ last_verified: 2026-09-03
 applies_to_ref: main
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
-current_mainline_control_plane_head: 0e993c8db6973ff0b468a13dc44c0b4780a77e32
+current_mainline_control_plane_head: 7bbfd8ec5991ce399b8ee58cdeca742040ad272c
 candidate identity: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 verified_runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 verified_runtime_deployment: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
@@ -23,16 +23,16 @@ GitHub is authoritative for implementation and CI; governance decisions are reco
 
 The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 
-The current mainline control-plane head is `0e993c8db6973ff0b468a13dc44c0b4780a77e32`, the squash merge of PR #214. The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to that exact Git SHA.
+The current mainline control-plane head is `7bbfd8ec5991ce399b8ee58cdeca742040ad272c`, the merge commit for PR #217. The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to that exact Git SHA.
 
-The `0e993c8…` change is governance/control-plane reconciliation and does not modify the runtime surfaces covered by the closed P2/P6a predicates. Those gates therefore remain closed; they are not reopened by documentation-only changes.
+The `7bbfd8e…` change is control-plane hardening and does not by itself replace the separately scoped verified runtime candidate. PRs #219, #220, and #221 are open control-plane remediation lanes and are not experimental authorization.
 
 ## Runtime gate state
 
 | Boundary | Status | Scope |
 |---|---|---|
 | P-35 | VALIDATED | immutable boundary `643dc77a…` |
-| Mainline control-plane head | CURRENT | `0e993c8…` |
+| Mainline control-plane head | CURRENT | `7bbfd8e…` |
 | Verified executable runtime candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Candidate deployment | VERIFIED READY | `dpl_8Msuf…` bound to `7c1cc4…` |
 | P2 | CLOSED / VERIFIED | run `33730195621`, artifact `9883521704` |
@@ -54,11 +54,21 @@ P2 run `33730195621` verified the exact candidate/deployment pair with all five 
 
 P6a run `33728695806` verified the same exact candidate/deployment binding using the canonical production origin; all four POST/preflight predicates passed. Artifact `9882965299` has digest `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`.
 
+## Control-plane hardening state
+
+- PR #217 is merged into current `main`; it hardens pre-freeze runner least privilege and reproducibility.
+- PR #219 remains open and hardens completion-controller evidence binding to the exact triggering workflow run rather than selecting the latest matching run.
+- PR #220 remains open and requires every blinded condition to contain the identical canonical topology × failure-count matrix.
+- PR #221 remains open and adds hash-enforced dry-run dependency installation plus exact-candidate structural evidence-registry emission.
+- PR #216 is closed/superseded; its still-valid evidence-registry intent was reworked onto current mainline in #221 without carrying forward stale dependency/checksum history.
+
+These changes are control-plane safeguards. They do not create empirical observations, establish efficacy, authorize a pilot, or create a freeze.
+
 ## Evidence boundary
 
 Closed P2/P6a runtime evidence remains scoped to the verified executable runtime identity above. Documentation/control-plane changes do not reopen those predicates unless the runtime surface or their governing acceptance conditions materially change. No empirical efficacy conclusion follows from these runtime checks.
 
-The PDMAL instrumentation workflow is isolated from documentation-only changes and retains deliberate `workflow_dispatch` as the route for intentional evidence execution. A successful PR dry run validates the workflow/control plane; it does not advance empirical N.
+The PDMAL instrumentation workflow is intended to remain isolated from documentation-only changes and retains deliberate `workflow_dispatch` as the route for intentional evidence execution. A successful PR dry run validates workflow/control infrastructure; it does not advance empirical N.
 
 ## Closure sequence
 
