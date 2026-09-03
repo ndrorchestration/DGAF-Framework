@@ -13,7 +13,7 @@
 
 The repository is in post-P6a-remediation, pre-freeze closure. The current mainline candidate is `7c1cc4...`, and the exact production deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` is READY with the same Git SHA.
 
-The current P6a runtime verification is closed for this exact candidate/deployment/environment binding. The historical P2 PASS for `48c12c...` and its deployment `dpl_CW4...` is retained as provenance but is not transferable to `7c1cc4...`; fresh P2 execution is required.
+P2 and P6a runtime verification are now both closed for this exact candidate/deployment/environment binding. Historical runtime results for superseded candidates remain provenance only and are not transferable.
 
 ## Gate board
 
@@ -23,9 +23,9 @@ The current P6a runtime verification is closed for this exact candidate/deployme
 | Current repository main | CURRENT | `7c1cc4…` |
 | Current candidate | PRE-FREEZE / NOT FROZEN | `7c1cc4…` |
 | Current production deployment | READY / EXACT SHA | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` |
-| P2 | OPEN | Fresh exact-candidate/deployment workflow execution required |
-| P6a | CLOSED / VERIFIED | Run `33728695806`; artifact `9882965299` |
-| P3 | VERIFIED AT ENGINEERING/WORKFLOW SCOPE | Operational closure remains required where specified |
+| P2 | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704`; exact candidate/deployment bound |
+| P6a | CLOSED / VERIFIED | Run `33728695806`; artifact `9882965299`; exact candidate/deployment bound |
+| P3 | VERIFIED AT ENGINEERING/WORKFLOW SCOPE | Current exact-candidate operational closure remains required where specified |
 | P4 | OPEN | Current-cycle operational blinding/custody evidence required |
 | P5 | OPEN | Final exact-candidate reproducibility closure required |
 | P6 | OPEN / FAIL-CLOSED | Durable external archive/retrieval/hash proof required |
@@ -35,6 +35,10 @@ The current P6a runtime verification is closed for this exact candidate/deployme
 | Freeze | NOT ESTABLISHED | No immutable frozen identity is authoritative |
 | Pilot authorization | NOT GRANTED | Separate governance transition |
 | Empirical data | ZERO | No authorized pilot execution |
+
+## Current P2 evidence
+
+Run `33730195621` verified candidate `7c1cc4...` against deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` using base URL `https://dynamicgovernanceagenticformation-9u712s0cq-ndrorchestration.vercel.app`. The five required runtime cases all passed their defined predicates, including expected fail-closed behavior for the valid request without live audit state. Artifact `9883521704` has digest `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`.
 
 ## Current P6a evidence
 
@@ -54,13 +58,12 @@ Evidence does not transfer across candidate SHA, deployment identity, triggering
 
 ## Required closure sequence
 
-1. Fresh exact-current-candidate P2.
-2. Current-cycle operational P4/P5/P6 evidence and durable custody.
-3. Exact final P7 candidate/protocol/analysis binding.
-4. P8 prerequisite satisfaction and analysis lock.
-5. Current-candidate independent P9.
-6. New immutable freeze and independent verification.
-7. Explicit pilot authorization.
-8. Only then execute the authorized blinded pilot.
+1. Current-cycle operational P4/P5/P6 evidence and durable custody.
+2. Exact final P7 candidate/protocol/analysis binding.
+3. P8 prerequisite satisfaction and analysis lock.
+4. Current-candidate independent P9.
+5. New immutable freeze and independent verification.
+6. Explicit pilot authorization.
+7. Only then execute the authorized blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
