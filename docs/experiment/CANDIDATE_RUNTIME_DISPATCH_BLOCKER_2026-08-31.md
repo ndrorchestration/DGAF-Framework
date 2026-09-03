@@ -6,10 +6,13 @@
 
 ## Exact candidate runtime identity
 
-- Apparatus source: `d56b5b3c44e39ddb8c883259584432ab39259306`
-- Production deployment: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
-- Deployment URL: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
+- Candidate SHA: `48c12c6660df7decb61f9aac4d8560526a8754eb`
+- Candidate tree SHA: `0dfd39883c4ea8604ef2e72a98e9c2024557330f`
+- Production deployment: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- Deployment URL: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 - Allowed CORS origin: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
+- Deployment status: `READY`
+- Deployment source SHA: `48c12c6660df7decb61f9aac4d8560526a8754eb`
 
 ## Blocking condition
 
@@ -19,20 +22,24 @@ This is an execution-plumbing limitation, not a missing candidate identity, depl
 
 ## Required P2 inputs
 
-- `candidate_sha`: `d56b5b3c44e39ddb8c883259584432ab39259306`
-- `deployment_id`: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
-- `base_url`: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
+- `candidate_sha`: `48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `deployment_id`: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 
 ## Required P6a inputs
 
-- `candidate_sha`: `d56b5b3c44e39ddb8c883259584432ab39259306`
-- `deployment_id`: `dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb`
-- `base_url`: `https://dynamicgovernanceagenticformation-ltttt6oip-ndrorchestration.vercel.app`
+- `candidate_sha`: `48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `deployment_id`: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
 - `allowed_origin`: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`
+
+## Runtime observations already available
+
+The exact deployment has shown the expected P6a request shape in Vercel runtime logs: two `POST /api/orchestrate` requests and two `OPTIONS /api/orchestrate` preflight requests. The observed responses were `503`, `503`, `204`, and `403`, respectively. These runtime observations do not constitute a current-candidate P6a workflow pass; the preserved P6a artifact remains historical because it is bound to a superseded candidate.
 
 ## Evidence non-transfer rule
 
-Historical P2/P6a runs, including the successful P6a run bound to `303f4424...`, remain historical and cannot be reused for the current candidate.
+Historical P2/P6a runs bound to superseded candidates remain historical and cannot be reused for the current candidate. In particular, prior P2/P6a artifacts for `92ff830b...` do not transfer to `48c12c...`.
 
 ## Closure condition
 
