@@ -6,58 +6,67 @@
 
 ## Current execution boundary — 2026-09-03
 
-The repository contains two distinct identities that must not be conflated:
+The current mainline candidate is the exact commit below. Earlier candidate/deployment pairs remain historical and must not be transferred.
 
 | Identity | Role | Status |
 |---|---|---|
-| `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | Corrected apparatus provenance anchor | Canonical |
-| `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d` | Immutable P-35 validation boundary | Validated |
-| `48c12c6660df7decb61f9aac4d8560526a8754eb` | Independently verified executable candidate | PRE-FREEZE / deployment-bound |
-| `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K` | Vercel deployment for `48c12c...` | READY / verified Git SHA |
-| `fc45d95e5cdae4026e4e50e2746d48e1cc3b7389` | Later PR #200 control-plane/documentation head | Not independently deployment-bound |
+| `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | Corrected apparatus provenance anchor | Historical canonical anchor |
+| `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d` | Immutable P-35 validation boundary | Historical validated boundary |
+| `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Current mainline candidate after P6a CORS remediation | PRE-FREEZE / not frozen |
+| `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Vercel deployment for `7c1cc4...` | READY / exact Git SHA |
+| `48c12c6660df7decb61f9aac4d8560526a8754eb` | Superseded executable candidate | Historical / non-transferable |
+| `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K` | Superseded deployment | Historical / non-transferable |
 
-The verified Vercel deployment reports Git SHA `48c12c...` and branch `candidate/p35-validated-control-state-2026-09-02`. The later `fc45d95e...` commit contains documentation/control-plane changes but does not establish a new deployment-bound candidate. Its dispatch handoff preserves the `48c12c...` execution candidate.
+The current mainline commit adds the canonical production origin to the middleware CORS allowlist. The exact deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` is the deployment used by the current P6a verification.
 
 ## P2 / P6a runtime boundary
 
-The exact deployment identity is established, but P2 and P6a are **not closed**. Fresh workflow execution must bind the workflow inputs to the same candidate/deployment pair and preserve the resulting provenance artifacts.
+P2 and P6a must be evaluated against the same exact current candidate/deployment binding. The historical P2 PASS for `48c12c...` is not current evidence after the mainline changed. P6a has been freshly verified for `7c1cc4...`.
 
-### P2
+### P2 — OPEN
 
-- candidate SHA: `48c12c6660df7decb61f9aac4d8560526a8754eb`
-- deployment ID: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
-- base URL: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- candidate SHA: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
+- deployment ID: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
+- base URL: `https://dynamicgovernanceagenticformation-9u712s0cq-ndrorchestration.vercel.app`
 - required suite: five authenticated POST cases against `/api/orchestrate`
+- required secret: `VERCEL_AUTOMATION_BYPASS_SECRET` (value never recorded)
 
-### P6a
+### P6a — CLOSED / VERIFIED
 
-- candidate SHA: `48c12c6660df7decb61f9aac4d8560526a8754eb`
-- deployment ID: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
-- base URL: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
-- allowed origin: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
-- required suite: four authenticated CORS POST/preflight checks
-
-The workflows require `VERCEL_AUTOMATION_BYPASS_SECRET`; the secret value is never recorded in repository documentation.
+- candidate SHA: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
+- deployment ID: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
+- base URL: `https://dynamicgovernanceagenticformation-9u712s0cq-ndrorchestration.vercel.app`
+- allowed origin: `https://dynamicgovernanceagenticformation.vercel.app`
+- run: `33728695806`
+- artifact: `9882965299`
+- artifact digest: `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`
+- required suite: four authenticated CORS POST/preflight checks; all four passed their expected predicates
 
 ## Gate state
 
 | Gate / boundary | Current state |
 |---|---|
 | P-35 implementation | VALIDATED at immutable boundary `643dc77a…` |
-| Current executable candidate | `48c12c…` / PRE-FREEZE |
-| Exact candidate deployment | READY / Git SHA independently verified |
-| P2 | OPEN — fresh candidate/deployment-bound workflow execution required |
-| P6a | OPEN — fresh candidate/deployment-bound workflow execution required |
-| P3 | VERIFIED at applicable engineering scope; operational closure remains required where specified |
+| Current mainline candidate | `7c1cc4…` / PRE-FREEZE |
+| Exact candidate deployment | READY / exact Git SHA verified |
+| P2 | OPEN — fresh exact-current-candidate workflow execution required |
+| P6a | CLOSED / VERIFIED — run `33728695806` |
+| P3 | VERIFIED at applicable engineering/workflow scope; operational closure remains required where specified |
 | P4 | OPEN — operational blinding/custody closure required |
-| P5 | OPEN — full reproducibility closure required |
-| P6 | OPEN / FAIL-CLOSED — durable archive/retention closure required |
-| P7 | Technically specified; exact final binding remains open |
+| P5 | OPEN — final exact-candidate reproducibility closure required |
+| P6 | OPEN / FAIL-CLOSED — durable archive/retrieval/hash proof required |
+| P7 | ADOPTED / FINAL BINDING OPEN |
 | P8 | OPEN / FAIL-CLOSED |
-| P9 | Historical/scoped evidence retained; fresh final closure remains required |
+| P9 | OPEN — current-candidate independent verification required |
 | Freeze | NOT ESTABLISHED |
 | Authorization | NOT GRANTED |
 | Empirical N | 0 |
+
+## Evaluator integrity finding
+
+The completion controller is a `workflow_run` evaluator and deliberately treats candidate SHA as data. On 2026-09-03, run `33729094860` executed from `main` but received `CANDIDATE_SHA=25b6379...`, the head of documentation PR #210, because the workflow uses `${{ github.event.workflow_run.head_sha }}`. Its result was correctly `OPEN_GAPS`, but that result is evidence about the triggering workflow's candidate, not automatically about current `main`.
+
+This control-plane binding behavior requires explicit review before a completion-controller result is used as current-main closure evidence. It does not authorize freeze, pilot execution, unblinding, or empirical collection.
 
 ## Evidence rules
 
@@ -65,6 +74,6 @@ Evidence does not transfer across candidate SHA, deployment identity, triggering
 
 ## Current closure sequence
 
-`P2 + P6a exact runtime → operational P4/P5/P6 → exact P7 binding → P8 → final independent P9 → immutable freeze → explicit authorization → blinded pilot`
+`P2 exact runtime → operational P4/P5/P6 → exact P7 binding → P8 → current-candidate P9 → immutable freeze → explicit authorization → blinded pilot`
 
 No step in this documentation lane grants experimental authorization or advances empirical N.
