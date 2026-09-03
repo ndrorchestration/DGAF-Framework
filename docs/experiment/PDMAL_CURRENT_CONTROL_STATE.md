@@ -3,77 +3,70 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-03
-applies_to_sha: 48c12c6660df7decb61f9aac4d8560526a8754eb
+applies_to_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
-runtime_candidate_sha: 48c12c6660df7decb61f9aac4d8560526a8754eb
-candidate_branch: candidate/p35-validated-control-state-2026-09-02
-candidate_deployment_identity: dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K
-candidate_deployment_sha: 48c12c6660df7decb61f9aac4d8560526a8754eb
+runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
+candidate_deployment_identity: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
+candidate_deployment_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 candidate_deployment_state: READY
-latest_pr200_control_plane_head: fc45d95e5cdae4026e4e50e2746d48e1cc3b7389
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 empirical_n: 0
 ---
 
 # PDMAL Current Control State
 
-This is the authoritative pre-authorization control record. The independently verified executable candidate is separated from later documentation/control-plane commits. Historical evidence remains scoped to the exact tested SHA, workflow run, deployment, and artifact.
+This is the current pre-authorization control record. Historical evidence remains scoped to the exact tested SHA, workflow run, deployment, and artifact.
 
 ## Identity boundary
 
 The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` and remains the canonical provenance anchor. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 
-The current deployment-bound executable candidate is `48c12c6660df7decb61f9aac4d8560526a8754eb` on `candidate/p35-validated-control-state-2026-09-02`. Vercel independently identifies deployment `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K` as READY and binds it to Git SHA `48c12c...` on that branch.
+The current mainline executable candidate is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`. Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` is READY and bound to that exact Git SHA.
 
-PR #200 later advanced to `fc45d95e5cdae4026e4e50e2746d48e1cc3b7389`. That commit is retained as a later control-plane/documentation head and is not promoted to a deployment-bound candidate because no independently verified deployment is bound to it. Its dispatch handoff preserves the `48c12c...` candidate/deployment pair.
+The former candidate `48c12c6660df7decb61f9aac4d8560526a8754eb` and deployment `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K` are historical/non-transferable.
 
 ## Current gate state
 
 | Control | State | Evidence / scope |
 |---|---|---|
 | P-35 | VALIDATED | Immutable boundary `643dc77a…` |
-| Executable candidate | CURRENT / PRE-FREEZE | `48c12c…` |
-| Candidate deployment | ESTABLISHED / READY | `dpl_CW4…` bound to `48c12c…` |
-| P2 runtime | OPEN / RE-RUN REQUIRED | Fresh exact candidate/deployment workflow execution |
-| P6a CORS | OPEN / RE-RUN REQUIRED | Fresh exact candidate/deployment workflow execution |
-| P3 | OPEN FOR FINAL CLOSURE | Candidate-bound operational evidence as specified by the current protocol |
+| Executable candidate | CURRENT / PRE-FREEZE | `7c1cc4…` |
+| Candidate deployment | ESTABLISHED / READY | `dpl_8Msuf…` bound to `7c1cc4…` |
+| P2 runtime | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
+| P6a CORS | CLOSED / VERIFIED | Run `33728695806`; artifact `9882965299` |
+| P3 | VERIFIED AT ENGINEERING/WORKFLOW SCOPE | Current exact-candidate operational closure remains required where specified |
 | P4 | OPEN | Operational blinding/custody |
-| P5 | OPEN | Full reproducibility |
-| P6 | OPEN / FAIL-CLOSED | Durable archive/retrieval/hash/retention proof |
-| P7 | FORMAL BINDING OPEN | Exact candidate/protocol/analysis/freeze binding |
-| P8 | OPEN / FAIL-CLOSED | Current-cycle evidence required |
-| P9 | SCOPED / FRESH CLOSURE REQUIRED | Historical independent evidence does not transfer |
+| P5 | OPEN | Final exact-candidate reproducibility |
+| P6 | OPEN / FAIL-CLOSED | Durable archive/retrieval/hash proof |
+| P7 | ADOPTED / FINAL BINDING OPEN | Exact candidate/protocol/analysis/freeze binding |
+| P8 | OPEN / FAIL-CLOSED | Current-cycle prerequisites and analysis lock |
+| P9 | OPEN | Fresh current-candidate independent verification |
 | Freeze | NOT ESTABLISHED | No immutable pilot identity |
 | Pilot authorization | NOT GRANTED | Separate governance decision |
 | Empirical data | N = 0 | No authorized pilot execution |
 
-## P2 / P6a runtime boundary
+## Runtime evidence boundary
 
-P2 required inputs are candidate `48c12c...`, deployment `dpl_CW4...`, and the exact deployment URL. P6a requires the same three values plus the configured allowed origin. Both workflows require `VERCEL_AUTOMATION_BYPASS_SECRET` and emit candidate/deployment-bound provenance artifacts.
+P2 and P6a are closed only for the exact `7c1cc4…` / `dpl_8Msuf…` binding. P2 artifact `9883521704` records all five required runtime predicates passing. P6a artifact `9882965299` records all four required CORS POST/preflight predicates passing with the canonical production origin.
 
-The Vercel deployment is reachable but protected by SSO for unauthenticated access. Direct HTTP reachability therefore establishes deployment health/protection only and is not P2/P6a closure evidence.
+The successful PDMAL instrumentation run on PR #213 is not current-main experimental evidence. It validates the trigger-isolation change on that PR candidate. The instrumentation workflow must be deliberately executed against the exact intended candidate before current-cycle P3/P4/P5/P6 closure can be claimed.
 
 ## Evidence rules
 
-A runtime result is closing only when the workflow execution itself binds to the exact candidate and exact deployment. Historical P2/P6a artifacts from `92ff830b…`, `a43219b…`, `48c12c…` prior runs, or any earlier candidate cannot be promoted merely by documentation change. A later documentation commit does not silently redefine the deployment-bound executable candidate.
-
-No freeze, authorization, unblinding, or empirical execution is established by this record.
+A runtime or experimental result is closing only when its workflow execution binds to the exact candidate and required deployment identity. Historical artifacts cannot be promoted by documentation changes. Documentation commits do not authorize execution or create a freeze.
 
 ## Required closure sequence
 
-1. Execute fresh P2 against `48c12c…` / `dpl_CW4…`.
-2. Execute fresh P6a against the same exact candidate/deployment and configured origin.
-3. Complete current-candidate P3/P4/P5/P6 operational closure.
-4. Bind P7 to the exact final candidate/protocol/analysis identity.
-5. Close P8 from current-cycle evidence only.
-6. Complete independent P9 closure.
-7. Create and independently verify immutable freeze.
-8. Obtain explicit pilot authorization.
-9. Only then execute the blinded pilot.
+1. Review/accept PR #213 trigger isolation after checks.
+2. Deliberately execute PDMAL instrumentation against exact candidate `7c1cc4…`; do not substitute documentation-branch runs.
+3. Re-establish current-cycle P3/P4/P5 evidence.
+4. Complete P6 durable archive, independent retrieval, and SHA-256 round-trip proof.
+5. Execute fresh independent P9 against the same exact candidate/evidence set.
+6. Finalize P7 candidate/protocol/analysis binding.
+7. Evaluate P8 only after current prerequisites are satisfied and exact-bound.
+8. Create and independently verify immutable freeze.
+9. Obtain explicit pilot authorization.
+10. Only then execute the blinded pilot.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
-
-## Reconciliation record
-
-See `docs/experiment/EXECUTION_BOUNDARY_RECONCILIATION_2026-09-03.md` for the independently verified deployment identity and the distinction between the executable candidate and later PR #200 documentation/control-plane commits.
