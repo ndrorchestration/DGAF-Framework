@@ -2,7 +2,9 @@
 
 ## Status
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
+### Current gate status
+
+PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
 
 ## Exact candidate runtime identity
 
