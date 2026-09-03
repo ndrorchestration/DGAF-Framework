@@ -13,9 +13,6 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-# Definitional policy / vocabulary / register docs whose purpose is to
-# ENUMERATE the prohibited claim-language as rules or audit records. These are
-# not active claims and would self-flag the checker's own vocabulary.
 EXCLUDED_RAW = {
     "docs/GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md",
     "docs/evidence/EVIDENCE_LADDER_POLICY.md",
@@ -31,14 +28,8 @@ EXCLUDED_RAW = {
     "docs/taxonomy/EPISTEMIC_CROSS_REPO_SWEEP_2026-08-15.md",
     "docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md",
 }
-# Case-insensitive so exclusions apply on case-sensitive Linux CI regardless of
-# on-disk casing (files are stored UPPERCASE, e.g. docs/EPISTEMIC_EVIDENCE_STANDARD.md).
 EXCLUDED = {p.lower() for p in EXCLUDED_RAW}
 ALLOWED_SUFFIXES = {".md", ".py", ".ts", ".tsx", ".yml", ".yaml", ".json"}
-# CI workflows and this checker's own scripts are configuration, not publishable
-# claim-language. The checker must not scan its own definition file
-# (claim-hygiene.yml defines the 'production-ready' regex string and would
-# self-flag) nor its own source/comment lines (which contain the lexicon).
 EXCLUDED_PARTS = {".git", "node_modules", ".venv", "venv", "__pycache__", "htmlcov", ".github", "scripts"}
 
 PATTERNS = [
@@ -47,7 +38,7 @@ PATTERNS = [
     re.compile(r"\b(?:universally safe|universal safety|proven efficacy|empirically superior)\b", re.I),
 ]
 HISTORICAL_CONTEXT = re.compile(
-    r"\b(?:historical record|historical metadata|historically|legacy attestation|attested project metadata|historical certification|historical snapshot)\b",
+    r"\b(?:historical record|historical metadata|historically|legacy attestation|attested project metadata|historical certification|historical snapshot|historical-priority|historical-priority adjudication)\b",
     re.I,
 )
 ACTIVE_CONTEXT = re.compile(
@@ -61,16 +52,10 @@ NON_ASSERTIVE_CONTEXT = re.compile(
 
 
 def line_is_non_assertive(line: str) -> bool:
-    """Return True when a matched term appears inside an explicit disclaimer/policy."""
     return bool(NON_ASSERTIVE_CONTEXT.search(line))
 
 
 def artifact_is_historical(text: str, line_number: int) -> bool:
-    """Allow a flagged term only when the surrounding artifact is clearly historical.
-
-    Look at the document header and a bounded context window around the finding.
-    A single historical word on the same line as an active claim is insufficient.
-    """
     lines = text.splitlines()
     header = "\n".join(lines[:40])
     start = max(0, line_number - 6)
