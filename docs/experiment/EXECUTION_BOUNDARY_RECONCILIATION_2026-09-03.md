@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This record distinguishes the verified executable candidate from later documentation/control-plane commits. It does not transfer any deployment-bound evidence across Git SHAs.
+This record is the current documentation authority for the execution boundary. It distinguishes the verified executable candidate from later documentation/control-plane commits and records runtime observations without promoting non-provenance-bound observations to gate closure.
 
 ## Identity
 
@@ -17,13 +17,13 @@ This record distinguishes the verified executable candidate from later documenta
 - **Verified deployment alias:** `dynamicgovernanceagenticformation-git-c-cab2e6-ndrorchestration.vercel.app`
 - **Later PR #200 documentation/control-plane head:** `fc45d95e5cdae4026e4e50e2746d48e1cc3b7389`
 
-The later `fc45d95e...` commit must not be treated as a deployment-bound runtime candidate merely because it is the latest PR head. Its own dispatch handoff preserves the `48c12c...` candidate/deployment pair.
+The later `fc45d95e...` commit is not promoted to a deployment-bound runtime candidate merely because it is the latest PR head. Its own dispatch handoff preserves the `48c12c...` execution candidate/deployment pair.
 
 ## Runtime verification boundary
 
-The existing Vercel deployment is independently identified as a Git deployment of `48c12c...`. Direct unauthenticated access reaches Vercel's SSO protection boundary; that confirms reachability/protection only and is not P2/P6a runtime evidence.
+The Vercel deployment is independently identified as a Git deployment of `48c12c...`. Direct unauthenticated access reaches the Vercel SSO protection boundary. This establishes reachability/protection only and is not P2/P6a workflow evidence.
 
-P2/P6a closure still requires successful candidate-bound workflow execution, including the required Vercel automation bypass secret and preservation of the resulting provenance artifacts.
+A live observation on the verified deployment exercised the four P6a request classes and matched the P6a workflow predicates: allowed-origin POST returned `503` with the expected allow-origin header; disallowed-origin POST returned `503` without the allow-origin header; allowed-origin preflight returned `204` with required method/header allowances; disallowed-origin preflight returned `403` without the allow-origin header. This is a runtime observation for the exact deployment, but it does not close P6a because the preserved workflow artifact must itself be produced by the exact-candidate workflow execution.
 
 ## Required dispatch inputs
 
@@ -42,6 +42,14 @@ P2/P6a closure still requires successful candidate-bound workflow execution, inc
 
 ## Evidence rules
 
-Historical P2/P6a artifacts do not transfer across candidate, deployment, or triggering-workflow identity. The exact deployment identity is established, but runtime closure remains pending until the workflow run itself is bound to the same candidate/deployment pair.
+Historical P2/P6a artifacts do not transfer across candidate, deployment, or triggering-workflow identity. The exact deployment identity is established, but closing evidence still requires the designated workflow run to execute against that exact candidate/deployment pair and preserve its artifact.
+
+Runtime observations, deployment health, CI success, dry runs, and documentation reconciliation are non-closing unless the governing predicate explicitly identifies them as sufficient evidence.
+
+The protected Vercel automation bypass secret is required by both runtime workflows and is never recorded in documentation.
 
 No freeze, authorization, pilot execution, unblinding, or empirical N is established by this document.
+
+## Current closure sequence
+
+`P2 + P6a exact workflow execution → operational P3/P4/P5/P6 closure → exact P7 binding → P8 → independent P9 → immutable freeze → explicit authorization → blinded pilot`
