@@ -41,7 +41,7 @@ This matrix is the current planning/control surface. It does not itself constitu
 
 PR #199 is the minimal current-mainline P-35 remediation: DGAF pilot execution requires an explicit callable `PDMAL_PREMISE_CHECKER`; omission or invalid configuration is fail-closed; `ConsensusTask(condition="dgaf")` requires the checker; and the checker is propagated into `DGAF_TGLAdapter` and `TGLHooks`.
 
-Exact implementation candidate `0b1190fe91db6b963da0b31492d61fa1a34381e3` completed the fresh validation wave successfully. The exact-head evidence includes PDMAL Pre-Freeze Runner Validation run `33697643625` and Governance CI run `33697643702`; the other candidate-bound validation workflows were also successful.
+Exact implementation candidate `0b1190fe91db6b963da0b31492d61fa1a34381e3` completed the fresh validation wave successfully. Exact-head evidence includes PDMAL Pre-Freeze Runner Validation run `33697643625` and Governance CI run `33697643702`; the other candidate-bound validation workflows were also successful.
 
 The P-35 regression verifies explicit checker invocation through the real runner/task/adapter/TGL path while preserving the fail-closed `UNRECOVERED_FAILURE` / `ffcr_success=False` contract. P-35 is therefore **CLOSED / VALIDATED for exact candidate `0b1190fe…`**.
 
