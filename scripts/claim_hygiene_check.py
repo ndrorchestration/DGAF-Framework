@@ -2,9 +2,10 @@
 """Block active public claim-language that exceeds the current DGAF evidence policy.
 
 The checker scans the same text/source suffix family used by CI and distinguishes
-historical records by artifact context. Explicit disclaimers and future-policy
-statements are treated as non-assertive so the gate detects positive claims rather
-than the vocabulary used to prohibit or qualify them.
+historical records and explicit non-claim sections from active assertions.
+Explicit disclaimers and future-policy statements are treated as non-assertive so
+the gate detects positive claims rather than the vocabulary used to prohibit or
+qualify them.
 """
 from __future__ import annotations
 
@@ -58,6 +59,8 @@ NON_ASSERTIVE_CONTEXT = re.compile(
     r"(?:\b(?:not|never|no|without|cannot|can't|must not|should not|do not|does not|doesn't)\b[^\n.;]{0,160}|\b(?:future|proposed|requires? separate governance|requires? explicit governance|requires? independent evidence)\b[^\n.;]{0,160})",
     re.I,
 )
+EXPLICIT_NONCLAIM_HEADING = re.compile(r"^\s*#{2,6}\s+explicit\s+non-claims\s*$", re.I)
+ANY_H2_HEADING = re.compile(r"^\s*#{2}\s+\S.*$", re.I)
 
 
 def line_is_non_assertive(line: str) -> bool:
@@ -82,6 +85,28 @@ def artifact_is_historical(text: str, line_number: int) -> bool:
     )
 
 
+def explicit_nonclaim_lines(text: str) -> set[int]:
+    """Return one-based line numbers contained by an 'Explicit non-claims' section.
+
+    The section is bounded by the next H2 heading. This preserves scanning of the
+    rest of the document while treating policy-listed non-claims as declarations
+    of what the repository does not assert rather than as active claims.
+    """
+    lines = text.splitlines()
+    covered: set[int] = set()
+    in_section = False
+    for idx, line in enumerate(lines, 1):
+        if EXPLICIT_NONCLAIM_HEADING.match(line):
+            in_section = True
+            covered.add(idx)
+            continue
+        if in_section and ANY_H2_HEADING.match(line):
+            in_section = False
+        if in_section:
+            covered.add(idx)
+    return covered
+
+
 def main() -> int:
     for path in sorted(ROOT.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in ALLOWED_SUFFIXES:
@@ -94,8 +119,11 @@ def main() -> int:
         except UnicodeDecodeError:
             continue
 
+        nonclaim_lines = explicit_nonclaim_lines(text)
         lines = text.splitlines()
         for lineno, line in enumerate(lines, 1):
+            if lineno in nonclaim_lines:
+                continue
             for pattern in PATTERNS:
                 if not pattern.search(line):
                     continue
