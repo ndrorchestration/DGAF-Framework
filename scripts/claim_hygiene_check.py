@@ -47,7 +47,7 @@ PATTERNS = [
     re.compile(r"\b(?:universally safe|universal safety|proven efficacy|empirically superior)\b", re.I),
 ]
 HISTORICAL_CONTEXT = re.compile(
-    r"\b(?:historical record|historical metadata|historically|legacy attestation|attested project metadata|historical certification|historical snapshot)\b",
+    r"\b(?:historical[- ]priority(?:\s+adjudication)?|historical record|historical metadata|historically|legacy attestation|attested project metadata|historical certification|historical snapshot)\b",
     re.I,
 )
 ACTIVE_CONTEXT = re.compile(
