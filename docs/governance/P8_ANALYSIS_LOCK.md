@@ -16,32 +16,29 @@
 
 ## Current verification boundary
 
-The `main` branch is a living documentation/evidence lineage and is not itself the experimental apparatus identity. The current controlled completion candidate is **`a43219b4ed91fff8615f6c655ab3d17ca871fc29`** on branch `completion/2026-09-01-exact-candidate`. Its exact tree is the candidate identity for the current completion verification cycle.
+The `main` branch is a living documentation/evidence lineage and is not itself the experimental apparatus identity. The current successor candidate for the closing cycle is **`48c12c6660df7decb61f9aac4d8560526a8754eb`** on branch `candidate/p35-validated-control-state-2026-09-02` (PR #200). Its exact candidate identity remains PRE-FREEZE / FAIL-CLOSED and is not authorization.
 
-An exact candidate deployment exists for that same source lineage:
+An exact candidate deployment exists for that same source identity:
 
-- Vercel deployment: `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
-- Deployment URL: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
-- Target: preview
-- Deployment state: READY
-- Source branch used for deployment: `deploy/exact-candidate-a43219b`
-- Required final external confirmation: deployment Git SHA must be independently confirmed as `a43219b4ed91fff8615f6c655ab3d17ca871fc29` through Vercel dashboard/API.
+- Vercel deployment: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- Deployment URL: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- State: READY
+- Source branch: `candidate/p35-validated-control-state-2026-09-02`
+- Deployment Git SHA: independently verified as `48c12c6660df7decb61f9aac4d8560526a8754eb`
 
-The deployment is SSO-protected from this environment. Redirects to Vercel SSO on root and API paths are therefore **not** evidence of runtime failure. Until authenticated P2/P6a execution succeeds, this deployment is a deployment identity, not runtime verification evidence.
+This deployment is a candidate identity and deployment-health record. It does not substitute for authenticated P2/P6a runtime evidence.
 
-The previous experimental verification boundary `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` is historical and must not be used as the current P8 candidate boundary.
+The previous experimental/completion candidates remain historical and must not be used as the current P8 boundary merely because the executable structure or protocol is shared.
 
 | Binding | Value | State |
 |---|---|---|
-| Controlled completion candidate | `a43219b4ed91fff8615f6c655ab3d17ca871fc29` | CURRENT / PRE-FREEZE |
-| Completion candidate branch | `completion/2026-09-01-exact-candidate` | CURRENT |
-| Exact deployment branch | `deploy/exact-candidate-a43219b` | CURRENT DEPLOYMENT SOURCE |
-| Exact Vercel deployment | `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17` | READY / PREVIEW |
-| Exact deployment URL | `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app` | PENDING AUTHENTICATED RUNTIME VERIFICATION |
-| Deployment Git SHA confirmation | `a43219b4ed91fff8615f6c655ab3d17ca871fc29` | EXTERNAL CONFIRMATION REQUIRED |
-| Historical experimental boundary | `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a` | HISTORICAL / SUPERSEDED |
+| Current successor candidate | `48c12c6660df7decb61f9aac4d8560526a8754eb` | CURRENT / PRE-FREEZE |
+| Candidate branch | `candidate/p35-validated-control-state-2026-09-02` | CURRENT |
+| Exact Vercel deployment | `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K` | READY |
+| Exact deployment URL | `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app` | CURRENT DEPLOYMENT IDENTITY |
+| Deployment Git SHA confirmation | `48c12c6660df7decb61f9aac4d8560526a8754eb` | VERIFIED |
 | Analysis implementation | `experiments/pdmal_pilot/analysis.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
-| Analysis configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | SELECTED / PRE-FREEZE |
+| Analysis configuration SHA | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | SELECTED / PRE-FREEZE; RECONFIRM AT CLOSURE |
 | Artifact schema | `experiments/pdmal_pilot/pilot_artifact_schema.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
 | Runner | `experiments/pdmal_pilot/run_pilot.py` | CURRENT-TREE / RE-BIND AT P8 CLOSURE |
 | Governance CI | `.github/workflows/governance-ci.yml` | CURRENT; exact-SHA binding required |
@@ -50,15 +47,13 @@ The previous experimental verification boundary `ac8ea267a9f0d995626cf9c3eaf9e6b
 | CI | two-sided 95%, `alpha=0.05` | SELECTED |
 | Directional support | estimate > 0 and CI lower bound > 0 | SELECTED |
 
-## TGL/P-35 prerequisite — verified remediation boundary
+## TGL/P-35 prerequisite
 
-The exact completion candidate `a43219b…` was found to have a candidate-scoped P-35 integration defect: the experimental `DGAF_TGLAdapter` did not provide a premise checker, and the pilot task path likewise did not supply one. The generic P-35 implementation treats a missing checker as pass-through, so the candidate did not demonstrate the required premise-hook injection.
+The immutable P-35 validation boundary is PR #199 at exact SHA `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`. PR #200 is the successor candidate derived from that boundary. The current successor passed its own exact-head PR validation wave, including Governance CI and the pre-freeze runner validation. Those results establish engineering/pre-freeze control integrity, not P8 authorization.
 
-PR #188 remediated that defect. The current remediation head is `d83ea74c0f7ef7dd3e39a25345d6b201770a370c`. It requires an explicit callable premise checker through the DGAF adapter and pilot runner, propagates the checker into `TGLHooks`/`ConsensusTask`, handles unexpected checker exceptions fail-closed, and preserves a sealed P-35/KILL audit result on premise violation.
+The active implementation requires an explicit callable `PDMAL_PREMISE_CHECKER` in `module:attribute` form for DGAF pilot execution. Missing, malformed, unloadable, or non-callable configuration is fail-closed. The checker is propagated through the DGAF pilot path and unexpected premise-checker failures remain governed by the existing fail-closed P-35 path.
 
-The exact-current-head pre-freeze runner validation run `33590352168` completed successfully for `d83ea74…`. Its contract suite included `test_run_pilot_p35.py`, and the workflow also verified contract-mode execution, pilot-mode failure without freeze/authorization, artifact schema/integrity checks, and PRE-FREEZE manifest emission. Artifact `9831586822` is the uploaded manifest; its workflow artifact digest is `sha256:dedacba56b8430fd995c4230e52fe208d2380f5e5015fa3816073cda3e9d774e`.
-
-This is **pre-freeze engineering verification of the remediation head**, not verification of an experimental candidate. Because `d83ea74…` materially changes the apparatus relative to `a43219b…`, the prior completion-candidate PDMAL/P9 evidence does not transfer. A new exact experimental candidate must be selected after remediation review, followed by fresh candidate-bound P3–P9 and affected P2/P6a verification.
+The successful PR #200 validation wave included the pre-freeze runner, pre-authorization security, Governance CI, control-state consistency/head binding, truth-layer validation/tests, epistemic evidence validation, DGAF regression, PDMAL harness validation, and instrumentation dry run. No pilot mode, freeze, authorization, or empirical collection was enabled.
 
 ## TGL prerequisite — broader contract
 
@@ -73,7 +68,7 @@ The required contract surface includes:
 - audit seal coverage of the exact returned audit object;
 - regression coverage for these semantics.
 
-The remediation now has exact-head pre-freeze evidence for these P-35 integration paths, but that evidence does not itself close P8, alter P7, create a freeze, or authorize the pilot.
+The exact successor has passed the available engineering/pre-freeze validation controls, but those controls do not themselves close P8.
 
 ## Protocol/candidate separation rule
 
@@ -81,32 +76,36 @@ The executable apparatus and living canonical protocol remain separate provenanc
 
 ## Runtime deployment verification boundary
 
-P2 and P6a must target the same exact candidate deployment:
+P2 and P6a must target the same exact successor deployment:
 
-- `candidate_sha`: `a43219b4ed91fff8615f6c655ab3d17ca871fc29`
-- `deployment_id`: `dpl_6f3AAA6MMqtHQP26qZ9efHmn4r17`
-- `base_url`: `https://dynamicgovernanceagenticformation-lhp3s3sv5-ndrorchestration.vercel.app`
-- deployment source branch: `deploy/exact-candidate-a43219b`
-- P6a `expected_allowed_origin`: the exact origin served by the deployment above.
+- `candidate_sha`: `48c12c6660df7decb61f9aac4d8560526a8754eb`
+- `deployment_id`: `dpl_CW4SqTjvGui2dGmfYfjxWBm6rp5K`
+- `base_url`: `https://dynamicgovernanceagenticformation-7avhglp61-ndrorchestration.vercel.app`
+- P6a `expected_allowed_origin`: `https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app`, subject to any explicit `DGAF_ALLOWED_ORIGINS` runtime override.
 
-The deployment must first be independently confirmed as serving the exact candidate SHA. P2/P6a workflow evidence is candidate-scoped only when the workflow records the exact deployment identity and candidate binding.
+Candidate/deployment identity must remain exact in all runtime artifacts. The deployment's READY state is necessary infrastructure evidence, not runtime predicate closure.
+
+## Current exact-candidate engineering evidence
+
+The exact successor instrumentation dry run is run `33701204328`, artifact `9873580197`, on candidate `48c12c…`. The artifact ZIP digest is `sha256:8df8c67d694f35c35824ac5511593e72ef9c2f182e835e5dbf5ee2aacb7e6dfa`. The pre-freeze runner produced artifact `9873664736` with digest `sha256:8ebbeeb635fb63d682ba4c95287cf7c6fe0eb9f669f7e1e68e8925bf5bc8ee54` and recorded `empirical_data_collection=false`, `status=pre-freeze`, and exact commit `48c12c66…`.
+
+These artifacts support current engineering/pre-freeze controls and do not constitute P8 closure or experimental evidence.
 
 ## Closure blockers
 
 P8 remains **OPEN / FAIL-CLOSED** pending:
 
-1. Selection of a new exact experimental candidate after the verified P-35 remediation.
-2. Re-binding analysis/schema/runner/protocol identities to that resulting candidate verification boundary.
-3. Fresh candidate-bound PDMAL/P3–P6 and independent P9 verification.
-4. P2 authenticated five-case runtime verification against the exact candidate deployment.
-5. P6a authenticated four-case CORS verification against the same deployment identity.
-6. Environment/topology reproducibility evidence.
-7. Durable evidence retention with direct retrieval and integrity verification.
-8. Current-boundary evidence review for E2b/M6, retaining their exact execution boundaries.
-9. P7 exact freeze binding and formal closure of the adopted scientific decision record.
-10. Independent P9 verification covering the final pre-freeze evidence chain.
+1. Candidate-bound authenticated P2 five-case runtime verification.
+2. Candidate-bound authenticated P6a four-case CORS verification.
+3. Final P3 artifact-contract evidence for the closing candidate.
+4. Operational P4 blinding/custody evidence, including independent bijection verification and no premature unblinding.
+5. Final P5 environment/topology/RNG reproducibility binding.
+6. Durable P6 archive/retrieval/hash proof.
+7. Exact P7 apparatus/candidate/protocol/analysis authority binding.
+8. Fresh independent P9 verification of the same closing candidate and evidence chain.
+9. Final freeze creation and independent verification.
 
-A successful CI run or deployment readiness is necessary evidence, not by itself P8 closure.
+A successful CI run, dry run, deployment readiness, or historical verification artifact is necessary supporting evidence but does not by itself close P8.
 
 **Pilot authorization:** NOT GRANTED.  
 **Empirical N:** 0.  
