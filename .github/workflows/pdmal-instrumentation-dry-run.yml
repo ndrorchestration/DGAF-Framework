@@ -24,12 +24,15 @@ jobs:
       PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install experiment dependencies
+      - name: Install experiment dependencies from hash-pinned requirements
         working-directory: experiments/pdmal_topology
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install --require-hashes -r requirements.txt
       - name: Fail fast if blinding secret is unavailable
         run: |
           python - <<'PY'
@@ -79,11 +82,68 @@ jobs:
           assert expected == actual, 'SHA-256 sidecar mismatch'
           print(f'checksum: PASS {actual}')
           PY
+      - name: Emit exact-candidate evidence registry
+        env:
+          CANDIDATE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          candidate = os.environ["CANDIDATE_SHA"]
+          registry = {
+              "schema_version": 1,
+              "candidate_sha": candidate,
+              "controls": {
+                  "freeze_authorized": False,
+                  "pilot_authorized": False,
+                  "empirical_execution_requested": False,
+              },
+              "source_workflow": "PDMAL Instrumentation Dry Run",
+              "registry_class": "STRUCTURAL_CANDIDATE_EVIDENCE",
+              "predicates": [
+                  {"id": "P2", "name": "runtime verification", "required": True, "status": "OPEN", "candidate_sha": None,
+                   "notes": "Requires separate exact-candidate authenticated runtime verification."},
+                  {"id": "P3", "name": "artifact contract", "required": True, "status": "OPEN", "candidate_sha": None,
+                   "notes": "Dry-run artifact checks are structural evidence; current closure requires the governing acceptance predicate."},
+                  {"id": "P4", "name": "blinding/security", "required": True, "status": "OPEN", "candidate_sha": None,
+                   "notes": "Dry run confirms secret presence and blinded output generation; operational custody closure remains required."},
+                  {"id": "P5", "name": "provenance/reproducibility", "required": True, "status": "OPEN", "candidate_sha": None,
+                   "notes": "Deterministic smoke and structural tests pass; full current-candidate reproducibility closure remains required."},
+                  {"id": "P6", "name": "durable evidence custody", "required": True, "status": "OPEN", "candidate_sha": None,
+                   "notes": "GitHub Actions artifact retention is not durable research custody; archive/retrieval/hash proof remains required."},
+                  {"id": "P7", "name": "scientific decision", "required": True, "status": "OPEN", "candidate_sha": None,
+                   "notes": "No scientific superiority or efficacy conclusion is produced by this structural dry run."},
+                  {"id": "P8", "name": "analysis lock", "required": True, "status": "FAIL_CLOSED", "candidate_sha": None,
+                   "notes": "Analysis lock remains fail-closed until its prerequisites are satisfied."},
+                  {"id": "P9", "name": "independent verification", "required": True, "status": "NOT_EXECUTED", "candidate_sha": None,
+                   "notes": "Independent verification is a separate exact-candidate workflow."},
+              ],
+              "structural_checks": {
+                  "deterministic_smoke": "PASS",
+                  "artifact_schema": "PASS",
+                  "checksum_sidecar": "PASS",
+                  "masked_dry_run_csv": "PASS",
+                  "dependency_install": "HASH_LOCKED",
+              },
+          }
+          Path("/tmp/dgaf-evidence-registry.json").write_text(
+              json.dumps(registry, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          print("emitted exact-candidate registry for", candidate)
+          PY
       - name: Upload dry-run artifacts
         uses: actions/upload-artifact@v4
         with:
           name: pdmal-instrumentation-dry-run
           path: /tmp/pdmal-artifact/raw_pilot_*.csv*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload exact-candidate evidence registry
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-evidence-registry
+          path: /tmp/dgaf-evidence-registry.json
           if-no-files-found: error
           retention-days: 14
       - name: One-seed structural dry run
