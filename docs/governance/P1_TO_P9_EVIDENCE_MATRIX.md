@@ -1,9 +1,9 @@
 # P1–P9 Deliberative Predicate Evidence Matrix
 
 **Status:** CURRENT / PRE-FREEZE / FAIL-CLOSED  
-**Last reconciled:** 2026-09-03  
+**Last reconciled:** 2026-09-04  
 **Current documentation/evidence lineage:** `main`  
-**Current control-plane head:** `637023b28492783f50d77550d4ed8e0867cbcc3d`  
+**Current control-plane head:** `1f0f5997877902054f2b35b4ecc61169df5f95c2`  
 **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
 **Empirical N:** `0`  
 **Pilot authorization:** `NOT GRANTED`  
@@ -14,7 +14,7 @@ This matrix is the current planning/control surface. It does not itself constitu
 ## Identity roles
 
 - `2a54a67d…` — corrected apparatus provenance anchor.
-- `637023b2…` — current control-plane mainline head after documentation reconciliation.
+- `1f0f5997…` — current documentation/control-plane mainline head at last reconciliation.
 - `7c1cc4bb…` — runtime candidate bound to the closed P2/P6a evidence below; retained as the verified executable evidence identity.
 - `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` — deployment bound to that P2/P6a evidence.
 - `48c12c66…` / `dpl_CW4…` — superseded candidate/deployment; historical and non-transferable.
@@ -37,7 +37,7 @@ This matrix is the current planning/control surface. It does not itself constitu
 
 ## Current runtime evidence
 
-P2 and P6a are closed against executable candidate `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` and deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`. The later `637023…` change is control-plane/documentation reconciliation and does not reopen those closed runtime predicates.
+P2 and P6a are closed against executable candidate `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` and deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`. Later documentation/control-plane changes do not reopen those closed runtime predicates.
 
 ### P2 — Run `33730195621`
 
@@ -56,6 +56,10 @@ Run `33572123857` provided a scoped P9 pass for `a43219b4…`; it is likewise hi
 ## Evaluator integrity
 
 Completion Controller run `33729094860` evaluated documentation PR #210 SHA `25b6379…` rather than current main. Its result is therefore candidate-scoped to that triggering workflow and does not establish current-main closure.
+
+## Matrix-control disposition
+
+PRs #220, #230, and #231 were closed without merge after review established that their additional matrix-equality assertion was logically implied by the existing canonical-coordinate membership, exact per-condition cardinality, and duplicate-cell rejection constraints. No active matrix-hardening blocker remains.
 
 ## Anti-transfer / fail-closed rule
 
