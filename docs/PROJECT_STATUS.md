@@ -1,8 +1,8 @@
 # DGAF/PDMAL Project Status
 
-**Status date:** 2026-09-03  
+**Status date:** 2026-09-04  
 **Repository:** `ndrorchestration/DGAF-Framework`  
-**Current control-plane head:** `637023b28492783f50d77550d4ed8e0867cbcc3d`  
+**Current control-plane head:** `b2fd2650578f5d428577f7ef8d63099ba92337d9`  
 **Verified executable runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
 **Verified runtime deployment:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`  
 **Corrected apparatus provenance anchor:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
@@ -11,14 +11,14 @@
 
 ## Executive state
 
-The repository is in post-P6a-remediation, pre-freeze closure. The control-plane head is `637023…`; the verified executable runtime identity remains `7c1cc4…` with deployment `dpl_8Ms…`. The later control-plane documentation change does not alter the runtime surfaces covered by P2/P6a, so those predicates remain closed.
+The repository is in post-control-plane-remediation, pre-freeze closure. The current control-plane head is `b2fd265…`; the verified executable runtime identity remains `7c1cc4…` with deployment `dpl_8Ms…`. The manifest/control-plane documentation changes do not alter the runtime surfaces covered by P2/P6a, so those predicates remain closed.
 
 ## Gate board
 
 | Gate / control | Status | Evidence / state |
 |---|---|---|
 | Corrected apparatus provenance | CANONICAL ANCHOR | `2a54a67d…` |
-| Control-plane main | CURRENT | `637023…` |
+| Control-plane main | CURRENT | `b2fd265…` |
 | Verified executable candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Runtime deployment | VERIFIED READY | `dpl_8Ms…` |
 | P2 | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
@@ -43,6 +43,8 @@ The PDMAL instrumentation dry run on PR #213 also passed its deterministic, stru
 ## Evidence boundary
 
 Evidence remains candidate- and workflow-scoped. Closed P2/P6a evidence is not reopened by documentation-only control-plane changes. Current P3–P6 closure still requires the operational and durable-custody predicates defined by the governance protocol.
+
+The #220/#230/#231 matrix-hardening sequence was closed without merge after invariant analysis showed that the proposed extra matrix-equality assertion was already implied by canonical coordinate membership, per-condition cardinality, and duplicate-cell rejection. No active matrix blocker remains.
 
 ## Required closure sequence
 
