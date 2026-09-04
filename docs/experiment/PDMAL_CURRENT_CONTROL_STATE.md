@@ -3,21 +3,20 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-04
+current_main_tip: 8118f7537dd95e8f5d0b7de4e978fee9a41457c9
 main_tip_at_reconciliation: 35436f1c95c11e49d8af7603bf914128cf2b4aee
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
 runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
-candidate_deployment_identity: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
-candidate_deployment_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
-candidate_deployment_state: READY
+runtime_deployment_reference: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 empirical_n: 0
 ---
 
 # PDMAL Current Control State
 
-This is the current pre-authorization control record. The consolidated control-state anchor is `89be386b…`. The `35436f1c…` value records the `main` tip at the reconciliation boundary; later documentation-only commits remain lineage unless executable semantics change. The verified runtime candidate and its closed P2/P6a evidence remain explicitly identified.
+This is the current pre-authorization control record. The consolidated control-state anchor is `89be386b…`. `35436f1c…` records the `main` tip at the earlier reconciliation boundary; the current `main` tip is `8118f753…` and consists of subsequent documentation/control-plane descendants. Those descendants do not alter executable runtime semantics unless executable surfaces materially change.
 
 ## Current gate state
 
@@ -25,11 +24,12 @@ This is the current pre-authorization control record. The consolidated control-s
 |---|---|---|
 | P-35 | VALIDATED | Immutable boundary `643dc77a…` |
 | Consolidated control-state anchor | CURRENT | `89be386b…` |
-| Main tip at reconciliation | LINEAGE ANCHOR | `35436f1c…` |
-| Executable runtime candidate | VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
-| Candidate deployment | ESTABLISHED / READY | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` |
-| P2 runtime | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
-| P6a CORS | CLOSED / VERIFIED | Run `33728695806`; artifact `9882965299` |
+| Main tip | CURRENT DOCUMENTATION/CONTROL-PLANE TIP | `8118f753…` |
+| Main tip at prior reconciliation | LINEAGE ANCHOR | `35436f1c…` |
+| Runtime candidate lineage | PRESENT | `7c1cc4…` |
+| Deployment reference | HISTORICAL / CURRENT RETRIEVAL UNCONFIRMED | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` |
+| P2 runtime | HISTORICAL RECORD / CURRENT RETRIEVAL UNCONFIRMED | Run `33730195621`; artifact `9883521704` |
+| P6a CORS | HISTORICAL RECORD / CURRENT RETRIEVAL UNCONFIRMED | Run `33728695806`; artifact `9882965299` |
 | P3 | OPEN | Current-cycle artifact contract |
 | P4 | OPEN | Operational blinding/custody |
 | P5 | OPEN | Reproducibility/provenance |
@@ -43,7 +43,7 @@ This is the current pre-authorization control record. The consolidated control-s
 
 ## Runtime evidence boundary
 
-P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. Later documentation/control-plane commits do not reopen those runtime predicates.
+The repository preserves P2 and P6a run/artifact identifiers for the exact `7c1cc4…` / `dpl_8Ms…` lineage. The 2026-09-04 verification pass did not independently re-retrieve those Actions records, so they remain historical repository assertions rather than freshly verified current evidence. This does not establish deletion, invalidity, or tampering; it establishes only that fresh retrieval was not achieved through the verification path used.
 
 ## Pre-freeze validation
 
@@ -57,8 +57,12 @@ The PDMAL instrumentation workflow is restricted to experiment-path changes and 
 
 PRs #220, #230, and #231 were closed without merge. Review established that the proposed additional per-condition matrix-equality assertion was logically implied by the existing canonical coordinate membership, exact per-condition cardinality, and duplicate `(condition, topology, failure_count)` rejection. No active matrix-hardening blocker remains.
 
+## Current-candidate evidence packet
+
+`docs/governance/CURRENT_CANDIDATE_EVIDENCE_PACKET_2026-09-04.md` is the controlling packet definition for the remaining current-candidate P3–P9 work. It preserves the historical P2/P6a identifiers while explicitly refusing to promote them to freshly verified evidence without successful retrieval or an independently retained immutable evidence copy.
+
 ## Required closure sequence
 
-`P3 → operational P4/P5/P6 → exact P7 binding → P8 → current-candidate P9 → immutable freeze → explicit authorization → blinded pilot`
+`P1/P3 → operational P4/P5/P6 → exact P7 binding → P8 → current-candidate P9 → immutable freeze → explicit authorization → blinded pilot`
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
