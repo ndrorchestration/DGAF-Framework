@@ -3,6 +3,10 @@
 **Status:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 **Purpose:** Define the exact evidence packet required for the verified executable runtime candidate without promoting historical evidence or generating empirical observations.
 
+## Operating practice
+
+The evidence process follows `docs/governance/EVIDENCE_OPERATING_PRINCIPLES.md`: identity before inference, evidence before status, unknown stays unknown, verification is distinct from efficacy, and independent challenge precedes irreversible transitions. These are operating practices for the existing P1–P9 process, not additional gates.
+
 ## Identity boundary
 
 | Identity | Value | Role |
@@ -182,6 +186,7 @@ The prior completion workflow artifacts from run `33572123862` and the prior P9 
 
 ## Source references
 
+- `docs/governance/EVIDENCE_OPERATING_PRINCIPLES.md`
 - `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md`
 - `docs/experiment/PDMAL_ANALYSIS_CONTROL_PLAN.md`
 - `docs/experiment/NEW_CANDIDATE_MANIFEST.md`
