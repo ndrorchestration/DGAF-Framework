@@ -82,15 +82,15 @@ The Markdown and JSON NDR registries currently represent different releases and 
 
 The current assurance model separates:
 
-**L0 — Identity & legitimacy**
+### L0 — Identity & legitimacy
 
-**L1 — Structural integrity**
+### L1 — Structural integrity
 
-**L2 — Execution integrity**
+### L2 — Execution integrity
 
-**L3 — Scientific integrity**
+### L3 — Scientific integrity
 
-**L4 — Governance integrity**
+### L4 — Governance integrity
 
 A lower-layer pass does not erase a higher-layer failure. Documentation should label the layer a statement belongs to rather than implying that success transfers automatically between layers.
 
