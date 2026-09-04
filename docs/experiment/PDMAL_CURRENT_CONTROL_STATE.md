@@ -3,7 +3,8 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-04
-applies_to_control_plane_head: 42a426fbee5b5a4e131d1fb692cb6b78658c72cd
+current_main_tip: 35436f1c95c11e49d8af7603bf914128cf2b4aee
+consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
 runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
@@ -16,14 +17,15 @@ empirical_n: 0
 
 # PDMAL Current Control State
 
-This is the current pre-authorization control record. The control-plane successor is documentation-only; the verified runtime candidate and its closed P2/P6a evidence remain explicitly identified.
+This is the current pre-authorization control record. The consolidated control-state anchor is `89be386b…`; `main` continues beyond that anchor only through documentation-only reconciliation commits unless executable semantics change. The verified runtime candidate and its closed P2/P6a evidence remain explicitly identified.
 
 ## Current gate state
 
 | Control | State | Evidence / scope |
 |---|---|---|
 | P-35 | VALIDATED | Immutable boundary `643dc77a…` |
-| Control-plane mainline | CURRENT | `42a426fb…` |
+| Consolidated control-state anchor | CURRENT | `89be386b…` |
+| Main tip | CURRENT | `35436f1c…` |
 | Executable runtime candidate | VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Candidate deployment | ESTABLISHED / READY | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` |
 | P2 runtime | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
@@ -41,7 +43,7 @@ This is the current pre-authorization control record. The control-plane successo
 
 ## Runtime evidence boundary
 
-P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. Later documentation/control-plane commits do not reopen those runtime predicates.
+P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. Later documentation/control-plane commits, including the post-anchor `main` tip, do not reopen those runtime predicates.
 
 ## Pre-freeze validation
 
@@ -49,7 +51,7 @@ The PDMAL pre-freeze runner validation completed successfully on the governance 
 
 ## Instrumentation workflow isolation
 
-The PDMAL instrumentation workflow is restricted to experiment-path changes and deliberate `workflow_dispatch`, preventing documentation-only changes from becoming experimental candidates. The earlier successful PR instrumentation run remains trigger-isolation validation and does not advance empirical N.
+The PDMAL instrumentation workflow is restricted to experiment-path changes and deliberate `workflow_dispatch`, preventing documentation-only changes from becoming experimental candidates. Earlier successful instrumentation runs remain trigger-isolation validation and do not advance empirical N.
 
 ## Matrix-control disposition
 
