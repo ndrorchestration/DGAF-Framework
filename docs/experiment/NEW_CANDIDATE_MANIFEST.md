@@ -4,12 +4,11 @@
 manifest_version: 8
 designation_event: CURRENT_RUNTIME_EVIDENCE_BOUND
 state: PRE-FREEZE / FAIL-CLOSED
-current_main_tip: 8118f7537dd95e8f5d0b7de4e978fee9a41457c9
-main_tip_at_reconciliation: 35436f1c95c11e49d8af7603bf914128cf2b4aee
+mainline_commit_at_last_reconciliation: a17aee4a97fc8159361bdc0b30c6039b19752c07
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 apparatus_source_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
-candidate_designation: VERIFIED EXECUTABLE RUNTIME CANDIDATE — HISTORICAL RUNTIME EVIDENCE BOUNDARY
+candidate_designation: RUNTIME CANDIDATE REFERENCED BY HISTORICAL P2/P6a EVIDENCE
 candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
 candidate_designation_rule: exact executable candidate commit referenced by the recorded P2/P6a runtime evidence; later documentation-only control-plane commits do not change that historical identity
@@ -17,8 +16,7 @@ candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 7c1cc4bb78025b215
 control_plane_successor:
   sha: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
   status: CONSOLIDATED DOCUMENTATION / CONTROL-PLANE ANCHOR
-  main_tip_at_reconciliation: 35436f1c95c11e49d8af7603bf914128cf2b4aee
-  current_main_tip: 8118f7537dd95e8f5d0b7de4e978fee9a41457c9
+  last_reconciled_mainline: a17aee4a97fc8159361bdc0b30c6039b19752c07
   note: later documentation-only descendants remain control-plane lineage and do not alter the runtime surfaces covered by the recorded P2/P6a evidence
 provenance_correction:
   pr: 174
@@ -65,8 +63,7 @@ freeze_status: NOT_CREATED
 - `586c00d6…` — exact tree of that runtime candidate.
 - `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` — deployment referenced by those historical runtime records; current retrieval is unconfirmed.
 - `89be386b…` — consolidated documentation/control-state anchor.
-- `35436f1c…` — `main` tip at the earlier reconciliation boundary.
-- `8118f753…` — current `main` tip; subsequent documentation/control-plane lineage.
+- `a17aee4a…` — latest mainline reconciliation commit at this record's update; documentation/control-plane lineage.
 
 ## Binding rule
 
