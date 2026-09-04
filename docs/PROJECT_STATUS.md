@@ -1,7 +1,7 @@
 # DGAF/PDMAL Project Status
 
 **Status date:** 2026-09-04  
-**Current `main` tip:** `829504669f9d7c2ea031618536d693edf1134d77`  
+**Last reconciled main tip:** `49a89d0da09a767bfea9ecc602905862ab17991f`  
 **Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
 **Verified executable runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
 **Verified runtime deployment:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`  
@@ -19,7 +19,7 @@ The repository is in post-control-plane-remediation, pre-freeze closure. The con
 |---|---|---|
 | Corrected apparatus provenance | CANONICAL ANCHOR | `2a54a67d…` |
 | Control-plane consolidated anchor | CURRENT | `89be386b…` |
-| Main tip | CURRENT | `82950466…` |
+| Last reconciled main tip | CURRENT AT RECONCILIATION | `49a89d0d…` |
 | Verified executable candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Runtime deployment | VERIFIED READY | `dpl_8Ms…` |
 | P2 | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
@@ -51,11 +51,9 @@ The strongest historical P3–P6 completion artifacts and P9 pass remain scoped 
 
 Evidence remains candidate- and workflow-scoped. Closed P2/P6a evidence is not reopened by documentation-only control-plane changes. Current P3–P6 closure still requires the operational and durable-custody predicates defined by the governance protocol.
 
-The #220/#230/#231 matrix-hardening sequence was closed without merge after invariant analysis showed that the proposed extra matrix-equality assertion was already implied by canonical coordinate membership, per-condition cardinality, and duplicate-cell rejection. No active matrix blocker remains.
-
 ## Current documentation hygiene state
 
-The 2026-09-04 reconciliation pass distinguishes the consolidated control-state anchor from the live `main` tip. Later documentation-only descendants are not executable candidates unless executable semantics materially change and a new candidate is independently established.
+The 2026-09-04 reconciliation pass distinguishes the consolidated control-state anchor from the mainline reconciliation tip. Later documentation-only descendants are not executable candidates unless executable semantics materially change and a new candidate is independently established.
 
 ## Required closure sequence
 
