@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-04
-current_main_tip: 35436f1c95c11e49d8af7603bf914128cf2b4aee
+main_tip_at_reconciliation: 35436f1c95c11e49d8af7603bf914128cf2b4aee
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
@@ -17,7 +17,7 @@ empirical_n: 0
 
 # PDMAL Current Control State
 
-This is the current pre-authorization control record. The consolidated control-state anchor is `89be386b…`; `main` continues beyond that anchor only through documentation-only reconciliation commits unless executable semantics change. The verified runtime candidate and its closed P2/P6a evidence remain explicitly identified.
+This is the current pre-authorization control record. The consolidated control-state anchor is `89be386b…`. The `35436f1c…` value records the `main` tip at the reconciliation boundary; later documentation-only commits remain lineage unless executable semantics change. The verified runtime candidate and its closed P2/P6a evidence remain explicitly identified.
 
 ## Current gate state
 
@@ -25,7 +25,7 @@ This is the current pre-authorization control record. The consolidated control-s
 |---|---|---|
 | P-35 | VALIDATED | Immutable boundary `643dc77a…` |
 | Consolidated control-state anchor | CURRENT | `89be386b…` |
-| Main tip | CURRENT | `35436f1c…` |
+| Main tip at reconciliation | LINEAGE ANCHOR | `35436f1c…` |
 | Executable runtime candidate | VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Candidate deployment | ESTABLISHED / READY | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` |
 | P2 runtime | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
@@ -43,7 +43,7 @@ This is the current pre-authorization control record. The consolidated control-s
 
 ## Runtime evidence boundary
 
-P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. Later documentation/control-plane commits, including the post-anchor `main` tip, do not reopen those runtime predicates.
+P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. Later documentation/control-plane commits do not reopen those runtime predicates.
 
 ## Pre-freeze validation
 
