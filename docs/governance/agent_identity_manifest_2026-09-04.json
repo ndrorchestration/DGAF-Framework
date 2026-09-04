@@ -1,0 +1,117 @@
+{
+  "manifest_type": "DGAF agent identity reconciliation",
+  "manifest_version": "0.1-audit",
+  "status": "NON-AUTHORITATIVE_CONFLICT_REGISTER",
+  "source_commit": "4ac8937f5b8f3358655a06ee7f9d8cd83b87106c",
+  "counts": {
+    "canonical_roster_seats_claimed": 20,
+    "physical_agent_directories_observed": 25,
+    "conceptual_or_historical_entries_observed": 26
+  },
+  "rules": {
+    "do_not_resolve_conflicts_silently": true,
+    "directory_presence_implies_canonical_seat": false,
+    "historical_artifacts_must_be_preserved": true
+  },
+  "observed_identities": [
+    {
+      "name": "Amethyst",
+      "ids_observed": ["A-00"],
+      "status": "canonical_candidate",
+      "sources": ["docs/agents/AGENT_ROSTER.md", "docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Reson",
+      "ids_observed": ["A-09", "A-10"],
+      "status": "conflicted",
+      "sources": ["docs/agents/AGENT_ROSTER.md", "docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Zenith",
+      "ids_observed": ["A-09", "A-09-Z"],
+      "status": "conflicted",
+      "sources": ["docs/agents/AGENT_ROSTER.md", "docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Lyra",
+      "ids_observed": ["A-10", "A-11"],
+      "status": "conflicted",
+      "sources": ["docs/agents/AGENT_ROSTER.md", "docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Echolette",
+      "ids_observed": ["A-11", "A-12"],
+      "status": "conflicted",
+      "sources": ["docs/agents/AGENT_ROSTER.md", "docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Sentinel",
+      "ids_observed": ["A-12"],
+      "status": "base_variant_lineage",
+      "sources": ["docs/agents/AGENT_ROSTER.md", "docs/AGENT_ARCHITECTURE_ASSESSMENT.md"]
+    },
+    {
+      "name": "Sentinel-Phi",
+      "ids_observed": ["A-12-φ"],
+      "status": "variant_conflict_pending",
+      "variant_of": "Sentinel",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md", "docs/agents/sentinel/SENTINEL_PHI_QA_RUBRIC.md"]
+    },
+    {
+      "name": "Ionia",
+      "ids_observed": ["A-13"],
+      "status": "state_vs_agent_conflict",
+      "semantic_status_observed": ["agent", "0Hz system STATE"],
+      "sources": ["docs/agents/AGENT_ROSTER.md", "docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md", "docs/agents/ionia/QA_RUBRIC.md"]
+    },
+    {
+      "name": "Oracle",
+      "ids_observed": ["A-20"],
+      "status": "conceptual_seed_not_roster_canonical",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md", "docs/agents/oracle/ORACLE_QA_RUBRIC.md"]
+    },
+    {
+      "name": "Vanguard",
+      "ids_observed": ["A-21"],
+      "status": "conceptual_seed_not_roster_canonical",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md", "docs/agents/vanguard/VANGUARD_QA_RUBRIC.md"]
+    },
+    {
+      "name": "Navigator",
+      "ids_observed": ["A-22"],
+      "status": "conceptual_seed_not_roster_canonical",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Momentum",
+      "ids_observed": ["A-23"],
+      "status": "conceptual_seed_not_roster_canonical",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Paragon",
+      "ids_observed": ["A-24"],
+      "status": "conceptual_seed_not_roster_canonical",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Synergy",
+      "ids_observed": ["A-25"],
+      "status": "conceptual_seed_not_roster_canonical",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Equilibrium",
+      "ids_observed": ["A-26"],
+      "status": "conceptual_seed_not_roster_canonical",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md"]
+    },
+    {
+      "name": "Sentience",
+      "ids_observed": ["A-27"],
+      "status": "historical_seed_absorbed",
+      "lineage": "sentinel/sentience/",
+      "sources": ["docs/agents/FORMATION_TOPOLOGY.md", "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md", "docs/AGENT_ARCHITECTURE_ASSESSMENT.md"]
+    }
+  ]
+}
