@@ -57,6 +57,7 @@ jobs:
         ${{ inputs.dgaf_url ||
         vars.DGAF_URL ||
         'https://dgaf-framework.vercel.app' }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
@@ -69,10 +70,17 @@ jobs:
       - name: Install httpx
         run: pip install httpx -q
 
+      - name: Require runtime bypass credential
+        run: |
+          set -euo pipefail
+          test -n "$VERCEL_AUTOMATION_BYPASS_SECRET"
+
       - name: Health preflight
         run: |
-          curl -sf "$DGAF_URL/api/health" | python3 -m json.tool
-          PSIOK=$(curl -sf "$DGAF_URL/api/health" | \
+          set -euo pipefail
+          health=$(curl -fsS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/health")
+          echo "$health" | python3 -m json.tool
+          PSIOK=$(printf '%s' "$health" | \
             python3 -c \
             "import sys,json; d=json.load(sys.stdin); print(d.get('psi_cubic',''))")
           [ "$PSIOK" = "True" ] \
@@ -80,6 +88,8 @@ jobs:
             || { echo 'psi_cubic FAIL'; exit 1; }
 
       - name: 30-turn live regression
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: python3 scripts/live_regression_v17.py
 
       - name: Upload regression results
@@ -91,8 +101,10 @@ jobs:
 
       - name: Audit log check
         run: |
-          curl -sf "$DGAF_URL/api/audit" | python3 -m json.tool
-          TC=$(curl -sf "$DGAF_URL/api/audit" | \
+          set -euo pipefail
+          audit=$(curl -fsS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/audit")
+          echo "$audit" | python3 -m json.tool
+          TC=$(printf '%s' "$audit" | \
             python3 -c \
             "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
           [ "$TC" -ge 30 ] \
