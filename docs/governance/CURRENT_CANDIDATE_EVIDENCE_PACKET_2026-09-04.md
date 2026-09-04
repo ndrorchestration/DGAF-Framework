@@ -8,32 +8,36 @@
 | Identity | Value | Role |
 |---|---|---|
 | Corrected apparatus source | `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | Canonical provenance anchor |
-| Consolidated control-state anchor | `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` | Current control-state lineage anchor |
-| Current `main` tip at record creation | `6504fd2e5cfa5ffafe301078da7eee4c6130ff3f` | Documentation/control-plane tip |
-| Verified executable runtime candidate | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Exact candidate used by closed P2/P6a evidence |
-| Candidate tree | `586c00d6dedb589e52108279f9759be3c4f927e1` | Exact candidate tree |
-| Verified deployment | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Deployment bound to candidate |
-| Deployment source SHA | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Exact deployment/source match |
+| Consolidated control-state anchor | `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` | Consolidated control-state lineage anchor |
+| Main tip at packet creation | `363d203c839746e89a7a6d3f6ba608730d42deea` | Current repository `main` tip |
+| Verified executable runtime candidate | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Candidate identity referenced by historical P2/P6a records |
+| Candidate tree | `586c00d6dedb589e52108279f9759be3c4f927e1` | Exact candidate tree referenced by prior records |
+| Historical deployment reference | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Prior deployment identity referenced by repository records |
+| Deployment source SHA | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Prior recorded source match |
 
-## Closed runtime evidence already retained
+## Historical runtime evidence — provenance retained, live retrieval not independently confirmed
+
+Repository records previously cited the following P2/P6a evidence for the exact candidate/deployment pair. In the current verification pass, the Actions run/artifact lookup endpoints did **not** return those records. Therefore this packet preserves the identifiers as **historical repository assertions**, not as newly re-verified live artifacts.
 
 ### P2 — Execution Contract / Runtime
 
-- Workflow run: `33730195621`
-- Artifact: `9883521704`
-- Artifact digest: `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`
+- Historically recorded workflow run: `33730195621`
+- Historically recorded artifact: `9883521704`
+- Historically recorded artifact digest: `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`
 - Candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
 - Deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
-- State: **CLOSED / VERIFIED**
+- Repository-record state: **HISTORICAL / NOT CURRENTLY RETRIEVABLE VIA THIS VERIFICATION PATH**
 
 ### P6a — Runtime / CORS
 
-- Workflow run: `33728695806`
-- Artifact: `9882965299`
-- Artifact digest: `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`
+- Historically recorded workflow run: `33728695806`
+- Historically recorded artifact: `9882965299`
+- Historically recorded artifact digest: `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`
 - Candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
 - Deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
-- State: **CLOSED / VERIFIED**
+- Repository-record state: **HISTORICAL / NOT CURRENTLY RETRIEVABLE VIA THIS VERIFICATION PATH**
+
+No current claim in this packet depends on independently re-verifying those run/artifact endpoints. Any future promotion of P2/P6a to currently verified evidence must include a successful retrieval path or a separately retained immutable evidence copy with independent provenance.
 
 ## Required current-candidate packet
 
