@@ -136,6 +136,7 @@ def validate_artifact(document: Mapping[str, Any], *, expected_seed: int | None 
         raise AssertionError(f"expected {EXPECTED_RECORD_COUNT} records, got {len(records) if isinstance(records, list) else 'non-list'}")
 
     seen_matrix: set[tuple[str, str, int]] = set()
+    condition_cells: dict[str, set[tuple[str, int]]] = {}
     seen_trial_ids: set[int] = set()
     condition_counts: dict[str, int] = {}
     expected_experiment_id: str | None = None
@@ -158,11 +159,13 @@ def validate_artifact(document: Mapping[str, Any], *, expected_seed: int | None 
         if key in seen_matrix:
             raise AssertionError(f"duplicate pilot matrix cell: {key!r}")
         seen_matrix.add(key)
+        condition = record["blinded_condition_id"]
+        condition_cells.setdefault(condition, set()).add((record["topology"], record["failure_count"]))
         trial_id = record["trial_id"]
         if trial_id in seen_trial_ids:
             raise AssertionError(f"duplicate trial_id: {trial_id}")
         seen_trial_ids.add(trial_id)
-        condition_counts[record["blinded_condition_id"]] = condition_counts.get(record["blinded_condition_id"], 0) + 1
+        condition_counts[condition] = condition_counts.get(condition, 0) + 1
 
     if seen_trial_ids != set(range(EXPECTED_RECORD_COUNT)):
         raise AssertionError(f"trial_id values must be exactly 0..{EXPECTED_RECORD_COUNT - 1}")
@@ -170,6 +173,10 @@ def validate_artifact(document: Mapping[str, Any], *, expected_seed: int | None 
         raise AssertionError("artifact must contain exactly four distinct blinded condition identifiers")
     if set(condition_counts.values()) != {EXPECTED_CELLS_PER_CONDITION}:
         raise AssertionError(f"each blinded condition must contain exactly {EXPECTED_CELLS_PER_CONDITION} matrix cells")
+
+    expected_matrix = {(topology, failure_count) for topology in CANONICAL_TOPOLOGIES for failure_count in CANONICAL_FAILURE_COUNTS}
+    if any(cells != expected_matrix for cells in condition_cells.values()):
+        raise AssertionError("each blinded condition must contain the complete canonical pilot matrix")
 
 
 def verify_sidecar(raw: bytes, sidecar: str, filename: str) -> None:
