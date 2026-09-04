@@ -94,9 +94,10 @@ def test_condition_distribution_must_be_balanced() -> None:
 
 def test_each_condition_must_have_identical_matrix_cells() -> None:
     document = _document()
-    first = document["records"][0]
-    second = document["records"][45]
+    first = document["records"][0]       # blind_a / ring / 0
+    second = document["records"][46]     # blind_b / ring / 1
     first["topology"], second["topology"] = second["topology"], first["topology"]
+    first["failure_count"], second["failure_count"] = second["failure_count"], first["failure_count"]
     first["artifact_sha256"] = hashlib.sha256(
         canonical_json_bytes({k: v for k, v in first.items() if k != "artifact_sha256"})
     ).hexdigest()
