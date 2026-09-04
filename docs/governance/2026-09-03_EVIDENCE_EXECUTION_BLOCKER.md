@@ -4,16 +4,20 @@
 
 Record the control-plane boundary after mainline reconciliation and prevent a tooling limitation from being mistaken for scientific evidence.
 
-## Current identity
+## Temporal scope
 
-- Control-plane mainline head: `637023b28492783f50d77550d4ed8e0867cbcc3d`
+This is a dated control record from 2026-09-03. Its identity fields describe the control-plane state at that time and are historical rather than a competing current-state source. The current consolidated control-state anchor is maintained in `docs/CURRENT_STATE.md`.
+
+## Historical identity at record time
+
+- Control-plane mainline head at record time: `637023b28492783f50d77550d4ed8e0867cbcc3d`
 - Verified executable runtime candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
 - Verified runtime deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
 - Corrected apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
 
-The control-plane successor is documentation/control-plane work and does not reopen the closed P2/P6a runtime predicates.
+The control-plane successor was documentation/control-plane work and did not reopen the closed P2/P6a runtime predicates. Later mainline documentation descendants supersede the record-time control-plane hash without changing its historical meaning.
 
-## Remaining evidence
+## Remaining evidence at record time
 
 - P3 current-cycle artifact-contract evidence
 - P4 operational blinding/custody evidence
@@ -38,4 +42,4 @@ The connected GitHub integration does not expose a workflow-dispatch operation. 
 - Empirical N: 0
 - Experimental efficacy: NOT ESTABLISHED
 
-This record is a control-plane record, not experimental evidence.
+This record is a historical control-plane record, not experimental evidence.
