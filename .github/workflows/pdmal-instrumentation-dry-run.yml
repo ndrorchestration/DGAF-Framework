@@ -37,20 +37,35 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
           tree_sha="$(git rev-parse HEAD^{tree})"
-          protocol_sha256="$(sha256sum docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md | awk '{print $1}')"
+          apparatus_source_sha="$(awk '/^apparatus_source_sha:/{print $2; exit}' docs/experiment/NEW_CANDIDATE_MANIFEST.md)"
+          apparatus_source_tree_sha="$(awk '/^apparatus_source_tree_sha:/{print $2; exit}' docs/experiment/NEW_CANDIDATE_MANIFEST.md)"
+          protocol_blob_sha="$(git hash-object docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md)"
+          protocol_content_sha256="$(sha256sum docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md | awk '{print $1}')"
+          execution_timestamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          test "${#apparatus_source_sha}" = 40
+          test "${#apparatus_source_tree_sha}" = 40
+          test "${#protocol_blob_sha}" = 40
           {
             echo "CANDIDATE_SHA=$CANDIDATE_SHA"
             echo "EXECUTED_TREE_SHA=$tree_sha"
+            echo "APPARATUS_SOURCE_SHA=$apparatus_source_sha"
+            echo "APPARATUS_SOURCE_TREE_SHA=$apparatus_source_tree_sha"
             echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID"
             echo "WORKFLOW_EVENT=$WORKFLOW_EVENT"
-            echo "PROTOCOL_BLOB_SHA256=$protocol_sha256"
+            echo "PROTOCOL_BLOB_SHA=$protocol_blob_sha"
+            echo "PROTOCOL_CONTENT_SHA256=$protocol_content_sha256"
+            echo "EXECUTION_TIMESTAMP=$execution_timestamp"
           } >> "$GITHUB_ENV"
           {
             echo "executed_candidate_sha=$CANDIDATE_SHA"
             echo "executed_tree_sha=$tree_sha"
+            echo "apparatus_source_sha=$apparatus_source_sha"
+            echo "apparatus_source_tree_sha=$apparatus_source_tree_sha"
             echo "workflow_run_id=$WORKFLOW_RUN_ID"
             echo "workflow_event=$WORKFLOW_EVENT"
-            echo "protocol_blob_sha256=$protocol_sha256"
+            echo "protocol_blob_sha=$protocol_blob_sha"
+            echo "protocol_content_sha256=$protocol_content_sha256"
+            echo "execution_timestamp=$execution_timestamp"
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/setup-python@v5
         with:
@@ -151,9 +166,13 @@ jobs:
 
           candidate = os.environ["CANDIDATE_SHA"]
           tree_sha = os.environ["EXECUTED_TREE_SHA"]
+          apparatus_source_sha = os.environ["APPARATUS_SOURCE_SHA"]
+          apparatus_source_tree_sha = os.environ["APPARATUS_SOURCE_TREE_SHA"]
           run_id = os.environ["WORKFLOW_RUN_ID"]
           event = os.environ["WORKFLOW_EVENT"]
-          protocol_sha = os.environ["PROTOCOL_BLOB_SHA256"]
+          protocol_blob_sha = os.environ["PROTOCOL_BLOB_SHA"]
+          protocol_content_sha256 = os.environ["PROTOCOL_CONTENT_SHA256"]
+          execution_timestamp = os.environ["EXECUTION_TIMESTAMP"]
           source_artifact = {
               "name": os.environ["SOURCE_ARTIFACT_NAME"],
               "id": os.environ["SOURCE_ARTIFACT_ID"],
@@ -171,8 +190,11 @@ jobs:
               "schema_version": 2,
               "candidate_sha": candidate,
               "candidate_tree_sha": tree_sha,
+              "apparatus_source_sha": apparatus_source_sha,
+              "apparatus_source_tree_sha": apparatus_source_tree_sha,
               "protocol_identity": "docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md",
-              "protocol_blob_sha256": protocol_sha,
+              "protocol_blob_sha": protocol_blob_sha,
+              "protocol_content_sha256": protocol_content_sha256,
               "source_workflow": "PDMAL Instrumentation Dry Run",
               "workflow_run_id": run_id,
               "workflow_event": event,
@@ -182,6 +204,7 @@ jobs:
               "artifact_id": source_artifact["id"],
               "artifact_digest": source_artifact["digest"],
               "artifact_content_digest": source_artifact["content_digest"],
+              "execution_timestamp": execution_timestamp,
               "controls": {
                   "freeze_authorized": False,
                   "pilot_authorized": False,
