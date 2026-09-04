@@ -21,7 +21,7 @@ GitHub is authoritative for implementation and CI; governance decisions are reco
 
 ## Current identity boundary
 
-The corrected apparatus source is `2a54a67d84870e4eb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
+The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 
 The current mainline control-plane head is `fc8976e5c5a1077a37ea6e7abd9cca92e436c05f`, a documentation reconciliation commit following the control-plane merges. The earlier `028771c3…` merge of PR #223 remains the substantive TLA+ supply-chain remediation point; the later `fc8976e…` commit only reconciles current documentation state. The TLA+ v1.8.0 digest is `16b8cd970e07147ff91f126baecba7edd98202e5ab33220a42f8f4358ee94b2b`.
 
