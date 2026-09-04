@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-03
-applies_to_control_plane_head: 637023b28492783f50d77550d4ed8e0867cbcc3d
+last_verified: 2026-09-04
+applies_to_control_plane_head: f801c21f9b2468fdb775bfa5742573b5317b6489
 verified_runtime_candidate: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 verified_runtime_deployment: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
 scope_note: >-
@@ -21,7 +21,7 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 
 | Evidence | State | Identity | Interpretation |
 |---|---|---|---|
-| Current control-plane lineage | CURRENT | `637023b2…` | Mainline documentation/control-plane head |
+| Current control-plane lineage | CURRENT | `f801c21f…` | Mainline documentation/control-plane head at last reconciliation |
 | Verified executable runtime candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4bb…` | Runtime candidate for closed P2/P6a evidence |
 | Verified exact deployment | VERIFIED | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | READY deployment bound to `7c1cc4bb…` |
 | Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…` | Seven-gate restoration/provenance lineage |
@@ -42,7 +42,11 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 
 ## Closed runtime predicates
 
-P2 and P6a remain closed for the exact executable runtime identity `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` and deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`. The later `637023…` change is control-plane/documentation reconciliation and does not reopen those predicates.
+P2 and P6a remain closed for the exact executable runtime identity `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` and deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`. Later documentation/control-plane changes do not reopen those predicates.
+
+## Matrix-control disposition
+
+PRs #220, #230, and #231 were closed without merge after review established that their additional matrix-equality assertion was implied by the existing canonical-coordinate membership, exact per-condition cardinality, and duplicate-cell rejection constraints. No active matrix-hardening blocker remains.
 
 ## P3–P6 current-cycle boundary
 
