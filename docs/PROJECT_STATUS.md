@@ -1,8 +1,7 @@
 # DGAF/PDMAL Project Status
 
 **Status date:** 2026-09-04  
-**Repository:** `ndrorchestration/DGAF-Framework`  
-**Main tip at consolidated-state reconciliation:** `35436f1c95c11e49d8af7603bf914128cf2b4aee`  
+**Current `main` tip:** `829504669f9d7c2ea031618536d693edf1134d77`  
 **Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
 **Verified executable runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
 **Verified runtime deployment:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`  
@@ -12,7 +11,7 @@
 
 ## Executive state
 
-The repository is in post-control-plane-remediation, pre-freeze closure. The consolidated control-state anchor is `89be386b…`; subsequent `main` commits are documentation-only reconciliation unless executable semantics change. The verified executable runtime identity remains `7c1cc4…` with deployment `dpl_8Ms…`. Documentation-only lineage does not alter the runtime surfaces covered by P2/P6a, so those predicates remain closed.
+The repository is in post-control-plane-remediation, pre-freeze closure. The consolidated control-state anchor is `89be386b…`; subsequent `main` commits are documentation/control-plane reconciliation unless executable semantics change. The verified executable runtime identity remains `7c1cc4…` with deployment `dpl_8Ms…`. Documentation-only lineage does not alter the runtime surfaces covered by P2/P6a, so those predicates remain closed.
 
 ## Gate board
 
@@ -20,12 +19,12 @@ The repository is in post-control-plane-remediation, pre-freeze closure. The con
 |---|---|---|
 | Corrected apparatus provenance | CANONICAL ANCHOR | `2a54a67d…` |
 | Control-plane consolidated anchor | CURRENT | `89be386b…` |
-| Main tip at reconciliation | HISTORICAL LINEAGE ANCHOR | `35436f1c…` |
+| Main tip | CURRENT | `82950466…` |
 | Verified executable candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Runtime deployment | VERIFIED READY | `dpl_8Ms…` |
 | P2 | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
 | P6a | CLOSED / VERIFIED | Run `33728695806`; artifact `9882965299` |
-| P3 | OPEN | Current-cycle artifact-contract closure |
+| P3 | OPEN | Current-candidate evidence packet required |
 | P4 | OPEN | Operational blinding/custody |
 | P5 | OPEN | Reproducibility/provenance closure |
 | P6 | OPEN / FAIL-CLOSED | Durable external archive/retrieval/hash proof |
@@ -36,11 +35,17 @@ The repository is in post-control-plane-remediation, pre-freeze closure. The con
 | Pilot authorization | NOT GRANTED | Separate governance transition |
 | Empirical data | ZERO | No authorized pilot execution |
 
+## Current-candidate evidence packet
+
+`docs/governance/CURRENT_CANDIDATE_EVIDENCE_PACKET_2026-09-04.md` defines the exact current-candidate P3–P9 evidence tuple and explicitly separates already-retained P2/P6a runtime evidence from outstanding operational, provenance, custody, analysis-lock, and independent-verification requirements.
+
+The packet is a control/readiness artifact only. It does not promote historical evidence, create empirical observations, establish a freeze, or grant authorization.
+
 ## Evidence execution status
 
-The PDMAL pre-freeze runner validation completed successfully on the governance branch with 44 harness tests passing, contract mode exercised, unauthorized pilot mode failing closed, artifact schema/integrity checks passing, and a retained pre-freeze manifest artifact. This is engineering/control evidence, not empirical efficacy evidence.
+The retained current runtime evidence consists of exact-candidate P2 and P6a artifacts. Their workflow runs and artifact digests remain bound to `7c1cc4…` / `dpl_8Ms…`.
 
-The PDMAL instrumentation dry run on PR #213 also passed its deterministic, structural, masked-artifact, schema, and checksum checks. It remains PR-candidate validation and does not advance empirical N.
+The strongest historical P3–P6 completion artifacts and P9 pass remain scoped to the superseded candidate `a43219b4…` and are therefore non-transferable.
 
 ## Evidence boundary
 
@@ -50,7 +55,7 @@ The #220/#230/#231 matrix-hardening sequence was closed without merge after inva
 
 ## Current documentation hygiene state
 
-The 2026-09-04 reconciliation pass established `89be386b…` as the consolidated control-state anchor and `35436f1c…` as the mainline tip at that reconciliation boundary. Later documentation-only descendants must be treated as lineage, not as executable candidate changes, unless executable semantics materially change.
+The 2026-09-04 reconciliation pass distinguishes the consolidated control-state anchor from the live `main` tip. Later documentation-only descendants are not executable candidates unless executable semantics materially change and a new candidate is independently established.
 
 ## Required closure sequence
 
