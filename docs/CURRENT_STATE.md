@@ -24,7 +24,7 @@ GitHub is authoritative for implementation and CI; governance decisions are reco
 
 The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 
-The current control-plane state is anchored at `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`; subsequent documentation-only descendants remain documentation reconciliation and do not alter executable runtime semantics. The TLA+ v1.8.0 digest is `16b8cd970e07147ff91f126baecba7edd98202e5ab33220a42f8f4358ee94b2b`.
+The current control-plane state is anchored at `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`; subsequent documentation-only descendants, including later reconciliation of dated records, remain documentation reconciliation and do not alter executable runtime semantics. The TLA+ v1.8.0 digest is `16b8cd970e07147ff91f126baecba7edd98202e5ab33220a42f8f4358ee94b2b`.
 
 The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to that exact Git SHA. The control-plane/documentation lineage must not be conflated with that separately scoped runtime identity.
 
@@ -59,7 +59,7 @@ The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55
 
 ## Candidate manifest reconciliation
 
-`docs/experiment/NEW_CANDIDATE_MANIFEST.md` continues to bind the verified executable runtime candidate `7c1cc4…` to deployment `dpl_8Msuf…`. Its control-plane successor reference was corrected to the current documentation lineage. This did not change the runtime candidate, deployment, P2, or P6a evidence boundaries.
+`docs/experiment/NEW_CANDIDATE_MANIFEST.md` continues to bind the verified executable runtime candidate `7c1cc4…` to deployment `dpl_8Msuf…`. Its control-plane successor reference was corrected to the documentation lineage represented by the current reconciliation anchor. This did not change the runtime candidate, deployment, P2, or P6a evidence boundaries.
 
 ## Evidence boundary
 
