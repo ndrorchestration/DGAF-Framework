@@ -27,6 +27,30 @@ jobs:
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Capture executed source identity
+        env:
+          CANDIDATE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          tree_sha="$(git rev-parse HEAD^{tree})"
+          protocol_sha256="$(sha256sum docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md | awk '{print $1}')"
+          {
+            echo "CANDIDATE_SHA=$CANDIDATE_SHA"
+            echo "EXECUTED_TREE_SHA=$tree_sha"
+            echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID"
+            echo "WORKFLOW_EVENT=$WORKFLOW_EVENT"
+            echo "PROTOCOL_BLOB_SHA256=$protocol_sha256"
+          } >> "$GITHUB_ENV"
+          {
+            echo "executed_candidate_sha=$CANDIDATE_SHA"
+            echo "executed_tree_sha=$tree_sha"
+            echo "workflow_run_id=$WORKFLOW_RUN_ID"
+            echo "workflow_event=$WORKFLOW_EVENT"
+            echo "protocol_blob_sha256=$protocol_sha256"
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -83,40 +107,57 @@ jobs:
           print(f'checksum: PASS {actual}')
           PY
       - name: Emit exact-candidate evidence registry
-        env:
-          CANDIDATE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
 
           candidate = os.environ["CANDIDATE_SHA"]
-          registry = {
-              "schema_version": 1,
+          tree_sha = os.environ["EXECUTED_TREE_SHA"]
+          run_id = os.environ["WORKFLOW_RUN_ID"]
+          event = os.environ["WORKFLOW_EVENT"]
+          protocol_sha = os.environ["PROTOCOL_BLOB_SHA256"]
+          predicate_defaults = {
               "candidate_sha": candidate,
+              "producer_workflow_run_id": run_id,
+              "producer_artifact_id": None,
+              "producer_artifact_digest": None,
+          }
+          registry = {
+              "schema_version": 2,
+              "candidate_sha": candidate,
+              "candidate_tree_sha": tree_sha,
+              "protocol_identity": "docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md",
+              "protocol_blob_sha256": protocol_sha,
+              "source_workflow": "PDMAL Instrumentation Dry Run",
+              "workflow_run_id": run_id,
+              "workflow_event": event,
+              "workflow_action": "completed",
+              "workflow_conclusion": "success",
+              "artifact_name": "dgaf-evidence-registry",
               "controls": {
                   "freeze_authorized": False,
                   "pilot_authorized": False,
                   "empirical_execution_requested": False,
               },
-              "source_workflow": "PDMAL Instrumentation Dry Run",
               "registry_class": "STRUCTURAL_CANDIDATE_EVIDENCE",
+              "epistemic_status": "TESTED",
               "predicates": [
-                  {"id": "P2", "name": "runtime verification", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P2", "name": "runtime verification", "required": True, "status": "OPEN",
                    "notes": "Requires separate exact-candidate authenticated runtime verification."},
-                  {"id": "P3", "name": "artifact contract", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P3", "name": "artifact contract", "required": True, "status": "OPEN",
                    "notes": "Dry-run artifact checks are structural evidence; current closure requires the governing acceptance predicate."},
-                  {"id": "P4", "name": "blinding/security", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P4", "name": "blinding/security", "required": True, "status": "OPEN",
                    "notes": "Dry run confirms secret presence and blinded output generation; operational custody closure remains required."},
-                  {"id": "P5", "name": "provenance/reproducibility", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P5", "name": "provenance/reproducibility", "required": True, "status": "OPEN",
                    "notes": "Deterministic smoke and structural tests pass; full current-candidate reproducibility closure remains required."},
-                  {"id": "P6", "name": "durable evidence custody", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P6", "name": "durable evidence custody", "required": True, "status": "OPEN",
                    "notes": "GitHub Actions artifact retention is not durable research custody; archive/retrieval/hash proof remains required."},
-                  {"id": "P7", "name": "scientific decision", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P7", "name": "scientific decision", "required": True, "status": "OPEN",
                    "notes": "No scientific superiority or efficacy conclusion is produced by this structural dry run."},
-                  {"id": "P8", "name": "analysis lock", "required": True, "status": "FAIL_CLOSED", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P8", "name": "analysis lock", "required": True, "status": "FAIL_CLOSED",
                    "notes": "Analysis lock remains fail-closed until its prerequisites are satisfied."},
-                  {"id": "P9", "name": "independent verification", "required": True, "status": "NOT_EXECUTED", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P9", "name": "independent verification", "required": True, "status": "NOT_EXECUTED",
                    "notes": "Independent verification is a separate exact-candidate workflow."},
               ],
               "structural_checks": {
@@ -130,7 +171,7 @@ jobs:
           Path("/tmp/dgaf-evidence-registry.json").write_text(
               json.dumps(registry, indent=2, sort_keys=True) + "\n", encoding="utf-8"
           )
-          print("emitted exact-candidate registry for", candidate)
+          print("emitted self-binding candidate registry for", candidate)
           PY
       - name: Upload dry-run artifacts
         uses: actions/upload-artifact@v4
