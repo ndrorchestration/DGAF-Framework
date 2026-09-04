@@ -21,7 +21,7 @@ The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. Th
 
 The consolidated control-state anchor is `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`. `main` now contains subsequent documentation/control-plane descendants; those descendants do not alter executable runtime semantics unless executable surfaces materially change.
 
-The candidate lineage referenced by historical P2/P6a records is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with historical deployment reference `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`. The present verification pass did not independently re-retrieve the cited Actions records, so those runtime results are not promoted here as freshly verified evidence.
+The **candidate identity** referenced by historical P2/P6a records is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with **deployment identity** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`. The present verification pass did not independently re-retrieve the cited Actions records, so those runtime results are not promoted here as freshly verified evidence.
 
 ## Runtime gate state
 
