@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-04
-current_mainline_commit_at_last_reconciliation: 8eaca001c93e0d2eb91e0a09d177ae8451677bb2
+current_mainline_commit_at_last_reconciliation: 90dab43838810cf73fac626c6268ab81ac4972b0
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
@@ -15,7 +15,7 @@ empirical_n: 0
 
 # PDMAL Current Control State
 
-This is the current pre-authorization control record. The consolidated control-state anchor is `89be386b…`. `8eaca001…` records the mainline at the last reconciliation point before the current document update; subsequent commits to this file are documentation/control-plane descendants. Those descendants do not alter executable runtime semantics unless executable surfaces materially change.
+This is the current pre-authorization control record. The consolidated control-state anchor is `89be386b…`. `90dab438…` records the mainline at the last reconciliation point; subsequent commits to this file are documentation/control-plane descendants. Those descendants do not alter executable runtime semantics unless executable surfaces materially change.
 
 ## Current gate state
 
@@ -23,7 +23,7 @@ This is the current pre-authorization control record. The consolidated control-s
 |---|---|---|
 | P-35 | VALIDATED | Immutable boundary `643dc77a…` |
 | Consolidated control-state anchor | CURRENT | `89be386b…` |
-| Mainline reconciliation anchor | DOCUMENTATION/CONTROL-PLANE | `8eaca001…` |
+| Mainline reconciliation anchor | DOCUMENTATION/CONTROL-PLANE | `90dab438…` |
 | Runtime candidate lineage | PRESENT | `7c1cc4…` |
 | Deployment reference | HISTORICAL / CURRENT RETRIEVAL UNCONFIRMED | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` |
 | P2 runtime | HISTORICAL RECORD / CURRENT RETRIEVAL UNCONFIRMED | Run `33730195621`; artifact `9883521704` |
@@ -49,7 +49,7 @@ The repository preserves P2 and P6a run/artifact identifiers for the exact `7c1c
 
 ## Evidence registry hardening
 
-`docs/governance/CURRENT_CANDIDATE_EVIDENCE_REGISTRY_CONTRACT_v1.md` defines a unified immutable evidence-source tuple. Draft PR #235 implements the first execution slice: exact checked-out candidate verification, executed tree capture, producing workflow/run capture, protocol digest capture, and predicate-level candidate/run binding. Its first PDMAL Instrumentation Dry Run passed all workflow steps; a separate control-state compatibility defect was identified and corrected on the branch.
+`docs/governance/CURRENT_CANDIDATE_EVIDENCE_REGISTRY_CONTRACT_v1.md` defines a unified immutable evidence-source tuple. Draft PR #236 is the current implementation lane: it adds exact checked-out candidate verification, executed tree capture, producing workflow/run capture, protocol digest capture, and predicate-level candidate/run binding to the PDMAL dry-run registry. Its predecessor #235 was superseded after CI exposed and corrected a validator-compatible control-state labeling mismatch.
 
 ## Pre-freeze validation
 
