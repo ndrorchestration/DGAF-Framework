@@ -44,5 +44,11 @@ def write_csv(rows: Iterable[dict], commit_short: str, output_dir: str | Path) -
 
 
 def environment_commit_short() -> str:
-    sha = os.environ.get("GITHUB_SHA", "local-unversioned")
+    """Return the exact candidate identity supplied by the governance workflow.
+
+    On pull_request runs GITHUB_SHA can identify GitHub's synthetic merge commit,
+    while the workflow explicitly checks out CANDIDATE_SHA. Prefer the latter so
+    persisted artifact names cannot silently bind to a different commit identity.
+    """
+    sha = os.environ.get("CANDIDATE_SHA") or os.environ.get("GITHUB_SHA") or "local-unversioned"
     return sha[:7] if sha != "local-unversioned" else sha

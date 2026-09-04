@@ -130,7 +130,7 @@ jobs:
         run: |
           curl --fail --location --retry 3 --output tla2tools.jar \
             https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
-          echo '16b8cd970e07147ff91f126baecba7edd98202e5ab33220a42f8f4358ee94b2b  tla2tools.jar' | sha256sum --check --strict
+          echo 'b658b4e504fdf0b721caf7066320f6b6fe5805f4dd2f717d0e47baba4097205e  tla2tools.jar' | sha256sum --check --strict
 
       - name: Model-check DGAF containment
         run: |
@@ -153,7 +153,7 @@ jobs:
               'evidence_class': 'BOUNDED_FORMAL_MODEL_CHECK', 'source_commit': '${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}',
               'workflow_run_id': '${{ github.run_id }}', 'job': 'governance-ci',
               'java_version': '17', 'tool': 'TLA+ Tools', 'tool_release': 'v1.8.0',
-              'tool_sha256': '16b8cd970e07147ff91f126baecba7edd98202e5ab33220a42f8f4358ee94b2b',
+              'tool_sha256': 'b658b4e504fdf0b721caf7066320f6b6fe5805f4dd2f717d0e47baba4097205e',
               'command': 'java -cp tla2tools.jar tlc2.TLC -config specs/DGAFContainment.cfg specs/DGAFContainment.tla',
               'result': 'PASS' if no_error else 'FAIL', 'no_error_found': no_error,
               'states_generated': int(generated.group(1)) if generated else None,

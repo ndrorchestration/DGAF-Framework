@@ -19,6 +19,7 @@ jobs:
     timeout-minutes: 2
     permissions:
       contents: read
+      actions: read
     env:
       PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
       PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
@@ -27,6 +28,45 @@ jobs:
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Capture executed source identity
+        env:
+          CANDIDATE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          tree_sha="$(git rev-parse HEAD^{tree})"
+          apparatus_source_sha="$(awk '/^apparatus_source_sha:/{print $2; exit}' docs/experiment/NEW_CANDIDATE_MANIFEST.md)"
+          apparatus_source_tree_sha="$(awk '/^apparatus_source_tree_sha:/{print $2; exit}' docs/experiment/NEW_CANDIDATE_MANIFEST.md)"
+          protocol_blob_sha="$(git hash-object docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md)"
+          protocol_content_sha256="$(sha256sum docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md | awk '{print $1}')"
+          execution_timestamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          test "${#apparatus_source_sha}" = 40
+          test "${#apparatus_source_tree_sha}" = 40
+          test "${#protocol_blob_sha}" = 40
+          {
+            echo "CANDIDATE_SHA=$CANDIDATE_SHA"
+            echo "EXECUTED_TREE_SHA=$tree_sha"
+            echo "APPARATUS_SOURCE_SHA=$apparatus_source_sha"
+            echo "APPARATUS_SOURCE_TREE_SHA=$apparatus_source_tree_sha"
+            echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID"
+            echo "WORKFLOW_EVENT=$WORKFLOW_EVENT"
+            echo "PROTOCOL_BLOB_SHA=$protocol_blob_sha"
+            echo "PROTOCOL_CONTENT_SHA256=$protocol_content_sha256"
+            echo "EXECUTION_TIMESTAMP=$execution_timestamp"
+          } >> "$GITHUB_ENV"
+          {
+            echo "executed_candidate_sha=$CANDIDATE_SHA"
+            echo "executed_tree_sha=$tree_sha"
+            echo "apparatus_source_sha=$apparatus_source_sha"
+            echo "apparatus_source_tree_sha=$apparatus_source_tree_sha"
+            echo "workflow_run_id=$WORKFLOW_RUN_ID"
+            echo "workflow_event=$WORKFLOW_EVENT"
+            echo "protocol_blob_sha=$protocol_blob_sha"
+            echo "protocol_content_sha256=$protocol_content_sha256"
+            echo "execution_timestamp=$execution_timestamp"
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -82,41 +122,112 @@ jobs:
           assert expected == actual, 'SHA-256 sidecar mismatch'
           print(f'checksum: PASS {actual}')
           PY
-      - name: Emit exact-candidate evidence registry
+      - name: Upload dry-run artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-instrumentation-dry-run
+          path: /tmp/pdmal-artifact/raw_pilot_*.csv*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Resolve exact source artifact identity
         env:
-          CANDIDATE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          artifacts_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${WORKFLOW_RUN_ID}/artifacts?per_page=100")"
+          artifact_count="$(jq -r '[.artifacts[] | select(.name == "pdmal-instrumentation-dry-run" and .expired == false)] | length' <<<"$artifacts_json")"
+          test "$artifact_count" = "1"
+          artifact_id="$(jq -r '[.artifacts[] | select(.name == "pdmal-instrumentation-dry-run" and .expired == false)][0].id' <<<"$artifacts_json")"
+          artifact_digest="$(jq -r '[.artifacts[] | select(.name == "pdmal-instrumentation-dry-run" and .expired == false)][0].digest // empty' <<<"$artifacts_json")"
+          test -n "$artifact_id"
+          test "$artifact_id" != "null"
+          test -n "$artifact_digest"
+          echo "SOURCE_ARTIFACT_NAME=pdmal-instrumentation-dry-run" >> "$GITHUB_ENV"
+          echo "SOURCE_ARTIFACT_ID=$artifact_id" >> "$GITHUB_ENV"
+          echo "SOURCE_ARTIFACT_DIGEST=$artifact_digest" >> "$GITHUB_ENV"
+          {
+            echo "source_artifact_name=pdmal-instrumentation-dry-run"
+            echo "source_artifact_id=$artifact_id"
+            echo "source_artifact_digest=$artifact_digest"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Compute source artifact content digest
+        run: |
+          set -euo pipefail
+          csv_path="$(find /tmp/pdmal-artifact -maxdepth 1 -type f -name 'raw_pilot_*.csv' -print -quit)"
+          test -n "$csv_path"
+          content_digest="$(sha256sum "$csv_path" | awk '{print $1}')"
+          echo "SOURCE_ARTIFACT_CONTENT_DIGEST=$content_digest" >> "$GITHUB_ENV"
+          echo "source_artifact_content_digest=$content_digest" >> "$GITHUB_STEP_SUMMARY"
+      - name: Emit exact-candidate evidence registry
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
 
           candidate = os.environ["CANDIDATE_SHA"]
-          registry = {
-              "schema_version": 1,
+          tree_sha = os.environ["EXECUTED_TREE_SHA"]
+          apparatus_source_sha = os.environ["APPARATUS_SOURCE_SHA"]
+          apparatus_source_tree_sha = os.environ["APPARATUS_SOURCE_TREE_SHA"]
+          run_id = os.environ["WORKFLOW_RUN_ID"]
+          event = os.environ["WORKFLOW_EVENT"]
+          protocol_blob_sha = os.environ["PROTOCOL_BLOB_SHA"]
+          protocol_content_sha256 = os.environ["PROTOCOL_CONTENT_SHA256"]
+          execution_timestamp = os.environ["EXECUTION_TIMESTAMP"]
+          source_artifact = {
+              "name": os.environ["SOURCE_ARTIFACT_NAME"],
+              "id": os.environ["SOURCE_ARTIFACT_ID"],
+              "digest": os.environ["SOURCE_ARTIFACT_DIGEST"],
+              "content_digest": os.environ["SOURCE_ARTIFACT_CONTENT_DIGEST"],
+          }
+          predicate_defaults = {
               "candidate_sha": candidate,
+              "producer_workflow_run_id": run_id,
+              "producer_artifact_id": source_artifact["id"],
+              "producer_artifact_digest": source_artifact["digest"],
+              "epistemic_status": "TESTED",
+          }
+          registry = {
+              "schema_version": 2,
+              "candidate_sha": candidate,
+              "candidate_tree_sha": tree_sha,
+              "apparatus_source_sha": apparatus_source_sha,
+              "apparatus_source_tree_sha": apparatus_source_tree_sha,
+              "protocol_identity": "docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md",
+              "protocol_blob_sha": protocol_blob_sha,
+              "protocol_content_sha256": protocol_content_sha256,
+              "source_workflow": "PDMAL Instrumentation Dry Run",
+              "workflow_run_id": run_id,
+              "workflow_event": event,
+              "workflow_action": "completed",
+              "workflow_conclusion": "success",
+              "artifact_name": source_artifact["name"],
+              "artifact_id": source_artifact["id"],
+              "artifact_digest": source_artifact["digest"],
+              "artifact_content_digest": source_artifact["content_digest"],
+              "execution_timestamp": execution_timestamp,
               "controls": {
                   "freeze_authorized": False,
                   "pilot_authorized": False,
                   "empirical_execution_requested": False,
               },
-              "source_workflow": "PDMAL Instrumentation Dry Run",
               "registry_class": "STRUCTURAL_CANDIDATE_EVIDENCE",
+              "epistemic_status": "TESTED",
               "predicates": [
-                  {"id": "P2", "name": "runtime verification", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P2", "name": "runtime verification", "required": True, "status": "OPEN",
                    "notes": "Requires separate exact-candidate authenticated runtime verification."},
-                  {"id": "P3", "name": "artifact contract", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P3", "name": "artifact contract", "required": True, "status": "OPEN",
                    "notes": "Dry-run artifact checks are structural evidence; current closure requires the governing acceptance predicate."},
-                  {"id": "P4", "name": "blinding/security", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P4", "name": "blinding/security", "required": True, "status": "OPEN",
                    "notes": "Dry run confirms secret presence and blinded output generation; operational custody closure remains required."},
-                  {"id": "P5", "name": "provenance/reproducibility", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P5", "name": "provenance/reproducibility", "required": True, "status": "OPEN",
                    "notes": "Deterministic smoke and structural tests pass; full current-candidate reproducibility closure remains required."},
-                  {"id": "P6", "name": "durable evidence custody", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P6", "name": "durable evidence custody", "required": True, "status": "OPEN",
                    "notes": "GitHub Actions artifact retention is not durable research custody; archive/retrieval/hash proof remains required."},
-                  {"id": "P7", "name": "scientific decision", "required": True, "status": "OPEN", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P7", "name": "scientific decision", "required": True, "status": "OPEN",
                    "notes": "No scientific superiority or efficacy conclusion is produced by this structural dry run."},
-                  {"id": "P8", "name": "analysis lock", "required": True, "status": "FAIL_CLOSED", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P8", "name": "analysis lock", "required": True, "status": "FAIL_CLOSED",
                    "notes": "Analysis lock remains fail-closed until its prerequisites are satisfied."},
-                  {"id": "P9", "name": "independent verification", "required": True, "status": "NOT_EXECUTED", "candidate_sha": None,
+                  {**predicate_defaults, "id": "P9", "name": "independent verification", "required": True, "status": "NOT_EXECUTED",
                    "notes": "Independent verification is a separate exact-candidate workflow."},
               ],
               "structural_checks": {
@@ -130,15 +241,8 @@ jobs:
           Path("/tmp/dgaf-evidence-registry.json").write_text(
               json.dumps(registry, indent=2, sort_keys=True) + "\n", encoding="utf-8"
           )
-          print("emitted exact-candidate registry for", candidate)
+          print("emitted self-binding candidate registry for", candidate)
           PY
-      - name: Upload dry-run artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: pdmal-instrumentation-dry-run
-          path: /tmp/pdmal-artifact/raw_pilot_*.csv*
-          if-no-files-found: error
-          retention-days: 14
       - name: Upload exact-candidate evidence registry
         uses: actions/upload-artifact@v4
         with:
