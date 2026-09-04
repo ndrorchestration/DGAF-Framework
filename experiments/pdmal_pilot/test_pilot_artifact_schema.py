@@ -92,6 +92,21 @@ def test_condition_distribution_must_be_balanced() -> None:
         validate_artifact(document, expected_seed=20260819)
 
 
+def test_each_condition_must_have_identical_matrix_cells() -> None:
+    document = _document()
+    first = document["records"][0]
+    second = document["records"][45]
+    first["topology"], second["topology"] = second["topology"], first["topology"]
+    first["artifact_sha256"] = hashlib.sha256(
+        canonical_json_bytes({k: v for k, v in first.items() if k != "artifact_sha256"})
+    ).hexdigest()
+    second["artifact_sha256"] = hashlib.sha256(
+        canonical_json_bytes({k: v for k, v in second.items() if k != "artifact_sha256"})
+    ).hexdigest()
+    with pytest.raises(AssertionError, match="complete canonical pilot matrix"):
+        validate_artifact(document, expected_seed=20260819)
+
+
 def test_record_commit_must_match_document_commit() -> None:
     document = _document()
     document["records"][0]["experiment_commit_sha"] = "b" * 40
