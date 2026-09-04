@@ -19,6 +19,7 @@ jobs:
     timeout-minutes: 2
     permissions:
       contents: read
+      actions: read
     env:
       PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
       PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
@@ -106,6 +107,42 @@ jobs:
           assert expected == actual, 'SHA-256 sidecar mismatch'
           print(f'checksum: PASS {actual}')
           PY
+      - name: Upload dry-run artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-instrumentation-dry-run
+          path: /tmp/pdmal-artifact/raw_pilot_*.csv*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Resolve exact source artifact identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          artifacts_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${WORKFLOW_RUN_ID}/artifacts?per_page=100")"
+          artifact_count="$(jq -r '[.artifacts[] | select(.name == "pdmal-instrumentation-dry-run" and .expired == false)] | length' <<<"$artifacts_json")"
+          test "$artifact_count" = "1"
+          artifact_id="$(jq -r '[.artifacts[] | select(.name == "pdmal-instrumentation-dry-run" and .expired == false)][0].id' <<<"$artifacts_json")"
+          artifact_digest="$(jq -r '[.artifacts[] | select(.name == "pdmal-instrumentation-dry-run" and .expired == false)][0].digest // empty' <<<"$artifacts_json")"
+          test -n "$artifact_id"
+          test "$artifact_id" != "null"
+          test -n "$artifact_digest"
+          echo "SOURCE_ARTIFACT_NAME=pdmal-instrumentation-dry-run" >> "$GITHUB_ENV"
+          echo "SOURCE_ARTIFACT_ID=$artifact_id" >> "$GITHUB_ENV"
+          echo "SOURCE_ARTIFACT_DIGEST=$artifact_digest" >> "$GITHUB_ENV"
+          {
+            echo "source_artifact_name=pdmal-instrumentation-dry-run"
+            echo "source_artifact_id=$artifact_id"
+            echo "source_artifact_digest=$artifact_digest"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Compute source artifact content digest
+        run: |
+          set -euo pipefail
+          csv_path="$(find /tmp/pdmal-artifact -maxdepth 1 -type f -name 'raw_pilot_*.csv' -print -quit)"
+          test -n "$csv_path"
+          content_digest="$(sha256sum "$csv_path" | awk '{print $1}')"
+          echo "SOURCE_ARTIFACT_CONTENT_DIGEST=$content_digest" >> "$GITHUB_ENV"
+          echo "source_artifact_content_digest=$content_digest" >> "$GITHUB_STEP_SUMMARY"
       - name: Emit exact-candidate evidence registry
         run: |
           python - <<'PY'
@@ -117,11 +154,18 @@ jobs:
           run_id = os.environ["WORKFLOW_RUN_ID"]
           event = os.environ["WORKFLOW_EVENT"]
           protocol_sha = os.environ["PROTOCOL_BLOB_SHA256"]
+          source_artifact = {
+              "name": os.environ["SOURCE_ARTIFACT_NAME"],
+              "id": os.environ["SOURCE_ARTIFACT_ID"],
+              "digest": os.environ["SOURCE_ARTIFACT_DIGEST"],
+              "content_digest": os.environ["SOURCE_ARTIFACT_CONTENT_DIGEST"],
+          }
           predicate_defaults = {
               "candidate_sha": candidate,
               "producer_workflow_run_id": run_id,
-              "producer_artifact_id": None,
-              "producer_artifact_digest": None,
+              "producer_artifact_id": source_artifact["id"],
+              "producer_artifact_digest": source_artifact["digest"],
+              "epistemic_status": "TESTED",
           }
           registry = {
               "schema_version": 2,
@@ -134,7 +178,10 @@ jobs:
               "workflow_event": event,
               "workflow_action": "completed",
               "workflow_conclusion": "success",
-              "artifact_name": "dgaf-evidence-registry",
+              "artifact_name": source_artifact["name"],
+              "artifact_id": source_artifact["id"],
+              "artifact_digest": source_artifact["digest"],
+              "artifact_content_digest": source_artifact["content_digest"],
               "controls": {
                   "freeze_authorized": False,
                   "pilot_authorized": False,
@@ -173,13 +220,6 @@ jobs:
           )
           print("emitted self-binding candidate registry for", candidate)
           PY
-      - name: Upload dry-run artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: pdmal-instrumentation-dry-run
-          path: /tmp/pdmal-artifact/raw_pilot_*.csv*
-          if-no-files-found: error
-          retention-days: 14
       - name: Upload exact-candidate evidence registry
         uses: actions/upload-artifact@v4
         with:
