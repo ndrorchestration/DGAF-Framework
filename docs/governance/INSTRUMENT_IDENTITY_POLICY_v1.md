@@ -28,7 +28,7 @@ execution_run
 execution_timestamp
 upstream_dependencies
 epistemic_status
-``` 
+```
 
 ## 2. Instrument classes
 
