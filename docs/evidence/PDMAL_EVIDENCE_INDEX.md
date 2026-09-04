@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-04
-current_main_tip: 35436f1c95c11e49d8af7603bf914128cf2b4aee
+main_tip_at_reconciliation: 35436f1c95c11e49d8af7603bf914128cf2b4aee
 applies_to_control_plane_head: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 verified_runtime_candidate: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 verified_runtime_deployment: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
@@ -23,7 +23,7 @@ This is a control-plane registry, not empirical evidence and not a self-authoriz
 | Evidence | State | Identity | Interpretation |
 |---|---|---|---|
 | Consolidated control-state lineage | CURRENT | `89be386b…` | Current authoritative documentation/control-state anchor |
-| Main tip | CURRENT | `35436f1c…` | Present `main` tip; post-anchor commits are documentation reconciliation unless executable semantics change |
+| Main tip at reconciliation | LINEAGE ANCHOR | `35436f1c…` | `main` tip at the consolidated-state reconciliation boundary |
 | Verified executable runtime candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4bb…` | Runtime candidate for closed P2/P6a evidence |
 | Verified exact deployment | VERIFIED | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | READY deployment bound to `7c1cc4bb…` |
 | Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…` | Seven-gate restoration/provenance lineage |
