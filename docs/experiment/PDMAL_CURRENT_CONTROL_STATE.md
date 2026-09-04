@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-03
-applies_to_control_plane_head: 637023b28492783f50d77550d4ed8e0867cbcc3d
+last_verified: 2026-09-04
+applies_to_control_plane_head: 42a426fbee5b5a4e131d1fb692cb6b78658c72cd
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
 runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
@@ -23,7 +23,7 @@ This is the current pre-authorization control record. The control-plane successo
 | Control | State | Evidence / scope |
 |---|---|---|
 | P-35 | VALIDATED | Immutable boundary `643dc77a…` |
-| Control-plane mainline | CURRENT | `637023b2…` |
+| Control-plane mainline | CURRENT | `42a426fb…` |
 | Executable runtime candidate | VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Candidate deployment | ESTABLISHED / READY | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` |
 | P2 runtime | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
@@ -41,7 +41,7 @@ This is the current pre-authorization control record. The control-plane successo
 
 ## Runtime evidence boundary
 
-P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. The later `637023…` control-plane change is documentation-only with respect to those runtime surfaces, so the closed predicates remain closed.
+P2 and P6a are closed for the exact `7c1cc4…` / `dpl_8Ms…` runtime binding. Later documentation/control-plane commits do not reopen those runtime predicates.
 
 ## Pre-freeze validation
 
@@ -50,6 +50,10 @@ The PDMAL pre-freeze runner validation completed successfully on the governance 
 ## Instrumentation workflow isolation
 
 The PDMAL instrumentation workflow is restricted to experiment-path changes and deliberate `workflow_dispatch`, preventing documentation-only changes from becoming experimental candidates. The earlier successful PR instrumentation run remains trigger-isolation validation and does not advance empirical N.
+
+## Matrix-control disposition
+
+PRs #220, #230, and #231 were closed without merge. Review established that the proposed additional per-condition matrix-equality assertion was logically implied by the existing canonical coordinate membership, exact per-condition cardinality, and duplicate `(condition, topology, failure_count)` rejection. No active matrix-hardening blocker remains.
 
 ## Required closure sequence
 
