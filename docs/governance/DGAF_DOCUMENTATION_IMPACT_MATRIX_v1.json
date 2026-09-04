@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": "1.0",
+  "status": "AUDIT_CONTROL_NON_AUTHORITATIVE",
+  "impact_axes": [
+    "identity",
+    "taxonomy",
+    "temporal",
+    "pattern",
+    "agentic",
+    "layer",
+    "implementation",
+    "test",
+    "evidence",
+    "governance"
+  ],
+  "high_impact_change_types": [
+    "identifier change",
+    "formula change",
+    "threshold change",
+    "authority change",
+    "formation membership change",
+    "pattern classification change",
+    "state-machine change",
+    "dependency change",
+    "canonical-source change"
+  ],
+  "required_impact_record": {
+    "change_id": "stable-change-id",
+    "source_commit": "40-char SHA",
+    "affected_concepts": [],
+    "affected_instruments": [],
+    "affected_agents": [],
+    "affected_patterns": [],
+    "affected_layers": [],
+    "affected_document_families": [],
+    "required_tests": [],
+    "required_evidence_refresh": [],
+    "historical_artifacts_affected": [],
+    "supersession_required": false,
+    "authority_review_required": true,
+    "scientific_state_change_expected": false
+  },
+  "promotion_rule": "Do not promote a documentation change to implementation, evidence, validation, freeze, or authorization status solely because documentation is complete."
+}
