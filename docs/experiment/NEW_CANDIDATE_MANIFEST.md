@@ -12,7 +12,7 @@ candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
 candidate_designation_rule: exact executable candidate commit used by the verified P2/P6a runtime evidence; later documentation-only control-plane commits do not reopen those predicates
 candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 control_plane_successor:
-  sha: 637023b28492783f50d77550d4ed8e0867cbcc3d
+  sha: 675703d6e95d90591df19dad6e8f58fec1f43608
   status: DOCUMENTATION / CONTROL-PLANE ONLY
   note: does not alter the runtime surfaces covered by P2/P6a
 provenance_correction:
@@ -59,7 +59,7 @@ freeze_status: NOT_CREATED
 - `7c1cc4bb…` — verified executable runtime candidate bound to P2/P6a.
 - `586c00d6…` — exact tree of that runtime candidate.
 - `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` — exact deployment bound to that runtime candidate.
-- `637023b2…` — later documentation/control-plane successor; not a new runtime candidate.
+- `675703d6…` — later documentation/control-plane successor; not a new runtime candidate.
 
 ## Binding rule
 
