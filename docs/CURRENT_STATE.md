@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-04
-current_main_tip: 08f29b7addab98dbc5460c31f2597d7b29e31e8a
+last_reconciled_main_tip: 3a5a9c27f30128a20aa41f981fd5058631009f9f
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
@@ -21,7 +21,7 @@ GitHub is authoritative for implementation and CI; governance decisions are reco
 
 The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 
-The consolidated control-state anchor is `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`. The live `main` tip is `08f29b7addab98dbc5460c31f2597d7b29e31e8a`; commits after the consolidated anchor are documentation/control-plane reconciliation and must not be mistaken for a new executable candidate unless executable semantics materially change.
+The consolidated control-state anchor is `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`. The latest reconciled `main` tip recorded by this document is `3a5a9c27f30128a20aa41f981fd5058631009f9f`; later commits are documentation/control-plane reconciliation unless executable semantics change.
 
 The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to that exact Git SHA. The control-plane/documentation lineage must not be conflated with that separately scoped runtime identity.
 
@@ -31,7 +31,7 @@ The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55
 |---|---|---|
 | P-35 | VALIDATED | immutable boundary `643dc77a…` |
 | Consolidated control-state anchor | CURRENT | `89be386b…` |
-| Live `main` tip | CURRENT | `08f29b7a…` |
+| Last reconciled main tip | CURRENT AT RECONCILIATION | `3a5a9c27…` |
 | Verified executable runtime candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Candidate deployment | VERIFIED READY | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to `7c1cc4…` |
 | P2 | CLOSED / VERIFIED | run `33730195621`, artifact `9883521704` |
@@ -49,7 +49,7 @@ The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55
 
 ## Current-candidate evidence packet
 
-`docs/governance/CURRENT_CANDIDATE_EVIDENCE_PACKET_2026-09-04.md` defines the exact current-candidate P3–P9 packet boundary. It distinguishes retained P2/P6a runtime evidence from the outstanding current-candidate operational, provenance, durable-custody, analysis-lock, and independent-verification predicates.
+`docs/governance/CURRENT_CANDIDATE_EVIDENCE_PACKET_2026-09-04.md` defines the exact current-candidate P3–P9 packet boundary. It distinguishes retained P2/P6a runtime evidence from outstanding current-candidate operational, provenance, durable-custody, analysis-lock, and independent-verification predicates.
 
 ## Evidence boundary
 
