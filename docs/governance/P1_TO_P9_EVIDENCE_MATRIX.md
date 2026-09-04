@@ -3,7 +3,8 @@
 **Status:** CURRENT / PRE-FREEZE / FAIL-CLOSED  
 **Last reconciled:** 2026-09-04  
 **Current documentation/evidence lineage:** `main`  
-**Current control-plane head:** `1f0f5997877902054f2b35b4ecc61169df5f95c2`  
+**Current main tip:** `35436f1c95c11e49d8af7603bf914128cf2b4aee`  
+**Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
 **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
 **Empirical N:** `0`  
 **Pilot authorization:** `NOT GRANTED`  
@@ -14,7 +15,8 @@ This matrix is the current planning/control surface. It does not itself constitu
 ## Identity roles
 
 - `2a54a67d…` — corrected apparatus provenance anchor.
-- `1f0f5997…` — current documentation/control-plane mainline head at last reconciliation.
+- `89be386b…` — consolidated current documentation/control-state anchor.
+- `35436f1c…` — current `main` tip; later documentation-only descendant of the consolidated anchor.
 - `7c1cc4bb…` — runtime candidate bound to the closed P2/P6a evidence below; retained as the verified executable evidence identity.
 - `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` — deployment bound to that P2/P6a evidence.
 - `48c12c66…` / `dpl_CW4…` — superseded candidate/deployment; historical and non-transferable.
