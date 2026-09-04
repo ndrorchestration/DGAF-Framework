@@ -2,11 +2,11 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-03
+last_verified: 2026-09-04
 applies_to_ref: main
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
-current_mainline_control_plane_head: 7bbfd8ec5991ce399b8ee58cdeca742040ad272c
+current_mainline_control_plane_head: 028771c3a40bce5e78984c13e91ef102066de6fa
 candidate identity: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 verified_runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 verified_runtime_deployment: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
@@ -23,16 +23,16 @@ GitHub is authoritative for implementation and CI; governance decisions are reco
 
 The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 
-The current mainline control-plane head is `7bbfd8ec5991ce399b8ee58cdeca742040ad272c`, the merge commit for PR #217. The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to that exact Git SHA.
+The current mainline control-plane head is `028771c3a40bce5e78984c13e91ef102066de6fa`, the merge commit for PR #223. PR #223 corrected the TLA+ Tools v1.8.0 checksum metadata to the current official release-asset digest `16b8cd970e07147ff91f126baecba7edd98202e5ab33220a42f8f4358ee94b2b`; its authoritative Governance CI passed before merge. That change is CI supply-chain remediation only.
 
-The `7bbfd8e…` change is control-plane hardening and does not by itself replace the separately scoped verified runtime candidate. PRs #219, #220, and #221 are open control-plane remediation lanes and are not experimental authorization.
+The verified executable runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` bound to that exact Git SHA. The current mainline control-plane head must not be conflated with that separately scoped runtime identity.
 
 ## Runtime gate state
 
 | Boundary | Status | Scope |
 |---|---|---|
 | P-35 | VALIDATED | immutable boundary `643dc77a…` |
-| Mainline control-plane head | CURRENT | `7bbfd8e…` |
+| Mainline control-plane head | CURRENT | `028771c3…` |
 | Verified executable runtime candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Candidate deployment | VERIFIED READY | `dpl_8Msuf…` bound to `7c1cc4…` |
 | P2 | CLOSED / VERIFIED | run `33730195621`, artifact `9883521704` |
@@ -54,21 +54,29 @@ P2 run `33730195621` verified the exact candidate/deployment pair with all five 
 
 P6a run `33728695806` verified the same exact candidate/deployment binding using the canonical production origin; all four POST/preflight predicates passed. Artifact `9882965299` has digest `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`.
 
-## Control-plane hardening state
+## Control-plane remediation state
 
-- PR #217 is merged into current `main`; it hardens pre-freeze runner least privilege and reproducibility.
-- PR #219 remains open and hardens completion-controller evidence binding to the exact triggering workflow run rather than selecting the latest matching run.
-- PR #220 remains open and requires every blinded condition to contain the identical canonical topology × failure-count matrix.
-- PR #221 remains open and adds hash-enforced dry-run dependency installation plus exact-candidate structural evidence-registry emission.
-- PR #216 is closed/superseded; its still-valid evidence-registry intent was reworked onto current mainline in #221 without carrying forward stale dependency/checksum history.
+- **PR #223 — MERGED:** TLA+ v1.8.0 digest corrected to the exact official release-asset digest. Authoritative Governance CI passed; no experimental authorization or execution was introduced.
+- **PR #219 — OPEN / REBASED / CURRENT-MAIN VALIDATION:** completion-controller evidence is bound to the exact triggering `workflow_run.id` and artifact rather than selecting the latest matching run. Current head `43d53f79067bd0ef6c8a0d3a344f13edcff62b7c`.
+- **PR #220 — OPEN / REBASED / CURRENT-MAIN VALIDATION:** every blinded condition must contain the identical canonical 5-topology × 9-failure pilot matrix. Current head `a82a56030be6a6bd3125014d1155a972fc207643`.
+- **PR #221 — OPEN / REBASED / CURRENT-MAIN VALIDATION:** dry-run dependency installation uses hash enforcement, persisted Git credentials are disabled, and an exact-candidate structural evidence registry is emitted. Current head `512340b57905fb01ff320d8c1f14724de897051a`.
+- **PR #222 — OPEN / REBASED / CURRENT-MAIN VALIDATION:** scheduled live regression uses the established Vercel automation bypass path and fails closed when the credential is absent. Current head `10209402423c8c7c4b75717e88c1f6a8fcae8e32`.
+- **PR #217 — MERGED:** pre-freeze runner least-privilege and reproducibility hardening.
+- **PR #216 — CLOSED / SUPERSEDED.** Its still-valid evidence-registry intent was reworked into #221 without carrying forward stale checksum history.
 
-These changes are control-plane safeguards. They do not create empirical observations, establish efficacy, authorize a pilot, or create a freeze.
+The four open remediation PRs are separate control-plane changes. They do not create empirical observations, establish efficacy, authorize a pilot, or create a freeze.
+
+## Documentation / provenance hygiene
+
+Current mainline identity, verified runtime identity, candidate branches, deployments, workflow runs, and evidence artifacts are deliberately represented as separate provenance objects. A current documentation commit is not itself an experimental candidate, and historical evidence does not transfer across SHAs merely because the implementation intent is similar.
+
+The TLA+ release pin is currently `v1.8.0` with official digest `16b8cd970e07147ff91f126baecba7edd98202e5ab33220a42f8f4358ee94b2b`. The successful Governance CI run that validated the remediation is evidence for the corrected CI supply chain; it is not efficacy evidence.
 
 ## Evidence boundary
 
-Closed P2/P6a runtime evidence remains scoped to the verified executable runtime identity above. Documentation/control-plane changes do not reopen those predicates unless the runtime surface or their governing acceptance conditions materially change. No empirical efficacy conclusion follows from these runtime checks.
+Closed P2/P6a runtime evidence remains scoped to the verified executable runtime identity above. Documentation/control-plane changes do not reopen those predicates unless the runtime surface or their governing acceptance conditions materially change. No empirical efficacy conclusion follows from runtime or CI checks.
 
-The PDMAL instrumentation workflow is intended to remain isolated from documentation-only changes and retains deliberate `workflow_dispatch` as the route for intentional evidence execution. A successful PR dry run validates workflow/control infrastructure; it does not advance empirical N.
+The PDMAL instrumentation workflow is isolated from documentation-only changes and retains deliberate `workflow_dispatch` as the route for intentional evidence execution. A successful structural or dry-run workflow validates workflow/control infrastructure; it does not advance empirical N.
 
 ## Closure sequence
 
