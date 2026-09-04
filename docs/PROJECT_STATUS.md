@@ -2,7 +2,8 @@
 
 **Status date:** 2026-09-04  
 **Repository:** `ndrorchestration/DGAF-Framework`  
-**Current control-plane head:** `b2fd2650578f5d428577f7ef8d63099ba92337d9`  
+**Current main tip:** `35436f1c95c11e49d8af7603bf914128cf2b4aee`  
+**Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
 **Verified executable runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
 **Verified runtime deployment:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`  
 **Corrected apparatus provenance anchor:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
@@ -11,14 +12,15 @@
 
 ## Executive state
 
-The repository is in post-control-plane-remediation, pre-freeze closure. The current control-plane head is `b2fd265…`; the verified executable runtime identity remains `7c1cc4…` with deployment `dpl_8Ms…`. The manifest/control-plane documentation changes do not alter the runtime surfaces covered by P2/P6a, so those predicates remain closed.
+The repository is in post-control-plane-remediation, pre-freeze closure. The consolidated control-state anchor is `89be386b…`; `main` now continues with documentation-only reconciliation commits through `35436f1…`. The verified executable runtime identity remains `7c1cc4…` with deployment `dpl_8Ms…`. Documentation-only lineage does not alter the runtime surfaces covered by P2/P6a, so those predicates remain closed.
 
 ## Gate board
 
 | Gate / control | Status | Evidence / state |
 |---|---|---|
 | Corrected apparatus provenance | CANONICAL ANCHOR | `2a54a67d…` |
-| Control-plane main | CURRENT | `b2fd265…` |
+| Control-plane consolidated anchor | CURRENT | `89be386b…` |
+| Main tip | CURRENT | `35436f1c…` |
 | Verified executable candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
 | Runtime deployment | VERIFIED READY | `dpl_8Ms…` |
 | P2 | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
@@ -45,6 +47,10 @@ The PDMAL instrumentation dry run on PR #213 also passed its deterministic, stru
 Evidence remains candidate- and workflow-scoped. Closed P2/P6a evidence is not reopened by documentation-only control-plane changes. Current P3–P6 closure still requires the operational and durable-custody predicates defined by the governance protocol.
 
 The #220/#230/#231 matrix-hardening sequence was closed without merge after invariant analysis showed that the proposed extra matrix-equality assertion was already implied by canonical coordinate membership, per-condition cardinality, and duplicate-cell rejection. No active matrix blocker remains.
+
+## Current documentation hygiene state
+
+The 2026-09-04 reconciliation pass has established `89be386b…` as the consolidated control-state anchor and `35436f1c…` as the present `main` tip. Current-state registries should identify both explicitly so later documentation-only descendants cannot be mistaken for a new executable candidate.
 
 ## Required closure sequence
 
