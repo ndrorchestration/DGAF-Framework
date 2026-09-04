@@ -1,0 +1,116 @@
+{
+  "manifest_type": "DGAF numerical/control instrument identity",
+  "manifest_version": "0.1-audit",
+  "status": "NON-AUTHORITATIVE_PRE-CANONICALIZATION",
+  "source_commit": "4ac8937f5b8f3358655a06ee7f9d8cd83b87106c",
+  "identity_fields": [
+    "instrument_id",
+    "instrument_version",
+    "instrument_type",
+    "canonical_source",
+    "formula_or_algorithm",
+    "parameter_set",
+    "score_range",
+    "thresholds_or_predicates",
+    "scope",
+    "authority",
+    "binding_strength",
+    "implementation_ref",
+    "source_commit",
+    "execution_run",
+    "execution_timestamp",
+    "upstream_dependencies",
+    "epistemic_status"
+  ],
+  "instruments": [
+    {
+      "instrument_id": "QA-11Q-ARTIFACT-v1",
+      "type": "RUBRIC",
+      "source": "docs/qa/QA_RUBRIC.md",
+      "model": "11 questions; stated weighted composite",
+      "score_range_claimed": "0-1",
+      "thresholds": [">=0.70", ">=0.90"],
+      "audit_status": "CONTRADICTION",
+      "defect": "listed weights total 1.50 while formula divides by 11"
+    },
+    {
+      "instrument_id": "GATE-11Q-v2",
+      "type": "GATE",
+      "source": "docs/gates/GATE_11Q.md",
+      "model": "11 deployment gates",
+      "thresholds": ["all 11 >= 3/4 across N>=3 when applicable"],
+      "audit_status": "DUPLICATE_REVIEW",
+      "lineage": "parent pattern P-11 is 11Q Attestation Scoring"
+    },
+    {
+      "instrument_id": "AXIS-v1.2",
+      "type": "METRIC / SCORE",
+      "source": "docs/qa/AXIS_METRIC_SPEC.md",
+      "model": "4 invariants I/P/A/E; composite=min(I,P,A,E)",
+      "score_range": "0-100",
+      "thresholds": [">=85 compliant", "70-84 drift", "<70 breach"],
+      "audit_status": "GAP",
+      "implementation_status": "Phase 3/4 instrumentation open"
+    },
+    {
+      "instrument_id": "APOGEE-AXIS-RUBRIC-v1",
+      "type": "RUBRIC",
+      "source": "docs/agents/apogee/QA_RUBRIC.md",
+      "model": "7 dimensions; 0-1 weighted sum",
+      "thresholds": ["P-11 >=0.85", "P-15 >=0.90", "AXIS floor >=0.75"],
+      "audit_status": "CONTRADICTION",
+      "lineage": "claims AXIS source but materially differs from AXIS-v1.2"
+    },
+    {
+      "instrument_id": "RESON-HARMONIC-v1",
+      "type": "RUBRIC",
+      "source": "docs/agents/reson/QA_RUBRIC.md",
+      "model": "4 H dimensions; weighted average",
+      "thresholds": ["seal floor 0.85", "sustained target >=0.90", "<0.70 escalation"],
+      "audit_status": "CONTRADICTION",
+      "scope_issue": "P-15 coupling artifacts elsewhere specify Reson >=0.75"
+    },
+    {
+      "instrument_id": "AHG-S-v1.3",
+      "type": "METRIC / SCORE",
+      "source": "docs/theory/AHG_ARCHITECTURE.md",
+      "model": "S=0.35De+0.20N+0.25C+0.20R; phi=1+0.8*sigma(S)",
+      "thresholds": ["phi in (1.0,1.8)", "Tribunal >1.80"],
+      "audit_status": "CONTRADICTION",
+      "defect": "companion analysis uses a different default weight total"
+    },
+    {
+      "instrument_id": "AHG-ANALYSIS-v1",
+      "type": "FORMAL COMPANION",
+      "source": "docs/theory/AHG_STABILITY_ANALYSIS.md",
+      "model": "divergence decomposition",
+      "audit_status": "CONTRADICTION",
+      "defect": "weighted divergence terms total 1.70 while partition is described as normalized without explicit normalization"
+    },
+    {
+      "instrument_id": "P42-RECOVERY-v1",
+      "type": "METRIC / CONTROL",
+      "source": "components/ahg_recovery.py",
+      "model": "Rc=0.50*dDe+0.30*dK+0.20*dv_phi",
+      "thresholds": ["Rc>0.05", "phi<1.70", "2 turns"],
+      "audit_status": "CONFIRMED_IMPLEMENTATION",
+      "boundary": "control signal, not stability proof"
+    },
+    {
+      "instrument_id": "KAPPA-EVAL-v3.6",
+      "type": "EXECUTION / MEASUREMENT",
+      "source": "components/evaluate_router.py",
+      "model": "five-score weighted average normalized by selected total weight",
+      "audit_status": "CONFIRMED_IMPLEMENTATION",
+      "boundary": "distinct score family from AXIS/11Q/Reson"
+    }
+  ],
+  "promotion_rule": "unresolved upstream formula, parameters, scope, or execution identity blocks promotion of derived evidence",
+  "prohibitions": [
+    "silent weight normalization",
+    "silent threshold selection",
+    "alias collapse",
+    "historical-score promotion"
+  ],
+  "scientific_boundary": "PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0"
+}
