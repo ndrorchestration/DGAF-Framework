@@ -365,7 +365,7 @@ class PDMALConvergenceMonitor:
         all_e  = set(c) | set(p)
         deltas = {e: abs(c.get(e, 0.0) - p.get(e, 0.0)) for e in all_e}
         frob   = math.sqrt(sum(v**2 for v in deltas.values()))
-        max_e  = max(deltas, key=deltas.get) if deltas else ("?", "?")
+        max_e  = max(deltas, key=lambda edge: deltas[edge]) if deltas else ("?", "?")
         return frob, deltas.get(max_e, 0.0), max_e
 
     def _sev(self, n: int) -> ConvergenceStatus:
@@ -848,7 +848,7 @@ class AgentAmethyst:
         return rec
 
     def full_report(self) -> Dict:
-        by_kappa = {}
+        by_kappa: Dict[str, List[float]] = {}
         for r in self.audit_log:
             by_kappa.setdefault(r.kappa_category, []).append(r.hpg_effective_confidence)
         kappa_avg = {k: round(sum(v)/len(v), 4) for k, v in by_kappa.items()}
