@@ -3,6 +3,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THREAT_MODEL = ROOT / "docs/governance/P4_MODE_T_SOLO_CUSTODY_THREAT_MODEL_2026-09-05.md"
 EVIDENCE = ROOT / "docs/governance/P4_MODE_T_EXTERNAL_ASSUMPTIONS_EVIDENCE_2026-09-05.md"
+SCHEMA = ROOT / "docs/governance/P4_MODE_T_SCHEMA_V3_DRAFT_2026-09-05.md"
 P4 = ROOT / "docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md"
 
 
@@ -56,13 +57,37 @@ def test_mode_t_keeps_live_runner_memory_access_unknown():
 def test_mode_h_and_i_are_not_weakened_by_mode_t_design():
     p4 = _read(P4)
     threat = _read(THREAT_MODEL)
+    schema = _read(SCHEMA)
     assert "Mode H — distinct-human custody" in p4
     assert "Mode I — institutional / third-party custody" in p4
     assert "Mode H and Mode I semantics exactly" in threat
+    assert "Mode H retains the current v2 requirement" in schema
+    assert "Mode I retains the same current v2 pre-freeze commitment requirement" in schema
+    assert "A Mode H/I record must never use Mode T null-secret fields" in schema
+
+
+def test_mode_t_schema_keeps_pre_authorization_secret_fields_null():
+    text = _read(SCHEMA)
+    assert 'p4_pre_freeze_class: "mechanism"' in text
+    assert "key_commitment_sha256: null" in text
+    assert "mapping_commitment_sha256: null" in text
+    assert 'secret_instantiation_status: "NOT_EXECUTED"' in text
+    assert "Final pre-authorization P9 must reject a Mode T freeze containing a real key/mapping commitment" in text
+
+
+def test_mode_t_schema_binds_exact_reserved_run_and_first_attempt():
+    text = _read(SCHEMA)
+    assert 'record_type: "PDMAL_MODE_T_RUN_RESERVATION"' in text
+    assert "github_run_attempt: 1" in text
+    assert 'record_type: "PDMAL_PILOT_AUTHORIZATION"' in text
+    assert "allowed_run_attempt: 1" in text
+    assert "fail before secret generation unless both records match" in text
 
 
 def test_design_record_is_explicitly_non_authorizing():
-    text = _read(THREAT_MODEL)
-    assert "AUTHORIZATION NOT GRANTED" in text
-    assert "empirical N=0" in text
-    assert "IMPLEMENTATION NOT YET PROMOTABLE" in text
+    threat = _read(THREAT_MODEL)
+    schema = _read(SCHEMA)
+    assert "AUTHORIZATION NOT GRANTED" in threat
+    assert "empirical N=0" in threat
+    assert "IMPLEMENTATION NOT YET PROMOTABLE" in threat
+    assert "This draft does not alter the canonical P4 procedure" in schema
