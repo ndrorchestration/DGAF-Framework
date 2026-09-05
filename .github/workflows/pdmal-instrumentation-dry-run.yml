@@ -1,7 +1,8 @@
 name: PDMAL Instrumentation Dry Run
 
 # Experiment evidence workflow: documentation-only changes must not become
-# experimental candidates. Use workflow_dispatch for deliberate candidate runs.
+# experimental candidates. Resolve the designated runtime candidate from the
+# canonical manifest and record the workflow-definition commit separately.
 on:
   push:
     paths:
@@ -24,32 +25,70 @@ jobs:
       PDMAL_BLINDING_KEY: ${{ secrets.PDMAL_BLINDING_KEY }}
       PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout control plane for candidate resolution
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+
+      - name: Resolve designated runtime candidate
+        id: candidate
+        env:
+          WORKFLOW_DEFINITION_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          manifest="docs/experiment/NEW_CANDIDATE_MANIFEST.md"
+          candidate_sha="$(awk '/^candidate_sha:/{print $2; exit}' "$manifest")"
+          candidate_tree_sha="$(awk '/^candidate_tree_sha:/{print $2; exit}' "$manifest")"
+          apparatus_source_sha="$(awk '/^apparatus_source_sha:/{print $2; exit}' "$manifest")"
+          apparatus_source_tree_sha="$(awk '/^apparatus_source_tree_sha:/{print $2; exit}' "$manifest")"
+          test "${#candidate_sha}" = 40
+          test "${#candidate_tree_sha}" = 40
+          test "${#apparatus_source_sha}" = 40
+          test "${#apparatus_source_tree_sha}" = 40
+          {
+            echo "candidate_sha=$candidate_sha"
+            echo "candidate_tree_sha=$candidate_tree_sha"
+            echo "apparatus_source_sha=$apparatus_source_sha"
+            echo "apparatus_source_tree_sha=$apparatus_source_tree_sha"
+          } >> "$GITHUB_OUTPUT"
+          echo "WORKFLOW_DEFINITION_SHA=$WORKFLOW_DEFINITION_SHA" >> "$GITHUB_ENV"
+          {
+            echo "designated_candidate_sha=$candidate_sha"
+            echo "designated_candidate_tree_sha=$candidate_tree_sha"
+            echo "workflow_definition_sha=$WORKFLOW_DEFINITION_SHA"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Checkout designated runtime candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.candidate.outputs.candidate_sha }}
+          persist-credentials: false
+
       - name: Capture executed source identity
         env:
-          CANDIDATE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          CANDIDATE_SHA: ${{ steps.candidate.outputs.candidate_sha }}
+          EXPECTED_CANDIDATE_TREE_SHA: ${{ steps.candidate.outputs.candidate_tree_sha }}
+          APPARATUS_SOURCE_SHA: ${{ steps.candidate.outputs.apparatus_source_sha }}
+          APPARATUS_SOURCE_TREE_SHA: ${{ steps.candidate.outputs.apparatus_source_tree_sha }}
           WORKFLOW_RUN_ID: ${{ github.run_id }}
           WORKFLOW_EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
           tree_sha="$(git rev-parse HEAD^{tree})"
-          apparatus_source_sha="$(awk '/^apparatus_source_sha:/{print $2; exit}' docs/experiment/NEW_CANDIDATE_MANIFEST.md)"
-          apparatus_source_tree_sha="$(awk '/^apparatus_source_tree_sha:/{print $2; exit}' docs/experiment/NEW_CANDIDATE_MANIFEST.md)"
+          test "$tree_sha" = "$EXPECTED_CANDIDATE_TREE_SHA"
           protocol_blob_sha="$(git hash-object docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md)"
           protocol_content_sha256="$(sha256sum docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md | awk '{print $1}')"
           execution_timestamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          test "${#apparatus_source_sha}" = 40
-          test "${#apparatus_source_tree_sha}" = 40
+          test "${#APPARATUS_SOURCE_SHA}" = 40
+          test "${#APPARATUS_SOURCE_TREE_SHA}" = 40
           test "${#protocol_blob_sha}" = 40
           {
             echo "CANDIDATE_SHA=$CANDIDATE_SHA"
             echo "EXECUTED_TREE_SHA=$tree_sha"
-            echo "APPARATUS_SOURCE_SHA=$apparatus_source_sha"
-            echo "APPARATUS_SOURCE_TREE_SHA=$apparatus_source_tree_sha"
+            echo "APPARATUS_SOURCE_SHA=$APPARATUS_SOURCE_SHA"
+            echo "APPARATUS_SOURCE_TREE_SHA=$APPARATUS_SOURCE_TREE_SHA"
             echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID"
             echo "WORKFLOW_EVENT=$WORKFLOW_EVENT"
             echo "PROTOCOL_BLOB_SHA=$protocol_blob_sha"
@@ -59,14 +98,15 @@ jobs:
           {
             echo "executed_candidate_sha=$CANDIDATE_SHA"
             echo "executed_tree_sha=$tree_sha"
-            echo "apparatus_source_sha=$apparatus_source_sha"
-            echo "apparatus_source_tree_sha=$apparatus_source_tree_sha"
+            echo "apparatus_source_sha=$APPARATUS_SOURCE_SHA"
+            echo "apparatus_source_tree_sha=$APPARATUS_SOURCE_TREE_SHA"
             echo "workflow_run_id=$WORKFLOW_RUN_ID"
             echo "workflow_event=$WORKFLOW_EVENT"
             echo "protocol_blob_sha=$protocol_blob_sha"
             echo "protocol_content_sha256=$protocol_content_sha256"
             echo "execution_timestamp=$execution_timestamp"
           } >> "$GITHUB_STEP_SUMMARY"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -168,6 +208,7 @@ jobs:
           tree_sha = os.environ["EXECUTED_TREE_SHA"]
           apparatus_source_sha = os.environ["APPARATUS_SOURCE_SHA"]
           apparatus_source_tree_sha = os.environ["APPARATUS_SOURCE_TREE_SHA"]
+          workflow_definition_sha = os.environ["WORKFLOW_DEFINITION_SHA"]
           run_id = os.environ["WORKFLOW_RUN_ID"]
           event = os.environ["WORKFLOW_EVENT"]
           protocol_blob_sha = os.environ["PROTOCOL_BLOB_SHA"]
@@ -181,6 +222,7 @@ jobs:
           }
           predicate_defaults = {
               "candidate_sha": candidate,
+              "producer_workflow_definition_sha": workflow_definition_sha,
               "producer_workflow_run_id": run_id,
               "producer_artifact_id": source_artifact["id"],
               "producer_artifact_digest": source_artifact["digest"],
@@ -196,6 +238,7 @@ jobs:
               "protocol_blob_sha": protocol_blob_sha,
               "protocol_content_sha256": protocol_content_sha256,
               "source_workflow": "PDMAL Instrumentation Dry Run",
+              "workflow_definition_sha": workflow_definition_sha,
               "workflow_run_id": run_id,
               "workflow_event": event,
               "workflow_action": "completed",
@@ -241,7 +284,7 @@ jobs:
           Path("/tmp/dgaf-evidence-registry.json").write_text(
               json.dumps(registry, indent=2, sort_keys=True) + "\n", encoding="utf-8"
           )
-          print("emitted self-binding candidate registry for", candidate)
+          print("emitted designated-candidate registry for", candidate)
           PY
       - name: Upload exact-candidate evidence registry
         uses: actions/upload-artifact@v4
