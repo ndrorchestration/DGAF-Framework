@@ -2,115 +2,107 @@
 
 **Originally opened:** 2026-09-04  
 **Reconciled:** 2026-09-05  
-**Repository main at reconciliation:** `9cf9fcdd3454ce7309efdcbbe4ef29f802a7c97e`  
+**Control-plane reconciliation base:** `4382a7b745c1abde3a68eb7848611412f5bd34d7`  
 **Designated runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
 **Candidate tree:** `586c00d6dedb589e52108279f9759be3c4f927e1`  
 **Experimental boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
 
-This packet is a control and evidence-index artifact. It does not establish efficacy, create a freeze, grant authorization, permit unblinding, or create empirical observations.
-
-## Identity roles
-
-| Identity | Role |
-|---|---|
-| `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | corrected apparatus provenance anchor |
-| `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d` | immutable P-35 validation boundary |
-| `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` | consolidated control-state anchor |
-| `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | designated executable runtime candidate |
-| `586c00d6dedb589e52108279f9759be3c4f927e1` | runtime candidate tree |
-| `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | READY production deployment sourced from the runtime candidate |
-| `9cf9fcdd3454ce7309efdcbbe4ef29f802a7c97e` | current documentation/control-plane main lineage |
-
-Documentation/control-plane descendants do not automatically replace the runtime candidate or inherit its runtime evidence.
+This packet is a control/evidence-index artifact. It does not establish efficacy, create a freeze, grant authorization, permit unblinding, or create empirical observations.
 
 ## Predicate matrix
 
-| Predicate | Current state | Evidence and remaining boundary |
+| Predicate | Current state | Evidence / remaining boundary |
 |---|---|---|
-| P1 Candidate Integrity | CLOSED / VERIFIED | apparatus, candidate/tree, self-bound provenance, and live deployment identity |
-| P2 Runtime Contract | CLOSED / VERIFIED | exact candidate/deployment five-case runtime predicates; run `33730195621`, artifact `9883521704` |
-| P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`, artifacts `9961526468` and `9961526662` |
-| P4 Security / Blinding | OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT | synthetic behavior passes; real human/key custody and access separation remain unestablished |
-| P5 Provenance / Reproducibility | OPEN / FINAL IDENTITY BINDING RECORDED FOR REVIEW | candidate/environment/determinism evidence present; exact analysis/configuration/runner/schema identities recorded in `P8_ANALYSIS_LOCK.md`; authoritative merge/review remains |
-| P6 Evidence Custody | CLOSED / VERIFIED | external archive → retrieval → SHA-256 equality contract satisfied for retained evidence set |
-| P6a Runtime / CORS | CLOSED / VERIFIED | exact candidate/deployment four-case CORS predicates; run `33728695806`, artifact `9882965299` |
-| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | final apparatus/candidate/protocol/analysis/freeze binding required |
-| P8 Analysis Lock | OPEN / FAIL-CLOSED | analysis identities recorded; prerequisite acceptance and immutable freeze remain |
-| P9 Independent Verification | NOT EXECUTED / OPEN | final bound-chain verification not executed |
+| P1 Candidate Integrity | CLOSED / VERIFIED | apparatus, candidate/tree, exact deployment identity |
+| P2 Runtime Contract | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704` |
+| P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662` |
+| P4 Security / Blinding | OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED | synthetic controls pass; real distinct-human custody/access separation absent |
+| P5 Provenance / Reproducibility | CLOSED / VERIFIED | candidate reproducibility evidence + exact analysis identities + signed authoritative merge `2e325acd…` + post-merge deep CI PASS |
+| P6 Evidence Custody | CLOSED / VERIFIED | external archive → retrieval → SHA-256 equality for retained evidence set |
+| P6a Runtime / CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299` |
+| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | actual P4 custody and final freeze identities remain unresolved |
+| P8 Analysis Lock | OPEN / FAIL-CLOSED | analysis identities bound; immutable freeze not created/verified |
+| P9 Independent Verification | NOT EXECUTED / OPEN | final frozen-chain independent verification absent |
 | Freeze | NOT ESTABLISHED | no immutable pilot identity |
 | Pilot authorization | NOT GRANTED | separate governance decision |
 | Empirical N | 0 | no empirical observations |
 
-## P2 — authenticated runtime matrix
+## Exact runtime evidence
 
-Run `33730195621` completed successfully against candidate `7c1cc4bb…` and deployment `dpl_8Msuf…`. Candidate identity, protected bypass availability, the five-case runtime matrix, and provenance upload all passed.
+### P2
 
-The candidate-bound artifact `9883521704` was resolved on 2026-09-05 and was unexpired. Its digest is:
+Run `33730195621` completed successfully against candidate `7c1cc4bb…` and deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`. Artifact `9883521704` has digest:
 
 `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`
 
-The valid request's expected HTTP 503 / `BLOCKED` result is fail-closed contract behavior because live audit state is not wired into `/api/orchestrate`. It is not general application-health or efficacy evidence.
+The valid request's expected HTTP 503 / `BLOCKED` outcome is fail-closed contract behavior because live audit state is not wired; it is not general application-health or efficacy evidence.
 
-## P6a — authenticated CORS matrix
+### P6a
 
-Run `33728695806` completed successfully against the same candidate/deployment tuple. Candidate identity, protected bypass availability, the four-case live CORS matrix, and provenance upload all passed.
-
-The candidate-bound artifact `9882965299` was resolved on 2026-09-05 and was unexpired. Its digest is:
+Run `33728695806` completed successfully against the same candidate/deployment tuple. Artifact `9882965299` has digest:
 
 `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`
 
-This evidence applies only to the exact endpoint, deployment, environment, and origins tested. It does not establish general security, health, or efficacy.
+This CORS evidence is exact-endpoint/deployment/environment/origin scoped.
 
-## P3 — artifact contract
+## P3 artifact contract
 
-Run `33939955138` checked out the designated candidate/tree and reported successful structural, identity, matrix, determinism, and specified adversarial-substitution checks. Its source artifact is `9961526468`; its source-bound registry is `9961526662`.
+Run `33939955138` verifies candidate/tree identity, canonical matrix/schema constraints, deterministic contract behavior, duplicate rejection, and fail-closed unauthorized pilot behavior. P3 remains structural evidence only.
 
-P3 closure is structural/contract evidence only. Synthetic fixture output is not empirical data.
+## P4 security / blinding
 
-## P4 — security and blinding
+Synthetic run `33939574283` demonstrates mock-key bijection/leakage/freeze-order controls. The merged `docs/governance/P4_HUMAN_KEY_CUSTODY_PROCEDURE.md` defines the real-world custody procedure using distinct human principals and nonce-hardened commitments.
 
-Run `33939574283` provides current-candidate synthetic mock-key evidence for deterministic bijection, leakage checks, and freeze-order behavior.
+The procedure has not been performed. No real Key Custodian, distinct execution/analysis principal, real commitment digest, custody attestation, or no-access attestation has been accepted. P4 remains OPEN / NOT EXECUTED operationally.
 
-P4 remains OPEN because actual human/key custody and access separation have not been established. CI cannot infer those operational facts.
+## P5 provenance / reproducibility — CLOSED / VERIFIED
 
-## P5 — provenance, reproducibility, and analysis identity
+Exact analysis-control identities:
 
-Run `33939955138` binds candidate/tree, protocol/dependency identity, deterministic reproduction, environment fingerprints, RNG child-stream separation, and topology fingerprints.
+- analysis implementation blob `a269ed226b1d261663994fc3ef0e8a1a96da6cd3`;
+- deterministic analysis configuration SHA-256 `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`;
+- pilot runner blob `b5152fa3c9c4effe1c5201a45d58ac2d6b8e5243`;
+- pilot artifact schema blob `c620d3755a645c5f2ad14124f42ce07a1c670c5f`;
+- protocol `0.7.5`.
 
-The designated candidate's analysis-control identities are now recorded in `docs/governance/P8_ANALYSIS_LOCK.md`:
+The analysis configuration SHA-256 was independently recomputed and matched exactly.
 
-- analysis implementation Git blob SHA: `a269ed226b1d261663994fc3ef0e8a1a96da6cd3`;
-- deterministic analysis configuration SHA-256: `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`;
-- pilot runner Git blob SHA: `b5152fa3c9c4effe1c5201a45d58ac2d6b8e5243`;
-- pilot artifact schema Git blob SHA: `c620d3755a645c5f2ad14124f42ce07a1c670c5f`;
-- protocol version encoded by runner: `0.7.5`.
+Exact-candidate run `33939955138` provides candidate/tree, protocol/dependency, toolchain/environment, deterministic reproduction, environment fingerprint, RNG separation, and topology-determinism evidence.
 
-P5 remains OPEN until this exact binding lands on the authoritative branch and passes the normal consistency/review checks. No new analysis implementation is required merely to satisfy provenance bookkeeping.
+PR #247 bound these identities into the authoritative control plane. Its exact PR head completed all returned workflows successfully and merged as signed commit `2e325acdde74dde50d3d4dc4f493a834fbd28eb2`.
 
-## P6 — evidence round trip
+Post-merge verification on exact `2e325acd…` includes:
 
-The finalized P3/P5 and P4 source/registry ZIPs were copied to a separate Google Drive archive, retrieved as raw bytes, and SHA-256 hashed. The retrieved digests matched their recorded source-artifact digests.
+- Control-State Consistency — PASS;
+- HEAD Binding — PASS;
+- Governance CI `33945464907` — PASS;
+- PDMAL Pre-Authorization Security `33945464908` — PASS.
 
-P6 is CLOSED / VERIFIED within that defined contract. Digest equality establishes equality of compared bytes at retrieval time; it does not establish immutable storage, independent human custody, producer authenticity against compromise, or a tamper-proof chain.
+Those deep checks include locked P8 analysis tests, pilot artifact-schema tests, execution-contract tests, durable-retention tests, adversarial controls, formal-model checking, and explicit non-empirical contract-mode verification.
 
-## Current-main boundary
+See `docs/experiment/P5_PROVENANCE_REPRODUCIBILITY_ATTESTATION_2026-09-05.md`.
 
-Current `main` at this reconciliation is `9cf9fcdd…`. It is a documentation/control-plane descendant of the designated runtime candidate and must not inherit candidate-scoped P2/P3/P6a evidence merely because those records are documented on `main`.
+P5 closure is bounded to provenance/reproducibility; it is not efficacy evidence.
 
-Current-main deployment and runtime health remain separate operational questions from designated-candidate scientific evidence.
+## P6 evidence round trip
+
+The finalized P3/P5 and P4 source/registry ZIPs were copied to separate archive custody, retrieved as raw bytes, and SHA-256 hashed. Retrieved digests matched the recorded source-artifact digests. This establishes the defined byte-integrity/retention contract only.
+
+## Current-main operational boundary
+
+Current repository source/deployment health is a separate operational question from the designated scientific candidate. The authoritative Vercel CLI production path is currently blocked by Vercel's 100-API-deployments-per-24-hours quota, tracked in Issue #250. No current-main deployment provenance or live health result should be inferred from the older READY candidate deployment.
 
 ## Remaining critical path
 
-1. Establish actual P4 human/key custody and access separation.
-2. Land and verify the exact P5 analysis implementation/configuration binding.
-3. Complete the exact P7 scientific identity binding.
-4. Close P8 only after its prerequisites are exact-bound and an immutable freeze is constructed/verified.
-5. Execute independent P9 against the final bound chain.
-6. Record separate explicit pilot authorization.
-7. Only then execute a blinded pilot.
+1. Perform and independently verify actual P4 human/key custody and access separation.
+2. Complete P7 final scientific identity binding.
+3. Construct and independently verify the P8 immutable freeze.
+4. Execute independent P9 against the final frozen chain.
+5. Record separate explicit pilot authorization.
+6. Only then execute blinded empirical observations.
 
 ## Non-transfer rule
 
-No historical candidate, deployment, artifact, runtime result, or experimental observation transfers to another identity without an explicit provenance relationship. Successful CI, synthetic evidence, deployment readiness, and documentation reconciliation are not empirical results.
+No historical candidate, deployment, artifact, runtime result, or experimental observation transfers to another identity without explicit provenance. Successful CI, synthetic evidence, deployment readiness, and documentation reconciliation are not empirical results.
 
 Freeze: **NOT ESTABLISHED** · Pilot authorization: **NOT GRANTED** · Empirical N: **0**
