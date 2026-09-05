@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 WORKFLOW_PATH = Path(".github/workflows/python-tests.yml")
 
 
