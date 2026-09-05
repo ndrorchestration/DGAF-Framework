@@ -24,6 +24,7 @@ This document is a binding draft only. Unresolved values remain explicit and clo
 | P5 binding merge | `2e325acdde74dde50d3d4dc4f493a834fbd28eb2` | AUTHORITATIVE MERGE / DEEP POST-MERGE VERIFICATION PASS |
 | P5 Governance CI | `33945464907` | PASS |
 | P5 Pre-Authorization Security | `33945464908` | PASS |
+| P5 closure reconciliation merge | `fcf21ce9ab3739a7b5880c6f6896cf378a3dd2da` | CLOSED / VERIFIED ON MAIN |
 | P4 custody procedure merge | `4382a7b745c1abde3a68eb7848611412f5bd34d7` | PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED |
 | P2 runtime run | `33730195621` | CLOSED / VERIFIED |
 | P2 artifact | `9883521704` | CLOSED / VERIFIED |
@@ -61,7 +62,6 @@ These are design selections, not results.
 | P4 key commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
 | P4 mapping commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
 | P4 custody/access-separation attestation | independently reviewable operational evidence | `null` / NOT EXECUTED |
-| P5 authoritative closure reconciliation | accepted mainline status reconciliation | `null` / PENDING PR #253 |
 | Final protocol blob/commit identity | immutable protocol identity at freeze | `null` / NOT FROZEN |
 | Final control-plane commit | exact accepted pre-freeze control state | `null` / NOT FROZEN |
 | Freeze manifest identity | immutable manifest object/digest | `null` / NOT CREATED |
@@ -80,14 +80,16 @@ P4 therefore remains OPEN until distinct humans actually perform and independent
 
 ## P5 boundary
 
-The exact analysis/configuration/runner/schema identities are present on the authoritative branch through merge `2e325acd…`, and the deterministic analysis configuration digest has been independently recomputed. Exact post-merge Governance CI `33945464907` and PDMAL Pre-Authorization Security `33945464908` both passed. The remaining repository-side P5 step is the authoritative status reconciliation in PR #253; this P7 draft does not preempt that merge.
+P5 is now **CLOSED / VERIFIED** on `main`. The exact analysis/configuration/runner/schema identities were bound through `2e325acd…`; exact post-merge Governance CI `33945464907` and PDMAL Pre-Authorization Security `33945464908` both passed; and the authoritative P5 closure reconciliation merged as `fcf21ce9ab3739a7b5880c6f6896cf378a3dd2da`.
+
+This P5 closure is provenance/reproducibility evidence only. It is not efficacy evidence, a freeze, authorization, or empirical execution.
 
 ## P7 closure rule
 
 P7 may be considered for `CLOSED / VERIFIED` only when:
 
 1. all scientific identities used by the experiment are exact and immutable;
-2. P5 authoritative closure reconciliation is on `main`;
+2. P5 remains authoritative and internally consistent;
 3. P4 real human/key custody and access separation are evidenced and independently reviewable;
 4. no candidate/runtime/protocol/analysis identity conflict remains;
 5. the final tuple can be copied into the immutable freeze manifest without inference or unresolved placeholders.
@@ -116,7 +118,7 @@ p5_deep_postmerge_verification:
   governance_ci_run: 33945464907
   preauthorization_security_run: 33945464908
   conclusion: "PASS"
-p5_closure_reconciliation: null
+p5_closure_reconciliation: "fcf21ce9ab3739a7b5880c6f6896cf378a3dd2da"
 p4_procedure_merge: "4382a7b745c1abde3a68eb7848611412f5bd34d7"
 p4_custody_evidence: null
 final_protocol_identity: null
@@ -130,8 +132,9 @@ empirical_n: 0
 
 ## Explicit non-claims
 
-This draft does not close P4, P5, P7, P8, or P9; create a freeze; authorize a pilot or unblinding; convert deployment/CI/synthetic evidence into empirical evidence; or increase empirical N.
+This draft does not close P4, P7, P8, or P9; create a freeze; authorize a pilot or unblinding; convert deployment/CI/synthetic evidence into empirical evidence; or increase empirical N.
 
+**P5: CLOSED / VERIFIED.**  
 **P7 remains ADOPTED / FINAL BINDING OPEN.**  
 **Freeze: NOT ESTABLISHED.**  
 **Pilot authorization: NOT GRANTED.**  
