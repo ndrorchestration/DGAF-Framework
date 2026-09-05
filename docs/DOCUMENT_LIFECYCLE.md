@@ -56,7 +56,7 @@ Before proposing a new documentation artifact, inspect the existing owner for th
 | Concern | Existing seed/source family |
 |---|---|
 | Documentation lifecycle | `docs/DOCUMENT_LIFECYCLE.md` |
-| Documentation gaps/hygiene | documentation gap audits and dated reconciliation records |
+| Documentation gaps/hygiene | `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` plus dated documentation reconciliation/hygiene records |
 | Temporal/history | session logs, version histories, dated governance/evidence records |
 | Taxonomy | agent/ecosystem registries and identity reconciliation records |
 | Pattern library | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` and `docs/ndr_patterns_unified.json` lineage |
