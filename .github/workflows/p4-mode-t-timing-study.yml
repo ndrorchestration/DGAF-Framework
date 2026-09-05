@@ -1,0 +1,154 @@
+name: P4 Mode T Synthetic Timing Study
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-timing-study.yml'
+      - 'docs/governance/P4_MODE_T_TIMING_STUDY_DESIGN_2026-09-05.md'
+      - 'experiments/pdmal_pilot/mode_t_timing_study.py'
+      - 'experiments/pdmal_pilot/test_mode_t_timing_study.py'
+      - 'experiments/pdmal_pilot/analysis.py'
+      - 'experiments/pdmal_pilot/run_pilot.py'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLOCK_VERSION: '1.2.0'
+  TLOCK_ARCHIVE: 'tlock_1.2.0_linux_amd64.tar.gz'
+  TLOCK_RELEASE_BASE: 'https://github.com/drand/tlock/releases/download/v1.2.0'
+  TLOCK_EXPECTED_SHA256: '0fda1e0fedffab82217cbd90e0b8b2a9d42df88a361b2dd890d8fac173b5dc57'
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  RUNNER_CLASS: github-hosted-standard-vm-ubuntu-24.04
+  PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_pilot
+
+jobs:
+  partial-synthetic-timing:
+    name: Partial synthetic timing evidence — no W proposal
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify checkout and bind source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          workflow_sha="$(sha256sum .github/workflows/p4-mode-t-timing-study.yml | awk '{print $1}')"
+          helper_sha="$(sha256sum experiments/pdmal_pilot/mode_t_timing_study.py | awk '{print $1}')"
+          lock_sha="$(sha256sum experiments/pdmal_pilot/requirements-full-lock.txt | awk '{print $1}')"
+          analysis_sha="$(sha256sum experiments/pdmal_pilot/analysis.py | awk '{print $1}')"
+          run_pilot_sha="$(sha256sum experiments/pdmal_pilot/run_pilot.py | awk '{print $1}')"
+          task_engine_sha="$(sha256sum experiments/pdmal_pilot/task_engine.py | awk '{print $1}')"
+          for value in "$workflow_sha" "$helper_sha" "$lock_sha" "$analysis_sha" "$run_pilot_sha" "$task_engine_sha"; do
+            [[ "$value" =~ ^[0-9a-f]{64}$ ]]
+          done
+          {
+            echo "TIMING_WORKFLOW_SHA256=$workflow_sha"
+            echo "TIMING_HELPER_SHA256=$helper_sha"
+            echo "DEPENDENCY_LOCK_SHA256=$lock_sha"
+            echo "ANALYSIS_SHA256=$analysis_sha"
+            echo "RUN_PILOT_SHA256=$run_pilot_sha"
+            echo "TASK_ENGINE_SHA256=$task_engine_sha"
+          } >> "$GITHUB_ENV"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Install hash-locked PDMAL dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Reverify exact tlock v1.2.0 Linux amd64 release asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-all-errors \
+            "$TLOCK_RELEASE_BASE/checksums.txt" \
+            --output checksums.txt
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-all-errors \
+            "$TLOCK_RELEASE_BASE/$TLOCK_ARCHIVE" \
+            --output "$TLOCK_ARCHIVE"
+          published="$(awk -v f="$TLOCK_ARCHIVE" '$2 == f {print $1}' checksums.txt)"
+          computed="$(sha256sum "$TLOCK_ARCHIVE" | awk '{print $1}')"
+          test "$published" = "$TLOCK_EXPECTED_SHA256"
+          test "$computed" = "$TLOCK_EXPECTED_SHA256"
+          tar -tzf "$TLOCK_ARCHIVE" >/dev/null
+          {
+            printf 'asset_name=%s\n' "$TLOCK_ARCHIVE"
+            printf 'published_sha256=%s\n' "$published"
+            printf 'computed_sha256=%s\n' "$computed"
+            printf 'match=true\n'
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'evidence_class=SYNTHETIC_SUPPLY_CHAIN_REVERIFICATION\n'
+            printf 'empirical_data_collection=false\n'
+          } > tlock-timing-prerequisite-evidence.txt
+          {
+            echo 'P4_MODE_T_TLOCK_SHA256_VERIFIED=1'
+            echo "P4_MODE_T_TLOCK_SHA256=$computed"
+          } >> "$GITHUB_ENV"
+
+      - name: Run timing-harness contract tests
+        run: python -m pytest experiments/pdmal_pilot/test_mode_t_timing_study.py -q
+
+      - name: Run partial full-shape synthetic timing study
+        run: |
+          python experiments/pdmal_pilot/mode_t_timing_study.py \
+            --output test-artifacts/p4-mode-t-timing-partial.json \
+            --repetitions 3 \
+            --require-tlock-verification
+
+      - name: Verify evidence is partial and cannot select W
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd test-artifacts
+          sha256sum --check p4-mode-t-timing-partial.json.sha256
+          cd ..
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('test-artifacts/p4-mode-t-timing-partial.json')
+          evidence = json.loads(path.read_text(encoding='utf-8'))
+          assert evidence['evidence_class'] == 'P4_MODE_T_SYNTHETIC_TIMING_PARTIAL_V1'
+          assert evidence['control_plane_sha'] == __import__('os').environ['EVIDENCE_SHA']
+          assert evidence['stages']['exact_tlock_asset_reverification']['status'] == 'PASS'
+          assert evidence['stages']['full_synthetic_matrix_timing']['status'] == 'PASS'
+          assert evidence['stages']['locked_primary_analysis_timing']['status'] == 'PASS'
+          assert evidence['stages']['synthetic_timelock_encryption_timing']['status'] == 'NOT_EXECUTED'
+          assert evidence['stages']['external_transparency_retention_timing']['status'] == 'NOT_EXECUTED'
+          assert evidence['coverage_complete'] is False
+          assert evidence['w_proposal_eligible'] is False
+          assert evidence['numeric_w_selected'] is False
+          assert evidence['proposed_w_seconds'] is None
+          assert evidence['protocol_frozen'] is False
+          assert evidence['pilot_authorized'] is False
+          assert evidence['empirical_data_collection'] is False
+          assert evidence['secret_instantiation'] is False
+          PY
+
+      - name: Upload partial non-empirical timing evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p4-mode-t-timing-partial-${{ env.EVIDENCE_SHA }}
+          path: |
+            test-artifacts/p4-mode-t-timing-partial.json
+            test-artifacts/p4-mode-t-timing-partial.json.sha256
+            tlock-timing-prerequisite-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
