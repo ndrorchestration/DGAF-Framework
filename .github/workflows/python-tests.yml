@@ -11,6 +11,7 @@ on:
       - 'tests/**/*.py'
       - 'requirements*.txt'
       - 'pyproject.toml'
+      - '.flake8'
       - '.github/workflows/python-tests.yml'
   pull_request:
     branches: [ main, develop ]
@@ -19,6 +20,8 @@ on:
       - 'tests/**/*.py'
       - 'requirements*.txt'
       - 'pyproject.toml'
+      - '.flake8'
+      - '.github/workflows/python-tests.yml'
 
 jobs:
   staging-evidence:
@@ -114,20 +117,62 @@ jobs:
     - name: Lint with flake8
       run: |
         flake8 components --count --select=E9,F63,F82 --show-source --statistics
-        flake8 components --count --exit-zero --statistics --max-line-length=120
-      continue-on-error: true
+        flake8 components --count --statistics --max-line-length=120
 
     - name: Format check with Black
       run: black --check components/ tests/ --line-length=120
-      continue-on-error: true
 
     - name: Sort imports with isort
       run: isort --check-only components/ tests/ --profile=black
-      continue-on-error: true
 
     - name: Type check with mypy
       run: mypy components/ --ignore-missing-imports --no-implicit-optional
-      continue-on-error: true
+
+    - name: Prove quality tools reject controlled violations
+      if: matrix.python-version == '3.12'
+      shell: bash
+      run: |
+        set -euo pipefail
+        out="ci-artifacts/quality-negative-controls"
+        tmp="${RUNNER_TEMP}/dgaf-quality-negative-controls"
+        mkdir -p "$out" "$tmp"
+
+        cat > "$tmp/flake8_bad.py" <<'PY'
+        import os
+        PY
+
+        cat > "$tmp/black_bad.py" <<'PY'
+        value={"answer":42}
+        PY
+
+        cat > "$tmp/isort_bad.py" <<'PY'
+        import sys
+        import os
+        PY
+
+        cat > "$tmp/mypy_bad.py" <<'PY'
+        value: int = "not-an-int"
+        PY
+
+        run_negative() {
+          name="$1"
+          shift
+          set +e
+          "$@" > "$out/${name}.log" 2>&1
+          status=$?
+          set -e
+          printf '%s\n' "$status" > "$out/${name}.status"
+          cat "$out/${name}.log"
+          if [ "$status" -eq 0 ]; then
+            echo "negative control unexpectedly passed: $name" >&2
+            exit 1
+          fi
+        }
+
+        run_negative flake8 flake8 "$tmp/flake8_bad.py"
+        run_negative black black --check "$tmp/black_bad.py" --line-length=120
+        run_negative isort isort --check-only "$tmp/isort_bad.py" --profile=black
+        run_negative mypy mypy "$tmp/mypy_bad.py" --ignore-missing-imports --no-implicit-optional
 
     - name: Run pytest with coverage and preserve diagnostics
       shell: bash
