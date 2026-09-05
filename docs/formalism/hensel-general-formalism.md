@@ -24,7 +24,7 @@
 | 3 | 11Q-derivation.md, cosine sum claim | `cos(π/11)+cos(3π/11)+cos(5π/11) ≈ ρ_P` stated as “close” | **REMOVED / SUPERSEDED** — numerical proximity did not establish the claimed identity |
 | 4 | 11Q constant annotation | Earlier draft treated a numerical best-match as derivation evidence | Reclassified as **NUMERICAL CANDIDATE / DERIVATION OPEN**; exact source remains unresolved in `docs/formalism/constants/11Q-derivation.md` |
 | 5 | PDMAL Abelian Balance | Unit-dependent `D_a ≤ 10` treated as an operational threshold | Historical target only. Current PDMAL math uses a normalized scale-invariant admission distance and requires `τ` to be calibrated from relevant healthy-run data; synthetic calibration does not establish a production threshold. |
-| 6 | PDMAL Forman-Ricci audit | O(|E|) edge scan was described as if low compute cost implied useful drift signal | Complexity claim retained; signal claim bounded. On the current unweighted 3-regular dodecahedral graph, Forman-Ricci is exactly `-2` on all 30 edges, so it has zero variance and no discriminating audit signal until meaningful weights/other features are defined and validated. |
+| 6 | PDMAL Forman-Ricci audit | O(\|E\|) edge scan was described as if low compute cost implied useful drift signal | Complexity claim retained; signal claim bounded. On the current unweighted 3-regular dodecahedral graph, Forman-Ricci is exactly `-2` on all 30 edges, so it has zero variance and no discriminating audit signal until meaningful weights/other features are defined and validated. |
 
 ---
 
@@ -169,6 +169,8 @@ The formalism uses **Unitary Drift (1.0)** as a project-internal label for a deg
 > distinctiveness — semantic homogenization of agent outputs where all signals collapse toward  
 > an undifferentiated state (“Fractal Agency”).  
 > **NOTE:** This is DISTINCT from standard dynamical-systems terminology. The label is project-specific and must not be presented as a general mathematical theorem about convergence.
+>
+> **11Q status:** `Platinum_Constant_11Q ≈ 0.541196` remains an architecture-internal target with unresolved exact derivation. Numerical proximity to candidate trigonometric expressions is not sufficient to establish the identity.
 
 #### Attractor Registry (v1.2 — reconciled 2026-09-05)
 
@@ -183,8 +185,6 @@ The formalism uses **Unitary Drift (1.0)** as a project-internal label for a deg
 | Platinum_Constant_11Q | ≈ 0.541196 | See `docs/formalism/constants/11Q-derivation.md` | INTERNAL / SOURCE-DEPENDENT | 11Q architecture target |
 
 > **Notation correction:** `pP` / **Platinum Mean** is DGAF-specific notation for the regular-hendecagon unit-side circumradius. It must not be confused with the plastic number `ρ ≈ 1.3247179572447454`. `ρP` is not canonical mathematical notation.
-
-> **11Q status:** `Platinum_Constant_11Q ≈ 0.541196` remains an architecture-internal target with unresolved exact derivation. Numerical proximity to candidate trigonometric expressions is not sufficient to establish the identity.
 
 **Cross-ref:** `docs/phi-calculus-architecture/`, `docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`
 
@@ -236,7 +236,9 @@ The Phi-Knight Protocol specifies a contraction-oriented governance control obje
 | G3 — Normative Constraint | PASS FOR DOCUMENT SCOPE | ETHICAL_COGNITION_BOUNDARY maintained; no experimental guarantee is implied |
 | G4 — Auditable | CONDITIONAL | 11Q exact derivation, weighted-curvature signal, and real-trace `D_a` calibration remain open |
 
-**Overall gate: CANONICAL ARCHITECTURAL SPECIFICATION — CONDITIONAL ON OPEN R&D ITEMS**
+### Overall gate
+
+CANONICAL ARCHITECTURAL SPECIFICATION — CONDITIONAL ON OPEN R&D ITEMS
 
 ---
 
