@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check human/machine NDR registry identity and bound the known migration gap."""
+"""Validate the NDR human/machine registry release identity."""
 from __future__ import annotations
 
 import json
@@ -13,43 +13,43 @@ MACHINE = ROOT / "docs" / "ndr_patterns_unified.json"
 md = MARKDOWN.read_text(encoding="utf-8")
 data = json.loads(MACHINE.read_text(encoding="utf-8"))
 
-# Tolerant parsing: the canonical metadata appears both as prose
-# ("**Registry watermark:** **P-XX**") and as a table row
-# ("| Registry watermark | **P-XX** |"). Match either form.
-md_match = re.search(r"\*\*Registry watermark:\*\*\s+\*\*(P-\d+)\*\*", md) or re.search(
-    r"Registry watermark\s*\|\s*\*\*(P-\d+)\*\*", md
-)
-md_total = re.search(r"\*\*Total named patterns \(P-series\)\*\*\s+\*\*(\d+)\*\*", md) or re.search(
-    r"Total named patterns \(P-series\)\s*\|\s*\*\*(\d+)", md
-)
-if not md_match or not md_total:
+md_release = re.search(r"Registry release identity:\*\*\s+`([^`]+)`", md)
+md_watermark = re.search(r"Effective watermark:\*\*\s+\*\*(P-\d+)\*\*", md)
+md_total = re.search(r"Total named P-series patterns\s*\|\s*\*\*(\d+)\*\*", md)
+if not (md_release and md_watermark and md_total):
     raise SystemExit("Registry consistency check failed: canonical Markdown metadata is not parseable.")
 
-md_watermark = md_match.group(1)
+release_id = md_release.group(1)
+md_watermark_n = int(md_watermark.group(1).split("-")[1])
 md_total_n = int(md_total.group(1))
+
 json_watermark = str(data.get("registry_watermark", ""))
 json_total = int(data.get("total_p_series", 0))
+json_version = str(data.get("version", ""))
+json_updated = str(data.get("last_updated", ""))
 
-if md_watermark == json_watermark and md_total_n == json_total:
-    print(f"Registry consistency check passed: {md_watermark} / {md_total_n} patterns.")
-    raise SystemExit(0)
+expected_release = "NDR-REGISTRY-2026-07-03-P42"
 
-# Known, explicitly documented migration state: the machine-readable registry
-# advanced one pattern beyond the stale human-readable snapshot. This is allowed
-# temporarily so CI does not mask unrelated divergence, but the mismatch remains
-# visible as a warning and must be reconciled before the registry is declared fully
-# synchronized.
-md_n = int(md_watermark.split("-")[1])
-json_n = int(json_watermark.split("-")[1]) if json_watermark.startswith("P-") else -1
-if json_n == md_n + 1 and json_total == md_total_n + 1:
-    print(
-        "::warning::Known registry migration gap: "
-        f"Markdown={md_watermark}/{md_total_n}; JSON={json_watermark}/{json_total}. "
-        "Human-readable registry reconciliation remains OPEN."
+if release_id != expected_release:
+    raise SystemExit(f"Registry consistency check failed: unexpected release identity {release_id!r}.")
+
+if md_watermark_n != 42 or md_total_n != 42:
+    raise SystemExit(
+        f"Registry consistency check failed: Markdown={md_watermark_n}/{md_total_n}; expected P-42/42."
     )
-    raise SystemExit(0)
 
-raise SystemExit(
-    "Registry consistency check failed: "
-    f"Markdown={md_watermark}/{md_total_n}; JSON={json_watermark}/{json_total}."
+if json_watermark != "P-42" or json_total != 42:
+    raise SystemExit(
+        f"Registry consistency check failed: JSON={json_watermark}/{json_total}; expected P-42/42."
+    )
+
+if json_version != "2.4" or json_updated != "2026-07-03":
+    raise SystemExit(
+        "Registry consistency check failed: machine-readable release metadata "
+        f"version={json_version!r}, updated={json_updated!r}."
+    )
+
+print(
+    "Registry identity check passed: "
+    f"{release_id} / P-42 / 42 patterns / JSON v{json_version}."
 )
