@@ -1,7 +1,7 @@
 # Doc-Lint CI Workflow — DGAF-Framework (Spine Repo)
-# Public/current documentation quality gate.
-# Historical and append-only evidence records are governed separately so
-# presentation linting does not rewrite or invalidate provenance.
+# Public/current documentation quality gate plus repository-wide baseline audit.
+# Historical and append-only evidence records remain provenance-sensitive: the
+# audit reports their lint state before any exemption or rewrite is accepted.
 
 name: Doc Lint
 
@@ -15,12 +15,14 @@ on:
       - '**.md'
       - '.markdownlint.yml'
       - '.markdownlint.json'
+      - '.github/workflows/doc-lint.yml'
   pull_request:
     branches: [main]
     paths:
       - '**.md'
       - '.markdownlint.yml'
       - '.markdownlint.json'
+      - '.github/workflows/doc-lint.yml'
 
 jobs:
   markdownlint:
@@ -49,15 +51,27 @@ jobs:
             README.governance.md \
             README.technical.md \
             docs/architecture/DGAF_V1_*.md
-        # Detailed governance, experiment, evidence, archive, historical,
-        # generated, and append-only records remain subject to their own
-        # provenance/evidence controls rather than presentation lint.
+
+      - name: Audit repository-wide markdownlint baseline
+        id: repo_wide_audit
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          markdownlint \
+            --config .markdownlint.yml \
+            --ignore node_modules \
+            '**/*.md' 2>&1 | tee repo-wide-markdownlint.txt
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
 
       - name: Report summary
         if: always()
         run: |
-          echo "## Doc Lint Summary — DGAF-Framework" >> $GITHUB_STEP_SUMMARY
-          echo "- Linter: markdownlint-cli 0.39.0" >> $GITHUB_STEP_SUMMARY
-          echo "- Node.js: 24" >> $GITHUB_STEP_SUMMARY
-          echo "- Scope: public/current entry-point documentation" >> $GITHUB_STEP_SUMMARY
-          echo "- Separate provenance surfaces: governance, experiment, evidence, archive, historical, generated, append-only records" >> $GITHUB_STEP_SUMMARY
+          echo "## Doc Lint Summary — DGAF-Framework" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Linter: markdownlint-cli 0.39.0" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Node.js: 24" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Public/current gate: README surfaces + docs/architecture/DGAF_V1_*.md" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repository-wide baseline audit exit: ${{ steps.repo_wide_audit.outputs.exit_code }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repository-wide audit is diagnostic in this change; failures are retained for classification rather than silently ignored." >> "$GITHUB_STEP_SUMMARY"
