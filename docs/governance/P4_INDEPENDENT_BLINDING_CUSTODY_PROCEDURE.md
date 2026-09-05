@@ -111,6 +111,7 @@ Every custody mode must establish:
 10. **Evidence provenance/integrity** — retained packet identity/digest and reviewable history.
 11. **Contradiction check** — no known access record, credential, copy, or control path contradicts the separation claim.
 12. **Independent review** — a reviewer, auditable external control, or independently inspectable technical evidence verifies the custody claim without exposing secret material.
+13. **Mode-specific evidence** — evidence appropriate to the selected H/I/T path is retained under one exact SHA-256 identity.
 
 ### Mode-specific predicates
 
@@ -127,6 +128,25 @@ Every custody mode must establish:
 Acceptable review evidence may include a distinct human reviewer, provider-generated immutable audit/configuration evidence, cryptographically verifiable access policy, threshold-control evidence, or another mechanism whose correctness can be checked without granting the analyst the protected material.
 
 Where the reviewer and operator are the same person, the underlying enforcement must itself be external to that person's unilateral control and independently inspectable. Self-authored prose is never sufficient.
+
+## Evidence identities bound into P7 and final P9
+
+At P4-A closure, the retained evidence packet must yield exact non-secret values for:
+
+- `p4_custody_mode`
+- `p4_custody_instance_id`
+- `p4_custody_authority_id`
+- `p4_execution_principal_id`
+- `p4_key_commitment_sha256`
+- `p4_mapping_commitment_sha256`
+- `p4_control_path_inventory_sha256`
+- `p4_no_unilateral_access_evidence_sha256`
+- `p4_independent_review_evidence_sha256`
+- `p4_mode_evidence_sha256`
+
+Closed P7 binds those values before freeze. The immutable freeze copies them into its `p4_custody` object, and final P9 requires exact equality between the freeze and P7. This prevents a custody mode or evidence packet from being substituted after P7 closes.
+
+P9 verifies identity consistency and fail-closed state. It does not magically prove that an external system is independent from its name alone; the retained P4 evidence remains responsible for establishing the actual access-control claim.
 
 ## P4-B — post-unblinding custody continuity audit
 
@@ -188,12 +208,13 @@ custody_instance_id: null
 execution_principal_id: null
 custody_authority_id: null
 custody_system_class: null
-control_path_inventory_digest: null
-no_unilateral_access_evidence: null
-independent_review_evidence: null
 commitment_scheme: "sha256-domain-separated-secret-nonce-v1"
 key_commitment_sha256: null
 mapping_commitment_sha256: null
+control_path_inventory_sha256: null
+no_unilateral_access_evidence_sha256: null
+independent_review_evidence_sha256: null
+mode_evidence_sha256: null
 custody_assigned_at: null
 release_rule: null
 release_rule_committed_at: null
@@ -234,7 +255,7 @@ A failed custody attempt remains historical evidence. A replacement requires a n
 
 ## Relationship to CI
 
-CI may verify schema, completeness, timestamp syntax, digest formatting, candidate identity, deterministic canonicalization, commitment recomputation on synthetic fixtures, required documentation language, and fail-closed state transitions.
+CI may verify schema, completeness, timestamp syntax, digest formatting, candidate identity, deterministic canonicalization, commitment recomputation on synthetic fixtures, required documentation language, P7/freeze/P9 identity consistency, and fail-closed state transitions.
 
 CI cannot by itself prove an external service's real access model or the absence of every off-platform recovery path. The closure packet must therefore include evidence appropriate to the selected custody mode.
 
