@@ -1,0 +1,23 @@
+{
+  "registry_release_identity": "NDR-REGISTRY-2026-07-03-P42",
+  "authority": "CANONICAL NDR FAMILY AUTHORITY",
+  "effective_watermark": "P-42",
+  "release_date": "2026-07-03",
+  "machine_readable_schema_version": "2.4",
+  "session": "S072-colleen-spec-v53.2",
+  "representation_source_commit": "165e24acec4518c11cc1fbe14d44cabac3fd9b9c",
+  "representations": {
+    "markdown": {
+      "path": "docs/NDR_PATTERN_REGISTRY_UNIFIED.md",
+      "git_blob_sha1": "acc052da2687c480a976815b3e6a3539ee846999"
+    },
+    "machine_readable": {
+      "path": "docs/ndr_patterns_unified.json",
+      "git_blob_sha1": "acbe8d71cb2bd02a44d8ac334049bb308e264f9f"
+    }
+  },
+  "provenance_status": "VERIFIED_REPRESENTATION_IDENTITY",
+  "verification_basis": "Immutable Git blob identities recorded for the exact release pair present at the representation_source_commit. This establishes content identity, not historical generator provenance.",
+  "generator_provenance": "NOT_ESTABLISHED",
+  "scientific_boundary": "PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0"
+}
