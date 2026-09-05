@@ -32,7 +32,7 @@ deployment_binding:
   deployment_target: production
   deployment_state: READY
   git_source_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
-  source_sha_match: VERIFIED_FOR_P1_IDENTITY_SCOPE
+  source_sha_match: MATCHED
   allowed_cors_origin: https://dynamicgovernanceagenticformation.vercel.app
 
 runtime_evidence:
