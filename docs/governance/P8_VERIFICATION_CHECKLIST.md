@@ -1,95 +1,99 @@
 # P8 Verification Checklist
 
 **Status:** OPEN / PRE-FREEZE / FAIL-CLOSED  
-**Current `main`:** documentation/evidence lineage; do not treat the branch tip as experimental apparatus identity.  
-**Current mainline runtime candidate:** `92ff830b1c67413df745e37087e6447c9c251b9a` / tree `73cf3adcc2fd600eda83b818a681c83a7bb1c2ae`  
-**Latest controlled completion candidate:** `562753b3053b3566b0fcad1b0b1df151d7de119a` / branch `completion/2026-09-01-exact-candidate`  
-**Historical experimental verification boundary:** `ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a`  
-**Prior pre-remediation candidate:** `c6157158bf0ee4840e99a381a4b99bd2febe2302` (historical/superseded)
+**Last reconciled:** 2026-09-05  
+**Purpose:** Track only the evidence that is still required to construct and independently verify the immutable P8 freeze for the designated PDMAL candidate.
 
-This checklist distinguishes implemented controls from executed verification evidence. Historical candidates and historical verifier runs remain provenance only. The selected pilot candidate must receive fresh candidate-scoped evidence before P8 closure.
+This checklist is a control surface, not a freeze record. Documentation/control-plane descendants do not replace the designated runtime candidate unless the canonical candidate identity is explicitly changed.
 
-## Candidate identity reconciliation
+## Current authoritative identity
 
-- [x] Historical candidate identities are retained without evidence transfer.
-- [x] Current mainline runtime candidate `92ff830b…` is explicitly distinguished from the latest completion candidate `562753b…`.
-- [x] Completion candidate branch is controlled but not frozen.
-- [ ] Intended pilot candidate is explicitly selected and rebound through P7/P8.
-- [ ] New candidate reaches a verified freeze state.
+| Binding | Exact value | State |
+|---|---|---|
+| Corrected apparatus source | `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | KNOWN |
+| Immutable P-35 validation boundary | `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d` | VALIDATED |
+| Designated runtime candidate | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | VERIFIED |
+| Candidate tree | `586c00d6dedb589e52108279f9759be3c4f927e1` | VERIFIED |
+| Candidate production deployment | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | VERIFIED FOR CANDIDATE |
+| Protocol version | `0.7.5` | SELECTED / PRE-FREEZE |
+| Analysis implementation blob | `a269ed226b1d261663994fc3ef0e8a1a96da6cd3` | BOUND |
+| Analysis configuration SHA-256 | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | VERIFIED / INDEPENDENTLY RECOMPUTED |
+| Pilot runner blob | `b5152fa3c9c4effe1c5201a45d58ac2d6b8e5243` | BOUND |
+| Pilot artifact schema blob | `c620d3755a645c5f2ad14124f42ce07a1c670c5f` | BOUND |
 
-## TGL/P-35 contract prerequisite
+## Pre-freeze predicates already satisfied
 
-- [x] Fail-closed remediation path is implemented.
-- [ ] Complete candidate-scoped verification of the resulting TGL/P-35 contract.
-- [ ] Premise-hook injection exercised by regression tests for the selected candidate.
-- [ ] Fail-closed exception containment exercised by regression tests for the selected candidate.
-- [ ] `PASS/WARN/SKIP/ESCALATE/KILL` reduction semantics explicitly tested for the selected candidate.
-- [ ] Unwired required-gate `SKIP` distinguished from dependency-caused or intentionally non-applicable `SKIP`.
-- [ ] Final audit seal proven to represent exactly the authoritative returned audit state.
-- [ ] Current selected-candidate CI run, SHA, ref, event, logs, and artifacts retained.
+- [x] **P1 Candidate Integrity — CLOSED / VERIFIED.** Exact apparatus/candidate/tree/deployment provenance is retained.
+- [x] **P2 Runtime — CLOSED / VERIFIED.** Run `33730195621`; artifact `9883521704`; five-case authenticated runtime matrix.
+- [x] **P3 Artifact Contract — CLOSED / VERIFIED.** Run `33939955138`; artifacts `9961526468` / `9961526662`; exact-candidate schema, canonical matrix/cardinality, identity/hash, duplicate-rejection, and adversarial checks.
+- [x] **P5 Provenance / Reproducibility — CLOSED / VERIFIED.** Exact analysis/configuration/runner/schema identities are bound; Governance CI `33945464907` and Pre-Authorization Security `33945464908` passed.
+- [x] **P6 Durable Evidence Custody — CLOSED / VERIFIED.** Retained candidate evidence completed independent archive → retrieval → SHA-256 equality.
+- [x] **P6a CORS — CLOSED / VERIFIED.** Run `33728695806`; artifact `9882965299`; four-case authenticated CORS matrix.
+- [x] Exact-candidate deterministic reproduction, environment/toolchain fingerprinting, RNG-stream separation, and topology determinism are retained through run `33939955138` and the P5 closure chain.
+- [x] Unauthorized pilot execution remains fail-closed and empirical collection remains disabled in pre-freeze verification.
 
-## Candidate artifact contract
+These closures are predicate-scoped engineering/governance evidence. They are not efficacy evidence and do not authorize execution.
 
-- [x] Explicit `ffcr_success` outcome is emitted by the runner.
-- [x] `ffcr_success` is integrity-covered and required by the pilot artifact schema.
-- [x] Matrix coordinates consumed by analysis (`topology`, `failure_count`) are explicit, required artifact fields.
-- [x] Schema rejects malformed FFCR outcomes and `ffcr_success=true` with non-success status.
-- [x] Analysis requires complete, non-duplicate condition matrices and an explicit unblinding map.
-- [x] Canonical record serialization is shared by runner and schema validation.
-- [x] Numeric Boolean values are rejected where integer identifiers/counts are required.
-- [x] Corrective tests cover artifact/document identity, matrix uniqueness, blinded balance, retention integrity, unblinding bijection, bootstrap invariants, and recovery-state semantics.
-- [ ] Fresh current-selected-candidate execution evidence exists.
+## P4 prerequisite — still blocking
 
-## Current candidate-tree CI evidence
+- [ ] A genuinely distinct human Key Custodian is selected.
+- [ ] A distinct execution/analysis principal is identified.
+- [ ] Non-secret key and mapping commitment digests are published under `sha256-domain-separated-secret-nonce-v1`.
+- [ ] Custodian and no-access attestations are attributable and retained.
+- [ ] Independent custody review confirms actual role/access separation without revealing key, mapping, or nonces.
 
-- [ ] Governance CI executed against the selected pilot candidate or exact descendant with unchanged executable apparatus and explicit provenance.
-- [ ] P8 analysis tests passed in that exact candidate execution.
-- [ ] P8 artifact-schema/security tests passed in that exact candidate execution.
-- [ ] Compilation passed in that exact candidate execution.
-- [ ] Run ID, URL, exact SHA, ref, and event retained.
-- [ ] Job logs inspected rather than inferred from a commit/check placeholder.
+Authoritative operational checkpoint: Issue #255 and `docs/governance/P4_HUMAN_CUSTODY_EXECUTION_RECORD_2026-09-05.md`.
 
-## Historical evidence boundaries
+P4 remains **OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED** until these real-world events occur. Repository automation, AI agents, aliases, or invented principals cannot satisfy this predicate.
 
-- [x] Historical E2b verification retained as provenance for its recorded execution.
-- [ ] Selected-candidate E2b applicability re-verified after candidate changes.
-- [x] Prior P2/P6a evidence retained as exact evidence for `92ff830b…` only.
-- [x] P2/P6a status is current for `92ff830b…` / `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc`.
+## P7 final-binding prerequisite
 
-## Runtime verification
+- [x] Scientific target is adopted: `dgaf` versus `null`, FFCR, paired root-seed estimand, 10,000 paired percentile bootstrap resamples, deterministic seed `20260823`, two-sided 95% interval.
+- [x] Candidate/deployment/protocol/analysis/runner/schema/P2/P3/P5/P6/P6a identities are assembled in `docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md`.
+- [ ] Actual P4 custody evidence is inserted without inference.
+- [ ] Final protocol blob/commit identity is selected for freeze.
+- [ ] Final accepted control-plane commit is selected for freeze.
+- [ ] P7 contains no unresolved closure-blocking placeholders and is formally closed.
 
-- [x] Current mainline P2 five-case matrix: run `33509348174`, artifact `9800942933`, candidate `92ff830b…`.
-- [x] Current mainline P6a four-case CORS matrix: run `33509416955`, artifact `9800972819`, candidate `92ff830b…`.
-- [ ] Fresh P2/P6a evidence for the selected pilot candidate if it differs from `92ff830b…`.
+P7 remains **ADOPTED / FINAL BINDING OPEN**.
 
-## P9 scoped verification
+## P8 immutable-freeze construction
 
-- [x] Exact candidate identity verified by `git rev-parse HEAD == GITHUB_SHA` for `562753b…` — run `33567199896`.
-- [x] Independent canonicalization path (`jq -S -c` + `sha256sum`) matched the DGAF/Python digest — run `33567199896`.
-- [x] Authority identity regression passed (`4 passed`) against exact candidate `562753b…` — run `33567199896`.
-- [x] Independent P9 evidence artifact uploaded — artifact `9823570326`.
-- [ ] Full broader P9 evidence-chain closure against the selected pilot candidate.
-- [ ] External durable archive/custody requirements independently satisfied where required.
+The following items must not be checked until P4 and P7 are legitimately complete.
 
-## Reproducibility and provenance
+- [ ] Construct the immutable freeze manifest from the exact P7 tuple without inference.
+- [ ] Bind the final protocol blob/commit identity.
+- [ ] Bind the final accepted control-plane commit.
+- [ ] Bind exact candidate SHA/tree and candidate deployment identity.
+- [ ] Bind exact analysis implementation/configuration/runner/schema identities.
+- [ ] Bind P1/P2/P3/P4/P5/P6/P6a evidence identities and digests required by the final tuple.
+- [ ] Bind the blinding-custody commitments/attestations without exposing secret material.
+- [ ] Compute and retain an immutable freeze-manifest digest.
+- [ ] Independently retrieve/recompute the freeze representation and verify the digest/identity tuple.
+- [ ] Record the independent freeze-verification evidence and verifier identity.
 
-- [ ] Executed candidate-tree identity reconciled with all P8 bindings for the selected candidate.
-- [ ] Canonical protocol blob SHA bound to the eventual frozen candidate identity.
-- [ ] Current candidate-bound E2b/M6 toolchain evidence captured and retained.
-- [ ] Environment fingerprint evidence captured and assessed.
-- [ ] Deterministic topology fingerprints reproduced for the selected candidate.
-- [ ] Seed/RNG separation and trial ordering independently verified.
+Until every applicable item above is complete, **P8 remains OPEN / FAIL-CLOSED and Freeze remains NOT ESTABLISHED**.
 
-## Evidence custody and negative state
+## P9 final independent verification
 
-- [ ] Selected-candidate CI logs/artifacts retained at a durable location.
-- [ ] Retained candidate artifacts retrieved independently.
-- [ ] Retrieval hashes verified against recorded integrity values.
-- [ ] Blinding custody boundary documented without exposing the key.
-- [ ] Current selected candidate has a machine-retained negative-state artifact proving N=0, no authorization, no pilot, and no unblinding.
+Historical/scoped P9 runs are provenance only and do not transfer to the final frozen chain.
+
+- [x] Historical independent-verification mechanisms exist and previously exercised alternate canonicalization/hash and authority-identity checks on superseded candidates.
+- [ ] Final P9 verifier identity is selected independently of the producing evidence path.
+- [ ] Final P9 re-resolves the immutable freeze and exact candidate/protocol/analysis/custody/evidence tuple.
+- [ ] Final P9 independently verifies all required digests and candidate/freeze identities.
+- [ ] Final P9 evidence artifact/digest is retained and independently reviewable.
+- [ ] P9 concludes PASS for the complete final frozen chain.
+
+P9 remains **NOT EXECUTED / OPEN** for the current final chain.
+
+## Authorization boundary
+
+- [ ] Separate explicit pilot authorization is recorded **after** P8 and P9 closure.
+- [ ] Empirical execution remains disabled until that authorization exists.
+
+Current state: **Freeze NOT ESTABLISHED · Pilot authorization NOT GRANTED · Empirical N = 0**.
 
 ## Closure rule
 
-P8 remains open until every applicable unchecked item has current candidate-scoped evidence. Historical or synthetic evidence cannot substitute for current-candidate verification.
-
-**Current state:** `P8 OPEN / FAIL-CLOSED`; P9 has a scoped PASS on completion candidate `562753b…`, while broader P9 closure remains open; no new freeze; no authorization; empirical N = 0.
+P8 may close only after real P4 custody is verified, P7 is exact and final, the immutable freeze is constructed from that tuple, and an independent freeze verification succeeds. P9 is then executed against that frozen chain. No historical candidate result, green CI run, READY deployment, synthetic blinding result, or documentation-only update may substitute for these events.
