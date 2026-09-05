@@ -3,58 +3,319 @@ name: PDMAL Blinding Operational Test
 on:
   workflow_dispatch:
   push:
-    branches:
-      - epistemic/evidence-architecture-v1
+    branches: [main]
     paths:
-      - 'experiments/pdmal_pilot/blinding_operational_test.py'
-      - 'docs/experiment/PDMAL_BLINDING_OPERATIONAL_VERIFICATION.md'
       - '.github/workflows/pdmal-blinding-operational-test.yml'
+      - 'docs/experiment/NEW_CANDIDATE_MANIFEST.md'
+      - 'docs/experiment/PDMAL_BLINDING_OPERATIONAL_VERIFICATION.md'
+      - 'experiments/pdmal_pilot/blinding_operational_test.py'
+      - 'experiments/pdmal_topology/CONTROL_PLANE_EVIDENCE_TRIGGER.md'
+  pull_request:
+    paths:
+      - '.github/workflows/pdmal-blinding-operational-test.yml'
+      - 'docs/experiment/NEW_CANDIDATE_MANIFEST.md'
+      - 'docs/experiment/PDMAL_BLINDING_OPERATIONAL_VERIFICATION.md'
+      - 'experiments/pdmal_pilot/blinding_operational_test.py'
+      - 'experiments/pdmal_topology/CONTROL_PLANE_EVIDENCE_TRIGGER.md'
 
+# Synthetic operational-control verification only. Never load a production
+# blinding secret and never represent CI process separation as human custody.
 permissions:
   contents: read
+  actions: read
 
 jobs:
   blinding-operational-test:
-    name: Non-production blinding custody dry-run
+    name: Exact-candidate synthetic P4 blinding custody dry-run
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout control plane for candidate resolution
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Resolve designated candidate and control-plane identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest='docs/experiment/NEW_CANDIDATE_MANIFEST.md'
+          test -s "$manifest"
+          read_field() { awk -F': ' -v key="$1" '$1 == key {print $2; exit}' "$manifest"; }
+          candidate_sha="$(read_field candidate_sha)"
+          candidate_tree_sha="$(read_field candidate_tree_sha)"
+          control_plane_sha="$(git rev-parse HEAD)"
+          workflow_sha256="$(sha256sum .github/workflows/pdmal-blinding-operational-test.yml | awk '{print $1}')"
+          for value in "$candidate_sha" "$candidate_tree_sha" "$control_plane_sha"; do
+            [[ "$value" =~ ^[0-9a-f]{40}$ ]]
+          done
+          [[ "$workflow_sha256" =~ ^[0-9a-f]{64}$ ]]
+          {
+            echo "CANDIDATE_SHA=$candidate_sha"
+            echo "CANDIDATE_TREE_SHA=$candidate_tree_sha"
+            echo "CONTROL_PLANE_SHA=$control_plane_sha"
+            echo "WORKFLOW_CONTENT_SHA256=$workflow_sha256"
+          } >> "$GITHUB_ENV"
+          printf 'control_plane_sha=%s\n' "$control_plane_sha" >> "$GITHUB_STEP_SUMMARY"
+          printf 'designated_candidate_sha=%s\n' "$candidate_sha" >> "$GITHUB_STEP_SUMMARY"
+          printf 'designated_candidate_tree_sha=%s\n' "$candidate_tree_sha" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Checkout and verify designated runtime candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "${CANDIDATE_SHA}^{commit}"
+          git checkout --detach "$CANDIDATE_SHA"
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$CANDIDATE_TREE_SHA"
 
       - name: Set up Python 3.12.0
         uses: actions/setup-python@v5
         with:
           python-version: '3.12.0'
 
-      - name: Run synthetic blinding custody dry-run
+      - name: Bind candidate script and procedure identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          script='experiments/pdmal_pilot/blinding_operational_test.py'
+          procedure='docs/experiment/PDMAL_BLINDING_OPERATIONAL_VERIFICATION.md'
+          test -s "$script"
+          test -s "$procedure"
+          script_blob="$(git rev-parse "HEAD:${script}")"
+          procedure_blob="$(git rev-parse "HEAD:${procedure}")"
+          script_sha256="$(sha256sum "$script" | awk '{print $1}')"
+          procedure_sha256="$(sha256sum "$procedure" | awk '{print $1}')"
+          for value in "$script_blob" "$procedure_blob"; do [[ "$value" =~ ^[0-9a-f]{40}$ ]]; done
+          for value in "$script_sha256" "$procedure_sha256"; do [[ "$value" =~ ^[0-9a-f]{64}$ ]]; done
+          {
+            echo "BLINDING_SCRIPT_BLOB_SHA=$script_blob"
+            echo "BLINDING_SCRIPT_SHA256=$script_sha256"
+            echo "BLINDING_PROCEDURE_BLOB_SHA=$procedure_blob"
+            echo "BLINDING_PROCEDURE_SHA256=$procedure_sha256"
+          } >> "$GITHUB_ENV"
+
+      - name: Run synthetic blinding custody dry-run twice
+        shell: bash
         env:
           PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_pilot
         run: |
-          python experiments/pdmal_pilot/blinding_operational_test.py \
-            --output-dir blinding_artifacts
+          set -euo pipefail
+          rm -rf /tmp/blinding-a /tmp/blinding-b
+          python experiments/pdmal_pilot/blinding_operational_test.py --output-dir /tmp/blinding-a
+          python experiments/pdmal_pilot/blinding_operational_test.py --output-dir /tmp/blinding-b
+          (cd /tmp/blinding-a && sha256sum --check blinding_operational_test.json.sha256)
+          (cd /tmp/blinding-b && sha256sum --check blinding_operational_test.json.sha256)
 
-      - name: Validate dry-run artifact
+      - name: Independently audit synthetic blinding semantics
+        shell: bash
         run: |
+          set -euo pipefail
+          mkdir -p blinding_artifacts
           python - <<'PY'
+          import hashlib
+          import hmac
           import json
+          import os
           from pathlib import Path
-          data = json.loads(Path('blinding_artifacts/blinding_operational_test.json').read_text())
-          assert data['protocol_status'] == 'PRE-FREEZE'
-          assert data['empirical_data_collection'] is False
-          assert data['production_secret_accessed'] is False
-          assert data['mock_dataset_frozen'] is True
-          assert data['recovered_labels_match'] is True
-          assert data['blinded_ids_unique'] is True
-          assert data['result'] == 'PASS'
-          print('Blinding operational dry-run artifact: PASS')
+
+          CONDITIONS = ("null", "simple", "static", "dgaf")
+          MOCK_KEY = b"PDMAL-MOCK-BLINDING-KEY-v1"
+
+          def canonical_bytes(value):
+              return (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+
+          def blind(label):
+              digest = hmac.new(MOCK_KEY, label.encode("utf-8"), hashlib.sha256).hexdigest()
+              return f"blind_{digest[:16]}"
+
+          a_path = Path('/tmp/blinding-a/blinding_operational_test.json')
+          b_path = Path('/tmp/blinding-b/blinding_operational_test.json')
+          a = json.loads(a_path.read_text(encoding='utf-8'))
+          b = json.loads(b_path.read_text(encoding='utf-8'))
+
+          required = {
+              'control_id': 'PDMAL-BLINDING-OPS-v1',
+              'protocol_status': 'PRE-FREEZE',
+              'empirical_data_collection': False,
+              'production_secret_accessed': False,
+              'mock_dataset_frozen': True,
+              'condition_count': 4,
+              'recovered_labels_match': True,
+              'blinded_ids_unique': True,
+              'result': 'PASS',
+          }
+          for label, payload in [('a', a), ('b', b)]:
+              for key, expected in required.items():
+                  if payload.get(key) != expected:
+                      raise SystemExit(f'{label}: {key} mismatch')
+
+          # Timestamp is intentionally excluded from deterministic semantics.
+          stable_keys = tuple(required) + ('mock_dataset_sha256',)
+          if {k: a[k] for k in stable_keys} != {k: b[k] for k in stable_keys}:
+              raise SystemExit('stable blinding semantics changed across repeated runs')
+
+          mapping = {label: blind(label) for label in CONDITIONS}
+          if any(mapping[label] != blind(label) for label in CONDITIONS):
+              raise SystemExit('same key/label was not deterministic')
+          if len(set(mapping.values())) != len(CONDITIONS):
+              raise SystemExit('independently recomputed blinded IDs collided')
+
+          blinded_dataset = [
+              {'trial_id': f'mock-{index:03d}', 'blinded_condition_id': blinded}
+              for index, blinded in enumerate(mapping.values(), start=1)
+          ]
+          dataset_bytes = canonical_bytes(blinded_dataset)
+          independent_dataset_digest = hashlib.sha256(dataset_bytes).hexdigest()
+          if independent_dataset_digest != a['mock_dataset_sha256']:
+              raise SystemExit('independent dataset digest mismatch')
+          if any(label.encode() in dataset_bytes for label in CONDITIONS):
+              raise SystemExit('cleartext label leaked into independently reconstructed analyst dataset')
+          if MOCK_KEY in dataset_bytes:
+              raise SystemExit('mock key leaked into independently reconstructed analyst dataset')
+
+          # The mock mapping is deliberately kept separate from dataset bytes.
+          mock_dataset_frozen = True
+          if not mock_dataset_frozen:
+              raise SystemExit('mock freeze was not established before mock unblinding')
+          reverse = {value: key for key, value in mapping.items()}
+          recovered = [reverse[row['blinded_condition_id']] for row in blinded_dataset]
+          if recovered != list(CONDITIONS):
+              raise SystemExit('independent mock unblinding mismatch')
+
+          for artifact_path in (a_path, b_path):
+              raw = artifact_path.read_bytes()
+              if MOCK_KEY in raw:
+                  raise SystemExit('mock key leaked into emitted control artifact')
+              if any(label.encode() in raw for label in CONDITIONS):
+                  raise SystemExit('cleartext condition label leaked into emitted control artifact')
+
+          evidence = {
+              'schema_version': 1,
+              'evidence_class': 'PDMAL_P4_SYNTHETIC_BLINDING_OPERATIONAL',
+              'epistemic_status': 'SYNTHETIC_OPERATIONAL_EVIDENCE_NOT_GATE_CLOSURE',
+              'candidate_sha': os.environ['CANDIDATE_SHA'],
+              'candidate_tree_sha': os.environ['CANDIDATE_TREE_SHA'],
+              'control_plane_sha': os.environ['CONTROL_PLANE_SHA'],
+              'workflow_definition_sha': os.environ['CONTROL_PLANE_SHA'],
+              'workflow_definition_content_sha256': os.environ['WORKFLOW_CONTENT_SHA256'],
+              'producer_workflow': 'PDMAL Blinding Operational Test',
+              'producer_workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'producer_event': os.environ['GITHUB_EVENT_NAME'],
+              'blinding_script_blob_sha': os.environ['BLINDING_SCRIPT_BLOB_SHA'],
+              'blinding_script_sha256': os.environ['BLINDING_SCRIPT_SHA256'],
+              'procedure_blob_sha': os.environ['BLINDING_PROCEDURE_BLOB_SHA'],
+              'procedure_sha256': os.environ['BLINDING_PROCEDURE_SHA256'],
+              'mock_dataset_sha256': independent_dataset_digest,
+              'assertions': {
+                  'candidate_checkout_exact': 'PASS',
+                  'candidate_tree_exact': 'PASS',
+                  'same_key_label_determinism': 'PASS',
+                  'different_labels_unique': 'PASS',
+                  'analyst_dataset_cleartext_absent': 'PASS',
+                  'analyst_dataset_mock_key_absent': 'PASS',
+                  'mock_freeze_before_mock_unblinding': 'PASS',
+                  'mock_unblinding_recovers_exact_mapping': 'PASS',
+                  'repeat_run_stable_semantics': 'PASS',
+                  'production_secret_accessed': 'PASS_FALSE',
+              },
+              'role_separation': {
+                  'synthetic_process_separation_demonstrated': True,
+                  'real_human_custody_access_separation_established': False,
+                  'note': 'CI demonstrates the synthetic executor/analyst/unblinder data boundary only; human key custody and access control require separate operational evidence.'
+              },
+              'controls': {
+                  'protocol_frozen': False,
+                  'pilot_authorized': False,
+                  'empirical_data_collection': False,
+                  'production_secret_accessed': False,
+                  'production_unblinding_requested': False,
+                  'mock_unblinding_performed': True,
+              },
+              'gate_interpretation': {
+                  'P4': 'EVIDENCE_PRESENT_NOT_CLOSED',
+                  'P6': 'OPEN_FAIL_CLOSED',
+              },
+          }
+          out = Path('blinding_artifacts/pdmal-p4-synthetic-operational-evidence.json')
+          raw = canonical_bytes(evidence)
+          out.write_bytes(raw)
+          digest = hashlib.sha256(raw).hexdigest()
+          out.with_suffix(out.suffix + '.sha256').write_text(f'{digest}  {out.name}\n', encoding='utf-8')
+          print(json.dumps(evidence['assertions'], indent=2, sort_keys=True))
           PY
 
-      - name: Upload dry-run evidence
+      - name: Verify audited evidence sidecar
+        run: cd blinding_artifacts && sha256sum --check pdmal-p4-synthetic-operational-evidence.json.sha256
+
+      - name: Upload exact-candidate synthetic P4 evidence
+        id: source_artifact
         uses: actions/upload-artifact@v4
         with:
-          name: pdmal-blinding-operational-test-${{ github.sha }}
-          path: blinding_artifacts/
+          name: pdmal-p4-synthetic-blinding-evidence
+          path: |
+            blinding_artifacts/pdmal-p4-synthetic-operational-evidence.json
+            blinding_artifacts/pdmal-p4-synthetic-operational-evidence.json.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Emit source-bound P4 registry
+        shell: bash
+        env:
+          SOURCE_ARTIFACT_ID: ${{ steps.source_artifact.outputs.artifact-id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ steps.source_artifact.outputs.artifact-digest }}
+        run: |
+          set -euo pipefail
+          test -n "$SOURCE_ARTIFACT_ID"
+          test -n "$SOURCE_ARTIFACT_DIGEST"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          inner = Path('blinding_artifacts/pdmal-p4-synthetic-operational-evidence.json.sha256').read_text(encoding='utf-8').split()[0]
+          registry = {
+              'schema_version': 1,
+              'registry_class': 'PDMAL_P4_SYNTHETIC_SOURCE_BINDING',
+              'candidate_sha': os.environ['CANDIDATE_SHA'],
+              'candidate_tree_sha': os.environ['CANDIDATE_TREE_SHA'],
+              'control_plane_sha': os.environ['CONTROL_PLANE_SHA'],
+              'workflow_definition_sha': os.environ['CONTROL_PLANE_SHA'],
+              'producer_workflow': 'PDMAL Blinding Operational Test',
+              'producer_workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'producer_event': os.environ['GITHUB_EVENT_NAME'],
+              'source_artifact': {
+                  'name': 'pdmal-p4-synthetic-blinding-evidence',
+                  'id': os.environ['SOURCE_ARTIFACT_ID'],
+                  'digest': os.environ['SOURCE_ARTIFACT_DIGEST'],
+                  'content_sha256': inner,
+                  'retention_class': 'GITHUB_ACTIONS_30_DAY_NOT_DURABLE_CUSTODY',
+              },
+              'role_separation': {
+                  'synthetic_process_separation_demonstrated': True,
+                  'real_human_custody_access_separation_established': False,
+              },
+              'gate_interpretation': {
+                  'P4': 'EVIDENCE_PRESENT_NOT_CLOSED',
+                  'P6': 'OPEN_FAIL_CLOSED',
+              },
+              'controls': {
+                  'protocol_frozen': False,
+                  'pilot_authorized': False,
+                  'empirical_data_collection': False,
+                  'production_secret_accessed': False,
+                  'production_unblinding_requested': False,
+              },
+          }
+          Path('blinding_artifacts/pdmal-p4-synthetic-registry.json').write_text(
+              json.dumps(registry, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Upload source-bound P4 registry
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-p4-synthetic-registry
+          path: blinding_artifacts/pdmal-p4-synthetic-registry.json
           if-no-files-found: error
           retention-days: 30
