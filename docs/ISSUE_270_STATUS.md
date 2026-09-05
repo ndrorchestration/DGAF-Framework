@@ -11,8 +11,8 @@ A later Python Tests & Quality Checks execution associated with PR #269 exposed 
 
 ## Final verified boundary
 
-Current protected `main`: `7ecc2578ca636fceca49504e0ee40de9a5213bd6`  
-Current `main` tree: `a33ec18e4d2ebba607e18c8b537d2597c8e82bc3`  
+Technical hardening verification commit: `7ecc2578ca636fceca49504e0ee40de9a5213bd6`  
+Technical hardening verification tree: `a33ec18e4d2ebba607e18c8b537d2597c8e82bc3`  
 Final workflow-hardening PR: #276  
 PR #276 exact head: `151239e9131ebbf0f2dc2a5382553b3bec12e44e`  
 PR #276 merge: `7ecc2578ca636fceca49504e0ee40de9a5213bd6`  
@@ -90,7 +90,7 @@ At PR #276 exact head `151239e9131ebbf0f2dc2a5382553b3bec12e44e`, Python Tests &
 
 The broader exact-head regression, governance, truth/evidence, IP hygiene, PDMAL harness, and PDMAL pre-freeze workflows also completed successfully before merge.
 
-## Mainline reproduction
+## Mainline reproduction at the technical hardening boundary
 
 After merge, protected `main` at `7ecc2578…` triggered Python Tests & Quality Checks run `33974834700` by `push`.
 
@@ -114,7 +114,7 @@ Codecov encountered HTTP 429 rate limiting during this remediation sequence. The
 
 Workflow fail-closed behavior and repository merge enforcement are distinct controls.
 
-At `main=7ecc2578…`, branch metadata reports `main` as protected but lists only `PPTL CI` as a required status context. The Python quality matrix is therefore **not currently established as a branch-protection-required merge check** by the available metadata.
+At technical hardening boundary `7ecc2578…`, branch metadata reported `main` as protected but listed only `PPTL CI` as a required status context. The Python quality matrix was therefore **not established as a branch-protection-required merge check** by that configuration readback.
 
 The direct branch-protection endpoint returns `403 Resource not accessible by integration`, and the connected mutation surface does not expose branch-protection/ruleset writes.
 
