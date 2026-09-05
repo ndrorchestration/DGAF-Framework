@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-05
-mainline_tip_at_last_reconciliation: 821878759797d0bfda2ae7a8bced980bd02c58a9
+mainline_tip_at_last_reconciliation: 9cf9fcdd3454ce7309efdcbbe4ef29f802a7c97e
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
@@ -16,7 +16,7 @@ empirical_n: 0
 
 # PDMAL Current Control State
 
-This is the current pre-authorization control record. The consolidated control-state anchor remains `89be386b…`; `82187875…` is the repository `main` reconciliation point after the exact-candidate P3 matrix-contract evaluator merged. Later documentation/control-plane descendants do not change the designated runtime candidate unless the canonical candidate manifest is explicitly changed.
+This is the current pre-authorization control record. The consolidated control-state anchor remains `89be386b…`; `9cf9fcdd…` is the current repository documentation/control-plane tip at this reconciliation. Documentation descendants do not replace the designated runtime candidate unless the canonical candidate manifest is explicitly changed.
 
 ## Current gate state
 
@@ -24,59 +24,71 @@ This is the current pre-authorization control record. The consolidated control-s
 |---|---|---|
 | P-35 | VALIDATED | Immutable boundary `643dc77a…` |
 | Consolidated control-state anchor | CURRENT | `89be386b…` |
-| Mainline reconciliation anchor | DOCUMENTATION/CONTROL-PLANE | `82187875…` |
+| Mainline reconciliation anchor | DOCUMENTATION/CONTROL-PLANE | `9cf9fcdd…` |
 | Runtime candidate lineage | VERIFIED | candidate `7c1cc4bb…`; tree `586c00d6…` |
-| Deployment reference | VERIFIED / LIVE RETRIEVED | Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`, READY production, Git source `7c1cc4bb…`; retained in `docs/evidence/PDMAL_DEPLOYMENT_IDENTITY_VERIFICATION_2026-09-05.md` |
+| Deployment reference | VERIFIED / LIVE RETRIEVED | Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`, READY production, Git source `7c1cc4bb…` |
 | P1 Candidate Integrity | CLOSED / VERIFIED | exact apparatus/source, candidate/tree, self-bound provenance, and live deployment-to-candidate identity reconciled |
-| P2 runtime | HISTORICAL RECORD / CURRENT ARTIFACT RETRIEVAL UNCONFIRMED | Run `33730195621`; artifact `9883521704`; live deployment identity is verified separately but five-case matrix has not been freshly re-executed |
-| P6a CORS | HISTORICAL RECORD / CURRENT ARTIFACT RETRIEVAL UNCONFIRMED | Run `33728695806`; artifact `9882965299`; live deployment identity is verified separately but four-case CORS matrix has not been freshly re-executed |
-| P3 Artifact Contract | CLOSED / VERIFIED | exact-candidate main run `33939955138`; source artifact `9961526468`; registry `9961526662`; canonical + 180-cell/adversarial schema contract retained |
-| P4 Security / Blinding | OPEN / EVIDENCE PRESENT | main run `33939574283`; synthetic blinding/bijection/leakage/freeze-order checks pass, but real human/key custody and access separation remain unestablished |
-| P5 Provenance / Reproducibility | OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT | run `33939955138` verifies candidate/tree, protocol/dependency identity, deterministic reproduction, environment and RNG/topology fingerprints; final analysis implementation/configuration binding remains pre-freeze work |
-| P6 Durable Evidence Custody | CLOSED / VERIFIED | candidate-scoped Google Drive archive plus independent raw retrieval and SHA-256 equality; see `P6_DURABLE_CUSTODY_ATTESTATION_2026-09-05.md` |
+| P2 runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; digest `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`; five-case authenticated matrix passed on exact candidate/deployment |
+| P3 Artifact Contract | CLOSED / VERIFIED | exact-candidate run `33939955138`; source artifact `9961526468`; registry `9961526662`; canonical + adversarial schema contract retained |
+| P4 Security / Blinding | OPEN / EVIDENCE PRESENT | synthetic blinding/bijection/leakage/freeze-order checks pass, but real human/key custody and access separation remain unestablished |
+| P5 Provenance / Reproducibility | OPEN / FINAL IDENTITY BINDING RECORDED FOR REVIEW | reproducibility evidence present; exact analysis/configuration/runner/schema identities recorded in `docs/governance/P8_ANALYSIS_LOCK.md`; authoritative merge/review still required |
+| P6 Durable Evidence Custody | CLOSED / VERIFIED | candidate-scoped Google Drive archive plus independent raw retrieval and SHA-256 equality |
+| P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299`; digest `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`; four-case authenticated CORS matrix passed on exact candidate/deployment |
 | P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | exact candidate/protocol/analysis/freeze binding still required; P4/P5 prerequisites remain open |
-| P8 Analysis Lock | OPEN / FAIL-CLOSED | analysis implementation/configuration must be rebound at final P8 closure after prerequisites |
-| P9 Independent Verification | OPEN | fresh independent verification of final bound chain not yet executed |
+| P8 Analysis Lock | OPEN / FAIL-CLOSED | current analysis identities are recorded, but final prerequisite acceptance and immutable freeze remain open |
+| P9 Independent Verification | NOT EXECUTED / OPEN | fresh independent verification of final bound chain not yet executed |
 | Freeze | NOT ESTABLISHED | no immutable pilot identity |
 | Pilot authorization | NOT GRANTED | separate governance decision |
 | Empirical data | N = 0 | no authorized pilot execution |
 
-## Current-candidate evidence established on 2026-09-05
+## Current-candidate evidence established
 
 ### P1 deployment identity
 
-The Vercel API independently resolved `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` as a READY production deployment for `ndrorchestration/DGAF-Framework`, sourced from Git commit `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`. This closes the deployment-identity uncertainty for P1. It does not recreate the P2/P6a runtime matrices.
+The exact Vercel deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` is bound to runtime candidate `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`. This is deployment-identity evidence, not efficacy evidence.
+
+### P2 authenticated runtime matrix
+
+Run `33730195621` executed the five predeclared runtime cases with the protected Vercel bypass credential present and withheld. All cases matched their expected HTTP/decision outcomes. Artifact `9883521704` remains candidate/deployment-bound. The expected HTTP 503 / `BLOCKED` result for the valid request is fail-closed contract behavior because live audit state is not wired into `/api/orchestrate`; it is not general application-health evidence.
 
 ### P3 artifact contract
 
-Authoritative main run `33939955138` checked out the exact designated candidate/tree, ran the canonical pre-freeze artifact validator and the richer pilot artifact schema/adversarial fixtures, and emitted source-bound artifacts `9961526468` and `9961526662`. The test surface covers required fields, PRE-FREEZE/non-empirical constraints, exclusion consistency, record identity/hash integrity, canonical topology/failure coordinates, four-condition balance, duplicate rejection, and the 180-record/seed matrix contract. P3 is therefore CLOSED / VERIFIED as structural contract evidence, not empirical evidence.
+Run `33939955138` checked out the exact designated candidate/tree and verified the pre-freeze/pilot artifact schema, identity, canonical matrix, determinism, duplicate-rejection, and fail-closed unauthorized-pilot contract. P3 is structural/contract evidence only.
 
 ### P4 synthetic operational evidence
 
-Main run `33939574283` demonstrates synthetic mock-key blinding, deterministic bijection behavior, no cleartext/key leakage in the mock analyst-facing surface, and mock unblinding only after mock freeze. The evidence explicitly does not establish real human/key custody separation; P4 remains OPEN.
+Run `33939574283` demonstrates synthetic mock-key blinding, deterministic bijection, leakage controls, and freeze-order behavior. It explicitly does not establish real human/key custody or access separation. P4 remains OPEN.
 
-### P5 reproducibility evidence
+### P5 reproducibility and final identity record
 
-Main run `33939955138` binds candidate/tree, protocol, hash-locked dependencies, Python/toolchain environment, deterministic contract reproduction, independently recomputed environment fingerprint, RNG child-stream separation, and topology fingerprint determinism. This materially advances P5, but the analysis control plan still requires final analysis implementation SHA and configuration SHA binding before the analysis chain is locked. P5 remains OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT.
+Run `33939955138` binds candidate/tree, protocol, hash-locked dependencies, toolchain/environment, deterministic reproduction, environment fingerprint, RNG child-stream separation, and topology fingerprint determinism.
+
+The designated candidate analysis-control identities are now recorded in `docs/governance/P8_ANALYSIS_LOCK.md`:
+
+- analysis implementation blob: `a269ed226b1d261663994fc3ef0e8a1a96da6cd3`;
+- analysis configuration SHA-256: `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`;
+- pilot runner blob: `b5152fa3c9c4effe1c5201a45d58ac2d6b8e5243`;
+- pilot artifact schema blob: `c620d3755a645c5f2ad14124f42ce07a1c670c5f`;
+- protocol version: `0.7.5`.
+
+P5 remains OPEN until this binding lands on the authoritative control plane and passes the normal consistency/review checks.
 
 ### P6 durable custody
 
-The finalized P3/P5 and P4 source/registry ZIPs were placed in independent Google Drive folder `1cbmvw8abh6m09M9YZRbRZ4kvsBlH2BLL`, retrieved back as raw bytes, and independently re-hashed. All SHA-256 values exactly matched their original GitHub artifact digests. P6 is CLOSED / VERIFIED for this candidate. The older historical P6 attestation remains non-transferable and unchanged.
+The finalized P3/P5 and P4 source/registry ZIPs were copied to the independent archive, retrieved as raw bytes, and independently re-hashed. The retrieved SHA-256 values matched their original GitHub artifact digests.
 
-## Runtime evidence boundary
+### P6a authenticated CORS matrix
 
-The exact Vercel deployment is now independently live-retrievable and candidate-bound. However, the historical P2 and P6a GitHub Actions artifacts have not been freshly retrieved through the current verification path, and their authenticated runtime matrices have not been freshly re-executed. Their historical provenance records remain preserved without promotion.
+Run `33728695806` executed the four required live CORS checks against the exact candidate deployment. Allowed and disallowed POST behavior and allowed/disallowed preflight behavior all matched the predeclared policy. Artifact `9882965299` remains candidate/deployment-bound. This evidence is endpoint/deployment/environment/origin scoped.
 
 ## Evidence registry hardening
 
-`docs/governance/CURRENT_CANDIDATE_EVIDENCE_REGISTRY_CONTRACT_v1.md` defines the unified immutable evidence-source tuple. PRs #236–#240 established designated-candidate self-binding and controller-side rejection of candidate/run/artifact/predicate tuple mismatches. The current evidence producers preserve explicit false freeze, pilot-authorization, unblinding, and empirical-execution controls.
+`docs/governance/CURRENT_CANDIDATE_EVIDENCE_REGISTRY_CONTRACT_v1.md` defines the immutable evidence-source tuple. Completion-controller hardening binds evidence to the exact triggering workflow run rather than a latest-matching run. Historical failures and superseded candidate records remain preserved.
 
 ## Remaining closure sequence
 
-Current completed portions do not bypass the remaining operational and analysis prerequisites:
+`P4 real custody + authoritative P5 binding → exact P7 binding → P8 / immutable freeze → independent P9 → explicit authorization → blinded pilot`
 
-`P4 + final P5 binding → exact P7 binding → P8 → current-candidate P9 → immutable freeze → explicit authorization → blinded pilot`
-
-P2/P6a remain separately historical/current-retrieval-limited runtime evidence and must not be silently promoted.
+No completed gate above authorizes empirical execution or changes empirical N.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
