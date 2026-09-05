@@ -37,11 +37,12 @@ These closures do not imply P4, P7, P8, P9, freeze, authorization, or empirical 
 
 ## First unresolved prerequisite — P4-A independently enforceable custody
 
-P4-A is the first substantive blocker. The canonical procedure is:
+P4-A is the first substantive blocker. The canonical surfaces are:
 
 - `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`
-- active handoff: `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md`
-- governance correction: Issue #285
+- active execution record: `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md`
+- completed governance architecture correction: Issue #285 / PR #286 / merge `a3bafa6f…`
+- active zero-human Mode-T design/threat-model lane: Issue #287 — design only, not accepted custody evidence
 
 The governing invariant is effective control separation: before the predeclared release condition, the execution/analysis principal must be unable to obtain the raw blinding key, cleartext mapping, commitment nonces, or functionally equivalent recovery material by unilateral ordinary, administrative, recovery, backup, policy-edit, credential-reset, export, or break-glass action.
 
@@ -51,7 +52,7 @@ Exactly one real custody mode must be instantiated:
 2. **Mode I — institutional/third-party custody.** An external organization/service controls custody and release outside the analyst's unilateral administration or recovery.
 3. **Mode T — independently enforced technical custody.** A cryptographic/HSM/KMS/threshold/equivalent mechanism is acceptable only if the analyst lacks every effective owner/admin/recovery/export/break-glass path capable of defeating the blind.
 
-Still required for every mode:
+Still required for every mode under the current canonical lifecycle:
 
 1. a selected custody mode and unique custody-instance identity;
 2. an attributable execution/analysis principal and custody authority/system identity;
@@ -60,6 +61,12 @@ Still required for every mode:
 5. a complete non-secret inventory of ordinary/admin/recovery/backup/export/break-glass paths;
 6. evidence that the execution/analysis principal cannot use any inventoried path alone to recover protected material before release;
 7. independent review evidence appropriate to the selected custody mode.
+
+### Mode-T lifecycle caveat
+
+No solo Mode-T implementation is currently accepted. Issue #287 explores a possible transient-runner/timelock lifecycle in which the real mapping would be generated only inside a separately authorized empirical environment. That proposal may require a future mode-specific P4/P7/P8/P9 lifecycle revision because the current canonical procedure expects real key/mapping commitments to exist before freeze.
+
+Until a future revision is independently reviewed, merged, and verified, the current pre-freeze predicates remain controlling. GitHub-hosted runners, drand/timelock tooling, HSM/KMS products, or any other candidate mechanism do not become P4 evidence merely because they are technically plausible.
 
 AI agents/personas, aliases, same-operator accounts, ordinary repository secrets, analyst-recoverable password vaults, analyst-administered KMS/HSM arrangements, and preregistration alone do not satisfy P4-A.
 
