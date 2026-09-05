@@ -60,10 +60,10 @@
       "source_commit": "8eaeab5a198775a8dea43ce0396affb481e9f812",
       "execution_run": null,
       "execution_timestamp": null,
-      "upstream_dependencies": ["QA-11Q-ARTIFACT-v1"],
+      "upstream_dependencies": [],
       "epistemic_status": "DEFINED_DISTINCT_INSTRUMENT_LINEAGE_UNRESOLVED",
       "audit_status": "DUPLICATE_REVIEW",
-      "diagnostics": {"lineage": "must remain distinct from P-11/11Q artifact scoring unless explicitly ratified"}
+      "diagnostics": {"lineage": "related terminology is present, but GATE-11Q must remain a distinct lineage from P-11/11Q artifact scoring unless explicit authority evidence establishes a relationship"}
     },
     {
       "instrument_id": "AXIS-v1.2",
