@@ -51,9 +51,11 @@ P4 no longer requires a personal relationship or a mandatory second-human topolo
 
 Mode H additionally requires genuinely distinct humans and attributable role/no-access attestations. Mode I requires external custody/release-policy evidence and lack of unilateral analyst administration/recovery. Mode T requires independently inspectable or machine-verifiable enforcement evidence and absence of analyst-controlled admin/recovery/export/break-glass paths.
 
+**Mode-T implementation warning:** no solo technical implementation is currently accepted. Issue #287 is an OPEN design/threat-model lane for a possible transient-runner/timelock lifecycle and may require a future mode-specific lifecycle correction. Until such a correction is separately merged and verified, the current canonical pre-freeze commitment predicates remain controlling. A design issue, GitHub-hosted runner, drand/timelock mechanism, or product name is not P4 closure evidence.
+
 AI agents, aliases, same-operator accounts, ordinary repository secrets, analyst-recoverable password vaults, analyst-administered KMS/HSM configurations, and preregistration alone cannot satisfy P4.
 
-Active operational handoff: `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md` and Issue #285. Issue #255 remains historical context for the earlier human-only checkpoint.
+Active execution-record surface: `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md`. Issue #285 is the completed governance-architecture correction; Issue #255 remains historical context for the earlier human-only checkpoint; Issue #287 is the active Mode-T design/threat-model lane.
 
 P4 remains **OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED** until one real custody mode is instantiated and verified.
 
@@ -125,4 +127,4 @@ Current state: **Freeze NOT ESTABLISHED · Pilot authorization NOT GRANTED · Em
 
 ## Closure rule
 
-P8 may close only after P4-A independently enforceable custody is verified, P7 is exact and final, immutable freeze object F is constructed, F is independently retrieved/re-hashed, and separate verification record V proves that verification without modifying F. P9 is then executed from the exact V commit against F. No historical candidate result, green CI run, READY deployment, synthetic blinding result, preregistration, or documentation-only update may substitute for these events.
+P8 may close only after P4-A independently enforceable custody is verified, P7 is exact and final, immutable freeze object F is constructed, F is independently retrieved/re-hashed, and separate verification record V proves that verification without modifying F. P9 is then executed from the exact V commit against F. No historical candidate result, green CI run, READY deployment, synthetic blinding result, preregistration, proposed technical-custody design, or documentation-only update may substitute for these events.
