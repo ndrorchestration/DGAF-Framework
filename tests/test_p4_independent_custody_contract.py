@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PROCEDURE = ROOT / "docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md"
 P7 = ROOT / "docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md"
