@@ -56,11 +56,14 @@ Select exactly one mode only when its real control arrangement exists:
 
 The raw blinding key, cleartext mapping before authorized unblinding, unreleased commitment nonces, recovery seeds, backup tokens, and equivalent secret recovery material must never be entered into this file, GitHub issues, pull-request text, ChatGPT, logs, or public artifacts.
 
-Only the following pre-execution public cryptographic values are permitted:
+Only non-secret commitment/evidence identities are permitted in the public record:
 
 - `key_commitment_sha256`
 - `mapping_commitment_sha256`
-- non-secret hashes/digests of custody policy/configuration evidence
+- `control_path_inventory_sha256`
+- `no_unilateral_access_evidence_sha256`
+- `independent_review_evidence_sha256`
+- `mode_evidence_sha256`
 
 Commitment scheme:
 
@@ -89,9 +92,11 @@ Required categories:
 
 `null / NOT EXECUTED`
 
-The inventory must be retained in non-secret form and assigned a SHA-256 digest or immutable record identity.
+The complete retained non-secret inventory must be assigned `control_path_inventory_sha256`. P7 and final P9 bind that exact digest; prose summaries do not replace it.
 
 ## Mode-specific evidence
+
+Each selected mode must produce a retained non-secret evidence packet whose exact bytes or canonical representation are identified by `mode_evidence_sha256`.
 
 ### Mode H — distinct-human custody
 
@@ -135,9 +140,10 @@ A technical mechanism controlled end-to-end by the same analyst remains **NOT IN
 - [ ] Key commitment digest published before empirical execution.
 - [ ] Mapping commitment digest published before empirical execution.
 - [ ] Release rule fixed before empirical execution.
-- [ ] Full control-path inventory retained.
-- [ ] Evidence supports absence of every unilateral early-recovery path.
-- [ ] Independent review evidence retained.
+- [ ] Full control-path inventory retained and SHA-256 bound.
+- [ ] No-unilateral-access evidence retained and SHA-256 bound.
+- [ ] Independent-review evidence retained and SHA-256 bound.
+- [ ] Selected mode-specific evidence packet retained and SHA-256 bound.
 - [ ] No contradictory access record is known.
 - [ ] Freeze remains NOT ESTABLISHED.
 - [ ] Pilot authorization remains NOT GRANTED.
@@ -145,6 +151,23 @@ A technical mechanism controlled end-to-end by the same analyst remains **NOT IN
 - [ ] Unblinding remains NOT EXECUTED.
 
 P4 remains OPEN if any applicable item is missing, contradictory, or supported only by self-assertion.
+
+## P7/P9 handoff contract
+
+At P4-A closure, the following exact non-secret values are copied into final P7 and must later match the immutable freeze object's `p4_custody` object byte-for-byte by value:
+
+- custody mode;
+- custody instance ID;
+- custody authority/system identity;
+- execution principal identity;
+- key commitment SHA-256;
+- mapping commitment SHA-256;
+- control-path inventory SHA-256;
+- no-unilateral-access evidence SHA-256;
+- independent-review evidence SHA-256;
+- selected mode-evidence SHA-256.
+
+Final P9 verifies this exact P7/freeze equality. It does not decide from a product name whether independence is real; that determination must already be supported by the retained P4-A evidence packet.
 
 ## Machine-readable execution state
 
@@ -177,9 +200,10 @@ custody_assigned_at: null
 key_generation_method_class: null
 release_rule: null
 release_rule_committed_at: null
-control_path_inventory_digest: null
-no_unilateral_access_evidence: null
-independent_review_evidence: null
+control_path_inventory_sha256: null
+no_unilateral_access_evidence_sha256: null
+independent_review_evidence_sha256: null
+mode_evidence_sha256: null
 p4a_closed_at: null
 freeze_id: null
 freeze_verified_at: null
