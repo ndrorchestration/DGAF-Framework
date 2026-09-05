@@ -112,6 +112,10 @@ jobs:
         working-directory: experiments/pdmal_pilot
         run: python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py test_dgaf_tgl_adapter.py -q
 
+      - name: Run synthetic pilot artifact matrix contract suite
+        working-directory: experiments/pdmal_pilot
+        run: python -m pytest test_pilot_artifact_schema.py test_security_controls.py -q
+
       - name: Prove deterministic contract mode without empirical collection
         shell: bash
         run: |
@@ -240,6 +244,8 @@ jobs:
                   'candidate_tree_exact': 'PASS',
                   'full_hash_locked_dependencies': 'PASS',
                   'artifact_contract_validation': 'PASS',
+                  'pilot_artifact_matrix_contract_validation': 'PASS',
+                  'pilot_artifact_adversarial_integrity_validation': 'PASS',
                   'environment_fingerprint_independent_recompute': 'PASS',
                   'rng_child_stream_separation': 'PASS',
                   'topology_fingerprint_determinism': 'PASS',
@@ -251,6 +257,7 @@ jobs:
                   'pilot_authorized': False,
                   'empirical_data_collection': False,
                   'unblinding_requested': False,
+                  'pilot_artifact_schema_fixture_only': True,
               },
               'gate_interpretation': {
                   'P3': 'EVIDENCE_PRESENT_NOT_CLOSED',
