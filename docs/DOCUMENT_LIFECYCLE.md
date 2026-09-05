@@ -79,7 +79,8 @@ The expert-panel review progressed through v0.7.0/v0.7.1/v0.7.2/v0.7.3 drafts be
 ## Authority rules
 
 - GitHub source files and CI runs are authoritative for implementation and execution evidence within their exact executed scope.
-- Governance decision records are authoritative only for the authority they explicitly hold; reconciliation artifacts do not acquire sovereignty merely by aggregating multiple sources.
+- Notion records are authoritative for governance decisions, panel adjudication, and control-plane state within their explicit scope and temporal identity.
+- Reconciliation artifacts do not acquire sovereignty merely by aggregating multiple sources.
 - Historical documents remain useful for provenance but cannot override current active documents.
 - A document marked `SUPERSEDED` or `HISTORICAL` must never be cited as the current implementation specification.
 - A `RECONCILIATION` artifact must preserve source disagreement instead of silently choosing a winner.
