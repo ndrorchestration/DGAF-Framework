@@ -108,4 +108,4 @@ The post-fix Completion Controller has not yet completed a new producer → cont
 
 No historical candidate, deployment, artifact, runtime result, or experimental observation transfers to another identity without an explicit provenance relationship. Successful CI, synthetic evidence, deployment readiness, and documentation reconciliation are not empirical results.
 
-**Freeze: NOT ESTABLISHED · Pilot authorization: NOT GRANTED · Empirical N: 0**
+Freeze: **NOT ESTABLISHED** · Pilot authorization: **NOT GRANTED** · Empirical N: **0**
