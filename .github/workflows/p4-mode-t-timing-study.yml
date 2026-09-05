@@ -24,7 +24,7 @@ env:
   TLOCK_EXPECTED_SHA256: '0fda1e0fedffab82217cbd90e0b8b2a9d42df88a361b2dd890d8fac173b5dc57'
   EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
   RUNNER_CLASS: github-hosted-standard-vm-ubuntu-24.04
-  PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_pilot
+  PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/experiments/pdmal_pilot
 
 jobs:
   partial-synthetic-timing:
@@ -70,6 +70,9 @@ jobs:
 
       - name: Install hash-locked PDMAL dependencies
         run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Verify DGAF/PPTL import path used by full matrix
+        run: python -c "from pptl.triadic_governance_loop import TriadicGovernanceLoop; from experiments.pdmal_pilot.dgaf_tgl_adapter import DGAF_TGLAdapter"
 
       - name: Reverify exact tlock v1.2.0 Linux amd64 release asset
         shell: bash
