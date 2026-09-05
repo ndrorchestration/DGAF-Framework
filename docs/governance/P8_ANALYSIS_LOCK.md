@@ -6,11 +6,11 @@
 
 ## Current authoritative boundary
 
-The `main` branch is a living documentation/evidence lineage and is not itself the experimental runtime identity.
+The `main` branch is a living documentation/evidence lineage and is not itself the experimental runtime identity. The repository commit recorded below is the control-plane reconciliation base for this document, not a claim that it remains the latest `main` tip indefinitely.
 
 | Binding | Value | State |
 |---|---|---|
-| Current `main` | `9cf9fcdd3454ce7309efdcbbe4ef29f802a7c97e` | DOCUMENTATION / CONTROL-PLANE LINEAGE |
+| Control-plane reconciliation base | `9cf9fcdd3454ce7309efdcbbe4ef29f802a7c97e` | DOCUMENTATION / CONTROL-PLANE LINEAGE |
 | Designated runtime candidate | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | CURRENT / PRE-FREEZE |
 | Runtime candidate tree | `586c00d6dedb589e52108279f9759be3c4f927e1` | CURRENT |
 | Exact Vercel deployment | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | READY / PRODUCTION / EXACT-CANDIDATE VERIFIED |
