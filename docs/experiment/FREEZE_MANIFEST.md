@@ -38,6 +38,8 @@ The designated runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbd
 
 All freeze-specific identity fields above remain `null` because no execution-valid immutable freeze exists.
 
+The final freeze must be created as a **new immutable object**, not by attempting to make this mutable negative record self-identifying. Its SHA-256 must be computed over the finalized freeze bytes and retained externally in a sidecar/attestation or equivalent independent record. A manifest must never embed the digest of its own complete bytes and then claim that embedded value hashes the resulting file; that would be circular. The `freeze_manifest_identity` / `freeze_manifest_sha256` nulls above are therefore pre-freeze placeholders indicating that the future external freeze identity/digest record does not yet exist, not fields to be self-populated inside the bytes being hashed.
+
 ## Experimental design selected pre-freeze
 
 - Conditions: `null`, `simple`, `static`, `dgaf`
@@ -106,20 +108,21 @@ P8 may construct the immutable freeze only after real P4 custody is independentl
 4. exact analysis/configuration/runner/schema identities;
 5. required P1/P2/P3/P4/P5/P6/P6a evidence identities/digests;
 6. non-secret blinding-custody commitments and attestations;
-7. an immutable freeze-manifest digest;
+7. an externally retained digest of the finalized immutable freeze bytes;
 8. independent freeze-verification evidence.
 
 P9 must then independently verify that complete frozen chain. Historical/scoped P9 runs are provenance only and do not transfer.
 
 ## Promotion rule
 
-This pre-freeze manifest becomes superseded by an execution-valid immutable freeze only when:
+This pre-freeze manifest becomes superseded by a new execution-valid immutable freeze object only when:
 
 - P4 real custody is independently verified;
 - P7 final exact binding is closed;
 - every freeze tuple field is exact and immutable;
-- the freeze manifest is created and cryptographically identified;
-- an independent verifier re-resolves/re-hashes the freeze and records a PASS.
+- the finalized freeze object is created;
+- its byte-level SHA-256 is retained externally in a non-circular sidecar/attestation;
+- an independent verifier retrieves/re-resolves/re-hashes the finalized freeze bytes and records a PASS.
 
 Even then, pilot authorization is a separate later governance transition.
 
