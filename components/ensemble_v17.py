@@ -1025,7 +1025,7 @@ if __name__ == "__main__":
     hpg = HarmonicParametricGate()
     r_seq = hpg.gate(0.50, routing_mode="sequential")
     assert r_seq["effective_confidence"] >= SEQUENTIAL_CONF_FLOOR, "SEQ FLOOR FAIL"
-    assert r_seq["step_locked"] == True, "SEQ STEP_LOCK FAIL"
+    assert r_seq["step_locked"] is True, "SEQ STEP_LOCK FAIL"
     print(f"[PASS] HPG sequential floor: eff_conf={r_seq['effective_confidence']} step_locked={r_seq['step_locked']}")
 
     r_fan = hpg.gate(0.80, routing_mode="fan_out")

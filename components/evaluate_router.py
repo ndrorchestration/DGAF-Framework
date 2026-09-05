@@ -189,5 +189,6 @@ if __name__ == "__main__":
     print(f"Policy dist:    {report['summary']['policy_distribution']}")
     for record in report["records"]:
         print(
-            f"  [{record['kappa_category']:<16}] {record['id']} -> {record['composite_score']:.4f} ({record['kappa_policy']})"
+            f"  [{record['kappa_category']:<16}] {record['id']} -> "
+            f"{record['composite_score']:.4f} ({record['kappa_policy']})"
         )

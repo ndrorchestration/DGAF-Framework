@@ -60,9 +60,9 @@ import time
 import urllib.error
 import urllib.request
 from collections import deque
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Callable, Deque, List, Optional
+from typing import Deque, List, Optional
 
 logger = logging.getLogger("ahg.herald_trace")
 

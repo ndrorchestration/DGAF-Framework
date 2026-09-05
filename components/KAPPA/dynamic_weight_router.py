@@ -224,9 +224,9 @@ def pattern_signal_score(content: str, patterns: List[str]) -> float:
         m = re.search(p, content, re.IGNORECASE)
         if m:
             match_count += 1
-            l = len(m.group(0))
-            if l > longest:
-                longest = l
+            match_length = len(m.group(0))
+            if match_length > longest:
+                longest = match_length
     score_count = min(1.0, match_count / 5.0)
     score_len = min(1.0, longest / max(1, len(content)))
     return 0.6 * score_count + 0.4 * score_len
