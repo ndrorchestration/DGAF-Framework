@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "registry_status": "ACTIVE_FAIL_CLOSED",
+  "last_reconciled": "2026-09-04",
+  "promotion_rule": "ALL_DEPENDENCIES_VERIFIED_AND_REPRODUCIBLE",
+  "policy": {
+    "historical_values_are_preserved": true,
+    "missing_evidence_does_not_imply_falsehood": true,
+    "missing_evidence_blocks_verified_promotion": true,
+    "derived_metrics_inherit_blocking_dependencies": true
+  },
+  "dependency_registry": [
+    {"dependency_id": "P-10-INSTRUMENT", "epistemic_status": "UNRESOLVED", "note": "Historical timing/decision-speed instrument is not reproducibly identified in the current repository evidence set."},
+    {"dependency_id": "P-11", "epistemic_status": "DEPRECATED", "note": "Legacy P-11 instrument is deprecated in the current provenance model."},
+    {"dependency_id": "P-11Q", "epistemic_status": "SHADOW", "note": "P-11Q remains a shadow/attestation instrument and cannot independently promote a derived metric to VERIFIED."},
+    {"dependency_id": "P-29-INSTRUMENT", "epistemic_status": "UNRESOLVED", "note": "Current reproducible latency/token benchmark identity is unresolved."},
+    {"dependency_id": "P-36-INSTRUMENT", "epistemic_status": "UNRESOLVED", "note": "Current MTTE benchmark identity is unresolved."},
+    {"dependency_id": "P-37-INSTRUMENT", "epistemic_status": "UNRESOLVED", "note": "Current confidence-gating precision evaluation identity is unresolved."},
+    {"dependency_id": "P-39-INSTRUMENT", "epistemic_status": "UNRESOLVED", "note": "Current transfer-evaluation identity is unresolved."},
+    {"dependency_id": "P-40-INSTRUMENT", "epistemic_status": "UNRESOLVED", "note": "Current cross-model evaluation identity is unresolved."}
+  ],
+  "metrics": [
+    {
+      "metric_id": "M-P10-SPEED", "pattern_id": "P-10", "display_name": "Decision-making speed improvement", "historical_claim": "+340%",
+      "definition": "Historical claim that P-10 increased decision-making speed; exact operational definition and timing protocol remain unresolved.",
+      "calculation_method": null, "unit": "percent change", "score_range": null, "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-10-INSTRUMENT"], "epistemic_status": "HISTORICAL_UNVERIFIED", "source_surfaces": ["README.md"]
+    },
+    {
+      "metric_id": "M-P11-HUMAN-REVIEW", "pattern_id": "P-11", "display_name": "Human-review reduction", "historical_claim": "-21%",
+      "definition": "Historical claim that P-11 reduced human-review demand; denominator, corpus, and review protocol remain unresolved.",
+      "calculation_method": null, "unit": "percent change", "score_range": null, "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-11"], "epistemic_status": "HISTORICAL_UNVERIFIED", "source_surfaces": ["README.md"]
+    },
+    {
+      "metric_id": "M-P29-LATENCY", "pattern_id": "P-29", "display_name": "Latency reduction", "historical_claim": "-62%",
+      "definition": "Historical P-29 latency-reduction claim; benchmark workload, baseline, and run artifact remain unresolved.",
+      "calculation_method": null, "unit": "percent change", "score_range": null, "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-29-INSTRUMENT"], "epistemic_status": "HISTORICAL_UNVERIFIED", "source_surfaces": ["README.md"]
+    },
+    {
+      "metric_id": "M-P29-TOKENS", "pattern_id": "P-29", "display_name": "Token reduction", "historical_claim": "-42%",
+      "definition": "Historical P-29 token-reduction claim; token-counting method, workload, baseline, and run artifact remain unresolved.",
+      "calculation_method": null, "unit": "percent change", "score_range": null, "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-29-INSTRUMENT"], "epistemic_status": "HISTORICAL_UNVERIFIED", "source_surfaces": ["README.md"]
+    },
+    {
+      "metric_id": "M-P34-945", "pattern_id": "P-34", "display_name": "P-34 94.5% attestation / cross-model claim", "historical_claim": "94.5%",
+      "definition": "Historical 94.5% P-34 value described across repository surfaces as an attestation score and/or cross-model F1; semantic identity must be reconciled before metric verification.",
+      "calculation_method": null, "unit": "percent", "score_range": "0-100%", "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-11", "P-11Q"], "epistemic_status": "DEPENDENCY_BLOCKED", "source_surfaces": ["NDR_STANDARD_CATALOG.md", "docs/qa/APOGEE_11Q_P34.json", "docs/ndr_patterns_unified.json"]
+    },
+    {
+      "metric_id": "M-P36-MTTE", "pattern_id": "P-36", "display_name": "Mean time to escalation reduction", "historical_claim": "-58.3%",
+      "definition": "Historical P-36 MTTE reduction claim; incident corpus, escalation definition, baseline, and retained run evidence remain unresolved.",
+      "calculation_method": null, "unit": "percent change", "score_range": null, "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-36-INSTRUMENT"], "epistemic_status": "HISTORICAL_UNVERIFIED", "source_surfaces": ["README.md"]
+    },
+    {
+      "metric_id": "M-P37-PRECISION", "pattern_id": "P-37", "display_name": "Confidence-gating precision", "historical_claim": "96%",
+      "definition": "Historical P-37 confidence-gating precision claim; evaluation corpus, threshold configuration, and retained run evidence remain unresolved.",
+      "calculation_method": null, "unit": "precision percent", "score_range": "0-100%", "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-37-INSTRUMENT"], "epistemic_status": "HISTORICAL_UNVERIFIED", "source_surfaces": ["NDR_STANDARD_CATALOG.md"]
+    },
+    {
+      "metric_id": "M-P39-TRANSFER", "pattern_id": "P-39", "display_name": "Transfer rate", "historical_claim": "95%",
+      "definition": "Historical P-39 transfer-rate claim; transfer task definition, model set, corpus, and retained run evidence remain unresolved.",
+      "calculation_method": null, "unit": "percent", "score_range": "0-100%", "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-39-INSTRUMENT"], "epistemic_status": "HISTORICAL_UNVERIFIED", "source_surfaces": ["NDR_STANDARD_CATALOG.md"]
+    },
+    {
+      "metric_id": "M-P40-F1", "pattern_id": "P-40", "display_name": "Cross-model F1", "historical_claim": "82.6%",
+      "definition": "Historical P-40 cross-model F1 claim; label policy, model set, corpus, split, and retained run evidence remain unresolved.",
+      "calculation_method": null, "unit": "F1 percent", "score_range": "0-100%", "dataset_or_corpus": null, "baseline": null, "configuration_identity": null, "source_commit": null,
+      "execution": {"workflow_run_id": null, "artifact_id": null, "timestamp": null}, "reproduction": {"status": "NON_REPRODUCIBLE", "command": null},
+      "dependencies": ["P-40-INSTRUMENT"], "epistemic_status": "HISTORICAL_UNVERIFIED", "source_surfaces": ["NDR_STANDARD_CATALOG.md"]
+    }
+  ]
+}

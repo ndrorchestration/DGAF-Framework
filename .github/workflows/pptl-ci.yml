@@ -25,10 +25,8 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: pip install httpx -q
+      - name: Validate dependency-aware metric provenance
+        run: python scripts/lint_provenance.py
 
-      - name: Run PPTL CI
-        run: |
-          echo 'PPTL CI placeholder'
-          echo 'All checks nominal'
+      - name: Run provenance regression tests
+        run: python -m unittest discover -s tests -p 'test_lint_provenance.py' -v
