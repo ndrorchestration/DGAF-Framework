@@ -1,10 +1,10 @@
-# P7 Final Scientific Binding — Draft v2
+# P7 Final Scientific Binding — Draft v3
 
 **Status:** OPEN / PRE-FREEZE / FAIL-CLOSED  
-**Control-plane base:** `4382a7b745c1abde3a68eb7848611412f5bd34d7`  
-**Purpose:** Assemble the exact scientific identity tuple that must be accepted before P7 may close and P8 may construct an immutable freeze.
+**Draft lineage anchor:** `4382a7b745c1abde3a68eb7848611412f5bd34d7`  
+**Purpose:** Assemble the exact pre-freeze scientific identity tuple that must be accepted before P7 may close and P8 may construct an immutable freeze.
 
-This document is a binding draft only. Unresolved values remain explicit and closure-blocking.
+This document is a binding draft only. Unresolved pre-freeze values remain explicit and closure-blocking. Outputs that can exist only after P7 closure are tracked separately and are not permitted to create a circular P7 dependency.
 
 ## Exact identities already established
 
@@ -53,7 +53,9 @@ This document is a binding draft only. Unresolved values remain explicit and clo
 
 These are design selections, not results.
 
-## Closure-blocking unresolved identities
+## P7 closure-blocking pre-freeze identities
+
+Only facts that can legitimately exist before immutable-freeze construction may block P7 closure.
 
 | Binding | Required value | Current state |
 |---|---|---|
@@ -62,25 +64,49 @@ These are design selections, not results.
 | P4 key commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
 | P4 mapping commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
 | P4 custody/access-separation attestation | independently reviewable operational evidence | `null` / NOT EXECUTED |
-| Final protocol blob/commit identity | immutable protocol identity at freeze | `null` / NOT FROZEN |
-| Final control-plane commit | exact accepted pre-freeze control state | `null` / NOT FROZEN |
-| Freeze manifest identity | immutable manifest object/digest | `null` / NOT CREATED |
-| Independent freeze verification | independently produced verification evidence | `null` / NOT EXECUTED |
-| Final P9 verifier identity | independent verifier principal/system | `null` / NOT EXECUTED |
-| Final P9 evidence artifact/digest | verification of complete final bound chain | `null` / NOT EXECUTED |
-| Pilot authorization record | separate explicit authorization identity | `null` / NOT GRANTED |
+| Final protocol Git blob | exact protocol blob selected for freeze | `null` / BIND AT P7 CLOSURE |
+| Final protocol content SHA-256 | exact protocol bytes selected for freeze | `null` / BIND AT P7 CLOSURE |
+| Final accepted pre-freeze control-plane commit | exact accepted state from which freeze is constructed | `null` / NOT SELECTED |
+| Selected final-P9 verifier script SHA-256 | exact verifier content at accepted pre-freeze control state | `null` / BIND AT P7 CLOSURE |
+| Selected final-P9 workflow SHA-256 | exact workflow content at accepted pre-freeze control state | `null` / BIND AT P7 CLOSURE |
 
-Any `null` field above prevents P7 closure.
+Any `null` field in this pre-freeze table prevents P7 closure.
+
+## Downstream outputs — not P7 closure blockers
+
+The following identities are produced only after P7 legitimately closes and therefore must not be required for P7 closure:
+
+| Downstream output | Current state |
+|---|---|
+| Immutable freeze commit identity | `null` / P8 NOT EXECUTED |
+| External immutable-freeze byte SHA-256 | `null` / P8 NOT EXECUTED |
+| Separate P8 freeze-verification record commit | `null` / P8 NOT EXECUTED |
+| External P8 verification-record byte SHA-256 | `null` / P8 NOT EXECUTED |
+| Final P9 evidence artifact/digest | `null` / P9 NOT EXECUTED |
+| Pilot authorization record | `null` / NOT GRANTED |
+
+These values remain null at legitimate P7 closure. They are populated by P8, P9, and separate authorization steps in that order.
+
+## Non-circular P8/P9 identity rule
+
+P8 uses two immutable identity layers:
+
+1. **Freeze commit F** — contains the finalized freeze object, final P7 binding, candidate/control identities, and the selected P9 verifier definition. The exact freeze-object byte SHA-256 is retained externally.
+2. **P8 verification record V** — produced only after F has been independently retrieved and re-hashed. V is stored separately in a descendant verification commit and references F plus the exact freeze digest. V is never embedded back into F and does not self-embed the SHA of its containing commit.
+
+Final P9 executes from the verification-record commit, independently resolves F, verifies the freeze and verification-record digests, verifies the final protocol/control-plane/verifier bindings declared by closed P7, and proves the P9 script/workflow definitions have not drifted from those frozen at F.
+
+This avoids requiring an immutable object to contain evidence or an identity that can exist only after that object's bytes are finalized.
 
 ## P4 procedure boundary
 
-`docs/governance/P4_HUMAN_KEY_CUSTODY_PROCEDURE.md` is now part of the control plane. It defines the required real-world role separation and nonce-hardened commitment scheme, but its existence is **not** evidence that custody occurred.
+`docs/governance/P4_HUMAN_KEY_CUSTODY_PROCEDURE.md` is part of the control plane. It defines the required real-world role separation and nonce-hardened commitment scheme, but its existence is **not** evidence that custody occurred.
 
 P4 therefore remains OPEN until distinct humans actually perform and independently attest the procedure.
 
 ## P5 boundary
 
-P5 is now **CLOSED / VERIFIED** on `main`. The exact analysis/configuration/runner/schema identities were bound through `2e325acd…`; exact post-merge Governance CI `33945464907` and PDMAL Pre-Authorization Security `33945464908` both passed; and the authoritative P5 closure reconciliation merged as `fcf21ce9ab3739a7b5880c6f6896cf378a3dd2da`.
+P5 is **CLOSED / VERIFIED** on `main`. The exact analysis/configuration/runner/schema identities were bound through `2e325acd…`; exact post-merge Governance CI `33945464907` and PDMAL Pre-Authorization Security `33945464908` both passed; and the authoritative P5 closure reconciliation merged as `fcf21ce9ab3739a7b5880c6f6896cf378a3dd2da`.
 
 This P5 closure is provenance/reproducibility evidence only. It is not efficacy evidence, a freeze, authorization, or empirical execution.
 
@@ -88,20 +114,22 @@ This P5 closure is provenance/reproducibility evidence only. It is not efficacy 
 
 P7 may be considered for `CLOSED / VERIFIED` only when:
 
-1. all scientific identities used by the experiment are exact and immutable;
+1. all pre-freeze scientific identities used by the experiment are exact;
 2. P5 remains authoritative and internally consistent;
 3. P4 real human/key custody and access separation are evidenced and independently reviewable;
-4. no candidate/runtime/protocol/analysis identity conflict remains;
-5. the final tuple can be copied into the immutable freeze manifest without inference or unresolved placeholders.
+4. final protocol blob/content and accepted pre-freeze control-plane identities are fixed;
+5. selected P9 verifier script/workflow SHA-256 identities are fixed before freeze;
+6. no candidate/runtime/protocol/analysis identity conflict remains; and
+7. the complete P7 tuple can be copied into the immutable freeze object without inference or unresolved pre-freeze placeholders.
 
-P7 closure is a binding decision, not empirical evidence and not authorization.
+P7 closure is a binding decision, not empirical evidence and not authorization. P7 does not require downstream P8/P9/auth outputs that do not yet exist.
 
 ## Machine-readable draft
 
 ```yaml
-p7_binding_version: "2"
+p7_binding_version: "3"
 status: "OPEN"
-control_plane_base: "4382a7b745c1abde3a68eb7848611412f5bd34d7"
+draft_lineage_anchor: "4382a7b745c1abde3a68eb7848611412f5bd34d7"
 apparatus_anchor: "2a54a67d84870e4eeb71b8aaf04413e0ca492ba1"
 p35_boundary: "643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d"
 control_state_anchor: "89be386b136aeb5f1fc5ca39d4aac4b3781a9f58"
@@ -109,6 +137,8 @@ candidate_sha: "7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8"
 candidate_tree_sha: "586c00d6dedb589e52108279f9759be3c4f927e1"
 deployment_id: "dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA"
 protocol_version: "0.7.5"
+protocol_blob_sha: null
+protocol_content_sha256: null
 analysis_blob_sha: "a269ed226b1d261663994fc3ef0e8a1a96da6cd3"
 analysis_config_sha256: "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8"
 runner_blob_sha: "b5152fa3c9c4effe1c5201a45d58ac2d6b8e5243"
@@ -121,12 +151,16 @@ p5_deep_postmerge_verification:
 p5_closure_reconciliation: "fcf21ce9ab3739a7b5880c6f6896cf378a3dd2da"
 p4_procedure_merge: "4382a7b745c1abde3a68eb7848611412f5bd34d7"
 p4_custody_evidence: null
-final_protocol_identity: null
 final_control_plane_commit: null
-freeze_manifest_identity: null
-freeze_verification_evidence: null
-p9_final_evidence: null
-pilot_authorization: null
+selected_p9_verifier_script_sha256: null
+selected_p9_workflow_sha256: null
+downstream_outputs:
+  freeze_commit_sha: null
+  freeze_sha256: null
+  p8_verification_commit_sha: null
+  p8_verification_sha256: null
+  p9_final_evidence: null
+  pilot_authorization: null
 empirical_n: 0
 ```
 
