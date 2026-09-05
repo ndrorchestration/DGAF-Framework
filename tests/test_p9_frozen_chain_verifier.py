@@ -122,9 +122,7 @@ def _p8_verification(freeze_sha256: str) -> dict:
     }
 
 
-def _write_controls(
-    tmp_path: Path, *, p7_status: str = "CLOSED", p7_custody_mode: str = "T"
-) -> tuple[Path, Path]:
+def _write_controls(tmp_path: Path, *, p7_status: str = "CLOSED", p7_custody_mode: str = "T") -> tuple[Path, Path]:
     candidate = tmp_path / "candidate.md"
     p7_path = tmp_path / "p7.md"
     candidate.write_text(_candidate_manifest(), encoding="utf-8")
@@ -149,9 +147,7 @@ def _verify(
 ) -> dict:
     if p7_custody_mode is None:
         p7_custody_mode = freeze["p4_custody"]["mode"]
-    candidate, p7_path = _write_controls(
-        tmp_path, p7_status=p7_status, p7_custody_mode=p7_custody_mode
-    )
+    candidate, p7_path = _write_controls(tmp_path, p7_status=p7_status, p7_custody_mode=p7_custody_mode)
     freeze_raw = _serialize(freeze)
     freeze_digest = hashlib.sha256(freeze_raw).hexdigest()
     p8_record = _p8_verification(freeze_digest)
