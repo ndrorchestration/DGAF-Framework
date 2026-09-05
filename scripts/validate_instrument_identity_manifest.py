@@ -3,7 +3,8 @@
 
 The validator intentionally treats unresolved contradictions as blocked. It may
 confirm that a contradiction is represented correctly, but it never selects a
-normalization, threshold, alias, or canonical formula on the project's behalf.
+normalization, threshold, alias, dependency, or canonical formula on the
+project's behalf.
 """
 from __future__ import annotations
 
@@ -113,8 +114,10 @@ def validate_manifest(data: dict[str, Any]) -> None:
     gate11q = instruments["GATE-11Q-v2"]
     if gate11q["instrument_id"] == qa11q["instrument_id"]:
         _fail("GATE-11Q and QA-11Q scoring must remain distinct instrument identities")
-    if "QA-11Q-ARTIFACT-v1" not in gate11q["upstream_dependencies"]:
-        _fail("GATE-11Q lineage must explicitly reference QA-11Q rather than alias it")
+    if gate11q["upstream_dependencies"]:
+        _fail("GATE-11Q must not gain an inferred QA-11Q dependency without authority evidence")
+    if "distinct" not in gate11q.get("diagnostics", {}).get("lineage", ""):
+        _fail("GATE-11Q audit must explicitly preserve distinct lineage")
 
     axis = instruments["AXIS-v1.2"]
     apogee_axis = instruments["APOGEE-AXIS-RUBRIC-v1"]
