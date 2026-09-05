@@ -6,7 +6,7 @@
 
 ## Current identity boundary — 2026-09-05
 
-This reconciliation is based on protected repository `main` at `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9`. The documentation synchronization that updates this file is a later control-plane descendant and does not replace the designated runtime candidate.
+This documentation hygiene reconciliation uses immutable source boundary `a3bafa6fca8599df479a685828f5fdddb6bae589` (PR #286 merge) rather than calling any embedded SHA “current main.” The documentation branch that updates this file is necessarily a later control-plane descendant and does not replace the designated runtime candidate.
 
 | Identity | Role | Status |
 |---|---|---|
@@ -14,8 +14,8 @@ This reconciliation is based on protected repository `main` at `17fbe054f0b94f68
 | `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d` | Immutable P-35 validation boundary | Historical validated boundary |
 | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Designated executable runtime candidate | PRE-FREEZE / not frozen |
 | `586c00d6dedb589e52108279f9759be3c4f927e1` | Runtime candidate tree | Exact candidate tree |
-| `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Vercel production deployment for `7c1cc4bb…` | READY / exact Git source verified |
-| `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9` | Reconciliation base for current repository state | Documentation/evaluator/control-plane lineage; not the scientific candidate |
+| `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Vercel production deployment for `7c1cc4bb…` | READY / exact Git source verified at its scoped evidence boundary |
+| `a3bafa6fca8599df479a685828f5fdddb6bae589` | Documentation-hygiene reconciliation source boundary | Control-plane lineage; not the scientific candidate |
 
 Later documentation, evaluator, or control-plane descendants do not automatically replace the designated runtime candidate or inherit its runtime evidence.
 
@@ -49,7 +49,7 @@ Fresh retrieval is not a new runtime execution and does not establish later-main
 | P1 candidate integrity | CLOSED / VERIFIED |
 | P2 runtime contract | CLOSED / VERIFIED at exact runtime scope |
 | P3 artifact contract | CLOSED / VERIFIED — run `33939955138` |
-| P4 security/blinding | OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED; real distinct-human custody/access separation absent |
+| P4 security/blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED; no H/I/T custody mode instantiated or verified |
 | P5 provenance/reproducibility | CLOSED / VERIFIED within its bounded provenance/reproducibility contract |
 | P6 evidence custody | CLOSED / VERIFIED within the defined archive/retrieval/hash contract |
 | P6a CORS | CLOSED / VERIFIED at exact runtime scope |
@@ -62,22 +62,36 @@ Fresh retrieval is not a new runtime execution and does not establish later-main
 
 P5 closure is provenance/reproducibility evidence, not model or scientific efficacy evidence.
 
+### P4 custody interpretation
+
+PR #286 generalized P4 from a mandatory second-human model to **effective control separation**. Three custody modes are admissible in principle:
+
+- `H` — genuinely distinct human custody;
+- `I` — institutional/third-party custody outside the analyst’s unilateral control;
+- `T` — independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
+
+No mode has been instantiated. Issue #285 is completed as the governance-architecture correction; Issue #255 is superseded historical context. Issue #287 is the active design/threat-model lane for a possible zero-human Mode T lifecycle. GitHub Actions + timelock/drand is **not** yet accepted as sufficient P4 custody merely because the design issue exists.
+
 ## Evaluation integrity
 
 Issue #32 Task 4 (`audit_hallucination_rate`) was hardened by PR #269, merged as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9`. The evaluator now fails closed unless provenance-controlled ground truth and independently generated corresponding outputs are supplied, and it performs deterministic six-field comparison rather than synthesizing a benchmark-derived score.
 
 That change verifies evaluator mechanics only. No Task-4 model-performance result currently exists; the required fixture/output corpus remains outstanding.
 
-## Current quality caveat
+## Engineering quality and merge enforcement
 
-Issue #270 tracks later-lineage Black/isort/mypy debt. Those diagnostics are currently advisory (`continue-on-error`) in the Python workflow, so a green workflow must not be represented as proof of a clean formatting/type baseline. Blocking pytest remains green for the PR #269 execution across Python 3.10, 3.11, and 3.12.
+Issue #270 is **CLOSED / COMPLETED**. PR #276 restored a clean current-lineage flake8/Black/isort/mypy baseline and converted those quality checks to fail-closed workflow gates; the Python matrix and deterministic negative controls subsequently passed at the recorded exact boundaries.
+
+A separate repository-administration gap remains: Issue #277 tracks branch-protection/ruleset enforcement. The Python quality workflow is fail-closed when it runs, but the available configuration readback did not establish that its matrix is required before every merge. That distinction must not be collapsed into either “quality is still advisory” or “branch protection is complete.”
 
 ## Evidence rules
 
 Evidence does not transfer across candidate SHA, deployment identity, workflow identity, artifact identity, or materially different control state without an explicit provenance relationship. A documentation commit does not create a new experimental candidate. Deployment readiness does not establish runtime behavior. CI and synthetic dry runs are engineering controls, not empirical efficacy evidence.
 
+Historical documents may contain statements that were “current” at their own closure boundary. Those statements remain historical unless explicitly promoted by a later current-state record.
+
 ## Current closure sequence
 
-`real P4 custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
+`verified real P4-A custody mode → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
 
 No documentation or CI action in this sequence grants experimental authorization or advances empirical N.

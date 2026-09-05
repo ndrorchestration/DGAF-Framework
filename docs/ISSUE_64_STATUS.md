@@ -1,7 +1,8 @@
 # Issue #64 — Evaluation Integrity & Adversarial Measurement Tests
 
 **Last updated:** 2026-09-05  
-**Status:** OPEN / EVALUATION-INTEGRITY TRACK
+**Status:** OPEN / EVALUATION-INTEGRITY TRACK  
+**Repository reconciliation source boundary:** `a3bafa6fca8599df479a685828f5fdddb6bae589`
 
 ## Historical exact verified fixture result
 
@@ -20,9 +21,9 @@ The same historical artifact also retains the three repository-native Issue #32 
 - `governance_schema_conformance`: 1000/1000, score `1.0`
 - `contraction_proof_fidelity`: 100/100, score `1.0`
 
-## Task 4 integrity hardening — merged current behavior
+## Task 4 integrity hardening — merged behavior
 
-PR #269 merged to protected `main` as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9` after all 17 returned exact-head workflows succeeded on head `d6b6fb640e6d310ff31c4a31d08541821824c412`.
+PR #269 merged as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9` after all 17 returned exact-head workflows succeeded on head `d6b6fb640e6d310ff31c4a31d08541821824c412`.
 
 The `audit_hallucination_rate` runner now:
 
@@ -43,7 +44,7 @@ Governance CI `33957199870` and PDMAL Pre-Freeze Runner Validation `33957199849`
 
 ## Evidence boundary
 
-The historical fixture result is **SYNTHETIC** repository-authored evaluator/mechanism evidence for its exact executed tree. The current Task-4 change verifies a fail-closed deterministic comparison mechanism and answer-leakage prevention behavior.
+The historical fixture result is **SYNTHETIC** repository-authored evaluator/mechanism evidence for its exact executed tree. The Task-4 change verifies a fail-closed deterministic comparison mechanism and answer-leakage prevention behavior.
 
 Neither establishes model-facing adversarial robustness, resistance to benchmark gaming in actual model execution, contamination resistance, topology invariance, DGAF efficacy, hallucination rate, or real-world performance.
 
@@ -55,19 +56,21 @@ Neither establishes model-facing adversarial robustness, resistance to benchmark
 - reproducible external benchmark execution where applicable;
 - independent verification where required by the applicable governance predicate.
 
-## Quality diagnostic boundary
+## Quality diagnostic boundary — superseded finding corrected
 
-Python workflow run `33957199893` records non-blocking Black/isort/mypy debt on the later lineage. Those diagnostics are currently configured `continue-on-error`, so a green workflow cannot be promoted into a claim that formatting/import/type checks are clean.
+Run `33957199893` historically recorded non-blocking Black/isort/mypy debt. That remains evidence about that exact execution boundary only.
 
-That current-lineage quality regression is tracked separately in Issue #270.
+Issue #270 is now **CLOSED / COMPLETED**. PR #276 repaired the current-lineage flake8/Black/isort/mypy baseline and converted those checks to fail-closed workflow gates. The supported Python matrix and deterministic negative controls subsequently passed at the recorded exact boundaries.
+
+Issue #277 separately tracks branch-protection/ruleset enforcement. The quality workflow is fail-closed when it runs, but the available repository-configuration readback did not establish that the Python matrix is required before every merge.
 
 ## Control boundary
 
 No freeze, authorization, unblinding, or empirical-N change follows from this evaluator work.
 
-**Current protected main:** `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9`  
+**Repository reconciliation source boundary:** `a3bafa6fca8599df479a685828f5fdddb6bae589`  
 **Fixture status:** VERIFIED / SYNTHETIC / historical exact tree `061286b1…` / Governance CI `33162492796`  
 **Task-4 evaluator:** MERGED / FAIL-CLOSED MECHANISM / NO PERFORMANCE RESULT  
 **Pilot authorization:** NOT GRANTED  
 **Empirical N:** 0  
-**Freeze:** NOT CREATED
+**Freeze:** NOT ESTABLISHED

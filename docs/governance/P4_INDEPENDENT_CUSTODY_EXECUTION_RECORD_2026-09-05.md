@@ -2,7 +2,8 @@
 
 **Status:** OPEN / NOT EXECUTED / FAIL-CLOSED  
 **Control-plane base:** `2d8a525b3f1717c5675907769615207e5aa59fd5`  
-**Related issue:** #285  
+**Architecture correction:** Issue #285 — COMPLETED via PR #286 / merge `a3bafa6fca8599df479a685828f5fdddb6bae589`  
+**Active Mode-T design/threat-model lane:** Issue #287 — OPEN / DESIGN ONLY  
 **Purpose:** Provide one operational record for instantiating P4 under human, institutional, or independently enforced technical custody without inferring or fabricating independence, secret material, commitments, freeze state, authorization, or empirical execution.
 
 This record is governed by `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`.
@@ -34,9 +35,15 @@ Select exactly one mode only when its real control arrangement exists:
 |---|---|---|
 | `H` | distinct-human custodian | NOT SELECTED |
 | `I` | institutional / third-party custody | NOT SELECTED |
-| `T` | independently enforced technical custody | NOT SELECTED |
+| `T` | independently enforced technical custody | NOT SELECTED / NO SOLO IMPLEMENTATION ACCEPTED |
 
 `custody_mode` remains `null` until an actual mechanism is chosen.
+
+### Mode-T implementation boundary
+
+Mode T is an admissible custody category, not a completed implementation. Issue #287 is evaluating a possible zero-human transient-runner/timelock lifecycle, but that design has not been accepted into the canonical P4/P7/P8/P9 lifecycle and no real key, mapping, nonce, or empirical workload has been executed under it.
+
+Until a future reviewed governance revision explicitly changes the lifecycle, any Mode-T execution attempt must satisfy the current canonical pre-freeze predicates exactly as written. Do not populate this record from a design proposal alone.
 
 ## Required operational assignments
 

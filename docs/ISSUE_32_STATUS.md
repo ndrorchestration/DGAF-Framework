@@ -2,7 +2,8 @@
 
 **Issue:** EVAL-001 — DGAF reproducible evaluation suite — baseline and evidence protocol  
 **Last updated:** 2026-09-05  
-**Status:** OPEN / EMPIRICAL EVIDENCE GATE
+**Status:** OPEN / EMPIRICAL EVIDENCE GATE  
+**Repository reconciliation source boundary:** `a3bafa6fca8599df479a685828f5fdddb6bae589`
 
 ---
 
@@ -38,9 +39,9 @@ The separate #64 fixture suite remains verified on the same historical exact run
 - 12/12 correct, accuracy `1.0`
 - six registered threat classes
 
-## Task 4 evaluator contract — merged current behavior
+## Task 4 evaluator contract — merged behavior
 
-PR #269 hardened `audit_hallucination_rate` and merged to protected `main` as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9` from exact PR head `d6b6fb640e6d310ff31c4a31d08541821824c412`.
+PR #269 hardened `audit_hallucination_rate` and merged as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9` from exact PR head `d6b6fb640e6d310ff31c4a31d08541821824c412`.
 
 Before merge, all 17 returned exact-head workflows completed successfully. Key evidence includes:
 
@@ -70,11 +71,13 @@ This establishes the **evaluator mechanism hardening only**. It does not create 
 - `taubench_banking_mitigation`: CONDITIONAL — reproducible external benchmark/data required.
 - Real-workload evaluation remains a separate evidence track.
 
-## Quality diagnostic boundary
+## Quality diagnostic boundary — superseded finding corrected
 
-Python workflow run `33957199893` also recorded current-lineage formatting/import/type debt. Black, isort, mypy, and broad lint diagnostics are presently configured `continue-on-error`, so workflow SUCCESS must not be represented as a clean formatting/type baseline.
+Run `33957199893` historically exposed formatting/import/type debt while the affected checks were non-blocking. That observation remains valid for its exact execution boundary, but it is **not the current quality state**.
 
-That later quality regression is tracked separately in Issue #270. The Task-4 regression tests themselves passed across the supported Python matrix.
+Issue #270 is now **CLOSED / COMPLETED**. PR #276 repaired the current-lineage flake8/Black/isort/mypy baseline and converted those checks to fail-closed workflow gates, with Python 3.10/3.11/3.12 execution and deterministic negative controls proving rejection of intentional violations.
+
+Issue #277 separately tracks repository-level merge enforcement. The Python quality workflow is fail-closed when executed; available branch-protection/ruleset readback did not establish that the matrix is required before every merge.
 
 ## Evidence boundary
 
@@ -82,7 +85,7 @@ The historical verified results establish evaluator/scoring behavior under repos
 
 The successful PR-head Governance CI and PDMAL Pre-Freeze runs are engineering/governance compatibility evidence only. They do not alter PDMAL scientific gate state.
 
-**Current protected main:** `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9`  
+**Repository reconciliation source boundary:** `a3bafa6fca8599df479a685828f5fdddb6bae589`  
 **Pilot authorization:** NOT GRANTED  
 **Empirical N:** 0  
-**Freeze:** NOT CREATED
+**Freeze:** NOT ESTABLISHED
