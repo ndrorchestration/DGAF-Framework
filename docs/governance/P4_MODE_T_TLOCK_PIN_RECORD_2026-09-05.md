@@ -17,8 +17,7 @@ scheme_id: bls-unchained-g1-rfc9380
 public_key: 83cf0f2896adee7eb8b5f01fcad3912212c437e0073e911fb90022d3e760183c8c4b450b6a0a6c3ac6a5776a2d1064510d1fec758c921cc22b0e17e63aaf4bcb5ed66304de9cf809bd274ca73bab4af5a6e9c76a4bc09e76eae8991ef5ece45a
 ```
 
-Source:
-- https://docs.drand.love/blog/2023/10/16/quicknet-is-live/
+Source: [drand quicknet launch record](https://docs.drand.love/blog/2023/10/16/quicknet-is-live/).
 
 The chain hash, period, genesis time, scheme and public key are protocol identities. A future runtime must verify the remote `/info` response against the frozen tuple rather than accept an endpoint name alone.
 
@@ -37,9 +36,10 @@ published_at: 2024-08-21T08:23:59Z
 ```
 
 Authoritative GitHub API evidence:
-- https://api.github.com/repos/drand/tlock/git/ref/tags/v1.2.0
-- https://api.github.com/repos/drand/tlock/git/tags/6a94bf6b8200ab67f2b80af8000a55db64998d94
-- https://api.github.com/repos/drand/tlock/releases/latest
+
+- [Tag ref](https://api.github.com/repos/drand/tlock/git/ref/tags/v1.2.0)
+- [Annotated tag object](https://api.github.com/repos/drand/tlock/git/tags/6a94bf6b8200ab67f2b80af8000a55db64998d94)
+- [Latest release](https://api.github.com/repos/drand/tlock/releases/latest)
 
 ## Release artifact pin — OPEN
 
@@ -59,8 +59,7 @@ No Mode T implementation may download and execute this artifact until the exact 
 
 The `tlock` source documents that a newly created Tlock trusts chain-hash metadata supplied by ciphertext by default and exposes `Strict()` to disable that switching behavior.
 
-Source:
-- https://github.com/drand/tlock/blob/main/tlock.go
+Source: [tlock chain-selection implementation](https://github.com/drand/tlock/blob/main/tlock.go).
 
 Future decryption/continuity verification must use the frozen quicknet identity and strict chain binding. Ciphertext metadata is evidence to validate, not authority to select another chain.
 
@@ -68,8 +67,7 @@ Future decryption/continuity verification must use the frozen quicknet identity 
 
 The drand timelock documentation explicitly states that a threshold number of malicious network nodes could compute future randomness and decrypt timelocked ciphertext early.
 
-Source:
-- https://docs.drand.love/docs/timelock-encryption/
+Source: [drand timelock encryption documentation](https://docs.drand.love/docs/timelock-encryption/).
 
 This threshold-network trust assumption must remain visible in any final P4-T review. A successful synthetic `tle` test cannot prove the network assumption.
 
