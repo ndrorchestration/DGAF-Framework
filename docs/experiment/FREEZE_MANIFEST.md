@@ -38,7 +38,7 @@ The designated runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbd
 
 All freeze-specific identity fields above remain `null` because no execution-valid immutable freeze exists.
 
-The final freeze must be created as a **new immutable object**, not by attempting to make this mutable negative record self-identifying. Its SHA-256 must be computed over the finalized freeze bytes and retained externally in a sidecar/attestation or equivalent independent record. A manifest must never embed the digest of its own complete bytes and then claim that embedded value hashes the resulting file; that would be circular. The `freeze_manifest_identity` / `freeze_manifest_sha256` nulls above are therefore pre-freeze placeholders indicating that the future external freeze identity/digest record does not yet exist, not fields to be self-populated inside the bytes being hashed.
+The final freeze must be created as a **new immutable object**, not by attempting to make this mutable negative record self-identifying. Its SHA-256 must be computed over finalized freeze bytes and retained externally. A manifest must never embed the digest of its own complete bytes and then claim that embedded value hashes the resulting file.
 
 ## Experimental design selected pre-freeze
 
@@ -71,11 +71,11 @@ These are design selections, not empirical results.
 | P1 Candidate Integrity | CLOSED / VERIFIED | apparatus/source, candidate/tree, provenance, deployment identity |
 | P2 Runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; five-case authenticated matrix |
 | P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662`; structural/contract scope |
-| P4 Security / Blinding | OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED | synthetic controls pass; real distinct-human custody/access separation absent |
+| P4 Security / Blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | canonical custody procedure now permits H human, I institutional, or T independently enforced technical custody; no mode has been instantiated or verified |
 | P5 Provenance / Reproducibility | CLOSED / VERIFIED | exact analysis/configuration/runner/schema/environment/RNG/topology chain |
 | P6 Durable Evidence Custody | CLOSED / VERIFIED | independent archive/retrieval/SHA-256 equality for retained evidence set |
 | P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299`; four-case authenticated matrix |
-| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | final binding awaits actual P4 custody and freeze-specific identities |
+| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | final binding awaits actual P4-A custody evidence and final pre-freeze identities |
 | P8 Analysis Lock / Freeze | OPEN / FAIL-CLOSED | analysis identities bound; immutable freeze not created or independently verified |
 | P9 Independent Verification | NOT EXECUTED / OPEN | final frozen-chain verification absent |
 | Freeze | NOT ESTABLISHED | all freeze-specific identity fields remain null |
@@ -84,45 +84,51 @@ These are design selections, not empirical results.
 
 ## P4 boundary
 
-The repository contains both the authoritative human/key-custody procedure and a pre-filled execution handoff. Their existence is not operational custody evidence.
+The canonical procedure is `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`; the active handoff is `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md`.
+
+P4-A is satisfied only by evidence of effective control separation. Exactly one custody mode must be selected:
+
+- `H`: genuinely distinct human custody;
+- `I`: institutional/third-party custody outside the analyst's unilateral control;
+- `T`: independently enforced technical custody.
 
 The following remain absent and must not be inferred or fabricated:
 
-- a genuinely distinct human Key Custodian;
-- a distinct execution/analysis principal;
+- a selected custody mode and real custody-instance identity;
+- a real custody authority/system outside the analyst's unilateral effective control;
 - real nonce-hardened key and mapping commitments;
-- attributable custody and no-access attestations;
-- independent custody review.
+- a complete control-path inventory;
+- evidence that the execution/analysis principal cannot recover protected material through any unilateral ordinary/admin/recovery/backup/export/break-glass path before release;
+- independent review evidence appropriate to the selected custody mode.
 
 P4 therefore remains OPEN / NOT EXECUTED operationally.
 
 ## P7/P8/P9 boundary
 
-`docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md` already assembles the established candidate/deployment/protocol/analysis/runner/schema and P2/P3/P5/P6/P6a identities. Its closure-blocking P4/freeze/P9/authorization fields remain explicit and unresolved.
+`docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md` assembles the established candidate/deployment/protocol/analysis/runner/schema and P2/P3/P5/P6/P6a identities. Its closure-blocking P4 and final pre-freeze identity fields remain explicit and unresolved.
 
-P8 may construct the immutable freeze only after real P4 custody is independently verified and P7 is final with no unresolved closure-blocking placeholders. The immutable freeze must bind, at minimum:
+P8 may construct immutable freeze object F only after P4-A is independently verified and P7 is final with no unresolved pre-freeze placeholders. The immutable freeze must bind, at minimum:
 
-1. final protocol blob/commit identity;
+1. final protocol blob/content identity;
 2. final accepted control-plane commit;
 3. exact candidate SHA/tree and deployment identity;
 4. exact analysis/configuration/runner/schema identities;
 5. required P1/P2/P3/P4/P5/P6/P6a evidence identities/digests;
-6. non-secret blinding-custody commitments and attestations;
-7. an externally retained digest of the finalized immutable freeze bytes;
-8. independent freeze-verification evidence.
+6. P4 custody mode, custody-instance identity, non-secret commitments, control-path evidence, and independent-review evidence;
+7. the selected P9 verifier definitions.
 
-P9 must then independently verify that complete frozen chain. Historical/scoped P9 runs are provenance only and do not transfer.
+The finalized freeze object's byte digest is retained externally. Independent P8 verification then produces separate descendant record V without writing V back into F. Final P9 verifies the F/V chain.
 
 ## Promotion rule
 
-This pre-freeze manifest becomes superseded by a new execution-valid immutable freeze object only when:
+This pre-freeze manifest is superseded by a new execution-valid immutable freeze object only when:
 
-- P4 real custody is independently verified;
+- P4-A independently enforceable custody is verified;
 - P7 final exact binding is closed;
 - every freeze tuple field is exact and immutable;
-- the finalized freeze object is created;
-- its byte-level SHA-256 is retained externally in a non-circular sidecar/attestation;
-- an independent verifier retrieves/re-resolves/re-hashes the finalized freeze bytes and records a PASS.
+- finalized freeze object F is created;
+- F's byte SHA-256 is retained externally;
+- an independent verifier retrieves and re-hashes F and records PASS in separate record V.
 
 Even then, pilot authorization is a separate later governance transition.
 

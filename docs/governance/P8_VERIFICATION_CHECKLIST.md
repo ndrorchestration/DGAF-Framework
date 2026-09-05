@@ -2,7 +2,7 @@
 
 **Status:** OPEN / PRE-FREEZE / FAIL-CLOSED  
 **Last reconciled:** 2026-09-05  
-**Purpose:** Track only the evidence that is still required to construct and independently verify the immutable P8 freeze for the designated PDMAL candidate.
+**Purpose:** Track only the evidence still required to construct and independently verify the immutable P8 freeze for the designated PDMAL candidate.
 
 This checklist is a control surface, not a freeze record. Documentation/control-plane descendants do not replace the designated runtime candidate unless the canonical candidate identity is explicitly changed.
 
@@ -36,22 +36,33 @@ These closures are predicate-scoped engineering/governance evidence. They are no
 
 ## P4 prerequisite — still blocking
 
-- [ ] A genuinely distinct human Key Custodian is selected.
-- [ ] A distinct execution/analysis principal is identified.
-- [ ] Non-secret key and mapping commitment digests are published under `sha256-domain-separated-secret-nonce-v1`.
-- [ ] Custodian and no-access attestations are attributable and retained.
-- [ ] Independent custody review confirms actual role/access separation without revealing key, mapping, or nonces.
+Canonical procedure: `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`.
 
-Authoritative operational checkpoint: Issue #255 and `docs/governance/P4_HUMAN_CUSTODY_EXECUTION_RECORD_2026-09-05.md`.
+P4 no longer requires a personal relationship or a mandatory second-human topology. It requires **effective control separation**.
 
-P4 remains **OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED** until these real-world events occur. Repository automation, AI agents, aliases, or invented principals cannot satisfy this predicate.
+- [ ] Exactly one custody mode is selected: `H` distinct-human, `I` institutional/third-party, or `T` independently enforced technical custody.
+- [ ] A unique custody-instance ID and attributable execution/analysis principal are recorded.
+- [ ] The custody authority/system identity is recorded in non-secret form.
+- [ ] Non-secret key and mapping commitment digests are published under `sha256-domain-separated-secret-nonce-v1` before empirical execution.
+- [ ] A complete control-path inventory covers owner/admin, IAM/policy, recovery/reset, backup/restore, export/decrypt, break-glass, alternate credentials, and equivalent recovery paths.
+- [ ] Evidence establishes that the execution/analysis principal cannot use any inventoried path unilaterally to recover protected material before the predeclared release condition.
+- [ ] Independent review evidence supports the selected custody mode without revealing key, mapping, nonces, or recovery material.
+- [ ] No contradictory access record is known.
+
+Mode H additionally requires genuinely distinct humans and attributable role/no-access attestations. Mode I requires external custody/release-policy evidence and lack of unilateral analyst administration/recovery. Mode T requires independently inspectable or machine-verifiable enforcement evidence and absence of analyst-controlled admin/recovery/export/break-glass paths.
+
+AI agents, aliases, same-operator accounts, ordinary repository secrets, analyst-recoverable password vaults, analyst-administered KMS/HSM configurations, and preregistration alone cannot satisfy P4.
+
+Active operational handoff: `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md` and Issue #285. Issue #255 remains historical context for the earlier human-only checkpoint.
+
+P4 remains **OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED** until one real custody mode is instantiated and verified.
 
 ## P7 final-binding prerequisite
 
 - [x] Scientific target is adopted: `dgaf` versus `null`, FFCR, paired root-seed estimand, 10,000 paired percentile bootstrap resamples, deterministic seed `20260823`, two-sided 95% interval.
 - [x] Candidate/deployment/protocol/analysis/runner/schema/P2/P3/P5/P6/P6a identities are assembled in `docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md`.
-- [ ] Actual P4 custody evidence is inserted without inference.
-- [ ] Final protocol blob/commit identity is selected for freeze.
+- [ ] Actual P4 custody mode, instance, commitments, control-path evidence, and independent review are inserted without inference.
+- [ ] Final protocol blob/content identity is selected for freeze.
 - [ ] Final accepted pre-freeze control-plane commit is selected for freeze.
 - [ ] Final P9 verifier script/workflow identities are bound before freeze.
 - [ ] P7 contains no unresolved **pre-freeze** closure-blocking placeholders and is formally closed.
@@ -64,13 +75,13 @@ The following items must not be checked until P4 and P7 are legitimately complet
 
 - [ ] Construct the immutable freeze object from the exact closed P7 tuple without inference.
 - [ ] Commit that object in an exact immutable freeze commit **F**.
-- [ ] Bind the final protocol blob/commit identity.
+- [ ] Bind the final protocol blob/content identity.
 - [ ] Bind the final accepted pre-freeze control-plane commit.
 - [ ] Bind exact candidate SHA/tree and candidate deployment identity.
 - [ ] Bind exact analysis implementation/configuration/runner/schema identities.
 - [ ] Bind P1/P2/P3/P4/P5/P6/P6a evidence identities and digests required by the final tuple.
-- [ ] Bind the blinding-custody commitments/attestations without exposing secret material.
-- [ ] Confirm the selected P9 verifier script/workflow definitions are present in F.
+- [ ] Bind P4 custody mode, instance identity, commitments, control-path evidence, and independent-review evidence without exposing secret material.
+- [ ] Confirm selected P9 verifier script/workflow definitions are present in F.
 - [ ] Compute the byte SHA-256 of `docs/experiment/PDMAL_IMMUTABLE_FREEZE.json` at F and retain it externally.
 - [ ] Confirm the immutable freeze object does **not** contain post-freeze verification evidence or a self-hash of its complete bytes.
 
@@ -78,12 +89,10 @@ At this point the freeze object exists, but P8 does not close until independent 
 
 ## Independent P8 freeze verification — separate record V
 
-Independent verification is a post-freeze event and therefore must remain outside immutable object F.
-
 - [ ] Independently retrieve exact commit F rather than a mutable branch tip.
 - [ ] Recompute the freeze-object byte SHA-256 and verify equality with the externally retained digest.
 - [ ] Independently verify the frozen candidate/P7/control tuple and expected freeze path.
-- [ ] Produce `docs/experiment/PDMAL_P8_FREEZE_VERIFICATION.json` as a **separate** verification record V.
+- [ ] Produce `docs/experiment/PDMAL_P8_FREEZE_VERIFICATION.json` as a separate verification record V.
 - [ ] V records PASS, exact freeze commit F, exact freeze path, expected/retrieved equal SHA-256 values, verifier identity, verification method, and timestamp.
 - [ ] Store V in a descendant verification commit distinct from F.
 - [ ] Retain V's byte SHA-256 externally.
@@ -100,7 +109,7 @@ Historical/scoped P9 runs are provenance only and do not transfer to the final f
 - [x] The final-P9 workflow verifies its script/workflow definitions did not drift between F and the P8 verification-record commit.
 - [ ] Final P9 verifier identity is fixed in closed P7 and frozen at F.
 - [ ] Final P9 dispatch occurs from the exact descendant P8 verification-record commit.
-- [ ] Final P9 validates the external byte digests of both immutable freeze object F and separate verification record V.
+- [ ] Final P9 validates external byte digests of both immutable freeze object F and separate verification record V.
 - [ ] Final P9 independently verifies all required candidate/protocol/analysis/custody/evidence identities.
 - [ ] Final P9 evidence artifact/digest is retained and independently reviewable.
 - [ ] Final P9 concludes PASS for the complete final frozen chain.
@@ -116,4 +125,4 @@ Current state: **Freeze NOT ESTABLISHED · Pilot authorization NOT GRANTED · Em
 
 ## Closure rule
 
-P8 may close only after real P4 custody is verified, P7 is exact and final, immutable freeze object F is constructed, F is independently retrieved/re-hashed, and separate verification record V proves that verification without modifying F. P9 is then executed from the exact V commit against F. No historical candidate result, green CI run, READY deployment, synthetic blinding result, or documentation-only update may substitute for these events.
+P8 may close only after P4-A independently enforceable custody is verified, P7 is exact and final, immutable freeze object F is constructed, F is independently retrieved/re-hashed, and separate verification record V proves that verification without modifying F. P9 is then executed from the exact V commit against F. No historical candidate result, green CI run, READY deployment, synthetic blinding result, preregistration, or documentation-only update may substitute for these events.

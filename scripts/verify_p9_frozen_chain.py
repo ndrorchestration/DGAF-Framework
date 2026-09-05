@@ -12,6 +12,12 @@ post-freeze verification evidence cannot change the bytes it claims to verify.
 The verification-record commit identity is also external to the record so the
 record does not self-embed the SHA of the commit whose hash depends on it.
 
+P4 custody is verified against the independently enforceable custody contract.
+The verifier accepts human (H), institutional/third-party (I), or independently
+enforced technical (T) custody only when the selected mode and its evidence
+identities are exactly bound by closed P7. It does not infer effective control
+separation from a product, account, or self-assertion.
+
 This verifier does not execute the experiment, authorize a pilot, or perform
 unblinding.
 """
@@ -29,6 +35,7 @@ from typing import Any
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_PREDICATES = ("P1", "P2", "P3", "P4", "P5", "P6", "P6a")
+P4_CUSTODY_MODES = ("H", "I", "T")
 EXPECTED_FREEZE_RECORD_TYPE = "PDMAL_IMMUTABLE_FREEZE"
 EXPECTED_P8_VERIFICATION_RECORD_TYPE = "PDMAL_P8_FREEZE_VERIFICATION"
 EXPECTED_FREEZE_PATH = "docs/experiment/PDMAL_IMMUTABLE_FREEZE.json"
@@ -62,6 +69,12 @@ def _expect_hex64(value: Any, field: str) -> str:
     text = _expect_nonempty(value, field)
     _expect(bool(HEX64.fullmatch(text)), f"{field} must be 64 lowercase hex characters")
     return text
+
+
+def _expect_custody_mode(value: Any, field: str) -> str:
+    mode = _expect_nonempty(value, field)
+    _expect(mode in P4_CUSTODY_MODES, f"{field} must be one of H, I, or T")
+    return mode
 
 
 def _dict_at(obj: dict[str, Any], key: str) -> dict[str, Any]:
@@ -163,6 +176,40 @@ def _p7_identity(p7_binding: Path) -> dict[str, str]:
         "artifact_schema_blob_sha": _expect_hex40(
             _extract_fenced_yaml_scalar(text, "artifact_schema_blob_sha"), "p7.artifact_schema_blob_sha"
         ),
+        "p4_custody_mode": _expect_custody_mode(
+            _extract_fenced_yaml_scalar(text, "p4_custody_mode"), "p7.p4_custody_mode"
+        ),
+        "p4_custody_instance_id": _expect_nonempty(
+            _extract_fenced_yaml_scalar(text, "p4_custody_instance_id"), "p7.p4_custody_instance_id"
+        ),
+        "p4_custody_authority_id": _expect_nonempty(
+            _extract_fenced_yaml_scalar(text, "p4_custody_authority_id"), "p7.p4_custody_authority_id"
+        ),
+        "p4_execution_principal_id": _expect_nonempty(
+            _extract_fenced_yaml_scalar(text, "p4_execution_principal_id"), "p7.p4_execution_principal_id"
+        ),
+        "p4_key_commitment_sha256": _expect_hex64(
+            _extract_fenced_yaml_scalar(text, "p4_key_commitment_sha256"), "p7.p4_key_commitment_sha256"
+        ),
+        "p4_mapping_commitment_sha256": _expect_hex64(
+            _extract_fenced_yaml_scalar(text, "p4_mapping_commitment_sha256"),
+            "p7.p4_mapping_commitment_sha256",
+        ),
+        "p4_control_path_inventory_sha256": _expect_hex64(
+            _extract_fenced_yaml_scalar(text, "p4_control_path_inventory_sha256"),
+            "p7.p4_control_path_inventory_sha256",
+        ),
+        "p4_no_unilateral_access_evidence_sha256": _expect_hex64(
+            _extract_fenced_yaml_scalar(text, "p4_no_unilateral_access_evidence_sha256"),
+            "p7.p4_no_unilateral_access_evidence_sha256",
+        ),
+        "p4_independent_review_evidence_sha256": _expect_hex64(
+            _extract_fenced_yaml_scalar(text, "p4_independent_review_evidence_sha256"),
+            "p7.p4_independent_review_evidence_sha256",
+        ),
+        "p4_mode_evidence_sha256": _expect_hex64(
+            _extract_fenced_yaml_scalar(text, "p4_mode_evidence_sha256"), "p7.p4_mode_evidence_sha256"
+        ),
         "final_control_plane_commit": _expect_hex40(
             _extract_fenced_yaml_scalar(text, "final_control_plane_commit"), "p7.final_control_plane_commit"
         ),
@@ -181,6 +228,55 @@ def _validate_evidence_ref(ref: Any, predicate: str, index: int) -> None:
     _expect(isinstance(ref, dict), f"predicates.{predicate}.evidence[{index}] must be an object")
     _expect_nonempty(ref.get("id"), f"predicates.{predicate}.evidence[{index}].id")
     _expect_hex64(ref.get("sha256"), f"predicates.{predicate}.evidence[{index}].sha256")
+
+
+def _validate_p4_custody(custody: dict[str, Any], p7: dict[str, str]) -> str:
+    _expect(custody.get("status") == "CLOSED / VERIFIED", "P4 custody must be CLOSED / VERIFIED")
+
+    mode = _expect_custody_mode(custody.get("mode"), "p4_custody.mode")
+    custody_instance_id = _expect_nonempty(custody.get("custody_instance_id"), "p4_custody.custody_instance_id")
+    custody_authority_id = _expect_nonempty(custody.get("custody_authority_id"), "p4_custody.custody_authority_id")
+    execution_principal_id = _expect_nonempty(
+        custody.get("execution_principal_id"), "p4_custody.execution_principal_id"
+    )
+    key_commitment = _expect_hex64(custody.get("key_commitment_sha256"), "p4_custody.key_commitment_sha256")
+    mapping_commitment = _expect_hex64(
+        custody.get("mapping_commitment_sha256"), "p4_custody.mapping_commitment_sha256"
+    )
+    control_path_inventory = _expect_hex64(
+        custody.get("control_path_inventory_sha256"), "p4_custody.control_path_inventory_sha256"
+    )
+    no_unilateral_access_evidence = _expect_hex64(
+        custody.get("no_unilateral_access_evidence_sha256"),
+        "p4_custody.no_unilateral_access_evidence_sha256",
+    )
+    independent_review_evidence = _expect_hex64(
+        custody.get("independent_review_evidence_sha256"),
+        "p4_custody.independent_review_evidence_sha256",
+    )
+    mode_evidence = _expect_hex64(custody.get("mode_evidence_sha256"), "p4_custody.mode_evidence_sha256")
+
+    _expect(
+        custody_authority_id != execution_principal_id,
+        "P4 custody authority and execution principal identities must be distinct",
+    )
+
+    comparisons = {
+        "p4_custody_mode": mode,
+        "p4_custody_instance_id": custody_instance_id,
+        "p4_custody_authority_id": custody_authority_id,
+        "p4_execution_principal_id": execution_principal_id,
+        "p4_key_commitment_sha256": key_commitment,
+        "p4_mapping_commitment_sha256": mapping_commitment,
+        "p4_control_path_inventory_sha256": control_path_inventory,
+        "p4_no_unilateral_access_evidence_sha256": no_unilateral_access_evidence,
+        "p4_independent_review_evidence_sha256": independent_review_evidence,
+        "p4_mode_evidence_sha256": mode_evidence,
+    }
+    for key, value in comparisons.items():
+        _expect(value == p7[key], f"freeze P4 {key} differs from final P7 binding")
+
+    return mode
 
 
 def _validate_p8_verification_record(
@@ -334,22 +430,7 @@ def validate_freeze(
         for index, ref in enumerate(evidence):
             _validate_evidence_ref(ref, predicate, index)
 
-    custody = _dict_at(freeze, "p4_custody")
-    _expect(custody.get("status") == "CLOSED / VERIFIED", "P4 custody must be CLOSED / VERIFIED")
-    for field in (
-        "key_commitment_sha256",
-        "mapping_commitment_sha256",
-        "custodian_attestation_sha256",
-        "execution_no_access_attestation_sha256",
-        "independent_custody_review_sha256",
-    ):
-        _expect_hex64(custody.get(field), f"p4_custody.{field}")
-    _expect_nonempty(custody.get("custodian_id"), "p4_custody.custodian_id")
-    _expect_nonempty(custody.get("execution_principal_id"), "p4_custody.execution_principal_id")
-    _expect(
-        custody.get("custodian_id") != custody.get("execution_principal_id"),
-        "P4 custodian and execution principal must be distinct",
-    )
+    custody_mode = _validate_p4_custody(_dict_at(freeze, "p4_custody"), p7)
 
     p8_verification = _validate_p8_verification_record(
         record_bytes=p8_verification_bytes,
@@ -387,6 +468,7 @@ def validate_freeze(
         "p9_workflow_sha256": p9_workflow_sha256,
         "p7_status": "CLOSED",
         "p4_status": "CLOSED / VERIFIED",
+        "p4_custody_mode": custody_mode,
         "freeze_verification_status": "PASS",
         "pilot_authorization": "NOT_GRANTED",
         "empirical_n": 0,

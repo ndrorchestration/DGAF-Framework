@@ -10,8 +10,8 @@ This plan reconciles six distinct expert perspectives against the current reposi
 
 1. **Experimental governance / methodology** — protects the P4 → P7 → P8 → P9 → authorization sequence and prevents engineering evidence from becoming efficacy evidence.
 2. **Epistemic provenance / claims auditing** — requires exact identities, external digests, non-transferable evidence scope, and explicit UNKNOWN/OPEN states.
-3. **Security / custody** — preserves genuinely distinct-human P4 key custody and rejects aliases, agents, bots, or inferred participation as substitutes.
-4. **Independent verification / red team** — searches for circular identities, self-verification, mutable-ref dependence, verifier drift, substitution, and premature authorization paths.
+3. **Security / custody** — protects effective separation of control over the blinding secret and rejects aliases, agents, bots, same-operator accounts, or analyst-recoverable infrastructure as substitutes for real independence.
+4. **Independent verification / red team** — searches for circular identities, self-verification, mutable-ref dependence, verifier drift, hidden administrator/recovery paths, substitution, and premature authorization paths.
 5. **CI / reliability / release engineering** — requires exact-head validation, fail-closed workflow behavior, post-merge reproduction, deployment identity separation, and durable evidence handling.
 6. **Repository / documentation governance** — keeps current-facing control surfaces synchronized while preserving historical records as scoped provenance.
 
@@ -19,9 +19,11 @@ This plan reconciles six distinct expert perspectives against the current reposi
 
 The system has moved beyond broad implementation hardening. The critical path is now narrow, but the remaining steps are higher-consequence governance transitions.
 
-The panel's principal new finding is Issue #280: the prior P7/P8/P9 model contained a circular dependency in which post-freeze verification evidence could be required inside the immutable freeze itself, and downstream P8/P9 outputs were incorrectly represented as P7 closure blockers. That must be corrected before P4 completion makes freeze execution actionable.
+Issue #280 corrected the P7/P8/P9 circular dependency by separating immutable freeze object F from downstream verification record V. Issue #285 adds a second governance correction: the earlier P4 model over-specified the mechanism of independence by requiring a distinct human in every case. The scientific requirement is effective control separation, not friendship or headcount.
 
-## Stage A — complete now: pre-P4 control-plane correctness
+The revised P4 model preserves distinct-human custody as Mode H while permitting Mode I institutional/third-party custody and Mode T independently enforced technical custody. Every mode must establish the same invariant: before the predeclared release condition, the execution/analysis principal cannot unilaterally recover the protected blinding material through ordinary, administrative, recovery, backup, policy-edit, credential-reset, export, or break-glass paths.
+
+## Stage A — pre-P4 control-plane correctness
 
 ### A1. Remove P7/P8/P9 circularity
 
@@ -33,14 +35,19 @@ The panel's principal new finding is Issue #280: the prior P7/P8/P9 model contai
 - Require P9 verifier script/workflow identity equality between F and V.
 - Maintain authorization `NOT_GRANTED` and empirical N `0` during P9.
 
-**Exit:** exact-head CI passes adversarial tests and control-state checks; changes merge without changing scientific gate status.
+**State:** implemented on current main through PR #284; post-merge verification remains separately evidence-scoped.
 
-### A2. Stabilize current-facing documentation
+### A2. Generalize P4 from human-only custody to independently enforceable custody
 
-- Finish Issue #270 historical-boundary wording so verification records do not self-stale when later documentation merges advance `main`.
-- Keep current-main operational state separate from historical exact verification boundaries.
+- Make `P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md` canonical.
+- Preserve the historical human path as Mode H.
+- Add Mode I institutional/third-party custody.
+- Add Mode T independently enforced technical custody.
+- Require a complete control-path inventory and evidence that the analyst lacks every unilateral path capable of defeating the blind.
+- Reject same-operator accounts, AI agents/personas, repository secrets, analyst-recoverable vaults, analyst-administered KMS/HSM paths, and preregistration alone as P4 substitutes.
+- Preserve P4-A pre-execution closure and P4-B post-unblinding continuity audit as distinct lifecycle stages.
 
-**Exit:** one-file documentation correction merges cleanly.
+**Exit:** exact-head CI passes the P4 custody contract tests and current-facing control surfaces are synchronized; governance correction merges without changing scientific gate status.
 
 ### A3. Repository merge enforcement
 
@@ -54,24 +61,28 @@ Issue #277 remains a repository-administration control.
 
 This lane may remain externally blocked without blocking PDMAL scientific sequencing unless governance explicitly promotes it to a scientific prerequisite.
 
-## Stage B — human operational gate: P4
+## Stage B — real P4-A custody gate
 
-No repository automation can complete this stage.
+Repository automation can prepare and test the control model, but it cannot truthfully declare real custody without evidence from the selected external/enforced mechanism.
 
-Required real-world events:
+Required events for any mode:
 
-1. select a genuinely distinct human Key Custodian;
-2. identify a distinct execution/analysis principal;
-3. generate and privately retain the blinding key/nonces outside public control surfaces;
+1. select exactly one custody mode: H, I, or T;
+2. identify the execution/analysis principal and custody authority/system;
+3. generate and protect the blinding key, mapping, and commitment nonces outside analyst access;
 4. publish only nonce-hardened key/mapping commitments;
-5. retain attributable custodian and no-access attestations;
-6. complete independent custody review without exposing secret material.
+5. predeclare the release rule;
+6. inventory every ordinary/admin/recovery/backup/export/break-glass path;
+7. retain evidence that the execution/analysis principal cannot use any path alone to recover protected material before release;
+8. complete independent review appropriate to the selected custody mode without exposing secret material.
 
-**Stop condition:** any missing attributable human, commitment, access statement, or independent review keeps P4 OPEN.
+Mode H additionally requires genuinely distinct humans and attributable role/no-access attestations. Mode I requires external custody/release-policy evidence and lack of unilateral analyst administration/recovery. Mode T requires independently inspectable or machine-verifiable enforcement evidence and absence of analyst-controlled recovery or override capability.
+
+**Stop condition:** any unexamined control path, analyst-controlled override, missing commitment, missing release rule, contradictory access evidence, or unsupported independence claim keeps P4-A OPEN.
 
 ## Stage C — P7 final exact binding
 
-Execute only after P4 closes.
+Execute only after P4-A closes.
 
 1. insert actual P4 custody evidence by digest/reference, never secret material;
 2. select exact final protocol identity;
@@ -127,24 +138,24 @@ Only after P8 and P9 closure:
 - confirm blinded execution remains unable to access the mapping;
 - only then may empirical collection begin.
 
-Authorization is not implied by green CI, P9 PASS, freeze construction, deployment readiness, or this plan.
+Authorization is not implied by green CI, P9 PASS, freeze construction, deployment readiness, preregistration, custody setup, or this plan.
 
 ## Parallel non-scientific lanes
 
 These may progress without changing the PDMAL gate sequence:
 
-- **Issue #144:** 82 safe-to-prune branch refs identified; mutation remains blocked because no branch-delete action is exposed.
-- **Issue #277:** Python quality merge-enforcement configuration requires repository-admin capability not exposed here.
+- **Issue #144:** safe-to-prune branch refs remain a repository-hygiene lane.
+- **Issue #277:** Python quality merge-enforcement configuration requires repository-admin capability.
 - **Issue #224:** agent identity implementation exists but sovereign ratifications remain human-authority decisions.
-- **Issue #122:** P-38 source recovery remains blocked after GitHub/Notion/Gmail/file-library searches found no authoritative source copy.
-- **Issue #36:** AOGA runtime is verified; Sentinel→AOGA integration is not implemented/evidenced; live staging circuit-breaker evidence remains pending.
+- **Issue #122:** P-38 source recovery remains blocked after prior source searches found no authoritative copy.
+- **Issue #36:** AOGA runtime is verified; Sentinel→AOGA integration and live staging circuit-breaker evidence remain separate work.
 - **Issue #32/#64:** evaluator mechanism is hardened, but provenance-controlled ground-truth corpus plus independently generated outputs are still needed for actual hallucination-rate evidence.
 
 ## Non-claims
 
 This plan and its supporting control-plane work do not:
 
-- execute P4;
+- execute P4-A;
 - close P7, P8, or P9;
 - create the real immutable freeze;
 - grant pilot authorization;

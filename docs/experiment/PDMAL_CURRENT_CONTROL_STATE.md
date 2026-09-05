@@ -28,11 +28,11 @@ This is the current pre-authorization control record. Documentation/control-plan
 | P1 Candidate Integrity | CLOSED / VERIFIED | exact apparatus/source, candidate/tree, provenance, deployment identity |
 | P2 Runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; five-case authenticated matrix |
 | P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662`; structural scope |
-| P4 Security / Blinding | OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED | synthetic controls pass; nonce-hardened real custody procedure merged; no distinct-human custody evidence exists |
+| P4 Security / Blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | canonical procedure now supports Mode H human, Mode I institutional, or Mode T independently enforced technical custody; no custody mode has yet been instantiated or verified |
 | P5 Provenance / Reproducibility | CLOSED / VERIFIED | exact analysis/config/runner/schema identities bound by merge `2e325acd…`; post-merge Governance CI `33945464907` and Pre-Authorization Security `33945464908` PASS |
 | P6 Durable Evidence Custody | CLOSED / VERIFIED | independent archive/retrieval/SHA-256 equality for retained evidence set |
 | P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299`; four-case authenticated matrix |
-| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | final binding blocked by real P4 custody and freeze identities |
+| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | final binding blocked by actual P4-A custody evidence and final pre-freeze identities |
 | P8 Analysis Lock | OPEN / FAIL-CLOSED | analysis identities bound; immutable freeze not created/verified |
 | P9 Independent Verification | NOT EXECUTED / OPEN | final independent frozen-chain verification absent |
 | Freeze | NOT ESTABLISHED | no immutable pilot identity |
@@ -57,11 +57,21 @@ Accordingly, P5 is CLOSED / VERIFIED for provenance/reproducibility only. This i
 
 ## P4 boundary
 
-`docs/governance/P4_HUMAN_KEY_CUSTODY_PROCEDURE.md` now defines the real-world custody/access-separation procedure with distinct human principals and nonce-hardened commitments. The procedure has not been performed. P4 remains OPEN / NOT EXECUTED operationally.
+`docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md` is now the canonical P4 procedure. P4 is defined by effective control separation rather than a mandatory two-human topology.
+
+Permitted modes are:
+
+- **H:** genuinely distinct human Key Custodian;
+- **I:** institutional/third-party custody outside the analyst's unilateral control;
+- **T:** independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
+
+The requirement is unchanged in substance: before the predeclared release condition, the execution/analysis principal must be unable to recover the raw key, cleartext mapping, commitment nonces, or equivalent recovery material by unilateral action.
+
+No mode has yet been instantiated. P4 remains OPEN / NOT EXECUTED operationally.
 
 ## Remaining closure sequence
 
-`real P4 custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
+`real independently enforceable P4-A custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
 
 No completed gate above authorizes empirical execution or changes empirical N.
 

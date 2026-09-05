@@ -16,11 +16,11 @@ This packet is a control/evidence-index artifact. It does not establish efficacy
 | P1 Candidate Integrity | CLOSED / VERIFIED | apparatus, candidate/tree, exact deployment identity |
 | P2 Runtime Contract | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704` |
 | P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662` |
-| P4 Security / Blinding | OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED | synthetic controls pass; real distinct-human custody/access separation absent |
+| P4 Security / Blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | synthetic controls pass; canonical procedure now permits H human, I institutional, or T independently enforced technical custody; no custody mode has been instantiated or verified |
 | P5 Provenance / Reproducibility | CLOSED / VERIFIED | candidate reproducibility evidence + exact analysis identities + signed authoritative merge `2e325acd…` + post-merge deep CI PASS |
 | P6 Evidence Custody | CLOSED / VERIFIED | external archive → retrieval → SHA-256 equality for retained evidence set |
 | P6a Runtime / CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299` |
-| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | actual P4 custody and final freeze identities remain unresolved |
+| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | actual P4-A custody evidence and final pre-freeze identities remain unresolved |
 | P8 Analysis Lock | OPEN / FAIL-CLOSED | analysis identities bound; immutable freeze not created/verified |
 | P9 Independent Verification | NOT EXECUTED / OPEN | final frozen-chain independent verification absent |
 | Freeze | NOT ESTABLISHED | no immutable pilot identity |
@@ -51,9 +51,19 @@ Run `33939955138` verifies candidate/tree identity, canonical matrix/schema cons
 
 ## P4 security / blinding
 
-Synthetic run `33939574283` demonstrates mock-key bijection/leakage/freeze-order controls. The merged `docs/governance/P4_HUMAN_KEY_CUSTODY_PROCEDURE.md` defines the real-world custody procedure using distinct human principals and nonce-hardened commitments.
+Synthetic run `33939574283` demonstrates mock-key bijection/leakage/freeze-order controls. The canonical procedure is now `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`.
 
-The procedure has not been performed. No real Key Custodian, distinct execution/analysis principal, real commitment digest, custody attestation, or no-access attestation has been accepted. P4 remains OPEN / NOT EXECUTED operationally.
+P4-A is defined by **effective control separation**: before the predeclared release condition, the execution/analysis principal must be unable to recover the raw blinding key, cleartext mapping, commitment nonces, or equivalent recovery material by unilateral ordinary/admin/recovery/backup/policy-edit/export/break-glass action.
+
+Admissible custody modes are:
+
+- `H`: genuinely distinct human Key Custodian;
+- `I`: institutional/third-party custody outside the analyst's unilateral control;
+- `T`: independently enforced technical custody.
+
+Every mode requires nonce-hardened key/mapping commitments, timestamp ordering, a full control-path inventory, no-unilateral-access evidence, and independent review evidence appropriate to the selected mode. AI agents/personas, aliases, same-operator accounts, ordinary repository secrets, analyst-recoverable vaults, analyst-administered KMS/HSM paths, and preregistration alone do not establish P4.
+
+No custody mode has been instantiated. P4 remains OPEN / NOT EXECUTED operationally.
 
 ## P5 provenance / reproducibility — CLOSED / VERIFIED
 
@@ -94,7 +104,7 @@ Current repository source/deployment health is a separate operational question f
 
 ## Remaining critical path
 
-1. Perform and independently verify actual P4 human/key custody and access separation.
+1. Instantiate and independently verify one acceptable P4-A custody mode.
 2. Complete P7 final scientific identity binding.
 3. Construct and independently verify the P8 immutable freeze.
 4. Execute independent P9 against the final frozen chain.
@@ -103,6 +113,6 @@ Current repository source/deployment health is a separate operational question f
 
 ## Non-transfer rule
 
-No historical candidate, deployment, artifact, runtime result, or experimental observation transfers to another identity without explicit provenance. Successful CI, synthetic evidence, deployment readiness, and documentation reconciliation are not empirical results.
+No historical candidate, deployment, artifact, runtime result, custody mechanism, or experimental observation transfers to another identity without explicit provenance. Successful CI, synthetic evidence, deployment readiness, preregistration, and documentation reconciliation are not empirical results.
 
 Freeze: **NOT ESTABLISHED** · Pilot authorization: **NOT GRANTED** · Empirical N: **0**
