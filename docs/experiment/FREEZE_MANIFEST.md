@@ -1,5 +1,3 @@
-# PDMAL Experiment — Pre-Freeze Manifest
-
 ---
 status: ACTIVE
 state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -29,6 +27,8 @@ p9_final_evidence: null
 pilot_authorization_id: null
 empirical_n: 0
 ---
+
+# PDMAL Experiment — Pre-Freeze Manifest
 
 ## State boundary
 
