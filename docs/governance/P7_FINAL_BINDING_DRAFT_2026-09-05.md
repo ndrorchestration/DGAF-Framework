@@ -1,4 +1,4 @@
-# P7 Final Scientific Binding — Draft v3
+# P7 Final Scientific Binding — Draft v4
 
 **Status:** OPEN / PRE-FREEZE / FAIL-CLOSED  
 **Draft lineage anchor:** `4382a7b745c1abde3a68eb7848611412f5bd34d7`  
@@ -25,7 +25,7 @@ This document is a binding draft only. Unresolved pre-freeze values remain expli
 | P5 Governance CI | `33945464907` | PASS |
 | P5 Pre-Authorization Security | `33945464908` | PASS |
 | P5 closure reconciliation merge | `fcf21ce9ab3739a7b5880c6f6896cf378a3dd2da` | CLOSED / VERIFIED ON MAIN |
-| P4 custody procedure merge | `4382a7b745c1abde3a68eb7848611412f5bd34d7` | PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED |
+| P4 original human procedure merge | `4382a7b745c1abde3a68eb7848611412f5bd34d7` | HISTORICAL PROCEDURE ANCHOR |
 | P2 runtime run | `33730195621` | CLOSED / VERIFIED |
 | P2 artifact | `9883521704` | CLOSED / VERIFIED |
 | P2 digest | `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d` | CLOSED / VERIFIED |
@@ -59,11 +59,15 @@ Only facts that can legitimately exist before immutable-freeze construction may 
 
 | Binding | Required value | Current state |
 |---|---|---|
-| P4 real Key Custodian identity | attributable human identity | `null` / NOT EXECUTED |
-| P4 execution/analysis principal identity | distinct attributable human identity | `null` / NOT EXECUTED |
+| P4 custody mode | exactly one of `H`, `I`, `T` | `null` / NOT EXECUTED |
+| P4 custody instance ID | unique non-secret identity | `null` / NOT EXECUTED |
+| P4 custody authority/system identity | attributable human, institution/service, or technical control identity | `null` / NOT EXECUTED |
+| P4 execution/analysis principal identity | attributable identity | `null` / NOT EXECUTED |
 | P4 key commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
 | P4 mapping commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
-| P4 custody/access-separation attestation | independently reviewable operational evidence | `null` / NOT EXECUTED |
+| P4 control-path inventory identity/digest | all relevant ordinary/admin/recovery/backup/export/break-glass paths | `null` / NOT EXECUTED |
+| P4 no-unilateral-access evidence | evidence analyst cannot defeat custody alone | `null` / NOT EXECUTED |
+| P4 independent review evidence | independently inspectable support for effective control separation | `null` / NOT EXECUTED |
 | Final protocol Git blob | exact protocol blob selected for freeze | `null` / BIND AT P7 CLOSURE |
 | Final protocol content SHA-256 | exact protocol bytes selected for freeze | `null` / BIND AT P7 CLOSURE |
 | Final accepted pre-freeze control-plane commit | exact accepted state from which freeze is constructed | `null` / NOT SELECTED |
@@ -73,8 +77,6 @@ Only facts that can legitimately exist before immutable-freeze construction may 
 Any `null` field in this pre-freeze table prevents P7 closure.
 
 ## Downstream outputs — not P7 closure blockers
-
-The following identities are produced only after P7 legitimately closes and therefore must not be required for P7 closure:
 
 | Downstream output | Current state |
 |---|---|
@@ -91,18 +93,20 @@ These values remain null at legitimate P7 closure. They are populated by P8, P9,
 
 P8 uses two immutable identity layers:
 
-1. **Freeze commit F** — contains the finalized freeze object, final P7 binding, candidate/control identities, and the selected P9 verifier definition. The exact freeze-object byte SHA-256 is retained externally.
+1. **Freeze commit F** — contains the finalized freeze object, final P7 binding, candidate/control identities, and selected P9 verifier definition. The exact freeze-object byte SHA-256 is retained externally.
 2. **P8 verification record V** — produced only after F has been independently retrieved and re-hashed. V is stored separately in a descendant verification commit and references F plus the exact freeze digest. V is never embedded back into F and does not self-embed the SHA of its containing commit.
 
 Final P9 executes from the verification-record commit, independently resolves F, verifies the freeze and verification-record digests, verifies the final protocol/control-plane/verifier bindings declared by closed P7, and proves the P9 script/workflow definitions have not drifted from those frozen at F.
 
-This avoids requiring an immutable object to contain evidence or an identity that can exist only after that object's bytes are finalized.
-
 ## P4 procedure boundary
 
-`docs/governance/P4_HUMAN_KEY_CUSTODY_PROCEDURE.md` is part of the control plane. It defines the required real-world role separation and nonce-hardened commitment scheme, but its existence is **not** evidence that custody occurred.
+`docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md` is the canonical P4 control. It preserves the original human-custody path as Mode H and also permits Mode I institutional/third-party custody or Mode T independently enforced technical custody.
 
-P4 therefore remains OPEN until distinct humans actually perform and independently attest the procedure.
+P4-A closure depends on the same invariant for every mode: **the execution/analysis principal cannot unilaterally recover the protected blinding material before the predeclared release condition**.
+
+A second human is therefore not mandatory, but apparent separation that remains under the analyst's effective owner/admin/recovery/export/break-glass control is not acceptable. AI agents, aliases, same-operator accounts, ordinary repository secrets, analyst-recoverable vaults, and preregistration alone do not satisfy P4.
+
+The canonical procedure's existence is not evidence that custody occurred. P4 remains OPEN until one selected custody mode is actually instantiated and independently verified.
 
 ## P5 boundary
 
@@ -116,10 +120,10 @@ P7 may be considered for `CLOSED / VERIFIED` only when:
 
 1. all pre-freeze scientific identities used by the experiment are exact;
 2. P5 remains authoritative and internally consistent;
-3. P4 real human/key custody and access separation are evidenced and independently reviewable;
+3. P4-A is closed under one declared custody mode with evidence that the execution/analysis principal lacks every unilateral early-recovery path relevant to that mode;
 4. final protocol blob/content and accepted pre-freeze control-plane identities are fixed;
 5. selected P9 verifier script/workflow SHA-256 identities are fixed before freeze;
-6. no candidate/runtime/protocol/analysis identity conflict remains; and
+6. no candidate/runtime/protocol/analysis/custody identity conflict remains; and
 7. the complete P7 tuple can be copied into the immutable freeze object without inference or unresolved pre-freeze placeholders.
 
 P7 closure is a binding decision, not empirical evidence and not authorization. P7 does not require downstream P8/P9/auth outputs that do not yet exist.
@@ -127,7 +131,7 @@ P7 closure is a binding decision, not empirical evidence and not authorization. 
 ## Machine-readable draft
 
 ```yaml
-p7_binding_version: "3"
+p7_binding_version: "4"
 status: "OPEN"
 draft_lineage_anchor: "4382a7b745c1abde3a68eb7848611412f5bd34d7"
 apparatus_anchor: "2a54a67d84870e4eeb71b8aaf04413e0ca492ba1"
@@ -149,8 +153,16 @@ p5_deep_postmerge_verification:
   preauthorization_security_run: 33945464908
   conclusion: "PASS"
 p5_closure_reconciliation: "fcf21ce9ab3739a7b5880c6f6896cf378a3dd2da"
-p4_procedure_merge: "4382a7b745c1abde3a68eb7848611412f5bd34d7"
-p4_custody_evidence: null
+p4_procedure: "docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md"
+p4_custody_mode: null
+p4_custody_instance_id: null
+p4_custody_authority_id: null
+p4_execution_principal_id: null
+p4_key_commitment_sha256: null
+p4_mapping_commitment_sha256: null
+p4_control_path_inventory_digest: null
+p4_no_unilateral_access_evidence: null
+p4_independent_review_evidence: null
 final_control_plane_commit: null
 selected_p9_verifier_script_sha256: null
 selected_p9_workflow_sha256: null
@@ -166,9 +178,10 @@ empirical_n: 0
 
 ## Explicit non-claims
 
-This draft does not close P4, P7, P8, or P9; create a freeze; authorize a pilot or unblinding; convert deployment/CI/synthetic evidence into empirical evidence; or increase empirical N.
+This draft does not close P4, P7, P8, or P9; instantiate a custody mode; create a freeze; authorize a pilot or unblinding; convert deployment/CI/synthetic evidence into empirical evidence; or increase empirical N.
 
 **P5: CLOSED / VERIFIED.**  
+**P4-A: OPEN / NOT EXECUTED.**  
 **P7 remains ADOPTED / FINAL BINDING OPEN.**  
 **Freeze: NOT ESTABLISHED.**  
 **Pilot authorization: NOT GRANTED.**  
