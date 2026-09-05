@@ -302,8 +302,14 @@ def select_weights_with_confidence(input_data: Dict) -> Dict:
         final_weights = {}
         for k in base_weights:
             if k in _numeric:
+                base_value = base_weights[k]
+                balanced_value = balanced[k]
+                if not isinstance(base_value, (int, float)) or not isinstance(
+                    balanced_value, (int, float)
+                ):
+                    raise TypeError(f"non-numeric weight for {k}")
                 final_weights[k] = round(
-                    alpha * base_weights[k] + (1 - alpha) * balanced[k], 3
+                    alpha * float(base_value) + (1 - alpha) * float(balanced_value), 3
                 )
             else:
                 final_weights[k] = base_weights[k]
