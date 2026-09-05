@@ -171,6 +171,11 @@ class HeraldHTTPSink:
             logger.debug("[HeraldHTTPSink] Circuit open — skipping push")
             return False
 
+        endpoint = self.config.endpoint
+        if endpoint is None:
+            logger.error("[HeraldHTTPSink] Endpoint missing — skipping push")
+            return False
+
         payload = json.dumps({"records": batch, "count": len(batch)}).encode()
         headers = {
             "Content-Type": "application/json",
@@ -186,7 +191,7 @@ class HeraldHTTPSink:
         for attempt in range(self.config.max_retries):
             try:
                 req = urllib.request.Request(
-                    self.config.endpoint,
+                    endpoint,
                     data=payload,
                     headers=headers,
                     method="POST",
@@ -233,7 +238,7 @@ class HeraldHTTPSink:
         """Background push worker — batches queue and flushes to Herald."""
         while not self._stop_event.is_set():
             if len(self._queue) >= self.config.batch_size:
-                batch = []
+                batch: List[dict] = []
                 while self._queue and len(batch) < self.config.batch_size:
                     batch.append(self._queue.popleft())
                 if batch:

@@ -334,7 +334,7 @@ class PDMALConvergenceMonitor:
         all_edges = set(curr.keys()) | set(prev.keys())
         deltas    = {e: abs(curr.get(e, 0.0) - prev.get(e, 0.0)) for e in all_edges}
         frob      = math.sqrt(sum(v ** 2 for v in deltas.values()))
-        max_e     = max(deltas, key=deltas.get) if deltas else ("?", "?")
+        max_e     = max(deltas, key=lambda edge: deltas[edge]) if deltas else ("?", "?")
         return frob, deltas.get(max_e, 0.0), max_e
 
     def _severity_from_consec(self, n: int) -> ConvergenceStatus:
