@@ -1,0 +1,167 @@
+# P4 Mode T External Assumptions Evidence — 2026-09-05
+
+**Status:** SOURCE-BACKED DESIGN EVIDENCE / NOT A P4 CLOSURE RECORD  
+**Issue:** #287  
+**PR lane:** #288  
+**Scientific state:** P4-A OPEN · P7 OPEN · P8 OPEN / FAIL-CLOSED · P9 NOT EXECUTED · FREEZE NOT ESTABLISHED · AUTHORIZATION NOT GRANTED · empirical N=0.
+
+## Purpose
+
+Record authoritative external facts that constrain the proposed solo Mode T design. These facts support design decisions only. They do not establish that GitHub Actions plus drand/tlock is sufficient custody.
+
+## GitHub-hosted runner facts
+
+### Fresh hosted environment per job
+
+GitHub documents that, except for single-CPU runners, each GitHub-hosted runner is a new virtual machine. GitHub also documents that when a hosted job begins it provisions a new VM and automatically decommissions it when the job finishes.
+
+Sources:
+- https://docs.github.com/en/actions/concepts/runners/github-hosted-runners
+- https://docs.github.com/en/actions/how-tos/manage-runners/github-hosted-runners/use-github-hosted-runners
+
+**Design consequence:** standard GitHub-hosted runners are preferable to self-hosted runners for Mode T because the accepted design requires an ephemeral execution environment. `ubuntu-slim` is not equivalent to the full-VM runner class and must not be substituted without a separate review.
+
+### The job itself has administrative privilege
+
+GitHub documents that Linux and macOS hosted VMs support passwordless `sudo`; Windows hosted VMs run as administrators with UAC disabled.
+
+Source:
+- https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+
+**Design consequence:** Mode T must not rely on OS-user separation between workflow steps. All steps in the same job are effectively inside one administrative trust domain. The real key/mapping/nonces therefore must remain inside one frozen trusted helper process and must never be placed in a location, environment variable, command-line argument, or file intentionally shared with later steps.
+
+### Re-runs are a real control path
+
+GitHub documents that people with write permission can re-run workflows. Re-runs use the same `GITHUB_SHA` and `GITHUB_REF` as the original event. GitHub also exposes `GITHUB_RUN_ATTEMPT`, which starts at 1 and increments for each re-run, while `GITHUB_RUN_ID` does not change across attempts of the same workflow run.
+
+Sources:
+- https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs
+- https://docs.github.com/en/actions/reference/workflows-and-actions/variables
+
+**Design consequence:** a Mode T empirical execution must reject `GITHUB_RUN_ATTEMPT != 1`. A successful or partially usable first attempt must never be rerun under the same authorization.
+
+### Debug logging can be enabled on a re-run
+
+GitHub documents runner-diagnostic and step-debug logging and states that anyone able to run the workflow can enable the additional debugging when re-running a workflow.
+
+Source:
+- https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging
+
+**Design consequence:** rejecting all re-run attempts is required but not sufficient. The accepted first attempt must also guard against debug mode before secret generation, and the helper must never emit plaintext protected material even under ordinary diagnostic verbosity.
+
+### Caches are cross-run storage and must not contain secrets
+
+GitHub documents that dependency caches persist independently of the clean hosted runner and explicitly says not to store sensitive information in a cache. Cache contents are restored as untrusted input.
+
+Sources:
+- https://docs.github.com/en/actions/concepts/workflows-and-actions/dependency-caching
+- https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching
+
+**Design consequence:** the Mode T execution job must not save or restore caches after the secret-generation boundary. Secret-bearing or potentially secret-derived temporary paths must never be included in a cache key or cache path.
+
+### Logs and workflow runs are not immutable evidence
+
+GitHub documents that users with write access can delete workflow runs and can delete workflow logs.
+
+Sources:
+- https://docs.github.com/en/actions/how-tos/manage-workflow-runs/delete-a-workflow-run
+- https://docs.github.com/en/rest/actions/workflow-runs
+- https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs
+
+**Design consequence:** GitHub Actions timestamps/run history alone cannot be the sole anti-cherry-picking or analysis-lock evidence. Reservation, authorization, execution-start, ciphertext/commitment, and analysis-lock records need prompt retention in the independently preserved P6 evidence channel or another append-only/non-unilateral evidence path before they are relied on scientifically.
+
+### Secret masking is defense-in-depth, not the custody boundary
+
+GitHub provides `::add-mask::` to redact a value from logs, and warns that masking must occur before a value is output.
+
+Source:
+- https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands
+
+**Design consequence:** the helper may register generated printable identifiers/nonces for masking as defense-in-depth, but Mode T must be safe even if masking is incomplete. Raw key/mapping/nonces must never be intentionally emitted to stdout/stderr, step outputs, summaries, artifacts, environment variables, or command-line arguments.
+
+## drand/tlock facts
+
+### Timelock security model
+
+drand documents timelock encryption as encryption to a future beacon round. The future randomness required for decryption is not released until that round. drand also explicitly states a security limitation: if a threshold number of network nodes are malicious, they can generate future random values and decrypt future ciphertexts early.
+
+Source:
+- https://docs.drand.love/docs/timelock-encryption/
+
+**Design consequence:** Mode T cannot claim unconditional time security. The accepted threat model must explicitly adopt the drand threshold-network assumption for the selected chain.
+
+### Current mainnet timelock chain identity
+
+The drand `tlock` project documents the current mainnet timelock-capable quicknet chain hash as:
+
+`52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971`
+
+It documents a 3-second frequency and recommends using the chain hash rather than only a beacon name when public-key integrity matters.
+
+Source:
+- https://github.com/drand/tlock
+
+**Design consequence:** the chain hash must be frozen explicitly. Mode T must not rely on an unqualified network alias.
+
+### Current released tlock version
+
+GitHub reports `drand/tlock` release `v1.2.0` as the latest published release, dated 2024-08-21.
+
+Source:
+- https://github.com/drand/tlock/releases/tag/v1.2.0
+
+**Design consequence:** implementation promotion should pin an exact reviewed `tle`/tlock release artifact or exact source commit plus independently verified checksum. No floating `latest`, branch, runtime package-manager resolution, or unverified download is acceptable.
+
+### Ciphertext chain-hash trust must be disabled
+
+`tlock` exposes a `Strict()` mode. Its source states that a newly constructed `Tlock` trusts the chain hash found in ciphertext metadata by default and may switch to it during decryption; `Strict()` disables that behavior.
+
+Source:
+- https://github.com/drand/tlock/blob/main/tlock.go
+
+**Design consequence:** the Mode T continuity/decryption path must use strict chain binding. A ciphertext-supplied chain identity must never override the frozen quicknet chain hash.
+
+## Design correction: reserve then authorize an exact run
+
+The external facts above expose a stronger execution-order requirement than the initial #287 sketch.
+
+A unique empirical execution should use a **run-reservation → exact-run authorization → execution** sequence:
+
+1. dispatch the frozen workflow into a pre-secret reservation/wait state;
+2. obtain immutable GitHub metadata including `GITHUB_RUN_ID`, `GITHUB_RUN_ATTEMPT=1`, frozen `GITHUB_SHA`, and workflow identity;
+3. create a separate authorization record that binds the exact reserved `GITHUB_RUN_ID`, candidate/freeze identities, and allowed first attempt;
+4. independently retain that reservation/authorization evidence before secret generation;
+5. let the same reserved run proceed only after it retrieves and validates that exact authorization;
+6. reject every different run ID and every `GITHUB_RUN_ATTEMPT != 1`;
+7. externally retain the execution-start record before the helper generates protected material.
+
+This reduces rerun/multi-run ambiguity because authorization is bound to an already existing run identity rather than to a reusable workflow definition alone.
+
+It does **not** eliminate all trust concerns: a repository owner can delete GitHub workflow history, so the run/authorization evidence still requires independent retention.
+
+## Remaining UNKNOWN / BLOCKING questions
+
+The reviewed authoritative GitHub documentation establishes fresh VM lifecycle, administrative privilege, rerun/debug controls, cache behavior and deletability of run/log evidence. It does **not**, in the sources reviewed here, explicitly document a supported repository-owner mechanism for attaching an interactive shell to the live standard GitHub-hosted VM or snapshotting its memory.
+
+Therefore the claim “a repository owner cannot inspect live runner memory” remains **UNKNOWN**, not PASS. Promotion must either:
+
+- obtain authoritative evidence sufficient to bound that capability; or
+- choose an architecture whose scientific validity does not depend on assuming an undocumented inability to inspect live memory.
+
+Also still unresolved:
+
+- exact minimum release-margin policy;
+- independent source for server-time-to-drand-round verification;
+- acceptable behavior if the drand round is delayed or network retrieval fails;
+- exact P6 external retention mechanism used for run-reservation/analysis-lock anti-deletion evidence;
+- exact binary checksum and supply-chain verification method for the selected tlock artifact.
+
+## Current conclusion
+
+The external evidence makes the Mode T proposal more concrete but **does not yet establish sufficient custody**.
+
+The strongest current design is:
+
+`P4-T-A mechanism closure → frozen run reservation → exact run authorization → P4-T-X secret instantiation in attempt 1 only → independently retained ciphertext/commitment evidence → P4-T-L analysis lock before release → P4-B reveal/continuity audit`
+
+Until the remaining UNKNOWN items are resolved and synthetic adversarial tests pass, P4-T-A remains OPEN.
