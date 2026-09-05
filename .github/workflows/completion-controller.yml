@@ -1,8 +1,10 @@
 name: DGAF Completion Controller
 
-# The completion controller is an evaluator, not the candidate under evaluation.
-# It runs only from a trusted workflow_run trigger and never checks out or executes
-# candidate-controlled source. Candidate SHA is treated strictly as data.
+# The completion controller is a trusted evaluator, not the candidate under evaluation.
+# It runs from the default-branch workflow definition and never checks out or executes
+# candidate-controlled source. For PDMAL, the producing workflow head is the control-plane
+# identity; the designated runtime candidate is resolved independently from that head's
+# canonical manifest and validated against the emitted evidence registry.
 
 on:
   workflow_run:
@@ -19,18 +21,19 @@ jobs:
       contents: read
       actions: read
     env:
-      CANDIDATE_SHA: ${{ github.event.workflow_run.head_sha }}
+      WORKFLOW_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
       PRODUCING_RUN_ID: ${{ github.event.workflow_run.id }}
       PRODUCING_WORKFLOW: ${{ github.event.workflow_run.name }}
       PRODUCING_EVENT: ${{ github.event.workflow_run.event }}
       PRODUCING_ACTION: ${{ github.event.action }}
       PRODUCING_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+
     steps:
-      - name: Verify candidate and triggering workflow identifiers
+      - name: Verify triggering workflow identifiers
         shell: bash
         run: |
           set -euo pipefail
-          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$WORKFLOW_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$PRODUCING_RUN_ID" =~ ^[0-9]+$ ]]
           test "$PRODUCING_ACTION" = "completed"
           test "$PRODUCING_CONCLUSION" = "success"
@@ -38,7 +41,7 @@ jobs:
             "PDMAL Instrumentation Dry Run"|"P9 Independent Verification") ;;
             *) echo "unexpected producing workflow: $PRODUCING_WORKFLOW" >&2; exit 1 ;;
           esac
-          printf 'candidate_sha=%s\n' "$CANDIDATE_SHA" >> "$GITHUB_STEP_SUMMARY"
+          printf 'workflow_head_sha=%s\n' "$WORKFLOW_HEAD_SHA" >> "$GITHUB_STEP_SUMMARY"
           printf 'producing_workflow=%s\n' "$PRODUCING_WORKFLOW" >> "$GITHUB_STEP_SUMMARY"
           printf 'producing_run_id=%s\n' "$PRODUCING_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
           printf 'producing_event=%s\n' "$PRODUCING_EVENT" >> "$GITHUB_STEP_SUMMARY"
@@ -48,101 +51,201 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Retrieve evidence artifact from triggering workflow run only
+      - name: Retrieve exact-run registry and independent source identity
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p /tmp/evidence-registry
-          artifact_name=""
+
+          registry_artifact_name=""
           case "$PRODUCING_WORKFLOW" in
-            "PDMAL Instrumentation Dry Run") artifact_name="dgaf-evidence-registry" ;;
-            "P9 Independent Verification") artifact_name="dgaf-p9-independent-evidence" ;;
+            "PDMAL Instrumentation Dry Run") registry_artifact_name="dgaf-evidence-registry" ;;
+            "P9 Independent Verification") registry_artifact_name="dgaf-p9-independent-evidence" ;;
           esac
 
           run_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PRODUCING_RUN_ID}")"
           test "$(jq -r '.id' <<<"$run_json")" = "$PRODUCING_RUN_ID"
           test "$(jq -r '.name' <<<"$run_json")" = "$PRODUCING_WORKFLOW"
-          test "$(jq -r '.head_sha' <<<"$run_json")" = "$CANDIDATE_SHA"
+          test "$(jq -r '.head_sha' <<<"$run_json")" = "$WORKFLOW_HEAD_SHA"
           test "$(jq -r '.conclusion' <<<"$run_json")" = "success"
           test "$(jq -r '.event' <<<"$run_json")" = "$PRODUCING_EVENT"
 
           artifacts_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PRODUCING_RUN_ID}/artifacts?per_page=100")"
-          artifact_count="$(jq -r --arg name "$artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)] | length' <<<"$artifacts_json")"
-          test "$artifact_count" = "1"
-          artifact_id="$(jq -r --arg name "$artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)][0].id' <<<"$artifacts_json")"
-          artifact_digest="$(jq -r --arg name "$artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)][0].digest // empty' <<<"$artifacts_json")"
-          test -n "$artifact_id"
-          test "$artifact_id" != "null"
-          test -n "$artifact_digest"
+          registry_count="$(jq -r --arg name "$registry_artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)] | length' <<<"$artifacts_json")"
+          test "$registry_count" = "1"
+          registry_artifact_id="$(jq -r --arg name "$registry_artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)][0].id' <<<"$artifacts_json")"
+          registry_artifact_digest="$(jq -r --arg name "$registry_artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)][0].digest // empty' <<<"$artifacts_json")"
+          test -n "$registry_artifact_id"
+          test "$registry_artifact_id" != "null"
+          test -n "$registry_artifact_digest"
 
-          gh run download "$PRODUCING_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$artifact_name" --dir /tmp/evidence-registry
+          designated_candidate="$WORKFLOW_HEAD_SHA"
+          source_artifact_name="$registry_artifact_name"
+          source_artifact_id="$registry_artifact_id"
+          source_artifact_digest="$registry_artifact_digest"
+
+          if test "$PRODUCING_WORKFLOW" = "PDMAL Instrumentation Dry Run"; then
+            manifest_json="$(gh api "repos/${GITHUB_REPOSITORY}/contents/docs/experiment/NEW_CANDIDATE_MANIFEST.md?ref=${WORKFLOW_HEAD_SHA}")"
+            manifest_text="$(jq -r '.content' <<<"$manifest_json" | tr -d '\n' | base64 --decode)"
+            designated_candidate="$(awk '/^candidate_sha:/{print $2; exit}' <<<"$manifest_text")"
+            [[ "$designated_candidate" =~ ^[0-9a-f]{40}$ ]]
+
+            source_artifact_name="pdmal-instrumentation-dry-run"
+            source_count="$(jq -r --arg name "$source_artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)] | length' <<<"$artifacts_json")"
+            test "$source_count" = "1"
+            source_artifact_id="$(jq -r --arg name "$source_artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)][0].id' <<<"$artifacts_json")"
+            source_artifact_digest="$(jq -r --arg name "$source_artifact_name" '[.artifacts[] | select(.name == $name and .expired == false)][0].digest // empty' <<<"$artifacts_json")"
+            test -n "$source_artifact_id"
+            test "$source_artifact_id" != "null"
+            test -n "$source_artifact_digest"
+          fi
+
+          gh run download "$PRODUCING_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$registry_artifact_name" --dir /tmp/evidence-registry
           case "$PRODUCING_WORKFLOW" in
             "PDMAL Instrumentation Dry Run") test -f /tmp/evidence-registry/dgaf-evidence-registry.json ;;
-            "P9 Independent Verification") test -f /tmp/evidence-registry/p9-independent-evidence.json ;;
+            "P9 Independent Verification")
+              test -f /tmp/evidence-registry/p9-independent-evidence.json
+              test -f /tmp/evidence-registry/p9-independent-evidence.sha256
+              ;;
           esac
 
-          printf 'producing_artifact_id=%s\n' "$artifact_id" >> "$GITHUB_STEP_SUMMARY"
-          printf 'producing_artifact_digest=%s\n' "$artifact_digest" >> "$GITHUB_STEP_SUMMARY"
-          printf 'producing_artifact_name=%s\n' "$artifact_name" >> "$GITHUB_STEP_SUMMARY"
+          echo "DESIGNATED_CANDIDATE_SHA=$designated_candidate" >> "$GITHUB_ENV"
+          printf 'designated_candidate_sha=%s\n' "$designated_candidate" >> "$GITHUB_STEP_SUMMARY"
+          printf 'registry_artifact_id=%s\n' "$registry_artifact_id" >> "$GITHUB_STEP_SUMMARY"
+          printf 'registry_artifact_digest=%s\n' "$registry_artifact_digest" >> "$GITHUB_STEP_SUMMARY"
+          printf 'source_artifact_id=%s\n' "$source_artifact_id" >> "$GITHUB_STEP_SUMMARY"
+          printf 'source_artifact_digest=%s\n' "$source_artifact_digest" >> "$GITHUB_STEP_SUMMARY"
+
           jq -n \
-            --arg candidate "$CANDIDATE_SHA" \
+            --arg candidate "$designated_candidate" \
+            --arg workflow_head "$WORKFLOW_HEAD_SHA" \
             --arg workflow "$PRODUCING_WORKFLOW" \
             --arg run_id "$PRODUCING_RUN_ID" \
             --arg event "$PRODUCING_EVENT" \
             --arg action "$PRODUCING_ACTION" \
-            --arg artifact_id "$artifact_id" \
-            --arg artifact_digest "$artifact_digest" \
-            --arg artifact_name "$artifact_name" \
-            '{candidate_sha:$candidate,workflow_name:$workflow,workflow_run_id:$run_id,workflow_event:$event,workflow_action:$action,artifact_id:$artifact_id,artifact_digest:$artifact_digest,artifact_name:$artifact_name}' \
+            --arg conclusion "$PRODUCING_CONCLUSION" \
+            --arg artifact_id "$registry_artifact_id" \
+            --arg artifact_digest "$registry_artifact_digest" \
+            --arg artifact_name "$registry_artifact_name" \
+            --arg source_artifact_id "$source_artifact_id" \
+            --arg source_artifact_digest "$source_artifact_digest" \
+            --arg source_artifact_name "$source_artifact_name" \
+            '{candidate_sha:$candidate,workflow_head_sha:$workflow_head,workflow_name:$workflow,workflow_run_id:$run_id,workflow_event:$event,workflow_action:$action,workflow_conclusion:$conclusion,artifact_id:$artifact_id,artifact_digest:$artifact_digest,artifact_name:$artifact_name,source_artifact_id:$source_artifact_id,source_artifact_digest:$source_artifact_digest,source_artifact_name:$source_artifact_name}' \
             > /tmp/evidence-registry/source-identity.json
 
-      - name: Validate exact-run artifact content identity
+      - name: Validate exact provenance tuple and adversarial mismatch rejection
         shell: bash
         run: |
           set -euo pipefail
-          source=/tmp/evidence-registry/source-identity.json
-          test "$(jq -r '.candidate_sha' "$source")" = "$CANDIDATE_SHA"
-          test "$(jq -r '.workflow_run_id' "$source")" = "$PRODUCING_RUN_ID"
-          test "$(jq -r '.workflow_name' "$source")" = "$PRODUCING_WORKFLOW"
-          test -n "$(jq -r '.artifact_digest' "$source")"
+          python - <<'PY'
+          import copy
+          import hashlib
+          import json
+          from pathlib import Path
 
-          case "$PRODUCING_WORKFLOW" in
-            "PDMAL Instrumentation Dry Run")
-              registry=/tmp/evidence-registry/dgaf-evidence-registry.json
-              test "$(jq -r '.candidate_sha' "$registry")" = "$CANDIDATE_SHA"
-              ;;
-            "P9 Independent Verification")
-              p9=/tmp/evidence-registry/p9-independent-evidence.json
-              test "$(jq -r '.candidate_sha' "$p9")" = "$CANDIDATE_SHA"
-              test "$(jq -r '.run_id' "$p9")" = "$PRODUCING_RUN_ID"
-              test "$(jq -r '.source_workflow' "$p9")" = "$PRODUCING_WORKFLOW"
-              test "$(jq -r '.independent_canonicalization' "$p9")" = "jq -S -c"
-              test "$(jq -r '.authority_identity_regression' "$p9")" = "PASS"
-              test "$(jq -r '.authorization_is_external' "$p9")" = "true"
-              test "$(jq -r '.empirical_execution_requested' "$p9")" = "false"
-              test "$(sha256sum "$p9" | awk '{print $1}')" = "$(cat /tmp/evidence-registry/p9-independent-evidence.sha256)"
-              ;;
-          esac
+          root = Path('/tmp/evidence-registry')
+          source = json.loads((root / 'source-identity.json').read_text(encoding='utf-8'))
+          workflow = source['workflow_name']
+
+          def require_equal(label, actual, expected):
+              if actual != expected:
+                  raise ValueError(f'{label} mismatch: {actual!r} != {expected!r}')
+
+          def validate_pdmal(payload):
+              require_equal('candidate_sha', payload.get('candidate_sha'), source['candidate_sha'])
+              require_equal('workflow_definition_sha', payload.get('workflow_definition_sha'), source['workflow_head_sha'])
+              require_equal('workflow_run_id', str(payload.get('workflow_run_id')), source['workflow_run_id'])
+              require_equal('source_workflow', payload.get('source_workflow'), source['workflow_name'])
+              require_equal('workflow_event', payload.get('workflow_event'), source['workflow_event'])
+              require_equal('workflow_action', payload.get('workflow_action'), source['workflow_action'])
+              require_equal('workflow_conclusion', payload.get('workflow_conclusion'), source['workflow_conclusion'])
+              require_equal('artifact_name', payload.get('artifact_name'), source['source_artifact_name'])
+              require_equal('artifact_id', str(payload.get('artifact_id')), source['source_artifact_id'])
+              require_equal('artifact_digest', payload.get('artifact_digest'), source['source_artifact_digest'])
+
+              controls = payload.get('controls') or {}
+              require_equal('freeze_authorized', controls.get('freeze_authorized'), False)
+              require_equal('pilot_authorized', controls.get('pilot_authorized'), False)
+              require_equal('empirical_execution_requested', controls.get('empirical_execution_requested'), False)
+
+              predicates = payload.get('predicates')
+              if not isinstance(predicates, list) or not predicates:
+                  raise ValueError('predicates must be a non-empty list')
+              for index, item in enumerate(predicates):
+                  prefix = f'predicates[{index}]'
+                  require_equal(f'{prefix}.candidate_sha', item.get('candidate_sha'), source['candidate_sha'])
+                  require_equal(f'{prefix}.producer_workflow_run_id', str(item.get('producer_workflow_run_id')), source['workflow_run_id'])
+                  require_equal(f'{prefix}.producer_artifact_id', str(item.get('producer_artifact_id')), source['source_artifact_id'])
+                  require_equal(f'{prefix}.producer_artifact_digest', item.get('producer_artifact_digest'), source['source_artifact_digest'])
+                  require_equal(f'{prefix}.producer_workflow_definition_sha', item.get('producer_workflow_definition_sha'), source['workflow_head_sha'])
+
+          if workflow == 'PDMAL Instrumentation Dry Run':
+              path = root / 'dgaf-evidence-registry.json'
+              payload = json.loads(path.read_text(encoding='utf-8'))
+              validate_pdmal(payload)
+
+              # Adversarial regression: every identity dimension used for acceptance
+              # must fail closed when tampered independently.
+              mutations = [
+                  ('top-level candidate', lambda p: p.__setitem__('candidate_sha', '0' * 40)),
+                  ('workflow definition', lambda p: p.__setitem__('workflow_definition_sha', '1' * 40)),
+                  ('workflow run', lambda p: p.__setitem__('workflow_run_id', '0')),
+                  ('source artifact id', lambda p: p.__setitem__('artifact_id', '0')),
+                  ('source artifact digest', lambda p: p.__setitem__('artifact_digest', 'sha256:' + '0' * 64)),
+                  ('predicate candidate', lambda p: p['predicates'][0].__setitem__('candidate_sha', '0' * 40)),
+                  ('predicate workflow run', lambda p: p['predicates'][0].__setitem__('producer_workflow_run_id', '0')),
+                  ('predicate artifact id', lambda p: p['predicates'][0].__setitem__('producer_artifact_id', '0')),
+                  ('predicate artifact digest', lambda p: p['predicates'][0].__setitem__('producer_artifact_digest', 'sha256:' + '0' * 64)),
+                  ('predicate workflow definition', lambda p: p['predicates'][0].__setitem__('producer_workflow_definition_sha', '1' * 40)),
+              ]
+              for label, mutate in mutations:
+                  bad = copy.deepcopy(payload)
+                  mutate(bad)
+                  try:
+                      validate_pdmal(bad)
+                  except ValueError:
+                      continue
+                  raise SystemExit(f'adversarial mismatch was not rejected: {label}')
+              print(f'PDMAL provenance tuple: PASS; adversarial mismatch cases: {len(mutations)} PASS')
+
+          elif workflow == 'P9 Independent Verification':
+              path = root / 'p9-independent-evidence.json'
+              payload = json.loads(path.read_text(encoding='utf-8'))
+              require_equal('candidate_sha', payload.get('candidate_sha'), source['candidate_sha'])
+              require_equal('run_id', str(payload.get('run_id')), source['workflow_run_id'])
+              require_equal('source_workflow', payload.get('source_workflow'), source['workflow_name'])
+              require_equal('independent_canonicalization', payload.get('independent_canonicalization'), 'jq -S -c')
+              require_equal('authority_identity_regression', payload.get('authority_identity_regression'), 'PASS')
+              require_equal('authorization_is_external', payload.get('authorization_is_external'), True)
+              require_equal('empirical_execution_requested', payload.get('empirical_execution_requested'), False)
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              expected = (root / 'p9-independent-evidence.sha256').read_text(encoding='utf-8').strip().split()[0]
+              require_equal('p9 sha256', actual, expected)
+              print('P9 exact-run evidence identity: PASS')
+          else:
+              raise SystemExit(f'unexpected workflow: {workflow}')
+          PY
 
       - name: Reconcile triggering-run evidence into candidate registry
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, os
+          import json
           from pathlib import Path
 
-          candidate = os.environ['CANDIDATE_SHA']
-          workflow = os.environ['PRODUCING_WORKFLOW']
-          run_id = os.environ['PRODUCING_RUN_ID']
-          source_identity = json.loads(Path('/tmp/evidence-registry/source-identity.json').read_text())
+          root = Path('/tmp/evidence-registry')
+          source_identity = json.loads((root / 'source-identity.json').read_text(encoding='utf-8'))
+          candidate = source_identity['candidate_sha']
+          workflow = source_identity['workflow_name']
+          run_id = source_identity['workflow_run_id']
 
           if workflow == 'PDMAL Instrumentation Dry Run':
-              registry_path = Path('/tmp/evidence-registry/dgaf-evidence-registry.json')
+              registry_path = root / 'dgaf-evidence-registry.json'
           else:
-              registry_path = Path('/tmp/evidence-registry/p9-independent-evidence.json')
+              registry_path = root / 'p9-independent-evidence.json'
 
           payload = json.loads(registry_path.read_text(encoding='utf-8'))
           if payload.get('candidate_sha') != candidate:
@@ -161,12 +264,13 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, os
+          import json
           from pathlib import Path
 
-          p = Path('/tmp/evidence-registry/dgaf-evidence-registry.json')
-          payload = json.loads(p.read_text(encoding='utf-8'))
-          candidate = os.environ['CANDIDATE_SHA']
+          root = Path('/tmp/evidence-registry')
+          payload = json.loads((root / 'dgaf-evidence-registry.json').read_text(encoding='utf-8'))
+          source = json.loads((root / 'source-identity.json').read_text(encoding='utf-8'))
+          candidate = source['candidate_sha']
           if payload.get('candidate_sha') != candidate:
               raise SystemExit('candidate mismatch in evidence registry')
 
@@ -183,6 +287,7 @@ jobs:
           report = {
               'schema_version': 1,
               'candidate_sha': candidate,
+              'workflow_head_sha': source['workflow_head_sha'],
               'required_predicates': required,
               'blocking_predicates': blocking,
               'controller_notes': controller_notes,
