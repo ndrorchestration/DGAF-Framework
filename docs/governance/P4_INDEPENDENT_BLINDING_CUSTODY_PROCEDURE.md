@@ -1,10 +1,9 @@
 # P4 Independent Blinding Custody Procedure
 
-**Status:** CANONICAL PROCEDURE / NOT EXECUTED / P4 REMAINS OPEN  
+**Status:** PROCEDURE DRAFT / NOT EXECUTED / P4 REMAINS OPEN  
 **Authority:** DGAF/PDMAL pre-freeze governance  
 **Supersedes as canonical procedure:** `P4_HUMAN_KEY_CUSTODY_PROCEDURE.md`  
-**Architecture correction:** Issue #285 — COMPLETED via PR #286 / merge `a3bafa6fca8599df479a685828f5fdddb6bae589`  
-**Active Mode-T design/threat-model lane:** Issue #287 — OPEN / DESIGN ONLY  
+**Related issue:** #285  
 **Purpose:** Define the minimum pre-execution custody, access-separation, commitment, release-control, and audit evidence required before P4 Security / Blinding may be considered for closure.
 
 ## Governing invariant
@@ -52,14 +51,6 @@ Mode T requires an explicit control-path inventory covering at least:
 - any local copy, escrow, recovery phrase, seed, token, or backup that restores effective access.
 
 If the analyst controls any path that can restore the mapping or secret before authorized release, Mode T fails closed.
-
-### Current Mode-T implementation boundary
-
-Mode T is an **admissible control class**, not a claim that a specific zero-human implementation already satisfies P4.
-
-No solo Mode-T implementation has been accepted or executed. Issue #287 evaluates a possible lifecycle in which secret material is generated only inside an authorized transient execution environment and timelock-released after an analysis-lock deadline. That proposal may require a future mode-specific P4/P7/P8/P9 lifecycle revision because the current universal predicates bind real key/mapping commitments pre-freeze.
-
-Until such a revision is separately reviewed, merged, and verified, this canonical procedure remains controlling as written. The existence of Issue #287, GitHub-hosted runners, drand/timelock tooling, HSM/KMS products, or any other proposed mechanism does **not** close P4 or establish sufficient independence.
 
 ## Explicit non-substitutes
 
@@ -267,3 +258,29 @@ A failed custody attempt remains historical evidence. A replacement requires a n
 CI may verify schema, completeness, timestamp syntax, digest formatting, candidate identity, deterministic canonicalization, commitment recomputation on synthetic fixtures, required documentation language, P7/freeze/P9 identity consistency, and fail-closed state transitions.
 
 CI cannot by itself prove an external service's real access model or the absence of every off-platform recovery path. The closure packet must therefore include evidence appropriate to the selected custody mode.
+
+## Standards and complementary controls
+
+- NIST SP 800-57 Part 1 Rev. 5 provides general cryptographic key-management guidance.
+- NIST SP 800-171 Rev. 3 frames separation of duties in terms of separated duties and access authorizations, supporting a role/control-based rather than friendship-based interpretation.
+- A timestamped preregistration may complement P4 by constraining outcome-dependent redesign, but it does not establish custody or blinding.
+
+## Explicit non-claims
+
+Creating or merging this procedure does **not**:
+
+- establish that any custody mode has been instantiated;
+- prove effective control separation;
+- create a real blinding key or mapping;
+- publish real commitment digests;
+- close P4-A;
+- create a freeze;
+- authorize a pilot;
+- permit empirical execution;
+- authorize unblinding; or
+- increase empirical N.
+
+**P4 remains OPEN until one selected custody mode is actually instantiated and independently verified.**  
+**Freeze: NOT ESTABLISHED.**  
+**Pilot authorization: NOT GRANTED.**  
+**Empirical N: 0.**
