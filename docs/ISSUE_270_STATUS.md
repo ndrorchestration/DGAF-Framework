@@ -1,86 +1,146 @@
 # Issue #270 — Current-Lineage Quality Regression
 
 **Last updated:** 2026-09-05  
-**Status:** OPEN / MYPY TRANCHE CLOSED / FORMATTING + IMPORT + STYLE DEBT REMAINS
+**Status:** VERIFIED / CURRENT-LINEAGE QUALITY REGRESSION CLOSED AT WORKFLOW LEVEL
 
 ## Why this issue exists
 
 Issue #47 remains a valid historical exact-tree closure for commit `e46ffb3913794b506bf413e837fcf5be99d8f426`. It does not certify every later tree.
 
-A later Python Tests & Quality Checks execution associated with PR #269 exposed formatting/import/type diagnostics on the current lineage. Those findings are tracked here rather than retroactively rewriting the historical #47 result.
+A later Python Tests & Quality Checks execution associated with PR #269 exposed current-lineage type, formatting, import-order, and lint diagnostics. Issue #270 tracked those later findings without rewriting the historical #47 result.
 
-## Current evidence boundary
+## Final verified boundary
 
-Current protected `main`: `0c7b83558c2677f73fd71ad8bfa2a9b265b87965`  
-Current `main` tree: `892e65b7e354bcb1eb6e9ddfdfed77faa6ca68b5`  
-PR #272 exact head: `198669c2574b37f6e83cd9544ec172ecd0ee64f1`  
-PR #272 merge: `0c7b83558c2677f73fd71ad8bfa2a9b265b87965`  
-Python Tests & Quality Checks run: `33965667752`
+Current protected `main`: `7ecc2578ca636fceca49504e0ee40de9a5213bd6`  
+Current `main` tree: `a33ec18e4d2ebba607e18c8b537d2597c8e82bc3`  
+Final workflow-hardening PR: #276  
+PR #276 exact head: `151239e9131ebbf0f2dc2a5382553b3bec12e44e`  
+PR #276 merge: `7ecc2578ca636fceca49504e0ee40de9a5213bd6`  
+Exact-head Python run: `33974534482`  
+Main push Python run: `33974834700`
 
-PR #272 passed all **15/15 returned exact-head workflows** before merge.
+PR #276 passed all **15/15 exact-head workflows** before merge. The main push Python run `33974834700` also completed successfully against merge SHA `7ecc2578…`.
 
-## Mypy tranche — CLOSED / CLEAN
+## Remediation history
 
-The earlier current-lineage baseline run `33957199893` reported six mypy errors in four component files:
+### Mypy — CLOSED
 
-- `components/KAPPA/dynamic_weight_router.py`
-- `components/ensemble_v17.py`
-- `components/ensemble_v16.py`
-- `components/ahg_herald_trace.py`
+PR #272 repaired six current-lineage mypy findings with narrow type/runtime corrections and no suppressions for those findings.
 
-PR #272 repaired those six findings with narrow type/runtime checks only. It did not add mypy exclusions for the findings, weaken the workflow, or perform an unrelated formatting sweep.
-
-Direct logs from run `33965667752` establish the result independently of the workflow's advisory-success semantics:
+Direct matrix evidence established:
 
 - Python 3.10: `Success: no issues found in 12 source files`
 - Python 3.11: `Success: no issues found in 12 source files`
 - Python 3.12: `Success: no issues found in 12 source files`
-- command: `mypy components/ --ignore-missing-imports --no-implicit-optional`
 
-Blocking pytest remained green. Python 3.10 and Python 3.12 each recorded **190 passed / 4 skipped**; the Python 3.11 job also completed successfully. The broader exact-head governance, regression, truth/evidence, PDMAL harness, and pre-freeze workflows also passed before merge.
+### Black / isort — CLOSED
 
-Codecov delivery encountered an external HTTP 429 rate limit in the Python jobs. The action is configured non-blocking and repository coverage artifacts were still uploaded. This record therefore does **not** claim that the Codecov upload succeeded.
+PR #274 mechanically normalized the current Python scope with the pinned toolchain:
 
-## Remaining current-lineage debt
+- Black `26.5.1`
+- isort `8.0.1`
 
-The workflow still marks Black, isort, mypy, and broad lint diagnostics `continue-on-error: true`. Workflow-level SUCCESS therefore must not be described as proof that all quality diagnostics are clean.
+The formatter/import tranche was verified independently before merge and did not rotate any PDMAL scientific identity.
 
-### Black — OPEN
+### Broad flake8 — CLOSED
 
-`black --check components/ tests/ --line-length=120` still reports **28 files would be reformatted** on the #272 exact head.
+PR #275 repaired the remaining seven concrete lint findings and introduced a minimal root `.flake8` configuration:
 
-### isort — OPEN
+```ini
+[flake8]
+max-line-length = 120
+# E203 conflicts with Black-formatted slice syntax.
+extend-ignore = E203
+```
 
-`isort --check-only components/ tests/ --profile=black` still reports import-order failures across current-lineage component and test files.
+No other lint code was ignored or excluded. Normal PR CI reproduced fatal flake8 = `0`, broad flake8 = `0`, Black clean, isort clean, mypy clean, and pytest green.
 
-### Broad flake8 diagnostics — OPEN
+### Fail-closed quality workflow — CLOSED
 
-The broad diagnostic invocation still reports **224 style findings** on the #272 exact head. The blocking fatal subset remains clean:
+PR #276 converted the now-clean quality baseline from advisory diagnostics into fail-closed workflow gates:
 
-`flake8 components --count --select=E9,F63,F82 --show-source --statistics` → `0`
+- broad flake8 no longer uses `--exit-zero`;
+- flake8, Black, isort, and mypy no longer use `continue-on-error: true`;
+- `.flake8` is covered by both push and pull-request path filters;
+- `.github/workflows/python-tests.yml` is covered by both push and pull-request path filters;
+- Black remains blocking and emits `--diff` diagnostics on failure;
+- deterministic Python 3.12 negative controls require flake8, Black, isort, and mypy each to reject a deliberate isolated violation;
+- `tests/test_python_quality_gate_contract.py` locks the trigger and fail-closed semantics against silent regression.
 
-The remaining style findings must not be conflated with the now-clean mypy tranche.
+Earlier #276 exact-head attempts failed at a real Black defect in the newly added contract test and skipped later quality stages. That is direct observed fail-closed behavior, not merely static configuration evidence.
 
-## Required remediation sequence
+## Final exact-head evidence
 
-1. Mechanically normalize Black/isort scope without mixing in semantic refactors.
-2. Re-run Black/isort/mypy and the supported pytest/security/regression suites against the exact normalization head.
-3. Reassess broad flake8 findings after Black/isort normalization and repair residual findings in a separate bounded tranche if needed.
-4. Preserve exact-run diagnostics and provenance.
-5. Only after a clean intended baseline exists, remove `continue-on-error` from the quality checks intended to be blocking.
-6. Verify the newly blocking checks actually fail closed under a controlled negative regression or equivalent deterministic test.
-7. Keep current-facing documentation explicit about advisory-vs-blocking semantics until that transition is verified.
+At PR #276 exact head `151239e9131ebbf0f2dc2a5382553b3bec12e44e`, Python Tests & Quality Checks run `33974534482` established:
+
+- fatal flake8: `0`
+- broad flake8: `0`
+- Black `26.5.1`: `41 files would be left unchanged`
+- isort `8.0.1`: success
+- mypy `2.3.1`: `Success: no issues found in 12 source files`
+- four workflow-contract tests: PASS
+- pytest: **194 passed / 4 skipped / 7 warnings**
+- negative controls: all four deliberate violations rejected
+  - flake8: unused-import `F401`
+  - Black: reformat required
+  - isort: import-order failure
+  - mypy: incompatible assignment
+- diagnostic artifact ID: `9971918880`
+- diagnostic ZIP SHA256: `2bd3ba3ada826bf851c1d71db1344ac12fd6f6ae65ad0de6c0971350c6a8a5f0`
+
+The broader exact-head regression, governance, truth/evidence, IP hygiene, PDMAL harness, and PDMAL pre-freeze workflows also completed successfully before merge.
+
+## Mainline reproduction
+
+After merge, protected `main` at `7ecc2578…` triggered Python Tests & Quality Checks run `33974834700` by `push`.
+
+That run completed successfully and reproduced the intended behavior:
+
+- `test (3.10)` — SUCCESS
+- `test (3.11)` — SUCCESS
+- `test (3.12)` — SUCCESS
+- Python 3.12 flake8 / Black / isort / mypy — SUCCESS
+- Python 3.12 negative controls — SUCCESS
+- pytest — SUCCESS
+- `security-scan` — SUCCESS
+- `staging-evidence` — SUCCESS
+- `integration-tests` job — SUCCESS; no `tests/integration` suite existed at this boundary, so actual integration execution was explicitly detected as unavailable and skipped rather than represented as executed.
+
+## External-service caveat
+
+Codecov encountered HTTP 429 rate limiting during this remediation sequence. The Codecov action is explicitly non-blocking, and repository coverage artifacts were retained. This status therefore does **not** claim successful Codecov delivery where the external upload was rate-limited.
+
+## Separate branch-protection control — OPEN AS #277
+
+Workflow fail-closed behavior and repository merge enforcement are distinct controls.
+
+At `main=7ecc2578…`, branch metadata reports `main` as protected but lists only `PPTL CI` as a required status context. The Python quality matrix is therefore **not currently established as a branch-protection-required merge check** by the available metadata.
+
+The direct branch-protection endpoint returns `403 Resource not accessible by integration`, and the connected mutation surface does not expose branch-protection/ruleset writes.
+
+Issue #277 separately tracks the repository-administration action to require the Python quality matrix (or an equivalent required-workflow policy) before merge and verify that configuration by readback.
+
+This distinction does not reopen the code/workflow regression repaired by #270:
+
+- current-lineage code quality baseline: **CLEAN / VERIFIED**
+- workflow fail-closed behavior: **VERIFIED**
+- branch-protection merge enforcement for Python quality: **OPEN / TRACKED BY #277**
 
 ## Acceptance criteria
 
-- [ ] `black --check components/ tests/ --line-length=120` exits 0.
-- [ ] `isort --check-only components/ tests/ --profile=black` exits 0.
-- [x] `mypy components/ --ignore-missing-imports --no-implicit-optional` exits 0 across Python 3.10/3.11/3.12 on PR #272 exact head.
-- [ ] intended quality steps are blocking after clean-baseline verification.
-- [x] full pytest/security/regression suites remained green for the mypy tranche.
+- [x] `black --check components/ tests/ --line-length=120` exits 0 on the verified current lineage.
+- [x] `isort --check-only components/ tests/ --profile=black` exits 0.
+- [x] `mypy components/ --ignore-missing-imports --no-implicit-optional` exits 0 across Python 3.10/3.11/3.12.
+- [x] fatal and broad flake8 baselines are clean under the explicit Black-compatible configuration.
+- [x] flake8 / Black / isort / mypy are fail-closed inside the Python workflow.
+- [x] broad flake8 no longer masks findings with `--exit-zero`.
+- [x] `.flake8` and the workflow file itself are covered by push and pull-request triggers.
+- [x] deterministic negative controls prove each intended quality tool rejects a controlled violation.
+- [x] exact-head and mainline Python runs completed successfully after hardening.
+- [x] repository-admin merge-enforcement gap separated into Issue #277 rather than misrepresented as complete.
 
 ## Scientific boundary
 
-This is engineering-quality work only. It does not alter PDMAL candidate identity, P1–P9 scientific status, freeze, authorization, blinding/unblinding, empirical execution, or empirical N.
+This remediation is engineering quality and repository workflow governance only. It does not alter PDMAL candidate identity, P1–P9 scientific status, freeze, pilot authorization, blinding/unblinding, empirical execution, or empirical N.
 
 **PDMAL remains PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
