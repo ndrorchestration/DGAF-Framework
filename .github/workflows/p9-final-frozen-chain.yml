@@ -1,0 +1,170 @@
+name: P9 Final Frozen-Chain Verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      freeze_commit_sha:
+        description: 'Exact 40-hex commit containing the immutable freeze object and this verifier definition'
+        required: true
+        type: string
+      freeze_sha256:
+        description: 'Externally retained SHA-256 of docs/experiment/PDMAL_IMMUTABLE_FREEZE.json bytes'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  FREEZE_PATH: docs/experiment/PDMAL_IMMUTABLE_FREEZE.json
+  CANDIDATE_MANIFEST: docs/experiment/NEW_CANDIDATE_MANIFEST.md
+  P7_BINDING: docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md
+
+jobs:
+  final-p9:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject dispatch from a non-freeze workflow ref
+        env:
+          REQUESTED_FREEZE_SHA: ${{ inputs.freeze_commit_sha }}
+          DISPATCH_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          [[ "$REQUESTED_FREEZE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$DISPATCH_SHA" == "$REQUESTED_FREEZE_SHA" ]]
+
+      - name: Checkout exact freeze commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.freeze_commit_sha }}
+          persist-credentials: false
+
+      - name: Verify checked-out freeze identity
+        env:
+          REQUESTED_FREEZE_SHA: ${{ inputs.freeze_commit_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$REQUESTED_FREEZE_SHA"
+          test -f "$FREEZE_PATH"
+          test -f "$CANDIDATE_MANIFEST"
+          test -f "$P7_BINDING"
+          test -f scripts/verify_p9_frozen_chain.py
+          test -f .github/workflows/p9-final-frozen-chain.yml
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Record verifier source identities
+        id: verifier_identity
+        run: |
+          set -euo pipefail
+          echo "script_sha256=$(sha256sum scripts/verify_p9_frozen_chain.py | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "workflow_sha256=$(sha256sum .github/workflows/p9-final-frozen-chain.yml | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "candidate_manifest_sha256=$(sha256sum "$CANDIDATE_MANIFEST" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "p7_binding_sha256=$(sha256sum "$P7_BINDING" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+
+      - name: Independently verify final frozen chain
+        env:
+          EXPECTED_FREEZE_SHA256: ${{ inputs.freeze_sha256 }}
+          FREEZE_COMMIT_SHA: ${{ inputs.freeze_commit_sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/p9-final
+          python scripts/verify_p9_frozen_chain.py \
+            --freeze "$FREEZE_PATH" \
+            --expected-freeze-sha256 "$EXPECTED_FREEZE_SHA256" \
+            --freeze-commit-sha "$FREEZE_COMMIT_SHA" \
+            --candidate-manifest "$CANDIDATE_MANIFEST" \
+            --p7-binding "$P7_BINDING" \
+            --output /tmp/p9-final/p9-final-frozen-chain-evidence.json
+
+      - name: Verify evidence sidecar
+        run: |
+          set -euo pipefail
+          expected="$(cat /tmp/p9-final/p9-final-frozen-chain-evidence.json.sha256)"
+          actual="$(sha256sum /tmp/p9-final/p9-final-frozen-chain-evidence.json | awk '{print $1}')"
+          test "$actual" = "$expected"
+
+      - name: Upload source P9 evidence
+        id: source_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-p9-final-frozen-chain-evidence
+          path: |
+            /tmp/p9-final/p9-final-frozen-chain-evidence.json
+            /tmp/p9-final/p9-final-frozen-chain-evidence.json.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Emit source-bound P9 registry
+        env:
+          FREEZE_COMMIT_SHA: ${{ inputs.freeze_commit_sha }}
+          FREEZE_SHA256: ${{ inputs.freeze_sha256 }}
+          SOURCE_ARTIFACT_ID: ${{ steps.source_artifact.outputs.artifact-id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ steps.source_artifact.outputs.artifact-digest }}
+          SCRIPT_SHA256: ${{ steps.verifier_identity.outputs.script_sha256 }}
+          WORKFLOW_SHA256: ${{ steps.verifier_identity.outputs.workflow_sha256 }}
+          CANDIDATE_MANIFEST_SHA256: ${{ steps.verifier_identity.outputs.candidate_manifest_sha256 }}
+          P7_BINDING_SHA256: ${{ steps.verifier_identity.outputs.p7_binding_sha256 }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          evidence = Path('/tmp/p9-final/p9-final-frozen-chain-evidence.json')
+          evidence_digest = hashlib.sha256(evidence.read_bytes()).hexdigest()
+          registry = {
+              'schema_version': 1,
+              'evidence_class': 'PDMAL_P9_FINAL_FROZEN_CHAIN_REGISTRY',
+              'epistemic_status': 'VERIFICATION_EVIDENCE_PRESENT_PENDING_DURABLE_CUSTODY',
+              'producer': {
+                  'workflow': '.github/workflows/p9-final-frozen-chain.yml',
+                  'workflow_sha256': os.environ['WORKFLOW_SHA256'],
+                  'verifier_script_sha256': os.environ['SCRIPT_SHA256'],
+                  'run_id': int(os.environ['RUN_ID']),
+                  'run_attempt': int(os.environ['RUN_ATTEMPT']),
+              },
+              'freeze': {
+                  'commit_sha': os.environ['FREEZE_COMMIT_SHA'],
+                  'external_byte_sha256': os.environ['FREEZE_SHA256'],
+              },
+              'independent_resolution_inputs': {
+                  'candidate_manifest_sha256': os.environ['CANDIDATE_MANIFEST_SHA256'],
+                  'p7_binding_sha256': os.environ['P7_BINDING_SHA256'],
+              },
+              'source_artifact': {
+                  'artifact_id': int(os.environ['SOURCE_ARTIFACT_ID']),
+                  'artifact_digest': os.environ['SOURCE_ARTIFACT_DIGEST'],
+                  'content_sha256': evidence_digest,
+                  'retention_class': 'GITHUB_ACTIONS_30_DAY_NOT_DURABLE_CUSTODY',
+              },
+              'gate_interpretation': {
+                  'p9': 'EVIDENCE_PRESENT_PENDING_DURABLE_CUSTODY_AND_ADJUDICATION',
+                  'pilot_authorization': 'NOT_GRANTED',
+                  'empirical_n': 0,
+              },
+          }
+          out = Path('/tmp/p9-final/p9-final-registry.json')
+          payload = json.dumps(registry, sort_keys=True, indent=2) + '\n'
+          out.write_text(payload, encoding='utf-8')
+          out.with_suffix('.json.sha256').write_text(
+              hashlib.sha256(payload.encode()).hexdigest() + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Upload source-bound P9 registry
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-p9-final-frozen-chain-registry
+          path: |
+            /tmp/p9-final/p9-final-registry.json
+            /tmp/p9-final/p9-final-registry.json.sha256
+          if-no-files-found: error
+          retention-days: 30
