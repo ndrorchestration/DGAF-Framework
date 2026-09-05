@@ -27,12 +27,18 @@ class ProvenanceRegistryTests(unittest.TestCase):
     def test_dependency_block_prevents_verified_promotion(self) -> None:
         data = copy.deepcopy(_registry())
         metric = next(item for item in data["metrics"] if item["metric_id"] == "M-P34-945")
-        metric.update({
-            "epistemic_status": "VERIFIED", "calculation_method": "synthetic test method", "dataset_or_corpus": "synthetic test corpus",
-            "baseline": "synthetic baseline", "configuration_identity": "synthetic-config", "source_commit": "0" * 40,
-            "execution": {"workflow_run_id": "1", "artifact_id": "2", "timestamp": "2026-09-04T00:00:00Z"},
-            "reproduction": {"status": "REPRODUCIBLE", "command": "python synthetic.py"}
-        })
+        metric.update(
+            {
+                "epistemic_status": "VERIFIED",
+                "calculation_method": "synthetic test method",
+                "dataset_or_corpus": "synthetic test corpus",
+                "baseline": "synthetic baseline",
+                "configuration_identity": "synthetic-config",
+                "source_commit": "0" * 40,
+                "execution": {"workflow_run_id": "1", "artifact_id": "2", "timestamp": "2026-09-04T00:00:00Z"},
+                "reproduction": {"status": "REPRODUCIBLE", "command": "python synthetic.py"},
+            }
+        )
         messages = [finding.message for finding in lint.validate_registry(data) if finding.level == "ERROR"]
         self.assertTrue(any("VERIFIED blocked by dependencies" in message for message in messages))
 
@@ -42,11 +48,18 @@ class ProvenanceRegistryTests(unittest.TestCase):
             if dependency["dependency_id"] == "P-10-INSTRUMENT":
                 dependency["epistemic_status"] = "VERIFIED"
         metric = next(item for item in data["metrics"] if item["metric_id"] == "M-P10-SPEED")
-        metric.update({
-            "epistemic_status": "VERIFIED", "calculation_method": "synthetic test method", "score_range": "unbounded positive change",
-            "dataset_or_corpus": "synthetic test corpus", "baseline": "synthetic baseline", "configuration_identity": "synthetic-config",
-            "source_commit": "0" * 40, "reproduction": {"status": "REPRODUCIBLE", "command": "python synthetic.py"}
-        })
+        metric.update(
+            {
+                "epistemic_status": "VERIFIED",
+                "calculation_method": "synthetic test method",
+                "score_range": "unbounded positive change",
+                "dataset_or_corpus": "synthetic test corpus",
+                "baseline": "synthetic baseline",
+                "configuration_identity": "synthetic-config",
+                "source_commit": "0" * 40,
+                "reproduction": {"status": "REPRODUCIBLE", "command": "python synthetic.py"},
+            }
+        )
         messages = [finding.message for finding in lint.validate_registry(data) if finding.level == "ERROR"]
         self.assertTrue(any("requires workflow_run_id, artifact_id, and timestamp" in message for message in messages))
 

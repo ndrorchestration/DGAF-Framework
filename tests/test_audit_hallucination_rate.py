@@ -38,12 +38,8 @@ def test_missing_ground_truth_and_outputs_fail_closed():
     assert result.sample_count == 0
     assert result.preconditions_met is False
     assert result.passed is False
-    assert any(
-        "ground_truth_fixtures" in item for item in result.precondition_failures
-    )
-    assert any(
-        "generated_audit_events" in item for item in result.precondition_failures
-    )
+    assert any("ground_truth_fixtures" in item for item in result.precondition_failures)
+    assert any("generated_audit_events" in item for item in result.precondition_failures)
 
 
 def test_exact_six_field_match_is_deterministic_pass():
@@ -133,9 +129,7 @@ def test_legacy_herald_client_is_not_given_expected_answers():
     assert called is False
     assert result.preconditions_met is False
     assert result.passed is False
-    assert any(
-        "not invoked by design" in item for item in result.precondition_failures
-    )
+    assert any("not invoked by design" in item for item in result.precondition_failures)
 
 
 def test_nvfp4_policy_blocks_even_perfect_pairs():

@@ -9,7 +9,9 @@ hierarchical catch-all (TC1, TC2, TC7, TC8 failures).
 Fix: Reorder predicate evaluation to specific-before-general;
 fan-out and sequential checks now run before hierarchical.
 """
+
 from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional

@@ -35,11 +35,11 @@ FREEZE_VERIFY_SHA = "1" * 64
 
 
 def _candidate_manifest() -> str:
-    return f'''# candidate\n\n```yaml\ncandidate_sha: {CANDIDATE_SHA}\ncandidate_tree_sha: {CANDIDATE_TREE}\ndeployment_binding:\n  deployment_id: {DEPLOYMENT}\n```\n'''
+    return f"""# candidate\n\n```yaml\ncandidate_sha: {CANDIDATE_SHA}\ncandidate_tree_sha: {CANDIDATE_TREE}\ndeployment_binding:\n  deployment_id: {DEPLOYMENT}\n```\n"""
 
 
 def _p7(status: str = "CLOSED") -> str:
-    return f'''# P7\n\n```yaml\nstatus: "{status}"\ncandidate_sha: "{CANDIDATE_SHA}"\ncandidate_tree_sha: "{CANDIDATE_TREE}"\ndeployment_id: "{DEPLOYMENT}"\nprotocol_version: "0.7.5"\nanalysis_blob_sha: "{ANALYSIS_BLOB}"\nanalysis_config_sha256: "{CONFIG_SHA}"\nrunner_blob_sha: "{RUNNER_BLOB}"\nartifact_schema_blob_sha: "{SCHEMA_BLOB}"\n```\n'''
+    return f"""# P7\n\n```yaml\nstatus: "{status}"\ncandidate_sha: "{CANDIDATE_SHA}"\ncandidate_tree_sha: "{CANDIDATE_TREE}"\ndeployment_id: "{DEPLOYMENT}"\nprotocol_version: "0.7.5"\nanalysis_blob_sha: "{ANALYSIS_BLOB}"\nanalysis_config_sha256: "{CONFIG_SHA}"\nrunner_blob_sha: "{RUNNER_BLOB}"\nartifact_schema_blob_sha: "{SCHEMA_BLOB}"\n```\n"""
 
 
 def _freeze() -> dict:

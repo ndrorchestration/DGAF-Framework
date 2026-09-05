@@ -42,43 +42,42 @@ from typing import Dict, List, Optional, Tuple
 # ─────────────────────────────────────────────────────────────────────────────
 # CONSTANTS
 # ─────────────────────────────────────────────────────────────────────────────
-PSI: float = (1 + math.sqrt(5)) / 2          # Golden ratio φ ≈ 1.6180
-PHI_STAR: float = PSI - 1                    # φ* = φ−1 ≈ 0.6180 (unit conjugate)
+PSI: float = (1 + math.sqrt(5)) / 2  # Golden ratio φ ≈ 1.6180
+PHI_STAR: float = PSI - 1  # φ* = φ−1 ≈ 0.6180 (unit conjugate)
 FIB_SEQUENCE: List[int] = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
 FIB_CHECKPOINTS: List[int] = [13, 21, 34, 55]
 
 # Phi-closure tolerance narrows at each checkpoint — strictness increases
 FIB_CHECKPOINT_TOLERANCE: Dict[int, float] = {
-    13: 0.07,   # Early warning — wide band
-    21: 0.05,   # Mid-session — standard
-    34: 0.04,   # Late — tighter
-    55: 0.03,   # Closure horizon — strictest
+    13: 0.07,  # Early warning — wide band
+    21: 0.05,  # Mid-session — standard
+    34: 0.04,  # Late — tighter
+    55: 0.03,  # Closure horizon — strictest
 }
 
 # Ionian harmonic intervals (normalized octave [1,2])
-IONIAN_INTERVALS: List[float] = [
-    1.0, 9/8, 5/4, 4/3, 3/2, 5/3, 15/8, 2.0
-]
+IONIAN_INTERVALS: List[float] = [1.0, 9 / 8, 5 / 4, 4 / 3, 3 / 2, 5 / 3, 15 / 8, 2.0]
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ENUMERATIONS
 # ─────────────────────────────────────────────────────────────────────────────
 class Tier(Enum):
-    AXIOM       = 0  # T0 — governance invariants, NEVER pruned
-    STRUCTURAL  = 1  # T1 — schema refs, state hashes
+    AXIOM = 0  # T0 — governance invariants, NEVER pruned
+    STRUCTURAL = 1  # T1 — schema refs, state hashes
     OPERATIONAL = 2  # T2 — tool outputs, agent turns
     EXPLORATORY = 3  # T3 — CoT scratchpad, noisy reasoning
 
 
 class ConvergenceStatus(Enum):
-    STABLE    = ("stable",    0)
+    STABLE = ("stable", 0)
     CONVERGED = ("converged", 0)
-    WATCH     = ("watch",     1)
-    WARN      = ("warn",      2)
-    ALERT     = ("alert",     3)
+    WATCH = ("watch", 1)
+    WARN = ("warn", 2)
+    ALERT = ("alert", 3)
 
     def __init__(self, code: str, severity: int):
-        self.code     = code
+        self.code = code
         self.severity = severity
 
 
@@ -87,72 +86,72 @@ class ConvergenceStatus(Enum):
 # ─────────────────────────────────────────────────────────────────────────────
 @dataclass
 class ContextToken:
-    token_id:      str
-    content:       str
-    tier:          Tier
-    inserted_at:   float = field(default_factory=time.time)
+    token_id: str
+    content: str
+    tier: Tier
+    inserted_at: float = field(default_factory=time.time)
     has_trust_edge: bool = False
-    _retention:    float = 1.0
+    _retention: float = 1.0
 
 
 @dataclass
 class PruneEvent:
-    token_id:     str
-    tier:          str
+    token_id: str
+    tier: str
     content_hash: str  # SHA-256 of content for audit chain
-    pruned_at:    float
+    pruned_at: float
     retention_at_prune: float
 
 
 @dataclass
 class DivergenceEvent:
-    turn_id:              str
-    turn_number:          int
-    graph_norm_delta:     float
-    max_edge_delta:       float
-    max_edge:             Tuple[str, str]
+    turn_id: str
+    turn_number: int
+    graph_norm_delta: float
+    max_edge_delta: float
+    max_edge: Tuple[str, str]
     consecutive_divergent: int
-    status:               str
-    severity:             int
-    routing_action:       str
+    status: str
+    severity: int
+    routing_action: str
     convergence_snapshot: Dict[str, float]
 
 
 @dataclass
 class PhiCheckpointEvent:
-    fib_index:          int
-    ratio:              float
-    phi_delta:          float
-    tolerance:          float
-    passed:              bool
-    decision:            str
-    consecutive_fails:  int
+    fib_index: int
+    ratio: float
+    phi_delta: float
+    tolerance: float
+    passed: bool
+    decision: str
+    consecutive_fails: int
     escalation_authority: str
 
 
 @dataclass
 class TurnAuditRecord:
-    turn_id:                    str
-    turn_number:                int
-    timestamp:                  float
-    payload_hash:               str
-    dgaf_decision:              str
-    phi_decision:               str
-    phi_checkpoint_index:       Optional[int]
-    phi_checkpoint_passed:      Optional[bool]
-    hpg_applied:                bool
-    hpg_effective_confidence:   float
-    prodigy_advisory:           bool
-    apogee_grade:               str
-    gold_star:                  bool
-    scpe_pruned:                int
-    scpe_compression_ratio:     float
-    pdmal_convergence_status:   str
+    turn_id: str
+    turn_number: int
+    timestamp: float
+    payload_hash: str
+    dgaf_decision: str
+    phi_decision: str
+    phi_checkpoint_index: Optional[int]
+    phi_checkpoint_passed: Optional[bool]
+    hpg_applied: bool
+    hpg_effective_confidence: float
+    prodigy_advisory: bool
+    apogee_grade: str
+    gold_star: bool
+    scpe_pruned: int
+    scpe_compression_ratio: float
+    pdmal_convergence_status: str
     pdmal_convergence_severity: int
-    pdmal_norm_delta:           float
+    pdmal_norm_delta: float
     pdmal_consecutive_divergent: int
-    pdmal_alert_routed:         bool
-    seal_hash:                  str
+    pdmal_alert_routed: bool
+    seal_hash: str
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -167,38 +166,37 @@ class StructuralContextPruningEngine:
     """
 
     TIER_DECAY: Dict[Tier, float] = {
-        Tier.AXIOM:       0.0,
-        Tier.STRUCTURAL:  0.05,
+        Tier.AXIOM: 0.0,
+        Tier.STRUCTURAL: 0.05,
         Tier.OPERATIONAL: 0.15,
-        Tier.EXPLORATORY:  0.45,
+        Tier.EXPLORATORY: 0.45,
     }
     TIER_TIF_BASE: Dict[Tier, float] = {
-        Tier.AXIOM:       1.0,
-        Tier.STRUCTURAL:  0.85,
+        Tier.AXIOM: 1.0,
+        Tier.STRUCTURAL: 0.85,
         Tier.OPERATIONAL: 0.65,
         Tier.EXPLORATORY: 0.30,
     }
     TRUST_EDGE_BOOST: float = 0.15
-    LAST_K_ANCHOR:    int   = 3
+    LAST_K_ANCHOR: int = 3
 
     def __init__(self, threshold: float = 0.15):
-        self.threshold   = threshold
-        self._tokens:    Dict[str, ContextToken] = {}
-        self.prune_log:  List[PruneEvent] = []
+        self.threshold = threshold
+        self._tokens: Dict[str, ContextToken] = {}
+        self.prune_log: List[PruneEvent] = []
 
     def ingest(self, token: ContextToken) -> None:
         self._tokens[token.token_id] = token
 
     def prune(self) -> Dict:
-        now    = time.time()
+        now = time.time()
         retain = []
         pruned = []
 
         ops_sorted = sorted(
-            [t for t in self._tokens.values() if t.tier == Tier.OPERATIONAL],
-            key=lambda t: t.inserted_at
+            [t for t in self._tokens.values() if t.tier == Tier.OPERATIONAL], key=lambda t: t.inserted_at
         )
-        anchor_ids = {t.token_id for t in ops_sorted[-self.LAST_K_ANCHOR:]}
+        anchor_ids = {t.token_id for t in ops_sorted[-self.LAST_K_ANCHOR :]}
 
         for tok in list(self._tokens.values()):
             if tok.tier == Tier.AXIOM:
@@ -208,8 +206,7 @@ class StructuralContextPruningEngine:
                 retain.append(tok)
                 continue
             delta_t = now - tok.inserted_at
-            tif = (self.TIER_TIF_BASE[tok.tier]
-                   + (self.TRUST_EDGE_BOOST if tok.has_trust_edge else 0.0))
+            tif = self.TIER_TIF_BASE[tok.tier] + (self.TRUST_EDGE_BOOST if tok.has_trust_edge else 0.0)
             decay = self.TIER_DECAY[tok.tier]
             r = tif * (PSI ** (-delta_t * decay))
             tok._retention = r
@@ -227,8 +224,8 @@ class StructuralContextPruningEngine:
                 self.prune_log.append(evt)
                 del self._tokens[tok.token_id]
 
-        total   = len(retain) + len(pruned)
-        comp    = len(pruned) / total if total > 0 else 0.0
+        total = len(retain) + len(pruned)
+        comp = len(pruned) / total if total > 0 else 0.0
         tier_counts = {tier.name: 0 for tier in Tier}
         for tok in retain:
             tier_counts[tok.tier.name] += 1
@@ -244,8 +241,7 @@ class StructuralContextPruningEngine:
         )
 
     def snapshot(self) -> Dict:
-        return {tid: {"tier": t.tier.name, "retention": round(t._retention, 4)}
-                for tid, t in self._tokens.items()}
+        return {tid: {"tier": t.tier.name, "retention": round(t._retention, 4)} for tid, t in self._tokens.items()}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -305,19 +301,19 @@ class PDMALConvergenceMonitor:
         self,
         pdmal_graph: PDMALGraph,
         alert_thresh: float = 0.08,
-        conv_thresh:  float = 0.02,
-        n_consec:     int   = 3,
+        conv_thresh: float = 0.02,
+        n_consec: int = 3,
     ):
-        self.graph       = pdmal_graph
+        self.graph = pdmal_graph
         self.alert_thresh = alert_thresh
-        self.conv_thresh  = conv_thresh
-        self.n_consec     = n_consec
+        self.conv_thresh = conv_thresh
+        self.n_consec = n_consec
         self._prev_weights: Dict[Tuple[str, str], float] = {}
-        self._events:       List[DivergenceEvent] = []
+        self._events: List[DivergenceEvent] = []
         self._consec_divergent = 0
-        self._consec_stable    = 0
-        self._status           = ConvergenceStatus.STABLE
-        self._turn             = 0
+        self._consec_stable = 0
+        self._status = ConvergenceStatus.STABLE
+        self._turn = 0
 
     def _current_weights(self) -> Dict[Tuple[str, str], float]:
         w = {}
@@ -332,15 +328,18 @@ class PDMALConvergenceMonitor:
         prev: Dict[Tuple[str, str], float],
     ) -> Tuple[float, float, Tuple[str, str]]:
         all_edges = set(curr.keys()) | set(prev.keys())
-        deltas    = {e: abs(curr.get(e, 0.0) - prev.get(e, 0.0)) for e in all_edges}
-        frob      = math.sqrt(sum(v ** 2 for v in deltas.values()))
-        max_e     = max(deltas, key=lambda edge: deltas[edge]) if deltas else ("?", "?")
+        deltas = {e: abs(curr.get(e, 0.0) - prev.get(e, 0.0)) for e in all_edges}
+        frob = math.sqrt(sum(v**2 for v in deltas.values()))
+        max_e = max(deltas, key=lambda edge: deltas[edge]) if deltas else ("?", "?")
         return frob, deltas.get(max_e, 0.0), max_e
 
     def _severity_from_consec(self, n: int) -> ConvergenceStatus:
-        if n == 0: return ConvergenceStatus.STABLE
-        if n == 1: return ConvergenceStatus.WATCH
-        if n == 2: return ConvergenceStatus.WARN
+        if n == 0:
+            return ConvergenceStatus.STABLE
+        if n == 1:
+            return ConvergenceStatus.WATCH
+        if n == 2:
+            return ConvergenceStatus.WARN
         return ConvergenceStatus.ALERT
 
     def check(self, turn_id: str) -> DivergenceEvent:
@@ -350,13 +349,16 @@ class PDMALConvergenceMonitor:
         if not self._prev_weights:
             self._prev_weights = curr
             evt = DivergenceEvent(
-                turn_id=turn_id, turn_number=self._turn,
-                graph_norm_delta=0.0, max_edge_delta=0.0,
-                max_edge=("—", "—"), consecutive_divergent=0,
-                status=ConvergenceStatus.STABLE.code, severity=0,
+                turn_id=turn_id,
+                turn_number=self._turn,
+                graph_norm_delta=0.0,
+                max_edge_delta=0.0,
+                max_edge=("—", "—"),
+                consecutive_divergent=0,
+                status=ConvergenceStatus.STABLE.code,
+                severity=0,
                 routing_action="log",
-                convergence_snapshot={f"{s}→{d}": round(w, 4)
-                                       for (s, d), w in curr.items()},
+                convergence_snapshot={f"{s}→{d}": round(w, 4) for (s, d), w in curr.items()},
             )
             self._events.append(evt)
             return evt
@@ -365,11 +367,11 @@ class PDMALConvergenceMonitor:
 
         if frob > self.alert_thresh:
             self._consec_divergent += 1
-            self._consec_stable     = 0
+            self._consec_stable = 0
             status = self._severity_from_consec(self._consec_divergent)
         else:
-            self._consec_stable    += 1
-            self._consec_divergent  = 0
+            self._consec_stable += 1
+            self._consec_divergent = 0
             if frob < self.conv_thresh and self._consec_stable >= self.n_consec:
                 status = ConvergenceStatus.CONVERGED
             else:
@@ -378,13 +380,16 @@ class PDMALConvergenceMonitor:
         self._status = status
         routing = "amethyst_alert" if status == ConvergenceStatus.ALERT else "log"
         evt = DivergenceEvent(
-            turn_id=turn_id, turn_number=self._turn,
-            graph_norm_delta=round(frob, 6), max_edge_delta=round(max_delta, 6),
-            max_edge=max_edge, consecutive_divergent=self._consec_divergent,
-            status=status.code, severity=status.severity,
+            turn_id=turn_id,
+            turn_number=self._turn,
+            graph_norm_delta=round(frob, 6),
+            max_edge_delta=round(max_delta, 6),
+            max_edge=max_edge,
+            consecutive_divergent=self._consec_divergent,
+            status=status.code,
+            severity=status.severity,
             routing_action=routing,
-            convergence_snapshot={f"{s}→{d}": round(w, 4)
-                                   for (s, d), w in curr.items()},
+            convergence_snapshot={f"{s}→{d}": round(w, 4) for (s, d), w in curr.items()},
         )
         self._events.append(evt)
         self._prev_weights = curr
@@ -506,28 +511,44 @@ class AgentAmethyst:
         seal_hash = hashlib.sha256(seal_material.encode()).hexdigest()
 
         record = TurnAuditRecord(
-            turn_id=turn_id, turn_number=len(self.audit_log) + 1,
-            timestamp=time.time(), payload_hash=payload_hash,
-            dgaf_decision=dgaf_decision, phi_decision=phi_decision,
+            turn_id=turn_id,
+            turn_number=len(self.audit_log) + 1,
+            timestamp=time.time(),
+            payload_hash=payload_hash,
+            dgaf_decision=dgaf_decision,
+            phi_decision=phi_decision,
             phi_checkpoint_index=phi_evt.fib_index if phi_evt else None,
             phi_checkpoint_passed=phi_evt.passed if phi_evt else None,
-            hpg_applied=hpg_applied, hpg_effective_confidence=hpg_conf,
-            prodigy_advisory=prodigy_advisory, apogee_grade=apogee_grade,
-            gold_star=apogee_grade == "A", scpe_pruned=prune_result["pruned"],
+            hpg_applied=hpg_applied,
+            hpg_effective_confidence=hpg_conf,
+            prodigy_advisory=prodigy_advisory,
+            apogee_grade=apogee_grade,
+            gold_star=apogee_grade == "A",
+            scpe_pruned=prune_result["pruned"],
             scpe_compression_ratio=prune_result["compression_ratio"],
             pdmal_convergence_status=div.status,
             pdmal_convergence_severity=div.severity,
             pdmal_norm_delta=div.graph_norm_delta,
             pdmal_consecutive_divergent=div.consecutive_divergent,
-            pdmal_alert_routed=pdmal_alert, seal_hash=seal_hash,
+            pdmal_alert_routed=pdmal_alert,
+            seal_hash=seal_hash,
         )
         self.audit_log.append(record)
         return record
 
 
 __all__ = [
-    "StructuralContextPruningEngine", "ContextToken", "Tier",
-    "PDMALGraph", "PDMALConvergenceMonitor", "HarmonicParametricGate",
-    "DemiJouleGate", "FibonacciPhiClosureGate", "AgentAmethyst",
-    "TurnAuditRecord", "PruneEvent", "DivergenceEvent", "PhiCheckpointEvent",
+    "StructuralContextPruningEngine",
+    "ContextToken",
+    "Tier",
+    "PDMALGraph",
+    "PDMALConvergenceMonitor",
+    "HarmonicParametricGate",
+    "DemiJouleGate",
+    "FibonacciPhiClosureGate",
+    "AgentAmethyst",
+    "TurnAuditRecord",
+    "PruneEvent",
+    "DivergenceEvent",
+    "PhiCheckpointEvent",
 ]

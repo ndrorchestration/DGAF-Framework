@@ -3,6 +3,7 @@
 The conductor computes φ, dispatches regimes, and evaluates the Tribunal
 recovery signal. Recovery is an empirical control metric, not a stability proof.
 """
+
 from __future__ import annotations
 
 import logging
@@ -52,15 +53,20 @@ _REGIME_ARCHETYPE = {
     Regime.TENSION: Archetype.TRIBUNAL,
 }
 _REGIME_THRESHOLDS = [
-    (1.80, Regime.TENSION), (1.70, Regime.INTROSPECTION),
-    (1.60, Regime.INTEGRATION), (1.45, Regime.EXPANSION),
-    (1.30, Regime.VIGILANCE), (1.15, Regime.FLOW), (1.00, Regime.GROUNDED),
+    (1.80, Regime.TENSION),
+    (1.70, Regime.INTROSPECTION),
+    (1.60, Regime.INTEGRATION),
+    (1.45, Regime.EXPANSION),
+    (1.30, Regime.VIGILANCE),
+    (1.15, Regime.FLOW),
+    (1.00, Regime.GROUNDED),
 ]
 
 
 @dataclass
 class StateVector:
     """x_t = [D_e, D_explore, D_correct, N, C, R, M, K]."""
+
     D_e: float = 0.0
     D_explore: float = 0.0
     D_correct: float = 0.0
@@ -78,6 +84,7 @@ class StateVector:
 @dataclass
 class PhaseIntent:
     """Governance broadcast packet emitted once per conductor turn."""
+
     mode: Archetype
     weights: dict[str, float]
     constraints: list[str]
@@ -150,8 +157,7 @@ def compute_3d_phase(sv: StateVector) -> tuple[float, float, float]:
 class AHGConductor:
     """Continuous φ estimation, regime dispatch, and Tribunal recovery."""
 
-    def __init__(self, herald_sink=None, hysteresis_turns: int = HYSTERESIS_TURNS,
-                 phi_history_max: int = 10) -> None:
+    def __init__(self, herald_sink=None, hysteresis_turns: int = HYSTERESIS_TURNS, phi_history_max: int = 10) -> None:
         self.herald_sink = herald_sink
         self.hysteresis_turns = hysteresis_turns
         self.phi_history_max = phi_history_max
@@ -181,9 +187,8 @@ class AHGConductor:
         recovery_exit = False
         if tribunal_active and len(self._state.state_history) >= 2:
             from .ahg_recovery import compute_recovery_score, recovery_exit_met
-            recovery_score = compute_recovery_score(
-                self._state.state_history[-2], sv, self._state.phi_history
-            )
+
+            recovery_score = compute_recovery_score(self._state.state_history[-2], sv, self._state.phi_history)
             if recovery_score > 0.05 and phi < 1.70:
                 self._state.recovery_turns += 1
             else:
@@ -204,12 +209,20 @@ class AHGConductor:
         intent = PhaseIntent(
             mode=archetype,
             weights={"w1_D_e": W1_D_E, "w2_N": W2_N, "w3_C": W3_C, "w4_R": W4_R},
-            constraints=constraints, ttl=5 if tribunal_active else 3,
-            phi=phi, regime=regime, turn_id=turn_id,
-            v_phi=v_phi, a_phi=a_phi, tribunal_active=tribunal_active,
-            message=message, phase_exploration=p_explore,
-            phase_dissent=p_dissent, phase_uncertainty=p_uncertainty,
-            recovery_score=recovery_score, recovery_exit=recovery_exit,
+            constraints=constraints,
+            ttl=5 if tribunal_active else 3,
+            phi=phi,
+            regime=regime,
+            turn_id=turn_id,
+            v_phi=v_phi,
+            a_phi=a_phi,
+            tribunal_active=tribunal_active,
+            message=message,
+            phase_exploration=p_explore,
+            phase_dissent=p_dissent,
+            phase_uncertainty=p_uncertainty,
+            recovery_score=recovery_score,
+            recovery_exit=recovery_exit,
         )
         if tribunal_active:
             self._tribunal_check(intent, sv)
@@ -260,13 +273,16 @@ class AHGConductor:
         if intent.recovery_exit:
             logger.info(
                 "AHG Tribunal recovery exit T=%d phi=%.4f R_c=%.4f after %d qualifying turns",
-                intent.turn_id, intent.phi, intent.recovery_score or 0.0,
+                intent.turn_id,
+                intent.phi,
+                intent.recovery_score or 0.0,
                 self._state.recovery_turns,
             )
             return
         logger.warning(
             "AHG Tribunal active T=%d phi=%.4f R_c=%s P-29 risk_block + P-38 OPEN",
-            intent.turn_id, intent.phi,
+            intent.turn_id,
+            intent.phi,
             "n/a" if intent.recovery_score is None else f"{intent.recovery_score:.4f}",
         )
 
@@ -278,6 +294,9 @@ class AHGConductor:
                 logger.error("AHGConductor herald emit failed: %s", exc)
         logger.debug(
             "AHGConductor herald T=%d phi=%.4f regime=%s archetype=%s tribunal=%s",
-            intent.turn_id, intent.phi, intent.regime.value, intent.mode.value,
+            intent.turn_id,
+            intent.phi,
+            intent.regime.value,
+            intent.mode.value,
             intent.tribunal_active,
         )

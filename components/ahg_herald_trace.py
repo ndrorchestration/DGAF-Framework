@@ -51,16 +51,16 @@ Usage (explicit HTTP config):
 
 from __future__ import annotations
 
+import datetime
 import json
 import logging
 import os
-import time
 import threading
-import datetime
-import urllib.request
+import time
 import urllib.error
+import urllib.request
 from collections import deque
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Callable, Deque, List, Optional
 
@@ -69,6 +69,7 @@ logger = logging.getLogger("ahg.herald_trace")
 # Guard: PhaseIntent import is optional (P-42 v1.3+ required)
 try:
     from components.ahg_conductor import PhaseIntent
+
     _CONDUCTOR_AVAILABLE = True
 except ImportError:
     _CONDUCTOR_AVAILABLE = False
@@ -79,18 +80,20 @@ except ImportError:
 # Herald Sink Configuration
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class HeraldSinkConfig:
     """Configuration for P-01 Herald HTTP push sink.
     Can be constructed explicitly or loaded from environment variables.
     """
-    endpoint: Optional[str] = None        # AHG_HERALD_ENDPOINT
-    api_key: Optional[str] = None         # AHG_HERALD_API_KEY (Bearer token)
-    timeout: float = 2.0                  # AHG_HERALD_TIMEOUT
-    max_retries: int = 3                  # AHG_HERALD_MAX_RETRIES
-    batch_size: int = 10                  # AHG_HERALD_BATCH_SIZE
-    retry_backoff_base: float = 0.25      # seconds — exponential backoff base
-    circuit_breaker_threshold: int = 5    # consecutive failures before open
+
+    endpoint: Optional[str] = None  # AHG_HERALD_ENDPOINT
+    api_key: Optional[str] = None  # AHG_HERALD_API_KEY (Bearer token)
+    timeout: float = 2.0  # AHG_HERALD_TIMEOUT
+    max_retries: int = 3  # AHG_HERALD_MAX_RETRIES
+    batch_size: int = 10  # AHG_HERALD_BATCH_SIZE
+    retry_backoff_base: float = 0.25  # seconds — exponential backoff base
+    circuit_breaker_threshold: int = 5  # consecutive failures before open
     circuit_breaker_reset_sec: float = 60.0
 
     @classmethod
@@ -113,6 +116,7 @@ class HeraldSinkConfig:
 # HTTP Push Sink (v1.5)
 # ---------------------------------------------------------------------------
 
+
 class HeraldHTTPSink:
     """Non-blocking HTTP push sink to P-01 Herald Fan-Out endpoint.
 
@@ -133,9 +137,7 @@ class HeraldHTTPSink:
         self._total_failed = 0
         self._lock = threading.Lock()
         self._stop_event = threading.Event()
-        self._thread = threading.Thread(
-            target=self._worker, daemon=True, name="ahg-herald-http-sink"
-        )
+        self._thread = threading.Thread(target=self._worker, daemon=True, name="ahg-herald-http-sink")
         self._thread.start()
         logger.info(
             f"[HeraldHTTPSink] Started — endpoint={config.endpoint} "
@@ -184,8 +186,7 @@ class HeraldHTTPSink:
         }
         if self.config.api_key:
             headers["Authorization"] = (
-                self.config.api_key if self.config.api_key.startswith("Bearer ")
-                else f"Bearer {self.config.api_key}"
+                self.config.api_key if self.config.api_key.startswith("Bearer ") else f"Bearer {self.config.api_key}"
             )
 
         for attempt in range(self.config.max_retries):
@@ -201,18 +202,12 @@ class HeraldHTTPSink:
                         with self._lock:
                             self._consecutive_failures = 0
                             self._total_pushed += len(batch)
-                        logger.debug(
-                            f"[HeraldHTTPSink] Pushed {len(batch)} records "
-                            f"→ HTTP {resp.status}"
-                        )
+                        logger.debug(f"[HeraldHTTPSink] Pushed {len(batch)} records " f"→ HTTP {resp.status}")
                         return True
                     else:
-                        logger.warning(
-                            f"[HeraldHTTPSink] Unexpected status {resp.status} "
-                            f"on attempt {attempt + 1}"
-                        )
+                        logger.warning(f"[HeraldHTTPSink] Unexpected status {resp.status} " f"on attempt {attempt + 1}")
             except (urllib.error.URLError, OSError, TimeoutError) as exc:
-                backoff = self.config.retry_backoff_base * (2 ** attempt)
+                backoff = self.config.retry_backoff_base * (2**attempt)
                 logger.warning(
                     f"[HeraldHTTPSink] Push failed (attempt {attempt + 1}/{self.config.max_retries}): "
                     f"{exc} — backoff {backoff:.2f}s"
@@ -251,7 +246,7 @@ class HeraldHTTPSink:
         if remaining:
             logger.info(f"[HeraldHTTPSink] Draining {len(remaining)} remaining records on shutdown")
             for i in range(0, len(remaining), self.config.batch_size):
-                self._push_batch(remaining[i:i + self.config.batch_size])
+                self._push_batch(remaining[i : i + self.config.batch_size])
 
     @property
     def stats(self) -> dict:
@@ -268,27 +263,29 @@ class HeraldHTTPSink:
 # Trace Record
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class AHGTraceRecord:
     """Structured trace record for one PhaseIntent event.
     COLLEEN-archivable. Routes to P-01 Herald Fan-Out via HeraldHTTPSink.
     """
-    record_id:         str
-    session_id:        str
-    turn_id:           int
-    timestamp_utc:     str
-    archetype:         str
-    regime:            str
-    phi:               float
-    v_phi:             float
-    a_phi:             float
-    tribunal_active:   bool
-    ttl:               int
-    message:           str
+
+    record_id: str
+    session_id: str
+    turn_id: int
+    timestamp_utc: str
+    archetype: str
+    regime: str
+    phi: float
+    v_phi: float
+    a_phi: float
+    tribunal_active: bool
+    ttl: int
+    message: str
     phase_exploration: Optional[float] = None
-    phase_dissent:     Optional[float] = None
+    phase_dissent: Optional[float] = None
     phase_uncertainty: Optional[float] = None
-    ndr_stasis_delta:  Optional[float] = None
+    ndr_stasis_delta: Optional[float] = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -300,6 +297,7 @@ class AHGTraceRecord:
 # ---------------------------------------------------------------------------
 # Herald Trace (main entry point)
 # ---------------------------------------------------------------------------
+
 
 class AHGHeraldTrace:
     """P-01 Herald Fan-Out Trace Sink for AHG PhaseIntent events.
@@ -345,10 +343,7 @@ class AHGHeraldTrace:
         # File sink
         if self.output_dir:
             self.output_dir.mkdir(parents=True, exist_ok=True)
-            fname = (
-                f"ahg_trace_{session_id}_"
-                f"{datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.jsonl"
-            )
+            fname = f"ahg_trace_{session_id}_" f"{datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.jsonl"
             self._jsonl_path = self.output_dir / fname
             logger.info(f"[AHGHeraldTrace] JSONL trace file: {self._jsonl_path}")
 
@@ -356,14 +351,9 @@ class AHGHeraldTrace:
         resolved_config = sink_config or HeraldSinkConfig.from_env()
         if resolved_config.enabled:
             self._http_sink = HeraldHTTPSink(resolved_config)
-            logger.info(
-                f"[AHGHeraldTrace] P-01 HTTP push ENABLED → {resolved_config.endpoint}"
-            )
+            logger.info(f"[AHGHeraldTrace] P-01 HTTP push ENABLED → {resolved_config.endpoint}")
         else:
-            logger.info(
-                "[AHGHeraldTrace] P-01 HTTP push DISABLED "
-                "(set AHG_HERALD_ENDPOINT to enable)"
-            )
+            logger.info("[AHGHeraldTrace] P-01 HTTP push DISABLED " "(set AHG_HERALD_ENDPOINT to enable)")
 
         logger.info(
             f"[AHGHeraldTrace] v1.5 ready — session={session_id} "
@@ -405,7 +395,7 @@ class AHGHeraldTrace:
         # 1. In-memory buffer (rolling)
         self._records.append(record)
         if len(self._records) > self.max_memory_records:
-            self._records = self._records[-self.max_memory_records:]
+            self._records = self._records[-self.max_memory_records :]
 
         # 2. JSONL file sink
         if self._jsonl_path:
@@ -468,8 +458,7 @@ class AHGHeraldTrace:
             "tribunal_events": len(self.tribunal_events()),
             "ndr_stasis_events": len(self.ndr_stasis_events()),
             "archetype_distribution": {
-                a: sum(1 for r in self._records if r.archetype == a)
-                for a in {r.archetype for r in self._records}
+                a: sum(1 for r in self._records if r.archetype == a) for a in {r.archetype for r in self._records}
             },
             "jsonl_path": str(self._jsonl_path) if self._jsonl_path else None,
             "http_sink": http_stats,

@@ -1,7 +1,6 @@
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
-
 MODULE_PATH = Path(__file__).resolve().parents[1] / "tools" / "pdmal" / "lattice_harness.py"
 SPEC = spec_from_file_location("pdmal_lattice_harness", MODULE_PATH)
 assert SPEC is not None and SPEC.loader is not None
@@ -36,6 +35,4 @@ def test_nonregular_graph_retains_explicit_threshold_semantics():
 
 
 def test_source_artifact_identity_is_preserved_as_provenance_only():
-    assert HARNESS.SOURCE_ARTIFACT_SHA256 == (
-        "f8382b68bbf155fe574bd76118db6fc2142c558c21d0f109e3b92103a1611216"
-    )
+    assert HARNESS.SOURCE_ARTIFACT_SHA256 == ("f8382b68bbf155fe574bd76118db6fc2142c558c21d0f109e3b92103a1611216")

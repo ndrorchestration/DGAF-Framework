@@ -46,11 +46,11 @@ Critical pre-conditions (must check before running):
 
 from __future__ import annotations
 
+import datetime
 import json
 import time
 import uuid
-import datetime
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
@@ -115,7 +115,6 @@ DGAF_EVAL_TASKS: Dict[str, Dict[str, Any]] = {
         "sentinel_required": True,
         "few_shot_required": True,
     },
-
     # -------------------------------------------------------------------
     # AHG Tasks (P-42 v1.2) — added Post-S077 — Issue #32
     # Falsifiable targets from AHG_ARCHITECTURE.md §6
@@ -185,6 +184,7 @@ AUDIT_REQUIRED_FIELDS = (
 # Result & Episode Data Models
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class TaskResult:
     task_name: str
@@ -214,6 +214,7 @@ class TaskResult:
 @dataclass
 class EvalEpisode:
     """COLLEEN episode record — one per full suite run."""
+
     episode_id: str
     session_id: str
     run_id: str
@@ -237,6 +238,7 @@ class EvalEpisode:
 # ---------------------------------------------------------------------------
 # Precondition Guards
 # ---------------------------------------------------------------------------
+
 
 class PreconditionError(RuntimeError):
     """Raised when a task-level precondition is not met."""
@@ -271,6 +273,7 @@ def check_preconditions(task_name: str, precision_mode: str) -> List[str]:
 # Core Eval Runners (Tasks 1-5)
 # ---------------------------------------------------------------------------
 
+
 def run_contraction_proof_fidelity(
     precision_mode: str = "BF16",
     n_samples: int = 100,
@@ -291,11 +294,18 @@ def run_contraction_proof_fidelity(
             scores.append(1.0 if spectral_radius < 1.0 else 0.0)
     score = float(np.mean(scores))
     return TaskResult(
-        task_name="contraction_proof_fidelity", priority=1, score=score,
-        target=spec["target"], passed=score >= spec["target"], sample_count=n_samples,
-        precision_mode=precision_mode, published_baseline=spec["published_baseline"],
-        run_id=run_id, timestamp_utc=datetime.datetime.utcnow().isoformat(),
-        raw_scores=scores, notes="STUB run",
+        task_name="contraction_proof_fidelity",
+        priority=1,
+        score=score,
+        target=spec["target"],
+        passed=score >= spec["target"],
+        sample_count=n_samples,
+        precision_mode=precision_mode,
+        published_baseline=spec["published_baseline"],
+        run_id=run_id,
+        timestamp_utc=datetime.datetime.utcnow().isoformat(),
+        raw_scores=scores,
+        notes="STUB run",
     )
 
 
@@ -309,11 +319,18 @@ def run_governance_schema_conformance(
     scores = [1.0 if np.random.random() > 0.005 else 0.0 for _ in range(n_variants)]
     score = float(np.mean(scores))
     return TaskResult(
-        task_name="governance_schema_conformance", priority=2, score=score,
-        target=spec["target"], passed=score >= spec["target"], sample_count=n_variants,
-        precision_mode=precision_mode, published_baseline=spec["published_baseline"],
-        run_id=run_id, timestamp_utc=datetime.datetime.utcnow().isoformat(),
-        raw_scores=scores, notes="STUB run",
+        task_name="governance_schema_conformance",
+        priority=2,
+        score=score,
+        target=spec["target"],
+        passed=score >= spec["target"],
+        sample_count=n_variants,
+        precision_mode=precision_mode,
+        published_baseline=spec["published_baseline"],
+        run_id=run_id,
+        timestamp_utc=datetime.datetime.utcnow().isoformat(),
+        raw_scores=scores,
+        notes="STUB run",
     )
 
 
@@ -327,11 +344,18 @@ def run_role_boundary_coherence(
     scores = [1.0 if np.random.random() > 0.045 else 0.0 for _ in range(n_traces)]
     score = float(np.mean(scores))
     return TaskResult(
-        task_name="role_boundary_coherence", priority=3, score=score,
-        target=spec["target"], passed=score >= spec["target"], sample_count=n_traces,
-        precision_mode=precision_mode, published_baseline=spec["published_baseline"],
-        run_id=run_id, timestamp_utc=datetime.datetime.utcnow().isoformat(),
-        raw_scores=scores, notes="STUB run",
+        task_name="role_boundary_coherence",
+        priority=3,
+        score=score,
+        target=spec["target"],
+        passed=score >= spec["target"],
+        sample_count=n_traces,
+        precision_mode=precision_mode,
+        published_baseline=spec["published_baseline"],
+        run_id=run_id,
+        timestamp_utc=datetime.datetime.utcnow().isoformat(),
+        raw_scores=scores,
+        notes="STUB run",
     )
 
 
@@ -459,9 +483,7 @@ def run_audit_hallucination_rate(
             if field_name not in expected or expected[field_name] is None
         ]
         if missing:
-            failures.append(
-                f"ground_truth_fixtures[{index}] missing required non-null fields: {missing}."
-            )
+            failures.append(f"ground_truth_fixtures[{index}] missing required non-null fields: {missing}.")
 
     for index, observed in enumerate(generated_audit_events[:n_samples]):
         if not isinstance(observed, dict):
@@ -515,19 +537,24 @@ def run_taubench_banking_mitigation(
     failures = []
     if not few_shot_confirmed:
         failures.append(
-            "BLOCKED: few_shot_confirmed=False. Sentinel must validate primer before run. "
-            "Raw baseline is 22.6%."
+            "BLOCKED: few_shot_confirmed=False. Sentinel must validate primer before run. " "Raw baseline is 22.6%."
         )
     base = 0.82 if few_shot_confirmed else 0.226
     scores = [1.0 if np.random.random() < base else 0.0 for _ in range(n_cases)]
     score = float(np.mean(scores))
     return TaskResult(
-        task_name="taubench_banking_mitigation", priority=5, score=score,
-        target=spec["target"], passed=score >= spec["target"] and few_shot_confirmed,
-        sample_count=n_cases, precision_mode=precision_mode,
+        task_name="taubench_banking_mitigation",
+        priority=5,
+        score=score,
+        target=spec["target"],
+        passed=score >= spec["target"] and few_shot_confirmed,
+        sample_count=n_cases,
+        precision_mode=precision_mode,
         published_baseline=spec["published_baseline"],
-        run_id=run_id, timestamp_utc=datetime.datetime.utcnow().isoformat(),
-        raw_scores=scores, preconditions_met=few_shot_confirmed,
+        run_id=run_id,
+        timestamp_utc=datetime.datetime.utcnow().isoformat(),
+        raw_scores=scores,
+        preconditions_met=few_shot_confirmed,
         precondition_failures=failures,
         notes="STUB run" + (" — few-shot confirmed." if few_shot_confirmed else " — WARNING: no priming."),
     )
@@ -536,6 +563,7 @@ def run_taubench_banking_mitigation(
 # ---------------------------------------------------------------------------
 # AHG Eval Runners (Tasks 6-8) — P-42 v1.2 — Issue #32 Post-S077
 # ---------------------------------------------------------------------------
+
 
 def _make_synthetic_heartbeats(
     n_agents: int,
@@ -621,8 +649,7 @@ def run_ahg_hallucination_reduction(
     score = float(np.clip(score, 0.0, 1.0))
 
     raw_scores = [
-        float(1.0 - (ahg_D_e_per_episode[i] / baseline_D_e_per_episode[i]))
-        if baseline_D_e_per_episode[i] > 0 else 0.0
+        float(1.0 - (ahg_D_e_per_episode[i] / baseline_D_e_per_episode[i])) if baseline_D_e_per_episode[i] > 0 else 0.0
         for i in range(n_episodes)
     ]
 
@@ -699,8 +726,7 @@ def run_ahg_recovery_turns(
     score = float(np.clip(score, 0.0, 1.0))
 
     raw_scores = [
-        float(1.0 - (ahg_turns_list[i] / baseline_turns_list[i]))
-        if baseline_turns_list[i] > 0 else 0.0
+        float(1.0 - (ahg_turns_list[i] / baseline_turns_list[i])) if baseline_turns_list[i] > 0 else 0.0
         for i in range(n_tension_events)
     ]
 
@@ -793,14 +819,14 @@ def run_ahg_entropy_recovery(
 # ---------------------------------------------------------------------------
 
 TASK_RUNNERS: Dict[str, Callable] = {
-    "contraction_proof_fidelity":    run_contraction_proof_fidelity,
+    "contraction_proof_fidelity": run_contraction_proof_fidelity,
     "governance_schema_conformance": run_governance_schema_conformance,
-    "role_boundary_coherence":       run_role_boundary_coherence,
-    "audit_hallucination_rate":      run_audit_hallucination_rate,
-    "taubench_banking_mitigation":   run_taubench_banking_mitigation,
-    "ahg_hallucination_reduction":   run_ahg_hallucination_reduction,
-    "ahg_recovery_turns":            run_ahg_recovery_turns,
-    "ahg_entropy_recovery":          run_ahg_entropy_recovery,
+    "role_boundary_coherence": run_role_boundary_coherence,
+    "audit_hallucination_rate": run_audit_hallucination_rate,
+    "taubench_banking_mitigation": run_taubench_banking_mitigation,
+    "ahg_hallucination_reduction": run_ahg_hallucination_reduction,
+    "ahg_recovery_turns": run_ahg_recovery_turns,
+    "ahg_entropy_recovery": run_ahg_entropy_recovery,
 }
 
 
@@ -1081,9 +1107,9 @@ try:
 
         def test_score_within_claim_range(self):
             result = run_ahg_hallucination_reduction(n_episodes=200)
-            assert 0.15 <= result.score <= 0.55, (
-                f"Score {result.score:.3f} outside expected stub range for 20-40% claim"
-            )
+            assert (
+                0.15 <= result.score <= 0.55
+            ), f"Score {result.score:.3f} outside expected stub range for 20-40% claim"
 
         def test_task_spec_fields(self):
             spec = DGAF_EVAL_TASKS["ahg_hallucination_reduction"]
@@ -1138,9 +1164,9 @@ try:
 
         def test_all_deltas_positive(self):
             result = run_ahg_entropy_recovery(n_tribunal_events=20)
-            assert all(d >= 0 for d in result.raw_scores), (
-                "All Tribunal cycles should produce non-negative D_e reduction"
-            )
+            assert all(
+                d >= 0 for d in result.raw_scores
+            ), "All Tribunal cycles should produce non-negative D_e reduction"
 
         def test_task_spec_fields(self):
             spec = DGAF_EVAL_TASKS["ahg_entropy_recovery"]
@@ -1159,14 +1185,14 @@ try:
                 session_id="TEST",
                 few_shot_confirmed=True,
                 **{
-                    "contraction_proof_fidelity":    {"n_samples": 20},
+                    "contraction_proof_fidelity": {"n_samples": 20},
                     "governance_schema_conformance": {"n_variants": 50},
-                    "role_boundary_coherence":       {"n_traces": 20},
-                    "audit_hallucination_rate":      {"n_samples": 20},
-                    "taubench_banking_mitigation":   {"n_cases": 20},
-                    "ahg_hallucination_reduction":   {"n_episodes": 20},
-                    "ahg_recovery_turns":            {"n_tension_events": 10},
-                    "ahg_entropy_recovery":          {"n_tribunal_events": 10},
+                    "role_boundary_coherence": {"n_traces": 20},
+                    "audit_hallucination_rate": {"n_samples": 20},
+                    "taubench_banking_mitigation": {"n_cases": 20},
+                    "ahg_hallucination_reduction": {"n_episodes": 20},
+                    "ahg_recovery_turns": {"n_tension_events": 10},
+                    "ahg_entropy_recovery": {"n_tribunal_events": 10},
                 },
             )
             assert len(episode.results) == 8
@@ -1182,14 +1208,14 @@ try:
                 session_id="TEST",
                 few_shot_confirmed=True,
                 **{
-                    "contraction_proof_fidelity":    {"n_samples": 5},
+                    "contraction_proof_fidelity": {"n_samples": 5},
                     "governance_schema_conformance": {"n_variants": 5},
-                    "role_boundary_coherence":       {"n_traces": 5},
-                    "audit_hallucination_rate":      {"n_samples": 5},
-                    "taubench_banking_mitigation":   {"n_cases": 5},
-                    "ahg_hallucination_reduction":   {"n_episodes": 5},
-                    "ahg_recovery_turns":            {"n_tension_events": 5},
-                    "ahg_entropy_recovery":          {"n_tribunal_events": 5},
+                    "role_boundary_coherence": {"n_traces": 5},
+                    "audit_hallucination_rate": {"n_samples": 5},
+                    "taubench_banking_mitigation": {"n_cases": 5},
+                    "ahg_hallucination_reduction": {"n_episodes": 5},
+                    "ahg_recovery_turns": {"n_tension_events": 5},
+                    "ahg_entropy_recovery": {"n_tribunal_events": 5},
                 },
             )
             parsed = json.loads(episode.to_json())
@@ -1210,8 +1236,8 @@ try:
                 tasks=["ahg_hallucination_reduction", "ahg_recovery_turns", "ahg_entropy_recovery"],
                 **{
                     "ahg_hallucination_reduction": {"n_episodes": 20},
-                    "ahg_recovery_turns":          {"n_tension_events": 10},
-                    "ahg_entropy_recovery":        {"n_tribunal_events": 10},
+                    "ahg_recovery_turns": {"n_tension_events": 10},
+                    "ahg_entropy_recovery": {"n_tribunal_events": 10},
                 },
             )
             assert len(episode.results) == 3
@@ -1228,9 +1254,7 @@ except ImportError:
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="DGAF Eval Suite — Nemotron 3 Ultra + AHG Parametric Benchmark"
-    )
+    parser = argparse.ArgumentParser(description="DGAF Eval Suite — Nemotron 3 Ultra + AHG Parametric Benchmark")
     parser.add_argument("--precision", choices=["BF16", "NVFP4"], default="BF16")
     parser.add_argument("--session", default="S077")
     parser.add_argument("--tasks", nargs="+", choices=list(DGAF_EVAL_TASKS.keys()), default=None)
@@ -1243,14 +1267,14 @@ if __name__ == "__main__":
     task_kwargs: Dict[str, Any] = {}
     if args.quick:
         task_kwargs = {
-            "contraction_proof_fidelity":    {"n_samples": 20},
+            "contraction_proof_fidelity": {"n_samples": 20},
             "governance_schema_conformance": {"n_variants": 100},
-            "role_boundary_coherence":       {"n_traces": 20},
-            "audit_hallucination_rate":      {"n_samples": 20},
-            "taubench_banking_mitigation":   {"n_cases": 20},
-            "ahg_hallucination_reduction":   {"n_episodes": 20},
-            "ahg_recovery_turns":            {"n_tension_events": 10},
-            "ahg_entropy_recovery":          {"n_tribunal_events": 10},
+            "role_boundary_coherence": {"n_traces": 20},
+            "audit_hallucination_rate": {"n_samples": 20},
+            "taubench_banking_mitigation": {"n_cases": 20},
+            "ahg_hallucination_reduction": {"n_episodes": 20},
+            "ahg_recovery_turns": {"n_tension_events": 10},
+            "ahg_entropy_recovery": {"n_tribunal_events": 10},
         }
 
     selected_tasks = args.tasks

@@ -5,7 +5,11 @@ All assertions validated in-session before commit.
 
 Run: pytest tests/test_ensemble_v16_quick.py -v
 """
-import hashlib, math, time
+
+import hashlib
+import math
+import time
+
 import pytest
 
 # ── Constants (duplicated here to avoid import path assumptions) ───────────────
@@ -13,17 +17,26 @@ PSI: float = (1 + math.sqrt(5)) / 2
 PHI_STAR: float = PSI - 1
 FIB_CHECKPOINTS = [13, 21, 34, 55]
 FIB_CHECKPOINT_TOLERANCE = {13: 0.07, 21: 0.05, 34: 0.04, 55: 0.03}
-IONIAN_INTERVALS = [1.0, 9/8, 5/4, 4/3, 3/2, 5/3, 15/8, 2.0]
+IONIAN_INTERVALS = [1.0, 9 / 8, 5 / 4, 4 / 3, 3 / 2, 5 / 3, 15 / 8, 2.0]
+
+import os
 
 # ── Import ensemble components ─────────────────────────────────────────────────
-import sys, os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "components"))
 try:
     from ensemble_v16 import (
-        StructuralContextPruningEngine, ContextToken, Tier,
-        FibonacciPhiClosureGate, PDMALConvergenceMonitor,
-        HarmonicParametricGate, DemiJouleGate, ApogeeReviewer,
-        AgentAmethyst, _build_default_pdmal
+        AgentAmethyst,
+        ApogeeReviewer,
+        ContextToken,
+        DemiJouleGate,
+        FibonacciPhiClosureGate,
+        HarmonicParametricGate,
+        PDMALConvergenceMonitor,
+        StructuralContextPruningEngine,
+        Tier,
+        _build_default_pdmal,
     )
 except ImportError:
     pytest.skip("ensemble_v16 not importable — run from repo root", allow_module_level=True)
@@ -54,9 +67,12 @@ def test_scpe_knee_compression():
     """At the validated knee (threshold=0.15), T0 survives, T3 collapses."""
     eng = StructuralContextPruningEngine(threshold=0.15)
     old = time.time() - 200
-    for i in range(5):  eng.ingest(ContextToken(f"ax{i}", f"axiom {i}", Tier.AXIOM, inserted_at=old))
-    for i in range(10): eng.ingest(ContextToken(f"op{i}", f"op {i}", Tier.OPERATIONAL, inserted_at=old))
-    for i in range(20): eng.ingest(ContextToken(f"ex{i}", f"explore {i}", Tier.EXPLORATORY, inserted_at=old))
+    for i in range(5):
+        eng.ingest(ContextToken(f"ax{i}", f"axiom {i}", Tier.AXIOM, inserted_at=old))
+    for i in range(10):
+        eng.ingest(ContextToken(f"op{i}", f"op {i}", Tier.OPERATIONAL, inserted_at=old))
+    for i in range(20):
+        eng.ingest(ContextToken(f"ex{i}", f"explore {i}", Tier.EXPLORATORY, inserted_at=old))
     s = eng.prune()
     assert s["axiom_count"] == 5, f"T0 count wrong: {s['axiom_count']}"
     assert s["exploratory_count"] < 5, f"T3 not pruned enough: {s['exploratory_count']}"
@@ -72,9 +88,7 @@ def test_scpe_last_k_anchor():
     for i in range(8):
         eng.ingest(ContextToken(f"op{i}", f"operational content {i}", Tier.OPERATIONAL, inserted_at=old))
     s = eng.prune()
-    assert s["operational_count"] == 3, (
-        f"Last-K anchor must preserve exactly 3 T2 tokens, got {s['operational_count']}"
-    )
+    assert s["operational_count"] == 3, f"Last-K anchor must preserve exactly 3 T2 tokens, got {s['operational_count']}"
 
 
 # ── [5] HPG: Ionian snap ──────────────────────────────────────────────────────
@@ -93,7 +107,8 @@ def test_phi_fib13_clean_warns():
     *above* the φ* band (0.618±0.07). This is architecturally correct:
     φ* is 0.618, not 1.0. Perfect sessions still trigger the gate."""
     phi = FibonacciPhiClosureGate()
-    for _ in range(13): phi.record_turn(True)
+    for _ in range(13):
+        phi.record_turn(True)
     dec, evt = phi.check()
     assert evt is not None and evt.fib_index == 13
     # R=1.0, Δ=|1.0-0.618|=0.382 > tol=0.07 → WARN
@@ -106,7 +121,8 @@ def test_phi_fib13_drift_hpg_bypass():
     """Dirty session at Fib[13]: R=12/13=0.923, Δ=0.305 > tol=0.07 → WARN.
     Warn severity > 0 means HPG must be bypassed."""
     phi = FibonacciPhiClosureGate()
-    for _ in range(12): phi.record_turn(True)
+    for _ in range(12):
+        phi.record_turn(True)
     phi.record_turn(False)  # 1 DGAF failure
     dec, evt = phi.check()
     assert evt is not None and not evt.passed
@@ -120,21 +136,24 @@ def test_phi_escalation_ladder():
     phi = FibonacciPhiClosureGate()
 
     # --- Fib[13]: mostly dirty → R=1/13=0.077, Δ=0.541 > 0.07 → warn (fail 1)
-    for i in range(13): phi.record_turn(i == 0)
+    for i in range(13):
+        phi.record_turn(i == 0)
     dec13, evt13 = phi.check()
     assert evt13 is not None and not evt13.passed
     assert dec13.code == "warn", f"Expected warn at Fib[13] fail 1, got {dec13.code}"
     assert evt13.consecutive_fails == 1
 
     # --- Fib[21]: 8 more dirty turns → R=1/21=0.048, still dirty → escalate (fail 2)
-    for _ in range(8): phi.record_turn(False)
+    for _ in range(8):
+        phi.record_turn(False)
     dec21, evt21 = phi.check()
     assert evt21 is not None and not evt21.passed
     assert dec21.code == "escalate", f"Expected escalate at Fib[21] fail 2, got {dec21.code}"
     assert evt21.consecutive_fails == 2
 
     # --- Fib[34]: 13 more dirty → R=1/34≈0.029 → kill_rec (fail 3)
-    for _ in range(13): phi.record_turn(False)
+    for _ in range(13):
+        phi.record_turn(False)
     dec34, evt34 = phi.check()
     assert evt34 is not None and not evt34.passed
     assert dec34.code == "kill_rec", f"Expected kill_rec at Fib[34] fail 3, got {dec34.code}"
@@ -145,9 +164,11 @@ def test_phi_escalation_ladder():
 def test_pdmal_convergence_stable():
     """Unmodified graph over 5 turns must converge to stable/converged."""
     from enum import Enum
+
     g = _build_default_pdmal()
     mon = PDMALConvergenceMonitor(g)
-    for i in range(5): mon.check(f"T{i}")
+    for i in range(5):
+        mon.check(f"T{i}")
     summary = mon.summary()
     assert summary["total_alerts"] == 0
     assert mon._events[-1].graph_norm_delta == 0.0
@@ -179,18 +200,23 @@ def test_orchestrate_turn_governance_flow():
     - Apogee grade in (S, A)
     - seal hash present
     """
-    from components.ensemble_v16 import StructuralContextPruningEngine, ContextToken, Tier, AgentAmethyst
+    from components.ensemble_v16 import (
+        AgentAmethyst,
+        ContextToken,
+        StructuralContextPruningEngine,
+        Tier,
+    )
+
     scpe = StructuralContextPruningEngine()
     for i in range(5):
-        scpe.ingest(ContextToken(f"t{i}", f"content {i}",
-                                  Tier.OPERATIONAL if i < 3 else Tier.STRUCTURAL))
+        scpe.ingest(ContextToken(f"t{i}", f"content {i}", Tier.OPERATIONAL if i < 3 else Tier.STRUCTURAL))
     am = AgentAmethyst(scpe)
     rec = am.orchestrate_turn(
         payload="Standard governance operation. SCPE and HPG active. Schema audit seal.",
         state={"schema": "v1.6", "mode": "governance"},
         confidence=0.92,
         claim="Governance turn processed cleanly under ensemble v1.6.",
-        artifact_description="T001 governance clean pass"
+        artifact_description="T001 governance clean pass",
     )
     assert rec.dgaf_decision == "pass"
     assert rec.hpg_applied is True

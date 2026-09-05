@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from evaluations.contraction_proof_fidelity import DEFAULT_FIXTURE, TARGET, evaluate, load_fixture
+from evaluations.contraction_proof_fidelity import (
+    DEFAULT_FIXTURE,
+    TARGET,
+    evaluate,
+    load_fixture,
+)
 
 
 def test_contraction_fixture_is_canonical_and_complete():

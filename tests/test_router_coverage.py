@@ -8,8 +8,15 @@ Fixed: TC1 (SEQUENTIAL single-pair), TC2 (SEQUENTIAL chain),
        TC7 (FAN_OUT 3-agent), TC8 (FAN_OUT 2-agent) previously
        misclassified as HIERARCHICAL due to predicate shadowing.
 """
+
 import pytest
-from components.topology_router import TopologyRouter, TopologyClass, RoutingPayload, make_router
+
+from components.topology_router import (
+    RoutingPayload,
+    TopologyClass,
+    TopologyRouter,
+    make_router,
+)
 
 
 @pytest.fixture
