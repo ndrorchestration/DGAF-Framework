@@ -1,0 +1,68 @@
+name: P4 Mode T tlock Supply-Chain Verification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-tlock-supply-chain.yml'
+      - 'docs/governance/P4_MODE_T_TLOCK_SUPPLY_CHAIN_VERIFICATION_2026-09-05.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-tlock-release:
+    name: Verify tlock v1.2.0 Linux amd64 checksum
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TLOCK_VERSION: '1.2.0'
+      TLOCK_ARCHIVE: 'tlock_1.2.0_linux_amd64.tar.gz'
+      TLOCK_RELEASE_BASE: 'https://github.com/drand/tlock/releases/download/v1.2.0'
+      EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      WORKFLOW_GITHUB_SHA: ${{ github.sha }}
+    steps:
+      - name: Download official checksum manifest and archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-all-errors \
+            "$TLOCK_RELEASE_BASE/checksums.txt" \
+            --output checksums.txt
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-all-errors \
+            "$TLOCK_RELEASE_BASE/$TLOCK_ARCHIVE" \
+            --output "$TLOCK_ARCHIVE"
+
+      - name: Recompute and compare SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="$(awk -v f="$TLOCK_ARCHIVE" '$2 == f {print $1}' checksums.txt)"
+          test -n "$expected"
+          test "${#expected}" -eq 64
+          computed="$(sha256sum "$TLOCK_ARCHIVE" | awk '{print $1}')"
+          test "$computed" = "$expected"
+          {
+            printf 'tlock_version=%s\n' "$TLOCK_VERSION"
+            printf 'asset_name=%s\n' "$TLOCK_ARCHIVE"
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'workflow_github_sha=%s\n' "$WORKFLOW_GITHUB_SHA"
+            printf 'published_sha256=%s\n' "$expected"
+            printf 'computed_sha256=%s\n' "$computed"
+            printf 'match=true\n'
+            printf 'evidence_class=SYNTHETIC_SUPPLY_CHAIN_VERIFICATION\n'
+            printf 'experimental_state=PRE-FREEZE_NOT_AUTHORIZED_N0\n'
+          } > tlock-supply-chain-evidence.txt
+          cat tlock-supply-chain-evidence.txt
+
+      - name: Upload non-secret verification evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p4-mode-t-tlock-supply-chain-${{ env.EVIDENCE_SHA }}
+          path: |
+            checksums.txt
+            tlock-supply-chain-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
