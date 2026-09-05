@@ -21,7 +21,9 @@ This document is a binding draft only. Unresolved values remain explicit and clo
 | Analysis configuration SHA-256 | `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8` | BOUND / INDEPENDENTLY RECOMPUTED |
 | Pilot runner Git blob | `b5152fa3c9c4effe1c5201a45d58ac2d6b8e5243` | BOUND |
 | Pilot artifact schema Git blob | `c620d3755a645c5f2ad14124f42ce07a1c670c5f` | BOUND |
-| P5 binding merge | `2e325acdde74dde50d3d4dc4f493a834fbd28eb2` | AUTHORITATIVE MERGE / DEEP POST-MERGE VERIFICATION PENDING |
+| P5 binding merge | `2e325acdde74dde50d3d4dc4f493a834fbd28eb2` | AUTHORITATIVE MERGE / DEEP POST-MERGE VERIFICATION PASS |
+| P5 Governance CI | `33945464907` | PASS |
+| P5 Pre-Authorization Security | `33945464908` | PASS |
 | P4 custody procedure merge | `4382a7b745c1abde3a68eb7848611412f5bd34d7` | PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED |
 | P2 runtime run | `33730195621` | CLOSED / VERIFIED |
 | P2 artifact | `9883521704` | CLOSED / VERIFIED |
@@ -41,6 +43,7 @@ This document is a binding draft only. Unresolved values remain explicit and clo
 - Statistical unit: paired root seed.
 - Seed-level effect: `Delta_s = FFCR_s(dgaf) - FFCR_s(null)`.
 - Primary estimand: equal-weight mean paired seed effect.
+- FFCR: proportion of complete topology × failure-count cells whose recorded `ffcr_success` is true.
 - Bootstrap: 10,000 paired-seed percentile resamples.
 - Deterministic bootstrap seed: `20260823`.
 - Confidence interval: two-sided 95%, `alpha=0.05`.
@@ -58,7 +61,7 @@ These are design selections, not results.
 | P4 key commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
 | P4 mapping commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
 | P4 custody/access-separation attestation | independently reviewable operational evidence | `null` / NOT EXECUTED |
-| P5 deep post-merge verification | accepted exact-main deep CI result for binding merge | `null` / IN PROGRESS |
+| P5 authoritative closure reconciliation | accepted mainline status reconciliation | `null` / PENDING PR #253 |
 | Final protocol blob/commit identity | immutable protocol identity at freeze | `null` / NOT FROZEN |
 | Final control-plane commit | exact accepted pre-freeze control state | `null` / NOT FROZEN |
 | Freeze manifest identity | immutable manifest object/digest | `null` / NOT CREATED |
@@ -77,14 +80,14 @@ P4 therefore remains OPEN until distinct humans actually perform and independent
 
 ## P5 boundary
 
-The exact analysis/configuration/runner/schema identities are now present on the authoritative branch through merge `2e325acd…`, and the deterministic analysis configuration digest has been independently recomputed. P5 must remain OPEN until the exact post-merge deep governance/pre-authorization verification finishes successfully and the control state is reconciled to that result.
+The exact analysis/configuration/runner/schema identities are present on the authoritative branch through merge `2e325acd…`, and the deterministic analysis configuration digest has been independently recomputed. Exact post-merge Governance CI `33945464907` and PDMAL Pre-Authorization Security `33945464908` both passed. The remaining repository-side P5 step is the authoritative status reconciliation in PR #253; this P7 draft does not preempt that merge.
 
 ## P7 closure rule
 
 P7 may be considered for `CLOSED / VERIFIED` only when:
 
 1. all scientific identities used by the experiment are exact and immutable;
-2. P5 authoritative binding is fully verified;
+2. P5 authoritative closure reconciliation is on `main`;
 3. P4 real human/key custody and access separation are evidenced and independently reviewable;
 4. no candidate/runtime/protocol/analysis identity conflict remains;
 5. the final tuple can be copied into the immutable freeze manifest without inference or unresolved placeholders.
@@ -109,7 +112,11 @@ analysis_config_sha256: "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a
 runner_blob_sha: "b5152fa3c9c4effe1c5201a45d58ac2d6b8e5243"
 artifact_schema_blob_sha: "c620d3755a645c5f2ad14124f42ce07a1c670c5f"
 p5_binding_merge: "2e325acdde74dde50d3d4dc4f493a834fbd28eb2"
-p5_deep_postmerge_verification: null
+p5_deep_postmerge_verification:
+  governance_ci_run: 33945464907
+  preauthorization_security_run: 33945464908
+  conclusion: "PASS"
+p5_closure_reconciliation: null
 p4_procedure_merge: "4382a7b745c1abde3a68eb7848611412f5bd34d7"
 p4_custody_evidence: null
 final_protocol_identity: null
