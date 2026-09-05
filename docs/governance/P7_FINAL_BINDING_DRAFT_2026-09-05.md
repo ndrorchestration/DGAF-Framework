@@ -63,11 +63,12 @@ Only facts that can legitimately exist before immutable-freeze construction may 
 | P4 custody instance ID | unique non-secret identity | `null` / NOT EXECUTED |
 | P4 custody authority/system identity | attributable human, institution/service, or technical control identity | `null` / NOT EXECUTED |
 | P4 execution/analysis principal identity | attributable identity | `null` / NOT EXECUTED |
-| P4 key commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
-| P4 mapping commitment | nonce-hardened non-secret commitment | `null` / NOT EXECUTED |
-| P4 control-path inventory identity/digest | all relevant ordinary/admin/recovery/backup/export/break-glass paths | `null` / NOT EXECUTED |
-| P4 no-unilateral-access evidence | evidence analyst cannot defeat custody alone | `null` / NOT EXECUTED |
-| P4 independent review evidence | independently inspectable support for effective control separation | `null` / NOT EXECUTED |
+| P4 key commitment | nonce-hardened non-secret SHA-256 commitment | `null` / NOT EXECUTED |
+| P4 mapping commitment | nonce-hardened non-secret SHA-256 commitment | `null` / NOT EXECUTED |
+| P4 control-path inventory SHA-256 | digest of retained non-secret inventory covering ordinary/admin/recovery/backup/export/break-glass paths | `null` / NOT EXECUTED |
+| P4 no-unilateral-access evidence SHA-256 | digest of retained evidence that the analyst cannot defeat custody alone | `null` / NOT EXECUTED |
+| P4 independent-review evidence SHA-256 | digest of independently inspectable support for effective control separation | `null` / NOT EXECUTED |
+| P4 mode-specific evidence SHA-256 | digest of the selected H/I/T mode evidence packet | `null` / NOT EXECUTED |
 | Final protocol Git blob | exact protocol blob selected for freeze | `null` / BIND AT P7 CLOSURE |
 | Final protocol content SHA-256 | exact protocol bytes selected for freeze | `null` / BIND AT P7 CLOSURE |
 | Final accepted pre-freeze control-plane commit | exact accepted state from which freeze is constructed | `null` / NOT SELECTED |
@@ -98,6 +99,8 @@ P8 uses two immutable identity layers:
 
 Final P9 executes from the verification-record commit, independently resolves F, verifies the freeze and verification-record digests, verifies the final protocol/control-plane/verifier bindings declared by closed P7, and proves the P9 script/workflow definitions have not drifted from those frozen at F.
 
+The final P9 verifier must also require the freeze's P4 custody mode and every P4 evidence digest above to match the exact values in closed P7. It may not infer independence from a product name or replace external custody evidence with a same-operator assertion.
+
 ## P4 procedure boundary
 
 `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md` is the canonical P4 control. It preserves the original human-custody path as Mode H and also permits Mode I institutional/third-party custody or Mode T independently enforced technical custody.
@@ -121,10 +124,11 @@ P7 may be considered for `CLOSED / VERIFIED` only when:
 1. all pre-freeze scientific identities used by the experiment are exact;
 2. P5 remains authoritative and internally consistent;
 3. P4-A is closed under one declared custody mode with evidence that the execution/analysis principal lacks every unilateral early-recovery path relevant to that mode;
-4. final protocol blob/content and accepted pre-freeze control-plane identities are fixed;
-5. selected P9 verifier script/workflow SHA-256 identities are fixed before freeze;
-6. no candidate/runtime/protocol/analysis/custody identity conflict remains; and
-7. the complete P7 tuple can be copied into the immutable freeze object without inference or unresolved pre-freeze placeholders.
+4. the exact P4 custody mode, custody instance, authority/execution identities, commitments, control-path inventory digest, no-unilateral-access evidence digest, independent-review digest, and mode-specific evidence digest are bound;
+5. final protocol blob/content and accepted pre-freeze control-plane identities are fixed;
+6. selected P9 verifier script/workflow SHA-256 identities are fixed before freeze;
+7. no candidate/runtime/protocol/analysis/custody identity conflict remains; and
+8. the complete P7 tuple can be copied into the immutable freeze object without inference or unresolved pre-freeze placeholders.
 
 P7 closure is a binding decision, not empirical evidence and not authorization. P7 does not require downstream P8/P9/auth outputs that do not yet exist.
 
@@ -160,9 +164,10 @@ p4_custody_authority_id: null
 p4_execution_principal_id: null
 p4_key_commitment_sha256: null
 p4_mapping_commitment_sha256: null
-p4_control_path_inventory_digest: null
-p4_no_unilateral_access_evidence: null
-p4_independent_review_evidence: null
+p4_control_path_inventory_sha256: null
+p4_no_unilateral_access_evidence_sha256: null
+p4_independent_review_evidence_sha256: null
+p4_mode_evidence_sha256: null
 final_control_plane_commit: null
 selected_p9_verifier_script_sha256: null
 selected_p9_workflow_sha256: null
