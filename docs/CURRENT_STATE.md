@@ -2,68 +2,72 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-04
+last_verified: 2026-09-05
+main_at_last_reconciliation: 8ae37faee637d3992dfec2f635ea4d1d9252ef2d
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
 runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
+runtime_candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
 runtime_deployment_reference: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 empirical_n: 0
 ---
+
 # DGAF-Framework / PDMAL — Current State
 
-GitHub is authoritative for implementation and CI; governance decisions are recorded through the project's governance process. Historical evidence remains scoped to the exact SHA, workflow run, deployment, and artifact that produced it. A repository record of prior verification is distinct from successful current retrieval of the underlying evidence artifact.
+GitHub is authoritative for implementation and CI; governance decisions remain separately recorded. Evidence is scoped to the exact identities and predicates that produced it. A successful CI, deployment, synthetic, or custody check is not empirical efficacy evidence.
 
-## Current identity boundary
+## Identity boundary
 
-The corrected apparatus source is `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`. The immutable P-35 validation boundary is `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
+- Corrected apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`.
+- Immutable P-35 validation boundary: `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
+- Consolidated control-state anchor: `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`.
+- Candidate identity — designated runtime candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`.
+- Runtime candidate tree: `586c00d6dedb589e52108279f9759be3c4f927e1`.
+- Deployment identity — candidate deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.
+- Repository main at reconciliation: `8ae37faee637d3992dfec2f635ea4d1d9252ef2d`.
 
-The consolidated control-state anchor is `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`. `main` now contains subsequent documentation/control-plane descendants; those descendants do not alter executable runtime semantics unless executable surfaces materially change.
+Later documentation/control-plane descendants do not automatically replace the designated runtime candidate or inherit its runtime evidence.
 
-The **candidate identity** referenced by historical P2/P6a records is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, with **deployment identity** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`. The present verification pass did not independently re-retrieve the cited Actions records, so those runtime results are not promoted here as freshly verified evidence.
-
-## Runtime gate state
+## Current gate board
 
 | Boundary | Status | Scope |
 |---|---|---|
 | P-35 | VALIDATED | immutable boundary `643dc77a…` |
-| Consolidated control-state anchor | CURRENT | `89be386b…` |
-| Runtime candidate lineage | PRESENT | `7c1cc4bb…` |
-| Deployment reference | HISTORICAL / CURRENT RETRIEVAL UNCONFIRMED | `dpl_8Msuf…` |
-| P2 | HISTORICAL RECORD / CURRENT RETRIEVAL UNCONFIRMED | run `33730195621`, artifact `9883521704` |
-| P6a | HISTORICAL RECORD / CURRENT RETRIEVAL UNCONFIRMED | run `33728695806`, artifact `9882965299` |
-| P3 | OPEN / CURRENT EVIDENCE REQUIRED | artifact-contract closure |
-| P4 | OPEN | operational blinding/custody |
-| P5 | OPEN | reproducibility/provenance closure |
-| P6 | OPEN / FAIL-CLOSED | durable archive/retrieval/hash proof |
-| P7 | ADOPTED / FINAL BINDING OPEN | exact final candidate/protocol/analysis binding |
-| P8 | OPEN / FAIL-CLOSED | exact prerequisites and analysis lock |
-| P9 | OPEN | independent verification |
+| P1 candidate integrity | CLOSED / VERIFIED | apparatus, candidate/tree, and live deployment identity |
+| P2 runtime | CLOSED / VERIFIED | exact `7c1cc4bb…` / `dpl_8Msuf…` five-case runtime predicates |
+| P3 artifact contract | CLOSED / VERIFIED | run `33939955138`; candidate-bound structural/matrix/integrity evidence |
+| P4 security/blinding | OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT | synthetic behavior passes; actual human/key custody and access separation unestablished |
+| P5 provenance/reproducibility | OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT | deterministic/environment evidence present; final analysis implementation/configuration binding open |
+| P6 evidence custody | CLOSED / VERIFIED | defined archive → retrieval → SHA-256 equality contract |
+| P6a CORS | CLOSED / VERIFIED | exact `7c1cc4bb…` / `dpl_8Msuf…` four-case CORS predicates |
+| P7 scientific target | ADOPTED / FINAL BINDING OPEN | final exact candidate/protocol/analysis/freeze binding required |
+| P8 analysis lock | OPEN / FAIL-CLOSED | prerequisites and final analysis binding incomplete |
+| P9 independent verification | OPEN | final bound-chain verification not executed |
 | Freeze | NOT ESTABLISHED | no immutable pilot identity |
-| Authorization | NOT GRANTED | separate governance transition |
+| Authorization | NOT GRANTED | separate human governance decision |
 | Empirical N | 0 | no authorized pilot execution |
 
-## Current-candidate evidence packet
+## Runtime evidence retrieval
 
-`docs/governance/CURRENT_CANDIDATE_EVIDENCE_PACKET_2026-09-04.md` is present in the current GitHub `main` tree and defines the exact P3–P9 evidence boundary. It explicitly distinguishes historical repository-recorded P2/P6a identifiers from currently retrievable evidence.
+On 2026-09-05, the P2 and P6a GitHub Actions records were freshly resolved:
 
-## Evidence boundary
+- P2 run `33730195621`, artifact `9883521704`, digest `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`.
+- P6a run `33728695806`, artifact `9882965299`, digest `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`.
 
-The P2/P6a run and artifact identifiers remain preserved as provenance records. Their present verification state is **not currently retrievable through the verification path used in the 2026-09-04 pass**. This does not establish deletion, invalidity, or tampering; it establishes only that fresh retrieval was not achieved.
+Both artifacts were unexpired and candidate-bound. This supersedes the earlier retrieval-unconfirmed observation; it does not constitute a new execution or extend closure beyond the exact runtime predicates.
 
-The strongest historical completion evidence remains scoped to superseded candidate `a43219b4…` and does not transfer to `7c1cc4…` without an explicit provenance relationship.
+## Current-main operational limitation
 
-## Documentation architecture boundary
+The Vercel deployment workflow for `8ae37fa…` failed because the free-plan daily deployment limit was exceeded. No deployment was created for that SHA. Exact deployment identity, provenance upload, health, and live regression were therefore not executed for repository main. The separately verified `7c1cc4bb…` deployment remains candidate-scoped evidence only.
 
-Agent-identity, registry-synchronization, numerical-instrument, and documentation-integration reconciliation work remains separately scoped. These controls do not resolve disputed authority or change experimental state by themselves.
+The post-fix Completion Controller has not yet been exercised by a new producer → controller cycle. Its post-fix operational status remains NOT EXECUTED / UNKNOWN.
 
-## Current substantive closure work
+## Remaining substantive closure work
 
-The remaining task is one-candidate evidence assembly, not additional speculative governance architecture:
+`P4 actual custody + final P5 binding → exact P7 binding → P8 → independent P9 → immutable freeze → explicit authorization → blinded pilot`
 
-`P1/P3 → operational P4/P5/P6 → exact P7 binding → P8 → current-candidate P9 → immutable freeze → explicit authorization → blinded pilot`
-
-The active completion control record is GitHub Issue #232. Superseded planning records #184 and #186 remain historical provenance.
+Issue #232 is the active completion-control record. Instrument conflicts in #226 remain separately fail-closed where applicable.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**

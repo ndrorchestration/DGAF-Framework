@@ -1,62 +1,61 @@
 # DGAF/PDMAL Project Status
 
-**Status date:** 2026-09-04  
-**Last reconciled main tip:** `49a89d0da09a767bfea9ecc602905862ab17991f`  
+**Status date:** 2026-09-05  
+**Repository main at reconciliation:** `8ae37faee637d3992dfec2f635ea4d1d9252ef2d`  
 **Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
-**Verified executable runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
-**Verified runtime deployment:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`  
-**Corrected apparatus provenance anchor:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
-**Pilot status:** PRE-FREEZE; authorization not granted  
+**Designated executable runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
+**Candidate tree:** `586c00d6dedb589e52108279f9759be3c4f927e1`  
+**Candidate deployment:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`  
+**Pilot status:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED  
 **Empirical N:** 0
 
 ## Executive state
 
-The repository is in post-control-plane-remediation, pre-freeze closure. The consolidated control-state anchor is `89be386b…`; subsequent `main` commits are documentation/control-plane reconciliation unless executable semantics change. The verified executable runtime identity remains `7c1cc4…` with deployment `dpl_8Ms…`. Documentation-only lineage does not alter the runtime surfaces covered by P2/P6a, so those predicates remain closed.
+DGAF is in pre-freeze closure. The runtime candidate and its deployment remain distinct from later documentation/control-plane commits. P1, P2, P3, P6, and P6a have candidate-scoped verification records. P4 and P5 have current-candidate engineering evidence but retain substantive open requirements. P7 final binding, P8, P9, freeze, and authorization remain open or absent.
+
+None of these engineering states establishes empirical efficacy.
 
 ## Gate board
 
-| Gate / control | Status | Evidence / state |
+| Gate / control | Status | Evidence / limitation |
 |---|---|---|
 | Corrected apparatus provenance | CANONICAL ANCHOR | `2a54a67d…` |
-| Control-plane consolidated anchor | CURRENT | `89be386b…` |
-| Last reconciled main tip | CURRENT AT RECONCILIATION | `49a89d0d…` |
-| Verified executable candidate | CURRENT VERIFIED RUNTIME IDENTITY | `7c1cc4…` |
-| Runtime deployment | VERIFIED READY | `dpl_8Ms…` |
-| P2 | CLOSED / VERIFIED | Run `33730195621`; artifact `9883521704` |
-| P6a | CLOSED / VERIFIED | Run `33728695806`; artifact `9882965299` |
-| P3 | OPEN | Current-candidate evidence packet required |
-| P4 | OPEN | Operational blinding/custody |
-| P5 | OPEN | Reproducibility/provenance closure |
-| P6 | OPEN / FAIL-CLOSED | Durable external archive/retrieval/hash proof |
-| P7 | ADOPTED / FINAL BINDING OPEN | Exact protocol/candidate/analysis binding |
-| P8 | OPEN / FAIL-CLOSED | Prerequisites and analysis lock |
-| P9 | OPEN | Independent verification |
-| Freeze | NOT ESTABLISHED | No immutable pilot identity |
-| Pilot authorization | NOT GRANTED | Separate governance transition |
-| Empirical data | ZERO | No authorized pilot execution |
+| P-35 | VALIDATED | immutable boundary `643dc77a…` |
+| P1 | CLOSED / VERIFIED | exact apparatus/candidate/tree and live deployment identity |
+| P2 | CLOSED / VERIFIED | run `33730195621`; retrievable artifact `9883521704`; exact runtime predicates only |
+| P3 | CLOSED / VERIFIED | run `33939955138`; artifact-contract evidence |
+| P4 | OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT | synthetic blinding behavior only; real custody/access separation absent |
+| P5 | OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT | final analysis implementation/configuration binding absent |
+| P6 | CLOSED / VERIFIED | defined external archive/retrieval/SHA-256 equality contract |
+| P6a | CLOSED / VERIFIED | run `33728695806`; retrievable artifact `9882965299`; exact CORS predicates only |
+| P7 | ADOPTED / FINAL BINDING OPEN | final scientific identity chain incomplete |
+| P8 | OPEN / FAIL-CLOSED | prerequisites and analysis lock incomplete |
+| P9 | OPEN | independent final verification not executed |
+| Freeze | NOT ESTABLISHED | no immutable pilot identity |
+| Pilot authorization | NOT GRANTED | separate governance transition |
+| Empirical data | N = 0 | no authorized pilot execution |
 
-## Current-candidate evidence packet
+## Current execution evidence
 
-`docs/governance/CURRENT_CANDIDATE_EVIDENCE_PACKET_2026-09-04.md` defines the exact current-candidate P3–P9 evidence tuple and explicitly separates already-retained P2/P6a runtime evidence from outstanding operational, provenance, custody, analysis-lock, and independent-verification requirements.
+On 2026-09-05, both candidate-scoped runtime evidence records were successfully re-retrieved:
 
-The packet is a control/readiness artifact only. It does not promote historical evidence, create empirical observations, establish a freeze, or grant authorization.
+- P2 artifact `9883521704`, digest `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`.
+- P6a artifact `9882965299`, digest `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`.
 
-## Evidence execution status
+This supersedes the earlier retrieval-unconfirmed observation but is not a new runtime execution.
 
-The retained current runtime evidence consists of exact-candidate P2 and P6a artifacts. Their workflow runs and artifact digests remain bound to `7c1cc4…` / `dpl_8Ms…`.
+Current-candidate P3/P5 evidence is retained from run `33939955138`. Synthetic P4 evidence is retained from run `33939574283`. The P6 round-trip record covers the finalized P3/P5 and P4 artifact sets within its defined byte-equality scope.
 
-The strongest historical P3–P6 completion artifacts and P9 pass remain scoped to the superseded candidate `a43219b4…` and are therefore non-transferable.
+## Current-main deployment state
+
+The production-deployment workflow for `8ae37fa…` failed at Vercel's free-plan daily deployment quota. No deployment exists for that repository-main SHA, and its identity verification, health, and live regression were not executed. Do not transfer the `7c1cc4bb…` deployment result to `8ae37fa…`.
 
 ## Evidence boundary
 
-Evidence remains candidate- and workflow-scoped. Closed P2/P6a evidence is not reopened by documentation-only control-plane changes. Current P3–P6 closure still requires the operational and durable-custody predicates defined by the governance protocol.
-
-## Current documentation hygiene state
-
-The 2026-09-04 reconciliation pass distinguishes the consolidated control-state anchor from the mainline reconciliation tip. Later documentation-only descendants are not executable candidates unless executable semantics materially change and a new candidate is independently established.
+Evidence remains exact-candidate, workflow, artifact, deployment, and predicate scoped. Documentation-only control-plane changes neither reopen valid exact-scope evidence nor inherit it automatically. Archive/retrieval digest equality does not establish immutable custody or independent human control.
 
 ## Required closure sequence
 
-`P3 → operational P4/P5/P6 → exact P7 binding → P8 → current-candidate P9 → immutable freeze → explicit authorization → blinded pilot`
+`P4 actual custody + final P5 binding → exact P7 binding → P8 → independent P9 → immutable freeze → explicit authorization → blinded pilot`
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
