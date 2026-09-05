@@ -71,12 +71,13 @@ mode_t:
   rerun_policy_sha256: null
   no_secret_output_contract_sha256: null
   p6_retention_contract_sha256: null
+  transparency_contract_sha256: null
   live_runner_memory_access_disposition: "UNKNOWN"
 ```
 
 Mode T pre-freeze closure is **MECHANISM VERIFIED / SECRET NOT YET INSTANTIATED**. It is not equivalent to a closed H/I instantiated-custody record.
 
-## Run-reservation and authorization record
+## Run-reservation and authorization records
 
 Before P4-T-X can begin, a pre-secret workflow attempt reserves one exact run identity:
 
@@ -90,6 +91,7 @@ github_run_attempt: 1
 github_sha: null
 reserved_at_server_time: null
 reservation_evidence_sha256: null
+transparency_bundle_sha256: null
 p6_archive_identity: null
 ```
 
@@ -100,6 +102,7 @@ record_type: "PDMAL_PILOT_AUTHORIZATION"
 status: "GRANTED"
 freeze_commit_sha: null
 freeze_sha256: null
+reservation_evidence_sha256: null
 github_run_id: null
 allowed_run_attempt: 1
 authorization_id: null
@@ -109,9 +112,32 @@ authorization_record_sha256: null
 
 The execution workflow must fail before secret generation unless both records match the frozen tuple exactly.
 
+## Single-use authorization-consumption record
+
+After the reserved run verifies the exact authorization and **before** any key, mapping, or commitment nonce exists, it must create and independently retain:
+
+```yaml
+record_type: "PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION"
+status: "CONSUMED_PRE_SECRET"
+freeze_sha256: null
+reservation_evidence_sha256: null
+authorization_record_sha256: null
+authorization_id: null
+github_run_id: null
+github_run_attempt: 1
+secret_instantiation_status: "NOT_EXECUTED"
+consumption_evidence_sha256: null
+transparency_bundle_sha256: null
+p6_archive_identity: null
+```
+
+One authorization may correspond to at most one accepted consumption record. Once this record exists, the authorization is consumed even if the run later crashes. A second secret-instantiating attempt requires a new custody-instance identity and a new explicit authorization decision; it may not silently reuse the consumed authorization.
+
+This rule prevents a failed post-secret/pre-X run from disappearing into history and being replaced by a second usable execution under the same authorization.
+
 ## P4-T-X execution evidence
 
-The first and only accepted authorized attempt emits:
+The first and only accepted consumed authorization emits:
 
 ```yaml
 record_type: "PDMAL_P4_T_EXECUTION"
@@ -121,6 +147,7 @@ github_run_id: null
 github_run_attempt: 1
 freeze_commit_sha: null
 authorization_id: null
+consumption_evidence_sha256: null
 secret_instantiated_at: null
 commitment_scheme: "sha256-domain-separated-secret-nonce-v1"
 key_commitment_sha256: null
@@ -131,6 +158,7 @@ timelock_ciphertext_sha256: null
 blinded_dataset_sha256: null
 leak_scan_status: null
 execution_evidence_sha256: null
+transparency_bundle_sha256: null
 p6_archive_identity: null
 ```
 
@@ -142,6 +170,7 @@ The record contains no raw key, cleartext mapping, unreleased nonce, recovery se
 record_type: "PDMAL_P4_T_ANALYSIS_LOCK"
 status: "LOCKED_BEFORE_RELEASE"
 github_run_id: null
+consumption_evidence_sha256: null
 blinded_dataset_sha256: null
 analysis_blob_sha: null
 analysis_config_sha256: null
@@ -151,10 +180,11 @@ timelock_release_round: null
 timelock_release_time: null
 ordering_verified: null
 analysis_lock_evidence_sha256: null
+transparency_bundle_sha256: null
 p6_archive_identity: null
 ```
 
-`ordering_verified` may be true only when the independently retained server-side analysis completion time is strictly before the release time represented by the frozen drand round policy.
+`ordering_verified` may be true only when independently verifiable transparency evidence places the primary-analysis lock strictly before the release time represented by the frozen drand round policy. A self-asserted payload timestamp is insufficient.
 
 ## P4-B post-release continuity evidence
 
@@ -173,7 +203,7 @@ exceptions: []
 audit_evidence_sha256: null
 ```
 
-P4-B never rewrites the historical pre-freeze or P4-T-X record.
+P4-B never rewrites the historical pre-freeze, consumption, or P4-T-X record.
 
 ## Mode-specific P7/P8/P9 consequence
 
@@ -188,8 +218,9 @@ For T, pre-authorization P7/freeze/P9 instead bind the exact mechanism tuple:
 - round/release-margin policy;
 - no-secret-output contract;
 - analysis-lock policy;
-- rerun policy;
+- rerun/single-use authorization policy;
 - P6 independent-retention contract;
+- transparency contract;
 - `secret_instantiation_status: NOT_EXECUTED`.
 
 Final pre-authorization P9 must reject a Mode T freeze containing a real key/mapping commitment because that would mean protected material was instantiated before the authorized P4-T-X phase under this lifecycle.
@@ -202,6 +233,7 @@ The existing v2 canonical procedure and verifier remain authoritative until a se
 2. T cannot use H/I fields to bypass mechanism closure;
 3. H/I cannot use T null-secret semantics;
 4. P9 remains pre-authorization and empirical N=0;
-5. no real secret is created by schema/test migration.
+5. one authorization cannot yield more than one accepted consumption/secret-instantiation lineage;
+6. no real secret is created by schema/test migration.
 
 **This draft does not alter the canonical P4 procedure, P7 binding, freeze schema, P9 verifier, authorization state, or empirical state.**
