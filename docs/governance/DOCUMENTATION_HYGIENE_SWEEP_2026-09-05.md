@@ -1,8 +1,11 @@
 # Documentation Hygiene Sweep — 2026-09-05
 
-**Status:** COMPLETED ON HYGIENE BRANCH / PENDING PR VALIDATION  
+**Status:** PRIMARY SWEEP MERGED / EXACT-HEAD VALIDATED  
 **Source boundary audited:** `a3bafa6fca8599df479a685828f5fdddb6bae589`  
-**Branch:** `docs/multi-hygiene-sweeps-20260905`  
+**Primary PR:** #289  
+**Primary exact head:** `536b4f03f6a625ad751c60e8abe06609250dee76`  
+**Primary merge:** `00e51ae3e85c269664db3d2c708349f4ae33e98e`  
+**Validation:** 18/18 exact-head workflows PASS before merge  
 **Scientific boundary:** `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
 
 ## Purpose
@@ -56,7 +59,7 @@ No custody mode has been instantiated or verified. P4 remains OPEN / NOT EXECUTE
 - Issue #255: **SUPERSEDED / HISTORICAL** human-only checkpoint.
 - Issue #287: **OPEN / DESIGN-THREAT-MODEL ONLY** for a possible zero-human Mode-T lifecycle.
 
-The canonical P4 procedure, execution handoff, P8 checklist, freeze-readiness record, and next-stage expert plan now use this routing.
+The active execution handoff, P8 checklist, freeze-readiness record, next-stage expert plan, live current-candidate tracker (#232), and N=1 checkpoint (#141) now use this routing.
 
 ## Sweep 3 — Mode-T epistemic-boundary hygiene
 
@@ -67,7 +70,7 @@ The repository now explicitly distinguishes:
 
 No zero-human Mode-T mechanism has been accepted or executed.
 
-Issue #287 explores a transient-runner/timelock design, but that concept may require a future mode-specific lifecycle revision because the current universal P4-A predicates expect real key/mapping commitments before freeze. Until a future revision is independently reviewed, merged, and verified, the current canonical pre-freeze lifecycle remains controlling.
+Issue #287 and draft PR #288 explore a transient-runner/timelock design, but that concept may require a future mode-specific lifecycle revision because the current universal P4-A predicates expect real key/mapping commitments before freeze. Until a future revision is independently reviewed, merged, and verified, the current canonical pre-freeze lifecycle remains controlling.
 
 GitHub-hosted runners, drand/timelock tooling, KMS/HSM products, preregistration, or design prose are not promoted into P4 evidence by association.
 
@@ -75,7 +78,7 @@ GitHub-hosted runners, drand/timelock tooling, KMS/HSM products, preregistration
 
 ### Stale state found
 
-README, current-state/project-status records, and Issue #32/#64 status files still described flake8/Black/isort/mypy as current advisory `continue-on-error` diagnostics based on run `33957199893`.
+README, current-state/project-status records, and Issue #32/#64 status surfaces still described flake8/Black/isort/mypy as current advisory `continue-on-error` diagnostics based on run `33957199893`.
 
 That statement is valid historically for the exact run, but it became stale after Issue #270 closed.
 
@@ -105,7 +108,7 @@ The refreshed documents use immutable language such as:
 - `documentation-hygiene reconciliation source boundary`;
 - exact historical merge/verification boundary.
 
-The current hygiene source boundary is `a3bafa6fca8599df479a685828f5fdddb6bae589`. The branch commits containing this report are descendants, so this record deliberately does not self-embed a SHA and call it “current main.”
+The hygiene audit source boundary is `a3bafa6fca8599df479a685828f5fdddb6bae589`. The primary merge `00e51ae3…` is a later control-plane descendant and does not replace the designated runtime/scientific candidate.
 
 The designated executable runtime/scientific candidate remains:
 
@@ -126,7 +129,28 @@ Historical evidence was not bulk-edited to erase superseded claims. The followin
 
 This avoids both forms of documentation drift: leaving stale claims current and retroactively rewriting historical evidence.
 
-## Files changed in this sweep
+## Sweep 7 — live GitHub metadata hygiene
+
+Live issue/process surfaces were also reconciled outside the repository file PR where their bodies had become stale:
+
+- Issue #32 — evaluator/quality status;
+- Issue #36 — Sentinel→AOGA evidence boundary;
+- Issue #64 — evaluation-integrity/quality status;
+- Issue #78 — external integration research status;
+- Issue #122 — P-38 source-recovery checkpoint language;
+- Issue #141 — N=1 gate ordering and P4 H/I/T semantics;
+- Issue #144 — live branch/process inventory;
+- Issue #232 — canonical current-candidate closure tracker.
+
+The live branch inventory after PR #289 merge reports 213 refs including `main`, therefore 212 non-main refs, with one open PR branch (#288) and the merged #289 branch demonstrated safe-to-prune once a supported branch-deletion capability exists.
+
+## Review/safeguard event during #289
+
+A concurrent review correctly found that an early P4 hygiene rewrite had accidentally dropped the canonical procedure's pre-existing **Standards and complementary controls** and **Explicit non-claims** sections. The PR was moved back to draft and the P4 body was restored before final validation.
+
+Final primary head `536b4f03…` therefore left the canonical P4 procedure body unchanged from its source boundary; all 18 exact-head workflows then passed. A narrow post-merge follow-up changes only the stale P4 header/status/routing metadata from `PROCEDURE DRAFT` to `CANONICAL PROCEDURE` while preserving every substantive safeguard verbatim.
+
+## Files changed by primary PR #289
 
 - `README.md`
 - `docs/CURRENT_STATE.md`
@@ -135,12 +159,18 @@ This avoids both forms of documentation drift: leaving stale claims current and 
 - `docs/ISSUE_64_STATUS.md`
 - `docs/experiment/NEW_CANDIDATE_MANIFEST.md`
 - `docs/formalism/hensel-general-formalism.md`
-- `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`
 - `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md`
 - `docs/governance/P8_VERIFICATION_CHECKLIST.md`
 - `docs/governance/P8_P9_FREEZE_READINESS_2026-08-26.md`
 - `docs/governance/NEXT_STAGE_EXPERT_PANEL_PLAN_2026-09-05.md`
 - this hygiene record
+
+## Post-merge finalization
+
+A narrow follow-up touches only:
+
+- `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md` — canonical-status and issue-routing metadata only; substantive safeguards preserved verbatim;
+- this record — replaces obsolete “pending PR validation” language with immutable validation/merge facts and records the safeguard review event.
 
 ## Explicit non-effects
 

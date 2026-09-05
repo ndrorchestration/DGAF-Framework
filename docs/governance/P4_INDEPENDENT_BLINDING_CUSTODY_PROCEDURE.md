@@ -1,9 +1,10 @@
 # P4 Independent Blinding Custody Procedure
 
-**Status:** PROCEDURE DRAFT / NOT EXECUTED / P4 REMAINS OPEN  
+**Status:** CANONICAL PROCEDURE / NOT EXECUTED / P4 REMAINS OPEN  
 **Authority:** DGAF/PDMAL pre-freeze governance  
 **Supersedes as canonical procedure:** `P4_HUMAN_KEY_CUSTODY_PROCEDURE.md`  
-**Related issue:** #285  
+**Architecture correction:** Issue #285 — COMPLETED via PR #286 / merge `a3bafa6fca8599df479a685828f5fdddb6bae589`  
+**Active Mode-T design lane:** Issue #287 / PR #288 — DRAFT DESIGN ONLY / NOT ACCEPTED CUSTODY EVIDENCE  
 **Purpose:** Define the minimum pre-execution custody, access-separation, commitment, release-control, and audit evidence required before P4 Security / Blinding may be considered for closure.
 
 ## Governing invariant
