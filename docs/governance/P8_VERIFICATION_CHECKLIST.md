@@ -52,38 +52,58 @@ P4 remains **OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED** until these
 - [x] Candidate/deployment/protocol/analysis/runner/schema/P2/P3/P5/P6/P6a identities are assembled in `docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md`.
 - [ ] Actual P4 custody evidence is inserted without inference.
 - [ ] Final protocol blob/commit identity is selected for freeze.
-- [ ] Final accepted control-plane commit is selected for freeze.
-- [ ] P7 contains no unresolved closure-blocking placeholders and is formally closed.
+- [ ] Final accepted pre-freeze control-plane commit is selected for freeze.
+- [ ] Final P9 verifier script/workflow identities are bound before freeze.
+- [ ] P7 contains no unresolved **pre-freeze** closure-blocking placeholders and is formally closed.
 
-P7 remains **ADOPTED / FINAL BINDING OPEN**.
+P7 remains **ADOPTED / FINAL BINDING OPEN**. Freeze/P8/P9/auth identities are downstream outputs and must not be required to close P7.
 
-## P8 immutable-freeze construction
+## P8 immutable-freeze construction — object F
 
 The following items must not be checked until P4 and P7 are legitimately complete.
 
-- [ ] Construct the immutable freeze manifest from the exact P7 tuple without inference.
+- [ ] Construct the immutable freeze object from the exact closed P7 tuple without inference.
+- [ ] Commit that object in an exact immutable freeze commit **F**.
 - [ ] Bind the final protocol blob/commit identity.
-- [ ] Bind the final accepted control-plane commit.
+- [ ] Bind the final accepted pre-freeze control-plane commit.
 - [ ] Bind exact candidate SHA/tree and candidate deployment identity.
 - [ ] Bind exact analysis implementation/configuration/runner/schema identities.
 - [ ] Bind P1/P2/P3/P4/P5/P6/P6a evidence identities and digests required by the final tuple.
 - [ ] Bind the blinding-custody commitments/attestations without exposing secret material.
-- [ ] Compute and retain an immutable freeze-manifest digest.
-- [ ] Independently retrieve/recompute the freeze representation and verify the digest/identity tuple.
-- [ ] Record the independent freeze-verification evidence and verifier identity.
+- [ ] Confirm the selected P9 verifier script/workflow definitions are present in F.
+- [ ] Compute the byte SHA-256 of `docs/experiment/PDMAL_IMMUTABLE_FREEZE.json` at F and retain it externally.
+- [ ] Confirm the immutable freeze object does **not** contain post-freeze verification evidence or a self-hash of its complete bytes.
 
-Until every applicable item above is complete, **P8 remains OPEN / FAIL-CLOSED and Freeze remains NOT ESTABLISHED**.
+At this point the freeze object exists, but P8 does not close until independent verification succeeds.
+
+## Independent P8 freeze verification — separate record V
+
+Independent verification is a post-freeze event and therefore must remain outside immutable object F.
+
+- [ ] Independently retrieve exact commit F rather than a mutable branch tip.
+- [ ] Recompute the freeze-object byte SHA-256 and verify equality with the externally retained digest.
+- [ ] Independently verify the frozen candidate/P7/control tuple and expected freeze path.
+- [ ] Produce `docs/experiment/PDMAL_P8_FREEZE_VERIFICATION.json` as a **separate** verification record V.
+- [ ] V records PASS, exact freeze commit F, exact freeze path, expected/retrieved equal SHA-256 values, verifier identity, verification method, and timestamp.
+- [ ] Store V in a descendant verification commit distinct from F.
+- [ ] Retain V's byte SHA-256 externally.
+- [ ] Do not write V or its digest back into F.
+
+Until every applicable item above is complete, **P8 remains OPEN / FAIL-CLOSED and Freeze remains NOT ESTABLISHED as a verified freeze**.
 
 ## P9 final independent verification
 
 Historical/scoped P9 runs are provenance only and do not transfer to the final frozen chain.
 
-- [x] Historical independent-verification mechanisms exist and previously exercised alternate canonicalization/hash and authority-identity checks on superseded candidates.
-- [ ] Final P9 verifier identity is selected independently of the producing evidence path.
-- [ ] Final P9 re-resolves the immutable freeze and exact candidate/protocol/analysis/custody/evidence tuple.
-- [ ] Final P9 independently verifies all required digests and candidate/freeze identities.
+- [x] A manual-only fail-closed final-P9 verifier/workflow exists in the pre-freeze control plane.
+- [x] The final-P9 workflow is designed to resolve candidate/P7/freeze bytes from exact freeze commit F rather than trusting a later mutable copy.
+- [x] The final-P9 workflow verifies its script/workflow definitions did not drift between F and the P8 verification-record commit.
+- [ ] Final P9 verifier identity is fixed in closed P7 and frozen at F.
+- [ ] Final P9 dispatch occurs from the exact descendant P8 verification-record commit.
+- [ ] Final P9 validates the external byte digests of both immutable freeze object F and separate verification record V.
+- [ ] Final P9 independently verifies all required candidate/protocol/analysis/custody/evidence identities.
 - [ ] Final P9 evidence artifact/digest is retained and independently reviewable.
-- [ ] P9 concludes PASS for the complete final frozen chain.
+- [ ] Final P9 concludes PASS for the complete final frozen chain.
 
 P9 remains **NOT EXECUTED / OPEN** for the current final chain.
 
@@ -96,4 +116,4 @@ Current state: **Freeze NOT ESTABLISHED · Pilot authorization NOT GRANTED · Em
 
 ## Closure rule
 
-P8 may close only after real P4 custody is verified, P7 is exact and final, the immutable freeze is constructed from that tuple, and an independent freeze verification succeeds. P9 is then executed against that frozen chain. No historical candidate result, green CI run, READY deployment, synthetic blinding result, or documentation-only update may substitute for these events.
+P8 may close only after real P4 custody is verified, P7 is exact and final, immutable freeze object F is constructed, F is independently retrieved/re-hashed, and separate verification record V proves that verification without modifying F. P9 is then executed from the exact V commit against F. No historical candidate result, green CI run, READY deployment, synthetic blinding result, or documentation-only update may substitute for these events.
