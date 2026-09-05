@@ -56,7 +56,13 @@ No custody mode has been instantiated or verified. P4 remains OPEN / NOT EXECUTE
 - Issue #255: **SUPERSEDED / HISTORICAL** human-only checkpoint.
 - Issue #287: **OPEN / DESIGN-THREAT-MODEL ONLY** for a possible zero-human Mode-T lifecycle.
 
-The canonical P4 procedure, execution handoff, P8 checklist, freeze-readiness record, and next-stage expert plan now use this routing.
+The canonical P4 procedure at the audited source boundary already carried the revised H/I/T architecture and explicit non-claims, so the final hygiene diff leaves that file byte-identical. The execution handoff, P8 checklist, freeze-readiness record, and next-stage expert plan receive the current routing updates.
+
+### Integrity-review correction preserved
+
+An intermediate hygiene-branch edit to `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md` accidentally removed its `Standards and complementary controls` and `Explicit non-claims` tail, including explicit statements that P4 remained open, freeze was not established, authorization was not granted, and empirical N remained zero.
+
+That edit was identified during PR review as inconsistent with the hygiene-only scope and was reverted **byte-for-byte to the audited `main` blob** before this report was finalized. The canonical P4 procedure is therefore not part of the final PR diff. This failed intermediate edit remains documented here as quality-control evidence rather than being hidden.
 
 ## Sweep 3 — Mode-T epistemic-boundary hygiene
 
@@ -120,7 +126,7 @@ Documentation descendants neither replace that candidate nor inherit its runtime
 Historical evidence was not bulk-edited to erase superseded claims. The following rule was applied:
 
 1. **Current-facing state/control docs:** correct stale present-tense claims.
-2. **Canonical procedures/formalisms:** correct current authority while preserving historical design provenance explicitly.
+2. **Canonical procedures/formalisms:** correct current authority only where necessary while preserving historical design provenance and explicit non-claims.
 3. **Historical exact-run/issue/evidence records:** preserve factual historical observations unless the document incorrectly promotes them as current.
 4. **Scientific evidence:** never transfer across candidate/workflow/artifact/deployment/control-state identities without explicit provenance.
 
@@ -135,7 +141,6 @@ This avoids both forms of documentation drift: leaving stale claims current and 
 - `docs/ISSUE_64_STATUS.md`
 - `docs/experiment/NEW_CANDIDATE_MANIFEST.md`
 - `docs/formalism/hensel-general-formalism.md`
-- `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`
 - `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md`
 - `docs/governance/P8_VERIFICATION_CHECKLIST.md`
 - `docs/governance/P8_P9_FREEZE_READINESS_2026-08-26.md`
