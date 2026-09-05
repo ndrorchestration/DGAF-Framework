@@ -2,11 +2,12 @@
 
 **Status:** ACTIVE PLANNING CONTROL / PRE-FREEZE / NO EXPERIMENT AUTHORITY  
 **Designated runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
+**Documentation reconciliation source boundary:** `a3bafa6fca8599df479a685828f5fdddb6bae589`  
 **Empirical N:** `0`
 
 ## Panel perspectives
 
-This plan reconciles six distinct expert perspectives against the current repository evidence:
+This plan reconciles six distinct expert perspectives against the repository evidence:
 
 1. **Experimental governance / methodology** — protects the P4 → P7 → P8 → P9 → authorization sequence and prevents engineering evidence from becoming efficacy evidence.
 2. **Epistemic provenance / claims auditing** — requires exact identities, external digests, non-transferable evidence scope, and explicit UNKNOWN/OPEN states.
@@ -19,9 +20,11 @@ This plan reconciles six distinct expert perspectives against the current reposi
 
 The system has moved beyond broad implementation hardening. The critical path is now narrow, but the remaining steps are higher-consequence governance transitions.
 
-Issue #280 corrected the P7/P8/P9 circular dependency by separating immutable freeze object F from downstream verification record V. Issue #285 adds a second governance correction: the earlier P4 model over-specified the mechanism of independence by requiring a distinct human in every case. The scientific requirement is effective control separation, not friendship or headcount.
+Issue #280 corrected the P7/P8/P9 circular dependency by separating immutable freeze object F from downstream verification record V. PR #284 integrated that correction. Issue #285 then corrected the earlier P4 model, which over-specified the mechanism of independence by requiring a distinct human in every case. PR #286 merged that P4 architecture correction as `a3bafa6fca8599df479a685828f5fdddb6bae589`.
 
-The revised P4 model preserves distinct-human custody as Mode H while permitting Mode I institutional/third-party custody and Mode T independently enforced technical custody. Every mode must establish the same invariant: before the predeclared release condition, the execution/analysis principal cannot unilaterally recover the protected blinding material through ordinary, administrative, recovery, backup, policy-edit, credential-reset, export, or break-glass paths.
+The canonical P4 model preserves distinct-human custody as Mode H while permitting Mode I institutional/third-party custody and Mode T independently enforced technical custody. Every mode must establish the same invariant: before the predeclared release condition, the execution/analysis principal cannot unilaterally recover the protected blinding material through ordinary, administrative, recovery, backup, policy-edit, credential-reset, export, or break-glass paths.
+
+No custody mode has been instantiated. Issue #287 is an OPEN design/threat-model lane for a possible zero-human Mode T lifecycle. It is not P4 evidence and does not yet change the canonical pre-freeze commitment lifecycle.
 
 ## Stage A — pre-P4 control-plane correctness
 
@@ -35,7 +38,7 @@ The revised P4 model preserves distinct-human custody as Mode H while permitting
 - Require P9 verifier script/workflow identity equality between F and V.
 - Maintain authorization `NOT_GRANTED` and empirical N `0` during P9.
 
-**State:** implemented on current main through PR #284; post-merge verification remains separately evidence-scoped.
+**State:** IMPLEMENTED through PR #284 / merge `2d8a525b3f1717c5675907769615207e5aa59fd5`; later exact-scope validation remains evidence-bound to the runs that executed it.
 
 ### A2. Generalize P4 from human-only custody to independently enforceable custody
 
@@ -47,13 +50,32 @@ The revised P4 model preserves distinct-human custody as Mode H while permitting
 - Reject same-operator accounts, AI agents/personas, repository secrets, analyst-recoverable vaults, analyst-administered KMS/HSM paths, and preregistration alone as P4 substitutes.
 - Preserve P4-A pre-execution closure and P4-B post-unblinding continuity audit as distinct lifecycle stages.
 
-**Exit:** exact-head CI passes the P4 custody contract tests and current-facing control surfaces are synchronized; governance correction merges without changing scientific gate status.
+**State:** COMPLETED as a governance-architecture correction through Issue #285 / PR #286 / merge `a3bafa6fca8599df479a685828f5fdddb6bae589`. This changed the admissible control architecture only; P4 itself remains OPEN / NOT EXECUTED.
+
+### A2.1. Evaluate a solo zero-human Mode-T lifecycle
+
+Issue #287 is the active design/threat-model lane.
+
+Candidate design concept:
+
+- exact frozen workflow/helper identity;
+- transient hosted execution environment;
+- secret/mapping generation only inside the separately authorized empirical runner;
+- blinded dataset emitted without plaintext mapping;
+- future-time/timelock release bundle;
+- primary analysis lock server-timestamped before the release condition;
+- fail-closed invalidation if analysis is not locked before release;
+- post-release P4-B continuity/reveal audit.
+
+**Critical caveat:** this design conflicts with the current universal P4-A requirement that real key/mapping commitments already exist before P7/freeze. Therefore the candidate architecture cannot be promoted merely by implementing tooling. It requires a separate threat model, mode-specific lifecycle decision, P7/P8/P9 schema changes where justified, adversarial tests, and independent review before it can become an accepted Mode-T path.
+
+**State:** OPEN / DESIGN ONLY / NOT P4 EVIDENCE.
 
 ### A3. Repository merge enforcement
 
 Issue #277 remains a repository-administration control.
 
-- Python quality workflow fail-closed behavior is already verified.
+- Python quality workflow fail-closed behavior is verified.
 - Protected-branch/ruleset readback does not require the Python quality matrix before merge.
 - Current connector cannot mutate branch protection/rulesets.
 
@@ -65,7 +87,7 @@ This lane may remain externally blocked without blocking PDMAL scientific sequen
 
 Repository automation can prepare and test the control model, but it cannot truthfully declare real custody without evidence from the selected external/enforced mechanism.
 
-Required events for any mode:
+Required events under the current canonical lifecycle for any mode:
 
 1. select exactly one custody mode: H, I, or T;
 2. identify the execution/analysis principal and custody authority/system;
@@ -78,7 +100,7 @@ Required events for any mode:
 
 Mode H additionally requires genuinely distinct humans and attributable role/no-access attestations. Mode I requires external custody/release-policy evidence and lack of unilateral analyst administration/recovery. Mode T requires independently inspectable or machine-verifiable enforcement evidence and absence of analyst-controlled recovery or override capability.
 
-**Stop condition:** any unexamined control path, analyst-controlled override, missing commitment, missing release rule, contradictory access evidence, or unsupported independence claim keeps P4-A OPEN.
+**Stop condition:** any unexamined control path, analyst-controlled override, missing commitment, missing release rule, contradictory access evidence, unsupported independence claim, or unmerged alternate lifecycle keeps P4-A OPEN.
 
 ## Stage C — P7 final exact binding
 
@@ -135,10 +157,10 @@ Only after P8 and P9 closure:
 
 - create a separate explicit authorization record;
 - bind it to exact F/V/P9 identities;
-- confirm blinded execution remains unable to access the mapping;
+- confirm blinded execution remains unable to access the mapping under the accepted custody lifecycle;
 - only then may empirical collection begin.
 
-Authorization is not implied by green CI, P9 PASS, freeze construction, deployment readiness, preregistration, custody setup, or this plan.
+Authorization is not implied by green CI, P9 PASS, freeze construction, deployment readiness, preregistration, custody setup, a proposed timelock design, or this plan.
 
 ## Parallel non-scientific lanes
 
@@ -150,6 +172,7 @@ These may progress without changing the PDMAL gate sequence:
 - **Issue #122:** P-38 source recovery remains blocked after prior source searches found no authoritative copy.
 - **Issue #36:** AOGA runtime is verified; Sentinel→AOGA integration and live staging circuit-breaker evidence remain separate work.
 - **Issue #32/#64:** evaluator mechanism is hardened, but provenance-controlled ground-truth corpus plus independently generated outputs are still needed for actual hallucination-rate evidence.
+- **Issue #287:** zero-human Mode-T custody architecture remains a design/threat-model lane until independently accepted.
 
 ## Non-claims
 
@@ -161,6 +184,7 @@ This plan and its supporting control-plane work do not:
 - grant pilot authorization;
 - execute or unblind an empirical pilot;
 - establish PDMAL efficacy;
+- establish the sufficiency of a proposed zero-human Mode-T mechanism;
 - increase empirical N.
 
 **Current scientific boundary remains PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0.**
