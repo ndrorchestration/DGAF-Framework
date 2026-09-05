@@ -20,11 +20,11 @@ This matrix is the current planning/control surface. It does not itself constitu
 | P1 Candidate Integrity | **CLOSED / VERIFIED** | exact apparatus/candidate/tree plus deployment-to-candidate binding retained |
 | P2 Execution Contract / Runtime | **CLOSED / VERIFIED** | run `33730195621`; artifact `9883521704`; digest `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d` |
 | P3 Artifact Contract | **CLOSED / VERIFIED** | run `33939955138`; artifacts `9961526468` / `9961526662`; structural/contract scope only |
-| P4 Security / Blinding | **OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED** | synthetic controls pass; merged `P4_HUMAN_KEY_CUSTODY_PROCEDURE.md` defines real custody requirements; distinct-human custody evidence remains absent |
+| P4 Security / Blinding | **OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED** | canonical P4 procedure now accepts Mode H human, Mode I institutional, or Mode T independently enforced technical custody; no real custody instance or no-unilateral-access evidence exists yet |
 | P5 Provenance / Reproducibility | **CLOSED / VERIFIED** | exact candidate identities, deterministic configuration, exact-candidate reproduction evidence, authoritative binding merge `2e325acd…`, and post-merge Governance CI / pre-authorization security PASS; see `P5_PROVENANCE_REPRODUCIBILITY_ATTESTATION_2026-09-05.md` |
 | P6 Durable Evidence Custody | **CLOSED / VERIFIED** | independent archive → retrieval → SHA-256 equality for retained current-candidate evidence set |
 | P6a Runtime / CORS | **CLOSED / VERIFIED** | run `33728695806`; artifact `9882965299`; digest `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f` |
-| P7 Scientific Target | **ADOPTED / FINAL BINDING OPEN** | final exact tuple still blocked by P4 real custody and final freeze identities |
+| P7 Scientific Target | **ADOPTED / FINAL BINDING OPEN** | final exact tuple still blocked by actual P4-A custody evidence and final pre-freeze identities |
 | P8 Analysis Lock | **OPEN / FAIL-CLOSED** | analysis identities are bound; immutable freeze has not been created/verified |
 | P9 Independent Verification | **NOT EXECUTED / OPEN** | fresh independent verification of the final frozen chain remains required |
 
@@ -42,15 +42,25 @@ Run `33730195621` completed all five predeclared exact-candidate runtime cases s
 
 Run `33939955138` verified candidate/tree identity, canonical matrix/schema/cardinality constraints, deterministic contract behavior, duplicate rejection, and fail-closed unauthorized pilot behavior. P3 remains structural/contract evidence only.
 
-### P4 — synthetic evidence plus real-world procedure
+### P4 — synthetic evidence plus independently enforceable custody procedure
 
-Synthetic mock-key blinding/bijection/leakage/freeze-order controls pass. The merged P4 human/key custody procedure requires distinct human principals, secret nonce-hardened key/mapping commitments, attributable custody/no-access attestations, timestamp ordering, and independent release/continuity verification.
+Synthetic mock-key blinding/bijection/leakage/freeze-order controls pass. The canonical procedure is now `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`.
 
-No such real custody event has occurred. P4 therefore remains OPEN / NOT EXECUTED operationally.
+P4-A no longer equates independence with a mandatory personal second-human relationship. It requires the execution/analysis principal to lack unilateral early access to the raw blinding key, cleartext mapping, commitment nonces, or equivalent recovery material.
+
+Three custody modes are admissible:
+
+- `H`: genuinely distinct human custody;
+- `I`: institutional/third-party custody outside the analyst's unilateral control;
+- `T`: independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
+
+Every mode requires nonce-hardened key/mapping commitments, timestamp ordering, a complete control-path inventory, no-unilateral-access evidence, and independently inspectable review evidence. AI agents, aliases, same-operator accounts, ordinary repository secrets, analyst-recoverable vaults, analyst-administered KMS/HSM configurations, and preregistration alone are not substitutes.
+
+No real custody instance has occurred. P4 therefore remains OPEN / NOT EXECUTED operationally.
 
 ### P5 — provenance / reproducibility
 
-P5 is now **CLOSED / VERIFIED** for its bounded provenance/reproducibility claim.
+P5 is **CLOSED / VERIFIED** for its bounded provenance/reproducibility claim.
 
 Exact candidate identities:
 
@@ -74,12 +84,12 @@ Run `33728695806` completed the four exact-candidate CORS cases successfully. Th
 
 ## Anti-transfer / fail-closed rule
 
-No historical candidate, deployment, artifact, runtime result, or empirical observation transfers to another identity merely because code or prose appears equivalent. Deployment health, CI success, synthetic evidence, and control-plane reconciliation are not empirical efficacy evidence.
+No historical candidate, deployment, artifact, runtime result, or empirical observation transfers to another identity merely because code or prose appears equivalent. Deployment health, CI success, synthetic evidence, control-plane reconciliation, preregistration, or a custody mechanism's existence are not empirical efficacy evidence.
 
 ## Remaining critical path
 
-1. Perform and independently verify real P4 human/key custody and access separation.
-2. Complete P7 final exact binding using the already-closed P1/P2/P3/P5/P6/P6a evidence plus actual P4 custody evidence.
+1. Instantiate one acceptable P4-A custody mode and independently verify the no-unilateral-access invariant.
+2. Complete P7 final exact binding using the already-closed P1/P2/P3/P5/P6/P6a evidence plus actual P4-A custody evidence.
 3. Construct and independently verify the immutable P8 freeze.
 4. Execute independent P9 verification of the final frozen chain.
 5. Record separate explicit pilot authorization.
