@@ -27,6 +27,7 @@ Historical candidate evidence remains non-transferable unless an explicit proven
 - Statistical unit: seed, paired by root seed identity.
 - Seed-level effect: `Delta_s = FFCR_s(dgaf) - FFCR_s(null)`.
 - Primary estimand: equal-weight mean of complete paired seed effects.
+- FFCR: proportion of complete topology × failure-count cells whose recorded `ffcr_success` is true.
 - No outcome-dependent weighting, exclusion, or silent imputation.
 - Bootstrap: 10,000 paired-seed percentile resamples.
 - Deterministic bootstrap seed: `20260823`.
