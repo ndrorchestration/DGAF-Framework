@@ -1,7 +1,7 @@
 # Doc-Lint CI Workflow — DGAF-Framework (Spine Repo)
-# Public/current documentation quality gate.
-# Historical and append-only evidence records are governed separately so
-# presentation linting does not rewrite or invalidate provenance.
+# Strict public/current documentation gate plus repository-wide debt ratchet.
+# Historical and append-only evidence records remain provenance-sensitive: the
+# ratchet prevents new debt without requiring bulk rewrites of retained evidence.
 
 name: Doc Lint
 
@@ -15,16 +15,20 @@ on:
       - '**.md'
       - '.markdownlint.yml'
       - '.markdownlint.json'
+      - '.github/markdownlint-repo-baseline.json'
+      - '.github/workflows/doc-lint.yml'
   pull_request:
     branches: [main]
     paths:
       - '**.md'
       - '.markdownlint.yml'
       - '.markdownlint.json'
+      - '.github/markdownlint-repo-baseline.json'
+      - '.github/workflows/doc-lint.yml'
 
 jobs:
   markdownlint:
-    name: Markdown Lint — Public Surface
+    name: Markdown Lint — Public Surface + Repository Ratchet
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,15 +53,97 @@ jobs:
             README.governance.md \
             README.technical.md \
             docs/architecture/DGAF_V1_*.md
-        # Detailed governance, experiment, evidence, archive, historical,
-        # generated, and append-only records remain subject to their own
-        # provenance/evidence controls rather than presentation lint.
+
+      - name: Audit repository-wide markdownlint state
+        id: repo_wide_audit
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          markdownlint \
+            --config .markdownlint.yml \
+            --ignore node_modules \
+            '**/*.md' 2>&1 | tee repo-wide-markdownlint.txt
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Summarize repository-wide state
+        id: repo_wide_summary
+        if: always()
+        shell: bash
+        run: |
+          report=repo-wide-markdownlint.txt
+          test -f "$report"
+          total=$(grep -Ec ':[0-9]+(:[0-9]+)? MD[0-9]{3}/' "$report" || true)
+          files=$(sed -nE 's#^([^:]+):[0-9]+(:[0-9]+)? MD[0-9]{3}/.*#\1#p' "$report" | sort -u | wc -l | tr -d ' ')
+          sed -nE 's#^.* (MD[0-9]{3})/.*#\1#p' "$report" | sort | uniq -c | awk '{print $2 "=" $1}' > repo-wide-markdownlint-counts.txt
+          echo "total=$total" >> "$GITHUB_OUTPUT"
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+          echo 'REPO_WIDE_MARKDOWNLINT_RULE_COUNTS_BEGIN'
+          cat repo-wide-markdownlint-counts.txt
+          echo 'REPO_WIDE_MARKDOWNLINT_RULE_COUNTS_END'
+          echo "REPO_WIDE_MARKDOWNLINT_TOTAL=$total"
+          echo "REPO_WIDE_MARKDOWNLINT_FILES=$files"
+
+      - name: Enforce repository-wide non-increasing ratchet
+        if: always()
+        env:
+          MARKDOWNLINT_EXIT_CODE: ${{ steps.repo_wide_audit.outputs.exit_code }}
+          CURRENT_TOTAL: ${{ steps.repo_wide_summary.outputs.total }}
+          CURRENT_FILES: ${{ steps.repo_wide_summary.outputs.files }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          baseline = json.loads(Path('.github/markdownlint-repo-baseline.json').read_text())
+          exit_code = int(os.environ['MARKDOWNLINT_EXIT_CODE'])
+          if exit_code not in (0, 1):
+              raise SystemExit(f'markdownlint invocation failed with unexpected exit code {exit_code}')
+
+          current = {}
+          counts_path = Path('repo-wide-markdownlint-counts.txt')
+          if counts_path.exists():
+              for line in counts_path.read_text().splitlines():
+                  if line.strip():
+                      rule, count = line.split('=', 1)
+                      current[rule] = int(count)
+
+          baseline_rules = {k: int(v) for k, v in baseline['rule_counts'].items()}
+          failures = []
+          for rule, count in sorted(current.items()):
+              if rule not in baseline_rules:
+                  failures.append(f'new rule family {rule}={count}')
+              elif count > baseline_rules[rule]:
+                  failures.append(f'{rule} increased {baseline_rules[rule]} -> {count}')
+
+          total = int(os.environ['CURRENT_TOTAL'])
+          files = int(os.environ['CURRENT_FILES'])
+          if total > int(baseline['total_violations']):
+              failures.append(f'total violations increased {baseline["total_violations"]} -> {total}')
+          if files > int(baseline['affected_files']):
+              failures.append(f'affected files increased {baseline["affected_files"]} -> {files}')
+
+          if failures:
+              print('Repository-wide markdownlint debt ratchet FAILED:')
+              for failure in failures:
+                  print(f'- {failure}')
+              raise SystemExit(1)
+
+          print(f'PASS: repository-wide markdownlint debt did not increase (violations={total}, files={files})')
+          PY
 
       - name: Report summary
         if: always()
         run: |
-          echo "## Doc Lint Summary — DGAF-Framework" >> $GITHUB_STEP_SUMMARY
-          echo "- Linter: markdownlint-cli 0.39.0" >> $GITHUB_STEP_SUMMARY
-          echo "- Node.js: 24" >> $GITHUB_STEP_SUMMARY
-          echo "- Scope: public/current entry-point documentation" >> $GITHUB_STEP_SUMMARY
-          echo "- Separate provenance surfaces: governance, experiment, evidence, archive, historical, generated, append-only records" >> $GITHUB_STEP_SUMMARY
+          echo "## Doc Lint Summary — DGAF-Framework" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Linter: markdownlint-cli 0.39.0" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Node.js: 24" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Public/current gate: README surfaces + docs/architecture/DGAF_V1_*.md" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repository-wide observed lint exit: ${{ steps.repo_wide_audit.outputs.exit_code }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repository-wide violations: ${{ steps.repo_wide_summary.outputs.total }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repository-wide affected files: ${{ steps.repo_wide_summary.outputs.files }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Baseline: .github/markdownlint-repo-baseline.json (690 violations / 270 files)." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Policy: current debt may decrease but must not increase; public/current and PR-scope lint remain strict." >> "$GITHUB_STEP_SUMMARY"
