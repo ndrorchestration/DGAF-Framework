@@ -1,8 +1,6 @@
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
-import networkx as nx
-
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "tools" / "pdmal" / "lattice_harness.py"
 SPEC = spec_from_file_location("pdmal_lattice_harness", MODULE_PATH)
@@ -17,6 +15,7 @@ def test_dodecahedral_unweighted_curvature_reports_no_discriminating_signal():
 
     assert graph.number_of_nodes() == 20
     assert graph.number_of_edges() == 30
+    assert {graph.degree(node) for node in range(20)} == {3}
     assert audit["n_edges"] == 30
     assert audit["ricci_min"] == -2.0
     assert audit["ricci_mean"] == -2.0
@@ -27,7 +26,7 @@ def test_dodecahedral_unweighted_curvature_reports_no_discriminating_signal():
 
 
 def test_nonregular_graph_retains_explicit_threshold_semantics():
-    graph = nx.path_graph(4)
+    graph = HARNESS.SimpleGraph(((0, 1), (1, 2), (2, 3)))
     audit = HARNESS.lattice_audit(graph, ricci_floor=0.0)
 
     assert audit["ricci_variance"] > 0.0
