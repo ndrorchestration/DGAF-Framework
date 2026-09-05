@@ -1,21 +1,37 @@
 # Pattern Commons Architecture
 
-**Status:** Proposed / audit phase  
-**Date:** 2026-08-26
+**Status:** Accepted architectural boundary / active reconciliation layer  
+**Date:** 2026-09-04
 
 ## Purpose
 
 Pattern definitions and pattern registries are ecosystem-level knowledge artifacts. They are not inherently owned by DGAF merely because DGAF implements or references them.
 
-The intended architecture is a **federated source model with a normalized governance/index layer**: original repositories retain provenance and implementation context; the Pattern Commons records canonical identity, relationships, and epistemic status without falsely implying that every artifact is one thing.
+The architecture is a **federated source model with a normalized governance/index layer**: original repositories retain provenance and implementation context; Pattern Commons records canonical identity, relationships, and epistemic status without falsely implying that every artifact is one thing.
 
 ## Separation of concerns
 
-- **Pattern Commons:** canonical identity, provenance, aliases, semantic equivalence, epistemic status, evidence relationships, and cross-repository mappings.
-- **NDR:** a pattern namespace/family within the Pattern Commons; it is not synonymous with the entire ecosystem registry.
-- **DGAF:** framework implementation, governance mechanisms, enforcement, evaluation, and references to applicable patterns.
+- **Pattern Commons:** cross-family identity, provenance, aliases, semantic-equivalence relationships, epistemic status, evidence relationships, and cross-repository mappings.
+- **NDR:** one pattern namespace/family within Pattern Commons. Its canonical family authority is `docs/NDR_PATTERN_REGISTRY_UNIFIED.md`.
+- **DGAF:** framework implementation, governance mechanisms, enforcement, evaluation, and references to applicable patterns. Its orchestration-pattern namespace remains `registry/PATTERN_REGISTRY_v2.md`.
 - **Notion:** governance/index layer linking patterns to repositories, claims, decisions, implementations, evidence, and asset-boundary decisions.
 - **Commercialization boundary:** determines whether an artifact is open, research, proprietary, private, security-sensitive, or trademark/certification governed; this is independent of epistemic validity.
+
+## Authority rule
+
+There is **no universal pattern registry**. Authority is scoped by family and artifact type:
+
+| Artifact family | Authority |
+|---|---|
+| NDR patterns | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` + `docs/ndr_patterns_unified.json` as one release pair |
+| DGAF orchestration patterns | `registry/PATTERN_REGISTRY_v2.md` |
+| External patterns | Their originating repository/source |
+| Cross-family identity/relationship | Pattern Commons architecture/index layer |
+| Templates | Owning template registry |
+| Agents | Owning agent registry |
+| Evidence/claims | Owning evidence/claim registry |
+
+A registry name, filename, identifier, or cross-reference does not override this authority model.
 
 ## Semantic authority boundary
 
@@ -25,29 +41,15 @@ The governing semantic progression is:
 
 **defined → observed → supported → verified → authorized → canonical**
 
-A pattern record should distinguish, where applicable:
-
-- representation;
-- classification;
-- policy status;
-- epistemic status;
-- ontological assertion;
-- candidate vocabulary;
-- canonical vocabulary.
-
 New terminology or semantic categories are candidate vocabulary until provenance and authorization establish canonical status. Shared terminology, repeated model output, registry membership, or confidence does not establish ontological truth.
-
-**Ontology drift** is a distinct semantic-drift class meaning an unauthorized change in effective vocabulary, entity boundaries, relations, or semantic commitments. It is tracked alongside definition drift, epistemic drift, policy drift, and provenance drift.
-
-Semantic/ontological detection is not inherently a gate. Any detector promoted to threshold-bearing or blocking use requires empirical characterization and evidence of control value.
 
 ## Registry family map
 
-The census currently distinguishes at least:
+The census distinguishes:
 
-1. **NDR P-series / named-session patterns** — the unified NDR family.
-2. **DGAF orchestration patterns** — e.g. `registry/PATTERN_REGISTRY_v2.md`, using IDs such as `P-SAGA-001`, `P-TX-001`, and `P-CB-001`; this is a distinct namespace from NDR P-01–P-42.
-3. **External/cross-listed patterns** — patterns housed in other portfolio repositories, where canonical-source evidence determines whether an artifact is an alias, cross-reference, adapter, or independent pattern.
+1. **NDR P-series / named-session patterns** — unified NDR family.
+2. **DGAF orchestration patterns** — distinct namespace using IDs such as `P-SAGA-001`, `P-TX-001`, and `P-CB-001`.
+3. **External/cross-listed patterns** — canonical source remains external unless explicitly transferred.
 4. **Taxonomy/vocabulary registries.**
 5. **Template registries.**
 6. **Agent registries.**
@@ -58,11 +60,20 @@ The census currently distinguishes at least:
 
 These must not be merged merely because they share the term `registry` or use similar identifiers.
 
-## Current NDR synchronization boundary
+## NDR release synchronization
 
-The NDR Markdown registry currently declares P-01–P-41 as its canonical P-series watermark, while the machine-readable registry has advanced to P-42. This is a known synchronization discrepancy and must be treated as a **consistency issue**, not resolved by silently choosing whichever artifact is newer.
+The NDR human-readable and machine-readable registries now target the same release identity:
 
-Until reconciled, no new pattern should rely on an implicit assumption that the two representations are synchronized.
+`NDR-REGISTRY-2026-07-03-P42`
+
+The machine-readable counterpart records P-42 and version 2.4. The human-readable registry has been reconciled to that P-42 watermark. Deterministic validation remains required for the release to be considered fully synchronized at the provenance/digest level.
+
+The synchronization check therefore has two distinct outcomes:
+
+- **content identity:** watermark/count/version/date agree;
+- **provenance identity:** source commit and content digests are bound and validated.
+
+A content match does not by itself prove provenance identity.
 
 ## Equivalence rule
 
@@ -79,62 +90,24 @@ Same identifier, filename, terminology, or repository location is insufficient e
 
 Where equivalence is unresolved, retain separate source records and record the relationship as `candidate-alias`, `possible-equivalence`, `cross-reference`, or `independent-pattern` rather than forcing a merge.
 
+## Historical artifacts
+
+The former NDR differentiation and merge-plan documents are historical migration records. They remain useful for provenance but are not current authorities or task queues. Legacy registries and cards are similarly historical/superseded where the unified NDR registry explicitly records their disposition.
+
+Historical artifacts must not be deleted solely to make the repository appear less redundant when deletion would destroy useful provenance.
+
 ## Epistemic rule
 
 Registry membership does not establish truth, novelty, empirical support, completeness, safety, production readiness, or independent verification.
 
-Every canonical pattern record should distinguish at minimum:
+A canonical pattern record should distinguish at minimum:
 
 `provenance → definition → claim → mechanism → implementation → evidence → replication/independence → scope → limitations → epistemic status`
 
-Recommended epistemic statuses remain:
+## Anti-sprawl rule
 
-`observed · candidate · proposed · implemented · empirically supported · independently verified · formalized · deprecated · rejected · unresolved`
+Do not create another registry merely because an existing registry is difficult to navigate. Extend the owning authority, add a reconciliation/index record when scope crosses boundaries, or create a genuinely distinct artifact family only when its authority, lifecycle, and evidence boundary differ materially.
 
-## Cross-disciplinary rule
+This is a documentation architecture rule and does not change DGAF/PDMAL experimental status.
 
-A pattern may participate in multiple disciplines—software architecture, AI evaluation, governance, security, reliability, observability, mathematics, legal/commercial policy, or organizational process—without becoming equivalent across those domains.
-
-Disciplinary applicability must therefore be recorded separately from epistemic validity. A pattern can be:
-
-- technically implemented but empirically unsupported;
-- empirically observed but not formally proved;
-- legally governed but technically experimental;
-- commercially valuable but scientifically unvalidated;
-- mathematically well-defined but operationally inert.
-
-This separation prevents business value, nomenclature, or formal appearance from being mistaken for evidence.
-
-## Relationship to commercialization
-
-See [`GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md).
-
-A pattern's commercial/private/security status is an asset-governance attribute, not a truth claim. Public claims about a commercial or private implementation still require enough evidence to substantiate what is publicly asserted.
-
-See [`GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md) for future official/certification terminology.
-
-## Current NDR candidates
-
-The current audit has identified candidate concepts for the next NDR wave:
-
-- **Epistemic Overreach** — candidate pattern.
-- **Mutual Reference Instability** — candidate pattern.
-- **Semantic Convergence Failure** — candidate pattern; any Semantic Delta CRDT language remains a proposed design, not an established technology claim.
-- **Observational Perturbation** — candidate pattern; replaces the more narrowly phrased “observational inertia” concept pending causal instrumentation experiments.
-
-These remain candidate definitions until formalization and evidence are completed. They must not be silently assigned canonical P-numbers while the existing registry already contains P-35–P-42.
-
-## Migration policy
-
-No existing pattern artifacts should be moved, deleted, or consolidated until provenance, ownership, aliases, semantic equivalence, licensing, and epistemic status have been reconciled.
-
-The dedicated Pattern Commons repository decision remains deferred until the ecosystem census and audit provide sufficient evidence.
-
-## Governance references
-
-- [`GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md`](GOVERNANCE/DGAF_COMMERCIALIZATION_OPENNESS_BOUNDARY.md)
-- [`GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md`](GOVERNANCE/DGAF_TRADEMARK_AND_CERTIFICATION_POLICY.md)
-- [`GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md`](GOVERNANCE/DGAF_ECOSYSTEM_BOUNDARY_CROSSWALK_2026-08-25.md)
-- [`CROSS_REF.md`](../CROSS_REF.md)
-- [`CURRENT_STATE.md`](CURRENT_STATE.md)
-- Apache-2.0 [`LICENSE`](../LICENSE)
+**Current DGAF scientific boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.
