@@ -110,9 +110,9 @@ The cleartext mapping between blinded condition identifiers and canonical condit
 
 The analyst-facing artifact surface must contain only blinded identifiers during the blinded phase.
 
-## Required access-separation evidence
+## P4-A — pre-execution custody closure evidence
 
-Before P4 may be reviewed for closure, the evidence packet must include all of the following:
+P4-A is the upstream custody gate consumed by P7/P8/P9. Before P4-A may be reviewed for closure, the evidence packet must include all of the following:
 
 1. **Custodian attestation** — signed or otherwise attributable statement from the Key Custodian.
 2. **Distinct-role attestation** — attributable statement showing the execution/analysis principal is a different human principal from the Key Custodian.
@@ -122,8 +122,25 @@ Before P4 may be reviewed for closure, the evidence packet must include all of t
 6. **No-access statement** — explicit declaration from the execution/analysis principal that they did not possess the key, cleartext mapping, or commitment nonces during the blinded period.
 7. **Timestamp ordering** — evidence that commitments and custody assignment predate any authorized empirical execution.
 8. **Unblinding rule** — explicit condition under which the custodian may release the mapping and its commitment nonce.
-9. **Release record** — after authorized unblinding, an attributable release event with timestamp and authorization reference.
-10. **Continuity verification** — recomputation proving the released mapping plus released mapping nonce matches the pre-execution mapping commitment; key continuity is verified under controlled access without requiring public disclosure of the raw key.
+9. **Evidence provenance/integrity** — retained packet identity/digest and reviewable history.
+10. **Independent pre-execution review** — confirmation that the principals are genuinely distinct, required statements/commitments are present, no secret material is disclosed, and no contradictory access record is known.
+
+P4-A closure requires only evidence that can exist before freeze, authorization, pilot execution, or unblinding. Runtime use, release, and continuity recomputation are downstream P4-B evidence and must not be used as prerequisites for P4-A closure.
+
+## P4-B — post-unblinding custody continuity audit
+
+P4-B occurs only after separately authorized blinded execution and unblinding. It appends evidence to the historical P4-A record; it does not rewrite or retroactively manufacture P4-A closure.
+
+P4-B must retain, as applicable:
+
+- evidence that the authorized runtime actually used the custody object associated with the recorded commitment;
+- release authorization and attributable release timestamp;
+- released mapping plus nonce and exact recomputation of the pre-execution mapping commitment;
+- controlled key-continuity verification when required by the frozen protocol;
+- any adopted destruction attestation; and
+- any custody exception, contradiction, or breach.
+
+A failed or contradictory P4-B audit can invalidate downstream scientific interpretation or require explicit exception adjudication, while the historical P4-A record remains immutable as a statement of what was established pre-execution.
 
 ## Release and continuity verification
 
@@ -191,22 +208,27 @@ The public manifest must never contain the raw key, cleartext mapping before aut
 
 Fields corresponding to events that have not occurred must remain null. They must not be pre-populated with placeholder claims that look like completed events.
 
-## Closure review predicates
+## P4-A closure review predicates
 
-P4 may be considered for `CLOSED / VERIFIED` only if an independent reviewer can establish:
+P4-A may be considered for `CLOSED / VERIFIED (PRE-EXECUTION CUSTODY)` only if an independent reviewer can establish:
 
-- at least two distinct human principals participated in the custody/analysis separation;
-- the key, cleartext mapping, and secret commitment nonces were not available to the blinded-results analyst before authorized release;
-- the commitment digests were published before empirical execution;
-- the mapping commitment scheme is resistant to trivial enumeration of the small mapping space because its nonce remained secret;
-- the runtime/blinding mechanism used the custody object associated with the recorded commitment;
-- release/unblinding occurred only after the required freeze/authorization/analysis conditions;
-- the released mapping and nonce reproduce the pre-execution mapping commitment exactly;
-- key continuity is independently checked under controlled access if required by the frozen protocol;
+- at least two genuinely distinct human principals participate in custody/analysis separation;
+- attributable custodian and execution/analysis no-access attestations exist;
+- raw key, cleartext mapping, and secret commitment nonces are held out of band under the declared access/storage class;
+- nonce-hardened key and mapping commitments were published before any empirical execution;
+- custody assignment and commitment timestamps are retained;
+- the release rule is predeclared;
 - the evidence packet is retained with provenance and integrity checks;
-- no conflicting access record exists.
+- no key, mapping, or unreleased nonce is disclosed in the public packet; and
+- no contradictory access record is known at closure.
 
-If any required predicate is missing or cannot be independently checked, P4 remains **OPEN / BLOCKED** rather than being inferred from intent.
+If any required P4-A predicate is missing or cannot be independently checked, P4-A remains **OPEN / BLOCKED** rather than being inferred from intent.
+
+P7/P8/P9 consume only this P4-A pre-execution closure. They must not require P4-B evidence that can exist only after pilot execution or unblinding.
+
+## P4-B adjudication predicates
+
+After authorized unblinding, the continuity audit checks runtime custody use, release authorization/timestamp, mapping-commitment recomputation, controlled key continuity when required, adopted destruction evidence, and exceptions/breaches. Missing or contradictory required P4-B evidence is preserved as a downstream failure/exception and may invalidate scientific interpretation; it does not rewrite the historical P4-A evidence.
 
 ## Failure and exception handling
 
