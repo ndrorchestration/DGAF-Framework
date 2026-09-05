@@ -29,22 +29,31 @@ PROTOCOL_CONTENT = "b" * 64
 EVIDENCE_SHA = "c" * 64
 KEY_COMMITMENT = "d" * 64
 MAPPING_COMMITMENT = "e" * 64
-ATTESTATION_SHA = "f" * 64
-NO_ACCESS_SHA = "0" * 64
+CONTROL_PATH_SHA = "f" * 64
+NO_UNILATERAL_ACCESS_SHA = "0" * 64
 REVIEW_SHA = "1" * 64
+MODE_EVIDENCE_SHA = "4" * 64
 VERIFIER_SCRIPT_SHA = "2" * 64
 VERIFIER_WORKFLOW_SHA = "3" * 64
+EXECUTION_PRINCIPAL = "human-executor"
+CUSTODY_AUTHORITIES = {
+    "H": "human-custodian",
+    "I": "institutional-custody-service",
+    "T": "technical-custody-system",
+}
 
 
 def _candidate_manifest() -> str:
     return f"""# candidate\n\n```yaml\ncandidate_sha: {CANDIDATE_SHA}\ncandidate_tree_sha: {CANDIDATE_TREE}\ndeployment_binding:\n  deployment_id: {DEPLOYMENT}\n```\n"""
 
 
-def _p7(status: str = "CLOSED") -> str:
-    return f"""# P7\n\n```yaml\nstatus: "{status}"\ncandidate_sha: "{CANDIDATE_SHA}"\ncandidate_tree_sha: "{CANDIDATE_TREE}"\ndeployment_id: "{DEPLOYMENT}"\nprotocol_version: "0.7.5"\nprotocol_blob_sha: "{PROTOCOL_BLOB}"\nprotocol_content_sha256: "{PROTOCOL_CONTENT}"\nanalysis_blob_sha: "{ANALYSIS_BLOB}"\nanalysis_config_sha256: "{CONFIG_SHA}"\nrunner_blob_sha: "{RUNNER_BLOB}"\nartifact_schema_blob_sha: "{SCHEMA_BLOB}"\nfinal_control_plane_commit: "{CONTROL_PLANE}"\nselected_p9_verifier_script_sha256: "{VERIFIER_SCRIPT_SHA}"\nselected_p9_workflow_sha256: "{VERIFIER_WORKFLOW_SHA}"\n```\n"""
+def _p7(status: str = "CLOSED", custody_mode: str = "T") -> str:
+    authority = CUSTODY_AUTHORITIES.get(custody_mode, "invalid-custody-authority")
+    return f"""# P7\n\n```yaml\nstatus: "{status}"\ncandidate_sha: "{CANDIDATE_SHA}"\ncandidate_tree_sha: "{CANDIDATE_TREE}"\ndeployment_id: "{DEPLOYMENT}"\nprotocol_version: "0.7.5"\nprotocol_blob_sha: "{PROTOCOL_BLOB}"\nprotocol_content_sha256: "{PROTOCOL_CONTENT}"\nanalysis_blob_sha: "{ANALYSIS_BLOB}"\nanalysis_config_sha256: "{CONFIG_SHA}"\nrunner_blob_sha: "{RUNNER_BLOB}"\nartifact_schema_blob_sha: "{SCHEMA_BLOB}"\np4_custody_mode: "{custody_mode}"\np4_custody_instance_id: "custody-instance-1"\np4_custody_authority_id: "{authority}"\np4_execution_principal_id: "{EXECUTION_PRINCIPAL}"\np4_key_commitment_sha256: "{KEY_COMMITMENT}"\np4_mapping_commitment_sha256: "{MAPPING_COMMITMENT}"\np4_control_path_inventory_sha256: "{CONTROL_PATH_SHA}"\np4_no_unilateral_access_evidence_sha256: "{NO_UNILATERAL_ACCESS_SHA}"\np4_independent_review_evidence_sha256: "{REVIEW_SHA}"\np4_mode_evidence_sha256: "{MODE_EVIDENCE_SHA}"\nfinal_control_plane_commit: "{CONTROL_PLANE}"\nselected_p9_verifier_script_sha256: "{VERIFIER_SCRIPT_SHA}"\nselected_p9_workflow_sha256: "{VERIFIER_WORKFLOW_SHA}"\n```\n"""
 
 
-def _freeze() -> dict:
+def _freeze(custody_mode: str = "T") -> dict:
+    authority = CUSTODY_AUTHORITIES.get(custody_mode, "invalid-custody-authority")
     return {
         "schema_version": 1,
         "record_type": "PDMAL_IMMUTABLE_FREEZE",
@@ -79,13 +88,16 @@ def _freeze() -> dict:
         },
         "p4_custody": {
             "status": "CLOSED / VERIFIED",
-            "custodian_id": "human-custodian",
-            "execution_principal_id": "human-executor",
+            "mode": custody_mode,
+            "custody_instance_id": "custody-instance-1",
+            "custody_authority_id": authority,
+            "execution_principal_id": EXECUTION_PRINCIPAL,
             "key_commitment_sha256": KEY_COMMITMENT,
             "mapping_commitment_sha256": MAPPING_COMMITMENT,
-            "custodian_attestation_sha256": ATTESTATION_SHA,
-            "execution_no_access_attestation_sha256": NO_ACCESS_SHA,
-            "independent_custody_review_sha256": REVIEW_SHA,
+            "control_path_inventory_sha256": CONTROL_PATH_SHA,
+            "no_unilateral_access_evidence_sha256": NO_UNILATERAL_ACCESS_SHA,
+            "independent_review_evidence_sha256": REVIEW_SHA,
+            "mode_evidence_sha256": MODE_EVIDENCE_SHA,
         },
         "pilot_authorization": {"status": "NOT_GRANTED", "record_id": None},
         "empirical_execution": {"status": "NOT_EXECUTED", "n": 0},
@@ -110,11 +122,13 @@ def _p8_verification(freeze_sha256: str) -> dict:
     }
 
 
-def _write_controls(tmp_path: Path, *, p7_status: str = "CLOSED") -> tuple[Path, Path]:
+def _write_controls(
+    tmp_path: Path, *, p7_status: str = "CLOSED", p7_custody_mode: str = "T"
+) -> tuple[Path, Path]:
     candidate = tmp_path / "candidate.md"
     p7_path = tmp_path / "p7.md"
     candidate.write_text(_candidate_manifest(), encoding="utf-8")
-    p7_path.write_text(_p7(p7_status), encoding="utf-8")
+    p7_path.write_text(_p7(p7_status, p7_custody_mode), encoding="utf-8")
     return candidate, p7_path
 
 
@@ -127,12 +141,17 @@ def _verify(
     freeze: dict,
     *,
     p7_status: str = "CLOSED",
+    p7_custody_mode: str | None = None,
     p8_mutator=None,
     p8_verification_commit_sha: str = P8_VERIFICATION_COMMIT,
     p9_verifier_script_sha256: str = VERIFIER_SCRIPT_SHA,
     p9_workflow_sha256: str = VERIFIER_WORKFLOW_SHA,
 ) -> dict:
-    candidate, p7_path = _write_controls(tmp_path, p7_status=p7_status)
+    if p7_custody_mode is None:
+        p7_custody_mode = freeze["p4_custody"]["mode"]
+    candidate, p7_path = _write_controls(
+        tmp_path, p7_status=p7_status, p7_custody_mode=p7_custody_mode
+    )
     freeze_raw = _serialize(freeze)
     freeze_digest = hashlib.sha256(freeze_raw).hexdigest()
     p8_record = _p8_verification(freeze_digest)
@@ -154,9 +173,11 @@ def _verify(
     )
 
 
-def test_valid_frozen_chain_passes(tmp_path: Path) -> None:
-    result = _verify(tmp_path, _freeze())
+@pytest.mark.parametrize("custody_mode", ["H", "I", "T"])
+def test_valid_frozen_chain_passes_for_each_custody_mode(tmp_path: Path, custody_mode: str) -> None:
+    result = _verify(tmp_path, _freeze(custody_mode))
     assert result["result"] == "PASS"
+    assert result["p4_custody_mode"] == custody_mode
     assert result["empirical_n"] == 0
     assert result["pilot_authorization"] == "NOT_GRANTED"
     assert result["freeze_verification_status"] == "PASS"
@@ -197,10 +218,43 @@ def test_candidate_substitution_fails_closed(tmp_path: Path) -> None:
         _verify(tmp_path, freeze)
 
 
-def test_same_human_cannot_fill_both_p4_roles(tmp_path: Path) -> None:
+def test_invalid_p4_custody_mode_fails_closed(tmp_path: Path) -> None:
     freeze = _freeze()
-    freeze["p4_custody"]["execution_principal_id"] = freeze["p4_custody"]["custodian_id"]
+    freeze["p4_custody"]["mode"] = "Z"
+    with pytest.raises(p9.VerificationError, match="must be one of H, I, or T"):
+        _verify(tmp_path, freeze, p7_custody_mode="T")
+
+
+def test_same_human_cannot_fill_both_mode_h_roles(tmp_path: Path) -> None:
+    freeze = _freeze("H")
+    freeze["p4_custody"]["custody_authority_id"] = EXECUTION_PRINCIPAL
     with pytest.raises(p9.VerificationError, match="must be distinct"):
+        _verify(tmp_path, freeze, p7_custody_mode="H")
+
+
+def test_same_operator_identity_cannot_claim_mode_t_separation(tmp_path: Path) -> None:
+    freeze = _freeze("T")
+    freeze["p4_custody"]["custody_authority_id"] = EXECUTION_PRINCIPAL
+    with pytest.raises(p9.VerificationError, match="must be distinct"):
+        _verify(tmp_path, freeze, p7_custody_mode="T")
+
+
+def test_missing_control_path_inventory_fails_closed(tmp_path: Path) -> None:
+    freeze = _freeze()
+    freeze["p4_custody"].pop("control_path_inventory_sha256")
+    with pytest.raises(p9.VerificationError, match="control_path_inventory_sha256"):
+        _verify(tmp_path, freeze)
+
+
+def test_p4_custody_mode_substitution_against_p7_fails_closed(tmp_path: Path) -> None:
+    with pytest.raises(p9.VerificationError, match="p4_custody_mode differs from final P7 binding"):
+        _verify(tmp_path, _freeze("T"), p7_custody_mode="I")
+
+
+def test_p4_evidence_substitution_against_p7_fails_closed(tmp_path: Path) -> None:
+    freeze = _freeze()
+    freeze["p4_custody"]["no_unilateral_access_evidence_sha256"] = "9" * 64
+    with pytest.raises(p9.VerificationError, match="p4_no_unilateral_access_evidence_sha256"):
         _verify(tmp_path, freeze)
 
 
