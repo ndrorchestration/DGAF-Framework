@@ -4,11 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       freeze_commit_sha:
-        description: 'Exact 40-hex commit containing the immutable freeze object and this verifier definition'
+        description: 'Exact 40-hex immutable freeze commit'
         required: true
         type: string
       freeze_sha256:
-        description: 'Externally retained SHA-256 of docs/experiment/PDMAL_IMMUTABLE_FREEZE.json bytes'
+        description: 'Externally retained SHA-256 of frozen PDMAL_IMMUTABLE_FREEZE.json bytes'
+        required: true
+        type: string
+      p8_verification_commit_sha:
+        description: 'Exact descendant commit containing the separate P8 freeze-verification record'
+        required: true
+        type: string
+      p8_verification_sha256:
+        description: 'Externally retained SHA-256 of PDMAL_P8_FREEZE_VERIFICATION.json bytes'
         required: true
         type: string
 
@@ -17,6 +25,7 @@ permissions:
 
 env:
   FREEZE_PATH: docs/experiment/PDMAL_IMMUTABLE_FREEZE.json
+  P8_VERIFICATION_PATH: docs/experiment/PDMAL_P8_FREEZE_VERIFICATION.json
   CANDIDATE_MANIFEST: docs/experiment/NEW_CANDIDATE_MANIFEST.md
   P7_BINDING: docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md
 
@@ -24,60 +33,93 @@ jobs:
   final-p9:
     runs-on: ubuntu-latest
     steps:
-      - name: Reject dispatch from a non-freeze workflow ref
+      - name: Reject dispatch from a non-verification workflow ref
         env:
-          REQUESTED_FREEZE_SHA: ${{ inputs.freeze_commit_sha }}
+          FREEZE_COMMIT_SHA: ${{ inputs.freeze_commit_sha }}
+          REQUESTED_VERIFICATION_SHA: ${{ inputs.p8_verification_commit_sha }}
           DISPATCH_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          [[ "$REQUESTED_FREEZE_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$DISPATCH_SHA" == "$REQUESTED_FREEZE_SHA" ]]
+          [[ "$FREEZE_COMMIT_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$REQUESTED_VERIFICATION_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$DISPATCH_SHA" = "$REQUESTED_VERIFICATION_SHA"
+          test "$FREEZE_COMMIT_SHA" != "$REQUESTED_VERIFICATION_SHA"
 
-      - name: Checkout exact freeze commit
+      - name: Checkout exact P8 verification commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.freeze_commit_sha }}
+          ref: ${{ inputs.p8_verification_commit_sha }}
+          fetch-depth: 0
           persist-credentials: false
 
-      - name: Verify checked-out freeze identity
+      - name: Verify verification commit identity and freeze ancestry
         env:
-          REQUESTED_FREEZE_SHA: ${{ inputs.freeze_commit_sha }}
+          FREEZE_COMMIT_SHA: ${{ inputs.freeze_commit_sha }}
+          P8_VERIFICATION_COMMIT_SHA: ${{ inputs.p8_verification_commit_sha }}
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$REQUESTED_FREEZE_SHA"
-          test -f "$FREEZE_PATH"
-          test -f "$CANDIDATE_MANIFEST"
-          test -f "$P7_BINDING"
+          test "$(git rev-parse HEAD)" = "$P8_VERIFICATION_COMMIT_SHA"
+          git cat-file -e "$FREEZE_COMMIT_SHA^{commit}"
+          git merge-base --is-ancestor "$FREEZE_COMMIT_SHA" "$P8_VERIFICATION_COMMIT_SHA"
+          test -f "$P8_VERIFICATION_PATH"
           test -f scripts/verify_p9_frozen_chain.py
           test -f .github/workflows/p9-final-frozen-chain.yml
+
+      - name: Materialize immutable freeze inputs from exact freeze commit
+        env:
+          FREEZE_COMMIT_SHA: ${{ inputs.freeze_commit_sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/p9-frozen
+          git show "$FREEZE_COMMIT_SHA:$FREEZE_PATH" > /tmp/p9-frozen/PDMAL_IMMUTABLE_FREEZE.json
+          git show "$FREEZE_COMMIT_SHA:$CANDIDATE_MANIFEST" > /tmp/p9-frozen/NEW_CANDIDATE_MANIFEST.md
+          git show "$FREEZE_COMMIT_SHA:$P7_BINDING" > /tmp/p9-frozen/P7_FINAL_BINDING.md
+          git show "$FREEZE_COMMIT_SHA:scripts/verify_p9_frozen_chain.py" > /tmp/p9-frozen/verify_p9_frozen_chain.py
+          git show "$FREEZE_COMMIT_SHA:.github/workflows/p9-final-frozen-chain.yml" > /tmp/p9-frozen/p9-final-frozen-chain.yml
+
+      - name: Verify P9 verifier definition did not drift after freeze
+        id: verifier_identity
+        run: |
+          set -euo pipefail
+          frozen_script_sha="$(sha256sum /tmp/p9-frozen/verify_p9_frozen_chain.py | awk '{print $1}')"
+          current_script_sha="$(sha256sum scripts/verify_p9_frozen_chain.py | awk '{print $1}')"
+          frozen_workflow_sha="$(sha256sum /tmp/p9-frozen/p9-final-frozen-chain.yml | awk '{print $1}')"
+          current_workflow_sha="$(sha256sum .github/workflows/p9-final-frozen-chain.yml | awk '{print $1}')"
+          test "$frozen_script_sha" = "$current_script_sha"
+          test "$frozen_workflow_sha" = "$current_workflow_sha"
+          echo "script_sha256=$frozen_script_sha" >> "$GITHUB_OUTPUT"
+          echo "workflow_sha256=$frozen_workflow_sha" >> "$GITHUB_OUTPUT"
+          echo "candidate_manifest_sha256=$(sha256sum /tmp/p9-frozen/NEW_CANDIDATE_MANIFEST.md | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "p7_binding_sha256=$(sha256sum /tmp/p9-frozen/P7_FINAL_BINDING.md | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "p8_verification_record_sha256=$(sha256sum "$P8_VERIFICATION_PATH" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12.0'
 
-      - name: Record verifier source identities
-        id: verifier_identity
-        run: |
-          set -euo pipefail
-          echo "script_sha256=$(sha256sum scripts/verify_p9_frozen_chain.py | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-          echo "workflow_sha256=$(sha256sum .github/workflows/p9-final-frozen-chain.yml | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-          echo "candidate_manifest_sha256=$(sha256sum "$CANDIDATE_MANIFEST" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-          echo "p7_binding_sha256=$(sha256sum "$P7_BINDING" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-
       - name: Independently verify final frozen chain
         env:
           EXPECTED_FREEZE_SHA256: ${{ inputs.freeze_sha256 }}
           FREEZE_COMMIT_SHA: ${{ inputs.freeze_commit_sha }}
+          EXPECTED_P8_VERIFICATION_SHA256: ${{ inputs.p8_verification_sha256 }}
+          P8_VERIFICATION_COMMIT_SHA: ${{ inputs.p8_verification_commit_sha }}
+          FROZEN_SCRIPT_SHA256: ${{ steps.verifier_identity.outputs.script_sha256 }}
+          FROZEN_WORKFLOW_SHA256: ${{ steps.verifier_identity.outputs.workflow_sha256 }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/p9-final
           python scripts/verify_p9_frozen_chain.py \
-            --freeze "$FREEZE_PATH" \
+            --freeze /tmp/p9-frozen/PDMAL_IMMUTABLE_FREEZE.json \
             --expected-freeze-sha256 "$EXPECTED_FREEZE_SHA256" \
             --freeze-commit-sha "$FREEZE_COMMIT_SHA" \
-            --candidate-manifest "$CANDIDATE_MANIFEST" \
-            --p7-binding "$P7_BINDING" \
+            --p8-verification "$P8_VERIFICATION_PATH" \
+            --expected-p8-verification-sha256 "$EXPECTED_P8_VERIFICATION_SHA256" \
+            --p8-verification-commit-sha "$P8_VERIFICATION_COMMIT_SHA" \
+            --candidate-manifest /tmp/p9-frozen/NEW_CANDIDATE_MANIFEST.md \
+            --p7-binding /tmp/p9-frozen/P7_FINAL_BINDING.md \
+            --p9-verifier-script-sha256 "$FROZEN_SCRIPT_SHA256" \
+            --p9-workflow-sha256 "$FROZEN_WORKFLOW_SHA256" \
             --output /tmp/p9-final/p9-final-frozen-chain-evidence.json
 
       - name: Verify evidence sidecar
@@ -102,16 +144,20 @@ jobs:
         env:
           FREEZE_COMMIT_SHA: ${{ inputs.freeze_commit_sha }}
           FREEZE_SHA256: ${{ inputs.freeze_sha256 }}
+          P8_VERIFICATION_COMMIT_SHA: ${{ inputs.p8_verification_commit_sha }}
+          P8_VERIFICATION_SHA256: ${{ inputs.p8_verification_sha256 }}
           SOURCE_ARTIFACT_ID: ${{ steps.source_artifact.outputs.artifact-id }}
           SOURCE_ARTIFACT_DIGEST: ${{ steps.source_artifact.outputs.artifact-digest }}
           SCRIPT_SHA256: ${{ steps.verifier_identity.outputs.script_sha256 }}
           WORKFLOW_SHA256: ${{ steps.verifier_identity.outputs.workflow_sha256 }}
           CANDIDATE_MANIFEST_SHA256: ${{ steps.verifier_identity.outputs.candidate_manifest_sha256 }}
           P7_BINDING_SHA256: ${{ steps.verifier_identity.outputs.p7_binding_sha256 }}
+          P8_RECORD_COMPUTED_SHA256: ${{ steps.verifier_identity.outputs.p8_verification_record_sha256 }}
           RUN_ID: ${{ github.run_id }}
           RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
           set -euo pipefail
+          test "$P8_RECORD_COMPUTED_SHA256" = "$P8_VERIFICATION_SHA256"
           python - <<'PY'
           import hashlib
           import json
@@ -134,6 +180,10 @@ jobs:
               'freeze': {
                   'commit_sha': os.environ['FREEZE_COMMIT_SHA'],
                   'external_byte_sha256': os.environ['FREEZE_SHA256'],
+              },
+              'p8_verification': {
+                  'commit_sha': os.environ['P8_VERIFICATION_COMMIT_SHA'],
+                  'external_byte_sha256': os.environ['P8_VERIFICATION_SHA256'],
               },
               'independent_resolution_inputs': {
                   'candidate_manifest_sha256': os.environ['CANDIDATE_MANIFEST_SHA256'],
