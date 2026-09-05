@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: vercel-production-deploy
+  cancel-in-progress: true
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   VERCEL_ORG_ID: team_TJWNcGa1Xh9ARKF3SYbKKxKp
