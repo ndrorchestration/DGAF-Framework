@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "generated_against_main_sha": "a72e9c5acf4e89a0f3bfce1e0a131aea00de4b3f",
+  "tool": "markdownlint-cli@0.39.0",
+  "config": ".markdownlint.yml",
+  "scope": "**/*.md excluding node_modules",
+  "total_violations": 690,
+  "affected_files": 270,
+  "rule_counts": {
+    "MD003": 2,
+    "MD007": 5,
+    "MD022": 47,
+    "MD025": 4,
+    "MD026": 1,
+    "MD028": 11,
+    "MD029": 13,
+    "MD031": 1,
+    "MD032": 30,
+    "MD034": 42,
+    "MD036": 181,
+    "MD040": 325,
+    "MD047": 4,
+    "MD052": 4,
+    "MD055": 2,
+    "MD056": 18
+  },
+  "policy": "non-increasing ratchet; new rule families or increases in per-rule count, total violations, or affected files fail closed",
+  "scientific_boundary": "documentation quality control only; no freeze, authorization, unblinding, deployment certification, or empirical-N effect"
+}
