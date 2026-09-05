@@ -1,0 +1,135 @@
+name: Temporary Current-Lineage Flake8 Remediation
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - fix/quality-flake8-current-lineage-20260905
+
+jobs:
+  remediate:
+    if: github.actor == 'ndrorchestration'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout remediation branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/quality-flake8-current-lineage-20260905
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install repository-pinned CI toolchain
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Apply seven bounded code fixes and Black-compatible flake8 rule
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('components/KAPPA/dynamic_weight_router.py'): [
+                  (
+                      '            l = len(m.group(0))\n            if l > longest:\n                longest = l\n',
+                      '            match_length = len(m.group(0))\n            if match_length > longest:\n                longest = match_length\n',
+                  ),
+              ],
+              Path('components/ahg_herald_trace.py'): [
+                  ('from dataclasses import asdict, dataclass, field\n', 'from dataclasses import asdict, dataclass\n'),
+                  ('from typing import Callable, Deque, List, Optional\n', 'from typing import Deque, List, Optional\n'),
+              ],
+              Path('components/ensemble_v16.py'): [
+                  ('import re\n', ''),
+              ],
+              Path('components/ensemble_v17.py'): [
+                  ('    assert r_seq["step_locked"] == True, "SEQ STEP_LOCK FAIL"\n',
+                   '    assert r_seq["step_locked"] is True, "SEQ STEP_LOCK FAIL"\n'),
+              ],
+              Path('components/evaluate_router.py'): [
+                  (
+                      '            f"  [{record[\'kappa_category\']:<16}] {record[\'id\']} -> {record[\'composite_score\']:.4f} ({record[\'kappa_policy\']})"\n',
+                      '            f"  [{record[\'kappa_category\']:<16}] {record[\'id\']} -> "\n'
+                      '            f"{record[\'composite_score\']:.4f} ({record[\'kappa_policy\']})"\n',
+                  ),
+              ],
+              Path('components/topology_router.py'): [
+                  ('from typing import List, Optional\n', 'from typing import List\n'),
+              ],
+          }
+
+          for path, edits in replacements.items():
+              text = path.read_text(encoding='utf-8')
+              for old, new in edits:
+                  count = text.count(old)
+                  if count != 1:
+                      raise SystemExit(f'{path}: expected exactly one replacement target, found {count}: {old!r}')
+                  text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+
+          Path('.flake8').write_text(
+              '[flake8]\n'
+              'max-line-length = 120\n'
+              '# E203 conflicts with Black-formatted slice syntax.\n'
+              'extend-ignore = E203\n',
+              encoding='utf-8',
+          )
+          PY
+
+      - name: Normalize only touched Python files
+        run: |
+          isort \
+            components/KAPPA/dynamic_weight_router.py \
+            components/ahg_herald_trace.py \
+            components/ensemble_v16.py \
+            components/ensemble_v17.py \
+            components/evaluate_router.py \
+            components/topology_router.py \
+            --profile=black
+          black \
+            components/KAPPA/dynamic_weight_router.py \
+            components/ahg_herald_trace.py \
+            components/ensemble_v16.py \
+            components/ensemble_v17.py \
+            components/evaluate_router.py \
+            components/topology_router.py \
+            --line-length=120
+
+      - name: Verify full intended quality baseline
+        run: |
+          flake8 components --count --select=E9,F63,F82 --show-source --statistics
+          flake8 components --count --statistics --max-line-length=120
+          black --check components/ tests/ --line-length=120
+          isort --check-only components/ tests/ --profile=black
+          mypy components/ --ignore-missing-imports --no-implicit-optional
+          git diff --check
+          pytest tests/ -q --timeout=30
+
+      - name: Remove temporary remediation workflow from proposed diff
+        run: rm .github/workflows/quality-flake8-autofix-current-lineage.yml
+
+      - name: Commit verified bounded remediation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            .flake8 \
+            components/KAPPA/dynamic_weight_router.py \
+            components/ahg_herald_trace.py \
+            components/ensemble_v16.py \
+            components/ensemble_v17.py \
+            components/evaluate_router.py \
+            components/topology_router.py \
+            .github/workflows/quality-flake8-autofix-current-lineage.yml
+          git status --short
+          if git diff --cached --quiet; then
+            echo 'No remediation changes produced.'
+            exit 1
+          fi
+          git commit -m 'style: close current-lineage flake8 baseline'
+          git push origin HEAD:fix/quality-flake8-current-lineage-20260905
