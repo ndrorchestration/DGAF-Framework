@@ -3,8 +3,7 @@ name: PDMAL Pre-Freeze Runner Validation
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - '.github/workflows/pdmal-pre-freeze-runner.yml'
       - 'docs/experiment/NEW_CANDIDATE_MANIFEST.md'
@@ -12,8 +11,8 @@ on:
       - 'experiments/pdmal_topology/CONTROL_PLANE_EVIDENCE_TRIGGER.md'
   pull_request:
 
-# Trusted pre-freeze evaluator only. It must never authorize empirical work or
-# mutate repository/workflow state.
+# Trusted pre-freeze evaluator only. This workflow must not authorize empirical
+# work, create a freeze, request unblinding, or mutate repository/workflow state.
 permissions:
   contents: read
   actions: read
@@ -34,31 +33,34 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
 
-      - name: Resolve designated runtime candidate
+      - name: Resolve designated candidate and control-plane identity
         shell: bash
         run: |
           set -euo pipefail
           manifest='docs/experiment/NEW_CANDIDATE_MANIFEST.md'
           test -s "$manifest"
+          read_field() { awk -F': ' -v key="$1" '$1 == key {print $2; exit}' "$manifest"; }
 
-          candidate_sha="$(awk -F': ' '$1 == "candidate_sha" {print $2; exit}' "$manifest")"
-          candidate_tree_sha="$(awk -F': ' '$1 == "candidate_tree_sha" {print $2; exit}' "$manifest")"
-          apparatus_sha="$(awk -F': ' '$1 == "apparatus_source_sha" {print $2; exit}' "$manifest")"
-          apparatus_tree_sha="$(awk -F': ' '$1 == "apparatus_source_tree_sha" {print $2; exit}' "$manifest")"
+          candidate_sha="$(read_field candidate_sha)"
+          candidate_tree_sha="$(read_field candidate_tree_sha)"
+          apparatus_sha="$(read_field apparatus_source_sha)"
+          apparatus_tree_sha="$(read_field apparatus_source_tree_sha)"
           control_plane_sha="$(git rev-parse HEAD)"
-          workflow_content_sha256="$(sha256sum .github/workflows/pdmal-pre-freeze-runner.yml | awk '{print $1}')"
+          workflow_sha256="$(sha256sum .github/workflows/pdmal-pre-freeze-runner.yml | awk '{print $1}')"
 
           for value in "$candidate_sha" "$candidate_tree_sha" "$apparatus_sha" "$apparatus_tree_sha" "$control_plane_sha"; do
             [[ "$value" =~ ^[0-9a-f]{40}$ ]]
           done
-          [[ "$workflow_content_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$workflow_sha256" =~ ^[0-9a-f]{64}$ ]]
 
-          echo "CANDIDATE_SHA=$candidate_sha" >> "$GITHUB_ENV"
-          echo "CANDIDATE_TREE_SHA=$candidate_tree_sha" >> "$GITHUB_ENV"
-          echo "APPARATUS_SOURCE_SHA=$apparatus_sha" >> "$GITHUB_ENV"
-          echo "APPARATUS_SOURCE_TREE_SHA=$apparatus_tree_sha" >> "$GITHUB_ENV"
-          echo "CONTROL_PLANE_SHA=$control_plane_sha" >> "$GITHUB_ENV"
-          echo "WORKFLOW_CONTENT_SHA256=$workflow_content_sha256" >> "$GITHUB_ENV"
+          {
+            echo "CANDIDATE_SHA=$candidate_sha"
+            echo "CANDIDATE_TREE_SHA=$candidate_tree_sha"
+            echo "APPARATUS_SOURCE_SHA=$apparatus_sha"
+            echo "APPARATUS_SOURCE_TREE_SHA=$apparatus_tree_sha"
+            echo "CONTROL_PLANE_SHA=$control_plane_sha"
+            echo "WORKFLOW_CONTENT_SHA256=$workflow_sha256"
+          } >> "$GITHUB_ENV"
 
           printf 'control_plane_sha=%s\n' "$control_plane_sha" >> "$GITHUB_STEP_SUMMARY"
           printf 'designated_candidate_sha=%s\n' "$candidate_sha" >> "$GITHUB_STEP_SUMMARY"
@@ -77,41 +79,38 @@ jobs:
         with:
           python-version: '3.12.0'
 
-      - name: Require and fingerprint genuine full dependency lock
+      - name: Bind dependency lock and protocol identity
         shell: bash
         run: |
           set -euo pipefail
-          lock_path='experiments/pdmal_pilot/requirements-full-lock.txt'
-          test -s "$lock_path"
-          grep -Eq '^[[:space:]]*--hash=sha256:' "$lock_path"
-          grep -Eq '^numpy==[0-9]' "$lock_path"
-          grep -Eq '^networkx==[0-9]' "$lock_path"
-          grep -Eq '^pytest==[0-9]' "$lock_path"
-          grep -Eq '^pandas==[0-9]' "$lock_path"
-          lock_sha256="$(sha256sum "$lock_path" | awk '{print $1}')"
-          [[ "$lock_sha256" =~ ^[0-9a-f]{64}$ ]]
-          echo "DEPENDENCY_LOCK_SHA256=$lock_sha256" >> "$GITHUB_ENV"
+          lock='experiments/pdmal_pilot/requirements-full-lock.txt'
+          protocol='docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md'
+          test -s "$lock"
+          test -s "$protocol"
+          grep -Eq '^[[:space:]]*--hash=sha256:' "$lock"
+          grep -Eq '^numpy==[0-9]' "$lock"
+          grep -Eq '^networkx==[0-9]' "$lock"
+          grep -Eq '^pytest==[0-9]' "$lock"
+          grep -Eq '^pandas==[0-9]' "$lock"
 
-      - name: Capture protocol identity
-        shell: bash
-        run: |
-          set -euo pipefail
-          protocol_path='docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md'
-          test -s "$protocol_path"
-          protocol_blob_sha="$(git rev-parse "HEAD:${protocol_path}")"
-          protocol_content_sha256="$(sha256sum "$protocol_path" | awk '{print $1}')"
+          lock_sha256="$(sha256sum "$lock" | awk '{print $1}')"
+          protocol_blob_sha="$(git rev-parse "HEAD:${protocol}")"
+          protocol_sha256="$(sha256sum "$protocol" | awk '{print $1}')"
+          [[ "$lock_sha256" =~ ^[0-9a-f]{64}$ ]]
           [[ "$protocol_blob_sha" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$protocol_content_sha256" =~ ^[0-9a-f]{64}$ ]]
-          echo "PROTOCOL_BLOB_SHA=$protocol_blob_sha" >> "$GITHUB_ENV"
-          echo "PROTOCOL_CONTENT_SHA256=$protocol_content_sha256" >> "$GITHUB_ENV"
+          [[ "$protocol_sha256" =~ ^[0-9a-f]{64}$ ]]
+          {
+            echo "DEPENDENCY_LOCK_SHA256=$lock_sha256"
+            echo "PROTOCOL_BLOB_SHA=$protocol_blob_sha"
+            echo "PROTOCOL_CONTENT_SHA256=$protocol_sha256"
+          } >> "$GITHUB_ENV"
 
       - name: Install harness dependencies from full lock only
         run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
 
       - name: Run pre-freeze contract suite
         working-directory: experiments/pdmal_pilot
-        run: |
-          python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py test_dgaf_tgl_adapter.py -q
+        run: python -m pytest test_harness_contract.py test_execution_contract.py test_task_engine.py test_dgaf_tgl_adapter.py -q
 
       - name: Prove deterministic contract mode without empirical collection
         shell: bash
@@ -125,7 +124,7 @@ jobs:
           test -z "$(find /tmp/pdmal-contract-a -type f -print -quit)"
           test -z "$(find /tmp/pdmal-contract-b -type f -print -quit)"
 
-      - name: Verify pilot mode fails closed without freeze or authorization
+      - name: Verify pilot mode fails closed without governance authorization
         shell: bash
         env:
           PDMAL_MODE: pilot
@@ -144,7 +143,7 @@ jobs:
             test -z "$(find /tmp/pdmal-prohibited-pilot -type f -print -quit)"
           fi
 
-      - name: Build exact-candidate P3/P5 structural contract evidence
+      - name: Build exact-candidate P3/P5 structural evidence
         shell: bash
         run: |
           set -euo pipefail
@@ -161,40 +160,32 @@ jobs:
           import networkx as nx
           import numpy as np
 
-          from harness_contract import (
-              CONTRACT_ROOT_SEEDS if False else STREAM_IDS,
-          )
-          from harness_contract import (
-              deterministic_contract_run,
-              stream_fingerprint,
-              validate_artifact_contract,
-          )
+          from harness_contract import STREAM_IDS, deterministic_contract_run, stream_fingerprint, validate_artifact_contract
           from run_pilot import CONTRACT_ROOT_SEEDS, _environment_fingerprint
 
           candidate = os.environ['CANDIDATE_SHA']
-          candidate_tree = os.environ['CANDIDATE_TREE_SHA']
-          environment_from_candidate = _environment_fingerprint()
-          independently_recomputed_environment = hashlib.sha256(
+          candidate_env = _environment_fingerprint()
+          independent_env = hashlib.sha256(
               f"{platform.python_version()}|{np.__version__}|{nx.__version__}".encode()
           ).hexdigest()
-          if environment_from_candidate != independently_recomputed_environment:
+          if candidate_env != independent_env:
               raise SystemExit('environment fingerprint mismatch')
 
-          key = b'contract-only-test-key-000000000000000000'
-          contract_artifacts = []
-          deterministic_semantic_digests = []
-          stream_fingerprints = {}
+          mock_key = b'contract-only-test-key-000000000000000000'
+          artifacts = []
+          stream_records = {}
+          semantic_digests = []
 
           for seed in CONTRACT_ROOT_SEEDS:
               start = perf_counter()
-              first = [asdict(item) for item in deterministic_contract_run(seed, key)]
+              first = [asdict(x) for x in deterministic_contract_run(seed, mock_key)]
               elapsed = perf_counter() - start
-              second = [asdict(item) for item in deterministic_contract_run(seed, key)]
+              second = [asdict(x) for x in deterministic_contract_run(seed, mock_key)]
               if first != second:
-                  raise SystemExit(f'non-deterministic contract result for seed {seed}')
+                  raise SystemExit(f'contract output changed on repeat for seed {seed}')
 
               streams = stream_fingerprint(seed)
-              spawn_keys = [tuple(streams['spawn_keys'][stream_id]) for stream_id in STREAM_IDS]
+              spawn_keys = [tuple(streams['spawn_keys'][name]) for name in STREAM_IDS]
               if len(set(spawn_keys)) != len(STREAM_IDS):
                   raise SystemExit(f'RNG child stream collision for seed {seed}')
 
@@ -206,22 +197,23 @@ jobs:
                   'root_seed': seed,
                   'results': first,
                   'runtime_seconds': elapsed,
-                  'environment_fingerprint': environment_from_candidate,
+                  'environment_fingerprint': candidate_env,
                   'protocol_status': 'PRE-FREEZE',
                   'empirical_data_collection': False,
               }
               validate_artifact_contract(artifact)
-              semantic = json.dumps(first, sort_keys=True, separators=(',', ':')).encode()
-              deterministic_semantic_digests.append(hashlib.sha256(semantic).hexdigest())
-              contract_artifacts.append(artifact)
-              stream_fingerprints[str(seed)] = streams
+              artifacts.append(artifact)
+              stream_records[str(seed)] = streams
+              semantic_digests.append(hashlib.sha256(
+                  json.dumps(first, sort_keys=True, separators=(',', ':')).encode()
+              ).hexdigest())
 
           evidence = {
               'schema_version': 1,
               'evidence_class': 'PDMAL_PRE_FREEZE_STRUCTURAL_CONTRACT',
               'epistemic_status': 'STRUCTURAL_CONTRACT_EVIDENCE_NOT_GATE_CLOSURE',
               'candidate_sha': candidate,
-              'candidate_tree_sha': candidate_tree,
+              'candidate_tree_sha': os.environ['CANDIDATE_TREE_SHA'],
               'apparatus_source_sha': os.environ['APPARATUS_SOURCE_SHA'],
               'apparatus_source_tree_sha': os.environ['APPARATUS_SOURCE_TREE_SHA'],
               'control_plane_sha': os.environ['CONTROL_PLANE_SHA'],
@@ -230,21 +222,19 @@ jobs:
               'producer_workflow': 'PDMAL Pre-Freeze Runner Validation',
               'producer_workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'producer_event': os.environ['GITHUB_EVENT_NAME'],
-              'protocol_path': 'docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md',
               'protocol_blob_sha': os.environ['PROTOCOL_BLOB_SHA'],
               'protocol_content_sha256': os.environ['PROTOCOL_CONTENT_SHA256'],
-              'dependency_lock_path': 'experiments/pdmal_pilot/requirements-full-lock.txt',
               'dependency_lock_sha256': os.environ['DEPENDENCY_LOCK_SHA256'],
               'environment': {
                   'python': platform.python_version(),
                   'numpy': np.__version__,
                   'networkx': nx.__version__,
-                  'candidate_environment_fingerprint': environment_from_candidate,
-                  'independently_recomputed_fingerprint': independently_recomputed_environment,
+                  'candidate_fingerprint': candidate_env,
+                  'independently_recomputed_fingerprint': independent_env,
               },
-              'rng_stream_fingerprints': stream_fingerprints,
-              'deterministic_semantic_sha256': deterministic_semantic_digests,
-              'contract_artifacts': contract_artifacts,
+              'rng_stream_fingerprints': stream_records,
+              'deterministic_semantic_sha256': semantic_digests,
+              'contract_artifacts': artifacts,
               'assertions': {
                   'candidate_checkout_exact': 'PASS',
                   'candidate_tree_exact': 'PASS',
@@ -278,14 +268,10 @@ jobs:
           PY
 
       - name: Verify structural evidence sidecar
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd test-artifacts
-          sha256sum --check pdmal-pre-freeze-p3-p5-evidence.json.sha256
+        run: cd test-artifacts && sha256sum --check pdmal-pre-freeze-p3-p5-evidence.json.sha256
 
-      - name: Upload exact-candidate P3/P5 structural evidence
-        id: upload_contract
+      - name: Upload exact-candidate structural evidence
+        id: source_artifact
         uses: actions/upload-artifact@v4
         with:
           name: pdmal-pre-freeze-contract-evidence
@@ -295,11 +281,11 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Emit source-bound pre-freeze evidence registry
+      - name: Emit source-bound P3/P5 registry
         shell: bash
         env:
-          SOURCE_ARTIFACT_ID: ${{ steps.upload_contract.outputs.artifact-id }}
-          SOURCE_ARTIFACT_DIGEST: ${{ steps.upload_contract.outputs.artifact-digest }}
+          SOURCE_ARTIFACT_ID: ${{ steps.source_artifact.outputs.artifact-id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ steps.source_artifact.outputs.artifact-digest }}
         run: |
           set -euo pipefail
           test -n "$SOURCE_ARTIFACT_ID"
@@ -309,8 +295,7 @@ jobs:
           import os
           from pathlib import Path
 
-          source_sidecar = Path('test-artifacts/pdmal-pre-freeze-p3-p5-evidence.json.sha256').read_text(encoding='utf-8').strip()
-          content_digest = source_sidecar.split()[0]
+          sidecar = Path('test-artifacts/pdmal-pre-freeze-p3-p5-evidence.json.sha256').read_text(encoding='utf-8').split()[0]
           registry = {
               'schema_version': 1,
               'registry_class': 'PDMAL_PRE_FREEZE_P3_P5_SOURCE_BINDING',
@@ -318,7 +303,6 @@ jobs:
               'candidate_tree_sha': os.environ['CANDIDATE_TREE_SHA'],
               'control_plane_sha': os.environ['CONTROL_PLANE_SHA'],
               'workflow_definition_sha': os.environ['CONTROL_PLANE_SHA'],
-              'workflow_definition_content_sha256': os.environ['WORKFLOW_CONTENT_SHA256'],
               'producer_workflow': 'PDMAL Pre-Freeze Runner Validation',
               'producer_workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'producer_event': os.environ['GITHUB_EVENT_NAME'],
@@ -326,7 +310,7 @@ jobs:
                   'name': 'pdmal-pre-freeze-contract-evidence',
                   'id': os.environ['SOURCE_ARTIFACT_ID'],
                   'digest': os.environ['SOURCE_ARTIFACT_DIGEST'],
-                  'content_sha256': content_digest,
+                  'content_sha256': sidecar,
                   'retention_class': 'GITHUB_ACTIONS_30_DAY_NOT_DURABLE_CUSTODY',
               },
               'gate_interpretation': {
@@ -346,7 +330,7 @@ jobs:
           )
           PY
 
-      - name: Upload source-bound pre-freeze evidence registry
+      - name: Upload source-bound P3/P5 registry
         uses: actions/upload-artifact@v4
         with:
           name: pdmal-pre-freeze-p3-p5-registry
