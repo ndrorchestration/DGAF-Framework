@@ -28,7 +28,7 @@ def test_p4_rejects_same_operator_and_ai_pseudo_separation():
         "repository secret",
         "password-manager vault",
         "break-glass",
-        "preregistration alone",
+        "preregistration or timestamping alone",
     ]
     for phrase in required:
         assert phrase in text
