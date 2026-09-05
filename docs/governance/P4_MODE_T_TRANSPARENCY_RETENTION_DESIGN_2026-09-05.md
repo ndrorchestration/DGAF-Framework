@@ -12,6 +12,7 @@ GitHub separately documents that users with write access can delete workflow run
 
 - which exact run was reserved;
 - which exact run was authorized;
+- that authorization was consumed before any protected material existed;
 - that secret instantiation occurred only in the authorized attempt;
 - that primary analysis was locked before the timelock release;
 - that no extra accepted execution can be silently hidden by deleting GitHub history.
@@ -21,12 +22,13 @@ GitHub separately documents that users with write access can delete workflow run
 Sigstore documents Rekor as an immutable, append-only transparency log. Its security documentation states that entries cannot later be modified or removed from a valid monitored log, and that an entry can establish that a signed artifact existed prior to a logged time. Cosign can sign ordinary blobs and return a bundle containing the signature, certificate, timestamp and transparency-log inclusion proof.
 
 Sources:
-- https://docs.sigstore.dev/
-- https://docs.sigstore.dev/logging/overview/
-- https://docs.sigstore.dev/about/security/
-- https://docs.sigstore.dev/quickstart/quickstart-cosign/
-- https://docs.sigstore.dev/cosign/signing/signing_with_blobs/
-- https://docs.sigstore.dev/quickstart/quickstart-ci/
+
+- [Sigstore documentation](https://docs.sigstore.dev/)
+- [Rekor overview](https://docs.sigstore.dev/logging/overview/)
+- [Sigstore security model](https://docs.sigstore.dev/about/security/)
+- [Cosign quickstart](https://docs.sigstore.dev/quickstart/quickstart-cosign/)
+- [Signing blobs](https://docs.sigstore.dev/cosign/signing/signing_with_blobs/)
+- [GitHub Actions CI quickstart](https://docs.sigstore.dev/quickstart/quickstart-ci/)
 
 This is a **candidate design**, not an assertion that Sigstore is automatically sufficient for P4/P6.
 
@@ -68,11 +70,31 @@ The same run may proceed only after it retrieves and verifies the authorization 
 
 A different run ID or attempt fails before secret generation.
 
-### X — execution-start / ciphertext transparency record
+### C — authorization-consumption transparency record
 
-After authorization verification and P4-T-X execution, emit only non-secret evidence:
+After the reserved run verifies A but **before any key, mapping, or commitment nonce is generated**, it must publish a single-use consumption record:
 
-- exact R/A identities;
+```yaml
+record_type: PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION
+reservation_sha256: <R canonical-record digest>
+authorization_sha256: <A canonical-record digest>
+freeze_sha256: <exact frozen bytes digest>
+github_run_id: <exact reserved run ID>
+github_run_attempt: 1
+secret_instantiation_status: NOT_EXECUTED
+```
+
+C is signed/logged to Rekor and independently retained before P4-T-X begins.
+
+The frozen rule is strict: **one authorization may have at most one accepted C record**. Once C exists, that authorization is consumed even if the runner later crashes before producing a blinded dataset or X record. A replacement execution requires a new custody instance and a new explicit authorization decision; it cannot silently retry the consumed authorization.
+
+This closes a crash-window ambiguity in which a first run could generate protected material, fail before X publication, and then be replaced by a second apparently legitimate execution.
+
+### X — execution / ciphertext transparency record
+
+Only after C is verified as published may P4-T-X generate protected material. After execution, emit only non-secret evidence:
+
+- exact R/A/C identities;
 - key/mapping commitment digests;
 - timelock chain/release round;
 - ciphertext digest;
@@ -86,7 +108,7 @@ Sign/log that public evidence to Rekor and archive the bundle. The real key/mapp
 
 Before the selected drand release round, the frozen primary-analysis workflow creates canonical public JSON containing:
 
-- R/A/X identities;
+- R/A/C/X identities;
 - blinded dataset digest;
 - exact analysis implementation/config identities;
 - primary result digest;
@@ -102,25 +124,21 @@ A payload-supplied timestamp is not sufficient.
 
 ### GitHub deletion no longer erases the only evidence
 
-A repository writer can delete GitHub Actions run/log records, but a valid Rekor entry is designed to be append-only and externally auditable. Deleting GitHub history therefore cannot erase an already-published R/X/L transparency event.
+A repository writer can delete GitHub Actions run/log records, but a valid Rekor entry is designed to be append-only and externally auditable. Deleting GitHub history therefore cannot erase an already-published R/C/X/L transparency event.
 
 ### Backdating the primary analysis becomes harder
 
 The analyst cannot make a post-release analysis become pre-release merely by writing an earlier timestamp into the payload. The verifier uses the transparency-log integration evidence, not the self-asserted payload time, and compares it to the deterministic drand release round/time.
 
-### Duplicate runs become externally visible if the frozen workflow logs before secret generation
+### Duplicate or crashed executions become externally visible
 
-Every exact frozen run must publish R before it can wait for/consume authorization. Final review can reject a freeze/authorization lineage if more than one reservation for the same freeze/custody instance appears under the expected workflow identity, unless the frozen policy classifies the additional reservation as a pre-secret infrastructure abort and proves no P4-T-X evidence exists.
+Every exact frozen run must publish R before it can consume authorization, and every authorization must publish C before secret generation. Final review rejects a lineage containing more than one C for one authorization. A crash after C is therefore visible as a consumed-but-invalid execution rather than becoming an invisible reason to retry.
+
+Multiple R records may exist only if the frozen policy classifies the extras as pre-authorization/pre-consumption aborts and proves that no C exists for them. There is no retry after C under the same authorization.
 
 ## GitHub OIDC identity constraint
 
-Sigstore's GitHub Actions examples use the OIDC issuer:
-
-`https://token.actions.githubusercontent.com`
-
-and verify workflow identities in the form:
-
-`https://github.com/OWNER/REPOSITORY/.github/workflows/WORKFLOW@refs/...`
+Sigstore's GitHub Actions examples use the OIDC issuer `https://token.actions.githubusercontent.com` and verify workflow identities in the form `https://github.com/OWNER/REPOSITORY/.github/workflows/WORKFLOW@refs/...`.
 
 The transparency signature identity is therefore another bound input, not a substitute for the frozen repository SHA/workflow digest contained in the signed record.
 
@@ -148,10 +166,13 @@ Therefore final Mode T should treat Rekor as independent transparency/timestamp 
 
 - If R cannot be signed/logged before authorization consumption: **STOP / NO SECRET**.
 - If A does not bind R and exact run attempt 1: **STOP / NO SECRET**.
+- If C cannot be signed/logged before protected-material generation: **STOP / NO SECRET**.
+- If more than one C exists for the same authorization: **PILOT INVALID**.
+- If a run fails after C: **AUTHORIZATION CONSUMED / PILOT INVALID / NO RETRY UNDER SAME AUTHORIZATION**.
 - If X cannot be signed/logged after a usable blinded execution: **PILOT INVALID**.
 - If L cannot be signed/logged before release: **PILOT INVALID / NO PRIMARY INTERPRETATION**.
 - If L's verified transparency-log time is not strictly before release: **PILOT INVALID**.
-- If unexpected duplicate R/X records are discovered: **PILOT INVALID pending adjudication under the frozen rerun policy**.
+- If unexpected duplicate R/C/X records are discovered: **PILOT INVALID pending adjudication under the frozen rerun policy**.
 - If Sigstore identity, bundle inclusion proof, frozen SHA, workflow digest or helper digest mismatches: **FAIL-CLOSED**.
 
 ## Relationship to existing P6
