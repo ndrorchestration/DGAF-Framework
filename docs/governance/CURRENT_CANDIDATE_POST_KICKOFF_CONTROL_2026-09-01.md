@@ -1,3 +1,5 @@
+> **Historical snapshot / superseded for present-state use — 2026-09-05:** This post-kickoff record preserves the 2026-09-01 candidate/control state and exact evidence then under review. It is not current authority. The current designated runtime candidate is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`; use `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`, `docs/experiment/NEW_CANDIDATE_MANIFEST.md`, and `docs/CURRENT_STATE.md` for present state.
+
 # Current-Candidate Post-Kickoff Control — 2026-09-01
 
 This is a non-authorizing control record created after the completion-audit kickoff documentation commit.

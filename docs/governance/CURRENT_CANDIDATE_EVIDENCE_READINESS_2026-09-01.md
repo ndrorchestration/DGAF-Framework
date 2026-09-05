@@ -1,3 +1,5 @@
+> **Historical snapshot / superseded for present-state use — 2026-09-05:** This file preserves the 2026-09-01 candidate-readiness assessment and its then-current identities. It is not current gate authority. The current designated runtime candidate is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`; present gate state is controlled by `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`, `docs/experiment/NEW_CANDIDATE_MANIFEST.md`, and `docs/CURRENT_STATE.md`. The historical P3/P5/P6/P9 dispositions below must not be reused as current state.
+
 # DGAF/PDMAL — Current-Candidate Evidence Readiness — 2026-09-01
 
 ## Scope
@@ -29,6 +31,7 @@ This record is a non-authorizing control/evidence assessment for the current run
 ## Verified mainline runtime evidence
 
 ### P2
+
 - Run: `33509348174`
 - Artifact: `9800942933`
 - Digest: `sha256:00519533edcaa4c09410b3ed29e49437a5ce8a23ea341a2b798490e110f056c2`
@@ -37,6 +40,7 @@ This record is a non-authorizing control/evidence assessment for the current run
 - Fail-closed case: `valid_missing_audit` → HTTP 503 / `BLOCKED`
 
 ### P6a
+
 - Run: `33509416955`
 - Artifact: `9800972819`
 - Digest: `sha256:9e78ebef5eaa7f33027ec09c0cb922f57bc43dab2fcc694a823ac504c611fcdd`

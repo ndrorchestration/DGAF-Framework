@@ -6,7 +6,7 @@
 
 ## Current identity boundary — 2026-09-05
 
-Repository `main` at the latest reconciliation is `8ae37faee637d3992dfec2f635ea4d1d9252ef2d`. It is a documentation/control-plane descendant, not a replacement runtime candidate.
+This reconciliation is based on protected repository `main` at `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9`. The documentation synchronization that updates this file is a later control-plane descendant and does not replace the designated runtime candidate.
 
 | Identity | Role | Status |
 |---|---|---|
@@ -15,9 +15,9 @@ Repository `main` at the latest reconciliation is `8ae37faee637d3992dfec2f635ea4
 | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Designated executable runtime candidate | PRE-FREEZE / not frozen |
 | `586c00d6dedb589e52108279f9759be3c4f927e1` | Runtime candidate tree | Exact candidate tree |
 | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Vercel production deployment for `7c1cc4bb…` | READY / exact Git source verified |
-| `8ae37faee637d3992dfec2f635ea4d1d9252ef2d` | Latest reconciled repository main | Documentation/control-plane lineage; not deployment-bound |
+| `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9` | Reconciliation base for current repository state | Documentation/evaluator/control-plane lineage; not the scientific candidate |
 
-The attempted Vercel deployment for `8ae37fa…` failed because the free-plan daily deployment quota was exceeded. No deployment was created for that SHA; exact deployment identity and live regression were not executed. This does not invalidate the separately recorded `7c1cc4bb…` deployment tuple.
+Later documentation, evaluator, or control-plane descendants do not automatically replace the designated runtime candidate or inherit its runtime evidence.
 
 ## Candidate-scoped runtime evidence
 
@@ -39,7 +39,7 @@ P2 and P6a are **CLOSED / VERIFIED** only for candidate `7c1cc4bb…`, tree `586
 - scope: four authenticated CORS POST/preflight cases
 - 2026-09-05 retrieval: run and unexpired candidate-bound artifact successfully resolved
 
-Fresh retrieval supersedes the earlier retrieval-unconfirmed observation. It is not a new runtime execution and does not establish current-main equivalence, general application health, or efficacy.
+Fresh retrieval is not a new runtime execution and does not establish later-main equivalence, general application health, or efficacy.
 
 ## Gate state
 
@@ -49,16 +49,28 @@ Fresh retrieval supersedes the earlier retrieval-unconfirmed observation. It is 
 | P1 candidate integrity | CLOSED / VERIFIED |
 | P2 runtime contract | CLOSED / VERIFIED at exact runtime scope |
 | P3 artifact contract | CLOSED / VERIFIED — run `33939955138` |
-| P4 security/blinding | OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT; real human/key custody unestablished |
-| P5 provenance/reproducibility | OPEN / CURRENT-CANDIDATE EVIDENCE PRESENT; final analysis implementation/configuration binding required |
+| P4 security/blinding | OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED; real distinct-human custody/access separation absent |
+| P5 provenance/reproducibility | CLOSED / VERIFIED within its bounded provenance/reproducibility contract |
 | P6 evidence custody | CLOSED / VERIFIED within the defined archive/retrieval/hash contract |
 | P6a CORS | CLOSED / VERIFIED at exact runtime scope |
 | P7 scientific target | ADOPTED / FINAL BINDING OPEN |
-| P8 analysis lock | OPEN / FAIL-CLOSED |
-| P9 independent verification | OPEN |
+| P8 analysis lock / freeze readiness | OPEN / FAIL-CLOSED |
+| P9 independent verification | NOT EXECUTED / OPEN |
 | Freeze | NOT ESTABLISHED |
 | Pilot authorization | NOT GRANTED |
 | Empirical N | 0 |
+
+P5 closure is provenance/reproducibility evidence, not model or scientific efficacy evidence.
+
+## Evaluation integrity
+
+Issue #32 Task 4 (`audit_hallucination_rate`) was hardened by PR #269, merged as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9`. The evaluator now fails closed unless provenance-controlled ground truth and independently generated corresponding outputs are supplied, and it performs deterministic six-field comparison rather than synthesizing a benchmark-derived score.
+
+That change verifies evaluator mechanics only. No Task-4 model-performance result currently exists; the required fixture/output corpus remains outstanding.
+
+## Current quality caveat
+
+Issue #270 tracks later-lineage Black/isort/mypy debt. Those diagnostics are currently advisory (`continue-on-error`) in the Python workflow, so a green workflow must not be represented as proof of a clean formatting/type baseline. Blocking pytest remains green for the PR #269 execution across Python 3.10, 3.11, and 3.12.
 
 ## Evidence rules
 
@@ -66,6 +78,6 @@ Evidence does not transfer across candidate SHA, deployment identity, workflow i
 
 ## Current closure sequence
 
-`P4 actual custody + final P5 binding → exact P7 binding → P8 → P9 → immutable freeze → explicit authorization → blinded pilot`
+`real P4 custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
 
 No documentation or CI action in this sequence grants experimental authorization or advances empirical N.

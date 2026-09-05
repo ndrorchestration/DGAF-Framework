@@ -1,3 +1,5 @@
+> **Historical snapshot / superseded for present-state use — 2026-09-05:** This checklist preserves the 2026-09-01 evidence requirements and then-current candidate. It is not the present gate ledger. The current designated runtime candidate is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`; P5 and P6 have since closed within their bounded contracts, while P4 real human custody/access separation remains open. Use `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` and Issue #232 for current closure state.
+
 # Current-Candidate P4/P5/P6 Evidence Checklist — 2026-09-01
 
 ## Scope

@@ -1,10 +1,10 @@
 # NEW CANDIDATE MANIFEST — post-#174 provenance-corrected apparatus cycle
 
 ```yaml
-manifest_version: 10
+manifest_version: 11
 designation_event: CURRENT_RUNTIME_EVIDENCE_RECONCILED
 state: PRE-FREEZE / FAIL-CLOSED
-mainline_commit_at_last_reconciliation: d859b8356a3488fbead2185f6006a048c0610d92
+reconciliation_base_main: 17fbe054f0b94f68f8b379ad1c8b92f0fab16da9
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 apparatus_source_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
@@ -16,8 +16,8 @@ candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 7c1cc4bb78025b215
 
 control_plane:
   consolidated_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
-  main_at_last_reconciliation: d859b8356a3488fbead2185f6006a048c0610d92
-  status: DOCUMENTATION / CONTROL-PLANE LINEAGE
+  reconciliation_base_main: 17fbe054f0b94f68f8b379ad1c8b92f0fab16da9
+  status: DOCUMENTATION / EVALUATOR / CONTROL-PLANE LINEAGE
   runtime_evidence_inherited: false
 
 provenance_correction:
@@ -80,16 +80,24 @@ freeze_status: NOT_ESTABLISHED
 - `2a54a67d…` is the corrected apparatus provenance anchor.
 - `7c1cc4bb…` / tree `586c00d6…` is the designated executable runtime candidate.
 - `dpl_8Msuf…` is the READY production deployment bound to that candidate.
-- `d859b835…` is a later documentation/control-plane mainline commit, not a replacement runtime candidate.
+- `17fbe054…` is the repository `main` used as the base of this reconciliation; the documentation synchronization that updates this manifest is a later control-plane descendant, not a replacement runtime candidate.
 - P2 and P6a were executed on 2026-09-03 and their candidate-bound artifacts were successfully re-retrieved on 2026-09-05. Retrieval does not constitute re-execution.
 - P1, P2, P3, P5, P6, and P6a are closed within their explicitly bounded engineering/governance evidence contracts.
 - P4 remains operationally open because real distinct-human custody/access separation has not been executed.
 - P7 remains final-binding open; P8 remains fail-closed; final P9 is not executed.
 - No closed engineering/governance predicate is efficacy evidence or authorization.
 
-## Current-main deployment limitation
+## Later control-plane/evaluation work
 
-The exact-main Vercel production deployment attempt for `d859b835…` (run `33949794842`) failed solely on provider quota `api-deployments-free-per-day`. Its dependent live health/regression job was therefore skipped / not executed. This current-main operational incident does not transfer into, invalidate, or silently refresh the designated candidate/deployment evidence above.
+PR #268 corrected the documented Sentinel/AOGA runtime boundary: AOGA runtime is separately implemented/evidenced, while direct Sentinel→AOGA integration is not implemented/evidenced.
+
+PR #269 merged as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9` and made Issue #32 Task 4 fail closed without provenance-controlled ground truth plus independently generated outputs. This is evaluator-mechanism hardening only and does not create a model-performance result or alter the PDMAL candidate.
+
+Issue #270 separately tracks current-lineage Black/isort/mypy debt. Advisory quality diagnostics do not alter this candidate manifest or scientific state.
+
+## Current-main interpretation
+
+This manifest does not treat later repository `main` descendants as experimentally equivalent to the designated candidate. Historical provider/deployment incidents remain scoped to the SHAs on which they occurred; they are not promoted into current-state claims without fresh observation.
 
 ## Boundary
 
