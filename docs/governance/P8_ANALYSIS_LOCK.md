@@ -16,7 +16,7 @@ The `main` branch is a living documentation/evidence lineage and is not itself t
 | Exact candidate Vercel deployment | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | READY / PRODUCTION / EXACT-CANDIDATE VERIFIED |
 | Candidate deployment URL | `https://dynamicgovernanceagenticformation-9u712s0cq-ndrorchestration.vercel.app` | CANDIDATE RUNTIME SURFACE |
 | P5 authoritative binding merge | `2e325acdde74dde50d3d4dc4f493a834fbd28eb2` | VERIFIED |
-| P4 custody procedure merge | `4382a7b745c1abde3a68eb7848611412f5bd34d7` | PROCEDURE ONLY / OPERATION NOT EXECUTED |
+| P4 original human procedure merge | `4382a7b745c1abde3a68eb7848611412f5bd34d7` | HISTORICAL PROCEDURE ANCHOR |
 
 Historical candidate evidence remains non-transferable unless an explicit provenance relation binds it.
 
@@ -57,9 +57,17 @@ Accordingly, P5 is CLOSED / VERIFIED for provenance/reproducibility. See `docs/e
 
 ## P4 custody boundary — still OPEN
 
-`docs/governance/P4_HUMAN_KEY_CUSTODY_PROCEDURE.md` now defines the real-world custody/access-separation procedure, including distinct human principals and domain-separated secret-nonce commitments.
+The canonical control is now `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`.
 
-The procedure has not been performed. No real custodian identity, distinct execution/analysis identity, real key/mapping commitment, or custody/no-access attestation has been accepted. P4 remains **OPEN / NOT EXECUTED** operationally.
+P4-A requires effective control separation, not a mandatory two-human topology. The permitted modes are:
+
+- `H`: genuinely distinct human Key Custodian;
+- `I`: institutional/third-party custody outside the analyst's unilateral control;
+- `T`: independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
+
+Every mode requires nonce-hardened commitments, timestamp ordering, a complete control-path inventory, evidence that the execution/analysis principal cannot recover protected material by unilateral action before release, and independently inspectable review evidence.
+
+No custody mode has been instantiated or accepted. P4 remains **OPEN / NOT EXECUTED** operationally.
 
 ## Verified runtime/artifact context
 
@@ -72,16 +80,16 @@ The P2 valid-request HTTP 503 / `BLOCKED` outcome is expected fail-closed contra
 
 ## P7/P8/P9 boundary
 
-P7's scientific target is adopted, and P5 is now closed, but P7 final exact binding remains blocked by actual P4 human/key custody plus final freeze-specific protocol/control-plane identities.
+P7's scientific target is adopted, and P5 is closed, but P7 final exact binding remains blocked by actual P4-A custody evidence plus final protocol/control-plane identities.
 
-P8 remains **OPEN / FAIL-CLOSED**. Exact analysis identities are now bound, but an immutable freeze has not been constructed or independently verified.
+P8 remains **OPEN / FAIL-CLOSED**. Exact analysis identities are bound, but an immutable freeze has not been constructed or independently verified.
 
 P9 remains **NOT EXECUTED** for the final frozen chain. It must be independently produced after the final pre-freeze evidence tuple is complete.
 
 ## Remaining closure blockers
 
-1. Perform and independently verify real P4 human/key custody and access separation.
-2. Complete P7 exact final binding, including the actual P4 custody evidence and final protocol/control-plane identities.
+1. Instantiate and independently verify one acceptable P4-A custody mode.
+2. Complete P7 exact final binding, including actual P4 custody evidence and final protocol/control-plane identities.
 3. Construct the immutable P8 freeze and independently verify it.
 4. Execute final independent P9 verification of the frozen chain.
 5. Record separate pilot authorization.
@@ -89,13 +97,13 @@ P9 remains **NOT EXECUTED** for the final frozen chain. It must be independently
 
 ## Protocol/candidate separation rule
 
-The executable apparatus, protocol, control-plane documentation, deployment state, synthetic evidence, and empirical artifacts are separate provenance objects. A green CI run, READY deployment, procedure document, or synthetic blinding result does not constitute empirical data or authorization.
+The executable apparatus, protocol, control-plane documentation, deployment state, synthetic evidence, custody mechanism, and empirical artifacts are separate provenance objects. A green CI run, READY deployment, procedure document, preregistration, custody product, or synthetic blinding result does not constitute empirical data or authorization.
 
 ## Explicit non-claims
 
 P5 closure and this reconciliation do **not** create a freeze, authorize a pilot, execute P4 custody, authorize unblinding, establish efficacy, or increase empirical N.
 
-**P4 real custody: OPEN / NOT EXECUTED.**  
+**P4-A custody: OPEN / NOT EXECUTED.**  
 **P7: ADOPTED / FINAL BINDING OPEN.**  
 **P8: OPEN / FAIL-CLOSED.**  
 **P9: NOT EXECUTED.**  
