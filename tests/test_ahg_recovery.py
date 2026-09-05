@@ -3,7 +3,11 @@
 import math
 
 from components.ahg_conductor import StateVector
-from components.ahg_recovery import R_THRESHOLD, compute_recovery_score, recovery_exit_met
+from components.ahg_recovery import (
+    R_THRESHOLD,
+    compute_recovery_score,
+    recovery_exit_met,
+)
 
 
 def test_recovery_score_sign_convention():

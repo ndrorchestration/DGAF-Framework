@@ -1,7 +1,7 @@
 from evaluations.governance_schema_conformance import (
     DEFAULT_SCHEMA,
-    TARGET,
     SEED,
+    TARGET,
     build_corpus,
     evaluate,
 )

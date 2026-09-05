@@ -14,9 +14,8 @@ or production services are contacted.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
-
 
 ARTIFACT = Path("test-artifacts/staging-circuit-breaker-evidence.json")
 
@@ -41,9 +40,7 @@ class StagingCircuitBreaker:
 
     def _record(self, state: str, trigger: str, fault_score: float) -> None:
         self.state = state
-        self.trace.append(
-            Transition(len(self.trace), state, trigger, fault_score)
-        )
+        self.trace.append(Transition(len(self.trace), state, trigger, fault_score))
 
     def activate(self) -> None:
         if self.state != "STAGING":

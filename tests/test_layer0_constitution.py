@@ -39,7 +39,16 @@ def test_layer0_distinguishes_law_standards_frameworks_and_design_choices():
 def test_layer0_preserves_role_separation():
     text = _read(CONSTITUTION)
     matrix = _read(MATRIX)
-    for agent in ("Perigee", "Sentinel-Φ", "Reciprocity", "Professor Prodigy", "Amethyst", "DemiJoule", "Herald", "Apogee"):
+    for agent in (
+        "Perigee",
+        "Sentinel-Φ",
+        "Reciprocity",
+        "Professor Prodigy",
+        "Amethyst",
+        "DemiJoule",
+        "Herald",
+        "Apogee",
+    ):
         assert agent in text
     assert "This composition is descriptive of existing or proposed domain responsibilities." in text
     assert "does not supersede canonical gate ownership" in text
@@ -66,4 +75,7 @@ def test_layer0_blocks_evidence_promotion_and_unauthorized_action():
     text = _read(CONSTITUTION)
     assert "MUST NOT be treated as human authorization" in text
     assert "block, escalate, abstain, or request human review" in text
-    assert "No synthetic test, model output, expert consensus, deployment status, or documentation quality result may be promoted into empirical efficacy" in text
+    assert (
+        "No synthetic test, model output, expert consensus, deployment status, or documentation quality result may be promoted into empirical efficacy"
+        in text
+    )

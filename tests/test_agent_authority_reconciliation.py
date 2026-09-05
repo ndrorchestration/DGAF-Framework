@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 RECON = ROOT / "docs" / "agents" / "AGENT_AUTHORITY_RECONCILIATION.md"
 

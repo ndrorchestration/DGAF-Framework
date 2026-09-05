@@ -8,12 +8,12 @@ Orchestrator: Amethyst
 Anchor: S043
 """
 
+import time
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum, auto
 from typing import Callable, Dict, List, Optional, Set
-import time
-import uuid
 
 import pytest
 
@@ -125,8 +125,7 @@ def invariant_tests_before_deploy(state: State) -> bool:
             (
                 change.timestamp
                 for change in state.events
-                if change.artifact_id == event.artifact_id
-                and change.type in {EventType.CODEGEN, EventType.EDIT}
+                if change.artifact_id == event.artifact_id and change.type in {EventType.CODEGEN, EventType.EDIT}
             ),
             default=None,
         )
@@ -299,7 +298,9 @@ class TestAttackPaths:
     def test_direct_deploy_no_review_blocked(self, clean_state):
         aid = "B1"
         apply_event(clean_state, new_event(EventType.CODEGEN, aid, "code_agent"))
-        result = apply_event(clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": "prod"}))
+        result = apply_event(
+            clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": "prod"})
+        )
         assert result is False, "Direct deploy without review must be blocked"
         assert len(clean_state.events) == 1, "Only CODEGEN should be committed"
 
@@ -307,7 +308,9 @@ class TestAttackPaths:
         aid = "B2"
         apply_event(clean_state, new_event(EventType.CODEGEN, aid, "code_agent"))
         apply_event(clean_state, new_event(EventType.REVIEW_APPROVE, aid, "review_agent"))
-        result = apply_event(clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": "prod"}))
+        result = apply_event(
+            clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": "prod"})
+        )
         assert result is False, "Deploy without tests must be blocked"
 
     def test_unauthorized_deploy_blocked(self, clean_state):
@@ -316,7 +319,9 @@ class TestAttackPaths:
         apply_event(clean_state, new_event(EventType.REVIEW_APPROVE, aid, "review_agent"))
         apply_event(clean_state, new_event(EventType.TEST_PASS, aid, "test_agent"))
         apply_event(clean_state, new_event(EventType.DEPLOY_ATTEMPT, aid, "code_agent", {"environment": "prod"}))
-        result = apply_event(clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "code_agent", {"environment": "prod"}))
+        result = apply_event(
+            clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "code_agent", {"environment": "prod"})
+        )
         assert result is False, "Unauthorized deploy must be blocked"
 
     def test_invariants_hold_after_attack(self, clean_state):
@@ -349,7 +354,9 @@ class TestProvenanceCompleteness:
         aid = "C1"
         clean_state.events.append(new_event(EventType.REVIEW_APPROVE, aid, "review_agent"))
         clean_state.events.append(new_event(EventType.TEST_PASS, aid, "test_agent"))
-        result = apply_event(clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": "prod"}))
+        result = apply_event(
+            clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": "prod"})
+        )
         assert result is False
 
     def test_full_provenance_accepted(self, clean_state):
@@ -361,5 +368,7 @@ class TestProvenanceCompleteness:
             (EventType.DEPLOY_ATTEMPT, "deploy_agent", {"environment": env}),
         ]:
             apply_event(clean_state, new_event(event_type, aid, actor, metadata))
-        result = apply_event(clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": env}))
+        result = apply_event(
+            clean_state, new_event(EventType.DEPLOY_SUCCESS, aid, "deploy_agent", {"environment": env})
+        )
         assert result is True

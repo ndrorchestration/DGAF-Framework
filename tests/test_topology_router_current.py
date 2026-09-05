@@ -41,9 +41,7 @@ def test_sequential_requires_single_authority(router):
 
 
 def test_reflexive_single_agent(router):
-    decision = router.route(
-        payload(agent_ids=["a"], self_loop=True)
-    )
+    decision = router.route(payload(agent_ids=["a"], self_loop=True))
     assert decision.topology is TopologyClass.REFLEXIVE
 
 
@@ -81,9 +79,7 @@ def test_fan_out_basic(router):
 
 
 def test_fan_out_requires_multiple_agents(router):
-    decision = router.route(
-        payload(agent_ids=["a"], fan_out_declared=True)
-    )
+    decision = router.route(payload(agent_ids=["a"], fan_out_declared=True))
     assert decision.topology is TopologyClass.HIERARCHICAL
 
 

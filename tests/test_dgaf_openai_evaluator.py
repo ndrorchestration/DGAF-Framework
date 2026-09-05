@@ -1,7 +1,6 @@
 import importlib.util
 from pathlib import Path
 
-
 MODULE_PATH = Path(__file__).parents[1] / "tools" / "dgaf_openai_evaluator.py"
 spec = importlib.util.spec_from_file_location("dgaf_openai_evaluator", MODULE_PATH)
 assert spec and spec.loader

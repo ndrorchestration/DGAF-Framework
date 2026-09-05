@@ -2,7 +2,6 @@ from pathlib import Path
 
 from evaluations.role_boundary_coherence import TARGET, evaluate
 
-
 FIXTURE = Path(__file__).parents[1] / "evaluations" / "fixtures" / "role_boundary_coherence_v1.json"
 
 

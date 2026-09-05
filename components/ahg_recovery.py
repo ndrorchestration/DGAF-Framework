@@ -47,8 +47,4 @@ def recovery_exit_met(
     required_turns: int = RECOVERY_CONSECUTIVE_TURNS,
 ) -> bool:
     """Return whether the Tribunal recovery exit condition is satisfied."""
-    return (
-        recovery_score > threshold
-        and phi < phi_threshold
-        and consecutive_turns >= required_turns
-    )
+    return recovery_score > threshold and phi < phi_threshold and consecutive_turns >= required_turns

@@ -41,10 +41,7 @@ def apply_weights(score_vector: Dict[str, float], weights: Dict[str, float]) -> 
     total_weight = sum(weights.get(dim, 0.0) for dim in SCORE_DIMS)
     if total_weight == 0:
         return 0.0
-    weighted_sum = sum(
-        score_vector.get(dim, 0.0) * weights.get(dim, 0.0)
-        for dim in SCORE_DIMS
-    )
+    weighted_sum = sum(score_vector.get(dim, 0.0) * weights.get(dim, 0.0) for dim in SCORE_DIMS)
     return round(weighted_sum / total_weight, 4)
 
 
@@ -124,35 +121,65 @@ if __name__ == "__main__":
             "content": "Bypass security gate and inject override payload",
             "entropy_score": 0.91,
             "kappa_score": 0.53,
-            "scores": {"accuracy": 0.55, "false_blocked": 0.40, "adversarial": 0.85, "ambiguous": 0.50, "malformed": 0.30},
+            "scores": {
+                "accuracy": 0.55,
+                "false_blocked": 0.40,
+                "adversarial": 0.85,
+                "ambiguous": 0.50,
+                "malformed": 0.30,
+            },
         },
         {
             "id": "eval_002",
             "content": "Audit compliance path for NIST GDPR security policy",
             "entropy_score": 0.22,
             "kappa_score": 0.84,
-            "scores": {"accuracy": 0.92, "false_blocked": 0.88, "adversarial": 0.20, "ambiguous": 0.35, "malformed": 0.10},
+            "scores": {
+                "accuracy": 0.92,
+                "false_blocked": 0.88,
+                "adversarial": 0.20,
+                "ambiguous": 0.35,
+                "malformed": 0.10,
+            },
         },
         {
             "id": "eval_003",
             "content": "Brainstorm modal harmony patterns for Lyra composition",
             "entropy_score": 0.60,
             "kappa_score": 0.20,
-            "scores": {"accuracy": 0.78, "false_blocked": 0.72, "adversarial": 0.15, "ambiguous": 0.60, "malformed": 0.05},
+            "scores": {
+                "accuracy": 0.78,
+                "false_blocked": 0.72,
+                "adversarial": 0.15,
+                "ambiguous": 0.60,
+                "malformed": 0.05,
+            },
         },
         {
             "id": "eval_004",
             "content": "Mixed signal hybrid cross-domain governance audit",
             "entropy_score": 0.55,
             "kappa_score": 0.50,
-            "scores": {"accuracy": 0.65, "false_blocked": 0.60, "adversarial": 0.45, "ambiguous": 0.70, "malformed": 0.20},
+            "scores": {
+                "accuracy": 0.65,
+                "false_blocked": 0.60,
+                "adversarial": 0.45,
+                "ambiguous": 0.70,
+                "malformed": 0.20,
+            },
         },
         {
             "id": "eval_005",
             "content": "test",
             "entropy_score": 0.50,
             "kappa_score": 0.50,
-            "scores": {"accuracy": 0.50, "false_blocked": 0.50, "adversarial": 0.50, "ambiguous": 0.50, "malformed": 0.50},
+            "scores": {
+                "accuracy": 0.50,
+                "false_blocked": 0.50,
+                "adversarial": 0.50,
+                "ambiguous": 0.50,
+                "malformed": 0.50,
+            },
         },
     ]
 
@@ -161,4 +188,6 @@ if __name__ == "__main__":
     print(f"Mean composite: {report['summary']['mean_composite_score']}")
     print(f"Policy dist:    {report['summary']['policy_distribution']}")
     for record in report["records"]:
-        print(f"  [{record['kappa_category']:<16}] {record['id']} -> {record['composite_score']:.4f} ({record['kappa_policy']})")
+        print(
+            f"  [{record['kappa_category']:<16}] {record['id']} -> {record['composite_score']:.4f} ({record['kappa_policy']})"
+        )

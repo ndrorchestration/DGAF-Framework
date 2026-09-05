@@ -45,7 +45,11 @@ def _clip(value: float, lo: float, hi: float, field_name: str, agent_id: str) ->
         logger.warning(
             "AHGSidecar clip: agent=%s field=%s raw=%.4f clipped to [%.1f, %.1f]. "
             "Miscalibrated heartbeat signal — check agent normalization.",
-            agent_id, field_name, value, lo, hi,
+            agent_id,
+            field_name,
+            value,
+            lo,
+            hi,
         )
         return max(lo, min(hi, value))
     return value
@@ -53,28 +57,25 @@ def _clip(value: float, lo: float, hi: float, field_name: str, agent_id: str) ->
 
 @dataclass
 class AgentHeartbeat:
-    agent_id:          str
-    turn_id:           int
-    D_e_signal:        float = 0.0
-    D_explore_signal:  float = 0.0
-    D_correct_signal:  float = 0.0
-    novelty_signal:    float = 0.0
-    constraint_count:  int   = 0
-    revision_count:    int   = 0
-    coherence_signal:  float = 0.0
+    agent_id: str
+    turn_id: int
+    D_e_signal: float = 0.0
+    D_explore_signal: float = 0.0
+    D_correct_signal: float = 0.0
+    novelty_signal: float = 0.0
+    constraint_count: int = 0
+    revision_count: int = 0
+    coherence_signal: float = 0.0
 
 
 @dataclass
 class TurnBuffer:
-    turn_id:    int
+    turn_id: int
     heartbeats: list[AgentHeartbeat] = field(default_factory=list)
 
     def add(self, hb: AgentHeartbeat) -> None:
         if hb.turn_id != self.turn_id:
-            raise ValueError(
-                f"Heartbeat turn_id {hb.turn_id} does not match "
-                f"buffer turn_id {self.turn_id}"
-            )
+            raise ValueError(f"Heartbeat turn_id {hb.turn_id} does not match " f"buffer turn_id {self.turn_id}")
         self.heartbeats.append(hb)
 
     def to_state_vector(self, total_possible_constraints: int = 10) -> StateVector:
@@ -94,29 +95,33 @@ class TurnBuffer:
             return StateVector()
 
         n = len(self.heartbeats)
-        D_e_raw       = sum(h.D_e_signal       for h in self.heartbeats) / n
+        D_e_raw = sum(h.D_e_signal for h in self.heartbeats) / n
         D_explore_raw = sum(h.D_explore_signal for h in self.heartbeats) / n
         D_correct_raw = sum(h.D_correct_signal for h in self.heartbeats) / n
-        N_raw         = sum(h.novelty_signal   for h in self.heartbeats) / n
-        C_raw         = sum(h.constraint_count for h in self.heartbeats) / max(
-                            total_possible_constraints, 1
-                        )
-        R_raw         = sum(h.revision_count   for h in self.heartbeats) / n / 10.0
-        K_raw         = sum(h.coherence_signal for h in self.heartbeats) / n
+        N_raw = sum(h.novelty_signal for h in self.heartbeats) / n
+        C_raw = sum(h.constraint_count for h in self.heartbeats) / max(total_possible_constraints, 1)
+        R_raw = sum(h.revision_count for h in self.heartbeats) / n / 10.0
+        K_raw = sum(h.coherence_signal for h in self.heartbeats) / n
 
         agent_ids = ", ".join(sorted({h.agent_id for h in self.heartbeats}))
 
-        D_e       = _clip(D_e_raw,       0.0, 1.0, "D_e",       agent_ids)
+        D_e = _clip(D_e_raw, 0.0, 1.0, "D_e", agent_ids)
         D_explore = _clip(D_explore_raw, 0.0, 1.0, "D_explore", agent_ids)
         D_correct = _clip(D_correct_raw, 0.0, 1.0, "D_correct", agent_ids)
-        N         = _clip(N_raw,         0.0, 1.0, "N",         agent_ids)
-        C         = _clip(C_raw,         0.0, 1.0, "C",         agent_ids)
-        R         = _clip(R_raw,         0.0, 1.0, "R",         agent_ids)
-        K         = _clip(K_raw,         0.0, 1.0, "K",         agent_ids)
+        N = _clip(N_raw, 0.0, 1.0, "N", agent_ids)
+        C = _clip(C_raw, 0.0, 1.0, "C", agent_ids)
+        R = _clip(R_raw, 0.0, 1.0, "R", agent_ids)
+        K = _clip(K_raw, 0.0, 1.0, "K", agent_ids)
 
         return StateVector(
-            D_e=D_e, D_explore=D_explore, D_correct=D_correct,
-            N=N, C=C, R=R, M=0.0, K=K,
+            D_e=D_e,
+            D_explore=D_explore,
+            D_correct=D_correct,
+            N=N,
+            C=C,
+            R=R,
+            M=0.0,
+            K=K,
         )
 
 
@@ -159,7 +164,9 @@ class AHGSidecar:
         self._buffers[turn_id].add(heartbeat)
         logger.debug(
             "AHGSidecar ingested: agent=%s turn=%d D_e=%.3f",
-            heartbeat.agent_id, turn_id, heartbeat.D_e_signal,
+            heartbeat.agent_id,
+            turn_id,
+            heartbeat.D_e_signal,
         )
 
     def flush(self, turn_id: int) -> Optional[PhaseIntent]:
@@ -169,7 +176,7 @@ class AHGSidecar:
             logger.warning("AHGSidecar flush: no buffer for turn=%d", turn_id)
             return None
 
-        sv     = buffer.to_state_vector(self.total_possible_constraints)
+        sv = buffer.to_state_vector(self.total_possible_constraints)
         intent = self.conductor.step(sv)
 
         if self._herald_callback is not None:
