@@ -1,43 +1,44 @@
-# PDMAL Experiment — Freeze Manifest
+# PDMAL Experiment — Pre-Freeze Manifest
 
 ---
-
 status: ACTIVE
-state: PRE-FREEZE / BLOCKED
+state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 authority: Both
 owner: DGAF/PDMAL experimental-control
-last_verified: 2026-09-01
+last_verified: 2026-09-05
+control_plane_lineage_tip_at_reconciliation: d859b8356a3488fbead2185f6006a048c0610d92
 corrected_apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 corrected_apparatus_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
-runtime_candidate_sha: 92ff830b1c67413df745e37087e6447c9c251b9a
-runtime_candidate_tree_sha: 73cf3adcc2fd600eda83b818a681c83a7bb1c2ae
-runtime_candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 92ff830b1c67413df745e37087e6447c9c251b9a
-historical_freeze_sha: 3510b86889cd341f7a7cf9ab684fd37b2fafd758
-prior_production_engineering_source: 303f4424d2198f0d0cf76305c589263dd1e417dc
-prior_pre_remediation_candidate: c6157158bf0ee4840e99a381a4b99bd2febe2302
-prior_experimental_verification_boundary: ac8ea267a9f0d995626cf9c3eaf9e6b008b5dc8a
-superseded_post151_apparatus_candidate_sha: 05fa286614bd80576c1f7f4b01f1bdd7fe57ef37
-superseded_candidate_designation_commit_sha: 02c146d1e0cdc423948ac0dfa11e98f812edfb44
-invalidated_pre_correction_apparatus_source_sha: d56b5b3c44e39ddb8c883259584432ab39259306
-invalidated_pre_correction_deployment_id: dpl_76UU8mCmCgKkphF9b1iWvFTVCsRb
-current_candidate_status: CURRENT RUNTIME CANDIDATE / PRE-FREEZE / NOT FROZEN
-current_deployment_id: dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc
-current_deployment_url: https://dynamicgovernanceagenticformation-3y3d8o5dp-ndrorchestration.vercel.app
-current_allowed_cors_origin: https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app
-freeze_commit_sha: NONE
-freeze_timestamp_utc: NONE
-freeze_author: NONE
+immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
+runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
+runtime_candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
+runtime_candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
+candidate_deployment_id: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
+protocol_version: 0.7.5
+analysis_blob_sha: a269ed226b1d261663994fc3ef0e8a1a96da6cd3
+analysis_config_sha256: 6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8
+pilot_runner_blob_sha: b5152fa3c9c4effe1c5201a45d58ac2d6b8e5243
+pilot_artifact_schema_blob_sha: c620d3755a645c5f2ad14124f42ce07a1c670c5f
+freeze_manifest_identity: null
+freeze_manifest_sha256: null
+freeze_commit_sha: null
+freeze_timestamp_utc: null
+freeze_author: null
+independent_freeze_verification: null
+p9_final_evidence: null
+pilot_authorization_id: null
+empirical_n: 0
 ---
 
 ## State boundary
 
-This file is the **pre-freeze manifest**. It is not evidence that the current apparatus is frozen. The historical implementation freeze at `3510b868…` is retained as provenance only.
+This file is the **current negative/pre-freeze manifest**. It is not an immutable freeze and must not be cited as one. The living `main` branch is a documentation/control-plane lineage; it does not replace the designated runtime/scientific candidate unless the canonical candidate identity is explicitly changed.
 
-PR #174 merged the provenance-integrity correction as apparatus source `2a54a67d…`. The earlier `d56b5b3c…` apparatus is invalidated as an execution candidate because its canonical identity omitted five restored gate-state substrates.
+The designated runtime candidate remains `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`, tree `586c00d6dedb589e52108279f9759be3c4f927e1`, with candidate deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.
 
-The current runtime candidate is now distinct from that apparatus source: candidate `92ff830b…`, exact tree `73cf3ad…`. The corrected apparatus source remains the canonical provenance anchor; the runtime candidate is the executable identity used by current runtime evidence.
+All freeze-specific identity fields above remain `null` because no execution-valid immutable freeze exists.
 
-## Experimental design
+## Experimental design selected pre-freeze
 
 - Conditions: `null`, `simple`, `static`, `dgaf`
 - Topologies: `ring`, `pdmal`, `random_regular`, `small_world`, `complete`
@@ -47,56 +48,79 @@ The current runtime candidate is now distinct from that apparatus source: candid
 - Planned raw trial records: 9,000
 - Primary endpoint: FFCR per condition per seed
 - Primary contrast: `dgaf` vs `null`
+- Statistical unit: paired root seed
+- Seed-level effect: `Delta_s = FFCR_s(dgaf) - FFCR_s(null)`
+- Primary estimand: equal-weight mean paired seed effect
+- Bootstrap: 10,000 paired-seed percentile resamples
+- Deterministic bootstrap seed: `20260823`
+- Confidence interval: two-sided 95%, `alpha=0.05`
 - Iterations: 100 fixed; no convergence-based early stopping
+- No outcome-dependent weighting, silent imputation, or silent exclusion
+
+These are design selections, not empirical results.
 
 ## Current evidence state
 
-| Predicate | State |
-|---|---|
-| Historical freeze | HISTORICAL / SUPERSEDED |
-| Seven-gate constitutive restoration | IMPLEMENTED / PROVENANCE COMPLETE |
-| Corrected apparatus identity | CANONICAL PROVENANCE ANCHOR | `2a54a67d…` |
-| Runtime candidate identity | CURRENT / NOT FROZEN | `92ff830b…`; tree `73cf3ad…` |
-| Candidate lineage | ESTABLISHED | `2a54a67d…` → `92ff830b…` |
-| Current deployment identity | CAPTURED | `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` |
-| P1 Candidate integrity | CURRENT-CANDIDATE EVIDENCE OPEN |
-| P2 Execution contract / runtime | VERIFIED | Run `33509348174`; artifact `9800942933` |
-| P3 Artifact contract | IMPLEMENTED / OPEN | Current-candidate evidence required |
-| P4 Security / blinding integrity | OPEN | Current-cycle evidence required |
-| P5 Provenance / reproducibility | OPEN | Current-candidate environment/topology/RNG evidence required |
-| P6 Durable evidence custody | OPEN / FAIL-CLOSED | Current-cycle proof required |
-| P6a Runtime/CORS | VERIFIED | Run `33509416955`; artifact `9800972819` |
-| P7 Scientific target specification | ADOPTED / FINAL BINDING PENDING |
-| P8 Analysis lock | OPEN / FAIL-CLOSED |
-| P9 Independent verification | NOT EXECUTED |
-| Freeze | NOT CREATED |
-| Authorization | NOT GRANTED |
-| Empirical N | 0 |
+| Predicate | State | Current evidence boundary |
+|---|---|---|
+| P-35 | VALIDATED | immutable boundary `643dc77a…` |
+| Runtime candidate lineage | VERIFIED | candidate `7c1cc4bb…`; tree `586c00d6…` |
+| Candidate deployment | VERIFIED | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`, exact candidate source |
+| P1 Candidate Integrity | CLOSED / VERIFIED | apparatus/source, candidate/tree, provenance, deployment identity |
+| P2 Runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; five-case authenticated matrix |
+| P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662`; structural/contract scope |
+| P4 Security / Blinding | OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED | synthetic controls pass; real distinct-human custody/access separation absent |
+| P5 Provenance / Reproducibility | CLOSED / VERIFIED | exact analysis/configuration/runner/schema/environment/RNG/topology chain |
+| P6 Durable Evidence Custody | CLOSED / VERIFIED | independent archive/retrieval/SHA-256 equality for retained evidence set |
+| P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299`; four-case authenticated matrix |
+| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | final binding awaits actual P4 custody and freeze-specific identities |
+| P8 Analysis Lock / Freeze | OPEN / FAIL-CLOSED | analysis identities bound; immutable freeze not created or independently verified |
+| P9 Independent Verification | NOT EXECUTED / OPEN | final frozen-chain verification absent |
+| Freeze | NOT ESTABLISHED | all freeze-specific identity fields remain null |
+| Pilot authorization | NOT GRANTED | separate governance decision absent |
+| Empirical data | N = 0 | no authorized pilot observation |
 
-## Provenance correction
+## P4 boundary
 
-The #170 apparatus `d56b5b3c…` is retained as historical only. PR #174 completed the bounded provenance correction by incorporating all seven restored gate-state substrates into canonical identity and adding regression coverage, including substrate-driven P-29 behavior. The correction establishes apparatus provenance but does not itself constitute runtime evidence.
+The repository contains both the authoritative human/key-custody procedure and a pre-filled execution handoff. Their existence is not operational custody evidence.
 
-## Current runtime identity and evidence
+The following remain absent and must not be inferred or fabricated:
 
-P2 and P6a both recorded the same deployment identity `dpl_Br3muEJGN8eMNCWSpzZqSag6Ptrc` and candidate SHA `92ff830b1c67413df745e37087e6447c9c251b9a`.
+- a genuinely distinct human Key Custodian;
+- a distinct execution/analysis principal;
+- real nonce-hardened key and mapping commitments;
+- attributable custody and no-access attestations;
+- independent custody review.
 
-P2 artifact `9800942933` digest: `sha256:00519533edcaa4c09410b3ed29e49437a5ce8a23ea341a2b798490e110f056c2`. Five required runtime cases passed, including the required fail-closed missing-audit case.
+P4 therefore remains OPEN / NOT EXECUTED operationally.
 
-P6a artifact `9800972819` digest: `sha256:9e78ebef5eaa7f33027ec09c0cb922f57bc43dab2fcc694a823ac504c611fcdd`. Four CORS checks passed, including allowed-origin preflight 204 and disallowed-origin preflight 403.
+## P7/P8/P9 boundary
 
-These are predicate-scoped runtime results. They do not create a freeze, establish efficacy, grant authorization, or cross the empirical boundary.
+`docs/governance/P7_FINAL_BINDING_DRAFT_2026-09-05.md` already assembles the established candidate/deployment/protocol/analysis/runner/schema and P2/P3/P5/P6/P6a identities. Its closure-blocking P4/freeze/P9/authorization fields remain explicit and unresolved.
 
-## Historical documentation classification
+P8 may construct the immutable freeze only after real P4 custody is independently verified and P7 is final with no unresolved closure-blocking placeholders. The immutable freeze must bind, at minimum:
 
-Older audit records stating that inline artifact validation is missing are historical/stale observations, not current defects. The current implementation performs inline artifact validation. Historical records remain preserved; current-state records carry the present implementation and current-candidate evidence status.
+1. final protocol blob/commit identity;
+2. final accepted control-plane commit;
+3. exact candidate SHA/tree and deployment identity;
+4. exact analysis/configuration/runner/schema identities;
+5. required P1/P2/P3/P4/P5/P6/P6a evidence identities/digests;
+6. non-secret blinding-custody commitments and attestations;
+7. an immutable freeze-manifest digest;
+8. independent freeze-verification evidence.
 
-## Candidate boundary
-
-No execution-valid freeze or authorization exists. P3–P6 remain open as separate current-cycle evidence predicates. P7 requires final exact candidate/protocol/analysis/freeze binding. P8 remains fail-closed until TGL/P-35 candidate verification is complete. P9 remains independent and unexecuted.
+P9 must then independently verify that complete frozen chain. Historical/scoped P9 runs are provenance only and do not transfer.
 
 ## Promotion rule
 
-A true frozen manifest requires current-candidate P1–P8 evidence, independent P9 verification, an exact final apparatus/candidate/freeze identity, coherent protocol/analysis/retention/blinding/provenance state, and an independently verified freeze. Explicit authorization remains a separate transition.
+This pre-freeze manifest becomes superseded by an execution-valid immutable freeze only when:
 
-**Pilot authorization: NOT GRANTED. Empirical N: 0. Freeze: NOT CREATED.**
+- P4 real custody is independently verified;
+- P7 final exact binding is closed;
+- every freeze tuple field is exact and immutable;
+- the freeze manifest is created and cryptographically identified;
+- an independent verifier re-resolves/re-hashes the freeze and records a PASS.
+
+Even then, pilot authorization is a separate later governance transition.
+
+**Freeze: NOT ESTABLISHED · Pilot authorization: NOT GRANTED · Empirical N: 0.**
