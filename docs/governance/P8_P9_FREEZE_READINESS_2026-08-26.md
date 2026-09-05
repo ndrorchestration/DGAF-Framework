@@ -9,7 +9,7 @@
 - P1: `CLOSED / VERIFIED`
 - P2: `CLOSED / VERIFIED`
 - P3: `CLOSED / VERIFIED`
-- P4: `OPEN / PROCEDURE ESTABLISHED / OPERATION NOT EXECUTED`
+- P4: `OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED`
 - P5: `CLOSED / VERIFIED`
 - P6: `CLOSED / VERIFIED`
 - P6a: `CLOSED / VERIFIED`
@@ -35,29 +35,39 @@ This is a readiness/control artifact. It does not create a freeze, authorize exe
 
 These closures do not imply P4, P7, P8, P9, freeze, authorization, or empirical efficacy.
 
-## First unresolved prerequisite — P4
+## First unresolved prerequisite — P4-A independently enforceable custody
 
-P4 is the first substantive blocker and is operational rather than repository-synthetic.
+P4-A is the first substantive blocker. The canonical procedure is:
 
-The repository already contains:
+- `docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md`
+- active handoff: `docs/governance/P4_INDEPENDENT_CUSTODY_EXECUTION_RECORD_2026-09-05.md`
+- governance correction: Issue #285
 
-- `docs/governance/P4_HUMAN_KEY_CUSTODY_PROCEDURE.md`;
-- `docs/governance/P4_HUMAN_CUSTODY_EXECUTION_RECORD_2026-09-05.md`;
-- Issue #255 as the operational checkpoint.
+The governing invariant is effective control separation: before the predeclared release condition, the execution/analysis principal must be unable to obtain the raw blinding key, cleartext mapping, commitment nonces, or functionally equivalent recovery material by unilateral ordinary, administrative, recovery, backup, policy-edit, credential-reset, export, or break-glass action.
 
-Still required:
+Exactly one real custody mode must be instantiated:
 
-1. a genuinely distinct human Key Custodian;
-2. a distinct execution/analysis principal;
-3. real nonce-hardened key/mapping commitments generated outside repository-visible state;
-4. attributable custody and no-access attestations;
-5. independent review of role/access separation without disclosure of secret material.
+1. **Mode H — distinct-human custody.** A genuinely distinct human Key Custodian remains a valid path.
+2. **Mode I — institutional/third-party custody.** An external organization/service controls custody and release outside the analyst's unilateral administration or recovery.
+3. **Mode T — independently enforced technical custody.** A cryptographic/HSM/KMS/threshold/equivalent mechanism is acceptable only if the analyst lacks every effective owner/admin/recovery/export/break-glass path capable of defeating the blind.
 
-Until those events exist, P4 remains OPEN and no repository-side automation may substitute invented principals or attestations.
+Still required for every mode:
+
+1. a selected custody mode and unique custody-instance identity;
+2. an attributable execution/analysis principal and custody authority/system identity;
+3. real nonce-hardened key/mapping commitments generated before empirical execution;
+4. a predeclared release rule;
+5. a complete non-secret inventory of ordinary/admin/recovery/backup/export/break-glass paths;
+6. evidence that the execution/analysis principal cannot use any inventoried path alone to recover protected material before release;
+7. independent review evidence appropriate to the selected custody mode.
+
+AI agents/personas, aliases, same-operator accounts, ordinary repository secrets, analyst-recoverable password vaults, analyst-administered KMS/HSM arrangements, and preregistration alone do not satisfy P4-A.
+
+Until one mode is actually instantiated and verified, P4 remains OPEN. Repository-side documentation or automation may not substitute invented independence evidence.
 
 ## P7 readiness
 
-The P7 binding draft already fixes the scientific and technical identities that can legitimately be known before P4:
+The P7 binding draft already fixes the scientific and technical identities known before P4-A:
 
 - candidate/tree and candidate deployment;
 - protocol `0.7.5`;
@@ -67,20 +77,21 @@ The P7 binding draft already fixes the scientific and technical identities that 
 - exact analysis/configuration/runner/schema identities;
 - P2/P3/P5/P6/P6a evidence identities.
 
-P7 remains open because actual P4 custody evidence and final freeze-specific protocol/control-plane identities are not yet available.
+P7 remains open because actual P4-A custody evidence and final pre-freeze protocol/control-plane/verifier identities are not yet available.
 
 ## P8 readiness
 
-The analysis implementation/configuration is already bound through P5. P8 is therefore no longer blocked on selecting or reproducing the primary analysis; it is blocked on constructing an immutable freeze from a fully closed P7 tuple.
+The analysis implementation/configuration is already bound through P5. P8 is blocked on constructing immutable freeze object F from a fully closed P7 tuple.
 
-After P4 and P7 close, P8 must:
+After P4-A and P7 close, P8 must:
 
-1. select the exact final protocol blob/commit identity;
-2. select the exact final accepted control-plane commit;
-3. create an immutable freeze manifest containing the complete exact tuple;
-4. compute/retain the freeze-manifest digest;
-5. independently retrieve/recompute the freeze representation;
-6. verify all bound identities/digests and retain the independent freeze-verification record.
+1. bind the exact final protocol blob/content identity;
+2. bind the exact accepted pre-freeze control-plane commit;
+3. create immutable freeze object F containing the complete exact tuple;
+4. retain the byte-level digest of F externally;
+5. independently retrieve and re-hash F;
+6. create separate descendant verification record V without modifying F;
+7. retain V's byte digest externally.
 
 Until then: **P8 OPEN / FAIL-CLOSED; Freeze NOT ESTABLISHED.**
 
@@ -88,24 +99,25 @@ Until then: **P8 OPEN / FAIL-CLOSED; Freeze NOT ESTABLISHED.**
 
 Historical P9 work demonstrated scoped independent-verification mechanisms on superseded candidates. Those records remain provenance only.
 
-The final P9 has not been executed. It must occur after the immutable P8 freeze exists and must independently verify the complete final chain, including:
+The final P9 has not been executed. It must occur after immutable F and independent verification record V exist and must independently verify the complete final chain, including:
 
-- freeze manifest identity/digest;
+- F and V identities/digests;
 - candidate/tree/deployment identity;
 - final protocol/control-plane identities;
 - analysis/configuration/runner/schema identities;
 - P1/P2/P3/P4/P5/P6/P6a evidence bindings;
-- custody commitments/attestations without secret disclosure;
-- absence of unauthorized empirical execution before authorization.
+- selected P4 custody-mode/instance, commitments, no-unilateral-access evidence, and independent-review evidence without secret disclosure;
+- absence of unauthorized empirical execution before authorization;
+- P9 verifier script/workflow non-drift between F and V.
 
-The final P9 verifier identity and final P9 artifact/digest must be recorded as new evidence. Historical scoped P9 artifacts cannot be relabeled as final-chain verification.
+Historical scoped P9 artifacts cannot be relabeled as final-chain verification.
 
 ## Exact remaining sequence
 
-`real P4 custody → P7 final exact binding → P8 immutable freeze → independent freeze verification → final P9 → separate explicit pilot authorization → blinded empirical execution`
+`real independently enforceable P4-A custody → P7 final exact binding → immutable freeze F → independent P8 verification record V → final P9 → separate explicit pilot authorization → blinded empirical execution`
 
 No later step may be inferred from completion of an earlier one.
 
 ## Current hard boundary
 
-**Freeze: NOT ESTABLISHED · Pilot authorization: NOT GRANTED · Unblinding: NOT EXECUTED · Empirical N: 0.**
+**P4-A: OPEN / NOT EXECUTED · Freeze: NOT ESTABLISHED · Pilot authorization: NOT GRANTED · Unblinding: NOT EXECUTED · Empirical N: 0.**
