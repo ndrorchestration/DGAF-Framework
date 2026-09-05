@@ -4,6 +4,7 @@ ROOT = Path(__file__).resolve().parents[1]
 THREAT_MODEL = ROOT / "docs/governance/P4_MODE_T_SOLO_CUSTODY_THREAT_MODEL_2026-09-05.md"
 EVIDENCE = ROOT / "docs/governance/P4_MODE_T_EXTERNAL_ASSUMPTIONS_EVIDENCE_2026-09-05.md"
 SCHEMA = ROOT / "docs/governance/P4_MODE_T_SCHEMA_V3_DRAFT_2026-09-05.md"
+TRANSPARENCY = ROOT / "docs/governance/P4_MODE_T_TRANSPARENCY_RETENTION_DESIGN_2026-09-05.md"
 P4 = ROOT / "docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md"
 
 
@@ -84,10 +85,33 @@ def test_mode_t_schema_binds_exact_reserved_run_and_first_attempt():
     assert "fail before secret generation unless both records match" in text
 
 
+def test_mode_t_transparency_design_is_append_only_and_pre_secret():
+    text = _read(TRANSPARENCY)
+    assert "immutable, append-only transparency log" in text
+    assert "secret_instantiation_status: NOT_EXECUTED" in text
+    assert "If R cannot be signed/logged before authorization consumption: **STOP / NO SECRET**" in text
+
+
+def test_mode_t_analysis_lock_uses_external_log_time_not_payload_time():
+    text = _read(TRANSPARENCY)
+    assert "A payload-supplied timestamp is not sufficient." in text
+    assert "strictly earlier" in text
+    assert "deterministic release time for the frozen drand round" in text
+
+
+def test_mode_t_duplicate_reservations_remain_fail_closed():
+    text = _read(TRANSPARENCY)
+    assert "Duplicate runs become externally visible" in text
+    assert "unexpected duplicate R/X records" in text
+    assert "PILOT INVALID pending adjudication" in text
+
+
 def test_design_record_is_explicitly_non_authorizing():
     threat = _read(THREAT_MODEL)
     schema = _read(SCHEMA)
+    transparency = _read(TRANSPARENCY)
     assert "AUTHORIZATION NOT GRANTED" in threat
     assert "empirical N=0" in threat
     assert "IMPLEMENTATION NOT YET PROMOTABLE" in threat
     assert "This draft does not alter the canonical P4 procedure" in schema
+    assert "No Sigstore entry has been created for empirical evidence" in transparency
