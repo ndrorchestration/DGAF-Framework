@@ -16,7 +16,7 @@ The repository-native protocol separates:
 
 A result is not promoted to `VERIFIED` without reproducible inputs, expected results, command/environment provenance, retained machine-readable output, and failure analysis.
 
-## Exact-tree repository-native verification
+## Historical exact-tree repository-native verification
 
 Governance CI run `33162492796` completed **SUCCESS** on exact tree `061286b1c17fe671cd5c58df025767befbeb55cd` and retained:
 
@@ -30,7 +30,7 @@ All three records identify the same exact source commit and workflow run. They a
 
 ## Evaluation-integrity fixture track (#64)
 
-The separate #64 fixture suite is also verified on the same exact run:
+The separate #64 fixture suite remains verified on the same historical exact run:
 
 - fixture: `evaluations/evaluation_integrity_fixture_suite.py`
 - regression coverage: `tests/test_evaluation_integrity_fixture_suite.py`
@@ -38,32 +38,51 @@ The separate #64 fixture suite is also verified on the same exact run:
 - 12/12 correct, accuracy `1.0`
 - six registered threat classes
 
-## Task 4 evaluator contract
+## Task 4 evaluator contract — merged current behavior
 
-The `audit_hallucination_rate` runner is required to compare independently generated audit events against provenance-controlled ground-truth events on six declared fields: `role`, `curvature`, `contraction`, `gate_result`, `timestamp`, and `session_id`.
+PR #269 hardened `audit_hallucination_rate` and merged to protected `main` as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9` from exact PR head `d6b6fb640e6d310ff31c4a31d08541821824c412`.
 
-The previous runner implementation accepted ground-truth/client parameters but ignored them and synthesized stochastic scores from published benchmark baselines. That behavior was not part of the retained Governance-CI evidence above, but it was too permissive for a direct evidence-gated runner.
+Before merge, all 17 returned exact-head workflows completed successfully. Key evidence includes:
 
-The current hardening change makes Task 4 fail closed unless both ground-truth events and independently produced audit-event outputs are supplied. It removes baseline-derived/random scoring from Task 4 and uses deterministic exact field comparison. The legacy `herald_client` parameter is not auto-invoked with expected events, preventing the evaluator from leaking answers into generation.
+- Python Tests & Quality Checks run `33957199893`: SUCCESS.
+- Governance CI run `33957199870`: SUCCESS.
+- PDMAL Pre-Freeze Runner Validation run `33957199849`: SUCCESS.
+- Python 3.12 pytest: 190 passed / 4 skipped overall.
+- All seven `tests/test_audit_hallucination_rate.py` regressions were collected and passed.
+- Python 3.10 and Python 3.11 test jobs also completed successfully.
 
-Regression coverage is provided by `tests/test_audit_hallucination_rate.py` and checks missing evidence, exact matches, deterministic mismatches, malformed ground truth, insufficient sample pairs, non-invocation of the legacy client, and the BF16 policy gate.
+The Task 4 runner now requires both provenance-controlled ground-truth audit events and independently generated corresponding audit-event outputs. It deterministically compares six declared fields:
 
-This hardens the **evaluator mechanism only**. It does not create the required provenance-controlled corpus, independently generate Herald/model outputs, or establish a hallucination-rate result.
+- `role`
+- `curvature`
+- `contraction`
+- `gate_result`
+- `timestamp`
+- `session_id`
+
+If required evidence is absent, malformed, or insufficient, the task fails closed and emits no synthetic/random performance result. The legacy `herald_client` parameter is retained for compatibility but is deliberately not auto-invoked with expected answers, preventing answer leakage into the generation path. BF16 remains the required precision policy.
+
+This establishes the **evaluator mechanism hardening only**. It does not create the required provenance-controlled corpus, independently generate Herald/model outputs, or establish a hallucination-rate result.
 
 ## Remaining slices
 
-- `audit_hallucination_rate`: **BLOCKED ON FIXTURE / OUTPUT CORPUS** — provenance-controlled ground-truth audit events and independently generated corresponding outputs are required before a performance result exists.
+- `audit_hallucination_rate`: **BLOCKED ON FIXTURE / OUTPUT CORPUS** — provenance-controlled ground-truth audit events and independently generated corresponding outputs are required before a model-performance result exists.
 - `taubench_banking_mitigation`: CONDITIONAL — reproducible external benchmark/data required.
 - Real-workload evaluation remains a separate evidence track.
 
+## Quality diagnostic boundary
+
+Python workflow run `33957199893` also recorded current-lineage formatting/import/type debt. Black, isort, mypy, and broad lint diagnostics are presently configured `continue-on-error`, so workflow SUCCESS must not be represented as a clean formatting/type baseline.
+
+That later quality regression is tracked separately in Issue #270. The Task-4 regression tests themselves passed across the supported Python matrix.
+
 ## Evidence boundary
 
-The verified results establish evaluator/scoring behavior under repository-authored deterministic synthetic conditions. They do not establish model capability, DGAF efficacy, production reliability, adversarial robustness, or real-world performance.
+The historical verified results establish evaluator/scoring behavior under repository-authored deterministic synthetic conditions. The Task-4 merge establishes fail-closed deterministic comparison mechanics and leakage prevention. Neither establishes model capability, DGAF efficacy, production reliability, adversarial robustness, hallucination rate, or real-world performance.
 
-The successful Governance CI run also emitted exact-run E2b/M6, P-42, P8, formal-model, and provenance artifacts. Those are not automatically transferable to later commits.
+The successful PR-head Governance CI and PDMAL Pre-Freeze runs are engineering/governance compatibility evidence only. They do not alter PDMAL scientific gate state.
 
-Task 4 hardening must itself pass current exact-head CI before being treated as merged repository behavior. Even after that, Task 4 remains blocked until a provenance-controlled fixture/output corpus is supplied and retained.
-
+**Current protected main:** `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9`  
 **Pilot authorization:** NOT GRANTED  
 **Empirical N:** 0  
 **Freeze:** NOT CREATED
