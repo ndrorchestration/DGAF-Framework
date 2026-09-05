@@ -32,7 +32,7 @@ def test_mode_t_rejects_rerun_and_multi_run_selection():
     assert "Reruns enable cherry-picking" in threat
     assert "One authorization maps to one accepted execution identity" in threat
     assert "reject `GITHUB_RUN_ATTEMPT != 1`" in evidence
-    assert "run-reservation → exact-run authorization → execution" in evidence
+    assert "run-reservation → exact-run authorization → authorization-consumption → execution" in evidence
 
 
 def test_mode_t_does_not_treat_github_history_as_immutable_evidence():
@@ -85,11 +85,22 @@ def test_mode_t_schema_binds_exact_reserved_run_and_first_attempt():
     assert "fail before secret generation unless both records match" in text
 
 
+def test_mode_t_authorization_is_consumed_before_secret_generation():
+    schema = _read(SCHEMA)
+    transparency = _read(TRANSPARENCY)
+    assert 'record_type: "PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION"' in schema
+    assert 'status: "CONSUMED_PRE_SECRET"' in schema
+    assert 'secret_instantiation_status: "NOT_EXECUTED"' in schema
+    assert "one authorization may have at most one accepted C record" in transparency
+    assert "There is no retry after C under the same authorization" in transparency
+
+
 def test_mode_t_transparency_design_is_append_only_and_pre_secret():
     text = _read(TRANSPARENCY)
     assert "immutable, append-only transparency log" in text
     assert "secret_instantiation_status: NOT_EXECUTED" in text
     assert "If R cannot be signed/logged before authorization consumption: **STOP / NO SECRET**" in text
+    assert "If C cannot be signed/logged before protected-material generation: **STOP / NO SECRET**" in text
 
 
 def test_mode_t_analysis_lock_uses_external_log_time_not_payload_time():
@@ -99,11 +110,11 @@ def test_mode_t_analysis_lock_uses_external_log_time_not_payload_time():
     assert "deterministic release time for the frozen drand round" in text
 
 
-def test_mode_t_duplicate_reservations_remain_fail_closed():
+def test_mode_t_duplicate_or_crashed_execution_remains_fail_closed():
     text = _read(TRANSPARENCY)
-    assert "Duplicate runs become externally visible" in text
-    assert "unexpected duplicate R/X records" in text
-    assert "PILOT INVALID pending adjudication" in text
+    assert "Duplicate or crashed executions become externally visible" in text
+    assert "more than one C exists for the same authorization" in text
+    assert "AUTHORIZATION CONSUMED / PILOT INVALID / NO RETRY UNDER SAME AUTHORIZATION" in text
 
 
 def test_design_record_is_explicitly_non_authorizing():
