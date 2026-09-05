@@ -24,7 +24,8 @@ Pattern bundle: high_risk_state_mutation
 
 AHG tasks added: Post-S077 — falsifiable targets from AHG_ARCHITECTURE.md §6
     These tasks require ahg_conductor.py + ahg_sidecar.py (P-42 v1.3) to be wired.
-    Stub implementations provided for CI harness validation.
+    Historical stub implementations remain for harness calibration. Task 4 is
+    evidence-gated and fails closed without independent outputs plus ground truth.
 
 Agent responsibilities:
     Amethyst    — orchestration, manifest, CI wiring
@@ -37,6 +38,7 @@ Agent responsibilities:
 Critical pre-conditions (must check before running):
     [ ] DemiJoule: BF16 vs NVFP4 head-to-head on Task 1 (20 samples) — choose precision
     [ ] Herald: generate ground-truth audit event fixtures for Task 4
+    [ ] Task 4: independently produce audit-event outputs without exposing expected answers
     [ ] Sentinel: validate few-shot primer for Task 5 BEFORE baseline run
     [ ] vLLM: expert-routing logs enabled for MoE expert entropy audit
     [ ] AHG Tasks 6-8: ahg_conductor.py + ahg_sidecar.py wired (P-42 v1.3)
@@ -91,7 +93,7 @@ DGAF_EVAL_TASKS: Dict[str, Dict[str, Any]] = {
     },
     "audit_hallucination_rate": {
         "priority": 4,
-        "method": "compare Herald-generated audit events vs ground truth logs (100 samples)",
+        "method": "compare independently generated Herald audit events vs provenance-controlled ground truth logs (100 samples)",
         "metric": "field-level accuracy (role, curvature, contraction, gate_result, timestamp, session_id)",
         "target": 0.787,
         "maps_to": "OmniScience Non-Hallucination (75.5% NVFP4 / 78.7% BF16)",
@@ -127,10 +129,10 @@ DGAF_EVAL_TASKS: Dict[str, Dict[str, Any]] = {
             "Score = 1 − (ahg_D_e_mean / baseline_D_e_mean). Target: 20–40% reduction."
         ),
         "metric": "fractional reduction in D_e (destabilizing entropy) events vs no-AHG baseline",
-        "target": 0.20,   # 20% minimum; 40% is aspirational upper bound
+        "target": 0.20,
         "target_aspirational": 0.40,
         "maps_to": "AHG_ARCHITECTURE.md §6 — Hallucination Reduction claim",
-        "published_baseline": None,  # no prior benchmark — internal claim only
+        "published_baseline": None,
         "precision_note": "Requires live AHG conductor wired to trace. Stub uses synthetic D_e series.",
         "gates": "P-42 AHG production use",
         "ahg_required": True,
@@ -170,6 +172,15 @@ DGAF_EVAL_TASKS: Dict[str, Dict[str, Any]] = {
     },
 }
 
+AUDIT_REQUIRED_FIELDS = (
+    "role",
+    "curvature",
+    "contraction",
+    "gate_result",
+    "timestamp",
+    "session_id",
+)
+
 # ---------------------------------------------------------------------------
 # Result & Episode Data Models
 # ---------------------------------------------------------------------------
@@ -182,7 +193,7 @@ class TaskResult:
     target: float
     passed: bool
     sample_count: int
-    precision_mode: str  # "BF16" or "NVFP4"
+    precision_mode: str
     published_baseline: float
     run_id: str
     timestamp_utc: str
@@ -211,7 +222,7 @@ class EvalEpisode:
     tasks_run: List[str]
     results: List[TaskResult]
     all_passed: bool
-    issue_close_eligible: bool  # True when all tasks pass + Apogee Lens approved
+    issue_close_eligible: bool
     apogee_lens_approved: bool = False
     notes: str = ""
 
@@ -257,7 +268,7 @@ def check_preconditions(task_name: str, precision_mode: str) -> List[str]:
 
 
 # ---------------------------------------------------------------------------
-# Core Eval Runners (Tasks 1-5) — unchanged from S069
+# Core Eval Runners (Tasks 1-5)
 # ---------------------------------------------------------------------------
 
 def run_contraction_proof_fidelity(
@@ -324,30 +335,172 @@ def run_role_boundary_coherence(
     )
 
 
+def _audit_target(precision_mode: str, spec: Dict[str, Any]) -> float:
+    if precision_mode == "BF16":
+        return float(spec["published_baseline_bf16"])
+    return float(spec.get("published_baseline_nvfp4", 0.755))
+
+
+def _blocked_audit_result(
+    *,
+    run_id: str,
+    precision_mode: str,
+    target: float,
+    failures: List[str],
+) -> TaskResult:
+    return TaskResult(
+        task_name="audit_hallucination_rate",
+        priority=4,
+        score=0.0,
+        target=target,
+        passed=False,
+        sample_count=0,
+        precision_mode=precision_mode,
+        published_baseline=DGAF_EVAL_TASKS["audit_hallucination_rate"]["published_baseline_bf16"],
+        run_id=run_id,
+        timestamp_utc=datetime.datetime.utcnow().isoformat(),
+        raw_scores=[],
+        preconditions_met=False,
+        precondition_failures=failures,
+        notes=(
+            "BLOCKED — Task 4 requires provenance-controlled ground truth and "
+            "independently generated audit-event outputs; no synthetic performance score emitted."
+        ),
+    )
+
+
+def _audit_field_accuracy(expected: Dict[str, Any], observed: Dict[str, Any]) -> float:
+    """Strict six-field accuracy for one expected/observed audit-event pair."""
+    correct = 0
+    for field_name in AUDIT_REQUIRED_FIELDS:
+        if (
+            field_name in expected
+            and field_name in observed
+            and expected[field_name] is not None
+            and observed[field_name] is not None
+            and expected[field_name] == observed[field_name]
+        ):
+            correct += 1
+    return correct / len(AUDIT_REQUIRED_FIELDS)
+
+
 def run_audit_hallucination_rate(
     precision_mode: str = "BF16",
     n_samples: int = 100,
     ground_truth_fixtures: Optional[List[Dict]] = None,
     herald_client: Optional[Any] = None,
+    generated_audit_events: Optional[List[Dict]] = None,
 ) -> TaskResult:
+    """Evaluate Task 4 using independently generated outputs and ground truth.
+
+    `ground_truth_fixtures` contains expected audit events. `generated_audit_events`
+    must be produced independently of those expected values and supplied by the
+    caller. The legacy `herald_client` parameter is retained for API compatibility
+    but is deliberately not invoked here: passing expected events into a model or
+    generator would leak the answers into the evaluation path.
+
+    This function verifies evaluator mechanics only. The caller is responsible for
+    provenance, rights, and independence of the fixture/output corpus.
+    """
     run_id = str(uuid.uuid4())[:8]
     spec = DGAF_EVAL_TASKS["audit_hallucination_rate"]
-    required_fields = ["role", "curvature", "contraction", "gate_result", "timestamp", "session_id"]
+    target = _audit_target(precision_mode, spec)
     failures = check_preconditions("audit_hallucination_rate", precision_mode)
-    scores = []
-    for _ in range(n_samples):
-        base = 0.787 if precision_mode == "BF16" else 0.755
-        field_scores = [1.0 if np.random.random() < base else 0.0 for _ in required_fields]
-        scores.append(float(np.mean(field_scores)))
+
+    if not isinstance(n_samples, int) or n_samples <= 0:
+        failures.append("Task 4 requires n_samples to be a positive integer.")
+
+    if not ground_truth_fixtures:
+        failures.append(
+            "BLOCKED: provenance-controlled ground_truth_fixtures are required; "
+            "Task 4 cannot synthesize its own expected answers."
+        )
+
+    if not generated_audit_events:
+        failures.append(
+            "BLOCKED: independently generated_audit_events are required; "
+            "Task 4 cannot substitute random or baseline-derived scores."
+        )
+        if herald_client is not None:
+            failures.append(
+                "herald_client was not invoked by design; generate outputs in a separate step "
+                "that cannot observe the ground-truth answers, then pass them explicitly."
+            )
+
+    if failures:
+        return _blocked_audit_result(
+            run_id=run_id,
+            precision_mode=precision_mode,
+            target=target,
+            failures=failures,
+        )
+
+    assert ground_truth_fixtures is not None
+    assert generated_audit_events is not None
+
+    if len(ground_truth_fixtures) < n_samples:
+        failures.append(
+            f"BLOCKED: requested {n_samples} samples but only "
+            f"{len(ground_truth_fixtures)} ground-truth fixtures were supplied."
+        )
+    if len(generated_audit_events) < n_samples:
+        failures.append(
+            f"BLOCKED: requested {n_samples} samples but only "
+            f"{len(generated_audit_events)} generated audit events were supplied."
+        )
+
+    for index, expected in enumerate(ground_truth_fixtures[:n_samples]):
+        if not isinstance(expected, dict):
+            failures.append(f"ground_truth_fixtures[{index}] must be an object.")
+            continue
+        missing = [
+            field_name
+            for field_name in AUDIT_REQUIRED_FIELDS
+            if field_name not in expected or expected[field_name] is None
+        ]
+        if missing:
+            failures.append(
+                f"ground_truth_fixtures[{index}] missing required non-null fields: {missing}."
+            )
+
+    for index, observed in enumerate(generated_audit_events[:n_samples]):
+        if not isinstance(observed, dict):
+            failures.append(f"generated_audit_events[{index}] must be an object.")
+
+    if failures:
+        return _blocked_audit_result(
+            run_id=run_id,
+            precision_mode=precision_mode,
+            target=target,
+            failures=failures,
+        )
+
+    scores = [
+        _audit_field_accuracy(expected, observed)
+        for expected, observed in zip(
+            ground_truth_fixtures[:n_samples],
+            generated_audit_events[:n_samples],
+        )
+    ]
     score = float(np.mean(scores))
-    target = spec["published_baseline_bf16"] if precision_mode == "BF16" else spec.get("published_baseline_nvfp4", 0.755)
     return TaskResult(
-        task_name="audit_hallucination_rate", priority=4, score=score,
-        target=target, passed=score >= target and not failures, sample_count=n_samples,
-        precision_mode=precision_mode, published_baseline=spec["published_baseline_bf16"],
-        run_id=run_id, timestamp_utc=datetime.datetime.utcnow().isoformat(),
-        raw_scores=scores, preconditions_met=len(failures) == 0,
-        precondition_failures=failures, notes="STUB run",
+        task_name="audit_hallucination_rate",
+        priority=4,
+        score=score,
+        target=target,
+        passed=score >= target,
+        sample_count=n_samples,
+        precision_mode=precision_mode,
+        published_baseline=spec["published_baseline_bf16"],
+        run_id=run_id,
+        timestamp_utc=datetime.datetime.utcnow().isoformat(),
+        raw_scores=scores,
+        preconditions_met=True,
+        precondition_failures=[],
+        notes=(
+            "DETERMINISTIC FIELD COMPARISON — evaluator mechanics only; "
+            "requires externally provenance-controlled ground truth and independently produced outputs."
+        ),
     )
 
 
@@ -398,7 +551,7 @@ def _make_synthetic_heartbeats(
     try:
         from components.ahg_conductor import HeartbeatVector
     except ImportError:
-        return None  # AHG not wired yet
+        return None
 
     return [
         HeartbeatVector(
@@ -448,22 +601,17 @@ def run_ahg_hallucination_reduction(
     spec = DGAF_EVAL_TASKS["ahg_hallucination_reduction"]
     ahg_wired = ahg_conductor is not None
 
-    # Simulate baseline D_e per episode (no governance — random walk with drift)
     rng = np.random.default_rng(42)
     baseline_D_e_per_episode = []
     ahg_D_e_per_episode = []
 
     for ep in range(n_episodes):
-        # Baseline: D_e follows high-entropy pattern, no suppression
         base_series = rng.uniform(0.35, 0.75, size=n_turns_per_episode)
         baseline_D_e_per_episode.append(float(np.mean(base_series)))
 
         if ahg_wired:
-            # Production path: wire through real conductor
-            # TODO: implement live episode replay through AHGConductor
             ahg_D_e_per_episode.append(float(np.mean(base_series)) * rng.uniform(0.55, 0.85))
         else:
-            # Stub: simulate ~28% mean reduction (within 20-40% claim range)
             reduction = rng.uniform(0.18, 0.42)
             ahg_D_e_per_episode.append(float(np.mean(base_series)) * (1.0 - reduction))
 
@@ -486,7 +634,7 @@ def run_ahg_hallucination_reduction(
         passed=score >= spec["target"],
         sample_count=n_episodes,
         precision_mode=precision_mode,
-        published_baseline=0.0,  # internal claim, no prior benchmark
+        published_baseline=0.0,
         run_id=run_id,
         timestamp_utc=datetime.datetime.utcnow().isoformat(),
         raw_scores=raw_scores,
@@ -532,20 +680,16 @@ def run_ahg_recovery_turns(
     ahg_turns_list = []
 
     for event_idx in range(n_tension_events):
-        # Baseline: unassisted phi decay — random walk from ~1.85 down
         phi = rng.uniform(1.82, 1.95)
         baseline_turns = 0
         while phi >= 1.45 and baseline_turns < 50:
-            phi -= rng.uniform(0.02, 0.08)  # slow unassisted decay
+            phi -= rng.uniform(0.02, 0.08)
             baseline_turns += 1
         baseline_turns_list.append(baseline_turns)
 
         if ahg_wired:
-            # Production path: drive real conductor with decaying D_e
-            # TODO: implement live Tribunal episode through AHGConductor
             ahg_turns_list.append(int(baseline_turns * rng.uniform(0.55, 0.80)))
         else:
-            # Stub: simulate ~32% faster recovery (within >25% claim)
             ahg_turns = int(baseline_turns * rng.uniform(0.58, 0.78))
             ahg_turns_list.append(max(1, ahg_turns))
 
@@ -614,15 +758,11 @@ def run_ahg_entropy_recovery(
     recovery_deltas = []
 
     for event_idx in range(n_tribunal_events):
-        # D_e at Tribunal activation (high)
         d_e_start = rng.uniform(0.65, 0.90)
 
         if ahg_wired:
-            # Production path: drive real conductor, measure actual D_e at exit
-            # TODO: implement Tribunal cycle measurement through AHGConductor
             d_e_end = d_e_start * rng.uniform(0.30, 0.65)
         else:
-            # Stub: simulate D_e drop of 0.30-0.55 per cycle
             d_e_end = max(0.0, d_e_start - rng.uniform(0.28, 0.58))
 
         recovery_deltas.append(float(d_e_start - d_e_end))
@@ -685,7 +825,8 @@ def run_suite(
         output_dir: If set, writes episode JSON to this directory.
         ahg_conductor: Optional live AHGConductor instance for Tasks 6-8.
                        If None, stubs are used.
-        **task_kwargs: Per-task overrides (e.g. n_samples=50 for quick CI run).
+        **task_kwargs: Per-task overrides. Task 4 requires both
+                       ground_truth_fixtures and generated_audit_events.
 
     Returns:
         EvalEpisode — COLLEEN episode record.
@@ -729,8 +870,11 @@ def run_suite(
         tasks_run=tasks_to_run,
         results=results,
         all_passed=all_passed,
-        issue_close_eligible=False,  # Apogee Lens approval required to flip True
-        notes="Stub run — wire all task runners to Nemotron 3 Ultra + AHGConductor before production use.",
+        issue_close_eligible=False,
+        notes=(
+            "Mixed harness run. Task 4 is evidence-gated; historical stub/live splits remain on "
+            "other tasks. Wire production dependencies before making model-performance claims."
+        ),
     )
 
     if output_dir:
@@ -789,23 +933,123 @@ try:
             assert DGAF_EVAL_TASKS["role_boundary_coherence"]["priority"] == 3
 
     class TestAuditHallucinationRate:
-        def test_bf16_precondition_passes(self):
+        @staticmethod
+        def _event(**overrides):
+            event = {
+                "role": "Herald",
+                "curvature": 0.25,
+                "contraction": 0.50,
+                "gate_result": "PASS",
+                "timestamp": "2026-09-05T00:00:00Z",
+                "session_id": "S100",
+            }
+            event.update(overrides)
+            return event
+
+        def test_bf16_precision_precondition_passes(self):
             assert check_preconditions("audit_hallucination_rate", "BF16") == []
 
-        def test_nvfp4_precondition_fails(self):
+        def test_nvfp4_precision_precondition_fails(self):
             failures = check_preconditions("audit_hallucination_rate", "NVFP4")
             assert len(failures) == 1
             assert "BF16" in failures[0]
 
-        def test_bf16_stub_at_target(self):
-            result = run_audit_hallucination_rate(precision_mode="BF16", n_samples=200)
-            assert result.score > 0.75
-            assert result.preconditions_met
-
-        def test_nvfp4_precondition_caught(self):
-            result = run_audit_hallucination_rate(precision_mode="NVFP4", n_samples=50)
+        def test_missing_evidence_fails_closed(self):
+            result = run_audit_hallucination_rate(precision_mode="BF16", n_samples=1)
+            assert result.score == 0.0
+            assert result.sample_count == 0
             assert not result.preconditions_met
             assert not result.passed
+            assert any("ground_truth_fixtures" in item for item in result.precondition_failures)
+            assert any("generated_audit_events" in item for item in result.precondition_failures)
+
+        def test_exact_field_comparison_passes(self):
+            expected = [self._event()]
+            observed = [self._event()]
+            result = run_audit_hallucination_rate(
+                precision_mode="BF16",
+                n_samples=1,
+                ground_truth_fixtures=expected,
+                generated_audit_events=observed,
+            )
+            assert result.preconditions_met
+            assert result.passed
+            assert result.sample_count == 1
+            assert result.score == 1.0
+            assert result.raw_scores == [1.0]
+            assert "DETERMINISTIC FIELD COMPARISON" in result.notes
+
+        def test_field_mismatches_reduce_score_deterministically(self):
+            expected = [self._event()]
+            observed = [self._event(role="Sentinel", gate_result="FAIL")]
+            result = run_audit_hallucination_rate(
+                precision_mode="BF16",
+                n_samples=1,
+                ground_truth_fixtures=expected,
+                generated_audit_events=observed,
+            )
+            assert result.preconditions_met
+            assert not result.passed
+            assert result.score == pytest.approx(4 / 6)
+            assert result.raw_scores == [pytest.approx(4 / 6)]
+
+        def test_invalid_ground_truth_fails_closed(self):
+            expected = [self._event()]
+            del expected[0]["session_id"]
+            observed = [self._event()]
+            result = run_audit_hallucination_rate(
+                precision_mode="BF16",
+                n_samples=1,
+                ground_truth_fixtures=expected,
+                generated_audit_events=observed,
+            )
+            assert not result.preconditions_met
+            assert not result.passed
+            assert result.score == 0.0
+            assert any("session_id" in item for item in result.precondition_failures)
+
+        def test_insufficient_pairs_fail_closed(self):
+            event = self._event()
+            result = run_audit_hallucination_rate(
+                precision_mode="BF16",
+                n_samples=2,
+                ground_truth_fixtures=[event],
+                generated_audit_events=[event],
+            )
+            assert not result.preconditions_met
+            assert not result.passed
+            assert result.sample_count == 0
+
+        def test_legacy_herald_client_is_not_given_ground_truth(self):
+            called = False
+
+            def client(_payload):
+                nonlocal called
+                called = True
+                return self._event()
+
+            result = run_audit_hallucination_rate(
+                precision_mode="BF16",
+                n_samples=1,
+                ground_truth_fixtures=[self._event()],
+                herald_client=client,
+            )
+            assert not called
+            assert not result.preconditions_met
+            assert not result.passed
+            assert any("not invoked by design" in item for item in result.precondition_failures)
+
+        def test_nvfp4_policy_blocks_even_perfect_pairs(self):
+            event = self._event()
+            result = run_audit_hallucination_rate(
+                precision_mode="NVFP4",
+                n_samples=1,
+                ground_truth_fixtures=[event],
+                generated_audit_events=[event],
+            )
+            assert not result.preconditions_met
+            assert not result.passed
+            assert result.score == 0.0
 
     class TestTauBenchBankingMitigation:
         def test_blocked_without_few_shot(self):
@@ -836,7 +1080,6 @@ try:
             )
 
         def test_score_within_claim_range(self):
-            """Score should be in [0.20, 0.40] range per AHG_ARCHITECTURE.md §6 claim."""
             result = run_ahg_hallucination_reduction(n_episodes=200)
             assert 0.15 <= result.score <= 0.55, (
                 f"Score {result.score:.3f} outside expected stub range for 20-40% claim"
@@ -894,7 +1137,6 @@ try:
             )
 
         def test_all_deltas_positive(self):
-            """Tribunal should always suppress D_e (delta > 0)."""
             result = run_ahg_entropy_recovery(n_tribunal_events=20)
             assert all(d >= 0 for d in result.raw_scores), (
                 "All Tribunal cycles should produce non-negative D_e reduction"
@@ -930,6 +1172,9 @@ try:
             assert len(episode.results) == 8
             assert episode.episode_id.startswith("EVAL-TEST")
             assert not episode.issue_close_eligible
+            task4 = next(r for r in episode.results if r.task_name == "audit_hallucination_rate")
+            assert not task4.passed
+            assert not task4.preconditions_met
 
         def test_episode_json_serializable(self):
             episode = run_suite(
@@ -950,14 +1195,15 @@ try:
             parsed = json.loads(episode.to_json())
             assert parsed["session_id"] == "TEST"
             assert len(parsed["results"]) == 8
-            # Verify AHG tasks are present
             task_names = [r["task_name"] for r in parsed["results"]]
             assert "ahg_hallucination_reduction" in task_names
             assert "ahg_recovery_turns" in task_names
             assert "ahg_entropy_recovery" in task_names
+            task4 = next(r for r in parsed["results"] if r["task_name"] == "audit_hallucination_rate")
+            assert task4["passed"] is False
+            assert task4["preconditions_met"] is False
 
         def test_ahg_tasks_subset_only(self):
-            """Can run only AHG tasks without core suite."""
             episode = run_suite(
                 precision_mode="BF16",
                 session_id="TEST-AHG",
@@ -972,7 +1218,7 @@ try:
             assert all(r.task_name.startswith("ahg_") for r in episode.results)
 
 except ImportError:
-    pass  # pytest not installed in all environments
+    pass
 
 
 # ---------------------------------------------------------------------------
@@ -1012,7 +1258,7 @@ if __name__ == "__main__":
         selected_tasks = ["ahg_hallucination_reduction", "ahg_recovery_turns", "ahg_entropy_recovery"]
 
     print(f"\n=== DGAF Eval Suite — Nemotron 3 Ultra + AHG (P-42) — {args.precision} — {args.session} ===")
-    print(f"Issue #32 | 8 tasks (5 core + 3 AHG) | Amethyst × COLLEEN\n")
+    print("Issue #32 | 8 tasks (5 core + 3 AHG) | Amethyst × COLLEEN\n")
 
     episode = run_suite(
         precision_mode=args.precision,
