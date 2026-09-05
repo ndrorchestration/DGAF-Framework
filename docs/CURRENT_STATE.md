@@ -23,9 +23,9 @@ GitHub is authoritative for implementation and CI; governance decisions remain s
 - Corrected apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`.
 - Immutable P-35 validation boundary: `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 - Consolidated control-state anchor: `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`.
-- Designated runtime candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`.
+- Candidate identity — designated runtime candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`.
 - Runtime candidate tree: `586c00d6dedb589e52108279f9759be3c4f927e1`.
-- Candidate deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.
+- Deployment identity — candidate deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.
 - Repository main at reconciliation: `8ae37faee637d3992dfec2f635ea4d1d9252ef2d`.
 
 Later documentation/control-plane descendants do not automatically replace the designated runtime candidate or inherit its runtime evidence.
