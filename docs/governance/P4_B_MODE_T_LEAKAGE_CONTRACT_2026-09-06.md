@@ -2,7 +2,7 @@
 
 ## Status
 
-**STATIC/DYNAMIC SURFACE-GUARD EVIDENCE ONLY / NOT PROTECTED EXECUTION / NOT CUSTODY / NOT AUTHORIZATION**
+Status: **STATIC/DYNAMIC SURFACE-GUARD EVIDENCE ONLY / NOT PROTECTED EXECUTION / NOT CUSTODY / NOT AUTHORIZATION**
 
 Scientific boundary remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**.
 
@@ -60,4 +60,4 @@ At minimum:
 
 No freeze, authorization, custody sufficiency, empirical execution, efficacy, or N change is created by this tranche.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
+Scientific posture: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
