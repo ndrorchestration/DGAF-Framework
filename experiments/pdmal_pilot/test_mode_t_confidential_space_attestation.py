@@ -20,6 +20,8 @@ PRE_TOKEN_SHA = "3" * 64
 POST_TOKEN_SHA = "8" * 64
 IMAGE_DIGEST = "sha256:" + ("4" * 64)
 AUDIENCE = "dgaf-mode-t-admission-v1"
+SUBJECT = "https://www.googleapis.com/compute/v1/projects/dgaf/zones/us-central1-a/instances/310"
+SERVICE_ACCOUNTS = ("dgaf-mode-t@dgaf.iam.gserviceaccount.com",)
 CONTAINER_ARGS = ("/app/dgaf-mode-t",)
 NOW = 1_800_000_000
 
@@ -27,7 +29,10 @@ NOW = 1_800_000_000
 def good_claims(*, binding_sha256: str = C_SHA, issued_at: int = NOW - 30) -> dict:
     return {
         "iss": "https://confidentialcomputing.googleapis.com",
+        "oemid": 11129,
         "aud": AUDIENCE,
+        "sub": SUBJECT,
+        "google_service_accounts": list(SERVICE_ACCOUNTS),
         "swname": "CONFIDENTIAL_SPACE",
         "hwmodel": "GCP_INTEL_TDX",
         "attester_tcb": ["INTEL"],
@@ -63,6 +68,8 @@ def expectation(
     return AttestationExpectation(
         phase=phase,
         audience=AUDIENCE,
+        subject=SUBJECT,
+        expected_service_accounts=SERVICE_ACCOUNTS,
         image_digest=IMAGE_DIGEST,
         binding_sha256=binding_sha256,
         expected_args=expected_args,
@@ -113,6 +120,11 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
         self.assertEqual(result["attestation_phase"], PRE_EXECUTION)
         self.assertEqual(result["authorization_consumption_sha256"], C_SHA)
         self.assertIsNone(result["output_manifest_sha256"])
+        self.assertEqual(result["runtime_identity"]["subject"], SUBJECT)
+        self.assertEqual(
+            result["runtime_identity"]["google_service_accounts"],
+            list(SERVICE_ACCOUNTS),
+        )
         self.assertTrue(result["signature_verified"])
         self.assertFalse(result["freeze_established"])
         self.assertFalse(result["pilot_authorized"])
@@ -151,6 +163,8 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
             e = AttestationExpectation(
                 phase="UNKNOWN",
                 audience=e.audience,
+                subject=e.subject,
+                expected_service_accounts=e.expected_service_accounts,
                 image_digest=e.image_digest,
                 binding_sha256=e.binding_sha256,
                 expected_args=e.expected_args,
@@ -176,9 +190,46 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
 
         self.assert_rejected(mutate)
 
+    def test_rejects_wrong_oem_id(self) -> None:
+        def mutate(c, e, t):
+            c["oemid"] = 1
+            return c, e, t
+
+        self.assert_rejected(mutate)
+
     def test_rejects_wrong_audience(self) -> None:
         def mutate(c, e, t):
             c["aud"] = "wrong-audience"
+            return c, e, t
+
+        self.assert_rejected(mutate)
+
+    def test_rejects_wrong_subject(self) -> None:
+        def mutate(c, e, t):
+            c["sub"] = SUBJECT + "-other"
+            return c, e, t
+
+        self.assert_rejected(mutate)
+
+    def test_rejects_wrong_service_account(self) -> None:
+        def mutate(c, e, t):
+            c["google_service_accounts"] = ["other@dgaf.iam.gserviceaccount.com"]
+            return c, e, t
+
+        self.assert_rejected(mutate)
+
+    def test_rejects_duplicate_expected_service_account(self) -> None:
+        def mutate(c, e, t):
+            e = AttestationExpectation(
+                phase=e.phase,
+                audience=e.audience,
+                subject=e.subject,
+                expected_service_accounts=(SERVICE_ACCOUNTS[0], SERVICE_ACCOUNTS[0]),
+                image_digest=e.image_digest,
+                binding_sha256=e.binding_sha256,
+                expected_args=e.expected_args,
+                expected_env=e.expected_env,
+            )
             return c, e, t
 
         self.assert_rejected(mutate)
@@ -332,7 +383,7 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
     def test_pair_rejects_runtime_identity_drift(self) -> None:
         post = post_result()
         post["runtime_identity_sha256"] = "9" * 64
-        with self.assertRaises(AttestationContractError, msg="runtime identity"):
+        with self.assertRaises(AttestationContractError):
             verify_two_phase_attestation_binding(
                 pre_result(),
                 post,
@@ -343,7 +394,7 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
     def test_pair_rejects_same_token_replay(self) -> None:
         post = post_result()
         post["token_sha256"] = PRE_TOKEN_SHA
-        with self.assertRaises(AttestationContractError, msg="distinct"):
+        with self.assertRaises(AttestationContractError):
             verify_two_phase_attestation_binding(
                 pre_result(),
                 post,
@@ -352,7 +403,7 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
             )
 
     def test_pair_rejects_reversed_phases(self) -> None:
-        with self.assertRaises(AttestationContractError, msg="PRE_EXECUTION"):
+        with self.assertRaises(AttestationContractError):
             verify_two_phase_attestation_binding(
                 post_result(),
                 pre_result(),
@@ -363,7 +414,7 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
     def test_pair_rejects_post_token_that_predates_pre_token(self) -> None:
         post = post_result()
         post["issued_at_unix"] = NOW - 60
-        with self.assertRaises(AttestationContractError, msg="predates"):
+        with self.assertRaises(AttestationContractError):
             verify_two_phase_attestation_binding(
                 pre_result(),
                 post,
@@ -372,7 +423,7 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
             )
 
     def test_pair_rejects_wrong_expected_c(self) -> None:
-        with self.assertRaises(AttestationContractError, msg="C binding"):
+        with self.assertRaises(AttestationContractError):
             verify_two_phase_attestation_binding(
                 pre_result(),
                 post_result(),
@@ -381,7 +432,7 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
             )
 
     def test_pair_rejects_wrong_expected_manifest(self) -> None:
-        with self.assertRaises(AttestationContractError, msg="manifest binding"):
+        with self.assertRaises(AttestationContractError):
             verify_two_phase_attestation_binding(
                 pre_result(),
                 post_result(),
