@@ -56,15 +56,23 @@ jobs:
 
           source = Path('experiments/pdmal_pilot/mode_t_confidential_space_attestation.py').read_text(encoding='utf-8')
           required = (
+              'GOOGLE_CLOUD_OEM_ID = 11129',
               'GCP_INTEL_TDX',
               'REQUIRED_ATTESTER_TCB = ("INTEL",)',
               'disabled-since-boot',
               'secure boot is not attested true',
+              'attestation VM subject mismatch',
+              'validated service accounts mismatch',
               'memory monitoring must be exactly disabled',
               'container args mismatch',
               'attestation audience mismatch',
               'REQUIRED_RESTART_POLICY = "Never"',
               'REQUIRED_SUPPORT_ATTRIBUTE = "STABLE"',
+              'PRE_EXECUTION = "PRE_EXECUTION"',
+              'POST_EXECUTION = "POST_EXECUTION"',
+              'exactly one phase-specific attestation nonce is required',
+              'pre/post runtime identity mismatch',
+              'pre/post attestation tokens must be distinct',
               'cryptographic token signature is not verified',
               'attestation nonce binding mismatch',
               '"freeze_established": False',
@@ -91,6 +99,6 @@ jobs:
 
       - name: Report bounded interpretation
         run: |
-          echo 'PASS: synthetic Confidential Space claim contract only'
+          echo 'PASS: synthetic two-phase Confidential Space claim contract only'
           echo 'P4 custody remains OPEN / NOT EXECUTED'
           echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0'
