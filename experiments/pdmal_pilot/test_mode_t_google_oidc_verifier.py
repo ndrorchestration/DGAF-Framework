@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import inspect
 import json
 import unittest
 
@@ -21,6 +22,7 @@ from mode_t_google_oidc_verifier import (
     SYNTHETIC_TRANSPORT,
     GoogleOIDCVerificationError,
     GoogleOIDCVerifier,
+    verify_google_confidential_space_token,
 )
 
 NOW = 1_800_000_000
@@ -31,6 +33,7 @@ SUBJECT = "https://www.googleapis.com/compute/v1/projects/dgaf/zones/us-central1
 SERVICE_ACCOUNTS = ("dgaf-mode-t@dgaf.iam.gserviceaccount.com",)
 CONTAINER_ARGS = ("/app/dgaf-mode-t",)
 ENV = {"DGAF_RUN_BINDING": "synthetic-run-310"}
+_B64URL_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
 
 
 def b64u(raw: bytes) -> str:
@@ -104,6 +107,24 @@ def sign_token(
     return f"{header_segment}.{payload_segment}.{b64u(signature)}"
 
 
+def noncanonical_same_bytes(segment: str) -> str:
+    """Change only unused base64url pad bits while preserving decoded bytes."""
+    remainder = len(segment) % 4
+    if remainder not in (2, 3):
+        raise AssertionError("test segment has no base64url pad bits")
+    unused_bits = 4 if remainder == 2 else 2
+    index = _B64URL_ALPHABET.index(segment[-1])
+    if index & ((1 << unused_bits) - 1):
+        raise AssertionError("input segment was already noncanonical")
+    alternate_index = index + 1
+    alternate = segment[:-1] + _B64URL_ALPHABET[alternate_index]
+    original_raw = base64.urlsafe_b64decode(segment + "=" * (-len(segment) % 4))
+    alternate_raw = base64.urlsafe_b64decode(alternate + "=" * (-len(alternate) % 4))
+    if original_raw != alternate_raw:
+        raise AssertionError("pad-bit mutation changed decoded bytes")
+    return alternate
+
+
 class FakeGoogleKeySource:
     def __init__(self, keys: list[dict]) -> None:
         self.keys = keys
@@ -165,6 +186,10 @@ class GoogleOIDCVerifierTests(unittest.TestCase):
         with self.assertRaises(GoogleOIDCVerificationError):
             verifier.verify(token, verified_at_unix=now)
 
+    def test_production_entry_point_exposes_no_clock_or_fetcher_injection(self) -> None:
+        signature = inspect.signature(verify_google_confidential_space_token)
+        self.assertEqual(tuple(signature.parameters), ("token",))
+
     def test_production_and_synthetic_provenance_modes_are_distinct(self) -> None:
         production = GoogleOIDCVerifier()
         source = FakeGoogleKeySource([public_jwk(self.key1, "kid-1")])
@@ -218,6 +243,13 @@ class GoogleOIDCVerifierTests(unittest.TestCase):
         signature = bytearray(base64.urlsafe_b64decode(s + "=" * (-len(s) % 4)))
         signature[0] ^= 1
         self.assert_rejected(verifier, f"{h}.{p}.{b64u(bytes(signature))}")
+
+    def test_rejects_noncanonical_signature_encoding_with_same_decoded_bytes(self) -> None:
+        _, verifier, token = self.make()
+        h, p, s = token.split(".")
+        alternate = noncanonical_same_bytes(s)
+        self.assertNotEqual(s, alternate)
+        self.assert_rejected(verifier, f"{h}.{p}.{alternate}")
 
     def test_rejects_algorithm_confusion(self) -> None:
         source = FakeGoogleKeySource([public_jwk(self.key1, "kid-1")])
