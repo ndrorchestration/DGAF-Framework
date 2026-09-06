@@ -1,0 +1,64 @@
+name: PR Issue-State Keyword Guard
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-issue-state-keyword-guard:
+    name: PR Issue-State Keyword Guard
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Verify exact PR head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$EXPECTED_HEAD"
+          echo "Exact PR head verified: $actual"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run deterministic guard tests
+        run: python -m unittest tests.test_pr_closure_keywords -v
+
+      - name: Scan pull-request body
+        run: >-
+          python scripts/check_pr_closure_keywords.py
+          --event-path "$GITHUB_EVENT_PATH"
+          --required-base main
+
+      - name: Report bounded interpretation
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## PR issue-state keyword guard"
+            echo "- Scope: pull-request body syntax for PRs targeting main"
+            echo "- Policy: issue-state transitions are explicit governance actions, not PR-body side effects"
+            echo "- Repository prevention: NOT ESTABLISHED unless this workflow is separately configured as required"
+            echo "- Scientific state: unchanged"
+          } >> "$GITHUB_STEP_SUMMARY"
