@@ -1,0 +1,91 @@
+name: P4 Mode T Sigstore Verifier Contract
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-sigstore-verifier.yml'
+      - 'experiments/pdmal_pilot/mode_t_sigstore_verifier.py'
+      - 'experiments/pdmal_pilot/test_mode_t_sigstore_verifier.py'
+      - 'docs/governance/P4_MODE_T_SIGSTORE_VERIFIER_2026-09-06.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  sigstore-verifier-contract:
+    name: Side-effect-free verifier boundary
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run verifier boundary tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_sigstore_verifier.py -v
+
+      - name: Enforce no signing, OIDC, or external-write path
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('experiments/pdmal_pilot/mode_t_sigstore_verifier.py').read_text(encoding='utf-8')
+          workflow = Path('.github/workflows/p4-mode-t-sigstore-verifier.yml').read_text(encoding='utf-8')
+          required = (
+              'verify-blob',
+              '--certificate-identity',
+              '--certificate-oidc-issuer',
+              'EXPECTED_COSIGN_LINUX_AMD64_SHA256',
+              '"external_write_performed_by_verifier": False',
+              '"oidc_token_requested_by_verifier": False',
+              '"real_external_retention_established": False',
+              '"temporal_order_verified": False',
+              '"pilot_authorized": False',
+              '"empirical_n": 0',
+          )
+          for marker in required:
+              if marker not in source:
+                  raise SystemExit(f'missing verifier-boundary marker: {marker}')
+          forbidden = (
+              'sign-blob',
+              'id-token:' + ' write',
+              'google-github-actions/' + 'auth',
+              'PDMAL_PILOT_AUTHORIZED' + '=1',
+              'PDMAL_PROTOCOL_FROZEN' + '=1',
+          )
+          combined = source + workflow
+          for marker in forbidden:
+              if marker in combined:
+                  raise SystemExit(f'forbidden side-effect/promotion marker: {marker}')
+          PY
+
+      - name: Report bounded interpretation
+        run: |
+          echo 'PASS: verifier interface and fail-closed normalization contract validated.'
+          echo 'No real Sigstore bundle was cryptographically verified by this CI run.'
+          echo 'No signing, OIDC token request, Rekor upload, external retention write, authorization, or empirical execution occurred.'
+          echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.'
