@@ -4,6 +4,7 @@ authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-06
 live_source_boundary: 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
+live_source_boundary_role: V0_7_6_APPARATUS_INTRODUCTION_BOUNDARY_NOT_CURRENT_HEAD
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
@@ -35,7 +36,7 @@ Merged PR #308 advanced the experimental apparatus to protocol v0.7.6 / artifact
 - Historical runtime-evidence candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`.
 - Historical runtime candidate tree: `586c00d6dedb589e52108279f9759be3c4f927e1`.
 - Deployment identity: historical evidence deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` is exact-bound to `7c1cc4bb…` at its recorded scope.
-- Live v0.7.6 source boundary: `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`.
+- v0.7.6 apparatus-introduction boundary: `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` (legacy `live_source_boundary` metadata name; not current `main`).
 
 Later documentation/evaluator/control-plane descendants do not automatically become the final candidate or inherit historical runtime evidence.
 
@@ -47,7 +48,7 @@ Later documentation/evaluator/control-plane descendants do not automatically bec
 | Historical P1 candidate integrity | CLOSED / VERIFIED | apparatus, `7c1cc4bb…` candidate/tree, and scoped deployment identity; final-candidate transfer/reverification pending #309 |
 | Historical P2 runtime | CLOSED / VERIFIED | exact `7c1cc4bb…` / `dpl_8Msuf…` five-case runtime predicates; final-candidate transfer/reverification pending #309 |
 | Historical P3 artifact contract | CLOSED / VERIFIED | run `33939955138`; candidate-bound structural/matrix/integrity evidence; final-candidate transfer/reverification pending #309 |
-| P4 security/blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | H/I/T custody architecture defined; no real custody mode instantiated or verified |
+| P4 security/blinding | OPEN / FAIL-CLOSED | Mode-T engineering mechanisms integrated by #326; no real admissible H/I/T custody mode independently accepted/executed |
 | Historical P5 provenance/reproducibility | CLOSED / VERIFIED | pre-v0.7.6 analysis/config/runner/schema identities and deterministic provenance/reproducibility evidence; final-candidate transfer/reverification pending #309 |
 | Historical P6 evidence custody | CLOSED / VERIFIED | defined archive → retrieval → SHA-256 equality contract; final-candidate rebind decision pending #309 |
 | Historical P6a CORS | CLOSED / VERIFIED | exact `7c1cc4bb…` / `dpl_8Msuf…` four-case CORS predicates; final-candidate transfer/reverification pending #309 |
@@ -67,9 +68,9 @@ PR #286 merged as `a3bafa6f…` and corrected the P4 architecture from a mandato
 - `I`: institutional/third-party custody outside the analyst’s unilateral control;
 - `T`: independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
 
-No real mode has been instantiated. P4 therefore remains OPEN / NOT EXECUTED.
+PR #326 integrated the validated Mode-T engineering mechanism stack, but no real custody/admission mode has been independently accepted and executed. P4 remains OPEN / FAIL-CLOSED operationally; #316, #320, signer/TrustedRoot/retention, and real Confidential Space admission/reverification remain open.
 
-Issue #285 is completed as the governance-architecture correction. Issue #255 is superseded historical context. Issue #287 is the active design/threat-model lane for a possible zero-human Mode T implementation. Its existence does not establish that GitHub Actions, drand/timelock, or any other proposed mechanism satisfies P4.
+Issue #285 is completed as the governance-architecture correction and Issue #287 is the historical Mode-T design/threat-model lane. PR #326 later integrated the validated Mode-T engineering stack. That integration is mechanism-level engineering evidence only; it does not establish real P4 custody. Current external/independent blockers include #316, #320, final signer authority, production TrustedRoot/TUF approval/freeze, durable retention/retrieval, and real Confidential Space admission with independently reverified PRE/POST evidence.
 
 ## Current P5 closure basis
 
@@ -116,6 +117,6 @@ For the dodecahedral graph, the corrected exact Cheeger constant is `0.6`. Unwei
 
 `complete candidate-relevant P4 apparatus work → explicitly designate exact v0.7.6 final candidate under #309 → classify/regenerate identity-dependent evidence → verified real P4-A custody mode → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
 
-Issue #232 remains the PDMAL completion-control record. Issue #287 is the active solo Mode-T design lane. No current-facing documentation or CI success changes empirical N or self-authorizes the experiment.
+Issue #232 remains the PDMAL completion-control record. Issue #287 is historical Mode-T design/threat-model provenance; PR #326 is the later bounded mechanism-integration boundary. Neither constitutes real custody acceptance. No current-facing documentation or CI success changes empirical N or self-authorizes the experiment.
 
 **Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**

@@ -1,7 +1,7 @@
 # DGAF/PDMAL Project Status
 
 **Status date:** 2026-09-06  
-**Live v0.7.6 source boundary:** `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`  
+**v0.7.6 apparatus-introduction boundary:** `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` (not current `main`)
 **Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
 **Historical runtime-evidence candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
 **Historical candidate tree:** `586c00d6dedb589e52108279f9759be3c4f927e1`  
@@ -18,9 +18,9 @@ The consolidated control-state anchor `89be386b…` remains valid for its contro
 
 ## Executive state
 
-DGAF is in pre-freeze closure. Historical P1, P2, P3, P5, P6, and P6a results remain closed/verified within their explicitly bounded engineering/governance evidence contracts for `7c1cc4bb…`; they do not automatically close those predicates for the future final candidate. P4 remains operationally open because no admissible H/I/T custody mode has been instantiated and verified. P7 final binding, P8 immutable freeze/readiness, final P9, freeze establishment, and authorization remain open or absent.
+DGAF is in pre-freeze closure. Historical P1, P2, P3, P5, P6, and P6a results remain closed/verified within their explicitly bounded engineering/governance evidence contracts for `7c1cc4bb…`; they do not automatically close those predicates for the future final candidate. PR #326 integrated the validated Mode-T engineering mechanism stack, but P4 remains operationally open because no admissible H/I/T custody mode has been independently accepted and executed for the final run. P7 final binding, P8 immutable freeze/readiness, final P9, freeze establishment, and authorization remain open or absent.
 
-PR #286 removed an unnecessary mandatory-second-human dependency by redefining P4 around effective control separation; it did not close P4. Issue #287 now carries the threat-model/design work for a possible zero-human Mode T lifecycle and must not be treated as evidence that such a mechanism is already accepted.
+PR #286 removed an unnecessary mandatory-second-human dependency by redefining P4 around effective control separation; it did not close P4. Issue #287 is the historical Mode-T design lane; PR #326 later integrated the validated mechanism stack. Mechanism integration is not custody acceptance: #316, #320, final signer authority, production TrustedRoot/TUF approval/freeze, durable retention/retrieval, and real Confidential Space admission/reverification remain open.
 
 None of these engineering states establishes empirical efficacy.
 
@@ -34,7 +34,7 @@ None of these engineering states establishes empirical efficacy.
 | Historical P1 | CLOSED / VERIFIED | exact `7c1cc4bb…` apparatus/candidate/tree and scoped deployment identity; final-candidate transfer/reverification pending #309 |
 | Historical P2 | CLOSED / VERIFIED | run `33730195621`; retrievable artifact `9883521704`; exact runtime predicates only; final-candidate transfer/reverification pending #309 |
 | Historical P3 | CLOSED / VERIFIED | run `33939955138`; artifact-contract evidence; final-candidate transfer/reverification pending #309 |
-| P4 | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | H/I/T custody architecture defined; no real custody instance verified |
+| P4 | OPEN / FAIL-CLOSED | Mode-T mechanisms integrated by #326; no real admissible custody instance independently accepted/executed |
 | Historical P5 | CLOSED / VERIFIED | provenance/reproducibility and exact analysis-control identity binding for pre-v0.7.6 candidate; final-candidate transfer/reverification pending #309 |
 | Historical P6 | CLOSED / VERIFIED | defined external archive/retrieval/SHA-256 equality contract; final-candidate rebind decision pending #309 |
 | Historical P6a | CLOSED / VERIFIED | run `33728695806`; retrievable artifact `9882965299`; exact CORS predicates only; final-candidate transfer/reverification pending #309 |
@@ -67,9 +67,9 @@ The canonical P4 control is now effective control separation rather than a manda
 - `I`: institutional/third-party custody outside the analyst's unilateral control;
 - `T`: independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
 
-Issue #285 is completed as the governance-architecture correction. Issue #255 is superseded historical context. No H/I/T execution instance exists yet, so P4-A remains OPEN / NOT EXECUTED.
+Issue #285 is completed as the governance-architecture correction. Issue #255 is superseded historical context. No real H/I/T custody instance has been independently accepted and executed for the final run, so P4-A remains OPEN / FAIL-CLOSED.
 
-Issue #287 is a design/threat-model lane for a possible solo Mode T lifecycle. It explicitly does not establish that GitHub-hosted runners, timelock encryption, drand, or any other candidate mechanism already satisfies P4.
+Issue #287 is the historical design/threat-model lane. PR #326 integrated the validated Mode-T mechanism stack, but that bounded engineering result does not establish real custody or production admission. Current acceptance blockers are tracked by #316, #320, signer/TrustedRoot/retention controls, and real Confidential Space admission/reverification.
 
 ## Evaluation-integrity update
 
@@ -81,7 +81,7 @@ This establishes evaluator mechanics only. No Task-4 model-performance result ex
 
 Issue #270 is **CLOSED / COMPLETED**. Its remediation restored a clean current-lineage flake8/Black/isort/mypy baseline and converted those checks to fail-closed workflow gates. The exact remediation evidence includes successful Python 3.10/3.11/3.12 matrix execution and deterministic negative controls that intentionally trigger each primary quality tool.
 
-Issue #277 remains **OPEN** for branch-protection/ruleset enforcement. The quality workflow itself is fail-closed when run, but current protected `main` requires only `PPTL CI`; broader intended merge-critical checks are not yet proven repository-required. That repository-administration gap is separate from the repaired code/workflow quality baseline.
+Issue #277 remains **OPEN** for branch-protection/ruleset enforcement. The quality workflows are fail-closed when run, but full repository-level enforcement of the intended merge-critical set is **NOT ESTABLISHED**. The last readable protected-branch snapshot reported only `PPTL CI`; readable ruleset `Main` (`16909314`) contains only deletion/non-fast-forward with no bypass actors, while the direct branch-protection administration endpoint is currently inaccessible to this integration. That administration gap is separate from the repaired code/workflow quality baseline.
 
 ## Mathematical hygiene state
 

@@ -2,7 +2,7 @@
 
 **Current reconciliation:** 2026-09-06  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`  
-**Live v0.7.6 source boundary:** `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`  
+**v0.7.6 apparatus-introduction boundary:** `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` (legacy lineage boundary; not current `main`)
 **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
 **Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
 **Historical runtime-evidence candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` with exact tree `586c00d6dedb589e52108279f9759be3c4f927e1` and deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.  
@@ -10,7 +10,7 @@
 
 > **Reconciliation notice:** Historical claim/evidence rows preserve their original evidence scope. They must not be read as automatic final-candidate closure. Current gate authority is `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` plus the exact retained evidence named there.
 >
-> **Current experimental boundary:** **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.** Historical P1, P2, P3, P5, P6, and P6a evidence remains exact-scope provenance for `7c1cc4bb…`. P4 real H/I/T custody/access separation remains operationally open. P7 final binding remains open; P8 remains fail-closed; final P9 is not executed; no immutable freeze or pilot authorization exists.
+> **Current experimental boundary:** **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.** Historical P1, P2, P3, P5, P6, and P6a evidence remains exact-scope provenance for `7c1cc4bb…`. PR #326 integrated Mode-T engineering mechanisms, but real H/I/T custody/access separation remains operationally open pending independent/external acceptance. P7 final binding remains open; P8 remains fail-closed; final P9 is not executed; no immutable freeze or pilot authorization exists.
 
 This index maps high-impact claims to the evidence class actually supported. It is intentionally conservative and claim-specific. A repository or subsystem is never globally “verified” merely because one workflow succeeds.
 
@@ -31,7 +31,7 @@ The repository runs deterministic claim-language checks. Textual presence alone 
 | Historical P1 candidate identity/integrity is closed for `7c1cc4bb…`. | `CLOSED / VERIFIED AT HISTORICAL SCOPE` | Canonical PDMAL control state and exact candidate/deployment/provenance evidence. | Candidate-integrity engineering scope only; does not designate or close the future v0.7.6 final candidate. | Contradictory retained evidence or invalidated provenance. |
 | Historical P2 runtime predicates are satisfied for `7c1cc4bb…` / `dpl_8Msuf…`. | `CLOSED / VERIFIED AT HISTORICAL SCOPE` | run `33730195621`; artifact `9883521704`. | Five authenticated runtime predicates only; final-candidate transfer/re-run decision belongs to #309. | Contradictory exact-scope evidence. |
 | Historical P3 artifact contract is satisfied for `7c1cc4bb…`. | `CLOSED / VERIFIED AT HISTORICAL SCOPE` | run `33939955138`; exact-candidate structural/matrix evidence. | Artifact-contract/structural scope only; final-candidate transfer/reverification belongs to #309. | Contract/schema mismatch or contradictory retained evidence. |
-| P4 real custody/access separation is established. | `OPEN / NOT EXECUTED` | Procedure and synthetic controls exist; no real H/I/T custody execution evidence has been independently verified. | Cannot be closed by documentation or CI alone. | Completed real custody commitments/attestations plus applicable independent review. |
+| P4 real custody/access separation is established. | `OPEN / FAIL-CLOSED` | PR #326 integrated Mode-T mechanism controls; no real H/I/T custody execution/admission evidence has been independently accepted. | Mechanism integration cannot close custody; #316/#320 and production trust/retention/admission evidence remain open. | Completed real custody commitments/attestations plus applicable independent review. |
 | Historical P5 provenance/reproducibility is closed for `7c1cc4bb…`. | `CLOSED / VERIFIED AT HISTORICAL SCOPE` | Canonical PDMAL control state; run `33939955138`; bound analysis/config/runner/schema identities and deterministic environment/RNG/topology evidence. | Protocol 0.7.5 provenance/reproducibility only; does not silently become v0.7.6 final-candidate evidence. | Identity/config/environment mismatch or reproducibility failure. |
 | Historical P6 durable evidence custody is closed within the defined archive/retrieval/hash contract. | `CLOSED / VERIFIED AT HISTORICAL SCOPE` | Current P6 attestation and independent archive→retrieval→SHA-256 equality evidence. | Byte-custody/integrity scope; final-candidate rebind decision belongs to #309. | Retrieval/hash mismatch or loss of required retained object. |
 | Historical P6a CORS predicates are satisfied for `7c1cc4bb…` / `dpl_8Msuf…`. | `CLOSED / VERIFIED AT HISTORICAL SCOPE` | run `33728695806`; artifact `9882965299`. | Four authenticated CORS cases only; final-candidate transfer/re-run decision belongs to #309. | Contradictory exact-scope CORS evidence. |

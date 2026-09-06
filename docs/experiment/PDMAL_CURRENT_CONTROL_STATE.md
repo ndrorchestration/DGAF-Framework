@@ -4,6 +4,7 @@ authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-06
 live_source_boundary: 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
+live_source_boundary_role: V0_7_6_APPARATUS_INTRODUCTION_BOUNDARY_NOT_CURRENT_HEAD
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
@@ -32,7 +33,7 @@ The consolidated control-state anchor `89be386b…` remains valid for its contro
 | Historical P1 Candidate Integrity | CLOSED / VERIFIED | exact apparatus/source, candidate/tree, provenance, deployment identity; final-candidate transfer/reverification pending #309 |
 | Historical P2 Runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; five-case authenticated matrix; final-candidate transfer/reverification pending #309 |
 | Historical P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662`; structural scope; final-candidate transfer/reverification pending #309 |
-| P4 Security / Blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | canonical procedure supports Mode H human, Mode I institutional, or Mode T independently enforced technical custody; no custody mode has yet been instantiated or verified |
+| P4 Security / Blinding | OPEN / FAIL-CLOSED | #326 integrated Mode-T engineering mechanisms; no real H/I/T custody/admission instance has been independently accepted or executed |
 | Historical P5 Provenance / Reproducibility | CLOSED / VERIFIED | exact pre-v0.7.6 analysis/config/runner/schema identities; final-candidate transfer/reverification pending #309 |
 | Historical P6 Durable Evidence Custody | CLOSED / VERIFIED | independent archive/retrieval/SHA-256 equality for retained evidence set; final-candidate rebind decision pending #309 |
 | Historical P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299`; four-case authenticated matrix; final-candidate transfer/reverification pending #309 |
@@ -72,7 +73,7 @@ Permitted modes are:
 
 The requirement is unchanged in substance: before the predeclared release condition, the execution/analysis principal must be unable to recover the raw key, cleartext mapping, commitment nonces, or equivalent recovery material by unilateral action.
 
-No mode has yet been instantiated. P4 remains OPEN / NOT EXECUTED operationally.
+PR #326 integrated the validated Mode-T engineering mechanism stack, but no real custody/admission mode has been independently accepted and executed. P4 remains OPEN / FAIL-CLOSED operationally; #316, #320, signer/TrustedRoot/retention, and real Confidential Space admission/reverification remain open.
 
 ## Candidate reconstruction and remaining closure sequence
 

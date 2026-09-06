@@ -6,6 +6,7 @@ owner: DGAF/PDMAL experimental-control
 last_verified: 2026-09-06
 control_plane_lineage_tip_at_reconciliation: d859b8356a3488fbead2185f6006a048c0610d92
 live_source_boundary: 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
+live_source_boundary_role: V0_7_6_APPARATUS_INTRODUCTION_BOUNDARY_NOT_CURRENT_HEAD
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 corrected_apparatus_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
@@ -39,7 +40,7 @@ empirical_n: 0
 
 This file is the **current negative/pre-freeze manifest**. It is not an immutable freeze and must not be cited as one.
 
-PR #308 advanced the experimental apparatus to protocol v0.7.6 / artifact schema 1.1 at live source boundary `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. The retained `runtime_candidate_*`, deployment, protocol 0.7.5, analysis, runner, and schema fields above describe the historical `7c1cc4bb…` exact-scope evidence boundary; they do **not** designate the final v0.7.6 freeze/N=1 candidate. **Final v0.7.6 candidate: NOT DESIGNATED.** Issue #309 governs explicit reconstruction and evidence transfer/reverification.
+PR #308 advanced the experimental apparatus to protocol v0.7.6 / artifact schema 1.1 at v0.7.6 apparatus-introduction boundary `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. The retained `runtime_candidate_*`, deployment, protocol 0.7.5, analysis, runner, and schema fields above describe the historical `7c1cc4bb…` exact-scope evidence boundary; they do **not** designate the final v0.7.6 freeze/N=1 candidate. **Final v0.7.6 candidate: NOT DESIGNATED.** Issue #309 governs explicit reconstruction and evidence transfer/reverification.
 
 The consolidated control-state anchor `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` remains a control/provenance anchor rather than a candidate designation. The living `main` branch likewise does not become the final candidate merely by recency.
 
@@ -78,7 +79,7 @@ These are design selections, not empirical results.
 | Historical P1 Candidate Integrity | CLOSED / VERIFIED | apparatus/source, candidate/tree, provenance, deployment identity; final-candidate transfer/reverification pending #309 |
 | Historical P2 Runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; five-case authenticated matrix; final-candidate transfer/reverification pending #309 |
 | Historical P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662`; structural/contract scope; final-candidate transfer/reverification pending #309 |
-| P4 Security / Blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | canonical custody procedure permits H human, I institutional, or T independently enforced technical custody; no mode has been instantiated or verified |
+| P4 Security / Blinding | OPEN / FAIL-CLOSED | #326 integrated Mode-T engineering mechanisms; no real H/I/T custody/admission instance has been independently accepted or executed |
 | Historical P5 Provenance / Reproducibility | CLOSED / VERIFIED | exact protocol 0.7.5 analysis/configuration/runner/schema/environment/RNG/topology chain; final-candidate transfer/reverification pending #309 |
 | Historical P6 Durable Evidence Custody | CLOSED / VERIFIED | independent archive/retrieval/SHA-256 equality for retained historical evidence set; final-candidate rebind decision pending #309 |
 | Historical P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299`; four-case authenticated matrix; final-candidate transfer/reverification pending #309 |
@@ -109,7 +110,7 @@ The following remain absent and must not be inferred or fabricated:
 - evidence that the execution/analysis principal cannot recover protected material through any unilateral ordinary/admin/recovery/backup/export/break-glass path before release;
 - independent review evidence appropriate to the selected custody mode.
 
-P4 therefore remains OPEN / NOT EXECUTED operationally.
+PR #326 integrated the validated Mode-T engineering mechanism stack, but no real custody/admission mode has been independently accepted and executed. P4 remains OPEN / FAIL-CLOSED operationally; #316, #320, signer/TrustedRoot/retention, and real Confidential Space admission/reverification remain open.
 
 ## P7/P8/P9 boundary
 

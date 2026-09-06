@@ -2,7 +2,7 @@
 
 **Status:** CURRENT / PRE-FREEZE / FAIL-CLOSED  
 **Last reconciled:** 2026-09-06  
-**Live v0.7.6 source boundary:** `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`  
+**v0.7.6 apparatus-introduction boundary:** `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` (not current `main`)
 **Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
 **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
 **Historical runtime-evidence candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` / tree `586c00d6dedb589e52108279f9759be3c4f927e1`  
@@ -22,7 +22,7 @@ PR #308 changed the apparatus to protocol v0.7.6 / artifact schema 1.1. Therefor
 | Historical P1 Candidate Integrity | **CLOSED / VERIFIED** | exact `7c1cc4bb…` apparatus/candidate/tree plus deployment binding; final-candidate transfer/reverification pending #309 |
 | Historical P2 Execution Contract / Runtime | **CLOSED / VERIFIED** | run `33730195621`; artifact `9883521704`; digest `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`; final-candidate transfer/reverification pending #309 |
 | Historical P3 Artifact Contract | **CLOSED / VERIFIED** | run `33939955138`; artifacts `9961526468` / `9961526662`; structural/contract scope only; final-candidate transfer/reverification pending #309 |
-| P4 Security / Blinding | **OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED** | canonical P4 procedure accepts Mode H human, Mode I institutional, or Mode T independently enforced technical custody; no real custody instance or no-unilateral-access evidence exists yet |
+| P4 Security / Blinding | **OPEN / FAIL-CLOSED** | PR #326 integrated the validated Mode-T mechanism stack; no real H/I/T custody/admission instance or independently accepted no-unilateral-access evidence exists yet |
 | Historical P5 Provenance / Reproducibility | **CLOSED / VERIFIED** | exact pre-v0.7.6 candidate identities, deterministic configuration, reproduction evidence, and authoritative binding; final-candidate transfer/reverification pending #309 |
 | Historical P6 Durable Evidence Custody | **CLOSED / VERIFIED** | independent archive → retrieval → SHA-256 equality for retained historical evidence set; final-candidate rebind decision pending #309 |
 | Historical P6a Runtime / CORS | **CLOSED / VERIFIED** | run `33728695806`; artifact `9882965299`; digest `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`; final-candidate transfer/reverification pending #309 |
@@ -59,7 +59,7 @@ Three custody modes are admissible:
 
 Every mode requires nonce-hardened key/mapping commitments, timestamp ordering, a complete control-path inventory, no-unilateral-access evidence, and independently inspectable review evidence. AI agents, aliases, same-operator accounts, ordinary repository secrets, analyst-recoverable vaults, analyst-administered KMS/HSM configurations, and preregistration alone are not substitutes.
 
-No real custody instance has occurred. P4 therefore remains OPEN / NOT EXECUTED operationally.
+PR #326 integrated the validated Mode-T engineering mechanism stack, but no real custody/admission instance has been independently accepted and executed. P4 therefore remains OPEN / FAIL-CLOSED operationally; #316, #320, signer/TrustedRoot/retention, and real Confidential Space admission/reverification remain open.
 
 ### P5 — provenance / reproducibility
 
