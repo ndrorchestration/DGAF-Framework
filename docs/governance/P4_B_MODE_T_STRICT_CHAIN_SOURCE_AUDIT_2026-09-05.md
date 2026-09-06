@@ -80,4 +80,4 @@ This source audit is intentionally insufficient to close the issue. A dedicated 
 
 Passing this audit does **not** establish Mode-T custody sufficiency, P4-B completion, a release-margin policy, hosted-runner memory independence, freeze, authorization, empirical execution, efficacy, or any increase in empirical N.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
+Scientific posture: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
