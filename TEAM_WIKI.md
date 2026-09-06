@@ -1,12 +1,13 @@
 # DGAF Framework — Team Wiki
 
-> **Last updated:** 2026-07-02 · S072 · P-42 v1.4 Apogee Lens APPROVED
+> **Last updated:** 2026-07-02 · S072 · P-42 v1.4 Apogee Lens APPROVED  
+> **Terminology reconciliation:** 2026-09-06 — current canonical DGAF expansion is controlled by `docs/taxonomy/NDR_ACRONYM_REGISTRY.md`.
 
 ---
 
 ## §1 · Overview
 
-The DGAF (Dynamic Governance Agentic Framework) is the **layer-0 governance architecture** for the ndrorchestration ecosystem, rooted at `~/DGAF-Framework`. It orchestrates multi-agent workflows under a formally governed pattern registry. All execution flows through NDR patterns enforced by Amethyst (host), DemiJoule (supervisor), and Apogee Lens (verifier).
+The DGAF (**Dynamic Governance Agentic Formation**) is the **layer-0 governance architecture** for the ndrorchestration ecosystem, rooted at `~/DGAF-Framework`. It orchestrates multi-agent workflows under a formally governed pattern registry. All execution flows through NDR patterns enforced by Amethyst (host), DemiJoule (supervisor), and Apogee Lens (verifier).
 
 > **Nomenclature canon** (locked 2026-07-02 in `SESSION_ANCHOR.md`):  
 > • `NDR-HDFS` = NDR Hierarchical Dynamic Formation System (formerly FLAG-01) — the structural layer governing agent hierarchy and formation composition  
