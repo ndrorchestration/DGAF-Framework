@@ -97,12 +97,14 @@ def make_synthetic_reservation(
     workflow_sha256: str,
     github_run_id: int,
     github_sha: str,
+    admission_policy_sha256: str,
 ) -> dict[str, Any]:
-    """Create a sealed synthetic R record; no real reservation is granted."""
+    """Create a sealed synthetic R record bound to one static admission policy."""
     _commit(freeze_commit_sha, "freeze_commit_sha")
     _sha(freeze_sha256, "freeze_sha256")
     _sha(workflow_sha256, "workflow_sha256")
     _commit(github_sha, "github_sha")
+    policy_sha = _sha(admission_policy_sha256, "admission_policy_sha256")
     _require(github_run_id > 0, "github_run_id must be positive")
     return _seal(
         {
@@ -110,6 +112,7 @@ def make_synthetic_reservation(
             "freeze_commit_sha": freeze_commit_sha,
             "freeze_sha256": freeze_sha256,
             "workflow_sha256": workflow_sha256,
+            "admission_policy_sha256": policy_sha,
             "github_run_id": github_run_id,
             "github_run_attempt": 1,
             "github_sha": github_sha,
@@ -125,7 +128,7 @@ def make_synthetic_authorization(
     *,
     authorization_id: str,
 ) -> dict[str, Any]:
-    """Create a sealed synthetic A fixture bound to one R; never real authorization."""
+    """Create a sealed synthetic A fixture bound to one R and admission policy."""
     reservation_sha = _verify_seal(reservation, "reservation_evidence_sha256")
     r = _mapping(reservation, "reservation")
     _require(
@@ -139,6 +142,9 @@ def make_synthetic_authorization(
             "freeze_commit_sha": _commit(r.get("freeze_commit_sha"), "freeze_commit_sha"),
             "freeze_sha256": _sha(r.get("freeze_sha256"), "freeze_sha256"),
             "reservation_evidence_sha256": reservation_sha,
+            "admission_policy_sha256": _sha(
+                r.get("admission_policy_sha256"), "admission_policy_sha256"
+            ),
             "github_run_id": _integer(r.get("github_run_id"), "github_run_id"),
             "allowed_run_attempt": 1,
             "authorization_id": authorization_id,
@@ -201,6 +207,11 @@ class SyntheticAuthorizationConsumptionLedger:
             a.get("reservation_evidence_sha256") == reservation_sha,
             "A does not bind exact R evidence",
         )
+        _require(
+            a.get("admission_policy_sha256") == r.get("admission_policy_sha256"),
+            "A/R admission policy mismatch",
+        )
+        policy_sha = _sha(r.get("admission_policy_sha256"), "admission_policy_sha256")
         _require(a.get("github_run_id") == r.get("github_run_id"), "A/R run-id mismatch")
         _require(a.get("allowed_run_attempt") == 1, "A allowed attempt must be exactly 1")
 
@@ -221,6 +232,7 @@ class SyntheticAuthorizationConsumptionLedger:
                 "freeze_sha256": _sha(r.get("freeze_sha256"), "freeze_sha256"),
                 "reservation_evidence_sha256": reservation_sha,
                 "authorization_record_sha256": authorization_sha,
+                "admission_policy_sha256": policy_sha,
                 "authorization_id": authorization_id,
                 "github_run_id": _integer(r.get("github_run_id"), "github_run_id"),
                 "github_run_attempt": 1,
@@ -280,6 +292,7 @@ def build_output_manifest(
     candidate_sha: str,
     freeze_sha256: str,
     consumption_sha256: str,
+    admission_policy_sha256: str,
     runtime_identity_sha256: str,
     workload_image_digest: str,
     tlock_client_sha256: str,
@@ -295,6 +308,7 @@ def build_output_manifest(
     _commit(candidate_sha, "candidate_sha")
     _sha(freeze_sha256, "freeze_sha256")
     _sha(consumption_sha256, "consumption_sha256")
+    policy_sha = _sha(admission_policy_sha256, "admission_policy_sha256")
     _sha(runtime_identity_sha256, "runtime_identity_sha256")
     _require(
         isinstance(workload_image_digest, str)
@@ -319,6 +333,7 @@ def build_output_manifest(
         "candidate_sha": candidate_sha,
         "freeze_sha256": freeze_sha256,
         "authorization_consumption_sha256": consumption_sha256,
+        "admission_policy_sha256": policy_sha,
         "runtime_identity_sha256": runtime_identity_sha256,
         "workload_image_digest": workload_image_digest,
         "tlock_client_sha256": tlock_client_sha256,
@@ -355,6 +370,7 @@ def finalize_two_phase_lifecycle(
         manifest.get("authorization_consumption_sha256"),
         "authorization_consumption_sha256",
     )
+    policy_sha = _sha(manifest.get("admission_policy_sha256"), "admission_policy_sha256")
     pair = verify_two_phase_attestation_binding(
         pre_execution,
         post_execution,
@@ -372,12 +388,14 @@ def finalize_two_phase_lifecycle(
     return {
         "integrated_lifecycle": "PASS_SYNTHETIC_ONLY",
         "authorization_consumption_sha256": consumption_sha,
+        "admission_policy_sha256": policy_sha,
         "output_manifest_sha256": manifest_sha,
         "runtime_identity_sha256": pair["runtime_identity_sha256"],
         "pre_execution_token_sha256": pair["pre_execution_token_sha256"],
         "post_execution_token_sha256": pair["post_execution_token_sha256"],
         "real_confidential_space_admission": False,
         "independent_retention_verified": False,
+        "production_policy_complete": False,
         "freeze_established": False,
         "pilot_authorized": False,
         "empirical_data_collection": False,
