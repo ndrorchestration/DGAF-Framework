@@ -16,6 +16,19 @@ Before the authorized unblinding/release boundary, a pilot artifact may expose t
 
 Blinding is not claimed to make all subjective inference from outcome patterns impossible. The requirement here is narrower and enforceable: eliminate avoidable deterministic identity channels created by the apparatus itself.
 
+## Protected key contract and HMAC domains
+
+The production pilot runner must fail closed unless `PDMAL_BLINDING_KEY` contains at least 32 characters, preserving the existing minimum-key contract already documented elsewhere in the repository.
+
+The same protected key may support both label blinding and trial ordering only through explicit domain separation:
+
+```text
+condition identifier domain = PDMAL-BLINDED-CONDITION-ID-v1
+trial ordering domain       = PDMAL-BLINDED-TRIAL-ORDER-v1
+```
+
+A raw `HMAC(key, condition)` construction is not the v0.7.6 contract. The condition identifier is derived from the condition-ID domain plus the condition name; the ordering token is derived independently from the trial-order domain plus the complete cell identity.
+
 ## Secret-keyed trial schedule
 
 For each seed, the complete canonical 180-cell matrix remains unchanged:
@@ -24,7 +37,7 @@ For each seed, the complete canonical 180-cell matrix remains unchanged:
 5 topologies × 4 conditions × 9 failure counts = 180 cells
 ```
 
-The runner must construct all canonical cells first and then derive a per-cell ordering token using HMAC-SHA-256 under the protected blinding key with an explicit domain separator and the tuple:
+The runner must construct all canonical cells first and then derive a per-cell ordering token using HMAC-SHA-256 under the protected blinding key with the trial-order domain separator and the tuple:
 
 ```text
 (seed, topology, condition, failure_count)
@@ -73,12 +86,15 @@ The corrected apparatus must demonstrate at minimum:
 4. schedule derivation changes across seeds;
 5. the protected schedule is not the canonical topology→condition→failure ordering for the fixed regression fixture;
 6. `trial_id` spans exactly `0..179` but indexes the protected schedule;
-7. unexpected public fields are rejected by the artifact validator;
-8. explicit attempts to add `governance_trace` or `runtime_ms` fail validation;
-9. public record construction contains neither field;
-10. primary analysis remains independent of record order and `trial_id` condition semantics;
-11. release of the correct protected key can reconstruct both blinded labels and the exact trial schedule;
-12. no test or implementation creates empirical observations, freeze, authorization, or unblinding state.
+7. a short production blinding key is rejected before archive/pilot execution;
+8. the condition-ID HMAC is domain-separated from the legacy raw-condition construction and from the schedule HMAC;
+9. unexpected public fields are rejected by the artifact validator;
+10. explicit attempts to add `governance_trace` or `runtime_ms` fail validation;
+11. public record construction contains neither field;
+12. a complete fixed-seed 180-cell run produces identical per-cell results under canonical order and the protected permutation;
+13. primary analysis remains independent of record order and `trial_id` condition semantics;
+14. release of the correct protected key can reconstruct both blinded labels and the exact trial schedule;
+15. no test or implementation creates empirical observations, freeze, authorization, or unblinding state.
 
 ## Outcome-inference limitation
 
