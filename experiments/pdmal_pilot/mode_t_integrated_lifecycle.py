@@ -5,9 +5,10 @@ pilot: reservation R -> authorization A -> single-use consumption C -> PRE_EXECU
 admission -> in-process key capability -> blinded synthetic artifact/output manifest
 -> POST_EXECUTION admission -> two-phase lineage evidence.
 
-The in-memory ledger supports snapshot/rehydration so tests can model crashes after C
-and prove that retries remain consumed. It is *not* an independently retained P6 or
-transparency implementation and therefore cannot establish real authorization or P4.
+R/A/C now also carry one pre-execution admission-policy SHA-256 so synthetic tests can
+prove that the launch expectation used before key generation is the policy committed
+before authorization. The in-memory ledger remains synthetic and is *not* an
+independently retained P6/transparency implementation.
 """
 from __future__ import annotations
 
@@ -95,6 +96,7 @@ def make_synthetic_reservation(
     freeze_commit_sha: str,
     freeze_sha256: str,
     workflow_sha256: str,
+    admission_policy_sha256: str,
     github_run_id: int,
     github_sha: str,
 ) -> dict[str, Any]:
@@ -102,6 +104,7 @@ def make_synthetic_reservation(
     _commit(freeze_commit_sha, "freeze_commit_sha")
     _sha(freeze_sha256, "freeze_sha256")
     _sha(workflow_sha256, "workflow_sha256")
+    policy_sha = _sha(admission_policy_sha256, "admission_policy_sha256")
     _commit(github_sha, "github_sha")
     _require(github_run_id > 0, "github_run_id must be positive")
     return _seal(
@@ -110,6 +113,7 @@ def make_synthetic_reservation(
             "freeze_commit_sha": freeze_commit_sha,
             "freeze_sha256": freeze_sha256,
             "workflow_sha256": workflow_sha256,
+            "admission_policy_sha256": policy_sha,
             "github_run_id": github_run_id,
             "github_run_attempt": 1,
             "github_sha": github_sha,
@@ -138,6 +142,9 @@ def make_synthetic_authorization(
             "status": "SYNTHETIC_GRANTED_FOR_TEST_ONLY",
             "freeze_commit_sha": _commit(r.get("freeze_commit_sha"), "freeze_commit_sha"),
             "freeze_sha256": _sha(r.get("freeze_sha256"), "freeze_sha256"),
+            "admission_policy_sha256": _sha(
+                r.get("admission_policy_sha256"), "admission_policy_sha256"
+            ),
             "reservation_evidence_sha256": reservation_sha,
             "github_run_id": _integer(r.get("github_run_id"), "github_run_id"),
             "allowed_run_attempt": 1,
@@ -166,7 +173,6 @@ class SyntheticAuthorizationConsumptionLedger:
                 )
 
     def snapshot(self) -> dict[str, str]:
-        """Return the accepted-consumption index for simulated process rehydration."""
         return dict(self._consumed)
 
     def consume(
@@ -198,6 +204,10 @@ class SyntheticAuthorizationConsumptionLedger:
         _require(a.get("freeze_commit_sha") == r.get("freeze_commit_sha"), "A/R freeze commit mismatch")
         _require(a.get("freeze_sha256") == r.get("freeze_sha256"), "A/R freeze digest mismatch")
         _require(
+            a.get("admission_policy_sha256") == r.get("admission_policy_sha256"),
+            "A/R admission-policy digest mismatch",
+        )
+        _require(
             a.get("reservation_evidence_sha256") == reservation_sha,
             "A does not bind exact R evidence",
         )
@@ -219,6 +229,9 @@ class SyntheticAuthorizationConsumptionLedger:
                 "record_type": "PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION",
                 "status": "CONSUMED_PRE_SECRET_SYNTHETIC",
                 "freeze_sha256": _sha(r.get("freeze_sha256"), "freeze_sha256"),
+                "admission_policy_sha256": _sha(
+                    r.get("admission_policy_sha256"), "admission_policy_sha256"
+                ),
                 "reservation_evidence_sha256": reservation_sha,
                 "authorization_record_sha256": authorization_sha,
                 "authorization_id": authorization_id,
@@ -232,7 +245,6 @@ class SyntheticAuthorizationConsumptionLedger:
             "consumption_evidence_sha256",
         )
         c_sha = _sha(c["consumption_evidence_sha256"], "consumption_evidence_sha256")
-        # Mark consumed before the caller is allowed to cross into any secret/key step.
         self._consumed[authorization_id] = c_sha
         return c
 
@@ -241,7 +253,6 @@ def build_synthetic_blinded_artifact(
     lease: ModeTKeyLease,
     clear_identifiers: Iterable[str],
 ) -> dict[str, Any]:
-    """Build a synthetic blinded artifact containing no supplied clear identifiers."""
     identifiers = list(clear_identifiers)
     _require(bool(identifiers), "at least one synthetic identifier is required")
     _require(
@@ -280,6 +291,7 @@ def build_output_manifest(
     candidate_sha: str,
     freeze_sha256: str,
     consumption_sha256: str,
+    admission_policy_sha256: str,
     runtime_identity_sha256: str,
     workload_image_digest: str,
     tlock_client_sha256: str,
@@ -295,6 +307,7 @@ def build_output_manifest(
     _commit(candidate_sha, "candidate_sha")
     _sha(freeze_sha256, "freeze_sha256")
     _sha(consumption_sha256, "consumption_sha256")
+    _sha(admission_policy_sha256, "admission_policy_sha256")
     _sha(runtime_identity_sha256, "runtime_identity_sha256")
     _require(
         isinstance(workload_image_digest, str)
@@ -319,6 +332,7 @@ def build_output_manifest(
         "candidate_sha": candidate_sha,
         "freeze_sha256": freeze_sha256,
         "authorization_consumption_sha256": consumption_sha256,
+        "admission_policy_sha256": admission_policy_sha256,
         "runtime_identity_sha256": runtime_identity_sha256,
         "workload_image_digest": workload_image_digest,
         "tlock_client_sha256": tlock_client_sha256,
@@ -343,7 +357,6 @@ def finalize_two_phase_lifecycle(
     post_execution: Mapping[str, Any],
     output_manifest: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Bind PRE, output manifest, and POST into one retention-safe synthetic record."""
     bundle = _mapping(output_manifest, "output_manifest")
     manifest = _mapping(bundle.get("manifest"), "output_manifest.manifest")
     manifest_sha = _sha(bundle.get("manifest_sha256"), "manifest_sha256")
@@ -354,6 +367,10 @@ def finalize_two_phase_lifecycle(
     consumption_sha = _sha(
         manifest.get("authorization_consumption_sha256"),
         "authorization_consumption_sha256",
+    )
+    policy_sha = _sha(
+        manifest.get("admission_policy_sha256"),
+        "admission_policy_sha256",
     )
     pair = verify_two_phase_attestation_binding(
         pre_execution,
@@ -372,6 +389,7 @@ def finalize_two_phase_lifecycle(
     return {
         "integrated_lifecycle": "PASS_SYNTHETIC_ONLY",
         "authorization_consumption_sha256": consumption_sha,
+        "admission_policy_sha256": policy_sha,
         "output_manifest_sha256": manifest_sha,
         "runtime_identity_sha256": pair["runtime_identity_sha256"],
         "pre_execution_token_sha256": pair["pre_execution_token_sha256"],
