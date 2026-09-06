@@ -34,6 +34,7 @@ REQUIRED_ATTESTER_TCB = ("INTEL",)
 REQUIRED_DEBUG_STATUS = "disabled-since-boot"
 REQUIRED_RESTART_POLICY = "Never"
 REQUIRED_SUPPORT_ATTRIBUTE = "STABLE"
+MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS = 3600
 PRE_EXECUTION = "PRE_EXECUTION"
 POST_EXECUTION = "POST_EXECUTION"
 ATTESTATION_PHASES = frozenset({PRE_EXECUTION, POST_EXECUTION})
@@ -126,7 +127,7 @@ def verify_confidential_space_attestation(
     """Verify one exact DGAF Mode-T Confidential Space attestation phase.
 
     Returns normalized non-secret evidence on success. Any missing, malformed,
-    stale, or mismatched security-critical value raises
+    stale, overlong, or mismatched security-critical value raises
     ``AttestationContractError``.
     """
 
@@ -221,6 +222,11 @@ def verify_confidential_space_attestation(
     _require(exp > now - skew, "attestation expired")
     _require(exp > iat, "attestation expiration must be after issue time")
     _require(exp > nbf, "attestation expiration must be after not-before time")
+    token_lifetime_seconds = exp - iat
+    _require(
+        token_lifetime_seconds <= MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
+        "attestation token lifetime exceeds the reviewed Confidential Space one-hour bound",
+    )
 
     submods = _mapping(root.get("submods"), "submods")
     container = _mapping(submods.get("container"), "submods.container")
@@ -326,7 +332,11 @@ def verify_confidential_space_attestation(
         "token_sha256": token_sha256,
         "signature_verified": True,
         "issued_at_unix": iat,
+        "not_before_unix": nbf,
+        "expires_at_unix": exp,
         "verified_at_unix": now,
+        "token_lifetime_seconds": token_lifetime_seconds,
+        "max_attestation_token_lifetime_seconds": MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
         "authorization_consumption_sha256": None,
         "output_manifest_sha256": None,
         "freeze_established": False,
