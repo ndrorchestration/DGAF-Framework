@@ -13,7 +13,7 @@ If real attestation evidence cannot satisfy the contract in Issue #310, Mode T i
 
 ## Why this substrate is materially different
 
-Google documents Confidential Space as a trusted execution environment intended to protect a workload and its secrets from an untrusted workload operator, including an operator with broad project-administrator powers. Its production image disables remote access, uses protected ephemeral storage and encrypted memory, measures the workload and configuration, and exposes remote-attestation claims describing the software, hardware, container image and launch configuration.
+Google documents Confidential Space as a trusted execution environment intended to protect a workload and its secrets from an untrusted workload operator, including an operator with broad project-administrator powers. Its production image disables remote access, uses protected ephemeral storage and encrypted memory, measures the workload and configuration, and exposes remote-attestation claims describing the software, hardware, container image, monitoring state, and launch configuration.
 
 The relevant source documents reviewed on 2026-09-06 are:
 
@@ -38,20 +38,23 @@ Instead, final acceptance must bind to:
 4. exact run-specific nonce/data bindings;
 5. retained evidence proving the key never crossed an operator-visible surface.
 
-A different image, debug image, override, restart configuration, or mismatched run binding is a different execution and must be rejected.
+A different image, debug image, launch argument, override, monitoring configuration, restart configuration, or mismatched run binding is a different execution and must be rejected.
 
 ## Required attestation contract
 
-The first admission attempt is intentionally narrow.
-
-Required claims include:
+The first admission attempt is intentionally narrow. Required claims include:
 
 - issuer `https://confidentialcomputing.googleapis.com`;
+- exact predeclared custom audience;
 - software identity `CONFIDENTIAL_SPACE`;
 - hardware model `GCP_INTEL_TDX`;
+- `attester_tcb` exactly `['INTEL']` for the selected TDX policy;
+- Secure Boot attested true;
 - debug state `disabled-since-boot`;
 - production support attributes including `STABLE`;
+- Confidential Space memory monitoring exactly disabled;
 - exact frozen workload image digest;
+- exact full container `args` vector;
 - exact expected command override list;
 - exact expected non-secret environment inputs;
 - no environment overrides;
@@ -60,6 +63,8 @@ Required claims include:
 - exactly two unique SHA-256 nonce bindings:
   - digest of authorization-consumption record C;
   - digest of the emitted Mode-T output/evidence manifest.
+
+The current Google token-claims reference explicitly documents `aud`, `secboot`, `hwmodel`, `attester_tcb`, `dbgstat`, `eat_nonce`, `confidential_space.monitoring_enabled`, `container.args`, `container.cmd_override`, `container.env`, `container.env_override`, `container.image_digest`, and `container.restart_policy`. The verifier treats omission or mismatch of the selected security-critical values as rejection rather than relying on cloud defaults.
 
 Token parsing is not signature verification. A caller must cryptographically authenticate the attestation token before the claim contract can pass.
 
@@ -88,12 +93,16 @@ A crash or failure after C consumes the run authorization. It cannot silently re
 Its synthetic negative controls reject:
 
 - unverified token signature;
-- wrong issuer or software identity;
-- wrong hardware model;
+- wrong issuer or audience;
+- wrong software identity;
+- wrong hardware model or attester root;
+- Secure Boot false;
 - debug image;
 - missing STABLE support;
+- memory monitoring enabled;
 - wrong workload image digest;
-- command override;
+- wrong full container argument vector;
+- command override mismatch;
 - unexpected environment input or environment override;
 - restart policy other than Never;
 - wrong, duplicate, or missing nonce bindings;
