@@ -108,4 +108,4 @@ Even if this tranche passes, #295 remains open pending at least:
 - exact final run/attempt/tool/ciphertext/helper provenance;
 - P6/transparency retention of accepted continuity evidence.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
+Scientific posture: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
