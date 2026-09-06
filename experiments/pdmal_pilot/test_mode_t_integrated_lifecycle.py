@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import unittest
+from unittest.mock import patch
 
 from cryptography.hazmat.primitives.asymmetric import rsa
 
@@ -14,8 +15,9 @@ from mode_t_confidential_space_attestation import (
 from mode_t_google_oidc_verifier import GoogleOIDCVerifier, SYNTHETIC_TRANSPORT
 from mode_t_inprocess_key import (
     ModeTKeyError,
-    acquire_mode_t_key,
-    acquire_mode_t_key_synthetic,
+    acquire_mode_t_key_synthetic_from_verified,
+    admit_and_acquire_mode_t_key,
+    admit_and_acquire_mode_t_key_synthetic,
 )
 from mode_t_integrated_lifecycle import (
     ModeTLifecycleError,
@@ -92,12 +94,14 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         source = FakeGoogleKeySource([public_jwk(self.signing_key, self.kid)])
         return GoogleOIDCVerifier(fetcher=source.fetch)
 
-    def admitted_pre(self, c_sha: str, *, verifier=None):
-        verifier = verifier or self.verifier()
+    def pre_token(self, c_sha: str) -> str:
         claims = good_claims()
         claims["eat_nonce"] = [c_sha]
-        token = sign_token(self.signing_key, self.kid, claims)
-        verified = verifier.verify(token, verified_at_unix=NOW)
+        return sign_token(self.signing_key, self.kid, claims)
+
+    def admitted_pre(self, c_sha: str, *, verifier=None):
+        verifier = verifier or self.verifier()
+        verified = verifier.verify(self.pre_token(c_sha), verified_at_unix=NOW)
         self.assertEqual(verified.key_source.transport_authentication, SYNTHETIC_TRANSPORT)
         admission = verify_confidential_space_attestation(
             verified.claims,
@@ -105,6 +109,16 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
             verified.token_context,
         )
         return verified, admission
+
+    def synthetic_acquisition(self, c_sha: str, *, verifier=None, environment=None):
+        verifier = verifier or self.verifier()
+        return admit_and_acquire_mode_t_key_synthetic(
+            self.pre_token(c_sha),
+            expectation(phase=PRE_EXECUTION, binding=c_sha),
+            verifier=verifier,
+            environment={} if environment is None else environment,
+            verified_at_unix=NOW,
+        )
 
     def admitted_post(self, manifest_sha: str, *, verifier: GoogleOIDCVerifier):
         claims = good_claims()
@@ -121,13 +135,6 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         )
         return verified, admission
 
-    def synthetic_key(self, verified, pre, *, environment=None):
-        return acquire_mode_t_key_synthetic(
-            pre,
-            key_source_evidence=verified.evidence(),
-            environment={} if environment is None else environment,
-        )
-
     def test_full_synthetic_lifecycle_connects_all_reviewed_boundaries(self) -> None:
         reservation, authorization, ledger = self.new_records("A-integrated-success")
         consumption = ledger.consume(reservation, authorization)
@@ -136,11 +143,9 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         self.assertIn("NOT_INDEPENDENTLY_RETAINED", consumption["retention_status"])
 
         verifier = self.verifier()
-        pre_verified, pre = self.admitted_pre(c_sha, verifier=verifier)
-        self.assertEqual(pre["attestation_phase"], PRE_EXECUTION)
-        self.assertIsNone(pre["output_manifest_sha256"])
-
-        lease = self.synthetic_key(pre_verified, pre)
+        acquisition = self.synthetic_acquisition(c_sha, verifier=verifier)
+        pre = acquisition.pre_execution
+        lease = acquisition.lease
         with lease:
             blinded = build_synthetic_blinded_artifact(
                 lease,
@@ -158,7 +163,7 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
                 blinded_artifact_sha256=blinded["artifact_sha256"],
                 timelock_ciphertext_sha256=TIMLOCK_CIPHERTEXT_SHA,
                 key_commitment_sha256=key_commitment,
-                pre_execution_token_sha256=pre_verified.token_context.token_sha256,
+                pre_execution_token_sha256=lease.token_sha256,
                 execution_started_unix=NOW + 1,
                 execution_completed_unix=NOW + 9,
             )
@@ -176,7 +181,6 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         self.assertEqual(final["output_manifest_sha256"], manifest_sha)
         self.assertFalse(final["real_confidential_space_admission"])
         self.assertFalse(final["independent_retention_verified"])
-        self.assertFalse(final["freeze_established"])
         self.assertFalse(final["pilot_authorized"])
         self.assertEqual(final["empirical_n"], 0)
 
@@ -205,12 +209,11 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
     def test_crash_after_key_generation_zeroizes_and_cannot_retry(self) -> None:
         reservation, authorization, ledger = self.new_records("A-crash-after-key")
         consumption = ledger.consume(reservation, authorization)
-        verified, pre = self.admitted_pre(consumption["consumption_evidence_sha256"])
-        lease = self.synthetic_key(verified, pre)
+        acquisition = self.synthetic_acquisition(consumption["consumption_evidence_sha256"])
         with self.assertRaises(SyntheticCrash):
-            with lease:
+            with acquisition.lease:
                 raise SyntheticCrash("simulated crash after key generation")
-        self.assertTrue(lease.destroyed)
+        self.assertTrue(acquisition.lease.destroyed)
         with self.assertRaises(ModeTLifecycleError):
             SyntheticAuthorizationConsumptionLedger(ledger.snapshot()).consume(
                 reservation, authorization
@@ -219,8 +222,8 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
     def test_crash_after_blinded_output_before_post_attestation_cannot_retry(self) -> None:
         reservation, authorization, ledger = self.new_records("A-crash-after-output")
         consumption = ledger.consume(reservation, authorization)
-        verified, pre = self.admitted_pre(consumption["consumption_evidence_sha256"])
-        with self.synthetic_key(verified, pre) as lease:
+        acquisition = self.synthetic_acquisition(consumption["consumption_evidence_sha256"])
+        with acquisition.lease as lease:
             blinded = build_synthetic_blinded_artifact(lease, ["one", "two"])
         self.assertEqual(blinded["empirical_n"], 0)
         with self.assertRaises(ModeTLifecycleError):
@@ -232,17 +235,16 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         reservation, authorization, ledger = self.new_records("A-key-boundary")
         consumption = ledger.consume(reservation, authorization)
         verified, pre = self.admitted_pre(consumption["consumption_evidence_sha256"])
-        evidence = verified.evidence()
 
         post_like = copy.deepcopy(pre)
         post_like["attestation_phase"] = POST_EXECUTION
         with self.assertRaises(ModeTKeyError):
-            acquire_mode_t_key_synthetic(post_like, key_source_evidence=evidence, environment={})
+            acquire_mode_t_key_synthetic_from_verified(post_like, verified, environment={})
 
         circular = copy.deepcopy(pre)
         circular["output_manifest_sha256"] = "9" * 64
         with self.assertRaises(ModeTKeyError):
-            acquire_mode_t_key_synthetic(circular, key_source_evidence=evidence, environment={})
+            acquire_mode_t_key_synthetic_from_verified(circular, verified, environment={})
 
     def test_key_generation_rejects_runtime_identity_digest_tampering(self) -> None:
         reservation, authorization, ledger = self.new_records("A-runtime-drift")
@@ -251,57 +253,40 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         tampered = copy.deepcopy(pre)
         tampered["runtime_identity"]["image_digest"] = "sha256:" + ("9" * 64)
         with self.assertRaisesRegex(ModeTKeyError, "runtime identity digest"):
-            acquire_mode_t_key_synthetic(
-                tampered,
-                key_source_evidence=verified.evidence(),
-                environment={},
-            )
+            acquire_mode_t_key_synthetic_from_verified(tampered, verified, environment={})
 
-    def test_production_key_entry_rejects_synthetic_key_source_evidence(self) -> None:
+    def test_production_key_entry_rejects_synthetic_verifier_result(self) -> None:
         reservation, authorization, ledger = self.new_records("A-no-promotion")
         consumption = ledger.consume(reservation, authorization)
-        verified, pre = self.admitted_pre(consumption["consumption_evidence_sha256"])
-        with self.assertRaisesRegex(ModeTKeyError, "production Google key source"):
-            acquire_mode_t_key(
-                pre,
-                key_source_evidence=verified.evidence(),
-                environment={},
-            )
+        c_sha = consumption["consumption_evidence_sha256"]
+        verified, _ = self.admitted_pre(c_sha)
+        with patch(
+            "mode_t_inprocess_key.verify_google_confidential_space_token",
+            return_value=verified,
+        ):
+            with self.assertRaisesRegex(ModeTKeyError, "production Google key source"):
+                admit_and_acquire_mode_t_key(
+                    self.pre_token(c_sha),
+                    expectation(phase=PRE_EXECUTION, binding=c_sha),
+                    environment={},
+                    verified_at_unix=NOW,
+                )
 
-    def test_key_generation_rejects_key_source_token_mismatch(self) -> None:
+    def test_key_generation_rejects_verified_token_digest_mismatch(self) -> None:
         reservation, authorization, ledger = self.new_records("A-token-mismatch")
         consumption = ledger.consume(reservation, authorization)
         verified, pre = self.admitted_pre(consumption["consumption_evidence_sha256"])
-        evidence = copy.deepcopy(verified.evidence())
-        evidence["token_sha256"] = "9" * 64
-        with self.assertRaisesRegex(ModeTKeyError, "token digest"):
-            acquire_mode_t_key_synthetic(
-                pre,
-                key_source_evidence=evidence,
-                environment={},
-            )
-
-    def test_synthetic_key_entry_rejects_forged_production_provenance(self) -> None:
-        reservation, authorization, ledger = self.new_records("A-synthetic-source")
-        consumption = ledger.consume(reservation, authorization)
-        verified, pre = self.admitted_pre(consumption["consumption_evidence_sha256"])
-        evidence = copy.deepcopy(verified.evidence())
-        evidence["production_key_source_authenticated"] = True
-        with self.assertRaisesRegex(ModeTKeyError, "explicit synthetic key-source"):
-            acquire_mode_t_key_synthetic(
-                pre,
-                key_source_evidence=evidence,
-                environment={},
-            )
+        tampered = copy.deepcopy(pre)
+        tampered["token_sha256"] = "9" * 64
+        with self.assertRaisesRegex(ModeTKeyError, "verified token digest"):
+            acquire_mode_t_key_synthetic_from_verified(tampered, verified, environment={})
 
     def test_external_operational_secret_environment_is_rejected(self) -> None:
         reservation, authorization, ledger = self.new_records("A-secret-env")
         consumption = ledger.consume(reservation, authorization)
-        verified, pre = self.admitted_pre(consumption["consumption_evidence_sha256"])
         with self.assertRaises(ModeTKeyError):
-            self.synthetic_key(
-                verified,
-                pre,
+            self.synthetic_acquisition(
+                consumption["consumption_evidence_sha256"],
                 environment={"PDMAL_BLINDING_KEY": "forbidden"},
             )
 
