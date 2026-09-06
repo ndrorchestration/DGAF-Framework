@@ -7,9 +7,12 @@ control_plane_reconciliation_base: 4382a7b745c1abde3a68eb7848611412f5bd34d7
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
-runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
-runtime_candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
-runtime_deployment_reference: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
+historical_runtime_evidence_candidate: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
+historical_runtime_evidence_tree: 586c00d6dedb589e52108279f9759be3c4f927e1
+historical_deployment_reference: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
+final_candidate_status: NOT_DESIGNATED
+final_candidate_tracker: "#309"
+protocol_source_boundary: v0.7.6 / 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 empirical_n: 0
 ---
@@ -18,12 +21,20 @@ empirical_n: 0
 
 This is the current pre-authorization control record. Documentation/control-plane descendants do not replace the designated runtime candidate unless the canonical candidate identity is explicitly changed.
 
+## Candidate authority
+
+`7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` / tree `586c00d6…` / deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` remains valid **historical exact-scope runtime evidence** but is **not eligible as the final freeze/N=1 candidate** after the v0.7.6 apparatus correction (PR #308 / Issue #309).
+
+**Final v0.7.6 candidate: NOT YET DESIGNATED.** Issue #309 is the active reconstruction/evidence-regeneration authority. A new immutable v0.7.6 descendant must be explicitly designated after any remaining P4 apparatus changes.
+
+Live source boundary after PR #308: `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` (v0.7.6 blinding/noninterference correction). The consolidated control-state anchor `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` remains valid as the control-state/provenance anchor and does not itself designate the final candidate.
+
 ## Current gate state
 
 | Control | State | Evidence / scope |
 |---|---|---|
 | P-35 | VALIDATED | immutable boundary `643dc77a…` |
-| Runtime candidate lineage | VERIFIED | candidate `7c1cc4bb…`; tree `586c00d6…` |
+| Historical runtime candidate lineage | VERIFIED | candidate `7c1cc4bb…`; tree `586c00d6…`; exact-scope P2/P6a/etc. evidence retained |
 | Candidate deployment | VERIFIED | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`, READY production, exact Git source `7c1cc4bb…` |
 | P1 Candidate Integrity | CLOSED / VERIFIED | exact apparatus/source, candidate/tree, provenance, deployment identity |
 | P2 Runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; five-case authenticated matrix |
@@ -53,7 +64,7 @@ The analysis configuration digest was independently recomputed and matched exact
 
 Post-merge Governance CI `33945464907` completed successfully, including isolated hash-pinned E2b/M6 evidence, compilation, P8 analysis/artifact tests, authority tests, provenance artifacts, pinned TLA+ retrieval, and bounded model checking. PDMAL Pre-Authorization Security `33945464908` also completed successfully, including adversarial controls, locked P8 analysis tests, artifact-schema tests, execution-contract tests, retention tests, and explicit non-empirical contract-mode verification.
 
-Accordingly, P5 is CLOSED / VERIFIED for provenance/reproducibility only. This is not efficacy evidence.
+Accordingly, P5 is CLOSED / VERIFIED for provenance/reproducibility only. This is not efficacy evidence. The protocol/schema identities above are bound to the historical candidate `7c1cc4bb…`; they must be reverified against the final v0.7.6 descendant designated by #309 before they can be treated as current-candidate evidence.
 
 ## P4 boundary
 

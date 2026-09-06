@@ -4,24 +4,28 @@
 
 > **Epistemic status:** **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.** Engineering verification is not empirical efficacy evidence. Historical evidence remains scoped to the exact candidate, workflow, deployment, artifact, and predicates that produced it.
 
-## Current identity boundary — 2026-09-05
+## Current identity boundary — 2026-09-06
 
-This documentation hygiene reconciliation uses immutable source boundary `a3bafa6fca8599df479a685828f5fdddb6bae589` (PR #286 merge) rather than calling any embedded SHA “current main.” The documentation branch that updates this file is necessarily a later control-plane descendant and does not replace the designated runtime candidate.
+This documentation hygiene reconciliation uses immutable source boundary `a3bafa6fca8599df479a685828f5fdddb6bae589` (PR #286 merge) rather than calling any embedded SHA "current main." The documentation branch that updates this file is necessarily a later control-plane descendant and does not replace the designated runtime candidate.
 
 | Identity | Role | Status |
 |---|---|---|
 | `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | Corrected apparatus provenance anchor | Historical canonical anchor |
 | `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d` | Immutable P-35 validation boundary | Historical validated boundary |
-| `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Designated executable runtime candidate | PRE-FREEZE / not frozen |
-| `586c00d6dedb589e52108279f9759be3c4f927e1` | Runtime candidate tree | Exact candidate tree |
-| `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Vercel production deployment for `7c1cc4bb…` | READY / exact Git source verified at its scoped evidence boundary |
+| `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Historical verified runtime-evidence candidate | PRE-FREEZE / exact-scope evidence retained / not final candidate |
+| `586c00d6dedb589e52108279f9759be3c4f927e1` | Historical candidate tree | Exact candidate tree |
+| `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Historical Vercel production deployment for `7c1cc4bb…` | READY / exact Git source verified at its scoped evidence boundary |
 | `a3bafa6fca8599df479a685828f5fdddb6bae589` | Documentation-hygiene reconciliation source boundary | Control-plane lineage; not the scientific candidate |
+| `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` | Live `main` after PR #308 (v0.7.6 blinding/noninterference correction) | Current source boundary |
+| `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` | Consolidated control-state/provenance anchor | Does not designate final candidate |
+
+**Final v0.7.6 candidate: NOT DESIGNATED.** Issue #309 is the active reconstruction/evidence-regeneration authority. A new immutable v0.7.6 descendant must be explicitly designated after any remaining P4 apparatus changes.
 
 Later documentation, evaluator, or control-plane descendants do not automatically replace the designated runtime candidate or inherit its runtime evidence.
 
 ## Candidate-scoped runtime evidence
 
-P2 and P6a are **CLOSED / VERIFIED** only for candidate `7c1cc4bb…`, tree `586c00d6…`, deployment `dpl_8Msuf…`, and the exact predicates executed on 2026-09-03.
+P2 and P6a are **CLOSED / VERIFIED** only for historical candidate `7c1cc4bb…`, tree `586c00d6…`, deployment `dpl_8Msuf…`, and the exact predicates executed on 2026-09-03. This evidence is not transferable to the final v0.7.6 descendant designated by #309 without explicit provenance transition.
 
 ### P2 — CLOSED / VERIFIED
 

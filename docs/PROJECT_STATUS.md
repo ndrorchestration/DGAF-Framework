@@ -1,17 +1,19 @@
 # DGAF/PDMAL Project Status
 
-**Status date:** 2026-09-05  
+**Status date:** 2026-09-06  
 **Documentation-hygiene reconciliation source boundary:** `a3bafa6fca8599df479a685828f5fdddb6bae589`  
 **Consolidated control-state anchor:** `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`  
-**Designated executable runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
-**Candidate tree:** `586c00d6dedb589e52108279f9759be3c4f927e1`  
-**Candidate deployment:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`  
+**Historical verified runtime-evidence candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`  
+**Historical candidate tree:** `586c00d6dedb589e52108279f9759be3c4f927e1`  
+**Historical deployment reference:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`  
+**Final v0.7.6 candidate:** NOT YET DESIGNATED (tracked by Issue #309)  
+**Protocol/source boundary after PR #308:** v0.7.6 / `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`  
 **Pilot status:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED  
 **Empirical N:** 0
 
 ## Executive state
 
-DGAF is in pre-freeze closure. The designated runtime candidate and its deployment remain distinct from later documentation, evaluator, and control-plane commits.
+DGAF is in pre-freeze closure. The historical runtime-evidence candidate and its deployment remain distinct from later documentation, evaluator, and control-plane commits. The final v0.7.6 candidate has not yet been designated; Issue #309 is the active reconstruction/evidence-regeneration authority.
 
 P1, P2, P3, P5, P6, and P6a are closed/verified within their explicitly bounded engineering/governance evidence contracts. P4 remains operationally open because no admissible H/I/T custody mode has been instantiated and verified. P7 final binding, P8 immutable freeze/readiness, final P9, freeze establishment, and authorization remain open or absent.
 

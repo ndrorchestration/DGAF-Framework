@@ -1,18 +1,22 @@
 # NEW CANDIDATE MANIFEST — post-#174 provenance-corrected apparatus cycle
 
+> **Superseded for final-candidate authority by PR #308 / Issue #309.** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` remains an exact-scope historical evidence candidate. No v0.7.6 final candidate is yet designated. Historical provenance below is preserved intact.
+
 ```yaml
 manifest_version: 12
 designation_event: CURRENT_RUNTIME_EVIDENCE_RECONCILED_AFTER_P4_ARCHITECTURE_UPDATE
-state: PRE-FREEZE / FAIL-CLOSED
+state: HISTORICAL_EVIDENCE_RETAINED
 reconciliation_source_boundary: a3bafa6fca8599df479a685828f5fdddb6bae589
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 apparatus_source_sha: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 apparatus_source_tree_sha: 973c92335caf84f37fc2b3c4df6dd83b3b855087
-candidate_designation: DESIGNATED EXECUTABLE RUNTIME CANDIDATE
+candidate_designation: HISTORICAL VERIFIED RUNTIME-EVIDENCE CANDIDATE
 candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
-candidate_designation_rule: later documentation/control-plane descendants do not replace this executable identity or inherit its evidence without an explicit provenance transition
+candidate_designation_rule: later documentation/control-plane descendants do not replace this executable identity or inherit its evidence without an explicit provenance transition; final v0.7.6 candidate is not yet designated and is tracked by Issue #309
 candidate_lineage: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1 -> 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
+final_candidate_status: NOT_DESIGNATED
+final_candidate_tracker: 309
 
 control_plane:
   consolidated_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58

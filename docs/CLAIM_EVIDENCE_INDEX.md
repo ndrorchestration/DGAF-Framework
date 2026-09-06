@@ -1,11 +1,11 @@
 # Claim / Evidence Index
 
-**Current reconciliation:** 2026-09-05  
+**Current reconciliation:** 2026-09-06  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`  
 **Current main control-plane lineage:** resolve `main` directly in GitHub; the literal post-reconciliation tip is intentionally not treated as the runtime candidate.  
 **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
-**Current designated runtime candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` with exact tree `586c00d6dedb589e52108279f9759be3c4f927e1`.  
-**Candidate deployment identity:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.
+**Historical verified runtime-evidence candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` with exact tree `586c00d6dedb589e52108279f9759be3c4f927e1`.  
+**Historical candidate deployment identity:** `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.
 
 > **Reconciliation notice:** Historical claim/evidence rows preserve their original evidence scope. They must not be read as a current-candidate status ledger. Current gate authority is `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` plus the exact retained evidence named there.
 >
