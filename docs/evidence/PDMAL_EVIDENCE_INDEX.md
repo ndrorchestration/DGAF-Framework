@@ -4,6 +4,7 @@ authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-06
 live_source_boundary: 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
+live_source_boundary_role: V0_7_6_APPARATUS_INTRODUCTION_BOUNDARY_NOT_CURRENT_HEAD
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 historical_runtime_evidence_candidate: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
 historical_runtime_evidence_candidate_tree: 586c00d6dedb589e52108279f9759be3c4f927e1
@@ -29,12 +30,12 @@ The consolidated control-state anchor `89be386b…` remains a control/provenance
 | Corrected apparatus source | CANONICAL PROVENANCE ANCHOR | `2a54a67d…` | seven-gate restoration/provenance lineage |
 | P-35 validation | VALIDATED | `643dc77a…` | immutable validation boundary |
 | Consolidated control-state lineage | CANONICAL CONTROL/PROVENANCE ANCHOR | `89be386b…` | not a final-candidate designation |
-| Live v0.7.6 source boundary | CURRENT SOURCE | `972edd41…` | PR #308 apparatus source; not automatically the final candidate |
+| v0.7.6 apparatus-introduction boundary | HISTORICAL LINEAGE BOUNDARY | `972edd41…` | PR #308 protocol/schema introduction; not current `main` and not a final-candidate designation |
 | Historical runtime-evidence candidate | VERIFIED AT EXACT SCOPE | `7c1cc4bb…`; tree `586c00d6…` | valid historical executable evidence identity; not eligible as final v0.7.6 candidate |
 | Historical deployment identity | VERIFIED FOR RECORDED P1 SCOPE | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | READY production deployment sourced from `7c1cc4bb…` at its evidence boundary |
 | Historical P2 runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704` | exact candidate/deployment five-case runtime predicates; final-candidate decision pending #309 |
 | Historical P3 artifact contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468`, `9961526662` | structural/identity/matrix/deterministic scope; final-candidate decision pending #309 |
-| P4 blinding/security | OPEN / OPERATION NOT EXECUTED | synthetic/mechanism evidence plus H/I/T procedure | no real custody mode/no-unilateral-access evidence established |
+| P4 blinding/security | OPEN / FAIL-CLOSED | #326 integrated Mode-T mechanism stack plus H/I/T procedure | no real custody/admission instance independently accepted or executed |
 | Historical P5 provenance/reproducibility | CLOSED / VERIFIED | pre-v0.7.6 analysis/config/runner/schema evidence | bounded provenance/reproducibility only; final-candidate decision pending #309 |
 | Historical P6 evidence custody | CLOSED / VERIFIED | retained archive/retrieval/hash records | equality of compared historical evidence bytes; final-candidate rebind pending #309 |
 | Historical P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299` | exact candidate/deployment four-case CORS predicates; final-candidate decision pending #309 |
@@ -58,7 +59,7 @@ This retrieval remains valid provenance. It does not constitute a new runtime ex
 ## Historical candidate engineering evidence
 
 - P3 was closed at artifact-contract scope for `7c1cc4bb…` by run `33939955138`; protocol/schema changes in v0.7.6 prevent silent transfer.
-- P4 remains open because synthetic/mechanism evidence does not establish real H/I/T custody or no-unilateral-access evidence.
+- P4 remains open because #326's integrated Mode-T mechanism evidence does not establish real H/I/T custody, production admission, or independently accepted no-unilateral-access evidence.
 - P5 was closed for the bounded pre-v0.7.6 provenance/reproducibility claim; it does not silently become final-candidate v0.7.6 evidence.
 - P6 is closed within its defined historical external archive → retrieval → SHA-256 equality contract.
 
@@ -66,7 +67,7 @@ The P6 result establishes equality for the compared bytes at retrieval time. It 
 
 ## Current source/deployment interpretation
 
-Current source `972edd41…` is the v0.7.6 apparatus boundary after PR #308. It is not automatically the final scientific candidate and does not inherit `7c1cc4bb…` deployment/runtime evidence. A final candidate and any required exact deployment must be explicitly established under Issue #309.
+`972edd41…` is the v0.7.6 apparatus-introduction boundary after PR #308, not the current repository head. Later engineering lineage includes #326's Mode-T mechanism integration, but no descendant automatically becomes the final scientific candidate or inherits `7c1cc4bb…` deployment/runtime evidence. A final candidate and any required exact deployment must be explicitly established under Issue #309.
 
 ## Non-transfer rule
 
