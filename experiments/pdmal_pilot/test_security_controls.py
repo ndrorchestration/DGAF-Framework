@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import hmac
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,7 @@ from run_pilot import (
     blind_condition,
     blinded_trial_schedule,
     require_frozen_commit,
+    require_pilot_authorization,
 )
 from task_engine import SEED_RUNTIME_CEILING_SECONDS, validate_seed_runtime
 
@@ -31,6 +33,14 @@ def test_wrong_sha_rejected_even_when_authorized(monkeypatch: pytest.MonkeyPatch
         require_frozen_commit()
 
 
+def test_short_blinding_key_is_rejected_before_archive_access(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("PDMAL_PROTOCOL_FROZEN", "1")
+    monkeypatch.setenv("PDMAL_PILOT_AUTHORIZED", "1")
+    monkeypatch.setenv("PDMAL_BLINDING_KEY", "too-short")
+    with pytest.raises(SystemExit, match="at least 32 characters"):
+        require_pilot_authorization()
+
+
 def test_task_substitution_is_not_used_by_pilot_path() -> None:
     tree = ast.parse(RUNNER.read_text(encoding="utf-8"))
     pilot = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "run_pilot")
@@ -39,11 +49,14 @@ def test_task_substitution_is_not_used_by_pilot_path() -> None:
     assert "ScriptedTask" not in names
 
 
-def test_blinding_outputs_are_distinct_and_do_not_expose_labels() -> None:
-    blinded = [blind_condition(label, "test-only-key") for label in CONDITIONS]
+def test_blinding_outputs_are_distinct_domain_separated_and_do_not_expose_labels() -> None:
+    key = "test-only-key"
+    blinded = [blind_condition(label, key) for label in CONDITIONS]
     assert len(set(blinded)) == len(CONDITIONS)
     assert all(value.startswith("blind_") for value in blinded)
     assert all(label not in value for label, value in zip(CONDITIONS, blinded))
+    legacy_raw = "blind_" + hmac.new(key.encode(), b"dgaf", hashlib.sha256).hexdigest()[:16]
+    assert blind_condition("dgaf", key) != legacy_raw
 
 
 def test_mock_unblinding_requires_the_custody_key() -> None:
