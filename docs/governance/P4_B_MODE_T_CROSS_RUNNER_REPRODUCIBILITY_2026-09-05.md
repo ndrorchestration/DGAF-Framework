@@ -23,8 +23,10 @@ target_goarch: amd64
 goamd64: v1
 cgo_enabled: 0
 setup_go_commit: 924ae3a1cded613372ab5595356fb5720e22ba16
-download_artifact_commit: 018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+download_artifact_commit: 37930b1c2abaa49bbe596cd826c3c89aef350131
 ```
+
+The pinned download-artifact v7 action declares `node24`; it is used instead of the earlier v6 pin that GitHub's 2026 runner compatibility layer forced from a Node-20 action onto Node 24.
 
 The build command is fixed to:
 
@@ -41,7 +43,7 @@ The workflow builds independently on:
 
 Each job checks out the exact DGAF evidence SHA, installs exact Go 1.22.12 with `GOTOOLCHAIN=local`, fetches the exact upstream tlock source commit, verifies the upstream module graph with `go mod verify`, overlays only the exact DGAF verifier source, and produces the fixed Linux/amd64 target.
 
-The compiled binaries are **not uploaded**. Each runner records only source/module/toolchain provenance and the resulting binary SHA-256, then deletes the binary before artifact upload.
+The compiled binaries are **not uploaded**. Each runner records only source/module/toolchain provenance and the resulting binary SHA-256, then deletes the binary before artifact upload. The evidence SHA-256 sidecars contain relocation-safe basenames so they remain verifiable after artifact extraction into a different directory.
 
 ## Comparison contract
 
@@ -69,6 +71,12 @@ empirical_n: 0
 ```
 
 If the binary digests differ, the workflow fails closed. A mismatch is a reproducibility defect to investigate; it is not normalized away and must not be reinterpreted as acceptable evidence.
+
+## Initial fail-closed finding
+
+The first comparison run did not reach the binary-digest equality check. Both Ubuntu builds completed successfully, but each sidecar contained its original build-directory path. After artifact relocation the comparator could not resolve that path, so the lane failed closed. The workflow was corrected to write basename-only sidecars before any reproducibility result was accepted.
+
+That failure is retained as apparatus-debugging history and must not be described as evidence of either binary equality or binary inequality.
 
 ## Epistemic boundary
 
