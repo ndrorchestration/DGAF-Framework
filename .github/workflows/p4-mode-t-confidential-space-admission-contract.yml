@@ -72,9 +72,9 @@ jobs:
                   raise SystemExit(f'missing fail-closed admission marker: {marker}')
 
           forbidden = (
-              'PDMAL_PROTOCOL_FROZEN=1',
-              'PDMAL_PILOT_AUTHORIZED=1',
-              'PDMAL_BLINDING_KEY=',
+              'PDMAL_PROTOCOL_FROZEN' + '=1',
+              'PDMAL_PILOT_AUTHORIZED' + '=1',
+              'PDMAL_BLINDING_KEY' + '=',
           )
           workflow = Path('.github/workflows/p4-mode-t-confidential-space-admission-contract.yml').read_text(
               encoding='utf-8'
