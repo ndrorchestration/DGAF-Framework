@@ -1,10 +1,9 @@
 """Attestation-gated in-process key lease for the bounded DGAF Mode-T lane.
 
-The lease is created only after a PRE_EXECUTION Confidential Space admission has
-already authenticated the token signature, exact runtime identity, and C digest.
-It deliberately does not require an output-manifest digest: that value cannot exist
-until after key generation and blinded output, and requiring it here would recreate
-the lifecycle circularity corrected in Issue #310 / PR #311.
+Production key generation accepts only a PRE_EXECUTION admission whose normalized
+runtime identity still hashes to the attested digest and whose token is backed by
+production-authenticated Google key-source evidence. Synthetic tests use a separate,
+explicit API that accepts only explicitly synthetic injected-key provenance.
 
 The raw key is retained only in an owned mutable bytearray and is never returned.
 Best-effort zeroization cannot prove that Python/runtime internals made no transient
@@ -15,12 +14,14 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import json
 import os
 import re
 import secrets
 from typing import Any, Mapping
 
 from mode_t_confidential_space_attestation import PRE_EXECUTION
+from mode_t_google_oidc_verifier import PRODUCTION_TRANSPORT, SYNTHETIC_TRANSPORT
 
 KEY_BYTES = 32
 FORBIDDEN_EXTERNAL_SECRET_ENV = (
@@ -55,22 +56,26 @@ def _require_mapping(value: Any, label: str) -> Mapping[str, Any]:
     return value
 
 
+def _runtime_identity_sha256(runtime: Mapping[str, Any]) -> str:
+    encoded = json.dumps(
+        dict(runtime),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def _validate_pre_execution_admission(
     admission: Mapping[str, Any],
 ) -> tuple[str, str, str]:
     _require(isinstance(admission, Mapping), "attestation admission must be an object")
-    _require(
-        admission.get("attestation_contract") == "PASS",
-        "attestation contract is not PASS",
-    )
+    _require(admission.get("attestation_contract") == "PASS", "attestation contract is not PASS")
     _require(
         admission.get("attestation_phase") == PRE_EXECUTION,
         "Mode-T key generation requires PRE_EXECUTION attestation",
     )
-    _require(
-        admission.get("signature_verified") is True,
-        "attestation signature is not verified",
-    )
+    _require(admission.get("signature_verified") is True, "attestation signature is not verified")
 
     token_sha = _require_sha256(admission.get("token_sha256"), "token_sha256")
     consumption_sha = _require_sha256(
@@ -93,27 +98,43 @@ def _validate_pre_execution_admission(
     )
     runtime = _require_mapping(admission.get("runtime_identity"), "runtime_identity")
     _require(
-        runtime.get("software_identity") == "CONFIDENTIAL_SPACE",
-        "attested software identity is not CONFIDENTIAL_SPACE",
+        _runtime_identity_sha256(runtime) == runtime_sha,
+        "runtime identity digest does not match normalized runtime",
     )
-    _require(
-        runtime.get("hardware_model") == "GCP_INTEL_TDX",
-        "attested hardware is not GCP_INTEL_TDX",
-    )
+    _require(runtime.get("software_identity") == "CONFIDENTIAL_SPACE", "attested software identity is not CONFIDENTIAL_SPACE")
+    _require(runtime.get("hardware_model") == "GCP_INTEL_TDX", "attested hardware is not GCP_INTEL_TDX")
     _require(runtime.get("secure_boot") is True, "attested secure boot is not true")
-    _require(
-        runtime.get("debug_status") == "disabled-since-boot",
-        "attested debug state is not production",
-    )
-    _require(
-        runtime.get("memory_monitoring") is False,
-        "attested memory monitoring is not disabled",
-    )
-    _require(
-        runtime.get("restart_policy") == "Never",
-        "attested restart policy is not Never",
-    )
+    _require(runtime.get("debug_status") == "disabled-since-boot", "attested debug state is not production")
+    _require(runtime.get("memory_monitoring") is False, "attested memory monitoring is not disabled")
+    _require(runtime.get("restart_policy") == "Never", "attested restart policy is not Never")
     return token_sha, consumption_sha, runtime_sha
+
+
+def _validate_key_source_evidence(
+    evidence: Mapping[str, Any],
+    *,
+    token_sha256: str,
+    production: bool,
+) -> None:
+    source = _require_mapping(evidence, "key_source_evidence")
+    _require(source.get("signature_verified") is True, "key-source evidence signature is not verified")
+    _require(
+        _require_sha256(source.get("token_sha256"), "key-source token_sha256") == token_sha256,
+        "key-source evidence token digest does not match PRE_EXECUTION token",
+    )
+    key_source = _require_mapping(source.get("key_source"), "key_source_evidence.key_source")
+    transport = key_source.get("transport_authentication")
+    production_flag = source.get("production_key_source_authenticated")
+    if production:
+        _require(
+            production_flag is True and transport == PRODUCTION_TRANSPORT,
+            "production Mode-T key generation requires authenticated production Google key source",
+        )
+    else:
+        _require(
+            production_flag is False and transport == SYNTHETIC_TRANSPORT,
+            "synthetic Mode-T key generation requires explicit synthetic key-source evidence",
+        )
 
 
 def _reject_external_secret_environment(environment: Mapping[str, str]) -> None:
@@ -174,23 +195,19 @@ class ModeTKeyLease:
         return hmac.new(self._material, domain + message, hashlib.sha256).digest()
 
     def blind_identifier(self, clear_identifier: str) -> str:
-        """Return an opaque domain-separated identifier without exposing the key."""
         if not isinstance(clear_identifier, str) or not clear_identifier:
             raise ModeTKeyError("clear identifier must be a non-empty string")
         return self._hmac(BLIND_IDENTIFIER_DOMAIN, clear_identifier.encode("utf-8")).hex()
 
     def order_token(self, ordinal_material: bytes) -> str:
-        """Return a separate-domain token suitable for deterministic blinded ordering."""
         return self._hmac(ORDER_TOKEN_DOMAIN, ordinal_material).hex()
 
     def key_commitment(self, commitment_nonce: bytes) -> str:
-        """Return a domain-separated synthetic/operational commitment, not key bytes."""
         if not isinstance(commitment_nonce, bytes) or len(commitment_nonce) < 16:
             raise ModeTKeyError("commitment nonce must contain at least 128 bits")
         return self._hmac(KEY_COMMITMENT_DOMAIN, commitment_nonce).hex()
 
     def destroy(self) -> None:
-        """Best-effort overwrite of the owned mutable key buffer."""
         if self._destroyed:
             return
         for index in range(len(self._material)):
@@ -207,31 +224,58 @@ class ModeTKeyLease:
         return False
 
 
-def acquire_mode_t_key(
+def _acquire_mode_t_key(
     pre_execution_admission: Mapping[str, Any],
     *,
-    environment: Mapping[str, str] | None = None,
+    key_source_evidence: Mapping[str, Any],
+    environment: Mapping[str, str] | None,
+    production: bool,
 ) -> ModeTKeyLease:
-    """Generate 256 bits only after accepted PRE_EXECUTION attestation.
-
-    Production callers cannot inject an alternate entropy source. Tests may
-    monkeypatch ``secrets.token_bytes`` but cannot pass key material through this API.
-    """
     token_sha, consumption_sha, runtime_sha = _validate_pre_execution_admission(
         pre_execution_admission
     )
-    _reject_external_secret_environment(
-        os.environ if environment is None else environment
+    _validate_key_source_evidence(
+        key_source_evidence,
+        token_sha256=token_sha,
+        production=production,
     )
-
+    _reject_external_secret_environment(os.environ if environment is None else environment)
     generated = secrets.token_bytes(KEY_BYTES)
     _require(isinstance(generated, bytes), "CSPRNG did not return bytes")
     _require(len(generated) == KEY_BYTES, "CSPRNG returned an unexpected key length")
-    material = bytearray(generated)
-
     return ModeTKeyLease(
-        material,
+        bytearray(generated),
         token_sha256=token_sha,
         authorization_consumption_sha256=consumption_sha,
         runtime_identity_sha256=runtime_sha,
+    )
+
+
+def acquire_mode_t_key(
+    pre_execution_admission: Mapping[str, Any],
+    *,
+    key_source_evidence: Mapping[str, Any],
+    environment: Mapping[str, str] | None = None,
+) -> ModeTKeyLease:
+    """Production entry point: require production-authenticated Google key provenance."""
+    return _acquire_mode_t_key(
+        pre_execution_admission,
+        key_source_evidence=key_source_evidence,
+        environment=environment,
+        production=True,
+    )
+
+
+def acquire_mode_t_key_synthetic(
+    pre_execution_admission: Mapping[str, Any],
+    *,
+    key_source_evidence: Mapping[str, Any],
+    environment: Mapping[str, str] | None = None,
+) -> ModeTKeyLease:
+    """Synthetic-only entry point: cannot accept production provenance by implication."""
+    return _acquire_mode_t_key(
+        pre_execution_admission,
+        key_source_evidence=key_source_evidence,
+        environment=environment,
+        production=False,
     )
