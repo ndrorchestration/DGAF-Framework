@@ -295,6 +295,7 @@ def run_study(
     repetitions: int = DEFAULT_REPETITIONS,
     require_tlock_verification: bool = False,
     tlock_encryption_evidence: Path | None = None,
+    publication_evidence: Path | None = None,
 ) -> dict:
     if not isinstance(repetitions, int) or isinstance(repetitions, bool) or not 1 <= repetitions <= 20:
         raise ValueError("repetitions must be an integer between 1 and 20")
@@ -336,6 +337,10 @@ def run_study(
     if tuple(stages) != REQUIRED_STAGE_NAMES:
         raise RuntimeError("timing evidence stage set drifted from the required contract")
 
+    if publication_evidence is not None:
+        from mode_t_publication_timing import load_stage
+
+        stages["artifact_publication_retention_timing"] = load_stage(publication_evidence)
     coverage_complete = all(stage["status"] == "PASS" for stage in stages.values())
     artifact = {
         "schema_version": 1,
@@ -383,12 +388,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repetitions", type=int, default=DEFAULT_REPETITIONS)
     parser.add_argument("--require-tlock-verification", action="store_true")
     parser.add_argument("--tlock-encryption-evidence", type=Path)
+    parser.add_argument("--publication-evidence", type=Path)
     args = parser.parse_args(argv)
     artifact = run_study(
         output_path=args.output,
         repetitions=args.repetitions,
         require_tlock_verification=args.require_tlock_verification,
         tlock_encryption_evidence=args.tlock_encryption_evidence,
+        publication_evidence=args.publication_evidence,
     )
     print(
         json.dumps(
@@ -408,3 +415,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

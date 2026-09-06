@@ -7,6 +7,8 @@ on:
       - 'docs/governance/P4_MODE_T_TIMING_STUDY_DESIGN_2026-09-05.md'
       - 'experiments/pdmal_pilot/mode_t_timing_study.py'
       - 'experiments/pdmal_pilot/test_mode_t_timing_study.py'
+      - 'experiments/pdmal_pilot/mode_t_publication_timing.py'
+      - 'experiments/pdmal_pilot/test_mode_t_publication_timing.py'
       - 'experiments/pdmal_pilot/analysis.py'
       - 'experiments/pdmal_pilot/run_pilot.py'
       - 'experiments/pdmal_pilot/task_engine.py'
@@ -16,6 +18,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 env:
   TLOCK_VERSION: '1.2.0'
@@ -113,7 +116,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Run timing-harness contract tests
-        run: python -m pytest experiments/pdmal_pilot/test_mode_t_timing_study.py -q
+        run: python -m pytest experiments/pdmal_pilot/test_mode_t_timing_study.py experiments/pdmal_pilot/test_mode_t_publication_timing.py -q
 
       - name: Prepare pinned tlock binary and verify quicknet metadata
         shell: bash
@@ -214,6 +217,7 @@ jobs:
 
           samples_ms = []
           ciphertext_paths = []
+          ciphertext_sizes_bytes = []
           try:
               for index in range(sample_count):
                   ciphertext = Path(f'/tmp/p4-mode-t-synthetic-timing-{index}.tle')
@@ -243,6 +247,7 @@ jobs:
                   if not math.isfinite(elapsed_ms) or elapsed_ms < 0:
                       raise SystemExit('non-finite synthetic tlock encryption timing')
                   samples_ms.append(round(elapsed_ms, 6))
+                  ciphertext_sizes_bytes.append(ciphertext.stat().st_size)
                   ciphertext.unlink()
           finally:
               for ciphertext in ciphertext_paths:
@@ -267,6 +272,7 @@ jobs:
               'target_round': target_round,
               'sample_count': sample_count,
               'samples_ms': samples_ms,
+              'ciphertext_sizes_bytes': ciphertext_sizes_bytes,
               'payload_class': payload_class,
               'payload_bytes': len(payload),
               'payload_sha256': hashlib.sha256(payload).hexdigest(),
@@ -286,13 +292,40 @@ jobs:
           )
           PY
 
+      - name: Prepare synthetic publication fixture and start clock
+        id: publication_start
+        run: python experiments/pdmal_pilot/mode_t_publication_timing.py prepare
+
+      - name: Measure dummy artifact publication
+        id: publication_upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ${{ steps.publication_start.outputs.artifact_name }}
+          path: test-artifacts/publication-fixture.bin
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Finish publication clock and verify API metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLICATION_ARTIFACT_ID: ${{ steps.publication_upload.outputs.artifact-id }}
+          PUBLICATION_ARTIFACT_URL: ${{ steps.publication_upload.outputs.artifact-url }}
+          PUBLICATION_ARTIFACT_DIGEST: ${{ steps.publication_upload.outputs.artifact-digest }}
+        run: python experiments/pdmal_pilot/mode_t_publication_timing.py finish
+
+      - name: Clean local publication fixture
+        if: always()
+        run: rm -f test-artifacts/publication-fixture.bin
+
       - name: Run partial full-shape synthetic timing study
         run: |
           python experiments/pdmal_pilot/mode_t_timing_study.py \
             --output test-artifacts/p4-mode-t-timing-partial.json \
             --repetitions 3 \
             --require-tlock-verification \
-            --tlock-encryption-evidence test-artifacts/p4-mode-t-timing-encryption.json
+            --tlock-encryption-evidence test-artifacts/p4-mode-t-timing-encryption.json \
+            --publication-evidence test-artifacts/p4-mode-t-publication-timing.json
 
       - name: Verify evidence remains partial and cannot select W
         shell: bash
@@ -317,7 +350,8 @@ jobs:
           assert evidence['stages']['synthetic_timelock_encryption_timing']['status'] == 'PASS'
           assert evidence['stages']['synthetic_timelock_encryption_timing']['ciphertexts_retained'] is False
           assert evidence['stages']['external_transparency_retention_timing']['status'] == 'NOT_EXECUTED'
-          assert evidence['stages']['artifact_publication_retention_timing']['status'] == 'NOT_EXECUTED'
+          assert evidence['stages']['artifact_publication_retention_timing']['status'] == 'PASS'
+          assert evidence['stages']['artifact_publication_retention_timing']['durable_custody'] is False
           assert evidence['coverage_complete'] is False
           assert evidence['w_proposal_eligible'] is False
           assert evidence['numeric_w_selected'] is False
@@ -333,6 +367,8 @@ jobs:
         with:
           name: p4-mode-t-timing-partial-${{ env.EVIDENCE_SHA }}
           path: |
+            test-artifacts/p4-mode-t-publication-timing.json
+            test-artifacts/p4-mode-t-publication-timing.json.sha256
             test-artifacts/p4-mode-t-timing-partial.json
             test-artifacts/p4-mode-t-timing-partial.json.sha256
             test-artifacts/p4-mode-t-timing-encryption.json
@@ -341,3 +377,4 @@ jobs:
             tlock-timing-prerequisite-evidence.txt
           if-no-files-found: error
           retention-days: 30
+

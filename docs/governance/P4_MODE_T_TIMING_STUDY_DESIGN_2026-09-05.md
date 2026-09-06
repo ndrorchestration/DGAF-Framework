@@ -52,7 +52,7 @@ The workflow independently re-downloads the fixed `drand/tlock` v1.2.0 Linux amd
 
 This is a runtime re-verification of the exact asset already accepted at the PR #291 checksum boundary. The timing harness refuses the CI evidence run when that re-verification is absent or mismatched.
 
-This tranche does **not** yet execute tlock encryption. Asset identity verification and timelock-encryption latency are distinct stages.
+The workflow now measures synthetic tlock encryption after verifying the quicknet chain hash, scheme, and public key. It retains only timings and ciphertext byte sizes, then deletes synthetic payloads and ciphertexts. Strict-chain post-release decryption remains separate in #295.
 
 ## Evidence fields
 
@@ -78,11 +78,11 @@ The evidence contract contains six required stages:
 1. exact tlock asset re-verification;
 2. full synthetic matrix timing;
 3. locked primary-analysis timing;
-4. synthetic timelock-encryption timing under a separately reviewed strict-chain path;
+4. synthetic timelock-encryption timing with explicit verified quicknet identity;
 5. external transparency / durable-retention timing using the finally selected P6 mechanism;
-6. artifact-publication / retention timing.
+6. artifact-publication transport timing (deletable storage, not durable custody).
 
-This first implementation intentionally leaves stages 4–6 `NOT_EXECUTED` where they are not yet measured inside the accepted boundary.
+External transparency / durable-retention timing remains `NOT_EXECUTED` (#296). Encryption and publication transport may report PASS only after their run-bound records validate.
 
 Therefore it must emit:
 
@@ -100,7 +100,6 @@ A regression test enforces that partial coverage cannot become a W proposal.
 Even after this partial workflow passes, it does not establish:
 
 - a conservative full-workflow `W`;
-- timelock-encryption latency;
 - drand threshold-network security;
 - beacon availability or delayed-round behavior;
 - independently retained transparency timing;
@@ -109,6 +108,16 @@ Even after this partial workflow passes, it does not establish:
 - canonical P4/P7/P8/P9 mode-specific predicates;
 - freeze or authorization;
 - empirical performance or efficacy.
+
+## Publication transport timing (#297)
+
+The upload fixture is deterministic public padding with an explicit synthetic evidence label. Its size is the maximum ciphertext byte size from the same run's synthetic encryption samples. No ciphertext is uploaded. Compression is disabled so the padding does not collapse into an unrepresentative tiny compressed payload.
+
+The workflow records monotonic time immediately around the pinned upload action. The interval includes runner step-transition overhead and excludes the subsequent API verification. The action's returned ID, name, URL, and ZIP digest are checked against GitHub artifact metadata, including exact run and head binding. Run attempt is bound in the fixture name and timing record. Missing or mismatched metadata fails closed.
+
+The dummy artifact has one-day retention; the local fixture is removed even on failure. The separate timing evidence has a SHA-256 sidecar and is included in the existing 30-day evidence upload. The combined study loads this record only after checking its digest, execution identity, timing interval, and non-authorizing controls.
+
+This is one publication sample per workflow run. It does not establish a distribution, independent retention, end-to-end timing, degraded-condition performance, or an eligible W proposal. GitHub artifacts remain deletable. No Rekor submission is performed.
 
 ## Promotion rule
 
@@ -121,3 +130,4 @@ Completion of timing coverage still does not automatically select W. The evidenc
 This lane is an engineering measurement apparatus only. It is intentionally stacked on draft #292 and must remain reviewable independently from the custody design itself.
 
 **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
+
