@@ -1,0 +1,4 @@
+# Bounded direct dependency for the Mode-T Google OIDC signature verifier.
+# This is intentionally separate from the broad pilot lock so the security lane can
+# be installed with --require-hashes and --only-binary on its reviewed CI/runtime.
+cryptography==50.0.1

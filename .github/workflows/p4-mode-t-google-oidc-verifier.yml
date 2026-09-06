@@ -1,0 +1,127 @@
+name: P4 Mode T Google OIDC Verifier
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-google-oidc-verifier.yml'
+      - 'experiments/pdmal_pilot/mode_t_google_oidc_verifier.py'
+      - 'experiments/pdmal_pilot/test_mode_t_google_oidc_verifier.py'
+      - 'experiments/pdmal_pilot/mode_t_confidential_space_attestation.py'
+      - 'experiments/pdmal_pilot/test_mode_t_confidential_space_attestation.py'
+      - 'experiments/pdmal_pilot/requirements-mode-t-security.in'
+      - 'experiments/pdmal_pilot/requirements-mode-t-security-lock.txt'
+      - 'docs/governance/P4_MODE_T_GOOGLE_OIDC_VERIFIER_2026-09-06.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  oidc-verifier:
+    name: Authenticated-key and signature negative controls
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Install hash-locked security lane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check \
+            --require-hashes --only-binary=:all: \
+            -r experiments/pdmal_pilot/requirements-mode-t-security-lock.txt
+          python - <<'PY'
+          from importlib.metadata import version
+          expected = {
+              'cryptography': '50.0.1',
+              'cffi': '2.1.1',
+              'pycparser': '3.0',
+          }
+          for package, wanted in expected.items():
+              got = version(package)
+              if got != wanted:
+                  raise SystemExit(f'{package}: expected {wanted}, got {got}')
+          PY
+
+      - name: Run authenticated-key and signature negative controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_google_oidc_verifier.py -v
+
+      - name: Re-run current two-phase claim contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_confidential_space_attestation.py -v
+
+      - name: Static trust-boundary assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path('experiments/pdmal_pilot/mode_t_google_oidc_verifier.py').read_text(encoding='utf-8')
+          required = (
+              'ssl.create_default_context()',
+              'class _NoRedirect',
+              'EXPECTED_ALGORITHM = "RS256"',
+              'JWT alg must be exactly RS256',
+              'JWT header contains forbidden key source or critical extension',
+              'discovery JWKS URI changed from reviewed endpoint',
+              'absent from refreshed Google JWKS',
+              'HTTPS_SYSTEM_CA_HOSTNAME_VERIFIED',
+              'verify_google_confidential_space_token',
+              'GoogleOIDCVerifier().verify',
+              '"freeze_established": False',
+              '"pilot_authorized": False',
+              '"empirical_n": 0',
+          )
+          for marker in required:
+              if marker not in source:
+                  raise SystemExit(f'missing trust-boundary marker: {marker}')
+
+          forbidden = (
+              'ssl.CERT_NONE',
+              '_create_unverified_context',
+              'http://confidentialcomputing.googleapis.com',
+              'http://www.googleapis.com',
+              'PDMAL_BLINDING_KEY' + '=',
+              'PDMAL_PROTOCOL_FROZEN' + '=1',
+              'PDMAL_PILOT_AUTHORIZED' + '=1',
+          )
+          for marker in forbidden:
+              if marker in source:
+                  raise SystemExit(f'forbidden trust-boundary marker: {marker}')
+          PY
+
+      - name: Report bounded interpretation
+        shell: bash
+        run: |
+          echo 'PASS means synthetic authenticated-key/signature controls passed with locked dependencies.'
+          echo 'It does NOT mean a real Confidential Space token or workload has been admitted.'
+          echo 'P4 remains OPEN / PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.'
