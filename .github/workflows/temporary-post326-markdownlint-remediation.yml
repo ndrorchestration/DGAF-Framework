@@ -1,0 +1,89 @@
+name: Temporary Post-326 Markdownlint Remediation
+
+on:
+  push:
+    branches:
+      - fix/markdownlint-regression-post326-20260906
+
+permissions:
+  contents: write
+
+jobs:
+  remediate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout remediation branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: fix/markdownlint-regression-post326-20260906
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install markdownlint
+        run: npm install -g markdownlint-cli@0.39.0
+
+      - name: Identify post-326 Markdown surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only --diff-filter=ACMR d03f7b4e1c7d58ef73ad163b5da6e4236c0b0146..53efa75b6517b3a0a8ae189acad2017f5b3ead50 -- '*.md' > /tmp/post326-md.txt
+          cat /tmp/post326-md.txt
+
+      - name: Apply semantics-preserving Markdown normalization
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          paths = [Path(line.strip()) for line in Path('/tmp/post326-md.txt').read_text().splitlines() if line.strip()]
+          for path in paths:
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8')
+              lines = text.splitlines()
+              out = []
+              for line in lines:
+                  stripped = line.strip()
+                  indent = line[: len(line) - len(line.lstrip())]
+                  # MD040: plain/pseudocode/template fences get an explicit neutral language.
+                  if stripped == '```':
+                      line = indent + '```text'
+                  # MD036: classification footers are metadata, not implicit headings.
+                  m = re.fullmatch(r'\*Classification:\s*(.+)\*', stripped)
+                  if m:
+                      line = indent + 'Classification: ' + m.group(1)
+                  out.append(line)
+              path.write_text('\n'.join(out) + '\n', encoding='utf-8')
+          PY
+
+          mapfile -t files < /tmp/post326-md.txt
+          if [ "${#files[@]}" -gt 0 ]; then
+            markdownlint --fix --config .markdownlint.yml --ignore node_modules "${files[@]}" || true
+          fi
+
+      - name: Verify normalized post-326 surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < /tmp/post326-md.txt
+          markdownlint --config .markdownlint.yml --ignore node_modules "${files[@]}"
+
+      - name: Commit remediation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No remediation changes required.'
+            exit 0
+          fi
+          git config user.name 'DGAF Documentation Remediation'
+          git config user.email '246370637+ndrorchestration@users.noreply.github.com'
+          git add -- '*.md'
+          git commit -m 'docs: restore post-326 markdownlint ratchet'
+          git push origin HEAD:fix/markdownlint-regression-post326-20260906
