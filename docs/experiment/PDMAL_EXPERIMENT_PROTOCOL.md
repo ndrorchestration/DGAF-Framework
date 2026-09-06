@@ -3,10 +3,10 @@ status: ACTIVE
 state: PRE-FREEZE
 authority: Both
 owner: DGAF/PDMAL experimental-design control
-last_verified: 2026-08-30
+last_verified: 2026-09-06
 applies_to_sha: CURRENT_SPECIFICATION; EXECUTABLE_CANDIDATE_BOUND_SEPARATELY_BY_P8
 protocol_blob_sha: BOUND_EXTERNALLY_BY_P8_LOCK
-supersedes: prior protocol revisions; v0.7.5 matrix amendment incorporated
+supersedes: prior protocol revisions; v0.7.5 matrix amendment plus v0.7.6 blinding noninterference amendment incorporated
 ---
 
 # PDMAL Experiment Protocol
@@ -25,7 +25,9 @@ The seven constitutive treatment components are P-31 SCPE, P-33 PDMAL Convergenc
 
 ## 3. Protocol Version
 
-This protocol incorporates the v0.7.5 matrix amendment (`docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md`) and the P7 primary-analysis adjudication. These governance decisions are not themselves a protocol freeze.
+This protocol incorporates the v0.7.5 matrix amendment (`docs/experiment/PDMAL_PROTOCOL_MATRIX_AMENDMENT_V0.7.5.md`), the 2026-09-06 v0.7.6 blinding noninterference amendment (`docs/experiment/PDMAL_BLINDING_NONINTERFERENCE_AMENDMENT_2026-09-06.md`), and the P7 primary-analysis adjudication. These governance decisions are not themselves a protocol freeze.
+
+The v0.7.6 change does not alter the 5 × 4 × 9 scientific matrix, endpoint, estimand, or primary contrast. It corrects the execution/artifact blinding procedure before any empirical observation exists.
 
 ## 4. Methodology
 
@@ -70,6 +72,20 @@ The `dgaf` condition invokes the canonical `DGAF_TGLAdapter` during consensus ex
 
 Historical recovery/adaptation of these seven gates must preserve their defined semantics. No numerical proxy or field substitution is accepted merely for convenience. **R1–R4 semantic recovery for the current evidence epoch is complete; all seven required gates remain constitutive + FAIL-CLOSED. No R1–R4 repeat work is required unless genuinely new authoritative semantic evidence appears.** Gate-specific recovery state is governed by `docs/experiment/R5_R7_GATE_SEMANTIC_RECOVERY_MAP_2026-08-30.md` and Issue #152.
 
+### 4.7 Blinding noninterference and trial order
+
+The four named conditions remain fixed scientifically, but their execution and serialization order must not deterministically disclose their names before unblinding.
+
+For each root seed, the runner constructs the same complete 180-cell topology × condition × failure-count matrix, then orders those cells using a domain-separated HMAC-SHA-256 ordering token derived from the protected blinding key and the tuple `(seed, topology, condition, failure_count)`. The protected key therefore governs condition position; the public root seed alone does not.
+
+`trial_id` is the integer position in that protected per-seed schedule. Record serialization follows that same protected schedule. The schedule is deterministic and independently reconstructible only after authorized release of the protected blinding material. Any ordering-token collision or incomplete/duplicate matrix is fail-closed.
+
+The pre-unblinding public seed artifact uses exact allowlist schema `1.1`. It excludes plaintext `governance_trace`, per-trial `runtime_ms`, named condition labels, condition mappings, and unexpected fields. Seed-level aggregate runtime may remain because it does not distinguish conditions within a seed.
+
+This blinding contract eliminates avoidable deterministic identity channels; it does not claim that outcome patterns themselves can never support subjective guesses about treatment identity. Such inference risk must remain explicit rather than being confused with deterministic metadata leakage.
+
+Detailed treatment traces or per-trial timing may only be added later through a separately specified protected evidence surface that preserves the pre-release noninterference contract. They are not implicitly authorized by the public pilot artifact schema.
+
 ## 5. Analysis boundary
 
 The P7 adjudication defines the scientific target and primary analysis contract. P8 binds the executable analysis implementation/configuration to the exact candidate apparatus before any unblinding or empirical interpretation.
@@ -87,6 +103,7 @@ Historical characterization artifacts remain evidence only for the exact SHA and
 The protocol remains pre-freeze. **R1–R4 semantic recovery is CLOSED for the current evidence epoch.** The remaining pre-freeze gates are:
 
 - Seven-gate R5–R7 implementation, candidate binding, and verification **only if new authoritative semantics justify restoration/adaptation**; otherwise the seven required gates remain FAIL-CLOSED.
+- Issue #307 blinding-noninterference remediation, exact-head verification, and independent adversarial review
 - Formal P7 freeze binding and closure
 - Candidate-scoped P8 implementation/configuration verification and hash binding
 - Exact protocol blob SHA binding through the P8 analysis lock
@@ -110,6 +127,6 @@ The v0.7.5 runtime characterization release asset was downloaded and verified on
 - Inner artifact SHA-256: `42da11122cf4bca517d93888c946d26b31a8ae6b304433e56ae9c2f4c155f6ea`
 - ZIP-shipped sidecar confirms inner SHA: YES
 
-The v0.7.5 release is a 3-seed, 2-topology operational characterization (72/72 trials completed). It is NOT the 50-seed blinded pilot. Protocol status remains PRE-FREEZE.
+The v0.7.5 release is a 3-seed, 2-topology operational characterization (72/72 trials completed). It is NOT the 50-seed blinded pilot. It predates the v0.7.6 blinding amendment and is not evidence that the corrected blinding contract has been exercised.
 
 This protocol is a specification artifact. It does not authorize empirical execution. N = 0 throughout. Pilot authorization is NOT GRANTED.

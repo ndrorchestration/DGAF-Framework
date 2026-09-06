@@ -4,6 +4,10 @@ Separate from the pre-freeze contract schema. This validates artifact
 structure and record hashes; it does not authorize execution or unblind labels.
 The explicit FFCR outcome and its matrix coordinates are part of the pilot
 artifact contract because P8 analysis consumes them directly after unblinding.
+
+Schema 1.1 is an exact allowlist. Public blinded records must not silently gain
+condition-identifying diagnostic fields such as governance traces or per-trial
+runtime. Those surfaces are excluded before unblinding by design.
 """
 from __future__ import annotations
 
@@ -11,12 +15,17 @@ import hashlib
 import json
 from typing import Any, Mapping
 
-ARTIFACT_SCHEMA_VERSION = "1.0"
+ARTIFACT_SCHEMA_VERSION = "1.1"
+REQUIRED_DOCUMENT_FIELDS = {
+    "schema_version", "artifact_version", "protocol_status",
+    "empirical_data_collection", "frozen_commit_sha", "seed_id",
+    "runtime_seconds", "records",
+}
 REQUIRED_RECORD_FIELDS = {
     "experiment_id", "protocol_version", "experiment_commit_sha", "seed_id",
     "blinded_condition_id", "trial_id", "topology", "failure_count",
     "primary_outcome", "secondary_outcomes", "failure", "recovery", "ffcr_success",
-    "runtime_ms", "status", "excluded", "exclusion_reason",
+    "status", "excluded", "exclusion_reason",
     "environment_fingerprint", "artifact_sha256",
 }
 ALLOWED_STATUS = {"SUCCESS", "RECOVERED", "UNRECOVERED_FAILURE"}
@@ -48,9 +57,13 @@ def validate_record(
     expected_seed: int | None = None,
     expected_environment_fingerprint: str | None = None,
 ) -> None:
-    missing = REQUIRED_RECORD_FIELDS - set(record)
+    actual_fields = set(record)
+    missing = REQUIRED_RECORD_FIELDS - actual_fields
     if missing:
         raise AssertionError(f"missing required record fields: {sorted(missing)}")
+    unexpected = actual_fields - REQUIRED_RECORD_FIELDS
+    if unexpected:
+        raise AssertionError(f"unexpected record fields: {sorted(unexpected)}")
 
     _require_full_sha(record["experiment_commit_sha"], "experiment_commit_sha")
     if expected_commit_sha is not None and record["experiment_commit_sha"] != expected_commit_sha:
@@ -109,14 +122,13 @@ def validate_record(
 
 
 def validate_artifact(document: Mapping[str, Any], *, expected_seed: int | None = None) -> None:
-    required = {
-        "schema_version", "artifact_version", "protocol_status",
-        "empirical_data_collection", "frozen_commit_sha", "seed_id",
-        "runtime_seconds", "records",
-    }
-    missing = required - set(document)
+    actual_document_fields = set(document)
+    missing = REQUIRED_DOCUMENT_FIELDS - actual_document_fields
     if missing:
         raise AssertionError(f"artifact missing fields: {sorted(missing)}")
+    unexpected = actual_document_fields - REQUIRED_DOCUMENT_FIELDS
+    if unexpected:
+        raise AssertionError(f"artifact has unexpected fields: {sorted(unexpected)}")
     if document["schema_version"] != ARTIFACT_SCHEMA_VERSION:
         raise AssertionError("unsupported schema_version")
     if document["protocol_status"] != "FROZEN":
