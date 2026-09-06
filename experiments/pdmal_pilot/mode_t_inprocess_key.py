@@ -4,7 +4,8 @@ The production entry point accepts a raw Confidential Space token, authenticates
 Google signing-key path, evaluates the exact PRE_EXECUTION claim contract, re-hashes
 the normalized runtime identity, and only then generates operational key material.
 It never accepts caller-assembled ``signature_verified`` or key-source dictionaries
-as the production trust boundary.
+as the production trust boundary, and it does not expose a caller-selected verification
+clock.
 
 Synthetic tests use a separate explicitly synthetic path. The raw key remains inside
 an owned mutable bytearray and is never returned. Best-effort zeroization cannot prove
@@ -277,14 +278,10 @@ def admit_and_acquire_mode_t_key(
     expectation: AttestationExpectation,
     *,
     environment: Mapping[str, str] | None = None,
-    verified_at_unix: int | None = None,
 ) -> ModeTKeyAcquisition:
-    """Production entry: authenticate raw token, admit PRE claims, then generate key."""
+    """Production entry: authenticate raw token with system time, admit PRE, then generate key."""
     _require(expectation.phase == PRE_EXECUTION, "production key path requires PRE_EXECUTION expectation")
-    verified = verify_google_confidential_space_token(
-        token,
-        verified_at_unix=verified_at_unix,
-    )
+    verified = verify_google_confidential_space_token(token)
     pre = verify_confidential_space_attestation(
         verified.claims,
         expectation,

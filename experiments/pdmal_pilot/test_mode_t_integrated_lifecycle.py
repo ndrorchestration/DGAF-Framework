@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import inspect
 import unittest
 from unittest.mock import patch
 
@@ -134,6 +135,10 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
             verified.token_context,
         )
         return verified, admission
+
+    def test_production_key_entry_exposes_no_verification_time_override(self) -> None:
+        signature = inspect.signature(admit_and_acquire_mode_t_key)
+        self.assertNotIn("verified_at_unix", signature.parameters)
 
     def test_full_synthetic_lifecycle_connects_all_reviewed_boundaries(self) -> None:
         reservation, authorization, ledger = self.new_records("A-integrated-success")
@@ -269,7 +274,6 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
                     self.pre_token(c_sha),
                     expectation(phase=PRE_EXECUTION, binding=c_sha),
                     environment={},
-                    verified_at_unix=NOW,
                 )
 
     def test_key_generation_rejects_verified_token_digest_mismatch(self) -> None:

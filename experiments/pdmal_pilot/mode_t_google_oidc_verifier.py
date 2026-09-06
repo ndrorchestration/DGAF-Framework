@@ -122,9 +122,13 @@ def _b64u(value: Any, label: str) -> bytes:
     if _B64URL_RE.fullmatch(value) is None or len(value) % 4 == 1:
         raise _fail(f"{label} is not canonical base64url")
     try:
-        return base64.urlsafe_b64decode(value + "=" * (-len(value) % 4))
+        raw = base64.urlsafe_b64decode(value + "=" * (-len(value) % 4))
     except Exception as exc:
         raise _fail(f"{label} is not valid base64url") from exc
+    canonical = base64.urlsafe_b64encode(raw).rstrip(b"=").decode("ascii")
+    if canonical != value:
+        raise _fail(f"{label} is not canonical base64url")
+    return raw
 
 
 def _uint(value: Any, label: str) -> int:
@@ -475,15 +479,11 @@ class GoogleOIDCVerifier:
         )
 
 
-def verify_google_confidential_space_token(
-    token: str | bytes,
-    *,
-    verified_at_unix: int | None = None,
-) -> VerifiedGoogleOIDCToken:
-    """Production trust entry point using only the built-in authenticated fetcher.
+def verify_google_confidential_space_token(token: str | bytes) -> VerifiedGoogleOIDCToken:
+    """Production trust entry point using authenticated HTTPS and the system clock.
 
-    Tests may instantiate ``GoogleOIDCVerifier(fetcher=...)`` with synthetic sources,
-    but operational lifecycle code should call this function so a caller cannot
-    inject an alternate key source through the public production path.
+    Tests may instantiate ``GoogleOIDCVerifier(fetcher=...)`` and pass an explicit
+    verification time, but operational lifecycle code must call this function so a
+    caller cannot inject either an alternate key source or a caller-selected clock.
     """
-    return GoogleOIDCVerifier().verify(token, verified_at_unix=verified_at_unix)
+    return GoogleOIDCVerifier().verify(token)
