@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """Synthetic-only Mode-T timing characterization for Issue #293.
 
-This module measures operational durations for the exact PDMAL pilot matrix shape
-and locked primary-analysis shape without invoking pilot mode, creating a real
-blinding secret, authorizing empirical work, or retaining synthetic outcomes as
-scientific evidence.
+This module measures operational durations for the exact PDMAL pilot matrix shape,
+locked primary-analysis shape, and separately produced synthetic tlock encryption
+measurements without invoking pilot mode, creating a real blinding secret,
+authorizing empirical work, or retaining synthetic outcomes as scientific
+evidence.
 
 The emitted artifact is deliberately ineligible to propose an analysis-lock
-window until every required end-to-end stage is measured. In particular, this
-first tranche does not perform timelock encryption or external transparency /
-durable-retention operations.
+window until every required end-to-end stage is measured and independently
+reviewed. External transparency and artifact-publication timing remain separate
+required stages.
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ import hashlib
 import json
 import math
 import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from time import monotonic
@@ -39,10 +41,21 @@ from run_pilot import FAILURE_COUNTS as PILOT_FAILURE_COUNTS
 from task_engine import CONDITION_VALUES, ConsensusTask
 
 EVIDENCE_CLASS = "P4_MODE_T_SYNTHETIC_TIMING_PARTIAL_V1"
+TLOCK_ENCRYPTION_EVIDENCE_CLASS = "P4_MODE_T_SYNTHETIC_ENCRYPTION_TIMING_V1"
 DEFAULT_REPETITIONS = 3
 DEFAULT_MATRIX_SEED_BASE = 2026090500
 SYNTHETIC_ANALYSIS_SEED_COUNT = 50
+MIN_TLOCK_ENCRYPTION_SAMPLES = 3
+MAX_TLOCK_ENCRYPTION_SAMPLES = 20
 EXPECTED_TLOCK_SHA256 = "0fda1e0fedffab82217cbd90e0b8b2a9d42df88a361b2dd890d8fac173b5dc57"
+EXPECTED_DRAND_ENDPOINT = "https://api.drand.sh/"
+EXPECTED_QUICKNET_CHAIN_HASH = "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971"
+EXPECTED_QUICKNET_SCHEME = "bls-unchained-g1-rfc9380"
+EXPECTED_QUICKNET_PUBLIC_KEY = (
+    "83cf0f2896adee7eb8b5f01fcad3912212c437e0073e911fb90022d3e760183c"
+    "8c4b450b6a0a6c3ac6a5776a2d1064510d1fec758c921cc22b0e17e63aaf4bc"
+    "b5ed66304de9cf809bd274ca73bab4af5a6e9c76a4bc09e76eae8991ef5ece45a"
+)
 
 REQUIRED_STAGE_NAMES = (
     "exact_tlock_asset_reverification",
@@ -134,8 +147,6 @@ def build_synthetic_analysis_documents(seed_count: int = SYNTHETIC_ANALYSIS_SEED
         for condition in ANALYSIS_CONDITIONS:
             for topology in ANALYSIS_TOPOLOGIES:
                 for failure_count in ANALYSIS_FAILURE_COUNTS:
-                    # Deterministic fixture bit only; it is not produced by the
-                    # empirical apparatus and is never emitted in timing evidence.
                     fixture_success = (
                         seed
                         + condition_index[condition]
@@ -186,11 +197,104 @@ def _tlock_reverification_stage(*, require_tlock_verification: bool) -> dict[str
     }
 
 
+def _require_full_sha(value: object, *, field: str) -> str:
+    if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{40}", value) is None:
+        raise ValueError(f"{field} must be a full lowercase 40-character git SHA")
+    return value
+
+
+def _load_tlock_encryption_stage(path: Path | None) -> dict[str, object]:
+    """Validate separately produced synthetic tlock encryption timing evidence."""
+    if path is None:
+        return {
+            "status": "NOT_EXECUTED",
+            "reason": "requires separately reviewed synthetic encryption path",
+        }
+    try:
+        evidence = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid synthetic tlock encryption timing evidence") from exc
+    if not isinstance(evidence, dict):
+        raise ValueError("synthetic tlock encryption timing evidence must be a JSON object")
+    if evidence.get("schema_version") != 1:
+        raise ValueError("synthetic tlock encryption timing schema_version mismatch")
+    if evidence.get("evidence_class") != TLOCK_ENCRYPTION_EVIDENCE_CLASS:
+        raise ValueError("synthetic tlock encryption timing evidence_class mismatch")
+
+    evidence_sha = _require_full_sha(evidence.get("control_plane_sha"), field="control_plane_sha")
+    expected_sha = os.environ.get("EVIDENCE_SHA", "").strip().lower()
+    if expected_sha:
+        _require_full_sha(expected_sha, field="EVIDENCE_SHA")
+        if not hashlib.sha256(evidence_sha.encode()).digest() == hashlib.sha256(expected_sha.encode()).digest():
+            raise ValueError("synthetic tlock encryption evidence head mismatch")
+
+    if evidence.get("tlock_sha256") != EXPECTED_TLOCK_SHA256:
+        raise ValueError("synthetic tlock encryption evidence tlock digest mismatch")
+    if evidence.get("network_endpoint") != EXPECTED_DRAND_ENDPOINT:
+        raise ValueError("synthetic tlock encryption evidence endpoint mismatch")
+    if evidence.get("chain_hash") != EXPECTED_QUICKNET_CHAIN_HASH:
+        raise ValueError("synthetic tlock encryption evidence chain hash mismatch")
+    if evidence.get("scheme") != EXPECTED_QUICKNET_SCHEME:
+        raise ValueError("synthetic tlock encryption evidence scheme mismatch")
+    if evidence.get("public_key") != EXPECTED_QUICKNET_PUBLIC_KEY:
+        raise ValueError("synthetic tlock encryption evidence public key mismatch")
+    if evidence.get("network_metadata_verified") is not True:
+        raise ValueError("synthetic tlock encryption evidence lacks verified network metadata")
+
+    current_round = evidence.get("metadata_current_round")
+    target_round = evidence.get("target_round")
+    if (
+        not isinstance(current_round, int)
+        or isinstance(current_round, bool)
+        or current_round < 1
+        or not isinstance(target_round, int)
+        or isinstance(target_round, bool)
+        or target_round <= current_round
+    ):
+        raise ValueError("synthetic tlock encryption evidence has invalid round binding")
+
+    samples = evidence.get("samples_ms")
+    if not isinstance(samples, list) or not MIN_TLOCK_ENCRYPTION_SAMPLES <= len(samples) <= MAX_TLOCK_ENCRYPTION_SAMPLES:
+        raise ValueError("synthetic tlock encryption timing sample count is outside the accepted range")
+    stats = _timing_stats(samples)
+    if evidence.get("sample_count") != stats["sample_count"]:
+        raise ValueError("synthetic tlock encryption evidence sample_count mismatch")
+
+    payload_bytes = evidence.get("payload_bytes")
+    if not isinstance(payload_bytes, int) or isinstance(payload_bytes, bool) or payload_bytes < 1:
+        raise ValueError("synthetic tlock encryption evidence payload_bytes must be positive")
+    if evidence.get("payload_class") != "P4_MODE_T_SYNTHETIC_TIMING_NOT_AUTHORIZATION":
+        raise ValueError("synthetic tlock encryption evidence payload class mismatch")
+    if evidence.get("all_encryptions_succeeded") is not True:
+        raise ValueError("synthetic tlock encryption evidence does not prove all samples succeeded")
+    if evidence.get("ciphertexts_retained") is not False:
+        raise ValueError("synthetic tlock encryption evidence must not retain ciphertext fixtures")
+    if evidence.get("empirical_data_collection") is not False:
+        raise ValueError("synthetic tlock encryption evidence must be non-empirical")
+    if evidence.get("secret_instantiation") is not False:
+        raise ValueError("synthetic tlock encryption evidence must not instantiate a protected secret")
+    if evidence.get("pilot_authorized") is not False:
+        raise ValueError("synthetic tlock encryption evidence must not assert pilot authorization")
+
+    return {
+        "status": "PASS",
+        "evidence_class": TLOCK_ENCRYPTION_EVIDENCE_CLASS,
+        "network_endpoint": EXPECTED_DRAND_ENDPOINT,
+        "chain_hash": EXPECTED_QUICKNET_CHAIN_HASH,
+        "scheme": EXPECTED_QUICKNET_SCHEME,
+        "target_round": target_round,
+        "payload_bytes": payload_bytes,
+        "statistics": stats,
+        "ciphertexts_retained": False,
+    }
+
+
 def run_study(
     *,
     output_path: Path,
     repetitions: int = DEFAULT_REPETITIONS,
     require_tlock_verification: bool = False,
+    tlock_encryption_evidence: Path | None = None,
 ) -> dict:
     if not isinstance(repetitions, int) or isinstance(repetitions, bool) or not 1 <= repetitions <= 20:
         raise ValueError("repetitions must be an integer between 1 and 20")
@@ -217,10 +321,9 @@ def run_study(
             "bootstrap_resamples": BOOTSTRAP_RESAMPLES,
             "statistics": _timing_stats(analysis_samples),
         },
-        "synthetic_timelock_encryption_timing": {
-            "status": "NOT_EXECUTED",
-            "reason": "requires separately reviewed synthetic encryption path",
-        },
+        "synthetic_timelock_encryption_timing": _load_tlock_encryption_stage(
+            tlock_encryption_evidence
+        ),
         "external_transparency_retention_timing": {
             "status": "NOT_EXECUTED",
             "reason": "final P6/transparency mechanism is not selected and validated",
@@ -262,7 +365,6 @@ def run_study(
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     }
     if artifact["coverage_complete"]:
-        # Coverage completeness alone must never auto-promote into a W proposal.
         artifact["epistemic_status"] = "COMPLETE_SYNTHETIC_TIMING_REQUIRES_INDEPENDENT_W_REVIEW"
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -280,11 +382,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--repetitions", type=int, default=DEFAULT_REPETITIONS)
     parser.add_argument("--require-tlock-verification", action="store_true")
+    parser.add_argument("--tlock-encryption-evidence", type=Path)
     args = parser.parse_args(argv)
     artifact = run_study(
         output_path=args.output,
         repetitions=args.repetitions,
         require_tlock_verification=args.require_tlock_verification,
+        tlock_encryption_evidence=args.tlock_encryption_evidence,
     )
     print(
         json.dumps(
