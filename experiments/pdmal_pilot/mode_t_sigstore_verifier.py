@@ -105,14 +105,20 @@ def _first_tlog_entry(bundle: Mapping[str, Any]) -> Mapping[str, Any]:
     material = bundle.get("verificationMaterial")
     _require(isinstance(material, Mapping), "bundle missing verificationMaterial")
     entries = material.get("tlogEntries")
-    _require(isinstance(entries, list) and len(entries) == 1, "bundle must contain exactly one transparency-log entry")
+    _require(
+        isinstance(entries, list) and len(entries) == 1,
+        "bundle must contain exactly one transparency-log entry",
+    )
     entry = entries[0]
     _require(isinstance(entry, Mapping), "invalid transparency-log entry")
     return entry
 
 
 def _nonnegative_integer(value: Any, label: str) -> int:
-    _require(isinstance(value, int) and not isinstance(value, bool) and value >= 0, f"{label} must be a non-negative integer")
+    _require(
+        isinstance(value, int) and not isinstance(value, bool) and value >= 0,
+        f"{label} must be a non-negative integer",
+    )
     return value
 
 
@@ -147,7 +153,7 @@ def normalize_verified_bundle(
     log_id = entry.get("logId")
     if isinstance(log_id, Mapping):
         log_id = log_id.get("keyId")
-    _require(isinstance(log_id, str) and bool(log_id), "transparency log identity missing")
+    _require(isinstance(log_id, str) and bool(log_id), "transparency log key identity missing")
 
     return VerifiedTransparencyContext(
         signature_verified=True,
@@ -156,7 +162,7 @@ def normalize_verified_bundle(
         transparency_inclusion_verified=True,
         signed_entry_timestamp_verified=True,
         bundle_sha256=bundle_sha,
-        log_entry_uuid=log_id,
+        log_id_key_id=log_id,
         log_index=log_index,
         integrated_time_unix=integrated_time,
         verified_record_sha256=artifact_sha,
@@ -215,7 +221,7 @@ def retention_safe_evidence(
         "verified_record_sha256": context.verified_record_sha256,
         "certificate_identity": context.certificate_identity,
         "certificate_oidc_issuer": context.oidc_issuer,
-        "log_entry_identity": context.log_entry_uuid,
+        "log_id_key_id": context.log_id_key_id,
         "log_index": context.log_index,
         "integrated_time_unix_metadata_only": context.integrated_time_unix,
         "external_write_performed_by_verifier": False,
