@@ -4,11 +4,11 @@
 
 > **Epistemic status:** **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.** Engineering verification is not empirical efficacy evidence. Historical evidence remains scoped to the exact candidate, workflow, deployment, artifact, and predicates that produced it.
 >
-> **Candidate-authority update — 2026-09-06:** PR #308 advanced the apparatus to protocol v0.7.6 / artifact schema 1.1 at `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. The prior `7c1cc4bb…` runtime candidate retains valid exact-scope evidence but is now historical provenance for final-candidate purposes. **Final v0.7.6 candidate: NOT DESIGNATED**; Issue #309 governs reconstruction and identity-dependent evidence classification/regeneration. The consolidated control-state anchor `89be386b…` remains a control/provenance anchor, not a final-candidate designation.
+> **Candidate-authority update — 2026-09-06:** PR #308 introduced protocol v0.7.6 / artifact schema 1.1 at `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. Later engineering lineage, including the Mode-T stack integrated by PR #326, does not become the scientific candidate merely by being newer or more complete. The prior `7c1cc4bb…` runtime candidate retains valid exact-scope historical evidence; PR #328 made that historical-candidate boundary explicit in the Pre-Freeze workflow. **Final v0.7.6 candidate: NOT DESIGNATED**; Issue #309 governs final-candidate designation and identity-dependent evidence classification/regeneration. The consolidated control-state anchor `89be386b…` remains a control/provenance anchor, not a final-candidate designation.
 
 ## Current identity boundary — 2026-09-06
 
-This documentation reconciliation uses the live v0.7.6 source boundary `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` without treating the newest source SHA as the final scientific candidate merely by recency.
+`972edd41f16c69c6912af08c7d6c3aa627fdd8a9` is the **v0.7.6 protocol/schema apparatus-introduction boundary**, not the current repository head and not a final scientific candidate. The engineering lineage has advanced beyond that boundary, including PR #326's integration of the validated Mode-T mechanism stack and later governance/documentation corrections. Newer `main`, PR heads, deployments, evaluators, or documentation descendants do not become the final candidate or inherit historical runtime evidence by recency.
 
 | Identity | Role | Status |
 |---|---|---|
@@ -18,10 +18,9 @@ This documentation reconciliation uses the live v0.7.6 source boundary `972edd41
 | `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Historical exact-scope runtime-evidence candidate | Verified for recorded scope; not eligible as final v0.7.6 freeze/N=1 candidate |
 | `586c00d6dedb589e52108279f9759be3c4f927e1` | Historical runtime candidate tree | Exact candidate tree for `7c1cc4bb…` evidence |
 | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Vercel production deployment for `7c1cc4bb…` | READY / exact Git source verified at its scoped evidence boundary |
-| `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` | Live v0.7.6 source boundary | PR #308 merge; not automatically the final candidate |
+| `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` | v0.7.6 protocol/schema apparatus-introduction boundary | PR #308 merge; historical lineage boundary; not a final-candidate designation |
+| `d03f7b4e1c7d58ef73ad163b5da6e4236c0b0146` | Mode-T engineering-lineage integration boundary | PR #326 merge; bounded engineering integration only; not P4 acceptance or candidate designation |
 | Issue #309 | Final-candidate reconstruction authority | Final v0.7.6 candidate NOT DESIGNATED |
-
-Later documentation, evaluator, source, or control-plane descendants do not automatically become the final candidate or inherit historical runtime evidence.
 
 ## Candidate-scoped runtime evidence
 
@@ -53,7 +52,7 @@ Fresh retrieval is not a new runtime execution and does not establish later-main
 | Historical P1 candidate integrity | CLOSED / VERIFIED at `7c1cc4bb…` scope; final-candidate transfer/reverification pending #309 |
 | Historical P2 runtime contract | CLOSED / VERIFIED at exact `7c1cc4bb…` runtime scope; final-candidate transfer/reverification pending #309 |
 | Historical P3 artifact contract | CLOSED / VERIFIED — run `33939955138`; final-candidate transfer/reverification pending #309 |
-| P4 security/blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED; no H/I/T custody mode instantiated or verified |
+| P4 security/blinding | OPEN / FAIL-CLOSED; Mode-T engineering mechanisms are integrated, but no real admissible H/I/T custody mode has been independently accepted and executed for the final run |
 | Historical P5 provenance/reproducibility | CLOSED / VERIFIED within its bounded pre-v0.7.6 contract; final-candidate transfer/reverification pending #309 |
 | Historical P6 evidence custody | CLOSED / VERIFIED within the defined archive/retrieval/hash contract; final-candidate rebind decision pending #309 |
 | Historical P6a CORS | CLOSED / VERIFIED at exact `7c1cc4bb…` runtime scope; final-candidate transfer/reverification pending #309 |
@@ -75,7 +74,9 @@ PR #286 generalized P4 from a mandatory second-human model to **effective contro
 - `I` — institutional/third-party custody outside the analyst’s unilateral control;
 - `T` — independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
 
-No mode has been instantiated. Issue #285 is completed as the governance-architecture correction; Issue #255 is superseded historical context. Issue #287 is the active design/threat-model lane for a possible zero-human Mode T lifecycle. GitHub Actions + timelock/drand is **not** yet accepted as sufficient P4 custody merely because the design issue exists.
+PR #326 integrated the validated Mode-T engineering stack assembled through #311, #313, #314, #321, #323, and #324. That stack establishes bounded mechanism-level engineering evidence for authenticated attestation verification, lifecycle ordering, key-generation/retention contracts, Sigstore verification, and explicit TrustedRoot digest binding. It does **not** establish real P4 custody or independently accepted production admission.
+
+P4 therefore remains **OPEN / FAIL-CLOSED**. Required external/independent evidence includes #316 independently retained production R/A/C admission-policy evidence, #320 independent OIDC security review, final signer authority, an independently approved/frozen production TrustedRoot/TUF policy, real durable retention/retrieval, and real Confidential Space admission with independently reverified PRE/POST evidence. If those requirements cannot be satisfied for Mode T, an admissible H/I route must be selected rather than treating engineering mechanics as custody acceptance.
 
 ## Evaluation integrity
 
@@ -87,7 +88,7 @@ That change verifies evaluator mechanics only. No Task-4 model-performance resul
 
 Issue #270 is **CLOSED / COMPLETED**. PR #276 restored a clean current-lineage flake8/Black/isort/mypy baseline and converted those quality checks to fail-closed workflow gates; the Python matrix and deterministic negative controls subsequently passed at the recorded exact boundaries.
 
-A separate repository-administration gap remains: Issue #277 tracks branch-protection/ruleset enforcement. The Python quality workflow is fail-closed when it runs, but current protected `main` requires only `PPTL CI`; broader intended merge-critical checks are not yet proven repository-required. That distinction must not be collapsed into either “quality is still advisory” or “branch protection is complete.”
+A separate repository-administration gap remains: Issue #277 tracks branch-protection/ruleset enforcement. The quality and governance workflows are fail-closed when they run, but full repository-level enforcement of the intended merge-critical check set is **NOT ESTABLISHED**. The last readable protected-branch snapshot reported only `PPTL CI` as a required status context; a fresh readable `Main` ruleset (`16909314`) contains only deletion and non-fast-forward rules with no bypass actors, while the direct branch-protection administration endpoint is currently inaccessible to this integration (`403 Resource not accessible by integration`). Green exact-head workflows therefore remain verification evidence, not proof that every intended check is repository-required.
 
 ## Evidence rules
 
@@ -97,6 +98,6 @@ Historical documents may contain statements that were “current” at their own
 
 ## Current closure sequence
 
-`complete candidate-relevant P4 apparatus work → explicitly designate exact v0.7.6 final candidate under #309 → classify/regenerate identity-dependent evidence → verified real P4-A custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
+`complete candidate-relevant P4 apparatus/external-acceptance work → explicitly designate exact v0.7.6 final candidate under #309 → classify/regenerate identity-dependent P2/P3/P5/P6/P6a evidence → verified real P4 custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
 
 No documentation or CI action in this sequence grants experimental authorization or advances empirical N.
