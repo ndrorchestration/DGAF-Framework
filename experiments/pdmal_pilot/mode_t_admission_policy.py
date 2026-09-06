@@ -5,14 +5,16 @@ against a caller-supplied ``AttestationExpectation`` does not prove that the
 expectation itself was the launch policy authorized before execution.
 
 This module defines one canonical security-critical policy identity. Synthetic R/A/C
-records may bind its SHA-256. Production use must additionally verify that C/policy
-binding from an independently retained evidence source; a caller-supplied boolean or
-digest is not accepted as a substitute for independent retention.
+records bind its SHA-256 and the synthetic key path verifies that binding before token
+admission/key generation. Production remains fail-closed until an independently
+retained C/policy evidence verifier exists; caller-supplied booleans/digests do not
+substitute for that trust source.
 """
 from __future__ import annotations
 
 import hashlib
 import json
+import re
 from typing import Any, Mapping
 
 from mode_t_confidential_space_attestation import (
@@ -27,8 +29,14 @@ from mode_t_confidential_space_attestation import (
     REQUIRED_RESTART_POLICY,
     REQUIRED_SUPPORT_ATTRIBUTE,
 )
+from mode_t_google_oidc_verifier import GoogleOIDCVerifier
+from mode_t_inprocess_key import (
+    ModeTKeyAcquisition,
+    admit_and_acquire_mode_t_key_synthetic,
+)
 
 POLICY_SCHEMA = "DGAF_MODE_T_CONFIDENTIAL_SPACE_ADMISSION_POLICY_V1"
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 class ModeTAdmissionPolicyError(ValueError):
@@ -38,6 +46,14 @@ class ModeTAdmissionPolicyError(ValueError):
 def _require(condition: bool, message: str) -> None:
     if not condition:
         raise ModeTAdmissionPolicyError(message)
+
+
+def _sha(value: Any, label: str) -> str:
+    _require(
+        isinstance(value, str) and _SHA256_RE.fullmatch(value) is not None,
+        f"{label} must be lowercase SHA-256 hex",
+    )
+    return value
 
 
 def canonical_json_bytes(value: Mapping[str, Any]) -> bytes:
@@ -50,12 +66,7 @@ def canonical_json_bytes(value: Mapping[str, Any]) -> bytes:
 
 
 def canonical_admission_policy(expectation: AttestationExpectation) -> dict[str, Any]:
-    """Return the security-critical launch policy independent of run-specific nonce C.
-
-    ``binding_sha256`` is intentionally excluded because C does not exist when the
-    launch policy is frozen. ``phase`` is fixed here to PRE_EXECUTION. POST must bind
-    back to this same policy identity through the output manifest/two-phase lineage.
-    """
+    """Return security-critical launch policy independent of run-specific nonce C."""
     _require(
         isinstance(expectation, AttestationExpectation),
         "expectation must be AttestationExpectation",
@@ -113,6 +124,7 @@ def require_admission_policy_sha256(
     expectation: AttestationExpectation,
     expected_sha256: str,
 ) -> str:
+    _sha(expected_sha256, "expected admission_policy_sha256")
     actual = admission_policy_sha256(expectation)
     if actual != expected_sha256:
         raise ModeTAdmissionPolicyError(
@@ -121,12 +133,65 @@ def require_admission_policy_sha256(
     return actual
 
 
-def require_production_retained_policy_verifier() -> None:
-    """Explicit fail-closed marker for the still-missing production trust source.
+def _verify_synthetic_consumption_record(
+    consumption: Mapping[str, Any],
+) -> tuple[str, str]:
+    _require(isinstance(consumption, Mapping), "consumption evidence must be an object")
+    data = dict(consumption)
+    claimed = _sha(
+        data.pop("consumption_evidence_sha256", None),
+        "consumption_evidence_sha256",
+    )
+    actual = hashlib.sha256(canonical_json_bytes(data)).hexdigest()
+    _require(actual == claimed, "synthetic C digest does not match record")
+    _require(
+        data.get("record_type") == "PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION",
+        "wrong consumption record type",
+    )
+    _require(
+        data.get("status") == "CONSUMED_PRE_SECRET_SYNTHETIC",
+        "consumption record is not the synthetic pre-secret state",
+    )
+    _require(data.get("synthetic_only") is True, "consumption record must be synthetic")
+    _require(
+        data.get("retention_status")
+        == "SYNTHETIC_MODEL_ONLY_NOT_INDEPENDENTLY_RETAINED",
+        "synthetic C retention marker is missing or promoted",
+    )
+    return claimed, _sha(data.get("admission_policy_sha256"), "admission_policy_sha256")
 
-    The synthetic R/A/C model cannot satisfy independent retention. Production code
-    must not turn a caller-provided mapping/digest/boolean into equivalent evidence.
-    """
+
+def admit_and_acquire_mode_t_key_synthetic_policy_bound(
+    token: str | bytes,
+    expectation: AttestationExpectation,
+    consumption: Mapping[str, Any],
+    *,
+    verifier: GoogleOIDCVerifier,
+    environment: Mapping[str, str] | None = None,
+    verified_at_unix: int | None = None,
+) -> ModeTKeyAcquisition:
+    """Synthetic-only gate proving C binds the exact supplied PRE launch policy."""
+    c_sha, policy_sha = _verify_synthetic_consumption_record(consumption)
+    _require(
+        expectation.phase == PRE_EXECUTION,
+        "policy-bound synthetic key path requires PRE_EXECUTION expectation",
+    )
+    _require(
+        expectation.binding_sha256 == c_sha,
+        "PRE_EXECUTION expectation does not bind the exact synthetic C record",
+    )
+    require_admission_policy_sha256(expectation, policy_sha)
+    return admit_and_acquire_mode_t_key_synthetic(
+        token,
+        expectation,
+        verifier=verifier,
+        environment=environment,
+        verified_at_unix=verified_at_unix,
+    )
+
+
+def require_production_retained_policy_verifier() -> None:
+    """Fail closed until independent C/policy retention is a real trust source."""
     raise ModeTAdmissionPolicyError(
         "production admission requires independently retained C/policy evidence verifier"
     )
