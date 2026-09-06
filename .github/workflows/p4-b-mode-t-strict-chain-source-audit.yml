@@ -1,0 +1,122 @@
+name: P4-B Mode T Strict-Chain Source Audit
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-b-mode-t-strict-chain-source-audit.yml'
+      - 'docs/governance/P4_B_MODE_T_STRICT_CHAIN_SOURCE_AUDIT_2026-09-05.md'
+      - 'experiments/pdmal_pilot/mode_t_strict_chain_source_audit.py'
+      - 'experiments/pdmal_pilot/test_mode_t_strict_chain_source_audit.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLOCK_SOURCE_COMMIT: '7b54141a9733fd6fa207587a11148280e6fb020d'
+  QUICKNET_CHAIN_HASH: '52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971'
+  QUICKNET_SCHEME: 'bls-unchained-g1-rfc9380'
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  pinned-source-audit:
+    name: Audit pinned tlock strict-chain semantics
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify checkout identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Install hash-locked test dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run fail-closed source-audit contract tests
+        run: python -m pytest experiments/pdmal_pilot/test_mode_t_strict_chain_source_audit.py -q
+
+      - name: Retrieve exact pinned upstream source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-artifacts/upstream-tlock
+          base="https://raw.githubusercontent.com/drand/tlock/$TLOCK_SOURCE_COMMIT"
+          for path in tlock.go tlock_age.go cmd/tle/tle.go; do
+            out="test-artifacts/upstream-tlock/$(basename "$path")"
+            curl --fail --location --proto '=https' --tlsv1.2 \
+              --retry 3 --retry-all-errors \
+              "$base/$path" --output "$out"
+            test -s "$out"
+          done
+
+      - name: Audit strict-chain semantics
+        run: |
+          python experiments/pdmal_pilot/mode_t_strict_chain_source_audit.py \
+            --tlock-go test-artifacts/upstream-tlock/tlock.go \
+            --tlock-age-go test-artifacts/upstream-tlock/tlock_age.go \
+            --tle-go test-artifacts/upstream-tlock/tle.go \
+            --output test-artifacts/p4-b-mode-t-strict-chain-source-audit.json
+
+      - name: Enforce non-promoting audit result
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          evidence = json.loads(Path('test-artifacts/p4-b-mode-t-strict-chain-source-audit.json').read_text())
+          assert evidence['tlock_source_commit'] == os.environ['TLOCK_SOURCE_COMMIT']
+          assert evidence['quicknet_chain_hash'] == os.environ['QUICKNET_CHAIN_HASH']
+          assert evidence['quicknet_scheme'] == os.environ['QUICKNET_SCHEME']
+          assert evidence['strict_method_available'] is True
+          assert evidence['strict_disables_chainhash_switch'] is True
+          assert evidence['stock_tle_decrypt_uses_strict'] is False
+          assert evidence['stock_tle_acceptable_as_dgaf_strict_continuity_evidence'] is False
+          assert evidence['dedicated_strict_continuity_verifier_still_required'] is True
+          assert evidence['empirical_data_collection'] is False
+          assert evidence['secret_instantiation'] is False
+          assert evidence['freeze_established'] is False
+          assert evidence['pilot_authorized'] is False
+          assert evidence['empirical_n'] == 0
+          PY
+
+      - name: Bind evidence to exact repository head
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'tlock_source_commit=%s\n' "$TLOCK_SOURCE_COMMIT"
+            printf 'workflow_sha256=%s\n' "$(sha256sum .github/workflows/p4-b-mode-t-strict-chain-source-audit.yml | awk '{print $1}')"
+            printf 'audit_helper_sha256=%s\n' "$(sha256sum experiments/pdmal_pilot/mode_t_strict_chain_source_audit.py | awk '{print $1}')"
+            printf 'scientific_state=PRE-FREEZE_FAIL-CLOSED_NOT-AUTHORIZED_N0\n'
+          } > test-artifacts/p4-b-mode-t-strict-chain-source-audit-binding.txt
+
+      - name: Upload non-secret source-audit evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p4-b-mode-t-strict-chain-source-audit-${{ env.EVIDENCE_SHA }}
+          path: |
+            test-artifacts/p4-b-mode-t-strict-chain-source-audit.json
+            test-artifacts/p4-b-mode-t-strict-chain-source-audit.json.sha256
+            test-artifacts/p4-b-mode-t-strict-chain-source-audit-binding.txt
+            test-artifacts/upstream-tlock/tlock.go
+            test-artifacts/upstream-tlock/tlock_age.go
+            test-artifacts/upstream-tlock/tle.go
+          if-no-files-found: error
+          retention-days: 30
