@@ -1,6 +1,6 @@
 # Pareto-Safe Commit Semantics for Multi-Agent Orchestration
 
-# Research classification
+## Research classification
 
 **Date formulated:** 2026-09-06  
 **Status:** HYPOTHESIS / FORMALIZATION IN PROGRESS / NOT VALIDATED / N=0  
