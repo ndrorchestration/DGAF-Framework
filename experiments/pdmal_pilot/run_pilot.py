@@ -3,8 +3,8 @@
 
 Pilot execution requires protocol freeze, explicit authorization, an exact
 frozen git SHA, an out-of-band blinding key, and a configured durable archive.
-Pilot artifacts contain only blinded condition identifiers and are validated
-before the write is accepted.
+Pilot artifacts expose only the exact blinded-analysis allowlist and are
+validated before the write is accepted.
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ import numpy as np
 
 from durable_retention import archive_artifact, require_archive_root
 from harness_contract import TOPOLOGY_SPECS, deterministic_contract_run, generate_topology, make_streams
-from pilot_artifact_schema import canonical_json_bytes, validate_artifact, verify_sidecar
+from pilot_artifact_schema import ARTIFACT_SCHEMA_VERSION, canonical_json_bytes, validate_artifact, verify_sidecar
 from task_engine import AttemptStatus, CONDITION_VALUES, ConsensusTask, RetryPolicy, SEED_RUNTIME_CEILING_SECONDS, ScriptedTask, execute_trial
 from topology_utils import graph_fingerprint
 
@@ -28,6 +28,7 @@ SUPPORTED_MODES = {"contract", "pilot"}
 CONTRACT_ROOT_SEEDS = (20260817, 20260818)
 FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
 PROTOCOL_VERSION = "0.7.5"
+TRIAL_ORDER_DOMAIN = b"PDMAL-BLINDED-TRIAL-ORDER-v1"
 
 
 def require_mode() -> str:
@@ -75,7 +76,57 @@ def blind_condition(condition: str, key: str) -> str:
 
 
 def _trial_combinations() -> list[tuple[str, str, int]]:
-    return [(topology, condition, failure_count) for topology in TOPOLOGY_SPECS for condition in CONDITION_VALUES for failure_count in FAILURE_COUNTS]
+    """Return the complete canonical matrix without assigning public order."""
+    return [
+        (topology, condition, failure_count)
+        for topology in TOPOLOGY_SPECS
+        for condition in CONDITION_VALUES
+        for failure_count in FAILURE_COUNTS
+    ]
+
+
+def _trial_order_token(
+    *, key: str, seed: int, topology: str, condition: str, failure_count: int
+) -> bytes:
+    """Return a domain-separated secret ordering token for one matrix cell."""
+    if not key:
+        raise ValueError("blinded trial ordering requires a non-empty protected key")
+    payload = (
+        f"{seed}|{topology}|{condition}|{failure_count}".encode("utf-8")
+    )
+    return hmac.new(
+        key.encode("utf-8"), TRIAL_ORDER_DOMAIN + b"|" + payload, hashlib.sha256
+    ).digest()
+
+
+def blinded_trial_schedule(*, seed: int, key: str) -> list[tuple[str, str, int]]:
+    """Construct the exact matrix in a protected, reproducible per-seed order.
+
+    Public root-seed information alone must not reveal condition position.  The
+    schedule becomes independently reconstructible only after release of the
+    protected blinding material.
+    """
+    combinations = _trial_combinations()
+    keyed = [
+        (
+            _trial_order_token(
+                key=key,
+                seed=seed,
+                topology=topology,
+                condition=condition,
+                failure_count=failure_count,
+            ),
+            (topology, condition, failure_count),
+        )
+        for topology, condition, failure_count in combinations
+    ]
+    tokens = [token for token, _ in keyed]
+    if len(tokens) != len(set(tokens)):
+        raise RuntimeError("pilot execution prohibited: blinded trial-order token collision")
+    ordered = [combo for _, combo in sorted(keyed, key=lambda item: item[0])]
+    if len(ordered) != 180 or set(ordered) != set(combinations):
+        raise RuntimeError("pilot execution prohibited: blinded trial schedule is incomplete")
+    return ordered
 
 
 def _environment_fingerprint() -> str:
@@ -123,7 +174,8 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
     os.environ.pop("PDMAL_BLINDING_KEY", None)
     if seeds < 1:
         raise SystemExit("--seeds must be >= 1")
-    combinations = _trial_combinations()
+    if len(_trial_combinations()) != 180:
+        raise SystemExit("pilot execution prohibited: canonical matrix must contain exactly 180 cells")
     output_dir.mkdir(parents=True, exist_ok=True)
     environment_fingerprint = _environment_fingerprint()
     for seed_idx in range(seeds):
@@ -131,8 +183,8 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
         seed_start = monotonic()
         streams = make_streams(seed)
         records: list[dict] = []
+        combinations = blinded_trial_schedule(seed=seed, key=blinding_key)
         for trial_idx, (topology, condition, failure_count) in enumerate(combinations):
-            trial_start = monotonic()
             task = ConsensusTask(topology=topology, failure_count=failure_count, condition=condition)
             try:
                 result = task.run_detailed(seed=seed, attempt=1)
@@ -140,7 +192,6 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
             except Exception:
                 result = None
                 status = AttemptStatus.FAILURE
-            runtime_ms = int((monotonic() - trial_start) * 1000)
             raw_trial = {
                 "trial_key": task.trial_key(seed, topology, condition, failure_count), "seed": seed,
                 "topology": topology, "condition": condition, "failure_count": failure_count,
@@ -153,6 +204,8 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "attempt_status": status.value,
                 "consensus_success": bool(result.consensus_success) if result else False,
                 "deviation": result.deviation if result else None,
+                # Detailed governance trace remains process-local. It is
+                # intentionally excluded from the public blinded artifact.
                 "governance_trace": list(result.governance_trace) if result else [],
             }
             execution_success = status is AttemptStatus.SUCCESS
@@ -166,30 +219,47 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
                 "secondary_outcomes": {"final_mean": float(np.mean(raw_trial["final_values"])) if raw_trial["final_values"] else 0.0},
                 "failure": failure_count > 0, "recovery": recovered,
                 "ffcr_success": bool(raw_trial["consensus_success"] and execution_success),
-                "runtime_ms": runtime_ms,
                 "status": "RECOVERED" if recovered else ("SUCCESS" if execution_success else "UNRECOVERED_FAILURE"),
                 "excluded": False, "exclusion_reason": None,
                 "environment_fingerprint": environment_fingerprint,
-                "governance_trace": raw_trial["governance_trace"],
             }
             record["artifact_sha256"] = hashlib.sha256(canonical_json_bytes(record)).hexdigest()
             records.append(record)
         elapsed = monotonic() - seed_start
         if elapsed > SEED_RUNTIME_CEILING_SECONDS:
             raise SystemExit(f"pilot execution prohibited: seed {seed} exceeded runtime ceiling ({elapsed:.3f}s)")
-        document = {"schema_version": "1.0", "artifact_version": f"seed-{seed}", "protocol_status": "FROZEN", "empirical_data_collection": True, "frozen_commit_sha": frozen_sha, "seed_id": seed, "runtime_seconds": elapsed, "records": records}
+        document = {
+            "schema_version": ARTIFACT_SCHEMA_VERSION,
+            "artifact_version": f"seed-{seed}",
+            "protocol_status": "FROZEN",
+            "empirical_data_collection": True,
+            "frozen_commit_sha": frozen_sha,
+            "seed_id": seed,
+            "runtime_seconds": elapsed,
+            "records": records,
+        }
         path = output_dir / f"pilot_seed_{seed}.json"
         _write_and_validate_artifact(path, document, expected_seed=seed)
         _retain(path, archive_root, frozen_sha, kind="pilot_seed")
         _retain(path.with_suffix(path.suffix + ".sha256"), archive_root, frozen_sha, kind="pilot_seed_sidecar")
-    summary = {"schema_version": "1.0", "artifact_version": "pilot_summary", "protocol_status": "FROZEN", "empirical_data_collection": True, "frozen_commit_sha": frozen_sha, "total_seeds": seeds, "trials_per_seed": len(combinations), "total_trials": seeds * len(combinations), "environment_fingerprint": environment_fingerprint}
+    summary = {
+        "schema_version": ARTIFACT_SCHEMA_VERSION,
+        "artifact_version": "pilot_summary",
+        "protocol_status": "FROZEN",
+        "empirical_data_collection": True,
+        "frozen_commit_sha": frozen_sha,
+        "total_seeds": seeds,
+        "trials_per_seed": len(_trial_combinations()),
+        "total_trials": seeds * len(_trial_combinations()),
+        "environment_fingerprint": environment_fingerprint,
+    }
     summary_path = output_dir / "pilot_summary.json"
     raw_summary = canonical_json_bytes(summary)
     summary_path.write_bytes(raw_summary)
     _write_sidecar(summary_path)
     _retain(summary_path, archive_root, frozen_sha, kind="pilot_summary")
     _retain(summary_path.with_suffix(summary_path.suffix + ".sha256"), archive_root, frozen_sha, kind="pilot_summary_sidecar")
-    print(f"PILOT_MODE_COMPLETE: {seeds} seeds; {seeds * len(combinations)} observations")
+    print(f"PILOT_MODE_COMPLETE: {seeds} seeds; {seeds * len(_trial_combinations())} observations")
     return 0
 
 
