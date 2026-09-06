@@ -1,0 +1,343 @@
+name: P4 Mode T Synthetic Timing Study
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-timing-study.yml'
+      - 'docs/governance/P4_MODE_T_TIMING_STUDY_DESIGN_2026-09-05.md'
+      - 'experiments/pdmal_pilot/mode_t_timing_study.py'
+      - 'experiments/pdmal_pilot/test_mode_t_timing_study.py'
+      - 'experiments/pdmal_pilot/analysis.py'
+      - 'experiments/pdmal_pilot/run_pilot.py'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLOCK_VERSION: '1.2.0'
+  TLOCK_ARCHIVE: 'tlock_1.2.0_linux_amd64.tar.gz'
+  TLOCK_RELEASE_BASE: 'https://github.com/drand/tlock/releases/download/v1.2.0'
+  TLOCK_EXPECTED_SHA256: '0fda1e0fedffab82217cbd90e0b8b2a9d42df88a361b2dd890d8fac173b5dc57'
+  TLOCK_SOURCE_COMMIT: '7b54141a9733fd6fa207587a11148280e6fb020d'
+  DRAND_ENDPOINT: 'https://api.drand.sh/'
+  QUICKNET_CHAIN_HASH: '52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971'
+  QUICKNET_SCHEME: 'bls-unchained-g1-rfc9380'
+  QUICKNET_PUBLIC_KEY: '83cf0f2896adee7eb8b5f01fcad3912212c437e0073e911fb90022d3e760183c8c4b450b6a0a6c3ac6a5776a2d1064510d1fec758c921cc22b0e17e63aaf4bcb5ed66304de9cf809bd274ca73bab4af5a6e9c76a4bc09e76eae8991ef5ece45a'
+  TLOCK_ENCRYPTION_SAMPLES: '5'
+  QUICKNET_TARGET_ROUND_OFFSET: '1200'
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  RUNNER_CLASS: github-hosted-standard-vm-ubuntu-24.04
+  PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/experiments/pdmal_pilot
+
+jobs:
+  partial-synthetic-timing:
+    name: Partial synthetic timing evidence — no W proposal
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify checkout and bind source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          workflow_sha="$(sha256sum .github/workflows/p4-mode-t-timing-study.yml | awk '{print $1}')"
+          helper_sha="$(sha256sum experiments/pdmal_pilot/mode_t_timing_study.py | awk '{print $1}')"
+          lock_sha="$(sha256sum experiments/pdmal_pilot/requirements-full-lock.txt | awk '{print $1}')"
+          analysis_sha="$(sha256sum experiments/pdmal_pilot/analysis.py | awk '{print $1}')"
+          run_pilot_sha="$(sha256sum experiments/pdmal_pilot/run_pilot.py | awk '{print $1}')"
+          task_engine_sha="$(sha256sum experiments/pdmal_pilot/task_engine.py | awk '{print $1}')"
+          for value in "$workflow_sha" "$helper_sha" "$lock_sha" "$analysis_sha" "$run_pilot_sha" "$task_engine_sha"; do
+            [[ "$value" =~ ^[0-9a-f]{64}$ ]]
+          done
+          {
+            echo "TIMING_WORKFLOW_SHA256=$workflow_sha"
+            echo "TIMING_HELPER_SHA256=$helper_sha"
+            echo "DEPENDENCY_LOCK_SHA256=$lock_sha"
+            echo "ANALYSIS_SHA256=$analysis_sha"
+            echo "RUN_PILOT_SHA256=$run_pilot_sha"
+            echo "TASK_ENGINE_SHA256=$task_engine_sha"
+          } >> "$GITHUB_ENV"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Install hash-locked PDMAL dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Verify DGAF/PPTL import path used by full matrix
+        run: python -c "from pptl.triadic_governance_loop import TriadicGovernanceLoop; from experiments.pdmal_pilot.dgaf_tgl_adapter import DGAF_TGLAdapter"
+
+      - name: Reverify exact tlock v1.2.0 Linux amd64 release asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-all-errors \
+            "$TLOCK_RELEASE_BASE/checksums.txt" \
+            --output checksums.txt
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-all-errors \
+            "$TLOCK_RELEASE_BASE/$TLOCK_ARCHIVE" \
+            --output "$TLOCK_ARCHIVE"
+          published="$(awk -v f="$TLOCK_ARCHIVE" '$2 == f {print $1}' checksums.txt)"
+          computed="$(sha256sum "$TLOCK_ARCHIVE" | awk '{print $1}')"
+          test "$published" = "$TLOCK_EXPECTED_SHA256"
+          test "$computed" = "$TLOCK_EXPECTED_SHA256"
+          tar -tzf "$TLOCK_ARCHIVE" >/dev/null
+          {
+            printf 'asset_name=%s\n' "$TLOCK_ARCHIVE"
+            printf 'published_sha256=%s\n' "$published"
+            printf 'computed_sha256=%s\n' "$computed"
+            printf 'match=true\n'
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'evidence_class=SYNTHETIC_SUPPLY_CHAIN_REVERIFICATION\n'
+            printf 'empirical_data_collection=false\n'
+          } > tlock-timing-prerequisite-evidence.txt
+          {
+            echo 'P4_MODE_T_TLOCK_SHA256_VERIFIED=1'
+            echo "P4_MODE_T_TLOCK_SHA256=$computed"
+          } >> "$GITHUB_ENV"
+
+      - name: Run timing-harness contract tests
+        run: python -m pytest experiments/pdmal_pilot/test_mode_t_timing_study.py -q
+
+      - name: Prepare pinned tlock binary and verify quicknet metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf tlock-bin
+          mkdir -p tlock-bin test-artifacts
+          tar -xzf "$TLOCK_ARCHIVE" -C tlock-bin
+          tle_rel="$(find tlock-bin -type f -name tle -print -quit)"
+          test -n "$tle_rel"
+          chmod 0755 "$tle_rel"
+          tle_path="$(realpath "$tle_rel")"
+          "$tle_path" -m -n "$DRAND_ENDPOINT" -c "$QUICKNET_CHAIN_HASH" > test-artifacts/tlock-quicknet-metadata.yml
+          TLE_PATH="$tle_path" python - <<'PY'
+          import hmac
+          import os
+          from pathlib import Path
+
+          metadata_path = Path('test-artifacts/tlock-quicknet-metadata.yml')
+          fields = {}
+          for raw_line in metadata_path.read_text(encoding='utf-8').splitlines():
+              key, sep, value = raw_line.partition(':')
+              if sep and key in {'chain_hash', 'current', 'public_key', 'scheme'}:
+                  fields[key] = value.strip().strip("'\"")
+
+          required = {'chain_hash', 'current', 'public_key', 'scheme'}
+          if set(fields) != required:
+              raise SystemExit(f'quicknet metadata fields mismatch: {sorted(fields)}')
+          if not hmac.compare_digest(fields['chain_hash'], os.environ['QUICKNET_CHAIN_HASH']):
+              raise SystemExit('quicknet chain hash mismatch')
+          if not hmac.compare_digest(fields['scheme'], os.environ['QUICKNET_SCHEME']):
+              raise SystemExit('quicknet scheme mismatch')
+
+          public_key_prefix = 'bls12-381.G2: '
+          rendered_key = fields['public_key']
+          if not rendered_key.startswith(public_key_prefix):
+              raise SystemExit('unexpected tlock G2 public-key rendering')
+          normalized_key = rendered_key[len(public_key_prefix):]
+          if not hmac.compare_digest(normalized_key, os.environ['QUICKNET_PUBLIC_KEY']):
+              raise SystemExit('quicknet public key mismatch')
+
+          try:
+              current_round = int(fields['current'])
+          except ValueError as exc:
+              raise SystemExit('quicknet current round is not an integer') from exc
+          if current_round < 1:
+              raise SystemExit('quicknet current round must be positive')
+          target_round = current_round + int(os.environ['QUICKNET_TARGET_ROUND_OFFSET'])
+          if target_round <= current_round:
+              raise SystemExit('quicknet target round must be in the future')
+
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as env_file:
+              env_file.write(f"TLE_PATH={os.environ['TLE_PATH']}\n")
+              env_file.write(f'QUICKNET_METADATA_CURRENT_ROUND={current_round}\n')
+              env_file.write(f'QUICKNET_TARGET_ROUND={target_round}\n')
+          PY
+
+      - name: Measure synthetic tlock encryption timing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import math
+          import os
+          import subprocess
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from time import monotonic_ns
+
+          evidence_sha = os.environ['EVIDENCE_SHA']
+          tle_path = os.environ['TLE_PATH']
+          endpoint = os.environ['DRAND_ENDPOINT']
+          chain_hash = os.environ['QUICKNET_CHAIN_HASH']
+          scheme = os.environ['QUICKNET_SCHEME']
+          public_key = os.environ['QUICKNET_PUBLIC_KEY']
+          tlock_sha256 = os.environ['TLOCK_EXPECTED_SHA256']
+          current_round = int(os.environ['QUICKNET_METADATA_CURRENT_ROUND'])
+          target_round = int(os.environ['QUICKNET_TARGET_ROUND'])
+          sample_count = int(os.environ['TLOCK_ENCRYPTION_SAMPLES'])
+
+          if not (3 <= sample_count <= 20):
+              raise SystemExit('invalid synthetic encryption timing sample count')
+          if target_round <= current_round:
+              raise SystemExit('synthetic encryption target round is not in the future')
+
+          payload_class = 'P4_MODE_T_SYNTHETIC_TIMING_NOT_AUTHORIZATION'
+          prefix = (
+              f'{payload_class}\n'
+              f'evidence_sha={evidence_sha}\n'
+              'empirical_data_collection=false\n'
+              'secret_instantiation=false\n'
+          ).encode()
+          payload = (prefix + (b'.' * 4096))[:4096]
+          payload_path = Path('/tmp/p4-mode-t-synthetic-timing-payload.bin')
+          payload_path.write_bytes(payload)
+
+          samples_ms = []
+          ciphertext_paths = []
+          try:
+              for index in range(sample_count):
+                  ciphertext = Path(f'/tmp/p4-mode-t-synthetic-timing-{index}.tle')
+                  ciphertext_paths.append(ciphertext)
+                  started = monotonic_ns()
+                  proc = subprocess.run(
+                      [
+                          tle_path,
+                          '-e',
+                          '-n', endpoint,
+                          '-c', chain_hash,
+                          '-r', str(target_round),
+                          '-o', str(ciphertext),
+                          str(payload_path),
+                      ],
+                      stdout=subprocess.DEVNULL,
+                      stderr=subprocess.PIPE,
+                      text=True,
+                      timeout=15,
+                      check=False,
+                  )
+                  elapsed_ms = (monotonic_ns() - started) / 1_000_000.0
+                  if proc.returncode != 0:
+                      raise SystemExit(f'synthetic tlock encryption failed at sample {index}')
+                  if not ciphertext.is_file() or ciphertext.stat().st_size < 1:
+                      raise SystemExit(f'synthetic tlock encryption produced no ciphertext at sample {index}')
+                  if not math.isfinite(elapsed_ms) or elapsed_ms < 0:
+                      raise SystemExit('non-finite synthetic tlock encryption timing')
+                  samples_ms.append(round(elapsed_ms, 6))
+                  ciphertext.unlink()
+          finally:
+              for ciphertext in ciphertext_paths:
+                  ciphertext.unlink(missing_ok=True)
+              payload_path.unlink(missing_ok=True)
+
+          if any(path.exists() for path in ciphertext_paths) or payload_path.exists():
+              raise SystemExit('synthetic tlock fixture cleanup failed')
+
+          evidence = {
+              'schema_version': 1,
+              'evidence_class': 'P4_MODE_T_SYNTHETIC_ENCRYPTION_TIMING_V1',
+              'control_plane_sha': evidence_sha,
+              'tlock_source_commit': os.environ['TLOCK_SOURCE_COMMIT'],
+              'tlock_sha256': tlock_sha256,
+              'network_endpoint': endpoint,
+              'chain_hash': chain_hash,
+              'scheme': scheme,
+              'public_key': public_key,
+              'network_metadata_verified': True,
+              'metadata_current_round': current_round,
+              'target_round': target_round,
+              'sample_count': sample_count,
+              'samples_ms': samples_ms,
+              'payload_class': payload_class,
+              'payload_bytes': len(payload),
+              'payload_sha256': hashlib.sha256(payload).hexdigest(),
+              'all_encryptions_succeeded': True,
+              'ciphertexts_retained': False,
+              'empirical_data_collection': False,
+              'secret_instantiation': False,
+              'pilot_authorized': False,
+              'timestamp_utc': datetime.now(timezone.utc).isoformat(),
+          }
+          path = Path('test-artifacts/p4-mode-t-timing-encryption.json')
+          raw = (json.dumps(evidence, indent=2, sort_keys=True) + '\n').encode()
+          path.write_bytes(raw)
+          digest = hashlib.sha256(raw).hexdigest()
+          path.with_suffix(path.suffix + '.sha256').write_text(
+              f'{digest}  {path.name}\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Run partial full-shape synthetic timing study
+        run: |
+          python experiments/pdmal_pilot/mode_t_timing_study.py \
+            --output test-artifacts/p4-mode-t-timing-partial.json \
+            --repetitions 3 \
+            --require-tlock-verification \
+            --tlock-encryption-evidence test-artifacts/p4-mode-t-timing-encryption.json
+
+      - name: Verify evidence remains partial and cannot select W
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd test-artifacts
+          sha256sum --check p4-mode-t-timing-encryption.json.sha256
+          sha256sum --check p4-mode-t-timing-partial.json.sha256
+          cd ..
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path('test-artifacts/p4-mode-t-timing-partial.json')
+          evidence = json.loads(path.read_text(encoding='utf-8'))
+          assert evidence['evidence_class'] == 'P4_MODE_T_SYNTHETIC_TIMING_PARTIAL_V1'
+          assert evidence['control_plane_sha'] == os.environ['EVIDENCE_SHA']
+          assert evidence['stages']['exact_tlock_asset_reverification']['status'] == 'PASS'
+          assert evidence['stages']['full_synthetic_matrix_timing']['status'] == 'PASS'
+          assert evidence['stages']['locked_primary_analysis_timing']['status'] == 'PASS'
+          assert evidence['stages']['synthetic_timelock_encryption_timing']['status'] == 'PASS'
+          assert evidence['stages']['synthetic_timelock_encryption_timing']['ciphertexts_retained'] is False
+          assert evidence['stages']['external_transparency_retention_timing']['status'] == 'NOT_EXECUTED'
+          assert evidence['stages']['artifact_publication_retention_timing']['status'] == 'NOT_EXECUTED'
+          assert evidence['coverage_complete'] is False
+          assert evidence['w_proposal_eligible'] is False
+          assert evidence['numeric_w_selected'] is False
+          assert evidence['proposed_w_seconds'] is None
+          assert evidence['protocol_frozen'] is False
+          assert evidence['pilot_authorized'] is False
+          assert evidence['empirical_data_collection'] is False
+          assert evidence['secret_instantiation'] is False
+          PY
+
+      - name: Upload partial non-empirical timing evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p4-mode-t-timing-partial-${{ env.EVIDENCE_SHA }}
+          path: |
+            test-artifacts/p4-mode-t-timing-partial.json
+            test-artifacts/p4-mode-t-timing-partial.json.sha256
+            test-artifacts/p4-mode-t-timing-encryption.json
+            test-artifacts/p4-mode-t-timing-encryption.json.sha256
+            test-artifacts/tlock-quicknet-metadata.yml
+            tlock-timing-prerequisite-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
