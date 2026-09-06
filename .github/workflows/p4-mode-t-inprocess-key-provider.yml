@@ -1,0 +1,96 @@
+name: P4 Mode T In-Process Key Provider
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-inprocess-key-provider.yml'
+      - 'experiments/pdmal_pilot/mode_t_confidential_space_attestation.py'
+      - 'experiments/pdmal_pilot/test_mode_t_confidential_space_attestation.py'
+      - 'experiments/pdmal_pilot/mode_t_inprocess_key.py'
+      - 'experiments/pdmal_pilot/test_mode_t_inprocess_key.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  key-provider:
+    name: Synthetic in-process key boundary
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run attestation and key-provider negative controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_confidential_space_attestation.py -v
+          python test_mode_t_inprocess_key.py -v
+
+      - name: Verify no external operational-key ingress in Mode-T provider
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          path = Path('experiments/pdmal_pilot/mode_t_inprocess_key.py')
+          source = path.read_text(encoding='utf-8')
+          tree = ast.parse(source)
+
+          forbidden_calls = []
+          for node in ast.walk(tree):
+              if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                  if isinstance(node.func.value, ast.Name) and node.func.value.id == 'os':
+                      if node.func.attr in {'getenv', 'putenv'}:
+                          forbidden_calls.append(f'os.{node.func.attr}')
+              if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+                  if node.func.id in {'open', 'print', 'input'}:
+                      forbidden_calls.append(node.func.id)
+          if forbidden_calls:
+              raise SystemExit(f'forbidden Mode-T key surface calls: {forbidden_calls}')
+
+          required = (
+              'secrets.token_bytes(KEY_BYTES)',
+              'KEY_BYTES = 32',
+              'PDMAL_BLINDING_KEY',
+              'PDMAL_MODE_T_KEY',
+              'material=<redacted>',
+              'ModeTKeyLease serialization is prohibited',
+              'self._material[index] = 0',
+          )
+          for marker in required:
+              if marker not in source:
+                  raise SystemExit(f'missing Mode-T key-boundary marker: {marker}')
+          PY
+
+      - name: Report bounded interpretation
+        run: |
+          echo 'PASS: synthetic attestation-gated in-process key lease only'
+          echo 'Current H/I pilot key ingress is unchanged'
+          echo 'No real TEE key was generated or used'
+          echo 'P4 custody remains OPEN / NOT EXECUTED'
+          echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0'
