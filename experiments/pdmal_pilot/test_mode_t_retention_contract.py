@@ -33,7 +33,7 @@ def context() -> VerifiedTransparencyContext:
         transparency_inclusion_verified=True,
         signed_entry_timestamp_verified=True,
         bundle_sha256=BUNDLE_SHA,
-        log_entry_uuid="rekor-entry-uuid-synthetic",
+        log_id_key_id="synthetic-log-key-id",
         log_index=310,
         integrated_time_unix=1_800_000_000,
         verified_record_sha256=RECORD_SHA,
@@ -47,6 +47,7 @@ class ModeTRetentionContractTests(unittest.TestCase):
         result = verify_transparency_inclusion(expectation(), context())
         self.assertEqual(result["retention_contract"], "PASS_NORMALIZED_INCLUSION_ONLY")
         self.assertEqual(result["anti_deletion_inclusion_evidence"], "VERIFIED_NORMALIZED")
+        self.assertEqual(result["log_id_key_id"], "synthetic-log-key-id")
         self.assertFalse(result["temporal_order_verified"])
         self.assertFalse(result["external_sigstore_crypto_performed_by_this_module"])
         self.assertFalse(result["real_external_retention_established"])
