@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/pdmal-pre-freeze-runner.yml'
       - 'docs/experiment/NEW_CANDIDATE_MANIFEST.md'
+      - 'docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md'
       - 'experiments/pdmal_pilot/**'
       - 'experiments/pdmal_topology/CONTROL_PLANE_EVIDENCE_TRIGGER.md'
   pull_request:
@@ -23,53 +24,90 @@ env:
 
 jobs:
   runner-contract:
-    name: Exact-candidate pre-freeze P3/P5 contract evidence
+    name: Historical runtime-evidence pre-freeze P3/P5 contract evidence
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout control plane for candidate resolution
+      - name: Checkout control plane for historical evidence resolution
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
 
-      - name: Resolve designated candidate and control-plane identity
+      - name: Resolve historical runtime-evidence identity and current candidate authority
         shell: bash
         run: |
           set -euo pipefail
           manifest='docs/experiment/NEW_CANDIDATE_MANIFEST.md'
+          control_state='docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md'
           test -s "$manifest"
-          read_field() { awk -F': ' -v key="$1" '$1 == key {print $2; exit}' "$manifest"; }
+          test -s "$control_state"
+          read_manifest_field() { awk -F': ' -v key="$1" '$1 == key {print $2; exit}' "$manifest"; }
+          read_control_field() { awk -F': ' -v key="$1" '$1 == key {print $2; exit}' "$control_state"; }
 
-          candidate_sha="$(read_field candidate_sha)"
-          candidate_tree_sha="$(read_field candidate_tree_sha)"
-          apparatus_sha="$(read_field apparatus_source_sha)"
-          apparatus_tree_sha="$(read_field apparatus_source_tree_sha)"
+          candidate_sha="$(read_manifest_field candidate_sha)"
+          candidate_tree_sha="$(read_manifest_field candidate_tree_sha)"
+          apparatus_sha="$(read_manifest_field apparatus_source_sha)"
+          apparatus_tree_sha="$(read_manifest_field apparatus_source_tree_sha)"
+          historical_candidate_sha="$(read_control_field historical_runtime_evidence_candidate_sha)"
+          historical_candidate_tree_sha="$(read_control_field historical_runtime_evidence_candidate_tree_sha)"
+          final_candidate_status="$(read_control_field final_candidate_status)"
+          final_candidate_tracker="$(read_control_field final_candidate_tracker)"
           control_plane_sha="$(git rev-parse HEAD)"
+          manifest_blob_sha="$(git rev-parse "HEAD:${manifest}")"
+          manifest_content_sha256="$(sha256sum "$manifest" | awk '{print $1}')"
+          control_state_blob_sha="$(git rev-parse "HEAD:${control_state}")"
+          control_state_content_sha256="$(sha256sum "$control_state" | awk '{print $1}')"
           workflow_sha256="$(sha256sum .github/workflows/pdmal-pre-freeze-runner.yml | awk '{print $1}')"
 
-          for value in "$candidate_sha" "$candidate_tree_sha" "$apparatus_sha" "$apparatus_tree_sha" "$control_plane_sha"; do
+          for value in "$candidate_sha" "$candidate_tree_sha" "$apparatus_sha" "$apparatus_tree_sha" "$historical_candidate_sha" "$historical_candidate_tree_sha" "$control_plane_sha" "$manifest_blob_sha" "$control_state_blob_sha"; do
             [[ "$value" =~ ^[0-9a-f]{40}$ ]]
           done
-          [[ "$workflow_sha256" =~ ^[0-9a-f]{64}$ ]]
+          for value in "$manifest_content_sha256" "$control_state_content_sha256" "$workflow_sha256"; do
+            [[ "$value" =~ ^[0-9a-f]{64}$ ]]
+          done
+
+          test "$candidate_sha" = "$historical_candidate_sha"
+          test "$candidate_tree_sha" = "$historical_candidate_tree_sha"
+          test "$final_candidate_status" = 'NOT_DESIGNATED'
+          test "$final_candidate_tracker" = '309'
 
           {
+            # Legacy candidate variables are retained for compatibility, but are
+            # explicitly scoped to the historical runtime-evidence boundary.
             echo "CANDIDATE_SHA=$candidate_sha"
             echo "CANDIDATE_TREE_SHA=$candidate_tree_sha"
+            echo "CANDIDATE_ROLE=HISTORICAL_RUNTIME_EVIDENCE_BOUNDARY_NOT_FINAL_CANDIDATE"
+            echo "HISTORICAL_RUNTIME_EVIDENCE_CANDIDATE_SHA=$historical_candidate_sha"
+            echo "HISTORICAL_RUNTIME_EVIDENCE_CANDIDATE_TREE_SHA=$historical_candidate_tree_sha"
+            echo "FINAL_CANDIDATE_STATUS=$final_candidate_status"
+            echo "FINAL_CANDIDATE_TRACKER=$final_candidate_tracker"
             echo "APPARATUS_SOURCE_SHA=$apparatus_sha"
             echo "APPARATUS_SOURCE_TREE_SHA=$apparatus_tree_sha"
             echo "CONTROL_PLANE_SHA=$control_plane_sha"
+            echo "HISTORICAL_MANIFEST_BLOB_SHA=$manifest_blob_sha"
+            echo "HISTORICAL_MANIFEST_CONTENT_SHA256=$manifest_content_sha256"
+            echo "CURRENT_CONTROL_STATE_BLOB_SHA=$control_state_blob_sha"
+            echo "CURRENT_CONTROL_STATE_CONTENT_SHA256=$control_state_content_sha256"
             echo "WORKFLOW_CONTENT_SHA256=$workflow_sha256"
           } >> "$GITHUB_ENV"
 
           printf 'control_plane_sha=%s\n' "$control_plane_sha" >> "$GITHUB_STEP_SUMMARY"
-          printf 'designated_candidate_sha=%s\n' "$candidate_sha" >> "$GITHUB_STEP_SUMMARY"
-          printf 'designated_candidate_tree_sha=%s\n' "$candidate_tree_sha" >> "$GITHUB_STEP_SUMMARY"
+          printf 'candidate_role=%s\n' 'HISTORICAL_RUNTIME_EVIDENCE_BOUNDARY_NOT_FINAL_CANDIDATE' >> "$GITHUB_STEP_SUMMARY"
+          printf 'historical_runtime_evidence_candidate_sha=%s\n' "$historical_candidate_sha" >> "$GITHUB_STEP_SUMMARY"
+          printf 'historical_runtime_evidence_candidate_tree_sha=%s\n' "$historical_candidate_tree_sha" >> "$GITHUB_STEP_SUMMARY"
+          printf 'final_candidate_status=%s\n' "$final_candidate_status" >> "$GITHUB_STEP_SUMMARY"
+          printf 'final_candidate_tracker=%s\n' "$final_candidate_tracker" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Checkout and verify designated runtime candidate
+      - name: Checkout and verify historical runtime-evidence candidate
         shell: bash
         run: |
           set -euo pipefail
+          test "$CANDIDATE_ROLE" = 'HISTORICAL_RUNTIME_EVIDENCE_BOUNDARY_NOT_FINAL_CANDIDATE'
+          test "$CANDIDATE_SHA" = "$HISTORICAL_RUNTIME_EVIDENCE_CANDIDATE_SHA"
+          test "$CANDIDATE_TREE_SHA" = "$HISTORICAL_RUNTIME_EVIDENCE_CANDIDATE_TREE_SHA"
+          test "$FINAL_CANDIDATE_STATUS" = 'NOT_DESIGNATED'
+          test "$FINAL_CANDIDATE_TRACKER" = '309'
           git cat-file -e "${CANDIDATE_SHA}^{commit}"
           git checkout --detach "$CANDIDATE_SHA"
           test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
@@ -147,7 +185,7 @@ jobs:
             test -z "$(find /tmp/pdmal-prohibited-pilot -type f -print -quit)"
           fi
 
-      - name: Build exact-candidate P3/P5 structural evidence
+      - name: Build historical-runtime-evidence P3/P5 structural contract evidence
         shell: bash
         run: |
           set -euo pipefail
@@ -216,11 +254,22 @@ jobs:
               'schema_version': 1,
               'evidence_class': 'PDMAL_PRE_FREEZE_STRUCTURAL_CONTRACT',
               'epistemic_status': 'STRUCTURAL_CONTRACT_EVIDENCE_NOT_GATE_CLOSURE',
+              # Legacy candidate_* fields are retained for compatibility. Their
+              # role is explicitly bound below to historical exact-scope evidence.
               'candidate_sha': candidate,
               'candidate_tree_sha': os.environ['CANDIDATE_TREE_SHA'],
+              'candidate_role': os.environ['CANDIDATE_ROLE'],
+              'historical_runtime_evidence_candidate_sha': os.environ['HISTORICAL_RUNTIME_EVIDENCE_CANDIDATE_SHA'],
+              'historical_runtime_evidence_candidate_tree_sha': os.environ['HISTORICAL_RUNTIME_EVIDENCE_CANDIDATE_TREE_SHA'],
+              'final_candidate_status': os.environ['FINAL_CANDIDATE_STATUS'],
+              'final_candidate_tracker': os.environ['FINAL_CANDIDATE_TRACKER'],
               'apparatus_source_sha': os.environ['APPARATUS_SOURCE_SHA'],
               'apparatus_source_tree_sha': os.environ['APPARATUS_SOURCE_TREE_SHA'],
               'control_plane_sha': os.environ['CONTROL_PLANE_SHA'],
+              'historical_manifest_blob_sha': os.environ['HISTORICAL_MANIFEST_BLOB_SHA'],
+              'historical_manifest_content_sha256': os.environ['HISTORICAL_MANIFEST_CONTENT_SHA256'],
+              'current_control_state_blob_sha': os.environ['CURRENT_CONTROL_STATE_BLOB_SHA'],
+              'current_control_state_content_sha256': os.environ['CURRENT_CONTROL_STATE_CONTENT_SHA256'],
               'workflow_definition_sha': os.environ['CONTROL_PLANE_SHA'],
               'workflow_definition_content_sha256': os.environ['WORKFLOW_CONTENT_SHA256'],
               'producer_workflow': 'PDMAL Pre-Freeze Runner Validation',
@@ -242,6 +291,10 @@ jobs:
               'assertions': {
                   'candidate_checkout_exact': 'PASS',
                   'candidate_tree_exact': 'PASS',
+                  'historical_runtime_evidence_identity_matches_current_control_state': 'PASS',
+                  'legacy_candidate_fields_scoped_historical': 'PASS',
+                  'final_candidate_status_not_designated': 'PASS',
+                  'final_candidate_tracker_309': 'PASS',
                   'full_hash_locked_dependencies': 'PASS',
                   'artifact_contract_validation': 'PASS',
                   'pilot_artifact_matrix_contract_validation': 'PASS',
@@ -253,6 +306,8 @@ jobs:
                   'pilot_mode_fail_closed_without_governance_authorization': 'PASS',
               },
               'controls': {
+                  'candidate_authority': 'HISTORICAL_EXACT_SCOPE_ONLY',
+                  'final_candidate_designated': False,
                   'protocol_frozen': False,
                   'pilot_authorized': False,
                   'empirical_data_collection': False,
@@ -260,6 +315,7 @@ jobs:
                   'pilot_artifact_schema_fixture_only': True,
               },
               'gate_interpretation': {
+                  'scope': 'HISTORICAL_RUNTIME_EVIDENCE_BOUNDARY_ONLY_NOT_FINAL_CANDIDATE',
                   'P3': 'EVIDENCE_PRESENT_NOT_CLOSED',
                   'P5': 'EVIDENCE_PRESENT_NOT_CLOSED',
                   'P6': 'OPEN_FAIL_CLOSED',
@@ -277,7 +333,7 @@ jobs:
       - name: Verify structural evidence sidecar
         run: cd test-artifacts && sha256sum --check pdmal-pre-freeze-p3-p5-evidence.json.sha256
 
-      - name: Upload exact-candidate structural evidence
+      - name: Upload historical-runtime-evidence structural evidence
         id: source_artifact
         uses: actions/upload-artifact@v4
         with:
@@ -306,9 +362,19 @@ jobs:
           registry = {
               'schema_version': 1,
               'registry_class': 'PDMAL_PRE_FREEZE_P3_P5_SOURCE_BINDING',
+              # Legacy candidate_* fields are retained for compatibility only.
               'candidate_sha': os.environ['CANDIDATE_SHA'],
               'candidate_tree_sha': os.environ['CANDIDATE_TREE_SHA'],
+              'candidate_role': os.environ['CANDIDATE_ROLE'],
+              'historical_runtime_evidence_candidate_sha': os.environ['HISTORICAL_RUNTIME_EVIDENCE_CANDIDATE_SHA'],
+              'historical_runtime_evidence_candidate_tree_sha': os.environ['HISTORICAL_RUNTIME_EVIDENCE_CANDIDATE_TREE_SHA'],
+              'final_candidate_status': os.environ['FINAL_CANDIDATE_STATUS'],
+              'final_candidate_tracker': os.environ['FINAL_CANDIDATE_TRACKER'],
               'control_plane_sha': os.environ['CONTROL_PLANE_SHA'],
+              'historical_manifest_blob_sha': os.environ['HISTORICAL_MANIFEST_BLOB_SHA'],
+              'historical_manifest_content_sha256': os.environ['HISTORICAL_MANIFEST_CONTENT_SHA256'],
+              'current_control_state_blob_sha': os.environ['CURRENT_CONTROL_STATE_BLOB_SHA'],
+              'current_control_state_content_sha256': os.environ['CURRENT_CONTROL_STATE_CONTENT_SHA256'],
               'workflow_definition_sha': os.environ['CONTROL_PLANE_SHA'],
               'producer_workflow': 'PDMAL Pre-Freeze Runner Validation',
               'producer_workflow_run_id': os.environ['GITHUB_RUN_ID'],
@@ -321,11 +387,14 @@ jobs:
                   'retention_class': 'GITHUB_ACTIONS_30_DAY_NOT_DURABLE_CUSTODY',
               },
               'gate_interpretation': {
+                  'scope': 'HISTORICAL_RUNTIME_EVIDENCE_BOUNDARY_ONLY_NOT_FINAL_CANDIDATE',
                   'P3': 'EVIDENCE_PRESENT_NOT_CLOSED',
                   'P5': 'EVIDENCE_PRESENT_NOT_CLOSED',
                   'P6': 'OPEN_FAIL_CLOSED',
               },
               'controls': {
+                  'candidate_authority': 'HISTORICAL_EXACT_SCOPE_ONLY',
+                  'final_candidate_designated': False,
                   'protocol_frozen': False,
                   'pilot_authorized': False,
                   'empirical_data_collection': False,
