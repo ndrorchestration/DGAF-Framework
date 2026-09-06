@@ -24,9 +24,10 @@ goamd64: v1
 cgo_enabled: 0
 setup_go_commit: 924ae3a1cded613372ab5595356fb5720e22ba16
 download_artifact_commit: 37930b1c2abaa49bbe596cd826c3c89aef350131
+upload_artifact_commit: b7c566a772e6b6bfb58ed0dc250532a479d7789f
 ```
 
-The pinned download-artifact v7 action declares `node24`; it is used instead of the earlier v6 pin that GitHub's 2026 runner compatibility layer forced from a Node-20 action onto Node 24.
+The pinned artifact actions both declare `node24`. They replace earlier pins that GitHub's 2026 runner compatibility layer would otherwise force from Node-20 actions onto Node 24.
 
 The build command is fixed to:
 
