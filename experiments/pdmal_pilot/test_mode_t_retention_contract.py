@@ -4,6 +4,8 @@ import copy
 import unittest
 
 from mode_t_retention_contract import (
+    EXPECTED_GITHUB_WORKFLOW_REF,
+    EXPECTED_GITHUB_WORKFLOW_REPOSITORY,
     EXPECTED_OIDC_ISSUER,
     RetentionContractError,
     TransparencyExpectation,
@@ -14,6 +16,7 @@ from mode_t_retention_contract import (
 
 RECORD_SHA = "1" * 64
 BUNDLE_SHA = "2" * 64
+WORKFLOW_SHA = "a" * 40
 IDENTITY = "https://github.com/ndrorchestration/DGAF-Framework/.github/workflows/p4-mode-t-transparency.yml@refs/heads/main"
 
 
@@ -22,6 +25,7 @@ def expectation(record_type: str = "PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION") -> 
         record_type=record_type,
         record_sha256=RECORD_SHA,
         certificate_identity=IDENTITY,
+        github_workflow_sha=WORKFLOW_SHA,
     )
 
 
@@ -39,6 +43,9 @@ def context() -> VerifiedTransparencyContext:
         verified_record_sha256=RECORD_SHA,
         certificate_identity=IDENTITY,
         oidc_issuer=EXPECTED_OIDC_ISSUER,
+        github_workflow_sha=WORKFLOW_SHA,
+        github_workflow_repository=EXPECTED_GITHUB_WORKFLOW_REPOSITORY,
+        github_workflow_ref=EXPECTED_GITHUB_WORKFLOW_REF,
     )
 
 
@@ -48,6 +55,11 @@ class ModeTRetentionContractTests(unittest.TestCase):
         self.assertEqual(result["retention_contract"], "PASS_NORMALIZED_INCLUSION_ONLY")
         self.assertEqual(result["anti_deletion_inclusion_evidence"], "VERIFIED_NORMALIZED")
         self.assertEqual(result["log_id_key_id"], "synthetic-log-key-id")
+        self.assertEqual(result["github_workflow_sha"], WORKFLOW_SHA)
+        self.assertEqual(
+            result["github_workflow_repository"], EXPECTED_GITHUB_WORKFLOW_REPOSITORY
+        )
+        self.assertEqual(result["github_workflow_ref"], EXPECTED_GITHUB_WORKFLOW_REF)
         self.assertFalse(result["temporal_order_verified"])
         self.assertFalse(result["external_sigstore_crypto_performed_by_this_module"])
         self.assertFalse(result["real_external_retention_established"])
@@ -124,6 +136,58 @@ class ModeTRetentionContractTests(unittest.TestCase):
             verify_transparency_inclusion(
                 expectation(), VerifiedTransparencyContext(**data)
             )
+
+    def test_rejects_workflow_sha_mismatch(self) -> None:
+        data = dict(context().__dict__)
+        data["github_workflow_sha"] = "b" * 40
+        with self.assertRaisesRegex(RetentionContractError, "workflow SHA mismatch"):
+            verify_transparency_inclusion(
+                expectation(), VerifiedTransparencyContext(**data)
+            )
+
+    def test_rejects_workflow_repository_or_ref_mismatch(self) -> None:
+        for field, value, expected in (
+            ("github_workflow_repository", "example/other", "repository mismatch"),
+            ("github_workflow_ref", "refs/heads/other", "ref mismatch"),
+        ):
+            data = dict(context().__dict__)
+            data[field] = value
+            with self.subTest(field=field), self.assertRaisesRegex(
+                RetentionContractError, expected
+            ):
+                verify_transparency_inclusion(
+                    expectation(), VerifiedTransparencyContext(**data)
+                )
+
+    def test_rejects_invalid_or_unexpected_expectation_workflow_identity(self) -> None:
+        with self.assertRaisesRegex(RetentionContractError, "full lowercase 40-character"):
+            verify_transparency_inclusion(
+                TransparencyExpectation(
+                    record_type="PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION",
+                    record_sha256=RECORD_SHA,
+                    certificate_identity=IDENTITY,
+                    github_workflow_sha="short",
+                ),
+                context(),
+            )
+        for repository, ref, expected in (
+            ("example/other", EXPECTED_GITHUB_WORKFLOW_REF, "repository expectation"),
+            (EXPECTED_GITHUB_WORKFLOW_REPOSITORY, "refs/heads/other", "ref expectation"),
+        ):
+            with self.subTest(repository=repository, ref=ref), self.assertRaisesRegex(
+                RetentionContractError, expected
+            ):
+                verify_transparency_inclusion(
+                    TransparencyExpectation(
+                        record_type="PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION",
+                        record_sha256=RECORD_SHA,
+                        certificate_identity=IDENTITY,
+                        github_workflow_sha=WORKFLOW_SHA,
+                        github_workflow_repository=repository,
+                        github_workflow_ref=ref,
+                    ),
+                    context(),
+                )
 
     def test_rejects_unsupported_record_type(self) -> None:
         with self.assertRaisesRegex(RetentionContractError, "unsupported"):
