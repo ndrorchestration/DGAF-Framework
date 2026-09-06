@@ -1,19 +1,15 @@
 """Side-effect-free Sigstore/Cosign verifier for DGAF Mode-T retention evidence.
 
-This module removes caller-asserted cryptographic booleans from the active retention
-path. Its public entry point verifies an existing artifact+standardized Sigstore bundle
-with the exact reviewed Cosign v3.1.3 Linux/amd64 binary identity and the exact
-certificate/GitHub-workflow identity already fixed by the retention expectation.
+The public entry verifies an existing artifact+standardized Sigstore bundle with the
+exact reviewed Cosign v3.1.3 Linux/amd64 binary, exact certificate/GitHub-workflow
+identity, and an explicit predeclared TrustedRoot file. Ambient/default trust-material
+acquisition is not accepted by this wrapper.
 
-It never signs, requests OIDC, uploads to Rekor, or writes external evidence. A PASS
-is cryptographic standardized-bundle/inclusion verification only; it does not prove a
-new external write, independent temporal order, P4, freeze, authorization, or empirical
-execution.
+A matching TrustedRoot digest proves byte identity only. It does not prove that the
+root or its TUF/bootstrap/update policy was independently approved. That governance
+acceptance remains external and fail-closed.
 
-Cosign v3.1.3 is load-bearing: it is the first v3 release patched for
-GHSA-fx35-mq7g-6g98, a keyless verification bypass affecting legacy JSON bundles.
-DGAF additionally rejects legacy and old standardized bundle versions here and accepts
-only the current Sigstore v0.3 bundle media type with an inclusion proof.
+This module never signs, requests OIDC, uploads to Rekor, or writes external evidence.
 """
 from __future__ import annotations
 
@@ -59,6 +55,7 @@ class VerifiedSigstoreRetention:
     retention_result: Mapping[str, Any]
     cosign_version: str
     cosign_sha256: str
+    trusted_root_sha256: str
 
 
 def _require(condition: bool, message: str) -> None:
@@ -94,11 +91,27 @@ def _verify_cosign_binary(cosign: Path) -> str:
     return actual
 
 
+def _verify_trusted_root(
+    *,
+    trusted_root: Path,
+    expectation: TransparencyExpectation,
+) -> str:
+    """Require explicit JSON trust material with exact predeclared byte identity."""
+    _json_file(trusted_root, "Sigstore TrustedRoot")
+    actual = sha256_file(trusted_root)
+    _require(
+        actual == expectation.trusted_root_sha256,
+        "TrustedRoot SHA-256 does not match predeclared expectation",
+    )
+    return actual
+
+
 def _run_cosign_verify(
     *,
     cosign: Path,
     artifact: Path,
     bundle: Path,
+    trusted_root: Path,
     expectation: TransparencyExpectation,
     timeout_seconds: int,
 ) -> None:
@@ -106,6 +119,7 @@ def _run_cosign_verify(
     _require(cosign.is_file(), "Cosign executable is missing")
     _require(artifact.is_file(), "artifact is missing")
     _require(bundle.is_file(), "Sigstore bundle is missing")
+    _require(trusted_root.is_file(), "Sigstore TrustedRoot is missing")
     _require(bool(expectation.certificate_identity), "certificate identity must be non-empty")
     _require(
         expectation.oidc_issuer == EXPECTED_OIDC_ISSUER,
@@ -125,6 +139,8 @@ def _run_cosign_verify(
         "verify-blob",
         "--bundle",
         str(bundle),
+        "--trusted-root",
+        str(trusted_root),
         "--certificate-identity",
         expectation.certificate_identity,
         "--certificate-oidc-issuer",
@@ -194,9 +210,10 @@ def _normalize_verified_bundle(
     *,
     artifact: Path,
     bundle: Path,
+    trusted_root_sha256: str,
     expectation: TransparencyExpectation,
 ) -> VerifiedTransparencyContext:
-    """Parse metadata only after the private Cosign verification step has succeeded."""
+    """Parse metadata only after private Cosign verification has succeeded."""
     artifact_sha = sha256_file(artifact)
     bundle_raw = bundle.read_bytes()
     bundle_sha = sha256_bytes(bundle_raw)
@@ -230,6 +247,7 @@ def _normalize_verified_bundle(
         transparency_inclusion_verified=True,
         signed_entry_timestamp_verified=True,
         bundle_sha256=bundle_sha,
+        trusted_root_sha256=trusted_root_sha256,
         log_id_key_id=log_id_key_id,
         log_index=log_index,
         integrated_time_unix=integrated_time,
@@ -248,21 +266,28 @@ def verify_retention_record_with_sigstore(
     cosign: Path,
     artifact: Path,
     bundle: Path,
+    trusted_root: Path,
     timeout_seconds: int = 60,
 ) -> VerifiedSigstoreRetention:
     """Cryptographically verify one predeclared DGAF retention record, read-only."""
     _require(isinstance(expectation, TransparencyExpectation), "expectation has wrong type")
     cosign_sha = _verify_cosign_binary(cosign)
+    trusted_root_sha = _verify_trusted_root(
+        trusted_root=trusted_root,
+        expectation=expectation,
+    )
     _run_cosign_verify(
         cosign=cosign,
         artifact=artifact,
         bundle=bundle,
+        trusted_root=trusted_root,
         expectation=expectation,
         timeout_seconds=timeout_seconds,
     )
     context = _normalize_verified_bundle(
         artifact=artifact,
         bundle=bundle,
+        trusted_root_sha256=trusted_root_sha,
         expectation=expectation,
     )
     retention = verify_transparency_inclusion(expectation, context)
@@ -271,11 +296,12 @@ def verify_retention_record_with_sigstore(
         retention_result=retention,
         cosign_version=EXPECTED_COSIGN_VERSION,
         cosign_sha256=cosign_sha,
+        trusted_root_sha256=trusted_root_sha,
     )
 
 
 def retention_safe_evidence(verified: VerifiedSigstoreRetention) -> dict[str, Any]:
-    """Return non-secret evidence without claiming external-write or temporal closure."""
+    """Return non-secret evidence without claiming root approval or temporal closure."""
     _require(
         isinstance(verified, VerifiedSigstoreRetention),
         "verified Sigstore retention result required",
@@ -285,6 +311,9 @@ def retention_safe_evidence(verified: VerifiedSigstoreRetention) -> dict[str, An
         "sigstore_crypto_verified": True,
         "cosign_version_policy": verified.cosign_version,
         "cosign_sha256": verified.cosign_sha256,
+        "trusted_root_sha256": verified.trusted_root_sha256,
+        "trusted_root_explicit_and_digest_bound": True,
+        "trusted_root_independently_approved": False,
         "bundle_sha256": context.bundle_sha256,
         "verified_record_sha256": context.verified_record_sha256,
         "certificate_identity": context.certificate_identity,
