@@ -2,46 +2,51 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-05
-control_plane_reconciliation_base: 4382a7b745c1abde3a68eb7848611412f5bd34d7
+last_verified: 2026-09-06
+live_source_boundary: 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
 corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
 immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
-runtime_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
-runtime_candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
-runtime_deployment_reference: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
+historical_runtime_evidence_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
+historical_runtime_evidence_candidate_tree_sha: 586c00d6dedb589e52108279f9759be3c4f927e1
+historical_runtime_deployment_reference: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
+final_candidate_status: NOT_DESIGNATED
+final_candidate_tracker: 309
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 empirical_n: 0
 ---
 
 # PDMAL Current Control State
 
-This is the current pre-authorization control record. Documentation/control-plane descendants do not replace the designated runtime candidate unless the canonical candidate identity is explicitly changed.
+This is the current pre-authorization control record. PR #308 advanced the apparatus to protocol v0.7.6 / artifact schema 1.1 at `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. The prior runtime candidate `7c1cc4bb…` retains valid exact-scope evidence but is historical provenance for final-candidate purposes. **Final v0.7.6 candidate is NOT DESIGNATED; Issue #309 is authoritative for reconstruction and evidence regeneration.**
+
+The consolidated control-state anchor `89be386b…` remains valid for its control/provenance role and does not itself designate the final candidate. Neither `main`, a PR head, a deployment, nor a documentation checkpoint becomes the final candidate merely by recency.
 
 ## Current gate state
 
 | Control | State | Evidence / scope |
 |---|---|---|
 | P-35 | VALIDATED | immutable boundary `643dc77a…` |
-| Runtime candidate lineage | VERIFIED | candidate `7c1cc4bb…`; tree `586c00d6…` |
-| Candidate deployment | VERIFIED | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`, READY production, exact Git source `7c1cc4bb…` |
-| P1 Candidate Integrity | CLOSED / VERIFIED | exact apparatus/source, candidate/tree, provenance, deployment identity |
-| P2 Runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; five-case authenticated matrix |
-| P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662`; structural scope |
-| P4 Security / Blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | canonical procedure now supports Mode H human, Mode I institutional, or Mode T independently enforced technical custody; no custody mode has yet been instantiated or verified |
-| P5 Provenance / Reproducibility | CLOSED / VERIFIED | exact analysis/config/runner/schema identities bound by merge `2e325acd…`; post-merge Governance CI `33945464907` and Pre-Authorization Security `33945464908` PASS |
-| P6 Durable Evidence Custody | CLOSED / VERIFIED | independent archive/retrieval/SHA-256 equality for retained evidence set |
-| P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299`; four-case authenticated matrix |
-| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | final binding blocked by actual P4-A custody evidence and final pre-freeze identities |
-| P8 Analysis Lock | OPEN / FAIL-CLOSED | analysis identities bound; immutable freeze not created/verified |
+| Historical runtime candidate lineage | VERIFIED AT EXACT SCOPE | candidate `7c1cc4bb…`; tree `586c00d6…`; final-candidate transfer/reverification pending #309 |
+| Historical candidate deployment | VERIFIED AT EXACT SCOPE | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`, READY production, exact Git source `7c1cc4bb…` |
+| Historical P1 Candidate Integrity | CLOSED / VERIFIED | exact apparatus/source, candidate/tree, provenance, deployment identity; final-candidate transfer/reverification pending #309 |
+| Historical P2 Runtime | CLOSED / VERIFIED | run `33730195621`; artifact `9883521704`; five-case authenticated matrix; final-candidate transfer/reverification pending #309 |
+| Historical P3 Artifact Contract | CLOSED / VERIFIED | run `33939955138`; artifacts `9961526468` / `9961526662`; structural scope; final-candidate transfer/reverification pending #309 |
+| P4 Security / Blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED | canonical procedure supports Mode H human, Mode I institutional, or Mode T independently enforced technical custody; no custody mode has yet been instantiated or verified |
+| Historical P5 Provenance / Reproducibility | CLOSED / VERIFIED | exact pre-v0.7.6 analysis/config/runner/schema identities; final-candidate transfer/reverification pending #309 |
+| Historical P6 Durable Evidence Custody | CLOSED / VERIFIED | independent archive/retrieval/SHA-256 equality for retained evidence set; final-candidate rebind decision pending #309 |
+| Historical P6a CORS | CLOSED / VERIFIED | run `33728695806`; artifact `9882965299`; four-case authenticated matrix; final-candidate transfer/reverification pending #309 |
+| Final v0.7.6 candidate | NOT DESIGNATED | Issue #309; exact immutable SHA/tree still pending |
+| P7 Scientific Target | ADOPTED / FINAL BINDING OPEN | final binding blocked by final candidate identity, actual P4-A custody evidence, and final pre-freeze identities |
+| P8 Analysis Lock | OPEN / FAIL-CLOSED | analysis identities bound historically; immutable freeze not created/verified |
 | P9 Independent Verification | NOT EXECUTED / OPEN | final independent frozen-chain verification absent |
 | Freeze | NOT ESTABLISHED | no immutable pilot identity |
 | Pilot authorization | NOT GRANTED | separate governance decision |
 | Empirical data | N = 0 | no authorized pilot observation |
 
-## P5 closure basis
+## Historical P5 closure basis
 
-The designated candidate's analysis-control identities are fixed as:
+The `7c1cc4bb…` candidate's analysis-control identities were fixed as:
 
 - analysis implementation blob `a269ed226b1d261663994fc3ef0e8a1a96da6cd3`;
 - deterministic analysis configuration SHA-256 `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`;
@@ -53,7 +58,7 @@ The analysis configuration digest was independently recomputed and matched exact
 
 Post-merge Governance CI `33945464907` completed successfully, including isolated hash-pinned E2b/M6 evidence, compilation, P8 analysis/artifact tests, authority tests, provenance artifacts, pinned TLA+ retrieval, and bounded model checking. PDMAL Pre-Authorization Security `33945464908` also completed successfully, including adversarial controls, locked P8 analysis tests, artifact-schema tests, execution-contract tests, retention tests, and explicit non-empirical contract-mode verification.
 
-Accordingly, P5 is CLOSED / VERIFIED for provenance/reproducibility only. This is not efficacy evidence.
+Accordingly, P5 remains CLOSED / VERIFIED for provenance/reproducibility at that exact historical boundary. It is not efficacy evidence and does not silently become v0.7.6 final-candidate evidence.
 
 ## P4 boundary
 
@@ -69,9 +74,11 @@ The requirement is unchanged in substance: before the predeclared release condit
 
 No mode has yet been instantiated. P4 remains OPEN / NOT EXECUTED operationally.
 
-## Remaining closure sequence
+## Candidate reconstruction and remaining closure sequence
 
-`real independently enforceable P4-A custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
+Issue #309 requires an explicit immutable v0.7.6-descended candidate after candidate-relevant P4 apparatus changes are settled. Historical evidence must then be classified as transferable by construct, historical only, source/structure re-verifiable, runtime/deployment re-verifiable, re-archive/rebind, or not yet executable.
+
+`complete candidate-relevant P4 apparatus work → explicitly designate exact v0.7.6 final candidate → classify/regenerate identity-dependent evidence → real independently enforceable P4-A custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
 
 No completed gate above authorizes empirical execution or changes empirical N.
 
