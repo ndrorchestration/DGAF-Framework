@@ -16,6 +16,7 @@ from mode_t_retention_contract import (
 
 RECORD_SHA = "1" * 64
 BUNDLE_SHA = "2" * 64
+TRUSTED_ROOT_SHA = "3" * 64
 WORKFLOW_SHA = "a" * 40
 IDENTITY = "https://github.com/ndrorchestration/DGAF-Framework/.github/workflows/p4-mode-t-transparency.yml@refs/heads/main"
 
@@ -26,6 +27,7 @@ def expectation(record_type: str = "PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION") -> 
         record_sha256=RECORD_SHA,
         certificate_identity=IDENTITY,
         github_workflow_sha=WORKFLOW_SHA,
+        trusted_root_sha256=TRUSTED_ROOT_SHA,
     )
 
 
@@ -37,6 +39,7 @@ def context() -> VerifiedTransparencyContext:
         transparency_inclusion_verified=True,
         signed_entry_timestamp_verified=True,
         bundle_sha256=BUNDLE_SHA,
+        trusted_root_sha256=TRUSTED_ROOT_SHA,
         log_id_key_id="synthetic-log-key-id",
         log_index=310,
         integrated_time_unix=1_800_000_000,
@@ -54,11 +57,12 @@ class ModeTRetentionContractTests(unittest.TestCase):
         result = verify_transparency_inclusion(expectation(), context())
         self.assertEqual(result["retention_contract"], "PASS_NORMALIZED_INCLUSION_ONLY")
         self.assertEqual(result["anti_deletion_inclusion_evidence"], "VERIFIED_NORMALIZED")
+        self.assertEqual(result["trusted_root_sha256"], TRUSTED_ROOT_SHA)
+        self.assertTrue(result["trusted_root_explicit_and_digest_bound"])
+        self.assertFalse(result["trusted_root_independently_approved"])
         self.assertEqual(result["log_id_key_id"], "synthetic-log-key-id")
         self.assertEqual(result["github_workflow_sha"], WORKFLOW_SHA)
-        self.assertEqual(
-            result["github_workflow_repository"], EXPECTED_GITHUB_WORKFLOW_REPOSITORY
-        )
+        self.assertEqual(result["github_workflow_repository"], EXPECTED_GITHUB_WORKFLOW_REPOSITORY)
         self.assertEqual(result["github_workflow_ref"], EXPECTED_GITHUB_WORKFLOW_REF)
         self.assertFalse(result["temporal_order_verified"])
         self.assertFalse(result["external_sigstore_crypto_performed_by_this_module"])
@@ -66,15 +70,31 @@ class ModeTRetentionContractTests(unittest.TestCase):
         self.assertFalse(result["pilot_authorized"])
         self.assertEqual(result["empirical_n"], 0)
 
+    def test_rejects_trusted_root_mismatch_or_invalid_expectation(self) -> None:
+        data = dict(context().__dict__)
+        data["trusted_root_sha256"] = "4" * 64
+        with self.assertRaisesRegex(RetentionContractError, "trusted-root SHA-256 mismatch"):
+            verify_transparency_inclusion(expectation(), VerifiedTransparencyContext(**data))
+
+        with self.assertRaisesRegex(RetentionContractError, "trusted-root SHA-256"):
+            verify_transparency_inclusion(
+                TransparencyExpectation(
+                    record_type="PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION",
+                    record_sha256=RECORD_SHA,
+                    certificate_identity=IDENTITY,
+                    github_workflow_sha=WORKFLOW_SHA,
+                    trusted_root_sha256="not-a-digest",
+                ),
+                context(),
+            )
+
     def test_integrated_time_is_retained_only_as_metadata(self) -> None:
         result = verify_transparency_inclusion(expectation(), context())
         self.assertEqual(result["integrated_time_unix_metadata_only"], 1_800_000_000)
         self.assertIn("NOT_ACCEPTED_AS_INDEPENDENT_TIME_AUTHORITY", result["temporal_order_reason"])
 
     def test_analysis_lock_inclusion_does_not_prove_before_release(self) -> None:
-        inclusion = verify_transparency_inclusion(
-            expectation("PDMAL_P4_T_ANALYSIS_LOCK"), context()
-        )
+        inclusion = verify_transparency_inclusion(expectation("PDMAL_P4_T_ANALYSIS_LOCK"), context())
         result = verify_analysis_lock_temporal_order(inclusion)
         self.assertTrue(result["analysis_lock_inclusion_verified"])
         self.assertFalse(result["temporal_order_verified"])
@@ -82,9 +102,7 @@ class ModeTRetentionContractTests(unittest.TestCase):
         self.assertFalse(result["rekor_integrated_time_promoted"])
 
     def test_rejects_attempt_to_supply_unapproved_time_authority(self) -> None:
-        inclusion = verify_transparency_inclusion(
-            expectation("PDMAL_P4_T_ANALYSIS_LOCK"), context()
-        )
+        inclusion = verify_transparency_inclusion(expectation("PDMAL_P4_T_ANALYSIS_LOCK"), context())
         with self.assertRaisesRegex(RetentionContractError, "no independent temporal-order authority"):
             verify_analysis_lock_temporal_order(
                 inclusion,
@@ -92,12 +110,10 @@ class ModeTRetentionContractTests(unittest.TestCase):
             )
 
     def test_rejects_unverified_inclusion(self) -> None:
-        bad = copy.copy(context())
-        bad = VerifiedTransparencyContext(
-            **{**bad.__dict__, "transparency_inclusion_verified": False}
-        )
+        data = dict(context().__dict__)
+        data["transparency_inclusion_verified"] = False
         with self.assertRaises(RetentionContractError):
-            verify_transparency_inclusion(expectation(), bad)
+            verify_transparency_inclusion(expectation(), VerifiedTransparencyContext(**data))
 
     def test_rejects_unverified_signature_or_chain_or_identity(self) -> None:
         for field in (
@@ -109,41 +125,31 @@ class ModeTRetentionContractTests(unittest.TestCase):
             data = dict(context().__dict__)
             data[field] = False
             with self.subTest(field=field), self.assertRaises(RetentionContractError):
-                verify_transparency_inclusion(
-                    expectation(), VerifiedTransparencyContext(**data)
-                )
+                verify_transparency_inclusion(expectation(), VerifiedTransparencyContext(**data))
 
     def test_rejects_record_digest_mismatch(self) -> None:
         data = dict(context().__dict__)
         data["verified_record_sha256"] = "9" * 64
         with self.assertRaisesRegex(RetentionContractError, "record digest mismatch"):
-            verify_transparency_inclusion(
-                expectation(), VerifiedTransparencyContext(**data)
-            )
+            verify_transparency_inclusion(expectation(), VerifiedTransparencyContext(**data))
 
     def test_rejects_certificate_identity_mismatch(self) -> None:
         data = dict(context().__dict__)
         data["certificate_identity"] = "https://github.com/example/other/.github/workflows/x.yml@refs/heads/main"
         with self.assertRaisesRegex(RetentionContractError, "certificate identity mismatch"):
-            verify_transparency_inclusion(
-                expectation(), VerifiedTransparencyContext(**data)
-            )
+            verify_transparency_inclusion(expectation(), VerifiedTransparencyContext(**data))
 
     def test_rejects_wrong_oidc_issuer(self) -> None:
         data = dict(context().__dict__)
         data["oidc_issuer"] = "https://example.invalid"
         with self.assertRaisesRegex(RetentionContractError, "OIDC issuer mismatch"):
-            verify_transparency_inclusion(
-                expectation(), VerifiedTransparencyContext(**data)
-            )
+            verify_transparency_inclusion(expectation(), VerifiedTransparencyContext(**data))
 
     def test_rejects_workflow_sha_mismatch(self) -> None:
         data = dict(context().__dict__)
         data["github_workflow_sha"] = "b" * 40
         with self.assertRaisesRegex(RetentionContractError, "workflow SHA mismatch"):
-            verify_transparency_inclusion(
-                expectation(), VerifiedTransparencyContext(**data)
-            )
+            verify_transparency_inclusion(expectation(), VerifiedTransparencyContext(**data))
 
     def test_rejects_workflow_repository_or_ref_mismatch(self) -> None:
         for field, value, expected in (
@@ -152,12 +158,8 @@ class ModeTRetentionContractTests(unittest.TestCase):
         ):
             data = dict(context().__dict__)
             data[field] = value
-            with self.subTest(field=field), self.assertRaisesRegex(
-                RetentionContractError, expected
-            ):
-                verify_transparency_inclusion(
-                    expectation(), VerifiedTransparencyContext(**data)
-                )
+            with self.subTest(field=field), self.assertRaisesRegex(RetentionContractError, expected):
+                verify_transparency_inclusion(expectation(), VerifiedTransparencyContext(**data))
 
     def test_rejects_invalid_or_unexpected_expectation_workflow_identity(self) -> None:
         with self.assertRaisesRegex(RetentionContractError, "full lowercase 40-character"):
@@ -167,6 +169,7 @@ class ModeTRetentionContractTests(unittest.TestCase):
                     record_sha256=RECORD_SHA,
                     certificate_identity=IDENTITY,
                     github_workflow_sha="short",
+                    trusted_root_sha256=TRUSTED_ROOT_SHA,
                 ),
                 context(),
             )
@@ -174,15 +177,14 @@ class ModeTRetentionContractTests(unittest.TestCase):
             ("example/other", EXPECTED_GITHUB_WORKFLOW_REF, "repository expectation"),
             (EXPECTED_GITHUB_WORKFLOW_REPOSITORY, "refs/heads/other", "ref expectation"),
         ):
-            with self.subTest(repository=repository, ref=ref), self.assertRaisesRegex(
-                RetentionContractError, expected
-            ):
+            with self.subTest(repository=repository, ref=ref), self.assertRaisesRegex(RetentionContractError, expected):
                 verify_transparency_inclusion(
                     TransparencyExpectation(
                         record_type="PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION",
                         record_sha256=RECORD_SHA,
                         certificate_identity=IDENTITY,
                         github_workflow_sha=WORKFLOW_SHA,
+                        trusted_root_sha256=TRUSTED_ROOT_SHA,
                         github_workflow_repository=repository,
                         github_workflow_ref=ref,
                     ),
