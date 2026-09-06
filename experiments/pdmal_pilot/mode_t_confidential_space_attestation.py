@@ -5,6 +5,13 @@ verification step has succeeded. It deliberately does not parse or validate JWT
 signatures itself; callers must provide ``signature_verified=True`` only after an
 independent verifier has authenticated the token.
 
+The lifecycle has two non-interchangeable attestation phases:
+
+* PRE_EXECUTION binds the admitted runtime to the already-consumed authorization
+  record C and is the only phase that may gate operational-key generation.
+* POST_EXECUTION binds the same admitted runtime identity to the final blinded
+  output/evidence manifest after that manifest exists.
+
 Scientific boundary: engineering / synthetic admission checking only. Importing
 or passing this module does not establish P4 custody, freeze, authorization, or
 empirical evidence.
@@ -13,6 +20,8 @@ empirical evidence.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
+import json
 import re
 from typing import Any, Mapping
 
@@ -24,6 +33,9 @@ REQUIRED_ATTESTER_TCB = ("INTEL",)
 REQUIRED_DEBUG_STATUS = "disabled-since-boot"
 REQUIRED_RESTART_POLICY = "Never"
 REQUIRED_SUPPORT_ATTRIBUTE = "STABLE"
+PRE_EXECUTION = "PRE_EXECUTION"
+POST_EXECUTION = "POST_EXECUTION"
+ATTESTATION_PHASES = frozenset({PRE_EXECUTION, POST_EXECUTION})
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _IMAGE_DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 
@@ -34,12 +46,12 @@ class AttestationContractError(ValueError):
 
 @dataclass(frozen=True)
 class AttestationExpectation:
-    """Exact non-secret values frozen before a candidate attestation is accepted."""
+    """Exact non-secret values frozen before one attestation is accepted."""
 
+    phase: str
     audience: str
     image_digest: str
-    authorization_consumption_sha256: str
-    output_manifest_sha256: str
+    binding_sha256: str
     expected_args: tuple[str, ...]
     expected_env: Mapping[str, str]
     expected_cmd_override: tuple[str, ...] = ()
@@ -93,15 +105,25 @@ def _nonce_values(value: Any) -> tuple[str, ...]:
     return values
 
 
+def _runtime_identity_sha256(runtime_identity: Mapping[str, Any]) -> str:
+    encoded = json.dumps(
+        runtime_identity,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def verify_confidential_space_attestation(
     claims: Mapping[str, Any],
     expectation: AttestationExpectation,
     token_context: VerifiedTokenContext,
 ) -> dict[str, Any]:
-    """Verify the exact DGAF Mode-T Confidential Space claim contract.
+    """Verify one exact DGAF Mode-T Confidential Space attestation phase.
 
-    Returns a normalized non-secret evidence dictionary on success. Any missing,
-    malformed, unexpected, stale, or mismatched security-critical value raises
+    Returns normalized non-secret evidence on success. Any missing, malformed,
+    stale, or mismatched security-critical value raises
     ``AttestationContractError``.
     """
 
@@ -113,6 +135,10 @@ def verify_confidential_space_attestation(
     now = _integer(token_context.verified_at_unix, "verified_at_unix")
 
     _require(
+        expectation.phase in ATTESTATION_PHASES,
+        "attestation phase must be PRE_EXECUTION or POST_EXECUTION",
+    )
+    _require(
         isinstance(expectation.audience, str) and bool(expectation.audience),
         "attestation audience must be non-empty",
     )
@@ -121,22 +147,30 @@ def verify_confidential_space_attestation(
         and _IMAGE_DIGEST_RE.fullmatch(expectation.image_digest) is not None,
         "image_digest must be sha256:<lowercase-hex>",
     )
-    _sha256(
-        expectation.authorization_consumption_sha256,
-        "authorization_consumption_sha256",
-    )
-    _sha256(expectation.output_manifest_sha256, "output_manifest_sha256")
+    binding_sha256 = _sha256(expectation.binding_sha256, "binding_sha256")
     _require(
         expectation.max_clock_skew_seconds >= 0,
         "max_clock_skew_seconds must be non-negative",
     )
 
     root = _mapping(claims, "claims")
-    _require(root.get("iss") == GOOGLE_CLOUD_ATTESTATION_ISSUER, "unexpected attestation issuer")
+    _require(
+        root.get("iss") == GOOGLE_CLOUD_ATTESTATION_ISSUER,
+        "unexpected attestation issuer",
+    )
     _require(root.get("aud") == expectation.audience, "attestation audience mismatch")
-    _require(root.get("swname") == CONFIDENTIAL_SPACE_SWNAME, "software identity is not CONFIDENTIAL_SPACE")
-    _require(root.get("hwmodel") == REQUIRED_HARDWARE_MODEL, "hardware model is not GCP_INTEL_TDX")
-    _require(root.get("attester_tcb") == list(REQUIRED_ATTESTER_TCB), "TDX attester_tcb must be exactly ['INTEL']")
+    _require(
+        root.get("swname") == CONFIDENTIAL_SPACE_SWNAME,
+        "software identity is not CONFIDENTIAL_SPACE",
+    )
+    _require(
+        root.get("hwmodel") == REQUIRED_HARDWARE_MODEL,
+        "hardware model is not GCP_INTEL_TDX",
+    )
+    _require(
+        root.get("attester_tcb") == list(REQUIRED_ATTESTER_TCB),
+        "TDX attester_tcb must be exactly ['INTEL']",
+    )
     _require(root.get("secboot") is True, "secure boot is not attested true")
     _require(
         root.get("dbgstat") == REQUIRED_DEBUG_STATUS,
@@ -220,17 +254,10 @@ def verify_confidential_space_attestation(
     _require(len(env_override) == 0, "environment overrides are not permitted")
 
     nonces = _nonce_values(root.get("eat_nonce"))
-    _require(len(nonces) == 2, "exactly two attestation nonces are required")
-    _require(len(set(nonces)) == 2, "attestation nonces must be unique")
-    expected_nonces = {
-        expectation.authorization_consumption_sha256,
-        expectation.output_manifest_sha256,
-    }
-    _require(set(nonces) == expected_nonces, "attestation nonce binding mismatch")
+    _require(len(nonces) == 1, "exactly one phase-specific attestation nonce is required")
+    _require(nonces[0] == binding_sha256, "attestation nonce binding mismatch")
 
-    return {
-        "attestation_contract": "PASS",
-        "issuer": GOOGLE_CLOUD_ATTESTATION_ISSUER,
+    runtime_identity = {
         "audience": expectation.audience,
         "software_identity": CONFIDENTIAL_SPACE_SWNAME,
         "hardware_model": REQUIRED_HARDWARE_MODEL,
@@ -241,12 +268,89 @@ def verify_confidential_space_attestation(
         "memory_monitoring": False,
         "image_digest": expectation.image_digest,
         "container_args": list(expectation.expected_args),
+        "command_override": list(expectation.expected_cmd_override),
+        "environment": dict(expectation.expected_env),
+        "environment_override": {},
         "restart_policy": REQUIRED_RESTART_POLICY,
-        "authorization_consumption_sha256": expectation.authorization_consumption_sha256,
-        "output_manifest_sha256": expectation.output_manifest_sha256,
+    }
+    runtime_identity_sha256 = _runtime_identity_sha256(runtime_identity)
+
+    result = {
+        "attestation_contract": "PASS",
+        "attestation_phase": expectation.phase,
+        "issuer": GOOGLE_CLOUD_ATTESTATION_ISSUER,
+        "runtime_identity": runtime_identity,
+        "runtime_identity_sha256": runtime_identity_sha256,
+        "binding_sha256": binding_sha256,
         "token_sha256": token_sha256,
         "signature_verified": True,
+        "issued_at_unix": iat,
         "verified_at_unix": now,
+        "authorization_consumption_sha256": None,
+        "output_manifest_sha256": None,
+        "freeze_established": False,
+        "pilot_authorized": False,
+        "empirical_data_collection": False,
+        "empirical_n": 0,
+    }
+    if expectation.phase == PRE_EXECUTION:
+        result["authorization_consumption_sha256"] = binding_sha256
+    else:
+        result["output_manifest_sha256"] = binding_sha256
+    return result
+
+
+def verify_two_phase_attestation_binding(
+    pre_execution: Mapping[str, Any],
+    post_execution: Mapping[str, Any],
+    *,
+    authorization_consumption_sha256: str,
+    output_manifest_sha256: str,
+) -> dict[str, Any]:
+    """Bind two independently verified tokens to one admitted runtime lineage."""
+
+    expected_c = _sha256(
+        authorization_consumption_sha256,
+        "authorization_consumption_sha256",
+    )
+    expected_manifest = _sha256(output_manifest_sha256, "output_manifest_sha256")
+
+    pre = _mapping(pre_execution, "pre_execution")
+    post = _mapping(post_execution, "post_execution")
+    _require(pre.get("attestation_contract") == "PASS", "pre-execution attestation is not PASS")
+    _require(post.get("attestation_contract") == "PASS", "post-execution attestation is not PASS")
+    _require(pre.get("signature_verified") is True, "pre-execution signature is not verified")
+    _require(post.get("signature_verified") is True, "post-execution signature is not verified")
+    _require(pre.get("attestation_phase") == PRE_EXECUTION, "first token is not PRE_EXECUTION")
+    _require(post.get("attestation_phase") == POST_EXECUTION, "second token is not POST_EXECUTION")
+    _require(
+        pre.get("authorization_consumption_sha256") == expected_c,
+        "pre-execution C binding mismatch",
+    )
+    _require(
+        post.get("output_manifest_sha256") == expected_manifest,
+        "post-execution manifest binding mismatch",
+    )
+    _require(
+        pre.get("runtime_identity_sha256") == post.get("runtime_identity_sha256"),
+        "pre/post runtime identity mismatch",
+    )
+
+    pre_token = _sha256(pre.get("token_sha256"), "pre token_sha256")
+    post_token = _sha256(post.get("token_sha256"), "post token_sha256")
+    _require(pre_token != post_token, "pre/post attestation tokens must be distinct")
+
+    pre_iat = _integer(pre.get("issued_at_unix"), "pre issued_at_unix")
+    post_iat = _integer(post.get("issued_at_unix"), "post issued_at_unix")
+    _require(post_iat >= pre_iat, "post-execution token predates pre-execution token")
+
+    return {
+        "two_phase_attestation_binding": "PASS",
+        "runtime_identity_sha256": pre.get("runtime_identity_sha256"),
+        "authorization_consumption_sha256": expected_c,
+        "output_manifest_sha256": expected_manifest,
+        "pre_execution_token_sha256": pre_token,
+        "post_execution_token_sha256": post_token,
         "freeze_established": False,
         "pilot_authorized": False,
         "empirical_data_collection": False,
