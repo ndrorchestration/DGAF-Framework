@@ -123,9 +123,10 @@ jobs:
             printf 'goamd64=%s\n' "$GOAMD64"
             printf 'cgo_enabled=%s\n' "$CGO_ENABLED"
             printf 'expected_reference_binary_sha256=%s\n' "$EXPECTED_REFERENCE_BINARY_SHA256"
-            printf 'protected_material_included=false\n'
-            printf 'ciphertext_included=false\n'
-            printf 'empirical_data_included=false\n'
+            printf 'dgaf_protected_material_included=false\n'
+            printf 'dgaf_protected_ciphertext_included=false\n'
+            printf 'dgaf_empirical_data_included=false\n'
+            printf 'public_toolchain_dependency_test_fixtures_may_be_included=true\n'
             printf 'freeze_established=false\n'
             printf 'pilot_authorized=false\n'
             printf 'empirical_n=0\n'
