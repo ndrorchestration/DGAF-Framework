@@ -2,7 +2,7 @@
 
 ## Status
 
-**OFFLINE SYNTHETIC VERIFICATION ONLY / NOT CUSTODY / NOT AUTHORIZATION**
+Status: **OFFLINE SYNTHETIC VERIFICATION ONLY / NOT CUSTODY / NOT AUTHORIZATION**
 
 Scientific boundary remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**.
 
@@ -25,4 +25,4 @@ This is evidence only for ordering and fail-closed behavior at the verifier meta
 
 Successful CI does not close Issue #295 by itself. Remaining integrated acceptance work includes final ciphertext/commitment binding, broader leakage review, final exact-run provenance, accepted P6/transparency retention, and independent final review.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
+Scientific posture: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
