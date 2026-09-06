@@ -2,11 +2,11 @@
 
 ## Status
 
-**DESIGN / SYNTHETIC ENGINEERING EVIDENCE ONLY / NOT CUSTODY / NOT AUTHORIZATION**
+Status: **DESIGN / SYNTHETIC ENGINEERING EVIDENCE ONLY / NOT CUSTODY / NOT AUTHORIZATION**
 
 Scientific boundary remains:
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0**.
+Scientific posture: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0**.
 
 ## Purpose
 
@@ -86,4 +86,4 @@ Cross-runner byte identity under GitHub-hosted Ubuntu families remains separate 
 
 This work does not establish Mode-T custody sufficiency, select analysis-lock window `W`, create a freeze, grant pilot authorization, execute PDMAL empirical work, unblind protected material, establish DGAF efficacy, or increase empirical N.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
+Scientific posture: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
