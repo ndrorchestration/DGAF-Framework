@@ -3,7 +3,7 @@
 This module removes caller-asserted cryptographic booleans from the active retention
 path. Its public entry point verifies an existing artifact+standardized Sigstore bundle
 with the exact reviewed Cosign v3.1.3 Linux/amd64 binary identity and the exact
-certificate identity/OIDC issuer already fixed by the retention expectation.
+certificate/GitHub-workflow identity already fixed by the retention expectation.
 
 It never signs, requests OIDC, uploads to Rekor, or writes external evidence. A PASS
 is cryptographic standardized-bundle/inclusion verification only; it does not prove a
@@ -26,6 +26,8 @@ import subprocess
 from typing import Any, Mapping
 
 from mode_t_retention_contract import (
+    EXPECTED_GITHUB_WORKFLOW_REF,
+    EXPECTED_GITHUB_WORKFLOW_REPOSITORY,
     EXPECTED_OIDC_ISSUER,
     TransparencyExpectation,
     VerifiedTransparencyContext,
@@ -97,14 +99,26 @@ def _run_cosign_verify(
     cosign: Path,
     artifact: Path,
     bundle: Path,
-    certificate_identity: str,
+    expectation: TransparencyExpectation,
     timeout_seconds: int,
 ) -> None:
     _require(timeout_seconds > 0, "timeout_seconds must be positive")
     _require(cosign.is_file(), "Cosign executable is missing")
     _require(artifact.is_file(), "artifact is missing")
     _require(bundle.is_file(), "Sigstore bundle is missing")
-    _require(bool(certificate_identity), "certificate identity must be non-empty")
+    _require(bool(expectation.certificate_identity), "certificate identity must be non-empty")
+    _require(
+        expectation.oidc_issuer == EXPECTED_OIDC_ISSUER,
+        "unexpected certificate OIDC issuer expectation",
+    )
+    _require(
+        expectation.github_workflow_repository == EXPECTED_GITHUB_WORKFLOW_REPOSITORY,
+        "unexpected GitHub workflow repository expectation",
+    )
+    _require(
+        expectation.github_workflow_ref == EXPECTED_GITHUB_WORKFLOW_REF,
+        "unexpected GitHub workflow ref expectation",
+    )
 
     command = [
         str(cosign),
@@ -112,9 +126,15 @@ def _run_cosign_verify(
         "--bundle",
         str(bundle),
         "--certificate-identity",
-        certificate_identity,
+        expectation.certificate_identity,
         "--certificate-oidc-issuer",
         EXPECTED_OIDC_ISSUER,
+        "--certificate-github-workflow-sha",
+        expectation.github_workflow_sha,
+        "--certificate-github-workflow-repository",
+        EXPECTED_GITHUB_WORKFLOW_REPOSITORY,
+        "--certificate-github-workflow-ref",
+        EXPECTED_GITHUB_WORKFLOW_REF,
         str(artifact),
     ]
     try:
@@ -174,7 +194,7 @@ def _normalize_verified_bundle(
     *,
     artifact: Path,
     bundle: Path,
-    certificate_identity: str,
+    expectation: TransparencyExpectation,
 ) -> VerifiedTransparencyContext:
     """Parse metadata only after the private Cosign verification step has succeeded."""
     artifact_sha = sha256_file(artifact)
@@ -214,8 +234,11 @@ def _normalize_verified_bundle(
         log_index=log_index,
         integrated_time_unix=integrated_time,
         verified_record_sha256=artifact_sha,
-        certificate_identity=certificate_identity,
+        certificate_identity=expectation.certificate_identity,
         oidc_issuer=EXPECTED_OIDC_ISSUER,
+        github_workflow_sha=expectation.github_workflow_sha,
+        github_workflow_repository=EXPECTED_GITHUB_WORKFLOW_REPOSITORY,
+        github_workflow_ref=EXPECTED_GITHUB_WORKFLOW_REF,
     )
 
 
@@ -229,22 +252,18 @@ def verify_retention_record_with_sigstore(
 ) -> VerifiedSigstoreRetention:
     """Cryptographically verify one predeclared DGAF retention record, read-only."""
     _require(isinstance(expectation, TransparencyExpectation), "expectation has wrong type")
-    _require(
-        expectation.oidc_issuer == EXPECTED_OIDC_ISSUER,
-        "unexpected certificate OIDC issuer expectation",
-    )
     cosign_sha = _verify_cosign_binary(cosign)
     _run_cosign_verify(
         cosign=cosign,
         artifact=artifact,
         bundle=bundle,
-        certificate_identity=expectation.certificate_identity,
+        expectation=expectation,
         timeout_seconds=timeout_seconds,
     )
     context = _normalize_verified_bundle(
         artifact=artifact,
         bundle=bundle,
-        certificate_identity=expectation.certificate_identity,
+        expectation=expectation,
     )
     retention = verify_transparency_inclusion(expectation, context)
     return VerifiedSigstoreRetention(
@@ -270,6 +289,9 @@ def retention_safe_evidence(verified: VerifiedSigstoreRetention) -> dict[str, An
         "verified_record_sha256": context.verified_record_sha256,
         "certificate_identity": context.certificate_identity,
         "certificate_oidc_issuer": context.oidc_issuer,
+        "github_workflow_sha": context.github_workflow_sha,
+        "github_workflow_repository": context.github_workflow_repository,
+        "github_workflow_ref": context.github_workflow_ref,
         "transparency_log_id_key_id": context.log_id_key_id,
         "log_index": context.log_index,
         "integrated_time_unix_metadata_only": context.integrated_time_unix,
