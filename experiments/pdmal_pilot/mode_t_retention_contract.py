@@ -6,9 +6,10 @@ specific public record is signed and included under an expected identity, but Re
 ``integratedTime`` is not treated as an independently verifiable wall-clock proof.
 
 The module consumes already-verified, non-secret external evidence metadata; it is not
-itself a Sigstore cryptographic verifier or time authority. Therefore a PASS here does
-not establish real P6 retention, L-before-release ordering, P4, freeze, authorization,
-or empirical execution.
+itself a Sigstore cryptographic verifier or time authority. The sibling
+``mode_t_sigstore_verifier`` module supplies the cryptographic boundary for the active
+retention lane. A PASS here still does not establish real P6 retention,
+L-before-release ordering, P4, freeze, authorization, or empirical execution.
 """
 from __future__ import annotations
 
@@ -64,6 +65,11 @@ class TransparencyExpectation:
 class VerifiedTransparencyContext:
     """Normalized result from a separate Sigstore-capable cryptographic verifier.
 
+    ``log_id_key_id`` is the transparency log's key identity from Sigstore's
+    ``LogId.keyId`` field. It is deliberately not called an entry UUID: standardized
+    Sigstore bundles identify an entry by log identity plus log index rather than a
+    Rekor-entry UUID field.
+
     ``integrated_time_unix`` is retained as log metadata only. It is never accepted
     as independent temporal proof by this contract.
     """
@@ -74,7 +80,7 @@ class VerifiedTransparencyContext:
     transparency_inclusion_verified: bool
     signed_entry_timestamp_verified: bool
     bundle_sha256: str
-    log_entry_uuid: str
+    log_id_key_id: str
     log_index: int
     integrated_time_unix: int | None
     verified_record_sha256: str
@@ -105,7 +111,10 @@ def verify_transparency_inclusion(
     _require(verified_record == expected_record, "verified record digest mismatch")
     _require(context.certificate_identity == expected_identity, "certificate identity mismatch")
     _require(context.oidc_issuer == expectation.oidc_issuer, "certificate OIDC issuer mismatch")
-    _require(isinstance(context.log_entry_uuid, str) and bool(context.log_entry_uuid), "log entry UUID missing")
+    _require(
+        isinstance(context.log_id_key_id, str) and bool(context.log_id_key_id),
+        "transparency log key identity missing",
+    )
     _require(
         isinstance(context.log_index, int)
         and not isinstance(context.log_index, bool)
@@ -125,7 +134,7 @@ def verify_transparency_inclusion(
         "record_type": expectation.record_type,
         "record_sha256": expected_record,
         "bundle_sha256": bundle_sha,
-        "log_entry_uuid": context.log_entry_uuid,
+        "log_id_key_id": context.log_id_key_id,
         "log_index": context.log_index,
         "certificate_identity": expected_identity,
         "oidc_issuer": expectation.oidc_issuer,
