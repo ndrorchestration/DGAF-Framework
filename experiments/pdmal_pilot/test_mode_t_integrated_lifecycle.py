@@ -24,7 +24,6 @@ from mode_t_inprocess_key import (
     ModeTKeyError,
     acquire_mode_t_key_synthetic_from_verified,
     admit_and_acquire_mode_t_key,
-    admit_and_acquire_mode_t_key_synthetic,
 )
 from mode_t_integrated_lifecycle import (
     ModeTLifecycleError,
@@ -35,6 +34,9 @@ from mode_t_integrated_lifecycle import (
     finalize_two_phase_lifecycle,
     make_synthetic_authorization,
     make_synthetic_reservation,
+)
+from mode_t_policy_bound_key import (
+    admit_and_acquire_mode_t_key_synthetic_from_consumption,
 )
 from test_mode_t_google_oidc_verifier import (
     AUDIENCE,
@@ -126,11 +128,21 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         )
         return verified, admission
 
-    def synthetic_acquisition(self, c_sha: str, *, verifier=None, environment=None):
+    def synthetic_acquisition(
+        self,
+        consumption,
+        *,
+        verifier=None,
+        environment=None,
+        expectation_override: AttestationExpectation | None = None,
+    ):
         verifier = verifier or self.verifier()
-        return admit_and_acquire_mode_t_key_synthetic(
+        c_sha = consumption["consumption_evidence_sha256"]
+        expected = expectation_override or expectation(phase=PRE_EXECUTION, binding=c_sha)
+        return admit_and_acquire_mode_t_key_synthetic_from_consumption(
             self.pre_token(c_sha),
-            expectation(phase=PRE_EXECUTION, binding=c_sha),
+            expected,
+            consumption,
             verifier=verifier,
             environment={} if environment is None else environment,
             verified_at_unix=NOW,
@@ -177,7 +189,7 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         self.assertFalse(policy_binding["pilot_authorized"])
 
         verifier = self.verifier()
-        acquisition = self.synthetic_acquisition(c_sha, verifier=verifier)
+        acquisition = self.synthetic_acquisition(consumption, verifier=verifier)
         pre = acquisition.pre_execution
         lease = acquisition.lease
         with lease:
@@ -227,7 +239,7 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
                 reservation, authorization
             )
 
-    def test_consumed_policy_rejects_alternate_valid_expectation_before_key(self) -> None:
+    def test_policy_bound_key_bridge_rejects_alternate_valid_expectation(self) -> None:
         reservation, authorization, ledger = self.new_records("A-policy-substitution")
         consumption = ledger.consume(reservation, authorization)
         c_sha = consumption["consumption_evidence_sha256"]
@@ -236,7 +248,28 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
             subject=SUBJECT + "-alternate",
         )
         with self.assertRaisesRegex(AdmissionPolicyError, "different admission policy"):
-            verify_synthetic_consumption_policy_binding(consumption, alternate)
+            self.synthetic_acquisition(
+                consumption,
+                expectation_override=alternate,
+            )
+
+    def test_policy_bound_key_bridge_rejects_wrong_pre_C_binding(self) -> None:
+        reservation, authorization, ledger = self.new_records("A-wrong-C-binding")
+        consumption = ledger.consume(reservation, authorization)
+        wrong = expectation(phase=PRE_EXECUTION, binding="9" * 64)
+        with self.assertRaisesRegex(AdmissionPolicyError, "exact synthetic C"):
+            self.synthetic_acquisition(
+                consumption,
+                expectation_override=wrong,
+            )
+
+    def test_policy_bound_key_bridge_rejects_tampered_C_seal(self) -> None:
+        reservation, authorization, ledger = self.new_records("A-tampered-C")
+        consumption = ledger.consume(reservation, authorization)
+        tampered = copy.deepcopy(consumption)
+        tampered["admission_policy_sha256"] = "9" * 64
+        with self.assertRaisesRegex(AdmissionPolicyError, "does not match C record"):
+            self.synthetic_acquisition(tampered)
 
     def test_crash_after_C_before_pre_attestation_cannot_retry(self) -> None:
         reservation, authorization, ledger = self.new_records("A-crash-after-C")
@@ -258,7 +291,7 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
     def test_crash_after_key_generation_zeroizes_and_cannot_retry(self) -> None:
         reservation, authorization, ledger = self.new_records("A-crash-after-key")
         consumption = ledger.consume(reservation, authorization)
-        acquisition = self.synthetic_acquisition(consumption["consumption_evidence_sha256"])
+        acquisition = self.synthetic_acquisition(consumption)
         with self.assertRaises(SyntheticCrash):
             with acquisition.lease:
                 raise SyntheticCrash("simulated crash after key generation")
@@ -271,7 +304,7 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
     def test_crash_after_blinded_output_before_post_attestation_cannot_retry(self) -> None:
         reservation, authorization, ledger = self.new_records("A-crash-after-output")
         consumption = ledger.consume(reservation, authorization)
-        acquisition = self.synthetic_acquisition(consumption["consumption_evidence_sha256"])
+        acquisition = self.synthetic_acquisition(consumption)
         with acquisition.lease as lease:
             blinded = build_synthetic_blinded_artifact(lease, ["one", "two"])
         self.assertEqual(blinded["empirical_n"], 0)
@@ -334,7 +367,7 @@ class IntegratedModeTLifecycleTests(unittest.TestCase):
         consumption = ledger.consume(reservation, authorization)
         with self.assertRaises(ModeTKeyError):
             self.synthetic_acquisition(
-                consumption["consumption_evidence_sha256"],
+                consumption,
                 environment={"PDMAL_BLINDING_KEY": "forbidden"},
             )
 
