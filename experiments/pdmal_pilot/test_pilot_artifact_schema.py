@@ -4,11 +4,17 @@ import hashlib
 
 import pytest
 
-from pilot_artifact_schema import canonical_json_bytes, validate_artifact
+from pilot_artifact_schema import ARTIFACT_SCHEMA_VERSION, canonical_json_bytes, validate_artifact
 
 TOPOLOGIES = ("ring", "pdmal", "random_regular", "small_world", "complete")
 FAILURES = (0, 1, 2, 3, 4, 5, 6, 8, 10)
 CONDITIONS = ("blind_a", "blind_b", "blind_c", "blind_d")
+
+
+def _rehash(record: dict) -> None:
+    record["artifact_sha256"] = hashlib.sha256(
+        canonical_json_bytes({k: v for k, v in record.items() if k != "artifact_sha256"})
+    ).hexdigest()
 
 
 def _record(condition: str, trial_id: int, topology: str, failure_count: int) -> dict:
@@ -26,13 +32,12 @@ def _record(condition: str, trial_id: int, topology: str, failure_count: int) ->
         "failure": failure_count > 0,
         "recovery": failure_count > 0,
         "ffcr_success": True,
-        "runtime_ms": 1,
         "status": "RECOVERED" if failure_count > 0 else "SUCCESS",
         "excluded": False,
         "exclusion_reason": None,
         "environment_fingerprint": "env",
     }
-    record["artifact_sha256"] = hashlib.sha256(canonical_json_bytes(record)).hexdigest()
+    _rehash(record)
     return record
 
 
@@ -45,7 +50,7 @@ def _document() -> dict:
                 records.append(_record(condition, trial_id, topology, failure_count))
                 trial_id += 1
     return {
-        "schema_version": "1.0",
+        "schema_version": ARTIFACT_SCHEMA_VERSION,
         "artifact_version": "seed-20260819",
         "protocol_status": "FROZEN",
         "empirical_data_collection": True,
@@ -57,6 +62,7 @@ def _document() -> dict:
 
 
 def test_valid_complete_artifact_passes() -> None:
+    assert ARTIFACT_SCHEMA_VERSION == "1.1"
     validate_artifact(_document(), expected_seed=20260819)
 
 
@@ -73,9 +79,7 @@ def test_duplicate_matrix_cell_is_rejected() -> None:
     document = _document()
     duplicate = dict(document["records"][0])
     duplicate["trial_id"] = document["records"][-1]["trial_id"]
-    duplicate["artifact_sha256"] = hashlib.sha256(
-        canonical_json_bytes({k: v for k, v in duplicate.items() if k != "artifact_sha256"})
-    ).hexdigest()
+    _rehash(duplicate)
     document["records"][-1] = duplicate
     with pytest.raises(AssertionError, match="duplicate pilot matrix cell"):
         validate_artifact(document, expected_seed=20260819)
@@ -85,9 +89,7 @@ def test_condition_distribution_must_be_balanced() -> None:
     document = _document()
     for record in document["records"][45:90]:
         record["blinded_condition_id"] = "blind_a"
-        record["artifact_sha256"] = hashlib.sha256(
-            canonical_json_bytes({k: v for k, v in record.items() if k != "artifact_sha256"})
-        ).hexdigest()
+        _rehash(record)
     with pytest.raises(AssertionError):
         validate_artifact(document, expected_seed=20260819)
 
@@ -95,9 +97,7 @@ def test_condition_distribution_must_be_balanced() -> None:
 def test_record_commit_must_match_document_commit() -> None:
     document = _document()
     document["records"][0]["experiment_commit_sha"] = "b" * 40
-    document["records"][0]["artifact_sha256"] = hashlib.sha256(
-        canonical_json_bytes({k: v for k, v in document["records"][0].items() if k != "artifact_sha256"})
-    ).hexdigest()
+    _rehash(document["records"][0])
     with pytest.raises(AssertionError, match="experiment_commit_sha"):
         validate_artifact(document, expected_seed=20260819)
 
@@ -106,8 +106,26 @@ def test_recovered_record_requires_recovery_flag() -> None:
     document = _document()
     record = document["records"][1]
     record["recovery"] = False
-    record["artifact_sha256"] = hashlib.sha256(
-        canonical_json_bytes({k: v for k, v in record.items() if k != "artifact_sha256"})
-    ).hexdigest()
+    _rehash(record)
     with pytest.raises(AssertionError, match="RECOVERED records require recovery=true"):
+        validate_artifact(document, expected_seed=20260819)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("governance_trace", [{"decision": "PASS"}]),
+    ("runtime_ms", 123),
+    ("condition", "dgaf"),
+])
+def test_unexpected_condition_identifying_record_fields_are_rejected(field: str, value: object) -> None:
+    document = _document()
+    document["records"][0][field] = value
+    _rehash(document["records"][0])
+    with pytest.raises(AssertionError, match="unexpected record fields"):
+        validate_artifact(document, expected_seed=20260819)
+
+
+def test_unexpected_document_field_is_rejected() -> None:
+    document = _document()
+    document["condition_mapping"] = {"blind_a": "dgaf"}
+    with pytest.raises(AssertionError, match="unexpected fields"):
         validate_artifact(document, expected_seed=20260819)
