@@ -41,7 +41,9 @@ For one expected public record it requires normalized evidence that:
 - transparency inclusion is verified;
 - signed-entry timestamp signature is verified;
 - verified record SHA-256 equals the exact expected public-record digest;
-- bundle SHA-256, log UUID, and non-negative log index are retained.
+- bundle SHA-256, Sigstore `LogId.keyId`, and non-negative log index are retained.
+
+`LogId.keyId` identifies the transparency log key. It is **not** labeled or treated as a Rekor entry UUID. The normalized field is therefore `log_id_key_id`; an individual entry remains identified within that log by its verified bundle context and log index.
 
 Accepted record classes are restricted to:
 
