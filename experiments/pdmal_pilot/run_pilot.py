@@ -27,7 +27,7 @@ from topology_utils import graph_fingerprint
 SUPPORTED_MODES = {"contract", "pilot"}
 CONTRACT_ROOT_SEEDS = (20260817, 20260818)
 FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
-PROTOCOL_VERSION = "0.7.5"
+PROTOCOL_VERSION = "0.7.6"
 TRIAL_ORDER_DOMAIN = b"PDMAL-BLINDED-TRIAL-ORDER-v1"
 
 
@@ -91,9 +91,7 @@ def _trial_order_token(
     """Return a domain-separated secret ordering token for one matrix cell."""
     if not key:
         raise ValueError("blinded trial ordering requires a non-empty protected key")
-    payload = (
-        f"{seed}|{topology}|{condition}|{failure_count}".encode("utf-8")
-    )
+    payload = f"{seed}|{topology}|{condition}|{failure_count}".encode("utf-8")
     return hmac.new(
         key.encode("utf-8"), TRIAL_ORDER_DOMAIN + b"|" + payload, hashlib.sha256
     ).digest()
@@ -102,7 +100,7 @@ def _trial_order_token(
 def blinded_trial_schedule(*, seed: int, key: str) -> list[tuple[str, str, int]]:
     """Construct the exact matrix in a protected, reproducible per-seed order.
 
-    Public root-seed information alone must not reveal condition position.  The
+    Public root-seed information alone must not reveal condition position. The
     schedule becomes independently reconstructible only after release of the
     protected blinding material.
     """
