@@ -2,7 +2,7 @@
 
 ## Status
 
-**ACTIVE GOVERNANCE POLICY / PRE-MERGE SYNTAX CONTROL / NOT REPOSITORY-ADMIN PREVENTIVE ENFORCEMENT**
+Status: **ACTIVE GOVERNANCE POLICY / PRE-MERGE SYNTAX CONTROL / NOT REPOSITORY-ADMIN PREVENTIVE ENFORCEMENT**
 
 DGAF treats issue state as governance data. A pull-request description must not accidentally mutate a high-stakes issue merely because GitHub recognizes state-transition syntax.
 
