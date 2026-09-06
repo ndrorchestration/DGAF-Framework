@@ -18,6 +18,7 @@ import re
 from typing import Any, Mapping
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 _ALLOWED_RECORD_TYPES = frozenset(
     {
         "PDMAL_MODE_T_RUN_RESERVATION",
@@ -27,6 +28,8 @@ _ALLOWED_RECORD_TYPES = frozenset(
     }
 )
 EXPECTED_OIDC_ISSUER = "https://token.actions.githubusercontent.com"
+EXPECTED_GITHUB_WORKFLOW_REPOSITORY = "ndrorchestration/DGAF-Framework"
+EXPECTED_GITHUB_WORKFLOW_REF = "refs/heads/main"
 
 
 class RetentionContractError(ValueError):
@@ -46,6 +49,14 @@ def _sha(value: Any, label: str) -> str:
     return value
 
 
+def _commit(value: Any, label: str) -> str:
+    _require(
+        isinstance(value, str) and _COMMIT_RE.fullmatch(value) is not None,
+        f"{label} must be a full lowercase 40-character commit SHA",
+    )
+    return value
+
+
 def _string(value: Any, label: str) -> str:
     _require(isinstance(value, str) and bool(value), f"{label} must be non-empty")
     return value
@@ -53,12 +64,15 @@ def _string(value: Any, label: str) -> str:
 
 @dataclass(frozen=True)
 class TransparencyExpectation:
-    """Exact public record and identity values fixed before evidence acceptance."""
+    """Exact public record and signing-workflow identity fixed before acceptance."""
 
     record_type: str
     record_sha256: str
     certificate_identity: str
+    github_workflow_sha: str
     oidc_issuer: str = EXPECTED_OIDC_ISSUER
+    github_workflow_repository: str = EXPECTED_GITHUB_WORKFLOW_REPOSITORY
+    github_workflow_ref: str = EXPECTED_GITHUB_WORKFLOW_REF
 
 
 @dataclass(frozen=True)
@@ -69,6 +83,9 @@ class VerifiedTransparencyContext:
     ``LogId.keyId`` field. It is deliberately not called an entry UUID: standardized
     Sigstore bundles identify an entry by log identity plus log index rather than a
     Rekor-entry UUID field.
+
+    The GitHub workflow SHA/repository/ref values correspond to certificate claims
+    explicitly constrained by the Sigstore verifier, not record-body assertions.
 
     ``integrated_time_unix`` is retained as log metadata only. It is never accepted
     as independent temporal proof by this contract.
@@ -86,6 +103,9 @@ class VerifiedTransparencyContext:
     verified_record_sha256: str
     certificate_identity: str
     oidc_issuer: str
+    github_workflow_sha: str
+    github_workflow_repository: str
+    github_workflow_ref: str
 
 
 def verify_transparency_inclusion(
@@ -96,9 +116,21 @@ def verify_transparency_inclusion(
     _require(expectation.record_type in _ALLOWED_RECORD_TYPES, "unsupported Mode-T record type")
     expected_record = _sha(expectation.record_sha256, "expected record SHA-256")
     expected_identity = _string(expectation.certificate_identity, "expected certificate identity")
+    expected_workflow_sha = _commit(
+        expectation.github_workflow_sha,
+        "expected GitHub workflow SHA",
+    )
     _require(
         expectation.oidc_issuer == EXPECTED_OIDC_ISSUER,
         "unexpected transparency signing OIDC issuer expectation",
+    )
+    _require(
+        expectation.github_workflow_repository == EXPECTED_GITHUB_WORKFLOW_REPOSITORY,
+        "unexpected GitHub workflow repository expectation",
+    )
+    _require(
+        expectation.github_workflow_ref == EXPECTED_GITHUB_WORKFLOW_REF,
+        "unexpected GitHub workflow ref expectation",
     )
 
     _require(context.signature_verified is True, "artifact signature is not verified")
@@ -111,6 +143,19 @@ def verify_transparency_inclusion(
     _require(verified_record == expected_record, "verified record digest mismatch")
     _require(context.certificate_identity == expected_identity, "certificate identity mismatch")
     _require(context.oidc_issuer == expectation.oidc_issuer, "certificate OIDC issuer mismatch")
+    _require(
+        _commit(context.github_workflow_sha, "verified GitHub workflow SHA")
+        == expected_workflow_sha,
+        "GitHub workflow SHA mismatch",
+    )
+    _require(
+        context.github_workflow_repository == expectation.github_workflow_repository,
+        "GitHub workflow repository mismatch",
+    )
+    _require(
+        context.github_workflow_ref == expectation.github_workflow_ref,
+        "GitHub workflow ref mismatch",
+    )
     _require(
         isinstance(context.log_id_key_id, str) and bool(context.log_id_key_id),
         "transparency log key identity missing",
@@ -138,6 +183,9 @@ def verify_transparency_inclusion(
         "log_index": context.log_index,
         "certificate_identity": expected_identity,
         "oidc_issuer": expectation.oidc_issuer,
+        "github_workflow_sha": expected_workflow_sha,
+        "github_workflow_repository": expectation.github_workflow_repository,
+        "github_workflow_ref": expectation.github_workflow_ref,
         "signature_verified": True,
         "certificate_chain_verified": True,
         "transparency_inclusion_verified": True,
