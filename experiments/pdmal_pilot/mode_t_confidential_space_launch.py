@@ -4,6 +4,11 @@ This validates a *planned* Google Confidential Space launch configuration before
 cloud action occurs. It does not call GCP, build an image, create a VM, grant access,
 or establish P4. The real admission must later reconcile these declared values with
 independently verified attestation claims.
+
+The launch-contract digest is deliberately not an admission-policy or authorization
+digest. Google attestation includes an exact VM subject/selfLink that is only resolved
+for the created instance, and DGAF still requires the final attestation expectation to
+be bound through independently retained R/A/C evidence (tracked by #316).
 """
 from __future__ import annotations
 
@@ -22,6 +27,7 @@ REQUIRED_IMAGE_FAMILY = "confidential-space"
 REQUIRED_COMPUTE_TYPE = "TDX"
 REQUIRED_MAINTENANCE_POLICY = "TERMINATE"
 REQUIRED_RESTART_POLICY = "Never"
+POLICY_BINDING_ISSUE = 316
 
 REQUIRED_LAUNCH_POLICIES = {
     "tee.launch_policy.allow_capabilities": "false",
@@ -155,6 +161,13 @@ def validate_launch_contract(config: Mapping[str, Any]) -> dict[str, Any]:
         "launch_contract": "PASS_PREDECLARED_ONLY",
         "launch_contract_sha256": canonical_sha256(normalized),
         "normalized_launch": normalized,
+        # Deliberately fail closed on interpreting prelaunch validation as an
+        # authorization-complete attestation policy. The exact created-instance
+        # subject and independently retained R/A/C policy binding remain unresolved.
+        "authorization_policy_complete": False,
+        "admission_policy_sha256": None,
+        "instance_subject_resolved": False,
+        "policy_binding_issue": POLICY_BINDING_ISSUE,
         "real_gcp_configuration_verified": False,
         "real_confidential_space_admission": False,
         "freeze_established": False,
