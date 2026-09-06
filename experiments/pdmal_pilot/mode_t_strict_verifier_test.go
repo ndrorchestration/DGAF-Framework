@@ -26,6 +26,24 @@ func (n *mismatchNetwork) SwitchChainHash(string) error {
 	return errors.New("strict verifier must not switch chain")
 }
 
+type wrongChainMetadataNetwork struct {
+	signatureCalls int
+	switchCalls    int
+}
+
+func (n *wrongChainMetadataNetwork) ChainHash() string { return strings.Repeat("0", 64) }
+func (n *wrongChainMetadataNetwork) Current(time.Time) uint64 { return 0 }
+func (n *wrongChainMetadataNetwork) PublicKey() kyber.Point { return nil }
+func (n *wrongChainMetadataNetwork) Scheme() crypto.Scheme { return crypto.Scheme{} }
+func (n *wrongChainMetadataNetwork) Signature(uint64) ([]byte, error) {
+	n.signatureCalls++
+	return nil, errors.New("signature must not be requested after metadata mismatch")
+}
+func (n *wrongChainMetadataNetwork) SwitchChainHash(string) error {
+	n.switchCalls++
+	return errors.New("chain switching must not be attempted after metadata mismatch")
+}
+
 func TestValidateRunIdentity(t *testing.T) {
 	if err := validateRunIdentity(strings.Repeat("a", 40), "123", "1"); err != nil {
 		t.Fatalf("expected valid identity: %v", err)
@@ -92,6 +110,24 @@ z6hgtLUPYvAimgekc+CeyJ8fb/0MVrpq/Ewnx1MpKig8nQ==
 	}
 	if plaintext.Len() != 0 {
 		t.Fatal("wrong-chain failure emitted plaintext")
+	}
+}
+
+func TestFrozenChainMetadataMismatchFailsBeforeDecrypt(t *testing.T) {
+	network := &wrongChainMetadataNetwork{}
+	_, err := verifyCiphertext(
+		network,
+		[]byte("P4_B_SYNTHETIC_METADATA_MISMATCH_NOT_DECRYPTED"),
+		strings.Repeat("a", 64),
+	)
+	if err == nil || err.Error() != "network chain hash mismatch" {
+		t.Fatalf("expected frozen chain metadata mismatch, got %v", err)
+	}
+	if network.signatureCalls != 0 {
+		t.Fatalf("metadata mismatch requested %d signatures", network.signatureCalls)
+	}
+	if network.switchCalls != 0 {
+		t.Fatalf("metadata mismatch attempted %d chain switches", network.switchCalls)
 	}
 }
 
