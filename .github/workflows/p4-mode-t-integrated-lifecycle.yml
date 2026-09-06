@@ -1,0 +1,131 @@
+name: P4 Mode T Integrated Lifecycle
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-integrated-lifecycle.yml'
+      - 'experiments/pdmal_pilot/mode_t_confidential_space_attestation.py'
+      - 'experiments/pdmal_pilot/mode_t_google_oidc_verifier.py'
+      - 'experiments/pdmal_pilot/mode_t_inprocess_key.py'
+      - 'experiments/pdmal_pilot/mode_t_admission_policy.py'
+      - 'experiments/pdmal_pilot/mode_t_integrated_lifecycle.py'
+      - 'experiments/pdmal_pilot/test_mode_t_confidential_space_attestation.py'
+      - 'experiments/pdmal_pilot/test_mode_t_google_oidc_verifier.py'
+      - 'experiments/pdmal_pilot/test_mode_t_integrated_lifecycle.py'
+      - 'experiments/pdmal_pilot/requirements-mode-t-security-lock.txt'
+      - 'docs/governance/P4_MODE_T_INTEGRATED_LIFECYCLE_2026-09-06.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  integrated-lifecycle:
+    name: policy-to-C-to-PRE-to-key-to-output-to-POST controls
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Install hash-locked security lane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check \
+            --require-hashes --only-binary=:all: \
+            -r experiments/pdmal_pilot/requirements-mode-t-security-lock.txt
+
+      - name: Run integrated policy/lifecycle/crash controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_integrated_lifecycle.py -v
+
+      - name: Re-run component trust contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_google_oidc_verifier.py -v
+          python test_mode_t_confidential_space_attestation.py -v
+
+      - name: Static anti-promotion assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          lifecycle = Path('experiments/pdmal_pilot/mode_t_integrated_lifecycle.py').read_text(encoding='utf-8')
+          key = Path('experiments/pdmal_pilot/mode_t_inprocess_key.py').read_text(encoding='utf-8')
+          policy = Path('experiments/pdmal_pilot/mode_t_admission_policy.py').read_text(encoding='utf-8')
+          test = Path('experiments/pdmal_pilot/test_mode_t_integrated_lifecycle.py').read_text(encoding='utf-8')
+          combined = lifecycle + key + policy + test
+
+          required = (
+              'CONSUMED_PRE_SECRET_SYNTHETIC',
+              'SYNTHETIC_MODEL_ONLY_NOT_INDEPENDENTLY_RETAINED',
+              'PASS_SYNTHETIC_ONLY',
+              '"real_confidential_space_admission": False',
+              '"independent_retention_verified": False',
+              '"pilot_authorized": False',
+              '"empirical_n": 0',
+              'admission_policy_sha256',
+              'supplied PRE_EXECUTION expectation does not match pre-authorized admission policy',
+              'production Mode-T key generation blocked: independently retained C/policy verifier required',
+              'production admission requires independently retained C/policy evidence verifier',
+              'PRE_EXECUTION admission must not contain an output-manifest binding',
+              'runtime identity digest does not match normalized runtime',
+              'synthetic Mode-T key generation requires explicit synthetic key-source evidence',
+              'verified token digest does not match PRE_EXECUTION token',
+              'external operational-secret environment variable is forbidden',
+              'test_policy_substitution_after_C_is_rejected_before_key_generation',
+              'test_each_material_policy_field_mutation_is_rejected',
+              'test_tampered_or_promoted_synthetic_C_is_rejected',
+              'test_crash_boundaries_preserve_consumption',
+          )
+          for marker in required:
+              if marker not in combined:
+                  raise SystemExit(f'missing integrated lifecycle marker: {marker}')
+
+          forbidden = (
+              'PDMAL_PROTOCOL_FROZEN' + '=1',
+              'PDMAL_PILOT_AUTHORIZED' + '=1',
+              'PDMAL_BLINDING_KEY' + '=',
+              'real_confidential_space_admission' + '": True',
+              '"empirical_n": 1',
+              'independent_retention_verified' + '": True',
+          )
+          for marker in forbidden:
+              if marker in combined:
+                  raise SystemExit(f'forbidden promotion marker: {marker}')
+          PY
+
+      - name: Report bounded interpretation
+        shell: bash
+        run: |
+          echo 'PASS: synthetic policy-bound integrated lifecycle and crash/retry controls only.'
+          echo 'Production key acquisition is intentionally blocked pending independent C/policy retention verification.'
+          echo 'No real authorization, TEE admission, independent retention, or empirical run occurred.'
+          echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.'
