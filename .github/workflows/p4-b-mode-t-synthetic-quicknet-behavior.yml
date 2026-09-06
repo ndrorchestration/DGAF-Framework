@@ -1,0 +1,354 @@
+name: P4-B Mode T Synthetic Quicknet Behavior
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-b-mode-t-synthetic-quicknet-behavior.yml'
+      - 'docs/governance/P4_B_MODE_T_SYNTHETIC_QUICKNET_BEHAVIOR_2026-09-05.md'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier.go'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier_test.go'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier_additional_test.go'
+      - 'experiments/pdmal_pilot/mode_t_synthetic_quicknet_fixture.go'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLOCK_VERSION: 'v1.2.0'
+  TLOCK_SOURCE_COMMIT: '7b54141a9733fd6fa207587a11148280e6fb020d'
+  QUICKNET_ENDPOINT: 'https://api.drand.sh'
+  QUICKNET_CHAIN_HASH: '52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971'
+  GO_VERSION: '1.22.12'
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  GOTOOLCHAIN: local
+  CGO_ENABLED: '0'
+  GOOS: linux
+  GOARCH: amd64
+  GOAMD64: v1
+
+jobs:
+  synthetic-quicknet-behavior:
+    name: Strict verifier against synthetic quicknet fixtures
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact DGAF evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact checkout and strict-source constraints
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          grep -F 'tlock.New(network).Strict().Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go
+          if grep -F 'tlock.New(network).Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go; then
+            echo 'unstrict tlock decrypt call is forbidden' >&2
+            exit 1
+          fi
+
+      - name: Set up exact Go toolchain
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: '1.22.12'
+          check-latest: false
+          cache: false
+
+      - name: Fetch exact upstream tlock source and verify module graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(go env GOVERSION)" = "go${GO_VERSION}"
+          test "$(go env GOOS)" = "$GOOS"
+          test "$(go env GOARCH)" = "$GOARCH"
+          test "$(go env GOAMD64)" = "$GOAMD64"
+          test "$(go env CGO_ENABLED)" = "$CGO_ENABLED"
+
+          rm -rf upstream-tlock
+          git init -q upstream-tlock
+          git -C upstream-tlock remote add origin https://github.com/drand/tlock.git
+          git -C upstream-tlock fetch --quiet --depth 1 origin "$TLOCK_SOURCE_COMMIT"
+          git -C upstream-tlock checkout --quiet --detach FETCH_HEAD
+          test "$(git -C upstream-tlock rev-parse HEAD)" = "$TLOCK_SOURCE_COMMIT"
+          test "$(awk '$1 == "go" {print $2}' upstream-tlock/go.mod)" = '1.22'
+          (
+            cd upstream-tlock
+            go mod download
+            go mod verify
+          )
+
+      - name: Overlay verifier and synthetic fixture apparatus
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p upstream-tlock/cmd/dgaf-strict-verifier upstream-tlock/cmd/dgaf-synthetic-fixture
+          cp experiments/pdmal_pilot/mode_t_strict_verifier.go upstream-tlock/cmd/dgaf-strict-verifier/main.go
+          cp experiments/pdmal_pilot/mode_t_strict_verifier_test.go upstream-tlock/cmd/dgaf-strict-verifier/main_test.go
+          cp experiments/pdmal_pilot/mode_t_strict_verifier_additional_test.go upstream-tlock/cmd/dgaf-strict-verifier/additional_test.go
+          cp experiments/pdmal_pilot/mode_t_synthetic_quicknet_fixture.go upstream-tlock/cmd/dgaf-synthetic-fixture/main.go
+
+          test "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')" = \
+               "$(sha256sum upstream-tlock/cmd/dgaf-strict-verifier/main.go | awk '{print $1}')"
+          test "$(sha256sum experiments/pdmal_pilot/mode_t_synthetic_quicknet_fixture.go | awk '{print $1}')" = \
+               "$(sha256sum upstream-tlock/cmd/dgaf-synthetic-fixture/main.go | awk '{print $1}')"
+
+      - name: Run offline fail-closed tests and build exact target tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p local-bin test-artifacts/evidence local-sensitive
+          (
+            cd upstream-tlock
+            go test -mod=readonly ./cmd/dgaf-strict-verifier -count=1 -v
+            go build -mod=readonly -trimpath -buildvcs=false -ldflags='-buildid=' \
+              -o ../local-bin/verifier ./cmd/dgaf-strict-verifier
+            go build -mod=readonly -trimpath -buildvcs=false -ldflags='-buildid=' \
+              -o ../local-bin/fixture ./cmd/dgaf-synthetic-fixture
+          )
+          verifier_sha="$(sha256sum local-bin/verifier | awk '{print $1}')"
+          fixture_sha="$(sha256sum local-bin/fixture | awk '{print $1}')"
+          {
+            printf 'schema_version=1\n'
+            printf 'evidence_class=P4_B_MODE_T_SYNTHETIC_QUICKNET_BUILD_V1\n'
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'tlock_source_commit=%s\n' "$TLOCK_SOURCE_COMMIT"
+            printf 'go_version=%s\n' "$(go env GOVERSION)"
+            printf 'verifier_source_sha256=%s\n' "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')"
+            printf 'fixture_source_sha256=%s\n' "$(sha256sum experiments/pdmal_pilot/mode_t_synthetic_quicknet_fixture.go | awk '{print $1}')"
+            printf 'verifier_binary_sha256=%s\n' "$verifier_sha"
+            printf 'fixture_binary_sha256=%s\n' "$fixture_sha"
+            printf 'protected_material_present=false\n'
+            printf 'empirical_n=0\n'
+          } > test-artifacts/evidence/build-identities.txt
+
+      - name: Generate available and future synthetic quicknet fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./local-bin/fixture \
+            --endpoint "$QUICKNET_ENDPOINT" \
+            --mode available \
+            --ciphertext test-artifacts/evidence/available.age \
+            --commitment test-artifacts/evidence/available.commitment \
+            --canary local-sensitive/available.canary \
+            --manifest test-artifacts/evidence/available-manifest.json
+
+          ./local-bin/fixture \
+            --endpoint "$QUICKNET_ENDPOINT" \
+            --mode future \
+            --ciphertext test-artifacts/evidence/future.age \
+            --commitment test-artifacts/evidence/future.commitment \
+            --canary local-sensitive/future.canary \
+            --manifest test-artifacts/evidence/future-manifest.json
+
+          test -s local-sensitive/available.canary
+          test -s local-sensitive/future.canary
+          test -s test-artifacts/evidence/available.age
+          test -s test-artifacts/evidence/future.age
+
+      - name: Require correct quicknet strict success and replay immutability
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="$(tr -d '\r\n' < test-artifacts/evidence/available.commitment)"
+          ./local-bin/verifier \
+            --endpoint "$QUICKNET_ENDPOINT" \
+            --ciphertext test-artifacts/evidence/available.age \
+            --expected-plaintext-sha256 "$expected" \
+            --evidence-sha "$EVIDENCE_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            > test-artifacts/evidence/pass-1.json \
+            2> local-sensitive/pass-1.stderr
+          test ! -s local-sensitive/pass-1.stderr
+
+          ./local-bin/verifier \
+            --endpoint "$QUICKNET_ENDPOINT" \
+            --ciphertext test-artifacts/evidence/available.age \
+            --expected-plaintext-sha256 "$expected" \
+            --evidence-sha "$EVIDENCE_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            > test-artifacts/evidence/pass-2.json \
+            2> local-sensitive/pass-2.stderr
+          test ! -s local-sensitive/pass-2.stderr
+          cmp test-artifacts/evidence/pass-1.json test-artifacts/evidence/pass-2.json
+          git diff --exit-code
+          git diff --cached --exit-code
+
+      - name: Require wrong commitment failure after successful decryption path
+        shell: bash
+        run: |
+          set -euo pipefail
+          wrong='0000000000000000000000000000000000000000000000000000000000000000'
+          set +e
+          ./local-bin/verifier \
+            --endpoint "$QUICKNET_ENDPOINT" \
+            --ciphertext test-artifacts/evidence/available.age \
+            --expected-plaintext-sha256 "$wrong" \
+            --evidence-sha "$EVIDENCE_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            > local-sensitive/wrong-commit.stdout \
+            2> test-artifacts/evidence/wrong-commit.json
+          rc=$?
+          set -e
+          test "$rc" -eq 2
+          test ! -s local-sensitive/wrong-commit.stdout
+
+      - name: Require one-shot future-round TOO_EARLY failure without retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="$(tr -d '\r\n' < test-artifacts/evidence/future.commitment)"
+          set +e
+          ./local-bin/verifier \
+            --endpoint "$QUICKNET_ENDPOINT" \
+            --ciphertext test-artifacts/evidence/future.age \
+            --expected-plaintext-sha256 "$expected" \
+            --evidence-sha "$EVIDENCE_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            > local-sensitive/too-early.stdout \
+            2> test-artifacts/evidence/too-early.json
+          rc=$?
+          set -e
+          test "$rc" -eq 2
+          test ! -s local-sensitive/too-early.stdout
+
+      - name: Validate behavior evidence and non-promoting state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path('test-artifacts/evidence')
+          available = json.loads((root / 'available-manifest.json').read_text())
+          future = json.loads((root / 'future-manifest.json').read_text())
+          p1 = json.loads((root / 'pass-1.json').read_text())
+          p2 = json.loads((root / 'pass-2.json').read_text())
+          wrong = json.loads((root / 'wrong-commit.json').read_text())
+          early = json.loads((root / 'too-early.json').read_text())
+
+          assert available['chain_hash'] == os.environ['QUICKNET_CHAIN_HASH']
+          assert available['target_expected_available'] is True
+          assert available['target_round'] <= available['current_round_at_creation']
+          assert available['protected_material_present'] is False
+          assert future['chain_hash'] == os.environ['QUICKNET_CHAIN_HASH']
+          assert future['target_expected_available'] is False
+          assert future['target_round'] > future['current_round_at_creation']
+          assert future['protected_material_present'] is False
+
+          for passed in (p1, p2):
+              assert passed['status'] == 'PASS'
+              assert passed['control_plane_sha'] == os.environ['EVIDENCE_SHA']
+              assert passed['chain_hash'] == os.environ['QUICKNET_CHAIN_HASH']
+              assert passed['network_metadata_verified'] is True
+              assert passed['public_key_verified'] is True
+              assert passed['strict_chain_enforced'] is True
+              assert passed['plaintext_commitment_match'] is True
+              assert passed['plaintext_persisted'] is False
+              assert passed['plaintext_emitted'] is False
+              assert passed['empirical_data_collection'] is False
+              assert passed['freeze_established'] is False
+              assert passed['pilot_authorized'] is False
+              assert passed['empirical_n'] == 0
+          assert p1 == p2
+          assert p1['ciphertext_sha256'] == available['ciphertext_sha256']
+          assert p1['expected_plaintext_sha256'] == available['expected_plaintext_sha256']
+
+          assert wrong['status'] == 'FAIL'
+          assert wrong['classification'] == 'PLAINTEXT_COMMITMENT_MISMATCH'
+          assert wrong['empirical_n'] == 0
+          assert early['status'] == 'FAIL'
+          assert early['classification'] == 'TOO_EARLY'
+          assert early['empirical_n'] == 0
+
+          combined = {
+              'schema_version': 1,
+              'evidence_class': 'P4_B_MODE_T_SYNTHETIC_QUICKNET_BEHAVIOR_V1',
+              'evidence_sha': os.environ['EVIDENCE_SHA'],
+              'github_run_id': os.environ['GITHUB_RUN_ID'],
+              'github_run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'tlock_source_commit': os.environ['TLOCK_SOURCE_COMMIT'],
+              'quicknet_chain_hash': os.environ['QUICKNET_CHAIN_HASH'],
+              'correct_quicknet_strict_success': True,
+              'wrong_commitment_rejected': True,
+              'too_early_single_attempt_rejected': True,
+              'replay_outputs_identical': True,
+              'tracked_repository_state_unchanged': True,
+              'captured_verifier_outputs_canary_scan_pending': True,
+              'protected_material_present': False,
+              'empirical_data_collection': False,
+              'freeze_established': False,
+              'pilot_authorized': False,
+              'empirical_n': 0,
+          }
+          (root / 'synthetic-quicknet-behavior.json').write_text(
+              json.dumps(combined, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Scan artifact candidates and captured verifier streams for plaintext canaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          for canary in local-sensitive/available.canary local-sensitive/future.canary; do
+            if grep -R -a -F -f "$canary" test-artifacts/evidence local-sensitive/*.stderr local-sensitive/*.stdout 2>/dev/null; then
+              echo 'synthetic plaintext canary leaked into verifier output or artifact candidate' >&2
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('test-artifacts/evidence/synthetic-quicknet-behavior.json')
+          evidence = json.loads(path.read_text())
+          evidence['captured_verifier_outputs_canary_scan_pending'] = False
+          evidence['captured_verifier_outputs_canary_clean'] = True
+          evidence['plaintext_canaries_deleted_before_upload'] = True
+          path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          PY
+
+          rm -f local-sensitive/available.canary local-sensitive/future.canary
+          rm -f local-sensitive/*.stderr local-sensitive/*.stdout
+          rm -rf local-bin
+          test ! -e local-sensitive/available.canary
+          test ! -e local-sensitive/future.canary
+
+      - name: Bind and hash complete synthetic evidence set
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'github_run_id=%s\n' "$GITHUB_RUN_ID"
+            printf 'github_run_attempt=%s\n' "$GITHUB_RUN_ATTEMPT"
+            printf 'workflow_sha256=%s\n' "$(sha256sum .github/workflows/p4-b-mode-t-synthetic-quicknet-behavior.yml | awk '{print $1}')"
+            printf 'verifier_source_sha256=%s\n' "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')"
+            printf 'fixture_source_sha256=%s\n' "$(sha256sum experiments/pdmal_pilot/mode_t_synthetic_quicknet_fixture.go | awk '{print $1}')"
+            printf 'scientific_state=PRE-FREEZE_FAIL-CLOSED_NOT-AUTHORIZED_N0\n'
+          } > test-artifacts/evidence/evidence-binding.txt
+
+          (
+            cd test-artifacts/evidence
+            find . -maxdepth 1 -type f ! -name 'file-digests.sha256' -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > file-digests.sha256
+          )
+
+      - name: Upload synthetic continuity evidence only
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: p4-b-synthetic-quicknet-behavior-${{ env.EVIDENCE_SHA }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-artifacts/evidence/
+          if-no-files-found: error
+          retention-days: 30
