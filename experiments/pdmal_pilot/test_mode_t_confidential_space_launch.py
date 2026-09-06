@@ -5,6 +5,7 @@ import unittest
 
 from mode_t_confidential_space_launch import (
     LaunchContractError,
+    POLICY_BINDING_ISSUE,
     REQUIRED_LAUNCH_POLICIES,
     validate_launch_contract,
 )
@@ -55,10 +56,20 @@ class ConfidentialSpaceLaunchContractTests(unittest.TestCase):
     def test_accepts_exact_predeclared_launch_contract_without_promotion(self) -> None:
         result = validate_launch_contract(good_config())
         self.assertEqual(result["launch_contract"], "PASS_PREDECLARED_ONLY")
+        self.assertFalse(result["authorization_policy_complete"])
+        self.assertIsNone(result["admission_policy_sha256"])
+        self.assertFalse(result["instance_subject_resolved"])
+        self.assertEqual(result["policy_binding_issue"], POLICY_BINDING_ISSUE)
         self.assertFalse(result["real_gcp_configuration_verified"])
         self.assertFalse(result["real_confidential_space_admission"])
         self.assertFalse(result["pilot_authorized"])
         self.assertEqual(result["empirical_n"], 0)
+
+    def test_launch_digest_is_not_promoted_to_admission_policy_digest(self) -> None:
+        result = validate_launch_contract(good_config())
+        self.assertRegex(result["launch_contract_sha256"], r"^[0-9a-f]{64}$")
+        self.assertIsNone(result["admission_policy_sha256"])
+        self.assertFalse(result["authorization_policy_complete"])
 
     def test_is_deterministic(self) -> None:
         first = validate_launch_contract(good_config())
