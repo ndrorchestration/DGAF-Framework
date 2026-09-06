@@ -75,10 +75,12 @@ jobs:
           for marker in required:
               if marker not in source:
                   raise SystemExit(f'missing launch-contract marker: {marker}')
+
+          # Construct these values so the scanner does not match its own source text.
           forbidden = (
-              'google-github-actions/auth',
-              'id-token: write',
-              'gcloud compute instances create',
+              'google-github-actions/' + 'auth',
+              'id-token:' + ' write',
+              'gcloud compute instances ' + 'create',
               'PDMAL_PILOT_AUTHORIZED' + '=1',
               'PDMAL_PROTOCOL_FROZEN' + '=1',
           )
