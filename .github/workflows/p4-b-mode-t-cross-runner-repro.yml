@@ -129,7 +129,10 @@ jobs:
             printf 'pilot_authorized=false\n'
             printf 'empirical_n=0\n'
           } > "test-artifacts/repro/${{ matrix.label }}.txt"
-          sha256sum "test-artifacts/repro/${{ matrix.label }}.txt" > "test-artifacts/repro/${{ matrix.label }}.txt.sha256"
+          (
+            cd test-artifacts/repro
+            sha256sum "${{ matrix.label }}.txt" > "${{ matrix.label }}.txt.sha256"
+          )
           rm -f test-artifacts/repro/verifier
 
       - name: Upload digest/provenance only
@@ -149,13 +152,13 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Download ubuntu-22.04 provenance
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
           name: p4-b-repro-ubuntu-22.04-${{ env.EVIDENCE_SHA }}
           path: comparison/ubuntu-22.04
 
       - name: Download ubuntu-24.04 provenance
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
           name: p4-b-repro-ubuntu-24.04-${{ env.EVIDENCE_SHA }}
           path: comparison/ubuntu-24.04
