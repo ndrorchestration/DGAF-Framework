@@ -60,7 +60,7 @@ A correct-chain successful decrypt is intentionally not claimed by these offline
 
 The prototype CI does not introduce a floating DGAF Go module. Instead it:
 
-- pins `actions/setup-go` to immutable commit `40f1582b2485089dde7abd97c1529aa768e1baff`;
+- pins `actions/setup-go` v6 to immutable commit `924ae3a1cded613372ab5595356fb5720e22ba16`, whose action runtime targets Node 24 rather than relying on GitHub's compatibility forcing of a Node-20 action;
 - pins Go to `1.22.12` with `GOTOOLCHAIN=local`;
 - fetches the exact tlock source commit `7b54141a...`;
 - overlays only the DGAF verifier source/tests into that exact upstream module;
