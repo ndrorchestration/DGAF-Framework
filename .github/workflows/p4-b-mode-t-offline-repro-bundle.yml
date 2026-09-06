@@ -71,6 +71,7 @@ jobs:
           git -C upstream-tlock checkout --quiet --detach FETCH_HEAD
           test "$(git -C upstream-tlock rev-parse HEAD)" = "$TLOCK_SOURCE_COMMIT"
           test "$(awk '$1 == "go" {print $2}' upstream-tlock/go.mod)" = '1.22'
+          mkdir -p upstream-tlock/cmd/dgaf-strict-verifier
           cp experiments/pdmal_pilot/mode_t_strict_verifier.go \
              upstream-tlock/cmd/dgaf-strict-verifier/main.go
           (
