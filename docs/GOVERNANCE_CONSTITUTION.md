@@ -2,11 +2,12 @@
 
 ## The Foundational Charter of the DGAF Framework
 
-> **Version:** 1.0.0-anchor
+> **Version:** 1.0.1-anchor
 > **Authority:** Njineer (principal) → Amethyst (prime host) → COLLEEN (institutional anchor)
 > **Session:** S070-r3 · 2026-06-26 21:07 EDT
 > **Status:** 🟣 ACTIVE ANCHOR — ratification pending Njineer seal
 > **Cross-ref:** TEAM_WIKI §1, SESSION_ANCHORS S070-r3, NDR_INTERNAL_VOCABULARY_MASTER v1.3
+> **2026-09-06 terminology overlay:** PDMAL-D is **PROSPECTIVE / NOT_TRIGGERED**, not an active/canonical structural variant. Current vocabulary authority is `docs/taxonomy/NDR_ACRONYM_REGISTRY.md`. This correction does not change experimental gates, freeze, authorization, or empirical state.
 
 ---
 
@@ -87,7 +88,7 @@ These govern normal operation. They may be adjusted by Njineer with explicit rat
 | T2-02 | All flag conflicts surface as FLAGs — never silently resolved | Silent resolution is an epistemic failure |
 | T2-03 | Pattern registration before implementation | TEAM_WIKI §4.2 |
 | T2-04 | Stasis window governance — no irreversible architecture changes during active stasis | Current window expires 2026-07-13 |
-| T2-05 | PDMAL-φ alignment — all multi-agent topology decisions reference Phi-Driven parametric constraints as primary | PDMAL-D (Dodecahedral) is a valid structural variant, not the default |
+| T2-05 | PDMAL alignment — topology decisions reference Phi-Driven constraints as primary while topology-specific promotion remains evidence-gated | PDMAL-D (Phi-Dodecahedral) is PROSPECTIVE / NOT_TRIGGERED; verified dodecahedral graph/math quantities do not make it the active/default architecture |
 | T2-06 | Session seal requires Triumvirate sign-off (Amethyst + COLLEEN + Apogee) + Njineer ratification | Prevents orphaned partial sessions |
 
 ### Tier 3 — Default Operating Assumptions
@@ -127,7 +128,7 @@ Before any term, definition, or architectural fact is marked CANONICAL:
 
 | Confidence Level | Required Label | Example |
 |-----------------|---------------|---------|
-| Verified, ≥2 sources | `CANONICAL` | PDMAL-φ = Phi-Driven Multi-Agent Lattice ✅ |
+| Verified, ≥2 sources | `CANONICAL` | PDMAL = Phi-Driven Multi-Agent Lattice ✅ |
 | Verified, 1 source | `SINGLE-SOURCE` | Requires secondary confirmation |
 | Logically derived | `INFERRED` | "Derived from P-33 and φ-constraint — verify" |
 | Uncertain | `OPEN` | Flag raised, Njineer input required |
@@ -242,4 +243,5 @@ Any decision not explicitly scoped above defaults to: **surface to Njineer, do n
 
 | Version | Date | Change | Author |
 |---------|------|--------|--------|
+| 1.0.1-anchor | 2026-09-06 | Reconcile PDMAL-D to PROSPECTIVE / NOT_TRIGGERED; no experimental-state effect | Amethyst documentation reconciliation |
 | 1.0.0-anchor | 2026-06-26 | Initial constitution — anchored to Core Aspirations | Amethyst × COLLEEN × DemiJoule |
