@@ -36,7 +36,7 @@ from analysis import (
 )
 from harness_contract import TOPOLOGY_SPECS
 from run_pilot import FAILURE_COUNTS as PILOT_FAILURE_COUNTS
-from task_engine import CONDITION_VALUES, AttemptStatus, ConsensusTask
+from task_engine import CONDITION_VALUES, ConsensusTask
 
 EVIDENCE_CLASS = "P4_MODE_T_SYNTHETIC_TIMING_PARTIAL_V1"
 DEFAULT_REPETITIONS = 3
@@ -93,7 +93,13 @@ def _timing_stats(values_ms: Iterable[float]) -> dict[str, float | int]:
 def measure_full_synthetic_matrix(seed: int) -> float:
     """Time one exact 180-cell pilot-shape matrix using deterministic tasks.
 
-    Only execution status is inspected. Outcome values are deliberately neither
+    A returned ``ConsensusTrialResult`` counts as an executed matrix cell even
+    when its scientific attempt classification is FAILURE. This mirrors
+    ``run_pilot``: fail-closed/unrecovered trial classifications are recorded as
+    outcomes and do not abort the seed. Exceptions still propagate and fail this
+    timing study because they are execution-path failures, not trial outcomes.
+
+    Scientific result values and classifications are deliberately neither
     serialized nor returned from this timing harness.
     """
     _validate_canonical_shapes()
@@ -102,16 +108,11 @@ def measure_full_synthetic_matrix(seed: int) -> float:
     for topology in TOPOLOGY_SPECS:
         for condition in CONDITION_VALUES:
             for failure_count in PILOT_FAILURE_COUNTS:
-                result = ConsensusTask(
+                ConsensusTask(
                     topology=topology,
                     failure_count=failure_count,
                     condition=condition,
                 ).run_detailed(seed=seed, attempt=1)
-                if result.attempt_status is not AttemptStatus.SUCCESS:
-                    raise RuntimeError(
-                        "synthetic timing trial did not complete successfully: "
-                        f"{topology}/{condition}/{failure_count}"
-                    )
                 completed += 1
     if completed != expected_trials_per_seed():
         raise RuntimeError("synthetic matrix timing did not execute the complete pilot shape")
@@ -218,7 +219,7 @@ def run_study(
         },
         "synthetic_timelock_encryption_timing": {
             "status": "NOT_EXECUTED",
-            "reason": "requires separately reviewed strict-chain synthetic encryption path",
+            "reason": "requires separately reviewed synthetic encryption path",
         },
         "external_transparency_retention_timing": {
             "status": "NOT_EXECUTED",
