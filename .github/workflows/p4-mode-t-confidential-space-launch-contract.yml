@@ -75,10 +75,13 @@ jobs:
           for marker in required:
               if marker not in source:
                   raise SystemExit(f'missing launch-contract marker: {marker}')
+
+          # Build forbidden markers from fragments so this negative-control workflow
+          # does not fail merely because it contains the strings it is searching for.
           forbidden = (
-              'google-github-actions/auth',
-              'id-token: write',
-              'gcloud compute instances create',
+              'google-github-actions/' + 'auth',
+              'id-token:' + ' write',
+              'gcloud compute instances ' + 'create',
               'PDMAL_PILOT_AUTHORIZED' + '=1',
               'PDMAL_PROTOCOL_FROZEN' + '=1',
           )
