@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-**REVIEW SCAFFOLDING / CURRENT-SOURCE COVERAGE RECORD / NOT INDEPENDENT SECURITY ACCEPTANCE / NOT P4 CLOSURE**
+Status: **REVIEW SCAFFOLDING / CURRENT-SOURCE COVERAGE RECORD / NOT INDEPENDENT SECURITY ACCEPTANCE / NOT P4 CLOSURE**
 
 This record maps the current DGAF Mode-T Confidential Space admission implementation to the signed claims documented by Google Cloud. It exists to make omissions and policy choices reviewable before Issue #320 independent security adjudication and before any real admission attempt under Issue #310.
 
