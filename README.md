@@ -3,26 +3,29 @@
 **Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, formation governance, evaluation, provenance, and governance controls.
 
 > **Epistemic status:** **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.** Engineering verification is not empirical efficacy evidence. Historical evidence remains scoped to the exact candidate, workflow, deployment, artifact, and predicates that produced it.
+>
+> **Candidate-authority update — 2026-09-06:** PR #308 advanced the apparatus to protocol v0.7.6 / artifact schema 1.1 at `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. The prior `7c1cc4bb…` runtime candidate retains valid exact-scope evidence but is now historical provenance for final-candidate purposes. **Final v0.7.6 candidate: NOT DESIGNATED**; Issue #309 governs reconstruction and identity-dependent evidence classification/regeneration. The consolidated control-state anchor `89be386b…` remains a control/provenance anchor, not a final-candidate designation.
 
 ## Current identity boundary — 2026-09-06
 
-Live source boundary is `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` after merged PR #308, which introduced the v0.7.6 blinding-noninterference correction and artifact schema 1.1. The consolidated control-state anchor `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` remains a control/provenance anchor; it does not designate the final experimental candidate.
+This documentation reconciliation uses the live v0.7.6 source boundary `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` without treating the newest source SHA as the final scientific candidate merely by recency.
 
 | Identity | Role | Status |
 |---|---|---|
 | `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | Corrected apparatus provenance anchor | Historical canonical anchor |
 | `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d` | Immutable P-35 validation boundary | Historical validated boundary |
-| `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Historical exact-scope runtime-evidence candidate | Verified for its recorded evidence scope; not eligible as final v0.7.6 freeze/N=1 candidate |
-| `586c00d6dedb589e52108279f9759be3c4f927e1` | Historical runtime-evidence candidate tree | Exact tree for `7c1cc4bb…` evidence |
+| `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` | Consolidated control-state anchor | Canonical control/provenance anchor; not a candidate designation |
+| `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Historical exact-scope runtime-evidence candidate | Verified for recorded scope; not eligible as final v0.7.6 freeze/N=1 candidate |
+| `586c00d6dedb589e52108279f9759be3c4f927e1` | Historical runtime candidate tree | Exact candidate tree for `7c1cc4bb…` evidence |
 | `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Vercel production deployment for `7c1cc4bb…` | READY / exact Git source verified at its scoped evidence boundary |
-| `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` | Current v0.7.6 source boundary | Apparatus source after PR #308; not automatically the final candidate |
-| Issue #309 | Final-candidate reconstruction authority | **Final v0.7.6 candidate NOT DESIGNATED** |
+| `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` | Live v0.7.6 source boundary | PR #308 merge; not automatically the final candidate |
+| Issue #309 | Final-candidate reconstruction authority | Final v0.7.6 candidate NOT DESIGNATED |
 
-Later source, documentation, evaluator, or control-plane descendants do not automatically become the final scientific candidate or inherit historical runtime evidence. Issue #309 requires explicit candidate designation and classification/regeneration of identity-dependent evidence.
+Later documentation, evaluator, source, or control-plane descendants do not automatically become the final candidate or inherit historical runtime evidence.
 
 ## Candidate-scoped runtime evidence
 
-P2 and P6a are **CLOSED / VERIFIED** only for historical evidence candidate `7c1cc4bb…`, tree `586c00d6…`, deployment `dpl_8Msuf…`, and the exact predicates executed on 2026-09-03. Those results remain valid provenance but do not by themselves close the same predicates for the future v0.7.6 final candidate.
+P2 and P6a are **CLOSED / VERIFIED** only for historical candidate `7c1cc4bb…`, tree `586c00d6…`, deployment `dpl_8Msuf…`, and the exact predicates executed on 2026-09-03. Those results remain valid provenance but do not automatically close the same predicates for a future v0.7.6 final candidate.
 
 ### P2 — CLOSED / VERIFIED
 
@@ -47,9 +50,14 @@ Fresh retrieval is not a new runtime execution and does not establish later-main
 | Gate / boundary | Current state |
 |---|---|
 | P-35 implementation | VALIDATED at immutable boundary `643dc77a…` |
-| Historical candidate evidence | `7c1cc4bb…` evidence retained at exact scope; transfer/reverification decision pending #309 |
-| Final v0.7.6 candidate | NOT DESIGNATED |
+| Historical P1 candidate integrity | CLOSED / VERIFIED at `7c1cc4bb…` scope; final-candidate transfer/reverification pending #309 |
+| Historical P2 runtime contract | CLOSED / VERIFIED at exact `7c1cc4bb…` runtime scope; final-candidate transfer/reverification pending #309 |
+| Historical P3 artifact contract | CLOSED / VERIFIED — run `33939955138`; final-candidate transfer/reverification pending #309 |
 | P4 security/blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED; no H/I/T custody mode instantiated or verified |
+| Historical P5 provenance/reproducibility | CLOSED / VERIFIED within its bounded pre-v0.7.6 contract; final-candidate transfer/reverification pending #309 |
+| Historical P6 evidence custody | CLOSED / VERIFIED within the defined archive/retrieval/hash contract; final-candidate rebind decision pending #309 |
+| Historical P6a CORS | CLOSED / VERIFIED at exact `7c1cc4bb…` runtime scope; final-candidate transfer/reverification pending #309 |
+| Final v0.7.6 candidate | NOT DESIGNATED — Issue #309 |
 | P7 scientific target | ADOPTED / FINAL BINDING OPEN |
 | P8 analysis lock / freeze readiness | OPEN / FAIL-CLOSED |
 | P9 independent verification | NOT EXECUTED / OPEN |
@@ -57,7 +65,7 @@ Fresh retrieval is not a new runtime execution and does not establish later-main
 | Pilot authorization | NOT GRANTED |
 | Empirical N | 0 |
 
-Historical P1/P2/P3/P5/P6/P6a closure remains exact-candidate engineering/governance evidence, not model or scientific efficacy evidence and not automatic final-candidate closure.
+P5 closure is provenance/reproducibility evidence, not model or scientific efficacy evidence.
 
 ### P4 custody interpretation
 
@@ -67,7 +75,7 @@ PR #286 generalized P4 from a mandatory second-human model to **effective contro
 - `I` — institutional/third-party custody outside the analyst’s unilateral control;
 - `T` — independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
 
-No mode has been instantiated. Issue #287 is the active design/threat-model lane for a possible zero-human Mode T lifecycle. Current draft engineering work does not establish P4 custody, freeze, authorization, or empirical execution.
+No mode has been instantiated. Issue #285 is completed as the governance-architecture correction; Issue #255 is superseded historical context. Issue #287 is the active design/threat-model lane for a possible zero-human Mode T lifecycle. GitHub Actions + timelock/drand is **not** yet accepted as sufficient P4 custody merely because the design issue exists.
 
 ## Evaluation integrity
 
@@ -79,16 +87,16 @@ That change verifies evaluator mechanics only. No Task-4 model-performance resul
 
 Issue #270 is **CLOSED / COMPLETED**. PR #276 restored a clean current-lineage flake8/Black/isort/mypy baseline and converted those quality checks to fail-closed workflow gates; the Python matrix and deterministic negative controls subsequently passed at the recorded exact boundaries.
 
-A separate repository-administration gap remains: Issue #277 tracks branch-protection/ruleset enforcement. The Python quality workflow is fail-closed when it runs, but current protected `main` requires only `PPTL CI`; broader merge-critical checks are not yet proven repository-required.
+A separate repository-administration gap remains: Issue #277 tracks branch-protection/ruleset enforcement. The Python quality workflow is fail-closed when it runs, but current protected `main` requires only `PPTL CI`; broader intended merge-critical checks are not yet proven repository-required. That distinction must not be collapsed into either “quality is still advisory” or “branch protection is complete.”
 
 ## Evidence rules
 
-Evidence does not transfer across candidate SHA, deployment identity, workflow identity, artifact identity, protocol/schema identity, or materially different control state without an explicit provenance relationship. A newer source or documentation commit does not become the experimental candidate by recency. Deployment readiness does not establish runtime behavior. CI and synthetic dry runs are engineering controls, not empirical efficacy evidence.
+Evidence does not transfer across candidate SHA, deployment identity, workflow identity, artifact identity, protocol/schema identity, or materially different control state without an explicit provenance relationship. A documentation commit or newer source SHA does not create a new experimental candidate. Deployment readiness does not establish runtime behavior. CI and synthetic dry runs are engineering controls, not empirical efficacy evidence.
 
 Historical documents may contain statements that were “current” at their own closure boundary. Those statements remain historical unless explicitly promoted by a later current-state record.
 
 ## Current closure sequence
 
-`complete candidate-relevant P4 apparatus work → explicitly designate exact v0.7.6 final candidate under #309 → classify/regenerate identity-dependent evidence → close real P4-A custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
+`complete candidate-relevant P4 apparatus work → explicitly designate exact v0.7.6 final candidate under #309 → classify/regenerate identity-dependent evidence → verified real P4-A custody → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
 
 No documentation or CI action in this sequence grants experimental authorization or advances empirical N.
