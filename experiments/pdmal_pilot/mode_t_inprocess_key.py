@@ -1,16 +1,15 @@
 """Attestation-gated in-process key lease for the bounded DGAF Mode-T lane.
 
-The production entry point accepts a raw Confidential Space token, authenticates the
-Google signing-key path, evaluates the exact PRE_EXECUTION claim contract, re-hashes
-the normalized runtime identity, and only then generates operational key material.
-It never accepts caller-assembled ``signature_verified`` or key-source dictionaries
-as the production trust boundary, and it does not expose a caller-selected verification
-clock.
+Synthetic tests can exercise the full cryptographic/claim/key boundary. The direct
+production entry is intentionally fail-closed after Issue #316 identified that a
+caller-supplied AttestationExpectation is not itself proof of the policy authorized in
+independently retained R/A/C evidence. Production activation therefore requires a
+separate retained-policy verifier/capability before entropy generation is reachable.
 
-Synthetic tests use a separate explicitly synthetic path. The raw key remains inside
-an owned mutable bytearray and is never returned. Best-effort zeroization cannot prove
-that Python/runtime internals made no transient copies. Real P4 acceptance therefore
-still requires real TEE execution and independent leakage review.
+The raw key remains inside an owned mutable bytearray and is never returned.
+Best-effort zeroization cannot prove that Python/runtime internals made no transient
+copies. Real P4 acceptance still requires real TEE execution and independent leakage
+review.
 """
 from __future__ import annotations
 
@@ -29,11 +28,9 @@ from mode_t_confidential_space_attestation import (
     verify_confidential_space_attestation,
 )
 from mode_t_google_oidc_verifier import (
-    PRODUCTION_TRANSPORT,
     SYNTHETIC_TRANSPORT,
     GoogleOIDCVerifier,
     VerifiedGoogleOIDCToken,
-    verify_google_confidential_space_token,
 )
 
 KEY_BYTES = 32
@@ -127,7 +124,6 @@ def _validate_verified_token(
     verified: VerifiedGoogleOIDCToken,
     *,
     token_sha256: str,
-    production: bool,
 ) -> None:
     _require(
         isinstance(verified, VerifiedGoogleOIDCToken),
@@ -138,17 +134,10 @@ def _validate_verified_token(
         _require_sha256(verified.token_context.token_sha256, "verified token_sha256") == token_sha256,
         "verified token digest does not match PRE_EXECUTION token",
     )
-    transport = verified.key_source.transport_authentication
-    if production:
-        _require(
-            transport == PRODUCTION_TRANSPORT,
-            "production Mode-T key generation requires authenticated production Google key source",
-        )
-    else:
-        _require(
-            transport == SYNTHETIC_TRANSPORT,
-            "synthetic Mode-T key generation requires explicit synthetic key-source evidence",
-        )
+    _require(
+        verified.key_source.transport_authentication == SYNTHETIC_TRANSPORT,
+        "synthetic Mode-T key generation requires explicit synthetic key-source evidence",
+    )
 
 
 def _reject_external_secret_environment(environment: Mapping[str, str]) -> None:
@@ -240,8 +229,6 @@ class ModeTKeyLease:
 
 @dataclass(frozen=True)
 class ModeTKeyAcquisition:
-    """One admitted PRE context plus its live key lease and retention-safe evidence."""
-
     lease: ModeTKeyLease
     pre_execution: Mapping[str, Any]
     token_evidence: Mapping[str, Any]
@@ -255,12 +242,11 @@ def _acquire_from_verified(
     verified: VerifiedGoogleOIDCToken,
     *,
     environment: Mapping[str, str] | None,
-    production: bool,
 ) -> ModeTKeyLease:
     token_sha, consumption_sha, runtime_sha = _validate_pre_execution_admission(
         pre_execution_admission
     )
-    _validate_verified_token(verified, token_sha256=token_sha, production=production)
+    _validate_verified_token(verified, token_sha256=token_sha)
     _reject_external_secret_environment(os.environ if environment is None else environment)
     generated = secrets.token_bytes(KEY_BYTES)
     _require(isinstance(generated, bytes), "CSPRNG did not return bytes")
@@ -279,21 +265,11 @@ def admit_and_acquire_mode_t_key(
     *,
     environment: Mapping[str, str] | None = None,
 ) -> ModeTKeyAcquisition:
-    """Production entry: authenticate raw token with system time, admit PRE, then generate key."""
-    _require(expectation.phase == PRE_EXECUTION, "production key path requires PRE_EXECUTION expectation")
-    verified = verify_google_confidential_space_token(token)
-    pre = verify_confidential_space_attestation(
-        verified.claims,
-        expectation,
-        verified.token_context,
+    """Production entry is disabled until independently retained policy evidence exists."""
+    del token, expectation, environment
+    raise ModeTKeyError(
+        "production Mode-T key generation blocked: independently retained C/policy verifier required"
     )
-    lease = _acquire_from_verified(
-        pre,
-        verified,
-        environment=environment,
-        production=True,
-    )
-    return ModeTKeyAcquisition(lease, pre, verified.evidence())
 
 
 def admit_and_acquire_mode_t_key_synthetic(
@@ -316,7 +292,6 @@ def admit_and_acquire_mode_t_key_synthetic(
         pre,
         verified,
         environment=environment,
-        production=False,
     )
     return ModeTKeyAcquisition(lease, pre, verified.evidence())
 
@@ -332,5 +307,4 @@ def acquire_mode_t_key_synthetic_from_verified(
         pre_execution_admission,
         verified,
         environment=environment,
-        production=False,
     )
