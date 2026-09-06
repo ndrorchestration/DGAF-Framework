@@ -10,7 +10,12 @@ import unittest
 from unittest.mock import patch
 
 import mode_t_sigstore_verifier as verifier_module
-from mode_t_retention_contract import EXPECTED_OIDC_ISSUER, TransparencyExpectation
+from mode_t_retention_contract import (
+    EXPECTED_GITHUB_WORKFLOW_REF,
+    EXPECTED_GITHUB_WORKFLOW_REPOSITORY,
+    EXPECTED_OIDC_ISSUER,
+    TransparencyExpectation,
+)
 from mode_t_sigstore_verifier import (
     EXPECTED_COSIGN_LINUX_AMD64_SHA256,
     EXPECTED_COSIGN_VERSION,
@@ -20,6 +25,7 @@ from mode_t_sigstore_verifier import (
 )
 
 IDENTITY = "https://github.com/ndrorchestration/DGAF-Framework/.github/workflows/p4-mode-t-transparency.yml@refs/heads/main"
+WORKFLOW_SHA = "a" * 40
 
 
 def bundle_fixture(
@@ -59,6 +65,7 @@ class ModeTSigstoreVerifierTests(unittest.TestCase):
             record_type="PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION",
             record_sha256=hashlib.sha256(self.artifact.read_bytes()).hexdigest(),
             certificate_identity=IDENTITY,
+            github_workflow_sha=WORKFLOW_SHA,
         )
 
     def tearDown(self) -> None:
@@ -83,6 +90,11 @@ class ModeTSigstoreVerifierTests(unittest.TestCase):
         result = verified.retention_result
         self.assertEqual(result["retention_contract"], "PASS_NORMALIZED_INCLUSION_ONLY")
         self.assertEqual(result["log_id_key_id"], "synthetic-log-key-id")
+        self.assertEqual(result["github_workflow_sha"], WORKFLOW_SHA)
+        self.assertEqual(
+            result["github_workflow_repository"], EXPECTED_GITHUB_WORKFLOW_REPOSITORY
+        )
+        self.assertEqual(result["github_workflow_ref"], EXPECTED_GITHUB_WORKFLOW_REF)
         self.assertFalse(result["real_external_retention_established"])
         self.assertFalse(result["temporal_order_verified"])
         self.assertFalse(result["pilot_authorized"])
@@ -95,6 +107,12 @@ class ModeTSigstoreVerifierTests(unittest.TestCase):
         self.assertIn(IDENTITY, args)
         self.assertIn("--certificate-oidc-issuer", args)
         self.assertIn(EXPECTED_OIDC_ISSUER, args)
+        self.assertIn("--certificate-github-workflow-sha", args)
+        self.assertIn(WORKFLOW_SHA, args)
+        self.assertIn("--certificate-github-workflow-repository", args)
+        self.assertIn(EXPECTED_GITHUB_WORKFLOW_REPOSITORY, args)
+        self.assertIn("--certificate-github-workflow-ref", args)
+        self.assertIn(EXPECTED_GITHUB_WORKFLOW_REF, args)
         self.assertNotIn("sign-blob", args)
 
     def test_public_api_has_no_normalize_without_crypto_entry(self) -> None:
@@ -102,6 +120,7 @@ class ModeTSigstoreVerifierTests(unittest.TestCase):
         signature = inspect.signature(verify_retention_record_with_sigstore)
         self.assertNotIn("expected_cosign_sha256", signature.parameters)
         self.assertNotIn("oidc_issuer", signature.parameters)
+        self.assertNotIn("github_workflow_sha", signature.parameters)
         evidence_signature = inspect.signature(retention_safe_evidence)
         self.assertEqual(tuple(evidence_signature.parameters), ("verified",))
 
@@ -129,10 +148,34 @@ class ModeTSigstoreVerifierTests(unittest.TestCase):
             record_type=self.expectation.record_type,
             record_sha256=self.expectation.record_sha256,
             certificate_identity=IDENTITY,
+            github_workflow_sha=WORKFLOW_SHA,
             oidc_issuer="https://example.invalid",
         )
         with self.assertRaisesRegex(SigstoreVerifierError, "unexpected certificate OIDC issuer"):
             self._verify()
+        run.assert_not_called()
+
+    @patch("mode_t_sigstore_verifier._verify_cosign_binary")
+    @patch("mode_t_sigstore_verifier.subprocess.run")
+    def test_rejects_unexpected_workflow_repository_or_ref_before_execution(
+        self, run, verify_binary
+    ) -> None:
+        verify_binary.return_value = EXPECTED_COSIGN_LINUX_AMD64_SHA256
+        for repository, ref, expected in (
+            ("example/other", EXPECTED_GITHUB_WORKFLOW_REF, "repository"),
+            (EXPECTED_GITHUB_WORKFLOW_REPOSITORY, "refs/heads/other", "ref"),
+        ):
+            with self.subTest(repository=repository, ref=ref):
+                self.expectation = TransparencyExpectation(
+                    record_type="PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION",
+                    record_sha256=hashlib.sha256(self.artifact.read_bytes()).hexdigest(),
+                    certificate_identity=IDENTITY,
+                    github_workflow_sha=WORKFLOW_SHA,
+                    github_workflow_repository=repository,
+                    github_workflow_ref=ref,
+                )
+                with self.assertRaisesRegex(SigstoreVerifierError, expected):
+                    self._verify()
         run.assert_not_called()
 
     @patch("mode_t_sigstore_verifier._verify_cosign_binary")
@@ -237,6 +280,7 @@ class ModeTSigstoreVerifierTests(unittest.TestCase):
         self.assertEqual(
             evidence["transparency_log_id_key_id"], "synthetic-log-key-id"
         )
+        self.assertEqual(evidence["github_workflow_sha"], WORKFLOW_SHA)
         self.assertEqual(evidence["cosign_sha256"], EXPECTED_COSIGN_LINUX_AMD64_SHA256)
         self.assertFalse(evidence["external_write_performed_by_verifier"])
         self.assertFalse(evidence["oidc_token_requested_by_verifier"])
