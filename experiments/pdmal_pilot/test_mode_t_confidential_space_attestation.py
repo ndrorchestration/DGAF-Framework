@@ -6,21 +6,25 @@ import unittest
 from mode_t_confidential_space_attestation import (
     AttestationContractError,
     AttestationExpectation,
+    POST_EXECUTION,
+    PRE_EXECUTION,
     VerifiedTokenContext,
     verify_confidential_space_attestation,
+    verify_two_phase_attestation_binding,
 )
 
 
 C_SHA = "1" * 64
 MANIFEST_SHA = "2" * 64
-TOKEN_SHA = "3" * 64
+PRE_TOKEN_SHA = "3" * 64
+POST_TOKEN_SHA = "8" * 64
 IMAGE_DIGEST = "sha256:" + ("4" * 64)
 AUDIENCE = "dgaf-mode-t-admission-v1"
 CONTAINER_ARGS = ("/app/dgaf-mode-t",)
 NOW = 1_800_000_000
 
 
-def good_claims() -> dict:
+def good_claims(*, binding_sha256: str = C_SHA, issued_at: int = NOW - 30) -> dict:
     return {
         "iss": "https://confidentialcomputing.googleapis.com",
         "aud": AUDIENCE,
@@ -29,10 +33,10 @@ def good_claims() -> dict:
         "attester_tcb": ["INTEL"],
         "secboot": True,
         "dbgstat": "disabled-since-boot",
-        "iat": NOW - 30,
-        "nbf": NOW - 30,
+        "iat": issued_at,
+        "nbf": issued_at,
         "exp": NOW + 300,
-        "eat_nonce": [C_SHA, MANIFEST_SHA],
+        "eat_nonce": [binding_sha256],
         "submods": {
             "confidential_space": {
                 "support_attributes": ["LATEST", "STABLE", "USABLE"],
@@ -50,22 +54,47 @@ def good_claims() -> dict:
     }
 
 
-def expectation() -> AttestationExpectation:
+def expectation(
+    *,
+    phase: str = PRE_EXECUTION,
+    binding_sha256: str = C_SHA,
+    expected_args: tuple[str, ...] = CONTAINER_ARGS,
+) -> AttestationExpectation:
     return AttestationExpectation(
+        phase=phase,
         audience=AUDIENCE,
         image_digest=IMAGE_DIGEST,
-        authorization_consumption_sha256=C_SHA,
-        output_manifest_sha256=MANIFEST_SHA,
-        expected_args=CONTAINER_ARGS,
+        binding_sha256=binding_sha256,
+        expected_args=expected_args,
         expected_env={"DGAF_RUN_BINDING": "synthetic-run-310"},
     )
 
 
-def token_context() -> VerifiedTokenContext:
+def token_context(
+    *,
+    token_sha256: str = PRE_TOKEN_SHA,
+    verified_at: int = NOW,
+) -> VerifiedTokenContext:
     return VerifiedTokenContext(
         signature_verified=True,
-        token_sha256=TOKEN_SHA,
-        verified_at_unix=NOW,
+        token_sha256=token_sha256,
+        verified_at_unix=verified_at,
+    )
+
+
+def pre_result() -> dict:
+    return verify_confidential_space_attestation(
+        good_claims(binding_sha256=C_SHA, issued_at=NOW - 30),
+        expectation(phase=PRE_EXECUTION, binding_sha256=C_SHA),
+        token_context(token_sha256=PRE_TOKEN_SHA, verified_at=NOW),
+    )
+
+
+def post_result() -> dict:
+    return verify_confidential_space_attestation(
+        good_claims(binding_sha256=MANIFEST_SHA, issued_at=NOW + 10),
+        expectation(phase=POST_EXECUTION, binding_sha256=MANIFEST_SHA),
+        token_context(token_sha256=POST_TOKEN_SHA, verified_at=NOW + 20),
     )
 
 
@@ -78,32 +107,58 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
         with self.assertRaises(AttestationContractError):
             verify_confidential_space_attestation(claims, exp, context)
 
-    def test_accepts_exact_contract(self) -> None:
-        result = verify_confidential_space_attestation(
-            good_claims(),
-            expectation(),
-            token_context(),
-        )
+    def test_accepts_exact_pre_execution_contract(self) -> None:
+        result = pre_result()
         self.assertEqual(result["attestation_contract"], "PASS")
-        self.assertEqual(result["audience"], AUDIENCE)
-        self.assertEqual(result["attester_tcb"], ["INTEL"])
-        self.assertTrue(result["secure_boot"])
-        self.assertFalse(result["memory_monitoring"])
+        self.assertEqual(result["attestation_phase"], PRE_EXECUTION)
+        self.assertEqual(result["authorization_consumption_sha256"], C_SHA)
+        self.assertIsNone(result["output_manifest_sha256"])
         self.assertTrue(result["signature_verified"])
         self.assertFalse(result["freeze_established"])
         self.assertFalse(result["pilot_authorized"])
         self.assertFalse(result["empirical_data_collection"])
         self.assertEqual(result["empirical_n"], 0)
 
-    def test_nonce_order_is_not_semantic(self) -> None:
-        claims = good_claims()
-        claims["eat_nonce"] = [MANIFEST_SHA, C_SHA]
-        result = verify_confidential_space_attestation(
-            claims,
-            expectation(),
-            token_context(),
-        )
+    def test_accepts_exact_post_execution_contract(self) -> None:
+        result = post_result()
         self.assertEqual(result["attestation_contract"], "PASS")
+        self.assertEqual(result["attestation_phase"], POST_EXECUTION)
+        self.assertIsNone(result["authorization_consumption_sha256"])
+        self.assertEqual(result["output_manifest_sha256"], MANIFEST_SHA)
+
+    def test_two_phase_binding_accepts_same_runtime_lineage(self) -> None:
+        result = verify_two_phase_attestation_binding(
+            pre_result(),
+            post_result(),
+            authorization_consumption_sha256=C_SHA,
+            output_manifest_sha256=MANIFEST_SHA,
+        )
+        self.assertEqual(result["two_phase_attestation_binding"], "PASS")
+        self.assertEqual(result["authorization_consumption_sha256"], C_SHA)
+        self.assertEqual(result["output_manifest_sha256"], MANIFEST_SHA)
+        self.assertFalse(result["pilot_authorized"])
+        self.assertEqual(result["empirical_n"], 0)
+
+    def test_rejects_circular_two_nonce_pre_execution_request(self) -> None:
+        def mutate(c, e, t):
+            c["eat_nonce"] = [C_SHA, MANIFEST_SHA]
+            return c, e, t
+
+        self.assert_rejected(mutate)
+
+    def test_rejects_unknown_phase(self) -> None:
+        def mutate(c, e, t):
+            e = AttestationExpectation(
+                phase="UNKNOWN",
+                audience=e.audience,
+                image_digest=e.image_digest,
+                binding_sha256=e.binding_sha256,
+                expected_args=e.expected_args,
+                expected_env=e.expected_env,
+            )
+            return c, e, t
+
+        self.assert_rejected(mutate)
 
     def test_rejects_unverified_signature(self) -> None:
         self.assert_rejected(
@@ -223,30 +278,16 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
 
         self.assert_rejected(mutate)
 
-    def test_rejects_wrong_consumption_nonce(self) -> None:
+    def test_rejects_wrong_phase_binding_nonce(self) -> None:
         def mutate(c, e, t):
-            c["eat_nonce"] = ["6" * 64, MANIFEST_SHA]
-            return c, e, t
-
-        self.assert_rejected(mutate)
-
-    def test_rejects_wrong_manifest_nonce(self) -> None:
-        def mutate(c, e, t):
-            c["eat_nonce"] = [C_SHA, "7" * 64]
-            return c, e, t
-
-        self.assert_rejected(mutate)
-
-    def test_rejects_duplicate_nonce(self) -> None:
-        def mutate(c, e, t):
-            c["eat_nonce"] = [C_SHA, C_SHA]
+            c["eat_nonce"] = [MANIFEST_SHA]
             return c, e, t
 
         self.assert_rejected(mutate)
 
     def test_rejects_missing_nonce(self) -> None:
         def mutate(c, e, t):
-            c["eat_nonce"] = [C_SHA]
+            c["eat_nonce"] = []
             return c, e, t
 
         self.assert_rejected(mutate)
@@ -287,6 +328,66 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
             return c, e, t
 
         self.assert_rejected(mutate)
+
+    def test_pair_rejects_runtime_identity_drift(self) -> None:
+        post = post_result()
+        post["runtime_identity_sha256"] = "9" * 64
+        with self.assertRaises(AttestationContractError, msg="runtime identity"):
+            verify_two_phase_attestation_binding(
+                pre_result(),
+                post,
+                authorization_consumption_sha256=C_SHA,
+                output_manifest_sha256=MANIFEST_SHA,
+            )
+
+    def test_pair_rejects_same_token_replay(self) -> None:
+        post = post_result()
+        post["token_sha256"] = PRE_TOKEN_SHA
+        with self.assertRaises(AttestationContractError, msg="distinct"):
+            verify_two_phase_attestation_binding(
+                pre_result(),
+                post,
+                authorization_consumption_sha256=C_SHA,
+                output_manifest_sha256=MANIFEST_SHA,
+            )
+
+    def test_pair_rejects_reversed_phases(self) -> None:
+        with self.assertRaises(AttestationContractError, msg="PRE_EXECUTION"):
+            verify_two_phase_attestation_binding(
+                post_result(),
+                pre_result(),
+                authorization_consumption_sha256=C_SHA,
+                output_manifest_sha256=MANIFEST_SHA,
+            )
+
+    def test_pair_rejects_post_token_that_predates_pre_token(self) -> None:
+        post = post_result()
+        post["issued_at_unix"] = NOW - 60
+        with self.assertRaises(AttestationContractError, msg="predates"):
+            verify_two_phase_attestation_binding(
+                pre_result(),
+                post,
+                authorization_consumption_sha256=C_SHA,
+                output_manifest_sha256=MANIFEST_SHA,
+            )
+
+    def test_pair_rejects_wrong_expected_c(self) -> None:
+        with self.assertRaises(AttestationContractError, msg="C binding"):
+            verify_two_phase_attestation_binding(
+                pre_result(),
+                post_result(),
+                authorization_consumption_sha256="6" * 64,
+                output_manifest_sha256=MANIFEST_SHA,
+            )
+
+    def test_pair_rejects_wrong_expected_manifest(self) -> None:
+        with self.assertRaises(AttestationContractError, msg="manifest binding"):
+            verify_two_phase_attestation_binding(
+                pre_result(),
+                post_result(),
+                authorization_consumption_sha256=C_SHA,
+                output_manifest_sha256="7" * 64,
+            )
 
     def test_input_claims_are_not_mutated(self) -> None:
         claims = good_claims()
