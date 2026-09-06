@@ -120,6 +120,14 @@ jobs:
           go test -mod=readonly -tags=mode_t_live ./cmd/dgaf-strict-verifier \
             -run '^TestLiveQuicknetFutureRoundClassifiesTooEarly$' -count=1 -v
 
+      - name: Replay must not promote or mutate scientific state
+        working-directory: upstream-tlock
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -mod=readonly -tags=mode_t_live ./cmd/dgaf-strict-verifier \
+            -run '^TestLiveQuicknetReplayDoesNotPromoteState$' -count=1 -v
+
       - name: Emit non-authorizing evidence record
         shell: bash
         run: |
@@ -137,6 +145,7 @@ jobs:
             printf 'correct_chain_released_round_pass=true\n'
             printf 'wrong_plaintext_commitment_fail_closed=true\n'
             printf 'too_early_classification_verified=true\n'
+            printf 'replay_non_mutation_verified=true\n'
             printf 'synthetic_fixture_only=true\n'
             printf 'network_side_effect=read_only_public_beacon_queries\n'
             printf 'durable_p6_retention_established=false\n'
