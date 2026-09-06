@@ -47,7 +47,7 @@ _B64URL_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 
 
 class GoogleOIDCVerificationError(ValueError):
-    pass
+    """Raised when Google OIDC key authentication or JWT verification fails."""
 
 
 @dataclass(frozen=True)
@@ -80,6 +80,7 @@ class VerifiedGoogleOIDCToken:
     key_source: KeySourceProvenance
 
     def evidence(self) -> dict[str, Any]:
+        """Return retention-safe verification evidence; never include token/key bytes."""
         return {
             "token_sha256": self.token_context.token_sha256,
             "signature_verified": self.token_context.signature_verified,
@@ -193,9 +194,15 @@ def _ttl(headers: Mapping[str, str]) -> int:
 def _exact_https(url: str, host: str, path: str, label: str) -> None:
     p = urlparse(url)
     if (
-        p.scheme != "https" or p.hostname != host or p.port not in (None, 443)
-        or p.path != path or p.params or p.query or p.fragment
-        or p.username is not None or p.password is not None
+        p.scheme != "https"
+        or p.hostname != host
+        or p.port not in (None, 443)
+        or p.path != path
+        or p.params
+        or p.query
+        or p.fragment
+        or p.username is not None
+        or p.password is not None
     ):
         raise _fail(f"{label} is outside the reviewed Google HTTPS endpoint")
 
@@ -215,8 +222,11 @@ def _https_fetch(url: str, timeout: float) -> FetchedDocument:
     try:
         with opener.open(request, timeout=timeout) as response:
             return FetchedDocument(
-                url, response.geturl(), int(response.status),
-                response.read(MAX_DOCUMENT_BYTES + 1), dict(response.headers.items()),
+                url,
+                response.geturl(),
+                int(response.status),
+                response.read(MAX_DOCUMENT_BYTES + 1),
+                dict(response.headers.items()),
             )
     except HTTPError as exc:
         if 300 <= exc.code < 400:
@@ -246,9 +256,10 @@ def _jwk(item: Any) -> tuple[str, _KeyRecord]:
         raise _fail(f"JWKS key {kid!r} is not RSA")
     if item.get("use") != "sig":
         raise _fail(f"JWKS key {kid!r} is not restricted to signature use")
-    if item.get("alg") != "RS256":
+    if item.get("alg") != EXPECTED_ALGORITHM:
         raise _fail(f"JWKS key {kid!r} is not restricted to RS256")
-    n, e = _uint(item.get("n"), f"JWK {kid} n"), _uint(item.get("e"), f"JWK {kid} e")
+    n = _uint(item.get("n"), f"JWK {kid} n")
+    e = _uint(item.get("e"), f"JWK {kid} e")
     if e < 3 or e % 2 == 0:
         raise _fail(f"JWK {kid!r} has invalid exponent")
     try:
@@ -261,6 +272,8 @@ def _jwk(item: Any) -> tuple[str, _KeyRecord]:
 
 
 class GoogleOIDCVerifier:
+    """Stateful verifier supporting bounded authenticated JWKS caching and rotation."""
+
     def __init__(
         self,
         *,
@@ -287,37 +300,56 @@ class GoogleOIDCVerifier:
         return result
 
     def _refresh(self, now: int) -> _KeyCache:
-        _exact_https(DISCOVERY_URL, "confidentialcomputing.googleapis.com", "/.well-known/openid-configuration", "discovery")
+        _exact_https(
+            DISCOVERY_URL,
+            "confidentialcomputing.googleapis.com",
+            "/.well-known/openid-configuration",
+            "discovery",
+        )
         d_raw = _document(self._fetch(DISCOVERY_URL), DISCOVERY_URL, "discovery")
         discovery = _json(d_raw, "discovery")
         if not isinstance(discovery, Mapping):
             raise _fail("discovery must be an object")
         if discovery.get("issuer") != GOOGLE_CLOUD_ATTESTATION_ISSUER:
             raise _fail("discovery issuer mismatch")
-        if "RS256" not in discovery.get("id_token_signing_alg_values_supported", []):
+        algorithms = discovery.get("id_token_signing_alg_values_supported")
+        if not isinstance(algorithms, list) or not all(
+            isinstance(item, str) for item in algorithms
+        ):
+            raise _fail("discovery signing algorithms must be a list of strings")
+        if EXPECTED_ALGORITHM not in algorithms:
             raise _fail("discovery does not advertise RS256")
         uri = discovery.get("jwks_uri")
         if uri != EXPECTED_JWKS_URI:
             raise _fail("discovery JWKS URI changed from reviewed endpoint")
         _exact_https(
-            uri, "www.googleapis.com",
-            "/service_accounts/v1/metadata/jwk/signer@confidentialspace-sign.iam.gserviceaccount.com",
+            uri,
+            "www.googleapis.com",
+            "/service_accounts/v1/metadata/jwk/"
+            "signer@confidentialspace-sign.iam.gserviceaccount.com",
             "JWKS",
         )
         j_doc = self._fetch(uri)
         j_raw = _document(j_doc, uri, "JWKS")
         jwks = _json(j_raw, "JWKS")
-        if not isinstance(jwks, Mapping) or not isinstance(jwks.get("keys"), list) or not jwks["keys"]:
+        if (
+            not isinstance(jwks, Mapping)
+            or not isinstance(jwks.get("keys"), list)
+            or not jwks["keys"]
+        ):
             raise _fail("JWKS must contain keys")
-        keys = {}
+        keys: dict[str, _KeyRecord] = {}
         for item in jwks["keys"]:
             kid, record = _jwk(item)
             if kid in keys:
                 raise _fail(f"JWKS contains duplicate kid {kid!r}")
             keys[kid] = record
         cache = _KeyCache(
-            keys, hashlib.sha256(d_raw).hexdigest(), hashlib.sha256(j_raw).hexdigest(),
-            now, now + _ttl(j_doc.headers),
+            keys=keys,
+            discovery_sha256=hashlib.sha256(d_raw).hexdigest(),
+            jwks_sha256=hashlib.sha256(j_raw).hexdigest(),
+            fetched_at_unix=now,
+            expires_at_unix=now + _ttl(j_doc.headers),
         )
         self._cache = cache
         return cache
@@ -329,13 +361,20 @@ class GoogleOIDCVerifier:
         record = cache.keys.get(kid)
         if record is not None:
             return record, cache
+        # A missing kid can be normal Google rotation. Refresh exactly once from
+        # the authenticated source, then fail if the requested key is still absent.
         cache = self._refresh(now)
         record = cache.keys.get(kid)
         if record is None:
             raise _fail(f"JWT kid {kid!r} absent from refreshed Google JWKS")
         return record, cache
 
-    def verify(self, token: str | bytes, *, verified_at_unix: int | None = None) -> VerifiedGoogleOIDCToken:
+    def verify(
+        self,
+        token: str | bytes,
+        *,
+        verified_at_unix: int | None = None,
+    ) -> VerifiedGoogleOIDCToken:
         now = int(time.time()) if verified_at_unix is None else verified_at_unix
         if not isinstance(now, int) or isinstance(now, bool) or now < 0:
             raise _fail("verified_at_unix must be a non-negative integer")
@@ -359,7 +398,7 @@ class GoogleOIDCVerifier:
             raise _fail("JWT compact serialization is malformed")
         h_seg, p_seg, s_seg = parts
         header = _json(_b64u(h_seg, "JWT header"), "JWT header")
-        if not isinstance(header, Mapping) or header.get("alg") != "RS256":
+        if not isinstance(header, Mapping) or header.get("alg") != EXPECTED_ALGORITHM:
             raise _fail("JWT alg must be exactly RS256")
         if header.get("typ") not in (None, "JWT"):
             raise _fail("JWT typ must be JWT when present")
@@ -368,11 +407,14 @@ class GoogleOIDCVerifier:
             raise _fail("JWT kid is missing")
         if any(name in header for name in ("jku", "jwk", "x5u", "crit")):
             raise _fail("JWT header contains forbidden key source or critical extension")
+
         record, cache = self._key(kid, now)
         try:
             record.public_key.verify(
-                _b64u(s_seg, "JWT signature"), f"{h_seg}.{p_seg}".encode("ascii"),
-                padding.PKCS1v15(), hashes.SHA256(),
+                _b64u(s_seg, "JWT signature"),
+                f"{h_seg}.{p_seg}".encode("ascii"),
+                padding.PKCS1v15(),
+                hashes.SHA256(),
             )
         except InvalidSignature as exc:
             raise _fail("JWT signature verification failed") from exc
@@ -380,7 +422,10 @@ class GoogleOIDCVerifier:
             raise _fail("JWT cryptographic verification failed") from exc
 
         claims = _json(_b64u(p_seg, "JWT payload"), "JWT payload")
-        if not isinstance(claims, Mapping) or claims.get("iss") != GOOGLE_CLOUD_ATTESTATION_ISSUER:
+        if (
+            not isinstance(claims, Mapping)
+            or claims.get("iss") != GOOGLE_CLOUD_ATTESTATION_ISSUER
+        ):
             raise _fail("signed JWT issuer is not Google Cloud Attestation")
 
         def timestamp(name: str) -> int:
@@ -389,7 +434,9 @@ class GoogleOIDCVerifier:
                 raise _fail(f"signed JWT {name} must be an integer")
             return value
 
-        iat, nbf, exp = timestamp("iat"), timestamp("nbf"), timestamp("exp")
+        iat = timestamp("iat")
+        nbf = timestamp("nbf")
+        exp = timestamp("exp")
         if iat > now + self._skew or nbf > now + self._skew:
             raise _fail("signed JWT is future/not-yet-valid beyond allowed skew")
         if exp <= now - self._skew:
@@ -399,11 +446,30 @@ class GoogleOIDCVerifier:
 
         token_sha = hashlib.sha256(raw_token).hexdigest()
         return VerifiedGoogleOIDCToken(
-            dict(claims),
-            VerifiedTokenContext(True, token_sha, now),
-            KeySourceProvenance(
-                DISCOVERY_URL, EXPECTED_JWKS_URI, cache.discovery_sha256,
-                cache.jwks_sha256, cache.fetched_at_unix, cache.expires_at_unix,
-                kid, record.jwk_sha256,
+            claims=dict(claims),
+            token_context=VerifiedTokenContext(True, token_sha, now),
+            key_source=KeySourceProvenance(
+                discovery_url=DISCOVERY_URL,
+                jwks_uri=EXPECTED_JWKS_URI,
+                discovery_sha256=cache.discovery_sha256,
+                jwks_sha256=cache.jwks_sha256,
+                fetched_at_unix=cache.fetched_at_unix,
+                expires_at_unix=cache.expires_at_unix,
+                kid=kid,
+                jwk_sha256=record.jwk_sha256,
             ),
         )
+
+
+def verify_google_confidential_space_token(
+    token: str | bytes,
+    *,
+    verified_at_unix: int | None = None,
+) -> VerifiedGoogleOIDCToken:
+    """Production trust entry point using only the built-in authenticated fetcher.
+
+    Tests may instantiate ``GoogleOIDCVerifier(fetcher=...)`` with synthetic sources,
+    but operational lifecycle code should call this function so a caller cannot
+    inject an alternate key source through the public production path.
+    """
+    return GoogleOIDCVerifier().verify(token, verified_at_unix=verified_at_unix)
