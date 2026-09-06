@@ -127,19 +127,49 @@ jobs:
           chmod 0755 "$tle_rel"
           tle_path="$(realpath "$tle_rel")"
           "$tle_path" -m -n "$DRAND_ENDPOINT" -c "$QUICKNET_CHAIN_HASH" > test-artifacts/tlock-quicknet-metadata.yml
-          grep -F "chain_hash: $QUICKNET_CHAIN_HASH" test-artifacts/tlock-quicknet-metadata.yml
-          grep -F "scheme: $QUICKNET_SCHEME" test-artifacts/tlock-quicknet-metadata.yml
-          grep -F "public_key: $QUICKNET_PUBLIC_KEY" test-artifacts/tlock-quicknet-metadata.yml
-          current_round="$(awk '$1 == "current:" {print $2; exit}' test-artifacts/tlock-quicknet-metadata.yml)"
-          [[ "$current_round" =~ ^[0-9]+$ ]]
-          test "$current_round" -gt 0
-          target_round="$((current_round + QUICKNET_TARGET_ROUND_OFFSET))"
-          test "$target_round" -gt "$current_round"
-          {
-            echo "TLE_PATH=$tle_path"
-            echo "QUICKNET_METADATA_CURRENT_ROUND=$current_round"
-            echo "QUICKNET_TARGET_ROUND=$target_round"
-          } >> "$GITHUB_ENV"
+          TLE_PATH="$tle_path" python - <<'PY'
+          import hmac
+          import os
+          from pathlib import Path
+
+          metadata_path = Path('test-artifacts/tlock-quicknet-metadata.yml')
+          fields = {}
+          for raw_line in metadata_path.read_text(encoding='utf-8').splitlines():
+              key, sep, value = raw_line.partition(':')
+              if sep and key in {'chain_hash', 'current', 'public_key', 'scheme'}:
+                  fields[key] = value.strip().strip("'\"")
+
+          required = {'chain_hash', 'current', 'public_key', 'scheme'}
+          if set(fields) != required:
+              raise SystemExit(f'quicknet metadata fields mismatch: {sorted(fields)}')
+          if not hmac.compare_digest(fields['chain_hash'], os.environ['QUICKNET_CHAIN_HASH']):
+              raise SystemExit('quicknet chain hash mismatch')
+          if not hmac.compare_digest(fields['scheme'], os.environ['QUICKNET_SCHEME']):
+              raise SystemExit('quicknet scheme mismatch')
+
+          public_key_prefix = 'bls12-381.G1: '
+          rendered_key = fields['public_key']
+          if not rendered_key.startswith(public_key_prefix):
+              raise SystemExit('unexpected tlock G1 public-key rendering')
+          normalized_key = rendered_key[len(public_key_prefix):]
+          if not hmac.compare_digest(normalized_key, os.environ['QUICKNET_PUBLIC_KEY']):
+              raise SystemExit('quicknet public key mismatch')
+
+          try:
+              current_round = int(fields['current'])
+          except ValueError as exc:
+              raise SystemExit('quicknet current round is not an integer') from exc
+          if current_round < 1:
+              raise SystemExit('quicknet current round must be positive')
+          target_round = current_round + int(os.environ['QUICKNET_TARGET_ROUND_OFFSET'])
+          if target_round <= current_round:
+              raise SystemExit('quicknet target round must be in the future')
+
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as env_file:
+              env_file.write(f"TLE_PATH={os.environ['TLE_PATH']}\n")
+              env_file.write(f'QUICKNET_METADATA_CURRENT_ROUND={current_round}\n')
+              env_file.write(f'QUICKNET_TARGET_ROUND={target_round}\n')
+          PY
 
       - name: Measure synthetic tlock encryption timing
         shell: bash
