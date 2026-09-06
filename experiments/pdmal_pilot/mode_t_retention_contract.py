@@ -64,12 +64,18 @@ def _string(value: Any, label: str) -> str:
 
 @dataclass(frozen=True)
 class TransparencyExpectation:
-    """Exact public record and signing-workflow identity fixed before acceptance."""
+    """Exact public record, signer, and trusted-root identity fixed before acceptance.
+
+    ``trusted_root_sha256`` binds verification to explicit trust-material bytes. A
+    syntactically valid digest here is not itself evidence that the root was
+    independently approved; that governance decision remains external to this model.
+    """
 
     record_type: str
     record_sha256: str
     certificate_identity: str
     github_workflow_sha: str
+    trusted_root_sha256: str
     oidc_issuer: str = EXPECTED_OIDC_ISSUER
     github_workflow_repository: str = EXPECTED_GITHUB_WORKFLOW_REPOSITORY
     github_workflow_ref: str = EXPECTED_GITHUB_WORKFLOW_REF
@@ -80,15 +86,11 @@ class VerifiedTransparencyContext:
     """Normalized result from a separate Sigstore-capable cryptographic verifier.
 
     ``log_id_key_id`` is the transparency log's key identity from Sigstore's
-    ``LogId.keyId`` field. It is deliberately not called an entry UUID: standardized
-    Sigstore bundles identify an entry by log identity plus log index rather than a
-    Rekor-entry UUID field.
+    ``LogId.keyId`` field. It is deliberately not called an entry UUID.
 
-    The GitHub workflow SHA/repository/ref values correspond to certificate claims
-    explicitly constrained by the Sigstore verifier, not record-body assertions.
-
-    ``integrated_time_unix`` is retained as log metadata only. It is never accepted
-    as independent temporal proof by this contract.
+    The GitHub workflow SHA/repository/ref and trusted-root digest correspond to
+    inputs explicitly constrained by the Sigstore verifier, not record-body
+    assertions. ``integrated_time_unix`` is retained as metadata only.
     """
 
     signature_verified: bool
@@ -97,6 +99,7 @@ class VerifiedTransparencyContext:
     transparency_inclusion_verified: bool
     signed_entry_timestamp_verified: bool
     bundle_sha256: str
+    trusted_root_sha256: str
     log_id_key_id: str
     log_index: int
     integrated_time_unix: int | None
@@ -120,6 +123,10 @@ def verify_transparency_inclusion(
         expectation.github_workflow_sha,
         "expected GitHub workflow SHA",
     )
+    expected_trusted_root_sha = _sha(
+        expectation.trusted_root_sha256,
+        "expected trusted-root SHA-256",
+    )
     _require(
         expectation.oidc_issuer == EXPECTED_OIDC_ISSUER,
         "unexpected transparency signing OIDC issuer expectation",
@@ -140,7 +147,15 @@ def verify_transparency_inclusion(
     _require(context.signed_entry_timestamp_verified is True, "signed entry timestamp is not verified")
     bundle_sha = _sha(context.bundle_sha256, "bundle SHA-256")
     verified_record = _sha(context.verified_record_sha256, "verified record SHA-256")
+    verified_trusted_root_sha = _sha(
+        context.trusted_root_sha256,
+        "verified trusted-root SHA-256",
+    )
     _require(verified_record == expected_record, "verified record digest mismatch")
+    _require(
+        verified_trusted_root_sha == expected_trusted_root_sha,
+        "trusted-root SHA-256 mismatch",
+    )
     _require(context.certificate_identity == expected_identity, "certificate identity mismatch")
     _require(context.oidc_issuer == expectation.oidc_issuer, "certificate OIDC issuer mismatch")
     _require(
@@ -179,6 +194,7 @@ def verify_transparency_inclusion(
         "record_type": expectation.record_type,
         "record_sha256": expected_record,
         "bundle_sha256": bundle_sha,
+        "trusted_root_sha256": expected_trusted_root_sha,
         "log_id_key_id": context.log_id_key_id,
         "log_index": context.log_index,
         "certificate_identity": expected_identity,
@@ -192,6 +208,8 @@ def verify_transparency_inclusion(
         "signed_entry_timestamp_verified": True,
         "integrated_time_unix_metadata_only": context.integrated_time_unix,
         "anti_deletion_inclusion_evidence": "VERIFIED_NORMALIZED",
+        "trusted_root_explicit_and_digest_bound": True,
+        "trusted_root_independently_approved": False,
         "temporal_order_verified": False,
         "temporal_order_reason": "REKOR_INTEGRATED_TIME_NOT_ACCEPTED_AS_INDEPENDENT_TIME_AUTHORITY",
         "external_sigstore_crypto_performed_by_this_module": False,
