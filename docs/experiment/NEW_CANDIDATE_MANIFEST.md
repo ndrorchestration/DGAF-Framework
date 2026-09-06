@@ -1,5 +1,7 @@
 # NEW CANDIDATE MANIFEST — post-#174 provenance-corrected apparatus cycle
 
+> **Candidate-authority supersession — 2026-09-06:** This manifest remains valid provenance for the exact `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` runtime-evidence boundary and its scoped deployment/evidence. PR #308 subsequently changed the experimental apparatus to protocol v0.7.6 / artifact schema 1.1 at `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. Under Issue #309, `7c1cc4bb…` is therefore **historical exact-scope evidence only** and is not eligible to be the final freeze/N=1 candidate. **Final v0.7.6 candidate: NOT DESIGNATED.** The original manifest fields below are retained unchanged as historical provenance rather than rewritten retroactively.
+
 ```yaml
 manifest_version: 12
 designation_event: CURRENT_RUNTIME_EVIDENCE_RECONCILED_AFTER_P4_ARCHITECTURE_UPDATE
