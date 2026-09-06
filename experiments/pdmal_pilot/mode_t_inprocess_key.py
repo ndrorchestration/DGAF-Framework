@@ -1,17 +1,19 @@
 """Attestation-gated in-process key lease for the bounded DGAF Mode-T lane.
 
-Production key generation accepts only a PRE_EXECUTION admission whose normalized
-runtime identity still hashes to the attested digest and whose token is backed by
-production-authenticated Google key-source evidence. Synthetic tests use a separate,
-explicit API that accepts only explicitly synthetic injected-key provenance.
+The production entry point accepts a raw Confidential Space token, authenticates the
+Google signing-key path, evaluates the exact PRE_EXECUTION claim contract, re-hashes
+the normalized runtime identity, and only then generates operational key material.
+It never accepts caller-assembled ``signature_verified`` or key-source dictionaries
+as the production trust boundary.
 
-The raw key is retained only in an owned mutable bytearray and is never returned.
-Best-effort zeroization cannot prove that Python/runtime internals made no transient
-copies. Real P4 acceptance therefore still requires real TEE execution and leakage
-review. This module does not establish freeze, authorization, custody, or N>0.
+Synthetic tests use a separate explicitly synthetic path. The raw key remains inside
+an owned mutable bytearray and is never returned. Best-effort zeroization cannot prove
+that Python/runtime internals made no transient copies. Real P4 acceptance therefore
+still requires real TEE execution and independent leakage review.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
 import hashlib
 import hmac
 import json
@@ -20,8 +22,18 @@ import re
 import secrets
 from typing import Any, Mapping
 
-from mode_t_confidential_space_attestation import PRE_EXECUTION
-from mode_t_google_oidc_verifier import PRODUCTION_TRANSPORT, SYNTHETIC_TRANSPORT
+from mode_t_confidential_space_attestation import (
+    AttestationExpectation,
+    PRE_EXECUTION,
+    verify_confidential_space_attestation,
+)
+from mode_t_google_oidc_verifier import (
+    PRODUCTION_TRANSPORT,
+    SYNTHETIC_TRANSPORT,
+    GoogleOIDCVerifier,
+    VerifiedGoogleOIDCToken,
+    verify_google_confidential_space_token,
+)
 
 KEY_BYTES = 32
 FORBIDDEN_EXTERNAL_SECRET_ENV = (
@@ -110,29 +122,30 @@ def _validate_pre_execution_admission(
     return token_sha, consumption_sha, runtime_sha
 
 
-def _validate_key_source_evidence(
-    evidence: Mapping[str, Any],
+def _validate_verified_token(
+    verified: VerifiedGoogleOIDCToken,
     *,
     token_sha256: str,
     production: bool,
 ) -> None:
-    source = _require_mapping(evidence, "key_source_evidence")
-    _require(source.get("signature_verified") is True, "key-source evidence signature is not verified")
     _require(
-        _require_sha256(source.get("token_sha256"), "key-source token_sha256") == token_sha256,
-        "key-source evidence token digest does not match PRE_EXECUTION token",
+        isinstance(verified, VerifiedGoogleOIDCToken),
+        "verified token must be a VerifiedGoogleOIDCToken",
     )
-    key_source = _require_mapping(source.get("key_source"), "key_source_evidence.key_source")
-    transport = key_source.get("transport_authentication")
-    production_flag = source.get("production_key_source_authenticated")
+    _require(verified.token_context.signature_verified is True, "key-source token signature is not verified")
+    _require(
+        _require_sha256(verified.token_context.token_sha256, "verified token_sha256") == token_sha256,
+        "verified token digest does not match PRE_EXECUTION token",
+    )
+    transport = verified.key_source.transport_authentication
     if production:
         _require(
-            production_flag is True and transport == PRODUCTION_TRANSPORT,
+            transport == PRODUCTION_TRANSPORT,
             "production Mode-T key generation requires authenticated production Google key source",
         )
     else:
         _require(
-            production_flag is False and transport == SYNTHETIC_TRANSPORT,
+            transport == SYNTHETIC_TRANSPORT,
             "synthetic Mode-T key generation requires explicit synthetic key-source evidence",
         )
 
@@ -224,21 +237,29 @@ class ModeTKeyLease:
         return False
 
 
-def _acquire_mode_t_key(
+@dataclass(frozen=True)
+class ModeTKeyAcquisition:
+    """One admitted PRE context plus its live key lease and retention-safe evidence."""
+
+    lease: ModeTKeyLease
+    pre_execution: Mapping[str, Any]
+    token_evidence: Mapping[str, Any]
+
+    def __getstate__(self) -> None:
+        raise TypeError("ModeTKeyAcquisition serialization is prohibited")
+
+
+def _acquire_from_verified(
     pre_execution_admission: Mapping[str, Any],
+    verified: VerifiedGoogleOIDCToken,
     *,
-    key_source_evidence: Mapping[str, Any],
     environment: Mapping[str, str] | None,
     production: bool,
 ) -> ModeTKeyLease:
     token_sha, consumption_sha, runtime_sha = _validate_pre_execution_admission(
         pre_execution_admission
     )
-    _validate_key_source_evidence(
-        key_source_evidence,
-        token_sha256=token_sha,
-        production=production,
-    )
+    _validate_verified_token(verified, token_sha256=token_sha, production=production)
     _reject_external_secret_environment(os.environ if environment is None else environment)
     generated = secrets.token_bytes(KEY_BYTES)
     _require(isinstance(generated, bytes), "CSPRNG did not return bytes")
@@ -251,31 +272,68 @@ def _acquire_mode_t_key(
     )
 
 
-def acquire_mode_t_key(
-    pre_execution_admission: Mapping[str, Any],
+def admit_and_acquire_mode_t_key(
+    token: str | bytes,
+    expectation: AttestationExpectation,
     *,
-    key_source_evidence: Mapping[str, Any],
     environment: Mapping[str, str] | None = None,
-) -> ModeTKeyLease:
-    """Production entry point: require production-authenticated Google key provenance."""
-    return _acquire_mode_t_key(
-        pre_execution_admission,
-        key_source_evidence=key_source_evidence,
+    verified_at_unix: int | None = None,
+) -> ModeTKeyAcquisition:
+    """Production entry: authenticate raw token, admit PRE claims, then generate key."""
+    _require(expectation.phase == PRE_EXECUTION, "production key path requires PRE_EXECUTION expectation")
+    verified = verify_google_confidential_space_token(
+        token,
+        verified_at_unix=verified_at_unix,
+    )
+    pre = verify_confidential_space_attestation(
+        verified.claims,
+        expectation,
+        verified.token_context,
+    )
+    lease = _acquire_from_verified(
+        pre,
+        verified,
         environment=environment,
         production=True,
     )
+    return ModeTKeyAcquisition(lease, pre, verified.evidence())
 
 
-def acquire_mode_t_key_synthetic(
-    pre_execution_admission: Mapping[str, Any],
+def admit_and_acquire_mode_t_key_synthetic(
+    token: str | bytes,
+    expectation: AttestationExpectation,
     *,
-    key_source_evidence: Mapping[str, Any],
+    verifier: GoogleOIDCVerifier,
+    environment: Mapping[str, str] | None = None,
+    verified_at_unix: int | None = None,
+) -> ModeTKeyAcquisition:
+    """Explicit synthetic test path using an injected synthetic verifier."""
+    _require(expectation.phase == PRE_EXECUTION, "synthetic key path requires PRE_EXECUTION expectation")
+    verified = verifier.verify(token, verified_at_unix=verified_at_unix)
+    pre = verify_confidential_space_attestation(
+        verified.claims,
+        expectation,
+        verified.token_context,
+    )
+    lease = _acquire_from_verified(
+        pre,
+        verified,
+        environment=environment,
+        production=False,
+    )
+    return ModeTKeyAcquisition(lease, pre, verified.evidence())
+
+
+def acquire_mode_t_key_synthetic_from_verified(
+    pre_execution_admission: Mapping[str, Any],
+    verified: VerifiedGoogleOIDCToken,
+    *,
     environment: Mapping[str, str] | None = None,
 ) -> ModeTKeyLease:
-    """Synthetic-only entry point: cannot accept production provenance by implication."""
-    return _acquire_mode_t_key(
+    """Test-only seam for adversarial mutation tests after normalization."""
+    return _acquire_from_verified(
         pre_execution_admission,
-        key_source_evidence=key_source_evidence,
+        verified,
         environment=environment,
         production=False,
     )
