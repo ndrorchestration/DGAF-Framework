@@ -43,7 +43,10 @@ Google's raw token-claims reference currently documents `hwmodel=GCP_INTEL_TDX` 
 ## Classification vocabulary
 
 - **ENFORCED** — current DGAF admission rejects the token when the required value or shape is absent or mismatched.
-- **ENFORCED + IDENTITY-BOUND** — enforced and included in the normalized runtime/policy identity used by the reviewed lifecycle.
+- **ENFORCED + RUNTIME-IDENTITY-BOUND** — enforced and included in `runtime_identity_sha256` for PRE/POST lineage equality.
+- **ENFORCED + POLICY-BOUND** — the acceptance rule or fixed ceiling is included in the canonical admission-policy identity; the observed token value is not thereby claimed to be part of `runtime_identity_sha256`.
+- **ENFORCED + PHASE-BINDING** — enforced as a run-phase cryptographic binding rather than as a stable runtime identity field.
+- **ENFORCED + RETAINED EVIDENCE** — enforced and emitted in normalized evidence, but the observed value is not part of `runtime_identity_sha256`.
 - **CRYPTOGRAPHIC PREREQUISITE** — authenticated before workload claims are accepted, but not itself a workload-policy claim.
 - **SIGNED / REVIEW DECISION OPEN** — Google signs or exposes the claim, but current DGAF acceptance does not bind it; Issue #320/#310 must decide whether that is appropriate.
 - **INTENTIONALLY VERSION-ABSTRACTED** — exact value is not pinned because the current policy deliberately uses a documented support-state abstraction.
@@ -56,27 +59,27 @@ Google's raw token-claims reference currently documents `hwmodel=GCP_INTEL_TDX` 
 | JWT signature / Google issuer key provenance | CRYPTOGRAPHIC PREREQUISITE | Separate OIDC verifier must authenticate the token before claim admission | Signature success is not workload-policy acceptance |
 | `iss` | ENFORCED | exact Google Cloud Attestation issuer | Other attestation issuers are not accepted by this path |
 | `oemid` | ENFORCED | Google PEN `11129` | Exact Google attestation-service identity |
-| `aud` | ENFORCED + IDENTITY-BOUND | exact predeclared audience | Included in canonical admission-policy identity |
-| `sub` | ENFORCED + IDENTITY-BOUND | exact predeclared Confidential VM subject | Raw token `sub` is a fully qualified VM selfLink and therefore carries project/zone/instance identity indirectly |
-| `google_service_accounts` | ENFORCED + IDENTITY-BOUND | exact predeclared service-account set | No caller-selected widening is accepted |
-| `swname` | ENFORCED | `CONFIDENTIAL_SPACE` | Distinguishes the approved Confidential Space OS identity |
-| `hwmodel` | ENFORCED + IDENTITY-BOUND | raw token value `GCP_INTEL_TDX` | Do not confuse with the policy-facing WIP assertion spelling `INTEL_TDX` |
-| `attester_tcb` | ENFORCED + IDENTITY-BOUND | exactly `['INTEL']` | Establishes source of TDX attestation evidence, not real-time TCB freshness |
-| `secboot` | ENFORCED | `true` | Required by current claim contract |
-| `dbgstat` | ENFORCED + IDENTITY-BOUND | `disabled-since-boot` | Production image only |
-| `iat`, `nbf`, `exp` | ENFORCED + IDENTITY-BOUND | integer time validity with reviewed skew policy | Stale/malformed/incoherent timing fails closed |
-| `exp - iat` | ENFORCED + IDENTITY-BOUND | maximum `3600` seconds | Bound by PR #338 from Google's documented one-hour token lifetime |
-| `eat_nonce` | ENFORCED + IDENTITY-BOUND | exactly one expected SHA-256 phase binding | PRE binds C; POST binds the emitted output/evidence manifest |
-| `submods.confidential_space.support_attributes` | ENFORCED + IDENTITY-BOUND | must contain `STABLE` | Google documents STABLE as supported and monitored for vulnerabilities |
-| `submods.confidential_space.monitoring_enabled.memory` | ENFORCED + IDENTITY-BOUND | exactly `false` | Prevents admission when configured memory monitoring is active |
-| `submods.container.image_digest` | ENFORCED + IDENTITY-BOUND | exact reviewed image digest | Current workload identity is digest-bound |
-| `submods.container.args` | ENFORCED + IDENTITY-BOUND | exact predeclared arguments | Run-specific non-secret inputs only |
-| `submods.container.cmd_override` | ENFORCED + IDENTITY-BOUND | exact reviewed value | Current production policy expects no unreviewed command substitution |
-| `submods.container.env` | ENFORCED + IDENTITY-BOUND | exact explicit non-secret environment | Operational secrets are not authorized through this surface |
-| `submods.container.env_override` | ENFORCED + IDENTITY-BOUND | empty object | Operator environment substitution fails closed |
-| `submods.container.restart_policy` | ENFORCED + IDENTITY-BOUND | `Never` | Supports single-use / no-silent-retry lifecycle semantics |
-| PRE/POST runtime identity equality | ENFORCED | normalized runtime identity must match across both attestation phases | Prevents phase substitution across different accepted runtime identities |
-| PRE/POST token distinctness and ordering | ENFORCED | distinct token digests and required lifecycle ordering | This is lifecycle evidence, not a Google token claim |
+| `aud` | ENFORCED + RUNTIME-IDENTITY-BOUND | exact predeclared audience | Also included in canonical admission-policy identity |
+| `sub` | ENFORCED + RUNTIME-IDENTITY-BOUND | exact predeclared Confidential VM subject | Raw token `sub` is a fully qualified VM selfLink and therefore carries project/zone/instance identity indirectly |
+| `google_service_accounts` | ENFORCED + RUNTIME-IDENTITY-BOUND | exact predeclared service-account set | Also included in canonical admission-policy identity |
+| `swname` | ENFORCED + RUNTIME-IDENTITY-BOUND | `CONFIDENTIAL_SPACE` | Normalized as `software_identity` in runtime identity |
+| `hwmodel` | ENFORCED + RUNTIME-IDENTITY-BOUND | raw token value `GCP_INTEL_TDX` | Also policy-bound; do not confuse with the WIP assertion spelling `INTEL_TDX` |
+| `attester_tcb` | ENFORCED + RUNTIME-IDENTITY-BOUND | exactly `['INTEL']` | Establishes source of TDX attestation evidence, not real-time TCB freshness |
+| `secboot` | ENFORCED + RUNTIME-IDENTITY-BOUND | `true` | Normalized as `secure_boot=true` |
+| `dbgstat` | ENFORCED + RUNTIME-IDENTITY-BOUND | `disabled-since-boot` | Also policy-bound; production image only |
+| `iat`, `nbf`, `exp` | ENFORCED + RETAINED EVIDENCE | integer time validity with reviewed skew policy | Emitted as evidence; actual timestamps are not part of runtime identity |
+| `exp - iat` | ENFORCED + POLICY-BOUND | maximum `3600` seconds | Observed lifetime is retained; fixed ceiling is bound by PR #338 into policy identity |
+| `eat_nonce` | ENFORCED + PHASE-BINDING | exactly one expected SHA-256 phase binding | PRE binds C; POST binds the emitted output/evidence manifest |
+| `submods.confidential_space.support_attributes` | ENFORCED + RUNTIME-IDENTITY-BOUND | must contain `STABLE` | Policy and runtime identity bind the required support attribute, not the entire observed list |
+| `submods.confidential_space.monitoring_enabled.memory` | ENFORCED + RUNTIME-IDENTITY-BOUND | exactly `false` | Prevents admission when configured memory monitoring is active |
+| `submods.container.image_digest` | ENFORCED + RUNTIME-IDENTITY-BOUND | exact reviewed image digest | Current workload authorization identity is digest-bound |
+| `submods.container.args` | ENFORCED + RUNTIME-IDENTITY-BOUND | exact predeclared arguments | Run-specific non-secret inputs only |
+| `submods.container.cmd_override` | ENFORCED + RUNTIME-IDENTITY-BOUND | exact reviewed value | Current production policy expects no unreviewed command substitution |
+| `submods.container.env` | ENFORCED + RUNTIME-IDENTITY-BOUND | exact explicit non-secret environment | Operational secrets are not authorized through this surface |
+| `submods.container.env_override` | ENFORCED + RUNTIME-IDENTITY-BOUND | empty object | Operator environment substitution fails closed |
+| `submods.container.restart_policy` | ENFORCED + RUNTIME-IDENTITY-BOUND | `Never` | Supports single-use / no-silent-retry lifecycle semantics |
+| PRE/POST runtime identity equality | ENFORCED | exact `runtime_identity_sha256` equality | Prevents phase substitution across different accepted runtime identities |
+| PRE/POST token distinctness and ordering | ENFORCED | distinct token digests and nondecreasing issue time | Lifecycle evidence, not a stable runtime identity field |
 
 ## Signed claims not currently bound into DGAF acceptance identity
 
