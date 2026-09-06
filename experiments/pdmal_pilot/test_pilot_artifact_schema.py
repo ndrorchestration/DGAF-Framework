@@ -20,7 +20,7 @@ def _rehash(record: dict) -> None:
 def _record(condition: str, trial_id: int, topology: str, failure_count: int) -> dict:
     record = {
         "experiment_id": "PDMAL-PILOT-V1",
-        "protocol_version": "0.7.5",
+        "protocol_version": "0.7.6",
         "experiment_commit_sha": "a" * 40,
         "seed_id": 20260819,
         "blinded_condition_id": condition,
