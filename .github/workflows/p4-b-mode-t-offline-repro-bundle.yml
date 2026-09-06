@@ -1,0 +1,147 @@
+name: P4-B Mode T Offline Repro Bundle
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-b-mode-t-offline-repro-bundle.yml'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier.go'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLOCK_VERSION: 'v1.2.0'
+  TLOCK_SOURCE_COMMIT: '7b54141a9733fd6fa207587a11148280e6fb020d'
+  GO_VERSION: '1.22.12'
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  EXPECTED_REFERENCE_BINARY_SHA256: '01f4dc9ba1e9e77145c5b3b3bebdc4290e7f541b9a43f10ef7393579c07a205e'
+  GOTOOLCHAIN: local
+  CGO_ENABLED: '0'
+  GOOS: linux
+  GOARCH: amd64
+  GOAMD64: v1
+
+jobs:
+  prepare-offline-bundle:
+    name: Package public exact build inputs for independent offline reproduction
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact DGAF evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact verifier source boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          test "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')" = \
+               'b07e630320cffa2f03b87e83bceea3723ebf2b0e62577bb7e8ac4f9888cc7364'
+          grep -F 'tlock.New(network).Strict().Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go
+          if grep -F 'tlock.New(network).Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go; then
+            echo 'unstrict tlock decrypt call is forbidden' >&2
+            exit 1
+          fi
+
+      - name: Set up exact Go toolchain
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: '1.22.12'
+          check-latest: false
+          cache: false
+
+      - name: Fetch exact upstream tlock source and module graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(go env GOVERSION)" = "go${GO_VERSION}"
+          test "$(go env GOOS)" = "$GOOS"
+          test "$(go env GOARCH)" = "$GOARCH"
+          test "$(go env GOAMD64)" = "$GOAMD64"
+          test "$(go env CGO_ENABLED)" = "$CGO_ENABLED"
+          rm -rf upstream-tlock
+          git init -q upstream-tlock
+          git -C upstream-tlock remote add origin https://github.com/drand/tlock.git
+          git -C upstream-tlock fetch --quiet --depth 1 origin "$TLOCK_SOURCE_COMMIT"
+          git -C upstream-tlock checkout --quiet --detach FETCH_HEAD
+          test "$(git -C upstream-tlock rev-parse HEAD)" = "$TLOCK_SOURCE_COMMIT"
+          test "$(awk '$1 == "go" {print $2}' upstream-tlock/go.mod)" = '1.22'
+          cp experiments/pdmal_pilot/mode_t_strict_verifier.go \
+             upstream-tlock/cmd/dgaf-strict-verifier/main.go
+          (
+            cd upstream-tlock
+            go mod download
+            go mod verify
+          )
+
+      - name: Build reference identity before packaging
+        shell: bash
+        run: |
+          set -euo pipefail
+          (
+            cd upstream-tlock
+            go build -mod=readonly -trimpath -buildvcs=false -ldflags='-buildid=' \
+              -o ../reference-verifier ./cmd/dgaf-strict-verifier
+          )
+          actual="$(sha256sum reference-verifier | awk '{print $1}')"
+          test "$actual" = "$EXPECTED_REFERENCE_BINARY_SHA256"
+          rm -f reference-verifier
+
+      - name: Assemble network-free reproduction bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='offline-repro-root'
+          rm -rf "$root" offline-repro-bundle.tar.gz offline-repro-bundle.tar.gz.sha256
+          mkdir -p "$root"
+
+          cp -a "$(go env GOROOT)" "$root/go"
+          cp -a "$(go env GOMODCACHE)" "$root/modcache"
+          cp -a upstream-tlock "$root/tlock"
+          rm -rf "$root/tlock/.git"
+
+          {
+            printf 'schema_version=1\n'
+            printf 'bundle_class=P4_B_MODE_T_OFFLINE_REPRO_INPUTS_V1\n'
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'verifier_source_sha256=%s\n' "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')"
+            printf 'tlock_version=%s\n' "$TLOCK_VERSION"
+            printf 'tlock_source_commit=%s\n' "$TLOCK_SOURCE_COMMIT"
+            printf 'upstream_go_mod_sha256=%s\n' "$(sha256sum upstream-tlock/go.mod | awk '{print $1}')"
+            printf 'upstream_go_sum_sha256=%s\n' "$(sha256sum upstream-tlock/go.sum | awk '{print $1}')"
+            printf 'go_version=%s\n' "$(go env GOVERSION)"
+            printf 'go_binary_sha256=%s\n' "$(sha256sum "$(go env GOROOT)/bin/go" | awk '{print $1}')"
+            printf 'compile_tool_sha256=%s\n' "$(sha256sum "$(go env GOROOT)/pkg/tool/linux_amd64/compile" | awk '{print $1}')"
+            printf 'goos=%s\n' "$GOOS"
+            printf 'goarch=%s\n' "$GOARCH"
+            printf 'goamd64=%s\n' "$GOAMD64"
+            printf 'cgo_enabled=%s\n' "$CGO_ENABLED"
+            printf 'expected_reference_binary_sha256=%s\n' "$EXPECTED_REFERENCE_BINARY_SHA256"
+            printf 'protected_material_included=false\n'
+            printf 'ciphertext_included=false\n'
+            printf 'empirical_data_included=false\n'
+            printf 'freeze_established=false\n'
+            printf 'pilot_authorized=false\n'
+            printf 'empirical_n=0\n'
+          } > "$root/MANIFEST.txt"
+
+          cp "$root/MANIFEST.txt" OFFLINE_REPRO_MANIFEST.txt
+          tar -C "$root" -czf offline-repro-bundle.tar.gz .
+          sha256sum offline-repro-bundle.tar.gz > offline-repro-bundle.tar.gz.sha256
+
+      - name: Upload public offline reproduction inputs
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: p4-b-mode-t-offline-repro-inputs-${{ env.EVIDENCE_SHA }}
+          path: |
+            offline-repro-bundle.tar.gz
+            offline-repro-bundle.tar.gz.sha256
+            OFFLINE_REPRO_MANIFEST.txt
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
