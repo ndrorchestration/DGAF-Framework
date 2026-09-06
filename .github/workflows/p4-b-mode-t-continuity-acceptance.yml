@@ -1,0 +1,88 @@
+name: P4-B Mode T Continuity Acceptance Contract
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-b-mode-t-continuity-acceptance.yml'
+      - 'experiments/pdmal_pilot/mode_t_continuity_acceptance.py'
+      - 'experiments/pdmal_pilot/test_mode_t_continuity_acceptance.py'
+      - 'docs/governance/P4_B_MODE_T_CONTINUITY_ACCEPTANCE_CONTRACT_2026-09-06.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  structural-binding:
+    name: Fail-closed final-evidence binding preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run continuity-acceptance contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_continuity_acceptance.py -v
+
+      - name: Enforce non-promotion boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path(
+              'experiments/pdmal_pilot/mode_t_continuity_acceptance.py'
+          ).read_text(encoding='utf-8')
+          required = (
+              'PASS_STRUCTURAL_BINDING_ONLY',
+              'final_independent_adjudication": "NOT_EXECUTED"',
+              'issue_295_closed": False',
+              'p4_closed": False',
+              'freeze_established": False',
+              'pilot_authorized": False',
+              'empirical_n": 0',
+          )
+          for marker in required:
+              if marker not in source:
+                  raise SystemExit(f'missing non-promotion marker: {marker}')
+
+          forbidden = (
+              'issue_295_closed": True',
+              'p4_closed": True',
+              'freeze_established": True',
+              'pilot_authorized": True',
+          )
+          for marker in forbidden:
+              if marker in source:
+                  raise SystemExit(f'forbidden promotion marker: {marker}')
+          PY
+
+      - name: Report bounded interpretation
+        run: |
+          echo 'PASS: Issue #295 final-evidence identities are structurally bound.'
+          echo 'No protected run, external retention, adjudication, P4 closure, freeze, authorization, or empirical execution occurred.'
+          echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.'
