@@ -1,4 +1,5 @@
 # Reconciliation Alignment — Notion Control Layer Verified
+
 **Generated:** 2026-09-04  
 **Source:** Notion SSOT (`MASTER RUBRIC REGISTRY & AUDIT — 2026-09-04`) confirmed by user + on-disk verification  
 **Canonical home:** `docs/evaluation/`  
@@ -55,4 +56,4 @@ Both repo artifacts are consistent with the Notion state: 24 CONFIRMED + 1 CONTR
 
 ---
 
-*Classification: T1 PUBLIC — reconciliation alignment record. Notion SSOT confirmed by user; repo artifacts updated to match. Scientific boundary: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.*
+Classification: T1 PUBLIC — reconciliation alignment record. Notion SSOT confirmed by user; repo artifacts updated to match. Scientific boundary: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.

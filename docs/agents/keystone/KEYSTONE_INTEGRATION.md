@@ -105,4 +105,4 @@ These lanes are distinct but overlapping. Keystone may consume Clarion's runtime
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

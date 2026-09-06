@@ -78,4 +78,4 @@ Cadence does **not** merge branches, open pull requests, push commits, authorize
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

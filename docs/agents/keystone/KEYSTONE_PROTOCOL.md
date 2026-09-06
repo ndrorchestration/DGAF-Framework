@@ -12,7 +12,7 @@
 
 **Trigger:** Orchestrator provides a workflow YAML file path (or set of paths) and asks Keystone to inspect it for structural defects.
 
-```
+```text
 Step 1: Read the workflow YAML file at the specified path/SHA
 
 Step 2: Parse the workflow structure:
@@ -38,7 +38,7 @@ Step 4: Report each finding:
          — Severity
          — Description (what the defect is, why it matters, what the correct structure should be)
          — Evidence (the specific content supporting the finding)
-```
+```text
 
 ---
 
@@ -46,7 +46,7 @@ Step 4: Report each finding:
 
 **Trigger:** Orchestrator asks Keystone to analyze whether a workflow's triggers correctly isolate evidence-producing runs.
 
-```
+```text
 Step 1: Identify the workflow's intended purpose
          — Is it an evidence-producing workflow (must be isolated)?
          — Is it a validation workflow (may have broader triggers)?
@@ -71,7 +71,7 @@ Step 4: Report the trigger scoping analysis:
          — Whether the triggers correctly isolate (or not)
          — Any isolation defects, with the specific trigger entries involved
          — Any coverage defects, with the specific missing triggers
-```
+```text
 
 ---
 
@@ -79,7 +79,7 @@ Step 4: Report the trigger scoping analysis:
 
 **Trigger:** Orchestrator asks Keystone to inspect how the repository pins external artifacts.
 
-```
+```text
 Step 1: Identify all pinned artifacts in scope:
          — TLA+ Tools release pins (governance-ci.yml, TLA+ Tools download steps)
          — Dependency wheel pins (requirements files, lock files, pip install steps)
@@ -107,7 +107,7 @@ Step 4: Report each pin-management finding:
          — Verification status (verified at download / not verified at download)
          — Reproducibility status (reproducible / not reproducible)
          — Pin drift status (match / mismatch / unable to verify)
-```
+```text
 
 ---
 
@@ -115,7 +115,7 @@ Step 4: Report each pin-management finding:
 
 **Trigger:** Orchestrator asks Keystone to audit workflow permissions.
 
-```
+```text
 Step 1: For each workflow in scope:
          — Read the permissions block (if present)
          — Identify the jobs and steps that use GITHUB_TOKEN
@@ -136,7 +136,7 @@ Step 4: Report each permission finding:
          — Granted permission
          — Needed permission (if determinable)
          — Severity
-```
+```text
 
 ---
 
@@ -144,7 +144,7 @@ Step 4: Report each permission finding:
 
 **Trigger:** Orchestrator asks Keystone to verify whether a fail-closed gate is correctly structured.
 
-```
+```text
 Step 1: Identify the gate:
          — Gate name or step name
          — Workflow file path and line reference
@@ -168,7 +168,7 @@ Step 4: Report the fail-closed assessment:
          — Actual structure (how the step checks, what it does on success/failure)
          — Fail-closed assessment (correctly fails closed / does not fail closed / unclear)
          — Any bypass or skip risks
-```
+```text
 
 ---
 
@@ -176,7 +176,7 @@ Step 4: Report the fail-closed assessment:
 
 **Trigger:** Keystone has completed one or more inspection procedures and must report findings.
 
-```
+```text
 Step 1: For each finding, compile:
          — File path
          — Line reference
@@ -197,7 +197,7 @@ Step 3: Report the findings:
          — Summary count by severity
          — Any findings that are interconnected (e.g., a trigger scoping defect that
            creates a provenance risk Continuum should flag)
-```
+```text
 
 ---
 
@@ -205,7 +205,7 @@ Step 3: Report the findings:
 
 **Trigger:** Any point in a procedure where Keystone would need to take an action it is not authorized to perform.
 
-```
+```text
 Step 1: Detect the boundary:
          — Fix requires editing a file (Keystone does not edit files)
          — Merge requires branch integration (Keystone does not merge)
@@ -220,7 +220,7 @@ Step 2: Stop and report:
          — Which agent or authority is the appropriate actor
 
 Step 3: Do NOT attempt to proceed past the boundary
-```
+```text
 
 ---
 
@@ -238,4 +238,4 @@ Step 3: Do NOT attempt to proceed past the boundary
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

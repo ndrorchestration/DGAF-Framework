@@ -110,4 +110,4 @@ Cadence reports the parallelism assessment with the specific files, CI checks, a
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

@@ -1,4 +1,5 @@
 # DGAF Master Rubric Registry — Repository Inventory & Reconciliation
+
 **Generated:** 2026-09-04  
 **Source of truth for file verification:** this repository's disk inventory (live scan)  
 **Notion overlay:** [MASTER RUBRIC REGISTRY & AUDIT — 2026-09-04](https://app.notion.com/p/3d1f5bad238b812d8e66c7d7f0747cde) (OPEN audit — lower bound, not claimed exhaustive)  
@@ -260,20 +261,23 @@ Create the cohort measurement as a registry entry (M-001) governed by the regist
 ## 10. What's verified vs. what needs a separate pass
 
 ### Verified from this scan (filesystem evidence)
+
 - Every QA_RUBRIC file path and presence/absence status in §1 and §4
 - The six-layer completeness for the 21 full-6-layer folders and the 2 five-layer folders (continuum, cadence) in §3
 - The 5 non-agent rubric-bearing documents in §5
 - The corrected agent-rubric count (25 files, 23 folders) vs. the registry's provisional 17
 
 ### Needs a separate content-read pass
+
 - Each rubric's dimensions, scoring method, thresholds, blocking behavior, version — these live inside each rubric file's content, not in the filename
 - The sentinel ×2 deduplication question (two distinct rubrics vs. primary + variant)
 - Equilibrium and Synergy layer completeness (folder exists; not scanned for all 6 layers)
 - The "industry-translation rubric," "Gold Star standards," "multi-scale evaluation rubrics," and "qualitative maturity rubric" referenced in the Notion registry's A-001–A-007 rows — whether they exist on disk as rubric-bearing files or only as Notion references
 
 ### Needs a dedicated scan
+
 - All rubric-like documents in `docs/` and `.hermes/work/` that may function as evaluation instruments without the word "RUBRIC" in the filename (the `grep` in the interrupted response found 40+ candidate files in `.hermes/work/` alone, plus the `docs/` rubric-bearing set in §5)
 
 ---
 
-*Classification: T1 PUBLIC — filesystem-verified inventory, not a claim of exhaustive completeness. The 25-agent-QA_RUBRIC count is a lower bound from the live scan; the full rubric ecosystem includes rubric-like instruments not captured by the QA_RUBRIC filename pattern.*
+Classification: T1 PUBLIC — filesystem-verified inventory, not a claim of exhaustive completeness. The 25-agent-QA_RUBRIC count is a lower bound from the live scan; the full rubric ecosystem includes rubric-like instruments not captured by the QA_RUBRIC filename pattern.

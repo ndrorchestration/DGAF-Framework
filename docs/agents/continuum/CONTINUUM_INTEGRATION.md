@@ -96,4 +96,4 @@ These lanes are distinct. Continuum does not archive (The Librarian's lane), doe
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

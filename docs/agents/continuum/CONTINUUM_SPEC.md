@@ -86,4 +86,4 @@ Continuum does **not** produce evidence, execute workflows, close gates, or auth
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

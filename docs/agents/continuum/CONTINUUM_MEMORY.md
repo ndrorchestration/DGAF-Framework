@@ -67,4 +67,4 @@
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

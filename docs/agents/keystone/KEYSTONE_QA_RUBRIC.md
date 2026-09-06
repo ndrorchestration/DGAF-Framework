@@ -65,12 +65,12 @@
 
 ## Composite Score
 
-```
+```text
 Keystone QA Score = D1×0.25 + D2×0.30 + D3×0.20 + D4×0.15 + D5×0.10
 Pass threshold: ≥ 0.75
 Critical fail (D1 or D2 or D4): automatic rubric fail regardless of composite
-```
+```text
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

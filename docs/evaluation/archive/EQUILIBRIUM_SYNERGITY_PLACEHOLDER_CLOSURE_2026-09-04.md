@@ -32,4 +32,4 @@ Neither folder contains a SPEC, PROTOCOL, QA_RUBRIC, INTEGRATION, or MEMORY file
 - Six-layer standard: `docs/agents/AGENT_ECOSYSTEM_REGISTRY.md` (27 agents / 162 files; standard inventory = SPEC + KB_SEED + PROTOCOL + QA_RUBRIC + INTEGRATION + MEMORY).
 - Registry required fields: MASTER RUBRIC REGISTRY & AUDIT — 2026-09-04 (Notion page).
 
-*Classification: T1 PUBLIC — closure determination from live filesystem scan, not a claim of exhaustive completeness.*
+Classification: T1 PUBLIC — closure determination from live filesystem scan, not a claim of exhaustive completeness.
