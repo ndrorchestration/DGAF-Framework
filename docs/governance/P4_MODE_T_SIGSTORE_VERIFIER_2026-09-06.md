@@ -3,87 +3,133 @@
 Date: 2026-09-06  
 Issues: #287 / #296 / #310 / #316  
 Parent PR: #323  
-Status: **VERIFIER CONTRACT / NO REAL BUNDLE VERIFICATION EXECUTED BY CI**
+Status: **VERIFIER CANDIDATE / EXACT-HEAD CI REQUIRED**
 
 Controlling state remains **P4 OPEN / PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0**.
 
 ## Purpose
 
-PR #323 deliberately accepts a normalized `VerifiedTransparencyContext` rather than implementing Sigstore cryptography itself. That separation is useful, but it leaves an important trust seam if production code can populate verification booleans directly.
+PR #323 deliberately introduced a normalized `VerifiedTransparencyContext` rather than implementing Sigstore cryptography inside the retention contract. That separation is useful, but it creates a trust seam if an active path can populate cryptographic-verification booleans directly.
 
-This tranche removes that caller-asserted cryptography seam without creating a second Sigstore implementation. It extracts only the existing verification behavior already designed in #299:
+This tranche adds a read-only cryptographic boundary around the retention contract without creating a second signer, OIDC client, Rekor uploader, or time authority.
 
-- exact Cosign executable SHA-256 verification;
-- `cosign verify-blob` over existing artifact and bundle bytes;
-- exact certificate identity;
-- exact GitHub Actions OIDC issuer;
-- bundle/transparency material normalization;
-- handoff into #323's retention contract.
+The public DGAF entry point requires:
 
-It does **not** extract #299's signing path, OIDC token request, public Rekor submission, or timing experiment.
+1. a predeclared `TransparencyExpectation`;
+2. the exact reviewed Cosign Linux/amd64 binary identity;
+3. an existing public/non-secret record artifact;
+4. an existing standardized Sigstore v0.3 bundle;
+5. exact certificate identity from the predeclared expectation;
+6. the fixed GitHub Actions OIDC issuer;
+7. a positive `cosign verify-blob` result;
+8. an actual transparency-log inclusion proof;
+9. exact artifact digest equality when the result is handed to the retention contract.
 
-## Deduplication rule
+It does **not** sign, request OIDC, upload to Rekor, or perform a DGAF external-retention write.
 
-#299/#296 remains the canonical controlled public-signing/timing apparatus. This module reuses its pinned Cosign verification model rather than developing a second signing or transparency client.
+## Load-bearing Cosign identity
 
-No new public-transparency experiment issue is created by this tranche.
-
-## `mode_t_sigstore_verifier.py`
-
-The verifier requires:
-
-1. an existing Cosign executable whose bytes match the reviewed SHA-256;
-2. an existing public/non-secret record artifact;
-3. an existing Sigstore bundle;
-4. the exact expected certificate identity;
-5. the GitHub Actions OIDC issuer `https://token.actions.githubusercontent.com`;
-6. a positive `cosign verify-blob` result before any normalized verification context is returned.
-
-The reviewed Cosign identity reused from #299 is:
+The verifier pins:
 
 ```text
 version policy: v3.1.3
 linux-amd64 SHA-256: 4629c757b7618056f8ddd7e2625ae9fdd94c0372a65049520bc7d9df9efc7f71
 ```
 
-The module additionally requires exactly one transparency-log entry, a non-negative log index, a non-empty log identity, and inclusion proof or inclusion promise material before normalization.
+This minimum is security-relevant rather than cosmetic. Cosign v3.1.3 is the first v3 release patched for **GHSA-fx35-mq7g-6g98**, a keyless `verify-blob` verification bypass affecting legacy JSON bundles in v3 <= 3.1.2.
+
+The DGAF wrapper does not accept a caller-selected Cosign digest. The fixed executable digest is code policy.
+
+## Bundle-format policy
+
+Current Sigstore protobuf specifications define the current bundle as v0.3 and identify transparency entries through `LogId` plus `logIndex`.
+
+DGAF therefore accepts only the reviewed v0.3 standardized media types:
+
+- `application/vnd.dev.sigstore.bundle.v0.3+json`
+- `application/vnd.dev.sigstore.bundle+json;version=0.3`
+
+Legacy Cosign JSON bundles and standardized v0.1/v0.2 bundles are rejected by this lane even if a future tool invocation would otherwise accept them.
+
+An `inclusionPromise` alone is not enough for DGAF's normalized anti-deletion inclusion predicate. The bundle must contain a non-empty `inclusionProof`.
+
+## Log identity correction
+
+The retention schema previously used the name `log_entry_uuid` for Sigstore `logId.keyId`. That was semantically inaccurate: `LogId.keyId` identifies the transparency log key, not an entry UUID.
+
+The child lane corrects the field to `log_id_key_id` and keeps `log_index` separately. No UUID claim is made.
+
+## Protobuf JSON numeric compatibility
+
+Sigstore protobuf JSON may encode uint64 values such as `logIndex` and `integratedTime` as decimal strings. The verifier accepts either a non-negative integer or a canonical unsigned decimal string and normalizes to Python integers.
+
+It rejects booleans, negatives, signs, whitespace, non-decimal forms, and non-canonical leading-zero encodings.
+
+`integratedTime` remains **metadata only**. It is not promoted to an independent wall-clock or L-before-release proof.
+
+## API trust boundary
+
+The old public `normalize_verified_bundle(...)` shape is removed. Bundle normalization is private and can only be reached through the public cryptographic verification flow in ordinary API use.
+
+The public function is:
+
+```text
+verify_retention_record_with_sigstore(...)
+```
+
+It consumes the predeclared expectation and does not accept a caller-selected OIDC issuer or Cosign digest.
+
+`retention_safe_evidence(...)` accepts the resulting verified wrapper rather than a caller-supplied tool digest, preventing evidence serialization from substituting a different Cosign identity.
+
+## Dedicated CI
+
+The dedicated workflow performs two classes of evidence:
+
+### Deterministic repository tests
+
+Tests cover:
+
+- exact read-only `verify-blob` command construction;
+- fixed GitHub OIDC issuer and expectation-bound certificate identity;
+- wrong Cosign binary rejection before verification;
+- non-zero Cosign result rejection;
+- no public normalize-without-crypto entry point;
+- no caller-selectable Cosign digest or OIDC issuer;
+- legacy/v0.1/v0.2 bundle rejection;
+- promise-only bundle rejection;
+- missing/multiple transparency-entry rejection;
+- canonical protobuf uint64 parsing;
+- tampered/missing log identity rejection;
+- no promotion to real retention, temporal order, freeze, authorization, or empirical N.
+
+### Real read-only upstream cryptographic smoke test
+
+The workflow downloads the official Cosign v3.1.3 Linux/amd64 release binary and its official Sigstore bundle, requires the exact reviewed SHA-256, and performs identity-based `verify-blob` verification against the documented release identity:
+
+```text
+keyless@projectsigstore.iam.gserviceaccount.com
+https://accounts.google.com
+```
+
+It then appends one byte to a copy and requires verification to fail.
+
+This is a **public upstream verifier-mechanics fixture only**. It is not a DGAF Mode-T record, does not create a transparency entry, and does not satisfy DGAF retention or time-order gates.
 
 ## Trust interpretation
 
-A real successful call to `verify_sigstore_bundle(...)` can establish that the supplied artifact/bundle passed the reviewed local Cosign verification command and can produce the normalized cryptographic predicates consumed by #323.
+A successful DGAF call can establish that supplied artifact/bundle bytes passed the exact reviewed local cryptographic verification path and that the normalized result matches the predeclared record digest and identity.
 
-That is still narrower than real P6 retention. The verifier itself performs no external write and therefore cannot establish that an independently controlled durable copy exists.
+That is still narrower than real P6/P4 evidence. The verifier performs no DGAF external write and cannot establish that a separately controlled durable copy exists merely because a bundle verifies.
 
-It also does not promote Rekor `integratedTime` into independent temporal-order proof. `integratedTime` remains metadata only.
-
-## CI boundary
-
-The dedicated CI lane validates the interface with deterministic local fixtures and mocks the Cosign process result. This proves command construction, exact executable hashing, fail-closed parser behavior, handoff to #323, and non-promotion semantics.
-
-**CI PASS must not be described as a real Sigstore cryptographic verification.** No authentic signed bundle fixture is supplied by this tranche and no public Rekor action is performed.
-
-A real cryptographic evidence claim requires an actual artifact/bundle generated or retrieved through the separately controlled evidence process and an actual pinned Cosign execution whose result and bytes are retained.
-
-## Negative controls
-
-Tests reject or constrain:
-
-- wrong Cosign executable digest before subprocess execution;
-- unexpected OIDC issuer before subprocess execution;
-- non-zero Cosign verification result;
-- multiple transparency entries where the contract expects exactly one;
-- missing inclusion material;
-- any interpretation that cryptographic verification establishes external retention, time order, freeze, pilot authorization, or empirical N>0.
-
-Static CI guards prohibit `sign-blob`, OIDC write permission, Google authentication, freeze/authorization promotion markers, and external-signing behavior from entering this workflow.
+Likewise, transparency inclusion is kept separate from temporal-order evidence.
 
 ## Remaining real blockers
 
 This tranche does not close:
 
 - independently retained and re-verifiable R/A/C admission-policy evidence under #316;
-- actual Sigstore bundle verification for a real Mode-T public record;
-- independent durable external retention/retrieval;
+- an actual Sigstore bundle for a real Mode-T DGAF record;
+- independently retrieved/reverified durable DGAF external-retention evidence;
 - duplicate/one-C-per-authorization adjudication on the real external evidence source;
 - independent L-before-release time/order evidence if that predicate remains required;
 - independent security review;
