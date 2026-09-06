@@ -1,0 +1,233 @@
+name: P4-B Mode T Cross-Runner Reproducibility
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-b-mode-t-cross-runner-repro.yml'
+      - 'docs/governance/P4_B_MODE_T_CROSS_RUNNER_REPRODUCIBILITY_2026-09-05.md'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier.go'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLOCK_VERSION: 'v1.2.0'
+  TLOCK_SOURCE_COMMIT: '7b54141a9733fd6fa207587a11148280e6fb020d'
+  GO_VERSION: '1.22.12'
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  GOTOOLCHAIN: local
+  CGO_ENABLED: '0'
+  GOOS: linux
+  GOARCH: amd64
+  GOAMD64: v1
+
+jobs:
+  build:
+    name: Build verifier on ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-22.04
+            label: ubuntu-22.04
+          - runner: ubuntu-24.04
+            label: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact DGAF evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact DGAF source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          grep -F 'tlock.New(network).Strict().Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go
+          if grep -F 'tlock.New(network).Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go; then
+            echo 'unstrict tlock decrypt call is forbidden' >&2
+            exit 1
+          fi
+
+      - name: Set up exact Go toolchain
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: '1.22.12'
+          check-latest: false
+          cache: false
+
+      - name: Verify toolchain and target identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(go env GOVERSION)" = "go${GO_VERSION}"
+          test "$(go env GOOS)" = "$GOOS"
+          test "$(go env GOARCH)" = "$GOARCH"
+          test "$(go env GOAMD64)" = "$GOAMD64"
+          test "$(go env CGO_ENABLED)" = "$CGO_ENABLED"
+
+      - name: Fetch exact upstream tlock source and verify module graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf upstream-tlock
+          git init -q upstream-tlock
+          git -C upstream-tlock remote add origin https://github.com/drand/tlock.git
+          git -C upstream-tlock fetch --quiet --depth 1 origin "$TLOCK_SOURCE_COMMIT"
+          git -C upstream-tlock checkout --quiet --detach FETCH_HEAD
+          test "$(git -C upstream-tlock rev-parse HEAD)" = "$TLOCK_SOURCE_COMMIT"
+          test "$(awk '$1 == "go" {print $2}' upstream-tlock/go.mod)" = '1.22'
+          test -s upstream-tlock/go.sum
+          (
+            cd upstream-tlock
+            go mod download
+            go mod verify
+          )
+
+      - name: Overlay exact verifier and build deterministic target
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p upstream-tlock/cmd/dgaf-strict-verifier test-artifacts/repro
+          cp experiments/pdmal_pilot/mode_t_strict_verifier.go upstream-tlock/cmd/dgaf-strict-verifier/main.go
+          source_sha="$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')"
+          test "$source_sha" = "$(sha256sum upstream-tlock/cmd/dgaf-strict-verifier/main.go | awk '{print $1}')"
+          (
+            cd upstream-tlock
+            go build -mod=readonly -trimpath -buildvcs=false -ldflags='-buildid=' \
+              -o ../test-artifacts/repro/verifier ./cmd/dgaf-strict-verifier
+          )
+          binary_sha="$(sha256sum test-artifacts/repro/verifier | awk '{print $1}')"
+          {
+            printf 'schema_version=1\n'
+            printf 'evidence_class=P4_B_MODE_T_CROSS_RUNNER_BUILD_V1\n'
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'runner_label=%s\n' '${{ matrix.label }}'
+            printf 'runner_os=%s\n' "$RUNNER_OS"
+            printf 'runner_arch=%s\n' "$RUNNER_ARCH"
+            printf 'runner_image_os=%s\n' "${ImageOS:-UNKNOWN}"
+            printf 'runner_image_version=%s\n' "${ImageVersion:-UNKNOWN}"
+            printf 'tlock_version=%s\n' "$TLOCK_VERSION"
+            printf 'tlock_source_commit=%s\n' "$TLOCK_SOURCE_COMMIT"
+            printf 'go_version=%s\n' "$(go env GOVERSION)"
+            printf 'goos=%s\n' "$GOOS"
+            printf 'goarch=%s\n' "$GOARCH"
+            printf 'goamd64=%s\n' "$GOAMD64"
+            printf 'cgo_enabled=%s\n' "$CGO_ENABLED"
+            printf 'source_sha256=%s\n' "$source_sha"
+            printf 'upstream_go_mod_sha256=%s\n' "$(sha256sum upstream-tlock/go.mod | awk '{print $1}')"
+            printf 'upstream_go_sum_sha256=%s\n' "$(sha256sum upstream-tlock/go.sum | awk '{print $1}')"
+            printf 'binary_sha256=%s\n' "$binary_sha"
+            printf 'live_decryption_executed=false\n'
+            printf 'empirical_data_collection=false\n'
+            printf 'freeze_established=false\n'
+            printf 'pilot_authorized=false\n'
+            printf 'empirical_n=0\n'
+          } > "test-artifacts/repro/${{ matrix.label }}.txt"
+          (
+            cd test-artifacts/repro
+            sha256sum "${{ matrix.label }}.txt" > "${{ matrix.label }}.txt.sha256"
+          )
+          rm -f test-artifacts/repro/verifier
+
+      - name: Upload digest/provenance only
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: p4-b-repro-${{ matrix.label }}-${{ env.EVIDENCE_SHA }}
+          path: |
+            test-artifacts/repro/${{ matrix.label }}.txt
+            test-artifacts/repro/${{ matrix.label }}.txt.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+  compare:
+    name: Compare cross-runner binary identities
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Download ubuntu-22.04 provenance
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        with:
+          name: p4-b-repro-ubuntu-22.04-${{ env.EVIDENCE_SHA }}
+          path: comparison/ubuntu-22.04
+
+      - name: Download ubuntu-24.04 provenance
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        with:
+          name: p4-b-repro-ubuntu-24.04-${{ env.EVIDENCE_SHA }}
+          path: comparison/ubuntu-24.04
+
+      - name: Verify sidecars and require identical target binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          (
+            cd comparison/ubuntu-22.04
+            sha256sum -c ubuntu-22.04.txt.sha256
+          )
+          (
+            cd comparison/ubuntu-24.04
+            sha256sum -c ubuntu-24.04.txt.sha256
+          )
+
+          field() {
+            local file="$1" key="$2"
+            grep -E "^${key}=" "$file" | sed -E "s/^${key}=//"
+          }
+
+          a='comparison/ubuntu-22.04/ubuntu-22.04.txt'
+          b='comparison/ubuntu-24.04/ubuntu-24.04.txt'
+
+          for key in evidence_sha tlock_version tlock_source_commit go_version goos goarch goamd64 cgo_enabled source_sha256 upstream_go_mod_sha256 upstream_go_sum_sha256; do
+            test "$(field "$a" "$key")" = "$(field "$b" "$key")"
+          done
+
+          digest_a="$(field "$a" binary_sha256)"
+          digest_b="$(field "$b" binary_sha256)"
+          [[ "$digest_a" =~ ^[0-9a-f]{64}$ ]]
+          test "$digest_a" = "$digest_b"
+          test "$(field "$a" empirical_n)" = '0'
+          test "$(field "$b" empirical_n)" = '0'
+          test "$(field "$a" pilot_authorized)" = 'false'
+          test "$(field "$b" pilot_authorized)" = 'false'
+
+          mkdir -p comparison/result
+          {
+            printf 'schema_version=1\n'
+            printf 'evidence_class=P4_B_MODE_T_CROSS_RUNNER_REPRODUCIBILITY_V1\n'
+            printf 'evidence_sha=%s\n' "$(field "$a" evidence_sha)"
+            printf 'runner_a=ubuntu-22.04\n'
+            printf 'runner_b=ubuntu-24.04\n'
+            printf 'go_version=%s\n' "$(field "$a" go_version)"
+            printf 'tlock_source_commit=%s\n' "$(field "$a" tlock_source_commit)"
+            printf 'source_sha256=%s\n' "$(field "$a" source_sha256)"
+            printf 'binary_sha256=%s\n' "$digest_a"
+            printf 'cross_runner_binary_identical=true\n'
+            printf 'same_ci_operator=true\n'
+            printf 'independent_operator_reproducibility_established=false\n'
+            printf 'live_decryption_executed=false\n'
+            printf 'empirical_data_collection=false\n'
+            printf 'freeze_established=false\n'
+            printf 'pilot_authorized=false\n'
+            printf 'empirical_n=0\n'
+          } > comparison/result/cross-runner-reproducibility.txt
+          (
+            cd comparison/result
+            sha256sum cross-runner-reproducibility.txt > cross-runner-reproducibility.txt.sha256
+          )
+
+      - name: Upload combined reproducibility evidence
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: p4-b-cross-runner-repro-${{ env.EVIDENCE_SHA }}
+          path: |
+            comparison/result/cross-runner-reproducibility.txt
+            comparison/result/cross-runner-reproducibility.txt.sha256
+          if-no-files-found: error
+          retention-days: 30
