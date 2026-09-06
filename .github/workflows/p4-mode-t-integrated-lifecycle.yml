@@ -4,14 +4,17 @@ on:
   pull_request:
     paths:
       - '.github/workflows/p4-mode-t-integrated-lifecycle.yml'
+      - 'experiments/pdmal_pilot/mode_t_admission_policy.py'
       - 'experiments/pdmal_pilot/mode_t_confidential_space_attestation.py'
       - 'experiments/pdmal_pilot/mode_t_google_oidc_verifier.py'
       - 'experiments/pdmal_pilot/mode_t_inprocess_key.py'
       - 'experiments/pdmal_pilot/mode_t_integrated_lifecycle.py'
+      - 'experiments/pdmal_pilot/test_mode_t_admission_policy.py'
       - 'experiments/pdmal_pilot/test_mode_t_confidential_space_attestation.py'
       - 'experiments/pdmal_pilot/test_mode_t_google_oidc_verifier.py'
       - 'experiments/pdmal_pilot/test_mode_t_integrated_lifecycle.py'
       - 'experiments/pdmal_pilot/requirements-mode-t-security-lock.txt'
+      - 'docs/governance/P4_MODE_T_ADMISSION_POLICY_BINDING_2026-09-06.md'
       - 'docs/governance/P4_MODE_T_INTEGRATED_LIFECYCLE_2026-09-06.md'
   workflow_dispatch:
 
@@ -54,6 +57,13 @@ jobs:
             --require-hashes --only-binary=:all: \
             -r experiments/pdmal_pilot/requirements-mode-t-security-lock.txt
 
+      - name: Run admission-policy identity and anti-substitution controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_admission_policy.py -v
+
       - name: Run integrated lifecycle and crash-retry controls
         shell: bash
         run: |
@@ -76,16 +86,22 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
+          policy = Path('experiments/pdmal_pilot/mode_t_admission_policy.py').read_text(encoding='utf-8')
           lifecycle = Path('experiments/pdmal_pilot/mode_t_integrated_lifecycle.py').read_text(encoding='utf-8')
           key = Path('experiments/pdmal_pilot/mode_t_inprocess_key.py').read_text(encoding='utf-8')
+          policy_test = Path('experiments/pdmal_pilot/test_mode_t_admission_policy.py').read_text(encoding='utf-8')
           test = Path('experiments/pdmal_pilot/test_mode_t_integrated_lifecycle.py').read_text(encoding='utf-8')
 
           required = (
+              'admission_policy_sha256',
+              'verify_synthetic_consumption_policy_binding',
+              'OPEN_REVIEW_NOT_PRODUCTION_COMPLETE',
               'CONSUMED_PRE_SECRET_SYNTHETIC',
               'SYNTHETIC_MODEL_ONLY_NOT_INDEPENDENTLY_RETAINED',
               'PASS_SYNTHETIC_ONLY',
               '"real_confidential_space_admission": False',
               '"independent_retention_verified": False',
+              '"production_policy_complete": False',
               '"pilot_authorized": False',
               '"empirical_n": 0',
               'Mode-T key generation requires PRE_EXECUTION attestation',
@@ -97,6 +113,7 @@ jobs:
               'admit_and_acquire_mode_t_key',
               'verify_google_confidential_space_token',
               'external operational-secret environment variable is forbidden',
+              'test_consumed_policy_rejects_alternate_valid_expectation_before_key',
               'test_crash_after_C_before_pre_attestation_cannot_retry',
               'test_crash_after_pre_attestation_before_key_cannot_retry',
               'test_crash_after_key_generation_zeroizes_and_cannot_retry',
@@ -105,7 +122,7 @@ jobs:
               'test_production_key_entry_rejects_synthetic_verifier_result',
               'test_key_generation_rejects_verified_token_digest_mismatch',
           )
-          combined = lifecycle + key + test
+          combined = policy + lifecycle + key + policy_test + test
           for marker in required:
               if marker not in combined:
                   raise SystemExit(f'missing integrated lifecycle marker: {marker}')
@@ -115,6 +132,8 @@ jobs:
               'PDMAL_PILOT_AUTHORIZED' + '=1',
               'PDMAL_BLINDING_KEY' + '=',
               'real_confidential_space_admission' + '": True',
+              '"production_policy_complete": True',
+              '"independent_retention_verified": True',
               '"empirical_n": 1',
           )
           for marker in forbidden:
@@ -125,7 +144,10 @@ jobs:
       - name: Report bounded interpretation
         shell: bash
         run: |
-          echo 'PASS: synthetic integrated lifecycle and post-C crash/retry controls only.'
+          echo 'PASS: synthetic admission-policy binding plus integrated lifecycle and post-C crash/retry controls only.'
+          echo 'The static policy digest is carried through synthetic R/A/C and output-manifest lineage.'
+          echo 'Synthetic C policy evidence is not independently retained and cannot promote to production authorization.'
+          echo 'Signed-token lifetime upper-bound policy remains open review.'
           echo 'Production key acquisition accepts raw token input and performs Google verification internally.'
           echo 'Synthetic OIDC evidence is prohibited from the production key-acquisition path.'
           echo 'No real authorization, TEE admission, independent retention, or empirical run occurred.'
