@@ -96,7 +96,7 @@ def _rehash(record: dict) -> None:
 def _record(*, trial_id: int, condition: str, topology: str, failure_count: int, commit_sha: str = "a" * 40) -> dict:
     record = {
         "experiment_id": "PDMAL-PILOT-V1",
-        "protocol_version": "0.7.5",
+        "protocol_version": "0.7.6",
         "experiment_commit_sha": commit_sha,
         "seed_id": 20260819,
         "blinded_condition_id": blind_condition(condition, "test-schema-key"),
@@ -165,7 +165,6 @@ def test_ffcr_contract_fields_are_required_and_semantically_fail_closed() -> Non
 
 def test_artifact_rejects_duplicate_matrix_cells() -> None:
     document = _document()
-    # Make one record a duplicate matrix cell while preserving a distinct ID.
     document["records"][9]["blinded_condition_id"] = document["records"][0]["blinded_condition_id"]
     document["records"][9]["topology"] = document["records"][0]["topology"]
     document["records"][9]["failure_count"] = document["records"][0]["failure_count"]
