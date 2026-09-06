@@ -9,7 +9,7 @@ Controlling state remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirica
 
 ## Purpose
 
-The previous implementation had individually tested pieces but no trustworthy test of their ordering as one lifecycle. This tranche connects the reviewed boundaries without executing the real pilot:
+This tranche connects the reviewed boundaries without executing the real pilot:
 
 `R → A → C → authenticated PRE_EXECUTION → in-process key capability → blinded synthetic output → output manifest → authenticated POST_EXECUTION → two-phase lineage binding`
 
@@ -30,6 +30,24 @@ The replacement `mode_t_inprocess_key.py` now accepts only a normalized **PRE_EX
 - runtime-identity digest present;
 - runtime identity still attests Confidential Space, `GCP_INTEL_TDX`, secure boot, production debug state, disabled memory monitoring, and restart policy `Never`;
 - no externally supplied `PDMAL_BLINDING_KEY` or Mode-T key environment value.
+
+### Second-pass integrity and anti-promotion hardening
+
+A later adversarial integration review identified two additional boundaries that the first green #314 head did not enforce strongly enough:
+
+1. The key lease accepted the normalized `runtime_identity` object and its recorded digest separately, but did not recompute the digest immediately before key generation. A caller that mutated the normalized result after attestation verification could therefore create a mismatch between the runtime object used downstream and the previously attested digest.
+2. The key lease accepted `signature_verified=True` without requiring the key-source provenance emitted by #313. That was adequate for the explicitly synthetic test lane, but it left no API-level barrier preventing an injected synthetic key source from being accidentally passed into a future production key path.
+
+The key boundary now closes both gaps:
+
+- it canonically reserializes the complete normalized runtime identity and recomputes SHA-256 immediately before key generation; any mismatch with `runtime_identity_sha256` is rejected;
+- key-source evidence must bind the same token SHA-256 as the accepted PRE token;
+- production and synthetic acquisition are separate APIs rather than a caller-selectable permissive flag;
+- `acquire_mode_t_key(...)` accepts only evidence whose transport is `HTTPS_SYSTEM_CA_HOSTNAME_VERIFIED` and whose `production_key_source_authenticated` flag is true;
+- `acquire_mode_t_key_synthetic(...)` accepts only `SYNTHETIC_INJECTED_FETCHER` evidence with the production flag false;
+- a synthetic source cannot enter the production key API by implication, and production provenance cannot be forged merely by changing one boolean while retaining synthetic transport metadata.
+
+Dedicated controls now mutate the normalized runtime identity, substitute the token digest, feed synthetic evidence into the production API, and forge production status on synthetic evidence; each must fail before entropy generation.
 
 The generated 256-bit key remains inside a non-serializable lease. The API exposes only domain-separated HMAC capabilities for blinded identifiers, ordering tokens, and a commitment. The owned mutable buffer is best-effort zeroized when the lease exits, including exception paths.
 
@@ -94,13 +112,17 @@ The key boundary separately rejects:
 
 - POST_EXECUTION evidence presented for key generation;
 - a PRE record carrying an output-manifest binding;
+- mutated normalized runtime identity that no longer matches the attested digest;
+- key-source evidence bound to a different token;
+- synthetic injected-key evidence presented to the production key API;
+- forged production status on synthetic key-source evidence;
 - an externally supplied operational blinding key environment value.
 
 ## What this verifies
 
-If exact-head CI passes, this tranche verifies that the current synthetic implementations can be connected in the required causal order and that the modeled post-C retry rule remains fail-closed across simulated process loss.
+If exact-head CI passes, this tranche verifies that the current synthetic implementations can be connected in the required causal order, that modeled post-C retry remains fail-closed across simulated process loss, and that the final pre-key boundary revalidates both runtime integrity and key-source provenance.
 
-It materially raises confidence beyond isolated unit tests because the same C digest flows into PRE attestation, the admitted PRE result gates the key, the resulting blinded artifact feeds the manifest, the manifest digest feeds POST, and the final two-phase verifier reconciles the lineage.
+It materially raises confidence beyond isolated unit tests because the same C digest flows into PRE attestation, the admitted PRE result and same-token key provenance gate the key, the resulting blinded artifact feeds the manifest, the manifest digest feeds POST, and the final two-phase verifier reconciles the lineage.
 
 ## What this does not verify
 
@@ -118,7 +140,7 @@ This tranche does **not** prove:
 
 ## Remaining gates after synthetic CI
 
-1. Complete independent security review of the signature/key-source implementation, including any findings from standards comparison.
+1. Complete independent security review of the signature/key-source and key-acquisition implementation, including findings from standards comparison.
 2. Keep the Google OIDC dependency lock and exact-head CI green.
 3. Replace the synthetic C retention model with the reviewed independently retained evidence path required by P4-T.
 4. Build/review the exact Confidential Space workload image and launch configuration.
