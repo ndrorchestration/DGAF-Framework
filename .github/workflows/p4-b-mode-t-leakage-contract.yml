@@ -1,0 +1,109 @@
+name: P4-B Mode T Leakage Contract
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-b-mode-t-leakage-contract.yml'
+      - '.github/workflows/p4-b-mode-t-strict-verifier-prototype.yml'
+      - '.github/workflows/p4-b-mode-t-cross-runner-repro.yml'
+      - '.github/workflows/p4-b-mode-t-live-synthetic-continuity.yml'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier.go'
+      - 'experiments/pdmal_pilot/validate_mode_t_leakage_contract.py'
+      - 'docs/governance/P4_B_MODE_T_LEAKAGE_CONTRACT_2026-09-06.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  leakage-contract:
+    name: Enforce protected-material leakage surface contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact DGAF evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact checkout and Python runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          python3 - <<'PY'
+          import sys
+          if sys.version_info < (3, 10):
+              raise SystemExit(f"Python >=3.10 required, got {sys.version}")
+          print(sys.version)
+          PY
+
+      - name: Run fail-closed leakage surface validator
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-artifacts/p4-b-leakage-contract
+          python3 experiments/pdmal_pilot/validate_mode_t_leakage_contract.py \
+            > test-artifacts/p4-b-leakage-contract/contract-result.txt
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('test-artifacts/p4-b-leakage-contract/contract-result.txt')
+          result = json.loads(path.read_text(encoding='utf-8'))
+          assert result['status'] == 'PASS'
+          assert result['protected_material_used'] is False
+          assert result['empirical_data_collection'] is False
+          assert result['freeze_established'] is False
+          assert result['pilot_authorized'] is False
+          assert result['empirical_n'] == 0
+          PY
+
+      - name: Emit exact-head non-secret evidence record
+        shell: bash
+        run: |
+          set -euo pipefail
+          out='test-artifacts/p4-b-leakage-contract'
+          {
+            printf 'schema_version=1\n'
+            printf 'evidence_class=P4_B_MODE_T_LEAKAGE_CONTRACT_V1\n'
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'github_run_id=%s\n' "$GITHUB_RUN_ID"
+            printf 'github_run_attempt=%s\n' "$GITHUB_RUN_ATTEMPT"
+            printf 'validator_sha256=%s\n' "$(sha256sum experiments/pdmal_pilot/validate_mode_t_leakage_contract.py | awk '{print $1}')"
+            printf 'verifier_source_sha256=%s\n' "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')"
+            printf 'contract_result_sha256=%s\n' "$(sha256sum "$out/contract-result.txt" | awk '{print $1}')"
+            printf 'stdout_stderr_schema_allowlisted=true\n'
+            printf 'cli_flag_surface_allowlisted=true\n'
+            printf 'protected_environment_names_absent=true\n'
+            printf 'step_outputs_summaries_absent=true\n'
+            printf 'artifact_paths_text_evidence_only=true\n'
+            printf 'repository_secret_references_absent=true\n'
+            printf 'write_permissions_absent=true\n'
+            printf 'protected_material_used=false\n'
+            printf 'empirical_data_collection=false\n'
+            printf 'freeze_established=false\n'
+            printf 'pilot_authorized=false\n'
+            printf 'empirical_n=0\n'
+          } > "$out/evidence.txt"
+          (
+            cd "$out"
+            sha256sum contract-result.txt > contract-result.txt.sha256
+            sha256sum evidence.txt > evidence.txt.sha256
+          )
+
+      - name: Upload non-secret leakage-contract evidence
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: p4-b-mode-t-leakage-contract-${{ env.EVIDENCE_SHA }}
+          path: |
+            test-artifacts/p4-b-leakage-contract/contract-result.txt
+            test-artifacts/p4-b-leakage-contract/contract-result.txt.sha256
+            test-artifacts/p4-b-leakage-contract/evidence.txt
+            test-artifacts/p4-b-leakage-contract/evidence.txt.sha256
+          if-no-files-found: error
+          retention-days: 30

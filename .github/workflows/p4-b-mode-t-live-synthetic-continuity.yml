@@ -1,0 +1,169 @@
+name: P4-B Mode T Live Synthetic Continuity
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-b-mode-t-live-synthetic-continuity.yml'
+      - 'docs/governance/P4_B_MODE_T_LIVE_SYNTHETIC_CONTINUITY_2026-09-06.md'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier.go'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier_live_test.go'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLOCK_SOURCE_COMMIT: '7b54141a9733fd6fa207587a11148280e6fb020d'
+  GO_VERSION: '1.22.12'
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  DGAF_QUICKNET_ENDPOINT: 'https://api.drand.sh/'
+  GOTOOLCHAIN: local
+  CGO_ENABLED: '0'
+  GOOS: linux
+  GOARCH: amd64
+  GOAMD64: v1
+
+jobs:
+  live-synthetic-continuity:
+    name: Verify released/past + too-early synthetic quicknet paths
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact DGAF evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact source identity and safety boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          grep -F 'tlock.New(network).Strict().Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go
+          if grep -F 'tlock.New(network).Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go; then
+            echo 'unstrict tlock decrypt call is forbidden' >&2
+            exit 1
+          fi
+          grep -F '//go:build mode_t_live' experiments/pdmal_pilot/mode_t_strict_verifier_live_test.go
+          if grep -E 'os\.(WriteFile|Create)|ioutil\.WriteFile' experiments/pdmal_pilot/mode_t_strict_verifier_live_test.go; then
+            echo 'live synthetic tests must not persist plaintext/ciphertext fixtures' >&2
+            exit 1
+          fi
+
+      - name: Set up exact Go toolchain
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: '1.22.12'
+          check-latest: false
+          cache: false
+
+      - name: Verify toolchain and target identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(go env GOVERSION)" = "go${GO_VERSION}"
+          test "$(go env GOOS)" = "$GOOS"
+          test "$(go env GOARCH)" = "$GOARCH"
+          test "$(go env GOAMD64)" = "$GOAMD64"
+
+      - name: Fetch exact upstream tlock source and verify module graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf upstream-tlock
+          git init -q upstream-tlock
+          git -C upstream-tlock remote add origin https://github.com/drand/tlock.git
+          git -C upstream-tlock fetch --quiet --depth 1 origin "$TLOCK_SOURCE_COMMIT"
+          git -C upstream-tlock checkout --quiet --detach FETCH_HEAD
+          test "$(git -C upstream-tlock rev-parse HEAD)" = "$TLOCK_SOURCE_COMMIT"
+          test "$(awk '$1 == "go" {print $2}' upstream-tlock/go.mod)" = '1.22'
+          test -s upstream-tlock/go.sum
+          cd upstream-tlock
+          go mod download
+          go mod verify
+
+      - name: Overlay verifier and live synthetic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p upstream-tlock/cmd/dgaf-strict-verifier
+          cp experiments/pdmal_pilot/mode_t_strict_verifier.go upstream-tlock/cmd/dgaf-strict-verifier/main.go
+          cp experiments/pdmal_pilot/mode_t_strict_verifier_live_test.go upstream-tlock/cmd/dgaf-strict-verifier/live_test.go
+          test "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')" = \
+               "$(sha256sum upstream-tlock/cmd/dgaf-strict-verifier/main.go | awk '{print $1}')"
+          test "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier_live_test.go | awk '{print $1}')" = \
+               "$(sha256sum upstream-tlock/cmd/dgaf-strict-verifier/live_test.go | awk '{print $1}')"
+
+      - name: Correct quicknet + commitment path must pass
+        working-directory: upstream-tlock
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -mod=readonly -tags=mode_t_live ./cmd/dgaf-strict-verifier \
+            -run '^TestLiveQuicknetCorrectCommitmentPasses$' -count=1 -v
+
+      - name: Wrong plaintext commitment must fail closed
+        working-directory: upstream-tlock
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -mod=readonly -tags=mode_t_live ./cmd/dgaf-strict-verifier \
+            -run '^TestLiveQuicknetWrongCommitmentFailsClosed$' -count=1 -v
+
+      - name: Future round must classify TOO_EARLY
+        working-directory: upstream-tlock
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -mod=readonly -tags=mode_t_live ./cmd/dgaf-strict-verifier \
+            -run '^TestLiveQuicknetFutureRoundClassifiesTooEarly$' -count=1 -v
+
+      - name: Replay must not promote or mutate scientific state
+        working-directory: upstream-tlock
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -mod=readonly -tags=mode_t_live ./cmd/dgaf-strict-verifier \
+            -run '^TestLiveQuicknetReplayDoesNotPromoteState$' -count=1 -v
+
+      - name: Emit non-authorizing evidence record
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-artifacts/p4-b-live-synthetic
+          {
+            printf 'schema_version=1\n'
+            printf 'evidence_class=P4_B_MODE_T_LIVE_SYNTHETIC_CONTINUITY_V1\n'
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'github_run_id=%s\n' "$GITHUB_RUN_ID"
+            printf 'github_run_attempt=%s\n' "$GITHUB_RUN_ATTEMPT"
+            printf 'tlock_source_commit=%s\n' "$TLOCK_SOURCE_COMMIT"
+            printf 'quicknet_endpoint=%s\n' "$DGAF_QUICKNET_ENDPOINT"
+            printf 'quicknet_chain_hash=52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971\n'
+            printf 'correct_chain_released_round_pass=true\n'
+            printf 'wrong_plaintext_commitment_fail_closed=true\n'
+            printf 'too_early_classification_verified=true\n'
+            printf 'replay_non_mutation_verified=true\n'
+            printf 'synthetic_fixture_only=true\n'
+            printf 'network_side_effect=read_only_public_beacon_queries\n'
+            printf 'durable_p6_retention_established=false\n'
+            printf 'custody_sufficiency_established=false\n'
+            printf 'freeze_established=false\n'
+            printf 'pilot_authorized=false\n'
+            printf 'empirical_data_collection=false\n'
+            printf 'empirical_n=0\n'
+          } > test-artifacts/p4-b-live-synthetic/evidence.txt
+          cd test-artifacts/p4-b-live-synthetic
+          sha256sum evidence.txt > evidence.txt.sha256
+
+      - name: Upload synthetic continuity evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p4-b-mode-t-live-synthetic-continuity-${{ env.EVIDENCE_SHA }}
+          path: |
+            test-artifacts/p4-b-live-synthetic/evidence.txt
+            test-artifacts/p4-b-live-synthetic/evidence.txt.sha256
+          if-no-files-found: error
+          retention-days: 30
