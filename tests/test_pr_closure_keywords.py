@@ -7,7 +7,6 @@ import sys
 import tempfile
 import unittest
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "check_pr_closure_keywords.py"
 
@@ -38,9 +37,7 @@ class ClosureKeywordPatternTests(unittest.TestCase):
                 self.assertEqual(len(find_dangerous_closure_syntax(text)), 1)
 
     def test_rejects_cross_repo_reference(self) -> None:
-        findings = find_dangerous_closure_syntax(
-            "This wording does not fix ndrorchestration/DGAF-Framework#310."
-        )
+        findings = find_dangerous_closure_syntax("This wording does not fix ndrorchestration/DGAF-Framework#310.")
         self.assertEqual(len(findings), 1)
 
     def test_rejects_full_issue_url(self) -> None:
