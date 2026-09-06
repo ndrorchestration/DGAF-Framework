@@ -254,7 +254,10 @@ def verify_confidential_space_attestation(
     _require(len(env_override) == 0, "environment overrides are not permitted")
 
     nonces = _nonce_values(root.get("eat_nonce"))
-    _require(len(nonces) == 1, "exactly one phase-specific attestation nonce is required")
+    _require(
+        len(nonces) == 1,
+        "exactly one phase-specific attestation nonce is required",
+    )
     _require(nonces[0] == binding_sha256, "attestation nonce binding mismatch")
 
     runtime_identity = {
@@ -317,24 +320,56 @@ def verify_two_phase_attestation_binding(
 
     pre = _mapping(pre_execution, "pre_execution")
     post = _mapping(post_execution, "post_execution")
-    _require(pre.get("attestation_contract") == "PASS", "pre-execution attestation is not PASS")
-    _require(post.get("attestation_contract") == "PASS", "post-execution attestation is not PASS")
-    _require(pre.get("signature_verified") is True, "pre-execution signature is not verified")
-    _require(post.get("signature_verified") is True, "post-execution signature is not verified")
-    _require(pre.get("attestation_phase") == PRE_EXECUTION, "first token is not PRE_EXECUTION")
-    _require(post.get("attestation_phase") == POST_EXECUTION, "second token is not POST_EXECUTION")
+    _require(
+        pre.get("attestation_contract") == "PASS",
+        "pre-execution attestation is not PASS",
+    )
+    _require(
+        post.get("attestation_contract") == "PASS",
+        "post-execution attestation is not PASS",
+    )
+    _require(
+        pre.get("signature_verified") is True,
+        "pre-execution signature is not verified",
+    )
+    _require(
+        post.get("signature_verified") is True,
+        "post-execution signature is not verified",
+    )
+    _require(
+        pre.get("attestation_phase") == PRE_EXECUTION,
+        "first token is not PRE_EXECUTION",
+    )
+    _require(
+        post.get("attestation_phase") == POST_EXECUTION,
+        "second token is not POST_EXECUTION",
+    )
     _require(
         pre.get("authorization_consumption_sha256") == expected_c,
         "pre-execution C binding mismatch",
     )
     _require(
+        pre.get("output_manifest_sha256") is None,
+        "pre-execution token must not claim an output-manifest binding",
+    )
+    _require(
+        post.get("authorization_consumption_sha256") is None,
+        "post-execution token must not claim a C binding",
+    )
+    _require(
         post.get("output_manifest_sha256") == expected_manifest,
         "post-execution manifest binding mismatch",
     )
-    _require(
-        pre.get("runtime_identity_sha256") == post.get("runtime_identity_sha256"),
-        "pre/post runtime identity mismatch",
+
+    pre_runtime = _sha256(
+        pre.get("runtime_identity_sha256"),
+        "pre runtime_identity_sha256",
     )
+    post_runtime = _sha256(
+        post.get("runtime_identity_sha256"),
+        "post runtime_identity_sha256",
+    )
+    _require(pre_runtime == post_runtime, "pre/post runtime identity mismatch")
 
     pre_token = _sha256(pre.get("token_sha256"), "pre token_sha256")
     post_token = _sha256(post.get("token_sha256"), "post token_sha256")
@@ -346,7 +381,7 @@ def verify_two_phase_attestation_binding(
 
     return {
         "two_phase_attestation_binding": "PASS",
-        "runtime_identity_sha256": pre.get("runtime_identity_sha256"),
+        "runtime_identity_sha256": pre_runtime,
         "authorization_consumption_sha256": expected_c,
         "output_manifest_sha256": expected_manifest,
         "pre_execution_token_sha256": pre_token,
