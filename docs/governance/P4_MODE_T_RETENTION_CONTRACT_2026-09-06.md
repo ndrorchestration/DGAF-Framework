@@ -2,86 +2,68 @@
 
 Date: 2026-09-06  
 Issues: #287 / #310 / #316  
-Status: **NORMALIZED CONTRACT / NO REAL SIGSTORE ENTRY / NO TIME AUTHORITY APPROVED**
+Status: **NORMALIZED CONTRACT / EXPLICIT ROOT BYTE BINDING / NO REAL SIGSTORE ENTRY / NO TIME AUTHORITY APPROVED**
 
 Controlling state remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0**.
 
 ## Purpose
 
-The Mode-T evidence design needs two distinct predicates:
+Mode-T retention must keep two predicates separate:
 
-1. **inclusion / anti-deletion evidence** — evidence that a signed public R/C/X/L record was accepted into a verifiable transparency system under the expected identity; and
-2. **temporal-order evidence** — evidence that L occurred strictly before the deterministic timelock release boundary.
+1. **inclusion / anti-deletion evidence** — a signed public R/C/X/L record was accepted into a verifiable transparency system under the expected identity; and
+2. **temporal-order evidence** — L occurred strictly before the deterministic timelock release boundary.
 
-These predicates must not be collapsed into one another.
+They are not interchangeable.
 
-This tranche is stacked on the lineage-reconciled Confidential Space launch contract and current #314 policy-bound lifecycle rather than the stale #317/#319 chain.
+## Normalized retention contract
 
-## Sigstore/Rekor evidence boundary
+`mode_t_retention_contract.py` consumes already-verified normalized metadata from the separate Sigstore verifier. It does not sign, retrieve trust roots, monitor logs, perform external retention, or establish time.
 
-A valid, independently verified transparency inclusion can support public evidence that a specific signed record was included under an expected signing identity. That is useful because ordinary GitHub Actions history is not accepted as immutable anti-deletion evidence.
+For one expected record it now requires normalized evidence for signature, certificate chain, certificate identity, GitHub Actions OIDC issuer, transparency inclusion, signed-entry timestamp, exact record SHA-256, exact signer workflow SHA/repository/ref, and the **exact predeclared TrustedRoot SHA-256**.
 
-However, Rekor v1 `integratedTime` is treated only as log metadata here, not as an independently verifiable wall-clock authority. Therefore:
+A successful result records:
 
-- transparency inclusion is not rejected;
-- `integratedTime` may be retained as metadata;
-- neither inclusion nor that timestamp proves L-before-release;
-- temporal ordering remains OPEN until a separately reviewed mechanism exists or the protocol is redesigned not to require that wall-clock claim.
+- `anti_deletion_inclusion_evidence = VERIFIED_NORMALIZED`;
+- `trusted_root_explicit_and_digest_bound = true`;
+- `trusted_root_independently_approved = false`;
+- `temporal_order_verified = false`;
+- `real_external_retention_established = false`;
+- `pilot_authorized = false`;
+- `empirical_n = 0`.
 
-## `mode_t_retention_contract.py`
+The TrustedRoot distinction is deliberate: equality to a predeclared digest proves that verification used the expected bytes. It **does not prove independent approval of those bytes**, their TUF bootstrap/update path, validity policy, or final production suitability.
 
-The module consumes only **already-verified normalized metadata** from a separate Sigstore-capable cryptographic verifier. It does not itself perform signing, Fulcio verification, Rekor inclusion-proof verification, TUF trust-root retrieval, log monitoring, or external durable retention.
+No final DGAF production TrustedRoot is selected or frozen here.
 
-For one expected public record it requires normalized evidence that:
+## Transparency semantics
 
-- artifact signature is verified;
-- certificate chain is verified;
-- expected certificate identity is verified;
-- expected GitHub Actions OIDC issuer is verified;
-- transparency inclusion is verified;
-- signed-entry timestamp signature is verified;
-- verified record SHA-256 equals the exact expected public-record digest;
-- bundle SHA-256, Sigstore `LogId.keyId`, and non-negative log index are retained.
+Sigstore `LogId.keyId` identifies the transparency-log key and is represented as `log_id_key_id`; it is not treated as an entry UUID. `log_index` is retained separately.
 
-`LogId.keyId` identifies the transparency log key. It is **not** labeled or treated as a Rekor entry UUID. The normalized field is therefore `log_id_key_id`; an individual entry remains identified within that log by its verified bundle context and log index.
+Rekor `integratedTime` remains metadata only. Neither inclusion nor that value establishes an independent wall-clock L-before-release proof.
 
-Accepted record classes are restricted to:
+Accepted record classes remain:
 
 - `PDMAL_MODE_T_RUN_RESERVATION`;
 - `PDMAL_MODE_T_AUTHORIZATION_CONSUMPTION`;
 - `PDMAL_P4_T_EXECUTION`;
 - `PDMAL_P4_T_ANALYSIS_LOCK`.
 
-A successful normalized result is `PASS_NORMALIZED_INCLUSION_ONLY` and explicitly records:
-
-- `anti_deletion_inclusion_evidence = VERIFIED_NORMALIZED`;
-- `temporal_order_verified = false`;
-- `external_sigstore_crypto_performed_by_this_module = false`;
-- `real_external_retention_established = false`;
-- `pilot_authorized = false`;
-- `empirical_n = 0`.
-
-This is intentionally narrower than real P6/P4 evidence and does not satisfy the independently retained C/policy source still required by #316.
-
 ## Analysis-lock rule
 
-`verify_analysis_lock_temporal_order(...)` can consume an already normalized L-inclusion record, but cannot return temporal PASS in this contract version.
+`verify_analysis_lock_temporal_order(...)` cannot return temporal PASS in this contract version. Arbitrary caller-supplied `before_release` or unapproved time-authority claims remain rejected.
 
-Without a separately reviewed time/order authority it returns inclusion verified but temporal status OPEN. Supplying an arbitrary caller dictionary claiming `before_release=true` or another unapproved time source is rejected. This prevents another caller-supplied boolean from being promoted into evidence.
+## Remaining requirements for real retention
 
-## What still must be implemented for real external retention
+The production path still requires:
 
-A future real path must separately establish:
-
-1. a pinned/reviewed Sigstore-capable verifier and authenticated trust-root path;
-2. exact certificate identity and OIDC issuer policy for the frozen workflow;
-3. cryptographic verification of signatures, certificate chain, bundle, SET, and inclusion evidence;
-4. independent durable retention of the exact public record and verification bundle;
-5. monitoring/trust disposition consistent with the selected transparency system;
-6. duplicate-search / one-C-per-authorization adjudication suitable for the real external evidence path;
-7. fail-closed behavior when signing, logging, retrieval, verification, or retention is unavailable;
-8. integration with the independently retained C/admission-policy evidence required by #316; and
-9. a separate solution for L-before-release temporal ordering if that requirement remains in the protocol.
+1. independent review and freeze of the exact DGAF TrustedRoot and TUF bootstrap/update semantics;
+2. a final frozen signer identity/workflow;
+3. real DGAF signing and cryptographic bundle verification;
+4. independent durable retention and later retrieval/reverification of the exact public record and bundle;
+5. duplicate/one-C-per-authorization adjudication;
+6. fail-closed handling of signing/logging/retrieval/retention failure;
+7. integration with independently retained C/admission-policy evidence under #316; and
+8. a separate solution for L-before-release temporal ordering if retained by the protocol.
 
 ## Non-effects
 
