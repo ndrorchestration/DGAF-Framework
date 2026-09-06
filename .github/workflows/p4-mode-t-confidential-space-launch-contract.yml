@@ -1,0 +1,99 @@
+name: P4 Mode T Confidential Space Launch Contract
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-confidential-space-launch-contract.yml'
+      - 'experiments/pdmal_pilot/mode_t_confidential_space_launch.py'
+      - 'experiments/pdmal_pilot/test_mode_t_confidential_space_launch.py'
+      - 'docs/governance/P4_MODE_T_CONFIDENTIAL_SPACE_LAUNCH_CONTRACT_2026-09-06.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  launch-contract:
+    name: Synthetic prelaunch configuration negative controls
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run launch-contract controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_confidential_space_launch.py -v
+
+      - name: Static no-cloud no-promotion assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('experiments/pdmal_pilot/mode_t_confidential_space_launch.py').read_text(encoding='utf-8')
+          workflow = Path('.github/workflows/p4-mode-t-confidential-space-launch-contract.yml').read_text(encoding='utf-8')
+          required = (
+              'REQUIRED_IMAGE_FAMILY = "confidential-space"',
+              'REQUIRED_COMPUTE_TYPE = "TDX"',
+              'REQUIRED_RESTART_POLICY = "Never"',
+              'tee.launch_policy.allow_cmd_override',
+              'tee.launch_policy.allow_env_override',
+              'tee.launch_policy.allow_capabilities',
+              'tee.launch_policy.allow_mount_destinations',
+              'tee.launch_policy.log_redirect',
+              'tee.launch_policy.monitoring_memory_allow',
+              'operator environment injection metadata is forbidden',
+              'workload image reference must be digest-pinned',
+              '"authorization_policy_complete": False',
+              '"admission_policy_sha256": None',
+              '"real_gcp_configuration_verified": False',
+              '"real_confidential_space_admission": False',
+              '"pilot_authorized": False',
+              '"empirical_n": 0',
+          )
+          for marker in required:
+              if marker not in source:
+                  raise SystemExit(f'missing launch-contract marker: {marker}')
+
+          forbidden = (
+              'google-github-actions/' + 'auth',
+              'id-token:' + ' write',
+              'gcloud compute instances ' + 'create',
+              'PDMAL_PILOT_AUTHORIZED' + '=1',
+              'PDMAL_PROTOCOL_FROZEN' + '=1',
+          )
+          combined = source + workflow
+          for marker in forbidden:
+              if marker in combined:
+                  raise SystemExit(f'forbidden cloud/promotion marker: {marker}')
+          PY
+
+      - name: Report bounded interpretation
+        run: |
+          echo 'PASS: predeclared synthetic-only Confidential Space launch contract.'
+          echo 'This launch digest is not the independently retained admission-policy proof required by #316.'
+          echo 'No GCP authentication, image build, VM creation, authorization, or TEE admission occurred.'
+          echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.'
