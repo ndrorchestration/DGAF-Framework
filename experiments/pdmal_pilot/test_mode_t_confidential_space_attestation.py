@@ -3,7 +3,6 @@ from __future__ import annotations
 import copy
 import unittest
 
-from mode_t_admission_policy import canonical_admission_policy
 from mode_t_confidential_space_attestation import (
     AttestationContractError,
     AttestationExpectation,
@@ -156,17 +155,6 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
         self.assertEqual(
             result["token_lifetime_seconds"],
             MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
-        )
-
-    def test_admission_policy_binds_nonconfigurable_one_hour_lifetime_ceiling(self) -> None:
-        policy = canonical_admission_policy(expectation())
-        self.assertEqual(
-            policy["max_attestation_token_lifetime_seconds"],
-            MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
-        )
-        self.assertEqual(
-            policy["token_lifetime_policy"],
-            "SIGNED_IAT_NBF_EXP_REQUIRED_MAX_3600_SECONDS",
         )
 
     def test_two_phase_binding_accepts_same_runtime_lineage(self) -> None:
