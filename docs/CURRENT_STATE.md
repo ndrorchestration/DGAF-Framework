@@ -31,11 +31,11 @@ Merged PR #308 advanced the experimental apparatus to protocol v0.7.6 / artifact
 - Corrected apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`.
 - Immutable P-35 validation boundary: `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d`.
 - Consolidated control-state anchor: `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58`.
+- Candidate identity status: final v0.7.6 candidate is **NOT DESIGNATED**; Issue #309 controls designation.
 - Historical runtime-evidence candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`.
 - Historical runtime candidate tree: `586c00d6dedb589e52108279f9759be3c4f927e1`.
-- Historical candidate deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.
+- Deployment identity: historical evidence deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` is exact-bound to `7c1cc4bb…` at its recorded scope.
 - Live v0.7.6 source boundary: `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`.
-- Final v0.7.6 candidate: **NOT DESIGNATED**, tracked by Issue #309.
 
 Later documentation/evaluator/control-plane descendants do not automatically become the final candidate or inherit historical runtime evidence.
 
