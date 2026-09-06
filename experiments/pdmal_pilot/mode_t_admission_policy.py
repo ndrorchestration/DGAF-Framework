@@ -22,6 +22,7 @@ from mode_t_confidential_space_attestation import (
     CONFIDENTIAL_SPACE_SWNAME,
     GOOGLE_CLOUD_ATTESTATION_ISSUER,
     GOOGLE_CLOUD_OEM_ID,
+    MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
     PRE_EXECUTION,
     REQUIRED_ATTESTER_TCB,
     REQUIRED_DEBUG_STATUS,
@@ -111,7 +112,8 @@ def canonical_admission_policy(expectation: AttestationExpectation) -> dict[str,
         "explicit_non_secret_environment": dict(sorted(expectation.expected_env.items())),
         "environment_override_allowed": False,
         "max_clock_skew_seconds": expectation.max_clock_skew_seconds,
-        "token_lifetime_policy": "SIGNED_IAT_NBF_EXP_REQUIRED_AND_CHECKED",
+        "token_lifetime_policy": "SIGNED_IAT_NBF_EXP_REQUIRED_MAX_3600_SECONDS",
+        "max_attestation_token_lifetime_seconds": MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
         "operational_secret_environment_allowed": False,
     }
 

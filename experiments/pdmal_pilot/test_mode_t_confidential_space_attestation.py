@@ -6,6 +6,7 @@ import unittest
 from mode_t_confidential_space_attestation import (
     AttestationContractError,
     AttestationExpectation,
+    MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
     POST_EXECUTION,
     PRE_EXECUTION,
     VerifiedTokenContext,
@@ -126,6 +127,11 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
             list(SERVICE_ACCOUNTS),
         )
         self.assertTrue(result["signature_verified"])
+        self.assertEqual(result["token_lifetime_seconds"], 330)
+        self.assertEqual(
+            result["max_attestation_token_lifetime_seconds"],
+            MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
+        )
         self.assertFalse(result["freeze_established"])
         self.assertFalse(result["pilot_authorized"])
         self.assertFalse(result["empirical_data_collection"])
@@ -137,6 +143,19 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
         self.assertEqual(result["attestation_phase"], POST_EXECUTION)
         self.assertIsNone(result["authorization_consumption_sha256"])
         self.assertEqual(result["output_manifest_sha256"], MANIFEST_SHA)
+
+    def test_accepts_exactly_one_hour_claimed_lifetime(self) -> None:
+        claims = good_claims(issued_at=NOW - 30)
+        claims["exp"] = claims["iat"] + MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS
+        result = verify_confidential_space_attestation(
+            claims,
+            expectation(),
+            token_context(),
+        )
+        self.assertEqual(
+            result["token_lifetime_seconds"],
+            MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS,
+        )
 
     def test_two_phase_binding_accepts_same_runtime_lineage(self) -> None:
         result = verify_two_phase_attestation_binding(
@@ -360,6 +379,13 @@ class ConfidentialSpaceAttestationContractTests(unittest.TestCase):
     def test_rejects_future_issue_time(self) -> None:
         def mutate(c, e, t):
             c["iat"] = NOW + 120
+            return c, e, t
+
+        self.assert_rejected(mutate)
+
+    def test_rejects_claimed_lifetime_over_one_hour(self) -> None:
+        def mutate(c, e, t):
+            c["exp"] = c["iat"] + MAX_ATTESTATION_TOKEN_LIFETIME_SECONDS + 1
             return c, e, t
 
         self.assert_rejected(mutate)
