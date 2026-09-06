@@ -7,6 +7,7 @@ on:
       - 'experiments/pdmal_pilot/mode_t_confidential_space_attestation.py'
       - 'experiments/pdmal_pilot/mode_t_google_oidc_verifier.py'
       - 'experiments/pdmal_pilot/mode_t_inprocess_key.py'
+      - 'experiments/pdmal_pilot/mode_t_admission_policy.py'
       - 'experiments/pdmal_pilot/mode_t_integrated_lifecycle.py'
       - 'experiments/pdmal_pilot/test_mode_t_confidential_space_attestation.py'
       - 'experiments/pdmal_pilot/test_mode_t_google_oidc_verifier.py'
@@ -23,7 +24,7 @@ env:
 
 jobs:
   integrated-lifecycle:
-    name: C-to-PRE-to-key-to-output-to-POST crash controls
+    name: policy-to-C-to-PRE-to-key-to-output-to-POST controls
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -54,7 +55,7 @@ jobs:
             --require-hashes --only-binary=:all: \
             -r experiments/pdmal_pilot/requirements-mode-t-security-lock.txt
 
-      - name: Run integrated lifecycle and crash-retry controls
+      - name: Run integrated policy/lifecycle/crash controls
         shell: bash
         run: |
           set -euo pipefail
@@ -78,7 +79,9 @@ jobs:
 
           lifecycle = Path('experiments/pdmal_pilot/mode_t_integrated_lifecycle.py').read_text(encoding='utf-8')
           key = Path('experiments/pdmal_pilot/mode_t_inprocess_key.py').read_text(encoding='utf-8')
+          policy = Path('experiments/pdmal_pilot/mode_t_admission_policy.py').read_text(encoding='utf-8')
           test = Path('experiments/pdmal_pilot/test_mode_t_integrated_lifecycle.py').read_text(encoding='utf-8')
+          combined = lifecycle + key + policy + test
 
           required = (
               'CONSUMED_PRE_SECRET_SYNTHETIC',
@@ -88,24 +91,20 @@ jobs:
               '"independent_retention_verified": False',
               '"pilot_authorized": False',
               '"empirical_n": 0',
-              'Mode-T key generation requires PRE_EXECUTION attestation',
+              'admission_policy_sha256',
+              'supplied PRE_EXECUTION expectation does not match pre-authorized admission policy',
+              'production Mode-T key generation blocked: independently retained C/policy verifier required',
+              'production admission requires independently retained C/policy evidence verifier',
               'PRE_EXECUTION admission must not contain an output-manifest binding',
               'runtime identity digest does not match normalized runtime',
-              'production Mode-T key generation requires authenticated production Google key source',
               'synthetic Mode-T key generation requires explicit synthetic key-source evidence',
               'verified token digest does not match PRE_EXECUTION token',
-              'admit_and_acquire_mode_t_key',
-              'verify_google_confidential_space_token',
               'external operational-secret environment variable is forbidden',
-              'test_crash_after_C_before_pre_attestation_cannot_retry',
-              'test_crash_after_pre_attestation_before_key_cannot_retry',
-              'test_crash_after_key_generation_zeroizes_and_cannot_retry',
-              'test_crash_after_blinded_output_before_post_attestation_cannot_retry',
-              'test_key_generation_rejects_runtime_identity_digest_tampering',
-              'test_production_key_entry_rejects_synthetic_verifier_result',
-              'test_key_generation_rejects_verified_token_digest_mismatch',
+              'test_policy_substitution_after_C_is_rejected_before_key_generation',
+              'test_each_material_policy_field_mutation_is_rejected',
+              'test_tampered_or_promoted_synthetic_C_is_rejected',
+              'test_crash_boundaries_preserve_consumption',
           )
-          combined = lifecycle + key + test
           for marker in required:
               if marker not in combined:
                   raise SystemExit(f'missing integrated lifecycle marker: {marker}')
@@ -116,6 +115,7 @@ jobs:
               'PDMAL_BLINDING_KEY' + '=',
               'real_confidential_space_admission' + '": True',
               '"empirical_n": 1',
+              'independent_retention_verified' + '": True',
           )
           for marker in forbidden:
               if marker in combined:
@@ -125,8 +125,7 @@ jobs:
       - name: Report bounded interpretation
         shell: bash
         run: |
-          echo 'PASS: synthetic integrated lifecycle and post-C crash/retry controls only.'
-          echo 'Production key acquisition accepts raw token input and performs Google verification internally.'
-          echo 'Synthetic OIDC evidence is prohibited from the production key-acquisition path.'
+          echo 'PASS: synthetic policy-bound integrated lifecycle and crash/retry controls only.'
+          echo 'Production key acquisition is intentionally blocked pending independent C/policy retention verification.'
           echo 'No real authorization, TEE admission, independent retention, or empirical run occurred.'
           echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.'
