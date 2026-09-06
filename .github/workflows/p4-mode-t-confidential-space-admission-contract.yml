@@ -57,7 +57,12 @@ jobs:
           source = Path('experiments/pdmal_pilot/mode_t_confidential_space_attestation.py').read_text(encoding='utf-8')
           required = (
               'GCP_INTEL_TDX',
+              'REQUIRED_ATTESTER_TCB = ("INTEL",)',
               'disabled-since-boot',
+              'secure boot is not attested true',
+              'memory monitoring must be exactly disabled',
+              'container args mismatch',
+              'attestation audience mismatch',
               'REQUIRED_RESTART_POLICY = "Never"',
               'REQUIRED_SUPPORT_ATTRIBUTE = "STABLE"',
               'cryptographic token signature is not verified',
