@@ -17,6 +17,8 @@ from mode_t_google_oidc_verifier import (
     EXPECTED_JWKS_URI,
     FetchedDocument,
     GOOGLE_CLOUD_ATTESTATION_ISSUER,
+    PRODUCTION_TRANSPORT,
+    SYNTHETIC_TRANSPORT,
     GoogleOIDCVerificationError,
     GoogleOIDCVerifier,
 )
@@ -163,7 +165,15 @@ class GoogleOIDCVerifierTests(unittest.TestCase):
         with self.assertRaises(GoogleOIDCVerificationError):
             verifier.verify(token, verified_at_unix=now)
 
-    def test_accepts_authenticated_rs256_and_retains_key_source_provenance(self) -> None:
+    def test_production_and_synthetic_provenance_modes_are_distinct(self) -> None:
+        production = GoogleOIDCVerifier()
+        source = FakeGoogleKeySource([public_jwk(self.key1, "kid-1")])
+        synthetic = GoogleOIDCVerifier(fetcher=source.fetch)
+        self.assertEqual(production._transport_authentication, PRODUCTION_TRANSPORT)
+        self.assertEqual(synthetic._transport_authentication, SYNTHETIC_TRANSPORT)
+        self.assertNotEqual(PRODUCTION_TRANSPORT, SYNTHETIC_TRANSPORT)
+
+    def test_accepts_synthetic_rs256_without_promoting_key_source_provenance(self) -> None:
         source, verifier, token = self.make()
         verified = verifier.verify(token, verified_at_unix=NOW)
         self.assertTrue(verified.token_context.signature_verified)
@@ -172,13 +182,11 @@ class GoogleOIDCVerifierTests(unittest.TestCase):
         self.assertEqual(verified.key_source.jwks_uri, EXPECTED_JWKS_URI)
         self.assertEqual(verified.key_source.kid, "kid-1")
         self.assertEqual(verified.key_source.algorithm, "RS256")
-        self.assertEqual(
-            verified.key_source.transport_authentication,
-            "HTTPS_SYSTEM_CA_HOSTNAME_VERIFIED",
-        )
+        self.assertEqual(verified.key_source.transport_authentication, SYNTHETIC_TRANSPORT)
         self.assertEqual(source.calls, [DISCOVERY_URL, EXPECTED_JWKS_URI])
         evidence = verified.evidence()
         self.assertNotIn("token", evidence)
+        self.assertFalse(evidence["production_key_source_authenticated"])
         self.assertFalse(evidence["pilot_authorized"])
         self.assertEqual(evidence["empirical_n"], 0)
 
