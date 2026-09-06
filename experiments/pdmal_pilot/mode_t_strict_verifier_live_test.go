@@ -46,6 +46,13 @@ func syntheticCiphertextForTime(t *testing.T, network tlock.Network, plaintext [
 	return append([]byte(nil), ciphertext.Bytes()...)
 }
 
+func assertNoScientificPromotion(t *testing.T, report continuityReport) {
+	t.Helper()
+	if report.PlaintextPersisted || report.PlaintextEmitted || report.EmpiricalDataCollection || report.FreezeEstablished || report.PilotAuthorized || report.EmpiricalN != 0 {
+		t.Fatal("synthetic live verification promoted forbidden state")
+	}
+}
+
 func TestLiveQuicknetCorrectCommitmentPasses(t *testing.T) {
 	network := newLiveQuicknet(t)
 	plaintext := []byte("P4_B_SYNTHETIC_CONTINUITY_FIXTURE_V1")
@@ -58,9 +65,7 @@ func TestLiveQuicknetCorrectCommitmentPasses(t *testing.T) {
 	if report.Status != "PASS" || !report.StrictChainEnforced || !report.NetworkMetadataVerified || !report.PlaintextCommitmentMatch {
 		t.Fatalf("unexpected strict continuity report state: status=%q strict=%t metadata=%t commitment=%t", report.Status, report.StrictChainEnforced, report.NetworkMetadataVerified, report.PlaintextCommitmentMatch)
 	}
-	if report.PlaintextPersisted || report.PlaintextEmitted || report.EmpiricalDataCollection || report.FreezeEstablished || report.PilotAuthorized || report.EmpiricalN != 0 {
-		t.Fatal("synthetic live verification promoted forbidden state")
-	}
+	assertNoScientificPromotion(t, report)
 }
 
 func TestLiveQuicknetWrongCommitmentFailsClosed(t *testing.T) {
@@ -83,5 +88,26 @@ func TestLiveQuicknetFutureRoundClassifiesTooEarly(t *testing.T) {
 	_, err := verifyCiphertext(network, ciphertext, sha256Hex(plaintext))
 	if err == nil || err.Error() != "TOO_EARLY" {
 		t.Fatalf("expected explicit TOO_EARLY classification, got %v", err)
+	}
+}
+
+func TestLiveQuicknetReplayDoesNotPromoteState(t *testing.T) {
+	network := newLiveQuicknet(t)
+	plaintext := []byte("P4_B_SYNTHETIC_REPLAY_FIXTURE_V1")
+	ciphertext := syntheticCiphertextForTime(t, network, plaintext, time.Now().Add(-45*time.Second))
+	commitment := sha256Hex(plaintext)
+
+	first, err := verifyCiphertext(network, ciphertext, commitment)
+	if err != nil {
+		t.Fatalf("first strict replay verification failed: %v", err)
+	}
+	second, err := verifyCiphertext(network, ciphertext, commitment)
+	if err != nil {
+		t.Fatalf("second strict replay verification failed: %v", err)
+	}
+	assertNoScientificPromotion(t, first)
+	assertNoScientificPromotion(t, second)
+	if first.Status != "PASS" || second.Status != "PASS" || first.CiphertextSHA256 != second.CiphertextSHA256 || first.ExpectedPlaintextSHA256 != second.ExpectedPlaintextSHA256 {
+		t.Fatal("replayed continuity verification changed accepted identity/state")
 	}
 }
