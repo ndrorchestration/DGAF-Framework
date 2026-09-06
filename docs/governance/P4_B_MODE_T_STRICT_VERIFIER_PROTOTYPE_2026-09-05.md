@@ -90,4 +90,4 @@ Before #295 can close, at least the following remain:
 
 Passing prototype CI does not establish P4-B continuity for any DGAF protected material, custody sufficiency, freeze, authorization, analysis lock, empirical execution, efficacy, or any increase in empirical N.
 
-**PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
+Scientific posture: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
