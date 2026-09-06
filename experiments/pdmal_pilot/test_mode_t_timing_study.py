@@ -11,6 +11,36 @@ import mode_t_timing_study as timing
 from task_engine import AttemptStatus
 
 
+def _valid_encryption_evidence(head: str) -> dict:
+    return {
+        "schema_version": 1,
+        "evidence_class": timing.TLOCK_ENCRYPTION_EVIDENCE_CLASS,
+        "control_plane_sha": head,
+        "tlock_sha256": timing.EXPECTED_TLOCK_SHA256,
+        "network_endpoint": timing.EXPECTED_DRAND_ENDPOINT,
+        "chain_hash": timing.EXPECTED_QUICKNET_CHAIN_HASH,
+        "scheme": timing.EXPECTED_QUICKNET_SCHEME,
+        "public_key": timing.EXPECTED_QUICKNET_PUBLIC_KEY,
+        "network_metadata_verified": True,
+        "metadata_current_round": 1000,
+        "target_round": 2200,
+        "sample_count": 5,
+        "samples_ms": [101.0, 98.5, 102.25, 99.75, 100.5],
+        "payload_class": "P4_MODE_T_SYNTHETIC_TIMING_NOT_AUTHORIZATION",
+        "payload_bytes": 4096,
+        "all_encryptions_succeeded": True,
+        "ciphertexts_retained": False,
+        "empirical_data_collection": False,
+        "secret_instantiation": False,
+        "pilot_authorized": False,
+    }
+
+
+def _write_json(path: Path, document: dict) -> Path:
+    path.write_text(json.dumps(document, sort_keys=True), encoding="utf-8")
+    return path
+
+
 def test_canonical_timing_shapes_match_locked_pilot_and_analysis() -> None:
     assert timing.expected_trials_per_seed() == 180
     documents = timing.build_synthetic_analysis_documents(seed_count=2)
@@ -93,24 +123,94 @@ def test_matrix_timing_still_fails_on_execution_exception(
         timing.measure_full_synthetic_matrix(1234)
 
 
-def test_partial_study_cannot_propose_w(
+def test_valid_tlock_encryption_evidence_is_accepted(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    head = "a" * 40
+    monkeypatch.setenv("EVIDENCE_SHA", head)
+    path = _write_json(tmp_path / "encryption.json", _valid_encryption_evidence(head))
+
+    stage = timing._load_tlock_encryption_stage(path)
+
+    assert stage["status"] == "PASS"
+    assert stage["chain_hash"] == timing.EXPECTED_QUICKNET_CHAIN_HASH
+    assert stage["statistics"]["sample_count"] == 5
+    assert stage["ciphertexts_retained"] is False
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "match"),
+    [
+        ("control_plane_sha", "b" * 40, "head mismatch"),
+        ("tlock_sha256", "0" * 64, "tlock digest mismatch"),
+        ("chain_hash", "0" * 64, "chain hash mismatch"),
+        ("scheme", "wrong-scheme", "scheme mismatch"),
+        ("public_key", "wrong-key", "public key mismatch"),
+        ("network_metadata_verified", False, "lacks verified network metadata"),
+        ("ciphertexts_retained", True, "must not retain ciphertext"),
+        ("empirical_data_collection", True, "must be non-empirical"),
+        ("secret_instantiation", True, "must not instantiate"),
+        ("pilot_authorized", True, "must not assert pilot authorization"),
+    ],
+)
+def test_tlock_encryption_evidence_mismatches_fail_closed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    value: object,
+    match: str,
+) -> None:
+    head = "a" * 40
+    monkeypatch.setenv("EVIDENCE_SHA", head)
+    evidence = _valid_encryption_evidence(head)
+    evidence[field] = value
+    path = _write_json(tmp_path / "encryption.json", evidence)
+
+    with pytest.raises(ValueError, match=match):
+        timing._load_tlock_encryption_stage(path)
+
+
+def test_tlock_encryption_evidence_rejects_invalid_round_and_sample_contracts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    head = "a" * 40
+    monkeypatch.setenv("EVIDENCE_SHA", head)
+
+    evidence = _valid_encryption_evidence(head)
+    evidence["target_round"] = evidence["metadata_current_round"]
+    with pytest.raises(ValueError, match="invalid round binding"):
+        timing._load_tlock_encryption_stage(_write_json(tmp_path / "round.json", evidence))
+
+    evidence = _valid_encryption_evidence(head)
+    evidence["samples_ms"] = [1.0, 2.0]
+    evidence["sample_count"] = 2
+    with pytest.raises(ValueError, match="sample count"):
+        timing._load_tlock_encryption_stage(_write_json(tmp_path / "samples.json", evidence))
+
+
+def test_partial_study_cannot_propose_w_even_with_encryption_timing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    head = "a" * 40
     monkeypatch.setenv("P4_MODE_T_TLOCK_SHA256_VERIFIED", "1")
     monkeypatch.setenv("P4_MODE_T_TLOCK_SHA256", timing.EXPECTED_TLOCK_SHA256)
-    monkeypatch.setenv("EVIDENCE_SHA", "a" * 40)
+    monkeypatch.setenv("EVIDENCE_SHA", head)
     monkeypatch.setattr(
         timing,
         "measure_full_synthetic_matrix",
         lambda seed: 1000.0 + float(seed % 10),
     )
     monkeypatch.setattr(timing, "measure_locked_primary_analysis", lambda: 25.0)
+    encryption_path = _write_json(
+        tmp_path / "encryption.json", _valid_encryption_evidence(head)
+    )
 
     output = tmp_path / "timing.json"
     artifact = timing.run_study(
         output_path=output,
         repetitions=2,
         require_tlock_verification=True,
+        tlock_encryption_evidence=encryption_path,
     )
 
     assert artifact["coverage_complete"] is False
@@ -120,7 +220,7 @@ def test_partial_study_cannot_propose_w(
     assert artifact["empirical_data_collection"] is False
     assert artifact["secret_instantiation"] is False
     assert artifact["stages"]["exact_tlock_asset_reverification"]["status"] == "PASS"
-    assert artifact["stages"]["synthetic_timelock_encryption_timing"]["status"] == "NOT_EXECUTED"
+    assert artifact["stages"]["synthetic_timelock_encryption_timing"]["status"] == "PASS"
     assert artifact["stages"]["external_transparency_retention_timing"]["status"] == "NOT_EXECUTED"
 
     raw = output.read_bytes()
