@@ -18,6 +18,7 @@ WORKFLOWS = [
     ROOT / ".github/workflows/p4-b-mode-t-strict-verifier-prototype.yml",
     ROOT / ".github/workflows/p4-b-mode-t-cross-runner-repro.yml",
     ROOT / ".github/workflows/p4-b-mode-t-live-synthetic-continuity.yml",
+    ROOT / ".github/workflows/p4-b-mode-t-leakage-contract.yml",
 ]
 
 EXPECTED_JSON_TAGS = {
@@ -93,9 +94,17 @@ def validate_verifier() -> dict[str, object]:
     if "json.NewEncoder(os.Stderr).Encode(failureReport{" not in text:
         fail("stderr is not constrained to failure report JSON")
 
-    for forbidden in ("fmt.Print", "log.Print", "os.Stdout.Write", "os.Stderr.Write", "setenv"):
+    for forbidden in (
+        "fmt.Print",
+        "log.Print",
+        "os.Stdout.Write",
+        "os.Stderr.Write",
+        "os.Setenv",
+        "os.Getenv",
+        "os.LookupEnv",
+    ):
         if forbidden in text:
-            fail(f"verifier contains forbidden direct output primitive: {forbidden}")
+            fail(f"verifier contains forbidden direct output/environment primitive: {forbidden}")
 
     tags = set(re.findall(r'json:"([^",]+)', text))
     if tags != EXPECTED_JSON_TAGS:
@@ -111,7 +120,10 @@ def validate_verifier() -> dict[str, object]:
 
     for flag_name in flag_names:
         lowered = flag_name.lower()
-        if any(token in lowered for token in ("mapping", "private-key", "nonce", "secret", "password", "passphrase")):
+        if any(
+            token in lowered
+            for token in ("mapping", "private-key", "nonce", "secret", "password", "passphrase")
+        ):
             fail(f"protected-material CLI flag is forbidden: {flag_name}")
         if "plaintext" in lowered and flag_name != "expected-plaintext-sha256":
             fail(f"raw/plaintext CLI flag is forbidden: {flag_name}")
@@ -132,6 +144,7 @@ def validate_verifier() -> dict[str, object]:
         "cli_flags_reviewed": len(flag_names),
         "plaintext_byte_flow_allowlisted": True,
         "strict_decrypt_only": True,
+        "environment_input_surface_absent": True,
     }
 
 
@@ -154,15 +167,25 @@ def validate_workflow(path: Path) -> dict[str, object]:
         fail(f"{rel}: repository/organization secret reference is forbidden")
     if "id-token: write" in text or "contents: write" in text:
         fail(f"{rel}: write-capable permissions are forbidden")
-    for marker in ("GITHUB_STEP_SUMMARY", "GITHUB_OUTPUT", "::set-output", "set -x", "bash -x"):
+    for marker in (
+        "GITHUB_STEP_SUMMARY",
+        "GITHUB_OUTPUT",
+        "::set-output",
+        "set -x",
+        "bash -x",
+    ):
         if marker in text:
             fail(f"{rel}: forbidden output/debug surface present: {marker}")
 
     env_names = set(
         match.group(1)
-        for match in re.finditer(r"^\s{2,}([A-Z][A-Z0-9_]*)\s*:", text, flags=re.MULTILINE)
+        for match in re.finditer(
+            r"^\s{2,}([A-Z][A-Z0-9_]*)\s*:", text, flags=re.MULTILINE
+        )
     )
-    sensitive_names = sorted(name for name in env_names if SENSITIVE_ENV_TOKEN.search(name))
+    sensitive_names = sorted(
+        name for name in env_names if SENSITIVE_ENV_TOKEN.search(name)
+    )
     if sensitive_names:
         fail(f"{rel}: protected-material environment names present: {sensitive_names}")
 
@@ -175,11 +198,28 @@ def validate_workflow(path: Path) -> dict[str, object]:
         if not paths:
             fail(f"{rel}: upload-artifact has no reviewable text-evidence path")
         for artifact_path in paths:
-            if not (artifact_path.endswith(".txt") or artifact_path.endswith(".txt.sha256")):
+            if not (
+                artifact_path.endswith(".txt")
+                or artifact_path.endswith(".txt.sha256")
+            ):
                 fail(f"{rel}: non-text evidence path would be uploaded: {artifact_path}")
             lowered = artifact_path.lower()
-            if any(token in lowered for token in ("ciphertext", "plaintext", "mapping", "private-key", "nonce", ".tle", ".age", ".bin")):
-                fail(f"{rel}: protected-material-like artifact path is forbidden: {artifact_path}")
+            if any(
+                token in lowered
+                for token in (
+                    "ciphertext",
+                    "plaintext",
+                    "mapping",
+                    "private-key",
+                    "nonce",
+                    ".tle",
+                    ".age",
+                    ".bin",
+                )
+            ):
+                fail(
+                    f"{rel}: protected-material-like artifact path is forbidden: {artifact_path}"
+                )
 
     return {
         "workflow": rel,
