@@ -9,6 +9,7 @@ on:
       - 'experiments/pdmal_pilot/mode_t_google_oidc_verifier.py'
       - 'experiments/pdmal_pilot/mode_t_inprocess_key.py'
       - 'experiments/pdmal_pilot/mode_t_integrated_lifecycle.py'
+      - 'experiments/pdmal_pilot/mode_t_policy_bound_key.py'
       - 'experiments/pdmal_pilot/test_mode_t_admission_policy.py'
       - 'experiments/pdmal_pilot/test_mode_t_confidential_space_attestation.py'
       - 'experiments/pdmal_pilot/test_mode_t_google_oidc_verifier.py'
@@ -88,6 +89,7 @@ jobs:
 
           policy = Path('experiments/pdmal_pilot/mode_t_admission_policy.py').read_text(encoding='utf-8')
           lifecycle = Path('experiments/pdmal_pilot/mode_t_integrated_lifecycle.py').read_text(encoding='utf-8')
+          bridge = Path('experiments/pdmal_pilot/mode_t_policy_bound_key.py').read_text(encoding='utf-8')
           key = Path('experiments/pdmal_pilot/mode_t_inprocess_key.py').read_text(encoding='utf-8')
           policy_test = Path('experiments/pdmal_pilot/test_mode_t_admission_policy.py').read_text(encoding='utf-8')
           test = Path('experiments/pdmal_pilot/test_mode_t_integrated_lifecycle.py').read_text(encoding='utf-8')
@@ -95,6 +97,9 @@ jobs:
           required = (
               'admission_policy_sha256',
               'verify_synthetic_consumption_policy_binding',
+              'admit_and_acquire_mode_t_key_synthetic_from_consumption',
+              'consumption_evidence_sha256 does not match C record',
+              'PRE expectation does not bind the exact synthetic C record',
               'OPEN_REVIEW_NOT_PRODUCTION_COMPLETE',
               'CONSUMED_PRE_SECRET_SYNTHETIC',
               'SYNTHETIC_MODEL_ONLY_NOT_INDEPENDENTLY_RETAINED',
@@ -113,7 +118,9 @@ jobs:
               'admit_and_acquire_mode_t_key',
               'verify_google_confidential_space_token',
               'external operational-secret environment variable is forbidden',
-              'test_consumed_policy_rejects_alternate_valid_expectation_before_key',
+              'test_policy_bound_key_bridge_rejects_alternate_valid_expectation',
+              'test_policy_bound_key_bridge_rejects_wrong_pre_C_binding',
+              'test_policy_bound_key_bridge_rejects_tampered_C_seal',
               'test_crash_after_C_before_pre_attestation_cannot_retry',
               'test_crash_after_pre_attestation_before_key_cannot_retry',
               'test_crash_after_key_generation_zeroizes_and_cannot_retry',
@@ -122,7 +129,7 @@ jobs:
               'test_production_key_entry_rejects_synthetic_verifier_result',
               'test_key_generation_rejects_verified_token_digest_mismatch',
           )
-          combined = policy + lifecycle + key + policy_test + test
+          combined = policy + lifecycle + bridge + key + policy_test + test
           for marker in required:
               if marker not in combined:
                   raise SystemExit(f'missing integrated lifecycle marker: {marker}')
@@ -146,6 +153,7 @@ jobs:
         run: |
           echo 'PASS: synthetic admission-policy binding plus integrated lifecycle and post-C crash/retry controls only.'
           echo 'The static policy digest is carried through synthetic R/A/C and output-manifest lineage.'
+          echo 'The policy-bound bridge verifies the sealed C record and exact PRE C binding before synthetic key acquisition.'
           echo 'Synthetic C policy evidence is not independently retained and cannot promote to production authorization.'
           echo 'Signed-token lifetime upper-bound policy remains open review.'
           echo 'Production key acquisition accepts raw token input and performs Google verification internally.'
