@@ -90,11 +90,19 @@ jobs:
               '"empirical_n": 0',
               'Mode-T key generation requires PRE_EXECUTION attestation',
               'PRE_EXECUTION admission must not contain an output-manifest binding',
+              'runtime identity digest does not match normalized runtime',
+              'production Mode-T key generation requires authenticated production Google key source',
+              'synthetic Mode-T key generation requires explicit synthetic key-source evidence',
+              'key-source evidence token digest does not match PRE_EXECUTION token',
               'external operational-secret environment variable is forbidden',
               'test_crash_after_C_before_pre_attestation_cannot_retry',
               'test_crash_after_pre_attestation_before_key_cannot_retry',
               'test_crash_after_key_generation_zeroizes_and_cannot_retry',
               'test_crash_after_blinded_output_before_post_attestation_cannot_retry',
+              'test_key_generation_rejects_runtime_identity_digest_tampering',
+              'test_production_key_entry_rejects_synthetic_key_source_evidence',
+              'test_key_generation_rejects_key_source_token_mismatch',
+              'test_synthetic_key_entry_rejects_forged_production_provenance',
           )
           combined = lifecycle + key + test
           for marker in required:
@@ -117,5 +125,6 @@ jobs:
         shell: bash
         run: |
           echo 'PASS: synthetic integrated lifecycle and post-C crash/retry controls only.'
+          echo 'Synthetic OIDC evidence is prohibited from the production key-acquisition API.'
           echo 'No real authorization, TEE admission, independent retention, or empirical run occurred.'
           echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.'
