@@ -3,10 +3,12 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
 import mode_t_timing_study as timing
+from task_engine import AttemptStatus
 
 
 def test_canonical_timing_shapes_match_locked_pilot_and_analysis() -> None:
@@ -48,6 +50,47 @@ def test_required_tlock_reverification_fails_closed(monkeypatch: pytest.MonkeyPa
     monkeypatch.delenv("P4_MODE_T_TLOCK_SHA256", raising=False)
     with pytest.raises(RuntimeError, match="tlock release asset"):
         timing._tlock_reverification_stage(require_tlock_verification=True)
+
+
+def test_matrix_timing_accepts_returned_fail_closed_trial_classification(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class ReturnedFailureTask:
+        def __init__(self, *, topology: str, failure_count: int, condition: str) -> None:
+            del topology, failure_count, condition
+
+        def run_detailed(self, *, seed: int, attempt: int = 1):
+            del seed, attempt
+            return SimpleNamespace(attempt_status=AttemptStatus.FAILURE)
+
+    monkeypatch.setattr(timing, "_validate_canonical_shapes", lambda: None)
+    monkeypatch.setattr(timing, "TOPOLOGY_SPECS", {"ring": object()})
+    monkeypatch.setattr(timing, "CONDITION_VALUES", ("dgaf",))
+    monkeypatch.setattr(timing, "PILOT_FAILURE_COUNTS", (0,))
+    monkeypatch.setattr(timing, "ConsensusTask", ReturnedFailureTask)
+
+    assert timing.measure_full_synthetic_matrix(1234) >= 0.0
+
+
+def test_matrix_timing_still_fails_on_execution_exception(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class RaisingTask:
+        def __init__(self, *, topology: str, failure_count: int, condition: str) -> None:
+            del topology, failure_count, condition
+
+        def run_detailed(self, *, seed: int, attempt: int = 1):
+            del seed, attempt
+            raise RuntimeError("synthetic execution crash")
+
+    monkeypatch.setattr(timing, "_validate_canonical_shapes", lambda: None)
+    monkeypatch.setattr(timing, "TOPOLOGY_SPECS", {"ring": object()})
+    monkeypatch.setattr(timing, "CONDITION_VALUES", ("dgaf",))
+    monkeypatch.setattr(timing, "PILOT_FAILURE_COUNTS", (0,))
+    monkeypatch.setattr(timing, "ConsensusTask", RaisingTask)
+
+    with pytest.raises(RuntimeError, match="synthetic execution crash"):
+        timing.measure_full_synthetic_matrix(1234)
 
 
 def test_partial_study_cannot_propose_w(
