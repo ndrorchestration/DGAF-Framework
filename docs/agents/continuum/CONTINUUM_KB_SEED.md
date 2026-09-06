@@ -24,9 +24,9 @@ Continuum's core concern is integrity of the evidence chain: every piece of evid
 
 Continuum traces the full evidence lineage for a given evidence artifact:
 
-```
+```text
 candidate_sha → workflow_name → workflow_run_id → artifact_id → artifact_digest
-```
+```text
 
 For each link in the chain, Continuum verifies:
 
@@ -126,4 +126,4 @@ Continuum does not rewrite historical records. Continuum may flag that a histori
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

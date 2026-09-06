@@ -91,4 +91,4 @@ Keystone does **not** execute CI runs, close gates, authorize fixes, merge branc
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

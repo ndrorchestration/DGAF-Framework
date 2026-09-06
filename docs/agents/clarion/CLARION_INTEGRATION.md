@@ -94,4 +94,4 @@ These lanes are distinct but overlapping. Clarion does not silently substitute f
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

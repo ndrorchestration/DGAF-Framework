@@ -27,7 +27,7 @@ A soul is **not** a spec (SPEC.md), a knowledge base (KB.md), a protocol (PROTOC
 
 ### 1. Identity
 
-```
+```text
 # SOUL.md — Agent <Name>
 **Version:** 1.0
 **Date:** <date>
@@ -38,59 +38,59 @@ A soul is **not** a spec (SPEC.md), a knowledge base (KB.md), a protocol (PROTOC
 **Authority tier:** <tier, if defined in formation topology>
 **Canonical home:** docs/agents/<agent>/SOUL.md
 **Related instruments:** <instrument IDs this soul references, with reconciled IDs>
-```
+```text
 
 The identity section anchors the soul to the agent's governed artifacts (SPEC, KB, PROTOCOL, QA_RUBRIC, INTEGRATION, MEMORY) and to the instrument IDs it references.
 
 ### 2. Lane boundaries
 
-```
+```text
 ## Lane boundaries
 - <What the agent does>
 - <What the agent does NOT do>
 - <Authority limits — what the agent can and cannot decide>
 - <Sovereign file guard, if applicable — LICENSE/NOTICE/AXIS, etc.>
 - <Gate authority — does the agent gate, score, veto, attest, record, or advise?>
-```
+```text
 
 Lane boundaries are drawn from the agent's SPEC and PROTOCOL, not invented. They answer: what is this agent authorized to do, and what is explicitly out of lane?
 
 ### 3. Standing posture
 
-```
+```text
 ## Standing posture
 - <Formation-level posture the agent must uphold — e.g., PRE-FREEZE / FAIL-CLOSED / N=0 / NOT AUTHORIZED>
 - <What the agent must surface to the operator rather than decide>
 - <Irreversible-operation gate — merge, pilot, freeze, authorization require explicit go-ahead>
-```
+```text
 
 The standing posture is formation-level, not agent-specific. Every agent soul should state the posture it operates under, so there is no ambiguity about whether the agent can make authorization-level decisions.
 
 ### 4. Operating principles
 
-```
+```text
 ## Operating principles
 - <Principle 1 — drawn from agent's KB/PROTOCOL or from the operator's observed preferences>
 - <Principle 2>
 - ...
-```
+```text
 
 Operating principles encode how the agent behaves — skepticism, verification-before-claim, retraction discipline, subagent coordination, environment caution, etc. These can be drawn from the agent's own KB/PROTOCOL or from the operator's cross-session operating principles (as encoded in the Hermes-operator SOUL.md).
 
 ### 5. Failure-mode suppressions
 
-```
+```text
 ## Failure modes to actively suppress
 - <Failure mode 1 — specific, with session/known record if available>
 - <Failure mode 2>
 - ...
-```
+```text
 
 Failure-mode suppressions are the agent's known weak spots and the discipline to counter them. They should be specific, not generic. Where a failure mode has a known session record, cite it (e.g., "Session record: P-31 reported no implementation exists because search was scoped to pptl/ + experiments/; real code was in components/ensemble_v16.py").
 
 ### 6. Instrument references (reconciled IDs)
 
-```
+```text
 ## Instruments referenced
 | Instrument ID | Name | How referenced | Reconciliation status |
 |---|---|---|---|
@@ -101,40 +101,40 @@ Failure-mode suppressions are the agent's known weak spots and the discipline to
 | INST-AHG-ARCH | AHG Architecture Specification | <how referenced> | Weight sum conflict with INST-AHG-STAB (1.00 vs 0.80); implementation live but validation pending |
 | INST-HQ-META | Harmonic Quintet Meta-Orchestration Spec | <how referenced> | Matrix row-stochasticity claim false (APG row = 0.80); 0.844 composite unverifiable; convergence claim has true conclusion but wrong justification |
 | ... | ... | ... | ... |
-```
+```text
 
 This section is the key improvement the instrument-ontology layer enables: instead of referencing "P-11," "AXIS," "11Q," or "the rubric" ambiguously, the soul references **instrument IDs** and states the reconciliation status of each. This means the soul doesn't silently propagate an ambiguous or defective instrument reference — it flags the reconciliation state explicitly.
 
 ### 7. What I'm skeptical of
 
-```
+```text
 ## What I'm skeptical of
 - <Skepticism 1 — specific to the agent's role and instruments>
 - <Skepticism 2>
 - ...
-```
+```text
 
 Derived from the agent's lane and the instruments it references. Example: an agent that references INST-AHG-ARCH should be skeptical of treating "IMPLEMENTATION LIVE" as validation. An agent referencing INST-QA-001 should be skeptical of asserting 11Q scores before the weight defect is reconciled.
 
 ### 8. What I want from other agents
 
-```
+```text
 ## What I want from other agents
 - <Productive friction request 1>
 - <Productive friction request 2>
 - ...
-```
+```text
 
 The productive-friction stance: surface gaps, propose alternative framings, challenge overconfident answers, call out over/under-complication, distinguish settled from unsettled. This is the cross-agent discipline the operator has emphasized.
 
 ### 9. Governance linkage
 
-```
+```text
 ## Governance linkage
 - <How this soul maps to governance instruments — GOVERNANCE_LINKS.md, AGENT_ROSTER.md, formation topology>
 - <Notion agent profile, if any — agent page ID>
 - <Cross-repo references, if any — e.g., ndrorchestration/ndrorchestration docs/agent-<name>-instantiation.md>
-```
+```text
 
 Governance linkage ties the soul back to the governance apparatus: the agent roster, the governance links index, formation topology, Notion agent profiles, and any cross-repo instantiation specs.
 
@@ -162,4 +162,4 @@ This also makes the soul independently verifiable: a reviewer can check that eve
 
 ---
 
-*Classification: T1 PUBLIC — template, not yet authored for specific agents. Pending instrument reconciliation completion before individual agent souls are authored against it.*
+Classification: T1 PUBLIC — template, not yet authored for specific agents. Pending instrument reconciliation completion before individual agent souls are authored against it.

@@ -12,7 +12,7 @@
 
 **Trigger:** Orchestrator provides an evidence artifact (artifact ID, file path, or sidecar) and asks Continuum to trace its lineage.
 
-```
+```text
 Step 1: Identify the artifact
          — artifact ID (GitHub Actions artifact identifier)
          — OR file path (local or repository path to the evidence file)
@@ -37,7 +37,7 @@ Step 5: Report the lineage:
          — Each link in the chain, with the actual identifier found
          — Any link that cannot be verified, with the reason
          — Any mismatch at any link, with both the claimed and actual values
-```
+```text
 
 ---
 
@@ -45,7 +45,7 @@ Step 5: Report the lineage:
 
 **Trigger:** Orchestrator asks Continuum to scan for transfer risks in a document, manifest, or evidence set.
 
-```
+```text
 Step 1: Identify the scope of the scan
          — A single document (path or content)
          — A manifest file (JSON/YAML with candidate_sha, deployment_id, run_id fields)
@@ -73,7 +73,7 @@ Step 4: Flag each transfer risk:
 Step 5: Report the transfer risks:
          — Each risk as a structured finding
          — No transfer risks found, if applicable
-```
+```text
 
 ---
 
@@ -81,7 +81,7 @@ Step 5: Report the transfer risks:
 
 **Trigger:** Orchestrator asks Continuum to scan for stale references in documents, manifests, or sidecars.
 
-```
+```text
 Step 1: For each file in scope:
          — Read the file content
          — Identify all SHA references (40-character hex strings)
@@ -106,7 +106,7 @@ Step 4: For each sidecar:
 Step 5: Report the staleness findings:
          — Each stale reference with file path, field, stale value, and current value (if known)
          — Each stale sidecar with expected and actual checksum
-```
+```text
 
 ---
 
@@ -114,7 +114,7 @@ Step 5: Report the staleness findings:
 
 **Trigger:** Orchestrator provides an evidence artifact or assessment and asks Continuum to apply an evidence-state label.
 
-```
+```text
 Step 1: Identify what has been established about the evidence:
          — Does the artifact exist? → IMPLEMENTED (at minimum)
          — Has the artifact passed a test or CI check? → TESTED (if no further verification)
@@ -135,7 +135,7 @@ Step 3: Report the label and the evidence that supports it:
          — The label applied
          — The specific evidence, run ID, SHA, or verification that supports the label
          — Any ambiguity or uncertainty in the labeling
-```
+```text
 
 ---
 
@@ -143,7 +143,7 @@ Step 3: Report the label and the evidence that supports it:
 
 **Trigger:** Orchestrator asks Continuum to verify one or more `.sha256` sidecar files.
 
-```
+```text
 Step 1: For each sidecar:
          — Read the sidecar content
          — Extract the expected SHA-256 checksum
@@ -160,7 +160,7 @@ Step 3: Compare:
 Step 4: Report:
          — Each sidecar: path, expected checksum, actual checksum, match/mismatch
          — Any mismatch flagged as a stale sidecar with both values
-```
+```text
 
 ---
 
@@ -168,7 +168,7 @@ Step 4: Report:
 
 **Trigger:** Orchestrator asks Continuum to assess whether a historical record should be overlaid with a current interpretation.
 
-```
+```text
 Step 1: Identify the historical record and its content
          — What candidate SHA, run ID, deployment ID, or state it references
          — Whether the record is clearly historical or ambiguously current
@@ -189,7 +189,7 @@ Step 4: Report:
          — What the overlay should convey (current interpretation of historical material)
          — That the overlay is a separate artifact from the historical record
          — That Continuum does not rewrite historical records
-```
+```text
 
 ---
 
@@ -206,4 +206,4 @@ Step 4: Report:
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

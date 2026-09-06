@@ -1,4 +1,5 @@
 # Canonical Instrument Reconciliation Matrix
+
 **Generated:** 2026-09-04  
 **Source:** Direct repository reads + independent computational verification + Notion SSOT cross-validation  
 **Notion SSOT:** [MASTER RUBRIC REGISTRY & AUDIT — 2026-09-04](https://app.notion.com/p/3d1f5bad238b812d8e66c7d7f0747cde) (fetched 2026-09-04T08:25:34Z)  
@@ -360,7 +361,7 @@
    - 0.75 = AX-06 gate (Apogee Pillar C routing pass/fail)
    - 0.85 = seal floor (seal eligibility)
    - 0.90 = Ionian sustained target (quality target, advisory below)
-   
+
    Policy language that says "Reson score must reach [X] for seal" is ambiguous: does X mean the AX-06 gate (0.75), the seal floor (0.85), or the target (0.90)? The three predicates are structurally different (routing gate vs. eligibility floor vs. quality target) and should not be treated as one interchangeable threshold. Verified from: KB.md lines 47/51, RESON_KB.md lines 51/57/58, MEMORY.md line 13, PROTOCOL.md lines 50/59, QA_RUBRIC.md lines 69/78.
 
 2. **POLICY_LANGUAGE_AMBIGUITY (MEDIUM):** The same word "threshold" is used for all three predicates in different artifacts without distinguishing them by predicate name. This makes cross-artifact policy statements ambiguous unless each is read in the specific context of the artifact that contains it.
@@ -544,4 +545,4 @@ This matrix provides the instrument-ID layer (INST-XXX-NNN) for each contradicti
 
 ---
 
-*Classification: T1 PUBLIC — instrument identity and defect registry, not a claim of authoritative scores or resolved conflicts. All statuses are stated explicitly; no silent normalization has been performed. Scientific boundary: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.*
+Classification: T1 PUBLIC — instrument identity and defect registry, not a claim of authoritative scores or resolved conflicts. All statuses are stated explicitly; no silent normalization has been performed. Scientific boundary: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.

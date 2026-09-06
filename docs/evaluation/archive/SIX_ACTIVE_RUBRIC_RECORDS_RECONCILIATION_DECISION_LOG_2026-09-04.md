@@ -1,4 +1,5 @@
 # Six Active Rubric Records — Reconciliation Decision Log (6 → 5+1 reclassification)
+
 **Generated:** 2026-09-04  
 **Source:** Notion SSOT (`MASTER RUBRIC REGISTRY & AUDIT — 2026-09-04`) + independent on-disk verification  
 **Canonical home:** `docs/evaluation/`  
@@ -113,6 +114,7 @@ The scientific boundary remains unchanged: **PRE-FREEZE / FAIL-CLOSED / NOT AUTH
 **Instrument ID:** INST-RESON-4Q  
 **Internal coherence:** ✓ Confirmed. H1–H4, weights 0.30/0.25/0.25/0.20 sum to 1.00; clean weighted-average composite (matrix lines 345–347).  
 **External dependency:** Three distinct predicates are all referred to with the generic word "threshold" across the Reson artifacts:
+
 - 0.75 = AX-06 gate (Apogee Pillar C routing pass/fail) — from KB.md lines 47/51, RESON_KB.md line 51, MEMORY.md line 13
 - 0.85 = seal floor (seal eligibility) — from KB.md line 47, QA_RUBRIC.md line 69
 - 0.90 = Ionian sustained target (quality target, advisory below) — from KB.md line 47, PROTOCOL.md line 50, QA_RUBRIC.md lines 69/78
@@ -168,4 +170,4 @@ The 1 CONTRADICTION record (Core DGAF) is the only active rubric whose own publi
 
 ---
 
-*Classification: T1 PUBLIC — reconciliation record, not authoritative resolution. 24 CONFIRMED active rubrics (5 with external dependencies, 19 cleanly confirmed) + 1 CONTRADICTION (Core DGAF intrinsic). Reconciliation does not advance authorization, freeze, or empirical execution. Scientific boundary: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.*
+Classification: T1 PUBLIC — reconciliation record, not authoritative resolution. 24 CONFIRMED active rubrics (5 with external dependencies, 19 cleanly confirmed) + 1 CONTRADICTION (Core DGAF intrinsic). Reconciliation does not advance authorization, freeze, or empirical execution. Scientific boundary: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.

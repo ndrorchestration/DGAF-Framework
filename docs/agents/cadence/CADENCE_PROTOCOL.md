@@ -12,7 +12,7 @@
 
 **Trigger:** Orchestrator provides a set of remediation PRs or fixes and asks Cadence to map their dependencies.
 
-```
+```text
 Step 1: For each PR or fix in the set:
          — Identify the files it touches (diff, file list)
          — Identify the CI checks it triggers or modifies
@@ -37,7 +37,7 @@ Step 4: Report the dependency map:
          — Each dependency as a structured finding
          — The files, CI checks, evidence bindings, and SHAs involved
          — Any dependency that cannot be determined, with the reason
-```
+```text
 
 ---
 
@@ -45,7 +45,7 @@ Step 4: Report the dependency map:
 
 **Trigger:** Orchestrator provides a proposed merge order and asks Cadence to predict conflicts.
 
-```
+```text
 Step 1: For each consecutive pair (A → B) in the proposed order:
          — Will merging A before B cause a merge conflict on any file both touch?
          — Will merging A before B cause B's CI to fail because B depends on a
@@ -62,7 +62,7 @@ Step 2: For each predicted conflict:
 Step 3: Report the conflict predictions:
          — Each predicted conflict with type, files/checks/bindings involved, and resolution
          — Any pair with no predicted conflict
-```
+```text
 
 ---
 
@@ -70,7 +70,7 @@ Step 3: Report the conflict predictions:
 
 **Trigger:** Orchestrator asks Cadence to recommend a merge or fix sequence.
 
-```
+```text
 Step 1: Gather inputs:
          — Dependency map from Procedure 1
          — Conflict predictions from Procedure 2
@@ -100,7 +100,7 @@ Step 5: Report the recommended sequence:
          — The expected state after each step
          — Any unresolved dependencies or indeterminacies
          — Any boundary risks and the authorization they require
-```
+```text
 
 ---
 
@@ -108,7 +108,7 @@ Step 5: Report the recommended sequence:
 
 **Trigger:** Cadence is about to recommend a sequence, or has recommended one, and must verify it respects the standing governance boundary.
 
-```
+```text
 Step 1: For each recommended action in the sequence:
          — Is the action a merge? → flag for explicit authorization
          — Is the action a push that advances main? → flag for explicit authorization
@@ -125,7 +125,7 @@ Step 2: For each flagged action:
 Step 3: Report the boundary check:
          — Each flagged action with the boundary it crosses
          — Confirmation that the rest of the sequence respects the boundary
-```
+```text
 
 ---
 
@@ -133,7 +133,7 @@ Step 3: Report the boundary check:
 
 **Trigger:** Orchestrator asks Cadence whether a set of fixes can proceed in parallel.
 
-```
+```text
 Step 1: For each pair of fixes in the set:
          — Do they touch overlapping files? → not independent
          — Do they trigger or modify overlapping CI checks? → not independent
@@ -148,7 +148,7 @@ Step 3: Report the parallelism assessment:
          — Each independent group with its member fixes
          — Any fix that cannot be parallelized with another, with the reason
          — Any group that must wait for a dependency before starting
-```
+```text
 
 ---
 
@@ -156,7 +156,7 @@ Step 3: Report the parallelism assessment:
 
 **Trigger:** Any point in a procedure where Cadence would need to take an action it is not authorized to perform.
 
-```
+```text
 Step 1: Detect the boundary:
          — Merge requires branch integration (Cadence does not merge)
          — Push requires write access and authorization (Cadence does not push)
@@ -171,7 +171,7 @@ Step 2: Stop and report:
          — Which agent or authority is the appropriate actor
 
 Step 3: Do NOT attempt to proceed past the boundary
-```
+```text
 
 ---
 
@@ -188,4 +188,4 @@ Step 3: Do NOT attempt to proceed past the boundary
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

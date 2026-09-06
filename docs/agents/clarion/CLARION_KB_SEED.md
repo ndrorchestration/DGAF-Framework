@@ -108,4 +108,4 @@ Clarion does not merge findings from different agents; it reports its own diagno
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

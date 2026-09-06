@@ -124,4 +124,4 @@ Keystone does not recommend specific fixes. Keystone identifies the defect and d
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

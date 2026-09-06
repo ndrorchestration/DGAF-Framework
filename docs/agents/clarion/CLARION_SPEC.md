@@ -72,4 +72,4 @@ Clarion does **not** fix CI failures, open pull requests, merge branches, or aut
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

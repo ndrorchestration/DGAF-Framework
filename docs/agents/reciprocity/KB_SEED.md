@@ -28,10 +28,10 @@ Reciprocity enforces bidirectional consistency across the DGAF formation. It det
 
 Reciprocity operates on bidirectional algebra — each relationship R(A,B) must satisfy:
 
-```
+```text
 R(A,B) ∧ R(B,A) → symmetric
 ¬R(B,A) → asymmetry flag → mitigation required
-```
+```text
 
 Symmetry coefficient: `σ(A,B) = |R(A,B) ∩ R(B,A)| / |R(A,B) ∪ R(B,A)|`
 

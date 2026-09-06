@@ -59,12 +59,12 @@
 
 ## Composite Score
 
-```
+```text
 Clarion QA Score = D1×0.35 + D2×0.25 + D3×0.20 + D4×0.15 + D5×0.05
 Pass threshold: ≥ 0.75
 Critical fail (D1 or D2): automatic rubric fail regardless of composite
-```
+```text
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC

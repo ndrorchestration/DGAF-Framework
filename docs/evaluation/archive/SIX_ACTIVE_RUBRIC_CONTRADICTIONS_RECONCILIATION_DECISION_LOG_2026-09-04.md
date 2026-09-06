@@ -1,4 +1,5 @@
 # Six Active Rubric Contradictions — Reconciliation Decision Log
+
 **Generated:** 2026-09-04  
 **Source:** Notion SSOT (`MASTER RUBRIC REGISTRY & AUDIT — 2026-09-04`) + independent on-disk verification  
 **Canonical home:** `docs/evaluation/`  
@@ -66,6 +67,7 @@ The reconciliation does **not** assert that any contradictory instrument is wron
 From `docs/qa/QA_RUBRIC.md`:
 
 **Weight structure (lines 62–105):**
+
 - Domain A (Q1–Q3): 0.20 each → 0.20 × 3 = 0.60
 - Domain B (Q4–Q6): 0.15 each → 0.15 × 3 = 0.45
 - Domain C (Q7–Q9): 0.10 each → 0.10 × 3 = 0.30
@@ -73,9 +75,10 @@ From `docs/qa/QA_RUBRIC.md`:
 - **Sum = 1.50** (not 1.00)
 
 **Composite formula (line 239):**
-```
+
+```text
 S_{11Q} = (1/11) Σ w_i · Q_i
-```
+```text
 where each Q_i ∈ [0,1] and Σ w_i = 1.50.
 
 **Reachable range under literal execution:**
@@ -270,4 +273,4 @@ See `docs/evaluation/CANONICAL_INSTRUMENT_RECONCILIATION_MATRIX_2026-09-04.md` f
 
 ---
 
-*Classification: T1 PUBLIC — reconciliation record, not authoritative resolution. Six contradictions identified, bounded, with closure conditions — not resolved. Notion SSOT is the master registry; this repo artifact is the governed sidecar for on-disk evidence.*
+Classification: T1 PUBLIC — reconciliation record, not authoritative resolution. Six contradictions identified, bounded, with closure conditions — not resolved. Notion SSOT is the master registry; this repo artifact is the governed sidecar for on-disk evidence.
