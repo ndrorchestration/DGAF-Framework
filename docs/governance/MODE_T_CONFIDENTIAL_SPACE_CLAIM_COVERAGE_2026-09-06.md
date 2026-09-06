@@ -4,16 +4,18 @@
 
 Status: **REVIEW SCAFFOLDING / CURRENT-SOURCE COVERAGE RECORD / NOT INDEPENDENT SECURITY ACCEPTANCE / NOT P4 CLOSURE**
 
-This record maps the current DGAF Mode-T Confidential Space admission implementation to the signed claims documented by Google Cloud. It exists to make omissions and policy choices reviewable before Issue #320 independent security adjudication and before any real admission attempt under Issue #310.
+This record maps the reviewed DGAF Mode-T Confidential Space admission implementation to the signed claims documented by Google Cloud. It exists to make omissions and policy choices reviewable before Issue #320 independent security adjudication and before any real admission attempt under Issue #310.
 
 It does not change the verifier, select new thresholds, establish production trust roots, satisfy independently retained R/A/C authority, execute Confidential Space, or close P4.
 
 Scientific/control boundary: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0**.
 
-## Exact repository boundary reviewed
+## Exact source boundary reviewed
 
-- repository `main`: `fe1c4be89fff9e5b3e99ca8351aaa398d8c2c9a0`
-- tree: `75f84f28d571125e9bd9a41e8f0053c7dffedf0c`
+Review-base repository boundary:
+
+- base `main`: `fe1c4be89fff9e5b3e99ca8351aaa398d8c2c9a0`
+- base tree: `75f84f28d571125e9bd9a41e8f0053c7dffedf0c`
 - claim contract: `experiments/pdmal_pilot/mode_t_confidential_space_attestation.py`
   - Git blob: `622bfe88116162937f4a3e6993ec66075fceb72e`
 - Google OIDC verifier: `experiments/pdmal_pilot/mode_t_google_oidc_verifier.py`
@@ -21,7 +23,9 @@ Scientific/control boundary: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empir
 - canonical admission policy: `experiments/pdmal_pilot/mode_t_admission_policy.py`
   - Git blob: `520cd7dab7c0cb4c04c120007f84e05463243eb8`
 
-If any of those identities changes, this coverage record becomes historical until reviewed again.
+PR #340 merged this review document as repository `main` `13d6a3b61f96e1bf87181509a852297599ca48a0`, tree `b43bce1cab6f27cca08473799ae40c7ae9616d75`. That merge advanced the repository tip by adding this documentation artifact; it did not change the three reviewed source blobs above.
+
+The coverage classification remains source-current while those reviewed source identities and the security-critical policy semantics they represent remain unchanged. Unrelated repository-tip movement alone does not invalidate the matrix. A change to any reviewed source blob or relevant policy semantics requires a fresh review before the matrix may be treated as current for that changed implementation.
 
 ## Current Google sources
 
@@ -39,6 +43,8 @@ Reviewed 2026-09-06:
   `https://docs.cloud.google.com/confidential-computing/confidential-space/docs/deploy-workloads`
 
 Google's raw token-claims reference currently documents `hwmodel=GCP_INTEL_TDX` for Intel TDX tokens. Its Workload Identity Pool attestation-assertions surface currently documents the corresponding policy-facing hardware assertion as `INTEL_TDX`. DGAF's direct token claim contract consumes the raw Google attestation token and therefore currently requires the raw-token value `GCP_INTEL_TDX`. This distinction must not be silently normalized across interfaces.
+
+A live 2026-09-06 read of Google's OIDC discovery document also advertised `jti` in `claims_supported`, while the dedicated Confidential Space token-claims table reviewed that day did not list `jti` among its top-level claims. This record does not infer a DGAF requirement from that cross-document difference; it is an explicit standards-consistency question for Issue #320 independent review.
 
 ## Classification vocabulary
 
@@ -134,6 +140,7 @@ Issue #320 / the eventual independent reviewer should explicitly adjudicate at l
 5. Should `image_id` or `image_reference` be cross-checked in addition to the exact image digest?
 6. Is an exact-digest workload identity sufficient for this cycle, or is a separately governed image-signature authority required?
 7. Are any signed claims accepted by Google but omitted here security-critical for DGAF's specific no-operator-secret / no-silent-retry threat model?
+8. Does the live OIDC discovery document's advertised `jti` support have security-relevant semantics for Confidential Space tokens that are omitted or documented elsewhere, and should DGAF retain or enforce anything only if current Google/JOSE requirements justify it?
 
 ## Anti-drift rules
 
@@ -147,6 +154,7 @@ Do not infer any of the following from this matrix:
 - exact image digest proves signer authority;
 - exact `sub` automatically proves the separate GCE claim set is mutually consistent;
 - green CI or synthetic fixtures establish real Confidential Space admission;
+- unrelated repository-tip movement invalidates or refreshes a source-bound review without checking the reviewed source identities;
 - this record satisfies #316 independently retained production R/A/C authority;
 - this record satisfies #320 independent review;
 - this record closes #310 or P4.
@@ -155,6 +163,6 @@ Any final production policy change prompted by this review must be implemented a
 
 ## Current disposition
 
-The current implementation has broad fail-closed coverage over the claims it deliberately selects, but the signed-claim universe is larger than the present acceptance identity. The remaining omissions are now explicit review decisions rather than invisible assumptions.
+The current implementation has broad fail-closed coverage over the claims it deliberately selects, but the signed-claim universe is larger than the present acceptance identity. The remaining omissions are explicit review decisions rather than invisible assumptions. This matrix remains current only for the reviewed source identities and semantics named above; it is not a moving endorsement of future source changes.
 
 **#310 OPEN · #316 OPEN · #320 OPEN · #295 OPEN · final candidate NOT DESIGNATED · PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0.**
