@@ -9,7 +9,9 @@
 
 ## What Is DGAF-Framework?
 
-The **Dynamic Governance & Agentic Framework (DGAF)** is a structured multi-agent AI governance system that operationalizes NIST AI RMF, EU AI Act requirements, and OWASP Agentic Top 10 controls into a living, auditable repository. It governs the **Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)** — a portfolio of AI systems, agents, and automation workflows operated by ndrorchestration.
+The **Dynamic Governance Agentic Formation (DGAF)** is a structured multi-agent AI governance system that operationalizes NIST AI RMF, EU AI Act requirements, and OWASP Agentic Top 10 controls into a living, auditable repository. It governs the **Phi-Harmonic Dynamic Governance Ecosystem (PHDGE)** — a portfolio of AI systems, agents, and automation workflows operated by ndrorchestration.
+
+> **Terminology authority:** `docs/taxonomy/NDR_ACRONYM_REGISTRY.md`. Earlier expansions are historical provenance and must not be presented as the current canonical expansion.
 
 The framework is not a policy document. It is an **executable governance spine** — every policy has a corresponding gate, every gate has a machine-readable pass/fail schema, and every decision is traceable to a sealed SWEEP_LOG entry.
 

@@ -1,7 +1,7 @@
 # NDR Acronym Registry
 
 **Status:** CANONICAL REGISTRY / epistemic vocabulary control  
-**Date:** 2026-08-15
+**Date:** 2026-09-06
 
 ## Purpose
 
@@ -17,7 +17,8 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **AH3** | Adaptive Harmonic-Hierarchical Hybrid | Historical AHG/Zeta-Pell naming variant | HISTORICAL | Not the canonical expansion of AHG. |
 | **ASIS** | Acoustic Spatial Insight System | Acoustic/spatial perception system | DEFINED | Canonical expansion established 2026-08-14. |
 | **SIL** | Spatial Intelligence Layer | Perception/spatial abstraction layer within the ASIS concept | DEFINED | Do not imply a standardized external technology. |
-| **PDMAL / PDMA-L** | Phi-Driven Multi-Agent Lattice | Dodecahedral-graph lattice/control structure and associated formalism | VERIFIED for explicitly tested graph/math quantities; DEFINED for architecture | Not established as a complete BFT consensus protocol. |
+| **PDMAL / PDMA-L** | Phi-Driven Multi-Agent Lattice | Lattice/control research architecture; topology is an experimental/design variable rather than implied by the acronym | DEFINED for architecture; graph/math quantities are VERIFIED only where explicitly tested | Current active identity. Dodecahedral math may be verified without establishing dodecahedral efficacy or making that topology constitutive. |
+| **PDMAL-D** | Phi-Dodecahedral Multi-Agent Lattice | Prospective successor identity in which dodecahedral topology would be constitutive | PROSPECTIVE / NOT_TRIGGERED | Evidence-gated naming transition. Do not describe PDMAL-D as active, canonical architecture, or established successor until the transition gate is satisfied. |
 | **DGAF** | Dynamic Governance Agentic Formation | Agentic governance/orchestration framework | DEFINED; implementation evidence is artifact-specific | Do not infer capability from framework name alone. |
 | **AXIS** | Agent X-axis Invariant Spectrum | DGAF invariant measurement/metric spine | DEFINED; operationalization status is artifact-specific | Canonical expansion is explicitly recorded in `docs/qa/AXIS_METRIC_SPEC.md`; the specification itself states that full operationalization remains a roadmap item. fileciteturn231file0 |
 | **SACP** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical/project-local term | AMBIGUOUS | Do not invent an expansion. Preserve the acronym until a canonical source is located. |
@@ -53,7 +54,9 @@ For example:
 
 `PDMAL = Phi-Driven Multi-Agent Lattice`
 
-does not prove any particular convergence, consensus, governance, or fault-tolerance property.
+does not prove any particular convergence, consensus, governance, fault-tolerance, or topology-benefit property.
+
+Likewise, the definition of `PDMAL-D` does not make the successor active or establish that a dodecahedral topology is constitutive or beneficial.
 
 ### 4. Do not backronym ambiguous terms
 
@@ -74,6 +77,20 @@ Historical/inconsistent expansion: **Adaptive Hierarchical Governance**.
 Historical hybrid: **Adaptive Harmonic-Hierarchical Hybrid (AH3)**.
 
 The Zeta-Pell audit documented this conflict directly. It must not be silently reintroduced into current taxonomy.
+
+### PDMAL / PDMAL-D
+
+Current active identity: **PDMAL = Phi-Driven Multi-Agent Lattice**.
+
+Prospective successor identity: **PDMAL-D = Phi-Dodecahedral Multi-Agent Lattice**.
+
+The 2026-08-31 naming-transition record classifies the PDMAL → PDMAL-D transition as **NOT_TRIGGERED**. Dodecahedral graph quantities may be mathematically verified while the topology remains a candidate experimental factor. No naming preference, visualization, design intuition, single experiment, or historical structural use is sufficient to promote PDMAL-D to active status.
+
+Current documentation must therefore distinguish three things:
+
+1. the active PDMAL identity;
+2. verified dodecahedral graph/math quantities within their exact scope; and
+3. the untriggered prospective PDMAL-D architectural identity.
 
 ### AXIS
 
@@ -98,7 +115,7 @@ Future acronym sweeps must report:
 3. canonical expansion, if established;
 4. source file(s);
 5. evidence class;
-6. whether the expansion is current, historical, ambiguous, or deprecated;
+6. whether the expansion is current, historical, ambiguous, deprecated, or prospective;
 7. whether the acronym is being used as an external-standard term or an NDR-local term.
 
 **No acronym is considered reconciled merely because one plausible expansion exists.**
