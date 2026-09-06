@@ -28,6 +28,8 @@ SUPPORTED_MODES = {"contract", "pilot"}
 CONTRACT_ROOT_SEEDS = (20260817, 20260818)
 FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
 PROTOCOL_VERSION = "0.7.6"
+MIN_BLINDING_KEY_CHARS = 32
+CONDITION_ID_DOMAIN = b"PDMAL-BLINDED-CONDITION-ID-v1"
 TRIAL_ORDER_DOMAIN = b"PDMAL-BLINDED-TRIAL-ORDER-v1"
 
 
@@ -61,8 +63,10 @@ def require_pilot_authorization() -> tuple[str, Path]:
     if os.getenv("PDMAL_PILOT_AUTHORIZED") != "1":
         raise SystemExit("pilot execution prohibited: PDMAL_PILOT_AUTHORIZED=1 is required")
     key = os.getenv("PDMAL_BLINDING_KEY", "")
-    if not key:
-        raise SystemExit("pilot execution prohibited: PDMAL_BLINDING_KEY must be supplied out-of-band")
+    if len(key) < MIN_BLINDING_KEY_CHARS:
+        raise SystemExit(
+            f"pilot execution prohibited: PDMAL_BLINDING_KEY must contain at least {MIN_BLINDING_KEY_CHARS} characters"
+        )
     try:
         archive_root = require_archive_root()
     except RuntimeError as exc:
@@ -71,7 +75,11 @@ def require_pilot_authorization() -> tuple[str, Path]:
 
 
 def blind_condition(condition: str, key: str) -> str:
-    digest = hmac.new(key.encode(), condition.encode(), hashlib.sha256).hexdigest()
+    digest = hmac.new(
+        key.encode("utf-8"),
+        CONDITION_ID_DOMAIN + b"|" + condition.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
     return f"blind_{digest[:16]}"
 
 
