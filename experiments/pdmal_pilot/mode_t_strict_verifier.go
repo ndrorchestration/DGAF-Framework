@@ -61,14 +61,14 @@ type continuityReport struct {
 }
 
 type failureReport struct {
-	SchemaVersion   int    `json:"schema_version"`
-	EvidenceClass   string `json:"evidence_class"`
-	Status          string `json:"status"`
-	Classification  string `json:"classification"`
-	ControlPlaneSHA string `json:"control_plane_sha,omitempty"`
-	GitHubRunID     string `json:"github_run_id,omitempty"`
+	SchemaVersion    int    `json:"schema_version"`
+	EvidenceClass    string `json:"evidence_class"`
+	Status           string `json:"status"`
+	Classification   string `json:"classification"`
+	ControlPlaneSHA  string `json:"control_plane_sha,omitempty"`
+	GitHubRunID      string `json:"github_run_id,omitempty"`
 	GitHubRunAttempt string `json:"github_run_attempt,omitempty"`
-	EmpiricalN      int    `json:"empirical_n"`
+	EmpiricalN       int    `json:"empirical_n"`
 }
 
 func sha256Hex(data []byte) string {
@@ -107,7 +107,8 @@ func validateNetworkMetadata(network tlock.Network) error {
 	if network.ChainHash() != quicknetChainHash {
 		return errors.New("network chain hash mismatch")
 	}
-	if network.Scheme().String() != quicknetScheme {
+	scheme := network.Scheme()
+	if scheme.String() != quicknetScheme {
 		return errors.New("network scheme mismatch")
 	}
 	publicKey := network.PublicKey()
