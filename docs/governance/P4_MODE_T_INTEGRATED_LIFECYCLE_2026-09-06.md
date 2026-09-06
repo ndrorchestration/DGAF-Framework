@@ -19,37 +19,43 @@ The test uses synthetic authorization and synthetic attestation material. No tes
 
 The stale #312 prototype required `output_manifest_sha256` before generating the Mode-T key. That is incompatible with the corrected two-phase contract because the output manifest does not exist until after the key has been generated and used to create blinded output.
 
-The replacement `mode_t_inprocess_key.py` now accepts only a normalized **PRE_EXECUTION** admission and requires:
-
-- claim contract PASS;
-- phase exactly `PRE_EXECUTION`;
-- cryptographic signature verification true;
-- token digest present;
-- C digest present and equal to the PRE binding digest;
-- `output_manifest_sha256` absent/`None`;
-- runtime-identity digest present;
-- runtime identity still attests Confidential Space, `GCP_INTEL_TDX`, secure boot, production debug state, disabled memory monitoring, and restart policy `Never`;
-- no externally supplied `PDMAL_BLINDING_KEY` or Mode-T key environment value.
+The replacement key path requires PRE_EXECUTION, an exact C binding, no pre-key output-manifest binding, the full admitted runtime identity, and no external operational secret environment variable.
 
 ### Second-pass integrity and anti-promotion hardening
 
-A later adversarial integration review identified two additional boundaries that the first green #314 head did not enforce strongly enough:
+Adversarial integration review found two additional defects after the first green #314 head:
 
-1. The key lease accepted the normalized `runtime_identity` object and its recorded digest separately, but did not recompute the digest immediately before key generation. A caller that mutated the normalized result after attestation verification could therefore create a mismatch between the runtime object used downstream and the previously attested digest.
-2. The key lease accepted `signature_verified=True` without requiring the key-source provenance emitted by #313. That was adequate for the explicitly synthetic test lane, but it left no API-level barrier preventing an injected synthetic key source from being accidentally passed into a future production key path.
+1. the lease accepted `runtime_identity` and `runtime_identity_sha256` separately without recomputing the digest immediately before entropy generation; and
+2. a production-facing key API that accepted caller-assembled “verified” metadata would recreate the same trust-delegation weakness that the Google signature verifier was intended to eliminate.
 
-The key boundary now closes both gaps:
+Both are now closed in the current design.
 
-- it canonically reserializes the complete normalized runtime identity and recomputes SHA-256 immediately before key generation; any mismatch with `runtime_identity_sha256` is rejected;
-- key-source evidence must bind the same token SHA-256 as the accepted PRE token;
-- production and synthetic acquisition are separate APIs rather than a caller-selectable permissive flag;
-- `acquire_mode_t_key(...)` accepts only evidence whose transport is `HTTPS_SYSTEM_CA_HOSTNAME_VERIFIED` and whose `production_key_source_authenticated` flag is true;
-- `acquire_mode_t_key_synthetic(...)` accepts only `SYNTHETIC_INJECTED_FETCHER` evidence with the production flag false;
-- a synthetic source cannot enter the production key API by implication, and production provenance cannot be forged merely by changing one boolean while retaining synthetic transport metadata.
+The production function `admit_and_acquire_mode_t_key(...)` accepts the **raw attestation token** and a frozen PRE expectation. Inside the same production entry point it:
 
-Dedicated controls now mutate the normalized runtime identity, substitute the token digest, feed synthetic evidence into the production API, and forge production status on synthetic evidence; each must fail before entropy generation.
+1. invokes `verify_google_confidential_space_token(...)`, whose production path has no injected fetcher parameter;
+2. authenticates the reviewed Google OIDC/JWKS signing-key path and verifies the token signature;
+3. evaluates the exact PRE_EXECUTION Confidential Space claim contract;
+4. canonically reserializes the complete normalized runtime identity and recomputes SHA-256;
+5. requires that recomputed digest to equal the attested `runtime_identity_sha256`;
+6. verifies that the `VerifiedGoogleOIDCToken` token digest is the same digest embedded in the normalized PRE record;
+7. requires production transport provenance `HTTPS_SYSTEM_CA_HOSTNAME_VERIFIED`;
+8. rejects externally supplied operational-secret environment variables; and only then
+9. calls the OS-backed CSPRNG for the 256-bit operational key.
 
-The generated 256-bit key remains inside a non-serializable lease. The API exposes only domain-separated HMAC capabilities for blinded identifiers, ordering tokens, and a commitment. The owned mutable buffer is best-effort zeroized when the lease exits, including exception paths.
+The production API therefore does **not** accept a caller-supplied `signature_verified` boolean, provenance dictionary, or alternate key fetcher as its trust boundary.
+
+Synthetic CI uses the separately named `admit_and_acquire_mode_t_key_synthetic(...)`, which requires an explicitly injected `GoogleOIDCVerifier` whose result must carry `SYNTHETIC_INJECTED_FETCHER` provenance. A narrow `acquire_mode_t_key_synthetic_from_verified(...)` seam exists only for adversarial mutation tests after normalization; it is not the production API.
+
+Dedicated controls now prove rejection of:
+
+- runtime identity mutation after claim normalization;
+- normalized PRE token-digest substitution;
+- a synthetic verifier result forced into the production raw-token path;
+- POST_EXECUTION evidence used for key generation;
+- a circular pre-key output-manifest binding; and
+- external operational-secret environment injection.
+
+The generated key remains inside a non-serializable lease. The API exposes only domain-separated HMAC capabilities for blinded identifiers, ordering tokens, and a commitment. The owned mutable buffer is best-effort zeroized on normal exit and exception paths.
 
 Python zeroization is not treated as proof that no runtime copies existed; real TEE execution and independent leakage review remain required.
 
@@ -84,15 +90,7 @@ The output manifest is then built and hashed. It binds:
 - PRE token digest;
 - execution start/completion timestamps.
 
-Only after this manifest exists does the synthetic POST token bind `SHA256(manifest)` as its nonce. The final lineage record verifies:
-
-- PRE is bound to C;
-- POST is bound to the exact output manifest;
-- PRE and POST have the same runtime identity;
-- PRE and POST token digests are distinct;
-- manifest runtime identity equals the attested runtime identity;
-- manifest PRE-token digest equals the accepted PRE token;
-- POST does not substitute for PRE and PRE does not substitute for POST.
+Only after this manifest exists does the synthetic POST token bind `SHA256(manifest)` as its nonce. The final lineage record verifies PRE→C, POST→manifest, same runtime identity, distinct token digests, manifest runtime identity, and the exact PRE token digest.
 
 The final record is `PASS_SYNTHETIC_ONLY`, with `real_confidential_space_admission=false`, `independent_retention_verified=false`, `freeze_established=false`, `pilot_authorized=false`, and `empirical_n=0`.
 
@@ -108,21 +106,17 @@ Dedicated controls exercise crashes at these post-C boundaries:
 
 Every case rehydrates the C ledger and proves the same authorization cannot be consumed again. A later execution would require a new R/A/C identity chain.
 
-The key boundary separately rejects:
+## Standards comparison
 
-- POST_EXECUTION evidence presented for key generation;
-- a PRE record carrying an output-manifest binding;
-- mutated normalized runtime identity that no longer matches the attested digest;
-- key-source evidence bound to a different token;
-- synthetic injected-key evidence presented to the production key API;
-- forged production status on synthetic key-source evidence;
-- an externally supplied operational blinding key environment value.
+The production trust design is consistent with the reviewed security requirements used for this tranche:
 
-## What this verifies
+- application-fixed RS256 rather than trusting the token-selected algorithm;
+- issuer/key association through the authenticated Google discovery/JWKS path;
+- no arbitrary `jku`, `jwk`, or `x5u` trust redirection;
+- HTTPS discovery/JWKS endpoint and exact issuer consistency;
+- signed audience/subject/runtime claims remain fail-closed exact-match checks in the separate admission contract.
 
-If exact-head CI passes, this tranche verifies that the current synthetic implementations can be connected in the required causal order, that modeled post-C retry remains fail-closed across simulated process loss, and that the final pre-key boundary revalidates both runtime integrity and key-source provenance.
-
-It materially raises confidence beyond isolated unit tests because the same C digest flows into PRE attestation, the admitted PRE result and same-token key provenance gate the key, the resulting blinded artifact feeds the manifest, the manifest digest feeds POST, and the final two-phase verifier reconciles the lineage.
+This is an implementation/standards review, not an independent organizational security review.
 
 ## What this does not verify
 
@@ -140,7 +134,7 @@ This tranche does **not** prove:
 
 ## Remaining gates after synthetic CI
 
-1. Complete independent security review of the signature/key-source and key-acquisition implementation, including findings from standards comparison.
+1. Complete independent security review of the signature/key-source and key-acquisition implementation.
 2. Keep the Google OIDC dependency lock and exact-head CI green.
 3. Replace the synthetic C retention model with the reviewed independently retained evidence path required by P4-T.
 4. Build/review the exact Confidential Space workload image and launch configuration.
