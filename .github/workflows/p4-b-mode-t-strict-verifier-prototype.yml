@@ -1,0 +1,156 @@
+name: P4-B Mode T Strict Verifier Prototype
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-b-mode-t-strict-verifier-prototype.yml'
+      - 'docs/governance/P4_B_MODE_T_STRICT_VERIFIER_PROTOTYPE_2026-09-05.md'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier.go'
+      - 'experiments/pdmal_pilot/mode_t_strict_verifier_test.go'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLOCK_VERSION: 'v1.2.0'
+  TLOCK_SOURCE_COMMIT: '7b54141a9733fd6fa207587a11148280e6fb020d'
+  GO_VERSION: '1.22.12'
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  GOTOOLCHAIN: local
+  CGO_ENABLED: '0'
+  GOOS: linux
+  GOARCH: amd64
+
+jobs:
+  validate-strict-verifier-prototype:
+    name: Validate strict verifier — synthetic/offline only
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact DGAF evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify DGAF checkout and source constraints
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          grep -F 'tlock.New(network).Strict().Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go
+          if grep -F 'tlock.New(network).Decrypt' experiments/pdmal_pilot/mode_t_strict_verifier.go; then
+            echo 'unstrict tlock decrypt call is forbidden' >&2
+            exit 1
+          fi
+          if grep -E 'os\.(WriteFile|Create)|ioutil\.WriteFile' experiments/pdmal_pilot/mode_t_strict_verifier.go; then
+            echo 'verifier must not persist plaintext or other output files itself' >&2
+            exit 1
+          fi
+
+      - name: Set up exact Go toolchain
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version: '1.22.12'
+          check-latest: false
+          cache: false
+
+      - name: Verify Go toolchain identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(go env GOVERSION)" = "go${GO_VERSION}"
+          test "$(go env GOOS)" = "$GOOS"
+          test "$(go env GOARCH)" = "$GOARCH"
+          go version
+
+      - name: Fetch exact upstream tlock source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf upstream-tlock
+          git init -q upstream-tlock
+          git -C upstream-tlock remote add origin https://github.com/drand/tlock.git
+          git -C upstream-tlock fetch --quiet --depth 1 origin "$TLOCK_SOURCE_COMMIT"
+          git -C upstream-tlock checkout --quiet --detach FETCH_HEAD
+          test "$(git -C upstream-tlock rev-parse HEAD)" = "$TLOCK_SOURCE_COMMIT"
+          test "$(awk '$1 == "go" {print $2}' upstream-tlock/go.mod)" = '1.22'
+          test -s upstream-tlock/go.sum
+
+      - name: Overlay DGAF verifier into exact upstream module graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p upstream-tlock/cmd/dgaf-strict-verifier
+          cp experiments/pdmal_pilot/mode_t_strict_verifier.go upstream-tlock/cmd/dgaf-strict-verifier/main.go
+          cp experiments/pdmal_pilot/mode_t_strict_verifier_test.go upstream-tlock/cmd/dgaf-strict-verifier/main_test.go
+          test "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')" = \
+               "$(sha256sum upstream-tlock/cmd/dgaf-strict-verifier/main.go | awk '{print $1}')"
+          test "$(sha256sum experiments/pdmal_pilot/mode_t_strict_verifier_test.go | awk '{print $1}')" = \
+               "$(sha256sum upstream-tlock/cmd/dgaf-strict-verifier/main_test.go | awk '{print $1}')"
+
+      - name: Verify pinned module graph and run offline adversarial tests
+        working-directory: upstream-tlock
+        shell: bash
+        run: |
+          set -euo pipefail
+          go mod download
+          go mod verify
+          go test -mod=readonly ./cmd/dgaf-strict-verifier -count=1 -v
+
+      - name: Build prototype twice and require byte identity
+        working-directory: upstream-tlock
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ../test-artifacts/strict-verifier
+          go build -mod=readonly -trimpath -buildvcs=false -ldflags='-buildid=' \
+            -o ../test-artifacts/strict-verifier/verifier-a ./cmd/dgaf-strict-verifier
+          go clean -cache
+          go build -mod=readonly -trimpath -buildvcs=false -ldflags='-buildid=' \
+            -o ../test-artifacts/strict-verifier/verifier-b ./cmd/dgaf-strict-verifier
+          digest_a="$(sha256sum ../test-artifacts/strict-verifier/verifier-a | awk '{print $1}')"
+          digest_b="$(sha256sum ../test-artifacts/strict-verifier/verifier-b | awk '{print $1}')"
+          test "$digest_a" = "$digest_b"
+          {
+            printf 'schema_version=1\n'
+            printf 'evidence_class=P4_B_MODE_T_STRICT_VERIFIER_PROTOTYPE_BUILD_V1\n'
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'tlock_version=%s\n' "$TLOCK_VERSION"
+            printf 'tlock_source_commit=%s\n' "$TLOCK_SOURCE_COMMIT"
+            printf 'go_version=%s\n' "$(go env GOVERSION)"
+            printf 'goos=%s\n' "$GOOS"
+            printf 'goarch=%s\n' "$GOARCH"
+            printf 'cgo_enabled=%s\n' "$CGO_ENABLED"
+            printf 'source_sha256=%s\n' "$(sha256sum ../experiments/pdmal_pilot/mode_t_strict_verifier.go | awk '{print $1}')"
+            printf 'test_source_sha256=%s\n' "$(sha256sum ../experiments/pdmal_pilot/mode_t_strict_verifier_test.go | awk '{print $1}')"
+            printf 'upstream_go_mod_sha256=%s\n' "$(sha256sum go.mod | awk '{print $1}')"
+            printf 'upstream_go_sum_sha256=%s\n' "$(sha256sum go.sum | awk '{print $1}')"
+            printf 'binary_sha256=%s\n' "$digest_a"
+            printf 'same_runner_rebuild_identical=true\n'
+            printf 'live_decryption_executed=false\n'
+            printf 'empirical_data_collection=false\n'
+            printf 'freeze_established=false\n'
+            printf 'pilot_authorized=false\n'
+            printf 'empirical_n=0\n'
+          } > ../test-artifacts/strict-verifier/build-evidence.txt
+          rm -f ../test-artifacts/strict-verifier/verifier-a ../test-artifacts/strict-verifier/verifier-b
+
+      - name: Hash evidence record
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd test-artifacts/strict-verifier
+          sha256sum build-evidence.txt > build-evidence.txt.sha256
+
+      - name: Upload non-secret prototype evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p4-b-mode-t-strict-verifier-prototype-${{ env.EVIDENCE_SHA }}
+          path: |
+            test-artifacts/strict-verifier/build-evidence.txt
+            test-artifacts/strict-verifier/build-evidence.txt.sha256
+          if-no-files-found: error
+          retention-days: 30
