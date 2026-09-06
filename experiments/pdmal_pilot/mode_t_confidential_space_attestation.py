@@ -27,6 +27,7 @@ from typing import Any, Mapping
 
 
 GOOGLE_CLOUD_ATTESTATION_ISSUER = "https://confidentialcomputing.googleapis.com"
+GOOGLE_CLOUD_OEM_ID = 11129
 CONFIDENTIAL_SPACE_SWNAME = "CONFIDENTIAL_SPACE"
 REQUIRED_HARDWARE_MODEL = "GCP_INTEL_TDX"
 REQUIRED_ATTESTER_TCB = ("INTEL",)
@@ -50,6 +51,8 @@ class AttestationExpectation:
 
     phase: str
     audience: str
+    subject: str
+    expected_service_accounts: tuple[str, ...]
     image_digest: str
     binding_sha256: str
     expected_args: tuple[str, ...]
@@ -143,6 +146,23 @@ def verify_confidential_space_attestation(
         "attestation audience must be non-empty",
     )
     _require(
+        isinstance(expectation.subject, str) and bool(expectation.subject),
+        "attestation subject must be non-empty",
+    )
+    _require(
+        bool(expectation.expected_service_accounts)
+        and all(
+            isinstance(account, str) and bool(account)
+            for account in expectation.expected_service_accounts
+        ),
+        "expected service accounts must be non-empty strings",
+    )
+    _require(
+        len(set(expectation.expected_service_accounts))
+        == len(expectation.expected_service_accounts),
+        "expected service accounts must be unique",
+    )
+    _require(
         isinstance(expectation.image_digest, str)
         and _IMAGE_DIGEST_RE.fullmatch(expectation.image_digest) is not None,
         "image_digest must be sha256:<lowercase-hex>",
@@ -158,7 +178,22 @@ def verify_confidential_space_attestation(
         root.get("iss") == GOOGLE_CLOUD_ATTESTATION_ISSUER,
         "unexpected attestation issuer",
     )
+    _require(root.get("oemid") == GOOGLE_CLOUD_OEM_ID, "unexpected Google Cloud OEM ID")
     _require(root.get("aud") == expectation.audience, "attestation audience mismatch")
+    _require(root.get("sub") == expectation.subject, "attestation VM subject mismatch")
+
+    service_accounts = root.get("google_service_accounts")
+    _require(
+        isinstance(service_accounts, list)
+        and all(isinstance(account, str) for account in service_accounts),
+        "google_service_accounts must be a list of strings",
+    )
+    _require(
+        tuple(sorted(service_accounts))
+        == tuple(sorted(expectation.expected_service_accounts)),
+        "validated service accounts mismatch",
+    )
+
     _require(
         root.get("swname") == CONFIDENTIAL_SPACE_SWNAME,
         "software identity is not CONFIDENTIAL_SPACE",
@@ -262,6 +297,8 @@ def verify_confidential_space_attestation(
 
     runtime_identity = {
         "audience": expectation.audience,
+        "subject": expectation.subject,
+        "google_service_accounts": sorted(expectation.expected_service_accounts),
         "software_identity": CONFIDENTIAL_SPACE_SWNAME,
         "hardware_model": REQUIRED_HARDWARE_MODEL,
         "attester_tcb": list(REQUIRED_ATTESTER_TCB),
@@ -282,6 +319,7 @@ def verify_confidential_space_attestation(
         "attestation_contract": "PASS",
         "attestation_phase": expectation.phase,
         "issuer": GOOGLE_CLOUD_ATTESTATION_ISSUER,
+        "oemid": GOOGLE_CLOUD_OEM_ID,
         "runtime_identity": runtime_identity,
         "runtime_identity_sha256": runtime_identity_sha256,
         "binding_sha256": binding_sha256,
