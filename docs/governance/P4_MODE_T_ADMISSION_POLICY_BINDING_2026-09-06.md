@@ -52,7 +52,7 @@ The integrated synthetic lifecycle now requires `admission_policy_sha256` when r
 
 The exact digest is then carried through:
 
-`R → A → C → PRE policy check → output manifest → POST/final lineage`
+`R → A → C → PRE policy-bound key bridge → output manifest → POST/final lineage`
 
 The synthetic C record remains labeled:
 
@@ -62,11 +62,21 @@ A matching digest in this record is therefore not equivalent to independently re
 
 ## Fail-closed anti-substitution control
 
-Before synthetic key acquisition, `verify_synthetic_consumption_policy_binding(...)` recomputes the canonical policy digest from the supplied expectation and requires exact equality with the digest carried by C.
+`mode_t_policy_bound_key.py` provides the integrated synthetic bridge. Before any synthetic OIDC/attestation/key step it:
+
+1. recomputes and verifies the sealed C record digest;
+2. requires the PRE expectation to bind that exact C digest;
+3. recomputes the canonical static admission-policy digest and requires exact equality with C;
+4. only then calls the existing explicit synthetic token-verification and key-acquisition path;
+5. verifies the resulting key lease still binds the exact C digest.
+
+This prevents the policy check from being treated as an optional side step that a caller could bypass by invoking the lower-level synthetic key primitive directly.
 
 Deterministic negative controls reject:
 
 - a C record bound to policy P1 when a different otherwise-valid expectation P2 is supplied;
+- a PRE expectation that binds a different C digest;
+- mutation of a sealed C policy field without a matching C digest;
 - mutations of individual security-sensitive expectation fields;
 - duplicate service-account entries;
 - unknown or promotable synthetic-retention states;
@@ -80,7 +90,7 @@ This tranche does **not** satisfy #316's production requirement.
 
 Production P4 admission still requires a source of authenticated, independently retained and re-verifiable R/A/C evidence (or an equivalent authorization capability) whose policy digest was fixed before execution. Production key generation must consume that evidence and require exact policy equality before token admission and entropy generation.
 
-The current synthetic ledger cannot be promoted to that role.
+The current synthetic ledger and synthetic policy-bound bridge cannot be promoted to that role. In particular, local recomputation of a synthetic C seal is not a substitute for independently retained authorization evidence.
 
 The exact real VM subject/selfLink also remains unresolved until an authenticated Confidential Space launch instance exists. The launch-contract digest in #317 is not the final admission-policy digest and must not be promoted as one.
 
