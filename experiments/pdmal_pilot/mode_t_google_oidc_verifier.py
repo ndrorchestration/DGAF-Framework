@@ -38,6 +38,8 @@ EXPECTED_JWKS_URI = (
     "signer@confidentialspace-sign.iam.gserviceaccount.com"
 )
 EXPECTED_ALGORITHM = "RS256"
+PRODUCTION_TRANSPORT = "HTTPS_SYSTEM_CA_HOSTNAME_VERIFIED"
+SYNTHETIC_TRANSPORT = "SYNTHETIC_INJECTED_FETCHER"
 MAX_DOCUMENT_BYTES = 1_048_576
 MAX_TOKEN_BYTES = 262_144
 DEFAULT_CACHE_TTL_SECONDS = 300
@@ -69,8 +71,8 @@ class KeySourceProvenance:
     expires_at_unix: int
     kid: str
     jwk_sha256: str
+    transport_authentication: str
     algorithm: str = EXPECTED_ALGORITHM
-    transport_authentication: str = "HTTPS_SYSTEM_CA_HOSTNAME_VERIFIED"
 
 
 @dataclass(frozen=True)
@@ -81,11 +83,13 @@ class VerifiedGoogleOIDCToken:
 
     def evidence(self) -> dict[str, Any]:
         """Return retention-safe verification evidence; never include token/key bytes."""
+        production_key_source = self.key_source.transport_authentication == PRODUCTION_TRANSPORT
         return {
             "token_sha256": self.token_context.token_sha256,
             "signature_verified": self.token_context.signature_verified,
             "verified_at_unix": self.token_context.verified_at_unix,
             "key_source": asdict(self.key_source),
+            "production_key_source_authenticated": production_key_source,
             "freeze_established": False,
             "pilot_authorized": False,
             "empirical_data_collection": False,
@@ -272,7 +276,11 @@ def _jwk(item: Any) -> tuple[str, _KeyRecord]:
 
 
 class GoogleOIDCVerifier:
-    """Stateful verifier supporting bounded authenticated JWKS caching and rotation."""
+    """Stateful verifier supporting bounded authenticated JWKS caching and rotation.
+
+    Passing ``fetcher`` is a synthetic-test seam. Evidence from that path is
+    explicitly marked synthetic and cannot claim production HTTPS provenance.
+    """
 
     def __init__(
         self,
@@ -283,7 +291,12 @@ class GoogleOIDCVerifier:
     ) -> None:
         if timeout_seconds <= 0 or max_clock_skew_seconds < 0:
             raise _fail("invalid verifier timing policy")
-        self._fetcher = fetcher or _https_fetch
+        if fetcher is None:
+            self._fetcher = _https_fetch
+            self._transport_authentication = PRODUCTION_TRANSPORT
+        else:
+            self._fetcher = fetcher
+            self._transport_authentication = SYNTHETIC_TRANSPORT
         self._timeout = timeout_seconds
         self._skew = max_clock_skew_seconds
         self._cache: _KeyCache | None = None
@@ -457,6 +470,7 @@ class GoogleOIDCVerifier:
                 expires_at_unix=cache.expires_at_unix,
                 kid=kid,
                 jwk_sha256=record.jwk_sha256,
+                transport_authentication=self._transport_authentication,
             ),
         )
 
