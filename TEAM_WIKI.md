@@ -1,7 +1,8 @@
 # DGAF Framework — Team Wiki
 
 > **Last updated:** 2026-07-02 · S072 · P-42 v1.4 Apogee Lens APPROVED  
-> **Terminology reconciliation:** 2026-09-06 — current canonical DGAF expansion is controlled by `docs/taxonomy/NDR_ACRONYM_REGISTRY.md`.
+> **Terminology reconciliation:** 2026-09-06 — current canonical DGAF expansion is controlled by `docs/taxonomy/NDR_ACRONYM_REGISTRY.md`.  
+> **Current-authority overlay (2026-09-06):** This file preserves an S072 historical/team snapshot. Status labels, dependency blockers, session watermarks, pending tags, migration countdowns, and “next” work recorded below are historical unless independently reverified against current repository authority. For current DGAF/PDMAL operational and scientific state, use the current control-state/governance artifacts, current GitHub `main`, Issue #309, and the Operational Control Center. Final v0.7.6 candidate remains **NOT DESIGNATED**; **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0** remains controlling.
 
 ---
 
@@ -25,7 +26,7 @@ The DGAF (**Dynamic Governance Agentic Formation**) is the **layer-0 governance 
 |---|---|---|---|
 | **Amethyst** | L5 | Host, meta-orchestrator, working-memory refresher, tribunal | ✅ Active |
 | **COLLEEN** | L5 | Institutional anchor, 1-1-1-1 Alignment Gate, steward | ✅ Active |
-| **Apogee Lens** | L4 | QA orchestrator, NIST AI RMF compliance, P-30 attestation authority | ✅ On-call |
+| **Apogee Lens** | L4 | QA orchestrator, NIST AI RMF mapping/review, P-30 attestation authority | ✅ On-call |
 | **DemiJoule** | L4 | Runtime supervisor, ethics/safety, AXIS enforcement | ✅ On-call |
 | **Herald** | L3 | Explorer / Synthesizer | 🔴 Blocked (`VITE_GEMINI_API_KEY` — S-01) |
 | **Professor Prodigy** | L3 | Executor / Phi-calculus / Independent verifier | 🟡 Active (S072 — RV-01 audit pass) |
