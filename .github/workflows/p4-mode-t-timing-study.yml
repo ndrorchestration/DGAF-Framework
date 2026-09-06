@@ -147,10 +147,10 @@ jobs:
           if not hmac.compare_digest(fields['scheme'], os.environ['QUICKNET_SCHEME']):
               raise SystemExit('quicknet scheme mismatch')
 
-          public_key_prefix = 'bls12-381.G1: '
+          public_key_prefix = 'bls12-381.G2: '
           rendered_key = fields['public_key']
           if not rendered_key.startswith(public_key_prefix):
-              raise SystemExit('unexpected tlock G1 public-key rendering')
+              raise SystemExit('unexpected tlock G2 public-key rendering')
           normalized_key = rendered_key[len(public_key_prefix):]
           if not hmac.compare_digest(normalized_key, os.environ['QUICKNET_PUBLIC_KEY']):
               raise SystemExit('quicknet public key mismatch')
