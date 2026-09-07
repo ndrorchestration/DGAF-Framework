@@ -1,20 +1,27 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "record_type": "DGAF_PDMAL_SOLO_EPOCH_AUTHORITY",
   "protocol_version": "0.7.6",
   "status": "NOT_AUTHORIZED",
   "epoch_id": null,
-  "frozen_commit_sha": null,
+  "apparatus_commit_sha": null,
   "authorization": {
-    "type": "REPOSITORY_BOUND_EPOCH_AUTHORIZATION",
+    "type": "REPOSITORY_BOUND_EPOCH_AUTHORIZATION_ENVELOPE",
     "decision": "NOT_GRANTED",
     "authority_issue": 369,
     "required_runtime_env": {
       "PDMAL_SOLO_EPOCH_ID": "MUST_MATCH_AUTHORIZED_EPOCH_ID",
+      "PDMAL_FROZEN_COMMIT_SHA": "MUST_MATCH_AUTHORIZED_APPARATUS_COMMIT_SHA",
       "PDMAL_PROTOCOL_FROZEN": "1",
       "PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED": "1"
     },
     "legacy_self_authorization_sufficient": false
+  },
+  "authorization_envelope_contract": {
+    "must_be_direct_child_of_apparatus_commit": true,
+    "only_changed_path": "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json",
+    "apparatus_code_executes_from_envelope_without_other_file_changes": true,
+    "reason": "A commit cannot contain its own SHA without circular identity. The authorization envelope therefore names its direct-parent apparatus commit and may change only this authority record."
   },
   "blocking_reason": "Issue #369: empirical P-30 confidence binding is unresolved; no successor Solo empirical epoch is authorized.",
   "required_before_grant": [
@@ -22,7 +29,8 @@
     "candidate_bind_the_p30_source_and_transformation",
     "pass_n0_engineering_validation_on_exact_proposed_binding",
     "preregister_successor_epoch_without_pooling_experiment_001",
-    "bind_exact_frozen_commit_dependencies_schedule_blinding_and_custody",
+    "freeze_exact_apparatus_commit_with_runner_and_analysis_relevant_configuration",
+    "create_single_direct_child_authorization_envelope_that_changes_only_this_authority_record_and_names_the_apparatus_commit_sha",
     "record_new_explicit_epoch_authorization_after_all_prior_checks_pass"
   ],
   "historical_experiment_001_authority_reusable": false,
