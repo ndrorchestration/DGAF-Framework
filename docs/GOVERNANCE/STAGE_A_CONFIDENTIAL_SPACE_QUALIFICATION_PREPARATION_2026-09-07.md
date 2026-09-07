@@ -194,6 +194,7 @@ gcloud compute instances start <instance-name> --zone=<zone>
 ### 6.2 Synthetic workload behavior
 
 The synthetic workload:
+
 - Generates deterministic output from sealed seed
 - Writes output to `/workspace/output/` (ephemeral, in-memory only)
 - Does **not** write to persistent disk
