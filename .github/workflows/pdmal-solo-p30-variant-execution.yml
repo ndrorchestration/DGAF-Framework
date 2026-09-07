@@ -1,0 +1,276 @@
+name: PDMAL Solo P30 Variant Execution
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/pdmal-solo-p30-variant-execution.yml'
+      - 'experiments/pdmal_pilot/run_p30_variant.py'
+      - 'experiments/pdmal_pilot/test_p30_variant_track.py'
+      - 'docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.md'
+      - 'docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.json'
+  push:
+    branches:
+      - 'solo-p30-variant/run-*'
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: '3.12.0'
+  VARIANT_SEEDS: '50'
+  VARIANT_SEED_START: '20260901'
+
+jobs:
+  validate-variant-contract:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install hash-locked pilot dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run fail-closed variant authorization tests
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python -m pytest experiments/pdmal_pilot/test_p30_variant_track.py -q
+
+      - name: Validate preregistration and execution contract without empirical collection
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          md = Path('docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.md').read_text(encoding='utf-8')
+          data = json.loads(Path('docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.json').read_text(encoding='utf-8'))
+          runner = Path('experiments/pdmal_pilot/run_p30_variant.py').read_text(encoding='utf-8')
+          workflow = Path('.github/workflows/pdmal-solo-p30-variant-execution.yml').read_text(encoding='utf-8')
+
+          assert data['status'] == 'PREREGISTERED_NOT_EXECUTED'
+          assert data['experiment_id'] == 'PDMAL-SOLO-P30-EXPLICIT-V1'
+          assert data['variant_scope'] == 'DGAF-P30-EXPLICIT-0.45'
+          assert data['p30_binding']['confidence'] == 0.45
+          assert data['p30_binding']['real_or_calibrated_apogee_confidence'] is False
+          assert data['p30_binding']['canonical_dgaf_efficacy_claim_allowed'] is False
+          assert data['design']['seed_start'] == 20260901
+          assert data['design']['seed_end'] == 20260950
+          assert data['design']['seed_count'] == 50
+          assert data['design']['expected_observations'] == 9000
+          assert data['collection_controls']['outcome_inspection_during_collection'] is False
+          assert data['collection_controls']['unblinding_authorized_at_preregistration'] is False
+          assert data['locked_primary_analysis']['bootstrap_resamples'] == 10000
+          assert data['locked_primary_analysis']['analysis_rng_seed'] == 20260823
+          assert 'canonical DGAF efficacy' in md
+          assert 'VARIANT_SEED_START = 20260901' in runner
+          assert 'VARIANT_SEEDS = 50' in runner
+          assert "solo-p30-variant/run-*" in workflow
+          print('SOLO_P30_VARIANT_PREREGISTRATION_CONTRACT_PASS')
+          PY
+          test "${PDMAL_MODE:-}" != 'solo_p30_variant'
+          test "${PDMAL_SOLO_P30_VARIANT_AUTHORIZED:-}" != '1'
+          echo 'NON_EMPIRICAL_PR_VALIDATION_PASS'
+
+  execute-blinded-variant:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact run commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify exact one-file Epoch 003 run request commit
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA")
+          if [[ "${#changed[@]}" -ne 1 || "${changed[0]}" != "docs/experiment/solo_runs/SOLO_P30_VARIANT_RUN_REQUEST.json" ]]; then
+            printf 'Epoch 003 execution prohibited: run commit must change only SOLO_P30_VARIANT_RUN_REQUEST.json; changed=%s\n' "${changed[*]:-none}" >&2
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('docs/experiment/solo_runs/SOLO_P30_VARIANT_RUN_REQUEST.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          expected = {
+              'record_type': 'DGAF_PDMAL_SOLO_P30_VARIANT_EPOCH_003_RUN_REQUEST',
+              'schema_version': 1,
+              'protocol_version': '0.7.6',
+              'experiment_id': 'PDMAL-SOLO-P30-EXPLICIT-V1',
+              'variant_scope': 'DGAF-P30-EXPLICIT-0.45',
+              'execution_mode': 'solo_p30_variant',
+              'authorization': 'GRANTED_BY_DEVELOPER_AFTER_EPOCH_002_DIAGNOSTIC_PASS',
+              'p30_binding_id': 'SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1',
+              'p30_binding_kind': 'SYNTHETIC_MINIMUM_PASSING_FIXTURE',
+              'p30_confidence': 0.45,
+              'real_or_calibrated_apogee_confidence': False,
+              'canonical_dgaf_efficacy_claim_allowed': False,
+              'limitations_acknowledged': True,
+              'seed_start': 20260901,
+              'seeds': 50,
+              'expected_observations': 9000,
+              'outcome_inspection_during_collection': False,
+              'unblinding_authorized': False,
+          }
+          if d != expected:
+              raise SystemExit(f'Epoch 003 execution prohibited: request mismatch: {d!r}')
+          print('SOLO_P30_VARIANT_RUN_REQUEST_PASS')
+          PY
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install hash-locked pilot dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Generate recoverable fresh Epoch 003 blinding key
+        shell: bash
+        run: |
+          set -euo pipefail
+          KEY="$(python - <<'PY'
+          import secrets
+          print(secrets.token_hex(32))
+          PY
+          )"
+          echo "::add-mask::$KEY"
+          printf '%s\n' "$KEY" > "$RUNNER_TEMP/pdmal_solo_p30_variant_blinding_key.txt"
+          chmod 600 "$RUNNER_TEMP/pdmal_solo_p30_variant_blinding_key.txt"
+          echo "PDMAL_BLINDING_KEY=$KEY" >> "$GITHUB_ENV"
+          echo 'EPOCH_003_CUSTODY_BOUNDARY: same-system recoverable GitHub Actions artifact; not independent custody'
+
+      - name: Execute fresh blinded 50-seed Epoch 003 variant
+        env:
+          PDMAL_MODE: solo_p30_variant
+          PDMAL_PROTOCOL_FROZEN: '1'
+          PDMAL_SOLO_P30_VARIANT_AUTHORIZED: '1'
+          PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED: '1'
+          PDMAL_P30_BINDING_ID: SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1
+          PDMAL_P30_BINDING_KIND: SYNTHETIC_MINIMUM_PASSING_FIXTURE
+          PDMAL_P30_CONFIDENCE: '0.45'
+          PDMAL_FROZEN_COMMIT_SHA: ${{ github.sha }}
+          PDMAL_ARCHIVE_ROOT: ${{ runner.temp }}/pdmal-solo-p30-variant-archive
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: |
+          set -euo pipefail
+          test "${PDMAL_PILOT_AUTHORIZED:-}" != '1'
+          python experiments/pdmal_pilot/run_p30_variant.py \
+            --seeds "$VARIANT_SEEDS" \
+            --seed-start "$VARIANT_SEED_START" \
+            --output-dir "$RUNNER_TEMP/pdmal-solo-p30-variant-output"
+
+      - name: Lock and structurally verify Epoch 003 without inspecting outcomes
+        env:
+          PDMAL_FROZEN_COMMIT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ['RUNNER_TEMP']) / 'pdmal-solo-p30-variant-output'
+          seeds = sorted(root.glob('solo_p30_variant_seed_*.json'))
+          expected_names = {f'solo_p30_variant_seed_{20260901+i}.json' for i in range(50)}
+          if len(seeds) != 50 or {p.name for p in seeds} != expected_names:
+              raise SystemExit('Epoch 003 dataset seed identity mismatch')
+
+          total_records = 0
+          seed_digests = {}
+          for p in seeds:
+              raw = p.read_bytes()
+              sidecar = p.with_suffix(p.suffix + '.sha256')
+              if not sidecar.is_file():
+                  raise SystemExit(f'missing sidecar for {p.name}')
+              digest = hashlib.sha256(raw).hexdigest()
+              if not sidecar.read_text(encoding='utf-8').startswith(digest + '  '):
+                  raise SystemExit(f'sidecar mismatch for {p.name}')
+              doc = json.loads(raw)
+              records = doc.get('records')
+              if not isinstance(records, list) or len(records) != 180:
+                  raise SystemExit(f'expected 180 records in {p.name}')
+              if doc.get('frozen_commit_sha') != os.environ['PDMAL_FROZEN_COMMIT_SHA']:
+                  raise SystemExit(f'frozen SHA mismatch in {p.name}')
+              # Structural-only verification: deliberately do not read or aggregate outcome fields.
+              total_records += len(records)
+              seed_digests[p.name] = digest
+          if total_records != 9000:
+              raise SystemExit(f'expected 9000 records, found {total_records}')
+
+          summary = json.loads((root / 'solo_p30_variant_summary.json').read_text(encoding='utf-8'))
+          required = {
+              'validation_track': 'SOLO_DEVELOPER_VARIANT',
+              'independent_verification_status': 'NOT_ESTABLISHED_BY_RUNNER',
+              'frozen_commit_sha': os.environ['PDMAL_FROZEN_COMMIT_SHA'],
+              'experiment_id': 'PDMAL-SOLO-P30-EXPLICIT-V1',
+              'variant_scope': 'DGAF-P30-EXPLICIT-0.45',
+              'p30_binding_id': 'SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1',
+              'p30_binding_kind': 'SYNTHETIC_MINIMUM_PASSING_FIXTURE',
+              'p30_fixture_confidence': 0.45,
+              'p30_fixture_is_real_confidence': False,
+              'canonical_dgaf_efficacy_claim_allowed': False,
+              'seed_start': 20260901,
+              'total_seeds': 50,
+              'trials_per_seed': 180,
+              'total_trials': 9000,
+          }
+          for key, value in required.items():
+              if summary.get(key) != value:
+                  raise SystemExit(f'summary mismatch for {key}: {summary.get(key)!r} != {value!r}')
+
+          manifest = {
+              'record_type': 'DGAF_PDMAL_SOLO_P30_VARIANT_EPOCH_003_DATASET_LOCK',
+              'schema_version': 1,
+              'source_commit_sha': os.environ['PDMAL_FROZEN_COMMIT_SHA'],
+              'github_run_id': os.environ['GITHUB_RUN_ID'],
+              'experiment_id': 'PDMAL-SOLO-P30-EXPLICIT-V1',
+              'variant_scope': 'DGAF-P30-EXPLICIT-0.45',
+              'validation_track': 'SOLO_DEVELOPER_VARIANT',
+              'independent_verification_status': 'NOT_ESTABLISHED_BY_RUNNER',
+              'p30_binding_id': 'SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1',
+              'p30_binding_kind': 'SYNTHETIC_MINIMUM_PASSING_FIXTURE',
+              'p30_fixture_confidence': 0.45,
+              'p30_fixture_is_real_confidence': False,
+              'canonical_dgaf_efficacy_claim_allowed': False,
+              'blinding_key_custody': 'SAME_SYSTEM_GITHUB_ACTIONS_ARTIFACT',
+              'seed_start': 20260901,
+              'seed_count': 50,
+              'empirical_observations': 9000,
+              'outcomes_inspected_by_collection_workflow': False,
+              'unblinding_authorized': False,
+              'dataset_status': 'LOCKED_BLINDED',
+              'seed_artifact_sha256': seed_digests,
+          }
+          out = Path(os.environ['RUNNER_TEMP']) / 'SOLO_P30_VARIANT_EPOCH_003_DATASET_LOCK.json'
+          out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print('SOLO_P30_VARIANT_EPOCH_003_DATASET_LOCK_PASS: 50 seeds / 9000 blinded observations; outcomes not inspected')
+          PY
+
+      - name: Upload locked blinded Epoch 003 dataset
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-solo-p30-variant-epoch-003-dataset-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/pdmal-solo-p30-variant-output/
+            ${{ runner.temp }}/pdmal-solo-p30-variant-archive/
+            ${{ runner.temp }}/SOLO_P30_VARIANT_EPOCH_003_DATASET_LOCK.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload recoverable Epoch 003 blinding key
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-solo-p30-variant-epoch-003-blinding-key-${{ github.sha }}
+          path: ${{ runner.temp }}/pdmal_solo_p30_variant_blinding_key.txt
+          if-no-files-found: error
+          retention-days: 90
