@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "record_type": "PDMAL_V0_7_6_FINAL_CANDIDATE_DESIGNATION_TEMPLATE",
+  "status": "TEMPLATE_NOT_DESIGNATED",
+  "authority_issue": 309,
+  "protocol_version": "0.7.6",
+  "artifact_schema_version": "1.1",
+  "designation": {
+    "candidate_commit_sha": null,
+    "candidate_tree_sha": null,
+    "designation_actor": null,
+    "designation_timestamp": null,
+    "designation_record_sha256": null
+  },
+  "designation_prerequisites": {
+    "issue_277_preventive_enforcement_resolved_or_explicitly_risk_adjudicated": false,
+    "issue_320_independent_security_review_accepted": false,
+    "issue_310_real_stage_a_qualification_accepted": false,
+    "issue_316_production_authority_readiness_accepted": false,
+    "candidate_relevant_p4_apparatus_changes_integrated": false,
+    "no_unresolved_source_identity_drift": false,
+    "empirical_n_still_zero": true
+  },
+  "bound_apparatus": {
+    "protocol_blob_sha": null,
+    "analysis_blob_sha": null,
+    "analysis_config_sha256": null,
+    "runner_blob_sha": null,
+    "pilot_artifact_schema_blob_sha": null,
+    "stage_a_procedure_blob_sha": "969ef63fb2bd4188f2f60eb7f94d11bf7125b2a1",
+    "security_review_manifest_blob_sha": "412b2050900defd81175b6f787bad430eb24eff1",
+    "workload_container_digest_sha256": null,
+    "production_authority_record_sha256": null
+  },
+  "historical_evidence_classification": [],
+  "allowed_evidence_classifications": [
+    "TRANSFERABLE_BY_CONSTRUCT",
+    "HISTORICAL_ONLY",
+    "REVERIFY_SOURCE_STRUCTURE",
+    "REVERIFY_RUNTIME_DEPLOYMENT",
+    "REARCHIVE_REBIND",
+    "NOT_YET_EXECUTABLE"
+  ],
+  "post_designation_required_sequence": {
+    "classify_and_regenerate_identity_dependent_evidence": "NOT_EXECUTED",
+    "final_candidate_bound_p4_and_issue_295_acceptance": "NOT_EXECUTED",
+    "p7_final_binding": "NOT_EXECUTED",
+    "p8_immutable_freeze_constructed_and_independently_verified": "NOT_EXECUTED",
+    "final_independent_p9": "NOT_EXECUTED",
+    "separate_pilot_authorization": "NOT_GRANTED"
+  },
+  "non_effects": {
+    "freeze_established": false,
+    "pilot_authorized": false,
+    "empirical_execution_performed": false,
+    "empirical_n": 0
+  }
+}
