@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/pdmal-solo-p30-variant-execution.yml'
       - 'experiments/pdmal_pilot/run_p30_variant.py'
+      - 'experiments/pdmal_pilot/analyze_p30_variant.py'
       - 'experiments/pdmal_pilot/test_p30_variant_track.py'
       - 'docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.md'
       - 'docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.json'
@@ -36,7 +37,7 @@ jobs:
       - name: Install hash-locked pilot dependencies
         run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
 
-      - name: Run fail-closed variant authorization tests
+      - name: Run fail-closed variant authorization and analysis-lock tests
         env:
           PYTHONPATH: .:experiments/pdmal_pilot
         run: python -m pytest experiments/pdmal_pilot/test_p30_variant_track.py -q
@@ -51,6 +52,7 @@ jobs:
           md = Path('docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.md').read_text(encoding='utf-8')
           data = json.loads(Path('docs/experiment/SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION.json').read_text(encoding='utf-8'))
           runner = Path('experiments/pdmal_pilot/run_p30_variant.py').read_text(encoding='utf-8')
+          analyzer = Path('experiments/pdmal_pilot/analyze_p30_variant.py').read_text(encoding='utf-8')
           workflow = Path('.github/workflows/pdmal-solo-p30-variant-execution.yml').read_text(encoding='utf-8')
 
           assert data['status'] == 'PREREGISTERED_NOT_EXECUTED'
@@ -65,8 +67,13 @@ jobs:
           assert data['design']['expected_observations'] == 9000
           assert data['collection_controls']['outcome_inspection_during_collection'] is False
           assert data['collection_controls']['unblinding_authorized_at_preregistration'] is False
-          assert data['locked_primary_analysis']['bootstrap_resamples'] == 10000
-          assert data['locked_primary_analysis']['analysis_rng_seed'] == 20260823
+          locked = data['locked_primary_analysis']
+          assert locked['statistical_source_blob_sha'] == 'a269ed226b1d261663994fc3ef0e8a1a96da6cd3'
+          assert locked['variant_wrapper_blob_sha'] == '92d7cb38c67572ef208425097c4433da50a968b3'
+          assert locked['analysis_config_sha256'] == '6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8'
+          assert locked['bootstrap_resamples'] == 10000
+          assert locked['analysis_rng_seed'] == 20260823
+          assert 'EXPECTED_ANALYSIS_CONFIG_SHA256 = "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8"' in analyzer
           assert 'canonical DGAF efficacy' in md
           assert 'VARIANT_SEED_START = 20260901' in runner
           assert 'VARIANT_SEEDS = 50' in runner
