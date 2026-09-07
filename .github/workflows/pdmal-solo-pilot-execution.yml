@@ -51,11 +51,12 @@ jobs:
           from pathlib import Path
 
           workflow = Path('.github/workflows/pdmal-solo-pilot-execution.yml').read_text(encoding='utf-8')
+          # Construct forbidden markers so this guard does not match its own source text.
           forbidden = (
-              'solo-pilot/run-*',
-              'execute-solo-pilot:',
-              "authorization': 'GRANTED_BY_DEVELOPER'",
-              'PDMAL_SOLO_PILOT_AUTHORIZED:',
+              'solo-pilot/' + 'run-*',
+              'execute-' + 'solo-pilot:',
+              'GRANTED_BY_' + 'DEVELOPER',
+              'PDMAL_SOLO_PILOT_' + 'AUTHORIZED:',
           )
           for marker in forbidden:
               if marker in workflow:
