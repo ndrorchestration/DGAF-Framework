@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "record_type": "P4_B_MODE_T_FINAL_CONTINUITY_ACCEPTANCE_TEMPLATE",
+  "status": "TEMPLATE_NOT_EXECUTED",
+  "authority_issue": 295,
+  "frozen_chain_identity": {
+    "chain_hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+    "scheme": "bls-unchained-g1-rfc9380",
+    "tlock_v1_2_0_linux_amd64_sha256": "0fda1e0fedffab82217cbd90e0b8b2a9d42df88a361b2dd890d8fac173b5dc57"
+  },
+  "candidate_binding": {
+    "candidate_commit_sha": null,
+    "candidate_tree_sha": null,
+    "verifier_source_blob_sha": null,
+    "verifier_binary_sha256": null,
+    "toolchain_identity_sha256": null
+  },
+  "protected_run": {
+    "run_id": null,
+    "run_attempt": null,
+    "ciphertext_sha256": null,
+    "expected_plaintext_commitment_sha256": null,
+    "continuity_evidence_sha256": null,
+    "protected_plaintext_emitted": false,
+    "protected_key_or_mapping_emitted": false
+  },
+  "strict_chain_verification": {
+    "network_metadata_preflight_verified": false,
+    "strict_mode_used": false,
+    "ciphertext_chain_hash_exact_match": false,
+    "plaintext_commitment_exact_match": false,
+    "replay_or_retry_mutated_governance_state": false
+  },
+  "retention": {
+    "accepted_p6_or_transparency_location": null,
+    "retained_object_sha256": null,
+    "retrieval_actor": null,
+    "retrieved_object_sha256": null,
+    "independent_rehash_match": false
+  },
+  "independent_adjudication": {
+    "reviewer_or_adjudicator": null,
+    "independence_basis": null,
+    "review_record_sha256": null,
+    "classification": "NOT_EXECUTED",
+    "accepted": false
+  },
+  "non_effects": {
+    "p4_closed": false,
+    "freeze_established": false,
+    "pilot_authorized": false,
+    "empirical_n": 0
+  }
+}

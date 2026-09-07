@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "record_type": "PDMAL_V0_7_6_PILOT_AUTHORIZATION_TEMPLATE",
+  "status": "NOT_AUTHORIZED",
+  "authorization_scope": "BOUNDED_BLINDED_PILOT_ONLY",
+  "candidate": {
+    "commit_sha": null,
+    "tree_sha": null
+  },
+  "freeze": {
+    "freeze_manifest_identity": null,
+    "freeze_manifest_sha256": null,
+    "freeze_commit_sha": null,
+    "independent_p8_verification_record_sha256": null,
+    "verified": false
+  },
+  "gate_prerequisites": {
+    "final_candidate_designated": false,
+    "final_candidate_bound_p4_accepted": false,
+    "issue_295_final_continuity_acceptance_complete": false,
+    "p7_final_binding_complete": false,
+    "p8_freeze_independently_verified": false,
+    "final_independent_p9_pass": false,
+    "unresolved_blocking_findings": true
+  },
+  "authorization": {
+    "authorization_id": null,
+    "authorizing_actor": null,
+    "authority_basis": null,
+    "authorized_at": null,
+    "expires_at": null,
+    "single_use": true,
+    "reservation_id": null,
+    "authorization_record_sha256": null,
+    "consumption_record_required": true,
+    "consumption_record_sha256": null
+  },
+  "permitted_actions": {
+    "blinded_pilot_execution": false,
+    "empirical_collection": false,
+    "unblinding": false,
+    "final_experiment": false
+  },
+  "fail_closed": {
+    "any_missing_prerequisite_denies_authorization": true,
+    "candidate_or_freeze_identity_mismatch_denies_authorization": true,
+    "expired_or_reused_authorization_denies_execution": true,
+    "retry_after_consumption_requires_new_authorization_lineage": true
+  },
+  "current_state": {
+    "freeze": "NOT_ESTABLISHED",
+    "authorization": "NOT_GRANTED",
+    "empirical_n": 0
+  }
+}
