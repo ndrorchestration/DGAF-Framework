@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """Fail-closed PDMAL pilot runner.
 
-Pilot execution requires protocol freeze, explicit authorization, an exact
-frozen git SHA, an out-of-band blinding key, and a configured durable archive.
-Pilot artifacts expose only the exact blinded-analysis allowlist and are
-validated before the write is accepted.
+Three explicit execution modes exist:
+
+- ``contract``: non-empirical contract rehearsal only;
+- ``solo_pilot``: empirical developer-run pilot with self-freeze/self-authorization;
+- ``pilot``: the existing high-assurance pilot path.
+
+Both empirical modes require an exact frozen git SHA, protected blinding material,
+and durable retention. The solo track is intentionally distinguishable in its
+experiment identity and must not be represented as independently reviewed,
+Confidential-Space-qualified, or high-assurance evidence.
 """
 from __future__ import annotations
 
@@ -24,19 +30,21 @@ from pilot_artifact_schema import ARTIFACT_SCHEMA_VERSION, canonical_json_bytes,
 from task_engine import AttemptStatus, CONDITION_VALUES, ConsensusTask, RetryPolicy, SEED_RUNTIME_CEILING_SECONDS, ScriptedTask, execute_trial
 from topology_utils import graph_fingerprint
 
-SUPPORTED_MODES = {"contract", "pilot"}
+SUPPORTED_MODES = {"contract", "solo_pilot", "pilot"}
 CONTRACT_ROOT_SEEDS = (20260817, 20260818)
 FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
 PROTOCOL_VERSION = "0.7.6"
 MIN_BLINDING_KEY_CHARS = 32
 CONDITION_ID_DOMAIN = b"PDMAL-BLINDED-CONDITION-ID-v1"
 TRIAL_ORDER_DOMAIN = b"PDMAL-BLINDED-TRIAL-ORDER-v1"
+SOLO_EXPERIMENT_ID = "PDMAL-SOLO-PILOT-V1"
+HIGH_ASSURANCE_EXPERIMENT_ID = "PDMAL-PILOT-V1"
 
 
 def require_mode() -> str:
     mode = os.getenv("PDMAL_MODE")
     if mode not in SUPPORTED_MODES:
-        raise SystemExit("PDMAL_MODE must be explicitly set to 'contract' or 'pilot'.")
+        raise SystemExit("PDMAL_MODE must be explicitly set to 'contract', 'solo_pilot', or 'pilot'.")
     return mode
 
 
@@ -57,11 +65,7 @@ def require_frozen_commit() -> str:
     return actual
 
 
-def require_pilot_authorization() -> tuple[str, Path]:
-    if os.getenv("PDMAL_PROTOCOL_FROZEN") != "1":
-        raise SystemExit("pilot execution prohibited: PDMAL_PROTOCOL_FROZEN=1 is required")
-    if os.getenv("PDMAL_PILOT_AUTHORIZED") != "1":
-        raise SystemExit("pilot execution prohibited: PDMAL_PILOT_AUTHORIZED=1 is required")
+def _require_blinding_and_archive() -> tuple[str, Path]:
     key = os.getenv("PDMAL_BLINDING_KEY", "")
     if len(key) < MIN_BLINDING_KEY_CHARS:
         raise SystemExit(
@@ -72,6 +76,37 @@ def require_pilot_authorization() -> tuple[str, Path]:
     except RuntimeError as exc:
         raise SystemExit(f"pilot execution prohibited: {exc}") from exc
     return key, archive_root
+
+
+def require_pilot_authorization() -> tuple[str, Path]:
+    """Require the original high-assurance pilot authorization boundary."""
+    if os.getenv("PDMAL_PROTOCOL_FROZEN") != "1":
+        raise SystemExit("pilot execution prohibited: PDMAL_PROTOCOL_FROZEN=1 is required")
+    if os.getenv("PDMAL_PILOT_AUTHORIZED") != "1":
+        raise SystemExit("pilot execution prohibited: PDMAL_PILOT_AUTHORIZED=1 is required")
+    return _require_blinding_and_archive()
+
+
+def require_solo_pilot_authorization() -> tuple[str, Path]:
+    """Require explicit self-freeze and self-authorization for Solo Pilot evidence.
+
+    This intentionally does not satisfy the independent/high-assurance gate. A
+    separate limitations acknowledgement is required to make accidental use of
+    the relaxed track harder.
+    """
+    if os.getenv("PDMAL_PROTOCOL_FROZEN") != "1":
+        raise SystemExit("solo pilot execution prohibited: PDMAL_PROTOCOL_FROZEN=1 is required")
+    if os.getenv("PDMAL_SOLO_PILOT_AUTHORIZED") != "1":
+        raise SystemExit("solo pilot execution prohibited: PDMAL_SOLO_PILOT_AUTHORIZED=1 is required")
+    if os.getenv("PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED") != "1":
+        raise SystemExit(
+            "solo pilot execution prohibited: PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED=1 is required"
+        )
+    if os.getenv("PDMAL_PILOT_AUTHORIZED") == "1":
+        raise SystemExit(
+            "solo pilot execution prohibited: high-assurance PDMAL_PILOT_AUTHORIZED must not be asserted in solo mode"
+        )
+    return _require_blinding_and_archive()
 
 
 def blind_condition(condition: str, key: str) -> str:
@@ -174,9 +209,20 @@ def run_contract(output_dir: Path) -> int:
     return 0
 
 
-def run_pilot(output_dir: Path, seeds: int) -> int:
+def run_pilot(output_dir: Path, seeds: int, *, solo: bool = False) -> int:
     frozen_sha = require_frozen_commit()
-    blinding_key, archive_root = require_pilot_authorization()
+    if solo:
+        blinding_key, archive_root = require_solo_pilot_authorization()
+        experiment_id = SOLO_EXPERIMENT_ID
+        artifact_prefix = "solo_pilot"
+        artifact_kind = "solo_pilot_seed"
+        completion_label = "SOLO_PILOT_MODE_COMPLETE"
+    else:
+        blinding_key, archive_root = require_pilot_authorization()
+        experiment_id = HIGH_ASSURANCE_EXPERIMENT_ID
+        artifact_prefix = "pilot"
+        artifact_kind = "pilot_seed"
+        completion_label = "PILOT_MODE_COMPLETE"
     os.environ.pop("PDMAL_BLINDING_KEY", None)
     if seeds < 1:
         raise SystemExit("--seeds must be >= 1")
@@ -217,7 +263,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
             execution_success = status is AttemptStatus.SUCCESS
             recovered = failure_count > 0 and execution_success
             record = {
-                "experiment_id": "PDMAL-PILOT-V1", "protocol_version": PROTOCOL_VERSION,
+                "experiment_id": experiment_id, "protocol_version": PROTOCOL_VERSION,
                 "experiment_commit_sha": frozen_sha, "seed_id": seed,
                 "blinded_condition_id": blind_condition(condition, blinding_key), "trial_id": trial_idx,
                 "topology": topology, "failure_count": failure_count,
@@ -236,7 +282,7 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
             raise SystemExit(f"pilot execution prohibited: seed {seed} exceeded runtime ceiling ({elapsed:.3f}s)")
         document = {
             "schema_version": ARTIFACT_SCHEMA_VERSION,
-            "artifact_version": f"seed-{seed}",
+            "artifact_version": f"{artifact_prefix}-seed-{seed}",
             "protocol_status": "FROZEN",
             "empirical_data_collection": True,
             "frozen_commit_sha": frozen_sha,
@@ -244,28 +290,30 @@ def run_pilot(output_dir: Path, seeds: int) -> int:
             "runtime_seconds": elapsed,
             "records": records,
         }
-        path = output_dir / f"pilot_seed_{seed}.json"
+        path = output_dir / f"{artifact_prefix}_seed_{seed}.json"
         _write_and_validate_artifact(path, document, expected_seed=seed)
-        _retain(path, archive_root, frozen_sha, kind="pilot_seed")
-        _retain(path.with_suffix(path.suffix + ".sha256"), archive_root, frozen_sha, kind="pilot_seed_sidecar")
+        _retain(path, archive_root, frozen_sha, kind=artifact_kind)
+        _retain(path.with_suffix(path.suffix + ".sha256"), archive_root, frozen_sha, kind=f"{artifact_kind}_sidecar")
     summary = {
         "schema_version": ARTIFACT_SCHEMA_VERSION,
-        "artifact_version": "pilot_summary",
+        "artifact_version": f"{artifact_prefix}_summary",
         "protocol_status": "FROZEN",
         "empirical_data_collection": True,
+        "validation_track": "SOLO_DEVELOPER" if solo else "HIGH_ASSURANCE",
+        "independent_verification_status": "NOT_ESTABLISHED_BY_RUNNER",
         "frozen_commit_sha": frozen_sha,
         "total_seeds": seeds,
         "trials_per_seed": len(_trial_combinations()),
         "total_trials": seeds * len(_trial_combinations()),
         "environment_fingerprint": environment_fingerprint,
     }
-    summary_path = output_dir / "pilot_summary.json"
+    summary_path = output_dir / f"{artifact_prefix}_summary.json"
     raw_summary = canonical_json_bytes(summary)
     summary_path.write_bytes(raw_summary)
     _write_sidecar(summary_path)
-    _retain(summary_path, archive_root, frozen_sha, kind="pilot_summary")
-    _retain(summary_path.with_suffix(summary_path.suffix + ".sha256"), archive_root, frozen_sha, kind="pilot_summary_sidecar")
-    print(f"PILOT_MODE_COMPLETE: {seeds} seeds; {seeds * len(_trial_combinations())} observations")
+    _retain(summary_path, archive_root, frozen_sha, kind=f"{artifact_prefix}_summary")
+    _retain(summary_path.with_suffix(summary_path.suffix + ".sha256"), archive_root, frozen_sha, kind=f"{artifact_prefix}_summary_sidecar")
+    print(f"{completion_label}: {seeds} seeds; {seeds * len(_trial_combinations())} observations")
     return 0
 
 
@@ -279,7 +327,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.seeds != 2:
             raise SystemExit("contract mode is fixed at 2 validation seeds")
         return run_contract(args.output_dir)
-    return run_pilot(args.output_dir, args.seeds)
+    if mode == "solo_pilot":
+        return run_pilot(args.output_dir, args.seeds, solo=True)
+    return run_pilot(args.output_dir, args.seeds, solo=False)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "record_type": "DGAF_PDMAL_V0_7_6_SOLO_PILOT_TRACK",
+  "status": "AVAILABLE_NOT_EXECUTED",
+  "protocol_version": "0.7.6",
+  "empirical_n_at_definition": 0,
+  "execution_mode": "solo_pilot",
+  "experiment_id": "PDMAL-SOLO-PILOT-V1",
+  "authorization": {
+    "type": "DEVELOPER_SELF_AUTHORIZATION",
+    "required_env": {
+      "PDMAL_PROTOCOL_FROZEN": "1",
+      "PDMAL_SOLO_PILOT_AUTHORIZED": "1",
+      "PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED": "1"
+    },
+    "forbidden_high_assurance_assertion": {
+      "PDMAL_PILOT_AUTHORIZED": "1"
+    }
+  },
+  "controls_retained": [
+    "exact_checked_out_commit_binding",
+    "explicit_pre_execution_freeze",
+    "protected_blinding_key",
+    "blinded_condition_identifiers",
+    "keyed_trial_order",
+    "canonical_180_cell_matrix_per_seed",
+    "artifact_schema_validation",
+    "sha256_sidecars",
+    "runtime_ceiling",
+    "durable_retention",
+    "no_outcome_dependent_protocol_edit_without_refreeze"
+  ],
+  "high_assurance_prerequisites_not_required_for_solo_execution": [
+    277,
+    295,
+    310,
+    316,
+    320
+  ],
+  "claim_ceiling": {
+    "may_claim": [
+      "developer-run empirical pilot",
+      "self-validated",
+      "exact-commit-bound",
+      "blinded empirical observations",
+      "actual Solo empirical N after successful retained execution"
+    ],
+    "must_not_claim_without_separate_evidence": [
+      "independent security review",
+      "independent verification",
+      "real Confidential Space qualification",
+      "independently retained production authority or custody",
+      "high-assurance P4 closure",
+      "high-assurance P8 or P9 completion",
+      "repository preventive enforcement",
+      "production readiness",
+      "external certification"
+    ]
+  },
+  "track_separation": {
+    "solo_does_not_satisfy_high_assurance_blockers": true,
+    "high_assurance_track_preserved": true,
+    "solo_results_are_empirical": true,
+    "solo_results_are_independently_verified": false
+  }
+}

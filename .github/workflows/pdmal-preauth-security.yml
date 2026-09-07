@@ -30,6 +30,10 @@ jobs:
         env:
           PYTHONPATH: experiments/pdmal_pilot
         run: python -m pytest experiments/pdmal_pilot/test_security_controls.py -q
+      - name: Run Solo Pilot fail-closed authorization controls
+        env:
+          PYTHONPATH: experiments/pdmal_pilot
+        run: python -m pytest experiments/pdmal_pilot/test_solo_pilot_track.py -q
       - name: Run locked P8 analysis tests
         env:
           PYTHONPATH: experiments/pdmal_pilot
