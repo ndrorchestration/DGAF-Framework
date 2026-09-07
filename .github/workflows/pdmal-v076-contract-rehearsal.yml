@@ -1,0 +1,99 @@
+name: PDMAL v0.7.6 Contract Rehearsal
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/pdmal-v076-contract-rehearsal.yml'
+      - 'experiments/pdmal_pilot/**'
+      - 'docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md'
+      - 'docs/experiment/PDMAL_BLINDING_NONINTERFERENCE_AMENDMENT_2026-09-06.md'
+
+permissions:
+  contents: read
+
+jobs:
+  contract-rehearsal:
+    name: Non-empirical v0.7.6 apparatus rehearsal
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      EVIDENCE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/experiments/pdmal_pilot
+      PDMAL_MODE: contract
+    steps:
+      - name: Checkout exact rehearsal head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          printf 'rehearsal_head_sha=%s\n' "$EVIDENCE_SHA" >> "$GITHUB_STEP_SUMMARY"
+          printf 'rehearsal_tree_sha=%s\n' "$(git rev-parse HEAD^{tree})" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Install hash-locked pilot dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Prove empirical authorization inputs are absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PDMAL_MODE" = "contract"
+          test -z "${PDMAL_PROTOCOL_FROZEN:-}"
+          test -z "${PDMAL_PILOT_AUTHORIZED:-}"
+          test -z "${PDMAL_BLINDING_KEY:-}"
+          test -z "${PDMAL_FROZEN_COMMIT_SHA:-}"
+          test -z "${PDMAL_ARCHIVE_ROOT:-}"
+
+      - name: Validate v0.7.6 fail-closed apparatus contract
+        run: |
+          python -m pytest \
+            experiments/pdmal_pilot/test_pilot_artifact_schema.py \
+            experiments/pdmal_pilot/test_security_controls.py \
+            experiments/pdmal_pilot/test_blinding_noninterference.py \
+            -q
+
+      - name: Execute two-seed contract rehearsal
+        run: |
+          rm -rf /tmp/pdmal-v076-contract-rehearsal
+          python experiments/pdmal_pilot/run_pilot.py \
+            --seeds 2 \
+            --output-dir /tmp/pdmal-v076-contract-rehearsal
+
+      - name: Assert rehearsal emitted no empirical artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d /tmp/pdmal-v076-contract-rehearsal
+          if find /tmp/pdmal-v076-contract-rehearsal -type f -print -quit | grep -q .; then
+            echo "contract rehearsal unexpectedly emitted files" >&2
+            find /tmp/pdmal-v076-contract-rehearsal -type f -maxdepth 2 -print >&2
+            exit 1
+          fi
+          echo 'CONTRACT_REHEARSAL_PASS: v0.7.6 apparatus executed in non-empirical contract mode; no pilot artifact emitted.'
+          echo 'scientific_state=PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Negative control — pilot mode must remain fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          output="$(PDMAL_MODE=pilot python experiments/pdmal_pilot/run_pilot.py --seeds 1 --output-dir /tmp/should-not-exist 2>&1)"
+          status=$?
+          set -e
+          test "$status" -ne 0
+          grep -q 'pilot execution prohibited' <<<"$output"
+          test ! -e /tmp/should-not-exist/pilot_seed_20260819.json
+          echo 'PILOT_NEGATIVE_CONTROL_PASS: unauthorized empirical execution rejected.'
