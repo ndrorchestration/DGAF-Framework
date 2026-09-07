@@ -11,7 +11,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs/GOVERNANCE/PILOT_BLOCKER_MANIFEST_V0.7.6.json"
-EXPECTED_ISSUES = {277, 295, 309, 310, 316, 320}
+EXPECTED_ISSUES = {277, 295, 309, 310, 316, 320, 369}
 EXPECTED_CHECKPOINT = "d9919fce77588786f36ffa455baa4f2233fad9e7"
 
 
@@ -26,7 +26,7 @@ def require(condition: bool, message: str) -> None:
 
 def validate(data: dict[str, Any]) -> None:
     require(data.get("record_type") == "DGAF_PDMAL_V0_7_6_PILOT_BLOCKER_MANIFEST", "wrong record type")
-    require(data.get("schema_version") == 2, "wrong schema version")
+    require(data.get("schema_version") == 3, "wrong schema version")
     checkpoint = data.get("checkpoint", {})
     require(checkpoint.get("repository") == "ndrorchestration/DGAF-Framework", "wrong repository")
     require(checkpoint.get("high_assurance_checkpoint_main_sha") == EXPECTED_CHECKPOINT, "checkpoint SHA drift")
@@ -41,17 +41,21 @@ def validate(data: dict[str, Any]) -> None:
 
     solo = data.get("solo_controlling_state", {})
     require(solo == {
-        "track": "AVAILABLE_NOT_EXECUTED",
-        "freeze": "NOT_ESTABLISHED",
-        "self_authorization": "NOT_GRANTED",
-        "limitations_acknowledged": False,
-        "empirical_n": 0,
+        "track": "EXPERIMENT_001_APPARATUS_FALSIFICATION_FUTURE_EPOCH_NOT_AUTHORIZED",
+        "experiment_001_retained_observations": 9000,
+        "experiment_001_efficacy_eligible": False,
+        "scientific_n_for_efficacy": 0,
+        "future_epoch_freeze": "NOT_ESTABLISHED",
+        "future_epoch_authorization": "NOT_GRANTED",
+        "authority_record": "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json",
+        "blocking_issue": 369,
     }, "solo state promoted or malformed")
 
     testability = data.get("testability", {})
     require(testability.get("v0_7_6_contract_rehearsal") == "AVAILABLE_NON_EMPIRICAL", "contract rehearsal status drift")
     require(testability.get("merged_main_live_regression") == "PASS_AT_CHECKPOINT", "runtime evidence status drift")
-    require(testability.get("solo_pilot_execution") == "SEPARATELY_GOVERNED_BY_SOLO_PILOT_TRACK", "solo track boundary drift")
+    require(testability.get("solo_successor_empirical_execution") == "PROHIBITED_PENDING_REPOSITORY_BOUND_EPOCH_AUTHORITY", "Solo successor execution unexpectedly permitted")
+    require(testability.get("legacy_solo_environment_self_authorization") == "INSUFFICIENT", "legacy Solo environment variables unexpectedly authoritative")
     require(testability.get("high_assurance_empirical_pilot_execution") == "PROHIBITED", "high-assurance pilot unexpectedly permitted")
 
     blockers = data.get("blockers")
@@ -64,11 +68,15 @@ def validate(data: dict[str, Any]) -> None:
         issue = item.get("issue")
         require(item.get("status") == "OPEN", f"#{issue} status promoted")
         require(item.get("satisfied") is False, f"#{issue} unexpectedly satisfied")
-        require(item.get("blocks_solo_pilot") is False, f"#{issue} unexpectedly blocks Solo Pilot")
+        expected_solo_block = issue == 369
+        require(item.get("blocks_solo_pilot") is expected_solo_block, f"#{issue} Solo-blocking classification drift")
         require(bool(item.get("repo_preparation")), f"#{issue} missing repo preparation classification")
         require(bool(item.get("required_external_fact")), f"#{issue} missing required external fact")
         require(bool(item.get("closure_authority")), f"#{issue} missing closure authority")
         require(isinstance(item.get("blocks"), list) and item["blocks"], f"#{issue} missing downstream block list")
+
+    issue_369 = next(item for item in blockers if item.get("issue") == 369)
+    require(issue_369.get("blocks") == ["solo_successor_epoch_authorization"], "#369 downstream block drift")
 
     high_sequence = data.get("high_assurance_required_sequence")
     require(isinstance(high_sequence, list) and len(high_sequence) >= 8, "high-assurance sequence incomplete")
@@ -77,13 +85,14 @@ def validate(data: dict[str, Any]) -> None:
     require(high_sequence.index("grant_separate_explicit_high_assurance_pilot_authorization") < high_sequence.index("execute_high_assurance_blinded_pilot"), "high-assurance pilot precedes authorization")
 
     solo_sequence = data.get("solo_required_sequence")
-    require(isinstance(solo_sequence, list) and len(solo_sequence) >= 7, "solo sequence incomplete")
-    require(solo_sequence[0] == "select_exact_clean_commit", "solo sequence must begin with exact commit selection")
-    require("acknowledge_solo_limitations" in solo_sequence, "solo limitations acknowledgement missing")
-    require("grant_explicit_solo_self_authorization" in solo_sequence, "solo self-authorization missing")
-    require(solo_sequence.index("grant_explicit_solo_self_authorization") < solo_sequence.index("execute_blinded_solo_pilot"), "solo pilot precedes self-authorization")
+    require(isinstance(solo_sequence, list) and len(solo_sequence) >= 9, "solo sequence incomplete")
+    require(solo_sequence[0] == "resolve_issue_369_empirical_p30_binding", "Solo successor sequence must begin with issue #369")
+    require("pass_candidate_bound_n0_p30_validation" in solo_sequence, "Solo N=0 P-30 validation missing")
+    require("bind_repository_epoch_authority_to_exact_commit_and_epoch_id" in solo_sequence, "repository-bound Solo authority missing")
+    require("grant_repository_bound_epoch_authorization" in solo_sequence, "repository-bound Solo grant missing")
+    require(solo_sequence.index("grant_repository_bound_epoch_authorization") < solo_sequence.index("execute_blinded_successor_solo_epoch"), "Solo execution precedes repository-bound authorization")
 
-    effects = data.get("non_effects_at_definition", {})
+    effects = data.get("current_non_effects", {})
     require(effects == {
         "high_assurance_final_candidate_designated": False,
         "high_assurance_p4_closed": False,
@@ -91,9 +100,12 @@ def validate(data: dict[str, Any]) -> None:
         "high_assurance_pilot_authorized": False,
         "high_assurance_empirical_execution_performed": False,
         "high_assurance_empirical_n": 0,
-        "solo_empirical_execution_performed": False,
-        "solo_empirical_n": 0,
-    }, "definition non-effects promoted or malformed")
+        "solo_experiment_001_executed": True,
+        "solo_experiment_001_retained_observations": 9000,
+        "solo_experiment_001_efficacy_eligible": False,
+        "future_solo_epoch_authorized": False,
+        "future_solo_epoch_scientific_n": 0,
+    }, "current non-effects promoted or malformed")
 
 
 def self_test(data: dict[str, Any]) -> None:
@@ -112,12 +124,21 @@ def self_test(data: dict[str, Any]) -> None:
     cases.append(("high-assurance empirical execution promotion", mutated))
 
     mutated = copy.deepcopy(data)
-    mutated["blockers"][0]["blocks_solo_pilot"] = True
-    cases.append(("external blocker incorrectly blocks solo", mutated))
+    mutated["testability"]["legacy_solo_environment_self_authorization"] = "SUFFICIENT"
+    cases.append(("legacy Solo environment authorization promotion", mutated))
 
     mutated = copy.deepcopy(data)
-    mutated["solo_required_sequence"].remove("acknowledge_solo_limitations")
-    cases.append(("solo limitations acknowledgement removal", mutated))
+    mutated["solo_controlling_state"]["future_epoch_authorization"] = "GRANTED"
+    cases.append(("future Solo epoch authorization promotion", mutated))
+
+    mutated = copy.deepcopy(data)
+    mutated["current_non_effects"]["solo_experiment_001_efficacy_eligible"] = True
+    cases.append(("experiment-001 efficacy eligibility promotion", mutated))
+
+    mutated = copy.deepcopy(data)
+    issue_369 = next(item for item in mutated["blockers"] if item.get("issue") == 369)
+    issue_369["blocks_solo_pilot"] = False
+    cases.append(("issue #369 Solo blocker removal", mutated))
 
     for label, case in cases:
         try:
@@ -135,7 +156,7 @@ def main() -> int:
     validate(data)
     if args.self_test:
         self_test(data)
-    print("pilot blocker manifest: PASS (solo split / high-assurance fail-closed)")
+    print("pilot blocker manifest: PASS (Solo experiment 001 retained / successor epoch fail-closed / high-assurance fail-closed)")
     return 0
 
 
