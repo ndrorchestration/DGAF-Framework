@@ -83,7 +83,7 @@ Recording Stage B in an intake envelope does not prove that a final candidate ac
 
 Every envelope binds to:
 
-- handoff merge `8928a83e93cf9a53f0aeee89a05d57e37b3cc9c2`;
+- handoff merge `3f4ff8c1fee345389880f6451d683645960663ce`;
 - handoff tree `442fc81d30c311c6e2cd2f89db5276465982e1c5`;
 - handoff manifest blob `988f76aeb7313e6c4d149948c0450b682c82e0e1`;
 - review base `62e01c37e6e452e0851aa875fa6c709f049be991`;

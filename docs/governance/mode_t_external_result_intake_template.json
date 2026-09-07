@@ -4,7 +4,7 @@
   "record_state": "TEMPLATE",
   "source_handoff": {
     "repository": "ndrorchestration/DGAF-Framework",
-    "handoff_merge_sha": "8928a83e93cf9a53f0aeee89a05d57e37b3cc9c2",
+    "handoff_merge_sha": "3f4ff8c1fee345389880f6451d683645960663ce",
     "handoff_tree": "442fc81d30c311c6e2cd2f89db5276465982e1c5",
     "handoff_manifest_path": "docs/governance/mode_t_external_acceptance_manifest.json",
     "handoff_manifest_git_blob": "988f76aeb7313e6c4d149948c0450b682c82e0e1",
