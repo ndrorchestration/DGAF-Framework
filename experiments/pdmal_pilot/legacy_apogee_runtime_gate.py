@@ -6,7 +6,10 @@ PDMAL apparatus is preserved as historical runtime behavior under a distinct,
 non-canonical identity.
 """
 
-from pdmaltgl_gate_binding import ApogeeAttestationState, build_apogee_hook
+try:  # Package import path used by repository-wide tests and tooling.
+    from .pdmaltgl_gate_binding import ApogeeAttestationState, build_apogee_hook
+except ImportError:  # Flat pilot PYTHONPATH used by historical experiment workflows.
+    from pdmaltgl_gate_binding import ApogeeAttestationState, build_apogee_hook
 
 LEGACY_APOGEE_RUNTIME_GATE_ID = "LEGACY_APOGEE_RUNTIME_CONFIDENCE_GATE_V1"
 CANONICAL_P30_AUTHORITY = "S035_P11_11Q_ATTESTATION"
