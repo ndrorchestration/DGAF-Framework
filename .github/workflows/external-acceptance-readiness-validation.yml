@@ -5,6 +5,8 @@ on:
     paths:
       - "docs/GOVERNANCE/EXTERNAL_ACCEPTANCE_READINESS_2026-09-07.md"
       - "docs/GOVERNANCE/PILOT_BLOCKER_MANIFEST_V0.7.6.json"
+      - "docs/GOVERNANCE/SOLO_PILOT_TRACK_V0.7.6.md"
+      - "docs/GOVERNANCE/SOLO_PILOT_TRACK_V0.7.6.json"
       - "docs/GOVERNANCE/REPOSITORY_ADMIN_ENFORCEMENT_HANDOFF_2026-09-07.md"
       - "docs/GOVERNANCE/MODE_T_PRODUCTION_AUTHORITY_HANDOFF_2026-09-07.md"
       - "docs/GOVERNANCE/stage_a/**"
@@ -14,12 +16,15 @@ on:
       - "docs/experiment/PILOT_AUTHORIZATION_TEMPLATE_V0.7.6.json"
       - "scripts/validate_external_acceptance_readiness.py"
       - "scripts/validate_pilot_blocker_manifest.py"
+      - "scripts/validate_solo_pilot_track.py"
       - ".github/workflows/external-acceptance-readiness-validation.yml"
   push:
     branches: [main]
     paths:
       - "docs/GOVERNANCE/EXTERNAL_ACCEPTANCE_READINESS_2026-09-07.md"
       - "docs/GOVERNANCE/PILOT_BLOCKER_MANIFEST_V0.7.6.json"
+      - "docs/GOVERNANCE/SOLO_PILOT_TRACK_V0.7.6.md"
+      - "docs/GOVERNANCE/SOLO_PILOT_TRACK_V0.7.6.json"
       - "docs/GOVERNANCE/REPOSITORY_ADMIN_ENFORCEMENT_HANDOFF_2026-09-07.md"
       - "docs/GOVERNANCE/MODE_T_PRODUCTION_AUTHORITY_HANDOFF_2026-09-07.md"
       - "docs/GOVERNANCE/stage_a/**"
@@ -29,6 +34,7 @@ on:
       - "docs/experiment/PILOT_AUTHORIZATION_TEMPLATE_V0.7.6.json"
       - "scripts/validate_external_acceptance_readiness.py"
       - "scripts/validate_pilot_blocker_manifest.py"
+      - "scripts/validate_solo_pilot_track.py"
       - ".github/workflows/external-acceptance-readiness-validation.yml"
   workflow_dispatch:
 
@@ -52,5 +58,8 @@ jobs:
       - name: Validate inert templates and negative controls
         run: python scripts/validate_external_acceptance_readiness.py --self-test
 
-      - name: Validate pilot blocker manifest and negative controls
+      - name: Validate split pilot blocker manifest and negative controls
         run: python scripts/validate_pilot_blocker_manifest.py --self-test
+
+      - name: Validate Solo Pilot governance contract and negative controls
+        run: python scripts/validate_solo_pilot_track.py --self-test
