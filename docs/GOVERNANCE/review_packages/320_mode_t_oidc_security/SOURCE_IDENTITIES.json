@@ -1,0 +1,124 @@
+{
+  "review_id": "320",
+  "review_title": "Independent security review: Mode T Google OIDC verifier",
+  "frozen_at": "2026-09-07T00:50:00-04:00",
+  "reviewer_requirement": "organizationally independent (not DGAF/PDMAL contributor)",
+  "source_identities": [
+    {
+      "artifact": "Google OIDC verifier",
+      "path": "experiments/pdmal_pilot/mode_t_google_oidc_verifier.py",
+      "type": "python",
+      "review_scope": ["OIDC/JWKS discovery", "issuer consistency", "kid rotation", "algorithm restrictions", "time/expiry/skew", "parser/DoS"]
+    },
+    {
+      "artifact": "Sigstore verifier",
+      "path": "experiments/pdmal_pilot/mode_t_sigstore_verifier.py",
+      "type": "python",
+      "review_scope": ["Cosign verify-blob", "certificate identity", "TrustedRoot verification", "external retention"]
+    },
+    {
+      "artifact": "Retention contract",
+      "path": "experiments/pdmal_pilot/mode_t_retention_contract.py",
+      "type": "python",
+      "review_scope": ["external retention evidence", "synthetic vs real distinction", "archive/retrieval/hash verification"]
+    },
+    {
+      "artifact": "Durable retention",
+      "path": "experiments/pdmal_pilot/durable_retention.py",
+      "type": "python",
+      "review_scope": ["archive root", "artifact archiving", "retrieval", "SHA-256 verification"]
+    },
+    {
+      "artifact": "Admission policy",
+      "path": "experiments/pdmal_pilot/mode_t_admission_policy.py",
+      "type": "python",
+      "review_scope": ["policy digest binding", "caller-provided digest bypass", "tampered/promoted C evidence rejection"]
+    },
+    {
+      "artifact": "Attestation verifier",
+      "path": "experiments/pdmal_pilot/mode_t_confidential_space_attestation.py",
+      "type": "python",
+      "review_scope": ["PRE/POST attestation token fields", "claim interpretation", "Google Confidential Space schema"]
+    },
+    {
+      "artifact": "Launch contract",
+      "path": "experiments/pdmal_pilot/mode_t_confidential_space_launch.py",
+      "type": "python",
+      "review_scope": ["launch policy validation", "metadata restrictions", "image pinning"]
+    },
+    {
+      "artifact": "Integrated lifecycle",
+      "path": "experiments/pdmal_pilot/mode_t_integrated_lifecycle.py",
+      "type": "python",
+      "review_scope": ["end-to-end lifecycle", "key acquisition flow", "admission → attestation → retention"]
+    },
+    {
+      "artifact": "OIDC workflow",
+      "path": ".github/workflows/p4-mode-t-google-oidc-verifier.yml",
+      "type": "yaml",
+      "review_scope": ["CI verification of OIDC/JWKS path", "network boundaries", "test isolation"]
+    },
+    {
+      "artifact": "Sigstore workflow",
+      "path": ".github/workflows/p4-mode-t-sigstore-verifier.yml",
+      "type": "yaml",
+      "review_scope": ["CI verification of Sigstore path", "Cosign binary pinning", "TrustedRoot handling"]
+    },
+    {
+      "artifact": "Retention workflow",
+      "path": ".github/workflows/p4-mode-t-retention-contract.yml",
+      "type": "yaml",
+      "review_scope": ["CI verification of retention contract", "synthetic evidence exclusion"]
+    },
+    {
+      "artifact": "Admission workflow",
+      "path": ".github/workflows/p4-mode-t-confidential-space-admission-contract.yml",
+      "type": "yaml",
+      "review_scope": ["CI verification of admission policy", "policy digest binding"]
+    },
+    {
+      "artifact": "Launch workflow",
+      "path": ".github/workflows/p4-mode-t-confidential-space-launch-contract.yml",
+      "type": "yaml",
+      "review_scope": ["CI verification of launch contract", "metadata policy checks"]
+    },
+    {
+      "artifact": "Claim policy (from #314)",
+      "path": "experiments/pdmal_pilot/mode_t_admission_policy.py",
+      "type": "python",
+      "review_scope": ["policy identity", "R→A→C binding", "production key acquisition gate"]
+    }
+  ],
+  "controlling_state": {
+    "freeze": "NOT ESTABLISHED",
+    "authorization": "NOT GRANTED",
+    "empirical_n": 0,
+    "p4_state": "OPEN / FAIL-CLOSED",
+    "p7_state": "OPEN / FINAL BINDING OPEN",
+    "p8_state": "OPEN / FAIL-CLOSED",
+    "p9_state": "NOT EXECUTED",
+    "final_candidate": "NOT DESIGNATED",
+    "candidate_tracker": "309"
+  },
+  "review_output_schema": {
+    "required_fields": [
+      "review_id",
+      "reviewer_id",
+      "reviewer_organization",
+      "independence_declaration",
+      "findings",
+      "overall_classification"
+    ],
+    "finding_fields": [
+      "finding_id",
+      "artifact",
+      "category",
+      "severity",
+      "classification",
+      "description",
+      "remediation",
+      "verification_required"
+    ],
+    "classification_values": ["RESOLVED", "ACCEPTED WITH RATIONALE", "BLOCKED", "UNKNOWN"]
+  }
+}
