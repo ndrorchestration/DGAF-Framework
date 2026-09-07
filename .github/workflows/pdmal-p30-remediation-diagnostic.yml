@@ -55,7 +55,7 @@ jobs:
 
       - name: Execute non-empirical engineering diagnostic
         env:
-          PYTHONPATH: experiments/pdmal_pilot
+          PYTHONPATH: .:experiments/pdmal_pilot
         run: python experiments/pdmal_pilot/p30_remediation_diagnostic.py
 
       - name: Adjudicate diagnostic without efficacy inference
