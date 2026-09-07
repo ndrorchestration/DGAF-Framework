@@ -1,6 +1,6 @@
 {
   "record_type": "DGAF_PDMAL_V0_7_6_PILOT_BLOCKER_MANIFEST",
-  "schema_version": 2,
+  "schema_version": 3,
   "checkpoint": {
     "repository": "ndrorchestration/DGAF-Framework",
     "high_assurance_checkpoint_main_sha": "d9919fce77588786f36ffa455baa4f2233fad9e7",
@@ -13,16 +13,20 @@
     "empirical_n": 0
   },
   "solo_controlling_state": {
-    "track": "AVAILABLE_NOT_EXECUTED",
-    "freeze": "NOT_ESTABLISHED",
-    "self_authorization": "NOT_GRANTED",
-    "limitations_acknowledged": false,
-    "empirical_n": 0
+    "track": "EXPERIMENT_001_APPARATUS_FALSIFICATION_FUTURE_EPOCH_NOT_AUTHORIZED",
+    "experiment_001_retained_observations": 9000,
+    "experiment_001_efficacy_eligible": false,
+    "scientific_n_for_efficacy": 0,
+    "future_epoch_freeze": "NOT_ESTABLISHED",
+    "future_epoch_authorization": "NOT_GRANTED",
+    "authority_record": "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json",
+    "blocking_issue": 369
   },
   "testability": {
     "v0_7_6_contract_rehearsal": "AVAILABLE_NON_EMPIRICAL",
     "merged_main_live_regression": "PASS_AT_CHECKPOINT",
-    "solo_pilot_execution": "SEPARATELY_GOVERNED_BY_SOLO_PILOT_TRACK",
+    "solo_successor_empirical_execution": "PROHIBITED_PENDING_REPOSITORY_BOUND_EPOCH_AUTHORITY",
+    "legacy_solo_environment_self_authorization": "INSUFFICIENT",
     "high_assurance_empirical_pilot_execution": "PROHIBITED"
   },
   "blockers": [
@@ -91,6 +95,17 @@
       "blocks": ["high_assurance_freeze", "high_assurance_pilot_authorization"],
       "satisfied": false,
       "blocks_solo_pilot": false
+    },
+    {
+      "issue": 369,
+      "class": "solo_p30_empirical_treatment_binding",
+      "status": "OPEN",
+      "repo_preparation": "REPOSITORY_AUTHORITY_GUARD_READY",
+      "required_external_fact": "A prospectively specified, reproducible, non-circular empirical P-30 confidence source and transformation is semantically justified, exact-candidate-bound, and passes N=0 engineering validation before a successor Solo epoch is authorized.",
+      "closure_authority": "governance_designation_actor_after_candidate_bound_validation",
+      "blocks": ["solo_successor_epoch_authorization"],
+      "satisfied": false,
+      "blocks_solo_pilot": true
     }
   ],
   "high_assurance_required_sequence": [
@@ -109,23 +124,29 @@
     "perform_authorized_unblinding_and_analysis"
   ],
   "solo_required_sequence": [
+    "resolve_issue_369_empirical_p30_binding",
+    "pass_candidate_bound_n0_p30_validation",
+    "preregister_successor_epoch_without_pooling_experiment_001",
     "select_exact_clean_commit",
-    "self_freeze_exact_commit_before_outcome_observation",
+    "bind_repository_epoch_authority_to_exact_commit_and_epoch_id",
     "configure_durable_archive_and_protected_blinding_key",
     "acknowledge_solo_limitations",
-    "grant_explicit_solo_self_authorization",
-    "execute_blinded_solo_pilot",
+    "grant_repository_bound_epoch_authorization",
+    "execute_blinded_successor_solo_epoch",
     "retain_and_hash_artifacts",
-    "report_solo_empirical_n_and_results_with_solo_claim_ceiling"
+    "report_results_with_solo_claim_ceiling"
   ],
-  "non_effects_at_definition": {
+  "current_non_effects": {
     "high_assurance_final_candidate_designated": false,
     "high_assurance_p4_closed": false,
     "high_assurance_freeze_established": false,
     "high_assurance_pilot_authorized": false,
     "high_assurance_empirical_execution_performed": false,
     "high_assurance_empirical_n": 0,
-    "solo_empirical_execution_performed": false,
-    "solo_empirical_n": 0
+    "solo_experiment_001_executed": true,
+    "solo_experiment_001_retained_observations": 9000,
+    "solo_experiment_001_efficacy_eligible": false,
+    "future_solo_epoch_authorized": false,
+    "future_solo_epoch_scientific_n": 0
   }
 }
