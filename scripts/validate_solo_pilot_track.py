@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs/GOVERNANCE/SOLO_PILOT_TRACK_V0.7.6.json"
 AUTHORITY = ROOT / "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json"
+AUTHORITY_RELATIVE_PATH = "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json"
 
 EXPECTED_CONTROLS = {
     "exact_checked_out_commit_binding",
@@ -48,7 +49,7 @@ def validate_manifest(document: dict) -> None:
     future = document["future_epoch"]
     assert future == {
         "authorization_status": "NOT_GRANTED",
-        "authority_record": "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json",
+        "authority_record": AUTHORITY_RELATIVE_PATH,
         "blocking_issue": 369,
         "legacy_environment_self_authorization_sufficient": False,
         "historical_experiment_001_authority_reusable": False,
@@ -75,27 +76,34 @@ def validate_manifest(document: dict) -> None:
 
 
 def validate_authority(document: dict) -> None:
-    assert document.get("schema_version") == 1
+    assert document.get("schema_version") == 2
     assert document.get("record_type") == "DGAF_PDMAL_SOLO_EPOCH_AUTHORITY"
     assert document.get("protocol_version") == "0.7.6"
     assert document.get("status") == "NOT_AUTHORIZED"
     assert document.get("epoch_id") is None
-    assert document.get("frozen_commit_sha") is None
+    assert document.get("apparatus_commit_sha") is None
     assert document.get("scientific_n_increment_authorized") == 0
     assert document.get("historical_experiment_001_authority_reusable") is False
     assert document.get("legacy_environment_only_authorization_permitted") is False
 
     auth = document["authorization"]
-    assert auth["type"] == "REPOSITORY_BOUND_EPOCH_AUTHORIZATION"
+    assert auth["type"] == "REPOSITORY_BOUND_EPOCH_AUTHORIZATION_ENVELOPE"
     assert auth["decision"] == "NOT_GRANTED"
     assert auth["authority_issue"] == 369
     assert auth["legacy_self_authorization_sufficient"] is False
     assert auth["required_runtime_env"] == {
         "PDMAL_SOLO_EPOCH_ID": "MUST_MATCH_AUTHORIZED_EPOCH_ID",
+        "PDMAL_FROZEN_COMMIT_SHA": "MUST_MATCH_AUTHORIZED_APPARATUS_COMMIT_SHA",
         "PDMAL_PROTOCOL_FROZEN": "1",
         "PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED": "1",
     }
-    assert len(document["required_before_grant"]) >= 6
+
+    envelope = document["authorization_envelope_contract"]
+    assert envelope["must_be_direct_child_of_apparatus_commit"] is True
+    assert envelope["only_changed_path"] == AUTHORITY_RELATIVE_PATH
+    assert envelope["apparatus_code_executes_from_envelope_without_other_file_changes"] is True
+    assert "cannot contain its own SHA" in envelope["reason"]
+    assert len(document["required_before_grant"]) >= 7
 
 
 def self_test(manifest: dict, authority: dict) -> None:
@@ -142,6 +150,10 @@ def self_test(manifest: dict, authority: dict) -> None:
     changed["scientific_n_increment_authorized"] = 9000
     authority_mutations.append(changed)
 
+    changed = copy.deepcopy(authority)
+    changed["authorization_envelope_contract"]["only_changed_path"] = "experiments/pdmal_pilot/run_pilot.py"
+    authority_mutations.append(changed)
+
     for index, mutation in enumerate(authority_mutations, start=1):
         try:
             validate_authority(mutation)
@@ -160,7 +172,7 @@ def main() -> int:
     validate_authority(authority)
     if args.self_test:
         self_test(manifest, authority)
-    print("solo pilot track: PASS (historical apparatus-falsification / future epoch fail-closed)")
+    print("solo pilot track: PASS (historical apparatus-falsification / non-circular successor authority fail-closed)")
     return 0
 
 
