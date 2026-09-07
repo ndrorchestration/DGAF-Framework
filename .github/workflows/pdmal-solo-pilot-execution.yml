@@ -88,7 +88,7 @@ jobs:
       - name: Install hash-locked pilot dependencies
         run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
 
-      - name: Generate protected blinding key and encrypt for later unblinding
+      - name: Generate recoverable Solo blinding key
         shell: bash
         run: |
           set -euo pipefail
@@ -98,29 +98,11 @@ jobs:
           PY
           )"
           echo "::add-mask::$KEY"
-          printf '%s' "$KEY" > "$RUNNER_TEMP/pdmal_solo_blinding_key.txt"
+          printf '%s\n' "$KEY" > "$RUNNER_TEMP/pdmal_solo_blinding_key.txt"
+          chmod 600 "$RUNNER_TEMP/pdmal_solo_blinding_key.txt"
           echo "PDMAL_BLINDING_KEY=$KEY" >> "$GITHUB_ENV"
-          cat > "$RUNNER_TEMP/unblinding_public_key.pem" <<'PEM'
-          -----BEGIN PUBLIC KEY-----
-          MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA0pFB/O7KGw/ywp6gnQmN
-          w12HqBZ0RGnZiY3ElV1eHcI0k+sID6JD6dgDiqwmDJE1xpmDXIOum3vwZ82pY/gu
-          IeMIhu4bMPlQiEdxHCq6qBP5qQzvfTkdJm9qeTqr41iGh3kg6eGIkUtCjNgNH1Uj
-          iDcloFPwW6IU2MGpfwsdG76cSZkWXnyu8gy5nOT4f+q1fFW3lEWIiHMHYeuWrGJe
-          +LuANIooGo0FFKZSrZMjxYj9L3wJZQu9jauiIz1RuuN0gMYMxK1trpI0Y3pyFqaz
-          5QzOIeiZfYppRSY5GkzPkdkLIMTiysR/dO0pLXzV5e1BQqf3BMY7N6yS/xTRk6ea
-          Z1ojF+JFfEpn6VUM5qODHd6A9juyUGZWZUVo9T7Ix3YyqlTGk+dMPzGTaSEN0yWO
-          6xWJIwshtnniX4eYcSl1gjki6G9FvmDHCfo3yQWb+uvhDzf5W1ks+ag/4qVcd/1t
-          +oElS2A6QhcOY+Z3YabNZ7AZBS5U1ZgQij2MEvkhTojRAgMBAAE=
-          -----END PUBLIC KEY-----
-          PEM
-          openssl pkeyutl -encrypt -pubin \
-            -inkey "$RUNNER_TEMP/unblinding_public_key.pem" \
-            -in "$RUNNER_TEMP/pdmal_solo_blinding_key.txt" \
-            -out "$RUNNER_TEMP/pdmal_solo_blinding_key.enc" \
-            -pkeyopt rsa_padding_mode:oaep \
-            -pkeyopt rsa_oaep_md:sha256
-          rm -f "$RUNNER_TEMP/pdmal_solo_blinding_key.txt"
-          test -s "$RUNNER_TEMP/pdmal_solo_blinding_key.enc"
+          test -s "$RUNNER_TEMP/pdmal_solo_blinding_key.txt"
+          echo 'SOLO_CUSTODY_BOUNDARY: blinding key retained as restricted GitHub Actions artifact; not independent custody'
 
       - name: Execute blinded two-seed Solo Pilot
         env:
@@ -179,6 +161,7 @@ jobs:
               'github_run_id': os.environ['GITHUB_RUN_ID'],
               'validation_track': 'SOLO_DEVELOPER',
               'independent_verification_status': 'NOT_ESTABLISHED_BY_RUNNER',
+              'blinding_key_custody': 'SAME_SYSTEM_GITHUB_ACTIONS_ARTIFACT',
               'empirical_observations': 360,
               'outcomes_inspected_by_collection_workflow': False,
               'artifacts': {},
@@ -202,10 +185,10 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Upload encrypted unblinding key
+      - name: Upload recoverable Solo blinding key
         uses: actions/upload-artifact@v4
         with:
-          name: pdmal-solo-pilot-encrypted-key-${{ github.sha }}
-          path: ${{ runner.temp }}/pdmal_solo_blinding_key.enc
+          name: pdmal-solo-pilot-blinding-key-${{ github.sha }}
+          path: ${{ runner.temp }}/pdmal_solo_blinding_key.txt
           if-no-files-found: error
           retention-days: 90
