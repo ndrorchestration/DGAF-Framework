@@ -6,10 +6,14 @@ import pytest
 from experiments.pdmal_pilot.legacy_apogee_runtime_gate import (
     CANONICAL_P30_AUTHORITY,
     CANONICAL_TREATMENT_STATUS,
+    HISTORICAL_DESIGNATION_ISSUE,
+    HISTORICAL_HOOK_SYMBOL,
+    HISTORICAL_IMPLEMENTATION_MODULE,
+    HISTORICAL_STATE_SYMBOL,
+    HISTORICAL_TERMINAL_RULE,
+    HISTORICAL_THRESHOLD_MAP,
     LEGACY_APOGEE_RUNTIME_GATE_ID,
-    LegacyApogeeRuntimeConfidenceState,
     assert_noncanonical_runtime_identity,
-    build_legacy_apogee_runtime_hook,
 )
 from scripts.validate_legacy_apogee_runtime_identity import (
     MIGRATION,
@@ -26,21 +30,20 @@ def test_legacy_apogee_identity_migration_passes() -> None:
     validate(_load(MIGRATION), _load(RECONCILIATION))
 
 
-def test_compatibility_wrapper_is_explicitly_noncanonical() -> None:
+def test_identity_map_is_explicitly_noncanonical() -> None:
     assert_noncanonical_runtime_identity()
     assert LEGACY_APOGEE_RUNTIME_GATE_ID == "LEGACY_APOGEE_RUNTIME_CONFIDENCE_GATE_V1"
     assert CANONICAL_P30_AUTHORITY == "S035_P11_11Q_ATTESTATION"
     assert CANONICAL_TREATMENT_STATUS == "RETIRED_FROM_CANONICAL_DGAF_TREATMENT"
 
 
-def test_compatibility_wrapper_preserves_historical_scalar_behavior() -> None:
-    passing = LegacyApogeeRuntimeConfidenceState(confidence=0.45)
-    assert build_legacy_apogee_runtime_hook(passing)("", {}).value == "PASS"
-    assert passing.grade == "C"
-
-    failing = LegacyApogeeRuntimeConfidenceState(confidence=0.44)
-    assert build_legacy_apogee_runtime_hook(failing)("", {}).value == "KILL"
-    assert failing.grade == "D"
+def test_identity_map_points_to_preserved_historical_semantics() -> None:
+    assert HISTORICAL_IMPLEMENTATION_MODULE == "experiments/pdmal_pilot/pdmaltgl_gate_binding.py"
+    assert HISTORICAL_STATE_SYMBOL == "ApogeeAttestationState"
+    assert HISTORICAL_HOOK_SYMBOL == "build_apogee_hook"
+    assert HISTORICAL_DESIGNATION_ISSUE == 165
+    assert HISTORICAL_THRESHOLD_MAP == {"S": 0.90, "A": 0.75, "B": 0.60, "C": 0.45}
+    assert HISTORICAL_TERMINAL_RULE == "D_TO_KILL"
 
 
 @pytest.mark.parametrize(
