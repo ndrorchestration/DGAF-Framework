@@ -1,9 +1,9 @@
 # Stage-A Confidential Space Qualification Preparation
 
-> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. 
-> **Scope:** Engineering preparation for authenticated GCP Confidential Space execution. 
-> **What this is:** Specification and procedure only. No cloud actions, no key material, no empirical evidence. 
-> **Final candidate:** NOT DESIGNATED (Issue #309). 
+> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
+> **Scope:** Engineering preparation for authenticated GCP Confidential Space execution.
+> **What this is:** Specification and procedure only. No cloud actions, no key material, no empirical evidence.
+> **Final candidate:** NOT DESIGNATED (Issue #309).
 > **Live main:** `c2dd87eda2b92f72c8e06fe225de833e0c2d319a`
 
 ---
@@ -361,6 +361,6 @@ Stage-A is **FAIL-CLOSED** if any criterion cannot be met. No partial credit. No
 
 ---
 
-*Document written: 2026-09-07* 
-*Controlling state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0* 
+*Document written: 2026-09-07*
+*Controlling state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0*
 *No scientific-state transition claimed.*

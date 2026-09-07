@@ -1,8 +1,8 @@
 # Evidence-Chain Closure Plan — 2026-09-07
 
-> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. 
-> **Final v0.7.6 candidate:** NOT DESIGNATED (Issue #309). 
-> **Live main:** `3f4ff8c1fee345389880f6451d683645960663ce` (post-#343). 
+> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
+> **Final v0.7.6 candidate:** NOT DESIGNATED (Issue #309).
+> **Live main:** `3f4ff8c1fee345389880f6451d683645960663ce` (post-#343).
 > This document records the concrete deliverables for #277, #320, and #316. No scientific-state transition is claimed by this document.
 
 ---
@@ -390,6 +390,6 @@ Production trust authority is established when:
 
 ---
 
-*Document written: 2026-09-07* 
-*Controlling state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0* 
+*Document written: 2026-09-07*
+*Controlling state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0*
 *No scientific-state transition claimed.*

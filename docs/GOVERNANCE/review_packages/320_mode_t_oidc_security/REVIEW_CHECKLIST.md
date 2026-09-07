@@ -1,10 +1,10 @@
 # #320 Independent Security Review — Review Checklist
 
-> **Review ID:** 320 
-> **Title:** Independent security review: Mode T Google OIDC verifier 
-> **Frozen source identities:** `docs/governance/review_packages/320_mode_t_oidc_security/SOURCE_IDENTITIES.json` 
-> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 
-> **Final candidate:** NOT DESIGNATED (Issue #309) 
+> **Review ID:** 320
+> **Title:** Independent security review: Mode T Google OIDC verifier
+> **Frozen source identities:** `docs/governance/review_packages/320_mode_t_oidc_security/SOURCE_IDENTITIES.json`
+> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
+> **Final candidate:** NOT DESIGNATED (Issue #309)
 > **Reviewer requirement:** Organizationally independent (not DGAF/PDMAL contributor)
 
 ---
@@ -120,5 +120,5 @@ Findings must be submitted as a JSON file matching the schema in `SOURCE_IDENTIT
 
 ---
 
-*Checklist created: 2026-09-07* 
+*Checklist created: 2026-09-07*
 *Controlling state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0*
