@@ -1,0 +1,10 @@
+{
+  "record_type": "DGAF_PDMAL_SOLO_PILOT_RUN_REQUEST",
+  "schema_version": 1,
+  "protocol_version": "0.7.6",
+  "execution_mode": "solo_pilot",
+  "authorization": "GRANTED_BY_DEVELOPER",
+  "limitations_acknowledged": true,
+  "seeds": 2,
+  "outcome_inspection_during_collection": false
+}
