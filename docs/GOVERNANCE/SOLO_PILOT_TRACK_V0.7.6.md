@@ -77,13 +77,13 @@ A Solo run does **not** establish any of the following unless separately evidenc
 
 Before the first successful Solo artifact is written and retained:
 
-**SOLO TRACK AVAILABLE · SOLO NOT YET AUTHORIZED/EXECUTED · N=0**
+> SOLO TRACK AVAILABLE · SOLO NOT YET AUTHORIZED/EXECUTED · N=0
 
 After a successful retained Solo run, it is valid to increase the **Solo empirical N** by the actual number of completed empirical trial observations. This does not change the High-Assurance track's acceptance state.
 
 Recommended status wording after execution:
 
-**SOLO PILOT EXECUTED · DEVELOPER-RUN · SELF-VALIDATED · NOT INDEPENDENTLY VERIFIED · HIGH-ASSURANCE GATES OPEN**
+> SOLO PILOT EXECUTED · DEVELOPER-RUN · SELF-VALIDATED · NOT INDEPENDENTLY VERIFIED · HIGH-ASSURANCE GATES OPEN
 
 ## High-Assurance Track preservation
 
