@@ -1,0 +1,65 @@
+{
+  "record_type": "DGAF_PDMAL_SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_PREREGISTRATION",
+  "schema_version": 1,
+  "status": "PREREGISTERED_NOT_EXECUTED",
+  "protocol_version": "0.7.6",
+  "experiment_id": "PDMAL-SOLO-P30-EXPLICIT-V1",
+  "variant_scope": "DGAF-P30-EXPLICIT-0.45",
+  "validation_track": "SOLO_DEVELOPER_VARIANT",
+  "p30_binding": {
+    "binding_id": "SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1",
+    "binding_kind": "SYNTHETIC_MINIMUM_PASSING_FIXTURE",
+    "confidence": 0.45,
+    "real_or_calibrated_apogee_confidence": false,
+    "canonical_dgaf_efficacy_claim_allowed": false
+  },
+  "design": {
+    "conditions": ["null", "simple", "static", "dgaf"],
+    "topology_count": 5,
+    "failure_counts": [0, 1, 2, 3, 4, 5, 6, 8, 10],
+    "seed_start": 20260901,
+    "seed_end": 20260950,
+    "seed_count": 50,
+    "cells_per_seed": 180,
+    "expected_observations": 9000,
+    "prior_experiment_seed_reuse": false
+  },
+  "collection_controls": {
+    "exact_commit_binding": true,
+    "one_file_run_authorization_commit": true,
+    "fresh_blinding_key": true,
+    "keyed_condition_blinding": true,
+    "keyed_trial_order": true,
+    "outcome_inspection_during_collection": false,
+    "sha256_sidecars": true,
+    "durable_retention": true,
+    "dataset_lock_before_unblinding": true,
+    "unblinding_authorized_at_preregistration": false,
+    "blinding_key_custody": "SAME_SYSTEM_GITHUB_ACTIONS_ARTIFACT",
+    "independent_custody_established": false
+  },
+  "locked_primary_analysis": {
+    "comparison": "DGAF-P30-EXPLICIT-0.45_MINUS_NULL",
+    "unit": "seed",
+    "estimator": "mean_paired_seed_ffcr_difference",
+    "bootstrap_resamples": 10000,
+    "analysis_rng_seed": 20260823,
+    "alpha": 0.05,
+    "directional_support_requires_positive_point_estimate": true,
+    "directional_support_requires_ci_lower_bound_above_zero": true
+  },
+  "claim_ceiling": {
+    "canonical_dgaf_efficacy": false,
+    "real_apogee_calibration": false,
+    "independent_verification": false,
+    "confidential_space_qualification": false,
+    "production_readiness": false,
+    "high_assurance_acceptance": false,
+    "external_certification": false
+  },
+  "prior_epoch_non_effects": {
+    "experiment_001_preserved": true,
+    "experiment_001_pooling_allowed": false,
+    "diagnostic_epoch_002_scientific_n_increment": 0
+  }
+}
