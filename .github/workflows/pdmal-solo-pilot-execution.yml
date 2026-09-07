@@ -1,194 +1,83 @@
-name: PDMAL Solo Pilot Execution
+name: PDMAL Solo Pilot Authority Guard
 
 on:
   pull_request:
     paths:
       - '.github/workflows/pdmal-solo-pilot-execution.yml'
-  push:
-    branches:
-      - 'solo-pilot/run-*'
+      - 'docs/GOVERNANCE/SOLO_PILOT_TRACK_V0.7.6.json'
+      - 'docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json'
+      - 'docs/GOVERNANCE/PILOT_BLOCKER_MANIFEST_V0.7.6.json'
+      - 'scripts/validate_solo_pilot_track.py'
+      - 'scripts/validate_pilot_blocker_manifest.py'
+      - 'experiments/pdmal_pilot/run_pilot.py'
+      - 'experiments/pdmal_pilot/test_solo_pilot_track.py'
 
 permissions:
   contents: read
 
 env:
   PYTHON_VERSION: '3.12.0'
-  SOLO_SEEDS: '2'
 
 jobs:
-  validate-workflow-contract:
-    if: github.event_name == 'pull_request'
+  validate-solo-authority-guard:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout exact PR source
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+
       - name: Install locked dependencies
         run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
-      - name: Validate Solo Pilot governance contract
+
+      - name: Validate Solo track and repository-bound authority
         run: python scripts/validate_solo_pilot_track.py --self-test
+
       - name: Validate split blocker manifest
         run: python scripts/validate_pilot_blocker_manifest.py --self-test
-      - name: Run Solo Pilot fail-closed authorization tests
+
+      - name: Run Solo fail-closed authorization tests
         env:
           PYTHONPATH: experiments/pdmal_pilot
         run: python -m pytest experiments/pdmal_pilot/test_solo_pilot_track.py -q
+
+      - name: Prove generic Solo execution lane is retired
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          workflow = Path('.github/workflows/pdmal-solo-pilot-execution.yml').read_text(encoding='utf-8')
+          forbidden = (
+              'solo-pilot/run-*',
+              'execute-solo-pilot:',
+              "authorization': 'GRANTED_BY_DEVELOPER'",
+              'PDMAL_SOLO_PILOT_AUTHORIZED:',
+          )
+          for marker in forbidden:
+              if marker in workflow:
+                  raise SystemExit(f'generic Solo execution authority unexpectedly present: {marker}')
+
+          authority = Path('docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json').read_text(encoding='utf-8')
+          required = (
+              '"status": "NOT_AUTHORIZED"',
+              '"decision": "NOT_GRANTED"',
+              '"authority_issue": 369',
+              '"legacy_environment_only_authorization_permitted": false',
+          )
+          for marker in required:
+              if marker not in authority:
+                  raise SystemExit(f'missing fail-closed authority marker: {marker}')
+
+          print('SOLO_AUTHORITY_GUARD_PASS: PR validation only; no empirical execution trigger')
+          PY
+
       - name: Prove PR validation is non-empirical
         run: |
           test "${PDMAL_MODE:-}" != "solo_pilot"
-          test "${PDMAL_SOLO_PILOT_AUTHORIZED:-}" != "1"
           test "${PDMAL_PROTOCOL_FROZEN:-}" != "1"
-          echo 'SOLO_WORKFLOW_CONTRACT_PASS: PR validation collected no empirical data'
-
-  execute-solo-pilot:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout exact run commit
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Verify exact one-file run request commit
-        run: |
-          set -euo pipefail
-          mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA")
-          if [[ "${#changed[@]}" -ne 1 || "${changed[0]}" != "docs/experiment/solo_runs/SOLO_RUN_REQUEST.json" ]]; then
-            printf 'Solo execution prohibited: run commit must change only SOLO_RUN_REQUEST.json; changed=%s\n' "${changed[*]:-none}" >&2
-            exit 1
-          fi
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          p = Path('docs/experiment/solo_runs/SOLO_RUN_REQUEST.json')
-          d = json.loads(p.read_text(encoding='utf-8'))
-          expected = {
-              'record_type': 'DGAF_PDMAL_SOLO_PILOT_RUN_REQUEST',
-              'schema_version': 1,
-              'protocol_version': '0.7.6',
-              'execution_mode': 'solo_pilot',
-              'authorization': 'GRANTED_BY_DEVELOPER',
-              'limitations_acknowledged': True,
-              'seeds': 2,
-              'outcome_inspection_during_collection': False,
-          }
-          if d != expected:
-              raise SystemExit(f'Solo execution prohibited: run request mismatch: {d!r}')
-          print('SOLO_RUN_REQUEST_PASS')
-          PY
-
-      - name: Set up Python 3.12.0
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install hash-locked pilot dependencies
-        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
-
-      - name: Generate recoverable Solo blinding key
-        shell: bash
-        run: |
-          set -euo pipefail
-          KEY="$(python - <<'PY'
-          import secrets
-          print(secrets.token_hex(32))
-          PY
-          )"
-          echo "::add-mask::$KEY"
-          printf '%s\n' "$KEY" > "$RUNNER_TEMP/pdmal_solo_blinding_key.txt"
-          chmod 600 "$RUNNER_TEMP/pdmal_solo_blinding_key.txt"
-          echo "PDMAL_BLINDING_KEY=$KEY" >> "$GITHUB_ENV"
-          test -s "$RUNNER_TEMP/pdmal_solo_blinding_key.txt"
-          echo 'SOLO_CUSTODY_BOUNDARY: blinding key retained as restricted GitHub Actions artifact; not independent custody'
-
-      - name: Execute blinded two-seed Solo Pilot
-        env:
-          PDMAL_MODE: solo_pilot
-          PDMAL_PROTOCOL_FROZEN: '1'
-          PDMAL_SOLO_PILOT_AUTHORIZED: '1'
-          PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED: '1'
-          PDMAL_FROZEN_COMMIT_SHA: ${{ github.sha }}
-          PDMAL_ARCHIVE_ROOT: ${{ runner.temp }}/pdmal-solo-archive
-          PYTHONPATH: experiments/pdmal_pilot
-        run: |
-          set -euo pipefail
-          test "${PDMAL_PILOT_AUTHORIZED:-}" != '1'
-          python experiments/pdmal_pilot/run_pilot.py \
-            --seeds "$SOLO_SEEDS" \
-            --output-dir "$RUNNER_TEMP/pdmal-solo-output"
-
-      - name: Verify collection structure without inspecting outcomes
-        env:
-          PDMAL_FROZEN_COMMIT_SHA: ${{ github.sha }}
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import hashlib
-          import json
-          import os
-          from pathlib import Path
-
-          root = Path(os.environ['RUNNER_TEMP']) / 'pdmal-solo-output'
-          seeds = sorted(root.glob('solo_pilot_seed_*.json'))
-          if len(seeds) != 2:
-              raise SystemExit(f'expected 2 seed artifacts, found {len(seeds)}')
-          for p in seeds:
-              if not p.with_suffix(p.suffix + '.sha256').is_file():
-                  raise SystemExit(f'missing sidecar for {p.name}')
-          summary_path = root / 'solo_pilot_summary.json'
-          if not summary_path.is_file():
-              raise SystemExit('missing solo_pilot_summary.json')
-          summary = json.loads(summary_path.read_text(encoding='utf-8'))
-          required = {
-              'validation_track': 'SOLO_DEVELOPER',
-              'independent_verification_status': 'NOT_ESTABLISHED_BY_RUNNER',
-              'frozen_commit_sha': os.environ['PDMAL_FROZEN_COMMIT_SHA'],
-              'total_seeds': 2,
-              'trials_per_seed': 180,
-              'total_trials': 360,
-          }
-          for key, value in required.items():
-              if summary.get(key) != value:
-                  raise SystemExit(f'summary mismatch for {key}: {summary.get(key)!r} != {value!r}')
-
-          manifest = {
-              'record_type': 'DGAF_PDMAL_SOLO_PILOT_COLLECTION_MANIFEST',
-              'schema_version': 1,
-              'source_commit_sha': os.environ['PDMAL_FROZEN_COMMIT_SHA'],
-              'github_run_id': os.environ['GITHUB_RUN_ID'],
-              'validation_track': 'SOLO_DEVELOPER',
-              'independent_verification_status': 'NOT_ESTABLISHED_BY_RUNNER',
-              'blinding_key_custody': 'SAME_SYSTEM_GITHUB_ACTIONS_ARTIFACT',
-              'empirical_observations': 360,
-              'outcomes_inspected_by_collection_workflow': False,
-              'artifacts': {},
-          }
-          for p in sorted(root.iterdir()):
-              if p.is_file():
-                  manifest['artifacts'][p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
-          out = Path(os.environ['RUNNER_TEMP']) / 'SOLO_COLLECTION_MANIFEST.json'
-          out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n', encoding='utf-8')
-          print('SOLO_COLLECTION_STRUCTURE_PASS: 360 blinded empirical observations retained; outcomes not inspected')
-          PY
-
-      - name: Upload blinded Solo evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: pdmal-solo-pilot-evidence-${{ github.sha }}
-          path: |
-            ${{ runner.temp }}/pdmal-solo-output/
-            ${{ runner.temp }}/pdmal-solo-archive/
-            ${{ runner.temp }}/SOLO_COLLECTION_MANIFEST.json
-          if-no-files-found: error
-          retention-days: 90
-
-      - name: Upload recoverable Solo blinding key
-        uses: actions/upload-artifact@v4
-        with:
-          name: pdmal-solo-pilot-blinding-key-${{ github.sha }}
-          path: ${{ runner.temp }}/pdmal_solo_blinding_key.txt
-          if-no-files-found: error
-          retention-days: 90
+          test "${PDMAL_SOLO_EPOCH_ID:-}" = ""
+          echo 'NON_EMPIRICAL_SOLO_AUTHORITY_VALIDATION_PASS'
