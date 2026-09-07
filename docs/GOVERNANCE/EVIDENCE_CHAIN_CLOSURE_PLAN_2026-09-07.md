@@ -1,395 +1,264 @@
 # Evidence-Chain Closure Plan — 2026-09-07
 
-> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
-> **Final v0.7.6 candidate:** NOT DESIGNATED (Issue #309).
-> **Live main:** `3f4ff8c1fee345389880f6451d683645960663ce` (post-#343).
-> This document records the concrete deliverables for #277, #320, and #316. No scientific-state transition is claimed by this document.
+> **Document class:** Operational closure plan; not an evidence artifact and not an authority source.  
+> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N=0.  
+> **Final v0.7.6 candidate:** NOT DESIGNATED under Issue #309.  
+> **P4:** OPEN / FAIL-CLOSED.  
+> **P7 final binding:** OPEN.  
+> **P8:** OPEN / FAIL-CLOSED.  
+> **Final P9:** NOT EXECUTED.
+
+This plan defines the order in which the remaining evidence and governance boundaries must be closed. It deliberately does **not** embed a volatile `live main` SHA as authority. Repository tips change; immutable evidence identities, issue acceptance predicates, exact PR heads, and designated candidate/freeze artifacts are the relevant identities.
+
+The direct `main` commit `741f2c1a92297a7b2c08cfa8df6635f42e579b11` is retained as an incident boundary, not a governance promotion. Main Push Provenance Audit run `34086327869` failed for that push. Any semantically valid content from that commit must be carried forward through normal reviewed PRs before it is treated as accepted repository state.
 
 ---
 
-## 1. #277 — Repository Merge Enforcement Ruleset Correction
+## 1. Authority model
 
-### 1.1 Current verified state
+Use the following precedence when claims conflict:
 
-| Property | Value |
-|----------|-------|
-| Ruleset ID | `16909314` |
-| Name | `Main` |
-| Target | `branch` |
-| Enforcement | `active` |
-| Current rules | `deletion`, `non_fast_forward` |
-| Missing rules | `required_pull_request`, `required_status_checks` |
-| Connected integration write access | **No** — can read rulesets, cannot modify |
+1. immutable accepted evidence and explicit gate/freeze/authorization artifacts;
+2. current issue acceptance predicates and source-bound governance contracts;
+3. merged, verified repository implementation;
+4. operational planning documents such as this file;
+5. dashboards, summaries, portfolio records, and public-facing prose.
 
-### 1.2 Required ruleset configuration
+A lower layer must never strengthen a claim beyond the layer above it.
 
-```json
-{
-  "name": "Main",
-  "target": "branch",
-  "enforcement": "active",
-  "bypass_actors": [],
-  "rules": [
-    {
-      "type": "deletion"
-    },
-    {
-      "type": "non_fast_forward"
-    },
-    {
-      "type": "required_pull_request",
-      "parameters": {
-        "required_approving_review_count": 1,
-        "dismiss_stale_reviews_on_push": true,
-        "require_code_owner_reviews": false,
-        "require_last_push_approval": false,
-        "allowed_merge_methods": ["squash", "merge"],
-        "required_review_thread_resolution": false,
-        "autocancel_approving_reviews": true
-      }
-    },
-    {
-      "type": "required_status_checks",
-      "parameters": {
-        "required_status_checks": [
-          {
-            "context": "pptl-ci",
-            "integration_id": 0
-          },
-          {
-            "context": "python-tests",
-            "integration_id": 0
-          },
-          {
-            "context": "governance-ci",
-            "integration_id": 0
-          },
-          {
-            "context": "pdmal-pre-freeze-runner",
-            "integration_id": 0
-          },
-          {
-            "context": "p4-mode-t-confidential-space-admission-contract",
-            "integration_id": 0
-          },
-          {
-            "context": "p4-mode-t-retention-contract",
-            "integration_id": 0
-          },
-          {
-            "context": "p4-mode-t-google-oidc-verifier",
-            "integration_id": 0
-          },
-          {
-            "context": "p4-mode-t-sigstore-verifier",
-            "integration_id": 0
-          },
-          {
-            "context": "p4-mode-t-tlock-supply-chain",
-            "integration_id": 0
-          },
-          {
-            "context": "mode-t-external-acceptance-handoff",
-            "integration_id": 0
-          },
-          {
-            "context": "p9-final-frozen-chain",
-            "integration_id": 0
-          }
-        ],
-        "strict_required_status_checks_policy": true,
-        "do_not_enforce_on_create": false,
-        "required_status_checks_parameters": {
-          "required_status_checks": [
-            "pptl-ci",
-            "python-tests",
-            "governance-ci",
-            "pdmal-pre-freeze-runner",
-            "p4-mode-t-confidential-space-admission-contract",
-            "p4-mode-t-retention-contract",
-            "p4-mode-t-google-oidc-verifier",
-            "p4-mode-t-sigstore-verifier",
-            "p4-mode-t-tlock-supply-chain",
-            "mode-t-external-acceptance-handoff",
-            "p9-final-frozen-chain"
-          ]
-        }
-      }
-    }
-  ],
-  "conditions": {
-    "ref_name": {
-      "include": ["refs/heads/main"],
-      "exclude": ["refs/heads/main"]
-    }
-  }
-}
-```
-
-### 1.3 Required workflow context names
-
-The following workflow job IDs must be registered in `required_status_checks`:
-
-| Context | Workflow file | Purpose |
-|---------|---------------|---------|
-| `pptl-ci` | `pptl-ci.yml` | Existing enforced baseline |
-| `python-tests` | `python-tests.yml` | Core unit/integration tests |
-| `governance-ci` | `governance-ci.yml` | Governance/evidence validation |
-| `pdmal-pre-freeze-runner` | `pdmal-pre-freeze-runner.yml` | Candidate-role/custody assertions |
-| `p4-mode-t-confidential-space-admission-contract` | `p4-mode-t-confidential-space-admission-contract.yml` | Mode T admission policy |
-| `p4-mode-t-retention-contract` | `p4-mode-t-retention-contract.yml` | Durable retention evidence |
-| `p4-mode-t-google-oidc-verifier` | `p4-mode-t-google-oidc-verifier.yml` | OIDC/JWKS verification |
-| `p4-mode-t-sigstore-verifier` | `p4-mode-t-sigstore-verifier.yml` | Sigstore/Cosign verification |
-| `p4-mode-t-tlock-supply-chain` | `p4-mode-t-tlock-supply-chain.yml` | tlock binary supply chain |
-| `mode-t-external-acceptance-handoff` | `mode-t-external-acceptance-handoff.yml` | #344 external result intake |
-| `p9-final-frozen-chain` | `p9-final-frozen-chain.yml` | Final chain verification |
-
-### 1.4 Application method
-
-**Option A (requires admin):** Repository admin applies the JSON via GitHub web UI → Settings → Rules → Rulesets → Edit `Main` → Import ruleset JSON.
-
-**Option B (requires permission elevation):** Grant the connected GitHub integration `Administration` permission on `rulesets` scope, then apply via `gh api` PUT to `/repos/ndrorchestration/DGAF-Framework/rulesets/16909314`.
-
-**Option C (process-only, current state):** Until Option A or B is completed, maintain process discipline requiring all listed workflow checks to pass before merging. This is the current operating mode and is explicitly noted in #277.
-
-### 1.5 What this does NOT do
-
-- Does **not** close P4.
-
-- Does **not** authorize the experiment.
-
-- Does **not** constitute freeze.
-
-- Does **not** change scientific state.
-
-- Strengthens process integrity only.
+Passing CI proves only what the corresponding tests/checks actually establish. A successful synthetic contract, deployment, documentation check, or dry run is not evidence of independent custody, real Confidential Space admission, freeze, authorization, or empirical execution.
 
 ---
 
-## 2. #320 — Independent Security Review Charter
+## 2. Gate 0 — repository integrity and mutation control (#277)
 
-### 2.1 Review scope freeze
+**State:** BLOCKED ON REPOSITORY-ADMIN CONFIGURATION.
 
-The following source identities are frozen for #320 review. No other code is in scope.
+The repository currently has a detective Main Push Provenance Audit, but detective controls are not equivalent to preventive enforcement. The connected automation surface can read rulesets/branch protection but cannot modify repository-administration rules safely.
 
-| Artifact | Path | SHA (at time of charter) |
-|----------|------|--------------------------|
-| Google OIDC verifier | `experiments/pdmal_pilot/mode_t_google_oidc_verifier.py` | `HEAD` |
-| Sigstore verifier | `experiments/pdmal_pilot/mode_t_sigstore_verifier.py` | `HEAD` |
-| Retention contract | `experiments/pdmal_pilot/mode_t_retention_contract.py` | `HEAD` |
-| Durable retention | `experiments/pdmal_pilot/durable_retention.py` | `HEAD` |
-| Admission policy | `experiments/pdmal_pilot/mode_t_admission_policy.py` | `HEAD` |
-| Attestation verifier | `experiments/pdmal_pilot/mode_t_confidential_space_attestation.py` | `HEAD` |
-| Launch contract | `experiments/pdmal_pilot/mode_t_confidential_space_launch.py` | `HEAD` |
-| Integrated lifecycle | `experiments/pdmal_pilot/mode_t_integrated_lifecycle.py` | `HEAD` |
-| OIDC workflow | `.github/workflows/p4-mode-t-google-oidc-verifier.yml` | `HEAD` |
-| Sigstore workflow | `.github/workflows/p4-mode-t-sigstore-verifier.yml` | `HEAD` |
-| Retention workflow | `.github/workflows/p4-mode-t-retention-contract.yml` | `HEAD` |
-| Admission workflow | `.github/workflows/p4-mode-t-confidential-space-admission-contract.yml` | `HEAD` |
-| Launch workflow | `.github/workflows/p4-mode-t-confidential-space-launch-contract.yml` | `HEAD` |
-| Claim policy (from #314) | `experiments/pdmal_pilot/mode_t_admission_policy.py` | `HEAD` |
+Required closure evidence:
 
-### 2.2 Review checklist
+- default branch is protected by a rule that actually requires pull requests before merge;
+- no rule condition accidentally excludes `main`;
+- force pushes and deletion remain prohibited;
+- deliberately selected merge-critical checks are required by their exact live check-context names;
+- bypass actors are explicitly understood and minimized;
+- conversation resolution is required where compatible;
+- a controlled failing required check is proven to block merge;
+- an ordinary direct contents write to `main` is proven to be rejected;
+- a normal fully green PR is proven to merge through the intended path;
+- live ruleset/protection readback is retained as evidence.
 
-**Google OIDC/JWKS:**
+Do **not** import older ready-to-apply ruleset JSON from this repository without fresh validation. Earlier draft material had unsafe condition/check assumptions and is not authority.
 
-- [ ] JWKS discovery URL uses HTTPS with system-CA validation
-
-- [ ] Issuer claim matches `https://accounts.google.com` or `https://firebase.googleapis.com`
-
-- [ ] `kid` rotation handled without stale-cache acceptance
-
-- [ ] Algorithm restriction enforced (`RS256` only, no `alg:none`)
-
-- [ ] Expiry/skew handling within acceptable bounds
-
-- [ ] No JWT key-source manipulation vectors
-
-**TLS/redirects:**
-
-- [ ] All external fetches validate TLS certificates
-
-- [ ] Redirect behavior is bounded and explicit
-
-- [ ] No implicit trust on redirect chains
-
-**Issuer/JWKS consistency:**
-
-- [ ] JWKS `kid` matches JWT header `kid`
-
-- [ ] JWKS fetched from canonical Google endpoint
-
-- [ ] No fallback to unverified sources
-
-**Time/expiry/skew:**
-
-- [ ] Clock-skew tolerance documented and bounded
-
-- [ ] Expired tokens rejected deterministically
-
-**Parser/DoS:**
-
-- [ ] Input size bounded before parsing
-
-- [ ] Malformed JWTs rejected without exception escalation
-
-- [ ] No unbounded recursion or regex in parser path
-
-**Confidential Space claim interpretation:**
-
-- [ ] PRE/POST attestation token fields verified against Google schema
-
-- [ ] No claim fields trusted without cryptographic verification
-
-- [ ] Remaining #340/#341 claim questions resolved or marked ACCEPTED WITH RATIONALE
-
-**#314/#316 policy binding:**
-
-- [ ] Admission policy digest verified before synthetic key generation
-
-- [ ] Caller-provided digest cannot bypass policy check
-
-- [ ] Tampered/promoted C evidence rejected
-
-### 2.3 Finding taxonomy
-
-Every finding must be classified as one of:
-
-| Classification | Meaning |
-|----------------|---------|
-| `RESOLVED` | Issue fixed and verified in CI |
-| `ACCEPTED WITH RATIONALE` | Risk acknowledged, mitigation documented, accepted by reviewer and operator |
-| `BLOCKED` | Must be fixed before proceeding to candidate designation |
-| `UNKNOWN` | Cannot be determined from available evidence; requires additional data |
-
-### 2.4 Reviewer requirements
-
-- Organizationally independent (not DGAF/PDMAL contributor)
-
-- Has access to the frozen source identities above
-
-- Produces findings in machine-readable format (JSON or structured Markdown)
-
-- No code-changing remediation is applied until all `BLOCKED` findings are resolved
+Until this gate closes, Main Push Provenance Audit is a compensating detective control only.
 
 ---
 
-## 3. #316 — Production Trust/Retention Authority Audit
+## 3. Gate 1 — correct and qualify the real Confidential Space path (#310)
 
-### 3.1 Current verified state
+**Current engineering state:** corrected Stage-A procedure is being carried through PR #349.  
+**Execution state:** NOT EXECUTED.  
+**Scientific effect:** none; empirical N remains 0.
 
-**What exists:**
+Stage-A must be one coherent real-cloud engineering path:
 
-- #299: Sigstore/Cosign `verify-blob` implementation pinned to exact Cosign binary SHA-256 (`0fda1e0f...`)
+1. authenticated GCP project and explicitly supported Intel TDX machine/zone;
+2. production Google Confidential Space VM image;
+3. separate digest-pinned DGAF workload container;
+4. reviewed launch contract and exact launch metadata;
+5. workload service account with least-privilege roles, including the attestation-token role required by Google Confidential Space;
+6. PRE token requested from inside the workload through the Confidential Space launcher socket;
+7. Google signature/JWKS verification through the repository production verifier;
+8. DGAF claim verification against frozen audience, subject, service accounts, image digest, args/env, hardware/security state, and PRE nonce;
+9. only successful PRE admission may gate operational-key generation;
+10. synthetic Stage-A workload executes without empirical observations;
+11. POST token binds the same runtime identity to the final engineering-output/evidence manifest;
+12. evidence is retained, retrieved, and cryptographically reverified under the declared custody model;
+13. teardown is recorded.
 
-- #314: Admission policy bound through R→A→C chain; production key acquisition **disabled** until independent C/policy verifier exists
-
-- #323: Retention contract with synthetic-only evidence (not real independently retained evidence)
-
-**What is missing (blocking production trust authority):**
-
-1. **Real independently retained R/A/C evidence** — current retention evidence is synthetic/injected
-
-2. **Production TrustedRoot bytes + SHA frozen** — not yet produced
-
-3. **TUF bootstrap/expiry/rotation semantics specified** — not yet documented
-
-4. **Proof that production key acquisition consumes retained authorization** — not yet demonstrated
-
-5. **Independent retrieval and cryptographic reverification** — not yet executed
-
-6. **Production key acquisition re-enabled** — currently disabled pending #320 + real C evidence
-
-### 3.2 Audit checklist
-
-**R (Root) evidence:**
-
-- [ ] TrustedRoot bytes produced and SHA-256 frozen
-
-- [ ] Root stored in independently retained location
-
-- [ ] Root retrieval independently verified
-
-- [ ] Root identity bound to candidate/tree
-
-**A (Authority) evidence:**
-
-- [ ] Signing authority identity documented
-
-- [ ] Authority capability independently attested
-
-- [ ] No caller-asserted authority accepted without retained proof
-
-**C (Certificate/Claim) evidence:**
-
-- [ ] Certificate chain verified against TrustedRoot
-
-- [ ] Certificate identity matches expected signer
-
-- [ ] Certificate retention independently verified
-
-- [ ] #320 review results incorporated
-
-**Retention path:**
-
-- [ ] Retention location independently controlled
-
-- [ ] Retention retrieval independently executable
-
-- [ ] Cryptographic reverification automated
-
-- [ ] Synthetic retention explicitly excluded from production path
-
-**TUF semantics:**
-
-- [ ] Bootstrap procedure documented
-
-- [ ] Expiry policy defined
-
-- [ ] Rotation procedure defined
-
-- [ ] Update semantics defined (manual vs automated)
-
-**Production key acquisition:**
-
-- [ ] Consumption of retained authorization demonstrated
-
-- [ ] Cannot be bypassed via caller-provided digest
-
-- [ ] Cannot be bypassed via `independent_retention_verified=true` flag
-
-- [ ] Re-enabled only after #320 findings RESOLVED and real C evidence produced
-
-### 3.3 Acceptance criteria
-
-Production trust authority is established when:
-
-1. #320 review is complete with zero `BLOCKED` findings.
-
-2. Real independently retained R/A/C evidence exists and is independently retrievable.
-
-3. TrustedRoot bytes + SHA are frozen and bound to final candidate (post-#309).
-
-4. TUF bootstrap/expiry/rotation semantics are documented and verified.
-
-5. Production key acquisition demonstrably consumes retained authorization.
-
-6. All of the above is CI-verified before candidate designation.
+A Stage-A PASS is an apparatus-qualification result only. It does not close P4, designate the final candidate, freeze the protocol, authorize the pilot, execute final P9, or move N above zero.
 
 ---
 
-## 4. Immediate next steps
+## 4. Gate 2 — independent security review (#320)
 
-1. **#277 ruleset spec** — this document contains the ready-to-apply JSON. Needs admin application via web UI or permission elevation.
+**State:** NOT EXECUTED / OPEN / FAIL-CLOSED.
 
-2. **#320 charter** — source identities frozen above; ready to issue to independent reviewer.
+PR #350 prepares the review package. The review source boundary is intentionally immutable even if `main` later advances:
 
-3. **#316 audit** — checklist ready; execution blocked on #320 completion and real retention evidence production.
+- repository: `ndrorchestration/DGAF-Framework`;
+- source commit: `1f0a7f1e99787777d18b1bd62fe41dce5286a102`;
+- source tree: `ace8fce9a51b97e43e883795748ff07896292e22`;
+- exact artifact blob identities: defined in `docs/GOVERNANCE/review_packages/320_mode_t_oidc_security/SOURCE_IDENTITIES.json` once PR #350 is accepted.
 
-4. **#310 Stage-A** — preparation can proceed in parallel (#320/#316) but execution requires authenticated GCP.
+The reviewer must be organizationally independent from DGAF/PDMAL contribution. Repository authors, this assistant, and CI may prepare evidence but cannot satisfy that independence requirement by reviewing their own work.
+
+Review scope includes at minimum:
+
+- exact Confidential Space discovery/JWKS trust root and issuer consistency;
+- TLS, redirect, parser, cache/rotation, JWK/RSA and algorithm restrictions;
+- signed-token time handling;
+- audience/subject/service-account and Confidential Space claim interpretation;
+- PRE/POST nonce and runtime-identity continuity;
+- admission-policy binding and caller-substitution resistance;
+- operational-key release/lifetime/failure cleanup;
+- integrated lifecycle ordering and retry/crash boundaries;
+- Sigstore/TrustedRoot assumptions;
+- retention/custody claims and synthetic-vs-production separation.
+
+The reviewed repository contract uses the Confidential Space issuer `https://confidentialcomputing.googleapis.com`, not generic Google/Firebase identity issuers. The independent reviewer must verify that trust model against authoritative Google documentation and report any mismatch rather than inheriting DGAF's assertion.
+
+Closure requires a report that is identity-bound, independently attributable, hash-identified, and has no unresolved `BLOCKED` findings. `UNKNOWN` is fail-closed for gate purposes.
 
 ---
 
-*Document written: 2026-09-07*
-*Controlling state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0*
-*No scientific-state transition claimed.*
+## 5. Gate 3 — production trust authority and independently retained R/A/C (#316)
+
+**State:** OPEN / FAIL-CLOSED.
+
+The synthetic/read-only engineering path is not the production authority boundary. Production key acquisition must remain disabled/fail-closed until the retained authorization capability exists and is independently re-verifiable.
+
+Required closure evidence:
+
+- one canonical admission-policy identity covering the security-critical expectation fields;
+- policy digest bound into reservation/freeze R before execution;
+- exact digest carried through authorization A and single-use consumption C;
+- production R/A/C retained outside the caller-controlled assertion path;
+- retained C independently retrieved and cryptographically reverified;
+- production key acquisition consumes that authenticated retained capability before entropy generation;
+- caller-provided digests, booleans, expectations, or synthetic retention records cannot substitute for the retained authority;
+- final signing/retention authority is instantiated;
+- exact production TrustedRoot material and digest are frozen and independently approved;
+- TUF/bootstrap, expiry, rotation, and update semantics are defined and verified;
+- PRE binds to the consumed C and POST/output lineage cannot silently switch policies;
+- #320 independent review has no unresolved blocking findings;
+- real Stage-A PRE/POST evidence has been independently reverified.
+
+P4 does not close merely because hashes exist. The required property is independently checkable custody and authority lineage.
+
+---
+
+## 6. Gate 4 — final v0.7.6 candidate designation (#309)
+
+**State:** NOT DESIGNATED.
+
+Do not designate a final candidate while security-critical apparatus or authority boundaries are still being repaired.
+
+Candidate designation becomes appropriate only after:
+
+- repository mutation controls are established or an explicitly accepted residual governance risk is recorded;
+- Stage-A real-cloud qualification has a resolved evidence disposition;
+- #320 independent review is complete and blocking findings are remediated/re-reviewed;
+- #316 production R/A/C, signer/root, retention and production key-consumption boundary is resolved;
+- candidate-relevant CI is clean;
+- documentation no longer carries contradictory candidate/security authority claims.
+
+Designation must produce one exact candidate commit/tree identity. Routine development must not silently redefine it.
+
+---
+
+## 7. Gate 5 — final P7 / P8 / P9 closure on the designated candidate
+
+After candidate designation, rebuild the final gate packet against that exact identity.
+
+Requirements:
+
+- P7 final binding references the designated candidate without circular prerequisites;
+- P8 evidence is evaluated under its actual acceptance predicate and remains fail-closed if evidence is incomplete;
+- final P9 is genuinely independent and is executed only against the final designated candidate/evidence packet;
+- historical P7/P8/P9 passes remain historical and are not promoted to the final candidate unless their identity contract explicitly permits it.
+
+No final P9 claim may be inferred from earlier independent-verification prototypes or pre-candidate runs.
+
+---
+
+## 8. Gate 6 — protocol freeze
+
+Freeze occurs only after the final candidate and candidate-bound evidence package are stable.
+
+Freeze must bind at minimum:
+
+- candidate source/tree;
+- protocol and analysis code;
+- topology/condition/failure-level design;
+- seed plan and deterministic analysis seed;
+- exclusion and QC rules;
+- bootstrap/statistical procedure;
+- evidence schemas and artifact naming/retention rules;
+- dependency/environment identities;
+- blinding/unblinding procedure;
+- authorized execution boundaries.
+
+Substantive post-freeze changes require an explicit amendment. A green build or candidate designation is not itself freeze.
+
+---
+
+## 9. Gate 7 — explicit pilot authorization
+
+Authorization is separate from freeze.
+
+A pilot authorization artifact must consume the frozen identities and state exactly what may execute, by whom/what, under which evidence and custody constraints, and what terminates authorization.
+
+Until that artifact exists and validates, the system remains **NOT AUTHORIZED** and any empirical execution is prohibited by governance.
+
+---
+
+## 10. Gate 8 — bounded pilot, QC and sample-size decision
+
+Only after valid authorization may empirical N move above zero.
+
+The bounded pilot must:
+
+- execute the frozen path rather than a development substitute;
+- preserve blinding and provenance;
+- produce retained evidence under the accepted custody model;
+- run preregistered QC;
+- feed the predefined sample-size/final-experiment decision without retrospective outcome-driven rule changes.
+
+Pilot output is not automatically the final experiment.
+
+---
+
+## 11. Gate 9 — final experiment, unblinding and baselines
+
+After the QC/sample-size decision authorizes the final run:
+
+1. execute the final blinded experiment;
+2. close evidence retention and completeness checks;
+3. unblind only at the authorized point;
+4. run the frozen analysis;
+5. classify results according to the preregistered support criteria;
+6. establish the relevant P4/PDMAL baselines;
+7. propagate only evidence-supported claims to documentation, portfolio, resume and public materials.
+
+Synthetic results, engineering dry runs and apparatus checks remain excluded from empirical claims.
+
+---
+
+## 12. Current critical path
+
+The operational sequence is:
+
+**prevent direct mutation → finish current documentation/security repairs → real Stage-A qualification → independent #320 review → #316 production custody/authority closure → designate one final candidate → final P7/P8/P9 → freeze → explicit authorization → bounded pilot → QC/sample-size decision → final experiment → unblind/analyze → publish evidence-bounded claims.**
+
+The project should not add unrelated capabilities while these boundaries remain unresolved unless a new feature is strictly necessary to close one of them.
+
+---
+
+## 13. Immediate actions from this plan
+
+1. Let PR #349 complete fresh exact-head verification; merge only if all returned checks are successful and review/thread state is clear.
+2. Let PR #350 complete fresh exact-head verification; merge only under the same rule. Its immutable review-source anchor remains `1f0a7f1e...` even if the package itself merges later.
+3. Merge this closure-plan correction only after its own exact-head verification passes.
+4. Re-read `main` and Main Push Provenance Audit after every merge; any new direct-main write interrupts the sequence and reopens repository-integrity handling.
+5. Apply and verify #277 repository-admin enforcement through an authorized administration surface.
+6. Issue #320 to a genuinely independent reviewer using the frozen package.
+7. Prepare #310 real Stage-A execution inputs without executing empirical work.
+8. Close #316 only with real independently retained and reverified production authority evidence.
+9. Keep #309 open until all candidate prerequisites are evidenced.
+
+---
+
+*Corrected operational plan: 2026-09-07.*  
+*No scientific-state transition is claimed by this document.*
