@@ -85,12 +85,20 @@ def validate(data: dict[str, Any]) -> None:
     require(high_sequence.index("grant_separate_explicit_high_assurance_pilot_authorization") < high_sequence.index("execute_high_assurance_blinded_pilot"), "high-assurance pilot precedes authorization")
 
     solo_sequence = data.get("solo_required_sequence")
-    require(isinstance(solo_sequence, list) and len(solo_sequence) >= 9, "solo sequence incomplete")
+    require(isinstance(solo_sequence, list) and len(solo_sequence) >= 10, "solo sequence incomplete")
     require(solo_sequence[0] == "resolve_issue_369_empirical_p30_binding", "Solo successor sequence must begin with issue #369")
     require("pass_candidate_bound_n0_p30_validation" in solo_sequence, "Solo N=0 P-30 validation missing")
-    require("bind_repository_epoch_authority_to_exact_commit_and_epoch_id" in solo_sequence, "repository-bound Solo authority missing")
+    require("freeze_exact_apparatus_commit" in solo_sequence, "exact Solo apparatus freeze missing")
+    require("create_direct_child_authorization_envelope_bound_to_apparatus_sha_and_epoch_id" in solo_sequence, "non-circular repository authorization envelope missing")
     require("grant_repository_bound_epoch_authorization" in solo_sequence, "repository-bound Solo grant missing")
-    require(solo_sequence.index("grant_repository_bound_epoch_authorization") < solo_sequence.index("execute_blinded_successor_solo_epoch"), "Solo execution precedes repository-bound authorization")
+    require("execute_blinded_successor_solo_epoch_from_authorization_envelope" in solo_sequence, "authorization-envelope execution step missing")
+    require(
+        solo_sequence.index("freeze_exact_apparatus_commit")
+        < solo_sequence.index("create_direct_child_authorization_envelope_bound_to_apparatus_sha_and_epoch_id")
+        < solo_sequence.index("grant_repository_bound_epoch_authorization")
+        < solo_sequence.index("execute_blinded_successor_solo_epoch_from_authorization_envelope"),
+        "Solo apparatus/envelope/authorization/execution ordering drift",
+    )
 
     effects = data.get("current_non_effects", {})
     require(effects == {
@@ -140,6 +148,10 @@ def self_test(data: dict[str, Any]) -> None:
     issue_369["blocks_solo_pilot"] = False
     cases.append(("issue #369 Solo blocker removal", mutated))
 
+    mutated = copy.deepcopy(data)
+    mutated["solo_required_sequence"].remove("create_direct_child_authorization_envelope_bound_to_apparatus_sha_and_epoch_id")
+    cases.append(("authorization-envelope removal", mutated))
+
     for label, case in cases:
         try:
             validate(case)
@@ -156,7 +168,7 @@ def main() -> int:
     validate(data)
     if args.self_test:
         self_test(data)
-    print("pilot blocker manifest: PASS (Solo experiment 001 retained / successor epoch fail-closed / high-assurance fail-closed)")
+    print("pilot blocker manifest: PASS (Solo experiment 001 retained / non-circular successor authority fail-closed / high-assurance fail-closed)")
     return 0
 
 
