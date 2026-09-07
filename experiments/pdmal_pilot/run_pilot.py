@@ -300,7 +300,7 @@ def run_pilot(output_dir: Path, seeds: int, *, solo: bool = False) -> int:
         "protocol_status": "FROZEN",
         "empirical_data_collection": True,
         "validation_track": "SOLO_DEVELOPER" if solo else "HIGH_ASSURANCE",
-        "independently_verified": False if solo else True,
+        "independent_verification_status": "NOT_ESTABLISHED_BY_RUNNER",
         "frozen_commit_sha": frozen_sha,
         "total_seeds": seeds,
         "trials_per_seed": len(_trial_combinations()),
