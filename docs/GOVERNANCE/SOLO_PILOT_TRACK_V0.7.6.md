@@ -39,7 +39,7 @@ The following requirements governed the original Solo execution sequence. They r
 8. **No outcome-dependent protocol edits:** any protocol-affecting change after freeze invalidates that frozen run identity and requires a new candidate/freeze/authorization cycle.
 9. **Constitutive treatment bindings must be explicit:** every required DGAF gate must receive its designated substrate. Missing evidence must fail closed rather than silently receiving a proxy.
 
-The runner must verify that the actual checked-out `HEAD` exactly matches the epoch-bound frozen identity before empirical collection.
+For a successor Solo epoch, a commit cannot truthfully contain its own Git SHA in an authority record because adding that SHA changes the commit. The current runner therefore uses a non-circular **two-identity contract**: first freeze the exact apparatus commit; then create one direct-child authorization-envelope commit that changes only `docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json` and names the parent apparatus SHA. The runner verifies the direct-parent relationship and one-file diff before empirical collection. The empirical artifact remains bound to the apparatus SHA; the run summary retains the authorization-envelope SHA and authority-record digest.
 
 ## Experiment-001 finding and consequence
 
@@ -64,14 +64,20 @@ High-Assurance artifacts use:
 
 `PDMAL-PILOT-V1`
 
-This difference is deliberate and machine-visible. A successor Solo epoch must also carry a new explicit epoch identity and must not masquerade as experiment 001. The runner now obtains that successor identity from the committed repository authority record rather than from the historical experiment constant.
+This difference is deliberate and machine-visible. A successor Solo epoch must also carry a new explicit epoch identity and must not masquerade as experiment 001. The runner obtains that successor identity from the committed repository authority record rather than from the historical experiment constant.
+
+A successor Solo execution has two Git identities with different meanings:
+
+- **apparatus commit SHA** — the frozen protocol/executor/analysis-relevant code identity and the `frozen_commit_sha` recorded in empirical artifacts;
+- **authorization-envelope commit SHA** — the direct child that changes only the authority record from fail-closed state to the explicit epoch grant. This SHA and the authority-record SHA-256 are retained in the summary/provenance record.
 
 ## What valid Solo evidence may support
 
 If a future epoch is separately preregistered, authorized, executed, and its apparatus remains valid, accurate language may include:
 
-- "Developer-run empirical experiment executed on exact frozen commit `<sha>`."
+- "Developer-run empirical experiment executed against exact frozen apparatus commit `<sha>`."
 - "The Solo epoch produced `<N>` retained observations under its preregistered/frozen apparatus."
+- "The authorization envelope was separately provenance-bound and changed no apparatus file."
 - "Results are developer-run and provenance-bound, not independently verified."
 - "Independent security review and Confidential Space/high-assurance custody remain future validation work."
 
@@ -115,10 +121,10 @@ A future authorization requires a new prospective repository state that, at mini
 
 1. resolves Issue #369 with an explicit, reproducible, non-circular empirical P-30 confidence binding;
 2. validates that binding at scientific N increment 0;
-3. declares the exact candidate, dependencies, analysis-relevant configuration, epoch identity, blinding/custody model, and schedule;
+3. declares the exact apparatus dependencies, analysis-relevant configuration, successor epoch identity, blinding/custody model, and schedule;
 4. preserves non-pooling from experiment 001;
-5. updates the committed authority record to bind the exact successor epoch ID and exact frozen commit SHA;
-6. records a new explicit `GRANTED` authorization decision after those checks pass;
-7. passes the fail-closed authority tests before any empirical execution trigger is introduced.
+5. freezes the exact apparatus commit before authorization;
+6. creates a single direct-child authorization-envelope commit that changes only `SOLO_EPOCH_AUTHORITY_V1.json`, names the exact parent apparatus SHA and successor epoch ID, and records `GRANTED` only after the prior checks pass;
+7. passes the fail-closed authority/envelope tests before any empirical execution trigger is introduced.
 
 Until then: `FRESH_SOLO_EMPIRICAL_EPOCH_NOT_AUTHORIZED`.
