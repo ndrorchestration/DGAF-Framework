@@ -4,19 +4,20 @@
 Three explicit execution modes exist:
 
 - ``contract``: non-empirical contract rehearsal only;
-- ``solo_pilot``: empirical developer-run pilot with self-freeze/self-authorization;
+- ``solo_pilot``: empirical developer-run evidence only when a committed,
+  repository-bound epoch authority explicitly grants the exact frozen commit;
 - ``pilot``: the existing high-assurance pilot path.
 
 Both empirical modes require an exact frozen git SHA, protected blinding material,
-and durable retention. The solo track is intentionally distinguishable in its
-experiment identity and must not be represented as independently reviewed,
-Confidential-Space-qualified, or high-assurance evidence.
+and durable retention. Solo environment variables are runtime inputs only and
+cannot create empirical authority by themselves.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import hmac
+import json
 import os
 import subprocess
 from pathlib import Path
@@ -37,8 +38,11 @@ PROTOCOL_VERSION = "0.7.6"
 MIN_BLINDING_KEY_CHARS = 32
 CONDITION_ID_DOMAIN = b"PDMAL-BLINDED-CONDITION-ID-v1"
 TRIAL_ORDER_DOMAIN = b"PDMAL-BLINDED-TRIAL-ORDER-v1"
-SOLO_EXPERIMENT_ID = "PDMAL-SOLO-PILOT-V1"
+HISTORICAL_SOLO_EXPERIMENT_ID = "PDMAL-SOLO-PILOT-V1"
+SOLO_EXPERIMENT_ID = HISTORICAL_SOLO_EXPERIMENT_ID
 HIGH_ASSURANCE_EXPERIMENT_ID = "PDMAL-PILOT-V1"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SOLO_EPOCH_AUTHORITY_PATH = REPO_ROOT / "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json"
 
 
 def require_mode() -> str:
@@ -49,7 +53,13 @@ def require_mode() -> str:
 
 
 def _current_head_sha() -> str:
-    result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, timeout=5, cwd=Path(__file__).resolve().parents[2])
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        timeout=5,
+        cwd=REPO_ROOT,
+    )
     if result.returncode != 0:
         raise SystemExit("pilot execution prohibited: unable to resolve git HEAD")
     return result.stdout.strip()
@@ -87,17 +97,67 @@ def require_pilot_authorization() -> tuple[str, Path]:
     return _require_blinding_and_archive()
 
 
-def require_solo_pilot_authorization() -> tuple[str, Path]:
-    """Require explicit self-freeze and self-authorization for Solo Pilot evidence.
+def _load_solo_epoch_authority() -> dict:
+    try:
+        document = json.loads(SOLO_EPOCH_AUTHORITY_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"solo pilot execution prohibited: unable to load repository epoch authority: {exc}") from exc
+    if not isinstance(document, dict):
+        raise SystemExit("solo pilot execution prohibited: repository epoch authority must be a JSON object")
+    return document
 
-    This intentionally does not satisfy the independent/high-assurance gate. A
-    separate limitations acknowledgement is required to make accidental use of
-    the relaxed track harder.
+
+def validate_solo_epoch_authority(document: dict, *, frozen_sha: str, requested_epoch_id: str) -> str:
+    """Validate repository-bound Solo authority against the exact frozen commit.
+
+    This function deliberately treats environment values as requests, not as
+    authority. A committed authority record must independently grant the same
+    epoch identity and exact SHA before empirical execution can proceed.
     """
+    if document.get("schema_version") != 1:
+        raise SystemExit("solo pilot execution prohibited: unsupported repository epoch authority schema")
+    if document.get("record_type") != "DGAF_PDMAL_SOLO_EPOCH_AUTHORITY":
+        raise SystemExit("solo pilot execution prohibited: wrong repository epoch authority record type")
+    if document.get("protocol_version") != PROTOCOL_VERSION:
+        raise SystemExit("solo pilot execution prohibited: repository epoch authority protocol mismatch")
+
+    status = document.get("status")
+    if status != "AUTHORIZED":
+        raise SystemExit(f"solo pilot execution prohibited: repository epoch authority status is {status!r}")
+
+    auth = document.get("authorization")
+    if not isinstance(auth, dict):
+        raise SystemExit("solo pilot execution prohibited: repository epoch authorization block missing")
+    if auth.get("type") != "REPOSITORY_BOUND_EPOCH_AUTHORIZATION":
+        raise SystemExit("solo pilot execution prohibited: repository epoch authority type mismatch")
+    if auth.get("decision") != "GRANTED":
+        raise SystemExit("solo pilot execution prohibited: repository epoch authorization decision is not GRANTED")
+    if auth.get("legacy_self_authorization_sufficient") is not False:
+        raise SystemExit("solo pilot execution prohibited: legacy environment self-authorization must remain insufficient")
+    if document.get("legacy_environment_only_authorization_permitted") is not False:
+        raise SystemExit("solo pilot execution prohibited: environment-only Solo authorization is forbidden")
+    if document.get("historical_experiment_001_authority_reusable") is not False:
+        raise SystemExit("solo pilot execution prohibited: historical experiment-001 authority must not be reusable")
+
+    epoch_id = document.get("epoch_id")
+    if not isinstance(epoch_id, str) or not epoch_id.strip():
+        raise SystemExit("solo pilot execution prohibited: authorized repository epoch_id is missing")
+    if not requested_epoch_id or requested_epoch_id != epoch_id:
+        raise SystemExit("solo pilot execution prohibited: PDMAL_SOLO_EPOCH_ID does not match repository authority")
+
+    authority_sha = str(document.get("frozen_commit_sha") or "").lower()
+    if len(authority_sha) != 40 or any(c not in "0123456789abcdef" for c in authority_sha):
+        raise SystemExit("solo pilot execution prohibited: repository authority frozen_commit_sha is invalid")
+    if not hmac.compare_digest(authority_sha, frozen_sha.lower()):
+        raise SystemExit("solo pilot execution prohibited: repository authority is not bound to this frozen commit")
+
+    return epoch_id
+
+
+def require_solo_pilot_authorization(frozen_sha: str) -> tuple[str, Path, str]:
+    """Require a committed, exact-SHA-bound Solo epoch authorization."""
     if os.getenv("PDMAL_PROTOCOL_FROZEN") != "1":
         raise SystemExit("solo pilot execution prohibited: PDMAL_PROTOCOL_FROZEN=1 is required")
-    if os.getenv("PDMAL_SOLO_PILOT_AUTHORIZED") != "1":
-        raise SystemExit("solo pilot execution prohibited: PDMAL_SOLO_PILOT_AUTHORIZED=1 is required")
     if os.getenv("PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED") != "1":
         raise SystemExit(
             "solo pilot execution prohibited: PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED=1 is required"
@@ -106,7 +166,16 @@ def require_solo_pilot_authorization() -> tuple[str, Path]:
         raise SystemExit(
             "solo pilot execution prohibited: high-assurance PDMAL_PILOT_AUTHORIZED must not be asserted in solo mode"
         )
-    return _require_blinding_and_archive()
+
+    authority = _load_solo_epoch_authority()
+    requested_epoch_id = os.getenv("PDMAL_SOLO_EPOCH_ID", "").strip()
+    epoch_id = validate_solo_epoch_authority(
+        authority,
+        frozen_sha=frozen_sha,
+        requested_epoch_id=requested_epoch_id,
+    )
+    key, archive_root = _require_blinding_and_archive()
+    return key, archive_root, epoch_id
 
 
 def blind_condition(condition: str, key: str) -> str:
@@ -201,7 +270,14 @@ def run_contract(output_dir: Path) -> int:
         results = deterministic_contract_run(seed, key)
         if len(results) != 5 or not all(r.topology_valid for r in results):
             raise SystemExit(f"contract validation failed for seed {seed}")
-        trial = execute_trial(ScriptedTask([AttemptStatus.FAILURE, AttemptStatus.SUCCESS]), seed=seed, condition="CONTRACT_ONLY", policy=RetryPolicy(recovery_window_seconds=0.0), sleeper=lambda _: None, isolate=False)
+        trial = execute_trial(
+            ScriptedTask([AttemptStatus.FAILURE, AttemptStatus.SUCCESS]),
+            seed=seed,
+            condition="CONTRACT_ONLY",
+            policy=RetryPolicy(recovery_window_seconds=0.0),
+            sleeper=lambda _: None,
+            isolate=False,
+        )
         if not trial.ffcr_success:
             raise SystemExit(f"retry contract failed for seed {seed}")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -212,8 +288,8 @@ def run_contract(output_dir: Path) -> int:
 def run_pilot(output_dir: Path, seeds: int, *, solo: bool = False) -> int:
     frozen_sha = require_frozen_commit()
     if solo:
-        blinding_key, archive_root = require_solo_pilot_authorization()
-        experiment_id = SOLO_EXPERIMENT_ID
+        blinding_key, archive_root, epoch_id = require_solo_pilot_authorization(frozen_sha)
+        experiment_id = epoch_id
         artifact_prefix = "solo_pilot"
         artifact_kind = "solo_pilot_seed"
         completion_label = "SOLO_PILOT_MODE_COMPLETE"
@@ -245,8 +321,11 @@ def run_pilot(output_dir: Path, seeds: int, *, solo: bool = False) -> int:
                 result = None
                 status = AttemptStatus.FAILURE
             raw_trial = {
-                "trial_key": task.trial_key(seed, topology, condition, failure_count), "seed": seed,
-                "topology": topology, "condition": condition, "failure_count": failure_count,
+                "trial_key": task.trial_key(seed, topology, condition, failure_count),
+                "seed": seed,
+                "topology": topology,
+                "condition": condition,
+                "failure_count": failure_count,
                 "failure_nodes": [int(n) for n in result.failure_nodes] if result else [],
                 "initial_values": [float(v) for v in result.initial_values] if result else [],
                 "final_values": [float(v) for v in result.final_values] if result else [],
@@ -256,23 +335,29 @@ def run_pilot(output_dir: Path, seeds: int, *, solo: bool = False) -> int:
                 "attempt_status": status.value,
                 "consensus_success": bool(result.consensus_success) if result else False,
                 "deviation": result.deviation if result else None,
-                # Detailed governance trace remains process-local. It is
-                # intentionally excluded from the public blinded artifact.
                 "governance_trace": list(result.governance_trace) if result else [],
             }
             execution_success = status is AttemptStatus.SUCCESS
             recovered = failure_count > 0 and execution_success
             record = {
-                "experiment_id": experiment_id, "protocol_version": PROTOCOL_VERSION,
-                "experiment_commit_sha": frozen_sha, "seed_id": seed,
-                "blinded_condition_id": blind_condition(condition, blinding_key), "trial_id": trial_idx,
-                "topology": topology, "failure_count": failure_count,
+                "experiment_id": experiment_id,
+                "protocol_version": PROTOCOL_VERSION,
+                "experiment_commit_sha": frozen_sha,
+                "seed_id": seed,
+                "blinded_condition_id": blind_condition(condition, blinding_key),
+                "trial_id": trial_idx,
+                "topology": topology,
+                "failure_count": failure_count,
                 "primary_outcome": raw_trial["final_std"],
-                "secondary_outcomes": {"final_mean": float(np.mean(raw_trial["final_values"])) if raw_trial["final_values"] else 0.0},
-                "failure": failure_count > 0, "recovery": recovered,
+                "secondary_outcomes": {
+                    "final_mean": float(np.mean(raw_trial["final_values"])) if raw_trial["final_values"] else 0.0
+                },
+                "failure": failure_count > 0,
+                "recovery": recovered,
                 "ffcr_success": bool(raw_trial["consensus_success"] and execution_success),
                 "status": "RECOVERED" if recovered else ("SUCCESS" if execution_success else "UNRECOVERED_FAILURE"),
-                "excluded": False, "exclusion_reason": None,
+                "excluded": False,
+                "exclusion_reason": None,
                 "environment_fingerprint": environment_fingerprint,
             }
             record["artifact_sha256"] = hashlib.sha256(canonical_json_bytes(record)).hexdigest()
@@ -302,6 +387,7 @@ def run_pilot(output_dir: Path, seeds: int, *, solo: bool = False) -> int:
         "validation_track": "SOLO_DEVELOPER" if solo else "HIGH_ASSURANCE",
         "independent_verification_status": "NOT_ESTABLISHED_BY_RUNNER",
         "frozen_commit_sha": frozen_sha,
+        "experiment_id": experiment_id,
         "total_seeds": seeds,
         "trials_per_seed": len(_trial_combinations()),
         "total_trials": seeds * len(_trial_combinations()),
