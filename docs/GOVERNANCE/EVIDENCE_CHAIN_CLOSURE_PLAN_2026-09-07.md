@@ -188,6 +188,7 @@ The following source identities are frozen for #320 review. No other code is in 
 ### 2.2 Review checklist
 
 **Google OIDC/JWKS:**
+
 - [ ] JWKS discovery URL uses HTTPS with system-CA validation
 - [ ] Issuer claim matches `https://accounts.google.com` or `https://firebase.googleapis.com`
 - [ ] `kid` rotation handled without stale-cache acceptance
@@ -196,30 +197,36 @@ The following source identities are frozen for #320 review. No other code is in 
 - [ ] No JWT key-source manipulation vectors
 
 **TLS/redirects:**
+
 - [ ] All external fetches validate TLS certificates
 - [ ] Redirect behavior is bounded and explicit
 - [ ] No implicit trust on redirect chains
 
 **Issuer/JWKS consistency:**
+
 - [ ] JWKS `kid` matches JWT header `kid`
 - [ ] JWKS fetched from canonical Google endpoint
 - [ ] No fallback to unverified sources
 
 **Time/expiry/skew:**
+
 - [ ] Clock-skew tolerance documented and bounded
 - [ ] Expired tokens rejected deterministically
 
 **Parser/DoS:**
+
 - [ ] Input size bounded before parsing
 - [ ] Malformed JWTs rejected without exception escalation
 - [ ] No unbounded recursion or regex in parser path
 
 **Confidential Space claim interpretation:**
+
 - [ ] PRE/POST attestation token fields verified against Google schema
 - [ ] No claim fields trusted without cryptographic verification
 - [ ] Remaining #340/#341 claim questions resolved or marked ACCEPTED WITH RATIONALE
 
 **#314/#316 policy binding:**
+
 - [ ] Admission policy digest verified before synthetic key generation
 - [ ] Caller-provided digest cannot bypass policy check
 - [ ] Tampered/promoted C evidence rejected
@@ -249,11 +256,13 @@ Every finding must be classified as one of:
 ### 3.1 Current verified state
 
 **What exists:**
+
 - #299: Sigstore/Cosign `verify-blob` implementation pinned to exact Cosign binary SHA-256 (`0fda1e0f...`)
 - #314: Admission policy bound through R→A→C chain; production key acquisition **disabled** until independent C/policy verifier exists
 - #323: Retention contract with synthetic-only evidence (not real independently retained evidence)
 
 **What is missing (blocking production trust authority):**
+
 1. **Real independently retained R/A/C evidence** — current retention evidence is synthetic/injected
 2. **Production TrustedRoot bytes + SHA frozen** — not yet produced
 3. **TUF bootstrap/expiry/rotation semantics specified** — not yet documented
@@ -264,35 +273,41 @@ Every finding must be classified as one of:
 ### 3.2 Audit checklist
 
 **R (Root) evidence:**
+
 - [ ] TrustedRoot bytes produced and SHA-256 frozen
 - [ ] Root stored in independently retained location
 - [ ] Root retrieval independently verified
 - [ ] Root identity bound to candidate/tree
 
 **A (Authority) evidence:**
+
 - [ ] Signing authority identity documented
 - [ ] Authority capability independently attested
 - [ ] No caller-asserted authority accepted without retained proof
 
 **C (Certificate/Claim) evidence:**
+
 - [ ] Certificate chain verified against TrustedRoot
 - [ ] Certificate identity matches expected signer
 - [ ] Certificate retention independently verified
 - [ ] #320 review results incorporated
 
 **Retention path:**
+
 - [ ] Retention location independently controlled
 - [ ] Retention retrieval independently executable
 - [ ] Cryptographic reverification automated
 - [ ] Synthetic retention explicitly excluded from production path
 
 **TUF semantics:**
+
 - [ ] Bootstrap procedure documented
 - [ ] Expiry policy defined
 - [ ] Rotation procedure defined
 - [ ] Update semantics defined (manual vs automated)
 
 **Production key acquisition:**
+
 - [ ] Consumption of retained authorization demonstrated
 - [ ] Cannot be bypassed via caller-provided digest
 - [ ] Cannot be bypassed via `independent_retention_verified=true` flag
