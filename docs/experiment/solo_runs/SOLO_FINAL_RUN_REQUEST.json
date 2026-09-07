@@ -1,0 +1,13 @@
+{
+  "record_type": "DGAF_PDMAL_SOLO_FINAL_EXPERIMENT_RUN_REQUEST",
+  "schema_version": 1,
+  "protocol_version": "0.7.6",
+  "execution_mode": "solo_pilot",
+  "authorization": "GRANTED_BY_DEVELOPER_AFTER_BLINDED_QC",
+  "qc_record": "docs/experiment/SOLO_PILOT_QC_ADJUDICATION_2026-09-07.md",
+  "limitations_acknowledged": true,
+  "seeds": 50,
+  "expected_observations": 9000,
+  "outcome_inspection_during_collection": false,
+  "unblinding_authorized": false
+}
