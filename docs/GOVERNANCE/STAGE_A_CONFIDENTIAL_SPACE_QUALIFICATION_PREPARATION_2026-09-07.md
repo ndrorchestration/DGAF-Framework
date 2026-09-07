@@ -1,366 +1,395 @@
 # Stage-A Confidential Space Qualification Preparation
 
-> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. 
-> **Scope:** Engineering preparation for authenticated GCP Confidential Space execution. 
-> **What this is:** Specification and procedure only. No cloud actions, no key material, no empirical evidence. 
-> **Final candidate:** NOT DESIGNATED (Issue #309). 
-> **Live main:** `c2dd87eda2b92f72c8e06fe225de833e0c2d319a`
+> **Status:** CORRECTED SPECIFICATION DRAFT / NOT EXECUTED / NOT VERIFIED BY REAL GCP EVIDENCE.  
+> **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.  
+> **Scope:** Engineering preparation for authenticated Google Cloud Confidential Space qualification only.  
+> **Final v0.7.6 candidate:** NOT DESIGNATED under Issue #309.  
+> **Source-review base:** `bd0b8751b9556b91a63a93c04875daac18b134fc`.  
+> This document must not be used to claim P4 closure, freeze, authorization, final P9, or empirical execution.
 
 ---
 
-## 1. Purpose and boundary
+## 1. Purpose and evidence boundary
 
-Stage-A proves apparatus viability against a **real** Confidential Space environment while keeping `N=0`. It is not the pilot, not freeze, not authorization, not P4 closure. It is a controlled qualification run whose only acceptable outcomes are:
+Stage-A is intended to qualify the Mode-T apparatus against a **real** Confidential Space environment while keeping empirical `N=0`. It is an engineering evidence exercise, not the pilot and not scientific execution.
 
-- **PASS** — real PRE/POST attestation verified, no key/plaintext leaks detected, evidence independently retrievable.
+A future Stage-A run may be classified `PASS` only after all required real-cloud evidence is produced, retained, retrieved, cryptographically reverified, and adjudicated under the applicable governance track. Until then the state is **NOT EXECUTED**.
 
-- **FAIL-CLOSED** — any step cannot be completed or verified; record the exact failure mode; do not proceed to candidate designation.
+This corrected procedure deliberately separates three things that the earlier draft conflated:
 
-Stage-A does not generate empirical observations. It generates engineering evidence that the apparatus can execute end-to-end in a real TEE.
+1. the Google-provided **Confidential Space VM image**;
+2. the separately built and digest-pinned **DGAF workload container** launched through `tee-image-reference`;
+3. the **attestation verifier/relying party**, which verifies the returned token and the DGAF claim contract.
 
----
+Official Google references reviewed for this correction:
 
-## 2. Pre-requisites
-
- |  Item  |  Requirement  |
- | ------ | ------------- |
- |  GCP project  |  Authenticated project with Confidential Space API enabled  |
- |  Service account  |  Dedicated SA with `roles/confidentialspace.operator` and minimum required IAM  |
- |  Network  |  Outbound HTTPS to `confidentialcomputing.googleapis.com`, `oauth2.googleapis.com`, `accounts.google.com`  |
- |  tlock binary  |  Verified SHA-256 `0fda1e0fedffab82217cbd90e0b8b2a9d42df88a361b2dd890d8fac173b5dc57`  |
- |  Cosign binary  |  Pinned and verified per #299  |
- |  Candidate source  |  Exact tree to be designated under #309 (post-designation only)  |
+- [Deploy Confidential Space workloads](https://docs.cloud.google.com/confidential-computing/confidential-space/docs/deploy-workloads)
+- [Retrieve and validate Confidential Space attestation tokens](https://docs.cloud.google.com/confidential-computing/confidential-space/docs/connect-external-resources)
+- [Attestation token validation endpoint fields](https://docs.cloud.google.com/confidential-computing/confidential-space/docs/reference/token-validation-endpoint-fields)
+- [Confidential VM supported configurations](https://docs.cloud.google.com/confidential-computing/confidential-vm/docs/supported-configurations)
+- [Create a Confidential VM](https://docs.cloud.google.com/confidential-computing/confidential-vm/docs/create-a-confidential-vm-instance)
 
 ---
 
-## 3. Synthetic-only workload image
+## 2. Repository contracts that control Stage-A
 
-### 3.1 Image requirements
+Stage-A must conform to the executable repository contracts rather than inventing a parallel policy.
 
-The Stage-A workload image must be digest-pinned and built from a deterministic source. No external runtime dependencies.
+### 2.1 Launch contract
 
-```dockerfile
-# Stage-A synthetic-only workload
-FROM gcr.io/confidential-space/minimal:latest
-LABEL org.dgaf.stage_a.workload="synthetic-only"
-LABEL org.dgaf.stage_a.purpose="apparatus viability qualification"
+`experiments/pdmal_pilot/mode_t_confidential_space_launch.py` currently requires, among other exact properties:
 
-# Copy synthetic workload
-COPY workload/ /app/
-WORKDIR /app
+| Property | Required value |
+|---|---|
+| Confidential Space image family | `confidential-space` |
+| Confidential Computing type | `TDX` |
+| VM maintenance policy | `TERMINATE` |
+| Compute automatic restart | `false` |
+| Container restart policy | `Never` |
+| Secure Boot | enabled |
+| Workload image | exact digest-pinned reference |
+| `tee-container-log-redirect` | `false` |
+| `tee-monitoring-memory-enable` | `false` |
+| command override | prohibited |
+| environment override | prohibited |
+| additional capabilities | prohibited |
+| cgroup namespace | prohibited |
+| additional mounts | prohibited |
 
-# Run as non-root
-USER 65534:65534
+The source contract remains the authority if this prose diverges.
 
-# No entrypoint override allowed by launch contract
-ENTRYPOINT ["/app/synthetic_workload"]
-CMD ["--mode", "stage-a-qualification"]
-```
+### 2.2 Attestation contract
 
-### 3.2 Digest pinning
+`experiments/pdmal_pilot/mode_t_confidential_space_attestation.py` currently requires:
+
+- issuer `https://confidentialcomputing.googleapis.com`;
+- hardware model `GCP_INTEL_TDX`;
+- `attester_tcb == ["INTEL"]`;
+- Secure Boot attested true;
+- debug status `disabled-since-boot`;
+- `STABLE` Confidential Space support attribute;
+- memory monitoring exactly disabled;
+- container restart policy `Never`;
+- exact workload image digest, args, environment, command override, audience, subject, and service-account set;
+- no environment override;
+- an attestation lifetime no longer than one hour;
+- exactly one phase-specific SHA-256 nonce binding.
+
+`PRE_EXECUTION` binds to the already-consumed authorization record C and is the only phase that may gate operational-key generation. `POST_EXECUTION` binds the same runtime identity to the final blinded output/evidence manifest.
+
+### 2.3 Cryptographic token verification
+
+`experiments/pdmal_pilot/mode_t_google_oidc_verifier.py` is the production token-signature entry point. It is currently bound to:
+
+- discovery: `https://confidentialcomputing.googleapis.com/.well-known/openid-configuration`;
+- issuer: `https://confidentialcomputing.googleapis.com`;
+- algorithm: `RS256`;
+- the reviewed Confidential Space signer JWKS endpoint;
+- HTTPS with system CA and hostname verification;
+- no redirects and no JWT-supplied alternate key source;
+- bounded key caching with one authenticated refresh for normal `kid` rotation.
+
+A signature-verification pass authenticates the Google token source only. The separate claim contract still decides DGAF admission.
+
+---
+
+## 3. Prerequisites
+
+The following must be established before any Stage-A execution is attempted.
+
+| Item | Requirement |
+|---|---|
+| GCP identity | Authenticated project/operator with permission to create the required Confidential VM resources |
+| Workload service account | Dedicated service account attached to the Confidential Space VM |
+| Attestation role | Workload service account has `roles/confidentialcomputing.workloadUser` |
+| Container retrieval | Workload service account has `roles/artifactregistry.reader` when Artifact Registry is used |
+| Operator attachment permission | Workload operator has permission equivalent to `roles/iam.serviceAccountUser` for the attached service account |
+| Hardware | A currently supported Intel TDX machine type and zone |
+| VM image | Google production `confidential-space` image family from project `confidential-space-images` |
+| Workload image | Separate DGAF workload container referenced by immutable digest, not a mutable tag |
+| Authorization binding | Exact already-consumed C-record SHA-256 available before PRE token request |
+| Relying-party identity | Exact audience and expected VM subject/service-account set frozen before verification |
+| Evidence custody | Predeclared retention/retrieval path; no claim of independence unless a genuinely independent actor performs it |
+
+For Intel TDX, do **not** set `--min-cpu-platform`. Current Google supported configurations list Intel TDX on supported Intel machine families such as `c3-standard-*` and, where available, `c4-standard-*`; N2D is an AMD SEV/SEV-SNP family and must not be paired with `TDX`.
+
+---
+
+## 4. Workload container preparation
+
+The DGAF workload is a normal container image authored separately from the Google Confidential Space VM image.
+
+### 4.1 Required properties
+
+Before launch:
+
+1. build the Stage-A synthetic-only workload from reviewed source;
+2. publish it to an approved registry;
+3. resolve the immutable container digest;
+4. record the full `...@sha256:<64-hex>` reference;
+5. bind that exact digest into the DGAF launch and attestation expectations;
+6. prohibit mutable `:latest` or branch-like references from being treated as evidence identities.
+
+The container must enter a bootstrap state on launch and **must not generate an operational key or perform the protected action before PRE_EXECUTION attestation has passed**.
+
+Do not base the workload Dockerfile on a guessed `gcr.io/confidential-space/...` container. Google Confidential Space is supplied as the VM image; `tee-image-reference` identifies the separate workload container.
+
+---
+
+## 5. TDX Confidential Space VM launch template
+
+The exact machine type and zone must be selected from Google's then-current TDX-supported matrix at execution time and recorded in the evidence packet.
+
+The launch shape below mirrors Google's documented Confidential Space CPU workload flow and the current repository launch contract. Placeholders are not executable evidence.
 
 ```bash
-# Build and pin
-docker build -t stage-a-workload:under-test .
-DIGEST=$(docker inspect stage-a-workload:under-test --format='{{index .RepoDigests 0}}')
-echo "Pinned digest: $DIGEST"
-
-# Record in launch contract
-# digest_pin: sha256:<exact-image-sha256>
+gcloud compute instances create "$INSTANCE_NAME" \
+  --confidential-compute-type=TDX \
+  --machine-type="$TDX_MACHINE_TYPE" \
+  --maintenance-policy=TERMINATE \
+  --no-restart-on-failure \
+  --shielded-secure-boot \
+  --image-project=confidential-space-images \
+  --image-family=confidential-space \
+  --metadata="^~^tee-image-reference=${WORKLOAD_IMAGE_AT_DIGEST}~tee-restart-policy=Never~tee-container-log-redirect=false~tee-monitoring-memory-enable=false" \
+  --service-account="$WORKLOAD_SERVICE_ACCOUNT" \
+  --scopes=cloud-platform \
+  --zone="$ZONE" \
+  --project="$PROJECT_ID"
 ```
 
-### 3.3 Restrictions
+Additional network flags may be added only after the exact egress design has been reviewed. Do not assert `--no-address` while also assuming internet reachability unless the required private/NAT path is actually configured and evidenced.
 
-- **No debug symbols** in production image
-
-- **No shell access** in runtime container
-
-- **No network egress** except to Google attestation endpoints
-
-- **No environment variable overrides** permitted by launch policy
-
-- **No command-line overrides** permitted by launch policy
-
-- **Memory monitoring disabled** (`tee-monitoring-memory-enable: false`)
+Creating the VM launches the Confidential Space environment and its configured workload container. The earlier instruction to create the VM but "not start the workload yet" was incorrect.
 
 ---
 
-## 4. GCP configuration
+## 6. PRE_EXECUTION attestation
 
-### 4.1 Required exact identities
+### 6.1 Phase meaning
 
-```yaml
-# stage_a_gcp_config.yaml — fill with real values at execution time
-project_id: <exact-gcp-project-id>
-zone: <exact-zone>
-region: <exact-region>
-machine_type: n2d-standard-2
-min_cpu_platform: "AMD Rome"
+PRE is an **application lifecycle boundary inside the launched workload**, before operational-key generation or the protected action. It is not a token retrieved from `gcloud compute instances describe` and it is not a pre-boot VM metadata field.
 
-service_account: <sa-name>@<project-id>.iam.gserviceaccount.com
-service_account_scopes:
+### 6.2 Token acquisition
 
-  - https://www.googleapis.com/auth/cloud-platform
+For Google Cloud Attestation, the workload must request the token through the Confidential Space launcher:
 
-confidential_space:
-  tee_type: "SEV"
-  # or "TDX" per REQUIREMENTS
-  compute_type: "TDX"
-  restart_policy: "Never"
-  debug_mode: false
-  memory_monitoring: false
+- Unix domain socket: `/run/container_launcher/teeserver.sock`
+- HTTP endpoint over that socket: `POST http://localhost/v1/token`
+- token type: `OIDC`
+- `audience`: exact predeclared relying-party audience set by the workload
+- `nonces`: exactly one lowercase 64-character SHA-256 hex value for the DGAF PRE binding
 
-network:
-  no_external_ip: true
-  # or exact VPC connector if egress required
+For DGAF PRE_EXECUTION, that nonce is the exact SHA-256 of the already-consumed authorization record C expected by the attestation contract.
+
+Conceptual request body:
+
+```json
+{
+  "audience": "<exact-frozen-relying-party-audience>",
+  "token_type": "OIDC",
+  "nonces": ["<authorization-consumption-sha256>"]
+}
 ```
 
-### 4.2 Launch contract binding
+The production workload must use an HTTP client capable of dialing the Unix socket. Do not assume the production Confidential Space environment contains a shell or `curl`.
 
-The launch contract (`mode_t_confidential_space_launch.py`) validates:
+### 6.3 Cryptographic and claim verification
 
- |  Field  |  Required value  |
- | ------- | ---------------- |
- |  `tee.launch_policy.allow_capabilities`  |  `false`  |
- |  `tee.launch_policy.allow_cgroups`  |  `false`  |
- |  `tee.launch_policy.allow_cmd_override`  |  `false`  |
- |  `tee.launch_policy.allow_env_override`  |  `""`  |
- |  `tee.launch_policy.allow_mount_destinations`  |  `""`  |
- |  `tee.launch_policy.log_redirect`  |  `never`  |
- |  `tee.launch_policy.monitoring_memory_allow`  |  `never`  |
- |  `tee-restart-policy`  |  `Never`  |
- |  `tee-container-log-redirect`  |  `false`  |
- |  `tee-monitoring-memory-enable`  |  `false`  |
-
----
-
-## 5. PRE attestation procedure
-
-### 5.1 Trigger
-
-Execute `gcloud compute instances create` with the exact configuration above. Do **not** start the workload yet.
-
-### 5.2 Retrieve PRE token
-
-```bash
-# Retrieve PRE attestation token from instance metadata
-PRE_TOKEN=$(gcloud compute instances describe \
-  <instance-name> \
-  --zone=<zone> \
-  --format='value(confidentialSpaceConfig.attestationToken)')
-```
-
-### 5.3 Verify PRE token
+Use the repository production entry point first, then the claim contract:
 
 ```python
-from experiments.pdmal_pilot.mode_t_google_oidc_verifier import GoogleOIDCVerifier
+from experiments.pdmal_pilot.mode_t_google_oidc_verifier import (
+    verify_google_confidential_space_token,
+)
 from experiments.pdmal_pilot.mode_t_confidential_space_attestation import (
-    verify_attestation_token,
+    AttestationExpectation,
     PRE_EXECUTION,
+    verify_confidential_space_attestation,
 )
 
-verifier = GoogleOIDCVerifier()
-claims = verifier.verify(PRE_TOKEN)
-
-# Verify PRE_EXECUTION phase
-result = verify_attestation_token(
-    claims=claims,
-    phase=PRE_EXECUTION,
-    expected_subject=<exact-instance-self-link>,
-    expected_service_account=<sa-email>,
-    expected_image_digest=<pinned-image-digest>,
+verified = verify_google_confidential_space_token(pre_token)
+pre_evidence = verify_confidential_space_attestation(
+    verified.claims,
+    AttestationExpectation(
+        phase=PRE_EXECUTION,
+        audience=frozen_audience,
+        subject=frozen_subject,
+        expected_service_accounts=(workload_service_account,),
+        image_digest=workload_image_digest,
+        binding_sha256=authorization_consumption_sha256,
+        expected_args=frozen_args,
+        expected_env=frozen_non_secret_env,
+        expected_cmd_override=(),
+    ),
+    verified.token_context,
 )
-assert result.phase == PRE_EXECUTION
-assert result.debug_status == "disabled-since-boot"
-assert result.restart_policy == "Never"
-assert result.hardware_model == "GCP_INTEL_TDX"
 ```
 
-### 5.4 Record PRE evidence
+Any exception is FAIL-CLOSED. Do not generate the operational key after an incomplete or failed PRE verification.
 
-```bash
-# Independent retrieval: save token and claims to operator-controlled storage
-mkdir -p /workspace/stage_a_evidence/pre
-echo "$PRE_TOKEN" > /workspace/stage_a_evidence/pre/token.b64
-echo "$CLAIMS_JSON" > /workspace/stage_a_evidence/pre/claims.json
+### 6.4 PRE evidence to retain
 
-# Cryptographic reverification
-sha256sum /workspace/stage_a_evidence/pre/token.b64 > /workspace/stage_a_evidence/pre/token.sha256
-```
+At minimum retain, through the approved evidence path:
+
+- raw token bytes or an equivalently retrievable immutable token record for later independent reverification;
+- token SHA-256;
+- `verified.evidence()` including discovery/JWKS digests and key provenance;
+- normalized `pre_evidence` from the claim contract;
+- exact repository commit/tree and source blobs used by verifier and claim contract;
+- exact workload image digest, VM identity, service account, zone, machine type, and launch metadata;
+- exact authorization-consumption SHA-256 used as the nonce binding.
+
+Never print raw attestation tokens, keys, or protected plaintext into workload logs or serial output.
 
 ---
 
-## 6. Workload execution
+## 7. Stage-A synthetic action
 
-### 6.1 Start workload
+After PRE_EXECUTION passes, Stage-A may execute only its predeclared **synthetic engineering action**. It must not collect empirical experiment observations.
 
-```bash
-gcloud compute instances start <instance-name> --zone=<zone>
-```
+The test action must preserve the existing Mode-T lifecycle invariant:
 
-### 6.2 Synthetic workload behavior
+`authorization consumption → PRE attestation → operational key generation/use → blinded synthetic output/evidence manifest → POST attestation`
 
-The synthetic workload:
-
-- Generates deterministic output from sealed seed
-
-- Writes output to `/workspace/output/` (ephemeral, in-memory only)
-
-- Does **not** write to persistent disk
-
-- Does **not** make external network calls
-
-- Does **not** spawn child processes
-
-- Exits with code 0 on success, non-zero on apparatus failure
-
-### 6.3 Monitoring during execution
-
- |  Check  |  Method  |  Pass condition  |
- | ------- | -------- | ---------------- |
- |  No key material in logs  |  `gcloud compute ssh` with metadata inspection  |  No private key material in serial port 1-4  |
- |  No plaintext in environment  |  Instance metadata API  |  No workload secrets in environment variables  |
- |  Memory monitoring disabled  |  Launch policy audit  |  `tee-monitoring-memory-enable: false`  |
- |  No unauthorized mounts  |  Launch policy audit  |  `allow_mount_destinations: ""`  |
- |  No cmd/env override  |  Launch policy audit  |  `allow_cmd_override: false`, `allow_env_override: ""`  |
+The exact synthetic payload, expected args, and non-secret environment must be frozen before launch because the attestation contract compares them exactly.
 
 ---
 
-## 7. POST attestation procedure
+## 8. POST_EXECUTION attestation
 
-### 7.1 Retrieve POST token
+After the final blinded output/evidence manifest exists, compute its exact SHA-256 and request a **new** Google Cloud Attestation token from the workload through the same launcher socket/endpoint.
 
-```bash
-POST_TOKEN=$(gcloud compute instances describe \
-  <instance-name> \
-  --zone=<zone> \
-  --format='value(confidentialSpaceConfig.attestationToken)')
+The POST request uses:
+
+```json
+{
+  "audience": "<same-exact-frozen-relying-party-audience>",
+  "token_type": "OIDC",
+  "nonces": ["<final-output-manifest-sha256>"]
+}
 ```
 
-### 7.2 Verify POST token
+Verify the new token cryptographically, then call `verify_confidential_space_attestation` with `phase=POST_EXECUTION` and `binding_sha256=output_manifest_sha256`.
+
+Finally call the repository two-phase binding verifier so PRE and POST must represent the same admitted runtime identity while binding to their distinct phase records:
 
 ```python
-result = verify_attestation_token(
-    claims=claims,
-    phase=POST_EXECUTION,
-    expected_subject=<exact-instance-self-link>,
-    expected_service_account=<sa-email>,
-    expected_image_digest=<pinned-image-digest>,
+from experiments.pdmal_pilot.mode_t_confidential_space_attestation import (
+    verify_two_phase_attestation_binding,
 )
-assert result.phase == POST_EXECUTION
-# Same hardware/debug/restart assertions as PRE
+
+binding_evidence = verify_two_phase_attestation_binding(
+    pre_evidence,
+    post_evidence,
+    authorization_consumption_sha256=authorization_consumption_sha256,
+    output_manifest_sha256=output_manifest_sha256,
+)
 ```
 
-### 7.3 Record POST evidence
+The PRE and POST token records must be distinct. Failure of POST or two-phase binding does not retroactively create a PASS from successful PRE.
+
+---
+
+## 9. Independent retrieval and reverification
+
+Repository verification performed by the same operator is not automatically "independent." That label may be used only when the actor/custody boundary required by the controlling governance track is actually established.
+
+A qualifying retrieval/reverification record should establish:
+
+1. exact evidence object identity and retention location;
+2. who retained it and under what authority boundary;
+3. independent retrieval of the retained bytes;
+4. SHA-256 match against the original retained identities;
+5. fresh cryptographic token verification through the reviewed Google discovery/JWKS path;
+6. fresh claim-contract verification against the frozen expectations;
+7. two-phase runtime/binding verification;
+8. explicit adjudication outcome and unresolved findings.
+
+Do not replace cryptographic JWT verification with ad hoc `openssl` commands or the generic `https://www.googleapis.com/oauth2/v3/certs` endpoint. The current DGAF verifier intentionally authenticates the Confidential Space discovery document and exact reviewed JWKS authority.
+
+---
+
+## 10. Leak-surface checks
+
+Stage-A must record evidence that the launch and workload did not intentionally expose protected material through enabled observability surfaces.
+
+Required controls include:
+
+| Surface | Required condition |
+|---|---|
+| container stdout/stderr redirection | disabled by `tee-container-log-redirect=false` |
+| memory monitoring | disabled by `tee-monitoring-memory-enable=false` |
+| command override | absent/prohibited |
+| environment override | absent/prohibited |
+| additional mounts | absent/prohibited |
+| additional Linux capabilities | absent/prohibited |
+| cgroup namespace | absent/prohibited |
+| token/key/plaintext logging | prohibited by workload implementation and review |
+
+Read-only inspection of Cloud/serial/audit records may be used to look for accidental disclosure if those records exist, but the procedure must not require SSH into the production Confidential Space image or introduce a debug image merely to perform the check.
+
+---
+
+## 11. Teardown
+
+After evidence collection completes or any FAIL-CLOSED condition occurs:
+
+1. stop protected processing;
+2. ensure the required evidence has reached the predeclared retention path;
+3. delete the qualification VM and any temporary resources that the run explicitly created;
+4. record deletion results and any residual resources;
+5. never treat resource deletion as evidence that earlier leakage did not occur.
+
+A concrete teardown command may be executed only with the exact Stage-A instance/zone/project identities:
 
 ```bash
-mkdir -p /workspace/stage_a_evidence/post
-echo "$POST_TOKEN" > /workspace/stage_a_evidence/post/token.b64
-echo "$CLAIMS_JSON" > /workspace/stage_a_evidence/post/claims.json
-sha256sum /workspace/stage_a_evidence/post/token.b64 > /workspace/stage_a_evidence/post/token.sha256
+gcloud compute instances delete "$INSTANCE_NAME" \
+  --zone="$ZONE" \
+  --project="$PROJECT_ID" \
+  --quiet
 ```
 
----
-
-## 8. Evidence retrieval and independent reverification
-
-### 8.1 Operator-controlled storage
-
-All evidence must be written to storage the operator controls, not to instance-local or GCP-managed storage:
-
-- Preferred: Operator-controlled Cloud Storage bucket with uniform bucket-level access
-
-- Alternative: Local filesystem with independent hash verification
-
-- Prohibited: Instance persistent disks, GCP-managed metadata, workload stdout/stderr as sole record
-
-### 8.2 Independent reverification steps
-
-```bash
-# 1. Verify token SHA-256 matches recorded hash
-echo "<expected-sha256>  token.b64"  |  sha256sum -c -
-
-# 2. Verify JWT signature independently
-openssl ssl -verify <trusted-root-pem> -inform PEM -in <jwt-header>.pem
-
-# 3. Verify issuer and kid
-ISSUER=$(echo "$POST_TOKEN"  |  cut -d. -f1  |  base64 -d  |  jq -r .iss)
-KID=$(echo "$POST_TOKEN"  |  jq -r .kid)
-echo "Issuer: $ISSUER, Kid: $KID"
-
-# 4. Verify JWKS consistency
-curl -s https://www.googleapis.com/oauth2/v3/certs  |  jq -r ".[]  |  select(.kid==\"$KID\")"
-```
-
-### 8.3 Leak-surface verification
-
- |  Surface  |  Check  |  Pass condition  |
- | --------- | ------- | ---------------- |
- |  Serial ports 1-4  |  `gcloud compute instances get-serial-port-output`  |  No key material  |
- |  Instance metadata  |  `gcloud compute instances describe`  |  No workload secrets  |
- |  Cloud Audit Logs  |  `gcloud logging read`  |  No private key material  |
- |  Cloud Storage (if used)  |  Bucket ACL audit  |  Operator-controlled only  |
+Do not invent a temporary-disk name or storage-copy command unless that resource/path was actually created by the approved launch/evidence plan.
 
 ---
 
-## 9. Teardown
+## 12. Stage-A acceptance criteria
 
-```bash
-# Stop and delete instance — do NOT retain disk
-gcloud compute instances delete <instance-name> --zone=<zone> --quiet
+Stage-A may be recorded as **PASS for bounded engineering qualification only** when all of the following are supported by retained evidence:
 
-# Delete any temporary disks
-gcloud compute disks delete <disk-name> --zone=<zone> --quiet
+1. a real production Confidential Space VM image ran on a supported Intel TDX configuration;
+2. the exact digest-pinned workload container and launch policy were attested;
+3. a real PRE token was obtained through the launcher socket and passed production OIDC verification plus the DGAF PRE claim contract;
+4. operational-key generation/protected synthetic action occurred only after PRE passed;
+5. a real POST token was obtained after the final blinded output/evidence manifest existed;
+6. POST passed production OIDC verification plus the DGAF POST claim contract;
+7. PRE/POST runtime identity and phase bindings passed the repository two-phase verifier;
+8. no required fail-closed predicate was bypassed;
+9. the required retention/retrieval/reverification record exists for whatever governance scope is being claimed;
+10. the result is adjudicated without promoting Stage-A into P4 closure, freeze, authorization, final P9, or empirical evidence.
 
-# Archive evidence to operator-controlled storage
-gsutil cp -r /workspace/stage_a_evidence gs://<operator-bucket>/stage_a_<timestamp>/
-
-# Verify archive integrity
-gsutil hash gs://<operator-bucket>/stage_a_<timestamp>/*  |  sha256sum
-```
-
----
-
-## 10. Acceptance criteria
-
-Stage-A is **PASS** only when:
-
-1. Real PRE attestation token obtained from live Confidential Space instance and independently verified.
-
-2. Real POST attestation token obtained after workload execution and independently verified.
-
-3. Pinned workload image digest confirmed in both attestation claims.
-
-4. TDX/Secure Boot/non-debug/Never-restart verified in both PRE and POST.
-
-5. No protected key material or plaintext leaks detected on any observable surface.
-
-6. All evidence independently retrievable and cryptographically reverifiable from operator-controlled storage.
-
-7. Every step documented with exact GCP identities, timestamps, and SHA-256 hashes.
-
-Stage-A is **FAIL-CLOSED** if any criterion cannot be met. No partial credit. No synthetic substitution.
+If any required predicate is missing, malformed, unavailable, or not independently verifiable where independence is required, the result is **FAIL-CLOSED or NOT VERIFIED**, never partial PASS.
 
 ---
 
-## 11. What Stage-A does NOT do
+## 13. Explicit non-claims
 
-- Does **not** designate the final candidate (#309)
+Even a successful Stage-A engineering qualification does **not** by itself:
 
-- Does **not** close P4
-
-- Does **not** establish production trust authority (#316)
-
-- Does **not** replace #320 independent security review
-
-- Does **not** constitute freeze or authorization
-
-- Does **not** generate empirical observations or transition N=0 → N>0
-
-- Does **not** prove long-term retention; proves only that the apparatus can execute in a real TEE
+- designate the final v0.7.6 candidate under #309;
+- close P4;
+- complete #316 production trust/retention authority;
+- replace the independent #320 security review;
+- establish protocol freeze;
+- grant pilot authorization;
+- execute final P9;
+- unblind protected results;
+- increase empirical `N` above zero;
+- establish scientific efficacy or robustness.
 
 ---
 
-*Document written: 2026-09-07* 
-*Controlling state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0* 
-*No scientific-state transition claimed.*
+*Corrected source review: 2026-09-07*  
+*Controlling state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0*  
+*Cloud execution performed by this documentation correction: NO.*
