@@ -1,6 +1,6 @@
 # DGAF/PDMAL v0.7.6 Solo Pilot Track
 
-> **Current-authority overlay — 2026-09-07:** The original Solo-track definition below is historical design authority, not reusable execution authorization. A 2-seed blinded Solo QC collection was completed, followed by Solo final experiment 001 (50 seeds / 9,000 observations). Experiment 001 exposed a deterministic missing P-30 treatment binding before the intended DGAF treatment behavior could be evaluated and is retained as **apparatus-falsification evidence, not efficacy evidence**. The experiment-001 authorization is consumed. The epoch-002 P-30 engineering diagnostic passed at scientific N increment 0. **No fresh Solo empirical epoch is authorized. Issue #369 controls the unresolved empirical P-30 binding.**
+> **Current-authority overlay — 2026-09-07:** The original Solo-track definition below is historical design authority, not reusable execution authorization. A 2-seed blinded Solo QC collection was completed, followed by Solo final experiment 001 (50 seeds / 9,000 observations). Experiment 001 exposed a deterministic missing P-30 treatment binding before the intended DGAF treatment behavior could be evaluated and is retained as **apparatus-falsification evidence, not efficacy evidence**. The experiment-001 authorization is consumed. The epoch-002 P-30 engineering diagnostic passed at scientific N increment 0. **No fresh Solo empirical epoch is authorized. Issue #369 controls the unresolved empirical P-30 binding.** Current machine authority is recorded in `docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json` and is fail-closed at `NOT_AUTHORIZED`.
 
 **Original definition status:** TRACK DEFINED  
 **Current execution status:** EXPERIMENT 001 EXECUTED / APPARATUS-FALSIFICATION EVIDENCE / EXECUTION AUTHORITY RETIRED  
@@ -64,7 +64,7 @@ High-Assurance artifacts use:
 
 `PDMAL-PILOT-V1`
 
-This difference is deliberate and machine-visible. A successor Solo epoch must also carry a new explicit epoch identity and must not masquerade as experiment 001.
+This difference is deliberate and machine-visible. A successor Solo epoch must also carry a new explicit epoch identity and must not masquerade as experiment 001. The runner now obtains that successor identity from the committed repository authority record rather than from the historical experiment constant.
 
 ## What valid Solo evidence may support
 
@@ -109,18 +109,16 @@ Current recommended wording:
 
 ## Successor-epoch gate
 
-A successor Solo epoch must not be started merely by setting the historical Solo environment variables. It requires a new prospective record that, at minimum:
+A successor Solo epoch must not be started merely by setting the historical Solo environment variables. The current committed authority record is `docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json`; while it says `NOT_AUTHORIZED`, the runner must reject empirical Solo execution regardless of environment-variable values.
+
+A future authorization requires a new prospective repository state that, at minimum:
 
 1. resolves Issue #369 with an explicit, reproducible, non-circular empirical P-30 confidence binding;
 2. validates that binding at scientific N increment 0;
 3. declares the exact candidate, dependencies, analysis-relevant configuration, epoch identity, blinding/custody model, and schedule;
 4. preserves non-pooling from experiment 001;
-5. records a new explicit authorization decision after those checks pass.
+5. updates the committed authority record to bind the exact successor epoch ID and exact frozen commit SHA;
+6. records a new explicit `GRANTED` authorization decision after those checks pass;
+7. passes the fail-closed authority tests before any empirical execution trigger is introduced.
 
 Until then: `FRESH_SOLO_EMPIRICAL_EPOCH_NOT_AUTHORIZED`.
-
-## High-Assurance Track preservation
-
-Issues #277, #295, #310, #316, #320 and the final-candidate/high-assurance sequence remain open unless their original acceptance facts are genuinely established. Nothing in this document weakens those issue contracts.
-
-A future High-Assurance experiment may use Solo work as exploratory/apparatus context, but confirmatory claims require the separately authorized High-Assurance run and its own candidate/freeze/evidence chain.
