@@ -24,7 +24,7 @@ The canonical P-30/11Q gate is a governance-ready/canonical-promotion attestatio
 
 Historical code, issue #165, and experiment records used the P-30 label for the restored scalar ladder. Those records are preserved as provenance. They are not rewritten or deleted.
 
-A new compatibility wrapper, `experiments/pdmal_pilot/legacy_apogee_runtime_gate.py`, assigns the distinct identity while re-exporting the historical implementation. This makes future references able to distinguish the runtime mechanism without altering the behavior of experiment 001, diagnostic Epoch 002, or Epoch 003.
+A new dependency-free identity map, `experiments/pdmal_pilot/legacy_apogee_runtime_gate.py`, assigns the distinct identity and records symbolic references to the historical state/hook implementation. It deliberately does **not** import, wrap, or execute the historical pilot stack. This makes future references able to distinguish the runtime mechanism without altering experiment 001, diagnostic Epoch 002, Epoch 003, or their dependency surfaces.
 
 ## Historical compatibility surfaces audited
 
