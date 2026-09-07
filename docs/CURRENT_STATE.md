@@ -2,7 +2,7 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-06
+last_verified: 2026-09-07
 live_source_boundary: 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
 live_source_boundary_role: V0_7_6_APPARATUS_INTRODUCTION_BOUNDARY_NOT_CURRENT_HEAD
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
@@ -15,17 +15,35 @@ final_candidate_status: NOT_DESIGNATED
 final_candidate_tracker: 309
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 empirical_n: 0
+solo_experiment_001_status: APPARATUS_FALSIFICATION_EVIDENCE
+solo_p30_diagnostic_epoch_002_status: PASS_NON_EMPIRICAL_SCIENTIFIC_N_INCREMENT_0
+solo_fresh_empirical_epoch_status: NOT_AUTHORIZED
 ---
 
 # DGAF-Framework / PDMAL — Current State
 
-GitHub is authoritative for implementation and CI; governance decisions remain separately recorded. Evidence is scoped to the exact identities and predicates that produced it. A successful CI, deployment, synthetic, custody-mechanism, or documentation check is not empirical efficacy evidence.
+GitHub is authoritative for implementation and CI; governance decisions remain separately recorded. Evidence is scoped to the exact identities and predicates that produced it. A successful CI, deployment, synthetic, custody-mechanism, documentation check, or engineering diagnostic is not empirical efficacy evidence.
 
 ## Candidate-authority reconciliation — 2026-09-06
 
 Merged PR #308 advanced the experimental apparatus to protocol v0.7.6 / artifact schema 1.1 at source boundary `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. The earlier runtime candidate `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` and deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` retain valid exact-scope engineering/governance evidence, but Issue #309 now classifies them as historical provenance rather than the final freeze/N=1 apparatus.
 
 **Final v0.7.6 candidate: NOT DESIGNATED.** Issue #309 is the active reconstruction/evidence-regeneration authority. Neither current `main`, an active PR head, a deployment, nor a documentation checkpoint becomes the final candidate merely by being newer. The consolidated control-state anchor `89be386b136aeb5f1fc5ca39d4aac4b3781a9f58` remains the canonical control/provenance anchor for its scope and is not itself a candidate designation.
+
+## Separate Solo-track reconciliation — 2026-09-07
+
+The bounded Solo track is distinct from the canonical High-Assurance PDMAL candidate/freeze sequence above.
+
+- Solo final experiment 001 executed 50 seeds / 9,000 observations.
+- All 2,250 DGAF-condition cells failed closed before the intended DGAF consensus treatment behavior could be tested because the PDMAL adapter did not populate the required P-30 Apogee confidence substrate. The default `confidence=0.0` produced grade `D`, which maps to `KILL` under the designated P-30 contract.
+- Experiment 001 is therefore retained as **apparatus-falsification evidence**, not positive or negative DGAF efficacy evidence. It is not eligible for deletion, repair-in-place, positive relabeling, or pooling with a later empirical epoch.
+- PR #366 preregistered and executed the separate `SOLO-P30-DIAGNOSTIC-EPOCH-002` non-empirical engineering diagnostic using the fixed synthetic minimum-passing P-30 fixture `SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1` at exactly `0.45` confidence.
+- The diagnostic completed 90/90 trials successfully with 0 attempt failures and no aggregate gate failures. Scientific empirical N increment remained `0`.
+- PR #367 retained the diagnostic adjudication and exact run/artifact provenance in-repository.
+- The synthetic `0.45` fixture is not a real, observed, estimated, or calibrated Apogee confidence and cannot support an efficacy claim.
+- The diagnostic PASS permits only consideration of a separately preregistered fresh blinded Solo proposal. **No fresh empirical Solo epoch is currently authorized.**
+
+This Solo-track evidence does not designate the canonical v0.7.6 High-Assurance candidate, close P4/P7/P8/P9, establish freeze, grant canonical authorization, or change canonical High-Assurance empirical N from `0`.
 
 ## Identity boundary
 
@@ -58,7 +76,9 @@ Later documentation/evaluator/control-plane descendants do not automatically bec
 | P9 independent verification | NOT EXECUTED / OPEN | final frozen-chain verification absent |
 | Freeze | NOT ESTABLISHED | no immutable pilot identity |
 | Authorization | NOT GRANTED | separate governance decision |
-| Empirical N | 0 | no authorized pilot execution |
+| Canonical High-Assurance empirical N | 0 | no authorized canonical pilot execution |
+| Solo experiment 001 | APPARATUS-FALSIFICATION EVIDENCE | separate bounded Solo track; not efficacy evidence and not pooled |
+| Solo P-30 diagnostic epoch 002 | PASS / NON-EMPIRICAL | 90/90 diagnostic trials; scientific N increment 0; fresh empirical epoch not authorized |
 
 ## P4 custody boundary
 
@@ -115,8 +135,15 @@ For the dodecahedral graph, the corrected exact Cheeger constant is `0.6`. Unwei
 
 ## Remaining substantive closure work
 
+Canonical High-Assurance sequence:
+
 `complete candidate-relevant P4 apparatus work → explicitly designate exact v0.7.6 final candidate under #309 → classify/regenerate identity-dependent evidence → verified real P4-A custody mode → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
 
-Issue #232 remains the PDMAL completion-control record. Issue #287 is historical Mode-T design/threat-model provenance; PR #326 is the later bounded mechanism-integration boundary. Neither constitutes real custody acceptance. No current-facing documentation or CI success changes empirical N or self-authorizes the experiment.
+Separate Solo sequence:
 
-**Current experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
+`retain experiment 001 as apparatus-falsification evidence → retain epoch 002 engineering diagnostic → preregister an exact real P-30 treatment binding for a new epoch → rerun exact-candidate apparatus checks → separate authorization decision → only then consider fresh blinded empirical execution`
+
+Issue #232 remains the canonical PDMAL completion-control record. Issue #287 is historical Mode-T design/threat-model provenance; PR #326 is the later bounded mechanism-integration boundary. Neither constitutes real custody acceptance. No current-facing documentation, Solo diagnostic, or CI success changes canonical High-Assurance empirical N or self-authorizes a new experiment.
+
+**Canonical High-Assurance experimental state: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**  
+**Separate Solo state: experiment 001 retained as apparatus-falsification evidence; P-30 diagnostic PASS / non-empirical; fresh empirical epoch NOT AUTHORIZED.**

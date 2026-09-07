@@ -4,8 +4,8 @@
 
 Instead of treating governance as documentation added after deployment, DGAF explores what happens when agents, evidence, permissions, evaluation, and operational boundaries are governed as part of the system itself.
 
-> **Current research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0
-> Engineering validation is underway. No empirical efficacy claim is made.
+> **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
+> **Separate bounded Solo track:** Experiment 001 executed but exposed a treatment-binding defect and is retained as apparatus-falsification evidence, not efficacy evidence. A subsequent non-empirical P-30 remediation diagnostic passed; no fresh empirical rerun is authorized.
 
 ## What DGAF explores
 
@@ -46,23 +46,29 @@ The repository currently includes working and tested components for:
 - CI-based governance checks;
 - blinded-experiment preparation.
 
-The project is currently progressing through pre-freeze engineering and independent-review preparation.
+The canonical High-Assurance track is currently progressing through pre-freeze engineering and independent-review preparation.
 
-Historical engineering results remain scoped to the exact system identities that produced them and are not treated as evidence for later versions automatically.
+A separate bounded Solo track has also been used to test the apparatus. Its first final experiment exposed a deterministic P-30 treatment-binding defect before the intended DGAF treatment behavior could be evaluated. That run remains retained as falsification evidence; it is not pooled, repaired in place, or reported as an efficacy result.
+
+Historical engineering and experimental records remain scoped to the exact system identities and predicates that produced them and are not treated as evidence for later versions automatically.
 
 ## Research boundary
 
-DGAF deliberately distinguishes between two evidence classes.
+DGAF distinguishes among three evidence classes.
 
 ### Engineering evidence
 
-Tests, CI runs, deterministic checks, provenance validation, and security controls.
+Tests, CI runs, deterministic checks, provenance validation, security controls, and explicitly non-empirical diagnostics.
 
-### Empirical evidence
+### Apparatus-falsification evidence
 
-Results from an authorized experimental protocol using a frozen system and admissible evidence chain.
+Executions that reveal a protocol or treatment-binding defect and therefore test the experimental apparatus without supporting an efficacy inference.
 
-The first exists. The second does not yet. Empirical N = 0.
+### Efficacy evidence
+
+Results from an authorized experimental protocol whose apparatus, treatment binding, blinding, and evidence chain remain valid for the intended scientific comparison.
+
+The repository contains substantial engineering evidence and retained apparatus-falsification evidence. It does not yet contain valid DGAF efficacy evidence. The canonical High-Assurance PDMAL track remains empirical N = 0.
 
 ## Why this repository exists
 
@@ -80,7 +86,7 @@ DGAF is both an implementation project and an experimental research platform for
 
 Active research and development.
 
-The framework is not presented as empirically validated, production-certified, or experimentally authorized.
+The framework is not presented as empirically validated, production-certified, or currently authorized for a fresh empirical run.
 
 Detailed governance state, evidence records, protocol controls, and historical verification artifacts are maintained inside the repository for technical review.
 
