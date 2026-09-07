@@ -2,7 +2,7 @@
 
 > **Controlling state:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0. 
 > **Final v0.7.6 candidate:** NOT DESIGNATED (Issue #309). 
-> **Live main:** `3f4ff8c1fee345389880f6451d683645960663ce` (post-#343). 
+> **Source-bound external-acceptance handoff baseline:** PR #343 merge `8928a83e93cf9a53f0aeee89a05d57e37b3cc9c2`, tree `442fc81d30c311c6e2cd2f89db5276465982e1c5`; this is not a statement of current repository HEAD. 
 > This document records the concrete deliverables for #277, #320, and #316. No scientific-state transition is claimed by this document.
 
 ---
