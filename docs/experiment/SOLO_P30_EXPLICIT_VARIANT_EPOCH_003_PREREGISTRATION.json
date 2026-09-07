@@ -39,8 +39,10 @@
     "independent_custody_established": false
   },
   "locked_primary_analysis": {
-    "source_path": "experiments/pdmal_pilot/analysis.py",
-    "source_blob_sha": "a269ed226b1d261663994fc3ef0e8a1a96da6cd3",
+    "statistical_source_path": "experiments/pdmal_pilot/analysis.py",
+    "statistical_source_blob_sha": "a269ed226b1d261663994fc3ef0e8a1a96da6cd3",
+    "variant_wrapper_path": "experiments/pdmal_pilot/analyze_p30_variant.py",
+    "variant_wrapper_blob_sha": "92d7cb38c67572ef208425097c4433da50a968b3",
     "analysis_config_sha256": "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8",
     "comparison": "DGAF-P30-EXPLICIT-0.45_MINUS_NULL",
     "internal_treatment_label": "dgaf",
