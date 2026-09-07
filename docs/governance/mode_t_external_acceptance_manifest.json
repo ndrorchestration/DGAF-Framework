@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "record_class": "DGAF_MODE_T_EXTERNAL_ACCEPTANCE_HANDOFF_V1",
+  "review_base": {
+    "repository": "ndrorchestration/DGAF-Framework",
+    "sha": "62e01c37e6e452e0851aa875fa6c709f049be991",
+    "tree": "f5ac41ccddc785f3e3e52a3c91daeb4513bccc20"
+  },
+  "reviewed_sources": [
+    {
+      "path": "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md",
+      "git_blob": "c6dca09ed6415c2a260f21b40c32067a1e4bce26",
+      "role": "control_state"
+    },
+    {
+      "path": "experiments/pdmal_pilot/mode_t_google_oidc_verifier.py",
+      "git_blob": "7085d4c710c29821ade07304e3128ae9d8ef8dbf",
+      "role": "google_oidc_verifier"
+    },
+    {
+      "path": "experiments/pdmal_pilot/mode_t_confidential_space_attestation.py",
+      "git_blob": "622bfe88116162937f4a3e6993ec66075fceb72e",
+      "role": "confidential_space_claim_contract"
+    },
+    {
+      "path": "experiments/pdmal_pilot/mode_t_admission_policy.py",
+      "git_blob": "520cd7dab7c0cb4c04c120007f84e05463243eb8",
+      "role": "admission_policy"
+    },
+    {
+      "path": "experiments/pdmal_pilot/mode_t_strict_verifier.go",
+      "git_blob": "1ad1e161f0fabcf7ee20ebfaff6d78675e2fb5aa",
+      "role": "post_release_strict_continuity_verifier"
+    },
+    {
+      "path": "experiments/pdmal_pilot/mode_t_continuity_acceptance.py",
+      "git_blob": "fa33309cac0906f0c73360fbea773f4a04f00668",
+      "role": "continuity_acceptance_binding"
+    },
+    {
+      "path": "experiments/pdmal_pilot/mode_t_retention_contract.py",
+      "git_blob": "eed870e75912cbf979f9835e0272acd1747dabc9",
+      "role": "retention_contract"
+    },
+    {
+      "path": "docs/governance/MODE_T_CONFIDENTIAL_SPACE_CLAIM_COVERAGE_2026-09-06.md",
+      "git_blob": "1e55207292f450862eb69f81075201ec098f66e5",
+      "role": "independent_review_scaffold"
+    },
+    {
+      "path": "docs/governance/P4_MODE_T_RETENTION_CONTRACT_2026-09-06.md",
+      "git_blob": "c0f37831be744de7055265f1b618f3a8bffeda1e",
+      "role": "retention_governance_contract"
+    },
+    {
+      "path": "docs/governance/P4_B_MODE_T_CONTINUITY_ACCEPTANCE_CONTRACT_2026-09-06.md",
+      "git_blob": "b956c0a451013fdeff9ac9ab61effa14a9bc350a",
+      "role": "continuity_governance_contract"
+    }
+  ],
+  "external_tracks": [
+    {
+      "issue": 320,
+      "track": "independent_oidc_security_review",
+      "status": "NOT_EXECUTED",
+      "required_output": "independently attributable review with exact reviewed blobs, findings, severities, evidence, and disposition"
+    },
+    {
+      "issue": 316,
+      "track": "production_rac_retention_and_authority",
+      "status": "NOT_EXECUTED",
+      "required_output": "independently retained and reverified production R/A/C plus policy capability, signer authority, and approved frozen TrustedRoot/TUF semantics"
+    },
+    {
+      "issue": 310,
+      "track": "real_confidential_space_admission",
+      "status": "NOT_EXECUTED",
+      "required_output": "real authenticated Confidential Space PRE/POST admission evidence plus independent retrieval and reverification"
+    },
+    {
+      "issue": 295,
+      "track": "protected_continuity_acceptance",
+      "status": "NOT_EXECUTED",
+      "required_output": "final protected identity/run packet, accepted independent retention/retrieval/rehash, and independent adjudication"
+    }
+  ],
+  "scientific_state": {
+    "final_candidate_status": "NOT_DESIGNATED",
+    "final_candidate_tracker": 309,
+    "p4_status": "OPEN_FAIL_CLOSED",
+    "p7_final_binding": "OPEN",
+    "p8_status": "OPEN_FAIL_CLOSED",
+    "final_p9_status": "NOT_EXECUTED",
+    "freeze_status": "NOT_ESTABLISHED",
+    "authorization_status": "NOT_GRANTED",
+    "empirical_n": 0
+  },
+  "non_promotion": {
+    "packet_is_authorization": false,
+    "packet_is_independent_review": false,
+    "packet_is_real_custody_evidence": false,
+    "packet_designates_final_candidate": false,
+    "packet_changes_empirical_n": false
+  }
+}

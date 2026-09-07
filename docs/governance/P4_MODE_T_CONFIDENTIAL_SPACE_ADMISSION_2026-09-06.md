@@ -11,6 +11,17 @@ Google Confidential Space production advances only to a bounded admission proof.
 
 If real attestation evidence cannot satisfy the contract in Issue #310, Mode T is rejected for this cycle and an admissible H/I custody path must be used.
 
+## Sequencing clarification — qualification is not final P4 acceptance
+
+The Confidential Space path has two non-interchangeable real-world stages.
+
+1. **Pre-candidate apparatus qualification:** after independent source/security review and enough production trust-authority setup to make the run meaningful, one real synthetic-only Confidential Space qualification may test the exact workload/configuration/evidence path. A qualification PASS can settle whether the apparatus is viable, but cannot close final P4 because the final v0.7.6 candidate has not yet been designated.
+2. **Final candidate-bound P4 acceptance:** after Issue #309 explicitly designates the exact final candidate, the accepted production authorization capability, launch/admission policy, PRE/POST attestation, and independent evidence retrieval must be bound or rerun against that exact candidate before P4 can close.
+
+Immutable freeze **F is downstream of final P4 and final P7**. It therefore cannot be a prerequisite for P4 admission. At P4, the accepted run binds the exact final candidate plus an exact pre-freeze execution-contract identity. Later freeze F must incorporate the accepted P4/P7 state; P4 must not claim to bind a future freeze digest that does not yet exist.
+
+Current synthetic fixtures that use fields named `freeze_sha256` or `freeze_commit_sha` are historical pre-freeze fixture identifiers only. Their own evidence retains `freeze_established=false`; they must never be represented as an actual immutable freeze F.
+
 ## Why this substrate is materially different
 
 Google documents Confidential Space as a trusted execution environment intended to protect a workload and its secrets from an untrusted workload operator, including an operator with broad project-administrator powers. Its production image disables remote access, uses protected ephemeral storage and encrypted memory, measures the workload and configuration, and exposes remote-attestation claims describing the software, hardware, VM identity, validated service accounts, container image, monitoring state, and launch configuration.
@@ -30,14 +41,16 @@ These sources support testing a Mode-T custody claim. They do not themselves pro
 
 The same person can hold workload-author, workload-operator, and resource-owner powers before freeze. Therefore DGAF must not treat a mutable IAM policy or cloud-project configuration controlled by that person as sufficient custody evidence.
 
-Instead, final acceptance must bind to:
+Instead, final P4 acceptance must bind to:
 
-1. the exact pre-frozen workload image digest and source/toolchain identity;
-2. the exact final DGAF candidate/freeze tuple;
+1. the exact reviewed workload image digest and source/toolchain identity;
+2. the exact final DGAF candidate identity plus exact pre-freeze execution-contract identity;
 3. the exact Confidential VM subject and validated service-account set;
 4. independently verified runtime attestation from the accepted execution;
 5. phase-specific run/data nonce bindings;
 6. retained evidence proving the key never crossed an operator-visible surface.
+
+Immutable freeze F is created later and is not part of this P4 input tuple.
 
 A different VM, service account, image, debug image, launch argument, override, monitoring configuration, restart configuration, or mismatched run binding is a different execution and must be rejected.
 
@@ -153,18 +166,32 @@ Passing these tests establishes only that the local acceptance predicate fails c
 
 ## Real admission evidence still required
 
-Before Mode T can be accepted:
+### Stage A — qualification before candidate designation
 
-1. add the in-process Mode-T key provider without changing H/I behavior;
-2. extend leakage tests to the TEE path;
-3. independently review the exact container image and launch policy;
+Before candidate designation, the project may:
+
+1. complete the independent source/security review;
+2. settle candidate-relevant production trust-authority decisions;
+3. independently review an exact container image and launch policy;
 4. perform one real Confidential Space run using synthetic fixtures only;
 5. independently authenticate and re-evaluate both attestation phases;
 6. independently retrieve/re-hash the output evidence;
 7. verify no protected secret appears in any observable surface;
-8. adjudicate PASS, FAIL, or UNKNOWN against Issue #310.
+8. adjudicate whether the apparatus is viable for candidate integration.
 
-A PASS permits Mode-T integration into the final-candidate reconstruction lane. FAIL or UNKNOWN rejects Mode T for this cycle.
+A Stage-A PASS permits Mode-T apparatus integration into the final-candidate reconstruction lane. It is not final P4 acceptance.
+
+### Stage B — final candidate-bound acceptance
+
+After Issue #309 designates the exact final candidate, final P4 still requires:
+
+1. the accepted production authorization capability and admission policy bound to that exact candidate;
+2. the exact candidate workload image/configuration reviewed and immutable for the accepted run;
+3. real PRE/POST admission evidence bound to that exact candidate and pre-freeze execution contract;
+4. independent retrieval/reverification of the final accepted evidence;
+5. final P4 adjudication before P7 and freeze F.
+
+FAIL or UNKNOWN at either stage rejects Mode T for this cycle unless an explicitly reviewed remediation is integrated and the affected stage is repeated.
 
 ## Non-effects
 

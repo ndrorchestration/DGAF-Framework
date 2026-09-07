@@ -1,0 +1,64 @@
+name: Mode T External Acceptance Handoff
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/mode-t-external-acceptance-handoff.yml'
+      - 'docs/governance/MODE_T_EXTERNAL_ACCEPTANCE_HANDOFF_2026-09-06.md'
+      - 'docs/governance/mode_t_external_acceptance_manifest.json'
+      - 'docs/governance/P4_MODE_T_CONFIDENTIAL_SPACE_ADMISSION_2026-09-06.md'
+      - 'docs/governance/P4_MODE_T_CONFIDENTIAL_SPACE_LAUNCH_CONTRACT_2026-09-06.md'
+      - 'scripts/validate_mode_t_external_acceptance_manifest.py'
+      - 'tests/test_mode_t_external_acceptance_manifest.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  handoff-integrity:
+    name: Source-bound non-promotion preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run handoff contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_mode_t_external_acceptance_manifest -v
+
+      - name: Verify immutable source binding and control state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/validate_mode_t_external_acceptance_manifest.py
+
+      - name: Report bounded interpretation
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'PASS: Mode-T external acceptance handoff is source-bound and non-promoting.'
+          echo 'No independent review, production R/A/C authority, real Confidential Space admission, protected continuity acceptance, freeze, authorization, or empirical execution occurred.'
+          echo 'Final candidate NOT DESIGNATED / P4 OPEN / PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.'
