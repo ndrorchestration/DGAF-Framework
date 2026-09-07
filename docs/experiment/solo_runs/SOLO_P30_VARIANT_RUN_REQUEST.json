@@ -1,0 +1,20 @@
+{
+  "record_type": "DGAF_PDMAL_SOLO_P30_VARIANT_EPOCH_003_RUN_REQUEST",
+  "schema_version": 1,
+  "protocol_version": "0.7.6",
+  "experiment_id": "PDMAL-SOLO-P30-EXPLICIT-V1",
+  "variant_scope": "DGAF-P30-EXPLICIT-0.45",
+  "execution_mode": "solo_p30_variant",
+  "authorization": "GRANTED_BY_DEVELOPER_AFTER_EPOCH_002_DIAGNOSTIC_PASS",
+  "p30_binding_id": "SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1",
+  "p30_binding_kind": "SYNTHETIC_MINIMUM_PASSING_FIXTURE",
+  "p30_confidence": 0.45,
+  "real_or_calibrated_apogee_confidence": false,
+  "canonical_dgaf_efficacy_claim_allowed": false,
+  "limitations_acknowledged": true,
+  "seed_start": 20260901,
+  "seeds": 50,
+  "expected_observations": 9000,
+  "outcome_inspection_during_collection": false,
+  "unblinding_authorized": false
+}
