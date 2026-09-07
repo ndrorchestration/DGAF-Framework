@@ -1,0 +1,96 @@
+name: PDMAL P30 Remediation Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/pdmal_pilot/p30_remediation_diagnostic.py'
+      - 'docs/experiment/SOLO_P30_REMEDIATION_EPOCH_002_PREREGISTRATION.md'
+      - '.github/workflows/pdmal-p30-remediation-diagnostic.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install hash-locked pilot dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Verify preregistered fixture boundary
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          script = Path('experiments/pdmal_pilot/p30_remediation_diagnostic.py').read_text(encoding='utf-8')
+          prereg = Path('docs/experiment/SOLO_P30_REMEDIATION_EPOCH_002_PREREGISTRATION.md').read_text(encoding='utf-8')
+          required_script = [
+              'P30_BINDING_ID = "SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1"',
+              'P30_FIXTURE_CONFIDENCE = 0.45',
+              'DIAGNOSTIC_SEEDS = (20260819, 20260820)',
+              'scientific_n_increment',
+          ]
+          required_prereg = [
+              '`SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1`',
+              'Confidence: exactly `0.45`',
+              'Scientific empirical N increment: `0`',
+              'Total diagnostic trials: `2 × 5 × 9 = 90`',
+          ]
+          for token in required_script:
+              if token not in script:
+                  raise SystemExit(f'missing script boundary token: {token}')
+          for token in required_prereg:
+              if token not in prereg:
+                  raise SystemExit(f'missing preregistration boundary token: {token}')
+          print('P30_DIAGNOSTIC_PREREGISTRATION_BOUNDARY_PASS')
+          PY
+
+      - name: Execute non-empirical engineering diagnostic
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python experiments/pdmal_pilot/p30_remediation_diagnostic.py
+
+      - name: Adjudicate diagnostic without efficacy inference
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('test-artifacts/p30_remediation_diagnostic.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['classification'] == 'NON_EMPIRICAL_ENGINEERING_DIAGNOSTIC'
+          assert d['scientific_n_increment'] == 0
+          assert d['p30_binding_id'] == 'SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1'
+          assert d['p30_fixture_confidence'] == 0.45
+          assert d['p30_fixture_is_real_confidence'] is False
+          assert d['total_diagnostic_trials'] == 90
+          p30_kills = sum(
+              count for key, count in d['aggregate_gate_failures'].items()
+              if 'Apogee' in key and ':KILL' in key
+          )
+          if p30_kills:
+              raise SystemExit(f'P-30 fixture failed its own designated gate: kills={p30_kills}')
+          print(
+              'P30_DIAGNOSTIC_ADJUDICATION_PASS: '
+              f"attempt_success={d['attempt_success_count']} "
+              f"attempt_failure={d['attempt_failure_count']} "
+              f"gate_failures={d['aggregate_gate_failures']}"
+          )
+          PY
+
+      - name: Upload diagnostic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-p30-remediation-diagnostic-${{ github.sha }}
+          path: test-artifacts/p30_remediation_diagnostic.json
+          if-no-files-found: warn
+          retention-days: 90
