@@ -1,24 +1,27 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "record_type": "DGAF_PDMAL_V0_7_6_SOLO_PILOT_TRACK",
-  "status": "AVAILABLE_NOT_EXECUTED",
+  "status": "EXPERIMENT_001_APPARATUS_FALSIFICATION_FUTURE_EPOCH_NOT_AUTHORIZED",
   "protocol_version": "0.7.6",
-  "empirical_n_at_definition": 0,
   "execution_mode": "solo_pilot",
-  "experiment_id": "PDMAL-SOLO-PILOT-V1",
-  "authorization": {
-    "type": "DEVELOPER_SELF_AUTHORIZATION",
-    "required_env": {
-      "PDMAL_PROTOCOL_FROZEN": "1",
-      "PDMAL_SOLO_PILOT_AUTHORIZED": "1",
-      "PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED": "1"
-    },
-    "forbidden_high_assurance_assertion": {
-      "PDMAL_PILOT_AUTHORIZED": "1"
-    }
+  "historical_experiment_id": "PDMAL-SOLO-PILOT-V1",
+  "historical_evidence": {
+    "two_seed_qc_retained_observations": 360,
+    "experiment_001_retained_observations": 9000,
+    "experiment_001_classification": "APPARATUS_FALSIFICATION_EVIDENCE",
+    "efficacy_eligible_observations": 0,
+    "scientific_n_for_efficacy": 0
+  },
+  "future_epoch": {
+    "authorization_status": "NOT_GRANTED",
+    "authority_record": "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json",
+    "blocking_issue": 369,
+    "legacy_environment_self_authorization_sufficient": false,
+    "historical_experiment_001_authority_reusable": false
   },
   "controls_retained": [
     "exact_checked_out_commit_binding",
+    "repository_bound_epoch_authorization",
     "explicit_pre_execution_freeze",
     "protected_blinding_key",
     "blinded_condition_identifiers",
@@ -30,7 +33,7 @@
     "durable_retention",
     "no_outcome_dependent_protocol_edit_without_refreeze"
   ],
-  "high_assurance_prerequisites_not_required_for_solo_execution": [
+  "high_assurance_prerequisites_not_satisfied_by_solo_evidence": [
     277,
     295,
     310,
@@ -39,13 +42,13 @@
   ],
   "claim_ceiling": {
     "may_claim": [
-      "developer-run empirical pilot",
-      "self-validated",
-      "exact-commit-bound",
-      "blinded empirical observations",
-      "actual Solo empirical N after successful retained execution"
+      "developer-run Solo experiment 001 executed",
+      "9000 observations retained from the experiment-001 apparatus",
+      "experiment 001 is apparatus-falsification evidence",
+      "Solo evidence is not independently verified"
     ],
     "must_not_claim_without_separate_evidence": [
+      "DGAF efficacy from experiment 001",
       "independent security review",
       "independent verification",
       "real Confidential Space qualification",
@@ -60,7 +63,8 @@
   "track_separation": {
     "solo_does_not_satisfy_high_assurance_blockers": true,
     "high_assurance_track_preserved": true,
-    "solo_results_are_empirical": true,
+    "experiment_001_results_are_retained": true,
+    "experiment_001_results_are_efficacy_eligible": false,
     "solo_results_are_independently_verified": false
   }
 }
