@@ -1,0 +1,117 @@
+{
+  "record_type": "DGAF_PDMAL_SOLO_P30_EXPLICIT_VARIANT_EPOCH_003_ADJUDICATION",
+  "schema_version": 1,
+  "status": "EXECUTED_ANALYZED_NEGATIVE_DIRECTIONAL_RESULT_FOR_SYNTHETIC_VARIANT",
+  "protocol_version": "0.7.6",
+  "experiment_id": "PDMAL-SOLO-P30-EXPLICIT-V1",
+  "variant_scope": "DGAF-P30-EXPLICIT-0.45",
+  "validation_track": "SOLO_DEVELOPER_VARIANT",
+  "claim_boundary": {
+    "p30_binding_id": "SYNTHETIC_MINIMUM_PASSING_P30_FIXTURE_V1",
+    "p30_binding_kind": "SYNTHETIC_MINIMUM_PASSING_FIXTURE",
+    "p30_confidence": 0.45,
+    "real_or_calibrated_apogee_confidence": false,
+    "canonical_dgaf_efficacy_claim_allowed": false,
+    "independent_verification": false,
+    "high_assurance_acceptance": false
+  },
+  "execution": {
+    "preregistration_pr": 372,
+    "preregistration_head_sha": "b98755ec50024661b408e006006e122d7fcf9a46",
+    "preregistration_checks_passed": 20,
+    "preregistration_merge_sha": "49a1a4c00aeb24fdd143fce1c5b464902291b151",
+    "empirical_branch": "solo-p30-variant/run-20260907-003",
+    "frozen_empirical_sha": "ac72196151dd33907811cf1b172127d57a0a0bcb",
+    "github_run_id": 34169097968,
+    "github_run_conclusion": "SUCCESS",
+    "seed_start": 20260901,
+    "seed_end": 20260950,
+    "seed_count": 50,
+    "cells_per_seed": 180,
+    "empirical_observations": 9000
+  },
+  "retained_evidence": {
+    "dataset_artifact_id": 10035250498,
+    "dataset_artifact_sha256": "3a9feba409bf7124269c02628b59bafd998405db834efa6df52786c06cf71150",
+    "key_artifact_id": 10035250680,
+    "key_artifact_sha256": "f5dad9fbf23b9e1c3cea6951ff7ff4c7e86a6a4dda4f1c2187764efe8af54c8c",
+    "blinding_key_custody": "SAME_SYSTEM_GITHUB_ACTIONS_ARTIFACT",
+    "independent_custody_established": false,
+    "dataset_status_before_unblinding": "LOCKED_BLINDED",
+    "outcomes_inspected_by_collection_workflow": false
+  },
+  "pre_unblinding_structural_recheck": {
+    "seed_hashes_match_lock": true,
+    "sidecars_match": true,
+    "records_per_seed": 180,
+    "unique_blind_arms": 4,
+    "cells_per_blind_arm_per_seed": 45,
+    "complete_topology_failure_matrix_per_arm": true,
+    "archive_copies_byte_identical": true,
+    "environment_fingerprint_consistent": true,
+    "plaintext_condition_label_leakage_detected": false,
+    "outcome_fields_read": false
+  },
+  "controlled_unblinding": {
+    "authorization_issue": 309,
+    "authorization_comment_id": 5576605180,
+    "condition_map_reconstructed_exactly": true,
+    "condition_map_blind_id_count": 4
+  },
+  "locked_analysis": {
+    "statistical_source_path": "experiments/pdmal_pilot/analysis.py",
+    "statistical_source_blob_sha": "a269ed226b1d261663994fc3ef0e8a1a96da6cd3",
+    "analysis_config_sha256": "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8",
+    "variant_wrapper_path": "experiments/pdmal_pilot/analyze_p30_variant.py",
+    "variant_wrapper_blob_sha": "92d7cb38c67572ef208425097c4433da50a968b3",
+    "comparison": "DGAF-P30-EXPLICIT-0.45_MINUS_NULL",
+    "unit": "paired_seed",
+    "estimator": "mean_paired_seed_ffcr_difference",
+    "bootstrap_resamples": 10000,
+    "analysis_rng_seed": 20260823,
+    "alpha": 0.05
+  },
+  "primary_result": {
+    "mean_paired_ffcr_effect": -0.11911111111111111,
+    "paired_bootstrap_ci_95": [-0.14844444444444443, -0.09066666666666666],
+    "variant_aggregate_ffcr": 0.7244444444444444,
+    "null_aggregate_ffcr": 0.8435555555555555,
+    "mechanical_base_classification": "EVIDENCE_AGAINST_DIRECTIONAL_DGAF",
+    "bounded_variant_classification": "EVIDENCE_AGAINST_DIRECTIONAL_DGAF_P30_EXPLICIT_0_45_VARIANT",
+    "paired_seed_effects_negative": 42,
+    "paired_seed_effects_zero": 8,
+    "paired_seed_effects_positive": 0
+  },
+  "apparatus_crosscheck": {
+    "deterministic_p30_kill_pattern_observed": false,
+    "execution_status_structure_identical_across_conditions": true,
+    "success_cells_per_condition": 250,
+    "recovered_cells_per_condition": 2000,
+    "experiment_001_missing_substrate_failure_repeated": false
+  },
+  "post_primary_exploratory_topology_effects": {
+    "confirmatory": false,
+    "ring": -0.19111111111111112,
+    "pdmal": -0.008888888888888835,
+    "random_regular": -0.3622222222222222,
+    "small_world": -0.033333333333333326,
+    "complete": 0.0
+  },
+  "adjudication": {
+    "retain_result": true,
+    "scientifically_interpretable_for_variant": true,
+    "directional_benefit_supported_for_variant": false,
+    "evidence_against_directional_benefit_for_variant": true,
+    "canonical_dgaf_conclusion_allowed": false,
+    "experiment_001_pooling_allowed": false,
+    "github_result_comment_id": 5576619491
+  },
+  "parallel_state": {
+    "solo_pilot_n": 360,
+    "experiment_001_retained_n": 9000,
+    "diagnostic_epoch_002_scientific_n_increment": 0,
+    "epoch_003_n": 9000,
+    "high_assurance_authorized": false,
+    "high_assurance_empirical_n": 0
+  }
+}
