@@ -52,8 +52,10 @@ The fixture must not be tuned, optimized, or changed after this preregistration.
 
 The primary analysis remains the pre-existing paired-seed FFCR contrast used before this epoch was collected:
 
-- Analysis implementation: `experiments/pdmal_pilot/analysis.py`
-- Analysis source blob SHA: `a269ed226b1d261663994fc3ef0e8a1a96da6cd3`
+- Statistical implementation: `experiments/pdmal_pilot/analysis.py`
+- Statistical source blob SHA: `a269ed226b1d261663994fc3ef0e8a1a96da6cd3`
+- Variant analysis wrapper: `experiments/pdmal_pilot/analyze_p30_variant.py`
+- Variant wrapper blob SHA: `92d7cb38c67572ef208425097c4433da50a968b3`
 - Canonical analysis-config SHA-256: `6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8`
 - Primary comparison: `DGAF-P30-EXPLICIT-0.45 - null`
 - Unit of analysis: seed
@@ -63,9 +65,9 @@ The primary analysis remains the pre-existing paired-seed FFCR contrast used bef
 - Alpha: `0.05`
 - Directional-support rule: point estimate `> 0` **and** two-sided 95% bootstrap CI lower bound `> 0`
 
-The existing analyzer's internal canonical condition label `dgaf` is interpreted only as the blinded treatment arm instantiated by this Epoch 003 runner, whose treatment identity is fixed above as `DGAF-P30-EXPLICIT-0.45`. This does not broaden the claim to canonical Apogee-calibrated DGAF.
+The existing analyzer's internal canonical condition label `dgaf` is interpreted only as the blinded treatment arm instantiated by this Epoch 003 runner, whose treatment identity is fixed above as `DGAF-P30-EXPLICIT-0.45`. The variant wrapper enforces the exact 50-seed panel, experiment ID, complete 180-cell seed artifacts, and locked analysis-config hash before invoking those statistical primitives. This does not broaden the claim to canonical Apogee-calibrated DGAF.
 
-No endpoint, exclusion rule, sample size, bootstrap rule, classification rule, analysis source blob, or analysis configuration may change after collection begins without invalidating confirmatory interpretation for this epoch.
+No endpoint, exclusion rule, sample size, bootstrap rule, classification rule, statistical source blob, variant-wrapper blob, or analysis configuration may change after collection begins without invalidating confirmatory interpretation for this epoch.
 
 ## Interpretation ceiling
 
