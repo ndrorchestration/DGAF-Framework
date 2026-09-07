@@ -1,5 +1,7 @@
 # DGAF Current Repository Checkpoint — 2026-09-05
 
+> **Temporal scope / supersession — 2026-09-07:** This file is a dated snapshot of repository and governance state as observed on 2026-09-05. It is retained for historical provenance and is **not** a current operational or scientific authority. Current state is maintained in `docs/CURRENT_STATE.md`, `docs/PROJECT_STATUS.md`, and the live governance control surfaces. In particular, `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` is historical exact-scope runtime-evidence lineage; the final v0.7.6 candidate is **NOT DESIGNATED** under Issue #309. Any use of “current,” branch counts, open-PR counts, routing, candidate language, or checkpoint language below must be read as **current at this 2026-09-05 checkpoint only**.
+
 **Scope:** repository/governance/evaluation status synchronization  
 **Scientific status:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0
 
