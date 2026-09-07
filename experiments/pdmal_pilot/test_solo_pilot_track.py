@@ -7,26 +7,34 @@ import pytest
 
 from run_pilot import (
     HIGH_ASSURANCE_EXPERIMENT_ID,
+    SOLO_AUTHORITY_RELATIVE_PATH,
     SOLO_EXPERIMENT_ID,
     require_mode,
     require_solo_pilot_authorization,
+    validate_solo_authorization_envelope,
     validate_solo_epoch_authority,
 )
 
 
-def _authorized_record(*, epoch_id: str, frozen_sha: str) -> dict:
+def _authorized_record(*, epoch_id: str, apparatus_sha: str) -> dict:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "record_type": "DGAF_PDMAL_SOLO_EPOCH_AUTHORITY",
         "protocol_version": "0.7.6",
         "status": "AUTHORIZED",
         "epoch_id": epoch_id,
-        "frozen_commit_sha": frozen_sha,
+        "apparatus_commit_sha": apparatus_sha,
         "authorization": {
-            "type": "REPOSITORY_BOUND_EPOCH_AUTHORIZATION",
+            "type": "REPOSITORY_BOUND_EPOCH_AUTHORIZATION_ENVELOPE",
             "decision": "GRANTED",
             "authority_issue": 369,
             "legacy_self_authorization_sufficient": False,
+        },
+        "authorization_envelope_contract": {
+            "must_be_direct_child_of_apparatus_commit": True,
+            "only_changed_path": SOLO_AUTHORITY_RELATIVE_PATH,
+            "apparatus_code_executes_from_envelope_without_other_file_changes": True,
+            "reason": "A commit cannot contain its own SHA without circular identity. The authorization envelope therefore names its direct-parent apparatus commit and may change only this authority record.",
         },
         "historical_experiment_001_authority_reusable": False,
         "legacy_environment_only_authorization_permitted": False,
@@ -38,6 +46,7 @@ def _configure_legacy_solo_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("PDMAL_SOLO_PILOT_AUTHORIZED", "1")
     monkeypatch.setenv("PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED", "1")
     monkeypatch.setenv("PDMAL_SOLO_EPOCH_ID", "SOLO-EPOCH-003")
+    monkeypatch.setenv("PDMAL_FROZEN_COMMIT_SHA", "a" * 40)
     monkeypatch.setenv("PDMAL_BLINDING_KEY", "solo-test-blinding-key-0000000000000000")
     monkeypatch.delenv("PDMAL_PILOT_AUTHORIZED", raising=False)
 
@@ -55,54 +64,83 @@ def test_legacy_environment_variables_cannot_authorize_current_epoch(
 ) -> None:
     _configure_legacy_solo_env(monkeypatch)
     with pytest.raises(SystemExit, match="repository epoch authority status is 'NOT_AUTHORIZED'"):
-        require_solo_pilot_authorization("a" * 40)
+        require_solo_pilot_authorization()
 
 
-def test_repository_authority_accepts_only_exact_epoch_and_sha() -> None:
+def test_repository_authority_accepts_exact_epoch_and_apparatus_sha() -> None:
     sha = "a" * 40
     epoch = "SOLO-P30-EMPIRICAL-EPOCH-003"
-    record = _authorized_record(epoch_id=epoch, frozen_sha=sha)
-    assert validate_solo_epoch_authority(record, frozen_sha=sha, requested_epoch_id=epoch) == epoch
+    record = _authorized_record(epoch_id=epoch, apparatus_sha=sha)
+    assert validate_solo_epoch_authority(record, apparatus_sha=sha, requested_epoch_id=epoch) == epoch
 
 
 def test_repository_authority_rejects_epoch_mismatch() -> None:
     sha = "a" * 40
-    record = _authorized_record(epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003", frozen_sha=sha)
+    record = _authorized_record(epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003", apparatus_sha=sha)
     with pytest.raises(SystemExit, match="PDMAL_SOLO_EPOCH_ID does not match"):
-        validate_solo_epoch_authority(record, frozen_sha=sha, requested_epoch_id="OTHER-EPOCH")
+        validate_solo_epoch_authority(record, apparatus_sha=sha, requested_epoch_id="OTHER-EPOCH")
 
 
-def test_repository_authority_rejects_frozen_sha_mismatch() -> None:
-    record = _authorized_record(epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003", frozen_sha="a" * 40)
-    with pytest.raises(SystemExit, match="not bound to this frozen commit"):
+def test_repository_authority_rejects_apparatus_sha_mismatch() -> None:
+    record = _authorized_record(epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003", apparatus_sha="a" * 40)
+    with pytest.raises(SystemExit, match="not bound to the requested apparatus commit"):
         validate_solo_epoch_authority(
             record,
-            frozen_sha="b" * 40,
+            apparatus_sha="b" * 40,
             requested_epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003",
         )
 
 
 def test_repository_authority_rejects_legacy_self_authorization_semantics() -> None:
     sha = "a" * 40
-    record = _authorized_record(epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003", frozen_sha=sha)
+    record = _authorized_record(epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003", apparatus_sha=sha)
     record["authorization"]["legacy_self_authorization_sufficient"] = True
     with pytest.raises(SystemExit, match="legacy environment self-authorization must remain insufficient"):
         validate_solo_epoch_authority(
             record,
-            frozen_sha=sha,
+            apparatus_sha=sha,
             requested_epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003",
         )
 
 
 def test_repository_authority_rejects_historical_authority_reuse() -> None:
     sha = "a" * 40
-    record = _authorized_record(epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003", frozen_sha=sha)
+    record = _authorized_record(epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003", apparatus_sha=sha)
     record["historical_experiment_001_authority_reusable"] = True
     with pytest.raises(SystemExit, match="historical experiment-001 authority must not be reusable"):
         validate_solo_epoch_authority(
             record,
-            frozen_sha=sha,
+            apparatus_sha=sha,
             requested_epoch_id="SOLO-P30-EMPIRICAL-EPOCH-003",
+        )
+
+
+def test_authorization_envelope_accepts_direct_child_one_file_change() -> None:
+    validate_solo_authorization_envelope(
+        apparatus_sha="a" * 40,
+        envelope_sha="b" * 40,
+        parent_shas=["a" * 40],
+        changed_paths=[SOLO_AUTHORITY_RELATIVE_PATH],
+    )
+
+
+def test_authorization_envelope_rejects_non_direct_parent() -> None:
+    with pytest.raises(SystemExit, match="direct single-parent child"):
+        validate_solo_authorization_envelope(
+            apparatus_sha="a" * 40,
+            envelope_sha="c" * 40,
+            parent_shas=["b" * 40],
+            changed_paths=[SOLO_AUTHORITY_RELATIVE_PATH],
+        )
+
+
+def test_authorization_envelope_rejects_any_apparatus_change() -> None:
+    with pytest.raises(SystemExit, match="may change only"):
+        validate_solo_authorization_envelope(
+            apparatus_sha="a" * 40,
+            envelope_sha="b" * 40,
+            parent_shas=["a" * 40],
+            changed_paths=[SOLO_AUTHORITY_RELATIVE_PATH, "experiments/pdmal_pilot/run_pilot.py"],
         )
 
 
