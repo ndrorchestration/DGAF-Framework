@@ -5,12 +5,14 @@ Three explicit execution modes exist:
 
 - ``contract``: non-empirical contract rehearsal only;
 - ``solo_pilot``: empirical developer-run evidence only when a committed,
-  repository-bound epoch authority explicitly grants the exact frozen commit;
+  repository-bound authorization envelope grants an exact frozen apparatus;
 - ``pilot``: the existing high-assurance pilot path.
 
-Both empirical modes require an exact frozen git SHA, protected blinding material,
-and durable retention. Solo environment variables are runtime inputs only and
-cannot create empirical authority by themselves.
+Both empirical modes require protected blinding material and durable retention.
+High-Assurance continues to require checked-out HEAD == frozen SHA. Solo uses a
+non-circular two-identity contract: the frozen apparatus commit is the direct
+parent of a one-file authorization-envelope commit. Solo environment variables
+are runtime inputs only and cannot create empirical authority by themselves.
 """
 from __future__ import annotations
 
@@ -42,7 +44,8 @@ HISTORICAL_SOLO_EXPERIMENT_ID = "PDMAL-SOLO-PILOT-V1"
 SOLO_EXPERIMENT_ID = HISTORICAL_SOLO_EXPERIMENT_ID
 HIGH_ASSURANCE_EXPERIMENT_ID = "PDMAL-PILOT-V1"
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SOLO_EPOCH_AUTHORITY_PATH = REPO_ROOT / "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json"
+SOLO_AUTHORITY_RELATIVE_PATH = "docs/GOVERNANCE/SOLO_EPOCH_AUTHORITY_V1.json"
+SOLO_EPOCH_AUTHORITY_PATH = REPO_ROOT / SOLO_AUTHORITY_RELATIVE_PATH
 
 
 def require_mode() -> str:
@@ -52,24 +55,40 @@ def require_mode() -> str:
     return mode
 
 
-def _current_head_sha() -> str:
+def _git_output(*args: str) -> str:
     result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
+        ["git", *args],
         capture_output=True,
         text=True,
-        timeout=5,
+        timeout=10,
         cwd=REPO_ROOT,
     )
     if result.returncode != 0:
-        raise SystemExit("pilot execution prohibited: unable to resolve git HEAD")
+        raise SystemExit(
+            f"pilot execution prohibited: git {' '.join(args)} failed: {result.stderr.strip()}"
+        )
     return result.stdout.strip()
 
 
+def _current_head_sha() -> str:
+    return _git_output("rev-parse", "HEAD")
+
+
+def _require_full_sha(value: str, field: str) -> str:
+    candidate = value.strip().lower()
+    if len(candidate) != 40 or any(c not in "0123456789abcdef" for c in candidate):
+        raise SystemExit(f"pilot execution prohibited: {field} must be a full 40-character SHA")
+    return candidate
+
+
+def requested_frozen_commit_sha() -> str:
+    return _require_full_sha(os.getenv("PDMAL_FROZEN_COMMIT_SHA", ""), "PDMAL_FROZEN_COMMIT_SHA")
+
+
 def require_frozen_commit() -> str:
-    expected = os.getenv("PDMAL_FROZEN_COMMIT_SHA", "").strip().lower()
-    if len(expected) != 40 or any(c not in "0123456789abcdef" for c in expected):
-        raise SystemExit("pilot execution prohibited: PDMAL_FROZEN_COMMIT_SHA must be a full 40-character SHA")
-    actual = _current_head_sha().lower()
+    """High-Assurance identity: checked-out HEAD must equal the frozen SHA."""
+    expected = requested_frozen_commit_sha()
+    actual = _require_full_sha(_current_head_sha(), "git HEAD")
     if not hmac.compare_digest(actual, expected):
         raise SystemExit(f"pilot execution prohibited: frozen SHA mismatch (expected {expected}, actual {actual})")
     return actual
@@ -107,14 +126,10 @@ def _load_solo_epoch_authority() -> dict:
     return document
 
 
-def validate_solo_epoch_authority(document: dict, *, frozen_sha: str, requested_epoch_id: str) -> str:
-    """Validate repository-bound Solo authority against the exact frozen commit.
-
-    This function deliberately treats environment values as requests, not as
-    authority. A committed authority record must independently grant the same
-    epoch identity and exact SHA before empirical execution can proceed.
-    """
-    if document.get("schema_version") != 1:
+def validate_solo_epoch_authority(document: dict, *, apparatus_sha: str, requested_epoch_id: str) -> str:
+    """Validate the committed authority record against the requested apparatus."""
+    apparatus_sha = _require_full_sha(apparatus_sha, "apparatus_commit_sha")
+    if document.get("schema_version") != 2:
         raise SystemExit("solo pilot execution prohibited: unsupported repository epoch authority schema")
     if document.get("record_type") != "DGAF_PDMAL_SOLO_EPOCH_AUTHORITY":
         raise SystemExit("solo pilot execution prohibited: wrong repository epoch authority record type")
@@ -128,7 +143,7 @@ def validate_solo_epoch_authority(document: dict, *, frozen_sha: str, requested_
     auth = document.get("authorization")
     if not isinstance(auth, dict):
         raise SystemExit("solo pilot execution prohibited: repository epoch authorization block missing")
-    if auth.get("type") != "REPOSITORY_BOUND_EPOCH_AUTHORIZATION":
+    if auth.get("type") != "REPOSITORY_BOUND_EPOCH_AUTHORIZATION_ENVELOPE":
         raise SystemExit("solo pilot execution prohibited: repository epoch authority type mismatch")
     if auth.get("decision") != "GRANTED":
         raise SystemExit("solo pilot execution prohibited: repository epoch authorization decision is not GRANTED")
@@ -145,17 +160,70 @@ def validate_solo_epoch_authority(document: dict, *, frozen_sha: str, requested_
     if not requested_epoch_id or requested_epoch_id != epoch_id:
         raise SystemExit("solo pilot execution prohibited: PDMAL_SOLO_EPOCH_ID does not match repository authority")
 
-    authority_sha = str(document.get("frozen_commit_sha") or "").lower()
-    if len(authority_sha) != 40 or any(c not in "0123456789abcdef" for c in authority_sha):
-        raise SystemExit("solo pilot execution prohibited: repository authority frozen_commit_sha is invalid")
-    if not hmac.compare_digest(authority_sha, frozen_sha.lower()):
-        raise SystemExit("solo pilot execution prohibited: repository authority is not bound to this frozen commit")
+    authority_apparatus_sha = _require_full_sha(
+        str(document.get("apparatus_commit_sha") or ""),
+        "repository authority apparatus_commit_sha",
+    )
+    if not hmac.compare_digest(authority_apparatus_sha, apparatus_sha):
+        raise SystemExit("solo pilot execution prohibited: repository authority is not bound to the requested apparatus commit")
+
+    envelope = document.get("authorization_envelope_contract")
+    expected_envelope = {
+        "must_be_direct_child_of_apparatus_commit": True,
+        "only_changed_path": SOLO_AUTHORITY_RELATIVE_PATH,
+        "apparatus_code_executes_from_envelope_without_other_file_changes": True,
+        "reason": "A commit cannot contain its own SHA without circular identity. The authorization envelope therefore names its direct-parent apparatus commit and may change only this authority record.",
+    }
+    if envelope != expected_envelope:
+        raise SystemExit("solo pilot execution prohibited: authorization-envelope contract drift")
 
     return epoch_id
 
 
-def require_solo_pilot_authorization(frozen_sha: str) -> tuple[str, Path, str]:
-    """Require a committed, exact-SHA-bound Solo epoch authorization."""
+def validate_solo_authorization_envelope(
+    *,
+    apparatus_sha: str,
+    envelope_sha: str,
+    parent_shas: list[str],
+    changed_paths: list[str],
+) -> None:
+    """Prove the execution HEAD is a one-file direct-child authorization envelope."""
+    apparatus_sha = _require_full_sha(apparatus_sha, "apparatus_commit_sha")
+    envelope_sha = _require_full_sha(envelope_sha, "authorization envelope HEAD")
+    normalized_parents = [_require_full_sha(p, "authorization envelope parent") for p in parent_shas]
+    if hmac.compare_digest(envelope_sha, apparatus_sha):
+        raise SystemExit("solo pilot execution prohibited: authorization envelope must be distinct from apparatus commit")
+    if normalized_parents != [apparatus_sha]:
+        raise SystemExit("solo pilot execution prohibited: authorization envelope must be a direct single-parent child of apparatus commit")
+    if changed_paths != [SOLO_AUTHORITY_RELATIVE_PATH]:
+        raise SystemExit(
+            "solo pilot execution prohibited: authorization envelope may change only "
+            f"{SOLO_AUTHORITY_RELATIVE_PATH}; changed={changed_paths!r}"
+        )
+
+
+def require_solo_authorization_envelope(apparatus_sha: str) -> str:
+    envelope_sha = _require_full_sha(_current_head_sha(), "authorization envelope HEAD")
+    ancestry = _git_output("rev-list", "--parents", "-n", "1", envelope_sha).split()
+    if not ancestry or ancestry[0].lower() != envelope_sha:
+        raise SystemExit("solo pilot execution prohibited: unable to resolve authorization-envelope ancestry")
+    parent_shas = [item.lower() for item in ancestry[1:]]
+    changed_paths = [
+        line.strip()
+        for line in _git_output("diff-tree", "--no-commit-id", "--name-only", "-r", envelope_sha).splitlines()
+        if line.strip()
+    ]
+    validate_solo_authorization_envelope(
+        apparatus_sha=apparatus_sha,
+        envelope_sha=envelope_sha,
+        parent_shas=parent_shas,
+        changed_paths=changed_paths,
+    )
+    return envelope_sha
+
+
+def require_solo_pilot_authorization() -> tuple[str, Path, str, str, str]:
+    """Require repository authority plus a non-circular one-file authorization envelope."""
     if os.getenv("PDMAL_PROTOCOL_FROZEN") != "1":
         raise SystemExit("solo pilot execution prohibited: PDMAL_PROTOCOL_FROZEN=1 is required")
     if os.getenv("PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED") != "1":
@@ -167,15 +235,17 @@ def require_solo_pilot_authorization(frozen_sha: str) -> tuple[str, Path, str]:
             "solo pilot execution prohibited: high-assurance PDMAL_PILOT_AUTHORIZED must not be asserted in solo mode"
         )
 
+    apparatus_sha = requested_frozen_commit_sha()
     authority = _load_solo_epoch_authority()
     requested_epoch_id = os.getenv("PDMAL_SOLO_EPOCH_ID", "").strip()
     epoch_id = validate_solo_epoch_authority(
         authority,
-        frozen_sha=frozen_sha,
+        apparatus_sha=apparatus_sha,
         requested_epoch_id=requested_epoch_id,
     )
+    envelope_sha = require_solo_authorization_envelope(apparatus_sha)
     key, archive_root = _require_blinding_and_archive()
-    return key, archive_root, epoch_id
+    return key, archive_root, epoch_id, apparatus_sha, envelope_sha
 
 
 def blind_condition(condition: str, key: str) -> str:
@@ -286,14 +356,18 @@ def run_contract(output_dir: Path) -> int:
 
 
 def run_pilot(output_dir: Path, seeds: int, *, solo: bool = False) -> int:
-    frozen_sha = require_frozen_commit()
+    authorization_envelope_sha: str | None = None
+    authority_record_sha256: str | None = None
     if solo:
-        blinding_key, archive_root, epoch_id = require_solo_pilot_authorization(frozen_sha)
+        blinding_key, archive_root, epoch_id, frozen_sha, authorization_envelope_sha = require_solo_pilot_authorization()
         experiment_id = epoch_id
         artifact_prefix = "solo_pilot"
         artifact_kind = "solo_pilot_seed"
         completion_label = "SOLO_PILOT_MODE_COMPLETE"
+        authority_record_sha256 = hashlib.sha256(SOLO_EPOCH_AUTHORITY_PATH.read_bytes()).hexdigest()
+        _retain(SOLO_EPOCH_AUTHORITY_PATH, archive_root, frozen_sha, kind="solo_epoch_authority")
     else:
+        frozen_sha = require_frozen_commit()
         blinding_key, archive_root = require_pilot_authorization()
         experiment_id = HIGH_ASSURANCE_EXPERIMENT_ID
         artifact_prefix = "pilot"
@@ -388,6 +462,8 @@ def run_pilot(output_dir: Path, seeds: int, *, solo: bool = False) -> int:
         "independent_verification_status": "NOT_ESTABLISHED_BY_RUNNER",
         "frozen_commit_sha": frozen_sha,
         "experiment_id": experiment_id,
+        "authorization_envelope_commit_sha": authorization_envelope_sha,
+        "authority_record_sha256": authority_record_sha256,
         "total_seeds": seeds,
         "trials_per_seed": len(_trial_combinations()),
         "total_trials": seeds * len(_trial_combinations()),
