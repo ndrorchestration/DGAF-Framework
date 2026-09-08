@@ -1,0 +1,54 @@
+name: Track A Epoch 001 Preregistration Validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json'
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.md'
+      - 'scripts/validate_track_a_epoch_001_preregistration.py'
+      - 'docs/governance/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1.json'
+      - 'docs/qa/APOGEE_11Q_PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1_S078.json'
+      - 'docs/governance/TRACK_A_NONEMPIRICAL_MATRIX_ADJUDICATION_V1.json'
+      - '.github/workflows/track-a-epoch-001-preregistration.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-proposal-only:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Validate source-bound preregistration
+        run: python scripts/validate_track_a_epoch_001_preregistration.py
+
+      - name: Prove proposal cannot authorize or execute collection
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json').read_text())
+          assert d['empirical_execution_authorized'] is False
+          assert d['scientific_n_increment_at_preregistration'] == 0
+          assert d['next_gates']['exact_candidate_freeze'] == 'NOT_ESTABLISHED'
+          assert d['next_gates']['empirical_execution'] == 'NOT_AUTHORIZED'
+          workflow = Path('.github/workflows/track-a-epoch-001-preregistration.yml').read_text()
+          forbidden = [
+              'workflow_' + 'dispatch:',
+              'sche' + 'dule:',
+              'run_' + 'canonical_epoch',
+              'run_' + 'pilot',
+              'authorize_empirical_collection',
+          ]
+          for token in forbidden:
+              assert token not in workflow, token
+          print('TRACK_A_EPOCH_001_NONAUTHORIZING_BOUNDARY_PASS')
+          PY
