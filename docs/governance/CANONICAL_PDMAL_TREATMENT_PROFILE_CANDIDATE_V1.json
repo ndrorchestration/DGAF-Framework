@@ -36,9 +36,9 @@
       "allowed_results": ["CONDITIONAL"]
     },
     "accepted_verification_classes": [
-      "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
-      "INDEPENDENT_VERIFIED"
-    ]
+      "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT"
+    ],
+    "independent_verification_claim_accepted_without_separate_contract": false
   },
   "forbidden_step8_inputs": [
     "empirical_outcomes",
