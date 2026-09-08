@@ -1,0 +1,15 @@
+{
+  "record_type": "TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION",
+  "schema_version": 1,
+  "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-001",
+  "frozen_candidate_sha": "961b9918002c4c68afac9c0fd5dd3e352e49b926",
+  "closure_packet_blob_sha": "c32d89385c29c9e5cd0a706630c1955fb3f5f1c8",
+  "verification_status": "PASS",
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+  "independent_verification": false,
+  "same_system_custody": true,
+  "scientific_n_increment": 0,
+  "collection_authorized": false,
+  "unblinding_authorized": false,
+  "high_assurance_authorized": false
+}
