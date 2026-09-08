@@ -63,6 +63,47 @@ class VerificationClassificationValidatorTests(unittest.TestCase):
             validator.CLOSURE_PACKET_BLOB_SHA,
         )
 
+    def test_verification_blob_identity_is_exact(self) -> None:
+        self.assertEqual(
+            validator.VERIFICATION_BLOB_SHA,
+            "c67d09052faa7ae50de6eca57691ed50d906a951",
+        )
+
+    def test_established_verification_metadata_accepts_exact_state(self) -> None:
+        validator.validate_established_verification_metadata(
+            verification_blob=validator.VERIFICATION_BLOB_SHA,
+            verification_history=["a" * 40],
+            verification_is_ancestor=True,
+        )
+
+    def test_established_verification_metadata_fails_closed(self) -> None:
+        cases = [
+            {
+                "verification_blob": "0" * 40,
+                "verification_history": ["a" * 40],
+                "verification_is_ancestor": True,
+            },
+            {
+                "verification_blob": validator.VERIFICATION_BLOB_SHA,
+                "verification_history": [],
+                "verification_is_ancestor": False,
+            },
+            {
+                "verification_blob": validator.VERIFICATION_BLOB_SHA,
+                "verification_history": ["a" * 40, "b" * 40],
+                "verification_is_ancestor": True,
+            },
+            {
+                "verification_blob": validator.VERIFICATION_BLOB_SHA,
+                "verification_history": ["a" * 40],
+                "verification_is_ancestor": False,
+            },
+        ]
+        for case in cases:
+            with self.subTest(case=case):
+                with self.assertRaises(SystemExit):
+                    validator.validate_established_verification_metadata(**case)
+
     def test_verification_is_explicitly_nonindependent(self) -> None:
         record = validator.EXPECTED_VERIFICATION
         self.assertEqual(record["verification_status"], "PASS")
