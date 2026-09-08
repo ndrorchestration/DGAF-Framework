@@ -66,13 +66,13 @@ def test_audit_summary_counts_exact_step8_pass_and_required_failure():
     trace = ({
         "gates": [
             {"step": 8, "pattern": "P-30", "gate": "Apogee", "result": "PASS"},
-            {"step": 11, "pattern": "P-32", "gate": "PhiClosure", "result": "KILL"},
+            {"step": 6, "pattern": "P-32", "gate": "PhiClosure_Gate", "result": "KILL"},
         ]
     },)
     summary = _audit_summary(_result(trace))
     assert summary["governance_turn_count"] == 1
     assert summary["step8_pass_count"] == 1
-    assert summary["required_gate_failures"] == {"step11:PhiClosure:KILL": 1}
+    assert summary["required_gate_failures"] == {"step6:PhiClosure_Gate:KILL": 1}
 
 
 def test_audit_summary_fails_visible_on_malformed_or_missing_step8():
