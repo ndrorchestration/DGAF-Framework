@@ -1,0 +1,44 @@
+name: Canonical Epoch 004 Preregistration Validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/experiment/CANONICAL_SOLO_EMPIRICAL_EPOCH_004_PREREGISTRATION.json'
+      - 'docs/experiment/CANONICAL_SOLO_EMPIRICAL_EPOCH_004_PREREGISTRATION.md'
+      - 'scripts/validate_canonical_epoch_004_preregistration.py'
+      - '.github/workflows/canonical-epoch-004-preregistration.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-proposal-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate frozen preregistration contract
+        run: python scripts/validate_canonical_epoch_004_preregistration.py
+
+      - name: Prove proposal contains no execution authorization
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/experiment/CANONICAL_SOLO_EMPIRICAL_EPOCH_004_PREREGISTRATION.json').read_text())
+          assert d['empirical_execution_authorized'] is False
+          assert d['scientific_n_increment_at_preregistration'] == 0
+          assert d['collection_controls']['runner_status'] == 'NOT_YET_IMPLEMENTED_OR_AUTHORIZED'
+          workflow = Path('.github/workflows/canonical-epoch-004-preregistration.yml').read_text()
+          forbidden = ['run_pilot.py', 'run_p30_variant.py', 'workflow_dispatch:', 'schedule:']
+          for token in forbidden:
+              assert token not in workflow, token
+          print('CANONICAL_EPOCH_004_PROPOSAL_ONLY_BOUNDARY_PASS')
+          PY
