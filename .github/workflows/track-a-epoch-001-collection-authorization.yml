@@ -1,0 +1,86 @@
+name: Track A Epoch 001 Collection Authorization
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/track-a-epoch-001-collection-authorization.yml'
+      - 'scripts/validate_track_a_epoch_001_collection_authorization.py'
+      - 'tests/test_track_a_epoch_001_collection_authorization.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRECOLLECTION_PREFLIGHT.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json'
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json'
+      - 'docs/experiment/TRACK_A_EPOCH_001_ANALYSIS_LOCK.json'
+      - 'experiments/pdmal_pilot/track_a_epoch_001_analysis.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+      - 'experiments/pdmal_pilot/topology_utils.py'
+      - 'experiments/pdmal_pilot/run_track_a_epoch_001.py'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run collection-authorization validator mutation tests
+        run: python -m unittest -v tests/test_track_a_epoch_001_collection_authorization.py
+
+      - name: Validate tooling-only or exact one-file authorization event shape
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          git cat-file -e "$BASE_SHA^{commit}"
+          auth='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json'
+          validator='scripts/validate_track_a_epoch_001_collection_authorization.py'
+          workflow='.github/workflows/track-a-epoch-001-collection-authorization.yml'
+          tests='tests/test_track_a_epoch_001_collection_authorization.py'
+
+          if test -e "$auth"; then
+            python "$validator"
+            mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+            expected=("$auth")
+            test "${#changed[@]}" -eq 1
+            diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${changed[@]}")
+          else
+            python "$validator" --expect-absent
+            mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+            expected=("$workflow" "$validator" "$tests")
+            mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+            test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+            diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+          fi
+
+      - name: Prove PR validation cannot execute or unblind the experiment
+        run: |
+          echo 'TRACK_A_VERIFICATION = PASS_DEVELOPER_SELF_ATTESTED_NONINDEPENDENT'
+          echo 'TRACK_A_COLLECTION_AUTHORIZATION = TOOLING_OR_EVENT_SHAPE_ONLY'
+          echo 'TRACK_A_EMPIRICAL_EXECUTION = NOT_AUTHORIZED_ON_PR_HEAD'
+          echo 'TRACK_A_UNBLINDING = NOT_AUTHORIZED'
+          echo 'HISTORICAL_POOLING = NOT_ALLOWED'
+          echo 'EPOCH_004_SUBSTITUTION = NOT_ALLOWED'
+          echo 'HIGH_ASSURANCE = NOT_AUTHORIZED / N=0'
+          echo 'SCIENTIFIC_N_INCREMENT = 0'
