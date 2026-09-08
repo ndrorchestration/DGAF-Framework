@@ -36,7 +36,8 @@ def test_registered_fixtures_cover_required_source_paths() -> None:
     assert "risk_warn" in results["low-confidence-balanced"]["sentinel_risks"]
     assert results["low-confidence-balanced"]["classification"] == "REVIEW"
 
-    assert results["deontic-forbidden"]["deontic_gate"]["gate"] == "forbidden"\n    assert results["deontic-forbidden"]["kappa_confidence"] < 0.1
+    assert results["deontic-forbidden"]["deontic_gate"]["gate"] == "forbidden"
+    assert results["deontic-forbidden"]["kappa_confidence"] < 0.1
     assert results["deontic-forbidden"]["kappa_policy"] == "apply_strong"
     assert "risk_block" in results["deontic-forbidden"]["sentinel_risks"]
     assert results["deontic-forbidden"]["classification"] == "BLOCK"
