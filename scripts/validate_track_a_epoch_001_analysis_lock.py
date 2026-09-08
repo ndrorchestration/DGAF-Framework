@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import importlib.util
+import importlib
 import json
 import subprocess
 from pathlib import Path
@@ -23,11 +23,7 @@ def git_blob(path: Path) -> str:
 
 
 def load_analysis():
-    spec = importlib.util.spec_from_file_location("track_a_epoch_001_analysis", ANALYSIS)
-    assert spec is not None and spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+    return importlib.import_module("experiments.pdmal_pilot.track_a_epoch_001_analysis")
 
 
 def main() -> None:
