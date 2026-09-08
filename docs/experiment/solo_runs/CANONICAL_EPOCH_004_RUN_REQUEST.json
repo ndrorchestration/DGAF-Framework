@@ -1,0 +1,19 @@
+{
+  "record_type": "DGAF_CANONICAL_SOLO_EMPIRICAL_RUN_REQUEST",
+  "schema_version": 1,
+  "epoch_id": "PDMAL-SOLO-CANONICAL-EPOCH-004",
+  "authorized_runner_parent_sha": "647de0607dbcef1f2bcc77e009264527f2fda9d6",
+  "preregistration_merge_sha": "ae854edf565c903bf799f243841799819333d920",
+  "treatment_input_preflight_merge_sha": "15c6621ccab0c28e2938c302d23975ba037bd3ee",
+  "collection_contract_merge_sha": "db8595272a9782786e35b94eaacced6e73d9b649",
+  "seed_start": 20261001,
+  "seeds": 50,
+  "expected_observations": 9000,
+  "analysis_blob_sha": "a269ed226b1d261663994fc3ef0e8a1a96da6cd3",
+  "analysis_config_sha256": "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8",
+  "validation_track": "SOLO_DEVELOPER",
+  "limitations_acknowledged": true,
+  "authorize_empirical_collection": true,
+  "authorize_unblinding": false,
+  "historical_pooling_allowed": false
+}
