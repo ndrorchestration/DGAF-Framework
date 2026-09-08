@@ -1,69 +1,111 @@
 # DGAF-Framework
 
-**Dynamic Governance Agentic Formation (DGAF)** is an experimental framework for building multi-agent AI systems with governance, provenance, evaluation, and fail-closed controls built into the orchestration layer.
+**Dynamic Governance Agentic Formation (DGAF)** is an experimental framework for governed multi-agent AI systems. It treats **capability, evidence, verification, authority, and permission to act as separate machine-relevant states** rather than assuming that one implies another.
 
-Instead of treating governance as documentation added after deployment, DGAF explores what happens when agents, evidence, permissions, evaluation, and operational boundaries are governed as part of the system itself.
+In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
-> **Bounded Solo evidence:** Epoch 004 completed 50 seeds / 9,000 observations and produced negative evidence for its exact executed treatment. A later source audit found seven-gate canonical treatment fidelity was not established, so canonical DGAF efficacy remains not established.
+> **Track A Epoch 001:** PREFLIGHT PASS · FREEZE ESTABLISHED · CLOSURE ESTABLISHED · VERIFICATION PASS (DEVELOPER SELF-ATTESTED / NONINDEPENDENT) · PROSPECTIVE COLLECTION AUTHORIZED · scientific N = 0  
+> **Track A unblinding:** NOT AUTHORIZED  
+> **Canonical DGAF efficacy:** NOT ESTABLISHED
 
-## What DGAF explores
+## What problem DGAF is trying to solve
 
-DGAF focuses on several problems that become increasingly important as AI systems become more autonomous:
+Most agent frameworks focus on what an agent can do: reason, call tools, hand work to another agent, retain state, or complete a workflow.
 
-- **Multi-agent orchestration** — coordinating specialized agents under explicit roles and constraints.
-- **Provenance** — tracking where outputs, evidence, decisions, and system state came from.
-- **Governance** — making authority, permissions, transitions, and failure conditions explicit.
-- **Evaluation integrity** — separating tested behavior from unsupported claims.
-- **Fail-closed design** — preventing missing evidence or uncertain state from silently becoming authorization.
-- **Experimental reproducibility** — binding results to specific system, protocol, and evidence identities.
+DGAF focuses on an additional question:
 
-## Core idea
+> **Given the evidence and authority that exist right now, what is this system actually entitled to claim, authorize, and execute?**
 
-A capable AI system should not only produce answers. It should also be able to answer:
+DGAF explores this through:
 
-- What evidence supports this?
-- Which system state produced it?
-- Who or what had authority?
-- What assumptions remain unverified?
-- Can the result be independently reproduced?
-- Should execution continue when required evidence is missing?
+- **Governed orchestration** — specialized agents operate under explicit roles, boundaries, and escalation rules.
+- **Evidence-aware authorization** — technical capability does not automatically grant permission.
+- **Provenance** — outputs, decisions, evidence, and state are tied to the identities that produced them.
+- **Evaluation integrity** — implementation, testing, verification, independent verification, and empirical demonstration remain distinct.
+- **Fail-closed controls** — missing or ambiguous prerequisites block promotion rather than silently becoming approval.
+- **Experimental reproducibility** — prospective experiments bind protocols, code, analysis, artifacts, custody, and authorization to exact identities.
 
-DGAF is an attempt to make those questions part of the architecture.
+## The core model
 
-## Current development
+A simplified DGAF control loop is:
 
-The repository contains tested governance, provenance, deterministic validation, negative-control, candidate-state, evaluation, security/custody, CI, and blinded-experiment machinery.
+```text
+Evidence + provenance
+        ↓
+Epistemic / verification state
+        ↓
+Claim and action authority
+        ↓
+Governed agent formation
+        ↓
+Execution
+        ↓
+New evidence + trace
+        └────────────→ updated governance state
+```
 
-The canonical High-Assurance track remains pre-freeze and is progressing through independent/external acceptance work.
+The intended invariant is that **capability, evidence, verification, and authorization cannot silently substitute for one another**.
 
-A separate Solo research track has produced several exact-scope evidence records. Experiment 001 is retained as apparatus-falsification evidence. Epoch 003 is negative evidence for an explicitly synthetic treatment variant. Epoch 004 completed a preregistered 50-seed / 9,000-observation comparison and its locked primary result was negative for the exact executed restored-binding treatment. A subsequent source-bound audit found that six of seven constitutive gate bindings were not established for that execution; only the external P-30/11Q qualification binding was established at developer self-attested/non-independent scope. The Epoch 004 result is preserved, but it is not promoted to a claim about canonical DGAF efficacy.
+## Current research program
 
-Prospective evaluation is split by workload:
+DGAF separates prospective evaluation by workload instead of treating one experiment as proof of the entire framework.
 
-- **Track A** — numeric PDMAL topology robustness;
-- **Track B1** — semantic routing and safety;
-- **Track B2** — persistent context and closure;
-- **Track B3** — persistent weighted-graph convergence monitoring;
-- **Track C** — integrated DGAF, deferred until the component tracks are separately qualified and composition-ready.
+| Track | Plain-English purpose | Current boundary |
+|---|---|---|
+| **A** | Numeric topology robustness | Preregistered; analysis locked; hardened runner merged; preflight PASS; immutable freeze and final closure established; verification PASS as developer self-attested/non-independent; prospective collection authorized; collection not yet executed; unblinding not authorized |
+| **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
+| **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
+| **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
+| **C** | Integrated DGAF composition | Non-empirical composition proposal merged; empirical execution NOT AUTHORIZED |
 
-Track A now has a prospectively preregistered protocol and a locked primary analysis implementation in addition to its completed structural profile, developer/non-independent 11Q qualification, and structural-matrix adjudication. Its fail-closed empirical runner is under review; collection, freeze, and authorization remain separate later gates.
+Track A's prospective scientific panel is fixed at **50 seeds × 5 topologies × 9 failure counts = 2,250 observations**. The governed authorization to collect that panel is established, but **no prospective Track A observations have been collected yet**, so Track A scientific N remains 0.
 
-B1, B2, and B3 now have merged non-empirical profile implementations. B2 and B3 have also completed developer/non-independent 11Q qualification; their standalone integration-readiness adjudications are under review. B1 qualification is under review. None of these steps establishes integrated Track C efficacy.
+## What is established — and what is not
+
+The repository contains substantial engineering evidence: governance logic, provenance controls, deterministic validators, CI, negative controls, source binding, custody/security machinery, experimental tooling, and blinded-data infrastructure.
+
+A separate Solo research track produced bounded historical empirical evidence. Epoch 004 completed 50 seeds / 9,000 observations and produced negative evidence for its exact executed treatment. A later source audit found that canonical treatment fidelity was not established, so that result is preserved without promoting it into a claim about canonical DGAF efficacy.
+
+DGAF is **not** currently presented as:
+
+- empirically validated as a complete framework;
+- independently validated;
+- production-certified;
+- High-Assurance authorized;
+- empirically supported by the fresh Track A panel before that authorized collection is actually executed and retained.
+
+## Internal terms in plain English
+
+DGAF has accumulated project-specific names over its development history. Those names remain useful inside the governance system, but they should not be prerequisites for understanding the project.
+
+| Internal term | Public / industry-neutral translation |
+|---|---|
+| **Formation** | The set and structure of agents selected for a governed task |
+| **TGL / P-35** | Per-turn governance and state-transition kernel |
+| **P-* gate** | Project-specific evidence, policy, or authorization checkpoint |
+| **PDMAL** | Experimental multi-agent topology / robustness substrate |
+| **Freeze** | Immutable binding of the candidate and protected experimental inputs; **not execution authorization** |
+| **Closure** | Proof that required pre-authorization prerequisites are complete; **not execution authorization** |
+| **Verification classification** | Records what kind of verifier produced the evidence and whether it is independent |
+| **Collection authorization** | Explicit permission to collect the preregistered prospective observations; **not evidence that collection already happened** |
+| **Fail closed** | Missing, stale, malformed, or ambiguous required evidence blocks progress |
+
+See **[`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)** for the full public terminology map.
+
+## Where to start
+
+- **Plain-English terminology:** [`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)
+- **Live project/evidence state:** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
+- **Technical architecture:** [`README.technical.md`](README.technical.md)
+- **Governance model:** [`README.governance.md`](README.governance.md)
+- **Historical records:** [`docs/HISTORICAL_RECORDS_INDEX.md`](docs/HISTORICAL_RECORDS_INDEX.md)
 
 ## Research boundary
 
-DGAF distinguishes among engineering evidence, apparatus-falsification evidence, and efficacy evidence. Results remain scoped to the exact system identities, treatment definitions, protocols, and custody conditions that produced them.
-
-The repository contains substantial engineering evidence and bounded empirical evidence from the Solo track. It does **not** yet establish canonical DGAF efficacy, independent validation, production certification, or High-Assurance empirical evidence. The canonical High-Assurance track remains empirical N = 0.
-
-## Project status
-
-Active research and development.
-
-The framework is not presented as empirically validated, production-certified, or currently authorized for a fresh empirical run. Detailed governance state, evidence records, protocol controls, and historical verification artifacts are maintained inside the repository for technical review.
+Results remain scoped to the exact system identities, treatment definitions, protocols, evidence classes, and custody conditions that produced them. A green test, merged PR, internal qualification score, mathematical property, authorization record, or historical result does not automatically establish current empirical efficacy.
 
 ---
 
 Dynamic Governance Agentic Formation  
-Multi-agent orchestration · AI governance · provenance · evaluation · experimental integrity
+Governed multi-agent orchestration · provenance · evaluation · authorization · experimental integrity

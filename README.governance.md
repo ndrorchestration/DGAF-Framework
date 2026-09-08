@@ -2,6 +2,7 @@
 
 > **Audience:** Auditors, AI risk reviewers, governance practitioners, and technical reviewers  
 > **Entry point for:** NIST AI RMF project mapping · EU AI Act conceptual crosswalk · OWASP agentic-risk crosswalk · governance posture review  
+> **Plain-English terminology:** [`docs/PUBLIC_TRANSLATION_LAYER.md`](./docs/PUBLIC_TRANSLATION_LAYER.md)  
 > **Technical/agent-facing entry point:** [`README.technical.md`](./README.technical.md)  
 > **Architect:** Hensel, Andrew Vance · [@ndrorchestration](https://github.com/ndrorchestration)
 
@@ -17,7 +18,7 @@ Some DGAF artifacts are **mapped** to concepts in the NIST AI Risk Management Fr
 
 DGAF includes an **executable governance spine for selected controls**. A policy is not assumed to be technically enforced unless a corresponding implementation and scoped verification evidence are identified. Likewise, a decision is not assumed to have a complete audit chain unless the relevant repository artifacts establish that chain.
 
-**Current scientific boundary:** final v0.7.6 candidate **NOT DESIGNATED** under Issue #309; **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0**. Governance documentation or standards mapping does not alter that state.
+**Current scientific boundary:** the canonical High-Assurance program remains **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0**. This is separate from **Track A Epoch 001**, whose preflight, immutable freeze, final closure, developer-self-attested/non-independent verification classification, and prospective collection authorization are established. Track A collection has **not yet executed**, Track A scientific N remains **0**, and unblinding remains **NOT AUTHORIZED**. See [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) for the live cross-track state. Governance documentation or standards mapping does not alter either boundary.
 
 ---
 
@@ -94,24 +95,7 @@ DGAF provides several complementary trace surfaces. Their presence improves insp
 3. **Git commit and pull-request history** — records versioned repository mutations and review/CI lineage.
 4. **Evidence/control-state artifacts** — bind selected claims, candidates, workflow runs, artifacts, or gates to explicit identities.
 
-For a particular claim or decision, reconstruct only the chain actually supported by retained artifacts. A useful starting path is `git log --follow <file>` followed by the relevant changelog/session/evidence records. Missing links must remain **UNKNOWN / NOT VERIFIED**, not be filled by inference.
-
----
-
-## Governance Schema Vocabulary — Historical S068 Context
-
-> Original context: 2026-06-26 · Issue #32 · S068 governance-schema vocabulary  
-> Current interpretation: **historical/project-local terminology**, not legal conclusions or current certification claims.
-
-The S068 vocabulary used regulatory language as a design crosswalk. In current documentation, words such as **binding**, **satisfies**, **guarantee**, or **compliance** from that historical layer must be interpreted only within the exact evidence established for the referenced artifact.
-
-| Term | Project-local meaning | Standards/regulatory relationship | Evidence caution |
-|---|---|---|---|
-| **governance_schema_conformance** | Validation that declared governance data conforms to its JSON Schema / typed model | Structured schemas can support risk-management and transparency documentation | Schema validity alone does not establish AI Act Article 9/13 compliance or governance effectiveness. |
-| **governance.yml** | Project configuration declaring selected DGAF role/control metadata | May support governance, risk, and QMS documentation | A project configuration file is not by itself a legally sufficient QMS or risk-management system. |
-| **typed kernel** | Executable role unit with explicit input/policy/output/audit contract | May support traceability and technical control implementation | Machine-readable control structure does not itself establish statutory compliance or efficacy. |
-| **ρ-contraction** (governance) | Declared contraction condition on a modeled transition operator | Mathematical reasoning may support bounded-behavior analysis | It is a guarantee only when its assumptions, operator definition, implementation, and scoped proof/verification are established; it is not regulatory evidence by itself. |
-| **few-shot priming** (historical S068) | Historical prompt/routing intervention concept | May be relevant to human configuration or oversight depending on context | Any historical baseline percentage or claimed threshold requires its own provenance before reuse; it is not an EU AI Act compliance threshold. |
+For a particular claim or decision, reconstruct only the chain actually supported by retained artifacts. Missing links must remain **UNKNOWN / NOT VERIFIED**, not be filled by inference.
 
 ---
 
@@ -120,10 +104,11 @@ The S068 vocabulary used regulatory language as a design crosswalk. In current d
 - **Mapped** means a project artifact has a documented relationship to an external concept or requirement.
 - **Implemented** means a relevant mechanism exists in repository code/configuration.
 - **Verified** means a bounded test/check succeeded for its declared identity and scope.
+- **Authorized** means a governing record permits the bounded action it names; it does not mean the action already occurred or succeeded.
 - **Empirically supported** requires admissible observations under the applicable controlled protocol.
 - None of these labels automatically means **legally compliant**, **certified**, **secure**, **safe**, or **effective** beyond the evidence actually retained.
 
-For current experimental authority and gate status, use the repository's current control-state/governance artifacts and Issue #309 rather than this crosswalk.
+For current experimental authority and gate status, use [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) first, then the exact governing artifacts for the relevant High-Assurance or workload-specific track.
 
 ---
 
@@ -142,4 +127,4 @@ For current experimental authority and gate status, use the repository's current
 
 *License: Apache 2.0 · See [NOTICE](./NOTICE) for full attribution*  
 *Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*  
-*README.governance v1.2 · standards/claim-scope reconciliation · 2026-09-06*
+*README.governance v1.4 · public-state scope reconciliation · 2026-09-08*
