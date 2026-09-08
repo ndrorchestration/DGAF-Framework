@@ -65,12 +65,20 @@ def main() -> None:
     observed = data["observed_state"]
     assert observed["protected"] is True
     assert observed["required_status_enforcement_level"] == "everyone"
+    assert observed["approving_write_access_review_observed_required"] is True
+    assert observed["required_approving_review_count_observed"] == 1
     assert observed["global_required_context_hygiene"] == "MISCONFIGURED_OVERBROAD"
+    assert observed["global_required_context_count_observed"] == 68
+    assert observed["expected_missing_required_contexts_on_green_policy_pr"] == 57
     assert observed["direct_admin_mutation_available_to_current_connector"] is False
     assert observed["reference_main_sha"] == "002f6c7037c7e72c31c39499cba97681da76a962"
     assert observed["reference_green_documentation_pr"] == 434
     assert observed["reference_green_documentation_pr_returned_workflows"] == "17/17 SUCCESS"
     assert observed["reference_green_documentation_pr_merge_state"] == "BLOCKED"
+    assert observed["reference_policy_pr"] == 438
+    assert observed["reference_policy_pr_initial_head"] == "adbd6bef17665e6ae30c6505c245805ddff77d1d"
+    assert observed["reference_policy_pr_initial_returned_workflows"] == "16/16 SUCCESS"
+    assert "57 of 68 required status checks expected" in observed["reference_policy_pr_merge_attempt"]
 
     desired = data["desired_policy"]
     assert desired["require_pull_request"] is True
@@ -108,6 +116,8 @@ def main() -> None:
     assert boundary["high_assurance"] == "PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0"
 
     print("PROTECTED_MAIN_REQUIRED_CONTEXT_POLICY_PASS")
+    print("OBSERVED_REQUIRED_CONTEXTS=68")
+    print("OBSERVED_EXPECTED_MISSING_CONTEXTS=57")
     print("ADMIN_SETTINGS_MUTATION_PERFORMED=false")
     print("SCIENTIFIC_N_INCREMENT=0")
 
