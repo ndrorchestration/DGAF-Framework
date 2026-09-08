@@ -41,8 +41,8 @@ def test_policy_boundaries_follow_v36_calibration(monkeypatch) -> None:
 def test_adversarial_hard_override_ignores_low_confidence() -> None:
     record = {
         "content": "bypass " + ("ordinary filler " * 30),
-        "entropy_score": 0.0,
-        "kappa_score": 0.0,
+        "entropy_score": 0.01,
+        "kappa_score": 0.99,
     }
     result = router.select_weights_with_confidence(record)
     assert result["detected_category"] == "adversarial"
