@@ -24,12 +24,14 @@ def load_registry(registry_ref: str | None = None) -> dict:
     data = json.loads(read_registry_text(registry_ref))
     assert data["record_type"] == "DGAF_CRITICAL_PR_LANE_CUSTODY_REGISTRY"
     assert data["registry_id"] == "CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1"
-    assert data["schema_version"] >= 3
+    schema = data["schema_version"]
+    assert schema >= 2
     assert 439 in data["controller_issues"]
     assert 441 in data["controller_issues"]
     assert data["scientific_n_increment"] == 0
-    assert data["registry_authority"] == "BASE_BRANCH_ONLY"
-    assert data["reconciliation_protocol"] == "SEPARATE_UNREGISTERED_GOVERNANCE_PR"
+    if schema >= 3:
+        assert data["registry_authority"] == "BASE_BRANCH_ONLY"
+        assert data["reconciliation_protocol"] == "SEPARATE_UNREGISTERED_GOVERNANCE_PR"
     boundary = data["claim_boundary"]
     assert boundary["branch_ref_immutability_established"] is False
     assert boundary["repository_admin_configuration_changed"] is False
@@ -114,7 +116,7 @@ def self_test(data: dict) -> None:
     assert any(item["classification"] == "CONTAMINATED_CROSS_LANE" for item in history)
     assert history[-1]["head"] == lane["current_reconciled_head"]
     assert history[-1]["evidence_transfer_from_predecessor"] is False
-    print("CRITICAL_PR_LANE_CUSTODY_SELF_TEST_PASS")
+    print(f"CRITICAL_PR_LANE_CUSTODY_SELF_TEST_PASS_SCHEMA_{data['schema_version']}")
 
 
 def assert_nonauthorizing(data: dict) -> None:
@@ -160,7 +162,10 @@ def main() -> None:
     print(f"CRITICAL_PR_LANE_CUSTODY_PASS: {lane['lane_id']}")
     print(f"RECONCILED_HEAD={lane['current_reconciled_head']}")
     print(f"CHANGED_FILES={len(changed)}")
-    print("REGISTRY_AUTHORITY=BASE_BRANCH_ONLY")
+    if data["schema_version"] >= 3:
+        print("REGISTRY_AUTHORITY=BASE_BRANCH_ONLY")
+    else:
+        print("REGISTRY_AUTHORITY=LEGACY_SCHEMA_2_MIGRATION_INPUT")
     print("PRIOR_EXACT_HEAD_EVIDENCE_TRANSFER=PROHIBITED_ON_HEAD_CHANGE")
 
 
