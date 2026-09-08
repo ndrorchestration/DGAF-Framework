@@ -1,0 +1,105 @@
+{
+  "record_type": "TRACK_A_EPOCH_001_RUNNER_CONTRACT",
+  "schema_version": 2,
+  "controller_issue": 421,
+  "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-001",
+  "status": "RUNNER_HARDENED_NOT_AUTHORIZED",
+  "algorithm_id": "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1",
+  "source_bindings": {
+    "preregistration_merge_sha": "26077b27ca336454148006e6daf4cd087005b421",
+    "preregistration_blob_sha": "52148950ff054a407c2e6b5cf36103695cf96474",
+    "analysis_lock_merge_sha": "e9ea59ad839aef33fbce10ed04c2157358c4326d",
+    "analysis_lock_blob_sha": "ff9a37a0be7a75912dbe0ae34dd95893d41efafb",
+    "analysis_blob_sha": "76bc8e9604c5d7e039e324e73036f353dc8ea31f",
+    "analysis_config_sha256": "355b164f69e91405819f092d0721b7597b87b06de79394a0c451169410a5ab6d",
+    "task_engine_blob_sha": "90135e1c6dfccc3b56ffdc0dcb9eb50a0b2a5b05",
+    "harness_contract_blob_sha": "bb97c54ddf087fef568b1b3c8f8df72c30dad11e",
+    "topology_utils_blob_sha": "7ae92ba8a9ab964537e5dafa5e12de36b841391e",
+    "requirements_lock_blob_sha": "00c1f779e97030f9b25ae494642edb31b5b09de5"
+  },
+  "matrix": {
+    "seeds": [
+      20270101, 20270102, 20270103, 20270104, 20270105, 20270106, 20270107, 20270108, 20270109, 20270110,
+      20270111, 20270112, 20270113, 20270114, 20270115, 20270116, 20270117, 20270118, 20270119, 20270120,
+      20270121, 20270122, 20270123, 20270124, 20270125, 20270126, 20270127, 20270128, 20270129, 20270130,
+      20270131, 20270132, 20270133, 20270134, 20270135, 20270136, 20270137, 20270138, 20270139, 20270140,
+      20270141, 20270142, 20270143, 20270144, 20270145, 20270146, 20270147, 20270148, 20270149, 20270150
+    ],
+    "topologies": ["ring", "pdmal", "random_regular", "small_world", "complete"],
+    "failure_counts": [0, 1, 2, 3, 4, 5, 6, 8, 10],
+    "cells_per_seed": 45,
+    "expected_total_observations": 2250,
+    "condition_axis": false,
+    "historical_epoch_004_substitution_allowed": false
+  },
+  "endpoint": {
+    "field": "ffcr_success",
+    "source": "ConsensusTrialResult.consensus_success",
+    "type": "strict_boolean",
+    "boolean_coercion_allowed": false,
+    "reconstruction_or_imputation_allowed": false
+  },
+  "blinding": {
+    "topology_label_blinding_required": true,
+    "trial_order_blinding_required": true,
+    "trial_order_method": "HMAC_SHA256_KEYED_BY_FRESH_BLINDING_SECRET",
+    "public_plaintext_topology_prohibited_before_unblinding": true,
+    "public_topology_fingerprint_prohibited_before_unblinding": true,
+    "public_record_exact_allowlist_required": true,
+    "protected_mapping_separate_from_public_dataset": true,
+    "protected_blinding_key_custody_record_separate": true,
+    "fresh_secret_required_at_authorized_collection": true,
+    "same_system_custody_classification": "NONINDEPENDENT",
+    "unblinding_authorized_at_collection": false
+  },
+  "integrity": {
+    "per_seed_sha256_sidecar_required": true,
+    "whole_epoch_manifest_required": true,
+    "environment_fingerprint_required": true,
+    "duplicate_missing_extra_cells_fail_closed": true,
+    "protected_source_drift_after_freeze_prohibited": true,
+    "frozen_candidate_must_be_authorization_ancestor": true,
+    "historical_pooling_allowed": false,
+    "outcome_inspection_during_collection": false,
+    "outcome_aggregation_during_collection": false
+  },
+  "successor_gate_chain": {
+    "order": [
+      "TRACK_A_EPOCH_001_PRECOLLECTION_PREFLIGHT",
+      "TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST",
+      "TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET",
+      "TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION",
+      "TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION"
+    ],
+    "preflight_required": true,
+    "immutable_freeze_required": true,
+    "closure_packet_required": true,
+    "verification_classification_required": true,
+    "authorization_required": true,
+    "same_system_verification_must_be_nonindependent": true
+  },
+  "authorization": {
+    "one_file_path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json",
+    "authorization_head_exactly_one_parent": true,
+    "authorization_file_must_be_only_change": true,
+    "authorization_must_bind_frozen_candidate_sha_and_tree": true,
+    "authorization_must_bind_preflight_freeze_closure_verification_blobs": true,
+    "pr_validation_can_authorize": false,
+    "collection_authorized": false,
+    "unblinding_authorized": false,
+    "high_assurance_authorized": false
+  },
+  "pr_absence_proofs": [
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRECOLLECTION_PREFLIGHT.json",
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json",
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET.json",
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json",
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json"
+  ],
+  "next_gate": "CANDIDATE_STABILIZATION_AND_PRECOLLECTION_PREFLIGHT",
+  "scientific_n_increment": 0,
+  "track_a_freeze": "NOT_ESTABLISHED",
+  "track_a_empirical_execution": "NOT_AUTHORIZED",
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}
