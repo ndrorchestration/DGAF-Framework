@@ -15,7 +15,7 @@
     "demijoule_path": "components/ensemble_v17.py",
     "demijoule_blob_sha": "686eb9ba339742d9de2767fca18b9907a1c3b70a",
     "harness_path": "experiments/pdmal_pilot/b1_semantic_routing_safety_profile.py",
-    "harness_blob_sha": "65e9be815bcd9aaf727e1b72ec9fbed35b59167e"
+    "harness_blob_sha": "0ac0841259fad8d333e620ad54f1f81e238c4074"
   },
   "required_fields": [
     "record_id",
