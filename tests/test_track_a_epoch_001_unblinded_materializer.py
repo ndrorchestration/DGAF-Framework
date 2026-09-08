@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import ast
-from pathlib import Path
 import unittest
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MATERIALIZER = ROOT / "scripts" / "materialize_track_a_epoch_001_unblinded_input.py"
