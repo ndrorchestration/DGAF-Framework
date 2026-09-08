@@ -76,6 +76,19 @@ def git(*args: str, check: bool = True) -> str:
     return proc.stdout.strip()
 
 
+def git_object_exists(spec: str) -> bool:
+    return (
+        subprocess.run(
+            ["git", "cat-file", "-e", spec],
+            cwd=ROOT,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).returncode
+        == 0
+    )
+
+
 def git_blob(rev: str, path: str) -> str:
     return git("rev-parse", f"{rev}:{path}")
 
@@ -111,21 +124,36 @@ def validate_frozen_chain(head: str) -> None:
         raise SystemExit("freeze manifest blob drift")
     require_exact_object(load_json(FREEZE_PATH), EXPECTED_FREEZE, "freeze manifest")
 
-    freeze_history = [x for x in git("log", "--format=%H", "--", FREEZE_REL).splitlines() if x]
+    freeze_history = [
+        x for x in git("log", "--format=%H", "--", FREEZE_REL).splitlines() if x
+    ]
     if len(freeze_history) != 1:
-        raise SystemExit(f"freeze manifest must have exactly one history commit, got {freeze_history}")
+        raise SystemExit(
+            f"freeze manifest must have exactly one history commit, got {freeze_history}"
+        )
     freeze_commit = freeze_history[0]
-    if subprocess.run(
-        ["git", "merge-base", "--is-ancestor", freeze_commit, head], cwd=ROOT, check=False
-    ).returncode != 0:
+    if (
+        subprocess.run(
+            ["git", "merge-base", "--is-ancestor", freeze_commit, head],
+            cwd=ROOT,
+            check=False,
+        ).returncode
+        != 0
+    ):
         raise SystemExit("freeze commit is not an ancestor of closure head")
-    if subprocess.run(
-        ["git", "merge-base", "--is-ancestor", FROZEN_CANDIDATE_SHA, head],
-        cwd=ROOT,
-        check=False,
-    ).returncode != 0:
+    if (
+        subprocess.run(
+            ["git", "merge-base", "--is-ancestor", FROZEN_CANDIDATE_SHA, head],
+            cwd=ROOT,
+            check=False,
+        ).returncode
+        != 0
+    ):
         raise SystemExit("frozen candidate is not an ancestor of closure head")
-    if git("rev-parse", f"{FROZEN_CANDIDATE_SHA}^{{tree}}") != FROZEN_CANDIDATE_TREE_SHA:
+    if (
+        git("rev-parse", f"{FROZEN_CANDIDATE_SHA}^{{tree}}")
+        != FROZEN_CANDIDATE_TREE_SHA
+    ):
         raise SystemExit("frozen candidate tree drift")
 
     for path, wanted in EXPECTED_PROTECTED_SOURCE_BLOBS.items():
@@ -140,7 +168,9 @@ def validate_frozen_chain(head: str) -> None:
 def validate_downstream_absence() -> None:
     for path in (VERIFICATION_PATH, AUTH_PATH):
         if path.exists():
-            raise SystemExit(f"downstream gate must remain absent: {path.relative_to(ROOT)}")
+            raise SystemExit(
+                f"downstream gate must remain absent: {path.relative_to(ROOT)}"
+            )
 
 
 def validate_repository(*, expect_absent: bool) -> None:
@@ -163,16 +193,28 @@ def validate_repository(*, expect_absent: bool) -> None:
         raise SystemExit("closure head must have exactly one parent")
     parent = parents[1]
 
-    changed = sorted(x for x in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if x)
+    changed = sorted(
+        x
+        for x in git(
+            "diff-tree", "--no-commit-id", "--name-only", "-r", head
+        ).splitlines()
+        if x
+    )
     if changed != [CLOSURE_REL]:
-        raise SystemExit(f"closure head must change only {CLOSURE_REL}; got {changed}")
+        raise SystemExit(
+            f"closure head must change only {CLOSURE_REL}; got {changed}"
+        )
 
-    if git("cat-file", "-e", f"{parent}:{CLOSURE_REL}", check=False):
+    if git_object_exists(f"{parent}:{CLOSURE_REL}"):
         raise SystemExit("closure path unexpectedly existed at parent")
 
-    closure_history = [x for x in git("log", "--format=%H", "--", CLOSURE_REL).splitlines() if x]
+    closure_history = [
+        x for x in git("log", "--format=%H", "--", CLOSURE_REL).splitlines() if x
+    ]
     if closure_history != [head]:
-        raise SystemExit(f"closure path must have exactly one history commit at HEAD; got {closure_history}")
+        raise SystemExit(
+            f"closure path must have exactly one history commit at HEAD; got {closure_history}"
+        )
 
     if git_blob(head, FREEZE_REL) != FREEZE_MANIFEST_BLOB_SHA:
         raise SystemExit("closure does not bind the exact merged freeze blob")
