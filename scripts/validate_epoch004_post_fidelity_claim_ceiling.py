@@ -63,7 +63,7 @@ def main() -> int:
     assert locked["null_ffcr"] == result["null_ffcr"] == 0.8275555555555555
     assert (
         locked["paired_effect_dgaf_minus_null"]
-        == result["paired_effect"]
+        == result["paired_effect_dgaf_minus_null"]
         == -0.0937777777777778
     )
     assert locked["two_sided_95pct_ci"] == result["two_sided_95pct_ci"]
