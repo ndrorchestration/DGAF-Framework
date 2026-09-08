@@ -61,7 +61,6 @@ def main() -> int:
     require('--symmetric --cipher-algo AES256' in text, 'protected bundle encryption missing')
     require('track-a-epoch-001-protected.tar.gz.gpg' in text, 'encrypted protected artifact missing')
     require("rm -rf \"$protected_root\"" in text, 'protected plaintext deletion missing')
-    require("name 'track_a_epoch_001_mapping_*.json'" not in text, 'unexpected malformed mapping scan token')
     require("-name 'track_a_epoch_001_mapping_*.json'" in text, 'post-encryption plaintext mapping scan missing')
     require('gh release upload "$RELEASE_TAG"' in text, 'durable retention upload missing')
 
