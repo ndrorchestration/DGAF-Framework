@@ -1,0 +1,20 @@
+{
+  "record_type":"DGAF_B2_STATEFUL_CONTEXT_CLOSURE_PROFILE",
+  "schema_version":1,
+  "profile_id":"DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1",
+  "controller_issue":401,
+  "status":"NONEMPIRICAL_PROFILE_CANDIDATE",
+  "architecture_merge_sha":"5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+  "source":{"path":"components/ensemble_v17.py","blob_sha":"686eb9ba339742d9de2767fca18b9907a1c3b70a","components":["StructuralContextPruningEngine","FibonacciPhiClosureGate"]},
+  "harness":{"path":"experiments/pdmal_pilot/b2_stateful_context_closure_profile.py","blob_sha":"765dd5dd50f0590c6ee3c2c805c7e6144c4e86eb"},
+  "persistence":{"lifetime":"ONE_COMPLETE_SESSION","reset":"ONLY_AT_SESSION_BOUNDARY","required_state":["SCPE_TOKEN_STORE","TOKEN_INSERTION_TIMESTAMPS","TOKEN_TRUST_EDGES","PHI_STABLE_COUNT","PHI_TOTAL_COUNT","PHI_CONSECUTIVE_FAILURES","IS_STABLE_INPUT"]},
+  "registered_phi_checkpoints":[13,21,34,55],
+  "current_source_decision_ladder":["pass","warn","escalate","kill_rec"],
+  "known_source_limitation":{"detail":"PhiDecision.REPROMPT exists in the enum but the current FibonacciPhiClosureGate.check implementation does not emit it.","silent_redesign_allowed":false},
+  "required_behavior":{"state_survives_turn_boundaries":true,"new_session_resets_state":true,"scpe_prunes_populated_store":true,"checkpoint_counters_must_not_be_synthetically_injected":true},
+  "claim_ceiling":"STATE_PERSISTENCE_PRUNING_AND_CLOSURE_BEHAVIOR_ONLY",
+  "scientific_n_increment":0,
+  "empirical_execution_authorized":false,
+  "canonical_dgaf_efficacy":"NOT_ESTABLISHED",
+  "high_assurance":"NOT_AUTHORIZED_N0"
+}
