@@ -1,0 +1,51 @@
+name: Track A Epoch 001 Preregistration
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-preregistration.yml'
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json'
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.md'
+      - 'scripts/validate_track_a_epoch_001_preregistration.py'
+      - 'docs/governance/WORKLOAD_SPECIFIC_DGAF_EVALUATION_TRACKS_V1.md'
+      - 'docs/governance/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1.json'
+      - 'docs/qa/APOGEE_11Q_PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1_S078.json'
+      - 'docs/governance/TRACK_A_NONEMPIRICAL_MATRIX_ADJUDICATION_V1.json'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Validate prospective preregistration and exact source bindings
+        run: python scripts/validate_track_a_epoch_001_preregistration.py
+
+      - name: Prove preregistration cannot authorize collection
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'PROPOSAL_ONLY_NOT_AUTHORIZED'
+          assert d['empirical_execution_authorized'] is False
+          assert d['scientific_n_increment_at_preregistration'] == 0
+          assert d['collection_controls']['runner_status'] == 'NOT_YET_IMPLEMENTED'
+          assert d['collection_controls']['freeze_status'] == 'NOT_ESTABLISHED'
+          assert d['collection_controls']['collection_authorization'] == 'NOT_AUTHORIZED'
+          assert d['claim_ceiling']['canonical_dgaf_efficacy'] == 'NOT_ESTABLISHED'
+          assert d['claim_ceiling']['high_assurance'] == 'NOT_AUTHORIZED_N0'
+          print('TRACK_A_EPOCH_001_PREREGISTRATION_NONAUTHORIZING_BOUNDARY_PASS')
+          PY
