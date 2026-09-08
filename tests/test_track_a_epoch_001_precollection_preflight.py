@@ -101,11 +101,16 @@ def make_mutation_test(field: str, value: object):
         data[field] = value
         with self.assertRaises(SystemExit):
             v.validate_record(data, contract(), CANDIDATE, TREE)
+
     return test
 
 
 for _field, _value in MUTATIONS.items():
-    setattr(PreflightValidatorTests, f"test_mutation_{_field}_fails_closed", make_mutation_test(_field, _value))
+    setattr(
+        PreflightValidatorTests,
+        f"test_mutation_{_field}_fails_closed",
+        make_mutation_test(_field, _value),
+    )
 
 
 if __name__ == "__main__":

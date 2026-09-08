@@ -14,12 +14,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json"
-PREFLIGHT_PATH = ROOT / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRECOLLECTION_PREFLIGHT.json"
+PREFLIGHT_PATH = (
+    ROOT
+    / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRECOLLECTION_PREFLIGHT.json"
+)
 DOWNSTREAM = (
-    ROOT / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json",
-    ROOT / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET.json",
-    ROOT / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json",
-    ROOT / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json",
+    ROOT
+    / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json",
+    ROOT
+    / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET.json",
+    ROOT
+    / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json",
+    ROOT
+    / "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json",
 )
 SOURCE_PATHS = {
     "preregistration_blob_sha": "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json",
@@ -84,14 +91,19 @@ def expected_record(contract: dict, candidate_sha: str, candidate_tree_sha: str)
     }
 
 
-def validate_record(record: dict, contract: dict, candidate_sha: str, candidate_tree_sha: str) -> None:
+def validate_record(
+    record: dict, contract: dict, candidate_sha: str, candidate_tree_sha: str
+) -> None:
     expected = expected_record(contract, candidate_sha, candidate_tree_sha)
     if record != expected:
         missing = sorted(set(expected) - set(record))
         extra = sorted(set(record) - set(expected))
-        mismatched = sorted(k for k in set(expected) & set(record) if expected[k] != record[k])
+        mismatched = sorted(
+            k for k in set(expected) & set(record) if expected[k] != record[k]
+        )
         raise SystemExit(
-            f"PREFLIGHT_FAIL: record mismatch missing={missing} extra={extra} mismatched={mismatched}"
+            f"PREFLIGHT_FAIL: record mismatch missing={missing} extra={extra} "
+            f"mismatched={mismatched}"
         )
     if not HEX40.fullmatch(record["candidate_sha"]):
         raise SystemExit("PREFLIGHT_FAIL: malformed candidate SHA")
@@ -101,12 +113,18 @@ def validate_record(record: dict, contract: dict, candidate_sha: str, candidate_
         raise SystemExit("PREFLIGHT_FAIL: malformed analysis config SHA-256")
 
 
-def validate_git_bindings(record: dict, contract: dict, expected_candidate_sha: str | None) -> None:
+def validate_git_bindings(
+    record: dict, contract: dict, expected_candidate_sha: str | None
+) -> None:
     candidate_sha = record["candidate_sha"]
     candidate_tree = record["candidate_tree_sha"]
-    if expected_candidate_sha is not None and candidate_sha != expected_candidate_sha.lower():
+    if (
+        expected_candidate_sha is not None
+        and candidate_sha != expected_candidate_sha.lower()
+    ):
         raise SystemExit(
-            f"PREFLIGHT_FAIL: candidate must equal exact PR base {expected_candidate_sha}; got {candidate_sha}"
+            f"PREFLIGHT_FAIL: candidate must equal exact PR base "
+            f"{expected_candidate_sha}; got {candidate_sha}"
         )
     if git("rev-parse", f"{candidate_sha}^{{tree}}") != candidate_tree:
         raise SystemExit("PREFLIGHT_FAIL: candidate tree does not match Git")
@@ -118,7 +136,9 @@ def validate_git_bindings(record: dict, contract: dict, expected_candidate_sha: 
         actual = git("rev-parse", f"{candidate_sha}:{path}")
         expected = bindings[key]
         if actual != expected:
-            raise SystemExit(f"PREFLIGHT_FAIL: candidate source drift {path}: {actual} != {expected}")
+            raise SystemExit(
+                f"PREFLIGHT_FAIL: candidate source drift {path}: {actual} != {expected}"
+            )
 
     prereg_merge = bindings["preregistration_merge_sha"]
     analysis_merge = bindings["analysis_lock_merge_sha"]
@@ -131,7 +151,10 @@ def validate_git_bindings(record: dict, contract: dict, expected_candidate_sha: 
 def validate_contract_boundary(contract: dict) -> None:
     if contract.get("schema_version") != 2:
         raise SystemExit("PREFLIGHT_FAIL: runner contract schema_version != 2")
-    if contract.get("next_gate") != "CANDIDATE_STABILIZATION_AND_PRECOLLECTION_PREFLIGHT":
+    if (
+        contract.get("next_gate")
+        != "CANDIDATE_STABILIZATION_AND_PRECOLLECTION_PREFLIGHT"
+    ):
         raise SystemExit("PREFLIGHT_FAIL: runner contract next gate drift")
     if contract.get("track_a_freeze") != "NOT_ESTABLISHED":
         raise SystemExit("PREFLIGHT_FAIL: runner contract unexpectedly establishes freeze")
@@ -146,7 +169,9 @@ def validate_contract_boundary(contract: dict) -> None:
 def validate_downstream_absence() -> None:
     present = [str(path.relative_to(ROOT)) for path in DOWNSTREAM if path.exists()]
     if present:
-        raise SystemExit(f"PREFLIGHT_FAIL: downstream successor gates must remain absent: {present}")
+        raise SystemExit(
+            f"PREFLIGHT_FAIL: downstream successor gates must remain absent: {present}"
+        )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -165,7 +190,9 @@ def main(argv: list[str] | None = None) -> int:
         try:
             expected_candidate_tree = git("rev-parse", f"{expected_candidate_sha}^{{tree}}")
         except subprocess.CalledProcessError as exc:
-            raise SystemExit("PREFLIGHT_FAIL: expected candidate does not resolve in Git") from exc
+            raise SystemExit(
+                "PREFLIGHT_FAIL: expected candidate does not resolve in Git"
+            ) from exc
     else:
         expected_candidate_sha = record.get("candidate_sha", "")
         expected_candidate_tree = record.get("candidate_tree_sha", "")
