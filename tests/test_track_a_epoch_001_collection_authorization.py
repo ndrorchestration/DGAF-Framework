@@ -88,9 +88,7 @@ class CollectionAuthorizationValidatorTests(unittest.TestCase):
             validator.EXPECTED_VERIFICATION["verification_class"],
             "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
         )
-        self.assertIs(
-            validator.EXPECTED_VERIFICATION["independent_verification"], False
-        )
+        self.assertIs(validator.EXPECTED_VERIFICATION["independent_verification"], False)
         self.assertIs(validator.EXPECTED_VERIFICATION["same_system_custody"], True)
 
     def test_authorization_scope_is_exact(self) -> None:
@@ -117,9 +115,7 @@ class CollectionAuthorizationValidatorTests(unittest.TestCase):
     def test_protected_source_set_is_exact(self) -> None:
         self.assertEqual(len(validator.EXPECTED_PROTECTED_SOURCE_BLOBS), 8)
         self.assertEqual(
-            validator.EXPECTED_PROTECTED_SOURCE_BLOBS[
-                "experiments/pdmal_pilot/run_track_a_epoch_001.py"
-            ],
+            validator.EXPECTED_PROTECTED_SOURCE_BLOBS["experiments/pdmal_pilot/run_track_a_epoch_001.py"],
             "d8ef6f31f49da82e4eaf5295bad024c3194f6d15",
         )
 
