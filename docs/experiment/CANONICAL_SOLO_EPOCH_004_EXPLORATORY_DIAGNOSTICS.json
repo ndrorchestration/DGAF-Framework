@@ -1,0 +1,61 @@
+{
+  "record_type": "DGAF_CANONICAL_SOLO_EPOCH_EXPLORATORY_DIAGNOSTICS",
+  "schema_version": 1,
+  "epoch_id": "PDMAL-SOLO-CANONICAL-EPOCH-004",
+  "classification": "POST_PRIMARY_EXPLORATORY_DESCRIPTIVE_ONLY",
+  "primary_result_record": "docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_RESULT.json",
+  "primary_result_unchanged": true,
+  "confirmatory_inference_allowed": false,
+  "paired_seed_effect_signs": {
+    "negative": 40,
+    "zero": 10,
+    "positive": 0,
+    "median": -0.06666666666666671,
+    "minimum": -0.3111111111111111,
+    "maximum": 0.0
+  },
+  "aggregate_ffcr": {
+    "dgaf": 0.7337777777777778,
+    "null": 0.8275555555555555,
+    "simple": 0.7391111111111112,
+    "static": 0.8928888888888888,
+    "dgaf_minus_simple": -0.005333333333333412
+  },
+  "dgaf_minus_null_by_topology": {
+    "ring": -0.16444444444444445,
+    "pdmal": -0.011111111111111072,
+    "random_regular": -0.2711111111111112,
+    "small_world": -0.022222222222222254,
+    "complete": 0.0
+  },
+  "dgaf_minus_null_by_failure_count": {
+    "0": -0.10399999999999998,
+    "1": -0.09199999999999997,
+    "2": -0.08399999999999996,
+    "3": -0.08799999999999997,
+    "4": -0.08399999999999996,
+    "5": -0.08399999999999996,
+    "6": -0.07600000000000007,
+    "8": -0.08800000000000008,
+    "10": -0.14400000000000002
+  },
+  "largest_descriptive_cell_deficits": [
+    {"topology": "random_regular", "failure_count": 10, "dgaf_minus_null": -0.44},
+    {"topology": "ring", "failure_count": 0, "dgaf_minus_null": -0.34},
+    {"topology": "random_regular", "failure_count": 8, "dgaf_minus_null": -0.30},
+    {"topology": "random_regular", "failure_count": 5, "dgaf_minus_null": -0.30},
+    {"topology": "random_regular", "failure_count": 6, "dgaf_minus_null": -0.28}
+  ],
+  "interpretive_boundary": {
+    "supported": "The negative primary effect is descriptively concentrated in random-regular and ring topologies; complete is tied and PDMAL/small-world are near null. DGAF and simple are descriptively very close overall.",
+    "not_supported": [
+      "A causal explanation for the topology pattern",
+      "A claim that any component modification would improve the primary outcome",
+      "Replacing or rescuing the locked primary result",
+      "Independent validation or High-Assurance evidence"
+    ],
+    "next_step": "Form any mechanism-specific redesign as a new prospective hypothesis and separately preregistered epoch."
+  },
+  "historical_pooling_allowed": false,
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}
