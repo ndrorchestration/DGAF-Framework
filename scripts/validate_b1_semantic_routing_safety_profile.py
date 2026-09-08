@@ -13,7 +13,7 @@ EXPECTED = {
     ROOT / "components/evaluate_router.py": "8c141231bae3fcb0321f0c306ada068e5d369546",
     ROOT / "components/evaluate_router_v1_1.py": "3ece02b81e0b8bf331eb1e769a8225ab87af322a",
     ROOT / "components/ensemble_v17.py": "686eb9ba339742d9de2767fca18b9907a1c3b70a",
-    ROOT / "experiments/pdmal_pilot/b1_semantic_routing_safety_profile.py": "14c81690e0caa33635565018a3746bec3820b718",
+    ROOT / "experiments/pdmal_pilot/b1_semantic_routing_safety_profile.py": "65e9be815bcd9aaf727e1b72ec9fbed35b59167e",
 }
 
 
