@@ -1,0 +1,38 @@
+name: Canonical Profile 11Q Qualification Validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/qa/APOGEE_11Q_DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1_S077*'
+      - 'scripts/validate_canonical_profile_11q_qualification.py'
+      - '.github/workflows/canonical-profile-11q-qualification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate frozen source and qualification binding
+        env:
+          PYTHONPATH: experiments/pdmal_pilot
+        run: python scripts/validate_canonical_profile_11q_qualification.py
+      - name: Prove qualification is non-empirical and non-independent
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('docs/qa/APOGEE_11Q_DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1_S077.json')
+          data = json.loads(path.read_text())
+          assert data['verification_class'] == 'DEVELOPER_SELF_ATTESTED_NONINDEPENDENT'
+          assert data['independent_verification'] is False
+          assert data['empirical_evidence'] is False
+          assert data['scientific_n_increment'] == 0
+          print('PASS_CLAIM_CEILING')
+          PY

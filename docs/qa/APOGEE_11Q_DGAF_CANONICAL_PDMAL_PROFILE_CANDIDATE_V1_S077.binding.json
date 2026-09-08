@@ -1,0 +1,13 @@
+{
+  "record_type": "DGAF_P30_11Q_QUALIFICATION_BINDING",
+  "schema_version": 1,
+  "qualification_path": "docs/qa/APOGEE_11Q_DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1_S077.json",
+  "qualification_sha256": "4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78",
+  "profile_id": "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1",
+  "profile_source_sha": "c8a07306d212e23cc5a4c1e0d98b7e8f47f45e21",
+  "profile_reviewed_head_sha": "01c86153026c3864134d0ffa1af1c118cd32bfea",
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+  "independent_verification": false,
+  "empirical_authorization": false,
+  "scientific_n_increment": 0
+}
