@@ -1,0 +1,87 @@
+{
+  "record_type": "DGAF_SEVEN_GATE_TREATMENT_FIDELITY_AUDIT",
+  "schema_version": 1,
+  "audit_date": "2026-09-08",
+  "controller_issue": 392,
+  "classification": "POST_EMPIRICAL_SOURCE_AUDIT_NONEMPIRICAL",
+  "scientific_n_increment": 0,
+  "epoch_004_primary_result_preserved": true,
+  "epoch_004_executed_treatment_inference_valid": true,
+  "canonical_seven_gate_treatment_fidelity": "NOT_ESTABLISHED",
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "fresh_canonical_empirical_epoch_authorized": false,
+  "source_identities": {
+    "runner_blob_sha": "eaedb40862684c33b3bff08d294338c74f7c9d92",
+    "epoch004_adapter_blob_sha": "95dc2f05196fe1df054fa9677bdfcd5d4d188081",
+    "gate_binding_blob_sha": "11677608141e53de0a963eb62d6c5fbfa70f211b",
+    "mechanism_artifact_id": 10040466222,
+    "mechanism_artifact_digest": "sha256:d150323e9cdd9ba641cf9aa7a2deb1a8cc5f29871fdff1821a50cf3a1a8e1b07"
+  },
+  "integration_findings": {
+    "consensus_state_recreated_each_iteration": true,
+    "explicit_gate_state_carry_forward_in_epoch004_task": false
+  },
+  "gates": {
+    "P-31_SCPE": {
+      "fidelity": "NOT_ESTABLISHED",
+      "required_substrate": "token_tier_store_with_insertion_time_and_trust_edges",
+      "epoch004_substrate": "DEFAULT_EMPTY_TOKEN_STORE",
+      "state_persistent_across_iterations": false,
+      "observed_trace": "PASS_ALL_DIAGNOSTIC_TURNS"
+    },
+    "P-33_CONVERGENCE": {
+      "fidelity": "NOT_ESTABLISHED",
+      "required_substrate": "CURRENT_AND_PRIOR_WEIGHTED_GRAPH_PLUS_DIVERGENCE_COUNTERS",
+      "epoch004_substrate": "DEFAULT_EMPTY_WEIGHTS_PREV_WEIGHTS_AND_COUNTERS",
+      "state_persistent_across_iterations": false,
+      "observed_trace": "PASS_ALL_DIAGNOSTIC_TURNS"
+    },
+    "DEMIJOULE": {
+      "fidelity": "NOT_ESTABLISHED",
+      "required_substrate": "SEMANTIC_SOURCE_PAYLOAD",
+      "epoch004_substrate": "CANONICALIZED_NUMERIC_CONSENSUS_STATE_TEXT_FALLBACK",
+      "state_persistent_across_iterations": false,
+      "observed_trace": "PASS_ALL_DIAGNOSTIC_TURNS"
+    },
+    "P-27_KAPPA": {
+      "fidelity": "NOT_ESTABLISHED",
+      "controller_issue": 390,
+      "required_substrate": "P27_P28_EVALUATION_RECORD_ROUTING_AND_CONFIDENCE_PIPELINE",
+      "epoch004_substrate": "ZERO_DEFAULT_SCALAR_SCORE_FIELDS_NO_EVALUATION_WEIGHT_CONSUMER",
+      "state_persistent_across_iterations": false,
+      "observed_trace": "WARN_9000_OF_9000_AND_CONSERVATIVE_MIX_9000_OF_9000"
+    },
+    "P-29_SENTINEL": {
+      "fidelity": "NOT_ESTABLISHED",
+      "required_substrate": "RECORD_CATEGORY_ROUTING_POLICY_CONFIDENCE_HOOK_POINT_DEONTIC_STATE",
+      "epoch004_substrate": "DEFAULT_NONE_NONE_ZERO_PERMITTED_AND_NO_RISK_CONTEXT",
+      "state_persistent_across_iterations": false,
+      "observed_trace": "PASS_ALL_DIAGNOSTIC_TURNS"
+    },
+    "P-32_PHI_CLOSURE": {
+      "fidelity": "NOT_ESTABLISHED",
+      "required_substrate": "PERSISTENT_STABLE_TOTAL_CHECKPOINT_FAILURE_COUNTERS_AND_IS_STABLE_INPUT",
+      "epoch004_substrate": "FRESH_ZERO_COUNTERS_AND_MISSING_IS_STABLE_DEFAULT_TRUE",
+      "state_persistent_across_iterations": false,
+      "observed_trace": "PASS_ALL_DIAGNOSTIC_TURNS"
+    },
+    "P-30_APOGEE": {
+      "fidelity": "ESTABLISHED_DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+      "required_substrate": "SOURCE_BOUND_EXTERNAL_P11_11Q_QUALIFICATION",
+      "epoch004_substrate": "EXACT_QUALIFICATION_BYTES_DIGEST_PROFILE_AND_SOURCE",
+      "state_persistent_across_iterations": "NOT_APPLICABLE_EXTERNAL_QUALIFICATION",
+      "observed_trace": "PASS_ALL_DIAGNOSTIC_TURNS"
+    }
+  },
+  "prospective_requirements": [
+    "WORKLOAD_SPECIFIC_TREATMENT_PROFILE",
+    "SOURCE_BOUND_GATE_INPUT_MAPPINGS",
+    "STATE_PERSISTENCE_CONTRACT_FOR_STATEFUL_GATES",
+    "EXPLICIT_EXCLUSION_OR_GOVERNED_ADAPTATION_FOR_ABSENT_SUBSTRATE",
+    "NEW_PROFILE_IDENTITY_AND_11Q_QUALIFICATION",
+    "NONEMPIRICAL_MULTI_TURN_FIDELITY_DIAGNOSTIC",
+    "FRESH_PREREGISTRATION_AND_SEEDS",
+    "SEPARATE_EMPIRICAL_AUTHORIZATION"
+  ],
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}
