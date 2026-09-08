@@ -185,9 +185,9 @@ def registered_fixtures() -> tuple[dict[str, object], ...]:
         },
         {
             "record_id": "deontic-forbidden",
-            "content": "hack abcdefghijklmnopqrstuvwxyz12345",
-            "entropy_score": 0.0,
-            "kappa_score": 0.0,
+            "content": "hack xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "entropy_score": 0.0001,
+            "kappa_score": 1.0,
             "scores": {
                 "accuracy": 0.20,
                 "false_blocked": 0.20,
