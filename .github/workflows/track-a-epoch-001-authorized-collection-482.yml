@@ -1,0 +1,161 @@
+name: Track A Epoch 001 Authorized Collection 482
+
+on:
+  push:
+    branches:
+      - 'experiment/track-a-epoch-001-authorized-collection-482'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: track-a-epoch-001-authorized-collection-482
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact accepted authorization commit with full history
+        uses: actions/checkout@v4
+        with:
+          ref: 659aaa4dea2dd42624747952f1a47f307e69a014
+          fetch-depth: 0
+
+      - name: Prove exact authorization HEAD
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "659aaa4dea2dd42624747952f1a47f307e69a014"
+          test "$(git rev-parse HEAD^)" = "e6f8c02040e43fdcd74470381351b5414b2a0835"
+          test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install exact hash-locked environment
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Prepare fresh blind and isolated retention roots
+        shell: bash
+        run: |
+          set -euo pipefail
+          public_root="$RUNNER_TEMP/track_a_epoch_001_public"
+          protected_root="$RUNNER_TEMP/track_a_epoch_001_protected"
+          mkdir -p "$public_root" "$protected_root"
+          secret="$(openssl rand -hex 32)"
+          echo "::add-mask::$secret"
+          {
+            echo 'PDMAL_MODE=track_a_epoch_001'
+            echo 'PDMAL_PROTOCOL_FROZEN=1'
+            echo 'PDMAL_TRACK_A_EPOCH_001_AUTHORIZED=1'
+            echo 'PDMAL_UNBLINDING_AUTHORIZED=0'
+            echo 'PDMAL_PILOT_AUTHORIZED=0'
+            echo 'PDMAL_HISTORICAL_POOLING=0'
+            echo 'PDMAL_EPOCH_004_SUBSTITUTION=0'
+            echo "PDMAL_TOPOLOGY_BLINDING_KEY=$secret"
+            echo "PDMAL_TRACK_A_PUBLIC_OUTPUT_DIR=$public_root"
+            echo "PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR=$protected_root"
+          } >> "$GITHUB_ENV"
+          cat > "$RUNNER_TEMP/track_a_epoch_001_custody_cert.pem" <<'CERT'
+          -----BEGIN CERTIFICATE-----
+          MIIEVzCCAr+gAwIBAgIUMJSR5lLsExDUpkU0/TXGRMxahNUwDQYJKoZIhvcNAQEL
+          BQAwOzE5MDcGA1UEAwwwREdBRiBUcmFjayBBIEVwb2NoIDAwMSBQcm90ZWN0ZWQg
+          TWFwcGluZyBDdXN0b2R5MB4XDTI2MDkwODE4MTc0NloXDTM2MDkwNTE4MTc0Nlow
+          OzE5MDcGA1UEAwwwREdBRiBUcmFjayBBIEVwb2NoIDAwMSBQcm90ZWN0ZWQgTWFw
+          cGluZyBDdXN0b2R5MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAxI/7
+          ZDGMEpj4zvh2dOKkt181H5AFWW9jbUy6c2pZRDkLXr0ySZJvp0wYO5aSsldxnZxq
+          /8dCKwSQdHnN66Xx/H/SZdSTz7S9WmOttclGuQCqs3okMfH1mFWjQyOP5qQKgd8O
+          fUIzo9PsLgFOWknoJ3XwhLxUToPLm/Hh+YSN80DyIM/pl9Sa+0QjQ4t1683OF8wK
+          fnnq4oIXUamdpR6m2ZBa0Y77dcko+OG4IrrAklBOxFpv4g/zH0x9rnjVkoiJlAwr
+          5IduPMLsMnYbKd6zCBGKJEkR5E29Exnle2W3pxMT1JanqZDt7S9e3xhaUe3sohWM
+          4pb+duGLnDA/0UtqqfhhC6w/SYgwVPt125pKTsrwv+Usr8TVUKOZm0Qh6+6Bj1ev
+          zR2Ky93Q6ylZk8gE28OYfaeh3B7n4OabkDoTZaeJSqIp79DRJoLtTDqrlB8ywvt7
+          4+WwSvV+vZFMlAHPvJ6ziFE5GL0bIE1WcVvIrQWh8Afz5EGG1vUCLyKy+dDXAgMB
+          AAGjUzBRMB0GA1UdDgQWBBQUq/cx4cfqSEUVHiUrpoHMVHSYYDAfBgNVHSMEGDAW
+          gBQUq/cx4cfqSEUVHiUrpoHMVHSYYDAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3
+          DQEBCwUAA4IBgQAiGe58UjVUiwZLjQ7LDK7RcTepvr6wjwx8R8a2c6/yJTm91c+B
+          6RK7vp6n9/bJxH+PEMQzJqcO6R6zbDZk+tYmn8jeA4j0S5ttGcRKMdhKw4KAYXPo
+          3FoUOPSQOB3IeTjiiF+tphdPUnC7GNmcs2z/tAhcHUi2ZHPxwtbaZ8LcVg6sHgTi
+          Ene4uIEB344ZEixP2ImcGIFRKtsLtO2TC1M/OYIEBnx3Cr1C6OnH0FCeHLJduL4N
+          D/gm+pP4qyl23bMNASwsC8zpoXiChESZa4FDg4JgMhB3FqjJm1yiUIbHB5UTF4XV
+          b4wz9mobzqvtWzZHBuWIrpy9scnjgdFZG/bZM17z/khLQbazcjqWA18GJpjFa/F6
+          5SvoD3rZDUFwNIsuJ+tgvgj5wGYcSxne2izS1MEpBh5D4yXxK7qaYhxeas2cU8Yf
+          DM1VtlUlGTnpqr1pPwk9XYjubled2tutLoZxHaML+Q+zw7IT/jO3nzyvRAPl6lr6
+          iVjLE2AqL+2IFaE=
+          -----END CERTIFICATE-----
+          CERT
+          openssl x509 -in "$RUNNER_TEMP/track_a_epoch_001_custody_cert.pem" -noout >/dev/null
+
+      - name: Execute frozen authorized blinded collection
+        shell: bash
+        run: |
+          set -euo pipefail
+          python experiments/pdmal_pilot/run_track_a_epoch_001.py --execute | tee "$RUNNER_TEMP/track_a_epoch_001_collection_stdout.txt"
+          grep -Fx 'TRACK_A_EPOCH_001_COLLECTION_COMPLETE: 50 seeds; 2250 observations' "$RUNNER_TEMP/track_a_epoch_001_collection_stdout.txt"
+
+      - name: Verify collection file counts without inspecting outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find "$PDMAL_TRACK_A_PUBLIC_OUTPUT_DIR" -maxdepth 1 -type f -name 'track_a_epoch_001_seed_*.json' | wc -l)" -eq 50
+          test "$(find "$PDMAL_TRACK_A_PUBLIC_OUTPUT_DIR" -maxdepth 1 -type f -name 'track_a_epoch_001_seed_*.json.sha256' | wc -l)" -eq 50
+          test -f "$PDMAL_TRACK_A_PUBLIC_OUTPUT_DIR/track_a_epoch_001_manifest.json"
+          test -f "$PDMAL_TRACK_A_PUBLIC_OUTPUT_DIR/track_a_epoch_001_manifest.json.sha256"
+          test "$(find "$PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR" -maxdepth 1 -type f -name 'track_a_epoch_001_mapping_*.json' | wc -l)" -eq 50
+          test "$(find "$PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR" -maxdepth 1 -type f -name 'track_a_epoch_001_mapping_*.json.sha256' | wc -l)" -eq 50
+          test -f "$PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR/track_a_epoch_001_blinding_key_custody.json"
+          test -f "$PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR/track_a_epoch_001_blinding_key_custody.json.sha256"
+
+      - name: Encrypt protected custody bundle and destroy plaintext retention copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          protected_tar="$RUNNER_TEMP/track_a_epoch_001_protected.tar"
+          protected_cipher="$RUNNER_TEMP/track_a_epoch_001_protected.cms"
+          tar -C "$PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR" -cf "$protected_tar" .
+          sha256sum "$protected_tar" > "$RUNNER_TEMP/track_a_epoch_001_protected_plaintext_tar.sha256"
+          openssl cms -encrypt -binary -aes256 \
+            -in "$protected_tar" \
+            -outform DER \
+            -out "$protected_cipher" \
+            "$RUNNER_TEMP/track_a_epoch_001_custody_cert.pem"
+          sha256sum "$protected_cipher" > "$RUNNER_TEMP/track_a_epoch_001_protected_ciphertext.sha256"
+          sha256sum "$RUNNER_TEMP/track_a_epoch_001_custody_cert.pem" > "$RUNNER_TEMP/track_a_epoch_001_custody_cert.sha256"
+          rm -f "$protected_tar"
+          rm -rf "$PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR"
+          test ! -e "$PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR"
+          test -s "$protected_cipher"
+
+      - name: Upload blinded public collection artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-a-epoch-001-public-blinded-482
+          path: |
+            ${{ env.PDMAL_TRACK_A_PUBLIC_OUTPUT_DIR }}
+            ${{ runner.temp }}/track_a_epoch_001_collection_stdout.txt
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload encrypted protected custody artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-a-epoch-001-protected-encrypted-482
+          path: |
+            ${{ runner.temp }}/track_a_epoch_001_protected.cms
+            ${{ runner.temp }}/track_a_epoch_001_protected_plaintext_tar.sha256
+            ${{ runner.temp }}/track_a_epoch_001_protected_ciphertext.sha256
+            ${{ runner.temp }}/track_a_epoch_001_custody_cert.pem
+            ${{ runner.temp }}/track_a_epoch_001_custody_cert.sha256
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Preserve post-collection boundary
+        run: |
+          echo 'TRACK_A_EPOCH_001_COLLECTION = COMPLETE_IF_THIS_JOB_SUCCEEDS'
+          echo 'TRACK_A_UNBLINDING = NOT_AUTHORIZED'
+          echo 'OUTCOME_AGGREGATION = NOT_PERFORMED'
+          echo 'CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED'
+          echo 'HIGH_ASSURANCE = NOT_AUTHORIZED'
