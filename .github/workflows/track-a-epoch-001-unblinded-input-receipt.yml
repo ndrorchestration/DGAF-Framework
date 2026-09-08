@@ -1,0 +1,64 @@
+name: Track A Epoch 001 Unblinded Input Receipt
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-unblinded-input-receipt.yml'
+      - 'scripts/validate_track_a_epoch_001_unblinded_input_receipt.py'
+      - 'tests/test_track_a_epoch_001_unblinded_input_receipt.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDED_INPUT_RECEIPT.json'
+  push:
+    paths:
+      - '.github/workflows/track-a-epoch-001-unblinded-input-receipt.yml'
+      - 'scripts/validate_track_a_epoch_001_unblinded_input_receipt.py'
+      - 'tests/test_track_a_epoch_001_unblinded_input_receipt.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDED_INPUT_RECEIPT.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact validation head with history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact validation head
+        env:
+          EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run receipt validator contract tests
+        run: python -m unittest -v tests.test_track_a_epoch_001_unblinded_input_receipt
+
+      - name: Validate current gate state
+        run: |
+          set -euo pipefail
+          if test -f docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDED_INPUT_RECEIPT.json; then
+            python scripts/validate_track_a_epoch_001_unblinded_input_receipt.py
+          else
+            python scripts/validate_track_a_epoch_001_unblinded_input_receipt.py --expect-absent
+          fi
+
+      - name: Preserve non-analytical boundary
+        run: |
+          set -euo pipefail
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRIMARY_ANALYSIS_AUTHORIZATION.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRIMARY_RESULT.json
+          echo 'PRIMARY_ANALYSIS_RUN=FALSE'
+          echo 'OUTCOME_AGGREGATION=FALSE'
+          echo 'CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED'
+          echo 'HIGH_ASSURANCE=NOT_AUTHORIZED'
