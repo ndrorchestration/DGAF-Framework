@@ -1,0 +1,65 @@
+{
+  "record_type": "DGAF_CANONICAL_PDMAL_TREATMENT_PROFILE_CANDIDATE",
+  "schema_version": 1,
+  "profile_id": "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1",
+  "status": "NONEMPIRICAL_CANDIDATE_PROFILE",
+  "empirical_authorization": false,
+  "scientific_n_increment": 0,
+  "canonical_p30": {
+    "authority": "S035_P11_11Q_ATTESTATION",
+    "location": "EXTERNAL_GOVERNANCE_PROMOTION_ATTESTATION",
+    "per_turn_scoring": false,
+    "tgl_step": 8,
+    "step8_semantics": "VERIFY_EXTERNAL_QUALIFICATION_ARTIFACT"
+  },
+  "legacy_runtime_gate": {
+    "id": "LEGACY_APOGEE_RUNTIME_CONFIDENCE_GATE_V1",
+    "allowed_in_profile": false,
+    "status": "RETIRED_FROM_CANONICAL_DGAF_TREATMENT"
+  },
+  "step8_qualification_contract": {
+    "record_type": "DGAF_P30_11Q_PROFILE_QUALIFICATION",
+    "schema_version": 1,
+    "attestation_gate": "P-30",
+    "rubric": "P-11 11Q Attestation Scoring",
+    "profile_id_must_match": true,
+    "profile_source_sha_must_match": true,
+    "artifact_sha256_must_match_external_expected_digest": true,
+    "accepted_s_tier": {
+      "minimum_percentage": 95.0,
+      "minimum_q11": 9,
+      "allowed_results": ["GRANTED"]
+    },
+    "accepted_a_tier": {
+      "minimum_percentage": 85.0,
+      "requires_open_blg_count_greater_than_zero": true,
+      "allowed_results": ["CONDITIONAL"]
+    },
+    "accepted_verification_classes": [
+      "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+      "INDEPENDENT_VERIFIED"
+    ]
+  },
+  "forbidden_step8_inputs": [
+    "empirical_outcomes",
+    "ffcr",
+    "agent_values",
+    "topology",
+    "failure_count",
+    "runtime_confidence_scalar",
+    "default_constant",
+    "phi_constant",
+    "synthetic_confidence_fixture"
+  ],
+  "historical_evidence_policy": {
+    "rewrite_experiment_001": false,
+    "rewrite_epoch_002": false,
+    "rewrite_epoch_003": false,
+    "pool_with_future_canonical_epoch": false
+  },
+  "next_gate": {
+    "required": "SOURCE_BOUND_DEVELOPER_11Q_QUALIFICATION_THEN_NONEMPIRICAL_MATRIX_DIAGNOSTIC",
+    "new_canonical_empirical_epoch": "NOT_AUTHORIZED",
+    "high_assurance_changed": false
+  }
+}

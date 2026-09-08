@@ -1,0 +1,38 @@
+name: Canonical Treatment Profile Validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/governance/CANONICAL_PDMAL_TREATMENT_PROFILE_CANDIDATE_V1.*'
+      - 'experiments/pdmal_pilot/canonical_p30_qualification.py'
+      - 'experiments/pdmal_pilot/test_canonical_p30_qualification.py'
+      - 'scripts/validate_canonical_treatment_profile.py'
+      - '.github/workflows/canonical-treatment-profile.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate machine-readable profile boundary
+        run: python scripts/validate_canonical_treatment_profile.py
+      - name: Run qualification verifier tests
+        env:
+          PYTHONPATH: experiments/pdmal_pilot
+        run: python -m pytest -q experiments/pdmal_pilot/test_canonical_p30_qualification.py
+      - name: Prove no empirical execution lane exists in this workflow
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/canonical-treatment-profile.yml').read_text()
+          forbidden = ('run_pilot.py', 'run_p30_variant.py', 'solo-experiment/run-', 'solo-p30-variant/run-')
+          assert not any(x in text for x in forbidden)
+          print('PASS_NONEMPIRICAL_WORKFLOW')
+          PY
