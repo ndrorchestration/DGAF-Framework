@@ -2,7 +2,7 @@
 """
 DGAF-GATE-KAPPA Dynamic Weight Router with Confidence Scoring
 Version: 3.6.0 | Status: ACTIVE | Agent: Amethyst
-Calibrated: 2026-05-29 | Anchor: S043
+Calibrated: 2026-05-22 | Authority: S034/S066 + P-34
 
 Fix (v3.6.0): Resolved predicate shadow bug affecting TC1/TC2/TC7/TC8.
   - Root cause: `governance_clear` catch-all pattern (.* .*) matched
@@ -24,9 +24,9 @@ Auto-selects reliability score weights based on input category detection:
 - High-volume/batch   -> Efficiency-First weights (cost-sensitive)
 
 Confidence scoring:
-- >= 0.28: apply_strong (use category weights directly)
-- 0.25-0.28: apply_blended (blend with balanced)
-- < 0.25: fallback_balanced (use balanced weights)
+- >= 0.22: apply_strong (use category weights directly)
+- 0.18-0.22: apply_blended (blend with balanced)
+- < 0.18: fallback_balanced (use balanced weights)
 """
 
 import re
@@ -102,8 +102,8 @@ MIN_LENGTH_FOR_HIGH_CONF = 40
 PATTERN_WEIGHT = 0.60
 ENTROPY_WEIGHT = 0.20
 KAPPA_WEIGHT = 0.20
-STRONG_THRESH = 0.28
-BLENDED_THRESH = 0.25
+STRONG_THRESH = 0.22
+BLENDED_THRESH = 0.18
 
 # ---------------------------------------------------------------------------
 # Category detection patterns
