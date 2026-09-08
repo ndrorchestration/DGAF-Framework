@@ -64,15 +64,12 @@ for _field, _value in MUTATIONS.items():
     )
 
 
-def test_protected_source_drift_shape():
+def test_protected_source_drift_shape(self):
     data = copy.deepcopy(v.expected_freeze())
     first = next(iter(data["protected_source_blobs"]))
     data["protected_source_blobs"][first] = "0" * 40
-    try:
+    with self.assertRaises(SystemExit):
         v.require_exact_record(data)
-    except SystemExit:
-        return
-    raise AssertionError("protected source mutation must fail closed")
 
 
 setattr(
