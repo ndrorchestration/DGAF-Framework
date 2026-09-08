@@ -19,11 +19,11 @@ from time import monotonic
 
 import numpy as np
 
+from canonical_epoch_004_adapter import CanonicalEpoch004TGLAdapter
 from canonical_profile_tgl_diagnostic import (
     PROFILE_ID,
     PROFILE_SOURCE_SHA,
     QUALIFICATION_SHA256,
-    CanonicalQualifiedTGLAdapter,
     load_and_validate_qualification,
 )
 from dgaf_tgl_adapter import ConsensusState
@@ -165,7 +165,7 @@ class CanonicalEpoch004Task(ConsensusTask):
         failure_count_current: int,
         failure_count_total: int,
     ):
-        adapter = CanonicalQualifiedTGLAdapter(
+        adapter = CanonicalEpoch004TGLAdapter(
             session_id=f"epoch004-{self.trial_key(seed, self.topology, self.condition, self.failure_count)}",
             qualification_bytes=self.qualification_bytes,
         )
