@@ -1,0 +1,41 @@
+name: Track A Epoch 001 Analysis Lock
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/pdmal_pilot/track_a_epoch_001_analysis.py'
+      - 'experiments/pdmal_pilot/test_track_a_epoch_001_analysis.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+      - 'docs/experiment/TRACK_A_EPOCH_001_ANALYSIS_LOCK.json'
+      - 'scripts/validate_track_a_epoch_001_analysis_lock.py'
+      - '.github/workflows/track-a-epoch-001-analysis-lock.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-analysis-lock:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - name: Install hash-locked analysis dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+      - name: Validate immutable source/config/environment binding
+        run: python scripts/validate_track_a_epoch_001_analysis_lock.py
+      - name: Run Track A primary analysis tests
+        run: python -m pytest experiments/pdmal_pilot/test_track_a_epoch_001_analysis.py -q
+      - name: Prove non-authorizing boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('docs/experiment/TRACK_A_EPOCH_001_ANALYSIS_LOCK.json').read_text())
+          assert d['boundaries']['runner_implemented_by_this_lock'] is False
+          assert d['boundaries']['collection_authorized'] is False
+          assert d['boundaries']['unblinding_authorized'] is False
+          assert d['boundaries']['scientific_n_increment'] == 0
+          print('TRACK_A_ANALYSIS_LOCK_NONAUTHORIZING_BOUNDARY_PASS')
+          PY
