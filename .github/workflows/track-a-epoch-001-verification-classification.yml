@@ -1,0 +1,69 @@
+name: Track A Epoch 001 Verification Classification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/track-a-epoch-001-verification-classification.yml'
+      - 'scripts/validate_track_a_epoch_001_verification_classification.py'
+      - 'tests/test_track_a_epoch_001_verification_classification.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run verification-validator mutation tests
+        run: python -m unittest -v tests/test_track_a_epoch_001_verification_classification.py
+
+      - name: Validate tooling-only or exact one-file verification event
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          verification='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json'
+          if test -e "$verification"; then
+            python scripts/validate_track_a_epoch_001_verification_classification.py
+          else
+            python scripts/validate_track_a_epoch_001_verification_classification.py --expect-absent
+            mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+            expected=(
+              '.github/workflows/track-a-epoch-001-verification-classification.yml'
+              'scripts/validate_track_a_epoch_001_verification_classification.py'
+              'tests/test_track_a_epoch_001_verification_classification.py'
+            )
+            mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+            test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+            diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+          fi
+
+      - name: Prove collection authorization remains absent
+        run: test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json
+
+      - name: Prove verification gate remains non-authorizing
+        run: |
+          echo 'TRACK_A_CLOSURE = ESTABLISHED'
+          echo 'TRACK_A_EMPIRICAL_EXECUTION = NOT_AUTHORIZED'
+          echo 'SCIENTIFIC_N_INCREMENT = 0'
+          echo 'CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED'
+          echo 'HIGH_ASSURANCE = NOT_AUTHORIZED / N=0'
