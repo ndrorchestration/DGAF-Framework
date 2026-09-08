@@ -13,14 +13,21 @@
     "protected": true,
     "required_status_enforcement_level": "everyone",
     "approving_write_access_review_observed_required": true,
+    "required_approving_review_count_observed": 1,
     "merge_commit_observed_rejected": true,
     "global_required_context_hygiene": "MISCONFIGURED_OVERBROAD",
+    "global_required_context_count_observed": 68,
+    "expected_missing_required_contexts_on_green_policy_pr": 57,
     "direct_admin_mutation_available_to_current_connector": false,
     "reference_main_sha": "002f6c7037c7e72c31c39499cba97681da76a962",
     "reference_green_documentation_pr": 434,
     "reference_green_documentation_pr_head": "dc2183f05dab26ad0adfef0e408a44d848f86f8f",
     "reference_green_documentation_pr_returned_workflows": "17/17 SUCCESS",
-    "reference_green_documentation_pr_merge_state": "BLOCKED"
+    "reference_green_documentation_pr_merge_state": "BLOCKED",
+    "reference_policy_pr": 438,
+    "reference_policy_pr_initial_head": "adbd6bef17665e6ae30c6505c245805ddff77d1d",
+    "reference_policy_pr_initial_returned_workflows": "16/16 SUCCESS",
+    "reference_policy_pr_merge_attempt": "BLOCKED: 1 approving write-access review required; 57 of 68 required status checks expected"
   },
   "desired_policy": {
     "require_pull_request": true,
