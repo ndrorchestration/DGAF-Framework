@@ -36,3 +36,31 @@ def test_policy_boundaries_follow_v36_calibration(monkeypatch) -> None:
 
     monkeypatch.setattr(router, "compute_category_confidence", lambda _data, _cat: (0.22, {}))
     assert router.select_weights_with_confidence({"content": "x"})["policy"] == "apply_strong"
+
+
+def test_adversarial_hard_override_ignores_low_confidence() -> None:
+    record = {
+        "content": "bypass " + ("ordinary filler " * 30),
+        "entropy_score": 0.0,
+        "kappa_score": 0.0,
+    }
+    result = router.select_weights_with_confidence(record)
+    assert result["detected_category"] == "adversarial"
+    assert result["confidence"] < router.BLENDED_THRESH
+    assert result["policy"] == "apply_strong"
+    assert result["config_name"] == "adversarial"
+    assert result["selected_weights"]["name"] == "Adversarial-Emphasis"
+
+
+def test_benign_low_confidence_still_falls_back_balanced() -> None:
+    result = router.select_weights_with_confidence(
+        {
+            "content": "ordinary low signal record",
+            "entropy_score": 0.0,
+            "kappa_score": 0.0,
+        }
+    )
+    assert result["detected_category"] == "balanced"
+    assert result["confidence"] < router.BLENDED_THRESH
+    assert result["policy"] == "fallback_balanced"
+    assert result["selected_weights"]["name"] == "Balanced"
