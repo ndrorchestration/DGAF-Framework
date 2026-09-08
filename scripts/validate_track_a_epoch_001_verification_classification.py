@@ -21,6 +21,7 @@ FROZEN_CANDIDATE_SHA = "961b9918002c4c68afac9c0fd5dd3e352e49b926"
 FROZEN_CANDIDATE_TREE_SHA = "f20fa0ffee4b47872d84ce10cc9fd05e75c7306d"
 FREEZE_MANIFEST_BLOB_SHA = "ae15c6282351c01bd13ace2423d273ba0dde8348"
 CLOSURE_PACKET_BLOB_SHA = "c32d89385c29c9e5cd0a706630c1955fb3f5f1c8"
+VERIFICATION_BLOB_SHA = "c67d09052faa7ae50de6eca57691ed50d906a951"
 
 EXPECTED_PROTECTED_SOURCE_BLOBS = {
     "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json": "52148950ff054a407c2e6b5cf36103695cf96474",
@@ -81,8 +82,12 @@ EXPECTED_VERIFICATION = {
 
 def git(*args: str, check: bool = True) -> str:
     proc = subprocess.run(
-        ["git", *args], cwd=ROOT, text=True, stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE, check=False
+        ["git", *args],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
     )
     if check and proc.returncode != 0:
         raise SystemExit(f"git {' '.join(args)} failed: {proc.stderr.strip()}")
@@ -90,14 +95,31 @@ def git(*args: str, check: bool = True) -> str:
 
 
 def git_object_exists(spec: str) -> bool:
-    return subprocess.run(
-        ["git", "cat-file", "-e", spec], cwd=ROOT,
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False
-    ).returncode == 0
+    return (
+        subprocess.run(
+            ["git", "cat-file", "-e", spec],
+            cwd=ROOT,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).returncode
+        == 0
+    )
 
 
 def git_blob(rev: str, path: str) -> str:
     return git("rev-parse", f"{rev}:{path}")
+
+
+def is_ancestor(ancestor: str, descendant: str) -> bool:
+    return (
+        subprocess.run(
+            ["git", "merge-base", "--is-ancestor", ancestor, descendant],
+            cwd=ROOT,
+            check=False,
+        ).returncode
+        == 0
+    )
 
 
 def load_json(path: Path) -> dict:
@@ -122,39 +144,40 @@ def require_exact_object(actual: dict, expected: dict, label: str) -> None:
 
 def validate_verification_record(data: dict) -> None:
     require_exact_object(data, EXPECTED_VERIFICATION, "verification classification")
+    if data["independent_verification"] is not False:
+        raise SystemExit("same-system verification cannot claim independence")
+    if data["same_system_custody"] is not True:
+        raise SystemExit("same-system custody must be explicit")
+    if data["verification_class"] != "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT":
+        raise SystemExit("verification class exceeds supported evidence")
 
 
 def validate_chain(head: str) -> None:
     if git("rev-parse", f"{FROZEN_CANDIDATE_SHA}^{{tree}}") != FROZEN_CANDIDATE_TREE_SHA:
         raise SystemExit("frozen candidate tree drift")
-    if subprocess.run(
-        ["git", "merge-base", "--is-ancestor", FROZEN_CANDIDATE_SHA, head],
-        cwd=ROOT, check=False
-    ).returncode != 0:
+    if not is_ancestor(FROZEN_CANDIDATE_SHA, head):
         raise SystemExit("frozen candidate is not an ancestor of verification head")
 
     if git_blob(head, FREEZE_REL) != FREEZE_MANIFEST_BLOB_SHA:
         raise SystemExit("freeze manifest blob drift")
     require_exact_object(load_json(FREEZE_PATH), EXPECTED_FREEZE, "freeze manifest")
-    freeze_history = [x for x in git("log", "--format=%H", "--", FREEZE_REL).splitlines() if x]
+    freeze_history = [
+        x for x in git("log", "--format=%H", "--", FREEZE_REL).splitlines() if x
+    ]
     if len(freeze_history) != 1:
         raise SystemExit(f"freeze manifest history drift: {freeze_history}")
-    if subprocess.run(
-        ["git", "merge-base", "--is-ancestor", freeze_history[0], head],
-        cwd=ROOT, check=False
-    ).returncode != 0:
+    if not is_ancestor(freeze_history[0], head):
         raise SystemExit("freeze commit is not an ancestor of verification head")
 
     if git_blob(head, CLOSURE_REL) != CLOSURE_PACKET_BLOB_SHA:
         raise SystemExit("closure packet blob drift")
     require_exact_object(load_json(CLOSURE_PATH), EXPECTED_CLOSURE, "closure packet")
-    closure_history = [x for x in git("log", "--format=%H", "--", CLOSURE_REL).splitlines() if x]
+    closure_history = [
+        x for x in git("log", "--format=%H", "--", CLOSURE_REL).splitlines() if x
+    ]
     if len(closure_history) != 1:
         raise SystemExit(f"closure packet history drift: {closure_history}")
-    if subprocess.run(
-        ["git", "merge-base", "--is-ancestor", closure_history[0], head],
-        cwd=ROOT, check=False
-    ).returncode != 0:
+    if not is_ancestor(closure_history[0], head):
         raise SystemExit("closure commit is not an ancestor of verification head")
 
     for path, wanted in EXPECTED_PROTECTED_SOURCE_BLOBS.items():
@@ -163,23 +186,64 @@ def validate_chain(head: str) -> None:
         if git_blob(head, path) != wanted:
             raise SystemExit(f"current protected source drift: {path}")
 
-    if AUTH_PATH.exists():
-        raise SystemExit("collection authorization must remain absent")
+
+def validate_established_verification_metadata(
+    *, verification_blob: str, verification_history: list[str], verification_is_ancestor: bool
+) -> None:
+    if verification_blob != VERIFICATION_BLOB_SHA:
+        raise SystemExit(
+            f"established verification blob drift: {verification_blob} != {VERIFICATION_BLOB_SHA}"
+        )
+    if len(verification_history) != 1:
+        raise SystemExit(
+            "established verification must have exactly one immutable history commit; "
+            f"got {verification_history}"
+        )
+    if not verification_is_ancestor:
+        raise SystemExit("established verification commit is not an ancestor of successor head")
 
 
-def validate_repository(*, expect_absent: bool) -> None:
+def validate_established_verification(head: str) -> None:
+    if not VERIFICATION_PATH.exists():
+        raise SystemExit("established verification classification is missing")
+    validate_verification_record(load_json(VERIFICATION_PATH))
+
+    verification_history = [
+        x for x in git("log", "--format=%H", "--", VERIFICATION_REL).splitlines() if x
+    ]
+    verification_commit = verification_history[0] if len(verification_history) == 1 else ""
+    validate_established_verification_metadata(
+        verification_blob=git_blob(head, VERIFICATION_REL),
+        verification_history=verification_history,
+        verification_is_ancestor=bool(verification_commit)
+        and is_ancestor(verification_commit, head),
+    )
+
+
+def validate_repository(*, expect_absent: bool, expect_established: bool) -> None:
     head = git("rev-parse", "HEAD")
     validate_chain(head)
 
     if expect_absent:
         if VERIFICATION_PATH.exists():
             raise SystemExit("tooling mode requires verification classification to remain absent")
+        if AUTH_PATH.exists():
+            raise SystemExit("tooling mode requires collection authorization to remain absent")
         print("TRACK_A_EPOCH_001_VERIFICATION_TOOLING_PASS_NONAUTHORIZING")
         print("TRACK_A_VERIFICATION=NOT_ESTABLISHED")
         print("TRACK_A_EMPIRICAL_EXECUTION=NOT_AUTHORIZED")
         print("SCIENTIFIC_N_INCREMENT=0")
         return
 
+    if expect_established:
+        validate_established_verification(head)
+        print("TRACK_A_EPOCH_001_VERIFICATION_ESTABLISHED_SUCCESSOR_PASS")
+        print("TRACK_A_VERIFICATION=PASS_DEVELOPER_SELF_ATTESTED_NONINDEPENDENT")
+        print("VERIFICATION_SCIENTIFIC_N_INCREMENT=0")
+        return
+
+    if AUTH_PATH.exists():
+        raise SystemExit("verification event requires collection authorization to remain absent")
     if not VERIFICATION_PATH.exists():
         raise SystemExit("verification classification is missing")
     validate_verification_record(load_json(VERIFICATION_PATH))
@@ -189,23 +253,23 @@ def validate_repository(*, expect_absent: bool) -> None:
         raise SystemExit("verification head must have exactly one parent")
     parent = parents[1]
     changed = sorted(
-        x for x in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if x
+        x
+        for x in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines()
+        if x
     )
     if changed != [VERIFICATION_REL]:
         raise SystemExit(f"verification head must change only {VERIFICATION_REL}; got {changed}")
     if git_object_exists(f"{parent}:{VERIFICATION_REL}"):
         raise SystemExit("verification path unexpectedly existed at parent")
-    history = [x for x in git("log", "--format=%H", "--", VERIFICATION_REL).splitlines() if x]
+    history = [
+        x for x in git("log", "--format=%H", "--", VERIFICATION_REL).splitlines() if x
+    ]
     if history != [head]:
-        raise SystemExit(f"verification path must have exactly one history commit at HEAD; got {history}")
-
-    data = load_json(VERIFICATION_PATH)
-    if data["independent_verification"] is not False:
-        raise SystemExit("same-system verification cannot claim independence")
-    if data["same_system_custody"] is not True:
-        raise SystemExit("same-system custody must be explicit")
-    if data["verification_class"] != "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT":
-        raise SystemExit("verification class exceeds supported evidence")
+        raise SystemExit(
+            f"verification path must have exactly one history commit at HEAD; got {history}"
+        )
+    if git_blob(head, VERIFICATION_REL) != VERIFICATION_BLOB_SHA:
+        raise SystemExit("verification event does not produce the exact immutable verification blob")
 
     print("TRACK_A_EPOCH_001_VERIFICATION_EVENT_PASS_NONAUTHORIZING")
     print("TRACK_A_VERIFICATION=PASS_DEVELOPER_SELF_ATTESTED_NONINDEPENDENT")
@@ -215,9 +279,14 @@ def validate_repository(*, expect_absent: bool) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--expect-absent", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--expect-absent", action="store_true")
+    mode.add_argument("--expect-established", action="store_true")
     args = parser.parse_args()
-    validate_repository(expect_absent=args.expect_absent)
+    validate_repository(
+        expect_absent=args.expect_absent,
+        expect_established=args.expect_established,
+    )
     return 0
 
 
