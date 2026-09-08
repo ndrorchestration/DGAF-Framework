@@ -1,0 +1,128 @@
+{
+  "record_type": "TRACK_A_TOPOLOGY_ROBUSTNESS_EMPIRICAL_PREREGISTRATION",
+  "schema_version": 1,
+  "controller_issue": 410,
+  "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-001",
+  "status": "PROPOSAL_ONLY_NOT_AUTHORIZED",
+  "verification_class": "DEVELOPER_PREREGISTERED_NONINDEPENDENT",
+  "independent_verification": false,
+  "empirical_execution_authorized": false,
+  "scientific_n_increment_at_preregistration": 0,
+  "source_bindings": {
+    "architecture_merge_sha": "5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+    "profile_merge_sha": "b1e333ee9f9e0a4da78788e5ff019603296888eb",
+    "qualification_merge_sha": "647f612a2412818dca0d632229f352e857e1187e",
+    "adjudication_merge_sha": "ccabc065d0c1d183e1954ea36a947289fb084831",
+    "profile_id": "PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1",
+    "profile_blob_sha": "339d9ada4978ffd0c1eee67c310323f1e7fdc06a",
+    "qualification_blob_sha": "217028dc03aad6eb6a1a13cb6e32418782c43b08",
+    "adjudication_blob_sha": "26cb5817283727bac3c51135384810e850ce65e8",
+    "retained_structural_artifact_id": 10041800252,
+    "retained_structural_archive_digest": "sha256:629ee0be7a48606685f2452800ab4e482611fb45f7268d881e934488e1c1c1d5",
+    "retained_structural_payload_sha256": "e51497d150530d983f94002d23a21608be9135ca300d29a47b126ed184fdc489"
+  },
+  "research_question": "Under the fixed reference neighbor-mean alpha-0.5 consensus algorithm, does the PDMAL topology yield higher failure-and-recovery success than the matched random-regular topology across the preregistered failure-count panel?",
+  "directional_hypothesis": "PDMAL_TOPOLOGY_FFCR_GREATER_THAN_RANDOM_REGULAR",
+  "algorithm": {
+    "public_id": "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1",
+    "alpha": 0.5,
+    "condition_axis": false,
+    "dgaf_semantic_gate_path": false
+  },
+  "matrix": {
+    "topologies": ["ring", "pdmal", "random_regular", "small_world", "complete"],
+    "failure_counts": [0, 1, 2, 3, 4, 5, 6, 8, 10],
+    "seed_rule": "inclusive_integer_range_20270101_20270150",
+    "seeds": [20270101, 20270102, 20270103, 20270104, 20270105, 20270106, 20270107, 20270108, 20270109, 20270110, 20270111, 20270112, 20270113, 20270114, 20270115, 20270116, 20270117, 20270118, 20270119, 20270120, 20270121, 20270122, 20270123, 20270124, 20270125, 20270126, 20270127, 20270128, 20270129, 20270130, 20270131, 20270132, 20270133, 20270134, 20270135, 20270136, 20270137, 20270138, 20270139, 20270140, 20270141, 20270142, 20270143, 20270144, 20270145, 20270146, 20270147, 20270148, 20270149, 20270150],
+    "historical_seed_ranges_excluded": ["20260819..20260868", "20260901..20260950", "20261001..20261050"],
+    "diagnostic_seeds_excluded": [20261201, 20261202],
+    "seed_count": 50,
+    "cells_per_seed": 45,
+    "expected_total_observations": 2250
+  },
+  "endpoint": {
+    "field": "ffcr_success",
+    "type": "boolean",
+    "success_definition": "pre_existing_fixed_convergence_contract",
+    "endpoint_changes_after_freeze_allowed": false
+  },
+  "primary_analysis": {
+    "primary_comparator": "random_regular",
+    "primary_topology": "pdmal",
+    "seed_level_pdmal_ffcr": "mean(ffcr_success over the 9 registered failure counts for topology=pdmal within one seed)",
+    "seed_level_random_regular_ffcr": "mean(ffcr_success over the 9 registered failure counts for topology=random_regular within the same seed)",
+    "paired_seed_effect": "seed_level_pdmal_ffcr - seed_level_random_regular_ffcr",
+    "estimand": "mean of 50 paired_seed_effect values",
+    "bootstrap": "paired_seed_effects_percentile",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20270151,
+    "confidence_interval": "two_sided_95_percentile",
+    "alpha": 0.05,
+    "directional_support_rule": "estimate_gt_0_and_two_sided_95pct_ci_lower_gt_0",
+    "directional_negative_rule": "estimate_lt_0_and_two_sided_95pct_ci_upper_lt_0",
+    "otherwise_rule": "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED"
+  },
+  "multiplicity_policy": {
+    "confirmatory_family": ["pdmal_vs_random_regular"],
+    "confirmatory_test_count": 1,
+    "other_topology_comparisons": "EXPLORATORY_ONLY",
+    "failure_count_specific_effects": "EXPLORATORY_ONLY",
+    "post_hoc_subgroups": "EXPLORATORY_ONLY",
+    "confirmatory_relabeling_from_exploratory_results": false
+  },
+  "sample_size_rationale": {
+    "paired_seed_units": 50,
+    "basis": "Prospectively fixed paired-seed panel matching the established PDMAL experimental scale while limiting this first Track A epoch to one algorithm and one confirmatory topology contrast.",
+    "power_claim": "NONE",
+    "precision_rule": "Interpretation is governed by the preregistered paired-bootstrap interval rather than a post-hoc power calculation."
+  },
+  "prospective_qc": {
+    "require_exact_seed_count": 50,
+    "require_exact_topology_count": 5,
+    "require_exact_failure_count_count": 9,
+    "require_exact_total_observations": 2250,
+    "require_one_record_per_seed_topology_failure_cell": true,
+    "require_no_duplicate_cells": true,
+    "require_boolean_ffcr_success": true,
+    "require_bound_algorithm_identity": true,
+    "require_environment_fingerprint": true,
+    "require_per_seed_integrity_sidecar": true,
+    "outcome_based_exclusion_allowed": false,
+    "missing_cell_policy": "FAIL_CLOSED_NO_CONFIRMATORY_ANALYSIS"
+  },
+  "blinding_and_custody": {
+    "analysis_label_blinding_required": true,
+    "full_topology_concealment_claimed": false,
+    "fresh_mapping_key_after_protocol_freeze": true,
+    "dataset_and_key_separate": true,
+    "same_developer_custody_is_independent": false,
+    "dataset_structural_lock_before_key_release": true,
+    "separate_unblinding_authorization_required": true,
+    "outcome_inspection_before_dataset_lock": false
+  },
+  "historical_evidence_policy": {
+    "pool_experiment_001": false,
+    "pool_epoch_003": false,
+    "pool_epoch_004": false,
+    "pool_structural_diagnostic_seeds": false,
+    "historical_outcomes_may_tune_endpoint_or_seed_panel": false
+  },
+  "claim_ceiling": {
+    "allowed_if_executed": "TRACK_A_PDMAL_VS_RANDOM_REGULAR_TOPOLOGY_ROBUSTNESS_UNDER_EXACT_FROZEN_REFERENCE_ALGORITHM_AND_PROTOCOL",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "integrated_track_c": "NOT_ESTABLISHED",
+    "independent_validation": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED_N0",
+    "production_readiness": "NOT_ESTABLISHED"
+  },
+  "next_gates": {
+    "analysis_implementation_lock": "REQUIRED_BEFORE_COLLECTION",
+    "runner_implementation": "SEPARATE_PR_REQUIRED",
+    "precollection_preflight": "REQUIRED",
+    "exact_candidate_freeze": "NOT_ESTABLISHED",
+    "collection_authorization": "SEPARATE_EXACT_COMMIT_REQUIRED",
+    "empirical_execution": "NOT_AUTHORIZED",
+    "high_assurance": "NOT_AUTHORIZED",
+    "high_assurance_empirical_n": 0
+  }
+}
