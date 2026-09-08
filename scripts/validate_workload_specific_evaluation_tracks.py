@@ -49,6 +49,13 @@ def main() -> int:
     assert git_blob(HISTORICAL_PROFILE) == EXPECTED_HISTORICAL_PROFILE_BLOB
     assert historical["profile_blob_sha"] == EXPECTED_HISTORICAL_PROFILE_BLOB
 
+    p27 = data["p27_adjudication"]
+    assert p27["issue"] == 390
+    assert p27["state"] == "CLOSED_COMPLETED"
+    assert p27["component_provenance"] == "ESTABLISHED_KAPPA_V3_6"
+    assert p27["pdmal_binding_fidelity"] == "NOT_ESTABLISHED"
+    assert p27["proxy_alpha_mapping"] == "REJECTED"
+
     tracks = data["tracks"]
     assert set(tracks) == {
         "A_PDMAL_TOPOLOGY_ROBUSTNESS",
