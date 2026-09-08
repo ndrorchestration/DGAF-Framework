@@ -1,0 +1,46 @@
+name: Canonical Epoch 004 Collection Contract
+
+on:
+  pull_request:
+    paths:
+      - 'docs/experiment/CANONICAL_EPOCH_004_COLLECTION_CONTRACT.json'
+      - 'docs/experiment/CANONICAL_SOLO_EMPIRICAL_EPOCH_004_PREREGISTRATION.json'
+      - 'docs/experiment/CANONICAL_EPOCH_004_TREATMENT_INPUT_PREFLIGHT.json'
+      - 'scripts/validate_canonical_epoch_004_collection_contract.py'
+      - 'scripts/validate_canonical_epoch_004_preregistration.py'
+      - 'scripts/validate_canonical_epoch_004_treatment_input_preflight.py'
+      - '.github/workflows/canonical-epoch-004-collection-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-contract-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate frozen collection contract
+        run: python scripts/validate_canonical_epoch_004_collection_contract.py
+
+      - name: Prove no execution surface exists
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/canonical-epoch-004-collection-contract.yml').read_text()
+          head = text.split('permissions:', 1)[0]
+          assert 'workflow_dispatch:' not in head
+          assert 'schedule:' not in head
+          contract = Path('docs/experiment/CANONICAL_EPOCH_004_COLLECTION_CONTRACT.json').read_text()
+          assert '"execution_authorization_status": "NOT_AUTHORIZED"' in contract
+          assert '"execution_request_status": "ABSENT"' in contract
+          assert '"empirical_execution_authorized": false' in contract
+          print('CANONICAL_EPOCH_004_COLLECTION_CONTRACT_ONLY_BOUNDARY_PASS')
+          PY
