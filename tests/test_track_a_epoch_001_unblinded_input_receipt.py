@@ -29,12 +29,12 @@ class TrackAUnblindedInputReceiptValidatorTests(unittest.TestCase):
 
     def test_tooling_mode_requires_receipt_absence(self) -> None:
         self.assertIn("--expect-absent", self.text)
-        self.assertIn('require(not Path(RECEIPT_REL).exists()', self.text)
+        self.assertIn("require(not Path(RECEIPT_REL).exists()", self.text)
 
     def test_future_event_is_one_parent_one_file_and_unique_history(self) -> None:
-        self.assertIn('require(len(parents) == 2', self.text)
-        self.assertIn('require(changed == [RECEIPT_REL]', self.text)
-        self.assertIn('require(history == [head]', self.text)
+        self.assertIn("require(len(parents) == 2", self.text)
+        self.assertIn("require(changed == [RECEIPT_REL]", self.text)
+        self.assertIn("require(history == [head]", self.text)
 
     def test_receipt_preserves_analysis_boundary(self) -> None:
         for text in (
@@ -49,7 +49,7 @@ class TrackAUnblindedInputReceiptValidatorTests(unittest.TestCase):
             self.assertIn(text, self.text)
 
     def test_receipt_requires_exact_shape_and_durable_retention(self) -> None:
-        self.assertIn('require(set(doc) == exact_keys()', self.text)
+        self.assertIn("require(set(doc) == exact_keys()", self.text)
         self.assertIn('"paired_seed_units": 50', self.text)
         self.assertIn('"record_count": 2250', self.text)
         self.assertIn('"structure_validation": "PASS"', self.text)
