@@ -1,0 +1,38 @@
+{
+  "record_type": "DGAF_B2_NONEMPIRICAL_INTEGRATION_ADJUDICATION",
+  "schema_version": 1,
+  "controller_issue": 427,
+  "profile_id": "DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1",
+  "implementation_merge_sha": "9e6971d5c8fc39e46acfe743e6588bbdc127abe8",
+  "qualification_merge_sha": "a82c56894f1334279dd62adc2b858c924d5ba05f",
+  "qualification_path": "docs/qa/APOGEE_11Q_DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1_S079.json",
+  "qualification_blob_sha": "035c690354be7acd5fbbfa2bcd95967d9c0a65c8",
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+  "adjudication": {
+    "exact_source_binding": "PASS",
+    "session_lifetime_persistence": "PASS",
+    "session_boundary_reset_only": "PASS",
+    "scpe_real_persisted_state": "PASS",
+    "phi_real_persisted_state": "PASS",
+    "ordinary_fibonacci_progression": "PASS",
+    "reprompt_limitation_preserved": "PASS",
+    "b1_b3_proxy_behavior_absent": "PASS",
+    "empirical_endpoint_absent": "PASS",
+    "historical_pooling_absent": "PASS",
+    "claim_ceiling_preserved": "PASS"
+  },
+  "qualification_summary": {
+    "score": 108,
+    "max_score": 110,
+    "tier": "S-TIER",
+    "q11": 9,
+    "independent_verification": false
+  },
+  "disposition": "PASS_B2_STANDALONE_NONEMPIRICAL_LANE_COMPLETE",
+  "allowed_next_gate": "FUTURE_TRACK_C_NONEMPIRICAL_COMPOSITION_PROPOSAL_AFTER_B1_B3_ELIGIBILITY",
+  "scientific_n_increment": 0,
+  "b2_empirical_execution_authorized": false,
+  "track_c_empirical_execution_authorized": false,
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}
