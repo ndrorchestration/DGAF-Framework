@@ -18,5 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12.0'
+      - name: Install focused test dependency
+        run: python -m pip install pytest==8.4.2
       - name: Run focused Sentinel precedence tests
         run: python -m pytest tests/test_sentinel_deontic_precedence.py -q
