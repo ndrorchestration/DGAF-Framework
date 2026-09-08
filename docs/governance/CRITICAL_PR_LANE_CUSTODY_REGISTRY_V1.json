@@ -1,10 +1,12 @@
 {
   "record_type": "DGAF_CRITICAL_PR_LANE_CUSTODY_REGISTRY",
-  "schema_version": 2,
+  "schema_version": 3,
   "registry_id": "CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1",
   "controller_issues": [439, 441],
-  "purpose": "Fail closed when a registered critical PR branch changes files outside its declared lane or moves to an unreconciled head identity.",
-  "head_change_semantics": "A registered lane must match current_reconciled_head exactly. Any new head requires an explicit reconciliation record and a fresh exact-head check result; prior exact-head evidence does not transfer.",
+  "purpose": "Fail closed when a registered critical PR branch changes files outside its declared lane or moves to a head identity not reconciled on the protected base branch.",
+  "registry_authority": "BASE_BRANCH_ONLY",
+  "reconciliation_protocol": "SEPARATE_UNREGISTERED_GOVERNANCE_PR",
+  "head_change_semantics": "Registered critical-lane PRs are validated against the custody registry on the protected base branch, not a registry embedded in the PR head. Any legitimate head movement requires a separate unregistered governance PR to record the new current_reconciled_head on the base branch, followed by a fresh complete exact-head workflow wave on the unchanged critical-lane head. Prior exact-head evidence never transfers.",
   "scientific_n_increment": 0,
   "registered_lanes": [
     {
@@ -47,7 +49,7 @@
           "evidence_transfer_from_predecessor": false
         }
       ],
-      "status": "REGISTERED_FOR_SCOPE_AND_HEAD_CUSTODY"
+      "status": "REGISTERED_FOR_BASE_AUTHORITATIVE_SCOPE_AND_HEAD_CUSTODY"
     }
   ],
   "claim_boundary": {
