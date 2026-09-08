@@ -7,7 +7,7 @@
   "preregistration_merge_sha": "26077b27ca336454148006e6daf4cd087005b421",
   "preregistration_blob_sha": "52148950ff054a407c2e6b5cf36103695cf96474",
   "analysis_path": "experiments/pdmal_pilot/track_a_epoch_001_analysis.py",
-  "analysis_blob_sha": "1ae463614de770314315527156916a5b5229cfdd",
+  "analysis_blob_sha": "76bc8e9604c5d7e039e324e73036f353dc8ea31f",
   "analysis_config_sha256": "355b164f69e91405819f092d0721b7597b87b06de79394a0c451169410a5ab6d",
   "python_version": "3.12.0",
   "numpy_version": "2.5.1",
