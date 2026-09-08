@@ -1,0 +1,258 @@
+name: Track A Epoch 001 Collection Execution
+
+# Empirical execution workflow. This workflow is intentionally manual-only and
+# checks out the exact one-file authorization commit before invoking the frozen
+# runner. PR/push validation must never execute the 2,250-observation panel.
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Type COLLECT_TRACK_A_EPOCH_001 to authorize this already-governed collection run'
+        required: true
+        type: string
+
+concurrency:
+  group: track-a-epoch-001-collection-execution
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  collect:
+    if: ${{ inputs.confirmation == 'COLLECT_TRACK_A_EPOCH_001' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      AUTHORIZATION_SHA: 659aaa4dea2dd42624747952f1a47f307e69a014
+      RELEASE_TAG: track-a-epoch-001-collection-v1
+      PDMAL_TRACK_A_RETENTION_PASSPHRASE: ${{ secrets.PDMAL_TRACK_A_RETENTION_PASSPHRASE }}
+    steps:
+      - name: Require protected-retention secret before any collection
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          value = os.environ.get('PDMAL_TRACK_A_RETENTION_PASSPHRASE', '')
+          if len(value.encode()) < 32:
+              raise SystemExit('protected-retention secret missing or shorter than 32 bytes; collection refused')
+          print('protected-retention secret present (value withheld)')
+          PY
+
+      - name: Checkout exact collection-authorization event with full history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.AUTHORIZATION_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact authorization HEAD and immutable authorization gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$AUTHORIZATION_SHA"
+          python scripts/validate_track_a_epoch_001_collection_authorization.py
+          test "$(git rev-list --parents -n 1 HEAD | awk '{print NF-1}')" = "1"
+          changed="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+          test "$changed" = "docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json"
+          echo "authorization_sha=$AUTHORIZATION_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "authorization_shape=PASS" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Refuse duplicate or ambiguous collection execution
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "A release/draft already exists for $RELEASE_TAG; refusing a second collection attempt." >&2
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags "https://github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "A tag already exists for $RELEASE_TAG; refusing a second collection attempt." >&2
+            exit 1
+          fi
+
+      - name: Establish durable restricted execution lease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$AUTHORIZATION_SHA" \
+            --draft \
+            --title "Track A Epoch 001 blinded collection custody record" \
+            --notes "Restricted draft custody record for the single authorized Track A Epoch 001 prospective collection. Creation of this draft marks an execution attempt. It does not establish efficacy, authorize unblinding, or authorize High-Assurance promotion."
+          echo "execution_lease=draft_release:$RELEASE_TAG" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install exact hash-locked experiment dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Execute frozen prospective collection with ephemeral blinding key
+        shell: bash
+        run: |
+          set -euo pipefail
+          public_root="$RUNNER_TEMP/track-a-public"
+          protected_root="$RUNNER_TEMP/track-a-protected"
+          mkdir -p "$public_root" "$protected_root"
+
+          blinding_key="$(openssl rand -hex 32)"
+          echo "::add-mask::$blinding_key"
+
+          export PDMAL_MODE=track_a_epoch_001
+          export PDMAL_PROTOCOL_FROZEN=1
+          export PDMAL_TRACK_A_EPOCH_001_AUTHORIZED=1
+          export PDMAL_UNBLINDING_AUTHORIZED=0
+          export PDMAL_PILOT_AUTHORIZED=0
+          export PDMAL_HISTORICAL_POOLING=0
+          export PDMAL_EPOCH_004_SUBSTITUTION=0
+          export PDMAL_TOPOLOGY_BLINDING_KEY="$blinding_key"
+          export PDMAL_TRACK_A_PUBLIC_OUTPUT_DIR="$public_root"
+          export PDMAL_TRACK_A_PROTECTED_OUTPUT_DIR="$protected_root"
+          export PYTHONPATH="$GITHUB_WORKSPACE/experiments/pdmal_pilot"
+
+          python experiments/pdmal_pilot/run_track_a_epoch_001.py --execute
+
+          unset PDMAL_TOPOLOGY_BLINDING_KEY
+          blinding_key=''
+
+          test -f "$public_root/track_a_epoch_001_manifest.json"
+          test -f "$protected_root/track_a_epoch_001_blinding_key_custody.json"
+
+      - name: Validate collection structure without outcome aggregation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          public_root = Path(os.environ['RUNNER_TEMP']) / 'track-a-public'
+          protected_root = Path(os.environ['RUNNER_TEMP']) / 'track-a-protected'
+          manifest = json.loads((public_root / 'track_a_epoch_001_manifest.json').read_text())
+          assert manifest['record_type'] == 'TRACK_A_EPOCH_001_BLINDED_COLLECTION_MANIFEST'
+          assert manifest['schema_version'] == 2
+          assert manifest['frozen_candidate_sha'] == '961b9918002c4c68afac9c0fd5dd3e352e49b926'
+          assert manifest['seed_count'] == 50
+          assert manifest['expected_observations'] == 2250
+          assert len(manifest['rows']) == 50
+          assert sum(int(row['record_count']) for row in manifest['rows']) == 2250
+          assert manifest['outcomes_inspected_by_collection_workflow'] is False
+          assert manifest['outcome_aggregation_performed'] is False
+          assert manifest['unblinding_authorized'] is False
+          assert manifest['historical_pooling_allowed'] is False
+          assert manifest['epoch_004_substitution_allowed'] is False
+
+          public_seed_files = sorted(public_root.glob('track_a_epoch_001_seed_*.json'))
+          mapping_files = sorted(protected_root.glob('track_a_epoch_001_mapping_*.json'))
+          assert len(public_seed_files) == 50
+          assert len(mapping_files) == 50
+          print('collection structure: PASS; 50 seeds; 2250 blinded observations; outcomes not aggregated')
+          PY
+
+      - name: Package public blinded evidence and encrypt protected custody bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          public_root="$RUNNER_TEMP/track-a-public"
+          protected_root="$RUNNER_TEMP/track-a-protected"
+          custody_root="$RUNNER_TEMP/track-a-custody"
+          mkdir -p "$custody_root"
+
+          tar -C "$public_root" -czf "$custody_root/track-a-epoch-001-public-blinded.tar.gz" .
+          tar -C "$protected_root" -czf "$RUNNER_TEMP/track-a-epoch-001-protected-plaintext.tar.gz" .
+
+          printf '%s' "$PDMAL_TRACK_A_RETENTION_PASSPHRASE" | gpg \
+            --batch --yes --pinentry-mode loopback --passphrase-fd 0 \
+            --symmetric --cipher-algo AES256 \
+            --output "$custody_root/track-a-epoch-001-protected.tar.gz.gpg" \
+            "$RUNNER_TEMP/track-a-epoch-001-protected-plaintext.tar.gz"
+
+          rm -f "$RUNNER_TEMP/track-a-epoch-001-protected-plaintext.tar.gz"
+          rm -rf "$protected_root"
+
+          test -s "$custody_root/track-a-epoch-001-public-blinded.tar.gz"
+          test -s "$custody_root/track-a-epoch-001-protected.tar.gz.gpg"
+          if find "$RUNNER_TEMP" -type f -name 'track_a_epoch_001_mapping_*.json' -print -quit | grep -q .; then
+            echo 'plaintext protected mapping remains after encryption; refusing retention' >&2
+            exit 1
+          fi
+
+      - name: Emit non-analytical collection completion record
+        shell: bash
+        run: |
+          set -euo pipefail
+          custody_root="$RUNNER_TEMP/track-a-custody"
+          public_sha256="$(sha256sum "$custody_root/track-a-epoch-001-public-blinded.tar.gz" | awk '{print $1}')"
+          protected_sha256="$(sha256sum "$custody_root/track-a-epoch-001-protected.tar.gz.gpg" | awk '{print $1}')"
+          export PUBLIC_BUNDLE_SHA256="$public_sha256"
+          export PROTECTED_BUNDLE_SHA256="$protected_sha256"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          record = {
+              'record_type': 'TRACK_A_EPOCH_001_COLLECTION_COMPLETION',
+              'schema_version': 1,
+              'authorization_sha': '659aaa4dea2dd42624747952f1a47f307e69a014',
+              'frozen_candidate_sha': '961b9918002c4c68afac9c0fd5dd3e352e49b926',
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'seed_count': 50,
+              'observation_count': 2250,
+              'public_bundle_sha256': os.environ['PUBLIC_BUNDLE_SHA256'],
+              'protected_encrypted_bundle_sha256': os.environ['PROTECTED_BUNDLE_SHA256'],
+              'protected_plaintext_retained': False,
+              'outcome_aggregation_performed': False,
+              'outcomes_inspected_by_collection_workflow': False,
+              'unblinding_authorized': False,
+              'high_assurance_authorized': False,
+              'canonical_dgaf_efficacy_established': False,
+              'verification_classification': 'PASS_DEVELOPER_SELF_ATTESTED_NONINDEPENDENT',
+          }
+          path = Path(os.environ['RUNNER_TEMP']) / 'track-a-custody' / 'track-a-epoch-001-collection-completion.json'
+          path.write_text(json.dumps(record, sort_keys=True, indent=2) + '\n')
+          PY
+          sha256sum "$custody_root/track-a-epoch-001-collection-completion.json" > "$custody_root/track-a-epoch-001-collection-completion.json.sha256"
+
+      - name: Retain blinded evidence and encrypted protected custody in restricted draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          custody_root="$RUNNER_TEMP/track-a-custody"
+          gh release upload "$RELEASE_TAG" \
+            "$custody_root/track-a-epoch-001-public-blinded.tar.gz" \
+            "$custody_root/track-a-epoch-001-protected.tar.gz.gpg" \
+            "$custody_root/track-a-epoch-001-collection-completion.json" \
+            "$custody_root/track-a-epoch-001-collection-completion.json.sha256" \
+            --repo "$GITHUB_REPOSITORY"
+
+          assets="$(gh api "repos/${GITHUB_REPOSITORY}/releases" --paginate --jq '.[] | select(.tag_name == "track-a-epoch-001-collection-v1") | .assets | length' | head -n1)"
+          test "$assets" = "4"
+          echo "collection_retention=PASS" >> "$GITHUB_STEP_SUMMARY"
+          echo "scientific_n=2250" >> "$GITHUB_STEP_SUMMARY"
+          echo "unblinding_authorized=false" >> "$GITHUB_STEP_SUMMARY"
+          echo "canonical_dgaf_efficacy=NOT_ESTABLISHED" >> "$GITHUB_STEP_SUMMARY"
+          echo "high_assurance_authorized=false" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove remaining local collection material
+        if: always()
+        shell: bash
+        run: |
+          rm -rf "$RUNNER_TEMP/track-a-public" "$RUNNER_TEMP/track-a-protected" "$RUNNER_TEMP/track-a-custody" || true
+          rm -f "$RUNNER_TEMP/track-a-epoch-001-protected-plaintext.tar.gz" || true
