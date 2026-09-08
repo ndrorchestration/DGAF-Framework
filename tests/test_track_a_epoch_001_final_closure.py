@@ -84,6 +84,47 @@ class FinalClosureValidatorTests(unittest.TestCase):
             "f20fa0ffee4b47872d84ce10cc9fd05e75c7306d",
         )
 
+    def test_closure_blob_identity_is_exact(self):
+        self.assertEqual(
+            closure.CLOSURE_PACKET_BLOB_SHA,
+            "c32d89385c29c9e5cd0a706630c1955fb3f5f1c8",
+        )
+
+    def test_established_closure_metadata_accepts_exact_state(self):
+        closure.validate_established_closure_metadata(
+            closure_blob=closure.CLOSURE_PACKET_BLOB_SHA,
+            closure_history=["a" * 40],
+            closure_is_ancestor=True,
+        )
+
+    def test_established_closure_metadata_fails_closed(self):
+        cases = [
+            {
+                "closure_blob": "0" * 40,
+                "closure_history": ["a" * 40],
+                "closure_is_ancestor": True,
+            },
+            {
+                "closure_blob": closure.CLOSURE_PACKET_BLOB_SHA,
+                "closure_history": [],
+                "closure_is_ancestor": False,
+            },
+            {
+                "closure_blob": closure.CLOSURE_PACKET_BLOB_SHA,
+                "closure_history": ["a" * 40, "b" * 40],
+                "closure_is_ancestor": True,
+            },
+            {
+                "closure_blob": closure.CLOSURE_PACKET_BLOB_SHA,
+                "closure_history": ["a" * 40],
+                "closure_is_ancestor": False,
+            },
+        ]
+        for case in cases:
+            with self.subTest(case=case):
+                with self.assertRaises(SystemExit):
+                    closure.validate_established_closure_metadata(**case)
+
     def test_closure_remains_non_authorizing(self):
         expected = closure.EXPECTED_CLOSURE
         self.assertEqual(expected["scientific_n_increment"], 0)

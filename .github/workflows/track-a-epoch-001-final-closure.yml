@@ -38,38 +38,58 @@ jobs:
       - name: Run closure-validator mutation tests
         run: python -m unittest -v tests/test_track_a_epoch_001_final_closure.py
 
-      - name: Validate tooling-only or exact one-file closure event
+      - name: Validate closure tooling, exact closure event, or established closure persistence
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
           git cat-file -e "$BASE_SHA^{commit}"
+
           closure='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET.json'
-          if test -e "$closure"; then
-            python scripts/validate_track_a_epoch_001_final_closure.py
+          verification='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json'
+          authorization='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json'
+          workflow='.github/workflows/track-a-epoch-001-final-closure.yml'
+          validator='scripts/validate_track_a_epoch_001_final_closure.py'
+          tests='tests/test_track_a_epoch_001_final_closure.py'
+
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+
+          if printf '%s\n' "${changed[@]}" | grep -Fxq "$closure"; then
+            # The closure artifact itself is being established. Preserve the original
+            # one-parent/one-file event semantics and require downstream absence.
+            python "$validator"
+            test ! -e "$verification"
+            test ! -e "$authorization"
+          elif test -e "$closure"; then
+            # Closure is already established. Prove its exact blob/content/history,
+            # ancestry, frozen chain, and protected sources remain immutable while
+            # successor-specific validators govern successor artifacts.
+            python "$validator" --expect-established
+
+            # If this PR modifies closure tooling, keep that maintenance scope exact;
+            # never permit a tooling repair to smuggle a successor or scientific edit.
+            if printf '%s\n' "${changed[@]}" | grep -Eq "^(${workflow}|${validator}|${tests})$"; then
+              expected=("$workflow" "$validator" "$tests")
+              mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+              test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+              diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+            fi
           else
-            python scripts/validate_track_a_epoch_001_final_closure.py --expect-absent
-            mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
-            expected=(
-              '.github/workflows/track-a-epoch-001-final-closure.yml'
-              'scripts/validate_track_a_epoch_001_final_closure.py'
-              'tests/test_track_a_epoch_001_final_closure.py'
-            )
+            # Historical/tooling-install mode before closure exists.
+            python "$validator" --expect-absent
+            expected=("$workflow" "$validator" "$tests")
             mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
             test "${#changed[@]}" -eq "${#expected_sorted[@]}"
             diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+            test ! -e "$verification"
+            test ! -e "$authorization"
           fi
 
-      - name: Prove downstream gates remain absent
-        run: |
-          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json
-          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json
-
-      - name: Prove closure gate remains non-authorizing
+      - name: Prove closure gate itself remains non-authorizing
         run: |
           echo 'TRACK_A_FREEZE = ESTABLISHED'
-          echo 'TRACK_A_CLOSURE = TOOLING_OR_CLOSURE_VALIDATION_ONLY'
-          echo 'TRACK_A_EMPIRICAL_EXECUTION = NOT_AUTHORIZED'
-          echo 'SCIENTIFIC_N_INCREMENT = 0'
-          echo 'CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED'
-          echo 'HIGH_ASSURANCE = NOT_AUTHORIZED / N=0'
+          echo 'TRACK_A_CLOSURE = ESTABLISHED_OR_EXACT_EVENT_VALIDATED'
+          echo 'TRACK_A_EMPIRICAL_EXECUTION = GOVERNED_BY_SUCCESSOR_AUTHORIZATION_GATE'
+          echo 'CLOSURE_SCIENTIFIC_N_INCREMENT = 0'
+          echo 'CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED_BY_CLOSURE'
+          echo 'HIGH_ASSURANCE = NOT_AUTHORIZED_BY_CLOSURE'
