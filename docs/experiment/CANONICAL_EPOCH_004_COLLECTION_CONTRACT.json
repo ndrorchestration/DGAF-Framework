@@ -1,0 +1,89 @@
+{
+  "record_type": "DGAF_CANONICAL_SOLO_EMPIRICAL_COLLECTION_CONTRACT",
+  "schema_version": 1,
+  "epoch_id": "PDMAL-SOLO-CANONICAL-EPOCH-004",
+  "status": "CONTRACT_ONLY_NOT_AUTHORIZED",
+  "preregistration_merge_sha": "ae854edf565c903bf799f243841799819333d920",
+  "treatment_input_preflight_merge_sha": "15c6621ccab0c28e2938c302d23975ba037bd3ee",
+  "treatment_input_preflight_head_sha": "3f2289e63bdf53fcb7ae3fe70c81ae1ed0bd3f2b",
+  "treatment_input_preflight_run_id": 34178288423,
+  "treatment_input_preflight_artifact_id": 10037998545,
+  "treatment_input_preflight_artifact_digest": "sha256:810adc623193e7b08c24211585046c1db800717e8d1db2eccb5c56e86f63327c",
+  "runner": {
+    "implementation_status": "NOT_IMPLEMENTED_IN_THIS_CONTRACT",
+    "execution_authorization_status": "NOT_AUTHORIZED",
+    "execution_request_status": "ABSENT",
+    "future_execution_branch_pattern": "solo-canonical-epoch-004/run-*",
+    "one_file_authorization_path": "docs/experiment/solo_runs/CANONICAL_EPOCH_004_RUN_REQUEST.json",
+    "exact_frozen_commit_required": true,
+    "authorization_file_must_be_only_change": true,
+    "manual_execution_must_require_authorization_file": true
+  },
+  "matrix": {
+    "conditions": ["null", "simple", "static", "dgaf"],
+    "topologies": ["ring", "pdmal", "random_regular", "small_world", "complete"],
+    "failure_counts": [0, 1, 2, 3, 4, 5, 6, 8, 10],
+    "seeds": [20261001, 20261002, 20261003, 20261004, 20261005, 20261006, 20261007, 20261008, 20261009, 20261010, 20261011, 20261012, 20261013, 20261014, 20261015, 20261016, 20261017, 20261018, 20261019, 20261020, 20261021, 20261022, 20261023, 20261024, 20261025, 20261026, 20261027, 20261028, 20261029, 20261030, 20261031, 20261032, 20261033, 20261034, 20261035, 20261036, 20261037, 20261038, 20261039, 20261040, 20261041, 20261042, 20261043, 20261044, 20261045, 20261046, 20261047, 20261048, 20261049, 20261050],
+    "cells_per_seed": 180,
+    "expected_total_observations": 9000,
+    "duplicate_cells_allowed": false,
+    "missing_cells_allowed": false
+  },
+  "treatment_binding": {
+    "profile_id": "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1",
+    "profile_blob_sha": "133d7b71c9e829d5461e7c911527c6b2b10ba9ae",
+    "qualification_sha256": "4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78",
+    "qualification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+    "required_tgl_steps": [1, 2, 3, 4, 5, 6, 8]
+  },
+  "blinding": {
+    "fresh_key_required": true,
+    "condition_labels_blinded_during_collection": true,
+    "trial_order_keyed": true,
+    "plaintext_condition_mapping_in_dataset_prohibited": true,
+    "key_retained_separately_from_dataset": true,
+    "same_system_custody_class": "SOLO_GITHUB_ACTIONS_ARTIFACT_NONINDEPENDENT",
+    "independent_custody_claim_permitted": false
+  },
+  "collection_behavior": {
+    "outcome_inspection_by_collection_workflow": false,
+    "outcome_aggregation_by_collection_workflow": false,
+    "post_collection_tuning": false,
+    "historical_dataset_pooling": false,
+    "retry_policy": "FAIL_CLOSED_NO_SILENT_CELL_REPAIR",
+    "missing_required_treatment_input": "ABORT_BEFORE_COLLECTION",
+    "required_gate_kill_or_skip": "RECORD_AND_FAIL_CLOSED",
+    "unexpected_matrix_shape": "FAIL",
+    "sidecar_sha256_per_seed_required": true,
+    "environment_fingerprint_required": true
+  },
+  "retention": {
+    "blinded_dataset_artifact_required": true,
+    "separate_blinding_key_artifact_required": true,
+    "dataset_and_key_artifact_identity_must_be_recorded": true,
+    "dataset_status_before_unblinding": "LOCKED_BLINDED",
+    "structural_reverification_before_key_release": true,
+    "unblinding_authorized_at_collection_time": false,
+    "separate_post_lock_unblinding_authorization_required": true
+  },
+  "analysis_lock": {
+    "statistical_source_path": "experiments/pdmal_pilot/analysis.py",
+    "statistical_source_blob_sha": "a269ed226b1d261663994fc3ef0e8a1a96da6cd3",
+    "analysis_config_sha256": "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8",
+    "primary_contrast": "dgaf-vs-null",
+    "unit_of_analysis": "seed",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260823,
+    "alpha": 0.05,
+    "changes_after_collection_begins_invalidate_confirmatory_interpretation": true
+  },
+  "claim_ceiling": {
+    "validation_track": "SOLO_DEVELOPER",
+    "independent_verification": false,
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED_BEFORE_ANALYSIS",
+    "high_assurance": "NOT_AUTHORIZED_N0",
+    "production_readiness": "NOT_ESTABLISHED"
+  },
+  "empirical_execution_authorized": false,
+  "scientific_n_increment": 0
+}
