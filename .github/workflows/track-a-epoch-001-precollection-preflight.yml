@@ -1,0 +1,65 @@
+name: Track A Epoch 001 Precollection Preflight
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-precollection-preflight.yml'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRECOLLECTION_PREFLIGHT.json'
+      - 'scripts/validate_track_a_epoch_001_precollection_preflight.py'
+      - 'tests/test_track_a_epoch_001_precollection_preflight.py'
+      - 'docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run fail-closed mutation tests
+        run: python tests/test_track_a_epoch_001_precollection_preflight.py
+
+      - name: Validate exact candidate and preflight record
+        env:
+          EXPECTED_CANDIDATE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: python scripts/validate_track_a_epoch_001_precollection_preflight.py --expected-candidate-sha "$EXPECTED_CANDIDATE_SHA"
+
+      - name: Prove downstream gates remain absent
+        run: |
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json
+
+      - name: Prove preflight is non-authorizing
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRECOLLECTION_PREFLIGHT.json').read_text())
+          assert p['preflight_status'] == 'PASS'
+          assert p['scientific_n_increment'] == 0
+          assert p['collection_authorized'] is False
+          assert p['unblinding_authorized'] is False
+          assert p['high_assurance_authorized'] is False
+          print('TRACK_A_EPOCH_001_PREFLIGHT_NONAUTHORIZING_PASS')
+          print('TRACK_A_FREEZE=NOT_ESTABLISHED')
+          print('TRACK_A_EMPIRICAL_EXECUTION=NOT_AUTHORIZED')
+          print('SCIENTIFIC_N_INCREMENT=0')
+          PY
