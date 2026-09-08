@@ -139,7 +139,7 @@ def registered_fixtures() -> tuple[dict[str, object], ...]:
                 "ambiguous": 0.90,
                 "malformed": 0.95,
             },
-            "deontic": "obligated",
+            "deontic": "permitted",
         },
         {
             "record_id": "ambiguous-mixed",
