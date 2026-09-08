@@ -46,7 +46,7 @@ jobs:
               'sche' + 'dule:',
               'run_' + 'canonical_epoch',
               'run_' + 'pilot',
-              'authorize_empirical_collection',
+              'authorize_' + 'empirical_collection',
           ]
           for token in forbidden:
               assert token not in workflow, token
