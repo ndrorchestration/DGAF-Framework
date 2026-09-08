@@ -19,11 +19,16 @@ jobs:
           python-version: '3.12.0'
       - name: Exercise custody negative controls
         run: python scripts/validate_critical_pr_lane_custody.py --self-test
-      - name: Validate registered PR lane scope
+      - name: Validate registered PR lane scope and reconciled head
         env:
           HEAD_REF: ${{ github.head_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           BASE_REF: ${{ github.base_ref }}
-        run: python scripts/validate_critical_pr_lane_custody.py --head-ref "$HEAD_REF" --base-ref "$BASE_REF"
+        run: >-
+          python scripts/validate_critical_pr_lane_custody.py
+          --head-ref "$HEAD_REF"
+          --head-sha "$HEAD_SHA"
+          --base-ref "$BASE_REF"
       - name: Prove non-authorizing boundary
         run: |
           python - <<'PY'
@@ -33,7 +38,9 @@ jobs:
           assert d['scientific_n_increment'] == 0
           b=d['claim_boundary']
           assert b['branch_ref_immutability_established'] is False
+          assert b['actor_attribution_established'] is False
           assert b['repository_admin_configuration_changed'] is False
+          assert b['registry_reconciliation_is_scientific_authorization'] is False
           assert b['track_a_freeze'] == 'NOT_ESTABLISHED'
           assert b['track_a_empirical_execution'] == 'NOT_AUTHORIZED'
           print('CRITICAL_PR_LANE_CUSTODY_NONAUTHORIZING_BOUNDARY_PASS')
