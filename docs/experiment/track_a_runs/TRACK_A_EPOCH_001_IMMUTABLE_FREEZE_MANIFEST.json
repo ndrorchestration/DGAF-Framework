@@ -1,0 +1,23 @@
+{
+  "record_type": "TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST",
+  "schema_version": 1,
+  "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-001",
+  "frozen_candidate_sha": "961b9918002c4c68afac9c0fd5dd3e352e49b926",
+  "frozen_candidate_tree_sha": "f20fa0ffee4b47872d84ce10cc9fd05e75c7306d",
+  "preflight_blob_sha": "148cbd0e0717ca62efadfcce9227965abd838468",
+  "protected_source_blobs": {
+    "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json": "52148950ff054a407c2e6b5cf36103695cf96474",
+    "docs/experiment/TRACK_A_EPOCH_001_ANALYSIS_LOCK.json": "ff9a37a0be7a75912dbe0ae34dd95893d41efafb",
+    "experiments/pdmal_pilot/track_a_epoch_001_analysis.py": "76bc8e9604c5d7e039e324e73036f353dc8ea31f",
+    "experiments/pdmal_pilot/requirements-full-lock.txt": "00c1f779e97030f9b25ae494642edb31b5b09de5",
+    "experiments/pdmal_pilot/task_engine.py": "90135e1c6dfccc3b56ffdc0dcb9eb50a0b2a5b05",
+    "experiments/pdmal_pilot/harness_contract.py": "bb97c54ddf087fef568b1b3c8f8df72c30dad11e",
+    "experiments/pdmal_pilot/topology_utils.py": "7ae92ba8a9ab964537e5dafa5e12de36b841391e",
+    "experiments/pdmal_pilot/run_track_a_epoch_001.py": "d8ef6f31f49da82e4eaf5295bad024c3194f6d15"
+  },
+  "freeze_status": "ESTABLISHED",
+  "scientific_n_increment": 0,
+  "collection_authorized": false,
+  "unblinding_authorized": false,
+  "high_assurance_authorized": false
+}
