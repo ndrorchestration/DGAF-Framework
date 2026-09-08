@@ -20,6 +20,7 @@ PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-001"
 FROZEN_CANDIDATE_SHA = "961b9918002c4c68afac9c0fd5dd3e352e49b926"
 FROZEN_CANDIDATE_TREE_SHA = "f20fa0ffee4b47872d84ce10cc9fd05e75c7306d"
 FREEZE_MANIFEST_BLOB_SHA = "ae15c6282351c01bd13ace2423d273ba0dde8348"
+CLOSURE_PACKET_BLOB_SHA = "c32d89385c29c9e5cd0a706630c1955fb3f5f1c8"
 
 EXPECTED_PROTECTED_SOURCE_BLOBS = {
     "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json": "52148950ff054a407c2e6b5cf36103695cf96474",
@@ -173,17 +174,63 @@ def validate_downstream_absence() -> None:
             )
 
 
-def validate_repository(*, expect_absent: bool) -> None:
+def validate_established_closure_metadata(
+    *, closure_blob: str, closure_history: list[str], closure_is_ancestor: bool
+) -> None:
+    if closure_blob != CLOSURE_PACKET_BLOB_SHA:
+        raise SystemExit(
+            f"established closure blob drift: {closure_blob} != {CLOSURE_PACKET_BLOB_SHA}"
+        )
+    if len(closure_history) != 1:
+        raise SystemExit(
+            "established closure must have exactly one immutable history commit; "
+            f"got {closure_history}"
+        )
+    if not closure_is_ancestor:
+        raise SystemExit("established closure commit is not an ancestor of successor head")
+
+
+def validate_established_closure(head: str) -> None:
+    if not CLOSURE_PATH.exists():
+        raise SystemExit("established closure packet is missing")
+    validate_closure_record(load_json(CLOSURE_PATH))
+
+    closure_history = [
+        x for x in git("log", "--format=%H", "--", CLOSURE_REL).splitlines() if x
+    ]
+    closure_commit = closure_history[0] if len(closure_history) == 1 else ""
+    closure_is_ancestor = bool(closure_commit) and (
+        subprocess.run(
+            ["git", "merge-base", "--is-ancestor", closure_commit, head],
+            cwd=ROOT,
+            check=False,
+        ).returncode
+        == 0
+    )
+    validate_established_closure_metadata(
+        closure_blob=git_blob(head, CLOSURE_REL),
+        closure_history=closure_history,
+        closure_is_ancestor=closure_is_ancestor,
+    )
+
+
+def validate_repository(*, expect_absent: bool, expect_established: bool) -> None:
     head = git("rev-parse", "HEAD")
     validate_frozen_chain(head)
-    validate_downstream_absence()
 
     if expect_absent:
+        validate_downstream_absence()
         if CLOSURE_PATH.exists():
             raise SystemExit("tooling mode requires closure packet to remain absent")
         print("TRACK_A_EPOCH_001_FINAL_CLOSURE_TOOLING_PASS_NONAUTHORIZING")
         return
 
+    if expect_established:
+        validate_established_closure(head)
+        print("TRACK_A_EPOCH_001_FINAL_CLOSURE_ESTABLISHED_SUCCESSOR_PASS")
+        return
+
+    validate_downstream_absence()
     if not CLOSURE_PATH.exists():
         raise SystemExit("closure packet is missing")
     validate_closure_record(load_json(CLOSURE_PATH))
@@ -216,6 +263,8 @@ def validate_repository(*, expect_absent: bool) -> None:
             f"closure path must have exactly one history commit at HEAD; got {closure_history}"
         )
 
+    if git_blob(head, CLOSURE_REL) != CLOSURE_PACKET_BLOB_SHA:
+        raise SystemExit("closure event does not produce the exact immutable closure blob")
     if git_blob(head, FREEZE_REL) != FREEZE_MANIFEST_BLOB_SHA:
         raise SystemExit("closure does not bind the exact merged freeze blob")
 
@@ -224,9 +273,14 @@ def validate_repository(*, expect_absent: bool) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--expect-absent", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--expect-absent", action="store_true")
+    mode.add_argument("--expect-established", action="store_true")
     args = parser.parse_args()
-    validate_repository(expect_absent=args.expect_absent)
+    validate_repository(
+        expect_absent=args.expect_absent,
+        expect_established=args.expect_established,
+    )
     return 0
 
 
