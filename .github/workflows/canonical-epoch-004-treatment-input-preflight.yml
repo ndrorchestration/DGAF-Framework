@@ -59,11 +59,8 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-          import yaml
           path = Path('.github/workflows/canonical-epoch-004-treatment-input-preflight.yml')
           text = path.read_text()
-          # GitHub Actions parses the top-level `on` key as an event map. This workflow
-          # intentionally exposes only pull_request and no manual/scheduled execution surface.
           head = text.split('permissions:', 1)[0]
           assert 'workflow_dispatch:' not in head
           assert 'schedule:' not in head
