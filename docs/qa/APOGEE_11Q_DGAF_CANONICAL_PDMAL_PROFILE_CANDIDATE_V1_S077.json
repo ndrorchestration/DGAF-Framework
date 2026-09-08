@@ -1,0 +1,91 @@
+{
+  "attestation_gate": "P-30",
+  "attestation_id": "APOGEE_11Q_DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1_S077",
+  "empirical_evidence": false,
+  "independent_verification": false,
+  "limitations": [
+    "Self-attested by the same development/operator context; not independent verification.",
+    "Qualifies only the non-empirical candidate treatment profile and step-8 verification contract.",
+    "Does not execute the required non-empirical matrix diagnostic.",
+    "Does not authorize a fresh empirical epoch."
+  ],
+  "profile_blob_sha": "133d7b71c9e829d5461e7c911527c6b2b10ba9ae",
+  "profile_id": "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1",
+  "profile_reviewed_head_sha": "01c86153026c3864134d0ffa1af1c118cd32bfea",
+  "profile_source_sha": "c8a07306d212e23cc5a4c1e0d98b7e8f47f45e21",
+  "record_type": "DGAF_P30_11Q_PROFILE_QUALIFICATION",
+  "review_scope": "Merged non-empirical canonical PDMAL treatment-profile candidate and its step-8 qualification-verification contract.",
+  "rubric": "P-11 11Q Attestation Scoring",
+  "schema_version": 1,
+  "scientific_n_increment": 0,
+  "scoring": {
+    "Q01": {
+      "evidence": "Profile identity, status, P-30 authority, legacy exclusion, step-8 semantics, forbidden inputs, historical-evidence policy, and next gate are explicitly specified.",
+      "score": 10,
+      "verdict": "PASS"
+    },
+    "Q02": {
+      "evidence": "Machine-readable profile and verifier contract are mutually consistent and passed dedicated validation on the exact reviewed head.",
+      "score": 10,
+      "verdict": "PASS"
+    },
+    "Q03": {
+      "evidence": "Claims trace to merged P-30 authority reconciliation, legacy identity migration, canonical 11Q rubric, and exact source/blob identities.",
+      "score": 10,
+      "verdict": "PASS"
+    },
+    "Q04": {
+      "evidence": "Dependencies and authority relationships are explicitly identified, including S035/P-11/11Q, TGL step 8, and the retired legacy scalar gate.",
+      "score": 10,
+      "verdict": "PASS"
+    },
+    "Q05": {
+      "evidence": "Active candidate terminology is separated from historical scalar P-30 terminology; historical names remain only as provenance. One compatibility burden remains in historical TGL naming.",
+      "score": 9,
+      "verdict": "PASS"
+    },
+    "Q06": {
+      "evidence": "Relevant P-series constraints are preserved: P-30 remains external 11Q qualification while TGL step 8 becomes verification rather than scalar scoring.",
+      "score": 10,
+      "verdict": "PASS"
+    },
+    "Q07": {
+      "evidence": "Known unresolved work is formally deferred to a source-bound developer 11Q artifact and a non-empirical matrix diagnostic; empirical authorization remains false.",
+      "score": 9,
+      "verdict": "PASS"
+    },
+    "Q08": {
+      "evidence": "Profile is machine-readable, reversible, separately versioned, fail-closed, and preserves historical evidence without destructive rewriting.",
+      "score": 10,
+      "verdict": "PASS"
+    },
+    "Q09": {
+      "evidence": "Reviewed profile and verifier contain governance/source metadata only; no personal-data fields are introduced by this candidate.",
+      "score": 10,
+      "verdict": "PASS"
+    },
+    "Q10": {
+      "evidence": "Claim ceiling is explicit: developer self-attested only, no unsupported independent-verification claim, no empirical efficacy claim, and forbidden outcome/proxy inputs are mechanically rejected.",
+      "score": 10,
+      "verdict": "PASS"
+    },
+    "Q11": {
+      "evidence": "Ready for the next non-empirical qualification/diagnostic tier, not for empirical authorization. Promotion is limited to the candidate-profile role.",
+      "score": 9,
+      "verdict": "PASS"
+    }
+  },
+  "scoring_summary": {
+    "attestation_note": "S-TIER developer self-attestation for the non-empirical candidate treatment-profile role only. This does not establish independent verification, empirical efficacy, pilot authorization, production readiness, or High-Assurance acceptance.",
+    "attestation_result": "GRANTED",
+    "max_score": 110,
+    "open_blg_count": 0,
+    "open_blgs": [],
+    "percentage": 97.2727272727,
+    "q11_score": 9,
+    "q11_threshold_met": true,
+    "tier": "S-TIER",
+    "total_score": 107
+  },
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT"
+}
