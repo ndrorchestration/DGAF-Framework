@@ -67,7 +67,9 @@ def _validate_records(records: Sequence[Mapping[str, object]]) -> dict[tuple[int
         if "excluded" in record and record.get("excluded") is not False:
             raise ValueError("outcome exclusions are prohibited in the primary Track A analysis")
 
-        algorithm_id = record.get("algorithm_id", ALGORITHM_ID)
+        if "algorithm_id" not in record:
+            raise ValueError("record algorithm identity is required by the preregistration")
+        algorithm_id = record["algorithm_id"]
         if algorithm_id != ALGORITHM_ID:
             raise ValueError("record algorithm identity does not match the preregistration")
 
