@@ -121,7 +121,7 @@ This architecture does not reanalyze or rescue that result.
 ## Next sequence
 
 1. Merge this architecture only after exact-head validation.
-2. Adjudicate #390 as a PDMAL mapping issue, not a KAPPA component defect.
+2. Preserve the completed #390 adjudication: KAPPA v3.6 is authoritative; PDMAL proxy/alpha mapping is rejected.
 3. Build non-empirical Track A contract tests.
 4. Build B1 semantic fixtures against the actual KAPPA/evaluation/Sentinel pipeline.
 5. Build B2 persistent-session harness.
