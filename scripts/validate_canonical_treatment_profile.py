@@ -28,6 +28,11 @@ def validate() -> None:
     assert legacy["id"] == "LEGACY_APOGEE_RUNTIME_CONFIDENCE_GATE_V1"
     assert legacy["allowed_in_profile"] is False
     assert migration["legacy_runtime_gate"]["id"] == legacy["id"]
+    contract = profile["step8_qualification_contract"]
+    assert contract["accepted_verification_classes"] == [
+        "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT"
+    ]
+    assert contract["independent_verification_claim_accepted_without_separate_contract"] is False
     assert profile["next_gate"]["new_canonical_empirical_epoch"] == "NOT_AUTHORIZED"
     forbidden = set(profile["forbidden_step8_inputs"])
     required_forbidden = {
@@ -39,6 +44,7 @@ def validate() -> None:
     text = MODULE.read_text(encoding="utf-8")
     for token in required_forbidden:
         assert f'"{token}"' in text
+    assert "ALLOWED_VERIFICATION_CLASSES = {\"DEVELOPER_SELF_ATTESTED_NONINDEPENDENT\"}" in text
     assert "build_qualification_verifier_hook" in text
     assert "verify_qualification_artifact" in text
 
