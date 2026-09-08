@@ -9,7 +9,12 @@
   "analysis_path": "experiments/pdmal_pilot/track_a_epoch_001_analysis.py",
   "analysis_blob_sha": "76bc8e9604c5d7e039e324e73036f353dc8ea31f",
   "analysis_config_sha256": "355b164f69e91405819f092d0721b7597b87b06de79394a0c451169410a5ab6d",
-  "python_version": "3.12.0",
+  "environment": {
+    "python_version": "3.12.0",
+    "requirements_lock_path": "experiments/pdmal_pilot/requirements-full-lock.txt",
+    "requirements_lock_blob_sha": "00c1f779e97030f9b25ae494642edb31b5b09de5",
+    "install_policy": "PIP_REQUIRE_HASHES"
+  },
   "numpy_version": "2.5.1",
   "pytest_version": "9.0.3",
   "primary_contract": {
