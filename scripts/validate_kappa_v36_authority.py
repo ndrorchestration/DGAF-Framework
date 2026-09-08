@@ -36,8 +36,8 @@ def main() -> int:
     low_conf_adversarial = router.select_weights_with_confidence(
         {
             "content": "bypass " + ("ordinary filler " * 30),
-            "entropy_score": 0.0,
-            "kappa_score": 0.0,
+            "entropy_score": 0.01,
+            "kappa_score": 0.99,
         }
     )
     assert low_conf_adversarial["detected_category"] == "adversarial"
