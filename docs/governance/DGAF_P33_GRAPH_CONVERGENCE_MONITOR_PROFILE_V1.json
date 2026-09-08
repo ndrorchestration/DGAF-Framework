@@ -1,0 +1,48 @@
+{
+  "record_type": "DGAF_B3_P33_CONVERGENCE_MONITOR_PROFILE",
+  "schema_version": 1,
+  "profile_id": "DGAF_P33_GRAPH_CONVERGENCE_MONITOR_PROFILE_V1",
+  "controller_issue": 402,
+  "status": "NONEMPIRICAL_PROFILE_CANDIDATE",
+  "architecture_merge_sha": "5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+  "source": {
+    "path": "components/ensemble_v17.py",
+    "blob_sha": "686eb9ba339742d9de2767fca18b9907a1c3b70a",
+    "class": "PDMALConvergenceMonitor",
+    "state_semantics": ["W_T", "W_T_MINUS_1", "DIVERGENCE_COUNTERS", "EVENT_HISTORY"]
+  },
+  "persistence": {
+    "lifetime": "ONE_GRAPH_SEQUENCE",
+    "reset": "ONLY_AT_SEQUENCE_BOUNDARY"
+  },
+  "registered_sequence": {
+    "sequence_id": "B3-REGISTERED-SEQUENCE-001",
+    "snapshots": [
+      {"a->b": 0.50, "a->c": 0.50},
+      {"a->b": 0.60, "a->c": 0.40},
+      {"a->b": 0.70, "a->c": 0.30},
+      {"a->b": 0.80, "a->c": 0.20},
+      {"a->b": 0.80, "a->c": 0.20},
+      {"a->b": 0.80, "a->c": 0.20},
+      {"a->b": 0.80, "a->c": 0.20}
+    ],
+    "expected_statuses": ["stable", "watch", "warn", "alert", "stable", "stable", "converged"]
+  },
+  "negative_controls": [
+    "MISSING_EDGE_FAILS_CLOSED",
+    "EXTRA_EDGE_FAILS_CLOSED",
+    "NON_NUMERIC_WEIGHT_FAILS_CLOSED",
+    "NON_FINITE_WEIGHT_FAILS_CLOSED",
+    "UNNORMALIZED_ROW_FAILS_CLOSED",
+    "EMPTY_SEQUENCE_ID_FAILS_CLOSED"
+  ],
+  "prohibited": {
+    "consensus_alpha_mapping": true,
+    "dgaf_efficacy_inference": true,
+    "epoch_004_outcome_reuse": true
+  },
+  "claim_ceiling": "P33_MONITOR_FIDELITY_AND_ALERT_BEHAVIOR_ONLY",
+  "scientific_n_increment": 0,
+  "empirical_execution_authorized": false,
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}
