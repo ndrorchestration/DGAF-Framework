@@ -1,0 +1,114 @@
+name: Track A Epoch 001 Unblinding Receipt
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-unblinding-receipt.yml'
+      - 'scripts/validate_track_a_epoch_001_unblinding_receipt.py'
+      - 'tests/test_track_a_epoch_001_unblinding_receipt.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDING_RECEIPT.json'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run unblinding-receipt contract tests
+        run: python -m unittest -v tests/test_track_a_epoch_001_unblinding_receipt.py
+
+      - name: Validate tooling-only or exact one-file receipt event
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDING_RECEIPT.json'
+          workflow='.github/workflows/track-a-epoch-001-unblinding-receipt.yml'
+          validator='scripts/validate_track_a_epoch_001_unblinding_receipt.py'
+          tests='tests/test_track_a_epoch_001_unblinding_receipt.py'
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+          if test -e "$receipt"; then
+            python "$validator"
+          else
+            python "$validator" --expect-absent
+            expected=("$workflow" "$validator" "$tests")
+            mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+            test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+            diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+          fi
+
+      - name: Reverify protected collection evidence for receipt event only
+        if: ${{ hashFiles('docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDING_RECEIPT.json') != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          API: https://api.github.com
+        run: |
+          set -euo pipefail
+          tmp="$RUNNER_TEMP/track-a-unblinding-receipt"
+          mkdir -p "$tmp/protected"
+          auth=(-H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json')
+
+          curl -fsSL "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/runs/34262408225" > "$tmp/run.json"
+          curl -fsSL "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/runs/34262408225/artifacts?per_page=100" > "$tmp/artifacts.json"
+          python - "$tmp/run.json" "$tmp/artifacts.json" <<'PY'
+          import json, sys
+          run = json.load(open(sys.argv[1], encoding='utf-8'))
+          arts = json.load(open(sys.argv[2], encoding='utf-8'))['artifacts']
+          assert run['status'] == 'completed'
+          assert run['conclusion'] == 'success'
+          assert run['event'] == 'push'
+          assert run['head_sha'] == '98e72e370897c0e0916f78245a040108ed278189'
+          by_id = {a['id']: a for a in arts}
+          a = by_id[10070587302]
+          assert not a['expired']
+          assert a['name'] == 'track-a-epoch-001-protected-encrypted-482'
+          assert a['size_in_bytes'] == 136074
+          assert a['digest'] == 'sha256:f52d2144cfb8c699347c56cf92a41c1ac11cba98787fefabb56891c9f680c69f'
+          print('TRACK_A_UNBLINDING_RECEIPT_EXTERNAL_IDENTITY_QC=PASS')
+          PY
+
+          curl -fsSL -L "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/10070587302/zip" -o "$tmp/protected.zip"
+          echo 'f52d2144cfb8c699347c56cf92a41c1ac11cba98787fefabb56891c9f680c69f  '"$tmp/protected.zip" | sha256sum -c -
+          unzip -q "$tmp/protected.zip" -d "$tmp/protected"
+
+          cipher="$tmp/protected/track_a_epoch_001_protected.cms"
+          cert="$tmp/protected/track_a_epoch_001_custody_cert.pem"
+          test "$(sha256sum "$cipher" | awk '{print $1}')" = '15ba9d630cea0c26baca3ab50c33f7bcf10681a24293350b12acf3d4aeac4614'
+          test "$(sha256sum "$cert" | awk '{print $1}')" = 'cfa468d1091f2179cfe0c96ff000bfe45ae7c5bd1414146fbb99c77572dba707'
+          test "$(awk '{print $1}' "$tmp/protected/track_a_epoch_001_protected_plaintext_tar.sha256")" = 'ec51a5451b63c5cbccfd83d01290f939d7a1832181af190c5fabd31fa806eb35'
+          cert_pub=$(openssl x509 -in "$cert" -pubkey -noout | openssl pkey -pubin -outform DER | sha256sum | awk '{print $1}')
+          test "$cert_pub" = '5df195dec6352226cdf891ba3dcd35b1d5c89e6e5b2cc309bcde710f8fd7e5ee'
+          echo 'TRACK_A_UNBLINDING_RECEIPT_PROTECTED_IDENTITY_QC=PASS'
+          echo 'LOCAL_DECRYPTION_AND_MAPPING_QC_CLASS=DEVELOPER_SAME_SYSTEM_NONINDEPENDENT'
+
+      - name: Preserve analysis boundary
+        run: |
+          echo 'TRACK_A_DATASET_LOCK = ESTABLISHED'
+          echo 'TRACK_A_UNBLINDING_AUTHORIZATION = ESTABLISHED'
+          if test -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDING_RECEIPT.json; then
+            echo 'TRACK_A_UNBLINDING_RECEIPT = PENDING_VALIDATED_MERGE'
+          else
+            echo 'TRACK_A_UNBLINDING_RECEIPT = NOT_ESTABLISHED_IN_REPOSITORY'
+          fi
+          echo 'PRIMARY_ANALYSIS = NOT_AUTHORIZED'
+          echo 'PRIMARY_ANALYSIS_RUN = FALSE'
+          echo 'CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED'
+          echo 'HIGH_ASSURANCE = NOT_AUTHORIZED'
