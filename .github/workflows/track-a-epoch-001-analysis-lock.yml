@@ -5,6 +5,7 @@ on:
     paths:
       - 'experiments/pdmal_pilot/track_a_epoch_001_analysis.py'
       - 'experiments/pdmal_pilot/test_track_a_epoch_001_analysis.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
       - 'docs/experiment/TRACK_A_EPOCH_001_ANALYSIS_LOCK.json'
       - 'scripts/validate_track_a_epoch_001_analysis_lock.py'
       - '.github/workflows/track-a-epoch-001-analysis-lock.yml'
@@ -20,9 +21,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12.0'
-      - name: Install exact analysis dependencies
-        run: python -m pip install numpy==2.5.1 pytest==9.0.3
-      - name: Validate immutable source/config binding
+      - name: Install hash-locked analysis dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+      - name: Validate immutable source/config/environment binding
         run: python scripts/validate_track_a_epoch_001_analysis_lock.py
       - name: Run Track A primary analysis tests
         run: python -m pytest experiments/pdmal_pilot/test_track_a_epoch_001_analysis.py -q
