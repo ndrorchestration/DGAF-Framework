@@ -1,0 +1,42 @@
+name: B2 Non-Empirical Integration Adjudication
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/b2-integration-adjudication.yml'
+      - 'docs/governance/B2_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json'
+      - 'scripts/validate_b2_integration_adjudication.py'
+      - 'docs/qa/APOGEE_11Q_DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1_S079.json'
+      - 'docs/governance/DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1.json'
+      - 'components/ensemble_v17.py'
+      - 'experiments/pdmal_pilot/b2_stateful_context_closure_profile.py'
+      - 'experiments/pdmal_pilot/test_b2_stateful_context_closure_profile.py'
+      - 'scripts/validate_b2_stateful_context_closure_profile.py'
+      - '.github/workflows/b2-stateful-context-closure-profile.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - name: Validate exact source and qualification binding
+        run: python scripts/validate_b2_integration_adjudication.py
+      - name: Prove non-authorizing disposition
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/governance/B2_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json').read_text())
+          assert d['scientific_n_increment'] == 0
+          assert d['b2_empirical_execution_authorized'] is False
+          assert d['track_c_empirical_execution_authorized'] is False
+          assert d['canonical_dgaf_efficacy'] == 'NOT_ESTABLISHED'
+          assert d['high_assurance'] == 'NOT_AUTHORIZED_N0'
+          print('B2_INTEGRATION_ADJUDICATION_NONAUTHORIZING_BOUNDARY_PASS')
+          PY
