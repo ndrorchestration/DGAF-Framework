@@ -1,0 +1,45 @@
+name: Epoch 004 Post-Fidelity Claim Ceiling
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/epoch004-post-fidelity-claim-ceiling.yml'
+      - 'docs/experiment/EPOCH_004_POST_FIDELITY_CLAIM_CEILING_2026-09-08.json'
+      - 'docs/experiment/EPOCH_004_POST_FIDELITY_CLAIM_CEILING_2026-09-08.md'
+      - 'scripts/validate_epoch004_post_fidelity_claim_ceiling.py'
+      - 'docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_RESULT.json'
+      - 'docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_ADJUDICATION.md'
+      - 'docs/experiment/SEVEN_GATE_TREATMENT_FIDELITY_AUDIT_2026-09-08.json'
+      - 'docs/experiment/SEVEN_GATE_TREATMENT_FIDELITY_AUDIT_2026-09-08.md'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Validate source-bound claim ceiling
+        run: python scripts/validate_epoch004_post_fidelity_claim_ceiling.py
+
+      - name: Prove historical primary files are interpretation inputs only
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/experiment/EPOCH_004_POST_FIDELITY_CLAIM_CEILING_2026-09-08.json').read_text())
+          assert d['scientific_n_increment'] == 0
+          assert d['empirical_execution_authorized'] is False
+          assert d['historical_result_rewritten'] is False
+          assert d['historical_analysis_recalculated'] is False
+          assert d['supersession_policy']['narrows_future_interpretation_only'] is True
+          print('EPOCH004_CLAIM_CEILING_NONEMPIRICAL_BOUNDARY_PASS')
+          PY

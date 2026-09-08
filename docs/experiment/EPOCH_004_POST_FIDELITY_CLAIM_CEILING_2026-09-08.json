@@ -1,0 +1,53 @@
+{
+  "record_type": "DGAF_EPOCH_004_POST_FIDELITY_CLAIM_CEILING",
+  "schema_version": 1,
+  "amendment_date": "2026-09-08",
+  "controller_issue": 396,
+  "classification": "POST_EMPIRICAL_SOURCE_AUDIT_INTERPRETATION_AMENDMENT",
+  "scientific_n_increment": 0,
+  "empirical_execution_authorized": false,
+  "historical_result_rewritten": false,
+  "historical_analysis_recalculated": false,
+  "historical_pooling_allowed": false,
+  "source_bindings": {
+    "primary_result_path": "docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_RESULT.json",
+    "primary_result_blob_sha": "4a17f9e6a656721fcef9cfce04bb78ed34ce673a",
+    "primary_adjudication_path": "docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_ADJUDICATION.md",
+    "primary_adjudication_blob_sha": "8f436f0d68b65f19866ae31f9784d2fceee668a5",
+    "seven_gate_audit_json_path": "docs/experiment/SEVEN_GATE_TREATMENT_FIDELITY_AUDIT_2026-09-08.json",
+    "seven_gate_audit_json_blob_sha": "15a2867f5fe9a9b139c07f632dcbc3d18e0c86ad",
+    "seven_gate_audit_md_path": "docs/experiment/SEVEN_GATE_TREATMENT_FIDELITY_AUDIT_2026-09-08.md",
+    "seven_gate_audit_md_blob_sha": "991e0e34973fc829dd0b4049aa0b644af8212999",
+    "seven_gate_audit_merge_sha": "f5644417c9183b4d1db38f9624ea01ba46b8197e",
+    "mechanism_diagnostic_artifact_id": 10040466222,
+    "mechanism_diagnostic_artifact_digest": "sha256:d150323e9cdd9ba641cf9aa7a2deb1a8cc5f29871fdff1821a50cf3a1a8e1b07"
+  },
+  "locked_primary_result": {
+    "dgaf_ffcr": 0.7337777777777778,
+    "null_ffcr": 0.8275555555555555,
+    "paired_effect_dgaf_minus_null": -0.0937777777777778,
+    "two_sided_95pct_ci": [
+      -0.11822222222222223,
+      -0.07066666666666668
+    ],
+    "classification": "EVIDENCE_AGAINST_DIRECTIONAL_DGAF",
+    "estimator_recalculated_in_amendment": false
+  },
+  "post_fidelity_interpretation": {
+    "supported_scope": "EXACT_EPOCH_004_EXECUTED_RESTORED_BINDING_TREATMENT",
+    "seven_gate_canonical_treatment_fidelity": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "universal_dgaf_inferiority_claim": false,
+    "independent_validation": false,
+    "high_assurance_acceptance": false,
+    "production_readiness": false
+  },
+  "preferred_wording": "Evidence against the preregistered directional hypothesis for the exact Epoch 004 restored-binding treatment under the Solo developer apparatus; subsequent source audit found seven-gate canonical treatment fidelity not established.",
+  "supersession_policy": {
+    "supersedes_primary_result": false,
+    "supersedes_primary_analysis": false,
+    "supersedes_historical_adjudication_text": false,
+    "narrows_future_interpretation_only": true
+  },
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}
