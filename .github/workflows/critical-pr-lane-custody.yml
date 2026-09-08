@@ -28,7 +28,7 @@ jobs:
           python scripts/validate_critical_pr_lane_custody.py
           --self-test
           --registry-ref "origin/$BASE_REF"
-      - name: Validate registered PR lane scope and reconciled head
+      - name: Validate registered PR lane exact payload and live head
         env:
           HEAD_REF: ${{ github.head_ref }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -39,7 +39,7 @@ jobs:
           --head-sha "$HEAD_SHA"
           --base-ref "$BASE_REF"
           --registry-ref "origin/$BASE_REF"
-      - name: Prove base-registry reconciliation remains non-authorizing
+      - name: Prove base-registry custody remains non-authorizing
         env:
           BASE_REF: ${{ github.base_ref }}
         run: >-
