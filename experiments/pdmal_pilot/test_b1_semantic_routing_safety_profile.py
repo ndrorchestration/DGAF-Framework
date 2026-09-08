@@ -61,7 +61,7 @@ def test_schema_or_semantic_drift_fails_closed(mutation: str) -> None:
     elif mutation == "bad_deontic":
         record["deontic"] = "unknown"
     elif mutation == "deontic_mismatch":
-        record["deontic"] = "permitted"
+        record["deontic"] = "obligated"
     with pytest.raises(ValueError):
         evaluate_record(record)
 
