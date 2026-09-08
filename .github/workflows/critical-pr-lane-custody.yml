@@ -17,8 +17,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12.0'
-      - name: Exercise custody negative controls
-        run: python scripts/validate_critical_pr_lane_custody.py --self-test
+      - name: Fetch protected base registry authority
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git fetch origin "$BASE_REF" --depth=1
+      - name: Exercise custody negative controls against base registry
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: >-
+          python scripts/validate_critical_pr_lane_custody.py
+          --self-test
+          --registry-ref "origin/$BASE_REF"
       - name: Validate registered PR lane scope and reconciled head
         env:
           HEAD_REF: ${{ github.head_ref }}
@@ -29,19 +38,11 @@ jobs:
           --head-ref "$HEAD_REF"
           --head-sha "$HEAD_SHA"
           --base-ref "$BASE_REF"
-      - name: Prove non-authorizing boundary
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          d=json.loads(Path('docs/governance/CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1.json').read_text())
-          assert d['scientific_n_increment'] == 0
-          b=d['claim_boundary']
-          assert b['branch_ref_immutability_established'] is False
-          assert b['actor_attribution_established'] is False
-          assert b['repository_admin_configuration_changed'] is False
-          assert b['registry_reconciliation_is_scientific_authorization'] is False
-          assert b['track_a_freeze'] == 'NOT_ESTABLISHED'
-          assert b['track_a_empirical_execution'] == 'NOT_AUTHORIZED'
-          print('CRITICAL_PR_LANE_CUSTODY_NONAUTHORIZING_BOUNDARY_PASS')
-          PY
+          --registry-ref "origin/$BASE_REF"
+      - name: Prove base-registry reconciliation remains non-authorizing
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: >-
+          python scripts/validate_critical_pr_lane_custody.py
+          --assert-nonauthorizing
+          --registry-ref "origin/$BASE_REF"
