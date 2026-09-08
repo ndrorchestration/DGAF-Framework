@@ -5,7 +5,7 @@
 Instead of treating governance as documentation added after deployment, DGAF explores what happens when agents, evidence, permissions, evaluation, and operational boundaries are governed as part of the system itself.
 
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
-> **Separate bounded Solo track:** Experiment 001 executed but exposed a treatment-binding defect and is retained as apparatus-falsification evidence, not efficacy evidence. A subsequent non-empirical P-30 remediation diagnostic passed; no fresh empirical rerun is authorized.
+> **Bounded Solo evidence:** Epoch 004 completed 50 seeds / 9,000 observations and produced negative evidence for its exact executed treatment. A later source audit found seven-gate canonical treatment fidelity was not established, so canonical DGAF efficacy remains not established.
 
 ## What DGAF explores
 
@@ -20,9 +20,7 @@ DGAF focuses on several problems that become increasingly important as AI system
 
 ## Core idea
 
-A capable AI system should not only produce answers.
-
-It should also be able to answer:
+A capable AI system should not only produce answers. It should also be able to answer:
 
 - What evidence supports this?
 - Which system state produced it?
@@ -35,60 +33,33 @@ DGAF is an attempt to make those questions part of the architecture.
 
 ## Current development
 
-The repository currently includes working and tested components for:
+The repository contains tested governance, provenance, deterministic validation, negative-control, candidate-state, evaluation, security/custody, CI, and blinded-experiment machinery.
 
-- governed multi-agent orchestration;
-- provenance and evidence contracts;
-- deterministic validation and negative controls;
-- candidate and experimental-state management;
-- evaluation tooling;
-- security and custody mechanisms;
-- CI-based governance checks;
-- blinded-experiment preparation.
+The canonical High-Assurance track remains pre-freeze and is progressing through independent/external acceptance work.
 
-The canonical High-Assurance track is currently progressing through pre-freeze engineering and independent-review preparation.
+A separate Solo research track has now produced several exact-scope evidence records. Experiment 001 is retained as apparatus-falsification evidence. Epoch 003 is negative evidence for an explicitly synthetic treatment variant. Epoch 004 completed a preregistered 50-seed / 9,000-observation comparison and its locked primary result was negative for the exact executed restored-binding treatment. A subsequent source-bound audit found that six of seven constitutive gate bindings were not established for that execution; only the external P-30/11Q qualification binding was established at developer self-attested/non-independent scope. The Epoch 004 result is preserved, but it is not promoted to a claim about canonical DGAF efficacy.
 
-A separate bounded Solo track has also been used to test the apparatus. Its first final experiment exposed a deterministic P-30 treatment-binding defect before the intended DGAF treatment behavior could be evaluated. That run remains retained as falsification evidence; it is not pooled, repaired in place, or reported as an efficacy result.
+Prospective evaluation is therefore split by workload:
 
-Historical engineering and experimental records remain scoped to the exact system identities and predicates that produced them and are not treated as evidence for later versions automatically.
+- **Track A** — numeric PDMAL topology robustness;
+- **Track B1** — semantic routing and safety;
+- **Track B2** — persistent context and closure;
+- **Track B3** — persistent weighted-graph convergence monitoring;
+- **Track C** — integrated DGAF, deferred until the component tracks are independently qualified and validated.
+
+Track A has completed its non-empirical structural profile, developer/non-independent 11Q qualification, and structural-matrix adjudication. Its next gate is a separately reviewed prospective empirical protocol. Collection is not authorized.
 
 ## Research boundary
 
-DGAF distinguishes among three evidence classes.
+DGAF distinguishes among engineering evidence, apparatus-falsification evidence, and efficacy evidence. Results remain scoped to the exact system identities, treatment definitions, protocols, and custody conditions that produced them.
 
-### Engineering evidence
-
-Tests, CI runs, deterministic checks, provenance validation, security controls, and explicitly non-empirical diagnostics.
-
-### Apparatus-falsification evidence
-
-Executions that reveal a protocol or treatment-binding defect and therefore test the experimental apparatus without supporting an efficacy inference.
-
-### Efficacy evidence
-
-Results from an authorized experimental protocol whose apparatus, treatment binding, blinding, and evidence chain remain valid for the intended scientific comparison.
-
-The repository contains substantial engineering evidence and retained apparatus-falsification evidence. It does not yet contain valid DGAF efficacy evidence. The canonical High-Assurance PDMAL track remains empirical N = 0.
-
-## Why this repository exists
-
-The broader goal is to investigate whether multi-agent AI systems can become more:
-
-- auditable,
-- falsifiable,
-- reproducible,
-- resistant to silent authority drift,
-- and explicit about what they actually know versus what remains unverified.
-
-DGAF is both an implementation project and an experimental research platform for testing that idea.
+The repository contains substantial engineering evidence and bounded empirical evidence from the Solo track. It does **not** yet establish canonical DGAF efficacy, independent validation, production certification, or High-Assurance empirical evidence. The canonical High-Assurance track remains empirical N = 0.
 
 ## Project status
 
 Active research and development.
 
-The framework is not presented as empirically validated, production-certified, or currently authorized for a fresh empirical run.
-
-Detailed governance state, evidence records, protocol controls, and historical verification artifacts are maintained inside the repository for technical review.
+The framework is not presented as empirically validated, production-certified, or currently authorized for a fresh empirical run. Detailed governance state, evidence records, protocol controls, and historical verification artifacts are maintained inside the repository for technical review.
 
 ---
 
