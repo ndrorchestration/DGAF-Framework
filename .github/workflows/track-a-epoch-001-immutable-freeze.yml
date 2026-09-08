@@ -1,0 +1,62 @@
+name: Track A Epoch 001 Immutable Freeze
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/validate_track_a_epoch_001_immutable_freeze.py'
+      - 'tests/test_track_a_epoch_001_immutable_freeze.py'
+      - '.github/workflows/track-a-epoch-001-immutable-freeze.yml'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run freeze-validator mutation tests
+        run: python -m unittest -v tests/test_track_a_epoch_001_immutable_freeze.py
+
+      - name: Validate tooling-only or exact one-file freeze event
+        run: |
+          if test -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json; then
+            python scripts/validate_track_a_epoch_001_immutable_freeze.py
+          else
+            python scripts/validate_track_a_epoch_001_immutable_freeze.py --expect-absent
+          fi
+
+      - name: Prove downstream gates remain absent
+        run: |
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json
+
+      - name: Prove tooling does not authorize empirical execution
+        run: |
+          if test -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json; then
+            grep -q '"collection_authorized": false' docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json
+            grep -q '"unblinding_authorized": false' docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json
+            grep -q '"high_assurance_authorized": false' docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json
+            grep -q '"scientific_n_increment": 0' docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json
+          else
+            echo 'TRACK_A_FREEZE=NOT_ESTABLISHED'
+          fi
+          echo 'TRACK_A_EMPIRICAL_EXECUTION=NOT_AUTHORIZED'
+          echo 'SCIENTIFIC_N_INCREMENT=0'
