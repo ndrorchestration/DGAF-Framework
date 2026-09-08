@@ -64,7 +64,7 @@ for _field, _value in MUTATIONS.items():
     )
 
 
-def test_protected_source_drift_shape(self):
+def protected_source_drift_shape(self):
     data = copy.deepcopy(v.expected_freeze())
     first = next(iter(data["protected_source_blobs"]))
     data["protected_source_blobs"][first] = "0" * 40
@@ -75,7 +75,7 @@ def test_protected_source_drift_shape(self):
 setattr(
     ImmutableFreezeValidatorTests,
     "test_protected_source_mutation_fails_closed",
-    test_protected_source_drift_shape,
+    protected_source_drift_shape,
 )
 
 
