@@ -8,17 +8,28 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REGISTRY = ROOT / "docs/governance/CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1.json"
+REGISTRY_PATH = "docs/governance/CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1.json"
+REGISTRY = ROOT / REGISTRY_PATH
 
 
-def load_registry() -> dict:
-    data = json.loads(REGISTRY.read_text(encoding="utf-8"))
+def read_registry_text(registry_ref: str | None = None) -> str:
+    if registry_ref:
+        return subprocess.check_output(
+            ["git", "show", f"{registry_ref}:{REGISTRY_PATH}"], cwd=ROOT, text=True
+        )
+    return REGISTRY.read_text(encoding="utf-8")
+
+
+def load_registry(registry_ref: str | None = None) -> dict:
+    data = json.loads(read_registry_text(registry_ref))
     assert data["record_type"] == "DGAF_CRITICAL_PR_LANE_CUSTODY_REGISTRY"
     assert data["registry_id"] == "CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1"
-    assert data["schema_version"] >= 2
+    assert data["schema_version"] >= 3
     assert 439 in data["controller_issues"]
     assert 441 in data["controller_issues"]
     assert data["scientific_n_increment"] == 0
+    assert data["registry_authority"] == "BASE_BRANCH_ONLY"
+    assert data["reconciliation_protocol"] == "SEPARATE_UNREGISTERED_GOVERNANCE_PR"
     boundary = data["claim_boundary"]
     assert boundary["branch_ref_immutability_established"] is False
     assert boundary["repository_admin_configuration_changed"] is False
@@ -57,13 +68,17 @@ def validate_changed_files(lane: dict, changed_files: list[str]) -> None:
         raise SystemExit("CRITICAL_PR_LANE_CUSTODY_FAIL: registered lane has empty diff")
 
 
-def git_changed_files(base_ref: str) -> list[str]:
+def fetch_base(base_ref: str) -> None:
     subprocess.run(
         ["git", "fetch", "origin", base_ref, "--depth=1"],
         cwd=ROOT,
         check=True,
         stdout=subprocess.DEVNULL,
     )
+
+
+def git_changed_files(base_ref: str) -> list[str]:
+    fetch_base(base_ref)
     output = subprocess.check_output(
         ["git", "diff", "--name-only", f"origin/{base_ref}...HEAD"],
         cwd=ROOT,
@@ -102,17 +117,34 @@ def self_test(data: dict) -> None:
     print("CRITICAL_PR_LANE_CUSTODY_SELF_TEST_PASS")
 
 
+def assert_nonauthorizing(data: dict) -> None:
+    assert data["scientific_n_increment"] == 0
+    boundary = data["claim_boundary"]
+    assert boundary["branch_ref_immutability_established"] is False
+    assert boundary["actor_attribution_established"] is False
+    assert boundary["repository_admin_configuration_changed"] is False
+    assert boundary["registry_reconciliation_is_scientific_authorization"] is False
+    assert boundary["track_a_freeze"] == "NOT_ESTABLISHED"
+    assert boundary["track_a_empirical_execution"] == "NOT_AUTHORIZED"
+    print("CRITICAL_PR_LANE_CUSTODY_NONAUTHORIZING_BOUNDARY_PASS")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--head-ref")
     parser.add_argument("--head-sha")
     parser.add_argument("--base-ref", default="main")
+    parser.add_argument("--registry-ref")
     parser.add_argument("--self-test", action="store_true")
+    parser.add_argument("--assert-nonauthorizing", action="store_true")
     args = parser.parse_args()
 
-    data = load_registry()
+    data = load_registry(args.registry_ref)
     if args.self_test:
         self_test(data)
+        return
+    if args.assert_nonauthorizing:
+        assert_nonauthorizing(data)
         return
     if not args.head_ref or not args.head_sha:
         raise SystemExit("--head-ref and --head-sha are required outside self-test")
@@ -128,6 +160,7 @@ def main() -> None:
     print(f"CRITICAL_PR_LANE_CUSTODY_PASS: {lane['lane_id']}")
     print(f"RECONCILED_HEAD={lane['current_reconciled_head']}")
     print(f"CHANGED_FILES={len(changed)}")
+    print("REGISTRY_AUTHORITY=BASE_BRANCH_ONLY")
     print("PRIOR_EXACT_HEAD_EVIDENCE_TRANSFER=PROHIBITED_ON_HEAD_CHANGE")
 
 
