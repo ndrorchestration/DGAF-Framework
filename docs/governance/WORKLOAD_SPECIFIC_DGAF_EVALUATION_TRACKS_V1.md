@@ -54,6 +54,7 @@ Purpose: evaluate gates whose historical semantics operate directly on structure
 Required workload fields include content, entropy/kappa signals, the five KAPPA score dimensions, and deontic/risk context.
 
 Included:
+
 - DemiJoule semantic safety;
 - P-27 KAPPA v3.6;
 - P-28 evaluation pipeline;
@@ -61,6 +62,7 @@ Included:
 - external P-30 profile qualification.
 
 Excluded:
+
 - P-31 and P-32, which require persistent multi-turn context under B2;
 - P-33, which requires persistent weighted-graph state under B3.
 
@@ -73,6 +75,7 @@ Excluded:
 Purpose: evaluate P-31 SCPE and P-32 Phi Closure on a true multi-turn semantic session.
 
 Required state must persist for one complete session and reset only at the session boundary:
+
 - SCPE token/tier store;
 - token insertion timestamps and trust edges;
 - Phi stable/total counters;
@@ -80,6 +83,7 @@ Required state must persist for one complete session and reset only at the sessi
 - explicit `is_stable` input.
 
 Included:
+
 - P-31 SCPE;
 - P-32 Phi Closure;
 - external P-30 profile qualification.
@@ -93,6 +97,7 @@ Included:
 Purpose: evaluate P-33 on a sequence of persistent weighted-graph snapshots.
 
 Required state:
+
 - `W_t`;
 - `W_{t-1}`;
 - consecutive stable/divergent counters;
