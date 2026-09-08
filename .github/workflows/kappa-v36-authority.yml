@@ -1,0 +1,32 @@
+name: KAPPA v3.6 Authority
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/kappa-v36-authority.yml'
+      - 'components/KAPPA/dynamic_weight_router.py'
+      - 'components/KAPPA/DGAF_GATE_KAPPA_v3_6_component_card.json'
+      - 'components/KAPPA/calibration_v3_6.json'
+      - 'docs/patterns/NDR_PATTERN_REGISTRY.md'
+      - 'tests/test_kappa_v36_calibration_binding.py'
+      - 'scripts/validate_kappa_v36_authority.py'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Validate live router against v3.6 authority
+        env:
+          PYTHONPATH: .
+        run: python scripts/validate_kappa_v36_authority.py
