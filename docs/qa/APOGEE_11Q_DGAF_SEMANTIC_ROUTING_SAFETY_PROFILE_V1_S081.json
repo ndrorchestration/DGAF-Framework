@@ -1,0 +1,66 @@
+{
+  "record_type": "DGAF_P30_11Q_PROFILE_QUALIFICATION",
+  "schema_version": 1,
+  "attestation_gate": "P-30",
+  "rubric": "P-11 11Q Attestation Scoring",
+  "attestation_id": "APOGEE_11Q_DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1_S081",
+  "profile_id": "DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1",
+  "review_scope": "Merged non-empirical B1 semantic routing and safety profile.",
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+  "independent_verification": false,
+  "empirical_evidence": false,
+  "scientific_n_increment": 0,
+  "source_bindings": {
+    "architecture_merge_sha": "5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+    "profile_merge_sha": "002f6c7037c7e72c31c39499cba97681da76a962",
+    "profile_path": "docs/governance/DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1.json",
+    "profile_blob_sha": "692f5d1acaa68725e65b0e835fc96d9979253dd8",
+    "kappa_blob_sha": "8a2193a810c22bf6732f1a7f08650e06b8fbff08",
+    "evaluate_router_blob_sha": "8c141231bae3fcb0321f0c306ada068e5d369546",
+    "sentinel_blob_sha": "3ece02b81e0b8bf331eb1e769a8225ab87af322a",
+    "demijoule_blob_sha": "686eb9ba339742d9de2767fca18b9907a1c3b70a",
+    "harness_blob_sha": "0ac0841259fad8d333e620ad54f1f81e238c4074",
+    "test_blob_sha": "0ca9d200018e2aa1855d876ad3f7e3f5464bb1af",
+    "validator_blob_sha": "33c8bbe39e709126439e69eed492e7137450efbc",
+    "workflow_blob_sha": "7a711fc3e7779e7056c88a6efe877fcb1cead5ec",
+    "implementation_exact_head_workflows_passed": "18/18"
+  },
+  "scoring": {
+    "Q01": {"score": 10, "verdict": "PASS", "evidence": "Scope is explicit: semantic routing/safety behavior, required record substrate, five registered fixture classes, excluded B2/B3 components, and no efficacy endpoint."},
+    "Q02": {"score": 10, "verdict": "PASS", "evidence": "Profile, KAPPA, evaluation router, Sentinel/P-10, DemiJoule, harness, tests, validator, workflow, and merged implementation identity are exact-bound."},
+    "Q03": {"score": 10, "verdict": "PASS", "evidence": "Provenance binds architecture, merged B1 implementation, exact source blobs, and 18/18 successful implementation-head workflows."},
+    "Q04": {"score": 10, "verdict": "PASS", "evidence": "Record fields and component interfaces are explicit; deontic declaration is checked against source-derived P-10 state before Sentinel classification."},
+    "Q05": {"score": 10, "verdict": "PASS", "evidence": "Terminology and claim boundaries distinguish routing/safety classification from empirical efficacy and keep B2/B3 stateful components out of B1."},
+    "Q06": {"score": 10, "verdict": "PASS", "evidence": "Profile conforms to workload-specific architecture and uses actual semantic record substrate rather than numeric consensus proxies."},
+    "Q07": {"score": 8, "verdict": "PASS_WITH_LIMITATIONS", "evidence": "Two source limitations remain material and explicit: DemiJoule reprompt is unreachable under its current common-six-axis scoring, and P-10 forbidden is reachable only in a narrow live KAPPA confidence region demonstrated by the registered fixture."},
+    "Q08": {"score": 10, "verdict": "PASS", "evidence": "Registered fixtures and negative controls are deterministic and source-bound; the forbidden fixture proves the existing live predicate without threshold modification."},
+    "Q09": {"score": 10, "verdict": "PASS", "evidence": "Fixtures are synthetic evaluation records and retain only bounded routing/safety/provenance outputs; no personal data or empirical corpus is required."},
+    "Q10": {"score": 10, "verdict": "PASS", "evidence": "Efficacy estimation, historical pooling, numeric semantic proxies, and empirical execution are explicitly prohibited; scientific N remains zero."},
+    "Q11": {"score": 9, "verdict": "PASS", "evidence": "Ready only for a later non-empirical B1 integration/adjudication gate. Not ready for empirical execution, integrated Track C claims, High-Assurance acceptance, or production use."}
+  },
+  "scoring_summary": {
+    "total_score": 107,
+    "max_score": 110,
+    "percentage": 97.2727272727,
+    "tier": "S-TIER",
+    "q11_score": 9,
+    "q11_threshold_met": true,
+    "open_blg_count": 0,
+    "open_blgs": [],
+    "attestation_result": "GRANTED_WITH_EXPLICIT_SOURCE_LIMITATIONS",
+    "attestation_note": "S-TIER developer self-attestation for the non-empirical B1 profile role only; current source limitations remain binding."
+  },
+  "limitations": [
+    "Same developer/operator context performed profile design and qualification; this is not independent verification.",
+    "DemiJoule reprompt remains unreachable under the current common six-axis score implementation.",
+    "P-10 forbidden is source-reachable but only under a narrow KAPPA-derived confidence region; this is a fidelity finding, not a robustness claim.",
+    "Synthetic fixtures establish source-bound routing/safety behavior only, not real-workload safety or benefit.",
+    "B1 qualification does not establish B2, B3, integrated Track C, or canonical DGAF efficacy."
+  ],
+  "next_gate": {
+    "required": "B1_NONEMPIRICAL_INTEGRATION_ADJUDICATION",
+    "empirical_execution": "NOT_AUTHORIZED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance_changed": false
+  }
+}
