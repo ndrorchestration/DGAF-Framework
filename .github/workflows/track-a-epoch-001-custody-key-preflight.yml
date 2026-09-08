@@ -1,0 +1,53 @@
+name: Track A Epoch 001 Custody Key Preflight
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-custody-key-preflight.yml'
+      - 'scripts/preflight_track_a_epoch_001_custody_key.py'
+      - 'tests/test_track_a_epoch_001_custody_key_preflight.py'
+  push:
+    paths:
+      - '.github/workflows/track-a-epoch-001-custody-key-preflight.yml'
+      - 'scripts/preflight_track_a_epoch_001_custody_key.py'
+      - 'tests/test_track_a_epoch_001_custody_key_preflight.py'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-tooling-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact validation head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Prove exact validation head
+        env:
+          EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run custody-key preflight contract tests
+        run: python -m unittest -v tests.test_track_a_epoch_001_custody_key_preflight
+
+      - name: Prove CI cannot consume custody secrets or materialize data
+        run: |
+          set -euo pipefail
+          test -z "${TRACK_A_CUSTODY_PRIVATE_KEY:-}"
+          test ! -e track_a_epoch_001_unblinded_analysis_input.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDED_INPUT_RECEIPT.json
+          echo 'CUSTODY_KEY_AVAILABLE_TO_CI=FALSE'
+          echo 'PROTECTED_MAPPING_DECRYPTED=FALSE'
+          echo 'UNBLINDED_ANALYSIS_INPUT_MATERIALIZED=FALSE'
+          echo 'PRIMARY_ANALYSIS_RUN=FALSE'
