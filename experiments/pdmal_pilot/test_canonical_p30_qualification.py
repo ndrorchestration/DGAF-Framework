@@ -75,6 +75,8 @@ def test_rejects_digest_profile_and_source_drift():
     assert not _verify(raw, digest, expected_sha256="0" * 64)
     assert not _verify(raw, digest, expected_profile_id="OTHER")
     assert not _verify(raw, digest, expected_profile_source_sha="b" * 40)
+    assert not _verify(raw, digest, expected_sha256="G" * 64)
+    assert not _verify(raw, digest, expected_profile_source_sha="Z" * 40)
 
 
 def test_rejects_malformed_and_nonqualifying_evidence():
@@ -98,10 +100,12 @@ def test_rejects_a_tier_without_open_blg():
     assert not _verify(raw, digest)
 
 
-def test_rejects_wrong_authority_or_verification_class():
+def test_rejects_wrong_authority_or_unsupported_verification_class():
     raw, digest = _artifact(attestation_gate="LEGACY")
     assert not _verify(raw, digest)
     raw, digest = _artifact(verification_class="SELF_ASSERTED_INDEPENDENT")
+    assert not _verify(raw, digest)
+    raw, digest = _artifact(verification_class="INDEPENDENT_VERIFIED")
     assert not _verify(raw, digest)
 
 
