@@ -1,0 +1,70 @@
+name: Track A Topology Robustness Profile
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-topology-robustness-profile.yml'
+      - 'docs/governance/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1.json'
+      - 'experiments/pdmal_pilot/topology_robustness_profile.py'
+      - 'experiments/pdmal_pilot/test_topology_robustness_profile.py'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install hash-locked PDMAL dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run Track A profile tests
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: pytest -q experiments/pdmal_pilot/test_topology_robustness_profile.py
+
+      - name: Generate structural-only probe artifact
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python experiments/pdmal_pilot/topology_robustness_profile.py
+
+      - name: Independently adjudicate retained artifact
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('test-artifacts/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1_PROBE.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['record_type'] == 'PDMAL_TOPOLOGY_ROBUSTNESS_STRUCTURAL_PROBE'
+          assert d['profile_id'] == 'PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1'
+          assert d['algorithm_id'] == 'REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1'
+          assert d['scientific_n_increment'] == 0
+          assert d['empirical_authorization'] is False
+          assert d['expected_cells'] == d['completed_cells'] == 90
+          assert len(d['records']) == 90
+          raw = p.read_text(encoding='utf-8').lower()
+          for token in (
+              'ffcr', 'final_std', 'consensus_success', 'treatment_effect',
+              'confidence_interval', 'p_value', 'governance_trace', 'condition', 'dgaf'
+          ):
+              assert token not in raw, token
+          print('TRACK_A_STRUCTURAL_ARTIFACT_PASS')
+          PY
+
+      - name: Upload Track A structural probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-a-topology-robustness-probe-${{ github.sha }}
+          path: test-artifacts/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1_PROBE.json
+          if-no-files-found: error
+          retention-days: 90
