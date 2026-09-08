@@ -1,12 +1,12 @@
 {
   "record_type": "DGAF_CRITICAL_PR_LANE_CUSTODY_REGISTRY",
-  "schema_version": 3,
+  "schema_version": 4,
   "registry_id": "CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1",
-  "controller_issues": [439, 441],
-  "purpose": "Fail closed when a registered critical PR branch changes files outside its declared lane or moves to a head identity not reconciled on the protected base branch.",
+  "controller_issues": [439, 441, 452],
+  "purpose": "Fail closed when a registered critical PR leaves its declared lane or its exact registered payload changes, while allowing ancestry-only rebases to current protected main.",
   "registry_authority": "BASE_BRANCH_ONLY",
-  "reconciliation_protocol": "SEPARATE_UNREGISTERED_GOVERNANCE_PR",
-  "head_change_semantics": "Registered critical-lane PRs are validated against the custody registry on the protected base branch, not a registry embedded in the PR head. Any legitimate head movement requires a separate unregistered governance PR to record the new current_reconciled_head on the base branch, followed by a fresh complete exact-head workflow wave on the unchanged critical-lane head. Prior exact-head evidence never transfers.",
+  "reconciliation_protocol": "EXACT_PAYLOAD_BINDING_WITH_FRESH_HEAD_CI",
+  "head_change_semantics": "The protected base registry binds each critical lane to an exact changed-file set and exact blob identities. A new live head may differ only by ancestry while preserving that payload. Every new head requires a fresh complete exact-head CI wave; prior exact-head evidence never transfers. Explicitly contaminated historical heads remain prohibited.",
   "scientific_n_increment": 0,
   "registered_lanes": [
     {
@@ -15,7 +15,7 @@
       "branch": "experiment/track-a-epoch-001-runner",
       "controller_issue": 421,
       "current_reconciled_head": "f740586ef69ea543e9091dc75481a45ca9254157",
-      "current_reconciled_head_evidence": "Legitimate exact-payload re-anchor after B3 merge; fresh complete exact-head validation required after this base-authoritative reconciliation merges; prior evidence does not transfer.",
+      "current_reconciled_head_evidence": "19/19 fresh pull-request workflows SUCCESS after base-authoritative reconciliation; protected merge then demonstrated strict-up-to-date circularity, motivating schema-v4 payload binding. This head remains historical evidence after any ancestry-only rebase.",
       "allowed_changed_files": [
         ".github/workflows/track-a-epoch-001-runner.yml",
         "docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json",
@@ -23,6 +23,13 @@
         "experiments/pdmal_pilot/test_track_a_epoch_001_runner.py",
         "scripts/validate_track_a_epoch_001_runner.py"
       ],
+      "required_payload_blobs": {
+        ".github/workflows/track-a-epoch-001-runner.yml": "cdf57fa962d433d260007e6c6f8a2a94ef6d5d0e",
+        "docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json": "38120200d775b0fb3087bb4bc8c89ec9afc2b032",
+        "experiments/pdmal_pilot/run_track_a_epoch_001.py": "3abed05c927d4f9dd70c2ed0dad409a116b64ca3",
+        "experiments/pdmal_pilot/test_track_a_epoch_001_runner.py": "7b5467c25d84e3613ae0d0a529799d465ec5eff9",
+        "scripts/validate_track_a_epoch_001_runner.py": "1310f8fd8014266d4dfae58d6d799de90b410844"
+      },
       "head_history": [
         {
           "head": "bdf79ddfd3a42ad8ebf4861bfd8cb8c6a85da0ea",
@@ -50,14 +57,14 @@
         },
         {
           "head": "f740586ef69ea543e9091dc75481a45ca9254157",
-          "classification": "CURRENT_RECONCILED_REANCHOR",
-          "reason": "Exact five-file runner payload re-anchored onto B3-complete main after PR #430 merge.",
+          "classification": "RECONCILED_HEAD_HISTORICAL_AFTER_STRICT_UP_TO_DATE_DEADLOCK",
+          "reason": "Exact five-file runner payload re-anchored onto B3-complete main, reconciled through #451, then freshly validated 19/19; merge blocked only because #451 itself advanced strict main.",
           "fresh_exact_head_validation_required": true,
-          "fresh_exact_head_validation_observed": "PENDING_AFTER_BASE_RECONCILIATION",
+          "fresh_exact_head_validation_observed": "19/19 SUCCESS",
           "evidence_transfer_from_predecessor": false
         }
       ],
-      "status": "REGISTERED_FOR_BASE_AUTHORITATIVE_SCOPE_AND_HEAD_CUSTODY"
+      "status": "REGISTERED_FOR_EXACT_PAYLOAD_AND_FRESH_HEAD_CUSTODY"
     }
   ],
   "claim_boundary": {
