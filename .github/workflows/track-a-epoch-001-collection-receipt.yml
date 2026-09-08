@@ -1,0 +1,153 @@
+name: Track A Epoch 001 Collection Receipt
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-collection-receipt.yml'
+      - 'scripts/validate_track_a_epoch_001_collection_receipt.py'
+      - 'tests/test_track_a_epoch_001_collection_receipt.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_RECEIPT.json'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run collection-receipt contract tests
+        run: python -m unittest -v tests/test_track_a_epoch_001_collection_receipt.py
+
+      - name: Validate tooling-only or exact one-file receipt event
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_RECEIPT.json'
+          workflow='.github/workflows/track-a-epoch-001-collection-receipt.yml'
+          validator='scripts/validate_track_a_epoch_001_collection_receipt.py'
+          tests='tests/test_track_a_epoch_001_collection_receipt.py'
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+          if test -e "$receipt"; then
+            python "$validator"
+          else
+            python "$validator" --expect-absent
+            expected=("$workflow" "$validator" "$tests")
+            mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+            test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+            diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+          fi
+
+      - name: Verify retained run and artifacts for receipt event only
+        if: ${{ hashFiles('docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_RECEIPT.json') != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          API: https://api.github.com
+        run: |
+          set -euo pipefail
+          tmp="$RUNNER_TEMP/track-a-receipt-qc"
+          mkdir -p "$tmp/public" "$tmp/protected"
+          auth=(-H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json')
+
+          curl -fsSL "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/runs/34262408225" > "$tmp/run.json"
+          curl -fsSL "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/runs/34262408225/artifacts?per_page=100" > "$tmp/artifacts.json"
+          python - "$tmp/run.json" "$tmp/artifacts.json" <<'PY'
+          import json, sys
+          run = json.load(open(sys.argv[1], encoding='utf-8'))
+          arts = json.load(open(sys.argv[2], encoding='utf-8'))['artifacts']
+          assert run['status'] == 'completed'
+          assert run['conclusion'] == 'success'
+          assert run['event'] == 'push'
+          assert run['head_sha'] == '98e72e370897c0e0916f78245a040108ed278189'
+          assert run['head_branch'] == 'experiment/track-a-epoch-001-authorized-collection-482'
+          by_id = {a['id']: a for a in arts}
+          expected = {
+              10070586413: ('track-a-epoch-001-public-blinded-482', 83776, 'sha256:32851068cc61421f756041d0671681823b38c054f06e5082ed26c800bf296231'),
+              10070587302: ('track-a-epoch-001-protected-encrypted-482', 136074, 'sha256:f52d2144cfb8c699347c56cf92a41c1ac11cba98787fefabb56891c9f680c69f'),
+          }
+          for aid, (name, size, digest) in expected.items():
+              a = by_id[aid]
+              assert not a['expired']
+              assert a['name'] == name
+              assert a['size_in_bytes'] == size
+              assert a['digest'] == digest
+          print('TRACK_A_COLLECTION_EXTERNAL_IDENTITY_QC=PASS')
+          PY
+
+          curl -fsSL -L "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/10070586413/zip" -o "$tmp/public.zip"
+          curl -fsSL -L "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/10070587302/zip" -o "$tmp/protected.zip"
+          echo '32851068cc61421f756041d0671681823b38c054f06e5082ed26c800bf296231  '"$tmp/public.zip" | sha256sum -c -
+          echo 'f52d2144cfb8c699347c56cf92a41c1ac11cba98787fefabb56891c9f680c69f  '"$tmp/protected.zip" | sha256sum -c -
+
+          unzip -q "$tmp/public.zip" -d "$tmp/public"
+          public_root="$tmp/public/track_a_epoch_001_public"
+          test "$(find "$public_root" -maxdepth 1 -type f -name 'track_a_epoch_001_seed_*.json' | wc -l)" -eq 50
+          test "$(find "$public_root" -maxdepth 1 -type f -name 'track_a_epoch_001_seed_*.json.sha256' | wc -l)" -eq 50
+          (cd "$public_root" && for sidecar in *.sha256; do sha256sum -c "$sidecar" >/dev/null; done)
+          python - "$public_root/track_a_epoch_001_manifest.json" <<'PY'
+          import json, sys
+          d = json.load(open(sys.argv[1], encoding='utf-8'))
+          assert d['record_type'] == 'TRACK_A_EPOCH_001_BLINDED_COLLECTION_MANIFEST'
+          assert d['schema_version'] == 2
+          assert d['protocol_id'] == 'PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-001'
+          assert d['frozen_candidate_sha'] == '961b9918002c4c68afac9c0fd5dd3e352e49b926'
+          assert d['seed_count'] == 50 and len(d['rows']) == 50
+          assert d['expected_observations'] == 2250
+          assert sum(r['record_count'] for r in d['rows']) == 2250
+          assert all(r['record_count'] == 45 for r in d['rows'])
+          assert [r['seed_id'] for r in d['rows']] == list(range(20270101, 20270151))
+          assert d['outcomes_inspected_by_collection_workflow'] is False
+          assert d['outcome_aggregation_performed'] is False
+          assert d['unblinding_authorized'] is False
+          assert d['historical_pooling_allowed'] is False
+          assert d['epoch_004_substitution_allowed'] is False
+          print('TRACK_A_COLLECTION_MANIFEST_STRUCTURAL_QC=PASS')
+          PY
+
+          unzip -q "$tmp/protected.zip" -d "$tmp/protected"
+          mapfile -t protected_names < <(cd "$tmp/protected" && find . -maxdepth 1 -type f -printf '%f\n' | sort)
+          expected_names=(
+            track_a_epoch_001_custody_cert.pem
+            track_a_epoch_001_custody_cert.sha256
+            track_a_epoch_001_protected.cms
+            track_a_epoch_001_protected_ciphertext.sha256
+            track_a_epoch_001_protected_plaintext_tar.sha256
+          )
+          diff -u <(printf '%s\n' "${expected_names[@]}") <(printf '%s\n' "${protected_names[@]}")
+          expected_cipher=$(awk '{print $1}' "$tmp/protected/track_a_epoch_001_protected_ciphertext.sha256")
+          actual_cipher=$(sha256sum "$tmp/protected/track_a_epoch_001_protected.cms" | awk '{print $1}')
+          test "$expected_cipher" = '15ba9d630cea0c26baca3ab50c33f7bcf10681a24293350b12acf3d4aeac4614'
+          test "$actual_cipher" = "$expected_cipher"
+          expected_cert=$(awk '{print $1}' "$tmp/protected/track_a_epoch_001_custody_cert.sha256")
+          actual_cert=$(sha256sum "$tmp/protected/track_a_epoch_001_custody_cert.pem" | awk '{print $1}')
+          test "$expected_cert" = 'cfa468d1091f2179cfe0c96ff000bfe45ae7c5bd1414146fbb99c77572dba707'
+          test "$actual_cert" = "$expected_cert"
+          test "$(awk '{print $1}' "$tmp/protected/track_a_epoch_001_protected_plaintext_tar.sha256")" = 'ec51a5451b63c5cbccfd83d01290f939d7a1832181af190c5fabd31fa806eb35'
+          echo 'TRACK_A_COLLECTION_PROTECTED_CIPHERTEXT_QC=PASS'
+
+      - name: Preserve receipt boundary
+        run: |
+          echo 'TRACK_A_EMPIRICAL_COLLECTION = COMPLETE'
+          echo 'TRACK_A_INFERENTIAL_SEED_UNITS = 50'
+          echo 'TRACK_A_BLINDED_OBSERVATIONS = 2250'
+          echo 'TRACK_A_UNBLINDING = NOT_AUTHORIZED'
+          echo 'PRIMARY_ANALYSIS = NOT_RUN'
+          echo 'CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED'
+          echo 'HIGH_ASSURANCE = NOT_AUTHORIZED'
