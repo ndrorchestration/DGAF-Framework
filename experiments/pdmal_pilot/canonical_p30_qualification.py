@@ -9,15 +9,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import string
 from typing import Any, Callable
 
 PROFILE_ID = "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1"
 RECORD_TYPE = "DGAF_P30_11Q_PROFILE_QUALIFICATION"
 RUBRIC = "P-11 11Q Attestation Scoring"
-ALLOWED_VERIFICATION_CLASSES = {
-    "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
-    "INDEPENDENT_VERIFIED",
-}
+ALLOWED_VERIFICATION_CLASSES = {"DEVELOPER_SELF_ATTESTED_NONINDEPENDENT"}
 FORBIDDEN_KEYS = {
     "empirical_outcomes",
     "ffcr",
@@ -29,6 +27,15 @@ FORBIDDEN_KEYS = {
     "phi_constant",
     "synthetic_confidence_fixture",
 }
+
+
+def _is_lower_hex(value: str, length: int) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == length
+        and value == value.lower()
+        and all(ch in string.hexdigits.lower() for ch in value)
+    )
 
 
 def _contains_forbidden_key(value: Any) -> bool:
@@ -49,9 +56,11 @@ def verify_qualification_artifact(
     expected_profile_source_sha: str,
 ) -> bool:
     """Return True only for an exact, qualifying, source-bound P-30 artifact."""
-    if not artifact_bytes or len(expected_sha256) != 64 or len(expected_profile_source_sha) != 40:
+    if not artifact_bytes:
         return False
-    if hashlib.sha256(artifact_bytes).hexdigest() != expected_sha256.lower():
+    if not _is_lower_hex(expected_sha256, 64) or not _is_lower_hex(expected_profile_source_sha, 40):
+        return False
+    if hashlib.sha256(artifact_bytes).hexdigest() != expected_sha256:
         return False
     try:
         data = json.loads(artifact_bytes.decode("utf-8"))
