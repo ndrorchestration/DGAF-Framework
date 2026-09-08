@@ -26,7 +26,7 @@ GitHub is authoritative for implementation and CI; governance decisions remain s
 
 **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · canonical High-Assurance empirical N = 0.**
 
-The final v0.7.6 High-Assurance candidate is still **NOT DESIGNATED**. Historical runtime evidence remains exact-scoped to the identities that produced it and does not transfer automatically to a later candidate. P4 real custody/admission, final P7 binding, P8 immutable freeze, final independent P9, and explicit authorization remain separate gates.
+The final v0.7.6 High-Assurance candidate is still **NOT DESIGNATED**. The current **apparatus source**, **candidate identity**, and **deployment identity** remain governed by their exact historical/control records and are not rotated by repository `main` recency. Historical runtime evidence remains exact-scoped to the identities that produced it and does not transfer automatically to a later candidate. P4 real custody/admission, final P7 binding, P8 immutable freeze, final independent P9, and explicit authorization remain separate gates.
 
 ## Solo Epoch 004 — completed empirical evidence
 
