@@ -2,7 +2,7 @@
   "record_type": "DGAF_CRITICAL_PR_LANE_CUSTODY_REGISTRY",
   "schema_version": 4,
   "registry_id": "CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1",
-  "controller_issues": [439, 441, 452],
+  "controller_issues": [439, 441, 452, 454],
   "purpose": "Fail closed when a registered critical PR leaves its declared lane or its exact registered payload changes, while allowing ancestry-only rebases to current protected main.",
   "registry_authority": "BASE_BRANCH_ONLY",
   "reconciliation_protocol": "EXACT_PAYLOAD_BINDING_WITH_FRESH_HEAD_CI",
@@ -14,8 +14,8 @@
       "pull_request": 431,
       "branch": "experiment/track-a-epoch-001-runner",
       "controller_issue": 421,
-      "current_reconciled_head": "f740586ef69ea543e9091dc75481a45ca9254157",
-      "current_reconciled_head_evidence": "19/19 fresh pull-request workflows SUCCESS after base-authoritative reconciliation; protected merge then demonstrated strict-up-to-date circularity, motivating schema-v4 payload binding. This head remains historical evidence after any ancestry-only rebase.",
+      "current_reconciled_head": "edd8be75d2c815434a02cce934485c73207b2504",
+      "current_reconciled_head_evidence": "Hardened five-file payload prepared after successor-gate audit and re-anchored directly onto custody-safe main c97452a2cca74751dc86f259c1dc53f37657dd43. Payload reconciliation is pending merge of issue #454 governance PR; after that merge, #431 must be ancestry-rebased without blob changes and complete a wholly fresh exact-head workflow wave. No prior workflow evidence transfers.",
       "allowed_changed_files": [
         ".github/workflows/track-a-epoch-001-runner.yml",
         "docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json",
@@ -24,11 +24,11 @@
         "scripts/validate_track_a_epoch_001_runner.py"
       ],
       "required_payload_blobs": {
-        ".github/workflows/track-a-epoch-001-runner.yml": "cdf57fa962d433d260007e6c6f8a2a94ef6d5d0e",
-        "docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json": "38120200d775b0fb3087bb4bc8c89ec9afc2b032",
-        "experiments/pdmal_pilot/run_track_a_epoch_001.py": "3abed05c927d4f9dd70c2ed0dad409a116b64ca3",
-        "experiments/pdmal_pilot/test_track_a_epoch_001_runner.py": "7b5467c25d84e3613ae0d0a529799d465ec5eff9",
-        "scripts/validate_track_a_epoch_001_runner.py": "1310f8fd8014266d4dfae58d6d799de90b410844"
+        ".github/workflows/track-a-epoch-001-runner.yml": "36a21ac0bb66a6655367bafa7969ca183c50b501",
+        "docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json": "b7b38696403c9626eb86a193acf5abffb8424c33",
+        "experiments/pdmal_pilot/run_track_a_epoch_001.py": "d8ef6f31f49da82e4eaf5295bad024c3194f6d15",
+        "experiments/pdmal_pilot/test_track_a_epoch_001_runner.py": "f66d1b2dee94d2f2615575797484900cec0c4d94",
+        "scripts/validate_track_a_epoch_001_runner.py": "90b47cb8b1bdaf790c655724b3f9c247283b40a4"
       },
       "head_history": [
         {
@@ -58,13 +58,29 @@
         {
           "head": "f740586ef69ea543e9091dc75481a45ca9254157",
           "classification": "RECONCILED_HEAD_HISTORICAL_AFTER_STRICT_UP_TO_DATE_DEADLOCK",
-          "reason": "Exact five-file runner payload re-anchored onto B3-complete main, reconciled through #451, then freshly validated 19/19; merge blocked only because #451 itself advanced strict main.",
+          "reason": "Exact pre-hardening five-file runner payload re-anchored onto B3-complete main, reconciled through #451, then freshly validated 19/19; merge blocked by strict-up-to-date circularity. Successor-gate review then found authorization/blinding weaknesses, so this payload is superseded and must not be merged.",
           "fresh_exact_head_validation_required": true,
-          "fresh_exact_head_validation_observed": "19/19 SUCCESS",
+          "fresh_exact_head_validation_observed": "19/19 SUCCESS_PRE_HARDENING",
+          "evidence_transfer_from_predecessor": false
+        },
+        {
+          "head": "916fe9e8e0fb2d8bb9233d42667a69b5bef95be3",
+          "classification": "HARDENED_PAYLOAD_PRE_CUSTODY_V4_BASE_HISTORICAL",
+          "reason": "Successor-gate audit hardening introduced strict boolean endpoints, keyed trial order, successor-gate chain validation, one-file authorization enforcement, immutable gate-history checks, protected-source freeze checks, and expanded negative controls. Head became stale when custody schema-v4 repair merged to main.",
+          "fresh_exact_head_validation_required": true,
+          "fresh_exact_head_validation_observed": "NONTRANSFERABLE_PARTIAL_WAVE",
+          "evidence_transfer_from_predecessor": false
+        },
+        {
+          "head": "edd8be75d2c815434a02cce934485c73207b2504",
+          "classification": "HARDENED_PAYLOAD_REANCHOR_PENDING_BASE_RECONCILIATION",
+          "reason": "Exact hardened five-file payload re-anchored directly onto custody-safe main c97452a2cca74751dc86f259c1dc53f37657dd43. Schema-v4 custody correctly requires this separate base-authoritative payload reconciliation before #431 can pass custody.",
+          "fresh_exact_head_validation_required": true,
+          "fresh_exact_head_validation_observed": "PENDING_AFTER_BASE_RECONCILIATION",
           "evidence_transfer_from_predecessor": false
         }
       ],
-      "status": "REGISTERED_FOR_EXACT_PAYLOAD_AND_FRESH_HEAD_CUSTODY"
+      "status": "REGISTERED_FOR_HARDENED_EXACT_PAYLOAD_PENDING_FRESH_HEAD_CUSTODY"
     }
   ],
   "claim_boundary": {
