@@ -1,0 +1,50 @@
+name: Track A Epoch 001 Collection Execution Validation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-collection-execution.yml'
+      - '.github/workflows/track-a-epoch-001-collection-execution-validation.yml'
+      - 'scripts/validate_track_a_epoch_001_collection_execution.py'
+  push:
+    paths:
+      - '.github/workflows/track-a-epoch-001-collection-execution.yml'
+      - '.github/workflows/track-a-epoch-001-collection-execution-validation.yml'
+      - 'scripts/validate_track_a_epoch_001_collection_execution.py'
+
+permissions:
+  contents: read
+
+jobs:
+  static-validation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Checkout exact validation head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Prove exact validation head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Validate manual-only exact-authorization execution contract
+        shell: bash
+        run: python scripts/validate_track_a_epoch_001_collection_execution.py
+
+      - name: Prove validation is non-empirical
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e "$RUNNER_TEMP/track-a-public"
+          test ! -e "$RUNNER_TEMP/track-a-protected"
+          echo 'TRACK_A_EMPIRICAL_EXECUTION_DURING_VALIDATION=FALSE'
+          echo 'SCIENTIFIC_N_INCREMENT=0'
+          echo 'UNBLINDING_AUTHORIZED=FALSE'
+          echo 'HIGH_ASSURANCE_AUTHORIZED=FALSE'
