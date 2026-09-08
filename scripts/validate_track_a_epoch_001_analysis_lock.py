@@ -12,7 +12,7 @@ PROTOCOL = ROOT / "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGI
 ANALYSIS = ROOT / "experiments/pdmal_pilot/track_a_epoch_001_analysis.py"
 
 EXPECTED_PROTOCOL_BLOB = "52148950ff054a407c2e6b5cf36103695cf96474"
-EXPECTED_ANALYSIS_BLOB = "1ae463614de770314315527156916a5b5229cfdd"
+EXPECTED_ANALYSIS_BLOB = "76bc8e9604c5d7e039e324e73036f353dc8ea31f"
 EXPECTED_CONFIG_SHA256 = "355b164f69e91405819f092d0721b7597b87b06de79394a0c451169410a5ab6d"
 
 
@@ -52,6 +52,7 @@ def main() -> None:
     assert c["bootstrap_seed"] == p["bootstrap_seed"] == 20270151
     assert c["alpha"] == p["alpha"] == 0.05
     assert c["confirmatory_test_count"] == protocol["multiplicity_policy"]["confirmatory_test_count"] == 1
+    assert protocol["prospective_qc"]["require_bound_algorithm_identity"] is True
 
     b = lock["boundaries"]
     assert b["runner_implemented_by_this_lock"] is False
