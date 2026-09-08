@@ -2,8 +2,10 @@
 """Fail-closed Solo runner implementation for canonical DGAF Epoch 004.
 
 Code presence is not execution authorization. Empirical collection requires a future
-one-file run-request commit bound to the exact frozen SHA plus protected blinding
-and retention inputs. PR validation must never satisfy those predicates.
+one-file run-request commit whose request binds the known runner-parent SHA; the
+actual frozen run SHA is the one-file authorization commit itself. Protected
+blinding and retention inputs are also required. PR validation must never satisfy
+those predicates.
 """
 from __future__ import annotations
 
@@ -53,9 +55,22 @@ ANALYSIS_BLOB_SHA = "a269ed226b1d261663994fc3ef0e8a1a96da6cd3"
 ANALYSIS_CONFIG_SHA256 = "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8"
 
 
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
 def _git_blob(path: str) -> str:
-    root = Path(__file__).resolve().parents[2]
-    return subprocess.check_output(["git", "hash-object", path], cwd=root, text=True).strip()
+    return subprocess.check_output(["git", "hash-object", path], cwd=_repo_root(), text=True).strip()
+
+
+def _parent_sha() -> str:
+    try:
+        parent = subprocess.check_output(["git", "rev-parse", "HEAD^"], cwd=_repo_root(), text=True).strip().lower()
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit("Epoch 004 execution prohibited: unable to resolve authorization parent SHA") from exc
+    if len(parent) != 40 or any(c not in "0123456789abcdef" for c in parent):
+        raise SystemExit("Epoch 004 execution prohibited: invalid authorization parent SHA")
+    return parent
 
 
 def _load_request(path: Path = RUN_REQUEST_PATH) -> dict:
@@ -68,12 +83,14 @@ def _load_request(path: Path = RUN_REQUEST_PATH) -> dict:
     return data
 
 
-def validate_run_request(data: dict, *, frozen_sha: str) -> None:
+def validate_run_request(data: dict, *, frozen_sha: str, parent_sha: str) -> None:
+    if frozen_sha == parent_sha:
+        raise SystemExit("Epoch 004 execution prohibited: authorization commit must be distinct from runner parent")
     expected = {
         "record_type": "DGAF_CANONICAL_SOLO_EMPIRICAL_RUN_REQUEST",
         "schema_version": 1,
         "epoch_id": EPOCH_ID,
-        "requested_frozen_commit_sha": frozen_sha,
+        "authorized_runner_parent_sha": parent_sha,
         "preregistration_merge_sha": PREREG_MERGE_SHA,
         "treatment_input_preflight_merge_sha": PREFLIGHT_MERGE_SHA,
         "collection_contract_merge_sha": COLLECTION_CONTRACT_MERGE_SHA,
@@ -113,14 +130,15 @@ def require_epoch_authorization() -> tuple[str, Path, str]:
         raise SystemExit("Epoch 004 collection prohibited: unblinding must remain unauthorized during collection")
 
     frozen_sha = require_frozen_commit()
+    parent_sha = _parent_sha()
     request = _load_request()
-    validate_run_request(request, frozen_sha=frozen_sha)
+    validate_run_request(request, frozen_sha=frozen_sha, parent_sha=parent_sha)
     qualification = load_and_validate_qualification()
     if _git_blob("experiments/pdmal_pilot/analysis.py") != ANALYSIS_BLOB_SHA:
         raise SystemExit("Epoch 004 execution prohibited: locked analysis source blob mismatch")
     subprocess.run(
         ["python", "scripts/validate_canonical_epoch_004_treatment_input_preflight.py"],
-        cwd=Path(__file__).resolve().parents[2],
+        cwd=_repo_root(),
         check=True,
     )
     blinding_key, archive_root = _require_blinding_and_archive()
