@@ -34,7 +34,12 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           text = Path('.github/workflows/canonical-treatment-profile.yml').read_text()
-          forbidden = ('run_pilot.py', 'run_p30_variant.py', 'solo-experiment/run-', 'solo-p30-variant/run-')
-          assert not any(x in text for x in forbidden)
+          forbidden = (
+              'run_' + 'pilot.py',
+              'run_' + 'p30_variant.py',
+              'solo-' + 'experiment/run-',
+              'solo-' + 'p30-variant/run-',
+          )
+          assert not any(token in text for token in forbidden)
           print('PASS_NONEMPIRICAL_WORKFLOW')
           PY
