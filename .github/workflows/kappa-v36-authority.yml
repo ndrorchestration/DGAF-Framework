@@ -27,4 +27,6 @@ jobs:
           python-version: '3.12.0'
 
       - name: Validate live router against v3.6 authority
+        env:
+          PYTHONPATH: .
         run: python scripts/validate_kappa_v36_authority.py
