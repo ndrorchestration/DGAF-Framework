@@ -291,7 +291,12 @@ def select_weights_with_confidence(input_data: Dict) -> Dict:
 
     _numeric = {"accuracy", "false_blocked", "adversarial", "ambiguous", "malformed"}
 
-    if conf >= STRONG_THRESH:
+    # P-27 hard override: adversarial classification is security-authoritative.
+    # Confidence remains observable for audit, but it cannot downgrade routing.
+    if category == "adversarial":
+        final_weights = base_weights.copy()
+        policy = "apply_strong"
+    elif conf >= STRONG_THRESH:
         final_weights = base_weights.copy()
         policy = "apply_strong"
     elif conf >= BLENDED_THRESH:
