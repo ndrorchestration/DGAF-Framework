@@ -1,0 +1,37 @@
+{
+  "record_type": "DGAF_CRITICAL_PR_LANE_CUSTODY_REGISTRY",
+  "schema_version": 1,
+  "registry_id": "CRITICAL_PR_LANE_CUSTODY_REGISTRY_V1",
+  "controller_issue": 439,
+  "purpose": "Fail closed when a registered critical PR branch changes files outside its declared lane.",
+  "head_change_semantics": "Any new head requires a fresh check result; prior exact-head evidence does not transfer.",
+  "scientific_n_increment": 0,
+  "registered_lanes": [
+    {
+      "lane_id": "TRACK_A_EPOCH_001_RUNNER",
+      "pull_request": 431,
+      "branch": "experiment/track-a-epoch-001-runner",
+      "controller_issue": 421,
+      "allowed_changed_files": [
+        ".github/workflows/track-a-epoch-001-runner.yml",
+        "docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json",
+        "experiments/pdmal_pilot/run_track_a_epoch_001.py",
+        "experiments/pdmal_pilot/test_track_a_epoch_001_runner.py",
+        "scripts/validate_track_a_epoch_001_runner.py"
+      ],
+      "known_good_historical_head": "bdf79ddfd3a42ad8ebf4861bfd8cb8c6a85da0ea",
+      "known_contaminated_historical_head": "dd2577224b497e9da01add59cd850e08ee364362",
+      "known_contamination_family": "obsolete Solo authority / PR #371",
+      "status": "REGISTERED_FOR_SCOPE_CUSTODY"
+    }
+  ],
+  "claim_boundary": {
+    "branch_ref_immutability_established": false,
+    "actor_attribution_established": false,
+    "repository_admin_configuration_changed": false,
+    "track_a_freeze": "NOT_ESTABLISHED",
+    "track_a_empirical_execution": "NOT_AUTHORIZED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0"
+  }
+}
