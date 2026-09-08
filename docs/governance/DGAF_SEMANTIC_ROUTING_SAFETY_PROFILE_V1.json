@@ -1,0 +1,75 @@
+{
+  "record_type": "DGAF_B1_SEMANTIC_ROUTING_SAFETY_PROFILE",
+  "schema_version": 1,
+  "profile_id": "DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1",
+  "controller_issue": 400,
+  "status": "NONEMPIRICAL_PROFILE_CANDIDATE",
+  "architecture_merge_sha": "5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+  "source_bindings": {
+    "kappa_path": "components/KAPPA/dynamic_weight_router.py",
+    "kappa_blob_sha": "8a2193a810c22bf6732f1a7f08650e06b8fbff08",
+    "evaluate_router_path": "components/evaluate_router.py",
+    "evaluate_router_blob_sha": "8c141231bae3fcb0321f0c306ada068e5d369546",
+    "sentinel_path": "components/evaluate_router_v1_1.py",
+    "sentinel_blob_sha": "3ece02b81e0b8bf331eb1e769a8225ab87af322a",
+    "demijoule_path": "components/ensemble_v17.py",
+    "demijoule_blob_sha": "686eb9ba339742d9de2767fca18b9907a1c3b70a",
+    "harness_path": "experiments/pdmal_pilot/b1_semantic_routing_safety_profile.py",
+    "harness_blob_sha": "14c81690e0caa33635565018a3746bec3820b718"
+  },
+  "required_fields": [
+    "record_id",
+    "content",
+    "entropy_score",
+    "kappa_score",
+    "scores.accuracy",
+    "scores.false_blocked",
+    "scores.adversarial",
+    "scores.ambiguous",
+    "scores.malformed",
+    "deontic"
+  ],
+  "included_components": [
+    "DEMIJOULE",
+    "P-27_KAPPA_V3_6",
+    "P-28_EVALUATION_PIPELINE",
+    "P-29_SENTINEL"
+  ],
+  "p30_disposition": "EXTERNAL_PROFILE_QUALIFICATION_REQUIRED_AFTER_IMPLEMENTATION",
+  "registered_fixtures": [
+    "clean-governance",
+    "ambiguous-mixed",
+    "adversarial",
+    "low-confidence-balanced",
+    "deontic-forbidden"
+  ],
+  "required_behavior": {
+    "adversarial_kappa_policy": "apply_strong",
+    "deontic_forbidden_sentinel_risk": "risk_block",
+    "low_confidence_nonforbidden_sentinel_risk": "risk_warn",
+    "malformed_or_deontically_inconsistent_record": "FAIL_CLOSED",
+    "output_scope": "ROUTING_SAFETY_CLASSIFICATION_AND_PROVENANCE_ONLY"
+  },
+  "known_source_limitation": {
+    "component": "DEMIJOULE",
+    "detail": "Current six-axis heuristic assigns one common score across all six axes, making the reprompt band unreachable under the present source implementation.",
+    "silent_redesign_allowed": false,
+    "interpretation": "PRESERVE_AND_REPORT_LIMITATION"
+  },
+  "excluded_components": {
+    "P-31": "B2_ONLY",
+    "P-32": "B2_ONLY",
+    "P-33": "B3_ONLY"
+  },
+  "prohibited": {
+    "efficacy_estimation": true,
+    "historical_epoch_pooling": true,
+    "numeric_proxy_for_semantic_input": true,
+    "empirical_execution": true
+  },
+  "claim_ceiling": "RECORD_LEVEL_ROUTING_AND_SAFETY_BEHAVIOR_ONLY",
+  "scientific_n_increment": 0,
+  "empirical_execution_authorized": false,
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}
