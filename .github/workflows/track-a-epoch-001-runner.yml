@@ -1,0 +1,79 @@
+name: Track A Epoch 001 Runner Validation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-runner.yml'
+      - 'docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json'
+      - 'scripts/validate_track_a_epoch_001_runner.py'
+      - 'experiments/pdmal_pilot/run_track_a_epoch_001.py'
+      - 'experiments/pdmal_pilot/test_track_a_epoch_001_runner.py'
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json'
+      - 'docs/experiment/TRACK_A_EPOCH_001_ANALYSIS_LOCK.json'
+      - 'experiments/pdmal_pilot/track_a_epoch_001_analysis.py'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+      - 'experiments/pdmal_pilot/topology_utils.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install exact hash-locked environment
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Validate exact runner/source/analysis bindings
+        run: python scripts/validate_track_a_epoch_001_runner.py
+
+      - name: Exercise synthetic fail-closed negative controls only
+        working-directory: experiments/pdmal_pilot
+        run: python -m pytest test_track_a_epoch_001_runner.py -q
+
+      - name: Prove successor gates are absent from runner PR
+        run: |
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRECOLLECTION_PREFLIGHT.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_IMMUTABLE_FREEZE_MANIFEST.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_FINAL_CLOSURE_PACKET.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_VERIFICATION_CLASSIFICATION.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json
+
+      - name: Prove PR cannot authorize or execute scientific collection
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json').read_text())
+          assert d['schema_version'] == 2
+          assert d['authorization']['pr_validation_can_authorize'] is False
+          assert d['authorization']['collection_authorized'] is False
+          assert d['authorization']['unblinding_authorized'] is False
+          assert d['authorization']['high_assurance_authorized'] is False
+          assert d['scientific_n_increment'] == 0
+          assert d['track_a_freeze'] == 'NOT_ESTABLISHED'
+          assert d['track_a_empirical_execution'] == 'NOT_AUTHORIZED'
+          assert d['canonical_dgaf_efficacy'] == 'NOT_ESTABLISHED'
+          assert d['high_assurance'] == 'NOT_AUTHORIZED_N0'
+          print('SCIENTIFIC_N_INCREMENT = 0')
+          print('TRACK_A_RUNNER_PR_NONAUTHORIZING_BOUNDARY_PASS')
+          PY
