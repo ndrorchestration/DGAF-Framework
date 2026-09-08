@@ -58,7 +58,10 @@ def test_other_topologies_cannot_change_primary_estimate() -> None:
     assert baseline == changed == 1.0
 
 
-@pytest.mark.parametrize("mutation", ["missing", "duplicate", "malformed", "excluded", "wrong_algorithm", "extra"])
+@pytest.mark.parametrize(
+    "mutation",
+    ["missing", "duplicate", "malformed", "excluded", "missing_algorithm", "wrong_algorithm", "extra"],
+)
 def test_matrix_or_endpoint_drift_fails_closed(mutation: str) -> None:
     records = _records()
     if mutation == "missing":
@@ -69,6 +72,8 @@ def test_matrix_or_endpoint_drift_fails_closed(mutation: str) -> None:
         records[0]["ffcr_success"] = "true"
     elif mutation == "excluded":
         records[0]["excluded"] = True
+    elif mutation == "missing_algorithm":
+        del records[0]["algorithm_id"]
     elif mutation == "wrong_algorithm":
         records[0]["algorithm_id"] = "OTHER"
     elif mutation == "extra":
