@@ -37,17 +37,19 @@ The repository contains tested governance, provenance, deterministic validation,
 
 The canonical High-Assurance track remains pre-freeze and is progressing through independent/external acceptance work.
 
-A separate Solo research track has now produced several exact-scope evidence records. Experiment 001 is retained as apparatus-falsification evidence. Epoch 003 is negative evidence for an explicitly synthetic treatment variant. Epoch 004 completed a preregistered 50-seed / 9,000-observation comparison and its locked primary result was negative for the exact executed restored-binding treatment. A subsequent source-bound audit found that six of seven constitutive gate bindings were not established for that execution; only the external P-30/11Q qualification binding was established at developer self-attested/non-independent scope. The Epoch 004 result is preserved, but it is not promoted to a claim about canonical DGAF efficacy.
+A separate Solo research track has produced several exact-scope evidence records. Experiment 001 is retained as apparatus-falsification evidence. Epoch 003 is negative evidence for an explicitly synthetic treatment variant. Epoch 004 completed a preregistered 50-seed / 9,000-observation comparison and its locked primary result was negative for the exact executed restored-binding treatment. A subsequent source-bound audit found that six of seven constitutive gate bindings were not established for that execution; only the external P-30/11Q qualification binding was established at developer self-attested/non-independent scope. The Epoch 004 result is preserved, but it is not promoted to a claim about canonical DGAF efficacy.
 
-Prospective evaluation is therefore split by workload:
+Prospective evaluation is split by workload:
 
 - **Track A** — numeric PDMAL topology robustness;
 - **Track B1** — semantic routing and safety;
 - **Track B2** — persistent context and closure;
 - **Track B3** — persistent weighted-graph convergence monitoring;
-- **Track C** — integrated DGAF, deferred until the component tracks are independently qualified and validated.
+- **Track C** — integrated DGAF, deferred until the component tracks are separately qualified and composition-ready.
 
-Track A has completed its non-empirical structural profile, developer/non-independent 11Q qualification, and structural-matrix adjudication. Its next gate is a separately reviewed prospective empirical protocol. Collection is not authorized.
+Track A now has a prospectively preregistered protocol and a locked primary analysis implementation in addition to its completed structural profile, developer/non-independent 11Q qualification, and structural-matrix adjudication. Its fail-closed empirical runner is under review; collection, freeze, and authorization remain separate later gates.
+
+B1, B2, and B3 now have merged non-empirical profile implementations. B2 and B3 have also completed developer/non-independent 11Q qualification; their standalone integration-readiness adjudications are under review. B1 qualification is under review. None of these steps establishes integrated Track C efficacy.
 
 ## Research boundary
 
