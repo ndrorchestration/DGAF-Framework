@@ -37,6 +37,8 @@ FORBIDDEN_TOKENS = (
     "governance_trace",
     "canonical_dgaf",
     "full_dgaf",
+    "condition",
+    "dgaf",
 )
 
 
