@@ -12,8 +12,8 @@
       "pull_request": 431,
       "branch": "experiment/track-a-epoch-001-runner",
       "controller_issue": 421,
-      "current_reconciled_head": "924a3bdd7522dc3021170e9da64267c4ae9422a4",
-      "current_reconciled_head_evidence": "18/18 returned exact-head workflows SUCCESS on 2026-09-08; file family remained the declared Track A runner lane",
+      "current_reconciled_head": "f740586ef69ea543e9091dc75481a45ca9254157",
+      "current_reconciled_head_evidence": "Fresh 2026-09-08 exact-head wave on f740586ef69ea543e9091dc75481a45ca9254157 returned 18 SUCCESS and one fail-closed Critical PR Lane Custody result caused solely by the prior registry binding to 924a3bdd7522dc3021170e9da64267c4ae9422a4. Dedicated Track A runner validation, pre-freeze validation, pre-authorization security, Governance CI, PPTL CI, regression, truth-layer, evidence, control-state, and hygiene gates all succeeded. Fresh custody recheck is required after this base-side reconciliation; no predecessor evidence transfers.",
       "allowed_changed_files": [
         ".github/workflows/track-a-epoch-001-runner.yml",
         "docs/experiment/TRACK_A_EPOCH_001_RUNNER_CONTRACT.json",
@@ -40,10 +40,18 @@
         },
         {
           "head": "924a3bdd7522dc3021170e9da64267c4ae9422a4",
-          "classification": "CURRENT_RECONCILED_REANCHOR",
+          "classification": "RECONCILED_REANCHOR_HISTORICAL",
           "actor_attribution": "UNKNOWN_NOT_ESTABLISHED",
           "fresh_exact_head_validation_required": true,
           "fresh_exact_head_validation_observed": "18/18 SUCCESS",
+          "evidence_transfer_from_predecessor": false
+        },
+        {
+          "head": "f740586ef69ea543e9091dc75481a45ca9254157",
+          "classification": "CURRENT_RECONCILED_REANCHOR",
+          "actor_attribution": "UNKNOWN_NOT_ESTABLISHED",
+          "fresh_exact_head_validation_required": true,
+          "fresh_exact_head_validation_observed": "18 SUCCESS; custody fail-closed on stale prior registry binding; fresh custody recheck required after reconciliation",
           "evidence_transfer_from_predecessor": false
         }
       ],
