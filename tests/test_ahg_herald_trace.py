@@ -5,7 +5,11 @@ import urllib.request
 
 import pytest
 
-from components.ahg_herald_trace import HeraldHTTPSink, HeraldSinkConfig, validate_http_endpoint
+from components.ahg_herald_trace import (
+    HeraldHTTPSink,
+    HeraldSinkConfig,
+    validate_http_endpoint,
+)
 
 
 @pytest.mark.parametrize(
