@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json",
+  "title": "Track A Epoch 002 prospective result-record envelope",
+  "description": "Structural envelope only. Validation never authorizes collection, unblinding, analysis, scientific N, or a claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "protocol_id",
+    "epoch",
+    "record_id",
+    "generated_at_utc",
+    "producer",
+    "immutable_subject",
+    "evidence_scope",
+    "non_effects",
+    "status",
+    "predecessor_record_ids",
+    "authorization_effect",
+    "scientific_state_effect"
+  ],
+  "properties": {
+    "record_type": {
+      "type": "string",
+      "enum": [
+        "PRECOLLECTION_GATE_CHECKLIST",
+        "COLLECTION_START_RECEIPT",
+        "PER_SEED_EXECUTION_RECORD",
+        "QC_LEDGER",
+        "DATASET_LOCK_RECEIPT",
+        "UNBLINDING_DECISION_RECORD",
+        "MATERIALIZATION_RECEIPT",
+        "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD",
+        "LOCKED_ANALYSIS_RESULT_RECORD",
+        "INTERPRETATION_NOTE"
+      ]
+    },
+    "schema_version": { "const": 1 },
+    "protocol_id": { "const": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002" },
+    "epoch": { "const": 2 },
+    "record_id": { "type": "string", "pattern": "^[A-Z0-9][A-Z0-9._:-]{7,127}$" },
+    "generated_at_utc": { "type": "string", "format": "date-time" },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system", "version_or_commit"],
+      "properties": {
+        "system": { "type": "string", "minLength": 1 },
+        "version_or_commit": { "type": "string", "minLength": 7 }
+      }
+    },
+    "immutable_subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "tree_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "workflow_run_id": { "type": "integer", "minimum": 1 },
+        "artifact_id": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "evidence_scope": { "type": "string", "minLength": 1 },
+    "non_effects": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "DOES_NOT_AUTHORIZE_COLLECTION",
+          "DOES_NOT_AUTHORIZE_UNBLINDING",
+          "DOES_NOT_AUTHORIZE_ANALYSIS",
+          "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+          "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+          "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+          "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+        ]
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PASS", "FAIL", "BLOCKED", "STALE", "UNVERIFIED", "NOT_RUN", "NOT_APPLICABLE"]
+    },
+    "predecessor_record_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[A-Z0-9][A-Z0-9._:-]{7,127}$" }
+    },
+    "authorization_effect": {
+      "type": "string",
+      "enum": ["NONE", "BOUNDED_RECORD_ONLY", "REQUIRES_SEPARATE_EXACT_COMMIT"]
+    },
+    "scientific_state_effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["empirical_n_increment", "canonical_dgaf_efficacy"],
+      "properties": {
+        "empirical_n_increment": { "const": 0 },
+        "canonical_dgaf_efficacy": { "const": "NOT_ESTABLISHED" }
+      }
+    }
+  }
+}
