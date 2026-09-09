@@ -52,13 +52,16 @@ This section supersedes the **interpretation** of older taxonomy records where t
 All labels below are formation-local unless the sovereign seat is explicitly stated.
 
 ### Sovereign Governance
+
 - Amethyst (`local:A-00`)
 - COLLEEN (`local:A-00-GOV`; sovereign canonical seat A-05)
 
 ### Ethics Bridge
+
 - Sentience (`local:A-27`)
 
 ### Strategic Quintet
+
 - Nova (`local:A-03`)
 - Zenith (`local:A-09-Z`; sovereign canonical seat A-09)
 - Oracle (`local:A-20`)
@@ -66,6 +69,7 @@ All labels below are formation-local unless the sovereign seat is explicitly sta
 - Sentinel-Phi (`local:A-12-φ`; distinct from Sentinel)
 
 ### Harmonic Pentagonal Cluster
+
 - Prof Prodigy (`local:A-04`)
 - Herald (`local:A-05`; does not replace COLLEEN A-05)
 - Apogee (`local:A-01`)
@@ -73,6 +77,7 @@ All labels below are formation-local unless the sovereign seat is explicitly sta
 - DemiJoule (`local:A-03-DJ`)
 
 ### Resonance Cluster
+
 - Reson (`local:A-09`; sovereign canonical seat A-10)
 - Lyra (`local:A-10`; sovereign canonical seat A-11)
 - Echolette (`local:A-11`; sovereign canonical seat A-12)
@@ -81,16 +86,19 @@ All labels below are formation-local unless the sovereign seat is explicitly sta
 - `IONIA_STATE` / Ionia 0Hz is a state, not a seat; sovereign Agent Ionia remains A-13.
 
 ### Operational Swarm
+
 - Navigator (`local:A-22`)
 - Momentum (`local:A-23`)
 - Paragon (`local:A-24`)
 
 ### Perpetual Archive Trio
+
 - The Librarian (`local:A-06-L`; sovereign canonical seat A-06)
 - The Auditor (`local:A-07`; sovereign canonical seat A-07)
 - The Actualizer (`local:A-08`; sovereign canonical seat A-08)
 
 ### Specialist
+
 - Perigee (`local:A-02`; sovereign canonical seat A-02)
 
 ---
@@ -131,6 +139,7 @@ The percentages below describe historical documentation-layer coverage only. The
 | Sentience | 17% historical seed |
 
 Historical milestone records:
+
 - S001 Baseline: 13/66 files across 11-designation baseline.
 - Phase 1–2: 24/66.
 - Phase 3–4: 56/66.
