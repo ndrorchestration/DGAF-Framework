@@ -72,5 +72,5 @@ def test_failed_workflow_fails() -> None:
 def test_secret_bearing_input_is_rejected() -> None:
     record = copy.deepcopy(snapshot())
     record["token"] = "must-not-appear"
-    with pytest.raises(ValueError, match="snapshot keys invalid"):
+    with pytest.raises(ValueError, match="secret-bearing field prohibited"):
         reconcile(record, HEAD)
