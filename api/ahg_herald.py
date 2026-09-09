@@ -81,7 +81,8 @@ def _kv_set(key: str, value: Any) -> bool:
             },
             method="POST",
         )
-        # URL is validated immediately above as absolute HTTP(S).\n        with urllib.request.urlopen(req, timeout=1.5) as resp:  # nosec B310
+        # URL is validated immediately above as absolute HTTP(S).
+        with urllib.request.urlopen(req, timeout=1.5) as resp:  # nosec B310
             return resp.status == 200
     except Exception as exc:
         logger.warning(f"[Herald] KV write failed: {exc}")
@@ -99,7 +100,8 @@ def _post_webhook(url: str, payload: dict) -> bool:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        # URL is validated immediately above as absolute HTTP(S).\n        with urllib.request.urlopen(req, timeout=2.0) as resp:  # nosec B310
+        # URL is validated immediately above as absolute HTTP(S).
+        with urllib.request.urlopen(req, timeout=2.0) as resp:  # nosec B310
             return resp.status in (200, 204)
     except Exception as exc:
         logger.warning(f"[Herald] Webhook post failed: {exc}")
