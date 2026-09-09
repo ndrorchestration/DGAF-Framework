@@ -62,7 +62,8 @@ class GitHubClient:
                 "User-Agent": "dgaf-branch-disposition-inventory",
             },
         )
-        with urllib.request.urlopen(request, timeout=30) as response:
+        # API_ROOT is a fixed HTTPS GitHub origin; callers supply only the API path.
+        with urllib.request.urlopen(request, timeout=30) as response:  # nosec B310
             return json.load(response)
 
     def paginated(self, path: str) -> Iterable[dict[str, Any]]:
