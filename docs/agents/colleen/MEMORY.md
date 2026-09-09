@@ -95,4 +95,4 @@ Priority 3: A-14→A-19 names from Drive
 
 ---
 
-*Classification: T1 PUBLIC*
+Classification: T1 PUBLIC
