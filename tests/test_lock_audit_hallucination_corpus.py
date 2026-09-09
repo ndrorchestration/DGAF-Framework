@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from scripts.lock_audit_hallucination_corpus import (
     build_lock_manifest,
     CorpusValidationError,
