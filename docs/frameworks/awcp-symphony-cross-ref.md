@@ -7,7 +7,7 @@
 > **Reconciled:** September 9, 2026
 
 This file preserves an earlier local cross-reference between external research and the
-NDR/DGAF ecosystem. It does **not** establish AWCP, Symphony, MediHive, or their
+NDR/DGAF ecosystem. It does **not** establish AWCP, Symphony, MediHive, SEMAP, or their
 reported results as Hensel-authored frameworks, DGAF subsystems, peer control planes,
 deployed protocols, or DGAF evidence.
 
@@ -35,6 +35,8 @@ accomplishments.
   Lynn Ai, Eric Yang, and Bill Shi; arXiv `2508.20019`.
 - **MediHive — A Decentralized Agent Collective for Medical Reasoning:** external work
   by Xiaoyang Wang and Christopher C. Yang; arXiv `2603.27150`.
+- **SEMAP — Software Engineering Multi-Agent Protocol:** external work by Zhenyu Mao,
+  Jacky Keung, Fengji Zhang, Shuo Liu, Yifei Wang, and Jialong Li; arXiv `2510.12120`.
 
 Similarity to an NDR/DGAF design idea is a **cross-reference**, not evidence of common
 authorship, implementation inheritance, priority, equivalence, or result transfer.
@@ -58,10 +60,11 @@ literature boundary.
 | Lifecycle/session state machines | External protocol design; no silent import into DGAF state authority |
 | Workspace/control separation | Useful comparison for `agent-control-plane` adapter boundaries |
 
-The earlier cross-reference's **69.6% reduction in coordination failures** is **not an
-AWCP or DGAF result established by this file**. The local outline itself described that
-number through a different protocol (SEMAP) and then analogized lifecycle guidance to
-AWCP. Similarity does not permit metric transfer.
+The earlier cross-reference's **69.6% reduction in coordination failures** was
+misattributed by proximity to AWCP. The cited value belongs to the external SEMAP study:
+it reports up to a 69.6% reduction in total failures for **function-level software
+development** in its evaluated setting. It is not an AWCP result and is not a DGAF result.
+No transfer from SEMAP to AWCP or DGAF is valid without a new owning experiment.
 
 ## Symphony
 
@@ -113,10 +116,11 @@ reviving AWCP or Symphony as NDR peer control planes by name.
 `awcp_ownership = EXTERNAL_RESEARCH`  
 `symphony_ownership = EXTERNAL_RESEARCH`  
 `medihive_ownership = EXTERNAL_RESEARCH`  
+`semap_ownership = EXTERNAL_RESEARCH`  
 `awcp_runtime_authority_in_dgaf = NOT_ESTABLISHED`  
 `symphony_runtime_authority_in_dgaf = NOT_ESTABLISHED`  
 `awcp_priority_claim_first_workspace_delegation = NOT_ADOPTED_AS_NDR_CLAIM`  
-`historical_69_6_percent_gain = NOT_ESTABLISHED_FOR_AWCP_OR_DGAF_BY_THIS_SOURCE`  
+`semap_69_6_percent_function_level_failure_reduction = EXTERNAL_SOURCE_ONLY`  
 `symphony_benchmark_results = EXTERNAL_SOURCE_ONLY`  
 `medihive_medqa_84_3_percent = EXTERNAL_SOURCE_ONLY`  
 `medihive_pubmedqa_78_4_percent = EXTERNAL_SOURCE_ONLY`  
@@ -134,3 +138,5 @@ reviving AWCP or Symphony as NDR peer control planes by name.
   Intelligence*. arXiv:2508.20019.
 - Wang, X., & Yang, C. C. (2026). *MediHive: A Decentralized Agent Collective for
   Medical Reasoning*. arXiv:2603.27150.
+- Mao, Z., Keung, J., Zhang, F., Liu, S., Wang, Y., & Li, J. (2025). *Towards
+  Engineering Multi-Agent LLMs: A Protocol-Driven Approach*. arXiv:2510.12120.
