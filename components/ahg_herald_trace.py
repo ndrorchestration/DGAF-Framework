@@ -58,6 +58,7 @@ import os
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections import deque
 from dataclasses import asdict, dataclass
@@ -110,6 +111,19 @@ class HeraldSinkConfig:
     @property
     def enabled(self) -> bool:
         return bool(self.endpoint)
+
+
+def validate_http_endpoint(endpoint: str) -> str:
+    """Return endpoint only when it is an absolute HTTP(S) URL.
+
+    Herald is explicitly an HTTP push sink. Rejecting every other urllib scheme
+    keeps configured/environment-supplied endpoints from reaching local files or
+    non-HTTP protocol handlers through ``urllib.request``.
+    """
+    parsed = urllib.parse.urlsplit(endpoint)
+    if parsed.scheme.lower() not in {"http", "https"} or not parsed.netloc:
+        raise ValueError("Herald endpoint must be an absolute http:// or https:// URL")
+    return endpoint
 
 
 # ---------------------------------------------------------------------------
@@ -177,6 +191,11 @@ class HeraldHTTPSink:
         if endpoint is None:
             logger.error("[HeraldHTTPSink] Endpoint missing — skipping push")
             return False
+        try:
+            endpoint = validate_http_endpoint(endpoint)
+        except ValueError as exc:
+            logger.error(f"[HeraldHTTPSink] Invalid endpoint — skipping push: {exc}")
+            return False
 
         payload = json.dumps({"records": batch, "count": len(batch)}).encode()
         headers = {
@@ -197,7 +216,9 @@ class HeraldHTTPSink:
                     headers=headers,
                     method="POST",
                 )
-                with urllib.request.urlopen(req, timeout=self.config.timeout) as resp:
+                # B310 is suppressed only after validate_http_endpoint restricts
+                # the configured target to absolute HTTP(S) URLs above.
+                with urllib.request.urlopen(req, timeout=self.config.timeout) as resp:  # nosec B310
                     if resp.status in (200, 201, 202, 204):
                         with self._lock:
                             self._consecutive_failures = 0
