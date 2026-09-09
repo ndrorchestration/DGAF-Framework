@@ -5,8 +5,9 @@
 In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
-> **Track A Epoch 001:** PROSPECTIVE COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED · UNBLINDING AUTHORIZED  
-> **Track A post-collection boundary:** custody-key handoff NOT ESTABLISHED · unblinded analysis input NOT YET MATERIALIZED · primary analysis NOT AUTHORIZED / NOT RUN  
+> **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
+> **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
+> **Successor Track A:** issue #523 open for recoverable solo-custody redesign · replacement empirical collection **NOT AUTHORIZED**  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
@@ -53,19 +54,41 @@ DGAF separates prospective evaluation by workload instead of treating one experi
 
 | Track | Plain-English purpose | Current boundary |
 |---|---|---|
-| **A** | Numeric topology robustness | Preregistered; analysis locked; hardened runner merged; preflight/freeze/closure established; verification PASS as developer self-attested/non-independent; collection complete; blinded dataset locked; unblinding authorized; custody-key handoff and unblinded-input materialization still pending; primary analysis not authorized/run |
+| **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
+| **A — successor** | Replacement prospective topology robustness | Issue #523 governs fresh epoch/custody design; recovery-tested solo custody required before collection; empirical collection not authorized |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **C** | Integrated DGAF composition | Non-empirical composition proposal merged; empirical execution NOT AUTHORIZED |
 
-Track A's prospective scientific panel was fixed at **50 seeds × 5 topologies × 9 failure counts = 2,250 observations** and has now been collected under the governed blinded collection path. The accepted scientific unit count is **50 paired inferential seed units / 2,250 blinded raw observations**. Collection completion is not analysis completion: the separately held custody key has not yet been handed off through the accepted path, the unblinded analysis input has not been materialized, and the locked primary analysis has not been authorized or run.
+Epoch 001's prospective panel was fixed at **50 seeds × 5 topologies × 9 failure counts = 2,250 observations** and was collected under the governed blinded path. The accepted scientific unit count is **50 paired inferential seed units / 2,250 blinded raw observations**.
+
+The collection remains valid evidence that the blinded panel was executed and retained. It cannot produce its preregistered primary result because the retained encrypted topology mapping cannot be recovered: the matching private key was not durably escrowed in the solo operating model. Regenerating a different key cannot decrypt the retained ciphertext, and guessing or reconstructing the hidden assignment is prohibited.
+
+## Successor Track A custody design
+
+Issue #523 controls the replacement path. The successor must use a new epoch identity, fresh seeds and fresh blinding, and a recoverable solo-custody design without pretending that solo custody is independent custody.
+
+The preferred minimum pattern is:
+
+```text
+local keypair
+→ encrypted PKCS#8 private key
+→ at least two durable encrypted user-controlled recovery copies
+→ precollection recovery drill PASS
+→ public certificate supplied to collection
+→ same-system / non-independent custody receipt
+```
+
+No private key, passphrase, or recoverable secret belongs in GitHub, Notion, chat, workflow inputs, logs, or committed files.
+
+Replacement empirical collection remains **NOT AUTHORIZED** until that custody/recovery contract and the successor prospective gate chain are established.
 
 ## What is established — and what is not
 
-The repository contains substantial engineering evidence: governance logic, provenance controls, deterministic validators, CI, negative controls, source binding, custody/security machinery, experimental tooling, and blinded-data infrastructure.
+The repository contains substantial engineering evidence: governance logic, provenance controls, deterministic validators, CI, negative controls, source binding, custody/security machinery, experimental tooling, runtime evidence, vocabulary governance, and blinded-data infrastructure.
 
-Track A now also contains prospective blinded empirical collection evidence under its exact frozen protocol and authorization chain. That evidence is **not yet a primary result**. The post-collection sequence remains fail-closed: matching custody-key handoff → controlled materialization → immutable unblinded-input receipt → separate primary-analysis authorization → locked primary analysis.
+Track A Epoch 001 also contains genuine prospective blinded collection evidence. That evidence is **not a primary efficacy result** and is now explicitly **unanalyzable** because its protected mapping is cryptographically unrecoverable.
 
 A separate Solo research track produced bounded historical empirical evidence. Epoch 004 completed 50 seeds / 9,000 observations and produced negative evidence for its exact executed treatment. A later source audit found that canonical treatment fidelity was not established, so that result is preserved without promoting it into a claim about canonical DGAF efficacy.
 
@@ -89,17 +112,16 @@ DGAF is **not** currently presented as:
 | **Freeze** | Immutable binding of the candidate and protected experimental inputs; **not execution authorization** |
 | **Closure** | Proof that required pre-authorization prerequisites are complete; **not execution authorization** |
 | **Verification classification** | Records what kind of verifier produced the evidence and whether it is independent |
-| **Collection authorization** | Explicit permission to collect the preregistered prospective observations; **not evidence that collection already happened** |
-| **Dataset lock** | Immutable receipt binding the accepted collected dataset and its retained artifact identities |
-| **Unblinding authorization** | Permission to release/decrypt the protected topology mapping for the exact locked dataset; **not permission to run the primary analysis** |
-| **Fail closed** | Missing, stale, malformed, or ambiguous required evidence blocks progress |
+| **Dataset lock** | Immutable receipt binding an accepted collected dataset and retained artifact identities |
+| **Unblinding authorization** | Permission to release/decrypt protected mapping material; **not proof that the necessary secret remains recoverable** |
+| **Fail closed** | Missing, stale, malformed, ambiguous, or unrecoverable required evidence blocks progress |
 
-See **[`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)** for the full public terminology map.
+See **[`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)** for the full public terminology map and vocabulary governance.
 
 ## Where to start
 
-- **Plain-English terminology:** [`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)
 - **Live project/evidence state:** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
+- **Plain-English terminology:** [`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)
 - **Technical architecture:** [`README.technical.md`](README.technical.md)
 - **Governance model:** [`README.governance.md`](README.governance.md)
 - **Historical records:** [`docs/HISTORICAL_RECORDS_INDEX.md`](docs/HISTORICAL_RECORDS_INDEX.md)
@@ -107,6 +129,8 @@ See **[`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)** f
 ## Research boundary
 
 Results remain scoped to the exact system identities, treatment definitions, protocols, evidence classes, and custody conditions that produced them. A green test, merged PR, internal qualification score, mathematical property, authorization record, completed collection, or historical result does not automatically establish current empirical efficacy.
+
+Epoch 001 demonstrates an additional governance lesson: **a successful blinded collection is not sufficient if the protected mapping required for the preregistered analysis cannot later be recovered.** The replacement design therefore treats precollection recovery testing as a prerequisite rather than an operational afterthought.
 
 ---
 
