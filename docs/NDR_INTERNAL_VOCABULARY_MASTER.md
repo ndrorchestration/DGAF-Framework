@@ -1,7 +1,7 @@
 # NDR INTERNAL VOCABULARY MASTER LIBRARY
 
 > **Epistemic status:** Canonical terminology registry; vocabulary mappings are not evidence of implementation or validation.
-> **Last updated:** 2026-08-21 — documentation/provenance reconciliation
+> **Last updated:** 2026-09-09 — brainstorm-corpus reconciliation
 
 ## Epistemic standard
 
@@ -107,3 +107,100 @@ The following are retained for traceability and must not be used as current capa
 - historical agent capability descriptions not backed by current implementation/evaluation
 
 See `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md` for the full policy and `docs/taxonomy/TAXONOMY_ADDENDUM_8_AGENTS.md` for the historical taxonomy addendum.
+
+## 2026-09-09 brainstorm-corpus reconciliation
+
+A historical 2,610-line brainstorming/specification corpus was reviewed as a **discovery/provenance source**, not as implementation or validation evidence. The following vocabulary is retained with explicit epistemic boundaries.
+
+### Agent choreography
+
+**Working definition:** decentralized or event-driven coordination in which agent/node behavior is governed primarily by local rules, shared events, and peer interaction rather than a single central sequencer.
+
+**Evidence class:** `DEFINED` / `HYPOTHESIS` depending on the specific claimed mechanism.
+
+**Boundary:** This term is complementary to **agent orchestration**. Its use does not establish novelty, superiority, role separation, or performance improvement. Claims that choreography eliminates role-bleeding or yields a quantified coordination gain require direct evaluation.
+
+### Architecture vs. Architexture
+
+**Architecture** — structural contracts, topology, interfaces, authority, lifecycle, reliability, and implementation boundaries.
+
+**Architexture** — a project-internal descriptive term for perceptual/textural integration, presentation, narrative coherence, human-facing refinement, and pre-output quality shaping.
+
+**Evidence class:** `DEFINED`.
+
+**Boundary:** Architexture is not a second control plane, runtime authority, or evidence class. It must not be used to override structural, governance, or empirical requirements.
+
+### Substrate-agnostic vs. substrate-independent
+
+**Substrate-agnostic** — a specification or contract is expressed without assuming one runtime substrate.
+
+**Substrate-independent** — a portability/behavior claim that the same relevant semantics hold across materially different substrates.
+
+**Evidence class:** substrate-agnostic wording may be `DEFINED`; substrate-independence is `HYPOTHESIS` or `UNSUPPORTED` until cross-substrate evidence exists.
+
+### Layer-0 admissibility
+
+**Working definition:** a pre-performance acceptance layer in which policy, authorization, rights, provenance, or other governing predicates can reject an action regardless of its capability score.
+
+**Evidence class:** `DEFINED` as a governance pattern; implementation/verification must be established per owning system.
+
+### State Anchor Protocol / "Ping the Buoy"
+
+**Historical/design meaning:** explicit re-anchoring to authoritative state, intent, policy, manifest, artifact identity, or provenance before continuing a drift-sensitive workflow.
+
+**Evidence class:** `HISTORICAL` / `DEFINED`.
+
+**Current mapping rule:** Prefer concrete current mechanisms such as exact state manifests, provenance binding, policy/version identity, durable state recovery, and fail-closed transition checks. Do not create a parallel protocol authority solely to preserve the historical name.
+
+### Multi-altitude review
+
+The historical labels **Macro / Mid / Tactical / Quantum** describe a useful multi-scale review idea.
+
+**Current interpretation:** ecosystem/strategic → system/framework → workflow/task → implementation/detail.
+
+**Evidence class:** `DEFINED` / `METAPHOR`.
+
+**Boundary:** `Quantum` is metaphorical unless a project explicitly defines a literal computational or physical meaning.
+
+### Signal-chain / acoustic vocabulary
+
+Terms such as **gain staging**, **headroom**, **clipping**, **resonance**, **cadence**, **tonic**, and **mirror protocol** may be used as `METAPHOR` when mapped to concrete engineering controls such as bounded resource allocation, reserved margin, context/constraint overflow, disagreement handling, reconciliation, or closure.
+
+These terms do **not** imply literal physical frequencies, acoustic measurements, or empirically calibrated thresholds unless an owning implementation explicitly defines and measures them.
+
+### Historical umbrella names
+
+The following names are retained as historical/provisional lineage or branding unless an owning current source explicitly promotes them:
+
+- **A.P.O.G.E.E. Hub**
+- **Project Andromeda**
+- **SIGE / Substrate-Independent Governance Environment**
+- **NDR-Stasis**
+- **Yggdrasil Architecture**
+- **Crystalline / Sovereign / L5 Executor / LOCKED** maturity language
+
+They must not be used to supersede current ecosystem authority surfaces or to imply current implementation maturity.
+
+### Quarantined historical claims from generated brainstorming artifacts
+
+The following examples remain `UNSUPPORTED`, `HISTORICAL`, or `ATTESTED` unless independently re-established:
+
+- `99.1% Platinum Star integrity`
+- `340%` / `3.4x` coordination improvement
+- `21%` constraint-compliance improvement
+- `89%` reduction in off-domain reasoning
+- `95%` modal-alignment consistency
+- `96%` TruthfulQA-style accuracy
+- `97%` zero-hallucination threshold
+- `O(1)` governance/safety validation from Phi-Calculus or modular arithmetic
+- empirically meaningful `0 Hz`, `>10 Hz`, `15% headroom`, `0.21`, or `85% grounding` thresholds
+- claims that Hamiltonian traversal guarantees exhaustive cognition or eliminates role-bleeding
+- substrate-independence or universal-schema invariance claims without cross-substrate tests
+
+### Mathematical correction boundary
+
+- The historical wording `55/89 ≈ 1.61818` is incorrect as written. `89/55` is the Fibonacci ratio above 1 that approximates the golden ratio.
+- The user-defined **Platinum Mean** `pP = 1/(2 sin(π/11)) ≈ 1.774732842` is distinct from the **plastic constant** `ρ ≈ 1.3247179572447454`.
+- PDMAL's accepted formalization uses the plastic constant within its own scope and must not inherit historical 1.7747/plastic-constant conflation.
+
+**Canonical ingestion rule:** brainstorm dumps, generated syntheses, agent attestations, and artifact-title inventories may seed terminology and discovery targets, but they cannot upgrade evidence class through repetition or aggregation.
