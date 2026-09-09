@@ -2,8 +2,8 @@
 """Fail-closed validator for registry/agent_identity_manifest.v1.json.
 
 This checker validates structure and conflict preservation only. It does not
-resolve contested agent authority or promote conceptual identities to canonical
-status.
+resolve contested agent authority, promote conceptual identities to canonical
+status, or carry/modify live scientific state.
 """
 from __future__ import annotations
 
@@ -18,10 +18,11 @@ REQUIRED_TOP_LEVEL = {
     "status",
     "authority_policy",
     "source_snapshot",
+    "scientific_state_effect",
+    "scientific_state_authority",
     "allowed_seat_status",
     "allowed_activation_status",
     "identities",
-    "scientific_boundary",
 }
 REQUIRED_IDENTITY = {
     "identity_id",
@@ -34,7 +35,7 @@ REQUIRED_IDENTITY = {
     "observed_designations",
     "conflicts",
 }
-EXPECTED_BOUNDARY = "PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0"
+EXPECTED_SCIENTIFIC_STATE_AUTHORITY = "docs/CURRENT_STATE.md"
 
 
 def _fail(message: str) -> None:
@@ -46,10 +47,14 @@ def validate_manifest(data: dict[str, Any]) -> None:
     if missing:
         _fail(f"missing top-level fields: {sorted(missing)}")
 
+    if "scientific_boundary" in data:
+        _fail("identity manifest must not embed moving scientific state")
     if data["status"] != "conflict-register-not-authority-resolution":
         _fail("manifest status must preserve unresolved authority")
-    if data["scientific_boundary"] != EXPECTED_BOUNDARY:
-        _fail("scientific boundary changed")
+    if data["scientific_state_effect"] != "none":
+        _fail("identity control must have no scientific-state effect")
+    if data["scientific_state_authority"] != EXPECTED_SCIENTIFIC_STATE_AUTHORITY:
+        _fail("scientific-state authority pointer changed")
 
     allowed_seat = set(data["allowed_seat_status"])
     allowed_activation = set(data["allowed_activation_status"])
