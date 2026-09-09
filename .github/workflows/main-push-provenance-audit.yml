@@ -1,0 +1,83 @@
+name: Main Push Provenance Audit
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/main-push-provenance-audit.yml'
+      - 'scripts/main_push_provenance_audit.py'
+      - 'scripts/main_push_provenance_audit_test.py'
+      - 'docs/governance/MAIN_PUSH_PROVENANCE_AUDIT_2026-09-06.md'
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  contract-tests:
+    name: Fail-closed provenance classifier tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run provenance audit negative controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/main_push_provenance_audit_test.py -v
+
+  live-main-audit:
+    name: Detect non-PR main head
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout pushed main head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact pushed head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+
+      - name: Require exact merged-PR association
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python scripts/main_push_provenance_audit.py
+
+      - name: Report bounded interpretation
+        shell: bash
+        run: |
+          echo 'PASS: pushed main head is associated with exactly one merged PR targeting main.'
+          echo 'This is a detective control only and does not establish preventive branch protection.'

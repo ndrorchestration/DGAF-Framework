@@ -1,0 +1,10 @@
+# Reviewed Mode-T security lane lock.
+# Target: CPython 3.12 / Linux x86_64 (GitHub ubuntu-24.04 and reviewed workload).
+# Install with: python -m pip install --require-hashes --only-binary=:all: -r <this-file>
+# Re-review hashes and wheel compatibility before changing Python/platform/runtime.
+cryptography==50.0.1 \
+    --hash=sha256:51afcfceb15597cf2635068e4ac9a56b2abde622edde17f37d85fd7b5306497a
+cffi==2.1.1 \
+    --hash=sha256:c1453022f490d2459a11819d83ad1d586e9ff65a12ac3e705ffebd46d3685dcf
+pycparser==3.0 \
+    --hash=sha256:b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992

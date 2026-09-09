@@ -1,0 +1,61 @@
+{
+  "record_type": "DGAF_CANONICAL_SOLO_EPOCH_PRIMARY_RESULT",
+  "schema_version": 1,
+  "epoch_id": "PDMAL-SOLO-CANONICAL-EPOCH-004",
+  "validation_track": "SOLO_DEVELOPER",
+  "independent_verification": false,
+  "frozen_collection_sha": "9725ffd80d5386826d61b7f824524f7f8d89fce8",
+  "runner_parent_sha": "647de0607dbcef1f2bcc77e009264527f2fda9d6",
+  "execution_run_id": 34181212217,
+  "dataset_artifact": {
+    "id": 10039138297,
+    "digest": "sha256:6a11f4748eb40e10fa2c0476f759fb800bb43181a266ec3e0b4a457c7b7d1876",
+    "status": "LOCKED_BLINDED_BEFORE_UNBLINDING",
+    "seed_count": 50,
+    "observations": 9000,
+    "outcomes_inspected_by_collection_workflow": false
+  },
+  "key_artifact": {
+    "id": 10039138610,
+    "digest": "sha256:dc4c0aada6baaed556eabd4ad179b945228600959a78b48b8620b144e28d1a68",
+    "custody": "SAME_SYSTEM_GITHUB_ACTIONS_ARTIFACT_NONINDEPENDENT",
+    "key_value_published": false
+  },
+  "pre_unblinding_lock_record_comment_id": 5578420073,
+  "controlled_unblinding_authorization_comment_id": 5578422132,
+  "primary_result_record_comment_id": 5578430005,
+  "treatment": {
+    "profile_id": "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1",
+    "qualification_sha256": "4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78",
+    "qualification_verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+    "canonical_p30_binding": "EXTERNAL_P11_11Q_QUALIFICATION_VERIFICATION"
+  },
+  "locked_primary_analysis": {
+    "statistical_source": "experiments/pdmal_pilot/analysis.py",
+    "statistical_source_blob_sha": "a269ed226b1d261663994fc3ef0e8a1a96da6cd3",
+    "analysis_config_sha256": "6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8",
+    "primary_contrast": "dgaf-vs-null",
+    "estimand": "mean_seed_paired_ffcr_difference",
+    "paired_seeds": 50,
+    "bootstrap": "paired_seed_effects_percentile",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260823,
+    "alpha": 0.05,
+    "directional_support_rule": "estimate_gt_0_and_two_sided_95pct_ci_lower_gt_0"
+  },
+  "result": {
+    "dgaf_ffcr": 0.7337777777777778,
+    "null_ffcr": 0.8275555555555555,
+    "paired_effect_dgaf_minus_null": -0.0937777777777778,
+    "two_sided_95pct_ci": [-0.11822222222222223, -0.07066666666666668],
+    "classification": "EVIDENCE_AGAINST_DIRECTIONAL_DGAF"
+  },
+  "historical_pooling_allowed": false,
+  "claim_ceiling": {
+    "canonical_solo_directional_hypothesis": "EVIDENCE_AGAINST_UNDER_EPOCH_004",
+    "independent_validation": "NOT_ESTABLISHED",
+    "production_readiness": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED_N0",
+    "universal_dgaf_inferiority": "NOT_ESTABLISHED"
+  }
+}

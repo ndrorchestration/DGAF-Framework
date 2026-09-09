@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "record_type": "DGAF_STAGE_A_EXECUTION_INPUT_TEMPLATE",
+  "status": "TEMPLATE_NOT_EXECUTED",
+  "prepared_against_repository_checkpoint": "d01fa13d40b60a1e0bd661756fd60e8550107d9d",
+  "procedure": {
+    "path": "docs/GOVERNANCE/STAGE_A_CONFIDENTIAL_SPACE_QUALIFICATION_PREPARATION_2026-09-07.md",
+    "blob_sha": "969ef63fb2bd4188f2f60eb7f94d11bf7125b2a1"
+  },
+  "controlling_state": {
+    "final_candidate": "NOT_DESIGNATED",
+    "candidate_tracker": 309,
+    "p4": "OPEN_FAIL_CLOSED",
+    "freeze": "NOT_ESTABLISHED",
+    "authorization": "NOT_GRANTED",
+    "empirical_n": 0
+  },
+  "execution_scope": "STAGE_A_SYNTHETIC_ENGINEERING_QUALIFICATION_ONLY",
+  "gcp": {
+    "project_id": null,
+    "zone": null,
+    "instance_name": null,
+    "machine_type": null,
+    "confidential_compute_type": "TDX",
+    "confidential_space_image_project": "confidential-space-images",
+    "confidential_space_image_family": "confidential-space",
+    "workload_service_account": null,
+    "required_workload_role": "roles/confidentialcomputing.workloadUser",
+    "operator_service_account_user_permission_verified": false
+  },
+  "workload": {
+    "source_commit_sha": null,
+    "source_tree_sha": null,
+    "container_image_reference_at_digest": null,
+    "container_digest_sha256": null,
+    "args": null,
+    "non_secret_environment": null,
+    "command_override": [],
+    "restart_policy": "Never",
+    "secure_boot_required": true,
+    "container_log_redirect": false,
+    "memory_monitoring": false,
+    "additional_capabilities": false,
+    "additional_mounts": false
+  },
+  "attestation_expectation": {
+    "audience": null,
+    "subject": null,
+    "expected_service_accounts": null,
+    "issuer": "https://confidentialcomputing.googleapis.com",
+    "hardware_model": "GCP_INTEL_TDX",
+    "attester_tcb": ["INTEL"],
+    "debug_status": "disabled-since-boot",
+    "support_attribute": "STABLE",
+    "maximum_signed_lifetime_seconds": 3600
+  },
+  "authorization_binding": {
+    "mode": "SYNTHETIC_ENGINEERING_ONLY",
+    "reservation_id": null,
+    "authorization_id": null,
+    "consumption_record_id": null,
+    "authorization_consumption_sha256": null,
+    "production_authority_accepted": false
+  },
+  "retention": {
+    "predeclared_location": null,
+    "retention_actor": null,
+    "retrieval_actor": null,
+    "independence_claimed": false,
+    "independence_evidence": null
+  },
+  "execution_permission": {
+    "authenticated_gcp_session_available": false,
+    "operator_approved_real_cloud_qualification": false,
+    "empirical_execution_permitted": false
+  }
+}

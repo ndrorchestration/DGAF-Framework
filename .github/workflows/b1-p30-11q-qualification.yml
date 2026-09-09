@@ -1,0 +1,45 @@
+name: B1 P-30 11Q Qualification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/b1-p30-11q-qualification.yml'
+      - 'docs/qa/APOGEE_11Q_DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1_S081.json'
+      - 'scripts/validate_b1_p30_11q_qualification.py'
+      - 'docs/governance/DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1.json'
+      - 'components/KAPPA/dynamic_weight_router.py'
+      - 'components/evaluate_router.py'
+      - 'components/evaluate_router_v1_1.py'
+      - 'components/ensemble_v17.py'
+      - 'experiments/pdmal_pilot/b1_semantic_routing_safety_profile.py'
+      - 'experiments/pdmal_pilot/test_b1_semantic_routing_safety_profile.py'
+      - 'scripts/validate_b1_semantic_routing_safety_profile.py'
+      - '.github/workflows/b1-semantic-routing-safety-profile.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - name: Validate source-bound P-30 11Q qualification
+        run: python scripts/validate_b1_p30_11q_qualification.py
+      - name: Prove non-authorizing boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('docs/qa/APOGEE_11Q_DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1_S081.json').read_text())
+          assert d['empirical_evidence'] is False
+          assert d['scientific_n_increment'] == 0
+          assert d['independent_verification'] is False
+          assert d['next_gate']['empirical_execution'] == 'NOT_AUTHORIZED'
+          assert d['next_gate']['canonical_dgaf_efficacy'] == 'NOT_ESTABLISHED'
+          assert d['next_gate']['high_assurance_changed'] is False
+          print('B1_11Q_NONEMPIRICAL_BOUNDARY_PASS')
+          PY

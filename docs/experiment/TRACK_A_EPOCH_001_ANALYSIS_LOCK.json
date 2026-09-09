@@ -1,0 +1,41 @@
+{
+  "record_type": "TRACK_A_EPOCH_001_ANALYSIS_LOCK",
+  "schema_version": 1,
+  "controller_issue": 415,
+  "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-001",
+  "status": "ANALYSIS_IMPLEMENTATION_LOCKED_NONEMPIRICAL",
+  "preregistration_merge_sha": "26077b27ca336454148006e6daf4cd087005b421",
+  "preregistration_blob_sha": "52148950ff054a407c2e6b5cf36103695cf96474",
+  "analysis_path": "experiments/pdmal_pilot/track_a_epoch_001_analysis.py",
+  "analysis_blob_sha": "76bc8e9604c5d7e039e324e73036f353dc8ea31f",
+  "analysis_config_sha256": "355b164f69e91405819f092d0721b7597b87b06de79394a0c451169410a5ab6d",
+  "environment": {
+    "python_version": "3.12.0",
+    "requirements_lock_path": "experiments/pdmal_pilot/requirements-full-lock.txt",
+    "requirements_lock_blob_sha": "00c1f779e97030f9b25ae494642edb31b5b09de5",
+    "install_policy": "PIP_REQUIRE_HASHES"
+  },
+  "numpy_version": "2.5.1",
+  "pytest_version": "9.0.3",
+  "primary_contract": {
+    "seed_count": 50,
+    "expected_total_records": 2250,
+    "endpoint": "ffcr_success",
+    "primary_topology": "pdmal",
+    "primary_comparator": "random_regular",
+    "estimand": "mean_seed_paired_pdmal_minus_random_regular_ffcr",
+    "bootstrap": "paired_seed_effects_percentile",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20270151,
+    "alpha": 0.05,
+    "confirmatory_test_count": 1
+  },
+  "boundaries": {
+    "runner_implemented_by_this_lock": false,
+    "collection_authorized": false,
+    "unblinding_authorized": false,
+    "scientific_n_increment": 0,
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED_N0"
+  }
+}

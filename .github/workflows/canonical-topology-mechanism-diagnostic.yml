@@ -1,0 +1,59 @@
+name: Canonical Topology Mechanism Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/canonical-topology-mechanism-diagnostic.yml'
+      - 'experiments/pdmal_pilot/canonical_topology_mechanism_diagnostic.py'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install hash-locked pilot dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run non-empirical topology mechanism diagnostic
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python experiments/pdmal_pilot/canonical_topology_mechanism_diagnostic.py
+
+      - name: Adjudicate trace-only artifact
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('test-artifacts/CANONICAL_TOPOLOGY_MECHANISM_DIAGNOSTIC.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['classification'] == 'POST_PRIMARY_NONEMPIRICAL_MECHANISM_DIAGNOSTIC'
+          assert d['scientific_n_increment'] == 0
+          assert d['empirical_authorization'] is False
+          assert d['primary_result_unchanged'] == 'EVIDENCE_AGAINST_DIRECTIONAL_DGAF'
+          assert d['seeds'] == [20261101, 20261102]
+          assert d['trial_count'] == 90
+          assert len(d['records']) == 90
+          forbidden = {'ffcr_success','primary_outcome','secondary_outcomes','final_std','consensus_success','effect','confidence_interval','p_value'}
+          raw = p.read_text(encoding='utf-8').lower()
+          assert not any(token in raw for token in forbidden)
+          assert all(r['malformed_turn_count'] == 0 for r in d['records'])
+          print('TRACE_ONLY_DIAGNOSTIC_ARTIFACT_PASS')
+          PY
+
+      - name: Upload retained diagnostic artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-topology-mechanism-diagnostic-${{ github.sha }}
+          path: test-artifacts/CANONICAL_TOPOLOGY_MECHANISM_DIAGNOSTIC.json
+          if-no-files-found: error
+          retention-days: 90

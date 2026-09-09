@@ -1,0 +1,39 @@
+name: Track C Non-Empirical Composition Proposal
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-c-nonempirical-composition.yml'
+      - 'docs/governance/TRACK_C_NONEMPIRICAL_COMPOSITION_PROPOSAL_V1.json'
+      - 'scripts/validate_track_c_nonempirical_composition.py'
+      - 'docs/governance/B1_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json'
+      - 'docs/governance/B2_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json'
+      - 'docs/governance/B3_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - name: Validate exact B1/B2/B3 source-bound composition proposal
+        run: python scripts/validate_track_c_nonempirical_composition.py
+      - name: Prove proposal is non-authorizing and non-empirical
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('docs/governance/TRACK_C_NONEMPIRICAL_COMPOSITION_PROPOSAL_V1.json').read_text())
+          assert p['proposed_interface_contract']['integrated_execution_implemented'] is False
+          assert p['scientific_n_increment'] == 0
+          assert p['track_c_empirical_execution'] == 'NOT_AUTHORIZED'
+          assert p['canonical_dgaf_efficacy'] == 'NOT_ESTABLISHED'
+          assert p['high_assurance'] == 'NOT_AUTHORIZED_N0'
+          assert set(p['prohibited'].values()) == {True}
+          print('TRACK_C_COMPOSITION_PROPOSAL_NONAUTHORIZING_BOUNDARY_PASS')
+          PY

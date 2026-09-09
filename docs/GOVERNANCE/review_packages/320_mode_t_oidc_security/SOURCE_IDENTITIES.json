@@ -1,0 +1,134 @@
+{
+  "schema_version": "2.0",
+  "review_id": "320",
+  "review_title": "Independent security review: Mode T production trust and Google Confidential Space admission path",
+  "reviewer_requirement": "organizationally independent (not DGAF/PDMAL contributor)",
+  "source_anchor": {
+    "repository": "ndrorchestration/DGAF-Framework",
+    "commit_sha": "1f0a7f1e99787777d18b1bd62fe41dce5286a102",
+    "tree_sha": "ace8fce9a51b97e43e883795748ff07896292e22",
+    "identity_rule": "Every reviewed artifact must match both this commit/tree boundary and its listed Git blob SHA. A later main SHA does not silently supersede this review scope."
+  },
+  "primary_source_identities": [
+    {
+      "artifact": "Google OIDC verifier",
+      "path": "experiments/pdmal_pilot/mode_t_google_oidc_verifier.py",
+      "blob_sha": "7085d4c710c29821ade07304e3128ae9d8ef8dbf",
+      "review_scope": ["Confidential Space discovery/JWKS authenticity", "issuer consistency", "kid rotation/cache", "RS256 restriction", "TLS/redirect policy", "JWT key-source manipulation", "time/expiry/skew", "parser/DoS"]
+    },
+    {
+      "artifact": "Confidential Space attestation verifier",
+      "path": "experiments/pdmal_pilot/mode_t_confidential_space_attestation.py",
+      "blob_sha": "622bfe88116162937f4a3e6993ec66075fceb72e",
+      "review_scope": ["PRE/POST claim interpretation", "audience/subject/service-account binding", "hardware/software/debug claims", "nonce binding", "runtime identity continuity"]
+    },
+    {
+      "artifact": "Confidential Space launch contract",
+      "path": "experiments/pdmal_pilot/mode_t_confidential_space_launch.py",
+      "blob_sha": "a58ee27954d510cc8d3f475123a290abc280e022",
+      "review_scope": ["launch-policy validation", "metadata restrictions", "workload image pinning", "synthetic-only boundary"]
+    },
+    {
+      "artifact": "Admission policy",
+      "path": "experiments/pdmal_pilot/mode_t_admission_policy.py",
+      "blob_sha": "520cd7dab7c0cb4c04c120007f84e05463243eb8",
+      "review_scope": ["policy identity", "R-to-A-to-C binding", "caller-provided digest bypass resistance", "tampered/promoted C evidence rejection"]
+    },
+    {
+      "artifact": "In-process key gate",
+      "path": "experiments/pdmal_pilot/mode_t_inprocess_key.py",
+      "blob_sha": "ab567b5b4579b7c17cefa430b768e064658aa959",
+      "review_scope": ["attestation-gated key acquisition", "key lifetime", "failure cleanup", "no unauthorized key release"]
+    },
+    {
+      "artifact": "Integrated lifecycle",
+      "path": "experiments/pdmal_pilot/mode_t_integrated_lifecycle.py",
+      "blob_sha": "c38bacab8bd672715d6df79ee1b9f5c7c486249c",
+      "review_scope": ["end-to-end authorization/attestation/key/retention ordering", "PRE/POST separation", "crash/retry and fail-closed boundaries"]
+    },
+    {
+      "artifact": "Sigstore verifier",
+      "path": "experiments/pdmal_pilot/mode_t_sigstore_verifier.py",
+      "blob_sha": "23830b17656d60ac6c881690bf8dd4032239447a",
+      "review_scope": ["Cosign verification", "certificate identity", "TrustedRoot handling", "retention evidence authenticity"]
+    },
+    {
+      "artifact": "Retention contract",
+      "path": "experiments/pdmal_pilot/mode_t_retention_contract.py",
+      "blob_sha": "eed870e75912cbf979f9835e0272acd1747dabc9",
+      "review_scope": ["external retention evidence", "synthetic versus real distinction", "archive/retrieval/hash verification"]
+    },
+    {
+      "artifact": "Durable retention",
+      "path": "experiments/pdmal_pilot/durable_retention.py",
+      "blob_sha": "b2d889838b29ef74e1a6774db191c7a1b3c9e0ba",
+      "review_scope": ["archive root", "artifact archiving", "retrieval", "SHA-256 verification", "custody assumptions"]
+    }
+  ],
+  "workflow_identities": [
+    {
+      "path": ".github/workflows/p4-mode-t-google-oidc-verifier.yml",
+      "blob_sha": "6fe5626e9c41b9418cf2c0a7891101febf3bfa98"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-sigstore-verifier.yml",
+      "blob_sha": "e34313cc7f4ff8b5ded89355fac8074e150f69af"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-retention-contract.yml",
+      "blob_sha": "9ad9c83c229cc098fb2048e61441821bf3255e0a"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-confidential-space-admission-contract.yml",
+      "blob_sha": "78bb80dca03ba08f4291289a1af716722b384079"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-confidential-space-launch-contract.yml",
+      "blob_sha": "b81f6990de09b3653fd9ef145e6a6b7e5dc59a2e"
+    },
+    {
+      "path": ".github/workflows/p4-mode-t-integrated-lifecycle.yml",
+      "blob_sha": "af2ce32546ae8c4bd6fad2f72c70bb8bdab81d6d"
+    }
+  ],
+  "supporting_test_identities": [
+    {
+      "path": "experiments/pdmal_pilot/test_mode_t_google_oidc_verifier.py",
+      "blob_sha": "0f2d91b913ac3cb597a0a7913fb90071f6122c29"
+    },
+    {
+      "path": "experiments/pdmal_pilot/test_mode_t_confidential_space_attestation.py",
+      "blob_sha": "83738a5b6596cd5313a310ddb52cc450c7bf6faf"
+    },
+    {
+      "path": "experiments/pdmal_pilot/test_mode_t_integrated_lifecycle.py",
+      "blob_sha": "26292f9dbd35ea281de1da4763b2cc7951ca721a"
+    }
+  ],
+  "review_trust_contract": {
+    "issuer": "https://confidentialcomputing.googleapis.com",
+    "discovery_url": "https://confidentialcomputing.googleapis.com/.well-known/openid-configuration",
+    "jwks_uri": "https://www.googleapis.com/service_accounts/v1/metadata/jwk/signer@confidentialspace-sign.iam.gserviceaccount.com",
+    "jwt_algorithm": "RS256",
+    "note": "These values describe the reviewed repository contract. The independent reviewer must verify them against authoritative Google Confidential Space documentation and report any mismatch; this manifest does not substitute for that review."
+  },
+  "controlling_state": {
+    "freeze": "NOT ESTABLISHED",
+    "authorization": "NOT GRANTED",
+    "empirical_n": 0,
+    "p4_state": "OPEN / FAIL-CLOSED",
+    "p7_state": "OPEN / FINAL BINDING OPEN",
+    "p8_state": "OPEN / FAIL-CLOSED",
+    "p9_state": "NOT EXECUTED",
+    "final_candidate": "NOT DESIGNATED",
+    "candidate_tracker": "309"
+  },
+  "review_output_contract": {
+    "report_path": "docs/GOVERNANCE/review_packages/320_mode_t_oidc_security/SECURITY_REVIEW_REPORT.json",
+    "required_fields": ["review_id", "reviewed_repository", "reviewed_commit_sha", "reviewed_tree_sha", "reviewer_id", "reviewer_organization", "independence_declaration", "artifact_identity_verification", "findings", "overall_classification", "report_sha256"],
+    "finding_fields": ["finding_id", "artifact", "category", "severity", "classification", "description", "remediation", "verification_required"],
+    "classification_values": ["RESOLVED", "ACCEPTED WITH RATIONALE", "BLOCKED", "UNKNOWN"],
+    "overall_classification_values": ["PASS", "PASS_WITH_ACCEPTED_RISK", "BLOCKED", "UNKNOWN"],
+    "identity_requirement": "The report must state the exact reviewed commit/tree and confirm each reviewed primary-source blob SHA. Any mismatch makes the review package UNKNOWN/NOT EXECUTED for gate purposes."
+  }
+}

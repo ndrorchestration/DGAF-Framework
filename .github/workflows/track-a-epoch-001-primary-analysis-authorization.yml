@@ -1,0 +1,67 @@
+name: Track A Epoch 001 Primary Analysis Authorization
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-primary-analysis-authorization.yml'
+      - 'scripts/validate_track_a_epoch_001_primary_analysis_authorization.py'
+      - 'tests/test_track_a_epoch_001_primary_analysis_authorization.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRIMARY_ANALYSIS_AUTHORIZATION.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run primary-analysis authorization contract tests
+        run: python -m unittest -v tests.test_track_a_epoch_001_primary_analysis_authorization
+
+      - name: Validate tooling-only or exact one-file authorization event
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          auth='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRIMARY_ANALYSIS_AUTHORIZATION.json'
+          workflow='.github/workflows/track-a-epoch-001-primary-analysis-authorization.yml'
+          validator='scripts/validate_track_a_epoch_001_primary_analysis_authorization.py'
+          tests='tests/test_track_a_epoch_001_primary_analysis_authorization.py'
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+          if test -e "$auth"; then
+            python "$validator"
+          else
+            python "$validator" --expect-absent
+            expected=("$workflow" "$validator" "$tests")
+            mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+            test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+            diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+          fi
+
+      - name: Prove validation cannot run analysis or create results
+        run: |
+          set -euo pipefail
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_PRIMARY_RESULT.json
+          test ! -e track_a_epoch_001_primary_result.json
+          echo 'PRIMARY_ANALYSIS_RUN=FALSE'
+          echo 'SCIENTIFIC_N_INCREMENT=0'
+          echo 'CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED'
+          echo 'HIGH_ASSURANCE=NOT_AUTHORIZED'

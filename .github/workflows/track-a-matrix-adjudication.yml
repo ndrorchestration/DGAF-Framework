@@ -1,0 +1,56 @@
+name: Track A Matrix Adjudication
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-matrix-adjudication.yml'
+      - 'docs/governance/TRACK_A_NONEMPIRICAL_MATRIX_ADJUDICATION_V1.json'
+      - 'docs/governance/TRACK_A_NONEMPIRICAL_MATRIX_ADJUDICATION_V1.md'
+      - 'scripts/validate_track_a_matrix_adjudication.py'
+      - 'docs/governance/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1.json'
+      - 'docs/qa/APOGEE_11Q_PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1_S078.json'
+      - 'experiments/pdmal_pilot/topology_robustness_profile.py'
+      - 'experiments/pdmal_pilot/test_topology_robustness_profile.py'
+      - '.github/workflows/track-a-topology-robustness-profile.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install hash-locked PDMAL dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Reproduce bound structural payload
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python experiments/pdmal_pilot/topology_robustness_profile.py
+
+      - name: Validate adjudication and claim ceiling
+        run: python scripts/validate_track_a_matrix_adjudication.py
+
+      - name: Prove this gate cannot authorize collection
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('docs/governance/TRACK_A_NONEMPIRICAL_MATRIX_ADJUDICATION_V1.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['empirical_evidence'] is False
+          assert d['scientific_n_increment'] == 0
+          assert d['next_gate']['empirical_execution'] == 'NOT_AUTHORIZED'
+          assert d['next_gate']['freeze_status'] == 'NOT_ESTABLISHED'
+          assert d['next_gate']['high_assurance'] == 'NOT_AUTHORIZED'
+          assert d['next_gate']['high_assurance_empirical_n'] == 0
+          print('TRACK_A_MATRIX_NONAUTHORIZING_BOUNDARY_PASS')
+          PY

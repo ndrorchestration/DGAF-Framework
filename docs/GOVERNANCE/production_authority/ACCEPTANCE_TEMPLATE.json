@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "record_type": "DGAF_MODE_T_PRODUCTION_AUTHORITY_ACCEPTANCE_TEMPLATE",
+  "status": "TEMPLATE_NOT_EXECUTED",
+  "authority_issue": 316,
+  "authorization_chain": {
+    "reservation_record_sha256": null,
+    "authorization_record_sha256": null,
+    "consumption_record_sha256": null,
+    "retaining_actor": null,
+    "consumption_actor": null,
+    "single_use_verified": false,
+    "retry_requires_new_lineage": true
+  },
+  "admission_policy": {
+    "policy_identity": "DGAF_MODE_T_CONFIDENTIAL_SPACE_ADMISSION_POLICY_V1",
+    "canonical_policy_sha256": null,
+    "bound_in_reservation": false,
+    "bound_in_authorization": false,
+    "bound_in_consumption": false,
+    "production_key_path_exact_match_verified": false
+  },
+  "signer_and_transparency": {
+    "approved_signer_identity": null,
+    "certificate_identity_constraints": null,
+    "transparency_policy_identity": null,
+    "rotation_policy_identity": null,
+    "approved": false
+  },
+  "trusted_root_and_tuf": {
+    "trusted_root_sha256": null,
+    "bootstrap_evidence_sha256": null,
+    "tuf_policy_identity": null,
+    "expiry_policy_identity": null,
+    "rollback_freeze_attack_policy_identity": null,
+    "recovery_authority": null,
+    "approved": false
+  },
+  "retention_and_reverification": {
+    "retention_location": null,
+    "retained_manifest_sha256": null,
+    "retention_actor": null,
+    "retrieval_actor": null,
+    "retrieved_manifest_sha256": null,
+    "digest_match_verified": false,
+    "fresh_cryptographic_verification": false,
+    "independence_claimed": false,
+    "independence_basis": null
+  },
+  "external_dependencies": {
+    "issue_320_review_report_sha256": null,
+    "issue_320_accepted": false,
+    "issue_310_stage_a_evidence_manifest_sha256": null,
+    "issue_310_accepted": false
+  },
+  "adjudication": {
+    "classification": "NOT_EXECUTED",
+    "adjudicator": null,
+    "adjudicated_at": null,
+    "unresolved_findings": [],
+    "production_authority_established": false
+  },
+  "non_effects": {
+    "final_candidate_designated": false,
+    "p4_closed": false,
+    "freeze_established": false,
+    "pilot_authorized": false,
+    "empirical_n": 0
+  }
+}

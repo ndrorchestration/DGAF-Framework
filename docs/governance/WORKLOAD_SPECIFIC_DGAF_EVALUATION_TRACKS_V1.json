@@ -1,0 +1,204 @@
+{
+  "record_type": "DGAF_WORKLOAD_SPECIFIC_EVALUATION_TRACKS",
+  "schema_version": 1,
+  "spec_id": "DGAF-WORKLOAD-SPECIFIC-EVALUATION-TRACKS-V1",
+  "status": "NONEMPIRICAL_CANDIDATE_ARCHITECTURE",
+  "controller_issue": 394,
+  "scientific_n_increment": 0,
+  "empirical_authorization": false,
+  "high_assurance": "NOT_AUTHORIZED_N0",
+  "historical_profile_policy": {
+    "profile_id": "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1",
+    "profile_blob_sha": "133d7b71c9e829d5461e7c911527c6b2b10ba9ae",
+    "future_canonical_use": false,
+    "disposition": "HISTORICAL_EXACT_EPOCH_004_PROFILE_ONLY",
+    "epoch_004_primary_result": "PRESERVED_FOR_EXACT_EXECUTED_RESTORED_BINDING_TREATMENT",
+    "rewrite_historical_evidence": false,
+    "pool_into_future_profiles": false
+  },
+  "design_rules": [
+    "NO_GATE_WITHOUT_SOURCE_BOUND_WORKLOAD_SUBSTRATE",
+    "NO_NUMERIC_PROXY_FOR_SEMANTIC_GATE_INPUT",
+    "NO_SEMANTIC_PROXY_FOR_GRAPH_STATE",
+    "STATEFUL_GATES_MUST_DECLARE_PERSISTENCE_LIFETIME_AND_RESET_SEMANTICS",
+    "EXCLUDED_GATES_ARE_EXPLICITLY_OUT_OF_SCOPE_NOT_DEFAULT_PASS",
+    "P30_PROFILE_QUALIFICATION_IS_EXTERNAL_CONTROL_NOT_PER_TURN_EFFICACY_SIGNAL",
+    "EVERY_EMPIRICAL_TRACK_REQUIRES_NEW_PROFILE_ID_NEW_QUALIFICATION_NEW_PREREGISTRATION_FRESH_SEEDS_AND_SEPARATE_AUTHORIZATION"
+  ],
+  "tracks": {
+    "A_PDMAL_TOPOLOGY_ROBUSTNESS": {
+      "profile_id": "PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1",
+      "purpose": "Measure topology and failure-recovery behavior under a numeric distributed-consensus workload without claiming DGAF semantic-governance efficacy.",
+      "workload_type": "NUMERIC_DISTRIBUTED_CONSENSUS",
+      "required_workload_fields": [
+        "topology",
+        "failure_schedule",
+        "agent_values",
+        "active_neighbors",
+        "iteration",
+        "seed"
+      ],
+      "treatment_scope": [
+        "CONSENSUS_ALGORITHM_IDENTITY",
+        "TOPOLOGY",
+        "FAILURE_INJECTION_AND_RECOVERY"
+      ],
+      "dgaf_gate_disposition": {
+        "P-31": "OUT_OF_SCOPE_NO_TOKEN_TIER_SUBSTRATE",
+        "P-33": "SEPARATE_B3_MONITOR_FIDELITY_TRACK_NOT_CONSENSUS_EFFECT",
+        "DEMIJOULE": "OUT_OF_SCOPE_NO_SEMANTIC_PAYLOAD",
+        "P-27": "OUT_OF_SCOPE_NO_EVALUATION_RECORD_WEIGHT_CONSUMER",
+        "P-29": "OUT_OF_SCOPE_NO_ROUTING_RISK_DEONTIC_RECORD",
+        "P-32": "OUT_OF_SCOPE_UNLESS_SEPARATE_STATEFUL_CLOSURE_PROFILE",
+        "P-30": "EXTERNAL_PROFILE_QUALIFICATION_ONLY"
+      },
+      "prohibited_condition_labels": [
+        "dgaf",
+        "full_dgaf",
+        "canonical_dgaf"
+      ],
+      "claim_ceiling": "PDMAL_TOPOLOGY_AND_FAILURE_ROBUSTNESS_ONLY_NOT_DGAF_EFFICACY",
+      "implementation_status": "NOT_YET_IMPLEMENTED",
+      "empirical_status": "NOT_AUTHORIZED"
+    },
+    "B1_SEMANTIC_ROUTING_SAFETY": {
+      "profile_id": "DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1",
+      "purpose": "Evaluate record-level semantic routing and safety controls on realistic evaluation records.",
+      "workload_type": "STRUCTURED_SEMANTIC_EVALUATION_RECORD",
+      "required_workload_fields": [
+        "record_id",
+        "content",
+        "entropy_score",
+        "kappa_score",
+        "scores.accuracy",
+        "scores.false_blocked",
+        "scores.adversarial",
+        "scores.ambiguous",
+        "scores.malformed",
+        "deontic"
+      ],
+      "included_components": [
+        "DEMIJOULE",
+        "P-27_KAPPA_V3_6",
+        "P-28_EVALUATION_PIPELINE",
+        "P-29_SENTINEL",
+        "P-30_EXTERNAL_PROFILE_QUALIFICATION"
+      ],
+      "excluded_components": {
+        "P-31": "SEPARATE_B2_CONTEXT_STATE_TRACK",
+        "P-33": "SEPARATE_B3_GRAPH_MONITOR_TRACK",
+        "P-32": "SEPARATE_B2_MULTI_TURN_CLOSURE_TRACK"
+      },
+      "source_consumers": [
+        "components/KAPPA/dynamic_weight_router.py",
+        "components/evaluate_router.py",
+        "components/evaluate_router_v1_1.py"
+      ],
+      "claim_ceiling": "RECORD_LEVEL_ROUTING_AND_SAFETY_BEHAVIOR_ONLY",
+      "implementation_status": "NOT_YET_IMPLEMENTED",
+      "empirical_status": "NOT_AUTHORIZED"
+    },
+    "B2_STATEFUL_CONTEXT_CLOSURE": {
+      "profile_id": "DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1",
+      "purpose": "Test P-31 context pruning and P-32 closure only on a persistent multi-turn semantic session with their actual state substrates.",
+      "workload_type": "MULTI_TURN_SEMANTIC_SESSION",
+      "required_workload_fields": [
+        "turn_id",
+        "payload",
+        "token_tier_store",
+        "token_inserted_at",
+        "token_trust_edges",
+        "is_stable",
+        "session_id"
+      ],
+      "persistence_contract": {
+        "lifetime": "ONE_COMPLETE_SESSION",
+        "reset": "ONLY_AT_SESSION_BOUNDARY",
+        "required_state": [
+          "SCPE_TOKEN_STORE",
+          "PHI_STABLE_COUNT",
+          "PHI_TOTAL_COUNT",
+          "PHI_CONSECUTIVE_FAILURES"
+        ]
+      },
+      "included_components": [
+        "P-31_SCPE",
+        "P-32_PHI_CLOSURE",
+        "P-30_EXTERNAL_PROFILE_QUALIFICATION"
+      ],
+      "excluded_components": {
+        "P-27_P28_P29_DEMIJOULE": "COVERED_BY_B1",
+        "P-33": "COVERED_BY_B3"
+      },
+      "claim_ceiling": "STATE_PERSISTENCE_PRUNING_AND_CLOSURE_BEHAVIOR_ONLY",
+      "implementation_status": "NOT_YET_IMPLEMENTED",
+      "empirical_status": "NOT_AUTHORIZED"
+    },
+    "B3_GRAPH_CONVERGENCE_MONITOR": {
+      "profile_id": "DGAF_P33_GRAPH_CONVERGENCE_MONITOR_PROFILE_V1",
+      "purpose": "Test P-33 against persistent weighted-graph snapshots without using its status as an invented consensus-update effect.",
+      "workload_type": "PERSISTENT_WEIGHTED_GRAPH_SEQUENCE",
+      "required_workload_fields": [
+        "graph_id",
+        "turn_id",
+        "current_edge_weights",
+        "previous_edge_weights",
+        "consecutive_divergent",
+        "consecutive_stable"
+      ],
+      "persistence_contract": {
+        "lifetime": "ONE_GRAPH_SEQUENCE",
+        "reset": "ONLY_AT_SEQUENCE_BOUNDARY",
+        "required_state": [
+          "W_T",
+          "W_T_MINUS_1",
+          "DIVERGENCE_COUNTERS",
+          "EVENT_HISTORY"
+        ]
+      },
+      "included_components": [
+        "P-33_PDMAL_CONVERGENCE_MONITOR",
+        "P-30_EXTERNAL_PROFILE_QUALIFICATION"
+      ],
+      "prohibited_uses": [
+        "DIRECT_MAPPING_TO_CONSENSUS_ALPHA",
+        "EFFICACY_EFFECT_WITHOUT_SEPARATE_SPECIFICATION"
+      ],
+      "claim_ceiling": "P33_MONITOR_FIDELITY_AND_ALERT_BEHAVIOR_ONLY",
+      "implementation_status": "NOT_YET_IMPLEMENTED",
+      "empirical_status": "NOT_AUTHORIZED"
+    },
+    "C_INTEGRATED_DGAF_SYSTEM": {
+      "profile_id": "DGAF_INTEGRATED_WORKLOAD_PROFILE_V1",
+      "status": "DEFERRED",
+      "prerequisites": [
+        "TRACK_A_PROFILE_QUALIFIED_AND_NONEMPIRICALLY_VALIDATED",
+        "TRACK_B1_PROFILE_QUALIFIED_AND_NONEMPIRICALLY_VALIDATED",
+        "TRACK_B2_PROFILE_QUALIFIED_AND_NONEMPIRICALLY_VALIDATED",
+        "TRACK_B3_PROFILE_QUALIFIED_AND_NONEMPIRICALLY_VALIDATED",
+        "EXPLICIT_CROSS_TRACK_INTERFACE_SPECIFICATION",
+        "NO_PROXY_INPUTS",
+        "FRESH_11Q_QUALIFICATION"
+      ],
+      "claim_ceiling": "NONE_UNTIL_PROSPECTIVELY_SPECIFIED",
+      "empirical_status": "PROHIBITED"
+    }
+  },
+  "next_sequence": [
+    "MERGE_ARCHITECTURE_SPEC_AFTER_EXACT_HEAD_VALIDATION",
+    "PRESERVE_COMPLETED_P27_ADJUDICATION_ISSUE_390",
+    "IMPLEMENT_TRACK_A_NONEMPIRICAL_PROFILE_AND_CONTRACT_TESTS",
+    "IMPLEMENT_TRACK_B1_NONEMPIRICAL_PROFILE_AND_FIXTURES",
+    "IMPLEMENT_TRACK_B2_PERSISTENCE_HARNESS",
+    "IMPLEMENT_TRACK_B3_PERSISTENCE_HARNESS",
+    "RUN_SOURCE_BOUND_11Q_FOR_EACH_PROFILE",
+    "ONLY_THEN_DESIGN_FRESH_EMPIRICAL_EPOCHS"
+  ],
+  "p27_adjudication": {
+    "issue": 390,
+    "state": "CLOSED_COMPLETED",
+    "component_provenance": "ESTABLISHED_KAPPA_V3_6",
+    "pdmal_binding_fidelity": "NOT_ESTABLISHED",
+    "proxy_alpha_mapping": "REJECTED"
+  }
+}

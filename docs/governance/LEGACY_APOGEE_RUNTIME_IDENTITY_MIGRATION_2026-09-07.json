@@ -1,0 +1,56 @@
+{
+  "record_type": "DGAF_LEGACY_APOGEE_RUNTIME_IDENTITY_MIGRATION",
+  "schema_version": 1,
+  "date": "2026-09-07",
+  "issue": 374,
+  "authority_reconciliation_merge": "3a0bf4f864b7ff43af390daec65ead8c76588d1e",
+  "empirical_change": false,
+  "canonical_p30": {
+    "authority": "S035_P11_11Q_ATTESTATION",
+    "location": "EXTERNAL_GOVERNANCE_PROMOTION_ATTESTATION",
+    "inside_per_turn_pdmal_consensus_dynamics": false
+  },
+  "legacy_runtime_gate": {
+    "id": "LEGACY_APOGEE_RUNTIME_CONFIDENCE_GATE_V1",
+    "canonical_pattern_id": null,
+    "canonical_treatment_status": "RETIRED_FROM_CANONICAL_DGAF_TREATMENT",
+    "historical_semantics": {
+      "grades": ["S", "A", "B", "C", "D"],
+      "thresholds": {"S": 0.90, "A": 0.75, "B": 0.60, "C": 0.45},
+      "terminal_rule": "D_TO_KILL",
+      "gold_star_rule": "GRADE_S_AND_NONTRIVIAL_DESCRIPTION"
+    },
+    "historical_designation_issue": 165,
+    "historical_symbols_preserved": true,
+    "compatibility_wrapper": "experiments/pdmal_pilot/legacy_apogee_runtime_gate.py"
+  },
+  "bridge": {
+    "p11_11q_to_runtime_confidence": "NOT_ESTABLISHED",
+    "implicit_numeric_bridge_allowed": false,
+    "agent_values_proxy_allowed": false,
+    "outcome_derived_proxy_allowed": false,
+    "default_constant_as_calibrated_confidence_allowed": false,
+    "phi_constant_as_calibrated_confidence_allowed": false,
+    "synthetic_fixture_as_calibrated_confidence_allowed": false
+  },
+  "historical_surfaces": [
+    "components/ensemble_v17.py",
+    "experiments/pdmal_pilot/pdmaltgl_gate_binding.py",
+    "experiments/pdmal_pilot/dgaf_tgl_adapter.py",
+    "experiments/pdmal_pilot/p30_remediation_diagnostic.py",
+    "experiments/pdmal_pilot/run_p30_variant.py",
+    ".github/workflows/pdmal-solo-p30-variant-execution.yml",
+    "experiments/pdmal_pilot/test_p30_variant_track.py",
+    "experiments/pdmal_pilot/test_restore_five_gates_parity.py"
+  ],
+  "historical_evidence_policy": {
+    "rewrite_prior_experiments": false,
+    "pool_with_future_canonical_experiment": false,
+    "epoch_003_identity_preserved": "DGAF-P30-EXPLICIT-0.45"
+  },
+  "next_gate": {
+    "required": "NONEMPIRICAL_CANONICAL_TREATMENT_PROFILE",
+    "new_canonical_empirical_epoch": "NOT_AUTHORIZED",
+    "high_assurance_authorization_changed": false
+  }
+}

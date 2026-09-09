@@ -1,0 +1,86 @@
+name: P4 Mode T Retention Evidence Contract
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-retention-contract.yml'
+      - 'experiments/pdmal_pilot/mode_t_retention_contract.py'
+      - 'experiments/pdmal_pilot/test_mode_t_retention_contract.py'
+      - 'docs/governance/P4_MODE_T_RETENTION_CONTRACT_2026-09-06.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  retention-contract:
+    name: Inclusion/time non-promotion controls
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run retention-contract controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/pdmal_pilot
+          python test_mode_t_retention_contract.py -v
+
+      - name: Static epistemic-boundary assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('experiments/pdmal_pilot/mode_t_retention_contract.py').read_text(encoding='utf-8')
+          required = (
+              'PASS_NORMALIZED_INCLUSION_ONLY',
+              'REKOR_INTEGRATED_TIME_NOT_ACCEPTED_AS_INDEPENDENT_TIME_AUTHORITY',
+              '"temporal_order_verified": False',
+              '"real_external_retention_established": False',
+              'external_sigstore_crypto_performed_by_this_module',
+              'SEPARATE_INDEPENDENT_TIME_OR_ORDER_MECHANISM_REQUIRED',
+              'no independent temporal-order authority is approved',
+              '"pilot_authorized": False',
+              '"empirical_n": 0',
+          )
+          for marker in required:
+              if marker not in source:
+                  raise SystemExit(f'missing retention-boundary marker: {marker}')
+          forbidden = (
+              '"temporal_order_verified": True',
+              '"real_external_retention_established": True',
+              'PDMAL_PILOT_AUTHORIZED' + '=1',
+              'PDMAL_PROTOCOL_FROZEN' + '=1',
+          )
+          for marker in forbidden:
+              if marker in source:
+                  raise SystemExit(f'forbidden retention promotion marker: {marker}')
+          PY
+
+      - name: Report bounded interpretation
+        run: |
+          echo 'PASS: normalized inclusion evidence remains distinct from temporal-order proof.'
+          echo 'No Sigstore signing/upload, real external retention, time authority, authorization, or empirical execution occurred.'
+          echo 'PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.'

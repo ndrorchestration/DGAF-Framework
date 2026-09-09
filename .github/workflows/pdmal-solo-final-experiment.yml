@@ -1,0 +1,64 @@
+name: PDMAL Solo Final Experiment 001 — Retired
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/pdmal-solo-final-experiment.yml'
+      - 'docs/experiment/SOLO_FINAL_EXPERIMENT_001_RETIREMENT.md'
+      - 'docs/experiment/SOLO_PILOT_QC_ADJUDICATION_2026-09-07.md'
+
+permissions:
+  contents: read
+
+jobs:
+  retirement-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Verify experiment-001 execution authority is retired
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          workflow = Path('.github/workflows/pdmal-solo-final-experiment.yml').read_text(encoding='utf-8')
+          retirement = Path('docs/experiment/SOLO_FINAL_EXPERIMENT_001_RETIREMENT.md').read_text(encoding='utf-8')
+          qc = Path('docs/experiment/SOLO_PILOT_QC_ADJUDICATION_2026-09-07.md').read_text(encoding='utf-8')
+
+          forbidden = [
+              "\n  push:",
+              "solo-experiment/run-*",
+              "execute-final-solo-experiment",
+              "PDMAL_MODE: solo_pilot",
+              "PDMAL_SOLO_PILOT_AUTHORIZED: '1'",
+              "python experiments/pdmal_pilot/run_pilot.py",
+              "GRANTED_BY_DEVELOPER_AFTER_BLINDED_QC",
+          ]
+          for token in forbidden:
+              if token in workflow:
+                  raise SystemExit(f'retired Solo experiment workflow contains executable/stale authority token: {token!r}')
+
+          required_retirement = [
+              'EXPERIMENT_001_RETIRED',
+              'APPARATUS_FALSIFICATION_EVIDENCE',
+              'FRESH_SOLO_EMPIRICAL_EPOCH_NOT_AUTHORIZED',
+              'Issue #369',
+              '9db20dd2af4ec6a7e23bb8c078e744862109ac4e',
+          ]
+          for token in required_retirement:
+              if token not in retirement:
+                  raise SystemExit(f'missing retirement boundary token: {token!r}')
+
+          required_qc = [
+              'HISTORICAL PROSPECTIVE DECISION — SUPERSEDED FOR FUTURE EXECUTION AUTHORITY',
+              'does not authorize any fresh empirical epoch',
+          ]
+          for token in required_qc:
+              if token not in qc:
+                  raise SystemExit(f'QC record missing supersession boundary: {token!r}')
+
+          print('SOLO_EXPERIMENT_001_EXECUTION_AUTHORITY_RETIRED_PASS')
+          PY

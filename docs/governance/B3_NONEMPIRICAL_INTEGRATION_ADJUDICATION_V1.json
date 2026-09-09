@@ -1,0 +1,38 @@
+{
+  "record_type": "DGAF_B3_NONEMPIRICAL_INTEGRATION_ADJUDICATION",
+  "schema_version": 1,
+  "controller_issue": 429,
+  "profile_id": "DGAF_P33_GRAPH_CONVERGENCE_MONITOR_PROFILE_V1",
+  "implementation_merge_sha": "114312db125439ae861065e36d3b0d37ffe32d14",
+  "qualification_merge_sha": "68c94a53718915ae909eb2196373283186a95138",
+  "qualification_path": "docs/qa/APOGEE_11Q_DGAF_P33_GRAPH_CONVERGENCE_MONITOR_PROFILE_V1_S080.json",
+  "qualification_blob_sha": "b4701dfc091b6df3cf36061e5ab154c095a9aeaf",
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+  "adjudication": {
+    "exact_source_binding": "PASS",
+    "one_monitor_per_graph_sequence": "PASS",
+    "w_t_w_t_minus_1_persistence": "PASS",
+    "divergence_counter_persistence": "PASS",
+    "event_history_persistence": "PASS",
+    "sequence_boundary_reset_only": "PASS",
+    "registered_status_ladder_exact": "PASS",
+    "consensus_alpha_mapping_absent": "PASS",
+    "epoch_004_outcome_reuse_absent": "PASS",
+    "empirical_endpoint_absent": "PASS",
+    "claim_ceiling_preserved": "PASS"
+  },
+  "qualification_summary": {
+    "score": 108,
+    "max_score": 110,
+    "tier": "S-TIER",
+    "q11": 9,
+    "independent_verification": false
+  },
+  "disposition": "PASS_B3_STANDALONE_NONEMPIRICAL_LANE_COMPLETE",
+  "allowed_next_gate": "FUTURE_TRACK_C_NONEMPIRICAL_COMPOSITION_PROPOSAL_AFTER_B1_B2_ELIGIBILITY",
+  "scientific_n_increment": 0,
+  "b3_empirical_execution_authorized": false,
+  "track_c_empirical_execution_authorized": false,
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}

@@ -1,0 +1,64 @@
+{
+  "record_type": "DGAF_P30_11Q_PROFILE_QUALIFICATION",
+  "schema_version": 1,
+  "attestation_gate": "P-30",
+  "rubric": "P-11 11Q Attestation Scoring",
+  "attestation_id": "APOGEE_11Q_DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1_S079",
+  "profile_id": "DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1",
+  "review_scope": "Merged non-empirical B2 persistent SCPE and Phi-Closure session profile.",
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+  "independent_verification": false,
+  "empirical_evidence": false,
+  "scientific_n_increment": 0,
+  "source_bindings": {
+    "architecture_merge_sha": "5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+    "profile_merge_sha": "9e6971d5c8fc39e46acfe743e6588bbdc127abe8",
+    "profile_path": "docs/governance/DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1.json",
+    "profile_blob_sha": "306cd38952b979276908789bd042a3e3323c5ac3",
+    "source_path": "components/ensemble_v17.py",
+    "source_blob_sha": "686eb9ba339742d9de2767fca18b9907a1c3b70a",
+    "harness_path": "experiments/pdmal_pilot/b2_stateful_context_closure_profile.py",
+    "harness_blob_sha": "765dd5dd50f0590c6ee3c2c805c7e6144c4e86eb",
+    "test_blob_sha": "a205b878bf17f2160d323aa6e79b31ffa242d6b0",
+    "validator_blob_sha": "294af500f20aec2a40d443fbfb299792a0f61172",
+    "workflow_blob_sha": "a239ff486816d1e7b5414334b7342b7a2873c4ee",
+    "implementation_exact_head_workflows_passed": "18/18"
+  },
+  "scoring": {
+    "Q01": {"score": 10, "verdict": "PASS", "evidence": "Scope is explicit: one persistent semantic session, SCPE plus Phi-Closure state, reset semantics, registered checkpoints, and no empirical efficacy endpoint."},
+    "Q02": {"score": 10, "verdict": "PASS", "evidence": "Profile, source component, harness, tests, validator, workflow, and merged implementation identity are exact-bound."},
+    "Q03": {"score": 10, "verdict": "PASS", "evidence": "Provenance binds workload architecture, merged B2 implementation, and exact source/harness/test/validator/workflow blobs."},
+    "Q04": {"score": 10, "verdict": "PASS", "evidence": "Required state and interfaces are explicit: token store, insertion timestamps, trust edges, Phi counters, and is_stable input persist for one session."},
+    "Q05": {"score": 10, "verdict": "PASS", "evidence": "Terminology and role boundaries are explicit; B2 does not proxy B1 or B3 semantics and does not label state-persistence checks as efficacy."},
+    "Q06": {"score": 10, "verdict": "PASS", "evidence": "Implementation conforms to the workload-specific architecture and reset-only-at-session-boundary requirement."},
+    "Q07": {"score": 9, "verdict": "PASS", "evidence": "Known limitation is explicitly preserved: PhiDecision.REPROMPT exists but the current check implementation does not emit it; silent redesign is prohibited."},
+    "Q08": {"score": 10, "verdict": "PASS", "evidence": "The harness is deterministic and reproducible; ordinary turn progression reaches 13/21/34/55 without synthetic counter injection."},
+    "Q09": {"score": 10, "verdict": "PASS", "evidence": "Fixtures are synthetic semantic-session records with no personal data requirement and no unnecessary empirical dataset retention."},
+    "Q10": {"score": 10, "verdict": "PASS", "evidence": "Claim ceiling is explicit: state persistence, pruning, and closure behavior only; scientific N remains zero and canonical DGAF efficacy remains not established."},
+    "Q11": {"score": 9, "verdict": "PASS", "evidence": "Ready only for a later non-empirical integration/adjudication gate. Not ready for empirical execution, integrated Track C claims, High-Assurance acceptance, or production use."}
+  },
+  "scoring_summary": {
+    "total_score": 108,
+    "max_score": 110,
+    "percentage": 98.1818181818,
+    "tier": "S-TIER",
+    "q11_score": 9,
+    "q11_threshold_met": true,
+    "open_blg_count": 0,
+    "open_blgs": [],
+    "attestation_result": "GRANTED",
+    "attestation_note": "S-TIER developer self-attestation for the non-empirical B2 profile role only."
+  },
+  "limitations": [
+    "Same developer/operator context performed profile design and qualification; this is not independent verification.",
+    "Synthetic session fixtures establish source-bound state behavior only, not real-workload benefit.",
+    "PhiDecision.REPROMPT remains present in the enum but unreachable from the current check implementation.",
+    "B2 qualification does not establish B1, B3, integrated Track C, or canonical DGAF efficacy."
+  ],
+  "next_gate": {
+    "required": "B2_NONEMPIRICAL_INTEGRATION_ADJUDICATION",
+    "empirical_execution": "NOT_AUTHORIZED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance_changed": false
+  }
+}

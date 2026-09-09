@@ -1,0 +1,110 @@
+name: Track A Epoch 001 Unblinding Authorization
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-001-unblinding-authorization.yml'
+      - 'scripts/validate_track_a_epoch_001_unblinding_authorization.py'
+      - 'tests/test_track_a_epoch_001_unblinding_authorization.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDING_AUTHORIZATION.json'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Run unblinding-authorization contract tests
+        run: python -m unittest -v tests/test_track_a_epoch_001_unblinding_authorization.py
+
+      - name: Validate tooling-only or exact one-file authorization event
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          auth='docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDING_AUTHORIZATION.json'
+          workflow='.github/workflows/track-a-epoch-001-unblinding-authorization.yml'
+          validator='scripts/validate_track_a_epoch_001_unblinding_authorization.py'
+          tests='tests/test_track_a_epoch_001_unblinding_authorization.py'
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+          if test -e "$auth"; then
+            python "$validator"
+          else
+            python "$validator" --expect-absent
+            expected=("$workflow" "$validator" "$tests")
+            mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+            test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+            diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+          fi
+
+      - name: Reverify retained collection artifacts before authorization
+        if: ${{ hashFiles('docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDING_AUTHORIZATION.json') != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          API: https://api.github.com
+        run: |
+          set -euo pipefail
+          tmp="$RUNNER_TEMP/track-a-unblinding-auth"
+          mkdir -p "$tmp"
+          auth=(-H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json')
+
+          curl -fsSL "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/runs/34262408225" > "$tmp/run.json"
+          curl -fsSL "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/runs/34262408225/artifacts?per_page=100" > "$tmp/artifacts.json"
+          python - "$tmp/run.json" "$tmp/artifacts.json" <<'PY'
+          import json, sys
+          run = json.load(open(sys.argv[1], encoding='utf-8'))
+          arts = json.load(open(sys.argv[2], encoding='utf-8'))['artifacts']
+          assert run['status'] == 'completed'
+          assert run['conclusion'] == 'success'
+          assert run['event'] == 'push'
+          assert run['head_sha'] == '98e72e370897c0e0916f78245a040108ed278189'
+          by_id = {a['id']: a for a in arts}
+          expected = {
+              10070586413: ('track-a-epoch-001-public-blinded-482', 83776, 'sha256:32851068cc61421f756041d0671681823b38c054f06e5082ed26c800bf296231'),
+              10070587302: ('track-a-epoch-001-protected-encrypted-482', 136074, 'sha256:f52d2144cfb8c699347c56cf92a41c1ac11cba98787fefabb56891c9f680c69f'),
+          }
+          for aid, (name, size, digest) in expected.items():
+              a = by_id[aid]
+              assert not a['expired']
+              assert a['name'] == name
+              assert a['size_in_bytes'] == size
+              assert a['digest'] == digest
+          print('TRACK_A_UNBLINDING_ARTIFACT_METADATA_QC=PASS')
+          PY
+
+          curl -fsSL -L "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/10070586413/zip" -o "$tmp/public.zip"
+          curl -fsSL -L "${auth[@]}" "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/10070587302/zip" -o "$tmp/protected.zip"
+          echo '32851068cc61421f756041d0671681823b38c054f06e5082ed26c800bf296231  '"$tmp/public.zip" | sha256sum -c -
+          echo 'f52d2144cfb8c699347c56cf92a41c1ac11cba98787fefabb56891c9f680c69f  '"$tmp/protected.zip" | sha256sum -c -
+          echo 'TRACK_A_UNBLINDING_ARTIFACT_ARCHIVE_QC=PASS'
+
+      - name: Preserve authorization boundary
+        run: |
+          if test -e docs/experiment/track_a_runs/TRACK_A_EPOCH_001_UNBLINDING_AUTHORIZATION.json; then
+            echo 'TRACK_A_UNBLINDING = PENDING_VALIDATED_MERGE'
+          else
+            echo 'TRACK_A_UNBLINDING = NOT_AUTHORIZED'
+          fi
+          echo 'TRACK_A_DATASET_LOCK = ESTABLISHED'
+          echo 'PRIMARY_ANALYSIS = NOT_AUTHORIZED'
+          echo 'PRIMARY_ANALYSIS_RUN = FALSE'
+          echo 'CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED'
+          echo 'HIGH_ASSURANCE = NOT_AUTHORIZED'

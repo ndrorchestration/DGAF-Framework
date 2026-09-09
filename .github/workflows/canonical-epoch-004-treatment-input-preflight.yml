@@ -1,0 +1,84 @@
+name: Canonical Epoch 004 Treatment Input Preflight
+
+on:
+  pull_request:
+    paths:
+      - 'docs/experiment/CANONICAL_EPOCH_004_TREATMENT_INPUT_PREFLIGHT.json'
+      - 'docs/experiment/CANONICAL_SOLO_EMPIRICAL_EPOCH_004_PREREGISTRATION.json'
+      - 'docs/governance/CANONICAL_PDMAL_TREATMENT_PROFILE_CANDIDATE_V1.json'
+      - 'docs/qa/APOGEE_11Q_DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1_S077*'
+      - 'experiments/pdmal_pilot/analysis.py'
+      - 'experiments/pdmal_pilot/canonical_p30_qualification.py'
+      - 'pptl/triadic_governance_loop.py'
+      - 'scripts/validate_canonical_epoch_004_treatment_input_preflight.py'
+      - 'scripts/validate_canonical_epoch_004_preregistration.py'
+      - 'scripts/validate_canonical_profile_11q_qualification.py'
+      - 'scripts/validate_canonical_treatment_profile.py'
+      - '.github/workflows/canonical-epoch-004-treatment-input-preflight.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  preflight-nonempirical:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run fail-closed treatment-input preflight
+        run: python scripts/validate_canonical_epoch_004_treatment_input_preflight.py
+
+      - name: Independently adjudicate preflight result
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('test-artifacts/canonical_epoch_004_treatment_input_preflight.json')
+          d = json.loads(p.read_text())
+          assert d['record_type'] == 'DGAF_CANONICAL_EPOCH_TREATMENT_INPUT_PREFLIGHT_RESULT'
+          assert d['epoch_id'] == 'PDMAL-SOLO-CANONICAL-EPOCH-004'
+          assert d['status'] == 'PASS_NONEMPIRICAL_TREATMENT_INPUT_PREFLIGHT_ONLY'
+          assert d['required_tgl_steps'] == [1, 2, 3, 4, 5, 6, 8]
+          assert d['seed_count'] == 50
+          assert d['expected_observations_if_later_authorized'] == 9000
+          assert d['empirical_execution_authorized'] is False
+          assert d['scientific_n_increment'] == 0
+          assert d['claim_ceiling'] == 'SOLO_DEVELOPER_NONINDEPENDENT_ENGINEERING_EVIDENCE_ONLY'
+          print('CANONICAL_EPOCH_004_TREATMENT_INPUT_PREFLIGHT_ADJUDICATION_PASS')
+          PY
+
+      - name: Prove workflow is preflight-only
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.github/workflows/canonical-epoch-004-treatment-input-preflight.yml')
+          text = path.read_text()
+          head = text.split('permissions:', 1)[0]
+          assert 'workflow_dispatch:' not in head
+          assert 'schedule:' not in head
+          run_commands = []
+          for line in text.splitlines():
+              stripped = line.strip()
+              if stripped.startswith('run: ') and not stripped.endswith('|'):
+                  run_commands.append(stripped[5:])
+          forbidden_runners = ('run_pilot.py', 'run_p30_variant.py', 'solo_final', 'empirical_runner')
+          assert not any(token in command for command in run_commands for token in forbidden_runners)
+          print('CANONICAL_EPOCH_004_PREFLIGHT_ONLY_WORKFLOW_PASS')
+          PY
+
+      - name: Upload preflight artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-epoch-004-treatment-input-preflight-${{ github.event.pull_request.head.sha }}
+          path: test-artifacts/canonical_epoch_004_treatment_input_preflight.json
+          if-no-files-found: warn
+          retention-days: 90

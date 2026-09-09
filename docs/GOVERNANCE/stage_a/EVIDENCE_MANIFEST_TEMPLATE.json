@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "record_type": "DGAF_STAGE_A_EVIDENCE_MANIFEST_TEMPLATE",
+  "status": "TEMPLATE_NOT_EXECUTED",
+  "execution_input_path": "docs/GOVERNANCE/stage_a/EXECUTION_INPUT_TEMPLATE.json",
+  "execution_input_sha256": null,
+  "execution_identity": {
+    "repository_commit_sha": null,
+    "repository_tree_sha": null,
+    "workload_container_digest_sha256": null,
+    "gcp_project_id": null,
+    "zone": null,
+    "instance_name": null,
+    "machine_type": null,
+    "workload_service_account": null
+  },
+  "pre_attestation": {
+    "token_sha256": null,
+    "verified_token_evidence_sha256": null,
+    "claim_contract_evidence_sha256": null,
+    "authorization_consumption_sha256": null,
+    "verified": false,
+    "verification_actor": null,
+    "verification_timestamp": null
+  },
+  "synthetic_action": {
+    "executed": false,
+    "empirical_observations_collected": false,
+    "operational_key_generated_after_verified_pre": false,
+    "protected_material_persisted": false,
+    "protected_material_logged": false
+  },
+  "post_attestation": {
+    "token_sha256": null,
+    "verified_token_evidence_sha256": null,
+    "claim_contract_evidence_sha256": null,
+    "output_manifest_sha256": null,
+    "verified": false,
+    "verification_actor": null,
+    "verification_timestamp": null
+  },
+  "two_phase_binding": {
+    "verified": false,
+    "binding_evidence_sha256": null,
+    "same_runtime_identity": null,
+    "distinct_tokens": null
+  },
+  "leak_surface_checks": {
+    "container_log_redirect_disabled": null,
+    "memory_monitoring_disabled": null,
+    "no_command_override": null,
+    "no_environment_override": null,
+    "no_additional_mounts": null,
+    "no_additional_capabilities": null,
+    "no_protected_material_observed": null,
+    "evidence_sha256": null
+  },
+  "retention_and_reverification": {
+    "retention_location": null,
+    "retained_object_manifest_sha256": null,
+    "retention_actor": null,
+    "retrieval_actor": null,
+    "retrieved_bytes_sha256_match": null,
+    "fresh_oidc_verification_performed": false,
+    "fresh_claim_verification_performed": false,
+    "fresh_two_phase_binding_verification_performed": false,
+    "independence_claimed": false,
+    "independence_basis": null
+  },
+  "adjudication": {
+    "stage_a_outcome": "NOT_EXECUTED",
+    "adjudicator": null,
+    "adjudication_timestamp": null,
+    "open_findings": [],
+    "accepted_for_p4": false,
+    "candidate_designation_authorized": false
+  },
+  "controlling_state_after_record": {
+    "p4": "OPEN_FAIL_CLOSED",
+    "freeze": "NOT_ESTABLISHED",
+    "authorization": "NOT_GRANTED",
+    "empirical_n": 0
+  }
+}

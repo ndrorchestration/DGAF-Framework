@@ -1,0 +1,36 @@
+name: Canonical Epoch 004 Primary Result
+
+on:
+  pull_request:
+    paths:
+      - 'docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_RESULT.json'
+      - 'docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_ADJUDICATION.md'
+      - 'scripts/validate_canonical_epoch_004_primary_result.py'
+      - 'experiments/pdmal_pilot/analysis.py'
+      - '.github/workflows/canonical-epoch-004-primary-result.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate exact locked result and claim ceiling
+        run: python scripts/validate_canonical_epoch_004_primary_result.py
+
+      - name: Prove documentation-only adjudication boundary
+        run: |
+          set -euo pipefail
+          test ! -e docs/experiment/solo_runs/CANONICAL_EPOCH_004_RUN_REQUEST.json
+          grep -q 'EVIDENCE_AGAINST_DIRECTIONAL_DGAF' docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_ADJUDICATION.md
+          grep -q 'High-Assurance remains `NOT AUTHORIZED / N=0`' docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_ADJUDICATION.md
+          echo 'CANONICAL_EPOCH_004_ADJUDICATION_BOUNDARY_PASS'

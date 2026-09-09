@@ -1,0 +1,35 @@
+name: Protected Main Required Context Policy
+
+on:
+  pull_request:
+    paths:
+      - 'docs/governance/PROTECTED_MAIN_REQUIRED_CONTEXT_POLICY_V1.json'
+      - 'scripts/validate_protected_main_required_context_policy.py'
+      - '.github/workflows/protected-main-required-context-policy.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-policy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - name: Validate protected-main remediation target
+        run: python scripts/validate_protected_main_required_context_policy.py
+      - name: Prove non-authorizing scope
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/governance/PROTECTED_MAIN_REQUIRED_CONTEXT_POLICY_V1.json').read_text())
+          assert d['settings_mutation_performed'] is False
+          assert d['scientific_n_increment'] == 0
+          assert d['claim_boundary']['repository_admin_configuration_changed'] is False
+          assert d['claim_boundary']['freeze_established'] is False
+          assert d['claim_boundary']['empirical_execution_authorized'] is False
+          print('PROTECTED_MAIN_POLICY_NONAUTHORIZING_BOUNDARY_PASS')
+          PY

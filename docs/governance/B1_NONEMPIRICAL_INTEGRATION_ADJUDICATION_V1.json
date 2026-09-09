@@ -1,0 +1,44 @@
+{
+  "record_type": "DGAF_B1_NONEMPIRICAL_INTEGRATION_ADJUDICATION",
+  "schema_version": 1,
+  "controller_issue": 445,
+  "profile_id": "DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1",
+  "implementation_merge_sha": "002f6c7037c7e72c31c39499cba97681da76a962",
+  "qualification_merge_sha": "f94be1b096565a7909ed79a298fe380f56a09b1b",
+  "qualification_path": "docs/qa/APOGEE_11Q_DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1_S081.json",
+  "qualification_blob_sha": "820b23e1b620d61228f73143533a755b845e8728",
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+  "adjudication": {
+    "exact_source_binding": "PASS",
+    "semantic_record_substrate": "PASS",
+    "deontic_forbidden_precedence": "PASS",
+    "source_reachable_forbidden_fixture": "PASS",
+    "demijoule_reprompt_limitation_preserved": "PASS",
+    "narrow_p10_forbidden_region_preserved": "PASS",
+    "b2_b3_proxy_behavior_absent": "PASS",
+    "empirical_endpoint_absent": "PASS",
+    "historical_pooling_absent": "PASS",
+    "claim_ceiling_preserved": "PASS"
+  },
+  "qualification_summary": {
+    "score": 107,
+    "max_score": 110,
+    "tier": "S-TIER",
+    "q11": 9,
+    "independent_verification": false,
+    "attestation_result": "GRANTED_WITH_EXPLICIT_SOURCE_LIMITATIONS"
+  },
+  "binding_limitations": [
+    "DemiJoule reprompt remains unreachable under the current common six-axis score implementation.",
+    "P-10 forbidden is source-reachable only under the demonstrated narrow KAPPA-derived confidence region.",
+    "Synthetic fixtures establish source-bound routing/safety behavior only, not real-workload safety or benefit.",
+    "Developer self-attestation is not independent verification."
+  ],
+  "disposition": "PASS_B1_STANDALONE_NONEMPIRICAL_LANE_COMPLETE",
+  "allowed_next_gate": "FUTURE_TRACK_C_NONEMPIRICAL_COMPOSITION_PROPOSAL_AFTER_B2_B3_ELIGIBILITY",
+  "scientific_n_increment": 0,
+  "b1_empirical_execution_authorized": false,
+  "track_c_empirical_execution_authorized": false,
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED_N0"
+}

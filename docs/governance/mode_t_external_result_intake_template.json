@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "record_class": "DGAF_MODE_T_EXTERNAL_RESULT_INTAKE_V1",
+  "record_state": "TEMPLATE",
+  "source_handoff": {
+    "repository": "ndrorchestration/DGAF-Framework",
+    "handoff_merge_sha": "8928a83e93cf9a53f0aeee89a05d57e37b3cc9c2",
+    "handoff_tree": "442fc81d30c311c6e2cd2f89db5276465982e1c5",
+    "handoff_manifest_path": "docs/governance/mode_t_external_acceptance_manifest.json",
+    "handoff_manifest_git_blob": "988f76aeb7313e6c4d149948c0450b682c82e0e1",
+    "review_base_sha": "62e01c37e6e452e0851aa875fa6c709f049be991",
+    "review_base_tree": "f5ac41ccddc785f3e3e52a3c91daeb4513bccc20"
+  },
+  "track": {
+    "issue": null,
+    "track": null,
+    "required_output": null
+  },
+  "producer": {
+    "name": null,
+    "organization": null,
+    "external_identifier": null,
+    "independence_claimed": false,
+    "independence_basis": null,
+    "attribution_evidence_refs": []
+  },
+  "submission": {
+    "submitted_at_utc": null,
+    "external_record_uri": null,
+    "external_record_sha256": null
+  },
+  "external_result": {
+    "execution_state": "NOT_EXECUTED",
+    "execution_phase": null,
+    "external_disposition": "UNKNOWN",
+    "claims": [],
+    "evidence_artifacts": []
+  },
+  "ingestion_state": {
+    "attribution_verified": false,
+    "artifacts_retrieved": false,
+    "cryptographic_reverification_status": "NOT_EXECUTED",
+    "governance_adjudication_status": "NOT_EXECUTED"
+  },
+  "scientific_state": {
+    "final_candidate_status": "NOT_DESIGNATED",
+    "final_candidate_tracker": 309,
+    "p4_status": "OPEN_FAIL_CLOSED",
+    "p7_final_binding": "OPEN",
+    "p8_status": "OPEN_FAIL_CLOSED",
+    "final_p9_status": "NOT_EXECUTED",
+    "freeze_status": "NOT_ESTABLISHED",
+    "authorization_status": "NOT_GRANTED",
+    "empirical_n": 0
+  },
+  "non_promotion": {
+    "envelope_is_acceptance_evidence": false,
+    "envelope_verifies_independence": false,
+    "envelope_verifies_artifact_authenticity": false,
+    "envelope_closes_p4": false,
+    "envelope_designates_final_candidate": false,
+    "envelope_grants_authorization": false,
+    "envelope_changes_empirical_n": false
+  }
+}

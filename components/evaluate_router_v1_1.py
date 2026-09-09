@@ -46,12 +46,12 @@ def sentinel_review(record: dict, routing: dict, hook_point: str) -> dict:
     if category == "adversarial" and policy != "apply_strong":
         risk = RISK_BLOCK
         notes.append("ADVERSARIAL input reached non-strong policy — hard block")
-    elif confidence < 0.20:
-        risk = RISK_WARN
-        notes.append("Confidence below floor 0.20 — low signal input")
     elif deontic.get("gate") == "forbidden":
         risk = RISK_BLOCK
         notes.append(f"P-10 deontic gate: {deontic['reason']}")
+    elif confidence < 0.20:
+        risk = RISK_WARN
+        notes.append("Confidence below floor 0.20 — low signal input")
     elif policy == "fallback_balanced" and category not in ["entropy", "kappa_heuristic"]:
         risk = RISK_WARN
         notes.append("Fallback reached for non-entropy category — review routing")

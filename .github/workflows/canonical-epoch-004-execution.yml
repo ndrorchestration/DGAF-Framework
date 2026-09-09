@@ -1,0 +1,272 @@
+name: Canonical Epoch 004 Solo Execution
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/canonical-epoch-004-execution.yml'
+      - 'experiments/pdmal_pilot/run_canonical_epoch_004.py'
+      - 'experiments/pdmal_pilot/canonical_epoch_004_adapter.py'
+      - 'experiments/pdmal_pilot/test_canonical_epoch_004_runner.py'
+      - 'docs/experiment/CANONICAL_EPOCH_004_COLLECTION_CONTRACT.json'
+      - 'docs/experiment/CANONICAL_SOLO_EMPIRICAL_EPOCH_004_PREREGISTRATION.json'
+  push:
+    branches:
+      - 'solo-canonical-epoch-004/run-*'
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: '3.12.0'
+  EPOCH_SEEDS: '50'
+  EPOCH_SEED_START: '20261001'
+
+jobs:
+  validate-runner-only:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install hash-locked pilot dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run Epoch 004 authorization negative controls
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python -m pytest experiments/pdmal_pilot/test_canonical_epoch_004_runner.py -q
+
+      - name: Validate upstream preregistration, preflight, and collection contract
+        run: |
+          set -euo pipefail
+          python scripts/validate_canonical_epoch_004_preregistration.py
+          python scripts/validate_canonical_epoch_004_treatment_input_preflight.py
+          python scripts/validate_canonical_epoch_004_collection_contract.py
+
+      - name: Prove PR validation is non-empirical
+        run: |
+          set -euo pipefail
+          test ! -e docs/experiment/solo_runs/CANONICAL_EPOCH_004_RUN_REQUEST.json
+          test "${PDMAL_SOLO_CANONICAL_EPOCH_004_AUTHORIZED:-}" != '1'
+          test "${PDMAL_MODE:-}" != 'solo_canonical_epoch_004'
+          echo 'CANONICAL_EPOCH_004_RUNNER_PR_VALIDATION_NONEMPIRICAL_PASS'
+
+  execute-blinded-epoch:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact authorization commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify exact one-file run authorization commit
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA")
+          if [[ "${#changed[@]}" -ne 1 || "${changed[0]}" != "docs/experiment/solo_runs/CANONICAL_EPOCH_004_RUN_REQUEST.json" ]]; then
+            printf 'Epoch 004 execution prohibited: authorization commit must change only CANONICAL_EPOCH_004_RUN_REQUEST.json; changed=%s\n' "${changed[*]:-none}" >&2
+            exit 1
+          fi
+          PARENT_SHA="$(git rev-parse HEAD^)"
+          export PARENT_SHA
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          d = json.loads(Path('docs/experiment/solo_runs/CANONICAL_EPOCH_004_RUN_REQUEST.json').read_text(encoding='utf-8'))
+          expected = {
+              'record_type': 'DGAF_CANONICAL_SOLO_EMPIRICAL_RUN_REQUEST',
+              'schema_version': 1,
+              'epoch_id': 'PDMAL-SOLO-CANONICAL-EPOCH-004',
+              'authorized_runner_parent_sha': os.environ['PARENT_SHA'],
+              'preregistration_merge_sha': 'ae854edf565c903bf799f243841799819333d920',
+              'treatment_input_preflight_merge_sha': '15c6621ccab0c28e2938c302d23975ba037bd3ee',
+              'collection_contract_merge_sha': 'db8595272a9782786e35b94eaacced6e73d9b649',
+              'seed_start': 20261001,
+              'seeds': 50,
+              'expected_observations': 9000,
+              'analysis_blob_sha': 'a269ed226b1d261663994fc3ef0e8a1a96da6cd3',
+              'analysis_config_sha256': '6cab3f1ed6d4e040141598d293628dbab52442234c519b3e231b76a2896f09a8',
+              'validation_track': 'SOLO_DEVELOPER',
+              'limitations_acknowledged': True,
+              'authorize_empirical_collection': True,
+              'authorize_unblinding': False,
+              'historical_pooling_allowed': False,
+          }
+          if d != expected:
+              raise SystemExit('Epoch 004 execution prohibited: run request mismatch')
+          print('CANONICAL_EPOCH_004_ONE_FILE_RUN_REQUEST_PASS')
+          PY
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install hash-locked pilot dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run exact treatment-input preflight before key generation
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python scripts/validate_canonical_epoch_004_treatment_input_preflight.py
+
+      - name: Generate fresh recoverable Epoch 004 blinding key
+        shell: bash
+        run: |
+          set -euo pipefail
+          KEY="$(python - <<'PY'
+          import secrets
+          print(secrets.token_hex(32))
+          PY
+          )"
+          echo "::add-mask::$KEY"
+          printf '%s\n' "$KEY" > "$RUNNER_TEMP/canonical_epoch_004_blinding_key.txt"
+          chmod 600 "$RUNNER_TEMP/canonical_epoch_004_blinding_key.txt"
+          echo "PDMAL_BLINDING_KEY=$KEY" >> "$GITHUB_ENV"
+          echo 'EPOCH_004_CUSTODY_BOUNDARY: same-system recoverable GitHub Actions artifact; not independent custody'
+
+      - name: Execute fresh blinded 50-seed canonical Epoch 004
+        env:
+          PDMAL_MODE: solo_canonical_epoch_004
+          PDMAL_PROTOCOL_FROZEN: '1'
+          PDMAL_SOLO_CANONICAL_EPOCH_004_AUTHORIZED: '1'
+          PDMAL_SOLO_LIMITATIONS_ACKNOWLEDGED: '1'
+          PDMAL_UNBLINDING_AUTHORIZED: '0'
+          PDMAL_FROZEN_COMMIT_SHA: ${{ github.sha }}
+          PDMAL_ARCHIVE_ROOT: ${{ runner.temp }}/canonical-epoch-004-archive
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: |
+          set -euo pipefail
+          test "${PDMAL_PILOT_AUTHORIZED:-}" != '1'
+          python experiments/pdmal_pilot/run_canonical_epoch_004.py \
+            --seeds "$EPOCH_SEEDS" \
+            --seed-start "$EPOCH_SEED_START" \
+            --output-dir "$RUNNER_TEMP/canonical-epoch-004-output"
+
+      - name: Lock and structurally verify dataset without outcome inspection
+        env:
+          PDMAL_FROZEN_COMMIT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ['RUNNER_TEMP']) / 'canonical-epoch-004-output'
+          seeds = sorted(root.glob('canonical_epoch_004_seed_*.json'))
+          expected_names = {f'canonical_epoch_004_seed_{20261001+i}.json' for i in range(50)}
+          if len(seeds) != 50 or {p.name for p in seeds} != expected_names:
+              raise SystemExit('Epoch 004 dataset seed identity mismatch')
+
+          total_records = 0
+          seed_digests = {}
+          environment_fingerprints = set()
+          for p in seeds:
+              raw = p.read_bytes()
+              digest = hashlib.sha256(raw).hexdigest()
+              sidecar = p.with_suffix(p.suffix + '.sha256')
+              if not sidecar.is_file() or not sidecar.read_text(encoding='utf-8').startswith(digest + '  '):
+                  raise SystemExit(f'sidecar mismatch for {p.name}')
+              doc = json.loads(raw)
+              records = doc.get('records')
+              if not isinstance(records, list) or len(records) != 180:
+                  raise SystemExit(f'expected 180 records in {p.name}')
+              if doc.get('frozen_commit_sha') != os.environ['PDMAL_FROZEN_COMMIT_SHA']:
+                  raise SystemExit(f'frozen SHA mismatch in {p.name}')
+              structural = set()
+              blinded_counts = {}
+              for record in records:
+                  key = (record.get('blinded_condition_id'), record.get('topology'), record.get('failure_count'))
+                  if key in structural:
+                      raise SystemExit(f'duplicate blinded matrix cell in {p.name}: {key!r}')
+                  structural.add(key)
+                  blind = record.get('blinded_condition_id')
+                  blinded_counts[blind] = blinded_counts.get(blind, 0) + 1
+                  environment_fingerprints.add(record.get('environment_fingerprint'))
+              if len(structural) != 180 or sorted(blinded_counts.values()) != [45, 45, 45, 45]:
+                  raise SystemExit(f'blinded matrix structure mismatch in {p.name}')
+              total_records += 180
+              seed_digests[p.name] = digest
+          if total_records != 9000:
+              raise SystemExit(f'expected 9000 records, found {total_records}')
+          if len(environment_fingerprints) != 1 or None in environment_fingerprints:
+              raise SystemExit('environment fingerprint mismatch')
+
+          summary = json.loads((root / 'canonical_epoch_004_summary.json').read_text(encoding='utf-8'))
+          required = {
+              'validation_track': 'SOLO_DEVELOPER',
+              'independent_verification_status': 'NOT_ESTABLISHED_BY_RUNNER',
+              'frozen_commit_sha': os.environ['PDMAL_FROZEN_COMMIT_SHA'],
+              'experiment_id': 'PDMAL-SOLO-CANONICAL-EPOCH-004',
+              'profile_id': 'DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1',
+              'qualification_sha256': '4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78',
+              'qualification_verification_class': 'DEVELOPER_SELF_ATTESTED_NONINDEPENDENT',
+              'canonical_p30_binding': 'EXTERNAL_P11_11Q_QUALIFICATION_VERIFICATION',
+              'seed_start': 20261001,
+              'total_seeds': 50,
+              'trials_per_seed': 180,
+              'total_trials': 9000,
+              'outcomes_inspected_by_collection_workflow': False,
+              'unblinding_authorized': False,
+              'historical_pooling_allowed': False,
+          }
+          for key, value in required.items():
+              if summary.get(key) != value:
+                  raise SystemExit(f'summary mismatch for {key}')
+
+          manifest = {
+              'record_type': 'DGAF_CANONICAL_SOLO_EPOCH_004_DATASET_LOCK',
+              'schema_version': 1,
+              'source_commit_sha': os.environ['PDMAL_FROZEN_COMMIT_SHA'],
+              'github_run_id': os.environ['GITHUB_RUN_ID'],
+              'experiment_id': 'PDMAL-SOLO-CANONICAL-EPOCH-004',
+              'validation_track': 'SOLO_DEVELOPER',
+              'independent_verification_status': 'NOT_ESTABLISHED_BY_RUNNER',
+              'blinding_key_custody': 'SAME_SYSTEM_GITHUB_ACTIONS_ARTIFACT_NONINDEPENDENT',
+              'seed_start': 20261001,
+              'seed_count': 50,
+              'empirical_observations': 9000,
+              'outcomes_inspected_by_collection_workflow': False,
+              'unblinding_authorized': False,
+              'historical_pooling_allowed': False,
+              'dataset_status': 'LOCKED_BLINDED',
+              'environment_fingerprint': next(iter(environment_fingerprints)),
+              'seed_artifact_sha256': seed_digests,
+          }
+          out = Path(os.environ['RUNNER_TEMP']) / 'CANONICAL_EPOCH_004_DATASET_LOCK.json'
+          out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print('CANONICAL_EPOCH_004_DATASET_LOCK_PASS: 50 seeds / 9000 blinded observations; outcomes not inspected')
+          PY
+
+      - name: Upload locked blinded Epoch 004 dataset
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-epoch-004-dataset-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/canonical-epoch-004-output/
+            ${{ runner.temp }}/canonical-epoch-004-archive/
+            ${{ runner.temp }}/CANONICAL_EPOCH_004_DATASET_LOCK.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload recoverable Epoch 004 blinding key separately
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-epoch-004-blinding-key-${{ github.sha }}
+          path: ${{ runner.temp }}/canonical_epoch_004_blinding_key.txt
+          if-no-files-found: error
+          retention-days: 90

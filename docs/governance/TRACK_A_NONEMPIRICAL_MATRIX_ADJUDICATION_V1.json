@@ -1,0 +1,100 @@
+{
+  "record_type": "TRACK_A_NONEMPIRICAL_MATRIX_ADJUDICATION",
+  "schema_version": 1,
+  "controller_issue": 408,
+  "profile_id": "PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1",
+  "algorithm_id": "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1",
+  "adjudication_result": "PASS_ADVANCE_TO_PROSPECTIVE_EMPIRICAL_PROTOCOL_PROPOSAL",
+  "verification_class": "DEVELOPER_ADJUDICATED_NONINDEPENDENT",
+  "independent_verification": false,
+  "empirical_evidence": false,
+  "scientific_n_increment": 0,
+  "source_bindings": {
+    "architecture_merge_sha": "5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+    "profile_merge_sha": "b1e333ee9f9e0a4da78788e5ff019603296888eb",
+    "qualification_merge_sha": "647f612a2412818dca0d632229f352e857e1187e",
+    "profile_blob_sha": "339d9ada4978ffd0c1eee67c310323f1e7fdc06a",
+    "qualification_blob_sha": "217028dc03aad6eb6a1a13cb6e32418782c43b08",
+    "probe_blob_sha": "5b703273f26bde700fff03269c1734d89b2b347d",
+    "probe_test_blob_sha": "e94f8cbb4cef3ebae6bee5e2220f1ff0c7cc4856",
+    "probe_workflow_blob_sha": "fbad06eec3ca6f4c7edc912e3f80f0c3b31e0404",
+    "exact_profile_head": "9340081997bcc59e831e8b47312efe344b6bc4dd",
+    "exact_profile_head_workflows": "20/20",
+    "workflow_run_id": 34189626294,
+    "retained_artifact_id": 10041800252,
+    "retained_archive_digest": "sha256:629ee0be7a48606685f2452800ab4e482611fb45f7268d881e934488e1c1c1d5",
+    "artifact_payload_path": "PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1_PROBE.json",
+    "artifact_payload_sha256": "e51497d150530d983f94002d23a21608be9135ca300d29a47b126ed184fdc489"
+  },
+  "structural_inspection": {
+    "expected_cells": 90,
+    "completed_cells": 90,
+    "unique_matrix_cells": 90,
+    "seeds": [
+      20261201,
+      20261202
+    ],
+    "topologies": [
+      "ring",
+      "pdmal",
+      "random_regular",
+      "small_world",
+      "complete"
+    ],
+    "failure_counts": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10
+    ],
+    "distinct_topology_fingerprints": 7,
+    "topology_fingerprint_counts": {
+      "ring": 1,
+      "pdmal": 1,
+      "random_regular": 2,
+      "small_world": 2,
+      "complete": 1
+    },
+    "recovery_hash_mismatches": 0,
+    "no_failure_phase_hash_mismatches": 0,
+    "positive_failure_cells_with_changed_active_phase_hash": 80,
+    "positive_failure_cells_total": 80,
+    "forbidden_endpoint_tokens_present": false
+  },
+  "interpretation": [
+    "The retained artifact is structurally complete and byte-reproducible from the bound profile sources.",
+    "The failure-active phase changes the update hash in every positive-failure cell, and recovery restores the pre-failure update identity.",
+    "Seven topology fingerprints are expected because random_regular and small_world are seed-specific while ring, pdmal, and complete are fixed."
+  ],
+  "claim_ceiling": "STRUCTURAL_MATRIX_COMPLETE_NO_TOPOLOGY_SUPERIORITY_NO_EMPIRICAL_ROBUSTNESS_NO_DGAF_EFFICACY",
+  "limitations": [
+    "The two seeds are diagnostic engineering fixtures, not a scientific sample.",
+    "Hashes prove deterministic structural identity and phase sensitivity, not outcome quality or robustness.",
+    "The developer/operator context performed the profile, qualification, and adjudication; this is not independent verification.",
+    "The neutral Track A reference algorithm is not the integrated DGAF treatment."
+  ],
+  "next_gate": {
+    "required": "TRACK_A_PROSPECTIVE_EMPIRICAL_PROTOCOL_PROPOSAL",
+    "required_elements": [
+      "research_question_and_directional_hypothesis",
+      "named_comparators_and_treatment_identity",
+      "primary_endpoint_and_estimand",
+      "fixed_topology_failure_matrix",
+      "fresh_seed_rule_and_collision_check",
+      "sample_size_rationale_and_qc_rule",
+      "locked_analysis_and_multiplicity_policy",
+      "blinding_custody_and_unblinding_sequence",
+      "separate_runner_implementation",
+      "separate_exact_commit_collection_authorization"
+    ],
+    "empirical_execution": "NOT_AUTHORIZED",
+    "freeze_status": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED",
+    "high_assurance_empirical_n": 0
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "record_type": "DGAF_PDMAL_V0_7_6_PILOT_BLOCKER_MANIFEST",
+  "schema_version": 2,
+  "checkpoint": {
+    "repository": "ndrorchestration/DGAF-Framework",
+    "high_assurance_checkpoint_main_sha": "d9919fce77588786f36ffa455baa4f2233fad9e7",
+    "date": "2026-09-07"
+  },
+  "high_assurance_controlling_state": {
+    "candidate": "NOT_DESIGNATED",
+    "freeze": "NOT_ESTABLISHED",
+    "pilot_authorization": "NOT_GRANTED",
+    "empirical_n": 0
+  },
+  "solo_controlling_state": {
+    "track": "AVAILABLE_NOT_EXECUTED",
+    "freeze": "NOT_ESTABLISHED",
+    "self_authorization": "NOT_GRANTED",
+    "limitations_acknowledged": false,
+    "empirical_n": 0
+  },
+  "testability": {
+    "v0_7_6_contract_rehearsal": "AVAILABLE_NON_EMPIRICAL",
+    "merged_main_live_regression": "PASS_AT_CHECKPOINT",
+    "solo_pilot_execution": "SEPARATELY_GOVERNED_BY_SOLO_PILOT_TRACK",
+    "high_assurance_empirical_pilot_execution": "PROHIBITED"
+  },
+  "blockers": [
+    {
+      "issue": 277,
+      "class": "repository_administration",
+      "status": "OPEN",
+      "repo_preparation": "HANDOFF_READY",
+      "required_external_fact": "Protected main is configured and read back with the intended pull-request and merge-critical required-check enforcement, no unintended bypass, and negative enforcement evidence where practical.",
+      "closure_authority": "repository_administrator",
+      "blocks": ["high_assurance_pilot_authorization"],
+      "satisfied": false,
+      "blocks_solo_pilot": false
+    },
+    {
+      "issue": 320,
+      "class": "independent_security_review",
+      "status": "OPEN",
+      "repo_preparation": "FROZEN_REVIEW_PACKAGE_READY",
+      "required_external_fact": "An organizationally independent reviewer returns an attributable, exact-identity security review of the frozen Google OIDC/Confidential Space verifier package and findings are resolved or explicitly accepted.",
+      "closure_authority": "independent_security_reviewer",
+      "blocks": ["mode_t_acceptance", "final_candidate_designation", "high_assurance_pilot_authorization"],
+      "satisfied": false,
+      "blocks_solo_pilot": false
+    },
+    {
+      "issue": 310,
+      "class": "real_confidential_space_admission",
+      "status": "OPEN",
+      "repo_preparation": "STAGE_A_PROCEDURE_AND_INERT_TEMPLATES_READY",
+      "required_external_fact": "A real authenticated Google Confidential Space qualification run produces PRE/POST attestation and manifest evidence satisfying the admission contract, followed by independent retrieval and re-verification.",
+      "closure_authority": "authenticated_cloud_operator_plus_independent_verifier",
+      "blocks": ["mode_t_acceptance", "final_candidate_designation", "high_assurance_pilot_authorization"],
+      "satisfied": false,
+      "blocks_solo_pilot": false
+    },
+    {
+      "issue": 316,
+      "class": "production_authority_and_retention",
+      "status": "OPEN",
+      "repo_preparation": "ENGINEERING_POLICY_BINDING_AND_ACCEPTANCE_TEMPLATE_READY",
+      "required_external_fact": "Independently retained production R/A/C and admission-policy evidence, frozen signer and TrustedRoot/TUF authority, production capability consumption before entropy generation, and fresh cryptographic retrieval/re-verification are established.",
+      "closure_authority": "independent_retention_and_authorization_authority",
+      "blocks": ["mode_t_acceptance", "final_candidate_designation", "high_assurance_pilot_authorization"],
+      "satisfied": false,
+      "blocks_solo_pilot": false
+    },
+    {
+      "issue": 295,
+      "class": "protected_continuity_acceptance",
+      "status": "OPEN",
+      "repo_preparation": "STRICT_CHAIN_ENGINEERING_AND_STRUCTURAL_BINDING_READY",
+      "required_external_fact": "The final protected ciphertext and expected plaintext commitment are bound to the accepted candidate/helper/tool/run identity, retained through the accepted transparency channel, independently retrieved/rehashed, and independently adjudicated.",
+      "closure_authority": "independent_continuity_reviewer",
+      "blocks": ["p4_acceptance", "high_assurance_pilot_authorization"],
+      "satisfied": false,
+      "blocks_solo_pilot": false
+    },
+    {
+      "issue": 309,
+      "class": "final_candidate_designation",
+      "status": "OPEN",
+      "repo_preparation": "DESIGNATION_TEMPLATE_AND_CURRENT_APPARATUS_REHEARSAL_READY",
+      "required_external_fact": "All candidate-relevant external P4 prerequisites are accepted, then one exact v0.7.6 candidate commit/tree is explicitly designated under the governance contract.",
+      "closure_authority": "governance_designation_actor_after_prerequisites",
+      "blocks": ["high_assurance_freeze", "high_assurance_pilot_authorization"],
+      "satisfied": false,
+      "blocks_solo_pilot": false
+    }
+  ],
+  "high_assurance_required_sequence": [
+    "close_or_accept_applicable_external_and_admin_blockers",
+    "designate_exact_final_candidate_under_issue_309",
+    "classify_or_regenerate_candidate_dependent_evidence",
+    "complete_final_candidate_bound_p4_and_issue_295_acceptance",
+    "complete_p7_final_binding",
+    "construct_and_independently_verify_immutable_p8_freeze",
+    "complete_final_independent_p9",
+    "grant_separate_explicit_high_assurance_pilot_authorization",
+    "execute_high_assurance_blinded_pilot",
+    "perform_qc_and_sample_size_decision",
+    "execute_final_experiment",
+    "lock_dataset",
+    "perform_authorized_unblinding_and_analysis"
+  ],
+  "solo_required_sequence": [
+    "select_exact_clean_commit",
+    "self_freeze_exact_commit_before_outcome_observation",
+    "configure_durable_archive_and_protected_blinding_key",
+    "acknowledge_solo_limitations",
+    "grant_explicit_solo_self_authorization",
+    "execute_blinded_solo_pilot",
+    "retain_and_hash_artifacts",
+    "report_solo_empirical_n_and_results_with_solo_claim_ceiling"
+  ],
+  "non_effects_at_definition": {
+    "high_assurance_final_candidate_designated": false,
+    "high_assurance_p4_closed": false,
+    "high_assurance_freeze_established": false,
+    "high_assurance_pilot_authorized": false,
+    "high_assurance_empirical_execution_performed": false,
+    "high_assurance_empirical_n": 0,
+    "solo_empirical_execution_performed": false,
+    "solo_empirical_n": 0
+  }
+}

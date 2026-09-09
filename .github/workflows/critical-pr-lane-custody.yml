@@ -1,0 +1,48 @@
+name: Critical PR Lane Custody
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-lane-custody:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - name: Fetch protected base registry authority
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git fetch origin "$BASE_REF" --depth=1
+      - name: Exercise custody negative controls against base registry
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: >-
+          python scripts/validate_critical_pr_lane_custody.py
+          --self-test
+          --registry-ref "origin/$BASE_REF"
+      - name: Validate registered PR lane exact payload and live head
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_REF: ${{ github.base_ref }}
+        run: >-
+          python scripts/validate_critical_pr_lane_custody.py
+          --head-ref "$HEAD_REF"
+          --head-sha "$HEAD_SHA"
+          --base-ref "$BASE_REF"
+          --registry-ref "origin/$BASE_REF"
+      - name: Prove base-registry custody remains non-authorizing
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: >-
+          python scripts/validate_critical_pr_lane_custody.py
+          --assert-nonauthorizing
+          --registry-ref "origin/$BASE_REF"

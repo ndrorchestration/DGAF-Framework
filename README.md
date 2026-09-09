@@ -1,97 +1,138 @@
 # DGAF-Framework
 
-**Dynamic Governance Agentic Formation (DGAF)** — a research and implementation repository for agent orchestration, formation governance, evaluation, provenance, and governance controls.
+**Dynamic Governance Agentic Formation (DGAF)** is an experimental framework for governed multi-agent AI systems. It treats **capability, evidence, verification, authority, and permission to act as separate machine-relevant states** rather than assuming that one implies another.
 
-> **Epistemic status:** **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.** Engineering verification is not empirical efficacy evidence. Historical evidence remains scoped to the exact candidate, workflow, deployment, artifact, and predicates that produced it.
+In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
-## Current identity boundary — 2026-09-05
+> **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
+> **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
+> **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
+> **Successor Track A:** issue #523 open for recoverable solo-custody redesign · replacement empirical collection **NOT AUTHORIZED**  
+> **Canonical DGAF efficacy:** NOT ESTABLISHED
 
-This documentation hygiene reconciliation uses immutable source boundary `a3bafa6fca8599df479a685828f5fdddb6bae589` (PR #286 merge) rather than calling any embedded SHA “current main.” The documentation branch that updates this file is necessarily a later control-plane descendant and does not replace the designated runtime candidate.
+## What problem DGAF is trying to solve
 
-| Identity | Role | Status |
+Most agent frameworks focus on what an agent can do: reason, call tools, hand work to another agent, retain state, or complete a workflow.
+
+DGAF focuses on an additional question:
+
+> **Given the evidence and authority that exist right now, what is this system actually entitled to claim, authorize, and execute?**
+
+DGAF explores this through:
+
+- **Governed orchestration** — specialized agents operate under explicit roles, boundaries, and escalation rules.
+- **Evidence-aware authorization** — technical capability does not automatically grant permission.
+- **Provenance** — outputs, decisions, evidence, and state are tied to the identities that produced them.
+- **Evaluation integrity** — implementation, testing, verification, independent verification, and empirical demonstration remain distinct.
+- **Fail-closed controls** — missing or ambiguous prerequisites block promotion rather than silently becoming approval.
+- **Experimental reproducibility** — prospective experiments bind protocols, code, analysis, artifacts, custody, and authorization to exact identities.
+
+## The core model
+
+A simplified DGAF control loop is:
+
+```text
+Evidence + provenance
+        ↓
+Epistemic / verification state
+        ↓
+Claim and action authority
+        ↓
+Governed agent formation
+        ↓
+Execution
+        ↓
+New evidence + trace
+        └────────────→ updated governance state
+```
+
+The intended invariant is that **capability, evidence, verification, and authorization cannot silently substitute for one another**.
+
+## Current research program
+
+DGAF separates prospective evaluation by workload instead of treating one experiment as proof of the entire framework.
+
+| Track | Plain-English purpose | Current boundary |
 |---|---|---|
-| `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1` | Corrected apparatus provenance anchor | Historical canonical anchor |
-| `643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d` | Immutable P-35 validation boundary | Historical validated boundary |
-| `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` | Designated executable runtime candidate | PRE-FREEZE / not frozen |
-| `586c00d6dedb589e52108279f9759be3c4f927e1` | Runtime candidate tree | Exact candidate tree |
-| `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA` | Vercel production deployment for `7c1cc4bb…` | READY / exact Git source verified at its scoped evidence boundary |
-| `a3bafa6fca8599df479a685828f5fdddb6bae589` | Documentation-hygiene reconciliation source boundary | Control-plane lineage; not the scientific candidate |
+| **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
+| **A — successor** | Replacement prospective topology robustness | Issue #523 governs fresh epoch/custody design; recovery-tested solo custody required before collection; empirical collection not authorized |
+| **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
+| **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
+| **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
+| **C** | Integrated DGAF composition | Non-empirical composition proposal merged; empirical execution NOT AUTHORIZED |
 
-Later documentation, evaluator, or control-plane descendants do not automatically replace the designated runtime candidate or inherit its runtime evidence.
+Epoch 001's prospective panel was fixed at **50 seeds × 5 topologies × 9 failure counts = 2,250 observations** and was collected under the governed blinded path. The accepted scientific unit count is **50 paired inferential seed units / 2,250 blinded raw observations**.
 
-## Candidate-scoped runtime evidence
+The collection remains valid evidence that the blinded panel was executed and retained. It cannot produce its preregistered primary result because the retained encrypted topology mapping cannot be recovered: the matching private key was not durably escrowed in the solo operating model. Regenerating a different key cannot decrypt the retained ciphertext, and guessing or reconstructing the hidden assignment is prohibited.
 
-P2 and P6a are **CLOSED / VERIFIED** only for candidate `7c1cc4bb…`, tree `586c00d6…`, deployment `dpl_8Msuf…`, and the exact predicates executed on 2026-09-03.
+## Successor Track A custody design
 
-### P2 — CLOSED / VERIFIED
+Issue #523 controls the replacement path. The successor must use a new epoch identity, fresh seeds and fresh blinding, and a recoverable solo-custody design without pretending that solo custody is independent custody.
 
-- run: `33730195621`
-- artifact: `9883521704`
-- digest: `sha256:5ca5bd3496c31f569a87338c1a0a3d93200e46106a5efda19d8269022adf696d`
-- scope: five authenticated POST cases against `/api/orchestrate`
-- 2026-09-05 retrieval: run and unexpired candidate-bound artifact successfully resolved
+The preferred minimum pattern is:
 
-### P6a — CLOSED / VERIFIED
+```text
+local keypair
+→ encrypted PKCS#8 private key
+→ at least two durable encrypted user-controlled recovery copies
+→ precollection recovery drill PASS
+→ public certificate supplied to collection
+→ same-system / non-independent custody receipt
+```
 
-- run: `33728695806`
-- artifact: `9882965299`
-- digest: `sha256:527145195518f7ed147507e02b3ed7cdc4bd9be0c547645dedd094a4f4d3340f`
-- scope: four authenticated CORS POST/preflight cases
-- 2026-09-05 retrieval: run and unexpired candidate-bound artifact successfully resolved
+No private key, passphrase, or recoverable secret belongs in GitHub, Notion, chat, workflow inputs, logs, or committed files.
 
-Fresh retrieval is not a new runtime execution and does not establish later-main equivalence, general application health, or efficacy.
+Replacement empirical collection remains **NOT AUTHORIZED** until that custody/recovery contract and the successor prospective gate chain are established.
 
-## Gate state
+## What is established — and what is not
 
-| Gate / boundary | Current state |
+The repository contains substantial engineering evidence: governance logic, provenance controls, deterministic validators, CI, negative controls, source binding, custody/security machinery, experimental tooling, runtime evidence, vocabulary governance, and blinded-data infrastructure.
+
+Track A Epoch 001 also contains genuine prospective blinded collection evidence. That evidence is **not a primary efficacy result** and is now explicitly **unanalyzable** because its protected mapping is cryptographically unrecoverable.
+
+A separate Solo research track produced bounded historical empirical evidence. Epoch 004 completed 50 seeds / 9,000 observations and produced negative evidence for its exact executed treatment. A later source audit found that canonical treatment fidelity was not established, so that result is preserved without promoting it into a claim about canonical DGAF efficacy.
+
+DGAF is **not** currently presented as:
+
+- empirically validated as a complete framework;
+- independently validated;
+- production-certified;
+- High-Assurance authorized;
+- supported by a completed Track A primary analysis;
+- having established canonical DGAF efficacy.
+
+## Internal terms in plain English
+
+| Internal term | Public / industry-neutral translation |
 |---|---|
-| P-35 implementation | VALIDATED at immutable boundary `643dc77a…` |
-| P1 candidate integrity | CLOSED / VERIFIED |
-| P2 runtime contract | CLOSED / VERIFIED at exact runtime scope |
-| P3 artifact contract | CLOSED / VERIFIED — run `33939955138` |
-| P4 security/blinding | OPEN / PROCEDURE REVISED / OPERATION NOT EXECUTED; no H/I/T custody mode instantiated or verified |
-| P5 provenance/reproducibility | CLOSED / VERIFIED within its bounded provenance/reproducibility contract |
-| P6 evidence custody | CLOSED / VERIFIED within the defined archive/retrieval/hash contract |
-| P6a CORS | CLOSED / VERIFIED at exact runtime scope |
-| P7 scientific target | ADOPTED / FINAL BINDING OPEN |
-| P8 analysis lock / freeze readiness | OPEN / FAIL-CLOSED |
-| P9 independent verification | NOT EXECUTED / OPEN |
-| Freeze | NOT ESTABLISHED |
-| Pilot authorization | NOT GRANTED |
-| Empirical N | 0 |
+| **Formation** | The set and structure of agents selected for a governed task |
+| **TGL / P-35** | Per-turn governance and state-transition kernel |
+| **P-* gate** | Project-specific evidence, policy, or authorization checkpoint |
+| **PDMAL** | Experimental multi-agent topology / robustness substrate |
+| **Freeze** | Immutable binding of the candidate and protected experimental inputs; **not execution authorization** |
+| **Closure** | Proof that required pre-authorization prerequisites are complete; **not execution authorization** |
+| **Verification classification** | Records what kind of verifier produced the evidence and whether it is independent |
+| **Dataset lock** | Immutable receipt binding an accepted collected dataset and retained artifact identities |
+| **Unblinding authorization** | Permission to release/decrypt protected mapping material; **not proof that the necessary secret remains recoverable** |
+| **Fail closed** | Missing, stale, malformed, ambiguous, or unrecoverable required evidence blocks progress |
 
-P5 closure is provenance/reproducibility evidence, not model or scientific efficacy evidence.
+See **[`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)** for the full public terminology map and vocabulary governance.
 
-### P4 custody interpretation
+## Where to start
 
-PR #286 generalized P4 from a mandatory second-human model to **effective control separation**. Three custody modes are admissible in principle:
+- **Live project/evidence state:** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
+- **Plain-English terminology:** [`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)
+- **Technical architecture:** [`README.technical.md`](README.technical.md)
+- **Governance model:** [`README.governance.md`](README.governance.md)
+- **Historical records:** [`docs/HISTORICAL_RECORDS_INDEX.md`](docs/HISTORICAL_RECORDS_INDEX.md)
 
-- `H` — genuinely distinct human custody;
-- `I` — institutional/third-party custody outside the analyst’s unilateral control;
-- `T` — independently enforced technical custody with no analyst-controlled owner/admin/recovery/export/break-glass path capable of defeating the blind.
+## Research boundary
 
-No mode has been instantiated. Issue #285 is completed as the governance-architecture correction; Issue #255 is superseded historical context. Issue #287 is the active design/threat-model lane for a possible zero-human Mode T lifecycle. GitHub Actions + timelock/drand is **not** yet accepted as sufficient P4 custody merely because the design issue exists.
+Results remain scoped to the exact system identities, treatment definitions, protocols, evidence classes, and custody conditions that produced them. A green test, merged PR, internal qualification score, mathematical property, authorization record, completed collection, or historical result does not automatically establish current empirical efficacy.
 
-## Evaluation integrity
+Epoch 001 demonstrates an additional governance lesson: **a successful blinded collection is not sufficient if the protected mapping required for the preregistered analysis cannot later be recovered.** The replacement design therefore treats precollection recovery testing as a prerequisite rather than an operational afterthought.
 
-Issue #32 Task 4 (`audit_hallucination_rate`) was hardened by PR #269, merged as `17fbe054f0b94f68f8b379ad1c8b92f0fab16da9`. The evaluator now fails closed unless provenance-controlled ground truth and independently generated corresponding outputs are supplied, and it performs deterministic six-field comparison rather than synthesizing a benchmark-derived score.
+---
 
-That change verifies evaluator mechanics only. No Task-4 model-performance result currently exists; the required fixture/output corpus remains outstanding.
-
-## Engineering quality and merge enforcement
-
-Issue #270 is **CLOSED / COMPLETED**. PR #276 restored a clean current-lineage flake8/Black/isort/mypy baseline and converted those quality checks to fail-closed workflow gates; the Python matrix and deterministic negative controls subsequently passed at the recorded exact boundaries.
-
-A separate repository-administration gap remains: Issue #277 tracks branch-protection/ruleset enforcement. The Python quality workflow is fail-closed when it runs, but the available configuration readback did not establish that its matrix is required before every merge. That distinction must not be collapsed into either “quality is still advisory” or “branch protection is complete.”
-
-## Evidence rules
-
-Evidence does not transfer across candidate SHA, deployment identity, workflow identity, artifact identity, or materially different control state without an explicit provenance relationship. A documentation commit does not create a new experimental candidate. Deployment readiness does not establish runtime behavior. CI and synthetic dry runs are engineering controls, not empirical efficacy evidence.
-
-Historical documents may contain statements that were “current” at their own closure boundary. Those statements remain historical unless explicitly promoted by a later current-state record.
-
-## Current closure sequence
-
-`verified real P4-A custody mode → exact P7 final binding → P8 immutable freeze + independent freeze verification → final independent P9 → explicit authorization → blinded pilot`
-
-No documentation or CI action in this sequence grants experimental authorization or advances empirical N.
+Dynamic Governance Agentic Formation  
+Governed multi-agent orchestration · provenance · evaluation · authorization · experimental integrity

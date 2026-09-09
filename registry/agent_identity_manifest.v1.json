@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "status": "conflict-register-not-authority-resolution",
   "authority_policy": {
     "sovereign_identity_source": "docs/agents/AGENT_ROSTER.md",
@@ -9,6 +9,8 @@
     "rule": "Observed identities are preserved without silently promoting a conflicting designation to sovereign authority."
   },
   "source_snapshot": "8eaeab5a198775a8dea43ce0396affb481e9f812",
+  "scientific_state_effect": "none",
+  "scientific_state_authority": "docs/CURRENT_STATE.md",
   "allowed_seat_status": ["canonical", "variant", "conceptual", "historical", "state", "stub", "conflicted"],
   "allowed_activation_status": ["active", "inactive", "prospective", "historical", "unknown"],
   "identities": [
@@ -45,6 +47,5 @@
     {"identity_id":"agent.synergy","display_name":"Synergy","seat_status":"conceptual","activation_status":"prospective","variant_of":null,"directory":null,"rubric_ids":[],"observed_designations":[{"source":"docs/agents/FORMATION_TOPOLOGY.md","id":"A-25"},{"source":"docs/agents/AGENT_ECOSYSTEM_REGISTRY.md","id":"A-25"}],"conflicts":["absent from sovereign 20-seat roster"]},
     {"identity_id":"agent.equilibrium","display_name":"Equilibrium","seat_status":"conceptual","activation_status":"prospective","variant_of":null,"directory":null,"rubric_ids":[],"observed_designations":[{"source":"docs/agents/FORMATION_TOPOLOGY.md","id":"A-26"},{"source":"docs/agents/AGENT_ECOSYSTEM_REGISTRY.md","id":"A-26"}],"conflicts":["absent from sovereign 20-seat roster"]},
     {"identity_id":"agent.sentience","display_name":"Sentience","seat_status":"conflicted","activation_status":"unknown","variant_of":null,"directory":null,"rubric_ids":[],"observed_designations":[{"source":"docs/agents/FORMATION_TOPOLOGY.md","id":"A-27"},{"source":"docs/agents/AGENT_ECOSYSTEM_REGISTRY.md","id":"A-27"},{"source":"docs/AGENT_ARCHITECTURE_ASSESSMENT.md","id":"historical-entry"}],"conflicts":["topology/ecosystem model A-27 as an active formation seat while architecture assessment counts Sentience as historical conceptual lineage"]}
-  ],
-  "scientific_boundary": "PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0"
+  ]
 }

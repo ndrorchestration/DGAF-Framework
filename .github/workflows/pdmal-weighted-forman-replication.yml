@@ -1,0 +1,80 @@
+name: PDMAL Weighted Forman Replication
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pdmal_weighted_forman_replication.py"
+      - "tests/test_pdmal_weighted_forman_replication.py"
+      - "docs/experiment/PDMAL_WEIGHTED_FORMAN_REPLICATION_PROTOCOL_2026-09-09.md"
+      - ".github/workflows/pdmal-weighted-forman-replication.yml"
+      - "tools/pdmal/lattice_harness.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUNBUFFERED: "1"
+  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  replicate:
+    name: synthetic weighted-curvature matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+
+      - name: Verify exact source head
+        run: test "$(git rev-parse HEAD)" = "${SOURCE_SHA}"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned test runner
+        run: python -m pip install "pytest==8.4.2"
+
+      - name: Run prospective contract regressions
+        run: python -m pytest -q tests/test_pdmal_weighted_forman_replication.py
+
+      - name: Execute preregistered synthetic matrix
+        env:
+          GITHUB_SHA: ${{ env.SOURCE_SHA }}
+        run: >-
+          python experiments/pdmal_weighted_forman_replication.py
+          --output weighted-forman-replication.json
+
+      - name: Verify exact evidence binding and non-authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          data = json.loads(Path("weighted-forman-replication.json").read_text())
+          assert data["schema"] == "PDMAL_WEIGHTED_FORMAN_REPLICATION_V1"
+          assert data["source_commit"] == os.environ["SOURCE_SHA"]
+          assert data["protocol"]["total_trials"] == 480
+          assert data["protocol"]["heldout_trials"] == 240
+          assert data["epistemic_classification"]["track_a_state_effect"] == "NONE"
+          assert data["epistemic_classification"]["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+          PY
+
+      - name: Hash evidence
+        run: sha256sum weighted-forman-replication.json > weighted-forman-replication.json.sha256
+
+      - name: Upload exact-head research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdmal-weighted-forman-replication-${{ env.SOURCE_SHA }}
+          path: |
+            weighted-forman-replication.json
+            weighted-forman-replication.json.sha256
+          if-no-files-found: error
+          retention-days: 90

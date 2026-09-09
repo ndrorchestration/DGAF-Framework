@@ -1,0 +1,44 @@
+name: Seven-Gate Treatment Fidelity Audit
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/seven-gate-treatment-fidelity-audit.yml'
+      - 'docs/experiment/SEVEN_GATE_TREATMENT_FIDELITY_AUDIT_2026-09-08.md'
+      - 'docs/experiment/SEVEN_GATE_TREATMENT_FIDELITY_AUDIT_2026-09-08.json'
+      - 'scripts/validate_seven_gate_treatment_fidelity_audit.py'
+      - 'experiments/pdmal_pilot/run_canonical_epoch_004.py'
+      - 'experiments/pdmal_pilot/canonical_epoch_004_adapter.py'
+      - 'experiments/pdmal_pilot/pdmaltgl_gate_binding.py'
+      - 'experiments/pdmal_pilot/dgaf_tgl_adapter.py'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Validate source-bound treatment fidelity audit
+        run: python scripts/validate_seven_gate_treatment_fidelity_audit.py
+
+      - name: Prove audit is non-empirical
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('docs/experiment/SEVEN_GATE_TREATMENT_FIDELITY_AUDIT_2026-09-08.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['scientific_n_increment'] == 0
+          assert d['fresh_canonical_empirical_epoch_authorized'] is False
+          assert d['epoch_004_primary_result_preserved'] is True
+          print('SEVEN_GATE_AUDIT_NONEMPIRICAL_BOUNDARY_PASS')
+          PY

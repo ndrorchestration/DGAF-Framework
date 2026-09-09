@@ -1,0 +1,109 @@
+{
+  "record_type": "PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE",
+  "schema_version": 1,
+  "profile_id": "PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1",
+  "status": "NONEMPIRICAL_CANDIDATE_PROFILE",
+  "parent_architecture": {
+    "spec_id": "DGAF-WORKLOAD-SPECIFIC-EVALUATION-TRACKS-V1",
+    "merge_sha": "5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+    "controller_issue": 398
+  },
+  "scientific_n_increment": 0,
+  "empirical_authorization": false,
+  "workload_type": "NUMERIC_DISTRIBUTED_CONSENSUS",
+  "algorithm": {
+    "public_id": "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1",
+    "implementation_source": "experiments/pdmal_pilot/task_engine.py",
+    "implementation_blob_sha": "90135e1c6dfccc3b56ffdc0dcb9eb50a0b2a5b05",
+    "method": "ConsensusTask._null_or_simple_update",
+    "alpha": 0.5,
+    "historical_internal_condition_reuse": "null",
+    "public_condition_axis": false,
+    "dgaf_semantic_gate_path": false
+  },
+  "harness_source": {
+    "path": "experiments/pdmal_pilot/harness_contract.py",
+    "blob_sha": "bb97c54ddf087fef568b1b3c8f8df72c30dad11e"
+  },
+  "diagnostic_probe": {
+    "seeds": [
+      20261201,
+      20261202
+    ],
+    "topologies": [
+      "ring",
+      "pdmal",
+      "random_regular",
+      "small_world",
+      "complete"
+    ],
+    "failure_counts": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10
+    ],
+    "expected_cells": 90,
+    "phases": [
+      "pre_failure",
+      "during_failure",
+      "recovered"
+    ],
+    "artifact_class": "STRUCTURAL_HASH_ONLY_NONEMPIRICAL",
+    "retention_days": 90
+  },
+  "allowed_artifact_fields": [
+    "record_type",
+    "schema_version",
+    "profile_id",
+    "algorithm_id",
+    "scientific_n_increment",
+    "empirical_authorization",
+    "task_engine_blob_sha",
+    "harness_blob_sha",
+    "seeds",
+    "topologies",
+    "failure_counts",
+    "expected_cells",
+    "completed_cells",
+    "records",
+    "seed",
+    "topology",
+    "failure_count",
+    "topology_fingerprint",
+    "failure_nodes",
+    "initial_state_hash",
+    "phase_update_hashes",
+    "pre_failure",
+    "during_failure",
+    "recovered",
+    "classification"
+  ],
+  "forbidden_artifact_tokens": [
+    "ffcr",
+    "final_std",
+    "consensus_success",
+    "treatment_effect",
+    "confidence_interval",
+    "p_value",
+    "governance_trace",
+    "canonical_dgaf",
+    "full_dgaf"
+  ],
+  "gate_disposition": {
+    "P-31": "OUT_OF_SCOPE",
+    "P-33": "SEPARATE_B3_TRACK",
+    "DEMIJOULE": "OUT_OF_SCOPE",
+    "P-27": "OUT_OF_SCOPE",
+    "P-29": "OUT_OF_SCOPE",
+    "P-32": "OUT_OF_SCOPE",
+    "P-30": "EXTERNAL_PROFILE_QUALIFICATION_NOT_YET_EXECUTED"
+  },
+  "claim_ceiling": "PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_STRUCTURE_ONLY_NO_EFFICACY_INFERENCE",
+  "next_gate": "SOURCE_BOUND_P30_11Q_PROFILE_QUALIFICATION_THEN_NONEMPIRICAL_MATRIX_ADJUDICATION"
+}

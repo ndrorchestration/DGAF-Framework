@@ -1,0 +1,109 @@
+{
+  "record_type": "DGAF_P30_11Q_PROFILE_QUALIFICATION",
+  "schema_version": 1,
+  "attestation_gate": "P-30",
+  "rubric": "P-11 11Q Attestation Scoring",
+  "attestation_id": "APOGEE_11Q_PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1_S078",
+  "profile_id": "PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1",
+  "review_scope": "Merged non-empirical Track A topology-robustness candidate profile and its structural-only diagnostic probe.",
+  "verification_class": "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT",
+  "independent_verification": false,
+  "empirical_evidence": false,
+  "scientific_n_increment": 0,
+  "source_bindings": {
+    "architecture_merge_sha": "5e4f00a065c00cefec0b3a79c32b88a5f36a55c2",
+    "profile_merge_sha": "b1e333ee9f9e0a4da78788e5ff019603296888eb",
+    "profile_path": "docs/governance/PDMAL_TOPOLOGY_ROBUSTNESS_PROFILE_V1.json",
+    "profile_blob_sha": "339d9ada4978ffd0c1eee67c310323f1e7fdc06a",
+    "profile_doc_blob_sha": "d0e2e48ea670404cced48c5d20c3829faba52279",
+    "probe_path": "experiments/pdmal_pilot/topology_robustness_profile.py",
+    "probe_blob_sha": "5b703273f26bde700fff03269c1734d89b2b347d",
+    "probe_test_blob_sha": "e94f8cbb4cef3ebae6bee5e2220f1ff0c7cc4856",
+    "workflow_blob_sha": "fbad06eec3ca6f4c7edc912e3f80f0c3b31e0404",
+    "retained_artifact_id": 10041800252,
+    "retained_artifact_digest": "sha256:629ee0be7a48606685f2452800ab4e482611fb45f7268d881e934488e1c1c1d5",
+    "exact_head_validated": "9340081997bcc59e831e8b47312efe344b6bc4dd",
+    "exact_head_workflows_passed": "20/20"
+  },
+  "scoring": {
+    "Q01": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Profile explicitly defines numeric-consensus workload, neutral algorithm identity, 90-cell structural probe, forbidden outputs, gate dispositions, claim ceiling, and next non-empirical gate."
+    },
+    "Q02": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Machine-readable profile, implementation, tests, workflow, exact source blobs, and retained artifact are mutually bound; 20/20 exact-head workflows passed."
+    },
+    "Q03": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Provenance binds parent architecture merge, Track A merge, exact profile/probe/test/workflow blobs, diagnostic seeds, and retained artifact digest."
+    },
+    "Q04": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Dependencies and interfaces are explicit: historical numeric task/harness mechanics are reused without changing their semantics; semantic DGAF gates are explicitly excluded or separated into other tracks."
+    },
+    "Q05": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Neutral public algorithm identity replaces misleading DGAF treatment labeling; internal historical null label is documented as implementation reuse only and absent from retained artifact."
+    },
+    "Q06": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Profile conforms to workload-specific architecture: semantic gates are not proxied into numeric state, P-33 is deferred to B3, and P-30 remains external profile qualification."
+    },
+    "Q07": {
+      "score": 9,
+      "verdict": "PASS",
+      "evidence": "Limitations are explicit: structural-only validation, two diagnostic seeds, no efficacy endpoint, no topology superiority inference, and empirical Track A work remains separately gated."
+    },
+    "Q08": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Probe is deterministic, byte-stable under tests, source-bound, matrix-complete, retained as an artifact, and historical Epoch 004 machinery remains unchanged/reversible."
+    },
+    "Q09": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Artifact contains synthetic numeric topology state hashes and structural metadata only; no personal data, semantic payloads, or unnecessary raw numerical outcomes are retained."
+    },
+    "Q10": {
+      "score": 10,
+      "verdict": "PASS",
+      "evidence": "Epistemic ceiling is mechanically constrained: no FFCR, final_std, consensus_success, effects, confidence intervals, p-values, condition axis, governance trace, or DGAF label can enter the retained artifact."
+    },
+    "Q11": {
+      "score": 9,
+      "verdict": "PASS",
+      "evidence": "Ready only for the next non-empirical matrix-adjudication tier. It is not ready for empirical execution, superiority claims, DGAF efficacy claims, High-Assurance acceptance, or production use."
+    }
+  },
+  "scoring_summary": {
+    "total_score": 108,
+    "max_score": 110,
+    "percentage": 98.1818181818,
+    "tier": "S-TIER",
+    "q11_score": 9,
+    "q11_threshold_met": true,
+    "open_blg_count": 0,
+    "open_blgs": [],
+    "attestation_result": "GRANTED",
+    "attestation_note": "S-TIER developer self-attestation for the non-empirical Track A profile role only. Qualification grants progression only to a separate non-empirical matrix-adjudication gate."
+  },
+  "limitations": [
+    "Same developer/operator context performed the profile design, probe construction, and qualification; this is not independent verification.",
+    "Structural probe hashes do not establish topology superiority, recovery performance, or empirical robustness.",
+    "The two diagnostic-only seeds are engineering fixtures, not a scientific sample.",
+    "Historical internal reference mechanics are reused but exposed under a new neutral profile identity.",
+    "Any empirical Track A proposal requires fresh preregistration, fresh seeds, explicit endpoint/estimand specification, and separate authorization."
+  ],
+  "next_gate": {
+    "required": "TRACK_A_NONEMPIRICAL_MATRIX_ADJUDICATION",
+    "empirical_execution": "NOT_AUTHORIZED",
+    "high_assurance_changed": false
+  }
+}

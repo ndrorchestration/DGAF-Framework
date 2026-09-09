@@ -1,0 +1,45 @@
+name: B1 Non-Empirical Integration Adjudication
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/b1-integration-adjudication.yml'
+      - 'docs/governance/B1_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json'
+      - 'scripts/validate_b1_integration_adjudication.py'
+      - 'docs/qa/APOGEE_11Q_DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1_S081.json'
+      - 'docs/governance/DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1.json'
+      - 'components/KAPPA/dynamic_weight_router.py'
+      - 'components/evaluate_router.py'
+      - 'components/evaluate_router_v1_1.py'
+      - 'components/ensemble_v17.py'
+      - 'experiments/pdmal_pilot/b1_semantic_routing_safety_profile.py'
+      - 'experiments/pdmal_pilot/test_b1_semantic_routing_safety_profile.py'
+      - 'scripts/validate_b1_semantic_routing_safety_profile.py'
+      - '.github/workflows/b1-semantic-routing-safety-profile.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - name: Validate exact source and qualification binding
+        run: python scripts/validate_b1_integration_adjudication.py
+      - name: Prove non-authorizing disposition
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/governance/B1_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json').read_text())
+          assert d['scientific_n_increment'] == 0
+          assert d['b1_empirical_execution_authorized'] is False
+          assert d['track_c_empirical_execution_authorized'] is False
+          assert d['canonical_dgaf_efficacy'] == 'NOT_ESTABLISHED'
+          assert d['high_assurance'] == 'NOT_AUTHORIZED_N0'
+          print('B1_INTEGRATION_ADJUDICATION_NONAUTHORIZING_BOUNDARY_PASS')
+          PY

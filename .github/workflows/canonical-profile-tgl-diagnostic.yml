@@ -1,0 +1,121 @@
+name: Canonical Profile TGL Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/pdmal_pilot/canonical_profile_tgl_diagnostic.py'
+      - 'experiments/pdmal_pilot/test_canonical_profile_tgl_diagnostic.py'
+      - 'docs/experiment/CANONICAL_PROFILE_TGL_DIAGNOSTIC_V1_PREREGISTRATION.md'
+      - '.github/workflows/canonical-profile-tgl-diagnostic.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install hash-locked pilot dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Verify preregistered non-empirical boundary
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          script = Path('experiments/pdmal_pilot/canonical_profile_tgl_diagnostic.py').read_text(encoding='utf-8')
+          prereg = Path('docs/experiment/CANONICAL_PROFILE_TGL_DIAGNOSTIC_V1_PREREGISTRATION.md').read_text(encoding='utf-8')
+          required_script = [
+              'PROFILE_SOURCE_SHA = "c8a07306d212e23cc5a4c1e0d98b7e8f47f45e21"',
+              'QUALIFICATION_SHA256 = "4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78"',
+              'DIAGNOSTIC_SEEDS = (20260819, 20260820)',
+              'scientific_n_increment',
+              'empirical_authorization',
+          ]
+          required_prereg = [
+              'Scientific empirical N increment:** `0`',
+              'Empirical authorization:** `false`',
+              'Total diagnostic trials: `2 × 5 × 9 = 90`',
+              'Required complete governance turns for promotion: `9,000`',
+              '`NEW_CANONICAL_DGAF_EMPIRICAL_EPOCH = NOT_AUTHORIZED`',
+          ]
+          for token in required_script:
+              if token not in script:
+                  raise SystemExit(f'missing script boundary token: {token}')
+          for token in required_prereg:
+              if token not in prereg:
+                  raise SystemExit(f'missing preregistration boundary token: {token}')
+          print('CANONICAL_PROFILE_DIAGNOSTIC_PREREGISTRATION_BOUNDARY_PASS')
+          PY
+
+      - name: Run diagnostic negative controls
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python -m pytest -q experiments/pdmal_pilot/test_canonical_profile_tgl_diagnostic.py
+
+      - name: Execute 90-trial non-empirical diagnostic
+        env:
+          PYTHONPATH: .:experiments/pdmal_pilot
+        run: python experiments/pdmal_pilot/canonical_profile_tgl_diagnostic.py
+
+      - name: Independently adjudicate retained diagnostic artifact
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('test-artifacts/canonical_profile_tgl_diagnostic.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['classification'] == 'NON_EMPIRICAL_ENGINEERING_DIAGNOSTIC'
+          assert d['scientific_n_increment'] == 0
+          assert d['empirical_authorization'] is False
+          assert d['independent_verification'] is False
+          assert d['qualification_verification_class'] == 'DEVELOPER_SELF_ATTESTED_NONINDEPENDENT'
+          assert d['total_diagnostic_trials'] == 90
+          assert d['attempt_success_count'] == 90
+          assert d['attempt_failure_count'] == 0
+          assert d['total_governance_turns'] == 9000
+          assert d['total_step8_passes'] == 9000
+          assert d['aggregate_required_gate_failures'] == {}
+          assert d['efficacy_metrics_emitted'] is False
+          assert all(r['iterations_completed'] == 100 for r in d['records'])
+          assert all(r['malformed_turn_count'] == 0 for r in d['records'])
+          print('CANONICAL_PROFILE_TGL_DIAGNOSTIC_ARTIFACT_PASS')
+          PY
+
+      - name: Prove workflow is non-empirical
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          tree = ast.parse(Path('experiments/pdmal_pilot/canonical_profile_tgl_diagnostic.py').read_text(encoding='utf-8'))
+          imported = set()
+          for node in ast.walk(tree):
+              if isinstance(node, ast.Import):
+                  imported.update(alias.name for alias in node.names)
+              elif isinstance(node, ast.ImportFrom) and node.module:
+                  imported.add(node.module)
+          forbidden_modules = {'analysis', 'run_pilot', 'solo_final_experiment'}
+          overlap = imported & forbidden_modules
+          if overlap:
+              raise SystemExit(f'empirical-analysis module imported: {sorted(overlap)}')
+          print('PASS_NONEMPIRICAL_DIAGNOSTIC_WORKFLOW')
+          PY
+
+      - name: Upload diagnostic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-profile-tgl-diagnostic-${{ github.sha }}
+          path: test-artifacts/canonical_profile_tgl_diagnostic.json
+          if-no-files-found: warn
+          retention-days: 90

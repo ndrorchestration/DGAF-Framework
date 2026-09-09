@@ -1,0 +1,45 @@
+name: Workload-Specific Evaluation Tracks
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/workload-specific-evaluation-tracks.yml'
+      - 'docs/governance/WORKLOAD_SPECIFIC_DGAF_EVALUATION_TRACKS_V1.json'
+      - 'docs/governance/WORKLOAD_SPECIFIC_DGAF_EVALUATION_TRACKS_V1.md'
+      - 'scripts/validate_workload_specific_evaluation_tracks.py'
+      - 'docs/governance/CANONICAL_PDMAL_TREATMENT_PROFILE_CANDIDATE_V1.json'
+      - 'components/KAPPA/dynamic_weight_router.py'
+      - 'components/evaluate_router.py'
+      - 'components/evaluate_router_v1_1.py'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Validate workload-specific architecture
+        run: python scripts/validate_workload_specific_evaluation_tracks.py
+
+      - name: Prove non-empirical boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/governance/WORKLOAD_SPECIFIC_DGAF_EVALUATION_TRACKS_V1.json').read_text())
+          assert d['scientific_n_increment'] == 0
+          assert d['empirical_authorization'] is False
+          for name, track in d['tracks'].items():
+              assert track['empirical_status'] in {'NOT_AUTHORIZED', 'PROHIBITED'}, (name, track['empirical_status'])
+          assert d['historical_profile_policy']['rewrite_historical_evidence'] is False
+          print('WORKLOAD_TRACKS_NONEMPIRICAL_BOUNDARY_PASS')
+          PY

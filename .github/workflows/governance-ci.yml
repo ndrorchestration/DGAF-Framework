@@ -126,11 +126,35 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Download pinned TLA+ Tools release
+      - name: Verify and download exact pinned TLA+ Tools bytes
         run: |
+          python - <<'PY'
+          import json
+          import urllib.request
+
+          release_url = 'https://api.github.com/repos/tlaplus/tlaplus/releases/tags/v1.8.0'
+          expected_download_url = 'https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar'
+          expected_digest = 'sha256:a1fc0bfe391d99fdd86f579a63ff68c0950010e9dde551f1192b867d5c8f4efd'
+          request = urllib.request.Request(
+              release_url,
+              headers={
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+              },
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              release = json.load(response)
+
+          assert release['tag_name'] == 'v1.8.0'
+          assets = [asset for asset in release['assets'] if asset['name'] == 'tla2tools.jar']
+          assert len(assets) == 1
+          asset = assets[0]
+          assert asset['digest'] == expected_digest
+          assert asset['browser_download_url'] == expected_download_url
+          PY
           curl --fail --location --retry 3 --output tla2tools.jar \
             https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
-          echo 'b658b4e504fdf0b721caf7066320f6b6fe5805f4dd2f717d0e47baba4097205e  tla2tools.jar' | sha256sum --check --strict
+          echo 'a1fc0bfe391d99fdd86f579a63ff68c0950010e9dde551f1192b867d5c8f4efd  tla2tools.jar' | sha256sum --check --strict
 
       - name: Model-check DGAF containment
         run: |
@@ -153,7 +177,9 @@ jobs:
               'evidence_class': 'BOUNDED_FORMAL_MODEL_CHECK', 'source_commit': '${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}',
               'workflow_run_id': '${{ github.run_id }}', 'job': 'governance-ci',
               'java_version': '17', 'tool': 'TLA+ Tools', 'tool_release': 'v1.8.0',
-              'tool_sha256': 'b658b4e504fdf0b721caf7066320f6b6fe5805f4dd2f717d0e47baba4097205e',
+              'tool_download_url': 'https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar',
+              'tool_sha256': 'a1fc0bfe391d99fdd86f579a63ff68c0950010e9dde551f1192b867d5c8f4efd',
+              'tool_identity_rule': 'release tag + canonical download URL + downloaded-byte SHA-256',
               'command': 'java -cp tla2tools.jar tlc2.TLC -config specs/DGAFContainment.cfg specs/DGAFContainment.tla',
               'result': 'PASS' if no_error else 'FAIL', 'no_error_found': no_error,
               'states_generated': int(generated.group(1)) if generated else None,

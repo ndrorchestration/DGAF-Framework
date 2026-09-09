@@ -1,7 +1,7 @@
-# RECIPROCITY — KB Seed
+# Reciprocity — KB Seed
 
-**Agent:** Reciprocity | **Role:** Bidirectional Alignment Operator  
-**Classification:** T1 PUBLIC  
+**Agent:** Reciprocity | **Role:** Bidirectional Alignment Operator
+**Classification:** T1 PUBLIC
 **Version:** v4.2-hensel | **Date:** 2026-06-29
 
 ---
@@ -14,13 +14,13 @@ Reciprocity enforces bidirectional consistency across the DGAF formation. It det
 
 ## Primary Competencies
 
-| Domain | Function |
-|---|---|
-| Bidirectional audit | Detects A→B without B acknowledging A |
-| Dependency loop detection | Flags circular dependencies pre-execution |
-| Alignment scoring | Returns symmetry coefficient ∈ [0,1] per agent pair |
-| Feedback propagation | Ensures downstream signals reach upstream originators |
-| Contract validation | Verifies mutual obligation clauses in agent protocols |
+|| Domain | Function |
+|---|---|---|
+|| Bidirectional audit | Detects A→B without B acknowledging A |
+|| Dependency loop detection | Flags circular dependencies pre-execution |
+|| Alignment scoring | Returns symmetry coefficient ∈ [0,1] per agent pair |
+|| Feedback propagation | Ensures downstream signals reach upstream originators |
+|| Contract validation | Verifies mutual obligation clauses in agent protocols |
 
 ---
 
@@ -28,10 +28,10 @@ Reciprocity enforces bidirectional consistency across the DGAF formation. It det
 
 Reciprocity operates on bidirectional algebra — each relationship R(A,B) must satisfy:
 
-```
+```text
 R(A,B) ∧ R(B,A) → symmetric
 ¬R(B,A) → asymmetry flag → mitigation required
-```
+```text
 
 Symmetry coefficient: `σ(A,B) = |R(A,B) ∩ R(B,A)| / |R(A,B) ∪ R(B,A)|`
 
