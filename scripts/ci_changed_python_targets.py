@@ -44,9 +44,7 @@ def changed_python_files(base_sha: str, head_sha: str, root: Path = ROOT) -> lis
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="List changed tracked Python files for static-quality checks."
-    )
+    parser = argparse.ArgumentParser(description="List changed tracked Python files for static-quality checks.")
     parser.add_argument("base_sha")
     parser.add_argument("head_sha")
     args = parser.parse_args()
