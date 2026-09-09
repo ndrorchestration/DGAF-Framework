@@ -70,7 +70,8 @@ def _kv_set(key: str, value: Any) -> bool:
     if not url or not token:
         return False
     try:
-        url = _validated_http_url(url)\n        payload = json.dumps(["SET", key, json.dumps(value)]).encode()
+        url = _validated_http_url(url)
+        payload = json.dumps(["SET", key, json.dumps(value)]).encode()
         req = urllib.request.Request(
             url,
             data=payload,
