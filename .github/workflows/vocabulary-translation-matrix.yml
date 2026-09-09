@@ -1,0 +1,30 @@
+name: Vocabulary Translation Matrix
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  vocabulary-translation-matrix:
+    name: Vocabulary Translation Matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned test dependency
+        run: python -m pip install pytest==9.1.1
+      - name: Validate canonical vocabulary registry
+        run: python scripts/validate_vocabulary_translation_matrix.py
+      - name: Run vocabulary regression tests
+        run: python -m pytest -q tests/test_vocabulary_translation_matrix.py
