@@ -29,7 +29,7 @@ Formations are **not** ad-hoc groupings. A formation is a named, structurally de
 
 Labels in parentheses below are **formation-local designations unless explicitly marked sovereign**.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  SOVEREIGN GOVERNANCE                                        │
 │  Amethyst (local:A-00)     Meta-Orchestrator · spans tiers   │
@@ -204,7 +204,7 @@ The entries below are historical topology bindings. Current executable authority
 
 ### Composition Rules
 
-```
+```text
 Strategic Quintet ∩ Harmonic Pentagonal = ∅
 Strategic Quintet ∩ Operational Swarm  = ∅
 Harmonic Pentagonal ∩ Archive Trio      = ∅
