@@ -15,16 +15,26 @@ canonical_dgaf_efficacy: NOT_ESTABLISHED
 solo_epoch_004_status: LOCKED_NEGATIVE_EXACT_TREATMENT_EVIDENCE
 seven_gate_treatment_fidelity: NOT_ESTABLISHED
 track_a_protocol: PREREGISTERED
-track_a_primary_analysis: LOCKED_NONEMPIRICAL
+track_a_primary_analysis: LOCKED_NONEMPIRICAL_NOT_AUTHORIZED_NOT_RUN
 track_a_runner: MERGED_HARDENED
-track_a_preflight: MERGED_PASS
+track_a_preflight: PASS
 track_a_freeze: ESTABLISHED
 track_a_closure: ESTABLISHED
 track_a_verification: PASS_DEVELOPER_SELF_ATTESTED_NONINDEPENDENT
 track_a_collection_authorization: ESTABLISHED
-track_a_empirical_collection: AUTHORIZED_NOT_STARTED
-track_a_unblinding: NOT_AUTHORIZED
-track_a_scientific_n: 0
+track_a_empirical_collection: COMPLETE_BLINDED_RETAINED
+track_a_inferential_seed_units: 50
+track_a_blinded_observations: 2250
+track_a_dataset_lock: ESTABLISHED
+track_a_unblinding_authorization: ESTABLISHED
+track_a_materializer_tooling: MERGED_VALIDATED
+track_a_unblinded_input_receipt_tooling: MERGED_VALIDATED
+track_a_custody_key_preflight_tooling: MERGED_VALIDATED
+track_a_primary_analysis_authorization_tooling: MERGED_VALIDATED
+track_a_custody_key_handoff: NOT_ESTABLISHED
+track_a_unblinded_analysis_input: NOT_YET_MATERIALIZED
+track_a_unblinded_input_receipt: NOT_ESTABLISHED
+track_a_primary_analysis_authorization: NOT_ESTABLISHED
 b1_standalone_nonempirical_lane: COMPLETE
 b2_standalone_nonempirical_lane: COMPLETE
 b3_standalone_nonempirical_lane: COMPLETE
@@ -36,7 +46,7 @@ track_c_empirical_execution: NOT_AUTHORIZED
 
 This file is the primary current-facing repository summary. GitHub remains authoritative for implementation and CI; governance decisions and exact scientific transitions remain bound to their governing records.
 
-**Important:** the **canonical High-Assurance program** and **Track A Epoch 001** are distinct boundaries. Track A may advance through its workload-specific prospective experiment while the separate High-Assurance program remains pre-freeze.
+**Important:** the **canonical High-Assurance program** and **Track A Epoch 001** are distinct assurance/research boundaries. Track A has legitimately completed its governed prospective blinded collection while the separate High-Assurance program remains pre-freeze.
 
 ## Executive boundary
 
@@ -45,23 +55,33 @@ This file is the primary current-facing repository summary. GitHub remains autho
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A protocol | **PREREGISTERED** |
-| Track A primary analysis | **LOCKED / NONEMPIRICAL** |
+| Track A primary analysis | **LOCKED / NONEMPIRICAL / NOT AUTHORIZED / NOT RUN** |
 | Track A runner | **MERGED / HARDENED** |
-| Track A precollection preflight | **MERGED / PASS** |
+| Track A precollection preflight | **PASS** |
 | Track A immutable freeze | **ESTABLISHED** |
 | Track A final closure | **ESTABLISHED** |
 | Track A verification classification | **PASS — DEVELOPER SELF-ATTESTED / NONINDEPENDENT** |
 | Track A collection authorization | **ESTABLISHED** |
-| Track A prospective collection | **AUTHORIZED / NOT STARTED** |
-| Track A unblinding | **NOT AUTHORIZED** |
-| Track A scientific N | **0** |
+| Track A prospective collection | **COMPLETE / BLINDED / RETAINED** |
+| Track A inferential seed units | **50** |
+| Track A blinded raw observations | **2,250** |
+| Track A dataset lock | **ESTABLISHED** |
+| Track A unblinding authorization | **ESTABLISHED — mapping release/decryption scope only** |
+| Track A materializer tooling | **MERGED / VALIDATED** |
+| Track A unblinded-input receipt tooling | **MERGED / VALIDATED** |
+| Track A custody-key preflight tooling | **MERGED / VALIDATED** |
+| Track A primary-analysis authorization tooling | **MERGED / VALIDATED** |
+| Matching custody-key handoff | **NOT ESTABLISHED** |
+| Unblinded analysis input | **NOT YET MATERIALIZED** |
+| Unblinded-input receipt | **NOT ESTABLISHED** |
+| Primary-analysis authorization | **NOT ESTABLISHED** |
 | B1 standalone non-empirical lane | **COMPLETE** |
 | B2 standalone non-empirical lane | **COMPLETE** |
 | B3 standalone non-empirical lane | **COMPLETE** |
 | Track C composition | **MERGED NON-EMPIRICAL PROPOSAL** |
 | Track C empirical execution | **NOT AUTHORIZED** |
 
-No row above establishes production certification, independent validation, integrated DGAF efficacy, High-Assurance authorization, or permission to unblind.
+No row above establishes production certification, independent validation, integrated DGAF efficacy, High-Assurance authorization, or a completed Track A primary result.
 
 ## Track A Epoch 001 — prospective scientific lane
 
@@ -73,7 +93,7 @@ Track A uses neutral algorithm identity `REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1` a
 - 5 topologies: ring, PDMAL, random-regular, small-world, complete
 - 9 failure counts: `0, 1, 2, 3, 4, 5, 6, 8, 10`
 - 45 cells per seed
-- **2,250 authorized prospective observations**
+- 2,250 blinded raw observations
 - primary endpoint: strict-boolean `ffcr_success`
 - primary confirmatory comparison: PDMAL vs matched random-regular
 - 10,000 paired percentile bootstrap resamples
@@ -83,49 +103,82 @@ Track A uses neutral algorithm identity `REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1` a
 
 Historical outcomes are not pooled into this prospective panel.
 
-### Established governance chain
+### Established governance and evidence chain
 
-The current Track A chain has legitimately advanced through:
+Track A has advanced through:
 
 1. prospective preregistration;
-2. locked primary analysis implementation;
+2. locked primary-analysis implementation;
 3. hardened fail-closed runner;
 4. stabilized candidate;
-5. precollection preflight — **PASS / MERGED**;
+5. precollection preflight — **PASS**;
 6. immutable freeze — **ESTABLISHED**;
 7. final closure — **ESTABLISHED**;
 8. verification classification — **PASS / DEVELOPER SELF-ATTESTED / NONINDEPENDENT**;
-9. collection authorization — **ESTABLISHED**.
+9. collection authorization — **ESTABLISHED**;
+10. prospective blinded collection — **COMPLETE**;
+11. dataset lock / collection receipt — **ESTABLISHED**;
+12. unblinding authorization — **ESTABLISHED**, restricted to mapping release / protected-artifact decryption;
+13. controlled materializer tooling — **MERGED / VALIDATED**;
+14. unblinded-input receipt tooling — **MERGED / VALIDATED**;
+15. custody-key preflight tooling — **MERGED / VALIDATED**;
+16. future primary-analysis authorization tooling — **MERGED / VALIDATED**.
 
-Exact current bindings include:
+Exact accepted identities include:
 
 - frozen candidate SHA: `961b9918002c4c68afac9c0fd5dd3e352e49b926`
 - frozen candidate tree: `f20fa0ffee4b47872d84ce10cc9fd05e75c7306d`
-- merged preflight blob: `148cbd0e0717ca62efadfcce9227965abd838468`
+- preregistration merge: `26077b27ca336454148006e6daf4cd087005b421`
+- analysis-lock merge: `e9ea59ad839aef33fbce10ed04c2157358c4326d`
+- locked analysis blob: `76bc8e9604c5d7e039e324e73036f353dc8ea31f`
+- analysis-config SHA-256: `355b164f69e91405819f092d0721b7597b87b06de79394a0c451169410a5ab6d`
 - freeze merge: `bea146656ff4fdd81572215fb9d2d38296ca4455`
 - freeze manifest blob: `ae15c6282351c01bd13ace2423d273ba0dde8348`
 - final closure merge: `df74ead1481dbf8a475d9e6c9a452749d7c06196`
 - closure packet blob: `c32d89385c29c9e5cd0a706630c1955fb3f5f1c8`
 - verification merge: `4e4d872cf17f1b2c9d39f7f5969bf395abbd7617`
 - verification-classification blob: `c67d09052faa7ae50de6eca57691ed50d906a951`
-- collection-authorization merge/current main at authorization: `659aaa4dea2dd42624747952f1a47f307e69a014`
-- collection-authorization blob: `10373d3f3c01e0a145d0fae51e81402ad33af90f`
+- collection authorization merge: `659aaa4dea2dd42624747952f1a47f307e69a014`
+- collection run: `34262408225`
+- collection job: `102183375896`
+- dataset-lock commit: `fbf3e2da3be0a36c1102a69c996026e95c33cceb`
+- collection-receipt blob: `eb6b9325058fb104da85f8de6c26f2b2a748a1a9`
+- unblinding authorization merge: `2e1981870a8455abed36fd72dcb3aaa35e2f9bff`
+- controlled materializer merge: `f92c251bb8fcf068c644db04ae9d2f855c382caa`
+- unblinded-input receipt tooling merge: `f36d746f603f95d14098322792bec074b21b54cb`
+- custody-key preflight tooling merge: `498bb51ffb559145217b84be969fe74cf9f27579`
+- primary-analysis authorization tooling merge/current accepted main: `f95fd3303535cad4e53a24854c9adf7a25b79ab5`
 
-The collection authorization permits only the locked prospective collection. It does **not** authorize unblinding, historical pooling, Epoch-004 substitution, High-Assurance promotion, or efficacy claims before admissible data exist.
+### Accepted collection evidence
+
+The prospective collection completed with:
+
+- **50 paired inferential seed units**;
+- **2,250 blinded raw observations**;
+- retained public artifact ID `10070586413`, archive SHA-256 `32851068cc61421f756041d0671681823b38c054f06e5082ed26c800bf296231`;
+- retained protected encrypted artifact ID `10070587302`, archive SHA-256 `f52d2144cfb8c699347c56cf92a41c1ac11cba98787fefabb56891c9f680c69f`;
+- protected CMS ciphertext SHA-256 `15ba9d630cea0c26baca3ab50c33f7bcf10681a24293350b12acf3d4aeac4614`;
+- custody certificate SHA-256 `cfa468d1091f2179cfe0c96ff000bfe45ae7c5bd1414146fbb99c77572dba707`.
+
+The protected plaintext mapping was not retained in repository artifacts. Custody is explicitly same-system / non-independent.
 
 ### Current next Track A step
 
-The next legitimate scientific step is the **prospective blinded collection of the locked 2,250-observation panel** under the exact authorized chain.
+The next legitimate transition is **not analysis**. It is:
+
+**authorized local/ephemeral matching custody-key handoff → custody-key preflight PASS → controlled materialization of the exact unblinded analysis input → durable retention + immutable receipt → separate one-file primary-analysis authorization → locked primary analysis**.
 
 At this moment:
 
-- collection is **AUTHORIZED**;
-- collection has **NOT STARTED**;
-- Track A scientific N remains **0**;
-- unblinding remains **NOT AUTHORIZED**;
-- canonical DGAF efficacy remains **NOT ESTABLISHED**.
+- matching custody-key handoff is **NOT ESTABLISHED**;
+- unblinded analysis input is **NOT YET MATERIALIZED**;
+- unblinded-input receipt is **NOT ESTABLISHED**;
+- primary analysis is **NOT AUTHORIZED / NOT RUN**;
+- outcome aggregation is **NOT AUTHORIZED** outside a future separately authorized locked primary analysis;
+- canonical DGAF efficacy remains **NOT ESTABLISHED**;
+- High-Assurance remains **NOT AUTHORIZED**.
 
-Authorization is permission to execute the governed experiment; it is not evidence that the experiment has already run or that its hypothesis is supported.
+Completed collection is evidence that the governed blinded panel was executed and retained. It is not evidence of the direction, magnitude, or significance of the locked primary estimand.
 
 ## B1 / B2 / B3 — standalone non-empirical lanes
 
@@ -173,7 +226,7 @@ The separate canonical High-Assurance program remains:
 
 Its final candidate remains **NOT DESIGNATED** under that program's stricter custody, identity, verification, and authorization requirements.
 
-Track A's established freeze, closure, verification, and collection authorization must not be rewritten as High-Assurance progress. Conversely, the High-Assurance pre-freeze state must not erase Track A's legitimate workload-specific progression.
+Track A's workload-specific collection and governance progress must not be rewritten as High-Assurance progress. Conversely, the High-Assurance pre-freeze state must not erase Track A's legitimate workload-specific evidence.
 
 ## Evidence rules
 
@@ -186,9 +239,11 @@ Current-facing documentation must preserve these distinctions:
 5. **Freeze is not authorization.**
 6. **Closure is not authorization.**
 7. **Authorization is not execution.**
-8. **Execution is not efficacy until the locked analysis supports that claim.**
-9. **Historical evidence does not silently transfer to a new SHA, protocol, treatment, or evidence identity.**
-10. **Canonical DGAF efficacy remains NOT ESTABLISHED until evidence satisfying that exact claim exists.**
+8. **Collection execution is not unblinding.**
+9. **Unblinding authorization is not primary-analysis authorization.**
+10. **Execution is not efficacy until the locked analysis supports that claim.**
+11. **Historical evidence does not silently transfer to a new SHA, protocol, treatment, or evidence identity.**
+12. **Canonical DGAF efficacy remains NOT ESTABLISHED until evidence satisfying that exact claim exists.**
 
 ## Public terminology
 
