@@ -1,14 +1,28 @@
 # Current-Facing Documentation Recency Audit — 2026-09-09
 
-Status: **OPEN FINDINGS / NON-SCIENTIFIC**
+Status: **CORRECTIVE PR IN PROGRESS / SCIENTIFIC-STATE RECONCILIATION REQUIRED**
 
-Audit anchor: `8434a66f47ef9256c5f608b839886624e6d0d6e2` (merged PR #521)
+Audit source main: `8434a66f47ef9256c5f608b839886624e6d0d6e2` (merged PR #521)
 
 ## Purpose
 
-Distinguish repository-wide tracked-file coverage from the stronger question of whether every document presented as current-facing still reflects the latest accepted implementation, governance, vocabulary, and evidence boundary.
+Distinguish repository-wide tracked-file coverage from the stronger question of whether every document presented as current-facing reflects the latest accepted implementation, governance, vocabulary, and evidence boundary.
 
-This audit does not authorize execution, alter Track A, change scientific N, resolve agent identity conflicts, establish efficacy, or authorize High-Assurance.
+This audit does not authorize execution, change scientific N, resolve agent identity conflicts, establish efficacy, or authorize High-Assurance. It records and repairs documentation after a later governance adjudication.
+
+## Critical reconciliation discovered during audit
+
+The Notion Operational Control Center and GitHub issue state were read back during this audit. They establish a newer scientific disposition than the repository's current-facing narrative had recorded:
+
+- issue **#496** is now **CLOSED / NOT PLANNED** and retitled **`[UNRECOVERABLE] Track A Epoch 001 unblinded-input materialization`**;
+- issue **#523** is **OPEN** as **`Track A: replace unrecoverable Epoch 001 with recoverable solo-custody successor`**;
+- Epoch 001's prospective blinded collection and dataset lock remain valid historical evidence;
+- the retained protected topology mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** because no recoverable copy of the matching CMS private key has been established in the solo operating model;
+- Epoch 001 primary analysis is therefore **UNANALYZABLE / NOT RUN**;
+- no brute-force, guessing, inference, regenerated key, reconstructed mapping, historical pooling, or efficacy promotion is accepted;
+- replacement empirical collection is **NOT AUTHORIZED**.
+
+This supersedes the previous current-facing description that the next step was merely an authorized custody-key handoff.
 
 ## Current-facing surfaces reviewed
 
@@ -20,104 +34,88 @@ This audit does not authorize execution, alter Track A, change scientific N, res
 - `docs/VOCABULARY_GOVERNANCE.md`
 - `ENSEMBLE_ROSTER.md`
 - `docs/architecture/DGAF_V1_AGENT_ROLE_MAPPING.md`
-- Notion `DGAF-Framework — Operational Control Center` as the governance/control-plane mirror
+- Notion `DGAF-Framework — Operational Control Center`
+- GitHub issues #496, #522, and #523
 
 Historical dated records are not required to match current state when they are clearly classified as historical.
 
-## Findings
+## Findings and disposition
 
-### F-01 — `docs/CURRENT_STATE.md` recency metadata is stale
+### F-01 — `docs/CURRENT_STATE.md` was scientifically stale
 
-The live scientific boundary remains materially correct, but the front matter still records `last_verified: 2026-09-08` while current signed `main` is the 2026-09-09 PR #521 merge.
+It still described matching custody-key handoff as pending and Epoch 001 materialization as the next legitimate transition.
 
-Classification: **RECENCY / METADATA**
+**Disposition:** corrected on this branch. Epoch 001 is now recorded as completed blinded historical evidence whose protected mapping is cryptographically unrecoverable; primary analysis is unanalyzable/not run; successor issue #523 is the controlling scientific-design lane.
 
-Scientific effect: **NONE**
+### F-02 — stale moving-main wording remained in `docs/CURRENT_STATE.md`
 
-### F-02 — stale moving-main wording remains in `docs/CURRENT_STATE.md`
+The primary-analysis authorization tooling merge was described as `current accepted main` although later merges had advanced repository `main`.
 
-The Track A identity section describes the primary-analysis authorization tooling merge as `current accepted main`. That SHA is a valid historical tooling merge identity, but it is no longer repository `main` after subsequent security, custody, identity, research, runtime, and vocabulary merges.
+**Disposition:** corrected. Immutable tooling SHAs are retained as historical apparatus identities and are no longer described as the moving repository head.
 
-Required correction: retain the immutable tooling merge identity, remove the moving `current accepted main` characterization.
+### F-03 — README and compatibility status were scientifically stale after custody adjudication
 
-Classification: **CURRENT-FACING WORDING**
+They still described custody handoff/materialization as pending rather than impossible under retained Epoch 001 evidence.
 
-Scientific effect: **NONE**
+**Disposition:** corrected on this branch.
 
-### F-03 — recent engineering/control-plane completions are not summarized in the live state narrative
+### F-04 — recent engineering/control-plane completions were underrepresented
 
-The current scientific boundary did not change, but the live ecosystem summary does not yet surface the following merged developments:
+The live state narrative had not summarized several merged developments after the original Track A tooling chain, including security/dependency refresh, custody runbook, identity/scientific-state decoupling, branch inventory, weighted Forman–Ricci replication, Task-4 corpus intake locking, live staging-breaker evidence, and Vocabulary Translation Matrix v2.
 
-- #503 — Next.js security dependency refresh;
-- #507 — Track A custody handoff runbook;
-- #511 — identity/scientific-state decoupling;
-- #513 — non-destructive branch-disposition inventory;
-- #514 — prospective weighted Forman–Ricci replication lane;
-- #517 — Task-4 corpus-intake lock;
-- #520 — exact-source live staging-breaker evidence capped at `PASS_STRUCTURAL_LIVE_STAGING_ONLY`;
-- #521 — Vocabulary Translation Matrix v2 and vocabulary governance.
+**Disposition:** summarized in the revised `CURRENT_STATE.md` without assigning automatic scientific effect.
 
-These are engineering, governance, research, runtime, and documentation developments. They do not promote Track A or High-Assurance scientific state.
+### F-05 — identity ontology remains intentionally unresolved
 
-Classification: **SUMMARY COVERAGE**
+Issue #522 remains the controlling follow-up for Sentinel / Sentinel-Phi lineage, Ionia agent-vs-state ontology, A-09/A-10/A-11/A-12 designation collisions, and COLLEEN/Librarian designation drift.
 
-### F-04 — identity ontology remains intentionally unresolved
+**Disposition:** remain fail-closed/open. Translation must not silently adjudicate these conflicts.
 
-Issue #522 is the controlling follow-up for:
+### F-06 — full repository coverage is not equivalent to documentation recency
 
-- Sentinel / Sentinel-Phi lineage;
-- Ionia agent-vs-state ontology;
-- A-09/A-10/A-11/A-12 designation collisions involving Zenith / Reson / Lyra / Echolette;
-- COLLEEN / Librarian designation drift.
+`Full Repository Coverage Audit` inventories/hashes every tracked file and scans defined provenance/consistency patterns. It does not establish that every current-facing narrative is semantically current.
 
-Vocabulary translation must preserve these conflicts rather than silently adjudicating them.
+**Disposition:** retain full-repo coverage as one audit class; require explicit current-facing recency/adjudication after material governance/scientific transitions.
 
-Classification: **OPEN GOVERNANCE DEPENDENCY**
+## Fresh automated audit evidence
 
-### F-05 — full repository coverage is not equivalent to documentation recency
+PR #521 exact-head validation and its post-merge main workflows provided fresh ordinary automation evidence, including vocabulary validation, claim/IP hygiene, control-state consistency, main-push provenance, ecosystem registry auditing, Python quality, governance sweep, and the normal repository CI suite.
 
-`Full Repository Coverage Audit` inventories and hashes every tracked file and scans defined provenance/consistency patterns. It does not establish that every current-facing narrative is semantically current. A dedicated recency/adjudication pass is therefore required after material state-model, vocabulary, architecture, or public-documentation transitions.
+The existing `Full Repository Coverage Audit` is configured on both `push` and `pull_request`, so this corrective PR will force a fresh exact-head coverage audit as part of its validation wave.
 
-Classification: **PROCESS GAP**
+Those checks establish only their defined predicates. They do not substitute for the semantic recency findings above.
 
-## Fresh audit evidence already present on PR #521 / merged main
+## Audit classes still requiring explicit refresh/adjudication
 
-The PR #521 exact-head validation and post-merge main workflows provide fresh evidence for ordinary automated governance classes, including vocabulary validation, claim/IP hygiene, control-state consistency, provenance, ecosystem registry auditing, Python quality, and the normal repository CI suite.
+Priority after this corrective PR:
 
-Those passes establish their defined predicates only; they are not a substitute for the findings above.
+1. **Cross-authority agent identity ontology adjudication** under #522.
+2. **Cross-repository ecosystem architecture/documentation audit** across DGAF, PDMAL-related surfaces, agent-control-plane, evaluators, and satellite projects.
+3. **Security/dependency/provenance audit across satellite repositories**, including GitHub Actions/dependency pins and deployed-service boundaries.
+4. **P4-B / Mode-T strict-chain readiness refresh** before treating the 2026-09-05 source audit as current.
+5. **External portfolio / resume / public-claims evidence reconciliation** against the now-current repository evidence.
 
-## Audit classes requiring explicit refresh or adjudication
+The seven-gate treatment-fidelity audit dated 2026-09-08 remains recent and scope-specific. It does not require rerun solely because documentation/vocabulary changed unless its bound treatment or implementation identities change.
 
-Priority order:
+## Corrected scientific boundary
 
-1. current-facing documentation recency/adjudication;
-2. cross-authority agent identity ontology adjudication under #522;
-3. GitHub ↔ Notion control-plane reconciliation after #521/#522 changes;
-4. cross-repository ecosystem architecture/documentation audit;
-5. security/dependency/provenance audit across satellite repositories;
-6. P4-B / Mode-T strict-chain readiness refresh before relying on the 2026-09-05 record as current;
-7. external portfolio / resume / public-claims evidence reconciliation.
-
-The seven-gate treatment-fidelity audit dated 2026-09-08 remains recent and scope-specific; it does not require rerun solely because vocabulary/documentation changed unless its bound treatment or implementation identities change.
-
-## Current scientific boundary preserved by this audit
-
-- Track A prospective collection: **COMPLETE / BLINDED / RETAINED**
-- inferential seed units: **50**
-- blinded raw observations: **2,250**
-- dataset lock: **ESTABLISHED**
-- unblinding authorization: **ESTABLISHED — mapping release/decryption scope only**
-- matching custody-key handoff: **NOT ESTABLISHED**
-- unblinded analysis input: **NOT YET MATERIALIZED**
-- primary analysis: **NOT AUTHORIZED / NOT RUN**
+- Track A Epoch 001 prospective collection: **COMPLETE / BLINDED / RETAINED**
+- Epoch 001 inferential seed units: **50**
+- Epoch 001 blinded raw observations: **2,250**
+- Epoch 001 dataset lock: **ESTABLISHED**
+- Epoch 001 protected mapping: **CRYPTOGRAPHICALLY UNRECOVERABLE**
+- Epoch 001 unblinded input: **CANNOT BE MATERIALIZED FROM RETAINED EVIDENCE**
+- Epoch 001 primary analysis: **UNANALYZABLE / NOT RUN**
+- successor Track A issue #523: **OPEN — design/recovery-test tooling only**
+- successor empirical collection: **NOT AUTHORIZED**
 - canonical DGAF efficacy: **NOT ESTABLISHED**
-- canonical High-Assurance: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**
+- canonical High-Assurance: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**
 
 ## Completion condition
 
 This audit may be closed only after:
 
-1. F-01/F-02/F-03 are reconciled on current-facing repository documentation;
-2. Notion is read back and reconciled to the same GitHub authority boundary;
+1. the three current-facing repository surfaces are reconciled to the unrecoverable Epoch 001 disposition;
+2. Notion is read back and agrees on #496/#523 and the same scientific boundary;
 3. #522 remains visibly open or is replaced by an explicit accepted ontology adjudication;
-4. the exact audit-repair PR head completes a fresh full CI wave, including Full Repository Coverage Audit, with zero failures and zero active checks.
+4. the exact corrective PR head completes a fresh workflow wave, including Full Repository Coverage Audit, with zero failures and zero active checks.
