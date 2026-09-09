@@ -1,0 +1,59 @@
+name: Branch Disposition Inventory
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  inventory:
+    name: non-destructive branch inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact workflow head
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run classifier unit tests
+        run: python -m pytest -q tests/test_branch_disposition_inventory.py
+
+      - name: Generate read-only branch disposition ledger
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python scripts/inventory_branch_disposition.py
+          --repository "${{ github.repository }}"
+          --base main
+          --output branch-disposition-ledger.json
+
+      - name: Assert ledger cannot authorize deletion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("branch-disposition-ledger.json").read_text())
+          assert data["policy"]["auto_delete"] is False
+          assert data["base_branch"] == "main"
+          assert data["branch_count_including_base"] == data["non_base_branch_count"] + 1
+          print(data["counts"])
+          PY
+
+      - name: Upload inventory evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: branch-disposition-ledger
+          path: branch-disposition-ledger.json
+          if-no-files-found: error
+          retention-days: 30
