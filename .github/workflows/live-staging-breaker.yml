@@ -7,6 +7,7 @@ on:
       - '.github/workflows/live-staging-breaker.yml'
       - '.github/workflows/deploy.yml'
       - 'docs/governance/LIVE_STAGING_BREAKER_EVIDENCE_CONTRACT.md'
+      - 'tests/test_live_staging_breaker_contract.py'
   workflow_dispatch: {}
 
 permissions:
@@ -21,6 +22,7 @@ env:
   VERCEL_ORG_ID: team_TJWNcGa1Xh9ARKF3SYbKKxKp
   VERCEL_PROJECT_ID: prj_euzjAnhqct0wayTWWojizanKN3cX
   EXPECTED_ENSEMBLE_VERSION: 1.8.0
+  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   exercise:
@@ -31,6 +33,13 @@ jobs:
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Prove checkout is exact source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
 
       - name: Set up Node 24
         uses: actions/setup-node@v4
@@ -50,16 +59,22 @@ jobs:
         id: identity
         run: |
           set -euo pipefail
-          exercise_id="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${GITHUB_SHA}"
+          exercise_id="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${SOURCE_SHA}"
           echo "exercise_id=$exercise_id" >> "$GITHUB_OUTPUT"
-          printf '%s\n' true | vercel env add DGAF_STAGING_BREAKER_EXERCISE_ENABLED preview --token="$VERCEL_TOKEN" --force
-          printf '%s\n' "$exercise_id" | vercel env add DGAF_STAGING_BREAKER_EXERCISE_ID preview --token="$VERCEL_TOKEN" --force
 
       - name: Deploy exact PR source to Vercel preview
         id: deploy
+        env:
+          EXERCISE_ID: ${{ steps.identity.outputs.exercise_id }}
         run: |
           set -euo pipefail
-          vercel deploy --yes --token="$VERCEL_TOKEN" | tee vercel_preview.log
+          vercel deploy \
+            --target=preview \
+            --yes \
+            --token="$VERCEL_TOKEN" \
+            --env DGAF_STAGING_BREAKER_EXERCISE_ENABLED=true \
+            --env DGAF_STAGING_BREAKER_EXERCISE_ID="$EXERCISE_ID" \
+            | tee vercel_preview.log
           url=$(grep -Eo 'https://[^[:space:]]+\.vercel\.app' vercel_preview.log | tail -1)
           test -n "$url"
           echo "deployment_url=$url" >> "$GITHUB_OUTPUT"
@@ -83,7 +98,7 @@ jobs:
           test "$ready" = READY
           test "$target" != production
           test -n "$id"
-          test "$source" = "$GITHUB_SHA"
+          test "$source" = "$SOURCE_SHA"
 
       - name: Wait for preview to warm
         run: sleep 20
@@ -128,8 +143,9 @@ jobs:
           deployment_id=$(jq -r '.id' preview_deployment_metadata.json)
           source=$(jq -r '.meta.githubCommitSha // .gitSource.sha' preview_deployment_metadata.json)
           response_sha=$(sha256sum staging_breaker_response.json | awk '{print $1}')
+          test "$source" = "$SOURCE_SHA"
           jq -n \
-            --arg source "$source" \
+            --arg source "$SOURCE_SHA" \
             --arg run "$GITHUB_RUN_ID" \
             --arg attempt "$GITHUB_RUN_ATTEMPT" \
             --arg exercise "$EXERCISE_ID" \
@@ -142,7 +158,7 @@ jobs:
       - name: Upload staging evidence
         uses: actions/upload-artifact@v4
         with:
-          name: live-staging-breaker-${{ github.sha }}-${{ github.run_attempt }}
+          name: live-staging-breaker-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
           path: |
             preview_deployment_metadata.json
             staging_breaker_response.json
