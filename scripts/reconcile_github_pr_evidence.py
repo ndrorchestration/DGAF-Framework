@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Read-only reconciliation for a GitHub pull-request evidence snapshot.
 
-This tool deliberately consumes an already-collected JSON snapshot and emits a
+This tool consumes an already-collected JSON snapshot and emits a
 non-authorizing report. It makes no network calls, mutates no source of record,
 and cannot grant scientific or empirical authorization.
 """
@@ -26,9 +26,8 @@ def require(condition: bool, message: str) -> None:
 def reject_secrets(value: Any, path: str = "$") -> None:
     if isinstance(value, dict):
         for key, child in value.items():
-            lowered = str(key).lower()
             require(
-                not any(fragment in lowered for fragment in FORBIDDEN_KEY_FRAGMENTS),
+                not any(fragment in str(key).lower() for fragment in FORBIDDEN_KEY_FRAGMENTS),
                 f"secret-bearing field prohibited at {path}.{key}",
             )
             reject_secrets(child, f"{path}.{key}")
@@ -52,29 +51,33 @@ def reconcile(snapshot: dict[str, Any], expected_head_sha: str) -> dict[str, Any
 
     workflow_runs = snapshot["workflow_runs"]
     require(isinstance(workflow_runs, list), "workflow_runs must be a list")
-    run_names: set[str] = set()
+    run_ids: set[int] = set()
     failed: list[str] = []
     pending: list[str] = []
-    invalid: list[str] = []
+    stale: list[str] = []
     for index, run in enumerate(workflow_runs):
         require(isinstance(run, dict), f"workflow_runs[{index}] must be an object")
-        require(set(run) == {"name", "status", "conclusion", "head_sha"}, f"workflow_runs[{index}] keys invalid")
+        require(
+            set(run) == {"run_id", "name", "status", "conclusion", "head_sha"},
+            f"workflow_runs[{index}] keys invalid",
+        )
+        run_id = run["run_id"]
         name = run["name"]
-        require(isinstance(name, str) and name and name not in run_names, "workflow names must be distinct")
-        run_names.add(name)
+        require(isinstance(run_id, int) and run_id > 0 and run_id not in run_ids, "workflow run IDs must be distinct positive integers")
+        require(isinstance(name, str) and name, "workflow name required")
+        run_ids.add(run_id)
         require(run["status"] in {"completed", "in_progress", "queued"}, f"workflow status invalid for {name}")
         require(run["conclusion"] in {"success", "failure", "cancelled", None}, f"workflow conclusion invalid for {name}")
         require(isinstance(run["head_sha"], str) and SHA_RE.fullmatch(run["head_sha"]), f"workflow head SHA invalid for {name}")
         if run["head_sha"] != expected_head_sha:
-            invalid.append(name)
+            stale.append(f"{name}#{run_id}")
         elif run["status"] != "completed":
-            pending.append(name)
+            pending.append(f"{name}#{run_id}")
         elif run["conclusion"] != "success":
-            failed.append(name)
+            failed.append(f"{name}#{run_id}")
 
-    stale_subject = pull_request["head_sha"] != expected_head_sha
     status = "PASS"
-    if stale_subject or invalid:
+    if pull_request["head_sha"] != expected_head_sha or stale:
         status = "STALE"
     elif failed:
         status = "FAIL"
@@ -83,13 +86,14 @@ def reconcile(snapshot: dict[str, Any], expected_head_sha: str) -> dict[str, Any
 
     return {
         "record_type": "GITHUB_PR_EVIDENCE_RECONCILIATION_REPORT",
-        "schema_version": 1,
+        "schema_version": 2,
         "repository": snapshot["repository"],
         "pull_request_number": pull_request["number"],
         "expected_head_sha": expected_head_sha,
         "observed_head_sha": pull_request["head_sha"],
+        "workflow_run_ids": sorted(run_ids),
         "reconciliation_status": status,
-        "stale_workflows": sorted(invalid),
+        "stale_workflows": sorted(stale),
         "failed_workflows": sorted(failed),
         "pending_workflows": sorted(pending),
         "authorization_effect": "NONE",
