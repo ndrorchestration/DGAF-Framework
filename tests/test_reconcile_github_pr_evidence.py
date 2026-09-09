@@ -13,10 +13,10 @@ OTHER = "b" * 40
 def snapshot() -> dict[str, object]:
     return {
         "repository": "ndrorchestration/DGAF-Framework",
-        "pull_request": {"number": 541, "head_sha": HEAD, "state": "open"},
+        "pull_request": {"number": 543, "head_sha": HEAD, "state": "merged"},
         "workflow_runs": [
-            {"name": "Governance CI", "status": "completed", "conclusion": "success", "head_sha": HEAD},
-            {"name": "Doc Lint", "status": "completed", "conclusion": "success", "head_sha": HEAD},
+            {"run_id": 1001, "name": "Governance CI", "status": "completed", "conclusion": "success", "head_sha": HEAD},
+            {"run_id": 1002, "name": "Doc Lint", "status": "completed", "conclusion": "success", "head_sha": HEAD},
         ],
     }
 
@@ -24,6 +24,7 @@ def snapshot() -> dict[str, object]:
 def test_exact_subject_with_successful_workflows_passes() -> None:
     report = reconcile(snapshot(), HEAD)
     assert report["reconciliation_status"] == "PASS"
+    assert report["workflow_run_ids"] == [1001, 1002]
     assert report["authorization_effect"] == "NONE"
     assert report["scientific_state_effect"] == "NONE"
     assert report["mutated_authority_of_record"] is False
@@ -44,7 +45,7 @@ def test_workflow_bound_to_other_head_is_stale() -> None:
     runs[0]["head_sha"] = OTHER
     report = reconcile(record, HEAD)
     assert report["reconciliation_status"] == "STALE"
-    assert report["stale_workflows"] == ["Governance CI"]
+    assert report["stale_workflows"] == ["Governance CI#1001"]
 
 
 def test_pending_workflow_blocks_but_does_not_fail() -> None:
@@ -55,7 +56,7 @@ def test_pending_workflow_blocks_but_does_not_fail() -> None:
     runs[0]["conclusion"] = None
     report = reconcile(record, HEAD)
     assert report["reconciliation_status"] == "BLOCKED"
-    assert report["pending_workflows"] == ["Governance CI"]
+    assert report["pending_workflows"] == ["Governance CI#1001"]
 
 
 def test_failed_workflow_fails() -> None:
@@ -65,7 +66,16 @@ def test_failed_workflow_fails() -> None:
     runs[0]["conclusion"] = "failure"
     report = reconcile(record, HEAD)
     assert report["reconciliation_status"] == "FAIL"
-    assert report["failed_workflows"] == ["Governance CI"]
+    assert report["failed_workflows"] == ["Governance CI#1001"]
+
+
+def test_duplicate_run_ids_are_rejected() -> None:
+    record = snapshot()
+    runs = record["workflow_runs"]
+    assert isinstance(runs, list) and isinstance(runs[1], dict)
+    runs[1]["run_id"] = 1001
+    with pytest.raises(ValueError, match="run IDs must be distinct"):
+        reconcile(record, HEAD)
 
 
 def test_secret_bearing_input_is_rejected() -> None:
