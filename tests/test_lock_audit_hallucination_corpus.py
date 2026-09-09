@@ -3,12 +3,12 @@ from pathlib import Path
 
 import pytest
 
-from scripts.lock_audit_hallucination_corpus import (
-    build_lock_manifest,
-    CorpusValidationError,
-    REQUIRED_AUDIT_FIELDS,
-    write_manifest,
-)
+from scripts import lock_audit_hallucination_corpus as corpus_lock
+
+CorpusValidationError = corpus_lock.CorpusValidationError
+REQUIRED_AUDIT_FIELDS = corpus_lock.REQUIRED_AUDIT_FIELDS
+build_lock_manifest = corpus_lock.build_lock_manifest
+write_manifest = corpus_lock.write_manifest
 
 
 def audit_record(sample_id: str) -> dict:
