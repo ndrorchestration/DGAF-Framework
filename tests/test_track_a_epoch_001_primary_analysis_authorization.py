@@ -6,9 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = ROOT / "scripts" / "validate_track_a_epoch_001_primary_analysis_authorization.py"
-spec = importlib.util.spec_from_file_location(
-    "primary_analysis_authorization_validator", VALIDATOR
-)
+spec = importlib.util.spec_from_file_location("primary_analysis_authorization_validator", VALIDATOR)
 assert spec and spec.loader
 validator = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(validator)
