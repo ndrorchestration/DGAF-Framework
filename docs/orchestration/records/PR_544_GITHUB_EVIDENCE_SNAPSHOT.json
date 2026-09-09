@@ -1,0 +1,150 @@
+{
+  "repository": "ndrorchestration/DGAF-Framework",
+  "pull_request": {
+    "number": 544,
+    "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493",
+    "state": "merged"
+  },
+  "workflow_runs": [
+    {
+      "run_id": 34346042848,
+      "name": "PPTL CI",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042762,
+      "name": "Propagation Consistency (Advisory)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042765,
+      "name": "IP Hygiene Sweep",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042968,
+      "name": "DGAF Regression Suite",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042999,
+      "name": "Truth Layer Validation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346043033,
+      "name": "Full Repository Coverage Audit",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042974,
+      "name": "Claim Hygiene Audit",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042951,
+      "name": "Vocabulary Translation Matrix",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042981,
+      "name": "Validate Control-State HEAD Binding",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042753,
+      "name": "Critical PR Lane Custody",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042835,
+      "name": "Control-State Consistency",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042977,
+      "name": "PR Issue-State Keyword Guard",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042953,
+      "name": "PDMAL Harness Validation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042811,
+      "name": "Epistemic Evidence Validation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042975,
+      "name": "Doc Lint",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042960,
+      "name": "Doc Lint (PR Scope)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042980,
+      "name": "Truth Layer Tests",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042939,
+      "name": "Python Tests & Quality Checks",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042958,
+      "name": "PDMAL Pre-Freeze Runner Validation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    },
+    {
+      "run_id": 34346042822,
+      "name": "Governance CI",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b4a0558622943129d48508c43c82d369cf8bd493"
+    }
+  ]
+}
