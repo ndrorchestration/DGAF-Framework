@@ -333,9 +333,12 @@ def run_experiment() -> dict:
         }
 
     variances = [float(trial["curvature_variance"]) for trial in trials]
+    source_commit = os.environ.get("SOURCE_SHA") or os.environ.get(
+        "GITHUB_SHA", "UNBOUND_LOCAL"
+    )
     return {
         "schema": SCHEMA,
-        "source_commit": os.environ.get("GITHUB_SHA", "UNBOUND_LOCAL"),
+        "source_commit": source_commit,
         "source_run_id": os.environ.get("GITHUB_RUN_ID", "UNBOUND_LOCAL"),
         "epistemic_classification": {
             "matrix_results": "COMPUTED_SYNTHETIC",
