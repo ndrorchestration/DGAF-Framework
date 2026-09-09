@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Fail-closed validator for registry/agent_identity_manifest.v1.json.
 
-This checker validates structure and conflict preservation only. It does not
-resolve contested agent authority, promote conceptual identities to canonical
-status, or carry/modify live scientific state.
+This checker validates structure and preservation of observed identity lineage.
+Current authority resolution is carried separately by
+registry/agent_ontology_adjudication.v1.json; this legacy conflict register must
+not override that adjudication or carry/modify live scientific state.
 """
 from __future__ import annotations
 
@@ -50,7 +51,7 @@ def validate_manifest(data: dict[str, Any]) -> None:
     if "scientific_boundary" in data:
         _fail("identity manifest must not embed moving scientific state")
     if data["status"] != "conflict-register-not-authority-resolution":
-        _fail("manifest status must preserve unresolved authority")
+        _fail("legacy manifest status must remain conflict-register-not-authority-resolution")
     if data["scientific_state_effect"] != "none":
         _fail("identity control must have no scientific-state effect")
     if data["scientific_state_authority"] != EXPECTED_SCIENTIFIC_STATE_AUTHORITY:
@@ -119,14 +120,16 @@ def validate_manifest(data: dict[str, Any]) -> None:
             if entry["seat_status"] != "variant":
                 _fail(f"{identity_id}: variant_of requires seat_status=variant")
 
-    # Sentinel-Phi must remain a variant lineage and Ionia must remain unresolved,
-    # preventing silent collapse or promotion by future edits.
+    # The legacy manifest preserves source observations and lineage; current
+    # canonical seat adjudication lives in agent_ontology_adjudication.v1.json.
+    # Sentinel-Phi lineage must remain explicit, but this validator must not
+    # re-impose pre-adjudication Ionia ambiguity as current authority.
     sentinel_phi = by_id.get("agent.sentinel-phi")
     if not sentinel_phi or sentinel_phi["variant_of"] != "agent.sentinel":
         _fail("Sentinel-Phi variant lineage missing or changed")
     ionia = by_id.get("agent.ionia")
-    if not ionia or ionia["seat_status"] != "conflicted":
-        _fail("Ionia agent/state conflict must remain explicit until ratified")
+    if not ionia:
+        _fail("Ionia identity observation record missing")
 
     for n in range(20, 28):
         designation = f"A-{n}"
@@ -147,7 +150,8 @@ def main() -> int:
     args = parser.parse_args()
     data = json.loads(args.manifest.read_text(encoding="utf-8"))
     validate_manifest(data)
-    print(f"PASS: {args.manifest} preserves {len(data['identities'])} identity records")
+    print(f"PASS: {args.manifest} preserves {len(data['identities'])} identity observation records")
+    print("CURRENT_ONTOLOGY_AUTHORITY=registry/agent_ontology_adjudication.v1.json")
     return 0
 
 
