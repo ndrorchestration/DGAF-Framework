@@ -1,0 +1,132 @@
+name: P4 Mode T Full 50-Seed Task Timing
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p4-mode-t-full-pilot-task-timing.yml'
+      - 'docs/governance/P4_MODE_T_FULL_BOUNDARY_TIMING_CORRECTION_2026-09-06.md'
+      - 'experiments/pdmal_pilot/mode_t_full_pilot_timing.py'
+      - 'experiments/pdmal_pilot/test_mode_t_full_pilot_timing.py'
+      - 'experiments/pdmal_pilot/mode_t_timing_study.py'
+      - 'experiments/pdmal_pilot/run_pilot.py'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+      - 'experiments/pdmal_pilot/analysis.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  RUNNER_CLASS: github-hosted-standard-vm-ubuntu-24.04
+  PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/experiments/pdmal_pilot
+
+jobs:
+  full-pilot-task-shape:
+    name: 50 seeds x 180 trials — bounded task timing only
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact evidence head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact head and bind source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          workflow_sha="$(sha256sum .github/workflows/p4-mode-t-full-pilot-task-timing.yml | awk '{print $1}')"
+          helper_sha="$(sha256sum experiments/pdmal_pilot/mode_t_full_pilot_timing.py | awk '{print $1}')"
+          component_sha="$(sha256sum experiments/pdmal_pilot/mode_t_timing_study.py | awk '{print $1}')"
+          run_pilot_sha="$(sha256sum experiments/pdmal_pilot/run_pilot.py | awk '{print $1}')"
+          for value in "$workflow_sha" "$helper_sha" "$component_sha" "$run_pilot_sha"; do
+            [[ "$value" =~ ^[0-9a-f]{64}$ ]]
+          done
+          {
+            echo "FULL_TIMING_WORKFLOW_SHA256=$workflow_sha"
+            echo "FULL_TIMING_HELPER_SHA256=$helper_sha"
+            echo "COMPONENT_TIMING_HELPER_SHA256=$component_sha"
+            echo "RUN_PILOT_SHA256=$run_pilot_sha"
+          } >> "$GITHUB_ENV"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Install hash-locked PDMAL dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run correction contract tests
+        run: python -m pytest experiments/pdmal_pilot/test_mode_t_full_pilot_timing.py -q
+
+      - name: Measure exact 50-seed / 9,000-trial synthetic task shape
+        run: |
+          mkdir -p test-artifacts
+          python experiments/pdmal_pilot/mode_t_full_pilot_timing.py \
+            --output test-artifacts/p4-mode-t-full-pilot-task-timing.json \
+            --repetitions 3
+
+      - name: Fail closed on scientific-state or coverage promotion
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path('test-artifacts/p4-mode-t-full-pilot-task-timing.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          required = {
+              'evidence_class': 'P4_MODE_T_SYNTHETIC_FULL_PILOT_TASK_TIMING_V1',
+              'synthetic_seed_count_per_repetition': 50,
+              'trials_per_seed': 180,
+              'total_trials_per_repetition': 9000,
+              'canonical_seed_execution_semantics': 'sequential',
+              'full_boundary_contiguous_timing_established': False,
+              'complete_blinded_artifact_set_publication_timed': False,
+              'accepted_independent_retention_timed': False,
+              'external_transparency_timed': False,
+              'coverage_complete': False,
+              'w_proposal_eligible': False,
+              'numeric_w_selected': False,
+              'proposed_w_seconds': None,
+              'protocol_frozen': False,
+              'pilot_authorized': False,
+              'empirical_data_collection': False,
+              'protected_material_present': False,
+              'secret_instantiation': False,
+              'unblinding_requested': False,
+              'empirical_n': 0,
+          }
+          for key, expected in required.items():
+              if data.get(key) != expected:
+                  raise SystemExit(f'{key} mismatch: {data.get(key)!r} != {expected!r}')
+          if data.get('control_plane_sha') != os.environ['EVIDENCE_SHA']:
+              raise SystemExit('control_plane_sha mismatch')
+          if len(data.get('measurements', [])) != 3:
+              raise SystemExit('expected exactly three full task-shape repetitions')
+          if any(item.get('total_trials') != 9000 for item in data['measurements']):
+              raise SystemExit('one or more repetitions did not execute 9,000 trials')
+          PY
+
+      - name: Verify evidence sidecar
+        run: |
+          cd test-artifacts
+          sha256sum --check p4-mode-t-full-pilot-task-timing.json.sha256
+
+      - name: Upload bounded timing evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p4-mode-t-full-pilot-task-timing-${{ env.EVIDENCE_SHA }}
+          path: |
+            test-artifacts/p4-mode-t-full-pilot-task-timing.json
+            test-artifacts/p4-mode-t-full-pilot-task-timing.json.sha256
+          if-no-files-found: error
+          retention-days: 30
