@@ -18,10 +18,16 @@ import json
 import math
 import os
 import random
+import sys
+from pathlib import Path
 from statistics import fmean, median, pstdev, pvariance
 from typing import Iterable
 
-from tools.pdmal.lattice_harness import DODECAHEDRAL_EDGES
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from tools.pdmal.lattice_harness import DODECAHEDRAL_EDGES  # noqa: E402
 
 SCHEMA = "PDMAL_WEIGHTED_FORMAN_REPLICATION_V1"
 MASTER_SEED = 20260909
