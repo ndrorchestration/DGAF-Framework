@@ -46,9 +46,7 @@ def write_ledger(tmp_path, records):
 
 
 def test_accepts_prospective_blocked_first_record(tmp_path):
-    path = write_ledger(
-        tmp_path, [record("PRECOLLECTION_GATE_CHECKLIST", "E002-GATE-0001", status="BLOCKED")]
-    )
+    path = write_ledger(tmp_path, [record("PRECOLLECTION_GATE_CHECKLIST", "E002-GATE-0001", status="BLOCKED")])
     MODULE.validate_ledger(path)
 
 
