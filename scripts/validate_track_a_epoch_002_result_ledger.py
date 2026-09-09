@@ -15,18 +15,23 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
-ORDER = [
-    "PRECOLLECTION_GATE_CHECKLIST",
-    "COLLECTION_START_RECEIPT",
-    "PER_SEED_EXECUTION_RECORD",
-    "QC_LEDGER",
-    "DATASET_LOCK_RECEIPT",
-    "UNBLINDING_DECISION_RECORD",
-    "MATERIALIZATION_RECEIPT",
-    "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD",
-    "LOCKED_ANALYSIS_RESULT_RECORD",
-    "INTERPRETATION_NOTE",
-]
+PER_SEED_RECORD_COUNT = 50
+ORDER = (
+    [
+        "PRECOLLECTION_GATE_CHECKLIST",
+        "COLLECTION_START_RECEIPT",
+    ]
+    + ["PER_SEED_EXECUTION_RECORD"] * PER_SEED_RECORD_COUNT
+    + [
+        "QC_LEDGER",
+        "DATASET_LOCK_RECEIPT",
+        "UNBLINDING_DECISION_RECORD",
+        "MATERIALIZATION_RECEIPT",
+        "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD",
+        "LOCKED_ANALYSIS_RESULT_RECORD",
+        "INTERPRETATION_NOTE",
+    ]
+)
 
 
 def load_records(path: Path) -> list[dict]:
@@ -59,9 +64,12 @@ def validate_ledger(path: Path) -> None:
             raise ValueError(f"duplicate record_id: {record_id}")
         seen_ids.add(record_id)
 
-        record_type = record["record_type"]
         if terminal_seen:
             raise ValueError("records cannot follow a non-PASS record")
+        if expected_index >= len(ORDER):
+            raise ValueError("ledger contains more records than the defined ordered sequence")
+
+        record_type = record["record_type"]
         if record_type != ORDER[expected_index]:
             raise ValueError(
                 f"invalid record order: expected {ORDER[expected_index]}, got {record_type}"
@@ -78,9 +86,6 @@ def validate_ledger(path: Path) -> None:
             terminal_seen = True
         prior_id = record_id
         expected_index += 1
-
-        if expected_index == len(ORDER) and not terminal_seen:
-            break
 
     if len(records) > len(ORDER):
         raise ValueError("ledger contains more records than the defined ordered sequence")
