@@ -1,7 +1,7 @@
 # NDR INTERNAL VOCABULARY MASTER LIBRARY
 
 > **Epistemic status:** Canonical terminology registry; vocabulary mappings are not evidence of implementation or validation.
-> **Last updated:** 2026-09-09 — brainstorm-corpus reconciliation
+> **Last updated:** 2026-09-09 — brainstorm-corpus reconciliation batches 1–2
 
 ## Epistemic standard
 
@@ -108,7 +108,7 @@ The following are retained for traceability and must not be used as current capa
 
 See `docs/taxonomy/EPISTEMIC_VOCABULARY_STANDARD.md` for the full policy and `docs/taxonomy/TAXONOMY_ADDENDUM_8_AGENTS.md` for the historical taxonomy addendum.
 
-## 2026-09-09 brainstorm-corpus reconciliation
+## 2026-09-09 brainstorm-corpus reconciliation — Batch 1
 
 A historical 2,610-line brainstorming/specification corpus was reviewed as a **discovery/provenance source**, not as implementation or validation evidence. The following vocabulary is retained with explicit epistemic boundaries.
 
@@ -203,4 +203,134 @@ The following examples remain `UNSUPPORTED`, `HISTORICAL`, or `ATTESTED` unless 
 - The user-defined **Platinum Mean** `pP = 1/(2 sin(π/11)) ≈ 1.774732842` is distinct from the **plastic constant** `ρ ≈ 1.3247179572447454`.
 - PDMAL's accepted formalization uses the plastic constant within its own scope and must not inherit historical 1.7747/plastic-constant conflation.
 
-**Canonical ingestion rule:** brainstorm dumps, generated syntheses, agent attestations, and artifact-title inventories may seed terminology and discovery targets, but they cannot upgrade evidence class through repetition or aggregation.
+## 2026-09-09 brainstorm-corpus reconciliation — Batch 2 delta
+
+A second historical corpus of 2,728 lines was deduplicated against Batch 1. Repeated concepts inherit the earlier disposition. The following are the principal new vocabulary additions.
+
+### Consensus Triad (CT)
+
+**Definition:** a temporary formation of peer contributors that generate independently attributable outputs and enter an explicit consensus/blending function without a required structural leader.
+
+**Evidence class:** `DEFINED` / pattern candidate.
+
+**Boundary:** a consensus formation does not itself establish correctness or empirical efficacy; the join function, provenance rules, authority, and evaluation must be specified.
+
+### Conducted Triad (CoT)
+
+**Definition:** a leader-centric temporary formation in which one conductor is the user-facing synthesizer while internal augmenters provide specialist contributions and preserve separate identities.
+
+**Closest analogue:** supervisor + agents-as-tools.
+
+**Evidence class:** `DEFINED` / pattern candidate.
+
+### Positional agnosticism
+
+Formation role is task-assigned rather than identity-fixed. An eligible agent may occupy conductor, peer, augmenter, critic, evaluator, or other formation positions when the governing task contract and authority permit.
+
+**Invariant:** `agent identity ≠ formation position ≠ authority`.
+
+### Structural vs. parametric techniques
+
+- **Instantiation** — select the active roster for a task.
+- **QA bifurcation** — create an independent/mirrored checking branch where justified.
+- **Consensus triad** — peer topology plus explicit join.
+- **Conducted triad** — conductor plus internal augmenters.
+- **Lensing** — alter representation, basis, metrics, or evaluator viewpoint without silently mutating identity or authority.
+
+**Evidence class:** `DEFINED`; implementation requires executable contracts/tests.
+
+### Framework-Persona / Persona-Framework
+
+**Framework-Persona:** framework or methodology exposed through a persona/interface wrapper for invocation or explanation.
+
+**Persona-Framework:** identity specification intentionally designed to embody a methodology/framework.
+
+**Boundary:** neither label proves an independently deployed runtime agent.
+
+### DID — Dodecahedral-Icosahedral Dual
+
+Retained as an internal design/visualization concept for pairing dodecahedral expert topology with a dual governance/critic representation.
+
+**Evidence class:** `DEFINED` / `METAPHOR` unless an actual incidence structure is implemented and tested.
+
+### 120-cell / 600-cell analogy
+
+The 120-cell `{5,3,3}` and 600-cell `{3,3,5}` are real regular 4D polytopes and are mathematical duals. The 120-cell has 120 dodecahedral cells and 600 vertices; the 600-cell has 600 tetrahedral cells and 120 vertices.
+
+**Boundary:** an internal `20-agent shell` or `12-hub core` is not thereby a literal 120-cell/600-cell implementation. Treat such mappings as analogy unless a genuine 4D combinatorial/geometric model is specified.
+
+### Riemannian substrate mapping / fluid-membrane / epistemic heatmap
+
+**Working research concept:** map an explicit uncertainty/error quantity onto a metric or spatial cost field and visualize path cost/uncertainty geometrically.
+
+**Evidence class:** `HYPOTHESIS` / `METAPHOR` until a metric tensor or cost structure, update rule, path solver, implementation, and evaluation are specified.
+
+**Boundary:** no current claim that reasoning physically warps a manifold, follows true geodesics, or that curvature forces truth is established by historical generated text.
+
+### NDR-Pattern-82 — Proximity-Gated Luminance
+
+Retained as a historical visualization candidate: change tracer/luminance using a defined proximity/confidence function.
+
+**Evidence class:** `HISTORICAL` / `HYPOTHESIS` unless source code and tests establish implementation. Brightness is not proof of epistemic honesty.
+
+### Logic ghosting
+
+**Definition:** stale or superseded state continues to influence a current decision path.
+
+**Closest analogue:** stale-state/context contamination or precedence failure.
+
+### Over-cleaning
+
+**Definition:** reconciliation/pruning removes useful diversity or safe exploratory alternatives.
+
+**Use:** anti-pattern warning against destructive consolidation.
+
+### Violation taxonomy candidate
+
+Historical three-part classification: structural/incompatible; implementation drift/remediable; boundary/novel-context escalation.
+
+**Evidence class:** `DEFINED` / candidate taxonomy only. Map to current canonical governance before operational use.
+
+### Schizophonic Studio Trio
+
+Preserve **Reson + Echolette + Lyra** as historical/design formation lineage corresponding roughly to structural/signal-flow, textural/feedback, and synthesis/integration perspectives.
+
+Historical frequencies, maturity percentages, and behavioral capability claims remain unverified.
+
+### Archive Trio identity conflict
+
+The historical corpus alternates between **Alpha/Beta/Gamma** and **Librarian/Auditor/Actualizer**. Preserve both lineages; do not assert equivalence until current identity authority binds them. `Resin` references are not promoted as a new agent identity.
+
+### Omni-ROI Gate
+
+Historical/proposed dynamic abort concept based on a volatility/risk signal.
+
+**Current mapping rule:** prefer existing fail-closed policy/authorization controls unless a distinct metric, interface, lifecycle, implementation, and evidence justify a separate component.
+
+### Cognitive Coupling Jump / "My Jump == Your Jump"
+
+Historical personalization/alignment hypothesis measuring resemblance to the architect's reasoning leaps.
+
+**Boundary:** reasoning-style similarity is not truth, correctness, safety, or scientific efficacy evidence.
+
+### Platinum Overdrive / OST-51
+
+Historical/proposed stress-test lineage using the user-defined Platinum Mean as a test parameter or boundary condition.
+
+**Evidence class:** `HYPOTHESIS` / `HISTORICAL`. The generated contraction example assumes a chosen update rule; it does not establish that a real agent system converges to 1.7747 or gains safety from doing so.
+
+### Additional Batch 2 quarantine
+
+The following remain unsupported unless separately established:
+
+- FSM/MDP labels presented as proof that unsafe states are impossible;
+- fixed-point or contraction arguments generalized from an assumed toy update map to the live system;
+- implemented KL-divergence role-bleeding detection, Bayesian trust scoring, self-adjoint/Fourier/Phi-calculus operators, or Fibonacci-series integration without code/tests;
+- ASL/pdoom mitigation percentages or `12.5%` residual-risk claims;
+- NIST AI RMF, OECD, GDPR Article 22, or institutional compliance claims without scoped conformance evidence;
+- trade-secret ratings, `$250K–$500K` valuation, `6–12 month` competitive advantage, `7–22%` industry performance superiority, or similar market claims;
+- claims that GitHub timestamps, Apache licensing, `patent-pending` labels, defensive publication, or `CITATION.cff` content establish patent rights, inventorship priority, release status, or legal protection;
+- completion/maturity values such as `27%`, `50%`, `100%`, `13/48`, `24/48`, or "39-file deficit resolved" when the same corpus contains conflicting states;
+- private personal-case data presented as generalized empirical proof of Human Flourishing, clinical, psychological, or biopsychological efficacy.
+
+**Canonical ingestion rule:** brainstorm dumps, generated syntheses, agent attestations, artifact-title inventories, and personal-case narratives may seed terminology, design requirements, hypotheses, and discovery targets, but they cannot upgrade evidence class through repetition or aggregation.
