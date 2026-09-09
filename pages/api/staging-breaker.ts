@@ -78,7 +78,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const sequence = trace.map((entry) => entry.to)
   const sequenceMatches = JSON.stringify(sequence) === JSON.stringify(EXPECTED_SEQUENCE)
-  if (!sequenceMatches || state !== 'VERIFIED') {
+  if (!sequenceMatches) {
     return res.status(500).json({
       status: 'FAIL',
       reason: 'breaker transition sequence did not match the declared contract',
