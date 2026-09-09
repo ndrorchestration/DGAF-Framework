@@ -6,9 +6,58 @@
 
 ## Recovered version chain
 
-Drive discovery confirms a substantial historical A.P.O.G.E.E. HTML prototype lineage, including examples such as v3.9, v4.0, v5.0, v6.0, v17.0, v23.4, v49.0, v52.0, and v53.1.
+Drive discovery confirms a substantial historical A.P.O.G.E.E. HTML prototype lineage, including examples such as v3.9, v4.0, v5.0, v6.0, v17.0, v23.3, v23.4, v49.0, v52.0, and v53.1.
 
 An exact `v49.2` artifact or `v49_master_manifest.json` has **not** been recovered. The historical corpus's phrase `v49.2 Master Build` therefore remains an unresolved version attribution. Do not silently substitute v49.0 or v52.0 for v49.2.
+
+## v23.3 — Crystalline Lattice
+
+**Recovered title:** `A.P.O.G.E.E. HUB v23.3: Crystalline Lattice`
+
+This source materially corrects the earlier scoped negative finding from v52.0: a historical A.P.O.G.E.E. prototype **did** animate a declared 20-element `H_PATH` over the dodecahedral outer-node set.
+
+### What is genuinely implemented
+
+- explicit 20-node dodecahedral vertex coordinates;
+- explicit 12-node icosahedral inner-hub coordinates;
+- an `H_PATH` constant with 20 indices;
+- a visible tracer sphere;
+- animation logic that advances from `outerNodes[H_PATH[step]]` to `outerNodes[H_PATH[next]]` and interpolates between them;
+- nearby inner-hub emissive intensity and scale changes based on distance to the tracer;
+- dynamically rebuilt inner-hub ↔ outer-node line segments under a distance threshold;
+- modal UI controls that alter display variables and visual state.
+
+The relevant traversal is implemented as a visualization path, not merely declared as an unused constant.
+
+### What this does not establish
+
+The source does **not** establish that the path:
+
+- is a formally verified Hamiltonian path over the exact rendered graph incidence relation;
+- routes real reasoning, tool calls, messages, or agent state;
+- causes exhaustive cognitive coverage;
+- prevents role-bleeding;
+- improves correctness, latency, robustness, or cost;
+- creates epistemic or scientific validity;
+- implements a current DGAF/PDMAL/control-plane runtime.
+
+The historical UI's `LATTICE_COHERENCE` is directly tied to the local `morph` display variable; it is not an externally validated coherence measurement.
+
+### NDR-82 implication
+
+v23.3 also supplies a real proximity-driven visualization mechanism: inner hubs brighten and scale when their Euclidean distance to the tracer is below a fixed threshold. That is stronger provenance for the broad **proximity-gated luminance** idea than the later v49.0 breach-color shader alone.
+
+However, the source does not compute distance to a phi attractor, does not implement the generated `1.61818` proximity claim, and does not identify the code as `NDR-82`. Therefore:
+
+- `proximity-driven visual luminance lineage = SUPPORTED_HISTORICALLY`;
+- `NDR-82 exact implementation identity = NOT ESTABLISHED`;
+- `phi-attractor proximity semantics = NOT ESTABLISHED`.
+
+### Hamiltonian lineage disposition
+
+`historical H_PATH visualization execution = SUPPORTED in v23.3`
+
+This supersedes any overbroad statement that no historical Hamiltonian traversal implementation existed. It does **not** supersede the narrower v52.0 finding that `H_PATH` is declared but unused in that specific artifact.
 
 ## v49.0 — Axiomatic Sentinel
 
@@ -70,7 +119,7 @@ The v49.0 code strengthens historical provenance for concepts later described as
 
 ### What is not established by the source
 
-The presence of `H_PATH` does not establish Hamiltonian execution. In the fetched source, `H_PATH` is declared but not used by the animation loop or routing logic. The animation places instances by toroidal/golden-angle equations instead.
+The presence of `H_PATH` does not establish Hamiltonian execution **in v52.0**. In the fetched source, `H_PATH` is declared but not used by the animation loop or routing logic. The animation places instances by toroidal/golden-angle equations instead.
 
 The fetched source also calls:
 
@@ -80,7 +129,7 @@ const t = clock.getElapsedTime();
 
 but does not define `clock` in the recovered file. As written, the animation path therefore has an unresolved runtime defect unless some omitted/external context supplies it.
 
-No source evidence was found here for:
+No source evidence was found **in v52.0** for:
 
 - a traversal that visits each specialist vertex exactly once;
 - role-bleeding prevention;
@@ -94,7 +143,7 @@ No source evidence was found here for:
 
 ### Adjudication
 
-v52.0 is a genuine historical **interactive visualization prototype**, not evidence for the generated claims of a mathematically guaranteed Hamiltonian governance runtime.
+v52.0 is a genuine historical **interactive visualization prototype**, not evidence for the generated claims of a mathematically guaranteed Hamiltonian governance runtime. The separate v23.3 source does contain active `H_PATH` visualization traversal; that does not transfer execution semantics into v52.0.
 
 ## v53.1 — Axiomatic Sentinel / Pattern-78 naming evidence
 
@@ -138,8 +187,8 @@ The identifier in this recovered source is `NJ-Pattern-78`, whereas later genera
 The recovered artifacts make the evolution more concrete:
 
 1. **Historical prototypes:** rich visual metaphors, shader/state color, geometric meshes, named paths, audio cues, and optimistic governance status displays.
-2. **Historical implementation lineage:** by v53.1, Pattern-78 is explicitly named in code as a governance heartbeat.
-3. **Historical weakness exposed:** visual/state labels could imply stronger guarantees than the code actually enforced; v49.0 and v53.1 both contain a fail-open governance-fetch fallback, and v52.0 declares but does not execute `H_PATH`.
+2. **Historical implementation lineage:** v23.3 executes a real `H_PATH` visualization traversal; by v53.1, Pattern-78 is explicitly named in code as a governance heartbeat.
+3. **Historical weaknesses exposed:** visualization mechanics do not establish reasoning efficacy; v49.0 and v53.1 contain a fail-open governance-fetch fallback; v52.0 declares but does not execute `H_PATH` and contains an unresolved `clock` reference.
 4. **Current engineering:** explicit typed state identity, immutable provenance, authority narrowing, budget enforcement, and `CommitGate` proposal/authorization/commit barriers with tests.
 5. **Current evidence discipline:** UI labels, shader states, path constants, and generated metrics are no longer allowed to promote themselves into authorization, verification, or scientific efficacy.
 
@@ -153,6 +202,7 @@ Until an exact source is recovered:
 
 Known nearby artifacts must remain distinct:
 
+- `v23.3 Crystalline Lattice` — recovered;
 - `v49.0 Axiomatic Sentinel` — recovered;
 - `v52.0 MASTER_RESOLVED` — recovered;
 - `v53.1 Axiomatic Sentinel` — recovered;
@@ -163,6 +213,8 @@ Do not infer an intermediate version's contents from later or earlier siblings.
 ## Epistemic effect
 
 `historical_implementation_provenance = PARTIALLY_RECOVERED`  
+`historical_h_path_visualization_execution = SUPPORTED_IN_V23_3`  
+`proximity_driven_luminance_lineage = SUPPORTED_IN_V23_3`  
 `pattern_78_visualization_lineage = SUPPORTED_HISTORICALLY`  
 `pattern_78_fail_closed_authorization = NOT_SUPPORTED_BY_LEGACY_PROTOTYPE`  
 `current_runtime_authority_effect = NONE`  
