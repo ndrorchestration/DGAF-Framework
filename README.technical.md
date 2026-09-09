@@ -6,6 +6,8 @@
 
 DGAF is a framework for governed agent orchestration, evaluation, provenance, and control design. This document provides a technical map; authoritative specifications and current experimental status remain in the linked records.
 
+For industry-neutral explanations of DGAF-specific terminology, start with [`docs/PUBLIC_TRANSLATION_LAYER.md`](./docs/PUBLIC_TRANSLATION_LAYER.md).
+
 ## Architecture at a glance
 
 DGAF's implementation surfaces include:
@@ -70,17 +72,17 @@ See [`docs/governance/MATHEMATICAL_NOTATION_POLICY_METALLIC_MEANS_2026-08-28.md`
 
 For current project status and experimental boundaries, use:
 
-- [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md)
-- [`docs/PROJECT_STATUS.md`](./docs/PROJECT_STATUS.md)
+- [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) — live current-facing state authority;
+- [`docs/PROJECT_STATUS.md`](./docs/PROJECT_STATUS.md) — compatibility entrypoint that redirects to current state and preserves dated snapshots.
 
 Historical implementation records and earlier terminology remain available for provenance. See [`docs/HISTORICAL_RECORDS_INDEX.md`](./docs/HISTORICAL_RECORDS_INDEX.md) before treating an older record as current authority.
 
 ## Related references
 
-- [`README.md`](./README.md) — project overview
+- [`README.md`](./README.md) — public project overview
+- [`docs/PUBLIC_TRANSLATION_LAYER.md`](./docs/PUBLIC_TRANSLATION_LAYER.md) — plain-English terminology and claim-state translation
 - [`README.governance.md`](./README.governance.md) — governance model
 - [`docs/PATTERN_COMMONS_ARCHITECTURE.md`](./docs/PATTERN_COMMONS_ARCHITECTURE.md) — ecosystem pattern architecture
-- [`docs/governance/PUBLIC_DOCUMENTATION_INFORMATION_ARCHITECTURE.md`](./docs/governance/PUBLIC_DOCUMENTATION_INFORMATION_ARCHITECTURE.md) — documentation placement and navigation
 
 ---
 
