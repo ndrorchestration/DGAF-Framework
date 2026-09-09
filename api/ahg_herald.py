@@ -40,6 +40,7 @@ Environment variables:
 import json
 import logging
 import os
+import urllib.parse
 import urllib.request
 from http.server import BaseHTTPRequestHandler
 from typing import Any
@@ -48,6 +49,14 @@ logger = logging.getLogger("p01.herald")
 
 NDR_STASIS_PHI = 1.6180339887498949
 NDR_STASIS_TOLERANCE = 0.02
+
+
+def _validated_http_url(url: str) -> str:
+    """Require an absolute HTTP(S) URL before any network request is built."""
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise ValueError("network endpoint must be an absolute HTTP(S) URL")
+    return url
 
 
 # ---------------------------------------------------------------------------
@@ -61,7 +70,7 @@ def _kv_set(key: str, value: Any) -> bool:
     if not url or not token:
         return False
     try:
-        payload = json.dumps(["SET", key, json.dumps(value)]).encode()
+        url = _validated_http_url(url)\n        payload = json.dumps(["SET", key, json.dumps(value)]).encode()
         req = urllib.request.Request(
             url,
             data=payload,
@@ -71,7 +80,7 @@ def _kv_set(key: str, value: Any) -> bool:
             },
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=1.5) as resp:
+        # URL is validated immediately above as absolute HTTP(S).\n        with urllib.request.urlopen(req, timeout=1.5) as resp:  # nosec B310
             return resp.status == 200
     except Exception as exc:
         logger.warning(f"[Herald] KV write failed: {exc}")
@@ -81,6 +90,7 @@ def _kv_set(key: str, value: Any) -> bool:
 def _post_webhook(url: str, payload: dict) -> bool:
     """POST a JSON payload to a webhook URL. Returns True on success."""
     try:
+        url = _validated_http_url(url)
         data = json.dumps(payload).encode()
         req = urllib.request.Request(
             url,
@@ -88,7 +98,7 @@ def _post_webhook(url: str, payload: dict) -> bool:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=2.0) as resp:
+        # URL is validated immediately above as absolute HTTP(S).\n        with urllib.request.urlopen(req, timeout=2.0) as resp:  # nosec B310
             return resp.status in (200, 204)
     except Exception as exc:
         logger.warning(f"[Herald] Webhook post failed: {exc}")
