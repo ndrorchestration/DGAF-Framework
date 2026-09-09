@@ -47,4 +47,4 @@ python3 scripts/validate_track_a_successor_solo_custody_receipt.py \
 
 Do **not** commit the encrypted private-key file or its copies. Before any future collection, the project still needs the separate prospective protocol, candidate, custody review, freeze, and explicit authorization gates.
 
-OpenSSL's `genpkey` command generates the keypair, and encrypted PKCS#8 key containers are the intended form for password-protected private-key material. citeturn0search7turn0search6
+OpenSSL's [genpkey documentation](https://docs.openssl.org/3.6/man1/openssl-genpkey/) describes local keypair generation; its [PKCS#8 documentation](https://docs.openssl.org/3.5/man1/openssl-pkcs8/) describes encrypted password-protected private-key containers.
