@@ -10,7 +10,7 @@
 
 ## 1. Purpose
 
-This document is the canonical specification for named agent formations within the DGAF (Dynamic Governance Agentic Formation) Framework. It defines:
+This document is the canonical specification for all named agent formations within the DGAF (Dynamic Governance Agentic Formation) Framework. It defines:
 
 - Formation names, member composition, and formation-local seat counts
 - Activation conditions and authority scope per formation
