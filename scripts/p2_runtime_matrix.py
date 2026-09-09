@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from http.client import RemoteDisconnected
 from pathlib import Path
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 
@@ -56,10 +57,20 @@ def headers() -> dict[str, str]:
     return result
 
 
+def validate_http_url(url: str) -> str:
+    """Require an absolute HTTP(S) target for live runtime verification."""
+    parsed = urlsplit(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise ValueError("runtime endpoint must be an absolute HTTP(S) URL")
+    return url
+
+
 def request_raw(url: str, body: bytes) -> tuple[int, str, dict | None]:
+    url = validate_http_url(url)
     request = Request(url, data=body, method="POST", headers=headers())
     try:
-        with urlopen(request, timeout=20) as response:
+        # request_raw validates the URL as absolute HTTP(S) before constructing the request.
+        with urlopen(request, timeout=20) as response:  # nosec B310
             raw = response.read().decode("utf-8", errors="replace")
             try:
                 parsed = json.loads(raw)
