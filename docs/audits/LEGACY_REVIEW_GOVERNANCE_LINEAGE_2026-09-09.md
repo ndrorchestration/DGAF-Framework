@@ -14,14 +14,14 @@
 
 A historical Drive source titled `Telescopic Lens QA Gate` defines two orthogonal dimensions of review:
 
-**Four altitudes / zoom levels**
+#### Four altitudes / zoom levels
 
 1. **Macro** — ecosystem-wide / big-picture view.
 2. **Mid** — expert-group and inter-component behavior.
 3. **Tactical** — execution of a specific instruction or decision.
 4. **Quantum** — lowest-level precision / mathematical or implementation substrate.
 
-**Eight filters / review dimensions**
+#### Eight filters / review dimensions
 
 1. Scope
 2. Range
