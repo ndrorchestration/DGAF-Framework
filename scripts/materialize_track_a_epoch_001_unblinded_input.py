@@ -64,11 +64,28 @@ def verify_sidecar(path: Path) -> None:
 
 
 def safe_extract_tar(tar_path: Path, destination: Path) -> None:
+    """Extract only regular files/directories that remain inside destination."""
+    root = destination.resolve()
     with tarfile.open(tar_path, "r:") as archive:
         for member in archive.getmembers():
-            target = (destination / member.name).resolve()
-            require(str(target).startswith(str(destination.resolve())), "unsafe protected tar path")
-        archive.extractall(destination)
+            member_path = Path(member.name)
+            require(not member_path.is_absolute(), "unsafe protected tar absolute path")
+            target = (root / member_path).resolve()
+            require(target == root or root in target.parents, "unsafe protected tar path")
+            require(
+                member.isdir() or member.isfile(),
+                "protected tar contains link or special member",
+            )
+            if member.isdir():
+                target.mkdir(parents=True, exist_ok=True)
+                continue
+
+            require(target != root, "protected tar file has empty/root path")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            source = archive.extractfile(member)
+            require(source is not None, "protected tar regular file is unreadable")
+            with source, target.open("wb") as output_handle:
+                shutil.copyfileobj(source, output_handle)
 
 
 def materialize(public_zip: Path, protected_zip: Path, private_key: Path, output: Path) -> None:
