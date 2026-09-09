@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 
 from scripts import validate_control_state as validator
@@ -61,12 +59,12 @@ corrected_apparatus_source_sha: {OTHER_SHA}
 # Freeze Manifest
 """
 
-    with pytest.raises(AssertionError, match="expected exactly one authoritative corrected_apparatus_source_sha"):
+    message = "expected exactly one authoritative corrected_apparatus_source_sha"
+    with pytest.raises(AssertionError, match=message):
         validator.semantic_apparatus_source(path, text)
 
 
 def test_manifest_identity_is_scoped_to_authoritative_yaml_block() -> None:
-    path = "docs/experiment/NEW_CANDIDATE_MANIFEST.md"
     text = f"""# Manifest
 
 Historical apparatus_source_sha: {OTHER_SHA}
