@@ -28,9 +28,27 @@ def assert_contains(text: str, needle: str, path: str) -> None:
         raise AssertionError(f"{path}: missing required value {needle!r}")
 
 
+def unique_match(text: str, pattern: str, path: str, label: str) -> str:
+    matches = list(re.finditer(pattern, text, flags=re.MULTILINE))
+    if len(matches) != 1:
+        raise AssertionError(
+            f"{path}: expected exactly one authoritative {label}, found {len(matches)}"
+        )
+    return matches[0].group(1)
+
+
 def field(text: str, key: str) -> str | None:
     match = re.search(rf"^\s*{re.escape(key)}:\s*(\S+)\s*$", text, flags=re.MULTILINE)
     return match.group(1) if match else None
+
+
+def unique_field(text: str, key: str, path: str) -> str:
+    return unique_match(
+        text,
+        rf"^\s*{re.escape(key)}:\s*(\S+)\s*$",
+        path,
+        key,
+    )
 
 
 def nested_field(text: str, block: str, key: str) -> str | None:
@@ -44,18 +62,114 @@ def nested_field(text: str, block: str, key: str) -> str | None:
     return field(match.group("body"), key)
 
 
+def frontmatter(text: str, path: str) -> str:
+    match = re.match(r"\A---\s*\n(?P<body>.*?)\n---\s*(?:\n|\Z)", text, flags=re.DOTALL)
+    if not match:
+        raise AssertionError(f"{path}: missing authoritative frontmatter block")
+    return match.group("body")
+
+
+def fenced_yaml(text: str, path: str) -> str:
+    matches = list(re.finditer(r"^```yaml\s*\n(?P<body>.*?)^```\s*$", text, flags=re.MULTILINE | re.DOTALL))
+    if len(matches) != 1:
+        raise AssertionError(
+            f"{path}: expected exactly one authoritative fenced YAML manifest, found {len(matches)}"
+        )
+    return matches[0].group("body")
+
+
+def section(text: str, heading: str, path: str) -> str:
+    matches = list(re.finditer(rf"^{re.escape(heading)}\s*$", text, flags=re.MULTILINE))
+    if len(matches) != 1:
+        raise AssertionError(
+            f"{path}: expected exactly one authoritative section {heading!r}, found {len(matches)}"
+        )
+    start = matches[0].end()
+    remainder = text[start:]
+    next_heading = re.search(r"^#{1,2}\s+", remainder, flags=re.MULTILINE)
+    end = start + next_heading.start() if next_heading else len(text)
+    return text[start:end]
+
+
+def markdown_bullet_value(text: str, label: str, path: str) -> str:
+    return unique_match(
+        text,
+        rf"^\s*-\s+{re.escape(label)}:\s*`([^`]+)`\s*$",
+        path,
+        label,
+    )
+
+
+def markdown_bold_value(text: str, label: str, path: str) -> str:
+    return unique_match(
+        text,
+        rf"^\*\*{re.escape(label)}:\*\*\s*`([^`]+)`(?:\s+.*)?$",
+        path,
+        label,
+    )
+
+
+def semantic_apparatus_source(path: str, text: str) -> str:
+    """Extract the current apparatus source from the document's authoritative field.
+
+    Each control surface already carries a semantically scoped marker. Historical
+    or explanatory mentions elsewhere in the same document must never satisfy the
+    current-identity invariant.
+    """
+    if path == "docs/experiment/NEW_CANDIDATE_MANIFEST.md":
+        return unique_field(fenced_yaml(text, path), "apparatus_source_sha", path)
+
+    if path == "docs/CURRENT_STATE.md":
+        scoped = section(text, "## Canonical High-Assurance provenance boundary", path)
+        return markdown_bullet_value(scoped, "apparatus source", path)
+
+    if path == "docs/CLAIM_EVIDENCE_INDEX.md":
+        marker = "> **Reconciliation notice:**"
+        if marker not in text:
+            raise AssertionError(f"{path}: missing reconciliation-notice boundary")
+        preamble = text.split(marker, 1)[0]
+        return markdown_bold_value(preamble, "Corrected apparatus source", path)
+
+    if path == "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md":
+        return unique_field(frontmatter(text, path), "corrected_apparatus_source", path)
+
+    if path == "docs/experiment/N1_OPERATIONAL_CHARACTERIZATION_GATE_2026-08-30.md":
+        scoped = section(text, "## Candidate identity", path)
+        return markdown_bullet_value(scoped, "Corrected apparatus source", path)
+
+    if path == "docs/experiment/FREEZE_MANIFEST.md":
+        return unique_field(frontmatter(text, path), "corrected_apparatus_source_sha", path)
+
+    if path == "docs/governance/P1_TO_P9_EVIDENCE_MATRIX.md":
+        marker = "This matrix is the current planning/control surface."
+        if marker not in text:
+            raise AssertionError(f"{path}: missing matrix-metadata boundary")
+        preamble = text.split(marker, 1)[0]
+        return markdown_bold_value(preamble, "Corrected apparatus source", path)
+
+    raise AssertionError(f"{path}: no semantic apparatus-source parser is defined")
+
+
+def assert_semantic_apparatus_binding(path: str, text: str, expected_sha: str) -> None:
+    actual_sha = semantic_apparatus_source(path, text)
+    if actual_sha != expected_sha:
+        raise AssertionError(
+            f"{path}: authoritative apparatus source {actual_sha!r} does not match "
+            f"manifest apparatus source {expected_sha!r}"
+        )
+
+
 def manifest_identity(manifest: str) -> dict[str, str]:
     fields: dict[str, str] = {}
+    yaml = fenced_yaml(manifest, str(MANIFEST_PATH.relative_to(ROOT)))
     for key in ("apparatus_source_sha", "apparatus_source_tree_sha"):
-        value = field(manifest, key)
-        if value:
-            fields[key] = value
+        fields[key] = unique_field(yaml, key, str(MANIFEST_PATH.relative_to(ROOT)))
 
     # Only read deployment identity from the active deployment_binding block.
     # Historical deployment IDs elsewhere in the manifest must never satisfy
     # or invalidate the current deployment-state invariant.
     for key in ("deployment_id", "deployment_url", "deployment_target", "deployment_state", "source_sha_match"):
-        value = nested_field(manifest, "deployment_binding", key)
+        value = nested_field(yaml, "deployment_binding", key)
         if value:
             fields[key] = value
     return fields
@@ -64,7 +178,11 @@ def manifest_identity(manifest: str) -> dict[str, str]:
 def main() -> int:
     failures: list[str] = []
     manifest = read(MANIFEST_PATH)
-    identity = manifest_identity(manifest)
+    try:
+        identity = manifest_identity(manifest)
+    except AssertionError as exc:
+        failures.append(str(exc))
+        identity = {}
 
     apparatus_sha = identity.get("apparatus_source_sha")
     tree_sha = identity.get("apparatus_source_tree_sha")
@@ -76,7 +194,7 @@ def main() -> int:
     if apparatus_sha:
         for path in CONTROL_DOCS:
             try:
-                assert_contains(read(path), apparatus_sha, path)
+                assert_semantic_apparatus_binding(path, read(path), apparatus_sha)
             except AssertionError as exc:
                 failures.append(str(exc))
 
@@ -144,7 +262,7 @@ def main() -> int:
     print(f"apparatus_tree_sha={tree_sha}")
     print("active deployment binding is internally scoped")
     print("superseded candidate is not presented as live")
-    print("cross-document apparatus identity is present")
+    print("cross-document apparatus identity is semantically bound")
     print("pre-freeze authorization/N invariants are present")
     return 0
 
