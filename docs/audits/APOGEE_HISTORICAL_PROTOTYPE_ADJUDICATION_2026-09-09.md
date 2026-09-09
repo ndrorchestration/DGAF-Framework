@@ -96,14 +96,52 @@ No source evidence was found here for:
 
 v52.0 is a genuine historical **interactive visualization prototype**, not evidence for the generated claims of a mathematically guaranteed Hamiltonian governance runtime.
 
+## v53.1 — Axiomatic Sentinel / Pattern-78 naming evidence
+
+**Recovered title:** `A.P.O.G.E.E. HUB v53.1: Axiomatic Sentinel`
+
+This later artifact supplies direct source-level evidence for the historical Pattern-78 naming lineage. Its source includes:
+
+```js
+// --- NJ-Pattern-78: Governance Heartbeat ---
+```
+
+and implements:
+
+- polling of `/api/governance-check-status`;
+- `[AUTHORIZED]` vs `[BREACH]` UI state;
+- `L0_BREACH` terminal logging when the returned state is false;
+- per-instance swarm color switching between blue and red according to the governance Boolean;
+- a functioning `THREE.Clock` declaration, unlike the fetched v52.0 artifact.
+
+### Safety boundary remains decisive
+
+v53.1 retains the same fail-open fallback:
+
+```js
+const res = await fetch('/api/governance-check-status').catch(() => ({ passed: true }));
+```
+
+Therefore the historical `Pattern-78` implementation lineage is now supported **as visualization/heartbeat code**, but the prototype still cannot be classified as a fail-closed authorization barrier.
+
+The identifier in this recovered source is `NJ-Pattern-78`, whereas later generated material uses `NDR-Pattern-78`. Preserve that namespace difference as provenance; do not silently assert they are identical identifiers merely because the behavior and number are similar.
+
+### Adjudication
+
+- `Pattern-78 historical implementation lineage = SUPPORTED` for governance-heartbeat visualization;
+- `Pattern-78 fail-closed authorization = NOT SUPPORTED` by this prototype;
+- `NDR-78 = NJ-78 exact identifier equivalence = NOT ESTABLISHED` without a source that binds the namespace transition;
+- current closest fail-closed implementation remains `pptl/commit_gate.py`.
+
 ## Historical-to-current engineering evolution
 
 The recovered artifacts make the evolution more concrete:
 
-1. **Historical prototypes:** rich visual metaphors, shader state, geometric meshes, named paths, audio cues, and optimistic governance status displays.
-2. **Historical weakness exposed:** visual/state labels could imply stronger guarantees than the code actually enforced; v49.0 contains a fail-open fetch fallback.
-3. **Current engineering:** explicit typed state identity, immutable provenance, authority narrowing, budget enforcement, and `CommitGate` proposal/authorization/commit barriers with tests.
-4. **Current evidence discipline:** UI labels, shader states, path constants, and generated metrics are no longer allowed to promote themselves into authorization, verification, or scientific efficacy.
+1. **Historical prototypes:** rich visual metaphors, shader/state color, geometric meshes, named paths, audio cues, and optimistic governance status displays.
+2. **Historical implementation lineage:** by v53.1, Pattern-78 is explicitly named in code as a governance heartbeat.
+3. **Historical weakness exposed:** visual/state labels could imply stronger guarantees than the code actually enforced; v49.0 and v53.1 both contain a fail-open governance-fetch fallback, and v52.0 declares but does not execute `H_PATH`.
+4. **Current engineering:** explicit typed state identity, immutable provenance, authority narrowing, budget enforcement, and `CommitGate` proposal/authorization/commit barriers with tests.
+5. **Current evidence discipline:** UI labels, shader states, path constants, and generated metrics are no longer allowed to promote themselves into authorization, verification, or scientific efficacy.
 
 This is a useful provenance result: some historical ideas were not merely fictional labels; they existed as prototypes. The modern system's improvement is not that every historical claim was true, but that the useful control ideas have been progressively separated from metaphor and bound to inspectable, testable mechanisms.
 
@@ -117,6 +155,7 @@ Known nearby artifacts must remain distinct:
 
 - `v49.0 Axiomatic Sentinel` — recovered;
 - `v52.0 MASTER_RESOLVED` — recovered;
+- `v53.1 Axiomatic Sentinel` — recovered;
 - exact `v49.2` — not recovered.
 
 Do not infer an intermediate version's contents from later or earlier siblings.
@@ -124,6 +163,8 @@ Do not infer an intermediate version's contents from later or earlier siblings.
 ## Epistemic effect
 
 `historical_implementation_provenance = PARTIALLY_RECOVERED`  
+`pattern_78_visualization_lineage = SUPPORTED_HISTORICALLY`  
+`pattern_78_fail_closed_authorization = NOT_SUPPORTED_BY_LEGACY_PROTOTYPE`  
 `current_runtime_authority_effect = NONE`  
 `scientific_state_effect = NONE`  
 `empirical_authorization_effect = NONE`  
