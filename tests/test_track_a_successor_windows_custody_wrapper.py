@@ -34,6 +34,14 @@ def test_windows_wrapper_preserves_secret_boundary() -> None:
     assert "Git\\usr\\bin\\openssl.exe" in text
 
 
+def test_windows_wrapper_executes_receipt_validator() -> None:
+    text = WRAPPER.read_text(encoding="utf-8")
+    assert "$validatorArguments += $ReceiptValidator" in text
+    assert "$validatorArguments += $receipt" in text
+    assert "& $pythonCommand.Exe @validatorArguments" in text
+    assert "The custody receipt validator failed" in text
+
+
 def test_windows_wrapper_does_not_embed_secret_material() -> None:
     lowered = WRAPPER.read_text(encoding="utf-8").lower()
     forbidden_assignments = (
