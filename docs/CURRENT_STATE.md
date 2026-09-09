@@ -2,53 +2,39 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-08
+last_verified: 2026-09-09
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
-consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
-corrected_apparatus_source: 2a54a67d84870e4eeb71b8aaf04413e0ca492ba1
-immutable_p35_validation_boundary: 643dc77a56d3b5a92d16981d5d8ca01c3ed5b55d
-historical_runtime_evidence_candidate_sha: 7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8
-historical_runtime_deployment_reference: dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA
 canonical_dgaf_efficacy: NOT_ESTABLISHED
-solo_epoch_004_status: LOCKED_NEGATIVE_EXACT_TREATMENT_EVIDENCE
-seven_gate_treatment_fidelity: NOT_ESTABLISHED
-track_a_protocol: PREREGISTERED
-track_a_primary_analysis: LOCKED_NONEMPIRICAL_NOT_AUTHORIZED_NOT_RUN
-track_a_runner: MERGED_HARDENED
-track_a_preflight: PASS
-track_a_freeze: ESTABLISHED
-track_a_closure: ESTABLISHED
-track_a_verification: PASS_DEVELOPER_SELF_ATTESTED_NONINDEPENDENT
-track_a_collection_authorization: ESTABLISHED
-track_a_empirical_collection: COMPLETE_BLINDED_RETAINED
-track_a_inferential_seed_units: 50
-track_a_blinded_observations: 2250
-track_a_dataset_lock: ESTABLISHED
-track_a_unblinding_authorization: ESTABLISHED
-track_a_materializer_tooling: MERGED_VALIDATED
-track_a_unblinded_input_receipt_tooling: MERGED_VALIDATED
-track_a_custody_key_preflight_tooling: MERGED_VALIDATED
-track_a_primary_analysis_authorization_tooling: MERGED_VALIDATED
-track_a_custody_key_handoff: NOT_ESTABLISHED
-track_a_unblinded_analysis_input: NOT_YET_MATERIALIZED
-track_a_unblinded_input_receipt: NOT_ESTABLISHED
-track_a_primary_analysis_authorization: NOT_ESTABLISHED
-b1_standalone_nonempirical_lane: COMPLETE
-b2_standalone_nonempirical_lane: COMPLETE
-b3_standalone_nonempirical_lane: COMPLETE
-track_c_composition: MERGED_NONEMPIRICAL_PROPOSAL
-track_c_empirical_execution: NOT_AUTHORIZED
+track_a_epoch_001_collection: COMPLETE_BLINDED_RETAINED
+track_a_epoch_001_inferential_seed_units: 50
+track_a_epoch_001_blinded_observations: 2250
+track_a_epoch_001_dataset_lock: ESTABLISHED
+track_a_epoch_001_unblinding_authorization: ESTABLISHED_HISTORICAL
+track_a_epoch_001_unblinding_recoverability: CRYPTOGRAPHICALLY_UNRECOVERABLE
+track_a_epoch_001_primary_analysis: UNANALYZABLE_NOT_RUN
+track_a_successor_issue: 523
+track_a_successor_collection_authorization: NOT_ESTABLISHED
 ---
 
 # DGAF-Framework / PDMAL — Current State
 
-This file is the primary current-facing repository summary. GitHub remains authoritative for implementation and CI; governance decisions and exact scientific transitions remain bound to their governing records.
+This file is the primary current-facing repository summary. GitHub remains authoritative for implementation, immutable evidence identities, issues, and CI. Notion is the governance/control-plane mirror. Historical records remain valid only for the exact scope they bind.
 
-For the separate canonical High-Assurance program, repository `main` recency does not redefine the recorded **apparatus source**, **candidate identity**, or **deployment identity**. Those identities remain exact-scope governance/provenance records until a governing transition explicitly replaces them.
+**Important:** the canonical High-Assurance program, Track A Epoch 001, and any future Track A successor epoch are separate governance/evidence boundaries. Progress in one must not be silently promoted into another.
 
-**Important:** the **canonical High-Assurance program** and **Track A Epoch 001** are distinct assurance/research boundaries. Track A has legitimately completed its governed prospective blinded collection while the separate High-Assurance program remains pre-freeze.
+## Canonical High-Assurance provenance boundary
+
+Repository **main** recency does not redefine the High-Assurance apparatus source, candidate identity, or deployment identity. Those remain exact-scope provenance records until an explicit governing transition replaces them.
+
+- apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- apparatus source tree: `973c92335caf84f37fc2b3c4df6dd83b3b855087`
+- historical runtime-evidence candidate identity: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
+- historical runtime deployment identity: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
+- final v0.7.6 High-Assurance candidate identity: **NOT DESIGNATED**
+
+The separate High-Assurance program therefore remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / canonical empirical N=0**.
 
 ## Executive boundary
 
@@ -56,58 +42,45 @@ For the separate canonical High-Assurance program, repository `main` recency doe
 |---|---|
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
-| Track A protocol | **PREREGISTERED** |
-| Track A primary analysis | **LOCKED / NONEMPIRICAL / NOT AUTHORIZED / NOT RUN** |
-| Track A runner | **MERGED / HARDENED** |
-| Track A precollection preflight | **PASS** |
-| Track A immutable freeze | **ESTABLISHED** |
-| Track A final closure | **ESTABLISHED** |
-| Track A verification classification | **PASS — DEVELOPER SELF-ATTESTED / NONINDEPENDENT** |
-| Track A collection authorization | **ESTABLISHED** |
-| Track A prospective collection | **COMPLETE / BLINDED / RETAINED** |
-| Track A inferential seed units | **50** |
-| Track A blinded raw observations | **2,250** |
-| Track A dataset lock | **ESTABLISHED** |
-| Track A unblinding authorization | **ESTABLISHED — mapping release/decryption scope only** |
-| Track A materializer tooling | **MERGED / VALIDATED** |
-| Track A unblinded-input receipt tooling | **MERGED / VALIDATED** |
-| Track A custody-key preflight tooling | **MERGED / VALIDATED** |
-| Track A primary-analysis authorization tooling | **MERGED / VALIDATED** |
-| Matching custody-key handoff | **NOT ESTABLISHED** |
-| Unblinded analysis input | **NOT YET MATERIALIZED** |
-| Unblinded-input receipt | **NOT ESTABLISHED** |
-| Primary-analysis authorization | **NOT ESTABLISHED** |
+| Track A Epoch 001 prospective collection | **COMPLETE / BLINDED / RETAINED** |
+| Epoch 001 inferential seed units | **50** |
+| Epoch 001 blinded raw observations | **2,250** |
+| Epoch 001 dataset lock | **ESTABLISHED** |
+| Epoch 001 protected mapping recoverability | **CRYPTOGRAPHICALLY UNRECOVERABLE** |
+| Epoch 001 unblinded analysis input | **CANNOT BE MATERIALIZED FROM RETAINED EVIDENCE** |
+| Epoch 001 primary analysis | **UNANALYZABLE / NOT RUN** |
+| Epoch 001 outcome aggregation | **NOT PERFORMED** |
+| Successor Track A lane | **ISSUE #523 OPEN — DESIGN / RECOVERY-TEST TOOLING ONLY** |
+| Successor empirical collection | **NOT AUTHORIZED** |
 | B1 standalone non-empirical lane | **COMPLETE** |
 | B2 standalone non-empirical lane | **COMPLETE** |
 | B3 standalone non-empirical lane | **COMPLETE** |
 | Track C composition | **MERGED NON-EMPIRICAL PROPOSAL** |
 | Track C empirical execution | **NOT AUTHORIZED** |
 
-No row above establishes production certification, independent validation, integrated DGAF efficacy, High-Assurance authorization, or a completed Track A primary result.
+No row above establishes independent validation, production certification, integrated DGAF efficacy, High-Assurance authorization, or a completed Track A primary result.
 
-## Track A Epoch 001 — prospective scientific lane
+## Track A Epoch 001 — immutable historical prospective collection
 
-Track A uses neutral algorithm identity `REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1` and asks a bounded topology-robustness question rather than testing the complete integrated DGAF system.
+Epoch 001 was prospectively preregistered and collected under the locked topology-robustness protocol.
 
-### Locked study design
+Locked design:
 
 - 50 prospective seeds: `20270101..20270150`
 - 5 topologies: ring, PDMAL, random-regular, small-world, complete
 - 9 failure counts: `0, 1, 2, 3, 4, 5, 6, 8, 10`
 - 45 cells per seed
 - 2,250 blinded raw observations
+- algorithm: `REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1`
 - primary endpoint: strict-boolean `ffcr_success`
-- primary confirmatory comparison: PDMAL vs matched random-regular
-- 10,000 paired percentile bootstrap resamples
-- bootstrap seed: `20270151`
-- two-sided 95% percentile interval
-- alpha: `0.05`
+- primary comparison: PDMAL vs matched random-regular
+- locked analysis: 10,000 paired percentile-bootstrap resamples, seed `20270151`, alpha `0.05`
 
-Historical outcomes are not pooled into this prospective panel.
+The collection remains valid evidence that the prospective blinded panel was executed and retained. The accepted scientific unit count is **50 paired inferential seed units / 2,250 blinded raw observations**.
 
-### Established governance and evidence chain
+### Established Epoch 001 chain
 
-Track A has advanced through:
+Epoch 001 legitimately established:
 
 1. prospective preregistration;
 2. locked primary-analysis implementation;
@@ -116,139 +89,158 @@ Track A has advanced through:
 5. precollection preflight — **PASS**;
 6. immutable freeze — **ESTABLISHED**;
 7. final closure — **ESTABLISHED**;
-8. verification classification — **PASS / DEVELOPER SELF-ATTESTED / NONINDEPENDENT**;
+8. verification — **PASS / DEVELOPER SELF-ATTESTED / NONINDEPENDENT**;
 9. collection authorization — **ESTABLISHED**;
 10. prospective blinded collection — **COMPLETE**;
 11. dataset lock / collection receipt — **ESTABLISHED**;
-12. unblinding authorization — **ESTABLISHED**, restricted to mapping release / protected-artifact decryption;
-13. controlled materializer tooling — **MERGED / VALIDATED**;
-14. unblinded-input receipt tooling — **MERGED / VALIDATED**;
-15. custody-key preflight tooling — **MERGED / VALIDATED**;
-16. future primary-analysis authorization tooling — **MERGED / VALIDATED**.
+12. unblinding authorization — **ESTABLISHED historically** for mapping release/decryption;
+13. materializer, receipt, custody-key-preflight, and primary-analysis-authorization tooling — **MERGED / VALIDATED**.
 
-Exact accepted identities include:
+Those historical gates are not revoked. The later custody adjudication changes what can still be recovered and analyzed from the retained evidence.
+
+### Custody/recovery failure
+
+Issue #496 is now **CLOSED / NOT PLANNED** as `[UNRECOVERABLE] Track A Epoch 001 unblinded-input materialization`.
+
+The accepted collection path generated a fresh 256-bit topology-blinding secret at runtime, retained the protected topology mapping only inside a CMS-encrypted protected bundle, and destroyed the plaintext protected directory/tar after encryption. The retained artifact contains ciphertext, certificate, and digest commitments, but no recoverable private-key escrow.
+
+The actual operating model is solo. No separate authorized key holder or recoverable copy of the matching CMS private key has been established. A newly generated key cannot match the retained certificate/ciphertext, and the HMAC-keyed topology/order mapping cannot be honestly reconstructed from the public blinded dataset without guessing.
+
+Therefore:
+
+- `TRACK_A_EPOCH_001 = BLINDED_COLLECTION_COMPLETE / CRYPTOGRAPHICALLY_UNRECOVERABLE_FOR_UNBLINDING`
+- `TRACK_A_EPOCH_001_PRIMARY_ANALYSIS = UNANALYZABLE / NOT_RUN`
+- protected mapping/key recovery must **not** use brute force, guessing, inference, regenerated keys, or reconstruction;
+- Epoch 001 must **not** be pooled into a successor confirmatory analysis;
+- canonical DGAF efficacy remains **NOT ESTABLISHED**.
+
+The custody failure is itself an engineering/governance finding. It does not erase the successful blinded collection or dataset lock, and it does not create an efficacy result.
+
+## Successor Track A — issue #523
+
+Issue #523, `Track A: replace unrecoverable Epoch 001 with recoverable solo-custody successor`, is the controlling scientific-design lane.
+
+The successor must use a new epoch/protocol identity and fresh seeds/blinding. The locked endpoint, estimand, and matrix semantics should be preserved unless a change is separately prospectively justified without reference to unseen Epoch 001 outcomes.
+
+Before replacement empirical collection can be authorized, the successor custody path must establish recoverability for a solo researcher without pretending independence.
+
+Preferred minimum pattern:
+
+`locally generated keypair → encrypted PKCS#8 private key → at least two durable encrypted user-controlled recovery copies → precollection recovery drill PASS → public certificate supplied to collection → same-system/nonindependent custody receipt`
+
+Required boundaries:
+
+- secret/passphrase/private-key material stays outside GitHub, Notion, chat, workflow inputs, logs, and committed files;
+- recovery drill must derive the public key from the recovered encrypted private key and exactly match the collection certificate before authorization;
+- solo custody is explicitly **SAME_SYSTEM_NONINDEPENDENT**;
+- recoverability is not independent custody;
+- replacement empirical collection remains **NOT AUTHORIZED** until the new prospective gate chain is established;
+- dataset lock must still precede unblinding;
+- controlled materialization, immutable input receipt, and separate primary-analysis authorization remain separate later gates;
+- no Epoch 001 historical pooling or outcome-driven tuning is allowed.
+
+## Accepted Epoch 001 provenance identities
+
+Important historical identities remain valid for their exact scope:
 
 - frozen candidate SHA: `961b9918002c4c68afac9c0fd5dd3e352e49b926`
 - frozen candidate tree: `f20fa0ffee4b47872d84ce10cc9fd05e75c7306d`
 - preregistration merge: `26077b27ca336454148006e6daf4cd087005b421`
 - analysis-lock merge: `e9ea59ad839aef33fbce10ed04c2157358c4326d`
 - locked analysis blob: `76bc8e9604c5d7e039e324e73036f353dc8ea31f`
-- analysis-config SHA-256: `355b164f69e91405819f092d0721b7597b87b06de79394a0c451169410a5ab6d`
 - freeze merge: `bea146656ff4fdd81572215fb9d2d38296ca4455`
-- freeze manifest blob: `ae15c6282351c01bd13ace2423d273ba0dde8348`
 - final closure merge: `df74ead1481dbf8a475d9e6c9a452749d7c06196`
-- closure packet blob: `c32d89385c29c9e5cd0a706630c1955fb3f5f1c8`
 - verification merge: `4e4d872cf17f1b2c9d39f7f5969bf395abbd7617`
-- verification-classification blob: `c67d09052faa7ae50de6eca57691ed50d906a951`
 - collection authorization merge: `659aaa4dea2dd42624747952f1a47f307e69a014`
 - collection run: `34262408225`
-- collection job: `102183375896`
 - dataset-lock commit: `fbf3e2da3be0a36c1102a69c996026e95c33cceb`
-- collection-receipt blob: `eb6b9325058fb104da85f8de6c26f2b2a748a1a9`
 - unblinding authorization merge: `2e1981870a8455abed36fd72dcb3aaa35e2f9bff`
-- controlled materializer merge: `f92c251bb8fcf068c644db04ae9d2f855c382caa`
+- controlled materializer tooling merge: `f92c251bb8fcf068c644db04ae9d2f855c382caa`
 - unblinded-input receipt tooling merge: `f36d746f603f95d14098322792bec074b21b54cb`
 - custody-key preflight tooling merge: `498bb51ffb559145217b84be969fe74cf9f27579`
-- primary-analysis authorization tooling merge/current accepted main: `f95fd3303535cad4e53a24854c9adf7a25b79ab5`
+- primary-analysis authorization tooling merge: `f95fd3303535cad4e53a24854c9adf7a25b79ab5`
 
-### Accepted collection evidence
+These SHAs identify historical apparatus/governance events; none is the moving repository main merely because it is listed here.
 
-The prospective collection completed with:
+## Recent engineering / governance state
 
-- **50 paired inferential seed units**;
-- **2,250 blinded raw observations**;
-- retained public artifact ID `10070586413`, archive SHA-256 `32851068cc61421f756041d0671681823b38c054f06e5082ed26c800bf296231`;
-- retained protected encrypted artifact ID `10070587302`, archive SHA-256 `f52d2144cfb8c699347c56cf92a41c1ac11cba98787fefabb56891c9f680c69f`;
-- protected CMS ciphertext SHA-256 `15ba9d630cea0c26baca3ab50c33f7bcf10681a24293350b12acf3d4aeac4614`;
-- custody certificate SHA-256 `cfa468d1091f2179cfe0c96ff000bfe45ae7c5bd1414146fbb99c77572dba707`.
+Recent merged work after the original Epoch 001 tooling chain includes:
 
-The protected plaintext mapping was not retained in repository artifacts. Custody is explicitly same-system / non-independent.
+- security/dependency refresh;
+- Track A custody-handoff operator runbook;
+- agent identity / moving scientific-state decoupling;
+- non-destructive branch-disposition inventory;
+- prospective weighted Forman–Ricci replication research;
+- fail-closed Task-4 corpus-intake locking;
+- exact-source live staging-breaker evidence capped at `PASS_STRUCTURAL_LIVE_STAGING_ONLY`;
+- Vocabulary Translation Matrix v2 with active-identity coverage and vocabulary governance.
 
-### Current next Track A step
+These are meaningful implementation/governance advances but have **no automatic scientific-state effect**.
 
-The next legitimate transition is **not analysis**. It is:
+## Agent identity / vocabulary boundary
 
-**authorized local/ephemeral matching custody-key handoff → custody-key preflight PASS → controlled materialization of the exact unblinded analysis input → durable retention + immutable receipt → separate one-file primary-analysis authorization → locked primary analysis**.
+Vocabulary translation is downstream of identity and authority governance. Current translation controls distinguish canonical identity, accepted alias, abstract role/archetype, state, and external-facing functional label.
 
-At this moment:
+Issue #522 remains open for unresolved sovereign ontology conflicts including Sentinel/Sentinel-Phi lineage, Ionia agent-vs-state classification, A-09/A-10/A-11/A-12 designation collisions, and COLLEEN/Librarian designation drift. Translation must preserve those conflicts until adjudicated.
 
-- matching custody-key handoff is **NOT ESTABLISHED**;
-- unblinded analysis input is **NOT YET MATERIALIZED**;
-- unblinded-input receipt is **NOT ESTABLISHED**;
-- primary analysis is **NOT AUTHORIZED / NOT RUN**;
-- outcome aggregation is **NOT AUTHORIZED** outside a future separately authorized locked primary analysis;
-- canonical DGAF efficacy remains **NOT ESTABLISHED**;
-- High-Assurance authorization is **NOT GRANTED / NOT AUTHORIZED**.
+## B1 / B2 / B3 and Track C
 
-Completed collection is evidence that the governed blinded panel was executed and retained. It is not evidence of the direction, magnitude, or significance of the locked primary estimand.
+B1, B2, and B3 have completed standalone non-empirical lanes. Track C has a merged non-empirical composition proposal.
 
-## B1 / B2 / B3 — standalone non-empirical lanes
+These states establish integration-readiness predicates only. They do not establish empirical benefit or integrated DGAF efficacy.
 
-The three component lanes have completed their standalone non-empirical integration-readiness adjudications.
+`TRACK_C_EMPIRICAL_EXECUTION = NOT_AUTHORIZED`
 
-- **B1 — semantic routing and safety:** standalone non-empirical lane complete; known source limitations remain part of the claim ceiling.
-- **B2 — persistent context and closure:** standalone non-empirical lane complete.
-- **B3 — persistent weighted-graph convergence monitoring:** standalone non-empirical lane complete.
+## Solo Epoch 004 — bounded historical evidence
 
-Completion means these components are eligible for governed non-empirical composition. It does **not** establish empirical benefit or integrated efficacy.
+`PDMAL-SOLO-CANONICAL-EPOCH-004` remains separate from Epoch 001, any successor Track A epoch, and High-Assurance.
 
-## Track C — integrated composition
-
-A source-bound Track C non-empirical composition proposal has merged. It composes the declared B1/B2/B3 responsibilities and preserves their limitations and evidence ceilings.
-
-Track C remains:
-
-**EMPIRICAL EXECUTION = NOT AUTHORIZED**  
-**CANONICAL DGAF EFFICACY = NOT ESTABLISHED**  
-**SCIENTIFIC_N_INCREMENT = 0**
-
-No Track A outcome reuse, historical pooling, empirical endpoint, efficacy estimate, or unblinding is authorized by the composition proposal.
-
-## Solo Epoch 004 — historical bounded empirical evidence
-
-The bounded Solo track is separate from prospective Track A and canonical High-Assurance sequences.
-
-Epoch `PDMAL-SOLO-CANONICAL-EPOCH-004` executed 50 fresh paired seeds across 4 conditions × 5 topologies × 9 failure levels = **9,000 observations**.
-
-Its locked primary result was negative for the exact executed treatment:
+It executed 50 paired seeds across 4 conditions × 5 topologies × 9 failure levels = 9,000 observations and produced negative evidence for its exact executed treatment:
 
 - DGAF FFCR: `0.7337777777777778`
 - null FFCR: `0.8275555555555555`
 - paired effect: `-0.0937777777777778`
 - two-sided 95% CI: `[-0.11822222222222223, -0.07066666666666668]`
-- mechanical classification: **`EVIDENCE_AGAINST_DIRECTIONAL_DGAF`**
+- classification: **`EVIDENCE_AGAINST_DIRECTIONAL_DGAF`**
 
-A later source-bound audit found that canonical seven-gate treatment fidelity was **NOT ESTABLISHED** for that execution. The result remains preserved as exact-treatment historical evidence and is not promoted into a claim about canonical DGAF efficacy.
-
-## Canonical High-Assurance boundary
-
-The separate canonical High-Assurance program remains:
-
-**PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · AUTHORIZATION NOT GRANTED · canonical High-Assurance empirical N = 0.**
-
-Its final candidate remains **NOT DESIGNATED** under that program's stricter custody, identity, verification, and authorization requirements.
-
-Track A's workload-specific collection and governance progress must not be rewritten as High-Assurance progress. Conversely, the High-Assurance pre-freeze state must not erase Track A's legitimate workload-specific evidence.
+A later source-bound audit found canonical seven-gate treatment fidelity **NOT ESTABLISHED**. Preserve the result as exact-treatment historical evidence only.
 
 ## Evidence rules
 
 Current-facing documentation must preserve these distinctions:
 
-1. **Architecture is not implementation.**
-2. **Implementation is not empirical evidence.**
-3. **A passing test proves only its defined predicate and environment.**
-4. **Developer self-verification is not independent verification.**
-5. **Freeze is not authorization.**
-6. **Closure is not authorization.**
-7. **Authorization is not execution.**
-8. **Collection execution is not unblinding.**
-9. **Unblinding authorization is not primary-analysis authorization.**
-10. **Execution is not efficacy until the locked analysis supports that claim.**
-11. **Historical evidence does not silently transfer to a new SHA, protocol, treatment, or evidence identity.**
-12. **Canonical DGAF efficacy remains NOT ESTABLISHED until evidence satisfying that exact claim exists.**
+1. Architecture is not implementation.
+2. Implementation is not empirical evidence.
+3. A passing test proves only its defined predicate and environment.
+4. Developer self-verification is not independent verification.
+5. Freeze is not authorization.
+6. Closure is not authorization.
+7. Authorization is not execution.
+8. Collection execution is not unblinding.
+9. Unblinding authorization is not proof that unblinding remains recoverable.
+10. A completed blinded collection may become unanalyzable if its protected mapping cannot be recovered.
+11. Execution is not efficacy until the locked analysis supports that claim.
+12. Historical evidence does not silently transfer to a new SHA, protocol, treatment, epoch, or evidence identity.
+13. A successor experiment must not pool, infer, reconstruct, or tune from inaccessible Epoch 001 outcomes.
+14. Canonical DGAF efficacy remains **NOT ESTABLISHED** until evidence satisfying that exact claim exists.
+
+## Current next scientific gate
+
+The next legitimate Track A transition is **successor custody/recovery design**, not Epoch 001 decryption or analysis.
+
+Issue #523 must establish a fresh epoch identity, recoverable solo-custody contract, precollection recovery drill, fresh seed/blinding plan, and the rest of the prospective authorization chain before replacement empirical collection.
+
+At this moment:
+
+- Epoch 001 collection remains **COMPLETE / BLINDED / RETAINED**;
+- Epoch 001 unblinding is **CRYPTOGRAPHICALLY UNRECOVERABLE**;
+- Epoch 001 primary analysis is **UNANALYZABLE / NOT RUN**;
+- successor Track A empirical collection is **NOT AUTHORIZED**;
+- canonical DGAF efficacy remains **NOT ESTABLISHED**;
+- High-Assurance remains **NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**.
 
 ## Public terminology
 
-For a plain-English map from DGAF's internal names to industry-neutral functional descriptions, use [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md).
+For the industry-neutral map from project-local vocabulary to functional descriptions, use [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md) and `VOCABULARY_TRANSLATION_MATRIX.json`.
 
-Older dated status documents and issue bodies remain historical snapshots unless they explicitly identify themselves as the current authority.
+Older dated status documents are historical snapshots unless they explicitly identify themselves as current authority.
