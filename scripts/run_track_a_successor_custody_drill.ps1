@@ -124,6 +124,16 @@ if (-not (Test-Path -LiteralPath $certificate -PathType Leaf)) {
     throw "Expected public certificate was not created: $certificate"
 }
 
+$validatorArguments = @()
+$validatorArguments += $pythonCommand.Prefix
+$validatorArguments += $ReceiptValidator
+$validatorArguments += $receipt
+
+& $pythonCommand.Exe @validatorArguments
+if ($LASTEXITCODE -ne 0) {
+    throw "The custody receipt validator failed with exit code $LASTEXITCODE."
+}
+
 Write-Output "TRACK_A_SUCCESSOR_WINDOWS_CUSTODY=PASS_LOCAL"
 Write-Output "PUBLIC_CERTIFICATE=$certificate"
 Write-Output "NONSECRET_RECEIPT=$receipt"
