@@ -103,20 +103,17 @@ def test_index_and_materialized_card_state_must_match() -> None:
     assert any("index/card evidence_maturity mismatch" in failure for failure in failures)
 
 
-def test_duplicate_canonical_mapping_is_rejected() -> None:
-    index = card_index(relationship="CANONICAL_CLAIM_DETAIL", canonical_claim_id="claim-a", card="card.yaml")
+def test_duplicate_canonical_mapping_is_rejected_without_other_mismatches() -> None:
+    index = card_index(relationship="CANONICAL_CLAIM_DETAIL", canonical_claim_id="claim-a", card="card-a.yaml")
     second = deepcopy(index["cards"][0])
     second["id"] = "DGAF-CLAIM-B"
+    second["card"] = "card-b.yaml"
     index["cards"].append(second)
 
-    def loader(path: str) -> dict:
+    def matching_loader(path: str) -> dict:
         card = load_valid_card(path)
-        card["id"] = "DGAF-CLAIM-A" if len(path) else "DGAF-CLAIM-B"
+        card["id"] = "DGAF-CLAIM-A" if path == "card-a.yaml" else "DGAF-CLAIM-B"
         return card
 
-    # Use matching card IDs so the duplicate mapping is isolated from target-ID validation.
-    def matching_loader(_: str) -> dict:
-        return load_valid_card("card.yaml")
-
     failures = validate_claim_surfaces(canonical_registry(), index, card_loader=matching_loader)
-    assert any("duplicate canonical claim mapping: claim-a" in failure for failure in failures)
+    assert failures == ["duplicate canonical claim mapping: claim-a"]
