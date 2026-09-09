@@ -1,0 +1,41 @@
+name: Track A Epoch 002 Preregistration
+
+on:
+  pull_request:
+    paths:
+      - "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
+      - "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.md"
+      - "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_001_PREREGISTRATION.json"
+      - "scripts/validate_track_a_epoch_002_preregistration.py"
+      - "tests/test_track_a_epoch_002_preregistration.py"
+      - ".github/workflows/track-a-epoch-002-preregistration.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-successor-preregistration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned test dependency
+        run: python -m pip install pytest==9.1.1
+      - name: Validate prospective successor record
+        run: python scripts/validate_track_a_epoch_002_preregistration.py
+      - name: Run successor preregistration negative controls
+        run: python -m pytest -q tests/test_track_a_epoch_002_preregistration.py
+      - name: Assert fail-closed scientific boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json
+          echo 'TRACK_A_EPOCH_002_PREREGISTRATION=PROPOSAL_ONLY'
+          echo 'REAL_PRIVATE_KEY_CREATED=FALSE'
+          echo 'SUCCESSOR_COLLECTION_AUTHORIZED=FALSE'
+          echo 'SCIENTIFIC_N_INCREMENT=0'
+          echo 'CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED'
+          echo 'HIGH_ASSURANCE=NOT_AUTHORIZED_N0'
