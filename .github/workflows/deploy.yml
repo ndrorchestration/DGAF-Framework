@@ -129,6 +129,20 @@ jobs:
           test "$(jq -r '.psi_cubic' <<< "$health")" = true
           test "$(jq -r '.version' <<< "$health")" = "$EXPECTED_ENSEMBLE_VERSION"
 
+      - name: Prove staging breaker is unavailable in production
+        run: |
+          set -euo pipefail
+          status=$(curl -sS -o staging_breaker_production_response.json -w '%{http_code}' \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+            -H 'x-dgaf-staging-exercise-id: production-must-reject' \
+            -d '{}' \
+            "$DGAF_URL/api/staging-breaker")
+          test "$status" = 404
+          test "$(jq -r '.status' staging_breaker_production_response.json)" = NOT_AVAILABLE
+          test "$(jq -r '.scientific_state_effect' staging_breaker_production_response.json)" = NONE
+
       - name: 30-turn live regression
         run: python3 scripts/live_regression_v17.py
 
@@ -155,7 +169,7 @@ jobs:
             --arg source "$GITHUB_SHA" \
             --arg run "$GITHUB_RUN_ID" \
             --arg url "$DGAF_URL" \
-            '{evidence_class:"RUNTIME_VERIFICATION",source_commit:$source,workflow_run_id:$run,deployment_url:$url,result:"PASS_WITH_LIMITATION",limitations:["Audit state is in-memory and does not establish cross-request persistence.","Phi-Closure checkpoints remain fail-closed until live audit state is wired into /api/orchestrate.","Runtime integration evidence does not establish experimental efficacy, freeze, or authorization."]}' > runtime_verification.json
+            '{evidence_class:"RUNTIME_VERIFICATION",source_commit:$source,workflow_run_id:$run,deployment_url:$url,result:"PASS_WITH_LIMITATION",limitations:["Audit state is in-memory and does not establish cross-request persistence.","Phi-Closure checkpoints remain fail-closed until live audit state is wired into /api/orchestrate.","The staging breaker exercise endpoint is unavailable in production; preview-only staging evidence does not establish a persistent production breaker.","Runtime integration evidence does not establish experimental efficacy, freeze, or authorization."]}' > runtime_verification.json
 
       - name: Upload runtime verification evidence
         uses: actions/upload-artifact@v4
