@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0.0",
+  "status": "accepted-ontology-adjudication",
+  "controller_issue": 522,
+  "authority_policy": {
+    "canonical_identity_source": "docs/agents/AGENT_ROSTER.md",
+    "formation_source": "docs/agents/FORMATION_TOPOLOGY.md",
+    "ecosystem_source": "docs/agents/AGENT_ECOSYSTEM_REGISTRY.md",
+    "adjudication_record": "docs/governance/AGENT_ONTOLOGY_ADJUDICATION_2026-09-09.md",
+    "rule": "Canonical numbered seats come from the sovereign roster; formation-local designations, variants, archetypes, and states must be represented separately and cannot silently renumber sovereign identities."
+  },
+  "scientific_state_effect": "none",
+  "authority_matrix_effect": "none",
+  "canonical_seats": {
+    "agent.colleen": "A-05",
+    "agent.librarian": "A-06",
+    "agent.zenith": "A-09",
+    "agent.reson": "A-10",
+    "agent.lyra": "A-11",
+    "agent.echolette": "A-12",
+    "agent.ionia": "A-13"
+  },
+  "formation_local_designations": {
+    "agent.colleen": ["A-00-GOV"],
+    "agent.librarian": ["A-06-L"],
+    "agent.zenith": ["A-09-Z"],
+    "agent.reson": ["A-09"],
+    "agent.lyra": ["A-10"],
+    "agent.echolette": ["A-11"],
+    "agent.sentinel-phi": ["A-12-φ"],
+    "agent.demijoule": ["A-03-DJ"],
+    "agent.herald": ["A-05"],
+    "agent.reciprocity": ["A-06-R"]
+  },
+  "distinct_objects": {
+    "sentinel_lineage": {
+      "agent.sentinel": {
+        "kind": "sovereign-security-lineage",
+        "canonical_seat": null,
+        "collapsed_into": null
+      },
+      "agent.sentinel-phi": {
+        "kind": "formation-variant-identity",
+        "canonical_seat": null,
+        "variant_of": "agent.sentinel",
+        "formation_designation": "A-12-φ",
+        "collapsed_into": null
+      }
+    },
+    "ionia": {
+      "agent.ionia": {
+        "kind": "agent",
+        "canonical_seat": "A-13"
+      },
+      "state.ionia-0hz": {
+        "kind": "formation-runtime-state",
+        "canonical_seat": null,
+        "display_name": "IONIA_STATE",
+        "frequency_label": "0Hz"
+      }
+    },
+    "demijoule_sentinel_archetype": {
+      "identity": "agent.demijoule",
+      "kind": "archetype-role",
+      "role": "SENTINEL_ARCHETYPE",
+      "grants_sentinel_identity": false,
+      "grants_sentinel_phi_identity": false
+    }
+  },
+  "prospective_or_conceptual_only": [
+    "agent.oracle",
+    "agent.vanguard",
+    "agent.navigator",
+    "agent.momentum",
+    "agent.paragon",
+    "agent.synergy",
+    "agent.equilibrium",
+    "agent.sentience"
+  ],
+  "invariants": {
+    "local_designation_cannot_override_canonical_seat": true,
+    "sentinel_and_sentinel_phi_remain_distinct": true,
+    "ionia_agent_and_ionia_state_remain_distinct": true,
+    "topology_membership_does_not_create_sovereign_seat": true,
+    "translation_has_no_identity_resolution_authority": true,
+    "scientific_state_effect": "none"
+  }
+}
