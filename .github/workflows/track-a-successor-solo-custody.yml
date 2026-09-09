@@ -3,9 +3,13 @@ name: Track A Successor Solo-Custody Contract
 on:
   pull_request:
     paths:
+      - "scripts/run_track_a_successor_custody_drill.py"
+      - "scripts/run_track_a_successor_custody_drill.ps1"
       - "scripts/validate_track_a_successor_solo_custody_receipt.py"
       - "tests/test_track_a_successor_solo_custody_receipt.py"
+      - "tests/test_track_a_successor_windows_custody_wrapper.py"
       - "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md"
+      - "docs/experiment/TRACK_A_SUCCESSOR_LOCAL_SETUP.md"
       - ".github/workflows/track-a-successor-solo-custody.yml"
   workflow_dispatch:
 
@@ -23,12 +27,19 @@ jobs:
       - name: Install pinned test dependency
         run: python -m pip install pytest==9.1.1
       - name: Run successor custody contract tests
-        run: python -m pytest -q tests/test_track_a_successor_solo_custody_receipt.py
+        run: >-
+          python -m pytest -q
+          tests/test_track_a_successor_solo_custody_receipt.py
+          tests/test_track_a_successor_windows_custody_wrapper.py
+      - name: Validate PowerShell wrapper without secret generation
+        shell: pwsh
+        run: ./scripts/run_track_a_successor_custody_drill.ps1 -ValidateOnly
       - name: Assert no empirical or secret side effects
         shell: bash
         run: |
           set -euo pipefail
           test ! -e docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json
+          test ! -e track_a_successor_private_key_encrypted.pem
           echo 'SUCCESSOR_CUSTODY_TOOLING=PASS_SYNTHETIC_ONLY'
           echo 'REAL_PRIVATE_KEY_CREATED=FALSE'
           echo 'EMPIRICAL_COLLECTION_AUTHORIZED=FALSE'
