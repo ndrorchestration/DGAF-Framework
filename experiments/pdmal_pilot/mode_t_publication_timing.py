@@ -188,7 +188,8 @@ def finish() -> None:
                 "X-GitHub-Api-Version": "2022-11-28",
             },
         )
-        with urllib.request.urlopen(request, timeout=30) as response:
+        # Request origin is constructed above from the fixed HTTPS GitHub API host.
+        with urllib.request.urlopen(request, timeout=30) as response:  # nosec B310
             metadata = json.load(response)
         validate_metadata(state, metadata, artifact_id, digest)
         evidence = {
