@@ -3,7 +3,7 @@
 **Status:** PARTIAL SYNTHETIC TIMING HARNESS / NONCANONICAL / NO W PROPOSAL  
 **Issue:** #293  
 **Parent:** #287  
-**Stacked design dependency:** draft PR #292  
+**Historical design provenance:** draft PR #292 (closed/superseded); current `main` is authoritative  
 **Scientific state:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0.
 
 ## Purpose
@@ -127,7 +127,6 @@ Completion of timing coverage still does not automatically select W. The evidenc
 
 ## Current boundary
 
-This lane is an engineering measurement apparatus only. It is intentionally stacked on draft #292 and must remain reviewable independently from the custody design itself.
+This lane is an engineering measurement apparatus reconstructed onto current `main` for fresh exact-head validation. Historical draft PRs remain provenance only and do not carry validation forward.
 
 **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0 remains controlling.**
-
