@@ -6,9 +6,7 @@ import pytest
 jsonschema = pytest.importorskip("jsonschema")
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = json.loads(
-    (ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json").read_text()
-)
+SCHEMA = json.loads((ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json").read_text())
 
 
 def valid_record():
