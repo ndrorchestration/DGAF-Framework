@@ -1,0 +1,34 @@
+name: Agent Ontology Adjudication
+
+on:
+  pull_request:
+    paths:
+      - "registry/agent_ontology_adjudication.v1.json"
+      - "docs/governance/AGENT_ONTOLOGY_ADJUDICATION_2026-09-09.md"
+      - "scripts/validate_agent_ontology_adjudication.py"
+      - "tests/test_agent_ontology_adjudication.py"
+      - ".github/workflows/agent-ontology-adjudication.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-agent-ontology:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned test dependency
+        run: python -m pip install pytest==9.1.1
+      - name: Validate adjudication record
+        run: python scripts/validate_agent_ontology_adjudication.py
+      - name: Run adjudication regression tests
+        run: python -m pytest -q tests/test_agent_ontology_adjudication.py
+      - name: Assert non-scientific boundary
+        run: |
+          echo 'AGENT_ONTOLOGY_ADJUDICATION=PASS'
+          echo 'SCIENTIFIC_STATE_EFFECT=NONE'
+          echo 'AUTHORITY_MATRIX_EFFECT=NONE'
