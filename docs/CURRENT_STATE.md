@@ -24,6 +24,18 @@ This file is the primary current-facing repository summary. GitHub remains autho
 
 **Important:** the canonical High-Assurance program, Track A Epoch 001, and any future Track A successor epoch are separate governance/evidence boundaries. Progress in one must not be silently promoted into another.
 
+## Canonical High-Assurance provenance boundary
+
+Repository **main** recency does not redefine the High-Assurance apparatus source, candidate identity, or deployment identity. Those remain exact-scope provenance records until an explicit governing transition replaces them.
+
+- apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- apparatus source tree: `973c92335caf84f37fc2b3c4df6dd83b3b855087`
+- historical runtime-evidence candidate identity: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
+- historical runtime deployment identity: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
+- final v0.7.6 High-Assurance candidate identity: **NOT DESIGNATED**
+
+The separate High-Assurance program therefore remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / canonical empirical N=0**.
+
 ## Executive boundary
 
 | Area | Current state |
@@ -34,7 +46,6 @@ This file is the primary current-facing repository summary. GitHub remains autho
 | Epoch 001 inferential seed units | **50** |
 | Epoch 001 blinded raw observations | **2,250** |
 | Epoch 001 dataset lock | **ESTABLISHED** |
-| Epoch 001 unblinding authorization | **ESTABLISHED historically, but unusable because custody recovery failed** |
 | Epoch 001 protected mapping recoverability | **CRYPTOGRAPHICALLY UNRECOVERABLE** |
 | Epoch 001 unblinded analysis input | **CANNOT BE MATERIALIZED FROM RETAINED EVIDENCE** |
 | Epoch 001 primary analysis | **UNANALYZABLE / NOT RUN** |
@@ -53,23 +64,23 @@ No row above establishes independent validation, production certification, integ
 
 Epoch 001 was prospectively preregistered and collected under the locked topology-robustness protocol.
 
-Locked scientific design:
+Locked design:
 
 - 50 prospective seeds: `20270101..20270150`
 - 5 topologies: ring, PDMAL, random-regular, small-world, complete
 - 9 failure counts: `0, 1, 2, 3, 4, 5, 6, 8, 10`
 - 45 cells per seed
 - 2,250 blinded raw observations
-- neutral algorithm identity: `REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1`
+- algorithm: `REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1`
 - primary endpoint: strict-boolean `ffcr_success`
-- primary confirmatory comparison: PDMAL vs matched random-regular
-- locked paired-bootstrap analysis: 10,000 resamples, bootstrap seed `20270151`, alpha `0.05`
+- primary comparison: PDMAL vs matched random-regular
+- locked analysis: 10,000 paired percentile-bootstrap resamples, seed `20270151`, alpha `0.05`
 
-The prospective collection itself completed successfully and remains retained as blinded historical evidence. The accepted inferential unit count is **50 paired seed units / 2,250 blinded raw observations**.
+The collection remains valid evidence that the prospective blinded panel was executed and retained. The accepted scientific unit count is **50 paired inferential seed units / 2,250 blinded raw observations**.
 
-### Epoch 001 governance/evidence history
+### Established Epoch 001 chain
 
-The epoch legitimately established, in sequence:
+Epoch 001 legitimately established:
 
 1. prospective preregistration;
 2. locked primary-analysis implementation;
@@ -78,18 +89,18 @@ The epoch legitimately established, in sequence:
 5. precollection preflight — **PASS**;
 6. immutable freeze — **ESTABLISHED**;
 7. final closure — **ESTABLISHED**;
-8. verification classification — **PASS / DEVELOPER SELF-ATTESTED / NONINDEPENDENT**;
+8. verification — **PASS / DEVELOPER SELF-ATTESTED / NONINDEPENDENT**;
 9. collection authorization — **ESTABLISHED**;
 10. prospective blinded collection — **COMPLETE**;
 11. dataset lock / collection receipt — **ESTABLISHED**;
-12. unblinding authorization — **ESTABLISHED** for mapping release/decryption;
-13. materializer, receipt, custody-key-preflight, and later primary-analysis-authorization tooling — **MERGED / VALIDATED**.
+12. unblinding authorization — **ESTABLISHED historically** for mapping release/decryption;
+13. materializer, receipt, custody-key-preflight, and primary-analysis-authorization tooling — **MERGED / VALIDATED**.
 
 Those historical gates are not revoked. The later custody adjudication changes what can still be recovered and analyzed from the retained evidence.
 
-### Epoch 001 custody/recovery failure
+### Custody/recovery failure
 
-Issue #496 is now closed / not planned as **`[UNRECOVERABLE] Track A Epoch 001 unblinded-input materialization`**.
+Issue #496 is now **CLOSED / NOT PLANNED** as `[UNRECOVERABLE] Track A Epoch 001 unblinded-input materialization`.
 
 The accepted collection path generated a fresh 256-bit topology-blinding secret at runtime, retained the protected topology mapping only inside a CMS-encrypted protected bundle, and destroyed the plaintext protected directory/tar after encryption. The retained artifact contains ciphertext, certificate, and digest commitments, but no recoverable private-key escrow.
 
@@ -99,7 +110,7 @@ Therefore:
 
 - `TRACK_A_EPOCH_001 = BLINDED_COLLECTION_COMPLETE / CRYPTOGRAPHICALLY_UNRECOVERABLE_FOR_UNBLINDING`
 - `TRACK_A_EPOCH_001_PRIMARY_ANALYSIS = UNANALYZABLE / NOT_RUN`
-- the protected mapping must **not** be brute-forced, guessed, inferred, regenerated, or reconstructed;
+- protected mapping/key recovery must **not** use brute force, guessing, inference, regenerated keys, or reconstruction;
 - Epoch 001 must **not** be pooled into a successor confirmatory analysis;
 - canonical DGAF efficacy remains **NOT ESTABLISHED**.
 
@@ -107,11 +118,13 @@ The custody failure is itself an engineering/governance finding. It does not era
 
 ## Successor Track A — issue #523
 
-Issue #523, **`Track A: replace unrecoverable Epoch 001 with recoverable solo-custody successor`**, is the controlling scientific-design lane.
+Issue #523, `Track A: replace unrecoverable Epoch 001 with recoverable solo-custody successor`, is the controlling scientific-design lane.
 
-The successor must use a new epoch/protocol identity and fresh seeds/blinding. The locked scientific endpoint, estimand, and matrix semantics should be preserved unless a change is separately prospectively justified without reference to unseen Epoch 001 outcomes.
+The successor must use a new epoch/protocol identity and fresh seeds/blinding. The locked endpoint, estimand, and matrix semantics should be preserved unless a change is separately prospectively justified without reference to unseen Epoch 001 outcomes.
 
-Before replacement empirical collection can be authorized, the successor custody path must establish recoverability for a solo researcher without pretending independence. The preferred minimum pattern is:
+Before replacement empirical collection can be authorized, the successor custody path must establish recoverability for a solo researcher without pretending independence.
+
+Preferred minimum pattern:
 
 `locally generated keypair → encrypted PKCS#8 private key → at least two durable encrypted user-controlled recovery copies → precollection recovery drill PASS → public certificate supplied to collection → same-system/nonindependent custody receipt`
 
@@ -126,7 +139,7 @@ Required boundaries:
 - controlled materialization, immutable input receipt, and separate primary-analysis authorization remain separate later gates;
 - no Epoch 001 historical pooling or outcome-driven tuning is allowed.
 
-## Accepted Epoch 001 identities retained for provenance
+## Accepted Epoch 001 provenance identities
 
 Important historical identities remain valid for their exact scope:
 
@@ -147,40 +160,32 @@ Important historical identities remain valid for their exact scope:
 - custody-key preflight tooling merge: `498bb51ffb559145217b84be969fe74cf9f27579`
 - primary-analysis authorization tooling merge: `f95fd3303535cad4e53a24854c9adf7a25b79ab5`
 
-These SHAs identify historical apparatus/governance events; none should be described as the moving repository `main`.
+These SHAs identify historical apparatus/governance events; none is the moving repository main merely because it is listed here.
 
-## Recent engineering, governance, research, and documentation state
+## Recent engineering / governance state
 
-Recent merged work after the Epoch 001 tooling chain includes:
+Recent merged work after the original Epoch 001 tooling chain includes:
 
-- security/dependency refresh for Next.js;
+- security/dependency refresh;
 - Track A custody-handoff operator runbook;
-- decoupling agent identity records from moving scientific state;
+- agent identity / moving scientific-state decoupling;
 - non-destructive branch-disposition inventory;
 - prospective weighted Forman–Ricci replication research;
 - fail-closed Task-4 corpus-intake locking;
-- exact-source live staging breaker evidence capped at `PASS_STRUCTURAL_LIVE_STAGING_ONLY`;
-- Vocabulary Translation Matrix v2 with vocabulary governance and active-identity coverage.
+- exact-source live staging-breaker evidence capped at `PASS_STRUCTURAL_LIVE_STAGING_ONLY`;
+- Vocabulary Translation Matrix v2 with active-identity coverage and vocabulary governance.
 
 These are meaningful implementation/governance advances but have **no automatic scientific-state effect**.
 
 ## Agent identity / vocabulary boundary
 
-Vocabulary translation is downstream of identity and authority governance.
-
-Current translation controls preserve the distinction among:
-
-- canonical identity;
-- accepted alias;
-- abstract role/archetype;
-- state;
-- external-facing functional label.
+Vocabulary translation is downstream of identity and authority governance. Current translation controls distinguish canonical identity, accepted alias, abstract role/archetype, state, and external-facing functional label.
 
 Issue #522 remains open for unresolved sovereign ontology conflicts including Sentinel/Sentinel-Phi lineage, Ionia agent-vs-state classification, A-09/A-10/A-11/A-12 designation collisions, and COLLEEN/Librarian designation drift. Translation must preserve those conflicts until adjudicated.
 
 ## B1 / B2 / B3 and Track C
 
-B1, B2, and B3 have completed their standalone non-empirical lanes. Track C has a merged non-empirical composition proposal.
+B1, B2, and B3 have completed standalone non-empirical lanes. Track C has a merged non-empirical composition proposal.
 
 These states establish integration-readiness predicates only. They do not establish empirical benefit or integrated DGAF efficacy.
 
@@ -198,15 +203,7 @@ It executed 50 paired seeds across 4 conditions × 5 topologies × 9 failure lev
 - two-sided 95% CI: `[-0.11822222222222223, -0.07066666666666668]`
 - classification: **`EVIDENCE_AGAINST_DIRECTIONAL_DGAF`**
 
-A later source-bound audit found canonical seven-gate treatment fidelity **NOT ESTABLISHED** for that execution. Preserve the result as exact-treatment historical evidence only.
-
-## Canonical High-Assurance boundary
-
-The separate canonical High-Assurance program remains:
-
-**PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · AUTHORIZATION NOT GRANTED · canonical High-Assurance empirical N = 0.**
-
-Its final candidate remains **NOT DESIGNATED** under its stricter custody, identity, verification, and authorization requirements.
+A later source-bound audit found canonical seven-gate treatment fidelity **NOT ESTABLISHED**. Preserve the result as exact-treatment historical evidence only.
 
 ## Evidence rules
 
@@ -244,6 +241,6 @@ At this moment:
 
 ## Public terminology
 
-For the industry-neutral map from project-local vocabulary to functional descriptions, use [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md) and the machine-readable `VOCABULARY_TRANSLATION_MATRIX.json`.
+For the industry-neutral map from project-local vocabulary to functional descriptions, use [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md) and `VOCABULARY_TRANSLATION_MATRIX.json`.
 
 Older dated status documents are historical snapshots unless they explicitly identify themselves as current authority.
