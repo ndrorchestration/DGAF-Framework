@@ -142,7 +142,7 @@ jobs:
         flake8 "${changed[@]}" --count --statistics --max-line-length=120
         black --check "${changed[@]}" --line-length=120 --diff
         isort --check-only "${changed[@]}" --profile=black
-        mypy "${changed[@]}" --ignore-missing-imports --no-implicit-optional
+        mypy "${changed[@]}" --explicit-package-bases --ignore-missing-imports --no-implicit-optional
 
     - name: Lint with flake8
       run: |
