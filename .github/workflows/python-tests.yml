@@ -80,6 +80,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -113,6 +115,34 @@ jobs:
           echo "pydantic=$(python -m pip show pydantic | sed -n 's/^Version: //p')"
           echo "platform=$(python -c 'import platform; print(platform.platform())')"
         } | tee "ci-artifacts/toolchain-py${{ matrix.python-version }}.txt"
+
+    - name: Resolve changed Python quality targets
+      env:
+        BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+      run: |
+        set -euo pipefail
+        mkdir -p ci-artifacts
+        python scripts/ci_changed_python_targets.py "$BASE_SHA" "$GITHUB_SHA" \
+          | tee ci-artifacts/changed-python-targets.txt
+
+    - name: Static-check changed Python files
+      shell: bash
+      run: |
+        set -euo pipefail
+        mapfile -t changed < ci-artifacts/changed-python-targets.txt
+        if [ "${#changed[@]}" -eq 0 ]; then
+          echo "No changed Python files require changed-file static checks."
+          exit 0
+        fi
+
+        printf 'Changed Python static-quality targets:\n'
+        printf '  %s\n' "${changed[@]}"
+
+        flake8 "${changed[@]}" --count --select=E9,F63,F82 --show-source --statistics
+        flake8 "${changed[@]}" --count --statistics --max-line-length=120
+        black --check "${changed[@]}" --line-length=120 --diff
+        isort --check-only "${changed[@]}" --profile=black
+        mypy "${changed[@]}" --ignore-missing-imports --no-implicit-optional
 
     - name: Lint with flake8
       run: |
