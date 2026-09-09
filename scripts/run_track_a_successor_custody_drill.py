@@ -18,6 +18,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+
 
 def fail(message: str) -> None:
     raise RuntimeError(message)
@@ -39,6 +41,14 @@ def ensure_distinct(*paths: Path) -> None:
         for other in resolved[index + 1 :]:
             if path in other.parents or other in path.parents:
                 fail("output and backup directories must not contain one another")
+
+
+def ensure_outside_repository(*paths: Path) -> None:
+    repo_root = ROOT.resolve()
+    for path in paths:
+        resolved = path.resolve()
+        if resolved == repo_root or repo_root in resolved.parents:
+            fail(f"custody path must be outside the repository: {resolved}")
 
 
 def main() -> int:
@@ -64,6 +74,7 @@ def main() -> int:
     backup_a = args.backup_a.expanduser().resolve()
     backup_b = args.backup_b.expanduser().resolve()
     ensure_distinct(output, backup_a, backup_b)
+    ensure_outside_repository(output, backup_a, backup_b)
 
     for directory in (output, backup_a, backup_b):
         directory.mkdir(parents=True, exist_ok=True)
