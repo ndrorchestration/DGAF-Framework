@@ -1,0 +1,150 @@
+name: Live Staging Breaker Evidence
+
+on:
+  pull_request:
+    paths:
+      - 'pages/api/staging-breaker.ts'
+      - '.github/workflows/live-staging-breaker.yml'
+      - '.github/workflows/deploy.yml'
+      - 'docs/governance/LIVE_STAGING_BREAKER_EVIDENCE_CONTRACT.md'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-staging-breaker-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  VERCEL_ORG_ID: team_TJWNcGa1Xh9ARKF3SYbKKxKp
+  VERCEL_PROJECT_ID: prj_euzjAnhqct0wayTWWojizanKN3cX
+  EXPECTED_ENSEMBLE_VERSION: 1.8.0
+
+jobs:
+  exercise:
+    name: Exact-source preview breaker exercise
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Require preview credentials
+        run: |
+          set -euo pipefail
+          test -n "$VERCEL_TOKEN"
+          test -n "$VERCEL_AUTOMATION_BYPASS_SECRET"
+
+      - name: Bind single-run exercise identity
+        id: identity
+        run: |
+          set -euo pipefail
+          exercise_id="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${GITHUB_SHA}"
+          echo "exercise_id=$exercise_id" >> "$GITHUB_OUTPUT"
+          printf '%s\n' true | vercel env add DGAF_STAGING_BREAKER_EXERCISE_ENABLED preview --token="$VERCEL_TOKEN" --force
+          printf '%s\n' "$exercise_id" | vercel env add DGAF_STAGING_BREAKER_EXERCISE_ID preview --token="$VERCEL_TOKEN" --force
+
+      - name: Deploy exact PR source to Vercel preview
+        id: deploy
+        run: |
+          set -euo pipefail
+          vercel deploy --yes --token="$VERCEL_TOKEN" | tee vercel_preview.log
+          url=$(grep -Eo 'https://[^[:space:]]+\.vercel\.app' vercel_preview.log | tail -1)
+          test -n "$url"
+          echo "deployment_url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Verify preview deployment identity
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+        run: |
+          set -euo pipefail
+          host="${DEPLOYMENT_URL#https://}"
+          host="${host#http://}"
+          curl -fsS --get \
+            --data-urlencode "teamId=$VERCEL_ORG_ID" \
+            --data-urlencode 'withGitRepoInfo=true' \
+            "https://api.vercel.com/v13/deployments/$host" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" > preview_deployment_metadata.json
+          ready=$(jq -r '.readyState // empty' preview_deployment_metadata.json)
+          target=$(jq -r '.target // empty' preview_deployment_metadata.json)
+          id=$(jq -r '.id // empty' preview_deployment_metadata.json)
+          source=$(jq -r '.meta.githubCommitSha // .gitSource.sha // empty' preview_deployment_metadata.json)
+          test "$ready" = READY
+          test "$target" != production
+          test -n "$id"
+          test "$source" = "$GITHUB_SHA"
+
+      - name: Wait for preview to warm
+        run: sleep 20
+
+      - name: Exercise deployed breaker path
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+          EXERCISE_ID: ${{ steps.identity.outputs.exercise_id }}
+        run: |
+          set -euo pipefail
+          curl -fsS \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+            -H "x-dgaf-staging-exercise-id: $EXERCISE_ID" \
+            -d '{}' \
+            "$DEPLOYMENT_URL/api/staging-breaker" > staging_breaker_response.json
+          jq . staging_breaker_response.json
+          test "$(jq -r '.status' staging_breaker_response.json)" = PASS_STRUCTURAL_LIVE_STAGING_ONLY
+          test "$(jq -r '.exercise_id' staging_breaker_response.json)" = "$EXERCISE_ID"
+          test "$(jq -r '.runtime_environment' staging_breaker_response.json)" = vercel_preview
+          test "$(jq -r '.rollback_verified' staging_breaker_response.json)" = true
+          test "$(jq -r '.scientific_state_effect' staging_breaker_response.json)" = NONE
+          test "$(jq -r '.protected_or_empirical_material_used' staging_breaker_response.json)" = false
+          test "$(jq -r '.sequence | join(" -> ")' staging_breaker_response.json)" = 'STAGING -> ACTIVE -> BREAKER_OPEN -> FROZEN -> ROLLBACK -> VERIFIED'
+
+      - name: Verify post-rollback staging health
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+        run: |
+          set -euo pipefail
+          health=$(curl -fsS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DEPLOYMENT_URL/api/health")
+          test "$(jq -r '.psi_cubic' <<< "$health")" = true
+          test "$(jq -r '.version' <<< "$health")" = "$EXPECTED_ENSEMBLE_VERSION"
+
+      - name: Retain attempt-bound staging evidence
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
+          EXERCISE_ID: ${{ steps.identity.outputs.exercise_id }}
+        run: |
+          set -euo pipefail
+          deployment_id=$(jq -r '.id' preview_deployment_metadata.json)
+          source=$(jq -r '.meta.githubCommitSha // .gitSource.sha' preview_deployment_metadata.json)
+          response_sha=$(sha256sum staging_breaker_response.json | awk '{print $1}')
+          jq -n \
+            --arg source "$source" \
+            --arg run "$GITHUB_RUN_ID" \
+            --arg attempt "$GITHUB_RUN_ATTEMPT" \
+            --arg exercise "$EXERCISE_ID" \
+            --arg deployment "$deployment_id" \
+            --arg url "$DEPLOYMENT_URL" \
+            --arg response_sha "$response_sha" \
+            '{evidence_class:"DGAF_LIVE_STAGING_BREAKER_EVIDENCE_V1",source_commit:$source,workflow_run_id:$run,workflow_attempt:$attempt,exercise_id:$exercise,deployment_id:$deployment,deployment_url:$url,response_sha256:$response_sha,result:"PASS_STRUCTURAL_LIVE_STAGING_ONLY",sequence:["STAGING","ACTIVE","BREAKER_OPEN","FROZEN","ROLLBACK","VERIFIED"],post_rollback_health:"PASS",protected_or_empirical_material_used:false,scientific_state_effect:"NONE",primary_analysis_authorized:false,canonical_dgaf_efficacy:"NOT_ESTABLISHED",high_assurance_authorized:false}' > live_staging_breaker_evidence.json
+          sha256sum live_staging_breaker_evidence.json | awk '{print $1"  live_staging_breaker_evidence.json"}' > live_staging_breaker_evidence.json.sha256
+
+      - name: Upload staging evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-staging-breaker-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            preview_deployment_metadata.json
+            staging_breaker_response.json
+            live_staging_breaker_evidence.json
+            live_staging_breaker_evidence.json.sha256
