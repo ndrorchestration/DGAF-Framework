@@ -2,13 +2,14 @@
 
 **Status:** Canonical policy for taxonomy and vocabulary artifacts
 **Effective:** 2026-08-15
-**Scope:** `docs/NDR_INTERNAL_VOCABULARY_MASTER.md`, `docs/taxonomy/**`, agent role vocabularies, external-equivalent mappings, benchmark language, and generated taxonomy documents.
+**Last reconciled:** 2026-09-09
+**Scope:** `docs/NDR_INTERNAL_VOCABULARY_MASTER.md`, `docs/taxonomy/**`, agent role vocabularies, external-equivalent mappings, benchmark language, generated taxonomy documents, and historical brainstorming/generated synthesis used as discovery input.
 
 ## Purpose
 
 Taxonomy is not evidence. A useful vocabulary mapping must distinguish what a term is called, what it resembles externally, what is implemented, and what has actually been demonstrated.
 
-This standard prevents internal names, metaphors, mathematical constants, qualitative judgments, and historical benchmark claims from acquiring evidentiary status merely through repetition in vocabulary files.
+This standard prevents internal names, metaphors, mathematical constants, qualitative judgments, historical benchmark claims, and generated brainstorming claims from acquiring evidentiary status merely through repetition in vocabulary files.
 
 ## Required Epistemic Classes
 
@@ -60,7 +61,7 @@ Percentages, multipliers, scores, ratios, resilience figures, and benchmark valu
 
 `defined metric → defined denominator/baseline → source telemetry → calculation → reproducible test → reported result`
 
-A number hard-coded into a dictionary, dataframe, README, or taxonomy table is **not** independently verified merely because an assertion succeeds.
+A number hard-coded into a dictionary, dataframe, README, taxonomy table, generated report, agent attestation, or brainstorming artifact is **not** independently verified merely because an assertion succeeds or the number is repeated.
 
 Unspecified `Nx` claims are prohibited. The `1x` baseline must be defined before `150x`, `200x`, etc. can be called ratios.
 
@@ -104,6 +105,47 @@ This preserves the audit trail without laundering historical assertions into cur
 
 A term shared by two projects does not establish architectural identity. Shared mathematical motifs, names, metaphors, or control patterns must be recorded as similarity only until an explicit bridge is implemented and documented.
 
+## Brainstorm / generated-synthesis ingestion rule
+
+Historical brainstorm dumps, NotebookLM/Gemini/LLM syntheses, conversational specifications, agent attestations, generated artifact inventories, and studio output lists are **discovery/provenance sources** by default.
+
+They may seed:
+
+- terminology and aliases;
+- historical lineage;
+- pattern candidates;
+- artifact-discovery targets;
+- documentation gaps;
+- hypotheses and future experiments.
+
+They may not, by themselves, establish:
+
+- current implementation or runtime behavior;
+- mathematical correctness;
+- agent identity or authority;
+- deployment or production readiness;
+- governance authorization;
+- empirical efficacy or comparative superiority;
+- cross-project evidence transfer.
+
+Before promotion, a recovered item must resolve to an owning source, current artifact or exact version where applicable, evidence class, lifecycle state, authority scope, and provenance.
+
+**Repetition invariant:** repeated/generated claims do not gain evidence strength through repetition, aggregation, summarization, source count, or multiple agent attestations.
+
+## Metaphor operationalization rule
+
+Performance-design, musical, acoustic, geometric, biological, cognitive, or other cross-domain metaphors may be retained when useful, but technical documentation must identify the concrete predicate they stand for.
+
+Examples:
+
+- `headroom` → reserved resource/error/context margin;
+- `clipping` → overflow or violated constraint;
+- `cadence` → defined closure condition;
+- `tonic` → explicit state anchor;
+- `role-bleeding` → measurable specialist-contract or authority violation.
+
+If no concrete predicate is defined, classify the term as `METAPHOR`, not as a measured mechanism.
+
 ## Minimum Review Checklist
 
 Before merging a taxonomy/vocabulary change:
@@ -117,5 +159,7 @@ Before merging a taxonomy/vocabulary change:
 - [ ] Certification language identifies scope and evidence.
 - [ ] Cross-project similarities are not presented as identity.
 - [ ] Deprecated terminology is explicitly marked.
+- [ ] Brainstorm/generated-synthesis claims are promoted only after owning-source reconciliation.
+- [ ] Cross-domain metaphors are either operationalized or labeled `METAPHOR`.
 
 **Canonical rule:** Vocabulary organizes claims; it does not upgrade their epistemic status.
