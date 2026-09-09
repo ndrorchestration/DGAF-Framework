@@ -67,7 +67,7 @@ This apparatus does not prove:
 - model robustness;
 - High-Assurance acceptance.
 
-The staging endpoint is intentionally isolated from `/api/orchestrate`. The current production orchestrator still fails closed at Phi-Closure checkpoints because live audit state is not wired into that route. This exercise therefore closes only the original STRUCT-QA Gap-3 deployed-staging sequence requirement if its retained evidence passes independent review; it must not be cited as evidence that production orchestration has a persistent breaker implementation.
+The staging endpoint is intentionally isolated from `/api/orchestrate`. The current production orchestrator still fails closed at Phi-Closure checkpoints because live audit state is not wired into that route. This exercise therefore establishes only a deployed preview structural sequence if its retained evidence passes review; it does not establish a persistent production breaker implementation and does not by itself close any stronger runtime-control claim.
 
 ## Scientific boundary
 
