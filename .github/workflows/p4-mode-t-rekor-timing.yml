@@ -1,0 +1,201 @@
+name: P4 Mode T Controlled Rekor Timing
+
+on:
+  workflow_dispatch:
+    inputs:
+      evidence_sha:
+        description: 'Exact 40-character commit SHA to bind and execute'
+        required: true
+        type: string
+      confirm_public_rekor_entry:
+        description: 'Execution creates an irreversible public Rekor entry'
+        required: true
+        type: choice
+        default: 'NO'
+        options:
+          - 'NO'
+          - 'I_UNDERSTAND_PUBLIC_REKOR_ENTRY'
+
+permissions:
+  contents: read
+
+env:
+  COSIGN_VERSION: 'v3.1.3'
+  COSIGN_LINUX_AMD64_SHA256: '4629c757b7618056f8ddd7e2625ae9fdd94c0372a65049520bc7d9df9efc7f71'
+  COSIGN_URL: 'https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign-linux-amd64'
+  EVIDENCE_SHA: ${{ inputs.evidence_sha }}
+
+jobs:
+  validate-apparatus:
+    name: Validate non-authorizing Rekor timing apparatus
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact requested head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact dispatch/head binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$EVIDENCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EVIDENCE_SHA" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          test "$GITHUB_EVENT_NAME" = 'workflow_dispatch'
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Run standard-library contract tests
+        run: python -m unittest experiments.pdmal_pilot.test_mode_t_rekor_timing -v
+
+      - name: Verify workflow remains manual-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/p4-mode-t-rekor-timing.yml').read_text(encoding='utf-8')
+          trigger = text.split('permissions:', 1)[0]
+          if 'pull_request:' in trigger or 'push:' in trigger or 'schedule:' in trigger:
+              raise SystemExit('controlled Rekor workflow must remain manual-only')
+          if 'workflow_dispatch:' not in trigger:
+              raise SystemExit('manual workflow_dispatch trigger missing')
+          PY
+
+  execute-public-rekor:
+    name: Execute one synthetic public Rekor timing sample
+    needs: validate-apparatus
+    if: ${{ inputs.confirm_public_rekor_entry == 'I_UNDERSTAND_PUBLIC_REKOR_ENTRY' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Reconfirm public side effect and exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = 'workflow_dispatch'
+          test '${{ inputs.confirm_public_rekor_entry }}' = 'I_UNDERSTAND_PUBLIC_REKOR_ENTRY'
+          [[ "$EVIDENCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EVIDENCE_SHA" = "$GITHUB_SHA"
+          test "$GITHUB_RUN_ATTEMPT" = '1'
+
+      - name: Checkout exact requested head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.EVIDENCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify checkout before any signing request
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EVIDENCE_SHA"
+          helper_sha="$(sha256sum experiments/pdmal_pilot/mode_t_rekor_timing.py | awk '{print $1}')"
+          workflow_sha="$(sha256sum .github/workflows/p4-mode-t-rekor-timing.yml | awk '{print $1}')"
+          [[ "$helper_sha" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$workflow_sha" =~ ^[0-9a-f]{64}$ ]]
+          {
+            echo "REKOR_HELPER_SHA256=$helper_sha"
+            echo "REKOR_WORKFLOW_SHA256=$workflow_sha"
+          } >> "$GITHUB_ENV"
+
+      - name: Set up Python 3.12.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12.0'
+          check-latest: false
+
+      - name: Download and verify exact Cosign binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-artifacts/bin
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-all-errors \
+            "$COSIGN_URL" --output test-artifacts/bin/cosign
+          computed="$(sha256sum test-artifacts/bin/cosign | awk '{print $1}')"
+          test "$computed" = "$COSIGN_LINUX_AMD64_SHA256"
+          chmod 0755 test-artifacts/bin/cosign
+          test "$(sha256sum test-artifacts/bin/cosign | awk '{print $1}')" = "$COSIGN_LINUX_AMD64_SHA256"
+          test-artifacts/bin/cosign version
+
+      - name: Create synthetic blob, submit to Rekor, and verify bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-artifacts/rekor
+          python experiments/pdmal_pilot/mode_t_rekor_timing.py \
+            --cosign "$GITHUB_WORKSPACE/test-artifacts/bin/cosign" \
+            --cosign-sha256 "$COSIGN_LINUX_AMD64_SHA256" \
+            --blob test-artifacts/rekor/synthetic-non-authorization.json \
+            --bundle test-artifacts/rekor/cosign-bundle.json \
+            --output test-artifacts/rekor/rekor-timing-evidence.json
+
+      - name: Enforce evidence boundary and exact identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          p = Path('test-artifacts/rekor/rekor-timing-evidence.json')
+          e = json.loads(p.read_text(encoding='utf-8'))
+          assert e['control_plane_sha'] == os.environ['EVIDENCE_SHA']
+          assert e['github_run_id'] == os.environ['GITHUB_RUN_ID']
+          assert e['github_run_attempt'] == '1'
+          assert e['cosign_sha256'] == os.environ['COSIGN_LINUX_AMD64_SHA256']
+          assert e['public_transparency_side_effect'] is True
+          assert e['empirical_data_collection'] is False
+          assert e['protected_material_present'] is False
+          assert e['secret_instantiation'] is False
+          assert e['freeze_established'] is False
+          assert e['pilot_authorized'] is False
+          assert e['authorization_consumed'] is False
+          assert e['analysis_lock_created'] is False
+          assert e['numeric_w_selected'] is False
+          assert e['w_proposal_eligible'] is False
+          assert e['empirical_n'] == 0
+          assert e['tlog_entry_count'] >= 1
+          assert e['integrated_time'] >= 1
+          assert e['log_index'] >= 0
+          PY
+
+      - name: Bind timing evidence to workflow/helper identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            printf 'evidence_sha=%s\n' "$EVIDENCE_SHA"
+            printf 'github_run_id=%s\n' "$GITHUB_RUN_ID"
+            printf 'github_run_attempt=%s\n' "$GITHUB_RUN_ATTEMPT"
+            printf 'workflow_sha256=%s\n' "$REKOR_WORKFLOW_SHA256"
+            printf 'helper_sha256=%s\n' "$REKOR_HELPER_SHA256"
+            printf 'cosign_sha256=%s\n' "$COSIGN_LINUX_AMD64_SHA256"
+            printf 'scientific_state=PRE-FREEZE_FAIL-CLOSED_NOT-AUTHORIZED_N0\n'
+          } > test-artifacts/rekor/rekor-timing-binding.txt
+
+      - name: Upload non-secret synthetic Rekor timing evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p4-mode-t-rekor-timing-${{ env.EVIDENCE_SHA }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-artifacts/rekor/synthetic-non-authorization.json
+            test-artifacts/rekor/cosign-bundle.json
+            test-artifacts/rekor/rekor-timing-evidence.json
+            test-artifacts/rekor/rekor-timing-evidence.json.sha256
+            test-artifacts/rekor/rekor-timing-binding.txt
+          if-no-files-found: error
+          retention-days: 30
