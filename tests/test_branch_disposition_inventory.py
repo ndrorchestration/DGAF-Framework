@@ -1,4 +1,10 @@
-from scripts.inventory_branch_disposition import ACTIVE, MERGED, REVIEW, CompareFacts, classify_branch
+from scripts.inventory_branch_disposition import (
+    ACTIVE,
+    MERGED,
+    REVIEW,
+    CompareFacts,
+    classify_branch,
+)
 
 
 def facts(status: str, ahead: int, behind: int) -> CompareFacts:
