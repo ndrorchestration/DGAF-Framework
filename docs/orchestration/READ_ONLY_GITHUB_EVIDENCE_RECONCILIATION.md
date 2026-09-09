@@ -12,7 +12,7 @@
 
 ## Input
 
-The input JSON has exactly these top-level fields:
+The input JSON has exactly these top-level fields. Each workflow uses its immutable GitHub `run_id`; workflow names are descriptive only.
 
 ```json
 {
@@ -24,6 +24,7 @@ The input JSON has exactly these top-level fields:
   },
   "workflow_runs": [
     {
+      "run_id": 123456789,
       "name": "Governance CI",
       "status": "completed",
       "conclusion": "success",
@@ -41,4 +42,4 @@ python3 scripts/reconcile_github_pr_evidence.py snapshot.json \
   --output reconciliation-report.json
 ```
 
-A changed pull-request head or a workflow bound to another head is reported as `STALE`; incomplete work is `BLOCKED`; failed/cancelled work is `FAIL`. The report is evidence for a human or existing repository control, never an authorization decision.
+A changed pull-request head or a workflow bound to another head is reported as `STALE`; incomplete work is `BLOCKED`; failed/cancelled work is `FAIL`. The report retains the validated workflow run IDs, is evidence for a human or existing repository control, and is never an authorization decision.
