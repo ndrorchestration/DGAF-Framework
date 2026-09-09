@@ -38,10 +38,10 @@ def reject_secrets(value: Any, path: str = "$") -> None:
 
 
 def reconcile(snapshot: dict[str, Any], expected_head_sha: str) -> dict[str, Any]:
+    reject_secrets(snapshot)
     require(set(snapshot) == {"repository", "pull_request", "workflow_runs"}, "snapshot keys invalid")
     require(isinstance(snapshot["repository"], str) and "/" in snapshot["repository"], "repository invalid")
     require(isinstance(expected_head_sha, str) and SHA_RE.fullmatch(expected_head_sha), "expected head SHA invalid")
-    reject_secrets(snapshot)
 
     pull_request = snapshot["pull_request"]
     require(isinstance(pull_request, dict), "pull_request must be an object")
