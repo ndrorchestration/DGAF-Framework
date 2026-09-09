@@ -12,14 +12,29 @@ PUBLIC_LAYER_PATH = Path("docs/PUBLIC_TRANSLATION_LAYER.md")
 IDENTITY_MANIFEST_PATH = Path("registry/agent_identity_manifest.v1.json")
 
 REQUIRED_IDENTITIES = {
-    "Amethyst", "COLLEEN", "Apogee", "Sentinel-Phi", "DemiJoule", "Herald",
-    "Professor Prodigy", "Nova", "Perigee", "Reciprocity", "The Librarian",
-    "The Auditor", "The Actualizer", "Zenith", "Reson", "Lyra", "Echolette", "Ionia",
+    "Amethyst",
+    "COLLEEN",
+    "Apogee",
+    "Sentinel-Phi",
+    "DemiJoule",
+    "Herald",
+    "Professor Prodigy",
+    "Nova",
+    "Perigee",
+    "Reciprocity",
+    "The Librarian",
+    "The Auditor",
+    "The Actualizer",
+    "Zenith",
+    "Reson",
+    "Lyra",
+    "Echolette",
+    "Ionia",
 }
 REQUIRED_ALIAS_BINDINGS = {
-    "Apogee Lens": "Apogee", "Prodigy": "Professor Prodigy",
+    "Apogee Lens": "Apogee",
+    "Prodigy": "Professor Prodigy",
 }
-FORBIDDEN_ALIAS_BINDINGS = {"Sentinel": "Sentinel-Phi", "Sentinel": "DemiJoule"}
 REQUIRED_EXTERNAL_LABELS = {
     "Amethyst": "Governance Orchestrator",
     "Apogee": "Evidence & Verification Reviewer",
@@ -38,7 +53,11 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def validate_matrix(matrix: dict, public_text: str | None = None, identity_manifest: dict | None = None) -> list[str]:
+def validate_matrix(
+    matrix: dict,
+    public_text: str | None = None,
+    identity_manifest: dict | None = None,
+) -> list[str]:
     errors: list[str] = []
     if matrix.get("record_type") != "DGAF_VOCABULARY_TRANSLATION_MATRIX":
         errors.append("record_type mismatch")
@@ -49,7 +68,11 @@ def validate_matrix(matrix: dict, public_text: str | None = None, identity_manif
     if not isinstance(authority, dict):
         errors.append("authority must be an object")
     else:
-        for key in ("scientific_state_effect", "authority_effect", "identity_resolution_effect"):
+        for key in (
+            "scientific_state_effect",
+            "authority_effect",
+            "identity_resolution_effect",
+        ):
             if authority.get(key) != "NONE":
                 errors.append(f"{key} must be NONE")
         if authority.get("translation_not_renaming") is not True:
@@ -66,8 +89,16 @@ def validate_matrix(matrix: dict, public_text: str | None = None, identity_manif
     if not isinstance(unresolved, list) or not unresolved:
         errors.append("unresolved_relations must be a non-empty list")
     else:
-        sentinel_records = [r for r in unresolved if isinstance(r, dict) and set(r.get("terms", [])) == {"Sentinel", "Sentinel-Phi"}]
-        if not sentinel_records or sentinel_records[0].get("status") != "UNRESOLVED_IDENTITY_LINEAGE":
+        sentinel_records = [
+            record
+            for record in unresolved
+            if isinstance(record, dict)
+            and set(record.get("terms", [])) == {"Sentinel", "Sentinel-Phi"}
+        ]
+        if (
+            not sentinel_records
+            or sentinel_records[0].get("status") != "UNRESOLVED_IDENTITY_LINEAGE"
+        ):
             errors.append("Sentinel/Sentinel-Phi lineage must remain explicitly unresolved")
 
     entries = matrix.get("entries")
@@ -78,9 +109,16 @@ def validate_matrix(matrix: dict, public_text: str | None = None, identity_manif
     alias_to_identity: dict[str, str] = {}
     labels: set[str] = set()
     required_fields = {
-        "canonical_internal_identity", "identity_kind", "resolution_status", "aliases",
-        "external_label", "internal_function", "abstract_role_classes", "authority_class",
-        "authority_ceiling", "first_use_external",
+        "canonical_internal_identity",
+        "identity_kind",
+        "resolution_status",
+        "aliases",
+        "external_label",
+        "internal_function",
+        "abstract_role_classes",
+        "authority_class",
+        "authority_ceiling",
+        "first_use_external",
     }
 
     for index, entry in enumerate(entries):
@@ -101,11 +139,15 @@ def validate_matrix(matrix: dict, public_text: str | None = None, identity_manif
 
         if entry["identity_kind"] not in {"AGENT", "STATE"}:
             errors.append(f"{identity}: identity_kind must be AGENT or STATE")
-        if not isinstance(entry["resolution_status"], str) or not entry["resolution_status"].strip():
+        if not isinstance(entry["resolution_status"], str) or not entry[
+            "resolution_status"
+        ].strip():
             errors.append(f"{identity}: resolution_status must be non-empty")
 
         aliases = entry["aliases"]
-        if not isinstance(aliases, list) or any(not isinstance(a, str) or not a.strip() for a in aliases):
+        if not isinstance(aliases, list) or any(
+            not isinstance(alias, str) or not alias.strip() for alias in aliases
+        ):
             errors.append(f"{identity}: aliases must be strings")
             aliases = []
         for alias in aliases:
@@ -123,11 +165,15 @@ def validate_matrix(matrix: dict, public_text: str | None = None, identity_manif
         roles = entry["abstract_role_classes"]
         if not isinstance(roles, list) or not roles:
             errors.append(f"{identity}: abstract_role_classes must be non-empty")
-        if not isinstance(entry["authority_ceiling"], str) or not entry["authority_ceiling"].strip():
+        if not isinstance(entry["authority_ceiling"], str) or not entry[
+            "authority_ceiling"
+        ].strip():
             errors.append(f"{identity}: authority_ceiling must be non-empty")
         expected_first_use = f"{label} ({identity})"
         if entry["first_use_external"] != expected_first_use:
-            errors.append(f"{identity}: first_use_external must equal {expected_first_use!r}")
+            errors.append(
+                f"{identity}: first_use_external must equal {expected_first_use!r}"
+            )
 
     missing = REQUIRED_IDENTITIES - set(identities)
     if missing:
@@ -137,37 +183,68 @@ def validate_matrix(matrix: dict, public_text: str | None = None, identity_manif
         if alias_to_identity.get(alias) != canonical:
             errors.append(f"alias {alias!r} must resolve to {canonical!r}")
     if "Sentinel" in alias_to_identity:
-        errors.append("Sentinel must not be encoded as an alias while its lineage is unresolved")
+        errors.append(
+            "Sentinel must not be encoded as an alias while its lineage is unresolved"
+        )
 
     for identity, label in REQUIRED_EXTERNAL_LABELS.items():
         if identities.get(identity, {}).get("external_label") != label:
             errors.append(f"{identity}: expected external label {label!r}")
 
     if identities.get("Ionia", {}).get("identity_kind") != "STATE":
-        errors.append("Ionia must be translated as STATE until the agent-vs-state conflict is adjudicated")
-    if "SENTINEL_ARCHETYPE" not in set(identities.get("DemiJoule", {}).get("abstract_role_classes", [])):
+        errors.append(
+            "Ionia must be translated as STATE until the agent-vs-state conflict is adjudicated"
+        )
+    if "SENTINEL_ARCHETYPE" not in set(
+        identities.get("DemiJoule", {}).get("abstract_role_classes", [])
+    ):
         errors.append("DemiJoule must retain SENTINEL_ARCHETYPE as a role class")
 
     if identity_manifest is not None:
         active_names = {
             item.get("display_name")
             for item in identity_manifest.get("identities", [])
-            if item.get("activation_status") == "active" and isinstance(item.get("display_name"), str)
+            if item.get("activation_status") == "active"
+            and isinstance(item.get("display_name"), str)
         }
         missing_active = active_names - set(identities)
         if missing_active:
-            errors.append(f"active identity-manifest names missing translation entries: {sorted(missing_active)}")
-        sentinel = next((i for i in identity_manifest.get("identities", []) if i.get("display_name") == "Sentinel"), None)
-        sentinel_phi = next((i for i in identity_manifest.get("identities", []) if i.get("display_name") == "Sentinel-Phi"), None)
+            errors.append(
+                "active identity-manifest names missing translation entries: "
+                f"{sorted(missing_active)}"
+            )
+        sentinel = next(
+            (
+                item
+                for item in identity_manifest.get("identities", [])
+                if item.get("display_name") == "Sentinel"
+            ),
+            None,
+        )
+        sentinel_phi = next(
+            (
+                item
+                for item in identity_manifest.get("identities", [])
+                if item.get("display_name") == "Sentinel-Phi"
+            ),
+            None,
+        )
         if sentinel and sentinel_phi and "Sentinel" in alias_to_identity:
-            errors.append("identity manifest preserves Sentinel separately; translation cannot collapse it")
+            errors.append(
+                "identity manifest preserves Sentinel separately; translation cannot collapse it"
+            )
 
     if public_text is not None:
         for identity, entry in identities.items():
             if entry["external_label"] not in public_text:
-                errors.append(f"public translation layer missing external label for {identity}: {entry['external_label']}")
+                errors.append(
+                    "public translation layer missing external label for "
+                    f"{identity}: {entry['external_label']}"
+                )
         if "historical `Sentinel` resolves to `Sentinel-Phi`" in public_text:
-            errors.append("public translation layer incorrectly resolves contested Sentinel lineage")
+            errors.append(
+                "public translation layer incorrectly resolves contested Sentinel lineage"
+            )
 
     return errors
 
@@ -178,12 +255,19 @@ def main() -> int:
     parser.add_argument("--public-layer", type=Path, default=PUBLIC_LAYER_PATH)
     parser.add_argument("--identity-manifest", type=Path, default=IDENTITY_MANIFEST_PATH)
     args = parser.parse_args()
-    errors = validate_matrix(load_json(args.matrix), args.public_layer.read_text(encoding="utf-8"), load_json(args.identity_manifest))
+    errors = validate_matrix(
+        load_json(args.matrix),
+        args.public_layer.read_text(encoding="utf-8"),
+        load_json(args.identity_manifest),
+    )
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    print("PASS: vocabulary translation matrix v2 (coverage, conflict retention, authority ceiling)")
+    print(
+        "PASS: vocabulary translation matrix v2 "
+        "(coverage, conflict retention, authority ceiling)"
+    )
     return 0
 
 
