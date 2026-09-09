@@ -34,63 +34,36 @@ def test_duplicate_identity_fails_closed() -> None:
 
 def test_sentinel_lineage_cannot_be_collapsed_by_translation() -> None:
     matrix = _matrix()
-    sentinel_phi = next(
-        entry
-        for entry in matrix["entries"]
-        if entry["canonical_internal_identity"] == "Sentinel-Phi"
-    )
+    sentinel_phi = next(entry for entry in matrix["entries"] if entry["canonical_internal_identity"] == "Sentinel-Phi")
     sentinel_phi["aliases"] = ["Sentinel"]
     errors = validate_matrix(matrix, identity_manifest=_manifest())
-    assert any(
-        "Sentinel" in error and ("unresolved" in error or "collapse" in error)
-        for error in errors
-    )
+    assert any("Sentinel" in error and ("unresolved" in error or "collapse" in error) for error in errors)
 
 
 def test_demijoule_sentinel_is_role_not_identity() -> None:
     matrix = _matrix()
-    demi = next(
-        entry
-        for entry in matrix["entries"]
-        if entry["canonical_internal_identity"] == "DemiJoule"
-    )
+    demi = next(entry for entry in matrix["entries"] if entry["canonical_internal_identity"] == "DemiJoule")
     demi["abstract_role_classes"] = ["ADVISE"]
     assert any("SENTINEL_ARCHETYPE" in error for error in validate_matrix(matrix))
 
 
 def test_ionia_remains_state_until_reconciled() -> None:
     matrix = _matrix()
-    ionia = next(
-        entry
-        for entry in matrix["entries"]
-        if entry["canonical_internal_identity"] == "Ionia"
-    )
+    ionia = next(entry for entry in matrix["entries"] if entry["canonical_internal_identity"] == "Ionia")
     ionia["identity_kind"] = "AGENT"
-    assert any(
-        "Ionia" in error and "STATE" in error for error in validate_matrix(matrix)
-    )
+    assert any("Ionia" in error and "STATE" in error for error in validate_matrix(matrix))
 
 
 def test_active_manifest_identity_requires_translation_entry() -> None:
     matrix = _matrix()
-    matrix["entries"] = [
-        entry
-        for entry in matrix["entries"]
-        if entry["canonical_internal_identity"] != "Reson"
-    ]
+    matrix["entries"] = [entry for entry in matrix["entries"] if entry["canonical_internal_identity"] != "Reson"]
     errors = validate_matrix(matrix, identity_manifest=_manifest())
-    assert any(
-        "active identity-manifest" in error and "Reson" in error for error in errors
-    )
+    assert any("active identity-manifest" in error and "Reson" in error for error in errors)
 
 
 def test_apogee_alias_is_preserved() -> None:
     matrix = _matrix()
-    apogee = next(
-        entry
-        for entry in matrix["entries"]
-        if entry["canonical_internal_identity"] == "Apogee"
-    )
+    apogee = next(entry for entry in matrix["entries"] if entry["canonical_internal_identity"] == "Apogee")
     apogee["aliases"] = []
     assert any("Apogee Lens" in error for error in validate_matrix(matrix))
 
