@@ -309,7 +309,10 @@ def _mapping_detail_failures(
                 if canonical_value is None:
                     continue
                 if card_provenance.get(field) != canonical_value:
-                    failures.append(f"{card_id}: mapped card provenance.{field} differs from canonical provenance.{field}")
+                    failures.append(
+                        f"{card_id}: mapped card provenance.{field} "
+                        f"differs from canonical provenance.{field}"
+                    )
 
     return failures
 
