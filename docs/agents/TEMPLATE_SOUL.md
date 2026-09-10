@@ -94,10 +94,10 @@ Failure-mode suppressions are the agent's known weak spots and the discipline to
 ## Instruments referenced
 | Instrument ID | Name | How referenced | Reconciliation status |
 |---|---|---|---|
-| INST-QA-001 | DGAF Core QA Rubric (11Q) | <how this agent uses or references it> | Mathematical defect: weights sum to 1.50; formula unreachable under literal execution — do not assert 11Q scores until reconciled |
-| INST-GATE-11Q | GATE-11Q Deployment Gate | <how referenced> | Identity collision with INST-QA-001 — both called "11Q/P-11" but different instruments; use ID, not shorthand |
+| INST-QA-001 | DGAF Core QA Rubric (11Q) | <how this agent uses or references it> | v1.1 scoring semantics reconciled: normalized weighted mean; thresholds 0.70/0.90 are instrument-scoped inherited heuristics, not empirically calibrated; use ID + version |
+| INST-GATE-11Q | GATE-11Q Deployment Gate | <how referenced> | Identity collision with INST-QA-001 — both historically called "11Q/P-11" but different instruments; use ID, not shorthand |
 | INST-AXIS | AXIS Metric Specification | <how referenced> | Ratified but instrumentation OPEN; operational AXIS scores not established |
-| INST-APOGEE-7Q | Apogee QA Rubric (7-Dimension) | <how referenced> | P-11 threshold conflict with INST-QA-001 (0.85 vs 0.70); AXIS name collision with INST-AXIS |
+| INST-APOGEE-7Q | Apogee QA Rubric (7-Dimension) | <how referenced> | Separate 0.85 attestation threshold; do not substitute it for INST-QA-001's 0.70 artifact-quality threshold; AXIS name collision with INST-AXIS remains |
 | INST-AHG-ARCH | AHG Architecture Specification | <how referenced> | Weight sum conflict with INST-AHG-STAB (1.00 vs 0.80); implementation live but validation pending |
 | INST-HQ-META | Harmonic Quintet Meta-Orchestration Spec | <how referenced> | Matrix row-stochasticity claim false (APG row = 0.80); 0.844 composite unverifiable; convergence claim has true conclusion but wrong justification |
 | ... | ... | ... | ... |
@@ -114,7 +114,7 @@ This section is the key improvement the instrument-ontology layer enables: inste
 - ...
 ```text
 
-Derived from the agent's lane and the instruments it references. Example: an agent that references INST-AHG-ARCH should be skeptical of treating "IMPLEMENTATION LIVE" as validation. An agent referencing INST-QA-001 should be skeptical of asserting 11Q scores before the weight defect is reconciled.
+Derived from the agent's lane and the instruments it references. Example: an agent that references INST-AHG-ARCH should be skeptical of treating "IMPLEMENTATION LIVE" as validation. An agent referencing INST-QA-001 should require the explicit instrument ID + version and should not treat its inherited heuristic thresholds as empirical validation or as interchangeable with other instruments' P-11/11Q predicates.
 
 ### 8. What I want from other agents
 
@@ -162,4 +162,4 @@ This also makes the soul independently verifiable: a reviewer can check that eve
 
 ---
 
-Classification: T1 PUBLIC — template, not yet authored for specific agents. Pending instrument reconciliation completion before individual agent souls are authored against it.
+Classification: T1 PUBLIC — template. Individual agent souls must use current instrument IDs/versions and preserve unresolved conflicts on other instruments rather than inheriting historical reconciliation text as present-state truth.
