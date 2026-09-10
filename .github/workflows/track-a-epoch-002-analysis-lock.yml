@@ -1,0 +1,60 @@
+name: Track A Epoch 002 Analysis Lock
+
+on:
+  pull_request:
+    paths:
+      - 'docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json'
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json'
+      - 'experiments/pdmal_pilot/track_a_epoch_002_analysis.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+      - 'scripts/validate_track_a_epoch_002_analysis_lock.py'
+      - 'tests/test_track_a_epoch_002_analysis_lock.py'
+      - '.github/workflows/track-a-epoch-002-analysis-lock.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 non-empirical analysis lock
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install exact hash-locked experimental environment
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Validate exact analysis lock
+        run: python scripts/validate_track_a_epoch_002_analysis_lock.py
+
+      - name: Run focused adversarial tests
+        run: python -m pytest -q tests/test_track_a_epoch_002_analysis_lock.py
+
+      - name: Assert non-authorization boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          lock = json.loads(Path('docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json').read_text())
+          b = lock['boundaries']
+          assert b['successor_custody_recovery_receipt_established'] is False
+          assert b['exact_candidate_freeze_established'] is False
+          assert b['collection_authorized'] is False
+          assert b['unblinding_authorized'] is False
+          assert b['primary_analysis_authorized'] is False
+          assert b['empirical_execution_authorized'] is False
+          assert b['scientific_n_increment'] == 0
+          assert b['canonical_dgaf_efficacy'] == 'NOT_ESTABLISHED'
+          assert b['high_assurance'] == 'NOT_AUTHORIZED_N0'
+          print('EPOCH_002_ANALYSIS_LOCK_NONAUTHORIZING=TRUE')
+          PY
