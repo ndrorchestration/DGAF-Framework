@@ -34,21 +34,24 @@ Recoverability is not independent custody. A solo operator can prove that a secr
    - derive the public key from the certificate intended for collection;
    - require exact byte identity of the two public DER encodings;
    - clean up transient plaintext key material.
-10. Emit a non-secret recovery receipt containing only fingerprints, non-secret backup classifications/identifiers, recovery PASS, and the same-system/nonindependent classification.
-11. Validate that receipt with `scripts/validate_track_a_successor_solo_custody_receipt.py`.
+10. Emit a non-secret schema-v2 recovery receipt containing only fingerprints, non-secret backup classifications/identifiers, per-backup recovery PASS records, a timezone-qualified recovery timestamp, and the same-system/nonindependent classification.
+11. Validate that receipt with the current successor entry point in `scripts/validate_track_a_successor_solo_custody_receipt.py`.
 12. Only a later, separate immutable authorization event may authorize successor empirical collection.
 
 ## Required receipt invariants
 
-The recovery receipt must establish all of the following without containing secret material:
+The current successor recovery receipt must establish all of the following without containing secret material:
 
+- `schema_version = 2`;
 - fresh keypair created before collection;
 - encrypted private-key container SHA-256 recorded;
 - certificate SHA-256 recorded;
 - certificate public-key DER SHA-256 recorded;
 - recovered private-key-derived public DER SHA-256 recorded;
 - recovered public DER exactly matches the intended collection certificate public DER;
-- at least two distinct encrypted, user-controlled recovery copies exist;
+- at least two distinct encrypted, user-controlled recovery copies exist in distinct operator-declared storage classes;
+- every recorded backup has its own matching encrypted-container SHA-256, recovered public-key DER SHA-256, and recovery `PASS`;
+- recovery timestamp is timezone-qualified;
 - private key is not stored in repository, Notion, or chat;
 - custody classification is `SAME_SYSTEM_NONINDEPENDENT`;
 - independent custody is false;
@@ -59,9 +62,11 @@ The recovery receipt must establish all of the following without containing secr
 
 ## Receipt version and evidence limits
 
-The current helper emits schema v2: a timezone-qualified recovery timestamp and per-backup encrypted-container hash, recovered public-key DER hash, and recovery PASS. It requires explicit, distinct operator-declared storage classes; it does not infer offsite location from a path. The final receipt appears only after structural validation succeeds.
+The current helper emits schema v2. The normal/current `validate_receipt` entry point requires schema v2 so a legacy record cannot satisfy the Epoch 002 precollection gate merely because its older structure is still parseable.
 
-The validator retains schema-v1 compatibility for older records. A v1 validation is not evidence that both backups were tested. A structurally valid receipt is self-attested evidence, not independent observation of secret recovery, storage location, or durability. No real receipt is established by synthetic CI tests.
+Historical schema-v1 records remain inspectable only through the explicitly named `validate_legacy_receipt` compatibility function. That compatibility path is for provenance/review; it is **not** current successor-gate evidence and cannot satisfy Epoch 002 collection prerequisites.
+
+The helper requires explicit, distinct operator-declared storage classes; it does not infer offsite location from a path. The final receipt appears only after structural validation succeeds. A structurally valid receipt remains self-attested evidence, not independent observation of secret recovery, storage location, or durability. No real receipt is established by synthetic CI tests.
 
 ## Synthetic CI boundary
 
