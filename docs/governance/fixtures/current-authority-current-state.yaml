@@ -21,9 +21,10 @@ supersedes: []
 superseded_by: []
 terminal_reason: null
 last_verified_at: null
-next_gate: real operator-controlled custody-v2 recovery evidence under issue #523
+next_gate: repository admission and validation of the exact public certificate and non-secret schema-v2 custody receipt produced by the successful operator-local drill under issue #523
 projection_state: NOT_VERIFIED
 notes:
   - This R1 fixture is illustrative and non-authoritative.
   - Consumers must resolve docs/CURRENT_STATE.md for canonical current state.
+  - Operator-local custody recovery is PASS_CURRENT_V2 / self-attested / non-independent; repository-level real_custody_v2 remains unsatisfied pending exact artifact admission and validation.
   - PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION NOT AUTHORIZED / canonical empirical N=0 remains unchanged.
