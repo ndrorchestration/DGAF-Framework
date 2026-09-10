@@ -126,40 +126,20 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Verify and download exact pinned TLA+ Tools bytes
+      - name: Verify TLA+ pin contract
+        run: python -m pytest -q tests/test_governance_tlaplus_pin_contract.py
+
+      - name: Download and verify exact pinned TLA+ Tools bytes
         run: |
-          python - <<'PY'
-          import json
-          import urllib.request
-
-          release_url = 'https://api.github.com/repos/tlaplus/tlaplus/releases/tags/v1.7.4'
-          expected_download_url = 'https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar'
-          expected_size = 2274532
-          expected_sha1 = 'bee4a54f3ee3d4afc347c3240ec2d9e93b075104'
-          request = urllib.request.Request(
-              release_url,
-              headers={
-                  'Accept': 'application/vnd.github+json',
-                  'X-GitHub-Api-Version': '2022-11-28',
-              },
-          )
-          with urllib.request.urlopen(request, timeout=30) as response:
-              release = json.load(response)
-
-          assert release['tag_name'] == 'v1.7.4'
-          assert release['draft'] is False
-          assert release['prerelease'] is False
-          assets = [asset for asset in release['assets'] if asset['name'] == 'tla2tools.jar']
-          assert len(assets) == 1
-          asset = assets[0]
-          assert asset['browser_download_url'] == expected_download_url
-          assert asset['size'] == expected_size
-          assert f'{expected_sha1}|tla2tools.jar' in release['body']
-          PY
-          curl --fail --location --retry 3 --output tla2tools.jar \
-            https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar
-          echo 'bee4a54f3ee3d4afc347c3240ec2d9e93b075104  tla2tools.jar' | sha1sum --check --strict
-          echo '936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88  tla2tools.jar' | sha256sum --check --strict
+          set -euo pipefail
+          TLA_URL='https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar'
+          TLA_SIZE='2274532'
+          TLA_SHA1='bee4a54f3ee3d4afc347c3240ec2d9e93b075104'
+          TLA_SHA256='936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88'
+          curl --fail --location --retry 5 --retry-all-errors --output tla2tools.jar "$TLA_URL"
+          test "$(stat -c '%s' tla2tools.jar)" = "$TLA_SIZE"
+          echo "$TLA_SHA1  tla2tools.jar" | sha1sum --check --strict
+          echo "$TLA_SHA256  tla2tools.jar" | sha256sum --check --strict
 
       - name: Model-check DGAF containment
         run: |
@@ -183,9 +163,12 @@ jobs:
               'workflow_run_id': '${{ github.run_id }}', 'job': 'governance-ci',
               'java_version': '17', 'tool': 'TLA+ Tools', 'tool_release': 'v1.7.4',
               'tool_download_url': 'https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar',
+              'tool_size_bytes': 2274532,
               'tool_sha1': 'bee4a54f3ee3d4afc347c3240ec2d9e93b075104',
+              'tool_sha1_origin': 'upstream-published at stable v1.7.4 adoption',
               'tool_sha256': '936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88',
-              'tool_identity_rule': 'stable release tag + canonical download URL + upstream-published SHA-1 + downloaded-byte SHA-256',
+              'tool_identity_rule': 'stable release tag + canonical download URL + exact byte size + pinned SHA-1 + pinned SHA-256; runtime does not depend on release API availability',
+              'tool_release_metadata_provenance': 'v1.7.4 stable/non-prerelease metadata verified when adopted in PR #557; each run re-establishes executable identity from downloaded bytes',
               'command': 'java -cp tla2tools.jar tlc2.TLC -config specs/DGAFContainment.cfg specs/DGAFContainment.tla',
               'result': 'PASS' if no_error else 'FAIL', 'no_error_found': no_error,
               'states_generated': int(generated.group(1)) if generated else None,
@@ -224,6 +207,7 @@ jobs:
           test -f tests/test_agent_authority_matrix.py
           test -f tests/test_agent_authority_reconciliation.py
           test -f tests/test_layer0_constitution.py
+          test -f tests/test_governance_tlaplus_pin_contract.py
           test -f docs/agents/AGENT_AUTHORITY_INVARIANT.md
           test -f docs/agents/AGENT_AUTHORITY_MATRIX.md
           test -f docs/agents/AGENT_AUTHORITY_RECONCILIATION.md
