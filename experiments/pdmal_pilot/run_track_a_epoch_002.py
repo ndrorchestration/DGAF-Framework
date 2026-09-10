@@ -491,7 +491,7 @@ def expected_authorization(
         "authorize_unblinding": False,
         "authorize_primary_analysis": False,
         "historical_pooling_allowed": False,
-        "epoch_004_substitution_allowed": false,
+        "epoch_004_substitution_allowed": False,
         "high_assurance_authorized": False,
     }
 
