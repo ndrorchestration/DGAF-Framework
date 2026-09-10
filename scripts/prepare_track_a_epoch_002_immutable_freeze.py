@@ -9,15 +9,16 @@ unblinds data, runs empirical work, or increments scientific N.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, NoReturn
 
-from scripts import prepare_track_a_epoch_002_precollection_preflight as preflight
-
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json"
+PREFLIGHT_HELPER_PATH = ROOT / "scripts/prepare_track_a_epoch_002_precollection_preflight.py"
 PREFLIGHT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json"
 FREEZE_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json"
 CLOSURE_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_FINAL_CLOSURE_PACKET.json"
@@ -47,6 +48,19 @@ DOWNSTREAM_REL = (CLOSURE_REL, VERIFICATION_REL, AUTH_REL)
 
 def fail(message: str) -> NoReturn:
     raise SystemExit(f"EPOCH_002_FREEZE_FAIL: {message}")
+
+
+def load_preflight_helper() -> Any:
+    spec = importlib.util.spec_from_file_location("track_a_epoch_002_preflight_helper", PREFLIGHT_HELPER_PATH)
+    if spec is None or spec.loader is None:
+        fail("preflight helper cannot load")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+preflight = load_preflight_helper()
 
 
 def git(*args: str) -> str:
