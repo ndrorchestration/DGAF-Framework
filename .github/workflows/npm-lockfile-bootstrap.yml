@@ -1,113 +1,77 @@
-name: NPM Lockfile Bootstrap Evidence
+name: NPM Lockfile Artifact Retention
 
 on:
   pull_request:
     paths:
-      - 'package.json'
       - '.github/workflows/npm-lockfile-bootstrap.yml'
-  workflow_dispatch: {}
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  EXPECTED_NODE_VERSION: v24.20.0
-  EXPECTED_NPM_VERSION: 11.19.0
+  SOURCE_BOOTSTRAP_SHA: 62a0c35db29420075e331d501fa281054ab63230
+  SOURCE_RUN_ID: '34427479869'
+  SOURCE_ARTIFACT_ID: '10133208552'
+  EXPECTED_LOCK_SHA256: d4af9d2195f8b23975ce9389754e74ec4415c087ea633afc9a6b5146743503f6
+  EXPECTED_PACKAGE_SHA256: 032252ce8dd07dba9f1ebb583e091fe41f70c07633dc1380c72339b6408a6204
 
 jobs:
-  generate-and-verify:
-    name: Generate and verify npm lockfile
+  retain-validated-lockfile:
+    name: Retain exact validated npm lockfile
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout exact PR source
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
-      - name: Bind source identity
+      - name: Verify retention preconditions
         env:
-          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test ! -e package-lock.json
-          test ! -e npm-shrinkwrap.json
-          test ! -e pnpm-lock.yaml
-          test ! -e yarn.lock
+          test "$(sha256sum package.json | awk '{print $1}')" = "$EXPECTED_PACKAGE_SHA256"
 
-      - name: Set up exact Node runtime
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24.20.0'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Verify exact package-manager toolchain
-        run: |
-          set -euo pipefail
-          test "$(node --version)" = "$EXPECTED_NODE_VERSION"
-          test "$(npm --version)" = "$EXPECTED_NPM_VERSION"
-
-      - name: Generate lockfile without lifecycle scripts
-        run: |
-          set -euo pipefail
-          npm install \
-            --package-lock-only \
-            --ignore-scripts \
-            --no-audit \
-            --no-fund
-          test -s package-lock.json
-          test "$(node -p "require('./package-lock.json').lockfileVersion")" = 3
-          test "$(node -p "require('./package-lock.json').name")" = "$(node -p "require('./package.json').name")"
-          test "$(node -p "require('./package-lock.json').version")" = "$(node -p "require('./package.json').version")"
-
-      - name: Verify generated lockfile with clean install
-        run: |
-          set -euo pipefail
-          rm -rf node_modules
-          npm ci \
-            --ignore-scripts \
-            --no-audit \
-            --no-fund
-          npm run build
-
-      - name: Reject secret-like lockfile material
-        run: |
-          set -euo pipefail
-          if grep -Eiq '(_authToken|npm_[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|github_pat_)' package-lock.json; then
-            echo 'Secret-like material detected in generated package-lock.json' >&2
-            exit 1
-          fi
-
-      - name: Emit generation metadata
+      - name: Download exact bootstrap artifact
         env:
-          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          package_sha="$(sha256sum package.json | awk '{print $1}')"
-          lock_sha="$(sha256sum package-lock.json | awk '{print $1}')"
-          node_version="$(node --version)"
-          npm_version="$(npm --version)"
-          jq -n \
-            --arg evidence_class 'NPM_LOCKFILE_BOOTSTRAP_V1' \
-            --arg source_commit "$SOURCE_SHA" \
-            --arg workflow_run_id "$GITHUB_RUN_ID" \
-            --arg workflow_run_attempt "$GITHUB_RUN_ATTEMPT" \
-            --arg package_json_sha256 "$package_sha" \
-            --arg package_lock_sha256 "$lock_sha" \
-            --arg node_version "$node_version" \
-            --arg npm_version "$npm_version" \
-            '{evidence_class:$evidence_class,source_commit:$source_commit,workflow_run_id:$workflow_run_id,workflow_run_attempt:$workflow_run_attempt,package_json_sha256:$package_json_sha256,package_lock_sha256:$package_lock_sha256,node_version:$node_version,npm_version:$npm_version,generation_command:"npm install --package-lock-only --ignore-scripts --no-audit --no-fund",validation_command:"npm ci --ignore-scripts --no-audit --no-fund && npm run build",result:"PASS_NONEMPIRICAL_REPRODUCIBILITY_EVIDENCE",scientific_state_effect:"NONE"}' \
-            > npm-lockfile-bootstrap-metadata.json
-          sha256sum npm-lockfile-bootstrap-metadata.json > npm-lockfile-bootstrap-metadata.json.sha256
+          curl -fLsS \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$SOURCE_ARTIFACT_ID/zip" \
+            -o /tmp/npm-lockfile-bootstrap.zip
+          mkdir /tmp/npm-lockfile-bootstrap
+          unzip -q /tmp/npm-lockfile-bootstrap.zip -d /tmp/npm-lockfile-bootstrap
 
-      - name: Upload generated lockfile evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: npm-lockfile-bootstrap-${{ github.event.pull_request.head.sha || github.sha }}
-          if-no-files-found: error
-          retention-days: 7
-          path: |
-            package-lock.json
-            npm-lockfile-bootstrap-metadata.json
-            npm-lockfile-bootstrap-metadata.json.sha256
+      - name: Verify retained artifact provenance and bytes
+        run: |
+          set -euo pipefail
+          cd /tmp/npm-lockfile-bootstrap
+          test "$(jq -r '.source_commit' npm-lockfile-bootstrap-metadata.json)" = "$SOURCE_BOOTSTRAP_SHA"
+          test "$(jq -r '.workflow_run_id' npm-lockfile-bootstrap-metadata.json)" = "$SOURCE_RUN_ID"
+          test "$(jq -r '.package_json_sha256' npm-lockfile-bootstrap-metadata.json)" = "$EXPECTED_PACKAGE_SHA256"
+          test "$(jq -r '.package_lock_sha256' npm-lockfile-bootstrap-metadata.json)" = "$EXPECTED_LOCK_SHA256"
+          sha256sum -c npm-lockfile-bootstrap-metadata.json.sha256
+          test "$(sha256sum package-lock.json | awk '{print $1}')" = "$EXPECTED_LOCK_SHA256"
+          cp package-lock.json "$GITHUB_WORKSPACE/package-lock.json"
+
+      - name: Commit exact retained lockfile to PR branch
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          test -n "$HEAD_REF"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- package-lock.json
+          git diff --cached --quiet && { echo 'No lockfile change to retain' >&2; exit 1; }
+          git commit -m 'build: retain validated npm package lock'
+          git push origin "HEAD:$HEAD_REF"
