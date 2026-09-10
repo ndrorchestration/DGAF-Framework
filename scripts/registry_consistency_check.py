@@ -67,6 +67,7 @@ def git_blob_sha1(path: Path) -> str:
     header = f"blob {len(payload)}\0".encode("utf-8")
     return hashlib.sha1(header + payload, usedforsecurity=False).hexdigest()
 
+
 expected_md_sha = manifest["representations"]["markdown"]["git_blob_sha1"]
 expected_json_sha = manifest["representations"]["machine_readable"]["git_blob_sha1"]
 actual_md_sha = git_blob_sha1(MARKDOWN)
