@@ -173,15 +173,18 @@ Recent merged work after the original Epoch 001 tooling chain includes:
 - prospective weighted Forman–Ricci replication research;
 - fail-closed Task-4 corpus-intake locking;
 - exact-source live staging-breaker evidence capped at `PASS_STRUCTURAL_LIVE_STAGING_ONLY`;
-- Vocabulary Translation Matrix v2 with active-identity coverage and vocabulary governance.
+- Vocabulary Translation Matrix v2 with active-identity coverage and vocabulary governance;
+- sovereign agent-ontology adjudication and current-facing namespace migration under completed issue #522;
+- Epoch 002 primary-analysis implementation lock under PR #585, without analysis authorization;
+- update-safe npm lockfile integrity validation under PR #587, preserving bootstrap provenance while requiring fresh exact-head evidence for reviewed dependency updates.
 
 These are meaningful implementation/governance advances but have **no automatic scientific-state effect**.
 
 ## Agent identity / vocabulary boundary
 
-Vocabulary translation is downstream of identity and authority governance. Current translation controls distinguish canonical identity, accepted alias, abstract role/archetype, state, and external-facing functional label.
+Vocabulary translation is downstream of identity and authority governance. Current translation controls distinguish canonical identity, accepted alias, abstract role/archetype, state, formation seat, and historical lineage.
 
-Issue #522 remains open for unresolved sovereign ontology conflicts including Sentinel/Sentinel-Phi lineage, Ionia agent-vs-state classification, A-09/A-10/A-11/A-12 designation collisions, and COLLEEN/Librarian designation drift. Translation must preserve those conflicts until adjudicated.
+Issue #522 is **CLOSED / COMPLETED**. The accepted ontology contract establishes sovereign seat precedence through `docs/agents/AGENT_ROSTER.md` plus `registry/agent_ontology_adjudication.v1.json`; formation/topology identifiers remain local unless separately promoted. Sentinel and Sentinel-Phi remain distinct, `IONIA_STATE` remains a separate runtime/formation state from Agent Ionia A-13, and current-facing namespace migration is complete. Historical conflict records remain provenance rather than current unresolved state.
 
 ## B1 / B2 / B3 and Track C
 
