@@ -9,6 +9,7 @@ advisory unless ``--strict`` is supplied.
 This checker establishes repository consistency only. It does not establish
 scientific truth, empirical efficacy, freeze, or authorization.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -314,9 +315,7 @@ def reconcile_claim_surfaces(
     return errors, canonical_card_paths, stats
 
 
-def validate_registry_claim_bindings(
-    registry: dict[str, Any], claims: dict[str, Any]
-) -> list[str]:
+def validate_registry_claim_bindings(registry: dict[str, Any], claims: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     claim_ids = {
         c.get("claim_id")
@@ -375,7 +374,7 @@ def nearby_qualifier(text: str, start: int, end: int, qualifiers: list[str], rad
     scopes = [containing] if containing else []
     para_left = window.rfind("\n\n", 0, occurrence_center)
     para_right = window.find("\n\n", occurrence_center)
-    scopes.append(window[(para_left + 2 if para_left >= 0 else 0):(para_right if para_right >= 0 else len(window))])
+    scopes.append(window[(para_left + 2 if para_left >= 0 else 0) : (para_right if para_right >= 0 else len(window))])
 
     for scope in scopes:
         if scope is None:
@@ -423,15 +422,17 @@ def scan_entry(entry: dict[str, Any], path: Path, text: str) -> list[dict[str, A
                 status = "ALLOWED_HISTORICAL"
             else:
                 status = "ERROR_BARE_CURRENT"
-        results.append({
-            "id": entry.get("id"),
-            "canonical_claim_id": entry.get("canonical_claim_id"),
-            "path": str(path),
-            "line": line,
-            "classification": classification,
-            "status": status,
-            "match": m.group(0),
-        })
+        results.append(
+            {
+                "id": entry.get("id"),
+                "canonical_claim_id": entry.get("canonical_claim_id"),
+                "path": str(path),
+                "line": line,
+                "classification": classification,
+                "status": status,
+                "match": m.group(0),
+            }
+        )
     return results
 
 
