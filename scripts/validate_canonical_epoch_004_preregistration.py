@@ -3,6 +3,7 @@
 
 Proposal validation only. This script never authorizes or executes empirical collection.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -18,7 +19,7 @@ EXPECTED_ANALYSIS_CONFIG_SHA256 = "6cab3f1ed6d4e040141598d293628dbab52442234c519
 
 
 def git_blob_sha(data: bytes) -> str:
-    return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+    return hashlib.sha1(f"blob {len(data)}\0".encode() + data, usedforsecurity=False).hexdigest()
 
 
 def validate() -> None:
@@ -34,12 +35,14 @@ def validate() -> None:
     assert treatment["profile_id"] == "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1"
     assert treatment["profile_merge_sha"] == "c8a07306d212e23cc5a4c1e0d98b7e8f47f45e21"
     assert treatment["qualification_merge_sha"] == "2fbd54454ad45df26cdd3b51793268ac3e597336"
-    assert treatment["qualification_sha256"] == "4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78"
+    assert treatment["qualification_sha256"] == ("4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78")
     assert treatment["qualification_class"] == "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT"
     assert treatment["reachability_merge_sha"] == "621356297f803f0a3e8e3319d54878a5bb0282a5"
     assert treatment["reachability_run_id"] == 34176977560
     assert treatment["reachability_artifact_id"] == 10037645166
-    assert treatment["reachability_artifact_digest"] == "sha256:814222ba8fad2d1ef7dbd6d620fe0620f31e7a74c27d13b20f054c82efb90aa4"
+    assert treatment["reachability_artifact_digest"] == (
+        "sha256:814222ba8fad2d1ef7dbd6d620fe0620f31e7a74c27d13b20f054c82efb90aa4"
+    )
     assert treatment["required_tgl_steps"] == [1, 2, 3, 4, 5, 6, 8]
 
     matrix = d["matrix"]

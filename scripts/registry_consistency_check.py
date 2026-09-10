@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Validate the NDR human/machine registry release identity and provenance lock."""
+
 from __future__ import annotations
 
 import hashlib
@@ -39,13 +40,9 @@ expected_updated = "2026-07-03"
 if release_id != expected_release:
     raise SystemExit(f"Registry consistency check failed: unexpected release identity {release_id!r}.")
 if md_watermark_n != 42 or md_total_n != 42:
-    raise SystemExit(
-        f"Registry consistency check failed: Markdown={md_watermark_n}/{md_total_n}; expected P-42/42."
-    )
+    raise SystemExit(f"Registry consistency check failed: Markdown={md_watermark_n}/{md_total_n}; expected P-42/42.")
 if json_watermark != "P-42" or json_total != 42:
-    raise SystemExit(
-        f"Registry consistency check failed: JSON={json_watermark}/{json_total}; expected P-42/42."
-    )
+    raise SystemExit(f"Registry consistency check failed: JSON={json_watermark}/{json_total}; expected P-42/42.")
 if json_version != expected_schema or json_updated != expected_updated:
     raise SystemExit(
         "Registry consistency check failed: machine-readable release metadata "
@@ -65,16 +62,15 @@ if manifest.get("effective_watermark") != "P-42":
 def git_blob_sha1(path: Path) -> str:
     payload = path.read_bytes()
     header = f"blob {len(payload)}\0".encode("utf-8")
-    return hashlib.sha1(header + payload).hexdigest()
+    return hashlib.sha1(header + payload, usedforsecurity=False).hexdigest()
+
 
 expected_md_sha = manifest["representations"]["markdown"]["git_blob_sha1"]
 expected_json_sha = manifest["representations"]["machine_readable"]["git_blob_sha1"]
 actual_md_sha = git_blob_sha1(MARKDOWN)
 actual_json_sha = git_blob_sha1(MACHINE)
 if actual_md_sha != expected_md_sha:
-    raise SystemExit(
-        f"Registry provenance check failed: Markdown blob {actual_md_sha} != {expected_md_sha}."
-    )
+    raise SystemExit(f"Registry provenance check failed: Markdown blob {actual_md_sha} != {expected_md_sha}.")
 if actual_json_sha != expected_json_sha:
     raise SystemExit(
         f"Registry provenance check failed: machine-readable blob {actual_json_sha} != {expected_json_sha}."

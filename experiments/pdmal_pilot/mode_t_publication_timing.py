@@ -78,13 +78,9 @@ def prepare() -> None:
     STATE.write_text(json.dumps(state), encoding="utf-8")
 
 
-def validate_metadata(
-    state: dict, metadata: dict, artifact_id: int, digest: str
-) -> None:
+def validate_metadata(state: dict, metadata: dict, artifact_id: int, digest: str) -> None:
     require(re.fullmatch(r"[0-9a-f]{64}", digest) is not None, "invalid upload digest")
-    require(
-        artifact_id > 0 and metadata.get("id") == artifact_id, "artifact ID mismatch"
-    )
+    require(artifact_id > 0 and metadata.get("id") == artifact_id, "artifact ID mismatch")
     require(metadata.get("name") == state["artifact_name"], "artifact name mismatch")
     require(metadata.get("digest") == "sha256:" + digest, "artifact digest mismatch")
     require(metadata.get("expired") is False, "artifact expired or unknown")
@@ -109,9 +105,7 @@ def load_stage(path: Path) -> dict:
         data.get("evidence_class") == CLASS and data.get("status") == "PASS",
         "publication not PASS",
     )
-    require(
-        data.get("api_metadata_verified") is True, "publication metadata unverified"
-    )
+    require(data.get("api_metadata_verified") is True, "publication metadata unverified")
     for field in (
         "durable_custody",
         "external_transparency_verified",
@@ -131,8 +125,7 @@ def load_stage(path: Path) -> dict:
         "invalid publication duration",
     )
     require(
-        type(data.get("start_monotonic_ns")) is int
-        and type(data.get("end_monotonic_ns")) is int,
+        type(data.get("start_monotonic_ns")) is int and type(data.get("end_monotonic_ns")) is int,
         "missing monotonic interval",
     )
     require(
@@ -140,13 +133,11 @@ def load_stage(path: Path) -> dict:
         "invalid monotonic interval",
     )
     require(
-        data["duration_ms"]
-        == (data["end_monotonic_ns"] - data["start_monotonic_ns"]) / 1_000_000,
+        data["duration_ms"] == (data["end_monotonic_ns"] - data["start_monotonic_ns"]) / 1_000_000,
         "duration mismatch",
     )
     require(
-        re.fullmatch(r"sha256:[0-9a-f]{64}", data.get("artifact_digest", ""))
-        is not None,
+        re.fullmatch(r"sha256:[0-9a-f]{64}", data.get("artifact_digest", "")) is not None,
         "invalid artifact digest",
     )
     require(
@@ -166,16 +157,16 @@ def finish() -> None:
             "measurement identity mismatch",
         )
         started = state["start_monotonic_ns"]
-        require(
-            type(started) is int and 0 < started <= ended, "invalid monotonic interval"
-        )
+        require(type(started) is int and 0 < started <= ended, "invalid monotonic interval")
         require(
             hashlib.sha256(FIXTURE.read_bytes()).hexdigest() == state["fixture_sha256"],
             "fixture changed",
         )
         artifact_id = int(os.environ["PUBLICATION_ARTIFACT_ID"])
         digest = os.environ["PUBLICATION_ARTIFACT_DIGEST"]
-        expected_url = f"https://github.com/{state['repository']}/actions/runs/{state['run_id']}/artifacts/{artifact_id}"
+        expected_url = (
+            f"https://github.com/{state['repository']}/actions/runs/" f"{state['run_id']}/artifacts/{artifact_id}"
+        )
         require(
             os.environ["PUBLICATION_ARTIFACT_URL"] == expected_url,
             "artifact URL mismatch",
@@ -188,7 +179,8 @@ def finish() -> None:
                 "X-GitHub-Api-Version": "2022-11-28",
             },
         )
-        with urllib.request.urlopen(request, timeout=30) as response:
+        # Request origin is constructed above from the fixed HTTPS GitHub API host.
+        with urllib.request.urlopen(request, timeout=30) as response:  # nosec B310
             metadata = json.load(response)
         validate_metadata(state, metadata, artifact_id, digest)
         evidence = {
