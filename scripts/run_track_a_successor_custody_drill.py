@@ -3,7 +3,7 @@
 
 Run this only on the operator's own computer. It creates an encrypted private
 key locally, never prints or uploads it, copies the encrypted container to two
-operator-chosen directories, verifies recovery from backup A, and emits a
+operator-chosen directories, verifies recovery from both backups, and emits a
 non-secret receipt. It does not authorize collection or establish efficacy.
 """
 
@@ -16,6 +16,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,21 +52,74 @@ def ensure_outside_repository(*paths: Path) -> None:
             fail(f"custody path must be outside the repository: {resolved}")
 
 
+def verify_backups(certificate: Path, encrypted_key: Path, backups: tuple[Path, ...]) -> list[dict[str, str]]:
+    """Read back each encrypted copy and derive its public identity independently.
+
+    OpenSSL alone handles passphrase prompts. Storage durability/location remains
+    operator-attested; successful filesystem reads cannot prove offsite storage.
+    """
+    results = []
+    expected_digest = sha256_file(encrypted_key)
+    with tempfile.TemporaryDirectory(prefix="dgaf-custody-recovery-") as tmp:
+        tmp_path = Path(tmp)
+        certificate_pem = tmp_path / "certificate-public.pem"
+        certificate_der = tmp_path / "certificate-public.der"
+        run("openssl", "x509", "-in", str(certificate), "-pubkey", "-noout", "-out", str(certificate_pem))
+        run(
+            "openssl",
+            "pkey",
+            "-pubin",
+            "-in",
+            str(certificate_pem),
+            "-pubout",
+            "-outform",
+            "DER",
+            "-out",
+            str(certificate_der),
+        )
+        public_digest = sha256_file(certificate_der)
+        for index, backup in enumerate(backups):
+            recovered = tmp_path / f"recovered-{index}.pem"
+            recovered_der = tmp_path / f"recovered-{index}.der"
+            shutil.copy2(backup, recovered)
+            encrypted_digest = sha256_file(recovered)
+            if encrypted_digest != expected_digest:
+                fail(f"backup {index + 1} encrypted bytes do not match")
+            run("openssl", "pkey", "-in", str(recovered), "-pubout", "-outform", "DER", "-out", str(recovered_der))
+            recovered_digest = sha256_file(recovered_der)
+            if recovered_digest != public_digest:
+                fail(f"backup {index + 1} recovered public key does not match certificate")
+            results.append(
+                {
+                    "encrypted_private_key_sha256": encrypted_digest,
+                    "recovered_public_key_der_sha256": recovered_digest,
+                    "recovery_drill": "PASS",
+                }
+            )
+    return results
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Create a local encrypted custody key and prove backup recovery."
-    )
+    parser = argparse.ArgumentParser(description="Create a local encrypted custody key and prove backup recovery.")
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--backup-a", required=True, type=Path)
     parser.add_argument("--backup-b", required=True, type=Path)
     parser.add_argument("--backup-a-id", default="recovery-copy-a")
     parser.add_argument("--backup-b-id", default="recovery-copy-b")
+    storage_classes = ("ENCRYPTED_LOCAL_ARCHIVE", "ENCRYPTED_REMOVABLE_ARCHIVE", "ENCRYPTED_OFFSITE_ARCHIVE")
+    parser.add_argument("--backup-a-class", required=True, choices=storage_classes)
+    parser.add_argument("--backup-b-class", required=True, choices=storage_classes)
     parser.add_argument(
         "--subject",
         default="/CN=DGAF Track A Successor Custody",
         help="public certificate subject only; do not put personal secrets here",
     )
     args = parser.parse_args()
+
+    if args.backup_a_class == args.backup_b_class:
+        fail("backup storage classes must be distinct and operator-confirmed")
+    if args.backup_a_id == args.backup_b_id:
+        fail("backup identifiers must be distinct")
 
     if shutil.which("openssl") is None:
         fail("OpenSSL is required but was not found on PATH")
@@ -93,38 +147,42 @@ def main() -> int:
 
     # OpenSSL prompts directly for a passphrase; this program never receives it.
     run(
-        "openssl", "genpkey", "-algorithm", "RSA", "-aes-256-cbc",
-        "-pkeyopt", "rsa_keygen_bits:3072", "-out", str(encrypted_key),
+        "openssl",
+        "genpkey",
+        "-algorithm",
+        "RSA",
+        "-aes-256-cbc",
+        "-pkeyopt",
+        "rsa_keygen_bits:3072",
+        "-out",
+        str(encrypted_key),
     )
     run(
-        "openssl", "req", "-new", "-x509", "-key", str(encrypted_key),
-        "-out", str(certificate), "-days", "3650", "-subj", args.subject,
+        "openssl",
+        "req",
+        "-new",
+        "-x509",
+        "-key",
+        str(encrypted_key),
+        "-out",
+        str(certificate),
+        "-days",
+        "3650",
+        "-subj",
+        args.subject,
     )
 
     shutil.copy2(encrypted_key, backup_a_key)
     shutil.copy2(encrypted_key, backup_b_key)
 
-    # Recovery drill: derive public DER from recovered backup A and certificate.
-    with tempfile.TemporaryDirectory(prefix="dgaf-custody-recovery-") as tmp:
-        tmp_path = Path(tmp)
-        recovered = tmp_path / backup_name
-        shutil.copy2(backup_a_key, recovered)
-        recovered_der = tmp_path / "recovered-public.der"
-        certificate_pem = tmp_path / "certificate-public.pem"
-        certificate_der = tmp_path / "certificate-public.der"
-
-        run("openssl", "pkey", "-in", str(recovered), "-pubout", "-outform", "DER", "-out", str(recovered_der))
-        run("openssl", "x509", "-in", str(certificate), "-pubkey", "-noout", "-out", str(certificate_pem))
-        run("openssl", "pkey", "-pubin", "-in", str(certificate_pem), "-pubout", "-outform", "DER", "-out", str(certificate_der))
-
-        recovered_digest = sha256_file(recovered_der)
-        certificate_public_digest = sha256_file(certificate_der)
-        if recovered_digest != certificate_public_digest:
-            fail("recovery drill failed: recovered backup does not match certificate")
+    recovery_results = verify_backups(certificate, encrypted_key, (backup_a_key, backup_b_key))
+    certificate_public_digest = recovery_results[0]["recovered_public_key_der_sha256"]
+    recovered_digest = certificate_public_digest
 
     payload = {
         "record_type": "TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT",
-        "schema_version": 1,
+        "schema_version": 2,
+        "recovery_verified_at": datetime.now(timezone.utc).isoformat(),
         "custody_class": "SAME_SYSTEM_NONINDEPENDENT",
         "independent_custody": False,
         "keypair_created_before_collection": True,
@@ -137,15 +195,33 @@ def main() -> int:
         "recovered_public_key_der_sha256": recovered_digest,
         "recovery_drill": "PASS",
         "backup_refs": [
-            {"class": "ENCRYPTED_LOCAL_ARCHIVE", "nonsecret_id": args.backup_a_id, "encrypted": True, "user_controlled": True},
-            {"class": "ENCRYPTED_OFFSITE_ARCHIVE", "nonsecret_id": args.backup_b_id, "encrypted": True, "user_controlled": True},
+            {
+                "class": args.backup_a_class,
+                "nonsecret_id": args.backup_a_id,
+                "encrypted": True,
+                "user_controlled": True,
+                **recovery_results[0],
+            },
+            {
+                "class": args.backup_b_class,
+                "nonsecret_id": args.backup_b_id,
+                "encrypted": True,
+                "user_controlled": True,
+                **recovery_results[1],
+            },
         ],
         "empirical_collection_authorized": False,
         "scientific_state_effect": "NONE",
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
     }
-    receipt.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    run(sys.executable, "scripts/validate_track_a_successor_solo_custody_receipt.py", str(receipt))
+    pending_receipt = receipt.with_suffix(".pending.json")
+    pending_receipt.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    run(
+        sys.executable,
+        str(ROOT / "scripts" / "validate_track_a_successor_solo_custody_receipt.py"),
+        str(pending_receipt),
+    )
+    pending_receipt.replace(receipt)
 
     print("LOCAL_CUSTODY_SETUP=PASS")
     print(f"PUBLIC_CERTIFICATE={certificate}")

@@ -2,7 +2,7 @@
 
 **Status:** local recovery-test tooling only. Running it does **not** authorize collection.
 
-You do not need an existing key. This guide creates a new encrypted key on your own computer and proves that one backup can recover it.
+You do not need an existing key. This guide creates a new encrypted key on your own computer and proves that both backups can recover it.
 
 The successor Epoch 002 prospective protocol is now present in the repository, but the real custody drill remains a separate precollection requirement. No private key, passphrase, or recoverable secret material belongs in GitHub, Notion, chat, CI, or workflow inputs.
 
@@ -14,7 +14,7 @@ Choose three different locations you control:
 2. encrypted recovery location A (for example, an encrypted USB drive);
 3. encrypted recovery location B in a different storage class (for example, a separately encrypted archive you control).
 
-Do not use the repository folder for any of them. The custody script now rejects repository-contained output or backup paths. Do not use a chat upload, Notion, GitHub, workflow secret, or public document as a custody location.
+Do not use the repository folder for any of them. The custody script rejects repository-contained output or backup paths. Do not use a chat upload, Notion, GitHub, workflow secret, or public document as a custody location.
 
 ## Windows guided path
 
@@ -31,10 +31,10 @@ The wrapper:
 - finds Python 3 through `py -3` or `python`;
 - finds OpenSSL on `PATH` or in common Git-for-Windows locations;
 - creates a fresh timestamped working folder by default;
-- prompts you only for the two non-secret recovery-location paths;
+- prompts for the two non-secret recovery-location paths and their actual storage classes;
 - never requests the key passphrase itself;
 - lets OpenSSL prompt for the passphrase directly;
-- invokes the repository custody drill and receipt validator;
+- invokes the repository custody drill and current receipt validator;
 - prints only the public certificate and non-secret receipt paths when successful.
 
 The two recovery locations must be genuinely distinct storage classes. Two folders on the same unencrypted disk do not satisfy the intended recovery model.
@@ -55,7 +55,9 @@ On macOS, Linux, or any environment where Python 3 and OpenSSL are already avail
 python3 scripts/run_track_a_successor_custody_drill.py \
   --output-dir "$HOME/DGAF-Custody-Working" \
   --backup-a "/path/to/encrypted-recovery-A" \
-  --backup-b "/path/to/encrypted-recovery-B"
+  --backup-b "/path/to/encrypted-recovery-B" \
+  --backup-a-class ENCRYPTED_REMOVABLE_ARCHIVE \
+  --backup-b-class ENCRYPTED_OFFSITE_ARCHIVE
 ```
 
 OpenSSL will ask you to create and confirm a passphrase. Use a strong unique passphrase and keep it in a password manager or a separate secure record you control. Do not send it to anyone or paste it into a command.
@@ -67,11 +69,15 @@ The command creates:
 - a public certificate file; and
 - a non-secret JSON recovery receipt.
 
-It then proves that the private key recovered from backup A derives exactly the same public key as the certificate.
+It reads back **both** encrypted backups, checks their exact container hashes, and separately derives each recovered public key for comparison with the collection certificate. OpenSSL may prompt repeatedly; this is expected. A failure for either backup prevents publication of the final receipt.
+
+The emitted current receipt is schema v2. It includes a timezone-qualified recovery timestamp and separate fingerprints/PASS records for both backups. The current validator requires schema v2 for the Epoch 002 successor gate; a legacy schema-v1 receipt may be inspected only through the explicit historical compatibility function and cannot satisfy the current precollection prerequisite.
+
+The local validator checks receipt structure; it does not independently observe storage durability or offsite location. Those remain your attestations. The helper can be launched by absolute path from another directory. If interrupted, keep existing encrypted backups intact and choose fresh empty working/backup destinations for another setup attempt; the script refuses to overwrite backup key files.
 
 ## What you may retain or share
 
-The public certificate and the JSON receipt contain no private key or passphrase. The receipt can be checked with:
+The public certificate and the JSON receipt contain no private key or passphrase. The current successor receipt can be checked with:
 
 ```bash
 python3 scripts/validate_track_a_successor_solo_custody_receipt.py \

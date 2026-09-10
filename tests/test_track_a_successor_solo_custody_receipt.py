@@ -4,7 +4,10 @@ import copy
 
 import pytest
 
-from scripts.validate_track_a_successor_solo_custody_receipt import validate_receipt
+from scripts.validate_track_a_successor_solo_custody_receipt import (
+    validate_legacy_receipt,
+    validate_receipt,
+)
 
 
 def valid_receipt() -> dict[str, object]:
@@ -42,50 +45,105 @@ def valid_receipt() -> dict[str, object]:
     }
 
 
-def test_valid_receipt_passes() -> None:
-    validate_receipt(valid_receipt())
+def valid_v2_receipt() -> dict:
+    receipt = valid_receipt()
+    receipt["schema_version"] = 2
+    receipt["recovery_verified_at"] = "2026-09-10T03:00:00+00:00"
+    backups = receipt["backup_refs"]
+    assert isinstance(backups, list)
+    for backup in backups:
+        assert isinstance(backup, dict)
+        backup.update(
+            {
+                "encrypted_private_key_sha256": receipt["encrypted_private_key_sha256"],
+                "recovered_public_key_der_sha256": receipt["certificate_public_key_der_sha256"],
+                "recovery_drill": "PASS",
+            }
+        )
+    return receipt
+
+
+def test_legacy_v1_remains_parseable_but_is_not_current_gate_evidence() -> None:
+    receipt = valid_receipt()
+    validate_legacy_receipt(receipt)
+    with pytest.raises(ValueError, match="schema_version 2"):
+        validate_receipt(receipt)
+
+
+def test_valid_v2_receipt_passes_current_gate() -> None:
+    validate_receipt(valid_v2_receipt())
 
 
 def test_requires_two_recovery_copies() -> None:
-    receipt = valid_receipt()
-    receipt["backup_refs"] = receipt["backup_refs"][:1]  # type: ignore[index]
+    receipt = valid_v2_receipt()
+    receipt["backup_refs"] = receipt["backup_refs"][:1]
     with pytest.raises(ValueError, match="at least two"):
         validate_receipt(receipt)
 
 
 def test_recovered_key_must_match_certificate() -> None:
-    receipt = valid_receipt()
+    receipt = valid_v2_receipt()
     receipt["recovered_public_key_der_sha256"] = "4" * 64
     with pytest.raises(ValueError, match="does not match"):
         validate_receipt(receipt)
 
 
 def test_cannot_self_claim_independent_custody() -> None:
-    receipt = valid_receipt()
+    receipt = valid_v2_receipt()
     receipt["independent_custody"] = True
     with pytest.raises(ValueError, match="must not claim independence"):
         validate_receipt(receipt)
 
 
 def test_receipt_cannot_authorize_collection() -> None:
-    receipt = valid_receipt()
+    receipt = valid_v2_receipt()
     receipt["empirical_collection_authorized"] = True
     with pytest.raises(ValueError, match="must not authorize"):
         validate_receipt(receipt)
 
 
 def test_rejects_extra_secret_bearing_field() -> None:
-    receipt = copy.deepcopy(valid_receipt())
+    receipt = copy.deepcopy(valid_v2_receipt())
     receipt["passphrase"] = "must-never-be-here"
     with pytest.raises(ValueError, match="schema exactly"):
         validate_receipt(receipt)
 
 
 def test_backup_identifiers_must_be_distinct() -> None:
-    receipt = valid_receipt()
+    receipt = valid_v2_receipt()
     backups = receipt["backup_refs"]
     assert isinstance(backups, list)
     assert isinstance(backups[1], dict)
     backups[1]["nonsecret_id"] = "recovery-copy-a"
     with pytest.raises(ValueError, match="must be distinct"):
+        validate_receipt(receipt)
+
+
+def test_v2_requires_both_backup_recovery_records() -> None:
+    receipt = valid_v2_receipt()
+    receipt["backup_refs"][1].pop("recovery_drill")
+    with pytest.raises(ValueError, match="keys invalid"):
+        validate_receipt(receipt)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("recovery_drill", "FAIL"),
+        ("encrypted_private_key_sha256", "0" * 64),
+        ("recovered_public_key_der_sha256", "0" * 64),
+        ("class", "ENCRYPTED_LOCAL_ARCHIVE"),
+    ],
+)
+def test_v2_rejects_bad_second_backup(field: str, value: str) -> None:
+    receipt = valid_v2_receipt()
+    receipt["backup_refs"][1][field] = value
+    with pytest.raises(ValueError):
+        validate_receipt(receipt)
+
+
+def test_v2_rejects_timezone_free_timestamp() -> None:
+    receipt = valid_v2_receipt()
+    receipt["recovery_verified_at"] = "2026-09-10T03:00:00"
+    with pytest.raises(ValueError, match="timezone"):
         validate_receipt(receipt)
