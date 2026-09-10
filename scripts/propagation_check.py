@@ -201,18 +201,28 @@ def scan_entry(
     canonical_claim: dict[str, Any] | None = None
     if classification == CANONICAL_DERIVATIVE:
         claim_id = entry.get("canonical_claim_id")
-        invalid_claim_id = not isinstance(claim_id, str) or not claim_id
-        unavailable_claim = canonical_claims is None or claim_id not in canonical_claims
-        if invalid_claim_id or unavailable_claim:
-            for match in matches or [None]:
+        if not isinstance(claim_id, str) or not claim_id or canonical_claims is None or claim_id not in canonical_claims:
+            if matches:
+                for match in matches:
+                    results.append(
+                        {
+                            "id": entry.get("id"),
+                            "path": str(path),
+                            "line": line_number(text, match.start()),
+                            "classification": classification,
+                            "status": "ERROR_UNKNOWN_CANONICAL_CLAIM",
+                            "match": match.group(0),
+                        }
+                    )
+            else:
                 results.append(
                     {
                         "id": entry.get("id"),
                         "path": str(path),
-                        "line": line_number(text, match.start()) if match else 1,
+                        "line": 1,
                         "classification": classification,
                         "status": "ERROR_UNKNOWN_CANONICAL_CLAIM",
-                        "match": match.group(0) if match else "",
+                        "match": "",
                     }
                 )
             return results
