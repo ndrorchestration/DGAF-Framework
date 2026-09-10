@@ -224,7 +224,10 @@ def _mapping_state_failures(
     if evidence_maturity in PROMOTED_MATURITY:
         failures.append(f"{card_entry.get('id')}: canonical {status} claim cannot map to {evidence_maturity} maturity")
     if validation_status in PROMOTED_VALIDATION:
-        failures.append(f"{card_entry.get('id')}: canonical {status} claim cannot map to {validation_status} validation")
+        failures.append(
+            f"{card_entry.get('id')}: canonical {status} claim cannot map to "
+            f"{validation_status} validation"
+        )
     return failures
 
 
