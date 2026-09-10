@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -20,6 +21,7 @@ def load_analysis():
     spec = importlib.util.spec_from_file_location(name, ANALYSIS_PATH)
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
     spec.loader.exec_module(mod)
     return mod
 
