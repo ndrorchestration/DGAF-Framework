@@ -330,11 +330,7 @@ def validate_gate_order(candidate_sha: str, *, require_preflight_history: bool) 
 
 
 def ensure_preflight_only_delta(candidate_sha: str) -> None:
-    changed = tuple(
-        line
-        for line in git("diff", "--name-only", f"{candidate_sha}...HEAD").splitlines()
-        if line
-    )
+    changed = tuple(line for line in git("diff", "--name-only", f"{candidate_sha}...HEAD").splitlines() if line)
     if changed != (PREFLIGHT_REL,):
         fail(f"preflight validation branch must change only {PREFLIGHT_REL}; changed={list(changed)}")
 
@@ -407,9 +403,7 @@ def check_custody(expected_base_sha: str | None) -> None:
         if not is_ancestor(expected_base_sha, candidate_sha):
             fail("expected base is not an ancestor of custody-admission HEAD")
         changed = {
-            line
-            for line in git("diff", "--name-only", f"{expected_base_sha}...{candidate_sha}").splitlines()
-            if line
+            line for line in git("diff", "--name-only", f"{expected_base_sha}...{candidate_sha}").splitlines() if line
         }
         required = {RECEIPT_REL, CERT_REL}
         if changed != required:
