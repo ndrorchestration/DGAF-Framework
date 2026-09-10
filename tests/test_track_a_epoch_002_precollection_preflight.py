@@ -18,9 +18,7 @@ RUNNER_PATH = ROOT / "experiments/pdmal_pilot/run_track_a_epoch_002.py"
 def load_runner_expected_preflight() -> Callable[..., dict[str, Any]]:
     """Load only the runner's pure preflight constructor, without runtime deps."""
     tree = ast.parse(RUNNER_PATH.read_text(encoding="utf-8"), filename=str(RUNNER_PATH))
-    functions = [
-        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "expected_preflight"
-    ]
+    functions = [node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "expected_preflight"]
     assert len(functions) == 1
 
     module = ast.Module(body=functions, type_ignores=[])
