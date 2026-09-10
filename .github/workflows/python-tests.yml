@@ -308,12 +308,21 @@ jobs:
         bandit -r components/ scripts/ api/ experiments/ \
           -x scripts/materialize_track_a_epoch_001_unblinded_input.py \
           -ll -ii
-    - name: Check dependencies with Safety
+    - name: Audit installed CI environment with pip-audit
+      shell: bash
       run: |
-        pip install -r requirements.txt || true
-        safety check --json > safety-report.json || true
-        safety check || true
-      continue-on-error: true
+        set +e
+        python -m pip_audit --local --format=json --output pip-audit-report.json
+        json_status=$?
+        python -m pip_audit --local --format=columns | tee pip-audit-report.txt
+        text_status=${PIPESTATUS[0]}
+        set -e
+        printf 'pip_audit_json_exit_code=%s\n' "$json_status" > pip-audit-report.status
+        printf 'pip_audit_text_exit_code=%s\n' "$text_status" >> pip-audit-report.status
+        if [ "$json_status" -ne 0 ] || [ "$text_status" -ne 0 ]; then
+          echo "pip-audit detected dependency vulnerabilities or failed to complete." >&2
+          exit 1
+        fi
     - name: Upload security reports
       uses: actions/upload-artifact@v4
       with:
@@ -322,5 +331,7 @@ jobs:
           bandit-report.json
           bandit-report.txt
           bandit-report.status
-          safety-report.json
+          pip-audit-report.json
+          pip-audit-report.txt
+          pip-audit-report.status
       if: always()
