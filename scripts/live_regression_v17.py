@@ -5,16 +5,10 @@ from __future__ import annotations
 import json
 import os
 import statistics
-import sys
 import time
 from pathlib import Path
 
-try:
-    import httpx
-except ImportError:
-    import subprocess
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "httpx", "-q"])
-    import httpx
+import httpx
 
 BASE_URL = os.environ.get("DGAF_URL", "https://dgaf-framework.vercel.app").rstrip("/")
 TIMEOUT = 30
