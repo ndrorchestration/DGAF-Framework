@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Validate the non-secret recovery receipt for a Track A successor custody key.
 
-This validator never reads private-key bytes or passphrases. It validates only
-public fingerprints and a non-secret record proving that a local recovery drill
-was completed before empirical collection is authorized.
+This validator never reads private-key bytes or passphrases. The current
+successor-gate entry point requires schema v2 so both encrypted recovery copies
+have individual recovery evidence. An explicit legacy entry point remains for
+historical schema-v1 inspection only.
 """
 
 from __future__ import annotations
@@ -56,7 +57,7 @@ def _is_sha256(value: Any) -> bool:
     return isinstance(value, str) and SHA256_RE.fullmatch(value) is not None
 
 
-def validate_receipt(payload: dict[str, Any]) -> None:
+def _validate_compatible_receipt(payload: dict[str, Any]) -> None:
     version = payload.get("schema_version")
     _require(type(version) is int and version in (1, 2), "unsupported schema_version")
     expected_keys = EXPECTED_KEYS | ({"recovery_verified_at"} if version == 2 else set())
@@ -146,6 +147,17 @@ def validate_receipt(payload: dict[str, Any]) -> None:
     _require(payload["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED", "efficacy must remain not established")
 
 
+def validate_legacy_receipt(payload: dict[str, Any]) -> None:
+    """Validate historical schema-v1/v2 structure without satisfying the current gate."""
+    _validate_compatible_receipt(payload)
+
+
+def validate_receipt(payload: dict[str, Any]) -> None:
+    """Validate the current successor receipt; schema v2 is mandatory."""
+    _validate_compatible_receipt(payload)
+    _require(payload["schema_version"] == 2, "current successor receipt must use schema_version 2")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("receipt", type=Path)
@@ -154,9 +166,10 @@ def main() -> int:
     payload = json.loads(args.receipt.read_text(encoding="utf-8"))
     _require(isinstance(payload, dict), "receipt must be a JSON object")
     validate_receipt(payload)
-    print("TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECEIPT=PASS")
+    print("TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECEIPT=PASS_CURRENT_V2")
+    print("RECEIPT_SCHEMA_VERSION=2")
     print("RECEIPT_VALIDATION=STRUCTURAL_SELF_ATTESTED_ONLY")
-    print(f"BOTH_BACKUPS_RECORDED={payload['schema_version'] == 2}")
+    print("BOTH_BACKUPS_RECORDED=TRUE")
     print("INDEPENDENT_CUSTODY=FALSE")
     print("EMPIRICAL_COLLECTION_AUTHORIZED=FALSE")
     print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")
