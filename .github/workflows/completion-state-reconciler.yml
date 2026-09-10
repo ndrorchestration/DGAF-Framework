@@ -1,0 +1,103 @@
+name: DGAF Completion State Reconciler
+
+on:
+  pull_request:
+    paths:
+      - "registry/dgaf_completion_state_reconciler.v0.1.json"
+      - "scripts/derive_dgaf_completion_state.py"
+      - "tests/test_dgaf_completion_state_reconciler.py"
+      - "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
+      - "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json"
+      - "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json"
+      - "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md"
+      - "scripts/run_track_a_successor_custody_drill.py"
+      - "scripts/validate_track_a_successor_solo_custody_receipt.py"
+      - "scripts/validate_track_a_epoch_002_runner.py"
+      - "experiments/pdmal_pilot/run_track_a_epoch_002.py"
+      - "docs/experiment/track_a_runs/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "registry/dgaf_completion_state_reconciler.v0.1.json"
+      - "scripts/derive_dgaf_completion_state.py"
+      - "tests/test_dgaf_completion_state_reconciler.py"
+      - "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
+      - "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json"
+      - "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json"
+      - "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md"
+      - "scripts/run_track_a_successor_custody_drill.py"
+      - "scripts/validate_track_a_successor_solo_custody_receipt.py"
+      - "scripts/validate_track_a_epoch_002_runner.py"
+      - "experiments/pdmal_pilot/run_track_a_epoch_002.py"
+      - "docs/experiment/track_a_runs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    name: Reconcile non-authorizing completion state
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.0"
+
+      - name: Prove exact checkout identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            expected="${{ github.event.pull_request.head.sha }}"
+          else
+            expected="${{ github.sha }}"
+          fi
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$expected"
+          echo "DGAF_RECONCILER_HEAD=$actual"
+
+      - name: Run dependency-free adversarial tests
+        run: python -m unittest tests/test_dgaf_completion_state_reconciler.py -v
+
+      - name: Derive fail-closed completion state
+        run: |
+          python scripts/derive_dgaf_completion_state.py \
+            --output "${RUNNER_TEMP}/dgaf-completion-state.json"
+
+      - name: Assert non-authorizing output contract
+        env:
+          STATE_PATH: ${{ runner.temp }}/dgaf-completion-state.json
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          state = json.loads(Path(os.environ["STATE_PATH"]).read_text(encoding="utf-8"))
+          assert state["record_type"] == "DGAF_COMPLETION_STATE_RECONCILER_STATE"
+          assert state["scientific_state_effect"] == "NONE"
+          assert state["authorizes_transition"] is False
+          assert state["empirical_execution_requested"] is False
+          assert state["specialist_outputs_are_authorization"] is False
+          assert state["fail_closed"]["controller_valid"] is True
+          print("DGAF_COMPLETION_STATE_RECONCILER=PASS_NON_AUTHORIZING")
+          print("SCIENTIFIC_STATE_EFFECT=NONE")
+          PY
+
+      - name: Publish reconciler evidence packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgaf-completion-state-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/dgaf-completion-state.json
+          if-no-files-found: error
+          retention-days: 14
