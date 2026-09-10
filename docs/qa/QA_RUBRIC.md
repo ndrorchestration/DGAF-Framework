@@ -25,7 +25,7 @@ The QA_RUBRIC provides the canonical scoring framework for:
 
 ## Rubric Architecture
 
-```
+```text
 QA_RUBRIC
 ├── Domain A: Structural Integrity        (Questions 1–3)
 ├── Domain B: Governance Compliance       (Questions 4–6)
@@ -316,7 +316,7 @@ Each agent has distinct quality emphases based on role. Apogee applies weighted 
 
 ## Application Procedure
 
-```
+```text
 1. COLLEEN runs Q3 (cross-ref) + Q9 (vocab) → delivers sub-scores to Apogee
 2. Sentinel runs Q4 (classification) + Q6 (deprecated refs) → delivers sub-scores to Apogee
 3. DemiJoule runs Gate 17 (efficiency) → delivers to Apogee
