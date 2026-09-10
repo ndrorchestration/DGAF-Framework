@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.0",
-  "purpose": "Classified propagation/provenance QA registry. This registry does not establish empirical truth.",
+  "schema_version": "1.1",
+  "purpose": "Classified propagation/provenance QA registry. This registry does not establish empirical truth. Canonically bound derivative entries reference evidence/claims.json for claim identity and state rather than duplicating that state here.",
   "entries": [
     {
       "id": "coordination-gain-340",
@@ -29,6 +29,24 @@
       "historical_allowed": true,
       "historical_markers": ["historical", "archived", "at the time", "S069", "S070", "S071", "S072"],
       "context_radius": 180
+    },
+    {
+      "id": "canonical-dgaf-governance-effectiveness",
+      "claim_pattern": "DGAF\\s+improves\\s+governance\\s+outcomes\\s+relative\\s+to\\s+simpler\\s+baselines",
+      "classification": "canonical_claim_derivative",
+      "canonical_claim_id": "dgaf-governance-effectiveness",
+      "historical_allowed": true,
+      "historical_markers": ["historical", "archived", "at the time", "previously", "formerly"],
+      "context_radius": 260
+    },
+    {
+      "id": "canonical-pdmal-empirical-validation",
+      "claim_pattern": "PDMAL\\s+experimental\\s+results\\s+are\\s+empirically\\s+validated\\s+and\\s+reproducible",
+      "classification": "canonical_claim_derivative",
+      "canonical_claim_id": "pdmal-empirical-validation",
+      "historical_allowed": true,
+      "historical_markers": ["historical", "archived", "at the time", "previously", "formerly"],
+      "context_radius": 260
     }
   ]
 }
