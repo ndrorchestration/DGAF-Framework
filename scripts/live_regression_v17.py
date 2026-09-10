@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Current-contract 30-turn live regression against /api/orchestrate."""
+
 from __future__ import annotations
 
 import json
@@ -142,13 +143,8 @@ def run() -> None:
         if health_body.get("psi_cubic") is not True:
             raise AssertionError(f"Health psi_cubic={health_body.get('psi_cubic')!r}")
         if health_body.get("version") != EXPECTED_VERSION:
-            raise AssertionError(
-                f"Health version={health_body.get('version')!r}, expected {EXPECTED_VERSION}"
-            )
-        print(
-            f"  ✓ health: psi_cubic=True version={health_body['version']} "
-            f"runtime={health_body.get('runtime')}"
-        )
+            raise AssertionError(f"Health version={health_body.get('version')!r}, expected {EXPECTED_VERSION}")
+        print(f"  ✓ health: psi_cubic=True version={health_body['version']} " f"runtime={health_body.get('runtime')}")
 
         metrics: list[dict] = []
         all_errors: list[str] = []
@@ -158,9 +154,7 @@ def run() -> None:
             category = kappa_for(turn)
             payload = build_payload(turn)
             started = time.perf_counter()
-            response = client.post(
-                f"{BASE_URL}/api/orchestrate", json=payload, headers=post_headers()
-            )
+            response = client.post(f"{BASE_URL}/api/orchestrate", json=payload, headers=post_headers())
             latency_ms = (time.perf_counter() - started) * 1000
             latencies.append(latency_ms)
             try:
@@ -168,9 +162,7 @@ def run() -> None:
             except Exception as exc:
                 body = {"_parse_error": str(exc)}
 
-            errors = assert_response(
-                turn, category, response.status_code, body, payload
-            )
+            errors = assert_response(turn, category, response.status_code, body, payload)
             all_errors.extend([f"T{turn:02d}: {error}" for error in errors])
             marker = "✓" if not errors else "✗"
             print(
@@ -191,11 +183,7 @@ def run() -> None:
                     "phi_delta": body.get("phi_delta"),
                     "psi_cubic_check": body.get("psi_cubic_check"),
                     "evidence_status": body.get("evidence", {}).get("status"),
-                    "trace_length": (
-                        len(body.get("trace", []))
-                        if isinstance(body.get("trace"), list)
-                        else None
-                    ),
+                    "trace_length": (len(body.get("trace", [])) if isinstance(body.get("trace"), list) else None),
                     "payload_len": body.get("payload_len"),
                     "latency_ms": round(latency_ms, 1),
                     "errors": errors,
@@ -211,13 +199,9 @@ def run() -> None:
     if audit.get("status") != "ok":
         audit_errors.append(f"audit status={audit.get('status')!r}, expected 'ok'")
     if audit.get("version") != EXPECTED_VERSION:
-        audit_errors.append(
-            f"audit version={audit.get('version')!r}, expected {EXPECTED_VERSION!r}"
-        )
+        audit_errors.append(f"audit version={audit.get('version')!r}, expected {EXPECTED_VERSION!r}")
     if audit.get("axiom_count") != 1:
-        audit_errors.append(
-            f"audit axiom_count={audit.get('axiom_count')!r}, expected 1"
-        )
+        audit_errors.append(f"audit axiom_count={audit.get('axiom_count')!r}, expected 1")
     if not audit.get("_warning"):
         audit_errors.append("audit warning missing; persistence limitation is not exposed")
     all_errors.extend([f"AUDIT: {error}" for error in audit_errors])
@@ -232,9 +216,7 @@ def run() -> None:
         "KILL": kill_turns,
     }
     if observed_counts != expected_counts:
-        all_errors.append(
-            f"aggregate decisions={observed_counts!r}, expected {expected_counts!r}"
-        )
+        all_errors.append(f"aggregate decisions={observed_counts!r}, expected {expected_counts!r}")
 
     mean_latency = statistics.mean(latencies)
     p95_latency = sorted(latencies)[max(0, int(len(latencies) * 0.95) - 1)]
@@ -270,15 +252,10 @@ def run() -> None:
             ),
         ],
     }
-    Path("regression_results_v17.json").write_text(
-        json.dumps(result, indent=2) + "\n", encoding="utf-8"
-    )
+    Path("regression_results_v17.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
 
     print("─" * 72)
-    print(
-        f"  PASS turns: {pass_turns} | BLOCKED checkpoints: {blocked_turns} | "
-        f"adversarial KILLs: {kill_turns}"
-    )
+    print(f"  PASS turns: {pass_turns} | BLOCKED checkpoints: {blocked_turns} | " f"adversarial KILLs: {kill_turns}")
     print(f"  Avg latency: {mean_latency:.0f}ms | p95: {p95_latency:.0f}ms")
     print(
         f"  Audit baseline: status={audit.get('status')} "
