@@ -63,6 +63,7 @@ def _validated_http_url(url: str) -> str:
 # Vercel KV helpers (optional — no-op if env vars not set)
 # ---------------------------------------------------------------------------
 
+
 def _kv_set(key: str, value: Any) -> bool:
     """Write a value to Vercel KV via REST API. Returns True on success."""
     url = os.environ.get("AHG_KV_REST_API_URL")
@@ -112,6 +113,7 @@ def _post_webhook(url: str, payload: dict) -> bool:
 # Auth
 # ---------------------------------------------------------------------------
 
+
 def _is_production() -> bool:
     """Return True when the function is executing in Vercel production."""
     return os.environ.get("VERCEL_ENV", "").strip().lower() == "production"
@@ -129,12 +131,13 @@ def _check_auth(headers: dict) -> bool:
     auth = headers.get("authorization", headers.get("Authorization", ""))
     if not auth.startswith("Bearer "):
         return False
-    return auth[len("Bearer "):].strip() == expected.strip()
+    return auth[len("Bearer ") :].strip() == expected.strip()
 
 
 # ---------------------------------------------------------------------------
 # Record processing
 # ---------------------------------------------------------------------------
+
 
 def _process_records(records: list) -> dict:
     """Process a batch of AHGTraceRecord dicts. Returns fan-out summary."""
@@ -170,33 +173,39 @@ def _process_records(records: list) -> dict:
             ndr_stasis_events += 1
 
     kv_key = f"ahg:session:{session_id}:latest"
-    _kv_set(kv_key, {
-        "session_id": session_id,
-        "turn_id": latest.get("turn_id"),
-        "phi": latest.get("phi"),
-        "regime": latest.get("regime"),
-        "archetype": latest.get("archetype"),
-        "tribunal_active": latest.get("tribunal_active"),
-        "timestamp_utc": latest.get("timestamp_utc"),
-        "batch_size": len(records),
-        "tribunal_alerts_in_batch": tribunal_alerts,
-    })
+    _kv_set(
+        kv_key,
+        {
+            "session_id": session_id,
+            "turn_id": latest.get("turn_id"),
+            "phi": latest.get("phi"),
+            "regime": latest.get("regime"),
+            "archetype": latest.get("archetype"),
+            "tribunal_active": latest.get("tribunal_active"),
+            "timestamp_utc": latest.get("timestamp_utc"),
+            "batch_size": len(records),
+            "tribunal_alerts_in_batch": tribunal_alerts,
+        },
+    )
 
     webhook_url = os.environ.get("AHG_TRIBUNAL_WEBHOOK_URL")
     if tribunal_alerts > 0 and webhook_url:
         tribunal_recs = [r for r in records if r.get("tribunal_active")]
-        _post_webhook(webhook_url, {
-            "text": (
-                f"⚠️ *AHG TRIBUNAL ACTIVE* — Session `{session_id}`\n"
-                f"> {tribunal_alerts} Tribunal event(s) in batch of {len(records)}\n"
-                f"> Latest: turn={latest.get('turn_id')} "
-                f"phi={latest.get('phi', 0):.4f} "
-                f"regime={latest.get('regime')} "
-                f"archetype={latest.get('archetype')}"
-            ),
-            "session_id": session_id,
-            "tribunal_events": tribunal_recs,
-        })
+        _post_webhook(
+            webhook_url,
+            {
+                "text": (
+                    f"⚠️ *AHG TRIBUNAL ACTIVE* — Session `{session_id}`\n"
+                    f"> {tribunal_alerts} Tribunal event(s) in batch of {len(records)}\n"
+                    f"> Latest: turn={latest.get('turn_id')} "
+                    f"phi={latest.get('phi', 0):.4f} "
+                    f"regime={latest.get('regime')} "
+                    f"archetype={latest.get('archetype')}"
+                ),
+                "session_id": session_id,
+                "tribunal_events": tribunal_recs,
+            },
+        )
 
     return {
         "accepted": len(records),
@@ -209,6 +218,7 @@ def _process_records(records: list) -> dict:
 # ---------------------------------------------------------------------------
 # Vercel handler
 # ---------------------------------------------------------------------------
+
 
 class handler(BaseHTTPRequestHandler):
     """Vercel Python serverless function handler for POST /api/ahg_herald."""
@@ -249,14 +259,17 @@ class handler(BaseHTTPRequestHandler):
         self._send_json(200, result)
 
     def do_GET(self):
-        self._send_json(200, {
-            "status": "ok",
-            "endpoint": "P-01 AHG Herald Fan-Out",
-            "version": "1.0",
-            "kv_configured": bool(os.environ.get("AHG_KV_REST_API_URL")),
-            "auth_required": bool(os.environ.get("AHG_HERALD_API_KEY")) or _is_production(),
-            "tribunal_webhook": bool(os.environ.get("AHG_TRIBUNAL_WEBHOOK_URL")),
-        })
+        self._send_json(
+            200,
+            {
+                "status": "ok",
+                "endpoint": "P-01 AHG Herald Fan-Out",
+                "version": "1.0",
+                "kv_configured": bool(os.environ.get("AHG_KV_REST_API_URL")),
+                "auth_required": bool(os.environ.get("AHG_HERALD_API_KEY")) or _is_production(),
+                "tribunal_webhook": bool(os.environ.get("AHG_TRIBUNAL_WEBHOOK_URL")),
+            },
+        )
 
     def do_DELETE(self):
         self._send_json(405, {"error": "Method not allowed"})
