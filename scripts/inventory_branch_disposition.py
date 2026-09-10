@@ -155,7 +155,10 @@ def build_ledger(client: GitHubClient, base: str) -> dict[str, Any]:
         "counts": counts,
         "policy": {
             "auto_delete": False,
-            "merged_candidate_meaning": "ahead_by=0 and compare status is behind/identical; deletion still requires separate review/action",
+            "merged_candidate_meaning": (
+                "ahead_by=0 and compare status is behind/identical; "
+                "deletion still requires separate review/action"
+            ),
             "review_required_meaning": "unique/diverged/ambiguous/error state; no prune inference permitted",
         },
         "branches": records,
