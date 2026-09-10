@@ -144,7 +144,11 @@ def validate_policy() -> dict[str, Any]:
     record_type_schema = properties.get("record_type")
     effect_schema = properties.get("authorization_effect")
     non_effects_schema = properties.get("non_effects")
-    if not all(isinstance(value, dict) for value in (record_type_schema, effect_schema, non_effects_schema)):
+    if (
+        not isinstance(record_type_schema, dict)
+        or not isinstance(effect_schema, dict)
+        or not isinstance(non_effects_schema, dict)
+    ):
         fail("structural schema semantic enums missing")
 
     structural_types = string_set(record_type_schema.get("enum"), "schema record_type enum")
