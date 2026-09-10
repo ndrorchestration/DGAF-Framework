@@ -177,9 +177,7 @@ def test_structurally_valid_record_with_wrong_semantics_fails(tmp_path: Path) ->
 def test_policy_mutation_cannot_reclassify_human_authorization() -> None:
     policy = MODULE.validate_policy()
     mutated = deepcopy(policy)
-    mutated["records"]["UNBLINDING_DECISION_RECORD"]["authority_class"] = (
-        "NONAUTHORIZING_OBSERVATION"
-    )
+    mutated["records"]["UNBLINDING_DECISION_RECORD"]["authority_class"] = "NONAUTHORIZING_OBSERVATION"
     original = MODULE.load_object
     try:
         MODULE.load_object = lambda path, label: mutated if path == MODULE.POLICY_PATH else original(path, label)
