@@ -175,7 +175,10 @@ def finish() -> None:
         )
         artifact_id = int(os.environ["PUBLICATION_ARTIFACT_ID"])
         digest = os.environ["PUBLICATION_ARTIFACT_DIGEST"]
-        expected_url = f"https://github.com/{state['repository']}/actions/runs/{state['run_id']}/artifacts/{artifact_id}"
+        expected_url = (
+            f"https://github.com/{state['repository']}/actions/runs/"
+            f"{state['run_id']}/artifacts/{artifact_id}"
+        )
         require(
             os.environ["PUBLICATION_ARTIFACT_URL"] == expected_url,
             "artifact URL mismatch",
