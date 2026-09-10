@@ -41,6 +41,12 @@ jobs:
           set -euo pipefail
           python scripts/claim_hygiene_check.py
 
+      - name: Run claim-surface reconciliation gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validate_evidence_truth_layer.py --claim-surfaces-only
+
       - name: Run NDR registry consistency gate
         shell: bash
         run: |
