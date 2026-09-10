@@ -162,7 +162,11 @@ def attribution_transfer(
     if not isinstance(provenance, dict):
         return False
     source_owner = provenance.get("source_owner")
-    if not isinstance(source_owner, str) or not source_owner or source_owner.upper() in {"DGAF", "PDMAL", "NDR"}:
+    if (
+        not isinstance(source_owner, str)
+        or not source_owner
+        or source_owner.upper() in {"DGAF", "PDMAL", "NDR"}
+    ):
         return False
     attribution_pattern = re.compile(
         r"\b(?:DGAF|PDMAL|NDR)\s+" r"(?:established|proved|verified|demonstrated|found|showed)\b",
