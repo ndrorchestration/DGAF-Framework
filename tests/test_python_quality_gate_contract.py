@@ -1,6 +1,8 @@
 from pathlib import Path
 
 WORKFLOW_PATH = Path(".github/workflows/python-tests.yml")
+HISTORICAL_EPOCH_001_MATERIALIZER = "scripts/materialize_track_a_epoch_001_unblinded_input.py"
+BANDIT_TARGETS = "bandit -r components/ scripts/ api/ experiments/"
 
 
 def _workflow_text() -> str:
@@ -65,6 +67,34 @@ def test_negative_controls_cover_each_blocking_quality_tool() -> None:
         assert command in negative_block
 
 
+def test_bandit_full_report_and_blocking_threshold_contract() -> None:
+    text = _workflow_text()
+    full_report = _between(
+        text,
+        "    - name: Run full first-party Bandit report\n",
+        "    - name: Block medium-or-higher Bandit findings with medium-or-higher confidence\n",
+    )
+    blocking = _between(
+        text,
+        "    - name: Block medium-or-higher Bandit findings with medium-or-higher confidence\n",
+        "    - name: Check dependencies with Safety\n",
+    )
+
+    assert BANDIT_TARGETS in full_report
+    assert "-f json -o bandit-report.json" in full_report
+    assert "-f txt | tee bandit-report.txt" in full_report
+    assert "bandit-report.status" in full_report
+    assert "-x " not in full_report
+    assert "--exclude " not in full_report
+    assert HISTORICAL_EPOCH_001_MATERIALIZER not in full_report
+
+    assert BANDIT_TARGETS in blocking
+    assert "-ll -ii" in blocking
+    assert f"-x {HISTORICAL_EPOCH_001_MATERIALIZER}" in blocking
+    assert "continue-on-error:" not in blocking
+    assert "--exit-zero" not in blocking
+
+
 def test_advisory_exceptions_remain_scoped_outside_primary_quality_block() -> None:
     text = _workflow_text()
     quality_block = _between(
@@ -75,5 +105,6 @@ def test_advisory_exceptions_remain_scoped_outside_primary_quality_block() -> No
 
     assert "continue-on-error:" not in quality_block
     assert "fail_ci_if_error: false" in text
-    assert "Run Bandit security scan" in text
+    assert "Run full first-party Bandit report" in text
+    assert "Block medium-or-higher Bandit findings with medium-or-higher confidence" in text
     assert "Check dependencies with Safety" in text
