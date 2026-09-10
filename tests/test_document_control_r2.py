@@ -6,8 +6,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_document_control_r2.py"
 spec = importlib.util.spec_from_file_location("document_control_r2", MODULE_PATH)
+assert spec is not None and spec.loader is not None
 mod = importlib.util.module_from_spec(spec)
-assert spec and spec.loader
 spec.loader.exec_module(mod)
 
 
