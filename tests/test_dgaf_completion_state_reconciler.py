@@ -128,14 +128,8 @@ class CompletionStateReconcilerTests(unittest.TestCase):
             graph["orchestration"]["pattern_bundle"],
             ["P-PIER-001", "P-SAGA-001", "P-DURABLE-001", "P-CB-001", "P-POL-001"],
         )
-        custody_node = next(
-            node
-            for node in graph["lanes"][0]["nodes"]
-            if node["id"] == "real_custody_v2"
-        )
-        self.assertTrue(
-            any(check["type"] == "file_sha256_equals_json_field" for check in custody_node["checks"])
-        )
+        custody_node = next(node for node in graph["lanes"][0]["nodes"] if node["id"] == "real_custody_v2")
+        self.assertTrue(any(check["type"] == "file_sha256_equals_json_field" for check in custody_node["checks"]))
 
         state = derive_state(ROOT, GRAPH_PATH)
         self.assertIs(state["authorizes_transition"], False)
