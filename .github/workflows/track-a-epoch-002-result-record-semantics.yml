@@ -1,0 +1,88 @@
+name: Track A Epoch 002 Result Record Semantics
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-result-record-semantics.yml'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
+      - 'scripts/validate_track_a_epoch_002_result_ledger.py'
+      - 'scripts/validate_track_a_epoch_002_result_record_semantics.py'
+      - 'tests/test_track_a_epoch_002_result_record_schema.py'
+      - 'tests/test_track_a_epoch_002_result_ledger.py'
+      - 'tests/test_track_a_epoch_002_result_record_semantics.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 post-collection semantic boundary
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install pinned validation environment
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Validate semantic policy coherence
+        run: python scripts/validate_track_a_epoch_002_result_record_semantics.py --policy-only
+
+      - name: Run structural and semantic contract tests
+        run: >-
+          python -m pytest
+          tests/test_track_a_epoch_002_result_record_schema.py
+          tests/test_track_a_epoch_002_result_ledger.py
+          tests/test_track_a_epoch_002_result_record_semantics.py
+          -q
+
+      - name: Prove semantic tooling cannot create authority or execute science
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          policy = json.loads(
+              Path('docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json').read_text()
+          )
+          assert all(value is False for value in policy['policy_effect'].values())
+          human = {
+              name
+              for name, spec in policy['records'].items()
+              if spec['authority_class'] == 'HUMAN_CONTROLLED_AUTHORIZATION'
+          }
+          assert human == {
+              'UNBLINDING_DECISION_RECORD',
+              'PRIMARY_ANALYSIS_AUTHORIZATION_RECORD',
+          }
+          source = Path('scripts/validate_track_a_epoch_002_result_record_semantics.py').read_text()
+          assert '--write' not in source
+          assert '--execute' not in source
+          assert 'PDMAL_TOPOLOGY_BLINDING_KEY' not in source
+          print('RESULT_RECORD_SEMANTIC_TOOLING_NONAUTHORIZING=TRUE')
+          print('SUCCESSOR_COLLECTION_AUTHORIZED=FALSE')
+          print('UNBLINDING_AUTHORIZED=FALSE')
+          print('PRIMARY_ANALYSIS_AUTHORIZED=FALSE')
+          print('SCIENTIFIC_N_INCREMENT=0')
+          PY
