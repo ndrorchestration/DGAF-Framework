@@ -49,6 +49,11 @@ jobs:
           test ! -e pnpm-lock.yaml
           test ! -e yarn.lock
 
+      - name: Execute repository lockfile contract
+        run: |
+          set -euo pipefail
+          python3 tests/test_npm_lockfile_contract.py
+
       - name: Set up exact Node runtime
         uses: actions/setup-node@v4
         with:

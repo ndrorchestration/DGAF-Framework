@@ -30,6 +30,8 @@ Bootstrap provenance:
 - bootstrap validation: clean `npm ci --ignore-scripts --no-audit --no-fund` followed by `npm run build`
 - bootstrap result: `PASS_NONEMPIRICAL_REPRODUCIBILITY_EVIDENCE`
 
+The bootstrap lock digest above identifies the original retained bootstrap artifact only. It is historical provenance and does not constrain the SHA-256 of future reviewed lockfile updates. Each later dependency change is expected to produce new lockfile bytes and must instead be accepted only by the permanent validation gate on that exact reviewed source state.
+
 The artifact-retention workflow then downloaded that exact artifact, independently rechecked the source/run/package/lock identities and SHA-256 values, and committed the exact retained lockfile bytes to the PR branch. The write-capable retention workflow was removed immediately afterward and is not part of the permanent repository design.
 
 ## Permanent lock contract
@@ -37,13 +39,14 @@ The artifact-retention workflow then downloaded that exact artifact, independent
 `.github/workflows/npm-lockfile-validation.yml` is the permanent read-only gate. It:
 
 1. requires `package.json` and `package-lock.json` and rejects competing npm/yarn/pnpm lockfiles;
-2. uses exact Node `24.20.0` and requires bundled npm `11.19.0`;
-3. checks lockfile v3 name/version identity against `package.json`;
-4. runs `npm install --package-lock-only --ignore-scripts` and requires byte-for-byte lockfile stability;
-5. removes `node_modules`, performs clean `npm ci --ignore-scripts`, and builds;
-6. rejects obvious secret-like material in the lockfile;
-7. emits SHA-256-bound validation evidence tied to the exact workflow source/run; and
-8. has only `contents: read` permission.
+2. executes `tests/test_npm_lockfile_contract.py` directly so the repository-level contract is itself part of the required validation path;
+3. uses exact Node `24.20.0` and requires bundled npm `11.19.0`;
+4. checks lockfile v3 name/version identity against `package.json`;
+5. runs `npm install --package-lock-only --ignore-scripts` and requires byte-for-byte lockfile stability;
+6. removes `node_modules`, performs clean `npm ci --ignore-scripts`, and builds;
+7. rejects obvious secret-like material in the lockfile;
+8. emits SHA-256-bound validation evidence tied to the exact workflow source/run; and
+9. has only `contents: read` permission.
 
 Any future dependency update must deliberately update the manifest/lock together and re-pass this gate. The original **NOT REPOSITORY-LOCKED** state is superseded only when this PR's final exact-head validation passes and the change is merged.
 
