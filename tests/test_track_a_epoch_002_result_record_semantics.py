@@ -4,14 +4,16 @@ import importlib.util
 import json
 from copy import deepcopy
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_result_record_semantics.py"
 SPEC = importlib.util.spec_from_file_location("epoch_002_result_semantics", MODULE_PATH)
-MODULE = importlib.util.module_from_spec(SPEC)
-assert SPEC.loader is not None
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError("semantic validator module spec cannot load")
+MODULE: Any = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
 ALL_NON_EFFECTS = {
