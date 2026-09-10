@@ -66,7 +66,13 @@ def build_payload(turn: int) -> dict:
     }
 
 
-def assert_response(turn: int, category: str, status_code: int, body: dict, request_payload: dict) -> list[str]:
+def assert_response(
+    turn: int,
+    category: str,
+    status_code: int,
+    body: dict,
+    request_payload: dict,
+) -> list[str]:
     errors: list[str] = []
     decision = body.get("decision")
 
@@ -136,8 +142,13 @@ def run() -> None:
         if health_body.get("psi_cubic") is not True:
             raise AssertionError(f"Health psi_cubic={health_body.get('psi_cubic')!r}")
         if health_body.get("version") != EXPECTED_VERSION:
-            raise AssertionError(f"Health version={health_body.get('version')!r}, expected {EXPECTED_VERSION}")
-        print(f"  ✓ health: psi_cubic=True version={health_body['version']} runtime={health_body.get('runtime')}")
+            raise AssertionError(
+                f"Health version={health_body.get('version')!r}, expected {EXPECTED_VERSION}"
+            )
+        print(
+            f"  ✓ health: psi_cubic=True version={health_body['version']} "
+            f"runtime={health_body.get('runtime')}"
+        )
 
         metrics: list[dict] = []
         all_errors: list[str] = []
@@ -147,7 +158,9 @@ def run() -> None:
             category = kappa_for(turn)
             payload = build_payload(turn)
             started = time.perf_counter()
-            response = client.post(f"{BASE_URL}/api/orchestrate", json=payload, headers=post_headers())
+            response = client.post(
+                f"{BASE_URL}/api/orchestrate", json=payload, headers=post_headers()
+            )
             latency_ms = (time.perf_counter() - started) * 1000
             latencies.append(latency_ms)
             try:
@@ -155,28 +168,39 @@ def run() -> None:
             except Exception as exc:
                 body = {"_parse_error": str(exc)}
 
-            errors = assert_response(turn, category, response.status_code, body, payload)
+            errors = assert_response(
+                turn, category, response.status_code, body, payload
+            )
             all_errors.extend([f"T{turn:02d}: {error}" for error in errors])
             marker = "✓" if not errors else "✗"
-            print(f"  {marker} T{turn:02d} | {category:<11} | HTTP={response.status_code} | decision={str(body.get('decision', '—')):<7} | {latency_ms:.0f}ms")
-            metrics.append({
-                "turn": turn,
-                "kappa_category": category,
-                "http_status": response.status_code,
-                "decision": body.get("decision"),
-                "reason": body.get("reason"),
-                "raw_confidence": body.get("raw_confidence"),
-                "effective_confidence": body.get("effective_confidence"),
-                "hpg_fired": body.get("hpg_fired"),
-                "phi_gate": body.get("phi_gate"),
-                "phi_delta": body.get("phi_delta"),
-                "psi_cubic_check": body.get("psi_cubic_check"),
-                "evidence_status": body.get("evidence", {}).get("status"),
-                "trace_length": len(body.get("trace", [])) if isinstance(body.get("trace"), list) else None,
-                "payload_len": body.get("payload_len"),
-                "latency_ms": round(latency_ms, 1),
-                "errors": errors,
-            })
+            print(
+                f"  {marker} T{turn:02d} | {category:<11} | HTTP={response.status_code} | "
+                f"decision={str(body.get('decision', '—')):<7} | {latency_ms:.0f}ms"
+            )
+            metrics.append(
+                {
+                    "turn": turn,
+                    "kappa_category": category,
+                    "http_status": response.status_code,
+                    "decision": body.get("decision"),
+                    "reason": body.get("reason"),
+                    "raw_confidence": body.get("raw_confidence"),
+                    "effective_confidence": body.get("effective_confidence"),
+                    "hpg_fired": body.get("hpg_fired"),
+                    "phi_gate": body.get("phi_gate"),
+                    "phi_delta": body.get("phi_delta"),
+                    "psi_cubic_check": body.get("psi_cubic_check"),
+                    "evidence_status": body.get("evidence", {}).get("status"),
+                    "trace_length": (
+                        len(body.get("trace", []))
+                        if isinstance(body.get("trace"), list)
+                        else None
+                    ),
+                    "payload_len": body.get("payload_len"),
+                    "latency_ms": round(latency_ms, 1),
+                    "errors": errors,
+                }
+            )
             time.sleep(0.2)
 
         audit_response = client.get(f"{BASE_URL}/api/audit")
@@ -187,9 +211,13 @@ def run() -> None:
     if audit.get("status") != "ok":
         audit_errors.append(f"audit status={audit.get('status')!r}, expected 'ok'")
     if audit.get("version") != EXPECTED_VERSION:
-        audit_errors.append(f"audit version={audit.get('version')!r}, expected {EXPECTED_VERSION!r}")
+        audit_errors.append(
+            f"audit version={audit.get('version')!r}, expected {EXPECTED_VERSION!r}"
+        )
     if audit.get("axiom_count") != 1:
-        audit_errors.append(f"audit axiom_count={audit.get('axiom_count')!r}, expected 1")
+        audit_errors.append(
+            f"audit axiom_count={audit.get('axiom_count')!r}, expected 1"
+        )
     if not audit.get("_warning"):
         audit_errors.append("audit warning missing; persistence limitation is not exposed")
     all_errors.extend([f"AUDIT: {error}" for error in audit_errors])
@@ -198,9 +226,15 @@ def run() -> None:
     blocked_turns = sum(1 for m in metrics if m["decision"] == "BLOCKED")
     kill_turns = sum(1 for m in metrics if m["decision"] == "KILL")
     expected_counts = {"PASS": 25, "BLOCKED": 2, "KILL": 3}
-    observed_counts = {"PASS": pass_turns, "BLOCKED": blocked_turns, "KILL": kill_turns}
+    observed_counts = {
+        "PASS": pass_turns,
+        "BLOCKED": blocked_turns,
+        "KILL": kill_turns,
+    }
     if observed_counts != expected_counts:
-        all_errors.append(f"aggregate decisions={observed_counts!r}, expected {expected_counts!r}")
+        all_errors.append(
+            f"aggregate decisions={observed_counts!r}, expected {expected_counts!r}"
+        )
 
     mean_latency = statistics.mean(latencies)
     p95_latency = sorted(latencies)[max(0, int(len(latencies) * 0.95) - 1)]
@@ -221,17 +255,36 @@ def run() -> None:
         "audit": audit,
         "errors": all_errors,
         "limitations": [
-            "Phi-Closure checkpoints 13 and 21 remain intentionally fail-closed because live audit state is not wired into /api/orchestrate.",
-            "Audit counters are in-memory and reset on serverless cold starts; this regression verifies endpoint reachability and exposed baseline, not cross-request persistence.",
-            "This is runtime integration evidence only and does not establish experimental efficacy or authorization.",
+            (
+                "Phi-Closure checkpoints 13 and 21 remain intentionally fail-closed "
+                "because live audit state is not wired into /api/orchestrate."
+            ),
+            (
+                "Audit counters are in-memory and reset on serverless cold starts; "
+                "this regression verifies endpoint reachability and exposed baseline, "
+                "not cross-request persistence."
+            ),
+            (
+                "This is runtime integration evidence only and does not establish "
+                "experimental efficacy or authorization."
+            ),
         ],
     }
-    Path("regression_results_v17.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    Path("regression_results_v17.json").write_text(
+        json.dumps(result, indent=2) + "\n", encoding="utf-8"
+    )
 
     print("─" * 72)
-    print(f"  PASS turns: {pass_turns} | BLOCKED checkpoints: {blocked_turns} | adversarial KILLs: {kill_turns}")
+    print(
+        f"  PASS turns: {pass_turns} | BLOCKED checkpoints: {blocked_turns} | "
+        f"adversarial KILLs: {kill_turns}"
+    )
     print(f"  Avg latency: {mean_latency:.0f}ms | p95: {p95_latency:.0f}ms")
-    print(f"  Audit baseline: status={audit.get('status')} version={audit.get('version')} axiom_count={audit.get('axiom_count')} turn_count={audit.get('turn_count')} persistence=false")
+    print(
+        f"  Audit baseline: status={audit.get('status')} "
+        f"version={audit.get('version')} axiom_count={audit.get('axiom_count')} "
+        f"turn_count={audit.get('turn_count')} persistence=false"
+    )
     if all_errors:
         print(f"  ✗ REGRESSION FAILED — {len(all_errors)} error(s)")
         for error in all_errors:
