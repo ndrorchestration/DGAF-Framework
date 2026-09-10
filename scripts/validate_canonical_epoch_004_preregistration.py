@@ -34,7 +34,9 @@ def validate() -> None:
     assert treatment["profile_id"] == "DGAF_CANONICAL_PDMAL_PROFILE_CANDIDATE_V1"
     assert treatment["profile_merge_sha"] == "c8a07306d212e23cc5a4c1e0d98b7e8f47f45e21"
     assert treatment["qualification_merge_sha"] == "2fbd54454ad45df26cdd3b51793268ac3e597336"
-    assert treatment["qualification_sha256"] == "4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78"
+    assert treatment["qualification_sha256"] == (
+        "4d0346f6a05046f03ce5a399d1dd4de2d31b69f683988fe9af20802d2c062d78"
+    )
     assert treatment["qualification_class"] == "DEVELOPER_SELF_ATTESTED_NONINDEPENDENT"
     assert treatment["reachability_merge_sha"] == "621356297f803f0a3e8e3319d54878a5bb0282a5"
     assert treatment["reachability_run_id"] == 34176977560
