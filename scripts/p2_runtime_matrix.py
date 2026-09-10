@@ -106,7 +106,17 @@ def main() -> int:
 
     for case in CASES:
         ts = datetime.now(timezone.utc).isoformat()
-        request_body = case.get("raw_payload") or json.dumps(case["payload"]).encode("utf-8")
+        raw_payload = case.get("raw_payload")
+        if raw_payload is not None:
+            assert isinstance(raw_payload, bytes)
+            request_body = raw_payload
+            request_display: object = raw_payload.decode("utf-8")
+        else:
+            payload_obj = case["payload"]
+            assert isinstance(payload_obj, dict)
+            request_body = json.dumps(payload_obj).encode("utf-8")
+            request_display = payload_obj
+
         status, raw, parsed = request_raw(endpoint, request_body)
         decision = parsed.get("decision") if isinstance(parsed, dict) else None
         passed = status == case["expected_status"] and decision == case["expected_decision"]
@@ -114,7 +124,7 @@ def main() -> int:
             {
                 "case_id": case["id"],
                 "timestamp": ts,
-                "request": case.get("payload") if "payload" in case else case["raw_payload"].decode("utf-8"),
+                "request": request_display,
                 "expected": {
                     "status": case["expected_status"],
                     "decision": case["expected_decision"],
