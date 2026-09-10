@@ -13,9 +13,27 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REGISTRY = ROOT / "docs/governance/document-control-r2.json"
-ALLOWED_CLASSES = {"CURRENT_AUTHORITY", "CURRENT_SUPPORTING", "HISTORICAL", "SUPERSEDED", "AUDIT", "PROVENANCE", "EXPLORATORY"}
+ALLOWED_CLASSES = {
+    "CURRENT_AUTHORITY",
+    "CURRENT_SUPPORTING",
+    "HISTORICAL",
+    "SUPERSEDED",
+    "AUDIT",
+    "PROVENANCE",
+    "EXPLORATORY",
+}
 ALLOWED_PROJECTION_STATES = {"VERIFIED", "NOT_VERIFIED", "STALE", "INVALID"}
-REQUIRED = {"record_id", "title", "record_class", "domain", "owner", "scope", "lifecycle_state", "current_state_ref", "projection_state"}
+REQUIRED = {
+    "record_id",
+    "title",
+    "record_class",
+    "domain",
+    "owner",
+    "scope",
+    "lifecycle_state",
+    "current_state_ref",
+    "projection_state",
+}
 
 
 def fail(message: str) -> None:
@@ -74,10 +92,17 @@ def validate(data: dict) -> None:
                 fail(f"{rid}: historical/superseded record routes to itself as current")
             if record.get("last_verified_at") is not None and record["projection_state"] != "VERIFIED":
                 fail(f"{rid}: non-VERIFIED projection carries last_verified_at")
-            if record_class == "SUPERSEDED" and not record.get("superseded_by") and not record.get("terminal_reason"):
+            if (
+                record_class == "SUPERSEDED"
+                and not record.get("superseded_by")
+                and not record.get("terminal_reason")
+            ):
                 fail(f"{rid}: SUPERSEDED requires superseded_by or terminal_reason")
 
-        if record["projection_state"] in {"NOT_VERIFIED", "STALE", "INVALID"} and record.get("last_verified_at") is not None:
+        if (
+            record["projection_state"] in {"NOT_VERIFIED", "STALE", "INVALID"}
+            and record.get("last_verified_at") is not None
+        ):
             fail(f"{rid}: {record['projection_state']} must not present a verification timestamp")
         if record["projection_state"] == "VERIFIED" and not record.get("last_verified_at"):
             fail(f"{rid}: VERIFIED requires last_verified_at")
@@ -98,7 +123,10 @@ def main() -> int:
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"DOCUMENT_CONTROL_R2=FAIL: {exc}", file=sys.stderr)
         return 1
-    print(f"DOCUMENT_CONTROL_R2=PASS records={len(data['records'])} authority={data['current_authority_ref']}")
+    print(
+        "DOCUMENT_CONTROL_R2=PASS "
+        f"records={len(data['records'])} authority={data['current_authority_ref']}"
+    )
     print("SCIENTIFIC_STATE_EFFECT=NONE")
     print("AUTHORIZATION_EFFECT=NONE")
     return 0
