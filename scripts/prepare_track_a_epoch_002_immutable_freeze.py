@@ -146,10 +146,7 @@ def require_sources_unchanged(candidate_sha: str, expected: dict[str, str]) -> N
             fail(f"protected source absent at HEAD: {path}")
         current_blob = git_blob(path, "HEAD")
         if current_blob != candidate_blob:
-            fail(
-                f"protected source drift after candidate {path}: "
-                f"current={current_blob} candidate={candidate_blob}"
-            )
+            fail(f"protected source drift {path}: current={current_blob} candidate={candidate_blob}")
     if not is_ancestor(candidate_sha, git("rev-parse", "HEAD").lower()):
         fail("candidate is not an ancestor of HEAD")
 
