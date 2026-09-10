@@ -10,6 +10,7 @@ binds that canonical state.
 This checker validates translation consistency only. It does not establish the
 truth, efficacy, authorization, or independent verification of any claim.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -55,11 +56,7 @@ def load_claims(path: Path) -> dict[str, dict[str, Any]]:
         raise ValueError("canonical claims file must contain a 'claims' list")
     claims: dict[str, dict[str, Any]] = {}
     for claim in data["claims"]:
-        if (
-            not isinstance(claim, dict)
-            or not isinstance(claim.get("claim_id"), str)
-            or not claim["claim_id"]
-        ):
+        if not isinstance(claim, dict) or not isinstance(claim.get("claim_id"), str) or not claim["claim_id"]:
             raise ValueError("canonical claim entry missing claim_id")
         claim_id = claim["claim_id"]
         if claim_id in claims:
@@ -109,13 +106,7 @@ def local_scopes(text: str, start: int, end: int, radius: int) -> list[str]:
     scopes = [containing] if containing else []
     para_left = window.rfind("\n\n", 0, occurrence_center)
     para_right = window.find("\n\n", occurrence_center)
-    scopes.append(
-        window[
-            (para_left + 2 if para_left >= 0 else 0) : (
-                para_right if para_right >= 0 else len(window)
-            )
-        ]
-    )
+    scopes.append(window[(para_left + 2 if para_left >= 0 else 0) : (para_right if para_right >= 0 else len(window))])
     return [scope for scope in scopes if scope is not None]
 
 
@@ -143,10 +134,7 @@ def explicitly_historical(
     left = max(0, start - radius)
     right = min(len(text), end + radius)
     window = text[left:right]
-    return any(
-        re.search(re.escape(marker), window, flags=re.IGNORECASE)
-        for marker in markers
-    )
+    return any(re.search(re.escape(marker), window, flags=re.IGNORECASE) for marker in markers)
 
 
 def stale_run_binding(
@@ -174,15 +162,10 @@ def attribution_transfer(
     if not isinstance(provenance, dict):
         return False
     source_owner = provenance.get("source_owner")
-    if (
-        not isinstance(source_owner, str)
-        or not source_owner
-        or source_owner.upper() in {"DGAF", "PDMAL", "NDR"}
-    ):
+    if not isinstance(source_owner, str) or not source_owner or source_owner.upper() in {"DGAF", "PDMAL", "NDR"}:
         return False
     attribution_pattern = re.compile(
-        r"\b(?:DGAF|PDMAL|NDR)\s+"
-        r"(?:established|proved|verified|demonstrated|found|showed)\b",
+        r"\b(?:DGAF|PDMAL|NDR)\s+" r"(?:established|proved|verified|demonstrated|found|showed)\b",
         re.IGNORECASE,
     )
     for scope in local_scopes(text, start, end, radius):
@@ -347,8 +330,7 @@ def main() -> int:
     entries = [
         entry
         for entry in registry["entries"]
-        if not args.canonical_only
-        or entry.get("classification") == CANONICAL_DERIVATIVE
+        if not args.canonical_only or entry.get("classification") == CANONICAL_DERIVATIVE
     ]
 
     findings: list[dict[str, Any]] = []
@@ -377,8 +359,7 @@ def main() -> int:
         "counts": counts,
         "findings": findings,
         "evidence_boundary": (
-            "translation consistency only; no truth, efficacy, authorization, "
-            "or independent-verification promotion"
+            "translation consistency only; no truth, efficacy, authorization, " "or independent-verification promotion"
         ),
     }
     if args.as_json:
@@ -389,10 +370,7 @@ def main() -> int:
             print(f"  {status}: {count}")
         for finding in findings:
             if finding["status"] in FAIL_STATUSES | {"REVIEW_MIGRATION"}:
-                print(
-                    f"{finding['status']}: {finding['path']}:"
-                    f"{finding['line']} [{finding['id']}]"
-                )
+                print(f"{finding['status']}: {finding['path']}:" f"{finding['line']} [{finding['id']}]")
 
     failures = sum(counts.get(status, 0) for status in FAIL_STATUSES)
     return 1 if args.strict and failures else 0
