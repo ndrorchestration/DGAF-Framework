@@ -21,7 +21,12 @@ ACTION_CLASSES = {
     "human_controlled",
     "operator_external",
 }
-CHECK_TYPES = {"path_exists", "json_equals", "python_json_validator"}
+CHECK_TYPES = {
+    "path_exists",
+    "json_equals",
+    "python_json_validator",
+    "file_sha256_equals_json_field",
+}
 NODE_STATES = {
     "SATISFIED",
     "ACTIONABLE",
@@ -114,6 +119,17 @@ def validate_check(check: dict[str, Any], node_id: str) -> None:
         field = check["field"]
         if not isinstance(field, str) or not field or any(not part for part in field.split(".")):
             raise GraphError(f"json_equals field invalid in {node_id}")
+        return
+
+    if check_type == "file_sha256_equals_json_field":
+        expected_keys = {"type", "file_path", "json_path", "field"}
+        if set(check) != expected_keys:
+            raise GraphError(f"file_sha256_equals_json_field keys invalid in {node_id}")
+        normalize_repo_relative_path(check["file_path"], field=f"{node_id}.file_path")
+        normalize_repo_relative_path(check["json_path"], field=f"{node_id}.json_path")
+        field = check["field"]
+        if not isinstance(field, str) or not field or any(not part for part in field.split(".")):
+            raise GraphError(f"file_sha256_equals_json_field field invalid in {node_id}")
         return
 
     expected_keys = {"type", "validator_path", "function", "input_path"}
@@ -269,6 +285,51 @@ def evaluate_check(repo_root: Path, check: dict[str, Any]) -> dict[str, Any]:
         }
         if not passed:
             result["reason"] = "value_mismatch"
+        return result
+
+    if check_type == "file_sha256_equals_json_field":
+        file_relative = normalize_repo_relative_path(check["file_path"], field="check.file_path")
+        json_relative = normalize_repo_relative_path(check["json_path"], field="check.json_path")
+        file_path = resolve_repo_path(repo_root, file_relative)
+        json_path = resolve_repo_path(repo_root, json_relative)
+        if not file_path.is_file():
+            return {
+                "type": check_type,
+                "passed": False,
+                "ref": file_relative,
+                "json_ref": json_relative,
+                "reason": "file_absent",
+            }
+        if not json_path.is_file():
+            return {
+                "type": check_type,
+                "passed": False,
+                "ref": file_relative,
+                "json_ref": json_relative,
+                "reason": "json_absent",
+            }
+        try:
+            payload = load_json(json_path)
+            expected = lookup_field(payload, str(check["field"]))
+            actual = hashlib.sha256(file_path.read_bytes()).hexdigest()
+        except (OSError, json.JSONDecodeError, KeyError) as exc:
+            return {
+                "type": check_type,
+                "passed": False,
+                "ref": file_relative,
+                "json_ref": json_relative,
+                "reason": f"unreadable_or_missing_field:{type(exc).__name__}",
+            }
+        passed = isinstance(expected, str) and actual == expected
+        result = {
+            "type": check_type,
+            "passed": passed,
+            "ref": file_relative,
+            "json_ref": json_relative,
+            "field": str(check["field"]),
+        }
+        if not passed:
+            result["reason"] = "sha256_mismatch"
         return result
 
     if check_type == "python_json_validator":

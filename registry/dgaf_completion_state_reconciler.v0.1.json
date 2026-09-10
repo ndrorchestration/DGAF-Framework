@@ -119,6 +119,7 @@
           "checks": [
             {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json"},
             {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem"},
+            {"type": "file_sha256_equals_json_field", "file_path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem", "json_path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json", "field": "certificate_sha256"},
             {"type": "python_json_validator", "validator_path": "scripts/validate_track_a_successor_solo_custody_receipt.py", "function": "validate_receipt", "input_path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json"},
             {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json", "field": "schema_version", "value": 2},
             {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json", "field": "empirical_collection_authorized", "value": false}
