@@ -3,11 +3,12 @@
 **Classification:** T2 FRAMEWORK
 **Authority:** Apogee (scoring) + Amethyst (gate)
 **Scope:** Universal evaluation rubric for all 11 DGAF agents and their artifacts
-**Version:** 1.0
-**Last Updated:** 2026-06-29
+**Instrument ID:** INST-QA-001
+**Version:** 1.1
+**Last Updated:** 2026-09-10
 **Maintained by:** Apogee (content) / Amethyst-Conductor (gate)
 
-> **Note:** This rubric governs artifact quality evaluation (Apogee 11Q gate, P-11) and agent output assessment across all formations. Scoring formulas referencing harmonic calculus are T3 SOVEREIGN — stub only. See PROPRIETARY.md SOV-001–004.
+> **Note:** This rubric governs artifact quality evaluation and agent output assessment for **INST-QA-001**. Historical shorthand such as “11Q” or “P-11” is not a unique instrument identifier: `INST-GATE-11Q` and `INST-APOGEE-7Q` are separate instruments with separate semantics. New scoring records MUST cite `INST-QA-001` and this rubric version. Scoring formulas referencing harmonic calculus are T3 SOVEREIGN — stub only. See PROPRIETARY.md SOV-001–004.
 
 ---
 
@@ -24,18 +25,18 @@ The QA_RUBRIC provides the canonical scoring framework for:
 
 ## Rubric Architecture
 
-```
+```text
 QA_RUBRIC
-├── Domain A: Structural Integrity       (Questions 1–3)
+├── Domain A: Structural Integrity        (Questions 1–3)
 ├── Domain B: Governance Compliance       (Questions 4–6)
 ├── Domain C: Content Quality             (Questions 7–9)
-├── Domain D: Operational Readiness       (Questions 10–11)
-└── Domain E: Efficiency Gate             (Gate 17 — DemiJoule)
+├── Domain D: Operational Readiness        (Questions 10–11)
+└── Domain E: Efficiency Gate              (Gate 17 — DemiJoule)
 ```
 
-All domains feed into the **Apogee 11Q Composite Score** (0.00–1.00).
+All domains feed into the **INST-QA-001 Apogee 11Q Composite Score** (0.00–1.00).
 Gate 17 feeds separately into DemiJoule’s efficiency score (0.00–1.00).
-Both scores are delivered to Amethyst for P-11 gate decision.
+Both scores are delivered to Amethyst for the applicable instrument-scoped gate decision.
 
 ---
 
@@ -225,7 +226,7 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 | 0.40 | Within 200% of baseline |
 | 0.00 | Exceeds 200% of baseline (critical waste) |
 
-**Owner:** DemiJoule **Blocking threshold:** < 0.40 combined with Q1–11 composite < 0.70
+**Owner:** DemiJoule **Blocking threshold:** < 0.40 combined with INST-QA-001 artifact-quality score < 0.70
 
 > *Baseline calibration values are held in DemiJoule’s Efficiency Baseline Registry (Drive/Agents/). T3 weight calibration formulas: see PROPRIETARY.md.*
 
@@ -233,13 +234,21 @@ Both scores are delivered to Amethyst for P-11 gate decision.
 
 ## Composite Scoring
 
-### Apogee 11Q Composite
+### INST-QA-001 Apogee 11Q Composite
+
+Version 1.1 uses a **normalized weighted mean**:
 
 \[
-S_{11Q} = \frac{1}{11} \sum_{i=1}^{11} w_i \cdot Q_i
+S_{11Q} = \frac{\sum_{i=1}^{11} w_i \cdot Q_i}{\sum_{i=1}^{11} w_i}
 \]
 
-where \(w_i\) are domain weights and \(Q_i\) are per-question scores (0.00–1.00).
+where \(Q_i\) is the per-question score in [0.00, 1.00]. The published \(w_i\) values are **relative importance coefficients**, not probabilities, and therefore are not required to sum to 1.00. For the default T2 weights below, \(\sum w_i = 1.50\), so the executable form is:
+
+\[
+S_{11Q} = \frac{\sum_{i=1}^{11} w_i \cdot Q_i}{1.50}
+\]
+
+This guarantees `S_11Q ∈ [0,1]` for valid inputs, preserves the v1.0 relative weighting ratios, and makes a uniform input vector scale-preserving (for example, eleven 0.70 scores produce 0.70).
 
 **Default weights (T2 artifacts):**
 
@@ -250,17 +259,38 @@ where \(w_i\) are domain weights and \(Q_i\) are per-question scores (0.00–1.0
 | C — Content Quality | Q7–Q9 | 0.10 each |
 | D — Operational Readiness | Q10–Q11 | 0.075 each |
 
-> *Harmonic weighting adjustments for sovereign-touching artifacts (T3 adjacent) are T3 SOVEREIGN. See PROPRIETARY.md SOV-002, SOV-004.*
+**Executable reference:** `scripts/qa_rubric_11q.py`. Tests in `tests/test_qa_rubric_11q.py` lock the 0.00/1.00 range, uniform-score behavior, relative weighting, exact 11-question cardinality, invalid-input rejection, and instrument-scoped threshold boundaries.
 
-### Gate Thresholds
+> *Harmonic weighting adjustments for sovereign-touching artifacts (T3 adjacent) are T3 SOVEREIGN. See PROPRIETARY.md SOV-002, SOV-004. Any alternative T3 weight vector must still use explicit normalization unless a separately versioned instrument specification states otherwise.*
 
-| Gate | Threshold | Owner | Action if Failed |
-|---|---|---|---|
-| P-11 artifact quality | ≥ 0.70 | Apogee | Block commit; surface BLG with Q-level detail |
-| P-15 seal commit | ≥ 0.90 | Apogee + Reson | Block seal; remediation required |
-| Gate 17 combined failure | < 0.40 DemiJoule + < 0.70 Apogee | DemiJoule | Escalate to Amethyst; hard block |
-| NDR-133 (Q6 = 0.0) | Any deprecated name | Sentinel | P-01 trigger; immediate block |
-| T3 leak (Q4 = 0.0) | Any T3 in T1/T2 file | Sentinel | Hard block; PROPRIETARY.md redaction |
+### Instrument-Scoped Thresholds and Provenance
+
+| Predicate | Threshold | Owner | Provenance / epistemic status | Action if Failed |
+|---|---:|---|---|---|
+| INST-QA-001 artifact-quality eligibility (legacy shorthand: P-11 artifact quality) | ≥ 0.70 | Apogee | Inherited from v1.0 scaffold (2026-06-29); rubric-defined heuristic; **not empirically calibrated** | Block commit; surface BLG with Q-level detail |
+| INST-QA-001 seal eligibility (legacy shorthand: P-15 seal commit) | ≥ 0.90 | Apogee + Reson | Inherited from v1.0 scaffold (2026-06-29); rubric-defined heuristic; **not empirically calibrated** | Block seal; remediation required |
+| Gate 17 combined failure | < 0.40 DemiJoule + < 0.70 INST-QA-001 | DemiJoule | Existing rubric policy; not an empirical efficacy threshold | Escalate to Amethyst; hard block |
+| NDR-133 (Q6 = 0.0) | Any deprecated name | Sentinel | Rule-defined hard-block predicate | P-01 trigger; immediate block |
+| T3 leak (Q4 = 0.0) | Any T3 in T1/T2 file | Sentinel | Rule-defined hard-block predicate | Hard block; PROPRIETARY.md redaction |
+
+Retaining 0.70 and 0.90 in v1.1 is a **compatibility decision**, not evidence that either cutoff is statistically optimal, externally validated, or calibrated to downstream outcomes. If empirical calibration later changes a cutoff, that change requires a new rubric version and migration record.
+
+These thresholds apply only to `INST-QA-001`. They do **not** resolve or overwrite the separate `INST-APOGEE-7Q` 0.85 attestation threshold, and they do not define the procedure or predicates of `INST-GATE-11Q`. Decision records MUST use instrument IDs rather than bare “P-11” or “11Q” shorthand when ambiguity is possible.
+
+---
+
+## Migration from v1.0
+
+`INST-QA-001 v1.0` is **SUPERSEDED FOR NEW SCORING** by v1.1 because its written formula divided the weighted sum by 11 while the default weights summed to 1.50. Under literal v1.0 execution, the theoretical maximum was `1.50 / 11 ≈ 0.13636`, so the stated 0.70 and 0.90 thresholds were unreachable.
+
+Migration rules:
+
+1. Historical v1.0 score records remain historical evidence and MUST retain their original method/version metadata.
+2. Historical scores MUST NOT be silently reinterpreted as v1.1 scores.
+3. A historical artifact may be rescored under v1.1 only if its original Q1–Q11 inputs are available and the new result is recorded explicitly as a separate v1.1 computation.
+4. New authoritative core-11Q scoring MUST identify `instrument_id=INST-QA-001` and `instrument_version=1.1`.
+5. Bare “P-11” / “11Q” references are insufficient where `INST-GATE-11Q` or `INST-APOGEE-7Q` could be intended.
+6. This migration changes rubric correctness only. It does not establish scientific efficacy, freeze, empirical collection authorization, deployment authorization, or empirical N.
 
 ---
 
@@ -286,14 +316,14 @@ Each agent has distinct quality emphases based on role. Apogee applies weighted 
 
 ## Application Procedure
 
-```
+```text
 1. COLLEEN runs Q3 (cross-ref) + Q9 (vocab) → delivers sub-scores to Apogee
 2. Sentinel runs Q4 (classification) + Q6 (deprecated refs) → delivers sub-scores to Apogee
 3. DemiJoule runs Gate 17 (efficiency) → delivers to Apogee
 4. Apogee runs Q1, Q2, Q5, Q7, Q8, Q10, Q11 directly
-5. Apogee computes S_11Q composite
-6. Apogee delivers S_11Q + Gate 17 to Amethyst
-7. Amethyst applies gate threshold and commits or blocks
+5. Apogee computes INST-QA-001 v1.1 S_11Q using the normalized weighted mean
+6. Apogee records the instrument ID + version and delivers S_11Q + Gate 17 to Amethyst
+7. Amethyst applies only the explicitly cited instrument-scoped threshold and commits or blocks
 ```
 
 ---
@@ -302,7 +332,8 @@ Each agent has distinct quality emphases based on role. Apogee applies weighted 
 
 | Version | Date | Change |
 |---|---|---|
-| 1.0 | 2026-06-29 | Initial scaffold — 11Q + Gate 17 + per-agent profiles |
+| 1.1 | 2026-09-10 | Reconciled CX-08 / issue #595: normalized weighted mean; explicit `INST-QA-001` identity; 0–1 range tests; threshold provenance; v1.0 migration/supersession rules; no scientific/authorization transition |
+| 1.0 | 2026-06-29 | Initial scaffold — 11Q + Gate 17 + per-agent profiles; scoring formula later found internally inconsistent and superseded for new scoring by v1.1 |
 
 > *Rubric updates require Apogee content authorship + Amethyst sign-off + Njineer confirmation.*
 
