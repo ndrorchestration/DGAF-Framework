@@ -70,10 +70,13 @@ def test_stale_run_binding_is_rejected() -> None:
         )
         == "PASS_CANONICAL_PARITY"
     )
-    assert one_status(
-        "Claim A improves outcomes; VERIFIED by dpl_OLD999.",
-        claim_set=current,
-    ) == "ERROR_STALE_BINDING"
+    assert (
+        one_status(
+            "Claim A improves outcomes; VERIFIED by dpl_OLD999.",
+            claim_set=current,
+        )
+        == "ERROR_STALE_BINDING"
+    )
 
 
 def test_run_token_is_rejected_when_canonical_claim_has_no_run() -> None:
