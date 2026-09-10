@@ -1,3 +1,5 @@
+> **HISTORICAL / SUPERSEDED FOR PRESENT-STATE USE — 2026-09-10:** This record preserves the 2026-08-26 dynamic freeze-admissibility model and its then-current candidate, deployment, queue, gate, and blocker states. It is not current gate or execution authority. Resolve present state through `docs/CURRENT_STATE.md` and `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`. Terms such as “Current executable candidate,” “Current verified production deployment,” and “Current dynamic queue” below are event-time statements only and must not be used to infer the present candidate, deployment health, freeze state, authorization state, or next action.
+
 # Dynamic Freeze-Admissibility Control — 2026-08-26
 
 ## Purpose
