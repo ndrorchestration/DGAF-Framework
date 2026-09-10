@@ -5,6 +5,7 @@ This validator is deliberately dependency-free and non-authorizing. It validates
 projection/routing metadata only; it cannot establish scientific truth, freeze,
 collection authorization, efficacy, or empirical N.
 """
+
 from __future__ import annotations
 
 import json
@@ -92,11 +93,7 @@ def validate(data: dict) -> None:
                 fail(f"{rid}: historical/superseded record routes to itself as current")
             if record.get("last_verified_at") is not None and record["projection_state"] != "VERIFIED":
                 fail(f"{rid}: non-VERIFIED projection carries last_verified_at")
-            if (
-                record_class == "SUPERSEDED"
-                and not record.get("superseded_by")
-                and not record.get("terminal_reason")
-            ):
+            if record_class == "SUPERSEDED" and not record.get("superseded_by") and not record.get("terminal_reason"):
                 fail(f"{rid}: SUPERSEDED requires superseded_by or terminal_reason")
 
         if (
@@ -123,10 +120,7 @@ def main() -> int:
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"DOCUMENT_CONTROL_R2=FAIL: {exc}", file=sys.stderr)
         return 1
-    print(
-        "DOCUMENT_CONTROL_R2=PASS "
-        f"records={len(data['records'])} authority={data['current_authority_ref']}"
-    )
+    print("DOCUMENT_CONTROL_R2=PASS " f"records={len(data['records'])} authority={data['current_authority_ref']}")
     print("SCIENTIFIC_STATE_EFFECT=NONE")
     print("AUTHORIZATION_EFFECT=NONE")
     return 0
