@@ -31,6 +31,7 @@ PROMOTED_CARD_CLASSES = {"VERIFIED", "ATTESTED"}
 PROMOTED_MATURITY = {"EMPIRICALLY_SUPPORTED"}
 PROMOTED_VALIDATION = {"INDEPENDENTLY_REPLICATED"}
 CARD_STATE_FIELDS = ("claim_class", "evidence_maturity", "validation_status")
+CARD_PROVENANCE_FIELDS = ("source", "commit", "artifact", "recorded_at")
 
 
 def _parse_scalar(raw: str) -> Any:
@@ -132,25 +133,59 @@ def _safe_repo_path(relative_path: str) -> Path:
 
 
 def _default_card_loader(card_path: str) -> dict[str, Any]:
+    """Load only the Evidence Card fields needed for canonical parity checks.
+
+    Evidence Cards are YAML, but the truth-layer gate intentionally remains
+    dependency-free. This parser recognizes selected top-level fields plus the
+    controlled ``context`` and ``provenance`` mappings and ignores unrelated
+    richer dossier sections. Ambiguous duplicates fail closed.
+    """
+
     path = _safe_repo_path(card_path)
     if not path.is_file():
         raise FileNotFoundError(card_path)
 
-    wanted = {"id", *CARD_STATE_FIELDS}
-    metadata: dict[str, Any] = {}
-    for lineno, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-        if not raw_line or raw_line[0].isspace() or raw_line.lstrip().startswith("#"):
-            continue
-        if ":" not in raw_line:
-            continue
-        key, value = _split_mapping(raw_line, context=f"{card_path}:{lineno}")
-        if key not in wanted:
-            continue
-        if key in metadata:
-            raise ValueError(f"{card_path}:{lineno}: duplicate top-level field {key}")
-        metadata[key] = value
+    wanted_top = {"id", "claim", *CARD_STATE_FIELDS}
+    wanted_nested = {
+        "context": {"scope"},
+        "provenance": set(CARD_PROVENANCE_FIELDS),
+    }
+    metadata: dict[str, Any] = {"context": {}, "provenance": {}}
+    section: str | None = None
 
-    missing = wanted - metadata.keys()
+    for lineno, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not raw_line.strip() or raw_line.lstrip().startswith("#"):
+            continue
+        if "\t" in raw_line:
+            raise ValueError(f"{card_path}:{lineno}: tabs are not allowed")
+
+        indent = len(raw_line) - len(raw_line.lstrip(" "))
+        stripped = raw_line.strip()
+        if indent == 0:
+            section = None
+            if ":" not in stripped:
+                continue
+            key, value = _split_mapping(stripped, context=f"{card_path}:{lineno}")
+            if key in wanted_nested and value == "":
+                section = key
+                continue
+            if key not in wanted_top:
+                continue
+            if key in metadata:
+                raise ValueError(f"{card_path}:{lineno}: duplicate top-level field {key}")
+            metadata[key] = value
+            continue
+
+        if indent == 2 and section in wanted_nested and ":" in stripped:
+            key, value = _split_mapping(stripped, context=f"{card_path}:{lineno}")
+            if key not in wanted_nested[section]:
+                continue
+            nested = metadata[section]
+            if key in nested:
+                raise ValueError(f"{card_path}:{lineno}: duplicate {section}.{key}")
+            nested[key] = value
+
+    missing = wanted_top - metadata.keys()
     if missing:
         raise ValueError(f"{card_path}: missing top-level metadata {sorted(missing)}")
     return metadata
@@ -227,6 +262,53 @@ def _mapping_state_failures(
         failures.append(
             f"{card_entry.get('id')}: canonical {status} claim cannot map to " f"{validation_status} validation"
         )
+    return failures
+
+
+def _mapping_detail_failures(
+    canonical_claim: dict[str, Any],
+    card_entry: dict[str, Any],
+    card: dict[str, Any] | None,
+) -> list[str]:
+    """Require proposition, scope, and provenance parity for explicit mappings."""
+
+    if card is None:
+        return []
+
+    failures: list[str] = []
+    card_id = card_entry.get("id")
+    statement = canonical_claim.get("statement")
+    if not isinstance(statement, str) or not statement.strip():
+        failures.append(f"{card_id}: canonical mapped claim requires non-empty statement")
+    elif card.get("claim") != statement:
+        failures.append(f"{card_id}: mapped card claim differs from canonical statement")
+
+    canonical_scope = canonical_claim.get("scope")
+    if not isinstance(canonical_scope, str) or not canonical_scope.strip():
+        failures.append(f"{card_id}: canonical mapped claim requires explicit scope")
+    else:
+        context = card.get("context")
+        card_scope = context.get("scope") if isinstance(context, dict) else None
+        if card_scope != canonical_scope:
+            failures.append(f"{card_id}: mapped card context.scope differs from canonical scope")
+
+    canonical_provenance = canonical_claim.get("provenance")
+    if not isinstance(canonical_provenance, dict) or not isinstance(canonical_provenance.get("source"), str):
+        failures.append(f"{card_id}: canonical mapped claim requires provenance.source")
+    elif not canonical_provenance["source"].strip():
+        failures.append(f"{card_id}: canonical mapped claim requires non-empty provenance.source")
+    else:
+        card_provenance = card.get("provenance")
+        if not isinstance(card_provenance, dict):
+            failures.append(f"{card_id}: mapped card requires provenance mapping")
+        else:
+            for field in CARD_PROVENANCE_FIELDS:
+                canonical_value = canonical_provenance.get(field)
+                if canonical_value is None:
+                    continue
+                if card_provenance.get(field) != canonical_value:
+                    failures.append(f"{card_id}: mapped card provenance.{field} differs from canonical provenance.{field}")
+
     return failures
 
 
@@ -312,6 +394,7 @@ def validate_claim_surfaces(
 
         if canonical_claim is not None:
             failures.extend(_mapping_state_failures(canonical_claim, entry, card))
+            failures.extend(_mapping_detail_failures(canonical_claim, entry, card))
 
     return failures
 
