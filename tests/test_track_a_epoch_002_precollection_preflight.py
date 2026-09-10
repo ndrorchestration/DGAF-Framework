@@ -19,9 +19,7 @@ def load_runner_expected_preflight() -> Callable[..., dict[str, Any]]:
     """Load only the runner's pure preflight constructor, without runtime deps."""
     tree = ast.parse(RUNNER_PATH.read_text(encoding="utf-8"), filename=str(RUNNER_PATH))
     functions: list[ast.stmt] = [
-        node
-        for node in tree.body
-        if isinstance(node, ast.FunctionDef) and node.name == "expected_preflight"
+        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "expected_preflight"
     ]
     assert len(functions) == 1
 
