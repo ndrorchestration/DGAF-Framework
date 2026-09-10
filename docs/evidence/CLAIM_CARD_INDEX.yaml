@@ -1,30 +1,44 @@
-version: 1
+version: 2
+authority:
+  role: evidence_card_specification_index
+  canonical_claim_identity_and_state: evidence/claims.json
+  mapping_field: canonical_claim_id
 cards:
   - id: DGAF-CLAIM-GOV-SCHEMA-CONFORMANCE
     card: docs/evidence/example-dgaf-claim-v2.yaml
+    relationship: SPECIFICATION_ONLY
+    canonical_claim_id: null
     claim_class: HYPOTHESIS
     evidence_maturity: SPECIFIED
     validation_status: NOT_VALIDATED
   - id: DGAF-CLAIM-PDMAL-RESILIENCE
     card: pending
+    relationship: SPECIFICATION_ONLY
+    canonical_claim_id: null
     claim_class: HYPOTHESIS
     evidence_maturity: SPECIFIED
     validation_status: NOT_VALIDATED
     note: Requires the preregistered topology experiment; no result is asserted.
   - id: DGAF-CLAIM-DRIFTWATCH-DETECTION
     card: pending
+    relationship: SPECIFICATION_ONLY
+    canonical_claim_id: null
     claim_class: HYPOTHESIS
     evidence_maturity: SPECIFIED
     validation_status: NOT_VALIDATED
     note: Requires a ground-truth drift benchmark.
   - id: DGAF-CLAIM-RUNTIME-GOVERNANCE
     card: pending
+    relationship: SPECIFICATION_ONLY
+    canonical_claim_id: null
     claim_class: HYPOTHESIS
     evidence_maturity: SPECIFIED
     validation_status: NOT_VALIDATED
     note: Requires controlled runtime evidence.
   - id: DGAF-CLAIM-REPRODUCIBILITY
     card: pending
+    relationship: SPECIFICATION_ONLY
+    canonical_claim_id: null
     claim_class: HYPOTHESIS
     evidence_maturity: SPECIFIED
     validation_status: NOT_VALIDATED
