@@ -85,8 +85,8 @@ REQUIREMENTS_LOCK_BLOB_SHA = "00c1f779e97030f9b25ae494642edb31b5b09de5"
 TASK_ENGINE_BLOB_SHA = "90135e1c6dfccc3b56ffdc0dcb9eb50a0b2a5b05"
 HARNESS_BLOB_SHA = "bb97c54ddf087fef568b1b3c8f8df72c30dad11e"
 TOPOLOGY_UTILS_BLOB_SHA = "7ae92ba8a9ab964537e5dafa5e12de36b841391e"
-CUSTODY_CONTRACT_BLOB_SHA = "96ba5e297e7645d3a91a52a4c1eda56af9c337a5"
-CUSTODY_VALIDATOR_BLOB_SHA = "b2283a524f4eb8fd9191c953310ae264e0d8d369"
+CUSTODY_CONTRACT_BLOB_SHA = "c9b31ab6fa5d062e1dfec3dc33a46eb3642fee97"
+CUSTODY_VALIDATOR_BLOB_SHA = "93423101961aa3e572539ad4767d32a7803cc92a"
 
 PUBLIC_RECORD_KEYS = frozenset(
     {
@@ -491,7 +491,7 @@ def expected_authorization(
         "authorize_unblinding": False,
         "authorize_primary_analysis": False,
         "historical_pooling_allowed": False,
-        "epoch_004_substitution_allowed": False,
+        "epoch_004_substitution_allowed": false,
         "high_assurance_authorized": False,
     }
 
