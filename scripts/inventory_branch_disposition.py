@@ -5,6 +5,7 @@ The classifier intentionally proves only a narrow fact: whether a branch tip is
 fully represented by the selected base branch. It never deletes or rewrites a
 ref and never interprets unique work as obsolete merely from its age or name.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -156,8 +157,7 @@ def build_ledger(client: GitHubClient, base: str) -> dict[str, Any]:
         "policy": {
             "auto_delete": False,
             "merged_candidate_meaning": (
-                "ahead_by=0 and compare status is behind/identical; "
-                "deletion still requires separate review/action"
+                "ahead_by=0 and compare status is behind/identical; " "deletion still requires separate review/action"
             ),
             "review_required_meaning": "unique/diverged/ambiguous/error state; no prune inference permitted",
         },
