@@ -2,7 +2,7 @@
 
 ## Status
 
-**PROCEDURE ONLY / NON-AUTHORIZING / PRE-FREEZE / N=0**
+Status: PROCEDURE ONLY / NON-AUTHORIZING / PRE-FREEZE / N=0
 
 This procedure prepares and validates the retained precollection preflight required by the
 Track A Epoch 002 successor gate chain. It does not establish freeze and cannot authorize
