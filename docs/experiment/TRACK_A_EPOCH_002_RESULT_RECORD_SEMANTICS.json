@@ -1,0 +1,172 @@
+{
+  "record_type": "TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS",
+  "schema_version": 1,
+  "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
+  "status": "PROSPECTIVE_SEMANTIC_POLICY_NONAUTHORIZING",
+  "structural_schema_path": "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json",
+  "structural_ledger_validator_path": "scripts/validate_track_a_epoch_002_result_ledger.py",
+  "policy_effect": {
+    "creates_result_records": false,
+    "authorizes_collection": false,
+    "authorizes_unblinding": false,
+    "authorizes_primary_analysis": false,
+    "executes_empirical_work": false,
+    "increments_scientific_n": false,
+    "establishes_canonical_dgaf_efficacy": false,
+    "establishes_independent_validation": false,
+    "authorizes_high_assurance": false
+  },
+  "authority_classes": [
+    "NONAUTHORIZING_OBSERVATION",
+    "NONAUTHORIZING_STATE_TRANSITION",
+    "HUMAN_CONTROLLED_AUTHORIZATION"
+  ],
+  "records": {
+    "PRECOLLECTION_GATE_CHECKLIST": {
+      "authority_class": "NONAUTHORIZING_OBSERVATION",
+      "authorization_effect": "NONE",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": []
+    },
+    "COLLECTION_START_RECEIPT": {
+      "authority_class": "NONAUTHORIZING_OBSERVATION",
+      "authorization_effect": "NONE",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": []
+    },
+    "PER_SEED_EXECUTION_RECORD": {
+      "authority_class": "NONAUTHORIZING_OBSERVATION",
+      "authorization_effect": "NONE",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": []
+    },
+    "QC_LEDGER": {
+      "authority_class": "NONAUTHORIZING_OBSERVATION",
+      "authorization_effect": "NONE",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": []
+    },
+    "DATASET_LOCK_RECEIPT": {
+      "authority_class": "NONAUTHORIZING_STATE_TRANSITION",
+      "authorization_effect": "REQUIRES_SEPARATE_EXACT_COMMIT",
+      "requires_separate_exact_commit_for": "UNBLINDING_DECISION_RECORD",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": []
+    },
+    "UNBLINDING_DECISION_RECORD": {
+      "authority_class": "HUMAN_CONTROLLED_AUTHORIZATION",
+      "authorization_effect": "BOUNDED_RECORD_ONLY",
+      "bounded_scope": "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": [
+        "DOES_NOT_AUTHORIZE_UNBLINDING"
+      ]
+    },
+    "MATERIALIZATION_RECEIPT": {
+      "authority_class": "NONAUTHORIZING_STATE_TRANSITION",
+      "authorization_effect": "REQUIRES_SEPARATE_EXACT_COMMIT",
+      "requires_separate_exact_commit_for": "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": []
+    },
+    "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD": {
+      "authority_class": "HUMAN_CONTROLLED_AUTHORIZATION",
+      "authorization_effect": "BOUNDED_RECORD_ONLY",
+      "bounded_scope": "LOCKED_PRIMARY_ANALYSIS_ONLY",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": [
+        "DOES_NOT_AUTHORIZE_ANALYSIS"
+      ]
+    },
+    "LOCKED_ANALYSIS_RESULT_RECORD": {
+      "authority_class": "NONAUTHORIZING_OBSERVATION",
+      "authorization_effect": "NONE",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": []
+    },
+    "INTERPRETATION_NOTE": {
+      "authority_class": "NONAUTHORIZING_OBSERVATION",
+      "authorization_effect": "NONE",
+      "required_non_effects": [
+        "DOES_NOT_AUTHORIZE_COLLECTION",
+        "DOES_NOT_AUTHORIZE_UNBLINDING",
+        "DOES_NOT_AUTHORIZE_ANALYSIS",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+        "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE"
+      ],
+      "forbidden_non_effects": []
+    }
+  }
+}
