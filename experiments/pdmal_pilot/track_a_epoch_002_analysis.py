@@ -7,10 +7,10 @@ unblinding, or authorize primary analysis.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import json
 import math
+from dataclasses import dataclass
 from typing import Mapping, Sequence
 
 import numpy as np
