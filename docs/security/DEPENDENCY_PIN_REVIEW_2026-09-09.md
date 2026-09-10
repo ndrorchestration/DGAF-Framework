@@ -52,3 +52,24 @@ Any future dependency update must deliberately update the manifest/lock together
 This remediation changes dependency reproducibility only. It does not change Track A preregistration, candidate/freeze identity, custody/blinding, authorization, stopping rules, empirical results, or scientific N.
 
 **Control state remains:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
+
+
+## Reviewed update lifecycle — 2026-09-10
+
+The bootstrap lock digest above remains historical evidence for commit
+`c147df1ac226b641e5a85cd08fb45e9a838ac825`. Contract tests verify that immutable
+Git object rather than requiring every later lockfile to retain its bytes.
+The npm workflow now explicitly runs the standard-library unittest contract
+suite, with full checkout history so missing provenance fails visibly.
+Current manifest/lock consistency, clean npm ci/build, and exact-source
+validation receipts remain required for every reviewed update.
+
+The PostCSS manifest and lock changes are taken byte-for-byte from Dependabot
+PR #584, head `0c5ec61212a255366b5f359f32922388676087f5` (8.4.31 to 8.5.23).
+This change must receive fresh CI with the repaired contract; earlier PR checks
+are not transferred to this combined change. Historical bootstrap provenance
+is preserved and current dependency versions may evolve through reviewed PRs.
+
+Local contract checks accept both consistent original and updated pairs and
+reject a mismatched manifest/lock pair. This is structural engineering evidence,
+not empirical efficacy, freeze, custody acceptance, or collection authorization.

@@ -36,6 +36,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
 
       - name: Bind source identity
         env:
@@ -48,6 +49,14 @@ jobs:
           test ! -e npm-shrinkwrap.json
           test ! -e pnpm-lock.yaml
           test ! -e yarn.lock
+
+      - name: Set up Python for dependency-free contract tests
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run npm lockfile contract tests
+        run: python -m unittest discover -s tests -p test_npm_lockfile_contract.py -v
 
       - name: Set up exact Node runtime
         uses: actions/setup-node@v4

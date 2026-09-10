@@ -2,7 +2,7 @@
 
 **Status:** local recovery-test tooling only. Running it does **not** authorize collection.
 
-You do not need an existing key. This guide creates a new encrypted key on your own computer and proves that one backup can recover it.
+You do not need an existing key. This guide creates a new encrypted key on your own computer and proves that both backups can recover it.
 
 The successor Epoch 002 prospective protocol is now present in the repository, but the real custody drill remains a separate precollection requirement. No private key, passphrase, or recoverable secret material belongs in GitHub, Notion, chat, CI, or workflow inputs.
 
@@ -31,7 +31,7 @@ The wrapper:
 - finds Python 3 through `py -3` or `python`;
 - finds OpenSSL on `PATH` or in common Git-for-Windows locations;
 - creates a fresh timestamped working folder by default;
-- prompts you only for the two non-secret recovery-location paths;
+- prompts for the two non-secret recovery-location paths and their actual storage classes;
 - never requests the key passphrase itself;
 - lets OpenSSL prompt for the passphrase directly;
 - invokes the repository custody drill and receipt validator;
@@ -55,7 +55,9 @@ On macOS, Linux, or any environment where Python 3 and OpenSSL are already avail
 python3 scripts/run_track_a_successor_custody_drill.py \
   --output-dir "$HOME/DGAF-Custody-Working" \
   --backup-a "/path/to/encrypted-recovery-A" \
-  --backup-b "/path/to/encrypted-recovery-B"
+  --backup-b "/path/to/encrypted-recovery-B" \
+  --backup-a-class ENCRYPTED_REMOVABLE_ARCHIVE \
+  --backup-b-class ENCRYPTED_OFFSITE_ARCHIVE
 ```
 
 OpenSSL will ask you to create and confirm a passphrase. Use a strong unique passphrase and keep it in a password manager or a separate secure record you control. Do not send it to anyone or paste it into a command.
@@ -67,7 +69,11 @@ The command creates:
 - a public certificate file; and
 - a non-secret JSON recovery receipt.
 
-It then proves that the private key recovered from backup A derives exactly the same public key as the certificate.
+It reads back **both** encrypted backups, checks their exact container hashes, and separately derives each recovered public key for comparison with the collection certificate. OpenSSL may prompt repeatedly; this is expected. A failure for either backup prevents publication of the final receipt.
+
+Schema-v2 receipts include a timezone-qualified recovery timestamp and separate fingerprints/PASS records for both backups. The local validator checks receipt structure; it does not independently observe storage durability or offsite location. Those remain your attestations. Schema-v1 receipts remain readable as older evidence and do not establish the new two-backup record.
+
+The helper can be launched by absolute path from another directory. If interrupted, keep existing encrypted backups intact and choose fresh empty working/backup destinations for another setup attempt; the script refuses to overwrite backup key files.
 
 ## What you may retain or share
 

@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -56,7 +57,14 @@ def _is_sha256(value: Any) -> bool:
 
 
 def validate_receipt(payload: dict[str, Any]) -> None:
-    _require(set(payload) == EXPECTED_KEYS, "receipt keys must match schema exactly")
+    version = payload.get("schema_version")
+    _require(type(version) is int and version in (1, 2), "unsupported schema_version")
+    expected_keys = EXPECTED_KEYS | ({"recovery_verified_at"} if version == 2 else set())
+    _require(set(payload) == expected_keys, "receipt keys must match schema exactly")
+    if version == 2:
+        timestamp = payload["recovery_verified_at"]
+        _require(isinstance(timestamp, str), "recovery timestamp required")
+        _require(datetime.fromisoformat(timestamp).utcoffset() is not None, "recovery timestamp must include timezone")
 
     lowered_keys = {key.lower() for key in payload}
     for fragment in FORBIDDEN_KEY_FRAGMENTS:
@@ -66,7 +74,6 @@ def validate_receipt(payload: dict[str, Any]) -> None:
         payload["record_type"] == "TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT",
         "wrong record_type",
     )
-    _require(payload["schema_version"] == 1, "unsupported schema_version")
     _require(payload["custody_class"] == "SAME_SYSTEM_NONINDEPENDENT", "wrong custody_class")
     _require(payload["independent_custody"] is False, "solo custody must not claim independence")
     _require(payload["keypair_created_before_collection"] is True, "keypair must predate collection")
@@ -84,18 +91,24 @@ def validate_receipt(payload: dict[str, Any]) -> None:
 
     _require(payload["recovery_drill"] == "PASS", "recovery drill must PASS")
     _require(
-        payload["certificate_public_key_der_sha256"]
-        == payload["recovered_public_key_der_sha256"],
+        payload["certificate_public_key_der_sha256"] == payload["recovered_public_key_der_sha256"],
         "recovered private key does not match collection certificate",
     )
 
     backups = payload["backup_refs"]
     _require(isinstance(backups, list) and len(backups) >= 2, "at least two encrypted recovery copies required")
     seen_ids: set[str] = set()
+    seen_classes: set[str] = set()
     for index, backup in enumerate(backups):
         _require(isinstance(backup, dict), f"backup_refs[{index}] must be an object")
         _require(
-            set(backup) == {"class", "nonsecret_id", "encrypted", "user_controlled"},
+            set(backup)
+            == {"class", "nonsecret_id", "encrypted", "user_controlled"}
+            | (
+                {"encrypted_private_key_sha256", "recovered_public_key_der_sha256", "recovery_drill"}
+                if version == 2
+                else set()
+            ),
             f"backup_refs[{index}] keys invalid",
         )
         _require(isinstance(backup["class"], str) and backup["class"], "backup class required")
@@ -107,6 +120,23 @@ def validate_receipt(payload: dict[str, Any]) -> None:
         seen_ids.add(backup["nonsecret_id"])
         _require(backup["encrypted"] is True, "each recovery copy must be encrypted")
         _require(backup["user_controlled"] is True, "each recovery copy must be user controlled")
+        if version == 2:
+            _require(
+                backup["class"]
+                in {"ENCRYPTED_LOCAL_ARCHIVE", "ENCRYPTED_REMOVABLE_ARCHIVE", "ENCRYPTED_OFFSITE_ARCHIVE"},
+                "unsupported backup storage class",
+            )
+            _require(backup["class"] not in seen_classes, "backup storage classes must be distinct")
+            seen_classes.add(backup["class"])
+            _require(backup["recovery_drill"] == "PASS", "each backup recovery must PASS")
+            _require(
+                backup["encrypted_private_key_sha256"] == payload["encrypted_private_key_sha256"],
+                "backup encrypted bytes do not match",
+            )
+            _require(
+                backup["recovered_public_key_der_sha256"] == payload["certificate_public_key_der_sha256"],
+                "backup recovered public key does not match certificate",
+            )
 
     _require(
         payload["empirical_collection_authorized"] is False,
@@ -125,6 +155,8 @@ def main() -> int:
     _require(isinstance(payload, dict), "receipt must be a JSON object")
     validate_receipt(payload)
     print("TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECEIPT=PASS")
+    print("RECEIPT_VALIDATION=STRUCTURAL_SELF_ATTESTED_ONLY")
+    print(f"BOTH_BACKUPS_RECORDED={payload['schema_version'] == 2}")
     print("INDEPENDENT_CUSTODY=FALSE")
     print("EMPIRICAL_COLLECTION_AUTHORIZED=FALSE")
     print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")

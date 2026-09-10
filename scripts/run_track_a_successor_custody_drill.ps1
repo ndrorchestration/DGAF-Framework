@@ -2,6 +2,8 @@ param(
     [string]$OutputDir = "",
     [string]$BackupA = "",
     [string]$BackupB = "",
+    [string]$BackupAClass = "",
+    [string]$BackupBClass = "",
     [switch]$ValidateOnly
 )
 
@@ -86,6 +88,19 @@ if ([string]::IsNullOrWhiteSpace($BackupA) -or [string]::IsNullOrWhiteSpace($Bac
     throw "Both recovery locations are required."
 }
 
+$storageClasses = @("ENCRYPTED_LOCAL_ARCHIVE", "ENCRYPTED_REMOVABLE_ARCHIVE", "ENCRYPTED_OFFSITE_ARCHIVE")
+Write-Output "Storage classes: $($storageClasses -join ', ')"
+Write-Output "Choose the actual storage type. Offsite storage and durability are your attestations."
+if ([string]::IsNullOrWhiteSpace($BackupAClass)) {
+    $BackupAClass = Read-Host "Storage class for recovery location A"
+}
+if ([string]::IsNullOrWhiteSpace($BackupBClass)) {
+    $BackupBClass = Read-Host "Storage class for recovery location B"
+}
+if ($BackupAClass -notin $storageClasses -or $BackupBClass -notin $storageClasses -or $BackupAClass -eq $BackupBClass) {
+    throw "Choose two valid, distinct storage classes before key generation."
+}
+
 $opensslDir = Split-Path -Parent $opensslPath
 $originalPath = $env:PATH
 try {
@@ -99,7 +114,9 @@ try {
     $arguments += @(
         "--output-dir", $OutputDir,
         "--backup-a", $BackupA,
-        "--backup-b", $BackupB
+        "--backup-b", $BackupB,
+        "--backup-a-class", $BackupAClass,
+        "--backup-b-class", $BackupBClass
     )
 
     Write-Output "Starting local custody drill. OpenSSL will prompt you directly for a new passphrase."

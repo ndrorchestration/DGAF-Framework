@@ -28,7 +28,7 @@ Recoverability is not independent custody. A solo operator can prove that a secr
 6. Create at least two durable, encrypted, user-controlled recovery copies in distinct storage classes.
 7. Keep the private key, passphrase, recovery material, and recoverable secret data out of GitHub, Notion, chat, committed files, workflow inputs, command-line arguments, logs, and CI artifacts.
 8. Retain only the public certificate/public key for collection.
-9. Perform a precollection recovery drill from a retained encrypted copy:
+9. Perform a precollection recovery drill from **each** retained encrypted copy:
    - recover/decrypt the private key locally;
    - derive its public key;
    - derive the public key from the certificate intended for collection;
@@ -56,6 +56,12 @@ The recovery receipt must establish all of the following without containing secr
 - empirical collection authorization remains false;
 - scientific state effect is `NONE`;
 - canonical DGAF efficacy remains `NOT_ESTABLISHED`.
+
+## Receipt version and evidence limits
+
+The current helper emits schema v2: a timezone-qualified recovery timestamp and per-backup encrypted-container hash, recovered public-key DER hash, and recovery PASS. It requires explicit, distinct operator-declared storage classes; it does not infer offsite location from a path. The final receipt appears only after structural validation succeeds.
+
+The validator retains schema-v1 compatibility for older records. A v1 validation is not evidence that both backups were tested. A structurally valid receipt is self-attested evidence, not independent observation of secret recovery, storage location, or durability. No real receipt is established by synthetic CI tests.
 
 ## Synthetic CI boundary
 

@@ -51,3 +51,86 @@ def test_windows_wrapper_does_not_embed_secret_material() -> None:
         "password=",
     )
     assert not any(token in lowered for token in forbidden_assignments)
+
+
+def test_each_backup_is_recovered(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    key = tmp_path / "encrypted.pem"
+    key.write_bytes(b"synthetic-container")
+    backups = (tmp_path / "a.pem", tmp_path / "b.pem")
+    for backup in backups:
+        backup.write_bytes(key.read_bytes())
+    calls = []
+
+    def fake_run(*args: str, **kwargs: object) -> None:
+        calls.append(args)
+        Path(args[args.index("-out") + 1]).write_bytes(b"synthetic-public-identity")
+
+    monkeypatch.setattr(drill, "run", fake_run)
+    results = drill.verify_backups(tmp_path / "cert.pem", key, backups)
+    assert len(results) == 2
+    assert all(result["recovery_drill"] == "PASS" for result in results)
+    recoveries = [call for call in calls if "-in" in call and "recovered-" in call[call.index("-in") + 1]]
+    assert len(recoveries) == 2
+
+
+@pytest.mark.parametrize("failure", ["encrypted_bytes", "public_identity"])
+def test_bad_second_backup_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str) -> None:
+    key = tmp_path / "encrypted.pem"
+    key.write_bytes(b"synthetic-container")
+    backups = (tmp_path / "a.pem", tmp_path / "b.pem")
+    for backup in backups:
+        backup.write_bytes(key.read_bytes())
+    if failure == "encrypted_bytes":
+        backups[1].write_bytes(b"corrupt-container")
+
+    def fake_run(*args: str, **kwargs: object) -> None:
+        output = Path(args[args.index("-out") + 1])
+        output.write_bytes(b"wrong-identity" if output.name == "recovered-1.der" else b"public-identity")
+
+    monkeypatch.setattr(drill, "run", fake_run)
+    with pytest.raises(RuntimeError, match="backup 2"):
+        drill.verify_backups(tmp_path / "cert.pem", key, backups)
+
+
+def test_local_setup_from_unrelated_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import json
+    import sys
+
+    output = tmp_path / "working"
+    backup_a = tmp_path / "a"
+    backup_b = tmp_path / "b"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(drill.shutil, "which", lambda name: "/synthetic/openssl")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "custody-drill",
+            "--output-dir",
+            str(output),
+            "--backup-a",
+            str(backup_a),
+            "--backup-b",
+            str(backup_b),
+            "--backup-a-class",
+            "ENCRYPTED_REMOVABLE_ARCHIVE",
+            "--backup-b-class",
+            "ENCRYPTED_OFFSITE_ARCHIVE",
+        ],
+    )
+    real_run = drill.run
+
+    def fake_crypto(*args: str, **kwargs: object) -> None:
+        if args[0] == sys.executable:
+            assert Path(args[1]).is_absolute()
+            real_run(*args)
+        else:
+            Path(args[args.index("-out") + 1]).write_bytes(b"synthetic-test-data-not-a-key")
+
+    monkeypatch.setattr(drill, "run", fake_crypto)
+    assert drill.main() == 0
+    receipt = json.loads((output / "track_a_successor_solo_custody_receipt.json").read_text())
+    assert receipt["schema_version"] == 2
+    assert len(receipt["backup_refs"]) == 2
+    assert receipt["empirical_collection_authorized"] is False
+    assert not list(output.glob("*.pending.json"))

@@ -89,3 +89,49 @@ def test_backup_identifiers_must_be_distinct() -> None:
     backups[1]["nonsecret_id"] = "recovery-copy-a"
     with pytest.raises(ValueError, match="must be distinct"):
         validate_receipt(receipt)
+
+
+def valid_v2_receipt() -> dict:
+    receipt = valid_receipt()
+    receipt["schema_version"] = 2
+    receipt["recovery_verified_at"] = "2026-09-10T03:00:00+00:00"
+    for backup in receipt["backup_refs"]:
+        backup.update(
+            {
+                "encrypted_private_key_sha256": receipt["encrypted_private_key_sha256"],
+                "recovered_public_key_der_sha256": receipt["certificate_public_key_der_sha256"],
+                "recovery_drill": "PASS",
+            }
+        )
+    return receipt
+
+
+def test_v2_requires_both_backup_recovery_records() -> None:
+    receipt = valid_v2_receipt()
+    validate_receipt(receipt)
+    receipt["backup_refs"][1].pop("recovery_drill")
+    with pytest.raises(ValueError, match="keys invalid"):
+        validate_receipt(receipt)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("recovery_drill", "FAIL"),
+        ("encrypted_private_key_sha256", "0" * 64),
+        ("recovered_public_key_der_sha256", "0" * 64),
+        ("class", "ENCRYPTED_LOCAL_ARCHIVE"),
+    ],
+)
+def test_v2_rejects_bad_second_backup(field: str, value: str) -> None:
+    receipt = valid_v2_receipt()
+    receipt["backup_refs"][1][field] = value
+    with pytest.raises(ValueError):
+        validate_receipt(receipt)
+
+
+def test_v2_rejects_timezone_free_timestamp() -> None:
+    receipt = valid_v2_receipt()
+    receipt["recovery_verified_at"] = "2026-09-10T03:00:00"
+    with pytest.raises(ValueError, match="timezone"):
+        validate_receipt(receipt)
