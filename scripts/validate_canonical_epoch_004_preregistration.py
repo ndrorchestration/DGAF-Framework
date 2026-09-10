@@ -41,7 +41,9 @@ def validate() -> None:
     assert treatment["reachability_merge_sha"] == "621356297f803f0a3e8e3319d54878a5bb0282a5"
     assert treatment["reachability_run_id"] == 34176977560
     assert treatment["reachability_artifact_id"] == 10037645166
-    assert treatment["reachability_artifact_digest"] == "sha256:814222ba8fad2d1ef7dbd6d620fe0620f31e7a74c27d13b20f054c82efb90aa4"
+    assert treatment["reachability_artifact_digest"] == (
+        "sha256:814222ba8fad2d1ef7dbd6d620fe0620f31e7a74c27d13b20f054c82efb90aa4"
+    )
     assert treatment["required_tgl_steps"] == [1, 2, 3, 4, 5, 6, 8]
 
     matrix = d["matrix"]
