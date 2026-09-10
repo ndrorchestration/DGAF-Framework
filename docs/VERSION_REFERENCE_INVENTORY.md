@@ -2,6 +2,7 @@
 
 **Generated:** 2026-08-21
 **Purpose:** Exhaustive classification of every version-like reference in the repository, with before/after state for the 1.7.0 → 1.8.0 canonical version bump.
+
 ---
 
 ## Classification Key
@@ -91,6 +92,7 @@ Root npm direct dependencies in `package.json` are exact, but transitive npm res
 This inventory documents what was changed and what was deliberately not changed. It does not imply that version 1.8.0 has been empirically validated or that pilot authorization has been granted.
 
 **Epistemic state (unchanged by this version bump):**
+
 - Historical freeze `3510b868` = historical
 - Corrected runner = candidate apparatus
 - New freeze = not created
