@@ -1,3 +1,5 @@
+> **HISTORICAL / SUPERSEDED FOR PRESENT-STATE USE — 2026-09-10:** This report preserves the 2026-08-30 P9 second-pass findings, candidate/freeze identities, residual risks, and then-current closure conditions. It is not current P9, candidate, freeze, authorization, or experiment-state authority. Resolve present state through `docs/CURRENT_STATE.md`, `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`, and the current evidence index. Status statements below—including `P9 STATUS: OPEN`, `N=0`, candidate identities, and closure conditions—are event-time findings only unless a current authority explicitly carries them forward.
+
 # P9 Independent Verification — Second Pass Report
 
 **Report date:** 2026-08-30
