@@ -201,7 +201,12 @@ def scan_entry(
     canonical_claim: dict[str, Any] | None = None
     if classification == CANONICAL_DERIVATIVE:
         claim_id = entry.get("canonical_claim_id")
-        if not isinstance(claim_id, str) or not claim_id or canonical_claims is None or claim_id not in canonical_claims:
+        if (
+            not isinstance(claim_id, str)
+            or not claim_id
+            or canonical_claims is None
+            or claim_id not in canonical_claims
+        ):
             if matches:
                 for match in matches:
                     results.append(
