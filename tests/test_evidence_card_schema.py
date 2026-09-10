@@ -16,6 +16,14 @@ def test_worked_evidence_card_matches_schema():
     jsonschema.validate(card, SCHEMA)
 
 
+def test_canonical_evidence_cards_match_schema():
+    canonical_dir = ROOT / "docs/evidence/claims"
+    cards = sorted(canonical_dir.glob("*.json"))
+    assert cards, "expected canonical Evidence Cards"
+    for path in cards:
+        jsonschema.validate(json.loads(path.read_text(encoding="utf-8")), SCHEMA)
+
+
 def test_invalid_claim_class_is_rejected():
     card = {
         "id": "DGAF-CLAIM-INVALID",

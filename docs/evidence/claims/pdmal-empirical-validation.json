@@ -1,0 +1,30 @@
+{
+  "id": "DGAF-CLAIM-PDMAL-EMPIRICAL-VALIDATION",
+  "canonical_claim_id": "pdmal-empirical-validation",
+  "claim": "PDMAL experimental results are empirically validated and reproducible.",
+  "claim_class": "HYPOTHESIS",
+  "context": {
+    "intended_use": "Track the blocked empirical-validation claim without promoting it.",
+    "scope": "Prospective PDMAL topology experiment; current successor empirical collection remains unauthorized and N=0."
+  },
+  "measurement": {
+    "metric": "preregistered_primary_analysis_and_reproducibility",
+    "unit": "protocol-defined",
+    "method": "prospective blinded controlled experiment plus retained reproducibility evidence",
+    "ground_truth": "not yet established"
+  },
+  "uncertainty": {
+    "description": "No accepted successor empirical result currently supports this proposition.",
+    "limitations": [
+      "Successor collection is not authorized.",
+      "Canonical empirical N remains 0.",
+      "Epoch 001 primary analysis is unrecoverable and not usable as efficacy evidence."
+    ]
+  },
+  "provenance": {
+    "source": "evidence/claims.json#pdmal-empirical-validation",
+    "recorded_at": "2026-09-10"
+  },
+  "evidence_maturity": "SPECIFIED",
+  "validation_status": "NOT_VALIDATED"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "DGAF-CLAIM-RUNTIME-BUILD",
+  "canonical_claim_id": "dgaf-runtime-build",
+  "claim": "The DGAF web application builds successfully as a Next.js deployment.",
+  "claim_class": "VERIFIED",
+  "context": {
+    "intended_use": "Record bounded deployment-build integration evidence.",
+    "scope": "The exact deployed preview identified by the canonical claim run_id; not production efficacy or reliability."
+  },
+  "measurement": {
+    "metric": "deployment_build_status",
+    "unit": "pass/fail",
+    "method": "integration deployment build observation",
+    "ground_truth": "deployment provider completion state for the identified run"
+  },
+  "uncertainty": {
+    "description": "A successful deployment build establishes buildability for the identified preview only.",
+    "limitations": [
+      "Does not establish production reliability.",
+      "Does not establish DGAF scientific efficacy."
+    ]
+  },
+  "provenance": {
+    "source": "evidence/claims.json#dgaf-runtime-build",
+    "artifact": "dpl_2MoqAfD6J7jQoCtMrLHmdZjMJqE4",
+    "recorded_at": "2026-09-10"
+  },
+  "evidence_maturity": "VERIFIED",
+  "validation_status": "VALIDATED_FOR_CONTEXT"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "DGAF-CLAIM-ROOT-ROUTE",
+  "canonical_claim_id": "dgaf-root-route",
+  "claim": "The DGAF root route renders successfully in the deployed preview.",
+  "claim_class": "VERIFIED",
+  "context": {
+    "intended_use": "Record bounded root-route smoke-test evidence.",
+    "scope": "The exact deployed preview identified by the canonical claim run_id; not production availability or scientific efficacy."
+  },
+  "measurement": {
+    "metric": "root_route_render_status",
+    "unit": "pass/fail",
+    "method": "deployed-preview root-route smoke observation",
+    "ground_truth": "successful rendered response for the identified preview"
+  },
+  "uncertainty": {
+    "description": "A successful route render is a bounded integration observation.",
+    "limitations": [
+      "Does not establish sustained availability.",
+      "Does not establish DGAF scientific efficacy."
+    ]
+  },
+  "provenance": {
+    "source": "evidence/claims.json#dgaf-root-route",
+    "artifact": "dpl_2MoqAfD6J7jQoCtMrLHmdZjMJqE4",
+    "recorded_at": "2026-09-10"
+  },
+  "evidence_maturity": "VERIFIED",
+  "validation_status": "VALIDATED_FOR_CONTEXT"
+}

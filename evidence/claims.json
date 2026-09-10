@@ -1,5 +1,11 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
+  "authority": {
+    "claim_identity_and_status": "evidence/claims.json",
+    "evidence_card_role": "detail_projection_only",
+    "scientific_effect": "NONE",
+    "authorization_effect": "NONE"
+  },
   "claims": [
     {
       "claim_id": "dgaf-runtime-build",
@@ -29,6 +35,14 @@
       "claim_id": "dgaf-governance-effectiveness",
       "statement": "DGAF improves governance outcomes relative to simpler baselines.",
       "status": "HYPOTHESIS",
+      "evidence_mode": "empirical",
+      "run_id": null,
+      "dataset": "to-be-established"
+    },
+    {
+      "claim_id": "coordination-gain-340",
+      "statement": "DGAF produces a 340% coordination gain relative to a defined baseline.",
+      "status": "BLOCKED",
       "evidence_mode": "empirical",
       "run_id": null,
       "dataset": "to-be-established"

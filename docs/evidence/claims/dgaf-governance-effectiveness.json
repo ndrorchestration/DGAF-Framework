@@ -1,0 +1,29 @@
+{
+  "id": "DGAF-CLAIM-GOVERNANCE-EFFECTIVENESS",
+  "canonical_claim_id": "dgaf-governance-effectiveness",
+  "claim": "DGAF improves governance outcomes relative to simpler baselines.",
+  "claim_class": "HYPOTHESIS",
+  "context": {
+    "intended_use": "Track the canonical comparative-governance hypothesis without claiming a result.",
+    "scope": "Future preregistered comparison against defined simpler baselines."
+  },
+  "measurement": {
+    "metric": "protocol_defined_governance_outcome",
+    "unit": "protocol-defined",
+    "method": "prospective controlled comparison",
+    "ground_truth": "not yet established"
+  },
+  "uncertainty": {
+    "description": "This is a hypothesis, not an established efficacy claim.",
+    "limitations": [
+      "No accepted empirical successor result exists.",
+      "Baseline comparison remains prospective."
+    ]
+  },
+  "provenance": {
+    "source": "evidence/claims.json#dgaf-governance-effectiveness",
+    "recorded_at": "2026-09-10"
+  },
+  "evidence_maturity": "SPECIFIED",
+  "validation_status": "NOT_VALIDATED"
+}

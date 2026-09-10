@@ -1,0 +1,29 @@
+{
+  "id": "DGAF-CLAIM-COORDINATION-GAIN-340",
+  "canonical_claim_id": "coordination-gain-340",
+  "claim": "DGAF produces a 340% coordination gain relative to a defined baseline.",
+  "claim_class": "HYPOTHESIS",
+  "context": {
+    "intended_use": "Bind the historical/current 340% propagation rule to one canonical blocked claim identity.",
+    "scope": "No current empirical baseline/method/substrate establishes this numeric proposition."
+  },
+  "measurement": {
+    "metric": "coordination_gain",
+    "unit": "percent relative to a prospectively defined baseline",
+    "method": "requires a prospectively specified empirical comparison",
+    "ground_truth": "not yet established"
+  },
+  "uncertainty": {
+    "description": "The 340% figure remains blocked/unverified and may appear only with an appropriate qualifier or historical routing.",
+    "limitations": [
+      "Baseline is not yet canonically established.",
+      "No accepted empirical validation supports the numeric value."
+    ]
+  },
+  "provenance": {
+    "source": "evidence/claims.json#coordination-gain-340",
+    "recorded_at": "2026-09-10"
+  },
+  "evidence_maturity": "SPECIFIED",
+  "validation_status": "NOT_VALIDATED"
+}

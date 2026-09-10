@@ -20,15 +20,19 @@ jobs:
       - name: Validate document-control R2 temporal routing
         run: python3 scripts/validate_document_control_r2.py
 
-      - name: Run propagation consistency checker
+      - name: Run propagation and canonical claim-surface consistency checker
         run: |
           python3 scripts/propagation_check.py \
             --registry registry/propagation_registry.json \
             --root . \
+            --claims evidence/claims.json \
+            --card-index docs/evidence/CLAIM_CARD_INDEX.yaml \
             --json > propagation-report.json
           python3 scripts/propagation_check.py \
             --registry registry/propagation_registry.json \
-            --root .
+            --root . \
+            --claims evidence/claims.json \
+            --card-index docs/evidence/CLAIM_CARD_INDEX.yaml
 
       - name: Upload propagation report
         uses: actions/upload-artifact@v4
