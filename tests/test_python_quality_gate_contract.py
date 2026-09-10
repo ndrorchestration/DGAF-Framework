@@ -1,6 +1,7 @@
 from pathlib import Path
 
 WORKFLOW_PATH = Path(".github/workflows/python-tests.yml")
+REQUIREMENTS_CI_PATH = Path("requirements-ci.txt")
 HISTORICAL_EPOCH_001_MATERIALIZER = "scripts/materialize_track_a_epoch_001_unblinded_input.py"
 BANDIT_TARGETS = "bandit -r components/ scripts/ api/ experiments/"
 
@@ -77,7 +78,7 @@ def test_bandit_full_report_and_blocking_threshold_contract() -> None:
     blocking = _between(
         text,
         "    - name: Block medium-or-higher Bandit findings with medium-or-higher confidence\n",
-        "    - name: Check dependencies with Safety\n",
+        "    - name: Audit installed CI environment with pip-audit\n",
     )
 
     assert BANDIT_TARGETS in full_report
@@ -95,6 +96,28 @@ def test_bandit_full_report_and_blocking_threshold_contract() -> None:
     assert "--exit-zero" not in blocking
 
 
+def test_dependency_audit_is_pinned_noninteractive_and_blocking() -> None:
+    requirements = REQUIREMENTS_CI_PATH.read_text(encoding="utf-8")
+    assert "pip-audit==2.10.1" in requirements
+    assert "safety==" not in requirements
+
+    text = _workflow_text()
+    audit = _between(
+        text,
+        "    - name: Audit installed CI environment with pip-audit\n",
+        "    - name: Upload security reports\n",
+    )
+
+    assert "python -m pip_audit --local --format=json --output pip-audit-report.json" in audit
+    assert "python -m pip_audit --local --format=columns | tee pip-audit-report.txt" in audit
+    assert "pip-audit-report.status" in audit
+    assert 'if [ "$json_status" -ne 0 ] || [ "$text_status" -ne 0 ]; then' in audit
+    assert "continue-on-error:" not in audit
+    assert "|| true" not in audit
+    assert "safety check" not in text
+    assert "safety scan" not in text
+
+
 def test_advisory_exceptions_remain_scoped_outside_primary_quality_block() -> None:
     text = _workflow_text()
     quality_block = _between(
@@ -107,4 +130,4 @@ def test_advisory_exceptions_remain_scoped_outside_primary_quality_block() -> No
     assert "fail_ci_if_error: false" in text
     assert "Run full first-party Bandit report" in text
     assert "Block medium-or-higher Bandit findings with medium-or-higher confidence" in text
-    assert "Check dependencies with Safety" in text
+    assert "Audit installed CI environment with pip-audit" in text
