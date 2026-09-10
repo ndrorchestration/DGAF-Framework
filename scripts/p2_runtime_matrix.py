@@ -8,6 +8,7 @@ The runner records exact request/response metadata and never promotes a
 result to VERIFIED by itself. Use the generated JSON as execution evidence.
 Set VERCEL_AUTOMATION_BYPASS_SECRET when targeting a protected Vercel deployment.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -19,7 +20,6 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
-
 
 CASES = [
     {
