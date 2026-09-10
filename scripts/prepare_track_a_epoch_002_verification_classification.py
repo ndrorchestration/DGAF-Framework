@@ -214,7 +214,7 @@ def validate_verification(expected_base_sha: str | None) -> None:
 
     if expected_base_sha is not None:
         base = expected_base_sha.lower()
-        if not closure.closure.freeze.preflight.HEX40.fullmatch(base):
+        if not closure.freeze.preflight.HEX40.fullmatch(base):
             fail("malformed expected base SHA")
         if git_path_exists(VERIFICATION_REL, base):
             fail("verification classification already existed at expected base")
