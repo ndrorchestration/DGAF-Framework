@@ -7,6 +7,7 @@ PACKAGE_JSON = ROOT / "package.json"
 PACKAGE_LOCK = ROOT / "package-lock.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "npm-lockfile-validation.yml"
 REVIEW = ROOT / "docs" / "security" / "DEPENDENCY_PIN_REVIEW_2026-09-09.md"
+DIRECT_STATE = ROOT / "docs" / "security" / "npm-direct-dependency-state.json"
 BOOTSTRAP_LOCK_SHA256 = "d4af9d2195f8b23975ce9389754e74ec4415c087ea633afc9a6b5146743503f6"
 
 
@@ -24,6 +25,18 @@ class TestNpmLockfileContract(unittest.TestCase):
         self.assertEqual(root.get("dependencies", {}), package.get("dependencies", {}))
         self.assertEqual(root.get("devDependencies", {}), package.get("devDependencies", {}))
 
+    def test_direct_dependency_state_matches_manifest_exactly(self) -> None:
+        package = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
+        declared = json.loads(DIRECT_STATE.read_text(encoding="utf-8"))
+
+        self.assertEqual(declared["schema_version"], 1)
+        self.assertEqual(declared["evidence_class"], "NPM_DIRECT_DEPENDENCY_STATE_V1")
+        self.assertEqual(declared["dependencies"], package.get("dependencies", {}))
+        self.assertEqual(declared["devDependencies"], package.get("devDependencies", {}))
+        self.assertEqual(declared["latest_scope_adjudication"]["scientific_state_effect"], "NONE")
+        self.assertIn("SUCCESSOR COLLECTION NOT AUTHORIZED", declared["control_state"])
+        self.assertIn("N=0", declared["control_state"])
+
     def test_bootstrap_provenance_record_is_retained_not_current_lock_pin(self) -> None:
         review = REVIEW.read_text(encoding="utf-8")
 
@@ -39,12 +52,14 @@ class TestNpmLockfileContract(unittest.TestCase):
         self.assertIn("contents: read", workflow)
         self.assertNotIn("contents: write", workflow)
         self.assertIn("python3 tests/test_npm_lockfile_contract.py", workflow)
+        self.assertIn("docs/security/npm-direct-dependency-state.json", workflow)
         self.assertIn("npm ci", workflow)
         self.assertIn("npm run build", workflow)
         self.assertIn("npm install", workflow)
         self.assertIn("--package-lock-only", workflow)
         self.assertIn("cmp --silent /tmp/package-lock.before.json package-lock.json", workflow)
         self.assertIn("git diff --exit-code -- package-lock.json", workflow)
+        self.assertIn("direct_dependency_state_sha256", workflow)
         self.assertNotIn("git push", workflow)
         self.assertIn("package-lock.json", workflow)
 
