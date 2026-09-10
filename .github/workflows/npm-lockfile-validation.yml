@@ -8,6 +8,7 @@ on:
       - '.github/workflows/npm-lockfile-validation.yml'
       - 'tests/test_npm_lockfile_contract.py'
       - 'docs/security/DEPENDENCY_PIN_REVIEW_2026-09-09.md'
+      - 'docs/security/npm-direct-dependency-state.json'
   push:
     branches:
       - main
@@ -17,6 +18,7 @@ on:
       - '.github/workflows/npm-lockfile-validation.yml'
       - 'tests/test_npm_lockfile_contract.py'
       - 'docs/security/DEPENDENCY_PIN_REVIEW_2026-09-09.md'
+      - 'docs/security/npm-direct-dependency-state.json'
   workflow_dispatch: {}
 
 permissions:
@@ -45,6 +47,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test -s package.json
           test -s package-lock.json
+          test -s docs/security/npm-direct-dependency-state.json
           test ! -e npm-shrinkwrap.json
           test ! -e pnpm-lock.yaml
           test ! -e yarn.lock
@@ -107,16 +110,18 @@ jobs:
           set -euo pipefail
           package_sha="$(sha256sum package.json | awk '{print $1}')"
           lock_sha="$(sha256sum package-lock.json | awk '{print $1}')"
+          direct_state_sha="$(sha256sum docs/security/npm-direct-dependency-state.json | awk '{print $1}')"
           jq -n \
-            --arg evidence_class 'NPM_LOCKFILE_VALIDATION_V1' \
+            --arg evidence_class 'NPM_LOCKFILE_VALIDATION_V2' \
             --arg source_commit "$SOURCE_SHA" \
             --arg workflow_run_id "$GITHUB_RUN_ID" \
             --arg workflow_run_attempt "$GITHUB_RUN_ATTEMPT" \
             --arg package_json_sha256 "$package_sha" \
             --arg package_lock_sha256 "$lock_sha" \
+            --arg direct_dependency_state_sha256 "$direct_state_sha" \
             --arg node_version "$(node --version)" \
             --arg npm_version "$(npm --version)" \
-            '{evidence_class:$evidence_class,source_commit:$source_commit,workflow_run_id:$workflow_run_id,workflow_run_attempt:$workflow_run_attempt,package_json_sha256:$package_json_sha256,package_lock_sha256:$package_lock_sha256,node_version:$node_version,npm_version:$npm_version,result:"PASS_NONEMPIRICAL_REPRODUCIBILITY_EVIDENCE",scientific_state_effect:"NONE"}' \
+            '{evidence_class:$evidence_class,source_commit:$source_commit,workflow_run_id:$workflow_run_id,workflow_run_attempt:$workflow_run_attempt,package_json_sha256:$package_json_sha256,package_lock_sha256:$package_lock_sha256,direct_dependency_state_sha256:$direct_dependency_state_sha256,node_version:$node_version,npm_version:$npm_version,result:"PASS_NONEMPIRICAL_REPRODUCIBILITY_EVIDENCE",scientific_state_effect:"NONE"}' \
             > npm-lockfile-validation.json
           sha256sum npm-lockfile-validation.json > npm-lockfile-validation.json.sha256
 
