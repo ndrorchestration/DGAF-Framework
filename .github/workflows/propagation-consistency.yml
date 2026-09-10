@@ -17,6 +17,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Validate document-control R2 temporal routing
+        run: python3 scripts/validate_document_control_r2.py
+
       - name: Run propagation consistency checker
         run: |
           python3 scripts/propagation_check.py \
