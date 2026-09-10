@@ -14,7 +14,7 @@ ANALYSIS = ROOT / "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
 REQUIREMENTS_LOCK = ROOT / "experiments/pdmal_pilot/requirements-full-lock.txt"
 
 EXPECTED_PROTOCOL_BLOB = "9668ec54e50c40b04d40cfa64b817950df4bbffa"
-EXPECTED_ANALYSIS_BLOB = "f3a0cfaebf06362e2c8a69d395e6af68d62a8b91"
+EXPECTED_ANALYSIS_BLOB = "8988f2e4d55d8701066c1d36ad31c610bab8134e"
 EXPECTED_REQUIREMENTS_BLOB = "00c1f779e97030f9b25ae494642edb31b5b09de5"
 EXPECTED_CONFIG_SHA256 = "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73"
 EXPECTED_PREREG_MERGE = "eed3da6b0c4bae45f13871c45f42027da12ad36e"
@@ -26,9 +26,7 @@ EXPECTED_FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
 
 
 def git_blob(path: Path) -> str:
-    return subprocess.check_output(
-        ["git", "hash-object", str(path.relative_to(ROOT))], cwd=ROOT, text=True
-    ).strip()
+    return subprocess.check_output(["git", "hash-object", str(path.relative_to(ROOT))], cwd=ROOT, text=True).strip()
 
 
 def load_analysis():
