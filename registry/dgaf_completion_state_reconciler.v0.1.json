@@ -1,0 +1,194 @@
+{
+  "record_type": "DGAF_COMPLETION_STATE_RECONCILER_GRAPH",
+  "schema_version": 1,
+  "controller_issue": 600,
+  "status": "NON_AUTHORIZING_IMPLEMENTATION",
+  "scope": "TRACK_A_EPOCH_002_PRECOLLECTION_READINESS",
+  "scientific_state_effect": "NONE",
+  "can_authorize": false,
+  "can_execute_empirical_work": false,
+  "authority": {
+    "human_final_arbiter": "Ender",
+    "canonical_authority_sources": [
+      "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "docs/agents/LAYER_0_CONSTITUTION.md",
+      "docs/CURRENT_STATE.md",
+      "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md"
+    ],
+    "forbidden_actions": [
+      "GRANT_FREEZE",
+      "GRANT_COLLECTION_AUTHORIZATION",
+      "GENERATE_REAL_CUSTODY_SECRET",
+      "CLAIM_INDEPENDENT_VERIFICATION",
+      "EXECUTE_EMPIRICAL_COLLECTION",
+      "AUTHORIZE_UNBLINDING",
+      "AUTHORIZE_PRIMARY_ANALYSIS",
+      "PROMOTE_CANONICAL_DGAF_EFFICACY",
+      "INCREMENT_SCIENTIFIC_N"
+    ]
+  },
+  "orchestration": {
+    "pattern_bundle": [
+      "P-PIER-001",
+      "P-SAGA-001",
+      "P-DURABLE-001",
+      "P-CB-001",
+      "P-POL-001"
+    ],
+    "pattern_registry": "registry/PATTERN_REGISTRY_v2.md",
+    "co_orchestration_contract": "registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json",
+    "specialist_roles": {
+      "Amethyst": "meta_orchestration_and_admissibility_recommendation",
+      "COLLEEN": "provenance_and_episode_memory",
+      "Apogee": "evidence_and_quality_verification",
+      "Sentinel-Φ": "security_and_fail_closed_constraint_review",
+      "The Auditor": "deterministic_contract_verification",
+      "The Actualizer": "authorized_reversible_implementation_only",
+      "Ender": "human_final_transition_authority"
+    },
+    "reducer": "deterministic_fail_closed",
+    "specialist_outputs_are_authorization": false
+  },
+  "lanes": [
+    {
+      "id": "track_a_epoch_002_precollection",
+      "label": "Track A Epoch 002 precollection readiness",
+      "nodes": [
+        {
+          "id": "epoch_002_preregistration",
+          "label": "Epoch 002 prospective preregistration present",
+          "depends_on": [],
+          "action_class": "human_controlled",
+          "specialists": ["COLLEEN", "Apogee", "The Auditor"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json", "field": "protocol_id", "value": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json", "field": "empirical_execution_authorized", "value": false},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json", "field": "scientific_n_increment_at_preregistration", "value": 0}
+          ]
+        },
+        {
+          "id": "epoch_002_analysis_lock",
+          "label": "Epoch 002 primary-analysis implementation lock present",
+          "depends_on": ["epoch_002_preregistration"],
+          "action_class": "human_controlled",
+          "specialists": ["Apogee", "The Auditor", "COLLEEN"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json"},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json", "field": "status", "value": "ANALYSIS_IMPLEMENTATION_LOCKED_NONEMPIRICAL"},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json", "field": "boundaries.primary_analysis_authorized", "value": false},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json", "field": "boundaries.scientific_n_increment", "value": 0}
+          ]
+        },
+        {
+          "id": "epoch_002_runner_binding",
+          "label": "Fail-closed Epoch 002 runner bound",
+          "depends_on": ["epoch_002_analysis_lock"],
+          "action_class": "automatable_non_authorizing",
+          "specialists": ["Amethyst", "Apogee", "Sentinel-Φ", "The Auditor", "The Actualizer"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json"},
+            {"type": "path_exists", "path": "experiments/pdmal_pilot/run_track_a_epoch_002.py"},
+            {"type": "path_exists", "path": "scripts/validate_track_a_epoch_002_runner.py"},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json", "field": "status", "value": "RUNNER_BOUND_NOT_AUTHORIZED"},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json", "field": "authorization.collection_authorized", "value": false},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json", "field": "scientific_n_increment", "value": 0}
+          ]
+        },
+        {
+          "id": "custody_v2_tooling",
+          "label": "Recoverable dual-backup custody-v2 tooling bound",
+          "depends_on": ["epoch_002_runner_binding"],
+          "action_class": "automatable_non_authorizing",
+          "specialists": ["Sentinel-Φ", "Apogee", "The Auditor", "The Actualizer", "COLLEEN"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md"},
+            {"type": "path_exists", "path": "scripts/run_track_a_successor_custody_drill.py"},
+            {"type": "path_exists", "path": "scripts/validate_track_a_successor_solo_custody_receipt.py"},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json", "field": "custody_precondition.receipt_schema_version_required", "value": 2},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json", "field": "custody_precondition.each_recorded_backup_recovery_must_pass", "value": true},
+            {"type": "json_equals", "path": "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json", "field": "custody_precondition.distinct_backup_storage_classes_required", "value": true}
+          ]
+        },
+        {
+          "id": "real_custody_v2",
+          "label": "Real operator-controlled custody-v2 recovery evidence established",
+          "depends_on": ["custody_v2_tooling"],
+          "action_class": "operator_external",
+          "specialists": ["Ender", "Sentinel-Φ", "Apogee", "COLLEEN"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json"},
+            {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem"},
+            {"type": "python_json_validator", "validator_path": "scripts/validate_track_a_successor_solo_custody_receipt.py", "function": "validate_receipt", "input_path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json", "field": "schema_version", "value": 2},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json", "field": "empirical_collection_authorized", "value": false}
+          ]
+        },
+        {
+          "id": "precollection_preflight",
+          "label": "Epoch 002 precollection preflight retained",
+          "depends_on": ["real_custody_v2"],
+          "action_class": "automatable_non_authorizing",
+          "specialists": ["Amethyst", "Apogee", "Sentinel-Φ", "The Auditor", "The Actualizer"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json", "field": "preflight_status", "value": "PASS"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json", "field": "collection_authorized", "value": false},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json", "field": "scientific_n_increment", "value": 0}
+          ]
+        },
+        {
+          "id": "immutable_freeze",
+          "label": "Exact Epoch 002 candidate freeze established",
+          "depends_on": ["precollection_preflight"],
+          "action_class": "human_controlled",
+          "specialists": ["Ender", "Amethyst", "Apogee", "Sentinel-Φ", "COLLEEN"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json", "field": "freeze_status", "value": "ESTABLISHED"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json", "field": "collection_authorized", "value": false},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json", "field": "scientific_n_increment", "value": 0}
+          ]
+        },
+        {
+          "id": "final_closure",
+          "label": "Epoch 002 final closure packet established",
+          "depends_on": ["immutable_freeze"],
+          "action_class": "automatable_non_authorizing",
+          "specialists": ["Apogee", "The Auditor", "Sentinel-Φ", "COLLEEN"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_FINAL_CLOSURE_PACKET.json"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_FINAL_CLOSURE_PACKET.json", "field": "closure_status", "value": "CLOSED_VERIFIED_FOR_AUTHORIZATION_REVIEW"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_FINAL_CLOSURE_PACKET.json", "field": "collection_authorized", "value": false}
+          ]
+        },
+        {
+          "id": "verification_classification",
+          "label": "Epoch 002 verification classification retained",
+          "depends_on": ["final_closure"],
+          "action_class": "automatable_non_authorizing",
+          "specialists": ["Apogee", "The Auditor", "COLLEEN"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION.json"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION.json", "field": "verification_status", "value": "PASS"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION.json", "field": "independent_verification", "value": false},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION.json", "field": "collection_authorized", "value": false}
+          ]
+        },
+        {
+          "id": "collection_authorization",
+          "label": "Separate Epoch 002 collection authorization established",
+          "depends_on": ["verification_classification"],
+          "action_class": "human_controlled",
+          "specialists": ["Ender", "Amethyst", "Sentinel-Φ", "Apogee", "COLLEEN"],
+          "checks": [
+            {"type": "path_exists", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json"},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json", "field": "authorize_empirical_collection", "value": true},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json", "field": "authorize_unblinding", "value": false},
+            {"type": "json_equals", "path": "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json", "field": "authorize_primary_analysis", "value": false}
+          ]
+        }
+      ]
+    }
+  ]
+}
