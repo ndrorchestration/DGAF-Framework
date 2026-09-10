@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import importlib.util
+import ast
 import json
-import sys
 from copy import deepcopy
 from pathlib import Path
+from typing import Any, Callable
 
 import pytest
 
@@ -12,21 +12,36 @@ from scripts import prepare_track_a_epoch_002_precollection_preflight as preflig
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = json.loads((ROOT / "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json").read_text(encoding="utf-8"))
-PDMAL = ROOT / "experiments/pdmal_pilot"
+RUNNER_PATH = ROOT / "experiments/pdmal_pilot/run_track_a_epoch_002.py"
 
 
-def load_runner():
-    sys.path.insert(0, str(PDMAL))
-    try:
-        path = PDMAL / "run_track_a_epoch_002.py"
-        spec = importlib.util.spec_from_file_location("track_a_epoch_002_runner_for_preflight_test", path)
-        assert spec is not None and spec.loader is not None
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[spec.name] = module
-        spec.loader.exec_module(module)
-        return module
-    finally:
-        sys.path.remove(str(PDMAL))
+def load_runner_expected_preflight() -> Callable[..., dict[str, Any]]:
+    """Load only the runner's pure preflight constructor, without runtime deps."""
+    tree = ast.parse(RUNNER_PATH.read_text(encoding="utf-8"), filename=str(RUNNER_PATH))
+    functions = [
+        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "expected_preflight"
+    ]
+    assert len(functions) == 1
+
+    module = ast.Module(body=functions, type_ignores=[])
+    ast.fix_missing_locations(module)
+    bindings = CONTRACT["source_bindings"]
+    matrix = CONTRACT["matrix"]
+    namespace: dict[str, Any] = {
+        "PROTOCOL_ID": CONTRACT["protocol_id"],
+        "PREREG_MERGE_SHA": bindings["preregistration_merge_sha"],
+        "ANALYSIS_LOCK_MERGE_SHA": bindings["analysis_lock_merge_sha"],
+        "ANALYSIS_BLOB_SHA": bindings["analysis_blob_sha"],
+        "ANALYSIS_CONFIG_SHA256": bindings["analysis_config_sha256"],
+        "REQUIREMENTS_LOCK_BLOB_SHA": bindings["requirements_lock_blob_sha"],
+        "ALGORITHM_ID": CONTRACT["algorithm_id"],
+        "EXPECTED_CELLS_PER_SEED": matrix["cells_per_seed"],
+        "EXPECTED_TOTAL": matrix["expected_total_observations"],
+    }
+    exec(compile(module, str(RUNNER_PATH), "exec"), namespace)
+    function = namespace["expected_preflight"]
+    assert callable(function)
+    return function
 
 
 def custody_fixture() -> dict[str, str]:
@@ -40,7 +55,7 @@ def custody_fixture() -> dict[str, str]:
 
 
 def test_helper_expected_record_matches_collection_runner_contract() -> None:
-    runner = load_runner()
+    runner_expected_preflight = load_runner_expected_preflight()
     candidate_sha = "a" * 40
     candidate_tree = "b" * 40
     custody = custody_fixture()
@@ -51,7 +66,7 @@ def test_helper_expected_record_matches_collection_runner_contract() -> None:
         candidate_tree_sha=candidate_tree,
         custody=custody,
     )
-    runner_record = runner.expected_preflight(
+    runner_record = runner_expected_preflight(
         candidate_sha=candidate_sha,
         candidate_tree_sha=candidate_tree,
         custody=custody,
