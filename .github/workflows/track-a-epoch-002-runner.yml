@@ -1,0 +1,98 @@
+name: Track A Epoch 002 Runner Validation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-runner.yml'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json'
+      - 'scripts/validate_track_a_epoch_002_runner.py'
+      - 'experiments/pdmal_pilot/run_track_a_epoch_002.py'
+      - 'experiments/pdmal_pilot/test_track_a_epoch_002_runner.py'
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json'
+      - 'experiments/pdmal_pilot/track_a_epoch_002_analysis.py'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+      - 'experiments/pdmal_pilot/topology_utils.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+      - 'docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md'
+      - 'scripts/validate_track_a_successor_solo_custody_receipt.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 non-empirical runner binding
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Prove checkout is exact PR head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install exact hash-locked experimental environment
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Validate exact runner and upstream bindings
+        run: python scripts/validate_track_a_epoch_002_runner.py
+
+      - name: Exercise synthetic fail-closed negative controls only
+        working-directory: experiments/pdmal_pilot
+        run: python -m pytest test_track_a_epoch_002_runner.py -q
+
+      - name: Prove custody and successor gates are absent
+        run: |
+          set -euo pipefail
+          test ! -e docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_FINAL_CLOSURE_PACKET.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json
+
+      - name: Prove PR cannot authorize or execute scientific work
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          contract = json.loads(
+              Path('docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json').read_text()
+          )
+          auth = contract['authorization']
+          assert auth['pr_validation_can_authorize'] is False
+          assert auth['collection_authorized'] is False
+          assert auth['unblinding_authorized'] is False
+          assert auth['primary_analysis_authorized'] is False
+          assert auth['high_assurance_authorized'] is False
+          assert contract['scientific_n_increment'] == 0
+          assert contract['track_a_freeze'] == 'NOT_ESTABLISHED'
+          assert contract['successor_collection'] == 'NOT_AUTHORIZED'
+          assert contract['primary_analysis'] == 'NOT_AUTHORIZED'
+          assert contract['canonical_dgaf_efficacy'] == 'NOT_ESTABLISHED'
+          assert contract['high_assurance'] == 'NOT_AUTHORIZED_N0'
+          print('SUCCESSOR_COLLECTION_AUTHORIZED=FALSE')
+          print('PRIMARY_ANALYSIS_AUTHORIZED=FALSE')
+          print('SCIENTIFIC_N_INCREMENT=0')
+          print('TRACK_A_EPOCH_002_RUNNER_PR_NONAUTHORIZING=TRUE')
+          PY
