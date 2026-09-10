@@ -232,11 +232,20 @@ def validate_policy() -> dict[str, Any]:
         if entry.get("pass_profile") != EXPECTED_PASS_PROFILE[record_type]:
             fail(f"record {record_type} pass_profile drift")
 
-    if records["DATASET_LOCK_RECEIPT"].get("requires_separate_exact_commit_for") != "UNBLINDING_DECISION_RECORD":
+    if (
+        records["DATASET_LOCK_RECEIPT"].get("requires_separate_exact_commit_for")
+        != "UNBLINDING_DECISION_RECORD"
+    ):
         fail("dataset lock must require separate unblinding decision commit")
-    if records["MATERIALIZATION_RECEIPT"].get("requires_separate_exact_commit_for") != "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD":
+    if (
+        records["MATERIALIZATION_RECEIPT"].get("requires_separate_exact_commit_for")
+        != "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD"
+    ):
         fail("materialization must require separate primary-analysis authorization commit")
-    if records["UNBLINDING_DECISION_RECORD"].get("bounded_scope") != "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY":
+    if (
+        records["UNBLINDING_DECISION_RECORD"].get("bounded_scope")
+        != "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY"
+    ):
         fail("unblinding bounded scope drift")
     if records["PRIMARY_ANALYSIS_AUTHORIZATION_RECORD"].get("bounded_scope") != "LOCKED_PRIMARY_ANALYSIS_ONLY":
         fail("primary-analysis bounded scope drift")
