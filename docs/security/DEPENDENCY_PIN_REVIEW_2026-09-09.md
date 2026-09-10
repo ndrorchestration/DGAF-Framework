@@ -34,24 +34,33 @@ The bootstrap lock digest above identifies the original retained bootstrap artif
 
 The artifact-retention workflow then downloaded that exact artifact, independently rechecked the source/run/package/lock identities and SHA-256 values, and committed the exact retained lockfile bytes to the PR branch. The write-capable retention workflow was removed immediately afterward and is not part of the permanent repository design.
 
+## Direct dependency scope remediation
+
+PR #584 was presented as a PostCSS update, but its rebased exact diff also changed the root `next` dependency from `15.5.24` to `16.3.4`. That broader direct major-version change was not represented by the PR title/body. The rebased exact head `ae787820b6b6ad914df15401a6dad681e6d16e93` nevertheless passed all 18 returned workflows, including NPM Lockfile Validation, Governance CI, PPTL CI, DGAF Regression Suite, and PDMAL Pre-Freeze Runner Validation, before merge commit `0dcfe07d160eb116cfd9ef8f4d7faf17d6a51fcd`.
+
+Because PRE-FREEZE allows reviewed implementation maintenance but hidden dependency scope is not acceptable provenance, the current direct dependency surface is now declared separately in `docs/security/npm-direct-dependency-state.json`. The repository contract requires that declaration to match `package.json` exactly. A future direct dependency or devDependency change therefore fails the permanent npm gate unless the dedicated declaration is deliberately updated in the same reviewed source state. The declaration SHA-256 is included in emitted npm validation evidence.
+
+This remediation accepts the current Next.js/PostCSS source state as a pre-freeze implementation state after exact-head validation; it does not treat the earlier narrow PR description as sufficient review evidence, and it does not create scientific authorization.
+
 ## Permanent lock contract
 
 `.github/workflows/npm-lockfile-validation.yml` is the permanent read-only gate. It:
 
-1. requires `package.json` and `package-lock.json` and rejects competing npm/yarn/pnpm lockfiles;
+1. requires `package.json`, `package-lock.json`, and the direct-dependency declaration and rejects competing npm/yarn/pnpm lockfiles;
 2. executes `tests/test_npm_lockfile_contract.py` directly so the repository-level contract is itself part of the required validation path;
-3. uses exact Node `24.20.0` and requires bundled npm `11.19.0`;
-4. checks lockfile v3 name/version identity against `package.json`;
-5. runs `npm install --package-lock-only --ignore-scripts` and requires byte-for-byte lockfile stability;
-6. removes `node_modules`, performs clean `npm ci --ignore-scripts`, and builds;
-7. rejects obvious secret-like material in the lockfile;
-8. emits SHA-256-bound validation evidence tied to the exact workflow source/run; and
-9. has only `contents: read` permission.
+3. requires the declared direct dependency and devDependency maps to match `package.json` exactly;
+4. uses exact Node `24.20.0` and requires bundled npm `11.19.0`;
+5. checks lockfile v3 name/version identity against `package.json`;
+6. runs `npm install --package-lock-only --ignore-scripts` and requires byte-for-byte lockfile stability;
+7. removes `node_modules`, performs clean `npm ci --ignore-scripts`, and builds;
+8. rejects obvious secret-like material in the lockfile;
+9. emits SHA-256-bound validation evidence for the manifest, lockfile, and direct-dependency declaration tied to the exact workflow source/run; and
+10. has only `contents: read` permission.
 
-Any future dependency update must deliberately update the manifest/lock together and re-pass this gate. The original **NOT REPOSITORY-LOCKED** state is superseded only when this PR's final exact-head validation passes and the change is merged.
+Any future dependency update must deliberately update the manifest/lock together, update the direct-dependency declaration whenever the root dependency surface changes, and re-pass this gate.
 
 ## Governance boundary
 
-This remediation changes dependency reproducibility only. It does not change Track A preregistration, candidate/freeze identity, custody/blinding, authorization, stopping rules, empirical results, or scientific N.
+This remediation changes dependency reproducibility and dependency-scope disclosure only. It does not change Track A preregistration, candidate/freeze identity, custody/blinding, authorization, stopping rules, empirical results, or scientific N.
 
-**Control state remains:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
+**Control state remains:** PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION NOT AUTHORIZED / N=0.
