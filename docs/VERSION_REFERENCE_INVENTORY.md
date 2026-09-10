@@ -2,6 +2,7 @@
 
 **Generated:** 2026-08-21
 **Purpose:** Exhaustive classification of every version-like reference in the repository, with before/after state for the 1.7.0 → 1.8.0 canonical version bump.
+
 ---
 
 ## Classification Key
@@ -55,12 +56,16 @@ These are version-like strings that are NOT the package version. They identify s
 | File/Location | Value | What it actually is |
 |---------------|-------|---------------------|
 | `CITATION.cff` | `cff-version: 1.2.0` | Citation file format version (CFF spec), not project version |
-| `package-lock.json` | `"version": "1.7.0"` | Auto-generated from `package.json` — regenerated on next `npm install` |
+| `package-lock.json` | **absent** | No npm transitive lockfile is currently committed; integrity issue #570 tracks this explicitly |
 | `.github/workflows/deploy.yml` | `tlaplus/releases/tag/v1.8.0` | TLA+ Tools release version (Java dependency), not DGAF version |
 | `docs/formation_*.md` | Various `v1.x` refs | Formation topology version references |
 | `docs/gates/GATE_*.md` | Various gate IDs | Gate identifiers, not versions |
 | `components/KAPPA/` | `v3.6.0` | KAPPA router version (sub-component) |
 | `docs/agents/*/SPEC.md` | Various agent spec versions | Per-agent spec versions, not project version |
+
+### Dependency reproducibility note — 2026-09-09
+
+Root npm direct dependencies in `package.json` are exact, but transitive npm resolution is **not repository-locked** until a real package-manager lockfile is generated and committed. The repository must not claim that `package-lock.json` has been regenerated while it is absent. Deployment tooling is being hardened separately under issue #570 by replacing floating `vercel@latest` and unpinned live-regression `httpx` installs with reviewed exact versions.
 
 ---
 
@@ -69,7 +74,7 @@ These are version-like strings that are NOT the package version. They identify s
 - `middleware.ts` — no version string
 - `lib/evidence.ts` — no version string
 - `src/evidence_mode.py` — no version string
-- `vercel.json` — no version string
+- `vercel.json` — no version strings
 - `CITATION.cff` — `post-S070` retained (see Historical)
 - `app/api/` (deleted routes) — deleted in commit `7f7ef62`
 - `requirements*.txt` — dependency pins only
@@ -87,6 +92,7 @@ These are version-like strings that are NOT the package version. They identify s
 This inventory documents what was changed and what was deliberately not changed. It does not imply that version 1.8.0 has been empirically validated or that pilot authorization has been granted.
 
 **Epistemic state (unchanged by this version bump):**
+
 - Historical freeze `3510b868` = historical
 - Corrected runner = candidate apparatus
 - New freeze = not created
