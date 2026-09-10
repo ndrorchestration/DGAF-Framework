@@ -1,0 +1,37 @@
+record_id: dgaf-current-state-to-public-translation
+schema_version: "0.1"
+title: Current State to Public Translation handoff
+record_class: CURRENT_SUPPORTING
+domain: vocabulary
+owner:
+  authority_type: github_repo
+  authority_ref: docs/PUBLIC_TRANSLATION_LAYER.md
+scope: bounded translation of current project-local state into public-facing terminology
+lifecycle_state: DERIVATIVE
+epistemic_state: NOT_VERIFIED
+authorization_state: NOT_APPLICABLE
+current_state_ref: docs/CURRENT_STATE.md
+evidence_refs:
+  - docs/CURRENT_STATE.md
+  - docs/VOCABULARY_TRANSLATION_MATRIX.json
+depends_on:
+  - docs/DOCUMENT_LIFECYCLE.md
+blocks: []
+supersedes: []
+superseded_by: []
+last_verified_at: null
+next_gate: validate source and receiver semantics under the v0.1 handoff contract
+handoff:
+  standard_version: "0.1"
+  profile: H2
+  conformance: C1
+  source_ref: docs/CURRENT_STATE.md
+  receiver_ref: docs/PUBLIC_TRANSLATION_LAYER.md
+  transformation_ref: docs/VOCABULARY_TRANSLATION_MATRIX.json
+  threshold_refs: []
+  validation_state: SOURCE_AND_RECEIVER_VALIDATION_NOT_YET_EXECUTED
+  exception_refs: []
+projection_state: NOT_VERIFIED
+notes:
+  - This fixture demonstrates a bounded derivative handoff; it does not make the translation layer authoritative over current state.
+  - C1 is metadata conformance only and is not a scientific grade.
