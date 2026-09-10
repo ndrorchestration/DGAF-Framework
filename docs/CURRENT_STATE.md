@@ -2,7 +2,7 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-09
+last_verified: 2026-09-10
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -15,6 +15,8 @@ track_a_epoch_001_unblinding_authorization: ESTABLISHED_HISTORICAL
 track_a_epoch_001_unblinding_recoverability: CRYPTOGRAPHICALLY_UNRECOVERABLE
 track_a_epoch_001_primary_analysis: UNANALYZABLE_NOT_RUN
 track_a_successor_issue: 523
+track_a_successor_operator_local_custody_recovery: PASS_CURRENT_V2_SELF_ATTESTED_NONINDEPENDENT
+track_a_successor_repository_custody_admission: NOT_ESTABLISHED
 track_a_successor_collection_authorization: NOT_ESTABLISHED
 ---
 
@@ -50,7 +52,9 @@ The separate High-Assurance program therefore remains **PRE-FREEZE / FAIL-CLOSED
 | Epoch 001 unblinded analysis input | **CANNOT BE MATERIALIZED FROM RETAINED EVIDENCE** |
 | Epoch 001 primary analysis | **UNANALYZABLE / NOT RUN** |
 | Epoch 001 outcome aggregation | **NOT PERFORMED** |
-| Successor Track A lane | **ISSUE #523 OPEN — DESIGN / RECOVERY-TEST TOOLING ONLY** |
+| Successor Track A lane | **ISSUE #523 OPEN — OPERATOR-LOCAL CUSTODY-V2 DRILL PASS; REPOSITORY ADMISSION PENDING** |
+| Successor operator-local custody recovery | **PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT** |
+| Successor repository custody admission | **NOT ESTABLISHED** |
 | Successor empirical collection | **NOT AUTHORIZED** |
 | B1 standalone non-empirical lane | **COMPLETE** |
 | B2 standalone non-empirical lane | **COMPLETE** |
@@ -120,18 +124,35 @@ The custody failure is itself an engineering/governance finding. It does not era
 
 Issue #523, `Track A: replace unrecoverable Epoch 001 with recoverable solo-custody successor`, is the controlling scientific-design lane.
 
-The successor must use a new epoch/protocol identity and fresh seeds/blinding. The locked endpoint, estimand, and matrix semantics should be preserved unless a change is separately prospectively justified without reference to unseen Epoch 001 outcomes.
+The successor uses a new epoch/protocol identity and fresh seeds/blinding while preserving the locked endpoint, estimand, matrix semantics, and prospective analysis boundaries unless separately justified before outcome access.
 
-Before replacement empirical collection can be authorized, the successor custody path must establish recoverability for a solo researcher without pretending independence.
+Merged non-empirical successor work now includes:
 
-Preferred minimum pattern:
+- Epoch 002 primary-analysis implementation lock under PR #585;
+- fail-closed Epoch 002 runner and machine contract under PR #591;
+- custody schema v2 hardening and exact runner/custody-source rebinding under PR #597, merge `bdd213b9437dbe6bb65e0035a9de3dfd456e145c`;
+- deterministic non-authorizing completion-state reconciliation under PR #601;
+- custody receipt-to-certificate byte binding hardening under PR #603.
 
-`locally generated keypair → encrypted PKCS#8 private key → at least two durable encrypted user-controlled recovery copies → precollection recovery drill PASS → public certificate supplied to collection → same-system/nonindependent custody receipt`
+The custody-v2 implementation requires recovery evidence for both encrypted user-controlled backup copies, explicit distinct storage classes, per-backup container/public-key identity checks, a timezone-qualified recovery record, and exact SHA-256 binding between the committed public certificate bytes and the receipt's `certificate_sha256`. Legacy schema-v1 evidence cannot satisfy the Epoch 002 precollection custody prerequisite.
+
+A real operator-controlled local recovery drill has now returned `PASS_CURRENT_V2` under the repository tooling. That result is explicitly `STRUCTURAL_SELF_ATTESTED_ONLY`, with `INDEPENDENT_CUSTODY=FALSE` and `EMPIRICAL_COLLECTION_AUTHORIZED=FALSE`. The successful local run produced a public certificate and a non-secret schema-v2 receipt, but those exact bytes have not yet been admitted to the repository and revalidated from repository contents. Therefore the local PASS does **not** yet satisfy repository-level `real_custody_v2`.
+
+Only these two non-secret local artifacts are eligible for repository admission:
+
+- `track_a_successor_custody_cert.pem`
+- `track_a_successor_solo_custody_receipt.json`
+
+The encrypted private key, encrypted backup copies, passphrase, or any recoverable secret remain prohibited from GitHub, Notion, chat, CI inputs, workflow logs, and committed files.
+
+These controls and the operator-local drill do **not** establish precollection preflight, candidate freeze, collection authorization, empirical collection, unblinding, primary analysis, efficacy evidence, or independent custody.
 
 Required boundaries:
 
 - secret/passphrase/private-key material stays outside GitHub, Notion, chat, workflow inputs, logs, and committed files;
-- recovery drill must derive the public key from the recovered encrypted private key and exactly match the collection certificate before authorization;
+- repository admission must use the exact public certificate and non-secret schema-v2 receipt produced by the successful local drill, not regenerated or reconstructed substitutes;
+- the reconciler must validate the admitted certificate bytes against the receipt before repository-level `real_custody_v2` can be satisfied;
+- the later runner/preflight must still enforce the stronger OpenSSL-derived public-key/certificate binding required by the successor contract;
 - solo custody is explicitly **SAME_SYSTEM_NONINDEPENDENT**;
 - recoverability is not independent custody;
 - replacement empirical collection remains **NOT AUTHORIZED** until the new prospective gate chain is established;
@@ -173,15 +194,26 @@ Recent merged work after the original Epoch 001 tooling chain includes:
 - prospective weighted Forman–Ricci replication research;
 - fail-closed Task-4 corpus-intake locking;
 - exact-source live staging-breaker evidence capped at `PASS_STRUCTURAL_LIVE_STAGING_ONLY`;
-- Vocabulary Translation Matrix v2 with active-identity coverage and vocabulary governance.
+- Vocabulary Translation Matrix v2 with active-identity coverage and vocabulary governance;
+- sovereign agent-ontology adjudication and current-facing namespace migration under completed issue #522;
+- Epoch 002 primary-analysis implementation lock under PR #585, without analysis authorization;
+- update-safe npm lockfile integrity validation under PR #587;
+- direct npm dependency-scope provenance hardening under PR #589;
+- Epoch 002 fail-closed runner binding under PR #591;
+- TLA+ byte-verification reliability hardening under PR #596;
+- dual-backup custody-v2 implementation and runner rebinding under PR #597;
+- machine-readable document-control specification v0.1 under PR #598, status **PROPOSED**;
+- non-authorizing DGAF Completion State Reconciler under PR #601;
+- reconciler custody certificate-byte binding hardening under PR #603;
+- operator-local custody-v2 recovery drill `PASS_CURRENT_V2`, retained as self-attested/non-independent evidence pending repository admission of its public artifacts.
 
 These are meaningful implementation/governance advances but have **no automatic scientific-state effect**.
 
 ## Agent identity / vocabulary boundary
 
-Vocabulary translation is downstream of identity and authority governance. Current translation controls distinguish canonical identity, accepted alias, abstract role/archetype, state, and external-facing functional label.
+Vocabulary translation is downstream of identity and authority governance. Current translation controls distinguish canonical identity, accepted alias, abstract role/archetype, state, formation seat, and historical lineage.
 
-Issue #522 remains open for unresolved sovereign ontology conflicts including Sentinel/Sentinel-Phi lineage, Ionia agent-vs-state classification, A-09/A-10/A-11/A-12 designation collisions, and COLLEEN/Librarian designation drift. Translation must preserve those conflicts until adjudicated.
+Issue #522 is **CLOSED / COMPLETED**. The accepted ontology contract establishes sovereign seat precedence through `docs/agents/AGENT_ROSTER.md` plus `registry/agent_ontology_adjudication.v1.json`; formation/topology identifiers remain local unless separately promoted. Sentinel and Sentinel-Phi remain distinct, `IONIA_STATE` remains a separate runtime/formation state from Agent Ionia A-13, and current-facing namespace migration is complete. Historical conflict records remain provenance rather than current unresolved state.
 
 ## B1 / B2 / B3 and Track C
 
@@ -222,19 +254,23 @@ Current-facing documentation must preserve these distinctions:
 11. Execution is not efficacy until the locked analysis supports that claim.
 12. Historical evidence does not silently transfer to a new SHA, protocol, treatment, epoch, or evidence identity.
 13. A successor experiment must not pool, infer, reconstruct, or tune from inaccessible Epoch 001 outcomes.
-14. Canonical DGAF efficacy remains **NOT ESTABLISHED** until evidence satisfying that exact claim exists.
+14. Operator-local custody recovery is not repository-level custody admission or independent custody.
+15. Canonical DGAF efficacy remains **NOT ESTABLISHED** until evidence satisfying that exact claim exists.
 
 ## Current next scientific gate
 
-The next legitimate Track A transition is **successor custody/recovery design**, not Epoch 001 decryption or analysis.
+The next legitimate Track A transition is **repository admission and validation of the exact two non-secret artifacts produced by the successful operator-local custody-v2 drill**, not another key-generation exercise and not Epoch 001 decryption or analysis.
 
-Issue #523 must establish a fresh epoch identity, recoverable solo-custody contract, precollection recovery drill, fresh seed/blinding plan, and the rest of the prospective authorization chain before replacement empirical collection.
+Issue #523 must next admit only `track_a_successor_custody_cert.pem` and `track_a_successor_solo_custody_receipt.json` from the successful local drill, then validate those exact repository bytes against the merged schema-v2 custody contract and Completion State Reconciler. Only an accepted repository-level `real_custody_v2` result may make the remaining precollection preflight actionable. Candidate freeze, closure/verification, and collection authorization remain distinct later gates.
 
 At this moment:
 
 - Epoch 001 collection remains **COMPLETE / BLINDED / RETAINED**;
 - Epoch 001 unblinding is **CRYPTOGRAPHICALLY UNRECOVERABLE**;
 - Epoch 001 primary analysis is **UNANALYZABLE / NOT RUN**;
+- Epoch 002 analysis implementation, runner, custody-v2 contract, and non-authorizing readiness reconciler are **MERGED / VALIDATED AS NON-EMPIRICAL IMPLEMENTATION**;
+- operator-local Epoch 002 custody recovery is **PASS_CURRENT_V2 / SELF-ATTESTED / NONINDEPENDENT**;
+- repository-level Epoch 002 custody admission is **NOT ESTABLISHED**;
 - successor Track A empirical collection is **NOT AUTHORIZED**;
 - canonical DGAF efficacy remains **NOT ESTABLISHED**;
 - High-Assurance remains **NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**.

@@ -1,0 +1,38 @@
+record_id: pdmal-evidence-index-to-current-state
+schema_version: "0.1"
+title: PDMAL evidence index to current-state governance handoff
+record_class: CURRENT_SUPPORTING
+domain: evidence
+owner:
+  authority_type: github_repo
+  authority_ref: docs/evidence/PDMAL_EVIDENCE_INDEX.md
+scope: bounded evidence-index inputs used by current-state governance interpretation
+lifecycle_state: DERIVATIVE
+epistemic_state: NOT_VERIFIED
+authorization_state: NOT_APPLICABLE
+current_state_ref: docs/CURRENT_STATE.md
+evidence_refs:
+  - docs/evidence/PDMAL_EVIDENCE_INDEX.md
+  - docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md
+depends_on:
+  - docs/governance/machine-readable-document-control-v0.1.md
+blocks: []
+supersedes: []
+superseded_by: []
+terminal_reason: null
+last_verified_at: null
+next_gate: validate source evidence semantics and receiver interpretation under the v0.1 handoff contract
+handoff:
+  standard_version: "0.1"
+  profile: H2
+  conformance: C1
+  source_ref: docs/evidence/PDMAL_EVIDENCE_INDEX.md
+  receiver_ref: docs/CURRENT_STATE.md
+  transformation_ref: null
+  threshold_refs: []
+  validation_state: SOURCE_AND_RECEIVER_VALIDATION_NOT_YET_EXECUTED
+  exception_refs: []
+projection_state: NOT_VERIFIED
+notes:
+  - This R1 fixture records metadata conformance only; it does not promote evidence or governance state.
+  - C1 is not source validation, receiver validation, independent review, or authorization.
