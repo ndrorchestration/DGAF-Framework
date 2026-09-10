@@ -16,6 +16,9 @@ RUNNER = PDMAL / "run_track_a_epoch_002.py"
 TESTS = PDMAL / "test_track_a_epoch_002_runner.py"
 WORKFLOW = ROOT / ".github/workflows/track-a-epoch-002-runner.yml"
 
+CUSTODY_CONTRACT = ROOT / "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md"
+CUSTODY_VALIDATOR = ROOT / "scripts/validate_track_a_successor_solo_custody_receipt.py"
+
 EXPECTED_UPSTREAM_BLOBS = {
     (
         ROOT / "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
@@ -26,8 +29,8 @@ EXPECTED_UPSTREAM_BLOBS = {
     PDMAL / "task_engine.py": "90135e1c6dfccc3b56ffdc0dcb9eb50a0b2a5b05",
     PDMAL / "harness_contract.py": "bb97c54ddf087fef568b1b3c8f8df72c30dad11e",
     PDMAL / "topology_utils.py": "7ae92ba8a9ab964537e5dafa5e12de36b841391e",
-    ROOT / "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md": "96ba5e297e7645d3a91a52a4c1eda56af9c337a5",
-    ROOT / "scripts/validate_track_a_successor_solo_custody_receipt.py": "b2283a524f4eb8fd9191c953310ae264e0d8d369",
+    CUSTODY_CONTRACT: "c9b31ab6fa5d062e1dfec3dc33a46eb3642fee97",
+    CUSTODY_VALIDATOR: "93423101961aa3e572539ad4767d32a7803cc92a",
 }
 
 FUTURE_ARTIFACTS = (
@@ -73,6 +76,10 @@ def main() -> int:
     assert contract["protocol_id"] == "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
     assert contract["epoch_id"] == "TRACK_A_EPOCH_002"
     assert contract["algorithm_id"] == "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1"
+
+    bindings = contract["source_bindings"]
+    assert bindings["successor_custody_contract_blob_sha"] == EXPECTED_UPSTREAM_BLOBS[CUSTODY_CONTRACT]
+    assert bindings["successor_custody_receipt_validator_blob_sha"] == EXPECTED_UPSTREAM_BLOBS[CUSTODY_VALIDATOR]
 
     identity = contract["identity_policy"]
     assert identity["self_referential_blob_pins_allowed"] is False
@@ -120,7 +127,11 @@ def main() -> int:
 
     custody = contract["custody_precondition"]
     assert custody["receipt_must_validate"] is True
+    assert custody["receipt_schema_version_required"] == 2
+    assert custody["legacy_receipt_authorizes_successor_collection"] is False
     assert custody["recovery_drill_must_pass"] is True
+    assert custody["each_recorded_backup_recovery_must_pass"] is True
+    assert custody["distinct_backup_storage_classes_required"] is True
     assert custody["custody_class_required"] == "SAME_SYSTEM_NONINDEPENDENT"
     assert custody["independent_custody_required"] is False
     assert custody["minimum_distinct_encrypted_user_controlled_backups"] == 2
