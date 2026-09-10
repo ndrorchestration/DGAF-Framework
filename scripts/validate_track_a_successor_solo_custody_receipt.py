@@ -112,9 +112,9 @@ def _validate_compatible_receipt(payload: dict[str, Any]) -> None:
             ),
             f"backup_refs[{index}] keys invalid",
         )
-        _require(isinstance(backup["class"], str) and backup["class"], "backup class required")
+        _require(isinstance(backup["class"], str) and bool(backup["class"]), "backup class required")
         _require(
-            isinstance(backup["nonsecret_id"], str) and backup["nonsecret_id"],
+            isinstance(backup["nonsecret_id"], str) and bool(backup["nonsecret_id"]),
             "non-secret backup identifier required",
         )
         _require(backup["nonsecret_id"] not in seen_ids, "backup identifiers must be distinct")
