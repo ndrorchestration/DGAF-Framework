@@ -225,8 +225,7 @@ def _mapping_state_failures(
         failures.append(f"{card_entry.get('id')}: canonical {status} claim cannot map to {evidence_maturity} maturity")
     if validation_status in PROMOTED_VALIDATION:
         failures.append(
-            f"{card_entry.get('id')}: canonical {status} claim cannot map to "
-            f"{validation_status} validation"
+            f"{card_entry.get('id')}: canonical {status} claim cannot map to " f"{validation_status} validation"
         )
     return failures
 
@@ -308,8 +307,7 @@ def validate_claim_surfaces(
                 for field in CARD_STATE_FIELDS:
                     if entry.get(field) != card.get(field):
                         failures.append(
-                            f"{card_id}: index/card {field} mismatch: "
-                            f"{entry.get(field)!r} != {card.get(field)!r}"
+                            f"{card_id}: index/card {field} mismatch: " f"{entry.get(field)!r} != {card.get(field)!r}"
                         )
 
         if canonical_claim is not None:
@@ -363,9 +361,7 @@ def main() -> int:
         if isinstance(card, dict) and card.get("relationship") == "CANONICAL_CLAIM_DETAIL"
     )
     specified = sum(
-        1
-        for card in card_index["cards"]
-        if isinstance(card, dict) and card.get("relationship") == "SPECIFICATION_ONLY"
+        1 for card in card_index["cards"] if isinstance(card, dict) and card.get("relationship") == "SPECIFICATION_ONLY"
     )
     print("TRUTH-LAYER VALIDATION: PASS")
     print(f"Operational claims checked: {len(registry['claims'])}")
