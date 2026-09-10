@@ -8,7 +8,9 @@ from typing import Any, Callable
 
 import pytest
 
-from scripts import prepare_track_a_epoch_002_verification_classification as verification
+from scripts import (
+    prepare_track_a_epoch_002_verification_classification as verification,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNNER_PATH = ROOT / "experiments/pdmal_pilot/run_track_a_epoch_002.py"
