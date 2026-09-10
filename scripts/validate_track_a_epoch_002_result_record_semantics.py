@@ -202,9 +202,7 @@ def validate_policy() -> dict[str, Any]:
     unblind = profiles["UNBLINDING_AUTHORIZATION_PASS"]
     if unblind["authorization_effect"] != "BOUNDED_RECORD_ONLY":
         fail("unblinding PASS must be bounded-record-only authority")
-    if string_set(unblind["forbidden_non_effects"], "unblinding forbidden") != {
-        "DOES_NOT_AUTHORIZE_UNBLINDING"
-    }:
+    if string_set(unblind["forbidden_non_effects"], "unblinding forbidden") != {"DOES_NOT_AUTHORIZE_UNBLINDING"}:
         fail("unblinding PASS contradiction guard drift")
     if string_set(unblind["required_non_effects"], "unblinding required") != all_non_effects - {
         "DOES_NOT_AUTHORIZE_UNBLINDING"
@@ -214,9 +212,7 @@ def validate_policy() -> dict[str, Any]:
     analysis = profiles["PRIMARY_ANALYSIS_AUTHORIZATION_PASS"]
     if analysis["authorization_effect"] != "BOUNDED_RECORD_ONLY":
         fail("primary-analysis PASS must be bounded-record-only authority")
-    if string_set(analysis["forbidden_non_effects"], "analysis forbidden") != {
-        "DOES_NOT_AUTHORIZE_ANALYSIS"
-    }:
+    if string_set(analysis["forbidden_non_effects"], "analysis forbidden") != {"DOES_NOT_AUTHORIZE_ANALYSIS"}:
         fail("primary-analysis PASS contradiction guard drift")
     if string_set(analysis["required_non_effects"], "analysis required") != all_non_effects - {
         "DOES_NOT_AUTHORIZE_ANALYSIS"
@@ -232,20 +228,14 @@ def validate_policy() -> dict[str, Any]:
         if entry.get("pass_profile") != EXPECTED_PASS_PROFILE[record_type]:
             fail(f"record {record_type} pass_profile drift")
 
-    if (
-        records["DATASET_LOCK_RECEIPT"].get("requires_separate_exact_commit_for")
-        != "UNBLINDING_DECISION_RECORD"
-    ):
+    if records["DATASET_LOCK_RECEIPT"].get("requires_separate_exact_commit_for") != "UNBLINDING_DECISION_RECORD":
         fail("dataset lock must require separate unblinding decision commit")
     if (
         records["MATERIALIZATION_RECEIPT"].get("requires_separate_exact_commit_for")
         != "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD"
     ):
         fail("materialization must require separate primary-analysis authorization commit")
-    if (
-        records["UNBLINDING_DECISION_RECORD"].get("bounded_scope")
-        != "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY"
-    ):
+    if records["UNBLINDING_DECISION_RECORD"].get("bounded_scope") != "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY":
         fail("unblinding bounded scope drift")
     if records["PRIMARY_ANALYSIS_AUTHORIZATION_RECORD"].get("bounded_scope") != "LOCKED_PRIMARY_ANALYSIS_ONLY":
         fail("primary-analysis bounded scope drift")
