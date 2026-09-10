@@ -17,8 +17,8 @@
     "task_engine_blob_sha": "90135e1c6dfccc3b56ffdc0dcb9eb50a0b2a5b05",
     "harness_contract_blob_sha": "bb97c54ddf087fef568b1b3c8f8df72c30dad11e",
     "topology_utils_blob_sha": "7ae92ba8a9ab964537e5dafa5e12de36b841391e",
-    "successor_custody_contract_blob_sha": "96ba5e297e7645d3a91a52a4c1eda56af9c337a5",
-    "successor_custody_receipt_validator_blob_sha": "b2283a524f4eb8fd9191c953310ae264e0d8d369"
+    "successor_custody_contract_blob_sha": "c9b31ab6fa5d062e1dfec3dc33a46eb3642fee97",
+    "successor_custody_receipt_validator_blob_sha": "93423101961aa3e572539ad4767d32a7803cc92a"
   },
   "identity_policy": {
     "self_referential_blob_pins_allowed": false,
@@ -70,7 +70,11 @@
     "real_private_key_in_repository_allowed": false,
     "real_private_key_in_ci_allowed": false,
     "receipt_must_validate": true,
+    "receipt_schema_version_required": 2,
+    "legacy_receipt_authorizes_successor_collection": false,
     "recovery_drill_must_pass": true,
+    "each_recorded_backup_recovery_must_pass": true,
+    "distinct_backup_storage_classes_required": true,
     "custody_class_required": "SAME_SYSTEM_NONINDEPENDENT",
     "independent_custody_required": false,
     "minimum_distinct_encrypted_user_controlled_backups": 2,
