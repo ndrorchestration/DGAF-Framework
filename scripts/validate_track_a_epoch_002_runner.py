@@ -80,6 +80,8 @@ def main() -> int:
     bindings = contract["source_bindings"]
     assert bindings["successor_custody_contract_blob_sha"] == EXPECTED_UPSTREAM_BLOBS[CUSTODY_CONTRACT]
     assert bindings["successor_custody_receipt_validator_blob_sha"] == EXPECTED_UPSTREAM_BLOBS[CUSTODY_VALIDATOR]
+    assert runner.CUSTODY_CONTRACT_BLOB_SHA == bindings["successor_custody_contract_blob_sha"]
+    assert runner.CUSTODY_VALIDATOR_BLOB_SHA == bindings["successor_custody_receipt_validator_blob_sha"]
 
     identity = contract["identity_policy"]
     assert identity["self_referential_blob_pins_allowed"] is False
