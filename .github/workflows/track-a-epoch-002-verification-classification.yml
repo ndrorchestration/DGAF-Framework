@@ -1,0 +1,119 @@
+name: Track A Epoch 002 Verification Classification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-verification-classification.yml'
+      - 'scripts/prepare_track_a_epoch_002_verification_classification.py'
+      - 'tests/test_track_a_epoch_002_verification_classification.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION_PROCEDURE.md'
+      - 'scripts/prepare_track_a_epoch_002_final_closure.py'
+      - 'scripts/prepare_track_a_epoch_002_immutable_freeze.py'
+      - 'scripts/prepare_track_a_epoch_002_precollection_preflight.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json'
+      - 'experiments/pdmal_pilot/run_track_a_epoch_002.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_FINAL_CLOSURE_PACKET.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 non-authorizing verification classification
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            expected="${{ github.event.pull_request.head.sha }}"
+          else
+            expected="${{ github.sha }}"
+          fi
+          test "$(git rev-parse HEAD)" = "$expected"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install exact hash-locked experimental environment
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run focused verification-classification contract tests
+        run: python -m pytest -q tests/test_track_a_epoch_002_verification_classification.py
+
+      - name: Prove verification remains absent when no classification exists
+        if: hashFiles('docs/experiment/track_a_runs/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION.json') == ''
+        run: python scripts/prepare_track_a_epoch_002_verification_classification.py --expect-absent
+
+      - name: Validate verification-only transition when classification exists
+        if: hashFiles('docs/experiment/track_a_runs/TRACK_A_EPOCH_002_VERIFICATION_CLASSIFICATION.json') != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            python scripts/prepare_track_a_epoch_002_verification_classification.py \
+              --validate \
+              --expected-base-sha "${{ github.event.pull_request.base.sha }}"
+          else
+            python scripts/prepare_track_a_epoch_002_verification_classification.py --validate
+          fi
+
+      - name: Assert classification remains non-independent and non-authorizing
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          contract = json.loads(
+              Path('docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json').read_text()
+          )
+          assert contract['successor_collection'] == 'NOT_AUTHORIZED'
+          assert contract['primary_analysis'] == 'NOT_AUTHORIZED'
+          assert contract['scientific_n_increment'] == 0
+          auth = contract['authorization']
+          assert auth['pr_validation_can_authorize'] is False
+          assert auth['collection_authorized'] is False
+          assert auth['unblinding_authorized'] is False
+          assert auth['primary_analysis_authorized'] is False
+          assert auth['high_assurance_authorized'] is False
+
+          runner = Path('experiments/pdmal_pilot/run_track_a_epoch_002.py')
+          tree = ast.parse(runner.read_text(encoding='utf-8'))
+          function = next(
+              node for node in tree.body
+              if isinstance(node, ast.FunctionDef) and node.name == 'expected_verification'
+          )
+          module = ast.Module(body=[function], type_ignores=[])
+          ast.fix_missing_locations(module)
+          namespace = {'PROTOCOL_ID': contract['protocol_id']}
+          exec(compile(module, str(runner), 'exec'), namespace)
+          record = namespace['expected_verification'](
+              candidate_sha='a' * 40,
+              closure_blob_sha='b' * 40,
+          )
+          assert record['verification_class'] == 'DEVELOPER_SELF_ATTESTED_NONINDEPENDENT'
+          assert record['independent_verification'] is False
+          assert record['same_system_custody'] is True
+          assert record['collection_authorized'] is False
+          assert record['scientific_n_increment'] == 0
+          print('TRACK_A_EPOCH_002_VERIFICATION_CI_NONINDEPENDENT=TRUE')
+          print('TRACK_A_EPOCH_002_VERIFICATION_CI_NONAUTHORIZING=TRUE')
+          PY
