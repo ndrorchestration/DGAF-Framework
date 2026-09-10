@@ -1,0 +1,117 @@
+name: Track A Epoch 002 Precollection Preflight
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-preflight.yml'
+      - 'scripts/prepare_track_a_epoch_002_precollection_preflight.py'
+      - 'tests/test_track_a_epoch_002_precollection_preflight.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_PREFLIGHT_PROCEDURE.md'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json'
+      - 'docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json'
+      - 'experiments/pdmal_pilot/track_a_epoch_002_analysis.py'
+      - 'experiments/pdmal_pilot/run_track_a_epoch_002.py'
+      - 'experiments/pdmal_pilot/task_engine.py'
+      - 'experiments/pdmal_pilot/harness_contract.py'
+      - 'experiments/pdmal_pilot/topology_utils.py'
+      - 'experiments/pdmal_pilot/requirements-full-lock.txt'
+      - 'docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md'
+      - 'scripts/validate_track_a_successor_solo_custody_receipt.py'
+      - 'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 non-authorizing preflight
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            expected="${{ github.event.pull_request.head.sha }}"
+          else
+            expected="${{ github.sha }}"
+          fi
+          test "$(git rev-parse HEAD)" = "$expected"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install exact hash-locked experimental environment
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run focused preflight contract tests
+        run: python -m pytest -q tests/test_track_a_epoch_002_precollection_preflight.py
+
+      - name: Check custody evidence admission when present without preflight
+        if: >-
+          (hashFiles('docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json') != '' ||
+           hashFiles('docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem') != '') &&
+          hashFiles('docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json') == ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            python scripts/prepare_track_a_epoch_002_precollection_preflight.py \
+              --check-custody \
+              --expected-candidate-sha "${{ github.event.pull_request.base.sha }}"
+          else
+            python scripts/prepare_track_a_epoch_002_precollection_preflight.py --check-custody
+          fi
+
+      - name: Validate preflight when present
+        if: hashFiles('docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json') != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            python scripts/prepare_track_a_epoch_002_precollection_preflight.py \
+              --validate \
+              --expected-candidate-sha "${{ github.event.pull_request.base.sha }}"
+          else
+            python scripts/prepare_track_a_epoch_002_precollection_preflight.py --validate
+          fi
+
+      - name: Assert non-authorization boundary
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          contract = json.loads(
+              Path('docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json').read_text()
+          )
+          assert contract['track_a_freeze'] == 'NOT_ESTABLISHED'
+          assert contract['successor_collection'] == 'NOT_AUTHORIZED'
+          assert contract['primary_analysis'] == 'NOT_AUTHORIZED'
+          assert contract['scientific_n_increment'] == 0
+          auth = contract['authorization']
+          assert auth['pr_validation_can_authorize'] is False
+          assert auth['collection_authorized'] is False
+          assert auth['unblinding_authorized'] is False
+          assert auth['primary_analysis_authorized'] is False
+          assert auth['high_assurance_authorized'] is False
+          print('TRACK_A_EPOCH_002_PREFLIGHT_CI_NONAUTHORIZING=TRUE')
+          print('SCIENTIFIC_N_INCREMENT=0')
+          PY
