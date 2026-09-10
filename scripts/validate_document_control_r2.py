@@ -61,6 +61,7 @@ def validate(data: dict) -> None:
     records = data.get("records")
     if not isinstance(records, list) or not records:
         fail("records must be a non-empty list")
+    assert isinstance(records, list)
 
     ids: set[str] = set()
     current_by_scope: dict[str, str] = {}
