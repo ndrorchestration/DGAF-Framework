@@ -1,0 +1,28 @@
+record_id: dgaf-current-state
+schema_version: "0.1"
+title: DGAF-Framework / PDMAL Current State
+record_class: CURRENT_AUTHORITY
+domain: project
+owner:
+  authority_type: github_repo
+  authority_ref: docs/CURRENT_STATE.md
+scope: DGAF-Framework and PDMAL current-facing repository control state
+lifecycle_state: ACTIVE
+epistemic_state: NOT_ESTABLISHED
+authorization_state: NOT_AUTHORIZED
+current_state_ref: docs/CURRENT_STATE.md
+evidence_refs:
+  - docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md
+  - docs/evidence/PDMAL_EVIDENCE_INDEX.md
+depends_on:
+  - docs/DOCUMENT_LIFECYCLE.md
+blocks: []
+supersedes: []
+superseded_by: []
+last_verified_at: "2026-09-09"
+next_gate: successor Track A custody/recovery design under issue #523
+projection_state: NOT_VERIFIED
+notes:
+  - This fixture is illustrative and non-authoritative.
+  - Consumers must resolve docs/CURRENT_STATE.md for canonical state.
+  - PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / canonical empirical N=0 remains unchanged.
