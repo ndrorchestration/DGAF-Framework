@@ -63,8 +63,17 @@ def test_historical_statement_is_not_rewritten_as_current() -> None:
 
 def test_stale_run_binding_is_rejected() -> None:
     current = claims(status="VERIFIED", run_id="dpl_CURRENT123")
-    assert one_status("Claim A improves outcomes; VERIFIED by dpl_CURRENT123.", claim_set=current) == "PASS_CANONICAL_PARITY"
-    assert one_status("Claim A improves outcomes; VERIFIED by dpl_OLD999.", claim_set=current) == "ERROR_STALE_BINDING"
+    assert (
+        one_status(
+            "Claim A improves outcomes; VERIFIED by dpl_CURRENT123.",
+            claim_set=current,
+        )
+        == "PASS_CANONICAL_PARITY"
+    )
+    assert one_status(
+        "Claim A improves outcomes; VERIFIED by dpl_OLD999.",
+        claim_set=current,
+    ) == "ERROR_STALE_BINDING"
 
 
 def test_run_token_is_rejected_when_canonical_claim_has_no_run() -> None:
@@ -89,7 +98,12 @@ def test_external_attribution_preserved_is_not_flagged_as_transfer() -> None:
 
 def test_unknown_canonical_claim_fails_closed() -> None:
     configured = entry(canonical_claim_id="missing")
-    findings = scan_entry(configured, Path("docs/derivative.md"), "Claim A improves outcomes.", claims())
+    findings = scan_entry(
+        configured,
+        Path("docs/derivative.md"),
+        "Claim A improves outcomes.",
+        claims(),
+    )
     assert findings[0]["status"] == "ERROR_UNKNOWN_CANONICAL_CLAIM"
 
 
