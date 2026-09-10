@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import tempfile
 import unittest
@@ -127,6 +128,14 @@ class CompletionStateReconcilerTests(unittest.TestCase):
             graph["orchestration"]["pattern_bundle"],
             ["P-PIER-001", "P-SAGA-001", "P-DURABLE-001", "P-CB-001", "P-POL-001"],
         )
+        custody_node = next(
+            node
+            for node in graph["lanes"][0]["nodes"]
+            if node["id"] == "real_custody_v2"
+        )
+        self.assertTrue(
+            any(check["type"] == "file_sha256_equals_json_field" for check in custody_node["checks"])
+        )
 
         state = derive_state(ROOT, GRAPH_PATH)
         self.assertIs(state["authorizes_transition"], False)
@@ -242,6 +251,72 @@ class CompletionStateReconcilerTests(unittest.TestCase):
             lane = derive_lane(root, graph["lanes"][0])
             self.assertEqual(lane["nodes"][0]["state"], "ACTIONABLE")
             self.assertEqual(lane["nodes"][0]["checks"][0]["reason"], "value_mismatch")
+
+    def test_file_sha256_json_binding_accepts_match_and_rejects_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            graph = minimal_graph()
+            graph["lanes"][0]["nodes"] = [
+                {
+                    "id": "binding",
+                    "label": "certificate binding",
+                    "depends_on": [],
+                    "action_class": "operator_external",
+                    "specialists": ["Ender", "The Auditor"],
+                    "checks": [
+                        {
+                            "type": "file_sha256_equals_json_field",
+                            "file_path": "docs/experiment/cert.pem",
+                            "json_path": "docs/experiment/receipt.json",
+                            "field": "certificate_sha256",
+                        }
+                    ],
+                }
+            ]
+            certificate = b"synthetic public certificate bytes\n"
+            cert_path = root / "docs/experiment/cert.pem"
+            cert_path.parent.mkdir(parents=True, exist_ok=True)
+            cert_path.write_bytes(certificate)
+            write_path(
+                root,
+                "docs/experiment/receipt.json",
+                json.dumps({"certificate_sha256": hashlib.sha256(certificate).hexdigest()}),
+            )
+
+            lane = derive_lane(root, graph["lanes"][0])
+            self.assertEqual(lane["nodes"][0]["state"], "SATISFIED")
+            self.assertIs(lane["nodes"][0]["checks"][0]["passed"], True)
+
+            cert_path.write_bytes(b"wrong certificate bytes\n")
+            lane = derive_lane(root, graph["lanes"][0])
+            self.assertEqual(lane["nodes"][0]["state"], "HUMAN_ACTION_REQUIRED")
+            self.assertIs(lane["nodes"][0]["checks"][0]["passed"], False)
+            self.assertEqual(lane["nodes"][0]["checks"][0]["reason"], "sha256_mismatch")
+
+    def test_file_sha256_json_binding_rejects_unsafe_paths(self) -> None:
+        graph = minimal_graph()
+        graph["lanes"][0]["nodes"][0]["checks"] = [
+            {
+                "type": "file_sha256_equals_json_field",
+                "file_path": "docs/experiment/../../secret.pem",
+                "json_path": "docs/experiment/receipt.json",
+                "field": "certificate_sha256",
+            }
+        ]
+        with self.assertRaisesRegex(GraphError, "prohibited path traversal"):
+            validate_graph(graph)
+
+        graph = minimal_graph()
+        graph["lanes"][0]["nodes"][0]["checks"] = [
+            {
+                "type": "file_sha256_equals_json_field",
+                "file_path": ".github/workflows/cert.pem",
+                "json_path": "docs/experiment/receipt.json",
+                "field": "certificate_sha256",
+            }
+        ]
+        with self.assertRaisesRegex(GraphError, "outside approved evidence roots"):
+            validate_graph(graph)
 
     def test_allowlisted_python_validator_is_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
