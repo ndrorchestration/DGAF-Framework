@@ -4,6 +4,7 @@ Consumes an already authorized, structurally locked, unblinded Track A successor
 dataset. It cannot collect observations, infer missing outcomes, authorize
 unblinding, or authorize primary analysis.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -43,10 +44,7 @@ def _validate_records(records: Sequence[Mapping[str, object]]) -> dict[tuple[int
         raise ValueError(f"expected exactly {EXPECTED_TOTAL_RECORDS} records")
 
     expected = {
-        (seed, topology, failure_count)
-        for seed in SEEDS
-        for topology in TOPOLOGIES
-        for failure_count in FAILURE_COUNTS
+        (seed, topology, failure_count) for seed in SEEDS for topology in TOPOLOGIES for failure_count in FAILURE_COUNTS
     }
     observed: dict[tuple[int, str, int], bool] = {}
 
