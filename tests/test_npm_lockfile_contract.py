@@ -22,9 +22,7 @@ class TestNpmLockfileContract(unittest.TestCase):
         self.assertEqual(root["name"], package["name"])
         self.assertEqual(root["version"], package["version"])
         self.assertEqual(root.get("dependencies", {}), package.get("dependencies", {}))
-        self.assertEqual(
-            root.get("devDependencies", {}), package.get("devDependencies", {})
-        )
+        self.assertEqual(root.get("devDependencies", {}), package.get("devDependencies", {}))
 
     def test_bootstrap_provenance_record_is_retained_not_current_lock_pin(self) -> None:
         review = REVIEW.read_text(encoding="utf-8")
@@ -33,9 +31,7 @@ class TestNpmLockfileContract(unittest.TestCase):
         self.assertIn(BOOTSTRAP_LOCK_SHA256, review)
         self.assertIn("34427479869", review)
         self.assertIn("10133208552", review)
-        self.assertIn(
-            "does not constrain the SHA-256 of future reviewed lockfile updates", review
-        )
+        self.assertIn("does not constrain the SHA-256 of future reviewed lockfile updates", review)
 
     def test_permanent_workflow_is_read_only_and_lock_consuming(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
@@ -47,17 +43,13 @@ class TestNpmLockfileContract(unittest.TestCase):
         self.assertIn("npm run build", workflow)
         self.assertIn("npm install", workflow)
         self.assertIn("--package-lock-only", workflow)
-        self.assertIn(
-            "cmp --silent /tmp/package-lock.before.json package-lock.json", workflow
-        )
+        self.assertIn("cmp --silent /tmp/package-lock.before.json package-lock.json", workflow)
         self.assertIn("git diff --exit-code -- package-lock.json", workflow)
         self.assertNotIn("git push", workflow)
         self.assertIn("package-lock.json", workflow)
 
     def test_one_time_bootstrap_workflow_is_not_retained(self) -> None:
-        self.assertFalse(
-            (ROOT / ".github" / "workflows" / "npm-lockfile-bootstrap.yml").exists()
-        )
+        self.assertFalse((ROOT / ".github" / "workflows" / "npm-lockfile-bootstrap.yml").exists())
 
 
 if __name__ == "__main__":
