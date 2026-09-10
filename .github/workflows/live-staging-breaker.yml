@@ -23,6 +23,7 @@ env:
   VERCEL_PROJECT_ID: prj_euzjAnhqct0wayTWWojizanKN3cX
   EXPECTED_ENSEMBLE_VERSION: 1.8.0
   SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  VERCEL_CLI_VERSION: 59.11.7
 
 jobs:
   exercise:
@@ -46,8 +47,12 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
+      - name: Install exact Vercel CLI
+        run: |
+          set -euo pipefail
+          npm install -g "vercel@${VERCEL_CLI_VERSION}"
+          actual_version="$(vercel --version | tail -1 | awk '{print $NF}')"
+          test "$actual_version" = "$VERCEL_CLI_VERSION"
 
       - name: Require preview credentials
         run: |
