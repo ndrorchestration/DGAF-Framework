@@ -293,7 +293,9 @@ def _mapping_detail_failures(
             failures.append(f"{card_id}: mapped card context.scope differs from canonical scope")
 
     canonical_provenance = canonical_claim.get("provenance")
-    if not isinstance(canonical_provenance, dict) or not isinstance(canonical_provenance.get("source"), str):
+    if not isinstance(canonical_provenance, dict) or not isinstance(
+        canonical_provenance.get("source"), str
+    ):
         failures.append(f"{card_id}: canonical mapped claim requires provenance.source")
     elif not canonical_provenance["source"].strip():
         failures.append(f"{card_id}: canonical mapped claim requires non-empty provenance.source")
