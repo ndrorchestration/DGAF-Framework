@@ -169,7 +169,10 @@ def main() -> int:
             "bypass_configured": bool(os.getenv("VERCEL_AUTOMATION_BYPASS_SECRET")),
         },
         "cases": results,
-        "epistemic_boundary": "Execution evidence applies only to this endpoint, deployment, environment, and commit; it does not establish broad DGAF efficacy.",
+        "epistemic_boundary": (
+            "Execution evidence applies only to this endpoint, deployment, environment, and commit; "
+            "it does not establish broad DGAF efficacy."
+        ),
         "spec_revision": "P2-2026-08-18-runtime-contract-v2",
     }
 
