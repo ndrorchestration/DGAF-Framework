@@ -1,0 +1,40 @@
+record_id: epoch-004-primary-result-to-adjudication
+schema_version: "0.1"
+title: Canonical Solo Epoch 004 primary result to adjudication handoff
+record_class: HISTORICAL
+domain: experiment
+owner:
+  authority_type: github_repo
+  authority_ref: docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_RESULT.json
+scope: exact-treatment historical measurement/inference handoff for PDMAL-SOLO-CANONICAL-EPOCH-004 only
+lifecycle_state: RETAINED_HISTORICAL
+epistemic_state: BOUNDED_NEGATIVE_EVIDENCE_EXACT_TREATMENT_ONLY
+authorization_state: NOT_APPLICABLE
+current_state_ref: docs/CURRENT_STATE.md
+evidence_refs:
+  - docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_RESULT.json
+  - docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_ADJUDICATION.md
+  - docs/experiment/EPOCH_004_POST_FIDELITY_CLAIM_CEILING_2026-09-08.md
+depends_on:
+  - docs/governance/machine-readable-document-control-v0.1.md
+blocks: []
+supersedes: []
+superseded_by: []
+terminal_reason: retained as exact-treatment historical evidence; canonical seven-gate treatment fidelity is not established
+last_verified_at: null
+next_gate: null
+handoff:
+  standard_version: "0.1"
+  profile: H3
+  conformance: C1
+  source_ref: docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_RESULT.json
+  receiver_ref: docs/experiment/CANONICAL_SOLO_EPOCH_004_PRIMARY_ADJUDICATION.md
+  transformation_ref: scripts/validate_canonical_epoch_004_primary_result.py
+  threshold_refs: []
+  validation_state: SOURCE_AND_RECEIVER_VALIDATION_NOT_YET_EXECUTED
+  exception_refs:
+    - docs/experiment/EPOCH_004_POST_FIDELITY_CLAIM_CEILING_2026-09-08.md
+projection_state: NOT_VERIFIED
+notes:
+  - This R1 fixture is historical and cannot establish canonical DGAF efficacy.
+  - C1 records contract completeness only; it does not claim source validation, receiver validation, or independent review.

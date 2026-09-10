@@ -1,3 +1,5 @@
+> **HISTORICAL / SUPERSEDED FOR PRESENT-STATE USE — 2026-09-10:** This record preserves the 2026-09-03 evidence-execution state and its then-current runtime candidate, deployment, remaining gates, and next operation. It is not current gate or execution authority. Resolve present state through `docs/CURRENT_STATE.md` and `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`. “Current” and “next” wording below is event-time language only and must not be used to infer the present candidate, deployment health, freeze state, authorization state, empirical state, or next action.
+
 # 2026-09-03 — Current Evidence Execution Record
 
 ## Current verified runtime boundary
