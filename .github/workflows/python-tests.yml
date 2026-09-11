@@ -13,15 +13,12 @@ on:
       - 'pyproject.toml'
       - '.flake8'
       - '.github/workflows/python-tests.yml'
+  # Pull requests must always emit the Python matrix contexts because protected
+  # main may require those contexts even when the change itself is docs-only.
+  # The changed-Python static-check step already exits cleanly when there are no
+  # Python targets, while the repository regression suite remains fail-closed.
   pull_request:
     branches: [ main, develop ]
-    paths:
-      - '**/*.py'
-      - '**/*.pyi'
-      - 'requirements*.txt'
-      - 'pyproject.toml'
-      - '.flake8'
-      - '.github/workflows/python-tests.yml'
 
 jobs:
   staging-evidence:

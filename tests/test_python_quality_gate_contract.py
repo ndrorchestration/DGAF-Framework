@@ -16,14 +16,23 @@ def _between(text: str, start: str, end: str) -> str:
     return text.split(start, 1)[1].split(end, 1)[0]
 
 
-def test_quality_workflow_triggers_cover_contract_and_config_changes() -> None:
+def test_quality_workflow_triggers_preserve_push_scope_and_emit_every_pr_context() -> None:
     text = _workflow_text()
     push = _between(text, "  push:\n", "  pull_request:\n")
     pull_request = _between(text, "  pull_request:\n", "\njobs:\n")
 
-    for block in (push, pull_request):
-        assert "- '.flake8'" in block
-        assert "- '.github/workflows/python-tests.yml'" in block
+    for contract_path in (
+        "- '.flake8'",
+        "- 'requirements*.txt'",
+        "- 'pyproject.toml'",
+        "- '.github/workflows/python-tests.yml'",
+    ):
+        assert contract_path in push
+
+    assert "branches: [ main, develop ]" in pull_request
+    assert "paths:" not in pull_request
+    assert "paths-ignore:" not in pull_request
+    assert "python-version: ['3.10', '3.11', '3.12']" in text
 
 
 def test_primary_quality_steps_are_blocking() -> None:
