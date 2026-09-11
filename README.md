@@ -7,7 +7,7 @@ In plain English: an agent may be able to do something and still be blocked from
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
-> **Successor Track A:** issue #523 open · operator-local custody-v2 recovery **PASS_CURRENT_V2 / SELF-ATTESTED / NONINDEPENDENT** · repository custody admission **NOT ESTABLISHED** · dataset-lock tooling **ACCEPTED (#622)** · unblinding-decision validation tooling **ACCEPTED (#627)** · dataset lock **NOT ESTABLISHED** · replacement empirical collection **NOT AUTHORIZED**  
+> **Successor Track A:** issue #523 open · operator-local custody-v2 recovery **PASS_CURRENT_V2 / SELF-ATTESTED / NONINDEPENDENT** · repository custody **ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT (#644)** · precollection preflight **NOT ESTABLISHED** · dataset-lock tooling **ACCEPTED (#622)** · unblinding-decision validation tooling **ACCEPTED (#627)** · dataset lock **NOT ESTABLISHED** · replacement empirical collection **NOT AUTHORIZED**  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
@@ -55,7 +55,7 @@ DGAF separates prospective evaluation by workload instead of treating one experi
 | Track | Plain-English purpose | Current boundary |
 |---|---|---|
 | **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
-| **A — Epoch 002 successor** | Replacement prospective topology robustness | Issue #523 governs the successor; operator-local custody-v2 recovery passed as self-attested/non-independent, but repository custody remains NOT ESTABLISHED pending exact artifact admission/validation; dataset-lock and unblinding-decision validation tooling are accepted, but no successor dataset lock or unblinding event exists and empirical collection is not authorized |
+| **A — Epoch 002 successor** | Replacement prospective topology robustness | Issue #523 governs the successor; operator-local custody-v2 recovery passed as self-attested/non-independent and #644 accepted the exact public/non-secret custody evidence, satisfying repository `real_custody_v2` as `SAME_SYSTEM_NONINDEPENDENT`; precollection preflight is not yet established, dataset-lock and unblinding-decision validation tooling are accepted, and empirical collection is not authorized |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
@@ -69,9 +69,9 @@ That collection remains valid evidence that the blinded panel was executed and r
 
 Issue #523 controls the replacement path. Epoch 002 uses a new protocol identity, fresh seeds and fresh blinding, and a recoverable solo-custody design without pretending that solo custody is independent custody.
 
-The operator-local recovery drill has completed successfully as **`PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT`**. That local PASS does not satisfy repository-level custody. The exact generated public certificate and non-secret schema-v2 receipt still must be recovered/transferred, admitted, and validated from repository contents.
+The operator-local recovery drill completed successfully as **`PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT`**. PR #644 then admitted the exact public certificate and non-secret schema-v2 receipt and passed 22/22 exact-head workflows before merging as signed/verified `main` `73f4951c0789d2add282d4f68e1718de65b5f305`. Repository `real_custody_v2` is therefore satisfied. Custody remains **`SAME_SYSTEM_NONINDEPENDENT`**; recoverability and repository acceptance do not establish independent custody.
 
-Only these two non-secret artifacts from the successful local drill are eligible for repository admission:
+These two non-secret artifacts are the accepted repository custody evidence:
 
 - `track_a_successor_custody_cert.pem`
 - `track_a_successor_solo_custody_receipt.json`
@@ -89,15 +89,17 @@ Repository-side prospective tooling is accepted through:
 - content-addressed dataset-lock validation (#622);
 - separate fail-closed human-controlled unblinding-decision validation (#627).
 
-These controls **do not themselves create** custody evidence, preflight, freeze, closure, authorization, empirical results, dataset lock, unblinding, materialization, primary-analysis authority, efficacy, independent validation, High-Assurance authority, or scientific N.
+These controls **do not themselves create** preflight, freeze, closure, authorization, empirical results, dataset lock, unblinding, materialization, primary-analysis authority, efficacy, independent validation, High-Assurance authority, or scientific N.
+
+The first real preflight attempt, #646, is **CLOSED / UNMERGED / SUPERSEDED**. It exposed repository-state-coupled predecessor-absence tests and then correctly failed the one-file scientific-event boundary after test maintenance shared the branch. No preflight state or validation evidence from #646 transfers. PR #648 is the active **test-only** transition-maintenance prerequisite and creates no scientific transition.
 
 ## Ordered successor lifecycle
 
-The scientific/control sequence is intentionally split into separate transitions:
+The scientific/control sequence is intentionally split into separate transitions. The custody predecessor is now satisfied:
 
 ```text
-exact custody artifact admission
-→ repository custody validation + Completion State Reconciler
+accepted exact custody artifact admission
+→ accepted repository custody validation + Completion State Reconciler
 → precollection preflight
 → immutable freeze
 → final closure
@@ -116,7 +118,7 @@ exact custody artifact admission
 
 The dataset-lock transition is non-authorizing and cannot authorize its own successor. A future PASS unblinding decision is bounded to controlled mapping release/decryption only and does not authorize primary analysis. Materialization remains a separate controlled operation and receipt, followed by a still-separate primary-analysis authorization.
 
-Replacement empirical collection remains **NOT AUTHORIZED** until repository custody is established and the predecessor chain is executed in order.
+Replacement empirical collection remains **NOT AUTHORIZED** until the remaining predecessor chain is executed in order and a separate human-controlled collection-authorization event is accepted.
 
 ## What is established — and what is not
 
