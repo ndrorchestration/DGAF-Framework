@@ -165,11 +165,7 @@ def event_parent(expected_base_sha: str) -> str:
 def validate_event(expected_base_sha: str) -> None:
     parent = event_parent(expected_base_sha)
     head = git("rev-parse", "HEAD").lower()
-    changed = tuple(
-        line
-        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines()
-        if line
-    )
+    changed = tuple(line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line)
     if changed != (LEDGER_REL,):
         fail(f"dataset-lock head must change only {LEDGER_REL}; changed={list(changed)}")
     if not git_path_exists(LEDGER_REL, parent):
