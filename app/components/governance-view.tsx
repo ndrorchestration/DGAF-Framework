@@ -39,7 +39,7 @@ export function GovernanceView() {
           <div className="lane-rail">
             {lane.stages.map(stage => {
               const index = GOVERNANCE_STAGES.indexOf(stage) + 1
-              const isFrontier = stage.id === 'repository-custody'
+              const isFrontier = stage.id === 'precollection-preflight'
               return <article className="lane-stage" data-frontier={isFrontier ? 'true' : 'false'} key={stage.id}>
                 <div className="lane-stage-heading"><span className="lane-stage-number">{String(index).padStart(2, '0')}</span><StatusChip state={stage.predicateState} compact /></div>
                 <h4>{stage.shortLabel}</h4>
