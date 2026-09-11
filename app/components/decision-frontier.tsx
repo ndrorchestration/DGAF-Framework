@@ -8,32 +8,32 @@ export function DecisionFrontier({ showOperatorHandoff = false }: { showOperator
         <div>
           <span className="eyebrow accent">DECISION FRONTIER</span>
           <h3 id="decision-frontier-title">{NEXT_TRANSITION.title}</h3>
-          <p>One predecessor is open. Prepared downstream tooling does not move the frontier.</p>
+          <p>Custody is satisfied. One non-authorizing predecessor is now actionable; prepared downstream tooling does not move the frontier.</p>
         </div>
-        <StatusChip state="not_established" label="CUSTODY PREDICATE OPEN" />
+        <StatusChip state="open" label="PREFLIGHT ACTIONABLE" />
       </div>
 
       <div className="decision-flow" aria-label="Evidence, blocker, and next admissible action">
         <article className="decision-node" data-kind="evidence">
           <span className="decision-node-index">01</span>
           <span className="eyebrow">EVIDENCE</span>
-          <h4>Bounded local recovery evidence exists.</h4>
+          <h4>Repository custody-v2 evidence is satisfied.</h4>
           <p>{NEXT_TRANSITION.evidence}</p>
-          <StatusChip state="open" label="SELF-ATTESTED / NONINDEPENDENT" compact />
+          <StatusChip state="pass" label="CUSTODY SATISFIED" compact />
         </article>
         <div className="decision-connector" aria-hidden="true"><span /></div>
         <article className="decision-node" data-kind="blocker">
           <span className="decision-node-index">02</span>
           <span className="eyebrow">BLOCKER</span>
-          <h4>Repository acceptance has not been established.</h4>
+          <h4>The retained preflight record does not yet exist.</h4>
           <p>{NEXT_TRANSITION.blocker}</p>
-          <StatusChip state="not_established" label="PREDECESSOR OPEN" compact />
+          <StatusChip state="open" label="ACTIONABLE / NOT RETAINED" compact />
         </article>
         <div className="decision-connector" aria-hidden="true"><span /></div>
         <article className="decision-node" data-kind="action">
           <span className="decision-node-index">03</span>
           <span className="eyebrow accent">ACTION PERMITTED NOW</span>
-          <h4>Admit only the exact existing public artifacts.</h4>
+          <h4>Prepare only the non-authorizing preflight record.</h4>
           <p>{NEXT_TRANSITION.summary}</p>
           <div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div>
         </article>
@@ -42,11 +42,11 @@ export function DecisionFrontier({ showOperatorHandoff = false }: { showOperator
       {showOperatorHandoff && <details className="operator-handoff">
         <summary><span>Operator handoff</span><strong>Show exact safe local step</strong></summary>
         <div className="operator-handoff-grid">
-          <div><span>Branch</span><code>{NEXT_TRANSITION.operatorBranch}</code></div>
+          <div><span>Starting point</span><code>{NEXT_TRANSITION.operatorBranch}</code></div>
           <div><span>Run</span><code>{NEXT_TRANSITION.operatorCommand}</code></div>
-          <div><span>Verify staged scope</span><code>{NEXT_TRANSITION.operatorVerification}</code></div>
+          <div><span>Verify one-file delta</span><code>{NEXT_TRANSITION.operatorVerification}</code></div>
         </div>
-        <p>This handoff stages only the exact non-secret public custody artifacts. It does not create, expose, or request private-key material, passphrases, encrypted backups, or blinding secrets.</p>
+        <p>The preflight helper consumes only the already-admitted public certificate and non-secret custody receipt. It never creates, reads, requests, or accepts a private key or passphrase, and it cannot authorize empirical collection.</p>
       </details>}
 
       <div className="decision-lock">
