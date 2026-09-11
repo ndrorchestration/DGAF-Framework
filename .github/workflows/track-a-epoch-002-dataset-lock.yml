@@ -119,6 +119,7 @@ jobs:
           tmp="$RUNNER_TEMP/track-a-epoch-002-dataset-lock"
           mkdir -p "$tmp/evidence" "$tmp/public" "$tmp/protected"
           receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+          auth_rel='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json'
           auth=(-H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json')
 
           mapfile -t receipt_values < <(
@@ -197,14 +198,53 @@ jobs:
           evidence = json.load(open(sys.argv[1], encoding='utf-8'))
           print(evidence['collection_workflow_run_id'])
           print(evidence['collection_authorization_commit_sha'])
+          print(evidence['collection_authorization_blob_sha'])
+          print(evidence['frozen_candidate_sha'])
+          print(evidence['frozen_candidate_tree_sha'])
           print(evidence['public_artifact']['artifact_id'])
           print(evidence['protected_artifact']['artifact_id'])
           PY
           )
           collection_run_id="${collection_values[0]}"
           collection_authorization_commit="${collection_values[1]}"
-          public_artifact_id="${collection_values[2]}"
-          protected_artifact_id="${collection_values[3]}"
+          collection_authorization_blob="${collection_values[2]}"
+          frozen_candidate_sha="${collection_values[3]}"
+          frozen_candidate_tree="${collection_values[4]}"
+          public_artifact_id="${collection_values[5]}"
+          protected_artifact_id="${collection_values[6]}"
+
+          test "$(git rev-parse "$collection_authorization_commit:$auth_rel")" \
+            = "$collection_authorization_blob"
+          test "$(git rev-parse "$frozen_candidate_sha^{tree}")" \
+            = "$frozen_candidate_tree"
+          git show "$collection_authorization_commit:$auth_rel" \
+            > "$tmp/collection-authorization.json"
+
+          python - \
+            "$tmp/evidence/track_a_epoch_002_dataset_lock_evidence.json" \
+            "$tmp/collection-authorization.json" <<'PY'
+          import json
+          import sys
+
+          evidence = json.load(open(sys.argv[1], encoding='utf-8'))
+          authorization = json.load(open(sys.argv[2], encoding='utf-8'))
+          assert authorization['record_type'] == 'TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION'
+          assert authorization['frozen_candidate_sha'] == evidence['frozen_candidate_sha']
+          assert authorization['frozen_candidate_tree_sha'] == evidence['frozen_candidate_tree_sha']
+          assert authorization['custody_receipt_blob_sha'] == evidence['custody_receipt_blob_sha']
+          assert authorization['seed_count'] == evidence['paired_seed_units'] == 50
+          assert authorization['expected_observations'] == evidence['blinded_observations'] == 2250
+          assert authorization['authorize_empirical_collection'] is True
+          assert authorization['authorize_unblinding'] is False
+          assert authorization['authorize_primary_analysis'] is False
+          assert authorization['historical_pooling_allowed'] is False
+          assert authorization['epoch_004_substitution_allowed'] is False
+          assert authorization['high_assurance_authorized'] is False
+          assert authorization['custody_class'] == 'SAME_SYSTEM_NONINDEPENDENT'
+          assert authorization['custody_certificate_sha256'] == evidence['protected_artifact']['custody_certificate_sha256']
+          assert authorization['custody_certificate_public_key_der_sha256'] == evidence['protected_artifact']['custody_certificate_public_key_der_sha256']
+          print('TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION_IDENTITY=PASS')
+          PY
 
           curl -fsSL "${auth[@]}" \
             "$API/repos/$GITHUB_REPOSITORY/actions/runs/$collection_run_id" \
