@@ -18,6 +18,7 @@ test('P-07 default targets resolve to existing repository paths', () => {
 })
 
 test('P-07 defaults do not restore retired API locations', () => {
-  assert.equal(SWEEP_DEFAULT_TARGETS.includes('api/health.py'), false)
-  assert.equal(SWEEP_DEFAULT_TARGETS.includes('app/api/health/route.ts'), false)
+  const defaults: readonly string[] = SWEEP_DEFAULT_TARGETS
+  assert.equal(defaults.includes('api/health.py'), false)
+  assert.equal(defaults.includes('app/api/health/route.ts'), false)
 })
