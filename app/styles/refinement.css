@@ -118,6 +118,18 @@
   line-height: 1.5;
 }
 
+.operator-frontier {
+  padding: 22px 24px;
+}
+
+.operator-frontier .artifact-row {
+  margin-top: 16px;
+}
+
+.operator-frontier .warning-copy {
+  margin-bottom: 0;
+}
+
 .source-authority {
   padding: 20px 22px;
 }
