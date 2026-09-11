@@ -23,15 +23,37 @@ Harness failure, timeout, missing evidence, malformed input, or unknown classifi
 
 ## v1 scope
 
-The initial implementation provides a fail-closed output envelope, curated governance-semantic mutation operators, explicit legal/forbidden transition coverage metrics, and pairwise control-interaction analysis.
+The implementation provides a fail-closed output envelope, curated governance-semantic mutation operators, explicit legal/forbidden transition coverage metrics, pairwise control-interaction analysis, assumption-expiry modeling, and a blind-spot ledger contract.
 
 Critical mutant families begin with authorization promotion, evidence-independence promotion, predecessor/provenance removal, scientific-N increment, and fail-open decision promotion.
 
+### Assumption validity and expiry
+
+Assumptions are classified by evidence validity mode:
+
+- `IMMUTABLE` — content-addressed or otherwise immutable evidence does not decay merely because time passes;
+- `VERSION_BOUND` — revalidation is triggered by a relevant version change;
+- `CONFIGURATION_BOUND` — revalidation is triggered by a relevant configuration change;
+- `ENVIRONMENT_BOUND` — revalidation is triggered by a relevant environment change;
+- `TEMPORAL` — a timezone-aware revalidation deadline is required.
+
+Expiry is trigger-based first. The registry is seeded empty and carries `completeness_claim: false`; an empty registry therefore does not claim that no unregistered assumptions exist.
+
+### Blind-spot ledger
+
+A blind-spot record separates methods that discovered a finding from methods that missed it, binds reproduction evidence, may point to a candidate generated detector, and is always `authoritative_effect: NONE`.
+
+The seed ledger is deliberately empty with `completeness_claim: false`. Findings may be marked only `CANDIDATE`, `REVIEWED`, or `REJECTED`; the ledger itself cannot promote a finding into governance truth.
+
 ## Recursive assurance roadmap
 
-Later layers add metamorphic relation registries, assumption expiry, a blind-spot ledger (`discovered_by` / `missed_by`), detector mutation, property mutation, stateful search, formal lifecycle models, bounded agent/API chaos, and versioned external-framework crosswalks.
+Later layers add executable metamorphic relation registries, detector mutation, property mutation, stateful search, formal lifecycle models, bounded agent/API chaos, and versioned external-framework crosswalks.
 
 A discovery method may generate a candidate finding or test. It may never promote itself into authoritative governance truth.
+
+## Research alignment
+
+The design follows a measurement-oriented rather than certification-oriented interpretation of current AI TEVV work: assumptions and measurement objectives must be explicit, evidence validity can change with context, monitoring methods themselves can have blind spots, and machine-readable audit records improve reproducibility. External framework mappings remain informational and never imply compliance or certification.
 
 ## Verification boundary
 
