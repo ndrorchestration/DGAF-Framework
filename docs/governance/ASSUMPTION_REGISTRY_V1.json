@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "classification": "ENGINEERING_DISCOVERY_ONLY",
+  "authoritative_effect": "NONE",
+  "completeness_claim": false,
+  "validity_classes": [
+    "IMMUTABLE",
+    "VERSION_BOUND",
+    "CONFIGURATION_BOUND",
+    "ENVIRONMENT_BOUND",
+    "TEMPORAL"
+  ],
+  "assumptions": []
+}
