@@ -116,6 +116,70 @@ def materialization_evidence_fixture() -> dict:
     }
 
 
+def dataset_lock_evidence_fixture() -> dict:
+    return {
+        "record_type": "TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE",
+        "schema_version": 1,
+        "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
+        "epoch": 2,
+        "evidence_workflow_run_id": 9001,
+        "evidence_tooling_commit_sha": "0" * 40,
+        "collection_workflow_run_id": 9002,
+        "collection_authorization_commit_sha": "1" * 40,
+        "collection_authorization_blob_sha": "2" * 40,
+        "frozen_candidate_sha": "3" * 40,
+        "frozen_candidate_tree_sha": "4" * 40,
+        "custody_receipt_blob_sha": "5" * 40,
+        "qc_ledger_record_id": "E002-QC-00112233",
+        "pre_lock_result_ledger_sha256": "0" * 64,
+        "pre_lock_result_ledger_record_count": 53,
+        "paired_seed_units": 50,
+        "blinded_observations": 2250,
+        "public_artifact": {
+            "artifact_id": 9201,
+            "name": "track-a-epoch-002-public-blinded",
+            "size_bytes": 10001,
+            "archive_sha256": "5" * 64,
+            "manifest_sha256": "6" * 64,
+        },
+        "protected_artifact": {
+            "artifact_id": 9202,
+            "name": "track-a-epoch-002-protected-encrypted",
+            "size_bytes": 10002,
+            "archive_sha256": "7" * 64,
+            "ciphertext_sha256": "8" * 64,
+            "plaintext_tar_sha256": "9" * 64,
+            "custody_certificate_sha256": "a" * 64,
+            "custody_certificate_public_key_der_sha256": "b" * 64,
+        },
+        "structural_qc": {
+            "public_archive_digest_verified": True,
+            "protected_archive_digest_verified": True,
+            "all_public_sidecars_verified": True,
+            "whole_epoch_manifest_verified": True,
+            "exact_seed_panel_verified": True,
+            "exact_matrix_counts_verified": True,
+            "public_schema_allowlist_verified": True,
+            "protected_ciphertext_digest_verified": True,
+            "protected_plaintext_not_decrypted": True,
+            "protected_mapping_not_inspected": True,
+            "private_key_not_used": True,
+        },
+        "custody_class": "SAME_SYSTEM_NONINDEPENDENT",
+        "independent_custody": False,
+        "outcomes_inspected_for_lock": False,
+        "outcome_aggregation_performed": False,
+        "unblinding_authorized": False,
+        "primary_analysis_authorized": False,
+        "historical_pooling_allowed": False,
+        "epoch_004_substitution_allowed": False,
+        "high_assurance_authorized": False,
+        "scientific_n_increment": 0,
+        "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+        "dataset_lock_evidence_status": "STRUCTURAL_QC_PASS_PENDING_REPOSITORY_RECEIPT",
+    }
+
+
 def valid_receipt(validator, decision: dict, evidence: dict) -> dict:
     return validator.expected_receipt(
         decision,
@@ -158,6 +222,36 @@ def test_expected_receipt_binds_evidence_and_exact_unblinding_predecessor() -> N
         "empirical_n_increment": 0,
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
     }
+
+
+def test_evidence_matches_dataset_lock_artifact_lineage() -> None:
+    validator = load_validator()
+    validator.validate_evidence_against_dataset_lock(
+        materialization_evidence_fixture(),
+        dataset_lock_evidence_fixture(),
+    )
+
+
+def test_evidence_rejects_public_artifact_drift_from_dataset_lock() -> None:
+    validator = load_validator()
+    evidence = materialization_evidence_fixture()
+    evidence["public_artifact"]["archive_sha256"] = "f" * 64
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_against_dataset_lock(
+            evidence,
+            dataset_lock_evidence_fixture(),
+        )
+
+
+def test_evidence_rejects_protected_artifact_drift_from_dataset_lock() -> None:
+    validator = load_validator()
+    evidence = materialization_evidence_fixture()
+    evidence["protected_artifact"]["custody_certificate_sha256"] = "f" * 64
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_against_dataset_lock(
+            evidence,
+            dataset_lock_evidence_fixture(),
+        )
 
 
 def test_evidence_requires_exact_materializer_path() -> None:
