@@ -528,7 +528,10 @@ def validate_receipt_object(
         mismatched = sorted(
             key for key in set(expected) & set(receipt) if expected[key] != receipt[key]
         )
-        fail("dataset-lock receipt exact contract mismatch: " f"missing={missing} extra={extra} mismatched={mismatched}")
+        fail(
+            "dataset-lock receipt exact contract mismatch: "
+            f"missing={missing} extra={extra} mismatched={mismatched}"
+        )
 
 
 def git(*args: str, check: bool = True) -> str:
