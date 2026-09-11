@@ -1,0 +1,8 @@
+# Protect cryptographic material from line-ending normalization.
+# Git core.autocrlf=true would otherwise convert the PEM's CRLF to LF on
+# commit, changing the committed blob SHA-256 and breaking the deterministic
+# file_sha256_equals_json_field binding in both the reconciler (PR #603) and
+# the Epoch 002 precollection preflight (scripts/prepare_track_a_epoch_002
+# _precollection_preflight.py --check-custody), which produces:
+#   EPOCH_002_PREFLIGHT_FAIL: custody certificate SHA-256 mismatch
+docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem binary
