@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { spawnSync } from 'node:child_process'
+
 const SAFE_NON_DEPLOY_PREFIXES = [
   '.github/',
   'docs/',
@@ -14,6 +16,25 @@ function canSafelySkip(changedPaths) {
   )
 }
 
+function isAvailableCommit(sha) {
+  if (!sha) return false
+  return spawnSync('git', ['cat-file', '-e', `${sha}^{commit}`], { stdio: 'ignore' }).status === 0
+}
+
+function changedPathsFromVercelGit() {
+  const previous = process.env.VERCEL_GIT_PREVIOUS_SHA
+  const current = process.env.VERCEL_GIT_COMMIT_SHA
+
+  if (!isAvailableCommit(previous) || !isAvailableCommit(current)) return null
+
+  const diff = spawnSync('git', ['diff', '--name-only', '-z', previous, current, '--'], {
+    encoding: 'utf8',
+  })
+  if (diff.status !== 0 || diff.error) return null
+
+  return diff.stdout.split('\0').filter(Boolean)
+}
+
 const args = process.argv.slice(2)
 
 if (args[0] === '--changed') {
@@ -21,5 +42,6 @@ if (args[0] === '--changed') {
   process.exit(canSafelySkip(changedPaths) ? 0 : 1)
 }
 
-// Until a trustworthy Git comparison is available, fail open toward building.
-process.exit(1)
+const changedPaths = changedPathsFromVercelGit()
+// Missing/invalid comparison evidence fails open toward building.
+process.exit(changedPaths && canSafelySkip(changedPaths) ? 0 : 1)
