@@ -1,0 +1,312 @@
+name: Track A Epoch 002 Dataset Lock
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-dataset-lock.yml'
+      - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_PROCEDURE.md'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+      - 'scripts/validate_track_a_epoch_002_dataset_lock.py'
+      - 'scripts/validate_track_a_epoch_002_result_ledger.py'
+      - 'scripts/validate_track_a_epoch_002_result_record_semantics.py'
+      - 'tests/test_track_a_epoch_002_dataset_lock.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 dataset-lock boundary
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install pinned validation environment
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Resolve dataset-lock validation mode
+        id: mode
+        run: |
+          set -euo pipefail
+          receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+          if test -e "$receipt"; then
+            echo 'value=receipt_event' >> "$GITHUB_OUTPUT"
+          else
+            echo 'value=tooling_only' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate prospective tooling only
+        if: ${{ steps.mode.outputs.value == 'tooling_only' }}
+        run: python scripts/validate_track_a_epoch_002_dataset_lock.py --tooling-only
+
+      - name: Prove tooling PR changes only the dedicated lane
+        if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          expected=(
+            '.github/workflows/track-a-epoch-002-dataset-lock.yml'
+            'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
+            'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_PROCEDURE.md'
+            'scripts/validate_track_a_epoch_002_dataset_lock.py'
+            'tests/test_track_a_epoch_002_dataset_lock.py'
+          )
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+          diff -u \
+            <(printf '%s\n' "${expected_sorted[@]}") \
+            <(printf '%s\n' "${changed[@]}")
+
+      - name: Run dataset-lock adversarial tests
+        run: python -m pytest tests/test_track_a_epoch_002_dataset_lock.py -q
+
+      - name: Prove no empirical, decryption, or secret-writer surface
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path('scripts/validate_track_a_epoch_002_dataset_lock.py').read_text()
+          forbidden = (
+              '--write',
+              '--execute',
+              'PDMAL_TOPOLOGY_BLINDING_KEY',
+              'BEGIN PRIVATE KEY',
+              'BEGIN ENCRYPTED PRIVATE KEY',
+          )
+          for marker in forbidden:
+              assert marker not in source, marker
+          assert 'openssl cms -decrypt' not in source
+          assert 'openssl cms -encrypt' not in source
+          print('DATASET_LOCK_TOOLING_NONAUTHORIZING=TRUE')
+          print('DATASET_LOCK_TOOLING_DECRYPTS_PROTECTED_MAPPING=FALSE')
+          print('DATASET_LOCK_TOOLING_EXECUTES_EMPIRICAL_WORK=FALSE')
+          PY
+
+      - name: Retrieve and validate exact retained evidence for future receipt event
+        if: ${{ steps.mode.outputs.value == 'receipt_event' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          API: https://api.github.com
+        run: |
+          set -euo pipefail
+          tmp="$RUNNER_TEMP/track-a-epoch-002-dataset-lock"
+          mkdir -p "$tmp/evidence" "$tmp/public" "$tmp/protected"
+          receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+          auth_rel='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json'
+          auth=(-H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json')
+
+          mapfile -t receipt_values < <(
+            python - "$receipt" <<'PY'
+          import json
+          import sys
+
+          receipt = json.load(open(sys.argv[1], encoding='utf-8'))
+          subject = receipt['immutable_subject']
+          print(subject['workflow_run_id'])
+          print(subject['artifact_id'])
+          print(subject['sha256'])
+          print(receipt['producer']['version_or_commit'])
+          PY
+          )
+          evidence_run_id="${receipt_values[0]}"
+          evidence_artifact_id="${receipt_values[1]}"
+          evidence_sha256="${receipt_values[2]}"
+          evidence_tooling_commit="${receipt_values[3]}"
+
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/runs/$evidence_run_id" \
+            > "$tmp/evidence-run.json"
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$evidence_artifact_id" \
+            > "$tmp/evidence-artifact.json"
+
+          python - \
+            "$tmp/evidence-run.json" \
+            "$tmp/evidence-artifact.json" \
+            "$evidence_run_id" \
+            "$evidence_artifact_id" \
+            "$evidence_tooling_commit" <<'PY'
+          import json
+          import sys
+
+          run = json.load(open(sys.argv[1], encoding='utf-8'))
+          artifact = json.load(open(sys.argv[2], encoding='utf-8'))
+          run_id = int(sys.argv[3])
+          artifact_id = int(sys.argv[4])
+          tooling_commit = sys.argv[5]
+          assert run['id'] == run_id
+          assert run['status'] == 'completed'
+          assert run['conclusion'] == 'success'
+          assert run['head_sha'] == tooling_commit
+          assert artifact['id'] == artifact_id
+          assert artifact['name'] == 'track-a-epoch-002-dataset-lock-evidence'
+          assert artifact['expired'] is False
+          assert artifact['workflow_run']['id'] == run_id
+          print('TRACK_A_EPOCH_002_LOCK_EVIDENCE_EXTERNAL_IDENTITY=PASS')
+          PY
+
+          curl -fsSL -L "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$evidence_artifact_id/zip" \
+            -o "$tmp/evidence.zip"
+          unzip -q "$tmp/evidence.zip" -d "$tmp/evidence"
+          mapfile -t evidence_names < <(
+            cd "$tmp/evidence"
+            find . -maxdepth 1 -type f -printf '%f\n' | sort
+          )
+          expected_evidence_names=(
+            'track_a_epoch_002_dataset_lock_evidence.json'
+            'track_a_epoch_002_pre_lock_result_ledger.json'
+          )
+          diff -u \
+            <(printf '%s\n' "${expected_evidence_names[@]}" | sort) \
+            <(printf '%s\n' "${evidence_names[@]}")
+          echo "$evidence_sha256  $tmp/evidence/track_a_epoch_002_dataset_lock_evidence.json" \
+            | sha256sum -c -
+
+          mapfile -t collection_values < <(
+            python - "$tmp/evidence/track_a_epoch_002_dataset_lock_evidence.json" <<'PY'
+          import json
+          import sys
+
+          evidence = json.load(open(sys.argv[1], encoding='utf-8'))
+          print(evidence['collection_workflow_run_id'])
+          print(evidence['collection_authorization_commit_sha'])
+          print(evidence['collection_authorization_blob_sha'])
+          print(evidence['frozen_candidate_sha'])
+          print(evidence['frozen_candidate_tree_sha'])
+          print(evidence['public_artifact']['artifact_id'])
+          print(evidence['protected_artifact']['artifact_id'])
+          PY
+          )
+          collection_run_id="${collection_values[0]}"
+          collection_authorization_commit="${collection_values[1]}"
+          collection_authorization_blob="${collection_values[2]}"
+          frozen_candidate_sha="${collection_values[3]}"
+          frozen_candidate_tree="${collection_values[4]}"
+          public_artifact_id="${collection_values[5]}"
+          protected_artifact_id="${collection_values[6]}"
+
+          test "$(git rev-parse "$collection_authorization_commit:$auth_rel")" \
+            = "$collection_authorization_blob"
+          test "$(git rev-parse "$frozen_candidate_sha^{tree}")" \
+            = "$frozen_candidate_tree"
+          git show "$collection_authorization_commit:$auth_rel" \
+            > "$tmp/collection-authorization.json"
+
+          python - \
+            "$tmp/evidence/track_a_epoch_002_dataset_lock_evidence.json" \
+            "$tmp/collection-authorization.json" <<'PY'
+          import json
+          import sys
+
+          evidence = json.load(open(sys.argv[1], encoding='utf-8'))
+          authorization = json.load(open(sys.argv[2], encoding='utf-8'))
+          assert authorization['record_type'] == 'TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION'
+          assert authorization['frozen_candidate_sha'] == evidence['frozen_candidate_sha']
+          assert authorization['frozen_candidate_tree_sha'] == evidence['frozen_candidate_tree_sha']
+          assert authorization['custody_receipt_blob_sha'] == evidence['custody_receipt_blob_sha']
+          assert authorization['seed_count'] == evidence['paired_seed_units'] == 50
+          assert authorization['expected_observations'] == evidence['blinded_observations'] == 2250
+          assert authorization['authorize_empirical_collection'] is True
+          assert authorization['authorize_unblinding'] is False
+          assert authorization['authorize_primary_analysis'] is False
+          assert authorization['historical_pooling_allowed'] is False
+          assert authorization['epoch_004_substitution_allowed'] is False
+          assert authorization['high_assurance_authorized'] is False
+          assert authorization['custody_class'] == 'SAME_SYSTEM_NONINDEPENDENT'
+          assert authorization['custody_certificate_sha256'] == evidence['protected_artifact']['custody_certificate_sha256']
+          assert authorization['custody_certificate_public_key_der_sha256'] == evidence['protected_artifact']['custody_certificate_public_key_der_sha256']
+          print('TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION_IDENTITY=PASS')
+          PY
+
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/runs/$collection_run_id" \
+            > "$tmp/collection-run.json"
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$public_artifact_id" \
+            > "$tmp/public-artifact.json"
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$protected_artifact_id" \
+            > "$tmp/protected-artifact.json"
+
+          python - \
+            "$tmp/evidence/track_a_epoch_002_dataset_lock_evidence.json" \
+            "$tmp/collection-run.json" \
+            "$tmp/public-artifact.json" \
+            "$tmp/protected-artifact.json" <<'PY'
+          import json
+          import sys
+
+          evidence = json.load(open(sys.argv[1], encoding='utf-8'))
+          run = json.load(open(sys.argv[2], encoding='utf-8'))
+          public = json.load(open(sys.argv[3], encoding='utf-8'))
+          protected = json.load(open(sys.argv[4], encoding='utf-8'))
+          assert run['id'] == evidence['collection_workflow_run_id']
+          assert run['status'] == 'completed'
+          assert run['conclusion'] == 'success'
+          assert run['head_sha'] == evidence['collection_authorization_commit_sha']
+          for actual, expected in (
+              (public, evidence['public_artifact']),
+              (protected, evidence['protected_artifact']),
+          ):
+              assert actual['id'] == expected['artifact_id']
+              assert actual['workflow_run']['id'] == evidence['collection_workflow_run_id']
+              assert actual['name'] == expected['name']
+              assert actual['size_in_bytes'] == expected['size_bytes']
+              assert actual['digest'] == f"sha256:{expected['archive_sha256']}"
+              assert actual['expired'] is False
+          print('TRACK_A_EPOCH_002_COLLECTION_EXTERNAL_IDENTITIES=PASS')
+          PY
+
+          curl -fsSL -L "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$public_artifact_id/zip" \
+            -o "$tmp/public.zip"
+          curl -fsSL -L "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$protected_artifact_id/zip" \
+            -o "$tmp/protected.zip"
+          unzip -q "$tmp/public.zip" -d "$tmp/public"
+          unzip -q "$tmp/protected.zip" -d "$tmp/protected"
+
+          python scripts/validate_track_a_epoch_002_dataset_lock.py \
+            --receipt-event \
+            --evidence "$tmp/evidence/track_a_epoch_002_dataset_lock_evidence.json" \
+            --pre-lock-ledger "$tmp/evidence/track_a_epoch_002_pre_lock_result_ledger.json" \
+            --public-archive "$tmp/public.zip" \
+            --protected-archive "$tmp/protected.zip" \
+            --public-root "$tmp/public/track_a_epoch_002_public" \
+            --protected-root "$tmp/protected"
+
+      - name: Preserve fail-closed scientific boundary
+        run: |
+          echo 'SUCCESSOR_COLLECTION_AUTHORIZATION_UNCHANGED = TRUE'
+          echo 'UNBLINDING = NOT_AUTHORIZED'
+          echo 'PRIMARY_ANALYSIS = NOT_AUTHORIZED'
+          echo 'SCIENTIFIC_N_INCREMENT = 0'
+          echo 'CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED'
