@@ -8,9 +8,7 @@ import pytest
 from scripts import prepare_track_a_epoch_002_immutable_freeze as freeze
 
 ROOT = Path(__file__).resolve().parents[1]
-CONTRACT = json.loads(
-    (ROOT / "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json").read_text(encoding="utf-8")
-)
+CONTRACT = json.loads((ROOT / "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json").read_text(encoding="utf-8"))
 
 
 def test_validate_retained_freeze_does_not_reapply_creation_gate(
