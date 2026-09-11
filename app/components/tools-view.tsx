@@ -2,14 +2,14 @@
 
 import { useMemo, useState } from 'react'
 import { runSweep } from '../lib/api'
+import { SWEEP_DEFAULT_INPUT } from '../lib/tools-defaults'
 import type { SweepResult } from '../lib/types'
 import { StatusChip } from './status-chip'
 
-const DEFAULT_TARGETS = 'api/health.py\napp/api/health/route.ts\nrequirements.txt'
 const SEVERITIES = ['ALL', 'HIGH', 'MEDIUM', 'LOW', 'INFO'] as const
 
 export function ToolsView() {
-  const [input, setInput] = useState(DEFAULT_TARGETS)
+  const [input, setInput] = useState(SWEEP_DEFAULT_INPUT)
   const [result, setResult] = useState<SweepResult | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
