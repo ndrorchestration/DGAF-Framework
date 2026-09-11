@@ -21,9 +21,7 @@ EXPECTED_BRANCH = "track-a-successor-custody-evidence-v2"
 SOURCE_CERT_NAME = "track_a_successor_custody_cert.pem"
 SOURCE_RECEIPT_NAME = "track_a_successor_solo_custody_receipt.json"
 DEST_CERT = Path("docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem")
-DEST_RECEIPT = Path(
-    "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json"
-)
+DEST_RECEIPT = Path("docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json")
 EXPECTED_STAGED_PATHS = [DEST_CERT.as_posix(), DEST_RECEIPT.as_posix()]
 
 
@@ -117,8 +115,7 @@ def validate_source_evidence(
         "canonical DGAF efficacy must remain NOT_ESTABLISHED",
     )
     _require(
-        payload.get("certificate_public_key_der_sha256")
-        == payload.get("recovered_public_key_der_sha256"),
+        payload.get("certificate_public_key_der_sha256") == payload.get("recovered_public_key_der_sha256"),
         "recovered public key identity must match the collection certificate",
     )
 
