@@ -1,0 +1,4 @@
+# Track A Epoch 002 custody evidence is content-addressed against exact
+# operator-local bytes. Disable Git text/EOL normalization for these paths.
+docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem -text
+docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json -text
