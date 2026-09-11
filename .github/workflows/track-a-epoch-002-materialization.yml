@@ -1,0 +1,274 @@
+name: Track A Epoch 002 Materialization Receipt
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-materialization.yml'
+      - 'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_PROCEDURE.md'
+      - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json'
+      - 'scripts/validate_track_a_epoch_002_materialization.py'
+      - 'tests/test_track_a_epoch_002_materialization.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 materialization boundary
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install pinned validation environment
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Resolve materialization validation mode
+        id: mode
+        run: |
+          set -euo pipefail
+          receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json'
+          if test -e "$receipt"; then
+            echo 'value=receipt_event' >> "$GITHUB_OUTPUT"
+          else
+            echo 'value=tooling_only' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate prospective tooling only
+        if: ${{ steps.mode.outputs.value == 'tooling_only' }}
+        run: python scripts/validate_track_a_epoch_002_materialization.py --tooling-only
+
+      - name: Prove tooling PR changes only the dedicated lane
+        if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          expected=(
+            '.github/workflows/track-a-epoch-002-materialization.yml'
+            'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json'
+            'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_PROCEDURE.md'
+            'scripts/validate_track_a_epoch_002_materialization.py'
+            'tests/test_track_a_epoch_002_materialization.py'
+          )
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+          diff -u \
+            <(printf '%s\n' "${expected_sorted[@]}") \
+            <(printf '%s\n' "${changed[@]}")
+
+      - name: Run materialization adversarial tests
+        run: python -m pytest tests/test_track_a_epoch_002_materialization.py -q
+
+      - name: Prove validator has no secret, decryption, writer, or analysis surface
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path('scripts/validate_track_a_epoch_002_materialization.py').read_text()
+          forbidden = (
+              '--write',
+              '--execute',
+              '--private-key',
+              '--passphrase',
+              '--blinding-secret',
+              '--protected-plaintext',
+              '--decrypted-mapping',
+              'PDMAL_TOPOLOGY_BLINDING_KEY',
+              'BEGIN PRIVATE KEY',
+              'BEGIN ENCRYPTED PRIVATE KEY',
+              'openssl cms -decrypt',
+              'openssl cms -encrypt',
+              'run_primary_analysis',
+          )
+          for marker in forbidden:
+              assert marker not in source, marker
+          print('MATERIALIZATION_VALIDATOR_ONLY=TRUE')
+          print('MATERIALIZATION_TOOLING_DECRYPTS_PROTECTED_MAPPING=FALSE')
+          print('MATERIALIZATION_TOOLING_AUTHORIZES_PRIMARY_ANALYSIS=FALSE')
+          print('MATERIALIZATION_TOOLING_EXECUTES_PRIMARY_ANALYSIS=FALSE')
+          PY
+
+      - name: Retrieve exact retained evidence for future receipt event
+        if: ${{ steps.mode.outputs.value == 'receipt_event' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          API: https://api.github.com
+        run: |
+          set -euo pipefail
+          tmp="$RUNNER_TEMP/track-a-epoch-002-materialization"
+          mkdir -p "$tmp/materialization" "$tmp/dataset-lock"
+          materialization_receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json'
+          dataset_lock_receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+          auth=(-H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json')
+
+          mapfile -t materialization_values < <(
+            python - "$materialization_receipt" <<'PY'
+          import json
+          import sys
+
+          receipt = json.load(open(sys.argv[1], encoding='utf-8'))
+          subject = receipt['immutable_subject']
+          print(subject['workflow_run_id'])
+          print(subject['artifact_id'])
+          print(subject['sha256'])
+          PY
+          )
+          materialization_run_id="${materialization_values[0]}"
+          materialization_artifact_id="${materialization_values[1]}"
+          materialization_evidence_sha256="${materialization_values[2]}"
+
+          mapfile -t lock_values < <(
+            python - "$dataset_lock_receipt" <<'PY'
+          import json
+          import sys
+
+          receipt = json.load(open(sys.argv[1], encoding='utf-8'))
+          subject = receipt['immutable_subject']
+          print(subject['workflow_run_id'])
+          print(subject['artifact_id'])
+          print(subject['sha256'])
+          PY
+          )
+          lock_run_id="${lock_values[0]}"
+          lock_artifact_id="${lock_values[1]}"
+          lock_evidence_sha256="${lock_values[2]}"
+
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/runs/$materialization_run_id" \
+            > "$tmp/materialization-run.json"
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$materialization_artifact_id" \
+            > "$tmp/materialization-artifact.json"
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/runs/$lock_run_id" \
+            > "$tmp/lock-run.json"
+          curl -fsSL "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$lock_artifact_id" \
+            > "$tmp/lock-artifact.json"
+
+          python - \
+            "$tmp/materialization-run.json" \
+            "$tmp/materialization-artifact.json" \
+            "$tmp/lock-run.json" \
+            "$tmp/lock-artifact.json" \
+            "$materialization_run_id" \
+            "$materialization_artifact_id" \
+            "$lock_run_id" \
+            "$lock_artifact_id" <<'PY'
+          import json
+          import sys
+
+          materialization_run = json.load(open(sys.argv[1], encoding='utf-8'))
+          materialization_artifact = json.load(open(sys.argv[2], encoding='utf-8'))
+          lock_run = json.load(open(sys.argv[3], encoding='utf-8'))
+          lock_artifact = json.load(open(sys.argv[4], encoding='utf-8'))
+          materialization_run_id = int(sys.argv[5])
+          materialization_artifact_id = int(sys.argv[6])
+          lock_run_id = int(sys.argv[7])
+          lock_artifact_id = int(sys.argv[8])
+
+          assert materialization_run['id'] == materialization_run_id
+          assert materialization_run['status'] == 'completed'
+          assert materialization_run['conclusion'] == 'success'
+          assert materialization_artifact['id'] == materialization_artifact_id
+          assert materialization_artifact['name'] == 'track-a-epoch-002-materialization-evidence'
+          assert materialization_artifact['expired'] is False
+          assert materialization_artifact['workflow_run']['id'] == materialization_run_id
+
+          assert lock_run['id'] == lock_run_id
+          assert lock_run['status'] == 'completed'
+          assert lock_run['conclusion'] == 'success'
+          assert lock_artifact['id'] == lock_artifact_id
+          assert lock_artifact['name'] == 'track-a-epoch-002-dataset-lock-evidence'
+          assert lock_artifact['expired'] is False
+          assert lock_artifact['workflow_run']['id'] == lock_run_id
+          print('TRACK_A_EPOCH_002_MATERIALIZATION_EXTERNAL_EVIDENCE_IDENTITIES=PASS')
+          PY
+
+          curl -fsSL -L "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$materialization_artifact_id/zip" \
+            -o "$tmp/materialization.zip"
+          curl -fsSL -L "${auth[@]}" \
+            "$API/repos/$GITHUB_REPOSITORY/actions/artifacts/$lock_artifact_id/zip" \
+            -o "$tmp/dataset-lock.zip"
+          unzip -q "$tmp/materialization.zip" -d "$tmp/materialization"
+          unzip -q "$tmp/dataset-lock.zip" -d "$tmp/dataset-lock"
+
+          mapfile -t materialization_names < <(
+            cd "$tmp/materialization"
+            find . -maxdepth 1 -type f -printf '%f\n' | sort
+          )
+          expected_materialization_names=(
+            'track_a_epoch_002_materialization_evidence.json'
+          )
+          diff -u \
+            <(printf '%s\n' "${expected_materialization_names[@]}") \
+            <(printf '%s\n' "${materialization_names[@]}")
+
+          test -e "$tmp/dataset-lock/track_a_epoch_002_dataset_lock_evidence.json"
+          echo "$materialization_evidence_sha256  $tmp/materialization/track_a_epoch_002_materialization_evidence.json" \
+            | sha256sum -c -
+          echo "$lock_evidence_sha256  $tmp/dataset-lock/track_a_epoch_002_dataset_lock_evidence.json" \
+            | sha256sum -c -
+
+          python - \
+            "$tmp/materialization-run.json" \
+            "$tmp/materialization/track_a_epoch_002_materialization_evidence.json" <<'PY'
+          import json
+          import sys
+
+          run = json.load(open(sys.argv[1], encoding='utf-8'))
+          evidence = json.load(open(sys.argv[2], encoding='utf-8'))
+          assert run['head_sha'] == evidence['evidence_tooling_commit_sha']
+          assert run['id'] == evidence['evidence_workflow_run_id']
+          print('TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_RUN_BINDING=PASS')
+          PY
+
+          python scripts/validate_track_a_epoch_002_materialization.py \
+            --validate-event \
+            --evidence "$tmp/materialization/track_a_epoch_002_materialization_evidence.json" \
+            --dataset-lock-evidence "$tmp/dataset-lock/track_a_epoch_002_dataset_lock_evidence.json"
+
+      - name: Prove fail-closed current scientific boundary
+        if: ${{ steps.mode.outputs.value == 'tooling_only' }}
+        run: |
+          set -euo pipefail
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json
+          test ! -e scripts/materialize_track_a_epoch_002_unblinded_input.py
+          echo 'TRACK_A_EPOCH_002_DATASET_LOCK=NOT_ESTABLISHED'
+          echo 'TRACK_A_EPOCH_002_UNBLINDING=NOT_AUTHORIZED'
+          echo 'TRACK_A_EPOCH_002_MATERIALIZATION=NOT_ESTABLISHED'
+          echo 'TRACK_A_EPOCH_002_PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN'
+          echo 'SCIENTIFIC_N_INCREMENT=0'
+          echo 'CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED'
