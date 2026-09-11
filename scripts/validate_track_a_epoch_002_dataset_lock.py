@@ -525,7 +525,9 @@ def validate_receipt_object(
     if receipt != expected:
         missing = sorted(set(expected) - set(receipt))
         extra = sorted(set(receipt) - set(expected))
-        mismatched = sorted(key for key in set(expected) & set(receipt) if expected[key] != receipt[key])
+        mismatched = sorted(
+            key for key in set(expected) & set(receipt) if expected[key] != receipt[key]
+        )
         fail("dataset-lock receipt exact contract mismatch: " f"missing={missing} extra={extra} mismatched={mismatched}")
 
 
