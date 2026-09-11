@@ -280,6 +280,29 @@ def test_receipt_predecessor_must_match_manifest_qc() -> None:
         lock.validate_receipt_against_manifest(receipt, manifest, "c" * 64)
 
 
+def test_future_repository_event_is_one_file_and_first_history() -> None:
+    lock.require_event_shape(
+        changed_paths=[lock.RECEIPT_REL],
+        receipt_history=["a" * 40],
+        head_sha="a" * 40,
+        receipt_existed_at_parent=False,
+    )
+    with pytest.raises(SystemExit, match="change only"):
+        lock.require_event_shape(
+            changed_paths=[lock.RECEIPT_REL, "extra.json"],
+            receipt_history=["a" * 40],
+            head_sha="a" * 40,
+            receipt_existed_at_parent=False,
+        )
+    with pytest.raises(SystemExit, match="first-and-only"):
+        lock.require_event_shape(
+            changed_paths=[lock.RECEIPT_REL],
+            receipt_history=["a" * 40, "b" * 40],
+            head_sha="a" * 40,
+            receipt_existed_at_parent=False,
+        )
+
+
 def test_current_boundary_proves_dataset_lock_absent(capsys: pytest.CaptureFixture[str]) -> None:
     lock.validate_boundary()
     output = capsys.readouterr().out
