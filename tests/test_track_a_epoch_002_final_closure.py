@@ -122,16 +122,35 @@ def test_freeze_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_p
         closure.require_valid_freeze()
 
 
+def isolate_closure_absence(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    original_git_path_exists = closure.git_path_exists
+    monkeypatch.setattr(closure, "CLOSURE_PATH", tmp_path / "missing-closure.json")
+    monkeypatch.setattr(closure, "DOWNSTREAM_REL", ())
+    monkeypatch.setattr(
+        closure,
+        "git_path_exists",
+        lambda path, revision="HEAD": (
+            False if path == closure.CLOSURE_REL else original_git_path_exists(path, revision)
+        ),
+    )
+
+
 def test_prepare_fails_closed_while_freeze_absent(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    isolate_closure_absence(monkeypatch, tmp_path)
     monkeypatch.setattr(closure, "FREEZE_PATH", tmp_path / "missing-freeze.json")
     with pytest.raises(SystemExit, match="canonical immutable-freeze manifest is absent"):
         closure.prepare()
 
 
-def test_current_boundary_proves_closure_absent(capsys: pytest.CaptureFixture[str]) -> None:
+def test_boundary_proves_closure_absent_when_closure_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    isolate_closure_absence(monkeypatch, tmp_path)
     closure.validate_boundary()
     output = capsys.readouterr().out
     assert "TRACK_A_EPOCH_002_FINAL_CLOSURE_TOOLING=PASS_CLOSURE_ABSENT" in output
