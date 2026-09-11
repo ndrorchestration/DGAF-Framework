@@ -1,5 +1,11 @@
 import pytest
 from dgaf_discovery.harness import DiscoveryEnvelope, validate_discovery_envelope
+from dgaf_discovery.blindspots import (
+    DetectionRecord,
+    method_overlap,
+    unique_discovery_rate,
+    unexplained_shared_misses,
+)
 from dgaf_discovery.interactions import ControlContract, analyze_pairwise
 from dgaf_discovery.mutations import critical_mutations
 from dgaf_discovery.state_coverage import compute_transition_coverage
@@ -44,3 +50,14 @@ def test_control_interaction_detects_collisions():
     result = analyze_pairwise(controls)
     assert len(result) == 1
     assert set(result[0].codes) == {"F","R","W"}
+
+def test_blind_spot_metrics_measure_method_diversity_and_shared_misses():
+    records = (
+        DetectionRecord("F1", frozenset({"mutation"}), frozenset({"formal", "chaos"})),
+        DetectionRecord("F2", frozenset({"mutation", "formal"})),
+        DetectionRecord("F3", frozenset({"formal"}), frozenset({"mutation", "chaos"})),
+    )
+    assert unique_discovery_rate(records, "mutation") == 0.5
+    assert method_overlap(records, "mutation", "formal") == 1/3
+    shared = unexplained_shared_misses(records)
+    assert shared[frozenset({"formal", "chaos"})] == ("F1",)
