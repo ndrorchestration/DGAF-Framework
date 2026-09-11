@@ -4,7 +4,21 @@ import { StatusChip } from './status-chip'
 export function GovernanceView() {
   return <div className="view-stack">
     <section className="section-heading standalone"><div><span className="eyebrow">FAIL-CLOSED LIFECYCLE</span><h2>Progression is earned one predecessor at a time.</h2><p>Prepared tooling is shown separately from the state of the predicate it can eventually evaluate. Later readiness never backfills an earlier requirement.</p></div></section>
-    <section className="panel governance-summary"><div><span className="eyebrow accent">CURRENT FRONTIER</span><h3>{NEXT_TRANSITION.title}</h3><p>{NEXT_TRANSITION.summary}</p><div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div><p className="warning-copy">{NEXT_TRANSITION.warning}</p></div><StatusChip state="not_established" label="CUSTODY NOT ESTABLISHED"/></section>
+    <section className="panel governance-summary">
+      <div>
+        <span className="eyebrow accent">CURRENT FRONTIER</span>
+        <h3>{NEXT_TRANSITION.title}</h3>
+        <p>{NEXT_TRANSITION.summary}</p>
+        <div className="frontier-grid" aria-label="Current governance frontier">
+          <div className="frontier-item"><span>EVIDENCE</span><p>{NEXT_TRANSITION.evidence}</p></div>
+          <div className="frontier-item"><span>BLOCKER</span><p>{NEXT_TRANSITION.blocker}</p></div>
+          <div className="frontier-item"><span>ACTION PERMITTED NOW</span><p>Admit only the exact existing non-secret custody artifacts, then validate their exact bytes.</p></div>
+        </div>
+        <div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div>
+        <p className="warning-copy">{NEXT_TRANSITION.warning}</p>
+      </div>
+      <StatusChip state="not_established" label="CUSTODY NOT ESTABLISHED"/>
+    </section>
     <section className="lifecycle" aria-label="Ordered governance lifecycle">
       {GOVERNANCE_STAGES.map((stage, index) => <article className="lifecycle-stage panel" key={stage.id}>
         <div className="stage-index">{String(index + 1).padStart(2, '0')}</div>
