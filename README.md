@@ -7,7 +7,7 @@ In plain English: an agent may be able to do something and still be blocked from
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
-> **Successor Track A:** issue #523 open for recoverable solo-custody redesign · replacement empirical collection **NOT AUTHORIZED**  
+> **Successor Track A:** issue #523 open · operator-local custody-v2 recovery **PASS_CURRENT_V2 / SELF-ATTESTED / NONINDEPENDENT** · repository custody admission **NOT ESTABLISHED** · Epoch 002 dataset-lock tooling **ACCEPTED (#622)** / dataset lock **NOT ESTABLISHED** · replacement empirical collection **NOT AUTHORIZED**  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
@@ -55,7 +55,7 @@ DGAF separates prospective evaluation by workload instead of treating one experi
 | Track | Plain-English purpose | Current boundary |
 |---|---|---|
 | **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
-| **A — successor** | Replacement prospective topology robustness | Issue #523 governs fresh epoch/custody design; recovery-tested solo custody required before collection; empirical collection not authorized |
+| **A — successor** | Replacement prospective topology robustness | Issue #523 governs Epoch 002; operator-local custody-v2 recovery passed as self-attested/non-independent, but the exact public certificate + non-secret schema-v2 receipt are not yet admitted/revalidated in the repository; dataset-lock validation tooling is accepted via #622, but no dataset lock exists and empirical collection is not authorized |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
@@ -65,24 +65,35 @@ Epoch 001's prospective panel was fixed at **50 seeds × 5 topologies × 9 failu
 
 The collection remains valid evidence that the blinded panel was executed and retained. It cannot produce its preregistered primary result because the retained encrypted topology mapping cannot be recovered: the matching private key was not durably escrowed in the solo operating model. Regenerating a different key cannot decrypt the retained ciphertext, and guessing or reconstructing the hidden assignment is prohibited.
 
-## Successor Track A custody design
+## Successor Track A custody and gate design
 
-Issue #523 controls the replacement path. The successor must use a new epoch identity, fresh seeds and fresh blinding, and a recoverable solo-custody design without pretending that solo custody is independent custody.
+Issue #523 controls the replacement path. Epoch 002 uses a new protocol identity, fresh seeds and fresh blinding, and a recoverable solo-custody design without pretending that solo custody is independent custody.
 
-The preferred minimum pattern is:
+The required custody pattern is:
 
 ```text
 local keypair
 → encrypted PKCS#8 private key
 → at least two durable encrypted user-controlled recovery copies
-→ precollection recovery drill PASS
-→ public certificate supplied to collection
-→ same-system / non-independent custody receipt
+→ recovery from both copies
+→ public certificate + non-secret schema-v2 recovery receipt
+→ repository admission and exact validation
+→ precollection preflight
+→ immutable freeze
+→ final closure
+→ bounded verification classification
+→ separate human-controlled collection authorization
 ```
 
-No private key, passphrase, or recoverable secret belongs in GitHub, Notion, chat, workflow inputs, logs, or committed files.
+The operator-local recovery drill has completed successfully as **`PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT`**. That local PASS does not satisfy repository-level custody: the exact generated public certificate and non-secret schema-v2 receipt still must be admitted and validated from repository contents. This is the current `HUMAN_ARTIFACT_REQUIRED` boundary.
 
-Replacement empirical collection remains **NOT AUTHORIZED** until that custody/recovery contract and the successor prospective gate chain are established.
+Repository-side prospective, non-authorizing tooling is accepted through precollection preflight (#612), immutable freeze (#613), final closure (#614), bounded non-independent verification classification (#615), the validator-only human-controlled collection-authorization boundary (#616), fail-closed post-collection result-record semantics (#618), and content-addressed Epoch 002 dataset-lock validation (#622). These controls do not themselves create custody evidence, freeze, authorization, empirical results, dataset lock, unblinding, materialization, primary-analysis authority, efficacy, or scientific N.
+
+PR #622 binds future dataset-lock evidence to the authorized collection/candidate/run identity, retained public and protected artifact identities and digests, the custody-certificate commitment, the 53-record pre-lock ledger ending in PASS `QC_LEDGER`, and the future one-file `DATASET_LOCK_RECEIPT`. The validator remains outcome-blind and preserves the rule that a dataset-lock PASS is a **non-authorizing state transition** requiring a separate exact commit before any future unblinding decision.
+
+No private key, encrypted private-key backup, passphrase, blinding secret, or other recoverable secret belongs in GitHub, Notion, chat, workflow inputs, logs, or committed files. Only the exact public certificate and non-secret schema-v2 recovery receipt produced by the successful local drill are eligible for repository admission.
+
+Replacement empirical collection remains **NOT AUTHORIZED** until repository-level custody is established and the successor prospective gate chain is executed in order.
 
 ## What is established — and what is not
 
