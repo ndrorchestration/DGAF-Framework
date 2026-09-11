@@ -1,0 +1,76 @@
+name: Track A Epoch 002 Dataset Lock
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-dataset-lock.yml'
+      - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
+      - 'scripts/validate_track_a_epoch_002_dataset_lock.py'
+      - 'scripts/validate_track_a_epoch_002_result_ledger.py'
+      - 'scripts/validate_track_a_epoch_002_result_record_semantics.py'
+      - 'tests/test_track_a_epoch_002_dataset_lock.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 content-addressed dataset-lock boundary
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install pinned validation environment
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Run focused dataset-lock contract tests
+        run: python -m pytest tests/test_track_a_epoch_002_dataset_lock.py -q
+
+      - name: Prove current lock remains absent
+        run: python scripts/validate_track_a_epoch_002_dataset_lock.py --expect-absent
+
+      - name: Prove tooling is read-only and non-secret
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path('scripts/validate_track_a_epoch_002_dataset_lock.py').read_text()
+          forbidden = (
+              '--write',
+              'write_text(',
+              '--execute',
+              'PDMAL_TOPOLOGY_BLINDING_KEY',
+              'PRIVATE_KEY',
+              'PASSPHRASE',
+          )
+          for token in forbidden:
+              assert token not in source, token
+          print('DATASET_LOCK_TOOLING_READ_ONLY=TRUE')
+          print('DATASET_LOCK_ESTABLISHED=FALSE')
+          print('UNBLINDING_AUTHORIZED=FALSE')
+          print('PRIMARY_ANALYSIS_AUTHORIZED=FALSE')
+          print('SCIENTIFIC_N_INCREMENT=0')
+          PY
