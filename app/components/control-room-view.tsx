@@ -34,6 +34,15 @@ export function ControlRoomView({ snapshot, phase, error, lastSuccessAt, onRefre
       </section>
       <section className="panel"><span className="eyebrow">ADAPTER SURFACE</span><h3>Connected runtime adapters</h3><div className="tag-cloud">{(health?.adapters ?? []).map(adapter => <span className="tag" key={adapter}>{adapter}</span>)}{!health?.adapters?.length && <span className="muted">No validated adapter list available.</span>}</div><div className="constants-table"><div><span>PSI</span><code>{health?.psi ?? '—'}</code></div><div><span>PHI⋆</span><code>{health?.phi_star ?? '—'}</code></div><div><span>SCPE threshold</span><code>{health?.scpe_threshold ?? '—'}</code></div><div><span>Phi checkpoints</span><code>{health?.phi_checkpoints?.join(' · ') ?? '—'}</code></div></div></section>
     </div>
-    <section className="next-transition panel"><div><span className="eyebrow">GOVERNANCE IS NOT RUNTIME HEALTH</span><h3>{NEXT_TRANSITION.title}</h3><p>{NEXT_TRANSITION.summary}</p></div><StatusChip state="not_established" label="PREDECESSOR OPEN"/></section>
+    <section className="panel operator-frontier">
+      <div className="section-heading"><div><span className="eyebrow">REPOSITORY FRONTIER · NOT RUNTIME HEALTH</span><h3>What the operator can actually do next</h3><p>Runtime health cannot satisfy a repository governance predecessor or grant permission.</p></div><StatusChip state="not_established" label="PREDECESSOR OPEN"/></div>
+      <div className="frontier-grid" aria-label="Current operator governance frontier">
+        <div className="frontier-item"><span>EVIDENCE</span><p>{NEXT_TRANSITION.evidence}</p></div>
+        <div className="frontier-item"><span>BLOCKER</span><p>{NEXT_TRANSITION.blocker}</p></div>
+        <div className="frontier-item"><span>NEXT ADMISSIBLE ACTION</span><p><strong>{NEXT_TRANSITION.title}.</strong> {NEXT_TRANSITION.summary}</p></div>
+      </div>
+      <div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div>
+      <p className="warning-copy">{NEXT_TRANSITION.warning}</p>
+    </section>
   </div>
 }
