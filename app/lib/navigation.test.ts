@@ -66,3 +66,11 @@ test('runtime status is explicitly scoped away from governance authority', () =>
 test('links receive visible keyboard focus treatment', () => {
   assert.match(navigationStyles, /a:focus-visible/)
 })
+
+test('closed mobile drawer is removed from focus and Escape returns focus to its trigger', () => {
+  assert.match(shell, /useRef/)
+  assert.match(shell, /menuButtonRef\.current\?\.focus\(\)/)
+  assert.match(shell, /ref=\{menuButtonRef\}/)
+  assert.match(navigationStyles, /@media \(max-width: 760px\)[\s\S]*?\.sidebar\s*\{[\s\S]*?visibility:\s*hidden;[\s\S]*?pointer-events:\s*none;/)
+  assert.match(navigationStyles, /@media \(max-width: 760px\)[\s\S]*?\.sidebar\.mobile-open\s*\{[\s\S]*?visibility:\s*visible;[\s\S]*?pointer-events:\s*auto;/)
+})
