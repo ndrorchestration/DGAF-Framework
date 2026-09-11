@@ -25,18 +25,21 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
     id: 'repository-custody',
     label: 'Repository custody acceptance',
     shortLabel: 'Custody',
-    description: 'Admit the exact existing non-secret successor custody certificate and recovery receipt.',
-    predicateState: 'not_established',
-    toolingPrepared: false,
+    description: 'Validate and retain the exact public successor custody certificate and schema-v2 recovery receipt.',
+    predicateState: 'pass',
+    toolingPrepared: true,
+    toolingNote:
+      'The completion reconciler marks real_custody_v2 SATISFIED. Custody remains SAME_SYSTEM_NONINDEPENDENT; independent custody is false and this does not authorize collection.',
   },
   {
     id: 'precollection-preflight',
     label: 'Precollection preflight',
     shortLabel: 'Preflight',
-    description: 'Verify the successor collection prerequisites against accepted predecessor evidence.',
-    predicateState: 'blocked',
+    description: 'Retain the exact non-authorizing successor preflight record against the accepted custody evidence.',
+    predicateState: 'open',
     toolingPrepared: true,
-    toolingNote: 'Prospective preflight tooling has been repository-validated; the predicate remains predecessor-blocked.',
+    toolingNote:
+      'The completion reconciler marks precollection_preflight ACTIONABLE. The preflight record is not yet retained.',
   },
   {
     id: 'immutable-freeze',
@@ -135,21 +138,19 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
 ]
 
 export const NEXT_TRANSITION = {
-  title: 'Stage exact successor custody evidence',
+  title: 'Retain Epoch 002 precollection preflight',
   evidence:
-    'Operator-local custody-v2 recovery passed at PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT.',
-  blocker: 'Repository custody acceptance is NOT ESTABLISHED.',
+    'Repository real_custody_v2 is SATISFIED: the exact public certificate and schema-v2 recovery receipt are retained and validate against one another. Custody class is SAME_SYSTEM_NONINDEPENDENT and independent custody remains false.',
+  blocker:
+    'The canonical Epoch 002 precollection preflight record is absent. The completion reconciler marks precollection_preflight ACTIONABLE, not satisfied.',
   summary:
-    'On the clean dedicated evidence branch based exactly on current accepted main, run the fail-closed admission helper to stage only the exact existing public certificate and non-secret schema-v2 recovery receipt, then verify the staged path list before creating the evidence commit.',
-  artifacts: [
-    'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem',
-    'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json',
-  ],
-  operatorBranch: 'track-a-successor-custody-evidence-v2',
-  operatorCommand: 'py -3 scripts/prepare_track_a_successor_custody_admission.py',
-  operatorVerification: 'git diff --cached --name-only',
+    'From a clean branch based on current accepted main containing the admitted custody evidence, run the non-authorizing preflight helper with --write. It writes only the canonical preflight record; review that one-file delta before validation and merge.',
+  artifacts: ['docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json'],
+  operatorBranch: 'clean branch from current accepted main containing merged #644',
+  operatorCommand: 'py -3 scripts/prepare_track_a_epoch_002_precollection_preflight.py --write',
+  operatorVerification: 'git diff --name-only',
   warning:
-    'Do not regenerate, substitute, or reconstruct custody evidence. The helper stages only; it does not commit, push, freeze, authorize collection, or change scientific N.',
+    'Preflight preparation does not establish immutable freeze, authorize successor collection, increment scientific N, authorize unblinding or primary analysis, or establish efficacy.',
 } as const
 
 export interface EpochSummary {
@@ -183,13 +184,14 @@ export const EPOCH_SUMMARIES: EpochSummary[] = [
     title: 'Track A · Epoch 002',
     state: 'not_authorized',
     summary:
-      'Operator-local custody-v2 recovery passed at a self-attested, non-independent level; repository custody is not established and empirical collection remains unauthorized.',
+      'Repository custody-v2 evidence is now satisfied at the same-system, non-independent level. The non-authorizing precollection preflight is the next actionable gate; empirical collection remains unauthorized.',
     facts: [
-      'Local custody recovery: PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT',
-      'Repository custody: NOT ESTABLISHED',
+      'Repository custody-v2: SATISFIED / SAME_SYSTEM_NONINDEPENDENT',
+      'Independent custody: FALSE',
+      'Precollection preflight: ACTIONABLE / record not yet retained',
+      'Immutable freeze: NOT ESTABLISHED',
       'Empirical collection: NOT AUTHORIZED / NOT EXECUTED',
-      'Dataset lock: NOT ESTABLISHED',
-      'Unblinding and primary analysis: NOT AUTHORIZED',
+      'Scientific N: 0',
     ],
   },
 ]
