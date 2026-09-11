@@ -270,6 +270,73 @@
   transform: translateY(-50%) rotate(45deg);
 }
 
+.operator-handoff {
+  border-top: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, .012);
+}
+
+.operator-handoff summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 26px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--text-2);
+}
+
+.operator-handoff summary::-webkit-details-marker {
+  display: none;
+}
+
+.operator-handoff summary span {
+  color: var(--cyan);
+  font: 800 .64rem var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.operator-handoff summary strong {
+  font-size: .74rem;
+}
+
+.operator-handoff-grid {
+  display: grid;
+  grid-template-columns: .8fr 1.25fr .95fr;
+  gap: 1px;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--border-soft);
+}
+
+.operator-handoff-grid > div {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+  padding: 14px 26px;
+  background: #090f16;
+}
+
+.operator-handoff-grid span {
+  color: var(--muted);
+  font: 700 .6rem var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.operator-handoff-grid code {
+  overflow-wrap: anywhere;
+  color: var(--text);
+  font-size: .72rem;
+}
+
+.operator-handoff > p {
+  margin: 0;
+  padding: 12px 26px 15px;
+  font-size: .74rem;
+}
+
 .decision-lock {
   display: flex;
   align-items: center;
@@ -495,6 +562,10 @@
     transform: translateX(-50%) rotate(135deg);
   }
 
+  .operator-handoff-grid {
+    grid-template-columns: 1fr;
+  }
+
   .governance-lane {
     grid-template-columns: 1fr;
   }
@@ -565,6 +636,19 @@
     padding: 21px;
   }
 
+  .operator-handoff summary {
+    display: grid;
+    padding: 13px 21px;
+  }
+
+  .operator-handoff-grid > div {
+    padding: 13px 21px;
+  }
+
+  .operator-handoff > p {
+    padding: 12px 21px 15px;
+  }
+
   .decision-lock {
     display: grid;
     padding: 14px 21px;
@@ -628,6 +712,13 @@
   .decision-frontier-heading,
   .decision-flow,
   .decision-lock {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+
+  .operator-handoff summary,
+  .operator-handoff-grid > div,
+  .operator-handoff > p {
     padding-left: 17px;
     padding-right: 17px;
   }
