@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { DashboardPhase } from '../hooks/use-dashboard-data'
+import { TRUTH_BOUNDARY } from '../lib/governance'
 import { ActivityIcon, EvidenceIcon, MenuIcon, NodesIcon, OverviewIcon, ShieldIcon, ToolsIcon } from './icons'
 import { StatusChip } from './status-chip'
 
@@ -62,6 +63,14 @@ export function AppShell({ activeView, onNavigate, children, phase, lastSuccessA
           </div>
           <div className="runtime-pill"><StatusChip state={phaseState(phase)} label={phase === 'fresh' ? 'Runtime live' : phase === 'stale' ? 'Runtime stale' : phase === 'error' ? 'Runtime unavailable' : 'Connecting'} compact /><span>{lastSuccessAt ? `Updated ${lastSuccessAt.toLocaleTimeString()}` : 'Awaiting first valid snapshot'}</span></div>
         </header>
+        <section className="truth-ribbon" aria-label="Canonical repository truth boundary">
+          <div className="truth-ribbon-label"><span>Repository truth</span><strong>Canonical state · reconciled {TRUTH_BOUNDARY.sourceUpdated}</strong></div>
+          <div className="truth-ribbon-item"><span>Program</span><strong>{TRUTH_BOUNDARY.programState}</strong></div>
+          <div className="truth-ribbon-item"><span>Fail mode</span><strong>{TRUTH_BOUNDARY.failMode}</strong></div>
+          <div className="truth-ribbon-item"><span>Authorization</span><StatusChip state="not_authorized" label={TRUTH_BOUNDARY.authorization} compact /></div>
+          <div className="truth-ribbon-item"><span>Empirical N</span><code>N={TRUTH_BOUNDARY.empiricalN}</code></div>
+          <div className="truth-ribbon-item"><span>Efficacy</span><StatusChip state="not_established" label={TRUTH_BOUNDARY.efficacy} compact /></div>
+        </section>
         <main id="main-content" className="page-content">{children}</main>
       </div>
     </div>
