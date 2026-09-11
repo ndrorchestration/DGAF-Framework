@@ -14,7 +14,7 @@ import re
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Any, NoReturn
+from typing import Any, NoReturn, cast
 
 from scripts import validate_track_a_epoch_002_result_ledger as structural
 from scripts import validate_track_a_epoch_002_result_record_semantics as semantics
@@ -84,7 +84,7 @@ def require_record_list(value: object) -> list[dict[str, Any]]:
         fail("result ledger must be a JSON array")
     if any(not isinstance(record, dict) for record in value):
         fail("result ledger entries must be JSON objects")
-    return value
+    return cast(list[dict[str, Any]], value)
 
 
 def validate_with_existing_validators(records: list[dict[str, Any]]) -> None:
@@ -114,9 +114,7 @@ def validate_lock_record(record: dict[str, Any], qc_record_id: str) -> None:
         fail("dataset-lock semantic ceiling forbids scientific-state promotion")
 
 
-def validate_transition(
-    before: list[dict[str, Any]], after: list[dict[str, Any]]
-) -> None:
+def validate_transition(before: list[dict[str, Any]], after: list[dict[str, Any]]) -> None:
     if len(after) != len(before) + 1 or after[:-1] != before:
         fail("dataset-lock event must append exactly one record without predecessor rewrites")
 
@@ -169,9 +167,7 @@ def validate_event(expected_base_sha: str) -> None:
     head = git("rev-parse", "HEAD").lower()
     changed = tuple(
         line
-        for line in git(
-            "diff-tree", "--no-commit-id", "--name-only", "-r", head
-        ).splitlines()
+        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines()
         if line
     )
     if changed != (LEDGER_REL,):
