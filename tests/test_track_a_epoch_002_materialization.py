@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -354,3 +356,21 @@ def test_receipt_cannot_authorize_primary_analysis() -> None:
 def test_tooling_mode_preserves_absence_and_semantic_boundary() -> None:
     validator = load_validator()
     validator.validate_tooling_only()
+
+
+def test_validate_event_requires_dataset_lock_evidence_argument() -> None:
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(MODULE_PATH),
+            "--validate-event",
+            "--evidence",
+            "materialization-evidence.json",
+        ],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode != 0
+    assert "--dataset-lock-evidence" in (result.stdout + result.stderr)
