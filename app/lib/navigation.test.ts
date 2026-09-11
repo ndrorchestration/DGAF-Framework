@@ -5,6 +5,8 @@ import { readFileSync } from 'node:fs'
 const shell = readFileSync(new URL('../components/app-shell.tsx', import.meta.url), 'utf8')
 const controlRoom = readFileSync(new URL('../components/control-room-view.tsx', import.meta.url), 'utf8')
 const governanceView = readFileSync(new URL('../components/governance-view.tsx', import.meta.url), 'utf8')
+const navigationStyles = readFileSync(new URL('../styles/navigation.css', import.meta.url), 'utf8')
+const globalStyles = readFileSync(new URL('../styles/globals.css', import.meta.url), 'utf8')
 
 function position(label: string) {
   const index = shell.indexOf(label)
@@ -49,4 +51,19 @@ test('operator control room leads with decision frontier before runtime telemetr
 test('governance map marks the actionable preflight as the current frontier', () => {
   assert.match(governanceView, /isFrontier = stage\.id === 'precollection-preflight'/)
   assert.doesNotMatch(governanceView, /isFrontier = stage\.id === 'repository-custody'/)
+})
+
+test('shell provides keyboard escape and skip-to-content navigation', () => {
+  assert.match(shell, /event\.key === 'Escape'/)
+  assert.match(shell, /className="skip-link" href="#main-content"/)
+  assert.match(navigationStyles, /\.skip-link/)
+  assert.match(navigationStyles, /\.skip-link:focus/)
+})
+
+test('runtime status is explicitly scoped away from governance authority', () => {
+  assert.match(shell, /aria-label="Runtime observability only; not governance authority"/)
+})
+
+test('links receive the same visible keyboard focus treatment as form controls', () => {
+  assert.match(globalStyles, /a:focus-visible/)
 })
