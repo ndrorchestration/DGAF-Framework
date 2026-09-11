@@ -82,6 +82,16 @@ a:focus-visible {
 }
 
 @media (max-width: 760px) {
+  .sidebar {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .sidebar.mobile-open {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
   .nav-group {
     padding-top: 9px;
     padding-bottom: 10px;
