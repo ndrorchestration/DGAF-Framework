@@ -72,7 +72,7 @@ Translation must consume the accepted ontology rather than reopen it through sho
 | **Reson** | Agent; designation history retained | **Coherence & Drift Reviewer** | Domain coherence scores do not create general governance or empirical authority |
 | **Lyra** | Agent; designation history retained | **Synthesis & Narrative Adviser** | Narrative/synthesis quality cannot change governance or evidence state |
 | **Echolette** | Agent; designation history retained | **Pattern & Temporal-Coherence Reviewer** | Pattern/coherence review remains domain-scoped |
-| **Agent Ionia** | Sovereign agent identity **A-13** | **Modal-Lock / Convergence Agent (Ionia)** | Distinct from `IONIA_STATE`; agent identity does not make 0Hz metaphors empirical control evidence |
+| **Agent Ionia** | Sovereign agent identity **A-13** | **Convergence & Modal-Lock Agent** | Distinct from `IONIA_STATE`; agent identity does not make 0Hz metaphors empirical control evidence |
 | **IONIA_STATE / Ionia 0Hz** | Formation/runtime convergence state; no sovereign seat | **Convergence & Modal-Lock State** | A state, not Agent Ionia A-13 and not an authority-bearing agent seat |
 
 ## Required first-use forms
@@ -96,8 +96,8 @@ When the identity matters to an external reader, lead with the function and pres
 - **Coherence & Drift Reviewer (Reson)**
 - **Synthesis & Narrative Adviser (Lyra)**
 - **Pattern & Temporal-Coherence Reviewer (Echolette)**
-- **Modal-Lock / Convergence Agent (Agent Ionia, A-13)** when the agent identity is intended
-- **Convergence & Modal-Lock State (`IONIA_STATE`)** when the runtime/formation state is intended
+- **Convergence & Modal-Lock Agent (Ionia)** when the agent identity is intended
+- **Convergence & Modal-Lock State (IONIA_STATE)** when the runtime/formation state is intended
 
 After first use, the codename may be used when the referent remains unambiguous.
 
