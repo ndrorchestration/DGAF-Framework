@@ -75,6 +75,23 @@ The emitted current receipt is schema v2. It includes a timezone-qualified recov
 
 The local validator checks receipt structure; it does not independently observe storage durability or offsite location. Those remain your attestations. The helper can be launched by absolute path from another directory. If interrupted, keep existing encrypted backups intact and choose fresh empty working/backup destinations for another setup attempt; the script refuses to overwrite backup key files.
 
+## After a successful schema-v2 drill
+
+If the real operator-local drill has already returned `TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECEIPT=PASS_CURRENT_V2` and `TRACK_A_SUCCESSOR_WINDOWS_CUSTODY=PASS_LOCAL`, do not rerun the drill merely to recreate repository evidence.
+
+Preserve the encrypted private key, passphrase, and both encrypted recovery copies unchanged in their operator-controlled locations. Only the exact public certificate and exact non-secret schema-v2 receipt emitted by that successful run are eligible for repository admission.
+
+The canonical repository destinations are:
+
+- `docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem`
+- `docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json`
+
+These two paths are configured as Git byte-preserving (`-text`) because the receipt binds the certificate's exact SHA-256. Platform line-ending normalization must not alter the admitted evidence.
+
+Custody evidence admission is a two-file, non-authorizing transition. Do not include a preflight, freeze, closure, collection-authorization record, private key, encrypted backup, passphrase, or blinding secret in the custody-admission commit.
+
+A successful custody-admission validation changes only repository custody-evidence status. It does not authorize collection, does not establish independent custody, and does not change scientific N.
+
 ## What you may retain or share
 
 The public certificate and the JSON receipt contain no private key or passphrase. The current successor receipt can be checked with:
