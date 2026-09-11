@@ -122,7 +122,11 @@ def test_freeze_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_p
         closure.require_valid_freeze()
 
 
-def test_prepare_fails_closed_while_freeze_absent() -> None:
+def test_prepare_fails_closed_while_freeze_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(closure, "FREEZE_PATH", tmp_path / "missing-freeze.json")
     with pytest.raises(SystemExit, match="canonical immutable-freeze manifest is absent"):
         closure.prepare()
 

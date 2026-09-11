@@ -175,7 +175,11 @@ def test_candidate_tree_mismatch_fails_closed(
         freeze.require_valid_preflight()
 
 
-def test_prepare_fails_closed_while_preflight_absent() -> None:
+def test_prepare_fails_closed_while_preflight_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(freeze, "PREFLIGHT_PATH", tmp_path / "missing-preflight.json")
     with pytest.raises(SystemExit, match="canonical preflight record is absent"):
         freeze.prepare()
 
