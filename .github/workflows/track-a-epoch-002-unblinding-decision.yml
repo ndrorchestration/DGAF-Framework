@@ -1,0 +1,128 @@
+name: Track A Epoch 002 Unblinding Decision
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-unblinding-decision.yml'
+      - 'docs/experiment/TRACK_A_EPOCH_002_UNBLINDING_DECISION_PROCEDURE.md'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_PROCEDURE.md'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json'
+      - 'scripts/validate_track_a_epoch_002_dataset_lock.py'
+      - 'scripts/validate_track_a_epoch_002_unblinding_decision.py'
+      - 'tests/test_track_a_epoch_002_unblinding_decision.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 unblinding-decision boundary
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up exact Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+
+      - name: Install pinned validation environment
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Resolve validation mode
+        id: mode
+        run: |
+          set -euo pipefail
+          decision='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json'
+          if test -e "$decision"; then
+            echo 'value=decision_event' >> "$GITHUB_OUTPUT"
+          else
+            echo 'value=tooling_only' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate prospective tooling only
+        if: ${{ steps.mode.outputs.value == 'tooling_only' }}
+        run: python scripts/validate_track_a_epoch_002_unblinding_decision.py --tooling-only
+
+      - name: Validate future exact unblinding-decision event
+        if: ${{ steps.mode.outputs.value == 'decision_event' }}
+        run: python scripts/validate_track_a_epoch_002_unblinding_decision.py --validate-event
+
+      - name: Prove tooling PR changes only the dedicated lane
+        if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          expected=(
+            '.github/workflows/track-a-epoch-002-unblinding-decision.yml'
+            'docs/experiment/TRACK_A_EPOCH_002_UNBLINDING_DECISION_PROCEDURE.md'
+            'scripts/validate_track_a_epoch_002_unblinding_decision.py'
+            'tests/test_track_a_epoch_002_unblinding_decision.py'
+          )
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+          diff -u \
+            <(printf '%s\n' "${expected_sorted[@]}") \
+            <(printf '%s\n' "${changed[@]}")
+
+      - name: Run focused adversarial tests
+        run: python -m pytest tests/test_track_a_epoch_002_unblinding_decision.py -q
+
+      - name: Prove no secret, decryption, writer, or analysis surface
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path('scripts/validate_track_a_epoch_002_unblinding_decision.py').read_text()
+          forbidden = (
+              '--write',
+              '--execute',
+              'PDMAL_TOPOLOGY_BLINDING_KEY',
+              'BEGIN PRIVATE KEY',
+              'BEGIN ENCRYPTED PRIVATE KEY',
+              'openssl cms -decrypt',
+              'openssl cms -encrypt',
+              'materialize_track_a_epoch_002',
+              'run_primary_analysis',
+          )
+          for marker in forbidden:
+              assert marker not in source, marker
+          print('UNBLINDING_DECISION_VALIDATOR_ONLY=TRUE')
+          print('UNBLINDING_DECISION_DECRYPTS_PROTECTED_MAPPING=FALSE')
+          print('UNBLINDING_DECISION_MATERIALIZES_INPUT=FALSE')
+          print('UNBLINDING_DECISION_AUTHORIZES_PRIMARY_ANALYSIS=FALSE')
+          PY
+
+      - name: Prove fail-closed current scientific boundary
+        if: ${{ steps.mode.outputs.value == 'tooling_only' }}
+        run: |
+          set -euo pipefail
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json
+          test ! -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json
+          echo 'TRACK_A_EPOCH_002_UNBLINDING=NOT_AUTHORIZED'
+          echo 'TRACK_A_EPOCH_002_MATERIALIZATION=NOT_ESTABLISHED'
+          echo 'TRACK_A_EPOCH_002_PRIMARY_ANALYSIS=NOT_AUTHORIZED'
+          echo 'SCIENTIFIC_N_INCREMENT=0'
+          echo 'CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED'
