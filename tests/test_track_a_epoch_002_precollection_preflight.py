@@ -179,7 +179,7 @@ def test_retained_preflight_validation_does_not_reapply_creation_gate(
     tmp_path: Path,
 ) -> None:
     candidate_sha = "a" * 40
-    record = {"candidate_sha": candidate_sha}
+    record = {"candidate_sha": candidate_sha, "candidate_tree_sha": "b" * 40}
     path = tmp_path / "preflight.json"
     path.write_text(json.dumps(record), encoding="utf-8")
 
