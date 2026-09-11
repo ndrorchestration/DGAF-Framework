@@ -23,7 +23,7 @@ Harness failure, timeout, missing evidence, malformed input, or unknown classifi
 
 ## v1 scope
 
-The implementation provides a fail-closed output envelope, curated governance-semantic mutation operators, explicit legal/forbidden transition coverage metrics, pairwise control-interaction analysis, assumption-expiry modeling, and a blind-spot ledger contract.
+The implementation provides a fail-closed output envelope, curated governance-semantic mutation operators, explicit legal/forbidden transition coverage metrics, pairwise control-interaction analysis, assumption-expiry modeling, a blind-spot ledger contract, and executable metamorphic relation checks.
 
 Critical mutant families begin with authorization promotion, evidence-independence promotion, predecessor/provenance removal, scientific-N increment, and fail-open decision promotion.
 
@@ -45,9 +45,18 @@ A blind-spot record separates methods that discovered a finding from methods tha
 
 The seed ledger is deliberately empty with `completeness_claim: false`. Findings may be marked only `CANDIDATE`, `REVIEWED`, or `REJECTED`; the ledger itself cannot promote a finding into governance truth.
 
+### Metamorphic relations
+
+The initial executable relations cover two failure classes that ordinary example-based testing can miss:
+
+- changes outside governance semantics, such as presentation-only changes, must preserve protected authority fields;
+- removing required predecessor/provenance evidence cannot leave a `PASS` decision intact.
+
+Metamorphic failures are candidate engineering findings only. They do not themselves reject or authorize an experiment record unless an independent authoritative validator already defines that consequence.
+
 ## Recursive assurance roadmap
 
-Later layers add executable metamorphic relation registries, detector mutation, property mutation, stateful search, formal lifecycle models, bounded agent/API chaos, and versioned external-framework crosswalks.
+Later layers add a machine-readable metamorphic relation registry, detector mutation, property mutation, stateful search, formal lifecycle models, bounded agent/API chaos, and versioned external-framework crosswalks.
 
 A discovery method may generate a candidate finding or test. It may never promote itself into authoritative governance truth.
 
