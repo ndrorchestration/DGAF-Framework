@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { GOVERNANCE_STAGES, TRUTH_BOUNDARY } from './governance.ts'
+import { GOVERNANCE_STAGES, NEXT_TRANSITION, TRUTH_BOUNDARY } from './governance.ts'
 import { agentDisplayName } from './public-translation.ts'
 import { STATUS_META, normalizeRuntimeStatus, statusMeta } from './status.ts'
 
@@ -49,6 +49,13 @@ test('lifecycle predicates do not inherit readiness from prepared tooling', () =
   assert.equal(freeze?.toolingPrepared, true)
   assert.notEqual(freeze?.predicateState, 'pass')
   assert.equal(collection?.predicateState, 'not_authorized')
+})
+
+test('next custody action exposes the exact canonical repository destinations', () => {
+  assert.deepEqual(NEXT_TRANSITION.artifacts, [
+    'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem',
+    'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json',
+  ])
 })
 
 test('runtime codenames are translated with public function first', () => {
