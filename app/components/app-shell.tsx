@@ -8,31 +8,43 @@ import { StatusChip } from './status-chip'
 
 export type ViewId = 'overview' | 'control' | 'governance' | 'agents' | 'evidence' | 'tools'
 
-const NAV_GROUPS = [
+type NavItem = {
+  id: ViewId
+  label: string
+  sub: string
+  Icon: typeof OverviewIcon
+}
+
+type NavGroup = {
+  label: 'UNDERSTAND' | 'VERIFY' | 'INSPECT' | 'OPERATE'
+  items: NavItem[]
+}
+
+const NAV_GROUPS: NavGroup[] = [
   {
     label: 'UNDERSTAND',
     items: [
-      { id: 'overview' as const, label: 'Overview', sub: 'What DGAF is', Icon: OverviewIcon },
+      { id: 'overview', label: 'Overview', sub: 'What DGAF is', Icon: OverviewIcon },
     ],
   },
   {
     label: 'VERIFY',
     items: [
-      { id: 'evidence' as const, label: 'Evidence & Research', sub: 'Claims, provenance & experiment', Icon: EvidenceIcon },
-      { id: 'governance' as const, label: 'Governance', sub: 'Lifecycle & authority', Icon: ShieldIcon },
+      { id: 'evidence', label: 'Evidence & Research', sub: 'Claims, provenance & experiment', Icon: EvidenceIcon },
+      { id: 'governance', label: 'Governance', sub: 'Lifecycle & authority', Icon: ShieldIcon },
     ],
   },
   {
     label: 'INSPECT',
     items: [
-      { id: 'agents' as const, label: 'Agents & Formations', sub: 'Roles & topology', Icon: NodesIcon },
-      { id: 'tools' as const, label: 'Tools', sub: 'P-07 sweep workspace', Icon: ToolsIcon },
+      { id: 'agents', label: 'Agents & Formations', sub: 'Roles & topology', Icon: NodesIcon },
+      { id: 'tools', label: 'Tools', sub: 'P-07 sweep workspace', Icon: ToolsIcon },
     ],
   },
   {
     label: 'OPERATE',
     items: [
-      { id: 'control' as const, label: 'Control Room', sub: 'Operator actions & runtime', Icon: ActivityIcon },
+      { id: 'control', label: 'Control Room', sub: 'Operator actions & runtime', Icon: ActivityIcon },
     ],
   },
 ]
