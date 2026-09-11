@@ -195,7 +195,17 @@ def write_closure() -> None:
 
 def validate_closure(expected_base_sha: str | None) -> None:
     contract = validate_contract()
-    reject_downstream_gates()
+
+    base: str | None = None
+    base_has_closure = False
+    if expected_base_sha is not None:
+        base = expected_base_sha.lower()
+        if not freeze.preflight.HEX40.fullmatch(base):
+            fail("malformed expected base SHA")
+        base_has_closure = git_path_exists(CLOSURE_REL, base)
+        if not base_has_closure:
+            reject_downstream_gates()
+
     if not CLOSURE_PATH.is_file() or not git_path_exists(CLOSURE_REL):
         fail("closure packet absent")
 
@@ -216,17 +226,18 @@ def validate_closure(expected_base_sha: str | None) -> None:
     if freeze_commit == closure_commit or not is_ancestor(freeze_commit, closure_commit):
         fail("closure must be introduced strictly after immutable freeze")
 
-    if expected_base_sha is not None:
-        base = expected_base_sha.lower()
-        if not freeze.preflight.HEX40.fullmatch(base):
-            fail("malformed expected base SHA")
-        if git_path_exists(CLOSURE_REL, base):
-            fail("closure packet already existed at expected base")
-        if not git_path_exists(FREEZE_REL, base):
-            fail("immutable freeze must already exist at expected base")
-        changed = tuple(line for line in git("diff", "--name-only", f"{base}...HEAD").splitlines() if line)
-        if changed != (CLOSURE_REL,):
-            fail(f"closure PR must change only {CLOSURE_REL}; changed={list(changed)}")
+    if base is not None:
+        if base_has_closure:
+            base_blob = git_blob(CLOSURE_REL, base)
+            head_blob = git_blob(CLOSURE_REL, "HEAD")
+            if base_blob != head_blob:
+                fail(f"accepted closure packet drifted from expected base: base={base_blob} head={head_blob}")
+        else:
+            if not git_path_exists(FREEZE_REL, base):
+                fail("immutable freeze must already exist at expected base")
+            changed = tuple(line for line in git("diff", "--name-only", f"{base}...HEAD").splitlines() if line)
+            if changed != (CLOSURE_REL,):
+                fail(f"closure PR must change only {CLOSURE_REL}; changed={list(changed)}")
 
     print("TRACK_A_EPOCH_002_FINAL_CLOSURE=VALIDATED_NONAUTHORIZING")
     print(f"FROZEN_CANDIDATE_SHA={candidate_sha}")
@@ -255,7 +266,11 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--write", action="store_true", help="prepare closure only after an accepted freeze")
     mode.add_argument("--validate", action="store_true", help="validate an existing closure packet")
     mode.add_argument("--expect-absent", action="store_true", help="prove closure/downstream gates remain absent")
-    parser.add_argument("--expected-base-sha", default=None)
+    parser.add_argument(
+        "--expected-base-sha",
+        default=None,
+        help="for --validate, require creation-only delta when the exact base does not already contain closure",
+    )
     args = parser.parse_args(argv)
 
     if args.expected_base_sha is not None and not args.validate:
