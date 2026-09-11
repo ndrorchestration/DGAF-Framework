@@ -98,6 +98,45 @@ def test_downstream_gate_presence_fails_closed(monkeypatch: pytest.MonkeyPatch) 
         closure.reject_downstream_gates()
 
 
+def test_validate_retained_closure_does_not_reapply_creation_gate(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    base_sha = "f" * 40
+    candidate_sha = "a" * 40
+    freeze_blob_sha = "b" * 40
+    record = closure.expected_record(
+        protocol_id=CONTRACT["protocol_id"],
+        candidate_sha=candidate_sha,
+        freeze_blob_sha=freeze_blob_sha,
+    )
+    closure_path = tmp_path / "closure.json"
+    closure_path.write_text(json.dumps(record), encoding="utf-8")
+
+    monkeypatch.setattr(closure, "CLOSURE_PATH", closure_path)
+    monkeypatch.setattr(closure, "validate_contract", lambda: {"protocol_id": CONTRACT["protocol_id"]})
+    monkeypatch.setattr(
+        closure,
+        "reject_downstream_gates",
+        lambda: pytest.fail("retained closure validation re-applied the creation-time downstream gate"),
+    )
+    monkeypatch.setattr(
+        closure,
+        "git_path_exists",
+        lambda path, revision="HEAD": path == closure.CLOSURE_REL and revision in {"HEAD", base_sha},
+    )
+    monkeypatch.setattr(closure, "require_valid_freeze", lambda: (candidate_sha, freeze_blob_sha))
+    monkeypatch.setattr(
+        closure,
+        "git_history",
+        lambda path, revision="HEAD": (("d" * 40,) if path == closure.CLOSURE_REL else ("c" * 40,)),
+    )
+    monkeypatch.setattr(closure, "is_ancestor", lambda ancestor, descendant: True)
+    monkeypatch.setattr(closure, "git_blob", lambda path, revision="HEAD": "9" * 40)
+
+    closure.validate_closure(base_sha)
+
+
 def test_freeze_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     record = {
         "frozen_candidate_sha": "a" * 40,
