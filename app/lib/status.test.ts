@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { GOVERNANCE_STAGES, NEXT_TRANSITION, TRUTH_BOUNDARY } from './governance.ts'
+import { CURRENT_FRONTIER_ID, GOVERNANCE_STAGES, NEXT_TRANSITION, TRUTH_BOUNDARY } from './governance.ts'
 import { agentDisplayName } from './public-translation.ts'
 import { STATUS_META, normalizeRuntimeStatus, statusMeta } from './status.ts'
 
@@ -50,6 +50,8 @@ test('custody is satisfied while preflight is actionable and freeze remains bloc
   const collection = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
   assert.equal(custody?.predicateState, 'pass')
   assert.equal(preflight?.predicateState, 'open')
+  assert.equal(CURRENT_FRONTIER_ID, preflight?.id)
+  assert.notEqual(CURRENT_FRONTIER_ID, custody?.id)
   assert.equal(freeze?.toolingPrepared, true)
   assert.equal(freeze?.predicateState, 'blocked')
   assert.equal(collection?.predicateState, 'not_authorized')

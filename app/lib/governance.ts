@@ -20,6 +20,8 @@ export interface GovernanceStage {
   toolingNote?: string
 }
 
+export const CURRENT_FRONTIER_ID = 'precollection-preflight' as const
+
 export const GOVERNANCE_STAGES: GovernanceStage[] = [
   {
     id: 'repository-custody',
