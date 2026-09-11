@@ -19,28 +19,17 @@ from typing import Any, NoReturn
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE_SCHEMA_PATH = ROOT / (
-    "docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json"
-)
+EVIDENCE_SCHEMA_PATH = ROOT / ("docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json")
 RESULT_SCHEMA_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
 SEMANTICS_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
 
-DATASET_LOCK_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
-)
-UNBLINDING_DECISION_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
-)
-MATERIALIZATION_RECEIPT_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
-)
+DATASET_LOCK_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
+UNBLINDING_DECISION_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
+MATERIALIZATION_RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
 PRIMARY_ANALYSIS_AUTH_REL = (
-    "docs/experiment/track_a_runs/"
-    "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+    "docs/experiment/track_a_runs/" "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
 )
-LOCKED_ANALYSIS_RESULT_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
-)
+LOCKED_ANALYSIS_RESULT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
 
 DATASET_LOCK_PATH = ROOT / DATASET_LOCK_REL
 UNBLINDING_DECISION_PATH = ROOT / UNBLINDING_DECISION_REL
@@ -51,9 +40,7 @@ LOCKED_ANALYSIS_RESULT_PATH = ROOT / LOCKED_ANALYSIS_RESULT_REL
 PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 PRODUCER_SYSTEM = "DGAF_TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT_VALIDATOR"
 UNBLINDING_SCOPE = "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY"
-MATERIALIZATION_SCOPE = (
-    "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
-)
+MATERIALIZATION_SCOPE = "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
     "DOES_NOT_AUTHORIZE_UNBLINDING",
@@ -63,11 +50,7 @@ FULL_NON_EFFECTS = [
     "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
     "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
 ]
-UNBLINDING_NON_EFFECTS = [
-    effect
-    for effect in FULL_NON_EFFECTS
-    if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"
-]
+UNBLINDING_NON_EFFECTS = [effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"]
 SCIENTIFIC_NON_EFFECT = {
     "empirical_n_increment": 0,
     "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
@@ -213,11 +196,7 @@ def receipt_record_id(
     unblinding_decision_sha256: str,
     evidence_sha256: str,
 ) -> str:
-    payload = (
-        f"{unblinding_decision_commit_sha}:"
-        f"{unblinding_decision_sha256}:"
-        f"{evidence_sha256}"
-    )
+    payload = f"{unblinding_decision_commit_sha}:" f"{unblinding_decision_sha256}:" f"{evidence_sha256}"
     digest = hashlib.sha256(payload.encode("ascii")).hexdigest()
     return f"E002-MATERIALIZE-{digest[:16].upper()}"
 
@@ -385,21 +364,14 @@ def validate_event(evidence_path: Path) -> None:
     if not UNBLINDING_DECISION_PATH.exists():
         fail("canonical unblinding decision is absent")
     if PRIMARY_ANALYSIS_AUTH_PATH.exists() or LOCKED_ANALYSIS_RESULT_PATH.exists():
-        fail(
-            "materialization event cannot contain or follow analysis "
-            "authorization/result at event HEAD"
-        )
+        fail("materialization event cannot contain or follow analysis " "authorization/result at event HEAD")
 
     head = git("rev-parse", "HEAD")
     parents = git("rev-list", "--parents", "-n", "1", head).split()
     if len(parents) != 2:
         fail("materialization receipt event must have exactly one parent")
     parent = parents[1]
-    changed = [
-        line
-        for line in git("diff", "--name-only", parent, head).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff", "--name-only", parent, head).splitlines() if line]
     if changed != [MATERIALIZATION_RECEIPT_REL]:
         fail("materialization receipt event must change exactly the canonical receipt path")
     if git_object_exists(f"{parent}:{MATERIALIZATION_RECEIPT_REL}"):
