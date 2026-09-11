@@ -194,7 +194,7 @@ def require_valid_preflight() -> tuple[dict[str, Any], str, str, str]:
     if not preflight.HEX40.fullmatch(candidate_sha) or not preflight.HEX40.fullmatch(candidate_tree):
         fail("preflight candidate identity is malformed")
 
-    expected_preflight = preflight.prepare(candidate_sha)
+    expected_preflight = preflight.expected_record_for_candidate(candidate_sha)
     preflight.validate_record(record, expected_preflight)
 
     actual_tree = git("rev-parse", f"{candidate_sha}^{{tree}}").lower()

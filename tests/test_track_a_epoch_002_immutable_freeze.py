@@ -169,22 +169,90 @@ def test_candidate_tree_mismatch_fails_closed(
     monkeypatch.setattr(freeze, "PREFLIGHT_PATH", path)
     monkeypatch.setattr(freeze, "git_path_exists", lambda path, revision="HEAD": True)
     monkeypatch.setattr(freeze.preflight, "prepare", lambda sha: record)
+    monkeypatch.setattr(
+        freeze.preflight,
+        "expected_record_for_candidate",
+        lambda sha: record,
+        raising=False,
+    )
     monkeypatch.setattr(freeze.preflight, "validate_record", lambda actual, expected: None)
     monkeypatch.setattr(freeze, "git", lambda *args: "c" * 40)
     with pytest.raises(SystemExit, match="candidate tree mismatch"):
         freeze.require_valid_preflight()
 
 
+def test_require_valid_preflight_does_not_reapply_preflight_creation_gate(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    candidate = "a" * 40
+    candidate_tree = "b" * 40
+    record = {"candidate_sha": candidate, "candidate_tree_sha": candidate_tree}
+    path = tmp_path / "preflight.json"
+    path.write_text(json.dumps(record), encoding="utf-8")
+
+    monkeypatch.setattr(freeze, "PREFLIGHT_PATH", path)
+    monkeypatch.setattr(freeze, "git_path_exists", lambda path, revision="HEAD": True)
+    monkeypatch.setattr(
+        freeze.preflight,
+        "prepare",
+        lambda sha: pytest.fail("accepted predecessor validation re-applied the preflight creation gate"),
+    )
+    monkeypatch.setattr(
+        freeze.preflight,
+        "expected_record_for_candidate",
+        lambda sha: record,
+        raising=False,
+    )
+    monkeypatch.setattr(freeze.preflight, "validate_record", lambda actual, expected: None)
+    monkeypatch.setattr(
+        freeze,
+        "git",
+        lambda *args: candidate_tree if args == ("rev-parse", f"{candidate}^{{tree}}") else "c" * 40,
+    )
+    monkeypatch.setattr(freeze, "git_history", lambda path, revision="HEAD": ("d" * 40,))
+    monkeypatch.setattr(freeze, "is_ancestor", lambda ancestor, descendant: True)
+    monkeypatch.setattr(freeze, "git_blob", lambda path, revision: "e" * 40)
+
+    actual_record, actual_candidate, actual_tree, preflight_blob = freeze.require_valid_preflight()
+    assert actual_record == record
+    assert actual_candidate == candidate
+    assert actual_tree == candidate_tree
+    assert preflight_blob == "e" * 40
+
+
 def test_prepare_fails_closed_while_preflight_absent(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    original_git_path_exists = freeze.git_path_exists
     monkeypatch.setattr(freeze, "PREFLIGHT_PATH", tmp_path / "missing-preflight.json")
+    monkeypatch.setattr(freeze, "FREEZE_PATH", tmp_path / "missing-freeze.json")
+    monkeypatch.setattr(
+        freeze,
+        "git_path_exists",
+        lambda path, revision="HEAD": (
+            False if path == freeze.FREEZE_REL else original_git_path_exists(path, revision)
+        ),
+    )
     with pytest.raises(SystemExit, match="canonical preflight record is absent"):
         freeze.prepare()
 
 
-def test_current_boundary_proves_freeze_absent(capsys: pytest.CaptureFixture[str]) -> None:
+def test_boundary_proves_freeze_absent_when_freeze_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    original_git_path_exists = freeze.git_path_exists
+    monkeypatch.setattr(freeze, "FREEZE_PATH", tmp_path / "missing-freeze.json")
+    monkeypatch.setattr(
+        freeze,
+        "git_path_exists",
+        lambda path, revision="HEAD": (
+            False if path == freeze.FREEZE_REL else original_git_path_exists(path, revision)
+        ),
+    )
     freeze.validate_boundary()
     output = capsys.readouterr().out
     assert "TRACK_A_EPOCH_002_FREEZE_TOOLING=PASS_FREEZE_ABSENT" in output
