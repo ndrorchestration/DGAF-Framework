@@ -68,8 +68,10 @@ def _write_valid_source(source: Path, certificate_bytes: bytes) -> str:
 
 
 def _git(repo: Path, *args: str, text: bool = True) -> str | bytes:
-    return subprocess.check_output(["git", *args], cwd=repo, text=text).strip() if text else subprocess.check_output(
-        ["git", *args], cwd=repo
+    return (
+        subprocess.check_output(["git", *args], cwd=repo, text=text).strip()
+        if text
+        else subprocess.check_output(["git", *args], cwd=repo)
     )
 
 
@@ -78,10 +80,7 @@ def _init_repo(repo: Path) -> None:
     subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
     subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=repo, check=True)
     subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True)
-    attrs = (
-        f"{admission.DEST_CERT.as_posix()} -text\n"
-        f"{admission.DEST_RECEIPT.as_posix()} -text\n"
-    )
+    attrs = f"{admission.DEST_CERT.as_posix()} -text\n" f"{admission.DEST_RECEIPT.as_posix()} -text\n"
     (repo / ".gitattributes").write_text(attrs, encoding="utf-8")
     subprocess.run(["git", "add", ".gitattributes"], cwd=repo, check=True)
     subprocess.run(["git", "commit", "-q", "-m", "base"], cwd=repo, check=True)
