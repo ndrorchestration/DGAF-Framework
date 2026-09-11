@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json",
+  "title": "Track A Epoch 002 dataset-lock evidence manifest",
+  "description": "Prospective non-authorizing content-addressed evidence contract. It binds retained blinded collection/QC evidence without inspecting outcomes and does not itself create a repository dataset-lock receipt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "protocol_id",
+    "epoch",
+    "collection_authorization",
+    "collection_run",
+    "public_artifact",
+    "protected_artifact",
+    "custody",
+    "dataset_shape",
+    "structural_qc",
+    "authorization_state",
+    "scientific_state",
+    "qc_record_id",
+    "historical_pooling_allowed",
+    "epoch_004_substitution_allowed"
+  ],
+  "properties": {
+    "record_type": {"const": "TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE"},
+    "schema_version": {"const": 1},
+    "protocol_id": {"const": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"},
+    "epoch": {"const": 2},
+    "collection_authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit_sha", "blob_sha", "frozen_candidate_sha", "frozen_candidate_tree_sha"],
+      "properties": {
+        "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "blob_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "frozen_candidate_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "frozen_candidate_tree_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "collection_run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow_run_id", "job_id"],
+      "properties": {
+        "workflow_run_id": {"type": "integer", "minimum": 1},
+        "job_id": {"type": "integer", "minimum": 1}
+      }
+    },
+    "public_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "name", "size_bytes", "archive_sha256", "whole_epoch_manifest_sha256"],
+      "properties": {
+        "artifact_id": {"type": "integer", "minimum": 1},
+        "name": {"type": "string", "minLength": 1},
+        "size_bytes": {"type": "integer", "minimum": 1},
+        "archive_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "whole_epoch_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "protected_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "name", "size_bytes", "archive_sha256", "ciphertext_sha256", "plaintext_tar_sha256"],
+      "properties": {
+        "artifact_id": {"type": "integer", "minimum": 1},
+        "name": {"type": "string", "minLength": 1},
+        "size_bytes": {"type": "integer", "minimum": 1},
+        "archive_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "ciphertext_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "plaintext_tar_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "certificate_sha256", "certificate_public_key_der_sha256"],
+      "properties": {
+        "class": {"const": "SAME_SYSTEM_NONINDEPENDENT"},
+        "certificate_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "certificate_public_key_der_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "dataset_shape": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paired_seed_units", "blinded_observations"],
+      "properties": {
+        "paired_seed_units": {"const": 50},
+        "blinded_observations": {"const": 2250}
+      }
+    },
+    "structural_qc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["per_seed_sidecars", "complete_matrix", "outcome_values_inspected", "outcome_aggregation_performed"],
+      "properties": {
+        "per_seed_sidecars": {"const": "PASS"},
+        "complete_matrix": {"const": "PASS"},
+        "outcome_values_inspected": {"const": false},
+        "outcome_aggregation_performed": {"const": false}
+      }
+    },
+    "authorization_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unblinding_authorized", "primary_analysis_authorized"],
+      "properties": {
+        "unblinding_authorized": {"const": false},
+        "primary_analysis_authorized": {"const": false}
+      }
+    },
+    "scientific_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["empirical_n_increment", "canonical_dgaf_efficacy", "independent_validation", "high_assurance_authorized"],
+      "properties": {
+        "empirical_n_increment": {"const": 0},
+        "canonical_dgaf_efficacy": {"const": "NOT_ESTABLISHED"},
+        "independent_validation": {"const": false},
+        "high_assurance_authorized": {"const": false}
+      }
+    },
+    "qc_record_id": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9._:-]{7,127}$"},
+    "historical_pooling_allowed": {"const": false},
+    "epoch_004_substitution_allowed": {"const": false}
+  }
+}
