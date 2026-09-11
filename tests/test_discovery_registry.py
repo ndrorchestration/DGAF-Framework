@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+import json
+from pathlib import Path
 
 import pytest
 
@@ -97,3 +99,19 @@ def test_blindspot_record_is_non_authorizing_and_requires_disjoint_methods():
                 reproduction_evidence=("test://mutation-002",),
             )
         )
+
+
+def test_registry_seed_files_are_non_authorizing_and_non_exhaustive():
+    root = Path(__file__).resolve().parents[1]
+    assumption_registry = json.loads(
+        (root / "docs/governance/ASSUMPTION_REGISTRY_V1.json").read_text()
+    )
+    blindspot_ledger = json.loads(
+        (root / "docs/governance/BLIND_SPOT_LEDGER_V1.json").read_text()
+    )
+    assert assumption_registry["authoritative_effect"] == "NONE"
+    assert assumption_registry["completeness_claim"] is False
+    assert assumption_registry["assumptions"] == []
+    assert blindspot_ledger["authoritative_effect"] == "NONE"
+    assert blindspot_ledger["completeness_claim"] is False
+    assert blindspot_ledger["findings"] == []
