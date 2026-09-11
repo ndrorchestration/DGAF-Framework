@@ -4,7 +4,7 @@ This document translates DGAF's project-local vocabulary into plain, industry-ne
 
 The goal is **translation, not renaming**. Internal names remain useful inside DGAF, while public documentation leads with the function an external reader needs to understand.
 
-Machine-readable authority: `docs/VOCABULARY_TRANSLATION_MATRIX.json`. Process rules: `docs/VOCABULARY_GOVERNANCE.md`.
+Machine-readable translation authority: `docs/VOCABULARY_TRANSLATION_MATRIX.json`. Process rules: `docs/VOCABULARY_GOVERNANCE.md`. Identity disputes are resolved by `docs/agents/AGENT_ROSTER.md` plus `registry/agent_ontology_adjudication.v1.json`; the translation layer does not decide sovereign identity.
 
 ## One-sentence description
 
@@ -30,50 +30,54 @@ Machine-readable authority: `docs/VOCABULARY_TRANSLATION_MATRIX.json`. Process r
 | **Freeze** | Immutable experimental candidate binding | Not collection authorization |
 | **Closure** | Pre-authorization completeness proof | Not collection authorization |
 | **Collection authorization** | Permission for the exact prospective collection | Not evidence that collection happened or efficacy exists |
-| **Dataset lock** | Immutable collected-dataset receipt | Not analysis or efficacy evidence |
-| **Unblinding authorization** | Permission for controlled treatment-identity release | Not primary-analysis authorization |
+| **Dataset lock** | Immutable collected-dataset receipt | Non-authorizing; not unblinding or analysis permission |
+| **Unblinding decision** | Separate human-controlled permission for bounded treatment-identity release/decryption | Not materialization or primary-analysis authorization |
 | **Materialization** | Deterministic construction of analysis-ready unblinded input | Not outcome aggregation or analysis |
+| **Materialization receipt** | Immutable record binding the materialized input and retained identity | Non-authorizing; requires a separate primary-analysis decision |
 | **Primary-analysis authorization** | Separate permission to run the locked confirmatory analysis | Not exploratory pooling or canonical efficacy adjudication |
 | **High-Assurance** | Separate stricter assurance program | Not synonymous with Track A |
 
 ## Vocabulary model
 
-Five different things must remain separate:
+Keep these objects distinct:
 
 1. **Canonical identity** — project-local named agent identity.
-2. **Alias** — compatibility name whose relationship has actually been adjudicated.
-3. **Abstract role/archetype** — function class such as `VERIFY`, `GOVERN`, or `SENTINEL_ARCHETYPE`; not an identity and not authority.
-4. **State** — a system condition; not an independent agent authority.
-5. **External functional label** — plain-language explanation for public readers.
+2. **Accepted alias** — compatibility name whose relationship has been adjudicated.
+3. **Formation-local identity/designation** — a formation-scoped variant or seat that does not silently renumber sovereign identity.
+4. **Abstract role/archetype** — a function class; not an identity and not authority.
+5. **State** — a system/formation condition; not an independent agent authority.
+6. **External functional label** — plain-language explanation for public readers.
 
-Translation does not resolve underlying identity conflicts. When identity sources disagree, public language preserves the conflict rather than inventing a simpler ontology.
+Translation must consume the accepted ontology rather than reopen it through shorthand.
 
 ## Named-identity translation matrix
 
 | Internal term | Kind / status | External-facing label | Boundary |
 |---|---|---|---|
 | **Amethyst** | Agent | **Governance Orchestrator** | Coordinates governed lifecycle; does not independently establish scientific truth, owner authorization, independent verification, or efficacy |
-| **COLLEEN** | Agent; designation conflict retained | **Continuity & Provenance Coordinator** | Preserves continuity/provenance; does not manufacture evidence or authorization |
+| **COLLEEN** | Agent; designation history retained | **Continuity & Provenance Coordinator** | Preserves continuity/provenance; does not manufacture evidence or authorization |
 | **Apogee** | Agent; alias `Apogee Lens` | **Evidence & Verification Reviewer** | Verification role does not establish verifier independence |
-| **Sentinel-Phi** | Agent; Sentinel lineage unresolved | **Security & Policy Boundary Enforcer** | Translate only when the source specifically names Sentinel-Phi; do not silently collapse `Sentinel` into it |
-| **DemiJoule** | Agent | **Runtime Safety & Constraint Adviser** | `SENTINEL_ARCHETYPE` is a role class, not Sentinel or Sentinel-Phi identity |
+| **Sentinel** | Distinct sovereign security lineage/role | **Security Lineage / Policy Boundary Role** | Distinct from Sentinel-Phi; do not collapse the two identities |
+| **Sentinel-Phi** | Distinct formation variant/identity; formation-local `A-12-φ` | **Security & Policy Boundary Enforcer** | Formation-local designation does not create or replace a sovereign numbered seat |
+| **DemiJoule** | Agent | **Runtime Safety & Constraint Adviser** | Historical/AHG `SENTINEL_ARCHETYPE` is a role class, not Sentinel or Sentinel-Phi identity |
 | **Herald** | Agent | **Publication & External Communication Gatekeeper** | Cannot manufacture evidence, approval, or scientific status |
 | **Professor Prodigy** | Agent; aliases `Prodigy`, `Prof Prodigy` | **Formal Methods & Mathematical Analyst** | Formal analysis is non-orchestrating and non-authorizing |
 | **Nova** | Agent | **Simulation & Hypothesis Explorer** | Exploration is not authorization or verified evidence |
 | **Perigee** | Agent | **Boundary & Input-Safety Filter** | Filtering is not governance authorization or independent security certification |
 | **Reciprocity** | Agent | **Reciprocal-Impact & Fairness Reviewer** | Does not globally certify fairness |
-| **The Librarian** | Agent; designation conflict retained | **Provenance & Decision Archivist** | Traceability is not correctness or permission |
+| **The Librarian** | Agent; designation history retained | **Provenance & Decision Archivist** | Traceability is not correctness or permission |
 | **The Auditor** | Agent | **Quality & Constraint Reviewer** | Internal QA is not independent certification |
 | **The Actualizer** | Agent | **Authorized Execution Worker** | Technical ability never creates permission |
-| **Zenith** | Agent; designation conflict retained | **Compute & Resource Coordinator** | Resource control creates no scientific/governance authority |
-| **Reson** | Agent; designation conflict retained | **Coherence & Drift Reviewer** | Domain coherence scores do not create general governance or empirical authority |
-| **Lyra** | Agent; designation conflict retained | **Synthesis & Narrative Adviser** | Narrative/synthesis quality cannot change governance or evidence state |
-| **Echolette** | Agent; designation conflict retained | **Pattern & Temporal-Coherence Reviewer** | Pattern/coherence review remains domain-scoped |
-| **Ionia** | **State pending ontology reconciliation** | **Convergence & Modal-Lock State** | Newer records classify Ionia as state; translation does not rewrite the older roster or grant independent authority |
+| **Zenith** | Agent; designation history retained | **Compute & Resource Coordinator** | Resource control creates no scientific/governance authority |
+| **Reson** | Agent; designation history retained | **Coherence & Drift Reviewer** | Domain coherence scores do not create general governance or empirical authority |
+| **Lyra** | Agent; designation history retained | **Synthesis & Narrative Adviser** | Narrative/synthesis quality cannot change governance or evidence state |
+| **Echolette** | Agent; designation history retained | **Pattern & Temporal-Coherence Reviewer** | Pattern/coherence review remains domain-scoped |
+| **Agent Ionia** | Sovereign agent identity **A-13** | **Modal-Lock / Convergence Agent (Ionia)** | Distinct from `IONIA_STATE`; agent identity does not make 0Hz metaphors empirical control evidence |
+| **IONIA_STATE / Ionia 0Hz** | Formation/runtime convergence state; no sovereign seat | **Modal-Lock / Convergence State** | A state, not Agent Ionia A-13 and not an authority-bearing agent seat |
 
 ## Required first-use forms
 
-When the identity matters to an external reader, lead with the function:
+When the identity matters to an external reader, lead with the function and preserve the resolved object type:
 
 - **Governance Orchestrator (Amethyst)**
 - **Continuity & Provenance Coordinator (COLLEEN)**
@@ -92,52 +96,53 @@ When the identity matters to an external reader, lead with the function:
 - **Coherence & Drift Reviewer (Reson)**
 - **Synthesis & Narrative Adviser (Lyra)**
 - **Pattern & Temporal-Coherence Reviewer (Echolette)**
-- **Convergence & Modal-Lock State (Ionia)**
+- **Modal-Lock / Convergence Agent (Agent Ionia, A-13)** when the agent identity is intended
+- **Modal-Lock / Convergence State (`IONIA_STATE`)** when the runtime/formation state is intended
 
 After first use, the codename may be used when the referent remains unambiguous.
 
-## Important unresolved vocabulary
+## Adjudicated ontology distinctions
 
 ### Sentinel / Sentinel-Phi
 
-The current identity conflict register preserves a distinct Sentinel lineage and a related Sentinel-Phi identity. Therefore **Sentinel is not treated as an alias of Sentinel-Phi by the translation matrix**. Public material should preserve the source term when only `Sentinel` is known and explain ambiguity when it matters.
+Accepted issue #522 adjudication preserves **Sentinel** and **Sentinel-Phi** as distinct ontology records. Base Sentinel is a sovereign security lineage/role. Sentinel-Phi is a distinct formation variant/identity with formation-local designation `A-12-φ`. Formation-local designation does not silently create, replace, or renumber a sovereign seat.
 
-This is separate from DemiJoule's historical/AHG **Sentinel archetype**, which is a role class only.
+This is also separate from DemiJoule's historical/AHG **Sentinel archetype**, which is a role class only.
 
-### Ionia
+### Agent Ionia / IONIA_STATE
 
-The older sovereign roster describes Ionia as an agent seat, while newer topology/ecosystem records classify Ionia as a 0Hz/modal state. Public translation uses **Convergence & Modal-Lock State (Ionia)** until that ontology conflict is formally adjudicated. This wording does not alter the underlying sovereign source.
+Accepted issue #522 adjudication resolves the prior ambiguity:
 
-## Internal versus external example
+- **Agent Ionia — A-13** is the canonical sovereign roster identity unless a later explicit roster amendment changes it.
+- **`IONIA_STATE` / Ionia 0Hz state** is a formation/runtime convergence state. It is not an agent seat and consumes no sovereign seat.
 
-Internal shorthand may remain compact:
-
-> `Amethyst → Apogee → DemiJoule → Herald`
-
-External prose should translate the functions:
-
-> The **Governance Orchestrator (Amethyst)** routes a candidate through **Evidence & Verification Review (Apogee)** and **Runtime Safety & Constraint Review (DemiJoule)** before the **Publication & External Communication Gatekeeper (Herald)** may release an accepted public artifact.
+Any current-facing text that says only `Ionia` where the distinction matters must state which object is intended.
 
 ## Naming and authority rules
 
 - Codename is identity, not capability.
 - Role class is not identity.
-- Alias is accepted only after the underlying identity relationship is established.
+- Formation-local designation is not sovereign seat authority.
+- Alias is accepted only after the underlying relationship is established.
+- State is not an agent seat.
 - Independence is evidence, not branding.
 - Named agents are project-local constructs, not industry standards.
 - Translation has `scientific_state_effect = NONE`, `authority_effect = NONE`, and `identity_resolution_effect = NONE`.
-- Runtime, CI, deployment, experiment, authorization, and efficacy status do not belong in vocabulary entries.
+- Runtime, CI, deployment, experiment, authorization, and efficacy status do not belong in identity definitions.
 
 ## Research-track translation
 
 | Track | Plain-English scope | Current public interpretation |
 |---|---|---|
-| **Track A** | Numeric topology robustness experiment | Prospective blinded collection complete; 50 paired inferential seed units / 2,250 blinded raw observations retained; dataset lock and unblinding authorization established; custody-key handoff/materialization pending; primary analysis not authorized/run |
+| **Track A — Epoch 001** | Historical prospective numeric topology-robustness collection | Blinded collection complete; 50 paired inferential seed units / 2,250 blinded raw observations retained; dataset lock established; protected mapping cryptographically unrecoverable; primary analysis unanalyzable / not run |
+| **Track A — Epoch 002 successor** | Replacement prospective numeric topology-robustness experiment | Operator-local custody-v2 recovery passed as self-attested/non-independent; repository custody NOT ESTABLISHED; empirical collection NOT AUTHORIZED; dataset lock NOT ESTABLISHED; unblinding NOT AUTHORIZED; materialization NOT ESTABLISHED; primary analysis NOT AUTHORIZED / NOT RUN |
 | **Track B1** | Semantic routing and safety behavior | Standalone non-empirical engineering/evaluation lane complete |
 | **Track B2** | Persistent context and closure behavior | Standalone non-empirical engineering/evaluation lane complete |
 | **Track B3** | Persistent graph-convergence monitoring | Standalone non-empirical engineering/evaluation lane complete |
 | **Track C** | Integrated DGAF composition | Non-empirical composition proposal only; empirical execution not authorized |
 | **Solo Epochs** | Historical developer-run bounded experiments | Historical exact-scope evidence; not automatically canonical DGAF evidence |
+
+Accepted Epoch 002 tooling through #627 is preparation/validation evidence only. It does not promote any successor experiment predicate.
 
 ## Evidence-state translation
 
@@ -156,21 +161,23 @@ External prose should translate the functions:
 
 ## Scientific-unit wording
 
-For Track A, use **50 paired inferential seed units / 2,250 blinded raw observations** rather than a bare `N=2250`. The separate High-Assurance program remains at empirical N=0.
+For the historical Track A Epoch 001 collection, use **50 paired inferential seed units / 2,250 blinded raw observations** rather than a bare `N=2250`.
+
+For successor Epoch 002, no empirical collection has occurred and no scientific N is promoted. The separate canonical High-Assurance program remains at empirical **N=0**.
 
 ## Current external boundary
 
-**DGAF has substantial engineering and governance implementation evidence. Track A completed governed prospective blinded collection and established a dataset lock. Controlled unblinding is authorized, but matching custody-key handoff and unblinded-input materialization remain pending. Primary analysis has not been authorized or run, canonical DGAF efficacy is not established, and High-Assurance is not authorized.**
+**DGAF has substantial engineering and governance implementation evidence. Track A Epoch 001 completed a governed prospective blinded collection, but its protected mapping is cryptographically unrecoverable and its primary analysis is unanalyzable/not run. The replacement Epoch 002 path has passed an operator-local, self-attested/non-independent custody-recovery drill and has prospective tooling through dataset-lock and separate unblinding-decision validation, but repository custody is not established, empirical collection is not authorized, no successor dataset lock or unblinding decision exists, primary analysis is not authorized or run, canonical DGAF efficacy is not established, and High-Assurance remains PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.**
 
 ## Public documentation rule
 
 When a project-local term first appears on a designated public surface:
 
-1. classify it as identity, alias, role/archetype, state, or external label;
-2. check the vocabulary registry and unresolved relations;
+1. classify it as canonical identity, accepted alias, formation-local identity/designation, role/archetype, state, or external label;
+2. check the vocabulary registry and accepted ontology adjudication;
 3. lead with the plain-English function;
-4. preserve identity and authority conflicts rather than silently resolving them;
+4. preserve identity and authority distinctions rather than silently collapsing them;
 5. preserve verification, authorization, scientific-state, and efficacy ceilings;
 6. link to technical/governance evidence when the distinction matters.
 
-The dedicated `Vocabulary Translation Matrix` CI workflow checks registry structure, active-identity coverage, conflict retention, authority/scientific non-effects, and this public layer.
+The dedicated Vocabulary Translation Matrix CI workflow checks registry structure, active-identity coverage, conflict/adjudication handling, authority/scientific non-effects, and this public layer.
