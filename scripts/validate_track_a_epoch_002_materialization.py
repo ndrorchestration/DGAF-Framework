@@ -19,17 +19,28 @@ from typing import Any, NoReturn
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE_SCHEMA_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json"
+EVIDENCE_SCHEMA_PATH = ROOT / (
+    "docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json"
+)
 RESULT_SCHEMA_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
 SEMANTICS_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
 
-DATASET_LOCK_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
-UNBLINDING_DECISION_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
-MATERIALIZATION_RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
-PRIMARY_ANALYSIS_AUTH_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+DATASET_LOCK_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
 )
-LOCKED_ANALYSIS_RESULT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
+UNBLINDING_DECISION_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
+)
+MATERIALIZATION_RECEIPT_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
+)
+PRIMARY_ANALYSIS_AUTH_REL = (
+    "docs/experiment/track_a_runs/"
+    "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+)
+LOCKED_ANALYSIS_RESULT_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
+)
 
 DATASET_LOCK_PATH = ROOT / DATASET_LOCK_REL
 UNBLINDING_DECISION_PATH = ROOT / UNBLINDING_DECISION_REL
@@ -39,9 +50,10 @@ LOCKED_ANALYSIS_RESULT_PATH = ROOT / LOCKED_ANALYSIS_RESULT_REL
 
 PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 PRODUCER_SYSTEM = "DGAF_TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT_VALIDATOR"
-MATERIALIZER_REL = "scripts/materialize_track_a_epoch_002_unblinded_input.py"
 UNBLINDING_SCOPE = "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY"
-MATERIALIZATION_SCOPE = "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
+MATERIALIZATION_SCOPE = (
+    "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
+)
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
     "DOES_NOT_AUTHORIZE_UNBLINDING",
@@ -51,7 +63,11 @@ FULL_NON_EFFECTS = [
     "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
     "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
 ]
-UNBLINDING_NON_EFFECTS = [effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"]
+UNBLINDING_NON_EFFECTS = [
+    effect
+    for effect in FULL_NON_EFFECTS
+    if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"
+]
 SCIENTIFIC_NON_EFFECT = {
     "empirical_n_increment": 0,
     "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
@@ -133,7 +149,11 @@ def schema_validator(path: Path) -> Draft202012Validator:
     return Draft202012Validator(load_json(path), format_checker=FormatChecker())
 
 
-def validate_against(validator: Draft202012Validator, value: dict[str, Any], label: str) -> None:
+def validate_against(
+    validator: Draft202012Validator,
+    value: dict[str, Any],
+    label: str,
+) -> None:
     errors = sorted(validator.iter_errors(value), key=lambda item: list(item.path))
     if errors:
         first = errors[0]
@@ -142,7 +162,11 @@ def validate_against(validator: Draft202012Validator, value: dict[str, Any], lab
 
 
 def validate_unblinding_decision_object(decision: dict[str, Any]) -> None:
-    validate_against(schema_validator(RESULT_SCHEMA_PATH), decision, "unblinding decision")
+    validate_against(
+        schema_validator(RESULT_SCHEMA_PATH),
+        decision,
+        "unblinding decision",
+    )
     expected = {
         "record_type": "UNBLINDING_DECISION_RECORD",
         "schema_version": 1,
@@ -163,8 +187,14 @@ def validate_unblinding_decision_object(decision: dict[str, Any]) -> None:
 
 
 def validate_evidence_object(evidence: dict[str, Any]) -> None:
-    validate_against(schema_validator(EVIDENCE_SCHEMA_PATH), evidence, "materialization evidence")
-    if evidence["public_artifact"]["artifact_id"] == evidence["protected_artifact"]["artifact_id"]:
+    validate_against(
+        schema_validator(EVIDENCE_SCHEMA_PATH),
+        evidence,
+        "materialization evidence",
+    )
+    public_id = evidence["public_artifact"]["artifact_id"]
+    protected_id = evidence["protected_artifact"]["artifact_id"]
+    if public_id == protected_id:
         fail("public and protected artifact IDs must be distinct")
     digests = {
         evidence["materialized_input_sha256"],
@@ -183,7 +213,11 @@ def receipt_record_id(
     unblinding_decision_sha256: str,
     evidence_sha256: str,
 ) -> str:
-    payload = f"{unblinding_decision_commit_sha}:{unblinding_decision_sha256}:{evidence_sha256}"
+    payload = (
+        f"{unblinding_decision_commit_sha}:"
+        f"{unblinding_decision_sha256}:"
+        f"{evidence_sha256}"
+    )
     digest = hashlib.sha256(payload.encode("ascii")).hexdigest()
     return f"E002-MATERIALIZE-{digest[:16].upper()}"
 
@@ -248,7 +282,11 @@ def validate_receipt_object(
     evidence_sha256: str,
     materialization_parent_sha: str,
 ) -> None:
-    validate_against(schema_validator(RESULT_SCHEMA_PATH), receipt, "materialization receipt")
+    validate_against(
+        schema_validator(RESULT_SCHEMA_PATH),
+        receipt,
+        "materialization receipt",
+    )
     generated_at = receipt.get("generated_at_utc")
     if not isinstance(generated_at, str):
         fail("materialization receipt generated_at_utc must be a string")
@@ -335,7 +373,8 @@ def validate_dataset_lock_lineage(evidence: dict[str, Any], parent: str) -> None
     if sha256_bytes(dataset_lock_bytes) != evidence["dataset_lock_receipt_sha256"]:
         fail("materialization evidence dataset-lock receipt digest mismatch")
     dataset_lock = json.loads(dataset_lock_bytes.decode("utf-8"))
-    if not isinstance(dataset_lock, dict) or dataset_lock.get("record_id") != evidence["dataset_lock_record_id"]:
+    record_id = dataset_lock.get("record_id") if isinstance(dataset_lock, dict) else None
+    if record_id != evidence["dataset_lock_record_id"]:
         fail("materialization evidence dataset-lock record ID mismatch")
 
 
@@ -346,14 +385,21 @@ def validate_event(evidence_path: Path) -> None:
     if not UNBLINDING_DECISION_PATH.exists():
         fail("canonical unblinding decision is absent")
     if PRIMARY_ANALYSIS_AUTH_PATH.exists() or LOCKED_ANALYSIS_RESULT_PATH.exists():
-        fail("materialization event cannot contain or follow analysis authorization/result at event HEAD")
+        fail(
+            "materialization event cannot contain or follow analysis "
+            "authorization/result at event HEAD"
+        )
 
     head = git("rev-parse", "HEAD")
     parents = git("rev-list", "--parents", "-n", "1", head).split()
     if len(parents) != 2:
         fail("materialization receipt event must have exactly one parent")
     parent = parents[1]
-    changed = [line for line in git("diff", "--name-only", parent, head).splitlines() if line]
+    changed = [
+        line
+        for line in git("diff", "--name-only", parent, head).splitlines()
+        if line
+    ]
     if changed != [MATERIALIZATION_RECEIPT_REL]:
         fail("materialization receipt event must change exactly the canonical receipt path")
     if git_object_exists(f"{parent}:{MATERIALIZATION_RECEIPT_REL}"):
@@ -370,13 +416,20 @@ def validate_event(evidence_path: Path) -> None:
         fail("unblinding decision event must have exactly one parent")
     decision_parent = decision_event[1]
     decision_changed = [
-        line for line in git("diff", "--name-only", decision_parent, decision_commit).splitlines() if line
+        line
+        for line in git(
+            "diff",
+            "--name-only",
+            decision_parent,
+            decision_commit,
+        ).splitlines()
+        if line
     ]
     if decision_changed != [UNBLINDING_DECISION_REL]:
         fail("unblinding decision event changed unexpected paths")
-    if git("rev-parse", f"{parent}:{UNBLINDING_DECISION_REL}") != git(
-        "rev-parse", f"HEAD:{UNBLINDING_DECISION_REL}"
-    ):
+    parent_decision_blob = git("rev-parse", f"{parent}:{UNBLINDING_DECISION_REL}")
+    head_decision_blob = git("rev-parse", f"HEAD:{UNBLINDING_DECISION_REL}")
+    if parent_decision_blob != head_decision_blob:
         fail("unblinding decision changed during materialization receipt event")
 
     decision = load_json(UNBLINDING_DECISION_PATH)
