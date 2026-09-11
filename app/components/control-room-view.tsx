@@ -18,6 +18,7 @@ export function ControlRoomView({ snapshot, phase, error, lastSuccessAt, onRefre
   return <div className="view-stack">
     <section className="section-heading standalone"><div><span className="eyebrow">OPERATIONS</span><h2>Runtime observability without authority inflation</h2><p>Live application health is shown separately from repository governance and scientific state.</p></div><button className="button ghost" onClick={onRefresh}><RefreshIcon /> Refresh</button></section>
     {(phase === 'stale' || phase === 'error') && <div className={`alert ${phase === 'stale' ? 'warning' : 'danger'}`} role="status"><strong>{phase === 'stale' ? 'Showing last valid snapshot.' : 'Runtime data unavailable.'}</strong><span>{error ?? 'A refresh did not complete successfully.'}</span></div>}
+    <DecisionFrontier showOperatorHandoff />
     <div className="metric-grid">
       <article className="metric-card panel"><span>Runtime health</span>{loading ? <StatusChip state="loading"/> : <StatusChip state={health ? normalizeRuntimeStatus(health.status) : 'unavailable'} label={health?.status?.toUpperCase() ?? 'UNAVAILABLE'}/>}<small>{health?.runtime ?? 'No validated runtime snapshot'}</small></article>
       <article className="metric-card panel"><span>Version</span><strong className="mono">{health?.version ?? '—'}</strong><small>Runtime-reported ensemble version</small></article>
@@ -34,6 +35,5 @@ export function ControlRoomView({ snapshot, phase, error, lastSuccessAt, onRefre
       </section>
       <section className="panel"><span className="eyebrow">ADAPTER SURFACE</span><h3>Connected runtime adapters</h3><div className="tag-cloud">{(health?.adapters ?? []).map(adapter => <span className="tag" key={adapter}>{adapter}</span>)}{!health?.adapters?.length && <span className="muted">No validated adapter list available.</span>}</div><div className="constants-table"><div><span>PSI</span><code>{health?.psi ?? '—'}</code></div><div><span>PHI⋆</span><code>{health?.phi_star ?? '—'}</code></div><div><span>SCPE threshold</span><code>{health?.scpe_threshold ?? '—'}</code></div><div><span>Phi checkpoints</span><code>{health?.phi_checkpoints?.join(' · ') ?? '—'}</code></div></div></section>
     </div>
-    <DecisionFrontier showOperatorHandoff />
   </div>
 }
