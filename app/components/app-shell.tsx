@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { DashboardPhase } from '../hooks/use-dashboard-data'
 import { TRUTH_BOUNDARY } from '../lib/governance'
 import { ActivityIcon, EvidenceIcon, MenuIcon, NodesIcon, OverviewIcon, ShieldIcon, ToolsIcon } from './icons'
@@ -66,13 +66,17 @@ export function AppShell({ activeView, onNavigate, children, phase, lastSuccessA
   lastSuccessAt: Date | null
 }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
   const active = NAV.find(item => item.id === activeView) ?? NAV[0]
   const navigate = (view: ViewId) => { onNavigate(view); setMobileOpen(false) }
 
   useEffect(() => {
     if (!mobileOpen) return
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMobileOpen(false)
+      if (event.key === 'Escape') {
+        setMobileOpen(false)
+        menuButtonRef.current?.focus()
+      }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
@@ -109,6 +113,7 @@ export function AppShell({ activeView, onNavigate, children, phase, lastSuccessA
         <header className="topbar">
           <div className="topbar-title">
             <button
+              ref={menuButtonRef}
               className="icon-button mobile-menu"
               onClick={() => setMobileOpen(open => !open)}
               aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
