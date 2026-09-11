@@ -16,7 +16,9 @@ track_a_epoch_001_unblinding_recoverability: CRYPTOGRAPHICALLY_UNRECOVERABLE
 track_a_epoch_001_primary_analysis: UNANALYZABLE_NOT_RUN
 track_a_successor_issue: 523
 track_a_successor_operator_local_custody_recovery: PASS_CURRENT_V2_SELF_ATTESTED_NONINDEPENDENT
-track_a_successor_repository_custody_admission: NOT_ESTABLISHED
+track_a_successor_repository_custody_admission: SATISFIED_SAME_SYSTEM_NONINDEPENDENT
+track_a_successor_precollection_preflight: ESTABLISHED_PASS
+track_a_successor_immutable_freeze: NOT_ESTABLISHED
 track_a_successor_collection_authorization: NOT_ESTABLISHED
 track_a_successor_collection: NOT_AUTHORIZED_NOT_EXECUTED
 track_a_successor_dataset_lock: NOT_ESTABLISHED
@@ -47,7 +49,9 @@ The canonical High-Assurance program, Track A Epoch 001, and Track A Epoch 002 a
 | Epoch 001 primary analysis | **UNANALYZABLE / NOT RUN** |
 | Successor Track A lane | **ISSUE #523 OPEN** |
 | Successor operator-local custody recovery | **PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT** |
-| Successor repository custody admission | **NOT ESTABLISHED** |
+| Successor repository custody admission | **SATISFIED / SAME_SYSTEM_NONINDEPENDENT** |
+| Successor precollection preflight | **ESTABLISHED / PASS** |
+| Successor immutable freeze | **NOT ESTABLISHED** |
 | Successor empirical collection | **NOT AUTHORIZED / NOT EXECUTED** |
 | Successor dataset lock | **NOT ESTABLISHED** |
 | Successor unblinding | **NOT AUTHORIZED** |
@@ -99,31 +103,32 @@ PR #627's accepted exact implementation head was `c7edb1d8b834c16f9d2eef87bf0c39
 
 The unblinding-decision validator requires a future accepted PASS `DATASET_LOCK_RECEIPT`, exact dataset-lock event/content binding, the dataset-lock record as exact predecessor, and a separate one-parent / one-file / first-and-only-history human-controlled authorization event. Its positive scope is bounded to controlled mapping release/decryption only. It does not authorize primary analysis.
 
-### Current custody blocker
+### Current accepted frontier
 
 The operator-local custody-v2 recovery drill completed successfully as:
 
 `PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT`
 
-This establishes local structural recoverability under the declared solo-custody process. It does **not** establish repository-level `real_custody_v2` and it does not establish independent custody.
+The exact public certificate and non-secret schema-v2 recovery receipt from that drill were subsequently admitted and accepted by PR #644. Repository `real_custody_v2` is therefore **satisfied**. This does not establish independent custody: the accepted class remains `SAME_SYSTEM_NONINDEPENDENT`.
 
-The exact non-secret artifacts produced by that successful local drill have not yet been admitted and revalidated from repository contents:
+The canonical public custody artifacts are:
 
-- `track_a_successor_custody_cert.pem`
-- `track_a_successor_solo_custody_receipt.json`
+- `docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem`
+- `docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json`
 
-The next admissible scientific transition is therefore **recovery/transfer of those exact existing bytes, repository admission, certificate↔receipt validation, and Completion State Reconciler execution**. Regenerated, reconstructed, inferred, or substitute artifacts cannot satisfy the existing gate.
+PR #651 then accepted the separate one-file Epoch 002 precollection-preflight record. That record is bound to the exact accepted candidate/source/custody identities and records `preflight_status = PASS`, `collection_authorized = false`, and `scientific_n_increment = 0`.
+
+The next admissible scientific transition is therefore a separate **immutable-freeze manifest**. Freeze is not yet established and must be validated against the exact accepted preflight and protected-source identities before acceptance.
 
 Private keys, passphrases, encrypted backup copies, blinding secrets, protected plaintext mappings, and any other recoverable secret material remain prohibited from GitHub, Notion, chat, CI inputs, workflow logs, and committed files.
 
 ## Ordered successor transition chain
 
-Tooling readiness never skips predecessor state. The current governed order is:
+Tooling readiness never skips predecessor state. The full governed order is:
 
-`exact custody artifact admission`
-`→ repository custody validation / reconciler`
-`→ precollection preflight`
-`→ immutable freeze`
+`repository custody acceptance [SATISFIED]`
+`→ precollection preflight [ESTABLISHED / PASS]`
+`→ immutable freeze [NEXT / NOT ESTABLISHED]`
 `→ final closure`
 `→ bounded verification classification`
 `→ separate collection authorization`
@@ -139,7 +144,9 @@ Tooling readiness never skips predecessor state. The current governed order is:
 
 Current predicates remain:
 
-- `TRACK_A_EPOCH_002_REPOSITORY_CUSTODY = NOT_ESTABLISHED`
+- `TRACK_A_EPOCH_002_REPOSITORY_CUSTODY = SATISFIED / SAME_SYSTEM_NONINDEPENDENT`
+- `TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT = ESTABLISHED / PASS`
+- `TRACK_A_EPOCH_002_IMMUTABLE_FREEZE = NOT_ESTABLISHED`
 - `TRACK_A_EPOCH_002_COLLECTION = NOT_AUTHORIZED / NOT_EXECUTED`
 - `TRACK_A_EPOCH_002_DATASET_LOCK = NOT_ESTABLISHED`
 - `TRACK_A_EPOCH_002_UNBLINDING = NOT_AUTHORIZED`
@@ -199,17 +206,19 @@ Current-facing documentation must preserve these distinctions:
 3. A passing test proves only its defined predicate and environment.
 4. Developer self-verification is not independent verification.
 5. Local custody recovery is not repository custody acceptance and is not independent custody.
-6. Freeze is not authorization.
-7. Closure is not authorization.
-8. Authorization is not execution.
-9. Collection execution is not dataset lock.
-10. Dataset lock is not unblinding authorization.
-11. Unblinding authorization is not materialization.
-12. Materialization is not primary-analysis authorization.
-13. Primary-analysis authorization is not a positive result.
-14. A completed blinded collection can still become unanalyzable if protected mapping custody fails.
-15. Dependency, adjacency, documentation repetition, or shared authorship does not transfer evidence or scientific state.
-16. Historical exact-scope evidence does not silently bind a later candidate, epoch, deployment, or apparatus.
+6. Repository custody acceptance is not independent custody and is not preflight.
+7. Preflight is not freeze or authorization.
+8. Freeze is not authorization.
+9. Closure is not authorization.
+10. Authorization is not execution.
+11. Collection execution is not dataset lock.
+12. Dataset lock is not unblinding authorization.
+13. Unblinding authorization is not materialization.
+14. Materialization is not primary-analysis authorization.
+15. Primary-analysis authorization is not a positive result.
+16. A completed blinded collection can still become unanalyzable if protected mapping custody fails.
+17. Dependency, adjacency, documentation repetition, or shared authorship does not transfer evidence or scientific state.
+18. Historical exact-scope evidence does not silently bind a later candidate, epoch, deployment, or apparatus.
 
 ## Current documentation routing
 
@@ -219,4 +228,4 @@ Current-facing documentation must preserve these distinctions:
 - **Public / industry-neutral terminology:** [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md).
 - **Historical/provenance index:** [`HISTORICAL_RECORDS_INDEX.md`](HISTORICAL_RECORDS_INDEX.md).
 
-No documentation update can itself promote scientific N, custody acceptance, freeze, authorization, independent verification, efficacy, or High-Assurance status.
+No documentation update can itself promote scientific N, custody acceptance, preflight, freeze, authorization, independent verification, efficacy, or High-Assurance status.
