@@ -17,8 +17,10 @@ test('pass and verified remain distinct evidence states', () => {
   assert.notEqual(STATUS_META.pass.label, STATUS_META.verified.label)
 })
 
-test('not authorized and not established remain distinct', () => {
+test('not authorized is a governance lock, not a failure tone', () => {
   assert.equal(STATUS_META.not_authorized.label, 'Not authorized')
+  assert.equal(STATUS_META.not_authorized.tone, 'authority')
+  assert.notEqual(STATUS_META.not_authorized.tone, 'danger')
   assert.equal(STATUS_META.not_established.label, 'Not established')
   assert.notEqual(STATUS_META.not_authorized.description, STATUS_META.not_established.description)
 })
