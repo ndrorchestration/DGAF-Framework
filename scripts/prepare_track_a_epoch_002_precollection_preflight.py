@@ -374,6 +374,9 @@ def write_preflight() -> None:
 def validate_preflight(expected_candidate_sha: str | None) -> None:
     record = load_object(PREFLIGHT_PATH, "preflight record")
     candidate_sha = str(record.get("candidate_sha", "")).lower()
+    if not HEX40.fullmatch(candidate_sha):
+        fail("malformed candidate SHA")
+
     if expected_candidate_sha is not None:
         expected_candidate_sha = expected_candidate_sha.lower()
         if not HEX40.fullmatch(expected_candidate_sha):
@@ -384,10 +387,16 @@ def validate_preflight(expected_candidate_sha: str | None) -> None:
     if not is_ancestor(candidate_sha, git("rev-parse", "HEAD").lower()):
         fail("candidate is not an ancestor of preflight HEAD")
 
-    expected = prepare(candidate_sha)
-    validate_record(record, expected)
-    validate_gate_order(candidate_sha, require_preflight_history=True)
-    if expected_candidate_sha is not None:
+    if expected_candidate_sha is None:
+        expected = expected_record_for_candidate(candidate_sha)
+        validate_record(record, expected)
+        history = git_path_history(PREFLIGHT_REL, "HEAD")
+        if len(history) != 1:
+            fail(f"preflight must have exactly one immutable history commit; history={list(history)}")
+    else:
+        expected = prepare(candidate_sha)
+        validate_record(record, expected)
+        validate_gate_order(candidate_sha, require_preflight_history=True)
         ensure_preflight_only_delta(candidate_sha)
 
     print("TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT_PASS_NONAUTHORIZING")
