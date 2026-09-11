@@ -81,6 +81,35 @@ If the real operator-local drill has already returned `TRACK_A_SUCCESSOR_SOLO_CU
 
 Preserve the encrypted private key, passphrase, and both encrypted recovery copies unchanged in their operator-controlled locations. Only the exact public certificate and exact non-secret schema-v2 receipt emitted by that successful run are eligible for repository admission.
 
+### Prepare the two-file repository admission
+
+Use the dedicated clean evidence branch `track-a-successor-custody-evidence-v2`, based exactly on current accepted `main`. From that clean branch, run:
+
+```powershell
+py -3 scripts/prepare_track_a_successor_custody_admission.py
+```
+
+The admission helper is intentionally fail-closed. It:
+
+- searches only for `DGAF-Custody-Working-*` directories under the current user's home directory unless `--source-dir` is supplied;
+- selects only a unique source whose public certificate has the expected SHA-256 `5d14c89c20e0d22586045dea9fbb5de9a7ec6e7bbe7be4cd5b4da3ce9693db4e`;
+- runs the repository's current schema-v2 non-secret receipt validator;
+- requires the exact `SAME_SYSTEM_NONINDEPENDENT`, non-authorizing, `NOT_ESTABLISHED` custody semantics;
+- fetches `origin/main` and requires the evidence branch HEAD to equal it exactly;
+- requires a clean worktree/index and the repository's byte-preserving `-text` attributes;
+- copies and stages only the two canonical public evidence paths and verifies byte identity after copying;
+- refuses ambiguous local source matches instead of guessing; use `--source-dir <exact-successful-output-directory>` to resolve that case;
+- never reads the encrypted private key or recovery copies and never requests a passphrase; and
+- does not commit, push, freeze, authorize collection, or change scientific N.
+
+After it prints `TRACK_A_SUCCESSOR_CUSTODY_ADMISSION_PREP=PASS_STAGED`, verify that:
+
+```powershell
+git diff --cached --name-only
+```
+
+lists exactly the two canonical evidence files below before creating the single evidence commit.
+
 The canonical repository destinations are:
 
 - `docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem`
