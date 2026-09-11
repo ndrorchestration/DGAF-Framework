@@ -71,6 +71,13 @@
   margin-top: auto;
 }
 
+.artifact-row code {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .orientation-card[data-kind="evidence"] {
   border-color: rgba(123, 169, 255, .3);
 }
