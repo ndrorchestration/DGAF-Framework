@@ -16,7 +16,7 @@ track_a_epoch_001_unblinding_recoverability: CRYPTOGRAPHICALLY_UNRECOVERABLE
 track_a_epoch_001_primary_analysis: UNANALYZABLE_NOT_RUN
 track_a_successor_issue: 523
 track_a_successor_operator_local_custody_recovery: PASS_CURRENT_V2_SELF_ATTESTED_NONINDEPENDENT
-track_a_successor_repository_custody_admission: NOT_ESTABLISHED
+track_a_successor_repository_custody_admission: ESTABLISHED
 track_a_successor_collection_authorization: NOT_ESTABLISHED
 track_a_successor_collection: NOT_AUTHORIZED_NOT_EXECUTED
 track_a_successor_dataset_lock: NOT_ESTABLISHED
@@ -47,7 +47,8 @@ The canonical High-Assurance program, Track A Epoch 001, and Track A Epoch 002 a
 | Epoch 001 primary analysis | **UNANALYZABLE / NOT RUN** |
 | Successor Track A lane | **ISSUE #523 OPEN** |
 | Successor operator-local custody recovery | **PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT** |
-| Successor repository custody admission | **NOT ESTABLISHED** |
+| Successor repository custody admission | **ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT** via accepted #644 |
+| Successor precollection preflight | **NOT ESTABLISHED** |
 | Successor empirical collection | **NOT AUTHORIZED / NOT EXECUTED** |
 | Successor dataset lock | **NOT ESTABLISHED** |
 | Successor unblinding | **NOT AUTHORIZED** |
@@ -99,30 +100,29 @@ PR #627's accepted exact implementation head was `c7edb1d8b834c16f9d2eef87bf0c39
 
 The unblinding-decision validator requires a future accepted PASS `DATASET_LOCK_RECEIPT`, exact dataset-lock event/content binding, the dataset-lock record as exact predecessor, and a separate one-parent / one-file / first-and-only-history human-controlled authorization event. Its positive scope is bounded to controlled mapping release/decryption only. It does not authorize primary analysis.
 
-### Current custody blocker
+### Current successor gate
 
 The operator-local custody-v2 recovery drill completed successfully as:
 
 `PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT`
 
-This establishes local structural recoverability under the declared solo-custody process. It does **not** establish repository-level `real_custody_v2` and it does not establish independent custody.
+PR #644 then admitted the exact public certificate and non-secret schema-v2 recovery receipt and completed 22/22 exact-head workflows successfully. It squash-merged as signed/verified `main` `73f4951c0789d2add282d4f68e1718de65b5f305`. Repository `real_custody_v2` is therefore **satisfied**. Custody remains explicitly `SAME_SYSTEM_NONINDEPENDENT`; local recoverability and repository acceptance do not establish independent custody.
 
-The exact non-secret artifacts produced by that successful local drill have not yet been admitted and revalidated from repository contents:
+The first preflight attempt, #646, is **CLOSED / UNMERGED / SUPERSEDED**. It exposed repository-state-coupled predecessor-absence tests and then correctly failed the dedicated one-file scientific-event boundary after test maintenance was added to the same branch. No preflight state from #646 was accepted and none of its validation evidence transfers.
 
-- `track_a_successor_custody_cert.pem`
-- `track_a_successor_solo_custody_receipt.json`
-
-The next admissible scientific transition is therefore **recovery/transfer of those exact existing bytes, repository admission, certificate↔receipt validation, and Completion State Reconciler execution**. Regenerated, reconstructed, inferred, or substitute artifacts cannot satisfy the existing gate.
+PR #648 is the active **test-only** maintenance lane for the freeze, closure, and verification predecessor-absence controls. It creates no scientific record, authorization, efficacy result, or N transition. After #648 is accepted, the next admissible scientific transition is a freshly rebuilt one-file `TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json` event from the then-current exact signed `main`, with newly bound candidate SHA/tree.
 
 Private keys, passphrases, encrypted backup copies, blinding secrets, protected plaintext mappings, and any other recoverable secret material remain prohibited from GitHub, Notion, chat, CI inputs, workflow logs, and committed files.
 
 ## Ordered successor transition chain
 
-Tooling readiness never skips predecessor state. The current governed order is:
+Tooling readiness never skips predecessor state. The accepted predecessor is now:
 
-`exact custody artifact admission`
-`→ repository custody validation / reconciler`
-`→ precollection preflight`
+`exact custody artifact admission → repository custody validation / reconciler = SATISFIED`
+
+The remaining governed order is:
+
+`precollection preflight`
 `→ immutable freeze`
 `→ final closure`
 `→ bounded verification classification`
@@ -139,7 +139,8 @@ Tooling readiness never skips predecessor state. The current governed order is:
 
 Current predicates remain:
 
-- `TRACK_A_EPOCH_002_REPOSITORY_CUSTODY = NOT_ESTABLISHED`
+- `TRACK_A_EPOCH_002_REPOSITORY_CUSTODY = ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT`
+- `TRACK_A_EPOCH_002_PREFLIGHT = NOT_ESTABLISHED`
 - `TRACK_A_EPOCH_002_COLLECTION = NOT_AUTHORIZED / NOT_EXECUTED`
 - `TRACK_A_EPOCH_002_DATASET_LOCK = NOT_ESTABLISHED`
 - `TRACK_A_EPOCH_002_UNBLINDING = NOT_AUTHORIZED`
