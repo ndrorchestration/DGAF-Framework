@@ -34,8 +34,8 @@ Commercial status, repository visibility, sponsorship, project attestation, and 
 - Closed the synthetic blinding operational test; no production secret was accessed and no empirical pilot data was generated.
 - Merged security hardening PR **#70** into `main`.
 - Security baseline established at commit `93f535c1eb822244ab4e7d3646cadfb9e28a9876`.
-- PR **#65 — Epistemic Alignment + Evidence Card architecture** remains open and is blocked by merge conflicts because its branch predates the #70 merge.
-- PR #65 must be rebased/updated against current `main`, conflicts resolved, and CI rerun before merge.
+- PR **#65 — Epistemic Alignment + Evidence Card architecture** was merged 2026-08-19 (mergedAt: 2026-08-19T06:51:27Z). The below reflects the state as of the 2026-08-18 snapshot: it was still open and blocked by merge conflicts because its branch predates the #70 merge.
+- Under the 2026-08-18 snapshot, PR #65 must be rebased/updated against current `main`, conflicts resolved, and CI rerun before merge.
 - Release asset provenance remains split into two byte-level checks: SHA-256 of the published ZIP and SHA-256 of the authoritative inner runtime artifact.
 - Expected inner-artifact digest from the authoritative CI provenance record is `f6db24e5dd2659d4395c0752845e23f1823aa674980abb20074d4d443de01250`; this value remains an expected reference until the released inner artifact is freshly hashed.
 - Added `docs/PROJECT_STATUS.md` as the current authoritative operational gate board and provenance handoff.

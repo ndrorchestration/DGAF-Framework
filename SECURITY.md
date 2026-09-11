@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-This repository contains governance specifications, evaluation rubrics, and agent protocol documents — not executable software. Security concerns relate to:
+This repository contains governance specifications, evaluation rubrics, agent protocol documents, **and a Next.js application package** (see `package.json` for build/dev/start scripts). Security concerns relate to:
 
 - Specification integrity (unauthorized modifications to governance schemas)
 - Credential or secret exposure in committed files
