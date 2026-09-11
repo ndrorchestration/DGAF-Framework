@@ -26,7 +26,7 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
     </section>
 
     <section className="truth-boundary panel">
-      <div className="section-heading"><div><span className="eyebrow">CANONICAL HIGH-ASSURANCE BOUNDARY</span><h3>Truth boundary</h3></div><span className="source-stamp">SSoT reconciled {TRUTH_BOUNDARY.sourceUpdated}</span></div>
+      <div className="section-heading"><div><span className="eyebrow">CANONICAL HIGH-ASSURANCE BOUNDARY</span><h3>Governance state</h3></div><span className="source-stamp">SSoT reconciled {TRUTH_BOUNDARY.sourceUpdated}</span></div>
       <div className="truth-grid">
         <div><span>Program state</span><strong>{TRUTH_BOUNDARY.programState}</strong></div>
         <div><span>Fail mode</span><strong>{TRUTH_BOUNDARY.failMode}</strong></div>
@@ -35,6 +35,30 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
         <div><span>Canonical efficacy</span><StatusChip state="not_established" label={TRUTH_BOUNDARY.efficacy}/></div>
       </div>
       <p className="boundary-note">Substantial engineering and governance evidence exists. That does not establish canonical DGAF efficacy or authorize successor empirical collection.</p>
+    </section>
+
+    <section aria-labelledby="orientation-title">
+      <div className="section-heading"><div><span className="eyebrow">WHAT MATTERS NOW</span><h3 id="orientation-title">Evidence, blocker, and next admissible action</h3></div></div>
+      <div className="orientation-grid">
+        <article className="orientation-card panel" data-kind="evidence">
+          <span className="eyebrow">EVIDENCE AT THE FRONTIER</span>
+          <h3>Local custody recovery passed at a bounded evidence level.</h3>
+          <p>{NEXT_TRANSITION.evidence}</p>
+          <StatusChip state="open" label="SELF-ATTESTED / NONINDEPENDENT" />
+        </article>
+        <article className="orientation-card panel" data-kind="blocker">
+          <span className="eyebrow">CURRENT BLOCKER</span>
+          <h3>Repository custody has not crossed its acceptance predicate.</h3>
+          <p>{NEXT_TRANSITION.blocker}</p>
+          <StatusChip state="not_established" label="PREDECESSOR OPEN" />
+        </article>
+        <article className="orientation-card panel" data-kind="action">
+          <span className="eyebrow accent">NEXT ADMISSIBLE ACTION</span>
+          <h3>{NEXT_TRANSITION.title}</h3>
+          <p>{NEXT_TRANSITION.summary}</p>
+          <div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div>
+        </article>
+      </div>
     </section>
 
     <section>
