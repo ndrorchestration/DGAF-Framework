@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs'
 
 const shell = readFileSync(new URL('../components/app-shell.tsx', import.meta.url), 'utf8')
 const controlRoom = readFileSync(new URL('../components/control-room-view.tsx', import.meta.url), 'utf8')
+const governanceView = readFileSync(new URL('../components/governance-view.tsx', import.meta.url), 'utf8')
 
 function position(label: string) {
   const index = shell.indexOf(label)
@@ -43,4 +44,9 @@ test('operator control room leads with decision frontier before runtime telemetr
   assert.notEqual(frontier, -1)
   assert.notEqual(metrics, -1)
   assert.ok(frontier < metrics)
+})
+
+test('governance map marks the actionable preflight as the current frontier', () => {
+  assert.match(governanceView, /isFrontier = stage\.id === 'precollection-preflight'/)
+  assert.doesNotMatch(governanceView, /isFrontier = stage\.id === 'repository-custody'/)
 })
