@@ -2,7 +2,7 @@
 
 ## Status
 
-This procedure defines a future non-authorizing immutable-freeze transition for
+This procedure defines the next non-authorizing immutable-freeze transition for
 Track A Epoch 002. The procedure and tooling do not establish the freeze by
 existing.
 
@@ -11,6 +11,10 @@ Current state remains:
 `PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION NOT AUTHORIZED / N=0`
 
 Canonical DGAF efficacy remains `NOT_ESTABLISHED`.
+
+Repository custody-v2 is accepted as `SAME_SYSTEM_NONINDEPENDENT`, and the
+canonical Epoch 002 precollection preflight is accepted with `preflight_status =
+PASS`. Immutable freeze itself remains `NOT_ESTABLISHED`.
 
 ## Purpose
 
@@ -41,9 +45,10 @@ A freeze record may be prepared only after all of these conditions hold:
 6. The runner contract remains explicitly non-authorizing and scientific N
    remains zero.
 
-At the present repository state, the first two preconditions are not satisfied
-because the exact operator-local non-secret custody artifacts have not been
-admitted. The freeze therefore remains unavailable by design.
+At the present repository state, preconditions 1 and 2 are satisfied by the
+accepted custody-v2 evidence and accepted precollection preflight. The remaining
+freeze predicates must still be revalidated against the exact proposed freeze
+head. No freeze exists merely because its predecessors are satisfied.
 
 ## Protected source set
 
@@ -84,8 +89,8 @@ The helper is:
 `--expect-absent` proves the current freeze and downstream gates remain absent.
 If a preflight exists, the same mode also requires that preflight to validate.
 
-`--write` is a future local preparation mode. It refuses to operate until a
-valid preflight exists, derives the candidate from that preflight, recomputes
+`--write` is a local preparation mode. It refuses to operate until a valid
+preflight exists, derives the candidate from that preflight, recomputes
 candidate protected-source blobs, verifies no protected-source drift, and
 writes only the proposed freeze JSON to the working tree. Writing a proposed
 record is not acceptance.
@@ -101,8 +106,10 @@ The intended sequence is:
 
 `accepted custody evidence -> accepted preflight -> immutable freeze -> final closure -> verification classification -> separate collection authorization`
 
-Every transition remains independently validated. A later gate must not be
-created merely because an earlier gate's tooling exists.
+The first two predecessor events are now accepted. The immutable freeze remains
+the next separate governed event. Every later transition remains independently
+validated and must not be created merely because earlier tooling or evidence
+exists.
 
 ## Secret boundary
 
@@ -117,17 +124,20 @@ may become protected freeze sources.
 
 Acceptance of the tooling in this procedure does not establish:
 
-- repository-level real custody;
-- the Epoch 002 precollection preflight;
+- independent custody or independent verification;
 - the immutable freeze itself;
+- final closure or verification classification;
 - collection authorization;
 - empirical execution;
+- dataset lock;
 - unblinding authorization;
+- materialization;
 - primary-analysis authorization;
 - canonical DGAF efficacy;
-- independent custody or independent verification;
 - High-Assurance status; or
 - any increase in scientific N.
 
-The controlling state remains `PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION
-NOT AUTHORIZED / N=0` until separately admissible evidence changes it.
+Repository custody-v2 and the precollection preflight are established by their
+separate accepted evidence records, not by this procedure. The controlling
+state remains `PRE-FREEZE / FAIL-CLOSED / SUCCESSOR COLLECTION NOT AUTHORIZED /
+N=0` until separately admissible freeze evidence changes the freeze predicate.
