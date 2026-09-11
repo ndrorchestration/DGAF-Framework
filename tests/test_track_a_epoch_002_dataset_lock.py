@@ -279,6 +279,30 @@ def test_public_retained_structure_validates_without_outcome_aggregation(
     validator.validate_public_root(public_root, evidence)
 
 
+def test_public_record_algorithm_drift_fails_closed(tmp_path: Path) -> None:
+    evidence = evidence_fixture()
+    public_root = build_public_root(tmp_path, evidence)
+    seed = validator.SEEDS[0]
+    seed_path = public_root / f"track_a_epoch_002_seed_{seed}.json"
+    seed_doc = json.loads(seed_path.read_text(encoding="utf-8"))
+    seed_doc["records"][0]["algorithm_id"] = "DRIFTED_ALGORITHM"
+    seed_digest = write_json_with_sidecar(seed_path, seed_doc)
+
+    manifest_path = public_root / "track_a_epoch_002_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for row in manifest["rows"]:
+        if row["seed_id"] == seed:
+            row["public_dataset_sha256"] = seed_digest
+            break
+    evidence["public_artifact"]["manifest_sha256"] = write_json_with_sidecar(
+        manifest_path,
+        manifest,
+    )
+
+    with pytest.raises(SystemExit, match="algorithm"):
+        validator.validate_public_root(public_root, evidence)
+
+
 def test_public_manifest_outcome_inspection_claim_fails_closed(tmp_path: Path) -> None:
     evidence = evidence_fixture()
     public_root = build_public_root(tmp_path, evidence)
