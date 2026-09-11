@@ -32,6 +32,7 @@ RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEI
 RECEIPT_PATH = ROOT / RECEIPT_REL
 
 PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
+ALGORITHM_ID = "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1"
 EVIDENCE_ARTIFACT_NAME = "track-a-epoch-002-dataset-lock-evidence"
 PUBLIC_ARTIFACT_NAME = "track-a-epoch-002-public-blinded"
 PROTECTED_ARTIFACT_NAME = "track-a-epoch-002-protected-encrypted"
@@ -284,6 +285,8 @@ def _validate_public_seed_document(
             fail(f"public seed {seed} record schema drift")
         if record["protocol_id"] != PROTOCOL_ID:
             fail(f"public seed {seed} protocol drift")
+        if record["algorithm_id"] != ALGORITHM_ID:
+            fail(f"public seed {seed} algorithm drift")
         if record["frozen_candidate_sha"] != frozen_candidate_sha:
             fail(f"public seed {seed} candidate drift")
         if record["seed_id"] != seed:
