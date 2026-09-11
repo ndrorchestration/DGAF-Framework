@@ -1,6 +1,9 @@
 # Needle Template Registry
+
 <!-- DGAF Governance Layer: docs/needle/TEMPLATE_REGISTRY.md -->
-<!-- Status: GOLD STAR CERTIFIED | Last Updated: 20<!-- Status: GOLD STAR CERTIFIED | Last Updated: 2026-06-13 | Session: S071 | Owner: ndrorchestration --><!-- P-30: PASS | COLLEEN 1-1-1-1: PASS | Apogee Composite Avg: 0.958 -->1-1-1-1: PASS | Apogee Composite Avg: 0.958 -->
+<!-- Status: GOLD STAR CERTIFIED | Last Updated: 2026-06-13 | Session: S071 | Owner: ndrorchestration -->
+<!-- P-30: PASS | COLLEEN 1-1-1-1: PASS | Apogee Composite Avg: 0.958 -->
+<!-- METRICS SNAPSHOT: 2026-06-13 (NMS-003). Metrics below are a dated snapshot and may be stale. -->
 
 ## Purpose
 
@@ -109,4 +112,4 @@ A template may be added to this registry only when:
 | NT-05 Test Governance API Gates | 93 | — | — | — | — |
 | **90d Totals** | **11,374** | **1,311** | **3,254** | **11.5%** | **2.48x** |
 
-*Updated: 2026-06-13 | Agent Amethyst | S071*
+Updated: 2026-06-13 | Agent Amethyst | S071
