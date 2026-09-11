@@ -100,18 +100,12 @@ def validate_matrix(
         sentinel_records = [
             record
             for record in unresolved
-            if isinstance(record, dict)
-            and set(record.get("terms", [])) == {"Sentinel", "Sentinel-Phi"}
+            if isinstance(record, dict) and set(record.get("terms", [])) == {"Sentinel", "Sentinel-Phi"}
         ]
-        if (
-            not sentinel_records
-            or sentinel_records[0].get("status") != "UNRESOLVED_IDENTITY_LINEAGE"
-        ):
+        if not sentinel_records or sentinel_records[0].get("status") != "UNRESOLVED_IDENTITY_LINEAGE":
             errors.append("Sentinel/Sentinel-Phi lineage must retain bounded unresolved status")
         ionia_records = [
-            record
-            for record in unresolved
-            if isinstance(record, dict) and "Ionia" in set(record.get("terms", []))
+            record for record in unresolved if isinstance(record, dict) and "Ionia" in set(record.get("terms", []))
         ]
         if ionia_records:
             errors.append("Ionia agent-vs-state conflict is adjudicated and must not remain unresolved")
@@ -154,15 +148,11 @@ def validate_matrix(
 
         if entry["identity_kind"] not in {"AGENT", "STATE"}:
             errors.append(f"{identity}: identity_kind must be AGENT or STATE")
-        if not isinstance(entry["resolution_status"], str) or not entry[
-            "resolution_status"
-        ].strip():
+        if not isinstance(entry["resolution_status"], str) or not entry["resolution_status"].strip():
             errors.append(f"{identity}: resolution_status must be non-empty")
 
         aliases = entry["aliases"]
-        if not isinstance(aliases, list) or any(
-            not isinstance(alias, str) or not alias.strip() for alias in aliases
-        ):
+        if not isinstance(aliases, list) or any(not isinstance(alias, str) or not alias.strip() for alias in aliases):
             errors.append(f"{identity}: aliases must be strings")
             aliases = []
         for alias in aliases:
@@ -180,15 +170,11 @@ def validate_matrix(
         roles = entry["abstract_role_classes"]
         if not isinstance(roles, list) or not roles:
             errors.append(f"{identity}: abstract_role_classes must be non-empty")
-        if not isinstance(entry["authority_ceiling"], str) or not entry[
-            "authority_ceiling"
-        ].strip():
+        if not isinstance(entry["authority_ceiling"], str) or not entry["authority_ceiling"].strip():
             errors.append(f"{identity}: authority_ceiling must be non-empty")
         expected_first_use = f"{label} ({identity})"
         if entry["first_use_external"] != expected_first_use:
-            errors.append(
-                f"{identity}: first_use_external must equal {expected_first_use!r}"
-            )
+            errors.append(f"{identity}: first_use_external must equal {expected_first_use!r}")
 
     missing = REQUIRED_IDENTITIES - set(identities)
     if missing:
@@ -208,9 +194,7 @@ def validate_matrix(
         errors.append("Ionia must remain the adjudicated sovereign AGENT identity")
     if identities.get("IONIA_STATE", {}).get("identity_kind") != "STATE":
         errors.append("IONIA_STATE must remain a distinct STATE")
-    if "SENTINEL_ARCHETYPE" not in set(
-        identities.get("DemiJoule", {}).get("abstract_role_classes", [])
-    ):
+    if "SENTINEL_ARCHETYPE" not in set(identities.get("DemiJoule", {}).get("abstract_role_classes", [])):
         errors.append("DemiJoule must retain SENTINEL_ARCHETYPE as a role class")
 
     if ontology_adjudication is not None:
@@ -238,47 +222,30 @@ def validate_matrix(
         active_names = {
             item.get("display_name")
             for item in identity_manifest.get("identities", [])
-            if item.get("activation_status") == "active"
-            and isinstance(item.get("display_name"), str)
+            if item.get("activation_status") == "active" and isinstance(item.get("display_name"), str)
         }
         missing_active = active_names - set(identities)
         if missing_active:
-            errors.append(
-                "active identity-manifest names missing translation entries: "
-                f"{sorted(missing_active)}"
-            )
+            errors.append("active identity-manifest names missing translation entries: " f"{sorted(missing_active)}")
         sentinel = next(
-            (
-                item
-                for item in identity_manifest.get("identities", [])
-                if item.get("display_name") == "Sentinel"
-            ),
+            (item for item in identity_manifest.get("identities", []) if item.get("display_name") == "Sentinel"),
             None,
         )
         sentinel_phi = next(
-            (
-                item
-                for item in identity_manifest.get("identities", [])
-                if item.get("display_name") == "Sentinel-Phi"
-            ),
+            (item for item in identity_manifest.get("identities", []) if item.get("display_name") == "Sentinel-Phi"),
             None,
         )
         if sentinel and sentinel_phi and "Sentinel" in alias_to_identity:
-            errors.append(
-                "identity manifest preserves Sentinel separately; translation cannot collapse it"
-            )
+            errors.append("identity manifest preserves Sentinel separately; translation cannot collapse it")
 
     if public_text is not None:
         for identity, entry in identities.items():
             if entry["external_label"] not in public_text:
                 errors.append(
-                    "public translation layer missing external label for "
-                    f"{identity}: {entry['external_label']}"
+                    "public translation layer missing external label for " f"{identity}: {entry['external_label']}"
                 )
         if "historical `Sentinel` resolves to `Sentinel-Phi`" in public_text:
-            errors.append(
-                "public translation layer incorrectly resolves contested Sentinel lineage"
-            )
+            errors.append("public translation layer incorrectly resolves contested Sentinel lineage")
 
     return errors
 
@@ -300,10 +267,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    print(
-        "PASS: vocabulary translation matrix v2 "
-        "(coverage, accepted ontology, authority ceiling)"
-    )
+    print("PASS: vocabulary translation matrix v2 " "(coverage, accepted ontology, authority ceiling)")
     return 0
 
 
