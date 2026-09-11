@@ -112,7 +112,11 @@ def test_closure_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_
         verification.require_valid_closure()
 
 
-def test_prepare_fails_closed_while_closure_absent() -> None:
+def test_prepare_fails_closed_while_closure_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(verification, "CLOSURE_PATH", tmp_path / "missing-closure.json")
     with pytest.raises(SystemExit, match="canonical final-closure packet is absent"):
         verification.prepare()
 
