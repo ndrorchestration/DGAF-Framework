@@ -19,6 +19,7 @@
 - Preserved the Apache-2.0 license boundary and its separate trademark reservation; no proprietary restriction has been retroactively imposed on already-public open-source material.
 - Confirmed `.github/FUNDING.yml` already exposes GitHub Sponsors; sponsorship is treated as funding rather than certification or ownership.
 - No existing pattern artifact was moved, deleted, or reclassified solely for commercialization. Asset-by-asset classification remains an audit task.
+- Temporal supersession: PR **#65 — Epistemic Alignment + Evidence Card architecture** merged on 2026-08-19. The 2026-08-18 entry below remains preserved as an event-time snapshot and must not be read as current PR state.
 
 ### Epistemic boundary
 
