@@ -53,10 +53,10 @@ export function AgentsView({ roster }: { roster: RosterData | null }) {
               <div><span className="eyebrow">{triad.type}</span><h4>{triad.id.replaceAll('_', ' ')}</h4></div>
               <p>{triad.use_case}</p>
             </div>
-            <div className="formation-rail" aria-label={`${triad.id} members`}>
+            <div className="formation-rail" role="list" aria-label={`${triad.id} members`}>
               {triad.agents.map((id, index) => {
                 const agent = agentById.get(id)
-                return <div className="formation-member-wrap" key={id}>
+                return <div className="formation-member-wrap" role="listitem" key={id}>
                   {index > 0 && <span className="formation-link" aria-hidden="true" />}
                   <div className="formation-member">
                     <div className="formation-member-top"><span className="tier-mark">{agent?.tier ?? 'UNMAPPED'}</span><StatusChip state={agent ? normalizeRuntimeStatus(agent.status) : 'unknown'} label={agent?.status?.toUpperCase() ?? 'UNKNOWN'} compact /></div>
@@ -76,7 +76,7 @@ export function AgentsView({ roster }: { roster: RosterData | null }) {
           <label><span>Search</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Role, codename, formation…" /></label>
           <label><span>Tier</span><select value={tier} onChange={event => setTier(event.target.value)}><option value="all">All tiers</option>{tiers.map(value => <option key={value}>{value}</option>)}</select></label>
           <label><span>Status</span><select value={status} onChange={event => setStatus(event.target.value)}><option value="all">All statuses</option>{statuses.map(value => <option key={value}>{value}</option>)}</select></label>
-          <div className="filter-count"><strong>{agents.length}</strong><span>of {roster.agent_count} agents</span></div>
+          <div className="filter-count" aria-live="polite"><strong>{agents.length}</strong><span>of {roster.agent_count} agents</span></div>
         </div>
         <div className="roster-directory panel" role="table" aria-label="Validated runtime agent roster">
           <div className="roster-directory-head" role="row">
@@ -87,7 +87,7 @@ export function AgentsView({ roster }: { roster: RosterData | null }) {
             <p role="cell">{agent.role}</p>
             <div className="roster-state" role="cell"><span className="tier-mark">{agent.tier}</span><StatusChip state={normalizeRuntimeStatus(agent.status)} label={agent.status.toUpperCase()} compact /></div>
             <div className="tag-cloud" role="cell">{agent.triad_roles.map(role => <span className="tag" key={role}>{role}</span>)}</div>
-          </article>) : <div className="roster-no-results"><StatusChip state="unknown" label="NO MATCHES" compact/><span>No validated agent matches the current filters.</span></div>}
+          </article>) : <div className="roster-no-results" role="row"><div role="cell" aria-live="polite"><StatusChip state="unknown" label="NO MATCHES" compact/><span>No validated agent matches the current filters.</span></div></div>}
         </div>
       </section>
     </>}
