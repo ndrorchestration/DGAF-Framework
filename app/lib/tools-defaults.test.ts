@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import test from 'node:test'
 
-import { SWEEP_DEFAULT_TARGETS } from './tools-defaults'
+import { SWEEP_DEFAULT_TARGETS } from './tools-defaults.ts'
 
 test('P-07 default targets resolve to existing repository paths', () => {
   assert.deepEqual(SWEEP_DEFAULT_TARGETS, [
