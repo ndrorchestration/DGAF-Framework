@@ -23,16 +23,10 @@ from typing import Any, NoReturn
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE_SCHEMA_PATH = (
-    ROOT / "docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json"
-)
+EVIDENCE_SCHEMA_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json"
 RESULT_SCHEMA_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
-STRUCTURAL_LEDGER_VALIDATOR_PATH = (
-    ROOT / "scripts/validate_track_a_epoch_002_result_ledger.py"
-)
-SEMANTICS_VALIDATOR_PATH = (
-    ROOT / "scripts/validate_track_a_epoch_002_result_record_semantics.py"
-)
+STRUCTURAL_LEDGER_VALIDATOR_PATH = ROOT / "scripts/validate_track_a_epoch_002_result_ledger.py"
+SEMANTICS_VALIDATOR_PATH = ROOT / "scripts/validate_track_a_epoch_002_result_record_semantics.py"
 
 RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
 RECEIPT_PATH = ROOT / RECEIPT_REL
@@ -41,9 +35,7 @@ PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 EVIDENCE_ARTIFACT_NAME = "track-a-epoch-002-dataset-lock-evidence"
 PUBLIC_ARTIFACT_NAME = "track-a-epoch-002-public-blinded"
 PROTECTED_ARTIFACT_NAME = "track-a-epoch-002-protected-encrypted"
-EVIDENCE_SCOPE = (
-    "CONTENT_ADDRESSED_EPOCH_002_BLINDED_DATASET_LOCK_BEFORE_UNBLINDING"
-)
+EVIDENCE_SCOPE = "CONTENT_ADDRESSED_EPOCH_002_BLINDED_DATASET_LOCK_BEFORE_UNBLINDING"
 SEEDS = tuple(range(20270201, 20270251))
 FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
 PER_SEED_RECORD_COUNT = 45
@@ -248,10 +240,7 @@ def validate_pre_lock_ledger(path: Path, evidence: dict[str, Any]) -> None:
     except (ValueError, OSError, json.JSONDecodeError, SystemExit) as exc:
         fail(f"pre-lock result ledger validation failed: {exc}")
     if len(records) != PRE_LOCK_LEDGER_RECORD_COUNT:
-        fail(
-            "pre-lock result ledger must stop at QC_LEDGER with "
-            f"{PRE_LOCK_LEDGER_RECORD_COUNT} records"
-        )
+        fail("pre-lock result ledger must stop at QC_LEDGER with " f"{PRE_LOCK_LEDGER_RECORD_COUNT} records")
     last = records[-1]
     if last.get("record_type") != "QC_LEDGER" or last.get("status") != "PASS":
         fail("pre-lock result ledger must terminate in PASS QC_LEDGER")
@@ -282,9 +271,7 @@ def _validate_public_seed_document(
         fail(f"public seed {seed} claims primary-analysis authority")
     if not isinstance(doc["environment_fingerprint"], dict):
         fail(f"public seed {seed} environment_fingerprint must be object")
-    if not isinstance(doc["runtime_seconds"], (int, float)) or isinstance(
-        doc["runtime_seconds"], bool
-    ):
+    if not isinstance(doc["runtime_seconds"], (int, float)) or isinstance(doc["runtime_seconds"], bool):
         fail(f"public seed {seed} runtime_seconds malformed")
 
     records = doc["records"]
@@ -328,6 +315,20 @@ def _validate_public_seed_document(
             fail(f"public seed {seed} incomplete failure panel")
 
 
+def _validate_flat_member_set(root: Path, expected_names: set[str] | frozenset[str], label: str) -> None:
+    entries = list(root.iterdir())
+    unsafe = sorted(path.name for path in entries if path.is_symlink() or not path.is_file())
+    if unsafe:
+        fail(f"{label} artifact contains non-regular top-level members: {unsafe}")
+    actual_names = {path.name for path in entries}
+    if actual_names != set(expected_names):
+        fail(
+            f"{label} artifact member set mismatch: "
+            f"missing={sorted(set(expected_names) - actual_names)} "
+            f"extra={sorted(actual_names - set(expected_names))}"
+        )
+
+
 def validate_public_root(root: Path, evidence: dict[str, Any]) -> None:
     if not root.is_dir():
         fail("public artifact extraction root missing")
@@ -338,13 +339,7 @@ def validate_public_root(root: Path, evidence: dict[str, Any]) -> None:
     for seed in SEEDS:
         expected_names.add(f"track_a_epoch_002_seed_{seed}.json")
         expected_names.add(f"track_a_epoch_002_seed_{seed}.json.sha256")
-    actual_names = {path.name for path in root.iterdir() if path.is_file()}
-    if actual_names != expected_names:
-        fail(
-            "public artifact member set mismatch: "
-            f"missing={sorted(expected_names - actual_names)} "
-            f"extra={sorted(actual_names - expected_names)}"
-        )
+    _validate_flat_member_set(root, expected_names, "public")
 
     manifest_path = root / "track_a_epoch_002_manifest.json"
     manifest_digest = _require_sidecar(manifest_path)
@@ -366,10 +361,7 @@ def validate_public_root(root: Path, evidence: dict[str, Any]) -> None:
     protected = evidence["protected_artifact"]
     if manifest["custody_certificate_sha256"] != protected["custody_certificate_sha256"]:
         fail("public collection manifest custody certificate drift")
-    if (
-        manifest["custody_certificate_public_key_der_sha256"]
-        != protected["custody_certificate_public_key_der_sha256"]
-    ):
+    if manifest["custody_certificate_public_key_der_sha256"] != protected["custody_certificate_public_key_der_sha256"]:
         fail("public collection manifest custody public-key drift")
     for field in (
         "outcomes_inspected_by_collection_workflow",
@@ -396,9 +388,7 @@ def validate_public_root(root: Path, evidence: dict[str, Any]) -> None:
         if row["record_count"] != PER_SEED_RECORD_COUNT:
             fail(f"public collection manifest seed {seed} count drift")
         for digest_field in ("public_dataset_sha256", "protected_mapping_sha256"):
-            if not isinstance(row[digest_field], str) or not HEX64.fullmatch(
-                row[digest_field]
-            ):
+            if not isinstance(row[digest_field], str) or not HEX64.fullmatch(row[digest_field]):
                 fail(f"public collection manifest seed {seed} digest malformed")
         seed_path = root / f"track_a_epoch_002_seed_{seed}.json"
         seed_digest = _require_sidecar(seed_path)
@@ -432,13 +422,7 @@ def certificate_public_key_der_sha256(path: Path) -> str:
 def validate_protected_root(root: Path, evidence: dict[str, Any]) -> None:
     if not root.is_dir():
         fail("protected artifact extraction root missing")
-    actual_names = {path.name for path in root.iterdir() if path.is_file()}
-    if actual_names != PROTECTED_FILES:
-        fail(
-            "protected artifact member set mismatch: "
-            f"missing={sorted(PROTECTED_FILES - actual_names)} "
-            f"extra={sorted(actual_names - PROTECTED_FILES)}"
-        )
+    _validate_flat_member_set(root, PROTECTED_FILES, "protected")
     protected = evidence["protected_artifact"]
     ciphertext = root / "track_a_epoch_002_protected.cms"
     cert = root / "track_a_epoch_002_custody_cert.pem"
@@ -541,15 +525,8 @@ def validate_receipt_object(
     if receipt != expected:
         missing = sorted(set(expected) - set(receipt))
         extra = sorted(set(receipt) - set(expected))
-        mismatched = sorted(
-            key
-            for key in set(expected) & set(receipt)
-            if expected[key] != receipt[key]
-        )
-        fail(
-            "dataset-lock receipt exact contract mismatch: "
-            f"missing={missing} extra={extra} mismatched={mismatched}"
-        )
+        mismatched = sorted(key for key in set(expected) & set(receipt) if expected[key] != receipt[key])
+        fail("dataset-lock receipt exact contract mismatch: " f"missing={missing} extra={extra} mismatched={mismatched}")
 
 
 def git(*args: str, check: bool = True) -> str:
@@ -656,17 +633,10 @@ def validate_receipt_event(
         if line
     )
     if changed != [RECEIPT_REL]:
-        fail(
-            "dataset-lock receipt event must change exactly one file "
-            f"{RECEIPT_REL}; got {changed}"
-        )
+        fail("dataset-lock receipt event must change exactly one file " f"{RECEIPT_REL}; got {changed}")
     if git_object_exists(f"{parent}:{RECEIPT_REL}"):
         fail("dataset-lock receipt unexpectedly existed at event parent")
-    history = [
-        line
-        for line in git("log", "--format=%H", "--", RECEIPT_REL).splitlines()
-        if line
-    ]
+    history = [line for line in git("log", "--format=%H", "--", RECEIPT_REL).splitlines() if line]
     if history != [head]:
         fail(f"dataset-lock receipt must have first-and-only history at HEAD; got {history}")
 
