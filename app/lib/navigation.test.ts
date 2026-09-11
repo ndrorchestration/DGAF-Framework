@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 const shell = readFileSync(new URL('../components/app-shell.tsx', import.meta.url), 'utf8')
+const controlRoom = readFileSync(new URL('../components/control-room-view.tsx', import.meta.url), 'utf8')
 
 function position(label: string) {
   const index = shell.indexOf(label)
@@ -34,4 +35,12 @@ test('mobile navigation exposes expansion state and controlled region', () => {
   assert.match(shell, /aria-controls="primary-navigation"/)
   assert.match(shell, /aria-expanded=\{mobileOpen\}/)
   assert.match(shell, /aria-label=\{mobileOpen \? 'Close navigation' : 'Open navigation'\}/)
+})
+
+test('operator control room leads with decision frontier before runtime telemetry', () => {
+  const frontier = controlRoom.indexOf('<DecisionFrontier showOperatorHandoff />')
+  const metrics = controlRoom.indexOf('<div className="metric-grid">')
+  assert.notEqual(frontier, -1)
+  assert.notEqual(metrics, -1)
+  assert.ok(frontier < metrics)
 })
