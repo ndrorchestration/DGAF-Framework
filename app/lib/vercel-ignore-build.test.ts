@@ -39,6 +39,24 @@ function createRepoWithChange(relativePath: string) {
   return { repo, previous, current }
 }
 
+function createRepoWithRuntimeRename() {
+  const repo = mkdtempSync(path.join(tmpdir(), 'dgaf-vercel-ignore-rename-'))
+  git(repo, 'init')
+  git(repo, 'config', 'user.email', 'test@example.invalid')
+  git(repo, 'config', 'user.name', 'DGAF test')
+  mkdirSync(path.join(repo, 'app'), { recursive: true })
+  writeFileSync(path.join(repo, 'app/page.tsx'), 'export default function Page() { return null }\n')
+  git(repo, 'add', 'app/page.tsx')
+  git(repo, 'commit', '-m', 'runtime baseline')
+  const previous = git(repo, 'rev-parse', 'HEAD')
+
+  mkdirSync(path.join(repo, 'docs'), { recursive: true })
+  git(repo, 'mv', 'app/page.tsx', 'docs/page.tsx')
+  git(repo, 'commit', '-m', 'move runtime file to docs')
+  const current = git(repo, 'rev-parse', 'HEAD')
+  return { repo, previous, current }
+}
+
 function runGitMode(cwd: string, previous?: string, current?: string) {
   return spawnSync(process.execPath, [HELPER], {
     cwd,
@@ -88,6 +106,16 @@ test('Vercel Git SHA comparison skips a proven documentation-only commit', () =>
 
 test('Vercel Git SHA comparison builds for a deploy-relevant commit', () => {
   const fixture = createRepoWithChange('app/page.tsx')
+  try {
+    const result = runGitMode(fixture.repo, fixture.previous, fixture.current)
+    assert.equal(result.status, 1, result.stderr || result.stdout)
+  } finally {
+    rmSync(fixture.repo, { recursive: true, force: true })
+  }
+})
+
+test('runtime file moved into a non-deploy surface still forces a build', () => {
+  const fixture = createRepoWithRuntimeRename()
   try {
     const result = runGitMode(fixture.repo, fixture.previous, fixture.current)
     assert.equal(result.status, 1, result.stderr || result.stdout)
