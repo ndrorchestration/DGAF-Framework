@@ -423,7 +423,7 @@ def validate_dataset_lock_lineage(evidence: dict[str, Any], parent: str) -> None
         fail("materialization evidence dataset-lock record ID mismatch")
 
 
-def validate_event(evidence_path: Path) -> None:
+def validate_event(evidence_path: Path, dataset_lock_evidence_path: Path) -> None:
     validate_semantic_policy()
     if not MATERIALIZATION_RECEIPT_PATH.exists():
         fail("canonical materialization receipt is absent")
@@ -474,7 +474,8 @@ def validate_event(evidence_path: Path) -> None:
     validate_unblinding_decision_object(decision)
     decision_digest = sha256_file(UNBLINDING_DECISION_PATH)
     evidence = load_json(evidence_path)
-    validate_evidence_object(evidence)
+    dataset_lock_evidence = load_json(dataset_lock_evidence_path)
+    validate_evidence_against_dataset_lock(evidence, dataset_lock_evidence)
     if evidence["unblinding_decision_commit_sha"] != decision_commit:
         fail("materialization evidence does not bind the accepted unblinding event commit")
     if evidence["unblinding_decision_sha256"] != decision_digest:
@@ -504,14 +505,15 @@ def parse_args() -> argparse.Namespace:
     mode.add_argument("--tooling-only", action="store_true")
     mode.add_argument("--validate-event", action="store_true")
     parser.add_argument("--evidence", type=Path)
+    parser.add_argument("--dataset-lock-evidence", type=Path)
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     if args.tooling_only:
-        if args.evidence is not None:
-            fail("tooling-only mode does not accept materialization evidence")
+        if args.evidence is not None or args.dataset_lock_evidence is not None:
+            fail("tooling-only mode does not accept materialization or dataset-lock evidence")
         validate_tooling_only()
         print("TRACK_A_EPOCH_002_MATERIALIZATION_TOOLING=PASS_ABSENT")
         print("MATERIALIZATION=NOT_ESTABLISHED")
@@ -521,7 +523,9 @@ def main() -> None:
         return
     if args.evidence is None:
         fail("--validate-event requires --evidence")
-    validate_event(args.evidence)
+    if args.dataset_lock_evidence is None:
+        fail("--validate-event requires --dataset-lock-evidence")
+    validate_event(args.evidence, args.dataset_lock_evidence)
     print("TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT=PASS_NONAUTHORIZING")
     print("PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN")
     print("SCIENTIFIC_N_INCREMENT=0")
