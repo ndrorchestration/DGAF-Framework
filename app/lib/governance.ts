@@ -145,6 +145,9 @@ export const NEXT_TRANSITION = {
     'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem',
     'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json',
   ],
+  operatorBranch: 'track-a-successor-custody-evidence-v2',
+  operatorCommand: 'py -3 scripts/prepare_track_a_successor_custody_admission.py',
+  operatorVerification: 'git diff --cached --name-only',
   warning: 'Do not regenerate, substitute, or reconstruct custody evidence.',
 } as const
 
