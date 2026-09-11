@@ -1,13 +1,11 @@
-// app/layout.tsx
 import type { Metadata } from 'next'
+import './styles/globals.css'
+
 export const metadata: Metadata = {
-  title: 'DGAF-Framework — Ensemble Dashboard',
-  description: 'Topological Resonant Decay · Phi-Closure Gate · 9-Gate Orchestration',
+  title: 'DGAF — Governance Command Center',
+  description: 'Governed multi-agent orchestration, evidence, verification, authority, and runtime observability.',
 }
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body style={{ margin: 0, background: '#0f172a' }}>{children}</body>
-    </html>
-  )
+  return <html lang="en"><body>{children}</body></html>
 }
