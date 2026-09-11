@@ -27,7 +27,9 @@ function changedPathsFromVercelGit() {
 
   if (!isAvailableCommit(previous) || !isAvailableCommit(current)) return null
 
-  const diff = spawnSync('git', ['diff', '--name-only', '-z', previous, current, '--'], {
+  // Disable rename collapsing so a deploy-relevant source path cannot disappear
+  // behind a non-deploy destination path (for example app/page.tsx -> docs/page.tsx).
+  const diff = spawnSync('git', ['diff', '--name-only', '-z', '--no-renames', previous, current, '--'], {
     encoding: 'utf8',
   })
   if (diff.status !== 0 || diff.error) return null
