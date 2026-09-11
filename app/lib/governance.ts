@@ -141,7 +141,10 @@ export const NEXT_TRANSITION = {
   blocker: 'Repository custody acceptance is NOT ESTABLISHED.',
   summary:
     'Recover and transfer the exact existing non-secret custody certificate and recovery receipt to their canonical repository paths, then validate those exact bytes.',
-  artifacts: ['track_a_successor_custody_cert.pem', 'track_a_successor_solo_custody_receipt.json'],
+  artifacts: [
+    'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem',
+    'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json',
+  ],
   warning: 'Do not regenerate, substitute, or reconstruct custody evidence.',
 } as const
 
