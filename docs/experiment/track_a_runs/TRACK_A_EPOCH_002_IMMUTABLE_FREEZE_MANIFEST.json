@@ -1,0 +1,29 @@
+{
+  "collection_authorized": false,
+  "freeze_status": "ESTABLISHED",
+  "frozen_candidate_sha": "7bbd97604d82efada43d0b139901f06eb2582a23",
+  "frozen_candidate_tree_sha": "d6c4e94586551880d657ae3464043a08bfc5d8e1",
+  "high_assurance_authorized": false,
+  "preflight_blob_sha": "320086f1f2feb15f04a10cc4e2587a452d9ccff5",
+  "primary_analysis_authorized": false,
+  "protected_source_blobs": {
+    "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json": "26980e27185b3a77980204b2d46a4fdab7e5fc7e",
+    "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json": "76196a8f1eb4a64f36d73a9a649a2f2fc16f4288",
+    "docs/experiment/TRACK_A_SUCCESSOR_SOLO_CUSTODY_CONTRACT.md": "c9b31ab6fa5d062e1dfec3dc33a46eb3642fee97",
+    "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json": "9668ec54e50c40b04d40cfa64b817950df4bbffa",
+    "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem": "46bf5f3d2704e05e8cdcdc7f5b96a9795fe487fa",
+    "docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json": "32c248a364cb2bd43454dbec3beee9beccbe547f",
+    "experiments/pdmal_pilot/harness_contract.py": "bb97c54ddf087fef568b1b3c8f8df72c30dad11e",
+    "experiments/pdmal_pilot/requirements-full-lock.txt": "00c1f779e97030f9b25ae494642edb31b5b09de5",
+    "experiments/pdmal_pilot/run_track_a_epoch_002.py": "4f10a701249e9e45b80a50e2c4af1183149ae954",
+    "experiments/pdmal_pilot/task_engine.py": "90135e1c6dfccc3b56ffdc0dcb9eb50a0b2a5b05",
+    "experiments/pdmal_pilot/topology_utils.py": "7ae92ba8a9ab964537e5dafa5e12de36b841391e",
+    "experiments/pdmal_pilot/track_a_epoch_002_analysis.py": "d4495f7cdf211b974039ec0e66292dc62ea0881f",
+    "scripts/validate_track_a_successor_solo_custody_receipt.py": "311473aee1896b3718c64c73c1e740b4782f6100"
+  },
+  "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
+  "record_type": "TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST",
+  "schema_version": 1,
+  "scientific_n_increment": 0,
+  "unblinding_authorized": false
+}
