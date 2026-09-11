@@ -43,30 +43,30 @@ test('current truth boundary remains fail-closed and non-authorized', () => {
   assert.equal(TRUTH_BOUNDARY.efficacy, 'NOT ESTABLISHED')
 })
 
-test('custody is satisfied while preflight is actionable and freeze remains blocked', () => {
+test('preflight is satisfied while immutable freeze is the actionable frontier', () => {
   const custody = GOVERNANCE_STAGES.find(stage => stage.id === 'repository-custody')
   const preflight = GOVERNANCE_STAGES.find(stage => stage.id === 'precollection-preflight')
   const freeze = GOVERNANCE_STAGES.find(stage => stage.id === 'immutable-freeze')
   const collection = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
   assert.equal(custody?.predicateState, 'pass')
-  assert.equal(preflight?.predicateState, 'open')
-  assert.equal(CURRENT_FRONTIER_ID, preflight?.id)
-  assert.notEqual(CURRENT_FRONTIER_ID, custody?.id)
+  assert.equal(preflight?.predicateState, 'pass')
+  assert.equal(CURRENT_FRONTIER_ID, freeze?.id)
+  assert.notEqual(CURRENT_FRONTIER_ID, preflight?.id)
   assert.equal(freeze?.toolingPrepared, true)
-  assert.equal(freeze?.predicateState, 'blocked')
+  assert.equal(freeze?.predicateState, 'open')
   assert.equal(collection?.predicateState, 'not_authorized')
 })
 
-test('next action is the canonical non-authorizing precollection preflight record', () => {
+test('next action is the canonical non-authorizing immutable freeze manifest', () => {
   assert.deepEqual(NEXT_TRANSITION.artifacts, [
-    'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRECOLLECTION_PREFLIGHT.json',
+    'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json',
   ])
-  assert.equal(NEXT_TRANSITION.operatorCommand, 'py -3 scripts/prepare_track_a_epoch_002_precollection_preflight.py --write')
+  assert.equal(NEXT_TRANSITION.operatorCommand, 'python scripts/prepare_track_a_epoch_002_immutable_freeze.py --write')
   assert.equal(NEXT_TRANSITION.operatorVerification, 'git diff --name-only')
 })
 
 test('next action preserves the non-authorizing boundary', () => {
-  assert.match(NEXT_TRANSITION.warning, /does not establish immutable freeze/i)
+  assert.match(NEXT_TRANSITION.warning, /does not establish final closure/i)
   assert.match(NEXT_TRANSITION.warning, /authorize successor collection/i)
   assert.match(NEXT_TRANSITION.warning, /scientific N/i)
 })
