@@ -47,8 +47,8 @@ test('operator control room leads with decision frontier before runtime telemetr
   assert.ok(frontier < metrics)
 })
 
-test('governance map marks the actionable preflight as the current frontier', () => {
-  assert.match(governanceView, /isFrontier = stage\.id === 'precollection-preflight'/)
+test('governance map consumes the shared actionable frontier identity', () => {
+  assert.match(governanceView, /isFrontier = stage\.id === CURRENT_FRONTIER_ID/)
   assert.doesNotMatch(governanceView, /isFrontier = stage\.id === 'repository-custody'/)
 })
 
