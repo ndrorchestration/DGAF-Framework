@@ -10,6 +10,7 @@ from pathlib import Path
 MATRIX_PATH = Path("docs/VOCABULARY_TRANSLATION_MATRIX.json")
 PUBLIC_LAYER_PATH = Path("docs/PUBLIC_TRANSLATION_LAYER.md")
 IDENTITY_MANIFEST_PATH = Path("registry/agent_identity_manifest.v1.json")
+ONTOLOGY_ADJUDICATION_PATH = Path("registry/agent_ontology_adjudication.v1.json")
 
 REQUIRED_IDENTITIES = {
     "Amethyst",
@@ -30,10 +31,12 @@ REQUIRED_IDENTITIES = {
     "Lyra",
     "Echolette",
     "Ionia",
+    "IONIA_STATE",
 }
 REQUIRED_ALIAS_BINDINGS = {
     "Apogee Lens": "Apogee",
     "Prodigy": "Professor Prodigy",
+    "Ionia 0Hz": "IONIA_STATE",
 }
 REQUIRED_EXTERNAL_LABELS = {
     "Amethyst": "Governance Orchestrator",
@@ -45,7 +48,8 @@ REQUIRED_EXTERNAL_LABELS = {
     "Reson": "Coherence & Drift Reviewer",
     "Lyra": "Synthesis & Narrative Adviser",
     "Echolette": "Pattern & Temporal-Coherence Reviewer",
-    "Ionia": "Convergence & Modal-Lock State",
+    "Ionia": "Convergence & Modal-Lock Agent",
+    "IONIA_STATE": "Convergence & Modal-Lock State",
 }
 
 
@@ -57,6 +61,7 @@ def validate_matrix(
     matrix: dict,
     public_text: str | None = None,
     identity_manifest: dict | None = None,
+    ontology_adjudication: dict | None = None,
 ) -> list[str]:
     errors: list[str] = []
     if matrix.get("record_type") != "DGAF_VOCABULARY_TRANSLATION_MATRIX":
@@ -81,6 +86,9 @@ def validate_matrix(
     coverage = matrix.get("coverage_policy")
     if not isinstance(coverage, dict):
         errors.append("coverage_policy must be an object")
+    else:
+        if coverage.get("ontology_adjudication") != str(ONTOLOGY_ADJUDICATION_PATH):
+            errors.append("coverage_policy must bind accepted ontology adjudication")
     change_control = matrix.get("change_control")
     if not isinstance(change_control, dict) or "MOVING_STATE_PROHIBITED" not in change_control:
         errors.append("change_control must prohibit moving state")
@@ -99,7 +107,14 @@ def validate_matrix(
             not sentinel_records
             or sentinel_records[0].get("status") != "UNRESOLVED_IDENTITY_LINEAGE"
         ):
-            errors.append("Sentinel/Sentinel-Phi lineage must remain explicitly unresolved")
+            errors.append("Sentinel/Sentinel-Phi lineage must retain bounded unresolved status")
+        ionia_records = [
+            record
+            for record in unresolved
+            if isinstance(record, dict) and "Ionia" in set(record.get("terms", []))
+        ]
+        if ionia_records:
+            errors.append("Ionia agent-vs-state conflict is adjudicated and must not remain unresolved")
 
     entries = matrix.get("entries")
     if not isinstance(entries, list) or not entries:
@@ -183,22 +198,41 @@ def validate_matrix(
         if alias_to_identity.get(alias) != canonical:
             errors.append(f"alias {alias!r} must resolve to {canonical!r}")
     if "Sentinel" in alias_to_identity:
-        errors.append(
-            "Sentinel must not be encoded as an alias while its lineage is unresolved"
-        )
+        errors.append("Sentinel must not be encoded as an alias of Sentinel-Phi")
 
     for identity, label in REQUIRED_EXTERNAL_LABELS.items():
         if identities.get(identity, {}).get("external_label") != label:
             errors.append(f"{identity}: expected external label {label!r}")
 
-    if identities.get("Ionia", {}).get("identity_kind") != "STATE":
-        errors.append(
-            "Ionia must be translated as STATE until the agent-vs-state conflict is adjudicated"
-        )
+    if identities.get("Ionia", {}).get("identity_kind") != "AGENT":
+        errors.append("Ionia must remain the adjudicated sovereign AGENT identity")
+    if identities.get("IONIA_STATE", {}).get("identity_kind") != "STATE":
+        errors.append("IONIA_STATE must remain a distinct STATE")
     if "SENTINEL_ARCHETYPE" not in set(
         identities.get("DemiJoule", {}).get("abstract_role_classes", [])
     ):
         errors.append("DemiJoule must retain SENTINEL_ARCHETYPE as a role class")
+
+    if ontology_adjudication is not None:
+        if ontology_adjudication.get("status") != "accepted-ontology-adjudication":
+            errors.append("ontology adjudication status is not accepted")
+        seats = ontology_adjudication.get("canonical_seats", {})
+        if seats.get("agent.ionia") != "A-13":
+            errors.append("accepted ontology must retain Agent Ionia at A-13")
+        distinct = ontology_adjudication.get("distinct_objects", {})
+        ionia = distinct.get("ionia", {}) if isinstance(distinct, dict) else {}
+        if ionia.get("agent.ionia", {}).get("kind") != "agent":
+            errors.append("accepted ontology must classify agent.ionia as agent")
+        ionia_state = ionia.get("state.ionia-0hz", {})
+        if ionia_state.get("kind") != "formation-runtime-state":
+            errors.append("accepted ontology must classify IONIA_STATE as runtime state")
+        if ionia_state.get("canonical_seat") is not None:
+            errors.append("IONIA_STATE must not consume a canonical seat")
+        invariants = ontology_adjudication.get("invariants", {})
+        if invariants.get("sentinel_and_sentinel_phi_remain_distinct") is not True:
+            errors.append("accepted ontology must keep Sentinel and Sentinel-Phi distinct")
+        if invariants.get("ionia_agent_and_ionia_state_remain_distinct") is not True:
+            errors.append("accepted ontology must keep Agent Ionia and IONIA_STATE distinct")
 
     if identity_manifest is not None:
         active_names = {
@@ -254,11 +288,13 @@ def main() -> int:
     parser.add_argument("--matrix", type=Path, default=MATRIX_PATH)
     parser.add_argument("--public-layer", type=Path, default=PUBLIC_LAYER_PATH)
     parser.add_argument("--identity-manifest", type=Path, default=IDENTITY_MANIFEST_PATH)
+    parser.add_argument("--ontology-adjudication", type=Path, default=ONTOLOGY_ADJUDICATION_PATH)
     args = parser.parse_args()
     errors = validate_matrix(
         load_json(args.matrix),
         args.public_layer.read_text(encoding="utf-8"),
         load_json(args.identity_manifest),
+        load_json(args.ontology_adjudication),
     )
     if errors:
         for error in errors:
@@ -266,7 +302,7 @@ def main() -> int:
         return 1
     print(
         "PASS: vocabulary translation matrix v2 "
-        "(coverage, conflict retention, authority ceiling)"
+        "(coverage, accepted ontology, authority ceiling)"
     )
     return 0
 
