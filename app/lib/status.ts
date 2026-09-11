@@ -48,7 +48,7 @@ export const STATUS_META: Record<UiState, StatusMeta> = {
   },
   not_authorized: {
     label: 'Not authorized',
-    tone: 'danger',
+    tone: 'authority',
     description: 'The named action remains prohibited even if tooling or capability exists.',
   },
   not_established: {
