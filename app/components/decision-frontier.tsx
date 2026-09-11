@@ -1,7 +1,7 @@
 import { NEXT_TRANSITION } from '../lib/governance'
 import { StatusChip } from './status-chip'
 
-export function DecisionFrontier() {
+export function DecisionFrontier({ showOperatorHandoff = false }: { showOperatorHandoff?: boolean }) {
   return (
     <section className="decision-frontier panel panel-accent" aria-labelledby="decision-frontier-title">
       <div className="decision-frontier-heading">
@@ -38,6 +38,16 @@ export function DecisionFrontier() {
           <div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div>
         </article>
       </div>
+
+      {showOperatorHandoff && <details className="operator-handoff">
+        <summary><span>Operator handoff</span><strong>Show exact safe local step</strong></summary>
+        <div className="operator-handoff-grid">
+          <div><span>Branch</span><code>{NEXT_TRANSITION.operatorBranch}</code></div>
+          <div><span>Run</span><code>{NEXT_TRANSITION.operatorCommand}</code></div>
+          <div><span>Verify staged scope</span><code>{NEXT_TRANSITION.operatorVerification}</code></div>
+        </div>
+        <p>This handoff stages only the exact non-secret public custody artifacts. It does not create, expose, or request private-key material, passphrases, encrypted backups, or blinding secrets.</p>
+      </details>}
 
       <div className="decision-lock">
         <StatusChip state="not_authorized" label="SUCCESSOR COLLECTION NOT AUTHORIZED" compact />
