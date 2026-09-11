@@ -170,11 +170,11 @@ def expected_decision(
             "sha256": dataset_lock_receipt_sha256,
         },
         "evidence_scope": UNBLINDING_SCOPE,
-        "non_effects": UNBLINDING_NON_EFFECTS,
+        "non_effects": list(UNBLINDING_NON_EFFECTS),
         "status": "PASS",
         "predecessor_record_ids": [dataset_lock["record_id"]],
         "authorization_effect": "BOUNDED_RECORD_ONLY",
-        "scientific_state_effect": SCIENTIFIC_NON_EFFECT,
+        "scientific_state_effect": dict(SCIENTIFIC_NON_EFFECT),
     }
 
 
