@@ -135,12 +135,12 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
 ]
 
 export const NEXT_TRANSITION = {
-  title: 'Admit existing successor custody evidence',
+  title: 'Stage exact successor custody evidence',
   evidence:
     'Operator-local custody-v2 recovery passed at PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT.',
   blocker: 'Repository custody acceptance is NOT ESTABLISHED.',
   summary:
-    'Recover and transfer the exact existing non-secret custody certificate and recovery receipt to their canonical repository paths, then validate those exact bytes.',
+    'On the clean dedicated evidence branch based exactly on current accepted main, run the fail-closed admission helper to stage only the exact existing public certificate and non-secret schema-v2 recovery receipt, then verify the staged path list before creating the evidence commit.',
   artifacts: [
     'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_CUSTODY_CERT.pem',
     'docs/experiment/track_a_runs/TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json',
@@ -148,7 +148,8 @@ export const NEXT_TRANSITION = {
   operatorBranch: 'track-a-successor-custody-evidence-v2',
   operatorCommand: 'py -3 scripts/prepare_track_a_successor_custody_admission.py',
   operatorVerification: 'git diff --cached --name-only',
-  warning: 'Do not regenerate, substitute, or reconstruct custody evidence.',
+  warning:
+    'Do not regenerate, substitute, or reconstruct custody evidence. The helper stages only; it does not commit, push, freeze, authorize collection, or change scientific N.',
 } as const
 
 export interface EpochSummary {
