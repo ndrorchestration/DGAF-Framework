@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './styles/globals.css'
 import './styles/refinement.css'
 import './styles/systems.css'
+import './styles/navigation.css'
 
 export const metadata: Metadata = {
   title: 'DGAF — Governance Command Center',

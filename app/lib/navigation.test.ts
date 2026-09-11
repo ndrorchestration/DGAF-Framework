@@ -1,0 +1,76 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+
+const shell = readFileSync(new URL('../components/app-shell.tsx', import.meta.url), 'utf8')
+const controlRoom = readFileSync(new URL('../components/control-room-view.tsx', import.meta.url), 'utf8')
+const governanceView = readFileSync(new URL('../components/governance-view.tsx', import.meta.url), 'utf8')
+const navigationStyles = readFileSync(new URL('../styles/navigation.css', import.meta.url), 'utf8')
+
+function position(label: string) {
+  const index = shell.indexOf(label)
+  assert.notEqual(index, -1, `expected shell to contain ${label}`)
+  return index
+}
+
+test('primary navigation follows understand verify inspect operate journey', () => {
+  const understand = position("label: 'UNDERSTAND'")
+  const verify = position("label: 'VERIFY'")
+  const inspect = position("label: 'INSPECT'")
+  const operate = position("label: 'OPERATE'")
+
+  assert.ok(understand < verify)
+  assert.ok(verify < inspect)
+  assert.ok(inspect < operate)
+
+  assert.ok(position("label: 'Overview'") < position("label: 'Evidence & Research'"))
+  assert.ok(position("label: 'Evidence & Research'") < position("label: 'Agents & Formations'"))
+  assert.ok(position("label: 'Agents & Formations'") < position("label: 'Control Room'"))
+})
+
+test('control room is framed as an operator surface rather than generic telemetry', () => {
+  assert.match(shell, /label: 'Control Room', sub: 'Operator actions & runtime'/)
+})
+
+test('mobile navigation exposes expansion state and controlled region', () => {
+  assert.match(shell, /id="primary-navigation"/)
+  assert.match(shell, /aria-controls="primary-navigation"/)
+  assert.match(shell, /aria-expanded=\{mobileOpen\}/)
+  assert.match(shell, /aria-label=\{mobileOpen \? 'Close navigation' : 'Open navigation'\}/)
+})
+
+test('operator control room leads with decision frontier before runtime telemetry', () => {
+  const frontier = controlRoom.indexOf('<DecisionFrontier showOperatorHandoff />')
+  const metrics = controlRoom.indexOf('<div className="metric-grid">')
+  assert.notEqual(frontier, -1)
+  assert.notEqual(metrics, -1)
+  assert.ok(frontier < metrics)
+})
+
+test('governance map consumes the shared actionable frontier identity', () => {
+  assert.match(governanceView, /isFrontier = stage\.id === CURRENT_FRONTIER_ID/)
+  assert.doesNotMatch(governanceView, /isFrontier = stage\.id === 'repository-custody'/)
+})
+
+test('shell provides keyboard escape and skip-to-content navigation', () => {
+  assert.match(shell, /event\.key === 'Escape'/)
+  assert.match(shell, /className="skip-link" href="#main-content"/)
+  assert.match(navigationStyles, /\.skip-link/)
+  assert.match(navigationStyles, /\.skip-link:focus/)
+})
+
+test('runtime status is explicitly scoped away from governance authority', () => {
+  assert.match(shell, /aria-label="Runtime observability only; not governance authority"/)
+})
+
+test('links receive visible keyboard focus treatment', () => {
+  assert.match(navigationStyles, /a:focus-visible/)
+})
+
+test('closed mobile drawer is removed from focus and Escape returns focus to its trigger', () => {
+  assert.match(shell, /useRef/)
+  assert.match(shell, /menuButtonRef\.current\?\.focus\(\)/)
+  assert.match(shell, /ref=\{menuButtonRef\}/)
+  assert.match(navigationStyles, /@media \(max-width: 760px\)[\s\S]*?\.sidebar\s*\{[\s\S]*?visibility:\s*hidden;[\s\S]*?pointer-events:\s*none;/)
+  assert.match(navigationStyles, /@media \(max-width: 760px\)[\s\S]*?\.sidebar\.mobile-open\s*\{[\s\S]*?visibility:\s*visible;[\s\S]*?pointer-events:\s*auto;/)
+})
