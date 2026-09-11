@@ -136,6 +136,9 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
 
 export const NEXT_TRANSITION = {
   title: 'Admit existing successor custody evidence',
+  evidence:
+    'Operator-local custody-v2 recovery passed at PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT.',
+  blocker: 'Repository custody acceptance is NOT ESTABLISHED.',
   summary:
     'Recover and transfer the exact existing non-secret custody certificate and recovery receipt to their canonical repository paths, then validate those exact bytes.',
   artifacts: ['track_a_successor_custody_cert.pem', 'track_a_successor_solo_custody_receipt.json'],
