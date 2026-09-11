@@ -140,9 +140,7 @@ def build_public_root(tmp_path: Path, evidence: dict) -> Path:
         "seed_count": 50,
         "expected_observations": 2250,
         "custody_receipt_blob_sha": evidence["custody_receipt_blob_sha"],
-        "custody_certificate_sha256": evidence["protected_artifact"][
-            "custody_certificate_sha256"
-        ],
+        "custody_certificate_sha256": evidence["protected_artifact"]["custody_certificate_sha256"],
         "custody_certificate_public_key_der_sha256": evidence["protected_artifact"][
             "custody_certificate_public_key_der_sha256"
         ],
@@ -200,9 +198,7 @@ def test_evidence_promotions_fail_closed(path: tuple[str, ...], value: object) -
 
 def test_public_and_protected_artifact_ids_must_be_distinct() -> None:
     evidence = evidence_fixture()
-    evidence["protected_artifact"]["artifact_id"] = evidence["public_artifact"][
-        "artifact_id"
-    ]
+    evidence["protected_artifact"]["artifact_id"] = evidence["public_artifact"]["artifact_id"]
     with pytest.raises(SystemExit, match="distinct artifact IDs"):
         validator.validate_evidence_object(evidence)
 
@@ -293,6 +289,14 @@ def test_public_manifest_outcome_inspection_claim_fails_closed(tmp_path: Path) -
     )
     with pytest.raises(SystemExit, match="outcomes_inspected"):
         validator.validate_public_root(public_root, evidence)
+
+
+def test_flat_member_set_rejects_nested_directory(tmp_path: Path) -> None:
+    root = tmp_path / "artifact"
+    root.mkdir()
+    (root / "unexpected").mkdir()
+    with pytest.raises(SystemExit, match="non-regular top-level members"):
+        validator._validate_flat_member_set(root, set(), "public")
 
 
 def test_tooling_source_has_no_empirical_or_secret_writer_surface() -> None:
