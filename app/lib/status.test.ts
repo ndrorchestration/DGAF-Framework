@@ -1,5 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { GOVERNANCE_STAGES, TRUTH_BOUNDARY } from './governance.ts'
+import { agentDisplayName } from './public-translation.ts'
 import { STATUS_META, normalizeRuntimeStatus, statusMeta } from './status.ts'
 
 test('loading is neutral rather than destructive', () => {
@@ -29,4 +31,29 @@ test('unknown runtime input remains unknown', () => {
 test('runtime ok maps to pass, never verified', () => {
   assert.equal(normalizeRuntimeStatus('ok'), 'pass')
   assert.notEqual(normalizeRuntimeStatus('ok'), 'verified')
+})
+
+test('current truth boundary remains fail-closed and non-authorized', () => {
+  assert.equal(TRUTH_BOUNDARY.programState, 'PRE-FREEZE')
+  assert.equal(TRUTH_BOUNDARY.failMode, 'FAIL-CLOSED')
+  assert.equal(TRUTH_BOUNDARY.authorization, 'NOT AUTHORIZED')
+  assert.equal(TRUTH_BOUNDARY.empiricalN, 0)
+  assert.equal(TRUTH_BOUNDARY.efficacy, 'NOT ESTABLISHED')
+})
+
+test('lifecycle predicates do not inherit readiness from prepared tooling', () => {
+  const custody = GOVERNANCE_STAGES.find(stage => stage.id === 'repository-custody')
+  const freeze = GOVERNANCE_STAGES.find(stage => stage.id === 'immutable-freeze')
+  const collection = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
+  assert.equal(custody?.predicateState, 'not_established')
+  assert.equal(freeze?.toolingPrepared, true)
+  assert.notEqual(freeze?.predicateState, 'pass')
+  assert.equal(collection?.predicateState, 'not_authorized')
+})
+
+test('runtime codenames are translated with public function first', () => {
+  assert.equal(agentDisplayName('amethyst'), 'Governance Orchestrator (Amethyst)')
+  assert.equal(agentDisplayName('colleen'), 'Continuity & Provenance Coordinator (COLLEEN)')
+  assert.equal(agentDisplayName('apogee'), 'Evidence & Verification Reviewer (Apogee)')
+  assert.equal(agentDisplayName('demijole'), 'Runtime Safety & Constraint Adviser (DemiJoule)')
 })
