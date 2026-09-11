@@ -335,19 +335,25 @@ def ensure_preflight_only_delta(candidate_sha: str) -> None:
         fail(f"preflight validation branch must change only {PREFLIGHT_REL}; changed={list(changed)}")
 
 
-def prepare(candidate_sha: str) -> dict[str, Any]:
+def expected_record_for_candidate(candidate_sha: str) -> dict[str, Any]:
+    """Reconstruct an accepted preflight without reapplying creation-time gate order."""
     contract = load_object(CONTRACT_PATH, "runner contract")
     validate_contract_boundary(contract)
     candidate_tree = require_candidate_sources(contract, candidate_sha)
     receipt = load_object(RECEIPT_PATH, "schema-v2 custody receipt")
     custody = validate_custody_artifacts(candidate_sha, receipt)
-    validate_gate_order(candidate_sha, require_preflight_history=False)
     return expected_record(
         contract,
         candidate_sha=candidate_sha,
         candidate_tree_sha=candidate_tree,
         custody=custody,
     )
+
+
+def prepare(candidate_sha: str) -> dict[str, Any]:
+    record = expected_record_for_candidate(candidate_sha)
+    validate_gate_order(candidate_sha, require_preflight_history=False)
+    return record
 
 
 def write_preflight() -> None:
