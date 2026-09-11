@@ -13,6 +13,7 @@ from scripts import prepare_track_a_epoch_002_precollection_preflight as preflig
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = json.loads((ROOT / "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json").read_text(encoding="utf-8"))
 RUNNER_PATH = ROOT / "experiments/pdmal_pilot/run_track_a_epoch_002.py"
+WORKFLOW_PATH = ROOT / ".github/workflows/track-a-epoch-002-preflight.yml"
 
 
 def load_runner_expected_preflight() -> Callable[..., dict[str, Any]]:
@@ -171,3 +172,39 @@ def test_helper_has_no_secret_input_surface() -> None:
 
 def test_current_contract_remains_non_authorizing() -> None:
     preflight.validate_contract_boundary(CONTRACT)
+
+
+def test_retained_preflight_validation_does_not_reapply_creation_gate(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    candidate_sha = "a" * 40
+    record = {"candidate_sha": candidate_sha}
+    path = tmp_path / "preflight.json"
+    path.write_text(json.dumps(record), encoding="utf-8")
+
+    monkeypatch.setattr(preflight, "PREFLIGHT_PATH", path)
+    monkeypatch.setattr(preflight, "is_ancestor", lambda ancestor, descendant: True)
+    monkeypatch.setattr(preflight, "git", lambda *args: "b" * 40)
+    monkeypatch.setattr(preflight, "expected_record_for_candidate", lambda sha: record)
+    monkeypatch.setattr(preflight, "validate_record", lambda actual, expected: None)
+    monkeypatch.setattr(
+        preflight,
+        "prepare",
+        lambda sha: pytest.fail("retained preflight validation re-applied creation-time gate order"),
+    )
+    monkeypatch.setattr(preflight, "git_path_history", lambda path, revision: ("c" * 40,))
+
+    preflight.validate_preflight(None)
+
+
+def test_preflight_workflow_distinguishes_creation_from_retained_validation() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    marker = "      - name: Validate preflight when present"
+    next_marker = "      - name: Assert non-authorization boundary"
+    block = workflow.split(marker, 1)[1].split(next_marker, 1)[0]
+
+    assert "git cat-file -e" in block
+    assert "github.event.pull_request.base.sha" in block
+    assert "--expected-candidate-sha" in block
+    assert "--validate" in block
