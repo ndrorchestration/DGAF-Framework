@@ -60,6 +60,12 @@ test('next custody action exposes the exact canonical repository destinations', 
   ])
 })
 
+test('next custody action follows the current fail-closed admission helper contract', () => {
+  assert.equal(NEXT_TRANSITION.operatorBranch, 'track-a-successor-custody-evidence-v2')
+  assert.equal(NEXT_TRANSITION.operatorCommand, 'py -3 scripts/prepare_track_a_successor_custody_admission.py')
+  assert.equal(NEXT_TRANSITION.operatorVerification, 'git diff --cached --name-only')
+})
+
 test('runtime codenames are translated with public function first', () => {
   assert.equal(agentDisplayName('amethyst'), 'Governance Orchestrator (Amethyst)')
   assert.equal(agentDisplayName('colleen'), 'Continuity & Provenance Coordinator (COLLEEN)')
