@@ -1,0 +1,39 @@
+{
+  "record_type": "TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT",
+  "schema_version": 2,
+  "recovery_verified_at": "2026-09-10T08:56:01.184982+00:00",
+  "custody_class": "SAME_SYSTEM_NONINDEPENDENT",
+  "independent_custody": false,
+  "keypair_created_before_collection": true,
+  "private_key_in_repository": false,
+  "private_key_in_notion": false,
+  "private_key_in_chat": false,
+  "encrypted_private_key_sha256": "181659f1d567a7bb64eb4305bf16498d782f37b054c92037a82415b32ab28381",
+  "certificate_sha256": "5d14c89c20e0d22586045dea9fbb5de9a7ec6e7bbe7be4cd5b4da3ce9693db4e",
+  "certificate_public_key_der_sha256": "53d0b2a95b2634ef7011b808657e693df426dcaecf8ad70c8094be20d37c4f08",
+  "recovered_public_key_der_sha256": "53d0b2a95b2634ef7011b808657e693df426dcaecf8ad70c8094be20d37c4f08",
+  "recovery_drill": "PASS",
+  "backup_refs": [
+    {
+      "class": "ENCRYPTED_LOCAL_ARCHIVE",
+      "nonsecret_id": "recovery-copy-a",
+      "encrypted": true,
+      "user_controlled": true,
+      "encrypted_private_key_sha256": "181659f1d567a7bb64eb4305bf16498d782f37b054c92037a82415b32ab28381",
+      "recovered_public_key_der_sha256": "53d0b2a95b2634ef7011b808657e693df426dcaecf8ad70c8094be20d37c4f08",
+      "recovery_drill": "PASS"
+    },
+    {
+      "class": "ENCRYPTED_OFFSITE_ARCHIVE",
+      "nonsecret_id": "recovery-copy-b",
+      "encrypted": true,
+      "user_controlled": true,
+      "encrypted_private_key_sha256": "181659f1d567a7bb64eb4305bf16498d782f37b054c92037a82415b32ab28381",
+      "recovered_public_key_der_sha256": "53d0b2a95b2634ef7011b808657e693df426dcaecf8ad70c8094be20d37c4f08",
+      "recovery_drill": "PASS"
+    }
+  ],
+  "empirical_collection_authorized": false,
+  "scientific_state_effect": "NONE",
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED"
+}
