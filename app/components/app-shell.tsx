@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { DashboardPhase } from '../hooks/use-dashboard-data'
 import { TRUTH_BOUNDARY } from '../lib/governance'
 import { ActivityIcon, EvidenceIcon, MenuIcon, NodesIcon, OverviewIcon, ShieldIcon, ToolsIcon } from './icons'
@@ -68,8 +68,19 @@ export function AppShell({ activeView, onNavigate, children, phase, lastSuccessA
   const [mobileOpen, setMobileOpen] = useState(false)
   const active = NAV.find(item => item.id === activeView) ?? NAV[0]
   const navigate = (view: ViewId) => { onNavigate(view); setMobileOpen(false) }
+
+  useEffect(() => {
+    if (!mobileOpen) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [mobileOpen])
+
   return (
     <div className="command-center">
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <aside id="primary-navigation" className={`sidebar ${mobileOpen ? 'mobile-open' : ''}`} aria-label="Primary navigation">
         <div className="brand-block">
           <div className="brand-mark" aria-hidden="true"><span /><span /><span /></div>
@@ -106,7 +117,7 @@ export function AppShell({ activeView, onNavigate, children, phase, lastSuccessA
             ><MenuIcon /></button>
             <div><span className="eyebrow">DGAF / {active.id.toUpperCase()}</span><h1>{active.label}</h1></div>
           </div>
-          <div className="runtime-pill"><StatusChip state={phaseState(phase)} label={phase === 'fresh' ? 'Runtime live' : phase === 'stale' ? 'Runtime stale' : phase === 'error' ? 'Runtime unavailable' : 'Connecting'} compact /><span>{lastSuccessAt ? `Updated ${lastSuccessAt.toLocaleTimeString()}` : 'Awaiting first valid snapshot'}</span></div>
+          <div className="runtime-pill" aria-label="Runtime observability only; not governance authority"><StatusChip state={phaseState(phase)} label={phase === 'fresh' ? 'Runtime live' : phase === 'stale' ? 'Runtime stale' : phase === 'error' ? 'Runtime unavailable' : 'Connecting'} compact /><span>{lastSuccessAt ? `Updated ${lastSuccessAt.toLocaleTimeString()}` : 'Awaiting first valid snapshot'}</span></div>
         </header>
         <details className="truth-beacon">
           <summary aria-label="Canonical repository truth boundary">
