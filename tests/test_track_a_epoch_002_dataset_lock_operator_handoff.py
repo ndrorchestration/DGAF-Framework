@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_dataset_lock.py"
 SPEC = importlib.util.spec_from_file_location("epoch_002_dataset_lock_operator_handoff", MODULE_PATH)
@@ -77,3 +79,18 @@ def operator_evidence_fixture() -> dict:
 
 def test_operator_codespace_evidence_contract_passes_without_actions_ids() -> None:
     validator.validate_evidence_object(operator_evidence_fixture())
+
+
+def test_operator_codespace_rejects_collection_workflow_run_id() -> None:
+    evidence = operator_evidence_fixture()
+    evidence["collection_workflow_run_id"] = 8001
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_object(evidence)
+
+
+def test_operator_codespace_rejects_actions_artifact_ids() -> None:
+    evidence = operator_evidence_fixture()
+    evidence["public_artifact"]["artifact_id"] = 101
+    evidence["protected_artifact"]["artifact_id"] = 102
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_object(evidence)
