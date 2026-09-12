@@ -1,3 +1,5 @@
+import pytest
+
 from dgaf_discovery.detector_mutation import (
     DetectorMutation,
     PropertyCase,
@@ -106,3 +108,21 @@ def test_detector_mutation_outputs_are_non_authorizing():
     assert result.scientific_state_effect == "NONE"
     assert result.scientific_n_increment == 0
     assert result.mutation_scope == "EPHEMERAL_COPY_ONLY"
+
+
+def test_detector_mutation_rejects_vacuous_campaigns():
+    cases = (PropertyCase("VALID", {"ok": True}, True),)
+    with pytest.raises(ValueError, match="requires detector mutations"):
+        run_mutation_campaign(lambda specimen: True, (), cases)
+
+
+def test_detector_mutation_rejects_canonical_oracle_disagreement():
+    cases = (PropertyCase("EXPECTED_INVALID", {"ok": False}, False),)
+    mutant = DetectorMutation(
+        "DM-ORACLE-001",
+        "oracle",
+        "irrelevant mutant",
+        lambda specimen: False,
+    )
+    with pytest.raises(ValueError, match="canonical detector disagrees"):
+        run_mutation_campaign(lambda specimen: True, (mutant,), cases)
