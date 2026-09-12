@@ -98,6 +98,45 @@ def test_downstream_gate_presence_fails_closed(monkeypatch: pytest.MonkeyPatch) 
         closure.reject_downstream_gates()
 
 
+def test_validate_retained_closure_does_not_reapply_creation_gate(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    base_sha = "f" * 40
+    candidate_sha = "a" * 40
+    freeze_blob_sha = "b" * 40
+    record = closure.expected_record(
+        protocol_id=CONTRACT["protocol_id"],
+        candidate_sha=candidate_sha,
+        freeze_blob_sha=freeze_blob_sha,
+    )
+    closure_path = tmp_path / "closure.json"
+    closure_path.write_text(json.dumps(record), encoding="utf-8")
+
+    monkeypatch.setattr(closure, "CLOSURE_PATH", closure_path)
+    monkeypatch.setattr(closure, "validate_contract", lambda: {"protocol_id": CONTRACT["protocol_id"]})
+    monkeypatch.setattr(
+        closure,
+        "reject_downstream_gates",
+        lambda: pytest.fail("retained closure validation re-applied the creation-time downstream gate"),
+    )
+    monkeypatch.setattr(
+        closure,
+        "git_path_exists",
+        lambda path, revision="HEAD": path == closure.CLOSURE_REL and revision in {"HEAD", base_sha},
+    )
+    monkeypatch.setattr(closure, "require_valid_freeze", lambda: (candidate_sha, freeze_blob_sha))
+    monkeypatch.setattr(
+        closure,
+        "git_history",
+        lambda path, revision="HEAD": (("d" * 40,) if path == closure.CLOSURE_REL else ("c" * 40,)),
+    )
+    monkeypatch.setattr(closure, "is_ancestor", lambda ancestor, descendant: True)
+    monkeypatch.setattr(closure, "git_blob", lambda path, revision="HEAD": "9" * 40)
+
+    closure.validate_closure(base_sha)
+
+
 def test_freeze_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     record = {
         "frozen_candidate_sha": "a" * 40,
@@ -122,16 +161,35 @@ def test_freeze_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_p
         closure.require_valid_freeze()
 
 
+def isolate_closure_absence(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    original_git_path_exists = closure.git_path_exists
+    monkeypatch.setattr(closure, "CLOSURE_PATH", tmp_path / "missing-closure.json")
+    monkeypatch.setattr(closure, "DOWNSTREAM_REL", ())
+    monkeypatch.setattr(
+        closure,
+        "git_path_exists",
+        lambda path, revision="HEAD": (
+            False if path == closure.CLOSURE_REL else original_git_path_exists(path, revision)
+        ),
+    )
+
+
 def test_prepare_fails_closed_while_freeze_absent(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    isolate_closure_absence(monkeypatch, tmp_path)
     monkeypatch.setattr(closure, "FREEZE_PATH", tmp_path / "missing-freeze.json")
     with pytest.raises(SystemExit, match="canonical immutable-freeze manifest is absent"):
         closure.prepare()
 
 
-def test_current_boundary_proves_closure_absent(capsys: pytest.CaptureFixture[str]) -> None:
+def test_boundary_proves_closure_absent_when_closure_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    isolate_closure_absence(monkeypatch, tmp_path)
     closure.validate_boundary()
     output = capsys.readouterr().out
     assert "TRACK_A_EPOCH_002_FINAL_CLOSURE_TOOLING=PASS_CLOSURE_ABSENT" in output

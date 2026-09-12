@@ -192,7 +192,17 @@ def write_verification() -> None:
 
 def validate_verification(expected_base_sha: str | None) -> None:
     contract = validate_contract()
-    reject_authorization()
+
+    base: str | None = None
+    base_has_verification = False
+    if expected_base_sha is not None:
+        base = expected_base_sha.lower()
+        if not closure.freeze.preflight.HEX40.fullmatch(base):
+            fail("malformed expected base SHA")
+        base_has_verification = git_path_exists(VERIFICATION_REL, base)
+        if not base_has_verification:
+            reject_authorization()
+
     if not VERIFICATION_PATH.is_file() or not git_path_exists(VERIFICATION_REL):
         fail("verification classification absent")
 
@@ -212,17 +222,21 @@ def validate_verification(expected_base_sha: str | None) -> None:
     if closure_commit == verification_commit or not is_ancestor(closure_commit, verification_commit):
         fail("verification must be introduced strictly after final closure")
 
-    if expected_base_sha is not None:
-        base = expected_base_sha.lower()
-        if not closure.freeze.preflight.HEX40.fullmatch(base):
-            fail("malformed expected base SHA")
-        if git_path_exists(VERIFICATION_REL, base):
-            fail("verification classification already existed at expected base")
-        if not git_path_exists(CLOSURE_REL, base):
-            fail("final closure must already exist at expected base")
-        changed = tuple(line for line in git("diff", "--name-only", f"{base}...HEAD").splitlines() if line)
-        if changed != (VERIFICATION_REL,):
-            fail(f"verification PR must change only {VERIFICATION_REL}; changed={list(changed)}")
+    if base is not None:
+        if base_has_verification:
+            base_blob = git_blob(VERIFICATION_REL, base)
+            head_blob = git_blob(VERIFICATION_REL, "HEAD")
+            if base_blob != head_blob:
+                fail(
+                    "accepted verification classification drifted from expected base: "
+                    f"base={base_blob} head={head_blob}"
+                )
+        else:
+            if not git_path_exists(CLOSURE_REL, base):
+                fail("final closure must already exist at expected base")
+            changed = tuple(line for line in git("diff", "--name-only", f"{base}...HEAD").splitlines() if line)
+            if changed != (VERIFICATION_REL,):
+                fail(f"verification PR must change only {VERIFICATION_REL}; changed={list(changed)}")
 
     print("TRACK_A_EPOCH_002_VERIFICATION=VALIDATED_NONAUTHORIZING")
     print("VERIFICATION_CLASS=DEVELOPER_SELF_ATTESTED_NONINDEPENDENT")
@@ -254,7 +268,11 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--write", action="store_true", help="prepare verification only after accepted closure")
     mode.add_argument("--validate", action="store_true", help="validate an existing verification classification")
     mode.add_argument("--expect-absent", action="store_true", help="prove verification/authorization remain absent")
-    parser.add_argument("--expected-base-sha", default=None)
+    parser.add_argument(
+        "--expected-base-sha",
+        default=None,
+        help="for --validate, require creation-only delta when the exact base does not already contain verification",
+    )
     args = parser.parse_args(argv)
 
     if args.expected_base_sha is not None and not args.validate:
