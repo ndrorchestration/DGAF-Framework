@@ -6,41 +6,36 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_dataset_lock.py"
-SPEC = importlib.util.spec_from_file_location("epoch_002_dataset_lock_operator", MODULE_PATH)
+MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_operator_collection_admission.py"
+SPEC = importlib.util.spec_from_file_location("epoch_002_operator_admission", MODULE_PATH)
 assert SPEC is not None and SPEC.loader is not None
 validator = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(validator)
 
 
-def operator_evidence_fixture() -> dict:
+def operator_admission_fixture() -> dict:
     return {
-        "record_type": "TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE",
+        "record_type": "TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION",
         "schema_version": 1,
-        "protocol_id": validator.PROTOCOL_ID,
+        "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
         "epoch": 2,
-        "evidence_workflow_run_id": 9001,
-        "evidence_tooling_commit_sha": "d" * 40,
         "collection_execution_class": "OPERATOR_CODESPACE",
+        "collection_authorization_commit_sha": validator.AUTHORIZATION_SHA,
+        "frozen_candidate_sha": "7bbd97604d82efada43d0b139901f06eb2582a23",
+        "frozen_candidate_tree_sha": "d6c4e94586551880d657ae3464043a08bfc5d8e1",
+        "python_version": "3.12.3",
+        "requirements_lock_blob_sha": "00c1f779e97030f9b25ae494642edb31b5b09de5",
         "collection_execution_receipt_sha256": "0" * 64,
-        "collection_authorization_commit_sha": "b" * 40,
-        "collection_authorization_blob_sha": "9" * 40,
-        "frozen_candidate_sha": "a" * 40,
-        "frozen_candidate_tree_sha": "e" * 40,
-        "custody_receipt_blob_sha": "c" * 40,
-        "qc_ledger_record_id": "E002-QC-0001",
-        "pre_lock_result_ledger_sha256": "1" * 64,
-        "pre_lock_result_ledger_record_count": 53,
         "paired_seed_units": 50,
         "blinded_observations": 2250,
-        "public_artifact": {
-            "name": validator.PUBLIC_ARTIFACT_NAME,
+        "public_retention": {
+            "name": "track-a-epoch-002-public-blinded",
             "size_bytes": 1000,
             "archive_sha256": "2" * 64,
             "manifest_sha256": "3" * 64,
         },
-        "protected_artifact": {
-            "name": validator.PROTECTED_ARTIFACT_NAME,
+        "protected_retention": {
+            "name": "track-a-epoch-002-protected-encrypted",
             "size_bytes": 2000,
             "archive_sha256": "4" * 64,
             "ciphertext_sha256": "5" * 64,
@@ -48,22 +43,9 @@ def operator_evidence_fixture() -> dict:
             "custody_certificate_sha256": "7" * 64,
             "custody_certificate_public_key_der_sha256": "8" * 64,
         },
-        "structural_qc": {
-            "public_archive_digest_verified": True,
-            "protected_archive_digest_verified": True,
-            "all_public_sidecars_verified": True,
-            "whole_epoch_manifest_verified": True,
-            "exact_seed_panel_verified": True,
-            "exact_matrix_counts_verified": True,
-            "public_schema_allowlist_verified": True,
-            "protected_ciphertext_digest_verified": True,
-            "protected_plaintext_not_decrypted": True,
-            "protected_mapping_not_inspected": True,
-            "private_key_not_used": True,
-        },
         "custody_class": "SAME_SYSTEM_NONINDEPENDENT",
         "independent_custody": False,
-        "outcomes_inspected_for_lock": False,
+        "outcomes_inspected_for_admission": False,
         "outcome_aggregation_performed": False,
         "unblinding_authorized": False,
         "primary_analysis_authorized": False,
@@ -72,33 +54,37 @@ def operator_evidence_fixture() -> dict:
         "high_assurance_authorized": False,
         "scientific_n_increment": 0,
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
-        "dataset_lock_evidence_status": "STRUCTURAL_QC_PASS_PENDING_REPOSITORY_RECEIPT",
+        "admission_status": "CONTENT_ADDRESSED_PENDING_DATASET_LOCK",
     }
 
 
-def test_operator_codespace_evidence_is_accepted_without_actions_collection_ids() -> None:
-    evidence = operator_evidence_fixture()
-    validator.validate_evidence_object(evidence)
+def test_operator_codespace_record_is_accepted_without_actions_ids() -> None:
+    validator.validate_record(operator_admission_fixture())
 
 
-def test_operator_codespace_evidence_must_not_smuggle_actions_ids() -> None:
-    evidence = operator_evidence_fixture()
-    evidence["collection_workflow_run_id"] = 8001
-    evidence["public_artifact"]["artifact_id"] = 101
-    evidence["protected_artifact"]["artifact_id"] = 102
+def test_operator_codespace_record_rejects_actions_identity_smuggling() -> None:
+    record = operator_admission_fixture()
+    record["collection_workflow_run_id"] = 8001
     with pytest.raises(SystemExit):
-        validator.validate_evidence_object(evidence)
+        validator.validate_record(record)
 
 
-def test_operator_codespace_requires_content_addressed_execution_receipt() -> None:
-    evidence = operator_evidence_fixture()
-    evidence.pop("collection_execution_receipt_sha256")
+def test_operator_codespace_record_requires_execution_receipt_digest() -> None:
+    record = operator_admission_fixture()
+    record.pop("collection_execution_receipt_sha256")
     with pytest.raises(SystemExit):
-        validator.validate_evidence_object(evidence)
+        validator.validate_record(record)
 
 
-def test_actions_provenance_remains_distinct_from_operator_codespace() -> None:
-    evidence = operator_evidence_fixture()
-    evidence["collection_execution_class"] = "GITHUB_ACTIONS"
+def test_operator_codespace_record_rejects_authority_promotion() -> None:
+    record = operator_admission_fixture()
+    record["unblinding_authorized"] = True
     with pytest.raises(SystemExit):
-        validator.validate_evidence_object(evidence)
+        validator.validate_record(record)
+
+
+def test_operator_codespace_record_rejects_authorization_drift() -> None:
+    record = operator_admission_fixture()
+    record["collection_authorization_commit_sha"] = "f" * 40
+    with pytest.raises(SystemExit):
+        validator.validate_record(record)
