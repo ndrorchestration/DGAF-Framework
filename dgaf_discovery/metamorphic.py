@@ -28,11 +28,7 @@ def evaluate_preservation(
     before: dict[str, Any],
     after: dict[str, Any],
 ) -> RelationResult:
-    violations = tuple(
-        path
-        for path in relation.protected_paths
-        if _read_path(before, path) != _read_path(after, path)
-    )
+    violations = tuple(path for path in relation.protected_paths if _read_path(before, path) != _read_path(after, path))
     return RelationResult(passed=not violations, violations=violations)
 
 
@@ -45,11 +41,7 @@ def provenance_removal_requires_nonpass(
     before_provenance = _read_path(before, provenance_path)
     after_provenance = _read_path(after, provenance_path)
     after_decision = _read_path(after, decision_path)
-    violation = (
-        before_provenance is not None
-        and after_provenance is None
-        and after_decision == "PASS"
-    )
+    violation = before_provenance is not None and after_provenance is None and after_decision == "PASS"
     return RelationResult(
         passed=not violation,
         violations=(decision_path,) if violation else (),
