@@ -18,6 +18,7 @@ SPEC.loader.exec_module(validator)
 
 
 def operator_admission_fixture() -> dict:
+    custody_key_digest = "53d0b2a95b2634ef7011b808657e693df426dcaecf8ad70c8094be20d37c4f08"
     return {
         "record_type": "TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION",
         "schema_version": 1,
@@ -45,7 +46,7 @@ def operator_admission_fixture() -> dict:
             "ciphertext_sha256": "5" * 64,
             "plaintext_tar_sha256": "6" * 64,
             "custody_certificate_sha256": "5d14c89c20e0d22586045dea9fbb5de9a7ec6e7bbe7be4cd5b4da3ce9693db4e",
-            "custody_certificate_public_key_der_sha256": "53d0b2a95b2634ef7011b808657e693df426dcaecf8ad70c8094be20d37c4f08",
+            "custody_certificate_public_key_der_sha256": custody_key_digest,
         },
         "custody_class": "SAME_SYSTEM_NONINDEPENDENT",
         "independent_custody": False,
