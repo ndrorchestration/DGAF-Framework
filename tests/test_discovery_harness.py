@@ -14,13 +14,9 @@ from dgaf_discovery.state_coverage import compute_transition_coverage
 
 def test_envelope_rejects_authorization_and_scientific_changes():
     with pytest.raises(ValueError):
-        validate_discovery_envelope(
-            DiscoveryEnvelope("DETECTED", authorizes_transition=True)
-        )
+        validate_discovery_envelope(DiscoveryEnvelope("DETECTED", authorizes_transition=True))
     with pytest.raises(ValueError):
-        validate_discovery_envelope(
-            DiscoveryEnvelope("DETECTED", scientific_n_increment=1)
-        )
+        validate_discovery_envelope(DiscoveryEnvelope("DETECTED", scientific_n_increment=1))
 
 
 def test_default_envelope_is_non_authorizing():
