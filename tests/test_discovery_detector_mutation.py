@@ -70,8 +70,18 @@ def test_detector_mutation_summary_stratifies_by_family():
     )
     canonical = lambda specimen: bool(specimen["ok"])
     mutants = (
-        DetectorMutation("DM-AUTH-001", "authorization", "always allow", lambda specimen: True),
-        DetectorMutation("DM-PROV-003", "provenance", "equivalent detector", canonical),
+        DetectorMutation(
+            "DM-AUTH-001",
+            "authorization",
+            "always allow",
+            lambda specimen: True,
+        ),
+        DetectorMutation(
+            "DM-PROV-003",
+            "provenance",
+            "equivalent detector",
+            canonical,
+        ),
     )
 
     result = run_mutation_campaign(canonical, mutants, cases)
@@ -84,7 +94,12 @@ def test_detector_mutation_summary_stratifies_by_family():
 def test_detector_mutation_outputs_are_non_authorizing():
     cases = (PropertyCase("INVALID", {"ok": False}, False),)
     canonical = lambda specimen: bool(specimen["ok"])
-    mutant = DetectorMutation("DM-FAIL-001", "fail_open", "always allow", lambda specimen: True)
+    mutant = DetectorMutation(
+        "DM-FAIL-001",
+        "fail_open",
+        "always allow",
+        lambda specimen: True,
+    )
 
     result = run_mutation_campaign(canonical, (mutant,), cases)
     assert result.authoritative_effect == "NONE"
