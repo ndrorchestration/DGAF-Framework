@@ -70,11 +70,7 @@ def assess_expiry(
     validate_assumption(record)
     reasons: list[str] = []
     if record.validity_class is not EvidenceValidityClass.IMMUTABLE:
-        reasons.extend(
-            trigger
-            for trigger in record.invalidation_triggers
-            if trigger in observed_triggers
-        )
+        reasons.extend(trigger for trigger in record.invalidation_triggers if trigger in observed_triggers)
     if record.validity_class is EvidenceValidityClass.TEMPORAL:
         current = now or datetime.now(timezone.utc)
         deadline = _parse_deadline(record.revalidate_after or "")
