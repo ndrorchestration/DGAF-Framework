@@ -1,0 +1,31 @@
+name: Track A Epoch 002 Operator Admission
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-operator-admission.yml'
+      - 'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION_PROCEDURE.md'
+      - 'scripts/validate_track_a_epoch_002_operator_collection_admission.py'
+      - 'tests/test_track_a_epoch_002_operator_codespace_admission.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  test:
+    name: Operator Codespace admission contract
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.0'
+      - run: python -m pip install -r requirements-ci.txt
+      - run: python -m pytest tests/test_track_a_epoch_002_operator_codespace_admission.py -q

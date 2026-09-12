@@ -228,6 +228,7 @@ def test_prepare_fails_closed_while_preflight_absent(
     original_git_path_exists = freeze.git_path_exists
     monkeypatch.setattr(freeze, "PREFLIGHT_PATH", tmp_path / "missing-preflight.json")
     monkeypatch.setattr(freeze, "FREEZE_PATH", tmp_path / "missing-freeze.json")
+    monkeypatch.setattr(freeze, "DOWNSTREAM_REL", ())
     monkeypatch.setattr(
         freeze,
         "git_path_exists",
@@ -246,6 +247,7 @@ def test_boundary_proves_freeze_absent_when_freeze_absent(
 ) -> None:
     original_git_path_exists = freeze.git_path_exists
     monkeypatch.setattr(freeze, "FREEZE_PATH", tmp_path / "missing-freeze.json")
+    monkeypatch.setattr(freeze, "DOWNSTREAM_REL", ())
     monkeypatch.setattr(
         freeze,
         "git_path_exists",

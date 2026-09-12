@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "architecture": "persona-to-role",
+  "status": "ACTIVE — FUNCTIONAL CONTRACT V1",
+  "purpose": "Functional role and capability contract derived from the current DGAF agent authority matrix. This registry records behavior and authority boundaries; it does not grant new authority.",
+  "authority_classes": [
+    "SOVEREIGN",
+    "GATE",
+    "VERIFICATION",
+    "EXECUTION",
+    "ADVISORY",
+    "ARCHIVAL",
+    "PUBLICATION",
+    "STATE",
+    "GOVERNANCE",
+    "SIMULATION",
+    "INFRASTRUCTURE",
+    "PUBLIC-FACING SUPPORT",
+    "HARD BLOCK"
+  ],
+  "capabilities": [
+    {"id": "cap.governance.orchestrate", "description": "Coordinate governed work across specialist lanes without inheriting their specialist authority."},
+    {"id": "cap.governance.normative-disposition", "description": "Issue normative governance disposition where the governing contract explicitly assigns that authority."},
+    {"id": "cap.governance.final-commit-gate", "description": "Apply the documented final commit gate within scope."},
+    {"id": "cap.evidence.verify", "description": "Verify evidence within an assigned verification lane."},
+    {"id": "cap.evidence.integrity-review", "description": "Review evidence integrity, provenance, and bounded claim support."},
+    {"id": "cap.legitimacy.boundary-filter", "description": "Evaluate legitimacy and boundary admissibility within a defined gate."},
+    {"id": "cap.security.contaminated-input-block", "description": "Block contaminated or inadmissible inputs within a defined boundary contract."},
+    {"id": "cap.simulation.innovation", "description": "Generate or evaluate innovative simulated alternatives without creating authorization."},
+    {"id": "cap.formalization.proof-review", "description": "Review formal derivations and proof structure."},
+    {"id": "cap.math.claim-review", "description": "Review mathematical claims without acquiring orchestration authority."},
+    {"id": "cap.continuity.coordinate", "description": "Maintain operational continuity and coordination state."},
+    {"id": "cap.archive.preserve", "description": "Preserve records and historical distinctions without changing underlying decisions."},
+    {"id": "cap.routing.swarm", "description": "Route work across an assigned execution or operational swarm."},
+    {"id": "cap.provenance.preserve", "description": "Preserve source lineage and provenance records."},
+    {"id": "cap.constraint.verify", "description": "Verify compliance with explicitly defined constraints."},
+    {"id": "cap.qa.gate", "description": "Apply a scoped QA gate without silently executing downstream actions."},
+    {"id": "cap.execution.artifact", "description": "Implement an already-authorized code or artifact decision."},
+    {"id": "cap.compute.optimize", "description": "Analyze and recommend compute or resource optimization within infrastructure scope."},
+    {"id": "cap.coherence.verify", "description": "Evaluate domain-specific coherence thresholds within a defined verification lane."},
+    {"id": "cap.synthesis.narrative", "description": "Synthesize and communicate material without changing governance state."},
+    {"id": "cap.pattern.echo-review", "description": "Review repetition, amplification, and pattern/coherence signals."},
+    {"id": "cap.state.convergence-observe", "description": "Represent or observe a convergence/modal-lock state without independent authority."},
+    {"id": "cap.efficiency.resource-review", "description": "Analyze cost, bloat, efficiency, and resource constraints as advisory input."},
+    {"id": "cap.publication.release", "description": "Execute approved outward-facing publication within the release contract."},
+    {"id": "cap.fairness.rollback-review", "description": "Review fairness, asymmetry, reciprocal impact, and rollback conditions within scope."},
+    {"id": "cap.security.containment", "description": "Apply fail-closed security containment within an assigned security contract."},
+    {"id": "cap.security.sovereign-ip", "description": "Protect sovereign/IP and protected-disclosure boundaries within scope."}
+  ],
+  "roles": [
+    {
+      "id": "role.governance-orchestrator",
+      "label": "Governance Orchestrator",
+      "capabilities": ["cap.governance.orchestrate", "cap.governance.normative-disposition", "cap.governance.final-commit-gate"],
+      "authority_classes": ["SOVEREIGN", "GATE"],
+      "boundary": "Cannot silently inherit another specialist's lane; orchestration does not imply specialist verification, security, execution, or publication authority."
+    },
+    {
+      "id": "role.evidence-verification-reviewer",
+      "label": "Evidence & Verification Reviewer",
+      "capabilities": ["cap.evidence.verify", "cap.evidence.integrity-review"],
+      "authority_classes": ["GATE", "VERIFICATION"],
+      "boundary": "Verification is distinct from execution, authorship, and normative authorization."
+    },
+    {
+      "id": "role.legitimacy-boundary-gate",
+      "label": "Legitimacy & Boundary Gate",
+      "capabilities": ["cap.legitimacy.boundary-filter", "cap.security.contaminated-input-block"],
+      "authority_classes": ["GATE"],
+      "boundary": "Authority is limited to the defined legitimacy/security gate and contaminated-input boundary."
+    },
+    {
+      "id": "role.innovation-simulation-advisor",
+      "label": "Innovation & Simulation Advisor",
+      "capabilities": ["cap.simulation.innovation"],
+      "authority_classes": ["ADVISORY", "SIMULATION"],
+      "boundary": "Simulation and innovation output remains advisory until the applicable governance gate clears."
+    },
+    {
+      "id": "role.formalization-math-reviewer",
+      "label": "Formalization & Mathematics Reviewer",
+      "capabilities": ["cap.formalization.proof-review", "cap.math.claim-review"],
+      "authority_classes": ["VERIFICATION", "ADVISORY"],
+      "boundary": "Non-orchestrating; analysis and proof review do not create normative authority."
+    },
+    {
+      "id": "role.continuity-archive-coordinator",
+      "label": "Continuity & Archive Coordinator",
+      "capabilities": ["cap.continuity.coordinate", "cap.archive.preserve", "cap.routing.swarm"],
+      "authority_classes": ["GOVERNANCE", "ARCHIVAL"],
+      "boundary": "Maintains continuity and routing but does not make unassigned normative decisions."
+    },
+    {
+      "id": "role.provenance-archivist",
+      "label": "Provenance Archivist",
+      "capabilities": ["cap.provenance.preserve", "cap.archive.preserve"],
+      "authority_classes": ["ARCHIVAL"],
+      "boundary": "Preserves records and provenance; archival custody cannot alter underlying authority or decisions."
+    },
+    {
+      "id": "role.constraint-qa-auditor",
+      "label": "Constraint & QA Auditor",
+      "capabilities": ["cap.constraint.verify", "cap.qa.gate"],
+      "authority_classes": ["VERIFICATION", "GATE"],
+      "boundary": "Validates within the assigned QA lane and cannot silently execute downstream actions."
+    },
+    {
+      "id": "role.authorized-artifact-executor",
+      "label": "Authorized Artifact Executor",
+      "capabilities": ["cap.execution.artifact"],
+      "authority_classes": ["EXECUTION"],
+      "boundary": "Implements authorized decisions and cannot infer authorization from feasibility or implementation readiness."
+    },
+    {
+      "id": "role.compute-optimization-advisor",
+      "label": "Compute Optimization Advisor",
+      "capabilities": ["cap.compute.optimize"],
+      "authority_classes": ["ADVISORY", "INFRASTRUCTURE"],
+      "boundary": "Advisory resource and compute scope only."
+    },
+    {
+      "id": "role.coherence-verification-gate",
+      "label": "Coherence Verification Gate",
+      "capabilities": ["cap.coherence.verify"],
+      "authority_classes": ["VERIFICATION", "GATE"],
+      "boundary": "Scoped to the documented coherence threshold lane and does not create general governance authority."
+    },
+    {
+      "id": "role.synthesis-communication-advisor",
+      "label": "Synthesis & Communication Advisor",
+      "capabilities": ["cap.synthesis.narrative"],
+      "authority_classes": ["ADVISORY", "PUBLIC-FACING SUPPORT"],
+      "boundary": "Synthesis and communication cannot change governance state or manufacture approval."
+    },
+    {
+      "id": "role.pattern-echo-reviewer",
+      "label": "Pattern & Echo Reviewer",
+      "capabilities": ["cap.pattern.echo-review", "cap.coherence.verify"],
+      "authority_classes": ["VERIFICATION", "ADVISORY"],
+      "boundary": "Scoped to phrase, repetition, amplification, and coherence review."
+    },
+    {
+      "id": "role.convergence-state-observer",
+      "label": "Convergence State Observer",
+      "capabilities": ["cap.state.convergence-observe"],
+      "authority_classes": ["STATE", "ADVISORY"],
+      "boundary": "Represents or observes convergence/modal-lock state; it has no independent governance authority."
+    },
+    {
+      "id": "role.efficiency-resource-advisor",
+      "label": "Efficiency & Resource Advisor",
+      "capabilities": ["cap.efficiency.resource-review"],
+      "authority_classes": ["ADVISORY"],
+      "boundary": "Reports cost, bloat, and resource constraints; cannot independently veto, authorize, or execute."
+    },
+    {
+      "id": "role.publication-executor",
+      "label": "Publication & Release Executor",
+      "capabilities": ["cap.publication.release"],
+      "authority_classes": ["PUBLICATION", "EXECUTION"],
+      "boundary": "Relays and publishes only within an approved release contract; cannot create evidence or governance approval."
+    },
+    {
+      "id": "role.fairness-rollback-reviewer",
+      "label": "Fairness & Rollback Reviewer",
+      "capabilities": ["cap.fairness.rollback-review"],
+      "authority_classes": ["GATE", "ADVISORY"],
+      "boundary": "Fairness and rollback authority is limited to its defined lane and does not create general normative authority."
+    },
+    {
+      "id": "role.security-containment-gate",
+      "label": "Security & Containment Gate",
+      "capabilities": ["cap.security.containment", "cap.security.sovereign-ip"],
+      "authority_classes": ["GATE", "HARD BLOCK"],
+      "boundary": "Security, sovereign/IP, protected-disclosure, and fail-closed containment authority is limited to the governing security contract."
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "registry_schema_version": 1,
+  "status": "ACTIVE — COMPATIBILITY LINEAGE V1",
+  "purpose": "Compatibility and provenance mapping from legacy/current identity labels to functional role IDs. This file preserves identity lineage and authority equivalence; it does not create new authority.",
+  "reference_classes": {
+    "FD": "Functional dependency — current semantics depend on the identity and must migrate to a functional role/capability ID.",
+    "PP": "Persona/presentation — display or explanatory identity only.",
+    "FX": "Fixture/demo identity — synthetic or test/demo identity.",
+    "HP": "Historical/provenance — event-time identity retained for lineage only.",
+    "UN": "Undefined/conflicting — do not migrate until evidence resolves the mapping."
+  },
+  "entries": [
+    {
+      "legacy_identity": "Amethyst",
+      "reference_class": "FD",
+      "role_id": "role.governance-orchestrator",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["SOVEREIGN", "GATE"], "role_authority": ["SOVEREIGN", "GATE"]}
+    },
+    {
+      "legacy_identity": "Apogee",
+      "reference_class": "FD",
+      "role_id": "role.evidence-verification-reviewer",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["GATE", "VERIFICATION"], "role_authority": ["GATE", "VERIFICATION"]}
+    },
+    {
+      "legacy_identity": "Perigee",
+      "reference_class": "FD",
+      "role_id": "role.legitimacy-boundary-gate",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["GATE"], "role_authority": ["GATE"]}
+    },
+    {
+      "legacy_identity": "Nova",
+      "reference_class": "FD",
+      "role_id": "role.innovation-simulation-advisor",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["ADVISORY", "SIMULATION"], "role_authority": ["ADVISORY", "SIMULATION"]}
+    },
+    {
+      "legacy_identity": "Professor Prodigy",
+      "reference_class": "FD",
+      "role_id": "role.formalization-math-reviewer",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["VERIFICATION", "ADVISORY"], "role_authority": ["VERIFICATION", "ADVISORY"]}
+    },
+    {
+      "legacy_identity": "COLLEEN",
+      "reference_class": "FD",
+      "role_id": "role.continuity-archive-coordinator",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["GOVERNANCE", "ARCHIVAL"], "role_authority": ["GOVERNANCE", "ARCHIVAL"]}
+    },
+    {
+      "legacy_identity": "The Librarian",
+      "reference_class": "FD",
+      "role_id": "role.provenance-archivist",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["ARCHIVAL"], "role_authority": ["ARCHIVAL"]}
+    },
+    {
+      "legacy_identity": "The Auditor",
+      "reference_class": "FD",
+      "role_id": "role.constraint-qa-auditor",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["VERIFICATION", "GATE"], "role_authority": ["VERIFICATION", "GATE"]}
+    },
+    {
+      "legacy_identity": "The Actualizer",
+      "reference_class": "FD",
+      "role_id": "role.authorized-artifact-executor",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["EXECUTION"], "role_authority": ["EXECUTION"]}
+    },
+    {
+      "legacy_identity": "Zenith",
+      "reference_class": "FD",
+      "role_id": "role.compute-optimization-advisor",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["ADVISORY", "INFRASTRUCTURE"], "role_authority": ["ADVISORY", "INFRASTRUCTURE"]}
+    },
+    {
+      "legacy_identity": "Reson",
+      "reference_class": "FD",
+      "role_id": "role.coherence-verification-gate",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["VERIFICATION", "GATE"], "role_authority": ["VERIFICATION", "GATE"]}
+    },
+    {
+      "legacy_identity": "Lyra",
+      "reference_class": "FD",
+      "role_id": "role.synthesis-communication-advisor",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["ADVISORY", "PUBLIC-FACING SUPPORT"], "role_authority": ["ADVISORY", "PUBLIC-FACING SUPPORT"]}
+    },
+    {
+      "legacy_identity": "Echolette",
+      "reference_class": "FD",
+      "role_id": "role.pattern-echo-reviewer",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["VERIFICATION", "ADVISORY"], "role_authority": ["VERIFICATION", "ADVISORY"]}
+    },
+    {
+      "legacy_identity": "Ionia",
+      "reference_class": "FD",
+      "role_id": "role.convergence-state-observer",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["STATE", "ADVISORY"], "role_authority": ["STATE", "ADVISORY"]}
+    },
+    {
+      "legacy_identity": "DemiJoule",
+      "reference_class": "FD",
+      "role_id": "role.efficiency-resource-advisor",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["ADVISORY"], "role_authority": ["ADVISORY"]}
+    },
+    {
+      "legacy_identity": "Herald",
+      "reference_class": "FD",
+      "role_id": "role.publication-executor",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["PUBLICATION", "EXECUTION"], "role_authority": ["PUBLICATION", "EXECUTION"]}
+    },
+    {
+      "legacy_identity": "Reciprocity",
+      "reference_class": "FD",
+      "role_id": "role.fairness-rollback-reviewer",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["GATE", "ADVISORY"], "role_authority": ["GATE", "ADVISORY"]}
+    },
+    {
+      "legacy_identity": "Sentinel-Φ",
+      "reference_class": "FD",
+      "role_id": "role.security-containment-gate",
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+      "authority_equivalence": {"status": "equivalent", "authority_change": false, "legacy_authority": ["GATE", "HARD BLOCK"], "role_authority": ["GATE", "HARD BLOCK"]}
+    },
+    {
+      "legacy_identity": "Sentinel",
+      "reference_class": "HP",
+      "role_id": null,
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md#7-current-identity-normalization",
+      "authority_equivalence": {"status": "none", "authority_change": false, "legacy_authority": [], "role_authority": []},
+      "note": "Historical alias of Sentinel-Φ only; it must not create an additional active seat or authority mapping."
+    },
+    {
+      "legacy_identity": "Sentience",
+      "reference_class": "HP",
+      "role_id": null,
+      "source": "docs/agents/AGENT_AUTHORITY_MATRIX.md#7-current-identity-normalization",
+      "authority_equivalence": {"status": "none", "authority_change": false, "legacy_authority": [], "role_authority": []},
+      "note": "Historical/merged identity only; it must not create an additional active seat or authority mapping."
+    }
+  ]
+}

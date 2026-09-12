@@ -98,6 +98,45 @@ def test_collection_authorization_presence_fails_closed(monkeypatch: pytest.Monk
         verification.reject_authorization()
 
 
+def test_validate_retained_verification_does_not_reapply_creation_gate(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    base_sha = "f" * 40
+    candidate_sha = "a" * 40
+    closure_blob_sha = "b" * 40
+    record = verification.expected_record(
+        protocol_id=CONTRACT["protocol_id"],
+        candidate_sha=candidate_sha,
+        closure_blob_sha=closure_blob_sha,
+    )
+    verification_path = tmp_path / "verification.json"
+    verification_path.write_text(json.dumps(record), encoding="utf-8")
+
+    monkeypatch.setattr(verification, "VERIFICATION_PATH", verification_path)
+    monkeypatch.setattr(verification, "validate_contract", lambda: {"protocol_id": CONTRACT["protocol_id"]})
+    monkeypatch.setattr(
+        verification,
+        "reject_authorization",
+        lambda: pytest.fail("retained verification validation re-applied the creation-time authorization gate"),
+    )
+    monkeypatch.setattr(
+        verification,
+        "git_path_exists",
+        lambda path, revision="HEAD": path == verification.VERIFICATION_REL and revision in {"HEAD", base_sha},
+    )
+    monkeypatch.setattr(verification, "require_valid_closure", lambda: (candidate_sha, closure_blob_sha))
+    monkeypatch.setattr(
+        verification,
+        "git_history",
+        lambda path, revision="HEAD": (("d" * 40,) if path == verification.VERIFICATION_REL else ("c" * 40,)),
+    )
+    monkeypatch.setattr(verification, "is_ancestor", lambda ancestor, descendant: True)
+    monkeypatch.setattr(verification, "git_blob", lambda path, revision="HEAD": "9" * 40)
+
+    verification.validate_verification(base_sha)
+
+
 def test_closure_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     closure_path = tmp_path / "closure.json"
     closure_path.write_text("{}\n", encoding="utf-8")
@@ -112,16 +151,38 @@ def test_closure_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_
         verification.require_valid_closure()
 
 
+def isolate_verification_absence(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Mask verification/authorization event presence while preserving every other real path check."""
+    original_git_path_exists = verification.git_path_exists
+    monkeypatch.setattr(verification, "VERIFICATION_PATH", tmp_path / "missing-verification.json")
+    monkeypatch.setattr(verification, "AUTH_PATH", tmp_path / "missing-authorization.json")
+    monkeypatch.setattr(
+        verification,
+        "git_path_exists",
+        lambda path, revision="HEAD": (
+            False
+            if path in {verification.VERIFICATION_REL, verification.AUTH_REL}
+            else original_git_path_exists(path, revision)
+        ),
+    )
+
+
 def test_prepare_fails_closed_while_closure_absent(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    isolate_verification_absence(monkeypatch, tmp_path)
     monkeypatch.setattr(verification, "CLOSURE_PATH", tmp_path / "missing-closure.json")
     with pytest.raises(SystemExit, match="canonical final-closure packet is absent"):
         verification.prepare()
 
 
-def test_current_boundary_proves_verification_absent(capsys: pytest.CaptureFixture[str]) -> None:
+def test_boundary_proves_verification_absent_when_verification_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    isolate_verification_absence(monkeypatch, tmp_path)
     verification.validate_boundary()
     output = capsys.readouterr().out
     assert "TRACK_A_EPOCH_002_VERIFICATION_TOOLING=PASS_VERIFICATION_ABSENT" in output

@@ -244,7 +244,17 @@ def write_freeze() -> None:
 
 def validate_freeze(expected_base_sha: str | None) -> None:
     contract = validate_non_authorizing_contract()
-    reject_downstream_gates()
+
+    base: str | None = None
+    base_has_freeze = False
+    if expected_base_sha is not None:
+        base = expected_base_sha.lower()
+        if not preflight.HEX40.fullmatch(base):
+            fail("malformed expected base SHA")
+        base_has_freeze = git_path_exists(FREEZE_REL, base)
+        if not base_has_freeze:
+            reject_downstream_gates()
+
     if not FREEZE_PATH.is_file() or not git_path_exists(FREEZE_REL):
         fail("freeze manifest absent")
 
@@ -264,17 +274,18 @@ def validate_freeze(expected_base_sha: str | None) -> None:
     if len(history) != 1:
         fail(f"freeze path must have exactly one immutable history commit; history={list(history)}")
 
-    if expected_base_sha is not None:
-        base = expected_base_sha.lower()
-        if not preflight.HEX40.fullmatch(base):
-            fail("malformed expected base SHA")
-        if git_path_exists(FREEZE_REL, base):
-            fail("freeze manifest already existed at expected base")
-        if not git_path_exists(PREFLIGHT_REL, base):
-            fail("preflight must already exist at expected base")
-        changed = tuple(line for line in git("diff", "--name-only", f"{base}...HEAD").splitlines() if line)
-        if changed != (FREEZE_REL,):
-            fail(f"freeze PR must change only {FREEZE_REL}; changed={list(changed)}")
+    if base is not None:
+        if base_has_freeze:
+            base_blob = git_blob(FREEZE_REL, base)
+            head_blob = git_blob(FREEZE_REL, "HEAD")
+            if base_blob != head_blob:
+                fail(f"accepted freeze manifest drifted from expected base: base={base_blob} head={head_blob}")
+        else:
+            if not git_path_exists(PREFLIGHT_REL, base):
+                fail("preflight must already exist at expected base")
+            changed = tuple(line for line in git("diff", "--name-only", f"{base}...HEAD").splitlines() if line)
+            if changed != (FREEZE_REL,):
+                fail(f"freeze PR must change only {FREEZE_REL}; changed={list(changed)}")
 
     print("TRACK_A_EPOCH_002_IMMUTABLE_FREEZE=VALIDATED_NONAUTHORIZING")
     print(f"FROZEN_CANDIDATE_SHA={candidate_sha}")
@@ -309,7 +320,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--expected-base-sha",
         default=None,
-        help="for --validate, require a freeze-only delta from this exact PR base",
+        help="for --validate, require creation-only delta when the exact base does not already contain freeze",
     )
     args = parser.parse_args(argv)
 
