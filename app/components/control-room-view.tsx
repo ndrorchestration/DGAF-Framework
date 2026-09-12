@@ -1,7 +1,7 @@
 import type { DashboardPhase } from '../hooks/use-dashboard-data'
-import { NEXT_TRANSITION } from '../lib/governance'
 import { normalizeRuntimeStatus } from '../lib/status'
 import type { DashboardSnapshot } from '../lib/types'
+import { DecisionFrontier } from './decision-frontier'
 import { RefreshIcon } from './icons'
 import { StatusChip } from './status-chip'
 
@@ -34,6 +34,6 @@ export function ControlRoomView({ snapshot, phase, error, lastSuccessAt, onRefre
       </section>
       <section className="panel"><span className="eyebrow">ADAPTER SURFACE</span><h3>Connected runtime adapters</h3><div className="tag-cloud">{(health?.adapters ?? []).map(adapter => <span className="tag" key={adapter}>{adapter}</span>)}{!health?.adapters?.length && <span className="muted">No validated adapter list available.</span>}</div><div className="constants-table"><div><span>PSI</span><code>{health?.psi ?? '—'}</code></div><div><span>PHI⋆</span><code>{health?.phi_star ?? '—'}</code></div><div><span>SCPE threshold</span><code>{health?.scpe_threshold ?? '—'}</code></div><div><span>Phi checkpoints</span><code>{health?.phi_checkpoints?.join(' · ') ?? '—'}</code></div></div></section>
     </div>
-    <section className="next-transition panel"><div><span className="eyebrow">GOVERNANCE IS NOT RUNTIME HEALTH</span><h3>{NEXT_TRANSITION.title}</h3><p>{NEXT_TRANSITION.summary}</p></div><StatusChip state="not_established" label="PREDECESSOR OPEN"/></section>
+    <DecisionFrontier showOperatorHandoff />
   </div>
 }

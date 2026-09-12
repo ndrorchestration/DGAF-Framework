@@ -12,7 +12,7 @@ export type UiState =
   | 'not_established'
   | 'failed'
 
-export type StatusTone = 'neutral' | 'info' | 'positive' | 'warning' | 'danger' | 'violet'
+export type StatusTone = 'neutral' | 'info' | 'positive' | 'warning' | 'danger' | 'violet' | 'authority'
 
 export interface StatusMeta {
   label: string
