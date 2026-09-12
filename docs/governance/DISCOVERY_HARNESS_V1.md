@@ -23,7 +23,7 @@ Harness failure, timeout, missing evidence, malformed input, or unknown classifi
 
 ## v1 scope
 
-The implementation provides a fail-closed output envelope, curated governance-semantic mutation operators, explicit legal/forbidden transition coverage metrics, pairwise control-interaction analysis, assumption-expiry modeling, a blind-spot ledger contract, executable metamorphic relation checks, and bounded detector/property mutation campaigns.
+The implementation provides a fail-closed output envelope, curated governance-semantic mutation operators, explicit legal/forbidden transition coverage metrics, pairwise control-interaction analysis, assumption-expiry modeling, a blind-spot ledger contract, executable metamorphic relation checks, bounded detector/property mutation campaigns, and candidate blind-spot retention for surviving detector mutants.
 
 Critical mutant families begin with authorization promotion, evidence-independence promotion, predecessor/provenance removal, scientific-N increment, and fail-open decision promotion.
 
@@ -45,6 +45,8 @@ A blind-spot record separates methods that discovered a finding from methods tha
 
 The seed ledger is deliberately empty with `completeness_claim: false`. Findings may be marked only `CANDIDATE`, `REVIEWED`, or `REJECTED`; the ledger itself cannot promote a finding into governance truth.
 
+Surviving detector mutants may be converted into candidate blind-spot records. The conversion records `detector-mutation` as the discovery method, the evaluated detector or property suite as the method that missed the mutant, binds reproduction evidence to the mutant identifier, and keeps the record at `CANDIDATE` with `authoritative_effect: NONE`. Killed mutants do not create blind-spot records.
+
 ### Metamorphic relations
 
 The initial executable relations cover two failure classes that ordinary example-based testing can miss:
@@ -58,13 +60,13 @@ Metamorphic failures are candidate engineering findings only. They do not themse
 
 Detector mutation evaluates intentionally weakened detector behavior against explicit property cases whose expected validity is specified independently of the mutant. The canonical detector must agree with every property case before a campaign is scored; disagreement fails closed instead of allowing a misleading mutation score.
 
-A mutant is killed when at least one property case distinguishes the weakened detector from the stated property oracle. Surviving mutants are retained as evidence of an inadequate distinguishing corpus, not evidence that the detector is correct. Scores are reported both overall and by semantic family to reduce the value of a single gameable aggregate.
+A mutant is killed when at least one property case distinguishes the weakened detector from the stated property oracle. Surviving mutants are retained as evidence of an inadequate distinguishing corpus, not evidence that the detector is correct. Scores are reported both overall and by semantic family to reduce the value of a single gameable aggregate. Empty mutation campaigns are rejected rather than receiving a vacuous perfect score.
 
 Detector mutation operates on in-memory behavior only. Campaign results are always `authoritative_effect: NONE`, `scientific_state_effect: NONE`, `scientific_n_increment: 0`, and `mutation_scope: EPHEMERAL_COPY_ONLY`.
 
 ## Recursive assurance roadmap
 
-Later layers add a machine-readable metamorphic relation registry, stateful search, formal lifecycle models, bounded agent/API chaos, versioned external-framework crosswalks, and automated conversion of surviving mutants into candidate blind-spot records.
+Later layers add a machine-readable metamorphic relation registry, stateful search, formal lifecycle models, bounded agent/API chaos, versioned external-framework crosswalks, and cross-method blind-spot synthesis across mutation, metamorphic, transition, interaction, and chaos detectors.
 
 A discovery method may generate a candidate finding or test. It may never promote itself into authoritative governance truth.
 
