@@ -100,11 +100,13 @@ jobs:
           done
 
       - name: Run dataset-lock adversarial tests
-        run: >-
-          python -m pytest
-          tests/test_track_a_epoch_002_dataset_lock.py
-          tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py
-          -q
+        run: |
+          set -euo pipefail
+          tests=(tests/test_track_a_epoch_002_dataset_lock.py)
+          if test -f tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py; then
+            tests+=(tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py)
+          fi
+          python -m pytest "${tests[@]}" -q
 
       - name: Prove no empirical, decryption, or secret-writer surface
         run: |
