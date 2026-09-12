@@ -142,7 +142,16 @@ The retained CMS-protected mapping cannot be honestly reconstructed because the 
 
 ## Canonical High-Assurance provenance boundary
 
-Repository `main` recency does not redefine the separate High-Assurance apparatus source, candidate identity, deployment identity, or authorization state. The High-Assurance program remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / canonical empirical N=0** until its own governed transition occurs.
+Repository `main` recency does not redefine the separate High-Assurance apparatus, candidate, deployment, or authorization state. The currently bound exact-scope identities remain:
+
+- apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- apparatus source tree: `973c92335caf84f37fc2b3c4df6dd83b3b855087`
+- candidate identity: `NOT_DESIGNATED`
+- deployment identity: `NOT_ESTABLISHED_FOR_FINAL_CANDIDATE`
+- historical runtime-evidence candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
+- historical runtime deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
+
+The High-Assurance program remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / canonical empirical N=0** until its own governed transition occurs.
 
 ## Evidence and authority rules
 
