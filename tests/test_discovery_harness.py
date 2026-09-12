@@ -3,8 +3,8 @@ import pytest
 from dgaf_discovery.blindspots import (
     DetectionRecord,
     method_overlap,
-    unique_discovery_rate,
     unexplained_shared_misses,
+    unique_discovery_rate,
 )
 from dgaf_discovery.harness import DiscoveryEnvelope, validate_discovery_envelope
 from dgaf_discovery.interactions import ControlContract, analyze_pairwise
