@@ -2,7 +2,7 @@
 
 ## Status
 
-**ENGINEERING DISCOVERY ONLY · NON-AUTHORIZING · SCIENTIFIC N=0 EFFECT**
+ENGINEERING DISCOVERY ONLY · NON-AUTHORIZING · SCIENTIFIC N=0 EFFECT
 
 This harness is a second-order assurance layer. It searches for weaknesses in DGAF controls, weaknesses in the detectors that inspect those controls, and weaknesses shared by the discovery methods themselves.
 
