@@ -4,8 +4,8 @@ on:
   pull_request:
     paths:
       - '.github/workflows/track-a-epoch-002-operator-admission.yml'
-      - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
-      - 'scripts/validate_track_a_epoch_002_dataset_lock.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION_SCHEMA.json'
+      - 'scripts/validate_track_a_epoch_002_operator_collection_admission.py'
       - 'tests/test_track_a_epoch_002_operator_codespace_admission.py'
   workflow_dispatch: {}
 
