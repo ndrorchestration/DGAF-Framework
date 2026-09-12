@@ -151,16 +151,34 @@ def test_closure_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_
         verification.require_valid_closure()
 
 
+def isolate_verification_absence(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    original_git_path_exists = verification.git_path_exists
+    monkeypatch.setattr(verification, "VERIFICATION_PATH", tmp_path / "missing-verification.json")
+    monkeypatch.setattr(
+        verification,
+        "git_path_exists",
+        lambda path, revision="HEAD": (
+            False if path == verification.VERIFICATION_REL else original_git_path_exists(path, revision)
+        ),
+    )
+
+
 def test_prepare_fails_closed_while_closure_absent(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    isolate_verification_absence(monkeypatch, tmp_path)
     monkeypatch.setattr(verification, "CLOSURE_PATH", tmp_path / "missing-closure.json")
     with pytest.raises(SystemExit, match="canonical final-closure packet is absent"):
         verification.prepare()
 
 
-def test_current_boundary_proves_verification_absent(capsys: pytest.CaptureFixture[str]) -> None:
+def test_boundary_proves_verification_absent_when_verification_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    isolate_verification_absence(monkeypatch, tmp_path)
     verification.validate_boundary()
     output = capsys.readouterr().out
     assert "TRACK_A_EPOCH_002_VERIFICATION_TOOLING=PASS_VERIFICATION_ABSENT" in output
