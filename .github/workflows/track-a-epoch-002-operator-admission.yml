@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/track-a-epoch-002-operator-admission.yml'
       - 'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION_PROCEDURE.md'
       - 'scripts/validate_track_a_epoch_002_operator_collection_admission.py'
       - 'tests/test_track_a_epoch_002_operator_codespace_admission.py'
   workflow_dispatch: {}
