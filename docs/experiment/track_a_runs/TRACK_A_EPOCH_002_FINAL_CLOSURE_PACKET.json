@@ -1,0 +1,14 @@
+{
+  "closure_status": "CLOSED_VERIFIED_FOR_AUTHORIZATION_REVIEW",
+  "collection_authorized": false,
+  "freeze_manifest_blob_sha": "6eada11a416faebaee4a8493de99d55b69279453",
+  "frozen_candidate_sha": "7bbd97604d82efada43d0b139901f06eb2582a23",
+  "high_assurance_authorized": false,
+  "open_blockers": [],
+  "primary_analysis_authorized": false,
+  "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
+  "record_type": "TRACK_A_EPOCH_002_FINAL_CLOSURE_PACKET",
+  "schema_version": 1,
+  "scientific_n_increment": 0,
+  "unblinding_authorized": false
+}
