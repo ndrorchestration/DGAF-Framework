@@ -79,17 +79,13 @@ def run_mutation_campaign(
     for case in cases:
         observed = canonical_detector(case.specimen)
         if observed != case.expected_valid:
-            raise ValueError(
-                f"canonical detector disagrees with property oracle for {case.case_id}"
-            )
+            raise ValueError(f"canonical detector disagrees with property oracle for {case.case_id}")
 
     results = []
     family_counts: dict[str, list[int]] = {}
     for mutation in mutations:
         distinguishing_cases = tuple(
-            case.case_id
-            for case in cases
-            if mutation.detector(case.specimen) != case.expected_valid
+            case.case_id for case in cases if mutation.detector(case.specimen) != case.expected_valid
         )
         killed = bool(distinguishing_cases)
         results.append(
