@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any, Callable
 
+from dgaf_discovery.ledger import BlindSpotRecord, validate_blindspot_record
+
 Detector = Callable[[dict[str, Any]], bool]
 
 
@@ -111,3 +113,29 @@ def run_mutation_campaign(
         for family, counts in family_counts.items()
     }
     return MutationCampaignResult(tuple(results), by_family)
+
+
+def blindspots_from_survivors(
+    campaign: MutationCampaignResult,
+    detector_id: str,
+) -> tuple[BlindSpotRecord, ...]:
+    detector_id = detector_id.strip()
+    if not detector_id:
+        raise ValueError("detector_id is required")
+
+    records = []
+    for result in campaign.results:
+        if result.killed:
+            continue
+        record = BlindSpotRecord(
+            finding_id=f"BLINDSPOT-{result.mutation_id}",
+            discovered_by=frozenset({"detector-mutation"}),
+            missed_by=frozenset({detector_id}),
+            reproduction_evidence=(f"surviving-mutant:{result.mutation_id}",),
+            generated_detector=result.family,
+            review_status="CANDIDATE",
+            authoritative_effect="NONE",
+        )
+        validate_blindspot_record(record)
+        records.append(record)
+    return tuple(records)
