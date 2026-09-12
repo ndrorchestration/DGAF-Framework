@@ -178,3 +178,36 @@ def test_evidence_acceptance_requires_receipt_and_both_archives(tmp_path: Path) 
     write_json(receipt_path, execution_receipt_fixture())
     with pytest.raises(SystemExit):
         validator.validate_evidence_acceptance(record, receipt_path, None, None)
+
+
+def test_protected_archive_accepts_canonical_certificate_sidecar(tmp_path: Path) -> None:
+    """Exercise the complete allowed package, not only early rejection paths."""
+    cert = b"synthetic public certificate"
+    ciphertext = b"synthetic ciphertext"
+    cert_digest = hashlib.sha256(cert).hexdigest()
+    cipher_digest = hashlib.sha256(ciphertext).hexdigest()
+    members = {
+        "track_a_epoch_002_custody_cert.pem": cert,
+        "track_a_epoch_002_custody_cert.sha256": (
+            f"{cert_digest}  track_a_epoch_002_custody_cert.pem\n".encode()
+        ),
+        "track_a_epoch_002_protected.cms": ciphertext,
+        "track_a_epoch_002_protected_ciphertext.sha256": (
+            f"{cipher_digest}  track_a_epoch_002_protected.cms\n".encode()
+        ),
+        "track_a_epoch_002_protected_plaintext_tar.sha256": (
+            ("0" * 64 + "  track_a_epoch_002_protected.tar\n").encode()
+        ),
+    }
+    archive = tmp_path / "protected.tar"
+    write_tar(archive, members)
+    record = {
+        "protected_retention": {
+            "size_bytes": archive.stat().st_size,
+            "archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+            "custody_certificate_sha256": cert_digest,
+            "ciphertext_sha256": cipher_digest,
+            "plaintext_tar_sha256": "0" * 64,
+        }
+    }
+    validator.validate_protected_archive_members(archive, record)
