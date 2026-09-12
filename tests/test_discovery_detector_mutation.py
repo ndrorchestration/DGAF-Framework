@@ -36,10 +36,7 @@ def test_detector_mutation_campaign_kills_weakened_provenance_property():
     )
 
     def canonical(specimen):
-        return not (
-            specimen.get("decision") == "PASS"
-            and not specimen.get("evidence", {}).get("predecessor_sha")
-        )
+        return not (specimen.get("decision") == "PASS" and not specimen.get("evidence", {}).get("predecessor_sha"))
 
     mutant = DetectorMutation(
         mutation_id="DM-PROV-001",
