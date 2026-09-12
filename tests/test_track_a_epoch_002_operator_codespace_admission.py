@@ -188,9 +188,7 @@ def test_protected_archive_accepts_canonical_certificate_sidecar(tmp_path: Path)
     cipher_digest = hashlib.sha256(ciphertext).hexdigest()
     members = {
         "track_a_epoch_002_custody_cert.pem": cert,
-        "track_a_epoch_002_custody_cert.sha256": (
-            f"{cert_digest}  track_a_epoch_002_custody_cert.pem\n".encode()
-        ),
+        "track_a_epoch_002_custody_cert.sha256": (f"{cert_digest}  track_a_epoch_002_custody_cert.pem\n".encode()),
         "track_a_epoch_002_protected.cms": ciphertext,
         "track_a_epoch_002_protected_ciphertext.sha256": (
             f"{cipher_digest}  track_a_epoch_002_protected.cms\n".encode()
