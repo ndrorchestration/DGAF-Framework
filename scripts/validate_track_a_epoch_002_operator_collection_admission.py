@@ -15,10 +15,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "docs/experiment/TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION_SCHEMA.json"
-AUTHORIZATION_PATH = (
-    ROOT
-    / "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json"
-)
+AUTHORIZATION_PATH = ROOT / "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json"
 AUTHORIZATION_SHA = "563152fdb254b8ee948a693c287126a8bf8314b8"
 PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 PYTHON_VERSION = "3.12.3"
@@ -142,10 +139,7 @@ def validate_record(record: dict[str, Any]) -> None:
     protected = record["protected_retention"]
     if protected["custody_certificate_sha256"] != auth["custody_certificate_sha256"]:
         fail("custody certificate SHA-256 drift")
-    if (
-        protected["custody_certificate_public_key_der_sha256"]
-        != auth["custody_certificate_public_key_der_sha256"]
-    ):
+    if protected["custody_certificate_public_key_der_sha256"] != auth["custody_certificate_public_key_der_sha256"]:
         fail("custody public-key fingerprint drift")
 
 
@@ -247,12 +241,7 @@ def validate_public_archive_members(path: Path, record: dict[str, Any]) -> None:
     manifest_digest = sha256_bytes(manifest_bytes)
     if manifest_digest != spec["manifest_sha256"]:
         fail("public manifest SHA-256 mismatch")
-    if (
-        _read_sidecar_bytes(
-            values[manifest_name + ".sha256"], manifest_name, "public manifest"
-        )
-        != manifest_digest
-    ):
+    if _read_sidecar_bytes(values[manifest_name + ".sha256"], manifest_name, "public manifest") != manifest_digest:
         fail("public manifest sidecar mismatch")
     try:
         manifest = json.loads(manifest_bytes.decode("utf-8"))
@@ -271,10 +260,7 @@ def validate_public_archive_members(path: Path, record: dict[str, Any]) -> None:
         fail("public manifest custody receipt drift")
     if manifest.get("custody_certificate_sha256") != auth["custody_certificate_sha256"]:
         fail("public manifest custody certificate drift")
-    if (
-        manifest.get("custody_certificate_public_key_der_sha256")
-        != auth["custody_certificate_public_key_der_sha256"]
-    ):
+    if manifest.get("custody_certificate_public_key_der_sha256") != auth["custody_certificate_public_key_der_sha256"]:
         fail("public manifest custody public-key drift")
     for field in (
         "outcomes_inspected_by_collection_workflow",
@@ -305,9 +291,7 @@ def validate_public_archive_members(path: Path, record: dict[str, Any]) -> None:
         seed_digest = sha256_bytes(values[seed_name])
         if row.get("public_dataset_sha256") != seed_digest:
             fail(f"public seed {seed} manifest digest mismatch")
-        sidecar_digest = _read_sidecar_bytes(
-            values[seed_name + ".sha256"], seed_name, f"public seed {seed}"
-        )
+        sidecar_digest = _read_sidecar_bytes(values[seed_name + ".sha256"], seed_name, f"public seed {seed}")
         if sidecar_digest != seed_digest:
             fail(f"public seed {seed} sidecar mismatch")
 
@@ -378,10 +362,7 @@ def main() -> int:
 
     record = load_object(args.record, "operator admission record")
     if args.schema_only:
-        if any(
-            value is not None
-            for value in (args.execution_receipt, args.public_archive, args.protected_archive)
-        ):
+        if any(value is not None for value in (args.execution_receipt, args.public_archive, args.protected_archive)):
             fail("--schema-only cannot be combined with evidence inputs")
         validate_record(record)
         print(schema_only_status())
