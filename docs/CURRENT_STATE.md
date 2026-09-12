@@ -37,7 +37,7 @@ The canonical High-Assurance program, Track A Epoch 001, and Track A Epoch 002 a
 
 | Area | Current state |
 |---|---|
-| Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0** |
+| Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 prospective collection | **COMPLETE / BLINDED / RETAINED** |
 | Epoch 001 dataset lock | **ESTABLISHED** |
@@ -118,7 +118,7 @@ Current predicates:
 - `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
-- `HIGH_ASSURANCE = NOT_AUTHORIZED / N=0`
+- `HIGH_ASSURANCE = NOT_AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0`
 
 ## Parallel engineering lane
 
@@ -151,7 +151,7 @@ Repository `main` recency does not redefine the separate High-Assurance apparatu
 - historical runtime-evidence candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`
 - historical runtime deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`
 
-The High-Assurance program remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / canonical empirical N=0** until its own governed transition occurs.
+The High-Assurance program remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / canonical empirical N=0** until its own governed transition occurs.
 
 ## Evidence and authority rules
 
