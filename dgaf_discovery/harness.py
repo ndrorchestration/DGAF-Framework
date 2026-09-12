@@ -1,5 +1,6 @@
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from typing import Any
+
 
 @dataclass(frozen=True)
 class DiscoveryEnvelope:
@@ -13,6 +14,7 @@ class DiscoveryEnvelope:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
 
 def validate_discovery_envelope(envelope: DiscoveryEnvelope) -> None:
     errors = []
