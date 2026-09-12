@@ -35,7 +35,7 @@ class FamilyMutationSummary:
 
     @property
     def score(self) -> float:
-        return self.killed / self.attempted if self.attempted else 1.0
+        return self.killed / self.attempted if self.attempted else 0.0
 
 
 @dataclass(frozen=True)
@@ -61,7 +61,7 @@ class MutationCampaignResult:
 
     @property
     def score(self) -> float:
-        return self.killed / self.attempted if self.attempted else 1.0
+        return self.killed / self.attempted if self.attempted else 0.0
 
 
 def run_mutation_campaign(
@@ -71,6 +71,8 @@ def run_mutation_campaign(
 ) -> MutationCampaignResult:
     if not cases:
         raise ValueError("detector mutation campaign requires property cases")
+    if not mutations:
+        raise ValueError("detector mutation campaign requires detector mutations")
 
     for case in cases:
         observed = canonical_detector(case.specimen)
