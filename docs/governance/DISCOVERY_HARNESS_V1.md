@@ -23,7 +23,7 @@ Harness failure, timeout, missing evidence, malformed input, or unknown classifi
 
 ## v1 scope
 
-The implementation provides a fail-closed output envelope, curated governance-semantic mutation operators, explicit legal/forbidden transition coverage metrics, pairwise control-interaction analysis, assumption-expiry modeling, a blind-spot ledger contract, and executable metamorphic relation checks.
+The implementation provides a fail-closed output envelope, curated governance-semantic mutation operators, explicit legal/forbidden transition coverage metrics, pairwise control-interaction analysis, assumption-expiry modeling, a blind-spot ledger contract, executable metamorphic relation checks, and bounded detector/property mutation campaigns.
 
 Critical mutant families begin with authorization promotion, evidence-independence promotion, predecessor/provenance removal, scientific-N increment, and fail-open decision promotion.
 
@@ -54,9 +54,17 @@ The initial executable relations cover two failure classes that ordinary example
 
 Metamorphic failures are candidate engineering findings only. They do not themselves reject or authorize an experiment record unless an independent authoritative validator already defines that consequence.
 
+### Detector and property mutation
+
+Detector mutation evaluates intentionally weakened detector behavior against explicit property cases whose expected validity is specified independently of the mutant. The canonical detector must agree with every property case before a campaign is scored; disagreement fails closed instead of allowing a misleading mutation score.
+
+A mutant is killed when at least one property case distinguishes the weakened detector from the stated property oracle. Surviving mutants are retained as evidence of an inadequate distinguishing corpus, not evidence that the detector is correct. Scores are reported both overall and by semantic family to reduce the value of a single gameable aggregate.
+
+Detector mutation operates on in-memory behavior only. Campaign results are always `authoritative_effect: NONE`, `scientific_state_effect: NONE`, `scientific_n_increment: 0`, and `mutation_scope: EPHEMERAL_COPY_ONLY`.
+
 ## Recursive assurance roadmap
 
-Later layers add a machine-readable metamorphic relation registry, detector mutation, property mutation, stateful search, formal lifecycle models, bounded agent/API chaos, and versioned external-framework crosswalks.
+Later layers add a machine-readable metamorphic relation registry, stateful search, formal lifecycle models, bounded agent/API chaos, versioned external-framework crosswalks, and automated conversion of surviving mutants into candidate blind-spot records.
 
 A discovery method may generate a candidate finding or test. It may never promote itself into authoritative governance truth.
 
