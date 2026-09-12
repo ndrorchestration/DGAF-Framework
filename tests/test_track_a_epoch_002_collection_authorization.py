@@ -131,7 +131,25 @@ def test_contract_preserves_human_control_and_pr_non_authority() -> None:
     assert node["action_class"] == "human_controlled"
 
 
-def test_current_boundary_proves_authorization_absent(capsys: pytest.CaptureFixture[str]) -> None:
+def isolate_authorization_absence(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Mask only authorization-event presence while preserving every other real path check."""
+    original_git_path_exists = authorization.git_path_exists
+    monkeypatch.setattr(authorization, "AUTH_PATH", tmp_path / "missing-authorization.json")
+    monkeypatch.setattr(
+        authorization,
+        "git_path_exists",
+        lambda path, revision="HEAD": (
+            False if path == authorization.AUTH_REL else original_git_path_exists(path, revision)
+        ),
+    )
+
+
+def test_boundary_proves_authorization_absent_when_authorization_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    isolate_authorization_absence(monkeypatch, tmp_path)
     authorization.validate_boundary()
     output = capsys.readouterr().out
     assert "TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION_TOOLING=PASS_AUTHORIZATION_ABSENT" in output

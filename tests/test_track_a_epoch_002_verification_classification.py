@@ -152,14 +152,17 @@ def test_closure_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_
 
 
 def isolate_verification_absence(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    """Mask only verification-event presence while preserving every other real path check."""
+    """Mask verification/authorization event presence while preserving every other real path check."""
     original_git_path_exists = verification.git_path_exists
     monkeypatch.setattr(verification, "VERIFICATION_PATH", tmp_path / "missing-verification.json")
+    monkeypatch.setattr(verification, "AUTH_PATH", tmp_path / "missing-authorization.json")
     monkeypatch.setattr(
         verification,
         "git_path_exists",
         lambda path, revision="HEAD": (
-            False if path == verification.VERIFICATION_REL else original_git_path_exists(path, revision)
+            False
+            if path in {verification.VERIFICATION_REL, verification.AUTH_REL}
+            else original_git_path_exists(path, revision)
         ),
     )
 
