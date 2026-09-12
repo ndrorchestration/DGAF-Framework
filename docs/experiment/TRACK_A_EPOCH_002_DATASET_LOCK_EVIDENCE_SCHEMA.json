@@ -145,6 +145,19 @@
       "collection_execution_class",
       "operator_admission_record_sha256",
       "collection_execution_receipt_sha256"
+    ],
+    "allOf": [
+      {"not": {"required": ["collection_workflow_run_id"]}},
+      {
+        "properties": {
+          "public_artifact": {"not": {"required": ["artifact_id"]}}
+        }
+      },
+      {
+        "properties": {
+          "protected_artifact": {"not": {"required": ["artifact_id"]}}
+        }
+      }
     ]
   },
   "else": {
