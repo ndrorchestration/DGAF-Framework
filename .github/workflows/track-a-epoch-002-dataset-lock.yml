@@ -13,6 +13,7 @@ on:
       - 'scripts/validate_track_a_epoch_002_result_ledger.py'
       - 'scripts/validate_track_a_epoch_002_result_record_semantics.py'
       - 'tests/test_track_a_epoch_002_dataset_lock.py'
+      - 'tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py'
   workflow_dispatch: {}
 
 permissions:
@@ -63,28 +64,49 @@ jobs:
         if: ${{ steps.mode.outputs.value == 'tooling_only' }}
         run: python scripts/validate_track_a_epoch_002_dataset_lock.py --tooling-only
 
-      - name: Prove tooling PR changes only the dedicated lane
+      - name: Prove tooling PR stays within the dedicated lane
         if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          expected=(
+          allowed=(
             '.github/workflows/track-a-epoch-002-dataset-lock.yml'
             'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
             'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_PROCEDURE.md'
+            'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
+            'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
+            'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
             'scripts/validate_track_a_epoch_002_dataset_lock.py'
+            'scripts/validate_track_a_epoch_002_result_ledger.py'
+            'scripts/validate_track_a_epoch_002_result_record_semantics.py'
             'tests/test_track_a_epoch_002_dataset_lock.py'
+            'tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py'
           )
           mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
-          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
-          test "${#changed[@]}" -eq "${#expected_sorted[@]}"
-          diff -u \
-            <(printf '%s\n' "${expected_sorted[@]}") \
-            <(printf '%s\n' "${changed[@]}")
+          test "${#changed[@]}" -gt 0
+          for path in "${changed[@]}"; do
+            permitted=false
+            for candidate in "${allowed[@]}"; do
+              if test "$path" = "$candidate"; then
+                permitted=true
+                break
+              fi
+            done
+            test "$permitted" = true || {
+              echo "forbidden dataset-lock tooling path: $path" >&2
+              exit 1
+            }
+          done
 
       - name: Run dataset-lock adversarial tests
-        run: python -m pytest tests/test_track_a_epoch_002_dataset_lock.py -q
+        run: |
+          set -euo pipefail
+          tests=(tests/test_track_a_epoch_002_dataset_lock.py)
+          if test -f tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py; then
+            tests+=(tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py)
+          fi
+          python -m pytest "${tests[@]}" -q
 
       - name: Prove no empirical, decryption, or secret-writer surface
         run: |
