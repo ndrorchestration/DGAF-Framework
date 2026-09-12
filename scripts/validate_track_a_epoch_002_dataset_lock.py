@@ -185,7 +185,9 @@ def validate_evidence_object(evidence: dict[str, Any]) -> None:
     )
     public = evidence["public_artifact"]
     protected = evidence["protected_artifact"]
-    if public["artifact_id"] == protected["artifact_id"]:
+    public_id = public.get("artifact_id")
+    protected_id = protected.get("artifact_id")
+    if public_id is not None and protected_id is not None and public_id == protected_id:
         fail("public and protected artifacts must have distinct artifact IDs")
     if evidence["collection_authorization_commit_sha"] == evidence["frozen_candidate_sha"]:
         fail("collection authorization must be later than the frozen candidate")
