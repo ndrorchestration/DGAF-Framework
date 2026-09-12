@@ -50,6 +50,13 @@ def validate_assumption(record: AssumptionRecord) -> None:
         errors.append("assumption records cannot have authoritative effect")
     if not isinstance(record.validity_class, EvidenceValidityClass):
         errors.append("validity_class must be EvidenceValidityClass")
+    trigger_bound = {
+        EvidenceValidityClass.VERSION_BOUND,
+        EvidenceValidityClass.CONFIGURATION_BOUND,
+        EvidenceValidityClass.ENVIRONMENT_BOUND,
+    }
+    if record.validity_class in trigger_bound and not record.invalidation_triggers:
+        errors.append("trigger-bound assumptions require at least one invalidation_trigger")
     if record.validity_class is EvidenceValidityClass.TEMPORAL:
         if record.revalidate_after is None:
             errors.append("temporal assumptions require revalidate_after")

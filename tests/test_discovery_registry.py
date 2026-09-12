@@ -93,6 +93,25 @@ def test_assumption_rejects_runtime_validity_class_strings_and_unknown_values():
             )
 
 
+def test_trigger_bound_assumptions_require_invalidation_triggers():
+    for validity_class in (
+        EvidenceValidityClass.VERSION_BOUND,
+        EvidenceValidityClass.CONFIGURATION_BOUND,
+        EvidenceValidityClass.ENVIRONMENT_BOUND,
+    ):
+        with pytest.raises(ValueError, match="invalidation_trigger"):
+            validate_assumption(
+                AssumptionRecord(
+                    assumption_id="ASM-006",
+                    statement="Bound evidence must declare what invalidates it.",
+                    evidence_refs=("evidence://bound",),
+                    validity_class=validity_class,
+                    invalidation_triggers=(),
+                    falsification_test="Reject trigger-bound evidence without a trigger.",
+                )
+            )
+
+
 def test_blindspot_record_is_non_authorizing_and_requires_disjoint_methods():
     record = BlindSpotRecord(
         finding_id="BS-001",
