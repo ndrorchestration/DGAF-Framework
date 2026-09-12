@@ -321,7 +321,7 @@ def validate_protected_archive_members(path: Path, record: dict[str, Any]) -> No
     cert_name = "track_a_epoch_002_custody_cert.pem"
     cert_digest = sha256_bytes(values[cert_name])
     cert_sidecar = _read_sidecar_bytes(
-        values[cert_name + ".sha256"], cert_name, "custody certificate"
+        values["track_a_epoch_002_custody_cert.sha256"], cert_name, "custody certificate"
     )
     if cert_digest != cert_sidecar or cert_digest != spec["custody_certificate_sha256"]:
         fail("protected custody certificate digest mismatch")
