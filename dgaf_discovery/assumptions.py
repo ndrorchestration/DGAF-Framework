@@ -48,6 +48,8 @@ def validate_assumption(record: AssumptionRecord) -> None:
         errors.append("falsification_test is required")
     if record.authoritative_effect != "NONE":
         errors.append("assumption records cannot have authoritative effect")
+    if not isinstance(record.validity_class, EvidenceValidityClass):
+        errors.append("validity_class must be EvidenceValidityClass")
     if record.validity_class is EvidenceValidityClass.TEMPORAL:
         if record.revalidate_after is None:
             errors.append("temporal assumptions require revalidate_after")

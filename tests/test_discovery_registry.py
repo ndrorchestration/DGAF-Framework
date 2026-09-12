@@ -78,6 +78,21 @@ def test_immutable_evidence_does_not_decay_merely_with_time():
     assert result.expired is False
 
 
+def test_assumption_rejects_runtime_validity_class_strings_and_unknown_values():
+    for invalid_class in ("TEMPORAL", "BOGUS"):
+        with pytest.raises(ValueError, match="validity_class"):
+            validate_assumption(
+                AssumptionRecord(
+                    assumption_id="ASM-005",
+                    statement="Runtime validity classes must use the declared enum.",
+                    evidence_refs=("evidence://runtime-input",),
+                    validity_class=invalid_class,  # type: ignore[arg-type]
+                    invalidation_triggers=(),
+                    falsification_test="Reject non-enum validity classes.",
+                )
+            )
+
+
 def test_blindspot_record_is_non_authorizing_and_requires_disjoint_methods():
     record = BlindSpotRecord(
         finding_id="BS-001",
