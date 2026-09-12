@@ -1,3 +1,5 @@
+"""Regression coverage for retained Epoch 002 freeze-validation lifecycle semantics."""
+
 from __future__ import annotations
 
 import json
