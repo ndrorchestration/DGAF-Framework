@@ -152,6 +152,7 @@ def test_closure_history_must_be_immutable(monkeypatch: pytest.MonkeyPatch, tmp_
 
 
 def isolate_verification_absence(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Isolate tests that intentionally exercise a pre-verification repository state."""
     original_git_path_exists = verification.git_path_exists
     monkeypatch.setattr(verification, "VERIFICATION_PATH", tmp_path / "missing-verification.json")
     monkeypatch.setattr(
