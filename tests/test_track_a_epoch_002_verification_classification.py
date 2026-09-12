@@ -156,11 +156,26 @@ def test_prepare_fails_closed_while_closure_absent(
     tmp_path: Path,
 ) -> None:
     monkeypatch.setattr(verification, "CLOSURE_PATH", tmp_path / "missing-closure.json")
+    monkeypatch.setattr(verification, "VERIFICATION_PATH", tmp_path / "missing-verification.json")
+    monkeypatch.setattr(verification, "git_path_exists", lambda path, revision="HEAD": False)
     with pytest.raises(SystemExit, match="canonical final-closure packet is absent"):
         verification.prepare()
 
 
-def test_current_boundary_proves_verification_absent(capsys: pytest.CaptureFixture[str]) -> None:
+def test_current_boundary_proves_verification_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    real_git_path_exists = verification.git_path_exists
+    monkeypatch.setattr(verification, "VERIFICATION_PATH", tmp_path / "missing-verification.json")
+    monkeypatch.setattr(
+        verification,
+        "git_path_exists",
+        lambda path, revision="HEAD": (
+            False if path == verification.VERIFICATION_REL else real_git_path_exists(path, revision)
+        ),
+    )
     verification.validate_boundary()
     output = capsys.readouterr().out
     assert "TRACK_A_EPOCH_002_VERIFICATION_TOOLING=PASS_VERIFICATION_ABSENT" in output
