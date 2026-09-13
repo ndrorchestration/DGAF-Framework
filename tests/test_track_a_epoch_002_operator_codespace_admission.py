@@ -45,7 +45,9 @@ def operator_admission_fixture() -> dict:
             "archive_sha256": "4" * 64,
             "ciphertext_sha256": "5" * 64,
             "plaintext_tar_sha256": "6" * 64,
-            "custody_certificate_sha256": "5d14c89c20e0d22586045dea9fbb5de9a7ec6e7bbe7be4cd5b4da3ce9693db4e",
+            "custody_certificate_sha256": (
+                "5d14c89c20e0d22586045dea9fbb5de9a7ec6e7bbe7be4cd5b4da3ce9693db4e"
+            ),
             "custody_certificate_public_key_der_sha256": custody_key_digest,
         },
         "custody_class": "SAME_SYSTEM_NONINDEPENDENT",
