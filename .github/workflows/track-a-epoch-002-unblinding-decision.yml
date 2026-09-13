@@ -66,24 +66,44 @@ jobs:
         if: ${{ steps.mode.outputs.value == 'decision_event' }}
         run: python scripts/validate_track_a_epoch_002_unblinding_decision.py --validate-event
 
-      - name: Prove tooling PR changes only the dedicated lane
+      - name: Prove tooling PR stays within unblinding or upstream dataset-lock lanes
         if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          expected=(
+          allowed=(
             '.github/workflows/track-a-epoch-002-unblinding-decision.yml'
             'docs/experiment/TRACK_A_EPOCH_002_UNBLINDING_DECISION_PROCEDURE.md'
             'scripts/validate_track_a_epoch_002_unblinding_decision.py'
             'tests/test_track_a_epoch_002_unblinding_decision.py'
+            '.github/workflows/track-a-epoch-002-dataset-lock.yml'
+            'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
+            'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_PROCEDURE.md'
+            'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
+            'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
+            'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+            'scripts/validate_track_a_epoch_002_dataset_lock.py'
+            'scripts/validate_track_a_epoch_002_result_ledger.py'
+            'scripts/validate_track_a_epoch_002_result_record_semantics.py'
+            'tests/test_track_a_epoch_002_dataset_lock.py'
+            'tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py'
           )
           mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
-          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
-          test "${#changed[@]}" -eq "${#expected_sorted[@]}"
-          diff -u \
-            <(printf '%s\n' "${expected_sorted[@]}") \
-            <(printf '%s\n' "${changed[@]}")
+          test "${#changed[@]}" -gt 0
+          for path in "${changed[@]}"; do
+            permitted=false
+            for candidate in "${allowed[@]}"; do
+              if test "$path" = "$candidate"; then
+                permitted=true
+                break
+              fi
+            done
+            test "$permitted" = true || {
+              echo "forbidden unblinding/dependency tooling path: $path" >&2
+              exit 1
+            }
+          done
 
       - name: Run focused adversarial tests
         run: python -m pytest tests/test_track_a_epoch_002_unblinding_decision.py -q
