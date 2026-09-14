@@ -137,3 +137,20 @@ def test_retention_directory_must_not_be_inside_repository(tmp_path: Path, monke
 
     with pytest.raises(SystemExit, match="outside the repository"):
         preparer.require_external_retention_dir(retention)
+
+
+def test_explicit_archive_path_must_not_be_inside_repository(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_root = tmp_path / "repo"
+    fake_root.mkdir()
+    retention = tmp_path / "retention"
+    retention.mkdir()
+    public_archive = fake_root / "public.tar"
+    protected_archive = retention / "protected.tar"
+    public_archive.write_bytes(b"x")
+    protected_archive.write_bytes(b"x")
+    monkeypatch.setattr(preparer, "ROOT", fake_root)
+
+    with pytest.raises(SystemExit, match="archive must remain outside the repository"):
+        preparer.resolve_archives(retention, public_archive, protected_archive)
