@@ -12,7 +12,10 @@ MODULE_PATH = ROOT / "scripts/prepare_track_a_epoch_002_operator_evidence_admiss
 
 def load_preparer():
     assert MODULE_PATH.is_file(), "production evidence-admission preparer missing"
-    spec = importlib.util.spec_from_file_location("epoch002_operator_evidence_admission_preparer", MODULE_PATH)
+    spec = importlib.util.spec_from_file_location(
+        "epoch002_operator_evidence_admission_preparer",
+        MODULE_PATH,
+    )
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -41,16 +44,29 @@ def init_repo(repo: Path) -> None:
     git(repo, "commit", "-m", "fixture")
 
 
-def install_validation_stubs(monkeypatch: pytest.MonkeyPatch, preparer) -> None:
+def install_validation_stubs(
+    monkeypatch: pytest.MonkeyPatch,
+    preparer,
+) -> None:
     monkeypatch.setattr(
         preparer.dataset_lock,
         "validate_evidence_file",
-        lambda path: ({"record_type": "TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE"}, "a" * 64),
+        lambda path: (
+            {"record_type": "TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE"},
+            "a" * 64,
+        ),
     )
-    monkeypatch.setattr(preparer.dataset_lock, "validate_pre_lock_ledger", lambda path, evidence: None)
+    monkeypatch.setattr(
+        preparer.dataset_lock,
+        "validate_pre_lock_ledger",
+        lambda path, evidence: None,
+    )
 
 
-def test_dry_run_validates_without_writing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_dry_run_validates_without_writing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     preparer = load_preparer()
     repo = tmp_path / "repo"
     retention = tmp_path / "retention"
@@ -63,7 +79,10 @@ def test_dry_run_validates_without_writing(tmp_path: Path, monkeypatch: pytest.M
     monkeypatch.setattr(preparer, "ROOT", repo)
     install_validation_stubs(monkeypatch, preparer)
 
-    destinations = preparer.prepare(retention_dir=retention, write=False)
+    destinations = preparer.prepare(
+        retention_dir=retention,
+        write=False,
+    )
 
     assert destinations == (
         repo / preparer.dataset_lock.OPERATOR_EVIDENCE_REL,
@@ -74,7 +93,10 @@ def test_dry_run_validates_without_writing(tmp_path: Path, monkeypatch: pytest.M
     assert git(repo, "status", "--porcelain") == ""
 
 
-def test_write_copies_exact_bytes_and_only_two_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_write_copies_exact_bytes_and_only_two_files(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     preparer = load_preparer()
     repo = tmp_path / "repo"
     retention = tmp_path / "retention"
@@ -89,7 +111,10 @@ def test_write_copies_exact_bytes_and_only_two_files(tmp_path: Path, monkeypatch
     monkeypatch.setattr(preparer, "ROOT", repo)
     install_validation_stubs(monkeypatch, preparer)
 
-    evidence_dest, ledger_dest = preparer.prepare(retention_dir=retention, write=True)
+    evidence_dest, ledger_dest = preparer.prepare(
+        retention_dir=retention,
+        write=True,
+    )
 
     assert evidence_dest.read_bytes() == evidence_bytes
     assert ledger_dest.read_bytes() == ledger_bytes
@@ -101,7 +126,10 @@ def test_write_copies_exact_bytes_and_only_two_files(tmp_path: Path, monkeypatch
     )
 
 
-def test_refuses_dirty_or_unrelated_repository_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_refuses_dirty_or_unrelated_repository_state(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     preparer = load_preparer()
     repo = tmp_path / "repo"
     retention = tmp_path / "retention"
@@ -117,7 +145,10 @@ def test_refuses_dirty_or_unrelated_repository_state(tmp_path: Path, monkeypatch
         preparer.prepare(retention_dir=retention, write=False)
 
 
-def test_refuses_existing_canonical_destination(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_refuses_existing_canonical_destination(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     preparer = load_preparer()
     repo = tmp_path / "repo"
     retention = tmp_path / "retention"
@@ -135,14 +166,23 @@ def test_refuses_existing_canonical_destination(tmp_path: Path, monkeypatch: pyt
         preparer.prepare(retention_dir=retention, write=False)
 
 
-def test_refuses_repository_local_source_evidence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_refuses_repository_local_source_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     preparer = load_preparer()
     repo = tmp_path / "repo"
     init_repo(repo)
     local_retention = repo / "retention"
     local_retention.mkdir()
-    (local_retention / preparer.EVIDENCE_NAME).write_text("{}\n", encoding="utf-8")
-    (local_retention / preparer.LEDGER_NAME).write_text("[]\n", encoding="utf-8")
+    (local_retention / preparer.EVIDENCE_NAME).write_text(
+        "{}\n",
+        encoding="utf-8",
+    )
+    (local_retention / preparer.LEDGER_NAME).write_text(
+        "[]\n",
+        encoding="utf-8",
+    )
     monkeypatch.setattr(preparer, "ROOT", repo)
     install_validation_stubs(monkeypatch, preparer)
 
