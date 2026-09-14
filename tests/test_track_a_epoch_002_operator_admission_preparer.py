@@ -138,9 +138,7 @@ def test_retention_directory_must_not_be_inside_repository(tmp_path: Path, monke
         preparer.require_external_retention_dir(retention)
 
 
-def test_explicit_archive_path_must_not_be_inside_repository(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_explicit_archive_path_must_not_be_inside_repository(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake_root = tmp_path / "repo"
     fake_root.mkdir()
     retention = tmp_path / "retention"
