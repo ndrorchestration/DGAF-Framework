@@ -24,10 +24,12 @@
 ### Task 1: Add failing tests for the evidence-admission preparer
 
 **Files:**
+
 - Create: `tests/test_track_a_epoch_002_operator_evidence_admission_preparer.py`
 - Later create: `scripts/prepare_track_a_epoch_002_operator_evidence_admission.py`
 
 **Interfaces:**
+
 - Consumes: `validate_track_a_epoch_002_dataset_lock.validate_evidence_file`, `validate_pre_lock_ledger`, canonical `OPERATOR_EVIDENCE_REL` and `OPERATOR_PRE_LOCK_LEDGER_REL`.
 - Produces: `prepare(retention_dir: Path, evidence_path: Path | None = None, ledger_path: Path | None = None, write: bool = False) -> tuple[Path, Path]` and CLI PASS markers.
 
@@ -52,10 +54,12 @@ Run the dedicated pytest file plus existing dataset-lock adversarial tests. Expe
 ### Task 2: Add failing tests for the operator receipt preparer
 
 **Files:**
+
 - Create: `tests/test_track_a_epoch_002_operator_dataset_lock_receipt_preparer.py`
 - Later create: `scripts/prepare_track_a_epoch_002_operator_dataset_lock_receipt.py`
 
 **Interfaces:**
+
 - Consumes: existing canonical operator evidence paths; `_single_path_history`; `git_is_ancestor`; `expected_operator_receipt`; `validate_operator_receipt_object`; `canonical_json_bytes`.
 - Produces: `prepare(write: bool = False, generated_at_utc: str | None = None) -> dict[str, Any]` and CLI PASS markers.
 
@@ -80,10 +84,12 @@ Run both new test files and existing dataset-lock test suite. Expected: all pass
 ### Task 3: Integrate workflow and operator documentation
 
 **Files:**
+
 - Modify: `.github/workflows/track-a-epoch-002-dataset-lock.yml`
 - Modify: `docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_PROCEDURE.md`
 
 **Interfaces:**
+
 - Consumes: both new helpers/tests.
 - Produces: path-triggered validation and a documented operator sequence from local PASS outputs to exact repository deltas.
 
@@ -108,6 +114,7 @@ Document the two new dry-run/write commands after local retained-byte generation
 ### Task 4: Exact-head review, verification, and guarded completion
 
 **Files:**
+
 - Review all changed files from Tasks 1–3.
 
 - [ ] **Step 1: Open/refresh PR and inspect exact changed-file set**
