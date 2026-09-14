@@ -184,6 +184,25 @@ export default function Dashboard() {
           v{health?.version ?? '…'} · {roster?.agent_count ?? '…'} agents · NDR P-{roster?.ndr_patterns ?? '…'}
         </span>
       </div>
+      {/* Governance posture bar — surfaces DGAF truth boundary */}
+      <div style={{
+        display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center',
+        background: '#1e293b', border: '1px solid #334155', borderRadius: 6,
+        padding: '8px 14px', marginBottom: 20, fontSize: 11, fontWeight: 700,
+      }}>
+        <span style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Governance:</span>
+        <span style={{ color: '#fb923c' }}>PRE-FREEZE</span>
+        <span style={{ color: '#64748b' }}>·</span>
+        <span style={{ color: '#fb923c' }}>FAIL-CLOSED</span>
+        <span style={{ color: '#64748b' }}>·</span>
+        <span style={{ color: '#fb923c' }}>NOT AUTHORIZED</span>
+        <span style={{ color: '#64748b' }}>·</span>
+        <span style={{ color: '#64748b' }}>N=0</span>
+        <span style={{ color: '#64748b' }}>·</span>
+        <span style={{ color: '#fb923c' }}>NOT ESTABLISHED</span>
+        <span style={{ color: '#64748b', marginLeft: 12 }}>·</span>
+        <span style={{ color: '#64748b' }}>Empirical collection: NOT AUTHORIZED</span>
+      </div>
       <p style={{ fontSize: 11, color: '#475569', marginBottom: 20 }}>
         last poll: {lastPoll || '…'} · auto-refresh {REFRESH_MS / 1000}s · runtime: {health?.runtime ?? '…'}
       </p>
