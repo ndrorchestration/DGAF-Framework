@@ -8,40 +8,35 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-As of the 2026-09-11 SSOT reconciliation:
+As of the 2026-09-14 post-#689 reconciliation:
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
-- Track A Epoch 001 prospective collection: **COMPLETE / BLINDED / RETAINED**;
-- Epoch 001 inferential seed units: **50**;
-- Epoch 001 blinded raw observations: **2,250**;
-- Epoch 001 dataset lock: **ESTABLISHED**;
-- Epoch 001 protected mapping: **CRYPTOGRAPHICALLY UNRECOVERABLE**;
-- Epoch 001 primary analysis: **UNANALYZABLE / NOT RUN**;
-- successor Track A scientific-control lane: **issue #523 OPEN**;
-- successor operator-local custody-v2 recovery: **PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT**;
-- successor repository custody admission: **NOT ESTABLISHED**;
-- successor empirical collection: **NOT AUTHORIZED / NOT EXECUTED**;
+- Track A Epoch 001: **COMPLETE / BLINDED / DATASET LOCKED / CRYPTOGRAPHICALLY UNRECOVERABLE FOR PRIMARY ANALYSIS**;
+- Track A Epoch 002 repository custody: **ACCEPTED / SAME_SYSTEM_NONINDEPENDENT**;
+- Track A Epoch 002 immutable freeze, final closure, and bounded verification classification: **ACCEPTED**;
+- Track A Epoch 002 collection authorization: **ACCEPTED** at commit `563152fdb254b8ee948a693c287126a8bf8314b8`;
+- Track A Epoch 002 collection: **COMPLETE** at 50 paired seed units / 2,250 blinded observations;
+- operator retained-byte provenance admission: **PENDING**;
 - successor dataset lock: **NOT ESTABLISHED**;
 - successor unblinding: **NOT AUTHORIZED**;
 - successor materialization: **NOT ESTABLISHED**;
 - successor primary analysis: **NOT AUTHORIZED / NOT RUN**.
 
-Repository-side prospective tooling is accepted through precollection preflight (#612), immutable freeze (#613), final closure (#614), bounded verification classification (#615), separate human-controlled collection-authorization validation (#616), post-collection result-record semantics (#618), content-addressed dataset-lock validation (#622), and separate fail-closed unblinding-decision validation (#627).
+Accepted engineering support now includes #687 retained-byte admission preparation, #688 retrospective 53-record blinded pre-lock-ledger preparation, and #689 truthful `OPERATOR_CODESPACE` dataset-lock evidence preparation/admission support. Those tools do not assert that the operator-retained archives passed or that a dataset-lock receipt exists.
 
-Those controls are **preparation and validation tooling only**. They do not create custody acceptance, freeze, authorization, empirical data, dataset lock, unblinding, materialization, analysis authority, independent validation, efficacy, High-Assurance authorization, or scientific N.
+## Next admissible transition
 
-## Next admissible scientific transition
+Run the accepted #687–#689 sequence in the original operator-controlled Codespace against the exact retained public and encrypted-protected archives:
 
-The completed operator-local custody drill produced two non-secret artifacts that must be recovered/transferred as the exact existing bytes and admitted to their canonical repository paths:
+1. require retained-byte admission dry-run PASS before persistent non-authorizing output;
+2. generate and validate the 53-record blinded pre-lock ledger;
+3. generate the non-secret dataset-lock evidence manifest using the truthful `OPERATOR_CODESPACE` path;
+4. admit only the bounded canonical non-secret outputs;
+5. create the dataset-lock receipt later as a separate exact one-parent, one-file event.
 
-- `track_a_successor_custody_cert.pem`
-- `track_a_successor_solo_custody_receipt.json`
+Do not rerun the collection, fabricate GitHub Actions run/artifact identities, decrypt protected material, inspect or aggregate outcomes, authorize unblinding or analysis, or increment canonical scientific N.
 
-After repository validation of those exact artifacts, run the Completion State Reconciler and continue only through the ordered predecessor chain:
+## Presentation boundary
 
-`repository custody acceptance → precollection preflight → immutable freeze → final closure → verification classification → collection authorization → empirical collection → QC → dataset lock → separate unblinding decision → controlled materialization + immutable receipt → separate primary-analysis authorization → locked analysis`
-
-Do not regenerate or substitute custody evidence. Private keys, passphrases, encrypted backup copies, blinding secrets, and other recoverable secret material remain outside GitHub, Notion, chat, CI inputs, logs, and committed files.
-
-Epoch 001 remains immutable historical evidence of a completed blinded prospective collection and dataset lock plus a custody/recovery design failure. It must not be brute-forced, reconstructed, pooled into a successor confirmatory analysis, or promoted into a canonical efficacy claim.
+The owner-private DGAF Governance Console is a read-only companion presentation surface. It mirrors the current evidence boundary and provides creator/external reading modes, gate filtering, evidence inspection, and live repository freshness with a timestamped fallback. It is not a source of governance authority and cannot execute transitions. Its private URL is intentionally not recorded in this public repository.
