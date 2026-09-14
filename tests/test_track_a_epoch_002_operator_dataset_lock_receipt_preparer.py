@@ -69,7 +69,11 @@ def install_validator_stubs(
         "qc_ledger_record_id": "E002-QC-TEST",
         "evidence_tooling_commit_sha": "d" * 40,
     }
-    actual_sha = evidence_sha or "f" * 64
+    evidence_path = preparer.ROOT / preparer.dataset_lock.OPERATOR_EVIDENCE_REL
+    actual_sha = evidence_sha
+    if actual_sha is None and evidence_path.is_file():
+        actual_sha = hashlib.sha256(evidence_path.read_bytes()).hexdigest()
+    actual_sha = actual_sha or "f" * 64
     monkeypatch.setattr(
         preparer.dataset_lock,
         "validate_evidence_file",
