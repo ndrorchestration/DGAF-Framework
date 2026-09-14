@@ -240,6 +240,23 @@ def resolve_archives(
     return public_archive, protected_archive
 
 
+def validate_before_persisting(
+    record: dict[str, Any],
+    receipt_bytes: bytes,
+    public_archive: Path,
+    protected_archive: Path,
+) -> None:
+    with tempfile.TemporaryDirectory(prefix="dgaf-epoch002-admission-") as temporary:
+        receipt_path = Path(temporary) / EXECUTION_RECEIPT_NAME
+        receipt_path.write_bytes(receipt_bytes)
+        admission.validate_evidence_acceptance(
+            record,
+            receipt_path,
+            public_archive,
+            protected_archive,
+        )
+
+
 def prepare(
     *,
     retention_dir: Path,
@@ -259,6 +276,7 @@ def prepare(
         protected_archive=protected_archive,
     )
     admission.validate_record(record)
+    validate_before_persisting(record, receipt_bytes, public_archive, protected_archive)
 
     if write:
         receipt_path = retention_dir / EXECUTION_RECEIPT_NAME
@@ -275,15 +293,6 @@ def prepare(
         print(f"EXECUTION_RECEIPT={receipt_path}")
         print(f"ADMISSION_RECORD={record_path}")
     else:
-        with tempfile.TemporaryDirectory(prefix="dgaf-epoch002-admission-") as temporary:
-            receipt_path = Path(temporary) / EXECUTION_RECEIPT_NAME
-            receipt_path.write_bytes(receipt_bytes)
-            admission.validate_evidence_acceptance(
-                record,
-                receipt_path,
-                public_archive,
-                protected_archive,
-            )
         print("TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION=PASS_DRY_RUN_NOT_WRITTEN")
 
     print(f"PUBLIC_ARCHIVE={public_archive}")
