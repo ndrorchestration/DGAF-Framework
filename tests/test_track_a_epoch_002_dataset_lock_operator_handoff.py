@@ -19,7 +19,7 @@ def operator_evidence_fixture() -> dict:
         "schema_version": 1,
         "protocol_id": validator.PROTOCOL_ID,
         "epoch": 2,
-        "evidence_workflow_run_id": 9001,
+        "evidence_execution_class": "OPERATOR_CODESPACE",
         "evidence_tooling_commit_sha": "d" * 40,
         "collection_execution_class": "OPERATOR_CODESPACE",
         "operator_admission_record_sha256": "0" * 64,
@@ -94,3 +94,46 @@ def test_operator_codespace_rejects_actions_artifact_ids() -> None:
     evidence["protected_artifact"]["artifact_id"] = 102
     with pytest.raises(SystemExit):
         validator.validate_evidence_object(evidence)
+
+
+def test_operator_codespace_rejects_evidence_workflow_run_id() -> None:
+    evidence = operator_evidence_fixture()
+    evidence["evidence_workflow_run_id"] = 9001
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_object(evidence)
+
+
+def test_operator_receipt_binds_repository_admission_commit_without_actions_ids() -> None:
+    evidence = operator_evidence_fixture()
+    receipt = validator.expected_operator_receipt(
+        evidence,
+        "f" * 64,
+        evidence_admission_commit_sha="1" * 40,
+        generated_at_utc="2026-09-14T07:00:00Z",
+    )
+
+    assert receipt["producer"] == {
+        "system": "DGAF_TRACK_A_EPOCH_002_DATASET_LOCK_VALIDATOR",
+        "version_or_commit": "d" * 40,
+    }
+    assert receipt["immutable_subject"] == {
+        "commit_sha": "1" * 40,
+        "sha256": "f" * 64,
+    }
+    assert receipt["predecessor_record_ids"] == ["E002-QC-0001"]
+    assert receipt["authorization_effect"] == "REQUIRES_SEPARATE_EXACT_COMMIT"
+    assert receipt["scientific_state_effect"] == {
+        "empirical_n_increment": 0,
+        "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    }
+
+
+def test_operator_repository_evidence_paths_are_separate_from_lock_receipt() -> None:
+    assert validator.OPERATOR_EVIDENCE_REL == (
+        "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
+    )
+    assert validator.OPERATOR_PRE_LOCK_LEDGER_REL == (
+        "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRE_LOCK_RESULT_LEDGER.json"
+    )
+    assert validator.OPERATOR_EVIDENCE_REL != validator.RECEIPT_REL
+    assert validator.OPERATOR_PRE_LOCK_LEDGER_REL != validator.RECEIPT_REL
