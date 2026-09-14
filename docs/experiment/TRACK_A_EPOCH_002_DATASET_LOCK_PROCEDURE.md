@@ -1,121 +1,125 @@
 # Track A Epoch 002 dataset-lock procedure
 
-Status: **PROSPECTIVE TOOLING ONLY · DATASET LOCK NOT ESTABLISHED · UNBLINDING NOT AUTHORIZED · N=0**
+Status: **COLLECTION COMPLETE · OPERATOR RETAINED-BYTE ADMISSION PENDING · DATASET LOCK NOT ESTABLISHED · UNBLINDING NOT AUTHORIZED · SCIENTIFIC-N INCREMENT 0**
 
-Controller: issue #619. Historical issue #483 is a pattern source only; no Epoch 001 identity, artifact, custody, or authorization value transfers into Epoch 002.
+Current controller: issue #679. Historical issue #619 owns the original prospective dataset-lock tooling lineage; issue #483 is an Epoch 001 pattern source only. No Epoch 001 identity, artifact, custody, authorization, or scientific state transfers into Epoch 002.
 
 ## Purpose
 
-This procedure defines the post-collection structural lock boundary for Track A Epoch 002. It is intentionally separate from collection authorization, unblinding authorization, materialization, and primary-analysis authorization.
+This procedure defines the post-collection structural lock boundary for Track A Epoch 002. It is intentionally separate from collection authorization, empirical execution, unblinding authorization, materialization, primary-analysis authorization, and efficacy adjudication.
 
-A valid lock proves only that the already-retained blinded collection has a stable, content-addressed evidence identity and that its public/protected retention surfaces passed the preregistered structural checks. It does **not** inspect or aggregate outcomes for inference, decrypt protected topology mappings, release a mapping, run primary analysis, establish canonical DGAF efficacy, establish independent validation, authorize High-Assurance, or increment scientific N.
+A valid lock proves only that the already-retained blinded collection has a stable, content-addressed evidence identity and that its public/protected retention surfaces passed the declared structural checks. It does **not** inspect or aggregate outcomes for inference, decrypt protected topology mappings, release a mapping, run primary analysis, establish canonical DGAF efficacy, establish independent validation, authorize High-Assurance, or increment scientific N.
 
-The current repository has no canonical Epoch 002 dataset-lock receipt. Tooling validation must preserve that absence until a real authorized collection exists.
+Track A Epoch 002 collection is already complete at 50 paired seed units / 2,250 blinded observations. The actual retained bytes remain in the operator-controlled environment. Repository tooling does not substitute for retained-byte admission.
 
-## Two-layer pattern
+## Provenance classes
 
-Epoch 002 uses two layers instead of placing future artifact metadata directly into the generic result-record envelope.
+The dataset-lock evidence schema supports two evidence-provenance paths.
 
-1. **External dataset-lock evidence manifest**
-   - schema: `docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json`
-   - canonical inner filename: `track_a_epoch_002_dataset_lock_evidence.json`
-   - paired pre-lock ledger filename: `track_a_epoch_002_pre_lock_result_ledger.json`
-   - canonical GitHub artifact name: `track-a-epoch-002-dataset-lock-evidence`
-   - generated only after a future authorized collection and read-only structural QC
-   - content-binds both retained collection artifacts and the PASS `QC_LEDGER` predecessor
+### Legacy GitHub Actions evidence
 
-2. **Repository dataset-lock receipt**
-   - canonical path: `docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json`
-   - existing generic `record_type`: `DATASET_LOCK_RECEIPT`
-   - introduced later as an exact one-parent / one-file / first-history event
-   - `immutable_subject.sha256` binds the exact evidence-manifest bytes
-   - `immutable_subject.workflow_run_id` and `artifact_id` bind the exact retained evidence artifact
-   - `predecessor_record_ids` contains exactly the PASS `QC_LEDGER` record ID
-   - `authorization_effect` remains `REQUIRES_SEPARATE_EXACT_COMMIT`
+The original path remains valid for evidence produced and retained as GitHub Actions artifacts. It binds:
 
-This keeps the #618 structural/semantic envelope stable while allowing the detailed evidence surface to grow without smuggling authority into the result record.
+- the exact evidence workflow run;
+- the exact evidence artifact;
+- the exact collection workflow run;
+- exact public/protected collection artifact IDs and content identities.
+
+The later receipt therefore carries `workflow_run_id`, `artifact_id`, and the evidence SHA-256 in its immutable subject.
+
+### Operator Codespace evidence
+
+The actual Epoch 002 collection used operator-controlled retained bytes rather than GitHub Actions collection artifacts. This path must not synthesize Actions run or artifact IDs.
+
+Operator evidence therefore declares:
+
+- `evidence_execution_class = OPERATOR_CODESPACE`;
+- `collection_execution_class = OPERATOR_CODESPACE`;
+- exact operator admission-record SHA-256;
+- exact collection execution-receipt SHA-256;
+- exact retained public/protected archive sizes and SHA-256 identities;
+- exact public manifest, encrypted ciphertext, plaintext-tar commitment, custody certificate, and custody public-key commitments;
+- exact 53-record pre-lock ledger SHA-256 and terminal PASS `QC_LEDGER` identity;
+- `SAME_SYSTEM_NONINDEPENDENT` custody and the complete fail-closed non-promotion ceiling.
+
+For this class, `evidence_workflow_run_id`, `collection_workflow_run_id`, and public/protected Actions `artifact_id` values are prohibited.
+
+## Operator sequence
+
+The operator path is deliberately split into distinct transitions.
+
+1. **Retained-byte operator admission**
+   - run the accepted #687 preparer against the actual retained archives outside the repository;
+   - require a successful dry run before persistent write;
+   - retain the non-secret admission record and execution receipt outside the repository;
+   - do not expose private keys, passphrases, protected plaintext, decrypted mappings, or blinding secrets.
+
+2. **Retrospective blinded pre-lock ledger**
+   - run the accepted #688 preparer only after hardened retained-byte admission succeeds;
+   - produce exactly 53 records: gate checklist, collection-start receipt, 50 per-seed records, terminal PASS `QC_LEDGER`;
+   - preserve `authorization_effect = NONE`, scientific-N increment 0, and efficacy `NOT_ESTABLISHED` throughout.
+
+3. **Read-only local structural QC / operator evidence generation**
+   - validate public and protected retained archive bytes against their exact digests;
+   - verify public sidecars, manifest identity, seed panel, matrix counts, schema allowlists, and strict endpoint type without tallying or interpreting endpoint values;
+   - verify protected ciphertext/certificate commitments without decryption or private-key use;
+   - produce the non-secret dataset-lock evidence manifest with `evidence_execution_class = OPERATOR_CODESPACE`.
+
+4. **Repository evidence admission — separate non-authorizing event**
+   - admit exactly two non-secret files:
+     - `docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json`
+     - `docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRE_LOCK_RESULT_LEDGER.json`
+   - both paths must be creation-only, first-history files in the same one-parent event;
+   - the evidence manifest and ledger must pass the dataset-lock schema plus structural/semantic ledger validation;
+   - collection authorization and evidence-tooling commits must already exist in repository history;
+   - this event does **not** establish dataset lock.
+
+5. **Repository dataset-lock receipt — later separate one-file event**
+   - canonical path: `docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json`;
+   - the event changes exactly that one file, with one parent and first-and-only history;
+   - for operator provenance, the receipt immutable subject binds the exact repository evidence-admission commit plus exact evidence-manifest SHA-256;
+   - no Actions workflow/artifact identity is invented or required;
+   - merge only after the complete exact-head repository validation wave is terminal green.
+
+A validated receipt PR means **pending validated merge**, not established lock. The dataset lock becomes repository-established only after the exact one-file receipt event is accepted into protected `main`.
 
 ## Required retained collection surfaces
 
-The future collection/QC path must retain these exact artifact classes:
-
-- public artifact: `track-a-epoch-002-public-blinded`
-- protected artifact: `track-a-epoch-002-protected-encrypted`
-- dataset-lock evidence artifact: `track-a-epoch-002-dataset-lock-evidence`
-
-The public artifact extraction root is `track_a_epoch_002_public/` and contains exactly:
+The operator-local retained public surface contains exactly:
 
 - 50 `track_a_epoch_002_seed_<seed>.json` files;
 - 50 matching `.sha256` sidecars;
 - `track_a_epoch_002_manifest.json`;
 - its matching `.sha256` sidecar.
 
-The lock validator may parse the public files only for structural validation: exact field allowlists, strict boolean endpoint type, blinded topology IDs, seed/failure matrix membership, registered exclusions, and identity bindings. It must not tally, compare, summarize, rank, or interpret `ffcr_success`.
+The lock validator may parse public files only for structural validation: exact field allowlists, strict boolean endpoint type, blinded topology IDs, seed/failure matrix membership, registered exclusions, and identity bindings. It must not tally, compare, summarize, rank, or interpret `ffcr_success`.
 
-The protected artifact remains encrypted. Its extraction root contains exactly:
+The protected retained surface remains encrypted and contains the declared custody certificate, certificate sidecar, encrypted CMS payload, ciphertext sidecar, and pre-encryption tar commitment. No protected plaintext mapping, private custody key, blinding secret, passphrase, or decrypted tar is permitted in repository evidence or dataset-lock validation.
 
-- `track_a_epoch_002_custody_cert.pem`;
-- `track_a_epoch_002_custody_cert.sha256`;
-- `track_a_epoch_002_protected.cms`;
-- `track_a_epoch_002_protected_ciphertext.sha256`;
-- `track_a_epoch_002_protected_plaintext_tar.sha256`.
+## Pre-lock ledger bindings
 
-No protected plaintext mapping, private custody key, blinding secret, passphrase, or decrypted tar is permitted in the retained protected artifact or in dataset-lock validation.
-
-## Evidence requirements
-
-The external evidence manifest must bind, at minimum:
-
-- exact evidence-workflow run and tooling commit;
-- exact collection-workflow run;
-- exact collection-authorization commit and frozen candidate;
-- accepted custody-receipt blob identity;
-- exact PASS `QC_LEDGER` record ID and SHA-256 of the 53-record pre-lock result ledger;
-- 50 paired seed units and 2,250 blinded observations;
-- public artifact ID, size, archive SHA-256, and whole-epoch manifest SHA-256;
-- protected artifact ID, size, archive SHA-256, ciphertext SHA-256, pre-encryption tar commitment, custody-certificate SHA-256, and custody public-key fingerprint;
-- structural-QC PASS facts;
-- `SAME_SYSTEM_NONINDEPENDENT` custody;
-- no outcome inspection for the lock, no aggregation, no unblinding, no primary analysis, no historical pooling, no Epoch-004 substitution, no High-Assurance authorization;
-- scientific N increment `0`;
-- canonical DGAF efficacy `NOT_ESTABLISHED`.
-
-Future IDs, sizes, and digests are empirical retention facts. They must be recorded only after the corresponding run/artifacts exist. They must never be predicted or placeholder-filled.
-
-## Pre-lock ledger requirement
-
-The pre-lock result ledger must contain exactly 53 records and end with a PASS `QC_LEDGER`:
+The pre-lock ledger must contain exactly 53 records and end with a PASS `QC_LEDGER`:
 
 1. `PRECOLLECTION_GATE_CHECKLIST`
 2. `COLLECTION_START_RECEIPT`
 3. 50 ordered `PER_SEED_EXECUTION_RECORD` entries
 4. `QC_LEDGER`
 
-It must pass both:
+The dataset-lock validator additionally requires the ledger to bind:
 
-- `scripts/validate_track_a_epoch_002_result_ledger.py`
-- `scripts/validate_track_a_epoch_002_result_record_semantics.py`
+- the accepted frozen candidate commit and tree;
+- the exact collection-authorization commit;
+- for operator collection, the exact collection execution-receipt SHA-256;
+- for operator collection, the exact operator admission-record SHA-256;
+- the terminal QC record ID carried by the evidence manifest.
 
-The dataset-lock receipt is the next record in the already-defined order. A failed, blocked, stale, unverified, or otherwise non-PASS predecessor cannot be promoted into a lock.
+It must pass both existing result-ledger structural and semantic validators. A failed, blocked, stale, unverified, or otherwise non-PASS predecessor cannot be promoted into a lock.
 
-## Future receipt event
+## Repository evidence admission is not independent verification
 
-After the real collection and read-only dataset-lock evidence workflow are complete:
+The operator evidence manifest is generated from operator-controlled retained bytes and admitted by the same project/operator lineage. Its custody/evidence class remains `SAME_SYSTEM_NONINDEPENDENT`.
 
-1. Retrieve the exact evidence artifact by the future receipt's `immutable_subject.workflow_run_id` and `artifact_id`.
-2. Require the evidence workflow to be completed/successful and its exact head to equal the evidence tooling commit named by the receipt.
-3. Hash `track_a_epoch_002_dataset_lock_evidence.json` and require equality with `immutable_subject.sha256`.
-4. Validate the paired pre-lock ledger and its SHA-256.
-5. Resolve the collection run and the exact public/protected artifact IDs named by the evidence manifest.
-6. Require both artifacts to be unexpired, exact-name matches, exact-size matches, and exact archive-digest matches.
-7. Validate public sidecars/manifest/matrix structure without outcome aggregation.
-8. Validate the protected ciphertext/certificate commitments without decrypting protected data or using a private key.
-9. Require the repository event to have exactly one parent and exactly one changed path: `TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json`.
-10. Require that path to be absent at the parent and have first-and-only history at the event head.
-11. Require the receipt to conform to the existing #618 result-record structural schema and semantic policy.
-12. Merge only after the complete exact-head repository validation wave is terminal green.
-
-A validated PR means **pending validated merge**, not established lock. The dataset lock becomes repository-established only after the exact one-file event is accepted into protected `main`.
+Repository admission creates durable, reviewable, content-addressed provenance. It does not transform same-system evidence into independent verification and does not allow stronger claims than the underlying retained-byte validation supports.
 
 ## Authority boundary
 
@@ -127,9 +131,11 @@ A PASS `DATASET_LOCK_RECEIPT` carries the complete non-effect ceiling and has:
 
 Therefore it cannot authorize its own successor. Any future `UNBLINDING_DECISION_RECORD` remains a separate human-controlled decision with its own exact commit and bounded scope.
 
-Until the real predecessor evidence exists and the one-file receipt is accepted, preserve:
+Until retained-byte admission, operator evidence admission, and the later one-file dataset-lock receipt are separately completed and accepted, preserve:
 
-`PRE-FREEZE · FAIL-CLOSED · SUCCESSOR COLLECTION NOT AUTHORIZED · N=0`
+`TRACK_A_EPOCH_002_COLLECTION = COMPLETE`
+
+`TRACK_A_EPOCH_002_OPERATOR_PROVENANCE = PENDING_RETAINED_BYTE_ADMISSION`
 
 `TRACK_A_EPOCH_002_DATASET_LOCK = NOT_ESTABLISHED`
 
@@ -137,4 +143,8 @@ Until the real predecessor evidence exists and the one-file receipt is accepted,
 
 `PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`
 
+`SCIENTIFIC_N_INCREMENT = 0`
+
 `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
+
+`HIGH_ASSURANCE = NOT_AUTHORIZED`

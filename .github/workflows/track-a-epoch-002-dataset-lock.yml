@@ -8,12 +8,16 @@ on:
       - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_PROCEDURE.md'
       - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
       - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRE_LOCK_RESULT_LEDGER.json'
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+      - 'scripts/prepare_track_a_epoch_002_operator_dataset_lock_evidence.py'
       - 'scripts/validate_track_a_epoch_002_dataset_lock.py'
       - 'scripts/validate_track_a_epoch_002_result_ledger.py'
       - 'scripts/validate_track_a_epoch_002_result_record_semantics.py'
       - 'tests/test_track_a_epoch_002_dataset_lock.py'
       - 'tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py'
+      - 'tests/test_track_a_epoch_002_operator_dataset_lock_evidence_preparer.py'
   workflow_dispatch: {}
 
 permissions:
@@ -54,8 +58,37 @@ jobs:
         run: |
           set -euo pipefail
           receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+          evidence='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json'
+          ledger='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRE_LOCK_RESULT_LEDGER.json'
+
           if test -e "$receipt"; then
-            echo 'value=receipt_event' >> "$GITHUB_OUTPUT"
+            if test -e "$evidence" || test -e "$ledger"; then
+              test -e "$evidence" && test -e "$ledger"
+              evidence_class="$(python - "$evidence" <<'PY'
+          import json
+          import sys
+
+          value = json.load(open(sys.argv[1], encoding='utf-8'))
+          print(value.get('evidence_execution_class', ''))
+          PY
+              )"
+              test "$evidence_class" = 'OPERATOR_CODESPACE'
+              echo 'value=operator_receipt_event' >> "$GITHUB_OUTPUT"
+            else
+              echo 'value=actions_receipt_event' >> "$GITHUB_OUTPUT"
+            fi
+          elif test -e "$evidence" || test -e "$ledger"; then
+            test -e "$evidence" && test -e "$ledger"
+            evidence_class="$(python - "$evidence" <<'PY'
+          import json
+          import sys
+
+          value = json.load(open(sys.argv[1], encoding='utf-8'))
+          print(value.get('evidence_execution_class', ''))
+          PY
+            )"
+            test "$evidence_class" = 'OPERATOR_CODESPACE'
+            echo 'value=operator_evidence_admission' >> "$GITHUB_OUTPUT"
           else
             echo 'value=tooling_only' >> "$GITHUB_OUTPUT"
           fi
@@ -77,11 +110,13 @@ jobs:
             'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
             'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
             'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+            'scripts/prepare_track_a_epoch_002_operator_dataset_lock_evidence.py'
             'scripts/validate_track_a_epoch_002_dataset_lock.py'
             'scripts/validate_track_a_epoch_002_result_ledger.py'
             'scripts/validate_track_a_epoch_002_result_record_semantics.py'
             'tests/test_track_a_epoch_002_dataset_lock.py'
             'tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py'
+            'tests/test_track_a_epoch_002_operator_dataset_lock_evidence_preparer.py'
           )
           mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
           test "${#changed[@]}" -gt 0
@@ -99,11 +134,18 @@ jobs:
             }
           done
 
+      - name: Validate exact operator evidence-admission event
+        if: ${{ steps.mode.outputs.value == 'operator_evidence_admission' }}
+        run: >-
+          python scripts/validate_track_a_epoch_002_dataset_lock.py
+          --operator-evidence-admission-event
+
       - name: Run dataset-lock adversarial tests
         run: >-
           python -m pytest
           tests/test_track_a_epoch_002_dataset_lock.py
           tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py
+          tests/test_track_a_epoch_002_operator_dataset_lock_evidence_preparer.py
           -q
 
       - name: Prove no empirical, decryption, or secret-writer surface
@@ -112,10 +154,12 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          source = Path('scripts/validate_track_a_epoch_002_dataset_lock.py').read_text()
+          paths = (
+              Path('scripts/validate_track_a_epoch_002_dataset_lock.py'),
+              Path('scripts/prepare_track_a_epoch_002_operator_dataset_lock_evidence.py'),
+          )
+          source = '\n'.join(path.read_text() for path in paths)
           forbidden = (
-              '--write',
-              '--execute',
               'PDMAL_TOPOLOGY_BLINDING_KEY',
               'BEGIN PRIVATE KEY',
               'BEGIN ENCRYPTED PRIVATE KEY',
@@ -129,8 +173,14 @@ jobs:
           print('DATASET_LOCK_TOOLING_EXECUTES_EMPIRICAL_WORK=FALSE')
           PY
 
-      - name: Retrieve and validate exact retained evidence for future receipt event
-        if: ${{ steps.mode.outputs.value == 'receipt_event' }}
+      - name: Validate repository-admitted operator receipt event
+        if: ${{ steps.mode.outputs.value == 'operator_receipt_event' }}
+        run: >-
+          python scripts/validate_track_a_epoch_002_dataset_lock.py
+          --operator-receipt-event
+
+      - name: Retrieve and validate exact Actions-retained evidence for legacy receipt event
+        if: ${{ steps.mode.outputs.value == 'actions_receipt_event' }}
         env:
           GH_TOKEN: ${{ github.token }}
           API: https://api.github.com
@@ -324,6 +374,7 @@ jobs:
             --protected-root "$tmp/protected"
 
       - name: Preserve fail-closed scientific boundary
+        if: ${{ always() }}
         run: |
           echo 'SUCCESSOR_COLLECTION_AUTHORIZATION_UNCHANGED = TRUE'
           echo 'UNBLINDING = NOT_AUTHORIZED'

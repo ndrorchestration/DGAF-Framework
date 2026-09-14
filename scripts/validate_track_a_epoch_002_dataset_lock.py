@@ -30,6 +30,10 @@ SEMANTICS_VALIDATOR_PATH = ROOT / "scripts/validate_track_a_epoch_002_result_rec
 
 RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
 RECEIPT_PATH = ROOT / RECEIPT_REL
+OPERATOR_EVIDENCE_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
+OPERATOR_PRE_LOCK_LEDGER_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRE_LOCK_RESULT_LEDGER.json"
+OPERATOR_EVIDENCE_PATH = ROOT / OPERATOR_EVIDENCE_REL
+OPERATOR_PRE_LOCK_LEDGER_PATH = ROOT / OPERATOR_PRE_LOCK_LEDGER_REL
 
 PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 ALGORITHM_ID = "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1"
@@ -183,6 +187,9 @@ def validate_evidence_object(evidence: dict[str, Any]) -> None:
         evidence,
         "dataset-lock evidence",
     )
+    if evidence.get("evidence_execution_class") == "OPERATOR_CODESPACE":
+        if evidence.get("collection_execution_class") != "OPERATOR_CODESPACE":
+            fail("operator evidence provenance requires operator collection provenance")
     public = evidence["public_artifact"]
     protected = evidence["protected_artifact"]
     public_id = public.get("artifact_id")
@@ -244,11 +251,31 @@ def validate_pre_lock_ledger(path: Path, evidence: dict[str, Any]) -> None:
         fail(f"pre-lock result ledger validation failed: {exc}")
     if len(records) != PRE_LOCK_LEDGER_RECORD_COUNT:
         fail("pre-lock result ledger must stop at QC_LEDGER with " f"{PRE_LOCK_LEDGER_RECORD_COUNT} records")
+    first = records[0]
+    start = records[1]
     last = records[-1]
+    if first.get("record_type") != "PRECOLLECTION_GATE_CHECKLIST":
+        fail("pre-lock result ledger must begin with PRECOLLECTION_GATE_CHECKLIST")
+    if first.get("immutable_subject") != {
+        "commit_sha": evidence["frozen_candidate_sha"],
+        "tree_sha": evidence["frozen_candidate_tree_sha"],
+    }:
+        fail("pre-lock gate record candidate/tree binding mismatch")
+    if start.get("record_type") != "COLLECTION_START_RECEIPT":
+        fail("pre-lock result ledger second record must be COLLECTION_START_RECEIPT")
+    if start.get("immutable_subject", {}).get("commit_sha") != evidence["collection_authorization_commit_sha"]:
+        fail("pre-lock collection-start authorization binding mismatch")
     if last.get("record_type") != "QC_LEDGER" or last.get("status") != "PASS":
         fail("pre-lock result ledger must terminate in PASS QC_LEDGER")
     if last.get("record_id") != evidence["qc_ledger_record_id"]:
         fail("dataset-lock evidence qc_ledger_record_id mismatch")
+    if last.get("immutable_subject", {}).get("commit_sha") != evidence["collection_authorization_commit_sha"]:
+        fail("pre-lock QC authorization binding mismatch")
+    if evidence.get("collection_execution_class") == "OPERATOR_CODESPACE":
+        if start.get("immutable_subject", {}).get("sha256") != evidence["collection_execution_receipt_sha256"]:
+            fail("operator collection-start receipt SHA-256 binding mismatch")
+        if last.get("immutable_subject", {}).get("sha256") != evidence["operator_admission_record_sha256"]:
+            fail("operator QC admission-record SHA-256 binding mismatch")
 
 
 def _validate_public_seed_document(
@@ -491,11 +518,41 @@ def expected_receipt(
     }
 
 
-def validate_receipt_object(
-    receipt: dict[str, Any],
+def expected_operator_receipt(
     evidence: dict[str, Any],
     evidence_sha256: str,
-) -> None:
+    *,
+    evidence_admission_commit_sha: str,
+    generated_at_utc: str,
+) -> dict[str, Any]:
+    return {
+        "record_type": "DATASET_LOCK_RECEIPT",
+        "schema_version": 1,
+        "protocol_id": PROTOCOL_ID,
+        "epoch": 2,
+        "record_id": f"E002-DATASET-LOCK-{evidence_sha256[:16].upper()}",
+        "generated_at_utc": generated_at_utc,
+        "producer": {
+            "system": "DGAF_TRACK_A_EPOCH_002_DATASET_LOCK_VALIDATOR",
+            "version_or_commit": evidence["evidence_tooling_commit_sha"],
+        },
+        "immutable_subject": {
+            "commit_sha": evidence_admission_commit_sha,
+            "sha256": evidence_sha256,
+        },
+        "evidence_scope": EVIDENCE_SCOPE,
+        "non_effects": list(FULL_NON_EFFECTS),
+        "status": "PASS",
+        "predecessor_record_ids": [evidence["qc_ledger_record_id"]],
+        "authorization_effect": "REQUIRES_SEPARATE_EXACT_COMMIT",
+        "scientific_state_effect": {
+            "empirical_n_increment": 0,
+            "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+        },
+    }
+
+
+def _validate_receipt_semantics(receipt: dict[str, Any]) -> None:
     validate_against(
         schema_validator(RESULT_SCHEMA_PATH),
         receipt,
@@ -510,6 +567,23 @@ def validate_receipt_object(
         semantics.validate_record_semantics(receipt, policy)
     except SystemExit as exc:
         fail(f"dataset-lock receipt semantic validation failed: {exc}")
+
+
+def _require_receipt_exact(receipt: dict[str, Any], expected: dict[str, Any]) -> None:
+    if receipt != expected:
+        missing = sorted(set(expected) - set(receipt))
+        extra = sorted(set(receipt) - set(expected))
+        mismatched = sorted(key for key in set(expected) & set(receipt) if expected[key] != receipt[key])
+        details = f"missing={missing} extra={extra} mismatched={mismatched}"
+        fail(f"dataset-lock receipt exact contract mismatch: {details}")
+
+
+def validate_receipt_object(
+    receipt: dict[str, Any],
+    evidence: dict[str, Any],
+    evidence_sha256: str,
+) -> None:
+    _validate_receipt_semantics(receipt)
 
     immutable = receipt.get("immutable_subject")
     if not isinstance(immutable, dict):
@@ -527,12 +601,28 @@ def validate_receipt_object(
         evidence_artifact_id=artifact_id,
         generated_at_utc=generated_at,
     )
-    if receipt != expected:
-        missing = sorted(set(expected) - set(receipt))
-        extra = sorted(set(receipt) - set(expected))
-        mismatched = sorted(key for key in set(expected) & set(receipt) if expected[key] != receipt[key])
-        details = f"missing={missing} extra={extra} mismatched={mismatched}"
-        fail(f"dataset-lock receipt exact contract mismatch: {details}")
+    _require_receipt_exact(receipt, expected)
+
+
+def validate_operator_receipt_object(
+    receipt: dict[str, Any],
+    evidence: dict[str, Any],
+    evidence_sha256: str,
+    evidence_admission_commit_sha: str,
+) -> None:
+    _validate_receipt_semantics(receipt)
+    if evidence.get("evidence_execution_class") != "OPERATOR_CODESPACE":
+        fail("operator receipt requires operator evidence provenance")
+    generated_at = receipt.get("generated_at_utc")
+    if not isinstance(generated_at, str):
+        fail("dataset-lock receipt generated_at_utc missing")
+    expected = expected_operator_receipt(
+        evidence,
+        evidence_sha256,
+        evidence_admission_commit_sha=evidence_admission_commit_sha,
+        generated_at_utc=generated_at,
+    )
+    _require_receipt_exact(receipt, expected)
 
 
 def git(*args: str, check: bool = True) -> str:
@@ -571,6 +661,45 @@ def git_is_ancestor(ancestor: str, descendant: str) -> bool:
     return completed.returncode == 0
 
 
+def _head_parent(label: str) -> tuple[str, str]:
+    head = git("rev-parse", "HEAD")
+    parent_fields = git("rev-list", "--parents", "-n", "1", head).split()
+    if len(parent_fields) != 2:
+        fail(f"{label} HEAD must have exactly one parent")
+    return head, parent_fields[1]
+
+
+def _changed_paths(head: str) -> list[str]:
+    return sorted(
+        line
+        for line in git(
+            "diff-tree",
+            "--no-commit-id",
+            "--name-only",
+            "-r",
+            head,
+        ).splitlines()
+        if line
+    )
+
+
+def _single_path_history(path: str) -> list[str]:
+    return [line for line in git("log", "--format=%H", "--", path).splitlines() if line]
+
+
+def _validate_repository_ancestry(evidence: dict[str, Any], descendant: str) -> None:
+    authorization = evidence["collection_authorization_commit_sha"]
+    tooling = evidence["evidence_tooling_commit_sha"]
+    if not git_object_exists(f"{authorization}^{{commit}}"):
+        fail("collection authorization commit is not present in repository history")
+    if not git_is_ancestor(authorization, descendant):
+        fail("collection authorization commit is not an ancestor of the evidence chain")
+    if not git_object_exists(f"{tooling}^{{commit}}"):
+        fail("evidence tooling commit is not present in repository history")
+    if not git_is_ancestor(tooling, descendant):
+        fail("evidence tooling commit is not an ancestor of the evidence chain")
+
+
 def validate_tooling_only() -> None:
     if RECEIPT_PATH.exists():
         fail("tooling mode requires the canonical dataset-lock receipt to remain absent")
@@ -602,6 +731,32 @@ def validate_tooling_only() -> None:
         fail("DATASET_LOCK_PASS authority ceiling drift")
 
 
+def validate_operator_evidence_admission_event() -> None:
+    if RECEIPT_PATH.exists():
+        fail("operator evidence admission must precede the dataset-lock receipt")
+    if not OPERATOR_EVIDENCE_PATH.is_file() or not OPERATOR_PRE_LOCK_LEDGER_PATH.is_file():
+        fail("operator evidence admission requires both canonical evidence files")
+    evidence, _ = validate_evidence_file(OPERATOR_EVIDENCE_PATH)
+    if evidence.get("evidence_execution_class") != "OPERATOR_CODESPACE":
+        fail("operator evidence admission requires evidence_execution_class=OPERATOR_CODESPACE")
+    if evidence.get("collection_execution_class") != "OPERATOR_CODESPACE":
+        fail("operator evidence admission requires collection_execution_class=OPERATOR_CODESPACE")
+    validate_pre_lock_ledger(OPERATOR_PRE_LOCK_LEDGER_PATH, evidence)
+
+    head, parent = _head_parent("operator evidence admission")
+    expected_paths = sorted([OPERATOR_EVIDENCE_REL, OPERATOR_PRE_LOCK_LEDGER_REL])
+    changed = _changed_paths(head)
+    if changed != expected_paths:
+        fail(f"operator evidence admission must change exactly {expected_paths}; got {changed}")
+    for path in expected_paths:
+        if git_object_exists(f"{parent}:{path}"):
+            fail(f"operator evidence path unexpectedly existed at event parent: {path}")
+        history = _single_path_history(path)
+        if history != [head]:
+            fail(f"operator evidence path must have first-and-only history at HEAD: {path}; got {history}")
+    _validate_repository_ancestry(evidence, parent)
+
+
 def validate_receipt_event(
     evidence_path: Path,
     pre_lock_ledger_path: Path,
@@ -622,40 +777,56 @@ def validate_receipt_event(
     receipt = load_object(RECEIPT_PATH, "dataset-lock receipt")
     validate_receipt_object(receipt, evidence, evidence_sha256)
 
-    head = git("rev-parse", "HEAD")
-    parent_fields = git("rev-list", "--parents", "-n", "1", head).split()
-    if len(parent_fields) != 2:
-        fail("dataset-lock receipt HEAD must have exactly one parent")
-    parent = parent_fields[1]
-    changed = sorted(
-        line
-        for line in git(
-            "diff-tree",
-            "--no-commit-id",
-            "--name-only",
-            "-r",
-            head,
-        ).splitlines()
-        if line
-    )
+    head, parent = _head_parent("dataset-lock receipt")
+    changed = _changed_paths(head)
     if changed != [RECEIPT_REL]:
         fail("dataset-lock receipt event must change exactly one file " f"{RECEIPT_REL}; got {changed}")
     if git_object_exists(f"{parent}:{RECEIPT_REL}"):
         fail("dataset-lock receipt unexpectedly existed at event parent")
-    history = [line for line in git("log", "--format=%H", "--", RECEIPT_REL).splitlines() if line]
+    history = _single_path_history(RECEIPT_REL)
     if history != [head]:
         fail(f"dataset-lock receipt must have first-and-only history at HEAD; got {history}")
+    _validate_repository_ancestry(evidence, parent)
 
-    authorization = evidence["collection_authorization_commit_sha"]
-    tooling = evidence["evidence_tooling_commit_sha"]
-    if not git_object_exists(f"{authorization}^{{commit}}"):
-        fail("collection authorization commit is not present in repository history")
-    if not git_is_ancestor(authorization, parent):
-        fail("collection authorization commit is not ancestor of dataset-lock parent")
-    if not git_object_exists(f"{tooling}^{{commit}}"):
-        fail("evidence tooling commit is not present in repository history")
-    if not git_is_ancestor(tooling, parent):
-        fail("evidence tooling commit is not ancestor of dataset-lock parent")
+
+def validate_operator_receipt_event() -> None:
+    if not OPERATOR_EVIDENCE_PATH.is_file() or not OPERATOR_PRE_LOCK_LEDGER_PATH.is_file():
+        fail("operator receipt requires admitted canonical operator evidence")
+    evidence, evidence_sha256 = validate_evidence_file(OPERATOR_EVIDENCE_PATH)
+    if evidence.get("evidence_execution_class") != "OPERATOR_CODESPACE":
+        fail("operator receipt requires operator evidence provenance")
+    if evidence.get("collection_execution_class") != "OPERATOR_CODESPACE":
+        fail("operator receipt requires operator collection provenance")
+    validate_pre_lock_ledger(OPERATOR_PRE_LOCK_LEDGER_PATH, evidence)
+
+    if not RECEIPT_PATH.is_file():
+        fail("canonical dataset-lock receipt missing")
+    head, parent = _head_parent("operator dataset-lock receipt")
+    changed = _changed_paths(head)
+    if changed != [RECEIPT_REL]:
+        fail("operator dataset-lock receipt event must change exactly one file " f"{RECEIPT_REL}; got {changed}")
+    if git_object_exists(f"{parent}:{RECEIPT_REL}"):
+        fail("dataset-lock receipt unexpectedly existed at event parent")
+    receipt_history = _single_path_history(RECEIPT_REL)
+    if receipt_history != [head]:
+        fail(f"dataset-lock receipt must have first-and-only history at HEAD; got {receipt_history}")
+
+    evidence_history = _single_path_history(OPERATOR_EVIDENCE_REL)
+    ledger_history = _single_path_history(OPERATOR_PRE_LOCK_LEDGER_REL)
+    if len(evidence_history) != 1 or evidence_history != ledger_history:
+        fail("operator evidence manifest and pre-lock ledger must share one immutable admission event")
+    evidence_admission_commit = evidence_history[0]
+    if not git_is_ancestor(evidence_admission_commit, parent):
+        fail("operator evidence admission commit is not ancestor of dataset-lock receipt parent")
+
+    receipt = load_object(RECEIPT_PATH, "dataset-lock receipt")
+    validate_operator_receipt_object(
+        receipt,
+        evidence,
+        evidence_sha256,
+        evidence_admission_commit,
+    )
+    _validate_repository_ancestry(evidence, evidence_admission_commit)
 
 
 def main() -> int:
@@ -663,7 +834,9 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--tooling-only", action="store_true")
     mode.add_argument("--evidence-only", action="store_true")
+    mode.add_argument("--operator-evidence-admission-event", action="store_true")
     mode.add_argument("--receipt-event", action="store_true")
+    mode.add_argument("--operator-receipt-event", action="store_true")
     parser.add_argument("--evidence", type=Path)
     parser.add_argument("--pre-lock-ledger", type=Path)
     parser.add_argument("--public-archive", type=Path)
@@ -683,6 +856,14 @@ def main() -> int:
         validate_pre_lock_ledger(args.pre_lock_ledger, evidence)
         print("TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE=PASS_STRUCTURAL_ONLY")
         print("TRACK_A_EPOCH_002_DATASET_LOCK=NOT_ESTABLISHED")
+    elif args.operator_evidence_admission_event:
+        validate_operator_evidence_admission_event()
+        print("TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_EVIDENCE_ADMISSION=PASS_NONAUTHORIZING")
+        print("TRACK_A_EPOCH_002_DATASET_LOCK=NOT_ESTABLISHED")
+    elif args.operator_receipt_event:
+        validate_operator_receipt_event()
+        print("TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT_EVENT=PASS_PENDING_MERGE")
+        print("TRACK_A_EPOCH_002_DATASET_LOCK=PENDING_VALIDATED_MERGE")
     else:
         required = {
             "--evidence": args.evidence,
