@@ -169,9 +169,7 @@ def build_evidence(
             "ciphertext_sha256": protected["ciphertext_sha256"],
             "plaintext_tar_sha256": protected["plaintext_tar_sha256"],
             "custody_certificate_sha256": protected["custody_certificate_sha256"],
-            "custody_certificate_public_key_der_sha256": protected[
-                "custody_certificate_public_key_der_sha256"
-            ],
+            "custody_certificate_public_key_der_sha256": protected["custody_certificate_public_key_der_sha256"],
         },
         "structural_qc": {
             "public_archive_digest_verified": True,
