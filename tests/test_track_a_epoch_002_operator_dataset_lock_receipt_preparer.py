@@ -108,7 +108,7 @@ def test_dry_run_derives_shared_admission_commit_and_hash(
         preparer,
         evidence_sha=expected_sha,
     )
-    captured = {}
+    captured: dict[str, object] = {}
 
     def fake_expected(
         value,
