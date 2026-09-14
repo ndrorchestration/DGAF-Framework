@@ -7,7 +7,7 @@ In plain English: an agent may be able to do something and still be blocked from
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
-> **Successor Track A:** issue #523 open · operator-local custody-v2 recovery **PASS_CURRENT_V2 / SELF-ATTESTED / NONINDEPENDENT** · repository custody admission **NOT ESTABLISHED** · dataset-lock tooling **ACCEPTED (#622)** · unblinding-decision validation tooling **ACCEPTED (#627)** · dataset lock **NOT ESTABLISHED** · replacement empirical collection **NOT AUTHORIZED**  
+> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, and collection authorization **ACCEPTED** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · operator retained-byte admission **PENDING** · dataset lock **NOT ESTABLISHED** · unblinding and primary analysis **NOT AUTHORIZED**  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
@@ -55,7 +55,7 @@ DGAF separates prospective evaluation by workload instead of treating one experi
 | Track | Plain-English purpose | Current boundary |
 |---|---|---|
 | **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
-| **A — Epoch 002 successor** | Replacement prospective topology robustness | Issue #523 governs the successor; operator-local custody-v2 recovery passed as self-attested/non-independent, but repository custody remains NOT ESTABLISHED pending exact artifact admission/validation; dataset-lock and unblinding-decision validation tooling are accepted, but no successor dataset lock or unblinding event exists and empirical collection is not authorized |
+| **A — Epoch 002 successor** | Replacement prospective topology robustness | Custody, freeze, closure, bounded verification classification, and collection authorization are accepted; the operator-executed blinded collection is COMPLETE at 50 paired seed units / 2,250 observations; exact retained-byte admission is PENDING; dataset lock is NOT ESTABLISHED; unblinding and primary analysis are NOT AUTHORIZED |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
@@ -67,56 +67,33 @@ That collection remains valid evidence that the blinded panel was executed and r
 
 ## Successor Track A custody and gate design
 
-Issue #523 controls the replacement path. Epoch 002 uses a new protocol identity, fresh seeds and fresh blinding, and a recoverable solo-custody design without pretending that solo custody is independent custody.
+Issue #523 controls the replacement path. Epoch 002 uses a distinct protocol identity, fresh seeds and blinding, and recoverable solo custody without presenting same-system custody as independent.
 
-The operator-local recovery drill has completed successfully as **`PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT`**. That local PASS does not satisfy repository-level custody. The exact generated public certificate and non-secret schema-v2 receipt still must be recovered/transferred, admitted, and validated from repository contents.
+Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, and separate collection authorization are accepted predecessors. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
 
-Only these two non-secret artifacts from the successful local drill are eligible for repository admission:
+The current frontier is not collection execution. It is **exact retained-byte operator admission**. Accepted PRs #687–#689 provide a dry-run-first path that:
 
-- `track_a_successor_custody_cert.pem`
-- `track_a_successor_solo_custody_receipt.json`
+- validates the retained public and encrypted-protected archive bytes without decryption;
+- preserves `OPERATOR_CODESPACE` provenance without invented GitHub Actions IDs;
+- prepares a bounded 53-record blinded pre-lock ledger;
+- prepares the non-secret dataset-lock evidence manifest;
+- keeps the final dataset-lock receipt as a later separate one-file event.
 
-Private keys, passphrases, encrypted backup copies, blinding secrets, protected plaintext mappings, and other recoverable secret material do not belong in GitHub, Notion, chat, CI inputs, workflow logs, or committed files.
+Tooling acceptance does not claim that the operator step passed. Until the exact retained bytes are processed and the bounded evidence is admitted, preserve:
 
-Repository-side prospective tooling is accepted through:
+- `TRACK_A_EPOCH_002_OPERATOR_PROVENANCE = PENDING_RETAINED_BYTE_ADMISSION`;
+- `TRACK_A_EPOCH_002_DATASET_LOCK = NOT_ESTABLISHED`;
+- `UNBLINDING = NOT_AUTHORIZED`;
+- `PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`;
+- `SCIENTIFIC_N_INCREMENT = 0`;
+- `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
+- `HIGH_ASSURANCE = PRE-FREEZE / NOT AUTHORIZED / N=0`.
 
-- precollection preflight (#612);
-- immutable freeze (#613);
-- final closure (#614);
-- bounded non-independent verification classification (#615);
-- separate human-controlled collection-authorization validation (#616);
-- fail-closed post-collection result-record semantics (#618);
-- content-addressed dataset-lock validation (#622);
-- separate fail-closed human-controlled unblinding-decision validation (#627).
+The remaining ordered sequence is:
 
-These controls **do not themselves create** custody evidence, preflight, freeze, closure, authorization, empirical results, dataset lock, unblinding, materialization, primary-analysis authority, efficacy, independent validation, High-Assurance authority, or scientific N.
+`operator retained-byte admission → PASS structural QC ledger → repository evidence admission → separate dataset-lock receipt → separate human-controlled unblinding decision → controlled local materialization → immutable materialization receipt → separate primary-analysis authorization → locked analysis → interpretation/adjudication`
 
-## Ordered successor lifecycle
-
-The scientific/control sequence is intentionally split into separate transitions:
-
-```text
-exact custody artifact admission
-→ repository custody validation + Completion State Reconciler
-→ precollection preflight
-→ immutable freeze
-→ final closure
-→ bounded verification classification
-→ separate collection authorization
-→ empirical collection
-→ PASS QC
-→ dataset lock
-→ separate human-controlled unblinding decision
-→ controlled local materialization
-→ immutable materialization receipt
-→ separate primary-analysis authorization
-→ locked primary analysis
-→ interpretation/adjudication
-```
-
-The dataset-lock transition is non-authorizing and cannot authorize its own successor. A future PASS unblinding decision is bounded to controlled mapping release/decryption only and does not authorize primary analysis. Materialization remains a separate controlled operation and receipt, followed by a still-separate primary-analysis authorization.
-
-Replacement empirical collection remains **NOT AUTHORIZED** until repository custody is established and the predecessor chain is executed in order.
+No private key, passphrase, blinding secret, protected plaintext mapping, decrypted data, or other recoverable secret material belongs in GitHub, Notion, chat, CI inputs, workflow logs, or committed files.
 
 ## What is established — and what is not
 
