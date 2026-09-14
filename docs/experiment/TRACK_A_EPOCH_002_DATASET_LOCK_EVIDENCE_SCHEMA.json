@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/ndrorchestration/DGAF-Framework/docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json",
   "title": "Track A Epoch 002 content-addressed dataset-lock evidence manifest",
-  "description": "Non-authorizing structural-QC evidence produced only after a future authorized collection. It binds retained public/protected artifacts without unblinding, decrypting protected mappings, aggregating outcomes, or establishing efficacy.",
+  "description": "Non-authorizing structural-QC evidence produced only after an authorized collection. It binds retained public/protected artifacts without unblinding, decrypting protected mappings, aggregating outcomes, or establishing efficacy.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -10,7 +10,6 @@
     "schema_version",
     "protocol_id",
     "epoch",
-    "evidence_workflow_run_id",
     "evidence_tooling_commit_sha",
     "collection_authorization_commit_sha",
     "collection_authorization_blob_sha",
@@ -43,6 +42,7 @@
     "schema_version": {"const": 1},
     "protocol_id": {"const": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"},
     "epoch": {"const": 2},
+    "evidence_execution_class": {"const": "OPERATOR_CODESPACE"},
     "evidence_workflow_run_id": {"type": "integer", "minimum": 1},
     "evidence_tooling_commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "collection_execution_class": {"const": "OPERATOR_CODESPACE"},
@@ -137,6 +137,16 @@
     "canonical_dgaf_efficacy": {"const": "NOT_ESTABLISHED"},
     "dataset_lock_evidence_status": {"const": "STRUCTURAL_QC_PASS_PENDING_REPOSITORY_RECEIPT"}
   },
+  "allOf": [
+    {
+      "if": {"required": ["evidence_execution_class"]},
+      "then": {
+        "required": ["evidence_execution_class"],
+        "not": {"required": ["evidence_workflow_run_id"]}
+      },
+      "else": {"required": ["evidence_workflow_run_id"]}
+    }
+  ],
   "if": {
     "required": ["collection_execution_class"]
   },
