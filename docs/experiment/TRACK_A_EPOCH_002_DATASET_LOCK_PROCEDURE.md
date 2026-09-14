@@ -65,6 +65,30 @@ The operator path is deliberately split into distinct transitions.
    - verify protected ciphertext/certificate commitments without decryption or private-key use;
    - produce the non-secret dataset-lock evidence manifest with `evidence_execution_class = OPERATOR_CODESPACE`.
 
+   After the #687 → #688 → #689 retained-byte sequence has produced all required non-secret outputs, prepare the repository evidence-admission delta in dry-run mode first:
+
+   ```bash
+   python scripts/prepare_track_a_epoch_002_operator_evidence_admission.py \
+     --retention-dir "$HOME/DGAF-Epoch002-Retention"
+   ```
+
+   Require:
+
+   `TRACK_A_EPOCH_002_OPERATOR_EVIDENCE_ADMISSION_PREPARER=PASS_DRY_RUN_NOT_WRITTEN`
+
+   Only after that succeeds, prepare the exact two-file working-tree delta:
+
+   ```bash
+   python scripts/prepare_track_a_epoch_002_operator_evidence_admission.py \
+     --retention-dir "$HOME/DGAF-Epoch002-Retention" --write
+   ```
+
+   Require:
+
+   `TRACK_A_EPOCH_002_OPERATOR_EVIDENCE_ADMISSION_PREPARER=PASS_NONAUTHORIZING_DELTA_PREPARED`
+
+   This helper validates and copies the already-produced non-secret evidence bytes only. It does not stage, commit, push, merge, establish dataset lock, authorize unblinding, or run analysis.
+
 4. **Repository evidence admission — separate non-authorizing event**
    - admit exactly two non-secret files:
      - `docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json`
@@ -80,6 +104,28 @@ The operator path is deliberately split into distinct transitions.
    - for operator provenance, the receipt immutable subject binds the exact repository evidence-admission commit plus exact evidence-manifest SHA-256;
    - no Actions workflow/artifact identity is invented or required;
    - merge only after the complete exact-head repository validation wave is terminal green.
+
+   Only after the exact two-file evidence-admission event has been accepted into protected `main`, prepare the receipt in dry-run mode:
+
+   ```bash
+   python scripts/prepare_track_a_epoch_002_operator_dataset_lock_receipt.py
+   ```
+
+   Require:
+
+   `TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_RECEIPT_PREPARER=PASS_DRY_RUN_NOT_WRITTEN`
+
+   Only after that succeeds, prepare the exact one-file receipt delta:
+
+   ```bash
+   python scripts/prepare_track_a_epoch_002_operator_dataset_lock_receipt.py --write
+   ```
+
+   Require:
+
+   `TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_RECEIPT_PREPARER=PASS_NONAUTHORIZING_DELTA_PREPARED`
+
+   This helper derives the unique accepted evidence-admission commit from Git history, binds the exact admitted evidence SHA-256, constructs and validates the canonical receipt, and writes only the receipt path. It does not stage, commit, push, merge, authorize unblinding, materialize protected mappings, or run primary analysis.
 
 A validated receipt PR means **pending validated merge**, not established lock. The dataset lock becomes repository-established only after the exact one-file receipt event is accepted into protected `main`.
 
