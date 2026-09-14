@@ -175,9 +175,7 @@ def test_write_creates_only_canonical_receipt(
 
     receipt = repo / preparer.dataset_lock.RECEIPT_REL
     assert receipt.is_file()
-    assert git(repo, "status", "--porcelain") == (
-        f"?? {preparer.dataset_lock.RECEIPT_REL}"
-    )
+    assert git(repo, "status", "--porcelain") == (f"?? {preparer.dataset_lock.RECEIPT_REL}")
 
 
 def test_refuses_missing_committed_operator_evidence(
