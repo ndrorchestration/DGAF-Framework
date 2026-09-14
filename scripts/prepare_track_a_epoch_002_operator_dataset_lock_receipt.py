@@ -17,9 +17,7 @@ SCRIPTS = ROOT / "scripts"
 
 
 def fail(message: str) -> NoReturn:
-    raise SystemExit(
-        f"TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_RECEIPT_PREP_FAIL: {message}"
-    )
+    raise SystemExit(f"TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_RECEIPT_PREP_FAIL: {message}")
 
 
 def load_module(path: Path, name: str) -> Any:
@@ -100,11 +98,7 @@ def require_receipt_absent() -> Path:
 def derive_evidence_admission_commit() -> str:
     evidence_history = path_history(dataset_lock.OPERATOR_EVIDENCE_REL)
     ledger_history = path_history(dataset_lock.OPERATOR_PRE_LOCK_LEDGER_REL)
-    if (
-        len(evidence_history) != 1
-        or len(ledger_history) != 1
-        or evidence_history != ledger_history
-    ):
+    if len(evidence_history) != 1 or len(ledger_history) != 1 or evidence_history != ledger_history:
         fail("operator evidence and pre-lock ledger must share one immutable admission event")
     admission_commit = evidence_history[0]
     head = git("rev-parse", "HEAD")
@@ -129,27 +123,17 @@ def derive_evidence_admission_commit() -> str:
     )
     if changed != expected:
         fail(
-            "operator evidence admission commit must change exactly the two canonical "
-            f"evidence files; got {changed}"
+            "operator evidence admission commit must change exactly the two canonical " f"evidence files; got {changed}"
         )
     return admission_commit
 
 
 def utc_now() -> str:
-    return (
-        datetime.now(timezone.utc)
-        .replace(microsecond=0)
-        .isoformat()
-        .replace("+00:00", "Z")
-    )
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def verify_exact_delta() -> None:
-    actual = [
-        line
-        for line in git("status", "--porcelain", "--untracked-files=all").splitlines()
-        if line
-    ]
+    actual = [line for line in git("status", "--porcelain", "--untracked-files=all").splitlines() if line]
     expected = [f"?? {dataset_lock.RECEIPT_REL}"]
     if actual != expected:
         fail(f"repository delta must contain exactly the receipt file; got {actual}")
@@ -190,10 +174,7 @@ def prepare(
     )
 
     if not write:
-        print(
-            "TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_RECEIPT_PREPARER="
-            "PASS_DRY_RUN_NOT_WRITTEN"
-        )
+        print("TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_RECEIPT_PREPARER=" "PASS_DRY_RUN_NOT_WRITTEN")
         print(f"EVIDENCE_ADMISSION_COMMIT={admission_commit}")
         print(f"EVIDENCE_SHA256={evidence_sha256}")
         print(f"RECEIPT_DESTINATION={receipt_path}")
@@ -214,17 +195,12 @@ def prepare(
         receipt_path.unlink(missing_ok=True)
         raise
 
-    print(
-        "TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_RECEIPT_PREPARER="
-        "PASS_NONAUTHORIZING_DELTA_PREPARED"
-    )
+    print("TRACK_A_EPOCH_002_OPERATOR_DATASET_LOCK_RECEIPT_PREPARER=" "PASS_NONAUTHORIZING_DELTA_PREPARED")
     print(f"EVIDENCE_ADMISSION_COMMIT={admission_commit}")
     print(f"EVIDENCE_SHA256={evidence_sha256}")
     print(f"RECEIPT_DESTINATION={receipt_path}")
     print(f"NEXT_GIT_ADD=git add {dataset_lock.RECEIPT_REL}")
-    print(
-        "NEXT_GIT_COMMIT=git commit -m 'establish Track A Epoch 002 dataset-lock receipt'"
-    )
+    print("NEXT_GIT_COMMIT=git commit -m 'establish Track A Epoch 002 dataset-lock receipt'")
     return receipt
 
 
