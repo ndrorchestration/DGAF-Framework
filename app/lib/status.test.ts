@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { GOVERNANCE_STAGES, TRUTH_BOUNDARY } from './governance.ts'
+import { CURRENT_FRONTIER_ID, GOVERNANCE_STAGES, NEXT_TRANSITION, TRUTH_BOUNDARY } from './governance.ts'
 import { agentDisplayName } from './public-translation.ts'
 import { STATUS_META, normalizeRuntimeStatus, statusMeta } from './status.ts'
 
@@ -17,8 +17,10 @@ test('pass and verified remain distinct evidence states', () => {
   assert.notEqual(STATUS_META.pass.label, STATUS_META.verified.label)
 })
 
-test('not authorized and not established remain distinct', () => {
+test('not authorized is a governance lock, not a failure tone', () => {
   assert.equal(STATUS_META.not_authorized.label, 'Not authorized')
+  assert.equal(STATUS_META.not_authorized.tone, 'authority')
+  assert.notEqual(STATUS_META.not_authorized.tone, 'danger')
   assert.equal(STATUS_META.not_established.label, 'Not established')
   assert.notEqual(STATUS_META.not_authorized.description, STATUS_META.not_established.description)
 })
@@ -41,14 +43,32 @@ test('current truth boundary remains fail-closed and non-authorized', () => {
   assert.equal(TRUTH_BOUNDARY.efficacy, 'NOT ESTABLISHED')
 })
 
-test('lifecycle predicates do not inherit readiness from prepared tooling', () => {
+test('preflight is satisfied while immutable freeze is the actionable frontier', () => {
   const custody = GOVERNANCE_STAGES.find(stage => stage.id === 'repository-custody')
+  const preflight = GOVERNANCE_STAGES.find(stage => stage.id === 'precollection-preflight')
   const freeze = GOVERNANCE_STAGES.find(stage => stage.id === 'immutable-freeze')
   const collection = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
-  assert.equal(custody?.predicateState, 'not_established')
+  assert.equal(custody?.predicateState, 'pass')
+  assert.equal(preflight?.predicateState, 'pass')
+  assert.equal(CURRENT_FRONTIER_ID, freeze?.id)
+  assert.notEqual(CURRENT_FRONTIER_ID, preflight?.id)
   assert.equal(freeze?.toolingPrepared, true)
-  assert.notEqual(freeze?.predicateState, 'pass')
+  assert.equal(freeze?.predicateState, 'open')
   assert.equal(collection?.predicateState, 'not_authorized')
+})
+
+test('next action is the canonical non-authorizing immutable freeze manifest', () => {
+  assert.deepEqual(NEXT_TRANSITION.artifacts, [
+    'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json',
+  ])
+  assert.equal(NEXT_TRANSITION.operatorCommand, 'python scripts/prepare_track_a_epoch_002_immutable_freeze.py --write')
+  assert.equal(NEXT_TRANSITION.operatorVerification, 'git diff --name-only')
+})
+
+test('next action preserves the non-authorizing boundary', () => {
+  assert.match(NEXT_TRANSITION.warning, /does not establish final closure/i)
+  assert.match(NEXT_TRANSITION.warning, /authorize successor collection/i)
+  assert.match(NEXT_TRANSITION.warning, /scientific N/i)
 })
 
 test('runtime codenames are translated with public function first', () => {

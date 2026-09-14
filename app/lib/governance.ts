@@ -20,32 +20,37 @@ export interface GovernanceStage {
   toolingNote?: string
 }
 
+export const CURRENT_FRONTIER_ID = 'immutable-freeze' as const
+
 export const GOVERNANCE_STAGES: GovernanceStage[] = [
   {
     id: 'repository-custody',
     label: 'Repository custody acceptance',
     shortLabel: 'Custody',
-    description: 'Admit the exact existing non-secret successor custody certificate and recovery receipt.',
-    predicateState: 'not_established',
-    toolingPrepared: false,
+    description: 'Validate and retain the exact public successor custody certificate and schema-v2 recovery receipt.',
+    predicateState: 'pass',
+    toolingPrepared: true,
+    toolingNote:
+      'The completion reconciler marks real_custody_v2 SATISFIED. Custody remains SAME_SYSTEM_NONINDEPENDENT; independent custody is false and this does not authorize collection.',
   },
   {
     id: 'precollection-preflight',
     label: 'Precollection preflight',
     shortLabel: 'Preflight',
-    description: 'Verify the successor collection prerequisites against accepted predecessor evidence.',
-    predicateState: 'blocked',
+    description: 'Retain the exact non-authorizing successor preflight record against the accepted custody evidence.',
+    predicateState: 'pass',
     toolingPrepared: true,
-    toolingNote: 'Prospective preflight tooling has been repository-validated; the predicate remains predecessor-blocked.',
+    toolingNote:
+      'The canonical Epoch 002 precollection preflight record is retained on accepted main. This satisfies preflight only and does not establish immutable freeze or collection authority.',
   },
   {
     id: 'immutable-freeze',
     label: 'Immutable freeze',
     shortLabel: 'Freeze',
     description: 'Bind the exact experimental candidate immutably after predecessor closure.',
-    predicateState: 'blocked',
+    predicateState: 'open',
     toolingPrepared: true,
-    toolingNote: 'Freeze tooling is prepared; no successor freeze is established.',
+    toolingNote: 'Freeze tooling is prepared; no successor immutable freeze manifest is accepted yet.',
   },
   {
     id: 'final-closure',
@@ -135,11 +140,28 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
 ]
 
 export const NEXT_TRANSITION = {
-  title: 'Admit existing successor custody evidence',
+  title: 'Establish Epoch 002 immutable freeze',
+  headingSummary:
+    'Custody and precollection preflight are satisfied. Immutable freeze is now the next non-authorizing predecessor; prepared downstream tooling does not move the frontier.',
+  evidenceTitle: 'Precollection preflight is accepted.',
+  evidenceStatusLabel: 'PREFLIGHT ACCEPTED',
+  evidence:
+    'Repository custody-v2 remains SATISFIED / SAME_SYSTEM_NONINDEPENDENT, and the canonical Epoch 002 precollection preflight record is retained on accepted main. Independent custody remains false.',
+  blockerTitle: 'The immutable freeze manifest does not yet exist.',
+  blockerStatusLabel: 'ACTIONABLE / NOT ESTABLISHED',
+  blocker:
+    'The canonical Epoch 002 immutable freeze manifest is absent. Freeze tooling is prepared, but immutable freeze is not established until the exact one-file record is admitted and accepted.',
+  actionTitle: 'Prepare only the non-authorizing immutable freeze manifest.',
   summary:
-    'Recover and transfer the exact existing non-secret custody certificate and recovery receipt to their canonical repository paths, then validate those exact bytes.',
-  artifacts: ['track_a_successor_custody_cert.pem', 'track_a_successor_solo_custody_receipt.json'],
-  warning: 'Do not regenerate, substitute, or reconstruct custody evidence.',
+    'From a clean branch based on current accepted main containing the retained preflight record, run the immutable-freeze helper with --write. It writes only the canonical freeze manifest; review that one-file delta before validation and merge.',
+  artifacts: ['docs/experiment/track_a_runs/TRACK_A_EPOCH_002_IMMUTABLE_FREEZE_MANIFEST.json'],
+  operatorBranch: 'clean branch from current accepted main containing merged #651',
+  operatorCommand: 'python scripts/prepare_track_a_epoch_002_immutable_freeze.py --write',
+  operatorVerification: 'git diff --name-only',
+  operatorSafety:
+    'The freeze helper consumes only already-retained repository evidence and protected source identities. It does not create custody secrets, authorize empirical collection, unblind data, run empirical work, or increment scientific N.',
+  warning:
+    'Freeze preparation does not establish final closure, classify verification, authorize successor collection, increment scientific N, authorize unblinding or primary analysis, or establish efficacy.',
 } as const
 
 export interface EpochSummary {
@@ -173,13 +195,14 @@ export const EPOCH_SUMMARIES: EpochSummary[] = [
     title: 'Track A · Epoch 002',
     state: 'not_authorized',
     summary:
-      'Operator-local custody-v2 recovery passed at a self-attested, non-independent level; repository custody is not established and empirical collection remains unauthorized.',
+      'Repository custody-v2 and the non-authorizing precollection preflight are now accepted. Immutable freeze is the next actionable gate; empirical collection remains unauthorized.',
     facts: [
-      'Local custody recovery: PASS_CURRENT_V2 / STRUCTURAL_SELF_ATTESTED_ONLY / NONINDEPENDENT',
-      'Repository custody: NOT ESTABLISHED',
+      'Repository custody-v2: SATISFIED / SAME_SYSTEM_NONINDEPENDENT',
+      'Independent custody: FALSE',
+      'Precollection preflight: ACCEPTED / RETAINED',
+      'Immutable freeze: ACTIONABLE / NOT ESTABLISHED',
       'Empirical collection: NOT AUTHORIZED / NOT EXECUTED',
-      'Dataset lock: NOT ESTABLISHED',
-      'Unblinding and primary analysis: NOT AUTHORIZED',
+      'Scientific N: 0',
     ],
   },
 ]
