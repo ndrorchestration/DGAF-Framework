@@ -18,9 +18,7 @@ LEDGER_NAME = "track_a_epoch_002_pre_lock_result_ledger.json"
 
 
 def fail(message: str) -> NoReturn:
-    raise SystemExit(
-        f"TRACK_A_EPOCH_002_OPERATOR_EVIDENCE_ADMISSION_PREP_FAIL: {message}"
-    )
+    raise SystemExit(f"TRACK_A_EPOCH_002_OPERATOR_EVIDENCE_ADMISSION_PREP_FAIL: {message}")
 
 
 def load_module(path: Path, name: str) -> Any:
@@ -104,11 +102,7 @@ def expected_untracked_status() -> list[str]:
 
 
 def verify_exact_delta() -> None:
-    actual = sorted(
-        line
-        for line in git("status", "--porcelain", "--untracked-files=all").splitlines()
-        if line
-    )
+    actual = sorted(line for line in git("status", "--porcelain", "--untracked-files=all").splitlines() if line)
     expected = expected_untracked_status()
     if actual != expected:
         fail(f"repository delta must contain exactly the two admission files; got {actual}")
@@ -138,10 +132,7 @@ def prepare(
     validate_sources(evidence_source, ledger_source)
 
     if not write:
-        print(
-            "TRACK_A_EPOCH_002_OPERATOR_EVIDENCE_ADMISSION_PREPARER="
-            "PASS_DRY_RUN_NOT_WRITTEN"
-        )
+        print("TRACK_A_EPOCH_002_OPERATOR_EVIDENCE_ADMISSION_PREPARER=" "PASS_DRY_RUN_NOT_WRITTEN")
         print(f"EVIDENCE_SOURCE={evidence_source}")
         print(f"LEDGER_SOURCE={ledger_source}")
         print(f"EVIDENCE_DESTINATION={evidence_dest}")
@@ -163,20 +154,13 @@ def prepare(
             path.unlink(missing_ok=True)
         raise
 
-    print(
-        "TRACK_A_EPOCH_002_OPERATOR_EVIDENCE_ADMISSION_PREPARER="
-        "PASS_NONAUTHORIZING_DELTA_PREPARED"
-    )
+    print("TRACK_A_EPOCH_002_OPERATOR_EVIDENCE_ADMISSION_PREPARER=" "PASS_NONAUTHORIZING_DELTA_PREPARED")
     print(f"EVIDENCE_DESTINATION={evidence_dest}")
     print(f"LEDGER_DESTINATION={ledger_dest}")
     print(
-        "NEXT_GIT_ADD=git add "
-        f"{dataset_lock.OPERATOR_EVIDENCE_REL} "
-        f"{dataset_lock.OPERATOR_PRE_LOCK_LEDGER_REL}"
+        "NEXT_GIT_ADD=git add " f"{dataset_lock.OPERATOR_EVIDENCE_REL} " f"{dataset_lock.OPERATOR_PRE_LOCK_LEDGER_REL}"
     )
-    print(
-        "NEXT_GIT_COMMIT=git commit -m 'admit Track A Epoch 002 operator dataset-lock evidence'"
-    )
+    print("NEXT_GIT_COMMIT=git commit -m 'admit Track A Epoch 002 operator dataset-lock evidence'")
     return evidence_dest, ledger_dest
 
 
