@@ -11,11 +11,13 @@ on:
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json'
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRE_LOCK_RESULT_LEDGER.json'
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+      - 'scripts/prepare_track_a_epoch_002_operator_dataset_lock_evidence.py'
       - 'scripts/validate_track_a_epoch_002_dataset_lock.py'
       - 'scripts/validate_track_a_epoch_002_result_ledger.py'
       - 'scripts/validate_track_a_epoch_002_result_record_semantics.py'
       - 'tests/test_track_a_epoch_002_dataset_lock.py'
       - 'tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py'
+      - 'tests/test_track_a_epoch_002_operator_dataset_lock_evidence_preparer.py'
   workflow_dispatch: {}
 
 permissions:
@@ -108,11 +110,13 @@ jobs:
             'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
             'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
             'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json'
+            'scripts/prepare_track_a_epoch_002_operator_dataset_lock_evidence.py'
             'scripts/validate_track_a_epoch_002_dataset_lock.py'
             'scripts/validate_track_a_epoch_002_result_ledger.py'
             'scripts/validate_track_a_epoch_002_result_record_semantics.py'
             'tests/test_track_a_epoch_002_dataset_lock.py'
             'tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py'
+            'tests/test_track_a_epoch_002_operator_dataset_lock_evidence_preparer.py'
           )
           mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
           test "${#changed[@]}" -gt 0
@@ -141,6 +145,7 @@ jobs:
           python -m pytest
           tests/test_track_a_epoch_002_dataset_lock.py
           tests/test_track_a_epoch_002_dataset_lock_operator_handoff.py
+          tests/test_track_a_epoch_002_operator_dataset_lock_evidence_preparer.py
           -q
 
       - name: Prove no empirical, decryption, or secret-writer surface
@@ -149,10 +154,12 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          source = Path('scripts/validate_track_a_epoch_002_dataset_lock.py').read_text()
+          paths = (
+              Path('scripts/validate_track_a_epoch_002_dataset_lock.py'),
+              Path('scripts/prepare_track_a_epoch_002_operator_dataset_lock_evidence.py'),
+          )
+          source = '\n'.join(path.read_text() for path in paths)
           forbidden = (
-              '--write',
-              '--execute',
               'PDMAL_TOPOLOGY_BLINDING_KEY',
               'BEGIN PRIVATE KEY',
               'BEGIN ENCRYPTED PRIVATE KEY',
