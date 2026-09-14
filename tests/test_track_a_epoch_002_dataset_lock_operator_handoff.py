@@ -128,6 +128,46 @@ def test_operator_receipt_binds_repository_admission_commit_without_actions_ids(
     }
 
 
+def test_operator_receipt_passes_full_schema_and_semantic_validation() -> None:
+    evidence = operator_evidence_fixture()
+    evidence_sha256 = "f" * 64
+    admission_commit = "1" * 40
+    receipt = validator.expected_operator_receipt(
+        evidence,
+        evidence_sha256,
+        evidence_admission_commit_sha=admission_commit,
+        generated_at_utc="2026-09-14T07:00:00Z",
+    )
+
+    validator.validate_operator_receipt_object(
+        receipt,
+        evidence,
+        evidence_sha256,
+        admission_commit,
+    )
+
+
+def test_operator_receipt_rejects_evidence_admission_commit_drift() -> None:
+    evidence = operator_evidence_fixture()
+    evidence_sha256 = "f" * 64
+    admission_commit = "1" * 40
+    receipt = validator.expected_operator_receipt(
+        evidence,
+        evidence_sha256,
+        evidence_admission_commit_sha=admission_commit,
+        generated_at_utc="2026-09-14T07:00:00Z",
+    )
+    receipt["immutable_subject"]["commit_sha"] = "2" * 40
+
+    with pytest.raises(SystemExit, match="exact contract mismatch"):
+        validator.validate_operator_receipt_object(
+            receipt,
+            evidence,
+            evidence_sha256,
+            admission_commit,
+        )
+
+
 def test_operator_repository_evidence_paths_are_separate_from_lock_receipt() -> None:
     assert validator.OPERATOR_EVIDENCE_REL == (
         "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
