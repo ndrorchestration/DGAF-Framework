@@ -122,9 +122,7 @@ def test_write_copies_exact_bytes_and_only_two_files(
 
     assert evidence_dest.read_bytes() == evidence_bytes
     assert ledger_dest.read_bytes() == ledger_bytes
-    assert sorted(
-        git(repo, "status", "--porcelain", "--untracked-files=all").splitlines()
-    ) == sorted(
+    assert sorted(git(repo, "status", "--porcelain", "--untracked-files=all").splitlines()) == sorted(
         [
             f"?? {preparer.dataset_lock.OPERATOR_EVIDENCE_REL}",
             f"?? {preparer.dataset_lock.OPERATOR_PRE_LOCK_LEDGER_REL}",
