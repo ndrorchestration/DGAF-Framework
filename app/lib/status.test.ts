@@ -41,14 +41,30 @@ test('current truth boundary remains fail-closed and non-authorized', () => {
   assert.equal(TRUTH_BOUNDARY.efficacy, 'NOT ESTABLISHED')
 })
 
-test('lifecycle predicates do not inherit readiness from prepared tooling', () => {
+test('lifecycle reflects the post-collection frontier without downstream promotion', () => {
   const custody = GOVERNANCE_STAGES.find(stage => stage.id === 'repository-custody')
   const freeze = GOVERNANCE_STAGES.find(stage => stage.id === 'immutable-freeze')
-  const collection = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
-  assert.equal(custody?.predicateState, 'not_established')
-  assert.equal(freeze?.toolingPrepared, true)
-  assert.notEqual(freeze?.predicateState, 'pass')
-  assert.equal(collection?.predicateState, 'not_authorized')
+  const authorization = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
+  const collection = GOVERNANCE_STAGES.find(stage => stage.id === 'empirical-collection')
+  const admission = GOVERNANCE_STAGES.find(stage => stage.id === 'operator-evidence-admission')
+  const datasetLock = GOVERNANCE_STAGES.find(stage => stage.id === 'dataset-lock')
+  const unblinding = GOVERNANCE_STAGES.find(stage => stage.id === 'unblinding-decision')
+
+  assert.equal(custody?.predicateState, 'pass')
+  assert.equal(freeze?.predicateState, 'pass')
+  assert.equal(authorization?.predicateState, 'pass')
+  assert.equal(collection?.predicateState, 'pass')
+  assert.equal(admission?.predicateState, 'not_established')
+  assert.equal(admission?.toolingPrepared, true)
+  assert.equal(datasetLock?.predicateState, 'not_established')
+  assert.equal(unblinding?.predicateState, 'not_authorized')
+})
+
+test('every lifecycle stage carries an explicit claim boundary', () => {
+  for (const stage of GOVERNANCE_STAGES) {
+    assert.ok(stage.evidenceBoundary.length > 0)
+    assert.ok(stage.doesNotEstablish.length > 0)
+  }
 })
 
 test('runtime codenames are translated with public function first', () => {
