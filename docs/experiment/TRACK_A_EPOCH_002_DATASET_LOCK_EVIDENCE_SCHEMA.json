@@ -12,7 +12,6 @@
     "epoch",
     "evidence_workflow_run_id",
     "evidence_tooling_commit_sha",
-    "collection_workflow_run_id",
     "collection_authorization_commit_sha",
     "collection_authorization_blob_sha",
     "frozen_candidate_sha",
@@ -46,6 +45,9 @@
     "epoch": {"const": 2},
     "evidence_workflow_run_id": {"type": "integer", "minimum": 1},
     "evidence_tooling_commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "collection_execution_class": {"const": "OPERATOR_CODESPACE"},
+    "operator_admission_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "collection_execution_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "collection_workflow_run_id": {"type": "integer", "minimum": 1},
     "collection_authorization_commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "collection_authorization_blob_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
@@ -60,7 +62,7 @@
     "public_artifact": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["artifact_id", "name", "size_bytes", "archive_sha256", "manifest_sha256"],
+      "required": ["name", "size_bytes", "archive_sha256", "manifest_sha256"],
       "properties": {
         "artifact_id": {"type": "integer", "minimum": 1},
         "name": {"const": "track-a-epoch-002-public-blinded"},
@@ -73,7 +75,6 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "artifact_id",
         "name",
         "size_bytes",
         "archive_sha256",
@@ -135,5 +136,35 @@
     "scientific_n_increment": {"const": 0},
     "canonical_dgaf_efficacy": {"const": "NOT_ESTABLISHED"},
     "dataset_lock_evidence_status": {"const": "STRUCTURAL_QC_PASS_PENDING_REPOSITORY_RECEIPT"}
+  },
+  "if": {
+    "required": ["collection_execution_class"]
+  },
+  "then": {
+    "required": [
+      "collection_execution_class",
+      "operator_admission_record_sha256",
+      "collection_execution_receipt_sha256"
+    ],
+    "allOf": [
+      {"not": {"required": ["collection_workflow_run_id"]}},
+      {
+        "properties": {
+          "public_artifact": {"not": {"required": ["artifact_id"]}}
+        }
+      },
+      {
+        "properties": {
+          "protected_artifact": {"not": {"required": ["artifact_id"]}}
+        }
+      }
+    ]
+  },
+  "else": {
+    "required": ["collection_workflow_run_id"],
+    "properties": {
+      "public_artifact": {"required": ["artifact_id"]},
+      "protected_artifact": {"required": ["artifact_id"]}
+    }
   }
 }
