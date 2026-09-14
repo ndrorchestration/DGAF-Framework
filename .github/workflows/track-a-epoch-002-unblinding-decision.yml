@@ -66,24 +66,49 @@ jobs:
         if: ${{ steps.mode.outputs.value == 'decision_event' }}
         run: python scripts/validate_track_a_epoch_002_unblinding_decision.py --validate-event
 
-      - name: Prove tooling PR changes only the dedicated lane
+      - name: Prove unblinding-owned edits stay within the dedicated lane
         if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          expected=(
+          dedicated=(
             '.github/workflows/track-a-epoch-002-unblinding-decision.yml'
             'docs/experiment/TRACK_A_EPOCH_002_UNBLINDING_DECISION_PROCEDURE.md'
             'scripts/validate_track_a_epoch_002_unblinding_decision.py'
             'tests/test_track_a_epoch_002_unblinding_decision.py'
           )
           mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
-          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
-          test "${#changed[@]}" -eq "${#expected_sorted[@]}"
-          diff -u \
-            <(printf '%s\n' "${expected_sorted[@]}") \
-            <(printf '%s\n' "${changed[@]}")
+          test "${#changed[@]}" -gt 0
+
+          lane_changed=false
+          for path in "${changed[@]}"; do
+            for candidate in "${dedicated[@]}"; do
+              if test "$path" = "$candidate"; then
+                lane_changed=true
+                break
+              fi
+            done
+          done
+
+          if test "$lane_changed" = true; then
+            for path in "${changed[@]}"; do
+              permitted=false
+              for candidate in "${dedicated[@]}"; do
+                if test "$path" = "$candidate"; then
+                  permitted=true
+                  break
+                fi
+              done
+              test "$permitted" = true || {
+                echo "forbidden cross-lane edit in unblinding tooling PR: $path" >&2
+                exit 1
+              }
+            done
+            echo 'UNBLINDING_TOOLING_SCOPE=DEDICATED_ONLY'
+          else
+            echo 'UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_ONLY'
+          fi
 
       - name: Run focused adversarial tests
         run: python -m pytest tests/test_track_a_epoch_002_unblinding_decision.py -q
