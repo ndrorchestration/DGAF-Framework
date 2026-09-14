@@ -153,3 +153,35 @@ def test_explicit_archive_path_must_not_be_inside_repository(
 
     with pytest.raises(SystemExit, match="archive must remain outside the repository"):
         preparer.resolve_archives(retention, public_archive, protected_archive)
+
+
+def test_write_mode_validates_before_persisting(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    retention = tmp_path / "retention"
+    retention.mkdir()
+    public_archive = retention / "public.tar"
+    protected_archive = retention / "protected.tar"
+    public_archive.write_bytes(b"public")
+    protected_archive.write_bytes(b"protected")
+    writes: list[Path] = []
+
+    monkeypatch.setattr(preparer, "require_external_retention_dir", lambda path: path)
+    monkeypatch.setattr(
+        preparer,
+        "resolve_archives",
+        lambda retention_dir, public, protected: (public_archive, protected_archive),
+    )
+    monkeypatch.setattr(preparer.admission, "accepted_authorization", lambda: {})
+    monkeypatch.setattr(preparer, "build_execution_receipt", lambda auth: {})
+    monkeypatch.setattr(preparer, "build_admission_record", lambda **kwargs: {})
+    monkeypatch.setattr(preparer.admission, "validate_record", lambda record: None)
+    monkeypatch.setattr(
+        preparer.admission,
+        "validate_evidence_acceptance",
+        lambda *args: (_ for _ in ()).throw(SystemExit("invalid retained evidence")),
+    )
+    monkeypatch.setattr(preparer, "write_new_or_identical", lambda path, content: writes.append(path))
+
+    with pytest.raises(SystemExit, match="invalid retained evidence"):
+        preparer.prepare(retention_dir=retention, write=True)
+
+    assert writes == []
