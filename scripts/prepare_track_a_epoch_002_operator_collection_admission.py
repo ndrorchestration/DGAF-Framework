@@ -52,13 +52,27 @@ def sha256_file(path: Path) -> str:
         fail(f"cannot hash {path}: {exc}")
 
 
-def require_external_retention_dir(path: Path) -> Path:
+def _inside_repository(path: Path) -> bool:
     resolved = path.expanduser().resolve()
     root = ROOT.resolve()
-    if resolved == root or root in resolved.parents:
+    return resolved == root or root in resolved.parents
+
+
+def require_external_retention_dir(path: Path) -> Path:
+    resolved = path.expanduser().resolve()
+    if _inside_repository(resolved):
         fail("retention/output directory must remain outside the repository")
     if not resolved.is_dir():
         fail(f"retention directory missing: {resolved}")
+    return resolved
+
+
+def require_external_archive(path: Path, label: str) -> Path:
+    resolved = path.expanduser().resolve()
+    if _inside_repository(resolved):
+        fail(f"{label} archive must remain outside the repository")
+    if not resolved.is_file():
+        fail(f"{label} archive missing: {resolved}")
     return resolved
 
 
@@ -221,12 +235,8 @@ def resolve_archives(
         discovered_public, discovered_protected = discover_archives(retention_dir)
         public_archive = public_archive or discovered_public
         protected_archive = protected_archive or discovered_protected
-    public_archive = public_archive.expanduser().resolve()
-    protected_archive = protected_archive.expanduser().resolve()
-    if not public_archive.is_file():
-        fail(f"public archive missing: {public_archive}")
-    if not protected_archive.is_file():
-        fail(f"protected archive missing: {protected_archive}")
+    public_archive = require_external_archive(public_archive, "public")
+    protected_archive = require_external_archive(protected_archive, "protected")
     return public_archive, protected_archive
 
 
