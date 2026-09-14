@@ -49,10 +49,7 @@ def sample_admission() -> dict:
 
 
 def sample_seed_digests() -> dict[int, str]:
-    return {
-        seed: f"{index:064x}"[-64:]
-        for index, seed in enumerate(range(20270201, 20270251), start=1)
-    }
+    return {seed: f"{index:064x}"[-64:] for index, seed in enumerate(range(20270201, 20270251), start=1)}
 
 
 def test_builds_exact_53_record_retrospective_non_authorizing_ledger() -> None:
@@ -69,9 +66,7 @@ def test_builds_exact_53_record_retrospective_non_authorizing_ledger() -> None:
     assert len(ledger) == 53
     assert ledger[0]["record_type"] == "PRECOLLECTION_GATE_CHECKLIST"
     assert ledger[1]["record_type"] == "COLLECTION_START_RECEIPT"
-    assert [record["record_type"] for record in ledger[2:52]] == [
-        "PER_SEED_EXECUTION_RECORD"
-    ] * 50
+    assert [record["record_type"] for record in ledger[2:52]] == ["PER_SEED_EXECUTION_RECORD"] * 50
     assert ledger[-1]["record_type"] == "QC_LEDGER"
     assert ledger[-1]["status"] == "PASS"
 
