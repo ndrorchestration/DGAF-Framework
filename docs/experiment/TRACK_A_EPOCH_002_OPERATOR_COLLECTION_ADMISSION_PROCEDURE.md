@@ -57,6 +57,44 @@ Before admission, create a small non-secret receipt containing only execution/pr
 
 The receipt must contain no secret and no endpoint values. Its exact bytes are SHA-256 bound by the operator-admission record.
 
+## Operator-local preparer
+
+Use the repository preparer from the original/operator-controlled Codespace. It operates only on the retained directory outside the repository, identifies the public and protected archives by their exact allowed tar-member sets rather than by guessed filenames, derives all content addresses from the retained bytes, and invokes the hardened admission validator before reporting success.
+
+The default retained directory is `$HOME/DGAF-Epoch002-Retention`.
+
+First run the non-writing validation pass:
+
+```bash
+cd /workspaces/DGAF-Framework
+git switch main
+git pull --ff-only
+python scripts/prepare_track_a_epoch_002_operator_collection_admission.py
+```
+
+A successful dry run reports:
+
+`TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION=PASS_DRY_RUN_NOT_WRITTEN`
+
+Only after that succeeds, write the two non-secret admission artifacts:
+
+```bash
+python scripts/prepare_track_a_epoch_002_operator_collection_admission.py --write
+```
+
+The helper writes only:
+
+- `$HOME/DGAF-Epoch002-Retention/track_a_epoch_002_operator_execution_receipt.json`
+- `$HOME/DGAF-Epoch002-Retention/track_a_epoch_002_operator_collection_admission.json`
+
+If either output already exists with different bytes, the helper fails rather than overwriting it. The retained/output directory is required to remain outside the repository. If multiple archives match either exact member set, auto-discovery fails; in that case provide the intended retained paths explicitly with `--public-archive` and `--protected-archive` rather than deleting or renaming evidence to make discovery pass.
+
+A successful writing pass reports:
+
+`TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION=PASS_NONAUTHORIZING`
+
+Do not commit, push, decrypt, aggregate outcomes, or construct replacement evidence as part of this step.
+
 ## Admission record
 
 The canonical admission record conforms to:
