@@ -192,9 +192,7 @@ def build_admission_record(
             "ciphertext_sha256": sha256_bytes(ciphertext_bytes),
             "plaintext_tar_sha256": plaintext_commitment,
             "custody_certificate_sha256": sha256_bytes(cert_bytes),
-            "custody_certificate_public_key_der_sha256": auth[
-                "custody_certificate_public_key_der_sha256"
-            ],
+            "custody_certificate_public_key_der_sha256": auth["custody_certificate_public_key_der_sha256"],
         },
         "custody_class": auth["custody_class"],
         "independent_custody": False,
