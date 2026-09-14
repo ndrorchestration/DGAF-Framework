@@ -52,7 +52,11 @@ def install_validation_stubs(
         preparer.dataset_lock,
         "validate_evidence_file",
         lambda path: (
-            {"record_type": "TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE"},
+            {
+                "record_type": "TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE",
+                "evidence_execution_class": "OPERATOR_CODESPACE",
+                "collection_execution_class": "OPERATOR_CODESPACE",
+            },
             "a" * 64,
         ),
     )
