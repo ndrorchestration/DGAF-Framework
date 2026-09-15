@@ -16,6 +16,14 @@ def test_deployment_verifier_defaults_to_canonical_production_url() -> None:
     assert CANONICAL_PRODUCTION_URL in script
 
 
+def test_deployment_verifier_supports_vercel_protection_bypass_without_embedding_secret() -> None:
+    script = (REPO_ROOT / "scripts/verify_deployment.sh").read_text(encoding="utf-8")
+
+    assert "VERCEL_AUTOMATION_BYPASS_SECRET" in script
+    assert "x-vercel-protection-bypass" in script
+    assert "${VERCEL_AUTOMATION_BYPASS_SECRET}" in script
+
+
 def test_ecosystem_registry_binds_current_dgaf_vercel_identity() -> None:
     registry = json.loads((REPO_ROOT / "registry/ecosystem_registry.json").read_text(encoding="utf-8"))
     project = next(project for project in registry["projects"] if project["id"] == "dgaf-framework")
