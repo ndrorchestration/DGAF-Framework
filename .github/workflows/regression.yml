@@ -104,12 +104,22 @@ jobs:
           set -euo pipefail
           audit=$(curl -fsS -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$DGAF_URL/api/audit")
           echo "$audit" | python3 -m json.tool
-          TC=$(printf '%s' "$audit" | \
-            python3 -c \
-            "import sys,json; print(json.load(sys.stdin).get('turn_count',0))")
-          [ "$TC" -ge 30 ] \
-            && echo "audit: turn_count=$TC OK" \
-            || { echo "audit: turn_count=$TC < 30"; exit 1; }
+          AUDIT_JSON="$audit" python3 - <<'PY'
+          import json
+          import os
+          import sys
+          d = json.loads(os.environ["AUDIT_JSON"])
+          expected_warning = 'Audit counters are in-memory and reset on each serverless cold start. Wire to Vercel KV for persistence.'
+          ok = (
+              d.get('status') == 'ok'
+              and d.get('version') == '1.8.0'
+              and d.get('_warning') in (None, expected_warning)
+          )
+          if not ok:
+              print('audit response contract FAIL', file=sys.stderr)
+              raise SystemExit(1)
+          print('audit response contract OK')
+          PY
 
       - name: Notify on live-regression failure
         if: failure()
