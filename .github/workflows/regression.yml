@@ -56,8 +56,7 @@ jobs:
     env:
       DGAF_URL: >-
         ${{ inputs.dgaf_url ||
-        vars.DGAF_URL ||
-        'https://dgaf-framework.vercel.app' }}
+        'https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app' }}
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
