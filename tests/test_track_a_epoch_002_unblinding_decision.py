@@ -212,6 +212,10 @@ def test_decision_rejects_secret_like_record_id_drift() -> None:
         )
 
 
-def test_tooling_mode_preserves_absence_and_semantic_boundary() -> None:
+def test_tooling_mode_preserves_absence_and_semantic_boundary(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
     validator = load_validator()
+    monkeypatch.setattr(validator, "DECISION_PATH", tmp_path / "absent-unblinding-decision.json")
     validator.validate_tooling_only()
