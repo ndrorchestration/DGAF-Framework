@@ -10,7 +10,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import subprocess
 import tarfile
 import tempfile
@@ -193,7 +192,7 @@ def materialize(
     require(manifest.get("seed_count") == 50, "manifest seed count mismatch")
     require(manifest.get("expected_observations") == 2250, "manifest observation count mismatch")
     require(
-        evidence["public_artifact"].get("manifest_sha256") == digest_bytes(public_members["track_a_epoch_002_manifest.json"]),
+        evidence["public_artifact"].get("manifest_sha256")\n        == digest_bytes(public_members["track_a_epoch_002_manifest.json"]),
         "manifest digest mismatch",
     )
 
@@ -211,7 +210,7 @@ def materialize(
     expected_ciphertext = (
         f"{digest_bytes(outer['track_a_epoch_002_protected.cms'])}  track_a_epoch_002_protected.cms\n".encode()
     )
-    require(outer["track_a_epoch_002_protected_ciphertext.sha256"] == expected_ciphertext, "ciphertext sidecar mismatch")
+    require(\n        outer["track_a_epoch_002_protected_ciphertext.sha256"] == expected_ciphertext,\n        "ciphertext sidecar mismatch",\n    )
     require(
         protected_evidence.get("ciphertext_sha256") == digest_bytes(outer["track_a_epoch_002_protected.cms"]),
         "ciphertext digest mismatch",
@@ -303,7 +302,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     contracts = load_json(args.contracts_json.read_bytes(), "contracts")
-    materialize(args.public_archive, args.protected_archive, args.custody_private_key, args.output_dir, contracts=contracts)
+    materialize(\n        args.public_archive,\n        args.protected_archive,\n        args.custody_private_key,\n        args.output_dir,\n        contracts=contracts,\n    )
 
 
 if __name__ == "__main__":
