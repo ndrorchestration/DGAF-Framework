@@ -150,13 +150,11 @@ def load_repository_contracts() -> dict[str, Any]:
     )
 
     require(
-        git_text("rev-parse", f"{MATERIALIZER_COMMIT}:{MATERIALIZER_REL}")
-        == MATERIALIZER_BLOB,
+        git_text("rev-parse", f"{MATERIALIZER_COMMIT}:{MATERIALIZER_REL}") == MATERIALIZER_BLOB,
         "accepted materializer blob identity mismatch",
     )
     require(
-        git_text("merge-base", "--is-ancestor", EVIDENCE_TOOLING_COMMIT, MATERIALIZER_COMMIT)
-        == "",
+        git_text("merge-base", "--is-ancestor", EVIDENCE_TOOLING_COMMIT, MATERIALIZER_COMMIT) == "",
         "evidence tooling is not an ancestor of the accepted materializer",
     )
 
@@ -167,18 +165,14 @@ def load_repository_contracts() -> dict[str, Any]:
             DATASET_LOCK_COMMIT,
             DATASET_LOCK_RECEIPT_REL,
         ),
-        "dataset_lock_receipt_canonical_sha256": digest_bytes(
-            canonical(dataset_lock_receipt)
-        ),
+        "dataset_lock_receipt_canonical_sha256": digest_bytes(canonical(dataset_lock_receipt)),
         "dataset_lock_commit_sha": DATASET_LOCK_COMMIT,
         "unblinding_decision": unblinding_decision,
         "unblinding_decision_sha256": validator_bound_digest(
             UNBLINDING_DECISION_COMMIT,
             UNBLINDING_DECISION_REL,
         ),
-        "unblinding_decision_canonical_sha256": digest_bytes(
-            canonical(unblinding_decision)
-        ),
+        "unblinding_decision_canonical_sha256": digest_bytes(canonical(unblinding_decision)),
         "unblinding_decision_commit_sha": UNBLINDING_DECISION_COMMIT,
         "evidence_tooling_commit_sha": EVIDENCE_TOOLING_COMMIT,
         "materializer_commit_sha": MATERIALIZER_COMMIT,
@@ -211,9 +205,7 @@ def build_bundle_documents(
         "dataset_lock_commit_sha": contracts["dataset_lock_commit_sha"],
         "dataset_lock_receipt_sha256": contracts["dataset_lock_receipt_sha256"],
         "unblinding_decision_record_id": unblinding_decision["record_id"],
-        "unblinding_decision_commit_sha": contracts[
-            "unblinding_decision_commit_sha"
-        ],
+        "unblinding_decision_commit_sha": contracts["unblinding_decision_commit_sha"],
         "unblinding_decision_sha256": contracts["unblinding_decision_sha256"],
         "materialized_input_name": OUTPUT_NAME,
         "materialized_input_sha256": materialized_input_sha256,
@@ -268,9 +260,7 @@ def build_bundle_documents(
         "dataset_lock_commit_sha": contracts["dataset_lock_commit_sha"],
         "dataset_lock_receipt_sha256": contracts["dataset_lock_receipt_sha256"],
         "unblinding_decision_record_id": unblinding_decision["record_id"],
-        "unblinding_decision_commit_sha": contracts[
-            "unblinding_decision_commit_sha"
-        ],
+        "unblinding_decision_commit_sha": contracts["unblinding_decision_commit_sha"],
         "unblinding_decision_sha256": contracts["unblinding_decision_sha256"],
         "public_artifact": dict(dataset_lock["public_artifact"]),
         "protected_artifact": dict(dataset_lock["protected_artifact"]),
@@ -296,9 +286,7 @@ def build_bundle_documents(
         "high_assurance_authorized": False,
         "scientific_n_increment": 0,
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
-        "materialization_evidence_status": (
-            "MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"
-        ),
+        "materialization_evidence_status": ("MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"),
     }
     return {
         SIDECAR_NAME: sidecar,
@@ -343,13 +331,9 @@ def prepare_operator_bundle(
     materializer_contracts = {
         "dataset_lock_evidence": contracts["dataset_lock_evidence"],
         "dataset_lock_receipt": contracts["dataset_lock_receipt"],
-        "dataset_lock_receipt_sha256": contracts[
-            "dataset_lock_receipt_canonical_sha256"
-        ],
+        "dataset_lock_receipt_sha256": contracts["dataset_lock_receipt_canonical_sha256"],
         "unblinding_decision": contracts["unblinding_decision"],
-        "unblinding_decision_sha256": contracts[
-            "unblinding_decision_canonical_sha256"
-        ],
+        "unblinding_decision_sha256": contracts["unblinding_decision_canonical_sha256"],
     }
     result = materializer.materialize(
         Path(public_archive),
@@ -382,9 +366,7 @@ def prepare_operator_bundle(
         "materialized_input_sha256": digest_bytes(materialized_input),
         "materialization_manifest_sha256": digest_bytes(bundle[MANIFEST_NAME]),
         "materialization_sidecar_sha256": digest_bytes(bundle[SIDECAR_NAME]),
-        "operator_execution_receipt_sha256": digest_bytes(
-            bundle[EXECUTION_RECEIPT_NAME]
-        ),
+        "operator_execution_receipt_sha256": digest_bytes(bundle[EXECUTION_RECEIPT_NAME]),
         "materialization_evidence_sha256": digest_bytes(bundle[EVIDENCE_NAME]),
     }
 
