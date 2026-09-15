@@ -332,3 +332,48 @@ def test_tooling_source_has_no_empirical_or_secret_writer_surface() -> None:
     assert "PDMAL_TOPOLOGY_BLINDING_KEY" not in source
     assert "PRIVATE_KEY" not in source
     assert "PASSPHRASE" not in source
+
+
+def test_protected_root_accepts_canonical_retained_sidecar_names(tmp_path: Path, monkeypatch) -> None:
+    root = tmp_path / "protected"
+    root.mkdir()
+
+    ciphertext = root / "track_a_epoch_002_protected.cms"
+    ciphertext.write_bytes(b"ciphertext-fixture")
+    ciphertext_digest = hashlib.sha256(ciphertext.read_bytes()).hexdigest()
+    (root / "track_a_epoch_002_protected_ciphertext.sha256").write_text(
+        f"{ciphertext_digest}  {ciphertext.name}\n",
+        encoding="utf-8",
+    )
+
+    certificate = root / "track_a_epoch_002_custody_cert.pem"
+    certificate.write_bytes(b"certificate-fixture")
+    certificate_digest = hashlib.sha256(certificate.read_bytes()).hexdigest()
+    (root / "track_a_epoch_002_custody_cert.sha256").write_text(
+        f"{certificate_digest}  {certificate.name}\n",
+        encoding="utf-8",
+    )
+
+    plaintext_digest = "6" * 64
+    (root / "track_a_epoch_002_protected_plaintext_tar.sha256").write_text(
+        f"{plaintext_digest}  track_a_epoch_002_protected.tar\n",
+        encoding="utf-8",
+    )
+
+    public_key_digest = "8" * 64
+    monkeypatch.setattr(
+        validator,
+        "certificate_public_key_der_sha256",
+        lambda _path: public_key_digest,
+    )
+
+    evidence = {
+        "protected_artifact": {
+            "ciphertext_sha256": ciphertext_digest,
+            "plaintext_tar_sha256": plaintext_digest,
+            "custody_certificate_sha256": certificate_digest,
+            "custody_certificate_public_key_der_sha256": public_key_digest,
+        }
+    }
+
+    validator.validate_protected_root(root, evidence)

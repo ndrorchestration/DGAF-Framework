@@ -458,9 +458,23 @@ def validate_protected_root(root: Path, evidence: dict[str, Any]) -> None:
     protected = evidence["protected_artifact"]
     ciphertext = root / "track_a_epoch_002_protected.cms"
     cert = root / "track_a_epoch_002_custody_cert.pem"
-    if _require_sidecar(ciphertext) != protected["ciphertext_sha256"]:
+    ciphertext_digest = sha256_file(ciphertext)
+    ciphertext_sidecar_digest = _read_sidecar(
+        root / "track_a_epoch_002_protected_ciphertext.sha256",
+        ciphertext.name,
+    )
+    if ciphertext_sidecar_digest != ciphertext_digest:
+        fail("sidecar digest mismatch for track_a_epoch_002_protected.cms")
+    if ciphertext_digest != protected["ciphertext_sha256"]:
         fail("protected ciphertext SHA-256 mismatch")
-    if _require_sidecar(cert) != protected["custody_certificate_sha256"]:
+    cert_digest = sha256_file(cert)
+    cert_sidecar_digest = _read_sidecar(
+        root / "track_a_epoch_002_custody_cert.sha256",
+        cert.name,
+    )
+    if cert_sidecar_digest != cert_digest:
+        fail("sidecar digest mismatch for track_a_epoch_002_custody_cert.pem")
+    if cert_digest != protected["custody_certificate_sha256"]:
         fail("protected custody certificate SHA-256 mismatch")
     plaintext_commitment = _read_sidecar(
         root / "track_a_epoch_002_protected_plaintext_tar.sha256",
