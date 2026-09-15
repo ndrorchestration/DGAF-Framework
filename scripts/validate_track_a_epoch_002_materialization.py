@@ -586,7 +586,11 @@ def validate_receipt_event() -> None:
     if len(evidence_event) != 2:
         fail("materialization evidence admission must have exactly one parent")
     evidence_parent = evidence_event[1]
-    evidence_changed = [line for line in git("diff", "--name-only", evidence_parent, evidence_commit).splitlines() if line]
+    evidence_changed = [
+        line
+        for line in git("diff", "--name-only", evidence_parent, evidence_commit).splitlines()
+        if line
+    ]
     if evidence_changed != [MATERIALIZATION_EVIDENCE_REL]:
         fail("materialization evidence admission changed unexpected paths")
 
