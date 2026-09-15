@@ -102,15 +102,11 @@ def _deployment_errors(project: dict[str, Any]) -> list[str]:
         observed_at = deployment.get("observed_at")
         evidence_ref = deployment.get("evidence_ref")
         if project_identity.startswith("TODO") or not observed_at or not evidence_ref:
-            errors.append(
-                f"{project_id}: deployment[{index}] active runtime claim lacks dated evidence binding"
-            )
+            errors.append(f"{project_id}: deployment[{index}] active runtime claim lacks dated evidence binding")
     return errors
 
 
-def _github_metadata_errors(
-    project: dict[str, Any], observed_repos: dict[str, dict[str, Any]]
-) -> list[str]:
+def _github_metadata_errors(project: dict[str, Any], observed_repos: dict[str, dict[str, Any]]) -> list[str]:
     github = project.get("github")
     if not isinstance(github, dict):
         return []
@@ -227,18 +223,16 @@ def run_audit() -> int:
         for deployment in project.get("deployments", []):
             if not isinstance(deployment, dict):
                 continue
-            if str(deployment.get("url", "")).startswith("TODO") or str(
-                deployment.get("project_id", "")
-            ).startswith("TODO"):
+            if str(deployment.get("url", "")).startswith("TODO") or str(deployment.get("project_id", "")).startswith(
+                "TODO"
+            ):
                 print(
                     f"  UNVERIFIED_IDENTITY  {project.get('id')}  "
                     f"platform={deployment.get('platform')}  url={deployment.get('url')}"
                 )
 
     print("\n=== LIFECYCLE SUMMARY ===")
-    states = Counter(
-        project.get("lifecycle_state") for project in projects if isinstance(project, dict)
-    )
+    states = Counter(project.get("lifecycle_state") for project in projects if isinstance(project, dict))
     for state, count in sorted(states.items(), key=lambda item: str(item[0])):
         print(f"  {state}: {count}")
 
