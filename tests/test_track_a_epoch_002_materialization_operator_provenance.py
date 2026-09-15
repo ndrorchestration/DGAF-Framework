@@ -6,9 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_materialization.py"
-DATASET_LOCK_EVIDENCE_PATH = ROOT / (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
-)
+DATASET_LOCK_EVIDENCE_PATH = ROOT / ("docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json")
 
 
 def load_validator():
@@ -64,9 +62,7 @@ def operator_materialization_evidence_fixture(dataset_lock: dict) -> dict:
         "high_assurance_authorized": False,
         "scientific_n_increment": 0,
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
-        "materialization_evidence_status": (
-            "MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"
-        ),
+        "materialization_evidence_status": ("MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"),
     }
 
 
