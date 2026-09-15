@@ -211,7 +211,10 @@ def materialize(
     expected_ciphertext = (
         f"{digest_bytes(outer['track_a_epoch_002_protected.cms'])}  track_a_epoch_002_protected.cms\n".encode()
     )
-    require(\n        outer["track_a_epoch_002_protected_ciphertext.sha256"] == expected_ciphertext,\n        "ciphertext sidecar mismatch",\n    )
+    require(
+        outer["track_a_epoch_002_protected_ciphertext.sha256"] == expected_ciphertext,
+        "ciphertext sidecar mismatch",
+    )
     require(
         protected_evidence.get("ciphertext_sha256") == digest_bytes(outer["track_a_epoch_002_protected.cms"]),
         "ciphertext digest mismatch",
