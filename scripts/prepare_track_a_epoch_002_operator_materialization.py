@@ -25,7 +25,6 @@ MATERIALIZER_PATH = ROOT / MATERIALIZER_REL
 VALIDATOR_REL = "scripts/validate_track_a_epoch_002_materialization.py"
 VALIDATOR_PATH = ROOT / VALIDATOR_REL
 EVIDENCE_SCHEMA_REL = "docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json"
-EVIDENCE_SCHEMA_PATH = ROOT / EVIDENCE_SCHEMA_REL
 DATASET_LOCK_EVIDENCE_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
 DATASET_LOCK_RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
 UNBLINDING_DECISION_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
@@ -41,7 +40,13 @@ SIDECAR_NAME = OUTPUT_NAME + ".sha256"
 MANIFEST_NAME = "track_a_epoch_002_materialization_manifest.json"
 EXECUTION_RECEIPT_NAME = "track_a_epoch_002_materialization_execution_receipt.json"
 EVIDENCE_NAME = "TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json"
-BUNDLE_NAMES = (OUTPUT_NAME, SIDECAR_NAME, MANIFEST_NAME, EXECUTION_RECEIPT_NAME, EVIDENCE_NAME)
+BUNDLE_NAMES = (
+    OUTPUT_NAME,
+    SIDECAR_NAME,
+    MANIFEST_NAME,
+    EXECUTION_RECEIPT_NAME,
+    EVIDENCE_NAME,
+)
 
 
 def fail(message: str) -> None:
@@ -95,6 +100,16 @@ def require_accepted_file(commit: str, relative_path: str) -> bytes:
     return current
 
 
+def validator_bound_digest(commit: str, relative_path: str) -> str:
+    exact = git_bytes("show", f"{commit}:{relative_path}")
+    validator_view = git_text("show", f"{commit}:{relative_path}").encode("utf-8")
+    require(
+        exact == validator_view,
+        f"{relative_path} has trailing-byte ambiguity with the accepted validator",
+    )
+    return digest_bytes(exact)
+
+
 def load_module(path: Path, name: str) -> Any:
     spec = importlib.util.spec_from_file_location(name, path)
     if spec is None or spec.loader is None:
@@ -105,42 +120,65 @@ def load_module(path: Path, name: str) -> Any:
 
 
 def load_repository_contracts() -> dict[str, Any]:
-    dataset_lock_evidence_bytes = require_accepted_file(DATASET_LOCK_COMMIT, DATASET_LOCK_EVIDENCE_REL)
-    dataset_lock_receipt_bytes = require_accepted_file(DATASET_LOCK_COMMIT, DATASET_LOCK_RECEIPT_REL)
-    unblinding_decision_bytes = require_accepted_file(UNBLINDING_DECISION_COMMIT, UNBLINDING_DECISION_REL)
+    dataset_lock_evidence_bytes = require_accepted_file(
+        DATASET_LOCK_COMMIT,
+        DATASET_LOCK_EVIDENCE_REL,
+    )
+    dataset_lock_receipt_bytes = require_accepted_file(
+        DATASET_LOCK_COMMIT,
+        DATASET_LOCK_RECEIPT_REL,
+    )
+    unblinding_decision_bytes = require_accepted_file(
+        UNBLINDING_DECISION_COMMIT,
+        UNBLINDING_DECISION_REL,
+    )
     require_accepted_file(EVIDENCE_TOOLING_COMMIT, EVIDENCE_SCHEMA_REL)
     require_accepted_file(EVIDENCE_TOOLING_COMMIT, VALIDATOR_REL)
-    materializer_bytes = require_accepted_file(MATERIALIZER_COMMIT, MATERIALIZER_REL)
+    require_accepted_file(MATERIALIZER_COMMIT, MATERIALIZER_REL)
 
-    dataset_lock_evidence = load_json_bytes(dataset_lock_evidence_bytes, "dataset-lock evidence")
-    dataset_lock_receipt = load_json_bytes(dataset_lock_receipt_bytes, "dataset-lock receipt")
-    unblinding_decision = load_json_bytes(unblinding_decision_bytes, "unblinding decision")
+    dataset_lock_evidence = load_json_bytes(
+        dataset_lock_evidence_bytes,
+        "dataset-lock evidence",
+    )
+    dataset_lock_receipt = load_json_bytes(
+        dataset_lock_receipt_bytes,
+        "dataset-lock receipt",
+    )
+    unblinding_decision = load_json_bytes(
+        unblinding_decision_bytes,
+        "unblinding decision",
+    )
 
     require(
-        dataset_lock_receipt_bytes == canonical(dataset_lock_receipt),
-        "dataset-lock receipt is not canonical JSON",
-    )
-    require(
-        unblinding_decision_bytes == canonical(unblinding_decision),
-        "unblinding decision is not canonical JSON",
-    )
-    require(
-        git_text("rev-parse", f"{MATERIALIZER_COMMIT}:{MATERIALIZER_REL}") == MATERIALIZER_BLOB,
+        git_text("rev-parse", f"{MATERIALIZER_COMMIT}:{MATERIALIZER_REL}")
+        == MATERIALIZER_BLOB,
         "accepted materializer blob identity mismatch",
     )
-    require(digest_bytes(materializer_bytes) != "0" * 64, "materializer bytes are invalid")
     require(
-        git_text("merge-base", "--is-ancestor", EVIDENCE_TOOLING_COMMIT, MATERIALIZER_COMMIT) == "",
+        git_text("merge-base", "--is-ancestor", EVIDENCE_TOOLING_COMMIT, MATERIALIZER_COMMIT)
+        == "",
         "evidence tooling is not an ancestor of the accepted materializer",
     )
 
     return {
         "dataset_lock_evidence": dataset_lock_evidence,
         "dataset_lock_receipt": dataset_lock_receipt,
-        "dataset_lock_receipt_sha256": digest_bytes(dataset_lock_receipt_bytes),
+        "dataset_lock_receipt_sha256": validator_bound_digest(
+            DATASET_LOCK_COMMIT,
+            DATASET_LOCK_RECEIPT_REL,
+        ),
+        "dataset_lock_receipt_canonical_sha256": digest_bytes(
+            canonical(dataset_lock_receipt)
+        ),
         "dataset_lock_commit_sha": DATASET_LOCK_COMMIT,
         "unblinding_decision": unblinding_decision,
-        "unblinding_decision_sha256": digest_bytes(unblinding_decision_bytes),
+        "unblinding_decision_sha256": validator_bound_digest(
+            UNBLINDING_DECISION_COMMIT,
+            UNBLINDING_DECISION_REL,
+        ),
+        "unblinding_decision_canonical_sha256": digest_bytes(
+            canonical(unblinding_decision)
+        ),
         "unblinding_decision_commit_sha": UNBLINDING_DECISION_COMMIT,
         "evidence_tooling_commit_sha": EVIDENCE_TOOLING_COMMIT,
         "materializer_commit_sha": MATERIALIZER_COMMIT,
@@ -173,7 +211,9 @@ def build_bundle_documents(
         "dataset_lock_commit_sha": contracts["dataset_lock_commit_sha"],
         "dataset_lock_receipt_sha256": contracts["dataset_lock_receipt_sha256"],
         "unblinding_decision_record_id": unblinding_decision["record_id"],
-        "unblinding_decision_commit_sha": contracts["unblinding_decision_commit_sha"],
+        "unblinding_decision_commit_sha": contracts[
+            "unblinding_decision_commit_sha"
+        ],
         "unblinding_decision_sha256": contracts["unblinding_decision_sha256"],
         "materialized_input_name": OUTPUT_NAME,
         "materialized_input_sha256": materialized_input_sha256,
@@ -228,7 +268,9 @@ def build_bundle_documents(
         "dataset_lock_commit_sha": contracts["dataset_lock_commit_sha"],
         "dataset_lock_receipt_sha256": contracts["dataset_lock_receipt_sha256"],
         "unblinding_decision_record_id": unblinding_decision["record_id"],
-        "unblinding_decision_commit_sha": contracts["unblinding_decision_commit_sha"],
+        "unblinding_decision_commit_sha": contracts[
+            "unblinding_decision_commit_sha"
+        ],
         "unblinding_decision_sha256": contracts["unblinding_decision_sha256"],
         "public_artifact": dict(dataset_lock["public_artifact"]),
         "protected_artifact": dict(dataset_lock["protected_artifact"]),
@@ -254,21 +296,25 @@ def build_bundle_documents(
         "high_assurance_authorized": False,
         "scientific_n_increment": 0,
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
-        "materialization_evidence_status": "MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT",
+        "materialization_evidence_status": (
+            "MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"
+        ),
     }
-    evidence_bytes = canonical(evidence)
     return {
         SIDECAR_NAME: sidecar,
         MANIFEST_NAME: manifest_bytes,
         EXECUTION_RECEIPT_NAME: execution_receipt_bytes,
-        EVIDENCE_NAME: evidence_bytes,
+        EVIDENCE_NAME: canonical(evidence),
     }
 
 
 def preflight_output_paths(output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     existing = [name for name in BUNDLE_NAMES if (output_dir / name).exists()]
-    require(not existing, f"refusing to overwrite existing bundle path: {existing[0] if existing else ''}")
+    require(
+        not existing,
+        f"refusing to overwrite existing bundle path: {existing[0] if existing else ''}",
+    )
 
 
 def write_exclusive(path: Path, payload: bytes) -> None:
@@ -297,9 +343,13 @@ def prepare_operator_bundle(
     materializer_contracts = {
         "dataset_lock_evidence": contracts["dataset_lock_evidence"],
         "dataset_lock_receipt": contracts["dataset_lock_receipt"],
-        "dataset_lock_receipt_sha256": contracts["dataset_lock_receipt_sha256"],
+        "dataset_lock_receipt_sha256": contracts[
+            "dataset_lock_receipt_canonical_sha256"
+        ],
         "unblinding_decision": contracts["unblinding_decision"],
-        "unblinding_decision_sha256": contracts["unblinding_decision_sha256"],
+        "unblinding_decision_sha256": contracts[
+            "unblinding_decision_canonical_sha256"
+        ],
     }
     result = materializer.materialize(
         Path(public_archive),
@@ -321,7 +371,10 @@ def prepare_operator_bundle(
         retention_id=retention_id,
     )
     evidence = load_json_bytes(bundle[EVIDENCE_NAME], "materialization evidence")
-    validator.validate_evidence_against_dataset_lock(evidence, contracts["dataset_lock_evidence"])
+    validator.validate_evidence_against_dataset_lock(
+        evidence,
+        contracts["dataset_lock_evidence"],
+    )
     for name, payload in bundle.items():
         write_exclusive(output_dir / name, payload)
 
@@ -329,7 +382,9 @@ def prepare_operator_bundle(
         "materialized_input_sha256": digest_bytes(materialized_input),
         "materialization_manifest_sha256": digest_bytes(bundle[MANIFEST_NAME]),
         "materialization_sidecar_sha256": digest_bytes(bundle[SIDECAR_NAME]),
-        "operator_execution_receipt_sha256": digest_bytes(bundle[EXECUTION_RECEIPT_NAME]),
+        "operator_execution_receipt_sha256": digest_bytes(
+            bundle[EXECUTION_RECEIPT_NAME]
+        ),
         "materialization_evidence_sha256": digest_bytes(bundle[EVIDENCE_NAME]),
     }
 
