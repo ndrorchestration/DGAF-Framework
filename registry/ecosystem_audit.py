@@ -26,6 +26,26 @@ REGISTRY_PATH = os.environ.get("REGISTRY_PATH", "registry/ecosystem_registry.jso
 
 CURRENT_PERSONAS = frozenset({"Amethyst", "Sentinel", "COLLEEN"})
 PROJECTION_STATUSES = frozenset({"CURRENT", "STALE", "HISTORICAL"})
+RISKY_CURRENT_CLAIMS = (
+    "dgaf-governed",
+    "dgaf governed",
+    "dgaf-certified",
+    "dgaf certified",
+    "security compliance",
+    "s-tier certification",
+    "production-ready",
+    "production ready",
+)
+CLAIM_BOUNDARY_TERMS = (
+    "not established",
+    "does not establish",
+    "does not confer",
+    "not certified",
+    "historical",
+    "legacy",
+    "not authorized",
+    "no inherited",
+)
 
 
 def load_registry(path: str) -> dict[str, Any]:
@@ -62,6 +82,28 @@ def _is_historical(project: dict[str, Any]) -> bool:
     return isinstance(projection, dict) and projection.get("projection_status") == "HISTORICAL"
 
 
+def _project_projection_errors(project: dict[str, Any]) -> list[str]:
+    project_id = str(project.get("id", "<unknown>"))
+    projection = project.get("projection")
+    if not isinstance(projection, dict):
+        return [f"{project_id}: project projection metadata is required"]
+
+    errors: list[str] = []
+    for field in ("projection_status", "projection_checked_at", "canonical_source", "staleness_class"):
+        if field not in projection or projection[field] in (None, ""):
+            errors.append(f"{project_id}: projection.{field} is required")
+
+    status = projection.get("projection_status")
+    if status not in PROJECTION_STATUSES:
+        errors.append(f"{project_id}: invalid project projection_status={status!r}")
+
+    staleness_class = projection.get("staleness_class")
+    if not isinstance(staleness_class, list):
+        errors.append(f"{project_id}: projection.staleness_class must be an array")
+
+    return errors
+
+
 def _current_persona_authority_errors(project: dict[str, Any]) -> list[str]:
     if _is_historical(project):
         return []
@@ -82,6 +124,22 @@ def _current_persona_authority_errors(project: dict[str, Any]) -> list[str]:
             errors.append(f"{project_id}: current persona authority in governance.governance_owner={owner}")
 
     return errors
+
+
+def _claim_scope_errors(project: dict[str, Any]) -> list[str]:
+    if _is_historical(project):
+        return []
+
+    summary = str(project.get("summary", ""))
+    normalized = summary.lower()
+    risky = [claim for claim in RISKY_CURRENT_CLAIMS if claim in normalized]
+    if not risky:
+        return []
+    if any(boundary in normalized for boundary in CLAIM_BOUNDARY_TERMS):
+        return []
+
+    project_id = str(project.get("id", "<unknown>"))
+    return [f"{project_id}: unscoped current claim in summary ({', '.join(sorted(risky))})"]
 
 
 def _deployment_errors(project: dict[str, Any]) -> list[str]:
@@ -167,7 +225,9 @@ def validate_registry_semantics(
         if not isinstance(project, dict):
             errors.append("registry: project entries must be objects")
             continue
+        errors.extend(_project_projection_errors(project))
         errors.extend(_current_persona_authority_errors(project))
+        errors.extend(_claim_scope_errors(project))
         errors.extend(_deployment_errors(project))
         errors.extend(_github_metadata_errors(project, observed))
 
