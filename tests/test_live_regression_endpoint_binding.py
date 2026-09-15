@@ -21,3 +21,10 @@ def test_live_regression_defaults_bind_to_canonical_production_url(relative_path
 
     assert LEGACY_PRODUCTION_URL not in text
     assert CANONICAL_PRODUCTION_URL in text
+
+
+def test_scheduled_live_regression_cannot_be_redirected_by_repository_variable() -> None:
+    workflow = (REPO_ROOT / ".github/workflows/regression.yml").read_text(encoding="utf-8")
+
+    assert "vars.DGAF_URL" not in workflow
+    assert "inputs.dgaf_url" in workflow
