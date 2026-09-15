@@ -1,0 +1,30 @@
+"""Guards for current DGAF Vercel runtime identity metadata."""
+
+import json
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
+CANONICAL_PRODUCTION_URL = "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
+VERCEL_PROJECT_ID = "prj_euzjAnhqct0wayTWWojizanKN3cX"
+
+
+def test_deployment_verifier_defaults_to_canonical_production_url() -> None:
+    script = (REPO_ROOT / "scripts/verify_deployment.sh").read_text(encoding="utf-8")
+
+    assert LEGACY_PRODUCTION_URL not in script
+    assert CANONICAL_PRODUCTION_URL in script
+
+
+def test_ecosystem_registry_binds_current_dgaf_vercel_identity() -> None:
+    registry = json.loads((REPO_ROOT / "registry/ecosystem_registry.json").read_text(encoding="utf-8"))
+    project = next(project for project in registry["projects"] if project["id"] == "dgaf-framework")
+    deployment = next(
+        deployment
+        for deployment in project["deployments"]
+        if deployment["platform"] == "vercel" and deployment["env"] == "prod"
+    )
+
+    assert deployment["project_id"] == VERCEL_PROJECT_ID
+    assert deployment["url"] == CANONICAL_PRODUCTION_URL
+    assert deployment["status"] == "active"
