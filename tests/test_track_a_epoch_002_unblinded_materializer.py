@@ -51,6 +51,8 @@ class MaterializerPresenceTests(unittest.TestCase):
 
 @unittest.skipUnless(MATERIALIZER.is_file(), "Stage-1 materializer not implemented yet")
 class TrackAEpoch002MaterializerTests(unittest.TestCase):
+    module: Any
+
     @classmethod
     def setUpClass(cls) -> None:
         if shutil.which("openssl") is None:
