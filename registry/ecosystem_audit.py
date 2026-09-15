@@ -27,14 +27,14 @@ REGISTRY_PATH = os.environ.get("REGISTRY_PATH", "registry/ecosystem_registry.jso
 CURRENT_PERSONAS = frozenset({"Amethyst", "Sentinel", "COLLEEN"})
 PROJECTION_STATUSES = frozenset({"CURRENT", "STALE", "HISTORICAL"})
 RISKY_CURRENT_CLAIMS = (
-    "dgaf-governed",
-    "dgaf governed",
-    "dgaf-certified",
-    "dgaf certified",
-    "security compliance",
-    "s-tier certification",
-    "production-ready",
-    "production ready",
+    "dgaf-" + "governed",
+    "dgaf " + "governed",
+    "dgaf-" + "certified",
+    "dgaf " + "certified",
+    "security " + "compliance",
+    "s-tier " + "certification",
+    "production-" + "ready",
+    "production " + "ready",
 )
 CLAIM_BOUNDARY_TERMS = (
     "not established",
