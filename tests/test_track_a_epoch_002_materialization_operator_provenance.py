@@ -4,9 +4,26 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_materialization.py"
-DATASET_LOCK_EVIDENCE_PATH = ROOT / ("docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json")
+DATASET_LOCK_EVIDENCE_PATH = ROOT / (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
+)
+
+FULL_NON_EFFECTS = [
+    "DOES_NOT_AUTHORIZE_COLLECTION",
+    "DOES_NOT_AUTHORIZE_UNBLINDING",
+    "DOES_NOT_AUTHORIZE_ANALYSIS",
+    "DOES_NOT_INCREMENT_SCIENTIFIC_N",
+    "DOES_NOT_ESTABLISH_CANONICAL_DGAF_EFFICACY",
+    "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+    "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
+]
+UNBLINDING_NON_EFFECTS = [
+    effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"
+]
 
 
 def load_validator():
@@ -18,6 +35,34 @@ def load_validator():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def unblinding_decision_fixture() -> dict:
+    return {
+        "record_type": "UNBLINDING_DECISION_RECORD",
+        "schema_version": 1,
+        "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
+        "epoch": 2,
+        "record_id": "E002-UNBLINDING-00112233",
+        "generated_at_utc": "2026-09-15T12:00:00Z",
+        "producer": {
+            "system": "DGAF_TRACK_A_EPOCH_002_UNBLINDING_DECISION_VALIDATOR",
+            "version_or_commit": "a" * 40,
+        },
+        "immutable_subject": {
+            "commit_sha": "b" * 40,
+            "sha256": "c" * 64,
+        },
+        "evidence_scope": "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY",
+        "non_effects": list(UNBLINDING_NON_EFFECTS),
+        "status": "PASS",
+        "predecessor_record_ids": ["E002-DATASET-LOCK-A16973BD7AA9E1EB"],
+        "authorization_effect": "BOUNDED_RECORD_ONLY",
+        "scientific_state_effect": {
+            "empirical_n_increment": 0,
+            "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+        },
+    }
 
 
 def operator_materialization_evidence_fixture(dataset_lock: dict) -> dict:
@@ -62,7 +107,9 @@ def operator_materialization_evidence_fixture(dataset_lock: dict) -> dict:
         "high_assurance_authorized": False,
         "scientific_n_increment": 0,
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
-        "materialization_evidence_status": ("MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"),
+        "materialization_evidence_status": (
+            "MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"
+        ),
     }
 
 
@@ -72,3 +119,49 @@ def test_operator_materialization_evidence_matches_accepted_dataset_lock_without
     evidence = operator_materialization_evidence_fixture(dataset_lock)
 
     validator.validate_evidence_against_dataset_lock(evidence, dataset_lock)
+
+
+def test_operator_materialization_evidence_rejects_actions_identity_smuggling() -> None:
+    validator = load_validator()
+    dataset_lock = json.loads(DATASET_LOCK_EVIDENCE_PATH.read_text(encoding="utf-8"))
+    evidence = operator_materialization_evidence_fixture(dataset_lock)
+    evidence["evidence_workflow_run_id"] = 123
+    evidence["evidence_artifact_id"] = 456
+    evidence["public_artifact"]["artifact_id"] = 789
+
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_object(evidence)
+
+
+def test_operator_materialization_evidence_rejects_source_size_drift() -> None:
+    validator = load_validator()
+    dataset_lock = json.loads(DATASET_LOCK_EVIDENCE_PATH.read_text(encoding="utf-8"))
+    evidence = operator_materialization_evidence_fixture(dataset_lock)
+    evidence["public_artifact"]["size_bytes"] += 1
+
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_against_dataset_lock(evidence, dataset_lock)
+
+
+def test_operator_receipt_binds_repository_evidence_commit_and_digest_only() -> None:
+    validator = load_validator()
+    dataset_lock = json.loads(DATASET_LOCK_EVIDENCE_PATH.read_text(encoding="utf-8"))
+    decision = unblinding_decision_fixture()
+    evidence = operator_materialization_evidence_fixture(dataset_lock)
+    parent = "a" * 40
+    evidence_digest = "f" * 64
+
+    receipt = validator.expected_receipt(
+        decision,
+        evidence,
+        unblinding_decision_commit_sha=evidence["unblinding_decision_commit_sha"],
+        unblinding_decision_sha256=evidence["unblinding_decision_sha256"],
+        evidence_sha256=evidence_digest,
+        materialization_parent_sha=parent,
+        generated_at_utc="2026-09-15T13:00:00Z",
+    )
+
+    assert receipt["immutable_subject"] == {
+        "commit_sha": parent,
+        "sha256": evidence_digest,
+    }
