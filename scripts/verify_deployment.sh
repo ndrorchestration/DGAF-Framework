@@ -29,13 +29,13 @@ echo "[2] POST /api/orchestrate"
 ORCH=$(curl "${CURL_ARGS[@]}" "$URL/api/orchestrate" \
   -H "Content-Type: application/json" \
   -d '{ "payload": "Validate schema hash against SSoT.",
+         "turn": 1,
          "confidence": 0.80, "claim": "Schema hash validated.",
          "entropy_score": 0.25, "kappa_score_hint": 0.50 }')
 echo "$ORCH" | python3 -m json.tool
-for field in turn_id dgaf_decision phi_decision effective_confidence seal_hash; do
-  VAL=$(echo "$ORCH" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('$field','MISSING'))")
-  [ "$VAL" != "MISSING" ] && echo "  ✓ $field=$VAL" || echo "  ✗ $field MISSING"
-done
+ORCH_OK=$(echo "$ORCH" | python3 -c "import sys,json,math; d=json.load(sys.stdin); c=d.get('effective_confidence'); ok=(d.get('decision') == 'PASS' and d.get('turn') == 1 and not isinstance(c,bool) and isinstance(c,(int,float)) and math.isfinite(c) and d.get('psi_cubic_check') is True and isinstance(d.get('trace'),list) and d.get('evidence',{}).get('status') == 'PARTIAL'); print(str(ok).lower())")
+[ "$ORCH_OK" = "true" ] || { echo "  ✗ orchestrate response contract FAIL"; exit 1; }
+echo '  ✓ decision="PASS", turn=1, finite effective_confidence, psi_cubic_check=true, trace=array, evidence.status="PARTIAL"'
 echo ""
 
 # 3 — Dashboard
