@@ -213,7 +213,13 @@ def materialize(
         }
     )
     outer = read_exact_tar_members(protected_archive, outer_expected, "protected archive")
-    verify_sidecar(outer, "track_a_epoch_002_custody_cert.pem", "protected archive")
+    expected_certificate = (
+        f"{digest_bytes(outer['track_a_epoch_002_custody_cert.pem'])}  track_a_epoch_002_custody_cert.pem\n".encode()
+    )
+    require(
+        outer["track_a_epoch_002_custody_cert.sha256"] == expected_certificate,
+        "custody certificate sidecar mismatch",
+    )
     expected_ciphertext = (
         f"{digest_bytes(outer['track_a_epoch_002_protected.cms'])}  track_a_epoch_002_protected.cms\n".encode()
     )
