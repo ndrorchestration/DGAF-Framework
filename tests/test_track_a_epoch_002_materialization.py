@@ -10,9 +10,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_materialization.py"
-DATASET_LOCK_EVIDENCE_PATH = ROOT / (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
-)
+DATASET_LOCK_EVIDENCE_PATH = ROOT / ("docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json")
 
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
@@ -23,9 +21,7 @@ FULL_NON_EFFECTS = [
     "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
     "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
 ]
-UNBLINDING_NON_EFFECTS = [
-    effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"
-]
+UNBLINDING_NON_EFFECTS = [effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"]
 
 
 def load_validator():
@@ -112,9 +108,7 @@ def materialization_evidence_fixture() -> dict:
         "high_assurance_authorized": False,
         "scientific_n_increment": 0,
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
-        "materialization_evidence_status": (
-            "MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"
-        ),
+        "materialization_evidence_status": ("MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"),
     }
 
 
