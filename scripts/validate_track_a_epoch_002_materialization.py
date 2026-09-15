@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Fail-closed validator for Track A Epoch 002 materialization evidence and receipt.
 
-This tool validates prospective, non-authorizing materialization evidence and a
-future one-file MATERIALIZATION_RECEIPT event. It does not perform decryption,
-materialize analysis input, authorize or run primary analysis, inspect outcomes,
-or change scientific N.
+This tool validates prospective operator-produced materialization evidence, a
+creation-only repository evidence-admission event, and a later one-file
+MATERIALIZATION_RECEIPT event. It does not perform decryption, materialize
+analysis input, authorize or run primary analysis, inspect outcomes, or change
+scientific N.
 """
 
 from __future__ import annotations
@@ -19,21 +20,42 @@ from typing import Any, NoReturn
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE_SCHEMA_PATH = ROOT / ("docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json")
-DATASET_LOCK_EVIDENCE_SCHEMA_PATH = ROOT / ("docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json")
+EVIDENCE_SCHEMA_PATH = ROOT / (
+    "docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json"
+)
+DATASET_LOCK_EVIDENCE_SCHEMA_PATH = ROOT / (
+    "docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json"
+)
 RESULT_SCHEMA_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
 SEMANTICS_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
 
-DATASET_LOCK_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
-UNBLINDING_DECISION_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
-MATERIALIZATION_RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
-PRIMARY_ANALYSIS_AUTH_REL = (
-    "docs/experiment/track_a_runs/" "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+DATASET_LOCK_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
 )
-LOCKED_ANALYSIS_RESULT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
+DATASET_LOCK_EVIDENCE_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
+)
+UNBLINDING_DECISION_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
+)
+MATERIALIZATION_EVIDENCE_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json"
+)
+MATERIALIZATION_RECEIPT_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
+)
+PRIMARY_ANALYSIS_AUTH_REL = (
+    "docs/experiment/track_a_runs/"
+    "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+)
+LOCKED_ANALYSIS_RESULT_REL = (
+    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
+)
 
 DATASET_LOCK_PATH = ROOT / DATASET_LOCK_REL
+DATASET_LOCK_EVIDENCE_PATH = ROOT / DATASET_LOCK_EVIDENCE_REL
 UNBLINDING_DECISION_PATH = ROOT / UNBLINDING_DECISION_REL
+MATERIALIZATION_EVIDENCE_PATH = ROOT / MATERIALIZATION_EVIDENCE_REL
 MATERIALIZATION_RECEIPT_PATH = ROOT / MATERIALIZATION_RECEIPT_REL
 PRIMARY_ANALYSIS_AUTH_PATH = ROOT / PRIMARY_ANALYSIS_AUTH_REL
 LOCKED_ANALYSIS_RESULT_PATH = ROOT / LOCKED_ANALYSIS_RESULT_REL
@@ -42,7 +64,9 @@ PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 PRODUCER_SYSTEM = "DGAF_TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT_VALIDATOR"
 DATASET_LOCK_SCOPE = "CONTENT_ADDRESSED_EPOCH_002_BLINDED_DATASET_LOCK_BEFORE_UNBLINDING"
 UNBLINDING_SCOPE = "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY"
-MATERIALIZATION_SCOPE = "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
+MATERIALIZATION_SCOPE = (
+    "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
+)
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
     "DOES_NOT_AUTHORIZE_UNBLINDING",
@@ -52,7 +76,9 @@ FULL_NON_EFFECTS = [
     "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
     "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
 ]
-UNBLINDING_NON_EFFECTS = [effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"]
+UNBLINDING_NON_EFFECTS = [
+    effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"
+]
 SCIENTIFIC_NON_EFFECT = {
     "empirical_n_increment": 0,
     "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
@@ -251,10 +277,15 @@ def validate_evidence_object(evidence: dict[str, Any]) -> None:
         evidence,
         "materialization evidence",
     )
-    public_id = evidence["public_artifact"]["artifact_id"]
-    protected_id = evidence["protected_artifact"]["artifact_id"]
-    if public_id == protected_id:
-        fail("public and protected artifact IDs must be distinct")
+    if evidence.get("evidence_execution_class") != "OPERATOR_CODESPACE":
+        fail("materialization evidence execution class must be OPERATOR_CODESPACE")
+    forbidden_actions_fields = ("evidence_workflow_run_id", "evidence_artifact_id")
+    if any(field in evidence for field in forbidden_actions_fields):
+        fail("operator materialization evidence must not contain GitHub Actions IDs")
+    for label in ("public_artifact", "protected_artifact"):
+        if "artifact_id" in evidence[label]:
+            fail(f"operator {label} must not contain a GitHub Actions artifact ID")
+
     digests = {
         evidence["materialized_input_sha256"],
         evidence["materialization_manifest_sha256"],
@@ -287,18 +318,20 @@ def validate_evidence_against_dataset_lock(
         fail("materialization record count drifted from dataset lock")
 
     public_fields = (
-        "artifact_id",
         "name",
+        "size_bytes",
         "archive_sha256",
         "manifest_sha256",
     )
     for field in public_fields:
-        if dataset_lock_evidence["public_artifact"].get(field) != evidence["public_artifact"].get(field):
+        if dataset_lock_evidence["public_artifact"].get(field) != evidence[
+            "public_artifact"
+        ].get(field):
             fail(f"public artifact {field} drifted from dataset-lock evidence")
 
     protected_fields = (
-        "artifact_id",
         "name",
+        "size_bytes",
         "archive_sha256",
         "ciphertext_sha256",
         "plaintext_tar_sha256",
@@ -306,7 +339,9 @@ def validate_evidence_against_dataset_lock(
         "custody_certificate_public_key_der_sha256",
     )
     for field in protected_fields:
-        if dataset_lock_evidence["protected_artifact"].get(field) != evidence["protected_artifact"].get(field):
+        if dataset_lock_evidence["protected_artifact"].get(field) != evidence[
+            "protected_artifact"
+        ].get(field):
             fail(f"protected artifact {field} drifted from dataset-lock evidence")
 
     if dataset_lock_evidence.get("custody_class") != evidence["custody_class"]:
@@ -331,12 +366,8 @@ def validate_evidence_against_dataset_lock(
             fail(f"dataset-lock evidence state drift: {key}")
 
 
-def receipt_record_id(
-    unblinding_decision_commit_sha: str,
-    unblinding_decision_sha256: str,
-    evidence_sha256: str,
-) -> str:
-    payload = f"{unblinding_decision_commit_sha}:" f"{unblinding_decision_sha256}:" f"{evidence_sha256}"
+def receipt_record_id(evidence_admission_commit_sha: str, evidence_sha256: str) -> str:
+    payload = f"{evidence_admission_commit_sha}:{evidence_sha256}"
     digest = hashlib.sha256(payload.encode("ascii")).hexdigest()
     return f"E002-MATERIALIZE-{digest[:16].upper()}"
 
@@ -366,20 +397,14 @@ def expected_receipt(
         "schema_version": 1,
         "protocol_id": PROTOCOL_ID,
         "epoch": 2,
-        "record_id": receipt_record_id(
-            unblinding_decision_commit_sha,
-            unblinding_decision_sha256,
-            evidence_sha256,
-        ),
+        "record_id": receipt_record_id(materialization_parent_sha, evidence_sha256),
         "generated_at_utc": generated_at_utc,
         "producer": {
             "system": PRODUCER_SYSTEM,
             "version_or_commit": materialization_parent_sha,
         },
         "immutable_subject": {
-            "commit_sha": unblinding_decision_commit_sha,
-            "workflow_run_id": evidence["evidence_workflow_run_id"],
-            "artifact_id": evidence["evidence_artifact_id"],
+            "commit_sha": materialization_parent_sha,
             "sha256": evidence_sha256,
         },
         "evidence_scope": MATERIALIZATION_SCOPE,
@@ -453,33 +478,42 @@ def validate_semantic_policy() -> None:
         fail("unblinding predecessor semantic policy drift")
 
 
+def validate_no_analysis_successor() -> None:
+    if PRIMARY_ANALYSIS_AUTH_PATH.exists():
+        fail("primary-analysis authorization must remain absent")
+    if LOCKED_ANALYSIS_RESULT_PATH.exists():
+        fail("locked analysis result must remain absent")
+
+
 def validate_tooling_only() -> None:
     validate_semantic_policy()
     schema_validator(EVIDENCE_SCHEMA_PATH)
     schema_validator(DATASET_LOCK_EVIDENCE_SCHEMA_PATH)
     validate_accepted_predecessor_chain()
+    if MATERIALIZATION_EVIDENCE_PATH.exists():
+        fail("canonical materialization evidence must remain absent in tooling-only mode")
     if MATERIALIZATION_RECEIPT_PATH.exists():
         fail("canonical materialization receipt must remain absent in tooling-only mode")
-    if PRIMARY_ANALYSIS_AUTH_PATH.exists():
-        fail("primary-analysis authorization must remain absent in tooling-only mode")
-    if LOCKED_ANALYSIS_RESULT_PATH.exists():
-        fail("locked analysis result must remain absent in tooling-only mode")
+    validate_no_analysis_successor()
 
 
 def validate_materializer_identity(evidence: dict[str, Any], parent: str) -> None:
     commit_sha = evidence["materializer_commit_sha"]
     if not git_is_ancestor(commit_sha, parent):
-        fail("materializer commit is not an ancestor of the materialization event parent")
+        fail("materializer commit is not an ancestor of the evidence-admission parent")
     spec = f"{commit_sha}:{evidence['materializer_path']}"
     if not git_object_exists(spec):
         fail("materializer source is absent at its declared commit")
     if git("rev-parse", spec) != evidence["materializer_blob_sha"]:
         fail("materializer blob identity mismatch")
+    tooling_commit = evidence["evidence_tooling_commit_sha"]
+    if not git_is_ancestor(tooling_commit, parent):
+        fail("evidence tooling commit is not an ancestor of the evidence-admission parent")
 
 
 def validate_dataset_lock_lineage(evidence: dict[str, Any], parent: str) -> None:
     if not git_object_exists(f"{parent}:{DATASET_LOCK_REL}"):
-        fail("dataset-lock receipt is not established at the materialization parent")
+        fail("dataset-lock receipt is not established at the evidence-admission parent")
     history = path_history(DATASET_LOCK_REL, parent)
     if len(history) != 1:
         fail("dataset-lock receipt must have exactly one immutable history event")
@@ -490,22 +524,69 @@ def validate_dataset_lock_lineage(evidence: dict[str, Any], parent: str) -> None
         fail("materialization evidence dataset-lock receipt digest mismatch")
     dataset_lock = json.loads(dataset_lock_bytes.decode("utf-8"))
     if not isinstance(dataset_lock, dict):
-        fail("dataset-lock receipt at event parent is malformed")
+        fail("dataset-lock receipt at evidence-admission parent is malformed")
     validate_dataset_lock_receipt_object(dataset_lock)
     if dataset_lock.get("record_id") != evidence["dataset_lock_record_id"]:
         fail("materialization evidence dataset-lock record ID mismatch")
 
 
-def validate_event(evidence_path: Path, dataset_lock_evidence_path: Path) -> None:
+def validate_evidence_predecessors(evidence: dict[str, Any], parent: str) -> None:
+    dataset_lock = load_json(DATASET_LOCK_PATH)
+    decision = load_json(UNBLINDING_DECISION_PATH)
+    validate_dataset_lock_receipt_object(dataset_lock)
+    validate_unblinding_decision_object(decision, dataset_lock)
+
+    decision_history = path_history(UNBLINDING_DECISION_REL, parent)
+    if len(decision_history) != 1:
+        fail("unblinding decision must have exactly one immutable history event")
+    decision_commit = decision_history[0]
+    decision_bytes = git("show", f"{parent}:{UNBLINDING_DECISION_REL}").encode("utf-8")
+    decision_digest = sha256_bytes(decision_bytes)
+    if evidence["unblinding_decision_commit_sha"] != decision_commit:
+        fail("materialization evidence does not bind the accepted unblinding event commit")
+    if evidence["unblinding_decision_sha256"] != decision_digest:
+        fail("materialization evidence does not bind the exact unblinding decision bytes")
+    if evidence["unblinding_decision_record_id"] != decision["record_id"]:
+        fail("materialization evidence unblinding decision record ID mismatch")
+
+    validate_dataset_lock_lineage(evidence, parent)
+    validate_materializer_identity(evidence, parent)
+
+
+def validate_evidence_admission() -> None:
     validate_semantic_policy()
+    if not MATERIALIZATION_EVIDENCE_PATH.exists():
+        fail("canonical materialization evidence is absent")
+    if MATERIALIZATION_RECEIPT_PATH.exists():
+        fail("materialization evidence admission must precede receipt creation")
+    validate_no_analysis_successor()
+
+    head = git("rev-parse", "HEAD")
+    parents = git("rev-list", "--parents", "-n", "1", head).split()
+    if len(parents) != 2:
+        fail("materialization evidence admission must have exactly one parent")
+    parent = parents[1]
+    changed = [line for line in git("diff", "--name-only", parent, head).splitlines() if line]
+    if changed != [MATERIALIZATION_EVIDENCE_REL]:
+        fail("materialization evidence admission must change exactly the canonical evidence path")
+    if git_object_exists(f"{parent}:{MATERIALIZATION_EVIDENCE_REL}"):
+        fail("materialization evidence path must be absent at the admission parent")
+    if path_history(MATERIALIZATION_EVIDENCE_REL) != [head]:
+        fail("materialization evidence must have first-and-only history at admission HEAD")
+
+    evidence = load_json(MATERIALIZATION_EVIDENCE_PATH)
+    dataset_lock_evidence = load_json(DATASET_LOCK_EVIDENCE_PATH)
+    validate_evidence_against_dataset_lock(evidence, dataset_lock_evidence)
+    validate_evidence_predecessors(evidence, parent)
+
+
+def validate_receipt_event() -> None:
+    validate_semantic_policy()
+    if not MATERIALIZATION_EVIDENCE_PATH.exists():
+        fail("canonical materialization evidence is absent")
     if not MATERIALIZATION_RECEIPT_PATH.exists():
         fail("canonical materialization receipt is absent")
-    if not DATASET_LOCK_PATH.exists():
-        fail("canonical dataset-lock receipt is absent")
-    if not UNBLINDING_DECISION_PATH.exists():
-        fail("canonical unblinding decision is absent")
-    if PRIMARY_ANALYSIS_AUTH_PATH.exists() or LOCKED_ANALYSIS_RESULT_PATH.exists():
-        fail("materialization event cannot contain or follow analysis authorization/result " "at event HEAD")
+    validate_no_analysis_successor()
 
     head = git("rev-parse", "HEAD")
     parents = git("rev-list", "--parents", "-n", "1", head).split()
@@ -520,58 +601,38 @@ def validate_event(evidence_path: Path, dataset_lock_evidence_path: Path) -> Non
     if path_history(MATERIALIZATION_RECEIPT_REL) != [head]:
         fail("materialization receipt must have first-and-only history at event HEAD")
 
-    decision_history = path_history(UNBLINDING_DECISION_REL, parent)
-    if len(decision_history) != 1:
-        fail("unblinding decision must have exactly one immutable history event")
-    decision_commit = decision_history[0]
-    decision_event = git("rev-list", "--parents", "-n", "1", decision_commit).split()
-    if len(decision_event) != 2:
-        fail("unblinding decision event must have exactly one parent")
-    decision_parent = decision_event[1]
-    decision_changed = [
+    evidence_history = path_history(MATERIALIZATION_EVIDENCE_REL, parent)
+    if len(evidence_history) != 1:
+        fail("materialization evidence must have exactly one immutable history event")
+    evidence_commit = evidence_history[0]
+    if evidence_commit != parent:
+        fail("materialization receipt must directly follow the evidence-admission event")
+    evidence_event = git("rev-list", "--parents", "-n", "1", evidence_commit).split()
+    if len(evidence_event) != 2:
+        fail("materialization evidence admission must have exactly one parent")
+    evidence_parent = evidence_event[1]
+    evidence_changed = [
         line
-        for line in git(
-            "diff",
-            "--name-only",
-            decision_parent,
-            decision_commit,
-        ).splitlines()
+        for line in git("diff", "--name-only", evidence_parent, evidence_commit).splitlines()
         if line
     ]
-    if decision_changed != [UNBLINDING_DECISION_REL]:
-        fail("unblinding decision event changed unexpected paths")
-    parent_decision_blob = git("rev-parse", f"{parent}:{UNBLINDING_DECISION_REL}")
-    head_decision_blob = git("rev-parse", f"HEAD:{UNBLINDING_DECISION_REL}")
-    if parent_decision_blob != head_decision_blob:
-        fail("unblinding decision changed during materialization receipt event")
+    if evidence_changed != [MATERIALIZATION_EVIDENCE_REL]:
+        fail("materialization evidence admission changed unexpected paths")
 
     dataset_lock = load_json(DATASET_LOCK_PATH)
     decision = load_json(UNBLINDING_DECISION_PATH)
+    evidence = load_json(MATERIALIZATION_EVIDENCE_PATH)
+    dataset_lock_evidence = load_json(DATASET_LOCK_EVIDENCE_PATH)
     validate_dataset_lock_receipt_object(dataset_lock)
     validate_unblinding_decision_object(decision, dataset_lock)
-    lock_history = path_history(DATASET_LOCK_REL, parent)
-    if len(lock_history) != 1:
-        fail("dataset-lock receipt must have exactly one immutable history event")
-    if decision["immutable_subject"].get("commit_sha") != lock_history[0]:
-        fail("unblinding decision dataset-lock commit binding mismatch")
-    if decision["immutable_subject"].get("sha256") != sha256_file(DATASET_LOCK_PATH):
-        fail("unblinding decision dataset-lock receipt digest binding mismatch")
-
-    decision_digest = sha256_file(UNBLINDING_DECISION_PATH)
-    evidence = load_json(evidence_path)
-    dataset_lock_evidence = load_json(dataset_lock_evidence_path)
     validate_evidence_against_dataset_lock(evidence, dataset_lock_evidence)
-    if evidence["unblinding_decision_commit_sha"] != decision_commit:
-        fail("materialization evidence does not bind the accepted unblinding event commit")
-    if evidence["unblinding_decision_sha256"] != decision_digest:
-        fail("materialization evidence does not bind the exact unblinding decision bytes")
-    if evidence["unblinding_decision_record_id"] != decision["record_id"]:
-        fail("materialization evidence unblinding decision record ID mismatch")
+    validate_evidence_predecessors(evidence, evidence_parent)
 
-    validate_dataset_lock_lineage(evidence, parent)
-    validate_materializer_identity(evidence, parent)
-
-    evidence_digest = sha256_file(evidence_path)
+    decision_history = path_history(UNBLINDING_DECISION_REL, evidence_parent)
+    decision_commit = decision_history[0]
+    decision_bytes = git("show", f"{evidence_parent}:{UNBLINDING_DECISION_REL}").encode("utf-8")
+    decision_digest = sha256_bytes(decision_bytes)
+    evidence_digest = sha256_file(MATERIALIZATION_EVIDENCE_PATH)
     receipt = load_json(MATERIALIZATION_RECEIPT_PATH)
     validate_receipt_object(
         receipt,
@@ -588,17 +649,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--tooling-only", action="store_true")
-    mode.add_argument("--validate-event", action="store_true")
-    parser.add_argument("--evidence", type=Path)
-    parser.add_argument("--dataset-lock-evidence", type=Path)
+    mode.add_argument("--validate-evidence-admission", action="store_true")
+    mode.add_argument("--validate-receipt-event", action="store_true")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     if args.tooling_only:
-        if args.evidence is not None or args.dataset_lock_evidence is not None:
-            fail("tooling-only mode does not accept materialization or dataset-lock evidence")
         validate_tooling_only()
         print("TRACK_A_EPOCH_002_MATERIALIZATION_TOOLING=PASS_ABSENT")
         print("DATASET_LOCK=ESTABLISHED")
@@ -608,11 +666,15 @@ def main() -> None:
         print("SCIENTIFIC_N_INCREMENT=0")
         print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")
         return
-    if args.evidence is None:
-        fail("--validate-event requires --evidence")
-    if args.dataset_lock_evidence is None:
-        fail("--validate-event requires --dataset-lock-evidence")
-    validate_event(args.evidence, args.dataset_lock_evidence)
+    if args.validate_evidence_admission:
+        validate_evidence_admission()
+        print("TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE=PASS_NONAUTHORIZING")
+        print("MATERIALIZATION_RECEIPT=NOT_ESTABLISHED")
+        print("PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN")
+        print("SCIENTIFIC_N_INCREMENT=0")
+        print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")
+        return
+    validate_receipt_event()
     print("TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT=PASS_NONAUTHORIZING")
     print("PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN")
     print("SCIENTIFIC_N_INCREMENT=0")
