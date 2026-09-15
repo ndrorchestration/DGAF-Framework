@@ -24,6 +24,21 @@ def test_deployment_verifier_supports_vercel_protection_bypass_without_embedding
     assert "${VERCEL_AUTOMATION_BYPASS_SECRET}" in script
 
 
+def test_deployment_verifier_checks_current_orchestrate_response_contract() -> None:
+    script = (REPO_ROOT / "scripts/verify_deployment.sh").read_text(encoding="utf-8")
+
+    for legacy_field in ("turn_id", "dgaf_decision", "phi_decision", "seal_hash"):
+        assert legacy_field not in script
+
+    assert '"turn": 1' in script
+    assert "get('decision'" in script
+    assert "get('turn'" in script
+    assert "get('psi_cubic_check'" in script
+    assert "get('evidence',{})" in script
+    assert '"PASS"' in script
+    assert '"PARTIAL"' in script
+
+
 def test_ecosystem_registry_binds_current_dgaf_vercel_identity() -> None:
     registry = json.loads((REPO_ROOT / "registry/ecosystem_registry.json").read_text(encoding="utf-8"))
     project = next(project for project in registry["projects"] if project["id"] == "dgaf-framework")
