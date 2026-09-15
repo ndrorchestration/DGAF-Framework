@@ -3,6 +3,7 @@
 This utility verifies the locked public/protected artifacts and the bounded
 unblinding authorization before decrypting protected topology mappings with an
 operator-supplied custody key.  It does not perform primary analysis.
+PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN
 """
 
 from __future__ import annotations
@@ -43,7 +44,7 @@ def read_exact_tar_members(path: Path, expected: frozenset[str], label: str) -> 
         with tarfile.open(path, "r:*") as archive:
             members = archive.getmembers()
             actual = {member.name for member in members}
-            if actual != set(expected):
+            if actual != set(expected) or len(members) != len(actual):
                 fail(f"{label} member set does not match contract")
             output: dict[str, bytes] = {}
             for member in members:
@@ -303,7 +304,11 @@ def materialize(
     output_dir.mkdir(parents=True, exist_ok=True)
     destination = output_dir / OUTPUT_NAME
     payload = canonical(output)
-    destination.write_bytes(payload)
+    try:
+        with destination.open("xb") as output_file:
+            output_file.write(payload)
+    except FileExistsError:
+        fail("output already exists; refusing to overwrite")
     return {"output_path": str(destination), "materialized_input_sha256": digest_bytes(payload)}
 
 
