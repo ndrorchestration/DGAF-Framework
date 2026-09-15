@@ -1,10 +1,10 @@
 # Track A Epoch 002 materialization-receipt procedure
 
-Status: **ACTIVE PROCEDURE · DATASET LOCK ESTABLISHED · BOUNDED UNBLINDING AUTHORIZED · MATERIALIZATION TOOLING ACCEPTED · REAL MATERIALIZATION NOT ESTABLISHED · PRIMARY ANALYSIS NOT AUTHORIZED / NOT RUN · N=0**
+Status: **CORRECTIVE TOOLING · DATASET LOCK ESTABLISHED · BOUNDED UNBLINDING AUTHORIZED · MATERIALIZATION NOT ESTABLISHED · PRIMARY ANALYSIS NOT AUTHORIZED / NOT RUN · N=0**
 
-Controller issue #632 is **COMPLETED** for prospective materialization-receipt/tooling scope. Accepted PR #703 established the first current-lineage validator; later accepted corrections removed GitHub Actions workflow/artifact identity assumptions in favor of the actual `OPERATOR_CODESPACE` and content-addressed evidence model. Accepted PR #713 established the controlled Stage-1 materializer, and accepted PR #715 established the non-secret Stage-2 operator materialization bundle wrapper. This procedure describes the resulting accepted model; none of those tooling events establishes real materialization.
+Controller: issue #632. Accepted tooling PR #703 established the first current-lineage materialization validator, but post-acceptance review found that its future real-event path still assumed GitHub Actions workflow/artifact IDs. Accepted Epoch 002 custody and dataset-lock evidence are instead `OPERATOR_CODESPACE` and content-addressed. This procedure defines the corrected model.
 
-The accepted dataset-lock event is `e7ba2fe6fc6b3587957c59231da81ae107cacab2`. The accepted bounded unblinding event is `bf6279b9989f211e324ff3e9012788bed95e5c84`. The accepted Stage-1 materializer commit is `ebed3db8b5469e8ba8e18aed752aee7baccf05fc`, and the accepted Stage-2 operator bundle is on protected `main` through PR #715. Historical Epoch 001 materialization code is a pattern source only; no Epoch 001 identity, artifact, key, custody assumption, result, or authorization transfers into Epoch 002.
+The accepted dataset-lock event is `e7ba2fe6fc6b3587957c59231da81ae107cacab2`. The accepted bounded unblinding event is `bf6279b9989f211e324ff3e9012788bed95e5c84`. Historical Epoch 001 materialization code is a pattern source only; no Epoch 001 identity, artifact, key, custody assumption, result, or authorization transfers into Epoch 002.
 
 ## Purpose
 
@@ -18,7 +18,7 @@ None of these steps authorizes primary analysis. A future accepted `MATERIALIZAT
 
 ## Secret and execution boundary
 
-Real Epoch 002 decryption/materialization must execute under `OPERATOR_CODESPACE` or an equivalently operator-controlled environment outside GitHub Actions. The custody private key or passphrase must never enter repository contents, pull-request text, issue comments, CI variables, Actions artifacts, Notion, or ChatGPT/plugin messages.
+Real Epoch 002 decryption/materialization must execute under `OPERATOR_CODESPACE` or an equivalently operator-controlled environment outside GitHub Actions. The custody private key or passphrase must never enter repository contents, pull-request text, issue comments, CI variables, Actions artifacts, or ChatGPT/plugin messages.
 
 The repository validator and CI lane are validation-only. They do not:
 
@@ -68,38 +68,17 @@ GitHub Actions workflow IDs and artifact IDs are not valid substitutes for these
 
 The validator cross-checks public/protected names, byte sizes, and digests against the already accepted canonical dataset-lock evidence rather than trusting repeated values in the materialization evidence.
 
-## Stage 1 — accepted materializer implementation
+## Stage 1 — separately accept the materializer implementation
 
-The deterministic Epoch 002 materializer implementation is accepted at:
+Before any real decryption/materialization, the deterministic Epoch 002 materializer implementation must be reviewed and accepted separately at:
 
 `scripts/materialize_track_a_epoch_002_unblinded_input.py`
 
-Accepted implementation commit: `ebed3db8b5469e8ba8e18aed752aee7baccf05fc` (PR #713).
-
-The implementation validates exact archive membership, rejects duplicate/unexpected/link/traversal members, fails closed on wrong-key or source drift, creates output exclusively rather than overwriting existing files, and preserves the source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
-
-Acceptance of the implementation did not execute it and did not establish materialization.
+That implementation may follow the structural lessons of the historical Epoch 001 materializer, but it must use Epoch 002 identities and must preserve the current custody boundary. Acceptance of the implementation does not execute it and does not establish materialization.
 
 ## Stage 2 — controlled operator materialization
 
-The accepted Stage-2 wrapper is:
-
-`scripts/prepare_track_a_epoch_002_operator_materialization.py`
-
-It invokes the accepted Stage-1 materializer, validates the resulting evidence against accepted repository contracts, and atomically publishes exactly five bundle members only after validation succeeds.
-
-Real execution is intentionally operator-only. From the exact accepted repository lineage in the operator-controlled environment, use local paths without copying secret material into chat, GitHub, Notion, CI, or logs:
-
-```bash
-python scripts/prepare_track_a_epoch_002_operator_materialization.py \
-  --public-archive /secure/local/path/to/public-archive \
-  --protected-archive /secure/local/path/to/protected-archive \
-  --custody-private-key /secure/local/path/to/custody-private-key \
-  --output-dir /secure/local/path/to/new-materialization-bundle \
-  --retention-id '<non-secret durable retention identifier>'
-```
-
-The selected output directory must be creation-only for the five governed bundle members. Do not use a repository path for secret-bearing source material or for protected plaintext.
+Only after Stage 1 is accepted may the operator use the accepted bounded unblinding authority to perform controlled local decryption/materialization.
 
 The execution must:
 
@@ -111,14 +90,6 @@ The execution must:
 6. produce a non-secret materialization evidence JSON conforming to the schema;
 7. retain the materialized output and execution evidence under an explicitly identified durable operator-controlled location.
 
-A successful wrapper run produces these five members:
-
-- `track_a_epoch_002_unblinded_analysis_input.json`;
-- `track_a_epoch_002_unblinded_analysis_input.json.sha256`;
-- `track_a_epoch_002_materialization_manifest.json`;
-- `track_a_epoch_002_materialization_execution_receipt.json`;
-- `TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json`.
-
 No repository state transition is established merely because the operator execution succeeds.
 
 ## Stage 3 — creation-only repository evidence admission
@@ -126,8 +97,6 @@ No repository state transition is established merely because the operator execut
 Canonical future evidence path:
 
 `docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json`
-
-Only the canonical **non-secret** materialization evidence JSON is admissible to the repository event. The materialized empirical input, custody key/passphrase, decrypted protected mapping, and other secret or protected working material remain outside the repository.
 
 The admission event must satisfy all of the following:
 
@@ -205,7 +174,7 @@ The dedicated workflow resolves exactly one state from repository contents:
 
 There is no Actions-artifact retrieval mode. All real evidence required for repository validation is content-addressed and admitted through the canonical repository evidence record.
 
-The current accepted repository state remains `tooling_only`: Stage-1 and Stage-2 tooling are accepted, while canonical materialization evidence and the materialization receipt remain absent. A future real evidence-admission event must be creation-only and separately reviewed; it must not be bundled into a documentation or tooling PR.
+For the current corrective #632 tooling PR, the exact changed-file scope is limited to the workflow, evidence schema, procedure, validator, original adversarial test suite, and focused operator-provenance test suite. No materializer or empirical artifact is added.
 
 ## Current boundary
 
@@ -222,8 +191,6 @@ Until a separately accepted evidence-admission event and later receipt event exi
 `SCIENTIFIC_N_INCREMENT = 0`
 
 `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
-
-`INDEPENDENT_VALIDATION = NOT_ESTABLISHED`
 
 Broader High-Assurance governance remains:
 
