@@ -1,0 +1,45 @@
+[
+  {
+    "id": "FIG-001",
+    "title": "Research Program Architecture Map",
+    "priority": "P0",
+    "epistemic_class": "DESIGN",
+    "source_bindings": ["docs/CURRENT_STATE.md"],
+    "output": "docs/research_figures/generated/fig001_research_program_architecture.svg"
+  },
+  {
+    "id": "FIG-002",
+    "title": "Five-Topology Structural Comparison",
+    "priority": "P0",
+    "epistemic_class": "STRUCTURAL",
+    "source_bindings": [
+      "experiments/pdmal_topology/graph_harness.py",
+      "experiments/pdmal_topology/seeds.py"
+    ],
+    "output": "docs/research_figures/generated/fig002_topology_comparison.svg"
+  },
+  {
+    "id": "FIG-003",
+    "title": "Track A Epoch 002 Design Matrix",
+    "priority": "P0",
+    "epistemic_class": "DESIGN",
+    "source_bindings": ["docs/CURRENT_STATE.md"],
+    "output": "docs/research_figures/generated/fig003_epoch002_design_matrix.svg"
+  },
+  {
+    "id": "FIG-004",
+    "title": "Governance Transition State Machine",
+    "priority": "P0",
+    "epistemic_class": "GOVERNANCE",
+    "source_bindings": ["docs/CURRENT_STATE.md"],
+    "output": "docs/research_figures/generated/fig004_governance_state_machine.svg"
+  },
+  {
+    "id": "FIG-005",
+    "title": "Evidence and Provenance DAG",
+    "priority": "P0",
+    "epistemic_class": "PROVENANCE",
+    "source_bindings": ["docs/CURRENT_STATE.md"],
+    "output": "docs/research_figures/generated/fig005_evidence_provenance_dag.svg"
+  }
+]
