@@ -35,9 +35,9 @@ def test_scheduled_live_regression_cannot_be_redirected_by_repository_variable()
 
 def test_live_audit_check_does_not_require_cross_request_serverless_counter_persistence() -> None:
     workflow = (REPO_ROOT / ".github/workflows/regression.yml").read_text(encoding="utf-8")
-    audit_block = workflow.split("- name: Audit log check", 1)[1].split(
-        "- name: Notify on live-regression failure", 1
-    )[0]
+    audit_block = workflow.split("- name: Audit log check", 1)[1].split("- name: Notify on live-regression failure", 1)[
+        0
+    ]
 
     assert "turn_count" not in audit_block
     assert "d.get('status') == 'ok'" in audit_block
