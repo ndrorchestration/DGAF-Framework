@@ -3,7 +3,7 @@
 # Usage: DGAF_URL=https://your-project.vercel.app bash scripts/verify_deployment.sh
 set -euo pipefail
 
-URL="${DGAF_URL:-https://dgaf-framework.vercel.app}"
+URL="${DGAF_URL:-https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app}"
 echo "[DGAF] Verifying deployment at: $URL"
 echo "---"
 
