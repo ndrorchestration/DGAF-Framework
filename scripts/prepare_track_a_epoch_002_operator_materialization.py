@@ -16,7 +16,7 @@ import importlib.util
 import json
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
@@ -49,7 +49,7 @@ BUNDLE_NAMES = (
 )
 
 
-def fail(message: str) -> None:
+def fail(message: str) -> NoReturn:
     raise SystemExit(f"operator materialization refused: {message}")
 
 
