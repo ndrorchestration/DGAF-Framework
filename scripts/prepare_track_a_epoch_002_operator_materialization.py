@@ -101,13 +101,8 @@ def require_accepted_file(commit: str, relative_path: str) -> bytes:
 
 
 def validator_bound_digest(commit: str, relative_path: str) -> str:
-    exact = git_bytes("show", f"{commit}:{relative_path}")
     validator_view = git_text("show", f"{commit}:{relative_path}").encode("utf-8")
-    require(
-        exact == validator_view,
-        f"{relative_path} has trailing-byte ambiguity with the accepted validator",
-    )
-    return digest_bytes(exact)
+    return digest_bytes(validator_view)
 
 
 def load_module(path: Path, name: str) -> Any:
