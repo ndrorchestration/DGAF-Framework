@@ -18,10 +18,9 @@ echo "---"
 echo "[1] GET /api/health"
 HEALTH=$(curl "${CURL_ARGS[@]}" "$URL/api/health")
 echo "$HEALTH" | python3 -m json.tool
-PSI_OK=$(echo "$HEALTH" | python3 -c "import sys,json; d=json.load(sys.stdin); print(str(d.get('psi_cubic',False)).lower())")
-[ "$PSI_OK" = "true" ] && echo "  ✓ psi_cubic" || { echo "  ✗ psi_cubic FAIL"; exit 1; }
-VER=$(echo "$HEALTH" | python3 -c "import sys,json; print(json.load(sys.stdin).get('version',''))")
-[ "$VER" = "1.8.0" ] && echo "  ✓ version=1.8.0" || echo "  ⚠  version=$VER (expected 1.8.0)"
+HEALTH_OK=$(echo "$HEALTH" | python3 -c "import sys,json; d=json.load(sys.stdin); ok=(d.get('status') == 'ok' and d.get('psi_cubic') is True and d.get('version') == '1.8.0'); print(str(ok).lower())")
+[ "$HEALTH_OK" = "true" ] || { echo "  ✗ health response contract FAIL"; exit 1; }
+echo '  ✓ status="ok", psi_cubic=true, version="1.8.0"'
 echo ""
 
 # 2 — Orchestrate
@@ -41,12 +40,17 @@ echo ""
 # 3 — Dashboard
 echo "[3] GET / (dashboard)"
 HTTP_CODE=$(curl "${CURL_ARGS[@]}" -o /dev/null -w "%{http_code}" "$URL/")
-[ "$HTTP_CODE" = "200" ] && echo "  ✓ dashboard HTTP 200" || echo "  ✗ dashboard HTTP $HTTP_CODE"
+[ "$HTTP_CODE" = "200" ] || { echo "  ✗ dashboard HTTP contract FAIL: $HTTP_CODE"; exit 1; }
+echo "  ✓ dashboard HTTP 200"
 echo ""
 
 # 4 — Audit
 echo "[4] GET /api/audit"
-curl "${CURL_ARGS[@]}" "$URL/api/audit" | python3 -m json.tool
+AUDIT=$(curl "${CURL_ARGS[@]}" "$URL/api/audit")
+echo "$AUDIT" | python3 -m json.tool
+AUDIT_OK=$(echo "$AUDIT" | python3 -c "import sys,json; d=json.load(sys.stdin); expected_warning='Audit counters are in-memory and reset on each serverless cold start. Wire to Vercel KV for persistence.'; ok=(d.get('status') == 'ok' and d.get('version') == '1.8.0' and d.get('_warning') in (None, expected_warning)); print(str(ok).lower())")
+[ "$AUDIT_OK" = "true" ] || { echo "  ✗ audit response contract FAIL"; exit 1; }
+echo '  ✓ audit status="ok", version="1.8.0", warning contract valid'
 echo ""
 
 echo "[DGAF] Verification complete."
