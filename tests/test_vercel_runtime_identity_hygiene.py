@@ -7,6 +7,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
 CANONICAL_PRODUCTION_URL = "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
 VERCEL_PROJECT_ID = "prj_euzjAnhqct0wayTWWojizanKN3cX"
+COLD_START_WARNING = (
+    "Audit counters are in-memory and reset on each serverless cold start. "
+    "Wire to Vercel KV for persistence."
+)
 
 
 def test_deployment_verifier_defaults_to_canonical_production_url() -> None:
@@ -39,6 +43,28 @@ def test_deployment_verifier_checks_current_orchestrate_response_contract() -> N
     assert "get('evidence',{})" in script
     assert '"PASS"' in script
     assert '"PARTIAL"' in script
+
+
+def test_deployment_verifier_fails_closed_on_health_dashboard_and_audit_contract_drift() -> None:
+    script = (REPO_ROOT / "scripts/verify_deployment.sh").read_text(encoding="utf-8")
+
+    assert "HEALTH_OK=" in script
+    assert "d.get('status') == 'ok'" in script
+    assert "d.get('psi_cubic') is True" in script
+    assert "d.get('version') == '1.8.0'" in script
+    assert '"$HEALTH_OK" = "true"' in script
+    assert "health response contract FAIL" in script
+    assert "version=$VER (expected 1.8.0)" not in script
+
+    assert '"$HTTP_CODE" = "200"' in script
+    assert "dashboard HTTP contract FAIL" in script
+
+    assert "AUDIT=$(curl" in script
+    assert "AUDIT_OK=" in script
+    assert "d.get('_warning') in (None, expected_warning)" in script
+    assert COLD_START_WARNING in script
+    assert '"$AUDIT_OK" = "true"' in script
+    assert "audit response contract FAIL" in script
 
 
 def test_ecosystem_registry_binds_current_dgaf_vercel_identity() -> None:
