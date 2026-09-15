@@ -11,7 +11,10 @@ from pathlib import Path
 
 import httpx
 
-BASE_URL = os.environ.get("DGAF_URL", "https://dgaf-framework.vercel.app").rstrip("/")
+BASE_URL = os.environ.get(
+    "DGAF_URL",
+    "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app",
+).rstrip("/")
 TIMEOUT = 30
 EXPECTED_VERSION = os.environ.get("EXPECTED_ENSEMBLE_VERSION", "1.8.0")
 VERCEL_AUTOMATION_BYPASS_SECRET = os.environ.get("VERCEL_AUTOMATION_BYPASS_SECRET")
