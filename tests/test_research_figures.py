@@ -208,8 +208,10 @@ def test_current_state_figures_humanize_machine_tokens_and_show_source_freshness
     assert "COMPLETE_50_PAIRED_SEED_UNITS_2250_BLINDED_OBSERVATIONS" not in fig1
     assert "50 paired seed units / 2,250 blinded observations" in fig1
     assert "efficacy: NOT ESTABLISHED" in fig1
-    assert "Source snapshot last_verified: 2026-09-14" in fig1
-    assert "Source snapshot last_verified: 2026-09-14" in fig4
+    state = (ROOT / "docs" / "CURRENT_STATE.md").read_text(encoding="utf-8")
+    stamp = mod.parse_frontmatter(state)["last_verified"]
+    assert f"Source snapshot last_verified: {stamp}" in fig1
+    assert f"Source snapshot last_verified: {stamp}" in fig4
 
 
 def test_committed_first_wave_outputs_match_fresh_regeneration(tmp_path: Path):
