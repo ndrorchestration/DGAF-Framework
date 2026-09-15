@@ -101,6 +101,71 @@ def test_preflight_refuses_partial_or_existing_bundle(tmp_path: Path) -> None:
     assert existing.read_text(encoding="utf-8") == "preserve me"
 
 
+def test_post_materialization_failure_leaves_final_output_empty(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    helper = load_module(OPERATOR_BUNDLE, "epoch002_operator_bundle_atomicity")
+    payload = b'{"synthetic":true}\n'
+    contracts = {
+        "dataset_lock_evidence": {},
+        "dataset_lock_receipt": {},
+        "dataset_lock_receipt_canonical_sha256": "a" * 64,
+        "unblinding_decision": {},
+        "unblinding_decision_canonical_sha256": "b" * 64,
+    }
+
+    class FakeMaterializer:
+        @staticmethod
+        def materialize(
+            public_archive: Path,
+            protected_archive: Path,
+            custody_private_key: Path,
+            output_dir: Path,
+            *,
+            contracts: dict[str, Any],
+        ) -> dict[str, str]:
+            del public_archive, protected_archive, custody_private_key, contracts
+            output_dir.mkdir(parents=True, exist_ok=True)
+            (output_dir / helper.OUTPUT_NAME).write_bytes(payload)
+            return {"materialized_input_sha256": helper.digest_bytes(payload)}
+
+    class FakeValidator:
+        @staticmethod
+        def validate_evidence_against_dataset_lock(
+            evidence: dict[str, Any],
+            dataset_lock_evidence: dict[str, Any],
+        ) -> None:
+            del evidence, dataset_lock_evidence
+
+    def load_fake_module(path: Path, name: str) -> Any:
+        del name
+        if path == helper.MATERIALIZER_PATH:
+            return FakeMaterializer
+        return FakeValidator
+
+    def fail_after_materialization(**kwargs: Any) -> dict[str, bytes]:
+        del kwargs
+        raise RuntimeError("synthetic post-materialization failure")
+
+    monkeypatch.setattr(helper, "load_repository_contracts", lambda: contracts)
+    monkeypatch.setattr(helper, "load_module", load_fake_module)
+    monkeypatch.setattr(helper, "build_bundle_documents", fail_after_materialization)
+
+    final_output = tmp_path / "final"
+    with pytest.raises(RuntimeError, match="synthetic post-materialization failure"):
+        helper.prepare_operator_bundle(
+            Path("public.tar"),
+            Path("protected.tar"),
+            Path("custody-key.pem"),
+            final_output,
+            retention_id="synthetic-retention",
+        )
+
+    assert final_output.is_dir()
+    assert list(final_output.iterdir()) == []
+
+
 def test_source_preserves_secret_and_analysis_boundary() -> None:
     text = OPERATOR_BUNDLE.read_text(encoding="utf-8")
     assert "--custody-private-key" in text
