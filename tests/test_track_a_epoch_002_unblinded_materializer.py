@@ -379,6 +379,25 @@ class TrackAEpoch002MaterializerTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             self.module.read_exact_tar_members(linked, frozenset({"safe"}), "synthetic")
 
+    def test_duplicate_tar_members_are_rejected(self) -> None:
+        archive_path = self.root / "duplicate.tar"
+        with tarfile.open(archive_path, "w") as archive:
+            for value in (b"first", b"second"):
+                info = tarfile.TarInfo("safe")
+                info.size = len(value)
+                archive.addfile(info, io.BytesIO(value))
+        with self.assertRaises(SystemExit):
+            self.module.read_exact_tar_members(archive_path, frozenset({"safe"}), "synthetic")
+
+    def test_existing_output_is_preserved(self) -> None:
+        output_dir = self.root / "existing"
+        output_dir.mkdir()
+        destination = output_dir / self.module.OUTPUT_NAME
+        destination.write_bytes(b"previous result")
+        with self.assertRaises(SystemExit):
+            self._run(output_dir)
+        self.assertEqual(destination.read_bytes(), b"previous result")
+
     def test_source_preserves_nonanalysis_and_secret_boundary(self) -> None:
         text = MATERIALIZER.read_text()
         self.assertNotIn("track_a_epoch_002_analysis", text)
