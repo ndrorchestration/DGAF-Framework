@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -9,6 +10,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_materialization.py"
+DATASET_LOCK_EVIDENCE_PATH = ROOT / ("docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json")
 
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
@@ -31,6 +33,10 @@ def load_validator():
     return module
 
 
+def dataset_lock_evidence_fixture() -> dict:
+    return json.loads(DATASET_LOCK_EVIDENCE_PATH.read_text(encoding="utf-8"))
+
+
 def unblinding_decision_fixture() -> dict:
     return {
         "record_type": "UNBLINDING_DECISION_RECORD",
@@ -38,7 +44,7 @@ def unblinding_decision_fixture() -> dict:
         "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
         "epoch": 2,
         "record_id": "E002-UNBLINDING-00112233",
-        "generated_at_utc": "2026-09-11T04:00:00Z",
+        "generated_at_utc": "2026-09-15T12:00:00Z",
         "producer": {
             "system": "DGAF_TRACK_A_EPOCH_002_UNBLINDING_DECISION_VALIDATOR",
             "version_or_commit": "a" * 40,
@@ -50,7 +56,7 @@ def unblinding_decision_fixture() -> dict:
         "evidence_scope": "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY",
         "non_effects": list(UNBLINDING_NON_EFFECTS),
         "status": "PASS",
-        "predecessor_record_ids": ["E002-DATASET-LOCK-00112233"],
+        "predecessor_record_ids": ["E002-DATASET-LOCK-A16973BD7AA9E1EB"],
         "authorization_effect": "BOUNDED_RECORD_ONLY",
         "scientific_state_effect": {
             "empirical_n_increment": 0,
@@ -60,38 +66,26 @@ def unblinding_decision_fixture() -> dict:
 
 
 def materialization_evidence_fixture() -> dict:
+    dataset_lock = dataset_lock_evidence_fixture()
     return {
         "record_type": "TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE",
         "schema_version": 1,
         "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
         "epoch": 2,
-        "evidence_workflow_run_id": 9101,
-        "evidence_artifact_id": 9102,
+        "evidence_execution_class": "OPERATOR_CODESPACE",
+        "operator_execution_receipt_sha256": "0" * 64,
         "evidence_tooling_commit_sha": "d" * 40,
         "materializer_path": "scripts/materialize_track_a_epoch_002_unblinded_input.py",
         "materializer_commit_sha": "e" * 40,
         "materializer_blob_sha": "f" * 40,
-        "dataset_lock_record_id": "E002-DATASET-LOCK-00112233",
+        "dataset_lock_record_id": "E002-DATASET-LOCK-A16973BD7AA9E1EB",
         "dataset_lock_commit_sha": "1" * 40,
         "dataset_lock_receipt_sha256": "2" * 64,
         "unblinding_decision_record_id": "E002-UNBLINDING-00112233",
         "unblinding_decision_commit_sha": "3" * 40,
         "unblinding_decision_sha256": "4" * 64,
-        "public_artifact": {
-            "artifact_id": 9201,
-            "name": "track-a-epoch-002-public-blinded",
-            "archive_sha256": "5" * 64,
-            "manifest_sha256": "6" * 64,
-        },
-        "protected_artifact": {
-            "artifact_id": 9202,
-            "name": "track-a-epoch-002-protected-encrypted",
-            "archive_sha256": "7" * 64,
-            "ciphertext_sha256": "8" * 64,
-            "plaintext_tar_sha256": "9" * 64,
-            "custody_certificate_sha256": "a" * 64,
-            "custody_certificate_public_key_der_sha256": "b" * 64,
-        },
+        "public_artifact": dict(dataset_lock["public_artifact"]),
+        "protected_artifact": dict(dataset_lock["protected_artifact"]),
         "materialized_input_sha256": "c" * 64,
         "materialization_manifest_sha256": "d" * 64,
         "materialization_sidecar_sha256": "e" * 64,
@@ -99,8 +93,8 @@ def materialization_evidence_fixture() -> dict:
         "record_count": 2250,
         "structure_validation": "PASS",
         "durable_retention": {
-            "class": "GITHUB_ACTIONS_ARTIFACT",
-            "id": "track-a-epoch-002-materialized-input-9103",
+            "class": "LOCAL_CUSTODY_ARCHIVE",
+            "id": "track-a-epoch-002-materialized-input-content-addressed",
         },
         "custody_class": "SAME_SYSTEM_NONINDEPENDENT",
         "independent_custody": False,
@@ -114,71 +108,7 @@ def materialization_evidence_fixture() -> dict:
         "high_assurance_authorized": False,
         "scientific_n_increment": 0,
         "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
-        "materialization_evidence_status": "MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT",
-    }
-
-
-def dataset_lock_evidence_fixture() -> dict:
-    return {
-        "record_type": "TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE",
-        "schema_version": 1,
-        "protocol_id": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002",
-        "epoch": 2,
-        "evidence_workflow_run_id": 9001,
-        "evidence_tooling_commit_sha": "0" * 40,
-        "collection_workflow_run_id": 9002,
-        "collection_authorization_commit_sha": "1" * 40,
-        "collection_authorization_blob_sha": "2" * 40,
-        "frozen_candidate_sha": "3" * 40,
-        "frozen_candidate_tree_sha": "4" * 40,
-        "custody_receipt_blob_sha": "5" * 40,
-        "qc_ledger_record_id": "E002-QC-00112233",
-        "pre_lock_result_ledger_sha256": "0" * 64,
-        "pre_lock_result_ledger_record_count": 53,
-        "paired_seed_units": 50,
-        "blinded_observations": 2250,
-        "public_artifact": {
-            "artifact_id": 9201,
-            "name": "track-a-epoch-002-public-blinded",
-            "size_bytes": 10001,
-            "archive_sha256": "5" * 64,
-            "manifest_sha256": "6" * 64,
-        },
-        "protected_artifact": {
-            "artifact_id": 9202,
-            "name": "track-a-epoch-002-protected-encrypted",
-            "size_bytes": 10002,
-            "archive_sha256": "7" * 64,
-            "ciphertext_sha256": "8" * 64,
-            "plaintext_tar_sha256": "9" * 64,
-            "custody_certificate_sha256": "a" * 64,
-            "custody_certificate_public_key_der_sha256": "b" * 64,
-        },
-        "structural_qc": {
-            "public_archive_digest_verified": True,
-            "protected_archive_digest_verified": True,
-            "all_public_sidecars_verified": True,
-            "whole_epoch_manifest_verified": True,
-            "exact_seed_panel_verified": True,
-            "exact_matrix_counts_verified": True,
-            "public_schema_allowlist_verified": True,
-            "protected_ciphertext_digest_verified": True,
-            "protected_plaintext_not_decrypted": True,
-            "protected_mapping_not_inspected": True,
-            "private_key_not_used": True,
-        },
-        "custody_class": "SAME_SYSTEM_NONINDEPENDENT",
-        "independent_custody": False,
-        "outcomes_inspected_for_lock": False,
-        "outcome_aggregation_performed": False,
-        "unblinding_authorized": False,
-        "primary_analysis_authorized": False,
-        "historical_pooling_allowed": False,
-        "epoch_004_substitution_allowed": False,
-        "high_assurance_authorized": False,
-        "scientific_n_increment": 0,
-        "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
-        "dataset_lock_evidence_status": "STRUCTURAL_QC_PASS_PENDING_REPOSITORY_RECEIPT",
+        "materialization_evidence_status": ("MATERIALIZATION_PASS_PENDING_REPOSITORY_RECEIPT"),
     }
 
 
@@ -190,11 +120,11 @@ def valid_receipt(validator, decision: dict, evidence: dict) -> dict:
         unblinding_decision_sha256="4" * 64,
         evidence_sha256="f" * 64,
         materialization_parent_sha="0" * 40,
-        generated_at_utc="2026-09-11T05:00:00Z",
+        generated_at_utc="2026-09-15T13:00:00Z",
     )
 
 
-def test_expected_receipt_binds_evidence_and_exact_unblinding_predecessor() -> None:
+def test_expected_receipt_binds_repository_evidence_and_exact_unblinding_predecessor() -> None:
     validator = load_validator()
     decision = unblinding_decision_fixture()
     evidence = materialization_evidence_fixture()
@@ -213,9 +143,7 @@ def test_expected_receipt_binds_evidence_and_exact_unblinding_predecessor() -> N
     assert receipt["record_type"] == "MATERIALIZATION_RECEIPT"
     assert receipt["predecessor_record_ids"] == [decision["record_id"]]
     assert receipt["immutable_subject"] == {
-        "commit_sha": "3" * 40,
-        "workflow_run_id": 9101,
-        "artifact_id": 9102,
+        "commit_sha": "0" * 40,
         "sha256": "f" * 64,
     }
     assert receipt["authorization_effect"] == "REQUIRES_SEPARATE_EXACT_COMMIT"
@@ -226,7 +154,7 @@ def test_expected_receipt_binds_evidence_and_exact_unblinding_predecessor() -> N
     }
 
 
-def test_evidence_matches_dataset_lock_artifact_lineage() -> None:
+def test_evidence_matches_dataset_lock_content_addressed_lineage() -> None:
     validator = load_validator()
     validator.validate_evidence_against_dataset_lock(
         materialization_evidence_fixture(),
@@ -238,6 +166,17 @@ def test_evidence_rejects_public_artifact_drift_from_dataset_lock() -> None:
     validator = load_validator()
     evidence = materialization_evidence_fixture()
     evidence["public_artifact"]["archive_sha256"] = "f" * 64
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_against_dataset_lock(
+            evidence,
+            dataset_lock_evidence_fixture(),
+        )
+
+
+def test_evidence_rejects_public_artifact_size_drift_from_dataset_lock() -> None:
+    validator = load_validator()
+    evidence = materialization_evidence_fixture()
+    evidence["public_artifact"]["size_bytes"] += 1
     with pytest.raises(SystemExit):
         validator.validate_evidence_against_dataset_lock(
             evidence,
@@ -260,6 +199,14 @@ def test_evidence_requires_exact_materializer_path() -> None:
     validator = load_validator()
     evidence = materialization_evidence_fixture()
     evidence["materializer_path"] = "scripts/other_materializer.py"
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_object(evidence)
+
+
+def test_evidence_rejects_actions_identity_smuggling() -> None:
+    validator = load_validator()
+    evidence = materialization_evidence_fixture()
+    evidence["evidence_workflow_run_id"] = 9101
     with pytest.raises(SystemExit):
         validator.validate_evidence_object(evidence)
 
@@ -301,7 +248,7 @@ def test_receipt_rejects_evidence_digest_drift() -> None:
     decision = unblinding_decision_fixture()
     evidence = materialization_evidence_fixture()
     receipt = valid_receipt(validator, decision, evidence)
-    receipt["immutable_subject"]["sha256"] = "0" * 64
+    receipt["immutable_subject"]["sha256"] = "1" * 64
 
     with pytest.raises(SystemExit):
         validator.validate_receipt_object(
@@ -358,26 +305,36 @@ def test_tooling_mode_accepts_established_predecessors_and_preserves_successor_a
     validator.validate_tooling_only()
 
 
-def test_tooling_mode_requires_dataset_lock_predecessor(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_tooling_mode_requires_dataset_lock_predecessor(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
     validator = load_validator()
     monkeypatch.setattr(validator, "DATASET_LOCK_PATH", tmp_path / "missing-dataset-lock.json")
     with pytest.raises(SystemExit):
         validator.validate_tooling_only()
 
 
-def test_tooling_mode_requires_unblinding_predecessor(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_tooling_mode_requires_unblinding_predecessor(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
     validator = load_validator()
-    monkeypatch.setattr(validator, "UNBLINDING_DECISION_PATH", tmp_path / "missing-unblinding.json")
+    monkeypatch.setattr(
+        validator,
+        "UNBLINDING_DECISION_PATH",
+        tmp_path / "missing-unblinding.json",
+    )
     with pytest.raises(SystemExit):
         validator.validate_tooling_only()
 
 
-def test_validate_event_requires_dataset_lock_evidence_argument() -> None:
+def test_cli_rejects_obsolete_external_evidence_arguments() -> None:
     result = subprocess.run(
         [
             sys.executable,
             str(MODULE_PATH),
-            "--validate-event",
+            "--validate-receipt-event",
             "--evidence",
             "materialization-evidence.json",
         ],
@@ -387,4 +344,4 @@ def test_validate_event_requires_dataset_lock_evidence_argument() -> None:
         text=True,
     )
     assert result.returncode != 0
-    assert "--dataset-lock-evidence" in (result.stdout + result.stderr)
+    assert "unrecognized arguments" in (result.stdout + result.stderr)
