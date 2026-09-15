@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -131,5 +132,32 @@ def test_historical_lineage_can_preserve_persona_and_certification_terms() -> No
     }
 
     errors = _validator()(_registry(project), {})
+
+    assert errors == []
+
+
+def test_validator_rejects_unscoped_current_governance_or_compliance_claim() -> None:
+    project = _project()
+    project["summary"] = "DGAF-governed service providing security compliance."
+
+    errors = _validator()(_registry(project), {})
+
+    assert any("unscoped current claim" in error.lower() for error in errors)
+
+
+def test_checked_in_registry_has_no_internal_projection_drift() -> None:
+    registry = json.loads((ROOT / "registry/ecosystem_registry.json").read_text(encoding="utf-8"))
+    observed: dict[str, dict] = {}
+    for project in registry.get("projects", []):
+        github = project.get("github")
+        if isinstance(github, dict) and github.get("private") is False:
+            key = f"{github['owner']}/{github['repo']}"
+            observed[key] = {
+                "private": github.get("private"),
+                "archived": github.get("archived"),
+                "default_branch": github.get("default_branch"),
+            }
+
+    errors = _validator()(registry, observed)
 
     assert errors == []
