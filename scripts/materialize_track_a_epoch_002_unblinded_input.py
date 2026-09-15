@@ -306,7 +306,13 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     contracts = load_json(args.contracts_json.read_bytes(), "contracts")
-    materialize(\n        args.public_archive,\n        args.protected_archive,\n        args.custody_private_key,\n        args.output_dir,\n        contracts=contracts,\n    )
+    materialize(
+        args.public_archive,
+        args.protected_archive,
+        args.custody_private_key,
+        args.output_dir,
+        contracts=contracts,
+    )
 
 
 if __name__ == "__main__":
