@@ -14,7 +14,9 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Any, NoReturn
 
@@ -330,40 +332,62 @@ def prepare_operator_bundle(
         "unblinding_decision": contracts["unblinding_decision"],
         "unblinding_decision_sha256": contracts["unblinding_decision_canonical_sha256"],
     }
-    result = materializer.materialize(
-        Path(public_archive),
-        Path(protected_archive),
-        Path(custody_private_key),
-        output_dir,
-        contracts=materializer_contracts,
+    stage_dir = Path(
+        tempfile.mkdtemp(
+            prefix=f".{output_dir.name}.stage-",
+            dir=output_dir.parent,
+        )
     )
-    output_path = output_dir / OUTPUT_NAME
-    materialized_input = output_path.read_bytes()
-    require(
-        result.get("materialized_input_sha256") == digest_bytes(materialized_input),
-        "accepted materializer returned an inconsistent output digest",
-    )
+    promoted = False
+    try:
+        result = materializer.materialize(
+            Path(public_archive),
+            Path(protected_archive),
+            Path(custody_private_key),
+            stage_dir,
+            contracts=materializer_contracts,
+        )
+        output_path = stage_dir / OUTPUT_NAME
+        materialized_input = output_path.read_bytes()
+        require(
+            result.get("materialized_input_sha256") == digest_bytes(materialized_input),
+            "accepted materializer returned an inconsistent output digest",
+        )
 
-    bundle = build_bundle_documents(
-        materialized_input=materialized_input,
-        contracts=contracts,
-        retention_id=retention_id,
-    )
-    evidence = load_json_bytes(bundle[EVIDENCE_NAME], "materialization evidence")
-    validator.validate_evidence_against_dataset_lock(
-        evidence,
-        contracts["dataset_lock_evidence"],
-    )
-    for name, payload in bundle.items():
-        write_exclusive(output_dir / name, payload)
+        bundle = build_bundle_documents(
+            materialized_input=materialized_input,
+            contracts=contracts,
+            retention_id=retention_id,
+        )
+        evidence = load_json_bytes(bundle[EVIDENCE_NAME], "materialization evidence")
+        validator.validate_evidence_against_dataset_lock(
+            evidence,
+            contracts["dataset_lock_evidence"],
+        )
+        for name, payload in bundle.items():
+            write_exclusive(stage_dir / name, payload)
 
-    return {
-        "materialized_input_sha256": digest_bytes(materialized_input),
-        "materialization_manifest_sha256": digest_bytes(bundle[MANIFEST_NAME]),
-        "materialization_sidecar_sha256": digest_bytes(bundle[SIDECAR_NAME]),
-        "operator_execution_receipt_sha256": digest_bytes(bundle[EXECUTION_RECEIPT_NAME]),
-        "materialization_evidence_sha256": digest_bytes(bundle[EVIDENCE_NAME]),
-    }
+        staged_names = {path.name for path in stage_dir.iterdir()}
+        require(
+            staged_names == set(BUNDLE_NAMES),
+            "staged materialization bundle member set is not exact",
+        )
+        digests = {
+            "materialized_input_sha256": digest_bytes(materialized_input),
+            "materialization_manifest_sha256": digest_bytes(bundle[MANIFEST_NAME]),
+            "materialization_sidecar_sha256": digest_bytes(bundle[SIDECAR_NAME]),
+            "operator_execution_receipt_sha256": digest_bytes(bundle[EXECUTION_RECEIPT_NAME]),
+            "materialization_evidence_sha256": digest_bytes(bundle[EVIDENCE_NAME]),
+        }
+
+        output_dir.rmdir()
+        stage_dir.replace(output_dir)
+        promoted = True
+        return digests
+    finally:
+        if not promoted:
+            shutil.rmtree(stage_dir, ignore_errors=True)
+            output_dir.mkdir(parents=True, exist_ok=True)
 
 
 def parse_args() -> argparse.Namespace:
