@@ -20,37 +20,20 @@ from typing import Any, NoReturn
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE_SCHEMA_PATH = ROOT / (
-    "docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json"
-)
-DATASET_LOCK_EVIDENCE_SCHEMA_PATH = ROOT / (
-    "docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json"
-)
+EVIDENCE_SCHEMA_PATH = ROOT / ("docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json")
+DATASET_LOCK_EVIDENCE_SCHEMA_PATH = ROOT / ("docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json")
 RESULT_SCHEMA_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
 SEMANTICS_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
 
-DATASET_LOCK_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
-)
-DATASET_LOCK_EVIDENCE_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
-)
-UNBLINDING_DECISION_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
-)
-MATERIALIZATION_EVIDENCE_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json"
-)
-MATERIALIZATION_RECEIPT_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
-)
+DATASET_LOCK_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
+DATASET_LOCK_EVIDENCE_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
+UNBLINDING_DECISION_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
+MATERIALIZATION_EVIDENCE_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json"
+MATERIALIZATION_RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
 PRIMARY_ANALYSIS_AUTH_REL = (
-    "docs/experiment/track_a_runs/"
-    "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+    "docs/experiment/track_a_runs/" "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
 )
-LOCKED_ANALYSIS_RESULT_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
-)
+LOCKED_ANALYSIS_RESULT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
 
 DATASET_LOCK_PATH = ROOT / DATASET_LOCK_REL
 DATASET_LOCK_EVIDENCE_PATH = ROOT / DATASET_LOCK_EVIDENCE_REL
@@ -64,9 +47,7 @@ PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 PRODUCER_SYSTEM = "DGAF_TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT_VALIDATOR"
 DATASET_LOCK_SCOPE = "CONTENT_ADDRESSED_EPOCH_002_BLINDED_DATASET_LOCK_BEFORE_UNBLINDING"
 UNBLINDING_SCOPE = "CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY"
-MATERIALIZATION_SCOPE = (
-    "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
-)
+MATERIALIZATION_SCOPE = "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
     "DOES_NOT_AUTHORIZE_UNBLINDING",
@@ -76,9 +57,7 @@ FULL_NON_EFFECTS = [
     "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
     "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
 ]
-UNBLINDING_NON_EFFECTS = [
-    effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"
-]
+UNBLINDING_NON_EFFECTS = [effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_UNBLINDING"]
 SCIENTIFIC_NON_EFFECT = {
     "empirical_n_increment": 0,
     "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
@@ -324,9 +303,7 @@ def validate_evidence_against_dataset_lock(
         "manifest_sha256",
     )
     for field in public_fields:
-        if dataset_lock_evidence["public_artifact"].get(field) != evidence[
-            "public_artifact"
-        ].get(field):
+        if dataset_lock_evidence["public_artifact"].get(field) != evidence["public_artifact"].get(field):
             fail(f"public artifact {field} drifted from dataset-lock evidence")
 
     protected_fields = (
@@ -339,9 +316,7 @@ def validate_evidence_against_dataset_lock(
         "custody_certificate_public_key_der_sha256",
     )
     for field in protected_fields:
-        if dataset_lock_evidence["protected_artifact"].get(field) != evidence[
-            "protected_artifact"
-        ].get(field):
+        if dataset_lock_evidence["protected_artifact"].get(field) != evidence["protected_artifact"].get(field):
             fail(f"protected artifact {field} drifted from dataset-lock evidence")
 
     if dataset_lock_evidence.get("custody_class") != evidence["custody_class"]:
@@ -611,11 +586,7 @@ def validate_receipt_event() -> None:
     if len(evidence_event) != 2:
         fail("materialization evidence admission must have exactly one parent")
     evidence_parent = evidence_event[1]
-    evidence_changed = [
-        line
-        for line in git("diff", "--name-only", evidence_parent, evidence_commit).splitlines()
-        if line
-    ]
+    evidence_changed = [line for line in git("diff", "--name-only", evidence_parent, evidence_commit).splitlines() if line]
     if evidence_changed != [MATERIALIZATION_EVIDENCE_REL]:
         fail("materialization evidence admission changed unexpected paths")
 
