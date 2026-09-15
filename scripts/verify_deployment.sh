@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
 # scripts/verify_deployment.sh
-# Usage: DGAF_URL=https://your-project.vercel.app bash scripts/verify_deployment.sh
+# Usage:
+#   DGAF_URL=https://your-project.vercel.app bash scripts/verify_deployment.sh
+#   VERCEL_AUTOMATION_BYPASS_SECRET=... bash scripts/verify_deployment.sh
 set -euo pipefail
 
 URL="${DGAF_URL:-https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app}"
+CURL_ARGS=(-sS -f)
+if [[ -n "${VERCEL_AUTOMATION_BYPASS_SECRET:-}" ]]; then
+  CURL_ARGS+=(-H "x-vercel-protection-bypass: ${VERCEL_AUTOMATION_BYPASS_SECRET}")
+fi
+
 echo "[DGAF] Verifying deployment at: $URL"
 echo "---"
 
 # 1 — Health
 echo "[1] GET /api/health"
-HEALTH=$(curl -sf "$URL/api/health")
+HEALTH=$(curl "${CURL_ARGS[@]}" "$URL/api/health")
 echo "$HEALTH" | python3 -m json.tool
 PSI_OK=$(echo "$HEALTH" | python3 -c "import sys,json; d=json.load(sys.stdin); print(str(d.get('psi_cubic',False)).lower())")
 [ "$PSI_OK" = "true" ] && echo "  ✓ psi_cubic" || { echo "  ✗ psi_cubic FAIL"; exit 1; }
@@ -19,7 +26,7 @@ echo ""
 
 # 2 — Orchestrate
 echo "[2] POST /api/orchestrate"
-ORCH=$(curl -sf "$URL/api/orchestrate" \
+ORCH=$(curl "${CURL_ARGS[@]}" "$URL/api/orchestrate" \
   -H "Content-Type: application/json" \
   -d '{ "payload": "Validate schema hash against SSoT.",
          "confidence": 0.80, "claim": "Schema hash validated.",
@@ -33,13 +40,13 @@ echo ""
 
 # 3 — Dashboard
 echo "[3] GET / (dashboard)"
-HTTP_CODE=$(curl -so /dev/null -w "%{http_code}" "$URL/")
+HTTP_CODE=$(curl "${CURL_ARGS[@]}" -o /dev/null -w "%{http_code}" "$URL/")
 [ "$HTTP_CODE" = "200" ] && echo "  ✓ dashboard HTTP 200" || echo "  ✗ dashboard HTTP $HTTP_CODE"
 echo ""
 
 # 4 — Audit
 echo "[4] GET /api/audit"
-curl -sf "$URL/api/audit" | python3 -m json.tool
+curl "${CURL_ARGS[@]}" "$URL/api/audit" | python3 -m json.tool
 echo ""
 
 echo "[DGAF] Verification complete."
