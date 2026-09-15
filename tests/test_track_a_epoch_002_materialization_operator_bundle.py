@@ -74,15 +74,9 @@ def test_bundle_documents_validate_and_preserve_non_effects() -> None:
     input_sha = helper.digest_bytes(materialized_input)
     assert bundle[helper.SIDECAR_NAME] == f"{input_sha}  {helper.OUTPUT_NAME}\n".encode()
     assert evidence["materialized_input_sha256"] == input_sha
-    assert evidence["materialization_manifest_sha256"] == helper.digest_bytes(
-        bundle[helper.MANIFEST_NAME]
-    )
-    assert evidence["materialization_sidecar_sha256"] == helper.digest_bytes(
-        bundle[helper.SIDECAR_NAME]
-    )
-    assert evidence["operator_execution_receipt_sha256"] == helper.digest_bytes(
-        bundle[helper.EXECUTION_RECEIPT_NAME]
-    )
+    assert evidence["materialization_manifest_sha256"] == helper.digest_bytes(bundle[helper.MANIFEST_NAME])
+    assert evidence["materialization_sidecar_sha256"] == helper.digest_bytes(bundle[helper.SIDECAR_NAME])
+    assert evidence["operator_execution_receipt_sha256"] == helper.digest_bytes(bundle[helper.EXECUTION_RECEIPT_NAME])
     assert receipt["repository_materialization_established"] is False
     assert receipt["primary_analysis_authorized"] is False
     assert receipt["primary_analysis_run"] is False
@@ -113,8 +107,8 @@ def test_source_preserves_secret_and_analysis_boundary() -> None:
     assert "--passphrase" not in text
     assert "--private-key-passphrase" not in text
     assert "PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN" in text
-    assert "primary_analysis_authorized\": True" not in text
-    assert "scientific_n_increment\": 1" not in text
+    assert 'primary_analysis_authorized": True' not in text
+    assert 'scientific_n_increment": 1' not in text
 
 
 if __name__ == "__main__":
