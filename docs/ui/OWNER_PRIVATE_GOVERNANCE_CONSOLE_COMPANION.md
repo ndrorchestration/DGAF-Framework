@@ -3,8 +3,8 @@
 **Status:** ACTIVE / OWNER-PRIVATE / READ-ONLY  
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
-**Source snapshot:** protected `main` at `b409403624181c86738113b029c4a12e42f0b318`  
-**Console source commit:** `bc66767d2112392f6b780a3812c9c653ba7d7e72`
+**Source snapshot:** protected `main` at `ffb197443b02d49bffc8967f3cec1df72da560e8`  
+**Snapshot event:** post-PR #715 materialization-apparatus reconciliation
 
 ## Purpose
 
@@ -22,10 +22,14 @@ It separately represents the Track A Epoch 002 state:
 
 - collection authorization: ACCEPTED;
 - blinded collection: COMPLETE at 50 paired seed units / 2,250 observations;
-- operator retained-byte admission: PENDING;
-- dataset lock: NOT ESTABLISHED;
-- unblinding: NOT AUTHORIZED;
-- primary analysis: NOT AUTHORIZED / NOT RUN.
+- dataset lock: ESTABLISHED;
+- bounded unblinding: AUTHORIZED for controlled mapping release/decryption only;
+- Stage-1 materializer: ACCEPTED via PR #713;
+- Stage-2 operator materialization bundle: ACCEPTED via PR #715;
+- real materialization: NOT ESTABLISHED;
+- materialization receipt: NOT ESTABLISHED;
+- primary analysis: NOT AUTHORIZED / NOT RUN;
+- independent validation: NOT ESTABLISHED.
 
 Track A completion counts must never be rendered as canonical High-Assurance scientific N.
 
@@ -38,6 +42,10 @@ Track A completion counts must never be rendered as canonical High-Assurance sci
 - GitHub remains authoritative for repository, commit, issue, PR, and CI identity.
 - Runtime reachability remains operational evidence only.
 - Missing or failed live refresh retains the last timestamped snapshot and must not promote or negate a governance predicate.
+
+## Current next action
+
+The console should present **controlled operator-side materialization** as the next frontier, not retained-byte admission or dataset lock. Any successful operator materialization remains non-authorizing until the resulting evidence is admitted and a separate immutable `MATERIALIZATION_RECEIPT` is accepted. Primary analysis remains prohibited until a later separate authorization event.
 
 ## Access and validation
 
