@@ -186,7 +186,7 @@ Until a separately accepted evidence-admission event and later receipt event exi
 
 `MATERIALIZATION = NOT_ESTABLISHED`
 
-`PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`
+`PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`
 
 `SCIENTIFIC_N_INCREMENT = 0`
 
