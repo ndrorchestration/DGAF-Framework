@@ -58,6 +58,7 @@ def read_exact_tar_members(path: Path, expected: frozenset[str], label: str) -> 
                 handle = archive.extractfile(member)
                 if handle is None:
                     fail(f"{label} cannot read member")
+                assert handle is not None
                 output[member.name] = handle.read()
             return output
     except (OSError, tarfile.TarError) as error:
@@ -98,6 +99,9 @@ def validate_contracts(
     require(isinstance(evidence, dict), "dataset-lock evidence is required")
     require(isinstance(receipt, dict), "dataset-lock receipt is required")
     require(isinstance(decision, dict), "unblinding decision is required")
+    assert isinstance(evidence, dict)
+    assert isinstance(receipt, dict)
+    assert isinstance(decision, dict)
 
     receipt_sha = digest_bytes(canonical(receipt))
     require(contracts.get("dataset_lock_receipt_sha256") == receipt_sha, "receipt digest mismatch")
@@ -122,6 +126,8 @@ def validate_contracts(
     public = evidence.get("public_artifact")
     protected = evidence.get("protected_artifact")
     require(isinstance(public, dict) and isinstance(protected, dict), "artifact evidence is required")
+    assert isinstance(public, dict)
+    assert isinstance(protected, dict)
     require(public.get("archive_sha256") == digest_file(public_archive), "public archive digest mismatch")
     require(protected.get("archive_sha256") == digest_file(protected_archive), "protected archive digest mismatch")
     require(evidence.get("protocol_id") == PROTOCOL, "evidence protocol mismatch")
@@ -261,6 +267,8 @@ def materialize(
         mapping = mapping_document.get("mapping")
         source_records = public_document.get("records")
         require(isinstance(mapping, dict) and isinstance(source_records, list), f"seed {seed} malformed")
+        assert isinstance(mapping, dict)
+        assert isinstance(source_records, list)
         require(public_document.get("seed_id") == seed and mapping_document.get("seed_id") == seed, "seed mismatch")
         for row in source_records:
             require(isinstance(row, dict), f"seed {seed} record malformed")
