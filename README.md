@@ -7,7 +7,7 @@ In plain English: an agent may be able to do something and still be blocked from
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
-> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, and collection authorization **ACCEPTED** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · operator retained-byte admission **PENDING** · dataset lock **NOT ESTABLISHED** · unblinding and primary analysis **NOT AUTHORIZED**  
+> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, and bounded unblinding **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · materialization tooling **ACCEPTED** · real materialization **NOT ESTABLISHED** · primary analysis **NOT AUTHORIZED / NOT RUN**  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
@@ -55,7 +55,7 @@ DGAF separates prospective evaluation by workload instead of treating one experi
 | Track | Plain-English purpose | Current boundary |
 |---|---|---|
 | **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
-| **A — Epoch 002 successor** | Replacement prospective topology robustness | Custody, freeze, closure, bounded verification classification, and collection authorization are accepted; the operator-executed blinded collection is COMPLETE at 50 paired seed units / 2,250 observations; exact retained-byte admission is PENDING; dataset lock is NOT ESTABLISHED; unblinding and primary analysis are NOT AUTHORIZED |
+| **A — Epoch 002 successor** | Replacement prospective topology robustness | Collection COMPLETE at 50 paired seed units / 2,250 observations; dataset lock ESTABLISHED; bounded unblinding AUTHORIZED for controlled mapping release/decryption only; Stage-1 and Stage-2 materialization tooling ACCEPTED; real materialization and materialization receipt NOT ESTABLISHED; primary analysis NOT AUTHORIZED / NOT RUN |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
@@ -69,37 +69,39 @@ That collection remains valid evidence that the blinded panel was executed and r
 
 Issue #523 controls the replacement path. Epoch 002 uses a distinct protocol identity, fresh seeds and blinding, and recoverable solo custody without presenting same-system custody as independent.
 
-Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, and separate collection authorization are accepted predecessors. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
+Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, separate collection authorization, retained-evidence admission/QC, dataset lock, and bounded unblinding have advanced through separate governed events. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
 
-The current frontier is not collection execution. It is **exact retained-byte operator admission**. Accepted PRs #687–#689 provide a dry-run-first path that:
+The current frontier is **controlled operator-side materialization of the real retained Epoch 002 evidence**. The accepted apparatus now includes:
 
-- validates the retained public and encrypted-protected archive bytes without decryption;
-- preserves `OPERATOR_CODESPACE` provenance without invented GitHub Actions IDs;
-- prepares a bounded 53-record blinded pre-lock ledger;
-- prepares the non-secret dataset-lock evidence manifest;
-- keeps the final dataset-lock receipt as a later separate one-file event.
+- a PASS content-addressed dataset-lock receipt;
+- a separate PASS unblinding decision bounded to `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
+- PR #713's controlled Stage-1 materializer with wrong-key, archive-drift, duplicate-entry, traversal/link, and unexpected-member fail-closed behavior;
+- PR #715's non-secret Stage-2 materialization evidence bundle with deterministic content-addressed output identities and atomic five-member publication.
 
-Tooling acceptance does not claim that the operator step passed. Until the exact retained bytes are processed and the bounded evidence is admitted, preserve:
+Tooling acceptance does not claim that real materialization occurred. Until the exact retained material is processed under the accepted operator-controlled path and a separate immutable materialization receipt is admitted, preserve:
 
-- `TRACK_A_EPOCH_002_OPERATOR_PROVENANCE = PENDING_RETAINED_BYTE_ADMISSION`;
-- `TRACK_A_EPOCH_002_DATASET_LOCK = NOT_ESTABLISHED`;
-- `UNBLINDING = NOT_AUTHORIZED`;
+- `TRACK_A_EPOCH_002_DATASET_LOCK = ESTABLISHED`;
+- `UNBLINDING = AUTHORIZED / BOUNDED TO CONTROLLED MAPPING RELEASE OR DECRYPTION`;
+- `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`;
 - `PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
-- `HIGH_ASSURANCE = PRE-FREEZE / NOT AUTHORIZED / N=0`.
+- `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`;
+- `HIGH_ASSURANCE = PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`.
 
 The remaining ordered sequence is:
 
-`operator retained-byte admission → PASS structural QC ledger → repository evidence admission → separate dataset-lock receipt → separate human-controlled unblinding decision → controlled local materialization → immutable materialization receipt → separate primary-analysis authorization → locked analysis → interpretation/adjudication`
+`controlled local materialization → validated non-secret materialization evidence admission → immutable materialization receipt → separate primary-analysis authorization → locked analysis → interpretation/adjudication`
 
-No private key, passphrase, blinding secret, protected plaintext mapping, decrypted data, or other recoverable secret material belongs in GitHub, Notion, chat, CI inputs, workflow logs, or committed files.
+No private key, passphrase, blinding secret, protected plaintext mapping, decrypted protected data, or other recoverable secret material belongs in GitHub, Notion, chat, CI inputs, workflow logs, or committed files.
 
 ## What is established — and what is not
 
 The repository contains substantial engineering evidence: governance logic, provenance controls, deterministic validators, CI, negative controls, source binding, custody/security machinery, experimental tooling, runtime evidence, vocabulary governance, and blinded-data infrastructure.
 
 Track A Epoch 001 also contains genuine prospective blinded collection evidence. That evidence is **not a primary efficacy result** and is explicitly **unanalyzable** under the retained protected-mapping evidence.
+
+Track A Epoch 002 has advanced further: the successor collection is complete, its dataset lock is established, and bounded unblinding is authorized. Those transitions still do **not** constitute a primary efficacy result; real materialization, a materialization receipt, separate primary-analysis authorization, locked analysis execution, and later interpretation remain distinct downstream events.
 
 A separate Solo research track produced bounded historical empirical evidence. Epoch 004 completed 50 seeds / 9,000 observations and produced negative evidence for its exact executed treatment. A later source audit found that canonical treatment fidelity was not established, so that result remains exact-treatment historical evidence rather than a claim about canonical DGAF efficacy.
 
