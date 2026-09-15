@@ -33,7 +33,9 @@ def test_deployment_verifier_checks_current_orchestrate_response_contract() -> N
     assert '"turn": 1' in script
     assert "get('decision'" in script
     assert "get('turn'" in script
+    assert "get('effective_confidence'" in script
     assert "get('psi_cubic_check'" in script
+    assert "get('trace'" in script
     assert "get('evidence',{})" in script
     assert '"PASS"' in script
     assert '"PARTIAL"' in script
