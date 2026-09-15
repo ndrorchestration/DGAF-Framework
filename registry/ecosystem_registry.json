@@ -9,7 +9,7 @@
       "tags": ["ai-governance", "multi-agent", "pattern-registry"],
       "patterns": ["ndr.ecosystem_manifest_audit", "ndr.dual_orchestrator_qa_loop"],
       "github": {"owner": "ndrorchestration", "repo": "DGAF-Framework", "url": "https://github.com/ndrorchestration/DGAF-Framework", "default_branch": "main", "private": false, "archived": false, "topics": ["ai-governance","apache-2-0","multi-agent","nist-ai-rmf","phi-harmonic"]},
-      "deployments": [{"platform": "vercel", "project_id": "TODO:vercel-project-id", "url": "https://dgaf-framework.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
+      "deployments": [{"platform": "vercel", "project_id": "prj_euzjAnhqct0wayTWWojizanKN3cX", "url": "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app", "env": "prod", "status": "active", "last_deploy_at": null}],
       "documentation": {"primary_readme_url": "https://github.com/ndrorchestration/DGAF-Framework", "status": "silver", "last_reviewed": "2026-05-29T07:03:00Z", "owner": "Amethyst"},
       "governance": {"dgaf_tier": "silver", "safety_profile": "sentinel-default", "governance_owner": "Sentinel"},
       "lifecycle_state": "active"
