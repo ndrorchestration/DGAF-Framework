@@ -4,53 +4,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createHash } from 'crypto'
 import { evidenceEnvelope } from '../../lib/evidence'
+import { detectSweepTargets, type SweepFinding } from '../../app/lib/sweep-detection'
 
 const PHI_STAR = (1 + Math.sqrt(5)) / 2 - 1
 const PSI      = 1.4655712318767682
 
-type Severity = 'HIGH' | 'MEDIUM' | 'LOW' | 'INFO'
-
-interface Finding {
-  id: string
-  agent: string
-  target: string
-  severity: Severity
-  message: string
-}
-
-function colleen_detect(targets: string[]): Finding[] {
-  return targets.flatMap((t, i) => {
-    const findings: Finding[] = []
-    if (t.includes('api/') && t.endsWith('.py')) {
-      findings.push({
-        id: `C-${i}`,
-        agent: 'colleen',
-        target: t,
-        severity: 'HIGH',
-        message: 'Python API stub candidate; confirm whether it conflicts with pages/api/*.ts.',
-      })
-    }
-    if (t.includes('app/api/') && t.endsWith('.ts')) {
-      findings.push({
-        id: `C-${i}b`,
-        agent: 'colleen',
-        target: t,
-        severity: 'MEDIUM',
-        message: 'App Router API path candidate; confirm reachability in the current hybrid routing model.',
-      })
-    }
-    if (t.includes('requirements.txt')) {
-      findings.push({
-        id: `C-${i}c`,
-        agent: 'colleen',
-        target: t,
-        severity: 'LOW',
-        message: 'requirements.txt present; confirm whether the file is operationally relevant to the deployment path.',
-      })
-    }
-    return findings
-  })
-}
+type Finding = SweepFinding
 
 function planned_remediations(findings: Finding[]): Finding[] {
   return findings
@@ -67,8 +26,9 @@ function herald_narrate(findings: Finding[], planned: Finding[]): string {
   const high = findings.filter(f => f.severity === 'HIGH').length
   const medium = findings.filter(f => f.severity === 'MEDIUM').length
   const low = findings.filter(f => f.severity === 'LOW').length
+  const info = findings.filter(f => f.severity === 'INFO').length
   return [
-    `Sweep complete. ${findings.length} findings: ${high} HIGH · ${medium} MEDIUM · ${low} LOW.`,
+    `Sweep complete. ${findings.length} findings: ${high} HIGH · ${medium} MEDIUM · ${low} LOW · ${info} INFO.`,
     planned.length > 0
       ? `${planned.length} remediation candidates identified; no repository mutation was performed by this endpoint.`
       : 'No high-severity remediation candidates identified.',
@@ -95,7 +55,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     })
   }
 
-  const findings = colleen_detect(targets)
+  const findings = detectSweepTargets(targets)
   const planned = planned_remediations(findings)
   const narrative = herald_narrate(findings, planned)
   const sweep_id = createHash('sha256')
