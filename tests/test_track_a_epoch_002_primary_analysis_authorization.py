@@ -161,6 +161,10 @@ def install_valid_event_fixture(monkeypatch: pytest.MonkeyPatch, validator):
     return head, parent, receipt_event, state
 
 
+def validate_event_fixture(validator, head: str, parent: str) -> str:
+    return validator.validate_authorization_event(head, accepted_parent_sha=parent)
+
+
 def test_authorization_binds_exact_materialization_receipt_and_parent() -> None:
     validator = load_validator()
     receipt = materialization_receipt_fixture()
@@ -307,7 +311,7 @@ def test_authorization_event_validates_immutable_materialization_predecessor(
     validator = load_validator()
     head, parent, _, _ = install_valid_event_fixture(monkeypatch, validator)
 
-    assert validator.validate_authorization_event(head) == parent
+    assert validate_event_fixture(validator, head, parent) == parent
 
 
 def test_authorization_event_rejects_unaccepted_parent(
@@ -324,55 +328,55 @@ def test_authorization_event_rejects_missing_materialization_receipt(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     validator = load_validator()
-    head, _, _, state = install_valid_event_fixture(monkeypatch, validator)
+    head, parent, _, state = install_valid_event_fixture(monkeypatch, validator)
     state["receipt_exists_parent"] = False
 
     with pytest.raises(SystemExit):
-        validator.validate_authorization_event(head)
+        validate_event_fixture(validator, head, parent)
 
 
 def test_authorization_event_rejects_preexisting_locked_result(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     validator = load_validator()
-    head, _, _, state = install_valid_event_fixture(monkeypatch, validator)
+    head, parent, _, state = install_valid_event_fixture(monkeypatch, validator)
     state["result_exists_parent"] = True
 
     with pytest.raises(SystemExit):
-        validator.validate_authorization_event(head)
+        validate_event_fixture(validator, head, parent)
 
 
 def test_authorization_event_rejects_receipt_content_drift(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     validator = load_validator()
-    head, _, _, state = install_valid_event_fixture(monkeypatch, validator)
+    head, parent, _, state = install_valid_event_fixture(monkeypatch, validator)
     state["receipt_bytes_head"] = b"drifted-materialization-receipt\n"
 
     with pytest.raises(SystemExit):
-        validator.validate_authorization_event(head)
+        validate_event_fixture(validator, head, parent)
 
 
 def test_authorization_event_rejects_nonunique_receipt_history(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     validator = load_validator()
-    head, _, receipt_event, state = install_valid_event_fixture(monkeypatch, validator)
+    head, parent, receipt_event, state = install_valid_event_fixture(monkeypatch, validator)
     state["receipt_history"] = [receipt_event, "8" * 40]
 
     with pytest.raises(SystemExit):
-        validator.validate_authorization_event(head)
+        validate_event_fixture(validator, head, parent)
 
 
 def test_authorization_event_rejects_invalid_receipt_event_shape(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     validator = load_validator()
-    head, _, _, state = install_valid_event_fixture(monkeypatch, validator)
+    head, parent, _, state = install_valid_event_fixture(monkeypatch, validator)
     state["receipt_changed_files"] = [validator.MATERIALIZATION_RECEIPT_REL, "README.md"]
 
     with pytest.raises(SystemExit):
-        validator.validate_authorization_event(head)
+        validate_event_fixture(validator, head, parent)
 
 
 def test_primary_analysis_authorization_semantic_policy_is_exact() -> None:
@@ -390,7 +394,10 @@ def test_ci_workflow_is_read_only_exact_head_and_never_runs_analysis() -> None:
         "fetch-depth: 0",
         "persist-credentials: false",
         "python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --tooling",
-        "python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --event-commit HEAD",
+        "--event-commit HEAD",
+        "--accepted-parent \"${{ steps.mode.outputs.accepted_parent }}\"",
+        "accepted_parent=\"${{ github.event.pull_request.base.sha }}\"",
+        "accepted_parent=\"${{ github.event.before }}\"",
         "TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json",
         "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json",
         "TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json",
@@ -416,6 +423,7 @@ def test_procedure_preserves_prospective_fail_closed_boundary() -> None:
         "TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json",
         "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json",
         "TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json",
+        "accepted protected-main parent",
         "exactly one parent",
         "exactly one changed file",
         "creation-only",
