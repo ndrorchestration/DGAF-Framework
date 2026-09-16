@@ -1,25 +1,54 @@
 #!/usr/bin/env python3
-"""Ecosystem Registry Audit — Amethyst/COLLEEN co-orchestration tool.
+"""Ecosystem Registry Audit.
 
 Compares ecosystem_registry.json against live GitHub repos for ndrorchestration.
-Emits: unregistered repos, missing-in-github projects, and TODO deployment stubs.
-
-Usage:
-    GITHUB_TOKEN=<your-token> python ecosystem_audit.py
-    REGISTRY_PATH=registry/ecosystem_registry.json python ecosystem_audit.py
+Structural inventory output is preserved; semantic projection validation is
+exposed separately so fail-closed behavior can be tested deterministically.
 """
-import os
+from datetime import datetime, timezone
 import json
+import os
 import sys
+from typing import Any
+
 import requests
 
 GITHUB_OWNER = os.environ.get("GITHUB_OWNER", "ndrorchestration")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 REGISTRY_PATH = os.environ.get("REGISTRY_PATH", "registry/ecosystem_registry.json")
+PROJECTION_MAX_AGE_DAYS = int(os.environ.get("PROJECTION_MAX_AGE_DAYS", "7"))
+
+_ALLOWED_PROJECTION_STATUS = {"CURRENT", "STALE", "HISTORICAL"}
+_ALLOWED_STALENESS = {
+    None,
+    "METADATA",
+    "SOURCE_SEMANTIC",
+    "RUNTIME_IDENTITY",
+    "HISTORICAL_SCOPE",
+    "GENERATOR",
+}
+_PERSONA_OWNERS = {"amethyst", "sentinel", "colleen"}
+_HIGH_RISK_PHRASES = (
+    "dgaf-governed",
+    "dgaf governed",
+    "dgaf-certified",
+    "dgaf certified",
+    "security compliance",
+    "certified compliant",
+    "guaranteed compliance",
+)
+_NEGATING_SCOPE_PHRASES = (
+    "not established",
+    "not certified",
+    "not governed",
+    "historical",
+    "superseded",
+    "does not establish",
+)
 
 
 def load_registry(path: str) -> dict:
-    with open(path, "r") as f:
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -43,10 +72,251 @@ def fetch_github_repos(owner: str) -> list[dict]:
     return repos
 
 
+def _violation(code: str, *, project_id: str | None = None, detail: str) -> dict:
+    record = {"code": code, "detail": detail}
+    if project_id is not None:
+        record["project_id"] = project_id
+    return record
+
+
+def _parse_datetime(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _valid_current_owner(value: Any) -> bool:
+    return isinstance(value, str) and value.startswith(("role.", "capability."))
+
+
+def _is_persona_owner(value: Any) -> bool:
+    return isinstance(value, str) and value.strip().lower() in _PERSONA_OWNERS
+
+
+def _has_unscoped_current_claim(text: Any) -> bool:
+    if not isinstance(text, str):
+        return False
+    lowered = text.lower()
+    if not any(phrase in lowered for phrase in _HIGH_RISK_PHRASES):
+        return False
+    return not any(scope in lowered for scope in _NEGATING_SCOPE_PHRASES)
+
+
+def collect_semantic_violations(
+    registry: dict,
+    github_repos: list[dict],
+    *,
+    now: datetime | None = None,
+) -> list[dict]:
+    """Return deterministic semantic projection violations."""
+    if now is None:
+        now = datetime.now(timezone.utc)
+    elif now.tzinfo is None:
+        now = now.replace(tzinfo=timezone.utc)
+    else:
+        now = now.astimezone(timezone.utc)
+
+    violations: list[dict] = []
+    projection = registry.get("projection")
+    required_projection_fields = (
+        "authority_scope",
+        "canonical_source",
+        "canonical_source_revision",
+        "projection_checked_at",
+        "projection_status",
+        "staleness_class",
+    )
+    if not isinstance(projection, dict):
+        violations.append(
+            _violation(
+                "PROJECTION_METADATA_MISSING",
+                detail="registry.projection is required and must be an object",
+            )
+        )
+        projection = {}
+    else:
+        missing = [field for field in required_projection_fields if field not in projection]
+        if missing:
+            violations.append(
+                _violation(
+                    "PROJECTION_METADATA_MISSING",
+                    detail=f"projection missing required fields: {', '.join(missing)}",
+                )
+            )
+
+    if projection:
+        if projection.get("authority_scope") != "projection_only":
+            violations.append(
+                _violation(
+                    "PROJECTION_METADATA_INVALID",
+                    detail="projection.authority_scope must equal projection_only",
+                )
+            )
+        if not str(projection.get("canonical_source", "")).strip():
+            violations.append(
+                _violation(
+                    "PROJECTION_METADATA_INVALID",
+                    detail="projection.canonical_source must be non-empty",
+                )
+            )
+        if not str(projection.get("canonical_source_revision", "")).strip():
+            violations.append(
+                _violation(
+                    "PROJECTION_METADATA_INVALID",
+                    detail="projection.canonical_source_revision must be non-empty",
+                )
+            )
+        status = projection.get("projection_status")
+        if status not in _ALLOWED_PROJECTION_STATUS:
+            violations.append(
+                _violation(
+                    "PROJECTION_METADATA_INVALID",
+                    detail=f"invalid projection_status: {status!r}",
+                )
+            )
+        staleness = projection.get("staleness_class")
+        if staleness not in _ALLOWED_STALENESS:
+            violations.append(
+                _violation(
+                    "PROJECTION_METADATA_INVALID",
+                    detail=f"invalid staleness_class: {staleness!r}",
+                )
+            )
+        checked_at = _parse_datetime(projection.get("projection_checked_at"))
+        if checked_at is None:
+            violations.append(
+                _violation(
+                    "PROJECTION_METADATA_INVALID",
+                    detail="projection_checked_at must be a parseable ISO-8601 timestamp",
+                )
+            )
+        elif (
+            status == "CURRENT"
+            and (now - checked_at).total_seconds() > PROJECTION_MAX_AGE_DAYS * 86400
+        ):
+            violations.append(
+                _violation(
+                    "PROJECTION_METADATA_STALE",
+                    detail=(
+                        f"CURRENT projection is older than {PROJECTION_MAX_AGE_DAYS} days: "
+                        f"{projection.get('projection_checked_at')}"
+                    ),
+                )
+            )
+
+    gh_by_name = {
+        repo.get("full_name"): repo
+        for repo in github_repos
+        if repo.get("full_name")
+    }
+
+    for project in registry.get("projects", []):
+        project_id = str(project.get("id", "<missing-id>"))
+        github = project.get("github") or {}
+        full_name = None
+        if github.get("owner") and github.get("repo"):
+            full_name = f"{github['owner']}/{github['repo']}"
+        observed = gh_by_name.get(full_name)
+        if observed:
+            for field in ("private", "archived", "default_branch"):
+                if field in github and github.get(field) != observed.get(field):
+                    violations.append(
+                        _violation(
+                            "GITHUB_METADATA_MISMATCH",
+                            project_id=project_id,
+                            detail=(
+                                f"{field} registry={github.get(field)!r} "
+                                f"observed={observed.get(field)!r}"
+                            ),
+                        )
+                    )
+
+        authority = project.get("authority")
+        if isinstance(authority, dict):
+            current_owner = authority.get("current_owner")
+            if current_owner is not None and not _valid_current_owner(current_owner):
+                code = (
+                    "CURRENT_PERSONA_AUTHORITY"
+                    if _is_persona_owner(current_owner)
+                    else "CURRENT_AUTHORITY_INVALID"
+                )
+                violations.append(
+                    _violation(
+                        code,
+                        project_id=project_id,
+                        detail=(
+                            "current authority owner must be a functional "
+                            f"role/capability id: {current_owner!r}"
+                        ),
+                    )
+                )
+
+        for container_name, field in (
+            ("documentation", "owner"),
+            ("governance", "governance_owner"),
+        ):
+            container = project.get(container_name)
+            if isinstance(container, dict) and _is_persona_owner(container.get(field)):
+                violations.append(
+                    _violation(
+                        "CURRENT_PERSONA_AUTHORITY",
+                        project_id=project_id,
+                        detail=f"legacy current persona authority at {container_name}.{field}",
+                    )
+                )
+
+        if _has_unscoped_current_claim(project.get("summary")):
+            violations.append(
+                _violation(
+                    "UNSCOPED_CURRENT_CLAIM",
+                    project_id=project_id,
+                    detail=(
+                        "summary contains an unscoped current "
+                        "authority/certification/compliance claim"
+                    ),
+                )
+            )
+
+        for deployment in project.get("deployments", []):
+            if deployment.get("status") != "active":
+                continue
+            project_id_value = str(deployment.get("project_id", ""))
+            observed_at = _parse_datetime(deployment.get("observed_at"))
+            evidence = deployment.get("evidence")
+            if (
+                project_id_value.startswith("TODO")
+                or not project_id_value
+                or observed_at is None
+                or not evidence
+            ):
+                violations.append(
+                    _violation(
+                        "ACTIVE_DEPLOYMENT_UNVERIFIED",
+                        project_id=project_id,
+                        detail=(
+                            "active deployment requires non-TODO identity, "
+                            "observed_at, and evidence binding"
+                        ),
+                    )
+                )
+
+    return violations
+
+
 def run_audit():
     registry = load_registry(REGISTRY_PATH)
     projects = registry.get("projects", [])
-    reg_keys = {f"{p['github']['owner']}/{p['github']['repo']}": p for p in projects if p.get("github")}
+    reg_keys = {
+        f"{p['github']['owner']}/{p['github']['repo']}": p
+        for p in projects
+        if p.get("github")
+    }
 
     print(f"Registry v{registry.get('registry_version')} — {len(projects)} projects loaded.")
 
@@ -61,7 +331,10 @@ def run_audit():
     if missing_in_registry:
         for key in missing_in_registry:
             r = gh_keys[key]
-            print(f"  UNREGISTERED  {key}  (private={r.get('private')}, archived={r.get('archived')})")
+            print(
+                f"  UNREGISTERED  {key}  "
+                f"(private={r.get('private')}, archived={r.get('archived')})"
+            )
     else:
         print("  None — registry is complete.")
 
@@ -69,24 +342,34 @@ def run_audit():
     if missing_in_github:
         for key in missing_in_github:
             p = reg_keys[key]
-            print(f"  MISSING  {key}  (id={p.get('id')}, lifecycle={p.get('lifecycle_state')})")
+            print(
+                f"  MISSING  {key}  "
+                f"(id={p.get('id')}, lifecycle={p.get('lifecycle_state')})"
+            )
     else:
         print("  None — all registry projects have corresponding GitHub repos.")
 
     print("\n=== DEPLOYMENT TODO STUBS ===")
     for p in projects:
         for d in p.get("deployments", []):
-            if str(d.get("url", "")).startswith("TODO") or str(d.get("project_id", "")).startswith("TODO"):
-                print(f"  FILL_IN  {p['id']}  platform={d['platform']}  url={d.get('url')}")
+            if str(d.get("url", "")).startswith("TODO") or str(
+                d.get("project_id", "")
+            ).startswith("TODO"):
+                print(
+                    f"  FILL_IN  {p['id']}  platform={d['platform']}  "
+                    f"url={d.get('url')}"
+                )
 
     print("\n=== LIFECYCLE SUMMARY ===")
     from collections import Counter
+
     states = Counter(p.get("lifecycle_state") for p in projects)
     for state, count in sorted(states.items()):
         print(f"  {state}: {count}")
 
     print("\n=== PATTERN COVERAGE ===")
     from collections import defaultdict
+
     pattern_map = defaultdict(list)
     for p in projects:
         for pat in p.get("patterns", []):
