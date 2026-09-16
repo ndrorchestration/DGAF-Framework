@@ -310,6 +310,16 @@ def test_authorization_event_validates_immutable_materialization_predecessor(
     assert validator.validate_authorization_event(head) == parent
 
 
+def test_authorization_event_rejects_unaccepted_parent(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    head, _, _, _ = install_valid_event_fixture(monkeypatch, validator)
+
+    with pytest.raises(SystemExit):
+        validator.validate_authorization_event(head, accepted_parent_sha="e" * 40)
+
+
 def test_authorization_event_rejects_missing_materialization_receipt(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
