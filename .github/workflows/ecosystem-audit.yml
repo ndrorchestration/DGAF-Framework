@@ -4,6 +4,20 @@ on:
   workflow_dispatch: {}
   schedule:
     - cron: "0 * * * *"   # hourly
+  push:
+    paths:
+      - "registry/**"
+      - "tests/test_ecosystem_registry_projection_hygiene.py"
+      - ".github/workflows/ecosystem-audit.yml"
+      - "repos/README.md"
+      - "docs/ECOSYSTEM_AUDIT_STATUS.md"
+  pull_request:
+    paths:
+      - "registry/**"
+      - "tests/test_ecosystem_registry_projection_hygiene.py"
+      - ".github/workflows/ecosystem-audit.yml"
+      - "repos/README.md"
+      - "docs/ECOSYSTEM_AUDIT_STATUS.md"
 
 permissions:
   contents: read
@@ -24,7 +38,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install pytest requests
+
+      - name: Run semantic projection regression tests
+        run: pytest -q tests/test_ecosystem_registry_projection_hygiene.py
 
       - name: Run ecosystem audit
         env:

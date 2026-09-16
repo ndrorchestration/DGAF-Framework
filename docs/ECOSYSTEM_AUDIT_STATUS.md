@@ -10,9 +10,28 @@ Repository-local implementation evidence takes precedence over inherited labels,
 
 Use this status ladder:
 
-**DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
+`DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`
 
 A repository relationship does not transfer verification status from one project to another.
+
+## 2026-09-16 registry semantic-drift reconciliation — issue #694
+
+The machine ecosystem registry is explicitly classified as a **projection only**, not an SSoT or cross-repository authority source.
+
+The reconciliation is bounded to protected-main source state `0083d64aa5f9395a9aa38ff0ca01ccd9e528fd44` and distinguishes two separate dimensions:
+
+- **source semantics:** reconciled/current for the bounded registry audit;
+- **runtime identity:** partially unresolved / `RUNTIME_IDENTITY`, including the current DGAF production-runtime quota block tracked in issue #729 and deployment records that lack current provider-bound observation evidence.
+
+`registry/ecosystem_registry.json` version `0.5.0` therefore no longer treats historical persona owners or Bronze/Silver/experimental DGAF tiers as current machine authority. Those values are retained under explicit `HISTORICAL_ONLY` lineage. Current project authority is project-local unless a project-local source establishes a more specific functional role.
+
+The registry also no longer treats deployment configuration as proof of live runtime state. Declared deployment surfaces may remain recorded while runtime `status` is `unknown` and observation/evidence fields remain absent or bounded.
+
+`registry/ecosystem_audit.py` now has fail-closed semantic checks for projection metadata, current persona authority, GitHub visibility/archive/default-branch mismatch, unscoped current authority/certification/compliance claims, and unsupported `active` deployment assertions. Focused regression tests include negative/historical wording so provenance text does not become a false-positive current claim.
+
+The `repos/*` governance mirrors are retained as historical propagation evidence; `repos/README.md` defines their supersession boundary so they cannot silently reactivate prior persona/governance authority.
+
+This work has **no scientific-state or authorization effect**. It does not establish materialization, a materialization receipt, primary-analysis authorization/execution, scientific-N increment, efficacy, independent validation, certification, production readiness, or High-Assurance authorization.
 
 ## Completed / confirmed in this audit
 
@@ -123,4 +142,4 @@ Do not mark an item `VERIFIED` merely because a README, benchmark dictionary, is
 
 **Preserve evidence. Classify claims. Correct current surfaces. Retain historical provenance. Require new evidence before upgrading status.**
 
-*Reviewed 2026-08-15 during the ecosystem epistemic, terminology, temporal, and traceability audit.*
+*Reviewed 2026-09-16; prior 2026-08-15 audit history retained above.*
