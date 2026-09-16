@@ -159,3 +159,251 @@ def test_operator_receipt_binds_repository_evidence_commit_and_digest_only() -> 
         "commit_sha": parent,
         "sha256": evidence_digest,
     }
+
+
+def configure_evidence_admission_event(
+    validator,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    *,
+    changed_paths: list[str] | None = None,
+    evidence_preexists: bool = False,
+) -> None:
+    head = "a" * 40
+    parent = "b" * 40
+    evidence_path = tmp_path / "materialization-evidence.json"
+    lock_evidence_path = tmp_path / "dataset-lock-evidence.json"
+    receipt_path = tmp_path / "materialization-receipt.json"
+    evidence_path.write_text("{}\n", encoding="utf-8")
+    lock_evidence_path.write_text("{}\n", encoding="utf-8")
+
+    monkeypatch.setattr(validator, "MATERIALIZATION_EVIDENCE_PATH", evidence_path)
+    monkeypatch.setattr(validator, "DATASET_LOCK_EVIDENCE_PATH", lock_evidence_path)
+    monkeypatch.setattr(validator, "MATERIALIZATION_RECEIPT_PATH", receipt_path)
+    monkeypatch.setattr(validator, "validate_semantic_policy", lambda: None)
+    monkeypatch.setattr(validator, "validate_no_analysis_successor", lambda: None)
+    monkeypatch.setattr(
+        validator,
+        "validate_evidence_against_dataset_lock",
+        lambda evidence, lock_evidence: None,
+    )
+    monkeypatch.setattr(
+        validator,
+        "validate_evidence_predecessors",
+        lambda evidence, event_parent: None,
+    )
+
+    event_paths = changed_paths or [validator.MATERIALIZATION_EVIDENCE_REL]
+
+    def fake_git(*args: str) -> str:
+        if args == ("rev-parse", "HEAD"):
+            return head
+        if args == ("rev-list", "--parents", "-n", "1", head):
+            return f"{head} {parent}"
+        if args == ("diff", "--name-only", parent, head):
+            return "\n".join(event_paths)
+        raise AssertionError(f"unexpected git call: {args}")
+
+    monkeypatch.setattr(validator, "git", fake_git)
+    monkeypatch.setattr(
+        validator,
+        "git_object_exists",
+        lambda spec: evidence_preexists
+        if spec == f"{parent}:{validator.MATERIALIZATION_EVIDENCE_REL}"
+        else False,
+    )
+    monkeypatch.setattr(
+        validator,
+        "path_history",
+        lambda path, ref="HEAD": [head]
+        if path == validator.MATERIALIZATION_EVIDENCE_REL
+        else [],
+    )
+
+
+def test_evidence_admission_event_accepts_one_parent_one_file_creation_only(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    validator = load_validator()
+    configure_evidence_admission_event(validator, monkeypatch, tmp_path)
+
+    validator.validate_evidence_admission()
+
+
+def test_evidence_admission_event_rejects_extra_changed_path(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    validator = load_validator()
+    configure_evidence_admission_event(
+        validator,
+        monkeypatch,
+        tmp_path,
+        changed_paths=[validator.MATERIALIZATION_EVIDENCE_REL, "README.md"],
+    )
+
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_admission()
+
+
+def test_evidence_admission_event_rejects_replay_over_existing_evidence(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    validator = load_validator()
+    configure_evidence_admission_event(
+        validator,
+        monkeypatch,
+        tmp_path,
+        evidence_preexists=True,
+    )
+
+    with pytest.raises(SystemExit):
+        validator.validate_evidence_admission()
+
+
+def configure_receipt_event(
+    validator,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    *,
+    changed_paths: list[str] | None = None,
+    evidence_commit: str | None = None,
+    receipt_preexists: bool = False,
+) -> None:
+    head = "a" * 40
+    parent = "b" * 40
+    evidence_parent = "c" * 40
+    decision_commit = "d" * 40
+    bound_evidence_commit = evidence_commit or parent
+
+    paths = {
+        "DATASET_LOCK_PATH": tmp_path / "dataset-lock.json",
+        "UNBLINDING_DECISION_PATH": tmp_path / "unblinding.json",
+        "MATERIALIZATION_EVIDENCE_PATH": tmp_path / "materialization-evidence.json",
+        "DATASET_LOCK_EVIDENCE_PATH": tmp_path / "dataset-lock-evidence.json",
+        "MATERIALIZATION_RECEIPT_PATH": tmp_path / "materialization-receipt.json",
+    }
+    for name, path in paths.items():
+        path.write_text("{}\n", encoding="utf-8")
+        monkeypatch.setattr(validator, name, path)
+
+    monkeypatch.setattr(validator, "validate_semantic_policy", lambda: None)
+    monkeypatch.setattr(validator, "validate_no_analysis_successor", lambda: None)
+    monkeypatch.setattr(validator, "validate_dataset_lock_receipt_object", lambda value: None)
+    monkeypatch.setattr(
+        validator,
+        "validate_unblinding_decision_object",
+        lambda decision, dataset_lock=None: None,
+    )
+    monkeypatch.setattr(
+        validator,
+        "validate_evidence_against_dataset_lock",
+        lambda evidence, lock_evidence: None,
+    )
+    monkeypatch.setattr(
+        validator,
+        "validate_evidence_predecessors",
+        lambda evidence, event_parent: None,
+    )
+    monkeypatch.setattr(
+        validator,
+        "validate_receipt_object",
+        lambda receipt, decision, evidence, **kwargs: None,
+    )
+
+    event_paths = changed_paths or [validator.MATERIALIZATION_RECEIPT_REL]
+
+    def fake_git(*args: str) -> str:
+        if args == ("rev-parse", "HEAD"):
+            return head
+        if args == ("rev-list", "--parents", "-n", "1", head):
+            return f"{head} {parent}"
+        if args == ("diff", "--name-only", parent, head):
+            return "\n".join(event_paths)
+        if args == ("rev-list", "--parents", "-n", "1", parent):
+            return f"{parent} {evidence_parent}"
+        if args == ("diff", "--name-only", evidence_parent, parent):
+            return validator.MATERIALIZATION_EVIDENCE_REL
+        if args == ("show", f"{evidence_parent}:{validator.UNBLINDING_DECISION_REL}"):
+            return "{}"
+        raise AssertionError(f"unexpected git call: {args}")
+
+    monkeypatch.setattr(validator, "git", fake_git)
+    monkeypatch.setattr(
+        validator,
+        "git_object_exists",
+        lambda spec: receipt_preexists
+        if spec == f"{parent}:{validator.MATERIALIZATION_RECEIPT_REL}"
+        else False,
+    )
+
+    def fake_history(path: str, ref: str = "HEAD") -> list[str]:
+        if path == validator.MATERIALIZATION_RECEIPT_REL:
+            return [head]
+        if path == validator.MATERIALIZATION_EVIDENCE_REL and ref == parent:
+            return [bound_evidence_commit]
+        if path == validator.UNBLINDING_DECISION_REL and ref == evidence_parent:
+            return [decision_commit]
+        return []
+
+    monkeypatch.setattr(validator, "path_history", fake_history)
+
+
+def test_receipt_event_accepts_direct_one_file_successor(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    validator = load_validator()
+    configure_receipt_event(validator, monkeypatch, tmp_path)
+
+    validator.validate_receipt_event()
+
+
+def test_receipt_event_rejects_intervening_commit_after_evidence_admission(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    validator = load_validator()
+    configure_receipt_event(
+        validator,
+        monkeypatch,
+        tmp_path,
+        evidence_commit="e" * 40,
+    )
+
+    with pytest.raises(SystemExit):
+        validator.validate_receipt_event()
+
+
+def test_receipt_event_rejects_extra_changed_path(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    validator = load_validator()
+    configure_receipt_event(
+        validator,
+        monkeypatch,
+        tmp_path,
+        changed_paths=[validator.MATERIALIZATION_RECEIPT_REL, "README.md"],
+    )
+
+    with pytest.raises(SystemExit):
+        validator.validate_receipt_event()
+
+
+def test_receipt_event_rejects_replay_over_existing_receipt(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    validator = load_validator()
+    configure_receipt_event(
+        validator,
+        monkeypatch,
+        tmp_path,
+        receipt_preexists=True,
+    )
+
+    with pytest.raises(SystemExit):
+        validator.validate_receipt_event()
