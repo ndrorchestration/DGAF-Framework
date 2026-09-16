@@ -1,8 +1,10 @@
 # Track A Epoch 002 dataset-lock procedure
 
-Status: **COLLECTION COMPLETE · OPERATOR RETAINED-BYTE ADMISSION PENDING · DATASET LOCK NOT ESTABLISHED · UNBLINDING NOT AUTHORIZED · SCIENTIFIC-N INCREMENT 0**
+> **HISTORICAL PROCEDURE / SUPERSEDED CURRENT-STATE SNAPSHOT.** The status line and conditional predicates below describe the pre-dataset-lock stage when this procedure governed the transition. They are retained as event-time provenance and are **not** the current Track A Epoch 002 state. Resolve current state through `docs/CURRENT_STATE.md`. The accepted dataset lock is now established and bounded unblinding is authorized only for controlled mapping release/decryption; real materialization remains not established and primary analysis remains not authorized/not run. Current downstream materialization control is defined in `docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_PROCEDURE.md`. This archival banner has no scientific-state or authorization effect.
 
-Current controller: issue #679. Historical issue #619 owns the original prospective dataset-lock tooling lineage; issue #483 is an Epoch 001 pattern source only. No Epoch 001 identity, artifact, custody, authorization, or scientific state transfers into Epoch 002.
+Historical status at this procedure's active frontier: **COLLECTION COMPLETE · OPERATOR RETAINED-BYTE ADMISSION PENDING · DATASET LOCK NOT ESTABLISHED · UNBLINDING NOT AUTHORIZED · SCIENTIFIC-N INCREMENT 0**
+
+Historical controller: issue #679. Historical issue #619 owns the original prospective dataset-lock tooling lineage; issue #483 is an Epoch 001 pattern source only. No Epoch 001 identity, artifact, custody, authorization, or scientific state transfers into Epoch 002.
 
 ## Purpose
 
