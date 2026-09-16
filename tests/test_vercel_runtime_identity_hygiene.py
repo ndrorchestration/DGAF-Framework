@@ -66,7 +66,7 @@ def test_deployment_verifier_fails_closed_on_health_dashboard_and_audit_contract
     assert "audit response contract FAIL" in script
 
 
-def test_ecosystem_registry_binds_current_dgaf_vercel_identity() -> None:
+def test_ecosystem_registry_binds_declared_dgaf_vercel_identity() -> None:
     registry = json.loads((REPO_ROOT / "registry/ecosystem_registry.json").read_text(encoding="utf-8"))
     project = next(project for project in registry["projects"] if project["id"] == "dgaf-framework")
     deployment = next(
@@ -77,4 +77,5 @@ def test_ecosystem_registry_binds_current_dgaf_vercel_identity() -> None:
 
     assert deployment["project_id"] == VERCEL_PROJECT_ID
     assert deployment["url"] == CANONICAL_PRODUCTION_URL
-    assert deployment["status"] == "active"
+    assert deployment["status"] == "declared_configuration"
+    assert deployment["runtime_truth_scope"] == "IDENTITY_ONLY_NOT_RUNTIME_CURRENTNESS"

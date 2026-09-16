@@ -1,5 +1,7 @@
 # Lifecycle Harness v2
 
+**Historical-boundary notice (current as of 2026-09-15):** This file is an S067-era protocol/session artifact retained for lineage. Persona/agent names, registry references, stability labels, and closure language below are historical terms from that session and do **not** establish current authority, current experimental validity, execution authorization, freeze status, or a present control-state transition. Current authority must be derived from the repository's current role/identity/governance records and exact evidence-bound control state.
+
 > **Pattern:** Q-S066-04 (carry-forward from Q-S043-05)  
 > **Orchestrators:** Amethyst × COLLEEN  
 > **Session sealed:** S067 · 2026-05-30  
@@ -46,7 +48,7 @@ The Lifecycle Harness defines the Phase 0–VI stability verification protocol f
 
 For each phase, stability index SI is the mean of all measurable evidence signals normalised to [0,1]:
 
-```
+```text
 SI = mean(sᵢ) for all signals sᵢ in phase evidence set
 Pass condition: SI ≥ φ* = 0.6180
 ```

@@ -4,6 +4,15 @@ on:
   workflow_dispatch: {}
   schedule:
     - cron: "0 * * * *"   # hourly
+  pull_request:
+    paths:
+      - "registry/ecosystem_registry.json"
+      - "registry/ecosystem_audit.py"
+      - "tests/test_ecosystem_registry_projection_hygiene.py"
+      - "tests/test_vercel_runtime_identity_hygiene.py"
+      - ".github/workflows/ecosystem-audit.yml"
+      - "docs/lifecycle_harness_v2.md"
+      - "repos/README.md"
 
 permissions:
   contents: read
