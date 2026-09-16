@@ -25,11 +25,13 @@
 ### Task 1: Reproduce the semantic-audit blind spot with focused RED tests
 
 **Files:**
+
 - Create: `tests/test_ecosystem_registry_projection_hygiene.py`
 - Read: `registry/ecosystem_audit.py`
 - Read: `registry/ecosystem_registry.json`
 
 **Interfaces:**
+
 - Consumes: current `load_registry()` and module import surface.
 - Produces: executable requirements for `collect_semantic_violations(registry, github_repos, *, now)` and `audit_exit_code(violations)`.
 
@@ -108,10 +110,12 @@ Commit message: `test(registry): expose semantic projection drift`
 ### Task 2: Add the deterministic fail-closed semantic validator
 
 **Files:**
+
 - Modify: `registry/ecosystem_audit.py`
 - Test: `tests/test_ecosystem_registry_projection_hygiene.py`
 
 **Interfaces:**
+
 - Produces: `collect_semantic_violations(registry: dict, github_repos: list[dict], *, now: datetime) -> list[dict]`
 - Produces: `audit_exit_code(violations: list[dict]) -> int`
 - `run_audit()` prints structural + semantic sections and returns the exit code.
@@ -161,10 +165,12 @@ Commit message: `fix(registry): fail closed on semantic projection drift`
 ### Task 3: Reconcile the machine registry as an explicit projection
 
 **Files:**
+
 - Modify: `registry/ecosystem_registry.json`
 - Test: `tests/test_ecosystem_registry_projection_hygiene.py`
 
 **Interfaces:**
+
 - Consumes validator semantics from Task 2.
 - Produces a registry that passes semantic validation against the exact bounded GitHub observations used for reconciliation.
 
@@ -202,11 +208,13 @@ Commit message: `docs(registry): reconcile projection semantics`
 ### Task 4: Preserve historical propagation boundary and harden CI execution
 
 **Files:**
+
 - Create: `repos/README.md`
 - Modify: `.github/workflows/ecosystem-audit.yml`
 - Modify: `docs/ECOSYSTEM_AUDIT_STATUS.md`
 
 **Interfaces:**
+
 - The README marks `repos/*/GOVERNANCE.md` mirrors as historical propagation evidence and points to current external repository governance.
 - Workflow executes focused tests before the live audit and fails when the auditor returns nonzero.
 
@@ -235,6 +243,7 @@ Commit message: `ci(registry): enforce semantic projection hygiene`
 ### Task 5: Rebase issue #694 and validate the exact branch head
 
 **Files:**
+
 - GitHub issue #694 metadata/body
 - No scientific-state files unless a test requires an exact non-effect assertion.
 
