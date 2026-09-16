@@ -150,3 +150,39 @@ def test_mixed_summary_does_not_let_negative_clause_mask_positive_claim():
         )
     )
     assert "UNSCOPED_CURRENT_CLAIM" in _codes(_violations(mixed))
+
+
+def test_real_registry_has_no_semantic_projection_violations():
+    import json
+    from pathlib import Path
+
+    registry_path = Path(__file__).resolve().parents[1] / "registry" / "ecosystem_registry.json"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    visibility = {
+        "DGAF-Framework": (False, False, "main"),
+        "Driftwatch": (False, False, "main"),
+        "aoga-dashboard": (True, False, "main"),
+        "pptl-governance-dashboard": (True, False, "main"),
+        "sentinel-governance": (False, False, "main"),
+        "Amethyst-Governance-Eval-Stack": (True, False, "main"),
+        "junior-apogee-app": (False, False, "main"),
+        "phi-calculus-app": (False, False, "main"),
+        "Acoustic-mesh": (False, False, "main"),
+        "3d-visualization-hub": (False, False, "main"),
+        "ai-governance-frameworks": (False, False, "main"),
+        "gold-star-qa-framework": (True, True, "main"),
+    }
+    repos = [
+        _repo(
+            f"ndrorchestration/{name}",
+            private=private,
+            archived=archived,
+            default_branch=branch,
+        )
+        for name, (private, archived, branch) in visibility.items()
+    ]
+    assert collect_semantic_violations(
+        registry,
+        repos,
+        now=datetime(2026, 9, 16, 12, tzinfo=timezone.utc),
+    ) == []
