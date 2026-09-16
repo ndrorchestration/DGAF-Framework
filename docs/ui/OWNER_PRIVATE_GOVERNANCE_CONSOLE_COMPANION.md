@@ -3,8 +3,8 @@
 **Status:** ACTIVE / OWNER-PRIVATE / READ-ONLY  
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
-**Source snapshot:** protected `main` at `ffb197443b02d49bffc8967f3cec1df72da560e8`  
-**Snapshot event:** post-PR #715 materialization-apparatus reconciliation
+**Source snapshot:** protected `main` at `0e0e1a67644be224de3212a4aea83e191de41f23`  
+**Snapshot event:** post-PR #718 materialization-apparatus hardening reconciliation
 
 ## Purpose
 
