@@ -315,11 +315,7 @@ def validate_authorization_event(head: str) -> str:
     receipt = load_json_at_ref(parent, MATERIALIZATION_RECEIPT_REL)
     validate_materialization_receipt(receipt)
 
-    receipt_history = [
-        line
-        for line in git("log", "--format=%H", "--", MATERIALIZATION_RECEIPT_REL).splitlines()
-        if line
-    ]
+    receipt_history = [line for line in git("log", "--format=%H", "--", MATERIALIZATION_RECEIPT_REL).splitlines() if line]
     if len(receipt_history) != 1:
         fail("materialization receipt must have first-and-only immutable history")
     receipt_event = receipt_history[0]
@@ -329,13 +325,7 @@ def validate_authorization_event(head: str) -> str:
         fail("materialization receipt event must have exactly one parent")
     receipt_parent = receipt_lineage[1]
 
-    receipt_changed = [
-        line
-        for line in git(
-            "diff-tree", "--no-commit-id", "--name-only", "-r", receipt_event
-        ).splitlines()
-        if line
-    ]
+    receipt_changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", receipt_event).splitlines() if line]
     if receipt_changed != [MATERIALIZATION_RECEIPT_REL]:
         fail("materialization receipt event must change exactly the canonical receipt path")
     if git_object_exists(f"{receipt_parent}:{MATERIALIZATION_RECEIPT_REL}"):
