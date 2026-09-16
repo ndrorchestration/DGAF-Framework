@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -98,7 +99,7 @@ def install_valid_event_fixture(monkeypatch: pytest.MonkeyPatch, validator):
         generated_at_utc="2026-09-16T13:00:00Z",
     )
 
-    state = {
+    state: dict[str, Any] = {
         "receipt_exists_parent": True,
         "receipt_exists_head": True,
         "result_exists_parent": False,
