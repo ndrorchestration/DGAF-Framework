@@ -22,8 +22,49 @@ env:
   HTTPX_VERSION: 0.28.1
 
 jobs:
+  classify:
+    name: Classify deploy relevance
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.classify.outputs.should_deploy }}
+      decision: ${{ steps.classify.outputs.decision }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Classify exact push diff
+        id: classify
+        env:
+          BASE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          decision="$(node scripts/vercel-ignore-build.mjs --decision --base "${BASE_SHA:-}" --head "$GITHUB_SHA")"
+          case "$decision" in
+            SKIP)
+              should_deploy=false
+              ;;
+            BUILD)
+              should_deploy=true
+              ;;
+            *)
+              echo "Unexpected deploy decision: $decision" >&2
+              exit 1
+              ;;
+          esac
+          echo "decision=$decision" >> "$GITHUB_OUTPUT"
+          echo "should_deploy=$should_deploy" >> "$GITHUB_OUTPUT"
+          echo "Deploy relevance: $decision"
+
   deploy:
     name: Vercel Production Deploy
+    needs: classify
+    if: needs.classify.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     outputs:
       deployment_url: ${{ steps.deploy.outputs.deployment_url }}
