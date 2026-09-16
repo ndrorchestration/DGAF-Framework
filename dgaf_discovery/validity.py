@@ -75,7 +75,7 @@ class ImpactAssessment:
     scientific_state_effect: str = "NONE"
     scientific_n_increment: int = 0
 
-    def disposition_for(self, ref: str):
+    def disposition_for(self, ref: str) -> ImpactDisposition | None:
         for finding in self.findings:
             if finding.ref == ref:
                 return finding.disposition
@@ -96,17 +96,25 @@ def validate_validity_event(event: ValidityEvent) -> None:
     if not event.cause_code:
         raise ValueError("cause_code is required")
     if not event.evidence_refs or any(not ref for ref in event.evidence_refs):
-        raise ValueError("evidence_refs must contain at least one non-empty reference")
+        raise ValueError(
+            "evidence_refs must contain at least one non-empty reference"
+        )
     if not event.authority_scope:
         raise ValueError("authority_scope is required")
     if not event.decision_ref:
         raise ValueError("decision_ref is required")
     if event.classification != "ENGINEERING_DISCOVERY_ONLY":
-        raise ValueError("validity events in the discovery harness are engineering-discovery only")
+        raise ValueError(
+            "validity events in the discovery harness are engineering-discovery only"
+        )
     if event.authoritative_effect != "NONE":
-        raise ValueError("validity events in the discovery harness cannot have authoritative effect")
+        raise ValueError(
+            "validity events in the discovery harness cannot have authoritative effect"
+        )
     if event.scientific_state_effect != "NONE" or event.scientific_n_increment != 0:
-        raise ValueError("validity events in the discovery harness cannot alter scientific state")
+        raise ValueError(
+            "validity events in the discovery harness cannot alter scientific state"
+        )
 
 
 def validate_dependency_edge(edge: DependencyEdge) -> None:
@@ -153,8 +161,8 @@ _STOP_PROPAGATION = {
 
 def _reason(edge: DependencyEdge, disposition: ImpactDisposition) -> str:
     return (
-        f"{edge.relation.value} from {edge.source_ref} requires {disposition.value}; "
-        f"rule source: {edge.source_evidence_ref}"
+        f"{edge.relation.value} from {edge.source_ref} requires "
+        f"{disposition.value}; rule source: {edge.source_evidence_ref}"
     )
 
 
@@ -169,18 +177,23 @@ def compute_validity_impact(
     edges: tuple[DependencyEdge, ...],
 ) -> ImpactAssessment:
     validate_validity_event(event)
-    if event.new_state not in {ValidityState.INVALIDATED, ValidityState.SUPERSEDED}:
-        raise ValueError("impact traversal requires a new state of INVALIDATED or SUPERSEDED")
+    if event.new_state not in {
+        ValidityState.INVALIDATED,
+        ValidityState.SUPERSEDED,
+    }:
+        raise ValueError(
+            "impact traversal requires a new state of INVALIDATED or SUPERSEDED"
+        )
 
-    adjacency = defaultdict(list)
+    adjacency: dict[str, list[DependencyEdge]] = defaultdict(list)
     for edge in edges:
         validate_dependency_edge(edge)
         adjacency[edge.source_ref].append(edge)
 
     findings: dict[str, ImpactFinding] = {}
-    unresolved = set()
+    unresolved: set[str] = set()
     queue = deque([(event.subject_ref, (event.subject_ref,))])
-    traversed = set()
+    traversed: set[tuple[str, str, DependencyRelation]] = set()
 
     while queue:
         current_ref, path = queue.popleft()
@@ -192,8 +205,9 @@ def compute_validity_impact(
 
             if edge.relation in _AMBIGUOUS:
                 unresolved.add(
-                    f"{edge.source_ref} -[{edge.relation.value}]-> {edge.target_ref} "
-                    f"requires owner adjudication; source: {edge.source_evidence_ref}"
+                    f"{edge.source_ref} -[{edge.relation.value}]-> "
+                    f"{edge.target_ref} requires owner adjudication; "
+                    f"source: {edge.source_evidence_ref}"
                 )
                 continue
 
