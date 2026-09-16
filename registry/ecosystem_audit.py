@@ -239,7 +239,11 @@ def collect_semantic_violations(
         if isinstance(authority, dict):
             current_owner = authority.get("current_owner")
             if current_owner is not None and not _valid_current_owner(current_owner):
-                code = "CURRENT_PERSONA_AUTHORITY" if _is_persona_owner(current_owner) else "CURRENT_AUTHORITY_INVALID"
+                code = (
+                    "CURRENT_PERSONA_AUTHORITY"
+                    if _is_persona_owner(current_owner)
+                    else "CURRENT_AUTHORITY_INVALID"
+                )
                 violations.append(
                     _violation(
                         code,
