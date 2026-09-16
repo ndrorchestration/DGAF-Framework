@@ -8,6 +8,7 @@ A positive authorization event is valid only as a later, creation-only commit
 whose sole changed file is the canonical authorization record and whose
 accepted materialization receipt and frozen analysis identities already exist.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -23,24 +24,15 @@ PROTOCOL_ID = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 EPOCH = 2
 AUTH_SCOPE = "LOCKED_PRIMARY_ANALYSIS_ONLY"
 PRODUCER_SYSTEM = "DGAF_TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_VALIDATOR"
-MATERIALIZATION_SCOPE = (
-    "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
-)
+MATERIALIZATION_SCOPE = "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
 
 SCHEMA_REL = "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
 SEMANTICS_REL = "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
 ANALYSIS_LOCK_REL = "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json"
 PREREG_REL = "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
-MATERIALIZATION_RECEIPT_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
-)
-AUTH_REL = (
-    "docs/experiment/track_a_runs/"
-    "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
-)
-LOCKED_RESULT_REL = (
-    "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
-)
+MATERIALIZATION_RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
+AUTH_REL = "docs/experiment/track_a_runs/" "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+LOCKED_RESULT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
 
 SCHEMA_PATH = ROOT / SCHEMA_REL
 SEMANTICS_PATH = ROOT / SEMANTICS_REL
@@ -53,9 +45,7 @@ EXPECTED_PREREG_MERGE = "eed3da6b0c4bae45f13871c45f42027da12ad36e"
 EXPECTED_PREREG_BLOB = "9668ec54e50c40b04d40cfa64b817950df4bbffa"
 EXPECTED_ANALYSIS_PATH = "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
 EXPECTED_ANALYSIS_BLOB = "d4495f7cdf211b974039ec0e66292dc62ea0881f"
-EXPECTED_ANALYSIS_CONFIG_SHA256 = (
-    "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73"
-)
+EXPECTED_ANALYSIS_CONFIG_SHA256 = "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73"
 EXPECTED_REQUIREMENTS_PATH = "experiments/pdmal_pilot/requirements-full-lock.txt"
 EXPECTED_REQUIREMENTS_BLOB = "00c1f779e97030f9b25ae494642edb31b5b09de5"
 
@@ -144,9 +134,7 @@ def load_json(path: Path) -> dict[str, Any]:
 
 def git(*args: str, binary: bool = False) -> str | bytes:
     try:
-        return subprocess.check_output(
-            ["git", *args], cwd=ROOT, text=not binary, stderr=subprocess.STDOUT
-        ).strip()
+        return subprocess.check_output(["git", *args], cwd=ROOT, text=not binary, stderr=subprocess.STDOUT).strip()
     except subprocess.CalledProcessError as exc:
         output = exc.output.decode() if isinstance(exc.output, bytes) else exc.output
         fail(f"git {' '.join(args)} failed: {output.strip()}")
@@ -174,9 +162,7 @@ def validate_semantic_contract() -> None:
         fail("primary-analysis authorization forbidden non-effect drift")
     records = semantics.get("records", {})
     materialization = records.get("MATERIALIZATION_RECEIPT", {})
-    if materialization.get("requires_separate_exact_commit_for") != (
-        "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD"
-    ):
+    if materialization.get("requires_separate_exact_commit_for") != ("PRIMARY_ANALYSIS_AUTHORIZATION_RECORD"):
         fail("materialization-to-authorization separation contract drift")
     authorization = records.get("PRIMARY_ANALYSIS_AUTHORIZATION_RECORD", {})
     if authorization.get("authority_class") != "HUMAN_CONTROLLED_AUTHORIZATION":
@@ -356,30 +342,27 @@ def validate_authorization_event() -> None:
 
     if not file_exists_at(parent_sha, MATERIALIZATION_RECEIPT_REL):
         fail("accepted materialization receipt must pre-exist authorization event")
-    receipt_history_text = str(
-        git("log", "--format=%H", "--", MATERIALIZATION_RECEIPT_REL)
-    )
+    receipt_history_text = str(git("log", "--format=%H", "--", MATERIALIZATION_RECEIPT_REL))
     receipt_history = [line for line in receipt_history_text.splitlines() if line]
     if len(receipt_history) != 1:
         fail("materialization receipt must have exactly one immutable history event")
     receipt_commit_sha = receipt_history[0]
-    if subprocess.run(
-        ["git", "merge-base", "--is-ancestor", receipt_commit_sha, parent_sha],
-        cwd=ROOT,
-        check=False,
-    ).returncode != 0:
+    if (
+        subprocess.run(
+            ["git", "merge-base", "--is-ancestor", receipt_commit_sha, parent_sha],
+            cwd=ROOT,
+            check=False,
+        ).returncode
+        != 0
+    ):
         fail("materialization receipt event is not an ancestor of authorization parent")
 
-    parent_receipt_bytes = git(
-        "show", f"{parent_sha}:{MATERIALIZATION_RECEIPT_REL}", binary=True
-    )
+    parent_receipt_bytes = git("show", f"{parent_sha}:{MATERIALIZATION_RECEIPT_REL}", binary=True)
     head_receipt_bytes = MATERIALIZATION_RECEIPT_PATH.read_bytes()
     assert isinstance(parent_receipt_bytes, bytes)
     if parent_receipt_bytes != head_receipt_bytes:
         fail("materialization receipt changed across authorization event")
-    creation_receipt_bytes = git(
-        "show", f"{receipt_commit_sha}:{MATERIALIZATION_RECEIPT_REL}", binary=True
-    )
+    creation_receipt_bytes = git("show", f"{receipt_commit_sha}:{MATERIALIZATION_RECEIPT_REL}", binary=True)
     assert isinstance(creation_receipt_bytes, bytes)
     if creation_receipt_bytes != parent_receipt_bytes:
         fail("materialization receipt bytes drifted after accepted creation event")
