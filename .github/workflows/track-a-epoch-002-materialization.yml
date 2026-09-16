@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/track-a-epoch-002-materialization.yml'
       - 'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_MATERIALIZATION_EXECUTION_RECEIPT_SCHEMA.json'
       - 'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_PROCEDURE.md'
       - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
       - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
@@ -14,15 +15,20 @@ on:
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json'
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json'
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json'
+      - 'scripts/prepare_track_a_epoch_002_operator_materialization.py'
       - 'scripts/validate_track_a_epoch_002_materialization.py'
       - 'tests/test_track_a_epoch_002_materialization.py'
+      - 'tests/test_track_a_epoch_002_materialization_operator_bundle.py'
       - 'tests/test_track_a_epoch_002_materialization_operator_provenance.py'
+      - 'tests/test_track_a_epoch_002_operator_materialization_execution_receipt.py'
+      - 'tests/test_track_a_epoch_002_unblinded_materializer.py'
   push:
     branches:
       - main
     paths:
       - '.github/workflows/track-a-epoch-002-materialization.yml'
       - 'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json'
+      - 'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_MATERIALIZATION_EXECUTION_RECEIPT_SCHEMA.json'
       - 'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_PROCEDURE.md'
       - 'docs/experiment/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE_SCHEMA.json'
       - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
@@ -32,9 +38,13 @@ on:
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json'
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json'
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json'
+      - 'scripts/prepare_track_a_epoch_002_operator_materialization.py'
       - 'scripts/validate_track_a_epoch_002_materialization.py'
       - 'tests/test_track_a_epoch_002_materialization.py'
+      - 'tests/test_track_a_epoch_002_materialization_operator_bundle.py'
       - 'tests/test_track_a_epoch_002_materialization_operator_provenance.py'
+      - 'tests/test_track_a_epoch_002_operator_materialization_execution_receipt.py'
+      - 'tests/test_track_a_epoch_002_unblinded_materializer.py'
   workflow_dispatch: {}
 
 permissions:
@@ -69,8 +79,10 @@ jobs:
       - name: Install pinned validation environment
         run: python -m pip install -r requirements-ci.txt
 
-      - name: Compile validator
-        run: python -m py_compile scripts/validate_track_a_epoch_002_materialization.py
+      - name: Compile materialization tooling
+        run: |
+          python -m py_compile scripts/validate_track_a_epoch_002_materialization.py
+          python -m py_compile scripts/prepare_track_a_epoch_002_operator_materialization.py
 
       - name: Resolve materialization validation mode
         id: mode
@@ -99,32 +111,42 @@ jobs:
         if: ${{ steps.mode.outputs.value == 'receipt_event' }}
         run: python scripts/validate_track_a_epoch_002_materialization.py --validate-receipt-event
 
-      - name: Prove corrective tooling PR changes only the dedicated lane
+      - name: Prove tooling PR stays inside the dedicated materialization lane
         if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          expected=(
+          allowed=(
             '.github/workflows/track-a-epoch-002-materialization.yml'
             'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json'
+            'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_MATERIALIZATION_EXECUTION_RECEIPT_SCHEMA.json'
             'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_PROCEDURE.md'
+            'scripts/prepare_track_a_epoch_002_operator_materialization.py'
             'scripts/validate_track_a_epoch_002_materialization.py'
             'tests/test_track_a_epoch_002_materialization.py'
+            'tests/test_track_a_epoch_002_materialization_operator_bundle.py'
             'tests/test_track_a_epoch_002_materialization_operator_provenance.py'
+            'tests/test_track_a_epoch_002_operator_materialization_execution_receipt.py'
+            'tests/test_track_a_epoch_002_unblinded_materializer.py'
           )
           mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
-          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
-          test "${#changed[@]}" -eq "${#expected_sorted[@]}"
-          diff -u \
-            <(printf '%s\n' "${expected_sorted[@]}") \
-            <(printf '%s\n' "${changed[@]}")
+          test "${#changed[@]}" -gt 0
+          for path in "${changed[@]}"; do
+            printf '%s\n' "${allowed[@]}" | grep -Fxq -- "$path" || {
+              echo "out-of-lane materialization tooling path: $path" >&2
+              exit 1
+            }
+          done
 
-      - name: Run materialization adversarial tests
+      - name: Run materialization adversarial and operator-bundle tests
         run: |
           python -m pytest \
             tests/test_track_a_epoch_002_materialization.py \
             tests/test_track_a_epoch_002_materialization_operator_provenance.py \
+            tests/test_track_a_epoch_002_materialization_operator_bundle.py \
+            tests/test_track_a_epoch_002_operator_materialization_execution_receipt.py \
+            tests/test_track_a_epoch_002_unblinded_materializer.py \
             -q
 
       - name: Prove validator has no secret, decryption, writer, or analysis surface
