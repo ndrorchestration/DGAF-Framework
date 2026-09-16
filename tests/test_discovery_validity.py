@@ -26,8 +26,18 @@ def invalidation_event(subject_ref="validator:v1"):
 
 def test_required_dependency_propagates_to_reverification_then_suspension():
     edges = (
-        DependencyEdge("validator:v1", "receipt:r1", DependencyRelation.REQUIRES_VALIDITY, "policy://required"),
-        DependencyEdge("receipt:r1", "claim:c1", DependencyRelation.SUPPORTS_REQUIRED, "policy://support"),
+        DependencyEdge(
+            "validator:v1",
+            "receipt:r1",
+            DependencyRelation.REQUIRES_VALIDITY,
+            "policy://required",
+        ),
+        DependencyEdge(
+            "receipt:r1",
+            "claim:c1",
+            DependencyRelation.SUPPORTS_REQUIRED,
+            "policy://support",
+        ),
     )
     result = compute_validity_impact(invalidation_event(), edges)
     assert result.disposition_for("receipt:r1") is ImpactDisposition.REVERIFY
@@ -37,9 +47,24 @@ def test_required_dependency_propagates_to_reverification_then_suspension():
 
 def test_reference_and_lineage_edges_preserve_history_and_stop_propagation():
     edges = (
-        DependencyEdge("validator:v1", "historical:h1", DependencyRelation.REFERENCES, "policy://reference"),
-        DependencyEdge("validator:v1", "lineage:l1", DependencyRelation.LINEAGE, "policy://lineage"),
-        DependencyEdge("historical:h1", "claim:unreached", DependencyRelation.SUPPORTS_REQUIRED, "policy://downstream"),
+        DependencyEdge(
+            "validator:v1",
+            "historical:h1",
+            DependencyRelation.REFERENCES,
+            "policy://reference",
+        ),
+        DependencyEdge(
+            "validator:v1",
+            "lineage:l1",
+            DependencyRelation.LINEAGE,
+            "policy://lineage",
+        ),
+        DependencyEdge(
+            "historical:h1",
+            "claim:unreached",
+            DependencyRelation.SUPPORTS_REQUIRED,
+            "policy://downstream",
+        ),
     )
     result = compute_validity_impact(invalidation_event(), edges)
     assert result.disposition_for("historical:h1") is ImpactDisposition.NO_EFFECT
@@ -49,17 +74,35 @@ def test_reference_and_lineage_edges_preserve_history_and_stop_propagation():
 
 def test_projection_dependency_becomes_stale_without_back_propagation():
     edges = (
-        DependencyEdge("claim:c1", "projection:p1", DependencyRelation.PRESENTS, "policy://projection"),
-        DependencyEdge("source:authority", "claim:c1", DependencyRelation.SUPPORTS_REQUIRED, "policy://source"),
+        DependencyEdge(
+            "claim:c1",
+            "projection:p1",
+            DependencyRelation.PRESENTS,
+            "policy://projection",
+        ),
+        DependencyEdge(
+            "source:authority",
+            "claim:c1",
+            DependencyRelation.SUPPORTS_REQUIRED,
+            "policy://source",
+        ),
     )
     result = compute_validity_impact(invalidation_event("claim:c1"), edges)
-    assert result.disposition_for("projection:p1") is ImpactDisposition.STALE_PROJECTION
+    assert (
+        result.disposition_for("projection:p1")
+        is ImpactDisposition.STALE_PROJECTION
+    )
     assert result.disposition_for("source:authority") is None
 
 
 def test_contributory_support_requires_reverification_not_auto_invalidation():
     edges = (
-        DependencyEdge("evidence:e1", "claim:c1", DependencyRelation.SUPPORTS_CONTRIBUTORY, "policy://contributory"),
+        DependencyEdge(
+            "evidence:e1",
+            "claim:c1",
+            DependencyRelation.SUPPORTS_CONTRIBUTORY,
+            "policy://contributory",
+        ),
     )
     result = compute_validity_impact(invalidation_event("evidence:e1"), edges)
     assert result.disposition_for("claim:c1") is ImpactDisposition.REVERIFY
@@ -68,7 +111,12 @@ def test_contributory_support_requires_reverification_not_auto_invalidation():
 
 def test_ambiguous_relations_fail_closed_as_unresolved():
     edges = (
-        DependencyEdge("claim:c1", "claim:c2", DependencyRelation.DEFEATS, "policy://defeater"),
+        DependencyEdge(
+            "claim:c1",
+            "claim:c2",
+            DependencyRelation.DEFEATS,
+            "policy://defeater",
+        ),
     )
     result = compute_validity_impact(invalidation_event("claim:c1"), edges)
     assert result.disposition_for("claim:c2") is None
