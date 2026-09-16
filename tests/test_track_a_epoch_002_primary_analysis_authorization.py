@@ -205,6 +205,17 @@ def test_event_shape_rejects_preexisting_result() -> None:
         )
 
 
+def test_binary_git_output_preserves_exact_bytes(monkeypatch: pytest.MonkeyPatch) -> None:
+    validator = load_validator()
+    monkeypatch.setattr(
+        validator.subprocess,
+        "check_output",
+        lambda *args, **kwargs: b"exact-bytes-with-newline\n",
+    )
+
+    assert validator.git("show", "HEAD:record.json", binary=True) == b"exact-bytes-with-newline\n"
+
+
 def test_tooling_mode_preserves_authorization_and_result_absence() -> None:
     validator = load_validator()
     validator.validate_tooling_only()
