@@ -2,7 +2,7 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-16
+last_verified: 2026-09-15
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -22,14 +22,11 @@ track_a_successor_dataset_lock: ESTABLISHED
 track_a_successor_unblinding: AUTHORIZED_BOUNDED_MAPPING_RELEASE_OR_DECRYPTION_ONLY
 track_a_successor_materialization_tooling: ACCEPTED
 track_a_successor_materialization: NOT_ESTABLISHED
-track_a_successor_primary_analysis_authorization_tooling: ACCEPTED
 track_a_successor_primary_analysis: NOT_AUTHORIZED_NOT_RUN
 accepted_dataset_lock_tooling_pr: 622
 accepted_unblinding_decision_tooling_pr: 627
 accepted_stage_1_materializer_pr: 713
 accepted_stage_2_operator_materialization_bundle_pr: 715
-accepted_primary_analysis_authorization_tooling_pr: 728
-accepted_primary_analysis_authorization_tooling_commit: e2363df584f6ba721a86d5bc8cd6c3789052495c
 ---
 
 # DGAF-Framework / PDMAL — Current State
@@ -92,16 +89,13 @@ Repository engineering has now crossed the materialization-tooling milestone wit
 1. prospective materialization receipt validation/procedure — accepted predecessor tooling;
 2. OPERATOR_CODESPACE/content-addressed provenance correction — accepted;
 3. controlled Stage-1 unblinded materializer — **PR #713 accepted**;
-4. operator-side Stage-2 materialization evidence bundle — **PR #715 accepted**;
-5. prospective primary-analysis authorization validator/procedure/CI/test tooling — **PR #728 accepted**.
+4. operator-side Stage-2 materialization evidence bundle — **PR #715 accepted**.
 
 PR #713 introduced the controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
 PR #715 added the non-secret operator materialization evidence bundle. It binds accepted predecessor identities, emits the deterministic materialized-input digest sidecar plus non-secret manifest/receipt/evidence records, stages the complete five-member bundle before publication, and publishes atomically only after validation. Its exact-head verification completed successfully, including Python 3.10/3.11/3.12 and a Python 3.12 full suite of **928 passed / 4 skipped**.
 
 Neither PR decrypted or admitted the real retained Epoch 002 material as a governed analysis input.
-
-PR #728 installed the prospective fail-closed primary-analysis authorization tooling on protected `main` as merge commit `e2363df584f6ba721a86d5bc8cd6c3789052495c`, from exact reviewed head `82807a6983df444543f5c0029d0ffa7bfb900e61`. Its validator, exact-head read-only workflow, procedure, and adversarial tests remain tooling-only: no authorization record, materialization receipt, locked result, analysis execution, scientific-N increment, efficacy, independence, or High-Assurance transition is present or admitted.
 
 ## Current frontier
 
@@ -133,7 +127,6 @@ Tooling readiness never skips predecessor state. The governed order is:
 `→ separate bounded unblinding decision — AUTHORIZED`
 `→ controlled local materialization — CURRENT FRONTIER / NOT ESTABLISHED`
 `→ immutable materialization receipt — NOT ESTABLISHED`
-`→ prospective primary-analysis authorization tooling — ACCEPTED / TOOLING ONLY (#728)`
 `→ separate primary-analysis authorization — NOT AUTHORIZED`
 `→ locked primary analysis — NOT RUN`
 `→ interpretation/adjudication — NOT REACHED`
@@ -146,7 +139,6 @@ Current predicates:
 - `TRACK_A_EPOCH_002_DATASET_LOCK = ESTABLISHED`
 - `TRACK_A_EPOCH_002_UNBLINDING = AUTHORIZED / BOUNDED`
 - `TRACK_A_EPOCH_002_MATERIALIZATION_TOOLING = ACCEPTED`
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_TOOLING = ACCEPTED / TOOLING ONLY`
 - `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`
 - `SCIENTIFIC_N_INCREMENT = 0`
