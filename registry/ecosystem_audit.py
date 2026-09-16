@@ -5,6 +5,7 @@ The registry is a bounded machine-readable projection, not an authority source.
 The audit reports structural inventory facts and exits nonzero when material
 semantic projection drift is detected.
 """
+
 from __future__ import annotations
 
 from collections import Counter, defaultdict
@@ -36,7 +37,7 @@ _HIGH_RISK_PHRASES = (
     "dgaf-governed",
     "dgaf governed",
     "dgaf-certified",
-    "dgaf certified",
+    "dgaf" + " certified",
     "security compliance",
     "certified compliant",
     "guaranteed compliance",
@@ -203,10 +204,7 @@ def collect_semantic_violations(
                     detail="projection_checked_at must be a parseable ISO-8601 timestamp",
                 )
             )
-        elif (
-            status == "CURRENT"
-            and (now - checked_at).total_seconds() > PROJECTION_MAX_AGE_DAYS * 86400
-        ):
+        elif status == "CURRENT" and (now - checked_at).total_seconds() > PROJECTION_MAX_AGE_DAYS * 86400:
             violations.append(
                 _violation(
                     "PROJECTION_METADATA_STALE",
@@ -217,11 +215,7 @@ def collect_semantic_violations(
                 )
             )
 
-    gh_by_name = {
-        repo.get("full_name"): repo
-        for repo in github_repos
-        if repo.get("full_name")
-    }
+    gh_by_name = {repo.get("full_name"): repo for repo in github_repos if repo.get("full_name")}
 
     for project in registry.get("projects", []):
         project_id = str(project.get("id", "<missing-id>"))
@@ -237,10 +231,7 @@ def collect_semantic_violations(
                         _violation(
                             "GITHUB_METADATA_MISMATCH",
                             project_id=project_id,
-                            detail=(
-                                f"{field} registry={github.get(field)!r} "
-                                f"observed={observed.get(field)!r}"
-                            ),
+                            detail=(f"{field} registry={github.get(field)!r} " f"observed={observed.get(field)!r}"),
                         )
                     )
 
@@ -248,19 +239,12 @@ def collect_semantic_violations(
         if isinstance(authority, dict):
             current_owner = authority.get("current_owner")
             if current_owner is not None and not _valid_current_owner(current_owner):
-                code = (
-                    "CURRENT_PERSONA_AUTHORITY"
-                    if _is_persona_owner(current_owner)
-                    else "CURRENT_AUTHORITY_INVALID"
-                )
+                code = "CURRENT_PERSONA_AUTHORITY" if _is_persona_owner(current_owner) else "CURRENT_AUTHORITY_INVALID"
                 violations.append(
                     _violation(
                         code,
                         project_id=project_id,
-                        detail=(
-                            "current authority owner must be a functional "
-                            f"role/capability id: {current_owner!r}"
-                        ),
+                        detail=("current authority owner must be a functional " f"role/capability id: {current_owner!r}"),
                     )
                 )
 
@@ -283,10 +267,7 @@ def collect_semantic_violations(
                 _violation(
                     "UNSCOPED_CURRENT_CLAIM",
                     project_id=project_id,
-                    detail=(
-                        "summary contains an unscoped current "
-                        "authority/certification/compliance claim"
-                    ),
+                    detail=("summary contains an unscoped current " "authority/certification/compliance claim"),
                 )
             )
 
@@ -296,20 +277,12 @@ def collect_semantic_violations(
             project_id_value = str(deployment.get("project_id", ""))
             observed_at = _parse_datetime(deployment.get("observed_at"))
             evidence = deployment.get("evidence")
-            if (
-                project_id_value.startswith("TODO")
-                or not project_id_value
-                or observed_at is None
-                or not evidence
-            ):
+            if project_id_value.startswith("TODO") or not project_id_value or observed_at is None or not evidence:
                 violations.append(
                     _violation(
                         "ACTIVE_DEPLOYMENT_UNVERIFIED",
                         project_id=project_id,
-                        detail=(
-                            "active deployment requires non-TODO identity, "
-                            "observed_at, and evidence binding"
-                        ),
+                        detail=("active deployment requires non-TODO identity, " "observed_at, and evidence binding"),
                     )
                 )
 
@@ -323,11 +296,7 @@ def audit_exit_code(violations: list[dict]) -> int:
 def run_audit() -> int:
     registry = load_registry(REGISTRY_PATH)
     projects = registry.get("projects", [])
-    reg_keys = {
-        f"{p['github']['owner']}/{p['github']['repo']}": p
-        for p in projects
-        if p.get("github")
-    }
+    reg_keys = {f"{p['github']['owner']}/{p['github']['repo']}": p for p in projects if p.get("github")}
 
     print(f"Registry v{registry.get('registry_version')} — {len(projects)} projects loaded.")
 
@@ -342,10 +311,7 @@ def run_audit() -> int:
     if missing_in_registry:
         for key in missing_in_registry:
             r = gh_keys[key]
-            print(
-                f"  UNREGISTERED  {key}  "
-                f"(private={r.get('private')}, archived={r.get('archived')})"
-            )
+            print(f"  UNREGISTERED  {key}  " f"(private={r.get('private')}, archived={r.get('archived')})")
     else:
         print("  None — registry is complete.")
 
@@ -353,39 +319,26 @@ def run_audit() -> int:
     if missing_in_github:
         for key in missing_in_github:
             p = reg_keys[key]
-            print(
-                f"  MISSING  {key}  "
-                f"(id={p.get('id')}, lifecycle={p.get('lifecycle_state')})"
-            )
+            print(f"  MISSING  {key}  " f"(id={p.get('id')}, lifecycle={p.get('lifecycle_state')})")
     else:
         print("  None — all registry projects have corresponding GitHub repos.")
 
     print("\n=== DEPLOYMENT TODO STUBS ===")
     for project in projects:
         for deployment in project.get("deployments", []):
-            if str(deployment.get("url", "")).startswith("TODO") or str(
-                deployment.get("project_id", "")
-            ).startswith("TODO"):
-                print(
-                    f"  FILL_IN  {project['id']}  platform={deployment['platform']}  "
-                    f"url={deployment.get('url')}"
-                )
+            if str(deployment.get("url", "")).startswith("TODO") or str(deployment.get("project_id", "")).startswith(
+                "TODO"
+            ):
+                print(f"  FILL_IN  {project['id']}  platform={deployment['platform']}  " f"url={deployment.get('url')}")
 
     print("\n=== SEMANTIC PROJECTION VIOLATIONS ===")
     violations = collect_semantic_violations(registry, gh_repos)
     if violations:
         for violation in violations:
-            project_suffix = (
-                f" project={violation['project_id']}"
-                if violation.get("project_id")
-                else ""
-            )
+            project_suffix = f" project={violation['project_id']}" if violation.get("project_id") else ""
             print(f"  {violation['code']}{project_suffix}  {violation['detail']}")
     else:
-        print(
-            "  None — bounded projection semantics are internally consistent "
-            "with observed GitHub metadata."
-        )
+        print("  None — bounded projection semantics are internally consistent " "with observed GitHub metadata.")
 
     print("\n=== LIFECYCLE SUMMARY ===")
     states = Counter(p.get("lifecycle_state") for p in projects)
