@@ -29,8 +29,8 @@ SCHEMA_REL = "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
 SEMANTICS_REL = "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
 PREREG_REL = "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
 ANALYSIS_LOCK_REL = "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json"
-ANALYSIS_REL = "scripts/analyze_track_a_epoch_002_primary.py"
-REQUIREMENTS_REL = "requirements-track-a-epoch-002-analysis.txt"
+ANALYSIS_REL = "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
+REQUIREMENTS_REL = "experiments/pdmal_pilot/requirements-full-lock.txt"
 
 PREREG_BLOB_SHA = "9668ec54e50c40b04d40cfa64b817950df4bbffa"
 ANALYSIS_LOCK_BLOB_SHA = "26980e27185b3a77980204b2d46a4fdab7e5fc7e"
@@ -201,13 +201,31 @@ def validate_frozen_analysis_identities(ref: str) -> None:
     for relpath, expected_blob in expected_blobs.items():
         actual_blob = git("rev-parse", f"{ref}:{relpath}")
         if actual_blob != expected_blob:
-            fail(f"frozen Epoch 002 identity drift at {relpath}: expected {expected_blob}, got {actual_blob}")
+            fail(
+                f"frozen Epoch 002 identity drift at {relpath}: "
+                f"expected {expected_blob}, got {actual_blob}"
+            )
 
     lock = load_json_at_ref(ref, ANALYSIS_LOCK_REL)
-    if lock.get("protocol_id") != PROTOCOL_ID or lock.get("epoch") != EPOCH:
-        fail("Epoch 002 analysis lock protocol/epoch binding drifted")
+    if lock.get("protocol_id") != PROTOCOL_ID:
+        fail("Epoch 002 analysis lock protocol binding drifted")
+    if lock.get("status") != "ANALYSIS_IMPLEMENTATION_LOCKED_NONEMPIRICAL":
+        fail("Epoch 002 analysis lock status drifted")
+    if lock.get("preregistration_blob_sha") != PREREG_BLOB_SHA:
+        fail("Epoch 002 preregistration binding drifted")
+    if lock.get("analysis_path") != ANALYSIS_REL:
+        fail("Epoch 002 analysis path drifted")
+    if lock.get("analysis_blob_sha") != ANALYSIS_BLOB_SHA:
+        fail("Epoch 002 analysis blob drifted")
     if lock.get("analysis_config_sha256") != ANALYSIS_CONFIG_SHA256:
         fail("Epoch 002 analysis config digest drifted")
+    environment = lock.get("environment")
+    if not isinstance(environment, dict):
+        fail("Epoch 002 analysis lock environment is malformed")
+    if environment.get("requirements_lock_path") != REQUIREMENTS_REL:
+        fail("Epoch 002 requirements-lock path drifted")
+    if environment.get("requirements_lock_blob_sha") != REQUIREMENTS_BLOB_SHA:
+        fail("Epoch 002 requirements-lock blob drifted")
 
 
 def validate_tooling_only() -> None:
@@ -224,7 +242,13 @@ def validate_authorization_event_shape(head: str) -> str:
         fail("authorization event must have exactly one parent")
     parent = lineage[1]
 
-    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line]
+    changed = [
+        line
+        for line in git(
+            "diff-tree", "--no-commit-id", "--name-only", "-r", head
+        ).splitlines()
+        if line
+    ]
     if changed != [AUTH_REL]:
         fail("authorization event must create exactly the canonical authorization record and no other file")
 
