@@ -248,7 +248,10 @@ def collect_semantic_violations(
                     _violation(
                         code,
                         project_id=project_id,
-                        detail=("current authority owner must be a functional " f"role/capability id: {current_owner!r}"),
+                        detail=(
+                            "current authority owner must be a functional "
+                            f"role/capability id: {current_owner!r}"
+                        ),
                     )
                 )
 
