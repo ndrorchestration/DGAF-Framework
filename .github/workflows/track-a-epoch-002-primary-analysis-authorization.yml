@@ -1,0 +1,199 @@
+name: Track A Epoch 002 Primary Analysis Authorization
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
+      - "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
+      - "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
+      - "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
+      - "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
+      - "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json"
+      - "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
+      - "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+      - "scripts/validate_track_a_epoch_002_primary_analysis_authorization.py"
+      - "tests/test_track_a_epoch_002_primary_analysis_authorization.py"
+      - "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
+      - "experiments/pdmal_pilot/requirements-full-lock.txt"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
+      - "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
+      - "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
+      - "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
+      - "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
+      - "docs/experiment/TRACK_A_EPOCH_002_ANALYSIS_LOCK.json"
+      - "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
+      - "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+      - "scripts/validate_track_a_epoch_002_primary_analysis_authorization.py"
+      - "tests/test_track_a_epoch_002_primary_analysis_authorization.py"
+      - "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
+      - "experiments/pdmal_pilot/requirements-full-lock.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate-authority:
+    name: Validate Epoch 002 primary-analysis authorization boundary
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact subject head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact-head checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$expected"
+          printf 'EXACT_HEAD=%s\n' "$actual"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.3"
+          cache: pip
+
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Compile authorization validator
+        run: python -m py_compile scripts/validate_track_a_epoch_002_primary_analysis_authorization.py
+
+      - name: Resolve fail-closed validation mode
+        id: mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt="docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
+          authorization="docs/experiment/track_a_runs/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+          result="docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
+
+          if [ -e "$result" ]; then
+            echo "locked analysis result exists; this authorization lane does not admit result state" >&2
+            exit 1
+          fi
+
+          if [ -e "$authorization" ]; then
+            if [ ! -e "$receipt" ]; then
+              echo "authorization record exists without materialization receipt predecessor" >&2
+              exit 1
+            fi
+
+            case "${{ github.event_name }}" in
+              pull_request)
+                accepted_parent="${{ github.event.pull_request.base.sha }}"
+                ;;
+              push)
+                accepted_parent="${{ github.event.before }}"
+                ;;
+              *)
+                echo "authorization event mode requires a PR base or protected-main push predecessor" >&2
+                exit 1
+                ;;
+            esac
+
+            if [ -z "$accepted_parent" ]; then
+              echo "accepted protected-main parent SHA is empty" >&2
+              exit 1
+            fi
+            git cat-file -e "${accepted_parent}^{commit}"
+            echo "accepted_parent=$accepted_parent" >> "$GITHUB_OUTPUT"
+            echo "mode=event" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=tooling" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Enforce bounded tooling PR surface
+        if: github.event_name == 'pull_request' && steps.mode.outputs.mode == 'tooling'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ github.event.pull_request.base.sha }}"
+          mapfile -t changed < <(git diff --name-only "$base" HEAD)
+          allowed=(
+            ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
+            "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
+            "scripts/validate_track_a_epoch_002_primary_analysis_authorization.py"
+            "tests/test_track_a_epoch_002_primary_analysis_authorization.py"
+          )
+          for path in "${changed[@]}"; do
+            ok=false
+            for candidate in "${allowed[@]}"; do
+              if [ "$path" = "$candidate" ]; then
+                ok=true
+                break
+              fi
+            done
+            if [ "$ok" != true ]; then
+              echo "unexpected tooling-scope path: $path" >&2
+              exit 1
+            fi
+          done
+
+      - name: Validate tooling-only absence boundary
+        if: steps.mode.outputs.mode == 'tooling'
+        run: python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --tooling
+
+      - name: Validate exact authorization creation event
+        if: steps.mode.outputs.mode == 'event'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py \
+            --event-commit HEAD \
+            --accepted-parent "${{ steps.mode.outputs.accepted_parent }}"
+
+      - name: Run adversarial authorization tests
+        run: python -m pytest -q tests/test_track_a_epoch_002_primary_analysis_authorization.py
+
+      - name: Prove non-execution and secret boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          validator = Path("scripts/validate_track_a_epoch_002_primary_analysis_authorization.py").read_text()
+          workflow = Path(".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml").read_text()
+          combined = validator + "\n" + workflow
+
+          forbidden = (
+              "PRIVATE" + "_KEY=",
+              "PASS" + "PHRASE=",
+              "mapping" + "_values",
+              "subprocess." + "run([analysis",
+          )
+          for marker in forbidden:
+              if marker in combined:
+                  raise SystemExit(f"forbidden authorization-lane surface: {marker}")
+          PY
+
+      - name: Report preserved scientific boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.mode.outputs.mode }}" = "event" ]; then
+            echo "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD=VALIDATED_PENDING_ACCEPTANCE"
+          else
+            echo "PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN"
+          fi
+          echo "PRIMARY_ANALYSIS_RUN=FALSE"
+          echo "OBSERVATIONS_RETAINED=2250_BLINDED"
+          echo "PAIRED_SEED_UNITS=50"
+          echo "SCIENTIFIC_N_INCREMENT=0"
+          echo "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED"
+          echo "INDEPENDENT_VALIDATION=NOT_ESTABLISHED"
+          echo "HIGH_ASSURANCE=NOT_AUTHORIZED"
