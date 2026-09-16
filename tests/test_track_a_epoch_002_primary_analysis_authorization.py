@@ -19,9 +19,7 @@ FULL_NON_EFFECTS = [
     "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
     "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
 ]
-AUTH_NON_EFFECTS = [
-    effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_ANALYSIS"
-]
+AUTH_NON_EFFECTS = [effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_ANALYSIS"]
 
 
 def load_validator():
@@ -49,9 +47,7 @@ def materialization_receipt_fixture() -> dict:
             "commit_sha": "1" * 40,
             "sha256": "2" * 64,
         },
-        "evidence_scope": (
-            "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING"
-        ),
+        "evidence_scope": "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING",
         "non_effects": list(FULL_NON_EFFECTS),
         "status": "PASS",
         "predecessor_record_ids": ["E002-UNBLINDING-00112233"],
