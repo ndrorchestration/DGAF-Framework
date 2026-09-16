@@ -4,6 +4,31 @@
 
 In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
+## Five-minute evaluator orientation
+
+If you are evaluating DGAF as an AI-systems, governance, or research-engineering portfolio artifact, use this path before reading the full control history.
+
+**1. Start with the problem.** DGAF asks whether an AI system's current evidence and authority actually support the claim or action it is about to make. Capability alone does not grant permission, and passing engineering checks does not establish empirical efficacy.
+
+**2. Inspect what is implemented.** The repository contains governance logic, provenance/source binding, deterministic validators, negative controls, CI, experimental tooling, custody machinery, and blinded-data infrastructure. For implementation detail, start with [`README.technical.md`](README.technical.md) and [`README.governance.md`](README.governance.md).
+
+**3. Read the current state from its owning record.** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) is the live project/evidence entrypoint. The status block immediately below is a public summary, not a substitute for exact-bound evidence records.
+
+**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock is established and bounded unblinding is authorized for controlled mapping release/decryption. Materialization tooling is accepted, but real materialization and its receipt are not established; primary analysis is not authorized or run; scientific-N increment remains 0; canonical DGAF efficacy and independent validation are not established.
+
+**5. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
+
+### What this demonstrates
+
+Within the evidence boundaries documented in this repository, DGAF demonstrates practical work in:
+
+- multi-agent governance and explicit authority/state-transition design;
+- provenance, source/evidence binding, and custody controls;
+- deterministic validation, negative controls, and fail-closed CI;
+- prospective/blinded experiment infrastructure and reproducibility tooling;
+- separation of implementation, verification, independent verification, authorization, execution, and empirical support;
+- documentation and public translation of a complex technical control system without upgrading its evidence state.
+
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
