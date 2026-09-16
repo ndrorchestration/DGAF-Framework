@@ -91,6 +91,26 @@ jobs:
               echo "authorization record exists without materialization receipt predecessor" >&2
               exit 1
             fi
+
+            case "${{ github.event_name }}" in
+              pull_request)
+                accepted_parent="${{ github.event.pull_request.base.sha }}"
+                ;;
+              push)
+                accepted_parent="${{ github.event.before }}"
+                ;;
+              *)
+                echo "authorization event mode requires a PR base or protected-main push predecessor" >&2
+                exit 1
+                ;;
+            esac
+
+            if [ -z "$accepted_parent" ]; then
+              echo "accepted protected-main parent SHA is empty" >&2
+              exit 1
+            fi
+            git cat-file -e "${accepted_parent}^{commit}"
+            echo "accepted_parent=$accepted_parent" >> "$GITHUB_OUTPUT"
             echo "mode=event" >> "$GITHUB_OUTPUT"
           else
             echo "mode=tooling" >> "$GITHUB_OUTPUT"
@@ -129,7 +149,12 @@ jobs:
 
       - name: Validate exact authorization creation event
         if: steps.mode.outputs.mode == 'event'
-        run: python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --event-commit HEAD
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py \
+            --event-commit HEAD \
+            --accepted-parent "${{ steps.mode.outputs.accepted_parent }}"
 
       - name: Run adversarial authorization tests
         run: python -m pytest -q tests/test_track_a_epoch_002_primary_analysis_authorization.py
