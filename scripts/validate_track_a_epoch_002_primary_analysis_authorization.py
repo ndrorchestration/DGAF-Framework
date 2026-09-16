@@ -9,6 +9,7 @@ or change scientific state.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -84,6 +85,20 @@ def git_object_exists(spec: str) -> bool:
     return completed.returncode == 0
 
 
+def read_git_bytes(ref: str, relpath: str) -> bytes:
+    try:
+        completed = subprocess.run(
+            ["git", "show", f"{ref}:{relpath}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        detail = exc.stderr.decode("utf-8", errors="replace").strip()
+        fail(f"cannot read {ref}:{relpath}: {detail or exc}")
+    return completed.stdout
+
+
 def load_json(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -110,6 +125,33 @@ def validate_schema(record: dict[str, Any]) -> None:
         Draft202012Validator(schema).validate(record)
     except ValidationError as exc:
         fail(f"record schema validation failed: {exc.message}")
+
+
+def validate_semantic_policy() -> None:
+    semantics = load_json(ROOT / SEMANTICS_REL)
+    if semantics.get("protocol_id") != PROTOCOL_ID:
+        fail("primary-analysis authorization semantic policy protocol drifted")
+
+    records = semantics.get("records")
+    profiles = semantics.get("profiles")
+    if not isinstance(records, dict) or not isinstance(profiles, dict):
+        fail("primary-analysis authorization semantic policy is malformed")
+
+    expected_record = {
+        "authority_class": "HUMAN_CONTROLLED_AUTHORIZATION",
+        "pass_profile": "PRIMARY_ANALYSIS_AUTHORIZATION_PASS",
+        "bounded_scope": AUTH_SCOPE,
+    }
+    if records.get("PRIMARY_ANALYSIS_AUTHORIZATION_RECORD") != expected_record:
+        fail("primary-analysis authorization semantic record classification drifted")
+
+    expected_profile = {
+        "authorization_effect": "BOUNDED_RECORD_ONLY",
+        "required_non_effects": AUTHORIZATION_NON_EFFECTS,
+        "forbidden_non_effects": ["DOES_NOT_AUTHORIZE_ANALYSIS"],
+    }
+    if profiles.get("PRIMARY_ANALYSIS_AUTHORIZATION_PASS") != expected_profile:
+        fail("primary-analysis authorization semantic PASS profile drifted")
 
 
 def validate_materialization_receipt(receipt: dict[str, Any]) -> None:
@@ -177,6 +219,7 @@ def validate_authorization_object(
     materialization_receipt_sha256: str,
     authorization_parent_sha: str,
 ) -> None:
+    validate_semantic_policy()
     validate_materialization_receipt(materialization_receipt)
     validate_schema(authorization)
 
@@ -226,6 +269,7 @@ def validate_frozen_analysis_identities(ref: str) -> None:
 
 
 def validate_tooling_only() -> None:
+    validate_semantic_policy()
     if (ROOT / AUTH_REL).exists() or git_object_exists(f"HEAD:{AUTH_REL}"):
         fail("tooling mode requires the canonical primary-analysis authorization record to remain absent")
     if (ROOT / RESULT_REL).exists() or git_object_exists(f"HEAD:{RESULT_REL}"):
@@ -252,6 +296,66 @@ def validate_authorization_event_shape(head: str) -> str:
     return parent
 
 
+def validate_authorization_event(head: str) -> str:
+    parent = validate_authorization_event_shape(head)
+    validate_semantic_policy()
+
+    if not git_object_exists(f"{parent}:{MATERIALIZATION_RECEIPT_REL}"):
+        fail("authorization requires an accepted materialization receipt in its parent")
+    if not git_object_exists(f"{head}:{MATERIALIZATION_RECEIPT_REL}"):
+        fail("materialization receipt must remain present at authorization head")
+    if git_object_exists(f"{parent}:{RESULT_REL}") or git_object_exists(f"{head}:{RESULT_REL}"):
+        fail("locked analysis result must remain absent during authorization")
+
+    parent_receipt_bytes = read_git_bytes(parent, MATERIALIZATION_RECEIPT_REL)
+    head_receipt_bytes = read_git_bytes(head, MATERIALIZATION_RECEIPT_REL)
+    if parent_receipt_bytes != head_receipt_bytes:
+        fail("materialization receipt bytes changed during authorization event")
+
+    receipt = load_json_at_ref(parent, MATERIALIZATION_RECEIPT_REL)
+    validate_materialization_receipt(receipt)
+
+    receipt_history = [
+        line
+        for line in git("log", "--format=%H", "--", MATERIALIZATION_RECEIPT_REL).splitlines()
+        if line
+    ]
+    if len(receipt_history) != 1:
+        fail("materialization receipt must have first-and-only immutable history")
+    receipt_event = receipt_history[0]
+
+    receipt_lineage = git("rev-list", "--parents", "-n", "1", receipt_event).split()
+    if len(receipt_lineage) != 2 or receipt_lineage[0] != receipt_event:
+        fail("materialization receipt event must have exactly one parent")
+    receipt_parent = receipt_lineage[1]
+
+    receipt_changed = [
+        line
+        for line in git(
+            "diff-tree", "--no-commit-id", "--name-only", "-r", receipt_event
+        ).splitlines()
+        if line
+    ]
+    if receipt_changed != [MATERIALIZATION_RECEIPT_REL]:
+        fail("materialization receipt event must change exactly the canonical receipt path")
+    if git_object_exists(f"{receipt_parent}:{MATERIALIZATION_RECEIPT_REL}"):
+        fail("materialization receipt event must be creation-only")
+
+    git("merge-base", "--is-ancestor", receipt_event, parent)
+
+    materialization_receipt_sha256 = hashlib.sha256(parent_receipt_bytes).hexdigest()
+    authorization = load_json_at_ref(head, AUTH_REL)
+    validate_authorization_object(
+        authorization,
+        receipt,
+        materialization_receipt_commit_sha=receipt_event,
+        materialization_receipt_sha256=materialization_receipt_sha256,
+        authorization_parent_sha=parent,
+    )
+    validate_frozen_analysis_identities(parent)
+    return parent
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
@@ -266,8 +370,8 @@ def main() -> None:
         print("SCIENTIFIC_N_INCREMENT=0")
         return
 
-    validate_authorization_event_shape(args.event_commit)
-    print("PRIMARY_ANALYSIS_AUTHORIZATION_EVENT_SHAPE=PASS")
+    validate_authorization_event(args.event_commit)
+    print("PRIMARY_ANALYSIS_AUTHORIZATION_EVENT=PASS")
     print("PRIMARY_ANALYSIS_EXECUTION=NOT_PERFORMED")
     print("SCIENTIFIC_N_INCREMENT=0")
 
