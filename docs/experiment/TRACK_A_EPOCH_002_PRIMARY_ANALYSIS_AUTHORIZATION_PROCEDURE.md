@@ -6,6 +6,10 @@ This document defines the prospective, fail-closed procedure for a future Track 
 
 The permitted future scope is exactly `LOCKED_PRIMARY_ANALYSIS_ONLY`.
 
+## Accepted tooling revision
+
+The prospective authorization validator, procedure, exact-head read-only workflow, and adversarial test surface were accepted through PR #728. The reviewed subject head was `82807a6983df444543f5c0029d0ffa7bfb900e61`; protected `main` now contains the signed merge commit `e2363df584f6ba721a86d5bc8cd6c3789052495c`. This is a tooling-only acceptance: the canonical authorization record, materialization receipt, locked result, primary-analysis execution, scientific-N increment, efficacy, independent validation, and High-Assurance transition remain absent or not established.
+
 ## Current scientific and authorization boundary
 
 Track A Epoch 002 collection is complete at **50 paired seed units** and **2,250 blinded observations**. Those observations exist and remain part of the locked Epoch 002 evidence chain; the canonical scientific-N increment remains zero because no authorized primary analysis result has yet been admitted.
