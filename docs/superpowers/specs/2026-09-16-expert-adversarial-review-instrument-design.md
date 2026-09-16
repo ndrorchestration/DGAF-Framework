@@ -24,7 +24,7 @@ EARI does not prove correctness. It does not establish scientific truth. It does
 
 This design document does not activate EARI, create review authority, add a new source of truth, change current Track A Epoch 002 state, establish real materialization, admit a materialization receipt, authorize primary analysis, execute analysis, establish efficacy, establish independent validation, increment scientific N, or alter High-Assurance state.
 
-EARI has **zero operational gate effect until a separate implementation and explicit prospective governance activation are reviewed and accepted**. Future activation must name the exact EARI specification/policy identities and the transitions to which negative gate effect applies.
+EARI has **zero operational gate effect until a separate implementation and explicit prospective governance activation are reviewed and accepted**. Future activation must name the exact EARI specification and policy identities and the transitions to which negative gate effect applies.
 
 Activation is prospective. It must not retroactively invalidate or reinterpret repository transitions that occurred before the activation boundary unless a separate existing DGAF authority explicitly requires such retrospective treatment.
 
@@ -62,6 +62,7 @@ Versioned machine-readable specifications define:
 
 - the fixed reviewer panel and charters;
 - participation modes;
+- role-occupancy rules;
 - independence rules;
 - the five formal checkpoints;
 - defect classes and subclasses;
@@ -72,6 +73,7 @@ Versioned machine-readable specifications define:
 - calibration requirements;
 - dissent semantics;
 - checkpoint outcome rules;
+- process validity;
 - record lifecycle and lineage-integrity rules.
 
 Specification changes occur through normal repository review and do not rewrite prior review runs.
@@ -144,20 +146,9 @@ Automation does **not** decide whether a scientific criticism is substantively c
 
 ## 5. Human authority and AI boundary
 
-The formal panel consists of human reviewers. AI is a subordinate instrument available to those reviewers.
+The formal panel consists of accountable human reviewers. AI is a subordinate instrument available to those reviewers.
 
-AI may assist with:
-
-- evidence retrieval;
-- exact-identity comparison;
-- contradiction detection;
-- counterexample generation;
-- statistical and methodological probes;
-- provenance tracing;
-- reproduction attempts;
-- claim/evidence comparison;
-- candidate-finding generation;
-- review drafting.
+AI may assist with evidence retrieval, identity comparison, contradiction detection, counterexample generation, statistical and methodological probes, provenance tracing, reproduction attempts, claim/evidence comparison, candidate-finding generation, and review drafting.
 
 AI output cannot directly become a canonical EARI finding.
 
@@ -195,7 +186,19 @@ The panel is permanently defined by role so review coverage remains comparable a
 
 The roles are fixed. Their participation intensity is checkpoint-specific.
 
-## 7. Participation model
+## 7. Human role occupancy and shadow simulation
+
+A formal EARI checkpoint requires each of the 11 fixed roles to have an accountable human role holder. A role holder may be recused from a particular finding, but the panel must provide a valid replacement path when that role is mandatory for clearance.
+
+A single human may not satisfy both sides of a required primary/secondary independent-appraisal pair. Formal policy may impose stricter one-human-per-role requirements for selected checkpoints or defect classes.
+
+If the required human role coverage or independent secondary appraisal cannot be assembled, the system must not manufacture formal clearance. The permissible result is `REVIEW_INCONCLUSIVE` for an activated formal checkpoint, or `REVIEW_ADVISORY_ONLY` when operating outside formal authority.
+
+AI may simulate one or more reviewer roles for rehearsal, calibration development, red-team exploration, or shadow review. Such simulated panels are explicitly **advisory only**. An AI-only or AI-role-simulated panel cannot produce `REVIEW_CLEAR`, `REVIEW_BLOCKED`, or any formal EARI gate effect.
+
+This distinction allows EARI to be useful before an 11-human panel is operational without misrepresenting simulated expertise as formal independent review.
+
+## 8. Participation model
 
 Every formal checkpoint involves all 11 roles, but not all roles perform a full-domain review.
 
@@ -224,7 +227,7 @@ Cannot participate in adjudication for the affected finding/object.
 
 This model preserves mandatory panel involvement while avoiding ritualized eleven-way duplication.
 
-## 8. Reviewer independence
+## 9. Reviewer independence
 
 A different person or discipline is not automatically independent.
 
@@ -250,9 +253,9 @@ Disqualifying or contaminating relationships include, at minimum:
 
 Only `INDEPENDENT` appraisal satisfies a mandatory dual-appraisal requirement.
 
-A materially false or incomplete independence declaration may create a review-process-integrity defect.
+A materially false or incomplete independence declaration may create a review-process-integrity defect and/or invalidate the affected formal review process.
 
-## 9. Reviewer output contract
+## 10. Reviewer output contract
 
 Reviewers are not rewarded for manufacturing objections.
 
@@ -262,37 +265,24 @@ The required primary output is the strongest **plausible, evidence-supported dis
 NO_SUPPORTED_REJECTION_CASE_IDENTIFIED
 ```
 
-Every substantive objection records:
+Every substantive objection records asserted proposition, exact evidence bindings, assumptions, best counterevidence, defect class/subclass, protected property affected, severity, evidence status, gate relevance, remediation or falsification criterion, residual uncertainty, and revisit trigger.
 
-- asserted proposition;
-- exact evidence bindings;
-- assumptions;
-- best counterevidence;
-- defect class/subclass;
-- protected property affected;
-- severity;
-- evidence status;
-- gate relevance;
-- remediation or falsification criterion;
-- residual uncertainty;
-- revisit trigger.
-
-A `NO_FINDING` result is never a bare checkbox. It records at minimum:
+A `NO_FINDING` result is never a bare checkbox. A conforming example is:
 
 ```yaml
 review_scope:
-  charter_version: "..."
-  evidence_items_examined: []
-  tests_or_queries_performed: []
-  defect_classes_assessed: []
-  limitations: []
+  charter_version: "1.0.0"
+  evidence_items_examined: ["EVIDENCE-001"]
+  tests_or_queries_performed: ["QUERY-001"]
+  defect_classes_assessed: ["D01"]
+  limitations: ["LIMITATION-001"]
   conclusion: NO_FINDING_ESTABLISHED
-  residual_uncertainty: []
+  residual_uncertainty: ["UNCERTAINTY-001"]
 ```
 
 `NO_FINDING_ESTABLISHED` is bounded negative evidence. It does not mean `NO_DEFECT_EXISTS`.
 
-## 10. Three-axis finding model
+## 11. Three-axis finding model
 
 Finding classification separates three dimensions.
 
@@ -329,7 +319,7 @@ NO_EFFECT
 
 Gate effect is rule-bound. A reviewer cannot create blocking authority merely by assigning a high severity.
 
-## 11. Checkpoint outcome and orthogonal state axes
+## 12. Checkpoint outcome and orthogonal state axes
 
 Checkpoint outcomes are:
 
@@ -367,11 +357,11 @@ FORKED
 
 Limitations are structured records, not a disguised clearance state.
 
-A process-invalid review cannot have operational clearance effect regardless of its recorded checkpoint outcome.
+A process-invalid review cannot have operational clearance effect regardless of its recorded checkpoint outcome. Implementations must not collapse `process_validity = INVALID` into a scientific or system-level `REVIEW_BLOCKED` assertion. Invalidity means the review process cannot support formal clearance evidence.
 
-## 12. Evidence governance
+## 13. Evidence governance
 
-### 12.1 Evidence roles
+### 13.1 Evidence roles
 
 Evidence role describes decision consequence, not trustworthiness:
 
@@ -381,7 +371,7 @@ SUPPORTING
 CONTEXTUAL
 ```
 
-### 12.2 Typed provenance profiles
+### 13.2 Typed provenance profiles
 
 Evidence types use different provenance profiles rather than one misleading flat schema.
 
@@ -397,28 +387,30 @@ Evidence types use different provenance profiles rather than one misleading flat
 
 A content hash proves continuity of captured bytes from capture onward. It does not establish that the bytes were truthful, complete, correctly interpreted, or acquired from the legitimate upstream source. Those remain separate evidence/provenance questions.
 
-## 13. Immutable review packages and trust anchors
+## 14. Immutable review packages and trust anchors
 
 Every accepted formal review package records at minimum:
 
 ```yaml
-review_package_digest:
-parent_review_package_digest:
-checkpoint_lineage_id:
-admitted_repository_commit:
-admission_authority_id:
-signature_or_verifiable_attestation:
-signed_at:
-supersedes_package_digest:
-revocation_status:
-lineage_state:
+review_package_digest: "sha256:EXAMPLE"
+parent_review_package_digest: "sha256:EXAMPLE_PARENT"
+checkpoint_lineage_id: "EARI-R2-LINEAGE-001"
+admitted_repository_commit: "40-hex-commit-identity"
+admission_authority_id: "AUTHORITY-ID"
+signature_or_verifiable_attestation: "ATTESTATION-ID"
+signed_at: "ISO-8601-TIMESTAMP"
+supersedes_package_digest: null
+revocation_status: "NOT_REVOKED"
+lineage_state: "LINEAR"
 ```
+
+Values above are illustrative schema examples, not admitted review evidence.
 
 Git history is part of the trust model but is not treated as sufficient by itself to prove package authority or completeness.
 
 A review-lineage fork prevents formal clearance until an authorized reconciliation or supersession record establishes the accepted lineage.
 
-## 14. Calibration and qualification
+## 15. Calibration and qualification
 
 Human and AI calibration are assurance evidence only. They do not increment scientific N, establish efficacy, validate Epoch 002, or establish independent replication.
 
@@ -430,23 +422,11 @@ Qualification is capability-specific:
 reviewer × role × defect class × permitted review action
 ```
 
-Calibration records may include:
-
-- per-class recall;
-- per-class precision where meaningful;
-- unsupported-block false-positive rate;
-- evidence-binding precision;
-- ambiguity handling;
-- insufficient-evidence handling;
-- rationale requirements;
-- safety/validity-critical seeded defect recall;
-- test-set version;
-- protected holdout identity;
-- item retirement policy.
+Calibration records may include per-class recall, per-class precision where meaningful, unsupported-block false-positive rate, evidence-binding precision, ambiguity handling, insufficient-evidence handling, rationale requirements, safety/validity-critical seeded defect recall, test-set version, protected holdout identity, and item retirement policy.
 
 Agreement statistics may be used diagnostically when multiple reviewers truly judge the same standardized items under the same rubric. They are not a universal quality gate and must not replace investigation of why judgments differ.
 
-### 14.1 Qualification levels
+### 15.1 Qualification levels
 
 A reviewer may be separately qualified for:
 
@@ -457,11 +437,11 @@ independent secondary appraisal
 adjudication
 ```
 
-### 14.2 Calibration-corpus controls
+### 15.2 Calibration-corpus controls
 
 Calibration sets include clean cases, known defects, ambiguity cases, and insufficient-evidence cases. Protected holdouts and scenario rotation prevent the exercise from degrading into memorization.
 
-## 15. Material-change and recalibration policy
+## 16. Material-change and recalibration policy
 
 Material changes are classified as:
 
@@ -483,7 +463,7 @@ Typical effects:
 
 The same model applies to reviewer instructions, taxonomies, schemas, AI instruments, retrieval procedures, evidence pipelines, and review tools.
 
-## 16. Review phases
+## 17. Review phases
 
 Formal checkpoint review uses three epistemic phases plus deterministic packaging.
 
@@ -495,7 +475,7 @@ CROSS-EXAMINATION
 CONSENSUS ADJUDICATION
 ```
 
-### 16.1 Blind first pass
+### 17.1 Blind first pass
 
 Reviewers receive the same frozen packet, their charter, assigned defect classes, calibration status, and review scope.
 
@@ -503,7 +483,7 @@ They do not receive other reviewers' findings, provisional conclusions, aggregat
 
 First-pass submissions are sealed and immutable. Later position changes are append-only `POSITION_REVISION` records referencing the original judgment.
 
-### 16.2 Cross-examination
+### 17.2 Cross-examination
 
 After all required first passes are sealed, findings become visible.
 
@@ -524,35 +504,25 @@ INDEPENDENCE_CHALLENGE
 
 Each action binds a specific finding/object and evidence.
 
-### 16.3 Finding deduplication
+### 17.3 Finding deduplication
 
 Multiple independent observations of the same underlying defect are preserved as linked observations under one canonical defect object. Deduplication does not erase independent detection paths.
 
-### 16.4 Consensus adjudication
+### 17.4 Consensus adjudication
 
 Consensus means no reviewer with adjudicative standing maintains an unresolved evidence-supported objection to the disposition. It does not require agreement on every preference or interpretation.
 
-## 17. Formal dissent
+## 18. Formal dissent
 
 Dissent is a first-class immutable object.
 
-A dissent records:
-
-- finding/object identity;
-- agreed facts;
-- disputed propositions;
-- evidence on each side;
-- competing rationale;
-- consequence if the dissenter is correct;
-- falsification/resolution path;
-- escalation history;
-- current status.
+A dissent records finding/object identity, agreed facts, disputed propositions, evidence on each side, competing rationale, consequence if the dissenter is correct, falsification/resolution path, escalation history, and current status.
 
 An unresolved evidence-backed blocking dissent cannot be administratively converted into `REVIEW_CLEAR`.
 
-Not every disagreement is blocking. Taxonomy/policy must distinguish a blocking defect from an unresolved concern lacking sufficient evidence, a risk-tolerance disagreement, a compatible interpretive disagreement, or an issue outside the checkpoint decision boundary.
+Not every disagreement is blocking. Taxonomy and policy must distinguish a blocking defect from an unresolved concern lacking sufficient evidence, a risk-tolerance disagreement, a compatible interpretive disagreement, or an issue outside the checkpoint decision boundary.
 
-## 18. Five formal checkpoints
+## 19. Five formal checkpoints
 
 Outside these checkpoints the same instrument is advisory only.
 
@@ -598,7 +568,7 @@ Primary question:
 
 Minimum packet profile adds proposed public package, reproduction instructions, released data/code scope, provenance manifest, security/redaction review, claim wording, external-validity statement, ethics/limitations statement, and relevant review lineage.
 
-## 19. Defect taxonomy
+## 20. Defect taxonomy
 
 EARI uses 13 top-level defect families.
 
@@ -618,11 +588,17 @@ EARI uses 13 top-level defect families.
 | D12 | EXTERNAL_VALIDITY_OR_SCOPE_MISREPRESENTATION | Research Ethics & External Validity | Claims & Scientific Communication | R4–R5 |
 | D13 | REVIEW_PROCESS_INTEGRITY_FAILURE | Governance & Assurance | Independent Replication | R1–R5 |
 
-`D13` means the review process itself cannot support a trustworthy operational outcome; it does not automatically establish that the underlying DGAF science or system is defective.
+Evidence insufficiency, disagreement, dissent, unknown state, out-of-scope status, accepted risk, and `NO_FINDING_ESTABLISHED` are not defect classes. They are separate states or dispositions.
 
-Evidence insufficiency, disagreement, dissent, unknown state, out-of-scope status, accepted risk, and `NO_FINDING_ESTABLISHED` are not defect classes. They are separate states/dispositions.
+### 20.1 D13 and process validity
 
-## 20. Finding lifecycle
+`D13` records a concrete review-process defect as an auditable finding, for example first-pass leakage, invalid packet identity, or independence contamination.
+
+The orthogonal `process_validity` axis determines whether the run can provide formal clearance evidence. A D13 condition that violates a hard process prerequisite may set `process_validity = INVALID` immediately according to policy; it need not first be promoted through the scientific/system blocking lifecycle.
+
+Therefore D13 does **not** imply that the underlying DGAF science or system is defective, and implementations must not double-count a process invalidity as both scientific blocking evidence and process invalidity unless an independent underlying DGAF defect also exists.
+
+## 21. Finding lifecycle
 
 ```text
 OBSERVATION
@@ -654,7 +630,7 @@ SUPERSEDED_BY_VALID_REVIEW
 
 It may not be cleared by majority override, chair override, schedule pressure, or delivery exception.
 
-## 21. Blocking predicate
+## 22. Blocking predicate
 
 Blocking is conjunctive rather than intuitive:
 
@@ -671,7 +647,7 @@ Where:
 - `G(f)` — the defect is not prospectively permitted by an applicable declared residual-risk policy;
 - `D(f)` — required valid independent secondary appraisal is complete.
 
-### 21.1 Evidence threshold
+### 22.1 Evidence threshold
 
 A `CONFIRMED_BLOCKING` finding requires evidence status at least:
 
@@ -681,7 +657,7 @@ SUPPORTED or VERIFIED
 
 A merely `PLAUSIBLE` concern may require investigation or produce inconclusive review, but cannot itself become confirmed blocking.
 
-### 21.2 Protected properties
+### 22.2 Protected properties
 
 Findings bind an affected protected property such as:
 
@@ -699,7 +675,7 @@ REVIEW_INDEPENDENCE
 
 A true defect that does not affect a property required by the checkpoint is nonblocking for that checkpoint.
 
-### 21.3 Severity eligibility
+### 22.3 Severity eligibility
 
 ```text
 CRITICAL → blocking-capable
@@ -708,53 +684,55 @@ MODERATE → never CONFIRMED_BLOCKING
 MINOR    → never CONFIRMED_BLOCKING
 ```
 
-### 21.4 Residual-risk policy
+### 22.4 Residual-risk policy
 
 Accepted residual risk must be prospective and version-bound. It records applicable subclass, checkpoint, maximum severity, rationale, approval authority, and effective date.
 
 A new exception may not be invented retroactively solely to remove an already discovered blocker.
 
-## 22. Atomic finding record
+## 23. Atomic finding record
 
-The canonical machine-readable finding should include approximately:
+The canonical machine-readable finding should include at minimum:
 
 ```yaml
-finding_id:
-review_id:
-checkpoint_id:
-review_package_digest:
-defect_class:
-defect_subclass:
-claim_or_control_affected:
-protected_property:
-scope_of_impact:
-asserted_proposition:
+finding_id: "FINDING-ID"
+review_id: "EARI-R2-2026-001"
+checkpoint_id: "R2"
+review_package_digest: "sha256:EXAMPLE"
+defect_class: "D01"
+defect_subclass: "D01.03"
+claim_or_control_affected: "CONTROL-ID"
+protected_property: "DATASET_IDENTITY"
+scope_of_impact: "CHECKPOINT"
+asserted_proposition: "PROPOSITION"
 assumptions: []
 evidence_bindings: []
-evidence_status:
-provenance_status:
-reproducibility_status:
-severity:
-plausibility:
-primary_reviewer:
-primary_review_mode:
-secondary_appraiser:
-secondary_independence_status:
-gate_eligibility:
-gate_effect:
+evidence_status: "SUPPORTED"
+provenance_status: "ESTABLISHED"
+reproducibility_status: "ESTABLISHED"
+severity: "MAJOR"
+plausibility: "HIGH"
+primary_reviewer: "REVIEWER-ID"
+primary_review_mode: "PRIMARY"
+secondary_appraiser: "SECONDARY-REVIEWER-ID"
+secondary_independence_status: "INDEPENDENT"
+gate_eligibility: "ELIGIBLE"
+gate_effect: "PROPOSED_BLOCKING"
 best_counterevidence: []
-remediation_or_falsification_criterion:
-current_disposition:
+remediation_or_falsification_criterion: "ACCEPTANCE-TEST"
+current_disposition: "PROPOSED_BLOCKING"
 disposition_history: []
 dissent_links: []
-created_at:
-supersedes:
-superseded_by:
+created_at: "ISO-8601-TIMESTAMP"
+supersedes: null
+superseded_by: null
 ```
+
+Values above are illustrative schema examples, not admitted findings.
 
 Every substantive finding must include an explicit condition that would falsify, remediate, or materially narrow the objection.
 
-## 23. Frozen packet and append-only supplements
+## 24. Frozen packet and append-only supplements
 
 A formal checkpoint reviews a frozen, identity-bound evidence packet.
 
@@ -766,7 +744,7 @@ New evidence is admitted only as append-only supplements. Every supplement has i
 
 If a supplement materially changes the decision surface, affected first-pass work must be reopened through a recorded bounded process rather than silently updated.
 
-## 24. Formal review state machine
+## 25. Formal review state machine
 
 Every formal checkpoint follows:
 
@@ -800,31 +778,35 @@ PACKAGE_ATTESTED
 REPOSITORY_ADMITTED
 ```
 
+`INDEPENDENCE_VALIDATED` establishes the initial role assignments and declarations before first-pass review. Any later secondary appraiser assigned after a proposed blocker emerges must independently satisfy the same independence predicate before seeing the primary appraisal beyond the minimum information required for sealed assignment.
+
 A prohibited phase skip or contaminated first-pass process may set `process_validity = INVALID`.
 
 An invalid run is not rewritten. A later valid package may supersede it.
 
-## 25. Secondary appraisal
+## 26. Secondary appraisal
 
 Every `PROPOSED_BLOCKING` finding receives an independently sealed secondary appraisal that separately reconstructs the blocking predicate.
 
 The appraiser records at least:
 
 ```yaml
-finding_supported:
-evidence_sufficient:
-impact_supported:
-severity_supported:
-checkpoint_relevant:
-blocking_policy_satisfied:
-counterevidence_considered:
-independence_status:
-recommended_disposition:
+finding_supported: true
+evidence_sufficient: true
+impact_supported: true
+severity_supported: true
+checkpoint_relevant: true
+blocking_policy_satisfied: true
+counterevidence_considered: ["EVIDENCE-ID"]
+independence_status: "INDEPENDENT"
+recommended_disposition: "CONFIRMED_BLOCKING"
 ```
+
+Values above are illustrative schema examples, not an actual appraisal.
 
 The required output is not a bare `AGREE`/`DISAGREE` vote.
 
-## 26. Deterministic checkpoint outcomes
+## 27. Deterministic checkpoint outcomes
 
 Humans establish finding facts and dispositions. The policy engine computes which checkpoint outcome is permissible.
 
@@ -843,7 +825,7 @@ Allowed only when all of the following are true:
 ```text
 process_validity = VALID
 lineage_integrity = LINEAR
-all mandatory participation is complete
+all mandatory human role participation is complete
 all required appraisals are complete
 zero unresolved CONFIRMED_BLOCKING findings
 zero unresolved blocking-capable dissent
@@ -859,9 +841,9 @@ It does not mean `AUTHORIZED`.
 
 ### REVIEW_ADVISORY_ONLY
 
-Used outside R1–R5. Findings may inform future work but have no formal gate effect.
+Used outside R1–R5 and for AI-role-simulated/shadow exercises. Findings may inform future work but have no formal gate effect.
 
-## 27. Capacity, latency, and anti-bypass policy
+## 28. Capacity, latency, and anti-bypass policy
 
 An assurance system that cannot finish under plausible operating conditions will eventually be bypassed. EARI therefore uses explicit operating budgets.
 
@@ -884,7 +866,7 @@ Permitted pause reasons are enumerated, such as required external evidence unava
 
 A project deadline alone is not a valid pause or clearance reason.
 
-## 28. Emergency safety actions
+## 29. Emergency safety actions
 
 No emergency exception may turn a confirmed scientific-validity blocker into `REVIEW_CLEAR`.
 
@@ -892,39 +874,51 @@ Operational emergency authority may take harm-reducing actions such as revoking 
 
 Emergency authority may not use urgency to authorize scientific analysis, result admission, efficacy claims, or publication clearance.
 
-## 29. Review-system quality metrics
+## 30. Review-system quality metrics
 
-After sufficient review history exists, EARI may derive assurance-system metrics such as:
-
-- independent multi-role defect detection;
-- findings overturned during secondary appraisal;
-- unsupported blocking proposals;
-- late defects missed at earlier checkpoints;
-- reviewer-specific defect-class detection;
-- scoped `NO_FINDING_ESTABLISHED` frequency;
-- dissent-resolution patterns;
-- AI candidate adoption/rejection;
-- recurring correlated blind spots.
+After sufficient review history exists, EARI may derive assurance-system metrics such as independent multi-role defect detection, findings overturned during secondary appraisal, unsupported blocking proposals, late defects missed at earlier checkpoints, reviewer-specific defect-class detection, scoped `NO_FINDING_ESTABLISHED` frequency, dissent-resolution patterns, AI candidate adoption/rejection, and recurring correlated blind spots.
 
 These metrics evaluate EARI, not DGAF's scientific hypothesis. They never increment scientific N or establish efficacy.
 
-## 30. Implementation direction
+## 31. Deployment sequence
+
+EARI should be introduced in four prospective stages.
+
+### Stage A — Specification and validator implementation
+
+Implement machine-readable schemas, taxonomies, charters, deterministic validators, append-only package rules, and adversarial tests. Gate effect remains NONE.
+
+### Stage B — Advisory shadow operation
+
+Run AI-assisted and/or available-human rehearsals as `REVIEW_ADVISORY_ONLY`. Exercise frozen packets, finding semantics, deduplication, dissent, secondary appraisal, and generated indexes. No DGAF transition depends on EARI clearance.
+
+### Stage C — Human-panel calibration and qualification
+
+Qualify the 11 human roles and independent secondary-appraisal capability against versioned calibration corpora. Validate operating capacity and latency. Gate effect remains NONE until a separate governance activation is accepted.
+
+### Stage D — Prospective governance activation
+
+A separate governance change identifies the exact EARI versions, checkpoint(s), activation boundary, and negative gate effect. Only after that acceptance may formal EARI clearance become a prerequisite for the named future transitions.
+
+This sequence prevents a documentation or tooling merge from silently creating new authority.
+
+## 32. Implementation direction
 
 The approved architecture is **repo-native** rather than a separate review service.
 
 The smallest implementation should create machine-readable semantics before UI or dashboard work.
 
-Expected first implementation artifacts:
+Expected first implementation surfaces are:
 
 ```text
 docs/reviews/policy/defect_taxonomy.yaml
 docs/reviews/schemas/finding.schema.json
 docs/reviews/policy/gate_policy.yaml
 docs/reviews/policy/calibration_policy.yaml
-docs/reviews/charters/...
+one versioned charter file for each of R01–R11 under docs/reviews/charters/
 scripts/validate_eari_review.py
 scripts/generate_eari_current_index.py
-tests/test_eari_*.py
+tests covering EARI schemas, policies, lineage, and adversarial fixtures
 .github/workflows/eari-validation.yml
 ```
 
@@ -932,7 +926,7 @@ Exact file decomposition belongs in the implementation plan. No standalone datab
 
 Any future UI is a projection over repository-authoritative records, not a parallel source of truth.
 
-## 31. Required adversarial implementation fixtures
+## 33. Required adversarial implementation fixtures
 
 The implementation plan must include deterministic fixtures/tests for at least:
 
@@ -950,45 +944,44 @@ The implementation plan must include deterministic fixtures/tests for at least:
 12. a merely `PLAUSIBLE` high-severity concern that cannot become confirmed blocking;
 13. attempted retroactive residual-risk exception;
 14. attempted administrative/chair override of a confirmed blocker;
-15. attempted direct conversion of `REVIEW_CLEAR` into DGAF authorization.
+15. attempted direct conversion of `REVIEW_CLEAR` into DGAF authorization;
+16. an AI-only simulated 11-role panel attempting formal clearance and being forced to `REVIEW_ADVISORY_ONLY`;
+17. a D13 process-integrity failure invalidating the run without being misrepresented as a DGAF scientific defect.
 
-## 32. Implementation acceptance constraints
+## 34. Implementation acceptance constraints
 
 Implementation is acceptable only if it preserves all of these invariants:
 
 1. Human reviewers own canonical findings.
 2. AI cannot create a canonical finding directly.
-3. Blind first-pass records are preserved after later revisions.
-4. `NO_FINDING_ESTABLISHED` is always scoped and evidence-bearing.
-5. Independence is an operational predicate, not a role label.
-6. Blocking is conjunctive and machine-checkable.
-7. `PLAUSIBLE` evidence cannot become `CONFIRMED_BLOCKING` by severity alone.
-8. A confirmed blocker cannot be removed by majority/chair/schedule override.
-9. Dissent is append-only and reconstructable.
-10. Review packages are immutable and lineage-aware.
-11. Generated current-state indexes are projections only.
-12. Process validity, checkpoint outcome, record lifecycle, and lineage integrity remain separate axes.
-13. EARI clearance cannot establish positive DGAF authority.
-14. EARI has no gate effect before explicit prospective activation.
-15. Calibration and EARI operational metrics have zero scientific-N effect.
-16. Current Track A Epoch 002 scientific and authorization state remains unchanged by implementation unless a separate legitimate DGAF transition explicitly changes it.
+3. AI-only role simulation cannot create formal checkpoint clearance or blocking authority.
+4. Blind first-pass records are preserved after later revisions.
+5. `NO_FINDING_ESTABLISHED` is always scoped and evidence-bearing.
+6. Independence is an operational predicate, not a role label.
+7. Blocking is conjunctive and machine-checkable.
+8. `PLAUSIBLE` evidence cannot become `CONFIRMED_BLOCKING` by severity alone.
+9. A confirmed blocker cannot be removed by majority/chair/schedule override.
+10. Dissent is append-only and reconstructable.
+11. Review packages are immutable and lineage-aware.
+12. Generated current-state indexes are projections only.
+13. Process validity, checkpoint outcome, record lifecycle, and lineage integrity remain separate axes.
+14. EARI clearance cannot establish positive DGAF authority.
+15. EARI has no gate effect before explicit prospective activation.
+16. Calibration and EARI operational metrics have zero scientific-N effect.
+17. D13 process failure is not automatically evidence of an underlying DGAF scientific/system defect.
+18. Current Track A Epoch 002 scientific and authorization state remains unchanged by implementation unless a separate legitimate DGAF transition explicitly changes it.
 
-## 33. Design references and influences
+## 35. Design references and influences
 
 The architecture was strengthened using established patterns from independent evidence appraisal, audit/data-integrity practice, formal dissent, safety-critical decision-making, and AI test/evaluation practice. These are design influences, not claims that DGAF or EARI is regulated by or equivalent to those frameworks.
 
-Relevant sources discussed during design include:
+Relevant sources discussed during design include Cochrane Handbook guidance on independent duplicate appraisal, piloting, disagreement resolution, and preserving original judgments; NASA formal-dissent process concepts for documented facts, differing positions, rationales, impacts, escalation, and recorded decisions; FDA data-integrity / ALCOA+ concepts for attributable, original, complete, consistent, enduring, and available records; and NIST AI RMF concepts for documented test/evaluation/verification/validation, human oversight, benchmarks, knowledge limits, and independent assessment.
 
-- Cochrane Handbook guidance on independent duplicate appraisal, piloting, disagreement resolution, and preserving original judgments;
-- NASA formal-dissent process concepts for documented facts, differing positions, rationales, impacts, escalation, and recorded decisions;
-- FDA data-integrity / ALCOA+ concepts for attributable, original, complete, consistent, enduring, and available records;
-- NIST AI RMF concepts for documented test/evaluation/verification/validation, human oversight, benchmarks, knowledge limits, and independent assessment.
-
-## 34. Final invariant
+## 36. Final invariant
 
 > EARI is an append-only, evidence-bound, human-reviewer-first adversarial assurance instrument in which independent falsification precedes discussion, blocking requires predefined evidence and valid independent appraisal, dissent cannot be administratively erased, AI remains a calibrated subordinate instrument, and review clearance never constitutes scientific or operational authorization.
 
-## 35. Design-to-plan gate
+## 37. Design-to-plan gate
 
 This document is the approved architecture, not an implementation plan.
 
