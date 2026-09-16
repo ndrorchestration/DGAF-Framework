@@ -41,23 +41,29 @@ test('current truth boundary remains fail-closed and non-authorized', () => {
   assert.equal(TRUTH_BOUNDARY.efficacy, 'NOT ESTABLISHED')
 })
 
-test('lifecycle reflects the post-collection frontier without downstream promotion', () => {
+test('lifecycle reflects the post-unblinding materialization frontier without downstream promotion', () => {
   const custody = GOVERNANCE_STAGES.find(stage => stage.id === 'repository-custody')
   const freeze = GOVERNANCE_STAGES.find(stage => stage.id === 'immutable-freeze')
   const authorization = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
   const collection = GOVERNANCE_STAGES.find(stage => stage.id === 'empirical-collection')
   const admission = GOVERNANCE_STAGES.find(stage => stage.id === 'operator-evidence-admission')
+  const qualityControl = GOVERNANCE_STAGES.find(stage => stage.id === 'quality-control')
   const datasetLock = GOVERNANCE_STAGES.find(stage => stage.id === 'dataset-lock')
   const unblinding = GOVERNANCE_STAGES.find(stage => stage.id === 'unblinding-decision')
+  const materialization = GOVERNANCE_STAGES.find(stage => stage.id === 'materialization')
+  const analysisAuthorization = GOVERNANCE_STAGES.find(stage => stage.id === 'primary-analysis-authorization')
 
   assert.equal(custody?.predicateState, 'pass')
   assert.equal(freeze?.predicateState, 'pass')
   assert.equal(authorization?.predicateState, 'pass')
   assert.equal(collection?.predicateState, 'pass')
-  assert.equal(admission?.predicateState, 'not_established')
-  assert.equal(admission?.toolingPrepared, true)
-  assert.equal(datasetLock?.predicateState, 'not_established')
-  assert.equal(unblinding?.predicateState, 'not_authorized')
+  assert.equal(admission?.predicateState, 'pass')
+  assert.equal(qualityControl?.predicateState, 'pass')
+  assert.equal(datasetLock?.predicateState, 'pass')
+  assert.equal(unblinding?.predicateState, 'pass')
+  assert.equal(materialization?.predicateState, 'not_established')
+  assert.equal(materialization?.toolingPrepared, true)
+  assert.equal(analysisAuthorization?.predicateState, 'not_authorized')
 })
 
 test('every lifecycle stage carries an explicit claim boundary', () => {
