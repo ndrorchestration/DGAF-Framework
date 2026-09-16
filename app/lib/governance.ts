@@ -6,7 +6,7 @@ export const TRUTH_BOUNDARY = {
   authorization: 'NOT AUTHORIZED',
   empiricalN: 0,
   efficacy: 'NOT ESTABLISHED',
-  sourceUpdated: '2026-09-15',
+  sourceUpdated: '2026-09-16',
   sources: ['docs/PROJECT_STATUS.md', 'docs/CURRENT_STATE.md', 'docs/PUBLIC_TRANSLATION_LAYER.md'],
 } as const
 
@@ -154,7 +154,8 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
     shortLabel: 'Analysis auth',
     description: 'A separate decision must authorize the locked confirmatory analysis and nothing broader.',
     predicateState: 'not_authorized',
-    toolingPrepared: false,
+    toolingPrepared: true,
+    toolingNote: 'PR #728 accepted the prospective validator/procedure/CI/test tooling; no positive authorization event exists.',
     evidenceBoundary: 'No accepted primary-analysis authorization exists; an accepted materialization receipt is a real predecessor.',
     doesNotEstablish: 'A positive result, efficacy, certification, or production readiness.',
   },
