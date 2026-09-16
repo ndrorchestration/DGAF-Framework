@@ -244,10 +244,7 @@ def validate_frozen_analysis_identities(ref: str) -> None:
     for relpath, expected_blob in expected_blobs.items():
         actual_blob = git("rev-parse", f"{ref}:{relpath}")
         if actual_blob != expected_blob:
-            fail(
-                f"frozen Epoch 002 identity drift at {relpath}: "
-                f"expected {expected_blob}, got {actual_blob}"
-            )
+            fail(f"frozen Epoch 002 identity drift at {relpath}: " f"expected {expected_blob}, got {actual_blob}")
 
     lock = load_json_at_ref(ref, ANALYSIS_LOCK_REL)
     if lock.get("protocol_id") != PROTOCOL_ID:
@@ -286,22 +283,14 @@ def validate_authorization_event_shape(head: str) -> str:
         fail("authorization event must have exactly one parent")
     parent = lineage[1]
 
-    changed = [
-        line
-        for line in git(
-            "diff-tree", "--no-commit-id", "--name-only", "-r", head
-        ).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line]
     if changed != [AUTH_REL]:
         fail("authorization event must create exactly the canonical authorization record and no other file")
 
     if git_object_exists(f"{parent}:{AUTH_REL}"):
         fail("authorization record must be creation-only; it already exists in the parent")
 
-    history = [
-        line for line in git("log", "--format=%H", "--", AUTH_REL).splitlines() if line
-    ]
+    history = [line for line in git("log", "--format=%H", "--", AUTH_REL).splitlines() if line]
     if history != [head]:
         fail("authorization record must have first-and-only immutable history at the event commit")
     return parent
@@ -317,9 +306,7 @@ def validate_authorization_event(head: str, *, accepted_parent_sha: str) -> str:
         fail("authorization requires an accepted materialization receipt in its parent")
     if not git_object_exists(f"{head}:{MATERIALIZATION_RECEIPT_REL}"):
         fail("materialization receipt must remain present at authorization head")
-    if git_object_exists(f"{parent}:{RESULT_REL}") or git_object_exists(
-        f"{head}:{RESULT_REL}"
-    ):
+    if git_object_exists(f"{parent}:{RESULT_REL}") or git_object_exists(f"{head}:{RESULT_REL}"):
         fail("locked analysis result must remain absent during authorization")
 
     parent_receipt_bytes = read_git_bytes(parent, MATERIALIZATION_RECEIPT_REL)
@@ -341,9 +328,7 @@ def validate_authorization_event(head: str, *, accepted_parent_sha: str) -> str:
         fail("materialization receipt event must have exactly one parent")
     receipt_parent = receipt_lineage[1]
 
-    receipt_changed_output = git(
-        "diff-tree", "--no-commit-id", "--name-only", "-r", receipt_event
-    )
+    receipt_changed_output = git("diff-tree", "--no-commit-id", "--name-only", "-r", receipt_event)
     receipt_changed = [line for line in receipt_changed_output.splitlines() if line]
     if receipt_changed != [MATERIALIZATION_RECEIPT_REL]:
         fail("materialization receipt event must change exactly the canonical receipt path")
@@ -368,12 +353,8 @@ def validate_authorization_event(head: str, *, accepted_parent_sha: str) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
-    mode.add_argument(
-        "--tooling", action="store_true", help="validate prospective tooling-only state"
-    )
-    mode.add_argument(
-        "--event-commit", metavar="SHA", help="validate authorization event repository shape"
-    )
+    mode.add_argument("--tooling", action="store_true", help="validate prospective tooling-only state")
+    mode.add_argument("--event-commit", metavar="SHA", help="validate authorization event repository shape")
     parser.add_argument(
         "--accepted-parent",
         metavar="SHA",
