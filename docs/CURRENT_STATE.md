@@ -2,7 +2,7 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-15
+last_verified: 2026-09-16
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -22,11 +22,14 @@ track_a_successor_dataset_lock: ESTABLISHED
 track_a_successor_unblinding: AUTHORIZED_BOUNDED_MAPPING_RELEASE_OR_DECRYPTION_ONLY
 track_a_successor_materialization_tooling: ACCEPTED
 track_a_successor_materialization: NOT_ESTABLISHED
+track_a_successor_primary_analysis_authorization_tooling: ACCEPTED
+track_a_successor_primary_analysis_authorization: NOT_ESTABLISHED
 track_a_successor_primary_analysis: NOT_AUTHORIZED_NOT_RUN
 accepted_dataset_lock_tooling_pr: 622
 accepted_unblinding_decision_tooling_pr: 627
 accepted_stage_1_materializer_pr: 713
 accepted_stage_2_operator_materialization_bundle_pr: 715
+accepted_primary_analysis_authorization_tooling_pr: 728
 ---
 
 # DGAF-Framework / PDMAL — Current State
@@ -46,7 +49,7 @@ The canonical High-Assurance program, Track A Epoch 001, and Track A Epoch 002 a
 | Epoch 001 protected mapping recoverability | **CRYPTOGRAPHICALLY UNRECOVERABLE** |
 | Epoch 001 primary analysis | **UNANALYZABLE / NOT RUN** |
 | Successor Track A lane | **ISSUE #523 OPEN** |
-| Epoch 002 repository custody | **ACCEPTED / SAME_SYSTEM_NONINDEPENDENT** |
+| Epoch 002 repository custody | **ACCEPTED / SAME_SYSTEM NONINDEPENDENT** |
 | Epoch 002 freeze / closure / verification classification | **ACCEPTED** |
 | Epoch 002 collection authorization | **ACCEPTED** |
 | Epoch 002 collection | **COMPLETE · 50 PAIRED SEED UNITS / 2,250 BLINDED OBSERVATIONS** |
@@ -55,6 +58,8 @@ The canonical High-Assurance program, Track A Epoch 001, and Track A Epoch 002 a
 | Epoch 002 materialization tooling | **ACCEPTED** |
 | Epoch 002 real materialization | **NOT ESTABLISHED** |
 | Epoch 002 materialization receipt | **NOT ESTABLISHED** |
+| Epoch 002 primary-analysis authorization tooling | **ACCEPTED / TOOLING ONLY** |
+| Epoch 002 primary-analysis authorization event | **NOT ESTABLISHED** |
 | Epoch 002 primary analysis | **NOT AUTHORIZED / NOT RUN** |
 | Independent validation | **NOT ESTABLISHED** |
 
@@ -82,28 +87,34 @@ The successor collection is complete at **50 paired seed units / 2,250 blinded o
 
 A separate accepted `UNBLINDING_DECISION_RECORD` exists with `status=PASS` and scope **`CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`**. That record does not authorize primary analysis and does not promote scientific N, efficacy, independent validation, or High-Assurance state.
 
-### Accepted materialization apparatus
+### Accepted materialization and authorization apparatus
 
-Repository engineering has now crossed the materialization-tooling milestone without performing real materialization:
+Repository engineering has crossed the materialization- and authorization-tooling milestones without performing real materialization or creating a positive primary-analysis authorization event:
 
 1. prospective materialization receipt validation/procedure — accepted predecessor tooling;
 2. OPERATOR_CODESPACE/content-addressed provenance correction — accepted;
 3. controlled Stage-1 unblinded materializer — **PR #713 accepted**;
-4. operator-side Stage-2 materialization evidence bundle — **PR #715 accepted**.
+4. operator-side Stage-2 materialization evidence bundle — **PR #715 accepted**;
+5. prospective fail-closed primary-analysis authorization validator/procedure/read-only CI/adversarial tests — **PR #728 accepted**, with procedure reconciliation in **PR #730**.
 
 PR #713 introduced the controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
 PR #715 added the non-secret operator materialization evidence bundle. It binds accepted predecessor identities, emits the deterministic materialized-input digest sidecar plus non-secret manifest/receipt/evidence records, stages the complete five-member bundle before publication, and publishes atomically only after validation. Its exact-head verification completed successfully, including Python 3.10/3.11/3.12 and a Python 3.12 full suite of **928 passed / 4 skipped**.
 
-Neither PR decrypted or admitted the real retained Epoch 002 material as a governed analysis input.
+PR #728 added the prospective primary-analysis authorization gate. It requires a future positive authorization event to descend from an explicitly accepted protected-main parent, requires an already accepted immutable materialization receipt, binds frozen analysis identities, limits scope to `LOCKED_PRIMARY_ANALYSIS_ONLY`, and preserves tooling-only mode while the canonical authorization/result records remain absent. PR #730 records that tooling acceptance in the canonical authorization procedure.
+
+None of these PRs decrypted or admitted the real retained Epoch 002 material as a governed analysis input, created an accepted materialization receipt, created a positive primary-analysis authorization event, or ran primary analysis.
 
 ## Current frontier
 
 The next admissible scientific transition is **controlled operator-side materialization of the real retained Epoch 002 evidence, followed by validation/admission and a separate immutable materialization receipt**.
 
-The repository currently contains no canonical `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json`. Therefore:
+The repository currently contains no canonical `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json` and no accepted positive `PRIMARY_ANALYSIS_AUTHORIZATION_RECORD`. Therefore:
 
 - `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`;
+- `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT = NOT_ESTABLISHED`;
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_TOOLING = ACCEPTED`;
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = NOT_ESTABLISHED`;
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
@@ -127,7 +138,8 @@ Tooling readiness never skips predecessor state. The governed order is:
 `→ separate bounded unblinding decision — AUTHORIZED`
 `→ controlled local materialization — CURRENT FRONTIER / NOT ESTABLISHED`
 `→ immutable materialization receipt — NOT ESTABLISHED`
-`→ separate primary-analysis authorization — NOT AUTHORIZED`
+`→ prospective primary-analysis authorization tooling — ACCEPTED`
+`→ separate primary-analysis authorization event — NOT ESTABLISHED`
 `→ locked primary analysis — NOT RUN`
 `→ interpretation/adjudication — NOT REACHED`
 
@@ -140,7 +152,10 @@ Current predicates:
 - `TRACK_A_EPOCH_002_UNBLINDING = AUTHORIZED / BOUNDED`
 - `TRACK_A_EPOCH_002_MATERIALIZATION_TOOLING = ACCEPTED`
 - `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`
+- `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT = NOT_ESTABLISHED`
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_TOOLING = ACCEPTED`
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = NOT_ESTABLISHED`
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`
 - `SCIENTIFIC_N_INCREMENT = 0`
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`
