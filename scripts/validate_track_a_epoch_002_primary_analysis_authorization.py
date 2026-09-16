@@ -15,7 +15,7 @@ import hashlib
 import json
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 from jsonschema import Draft202012Validator
 
@@ -118,7 +118,7 @@ EXPECTED_ANALYSIS_LOCK = {
 }
 
 
-def fail(message: str) -> None:
+def fail(message: str) -> NoReturn:
     raise SystemExit(message)
 
 
