@@ -8,12 +8,12 @@ semantic projection drift is detected.
 
 from __future__ import annotations
 
-from collections import Counter, defaultdict
-from datetime import datetime, timezone
 import json
 import os
 import re
 import sys
+from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from typing import Any
 
 import requests
