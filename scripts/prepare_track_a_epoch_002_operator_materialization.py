@@ -20,6 +20,8 @@ import tempfile
 from pathlib import Path
 from typing import Any, NoReturn
 
+from jsonschema import Draft202012Validator
+
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
 MATERIALIZER_REL = "scripts/materialize_track_a_epoch_002_unblinded_input.py"
@@ -27,6 +29,10 @@ MATERIALIZER_PATH = ROOT / MATERIALIZER_REL
 VALIDATOR_REL = "scripts/validate_track_a_epoch_002_materialization.py"
 VALIDATOR_PATH = ROOT / VALIDATOR_REL
 EVIDENCE_SCHEMA_REL = "docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE_SCHEMA.json"
+EXECUTION_RECEIPT_SCHEMA_REL = (
+    "docs/experiment/TRACK_A_EPOCH_002_OPERATOR_MATERIALIZATION_EXECUTION_RECEIPT_SCHEMA.json"
+)
+EXECUTION_RECEIPT_SCHEMA_PATH = ROOT / EXECUTION_RECEIPT_SCHEMA_REL
 DATASET_LOCK_EVIDENCE_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
 DATASET_LOCK_RECEIPT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json"
 UNBLINDING_DECISION_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json"
@@ -77,6 +83,19 @@ def load_json_bytes(value: bytes, label: str) -> dict[str, Any]:
     if not isinstance(parsed, dict):
         fail(f"{label} must be a JSON object")
     return parsed
+
+
+def validate_operator_execution_receipt(receipt: dict[str, Any]) -> None:
+    schema = load_json_bytes(
+        EXECUTION_RECEIPT_SCHEMA_PATH.read_bytes(),
+        "operator materialization execution receipt schema",
+    )
+    validator = Draft202012Validator(schema)
+    errors = sorted(validator.iter_errors(receipt), key=lambda error: list(error.path))
+    if errors:
+        first = errors[0]
+        location = ".".join(str(part) for part in first.path) or "<root>"
+        fail(f"operator execution receipt schema violation at {location}: {first.message}")
 
 
 def git_bytes(*arguments: str) -> bytes:
@@ -359,6 +378,11 @@ def prepare_operator_bundle(
             contracts=contracts,
             retention_id=retention_id,
         )
+        execution_receipt = load_json_bytes(
+            bundle[EXECUTION_RECEIPT_NAME],
+            "operator materialization execution receipt",
+        )
+        validate_operator_execution_receipt(execution_receipt)
         evidence = load_json_bytes(bundle[EVIDENCE_NAME], "materialization evidence")
         validator.validate_evidence_against_dataset_lock(
             evidence,
