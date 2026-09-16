@@ -10,7 +10,7 @@ Repository-local implementation evidence takes precedence over inherited labels,
 
 Use this status ladder:
 
-**DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED**
+`DEFINED → IMPLEMENTED → COMPUTED → VERIFIED → ATTESTED → HISTORICAL → HYPOTHESIS → METAPHOR → UNSUPPORTED → DEPRECATED`
 
 A repository relationship does not transfer verification status from one project to another.
 
