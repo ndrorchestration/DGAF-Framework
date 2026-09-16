@@ -17,9 +17,7 @@ FULL_NON_EFFECTS = [
     "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
     "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
 ]
-AUTHORIZATION_NON_EFFECTS = [
-    effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_ANALYSIS"
-]
+AUTHORIZATION_NON_EFFECTS = [effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_ANALYSIS"]
 
 
 def load_validator():
@@ -50,10 +48,7 @@ def materialization_receipt_fixture() -> dict:
             "commit_sha": "2" * 40,
             "sha256": "3" * 64,
         },
-        "evidence_scope": (
-            "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_"
-            "AFTER_BOUNDED_UNBLINDING"
-        ),
+        "evidence_scope": "DETERMINISTIC_EPOCH_002_ANALYSIS_INPUT_MATERIALIZATION_AFTER_BOUNDED_UNBLINDING",
         "non_effects": list(FULL_NON_EFFECTS),
         "status": "PASS",
         "predecessor_record_ids": ["E002-UNBLINDING-00112233"],
@@ -174,9 +169,7 @@ def test_frozen_epoch_002_analysis_identities_are_exact() -> None:
     assert validator.PREREG_BLOB_SHA == "9668ec54e50c40b04d40cfa64b817950df4bbffa"
     assert validator.ANALYSIS_LOCK_BLOB_SHA == "26980e27185b3a77980204b2d46a4fdab7e5fc7e"
     assert validator.ANALYSIS_BLOB_SHA == "d4495f7cdf211b974039ec0e66292dc62ea0881f"
-    assert validator.ANALYSIS_CONFIG_SHA256 == (
-        "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73"
-    )
+    assert validator.ANALYSIS_CONFIG_SHA256 == "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73"
     assert validator.REQUIREMENTS_BLOB_SHA == "00c1f779e97030f9b25ae494642edb31b5b09de5"
 
 
@@ -206,9 +199,7 @@ def test_event_shape_rejects_extra_changed_file(monkeypatch: pytest.MonkeyPatch)
         validator.validate_authorization_event_shape(head)
 
 
-def test_event_shape_rejects_preexisting_authorization(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_event_shape_rejects_preexisting_authorization(monkeypatch: pytest.MonkeyPatch) -> None:
     validator = load_validator()
     head = "d" * 40
     parent = "c" * 40
@@ -223,11 +214,7 @@ def test_event_shape_rejects_preexisting_authorization(
         raise AssertionError(f"unexpected git call: {args}")
 
     monkeypatch.setattr(validator, "git", fake_git)
-    monkeypatch.setattr(
-        validator,
-        "git_object_exists",
-        lambda spec: spec == f"{parent}:{validator.AUTH_REL}",
-    )
+    monkeypatch.setattr(validator, "git_object_exists", lambda spec: spec == f"{parent}:{validator.AUTH_REL}")
 
     with pytest.raises(SystemExit):
         validator.validate_authorization_event_shape(head)
