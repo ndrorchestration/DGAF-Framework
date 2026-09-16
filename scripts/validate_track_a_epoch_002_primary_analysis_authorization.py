@@ -12,7 +12,7 @@ import argparse
 import json
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
@@ -55,7 +55,7 @@ FULL_NON_EFFECTS = [
 AUTHORIZATION_NON_EFFECTS = [effect for effect in FULL_NON_EFFECTS if effect != "DOES_NOT_AUTHORIZE_ANALYSIS"]
 
 
-def fail(message: str) -> None:
+def fail(message: str) -> NoReturn:
     raise SystemExit(message)
 
 
