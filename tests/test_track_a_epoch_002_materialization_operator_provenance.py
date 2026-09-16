@@ -208,16 +208,12 @@ def configure_evidence_admission_event(
     monkeypatch.setattr(
         validator,
         "git_object_exists",
-        lambda spec: evidence_preexists
-        if spec == f"{parent}:{validator.MATERIALIZATION_EVIDENCE_REL}"
-        else False,
+        lambda spec: evidence_preexists if spec == f"{parent}:{validator.MATERIALIZATION_EVIDENCE_REL}" else False,
     )
     monkeypatch.setattr(
         validator,
         "path_history",
-        lambda path, ref="HEAD": [head]
-        if path == validator.MATERIALIZATION_EVIDENCE_REL
-        else [],
+        lambda path, ref="HEAD": [head] if path == validator.MATERIALIZATION_EVIDENCE_REL else [],
     )
 
 
@@ -334,9 +330,7 @@ def configure_receipt_event(
     monkeypatch.setattr(
         validator,
         "git_object_exists",
-        lambda spec: receipt_preexists
-        if spec == f"{parent}:{validator.MATERIALIZATION_RECEIPT_REL}"
-        else False,
+        lambda spec: receipt_preexists if spec == f"{parent}:{validator.MATERIALIZATION_RECEIPT_REL}" else False,
     )
 
     def fake_history(path: str, ref: str = "HEAD") -> list[str]:
