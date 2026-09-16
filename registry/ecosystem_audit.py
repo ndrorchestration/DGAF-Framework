@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Ecosystem Registry Audit.
+"""Fail-closed ecosystem registry projection audit.
 
-Compares ecosystem_registry.json against live GitHub repos for ndrorchestration.
-Structural inventory output is preserved; semantic projection validation is
-exposed separately so fail-closed behavior can be tested deterministically.
+The registry is a bounded machine-readable projection, not an authority source.
+The audit reports structural inventory facts and exits nonzero when material
+semantic projection drift is detected.
 """
+from __future__ import annotations
+
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 import json
 import os
@@ -114,7 +117,8 @@ def collect_semantic_violations(
     *,
     now: datetime | None = None,
 ) -> list[dict]:
-    """Return deterministic semantic projection violations."""
+    """Return deterministic fail-closed semantic projection violations."""
+
     if now is None:
         now = datetime.now(timezone.utc)
     elif now.tzinfo is None:
@@ -309,7 +313,11 @@ def collect_semantic_violations(
     return violations
 
 
-def run_audit():
+def audit_exit_code(violations: list[dict]) -> int:
+    return 1 if violations else 0
+
+
+def run_audit() -> int:
     registry = load_registry(REGISTRY_PATH)
     projects = registry.get("projects", [])
     reg_keys = {
@@ -350,33 +358,47 @@ def run_audit():
         print("  None — all registry projects have corresponding GitHub repos.")
 
     print("\n=== DEPLOYMENT TODO STUBS ===")
-    for p in projects:
-        for d in p.get("deployments", []):
-            if str(d.get("url", "")).startswith("TODO") or str(
-                d.get("project_id", "")
+    for project in projects:
+        for deployment in project.get("deployments", []):
+            if str(deployment.get("url", "")).startswith("TODO") or str(
+                deployment.get("project_id", "")
             ).startswith("TODO"):
                 print(
-                    f"  FILL_IN  {p['id']}  platform={d['platform']}  "
-                    f"url={d.get('url')}"
+                    f"  FILL_IN  {project['id']}  platform={deployment['platform']}  "
+                    f"url={deployment.get('url')}"
                 )
 
-    print("\n=== LIFECYCLE SUMMARY ===")
-    from collections import Counter
+    print("\n=== SEMANTIC PROJECTION VIOLATIONS ===")
+    violations = collect_semantic_violations(registry, gh_repos)
+    if violations:
+        for violation in violations:
+            project_suffix = (
+                f" project={violation['project_id']}"
+                if violation.get("project_id")
+                else ""
+            )
+            print(f"  {violation['code']}{project_suffix}  {violation['detail']}")
+    else:
+        print(
+            "  None — bounded projection semantics are internally consistent "
+            "with observed GitHub metadata."
+        )
 
+    print("\n=== LIFECYCLE SUMMARY ===")
     states = Counter(p.get("lifecycle_state") for p in projects)
     for state, count in sorted(states.items()):
         print(f"  {state}: {count}")
 
     print("\n=== PATTERN COVERAGE ===")
-    from collections import defaultdict
+    pattern_map: dict[str, list[str]] = defaultdict(list)
+    for project in projects:
+        for pattern in project.get("patterns", []):
+            pattern_map[pattern].append(project["id"])
+    for pattern, ids in sorted(pattern_map.items()):
+        print(f"  {pattern}: {len(ids)} projects")
 
-    pattern_map = defaultdict(list)
-    for p in projects:
-        for pat in p.get("patterns", []):
-            pattern_map[pat].append(p["id"])
-    for pat, ids in sorted(pattern_map.items()):
-        print(f"  {pat}: {len(ids)} projects")
+    return audit_exit_code(violations)
 
 
 if __name__ == "__main__":
-    run_audit()
+    sys.exit(run_audit())
