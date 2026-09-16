@@ -7,6 +7,7 @@ on:
       - "tests/test_discovery_registry.py"
       - "tests/test_discovery_metamorphic.py"
       - "tests/test_discovery_detector_mutation.py"
+      - "tests/test_discovery_validity.py"
       - "docs/governance/DISCOVERY_HARNESS_V1.md"
       - "docs/governance/ASSUMPTION_REGISTRY_V1.json"
       - "docs/governance/BLIND_SPOT_LEDGER_V1.json"
@@ -31,3 +32,4 @@ jobs:
           tests/test_discovery_registry.py
           tests/test_discovery_metamorphic.py
           tests/test_discovery_detector_mutation.py
+          tests/test_discovery_validity.py
