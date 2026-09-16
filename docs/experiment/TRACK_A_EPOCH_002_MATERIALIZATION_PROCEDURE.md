@@ -68,6 +68,34 @@ GitHub Actions workflow IDs and artifact IDs are not valid substitutes for these
 
 The validator cross-checks public/protected names, byte sizes, and digests against the already accepted canonical dataset-lock evidence rather than trusting repeated values in the materialization evidence.
 
+## Operator execution receipt contract
+
+The Stage-2 operator bundle contains an internal non-secret execution receipt named:
+
+`track_a_epoch_002_materialization_execution_receipt.json`
+
+That receipt is governed by the closed schema:
+
+`docs/experiment/TRACK_A_EPOCH_002_OPERATOR_MATERIALIZATION_EXECUTION_RECEIPT_SCHEMA.json`
+
+It records only the bounded execution facts needed to bind the generated bundle: protocol, accepted materializer path/commit/blob, materialized-input SHA-256, manifest SHA-256, sidecar SHA-256, fixed seed/record counts, and explicit non-effects.
+
+The schema requires:
+
+- `status = PASS`;
+- `evidence_execution_class = OPERATOR_CODESPACE`;
+- `secret_material_persisted = false`;
+- `outcome_aggregation_performed = false`;
+- `primary_analysis_authorized = false`;
+- `primary_analysis_run = false`;
+- `repository_materialization_established = false`;
+- `scientific_n_increment = 0`;
+- `canonical_dgaf_efficacy = NOT_ESTABLISHED`;
+- `authorization_effect = NONE`;
+- no undeclared fields.
+
+The Stage-2 wrapper validates this receipt against the closed schema before any bundle member is promoted from isolated staging into the final retention location. The operator execution receipt is **not** the later repository `MATERIALIZATION_RECEIPT`; its existence cannot establish repository materialization state or grant analysis authority.
+
 ## Stage 1 — separately accept the materializer implementation
 
 Before any real decryption/materialization, the deterministic Epoch 002 materializer implementation must be reviewed and accepted separately at:
@@ -87,10 +115,33 @@ The execution must:
 3. keep custody private-key/passphrase material outside repository and CI surfaces;
 4. avoid outcome aggregation or primary analysis;
 5. produce deterministic materialized input plus non-secret manifest/sidecar identities;
-6. produce a non-secret materialization evidence JSON conforming to the schema;
-7. retain the materialized output and execution evidence under an explicitly identified durable operator-controlled location.
+6. produce and schema-validate the non-authorizing operator execution receipt;
+7. produce a non-secret materialization evidence JSON conforming to the evidence schema;
+8. assemble exactly the five declared bundle members in isolated staging;
+9. validate the execution receipt and evidence before final publication;
+10. atomically promote the complete validated bundle into an explicitly identified durable operator-controlled location.
 
 No repository state transition is established merely because the operator execution succeeds.
+
+## Failure semantics and deterministic reruns
+
+Any failure in predecessor validation, locked-source identity checks, decryption, materializer execution, output digest verification, execution-receipt schema validation, materialization-evidence validation, exact bundle-member validation, or atomic promotion leaves the scientific state unchanged:
+
+`MATERIALIZATION = NOT_ESTABLISHED`
+
+`PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`
+
+`SCIENTIFIC_N_INCREMENT = 0`
+
+`CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
+
+A failed attempt does not by itself invalidate the already accepted dataset lock or bounded-unblinding authorization. It is retained as failure provenance and must be investigated before another materialization attempt is admitted.
+
+The Stage-2 wrapper builds in a sibling temporary staging directory and removes failed staging state; a post-materialization failure must leave the final destination empty rather than publishing a partial bundle.
+
+The accepted Stage-1 test suite already verifies deterministic repeated synthetic materialization: identical accepted inputs and contracts must produce byte-identical canonical analysis input. A real rerun must use the same accepted predecessor identities, retained source bytes, and accepted materializer identity. If repeated execution produces non-identical canonical materialized input, fail closed and investigate; no run automatically supersedes another merely because it occurred later.
+
+This procedure does not claim secure erasure of process memory or retroactively require destruction of the accepted custody key. Secret material remains governed by the accepted custody boundary and must not be persisted into the non-secret bundle.
 
 ## Stage 3 — creation-only repository evidence admission
 
@@ -174,7 +225,7 @@ The dedicated workflow resolves exactly one state from repository contents:
 
 There is no Actions-artifact retrieval mode. All real evidence required for repository validation is content-addressed and admitted through the canonical repository evidence record.
 
-For the current corrective #632 tooling PR, the exact changed-file scope is limited to the workflow, evidence schema, procedure, validator, original adversarial test suite, and focused operator-provenance test suite. No materializer or empirical artifact is added.
+Tooling-only maintenance is restricted to an explicit materialization-owned path allowlist. It may update only the dedicated workflow, materialization schemas/procedure/validator, Stage-2 operator bundle helper, and their focused tests. Dependency-trigger-only validation remains read-only. This bounded subset rule replaces the older requirement that every historical materialization-tooling file change together in one PR; it reduces unrelated churn without widening the lane beyond explicit owned paths.
 
 ## Current boundary
 
@@ -186,7 +237,7 @@ Until a separately accepted evidence-admission event and later receipt event exi
 
 `MATERIALIZATION = NOT_ESTABLISHED`
 
-`PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`
+`PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`
 
 `SCIENTIFIC_N_INCREMENT = 0`
 
