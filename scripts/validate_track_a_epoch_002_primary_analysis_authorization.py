@@ -201,10 +201,7 @@ def validate_frozen_analysis_identities(ref: str) -> None:
     for relpath, expected_blob in expected_blobs.items():
         actual_blob = git("rev-parse", f"{ref}:{relpath}")
         if actual_blob != expected_blob:
-            fail(
-                f"frozen Epoch 002 identity drift at {relpath}: "
-                f"expected {expected_blob}, got {actual_blob}"
-            )
+            fail(f"frozen Epoch 002 identity drift at {relpath}: " f"expected {expected_blob}, got {actual_blob}")
 
     lock = load_json_at_ref(ref, ANALYSIS_LOCK_REL)
     if lock.get("protocol_id") != PROTOCOL_ID:
@@ -242,13 +239,7 @@ def validate_authorization_event_shape(head: str) -> str:
         fail("authorization event must have exactly one parent")
     parent = lineage[1]
 
-    changed = [
-        line
-        for line in git(
-            "diff-tree", "--no-commit-id", "--name-only", "-r", head
-        ).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line]
     if changed != [AUTH_REL]:
         fail("authorization event must create exactly the canonical authorization record and no other file")
 
