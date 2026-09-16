@@ -239,19 +239,16 @@ def collect_semantic_violations(
         if isinstance(authority, dict):
             current_owner = authority.get("current_owner")
             if current_owner is not None and not _valid_current_owner(current_owner):
-                code = (
-                    "CURRENT_PERSONA_AUTHORITY"
-                    if _is_persona_owner(current_owner)
-                    else "CURRENT_AUTHORITY_INVALID"
-                )
+                if _is_persona_owner(current_owner):
+                    code = "CURRENT_PERSONA_AUTHORITY"
+                else:
+                    code = "CURRENT_AUTHORITY_INVALID"
+                detail = f"invalid current authority owner: {current_owner!r}"
                 violations.append(
                     _violation(
                         code,
                         project_id=project_id,
-                        detail=(
-                            "current authority owner must be a functional "
-                            f"role/capability id: {current_owner!r}"
-                        ),
+                        detail=detail,
                     )
                 )
 
