@@ -38,7 +38,9 @@ This procedure does not perform steps 1-3 or step 6.
 All of the following must hold simultaneously. Any missing or conflicting condition fails closed:
 
 - the canonical materialization receipt exists and has a unique immutable repository history;
-- its accepted event is an ancestor of the proposed authorization event parent;
+- the authorization event's sole parent is exactly the **accepted protected-main parent** supplied by the repository event context;
+- the materialization receipt already exists in that accepted protected-main parent, so a receipt created only on the authorization PR branch cannot satisfy the prerequisite;
+- its accepted receipt event is an ancestor of the proposed authorization event parent;
 - the receipt content is byte-identical at the authorization parent and authorization head;
 - the locked analysis result does not exist at either the authorization parent or authorization head;
 - the frozen Epoch 002 preregistration identity matches the validator-bound blob identity;
@@ -53,6 +55,8 @@ All of the following must hold simultaneously. Any missing or conflicting condit
 
 The future accepted authorization event is deliberately narrow. Its commit must have **exactly one parent** and **exactly one changed file**: the canonical primary-analysis authorization record. The event is **creation-only** and must be the **first-and-only history** for that record path at admission time.
 
+The sole parent must equal the accepted protected-main parent used for validation. For a pull request, that identity is the exact PR base SHA. For a direct protected-main push, it is the push event's previous-main SHA. Event-mode validation fails closed when neither repository event can supply that accepted predecessor. This prevents a multi-commit candidate branch from manufacturing a materialization receipt and then treating it as already accepted authority.
+
 The authorization record must bind the exact accepted `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json` record and content digest. It must use the closed shared result-record envelope without adding a second authority schema. The record's exact evidence scope is `LOCKED_PRIMARY_ANALYSIS_ONLY`.
 
 A validator PASS on a pull-request head is only `VALIDATED_PENDING_ACCEPTANCE`. It is not an authorization state transition. Repository authority arises only from the separately reviewed and accepted protected-main event satisfying this procedure and the validator contract.
@@ -62,13 +66,13 @@ A validator PASS on a pull-request head is only `VALIDATED_PENDING_ACCEPTANCE`. 
 The dedicated workflow is read-only (`contents: read`) and checks out the exact subject head with full repository history and credential persistence disabled. It has two fail-closed modes:
 
 - **tooling mode**: while the canonical authorization and result records are absent, validate frozen identities, semantic policy, tooling boundaries, adversarial tests, and continued absence of unauthorized state;
-- **event mode**: when an authorization record is present and the result remains absent, validate `HEAD` as the exact prospective one-parent / one-file / creation-only authorization event.
+- **event mode**: when an authorization record is present and the result remains absent, validate `HEAD` as the exact prospective one-parent / one-file / creation-only authorization event and require `HEAD^` to equal the accepted protected-main parent derived from the PR base SHA or previous-main push SHA.
 
 The workflow never executes primary analysis and never writes the materialization receipt, authorization record, or locked result record. It does not receive or persist protected mapping material or custody secrets.
 
 ## Failure semantics
 
-Any failed identity, ancestry, uniqueness, content, scope, schema, semantic-policy, event-shape, result-absence, or secret-boundary check rejects the candidate. Rejection preserves the pre-event state:
+Any failed identity, accepted-parent binding, ancestry, uniqueness, content, scope, schema, semantic-policy, event-shape, result-absence, or secret-boundary check rejects the candidate. Rejection preserves the pre-event state:
 
 - `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`
 - `SCIENTIFIC_N_INCREMENT=0`
