@@ -10,6 +10,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_primary_analysis_authorization.py"
+WORKFLOW_PATH = ROOT / ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
+PROCEDURE_PATH = ROOT / "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
 
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
@@ -366,3 +368,55 @@ def test_authorization_event_rejects_invalid_receipt_event_shape(
 def test_primary_analysis_authorization_semantic_policy_is_exact() -> None:
     validator = load_validator()
     validator.validate_semantic_policy()
+
+
+def test_ci_workflow_is_read_only_exact_head_and_never_runs_analysis() -> None:
+    assert WORKFLOW_PATH.exists(), "Epoch 002 primary-analysis authorization workflow is missing"
+    source = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    required = (
+        "permissions:\n  contents: read",
+        "ref: ${{ github.event.pull_request.head.sha || github.sha }}",
+        "fetch-depth: 0",
+        "persist-credentials: false",
+        "python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --tooling",
+        "python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --event-commit HEAD",
+        "TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json",
+        "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json",
+        "TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json",
+        "PRIMARY_ANALYSIS_RUN=FALSE",
+        "SCIENTIFIC_N_INCREMENT=0",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED",
+    )
+    for marker in required:
+        assert marker in source, marker
+
+    assert "python experiments/pdmal_pilot/track_a_epoch_002_analysis.py" not in source
+    assert "run_primary_analysis" not in source
+
+
+def test_procedure_preserves_prospective_fail_closed_boundary() -> None:
+    assert PROCEDURE_PATH.exists(), "Epoch 002 primary-analysis authorization procedure is missing"
+    source = PROCEDURE_PATH.read_text(encoding="utf-8")
+
+    required = (
+        "LOCKED_PRIMARY_ANALYSIS_ONLY",
+        "TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json",
+        "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json",
+        "TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json",
+        "exactly one parent",
+        "exactly one changed file",
+        "creation-only",
+        "first-and-only history",
+        "PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN",
+        "SCIENTIFIC_N_INCREMENT=0",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED",
+        "2,250 blinded observations",
+        "50 paired seed units",
+    )
+    for marker in required:
+        assert marker in source, marker
