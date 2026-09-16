@@ -146,10 +146,10 @@ jobs:
           combined = validator + "\n" + workflow
 
           forbidden = (
-              "PRIVATE_KEY=",
-              "PASSPHRASE=",
-              "mapping_values",
-              "subprocess.run([analysis",
+              "PRIVATE" + "_KEY=",
+              "PASS" + "PHRASE=",
+              "mapping" + "_values",
+              "subprocess." + "run([analysis",
           )
           for marker in forbidden:
               if marker in combined:
