@@ -141,3 +141,12 @@ def test_run_audit_returns_nonzero_when_semantic_violations(tmp_path, monkeypatc
     monkeypatch.setattr(ecosystem_audit, "fetch_github_repos", lambda owner: [])
 
     assert ecosystem_audit.run_audit() == 1
+
+
+def test_mixed_summary_does_not_let_negative_clause_mask_positive_claim():
+    mixed = _registry(
+        _project(
+            summary="Example is DGAF-governed. Security compliance is NOT established."
+        )
+    )
+    assert "UNSCOPED_CURRENT_CLAIM" in _codes(_violations(mixed))
