@@ -1,6 +1,9 @@
+import json
 from datetime import datetime, timezone
+from pathlib import Path
 
-from registry.ecosystem_audit import collect_semantic_violations
+from registry import ecosystem_audit
+from registry.ecosystem_audit import audit_exit_code, collect_semantic_violations
 
 
 def _repo(full_name="ndrorchestration/example", **overrides):
@@ -113,16 +116,11 @@ def test_historical_persona_lineage_does_not_reactivate_current_authority():
 
 
 def test_audit_exit_code_fails_closed_on_semantic_violations():
-    from registry.ecosystem_audit import audit_exit_code
-
     assert audit_exit_code([]) == 0
     assert audit_exit_code([{"code": "PROJECTION_METADATA_MISSING"}]) == 1
 
 
 def test_run_audit_returns_nonzero_when_semantic_violations(tmp_path, monkeypatch):
-    import json
-    from registry import ecosystem_audit
-
     registry_path = tmp_path / "registry.json"
     registry_path.write_text(
         json.dumps({"registry_version": "0.4.0", "projects": []}),
@@ -140,9 +138,6 @@ def test_mixed_summary_does_not_let_negative_clause_mask_positive_claim():
 
 
 def test_real_registry_has_no_semantic_projection_violations():
-    import json
-    from pathlib import Path
-
     registry_path = Path(__file__).resolve().parents[1] / "registry" / "ecosystem_registry.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     visibility = {
