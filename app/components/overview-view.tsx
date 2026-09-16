@@ -34,7 +34,7 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
         <div><span>Empirical N</span><strong>{TRUTH_BOUNDARY.empiricalN}</strong></div>
         <div><span>Canonical efficacy</span><StatusChip state="not_established" label={TRUTH_BOUNDARY.efficacy}/></div>
       </div>
-      <p className="boundary-note">Substantial engineering and governance evidence exists. The completed successor collection does not establish dataset lock, canonical DGAF efficacy, or downstream authorization.</p>
+      <p className="boundary-note">Substantial engineering and governance evidence exists. Epoch 002 dataset lock is established and bounded unblinding is authorized; neither establishes canonical DGAF efficacy, primary-analysis authorization, or downstream High-Assurance authority.</p>
     </section>
 
     <section>
