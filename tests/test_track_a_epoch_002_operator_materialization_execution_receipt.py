@@ -29,8 +29,10 @@ def contracts(helper: Any) -> dict[str, Any]:
         },
         "dataset_lock_receipt": {"record_id": "E002-DATASET-LOCK-TEST0001"},
         "dataset_lock_receipt_sha256": "a" * 64,
+        "dataset_lock_receipt_canonical_sha256": "2" * 64,
         "unblinding_decision": {"record_id": "E002-UNBLINDING-TEST0001"},
         "unblinding_decision_sha256": "b" * 64,
+        "unblinding_decision_canonical_sha256": "3" * 64,
         "dataset_lock_commit_sha": "c" * 40,
         "unblinding_decision_commit_sha": "d" * 40,
         "evidence_tooling_commit_sha": "e" * 40,
@@ -85,6 +87,69 @@ def test_operator_execution_receipt_schema_rejects_authority_promotion_and_extra
     extended = dict(receipt)
     extended["unexpected_authority"] = "PRIMARY_ANALYSIS"
     assert list(validator.iter_errors(extended))
+
+
+def test_invalid_execution_receipt_blocks_atomic_bundle_promotion(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    helper = load_helper()
+    payload = helper.canonical({"synthetic": True})
+    bound_contracts = contracts(helper)
+    real_builder = helper.build_bundle_documents
+
+    class FakeMaterializer:
+        @staticmethod
+        def materialize(
+            public_archive: Path,
+            protected_archive: Path,
+            custody_private_key: Path,
+            output_dir: Path,
+            *,
+            contracts: dict[str, Any],
+        ) -> dict[str, str]:
+            del public_archive, protected_archive, custody_private_key, contracts
+            output_dir.mkdir(parents=True, exist_ok=True)
+            (output_dir / helper.OUTPUT_NAME).write_bytes(payload)
+            return {"materialized_input_sha256": helper.digest_bytes(payload)}
+
+    class FakeEvidenceValidator:
+        @staticmethod
+        def validate_evidence_against_dataset_lock(
+            evidence: dict[str, Any],
+            dataset_lock_evidence: dict[str, Any],
+        ) -> None:
+            del evidence, dataset_lock_evidence
+
+    def load_fake_module(path: Path, name: str) -> Any:
+        del name
+        if path == helper.MATERIALIZER_PATH:
+            return FakeMaterializer
+        return FakeEvidenceValidator
+
+    def invalid_builder(**kwargs: Any) -> dict[str, bytes]:
+        bundle = real_builder(**kwargs)
+        receipt = json.loads(bundle[helper.EXECUTION_RECEIPT_NAME])
+        receipt["primary_analysis_authorized"] = True
+        bundle[helper.EXECUTION_RECEIPT_NAME] = helper.canonical(receipt)
+        return bundle
+
+    monkeypatch.setattr(helper, "load_repository_contracts", lambda: bound_contracts)
+    monkeypatch.setattr(helper, "load_module", load_fake_module)
+    monkeypatch.setattr(helper, "build_bundle_documents", invalid_builder)
+
+    final_output = tmp_path / "final"
+    with pytest.raises(SystemExit, match="operator execution receipt schema violation"):
+        helper.prepare_operator_bundle(
+            Path("public.tar"),
+            Path("protected.tar"),
+            Path("custody-key.pem"),
+            final_output,
+            retention_id="epoch002-materialization-test-retention",
+        )
+
+    assert final_output.is_dir()
+    assert list(final_output.iterdir()) == []
 
 
 if __name__ == "__main__":
