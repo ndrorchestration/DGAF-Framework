@@ -119,3 +119,25 @@ def test_historical_persona_lineage_does_not_reactivate_current_authority():
         }
     )
     assert "CURRENT_PERSONA_AUTHORITY" not in _codes(_violations(_registry(project)))
+
+
+def test_audit_exit_code_fails_closed_on_semantic_violations():
+    from registry.ecosystem_audit import audit_exit_code
+
+    assert audit_exit_code([]) == 0
+    assert audit_exit_code([{"code": "PROJECTION_METADATA_MISSING"}]) == 1
+
+
+def test_run_audit_returns_nonzero_when_semantic_violations(tmp_path, monkeypatch):
+    import json
+    from registry import ecosystem_audit
+
+    registry_path = tmp_path / "registry.json"
+    registry_path.write_text(
+        json.dumps({"registry_version": "0.4.0", "projects": []}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(ecosystem_audit, "REGISTRY_PATH", str(registry_path))
+    monkeypatch.setattr(ecosystem_audit, "fetch_github_repos", lambda owner: [])
+
+    assert ecosystem_audit.run_audit() == 1
