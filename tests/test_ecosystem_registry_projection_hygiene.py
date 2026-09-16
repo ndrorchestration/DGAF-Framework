@@ -1,0 +1,121 @@
+from datetime import datetime, timezone
+
+from registry.ecosystem_audit import collect_semantic_violations
+
+
+def _repo(full_name="ndrorchestration/example", **overrides):
+    base = {
+        "full_name": full_name,
+        "private": False,
+        "archived": False,
+        "default_branch": "main",
+    }
+    base.update(overrides)
+    return base
+
+
+def _project(**overrides):
+    base = {
+        "id": "example",
+        "summary": "Example project.",
+        "github": {
+            "owner": "ndrorchestration",
+            "repo": "example",
+            "private": False,
+            "archived": False,
+            "default_branch": "main",
+        },
+        "authority": {"current_owner": "role.project-maintainer"},
+        "deployments": [],
+    }
+    base.update(overrides)
+    return base
+
+
+def _registry(project=None, projection=None):
+    if projection is None:
+        projection = {
+            "authority_scope": "projection_only",
+            "canonical_source": "project-local repository governance/evidence",
+            "canonical_source_revision": "0083d64aa5f9395a9aa38ff0ca01ccd9e528fd44",
+            "projection_checked_at": "2026-09-16T12:00:00Z",
+            "projection_status": "CURRENT",
+            "staleness_class": None,
+        }
+    return {
+        "registry_version": "0.5.0",
+        "projection": projection,
+        "projects": [project or _project()],
+    }
+
+
+def _violations(registry, repos=None):
+    return collect_semantic_violations(
+        registry,
+        repos or [_repo()],
+        now=datetime(2026, 9, 16, 12, tzinfo=timezone.utc),
+    )
+
+
+def _codes(violations):
+    return {v["code"] for v in violations}
+
+
+def test_rejects_current_persona_authority_without_functional_role():
+    registry = _registry(_project(authority={"current_owner": "Amethyst"}))
+    assert "CURRENT_PERSONA_AUTHORITY" in _codes(_violations(registry))
+
+
+def test_rejects_live_github_metadata_mismatch():
+    assert "GITHUB_METADATA_MISMATCH" in _codes(
+        _violations(_registry(), [_repo(private=True)])
+    )
+
+
+def test_rejects_active_deployment_without_bound_observation():
+    deployment = {
+        "platform": "vercel",
+        "project_id": "TODO:vercel-project-id",
+        "status": "active",
+        "observed_at": None,
+    }
+    registry = _registry(_project(deployments=[deployment]))
+    assert "ACTIVE_DEPLOYMENT_UNVERIFIED" in _codes(_violations(registry))
+
+
+def test_rejects_unscoped_current_positive_claim_but_allows_negative_statement():
+    bad = _registry(_project(summary="Example is DGAF-governed with security compliance."))
+    assert "UNSCOPED_CURRENT_CLAIM" in _codes(_violations(bad))
+
+    good = _registry(
+        _project(
+            summary="Security compliance is NOT established; "
+            "DGAF-governed is historical lineage only."
+        )
+    )
+    assert "UNSCOPED_CURRENT_CLAIM" not in _codes(_violations(good))
+
+
+def test_requires_projection_metadata_and_rejects_stale_current_projection():
+    missing = _registry(projection={})
+    assert "PROJECTION_METADATA_MISSING" in _codes(_violations(missing))
+
+    stale_projection = {
+        "authority_scope": "projection_only",
+        "canonical_source": "project-local repository governance/evidence",
+        "canonical_source_revision": "old",
+        "projection_checked_at": "2026-08-01T00:00:00Z",
+        "projection_status": "CURRENT",
+        "staleness_class": None,
+    }
+    stale = _registry(projection=stale_projection)
+    assert "PROJECTION_METADATA_STALE" in _codes(_violations(stale))
+
+
+def test_historical_persona_lineage_does_not_reactivate_current_authority():
+    project = _project(
+        historical_lineage={
+            "former_persona_owners": ["Amethyst", "Sentinel", "COLLEEN"]
+        }
+    )
+    assert "CURRENT_PERSONA_AUTHORITY" not in _codes(_violations(_registry(project)))
