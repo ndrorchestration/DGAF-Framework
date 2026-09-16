@@ -11,6 +11,7 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 import json
 import os
+import re
 import sys
 from typing import Any
 
@@ -105,10 +106,12 @@ def _is_persona_owner(value: Any) -> bool:
 def _has_unscoped_current_claim(text: Any) -> bool:
     if not isinstance(text, str):
         return False
-    lowered = text.lower()
-    if not any(phrase in lowered for phrase in _HIGH_RISK_PHRASES):
-        return False
-    return not any(scope in lowered for scope in _NEGATING_SCOPE_PHRASES)
+    for clause in re.split(r"[.;\n]+", text.lower()):
+        if not any(phrase in clause for phrase in _HIGH_RISK_PHRASES):
+            continue
+        if not any(scope in clause for scope in _NEGATING_SCOPE_PHRASES):
+            return True
+    return False
 
 
 def collect_semantic_violations(
