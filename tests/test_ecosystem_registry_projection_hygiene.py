@@ -67,9 +67,7 @@ def test_rejects_current_persona_authority_without_functional_role():
 
 
 def test_rejects_live_github_metadata_mismatch():
-    assert "GITHUB_METADATA_MISMATCH" in _codes(
-        _violations(_registry(), [_repo(private=True)])
-    )
+    assert "GITHUB_METADATA_MISMATCH" in _codes(_violations(_registry(), [_repo(private=True)]))
 
 
 def test_rejects_active_deployment_without_bound_observation():
@@ -88,10 +86,7 @@ def test_rejects_unscoped_current_positive_claim_but_allows_negative_statement()
     assert "UNSCOPED_CURRENT_CLAIM" in _codes(_violations(bad))
 
     good = _registry(
-        _project(
-            summary="Security compliance is NOT established; "
-            "DGAF-governed is historical lineage only."
-        )
+        _project(summary="Security compliance is NOT established; " "DGAF-governed is historical lineage only.")
     )
     assert "UNSCOPED_CURRENT_CLAIM" not in _codes(_violations(good))
 
@@ -113,11 +108,7 @@ def test_requires_projection_metadata_and_rejects_stale_current_projection():
 
 
 def test_historical_persona_lineage_does_not_reactivate_current_authority():
-    project = _project(
-        historical_lineage={
-            "former_persona_owners": ["Amethyst", "Sentinel", "COLLEEN"]
-        }
-    )
+    project = _project(historical_lineage={"former_persona_owners": ["Amethyst", "Sentinel", "COLLEEN"]})
     assert "CURRENT_PERSONA_AUTHORITY" not in _codes(_violations(_registry(project)))
 
 
@@ -144,11 +135,7 @@ def test_run_audit_returns_nonzero_when_semantic_violations(tmp_path, monkeypatc
 
 
 def test_mixed_summary_does_not_let_negative_clause_mask_positive_claim():
-    mixed = _registry(
-        _project(
-            summary="Example is DGAF-governed. Security compliance is NOT established."
-        )
-    )
+    mixed = _registry(_project(summary="Example is DGAF-governed. Security compliance is NOT established."))
     assert "UNSCOPED_CURRENT_CLAIM" in _codes(_violations(mixed))
 
 
@@ -181,8 +168,11 @@ def test_real_registry_has_no_semantic_projection_violations():
         )
         for name, (private, archived, branch) in visibility.items()
     ]
-    assert collect_semantic_violations(
-        registry,
-        repos,
-        now=datetime(2026, 9, 16, 12, tzinfo=timezone.utc),
-    ) == []
+    assert (
+        collect_semantic_violations(
+            registry,
+            repos,
+            now=datetime(2026, 9, 16, 12, tzinfo=timezone.utc),
+        )
+        == []
+    )
