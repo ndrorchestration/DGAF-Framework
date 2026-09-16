@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
+import json
 from pathlib import Path
 
 import pytest
@@ -78,6 +80,82 @@ def validate_fixture(validator, authorization: dict) -> None:
         materialization_receipt_sha256="b" * 64,
         authorization_parent_sha="c" * 40,
     )
+
+
+def install_valid_event_fixture(monkeypatch: pytest.MonkeyPatch, validator):
+    head = "d" * 40
+    parent = "c" * 40
+    receipt_event = "a" * 40
+    receipt_parent = "9" * 40
+    receipt = materialization_receipt_fixture()
+    receipt_bytes = (json.dumps(receipt, sort_keys=True, separators=(",", ":")) + "\n").encode()
+    receipt_sha256 = hashlib.sha256(receipt_bytes).hexdigest()
+    authorization = validator.expected_authorization(
+        receipt,
+        materialization_receipt_commit_sha=receipt_event,
+        materialization_receipt_sha256=receipt_sha256,
+        authorization_parent_sha=parent,
+        generated_at_utc="2026-09-16T13:00:00Z",
+    )
+
+    state = {
+        "receipt_exists_parent": True,
+        "receipt_exists_head": True,
+        "result_exists_parent": False,
+        "result_exists_head": False,
+        "receipt_history": [receipt_event],
+        "receipt_changed_files": [validator.MATERIALIZATION_RECEIPT_REL],
+        "receipt_bytes_parent": receipt_bytes,
+        "receipt_bytes_head": receipt_bytes,
+    }
+
+    def fake_git(*args: str) -> str:
+        if args == ("log", "--format=%H", "--", validator.MATERIALIZATION_RECEIPT_REL):
+            return "\n".join(state["receipt_history"])
+        if args == ("rev-list", "--parents", "-n", "1", receipt_event):
+            return f"{receipt_event} {receipt_parent}"
+        if args == ("diff-tree", "--no-commit-id", "--name-only", "-r", receipt_event):
+            return "\n".join(state["receipt_changed_files"])
+        if args == ("merge-base", "--is-ancestor", receipt_event, parent):
+            return ""
+        raise AssertionError(f"unexpected git call: {args}")
+
+    def fake_exists(spec: str) -> bool:
+        values = {
+            f"{parent}:{validator.MATERIALIZATION_RECEIPT_REL}": state["receipt_exists_parent"],
+            f"{head}:{validator.MATERIALIZATION_RECEIPT_REL}": state["receipt_exists_head"],
+            f"{receipt_parent}:{validator.MATERIALIZATION_RECEIPT_REL}": False,
+            f"{parent}:{validator.RESULT_REL}": state["result_exists_parent"],
+            f"{head}:{validator.RESULT_REL}": state["result_exists_head"],
+            f"{head}:{validator.AUTH_REL}": True,
+        }
+        return bool(values.get(spec, False))
+
+    def fake_load_json_at_ref(ref: str, relpath: str) -> dict:
+        if relpath == validator.MATERIALIZATION_RECEIPT_REL and ref in {parent, head}:
+            return receipt
+        if relpath == validator.AUTH_REL and ref == head:
+            return authorization
+        raise AssertionError(f"unexpected JSON read: {ref}:{relpath}")
+
+    def fake_read_git_bytes(ref: str, relpath: str) -> bytes:
+        if relpath != validator.MATERIALIZATION_RECEIPT_REL:
+            raise AssertionError(f"unexpected byte read: {ref}:{relpath}")
+        if ref == parent:
+            return state["receipt_bytes_parent"]
+        if ref == head:
+            return state["receipt_bytes_head"]
+        raise AssertionError(f"unexpected byte read: {ref}:{relpath}")
+
+    monkeypatch.setattr(validator, "validate_authorization_event_shape", lambda event_head: parent)
+    monkeypatch.setattr(validator, "validate_frozen_analysis_identities", lambda ref: None)
+    monkeypatch.setattr(validator, "validate_semantic_policy", lambda: None, raising=False)
+    monkeypatch.setattr(validator, "git", fake_git)
+    monkeypatch.setattr(validator, "git_object_exists", fake_exists)
+    monkeypatch.setattr(validator, "load_json_at_ref", fake_load_json_at_ref)
+    monkeypatch.setattr(validator, "read_git_bytes", fake_read_git_bytes, raising=False)
+
+    return head, parent, receipt_event, state
 
 
 def test_authorization_binds_exact_materialization_receipt_and_parent() -> None:
@@ -218,3 +296,72 @@ def test_event_shape_rejects_preexisting_authorization(monkeypatch: pytest.Monke
 
     with pytest.raises(SystemExit):
         validator.validate_authorization_event_shape(head)
+
+
+def test_authorization_event_validates_immutable_materialization_predecessor(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    head, parent, _, _ = install_valid_event_fixture(monkeypatch, validator)
+
+    assert validator.validate_authorization_event(head) == parent
+
+
+def test_authorization_event_rejects_missing_materialization_receipt(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    head, _, _, state = install_valid_event_fixture(monkeypatch, validator)
+    state["receipt_exists_parent"] = False
+
+    with pytest.raises(SystemExit):
+        validator.validate_authorization_event(head)
+
+
+def test_authorization_event_rejects_preexisting_locked_result(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    head, _, _, state = install_valid_event_fixture(monkeypatch, validator)
+    state["result_exists_parent"] = True
+
+    with pytest.raises(SystemExit):
+        validator.validate_authorization_event(head)
+
+
+def test_authorization_event_rejects_receipt_content_drift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    head, _, _, state = install_valid_event_fixture(monkeypatch, validator)
+    state["receipt_bytes_head"] = b"drifted-materialization-receipt\n"
+
+    with pytest.raises(SystemExit):
+        validator.validate_authorization_event(head)
+
+
+def test_authorization_event_rejects_nonunique_receipt_history(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    head, _, receipt_event, state = install_valid_event_fixture(monkeypatch, validator)
+    state["receipt_history"] = [receipt_event, "8" * 40]
+
+    with pytest.raises(SystemExit):
+        validator.validate_authorization_event(head)
+
+
+def test_authorization_event_rejects_invalid_receipt_event_shape(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    head, _, _, state = install_valid_event_fixture(monkeypatch, validator)
+    state["receipt_changed_files"] = [validator.MATERIALIZATION_RECEIPT_REL, "README.md"]
+
+    with pytest.raises(SystemExit):
+        validator.validate_authorization_event(head)
+
+
+def test_primary_analysis_authorization_semantic_policy_is_exact() -> None:
+    validator = load_validator()
+    validator.validate_semantic_policy()
