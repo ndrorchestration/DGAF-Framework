@@ -17,7 +17,8 @@ from components.ahg_sidecar import AgentHeartbeat, TurnBuffer
     ],
 )
 def test_turn_buffer_rejects_nonfinite_heartbeat_signals(field_name: str, value: float) -> None:
-    heartbeat = AgentHeartbeat(agent_id="agent-1", turn_id=1, **{field_name: value})
+    heartbeat = AgentHeartbeat(agent_id="agent-1", turn_id=1)
+    setattr(heartbeat, field_name, value)
     buffer = TurnBuffer(turn_id=1, heartbeats=[heartbeat])
 
     with pytest.raises(ValueError, match="non-finite heartbeat signal"):
