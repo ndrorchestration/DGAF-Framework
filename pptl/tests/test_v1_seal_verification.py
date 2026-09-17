@@ -36,10 +36,10 @@ def _envelope() -> GovernanceEnvelope:
     return GovernanceEnvelope(
         trace_id="root-trace",
         task_id="root",
-        authority_scope={"research", "draft"},
-        permitted_tools={"read", "search"},
-        data_classes={"public", "internal"},
-        prohibited_actions={"delete", "send"},
+        authority_scope=frozenset({"research", "draft"}),
+        permitted_tools=frozenset({"read", "search"}),
+        data_classes=frozenset({"public", "internal"}),
+        prohibited_actions=frozenset({"delete", "send"}),
         budget=_budget(),
     )
 
