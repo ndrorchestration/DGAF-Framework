@@ -26,6 +26,8 @@ type AarOverrides = {
   verifier_status?: 'PASS' | 'UNKNOWN' | 'FAIL'
 }
 
+let recordCounter = 0
+
 function response(): MockResponse {
   return {
     statusCode: 200,
@@ -71,9 +73,10 @@ function actionDigest(parameters: Record<string, unknown>, authorizationId = 'au
 }
 
 function aar(parameters: Record<string, unknown>, overrides: AarOverrides = {}): Record<string, unknown> {
+  recordCounter += 1
   return {
     version: 'AAR_V1',
-    record_id: overrides.record_id ?? `aar-${Math.random().toString(16).slice(2)}`,
+    record_id: overrides.record_id ?? `aar-test-${recordCounter}`,
     action_class: 'AUDIT_COUNTER_UPDATE_V1',
     target: '/api/audit',
     policy_id: 'AAR_AUDIT_POLICY_V1',
