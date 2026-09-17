@@ -316,7 +316,7 @@ The transition system SHOULD account for:
 
 NIST's 2026 agent identity/authorization work identifies agent identification, authorization, auditing, non-repudiation, and controls against indirect prompt-injection risk as active standards concerns. This specification uses those areas as external alignment targets, not as certification of DGAF.
 
-Reference: https://csrc.nist.gov/pubs/other/2026/02/05/accelerating-the-adoption-of-software-and-ai-agent/ipd
+Reference: [NIST — Accelerating the Adoption of Software and AI Agent Identity and Authorization](https://csrc.nist.gov/pubs/other/2026/02/05/accelerating-the-adoption-of-software-and-ai-agent/ipd)
 
 ## Verification strategy
 
