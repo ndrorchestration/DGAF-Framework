@@ -85,7 +85,7 @@ def test_contract_rejection_taxonomy_is_stable() -> None:
 
 
 def test_valid_envelope_is_admitted_only_as_non_authoritative_input() -> None:
-    from dgaf.external_runtime_adapter import validate_external_runtime_envelope
+    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 
     result = validate_external_runtime_envelope(
         valid_envelope(),
@@ -131,7 +131,7 @@ def test_valid_envelope_is_admitted_only_as_non_authoritative_input() -> None:
     ],
 )
 def test_invalid_envelopes_fail_closed(mutator, expected_code: str) -> None:
-    from dgaf.external_runtime_adapter import validate_external_runtime_envelope
+    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 
     envelope = valid_envelope()
     mutator(envelope)
@@ -145,7 +145,7 @@ def test_invalid_envelopes_fail_closed(mutator, expected_code: str) -> None:
 
 
 def test_duplicate_effect_fails_closed_independent_of_event_identity() -> None:
-    from dgaf.external_runtime_adapter import validate_external_runtime_envelope
+    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 
     replay_envelope = valid_envelope()
     replay_envelope["identity"]["event_id"] = "evt-002"
@@ -159,7 +159,7 @@ def test_duplicate_effect_fails_closed_independent_of_event_identity() -> None:
 
 
 def test_unknown_required_risk_dimension_has_no_admissible_consequential_transition() -> None:
-    from dgaf.external_runtime_adapter import validate_external_runtime_envelope
+    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 
     envelope = valid_envelope()
     envelope["request"] = {
@@ -176,7 +176,7 @@ def test_unknown_required_risk_dimension_has_no_admissible_consequential_transit
 
 
 def test_provider_fixtures_preserve_neutral_semantics() -> None:
-    from dgaf.external_runtime_adapter import validate_external_runtime_envelope
+    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 
     valid = json.loads((FIXTURE_ROOT / "valid_envelope.json").read_text(encoding="utf-8"))
     substitution = json.loads(
