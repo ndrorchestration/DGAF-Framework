@@ -20,13 +20,13 @@ DGAF includes an **executable governance spine for selected controls**. A policy
 
 **Current scientific boundary:** the canonical High-Assurance program remains **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0**. This is separate from **Track A Epoch 002**, whose governed prospective blinded collection is **COMPLETE** at **50 paired inferential seed units / 2,250 blinded observations**. Its dataset lock is **ESTABLISHED** and bounded unblinding is **AUTHORIZED only for controlled mapping release/decryption**. The accepted Stage-1/Stage-2 materialization apparatus and prospective primary-analysis authorization tooling are tooling/preparation only: real materialization is **NOT ESTABLISHED**, repository `MATERIALIZATION_RECEIPT` is **NOT ESTABLISHED**, positive primary-analysis authorization is **NOT ESTABLISHED**, primary analysis is **NOT AUTHORIZED / NOT RUN**, `SCIENTIFIC_N_INCREMENT=0`, and canonical DGAF efficacy and independent validation remain **NOT_ESTABLISHED**. Track A Epoch 001 remains historical blinded-collection/custody-failure provenance and is not pooled into Epoch 002. See [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) for the live cross-track state.
 
-**Current repository-control boundary:** protected `main` at the 2026-09-17 reconciliation is `6b89529da3e7ff13e14eaea415756579d859fb26`. The accepted assurance catalog remains `PARTIAL_CORE_FAMILIES_ONLY`; the Governance Command Center's Decision Frontier and Governance Map remain presentation-only projections. Neither documentation, UI state, catalog membership, nor standards mapping alters scientific or authorization state.
+**Current repository-control boundary:** protected `main` at the 2026-09-17 reconciliation is `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`. The accepted assurance catalog remains `PARTIAL_CORE_FAMILIES_ONLY`; the Governance Command Center's Decision Frontier, Governance Map, and State-Space Explorer V0 remain presentation-only projections. Neither documentation, UI state, catalog membership, nor standards mapping alters scientific or authorization state.
 
 ---
 
 ## Repository Assurance Inventory
 
-DGAF now contains a versioned repository-local recurring-assurance inventory:
+DGAF contains a versioned repository-local recurring-assurance inventory:
 
 - `registry/audit_catalog.v1.json` — bounded machine-readable catalog;
 - `registry/audit_catalog.py` — deterministic loading, validation, and coverage-gap helpers;
@@ -52,14 +52,15 @@ Known catalog gaps include wider workflow/script/test classification, exact job/
 
 ## Governance Presentation Surfaces
 
-The Governance Command Center now includes accepted presentation-only Semantic Control Field components:
+The Governance Command Center includes three accepted presentation-only Semantic Control Field components:
 
 - **Decision Frontier — PR #776**: exposes current governed state, supporting evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics.
 - **Governance Map — PR #779**: exposes ordered vertical escalation, explicitly named lateral relationships, and global field conditions derived from the normalized governance model.
+- **State-Space Explorer V0 — PR #783**: exposes canonical stages as discrete `established`, `frontier`, and `blocked_by_predecessor` regions while preserving native predicate state and explicit representation limits.
 
 These surfaces improve inspectability but do not independently grant authority, establish evidence, or create a new state engine. They intentionally avoid readiness percentages and continuous/manifold implications where no formal semantics exist.
 
-Any later State-Space Explorer remains candidate work until merged into protected `main`. Conceptual tensor/manifold research is non-authoritative guidance unless exact representation semantics are implemented and verified.
+State-Space Explorer V0 is explicitly discrete and categorical. It does not establish continuous tensor/manifold coordinates, distance-to-authorization, authorization probability, scalar evidence quality, efficacy gradients, inferred consequence, or inferred reversibility. Consequence and reversibility remain **NOT MODELED — DO NOT INFER** in V0. Conceptual tensor/manifold research remains non-authoritative guidance unless later formalization and exact implementation establish those semantics.
 
 ---
 
@@ -69,7 +70,7 @@ NIST AI RMF 1.0 defines four Core functions: **GOVERN, MAP, MEASURE, and MANAGE*
 
 | NIST AI RMF Function | DGAF project relation | Example artifacts | Evidence boundary |
 |---|---|---|---|
-| **GOVERN** | Role/authority definitions, pattern governance, claim/evidence controls, promotion gates, and explicit control-state projections | `governance/role_capability_registry.v1.json` · `registry/audit_catalog.v1.json` · Decision Frontier / Governance Map | Mapping and repository implementation are artifact-specific; no framework-wide NIST conformance claim. |
+| **GOVERN** | Role/authority definitions, pattern governance, claim/evidence controls, promotion gates, and explicit control-state projections | `governance/role_capability_registry.v1.json` · `registry/audit_catalog.v1.json` · Decision Frontier / Governance Map / State-Space Explorer V0 | Mapping and repository implementation are artifact-specific; no framework-wide NIST conformance claim. |
 | **MAP** | Ecosystem/context mapping and project-local risk/architecture decomposition | `CROSS_REF.md` · `docs/gates/TELESCOPIC_LENS.md` | Supports project context mapping; completeness against AI RMF MAP outcomes has not been independently established. |
 | **MEASURE** | Evaluation gates, structured evidence, recurring-assurance inventory, per-record audit data, and scoped test artifacts | `docs/gates/GATE_1111.md` · `components/evaluate_router_v1_1.py` · repository CI/evidence artifacts | Passing repository tests establishes only their declared scope; it does not validate all AI-risk measures or outcomes. |
 | **MANAGE** | Fail-closed gates, escalation/authority controls, recovery patterns, and project-local risk-response mechanisms | `docs/gates/ACOUSTIC_GATES.md` · `docs/protocols/MDAR_PROTOCOL_v1.md` · role/authority contracts | Mechanism existence does not establish risk-reduction efficacy or organizational AI RMF adoption. |
@@ -175,4 +176,4 @@ Current machine/agent authority is role-based. Persona labels are compatibility/
 
 *License: Apache 2.0 · See [NOTICE](./NOTICE) for full attribution*  
 *Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*  
-*README.governance v1.7 · assurance-catalog / semantic-control-field reconciliation · 2026-09-17*
+*README.governance v1.8 · assurance-catalog / semantic-control-field reconciliation · 2026-09-17*
