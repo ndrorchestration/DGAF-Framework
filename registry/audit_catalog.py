@@ -119,3 +119,33 @@ def collect_catalog_violations(catalog: dict[str, Any]) -> list[dict[str, str]]:
             violations.append(_violation("COVERAGE_GAPS_MISSING"))
 
     return violations
+
+
+def collect_unmapped_workflows(repo_root: Path | str, catalog: dict[str, Any]) -> list[str]:
+    """Return workflow definitions not exactly bound by catalog implementation paths.
+
+    Unmapped workflow definitions are coverage gaps only. Their presence does not
+    classify them as audits or change catalog coverage state.
+    """
+
+    root = Path(repo_root)
+    workflows_dir = root / ".github" / "workflows"
+    discovered = {
+        path.relative_to(root).as_posix()
+        for pattern in ("*.yml", "*.yaml")
+        for path in workflows_dir.glob(pattern)
+        if path.is_file()
+    }
+
+    mapped: set[str] = set()
+    audits = catalog.get("audits")
+    if isinstance(audits, list):
+        for entry in audits:
+            if not isinstance(entry, dict):
+                continue
+            implementation = entry.get("implementation")
+            if not isinstance(implementation, list):
+                continue
+            mapped.update(value for value in implementation if isinstance(value, str) and value)
+
+    return sorted(discovered - mapped)
