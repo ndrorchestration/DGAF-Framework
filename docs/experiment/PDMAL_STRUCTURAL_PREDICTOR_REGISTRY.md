@@ -264,7 +264,7 @@ The empirical question is whether `X(G)` predicts `Y` beyond appropriate baselin
 
 ## External methodology anchors
 
-- Li et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921. https://arxiv.org/abs/2608.12921
+- Li et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921. [arXiv:2608.12921](https://arxiv.org/abs/2608.12921)
 - Network-science and graph-theoretic alignment already recorded in `../evidence/PDMAL_EXTERNAL_ALIGNMENT.md`.
 
 External results establish precedent, not PDMAL-specific evidence.
