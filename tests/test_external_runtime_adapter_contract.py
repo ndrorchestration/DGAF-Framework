@@ -250,9 +250,7 @@ def test_provider_fixtures_preserve_neutral_semantics() -> None:
     from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
 
     valid = json.loads((FIXTURE_ROOT / "valid_envelope.json").read_text(encoding="utf-8"))
-    substitution = json.loads(
-        (FIXTURE_ROOT / "provider_substitution.json").read_text(encoding="utf-8")
-    )
+    substitution = json.loads((FIXTURE_ROOT / "provider_substitution.json").read_text(encoding="utf-8"))
     accepted = validate_external_runtime_envelope(
         valid,
         now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc),
