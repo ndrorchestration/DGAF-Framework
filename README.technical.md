@@ -27,13 +27,13 @@ The current frontend is a decomposed Next.js application under `app/`, with norm
 
 ### Accepted Semantic Control Field tranches
 
-**Decision Frontier — PR #776**
+### Decision Frontier — PR #776
 
 - derives from canonical governance stages rather than a duplicate lifecycle;
 - presents current governed state, supporting evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics;
 - remains presentation-only.
 
-**Governance Map — PR #779**
+### Governance Map — PR #779
 
 - derives its vertical spine from canonical governance stages;
 - renders named lateral relationships rather than inferred coupling;
@@ -41,7 +41,7 @@ The current frontend is a decomposed Next.js application under `app/`, with norm
 - keeps evidence, authority, authorization, and non-effects inspectable;
 - avoids readiness scores and continuous-state implications.
 
-**State-Space Explorer V0 — PR #783**
+### State-Space Explorer V0 — PR #783
 
 - derives stage identity/order and the current frontier from canonical governance stages;
 - keeps native predicate state separate from derived reachability;
