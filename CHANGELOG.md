@@ -10,23 +10,29 @@
 
 - Merged **PR #776 — Decision Frontier** as a presentation-only Semantic Control Field tranche derived from canonical governance state.
 - Decision Frontier exposes current governed state, supporting evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics without creating a second state engine or readiness score.
-- Merged **PR #779 — Governance Map** after exact-head verification and rebase onto then-current protected `main`.
+- Merged **PR #779 — Governance Map** after exact-head verification and current-main reconciliation.
 - Governance Map renders canonical vertical escalation, four explicitly named lateral relationships, and global field constraints while keeping authority/authorization/evidence distinctions structural and inspectable.
+- Merged **PR #783 — State-Space Explorer V0** as signed/verified protected-main commit `b1d91621bd73e70866d5ff8fd38fb98e440b30e9` after a fresh exact-head GREEN workflow set.
+- State-Space Explorer V0 projects canonical governance stages into discrete `established`, `frontier`, and `blocked_by_predecessor` reachability regions while keeping native predicate state separate from derived reachability.
+- V0 explicitly does not establish continuous/manifold coordinates, readiness percentages, distance-to-authorization, authorization probability, scalar evidence quality, efficacy gradients, or inferred consequence/reversibility values.
 - Source verification for these UI tranches does not establish deployment health, governance authority, scientific authorization, empirical support, independent validation, or production certification.
 
 ### Repository assurance inventory
 
 - Merged **PR #780** establishing `registry/audit_catalog.v1.json` and deterministic validation with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
 - Merged **PR #782** adding deterministic workflow coverage-gap discovery for current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by catalog `implementation` paths.
-- Merged **PR #785** at protected-main commit `6b89529da3e7ff13e14eaea415756579d859fb26`, adding seven source-verified recurring assurance families while preserving partial coverage.
-- Clarified that catalog membership is separate from protected-branch requiredness; current protected-main required contexts are **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**.
-- Clarified that `UNMAPPED` / `UNCLASSIFIED` is a fail-closed inventory state and does not mean a workflow is non-assurance.
-- Known catalog gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
+- Merged **PR #785** at commit `6b89529da3e7ff13e14eaea415756579d859fb26`, adding seven source-verified recurring assurance families while preserving partial coverage.
+- **PR #784** closed unmerged; its proposed fail-closed workflow-role census remains test-first/stale-lineage provenance, not accepted implementation.
+- Catalog membership remains separate from protected-branch requiredness; current protected-main required contexts are **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**.
+- `UNMAPPED` / `UNCLASSIFIED` remains a fail-closed inventory state and does not mean a workflow is non-assurance.
+- Known catalog gaps remain: wider workflow/script/test/method classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, presentation-projection assurance, and historical family-versus-execution-instance reconciliation.
 
 ### Documentation reconciliation
 
-- Refreshed `docs/CURRENT_STATE.md`, `docs/PROJECT_STATUS.md`, `README.md`, `README.technical.md`, and `README.governance.md` to distinguish scientific state, presentation state, assurance inventory, protected-branch requiredness, and deployment/runtime state.
-- Preserved historical design specs, TDD lineage records, and superseded snapshots as provenance rather than rewriting them into current authority.
+- Initial reconciliation PR **#786** preserved a valid focused RED→GREEN provenance correction for the Governance Command Center source date but was closed unmerged after protected `main` advanced through #783.
+- Reconciliation was recreated on exact post-#783 `main` rather than treating #786's stale lineage as acceptance evidence.
+- Current-facing `docs/CURRENT_STATE.md`, `docs/PROJECT_STATUS.md`, public/technical/governance READMEs, changelog, and source-provenance metadata are being reconciled together so they do not compete as parallel current authorities.
+- Historical design specs, TDD lineage records, and dated snapshots remain provenance and are not rewritten as present authority.
 
 ### Scientific/control non-effects
 
@@ -86,6 +92,7 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 ### Autonomous Sprint — Amethyst execution authority
 
 #### AHG v1.2 — External Review Integration
+
 - **`docs/theory/AHG_ARCHITECTURE.md` → v1.2:**
   - Canonical φ computation via logistic normalization: φ(t) = 1 + 0.8·σ(S(t)); range bounded [1.0, 1.8]
   - Stability Index S(t) = w_1·D_e + w_2·N + w_3·C + w_4·R (only D_e enters; D_explore, D_correct excluded)
@@ -102,6 +109,7 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 - **Source:** External AHG-MAS peer review document (Adaptive Harmonic Governance: A Stability-Guided Framework for Multi-Agent Systems)
 
 #### P-42 Collision Fix (prev commit b705834)
+
 - `patterns/P-42_AHG.md` created (renumbered from P-35)
 - `docs/theory/AHG_ARCHITECTURE.md` v1.1
 - `CROSS_REF.md` v4.4
@@ -110,9 +118,11 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 - `ENSEMBLE_ROSTER.md`, `SESSION_ANCHOR.md` updated
 
 #### P-35_AHG.md deletion (prev commit 6b6033e)
+
 - Stale `patterns/P-35_AHG.md` deleted
 
 #### Earlier commits
+
 - `e410ae4`: `CROSS_REF.md` v4.3 + `SESSION_ANCHOR.md` + `ENSEMBLE_ROSTER.md`
 - `e34af32`: `docs/theory/AHG_ARCHITECTURE.md` v1.0 + `patterns/P-35_AHG.md` (stale, now deleted)
 - `5ed1a85`: `docs/agents/PROFESSOR_PRODIGY_KB.md` v1.0
