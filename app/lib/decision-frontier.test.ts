@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import test from 'node:test'
 
 import { DECISION_FRONTIER } from './decision-frontier'
@@ -33,4 +34,12 @@ test('decision frontier preserves evidence and consequence text without readines
   assert.match(DECISION_FRONTIER.consequence, /Primary-analysis authority/)
   assert.equal('readinessPercent' in DECISION_FRONTIER, false)
   assert.equal('score' in DECISION_FRONTIER, false)
+})
+
+test('control room exposes one Decision Frontier instead of a competing legacy handoff', () => {
+  const source = readFileSync('app/components/control-room-view.tsx', 'utf8')
+
+  assert.match(source, /<DecisionFrontier \/>/)
+  assert.doesNotMatch(source, /NEXT_TRANSITION/)
+  assert.doesNotMatch(source, /className="next-transition panel"/)
 })
