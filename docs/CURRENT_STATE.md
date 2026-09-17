@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-17
-current_protected_main: 6b89529da3e7ff13e14eaea415756579d859fb26
+current_protected_main: b1d91621bd73e70866d5ff8fd38fb98e440b30e9
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -33,6 +33,7 @@ accepted_primary_analysis_authorization_tooling_pr: 728
 accepted_primary_analysis_authorization_tooling_commit: e2363df584f6ba721a86d5bc8cd6c3789052495c
 accepted_decision_frontier_pr: 776
 accepted_governance_map_pr: 779
+accepted_state_space_explorer_pr: 783
 accepted_audit_catalog_pr: 780
 accepted_workflow_coverage_scanner_pr: 782
 accepted_assurance_catalog_expansion_pr: 785
@@ -49,7 +50,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **`6b89529da3e7ff13e14eaea415756579d859fb26`** |
+| Protected repository `main` | **`b1d91621bd73e70866d5ff8fd38fb98e440b30e9`** |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -70,6 +71,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Independent validation | **NOT ESTABLISHED** |
 | Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
 | Governance Command Center — Governance Map | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #779** |
+| Governance Command Center — State-Space Explorer V0 | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #783** |
 | Repository assurance catalog | **ACCEPTED · PARTIAL_CORE_FAMILIES_ONLY** |
 | Workflow coverage-gap scanner | **ACCEPTED · UNMAPPED DOES NOT MEAN NON-ASSURANCE** |
 | Expanded recurring assurance mappings | **ACCEPTED · PR #785** |
@@ -78,22 +80,23 @@ No row above establishes integrated DGAF efficacy, independent validation, produ
 
 ## Protected-main repository state
 
-The current protected-main baseline is `6b89529da3e7ff13e14eaea415756579d859fb26`, produced by PR #785 after the accepted UI and assurance-inventory sequence below.
+The current protected-main baseline is `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`, produced by PR #783 after the accepted UI and assurance-inventory sequence below.
 
 ### Accepted presentation / Semantic Control Field sequence
 
 - **PR #776 — Decision Frontier** merged as `3777b66277135a31da496661e0cb12e87cb05e3c`. The component derives from the normalized governance model and presents the current governed state, evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics.
 - **PR #779 — Governance Map** merged as `29a7467b24e6709342874a048dd75b674a090463`. It projects vertical escalation from canonical governance stages, four explicit lateral relationships, and global field conditions without introducing a second state engine, continuous-manifold semantics, or readiness scoring.
+- **PR #783 — State-Space Explorer V0** merged as current protected `main` `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`. It projects canonical lifecycle stages into discrete categorical `established`, `frontier`, and `blocked_by_predecessor` regions while preserving native predicate state, evidence boundaries, and explicit model limits.
 
 These are **presentation-only** accepted source states. They do not create governance authority, grant authorization, establish runtime health, or promote scientific/empirical claims.
 
-A later discrete State-Space Explorer workstream is not accepted current state unless and until its own exact head is merged into protected `main`. Open or draft UI work remains candidate work.
+State-Space Explorer V0 establishes only a discrete categorical reachability projection. It does not establish continuous tensor/manifold coordinates, authorization distance, readiness percentages, numeric confidence, efficacy gradients, inferred consequence, or inferred reversibility. Consequence and reversibility remain explicitly **NOT MODELED — DO NOT INFER** in V0.
 
 ### Accepted repository assurance-inventory sequence
 
 - **PR #780** established `registry/audit_catalog.v1.json` and deterministic validation with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
 - **PR #782** added `collect_unmapped_workflows(...)`, which discovers current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by accepted catalog `implementation` paths. An unmapped workflow is a coverage gap only; no role is inferred from its filename or apparent purpose.
-- **PR #785**, merged as current `main` `6b89529da3e7ff13e14eaea415756579d859fb26`, added seven source-verified recurring assurance families while explicitly preserving partial coverage.
+- **PR #785**, merged as `6b89529da3e7ff13e14eaea415756579d859fb26`, added seven source-verified recurring assurance families while explicitly preserving partial coverage.
 
 The current protected-main required status contexts are separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. A recurring-assurance catalog entry does not imply branch-protection requiredness, and absence from the catalog does not prove that a workflow is non-assurance.
 
