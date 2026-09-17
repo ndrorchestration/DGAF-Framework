@@ -17,32 +17,47 @@ def load_contract() -> dict:
 
 def valid_envelope() -> dict:
     return {
-        "version": "EXTERNAL_RUNTIME_ENVELOPE_V1",
-        "provider_identity": "synthetic-runtime",
-        "provider_display_name": "Synthetic Runtime",
-        "event_id": "evt-001",
-        "effect_id": "eff-001",
-        "source_id": "src-001",
+        "schema_version": "DGAF_EXTERNAL_RUNTIME_ENVELOPE_V1",
+        "provider": {
+            "provider_id": "synthetic-provider",
+            "runtime_id": "synthetic-runtime",
+            "adapter_id": "neutral-test-adapter",
+            "adapter_version": "1.0.0",
+        },
+        "identity": {
+            "event_id": "evt-001",
+            "effect_id": "eff-001",
+            "source_id": "src-001",
+        },
         "evidence": {
+            "evidence_class": "EXTERNAL_UNTRUSTED_OBSERVATION",
             "observed_at": "2026-09-17T14:00:00Z",
-            "class": "EXTERNAL_UNTRUSTED_OBSERVATION",
-            "digest": "sha256:" + "1" * 64,
+            "content_digest": "sha256:" + "1" * 64,
+            "payload": {"claim": "synthetic"},
         },
         "provenance": {
-            "producer": "synthetic-runtime",
-            "binding": "sha256:" + "2" * 64,
+            "producer_id": "synthetic-provider",
+            "producer_run_id": "run-001",
+            "source_bindings": ["src-001"],
         },
-        "requested_action_class": "NON_CONSEQUENTIAL_RECORD_INGRESS",
-        "verification_assertion": "EXTERNAL_PASS",
-        "authority_presented": "EXTERNAL_PROVIDER_APPROVED",
-        "consequence": "LOW",
-        "reversibility": "REVERSIBLE",
+        "request": {
+            "action_class": "NON_CONSEQUENTIAL_RECORD_INGRESS",
+            "requested_transition": "RECORD_ONLY",
+        },
+        "assertions": {
+            "verification_class": "EXTERNAL_PASS",
+            "authority": {"status": "EXTERNAL_PROVIDER_APPROVED"},
+        },
+        "risk": {
+            "consequence_class": "NOT_APPLICABLE",
+            "reversibility": "NOT_APPLICABLE",
+        },
     }
 
 
 def test_contract_is_versioned_provider_neutral_and_non_authoritative() -> None:
     contract = load_contract()
-    assert contract["version"] == "EXTERNAL_RUNTIME_ENVELOPE_V1"
+    assert contract["version"] == "DGAF_EXTERNAL_RUNTIME_ENVELOPE_V1"
     assert contract["status"] == "NON_AUTHORITATIVE_INGRESS_CONTRACT"
     assert contract["authority_semantics"] == "PRESENTED_NOT_GRANTED"
     assert contract["exactly_once"] == "NOT_ESTABLISHED"
@@ -53,14 +68,19 @@ def test_contract_is_versioned_provider_neutral_and_non_authoritative() -> None:
 def test_contract_rejection_taxonomy_is_stable() -> None:
     rejection_codes = set(load_contract()["rejection_codes"])
     assert {
-        "MALFORMED_IDENTITY",
-        "STALE_EVIDENCE",
-        "DUPLICATE_EFFECT",
-        "AUTHORITY_MISMATCH",
-        "UNSUPPORTED_ACTION_CLASS",
-        "PROVIDER_SUBSTITUTION",
-        "MISSING_REQUIRED_FIELD",
-        "UNKNOWN_REQUIRED_DIMENSION",
+        "DGAF_EXT_SCHEMA_UNSUPPORTED",
+        "DGAF_EXT_REQUIRED_FIELD_MISSING",
+        "DGAF_EXT_IDENTITY_MALFORMED",
+        "DGAF_EXT_SOURCE_IDENTITY_INVALID",
+        "DGAF_EXT_EVIDENCE_DIGEST_MISMATCH",
+        "DGAF_EXT_PROVENANCE_INVALID",
+        "DGAF_EXT_EVIDENCE_STALE",
+        "DGAF_EXT_ACTION_CLASS_UNSUPPORTED",
+        "DGAF_EXT_TRANSITION_UNSUPPORTED",
+        "DGAF_EXT_AUTHORITY_MISMATCH",
+        "DGAF_EXT_RISK_METADATA_REQUIRED",
+        "DGAF_EXT_DUPLICATE_EFFECT",
+        "DGAF_EXT_PROVIDER_SUBSTITUTION",
     } <= rejection_codes
 
 
@@ -71,35 +91,43 @@ def test_valid_envelope_is_admitted_only_as_non_authoritative_input() -> None:
         valid_envelope(),
         now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc),
     )
-    assert result["decision"] == "ADMITTED_AS_NON_AUTHORITATIVE_INPUT"
-    assert result["authority_effect"] == "NONE"
-    assert result["record_identity"].startswith("sha256:")
-    assert result["effect_identity"].startswith("sha256:")
-    assert result["normalized_envelope"]["authority_presented"] == "EXTERNAL_PROVIDER_APPROVED"
-    assert result["normalized_envelope"]["verification_assertion"] == "EXTERNAL_PASS"
+    assert result["admitted"] is True
+    assert result["result_version"] == "DGAF_EXTERNAL_RUNTIME_ADMISSION_V1"
+    assert result["authority_status"] == "PRESENTED_NOT_GRANTED"
+    assert result["record_id"].startswith("sha256:")
+    assert result["effect_id"] == "eff-001"
+    assert result["trust_class"] == "EXTERNAL_NON_AUTHORITATIVE_UNTIL_VALIDATED"
+    assert result["external_assertions"]["verification_class"] == "EXTERNAL_PASS"
+    assert result["external_assertions"]["authority"]["status"] == "EXTERNAL_PROVIDER_APPROVED"
 
 
 @pytest.mark.parametrize(
     ("mutator", "expected_code"),
     [
-        (lambda e: e.update(event_id="bad id with spaces"), "MALFORMED_IDENTITY"),
+        (
+            lambda e: e["identity"].update(event_id="bad id with spaces"),
+            "DGAF_EXT_IDENTITY_MALFORMED",
+        ),
         (
             lambda e: e["evidence"].update(observed_at="2026-09-17T10:00:00Z"),
-            "STALE_EVIDENCE",
+            "DGAF_EXT_EVIDENCE_STALE",
         ),
         (
-            lambda e: e.update(authority_presented="DGAF_GRANTED"),
-            "AUTHORITY_MISMATCH",
+            lambda e: e["assertions"].update(authority={"status": "DGAF_GRANTED"}),
+            "DGAF_EXT_AUTHORITY_MISMATCH",
         ),
         (
-            lambda e: e.update(requested_action_class="ARBITRARY_SHELL_EXECUTION"),
-            "UNSUPPORTED_ACTION_CLASS",
+            lambda e: e["request"].update(action_class="ARBITRARY_SHELL_EXECUTION"),
+            "DGAF_EXT_ACTION_CLASS_UNSUPPORTED",
         ),
         (
-            lambda e: e.update(provider_identity="dgaf-authoritative-runtime"),
-            "PROVIDER_SUBSTITUTION",
+            lambda e: e["provider"].update(provider_id="dgaf-authoritative-runtime"),
+            "DGAF_EXT_PROVIDER_SUBSTITUTION",
         ),
-        (lambda e: e.pop("source_id"), "MISSING_REQUIRED_FIELD"),
+        (
+            lambda e: e["identity"].pop("source_id"),
+            "DGAF_EXT_REQUIRED_FIELD_MISSING",
+        ),
     ],
 )
 def test_invalid_envelopes_fail_closed(mutator, expected_code: str) -> None:
@@ -111,41 +139,40 @@ def test_invalid_envelopes_fail_closed(mutator, expected_code: str) -> None:
         envelope,
         now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc),
     )
-    assert result["decision"] == "REJECTED"
-    assert result["rejection_code"] == expected_code
-    assert result["authority_effect"] == "NONE"
+    assert result["admitted"] is False
+    assert result["reason_codes"][0] == expected_code
+    assert result["authority_status"] == "PRESENTED_NOT_GRANTED"
 
 
-def test_duplicate_effect_fails_closed_independent_of_record_identity() -> None:
+def test_duplicate_effect_fails_closed_independent_of_event_identity() -> None:
     from dgaf.external_runtime_adapter import validate_external_runtime_envelope
 
-    first = validate_external_runtime_envelope(
-        valid_envelope(),
-        now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc),
-    )
     replay_envelope = valid_envelope()
-    replay_envelope["event_id"] = "evt-002"
+    replay_envelope["identity"]["event_id"] = "evt-002"
     replay = validate_external_runtime_envelope(
         replay_envelope,
-        seen_effect_ids={first["effect_identity"]},
+        seen_effect_ids={"eff-001"},
         now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc),
     )
-    assert replay["decision"] == "REJECTED"
-    assert replay["rejection_code"] == "DUPLICATE_EFFECT"
+    assert replay["admitted"] is False
+    assert replay["reason_codes"] == ["DGAF_EXT_DUPLICATE_EFFECT"]
 
 
-def test_unknown_required_dimension_has_no_admissible_transition() -> None:
+def test_unknown_required_risk_dimension_has_no_admissible_consequential_transition() -> None:
     from dgaf.external_runtime_adapter import validate_external_runtime_envelope
 
     envelope = valid_envelope()
-    envelope["requested_action_class"] = "CONSEQUENTIAL_ACTION_REQUEST"
-    envelope["consequence"] = "UNKNOWN"
+    envelope["request"] = {
+        "action_class": "CONSEQUENTIAL_ACTION_REQUEST",
+        "requested_transition": "REQUEST_ACTION_ADMISSION",
+    }
+    envelope["risk"] = {"consequence_class": "UNKNOWN", "reversibility": "REVERSIBLE"}
     result = validate_external_runtime_envelope(
         envelope,
         now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc),
     )
-    assert result["decision"] == "REJECTED"
-    assert result["rejection_code"] == "UNKNOWN_REQUIRED_DIMENSION"
+    assert result["admitted"] is False
+    assert result["reason_codes"] == ["DGAF_EXT_RISK_METADATA_REQUIRED"]
 
 
 def test_provider_fixtures_preserve_neutral_semantics() -> None:
@@ -163,6 +190,6 @@ def test_provider_fixtures_preserve_neutral_semantics() -> None:
         substitution,
         now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc),
     )
-    assert accepted["decision"] == "ADMITTED_AS_NON_AUTHORITATIVE_INPUT"
-    assert accepted["authority_effect"] == "NONE"
-    assert rejected["rejection_code"] == "PROVIDER_SUBSTITUTION"
+    assert accepted["admitted"] is True
+    assert accepted["authority_status"] == "PRESENTED_NOT_GRANTED"
+    assert rejected["reason_codes"] == ["DGAF_EXT_PROVIDER_SUBSTITUTION"]
