@@ -2,7 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-16
+last_verified: 2026-09-17
+current_protected_main: 6b89529da3e7ff13e14eaea415756579d859fb26
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -30,18 +31,25 @@ accepted_stage_1_materializer_pr: 713
 accepted_stage_2_operator_materialization_bundle_pr: 715
 accepted_primary_analysis_authorization_tooling_pr: 728
 accepted_primary_analysis_authorization_tooling_commit: e2363df584f6ba721a86d5bc8cd6c3789052495c
+accepted_decision_frontier_pr: 776
+accepted_governance_map_pr: 779
+accepted_audit_catalog_pr: 780
+accepted_workflow_coverage_scanner_pr: 782
+accepted_assurance_catalog_expansion_pr: 785
+assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
 # DGAF-Framework / PDMAL — Current State
 
 This file is the **primary current-facing repository summary**. GitHub is authoritative for implementation, immutable evidence identities, issues, and CI. The DGAF Operational Control Center in Notion is the interpreted governance/control-plane mirror. Historical records are authoritative only for the exact scope, identity, and time they bind.
 
-The canonical High-Assurance program, Track A Epoch 001, and Track A Epoch 002 are separate governance/evidence boundaries. Evidence, authorization, N, verification class, and efficacy do not transfer between them without an explicit governed rule.
+The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, presentation/UI state, repository assurance inventory, runtime/deployment state, and historical evidence are separate governance/evidence dimensions. Evidence, authorization, N, verification class, deployment health, catalog membership, and efficacy do not transfer between them without an explicit governed rule.
 
 ## Executive boundary
 
 | Area | Current state |
 |---|---|
+| Protected repository `main` | **`6b89529da3e7ff13e14eaea415756579d859fb26`** |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -60,8 +68,36 @@ The canonical High-Assurance program, Track A Epoch 001, and Track A Epoch 002 a
 | Epoch 002 materialization receipt | **NOT ESTABLISHED** |
 | Epoch 002 primary analysis | **NOT AUTHORIZED / NOT RUN** |
 | Independent validation | **NOT ESTABLISHED** |
+| Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
+| Governance Command Center — Governance Map | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #779** |
+| Repository assurance catalog | **ACCEPTED · PARTIAL_CORE_FAMILIES_ONLY** |
+| Workflow coverage-gap scanner | **ACCEPTED · UNMAPPED DOES NOT MEAN NON-ASSURANCE** |
+| Expanded recurring assurance mappings | **ACCEPTED · PR #785** |
 
 No row above establishes integrated DGAF efficacy, independent validation, production certification, High-Assurance authorization, or a completed successor Track A primary result.
+
+## Protected-main repository state
+
+The current protected-main baseline is `6b89529da3e7ff13e14eaea415756579d859fb26`, produced by PR #785 after the accepted UI and assurance-inventory sequence below.
+
+### Accepted presentation / Semantic Control Field sequence
+
+- **PR #776 — Decision Frontier** merged as `3777b66277135a31da496661e0cb12e87cb05e3c`. The component derives from the normalized governance model and presents the current governed state, evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics.
+- **PR #779 — Governance Map** merged as `29a7467b24e6709342874a048dd75b674a090463`. It projects vertical escalation from canonical governance stages, four explicit lateral relationships, and global field conditions without introducing a second state engine, continuous-manifold semantics, or readiness scoring.
+
+These are **presentation-only** accepted source states. They do not create governance authority, grant authorization, establish runtime health, or promote scientific/empirical claims.
+
+A later discrete State-Space Explorer workstream is not accepted current state unless and until its own exact head is merged into protected `main`. Open or draft UI work remains candidate work.
+
+### Accepted repository assurance-inventory sequence
+
+- **PR #780** established `registry/audit_catalog.v1.json` and deterministic validation with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
+- **PR #782** added `collect_unmapped_workflows(...)`, which discovers current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by accepted catalog `implementation` paths. An unmapped workflow is a coverage gap only; no role is inferred from its filename or apparent purpose.
+- **PR #785**, merged as current `main` `6b89529da3e7ff13e14eaea415756579d859fb26`, added seven source-verified recurring assurance families while explicitly preserving partial coverage.
+
+The current protected-main required status contexts are separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. A recurring-assurance catalog entry does not imply branch-protection requiredness, and absence from the catalog does not prove that a workflow is non-assurance.
+
+Known catalog gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance coverage, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
 
 ## Successor Track A — controlling scientific lane
 
@@ -87,7 +123,7 @@ A separate accepted `UNBLINDING_DECISION_RECORD` exists with `status=PASS` and s
 
 ### Accepted materialization apparatus
 
-Repository engineering has now crossed the materialization-tooling milestone without performing real materialization:
+Repository engineering has crossed the materialization-tooling milestone without performing real materialization:
 
 1. prospective materialization receipt validation/procedure — accepted predecessor tooling;
 2. OPERATOR_CODESPACE/content-addressed provenance correction — accepted;
@@ -97,13 +133,13 @@ Repository engineering has now crossed the materialization-tooling milestone wit
 
 PR #713 introduced the controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
-PR #715 added the non-secret operator materialization evidence bundle. It binds accepted predecessor identities, emits the deterministic materialized-input digest sidecar plus non-secret manifest/receipt/evidence records, stages the complete five-member bundle before publication, and publishes atomically only after validation. Its exact-head verification completed successfully, including Python 3.10/3.11/3.12 and a Python 3.12 full suite of **928 passed / 4 skipped**.
+PR #715 added the non-secret operator materialization evidence bundle. It binds accepted predecessor identities, emits deterministic content-addressed output identities plus non-secret manifest/receipt/evidence records, stages the complete five-member bundle before publication, and publishes atomically only after validation.
 
 Neither PR decrypted or admitted the real retained Epoch 002 material as a governed analysis input.
 
-PR #728 installed the prospective fail-closed primary-analysis authorization tooling on protected `main` as merge commit `e2363df584f6ba721a86d5bc8cd6c3789052495c`, from exact reviewed head `82807a6983df444543f5c0029d0ffa7bfb900e61`. Its validator, exact-head read-only workflow, procedure, and adversarial tests remain tooling-only: no authorization record, materialization receipt, locked result, analysis execution, scientific-N increment, efficacy, independence, or High-Assurance transition is present or admitted.
+PR #728 installed prospective fail-closed primary-analysis authorization tooling on protected `main`. Its validator, exact-head read-only workflow, procedure, and adversarial tests remain tooling-only: no authorization record, materialization receipt, locked result, analysis execution, scientific-N increment, efficacy, independence, or High-Assurance transition is present or admitted.
 
-## Current frontier
+## Current scientific frontier
 
 The next admissible scientific transition is **controlled operator-side materialization of the real retained Epoch 002 evidence, followed by validation/admission and a separate immutable materialization receipt**.
 
@@ -148,7 +184,7 @@ Current predicates:
 - `TRACK_A_EPOCH_002_MATERIALIZATION_TOOLING = ACCEPTED`
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_TOOLING = ACCEPTED / TOOLING ONLY`
 - `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`
 - `SCIENTIFIC_N_INCREMENT = 0`
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`
@@ -214,15 +250,21 @@ Current-facing documentation must preserve these distinctions:
 12. Materialization is not primary-analysis authorization.
 13. Primary-analysis authorization is not a positive result.
 14. A completed blinded collection can still become unanalyzable if protected mapping custody fails.
-15. Dependency, adjacency, documentation repetition, or shared authorship does not transfer evidence or scientific state.
+15. Dependency, adjacency, documentation repetition, catalog membership, or shared authorship does not transfer evidence or scientific state.
 16. Historical exact-scope evidence does not silently bind a later candidate, epoch, deployment, or apparatus.
+17. UI projection is not governance authority.
+18. Source verification is not successful deployment or runtime health.
+19. A recurring-assurance catalog entry is not branch-protection requiredness.
+20. `UNMAPPED` / `UNCLASSIFIED` is a fail-closed inventory state, not a negative assurance judgment.
 
 ## Current documentation routing
 
 - **Primary live repository state:** this file, `docs/CURRENT_STATE.md`.
 - **Compatibility status entrypoint:** [`PROJECT_STATUS.md`](PROJECT_STATUS.md).
 - **Public overview:** [`../README.md`](../README.md).
+- **Technical implementation map:** [`../README.technical.md`](../README.technical.md).
+- **Governance / standards crosswalk:** [`../README.governance.md`](../README.governance.md).
 - **Public / industry-neutral terminology:** [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md).
 - **Historical/provenance index:** [`HISTORICAL_RECORDS_INDEX.md`](HISTORICAL_RECORDS_INDEX.md).
 
-No documentation update can itself promote scientific N, custody acceptance, freeze, authorization, independent verification, efficacy, or High-Assurance status.
+No documentation update can itself promote scientific N, custody acceptance, freeze, authorization, independent verification, efficacy, deployment health, or High-Assurance status.
