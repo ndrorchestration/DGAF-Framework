@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { createHash } from 'node:crypto'
+import { createHash, createHmac } from 'node:crypto'
 import test from 'node:test'
 
 import auditHandler from '../../pages/api/audit.ts'
@@ -24,7 +24,11 @@ type AarOverrides = {
   revoked?: boolean
   action_digest?: string
   verifier_status?: 'PASS' | 'UNKNOWN' | 'FAIL'
+  attestation?: string
 }
+
+const TEST_TRUST_KEY = 'dgaf-aar-test-key-only'
+process.env.DGAF_AAR_HMAC_KEY = TEST_TRUST_KEY
 
 let recordCounter = 0
 
@@ -72,9 +76,13 @@ function actionDigest(parameters: Record<string, unknown>, authorizationId = 'au
   return createHash('sha256').update(JSON.stringify(payload)).digest('hex')
 }
 
+function attest(record: Record<string, unknown>, key = TEST_TRUST_KEY): string {
+  return createHmac('sha256', key).update(JSON.stringify(canonicalize(record))).digest('hex')
+}
+
 function aar(parameters: Record<string, unknown>, overrides: AarOverrides = {}): Record<string, unknown> {
   recordCounter += 1
-  return {
+  const unsigned = {
     version: 'AAR_V1',
     record_id: overrides.record_id ?? `aar-test-${recordCounter}`,
     action_class: 'AUDIT_COUNTER_UPDATE_V1',
@@ -91,6 +99,10 @@ function aar(parameters: Record<string, unknown>, overrides: AarOverrides = {}):
     predicates: {
       verifier_status: overrides.verifier_status ?? 'PASS',
     },
+  }
+  return {
+    ...unsigned,
+    attestation: overrides.attestation ?? attest(unsigned),
   }
 }
 
@@ -150,7 +162,22 @@ test('POST /api/audit rejects fields outside the registered action parameter set
   assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters) })
 })
 
-test('POST /api/audit accepts an exact bound AAR once, emits a receipt, and rejects replay', () => {
+test('POST /api/audit rejects forged attestations and fails closed when the trust anchor is unavailable', () => {
+  const before = turnCount()
+  const parameters = { turn_count: before + 1 }
+  assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters, { attestation: '0'.repeat(64) }) })
+
+  const previous = process.env.DGAF_AAR_HMAC_KEY
+  delete process.env.DGAF_AAR_HMAC_KEY
+  try {
+    const denied = assertDeniedWithoutMutation({ ...parameters, aar: aar(parameters) })
+    assert.equal(denied.payload?.reason, 'TRUST_ANCHOR_UNAVAILABLE')
+  } finally {
+    process.env.DGAF_AAR_HMAC_KEY = previous
+  }
+})
+
+test('POST /api/audit accepts an exact trusted AAR once, emits a receipt, and rejects replay', () => {
   const before = turnCount()
   const parameters = { turn_count: before + 1 }
   const record = aar(parameters, { record_id: `aar-success-${before + 1}` })
