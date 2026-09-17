@@ -27,6 +27,15 @@ export type UpstashReplayTransport = {
   set: (key: string, value: string, options: ConditionalSetOptions) => Promise<unknown>
 }
 
+export type PostgresReplayResult = {
+  rowCount: number
+  rows: Array<{ effect_key: string }>
+}
+
+export type PostgresReplayExecutor = {
+  execute: (sql: string, params: readonly unknown[]) => Promise<PostgresReplayResult>
+}
+
 function canonicalEffectIdentity(effect: ReplayEffectIdentity): ReplayEffectIdentity {
   return {
     version: effect.version,
@@ -53,6 +62,37 @@ export function createUpstashReplayAuthority(transport: UpstashReplayTransport):
         if (result === null) return 'REPLAY'
         return 'CONFLICTED'
       } catch {
+        return 'UNAVAILABLE'
+      }
+    },
+  }
+}
+
+const POSTGRES_CONSUME_SQL = `
+INSERT INTO dgaf_replay_consumptions (effect_key)
+VALUES ($1)
+ON CONFLICT (effect_key) DO NOTHING
+RETURNING effect_key
+`.trim()
+
+function errorCode(error: unknown): string | null {
+  if (!error || typeof error !== 'object' || !('code' in error)) return null
+  const code = (error as { code?: unknown }).code
+  return typeof code === 'string' ? code : null
+}
+
+export function createPostgresReplayAuthority(executor: PostgresReplayExecutor): ReplayAuthority {
+  return {
+    async consumeOnce(effect: ReplayEffectIdentity): Promise<ReplayAuthorityResult> {
+      try {
+        const result = await executor.execute(POSTGRES_CONSUME_SQL, [effectIdentityKey(effect)])
+        if (result.rowCount === 1 && result.rows.length === 1) return 'CONSUMED'
+        if (result.rowCount === 0 && result.rows.length === 0) return 'REPLAY'
+        return 'CONFLICTED'
+      } catch (error) {
+        const code = errorCode(error)
+        if (code === 'DGAF_AMBIGUOUS_COMMIT') return 'CONFLICTED'
+        if (code?.startsWith('08')) return 'UNAVAILABLE'
         return 'UNAVAILABLE'
       }
     },
