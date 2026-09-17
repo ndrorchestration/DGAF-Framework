@@ -89,7 +89,10 @@ def collect_catalog_violations(catalog: dict[str, Any]) -> list[dict[str, str]]:
 
         for field in _REQUIRED_LIST_FIELDS:
             value = entry.get(field)
-            if not isinstance(value, list) or not value or any(not isinstance(item, str) or not item.strip() for item in value):
+            invalid_items = isinstance(value, list) and any(
+                not isinstance(item, str) or not item.strip() for item in value
+            )
+            if not isinstance(value, list) or not value or invalid_items:
                 code = {
                     "non_effects": "NON_EFFECTS_MISSING",
                     "target_layers": "TARGET_LAYER_MISSING",
