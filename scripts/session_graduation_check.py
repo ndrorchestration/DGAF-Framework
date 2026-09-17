@@ -100,14 +100,20 @@ def check_zero_open_blgs(anchor_path: Path) -> tuple[bool, str]:
         return False, "BLG Status section not found in SESSION_ANCHOR.md"
     blg_section = blg_section_match.group(0)
     rows = re.findall(r"\|\s*(S\d+-BLG-\S+|S\d+\s+\S+)\s*\|\s*(.+?)\s*\|", blg_section)
-    open_blgs = [(ref, status) for ref, status in rows if "\u2705 CLOSED" not in status and "ALL RESOLVED" not in status]
+    open_blgs = [
+        (ref, status) for ref, status in rows if "\u2705 CLOSED" not in status and "ALL RESOLVED" not in status
+    ]
     if not open_blgs:
         return True, f"BLG Status: all entries resolved ({len(rows)} total)"
     return False, f"Open BLGs: {[ref for ref, _ in open_blgs]}"
 
 
-def run_graduation_check(session: str, anchor_path: Path = None, queue_path: Path = None,
-                         cross_ref_path: Path = None) -> dict:
+def run_graduation_check(
+    session: str,
+    anchor_path: Path | None = None,
+    queue_path: Path | None = None,
+    cross_ref_path: Path | None = None,
+) -> dict:
     anchor_path = anchor_path or REPO_ROOT / "SESSION_ANCHOR.md"
     queue_path = queue_path or REPO_ROOT / "CO_ORCH_QUEUE.md"
     cross_ref_path = cross_ref_path or REPO_ROOT / "CROSS_REF.md"
@@ -125,12 +131,13 @@ def run_graduation_check(session: str, anchor_path: Path = None, queue_path: Pat
     return {"session": session, "verdict": verdict, "all_pass": all_pass, "checks": results}
 
 
-def write_graduation_report(result: dict, report_path: Path = None) -> Path:
+def write_graduation_report(result: dict, report_path: Path | None = None) -> Path:
     report_path = report_path or REPO_ROOT / "GRADUATION_REPORT.md"
+    verdict_label = "\u2705 GRADUATED" if result["all_pass"] else "\u274c NOT READY"
     lines = [
         f"# GRADUATION REPORT — {result['session']}",
         f"**Generated:** {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
-        f"**Verdict:** {'\u2705 GRADUATED' if result['all_pass'] else '\u274c NOT READY'}",
+        f"**Verdict:** {verdict_label}",
         "",
         "## Check Results",
         "",
