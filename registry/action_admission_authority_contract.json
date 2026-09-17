@@ -1,0 +1,88 @@
+{
+  "version": "AAR_AUTHORITY_CONTRACT_V1",
+  "status": "DESIGN_ONLY_NOT_RUNTIME_AUTHORITY",
+  "provider_admission": "REQUIRED_BEFORE_RUNTIME_IMPLEMENTATION",
+  "replay": {
+    "guarantee": "AT_MOST_ONCE_AUTHORIZED_EFFECT",
+    "exactly_once": "NOT_ESTABLISHED",
+    "required_atomic_operation": "CONSUME_ONCE",
+    "authority_outcomes": [
+      "CONSUMED",
+      "REPLAY",
+      "UNAVAILABLE",
+      "CONFLICTED"
+    ],
+    "fail_closed_outcomes": [
+      "REPLAY",
+      "UNAVAILABLE",
+      "CONFLICTED"
+    ],
+    "crash_after_consume_before_effect": "NO_AUTOMATIC_RETRY_MANUAL_RECOVERY_REQUIRED",
+    "identity_fields": [
+      "version",
+      "record_id",
+      "action_class",
+      "target",
+      "policy_id",
+      "authorization.authorization_id",
+      "action_digest"
+    ]
+  },
+  "revocation": {
+    "authority_outcomes": [
+      "ACTIVE",
+      "REVOKED",
+      "UNAVAILABLE",
+      "CONFLICTED"
+    ],
+    "allow_outcomes": [
+      "ACTIVE"
+    ],
+    "fail_closed_outcomes": [
+      "REVOKED",
+      "UNAVAILABLE",
+      "CONFLICTED"
+    ],
+    "timing": "IMMEDIATELY_BEFORE_REPLAY_CONSUME_AND_SIDE_EFFECT",
+    "historical_receipts": "IMMUTABLE_NON_RETROACTIVE"
+  },
+  "issuer_and_trust_anchor": {
+    "aar_v1": "CURRENT_BOUNDED_NO_ISSUER_OR_KEY_IDENTITY",
+    "future_record_version": "AAR_V2_REQUIRED_FOR_ISSUER_AND_KEY_IDENTITY",
+    "trust_anchor_states": [
+      "ACTIVE",
+      "OVERLAP_VERIFY_ONLY",
+      "RETIRED",
+      "COMPROMISED",
+      "UNAVAILABLE",
+      "CONFLICTED"
+    ],
+    "verification_allow_states": [
+      "ACTIVE",
+      "OVERLAP_VERIFY_ONLY"
+    ],
+    "verification_deny_states": [
+      "RETIRED",
+      "COMPROMISED",
+      "UNAVAILABLE",
+      "CONFLICTED"
+    ],
+    "issuer_separation": "ISSUANCE_AUTHORITY_SEPARATE_FROM_REQUEST_PATH_VERIFICATION"
+  },
+  "commit_order": [
+    "STRUCTURAL_AND_ATTESTATION_VALIDATION",
+    "COMMIT_TIME_REVOCATION_REVALIDATION",
+    "ATOMIC_REPLAY_CONSUME",
+    "PROTECTED_SIDE_EFFECT",
+    "POSTCONDITION_AND_EXECUTION_RECEIPT"
+  ],
+  "non_effects": [
+    "NO_PROVIDER_ADMISSION",
+    "NO_DURABLE_REPLAY_IMPLEMENTATION",
+    "NO_AUTHORITATIVE_REVOCATION_IMPLEMENTATION",
+    "NO_PRODUCTION_ISSUER",
+    "NO_TRUST_ANCHOR_LIFECYCLE_IMPLEMENTATION",
+    "NO_ACTION_CLASS_EXPANSION",
+    "NO_SCIENTIFIC_OR_AUTHORIZATION_STATE_TRANSITION"
+  ]
+}
