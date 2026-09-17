@@ -2,6 +2,7 @@ import type { DashboardPhase } from '../hooks/use-dashboard-data'
 import { NEXT_TRANSITION } from '../lib/governance'
 import { normalizeRuntimeStatus } from '../lib/status'
 import type { DashboardSnapshot } from '../lib/types'
+import { DecisionFrontier } from './decision-frontier'
 import { RefreshIcon } from './icons'
 import { StatusChip } from './status-chip'
 
@@ -18,6 +19,7 @@ export function ControlRoomView({ snapshot, phase, error, lastSuccessAt, onRefre
   return <div className="view-stack">
     <section className="section-heading standalone"><div><span className="eyebrow">OPERATIONS</span><h2>Runtime observability without authority inflation</h2><p>Live application health is shown separately from repository governance and scientific state.</p></div><button className="button ghost" onClick={onRefresh}><RefreshIcon /> Refresh</button></section>
     {(phase === 'stale' || phase === 'error') && <div className={`alert ${phase === 'stale' ? 'warning' : 'danger'}`} role="status"><strong>{phase === 'stale' ? 'Showing last valid snapshot.' : 'Runtime data unavailable.'}</strong><span>{error ?? 'A refresh did not complete successfully.'}</span></div>}
+    <DecisionFrontier />
     <div className="metric-grid">
       <article className="metric-card panel"><span>Runtime health</span>{loading ? <StatusChip state="loading"/> : <StatusChip state={health ? normalizeRuntimeStatus(health.status) : 'unavailable'} label={health?.status?.toUpperCase() ?? 'UNAVAILABLE'}/>}<small>{health?.runtime ?? 'No validated runtime snapshot'}</small></article>
       <article className="metric-card panel"><span>Version</span><strong className="mono">{health?.version ?? '—'}</strong><small>Runtime-reported ensemble version</small></article>
