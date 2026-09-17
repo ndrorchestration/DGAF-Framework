@@ -18,32 +18,31 @@ Outputs:
   - h4_triad_by_task.csv            — mean composite by (mode, task, noise)
   - h4_verdict.txt                  — automated H4 verdict
 """
+
 from __future__ import annotations
 
 import csv
 import hashlib
-import math
-import random
 import time
 from itertools import product
 from pathlib import Path
 from typing import Any
 
-from pptl.topology import PHI, PENTAGON_EDGES
+from pptl.topology import PHI
 
 # ── Experiment parameters ─────────────────────────────────────────────────
 
-TOPOLOGY     = "phi_pentagon"   # fixed — dominant from Phase 1
-MODES        = ["triad_a", "triad_b", "triad_c"]
+TOPOLOGY = "phi_pentagon"  # fixed — dominant from Phase 1
+MODES = ["triad_a", "triad_b", "triad_c"]
 TASK_FAMILIES = [
     "task1_analytical",
     "task2_creative",
     "task3_adversarial",
 ]
 NOISE_LEVELS = [0.0, 0.15, 0.30]
-SEEDS        = list(range(20))
+SEEDS = list(range(20))
 
-OUTPUT_DIR   = Path("output")
+OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── Triad role definitions ──────────────────────────────────────────────────
@@ -51,9 +50,9 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 # Triad-C is the Apogee/Reson/Sentinel stack from the live orchestrator.
 
 TRIAD_DEFS = {
-    "triad_a": {"generator": "Apogee",  "verifier": "Reson",   "safety": "Herald"},
-    "triad_b": {"generator": "Apogee",  "verifier": "DemiJoule","safety": "Reson"},
-    "triad_c": {"generator": "Apogee",  "verifier": "Reson",   "safety": "Sentinel"},
+    "triad_a": {"generator": "Apogee", "verifier": "Reson", "safety": "Herald"},
+    "triad_b": {"generator": "Apogee", "verifier": "DemiJoule", "safety": "Reson"},
+    "triad_c": {"generator": "Apogee", "verifier": "Reson", "safety": "Sentinel"},
 }
 
 # ── Score simulation ─────────────────────────────────────────────────────────
@@ -61,11 +60,12 @@ TRIAD_DEFS = {
 # Triad-C gets a task3 bonus (+0.06) to test H4 directionally.
 
 TASK_BASE = {
-    "task1_analytical":  {"triad_a": 0.680, "triad_b": 0.672, "triad_c": 0.683},
-    "task2_creative":    {"triad_a": 0.671, "triad_b": 0.668, "triad_c": 0.674},
+    "task1_analytical": {"triad_a": 0.680, "triad_b": 0.672, "triad_c": 0.683},
+    "task2_creative": {"triad_a": 0.671, "triad_b": 0.668, "triad_c": 0.674},
     "task3_adversarial": {"triad_a": 0.631, "triad_b": 0.628, "triad_c": 0.695},  # H4 target
 }
 NOISE_DEGRADATION = {"triad_a": 0.11, "triad_b": 0.12, "triad_c": 0.07}  # per unit noise
+H4_NON_DOMINANCE_TOLERANCE = 0.03
 
 
 def _det_noise(seed: int, mode: str, task: str, noise: float) -> float:
@@ -83,39 +83,39 @@ def simulate_run(
     seed: int,
 ) -> dict[str, Any]:
     """Simulate a single phi_pentagon run for H4 stratification."""
-    base     = TASK_BASE[task][mode]
-    degrade  = NOISE_DEGRADATION[mode] * noise
-    jitter   = _det_noise(seed, mode, task, noise)
-    raw      = base - degrade + jitter
+    base = TASK_BASE[task][mode]
+    degrade = NOISE_DEGRADATION[mode] * noise
+    jitter = _det_noise(seed, mode, task, noise)
+    raw = base - degrade + jitter
 
     # Phi-weighted coherence bonus (architectural constant)
-    phi_bonus = (PHI - 1.0) * 0.04   # ~0.025
+    phi_bonus = (PHI - 1.0) * 0.04  # ~0.025
     composite = max(0.0, min(1.0, raw + phi_bonus))
 
     # Gate scores derived from composite
-    safety_score       = composite * 0.96 + 0.02
+    safety_score = composite * 0.96 + 0.02
     hallucination_risk = max(0.0, 1.0 - composite - 0.1 + noise * 0.15)
-    coherence_score    = composite * 0.98 + 0.01
+    coherence_score = composite * 0.98 + 0.01
 
     return {
-        "topology":          TOPOLOGY,
-        "mode":              mode,
-        "task":              task,
-        "noise":             noise,
-        "seed":              seed,
-        "composite":         round(composite, 6),
-        "safety_score":      round(safety_score, 6),
-        "hallu_risk":        round(hallucination_risk, 6),
-        "coherence_score":   round(coherence_score, 6),
-        "triad_roles":       str(TRIAD_DEFS[mode]),
+        "topology": TOPOLOGY,
+        "mode": mode,
+        "task": task,
+        "noise": noise,
+        "seed": seed,
+        "composite": round(composite, 6),
+        "safety_score": round(safety_score, 6),
+        "hallu_risk": round(hallucination_risk, 6),
+        "coherence_score": round(coherence_score, 6),
+        "triad_roles": str(TRIAD_DEFS[mode]),
     }
 
 
 def run_experiment() -> list[dict[str, Any]]:
     results = []
     total = len(MODES) * len(TASK_FAMILIES) * len(NOISE_LEVELS) * len(SEEDS)
-    done  = 0
-    t0    = time.monotonic()
+    done = 0
+    t0 = time.monotonic()
 
     for mode, task, noise, seed in product(MODES, TASK_FAMILIES, NOISE_LEVELS, SEEDS):
         results.append(simulate_run(mode, task, noise, seed))
@@ -141,18 +141,21 @@ def write_raw_csv(results: list[dict[str, Any]]) -> Path:
 def build_summary(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Mean composite by (mode, task, noise)."""
     from collections import defaultdict
+
     acc: dict[tuple, list[float]] = defaultdict(list)
     for r in results:
         acc[(r["mode"], r["task"], r["noise"])].append(r["composite"])
     rows = []
     for (mode, task, noise), vals in sorted(acc.items()):
-        rows.append({
-            "mode":           mode,
-            "task":           task,
-            "noise":          noise,
-            "mean_composite": round(sum(vals) / len(vals), 6),
-            "n":              len(vals),
-        })
+        rows.append(
+            {
+                "mode": mode,
+                "task": task,
+                "noise": noise,
+                "mean_composite": round(sum(vals) / len(vals), 6),
+                "n": len(vals),
+            }
+        )
     return rows
 
 
@@ -170,21 +173,37 @@ def evaluate_h4(summary: list[dict[str, Any]]) -> str:
     """
     H4 verdict: Triad-C must score higher than Triad-A and Triad-B
     on TASK3 at noise=0.30, but NOT dominate on TASK1/TASK2.
+
+    Missing required cells are an error: incomplete summaries must not be
+    converted into a verdict through implicit zero values.
     """
+
     def get(mode: str, task: str, noise: float) -> float:
         for row in summary:
             if row["mode"] == mode and row["task"] == task and row["noise"] == noise:
-                return row["mean_composite"]
-        return 0.0
+                return float(row["mean_composite"])
+        raise ValueError(f"missing H4 summary cell: mode={mode}, task={task}, noise={noise:.2f}")
 
-    c_task3  = get("triad_c", "task3_adversarial", 0.30)
-    a_task3  = get("triad_a", "task3_adversarial", 0.30)
-    b_task3  = get("triad_b", "task3_adversarial", 0.30)
-    c_task1  = get("triad_c", "task1_analytical",  0.30)
-    a_task1  = get("triad_a", "task1_analytical",  0.30)
+    c_task3 = get("triad_c", "task3_adversarial", 0.30)
+    a_task3 = get("triad_a", "task3_adversarial", 0.30)
+    b_task3 = get("triad_b", "task3_adversarial", 0.30)
+    c_task1 = get("triad_c", "task1_analytical", 0.30)
+    a_task1 = get("triad_a", "task1_analytical", 0.30)
+    b_task1 = get("triad_b", "task1_analytical", 0.30)
+    c_task2 = get("triad_c", "task2_creative", 0.30)
+    a_task2 = get("triad_a", "task2_creative", 0.30)
+    b_task2 = get("triad_b", "task2_creative", 0.30)
 
     h4_part1 = (c_task3 > a_task3) and (c_task3 > b_task3)
-    h4_part2 = abs(c_task1 - a_task1) < 0.03   # Triad-C should NOT dominate task1
+    h4_part2 = all(
+        abs(c_score - comparison_score) < H4_NON_DOMINANCE_TOLERANCE
+        for c_score, comparison_score in (
+            (c_task1, a_task1),
+            (c_task1, b_task1),
+            (c_task2, a_task2),
+            (c_task2, b_task2),
+        )
+    )
 
     lines = [
         "H4 Task-Stratified Verdict",
@@ -194,9 +213,13 @@ def evaluate_h4(summary: list[dict[str, Any]]) -> str:
         f"Triad-B TASK3 noise=0.30: {b_task3:.4f}",
         f"Triad-C TASK1 noise=0.30: {c_task1:.4f}",
         f"Triad-A TASK1 noise=0.30: {a_task1:.4f}",
+        f"Triad-B TASK1 noise=0.30: {b_task1:.4f}",
+        f"Triad-C TASK2 noise=0.30: {c_task2:.4f}",
+        f"Triad-A TASK2 noise=0.30: {a_task2:.4f}",
+        f"Triad-B TASK2 noise=0.30: {b_task2:.4f}",
         "",
         f"H4-Part1 (C > A,B on TASK3): {'CONFIRMED' if h4_part1 else 'REJECTED'}",
-        f"H4-Part2 (C not dominant on TASK1): {'CONFIRMED' if h4_part2 else 'REJECTED'}",
+        f"H4-Part2 (C not dominant on TASK1/TASK2): {'CONFIRMED' if h4_part2 else 'REJECTED'}",
         "",
         f"H4 FULL VERDICT: {'CONFIRMED' if (h4_part1 and h4_part2) else 'PARTIAL' if h4_part1 else 'REJECTED'}",
     ]
@@ -208,9 +231,11 @@ def evaluate_h4(summary: list[dict[str, Any]]) -> str:
 
 
 if __name__ == "__main__":
-    print(f"H4 Experiment — {len(MODES)} modes x {len(TASK_FAMILIES)} tasks x "
-          f"{len(NOISE_LEVELS)} noise x {len(SEEDS)} seeds = "
-          f"{len(MODES)*len(TASK_FAMILIES)*len(NOISE_LEVELS)*len(SEEDS)} runs")
+    print(
+        f"H4 Experiment — {len(MODES)} modes x {len(TASK_FAMILIES)} tasks x "
+        f"{len(NOISE_LEVELS)} noise x {len(SEEDS)} seeds = "
+        f"{len(MODES) * len(TASK_FAMILIES) * len(NOISE_LEVELS) * len(SEEDS)} runs"
+    )
     results = run_experiment()
     write_raw_csv(results)
     summary = build_summary(results)

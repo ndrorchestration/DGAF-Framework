@@ -15,75 +15,95 @@ limitations under the License.
 
 ---
 
-## Proprietary Designations
+## Project Designations and Identity Lineage
 
-The following names, designations, and system identifiers are proprietary
-to ndrorchestration and Ndr "Ender" Hensel. The Apache 2.0 license grants
-code reuse rights but does NOT grant trademark or service mark rights to
-these designations:
+The following names and system identifiers are project designations used by
+ndrorchestration / Ndr "Ender" Hensel. Their inclusion here records project
+attribution and identity lineage; it does not make a representation about
+registration status, enforceability, or rights beyond those provided by
+applicable law.
 
 **Framework designations:**
 - DGAF (Dynamic Governance Agentic Formation)
 - PDMAL (Phi-Driven Multi-Agent Lattice)
-- NDR-HDFS (and all NDR-prefixed pattern identifiers)
+- NDR-HDFS and NDR-prefixed pattern identifiers
 - AXIS (Agentic eXecution Integrity System)
 - PPTL (Prof Prodigy Theorem Layer)
 - P-34 Flywheel
 - AOGA (Agentic Orchestration and Governance Architecture)
 
-**Agent designations (proprietary system identifiers):**
-- Agent Amethyst (meta-orchestrator)
-- Agent COLLEEN (institutional anchor)
-- Agent Apogee / Junior Apogee (QA orchestrator)
+**Historical / compatibility persona designations:**
+- Agent Amethyst
+- Agent COLLEEN
+- Agent Apogee / Junior Apogee
 - Agent Reciprocity
 - Agent Reson
 - Agent Echolette
 - Agent Lyra
 - Agent Herald
-- Agent Sentinel
+- Agent Sentinel / Sentinel-Φ
 - Agent DemiJoule
 - Agent Prof Prodigy
 
-**Pattern registry:**
-All NDR Pattern entries (P-01 through P-33 and subsequent) are original works
-by Ndr "Ender" Hensel. Pattern schemas, card formats, and registry structure
-are protected as original creative and technical works.
+These persona names are retained for provenance and compatibility. Current
+authority semantics resolve through `governance/role_capability_registry.v1.json`
+and `governance/persona_role_lineage.v1.json`; no persona label independently
+grants governance, verification, security, execution, or publication authority.
 
-**Mathematical constructs:**
-The Phi-Harmonic Gating system, PDMAL convergence mathematics, phi-attractor
-value assignments, and associated harmonic modal matrices are original
-contributions of Ndr "Ender" Hensel.
+**Pattern registry:**
+NDR Pattern entries and their associated schemas/card formats are project
+materials maintained in this repository. Copyright and reuse are governed by
+the Apache 2.0 license and any other applicable rights; pattern identifiers do
+not by themselves establish certification, external endorsement, or standards
+conformance.
+
+**Mathematical / research constructs:**
+The repository documents project-specific constructs including Phi-Harmonic
+Gating, PDMAL convergence models, phi-attractor assignments, and harmonic modal
+matrices. Their presence records research and implementation provenance; it is
+not an independent-validity, efficacy, novelty, or priority determination.
 
 ---
 
-## Attribution Requirements
+## License and Attribution Boundary
 
-Per Apache 2.0 Section 4(b): any derivative work or redistribution must
-retain this NOTICE file in its entirety, including the Proprietary Designations
-section above. Use of the agent names, framework designations, or pattern
-identifiers in derivative works without explicit written permission from
-ndrorchestration constitutes trademark infringement independent of the
-Apache 2.0 license terms.
+Redistributors should follow Apache License 2.0 Section 4(d) for NOTICE
+attribution. This NOTICE does not alter the Apache 2.0 license terms or add a
+separate restriction on the code rights granted by that license.
+
+Apache License 2.0 Section 6 does not grant permission to use the licensor's
+trade names, trademarks, service marks, or product names except as required for
+reasonable and customary use in describing the origin of the Work and
+reproducing the NOTICE content. Any broader trademark or designation question
+is governed by the license text and applicable law rather than by an expanded
+claim in this NOTICE.
 
 ---
 
 ## Technical Description
 
-This project provides a governance spine for multi-agent AI systems, featuring:
-- Agent Amethyst meta-orchestration and QA authority
-- Agent Apogee evidence governance and evaluation protocols
-- Agent Sentinel integrity enforcement and safety boundaries
-- MDAR (Monitor-Detect-Assess-Respond) loop specifications
-- NIST AI Risk Management Framework alignment
-- OWASP Agentic Top 10 safety sweep integration
-- Phi-Harmonic Gating convergence patterns (1-1-1-1 Gate, Triad Consensus, Platinum Strata)
-- Gold Star certification validation processes
-- Enterprise-grade governance and compliance standards
-- NDR Pattern Registry (P-01 through P-33+)
+This project is a governance, evidence, and controlled-experimentation framework
+for multi-agent AI systems. Current repository capabilities include:
+- functional governance-orchestration role and capability contracts;
+- scoped evidence/verification review contracts;
+- scoped security-containment and fail-closed boundary contracts;
+- MDAR (Monitor-Detect-Assess-Respond) loop specifications;
+- project-local NIST AI RMF, ISO/IEC 42001, EU AI Act, and OWASP crosswalks whose
+  mappings do not establish legal compliance, certification, or conformance;
+- Phi-Harmonic Gating and related convergence-pattern research;
+- internal evaluation/attestation records whose PASS labels are bounded to their
+  documented project-local tests and do not constitute third-party certification;
+- NDR Pattern Registry artifacts and provenance controls.
 
-Designed for institutional and enterprise deployment of secure,
-governance-aligned multi-agent AI systems.
+DGAF is an active research and implementation framework. Documentation,
+passing repository CI, internal review labels, or standards crosswalks do not
+by themselves establish production readiness, enterprise deployment fitness,
+security certification, regulatory compliance, independent validation, or
+efficacy.
+
+For current scientific/control state, use `docs/CURRENT_STATE.md`. For current
+functional authority semantics, use `governance/role_capability_registry.v1.json`.
 
 ---
 
-*Last updated: 2026-06-28 | STRUCT-QA-IP-001 | Amethyst meta-orchestrated*
+*Last updated: 2026-09-17 | documentation/claim hygiene | functional-role authority model*

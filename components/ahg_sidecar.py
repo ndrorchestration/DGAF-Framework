@@ -29,6 +29,7 @@ Architecture:
 from __future__ import annotations
 
 import logging
+import math
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
@@ -41,6 +42,8 @@ def _clip(value: float, lo: float, hi: float, field_name: str, agent_id: str) ->
     """Clip value to [lo, hi]. Emits WARNING if out of range so miscalibrated
     agents are visible in the Herald trace. Precondition for φ ∈ (1.0, 1.8).
     """
+    if not math.isfinite(value):
+        raise ValueError(f"non-finite heartbeat signal: agent={agent_id} field={field_name}")
     if value < lo or value > hi:
         logger.warning(
             "AHGSidecar clip: agent=%s field=%s raw=%.4f clipped to [%.1f, %.1f]. "
