@@ -8,6 +8,7 @@ recorded as SKIP and reduce the turn to ESCALATE; SKIP is never implicit PASS.
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -83,6 +84,16 @@ class TurnAuditRecord:
         """Seal the exact current audit contents, including every gate record."""
         self.seal_hash = hashlib.sha256(self._canonical_payload()).hexdigest()
         return self.seal_hash
+
+    def verify_seal(self) -> bool:
+        """Verify the stored seal against the current audit contents without mutating it."""
+        if not isinstance(self.seal_hash, str) or len(self.seal_hash) != 64:
+            return False
+        try:
+            expected = hashlib.sha256(self._canonical_payload()).hexdigest()
+        except (AttributeError, TypeError, ValueError):
+            return False
+        return hmac.compare_digest(self.seal_hash, expected)
 
     def to_dict(self) -> dict[str, Any]:
         self.seal()
