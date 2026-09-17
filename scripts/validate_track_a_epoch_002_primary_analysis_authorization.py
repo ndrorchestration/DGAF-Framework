@@ -290,7 +290,7 @@ def validate_authorization_event_shape(head: str) -> str:
     if git_object_exists(f"{parent}:{AUTH_REL}"):
         fail("authorization record must be creation-only; it already exists in the parent")
 
-    history = [line for line in git("log", "--format=%H", "--", AUTH_REL).splitlines() if line]
+    history = [line for line in git("log", "--format=%H", head, "--", AUTH_REL).splitlines() if line]
     if history != [head]:
         fail("authorization record must have first-and-only immutable history at the event commit")
     return parent
@@ -317,7 +317,7 @@ def validate_authorization_event(head: str, *, accepted_parent_sha: str) -> str:
     receipt = load_json_at_ref(parent, MATERIALIZATION_RECEIPT_REL)
     validate_materialization_receipt(receipt)
 
-    receipt_history_output = git("log", "--format=%H", "--", MATERIALIZATION_RECEIPT_REL)
+    receipt_history_output = git("log", "--format=%H", parent, "--", MATERIALIZATION_RECEIPT_REL)
     receipt_history = [line for line in receipt_history_output.splitlines() if line]
     if len(receipt_history) != 1:
         fail("materialization receipt must have first-and-only immutable history")
