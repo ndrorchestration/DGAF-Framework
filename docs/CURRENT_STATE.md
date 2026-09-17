@@ -146,10 +146,10 @@ The retained protected mapping must not be guessed, regenerated, or reconstructe
 
 Repository recency does not redefine the historical High-Assurance apparatus/candidate/runtime identities:
 
-- apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`;
+- apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
 - apparatus source tree: `973c92335caf84f37fc2b3c4df6dd83b3b855087`;
-- historical runtime-evidence candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`;
-- historical runtime deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`;
+- historical runtime-evidence candidate identity: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`;
+- historical runtime deployment identity: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`;
 - final v0.7.6 High-Assurance candidate: **NOT DESIGNATED**.
 
 The canonical High-Assurance program therefore remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**.
