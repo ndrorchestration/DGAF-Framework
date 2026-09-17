@@ -6,6 +6,6 @@
   "projection_semantics": "DGAF_LOCAL_FIELDS_NON_AUTHORITATIVE",
   "dgaf_field": "lifecycle_state",
   "dgaf_field_semantics": "Legacy DGAF-local activity descriptor only; not account-level repository lifecycle classification.",
-  "observed_canonical_revision": "da2d58e07a61790758a4bd6fcd1a31952b39acc3",
+  "observed_canonical_revision": "bdd6efa647e570926a7b3a7174d67c2c6a04065e",
   "observed_at": "2026-09-17"
 }
