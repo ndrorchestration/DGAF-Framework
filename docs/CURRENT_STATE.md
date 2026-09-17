@@ -3,21 +3,13 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-17
-current_protected_main: 6b89529da3e7ff13e14eaea415756579d859fb26
+current_protected_main: b1d91621bd73e70866d5ff8fd38fb98e440b30e9
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
 canonical_dgaf_efficacy: NOT_ESTABLISHED
 track_a_epoch_001_collection: COMPLETE_BLINDED_RETAINED
-track_a_epoch_001_inferential_seed_units: 50
-track_a_epoch_001_blinded_observations: 2250
-track_a_epoch_001_dataset_lock: ESTABLISHED
-track_a_epoch_001_unblinding_authorization: ESTABLISHED_HISTORICAL
-track_a_epoch_001_unblinding_recoverability: CRYPTOGRAPHICALLY_UNRECOVERABLE
 track_a_epoch_001_primary_analysis: UNANALYZABLE_NOT_RUN
-track_a_successor_issue: 523
-track_a_successor_repository_custody_admission: ACCEPTED_SAME_SYSTEM_NONINDEPENDENT
-track_a_successor_collection_authorization: ACCEPTED_COMMIT_563152F
 track_a_successor_collection: COMPLETE_50_PAIRED_SEED_UNITS_2250_BLINDED_OBSERVATIONS
 track_a_successor_dataset_lock: ESTABLISHED
 track_a_successor_unblinding: AUTHORIZED_BOUNDED_MAPPING_RELEASE_OR_DECRYPTION_ONLY
@@ -25,85 +17,72 @@ track_a_successor_materialization_tooling: ACCEPTED
 track_a_successor_materialization: NOT_ESTABLISHED
 track_a_successor_primary_analysis_authorization_tooling: ACCEPTED
 track_a_successor_primary_analysis: NOT_AUTHORIZED_NOT_RUN
-accepted_dataset_lock_tooling_pr: 622
-accepted_unblinding_decision_tooling_pr: 627
-accepted_stage_1_materializer_pr: 713
-accepted_stage_2_operator_materialization_bundle_pr: 715
-accepted_primary_analysis_authorization_tooling_pr: 728
-accepted_primary_analysis_authorization_tooling_commit: e2363df584f6ba721a86d5bc8cd6c3789052495c
 accepted_decision_frontier_pr: 776
 accepted_governance_map_pr: 779
 accepted_audit_catalog_pr: 780
 accepted_workflow_coverage_scanner_pr: 782
 accepted_assurance_catalog_expansion_pr: 785
+accepted_state_space_explorer_pr: 783
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
 # DGAF-Framework / PDMAL — Current State
 
-This file is the **primary current-facing repository summary**. GitHub is authoritative for implementation, immutable evidence identities, issues, and CI. The DGAF Operational Control Center in Notion is the interpreted governance/control-plane mirror. Historical records are authoritative only for the exact scope, identity, and time they bind.
-
-The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, presentation/UI state, repository assurance inventory, runtime/deployment state, and historical evidence are separate governance/evidence dimensions. Evidence, authorization, N, verification class, deployment health, catalog membership, and efficacy do not transfer between them without an explicit governed rule.
+This file is the **primary current-facing repository summary**. GitHub is authoritative for source, CI, immutable evidence identities, issues, and merge history. Runtime/deployment providers remain authoritative for runtime facts. The DGAF Operational Control Center in Notion is the interpreted governance/control-plane mirror. Historical records remain authoritative only for the exact scope, identity, and time they bind.
 
 ## Executive boundary
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **`6b89529da3e7ff13e14eaea415756579d859fb26`** |
+| Protected repository `main` | **`b1d91621bd73e70866d5ff8fd38fb98e440b30e9`** |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
-| Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
-| Epoch 001 dataset lock | **ESTABLISHED** |
-| Epoch 001 protected mapping recoverability | **CRYPTOGRAPHICALLY UNRECOVERABLE** |
-| Epoch 001 primary analysis | **UNANALYZABLE / NOT RUN** |
-| Successor Track A lane | **ISSUE #523 OPEN** |
-| Epoch 002 repository custody | **ACCEPTED / SAME_SYSTEM_NONINDEPENDENT** |
-| Epoch 002 freeze / closure / verification classification | **ACCEPTED** |
-| Epoch 002 collection authorization | **ACCEPTED** |
-| Epoch 002 collection | **COMPLETE · 50 PAIRED SEED UNITS / 2,250 BLINDED OBSERVATIONS** |
+| Independent validation | **NOT ESTABLISHED** |
+| Track A Epoch 001 | **COLLECTION COMPLETE / DATASET LOCKED / PROTECTED MAPPING CRYPTOGRAPHICALLY UNRECOVERABLE / PRIMARY ANALYSIS UNANALYZABLE-NOT-RUN** |
+| Track A Epoch 002 collection | **COMPLETE · 50 PAIRED SEED UNITS / 2,250 BLINDED OBSERVATIONS** |
 | Epoch 002 dataset lock | **ESTABLISHED** |
 | Epoch 002 bounded unblinding | **AUTHORIZED · CONTROLLED MAPPING RELEASE OR DECRYPTION ONLY** |
 | Epoch 002 materialization tooling | **ACCEPTED** |
 | Epoch 002 real materialization | **NOT ESTABLISHED** |
-| Epoch 002 materialization receipt | **NOT ESTABLISHED** |
+| Epoch 002 immutable materialization receipt | **NOT ESTABLISHED** |
 | Epoch 002 primary analysis | **NOT AUTHORIZED / NOT RUN** |
-| Independent validation | **NOT ESTABLISHED** |
-| Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
-| Governance Command Center — Governance Map | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #779** |
+| Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
+| Governance Map | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #779** |
+| State-Space Explorer V0 | **ACCEPTED PRESENTATION-ONLY DISCRETE/CATEGORICAL SOURCE STATE · PR #783** |
 | Repository assurance catalog | **ACCEPTED · PARTIAL_CORE_FAMILIES_ONLY** |
-| Workflow coverage-gap scanner | **ACCEPTED · UNMAPPED DOES NOT MEAN NON-ASSURANCE** |
+| Workflow coverage-gap scanner | **ACCEPTED · PR #782** |
 | Expanded recurring assurance mappings | **ACCEPTED · PR #785** |
 
-No row above establishes integrated DGAF efficacy, independent validation, production certification, High-Assurance authorization, or a completed successor Track A primary result.
+No row above establishes integrated DGAF efficacy, independent validation, successful/current deployment, production certification, High-Assurance authorization, or a completed successor Track A primary result.
 
-## Protected-main repository state
+## Protected-main repository sequence
 
-The current protected-main baseline is `6b89529da3e7ff13e14eaea415756579d859fb26`, produced by PR #785 after the accepted UI and assurance-inventory sequence below.
+Current protected `main` is signed/verified commit `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`, produced by **PR #783 — State-Space Explorer V0** after the accepted interface and assurance-inventory sequence below.
 
-### Accepted presentation / Semantic Control Field sequence
+### Semantic Control Field / presentation state
 
-- **PR #776 — Decision Frontier** merged as `3777b66277135a31da496661e0cb12e87cb05e3c`. The component derives from the normalized governance model and presents the current governed state, evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics.
-- **PR #779 — Governance Map** merged as `29a7467b24e6709342874a048dd75b674a090463`. It projects vertical escalation from canonical governance stages, four explicit lateral relationships, and global field conditions without introducing a second state engine, continuous-manifold semantics, or readiness scoring.
+The Governance Command Center now has three accepted presentation-only tranches:
 
-These are **presentation-only** accepted source states. They do not create governance authority, grant authorization, establish runtime health, or promote scientific/empirical claims.
+1. **PR #776 — Decision Frontier** (`3777b66277135a31da496661e0cb12e87cb05e3c`): presents current governed state, evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics from the canonical governance model.
+2. **PR #779 — Governance Map** (`29a7467b24e6709342874a048dd75b674a090463`): projects ordered vertical escalation, explicitly named lateral relationships, and global field conditions without introducing a second state engine or readiness score.
+3. **PR #783 — State-Space Explorer V0** (`b1d91621bd73e70866d5ff8fd38fb98e440b30e9`): projects canonical governance stages into discrete `established`, `frontier`, and `blocked_by_predecessor` reachability regions. Native predicate state remains separate from derived reachability. V0 explicitly does **not** establish continuous/manifold coordinates, readiness distance, authorization probability, scalar evidence quality, efficacy gradients, or inferred consequence/reversibility values.
 
-A later discrete State-Space Explorer workstream is not accepted current state unless and until its own exact head is merged into protected `main`. Open or draft UI work remains candidate work.
+These interfaces are explanatory projections. They do not create governance authority, grant permission, establish runtime health, or upgrade scientific/empirical evidence.
 
-### Accepted repository assurance-inventory sequence
+### Repository assurance inventory
 
-- **PR #780** established `registry/audit_catalog.v1.json` and deterministic validation with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
-- **PR #782** added `collect_unmapped_workflows(...)`, which discovers current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by accepted catalog `implementation` paths. An unmapped workflow is a coverage gap only; no role is inferred from its filename or apparent purpose.
-- **PR #785**, merged as current `main` `6b89529da3e7ff13e14eaea415756579d859fb26`, added seven source-verified recurring assurance families while explicitly preserving partial coverage.
+- **PR #780** established `registry/audit_catalog.v1.json` plus deterministic validation with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
+- **PR #782** added deterministic discovery of current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by accepted catalog `implementation` paths.
+- **PR #785** added seven source-verified recurring assurance families while explicitly preserving partial coverage.
+- **PR #784** was closed unmerged and remains test-first/stale-lineage provenance only; its proposed workflow-role census is **not accepted current implementation**.
 
-The current protected-main required status contexts are separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. A recurring-assurance catalog entry does not imply branch-protection requiredness, and absence from the catalog does not prove that a workflow is non-assurance.
+Current protected-main required status contexts are separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. Catalog membership is not branch-protection requiredness. `UNMAPPED` / `UNCLASSIFIED` means the assurance role has not yet been adjudicated; it is not evidence that a workflow is non-assurance.
 
-Known catalog gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance coverage, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
+Known assurance-inventory gaps remain: exhaustive remaining workflow/script/test/method classification, exact job/workflow/ruleset requiredness, shared-dependency and independence analysis, external-runtime ingress assurance, presentation-projection assurance, and historical family-versus-execution-instance reconciliation.
 
-## Successor Track A — controlling scientific lane
+## Track A Epoch 002 — controlling scientific lane
 
-Issue #523 controls the replacement topology-robustness experiment after the Epoch 001 custody failure. Epoch 002 uses a new protocol identity, fresh seeds, fresh blinding, and recoverable solo custody while preserving the locked endpoint/estimand/matrix semantics.
-
-The accepted Epoch 002 design remains:
+Issue #523 controls the successor prospective topology-robustness experiment. The accepted design remains:
 
 - 50 prospective seeds: `20270201..20270250`;
 - 5 topologies: ring, PDMAL, random-regular, small-world, complete;
@@ -113,124 +92,67 @@ The accepted Epoch 002 design remains:
 - primary endpoint: strict-boolean `ffcr_success`;
 - inferential unit: paired seed;
 - locked paired bootstrap: 10,000 resamples;
-- Epoch 002 analysis seed: `20270251`.
+- analysis seed: `20270251`.
 
-### Current accepted evidence boundary
+### Accepted evidence boundary
 
-The successor collection is complete at **50 paired seed units / 2,250 blinded observations**. The content-addressed Epoch 002 `DATASET_LOCK_RECEIPT` exists on protected `main` with `status=PASS` and explicitly preserves `empirical_n_increment=0`, canonical DGAF efficacy `NOT_ESTABLISHED`, and separate authorization requirements.
+The successor collection is complete at **50 paired seed units / 2,250 blinded observations**. A content-addressed Epoch 002 `DATASET_LOCK_RECEIPT` is accepted with `status=PASS`. A separate accepted `UNBLINDING_DECISION_RECORD` has `status=PASS` and scope **`CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`**.
 
-A separate accepted `UNBLINDING_DECISION_RECORD` exists with `status=PASS` and scope **`CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`**. That record does not authorize primary analysis and does not promote scientific N, efficacy, independent validation, or High-Assurance state.
+Those records do not establish real materialization, primary-analysis authority, a scientific result, efficacy, independent validation, or High-Assurance authorization.
 
-### Accepted materialization apparatus
+### Accepted materialization and authorization tooling
 
-Repository engineering has crossed the materialization-tooling milestone without performing real materialization:
+- **PR #713** accepted the controlled Stage-1 materializer with exact-member validation and fail-closed handling for wrong keys, archive drift, duplicate entries, traversal/link hazards, and unexpected members.
+- **PR #715** accepted the non-secret Stage-2 evidence bundle with deterministic content-addressed identities and atomic publication only after validation.
+- **PR #728** accepted prospective primary-analysis authorization validation/procedure/CI/test tooling.
 
-1. prospective materialization receipt validation/procedure — accepted predecessor tooling;
-2. OPERATOR_CODESPACE/content-addressed provenance correction — accepted;
-3. controlled Stage-1 unblinded materializer — **PR #713 accepted**;
-4. operator-side Stage-2 materialization evidence bundle — **PR #715 accepted**;
-5. prospective primary-analysis authorization validator/procedure/CI/test tooling — **PR #728 accepted**.
-
-PR #713 introduced the controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
-
-PR #715 added the non-secret operator materialization evidence bundle. It binds accepted predecessor identities, emits deterministic content-addressed output identities plus non-secret manifest/receipt/evidence records, stages the complete five-member bundle before publication, and publishes atomically only after validation.
-
-Neither PR decrypted or admitted the real retained Epoch 002 material as a governed analysis input.
-
-PR #728 installed prospective fail-closed primary-analysis authorization tooling on protected `main`. Its validator, exact-head read-only workflow, procedure, and adversarial tests remain tooling-only: no authorization record, materialization receipt, locked result, analysis execution, scientific-N increment, efficacy, independence, or High-Assurance transition is present or admitted.
+No accepted record establishes that the real retained Epoch 002 material was materialized, admitted, or analyzed.
 
 ## Current scientific frontier
 
-The next admissible scientific transition is **controlled operator-side materialization of the real retained Epoch 002 evidence, followed by validation/admission and a separate immutable materialization receipt**.
+The next admissible scientific transition remains:
 
-The repository currently contains no canonical `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json`. Therefore:
+`controlled operator-side real materialization`
+`→ validated non-secret materialization evidence admission`
+`→ separate immutable materialization receipt`
+`→ separate primary-analysis authorization`
+`→ locked primary analysis`
+`→ interpretation / adjudication`
 
-- `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`;
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`;
-- `SCIENTIFIC_N_INCREMENT = 0`;
-- `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
-- `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
+Current controlling predicates:
 
-Private keys, passphrases, encrypted backup copies, blinding secrets, protected plaintext mappings, and other recoverable secret material remain prohibited from GitHub, Notion, chat, CI inputs, workflow logs, and committed files.
-
-## Ordered successor transition chain
-
-Tooling readiness never skips predecessor state. The governed order is:
-
-`repository custody acceptance — ACCEPTED`
-`→ precollection preflight — ACCEPTED`
-`→ Epoch 002 immutable freeze — ESTABLISHED`
-`→ final closure — ACCEPTED`
-`→ bounded verification classification — ACCEPTED / NONINDEPENDENT`
-`→ separate collection authorization — ACCEPTED`
-`→ empirical collection — COMPLETE`
-`→ operator evidence admission / QC — ACCEPTED PREDECESSOR CHAIN`
-`→ dataset-lock receipt — ESTABLISHED`
-`→ separate bounded unblinding decision — AUTHORIZED`
-`→ controlled local materialization — CURRENT FRONTIER / NOT ESTABLISHED`
-`→ immutable materialization receipt — NOT ESTABLISHED`
-`→ prospective primary-analysis authorization tooling — ACCEPTED / TOOLING ONLY (#728)`
-`→ separate primary-analysis authorization — NOT AUTHORIZED`
-`→ locked primary analysis — NOT RUN`
-`→ interpretation/adjudication — NOT REACHED`
-
-Current predicates:
-
-- `TRACK_A_EPOCH_002_REPOSITORY_CUSTODY = ACCEPTED / SAME_SYSTEM_NONINDEPENDENT`
-- `TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION = ACCEPTED`
 - `TRACK_A_EPOCH_002_COLLECTION = COMPLETE`
 - `TRACK_A_EPOCH_002_DATASET_LOCK = ESTABLISHED`
 - `TRACK_A_EPOCH_002_UNBLINDING = AUTHORIZED / BOUNDED`
 - `TRACK_A_EPOCH_002_MATERIALIZATION_TOOLING = ACCEPTED`
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_TOOLING = ACCEPTED / TOOLING ONLY`
 - `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`
+- `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT = NOT_ESTABLISHED`
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`
 - `SCIENTIFIC_N_INCREMENT = 0`
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`
 - `HIGH_ASSURANCE = PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
 
+Private keys, passphrases, encrypted backup copies, blinding secrets, protected plaintext mappings, and other recoverable secret material remain prohibited from GitHub, Notion, chat, CI inputs, workflow logs, and committed files.
+
 ## Track A Epoch 001 — immutable historical boundary
 
-Epoch 001 remains valid evidence that a prospective blinded panel was collected and retained under its exact frozen protocol:
+Epoch 001 remains valid evidence that a prospective blinded panel was collected and retained under its exact frozen protocol: 50 paired inferential seed units / 2,250 blinded observations, dataset lock established, historical unblinding authorization established, protected mapping cryptographically unrecoverable, primary analysis unanalyzable/not run, outcome aggregation not performed.
 
-- 50 paired inferential seed units;
-- 2,250 blinded raw observations;
-- dataset lock established;
-- historical unblinding authorization established;
-- protected mapping cryptographically unrecoverable under the retained evidence;
-- primary analysis unanalyzable / not run;
-- outcome aggregation not performed.
-
-The retained CMS-protected mapping cannot be honestly reconstructed because the matching private-key escrow was not durably recoverable in the solo operating model. Do not brute-force, guess, infer, regenerate, or reconstruct the hidden assignment. Epoch 001 must not be pooled into the successor confirmatory analysis.
-
-The custody failure is itself an engineering/governance finding. It does not erase the completed blinded collection, and it does not create an efficacy result.
-
-For detailed historical event identities, use [`HISTORICAL_RECORDS_INDEX.md`](HISTORICAL_RECORDS_INDEX.md) and the immutable experiment/governance records rather than expanding this live summary into a second historical archive.
+The retained protected mapping must not be guessed, regenerated, or reconstructed. Epoch 001 is not pooled into the successor confirmatory analysis.
 
 ## Canonical High-Assurance provenance boundary
 
-Repository `main` recency does not redefine the High-Assurance apparatus source, candidate identity, or deployment identity. Those remain exact-scope provenance records until an explicit governing transition replaces them.
+Repository recency does not redefine the historical High-Assurance apparatus/candidate/runtime identities:
 
-- apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`;
 - apparatus source tree: `973c92335caf84f37fc2b3c4df6dd83b3b855087`;
-- historical runtime-evidence candidate identity: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`;
-- historical runtime deployment identity: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`;
-- final v0.7.6 High-Assurance candidate identity: **NOT DESIGNATED**.
+- historical runtime-evidence candidate: `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`;
+- historical runtime deployment: `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`;
+- final v0.7.6 High-Assurance candidate: **NOT DESIGNATED**.
 
-The High-Assurance program therefore remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / canonical empirical N=0**.
-
-## Agent identity / vocabulary boundary
-
-Issue #522 is **CLOSED / COMPLETED**. Current ontology authority is `docs/agents/AGENT_ROSTER.md` plus `registry/agent_ontology_adjudication.v1.json` and the accepted adjudication record.
-
-- sovereign numbered seats come from the canonical roster;
-- formation-local identifiers do not silently renumber sovereign seats;
-- Sentinel and Sentinel-Phi are distinct ontology records;
-- Agent Ionia is the sovereign A-13 identity;
-- `IONIA_STATE` / Ionia 0Hz is a separate formation/runtime state and consumes no sovereign seat.
-
-For industry-neutral terminology, use [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md) and `VOCABULARY_TRANSLATION_MATRIX.json`.
+The canonical High-Assurance program therefore remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**.
 
 ## Evidence and authority rules
 
@@ -240,31 +162,26 @@ Current-facing documentation must preserve these distinctions:
 2. Implementation is not empirical evidence.
 3. A passing test proves only its defined predicate and environment.
 4. Developer self-verification is not independent verification.
-5. Local custody recovery is not independent custody.
-6. Freeze is not authorization.
-7. Closure is not authorization.
-8. Authorization is not execution.
-9. Collection execution is not dataset lock.
-10. Dataset lock is not unblinding authorization.
-11. Unblinding authorization is not materialization.
-12. Materialization is not primary-analysis authorization.
-13. Primary-analysis authorization is not a positive result.
-14. A completed blinded collection can still become unanalyzable if protected mapping custody fails.
-15. Dependency, adjacency, documentation repetition, catalog membership, or shared authorship does not transfer evidence or scientific state.
-16. Historical exact-scope evidence does not silently bind a later candidate, epoch, deployment, or apparatus.
-17. UI projection is not governance authority.
-18. Source verification is not successful deployment or runtime health.
-19. A recurring-assurance catalog entry is not branch-protection requiredness.
-20. `UNMAPPED` / `UNCLASSIFIED` is a fail-closed inventory state, not a negative assurance judgment.
+5. Freeze is not authorization; authorization is not execution.
+6. Collection is not dataset lock; dataset lock is not unblinding authorization.
+7. Unblinding authorization is not materialization.
+8. Materialization is not primary-analysis authorization.
+9. Primary-analysis authorization is not a positive result.
+10. Historical exact-scope evidence does not silently bind a later candidate, epoch, deployment, or apparatus.
+11. UI projection is not governance authority.
+12. Source verification is not deployment/runtime health.
+13. Catalog membership is not branch-protection requiredness.
+14. `UNMAPPED` / `UNCLASSIFIED` is a fail-closed inventory state, not a negative assurance judgment.
+15. Discrete State-Space reachability is not continuous distance, probability, confidence, efficacy, consequence, or reversibility geometry.
 
 ## Current documentation routing
 
-- **Primary live repository state:** this file, `docs/CURRENT_STATE.md`.
+- **Primary live repository state:** this file.
 - **Compatibility status entrypoint:** [`PROJECT_STATUS.md`](PROJECT_STATUS.md).
 - **Public overview:** [`../README.md`](../README.md).
 - **Technical implementation map:** [`../README.technical.md`](../README.technical.md).
 - **Governance / standards crosswalk:** [`../README.governance.md`](../README.governance.md).
-- **Public / industry-neutral terminology:** [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md).
+- **Public terminology:** [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md).
 - **Historical/provenance index:** [`HISTORICAL_RECORDS_INDEX.md`](HISTORICAL_RECORDS_INDEX.md).
 
 No documentation update can itself promote scientific N, custody acceptance, freeze, authorization, independent verification, efficacy, deployment health, or High-Assurance status.
