@@ -33,10 +33,11 @@ Within the evidence boundaries documented in this repository, DGAF demonstrates 
 
 ### Current repository engineering milestones
 
-As of protected `main` `6b89529da3e7ff13e14eaea415756579d859fb26`:
+As of protected `main` `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`:
 
 - **Decision Frontier — PR #776** is merged as a presentation-only Semantic Control Field component derived from canonical governance state.
 - **Governance Map — PR #779** is merged and renders ordered escalation, explicitly named lateral relationships, and global field constraints without creating a second state engine.
+- **State-Space Explorer V0 — PR #783** is merged and projects canonical stages into discrete `established`, `frontier`, and `blocked_by_predecessor` regions while preserving native predicate state and explicit model limits.
 - **Bounded assurance catalog — PR #780** is merged with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
 - **Workflow coverage-gap scanner — PR #782** is merged and reports workflow definitions not yet exactly bound by the catalog without inferring their role.
 - **Recurring assurance expansion — PR #785** is merged and adds seven source-verified recurring assurance families while preserving partial coverage.
@@ -149,9 +150,9 @@ The accepted presentation layer is designed to answer five operator questions wi
 4. What can happen next?
 5. What would change if we did it?
 
-The **Decision Frontier** and **Governance Map** both consume normalized governance/current-state data. They may display evidence, blockers, reachability, provenance, coupling, and field constraints, but they cannot grant authority or promote a scientific state.
+The **Decision Frontier**, **Governance Map**, and **State-Space Explorer V0** consume normalized governance/current-state data. They may display evidence, blockers, reachability, provenance, coupling, field constraints, and explicit representation limits, but they cannot grant authority or promote a scientific state.
 
-A future State-Space Explorer is only current when merged into protected `main`. Continuous manifold/tensor metaphors remain conceptual unless exact formal semantics are implemented and verified; DGAF does not currently assign readiness distance, authorization probability, scalar evidence quality, or efficacy gradients.
+State-Space Explorer V0 is current accepted source state only as a **discrete categorical reachability projection**. Continuous manifold/tensor metaphors remain conceptual unless exact formal semantics are implemented and verified; DGAF does not currently assign readiness distance, authorization probability, scalar evidence quality, efficacy gradients, inferred consequence, or inferred reversibility.
 
 ## Repository assurance catalog
 
@@ -204,6 +205,7 @@ DGAF is **not** currently presented as:
 | **Primary-analysis authorization** | Separate permission to run the locked confirmatory analysis |
 | **Decision Frontier** | Presentation-only view of current state, blocker, reachable next action, and consequences |
 | **Governance Map** | Presentation-only structural view of vertical escalation, named lateral coupling, and global constraints |
+| **State-Space Explorer V0** | Presentation-only discrete reachability projection; not a continuous manifold or readiness score |
 | **Assurance catalog** | Partial machine-readable mapping of selected recurring repository assurance families |
 | **Fail closed** | Missing, stale, malformed, ambiguous, unrecoverable, or unclassified required evidence blocks promotion rather than being guessed |
 
