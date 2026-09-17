@@ -7,6 +7,11 @@ from pathlib import Path
 
 import pytest
 
+from scripts.validate_external_runtime_adapter import (
+    canonical_envelope_digest,
+    validate_external_runtime_envelope,
+)
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = REPO_ROOT / "registry/external_runtime_adapter_contract_v1.json"
 FIXTURE_ROOT = REPO_ROOT / "tests/resources/external_runtime_adapter"
@@ -89,8 +94,6 @@ def test_contract_rejection_taxonomy_is_stable() -> None:
 
 
 def test_valid_envelope_is_admitted_only_as_non_authoritative_input() -> None:
-    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-
     result = validate_external_runtime_envelope(
         valid_envelope(),
         now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc),
@@ -107,8 +110,6 @@ def test_valid_envelope_is_admitted_only_as_non_authoritative_input() -> None:
 
 
 def test_semantically_identical_envelopes_have_stable_record_identity() -> None:
-    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-
     first = valid_envelope()
     second = json.loads(json.dumps(first, indent=4, sort_keys=False))
     now = datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc)
@@ -167,8 +168,6 @@ def test_semantically_identical_envelopes_have_stable_record_identity() -> None:
     ],
 )
 def test_invalid_envelopes_fail_closed(mutator, expected_code: str) -> None:
-    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-
     envelope = valid_envelope()
     mutator(envelope)
     result = validate_external_runtime_envelope(
@@ -181,8 +180,6 @@ def test_invalid_envelopes_fail_closed(mutator, expected_code: str) -> None:
 
 
 def test_duplicate_effect_fails_closed_independent_of_event_identity() -> None:
-    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-
     replay_envelope = valid_envelope()
     replay_envelope["identity"]["event_id"] = "evt-002"
     replay = validate_external_runtime_envelope(
@@ -195,11 +192,6 @@ def test_duplicate_effect_fails_closed_independent_of_event_identity() -> None:
 
 
 def test_same_event_id_with_mutated_content_fails_closed() -> None:
-    from scripts.validate_external_runtime_adapter import (
-        canonical_envelope_digest,
-        validate_external_runtime_envelope,
-    )
-
     original = valid_envelope()
     seen_events = {"evt-001": canonical_envelope_digest(original)}
     mutated = copy.deepcopy(original)
@@ -215,8 +207,6 @@ def test_same_event_id_with_mutated_content_fails_closed() -> None:
 
 
 def test_unknown_required_risk_dimension_has_no_admissible_consequential_transition() -> None:
-    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-
     envelope = valid_envelope()
     envelope["request"] = {
         "action_class": "CONSEQUENTIAL_ACTION_REQUEST",
@@ -232,8 +222,6 @@ def test_unknown_required_risk_dimension_has_no_admissible_consequential_transit
 
 
 def test_external_assertions_never_promote_dgaf_state() -> None:
-    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-
     envelope = valid_envelope()
     envelope["assertions"] = {
         "verification_class": "VERIFIED",
@@ -249,8 +237,6 @@ def test_external_assertions_never_promote_dgaf_state() -> None:
 
 
 def test_provider_fixtures_preserve_neutral_semantics() -> None:
-    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
-
     valid = json.loads((FIXTURE_ROOT / "valid_envelope.json").read_text(encoding="utf-8"))
     substitution = json.loads((FIXTURE_ROOT / "provider_substitution.json").read_text(encoding="utf-8"))
     accepted = validate_external_runtime_envelope(
