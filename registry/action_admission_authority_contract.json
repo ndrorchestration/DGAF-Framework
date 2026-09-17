@@ -18,7 +18,7 @@
       "CONFLICTED"
     ],
     "crash_after_consume_before_effect": "NO_AUTOMATIC_RETRY_MANUAL_RECOVERY_REQUIRED",
-    "identity_fields": [
+    "record_identity_fields": [
       "version",
       "record_id",
       "action_class",
@@ -26,7 +26,16 @@
       "policy_id",
       "authorization.authorization_id",
       "action_digest"
-    ]
+    ],
+    "effect_identity_fields": [
+      "version",
+      "action_class",
+      "target",
+      "policy_id",
+      "authorization.authorization_id",
+      "action_digest"
+    ],
+    "consume_key": "EFFECT_IDENTITY"
   },
   "revocation": {
     "authority_outcomes": [
