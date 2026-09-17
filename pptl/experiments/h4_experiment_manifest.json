@@ -3,7 +3,17 @@
   "session": "S040-S041",
   "total_runs": 2520,
   "seed": 42,
-  "runner": "pptl/experiments/h4_task_stratified.py",
+  "evidence_status": "SYNTHETIC_HISTORICAL",
+  "empirical_efficacy_evidence": false,
+  "provenance": {
+    "historical_runner_claim": "pptl/experiments/h4_task_stratified.py",
+    "runner_binding_status": "CONTRADICTED",
+    "verified_runner": null,
+    "raw_population_status": "INCOMPLETE_NOT_VERIFIED",
+    "declared_total_runs": 2520,
+    "retained_raw_rows": 80,
+    "full_raw_population_retained": false
+  },
   "dimensions": {
     "topologies": ["phi_pentagon", "ring", "k5_full", "star"],
     "orch_modes": ["triad_a", "triad_b", "triad_c", "pipeline", "mesh", "centralized", "agents_as_tools"],
