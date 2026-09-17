@@ -208,3 +208,57 @@ def test_preflight_workflow_distinguishes_creation_from_retained_validation() ->
     assert "github.event.pull_request.base.sha" in block
     assert "--expected-candidate-sha" in block
     assert "--validate" in block
+
+
+def test_custody_validation_reads_receipt_fields_from_candidate_revision(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def git(*args: str) -> str:
+        return preflight.subprocess.check_output(["git", *args], cwd=repo, text=True).strip()
+
+    git("init", "-q")
+    git("config", "user.name", "DGAF Test")
+    git("config", "user.email", "dgaf-test@example.invalid")
+
+    receipt_path = repo / preflight.RECEIPT_REL
+    cert_path = repo / preflight.CERT_REL
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    cert_path.write_bytes((ROOT / preflight.CERT_REL).read_bytes())
+
+    certificate_sha = preflight.hashlib.sha256(cert_path.read_bytes()).hexdigest()
+    certificate_public_sha = preflight.certificate_public_key_der_sha256(cert_path)
+    candidate_key_sha = "3" * 64
+    candidate_receipt = {
+        "schema_version": 2,
+        "empirical_collection_authorized": False,
+        "certificate_sha256": certificate_sha,
+        "certificate_public_key_der_sha256": certificate_public_sha,
+        "recovered_public_key_der_sha256": certificate_public_sha,
+        "encrypted_private_key_sha256": candidate_key_sha,
+    }
+    receipt_path.write_text(json.dumps(candidate_receipt), encoding="utf-8")
+    git("add", preflight.RECEIPT_REL, preflight.CERT_REL)
+    git("commit", "-q", "-m", "candidate custody evidence")
+    candidate_sha = git("rev-parse", "HEAD")
+
+    working_receipt = deepcopy(candidate_receipt)
+    working_receipt["encrypted_private_key_sha256"] = "9" * 64
+    receipt_path.write_text(json.dumps(working_receipt), encoding="utf-8")
+
+    class Validator:
+        @staticmethod
+        def validate_receipt(receipt: dict[str, Any]) -> None:
+            return None
+
+    monkeypatch.setattr(preflight, "ROOT", repo)
+    monkeypatch.setattr(preflight, "RECEIPT_PATH", receipt_path)
+    monkeypatch.setattr(preflight, "CERT_PATH", cert_path)
+    monkeypatch.setattr(preflight, "load_custody_validator", lambda: Validator())
+
+    custody = preflight.validate_custody_artifacts(candidate_sha, working_receipt)
+
+    assert custody["custody_encrypted_private_key_sha256"] == candidate_key_sha
