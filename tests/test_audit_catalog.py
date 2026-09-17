@@ -5,7 +5,6 @@ import pytest
 
 from registry.audit_catalog import collect_catalog_violations, load_catalog
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = REPO_ROOT / "registry" / "audit_catalog.v1.json"
 
