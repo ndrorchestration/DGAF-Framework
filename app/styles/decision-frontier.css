@@ -1,0 +1,85 @@
+:root {
+  --field-grid: rgba(91, 216, 255, .055);
+  --field-filament: rgba(91, 216, 255, .34);
+  --field-boundary: rgba(247, 198, 108, .44);
+  --field-unreachable: rgba(255, 114, 126, .28);
+  --field-stratum: rgba(123, 169, 255, .08);
+}
+
+.decision-frontier {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+  background:
+    linear-gradient(var(--field-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--field-grid) 1px, transparent 1px),
+    radial-gradient(circle at 18% 8%, rgba(91, 216, 255, .09), transparent 24rem),
+    radial-gradient(circle at 84% 78%, rgba(167, 139, 250, .08), transparent 28rem),
+    linear-gradient(145deg, rgba(18, 27, 39, .96), rgba(8, 12, 18, .96));
+  background-size: 28px 28px, 28px 28px, auto, auto, auto;
+}
+
+.frontier-heading { margin-bottom: 22px; }
+.frontier-heading h3 { max-width: 780px; font-size: clamp(1.2rem, 2.1vw, 1.75rem); }
+.frontier-heading p { max-width: 850px; }
+.frontier-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 14px; color: var(--muted); font-family: var(--mono); font-size: .62rem; }
+.frontier-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.frontier-key { width: 15px; height: 8px; border-radius: 999px; border: 1px solid currentColor; }
+.frontier-key.established { color: var(--green); background: var(--green-soft); }
+.frontier-key.boundary { color: var(--amber); background: var(--amber-soft); }
+.frontier-key.unreachable { color: var(--red); background: repeating-linear-gradient(135deg, transparent 0 3px, currentColor 3px 4px); }
+
+.frontier-field { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+.frontier-path { position: absolute; left: 11%; right: 11%; top: 50%; height: 1px; background: linear-gradient(90deg, var(--green), var(--field-boundary) 50%, var(--field-filament)); opacity: .55; z-index: -1; }
+.frontier-path::after { content: ""; position: absolute; right: 0; top: -4px; width: 9px; height: 9px; border-top: 1px solid var(--cyan); border-right: 1px solid var(--cyan); transform: rotate(45deg); }
+.frontier-node { min-height: 205px; display: flex; flex-direction: column; gap: 10px; padding: 18px; border: 1px solid var(--border); border-radius: 14px; background: rgba(8, 13, 20, .9); box-shadow: 0 16px 32px rgba(0,0,0,.16); }
+.frontier-node[data-state="pass"] { border-color: rgba(86, 214, 154, .34); }
+.frontier-node[data-state="not_established"] { border-color: var(--field-boundary); box-shadow: inset 0 0 0 1px rgba(247, 198, 108, .07), 0 16px 32px rgba(0,0,0,.16); }
+.frontier-node-topline { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.frontier-node h4 { margin: 4px 0 0; line-height: 1.25; }
+.frontier-node p { margin: 0; font-size: .76rem; flex: 1; }
+.frontier-relation { color: var(--muted); font-family: var(--mono); font-size: .62rem; border-top: 1px solid var(--border-soft); padding-top: 10px; }
+
+.frontier-detail-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.frontier-stratum { padding: 15px; border-left: 2px solid var(--cyan); background: linear-gradient(90deg, var(--cyan-soft), transparent); }
+.frontier-stratum.consequence { border-left-color: var(--amber); background: linear-gradient(90deg, var(--amber-soft), transparent); }
+.frontier-stratum.receipt { border-left-color: var(--violet); background: linear-gradient(90deg, var(--violet-soft), transparent); }
+.frontier-stratum strong { display: block; margin: 7px 0 4px; font-size: .82rem; }
+.frontier-stratum p { margin: 0; font-size: .7rem; }
+.frontier-receipt-title { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.frontier-receipt-title strong { margin-right: auto; }
+
+.frontier-unreachable { position: relative; z-index: 1; margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--field-unreachable); display: grid; grid-template-columns: minmax(180px, .55fr) minmax(0, 1.45fr); gap: 20px; }
+.frontier-unreachable > div:first-child strong { display: block; margin-top: 7px; font-size: .82rem; }
+.frontier-unreachable-list { display: grid; gap: 8px; }
+.frontier-unreachable-item { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid rgba(255, 114, 126, .18); border-radius: 10px; background: repeating-linear-gradient(135deg, rgba(255,114,126,.025) 0 8px, transparent 8px 16px); }
+.frontier-unreachable-item > span { color: var(--red); font-family: var(--mono); font-weight: 900; }
+.frontier-unreachable-item strong { display: block; font-size: .72rem; }
+.frontier-unreachable-item small { display: block; color: var(--muted); margin-top: 3px; font-size: .62rem; line-height: 1.4; }
+
+.frontier-warning { position: relative; z-index: 1; margin-top: 16px; padding: 12px 14px; border: 1px solid rgba(247, 198, 108, .25); border-radius: 10px; background: rgba(247, 198, 108, .045); }
+.frontier-warning p { margin: 6px 0 0; color: #dfcfaa; font-size: .72rem; }
+
+@media (max-width: 980px) {
+  .frontier-field,
+  .frontier-detail-grid { grid-template-columns: 1fr; }
+  .frontier-path { left: 28px; right: auto; top: 8%; bottom: 8%; width: 1px; height: auto; background: linear-gradient(var(--green), var(--field-boundary) 50%, var(--field-filament)); }
+  .frontier-path::after { right: -4px; top: auto; bottom: 0; transform: rotate(135deg); }
+  .frontier-node { margin-left: 18px; min-height: 0; }
+  .frontier-unreachable { grid-template-columns: 1fr; }
+  .frontier-legend { justify-content: flex-start; }
+}
+
+@media (max-width: 640px) {
+  .decision-frontier { padding: 18px; background-size: 22px 22px, 22px 22px, auto, auto, auto; }
+  .frontier-node-topline,
+  .frontier-receipt-title { align-items: flex-start; flex-direction: column; }
+  .frontier-unreachable-item { grid-template-columns: 18px minmax(0, 1fr); }
+  .frontier-unreachable-item .status-chip { grid-column: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decision-frontier *,
+  .decision-frontier *::before,
+  .decision-frontier *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
