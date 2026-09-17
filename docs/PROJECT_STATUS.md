@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-As of the 2026-09-16 post-#728/#730/#732 reconciliation:
+As of the 2026-09-17 protected-main reconciliation through commit `6b89529da3e7ff13e14eaea415756579d859fb26`:
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -21,7 +21,7 @@ As of the 2026-09-16 post-#728/#730/#732 reconciliation:
 - successor dataset lock: **ESTABLISHED** through an accepted PASS `DATASET_LOCK_RECEIPT`;
 - successor bounded unblinding: **AUTHORIZED** for `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
 - successor materialization tooling: **ACCEPTED**, including Stage-1 PR #713 and Stage-2 operator bundle PR #715;
-- successor prospective primary-analysis authorization tooling: **ACCEPTED / TOOLING ONLY** through PR #728, with procedure reconciliation in PR #730 and current-state reconciliation in PR #732;
+- successor prospective primary-analysis authorization tooling: **ACCEPTED / TOOLING ONLY** through PR #728;
 - successor real materialization: **NOT ESTABLISHED**;
 - successor materialization receipt: **NOT ESTABLISHED**;
 - successor primary-analysis authorization event: **NOT ESTABLISHED**;
@@ -30,11 +30,34 @@ As of the 2026-09-16 post-#728/#730/#732 reconciliation:
 
 The accepted dataset-lock, bounded-unblinding, materialization-tooling, and primary-analysis-authorization-tooling records preserve separate event boundaries. They do not establish real materialization, a materialization receipt, primary-analysis authorization, efficacy, independent validation, or High-Assurance authorization.
 
-## Next admissible transition
+## Accepted repository presentation state
 
-The current frontier is no longer retained-byte admission, dataset locking, or authorization-tooling preparation. It remains **controlled operator-side materialization of the real retained Epoch 002 evidence**, followed by bounded evidence admission and a separate immutable materialization receipt.
+The Governance Command Center now contains two accepted presentation-only Semantic Control Field tranches on protected `main`:
 
-The accepted apparatus now provides:
+1. **Decision Frontier — PR #776**, merged as `3777b66277135a31da496661e0cb12e87cb05e3c`. It presents current governed state, evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics from the existing normalized governance model.
+2. **Governance Map — PR #779**, merged as `29a7467b24e6709342874a048dd75b674a090463`. It projects vertical escalation from canonical governance stages, explicit lateral relationships, and global field constraints without creating a second state engine or readiness score.
+
+These interfaces are explanatory projections. They do not create governance authority, authorize actions, establish deployment health, change scientific state, or promote empirical support.
+
+The next State-Space Explorer workstream is not yet accepted current state. Any open/draft State-Space PR remains candidate work until merged with fresh exact-head evidence.
+
+## Accepted repository assurance-inventory state
+
+Protected `main` now contains a machine-readable but explicitly partial recurring-assurance inventory:
+
+- **PR #780** introduced `registry/audit_catalog.v1.json` plus deterministic validation and preserved `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`;
+- **PR #782** added a workflow coverage-gap scanner that discovers `.github/workflows/*.yml|*.yaml` definitions not exactly bound by the catalog, without inferring that every unmapped workflow is or is not an assurance control;
+- **PR #785**, merged as `6b89529da3e7ff13e14eaea415756579d859fb26`, added seven source-verified recurring assurance families while explicitly preserving partial coverage.
+
+Current protected-main required status contexts remain separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. Catalog membership does not mean a workflow is a required branch-protection context, and non-membership means only **UNMAPPED / UNCLASSIFIED pending adjudication**, not “non-assurance.”
+
+Known assurance-inventory gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, Decision Frontier/other projection coverage, and historical family-versus-execution-instance reconciliation.
+
+## Next admissible scientific transition
+
+The current scientific frontier is still **controlled operator-side materialization of the real retained Epoch 002 evidence**, followed by bounded evidence admission and a separate immutable materialization receipt.
+
+The accepted apparatus provides:
 
 1. a controlled operator-side Stage-1 materializer with wrong-key/archive-drift and unsafe-archive fail-closed behavior;
 2. a non-secret Stage-2 evidence-bundle wrapper that records content-addressed identities without custody secrets;
@@ -46,4 +69,6 @@ Do not place private keys, passphrases, protected plaintext mappings, or other r
 
 ## Presentation boundary
 
-The owner-private DGAF Governance Console is a read-only companion presentation surface. It mirrors the current evidence boundary and provides creator/external reading modes, gate filtering, evidence inspection, and live repository freshness with a timestamped fallback. It is not a source of governance authority and cannot execute transitions. Its private URL is intentionally not recorded in this public repository.
+The DGAF Governance Command Center and ORBIT/Evidence Observer surfaces are read-only or presentation-layer companions to repository truth. They may expose current state, evidence, blockers, reachability, provenance, and runtime freshness, but they are not independent governance authorities and cannot upgrade evidence or scientific state.
+
+A deployment being READY, unavailable, stale, quota-blocked, or otherwise operationally healthy/unhealthy is a separate dimension from source verification, governance authority, experimental authorization, and empirical support.
