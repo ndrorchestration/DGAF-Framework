@@ -203,7 +203,8 @@ class ControlPlane:
     def submit(self, task: ControlTask) -> None:
         if task.task_id in self._tasks:
             raise ControlPlaneViolation(f"duplicate task_id: {task.task_id}")
-        self._lineage_limits.setdefault(task.lineage_id, task.envelope.budget.max_concurrency)
+        lineage = task.lineage_id or task.envelope.trace_id
+        self._lineage_limits.setdefault(lineage, task.envelope.budget.max_concurrency)
         self._tasks[task.task_id] = task
         self._ledgers[task.task_id] = BudgetLedger(task.envelope.budget)
         self._transition(task, TaskState.PREFLIGHT)
