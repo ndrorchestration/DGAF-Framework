@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-As of the 2026-09-17 protected-main reconciliation through commit `6b89529da3e7ff13e14eaea415756579d859fb26`:
+As of the 2026-09-17 protected-main reconciliation through commit `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`:
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -32,18 +32,19 @@ The accepted dataset-lock, bounded-unblinding, materialization-tooling, and prim
 
 ## Accepted repository presentation state
 
-The Governance Command Center now contains two accepted presentation-only Semantic Control Field tranches on protected `main`:
+The Governance Command Center now contains three accepted presentation-only Semantic Control Field tranches on protected `main`:
 
 1. **Decision Frontier — PR #776**, merged as `3777b66277135a31da496661e0cb12e87cb05e3c`. It presents current governed state, evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics from the existing normalized governance model.
 2. **Governance Map — PR #779**, merged as `29a7467b24e6709342874a048dd75b674a090463`. It projects vertical escalation from canonical governance stages, explicit lateral relationships, and global field constraints without creating a second state engine or readiness score.
+3. **State-Space Explorer V0 — PR #783**, merged as `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`. It projects canonical lifecycle stages into discrete categorical `established`, `frontier`, and `blocked_by_predecessor` regions while preserving each stage's native predicate state and explicit model limits.
 
 These interfaces are explanatory projections. They do not create governance authority, authorize actions, establish deployment health, change scientific state, or promote empirical support.
 
-The next State-Space Explorer workstream is not yet accepted current state. Any open/draft State-Space PR remains candidate work until merged with fresh exact-head evidence.
+State-Space Explorer V0 does **not** establish continuous tensor/manifold coordinates, authorization distance, readiness percentages, confidence scores, efficacy gradients, inferred consequence, or inferred reversibility. Consequence and reversibility remain explicitly **NOT MODELED — DO NOT INFER** in V0.
 
 ## Accepted repository assurance-inventory state
 
-Protected `main` now contains a machine-readable but explicitly partial recurring-assurance inventory:
+Protected `main` contains a machine-readable but explicitly partial recurring-assurance inventory:
 
 - **PR #780** introduced `registry/audit_catalog.v1.json` plus deterministic validation and preserved `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`;
 - **PR #782** added a workflow coverage-gap scanner that discovers `.github/workflows/*.yml|*.yaml` definitions not exactly bound by the catalog, without inferring that every unmapped workflow is or is not an assurance control;
@@ -51,7 +52,7 @@ Protected `main` now contains a machine-readable but explicitly partial recurrin
 
 Current protected-main required status contexts remain separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. Catalog membership does not mean a workflow is a required branch-protection context, and non-membership means only **UNMAPPED / UNCLASSIFIED pending adjudication**, not “non-assurance.”
 
-Known assurance-inventory gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, Decision Frontier/other projection coverage, and historical family-versus-execution-instance reconciliation.
+Known assurance-inventory gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
 
 ## Next admissible scientific transition
 
