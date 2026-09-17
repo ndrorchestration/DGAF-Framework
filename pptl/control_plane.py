@@ -10,6 +10,7 @@ from .branch_registry import BranchRecord, BranchRegistry
 from .budget_ledger import BudgetExceeded, Consumption, BudgetLedger
 from .governance_envelope import GovernanceEnvelope, ResourceBudget
 from .state_identity import StateRegistry
+from .triadic_governance_loop import TurnAuditRecord
 
 
 class TaskState(str, Enum):
@@ -275,11 +276,12 @@ class ControlPlane:
             self._escalate(task, "TGL runner exception")
             raise ControlPlaneViolation("TGL runner failed; task escalated") from exc
         status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
-        seal = getattr(result, "seal_hash", None)
-        if status is None or not isinstance(seal, str) or len(seal) != 64:
+        seal_valid = isinstance(result, TurnAuditRecord) and result.verify_seal()
+        if status is None or not seal_valid:
             self._set_runtime(task, reset_tgl=True)
             self._escalate(task, "TGL result lacks a valid cryptographic seal")
             raise ControlPlaneViolation("TGL result lacks valid sealed evidence")
+        seal = result.seal_hash
         self._set_runtime(task, tgl_status=status, tgl_seal=seal)
         self._events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
         if status in {"KILL", "KILL_REC"}:
