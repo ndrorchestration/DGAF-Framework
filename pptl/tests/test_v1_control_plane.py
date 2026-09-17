@@ -12,7 +12,6 @@ from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.state_identity import StateRegistry, canonical_state, state_id
 from pptl.triadic_governance_loop import TurnAuditRecord, TurnStatus
 
-
 VALID_SEAL = "0" * 64
 
 
@@ -372,9 +371,7 @@ def test_merge_ready_accepts_only_pass_status():
 
 
 def test_tgl_missing_seal_fails_closed():
-    plane = ControlPlane(
-        tgl_runner=lambda _input, _context: SimpleNamespace(final_status="PASS", seal_hash="")
-    )
+    plane = ControlPlane(tgl_runner=lambda _input, _context: SimpleNamespace(final_status="PASS", seal_hash=""))
     task = ControlTask("root", envelope())
     plane.submit(task)
     plane.admit("root")
