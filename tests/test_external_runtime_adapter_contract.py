@@ -11,6 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = REPO_ROOT / "registry/external_runtime_adapter_contract_v1.json"
 FIXTURE_ROOT = REPO_ROOT / "tests/resources/external_runtime_adapter"
 VALID_PAYLOAD_DIGEST = "sha256:1461f24e13616b569770490b5cd3f1a82082a6333b4087a66fde6a6763458515"
+MUTATED_PAYLOAD_DIGEST = "sha256:b00e423a78f460ea8c3699ec64ff401650794c8178d35b1603821e879a2ed03f"
 
 
 def load_contract() -> dict:
@@ -110,8 +111,9 @@ def test_semantically_identical_envelopes_have_stable_record_identity() -> None:
 
     first = valid_envelope()
     second = json.loads(json.dumps(first, indent=4, sort_keys=False))
-    left = validate_external_runtime_envelope(first, now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc))
-    right = validate_external_runtime_envelope(second, now=datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc))
+    now = datetime(2026, 9, 17, 14, 5, tzinfo=timezone.utc)
+    left = validate_external_runtime_envelope(first, now=now)
+    right = validate_external_runtime_envelope(second, now=now)
     assert left["record_id"] == right["record_id"]
 
 
@@ -200,7 +202,7 @@ def test_same_event_id_with_mutated_content_fails_closed() -> None:
     seen_events = {"evt-001": canonical_envelope_digest(original)}
     mutated = copy.deepcopy(original)
     mutated["evidence"]["payload"] = {"claim": "mutated"}
-    mutated["evidence"]["content_digest"] = "sha256:fc29893f4f94ea0a669911335654a8e2f78e3fc38f90708f6139ef1f2db99e82"
+    mutated["evidence"]["content_digest"] = MUTATED_PAYLOAD_DIGEST
     result = validate_external_runtime_envelope(
         mutated,
         seen_events=seen_events,
