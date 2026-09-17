@@ -46,7 +46,7 @@ export const DECISION_FRONTIER = {
   consequence: blocking.doesNotEstablish,
   receipt: {
     label: 'Immutable materialization receipt',
-    state: blocking.predicateState,
+    state: blocking.state,
     summary:
       'No accepted Epoch 002 MATERIALIZATION_RECEIPT exists. Execution evidence must remain non-secret and content-addressed before a separate receipt can be established.',
   },
