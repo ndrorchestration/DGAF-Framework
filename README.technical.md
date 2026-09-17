@@ -31,14 +31,14 @@ Current specifications: [`docs/gates/`](./docs/gates/)
 | Control checks | P-10, P-11, P-13 and related gate contracts |
 | Authority and promotion | Agent authority controls and project-defined promotion procedures |
 | Structural review | Project-local architecture and consistency checks |
-| Presentation projection | Decision Frontier, Governance Map, ORBIT/Evidence Observer |
+| Presentation projection | Decision Frontier, Governance Map, State-Space Explorer V0, ORBIT/Evidence Observer |
 | Assurance inventory | `registry/audit_catalog.v1.json`, coverage-gap scanner |
 
 ## Governance Command Center
 
 The current accepted source architecture is a decomposed Next.js application under `app/` with normalized governance state in `app/lib/`, dedicated presentation components under `app/components/`, and semantic styles under `app/styles/`.
 
-Two Semantic Control Field tranches are accepted on protected `main`:
+Three Semantic Control Field tranches are accepted on protected `main`:
 
 1. **Decision Frontier — PR #776**
    - derives from canonical governance stages rather than maintaining a second lifecycle;
@@ -49,8 +49,13 @@ Two Semantic Control Field tranches are accepted on protected `main`:
    - renders explicitly named lateral relationships rather than inferred coupling;
    - renders global field conditions separately from lifecycle stages;
    - preserves evidence/authorization/non-effect boundaries and avoids readiness percentages or continuous-state implications.
+3. **State-Space Explorer V0 — PR #783**
+   - derives canonical stage identity/order, native predicate state, and global constraints from the shared governance truth model;
+   - projects categorical `established`, `frontier`, and `blocked_by_predecessor` reachability separately from native stage state;
+   - classifies candidate dimensions as `projectable`, `bounded`, or `not_modeled` rather than inventing scalar coordinates;
+   - explicitly leaves consequence and reversibility **NOT MODELED — DO NOT INFER** and remains presentation-only.
 
-A later State-Space Explorer remains candidate work unless merged into protected `main`. Conceptual tensor/manifold research does not itself establish continuous coordinates, authorization distance, efficacy gradients, or any other quantitative state-space semantics.
+State-Space Explorer V0 establishes only a discrete categorical projection. Conceptual tensor/manifold research remains non-authoritative guidance unless later formalization defines and verifies exact continuous coordinates, transition geometry, authorization distance, efficacy gradients, or other quantitative state-space semantics.
 
 ## Repository assurance inventory
 
@@ -135,4 +140,4 @@ Historical implementation records and earlier terminology remain available for p
 
 ---
 
-*This reference is an implementation map, not a certification, regulatory-conformance statement, deployment attestation, or efficacy report. Updated 2026-09-17 through protected-main `6b89529d...`.*
+*This reference is an implementation map, not a certification, regulatory-conformance statement, deployment attestation, or efficacy report. Updated 2026-09-17 through protected-main `b1d91621...`.*
