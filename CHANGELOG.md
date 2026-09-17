@@ -4,6 +4,41 @@
 
 ---
 
+## [2026-09-17] — Semantic Control Field & Assurance Inventory Reconciliation
+
+### Governance Command Center
+
+- Merged **PR #776 — Decision Frontier** as a presentation-only Semantic Control Field tranche derived from canonical governance state.
+- Decision Frontier exposes current governed state, supporting evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics without creating a second state engine or readiness score.
+- Merged **PR #779 — Governance Map** after exact-head verification and rebase onto then-current protected `main`.
+- Governance Map renders canonical vertical escalation, four explicitly named lateral relationships, and global field constraints while keeping authority/authorization/evidence distinctions structural and inspectable.
+- Merged **PR #783 — State-Space Explorer V0** as signed/verified protected-main commit `b1d91621bd73e70866d5ff8fd38fb98e440b30e9` after all 21 returned pull-request workflow families completed SUCCESS on exact candidate `8b049154283cdb0a857e7e4742a118fcfa8e2e61`.
+- State-Space Explorer V0 projects canonical stages into discrete `established`, `frontier`, and `blocked_by_predecessor` regions while preserving native predicate state. Consequence and reversibility remain **NOT MODELED — DO NOT INFER**; continuous tensor/manifold coordinates, readiness distance, authorization probability, and efficacy gradients are not established.
+- Source verification for these UI tranches does not establish deployment health, governance authority, scientific authorization, empirical support, independent validation, or production certification.
+
+### Repository assurance inventory
+
+- Merged **PR #780** establishing `registry/audit_catalog.v1.json` and deterministic validation with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
+- Merged **PR #782** adding deterministic workflow coverage-gap discovery for current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by catalog `implementation` paths.
+- Merged **PR #785** at commit `6b89529da3e7ff13e14eaea415756579d859fb26`, adding seven source-verified recurring assurance families while preserving partial coverage.
+- Clarified that catalog membership is separate from protected-branch requiredness; current protected-main required contexts are **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**.
+- Clarified that `UNMAPPED` / `UNCLASSIFIED` is a fail-closed inventory state and does not mean a workflow is non-assurance.
+- Known catalog gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
+
+### Documentation reconciliation
+
+- Refreshed `docs/CURRENT_STATE.md`, `docs/PROJECT_STATUS.md`, `README.md`, `README.technical.md`, and `README.governance.md` to distinguish scientific state, presentation state, assurance inventory, protected-branch requiredness, and deployment/runtime state.
+- Reconciled the accepted presentation baseline through Decision Frontier #776, Governance Map #779, and State-Space Explorer V0 #783 while preserving their presentation-only authority boundary.
+- Preserved historical design specs, TDD lineage records, and superseded snapshots as provenance rather than rewriting them into current authority.
+
+### Scientific/control non-effects
+
+The accepted interface and assurance-inventory work does **not** establish real Epoch 002 materialization, a materialization receipt, primary-analysis authorization or execution, scientific-N promotion, canonical DGAF efficacy, independent validation, production certification, or High-Assurance authorization.
+
+The controlling canonical boundary remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**.
+
+---
+
 ## [2026-08-25] — Ecosystem Boundary Alignment
 
 ### Pattern Commons / commercialization / cross-disciplinary governance
@@ -97,7 +132,7 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 - P-40 Atomix Transactional Tool Boundary registered
 - P-41 Sentinel-Phi HITL Durable Queue registered
 - Layer 10 (Resilience & Recovery) and Layer 11 (Transactional Integrity) established
-- Registry watermark advanced to P-41
+- Registry watermark P-41
 - `topology_router.py` v3.6.0 — 8/8 TC passing
 - `lifecycle_stability_report.json` created
 
@@ -133,4 +168,4 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 
 ---
 
-*CHANGELOG · Amethyst × COLLEEN · Updated 2026-08-25*
+*CHANGELOG · Amethyst × COLLEEN · Updated 2026-09-17*
