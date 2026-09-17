@@ -78,9 +78,7 @@ def test_control_plane_rejects_arbitrary_64_character_seal() -> None:
 
 def test_control_plane_rejects_tampered_audit_after_sealing() -> None:
     audit = _sealed_audit()
-    audit.gate_records.append(
-        GateRecord(1, "P-31", "SCPE_Prune", GateResult.KILL, "tampered after seal")
-    )
+    audit.gate_records.append(GateRecord(1, "P-31", "SCPE_Prune", GateResult.KILL, "tampered after seal"))
     plane, task = _evaluating_plane(audit)
 
     with pytest.raises(ControlPlaneViolation, match="valid sealed evidence"):
