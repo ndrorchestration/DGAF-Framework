@@ -35,9 +35,9 @@ These additions do **not** amend the locked Track A Epoch 002 primary analysis, 
 
 Recent multi-agent research provides methodological precedent for treating communication structure and dependence as measurable variables:
 
-- Li et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921, uses communication-edge interventions/masking as part of causal topology analysis. https://arxiv.org/abs/2608.12921
-- Garg et al. (2025), *Correlated Errors in Large Language Models*, arXiv:2506.07962 / ICML 2025, documents substantial correlation among LLM errors. https://arxiv.org/abs/2506.07962
-- Wu, Li & Li (2025), *Can LLM Agents Really Debate?*, arXiv:2511.07784, studies majority pressure, correction, and group diversity in controlled multi-agent debate. https://arxiv.org/abs/2511.07784
+- Li et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921, uses communication-edge interventions/masking as part of causal topology analysis. [arXiv:2608.12921](https://arxiv.org/abs/2608.12921)
+- Garg et al. (2025), *Correlated Errors in Large Language Models*, arXiv:2506.07962 / ICML 2025, documents substantial correlation among LLM errors. [arXiv:2506.07962](https://arxiv.org/abs/2506.07962)
+- Wu, Li & Li (2025), *Can LLM Agents Really Debate?*, arXiv:2511.07784, studies majority pressure, correction, and group diversity in controlled multi-agent debate. [arXiv:2511.07784](https://arxiv.org/abs/2511.07784)
 
 These sources motivate questions and methods. They are not evidence of a PDMAL-specific advantage.
 
