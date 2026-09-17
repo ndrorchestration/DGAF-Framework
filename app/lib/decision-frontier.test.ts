@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 
-import { DECISION_FRONTIER } from './decision-frontier'
+import { DECISION_FRONTIER } from './decision-frontier.ts'
 
 test('decision frontier derives the current boundary from canonical governance stages', () => {
   assert.equal(DECISION_FRONTIER.current.label, 'Separate unblinding decision')
