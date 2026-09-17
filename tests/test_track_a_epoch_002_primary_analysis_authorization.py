@@ -113,7 +113,13 @@ def install_valid_event_fixture(monkeypatch: pytest.MonkeyPatch, validator):
     }
 
     def fake_git(*args: str) -> str:
-        if args == ("log", "--format=%H", "--", validator.MATERIALIZATION_RECEIPT_REL):
+        if args == (
+            "log",
+            "--format=%H",
+            parent,
+            "--",
+            validator.MATERIALIZATION_RECEIPT_REL,
+        ):
             return "\n".join(state["receipt_history"])
         if args == ("rev-list", "--parents", "-n", "1", receipt_event):
             return f"{receipt_event} {receipt_parent}"
@@ -263,6 +269,26 @@ def test_tooling_mode_preserves_authorization_and_result_absence() -> None:
     validator.validate_tooling_only()
 
 
+def test_event_shape_scopes_history_to_requested_event(monkeypatch: pytest.MonkeyPatch) -> None:
+    validator = load_validator()
+    head = "d" * 40
+    parent = "c" * 40
+
+    def fake_git(*args: str) -> str:
+        if args == ("rev-list", "--parents", "-n", "1", head):
+            return f"{head} {parent}"
+        if args == ("diff-tree", "--no-commit-id", "--name-only", "-r", head):
+            return validator.AUTH_REL
+        if args == ("log", "--format=%H", head, "--", validator.AUTH_REL):
+            return head
+        raise AssertionError(f"history escaped requested event scope: {args}")
+
+    monkeypatch.setattr(validator, "git", fake_git)
+    monkeypatch.setattr(validator, "git_object_exists", lambda spec: False)
+
+    assert validator.validate_authorization_event_shape(head) == parent
+
+
 def test_event_shape_rejects_extra_changed_file(monkeypatch: pytest.MonkeyPatch) -> None:
     validator = load_validator()
     head = "d" * 40
@@ -273,7 +299,7 @@ def test_event_shape_rejects_extra_changed_file(monkeypatch: pytest.MonkeyPatch)
             return f"{head} {parent}"
         if args[:4] == ("diff-tree", "--no-commit-id", "--name-only", "-r"):
             return f"{validator.AUTH_REL}\nREADME.md"
-        if args[:3] == ("log", "--format=%H", "--"):
+        if args == ("log", "--format=%H", head, "--", validator.AUTH_REL):
             return head
         raise AssertionError(f"unexpected git call: {args}")
 
@@ -294,7 +320,7 @@ def test_event_shape_rejects_preexisting_authorization(monkeypatch: pytest.Monke
             return f"{head} {parent}"
         if args[:4] == ("diff-tree", "--no-commit-id", "--name-only", "-r"):
             return validator.AUTH_REL
-        if args[:3] == ("log", "--format=%H", "--"):
+        if args == ("log", "--format=%H", head, "--", validator.AUTH_REL):
             return head
         raise AssertionError(f"unexpected git call: {args}")
 
