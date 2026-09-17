@@ -32,9 +32,7 @@ def summary_rows(
     return rows
 
 
-def test_h4_full_verdict_requires_task1_and_task2_non_dominance(
-    tmp_path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_h4_full_verdict_requires_task1_and_task2_non_dominance(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(h4, "OUTPUT_DIR", tmp_path)
 
     verdict = h4.evaluate_h4(summary_rows())
@@ -54,9 +52,7 @@ def test_h4_rejects_task2_specific_dominance(tmp_path, monkeypatch: pytest.Monke
     assert "H4 FULL VERDICT: PARTIAL" in verdict
 
 
-def test_h4_checks_both_comparison_triads_for_non_dominance(
-    tmp_path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_h4_checks_both_comparison_triads_for_non_dominance(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(h4, "OUTPUT_DIR", tmp_path)
 
     verdict = h4.evaluate_h4(summary_rows(task1=(0.69, 0.60, 0.70)))
@@ -67,11 +63,7 @@ def test_h4_checks_both_comparison_triads_for_non_dominance(
 
 def test_h4_missing_required_cell_fails_closed(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(h4, "OUTPUT_DIR", tmp_path)
-    summary = [
-        row
-        for row in summary_rows()
-        if not (row["mode"] == "triad_b" and row["task"] == "task2_creative")
-    ]
+    summary = [row for row in summary_rows() if not (row["mode"] == "triad_b" and row["task"] == "task2_creative")]
 
     with pytest.raises(ValueError, match="missing H4 summary cell"):
         h4.evaluate_h4(summary)
