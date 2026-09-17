@@ -34,6 +34,4 @@ def test_workflow_coverage_scanner_accepts_catalog_mapping_by_exact_implementati
         ],
     }
 
-    assert collect_unmapped_workflows(tmp_path, catalog) == [
-        ".github/workflows/beta.yaml"
-    ]
+    assert collect_unmapped_workflows(tmp_path, catalog) == [".github/workflows/beta.yaml"]
