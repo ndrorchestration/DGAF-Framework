@@ -129,6 +129,24 @@ Track independent evidence gain `DeltaE_c` separately. A candidate danger patter
 
 **Controls:** tool-call receipts, fallback-path logging, failure-mode labeling, and fail-closed independence claims.
 
+## Adjacent control-envelope threat: specification gaming
+
+Specification gaming is not a correlated-verification class, so it is not assigned a `CV-*` identifier. It is an adjacent threat that must be integrated into the action-admission design rather than hidden in a cross-reference.
+
+**Failure chain:**
+
+```text
+proxy specification
+  -> literal predicate compliance
+  -> omitted case exploited
+  -> formally compliant but harmful/unintended result
+  -> false assurance
+```
+
+The prospective control is an action-specific specification-gaming analysis recording what the verifier actually checks, the intended norm, known omissions, exploit scenarios, mitigations, and residual risk.
+
+See `ALIGNMENT_CONSTRAINT_LEDGER.md`.
+
 ## Dependence measurements
 
 No single metric establishes true statistical independence. The following are **audit features** for prospective evaluation.
@@ -180,7 +198,8 @@ A high-assurance verification workflow SHOULD:
 7. prevent an agent from self-approving a policy exception it requested;
 8. label unknown dependency information explicitly;
 9. avoid representing agent count as an independence count;
-10. fail closed when an action requires independent verification but independence cannot be established to the required policy threshold.
+10. fail closed when an action requires independent verification but independence cannot be established to the required policy threshold;
+11. permit `INCONCLUSIVE` or unresolved outcomes rather than forcing consensus where evidence is insufficient.
 
 These are prospective design requirements. Existing DGAF artifacts retain their exact accepted scope.
 

@@ -6,9 +6,11 @@
 
 ## Purpose
 
-This specification formalizes a governance pattern for agentic workflows in which evidence, authorization, execution, side effects, rollback, and audit must remain distinguishable states.
+This specification formalizes a governance pattern for agentic workflows in which evidence, authorization, execution, side effects, recovery, and audit remain distinguishable states.
 
 It is intentionally compatible with DGAF's fail-closed evidence discipline, but it does not alter any existing DGAF gate, accepted record, Track A state, or authorization.
+
+The associated prospective action-admission specification is `../governance/ALIGNMENT_CONSTRAINT_LEDGER.md`.
 
 ## State model
 
@@ -24,6 +26,7 @@ S_t = (
   authorization_state,
   artifact_state,
   execution_state,
+  recovery_state,
   audit_state
 )
 ```
@@ -40,26 +43,30 @@ S_(t+1) = T(S_t, action_t, evidence_t, authority_t)
 
 ```text
 PROPOSED
+  -> CANONICALIZED
   -> EVIDENCE_GATHERING
   -> VERIFICATION_PENDING
-  -> VERIFIED or REJECTED
+  -> VERIFIED or REJECTED or INCONCLUSIVE
   -> APPROVAL_PENDING
   -> AUTHORIZED or REJECTED
-  -> EXECUTION_PENDING
+  -> PREPARED
+  -> COMMIT_REVALIDATION
+  -> COMMIT_REVALIDATED or REJECTED
   -> EXECUTING
   -> EXECUTED or FAILED
-  -> VERIFIED_POSTCONDITION
+  -> POSTCONDITION_PENDING
+  -> VERIFIED_POSTCONDITION or POSTCONDITION_FAILED or POSTCONDITION_INCONCLUSIVE
   -> CLOSED
 ```
 
 Optional recovery transitions:
 
 ```text
-EXECUTING or EXECUTED
+EXECUTING or EXECUTED or POSTCONDITION_*
   -> CONTAINMENT
-  -> ROLLBACK_PENDING
-  -> ROLLED_BACK or ROLLBACK_FAILED
-  -> ESCALATED
+  -> ROLLBACK_PENDING or COMPENSATION_PENDING or ESCALATED
+  -> ROLLED_BACK or COMPENSATED or RECOVERY_FAILED
+  -> CLOSED or ESCALATED
 ```
 
 The named states are a reusable reference model. A concrete system may use different labels if their semantics remain explicit.
@@ -69,6 +76,7 @@ The named states are a reusable reference model. A concrete system may use diffe
 A governed action SHOULD bind, where applicable:
 
 - task/request identity;
+- canonical action identity and digest;
 - requesting agent or human identity;
 - executing agent/tool identity;
 - policy/rule-set identity and version;
@@ -76,9 +84,11 @@ A governed action SHOULD bind, where applicable:
 - evidence-set identity;
 - verifier identity;
 - approving authority identity;
+- authority/delegation-chain identity;
 - target resource identity;
+- environment/runtime identity;
 - resulting artifact or side-effect identity;
-- audit-event identity.
+- audit-event/receipt identity.
 
 Unknown identities must remain `UNKNOWN`; absence must not silently become equivalence or approval.
 
@@ -108,9 +118,9 @@ A valid authorization binds at minimum:
 (subject, action_class, target_scope, policy_version, validity_window)
 ```
 
-and, for high-risk actions, SHOULD also bind relevant artifact/evidence identities.
+and, for high-risk actions, SHOULD also bind the canonical action digest and relevant artifact/evidence identities.
 
-Authorization for one target, epoch, deployment, data set, or action class does not transfer by adjacency.
+Authorization for one target, epoch, deployment, data set, workflow composition, or action class does not transfer by adjacency.
 
 ### G4 — Self-approval of policy exceptions is prohibited
 
@@ -152,7 +162,7 @@ If provenance is unavailable, the workflow must label the claim accordingly rath
 RequiredVerifierFailed(x) -> not ProtectedTransition(x)
 ```
 
-Escalation to a separately authorized human or controller is permitted if the policy defines that path.
+Verifier unavailability is not auto-approval. Escalation to a separately authorized human or controller is permitted if the policy defines that path.
 
 ### G9 — Revocation invalidates future use
 
@@ -164,22 +174,86 @@ UseAuthorization(q, t > t_r) = FORBIDDEN
 
 Already completed actions remain historical facts and should not be rewritten as if they had not occurred.
 
-### G10 — Auditability must survive success and failure
+### G10 — Auditability survives success and failure
 
-A protected execution SHOULD emit or atomically bind an immutable/non-ambiguous event record containing:
+A protected execution SHOULD emit or atomically bind a non-ambiguous event record containing:
 
 - input/task identity;
+- canonical action identity/digest;
 - policy and authorization identity;
 - executor/tool identity;
 - time;
 - action class and target;
 - outcome;
 - resulting artifact/side-effect identity when available;
-- failure/rollback state.
+- postcondition state;
+- recovery/compensation state.
 
 Audit logging must avoid leaking protected secrets.
 
+### G11 — Delegation cannot widen authority
+
+```text
+DelegatedAuthority(child) subseteq DelegatedAuthority(parent)
+```
+
+Delegation cannot mint new capabilities, scope, budget, duration, exception rights, or recovery authority.
+
+### G12 — Action-specific approval is digest-bound
+
+Where policy uses action-specific approval:
+
+```text
+ApprovalDigest(a) == CommitDigest(a)
+```
+
+Material substitution invalidates the approval.
+
+### G13 — Commit-time revalidation is required for volatile predicates
+
+An authorization may be valid when issued but invalid at commit. Immediately before the side effect, required volatile predicates must still hold.
+
+```text
+Commit(a) -> RevalidatedAtCommit(a)
+```
+
+### G14 — Authorization is not automatically compositional
+
+```text
+Authorized(A) AND Authorized(B) -/-> Authorized(A then B)
+```
+
+Composition requires explicit policy closure or a separately governed workflow/action identity.
+
+### G15 — Postcondition failure does not erase execution
+
+```text
+Executed(a) AND PostconditionFailed(a) -> Executed(a)
+```
+
+The response is containment, rollback, compensation, or escalation—not historical rewriting.
+
+### G16 — Weaker evidence cannot increase authority
+
+For required evidence under the same policy and scope:
+
+```text
+EvidenceStrength(e2) <= EvidenceStrength(e1)
+  -> Authority(e2) <= Authority(e1)
+```
+
+This is a governance monotonicity requirement for future concrete policy definitions, not a universal numeric evidence metric.
+
 ## Transition guards
+
+### Proposed -> canonicalized
+
+Required guards SHOULD include:
+
+- action class selected from the accepted registry where applicable;
+- target scope explicit;
+- material parameters canonicalized;
+- canonical action digest recorded where approval/receipt binding requires it.
 
 ### Evidence gathering -> verification pending
 
@@ -198,7 +272,7 @@ Required guards may include:
 - verifier dependency requirements satisfied or explicitly waived by authorized policy;
 - contradictions recorded;
 - required provenance checks passed;
-- no unresolved blocking failure.
+- no unresolved blocking defeater.
 
 ### Approval pending -> authorized
 
@@ -208,17 +282,31 @@ Required guards may include:
 - policy version identified;
 - approver has authority for action and scope;
 - requester/approver separation satisfied where required;
-- authorization record created and bound to action scope.
+- delegation chain valid and non-widening where used;
+- authorization record created and bound to action scope/digest as policy requires.
 
-### Execution pending -> executing
+### Authorized -> prepared
+
+Preparation MAY stage data, build a provider request, or reserve resources, but it MUST NOT perform the protected side effect unless the policy explicitly defines preparation itself as the protected action and authorizes it.
+
+### Prepared -> commit revalidation
 
 Required guards may include:
 
-- authorization still valid;
+- authorization not expired, revoked, superseded, or consumed;
+- canonical action digest unchanged;
 - target identity unchanged;
+- policy identity still admitted;
+- delegation chain still valid;
 - artifact/configuration hashes unchanged where locked;
 - environment/tool identity admitted;
-- rate/cost/risk limits satisfied.
+- rate/cost/risk limits satisfied;
+- no active blocking defeater;
+- required dependency/verifier availability satisfied.
+
+### Commit revalidation -> executing
+
+Every required volatile predicate must be `TRUE`. `FALSE`, `UNKNOWN`, missing, stale, or identity-mismatched required predicates do not permit execution unless a separately authorized policy path explicitly resolves the condition.
 
 ### Executing -> executed
 
@@ -229,10 +317,28 @@ Required evidence includes an execution receipt or equivalent provider/tool evid
 Postconditions MAY include:
 
 - target reflects intended state;
-- no prohibited side effect observed;
+- no prohibited side effect observed within the declared observation boundary;
 - runtime identity matches authorized identity;
 - output/artifact hash matches receipt;
-- rollback capability remains intact where required.
+- recovery mechanism remains available where policy requires it.
+
+A failed/inconclusive required postcondition blocks closure or dependent actions where policy so specifies; it does not retroactively erase execution.
+
+## Recovery semantics
+
+Recovery MUST distinguish:
+
+```text
+REVERSIBLE
+COMPENSATABLE
+IRREVERSIBLE
+```
+
+- `REVERSIBLE` effects may use a tested rollback that restores the governed state within scope.
+- `COMPENSATABLE` effects use a new governed action to remediate without pretending the original event never happened.
+- `IRREVERSIBLE` effects require stronger pre-execution controls and containment/escalation because rollback is unavailable.
+
+For composed workflows, partial completion MUST have an explicit policy: forward recovery/retry, rollback, compensation, containment/escalation, or accepted partial state under separately recorded authority.
 
 ## Fail-closed decision rule
 
@@ -268,8 +374,10 @@ Preferred layering:
 
 ```text
 model/agent proposal
-  -> policy evaluator
+  -> action canonicalizer
+  -> policy/admissibility evaluator
   -> authorization verifier
+  -> commit-time revalidator
   -> typed tool gateway
   -> external system
   -> provider/runtime receipt
@@ -285,8 +393,10 @@ Research agent
   -> evidence verifier
   -> synthesizer
   -> human/separate approval authority
+  -> commit-time action digest / authority revalidation
   -> publishing gateway
   -> external publication receipt
+  -> postcondition/currentness check
 ```
 
 Required example invariants:
@@ -294,8 +404,9 @@ Required example invariants:
 - every material claim has linked evidence or explicit unsupported status;
 - a failed required verifier blocks publication or escalates;
 - agents cannot self-approve policy exceptions;
-- publishing gateway verifies a valid approval record;
-- final publication identity is captured after execution.
+- publishing gateway verifies a valid approval record for the exact action;
+- final publication identity is captured after execution;
+- later source revision may mark the publication's inputs stale/currentness-affected without rewriting the original provenance.
 
 ## Security considerations
 
@@ -306,10 +417,13 @@ The transition system SHOULD account for:
 - identity substitution;
 - prompt/tool injection;
 - policy-version drift;
-- approval-target mismatch;
+- approval-target/digest mismatch;
+- authority revocation races;
 - race conditions between validation and execution;
-- partial execution and rollback failure;
-- audit-log tampering;
+- delegation laundering or scope widening;
+- partial execution and rollback/compensation failure;
+- lineage fork/supersession ambiguity;
+- audit-log/receipt tampering;
 - secret exposure through logs or evidence records.
 
 ## Standards alignment
@@ -324,10 +438,13 @@ A concrete implementation SHOULD test this specification at multiple layers:
 
 1. state-machine/unit tests for legal and illegal transitions;
 2. property-based tests for malformed or missing evidence;
-3. model checking for small finite authorization/state models where practical;
-4. integration tests proving the tool gateway rejects unauthorized actions;
-5. adversarial tests for replay, target substitution, stale policy, and self-approval;
-6. provider/runtime readback proving successful actions occurred on the intended target.
+3. metamorphic tests for authority/evidence monotonicity;
+4. governance mutation tests, including mutation of verifier/control logic;
+5. model checking for small finite authorization/state models where practical;
+6. integration tests proving the tool gateway rejects unauthorized or stale actions;
+7. adversarial tests for replay, target substitution, stale policy, revocation race, delegation widening, and self-approval;
+8. provider/runtime readback proving successful actions occurred on the intended target;
+9. postcondition and recovery tests proving history is preserved across failure.
 
 ## Non-transfer rule
 
