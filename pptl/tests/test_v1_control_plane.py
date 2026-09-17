@@ -7,7 +7,12 @@ import pytest
 from pptl.branch_registry import BranchRecord, BranchRegistry
 from pptl.budget_ledger import BudgetExceeded, BudgetLedger, Consumption
 from pptl.commit_gate import CommitDenied, CommitGate, CommitRequest
-from pptl.control_plane import ControlPlane, ControlPlaneViolation, ControlTask, TaskState
+from pptl.control_plane import (
+    ControlPlane,
+    ControlPlaneViolation,
+    ControlTask,
+    TaskState,
+)
 from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.state_identity import StateRegistry, canonical_state, state_id
 from pptl.triadic_governance_loop import TurnAuditRecord, TurnStatus
