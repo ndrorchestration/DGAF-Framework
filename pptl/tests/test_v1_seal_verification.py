@@ -6,7 +6,12 @@ import pytest
 
 from pptl.control_plane import ControlPlane, ControlPlaneViolation, ControlTask, TaskState
 from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
-from pptl.triadic_governance_loop import GateRecord, GateResult, TurnAuditRecord, TurnStatus
+from pptl.triadic_governance_loop import (
+    GateRecord,
+    GateResult,
+    TurnAuditRecord,
+    TurnStatus,
+)
 
 
 def _budget() -> ResourceBudget:
