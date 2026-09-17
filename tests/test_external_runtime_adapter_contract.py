@@ -195,8 +195,10 @@ def test_duplicate_effect_fails_closed_independent_of_event_identity() -> None:
 
 
 def test_same_event_id_with_mutated_content_fails_closed() -> None:
-    from scripts.validate_external_runtime_adapter import canonical_envelope_digest
-    from scripts.validate_external_runtime_adapter import validate_external_runtime_envelope
+    from scripts.validate_external_runtime_adapter import (
+        canonical_envelope_digest,
+        validate_external_runtime_envelope,
+    )
 
     original = valid_envelope()
     seen_events = {"evt-001": canonical_envelope_digest(original)}
