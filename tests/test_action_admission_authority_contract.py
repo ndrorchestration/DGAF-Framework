@@ -27,7 +27,11 @@ def test_replay_contract_claims_at_most_once_not_exactly_once() -> None:
     assert replay["authority_outcomes"] == ["CONSUMED", "REPLAY", "UNAVAILABLE", "CONFLICTED"]
     assert replay["fail_closed_outcomes"] == ["REPLAY", "UNAVAILABLE", "CONFLICTED"]
     assert replay["crash_after_consume_before_effect"] == "NO_AUTOMATIC_RETRY_MANUAL_RECOVERY_REQUIRED"
-    assert replay["identity_fields"] == [
+
+    # Record identity supports duplicate-record detection, but at-most-once effect
+    # identity must not be defeatable by minting a fresh record_id for the same
+    # authorized consequential effect.
+    assert replay["record_identity_fields"] == [
         "version",
         "record_id",
         "action_class",
@@ -36,6 +40,16 @@ def test_replay_contract_claims_at_most_once_not_exactly_once() -> None:
         "authorization.authorization_id",
         "action_digest",
     ]
+    assert replay["effect_identity_fields"] == [
+        "version",
+        "action_class",
+        "target",
+        "policy_id",
+        "authorization.authorization_id",
+        "action_digest",
+    ]
+    assert "record_id" not in replay["effect_identity_fields"]
+    assert replay["consume_key"] == "EFFECT_IDENTITY"
 
 
 def test_revocation_contract_is_commit_time_and_fail_closed() -> None:
@@ -78,4 +92,6 @@ def test_commit_order_is_explicit_and_spec_disclaims_runtime_effect() -> None:
     assert "at-most-once" in spec.lower()
     assert "exactly-once is not established" in spec.lower()
     assert "does not admit a provider" in spec.lower()
+    assert "record id" in spec.lower()
+    assert "effect identity" in spec.lower()
     assert "PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0" in spec
