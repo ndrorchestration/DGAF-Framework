@@ -222,9 +222,9 @@ External literature supports the plausibility and importance of correlated model
 
 Methodology/context references:
 
-- Garg et al. (2025), *Correlated Errors in Large Language Models*, arXiv:2506.07962. https://arxiv.org/abs/2506.07962
-- Wu, Li & Li (2025), *Can LLM Agents Really Debate?*, arXiv:2511.07784. https://arxiv.org/abs/2511.07784
-- NIST, *Building Evaluation Probes into Agentic AI*. https://www.nist.gov/programs-projects/building-evaluation-probes-agentic-ai
+- Garg et al. (2025), *Correlated Errors in Large Language Models*, arXiv:2506.07962. [arXiv:2506.07962](https://arxiv.org/abs/2506.07962)
+- Wu, Li & Li (2025), *Can LLM Agents Really Debate?*, arXiv:2511.07784. [arXiv:2511.07784](https://arxiv.org/abs/2511.07784)
+- NIST, *Building Evaluation Probes into Agentic AI*. [NIST project page](https://www.nist.gov/programs-projects/building-evaluation-probes-agentic-ai)
 
 ## Falsification criteria
 
