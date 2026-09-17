@@ -8,9 +8,14 @@ The current accepted runtime remains bounded to `AAR_V1` for `AUDIT_COUNTER_UPDA
 
 ## Replay authority
 
-The target guarantee is **at-most-once authorized effect** for a given admitted action identity. Exactly-once is not established.
+The target guarantee is **at-most-once authorized effect** for a given admitted effect identity. Exactly-once is not established.
 
-A future durable replay authority must implement an atomic `CONSUME_ONCE` operation over an identity bound to the consequential AAR semantics, not only a caller-controlled record identifier. The canonical identity fields are:
+A future durable replay authority must implement an atomic `CONSUME_ONCE` operation over the **effect identity**, not merely over a caller-controlled record ID. Record identity and effect identity are distinct:
+
+- **Record identity** supports duplicate-record detection and includes `record_id` together with the consequential AAR semantics.
+- **Effect identity** is the replay-consume key for at-most-once protection and intentionally excludes `record_id`, so minting a fresh record ID cannot re-admit the same authorized consequential effect.
+
+The canonical record identity fields are:
 
 1. `version`
 2. `record_id`
@@ -19,6 +24,15 @@ A future durable replay authority must implement an atomic `CONSUME_ONCE` operat
 5. `policy_id`
 6. `authorization.authorization_id`
 7. `action_digest`
+
+The canonical effect identity fields are:
+
+1. `version`
+2. `action_class`
+3. `target`
+4. `policy_id`
+5. `authorization.authorization_id`
+6. `action_digest`
 
 The authority outcome vocabulary is `CONSUMED`, `REPLAY`, `UNAVAILABLE`, and `CONFLICTED`. Only `CONSUMED` permits progression. `REPLAY`, `UNAVAILABLE`, and `CONFLICTED` fail closed.
 
