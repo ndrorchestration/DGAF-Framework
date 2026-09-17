@@ -10,13 +10,24 @@ from pptl.commit_gate import CommitDenied, CommitGate, CommitRequest
 from pptl.control_plane import ControlPlane, ControlPlaneViolation, ControlTask, TaskState
 from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
 from pptl.state_identity import StateRegistry, canonical_state, state_id
+from pptl.triadic_governance_loop import TurnAuditRecord, TurnStatus
 
 
 VALID_SEAL = "0" * 64
 
 
-def tgl_result(status: str) -> SimpleNamespace:
-    return SimpleNamespace(final_status=status, seal_hash=VALID_SEAL)
+def tgl_result(status: str) -> TurnAuditRecord:
+    audit = TurnAuditRecord(
+        session_id="control-plane-test",
+        turn_index=1,
+        agent_id="test-agent",
+        input_hash="a" * 64,
+        gate_records=[],
+        final_status=TurnStatus(status),
+        timestamp="2026-09-17T00:00:00+00:00",
+    )
+    audit.seal()
+    return audit
 
 
 def budget(**overrides):
