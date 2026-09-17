@@ -1,14 +1,20 @@
 from pathlib import Path
 
-from registry.audit_catalog import collect_unmapped_workflows, load_catalog
+from registry import audit_catalog
+from registry.audit_catalog import load_catalog
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = REPO_ROOT / "registry" / "audit_catalog.v1.json"
 
 
+def _collect_unmapped_workflows(repo_root, catalog):
+    helper = getattr(audit_catalog, "collect_unmapped_workflows")
+    return helper(repo_root, catalog)
+
+
 def test_workflow_coverage_scanner_reports_current_unmapped_definitions():
     catalog = load_catalog(CATALOG_PATH)
-    unmapped = collect_unmapped_workflows(REPO_ROOT, catalog)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
 
     assert unmapped
     assert ".github/workflows/agent-ontology-adjudication.yml" in unmapped
@@ -34,4 +40,4 @@ def test_workflow_coverage_scanner_accepts_catalog_mapping_by_exact_implementati
         ],
     }
 
-    assert collect_unmapped_workflows(tmp_path, catalog) == [".github/workflows/beta.yaml"]
+    assert _collect_unmapped_workflows(tmp_path, catalog) == [".github/workflows/beta.yaml"]
