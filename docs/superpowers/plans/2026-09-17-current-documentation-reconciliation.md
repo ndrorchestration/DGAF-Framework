@@ -25,10 +25,12 @@
 ### Task 1: Reconcile primary current-state surfaces
 
 **Files:**
+
 - Modify: `docs/CURRENT_STATE.md`
 - Modify: `docs/PROJECT_STATUS.md`
 
 **Interfaces:**
+
 - Consumes: accepted protected-main history through `6b89529d...`
 - Produces: current-facing repository state used by public and governance references
 
@@ -41,11 +43,13 @@
 ### Task 2: Reconcile public and technical entry points
 
 **Files:**
+
 - Modify: `README.md`
 - Modify: `README.technical.md`
 - Modify: `README.governance.md`
 
 **Interfaces:**
+
 - Consumes: reconciled current-state language from Task 1
 - Produces: public, engineering, and governance-facing descriptions consistent with the same truth model
 
@@ -57,9 +61,11 @@
 ### Task 3: Record the accepted change sequence
 
 **Files:**
+
 - Modify: `CHANGELOG.md`
 
 **Interfaces:**
+
 - Consumes: merged PR identities #776, #779, #780, #782, #785
 - Produces: dated repository history without redefining current authority
 
@@ -70,9 +76,11 @@
 ### Task 4: Verify documentation-only scope
 
 **Files:**
+
 - Review all modified Markdown files.
 
 **Interfaces:**
+
 - Consumes: branch diff
 - Produces: documentation-only candidate suitable for repository CI
 
