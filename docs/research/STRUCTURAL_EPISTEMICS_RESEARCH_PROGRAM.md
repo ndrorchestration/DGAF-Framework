@@ -237,11 +237,11 @@ The direction arrows above denote a research model, not demonstrated causation.
 
 These sources provide methodology or external context. They are **not evidence that DGAF or PDMAL has achieved the corresponding outcomes**.
 
-- Garg, A., Kim, E., Peng, K., & Garg, N. (2025), *Correlated Errors in Large Language Models*, arXiv:2506.07962 / ICML 2025. https://arxiv.org/abs/2506.07962
-- Wu, H., Li, Z., & Li, L. (2025), *Can LLM Agents Really Debate? A Controlled Study of Multi-Agent Debate in Logical Reasoning*, arXiv:2511.07784. https://arxiv.org/abs/2511.07784
-- Li, J. et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921. https://arxiv.org/abs/2608.12921
-- NIST, *Accelerating the Adoption of Software and AI Agent Identity and Authorization* (2026 concept paper). https://csrc.nist.gov/pubs/other/2026/02/05/accelerating-the-adoption-of-software-and-ai-agent/ipd
-- NIST, *Building Evaluation Probes into Agentic AI*. https://www.nist.gov/programs-projects/building-evaluation-probes-agentic-ai
+- Garg, A., Kim, E., Peng, K., & Garg, N. (2025), *Correlated Errors in Large Language Models*, arXiv:2506.07962 / ICML 2025. [arXiv:2506.07962](https://arxiv.org/abs/2506.07962)
+- Wu, H., Li, Z., & Li, L. (2025), *Can LLM Agents Really Debate? A Controlled Study of Multi-Agent Debate in Logical Reasoning*, arXiv:2511.07784. [arXiv:2511.07784](https://arxiv.org/abs/2511.07784)
+- Li, J. et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921. [arXiv:2608.12921](https://arxiv.org/abs/2608.12921)
+- NIST, *Accelerating the Adoption of Software and AI Agent Identity and Authorization* (2026 concept paper). [NIST concept paper](https://csrc.nist.gov/pubs/other/2026/02/05/accelerating-the-adoption-of-software-and-ai-agent/ipd)
+- NIST, *Building Evaluation Probes into Agentic AI*. [NIST project page](https://www.nist.gov/programs-projects/building-evaluation-probes-agentic-ai)
 
 ## Falsification discipline
 
