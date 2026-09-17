@@ -1,5 +1,5 @@
-import { GOVERNANCE_STAGES, NEXT_TRANSITION } from './governance'
-import type { UiState } from './types'
+import { GOVERNANCE_STAGES, NEXT_TRANSITION } from './governance.ts'
+import type { UiState } from './types.ts'
 
 export interface DecisionFrontierTransition {
   id: string
