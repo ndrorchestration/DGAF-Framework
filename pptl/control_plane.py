@@ -203,8 +203,7 @@ class ControlPlane:
     def submit(self, task: ControlTask) -> None:
         if task.task_id in self._tasks:
             raise ControlPlaneViolation(f"duplicate task_id: {task.task_id}")
-        lineage = task.lineage_id or task.envelope.trace_id
-        self._lineage_limits.setdefault(lineage, task.envelope.budget.max_concurrency)
+        self._lineage_limits.setdefault(task.lineage_id, task.envelope.budget.max_concurrency)
         self._tasks[task.task_id] = task
         self._ledgers[task.task_id] = BudgetLedger(task.envelope.budget)
         self._transition(task, TaskState.PREFLIGHT)
@@ -259,3 +258,144 @@ class ControlPlane:
         if self._lineage_active.get(lineage, 0) >= self._lineage_limits[lineage]:
             self._escalate(task, "active concurrency limit reached")
             return
+        try:
+            self._ledgers[task_id].acquire_concurrency()
+            self._ledgers[task_id].consume(Consumption(rounds=1, nodes=1))
+        except BudgetExceeded as exc:
+            if self._ledgers[task_id].active_concurrency:
+                self._ledgers[task_id].release_concurrency()
+            self._events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
+            self._escalate(task, str(exc))
+            return
+        self._lineage_active[lineage] = self._lineage_active.get(lineage, 0) + 1
+        self._set_runtime(task, concurrency=True)
+        self._transition(task, TaskState.EXPANDING)
+
+    def begin_evaluation(self, task_id: str) -> None:
+        task = self._task(task_id)
+        self._transition(task, TaskState.EVALUATING)
+        self._set_runtime(task, reset_tgl=True)
+
+    def evaluate_turn(self, task_id: str, input_text: str, context: dict[str, Any] | None = None) -> Any:
+        if self._tgl_runner is None:
+            raise ControlPlaneViolation("no TGL runner configured")
+        task = self._task(task_id)
+        if task.state is not TaskState.EVALUATING:
+            raise ControlPlaneViolation("TGL evaluation requires EVALUATING state")
+        try:
+            result = self._tgl_runner(input_text, context or {})
+        except Exception as exc:
+            self._events.append({"event": "TGL_RUNNER_FAILURE", "task_id": task_id, "reason": str(exc)})
+            self._escalate(task, "TGL runner exception")
+            raise ControlPlaneViolation("TGL runner failed; task escalated") from exc
+        status = getattr(getattr(result, "final_status", None), "value", getattr(result, "final_status", None))
+        seal_valid = isinstance(result, TurnAuditRecord) and result.verify_seal()
+        if status is None or not seal_valid:
+            self._set_runtime(task, reset_tgl=True)
+            self._escalate(task, "TGL result lacks a valid cryptographic seal")
+            raise ControlPlaneViolation("TGL result lacks valid sealed evidence")
+        seal = result.seal_hash
+        self._set_runtime(task, tgl_status=status, tgl_seal=seal)
+        self._events.append({"event": "TGL_EVALUATED", "task_id": task_id, "status": status, "seal_hash": seal})
+        if status in {"KILL", "KILL_REC"}:
+            self.veto(task_id, "TGL terminal failure")
+        elif status == "ESCALATE":
+            self._escalate(task, "TGL escalation")
+        return result
+
+    def mark_merge_ready(self, task_id: str) -> None:
+        task = self._task(task_id)
+        if task.state is not TaskState.EVALUATING:
+            raise ControlPlaneViolation("merge readiness requires EVALUATING state")
+        if task.last_tgl_status != "PASS" or not task.last_tgl_seal:
+            raise ControlPlaneViolation("merge readiness requires successful sealed TGL evaluation")
+        self._transition(task, TaskState.MERGE_READY)
+
+    def mark_commit_ready(self, task_id: str) -> None:
+        task = self._task(task_id)
+        if task.envelope.side_effect_mode != "COMMIT_ALLOWED":
+            raise ControlPlaneViolation("task envelope does not permit commit")
+        self._transition(task, TaskState.COMMIT_READY)
+
+    def veto(self, task_id: str, reason: str) -> None:
+        task = self._task(task_id)
+        self._events.append({"event": "VETO", "task_id": task_id, "reason": reason})
+        self._escalate(task, reason)
+
+    def terminate(self, task_id: str) -> None:
+        task = self._task(task_id)
+        self._transition(task, TaskState.TERMINATED)
+        self._release_concurrency(task)
+
+    def create_child(
+        self,
+        parent_id: str,
+        *,
+        task_id: str,
+        trace_id: str,
+        authority_scope: set[str],
+        permitted_tools: set[str],
+        data_classes: set[str],
+        envelope_budget: ResourceBudget,
+        side_effect_mode: str | None = None,
+    ) -> ControlTask:
+        parent = self._task(parent_id)
+        if parent.state not in {TaskState.ADMITTED, TaskState.EXPANDING, TaskState.EVALUATING}:
+            raise ControlPlaneViolation("child creation requires an active parent task")
+        if parent.depth + 1 > parent.envelope.budget.max_depth:
+            raise ControlPlaneViolation("child exceeds maximum recursion depth")
+        child = ControlTask(
+            task_id=task_id,
+            depth=parent.depth + 1,
+            lineage_id=parent.lineage_id,
+            envelope=parent.envelope.derive_child(
+                trace_id=trace_id,
+                task_id=task_id,
+                authority_scope=authority_scope,
+                permitted_tools=permitted_tools,
+                data_classes=data_classes,
+                budget=envelope_budget,
+                side_effect_mode=side_effect_mode,
+            ),
+        )
+        candidate_snapshot = child.snapshot()
+        if self._state_registry.contains(candidate_snapshot):
+            raise ControlPlaneViolation("repeated orchestration state")
+        self.submit(child)
+        self._state_registry.observe(child.snapshot())
+        return child
+
+    def register_branch(self, branch: BranchRecord) -> None:
+        self._branches.add(branch)
+        self._events.append(
+            {
+                "event": "BRANCH_RECORDED",
+                "branch_id": branch.branch_id,
+                "policy_verdict": branch.policy_verdict,
+                "merge_status": branch.merge_status,
+            }
+        )
+
+    def consume(self, task_id: str, amount: Consumption) -> None:
+        task = self._task(task_id)
+        if task.state in {TaskState.ESCALATED, TaskState.TERMINATED}:
+            raise ControlPlaneViolation("terminal task cannot consume additional resources")
+        try:
+            self._ledgers[task_id].consume(amount)
+        except BudgetExceeded as exc:
+            self._events.append({"event": "BUDGET_EXCEEDED", "task_id": task_id, "reason": str(exc)})
+            self._escalate(task, str(exc))
+            raise
+
+    def _transition(self, task: ControlTask, new_state: TaskState) -> None:
+        if new_state not in _ALLOWED[task.state]:
+            raise ControlPlaneViolation(f"illegal transition {task.state.value} -> {new_state.value}")
+        task._state_history.append(task.state.value)
+        self._set_runtime(task, state=new_state)
+        self._events.append({"event": "STATE", "task_id": task.task_id, "state": new_state.value})
+
+    def _task(self, task_id: str) -> ControlTask:
+        try:
+            return self._tasks[task_id]
+        except KeyError as exc:
+            raise KeyError(task_id) from exc
