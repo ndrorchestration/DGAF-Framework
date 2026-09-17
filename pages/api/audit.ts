@@ -1,13 +1,13 @@
 // pages/api/audit.ts — Pages Router API
 // ⚠️  STATE RESETS ON COLD START — in-memory only.
-// Production upgrade path: replace `state` with Vercel KV reads/writes.
+// Production upgrade path: bind `state` to an admitted durable store after dependency admission.
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { consumeAuditAdmission, validateAuditAdmission } from '../../app/lib/action-admission.ts'
 
 export const COLD_START_WARNING =
   'Audit counters are in-memory and reset on each serverless cold start. ' +
-  'Wire to Vercel KV for persistence.'
+  'Configure an admitted durable store before relying on persistent audit state.'
 
 const state = {
   turn_count: 0,
