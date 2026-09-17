@@ -12,6 +12,7 @@ from scripts import validate_track_a_epoch_002_collection_authorization as autho
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNNER_PATH = ROOT / "experiments/pdmal_pilot/run_track_a_epoch_002.py"
+WORKFLOW_PATH = ROOT / ".github/workflows/track-a-epoch-002-collection-authorization-boundary.yml"
 CONTRACT = json.loads((ROOT / "docs/experiment/TRACK_A_EPOCH_002_RUNNER_CONTRACT.json").read_text(encoding="utf-8"))
 
 SAMPLE_CUSTODY = {
@@ -175,3 +176,10 @@ def test_current_contract_stays_not_authorized() -> None:
     assert contract["primary_analysis"] == "NOT_AUTHORIZED"
     assert contract["scientific_n_increment"] == 0
     assert contract["authorization"]["collection_authorized"] is False
+
+
+def test_workflow_validates_authorization_event_only_when_auth_path_changed() -> None:
+    text = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert 'git diff --quiet "${{ github.event.pull_request.base.sha }}...HEAD" -- \\' in text
+    assert '"docs/experiment/track_a_runs/TRACK_A_EPOCH_002_COLLECTION_AUTHORIZATION.json"' in text
+    assert "AUTHORIZATION_EVENT_VALIDATION=SKIPPED_UNCHANGED" in text

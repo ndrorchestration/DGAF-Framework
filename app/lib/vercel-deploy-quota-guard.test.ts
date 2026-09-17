@@ -75,6 +75,8 @@ test('only proven inert surfaces are classified SKIP', () => {
     ['schemas/example.schema.json'],
     ['tests/test_example.py'],
     ['.github/workflows/claim-hygiene.yml'],
+    ['scripts/prepare_track_a_epoch_002_precollection_preflight.py'],
+    ['scripts/validate_track_a_epoch_002_collection_authorization.py'],
     ['docs/status.md', 'schemas/example.json', 'tests/test_example.py'],
   ]) {
     const result = runDecision(changed)
@@ -83,7 +85,7 @@ test('only proven inert surfaces are classified SKIP', () => {
   }
 })
 
-test('runtime, scripts, deploy control, config, unknown, mixed, and empty changes classify BUILD', () => {
+test('runtime, unclassified scripts, deploy control, config, unknown, mixed, and empty changes classify BUILD', () => {
   const cases = [
     ['scripts/validate_example.py'],
     ['scripts/vercel-ignore-build.mjs'],

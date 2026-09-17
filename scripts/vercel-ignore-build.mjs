@@ -2,7 +2,14 @@
 
 import { spawnSync } from 'node:child_process'
 
-const SAFE_SKIP_PREFIXES = ['.github/', 'docs/', 'schemas/', 'tests/']
+const SAFE_SKIP_PREFIXES = [
+  '.github/',
+  'docs/',
+  'schemas/',
+  'tests/',
+  'scripts/prepare_track_a_',
+  'scripts/validate_track_a_',
+]
 const FORCE_BUILD_PATHS = new Set(['.github/workflows/deploy.yml'])
 
 function canSafelySkip(changedPaths) {

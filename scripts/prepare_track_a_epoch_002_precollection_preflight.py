@@ -65,11 +65,28 @@ def git(*args: str) -> str:
         fail(f"git {' '.join(args)} failed ({exc.returncode})")
 
 
+def git_bytes(path: str, revision: str) -> bytes:
+    try:
+        return subprocess.check_output(["git", "show", f"{revision}:{path}"], cwd=ROOT)
+    except subprocess.CalledProcessError as exc:
+        fail(f"git show {revision}:{path} failed ({exc.returncode})")
+
+
 def load_object(path: Path, label: str) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         fail(f"invalid or missing {label}: {exc}")
+    if not isinstance(value, dict):
+        fail(f"{label} must be a JSON object")
+    return value
+
+
+def load_git_object(path: str, revision: str, label: str) -> dict[str, Any]:
+    try:
+        value = json.loads(git_bytes(path, revision).decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        fail(f"invalid {label} in candidate {revision}: {exc}")
     if not isinstance(value, dict):
         fail(f"{label} must be a JSON object")
     return value
@@ -106,16 +123,13 @@ def git_blob(path: str, revision: str) -> str:
     return git("rev-parse", f"{revision}:{path}").lower()
 
 
-def sha256_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def certificate_public_key_der_sha256(path: Path) -> str:
+def certificate_public_key_der_sha256_bytes(certificate_pem: bytes) -> str:
     if shutil.which("openssl") is None:
         fail("OpenSSL is required to verify the public certificate")
     try:
         public_pem = subprocess.check_output(
-            ["openssl", "x509", "-in", str(path), "-pubkey", "-noout"],
+            ["openssl", "x509", "-pubkey", "-noout"],
+            input=certificate_pem,
             cwd=ROOT,
         )
         public_der = subprocess.check_output(
@@ -217,9 +231,12 @@ def require_candidate_sources(contract: dict[str, Any], candidate_sha: str) -> s
     return candidate_tree
 
 
-def validate_custody_artifacts(candidate_sha: str, receipt: dict[str, Any]) -> dict[str, str]:
+def validate_custody_artifacts(candidate_sha: str, _receipt: dict[str, Any]) -> dict[str, str]:
     if not git_path_exists(RECEIPT_REL, candidate_sha) or not git_path_exists(CERT_REL, candidate_sha):
         fail("custody receipt and public certificate must already be committed in candidate")
+
+    receipt = load_git_object(RECEIPT_REL, candidate_sha, "schema-v2 custody receipt")
+    certificate_pem = git_bytes(CERT_REL, candidate_sha)
 
     try:
         load_custody_validator().validate_receipt(receipt)
@@ -230,11 +247,9 @@ def validate_custody_artifacts(candidate_sha: str, receipt: dict[str, Any]) -> d
         fail("custody receipt must use schema version 2")
     if receipt.get("empirical_collection_authorized") is not False:
         fail("custody receipt must not authorize empirical collection")
-    if not CERT_PATH.is_file():
-        fail("public custody certificate absent from working tree")
 
-    certificate_sha = sha256_file(CERT_PATH)
-    certificate_public_sha = certificate_public_key_der_sha256(CERT_PATH)
+    certificate_sha = hashlib.sha256(certificate_pem).hexdigest()
+    certificate_public_sha = certificate_public_key_der_sha256_bytes(certificate_pem)
     if receipt.get("certificate_sha256") != certificate_sha:
         fail("custody certificate SHA-256 mismatch")
     if receipt.get("certificate_public_key_der_sha256") != certificate_public_sha:
@@ -340,8 +355,7 @@ def expected_record_for_candidate(candidate_sha: str) -> dict[str, Any]:
     contract = load_object(CONTRACT_PATH, "runner contract")
     validate_contract_boundary(contract)
     candidate_tree = require_candidate_sources(contract, candidate_sha)
-    receipt = load_object(RECEIPT_PATH, "schema-v2 custody receipt")
-    custody = validate_custody_artifacts(candidate_sha, receipt)
+    custody = validate_custody_artifacts(candidate_sha, {})
     return expected_record(
         contract,
         candidate_sha=candidate_sha,
