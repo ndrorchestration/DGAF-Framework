@@ -43,10 +43,10 @@ It is not a substitute for each project's canonical evidence or control-state au
 
 ## External context references
 
-- Garg et al. (2025), *Correlated Errors in Large Language Models*, arXiv:2506.07962. https://arxiv.org/abs/2506.07962
-- Wu, Li & Li (2025), *Can LLM Agents Really Debate?*, arXiv:2511.07784. https://arxiv.org/abs/2511.07784
-- Li et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921. https://arxiv.org/abs/2608.12921
-- NIST (2026), *Accelerating the Adoption of Software and AI Agent Identity and Authorization*. https://csrc.nist.gov/pubs/other/2026/02/05/accelerating-the-adoption-of-software-and-ai-agent/ipd
+- Garg et al. (2025), *Correlated Errors in Large Language Models*, arXiv:2506.07962. [arXiv:2506.07962](https://arxiv.org/abs/2506.07962)
+- Wu, Li & Li (2025), *Can LLM Agents Really Debate?*, arXiv:2511.07784. [arXiv:2511.07784](https://arxiv.org/abs/2511.07784)
+- Li et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921. [arXiv:2608.12921](https://arxiv.org/abs/2608.12921)
+- NIST (2026), *Accelerating the Adoption of Software and AI Agent Identity and Authorization*. [NIST concept paper](https://csrc.nist.gov/pubs/other/2026/02/05/accelerating-the-adoption-of-software-and-ai-agent/ipd)
 
 These sources support methodology/context only; they do not establish any row as an empirical result in the named NDR project.
 
