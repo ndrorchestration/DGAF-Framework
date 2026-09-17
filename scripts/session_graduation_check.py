@@ -101,9 +101,7 @@ def check_zero_open_blgs(anchor_path: Path) -> tuple[bool, str]:
     blg_section = blg_section_match.group(0)
     rows = re.findall(r"\|\s*(S\d+-BLG-\S+|S\d+\s+\S+)\s*\|\s*(.+?)\s*\|", blg_section)
     open_blgs = [
-        (ref, status)
-        for ref, status in rows
-        if "\u2705 CLOSED" not in status and "ALL RESOLVED" not in status
+        (ref, status) for ref, status in rows if "\u2705 CLOSED" not in status and "ALL RESOLVED" not in status
     ]
     if not open_blgs:
         return True, f"BLG Status: all entries resolved ({len(rows)} total)"
