@@ -26,12 +26,14 @@
 ### Task 1: Consequential Action Registry
 
 **Files:**
+
 - Create: `governance/action_registry.json`
 - Create: `governance/action_registry.schema.json`
 - Create: `tools/validate_action_registry.py`
 - Test: `tests/test_action_registry.py`
 
 **Interfaces:**
+
 - Consumes: existing DGAF governance identity conventions.
 - Produces: `ActionRegistry`, registry version, action-class lookup, `requires_aar(action_class) -> bool`, declared risk/reversibility metadata.
 
@@ -45,10 +47,12 @@
 ### Task 2: Canonical Action Identity
 
 **Files:**
+
 - Create: `governance/action_identity.py`
 - Test: `tests/test_action_identity.py`
 
 **Interfaces:**
+
 - Consumes: action class, actor, exact target scope, canonical parameters, intended effect, policy identity, material input identities.
 - Produces: deterministic canonical representation and SHA-256 `canonical_action_digest`.
 
@@ -62,11 +66,13 @@
 ### Task 3: Machine-Readable Action Admission Record
 
 **Files:**
+
 - Create: `governance/action_admission_record.schema.json`
 - Create: `governance/action_admission.py`
 - Test: `tests/test_action_admission_schema.py`
 
 **Interfaces:**
+
 - Consumes: canonical action identity, registry metadata, authority chain, policy identity, evidence/verifier refs, validity, composition, execution, recovery, provenance, residual-risk fields.
 - Produces: parsed/validated AAR and typed validation errors; no authorization side effect.
 
@@ -81,10 +87,12 @@
 ### Task 4: Authority Chain and Attenuation Validator
 
 **Files:**
+
 - Create: `governance/authority_chain.py`
 - Test: `tests/test_authority_chain.py`
 
 **Interfaces:**
+
 - Consumes: ordered delegation chain with parent/child scopes, validity, revocation state, actor identities.
 - Produces: `VALID`, `INVALID`, or `INCONCLUSIVE` plus typed reasons. `INCONCLUSIVE` is non-authorizing.
 
@@ -98,10 +106,12 @@
 ### Task 5: Admissibility and Defeater Evaluation
 
 **Files:**
+
 - Create: `governance/admissibility.py`
 - Test: `tests/test_admissibility.py`
 
 **Interfaces:**
+
 - Consumes: AAR, registry entry, policy ref, evidence/verifier results, active validity/defeater events.
 - Produces: `ADMISSIBLE`, `REJECTED`, or `INCONCLUSIVE` with machine-readable reasons. No execution.
 
@@ -115,10 +125,12 @@
 ### Task 6: Commit-Time Revalidation
 
 **Files:**
+
 - Create: `governance/commit_revalidation.py`
 - Test: `tests/test_commit_revalidation.py`
 
 **Interfaces:**
+
 - Consumes: prepared action digest, authorization, current authority chain, target identity, current policy/environment/tool identity, rate/budget state, active defeaters.
 - Produces: `COMMIT_REVALIDATED` or typed rejection/inconclusive result.
 
@@ -132,11 +144,13 @@
 ### Task 7: Receipt, Replay, and Lineage Model
 
 **Files:**
+
 - Create: `governance/action_receipt.schema.json`
 - Create: `governance/action_receipt.py`
 - Test: `tests/test_action_receipt.py`
 
 **Interfaces:**
+
 - Consumes: committed action identity, execution attempt, target result, authorization identity, parent lineage/supersession refs.
 - Produces: append-oriented receipt with digest identity and explicit lineage state.
 
@@ -150,10 +164,12 @@
 ### Task 8: Postcondition and Recovery Coordinator
 
 **Files:**
+
 - Create: `governance/action_recovery.py`
 - Test: `tests/test_action_recovery.py`
 
 **Interfaces:**
+
 - Consumes: executed receipt, expected postcondition, reversibility class, recovery policy.
 - Produces: closure/recovery state and, where needed, a proposal for a separately governed rollback/compensation action.
 
@@ -167,10 +183,12 @@
 ### Task 9: First Gateway Enforcement Adapter
 
 **Files:**
+
 - Modify: exact gateway/runtime file selected after repository inspection for the first chosen reversible non-scientific action class.
 - Test: create a dedicated integration test file adjacent to the existing gateway tests.
 
 **Interfaces:**
+
 - Consumes: validated AAR + commit revalidation result.
 - Produces: protected side effect only after exact successful gate; otherwise typed denial and no protected effect.
 
@@ -185,11 +203,13 @@
 ### Task 10: Coverage Auditor and CI Gate
 
 **Files:**
+
 - Create: `tools/audit_action_admission_coverage.py`
 - Create or modify: a narrowly scoped GitHub Actions workflow/check selected after existing CI inspection.
 - Test: `tests/test_action_admission_coverage.py`
 
 **Interfaces:**
+
 - Consumes: versioned action registry and implementation/enforcement declarations.
 - Produces: denominator-bound coverage report and fail-closed result for the specifically enforced scope.
 
@@ -203,9 +223,11 @@
 ### Task 11: Governance Mutation and Metamorphic Verification
 
 **Files:**
+
 - Extend existing Discovery Harness/governance mutation fixtures where compatible; otherwise create narrowly scoped AAR mutation tests under `tests/` without creating a second harness.
 
 **Interfaces:**
+
 - Consumes: registry, AAR validator, authority validator, admissibility, commit revalidation.
 - Produces: evidence that dangerous semantic mutations are killed and monotonicity properties hold.
 
@@ -218,11 +240,13 @@
 ### Task 12: Exact-Scope Evidence and Documentation Reconciliation
 
 **Files:**
+
 - Modify: `docs/governance/ALIGNMENT_CONSTRAINT_LEDGER.md`
 - Modify: `docs/research/CONTROL_ENVELOPE_PATTERN_ADOPTION_MATRIX.md`
 - Modify only the authoritative current-state surfaces required by existing repository convention after implementation evidence exists.
 
 **Interfaces:**
+
 - Consumes: exact implementation SHA, workflow runs, runtime/integration evidence, unresolved gaps.
 - Produces: implementation-status reconciliation without scientific or High-Assurance overclaim.
 
