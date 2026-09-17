@@ -24,6 +24,7 @@
 ### Task 1: Contract RED → GREEN
 
 **Files:**
+
 - Create: `registry/external_runtime_adapter_contract_v1.json`
 - Test: `tests/test_external_runtime_adapter_contract.py`
 
@@ -35,6 +36,7 @@
 ### Task 2: Validator RED → GREEN
 
 **Files:**
+
 - Create: `scripts/validate_external_runtime_adapter.py`
 - Modify: `tests/test_external_runtime_adapter_contract.py`
 
@@ -59,6 +61,7 @@ validate_external_runtime_envelope(
 ### Task 3: Fixture regressions
 
 **Files:**
+
 - Create: `tests/resources/external_runtime_adapter/valid_envelope.json`
 - Create: `tests/resources/external_runtime_adapter/provider_substitution.json`
 - Modify: `tests/test_external_runtime_adapter_contract.py`
