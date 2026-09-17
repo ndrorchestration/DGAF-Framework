@@ -1,0 +1,43 @@
+{
+  "schema_version": "DGAF_EXTERNAL_RUNTIME_ENVELOPE_V1",
+  "provider": {
+    "provider_id": "dgaf-authoritative-runtime",
+    "runtime_id": "synthetic-runtime",
+    "adapter_id": "neutral-test-adapter",
+    "adapter_version": "1.0.0"
+  },
+  "identity": {
+    "event_id": "evt-fixture-002",
+    "effect_id": "eff-fixture-002",
+    "source_id": "src-fixture-002"
+  },
+  "evidence": {
+    "evidence_class": "EXTERNAL_UNTRUSTED_OBSERVATION",
+    "observed_at": "2026-09-17T14:00:00Z",
+    "content_digest": "sha256:1461f24e13616b569770490b5cd3f1a82082a6333b4087a66fde6a6763458515",
+    "payload": {
+      "claim": "synthetic"
+    }
+  },
+  "provenance": {
+    "producer_id": "synthetic-provider",
+    "producer_run_id": "run-fixture-002",
+    "source_bindings": [
+      "src-fixture-002"
+    ]
+  },
+  "request": {
+    "action_class": "NON_CONSEQUENTIAL_RECORD_INGRESS",
+    "requested_transition": "RECORD_ONLY"
+  },
+  "assertions": {
+    "verification_class": "EXTERNAL_PASS",
+    "authority": {
+      "status": "EXTERNAL_PROVIDER_APPROVED"
+    }
+  },
+  "risk": {
+    "consequence_class": "NOT_APPLICABLE",
+    "reversibility": "NOT_APPLICABLE"
+  }
+}
