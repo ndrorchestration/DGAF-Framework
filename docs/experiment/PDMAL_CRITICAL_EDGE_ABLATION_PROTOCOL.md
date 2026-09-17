@@ -231,7 +231,7 @@ A null result is retained. Failure of structural metrics to predict edge importa
 
 Li et al. (2026), *Discovering Efficient and Explainable Communication Topologies for LLM-based Multi-Agent Systems via Causal Inference*, arXiv:2608.12921, uses communication-edge interventions as part of a causal-topology analysis. This protocol treats that work as methodological precedent only; its results do not establish PDMAL behavior.
 
-https://arxiv.org/abs/2608.12921
+[arXiv:2608.12921](https://arxiv.org/abs/2608.12921)
 
 ## Gate to execution
 
