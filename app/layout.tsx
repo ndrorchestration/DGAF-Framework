@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './styles/globals.css'
 import './styles/decision-frontier.css'
 import './styles/governance-map.css'
+import './styles/state-space.css'
 
 export const metadata: Metadata = {
   title: 'DGAF — Governance Command Center',
