@@ -1,4 +1,4 @@
-import { createHash, timingSafeEqual } from 'node:crypto'
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 
 export const AUDIT_ACTION_CLASS = 'AUDIT_COUNTER_UPDATE_V1' as const
 export const AUDIT_TARGET = '/api/audit' as const
@@ -31,12 +31,13 @@ export type ActionAdmissionRecord = {
   predicates: {
     verifier_status: 'PASS' | 'UNKNOWN' | 'FAIL'
   }
+  attestation: string
 }
 
 export type AuditAdmissionSuccess = {
   ok: true
   record: ActionAdmissionRecord
-  parameters: Record<AuditCounterField, number> | Partial<Record<AuditCounterField, number>>
+  parameters: Partial<Record<AuditCounterField, number>>
 }
 
 export type AuditAdmissionFailure = {
@@ -95,6 +96,7 @@ function parseAar(value: unknown): ActionAdmissionRecord | null {
   if (value.target !== AUDIT_TARGET) return null
   if (value.policy_id !== AUDIT_POLICY_ID) return null
   if (typeof value.action_digest !== 'string') return null
+  if (typeof value.attestation !== 'string') return null
   if (!isRecord(value.authorization) || !isRecord(value.predicates)) return null
 
   const authorization = value.authorization
@@ -117,11 +119,26 @@ function extractParameters(body: Record<string, unknown>): Record<string, unknow
   return parameters
 }
 
+function verifyAttestation(record: ActionAdmissionRecord): AuditAdmissionFailure | null {
+  const trustKey = process.env.DGAF_AAR_HMAC_KEY
+  if (!trustKey) return { ok: false, reason: 'TRUST_ANCHOR_UNAVAILABLE' }
+
+  const { attestation, ...unsignedRecord } = record
+  const expected = createHmac('sha256', trustKey)
+    .update(JSON.stringify(canonicalize(unsignedRecord)))
+    .digest('hex')
+  if (!secureDigestEqual(attestation, expected)) return { ok: false, reason: 'AAR_ATTESTATION_INVALID' }
+  return null
+}
+
 export function validateAuditAdmission(body: unknown, nowMs = Date.now()): AuditAdmissionResult {
   if (!isRecord(body)) return { ok: false, reason: 'INVALID_REQUEST' }
   const record = parseAar(body.aar)
   if (!record) return { ok: false, reason: 'AAR_REQUIRED_OR_MALFORMED' }
   if (usedRecordIds.has(record.record_id)) return { ok: false, reason: 'AAR_REPLAY' }
+
+  const attestationFailure = verifyAttestation(record)
+  if (attestationFailure) return attestationFailure
 
   const parameters = extractParameters(body)
   if (!parameters) return { ok: false, reason: 'ACTION_PARAMETERS_NOT_REGISTERED' }
