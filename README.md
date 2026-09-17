@@ -1,24 +1,46 @@
 # DGAF-Framework
 
-**Dynamic Governance Agentic Formation (DGAF)** is an experimental framework for governed multi-agent AI systems. It treats **capability, evidence, verification, authority, and permission to act as separate machine-relevant states** rather than assuming that one implies another.
+**Dynamic Governance Agentic Formation (DGAF)** is an experimental framework for governed multi-agent AI systems. It treats **capability, evidence, verification, authority, authorization, execution, and empirical support as separate machine-relevant states** rather than assuming that one implies another.
 
-In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
+In plain English: an agent may be technically capable of an action and still be blocked from taking it; a system may pass engineering checks and still be blocked from claiming empirical validation.
 
 ## Five-minute evaluator orientation
 
-If you are evaluating DGAF as an AI-systems, governance, or research-engineering portfolio artifact, use this path before reading the full control history.
+1. **Start with the problem.** DGAF asks whether the evidence and authority that exist now actually support the claim or action a system is about to make.
+2. **Inspect what is implemented.** The repository contains governance logic, provenance/source binding, deterministic validators, negative controls, CI, experimental tooling, custody machinery, blinded-data infrastructure, a Governance Command Center, and a machine-readable partial assurance catalog.
+3. **Read current state from its owner.** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) is the live project/evidence entrypoint.
+4. **Understand the scientific frontier.** Track A Epoch 002 collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock is established and bounded unblinding is authorized for controlled mapping release/decryption. Materialization tooling exists, but real materialization and its immutable receipt are not established; primary analysis is not authorized or run; scientific-N increment remains 0.
+5. **Evaluate the separation discipline.** The project does not claim that DGAF is already proven. It demonstrates explicit, testable boundaries among implementation, evidence, verification, authorization, execution, presentation, and assurance coverage.
 
-**1. Start with the problem.** DGAF asks whether an AI system's current evidence and authority actually support the claim or action it is about to make. Capability alone does not grant permission, and passing engineering checks does not establish empirical efficacy.
+## Current repository engineering state
 
-**2. Inspect what is implemented.** The repository contains governance logic, provenance/source binding, deterministic validators, negative controls, CI, experimental tooling, custody machinery, blinded-data infrastructure, a decomposed Governance Command Center, and a machine-readable partial assurance catalog. For implementation detail, start with [`README.technical.md`](README.technical.md) and [`README.governance.md`](README.governance.md).
+Protected signed/verified `main` is **`b1d91621bd73e70866d5ff8fd38fb98e440b30e9`**.
 
-**3. Read the current state from its owning record.** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) is the live project/evidence entrypoint. The status block immediately below is a public summary, not a substitute for exact-bound evidence records.
+### Semantic Control Field / Governance Command Center
 
-**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock is established and bounded unblinding is authorized for controlled mapping release/decryption. Materialization tooling is accepted, but real materialization and its receipt are not established; primary analysis is not authorized or run; scientific-N increment remains 0; canonical DGAF efficacy and independent validation are not established.
+Three presentation-only tranches are accepted on protected `main`:
 
-**5. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
+- **Decision Frontier — PR #776:** current governed state → evidence/provenance → blocking boundary → nearest admissible transition → unreachable transitions → consequence preview → receipt semantics.
+- **Governance Map — PR #779:** ordered vertical escalation, explicitly named lateral relationships, and global field constraints derived from the canonical governance model.
+- **State-Space Explorer V0 — PR #783:** discrete/categorical reachability over canonical stages, keeping native predicate state separate from derived `established`, `frontier`, and `blocked_by_predecessor` regions.
 
-### What this demonstrates
+State-Space V0 deliberately does **not** assign continuous/manifold coordinates, readiness percentages, distance-to-authorization, success probability, scalar evidence quality, efficacy gradients, or inferred consequence/reversibility values. The tensor/manifold work remains a conceptual/formalization direction until exact continuous semantics exist.
+
+These views are explanatory projections. They do not create governance authority or upgrade evidence.
+
+### Repository assurance inventory
+
+The repository also contains a bounded machine-readable assurance inventory:
+
+- **PR #780:** `registry/audit_catalog.v1.json` plus deterministic validation;
+- **PR #782:** deterministic discovery of current workflow definitions not exactly bound by accepted catalog implementation paths;
+- **PR #785:** seven additional source-verified recurring assurance families.
+
+The catalog remains explicitly **`PARTIAL_CORE_FAMILIES_ONLY`**. Current protected-main required status contexts are separately **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**.
+
+A cataloged recurring-assurance family is not automatically a required merge context. An `UNMAPPED` or `UNCLASSIFIED` workflow is an unadjudicated coverage gap, not proof that the workflow is non-assurance. **PR #784** was closed unmerged and its proposed workflow-role census is not accepted implementation.
+
+## What DGAF demonstrates
 
 Within the evidence boundaries documented in this repository, DGAF demonstrates practical work in:
 
@@ -27,50 +49,17 @@ Within the evidence boundaries documented in this repository, DGAF demonstrates 
 - deterministic validation, negative controls, and fail-closed CI;
 - prospective/blinded experiment infrastructure and reproducibility tooling;
 - separation of implementation, verification, independent verification, authorization, execution, and empirical support;
-- documentation and public translation of a complex technical control system without upgrading its evidence state;
-- operator/auditor UI design that exposes blockers and reachable transitions without inventing readiness percentages;
-- machine-readable assurance inventorying that distinguishes mapped controls, required branch contexts, and unclassified coverage gaps.
-
-### Current repository engineering milestones
-
-As of protected `main` `6b89529da3e7ff13e14eaea415756579d859fb26`:
-
-- **Decision Frontier — PR #776** is merged as a presentation-only Semantic Control Field component derived from canonical governance state.
-- **Governance Map — PR #779** is merged and renders ordered escalation, explicitly named lateral relationships, and global field constraints without creating a second state engine.
-- **Bounded assurance catalog — PR #780** is merged with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
-- **Workflow coverage-gap scanner — PR #782** is merged and reports workflow definitions not yet exactly bound by the catalog without inferring their role.
-- **Recurring assurance expansion — PR #785** is merged and adds seven source-verified recurring assurance families while preserving partial coverage.
-
-These milestones are engineering/presentation/assurance-inventory evidence only. They do **not** establish materialization, primary-analysis authorization, empirical efficacy, independent validation, successful deployment, production certification, or High-Assurance authorization.
+- operator/auditor UX that exposes blockers and reachable transitions without converting categorical authority into a score;
+- structural presentation of vertical escalation, lateral coupling, and global constraints without silently adding new semantics;
+- machine-readable assurance inventorying that distinguishes mapped controls, merge-required contexts, and unclassified coverage gaps.
 
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
-> **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
-> **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
-> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, and bounded unblinding **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · materialization tooling **ACCEPTED** · real materialization **NOT ESTABLISHED** · primary analysis **NOT AUTHORIZED / NOT RUN**  
-> **Canonical DGAF efficacy:** NOT ESTABLISHED
+> **Track A Epoch 001:** prospective blinded collection complete · 50 paired inferential seed units · 2,250 blinded observations · dataset lock established · protected mapping cryptographically unrecoverable · primary analysis unanalyzable/not run  
+> **Track A Epoch 002:** collection complete · dataset lock established · bounded unblinding authorized · materialization tooling accepted · real materialization not established · primary analysis not authorized/not run  
+> **Canonical DGAF efficacy:** NOT ESTABLISHED  
+> **Independent validation:** NOT ESTABLISHED
 
-## What problem DGAF is trying to solve
-
-Most agent frameworks focus on what an agent can do: reason, call tools, hand work to another agent, retain state, or complete a workflow.
-
-DGAF focuses on an additional question:
-
-> **Given the evidence and authority that exist right now, what is this system actually entitled to claim, authorize, and execute?**
-
-DGAF explores this through:
-
-- **Governed orchestration** — specialized agents operate under explicit roles, boundaries, and escalation rules.
-- **Evidence-aware authorization** — technical capability does not automatically grant permission.
-- **Provenance** — outputs, decisions, evidence, and state are tied to the identities that produced them.
-- **Evaluation integrity** — implementation, testing, verification, independent verification, and empirical demonstration remain distinct.
-- **Fail-closed controls** — missing or ambiguous prerequisites block promotion rather than silently becoming approval.
-- **Experimental reproducibility** — prospective experiments bind protocols, code, analysis, artifacts, custody, and authorization to exact identities.
-- **Inspectable reachability** — operator-facing presentation makes blocked and admissible transitions explicit without converting categorical authority into a score.
-- **Assurance coverage accounting** — machine-readable mappings record what recurring controls are classified and what remains unclassified.
-
-## The core model
-
-A simplified DGAF control loop is:
+## Core model
 
 ```text
 Evidence + provenance
@@ -87,94 +76,49 @@ New evidence + trace
         └────────────→ updated governance state
 ```
 
-The intended invariant is that **capability, evidence, verification, and authorization cannot silently substitute for one another**.
+The intended invariant is that **capability, evidence, verification, authorization, execution, presentation, and assurance classification cannot silently substitute for one another**.
 
-The same rule applies to presentation and assurance inventory: **UI state does not create authority, and catalog membership does not create branch-protection requiredness or scientific evidence**.
+## Current Track A scientific program
 
-## Current research program
+DGAF separates prospective evaluation by workload rather than treating one experiment as proof of the entire framework.
 
-DGAF separates prospective evaluation by workload instead of treating one experiment as proof of the entire framework.
+| Track | Current boundary |
+|---|---|
+| **A — Epoch 001** | Prospective blinded collection complete and dataset locked; protected mapping cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence. |
+| **A — Epoch 002 successor** | Collection COMPLETE at 50 paired seed units / 2,250 observations; dataset lock ESTABLISHED; bounded unblinding AUTHORIZED for controlled mapping release/decryption only; materialization tooling ACCEPTED; real materialization and receipt NOT ESTABLISHED; primary analysis NOT AUTHORIZED / NOT RUN. |
+| **B1 / B2 / B3** | Bounded non-empirical workload tracks; no framework-wide efficacy claim. |
+| **C** | Non-empirical composition work; empirical execution remains separately governed. |
 
-| Track | Plain-English purpose | Current boundary |
-|---|---|---|
-| **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
-| **A — Epoch 002 successor** | Replacement prospective topology robustness | Collection COMPLETE at 50 paired seed units / 2,250 observations; dataset lock ESTABLISHED; bounded unblinding AUTHORIZED for controlled mapping release/decryption only; Stage-1 and Stage-2 materialization tooling ACCEPTED; real materialization and materialization receipt NOT ESTABLISHED; primary analysis NOT AUTHORIZED / NOT RUN |
-| **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
-| **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
-| **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
-| **C** | Integrated DGAF composition | Non-empirical composition proposal merged; empirical execution NOT AUTHORIZED |
+The current Epoch 002 scientific transition is:
 
-Epoch 001's prospective panel was fixed at **50 seeds × 5 topologies × 9 failure counts = 2,250 observations**. The accepted scientific unit count is **50 paired inferential seed units / 2,250 blinded raw observations**.
-
-That collection remains valid evidence that the blinded panel was executed and retained. It cannot produce its preregistered primary result because the retained encrypted topology mapping cannot be recovered: the matching private key was not durably recoverable in the solo operating model. Regenerating a different key cannot decrypt the retained ciphertext, and guessing or reconstructing the hidden assignment is prohibited.
-
-## Successor Track A custody and gate design
-
-Issue #523 controls the replacement path. Epoch 002 uses a distinct protocol identity, fresh seeds and blinding, and recoverable solo custody without presenting same-system custody as independent.
-
-Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, separate collection authorization, retained-evidence admission/QC, dataset lock, and bounded unblinding have advanced through separate governed events. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
-
-The current frontier is **controlled operator-side materialization of the real retained Epoch 002 evidence**. The accepted apparatus now includes:
-
-- a PASS content-addressed dataset-lock receipt;
-- a separate PASS unblinding decision bounded to `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
-- PR #713's controlled Stage-1 materializer with wrong-key, archive-drift, duplicate-entry, traversal/link, and unexpected-member fail-closed behavior;
-- PR #715's non-secret Stage-2 materialization evidence bundle with deterministic content-addressed output identities and atomic five-member publication;
-- PR #728's prospective primary-analysis authorization tooling, which remains tooling-only until its predecessor receipt exists.
-
-Tooling acceptance does not claim that real materialization occurred. Until the exact retained material is processed under the accepted operator-controlled path and a separate immutable materialization receipt is admitted, preserve:
-
-- `TRACK_A_EPOCH_002_DATASET_LOCK = ESTABLISHED`;
-- `UNBLINDING = AUTHORIZED / BOUNDED TO CONTROLLED MAPPING RELEASE OR DECRYPTION`;
-- `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`;
-- `PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`;
-- `SCIENTIFIC_N_INCREMENT = 0`;
-- `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
-- `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`;
-- `HIGH_ASSURANCE = PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`.
-
-The remaining ordered sequence is:
-
-`controlled local materialization → validated non-secret materialization evidence admission → immutable materialization receipt → separate primary-analysis authorization → locked analysis → interpretation/adjudication`
+`controlled real materialization`
+`→ validated non-secret evidence admission`
+`→ immutable materialization receipt`
+`→ separate primary-analysis authorization`
+`→ locked analysis`
+`→ interpretation/adjudication`
 
 No private key, passphrase, blinding secret, protected plaintext mapping, decrypted protected data, or other recoverable secret material belongs in GitHub, Notion, chat, CI inputs, workflow logs, or committed files.
 
-## Governance Command Center
+## Internal terms in plain English
 
-The accepted presentation layer is designed to answer five operator questions without becoming an independent source of truth:
+| Internal term | Public / industry-neutral translation |
+|---|---|
+| **Formation** | The set and structure of agents selected for a governed task |
+| **P-* gate** | Project-specific evidence, policy, or authorization checkpoint |
+| **PDMAL** | Experimental multi-agent topology / robustness substrate |
+| **Freeze** | Immutable binding of a candidate and protected inputs; **not execution authorization** |
+| **Dataset lock** | Immutable binding of an accepted collected dataset; **not unblinding or analysis authorization** |
+| **Unblinding decision** | Bounded permission for treatment-identity release/decryption; **not materialization or analysis authorization** |
+| **Materialization** | Construction of analysis-ready unblinded input; **not outcome aggregation or analysis** |
+| **Primary-analysis authorization** | Separate permission to run the locked confirmatory analysis |
+| **Decision Frontier** | Presentation-only view of current state, blocker, reachable next action, consequences, and receipt semantics |
+| **Governance Map** | Presentation-only structural view of escalation, named lateral coupling, and global constraints |
+| **State-Space Explorer V0** | Presentation-only discrete reachability projection; not continuous readiness or authorization geometry |
+| **Assurance catalog** | Partial machine-readable mapping of selected recurring repository assurance families |
+| **Fail closed** | Missing, stale, malformed, ambiguous, unrecoverable, or unclassified required evidence blocks promotion rather than being guessed |
 
-1. Where are we?
-2. Why are we here?
-3. What is blocking us?
-4. What can happen next?
-5. What would change if we did it?
-
-The **Decision Frontier** and **Governance Map** both consume normalized governance/current-state data. They may display evidence, blockers, reachability, provenance, coupling, and field constraints, but they cannot grant authority or promote a scientific state.
-
-A future State-Space Explorer is only current when merged into protected `main`. Continuous manifold/tensor metaphors remain conceptual unless exact formal semantics are implemented and verified; DGAF does not currently assign readiness distance, authorization probability, scalar evidence quality, or efficacy gradients.
-
-## Repository assurance catalog
-
-`registry/audit_catalog.v1.json` is a versioned repository-local map of selected recurring assurance families. It remains explicitly **partial**.
-
-Current protected-main behavior includes:
-
-- deterministic catalog validation;
-- exact implementation-path bindings;
-- deterministic discovery of current workflow definitions not yet mapped by the catalog;
-- explicit non-effects and bounded verdict semantics for mapped families.
-
-Current protected-main branch-protection required contexts are separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. A workflow can be cataloged as a recurring assurance family without being a required merge context, and an unmapped workflow remains **unclassified**, not automatically “non-assurance.”
-
-## What is established — and what is not
-
-The repository contains substantial engineering evidence: governance logic, provenance controls, deterministic validators, CI, negative controls, source binding, custody/security machinery, experimental tooling, runtime evidence, vocabulary governance, presentation controls, a partial recurring-assurance inventory, and blinded-data infrastructure.
-
-Track A Epoch 001 also contains genuine prospective blinded collection evidence. That evidence is **not a primary efficacy result** and is explicitly **unanalyzable** under the retained protected-mapping evidence.
-
-Track A Epoch 002 has advanced further: the successor collection is complete, its dataset lock is established, and bounded unblinding is authorized. Those transitions still do **not** constitute a primary efficacy result; real materialization, a materialization receipt, separate primary-analysis authorization, locked analysis execution, and later interpretation remain distinct downstream events.
-
-A separate Solo research track produced bounded historical empirical evidence. Epoch 004 completed 50 seeds / 9,000 observations and produced negative evidence for its exact executed treatment. A later source audit found that canonical treatment fidelity was not established, so that result remains exact-treatment historical evidence rather than a claim about canonical DGAF efficacy.
+## What is not established
 
 DGAF is **not** currently presented as:
 
@@ -185,45 +129,18 @@ DGAF is **not** currently presented as:
 - supported by a completed Track A primary analysis;
 - having established canonical DGAF efficacy;
 - having exhaustive repository assurance coverage;
-- having deployment health established merely because source/CI verification passed.
-
-## Internal terms in plain English
-
-| Internal term | Public / industry-neutral translation |
-|---|---|
-| **Formation** | The set and structure of agents selected for a governed task |
-| **TGL / P-35** | Per-turn governance and state-transition kernel |
-| **P-* gate** | Project-specific evidence, policy, or authorization checkpoint |
-| **PDMAL** | Experimental multi-agent topology / robustness substrate |
-| **Freeze** | Immutable binding of the candidate and protected experimental inputs; **not execution authorization** |
-| **Closure** | Proof that required pre-authorization prerequisites are complete; **not execution authorization** |
-| **Verification classification** | Records what kind of verifier produced the evidence and whether it is independent |
-| **Dataset lock** | Immutable receipt binding an accepted collected dataset and retained artifact identities; **not unblinding or analysis authorization** |
-| **Unblinding decision** | Separate human-controlled permission for bounded treatment-identity release/decryption; **not materialization or analysis authorization** |
-| **Materialization** | Deterministic construction of analysis-ready unblinded input; **not outcome aggregation or analysis** |
-| **Primary-analysis authorization** | Separate permission to run the locked confirmatory analysis |
-| **Decision Frontier** | Presentation-only view of current state, blocker, reachable next action, and consequences |
-| **Governance Map** | Presentation-only structural view of vertical escalation, named lateral coupling, and global constraints |
-| **Assurance catalog** | Partial machine-readable mapping of selected recurring repository assurance families |
-| **Fail closed** | Missing, stale, malformed, ambiguous, unrecoverable, or unclassified required evidence blocks promotion rather than being guessed |
-
-See **[`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)** for the full public terminology map and vocabulary governance.
+- having deployment health established merely because source/CI verification passed;
+- having a meaningful continuous “distance” to authorization or readiness.
 
 ## Where to start
 
-- **Live project/evidence state:** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
+- **Live state:** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
 - **Compatibility status entrypoint:** [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md)
-- **Plain-English terminology:** [`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)
 - **Technical architecture:** [`README.technical.md`](README.technical.md)
-- **Governance model:** [`README.governance.md`](README.governance.md)
+- **Governance model / standards crosswalk:** [`README.governance.md`](README.governance.md)
+- **Plain-English terminology:** [`docs/PUBLIC_TRANSLATION_LAYER.md`](docs/PUBLIC_TRANSLATION_LAYER.md)
 - **Partial assurance catalog:** [`registry/audit_catalog.v1.json`](registry/audit_catalog.v1.json)
-- **Historical records:** [`docs/HISTORICAL_RECORDS_INDEX.md`](docs/HISTORICAL_RECORDS_INDEX.md)
-
-## Research boundary
-
-Results remain scoped to the exact system identities, treatment definitions, protocols, evidence classes, and custody conditions that produced them. A green test, merged PR, internal qualification score, mathematical property, authorization record, completed collection, UI projection, catalog entry, or historical result does not automatically establish current empirical efficacy.
-
-Epoch 001 demonstrates an additional governance lesson: **a successful blinded collection is not sufficient if the protected mapping required for the preregistered analysis cannot later be recovered.** The successor design therefore treats precollection recovery testing as a prerequisite rather than an operational afterthought.
+- **Historical/provenance index:** [`docs/HISTORICAL_RECORDS_INDEX.md`](docs/HISTORICAL_RECORDS_INDEX.md)
 
 ---
 
