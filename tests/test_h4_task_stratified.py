@@ -1,10 +1,45 @@
 from __future__ import annotations
 
+import importlib.util
+import sys
+import types
+from pathlib import Path
 from typing import Any
 
 import pytest
 
-from pptl.experiments import h4_task_stratified as h4
+ROOT = Path(__file__).resolve().parents[1]
+MODULE_PATH = ROOT / "pptl/experiments/h4_task_stratified.py"
+
+
+def load_h4():
+    package = types.ModuleType("pptl")
+    package.__path__ = [str(ROOT / "pptl")]
+    topology = types.ModuleType("pptl.topology")
+    topology.PHI = (1 + 5**0.5) / 2
+
+    previous_package = sys.modules.get("pptl")
+    previous_topology = sys.modules.get("pptl.topology")
+    sys.modules["pptl"] = package
+    sys.modules["pptl.topology"] = topology
+    try:
+        spec = importlib.util.spec_from_file_location("h4_task_stratified_test_module", MODULE_PATH)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    finally:
+        if previous_package is None:
+            sys.modules.pop("pptl", None)
+        else:
+            sys.modules["pptl"] = previous_package
+        if previous_topology is None:
+            sys.modules.pop("pptl.topology", None)
+        else:
+            sys.modules["pptl.topology"] = previous_topology
+
+
+h4 = load_h4()
 
 
 def summary_rows(
