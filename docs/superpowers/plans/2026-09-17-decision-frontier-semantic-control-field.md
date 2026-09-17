@@ -25,10 +25,12 @@
 ### Task 1: Derive the Decision Frontier model
 
 **Files:**
+
 - Create: `app/lib/decision-frontier.ts`
 - Test: `app/lib/decision-frontier.test.ts`
 
 **Interfaces:**
+
 - Consumes: `GOVERNANCE_STAGES` and `UiState`.
 - Produces: `DECISION_FRONTIER` with `current`, `blocking`, `nearest`, `downstream`, `why`, `consequence`, and source/provenance fields.
 
@@ -53,10 +55,12 @@ Expected: all UI semantic tests pass.
 ### Task 2: Render the flagship Decision Frontier component
 
 **Files:**
+
 - Create: `app/components/decision-frontier.tsx`
 - Modify: `app/components/control-room-view.tsx`
 
 **Interfaces:**
+
 - Consumes: `DECISION_FRONTIER` and existing `StatusChip`.
 - Produces: a semantic section exposing current state → why → blocking boundary → nearest admissible transition → downstream prohibited transitions → consequence/provenance.
 
@@ -80,9 +84,11 @@ Expected: SUCCESS.
 ### Task 3: Establish the Semantic Control Field visual grammar
 
 **Files:**
+
 - Modify: `app/styles/globals.css`
 
 **Interfaces:**
+
 - Consumes: existing design tokens and responsive conventions.
 - Produces: reusable `decision-frontier-*` styles for state node, boundary, transition path, provenance, consequence, and downstream denied/unreachable states.
 
@@ -105,6 +111,7 @@ Any transition/hover motion must be disabled or simplified under `prefers-reduce
 ### Task 4: Exact-head verification and PR reconciliation
 
 **Files:**
+
 - No new product files unless validation exposes a defect.
 
 - [ ] **Step 1: Run UI semantic suite**
