@@ -1,0 +1,100 @@
+{
+  "version": "DGAF_EXTERNAL_RUNTIME_ENVELOPE_V1",
+  "result_version": "DGAF_EXTERNAL_RUNTIME_ADMISSION_V1",
+  "status": "NON_AUTHORITATIVE_INGRESS_CONTRACT",
+  "trust_class": "EXTERNAL_NON_AUTHORITATIVE_UNTIL_VALIDATED",
+  "authority_semantics": "PRESENTED_NOT_GRANTED",
+  "provider_specific_trust": "PROHIBITED",
+  "exactly_once": "NOT_ESTABLISHED",
+  "required_top_level_fields": [
+    "schema_version",
+    "provider",
+    "identity",
+    "evidence",
+    "provenance",
+    "request",
+    "assertions",
+    "risk"
+  ],
+  "provider_fields": [
+    "provider_id",
+    "runtime_id",
+    "adapter_id",
+    "adapter_version"
+  ],
+  "identity_fields": [
+    "event_id",
+    "effect_id",
+    "source_id"
+  ],
+  "record_identity_fields": [
+    "schema_version",
+    "provider",
+    "identity",
+    "evidence",
+    "provenance",
+    "request",
+    "assertions",
+    "risk"
+  ],
+  "effect_identity_fields": [
+    "provider.provider_id",
+    "provider.runtime_id",
+    "identity.effect_id",
+    "request.action_class",
+    "request.requested_transition"
+  ],
+  "allowed_action_transitions": {
+    "NON_CONSEQUENTIAL_RECORD_INGRESS": [
+      "RECORD_ONLY"
+    ],
+    "CONSEQUENTIAL_ACTION_REQUEST": [
+      "REQUEST_ACTION_ADMISSION"
+    ]
+  },
+  "freshness_seconds": 3600,
+  "reserved_provider_prefixes": [
+    "dgaf-",
+    "dgaf_"
+  ],
+  "validation_order": [
+    "SCHEMA_AND_REQUIRED_FIELDS",
+    "STRUCTURAL_TYPES",
+    "PROVIDER_RUNTIME_ADAPTER_IDENTITY",
+    "EVENT_EFFECT_SOURCE_IDENTITY",
+    "EVIDENCE_DIGEST_AND_PROVENANCE",
+    "FRESHNESS",
+    "ACTION_AND_TRANSITION_SUPPORT",
+    "AUTHORITY_COMPATIBILITY",
+    "CONSEQUENCE_AND_REVERSIBILITY",
+    "REPLAY_AND_DUPLICATE_EFFECT",
+    "NORMALIZED_RECORD_CONSTRUCTION"
+  ],
+  "rejection_codes": [
+    "DGAF_EXT_SCHEMA_UNSUPPORTED",
+    "DGAF_EXT_REQUIRED_FIELD_MISSING",
+    "DGAF_EXT_TYPE_INVALID",
+    "DGAF_EXT_IDENTITY_MALFORMED",
+    "DGAF_EXT_SOURCE_IDENTITY_INVALID",
+    "DGAF_EXT_EVIDENCE_DIGEST_MISMATCH",
+    "DGAF_EXT_PROVENANCE_INVALID",
+    "DGAF_EXT_EVIDENCE_STALE",
+    "DGAF_EXT_ACTION_CLASS_UNSUPPORTED",
+    "DGAF_EXT_TRANSITION_UNSUPPORTED",
+    "DGAF_EXT_AUTHORITY_MISMATCH",
+    "DGAF_EXT_RISK_METADATA_REQUIRED",
+    "DGAF_EXT_DUPLICATE_EFFECT",
+    "DGAF_EXT_EVENT_IDENTITY_COLLISION",
+    "DGAF_EXT_PROVIDER_SUBSTITUTION"
+  ],
+  "non_effects": {
+    "scientific_state": "NONE",
+    "authorization": "NONE",
+    "runtime_authority": "NOT_ESTABLISHED",
+    "provider_compatibility": "NOT_ESTABLISHED",
+    "provider_trust": "NOT_ESTABLISHED",
+    "empirical_efficacy": "NOT_ESTABLISHED",
+    "independent_validation": "NOT_ESTABLISHED",
+    "high_assurance": "PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0"
+  }
+}
