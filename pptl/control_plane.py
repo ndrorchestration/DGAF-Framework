@@ -1,4 +1,5 @@
 """Deterministic DGAF v1 task/branch lifecycle controller."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
