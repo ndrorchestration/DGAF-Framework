@@ -4,6 +4,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "governance" / "role_capability_registry.v1.json"
 LINEAGE = ROOT / "governance" / "persona_role_lineage.v1.json"
+BRAND_SPEC = ROOT / "docs" / "brand" / "IMP_05_BRAND_SPEC.md"
+TEMPLATE_REGISTRY = ROOT / "docs" / "needle" / "TEMPLATE_REGISTRY.md"
 
 REFERENCE_CLASSES = {"FD", "PP", "FX", "HP", "UN"}
 AUTHORITY_STATUSES = {"equivalent", "none", "unresolved"}
@@ -87,3 +89,23 @@ def test_state_and_historical_aliases_cannot_become_authority_seats():
     assert sentience["role_id"] is None
     assert sentinel["authority_equivalence"]["status"] == "none"
     assert sentience["authority_equivalence"]["status"] == "none"
+
+
+def test_current_brand_generator_uses_functional_authority_not_persona_authority():
+    text = BRAND_SPEC.read_text(encoding="utf-8")
+
+    assert "Governed by Agent Amethyst-Conductor" not in text
+    assert "Meta-Orchestrator: Agent Amethyst-Conductor" not in text
+    assert "role.governance-orchestrator" in text
+    assert "persona label grants authority" in text
+
+
+def test_current_template_registry_bounds_internal_review_and_standards_crosswalk():
+    text = TEMPLATE_REGISTRY.read_text(encoding="utf-8")
+
+    assert "GOLD STAR CERTIFIED" not in text
+    assert "⭐ GOLD STAR" not in text
+    assert "endorsed runnable implementations" not in text
+    assert "| NIST Function | Control | Satisfied By |" not in text
+    assert "| Clause | Requirement | Satisfied By |" not in text
+    assert "does not establish certification, endorsement, compliance, or standards conformance" in text
