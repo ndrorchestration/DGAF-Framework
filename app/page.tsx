@@ -8,6 +8,7 @@ import { ControlRoomView } from './components/control-room-view'
 import { EvidenceView } from './components/evidence-view'
 import { GovernanceView } from './components/governance-view'
 import { OverviewView } from './components/overview-view'
+import { StateSpaceView } from './components/state-space-view'
 import { ToolsView } from './components/tools-view'
 
 export default function Dashboard() {
@@ -21,6 +22,9 @@ export default function Dashboard() {
       break
     case 'governance':
       content = <GovernanceView />
+      break
+    case 'state-space':
+      content = <StateSpaceView />
       break
     case 'agents':
       content = <AgentsView roster={dashboard.snapshot?.roster ?? null} />

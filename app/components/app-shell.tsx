@@ -5,12 +5,13 @@ import type { DashboardPhase } from '../hooks/use-dashboard-data'
 import { ActivityIcon, EvidenceIcon, MenuIcon, NodesIcon, OverviewIcon, ShieldIcon, ToolsIcon } from './icons'
 import { StatusChip } from './status-chip'
 
-export type ViewId = 'overview' | 'control' | 'governance' | 'agents' | 'evidence' | 'tools'
+export type ViewId = 'overview' | 'control' | 'governance' | 'state-space' | 'agents' | 'evidence' | 'tools'
 
 const NAV = [
   { id: 'overview' as const, label: 'Overview', sub: 'What DGAF is', Icon: OverviewIcon },
   { id: 'control' as const, label: 'Control Room', sub: 'Runtime telemetry', Icon: ActivityIcon },
   { id: 'governance' as const, label: 'Governance', sub: 'Lifecycle & authority', Icon: ShieldIcon },
+  { id: 'state-space' as const, label: 'State Space', sub: 'Reachability model', Icon: NodesIcon },
   { id: 'agents' as const, label: 'Agents & Formations', sub: 'Roles & topology', Icon: NodesIcon },
   { id: 'evidence' as const, label: 'Evidence & Research', sub: 'Claims & experiment state', Icon: EvidenceIcon },
   { id: 'tools' as const, label: 'Tools', sub: 'P-07 sweep workspace', Icon: ToolsIcon },
