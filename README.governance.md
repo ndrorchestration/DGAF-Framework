@@ -102,6 +102,20 @@ For any claim, reconstruct only the chain supported by retained artifacts. Missi
 
 None of these automatically means legally compliant, certified, secure, safe, effective, deployed, production healthy, independently validated, or High-Assurance authorized.
 
+## Governance contacts and functional authority
+
+Current machine/agent authority is role-based. Persona labels are compatibility/provenance identifiers and do not independently grant an authority seat.
+
+| Role | Current identity / authority source |
+|---|---|
+| **Architect / Human Authority** | Hensel, Andrew Vance · [@ndrorchestration](https://github.com/ndrorchestration) |
+| **Governance Orchestrator** | `role.governance-orchestrator` · `governance/role_capability_registry.v1.json` |
+| **Evidence & Verification Reviewer** | `role.evidence-verification-reviewer` · `governance/role_capability_registry.v1.json` |
+| **Security & Containment Gate** | `role.security-containment-gate` · `governance/role_capability_registry.v1.json` |
+| **Continuity & Archive Coordinator** | `role.continuity-archive-coordinator` · `governance/role_capability_registry.v1.json` |
+| **Historical persona lineage** | [`governance/persona_role_lineage.v1.json`](./governance/persona_role_lineage.v1.json) |
+
+
 ## Current routing
 
 - [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) — live repository/scientific state;
