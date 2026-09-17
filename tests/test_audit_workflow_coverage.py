@@ -41,3 +41,21 @@ def test_workflow_coverage_scanner_accepts_catalog_mapping_by_exact_implementati
     }
 
     assert _collect_unmapped_workflows(tmp_path, catalog) == [".github/workflows/beta.yaml"]
+
+
+def test_verified_recurring_assurance_workflows_are_catalog_mapped():
+    catalog = load_catalog(CATALOG_PATH)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
+
+    expected_mapped = {
+        ".github/workflows/claim-hygiene.yml",
+        ".github/workflows/control-state-consistency.yml",
+        ".github/workflows/critical-pr-lane-custody.yml",
+        ".github/workflows/epistemic-evidence-validation.yml",
+        ".github/workflows/external-acceptance-readiness-validation.yml",
+        ".github/workflows/full-repo-audit.yml",
+        ".github/workflows/ip-hygiene.yml",
+    }
+
+    assert expected_mapped.isdisjoint(unmapped)
+    assert ".github/workflows/agent-ontology-adjudication.yml" in unmapped
