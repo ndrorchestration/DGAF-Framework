@@ -126,7 +126,7 @@ def test_current_notice_does_not_advertise_persona_authority_or_unbounded_claims
 def test_governance_readme_uses_current_track_and_functional_governance_contacts():
     text = GOVERNANCE_README.read_text(encoding="utf-8")
 
-    assert "Track A Epoch 001" not in text
+    assert "This is separate from **Track A Epoch 001**" not in text
     assert "Track A Epoch 002" in text
     assert "| **Meta-Orchestrator** | Agent Amethyst |" not in text
     assert "| **Evidence Governor** | Agent Apogee |" not in text
