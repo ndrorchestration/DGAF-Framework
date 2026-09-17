@@ -7,7 +7,7 @@ from types import MappingProxyType
 from typing import Any, Callable, Mapping
 
 from .branch_registry import BranchRecord, BranchRegistry
-from .budget_ledger import BudgetExceeded, Consumption, BudgetLedger
+from .budget_ledger import BudgetExceeded, BudgetLedger, Consumption
 from .governance_envelope import GovernanceEnvelope, ResourceBudget
 from .state_identity import StateRegistry
 from .triadic_governance_loop import TurnAuditRecord
@@ -45,6 +45,7 @@ class ControlPlaneViolation(RuntimeError):
 @dataclass(frozen=True)
 class LedgerView:
     """Read-only snapshot of a task ledger."""
+
     budget: ResourceBudget
     consumed: Consumption
     reserved: Consumption
@@ -174,15 +175,17 @@ class ControlPlane:
 
     @property
     def ledgers(self) -> Mapping[str, LedgerView]:
-        return MappingProxyType({
-            task_id: LedgerView(
-                budget=ledger.budget,
-                consumed=ledger.consumed,
-                reserved=ledger.reserved,
-                active_concurrency=ledger.active_concurrency,
-            )
-            for task_id, ledger in self._ledgers.items()
-        })
+        return MappingProxyType(
+            {
+                task_id: LedgerView(
+                    budget=ledger.budget,
+                    consumed=ledger.consumed,
+                    reserved=ledger.reserved,
+                    active_concurrency=ledger.active_concurrency,
+                )
+                for task_id, ledger in self._ledgers.items()
+            }
+        )
 
     @property
     def events(self) -> tuple[dict[str, object], ...]:
@@ -207,7 +210,16 @@ class ControlPlane:
     def admit(self, task_id: str) -> None:
         self._transition(self._task(task_id), TaskState.ADMITTED)
 
-    def _set_runtime(self, task: ControlTask, *, state: TaskState | None = None, concurrency: bool | None = None, tgl_status: str | None = None, tgl_seal: str | None = None, reset_tgl: bool = False) -> None:
+    def _set_runtime(
+        self,
+        task: ControlTask,
+        *,
+        state: TaskState | None = None,
+        concurrency: bool | None = None,
+        tgl_status: str | None = None,
+        tgl_seal: str | None = None,
+        reset_tgl: bool = False,
+    ) -> None:
         if state is not None:
             object.__setattr__(task, "_state", state)
         if concurrency is not None:
@@ -314,13 +326,37 @@ class ControlPlane:
         self._transition(task, TaskState.TERMINATED)
         self._release_concurrency(task)
 
-    def create_child(self, parent_id: str, *, task_id: str, trace_id: str, authority_scope: set[str], permitted_tools: set[str], data_classes: set[str], envelope_budget: ResourceBudget, side_effect_mode: str | None = None) -> ControlTask:
+    def create_child(
+        self,
+        parent_id: str,
+        *,
+        task_id: str,
+        trace_id: str,
+        authority_scope: set[str],
+        permitted_tools: set[str],
+        data_classes: set[str],
+        envelope_budget: ResourceBudget,
+        side_effect_mode: str | None = None,
+    ) -> ControlTask:
         parent = self._task(parent_id)
         if parent.state not in {TaskState.ADMITTED, TaskState.EXPANDING, TaskState.EVALUATING}:
             raise ControlPlaneViolation("child creation requires an active parent task")
         if parent.depth + 1 > parent.envelope.budget.max_depth:
             raise ControlPlaneViolation("child exceeds maximum recursion depth")
-        child = ControlTask(task_id=task_id, depth=parent.depth + 1, lineage_id=parent.lineage_id, envelope=parent.envelope.derive_child(trace_id=trace_id, task_id=task_id, authority_scope=authority_scope, permitted_tools=permitted_tools, data_classes=data_classes, budget=envelope_budget, side_effect_mode=side_effect_mode))
+        child = ControlTask(
+            task_id=task_id,
+            depth=parent.depth + 1,
+            lineage_id=parent.lineage_id,
+            envelope=parent.envelope.derive_child(
+                trace_id=trace_id,
+                task_id=task_id,
+                authority_scope=authority_scope,
+                permitted_tools=permitted_tools,
+                data_classes=data_classes,
+                budget=envelope_budget,
+                side_effect_mode=side_effect_mode,
+            ),
+        )
         candidate_snapshot = child.snapshot()
         if self._state_registry.contains(candidate_snapshot):
             raise ControlPlaneViolation("repeated orchestration state")
@@ -330,7 +366,14 @@ class ControlPlane:
 
     def register_branch(self, branch: BranchRecord) -> None:
         self._branches.add(branch)
-        self._events.append({"event": "BRANCH_RECORDED", "branch_id": branch.branch_id, "policy_verdict": branch.policy_verdict, "merge_status": branch.merge_status})
+        self._events.append(
+            {
+                "event": "BRANCH_RECORDED",
+                "branch_id": branch.branch_id,
+                "policy_verdict": branch.policy_verdict,
+                "merge_status": branch.merge_status,
+            }
+        )
 
     def consume(self, task_id: str, amount: Consumption) -> None:
         task = self._task(task_id)
