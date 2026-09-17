@@ -18,6 +18,7 @@ Outputs:
   - h4_triad_by_task.csv            — mean composite by (mode, task, noise)
   - h4_verdict.txt                  — automated H4 verdict
 """
+
 from __future__ import annotations
 
 import csv
