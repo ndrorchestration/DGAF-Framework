@@ -47,6 +47,26 @@ export type AuditAdmissionFailure = {
 
 export type AuditAdmissionResult = AuditAdmissionSuccess | AuditAdmissionFailure
 
+export type ActionAdmissionCoverageEntry = {
+  action_class: typeof AUDIT_ACTION_CLASS
+  target: typeof AUDIT_TARGET
+  aar_required: true
+  enforcement_state: 'ENFORCED_BOUNDED'
+  replay_class: 'PROCESS_LOCAL'
+  revocation_class: 'RECORD_LOCAL'
+  trust_anchor_class: 'SERVER_HMAC_ENV'
+  issuer_class: 'NOT_ESTABLISHED'
+  decision_effect: 'NON_SCIENTIFIC_EPHEMERAL_AUDIT_COUNTER_UPDATE_ONLY'
+  limitations: string[]
+}
+
+export type ActionAdmissionCoverageReport = {
+  version: 'AAR_COVERAGE_V1'
+  complete: false
+  registered_action_classes: [typeof AUDIT_ACTION_CLASS]
+  entries: [ActionAdmissionCoverageEntry]
+}
+
 const usedRecordIds = new Set<string>()
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -169,4 +189,33 @@ export function consumeAuditAdmission(recordId: string): boolean {
   if (usedRecordIds.has(recordId)) return false
   usedRecordIds.add(recordId)
   return true
+}
+
+export function actionAdmissionCoverageReport(): ActionAdmissionCoverageReport {
+  return {
+    version: 'AAR_COVERAGE_V1',
+    complete: false,
+    registered_action_classes: [AUDIT_ACTION_CLASS],
+    entries: [
+      {
+        action_class: AUDIT_ACTION_CLASS,
+        target: AUDIT_TARGET,
+        aar_required: true,
+        enforcement_state: 'ENFORCED_BOUNDED',
+        replay_class: 'PROCESS_LOCAL',
+        revocation_class: 'RECORD_LOCAL',
+        trust_anchor_class: 'SERVER_HMAC_ENV',
+        issuer_class: 'NOT_ESTABLISHED',
+        decision_effect: 'NON_SCIENTIFIC_EPHEMERAL_AUDIT_COUNTER_UPDATE_ONLY',
+        limitations: [
+          'NO_DURABLE_CROSS_INSTANCE_REPLAY_PREVENTION',
+          'NO_AUTHORITATIVE_POST_ISSUANCE_REVOCATION',
+          'NO_PRODUCTION_AAR_ISSUER',
+          'NO_TRUST_ANCHOR_CUSTODY_ROTATION_POLICY',
+          'NO_DURABLE_ACTION_LEDGER',
+          'NO_OTHER_ACTION_CLASS_COVERAGE',
+        ],
+      },
+    ],
+  }
 }
