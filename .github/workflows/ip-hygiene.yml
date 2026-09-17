@@ -43,13 +43,17 @@ jobs:
           fi
           echo "OK: CITATION.cff present"
 
-      - name: Check NOTICE contains Proprietary Designations section
+      - name: Check NOTICE preserves bounded project-designation semantics
         run: |
-          if ! grep -q "Proprietary Designations" NOTICE; then
-            echo "::error::NOTICE file missing Proprietary Designations section."
+          if ! grep -q "Project Designations and Identity Lineage" NOTICE; then
+            echo "::error::NOTICE missing bounded Project Designations and Identity Lineage section."
             exit 1
           fi
-          echo "OK: NOTICE has Proprietary Designations"
+          if ! grep -q "does not alter the Apache 2.0 license terms" NOTICE; then
+            echo "::error::NOTICE missing Apache 2.0 non-expansion boundary for project designations."
+            exit 1
+          fi
+          echo "OK: NOTICE project-designation claims are license-bounded"
 
       - name: Check for secrets patterns
         run: |
