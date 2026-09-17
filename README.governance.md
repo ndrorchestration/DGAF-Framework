@@ -115,7 +115,6 @@ Current machine/agent authority is role-based. Persona labels are compatibility/
 | **Continuity & Archive Coordinator** | `role.continuity-archive-coordinator` · `governance/role_capability_registry.v1.json` |
 | **Historical persona lineage** | [`governance/persona_role_lineage.v1.json`](./governance/persona_role_lineage.v1.json) |
 
-
 ## Current routing
 
 - [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) — live repository/scientific state;
