@@ -5,6 +5,7 @@ DGAF-Framework · pptl
 The TGL is a deterministic gate sequencer. Unwired required gates are
 recorded as SKIP and reduce the turn to ESCALATE; SKIP is never implicit PASS.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -249,8 +250,13 @@ class TriadicGovernanceLoop:
         except PremiseViolationError as exc:
             gates.append(GateRecord(0, "P-35", "ProcludingPremiseGate", GateResult.KILL, str(exc)[:120]))
             audit = TurnAuditRecord(
-                self.session_id, self._turn_counter, self.agent_id, input_hash,
-                gates, TurnStatus.KILL, timestamp,
+                self.session_id,
+                self._turn_counter,
+                self.agent_id,
+                input_hash,
+                gates,
+                TurnStatus.KILL,
+                timestamp,
             )
             self._emit_herald_and_seal(audit, context, raise_premise=exc)
             return audit
@@ -278,22 +284,14 @@ class TriadicGovernanceLoop:
         # HPG is conditional and cannot run after any terminal failure.
         if not terminated:
             if phi_closure_result == GateResult.PASS:
-                gates.append(
-                    self._run_hook(
-                        self.hooks.hpg_fn, input_text, context, 7, "N/A", "HPG_OctaveGate"
-                    )
-                )
+                gates.append(self._run_hook(self.hooks.hpg_fn, input_text, context, 7, "N/A", "HPG_OctaveGate"))
             else:
-                gates.append(
-                    GateRecord(7, "N/A", "HPG_OctaveGate", GateResult.SKIP, "Phi-Closure did not PASS")
-                )
+                gates.append(GateRecord(7, "N/A", "HPG_OctaveGate", GateResult.SKIP, "Phi-Closure did not PASS"))
 
             # Apogee is allowed to inspect an escalated/warned turn, but not a KILL.
             if not any(g.result == GateResult.KILL for g in gates):
                 gates.append(
-                    self._run_hook(
-                        self.hooks.apogee_fn, input_text, context, 8, "P-30", "Apogee_AttestationGate"
-                    )
+                    self._run_hook(self.hooks.apogee_fn, input_text, context, 8, "P-30", "Apogee_AttestationGate")
                 )
 
         final_status = self._reduce_status(gates)
