@@ -344,7 +344,7 @@ def run_audit() -> int:
     else:
         print("  None — bounded projection semantics are internally consistent " "with observed GitHub metadata.")
 
-    print("\n=== LIFECYCLE SUMMARY ===")
+    print("\n=== NON-AUTHORITATIVE LOCAL ACTIVITY STATUS ===")
     states = Counter(p.get("lifecycle_state") for p in projects)
     for state, count in sorted(states.items()):
         print(f"  {state}: {count}")
