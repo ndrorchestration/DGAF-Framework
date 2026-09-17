@@ -12,13 +12,13 @@
 
 The **Dynamic Governance Agentic Formation (DGAF)** is a structured multi-agent governance research and implementation framework. The repository contains governance specifications, selected executable controls, CI gates, role/authority contracts, audit records, and evidence/provenance mechanisms.
 
-Some DGAF artifacts are **mapped** to concepts in the NIST AI Risk Management Framework (AI RMF), Regulation (EU) 2024/1689 (the EU AI Act), and the OWASP Top 10 for Agentic Applications. These mappings are project-local traceability aids. They are **not** a legal-compliance determination, certification, conformity assessment, security certification, or claim that every external requirement has been implemented or independently validated.
+Some DGAF artifacts are **mapped** to concepts in the NIST AI Risk Management Framework (AI RMF), Regulation (EU) 2024/1689 (the EU AI Act), ISO/IEC 42001, and the OWASP Top 10 for Agentic Applications. These mappings are project-local traceability aids. They are **not** a legal-compliance determination, certification, conformity assessment, security certification, or claim that every external requirement has been implemented or independently validated.
 
 > **Terminology authority:** `docs/taxonomy/NDR_ACRONYM_REGISTRY.md`. Earlier DGAF/PDMAL expansions are historical provenance and must not be presented as current vocabulary authority.
 
 DGAF includes an **executable governance spine for selected controls**. A policy is not assumed to be technically enforced unless a corresponding implementation and scoped verification evidence are identified. Likewise, a decision is not assumed to have a complete audit chain unless the relevant repository artifacts establish that chain.
 
-**Current scientific boundary:** the canonical High-Assurance program remains **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0**. This is separate from **Track A Epoch 001**, whose governed prospective blinded collection is complete with **50 paired inferential seed units / 2,250 blinded raw observations**, dataset lock and unblinding authorization established, and materializer/receipt/custody-preflight/primary-analysis-authorization tooling merged and validated. The matching custody-key handoff is **NOT ESTABLISHED**, the unblinded analysis input is **NOT YET MATERIALIZED**, primary analysis is **NOT AUTHORIZED / NOT RUN**, and canonical DGAF efficacy remains **NOT ESTABLISHED**. See [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) for the live cross-track state. Governance documentation or standards mapping does not alter either boundary.
+**Current scientific boundary:** the canonical High-Assurance program remains **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0**. This is separate from **Track A Epoch 002**, whose governed prospective blinded collection is **COMPLETE** at **50 paired inferential seed units / 2,250 blinded observations**. Its dataset lock is **ESTABLISHED** and bounded unblinding is **AUTHORIZED only for controlled mapping release/decryption**. The accepted Stage-1/Stage-2 materialization apparatus and prospective primary-analysis authorization tooling are tooling/preparation only: real materialization is **NOT ESTABLISHED**, repository `MATERIALIZATION_RECEIPT` is **NOT ESTABLISHED**, positive primary-analysis authorization is **NOT ESTABLISHED**, primary analysis is **NOT AUTHORIZED / NOT RUN**, `SCIENTIFIC_N_INCREMENT=0`, and canonical DGAF efficacy and independent validation remain **NOT_ESTABLISHED**. Track A Epoch 001 remains historical blinded-collection/custody-failure provenance and is not pooled into Epoch 002. See [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) for the live cross-track state. Governance documentation or standards mapping does not alter either boundary.
 
 ---
 
@@ -28,7 +28,7 @@ NIST AI RMF 1.0 defines four Core functions: **GOVERN, MAP, MEASURE, and MANAGE*
 
 | NIST AI RMF Function | DGAF project relation | Example artifacts | Evidence boundary |
 |---|---|---|---|
-| **GOVERN** | Role/authority definitions, pattern governance, claim/evidence controls, and promotion gates | `docs/NDR_PATTERN_REGISTRY_UNIFIED.md` · `ENSEMBLE_ROSTER.md` · `docs/taxonomy/NDR_ACRONYM_REGISTRY.md` | Mapping and repository implementation are artifact-specific; no framework-wide NIST conformance claim. |
+| **GOVERN** | Role/authority definitions, pattern governance, claim/evidence controls, and promotion gates | `governance/role_capability_registry.v1.json` · `governance/persona_role_lineage.v1.json` · `docs/taxonomy/NDR_ACRONYM_REGISTRY.md` | Mapping and repository implementation are artifact-specific; no framework-wide NIST conformance claim. |
 | **MAP** | Ecosystem/context mapping and project-local risk/architecture decomposition | `CROSS_REF.md` · `docs/gates/TELESCOPIC_LENS.md` | Supports project context mapping; completeness against AI RMF MAP outcomes has not been independently established. |
 | **MEASURE** | Evaluation gates, structured evidence, per-record audit data, and scoped test artifacts | `docs/gates/GATE_1111.md` · `components/evaluate_router_v1_1.py` · repository CI/evidence artifacts | Passing repository tests establishes only their declared scope; it does not validate all AI-risk measures or outcomes. |
 | **MANAGE** | Fail-closed gates, escalation/authority controls, recovery patterns, and project-local risk-response mechanisms | `docs/gates/ACOUSTIC_GATES.md` · `docs/protocols/MDAR_PROTOCOL_v1.md` · role/authority contracts | Mechanism existence does not establish risk-reduction efficacy or organizational AI RMF adoption. |
@@ -48,7 +48,7 @@ The EU AI Act imposes obligations according to regulated role, system classifica
 | **Article 13** | Transparency and information to deployers | Public/internal documentation, structured artifacts, role/authority descriptions, and evidence-status disclosure | Partial conceptual crosswalk; no finding that all required instructions/information are present. |
 | **Article 14** | Human oversight | Human override, HITL gates, explicit authority boundaries, and fail-closed escalation in selected workflows | Mechanism-level relation only; no Article 14 conformity assessment. |
 | **Article 17** | Quality management system | Governance procedures, QA/evidence workflows, change history, role assignments, and documentation controls | DGAF artifacts may inform a QMS; this repository is not asserted to constitute a complete Article 17 QMS. |
-| **Article 40** | Harmonised standards | External standards may be referenced during design/review | DGAF's internal S-TIER/Gold Star labels are **not harmonised standards** and are not evidence of Article 40 conformity. |
+| **Article 40** | Harmonised standards | External standards may be referenced during design/review | DGAF's internal S-TIER/legacy Gold Star labels are **not harmonised standards** and are not evidence of Article 40 conformity. |
 | **Article 72** | Post-market monitoring for high-risk AI systems | Runtime telemetry, audit/provenance concepts, and monitoring designs may inform future post-market processes | No verified Article 72 post-market monitoring system is claimed. |
 
 **Correction note:** an earlier version of this README described Article 72 as a penalties/non-compliance provision. Article 72 concerns post-market monitoring. Administrative penalties are addressed elsewhere in the Regulation, including Article 99 in the consolidated text. DGAF does not implement or enforce statutory penalties.
@@ -73,11 +73,11 @@ OWASP's 2026 Agentic Top 10 uses the ASI01–ASI10 taxonomy below. DGAF artifact
 |---|---|---|
 | **ASI01 — Agent Goal Hijack** | Input/governance constraints, authority checks, epistemic gates | Candidate mitigation relationship; adversarial effectiveness not established by this mapping. |
 | **ASI02 — Tool Misuse & Exploitation** | Tool/role boundaries, HITL gates, effect/reversibility controls | Selected mechanisms exist; comprehensive tool-misuse prevention is not claimed. |
-| **ASI03 — Identity & Privilege Abuse** | Explicit agent authority boundaries and signer/identity verification work | Production signer/trust admission remains separately gated; no complete privilege-security claim. |
+| **ASI03 — Identity & Privilege Abuse** | Explicit functional authority boundaries and signer/identity verification work | Production signer/trust admission remains separately gated; no complete privilege-security claim. |
 | **ASI04 — Agentic Supply Chain Vulnerabilities** | Dependency locking, provenance checks, Sigstore verification work, IP/dependency hygiene | Verification mechanisms are scoped; final production trust policy and external admission evidence remain open. |
 | **ASI05 — Unexpected Code Execution (RCE)** | Action/tool gates, human authorization boundaries, fail-closed execution contracts | No claim of comprehensive RCE prevention. |
 | **ASI06 — Memory & Context Poisoning** | Session/provenance records, evidence boundaries, controlled rehydration guidance | Supports traceability and contamination detection concepts; mitigation efficacy is not established. |
-| **ASI07 — Insecure Inter-Agent Communication** | Agent role/protocol contracts and controlled handoff specifications | Does not establish secure transport, authentication, or complete inter-agent communications security. |
+| **ASI07 — Insecure Inter-Agent Communication** | Functional role/protocol contracts and controlled handoff specifications | Does not establish secure transport, authentication, or complete inter-agent communications security. |
 | **ASI08 — Cascading Failures** | Fail-closed gates, recovery/Saga patterns, crash/retry controls | Structural mechanisms exist; empirical reduction of cascading failures remains unproven. |
 | **ASI09 — Human-Agent Trust Exploitation** | Claim hygiene, uncertainty disclosure, human override, and evidence-state separation | Supports calibrated-trust practices; no effectiveness certification. |
 | **ASI10 — Rogue Agents** | Authority constraints, human override, veto/escalation and execution boundaries | No claim that rogue-agent behavior is eliminated. |
@@ -112,19 +112,21 @@ For current experimental authority and gate status, use [`docs/CURRENT_STATE.md`
 
 ---
 
-## Governance Contacts
+## Governance Contacts and Functional Authority
 
-| Role | Identity |
+Current machine/agent authority is role-based. Persona labels are compatibility/provenance identifiers and do not independently grant an authority seat.
+
+| Role | Current identity / authority source |
 |---|---|
-| **Architect / Sovereign Authority** | Hensel, Andrew Vance · [@ndrorchestration](https://github.com/ndrorchestration) |
-| **Meta-Orchestrator** | Agent Amethyst |
-| **Evidence Governor** | Agent Apogee |
-| **Safety / Veto Authority** | Agent Sentinel |
-| **Registry / Continuity** | Agent COLLEEN |
-| **Full ensemble** | [`ENSEMBLE_ROSTER.md`](./ENSEMBLE_ROSTER.md) |
+| **Architect / Human Authority** | Hensel, Andrew Vance · [@ndrorchestration](https://github.com/ndrorchestration) |
+| **Governance Orchestrator** | `role.governance-orchestrator` · `governance/role_capability_registry.v1.json` |
+| **Evidence & Verification Reviewer** | `role.evidence-verification-reviewer` · `governance/role_capability_registry.v1.json` |
+| **Security & Containment Gate** | `role.security-containment-gate` · `governance/role_capability_registry.v1.json` |
+| **Continuity & Archive Coordinator** | `role.continuity-archive-coordinator` · `governance/role_capability_registry.v1.json` |
+| **Historical persona lineage** | [`governance/persona_role_lineage.v1.json`](./governance/persona_role_lineage.v1.json) |
 
 ---
 
 *License: Apache 2.0 · See [NOTICE](./NOTICE) for full attribution*  
 *Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*  
-*README.governance v1.5 · public-state reconciliation · 2026-09-08*
+*README.governance v1.6 · current-state / role-authority reconciliation · 2026-09-17*
