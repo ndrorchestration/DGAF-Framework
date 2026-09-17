@@ -4,6 +4,38 @@
 
 ---
 
+## [2026-09-17] — Semantic Control Field & Assurance Inventory Reconciliation
+
+### Governance Command Center
+
+- Merged **PR #776 — Decision Frontier** as a presentation-only Semantic Control Field tranche derived from canonical governance state.
+- Decision Frontier exposes current governed state, supporting evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics without creating a second state engine or readiness score.
+- Merged **PR #779 — Governance Map** after exact-head verification and rebase onto then-current protected `main`.
+- Governance Map renders canonical vertical escalation, four explicitly named lateral relationships, and global field constraints while keeping authority/authorization/evidence distinctions structural and inspectable.
+- Source verification for these UI tranches does not establish deployment health, governance authority, scientific authorization, empirical support, independent validation, or production certification.
+
+### Repository assurance inventory
+
+- Merged **PR #780** establishing `registry/audit_catalog.v1.json` and deterministic validation with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
+- Merged **PR #782** adding deterministic workflow coverage-gap discovery for current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by catalog `implementation` paths.
+- Merged **PR #785** at protected-main commit `6b89529da3e7ff13e14eaea415756579d859fb26`, adding seven source-verified recurring assurance families while preserving partial coverage.
+- Clarified that catalog membership is separate from protected-branch requiredness; current protected-main required contexts are **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**.
+- Clarified that `UNMAPPED` / `UNCLASSIFIED` is a fail-closed inventory state and does not mean a workflow is non-assurance.
+- Known catalog gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
+
+### Documentation reconciliation
+
+- Refreshed `docs/CURRENT_STATE.md`, `docs/PROJECT_STATUS.md`, `README.md`, `README.technical.md`, and `README.governance.md` to distinguish scientific state, presentation state, assurance inventory, protected-branch requiredness, and deployment/runtime state.
+- Preserved historical design specs, TDD lineage records, and superseded snapshots as provenance rather than rewriting them into current authority.
+
+### Scientific/control non-effects
+
+The accepted interface and assurance-inventory work does **not** establish real Epoch 002 materialization, a materialization receipt, primary-analysis authorization or execution, scientific-N promotion, canonical DGAF efficacy, independent validation, production certification, or High-Assurance authorization.
+
+The controlling canonical boundary remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**.
+
+---
+
 ## [2026-08-25] — Ecosystem Boundary Alignment
 
 ### Pattern Commons / commercialization / cross-disciplinary governance
@@ -133,4 +165,4 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 
 ---
 
-*CHANGELOG · Amethyst × COLLEEN · Updated 2026-08-25*
+*CHANGELOG · Amethyst × COLLEEN · Updated 2026-09-17*
