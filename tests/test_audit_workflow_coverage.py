@@ -59,3 +59,16 @@ def test_verified_recurring_assurance_workflows_are_catalog_mapped():
 
     assert expected_mapped.isdisjoint(unmapped)
     assert ".github/workflows/agent-ontology-adjudication.yml" in unmapped
+
+
+def test_protected_main_required_context_workflows_are_catalog_mapped():
+    catalog = load_catalog(CATALOG_PATH)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
+
+    required_context_workflows = {
+        ".github/workflows/governance-ci.yml",
+        ".github/workflows/pptl-ci.yml",
+        ".github/workflows/pr-issue-closure-keyword-guard.yml",
+    }
+
+    assert required_context_workflows.isdisjoint(unmapped)
