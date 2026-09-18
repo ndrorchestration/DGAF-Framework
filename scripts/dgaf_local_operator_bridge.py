@@ -145,7 +145,7 @@ def locked_artifact_contracts() -> tuple[dict[str, Any], dict[str, Any]]:
 def verify_artifact(path: Path, contract: dict[str, Any], label: str) -> dict[str, Any]:
     require_regular_external_file(path, label)
     expected_size = contract.get("size_bytes")
-    expected_sha = contract.get("sha256")
+    expected_sha = contract.get("archive_sha256")
     if not isinstance(expected_size, int) or not isinstance(expected_sha, str):
         refuse(f"{label} contract is malformed")
     actual_size = path.stat().st_size
