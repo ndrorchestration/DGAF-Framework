@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/docs/experiment/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_OUTPUT_SCHEMA.json",
+  "title": "Track A Epoch 002 locked primary-analysis output",
+  "description": "Closed schema for the exact non-secret output emitted by the frozen authorized Track A Epoch 002 primary analysis.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "protocol_id",
+    "authorization_event_commit_sha",
+    "authorization_record_id",
+    "materialized_input_sha256",
+    "analysis_blob_sha",
+    "analysis_config_sha256",
+    "environment",
+    "result",
+    "scientific_n_increment",
+    "canonical_dgaf_efficacy",
+    "independent_validation",
+    "high_assurance"
+  ],
+  "properties": {
+    "record_type": {
+      "const": "TRACK_A_EPOCH_002_LOCKED_PRIMARY_ANALYSIS_OUTPUT"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "protocol_id": {
+      "const": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
+    },
+    "authorization_event_commit_sha": {
+      "const": "e87917e644d71de7351c5983fa7ed89d9231962f"
+    },
+    "authorization_record_id": {
+      "const": "E002-ANALYSIS-AUTH-0001"
+    },
+    "materialized_input_sha256": {
+      "const": "b6bfe8e356084993f096398fd2a9ca3427fdaf15a5e55b70f764a688e407e937"
+    },
+    "analysis_blob_sha": {
+      "const": "d4495f7cdf211b974039ec0e66292dc62ea0881f"
+    },
+    "analysis_config_sha256": {
+      "const": "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73"
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "python",
+        "numpy"
+      ],
+      "properties": {
+        "python": {
+          "const": "3.12.0"
+        },
+        "numpy": {
+          "const": "2.5.1"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "algorithm_id",
+        "primary_topology",
+        "primary_comparator",
+        "paired_seed_count",
+        "estimate_pdmal_minus_random_regular",
+        "two_sided_95pct_percentile_ci",
+        "classification",
+        "bootstrap_resamples",
+        "bootstrap_seed",
+        "alpha",
+        "canonical_dgaf_efficacy",
+        "high_assurance"
+      ],
+      "properties": {
+        "protocol_id": {
+          "const": "PDMAL-TRACK-A-TOPOLOGY-ROBUSTNESS-EPOCH-002"
+        },
+        "algorithm_id": {
+          "const": "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1"
+        },
+        "primary_topology": {
+          "const": "pdmal"
+        },
+        "primary_comparator": {
+          "const": "random_regular"
+        },
+        "paired_seed_count": {
+          "const": 50
+        },
+        "estimate_pdmal_minus_random_regular": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "two_sided_95pct_percentile_ci": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            }
+          ],
+          "items": false
+        },
+        "classification": {
+          "enum": [
+            "SUPPORTS_DIRECTIONAL_TRACK_A_HYPOTHESIS",
+            "EVIDENCE_AGAINST_DIRECTIONAL_TRACK_A_HYPOTHESIS",
+            "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED"
+          ]
+        },
+        "bootstrap_resamples": {
+          "const": 10000
+        },
+        "bootstrap_seed": {
+          "const": 20270251
+        },
+        "alpha": {
+          "const": 0.05
+        },
+        "canonical_dgaf_efficacy": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "high_assurance": {
+          "const": "NOT_AUTHORIZED_N0"
+        }
+      }
+    },
+    "scientific_n_increment": {
+      "const": 0
+    },
+    "canonical_dgaf_efficacy": {
+      "const": "NOT_ESTABLISHED"
+    },
+    "independent_validation": {
+      "const": "NOT_ESTABLISHED"
+    },
+    "high_assurance": {
+      "const": "NOT_AUTHORIZED_N0"
+    }
+  }
+}
