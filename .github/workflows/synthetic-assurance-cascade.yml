@@ -192,6 +192,8 @@ jobs:
           path: synthetic-artifacts/track-a
 
       - name: Build fail-closed synthetic assurance summary
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python scripts/summarize_synthetic_assurance_cascade.py             --full-timing synthetic-artifacts/pdmal/full-task-timing.json             --partial-timing synthetic-artifacts/pdmal/component-timing.json             --weighted-forman synthetic-artifacts/track-a/weighted-forman-replication.json             --junit synthetic-artifacts/pdmal/pdmal-tests.xml             --junit synthetic-artifacts/track-a/track-a-tests.xml             --output synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json
 
