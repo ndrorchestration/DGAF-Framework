@@ -22,6 +22,9 @@ const REQUIRED_TOKENS = [
   '--focus-ring',
   '--surface-raised',
   '--text-primary',
+  '--type-display-size',
+  '--motion-standard',
+  '--ease-control',
 ]
 
 test('DGAF defines meaning-bearing visual tokens above palette primitives', () => {
@@ -48,6 +51,9 @@ test('non-color structural semantics remain present', () => {
   assert.match(governanceMap, /border-style:dashed/)
   assert.match(stateSpace, /border-style: dashed/)
   assert.match(stateSpace, /border-style: dotted/)
+  assert.match(globals, /data-tone="warning".*status-dot.*rotate\(45deg\)/s)
+  assert.match(globals, /data-tone="danger".*background:transparent/s)
+  assert.match(globals, /data-tone="neutral".*border-style:dotted/s)
 })
 
 test('reduced-motion equivalence remains explicit across semantic views', () => {
