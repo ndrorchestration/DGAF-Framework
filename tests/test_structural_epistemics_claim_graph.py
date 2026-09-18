@@ -37,22 +37,14 @@ def test_unknown_evidence_reference_fails_closed() -> None:
 
 def test_support_listing_requires_matching_relation() -> None:
     graph = _graph()
-    graph["relations"] = [
-        relation
-        for relation in graph["relations"]
-        if relation["relation_type"] != "SUPPORTS"
-    ]
+    graph["relations"] = [relation for relation in graph["relations"] if relation["relation_type"] != "SUPPORTS"]
     with pytest.raises(ValueError, match="lacks SUPPORTS relation"):
         validate_claim_graph(graph)
 
 
 def test_contradiction_listing_requires_matching_relation() -> None:
     graph = _graph()
-    graph["relations"] = [
-        relation
-        for relation in graph["relations"]
-        if relation["relation_type"] != "CONTRADICTS"
-    ]
+    graph["relations"] = [relation for relation in graph["relations"] if relation["relation_type"] != "CONTRADICTS"]
     with pytest.raises(ValueError, match="lacks CONTRADICTS relation"):
         validate_claim_graph(graph)
 
@@ -174,8 +166,6 @@ def test_supersession_must_be_reciprocal() -> None:
 
 def test_same_evidence_cannot_support_and_contradict_claim() -> None:
     graph = _graph()
-    graph["claims"][0]["contradicting_evidence_ids"].append(
-        "EVID-REFERENCE-SUPPORT"
-    )
+    graph["claims"][0]["contradicting_evidence_ids"].append("EVID-REFERENCE-SUPPORT")
     with pytest.raises(ValueError, match="same evidence as support and contradiction"):
         validate_claim_graph(graph)
