@@ -197,6 +197,11 @@ jobs:
         run: |
           python scripts/summarize_synthetic_assurance_cascade.py             --full-timing synthetic-artifacts/pdmal/full-task-timing.json             --partial-timing synthetic-artifacts/pdmal/component-timing.json             --weighted-forman synthetic-artifacts/track-a/weighted-forman-replication.json             --junit synthetic-artifacts/pdmal/pdmal-tests.xml             --junit synthetic-artifacts/track-a/track-a-tests.xml             --output synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json
 
+      - name: Verify synthetic summary sidecar
+        run: |
+          cd synthetic-artifacts
+          sha256sum --check SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json.sha256
+
       - name: Enforce zero empirical/scientific promotion
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
