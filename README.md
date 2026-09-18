@@ -14,7 +14,7 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **3. Read the current state from its owning record.** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) is the live project/evidence entrypoint. The status block immediately below is a public summary, not a substitute for exact-bound evidence records.
 
-**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock is established and bounded unblinding is authorized for controlled mapping release/decryption. Materialization tooling is accepted, but real materialization and its receipt are not established; primary analysis is not authorized or run; scientific-N increment remains 0; canonical DGAF efficacy and independent validation are not established.
+**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock and bounded unblinding are established at their exact scopes; real materialization evidence (#824) and the immutable materialization receipt (#826) are accepted; and the separate locked-primary-analysis authorization event (#828) is accepted. The primary analysis is **AUTHORIZED_BOUNDED / NOT RUN**; no locked result is established; scientific-N increment remains 0; canonical DGAF efficacy and independent validation are not established.
 
 **5. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
@@ -45,12 +45,12 @@ For this reconciliation, the accepted source lineage through PR #797 was read fr
 - **Stage-1 retained-archive repair — PR #794** is merged and accepts the exact locked archive's harmless `./` flat-member representation without changing archive bytes or weakening unsafe-member rejection.
 - **Stage-2 accepted-lineage rebind — PR #797** is merged and binds the operator bundle to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` / blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
 
-These milestones are engineering/presentation/assurance-inventory evidence only. They do **not** establish materialization, primary-analysis authorization, empirical efficacy, independent validation, successful deployment, production certification, or High-Assurance authorization.
+Those earlier engineering/presentation/assurance milestones did not establish materialization or primary-analysis authorization. Subsequent separately governed events now do: PR #824 admitted real non-secret materialization evidence, PR #826 established its immutable receipt, PR #831 accepted the fail-closed local analysis runner, PR #828 accepted bounded locked-analysis authorization, and PR #835 accepted non-executing content-addressed result-admission tooling. None of those events establishes analysis execution, empirical efficacy, independent validation, successful deployment, production certification, or High-Assurance authorization.
 
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
-> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, and bounded unblinding **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · materialization tooling **ACCEPTED** · real materialization **NOT ESTABLISHED** · primary analysis **NOT AUTHORIZED / NOT RUN**  
+> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, bounded unblinding, real materialization evidence, immutable materialization receipt, and locked-primary-analysis authorization **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · primary analysis **AUTHORIZED_BOUNDED / NOT RUN** · locked result **NOT ESTABLISHED**  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
@@ -102,7 +102,7 @@ DGAF separates prospective evaluation by workload instead of treating one experi
 | Track | Plain-English purpose | Current boundary |
 |---|---|---|
 | **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
-| **A — Epoch 002 successor** | Replacement prospective topology robustness | Collection COMPLETE at 50 paired seed units / 2,250 observations; dataset lock ESTABLISHED; bounded unblinding AUTHORIZED for controlled mapping release/decryption only; Stage-1 and Stage-2 materialization tooling ACCEPTED; real materialization and materialization receipt NOT ESTABLISHED; primary analysis NOT AUTHORIZED / NOT RUN |
+| **A — Epoch 002 successor** | Replacement prospective topology robustness | Collection COMPLETE at 50 paired seed units / 2,250 observations; dataset lock ESTABLISHED; bounded unblinding AUTHORIZED for controlled mapping release/decryption only; real materialization evidence and immutable receipt ESTABLISHED; locked-primary-analysis authorization ACCEPTED; primary analysis AUTHORIZED_BOUNDED / NOT RUN; locked result NOT ESTABLISHED |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
@@ -118,21 +118,26 @@ Issue #523 controls the replacement path. Epoch 002 uses a distinct protocol ide
 
 Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, separate collection authorization, retained-evidence admission/QC, dataset lock, and bounded unblinding have advanced through separate governed events. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
 
-The current frontier is **controlled operator-side materialization of the real retained Epoch 002 evidence**. The accepted apparatus now includes:
+The current frontier is **local execution of the authorized frozen Epoch 002 primary analysis**. The accepted apparatus now includes:
 
 - a PASS content-addressed dataset-lock receipt;
 - a separate PASS unblinding decision bounded to `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
-- PR #713's predecessor controlled Stage-1 materializer and PR #715's predecessor non-secret Stage-2 evidence bundle;
-- PR #794's accepted Stage-1 repair for the exact retained dot-prefixed archive representation, preserving locked archive bytes and fail-closed unsafe-member checks;
-- PR #797's accepted Stage-2 provenance rebind to the protected-main #794 materializer identity;
-- PR #728's prospective primary-analysis authorization tooling, which remains tooling-only until its predecessor receipt exists.
+- the accepted local materialization chain through PRs #713/#715/#794/#797/#806/#809/#813;
+- real non-secret materialization evidence admitted through PR #824;
+- an immutable creation-only materialization receipt accepted through PR #826;
+- fail-closed local locked-analysis runner tooling accepted through PR #831;
+- the separate primary-analysis authorization event accepted through PR #828 with exact scope `LOCKED_PRIMARY_ANALYSIS_ONLY`;
+- non-executing content-addressed result-admission tooling accepted through PR #835.
 
-Tooling acceptance does not claim that real materialization occurred. Until the exact retained material is processed under the accepted operator-controlled path and a separate immutable materialization receipt is admitted, preserve:
+Current boundary:
 
 - `TRACK_A_EPOCH_002_DATASET_LOCK = ESTABLISHED`;
 - `UNBLINDING = AUTHORIZED / BOUNDED TO CONTROLLED MAPPING RELEASE OR DECRYPTION`;
-- `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`;
-- `PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`;
+- `TRACK_A_EPOCH_002_MATERIALIZATION = ESTABLISHED`;
+- `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT = ESTABLISHED`;
+- `PRIMARY_ANALYSIS_AUTHORIZATION = ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY`;
+- `PRIMARY_ANALYSIS = AUTHORIZED_BOUNDED / NOT RUN`;
+- `LOCKED_ANALYSIS_RESULT = NOT_ESTABLISHED`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`;
@@ -140,7 +145,7 @@ Tooling acceptance does not claim that real materialization occurred. Until the 
 
 The remaining ordered sequence is:
 
-`controlled local materialization → validated non-secret materialization evidence admission → immutable materialization receipt → separate primary-analysis authorization → locked analysis → interpretation/adjudication`
+`locked primary analysis → content-addressed locked-result admission → interpretation/adjudication`
 
 No private key, passphrase, blinding secret, protected plaintext mapping, decrypted protected data, or other recoverable secret material belongs in GitHub, Notion, chat, CI inputs, workflow logs, or committed files.
 
@@ -177,7 +182,7 @@ The repository contains substantial engineering evidence: governance logic, prov
 
 Track A Epoch 001 also contains genuine prospective blinded collection evidence. That evidence is **not a primary efficacy result** and is explicitly **unanalyzable** under the retained protected-mapping evidence.
 
-Track A Epoch 002 has advanced further: the successor collection is complete, its dataset lock is established, and bounded unblinding is authorized. Those transitions still do **not** constitute a primary efficacy result; real materialization, a materialization receipt, separate primary-analysis authorization, locked analysis execution, and later interpretation remain distinct downstream events.
+Track A Epoch 002 has advanced further: collection is complete; dataset lock and bounded unblinding are established at their exact scopes; real materialization evidence and its immutable receipt are accepted; and a separate bounded locked-primary-analysis authorization event is accepted. Those transitions still do **not** constitute a primary efficacy result. Locked analysis execution, content-addressed result admission, and later interpretation remain distinct downstream events.
 
 A separate Solo research track produced bounded historical empirical evidence. Epoch 004 completed 50 seeds / 9,000 observations and produced negative evidence for its exact executed treatment. A later source audit found that canonical treatment fidelity was not established, so that result remains exact-treatment historical evidence rather than a claim about canonical DGAF efficacy.
 
