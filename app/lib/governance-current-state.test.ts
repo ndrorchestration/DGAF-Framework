@@ -15,9 +15,13 @@ test('public governance projection reflects the accepted 2026-09-18 documentatio
   const analysisAuthorization = GOVERNANCE_STAGES.find(
     stage => stage.id === 'primary-analysis-authorization',
   )
-  assert.equal(analysisAuthorization?.predicateState, 'not_authorized')
+  assert.equal(analysisAuthorization?.predicateState, 'pass')
   assert.equal(analysisAuthorization?.toolingPrepared, true)
-  assert.match(analysisAuthorization?.toolingNote ?? '', /#728/)
+  assert.match(analysisAuthorization?.toolingNote ?? '', /#828/)
+
+  const lockedAnalysis = GOVERNANCE_STAGES.find(stage => stage.id === 'locked-analysis')
+  assert.equal(lockedAnalysis?.predicateState, 'open')
+  assert.equal(lockedAnalysis?.toolingPrepared, true)
 })
 
 test('overview truth-boundary copy preserves established dataset-lock state', () => {
