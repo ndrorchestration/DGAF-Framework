@@ -1,0 +1,99 @@
+{
+  "record_type": "STRUCTURAL_EPISTEMICS_EVIDENCE_GRAPH",
+  "schema_version": 1,
+  "graph_id": "EGRAPH-REFERENCE-001",
+  "claims": [
+    {
+      "record_type": "STRUCTURAL_EPISTEMICS_CLAIM_RECORD",
+      "schema_version": 1,
+      "claim_id": "CLAIM-REFERENCE-001",
+      "proposition": "The reference condition is supported in the declared synthetic scope.",
+      "claim_class": "HYPOTHESIS",
+      "scope": {
+        "system": "STRUCTURAL_EPISTEMICS_REFERENCE_FIXTURE",
+        "population_or_context": "synthetic validation only",
+        "exclusions": ["DGAF authorization", "PDMAL efficacy"]
+      },
+      "temporal_validity": {
+        "valid_from": "2026-09-18",
+        "valid_until": null,
+        "review_by_or_condition": "review on source, schema, or fixture change"
+      },
+      "source_roots": ["fixture-root"],
+      "derivation_steps": ["synthetic fixture construction"],
+      "dependency_signature": {
+        "status": "KNOWN",
+        "roots": ["fixture-root"]
+      },
+      "supporting_evidence_ids": ["EVID-REFERENCE-SUPPORT"],
+      "contradicting_evidence_ids": ["EVID-REFERENCE-COUNTER"],
+      "defeaters": [],
+      "uncertainty": {
+        "aleatoric": "UNKNOWN",
+        "model_or_parameter": "UNKNOWN",
+        "structural_or_model_form": "UNKNOWN",
+        "data_coverage": "UNKNOWN",
+        "provenance": "UNKNOWN",
+        "dependency": "UNKNOWN",
+        "measurement": "UNKNOWN",
+        "temporal": "UNKNOWN",
+        "adversarial": "UNKNOWN",
+        "decision_or_consequence": "UNKNOWN"
+      },
+      "calibration_status": "NOT_APPLICABLE",
+      "verification_status": "NOT_VERIFIED",
+      "epistemic_state": "SUPPORTED",
+      "applicability_state": "CHALLENGED",
+      "causal_level": "ASSOCIATION",
+      "authorization_relevance": "NONE",
+      "supersedes": [],
+      "superseded_by": [],
+      "retraction": {
+        "state": "NOT_RETRACTED",
+        "reason": null
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVID-REFERENCE-SUPPORT",
+      "evidence_class": "DERIVATION",
+      "source_roots": ["support-root"],
+      "dependency_roots": [],
+      "observed_at": "2026-09-18",
+      "validity": {
+        "state": "CURRENT",
+        "review_condition": "review on fixture change"
+      },
+      "provenance_ref": "fixture://support"
+    },
+    {
+      "evidence_id": "EVID-REFERENCE-COUNTER",
+      "evidence_class": "COUNTEREVIDENCE",
+      "source_roots": ["counter-root"],
+      "dependency_roots": [],
+      "observed_at": "2026-09-18",
+      "validity": {
+        "state": "CURRENT",
+        "review_condition": "review on fixture change"
+      },
+      "provenance_ref": "fixture://counter"
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "REL-REFERENCE-SUPPORT",
+      "relation_type": "SUPPORTS",
+      "source_id": "EVID-REFERENCE-SUPPORT",
+      "target_id": "CLAIM-REFERENCE-001",
+      "scope": "synthetic validation"
+    },
+    {
+      "relation_id": "REL-REFERENCE-COUNTER",
+      "relation_type": "CONTRADICTS",
+      "source_id": "EVID-REFERENCE-COUNTER",
+      "target_id": "CLAIM-REFERENCE-001",
+      "scope": "synthetic validation"
+    }
+  ]
+}
