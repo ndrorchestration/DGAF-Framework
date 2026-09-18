@@ -77,3 +77,9 @@ test('Overview hero remains a semantic control field rather than decorative-only
   assert.match(overview, /NEXT ADMISSIBLE/)
   assert.doesNotMatch(overview, /hero-orbit/)
 })
+
+
+test('mobile does not hide the semantic hero field', () => {
+  assert.doesNotMatch(globals, /\.hero-field\{display:none\}/)
+  assert.match(globals, /\.hero-field\{width:100%;justify-self:stretch/)
+})
