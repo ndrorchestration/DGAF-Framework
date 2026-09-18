@@ -20,7 +20,7 @@ DGAF includes an **executable governance spine for selected controls**. A policy
 
 **Current scientific boundary:** the canonical High-Assurance program remains **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0**. This is separate from **Track A Epoch 002**, whose governed prospective blinded collection is **COMPLETE** at **50 paired inferential seed units / 2,250 blinded observations**. Its dataset lock is **ESTABLISHED** and bounded unblinding is **AUTHORIZED only for controlled mapping release/decryption**. The accepted Stage-1/Stage-2 materialization apparatus and prospective primary-analysis authorization tooling are tooling/preparation only: real materialization is **NOT ESTABLISHED**, repository `MATERIALIZATION_RECEIPT` is **NOT ESTABLISHED**, positive primary-analysis authorization is **NOT ESTABLISHED**, primary analysis is **NOT AUTHORIZED / NOT RUN**, `SCIENTIFIC_N_INCREMENT=0`, and canonical DGAF efficacy and independent validation remain **NOT_ESTABLISHED**. Track A Epoch 001 remains historical blinded-collection/custody-failure provenance and is not pooled into Epoch 002. See [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) for the live cross-track state.
 
-**Current repository-control boundary:** this 2026-09-18 reconciliation was prepared against protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`. Exact current protected-main identity is a Git fact and must be read at use time rather than embedded here as a standing self-reference. The accepted assurance catalog remains `PARTIAL_CORE_FAMILIES_ONLY`; the Governance Command Center's Decision Frontier, Governance Map, and State-Space Explorer V0 remain presentation-only projections. Neither documentation, UI state, catalog membership, nor standards mapping alters scientific or authorization state.
+**Current repository-control boundary:** this 2026-09-18 reconciliation was prepared against protected `main` `a0288b080b68e576b84d22eaf4a4972b5c3fbb5d`. Exact current protected-main identity is a Git fact and must be read at use time rather than embedded here as a standing self-reference. The accepted assurance catalog remains `PARTIAL_CORE_FAMILIES_ONLY`; the Governance Command Center's Decision Frontier, Governance Map, and State-Space Explorer V0 remain presentation-only projections. Neither documentation, UI state, catalog membership, nor standards mapping alters scientific or authorization state.
 
 ---
 
@@ -61,8 +61,11 @@ The accepted current materialization apparatus preserves a staged provenance cha
 - PR #713 and PR #715 remain predecessor Stage-1/Stage-2 tooling lineage.
 - PR #794 is the accepted Stage-1 repair for the exact locked public archive representation; it preserves locked archive byte identities and fail-closed archive-safety checks.
 - PR #797 binds Stage 2 to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
+- PR #806 accepts the bounded local operator bridge.
+- PR #809 accepts the local stdio MCP adapter as transport tooling only.
+- PR #813 accepts the one-command local materialization autopilot, which keeps secret-bearing execution on the operator machine and creates only a draft one-file non-secret evidence-admission PR before stopping.
 
-The dedicated materialization workflow passed the tooling-only and bound-chain checks, while real evidence-admission and real receipt-event paths remained skipped. Therefore real materialization and repository `MATERIALIZATION_RECEIPT` remain **NOT ESTABLISHED**.
+The dedicated materialization workflow passed the tooling-only and bound-chain checks, while real evidence-admission and real receipt-event paths remain unexecuted. Therefore real materialization and repository `MATERIALIZATION_RECEIPT` remain **NOT ESTABLISHED**.
 
 ## Governance Presentation Surfaces
 
@@ -190,4 +193,4 @@ Current machine/agent authority is role-based. Persona labels are compatibility/
 
 *License: Apache 2.0 · See [NOTICE](./NOTICE) for full attribution*  
 *Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*  
-*README.governance v1.9 · post-#797 materialization-provenance / documentation reconciliation · 2026-09-18*
+*README.governance v1.10 · post-#813 local-materialization tooling / documentation reconciliation · 2026-09-18*

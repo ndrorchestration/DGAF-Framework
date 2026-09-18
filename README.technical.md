@@ -86,9 +86,12 @@ The accepted Epoch 002 materialization apparatus is tooling/provenance only:
 - predecessor Stage-1 / Stage-2 tooling: PR #713 / PR #715;
 - accepted Stage-1 locked-archive representation repair: PR #794;
 - accepted Stage-2 provenance rebind: PR #797;
+- accepted bounded local operator bridge: PR #806;
+- accepted local stdio MCP adapter: PR #809;
+- accepted one-command local materialization autopilot: PR #813;
 - accepted Stage-1 identity: commit `cf32a62bbf08a1b8db39709f4989be1be800d64e`, blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
 
-The dedicated materialization workflow verifies tooling-only mode, Stage-1 tests, the Stage-1→Stage-2 binding, and bound Stage-2 bundle behavior. The real evidence-admission and real receipt-event paths remain unexecuted/skipped. No real materialization, receipt, primary-analysis authorization, scientific-N increment, efficacy, or independent validation is established by these tooling results.
+The accepted local operator entrypoint is `scripts/run_track_a_epoch_002_local_autopilot.ps1`. It keeps secret-bearing materialization on the operator machine and stops after creating a draft one-file non-secret evidence-admission PR. The dedicated materialization workflow verifies tooling-only mode, Stage-1 tests, the Stage-1→Stage-2 binding, and bound Stage-2 bundle behavior. The real evidence-admission and real receipt-event paths remain unexecuted. No real materialization, receipt, primary-analysis authorization, scientific-N increment, efficacy, or independent validation is established by these tooling results.
 
 ## Runtime components
 

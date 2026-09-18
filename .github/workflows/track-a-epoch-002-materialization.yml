@@ -16,9 +16,11 @@ on:
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json'
       - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json'
       - 'scripts/prepare_track_a_epoch_002_operator_materialization.py'
+      - 'scripts/prepare_track_a_epoch_002_materialization_receipt.py'
       - 'scripts/materialize_track_a_epoch_002_unblinded_input.py'
       - 'scripts/validate_track_a_epoch_002_materialization.py'
       - 'tests/test_track_a_epoch_002_materialization.py'
+      - 'tests/test_track_a_epoch_002_materialization_receipt_preparer.py'
       - 'tests/test_track_a_epoch_002_materialization_operator_bundle.py'
       - 'tests/test_track_a_epoch_002_materialization_operator_provenance.py'
       - 'tests/test_track_a_epoch_002_operator_materialization_execution_receipt.py'
@@ -85,6 +87,7 @@ jobs:
         run: |
           python -m py_compile scripts/validate_track_a_epoch_002_materialization.py
           python -m py_compile scripts/prepare_track_a_epoch_002_operator_materialization.py
+          python -m py_compile scripts/prepare_track_a_epoch_002_materialization_receipt.py
           python -m py_compile scripts/materialize_track_a_epoch_002_unblinded_input.py
 
       - name: Resolve materialization validation mode
@@ -148,9 +151,11 @@ jobs:
             'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_MATERIALIZATION_EXECUTION_RECEIPT_SCHEMA.json'
             'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_PROCEDURE.md'
             'scripts/prepare_track_a_epoch_002_operator_materialization.py'
+            'scripts/prepare_track_a_epoch_002_materialization_receipt.py'
             'scripts/materialize_track_a_epoch_002_unblinded_input.py'
             'scripts/validate_track_a_epoch_002_materialization.py'
             'tests/test_track_a_epoch_002_materialization.py'
+            'tests/test_track_a_epoch_002_materialization_receipt_preparer.py'
             'tests/test_track_a_epoch_002_materialization_operator_bundle.py'
             'tests/test_track_a_epoch_002_materialization_operator_provenance.py'
             'tests/test_track_a_epoch_002_operator_materialization_execution_receipt.py'
@@ -169,6 +174,7 @@ jobs:
         run: |
           python -m pytest \
             tests/test_track_a_epoch_002_materialization.py \
+            tests/test_track_a_epoch_002_materialization_receipt_preparer.py \
             tests/test_track_a_epoch_002_unblinded_materializer.py \
             -q
 
