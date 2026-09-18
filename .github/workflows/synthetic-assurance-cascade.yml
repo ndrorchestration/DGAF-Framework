@@ -1,0 +1,218 @@
+name: Synthetic Assurance Cascade
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/synthetic-assurance-cascade.yml"
+      - "scripts/summarize_synthetic_assurance_cascade.py"
+      - "tests/test_synthetic_assurance_cascade_summary.py"
+      - "experiments/pdmal_pilot/**"
+      - "experiments/pdmal_weighted_forman_replication.py"
+      - "tests/test_pdmal_weighted_forman_replication.py"
+      - "tests/test_track_a_epoch_002_*.py"
+      - "docs/experiment/SYNTHETIC_ASSURANCE_CASCADE.md"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/synthetic-assurance-cascade.yml"
+      - "scripts/summarize_synthetic_assurance_cascade.py"
+      - "tests/test_synthetic_assurance_cascade_summary.py"
+      - "experiments/pdmal_pilot/**"
+      - "experiments/pdmal_weighted_forman_replication.py"
+      - "tests/test_pdmal_weighted_forman_replication.py"
+      - "tests/test_track_a_epoch_002_*.py"
+      - "docs/experiment/SYNTHETIC_ASSURANCE_CASCADE.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pdmal-synthetic:
+    name: PDMAL synthetic matrix and timing
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.0"
+
+      - name: Install hash-locked PDMAL dependencies
+        run: python -m pip install --require-hashes -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Run surrogate contract, security, blinding, analysis, and timing tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p synthetic-artifacts/pdmal
+          cd experiments/pdmal_pilot
+          python -m pytest             test_harness_contract.py             test_execution_contract.py             test_task_engine.py             test_pilot_artifact_schema.py             test_security_controls.py             test_analysis.py             test_blinding_noninterference.py             test_governance_trace.py             test_mode_t_full_pilot_timing.py             test_mode_t_timing_study.py             -q             --junitxml=../../synthetic-artifacts/pdmal/pdmal-tests.xml
+
+      - name: Measure complete 50 x 180 synthetic task shape
+        env:
+          EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python experiments/pdmal_pilot/mode_t_full_pilot_timing.py             --output synthetic-artifacts/pdmal/full-task-timing.json             --repetitions 1
+
+      - name: Measure component matrix and locked synthetic analysis path
+        env:
+          EVIDENCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python experiments/pdmal_pilot/mode_t_timing_study.py             --output synthetic-artifacts/pdmal/component-timing.json             --repetitions 1
+
+      - name: Prove PDMAL timing artifacts remain nonempirical
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          full = json.loads(Path("synthetic-artifacts/pdmal/full-task-timing.json").read_text())
+          partial = json.loads(Path("synthetic-artifacts/pdmal/component-timing.json").read_text())
+
+          assert full["total_trials_per_repetition"] == 9000
+          assert full["synthetic_seed_count_per_repetition"] == 50
+          assert full["trials_per_seed"] == 180
+          assert full["empirical_data_collection"] is False
+          assert full["protected_material_present"] is False
+          assert full["empirical_n"] == 0
+
+          assert partial["empirical_data_collection"] is False
+          assert partial["pilot_authorized"] is False
+          assert partial["w_proposal_eligible"] is False
+          assert partial["numeric_w_selected"] is False
+          assert partial["stages"]["full_synthetic_matrix_timing"]["status"] == "PASS"
+          assert partial["stages"]["locked_primary_analysis_timing"]["status"] == "PASS"
+          PY
+
+      - name: Upload PDMAL synthetic measurements
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-pdmal-measurements
+          path: synthetic-artifacts/pdmal/
+          if-no-files-found: error
+          retention-days: 30
+
+  track-a-synthetic:
+    name: Track A synthetic gate and falsification tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.0"
+
+      - name: Install CI dependencies
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Run synthetic Track A gate and downstream-record tests
+        run: |
+          mkdir -p synthetic-artifacts/track-a
+          python -m pytest             tests/test_synthetic_assurance_cascade_summary.py             tests/test_pdmal_weighted_forman_replication.py             tests/test_track_a_epoch_002_analysis_lock.py             tests/test_track_a_epoch_002_materialization.py             tests/test_track_a_epoch_002_unblinded_materializer.py             tests/test_track_a_epoch_002_materialization_receipt_preparer.py             tests/test_track_a_epoch_002_primary_analysis_authorization.py             tests/test_track_a_epoch_002_result_record_schema.py             tests/test_track_a_epoch_002_result_record_semantics.py             tests/test_track_a_epoch_002_result_ledger.py             -q             --junitxml=synthetic-artifacts/track-a/track-a-tests.xml
+
+      - name: Run weighted Forman-Ricci synthetic falsification matrix
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python experiments/pdmal_weighted_forman_replication.py             --output synthetic-artifacts/track-a/weighted-forman-replication.json
+
+      - name: Prove falsification output has no scientific state effect
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(
+              Path("synthetic-artifacts/track-a/weighted-forman-replication.json").read_text()
+          )
+          assert data["protocol"]["total_trials"] == 480
+          assert data["protocol"]["calibration_trials"] == 240
+          assert data["protocol"]["heldout_trials"] == 240
+          assert data["epistemic_classification"]["track_a_state_effect"] == "NONE"
+          assert data["epistemic_classification"]["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+          PY
+
+      - name: Upload Track A synthetic measurements
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-track-a-measurements
+          path: synthetic-artifacts/track-a/
+          if-no-files-found: error
+          retention-days: 30
+
+  summarize:
+    name: Seal synthetic assurance measurement summary
+    needs:
+      - pdmal-synthetic
+      - track-a-synthetic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.0"
+
+      - name: Download PDMAL measurements
+        uses: actions/download-artifact@v4
+        with:
+          name: synthetic-pdmal-measurements
+          path: synthetic-artifacts/pdmal
+
+      - name: Download Track A measurements
+        uses: actions/download-artifact@v4
+        with:
+          name: synthetic-track-a-measurements
+          path: synthetic-artifacts/track-a
+
+      - name: Build fail-closed synthetic assurance summary
+        run: |
+          python scripts/summarize_synthetic_assurance_cascade.py             --full-timing synthetic-artifacts/pdmal/full-task-timing.json             --partial-timing synthetic-artifacts/pdmal/component-timing.json             --weighted-forman synthetic-artifacts/track-a/weighted-forman-replication.json             --junit synthetic-artifacts/pdmal/pdmal-tests.xml             --junit synthetic-artifacts/track-a/track-a-tests.xml             --output synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json
+
+      - name: Enforce zero empirical/scientific promotion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          summary = json.loads(
+              Path("synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json").read_text()
+          )
+          assert summary["classification"] == "SYNTHETIC_ENGINEERING_ASSURANCE_ONLY"
+          assert summary["empirical_data_used"] is False
+          assert summary["protected_material_used"] is False
+          assert summary["real_materialization_performed"] is False
+          assert summary["real_primary_analysis_performed"] is False
+          assert summary["scientific_n_increment"] == 0
+          assert summary["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+          assert summary["independent_validation"] == "NOT_ESTABLISHED"
+          PY
+
+      - name: Upload sealed synthetic assurance summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-assurance-cascade-summary
+          path: synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json
+          if-no-files-found: error
+          retention-days: 30
