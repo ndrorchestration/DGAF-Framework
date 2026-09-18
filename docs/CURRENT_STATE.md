@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-17
-current_protected_main: b1d91621bd73e70866d5ff8fd38fb98e440b30e9
+last_verified: 2026-09-18
+current_protected_main: 40d301583048e0c47e8bf38154ac40fa023b4f5e
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -27,8 +27,8 @@ track_a_successor_primary_analysis_authorization_tooling: ACCEPTED
 track_a_successor_primary_analysis: NOT_AUTHORIZED_NOT_RUN
 accepted_dataset_lock_tooling_pr: 622
 accepted_unblinding_decision_tooling_pr: 627
-accepted_stage_1_materializer_pr: 713
-accepted_stage_2_operator_materialization_bundle_pr: 715
+accepted_stage_1_materializer_pr: 794
+accepted_stage_2_operator_materialization_bundle_pr: 797
 accepted_primary_analysis_authorization_tooling_pr: 728
 accepted_primary_analysis_authorization_tooling_commit: e2363df584f6ba721a86d5bc8cd6c3789052495c
 accepted_decision_frontier_pr: 776
@@ -37,6 +37,12 @@ accepted_state_space_explorer_pr: 783
 accepted_audit_catalog_pr: 780
 accepted_workflow_coverage_scanner_pr: 782
 accepted_assurance_catalog_expansion_pr: 785
+accepted_wave_2_documentation_reconciliation_pr: 795
+accepted_stage_1_materializer_predecessor_pr: 713
+accepted_stage_2_materialization_predecessor_pr: 715
+accepted_stage_1_materializer_commit: cf32a62bbf08a1b8db39709f4989be1be800d64e
+accepted_stage_1_materializer_blob: 3a825b026423952c2844cb18664eb6395b72fdc1
+accepted_stage_2_rebind_pr: 797
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -50,7 +56,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **`b1d91621bd73e70866d5ff8fd38fb98e440b30e9`** |
+| Protected repository `main` | **`40d301583048e0c47e8bf38154ac40fa023b4f5e`** |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -80,13 +86,13 @@ No row above establishes integrated DGAF efficacy, independent validation, produ
 
 ## Protected-main repository state
 
-The current protected-main baseline is `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`, produced by PR #783 after the accepted UI and assurance-inventory sequence below.
+The current protected-main baseline is `40d301583048e0c47e8bf38154ac40fa023b4f5e`, produced by PR #797 after accepted documentation Wave 2 (#795), the Stage-1 retained-archive representation repair (#794), and the current-lineage Stage-2 provenance rebind (#797).
 
 ### Accepted presentation / Semantic Control Field sequence
 
 - **PR #776 — Decision Frontier** merged as `3777b66277135a31da496661e0cb12e87cb05e3c`. The component derives from the normalized governance model and presents the current governed state, evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics.
 - **PR #779 — Governance Map** merged as `29a7467b24e6709342874a048dd75b674a090463`. It projects vertical escalation from canonical governance stages, four explicit lateral relationships, and global field conditions without introducing a second state engine, continuous-manifold semantics, or readiness scoring.
-- **PR #783 — State-Space Explorer V0** merged as current protected `main` `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`. It projects canonical lifecycle stages into discrete categorical `established`, `frontier`, and `blocked_by_predecessor` regions while preserving native predicate state, evidence boundaries, and explicit model limits.
+- **PR #783 — State-Space Explorer V0** merged as `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`. It projects canonical lifecycle stages into discrete categorical `established`, `frontier`, and `blocked_by_predecessor` regions while preserving native predicate state, evidence boundaries, and explicit model limits.
 
 These are **presentation-only** accepted source states. They do not create governance authority, grant authorization, establish runtime health, or promote scientific/empirical claims.
 
@@ -130,15 +136,21 @@ Repository engineering has crossed the materialization-tooling milestone without
 
 1. prospective materialization receipt validation/procedure — accepted predecessor tooling;
 2. OPERATOR_CODESPACE/content-addressed provenance correction — accepted;
-3. controlled Stage-1 unblinded materializer — **PR #713 accepted**;
-4. operator-side Stage-2 materialization evidence bundle — **PR #715 accepted**;
-5. prospective primary-analysis authorization validator/procedure/CI/test tooling — **PR #728 accepted**.
+3. controlled Stage-1 unblinded materializer — **PR #713 accepted as predecessor tooling**;
+4. operator-side Stage-2 materialization evidence bundle — **PR #715 accepted as predecessor tooling**;
+5. Stage-1 retained-archive representation repair — **PR #794 accepted**, preserving locked archive bytes while admitting only the exact harmless `./` flat-member representation and retaining fail-closed rejection of unsafe/unexpected archive structures;
+6. Stage-2 provenance rebind — **PR #797 accepted**, binding the operator bundle to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and blob `3a825b026423952c2844cb18664eb6395b72fdc1`;
+7. prospective primary-analysis authorization validator/procedure/CI/test tooling — **PR #728 accepted**.
 
-PR #713 introduced the controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
+PR #713 introduced the original controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
-PR #715 added the non-secret operator materialization evidence bundle. It binds accepted predecessor identities, emits deterministic content-addressed output identities plus non-secret manifest/receipt/evidence records, stages the complete five-member bundle before publication, and publishes atomically only after validation.
+PR #715 added the original non-secret operator materialization evidence bundle. It binds predecessor identities, emits deterministic content-addressed output identities plus non-secret manifest/receipt/evidence records, stages the complete five-member bundle before publication, and publishes atomically only after validation.
 
-Neither PR decrypted or admitted the real retained Epoch 002 material as a governed analysis input.
+PR #794 then repaired Stage 1 against the exact locked public archive representation. The accepted materializer now admits at most one root-directory marker and strips only a leading `./` from regular-file member names while still rejecting absolute paths, nested paths, traversal, links, duplicate normalized names, unreadable members, and unexpected members. Both locked archive byte identities remain unchanged.
+
+PR #797 then rebound Stage 2 to the accepted #794 merge identity rather than an internal PR-only commit. The accepted binding is materializer commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and materializer blob `3a825b026423952c2844cb18664eb6395b72fdc1`. Its dedicated materialization workflow proved the tooling-only path, Stage-1 tests, Stage-1→Stage-2 binding, bound operator-bundle tests, and fail-closed scientific boundary; the real evidence-admission and real receipt-event paths remained skipped.
+
+None of PRs #713, #715, #794, or #797 decrypted or admitted the real retained Epoch 002 material as a governed analysis input, and none establishes a real materialization receipt.
 
 PR #728 installed prospective fail-closed primary-analysis authorization tooling on protected `main`. Its validator, exact-head read-only workflow, procedure, and adversarial tests remain tooling-only: no authorization record, materialization receipt, locked result, analysis execution, scientific-N increment, efficacy, independence, or High-Assurance transition is present or admitted.
 
