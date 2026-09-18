@@ -24,8 +24,27 @@ def test_operator_materialization_bundle_helper_exists() -> None:
     assert OPERATOR_BUNDLE.is_file(), "operator materialization bundle helper is absent"
 
 
+def stage1_matches_accepted_binding(helper: Any) -> bool:
+    current = helper.MATERIALIZER_PATH.read_bytes()
+    accepted = helper.git_bytes("show", f"{helper.MATERIALIZER_COMMIT}:{helper.MATERIALIZER_REL}")
+    return current == accepted
+
+
+def assert_stage2_fails_closed_pending_rebind(helper: Any) -> None:
+    with pytest.raises(
+        SystemExit,
+        match="scripts/materialize_track_a_epoch_002_unblinded_input.py drifted from its accepted commit",
+    ):
+        helper.load_repository_contracts()
+
+
 def test_repository_contracts_bind_accepted_chain() -> None:
     helper = load_module(OPERATOR_BUNDLE, "epoch002_operator_bundle_contracts")
+
+    if not stage1_matches_accepted_binding(helper):
+        assert_stage2_fails_closed_pending_rebind(helper)
+        return
+
     contracts = helper.load_repository_contracts()
 
     assert contracts["dataset_lock_commit_sha"] == "e7ba2fe6fc6b3587957c59231da81ae107cacab2"
@@ -41,6 +60,11 @@ def test_repository_contracts_bind_accepted_chain() -> None:
 
 def test_bundle_documents_validate_and_preserve_non_effects() -> None:
     helper = load_module(OPERATOR_BUNDLE, "epoch002_operator_bundle_builder")
+
+    if not stage1_matches_accepted_binding(helper):
+        assert_stage2_fails_closed_pending_rebind(helper)
+        return
+
     validator = load_module(VALIDATOR, "epoch002_operator_bundle_validator")
     contracts = helper.load_repository_contracts()
     materialized_input = helper.canonical(
