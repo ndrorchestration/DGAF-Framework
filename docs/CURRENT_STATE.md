@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-18
-reconciliation_input_main: 40d301583048e0c47e8bf38154ac40fa023b4f5e
+reconciliation_input_main: a0288b080b68e576b84d22eaf4a4972b5c3fbb5d
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -43,6 +43,10 @@ accepted_stage_2_materialization_predecessor_pr: 715
 accepted_stage_1_materializer_commit: cf32a62bbf08a1b8db39709f4989be1be800d64e
 accepted_stage_1_materializer_blob: 3a825b026423952c2844cb18664eb6395b72fdc1
 accepted_stage_2_rebind_pr: 797
+accepted_local_operator_bridge_pr: 806
+accepted_local_operator_mcp_pr: 809
+accepted_local_materialization_autopilot_pr: 813
+accepted_local_materialization_autopilot_commit: a0288b080b68e576b84d22eaf4a4972b5c3fbb5d
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -56,7 +60,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `40d301583048e0c47e8bf38154ac40fa023b4f5e` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `a0288b080b68e576b84d22eaf4a4972b5c3fbb5d` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -70,7 +74,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Epoch 002 collection | **COMPLETE · 50 PAIRED SEED UNITS / 2,250 BLINDED OBSERVATIONS** |
 | Epoch 002 dataset lock | **ESTABLISHED** |
 | Epoch 002 bounded unblinding | **AUTHORIZED · CONTROLLED MAPPING RELEASE OR DECRYPTION ONLY** |
-| Epoch 002 materialization tooling | **ACCEPTED** |
+| Epoch 002 materialization tooling | **ACCEPTED · LOCAL BRIDGE + STDIO MCP + ONE-COMMAND AUTOPILOT THROUGH PR #813** |
 | Epoch 002 real materialization | **NOT ESTABLISHED** |
 | Epoch 002 materialization receipt | **NOT ESTABLISHED** |
 | Epoch 002 primary analysis | **NOT AUTHORIZED / NOT RUN** |
@@ -86,7 +90,7 @@ No row above establishes integrated DGAF efficacy, independent validation, produ
 
 ## Protected-main repository state
 
-This reconciliation was prepared against protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`, produced by PR #797 after accepted documentation Wave 2 (#795), the Stage-1 retained-archive representation repair (#794), and the current-lineage Stage-2 provenance rebind (#797). Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was prepared against protected `main` `a0288b080b68e576b84d22eaf4a4972b5c3fbb5d`. Since the earlier #797 materialization rebind, protected main has additionally accepted the bounded local operator bridge (#806), its stdio MCP transport adapter (#809), and the one-command local materialization autopilot (#813). These additions reduce operator friction only; they do not establish real materialization, a repository materialization receipt, primary-analysis authorization, scientific-N increment, efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
@@ -140,7 +144,10 @@ Repository engineering has crossed the materialization-tooling milestone without
 4. operator-side Stage-2 materialization evidence bundle — **PR #715 accepted as predecessor tooling**;
 5. Stage-1 retained-archive representation repair — **PR #794 accepted**, preserving locked archive bytes while admitting only the exact harmless `./` flat-member representation and retaining fail-closed rejection of unsafe/unexpected archive structures;
 6. Stage-2 provenance rebind — **PR #797 accepted**, binding the operator bundle to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and blob `3a825b026423952c2844cb18664eb6395b72fdc1`;
-7. prospective primary-analysis authorization validator/procedure/CI/test tooling — **PR #728 accepted**.
+7. prospective primary-analysis authorization validator/procedure/CI/test tooling — **PR #728 accepted**;
+8. bounded local operator bridge — **PR #806 accepted**, exposing only the governed local materialization/status/evidence operations without arbitrary shell/filesystem/network authority;
+9. local stdio MCP adapter — **PR #809 accepted**, transport tooling only; it does not make ChatGPT/local-MCP connectivity a scientific predecessor;
+10. one-command local materialization autopilot — **PR #813 accepted**, performing secret-bearing materialization only on the operator machine, then preparing a draft one-file non-secret evidence-admission PR and stopping before receipt or primary-analysis authorization.
 
 PR #713 introduced the original controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
@@ -150,13 +157,13 @@ PR #794 then repaired Stage 1 against the exact locked public archive representa
 
 PR #797 then rebound Stage 2 to the accepted #794 merge identity rather than an internal PR-only commit. The accepted binding is materializer commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and materializer blob `3a825b026423952c2844cb18664eb6395b72fdc1`. Its dedicated materialization workflow proved the tooling-only path, Stage-1 tests, Stage-1→Stage-2 binding, bound operator-bundle tests, and fail-closed scientific boundary; the real evidence-admission and real receipt-event paths remained skipped.
 
-None of PRs #713, #715, #794, or #797 decrypted or admitted the real retained Epoch 002 material as a governed analysis input, and none establishes a real materialization receipt.
+None of PRs #713, #715, #794, #797, #806, #809, or #813 establishes real materialization or a repository materialization receipt. PR #813 can perform the real secret-bearing operation only when the operator deliberately runs the accepted local autopilot with the required local archives, custody key, retention ID, and out-of-repository output directory; the merged tooling itself is not execution evidence.
 
 PR #728 installed prospective fail-closed primary-analysis authorization tooling on protected `main`. Its validator, exact-head read-only workflow, procedure, and adversarial tests remain tooling-only: no authorization record, materialization receipt, locked result, analysis execution, scientific-N increment, efficacy, independence, or High-Assurance transition is present or admitted.
 
 ## Current scientific frontier
 
-The next admissible scientific transition is **controlled operator-side materialization of the real retained Epoch 002 evidence, followed by validation/admission and a separate immutable materialization receipt**.
+The next admissible scientific transition is **controlled operator-side materialization of the real retained Epoch 002 evidence, followed by validation/admission and a separate immutable materialization receipt**. The lowest-friction accepted operator path is now `scripts/run_track_a_epoch_002_local_autopilot.ps1` from a local DGAF checkout. That command must run only with the five required local variables defined and keeps all secret-bearing/decrypted material outside GitHub, Notion, chat, CI, and the repository.
 
 The repository currently contains no canonical `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json`. Therefore:
 
