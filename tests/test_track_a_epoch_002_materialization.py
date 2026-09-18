@@ -300,8 +300,21 @@ def test_receipt_cannot_authorize_primary_analysis() -> None:
         )
 
 
-def test_tooling_mode_accepts_established_predecessors_and_preserves_successor_absence() -> None:
+def test_tooling_mode_accepts_established_predecessors_and_preserves_successor_absence(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
     validator = load_validator()
+    monkeypatch.setattr(
+        validator,
+        "MATERIALIZATION_EVIDENCE_PATH",
+        tmp_path / "missing-materialization-evidence.json",
+    )
+    monkeypatch.setattr(
+        validator,
+        "MATERIALIZATION_RECEIPT_PATH",
+        tmp_path / "missing-materialization-receipt.json",
+    )
     validator.validate_tooling_only()
 
 
