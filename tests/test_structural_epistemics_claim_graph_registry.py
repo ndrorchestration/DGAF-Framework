@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from validate_structural_epistemics_claim_graph import validate_claim_graph
+from validate_structural_epistemics_claim_graph import validate_claim_graph  # noqa: E402
 
 REGISTRY_DIR = ROOT / "docs/research/claim_graphs"
 
