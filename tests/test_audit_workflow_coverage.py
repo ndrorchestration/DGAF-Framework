@@ -86,3 +86,16 @@ def test_core_exact_head_verification_workflows_are_catalog_mapped():
     }
 
     assert core_verification_workflows.isdisjoint(unmapped)
+
+
+def test_external_runtime_ingress_assurance_family_is_catalog_mapped():
+    catalog = load_catalog(CATALOG_PATH)
+    implementation_paths = {path for audit in catalog["audits"] for path in audit.get("implementation", [])}
+
+    external_runtime_assurance_paths = {
+        "registry/external_runtime_adapter_contract_v1.json",
+        "scripts/validate_external_runtime_adapter.py",
+        "tests/test_external_runtime_adapter_contract.py",
+    }
+
+    assert external_runtime_assurance_paths.issubset(implementation_paths)

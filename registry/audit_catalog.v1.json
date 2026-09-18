@@ -7,8 +7,8 @@
       "Many current workflows, assurance scripts, governance tests, security checks, documentation audits, and historical audit families still require classification and mapping.",
       "Current protected-main readback identifies PPTL CI, Governance CI, and PR Issue-State Keyword Guard as required contexts, and all three now have exact workflow-path catalog mappings; exact job/ruleset administration semantics and broader protected-branch configuration remain incomplete for the catalog.",
       "Shared-dependency and independence analysis remains incomplete across the wider assurance surface; some cataloged families intentionally reuse repository-local validators.",
-      "External-runtime ingress assurance on current main still requires dedicated catalog expansion and runtime evidence binding.",
-      "Historical dated audit reports still require family-versus-execution-instance classification."
+      "Historical dated audit reports still require family-versus-execution-instance classification.",
+      "External-runtime ingress has bounded source/contract assurance through repository tests, but no provider integration, live runtime evidence, runtime authority, provider compatibility/trust, or exactly-once execution guarantee is established."
     ]
   },
   "audits": [
@@ -792,6 +792,55 @@
         "No dedicated unit-test file for scripts/validate_control_state_head.py was identified at the expected repository path during this tranche; assurance is bound to the workflow and executable validator itself.",
         "The validator checks the encoded predecessor/HEAD reconciliation contract, not external correctness of every fact recorded in the control-state document.",
         "Workflow failure semantics do not imply protected-branch requiredness; current protected-main required-context readback does not list this workflow."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-EXT-RUNTIME-INGRESS",
+      "name": "External Runtime Ingress Contract Validation",
+      "class": "EPISTEMIC_CONTROL",
+      "target_layers": [
+        "REPOSITORY",
+        "RUNTIME",
+        "PROVENANCE",
+        "GOVERNANCE"
+      ],
+      "assertion": "Provider-neutral external runtime envelopes satisfy the versioned non-authoritative ingress contract and fail closed for malformed identity, evidence/provenance defects, staleness, unsupported action/transition requests, authority mismatch, required risk metadata, replay/collision conditions, and provider substitution while preserving DGAF authority non-promotion.",
+      "owner": "DGAF external runtime ingress boundary",
+      "implementation": [
+        "registry/external_runtime_adapter_contract_v1.json",
+        "scripts/validate_external_runtime_adapter.py",
+        "tests/test_external_runtime_adapter_contract.py"
+      ],
+      "trigger": [
+        "carried by .github/workflows/python-tests.yml on pull_request/push when the repository Python test suite executes",
+        "direct pytest execution"
+      ],
+      "blocking": false,
+      "evidence": [
+        "Python Tests & Quality Checks workflow conclusion when carried there",
+        "tests/test_external_runtime_adapter_contract.py pytest result",
+        "versioned contract identity DGAF_EXTERNAL_RUNTIME_ENVELOPE_V1",
+        "stable DGAF_EXT_* rejection taxonomy exercised by focused tests"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides bounded source-level assurance that the external runtime ingress contract preserves provider-neutral, non-authoritative, fail-closed admission semantics when its focused test family executes; it does not create a dedicated workflow or protected-branch requirement.",
+      "non_effects": [
+        "Does not establish provider integration, provider compatibility, provider trust, successful deployment, or live runtime evidence.",
+        "Does not grant DGAF authority or authorize a requested transition; admitted external input remains PRESENTED_NOT_GRANTED.",
+        "Does not establish exactly-once execution; the contract explicitly records exactly_once as NOT_ESTABLISHED.",
+        "Does not establish scientific efficacy, empirical support, independent validation, materialization, primary-analysis authorization/execution, or High-Assurance promotion."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_EXTERNAL_ENVELOPE_CONTRACT_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "This family is executed as part of the broader Python test carrier rather than by a dedicated external-runtime workflow.",
+        "Tests use synthetic provider/runtime fixtures and do not establish compatibility with any named external provider or live runtime.",
+        "Replay checks operate on supplied seen-event/effect sets; durable cross-process exactly-once authority is not established by this contract.",
+        "Source-level contract validation is not deployment/runtime verification and does not make external assertions authoritative."
       ],
       "lifecycle": "CURRENT"
     }
