@@ -83,3 +83,39 @@
   .decision-frontier *::before,
   .decision-frontier *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }
+
+
+/* Causal interaction: emphasize the reachable frontier without implying authorization. */
+.frontier-node,
+.frontier-stratum,
+.frontier-unreachable-item {
+  transition:
+    transform var(--motion-standard) var(--ease-control),
+    border-color var(--motion-standard) var(--ease-control),
+    opacity var(--motion-standard) var(--ease-control);
+}
+
+.frontier-path::after {
+  transition: transform var(--motion-focus) var(--ease-emphasis);
+}
+
+@media (hover: hover) {
+  .frontier-node:hover,
+  .frontier-stratum:hover {
+    transform: translateY(-2px);
+  }
+
+  .frontier-unreachable-item:hover {
+    transform: translateX(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frontier-node,
+  .frontier-stratum,
+  .frontier-unreachable-item,
+  .frontier-path::after {
+    transition: none !important;
+    transform: none !important;
+  }
+}
