@@ -278,6 +278,7 @@ def validate_tooling_only() -> None:
 
 
 def validate_authorization_event_shape(head: str) -> str:
+    head = git("rev-parse", head)
     lineage = git("rev-list", "--parents", "-n", "1", head).split()
     if len(lineage) != 2 or lineage[0] != head:
         fail("authorization event must have exactly one parent")
