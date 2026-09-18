@@ -59,3 +59,11 @@ test('non-color structural semantics remain present', () => {
 test('reduced-motion equivalence remains explicit across semantic views', () => {
   for (const css of [frontier, governanceMap, stateSpace]) assert.match(css, /prefers-reduced-motion: ?reduce/)
 })
+
+
+test('forced colors preserve structural semantics and focus visibility', () => {
+  assert.match(globals, /@media \(forced-colors: active\)/)
+  assert.match(globals, /outline: 2px solid Highlight/)
+  assert.match(globals, /truth-boundary[\s\S]*border-left: 3px solid CanvasText/)
+  assert.match(globals, /status-chip\[data-tone="warning"\][\s\S]*status-dot/)
+})
