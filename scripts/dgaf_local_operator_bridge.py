@@ -235,10 +235,18 @@ def get_evidence_response() -> dict[str, Any]:
     evidence_path = output / EVIDENCE_NAME
     evidence = load_json(evidence_path, "materialization evidence")
 
-    serialized = json.dumps(evidence, sort_keys=True).lower()
-    for token in SENSITIVE_TOKENS:
-        if token in serialized:
-            refuse("materialization evidence contains prohibited secret-bearing text")
+    def contains_sensitive_value(value: Any) -> bool:
+        if isinstance(value, str):
+            lowered = value.lower()
+            return any(token in lowered for token in SENSITIVE_TOKENS)
+        if isinstance(value, dict):
+            return any(contains_sensitive_value(item) for item in value.values())
+        if isinstance(value, list):
+            return any(contains_sensitive_value(item) for item in value)
+        return False
+
+    if contains_sensitive_value(evidence):
+        refuse("materialization evidence contains prohibited secret-bearing text")
 
     if evidence.get("primary_analysis_authorized") is not False:
         refuse("evidence does not preserve primary-analysis non-authorization")
