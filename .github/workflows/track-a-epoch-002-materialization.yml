@@ -100,11 +100,37 @@ jobs:
           set -euo pipefail
           evidence='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json'
           receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json'
+
+          prior=''
+          case "${{ github.event_name }}" in
+            pull_request)
+              prior="${{ github.event.pull_request.base.sha }}"
+              ;;
+            push)
+              prior="${{ github.event.before }}"
+              ;;
+          esac
+
+          unchanged_from_prior() {
+            local path="$1"
+            test -n "$prior" || return 1
+            git cat-file -e "$prior:$path" 2>/dev/null || return 1
+            git diff --quiet "$prior" HEAD -- "$path"
+          }
+
           if test -e "$receipt"; then
             test -e "$evidence"
-            echo 'value=receipt_event' >> "$GITHUB_OUTPUT"
+            if unchanged_from_prior "$receipt"; then
+              echo 'value=post_receipt_tooling' >> "$GITHUB_OUTPUT"
+            else
+              echo 'value=receipt_event' >> "$GITHUB_OUTPUT"
+            fi
           elif test -e "$evidence"; then
-            echo 'value=evidence_admission' >> "$GITHUB_OUTPUT"
+            if unchanged_from_prior "$evidence"; then
+              echo 'value=post_evidence_tooling' >> "$GITHUB_OUTPUT"
+            else
+              echo 'value=evidence_admission' >> "$GITHUB_OUTPUT"
+            fi
           else
             echo 'value=tooling_only' >> "$GITHUB_OUTPUT"
           fi
@@ -143,8 +169,30 @@ jobs:
         if: ${{ steps.mode.outputs.value == 'receipt_event' }}
         run: python scripts/validate_track_a_epoch_002_materialization.py --validate-receipt-event
 
+      - name: Validate post-admission immutable materialization state
+        if: ${{ steps.mode.outputs.value == 'post_evidence_tooling' || steps.mode.outputs.value == 'post_receipt_tooling' }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          MODE: ${{ steps.mode.outputs.value }}
+        run: |
+          set -euo pipefail
+          evidence='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE.json'
+          receipt='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json'
+
+          test -n "$BASE_SHA"
+          git cat-file -e "$BASE_SHA:$evidence"
+          git diff --quiet "$BASE_SHA" HEAD -- "$evidence"
+
+          if [ "$MODE" = 'post_receipt_tooling' ]; then
+            git cat-file -e "$BASE_SHA:$receipt"
+            git diff --quiet "$BASE_SHA" HEAD -- "$receipt"
+            test -e "$receipt"
+          else
+            test ! -e "$receipt"
+          fi
+
       - name: Prove tooling PR stays inside the dedicated materialization lane
-        if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
+        if: ${{ github.event_name == 'pull_request' && (steps.mode.outputs.value == 'tooling_only' || steps.mode.outputs.value == 'post_evidence_tooling' || steps.mode.outputs.value == 'post_receipt_tooling') }}
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
@@ -261,24 +309,43 @@ jobs:
 
           test -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_RECEIPT.json
           test -e docs/experiment/track_a_runs/TRACK_A_EPOCH_002_UNBLINDING_DECISION_RECORD.json
-          test ! -e "$analysis_auth"
-          test ! -e "$analysis_result"
 
           case "$MODE" in
             tooling_only)
               test ! -e "$evidence"
               test ! -e "$receipt"
+              test ! -e "$analysis_auth"
+              test ! -e "$analysis_result"
               echo 'TRACK_A_EPOCH_002_MATERIALIZATION=NOT_ESTABLISHED'
+              echo 'TRACK_A_EPOCH_002_PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN'
               ;;
             evidence_admission)
               test -e "$evidence"
               test ! -e "$receipt"
+              test ! -e "$analysis_auth"
+              test ! -e "$analysis_result"
               echo 'TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE=ADMITTED_PENDING_RECEIPT'
+              echo 'TRACK_A_EPOCH_002_PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN'
               ;;
             receipt_event)
               test -e "$evidence"
               test -e "$receipt"
+              test ! -e "$analysis_auth"
+              test ! -e "$analysis_result"
               echo 'TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT=VALIDATED_PENDING_ACCEPTANCE'
+              echo 'TRACK_A_EPOCH_002_PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN'
+              ;;
+            post_evidence_tooling)
+              test -e "$evidence"
+              test ! -e "$receipt"
+              echo 'TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE=ESTABLISHED_PRESERVED'
+              echo 'TRACK_A_EPOCH_002_SUCCESSOR_STATE=OUT_OF_SCOPE_PRESERVED'
+              ;;
+            post_receipt_tooling)
+              test -e "$evidence"
+              test -e "$receipt"
+              echo 'TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT=ESTABLISHED_PRESERVED'
+              echo 'TRACK_A_EPOCH_002_SUCCESSOR_STATE=OUT_OF_SCOPE_PRESERVED'
               ;;
             *)
               exit 1
@@ -287,6 +354,5 @@ jobs:
 
           echo 'TRACK_A_EPOCH_002_DATASET_LOCK=ESTABLISHED'
           echo 'TRACK_A_EPOCH_002_UNBLINDING=AUTHORIZED_BOUNDED'
-          echo 'TRACK_A_EPOCH_002_PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN'
           echo 'SCIENTIFIC_N_INCREMENT=0'
           echo 'CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED'
