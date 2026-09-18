@@ -20,7 +20,7 @@ DGAF includes an **executable governance spine for selected controls**. A policy
 
 **Current scientific boundary:** the canonical High-Assurance program remains **PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N=0**. This is separate from **Track A Epoch 002**, whose governed prospective blinded collection is **COMPLETE** at **50 paired inferential seed units / 2,250 blinded observations**. Its dataset lock is **ESTABLISHED** and bounded unblinding is **AUTHORIZED only for controlled mapping release/decryption**. The accepted Stage-1/Stage-2 materialization apparatus and prospective primary-analysis authorization tooling are tooling/preparation only: real materialization is **NOT ESTABLISHED**, repository `MATERIALIZATION_RECEIPT` is **NOT ESTABLISHED**, positive primary-analysis authorization is **NOT ESTABLISHED**, primary analysis is **NOT AUTHORIZED / NOT RUN**, `SCIENTIFIC_N_INCREMENT=0`, and canonical DGAF efficacy and independent validation remain **NOT_ESTABLISHED**. Track A Epoch 001 remains historical blinded-collection/custody-failure provenance and is not pooled into Epoch 002. See [`docs/CURRENT_STATE.md`](./docs/CURRENT_STATE.md) for the live cross-track state.
 
-**Current repository-control boundary:** protected `main` at the 2026-09-17 reconciliation is `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`. The accepted assurance catalog remains `PARTIAL_CORE_FAMILIES_ONLY`; the Governance Command Center's Decision Frontier, Governance Map, and State-Space Explorer V0 remain presentation-only projections. Neither documentation, UI state, catalog membership, nor standards mapping alters scientific or authorization state.
+**Current repository-control boundary:** protected `main` at the 2026-09-18 reconciliation is `40d301583048e0c47e8bf38154ac40fa023b4f5e`. The accepted assurance catalog remains `PARTIAL_CORE_FAMILIES_ONLY`; the Governance Command Center's Decision Frontier, Governance Map, and State-Space Explorer V0 remain presentation-only projections. Neither documentation, UI state, catalog membership, nor standards mapping alters scientific or authorization state.
 
 ---
 
@@ -37,6 +37,10 @@ Accepted progression:
 1. **PR #780** established the initial bounded catalog and validator.
 2. **PR #782** added deterministic discovery of current `.github/workflows/*.yml|*.yaml` definitions not exactly bound by catalog implementation paths.
 3. **PR #785** added seven source-verified recurring assurance families while preserving `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
+4. **PR #789** bound all currently observed protected-main required contexts to exact catalog workflow paths without making catalog membership equivalent to requiredness.
+5. **PR #791** cataloged core exact-head verification families, including Python quality, UI validation, PR-scoped doc lint, and control-state HEAD binding.
+6. **PR #792** cataloged the provider-neutral external runtime ingress contract while preserving external assertions as non-authoritative and exactly-once execution as not established.
+7. **PR #793** cataloged the accepted Semantic Control Field projection contracts for Decision Frontier, Governance Map, and State-Space Explorer V0.
 
 Interpretation rules:
 
@@ -49,6 +53,16 @@ Interpretation rules:
 Known catalog gaps include wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
 
 ---
+
+## Materialization Tooling Provenance
+
+The accepted current materialization apparatus preserves a staged provenance chain:
+
+- PR #713 and PR #715 remain predecessor Stage-1/Stage-2 tooling lineage.
+- PR #794 is the accepted Stage-1 repair for the exact locked public archive representation; it preserves locked archive byte identities and fail-closed archive-safety checks.
+- PR #797 binds Stage 2 to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
+
+The dedicated materialization workflow passed the tooling-only and bound-chain checks, while real evidence-admission and real receipt-event paths remained skipped. Therefore real materialization and repository `MATERIALIZATION_RECEIPT` remain **NOT ESTABLISHED**.
 
 ## Governance Presentation Surfaces
 
@@ -176,4 +190,4 @@ Current machine/agent authority is role-based. Persona labels are compatibility/
 
 *License: Apache 2.0 · See [NOTICE](./NOTICE) for full attribution*  
 *Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)*  
-*README.governance v1.8 · assurance-catalog / semantic-control-field reconciliation · 2026-09-17*
+*README.governance v1.9 · post-#797 materialization-provenance / documentation reconciliation · 2026-09-18*
