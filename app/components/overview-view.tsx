@@ -3,6 +3,12 @@ import type { ViewId } from './app-shell'
 import { ArrowIcon } from './icons'
 import { StatusChip } from './status-chip'
 
+const PUBLIC_SUMMARY = [
+  ['Govern actions', 'Make admissible transitions explicit before agents or operators act.'],
+  ['Bind evidence', 'Keep claims attached to provenance, verification scope, and immutable records.'],
+  ['Expose limits', 'Show what is not authorized, not established, or not yet reachable.'],
+]
+
 const PILLARS = [
   ['Evidence', 'What was observed or produced, with exact scope and provenance.'],
   ['Verification', 'What review predicate passed, and whether it was independent.'],
@@ -31,6 +37,22 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
           <div className="hero-filament hero-filament-frontier"><span>nearest admissible path</span></div>
           <div className="hero-state hero-state-frontier"><span>NEXT ADMISSIBLE</span><strong>{NEXT_TRANSITION.title}</strong><small>Not execution; operator handoff</small></div>
         </div>
+      </div>
+    </section>
+
+    <section className="public-summary panel" aria-labelledby="public-summary-title">
+      <div className="public-summary-copy">
+        <span className="eyebrow">EXTERNAL SUMMARY</span>
+        <h3 id="public-summary-title">What DGAF is for</h3>
+        <p>DGAF is a governance and evidence layer for agentic systems. It makes transition authority, provenance, and claim limits inspectable instead of leaving them implicit in orchestration code.</p>
+      </div>
+      <div className="public-summary-grid">
+        {PUBLIC_SUMMARY.map(([title, body]) => <div key={title}><strong>{title}</strong><span>{body}</span></div>)}
+      </div>
+      <div className="public-claim-ceiling">
+        <span>Current claim ceiling</span>
+        <strong>{TRUTH_BOUNDARY.efficacy}</strong>
+        <small>Engineering and governance maturity are not presented as established canonical efficacy.</small>
       </div>
     </section>
 
