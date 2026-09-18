@@ -5,6 +5,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ADAPTER = ROOT / "scripts/dgaf_local_operator_mcp.py"
+BOOTSTRAP = ROOT / "scripts/bootstrap_dgaf_local_operator_mcp.ps1"
+LAUNCHER = ROOT / "scripts/start_dgaf_local_operator_mcp.ps1"
 EXPECTED_TOOLS = {"status", "verify_inputs", "materialize", "get_evidence"}
 
 
@@ -101,3 +103,23 @@ def test_adapter_has_no_process_or_filesystem_escape_imports() -> None:
     assert "socket" not in imported
     assert "requests" not in imported
     assert "httpx" not in imported
+
+
+def test_windows_bootstrap_is_non_authorizing() -> None:
+    source = BOOTSTRAP.read_text(encoding="utf-8").lower()
+
+    assert '{"action":"status"}' in source
+    assert '{"action":"verify_inputs"}' not in source
+    assert '{"action":"materialize"}' not in source
+    assert "git push" not in source
+    assert "gh pr" not in source
+
+
+def test_windows_launcher_only_starts_stdio_adapter() -> None:
+    source = LAUNCHER.read_text(encoding="utf-8").lower()
+
+    assert "dgaf_local_operator_mcp.py" in source
+    assert "dgaf_local_operator_bridge.py" not in source
+    assert '{"action":"materialize"}' not in source
+    assert "invoke-webrequest" not in source
+    assert "start-process" not in source
