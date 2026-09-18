@@ -125,6 +125,7 @@ jobs:
           mapfile -t changed < <(git diff --name-only "$base" HEAD)
           allowed=(
             ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
+            "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json"
             "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
             "scripts/validate_track_a_epoch_002_primary_analysis_authorization.py"
             "tests/test_track_a_epoch_002_primary_analysis_authorization.py"
