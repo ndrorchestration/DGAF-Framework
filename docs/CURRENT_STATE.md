@@ -237,7 +237,7 @@ The High-Assurance program therefore remains **PRE-FREEZE / FAIL-CLOSED / NOT AU
 
 ## Agent identity / vocabulary boundary
 
-Issue #522 is **CLOSED / COMPLETED**. Current ontology authority is `docs/agents/AGENT_ROSTER.md` plus `registry/agent_ontology_adjudication.v1.json` and the accepted adjudication record.
+Issue #522 is **CLOSED / COMPLETED**. Canonical persona identity and numbered-seat lineage remain governed by `docs/agents/AGENT_ROSTER.md` plus `registry/agent_ontology_adjudication.v1.json` and the accepted adjudication record. Current executable authority is separately defined by `governance/role_capability_registry.v1.json`; persona identity does not independently grant authority.
 
 - sovereign numbered seats come from the canonical roster;
 - formation-local identifiers do not silently renumber sovereign seats;
