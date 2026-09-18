@@ -41,6 +41,9 @@ def assert_stage2_fails_closed_pending_rebind(helper: Any) -> None:
 def test_repository_contracts_bind_accepted_chain() -> None:
     helper = load_module(OPERATOR_BUNDLE, "epoch002_operator_bundle_contracts")
 
+    assert helper.MATERIALIZER_COMMIT == "cf32a62bbf08a1b8db39709f4989be1be800d64e"
+    assert helper.MATERIALIZER_BLOB == "3a825b026423952c2844cb18664eb6395b72fdc1"
+
     if not stage1_matches_accepted_binding(helper):
         assert_stage2_fails_closed_pending_rebind(helper)
         return
@@ -50,8 +53,8 @@ def test_repository_contracts_bind_accepted_chain() -> None:
     assert contracts["dataset_lock_commit_sha"] == "e7ba2fe6fc6b3587957c59231da81ae107cacab2"
     assert contracts["unblinding_decision_commit_sha"] == "bf6279b9989f211e324ff3e9012788bed95e5c84"
     assert contracts["evidence_tooling_commit_sha"] == "84e3a9ca5af8f87f63c14b06de8aa21430542ada"
-    assert contracts["materializer_commit_sha"] == "ebed3db8b5469e8ba8e18aed752aee7baccf05fc"
-    assert contracts["materializer_blob_sha"] == "ebc2163003ee9079a887cf378e357fd5078bf1a3"
+    assert contracts["materializer_commit_sha"] == "cf32a62bbf08a1b8db39709f4989be1be800d64e"
+    assert contracts["materializer_blob_sha"] == "3a825b026423952c2844cb18664eb6395b72fdc1"
     assert contracts["dataset_lock_receipt_sha256"]
     assert contracts["unblinding_decision_sha256"]
     assert contracts["dataset_lock_receipt_canonical_sha256"]
