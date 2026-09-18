@@ -67,7 +67,10 @@
   --motion-fast: 140ms;
   --motion-standard: 180ms;
   --motion-slow: 260ms;
+  --motion-flow: 1800ms;
+  --motion-focus: 320ms;
   --ease-control: cubic-bezier(.2,.8,.2,1);
+  --ease-emphasis: cubic-bezier(.16,1,.3,1);
   --shadow: 0 24px 80px rgba(0, 0, 0, .32);
   --radius: 16px;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -173,5 +176,80 @@ h4 { font-size: 1rem; }
   .governance-node,
   .governance-relation {
     box-shadow: none;
+  }
+}
+
+
+/* Motion grammar: motion may explain causality, focus, or state transition; never authority by itself. */
+@keyframes dgaf-provenance-flow {
+  from { background-position: 0 0; }
+  to { background-position: 0 18px; }
+}
+
+@keyframes dgaf-frontier-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--state-frontier) 0%, transparent); }
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--state-frontier) 9%, transparent); }
+}
+
+.hero-filament::before {
+  background-size: 100% 18px;
+  animation: dgaf-provenance-flow var(--motion-flow) linear infinite;
+}
+
+.hero-state,
+.truth-grid > div,
+.concept-card,
+.epoch-card,
+.next-transition {
+  transition:
+    transform var(--motion-standard) var(--ease-control),
+    border-color var(--motion-standard) var(--ease-control),
+    background-color var(--motion-standard) var(--ease-control);
+}
+
+.hero-state-frontier {
+  animation: dgaf-frontier-breathe calc(var(--motion-flow) * 1.8) var(--ease-emphasis) infinite;
+}
+
+.button:active,
+.nav-item:active,
+.icon-button:active,
+.text-button:active {
+  transform: translateY(0) scale(.985);
+}
+
+.nav-item[data-active="true"] {
+  box-shadow: inset 3px 0 0 var(--provenance);
+}
+
+@media (hover: hover) {
+  .concept-card:hover,
+  .epoch-card:hover,
+  .next-transition:hover {
+    transform: translateY(-2px);
+  }
+
+  .hero-state:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-filament::before,
+  .hero-state-frontier {
+    animation: none !important;
+  }
+
+  .hero-state,
+  .truth-grid > div,
+  .concept-card,
+  .epoch-card,
+  .next-transition,
+  .button,
+  .nav-item,
+  .icon-button,
+  .text-button {
+    transition: none !important;
+    transform: none !important;
   }
 }
