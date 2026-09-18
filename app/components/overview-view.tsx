@@ -1,6 +1,6 @@
 import { EPOCH_SUMMARIES, NEXT_TRANSITION, TRUTH_BOUNDARY } from '../lib/governance'
 import type { ViewId } from './app-shell'
-import { ArrowIcon, ShieldIcon } from './icons'
+import { ArrowIcon } from './icons'
 import { StatusChip } from './status-chip'
 
 const PILLARS = [
@@ -22,7 +22,16 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
           <button className="button ghost" onClick={() => onNavigate('control')}>Open control room</button>
         </div>
       </div>
-      <div className="hero-orbit" aria-hidden="true"><div className="orbit orbit-a"/><div className="orbit orbit-b"/><div className="orbit-core"><ShieldIcon /></div><span className="orbit-node n1"/><span className="orbit-node n2"/><span className="orbit-node n3"/><span className="orbit-node n4"/></div>
+      <div className="hero-field" role="img" aria-label={`Governed transition field. Current program state: ${TRUTH_BOUNDARY.programState}. Authorization: ${TRUTH_BOUNDARY.authorization}. Next admissible transition: ${NEXT_TRANSITION.title}.`}>
+        <div className="hero-field-frame">
+          <div className="hero-field-caption"><span className="eyebrow">SEMANTIC CONTROL FIELD</span><span>reachability preview</span></div>
+          <div className="hero-state hero-state-current"><span>CURRENT STATE</span><strong>{TRUTH_BOUNDARY.programState}</strong><small>Established governance context</small></div>
+          <div className="hero-filament hero-filament-established"><span>evidence + provenance</span></div>
+          <div className="hero-boundary"><span>AUTHORIZATION BOUNDARY</span><strong>{TRUTH_BOUNDARY.authorization}</strong></div>
+          <div className="hero-filament hero-filament-frontier"><span>nearest admissible path</span></div>
+          <div className="hero-state hero-state-frontier"><span>NEXT ADMISSIBLE</span><strong>{NEXT_TRANSITION.title}</strong><small>Not execution; operator handoff</small></div>
+        </div>
+      </div>
     </section>
 
     <section className="truth-boundary panel">
