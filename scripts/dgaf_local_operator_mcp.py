@@ -12,9 +12,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp.server.mcpserver import MCPServer
-
 from dgaf_local_operator_bridge import dispatch
+from mcp.server.mcpserver import MCPServer
 
 SERVER_NAME = "dgaf-epoch002-local-operator"
 
