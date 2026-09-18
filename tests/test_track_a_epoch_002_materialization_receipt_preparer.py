@@ -55,6 +55,16 @@ def test_receipt_preparer_fails_closed_before_evidence_admission(
         "MATERIALIZATION_EVIDENCE_PATH",
         tmp_path / "missing-materialization-evidence.json",
     )
+    monkeypatch.setattr(
+        module.validator,
+        "PRIMARY_ANALYSIS_AUTH_PATH",
+        tmp_path / "missing-primary-analysis-authorization.json",
+    )
+    monkeypatch.setattr(
+        module.validator,
+        "LOCKED_ANALYSIS_RESULT_PATH",
+        tmp_path / "missing-locked-analysis-result.json",
+    )
 
     with pytest.raises(SystemExit, match="canonical materialization evidence is absent"):
         module.build_receipt("2026-09-18T15:00:00Z")

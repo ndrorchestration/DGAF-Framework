@@ -315,6 +315,16 @@ def test_tooling_mode_accepts_established_predecessors_and_preserves_successor_a
         "MATERIALIZATION_RECEIPT_PATH",
         tmp_path / "missing-materialization-receipt.json",
     )
+    monkeypatch.setattr(
+        validator,
+        "PRIMARY_ANALYSIS_AUTH_PATH",
+        tmp_path / "missing-primary-analysis-authorization.json",
+    )
+    monkeypatch.setattr(
+        validator,
+        "LOCKED_ANALYSIS_RESULT_PATH",
+        tmp_path / "missing-locked-analysis-result.json",
+    )
     validator.validate_tooling_only()
 
 
