@@ -264,8 +264,20 @@ def test_frozen_epoch_002_analysis_identities_are_exact() -> None:
     assert validator.REQUIREMENTS_BLOB_SHA == "00c1f779e97030f9b25ae494642edb31b5b09de5"
 
 
-def test_tooling_mode_preserves_authorization_and_result_absence() -> None:
+def test_tooling_mode_preserves_authorization_and_result_absence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     validator = load_validator()
+    monkeypatch.setattr(
+        validator,
+        "AUTH_REL",
+        "docs/experiment/track_a_runs/__missing_epoch002_primary_analysis_authorization.json",
+    )
+    monkeypatch.setattr(
+        validator,
+        "RESULT_REL",
+        "docs/experiment/track_a_runs/__missing_epoch002_locked_analysis_result.json",
+    )
     validator.validate_tooling_only()
 
 
