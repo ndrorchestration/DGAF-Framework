@@ -123,6 +123,7 @@ jobs:
             'docs/experiment/TRACK_A_EPOCH_002_OPERATOR_MATERIALIZATION_EXECUTION_RECEIPT_SCHEMA.json'
             'docs/experiment/TRACK_A_EPOCH_002_MATERIALIZATION_PROCEDURE.md'
             'scripts/prepare_track_a_epoch_002_operator_materialization.py'
+          'scripts/materialize_track_a_epoch_002_unblinded_input.py'
             'scripts/validate_track_a_epoch_002_materialization.py'
             'tests/test_track_a_epoch_002_materialization.py'
             'tests/test_track_a_epoch_002_materialization_operator_bundle.py'

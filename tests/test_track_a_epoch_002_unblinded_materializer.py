@@ -361,6 +361,33 @@ class TrackAEpoch002MaterializerTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             self._run(self.root / "drift", contracts=contracts)
 
+    def test_tar_reader_accepts_locked_archive_dot_prefix_without_weakening_flatness(self) -> None:
+        archive_path = self.root / "dot-prefixed.tar"
+        with tarfile.open(archive_path, "w") as archive:
+            root = tarfile.TarInfo("./")
+            root.type = tarfile.DIRTYPE
+            root.mode = 0o700
+            archive.addfile(root)
+            info = tarfile.TarInfo("./safe")
+            info.size = 1
+            info.mode = 0o600
+            archive.addfile(info, io.BytesIO(b"x"))
+
+        members = self.module.read_exact_tar_members(
+            archive_path,
+            frozenset({"safe"}),
+            "synthetic",
+        )
+        self.assertEqual(members, {"safe": b"x"})
+
+        nested = self.root / "nested-prefixed.tar"
+        with tarfile.open(nested, "w") as archive:
+            info = tarfile.TarInfo("./nested/safe")
+            info.size = 1
+            archive.addfile(info, io.BytesIO(b"x"))
+        with self.assertRaises(SystemExit):
+            self.module.read_exact_tar_members(nested, frozenset({"safe"}), "synthetic")
+
     def test_tar_reader_rejects_traversal_and_links(self) -> None:
         traversal = self.root / "traversal.tar"
         with tarfile.open(traversal, "w") as archive:
