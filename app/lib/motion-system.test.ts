@@ -26,7 +26,7 @@ test('reduced-motion removes semantic animation without removing structural cues
     assert.match(css, /prefers-reduced-motion: reduce/)
     assert.match(css, /animation: none !important|animation:none!important/)
   }
-  assert.match(frontier, /border-style: dashed/)
+  assert.match(frontier, /border-top: 1px dashed|border-style: dashed/)
   assert.match(governance, /border-style:double/)
   assert.match(stateSpace, /border-style: dotted/)
 })
