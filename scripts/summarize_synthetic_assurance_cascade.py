@@ -114,7 +114,7 @@ def build_summary(
     return {
         "schema_version": 1,
         "classification": CLASSIFICATION,
-        "source_sha": os.environ.get("GITHUB_SHA", "UNBOUND_LOCAL"),
+        "source_sha": os.environ.get("SOURCE_SHA") or os.environ.get("GITHUB_SHA", "UNBOUND_LOCAL"),
         "empirical_data_used": False,
         "protected_material_used": False,
         "real_materialization_performed": False,
