@@ -30,19 +30,12 @@ from prepare_track_a_epoch_002_operator_materialization import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-DATASET_LOCK_EVIDENCE_PATH = (
-    ROOT
-    / "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
-)
+DATASET_LOCK_EVIDENCE_PATH = ROOT / "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_DATASET_LOCK_EVIDENCE.json"
 PRIMARY_ANALYSIS_AUTH_PATH = (
-    ROOT
-    / "docs/experiment/track_a_runs/"
-    "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
+    ROOT / "docs/experiment/track_a_runs/" "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json"
 )
 LOCKED_ANALYSIS_RESULT_PATH = (
-    ROOT
-    / "docs/experiment/track_a_runs/"
-    "TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
+    ROOT / "docs/experiment/track_a_runs/" "TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
 )
 
 ENV_PUBLIC = "DGAF_PUBLIC_ARCHIVE"
