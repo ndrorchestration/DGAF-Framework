@@ -187,11 +187,7 @@ def validate_authorization_history(ref: str = "HEAD") -> tuple[str, dict[str, An
     if len(lineage) != 2 or lineage[0] != event:
         fail("primary-analysis authorization event must have exactly one parent")
     parent = lineage[1]
-    changed = [
-        line
-        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines() if line]
     if changed != [AUTH_REL]:
         fail("primary-analysis authorization event changed more than its canonical record")
     if git_object_exists(f"{parent}:{AUTH_REL}"):
@@ -397,11 +393,7 @@ def validate_result_event(head: str, *, accepted_parent_sha: str) -> str:
     if parent != accepted_parent_sha:
         fail("locked analysis result parent is not the accepted protected-main parent")
 
-    changed = [
-        line
-        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line]
     if changed != [RESULT_REL]:
         fail("locked analysis result event must create exactly the canonical result record")
     if git_object_exists(f"{parent}:{RESULT_REL}"):
@@ -434,11 +426,7 @@ def validate_accepted_result(ref: str = "HEAD") -> str:
     if len(lineage) != 2 or lineage[0] != event:
         fail("accepted locked analysis result event must have exactly one parent")
     parent = lineage[1]
-    changed = [
-        line
-        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines() if line]
     if changed != [RESULT_REL]:
         fail("accepted locked analysis result event changed more than its canonical record")
     if git_object_exists(f"{parent}:{RESULT_REL}"):
