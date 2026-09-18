@@ -99,3 +99,24 @@ def test_external_runtime_ingress_assurance_family_is_catalog_mapped():
     }
 
     assert external_runtime_assurance_paths.issubset(implementation_paths)
+
+
+def test_semantic_control_field_projection_assurance_family_is_catalog_mapped():
+    catalog = load_catalog(CATALOG_PATH)
+    audit = next(
+        (entry for entry in catalog["audits"] if entry.get("id") == "AUD-UI-SEMANTIC-CONTROL-FIELD"),
+        None,
+    )
+
+    assert audit is not None
+
+    expected_paths = {
+        "app/lib/decision-frontier.ts",
+        "app/lib/decision-frontier.test.ts",
+        "app/lib/governance-map.ts",
+        "app/lib/governance-map.test.ts",
+        "app/lib/state-space-projection.ts",
+        "app/lib/state-space-projection.test.ts",
+    }
+
+    assert expected_paths.issubset(set(audit["implementation"]))
