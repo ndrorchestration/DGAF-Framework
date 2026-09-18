@@ -1,0 +1,19 @@
+/* DGAF editorial hierarchy — successor lane #801. */
+.hero-copy > p { max-width: 62ch; font-size: 1.02rem; line-height: 1.72; }
+.truth-grid strong { letter-spacing: -.01em; }
+.boundary-note,
+.claim-ceiling p,
+.governance-summary p { max-width: 78ch; }
+.source-stamp,
+.artifact-row code,
+.finding-meta code,
+.tool-contract strong { font-variant-numeric: tabular-nums; }
+.source-stamp,
+.artifact-row code { overflow-wrap: anywhere; }
+.eyebrow { text-wrap: balance; }
+.section-heading h2,
+.section-heading h3,
+.hero h2 { text-wrap: balance; }
+.warning-copy,
+.inline-warning,
+.alert { text-wrap: pretty; }
