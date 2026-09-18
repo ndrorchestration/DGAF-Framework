@@ -21,12 +21,15 @@ def test_agent_authority_invariant_is_present_and_canonical():
     assert "BLOCK / ESCALATE / REQUEST HUMAN REVIEW" in text
 
 
-def test_canonical_roster_and_topology_remain_distinct_authority_sources():
+def test_roster_preserves_identity_lineage_while_functional_authority_is_separate():
     roster = _read(ROSTER)
     topology = _read(TOPOLOGY)
 
-    assert "single source of truth for agent names, roles, and duty assignments" in roster
-    assert "Changes require Amethyst sign-off + Njineer confirmation." in roster
+    assert "identity and historical duty lineage" in roster.lower()
+    assert "governance/role_capability_registry.v1.json" in roster
+    assert "governance/persona_role_lineage.v1.json" in roster
+    assert "single source of truth for agent names, roles, and duty assignments" not in roster
+    assert "Changes require Amethyst sign-off + Njineer confirmation." not in roster
     assert "canonical specification for all named agent formations" in topology
     assert "Sealed formation seat change" in topology
 

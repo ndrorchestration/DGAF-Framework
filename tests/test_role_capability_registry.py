@@ -134,3 +134,44 @@ def test_governance_readme_uses_current_track_and_functional_governance_contacts
     assert "role.governance-orchestrator" in text
     assert "role.evidence-verification-reviewer" in text
     assert "role.security-containment-gate" in text
+
+
+def test_gate_unit_template_uses_functional_roles_and_noncertifying_status_language():
+    text = (ROOT / "docs" / "gates" / "GATE_UNIT_TEMPLATE.md").read_text(encoding="utf-8")
+
+    assert "Status:       DRAFT | REVIEW | CERTIFIED" not in text
+    assert "Certified-by: Agent Apogee" not in text
+    assert "**Maintained by:** Agent Amethyst" not in text
+    assert "Escalate to Sentinel" not in text
+    assert "role.governance-orchestrator" in text
+    assert "role.evidence-verification-reviewer" in text
+    assert "role.security-containment-gate" in text
+    assert "does not establish external certification" in text
+
+
+def test_agent_roster_is_identity_lineage_not_current_authority_source():
+    text = (ROOT / "docs" / "agents" / "AGENT_ROSTER.md").read_text(encoding="utf-8")
+
+    assert "single source of truth for agent names, roles, and duty assignments" not in text
+    assert "Sentinel sovereign veto overrides Amethyst" not in text
+    assert "This file is a sovereign reference" not in text
+    assert "governance/role_capability_registry.v1.json" in text
+    assert "governance/persona_role_lineage.v1.json" in text
+    assert "identity and historical duty lineage" in text.lower()
+
+
+def test_notice_uses_canonical_axis_and_pptl_expansions():
+    text = NOTICE_FILE.read_text(encoding="utf-8")
+
+    assert "AXIS (Agentic eXecution Integrity System)" not in text
+    assert "PPTL (Prof Prodigy Theorem Layer)" not in text
+    assert "AXIS (Agent X-axis Invariant Spectrum)" in text
+    assert "PPTL (Phi-Pentagon Topology Lab)" in text
+
+
+def test_acronym_registry_contains_no_chat_file_citation_tokens():
+    text = (ROOT / "docs" / "taxonomy" / "NDR_ACRONYM_REGISTRY.md").read_text(encoding="utf-8")
+
+    assert "filecite" not in text
+    assert "turn231file0" not in text
+    assert "docs/qa/AXIS_METRIC_SPEC.md" in text

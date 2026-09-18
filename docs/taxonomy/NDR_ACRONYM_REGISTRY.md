@@ -20,7 +20,8 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **PDMAL / PDMA-L** | Phi-Driven Multi-Agent Lattice | Lattice/control research architecture; topology is an experimental/design variable rather than implied by the acronym | DEFINED for architecture; graph/math quantities are VERIFIED only where explicitly tested | Current active identity. Dodecahedral math may be verified without establishing dodecahedral efficacy or making that topology constitutive. |
 | **PDMAL-D** | Phi-Dodecahedral Multi-Agent Lattice | Prospective successor identity in which dodecahedral topology would be constitutive | PROSPECTIVE / NOT_TRIGGERED | Evidence-gated naming transition. Do not describe PDMAL-D as active, canonical architecture, or established successor until the transition gate is satisfied. |
 | **DGAF** | Dynamic Governance Agentic Formation | Agentic governance/orchestration framework | DEFINED; implementation evidence is artifact-specific | Do not infer capability from framework name alone. |
-| **AXIS** | Agent X-axis Invariant Spectrum | DGAF invariant measurement/metric spine | DEFINED; operationalization status is artifact-specific | Canonical expansion is explicitly recorded in `docs/qa/AXIS_METRIC_SPEC.md`; the specification itself states that full operationalization remains a roadmap item. fileciteturn231file0 |
+| **PPTL** | Phi-Pentagon Topology Lab | Repository-local topology/governance harness name | DEFINED; implementation/evidence remains artifact-specific | Supported by `pptl/README.md` and `pptl/__init__.py`; older competing expansions are historical/current-facing residue, not equal canonical candidates. |
+| **AXIS** | Agent X-axis Invariant Spectrum | DGAF invariant measurement/metric spine | DEFINED; operationalization status is artifact-specific | Canonical expansion is explicitly recorded in `docs/qa/AXIS_METRIC_SPEC.md`; the specification itself states that full operationalization remains a roadmap item. |
 | **SACP** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical/project-local term | AMBIGUOUS | Do not invent an expansion. Preserve the acronym until a canonical source is located. |
 | **BFT** | Byzantine Fault Tolerance | Established distributed-systems fault model/property | EXTERNAL STANDARD TERM | PDMAL is not automatically BFT merely because BFT terminology appears nearby. |
 | **MDAR** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | DGAF protocol reference | AMBIGUOUS | The repository contains references to an `MDAR_PROTOCOL_v1.md`, but the current search surface did not establish its expansion. Do not infer one. |
@@ -94,7 +95,7 @@ Current documentation must therefore distinguish three things:
 
 ### AXIS
 
-Current canonical expansion: **Agent X-axis Invariant Spectrum**. The authoritative source is `docs/qa/AXIS_METRIC_SPEC.md`. fileciteturn231file0
+Current canonical expansion: **Agent X-axis Invariant Spectrum**. The authoritative source is `docs/qa/AXIS_METRIC_SPEC.md`.
 
 The acronym is reconciled at the vocabulary level. Separate verification is still required for claims about AXIS's operational deployment, scoring validity, or performance.
 

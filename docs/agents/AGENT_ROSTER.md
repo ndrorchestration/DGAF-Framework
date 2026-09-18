@@ -1,12 +1,12 @@
 # DGAF Agent Roster
 
 **Version:** 1.2  
-**Maintained by:** Amethyst-Conductor  
+**Maintained as identity lineage by:** DGAF documentation governance  
 **Canonical home:** `DGAF-Framework/docs/agents/AGENT_ROSTER.md`  
-**Authority:** This file is the single source of truth for agent names, roles, and duty assignments across the T1/T2 operational layer (A-00 through A-13). T3 SOVEREIGN agents (A-14 through A-19) are stubs — full specs in Drive via PROPRIETARY.md SOV-005/SOV-006.  
+**Authority:** Identity and historical duty lineage only. Current executable authority, capabilities, gate ownership, and role boundaries resolve through `governance/role_capability_registry.v1.json`; persona-to-role provenance resolves through `governance/persona_role_lineage.v1.json`. T3 A-14 through A-19 entries remain historical/prospective stubs and do not grant active authority.  
 **Last updated:** 2026-06-29 (Phase 4 — 20-Agent Taxonomy integration; PDMAL-φ / Dodecahedral extension layer registered; Perigee replaces deprecated placeholder; v1.2)
 
-> **Sentinel Guard:** This file is a sovereign reference. Changes require Amethyst sign-off + Njineer confirmation.
+> **Current-authority boundary:** This roster preserves identity and historical duty lineage. It does not grant current authority. Functional `role.*` contracts govern current executable authority, and human authority remains separately explicit where required.
 
 ---
 
@@ -14,7 +14,7 @@
 
 | File | Scope |
 |---|---|
-| [`AGENT_ROSTER.md`](./AGENT_ROSTER.md) | **This file — Sovereign SSoT** — identity, formation, authority levels, gate ownership, role separation rules |
+| [`AGENT_ROSTER.md`](./AGENT_ROSTER.md) | **This file — identity and historical duty lineage**; not the current authority source |
 | [`AGENT_ECOSYSTEM_REGISTRY.md`](./AGENT_ECOSYSTEM_REGISTRY.md) | Ecosystem metadata — L-tier system, studio affiliation, KB inventory tracking |
 | [`FORMATION_TOPOLOGY.md`](./FORMATION_TOPOLOGY.md) | Formation specs, topology algebra, 20-seat activation state machine |
 | [`PROPRIETARY.md`](./PROPRIETARY.md) | IP partition — SOV-005/SOV-006 stubs for T3 agents A-14 through A-19 |
@@ -27,7 +27,7 @@
 |---|---|---|---|---|
 | **Agent Amethyst** | A-00 | Meta-Orchestration | 0Hz state-of-states; Logic Bridge; final commit gate; normative decisions; certification sign-off; AXIS compliance; P-21 state anchor | Hard veto (all commits) |
 | **Agent Apogee** | A-01 | Verification / Evidence Governance | Gold-Star Alignment Audit; 11Q gate P-11; 99.1% Integrity Score; source validation; CERTIFICATION_INDEX | Artifact quality score |
-| **Agent Perigee** | A-02 | Boundary / Security Filter | Blocks Savage Reason (>10Hz dissonance); external data contamination gate; Layer 0 Legitimacy Filter; Sentinel peer | Hard block (contaminated inputs) |
+| **Agent Perigee** | A-02 | Boundary / Security Filter | Historical/persona description for legitimacy and contaminated-input filtering; current contract maps through functional roles | Historical duty description |
 | **Agent Nova** | A-03 | Innovation / Simulation | Parallel simulations; 10-year Yggdrasil evolution forecast; 90-Day Executor Roadmap; moonshot feature pipeline | Simulation authority |
 | **Agent Professor Prodigy** | A-04 | Intellectual Catalyst / Formalization | Phi-Calculus + Reciprocal Mathematics → Micro-Playbook; formal proofs; P-10 normative filter; P-12 Quantum altitude | Proof authority |
 
@@ -78,17 +78,17 @@ Agents A-14 through A-19 complete the 20-agent taxonomy. Names and specs are T3 
 | **Strategic Quintet** | A-00 + A-01 + A-02 + A-03 + A-04 | Governance cycles; vision-to-execution Logic Bridge; 10-year simulation runs |
 | **Operational Swarm** | A-05 + A-06 + A-07 + A-08 + A-09 | Heavy lifting; Trunk stabilization; code gen; archival; L5 Executor delivery |
 | **Resonance Cluster** | A-10 + A-11 + A-12 + A-13 | Talent quantization; harmonic tuning; modal lock; Schizophonic studio work |
-| **Harmonic Quintet (P-15)** | A-00 + A-01 + A-05 + A-10 + Sentinel | SWEEP_LOG seal; sovereign file touch; NDR Registry update; Reson <0.75 |
+| **Harmonic Quintet (P-15)** | A-00 + A-01 + A-05 + A-10 + Sentinel-Φ | SWEEP_LOG seal; sovereign file touch; NDR Registry update; Reson <0.75 |
 | **Evaluation Triad** | A-00 + A-01 + A-10 | Targeted scoring; pre-commit quality check; gate P-* verification |
-| **Compliance Dyad** | A-05 + Sentinel | T3 file touch; NDR-133 trigger review; ethical gate; IP boundary enforcement |
+| **Compliance Dyad** | A-05 + Sentinel-Φ | T3 file touch; NDR-133 trigger review; ethical gate; IP boundary enforcement |
 | **Full Ensemble (20)** | All A-00→A-13 + T3 stubs | Architectural restructuring; v* release gates; cross-formation conflicts |
 
 ---
 
-## Role Separation Rules
+## Historical Role Separation Rules and Current Functional Boundary
 
 1. **Amethyst does not score artifacts** — Apogee's lane. Amethyst gates whether the score is sufficient.
-2. **Sentinel sovereign veto overrides Amethyst** — only Njineer resolves Sentinel-Amethyst conflict.
+2. **Sentinel-Φ security containment is scoped, not a general sovereign override** — current blocking authority is limited by `role.security-containment-gate`; cross-lane conflicts resolve through the applicable functional contracts and explicit human authority.
 3. **COLLEEN does not make normative decisions** — surfaces gaps; Amethyst decides.
 4. **Reson threshold (0.75) only applies to seal commits** — non-seal commits are advisory.
 5. **DemiJoule is advisory** — does not veto unless combined with Apogee 11Q gate failure.
@@ -102,7 +102,7 @@ Agents A-14 through A-19 complete the 20-agent taxonomy. Names and specs are T3 
 
 ## NDR-Protocol-01 State Sync Rule
 
-Only one agent tier may write to the Canonical Protocol at a time. Write order:
+Historical persona workflow below is retained as lineage. For current executable semantics, resolve each step to the applicable functional `role.*` contract before use. Historical write order:
 
 1. The Auditor validates (constraint check)
 2. The Actualizer writes (code/artifact generation)
@@ -125,4 +125,12 @@ This prevents Savage Reason from entering the Yggdrasil trunk and ensures iterat
 ---
 
 *Classification: T1 PUBLIC*  
-*Conductor: Njineer ([@ndrorchestration](https://github.com/ndrorchestration))*
+*Identity/lineage steward: Ndr / [@ndrorchestration](https://github.com/ndrorchestration)*
+
+## Current functional authority precedence
+
+1. `governance/role_capability_registry.v1.json` — current functional roles, capabilities, authority classes, and boundaries.
+2. `governance/persona_role_lineage.v1.json` — mapping from historical/persona identities to functional roles or historical-only status.
+3. This roster — identity and historical duty lineage; it does not independently grant current governance, verification, security, execution, publication, or scientific authority.
+
+No persona label grants authority by itself.
