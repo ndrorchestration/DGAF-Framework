@@ -137,3 +137,20 @@ def test_weighted_forman_split_must_remain_preregistered() -> None:
             weighted,
             {"tests": 1, "failures": 0, "errors": 0, "skipped": 0},
         )
+
+
+def test_summary_prefers_exact_source_sha(monkeypatch: pytest.MonkeyPatch) -> None:
+    module = load_module()
+    exact_head = "a" * 40
+    merge_ref = "b" * 40
+    monkeypatch.setenv("SOURCE_SHA", exact_head)
+    monkeypatch.setenv("GITHUB_SHA", merge_ref)
+
+    summary = module.build_summary(
+        full_fixture(),
+        partial_fixture(),
+        weighted_fixture(),
+        {"tests": 1, "failures": 0, "errors": 0, "skipped": 0},
+    )
+
+    assert summary["source_sha"] == exact_head
