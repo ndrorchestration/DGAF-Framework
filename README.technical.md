@@ -140,4 +140,4 @@ Historical implementation records and earlier terminology remain available for p
 
 ---
 
-*This reference is an implementation map, not a certification, regulatory-conformance statement, deployment attestation, or efficacy report. Updated 2026-09-17 through protected-main `b1d91621...`.*
+*This reference is an implementation map, not a certification, regulatory-conformance statement, deployment attestation, or efficacy report. Updated 2026-09-17. Exact source identity is established by Git history and the protected `main` commit at the time of use; this document does not embed a volatile SHA as a standing current-state claim.*

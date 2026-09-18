@@ -3,7 +3,9 @@
 **Invariant:** DGAF-AUTH-001  
 **Status:** ACTIVE — BASELINE DERIVATIVE  
 **Version:** 1.1.0  
-**Purpose:** Machine-readable-by-inspection derivative of canonical agent authority sources. This matrix records authority boundaries; it does not grant authority.
+**Purpose:** Human-readable derivative of current functional-role authority plus persona/identity lineage. This matrix records boundaries; it does not grant authority.
+**Current authority source:** `governance/role_capability_registry.v1.json`
+**Persona/identity provenance:** `governance/persona_role_lineage.v1.json`
 
 > **Core invariant:** Shared governance ontology MUST NOT imply shared authority.
 
@@ -20,9 +22,17 @@
 | PUBLICATION | May control or execute outward-facing publication within its defined contract |
 | STATE | Represents a system condition, not an independent agent authority |
 
-## 2. Current Authority Baseline
+## 2. Current Functional Authority Precedence
 
-| Agent | Current documented role | Authority class | Explicit boundary | Source |
+Current executable authority is defined by functional `role.*` records in `governance/role_capability_registry.v1.json`. Persona labels do not independently grant authority. Persona-to-role or historical-only status is recorded in `governance/persona_role_lineage.v1.json`.
+
+The current functional-role set includes governance orchestration, evidence verification, legitimacy/boundary review, security containment, continuity/archive coordination, authorized execution, publication, fairness/rollback review, formalization review, coherence verification, and other scoped roles. Each role's authority classes and boundary are authoritative only within the registry's defined scope.
+
+## 3. Persona / Identity Lineage Derivative (Non-Authoritative)
+
+The table below preserves persona identity and historical duty descriptions for legibility. It is not a current authority registry; where a description conflicts with the functional registry, the functional role contract controls.
+
+| Persona / identity | Historical or lineage duty description | Historical / derived class | Explicit boundary | Provenance source |
 |---|---|---|---|---|
 | Amethyst | Meta-orchestration; normative governance/final commit gate | SOVEREIGN / GATE | Cannot silently inherit another specialist's lane | AGENT_ROSTER.md; Control Center |
 | Apogee | Verification / evidence governance; 11Q integrity lane | GATE / VERIFICATION | Verification is distinct from execution and authorship | AGENT_ROSTER.md; FORMATION_TOPOLOGY.md |
@@ -43,7 +53,7 @@
 | Reciprocity | Fairness / rollback / asymmetry review | GATE / ADVISORY | F-4 rollback block and fairness lane only; no general normative authority | RECIPROCITY_SPEC.md; Notion profile |
 | Sentinel-Φ | Strategic security / sovereign-IP boundary | GATE / HARD BLOCK | Security, sovereign/IP, protected-disclosure, and fail-closed containment within contract | SENTINEL_SPEC.md; Notion Sentinel-Phi profile |
 
-## 3. Shared Layer-0 Constitutional Substrate
+## 4. Shared Layer-0 Constitutional Substrate
 
 Layer 0 is a distributed constitutional constraint, not a single-agent ownership claim. The authoritative Layer-0 contract is `docs/agents/LAYER_0_CONSTITUTION.md` and is constrained by DGAF-AUTH-001.
 
@@ -62,7 +72,7 @@ Layer 0 covers, as applicable:
 
 Domain responsibilities are distributed. No agent receives total Layer-0 authority merely because it is capable of reasoning about Layer-0 issues.
 
-## 4. Layer-0 Specialist Composition
+## 5. Layer-0 Specialist Composition
 
 | Specialist | Layer-0 contribution | Authority limit |
 |---|---|---|
@@ -77,7 +87,7 @@ Domain responsibilities are distributed. No agent receives total Layer-0 authori
 | COLLEEN / Librarian | Preserve governance state, provenance, and historical distinctions | Records do not themselves authorize action |
 | Reson / Lyra / Echolette | Domain-specific observations, synthesis, communication and coherence | Domain output cannot silently become governance state |
 
-## 5. Non-Delegation Rules
+## 6. Non-Delegation Rules
 
 1. Capability overlap does not create authority overlap.
 2. Advisory output MUST NOT silently become authorization.
@@ -89,7 +99,7 @@ Domain responsibilities are distributed. No agent receives total Layer-0 authori
 8. T3/SOVEREIGN material remains subject to the repository IP firewall and Drive-only rules.
 9. Historical aliases or merged identities MUST NOT be treated as additional active seats.
 
-## 6. Public Legibility & Visibility
+## 7. Public Legibility & Visibility
 
 For public-facing DGAF surfaces, evaluate independently:
 
@@ -101,11 +111,11 @@ Preserve status distinctions:
 
 Repository/account visibility review should consider source code, branches, pull requests, issues, Actions logs, artifacts, releases, deployment metadata, generated files, historical commits, external integrations, credentials/secrets exposure, personal information, and sovereign/IP material.
 
-## 7. Current Identity Normalization
+## 8. Current Identity Normalization
 
 **Sentinel-Φ** is the active canonical identity. **Sentinel** is a historical alias only. **Sentience** is a historical/merged identity and is not a separate active seat. These labels MUST NOT create duplicated authority.
 
-## 8. Reconciliation Targets
+## 9. Reconciliation Targets
 
 The following remain explicit reconciliation targets:
 
@@ -119,7 +129,7 @@ The following remain explicit reconciliation targets:
 
 These are discrepancies to resolve under governance, not permission to infer a winner.
 
-## 9. Change Procedure
+## 10. Change Procedure
 
 For every proposed authority change:
 
@@ -134,7 +144,7 @@ For every proposed authority change:
 9. update public-facing material without overstating evidence;
 10. retain the provenance trail.
 
-## 10. Conformance Target
+## 11. Conformance Target
 
 Future automated checks SHOULD fail when:
 
@@ -145,4 +155,4 @@ Future automated checks SHOULD fail when:
 - a merged/historical identity is treated as active;
 - a material role change lacks provenance and authorization evidence.
 
-**This matrix remains a governed derivative. It does not supersede the current Control Center, sealed formation contracts, or explicitly authoritative source documents within their defined scope.**
+**This matrix remains a governed derivative. It does not supersede `governance/role_capability_registry.v1.json`, `governance/persona_role_lineage.v1.json`, the current Control Center, sealed formation contracts, or other explicitly authoritative source documents within their defined scope.**

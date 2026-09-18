@@ -175,3 +175,70 @@ def test_acronym_registry_contains_no_chat_file_citation_tokens():
     assert "filecite" not in text
     assert "turn231file0" not in text
     assert "docs/qa/AXIS_METRIC_SPEC.md" in text
+
+
+def test_security_policy_routes_current_authority_through_functional_contracts():
+    text = (ROOT / "SECURITY.md").read_text(encoding="utf-8")
+
+    assert "governed by the DGAF framework under Agent Amethyst" not in text
+    assert "Agent Sentinel (integrity enforcement)" not in text
+    assert "role.security-containment-gate" in text
+    assert "role.governance-orchestrator" in text
+    assert "sentinel-governance" not in text
+
+
+def test_operations_docs_do_not_grant_current_authority_to_persona_labels():
+    paths = (
+        ROOT / ".operations" / "README.md",
+        ROOT / ".operations" / "seal_checklist.md",
+        ROOT / ".operations" / "sweep_session_init.md",
+    )
+    combined = "\n".join(path.read_text(encoding="utf-8") for path in paths)
+
+    assert "**Authority:** Agent Amethyst" not in combined
+    assert "Sentinel veto authority" not in combined
+    assert "*Authority: Agent COLLEEN + Agent Sentinel" not in combined
+    assert "role.governance-orchestrator" in combined
+    assert "role.security-containment-gate" in combined
+    assert "governance/persona_role_lineage.v1.json" in combined
+
+
+def test_pattern_registry_uses_functional_review_and_execution_authority():
+    text = (ROOT / "registry" / "PATTERN_REGISTRY_v2.md").read_text(encoding="utf-8")
+
+    assert "**Enforced by:** Amethyst" not in text
+    assert "signed off by Amethyst" not in text
+    assert "hard gate enforced by Sentinel-Phi" not in text
+    assert "role.governance-orchestrator" in text
+    assert "role.evidence-verification-reviewer" in text
+    assert "role.security-containment-gate" in text
+
+
+def test_authority_matrix_defers_current_authority_to_role_registry():
+    text = (ROOT / "docs" / "agents" / "AGENT_AUTHORITY_MATRIX.md").read_text(encoding="utf-8")
+
+    assert "## 2. Current Authority Baseline" not in text
+    assert "governance/role_capability_registry.v1.json" in text
+    assert "governance/persona_role_lineage.v1.json" in text
+    assert "functional role" in text.lower()
+    assert "persona" in text.lower()
+    assert "does not grant authority" in text.lower()
+
+
+def test_workspace_bootstrap_current_overlay_uses_current_taxonomy_and_nonpersona_authority():
+    text = (ROOT / "docs" / "WORKSPACE_BOOTSTRAP.md").read_text(encoding="utf-8")
+
+    assert "| PPTL | Procluding Premise Triadic Loop (uppercase) | ✅ CANONICAL |" not in text
+    assert "PPTL | **Phi-Pentagon Topology Lab**" in text
+    assert "**Authority order:** User → Space instruction (Amethyst host)" not in text
+    assert "historical s071 authority order" in text.lower()
+    assert "current executable authority" in text.lower()
+    assert "governance/role_capability_registry.v1.json" in text
+
+
+def test_technical_reference_does_not_publish_stale_protected_main_marker():
+    text = (ROOT / "README.technical.md").read_text(encoding="utf-8")
+
+    assert "through protected-main `b1d91621...`" not in text
+    assert "exact source identity" in text.lower()
+    assert "git history" in text.lower()
