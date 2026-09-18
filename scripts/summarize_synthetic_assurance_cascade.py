@@ -9,6 +9,7 @@ efficacy.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -111,10 +112,12 @@ def build_summary(
     weighted_protocol = weighted["protocol"]
     variance = weighted["variance_restoration"]
 
+    source_sha = os.environ.get("SOURCE_SHA") or os.environ.get("GITHUB_SHA", "UNBOUND_LOCAL")
+
     return {
         "schema_version": 1,
         "classification": CLASSIFICATION,
-        "source_sha": os.environ.get("SOURCE_SHA") or os.environ.get("GITHUB_SHA", "UNBOUND_LOCAL"),
+        "source_sha": source_sha,
         "empirical_data_used": False,
         "protected_material_used": False,
         "real_materialization_performed": False,
@@ -171,7 +174,11 @@ def main() -> int:
         junit_counts(args.junit),
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    raw = (json.dumps(summary, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    args.output.write_bytes(raw)
+    digest = hashlib.sha256(raw).hexdigest()
+    sidecar = args.output.with_suffix(args.output.suffix + ".sha256")
+    sidecar.write_text(f"{digest}  {args.output.name}\n", encoding="utf-8")
     print(json.dumps(summary, sort_keys=True))
     return 0
 
