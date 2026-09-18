@@ -85,6 +85,7 @@ jobs:
         run: |
           python -m py_compile scripts/validate_track_a_epoch_002_materialization.py
           python -m py_compile scripts/prepare_track_a_epoch_002_operator_materialization.py
+          python -m py_compile scripts/materialize_track_a_epoch_002_unblinded_input.py
 
       - name: Resolve materialization validation mode
         id: mode
@@ -99,6 +100,28 @@ jobs:
             echo 'value=evidence_admission' >> "$GITHUB_OUTPUT"
           else
             echo 'value=tooling_only' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve Stage-1 to Stage-2 binding state
+        id: binding
+        run: |
+          set -euo pipefail
+          materializer_commit="$(python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+
+          path = Path('scripts/prepare_track_a_epoch_002_operator_materialization.py')
+          spec = importlib.util.spec_from_file_location('epoch002_operator_bundle_binding', path)
+          assert spec is not None and spec.loader is not None
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          print(module.MATERIALIZER_COMMIT)
+          PY
+          )"
+          if git diff --quiet "$materializer_commit" -- scripts/materialize_track_a_epoch_002_unblinded_input.py; then
+            echo 'value=bound' >> "$GITHUB_OUTPUT"
+          else
+            echo 'value=stage1_candidate_pending_rebind' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Validate prospective tooling only
@@ -142,15 +165,47 @@ jobs:
             }
           done
 
-      - name: Run materialization adversarial and operator-bundle tests
+      - name: Run Stage-1 materializer and validator tests
         run: |
           python -m pytest \
             tests/test_track_a_epoch_002_materialization.py \
+            tests/test_track_a_epoch_002_unblinded_materializer.py \
+            -q
+
+      - name: Run bound Stage-2 operator-bundle tests
+        if: ${{ steps.binding.outputs.value == 'bound' }}
+        run: |
+          python -m pytest \
             tests/test_track_a_epoch_002_materialization_operator_provenance.py \
             tests/test_track_a_epoch_002_materialization_operator_bundle.py \
             tests/test_track_a_epoch_002_operator_materialization_execution_receipt.py \
-            tests/test_track_a_epoch_002_unblinded_materializer.py \
             -q
+
+      - name: Prove unbound Stage-2 fails closed pending accepted Stage-1 rebind
+        if: ${{ steps.binding.outputs.value == 'stage1_candidate_pending_rebind' }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+
+          path = Path('scripts/prepare_track_a_epoch_002_operator_materialization.py')
+          spec = importlib.util.spec_from_file_location('epoch002_operator_bundle_fail_closed', path)
+          assert spec is not None and spec.loader is not None
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+
+          try:
+              module.load_repository_contracts()
+          except SystemExit as error:
+              message = str(error)
+              assert 'scripts/materialize_track_a_epoch_002_unblinded_input.py drifted from its accepted commit' in message
+          else:
+              raise AssertionError('Stage-2 unexpectedly accepted unbound Stage-1 materializer bytes')
+
+          print('TRACK_A_EPOCH_002_STAGE1_REPAIR=VALIDATED_PENDING_ACCEPTED_REBIND')
+          print('TRACK_A_EPOCH_002_STAGE2_OPERATOR_BUNDLE=FAIL_CLOSED_PENDING_REBIND')
+          PY
 
       - name: Prove validator has no secret, decryption, writer, or analysis surface
         run: |
