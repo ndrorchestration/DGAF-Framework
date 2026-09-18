@@ -52,9 +52,9 @@ test('non-color structural semantics remain present', () => {
   assert.match(governanceMap, /border-style:dashed/)
   assert.match(stateSpace, /border-style: dashed/)
   assert.match(stateSpace, /border-style: dotted/)
-  assert.match(globals, /data-tone="warning".*status-dot.*rotate\(45deg\)/s)
-  assert.match(globals, /data-tone="danger".*background:transparent/s)
-  assert.match(globals, /data-tone="neutral".*border-style:dotted/s)
+  assert.match(globals, /data-tone="warning"[\s\S]*status-dot[\s\S]*rotate\(45deg\)/)
+  assert.match(globals, /data-tone="danger"[\s\S]*background:transparent/)
+  assert.match(globals, /data-tone="neutral"[\s\S]*border-style:dotted/)
 })
 
 test('reduced-motion equivalence remains explicit across semantic views', () => {
