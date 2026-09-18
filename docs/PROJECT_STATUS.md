@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-This 2026-09-18 reconciliation was prepared against protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
+This 2026-09-18 reconciliation was prepared against protected `main` `a0288b080b68e576b84d22eaf4a4972b5c3fbb5d`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -20,7 +20,7 @@ This 2026-09-18 reconciliation was prepared against protected `main` `40d3015830
 - Track A Epoch 002 collection: **COMPLETE** at 50 paired seed units / 2,250 blinded observations;
 - successor dataset lock: **ESTABLISHED** through an accepted PASS `DATASET_LOCK_RECEIPT`;
 - successor bounded unblinding: **AUTHORIZED** for `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
-- successor materialization tooling: **ACCEPTED**, with PR #713/#715 retained as predecessor tooling, Stage-1 repaired against the exact locked archive representation by PR #794, and Stage 2 rebound to the accepted #794 merge identity by PR #797;
+- successor materialization tooling: **ACCEPTED**, with PR #713/#715 retained as predecessor tooling, Stage-1 repaired by #794, Stage 2 rebound by #797, the bounded local operator bridge accepted through #806, the stdio MCP adapter accepted through #809, and the one-command local materialization autopilot accepted through #813;
 - successor prospective primary-analysis authorization tooling: **ACCEPTED / TOOLING ONLY** through PR #728;
 - successor real materialization: **NOT ESTABLISHED**;
 - successor materialization receipt: **NOT ESTABLISHED**;
@@ -60,12 +60,15 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 
 - **PR #794** accepted the exact retained public archive's harmless dot-prefixed flat-member representation while preserving both locked archive byte identities and fail-closed rejection of absolute/nested/traversal/link/duplicate/unreadable/unexpected members.
 - **PR #797** rebound Stage 2 to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
-- The dedicated materialization-receipt workflow passed in tooling-only/binding mode. Real evidence admission and the real receipt-event path remained skipped.
+- **PR #806** accepted the bounded local operator bridge.
+- **PR #809** accepted the local stdio MCP adapter as transport tooling only.
+- **PR #813** accepted the one-command local materialization autopilot, which performs secret-bearing materialization only on the operator machine, prepares exactly one non-secret evidence-admission path, and stops before receipt or primary-analysis authorization.
+- The dedicated materialization-receipt workflow passed in tooling-only/binding mode. Real evidence admission and the real receipt-event path remain unexecuted.
 - These are tooling/provenance milestones only. They do not establish real materialization or a materialization receipt.
 
 ## Next admissible scientific transition
 
-The current scientific frontier is still **controlled operator-side materialization of the real retained Epoch 002 evidence**, followed by bounded evidence admission and a separate immutable materialization receipt.
+The current scientific frontier is still **controlled operator-side materialization of the real retained Epoch 002 evidence**, followed by bounded evidence admission and a separate immutable materialization receipt. The accepted lowest-friction Windows entrypoint is `scripts/run_track_a_epoch_002_local_autopilot.ps1` from a local DGAF checkout with the required local configuration.
 
 The accepted apparatus provides:
 
