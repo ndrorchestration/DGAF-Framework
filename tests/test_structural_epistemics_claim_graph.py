@@ -1,0 +1,189 @@
+import copy
+import importlib.util
+import json
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+MODULE_PATH = ROOT / "scripts/validate_structural_epistemics_claim_graph.py"
+FIXTURE_PATH = (
+    ROOT
+    / "docs/research/fixtures/STRUCTURAL_EPISTEMICS_CLAIM_GRAPH_REFERENCE.json"
+)
+
+spec = importlib.util.spec_from_file_location(
+    "validate_structural_epistemics_claim_graph", MODULE_PATH
+)
+assert spec and spec.loader
+validator = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(validator)
+
+
+def _graph() -> dict:
+    return json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+
+
+def _support_relation(evidence_id: str, claim_id: str, suffix: str) -> dict:
+    return {
+        "relation_id": f"REL-SUPPORT-{suffix}",
+        "relation_type": "SUPPORTS",
+        "source_id": evidence_id,
+        "target_id": claim_id,
+        "scope": "test",
+    }
+
+
+def test_reference_fixture_passes() -> None:
+    validator.validate_claim_graph(_graph())
+
+
+def test_unknown_evidence_reference_fails_closed() -> None:
+    graph = _graph()
+    graph["claims"][0]["supporting_evidence_ids"].append("EVID-MISSING")
+    with pytest.raises(ValueError, match="references unknown evidence"):
+        validator.validate_claim_graph(graph)
+
+
+def test_support_listing_requires_matching_relation() -> None:
+    graph = _graph()
+    graph["relations"] = [
+        relation
+        for relation in graph["relations"]
+        if relation["relation_type"] != "SUPPORTS"
+    ]
+    with pytest.raises(ValueError, match="lacks SUPPORTS relation"):
+        validator.validate_claim_graph(graph)
+
+
+def test_contradiction_listing_requires_matching_relation() -> None:
+    graph = _graph()
+    graph["relations"] = [
+        relation
+        for relation in graph["relations"]
+        if relation["relation_type"] != "CONTRADICTS"
+    ]
+    with pytest.raises(ValueError, match="lacks CONTRADICTS relation"):
+        validator.validate_claim_graph(graph)
+
+
+def test_repeated_support_root_requires_explicit_dependency_relation() -> None:
+    graph = _graph()
+    claim = graph["claims"][0]
+    claim["supporting_evidence_ids"].append("EVID-REFERENCE-SUPPORT-2")
+    graph["evidence"].append(
+        {
+            "evidence_id": "EVID-REFERENCE-SUPPORT-2",
+            "evidence_class": "DERIVATION",
+            "source_roots": ["support-root"],
+            "dependency_roots": [],
+            "observed_at": "2026-09-18",
+            "validity": {
+                "state": "CURRENT",
+                "review_condition": "review on fixture change",
+            },
+            "provenance_ref": "fixture://support-2",
+        }
+    )
+    graph["relations"].append(
+        _support_relation(
+            "EVID-REFERENCE-SUPPORT-2", "CLAIM-REFERENCE-001", "REFERENCE-2"
+        )
+    )
+
+    with pytest.raises(ValueError, match="share dependency roots without"):
+        validator.validate_claim_graph(graph)
+
+    graph["relations"].append(
+        {
+            "relation_id": "REL-SHARED-ROOT",
+            "relation_type": "SHARES_SOURCE_ROOT",
+            "source_id": "EVID-REFERENCE-SUPPORT",
+            "target_id": "EVID-REFERENCE-SUPPORT-2",
+            "scope": "shared support-root",
+        }
+    )
+    validator.validate_claim_graph(graph)
+
+
+def test_triggered_defeater_cannot_remain_current() -> None:
+    graph = _graph()
+    claim = graph["claims"][0]
+    claim["applicability_state"] = "CURRENT"
+    claim["defeaters"] = [
+        {
+            "defeater_id": "DEF-1",
+            "condition": "counterexample observed",
+            "status": "TRIGGERED",
+        }
+    ]
+    with pytest.raises(ValueError, match="triggered defeater but remains CURRENT"):
+        validator.validate_claim_graph(graph)
+
+
+def test_retraction_state_must_be_consistent() -> None:
+    graph = _graph()
+    claim = graph["claims"][0]
+    claim["applicability_state"] = "RETRACTED"
+    claim["retraction"] = {"state": "NOT_RETRACTED", "reason": None}
+    with pytest.raises(ValueError, match="requires a retraction reason"):
+        validator.validate_claim_graph(graph)
+
+
+def test_causal_identified_requires_intervention_or_causal_design_evidence() -> None:
+    graph = _graph()
+    graph["claims"][0]["causal_level"] = "CAUSAL_IDENTIFIED"
+    with pytest.raises(ValueError, match="requires intervention/causal-design evidence"):
+        validator.validate_claim_graph(graph)
+
+
+def test_empirically_supported_requires_empirical_evidence() -> None:
+    graph = _graph()
+    claim = graph["claims"][0]
+    claim["claim_class"] = "EMPIRICALLY_SUPPORTED"
+    claim["epistemic_state"] = "EMPIRICALLY_SUPPORTED"
+    claim["verification_status"] = "VERIFIED_IN_SCOPE"
+    with pytest.raises(ValueError, match="requires empirical support evidence"):
+        validator.validate_claim_graph(graph)
+
+
+def test_non_proposed_claim_requires_current_support() -> None:
+    graph = _graph()
+    graph["evidence"][0]["validity"]["state"] = "STALE"
+    with pytest.raises(ValueError, match="has no CURRENT supporting evidence"):
+        validator.validate_claim_graph(graph)
+
+
+def test_unknown_dependence_cannot_assert_known_roots() -> None:
+    graph = _graph()
+    graph["claims"][0]["dependency_signature"] = {
+        "status": "UNKNOWN_DEPENDENCE",
+        "roots": ["known-root"],
+    }
+    with pytest.raises(ValueError, match="must not assert known roots"):
+        validator.validate_claim_graph(graph)
+
+
+def test_supersession_must_be_reciprocal() -> None:
+    graph = _graph()
+    successor = copy.deepcopy(graph["claims"][0])
+    successor["claim_id"] = "CLAIM-REFERENCE-002"
+    successor["proposition"] = "Successor claim"
+    successor["supersedes"] = ["CLAIM-REFERENCE-001"]
+    successor["superseded_by"] = []
+    successor["supporting_evidence_ids"] = []
+    successor["contradicting_evidence_ids"] = []
+    successor["epistemic_state"] = "PROPOSED"
+    graph["claims"].append(successor)
+
+    with pytest.raises(ValueError, match="not reciprocally declared"):
+        validator.validate_claim_graph(graph)
+
+
+def test_same_evidence_cannot_support_and_contradict_claim() -> None:
+    graph = _graph()
+    graph["claims"][0]["contradicting_evidence_ids"].append(
+        "EVID-REFERENCE-SUPPORT"
+    )
+    with pytest.raises(ValueError, match="same evidence as support and contradiction"):
+        validator.validate_claim_graph(graph)
