@@ -15,11 +15,7 @@ def source_and_tree() -> tuple[str, ast.Module]:
 
 
 def string_constants(tree: ast.AST) -> set[str]:
-    return {
-        node.value
-        for node in ast.walk(tree)
-        if isinstance(node, ast.Constant) and isinstance(node.value, str)
-    }
+    return {node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str)}
 
 
 def test_autopilot_stops_at_evidence_admission_boundary() -> None:
