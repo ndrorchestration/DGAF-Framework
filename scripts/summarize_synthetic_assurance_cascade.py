@@ -11,10 +11,10 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
+from defusedxml import ElementTree as ET
 
 CLASSIFICATION = "SYNTHETIC_ENGINEERING_ASSURANCE_ONLY"
 
