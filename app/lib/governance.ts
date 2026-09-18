@@ -6,7 +6,7 @@ export const TRUTH_BOUNDARY = {
   authorization: 'NOT AUTHORIZED',
   empiricalN: 0,
   efficacy: 'NOT ESTABLISHED',
-  sourceUpdated: '2026-09-17',
+  sourceUpdated: '2026-09-18',
   sources: ['docs/PROJECT_STATUS.md', 'docs/CURRENT_STATE.md', 'docs/PUBLIC_TRANSLATION_LAYER.md'],
 } as const
 
