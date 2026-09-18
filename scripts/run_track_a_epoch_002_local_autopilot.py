@@ -200,21 +200,13 @@ def create_admission_pr(evidence_path: Path, evidence_sha: str) -> str:
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(evidence_path, destination)
 
-            status_lines = [
-                line
-                for line in git("status", "--porcelain", cwd=worktree).splitlines()
-                if line
-            ]
+            status_lines = [line for line in git("status", "--porcelain", cwd=worktree).splitlines() if line]
             expected_untracked = f"?? {EVIDENCE_REL}"
             if status_lines != [expected_untracked]:
                 fail("evidence-admission worktree contains unexpected changes")
 
             git("add", "--", EVIDENCE_REL, cwd=worktree)
-            staged = [
-                line
-                for line in git("diff", "--cached", "--name-only", cwd=worktree).splitlines()
-                if line
-            ]
+            staged = [line for line in git("diff", "--cached", "--name-only", cwd=worktree).splitlines() if line]
             if staged != [EVIDENCE_REL]:
                 fail("evidence-admission commit would change more than the canonical evidence file")
 
