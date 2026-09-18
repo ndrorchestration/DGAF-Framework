@@ -175,3 +175,102 @@ h4 { font-size: 1rem; }
     box-shadow: none;
   }
 }
+
+
+/* Public/external impression: value proposition with an explicit claim ceiling. */
+.public-summary {
+  display: grid;
+  grid-template-columns: minmax(220px, .8fr) minmax(0, 1.5fr) minmax(220px, .7fr);
+  gap: 18px;
+  align-items: stretch;
+  padding: 22px;
+}
+
+.public-summary-copy {
+  align-self: center;
+}
+
+.public-summary-copy h3 {
+  margin: 6px 0 10px;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+}
+
+.public-summary-copy p {
+  margin: 0;
+  font-size: .8rem;
+}
+
+.public-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--border-soft);
+}
+
+.public-summary-grid > div {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  padding: 14px;
+  background: var(--surface-inspection);
+}
+
+.public-summary-grid strong {
+  font-size: .78rem;
+}
+
+.public-summary-grid span {
+  color: var(--text-secondary);
+  font-size: .7rem;
+  line-height: 1.5;
+}
+
+.public-claim-ceiling {
+  display: grid;
+  align-content: center;
+  gap: 7px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--boundary-authorization);
+  background: var(--boundary-authorization-soft);
+}
+
+.public-claim-ceiling > span {
+  font: 800 .58rem var(--mono);
+  letter-spacing: .09em;
+  color: var(--boundary-authorization);
+  text-transform: uppercase;
+}
+
+.public-claim-ceiling > strong {
+  font: 800 .78rem var(--mono);
+  overflow-wrap: anywhere;
+}
+
+.public-claim-ceiling > small {
+  color: var(--text-secondary);
+  font-size: .66rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 980px) {
+  .public-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .public-summary {
+    padding: 16px;
+  }
+
+  .public-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .public-claim-ceiling {
+    border-left-width: 2px;
+  }
+}
