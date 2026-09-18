@@ -33,7 +33,7 @@ Within the evidence boundaries documented in this repository, DGAF demonstrates 
 
 ### Current repository engineering milestones
 
-As of protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`:
+For this reconciliation, the accepted source lineage through PR #797 was read from protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`. Exact current protected-main identity is a Git fact and must be read at use time:
 
 - **Decision Frontier — PR #776** is merged as a presentation-only Semantic Control Field component derived from canonical governance state.
 - **Governance Map — PR #779** is merged and renders ordered escalation, explicitly named lateral relationships, and global field constraints without creating a second state engine.
