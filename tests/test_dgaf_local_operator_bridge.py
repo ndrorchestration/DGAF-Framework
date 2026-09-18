@@ -83,6 +83,7 @@ def test_get_evidence_returns_only_nonsecret_record(tmp_path, monkeypatch):
     output.mkdir()
     evidence = {
         "record_type": "TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE",
+        "secret_material_persisted": False,
         "primary_analysis_authorized": False,
         "primary_analysis_run": False,
         "scientific_n_increment": 0,
@@ -99,3 +100,25 @@ def test_get_evidence_returns_only_nonsecret_record(tmp_path, monkeypatch):
     assert response["evidence"] == evidence
     assert response["secret_material_returned"] is False
     assert "path" not in response
+
+
+def test_get_evidence_rejects_sensitive_string_value(tmp_path, monkeypatch):
+    bridge = load_bridge()
+    output = tmp_path / "bundle"
+    output.mkdir()
+    evidence = {
+        "record_type": "TRACK_A_EPOCH_002_MATERIALIZATION_EVIDENCE",
+        "note": "contains-private_key-material",
+        "secret_material_persisted": False,
+        "primary_analysis_authorized": False,
+        "primary_analysis_run": False,
+        "scientific_n_increment": 0,
+    }
+    (output / bridge.EVIDENCE_NAME).write_text(
+        json.dumps(evidence, sort_keys=True),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv(bridge.ENV_OUTPUT, str(output))
+
+    with pytest.raises(bridge.BridgeRefusal, match="prohibited secret-bearing text"):
+        bridge.get_evidence_response()
