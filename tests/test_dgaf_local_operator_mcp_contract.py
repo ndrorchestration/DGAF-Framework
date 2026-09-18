@@ -67,11 +67,7 @@ def test_adapter_delegates_to_existing_bridge_dispatch() -> None:
 
 def test_adapter_runs_stdio_only() -> None:
     source, tree = parse_adapter()
-    main = next(
-        node
-        for node in tree.body
-        if isinstance(node, ast.FunctionDef) and node.name == "main"
-    )
+    main = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "main")
     calls = [node for node in ast.walk(main) if isinstance(node, ast.Call)]
     run_calls = [
         node
