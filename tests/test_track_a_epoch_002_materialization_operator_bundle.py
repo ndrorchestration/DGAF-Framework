@@ -41,6 +41,9 @@ def assert_stage2_fails_closed_pending_rebind(helper: Any) -> None:
 def test_repository_contracts_bind_accepted_chain() -> None:
     helper = load_module(OPERATOR_BUNDLE, "epoch002_operator_bundle_contracts")
 
+    assert helper.MATERIALIZER_COMMIT == "cf32a62bbf08a1b8db39709f4989be1be800d64e"
+    assert helper.MATERIALIZER_BLOB == "3a825b026423952c2844cb18664eb6395b72fdc1"
+
     if not stage1_matches_accepted_binding(helper):
         assert_stage2_fails_closed_pending_rebind(helper)
         return
