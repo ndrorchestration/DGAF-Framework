@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-18
-reconciliation_input_main: a0288b080b68e576b84d22eaf4a4972b5c3fbb5d
+reconciliation_input_main: 037e9e878fb8d9ea7a4658219734158bb5300b1e
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -22,9 +22,12 @@ track_a_successor_collection: COMPLETE_50_PAIRED_SEED_UNITS_2250_BLINDED_OBSERVA
 track_a_successor_dataset_lock: ESTABLISHED
 track_a_successor_unblinding: AUTHORIZED_BOUNDED_MAPPING_RELEASE_OR_DECRYPTION_ONLY
 track_a_successor_materialization_tooling: ACCEPTED
-track_a_successor_materialization: NOT_ESTABLISHED
+track_a_successor_materialization: ESTABLISHED
+track_a_successor_materialization_receipt: ESTABLISHED
 track_a_successor_primary_analysis_authorization_tooling: ACCEPTED
-track_a_successor_primary_analysis: NOT_AUTHORIZED_NOT_RUN
+track_a_successor_primary_analysis_authorization: ACCEPTED_LOCKED_PRIMARY_ANALYSIS_ONLY
+track_a_successor_primary_analysis: AUTHORIZED_BOUNDED_NOT_RUN
+track_a_successor_locked_analysis_result: NOT_ESTABLISHED
 accepted_dataset_lock_tooling_pr: 622
 accepted_unblinding_decision_tooling_pr: 627
 accepted_stage_1_materializer_pr: 794
@@ -47,6 +50,16 @@ accepted_local_operator_bridge_pr: 806
 accepted_local_operator_mcp_pr: 809
 accepted_local_materialization_autopilot_pr: 813
 accepted_local_materialization_autopilot_commit: a0288b080b68e576b84d22eaf4a4972b5c3fbb5d
+accepted_materialization_evidence_pr: 824
+accepted_materialization_evidence_commit: 0e97a178376cb120ae45a5dad7bdc05d516023f7
+accepted_materialization_receipt_pr: 826
+accepted_materialization_receipt_commit: 26af4224b82656734b3f411acf063ab82712cdca
+accepted_locked_analysis_runner_pr: 831
+accepted_locked_analysis_runner_commit: 6658cdc10c6b2e09bc0ef1112a7af3e2caba84e7
+accepted_primary_analysis_authorization_event_pr: 828
+accepted_primary_analysis_authorization_event_commit: e87917e644d71de7351c5983fa7ed89d9231962f
+accepted_locked_result_admission_tooling_pr: 835
+accepted_locked_result_admission_tooling_commit: 037e9e878fb8d9ea7a4658219734158bb5300b1e
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -60,7 +73,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `a0288b080b68e576b84d22eaf4a4972b5c3fbb5d` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `037e9e878fb8d9ea7a4658219734158bb5300b1e` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -75,9 +88,13 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Epoch 002 dataset lock | **ESTABLISHED** |
 | Epoch 002 bounded unblinding | **AUTHORIZED · CONTROLLED MAPPING RELEASE OR DECRYPTION ONLY** |
 | Epoch 002 materialization tooling | **ACCEPTED · LOCAL BRIDGE + STDIO MCP + ONE-COMMAND AUTOPILOT THROUGH PR #813** |
-| Epoch 002 real materialization | **NOT ESTABLISHED** |
-| Epoch 002 materialization receipt | **NOT ESTABLISHED** |
-| Epoch 002 primary analysis | **NOT AUTHORIZED / NOT RUN** |
+| Epoch 002 real materialization | **ESTABLISHED · NON-SECRET EVIDENCE ACCEPTED VIA PR #824** |
+| Epoch 002 materialization receipt | **ESTABLISHED · CREATION-ONLY EVENT VIA PR #826** |
+| Epoch 002 locked-analysis runner | **ACCEPTED · FAIL-CLOSED LOCAL TOOLING VIA PR #831** |
+| Epoch 002 primary-analysis authorization | **ACCEPTED · LOCKED_PRIMARY_ANALYSIS_ONLY · PR #828** |
+| Epoch 002 primary analysis | **AUTHORIZED_BOUNDED / NOT RUN** |
+| Epoch 002 locked-analysis result | **NOT ESTABLISHED** |
+| Epoch 002 result-admission tooling | **ACCEPTED · CONTENT-ADDRESSED / NON-EXECUTING · PR #835** |
 | Independent validation | **NOT ESTABLISHED** |
 | Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
 | Governance Command Center — Governance Map | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #779** |
@@ -90,7 +107,7 @@ No row above establishes integrated DGAF efficacy, independent validation, produ
 
 ## Protected-main repository state
 
-This reconciliation was prepared against protected `main` `a0288b080b68e576b84d22eaf4a4972b5c3fbb5d`. Since the earlier #797 materialization rebind, protected main has additionally accepted the bounded local operator bridge (#806), its stdio MCP transport adapter (#809), and the one-command local materialization autopilot (#813). These additions reduce operator friction only; they do not establish real materialization, a repository materialization receipt, primary-analysis authorization, scientific-N increment, efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was prepared against protected `main` `037e9e878fb8d9ea7a4658219734158bb5300b1e`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), and content-addressed locked-result admission tooling (#835). These accepted events establish materialization, its receipt, and permission to run exactly the frozen primary analysis; they do not establish that the analysis has run, a locked result, scientific-N promotion, efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
@@ -136,7 +153,7 @@ A separate accepted `UNBLINDING_DECISION_RECORD` exists with `status=PASS` and s
 
 ### Accepted materialization apparatus
 
-Repository engineering has crossed the materialization-tooling milestone without performing real materialization:
+Repository engineering and controlled operator execution have crossed the materialization and bounded-authorization milestones while preserving separate event boundaries:
 
 1. prospective materialization receipt validation/procedure — accepted predecessor tooling;
 2. OPERATOR_CODESPACE/content-addressed provenance correction — accepted;
@@ -147,7 +164,12 @@ Repository engineering has crossed the materialization-tooling milestone without
 7. prospective primary-analysis authorization validator/procedure/CI/test tooling — **PR #728 accepted**;
 8. bounded local operator bridge — **PR #806 accepted**, exposing only the governed local materialization/status/evidence operations without arbitrary shell/filesystem/network authority;
 9. local stdio MCP adapter — **PR #809 accepted**, transport tooling only; it does not make ChatGPT/local-MCP connectivity a scientific predecessor;
-10. one-command local materialization autopilot — **PR #813 accepted**, performing secret-bearing materialization only on the operator machine, then preparing a draft one-file non-secret evidence-admission PR and stopping before receipt or primary-analysis authorization.
+10. one-command local materialization autopilot — **PR #813 accepted**, performing secret-bearing materialization only on the operator machine, then preparing a draft one-file non-secret evidence-admission PR and stopping before receipt or primary-analysis authorization;
+11. canonical non-secret materialization evidence — **PR #824 accepted**;
+12. creation-only immutable materialization receipt — **PR #826 accepted**;
+13. fail-closed locked-primary-analysis runner tooling — **PR #831 accepted**;
+14. bounded primary-analysis authorization event — **PR #828 accepted**, scope exactly `LOCKED_PRIMARY_ANALYSIS_ONLY`;
+15. content-addressed locked-result admission tooling — **PR #835 accepted**, non-executing and non-interpreting.
 
 PR #713 introduced the original controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
@@ -157,18 +179,21 @@ PR #794 then repaired Stage 1 against the exact locked public archive representa
 
 PR #797 then rebound Stage 2 to the accepted #794 merge identity rather than an internal PR-only commit. The accepted binding is materializer commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and materializer blob `3a825b026423952c2844cb18664eb6395b72fdc1`. Its dedicated materialization workflow proved the tooling-only path, Stage-1 tests, Stage-1→Stage-2 binding, bound operator-bundle tests, and fail-closed scientific boundary; the real evidence-admission and real receipt-event paths remained skipped.
 
-None of PRs #713, #715, #794, #797, #806, #809, or #813 establishes real materialization or a repository materialization receipt. PR #813 can perform the real secret-bearing operation only when the operator deliberately runs the accepted local autopilot with the required local archives, custody key, retention ID, and out-of-repository output directory; the merged tooling itself is not execution evidence.
+PRs #713/#715/#794/#797/#806/#809/#813 remain tooling/provenance predecessors and do not themselves establish execution. The later accepted operator evidence in PR #824 establishes the real materialization event at its exact content-addressed scope, and PR #826 establishes its separate immutable repository receipt.
 
-PR #728 installed prospective fail-closed primary-analysis authorization tooling on protected `main`. Its validator, exact-head read-only workflow, procedure, and adversarial tests remain tooling-only: no authorization record, materialization receipt, locked result, analysis execution, scientific-N increment, efficacy, independence, or High-Assurance transition is present or admitted.
+PR #728 installed prospective fail-closed primary-analysis authorization tooling. PR #828 later supplied the separate accepted authorization event against the established materialization receipt. That event authorizes only the frozen locked primary analysis; it does not execute analysis, admit a result, increment scientific N, establish efficacy/independence, or authorize High-Assurance operation.
 
 ## Current scientific frontier
 
-The next admissible scientific transition is **controlled operator-side materialization of the real retained Epoch 002 evidence, followed by validation/admission and a separate immutable materialization receipt**. The lowest-friction accepted operator path is now `scripts/run_track_a_epoch_002_local_autopilot.ps1` from a local DGAF checkout. That command must run only with the five required local variables defined and keeps all secret-bearing/decrypted material outside GitHub, Notion, chat, CI, and the repository.
+The next admissible scientific transition is **local execution of the authorized frozen Epoch 002 primary analysis**. The accepted runner is `scripts/run_track_a_epoch_002_locked_primary_analysis.py`; it must consume the exact retained materialized input outside the repository and run in the exact locked Python 3.12.0 / NumPy 2.5.1 environment. PR #835 provides the separate non-executing path for later content-addressed result admission.
 
-The repository currently contains no canonical `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json`. Therefore:
+Current boundary:
 
-- `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`;
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT_RUN`;
+- `TRACK_A_EPOCH_002_MATERIALIZATION = ESTABLISHED`;
+- `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT = ESTABLISHED`;
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY`;
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = AUTHORIZED_BOUNDED / NOT_RUN`;
+- `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = NOT_ESTABLISHED`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
@@ -189,11 +214,12 @@ Tooling readiness never skips predecessor state. The governed order is:
 `→ operator evidence admission / QC — ACCEPTED PREDECESSOR CHAIN`
 `→ dataset-lock receipt — ESTABLISHED`
 `→ separate bounded unblinding decision — AUTHORIZED`
-`→ controlled local materialization — CURRENT FRONTIER / NOT ESTABLISHED`
-`→ immutable materialization receipt — NOT ESTABLISHED`
-`→ prospective primary-analysis authorization tooling — ACCEPTED / TOOLING ONLY (#728)`
-`→ separate primary-analysis authorization — NOT AUTHORIZED`
-`→ locked primary analysis — NOT RUN`
+`→ controlled local materialization — ESTABLISHED (#824 evidence)`
+`→ immutable materialization receipt — ESTABLISHED (#826)`
+`→ primary-analysis authorization tooling — ACCEPTED (#728)`
+`→ separate primary-analysis authorization — ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY (#828)`
+`→ locked primary analysis — CURRENT FRONTIER / AUTHORIZED_BOUNDED / NOT RUN`
+`→ locked-analysis result admission — NOT ESTABLISHED; tooling ACCEPTED (#835)`
 `→ interpretation/adjudication — NOT REACHED`
 
 Current predicates:
@@ -204,9 +230,13 @@ Current predicates:
 - `TRACK_A_EPOCH_002_DATASET_LOCK = ESTABLISHED`
 - `TRACK_A_EPOCH_002_UNBLINDING = AUTHORIZED / BOUNDED`
 - `TRACK_A_EPOCH_002_MATERIALIZATION_TOOLING = ACCEPTED`
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_TOOLING = ACCEPTED / TOOLING ONLY`
-- `TRACK_A_EPOCH_002_MATERIALIZATION = NOT_ESTABLISHED`
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = NOT_AUTHORIZED / NOT RUN`
+- `TRACK_A_EPOCH_002_MATERIALIZATION = ESTABLISHED`
+- `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT = ESTABLISHED`
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_TOOLING = ACCEPTED`
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY`
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = AUTHORIZED_BOUNDED / NOT RUN`
+- `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = NOT_ESTABLISHED`
+- `TRACK_A_EPOCH_002_RESULT_ADMISSION_TOOLING = ACCEPTED / NON-EXECUTING`
 - `SCIENTIFIC_N_INCREMENT = 0`
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`
