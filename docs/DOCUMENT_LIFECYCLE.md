@@ -2,13 +2,15 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL documentation control
-last_verified: 2026-09-05
-applies_to_sha: 423f9af1fa9f31f7d1ef37c9f8f1c367346f4fce
+last_verified: 2026-09-18
+reconciliation_input_main: 2e34b856cb87153904e41205030b46911e77e038
 ---
 
 # Documentation Lifecycle Registry
 
 This registry prevents documentation drift by making lifecycle state, authority, temporal meaning, and lineage explicit. It is the preferred place to determine whether a document is current, historical, superseded, a template, a reconciliation artifact, or a derivative.
+
+Because this registry is itself versioned on protected `main`, `reconciliation_input_main` records the Git source baseline used for this revision. Exact current protected-main identity must be read from Git at use time; this file does not maintain a self-referential standing SHA.
 
 ## Lifecycle states
 

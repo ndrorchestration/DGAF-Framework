@@ -1,14 +1,17 @@
 # Owner-private DGAF Governance Console Companion
 
 **Status:** ACTIVE / OWNER-PRIVATE / READ-ONLY  
+**Lifecycle:** DERIVATIVE  
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
-**Source snapshot:** protected `main` at `40d301583048e0c47e8bf38154ac40fa023b4f5e`  
-**Snapshot event:** post-PR #797 Stage-2 accepted-lineage rebind and post-PR #795 authority/documentation reconciliation
+**Reconciliation input:** protected `main` at `2e34b856cb87153904e41205030b46911e77e038`  
+**Reconciliation event:** post-PR #798 current-facing documentation reconciliation through the accepted #794/#797 materialization-tooling lineage
 
 ## Purpose
 
 The owner-private DGAF Governance Console is a companion presentation surface for inspecting governance state, evidence boundaries, blockers, and admissible next actions. It provides creator and external-reader depths over one fact model, gate filtering, per-gate scope inspection, evidence-source search, and live GitHub freshness with a timestamped fallback.
+
+This companion is a derivative projection of its named sources. Because it is versioned in the same repository, the reconciliation input above is provenance for this revision rather than a standing claim about the current protected-main SHA; exact current protected-main identity must be read from Git at use time.
 
 The private console is not a governance authority, evidence store, authorization surface, or scientific transition mechanism. The private URL and access identifiers are intentionally omitted from this public repository.
 
