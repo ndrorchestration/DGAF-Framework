@@ -14,7 +14,7 @@ import json
 import subprocess
 import tarfile
 import tempfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 OUTPUT_NAME = "track_a_epoch_002_unblinded_analysis_input.json"
@@ -42,25 +42,37 @@ def digest_file(path: Path) -> str:
 def read_exact_tar_members(path: Path, expected: frozenset[str], label: str) -> dict[str, bytes]:
     try:
         with tarfile.open(path, "r:*") as archive:
-            members = archive.getmembers()
-            actual = {member.name for member in members}
-            if actual != set(expected) or len(members) != len(actual):
-                fail(f"{label} member set does not match contract")
             output: dict[str, bytes] = {}
-            for member in members:
+            saw_root_marker = False
+            for member in archive.getmembers():
+                raw_name = member.name
+                if raw_name in {".", "./"}:
+                    if saw_root_marker or not member.isdir():
+                        fail(f"{label} contains unsafe member")
+                    saw_root_marker = True
+                    continue
+
+                normalized = raw_name[2:] if raw_name.startswith("./") else raw_name
+                normalized_path = PurePosixPath(normalized)
                 if (
                     not member.isfile()
                     or member.issym()
                     or member.islnk()
-                    or member.name.startswith("/")
-                    or ".." in Path(member.name).parts
+                    or normalized_path.is_absolute()
+                    or len(normalized_path.parts) != 1
+                    or normalized_path.name in {"", ".", ".."}
+                    or normalized in output
                 ):
                     fail(f"{label} contains unsafe member")
+
                 handle = archive.extractfile(member)
                 if handle is None:
                     fail(f"{label} cannot read member")
                 assert handle is not None
-                output[member.name] = handle.read()
+                output[normalized] = handle.read()
+
+            if set(output) != set(expected):
+                fail(f"{label} member set does not match contract")
             return output
     except (OSError, tarfile.TarError) as error:
         fail(f"{label} cannot be read: {error}")
