@@ -275,6 +275,8 @@ def test_event_shape_scopes_history_to_requested_event(monkeypatch: pytest.Monke
     parent = "c" * 40
 
     def fake_git(*args: str) -> str:
+        if args == ("rev-parse", head):
+            return head
         if args == ("rev-list", "--parents", "-n", "1", head):
             return f"{head} {parent}"
         if args == ("diff-tree", "--no-commit-id", "--name-only", "-r", head):
@@ -295,6 +297,8 @@ def test_event_shape_rejects_extra_changed_file(monkeypatch: pytest.MonkeyPatch)
     parent = "c" * 40
 
     def fake_git(*args: str) -> str:
+        if args == ("rev-parse", head):
+            return head
         if args[:4] == ("rev-list", "--parents", "-n", "1"):
             return f"{head} {parent}"
         if args[:4] == ("diff-tree", "--no-commit-id", "--name-only", "-r"):
@@ -316,6 +320,8 @@ def test_event_shape_rejects_preexisting_authorization(monkeypatch: pytest.Monke
     parent = "c" * 40
 
     def fake_git(*args: str) -> str:
+        if args == ("rev-parse", head):
+            return head
         if args[:4] == ("rev-list", "--parents", "-n", "1"):
             return f"{head} {parent}"
         if args[:4] == ("diff-tree", "--no-commit-id", "--name-only", "-r"):
@@ -464,3 +470,25 @@ def test_procedure_preserves_prospective_fail_closed_boundary() -> None:
     )
     for marker in required:
         assert marker in source, marker
+
+
+def test_event_shape_resolves_symbolic_head(monkeypatch: pytest.MonkeyPatch) -> None:
+    validator = load_validator()
+    resolved = "d" * 40
+    parent = "c" * 40
+
+    def fake_git(*args: str) -> str:
+        if args == ("rev-parse", "HEAD"):
+            return resolved
+        if args == ("rev-list", "--parents", "-n", "1", resolved):
+            return f"{resolved} {parent}"
+        if args == ("diff-tree", "--no-commit-id", "--name-only", "-r", resolved):
+            return validator.AUTH_REL
+        if args == ("log", "--format=%H", resolved, "--", validator.AUTH_REL):
+            return resolved
+        raise AssertionError(f"unexpected git call: {args}")
+
+    monkeypatch.setattr(validator, "git", fake_git)
+    monkeypatch.setattr(validator, "git_object_exists", lambda spec: False)
+
+    assert validator.validate_authorization_event_shape("HEAD") == parent
