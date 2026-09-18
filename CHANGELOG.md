@@ -1,6 +1,29 @@
 # CHANGELOG.md
 
-> **Steward:** COLLEEN · **Orchestrator:** Amethyst
+> **Current stewardship authority:** functional role contracts in `governance/role_capability_registry.v1.json`; historical COLLEEN/Amethyst labels remain provenance.
+
+---
+
+## [2026-09-18] — Documentation & Materialization Tooling Reconciliation
+
+### Current-facing authority and documentation
+
+- Merged **PR #795 — Wave-2 current authority reconciliation** as signed/verified protected-main commit `d2cbfbd6f6d348ddef42fef208029295dec0051b`.
+- Current security, operations, pattern-registry, authority-matrix, bootstrap, and technical-reference surfaces now route executable authority through functional `role.*` contracts while preserving persona labels as identity/provenance only.
+- Stale authority-matrix regression logic was updated to preserve persona lineage without treating persona rows as current authority seats.
+- Touched legacy Markdown surfaces were normalized to the repository's current lint contract.
+
+### Epoch 002 materialization tooling provenance
+
+- Merged **PR #794 — Stage-1 retained-archive representation repair** as `cf32a62bbf08a1b8db39709f4989be1be800d64e`.
+- #794 preserves both locked archive byte identities, accepts only the exact harmless dot-prefixed flat-member representation, and retains fail-closed rejection of absolute/nested/traversal/link/duplicate/unreadable/unexpected members.
+- Merged **PR #797 — Stage-2 accepted-lineage rebind** as current protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`.
+- Stage 2 now binds accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
+- The dedicated materialization workflow passed tooling-only, Stage-1, binding, bound Stage-2, and fail-closed boundary checks; real evidence-admission and real receipt-event paths remained skipped.
+
+### Scientific/control non-effects
+
+No real materialization or immutable materialization receipt is established. Primary analysis remains **NOT AUTHORIZED / NOT RUN**; scientific-N increment remains **0**; canonical DGAF efficacy and independent validation remain **NOT ESTABLISHED**; High-Assurance remains **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**.
 
 ---
 
@@ -168,4 +191,4 @@ The v0.7.5 release identity, published release-asset SHA-256, inner runtime-arti
 
 ---
 
-*CHANGELOG · Amethyst × COLLEEN · Updated 2026-09-17*
+*CHANGELOG · current functional governance with historical persona provenance · Updated 2026-09-18*
