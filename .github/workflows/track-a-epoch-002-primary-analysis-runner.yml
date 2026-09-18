@@ -1,0 +1,80 @@
+name: Track A Epoch 002 Locked Analysis Runner Tooling
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-primary-analysis-runner.yml'
+      - 'scripts/run_track_a_epoch_002_locked_primary_analysis.py'
+      - 'tests/test_track_a_epoch_002_locked_primary_analysis_runner.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_EXECUTION_PROCEDURE.md'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/track-a-epoch-002-primary-analysis-runner.yml'
+      - 'scripts/run_track_a_epoch_002_locked_primary_analysis.py'
+      - 'tests/test_track_a_epoch_002_locked_primary_analysis_runner.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_EXECUTION_PROCEDURE.md'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  tooling:
+    name: Validate locked-analysis runner tooling only
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install CI-only validation environment
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Compile runner
+        run: python -m py_compile scripts/run_track_a_epoch_002_locked_primary_analysis.py
+
+      - name: Run runner unit tests with synthetic inputs only
+        run: python -m pytest -q tests/test_track_a_epoch_002_locked_primary_analysis_runner.py
+
+      - name: Prove workflow never executes empirical analysis
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          workflow = Path(".github/workflows/track-a-epoch-002-primary-analysis-runner.yml").read_text()
+          runner = Path("scripts/run_track_a_epoch_002_locked_primary_analysis.py").read_text()
+
+          empirical_invocation = "run_track_a_epoch_002_locked_primary_analysis.py" + " --input"
+          materialized_name = "track_a_epoch_002_" + "unblinded_analysis_input.json"
+          assert empirical_invocation not in workflow
+          assert materialized_name not in workflow
+          for forbidden in (
+              "private_key",
+              "passphrase",
+              "blinding_secret",
+              "decrypted_mapping",
+              "c:\\users\\",
+          ):
+              assert forbidden not in runner.lower()
+          print("TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RUNNER_TOOLING=PASS_NONEXECUTING")
+          print("PRIMARY_ANALYSIS_EXECUTION=NOT_PERFORMED")
+          print("SCIENTIFIC_N_INCREMENT=0")
+          print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")
+          PY
