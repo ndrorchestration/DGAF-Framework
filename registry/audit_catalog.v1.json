@@ -607,6 +607,193 @@
         "Protected-main requiredness is a separate repository configuration fact observed through branch metadata; this catalog entry does not create that requiredness."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-PYTHON-QUALITY",
+      "name": "Python Tests & Quality Checks",
+      "class": "REPOSITORY_CI",
+      "target_layers": [
+        "REPOSITORY",
+        "CODE",
+        "SECURITY"
+      ],
+      "assertion": "The candidate satisfies the workflow's pinned Python matrix, changed-file and repository quality checks, full pytest regression suite, bounded security thresholds, deterministic staging-evidence checks, and integration-suite behavior when an integration suite is present.",
+      "owner": "DGAF Python quality and security workflow",
+      "implementation": [
+        ".github/workflows/python-tests.yml",
+        "scripts/ci_changed_python_targets.py",
+        "tests/test_ci_changed_python_targets.py",
+        "requirements-ci.txt"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "Python 3.10/3.11/3.12 test conclusions",
+        "toolchain manifests",
+        "pytest diagnostics and coverage artifacts",
+        "security reports",
+        "staging circuit-breaker evidence",
+        "integration-wrapper result"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides recurring source-quality, regression, security-threshold, and deterministic staging-evidence assurance for a candidate; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not establish scientific efficacy or independent validation.",
+        "Does not establish successful deployment or production health.",
+        "Does not grant materialization, primary-analysis, runtime, or High-Assurance authorization.",
+        "Does not establish a minimum code-coverage percentage."
+      ],
+      "fail_behavior": "MIXED_FAIL_CLOSED_CHECKS_WITH_EXPLICIT_NONBLOCKING_OR_CONDITIONAL_SUBSURFACES",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Coverage threshold is configured as zero, so coverage artifacts are observational rather than a minimum-coverage gate.",
+        "Codecov upload is explicitly non-blocking and continue-on-error.",
+        "Integration execution is skipped when tests/integration is absent.",
+        "The full Bandit report is advisory; the blocking threshold is medium-or-higher severity with medium-or-higher confidence and excludes one exact immutable historical Epoch 001 materializer.",
+        "Workflow failure semantics do not imply protected-branch requiredness; current protected-main required-context readback does not list this workflow."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-UI-COMMAND-CENTER",
+      "name": "UI Command Center Validation",
+      "class": "REPOSITORY_CI",
+      "target_layers": [
+        "REPOSITORY",
+        "PRESENTATION",
+        "DOCUMENTATION"
+      ],
+      "assertion": "For path-scoped pull requests or manual runs, the locked Node environment completes the repository UI semantic/contract tests and production Next.js build.",
+      "owner": "DGAF Governance Command Center validation workflow",
+      "implementation": [
+        ".github/workflows/ui-command-center-validation.yml",
+        "package.json"
+      ],
+      "trigger": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "npm run test:ui result",
+        "npm run build result"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides bounded source-level assurance that covered Governance Command Center semantics/tests and production build succeed; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not establish deployment success, current production health, or provider/runtime identity.",
+        "Does not create governance authority or authorize any transition.",
+        "Does not establish scientific efficacy, empirical support, or independent validation."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_TRIGGERED_UI_TEST_AND_BUILD_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Pull-request execution is path-scoped rather than repository-wide.",
+        "The UI test command covers app/lib/*.test.ts and is not a claim of exhaustive browser, accessibility, or end-to-end testing.",
+        "Dependency installation uses npm ci with --no-audit, so this workflow does not perform an npm vulnerability audit.",
+        "Successful source build is not runtime/deployment verification."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-DOC-LINT-PR",
+      "name": "Doc Lint (PR Scope)",
+      "class": "DOCUMENTATION",
+      "target_layers": [
+        "REPOSITORY",
+        "DOCUMENTATION"
+      ],
+      "assertion": "Markdown files introduced or modified by a pull request targeting main satisfy the repository markdownlint configuration within the workflow's explicit changed-file and exclusion scope.",
+      "owner": "DGAF PR-scoped documentation lint workflow",
+      "implementation": [
+        ".github/workflows/doc-lint-pr-scope.yml",
+        ".markdownlint.yml"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "changed Markdown file list",
+        "markdownlint-cli 0.39.0 output",
+        "PR-scoped summary"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Surfaces Markdown-format defects introduced or modified by a covered pull request; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not establish factual correctness, recency, provenance correctness, or claim validity.",
+        "Does not resolve repository-wide historical documentation debt.",
+        "Does not establish scientific, runtime, authorization, or certification state."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_CHANGED_MARKDOWN_FILES_WITH_EXPLICIT_EXCLUSIONS",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Scope is only Markdown files added, copied, modified, or renamed by the pull request.",
+        "CHANGELOG.md and SWEEP_LOG.md are explicitly excluded by this workflow.",
+        "Repository-wide documentation debt is tracked separately and is not cleared by a passing PR-scoped lint result."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-CONTROL-STATE-HEAD",
+      "name": "Validate Control-State HEAD Binding",
+      "class": "EPISTEMIC_CONTROL",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "CONTROL_STATE",
+        "PROVENANCE"
+      ],
+      "assertion": "The canonical control-state record's last_reconciled_main_tip remains correctly bound to the relevant push or pull-request predecessor when the control-state file changes, while unchanged control-state files retain their prior reconciliation source without a self-referential HEAD requirement.",
+      "owner": "DGAF control-state provenance workflow",
+      "implementation": [
+        ".github/workflows/validate-control-state-head.yml",
+        "scripts/validate_control_state_head.py"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "exact candidate HEAD environment",
+        "push-before or pull-request base identity",
+        "control-state validator output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Surfaces stale or malformed canonical control-state reconciliation bindings within the validator's event-aware scope; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not make the control-state record an authority for facts owned by other sources.",
+        "Does not authorize a governance or scientific transition.",
+        "Does not establish runtime identity, efficacy, empirical support, or independent validation."
+      ],
+      "fail_behavior": "FAIL_CLOSED_ON_MISSING_REQUIRED_IDENTITY_STALE_PREDECESSOR_BINDING_OR_AMBIGUOUS_NON_EVENT_RECONCILIATION",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "No dedicated unit-test file for scripts/validate_control_state_head.py was identified at the expected repository path during this tranche; assurance is bound to the workflow and executable validator itself.",
+        "The validator checks the encoded predecessor/HEAD reconciliation contract, not external correctness of every fact recorded in the control-state document.",
+        "Workflow failure semantics do not imply protected-branch requiredness; current protected-main required-context readback does not list this workflow."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }

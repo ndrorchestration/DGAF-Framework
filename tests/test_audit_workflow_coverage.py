@@ -72,3 +72,17 @@ def test_protected_main_required_context_workflows_are_catalog_mapped():
     }
 
     assert required_context_workflows.isdisjoint(unmapped)
+
+
+def test_core_exact_head_verification_workflows_are_catalog_mapped():
+    catalog = load_catalog(CATALOG_PATH)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
+
+    core_verification_workflows = {
+        ".github/workflows/python-tests.yml",
+        ".github/workflows/ui-command-center-validation.yml",
+        ".github/workflows/doc-lint-pr-scope.yml",
+        ".github/workflows/validate-control-state-head.yml",
+    }
+
+    assert core_verification_workflows.isdisjoint(unmapped)
