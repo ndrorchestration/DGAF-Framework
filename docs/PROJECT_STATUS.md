@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-As of the 2026-09-18 protected-main reconciliation through commit `40d301583048e0c47e8bf38154ac40fa023b4f5e`:
+This 2026-09-18 reconciliation was prepared against protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
