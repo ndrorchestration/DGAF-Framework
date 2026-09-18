@@ -10,18 +10,18 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def _active_agent_rows(matrix: str) -> set[str]:
+def _persona_lineage_rows(matrix: str) -> set[str]:
     rows = set()
-    in_baseline = False
+    in_lineage = False
     for line in matrix.splitlines():
-        if line.strip() == "## 2. Current Authority Baseline":
-            in_baseline = True
+        if line.strip() == "## 3. Persona / Identity Lineage Derivative (Non-Authoritative)":
+            in_lineage = True
             continue
-        if in_baseline and line.startswith("## "):
+        if in_lineage and line.startswith("## "):
             break
-        if in_baseline and line.startswith("|"):
+        if in_lineage and line.startswith("|"):
             cells = [cell.strip() for cell in line.strip("|").split("|")]
-            if len(cells) >= 1 and cells[0] not in {"Agent", "---"}:
+            if len(cells) >= 1 and cells[0] not in {"Persona / identity", "---"}:
                 rows.add(cells[0])
     return rows
 
@@ -50,9 +50,12 @@ def test_matrix_preserves_non_delegation_boundaries():
         assert text in matrix
 
 
-def test_matrix_contains_current_specialists():
+def test_matrix_preserves_persona_lineage_without_granting_current_authority():
     matrix = _read(MATRIX)
-    active_agents = _active_agent_rows(matrix)
+    persona_rows = _persona_lineage_rows(matrix)
+    assert "governance/role_capability_registry.v1.json" in matrix
+    assert "governance/persona_role_lineage.v1.json" in matrix
+    assert "Persona labels do not independently grant authority." in matrix
     for agent in (
         "Amethyst",
         "Apogee",
@@ -72,9 +75,9 @@ def test_matrix_contains_current_specialists():
         "Reciprocity",
         "Sentinel-Φ",
     ):
-        assert agent in active_agents
-    assert "Sentience" not in active_agents
-    assert "Sentinel-Φ / Sentinel" not in active_agents
+        assert agent in persona_rows
+    assert "Sentience" not in persona_rows
+    assert "Sentinel-Φ / Sentinel" not in persona_rows
 
 
 def test_reconciliation_targets_are_explicit():

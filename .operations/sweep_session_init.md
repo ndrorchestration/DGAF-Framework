@@ -2,13 +2,13 @@
 
 **Pattern:** P-02 (COLLEEN-Trigger-Chain) | P-21 (Session-Boundary-State-Anchor)  
 **Run at:** Every session open, before any commits  
-**Owner:** Agent COLLEEN → handoff to Agent Amethyst  
+**Owner:** `role.continuity-archive-coordinator` → handoff to `role.governance-orchestrator`  
 
 ---
 
 ## Step 1 — Read SESSION_ANCHOR.md
 
-```
+```text
 File: DGAF-Framework/SESSION_ANCHOR.md
 Action: Read open BLGs, last seal status, Drive-GitHub sync status, priority queue
 Owner: COLLEEN
@@ -36,9 +36,9 @@ python .operations/gate_compliance_check.py
 
 ## Step 3 — COLLEEN-Trigger-Chain Output
 
-Produce a compact priority queue for Amethyst:
+Produce a compact priority queue for the current `role.governance-orchestrator`:
 
-```
+```text
 SESSION [SXX] OPEN — [DATE] [TIME] EDT
 Open BLGs:       [ID list or "none"]
 P-24 gaps:       [count] files non-compliant
@@ -47,7 +47,7 @@ Priority queue:  1. [top item]  2. [item]  3. [item]
 Formation:       [Trio / Quintet / IP Sweep / Solo]
 ```
 
-- [ ] Priority queue emitted to Amethyst
+- [ ] Priority queue emitted to `role.governance-orchestrator`
 - [ ] Formation selected for this session
 
 ---
@@ -60,4 +60,4 @@ Formation:       [Trio / Quintet / IP Sweep / Solo]
 
 ---
 
-*Owner: COLLEEN · Conductor: Amethyst · Architect: Hensel, Andrew Vance*
+*Owner role: `role.continuity-archive-coordinator` · Conductor role: `role.governance-orchestrator` · Identity provenance: `governance/persona_role_lineage.v1.json` · Architect / human authority: Hensel, Andrew Vance*

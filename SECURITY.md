@@ -42,4 +42,10 @@ To report a security concern with this repository or the broader DGAF ecosystem:
 
 ## Governance Context
 
-This repository is governed by the DGAF framework under Agent Amethyst (meta-orchestrator) and Agent Sentinel (integrity enforcement). Security reports may be escalated to the [sentinel-governance](https://github.com/ndrorchestration/sentinel-governance) CI/CD layer for automated remediation verification.
+Current governance and security authority are role-based:
+
+- `role.governance-orchestrator` owns the applicable governance-orchestration and normative-disposition lane;
+- `role.security-containment-gate` owns scoped security containment, sovereign/IP protection, protected-disclosure, and fail-closed blocking within its governing contract;
+- `role.evidence-verification-reviewer` may verify retained remediation evidence where the applicable contract requires independent review.
+
+Functional authority is defined in `governance/role_capability_registry.v1.json`. Persona names and historical agent repositories may be retained as provenance, but they do not independently grant current security or governance authority. Security remediation must remain bound to this repository's current source, CI evidence, and applicable private reporting path.

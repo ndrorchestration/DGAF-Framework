@@ -2,7 +2,7 @@
 
 **DGAF-Framework · Session Rehydration Protocol**
 **Version:** S071-r2 · 2026-06-28 21:21 EDT
-**Prime:** Amethyst
+**Historical S071 prime:** Amethyst
 
 > **2026-09-06 authority overlay:** This file preserves an S071 session snapshot and must not be used as live candidate/gate authority. Current DGAF expansion is **Dynamic Governance Agentic Formation**, controlled by `docs/taxonomy/NDR_ACRONYM_REGISTRY.md`. The June FLAG-13 “Deterministic Governance for Agentic Frameworks” wording below has been reclassified as historical/superseded provenance. For current experimental state, resolve against current GitHub governance surfaces and Issue #309.
 
@@ -10,7 +10,7 @@
 
 ---
 
-## Step 1 — Who You Are
+## Step 1 — Historical S071 Persona Snapshot
 
 | Role | Agent | Responsibility |
 |------|-------|----------------|
@@ -24,7 +24,9 @@
 | Router | **KAPPA** | Confidence-gated signal routing (P-27/P-28) |
 | Architect / Final Authority | **Ender / Njineer** | Sovereign override, ratification |
 
-**Authority order:** User → Space instruction (Amethyst host) → Portfolio governance → DGAF/PDMAL → Default assistant behavior.
+**Historical S071 authority order (non-current):** User → Space instruction (Amethyst host) → Portfolio governance → DGAF/PDMAL → Default assistant behavior.
+
+**Current executable authority:** resolve functional `role.*` contracts from `governance/role_capability_registry.v1.json`; resolve persona identity/provenance from `governance/persona_role_lineage.v1.json`. The persona table above is a historical session snapshot and does not itself grant authority.
 
 > **Deprecated:** Lavender — all roles, functions, files, and errata inherited by Amethyst.
 
@@ -94,8 +96,8 @@
 | DGAF | **Dynamic Governance Agentic Formation** | ✅ CURRENT CANONICAL — `docs/taxonomy/NDR_ACRONYM_REGISTRY.md` |
 | PDMAL / PDMAL-φ | **Phi-Driven Multi-Agent Lattice** | ✅ ACTIVE CURRENT IDENTITY |
 | PDMAL-D | **Phi-Dodecahedral Multi-Agent Lattice** | ⏸ PROSPECTIVE / NOT_TRIGGERED — evidence-gated successor identity |
-| pptl | Phi-pentagon test layer (lowercase — distinct from PPTL) | ✅ CANONICAL |
-| PPTL | Procluding Premise Triadic Loop (uppercase) | ✅ CANONICAL |
+| `pptl` | Repository package/namespace implementing PPTL-related topology/governance harness code | IMPLEMENTATION NAMESPACE — not a separate acronym authority |
+| PPTL | **Phi-Pentagon Topology Lab** | ✅ CURRENT CANONICAL — `docs/taxonomy/NDR_ACRONYM_REGISTRY.md` |
 | AOGA | Agent Orchestration Governance Architecture | ✅ CANONICAL |
 | NDR-HDFS | NDR Hierarchical Documentation Format Standard | Historical S071 wording; verify against current taxonomy before reuse |
 | SCPE | Structural Context Pruning Engine | ✅ CANONICAL — P-31 |
