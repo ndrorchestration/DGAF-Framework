@@ -175,3 +175,100 @@ h4 { font-size: 1rem; }
     box-shadow: none;
   }
 }
+
+
+/* Accessibility/responsive successor: keyboard entry, touch targets, and technical identity wrapping. */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  padding: 10px 12px;
+  border: 1px solid var(--focus-ring);
+  border-radius: 9px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-weight: 800;
+  transform: translateY(-160%);
+  transition: transform var(--motion-fast) var(--ease-control);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.nav-item,
+.button,
+.icon-button,
+.text-button,
+.severity-filter button {
+  min-height: 44px;
+}
+
+code,
+.mono,
+.source-stamp,
+.artifact-row code,
+.finding-meta code,
+.tool-contract strong {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+@media (max-width: 760px) {
+  .sidebar {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .nav-item {
+    min-height: 48px;
+  }
+
+  .topbar-title,
+  .runtime-pill {
+    min-width: 0;
+  }
+
+  .topbar-title > div:last-child,
+  .runtime-pill > span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    gap: 10px;
+  }
+
+  .topbar h1 {
+    max-width: 48vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .page-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .skip-link {
+    border-color: Highlight;
+    background: Canvas;
+    color: CanvasText;
+  }
+}
