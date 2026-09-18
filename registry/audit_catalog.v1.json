@@ -843,6 +843,58 @@
         "Source-level contract validation is not deployment/runtime verification and does not make external assertions authoritative."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-UI-SEMANTIC-CONTROL-FIELD",
+      "name": "Semantic Control Field Projection Contracts",
+      "class": "EPISTEMIC_CONTROL",
+      "target_layers": [
+        "REPOSITORY",
+        "PRESENTATION",
+        "GOVERNANCE"
+      ],
+      "assertion": "Decision Frontier, Governance Map, and State-Space Explorer V0 preserve their encoded presentation-projection contracts over canonical governance state: current/blocking/reachable distinctions remain categorical, downstream unauthorized states remain unreachable where encoded, global constraints remain explicit, lateral relationships resolve to canonical stage identities, and State-Space V0 does not invent continuous readiness or authority semantics.",
+      "owner": "DGAF Governance Command Center presentation assurance",
+      "implementation": [
+        "app/lib/decision-frontier.ts",
+        "app/lib/decision-frontier.test.ts",
+        "app/lib/governance-map.ts",
+        "app/lib/governance-map.test.ts",
+        "app/lib/state-space-projection.ts",
+        "app/lib/state-space-projection.test.ts"
+      ],
+      "trigger": [
+        "carried by .github/workflows/ui-command-center-validation.yml on path-scoped pull requests or workflow_dispatch",
+        "npm run test:ui"
+      ],
+      "blocking": false,
+      "evidence": [
+        "UI Command Center Validation workflow conclusion when triggered",
+        "npm run test:ui semantic/contract test result",
+        "Decision Frontier canonical-stage derivation assertions",
+        "Governance Map canonical-stage, lateral-coupling, and global-constraint assertions",
+        "State-Space V0 discrete-reachability and not-modeled-boundary assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides bounded source-level assurance that the three accepted Semantic Control Field projections preserve their encoded categorical governance semantics when the UI semantic/contract tests execute; it does not create a new state engine or protected-branch requirement.",
+      "non_effects": [
+        "Does not grant governance authority or authorize any transition.",
+        "Does not establish deployment success, current production health, provider/runtime identity, or browser/end-to-end behavior.",
+        "Does not establish materialization, primary-analysis authorization/execution, scientific efficacy, empirical support, independent validation, certification, or High-Assurance promotion.",
+        "Does not establish continuous state-space geometry, readiness percentage, authorization probability/distance, scalar evidence quality, efficacy gradients, or inferred consequence/reversibility."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_ENCODED_PRESENTATION_PROJECTION_ASSERTIONS",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The family is carried by the path-scoped UI Command Center Validation workflow rather than a dedicated projection workflow.",
+        "The tests are source-level semantic contracts and selected source-text assertions; they are not exhaustive browser, accessibility, visual-regression, interaction, or end-to-end assurance.",
+        "State-Space V0 assurance is intentionally discrete and categorical; continuous manifold/tensor semantics remain outside the implemented contract.",
+        "Successful UI tests and production build do not establish live deployment or runtime correctness."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
