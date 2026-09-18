@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-18
-current_protected_main: 40d301583048e0c47e8bf38154ac40fa023b4f5e
+reconciliation_input_main: 40d301583048e0c47e8bf38154ac40fa023b4f5e
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -56,7 +56,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **`40d301583048e0c47e8bf38154ac40fa023b4f5e`** |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `40d301583048e0c47e8bf38154ac40fa023b4f5e` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -86,7 +86,7 @@ No row above establishes integrated DGAF efficacy, independent validation, produ
 
 ## Protected-main repository state
 
-The current protected-main baseline is `40d301583048e0c47e8bf38154ac40fa023b4f5e`, produced by PR #797 after accepted documentation Wave 2 (#795), the Stage-1 retained-archive representation repair (#794), and the current-lineage Stage-2 provenance rebind (#797).
+This reconciliation was prepared against protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`, produced by PR #797 after accepted documentation Wave 2 (#795), the Stage-1 retained-archive representation repair (#794), and the current-lineage Stage-2 provenance rebind (#797). Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
