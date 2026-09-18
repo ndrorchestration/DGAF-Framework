@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-This 2026-09-18 reconciliation was prepared against protected `main` `a0288b080b68e576b84d22eaf4a4972b5c3fbb5d`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
+This 2026-09-18 reconciliation was prepared against protected `main` `037e9e878fb8d9ea7a4658219734158bb5300b1e`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -21,14 +21,17 @@ This 2026-09-18 reconciliation was prepared against protected `main` `a0288b080b
 - successor dataset lock: **ESTABLISHED** through an accepted PASS `DATASET_LOCK_RECEIPT`;
 - successor bounded unblinding: **AUTHORIZED** for `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
 - successor materialization tooling: **ACCEPTED**, with PR #713/#715 retained as predecessor tooling, Stage-1 repaired by #794, Stage 2 rebound by #797, the bounded local operator bridge accepted through #806, the stdio MCP adapter accepted through #809, and the one-command local materialization autopilot accepted through #813;
-- successor prospective primary-analysis authorization tooling: **ACCEPTED / TOOLING ONLY** through PR #728;
-- successor real materialization: **NOT ESTABLISHED**;
-- successor materialization receipt: **NOT ESTABLISHED**;
-- successor primary-analysis authorization event: **NOT ESTABLISHED**;
-- successor primary analysis: **NOT AUTHORIZED / NOT RUN**;
+- successor prospective primary-analysis authorization tooling: **ACCEPTED** through PR #728;
+- successor real materialization evidence: **ESTABLISHED / ACCEPTED** through PR #824;
+- successor materialization receipt: **ESTABLISHED** through creation-only PR #826;
+- successor locked-analysis runner tooling: **ACCEPTED** through PR #831;
+- successor primary-analysis authorization event: **ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY** through PR #828;
+- successor primary analysis: **AUTHORIZED_BOUNDED / NOT RUN**;
+- successor locked-analysis result: **NOT ESTABLISHED**;
+- successor result-admission tooling: **ACCEPTED / NON-EXECUTING** through PR #835;
 - scientific-N increment: **0**.
 
-The accepted dataset-lock, bounded-unblinding, materialization-tooling, and primary-analysis-authorization-tooling records preserve separate event boundaries. They do not establish real materialization, a materialization receipt, primary-analysis authorization, efficacy, independent validation, or High-Assurance authorization.
+These accepted records preserve separate event boundaries. Materialization, its receipt, and bounded primary-analysis authorization are established at their exact scopes; the primary analysis has not run, no locked result has been admitted, and efficacy, independent validation, and High-Assurance authorization remain unestablished.
 
 ## Accepted repository presentation state
 
@@ -63,22 +66,24 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 - **PR #806** accepted the bounded local operator bridge.
 - **PR #809** accepted the local stdio MCP adapter as transport tooling only.
 - **PR #813** accepted the one-command local materialization autopilot, which performs secret-bearing materialization only on the operator machine, prepares exactly one non-secret evidence-admission path, and stops before receipt or primary-analysis authorization.
-- The dedicated materialization-receipt workflow passed in tooling-only/binding mode. Real evidence admission and the real receipt-event path remain unexecuted.
-- These are tooling/provenance milestones only. They do not establish real materialization or a materialization receipt.
+- PR #824 subsequently admitted the exact non-secret materialization evidence and PR #826 established the creation-only materialization receipt.
+- PR #831 accepted the fail-closed local locked-analysis runner; PR #828 accepted the separate bounded authorization event; PR #835 accepted content-addressed result-admission tooling.
+- These later events establish materialization/receipt/authorization only at their exact scopes; they do not establish analysis execution, a result, efficacy, independent validation, or High-Assurance authorization.
 
 ## Next admissible scientific transition
 
-The current scientific frontier is still **controlled operator-side materialization of the real retained Epoch 002 evidence**, followed by bounded evidence admission and a separate immutable materialization receipt. The accepted lowest-friction Windows entrypoint is `scripts/run_track_a_epoch_002_local_autopilot.ps1` from a local DGAF checkout with the required local configuration.
+The current scientific frontier is **local execution of the authorized frozen Epoch 002 primary analysis**. Materialization evidence and receipt are accepted, and the separate bounded authorization event is accepted. Execution must use the accepted fail-closed runner against the retained content-addressed input in the exact locked Python 3.12.0 / NumPy 2.5.1 environment; the resulting local output is then admitted by content address through a separate result-record event before interpretation.
 
-The accepted apparatus provides:
+The accepted apparatus now provides:
 
 1. a controlled operator-side Stage-1 materializer with wrong-key/archive-drift and unsafe-archive fail-closed behavior;
-2. a non-secret Stage-2 evidence-bundle wrapper that records content-addressed identities without custody secrets;
-3. atomic publication of the complete materialization bundle only after validation;
-4. a prospective, read-only primary-analysis authorization gate that can validate a future exact authorization event only after an accepted immutable materialization receipt exists;
-5. explicit preservation of `PRIMARY_ANALYSIS_AUTHORIZATION=NOT_ESTABLISHED`, `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`, scientific-N increment 0, and canonical efficacy `NOT_ESTABLISHED`.
+2. a non-secret evidence-bundle and immutable receipt chain already accepted for Epoch 002;
+3. a bounded human-controlled authorization record with exact scope `LOCKED_PRIMARY_ANALYSIS_ONLY`;
+4. a fail-closed local locked-analysis runner bound to the frozen analysis/configuration, exact materialized-input digest, and exact Python 3.12.0 / NumPy 2.5.1 runtime;
+5. a separate non-executing result-admission lane that validates and content-addresses the local output without copying numerical outcomes into the repository record;
+6. explicit preservation of scientific-N increment 0, canonical efficacy `NOT_ESTABLISHED`, independent validation `NOT_ESTABLISHED`, and High-Assurance `NOT AUTHORIZED`.
 
-Do not place private keys, passphrases, protected plaintext mappings, or other recoverable secret material in GitHub, Notion, chat, CI inputs, workflow logs, or committed files. Do not create a positive primary-analysis authorization event until a real materialization has been admitted and its immutable receipt has been accepted. Do not run primary analysis until that separate authorization event is itself accepted.
+Do not place private keys, passphrases, protected plaintext mappings, or other recoverable secret material in GitHub, Notion, chat, CI inputs, workflow logs, or committed files. Do not alter the frozen endpoint, estimand, bootstrap contract, historical pooling boundary, or locked runtime after outcome access. Analysis execution, result admission, and later interpretation remain separate events.
 
 ## Presentation boundary
 
