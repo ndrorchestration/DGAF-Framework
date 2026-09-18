@@ -165,6 +165,14 @@ Acceptance of this event means only that **materialization evidence has been adm
 
 ## Stage 4 — direct one-file materialization receipt
 
+A dedicated dry-run-first helper is available at:
+
+`scripts/prepare_track_a_epoch_002_materialization_receipt.py`
+
+It is creation-only and non-authorizing. The helper refuses to proceed unless the checked-out HEAD is itself the accepted one-file materialization-evidence admission, the canonical evidence has first-and-only history at that HEAD, the receipt is absent, the predecessor chain still validates, and no primary-analysis authorization or result exists. By default it prints the exact prospective receipt without writing it. Explicit `--write` may create only the canonical receipt path in an otherwise clean worktree; review/commit/merge remain separate repository events.
+
+The helper delegates receipt construction and semantic checking to the accepted `expected_receipt(...)` and `validate_receipt_object(...)` functions. It has no decryption, secret, primary-analysis, authorization, merge, or scientific-state-promotion surface.
+
 Canonical future receipt path:
 
 `docs/experiment/track_a_runs/TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json`
