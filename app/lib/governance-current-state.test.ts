@@ -24,10 +24,9 @@ test('public governance projection reflects the accepted 2026-09-18 documentatio
   assert.equal(lockedAnalysis?.toolingPrepared, true)
 })
 
-test('overview truth-boundary copy preserves established dataset-lock state', () => {
-  assert.doesNotMatch(
-    OVERVIEW_SOURCE,
-    /completed successor collection does not establish dataset lock/,
-  )
-  assert.match(OVERVIEW_SOURCE, /dataset lock is established/)
+test('overview truth-boundary copy reflects the accepted locked-analysis frontier', () => {
+  assert.match(OVERVIEW_SOURCE, /materialization and its immutable receipt are established/)
+  assert.match(OVERVIEW_SOURCE, /bounded locked-primary-analysis authorization is accepted/)
+  assert.match(OVERVIEW_SOURCE, /the analysis has not run/)
+  assert.match(OVERVIEW_SOURCE, /no locked result is established/)
 })
