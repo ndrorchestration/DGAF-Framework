@@ -70,6 +70,7 @@ These aliases may map to different palette values over time without changing the
 ## Surface grammar
 
 Use a small depth vocabulary:
+
 - base field
 - raised panel
 - inspection surface
@@ -81,12 +82,14 @@ Avoid arbitrary card variants. Depth must indicate relationship or inspection hi
 ## Motion grammar
 
 Allowed:
+
 - short emphasis transitions when reachability/state changes;
 - provenance reveal/tracing;
 - expansion/collapse for evidence inspection;
 - subtle parallax or field depth only where it clarifies spatial hierarchy.
 
 Avoid:
+
 - ambient pulsing;
 - bouncing;
 - attention-seeking loops;
@@ -112,15 +115,19 @@ Reduced-motion mode must preserve the same information and ordering.
 ## Flagship surfaces
 
 ### Decision Frontier
+
 Primary operator handoff. Must make current state, blocking boundary, nearest admissible action, downstream unreachable transitions, provenance, consequence, and receipt state readable without relying on color.
 
 ### Governance Map
+
 Primary structural view. Must preserve vertical escalation, lateral coupling, provenance, and global constraints as different visual relationships.
 
 ### State Space
+
 Discrete categorical reachability remains authoritative in V0. No continuous geometry, interpolation, readiness distance, confidence field, or efficacy gradient until formal semantics exist.
 
 ### Truth Boundary
+
 Must remain the highest-salience compact statement of canonical state and must never be visually subordinated to runtime health.
 
 ## QA gates
