@@ -33,7 +33,7 @@ Within the evidence boundaries documented in this repository, DGAF demonstrates 
 
 ### Current repository engineering milestones
 
-As of protected `main` `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`:
+As of protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`:
 
 - **Decision Frontier — PR #776** is merged as a presentation-only Semantic Control Field component derived from canonical governance state.
 - **Governance Map — PR #779** is merged and renders ordered escalation, explicitly named lateral relationships, and global field constraints without creating a second state engine.
@@ -41,6 +41,9 @@ As of protected `main` `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`:
 - **Bounded assurance catalog — PR #780** is merged with `coverage.status = PARTIAL_CORE_FAMILIES_ONLY`.
 - **Workflow coverage-gap scanner — PR #782** is merged and reports workflow definitions not yet exactly bound by the catalog without inferring their role.
 - **Recurring assurance expansion — PR #785** is merged and adds seven source-verified recurring assurance families while preserving partial coverage.
+- **Current-facing authority/documentation reconciliation — PR #795** is merged; security, operations, pattern-registry, authority-matrix, bootstrap, and technical-reference surfaces now route current executable authority through functional `role.*` contracts while retaining personas as provenance.
+- **Stage-1 retained-archive repair — PR #794** is merged and accepts the exact locked archive's harmless `./` flat-member representation without changing archive bytes or weakening unsafe-member rejection.
+- **Stage-2 accepted-lineage rebind — PR #797** is merged and binds the operator bundle to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` / blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
 
 These milestones are engineering/presentation/assurance-inventory evidence only. They do **not** establish materialization, primary-analysis authorization, empirical efficacy, independent validation, successful deployment, production certification, or High-Assurance authorization.
 
@@ -119,8 +122,9 @@ The current frontier is **controlled operator-side materialization of the real r
 
 - a PASS content-addressed dataset-lock receipt;
 - a separate PASS unblinding decision bounded to `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
-- PR #713's controlled Stage-1 materializer with wrong-key, archive-drift, duplicate-entry, traversal/link, and unexpected-member fail-closed behavior;
-- PR #715's non-secret Stage-2 materialization evidence bundle with deterministic content-addressed output identities and atomic five-member publication;
+- PR #713's predecessor controlled Stage-1 materializer and PR #715's predecessor non-secret Stage-2 evidence bundle;
+- PR #794's accepted Stage-1 repair for the exact retained dot-prefixed archive representation, preserving locked archive bytes and fail-closed unsafe-member checks;
+- PR #797's accepted Stage-2 provenance rebind to the protected-main #794 materializer identity;
 - PR #728's prospective primary-analysis authorization tooling, which remains tooling-only until its predecessor receipt exists.
 
 Tooling acceptance does not claim that real materialization occurred. Until the exact retained material is processed under the accepted operator-controlled path and a separate immutable materialization receipt is admitted, preserve:
