@@ -6,6 +6,7 @@ const globals = readFileSync('app/styles/globals.css', 'utf8')
 const frontier = readFileSync('app/styles/decision-frontier.css', 'utf8')
 const governanceMap = readFileSync('app/styles/governance-map.css', 'utf8')
 const stateSpace = readFileSync('app/styles/state-space.css', 'utf8')
+const overview = readFileSync('app/components/overview-view.tsx', 'utf8')
 
 const REQUIRED_TOKENS = [
   '--state-established',
@@ -66,4 +67,13 @@ test('forced colors preserve structural semantics and focus visibility', () => {
   assert.match(globals, /outline: 2px solid Highlight/)
   assert.match(globals, /truth-boundary[\s\S]*border-left: 3px solid CanvasText/)
   assert.match(globals, /status-chip\[data-tone="warning"\][\s\S]*status-dot/)
+})
+
+
+test('Overview hero remains a semantic control field rather than decorative-only futurism', () => {
+  assert.match(overview, /SEMANTIC CONTROL FIELD/)
+  assert.match(overview, /CURRENT STATE/)
+  assert.match(overview, /AUTHORIZATION BOUNDARY/)
+  assert.match(overview, /NEXT ADMISSIBLE/)
+  assert.doesNotMatch(overview, /hero-orbit/)
 })
