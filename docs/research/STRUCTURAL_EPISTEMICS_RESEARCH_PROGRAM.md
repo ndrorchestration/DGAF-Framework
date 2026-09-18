@@ -335,6 +335,190 @@ Examples of disconfirming outcomes include:
 
 Negative results must be retained as evidence rather than reframed as success.
 
+## Epistemic state and claim-evidence model
+
+The research program now treats epistemic state as a **typed, auditable object** rather than a scalar confidence score. This extension is prospective and non-authorizing; it does not amend the locked PDMAL primary analysis or alter any current governance/scientific predicate.
+
+### Claim object
+
+For each material claim `c`, record at minimum:
+
+```text
+ClaimRecord(c) = {
+  claim_id,
+  proposition,
+  claim_class,
+  scope,
+  population_or_system,
+  time_valid_from,
+  time_valid_until_or_review_by,
+  source_roots,
+  derivation_steps,
+  dependency_signature,
+  supporting_evidence,
+  contradicting_evidence,
+  defeaters,
+  uncertainty,
+  calibration_status,
+  verification_status,
+  authorization_relevance,
+  supersedes,
+  superseded_by,
+  retraction_state
+}
+```
+
+A claim is not promoted merely because multiple agents repeat it, a source is prestigious, a model assigns high confidence, or a mathematical property is exact.
+
+### Evidence graph and independence
+
+Extend the provenance graph `H` with typed evidence relations:
+
+```text
+SUPPORTS
+CONTRADICTS
+DERIVED_FROM
+REPLICATES
+SHARES_SOURCE_ROOT
+SHARES_MODEL_LINEAGE
+SHARES_PROMPT_OR_POLICY
+SHARES_TOOL_OUTPUT
+DEFEATS
+SUPERSEDES
+RETRACTS
+VALID_DURING
+```
+
+Evidence diversity must be estimated from dependency structure rather than raw evidence count. Unknown dependence remains `UNKNOWN_DEPENDENCE`; it must not be silently treated as independence.
+
+A future effective-evidence quantity may be evaluated as a research metric, but no universal weighting formula is assumed in advance. Any proposed aggregation rule must be calibrated and compared against simpler baselines.
+
+### Uncertainty decomposition
+
+Do not collapse uncertainty into one confidence number. Track separable sources where observable:
+
+```text
+U(c) = {
+  aleatoric,
+  model_or_parameter,
+  structural_or_model_form,
+  data_coverage,
+  provenance,
+  dependency,
+  measurement,
+  temporal,
+  adversarial,
+  decision_or_consequence
+}
+```
+
+`UNKNOWN` is categorical when the system lacks a justified estimate. A missing estimate is not zero uncertainty.
+
+### Contradiction, defeasibility, and belief revision
+
+For any material contradiction:
+
+1. retain both claim/evidence paths;
+2. classify whether the conflict is logical, empirical, temporal, definitional, scope-related, or source-identity related;
+3. identify explicit defeaters rather than averaging incompatible claims;
+4. recompute admissibility only through declared dependency edges;
+5. record supersession or retraction without deleting historical provenance.
+
+A later claim may supersede an earlier claim only for an explicitly declared scope and time interval. Historical truth must remain reconstructable.
+
+### Temporal validity
+
+Every externally contingent claim should declare either a validity interval or a review condition. Evidence that was valid at `t0` must not be assumed current at `t1` when the underlying system, model, policy, dataset, deployment, or source can change.
+
+### Causal-claim discipline
+
+Distinguish at least:
+
+- association;
+- predictive relationship;
+- intervention effect;
+- mechanism hypothesis;
+- causal effect supported by an identified design.
+
+Graph structure, correlation, salience, or feature importance alone does not establish causal effect. Edge-ablation work remains the prospective causal-intervention lane for communication-edge importance.
+
+### Adversarial evidence handling
+
+Future evaluation should include evidence attacks as first-class perturbations:
+
+- source poisoning or fabricated citations;
+- many-agent repetition of one false root;
+- provenance aliasing;
+- selective omission of counterevidence;
+- stale evidence presented as current;
+- judge/verifier correlation;
+- confidence inflation without evidence gain;
+- tool-output substitution or replay;
+- contradictory high-prestige sources.
+
+The system should be evaluated on whether it preserves uncertainty, detects dependence, surfaces contradictions, and fails closed when required evidence becomes inadmissible.
+
+### Calibration and scoring rules
+
+Where probabilistic confidence is used, evaluate it with proper scoring rules and calibration diagnostics rather than confidence accuracy alone. Candidate measures include Brier score, log score, calibration curves, and selective-risk/coverage behavior. Calibration must be measured on the same claim class and operating regime for which the probability is interpreted.
+
+### Epistemic evaluation battery
+
+A future separately authorized evaluation lane should measure:
+
+| Property | Candidate test |
+|---|---|
+| provenance completeness | reconstruct every material claim to immutable source/derivation roots |
+| dependency awareness | distinguish repeated evidence from genuinely independent paths |
+| contradiction survival | preserve and surface incompatible evidence until resolved |
+| defeater sensitivity | withdraw or downgrade claims when preregistered defeaters are introduced |
+| temporal validity | reject or quarantine stale evidence after a validity boundary |
+| calibration | proper scoring rules plus reliability/selective-risk analysis |
+| robustness to source poisoning | controlled misleading-evidence intervention |
+| update correctness | reproduce belief/state changes from an append-only event history |
+| retraction integrity | retract present applicability without erasing historical provenance |
+| causal discipline | prevent observational predictors from being promoted to causal claims |
+| unknown-state fidelity | preserve `UNKNOWN` / `INSUFFICIENT_EVIDENCE` instead of forced scoring |
+| cross-agent diversity | compare agent count against independent provenance-root count |
+
+### Promotion and retraction protocol
+
+A material claim should move between epistemic states only through explicit events:
+
+```text
+PROPOSED
+ -> SUPPORTED
+ -> VERIFIED
+ -> EMPIRICALLY_SUPPORTED
+```
+
+with orthogonal transitions such as:
+
+```text
+CHALLENGED
+DEFEATED
+SUPERSEDED
+RETRACTED
+STALE
+OUT_OF_SCOPE
+```
+
+These states are not an authorization ladder. Verification, empirical support, authorization, execution, and deployment remain separate dimensions.
+
+### State-of-the-art target
+
+The program's state-of-the-art epistemic target is therefore not maximal agent agreement. It is a system that can answer, for any consequential claim:
+
+1. **What exactly is asserted, and for what scope/time?**
+2. **What evidence supports and contradicts it?**
+3. **How independent are those evidence paths?**
+4. **What uncertainty remains, and what kind is it?**
+5. **What would defeat, supersede, or retract the claim?**
+6. **Can the complete update history be replayed?**
+7. **Was any causal or authorization inference made beyond the evidence?**
+
+This target is testable and falsifiable. Failure on these properties should remain visible evidence against the corresponding design hypothesis.
+
 ## Promotion rule
 
 No construct in this program may be promoted to a DGAF/PDMAL scientific result solely because it is mathematically plausible, externally published, implemented, or documented. Promotion requires an exact-scope evidence chain appropriate to the claim class, as defined in `MATHEMATICAL_CLAIM_CLASSIFICATION_STANDARD.md`.
