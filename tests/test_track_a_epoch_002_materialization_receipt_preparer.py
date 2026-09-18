@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import ast
-import subprocess
+import importlib.util
 import sys
 from pathlib import Path
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 PREPARER = ROOT / "scripts/prepare_track_a_epoch_002_materialization_receipt.py"
@@ -35,17 +37,27 @@ def test_receipt_preparer_exists_and_is_creation_only() -> None:
         assert forbidden not in lowered
 
 
-def test_receipt_preparer_fails_closed_before_evidence_admission() -> None:
-    result = subprocess.run(
-        [sys.executable, str(PREPARER)],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
+def test_receipt_preparer_fails_closed_before_evidence_admission(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    spec = importlib.util.spec_from_file_location(
+        "epoch002_materialization_receipt_preparer_test",
+        PREPARER,
     )
-    assert result.returncode != 0
-    combined = result.stdout + result.stderr
-    assert "canonical materialization evidence is absent" in combined
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+
+    monkeypatch.setattr(
+        module.validator,
+        "MATERIALIZATION_EVIDENCE_PATH",
+        tmp_path / "missing-materialization-evidence.json",
+    )
+
+    with pytest.raises(SystemExit, match="canonical materialization evidence is absent"):
+        module.build_receipt("2026-09-18T15:00:00Z")
 
 
 def test_receipt_preparer_write_mode_is_explicit() -> None:
