@@ -12,7 +12,8 @@ PREPARER = ROOT / "scripts/prepare_track_a_epoch_002_materialization_receipt.py"
 def test_receipt_preparer_exists_and_is_creation_only() -> None:
     source = PREPARER.read_text(encoding="utf-8")
     tree = ast.parse(source)
-    constants = {node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str)}
+    ast_constants = [node for node in ast.walk(tree) if isinstance(node, ast.Constant)]
+    constants = {node.value for node in ast_constants if isinstance(node.value, str)}
 
     assert "--write" in constants
     assert "TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json" in source
