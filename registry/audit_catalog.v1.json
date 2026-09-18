@@ -5,7 +5,7 @@
     "status": "PARTIAL_CORE_FAMILIES_ONLY",
     "known_gaps": [
       "Many current workflows, assurance scripts, governance tests, security checks, documentation audits, and historical audit families still require classification and mapping.",
-      "Current protected-main readback identifies PPTL CI, Governance CI, and PR Issue-State Keyword Guard as required contexts, but exact job/workflow/ruleset mapping and broader administration semantics remain incomplete for the catalog.",
+      "Current protected-main readback identifies PPTL CI, Governance CI, and PR Issue-State Keyword Guard as required contexts, and all three now have exact workflow-path catalog mappings; exact job/ruleset administration semantics and broader protected-branch configuration remain incomplete for the catalog.",
       "Shared-dependency and independence analysis remains incomplete across the wider assurance surface; some cataloged families intentionally reuse repository-local validators.",
       "External-runtime ingress assurance on current main still requires dedicated catalog expansion and runtime evidence binding.",
       "Historical dated audit reports still require family-versus-execution-instance classification."
@@ -16,228 +16,596 @@
       "id": "AUD-CI-GOVERNANCE",
       "name": "Governance CI",
       "class": "REPOSITORY_CI",
-      "target_layers": ["REPOSITORY", "GOVERNANCE"],
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE"
+      ],
       "assertion": "Repository governance contracts and their declared verifier paths remain internally consistent for the exact candidate under test.",
       "owner": "DGAF repository governance workflows",
-      "implementation": [".github/workflows/governance-ci.yml"],
-      "trigger": ["pull_request", "push"],
+      "implementation": [
+        ".github/workflows/governance-ci.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
       "blocking": true,
-      "evidence": ["workflow conclusion", "job/step logs", "uploaded verifier artifacts where emitted"],
-      "verdicts": ["SUCCESS", "FAILURE"],
+      "evidence": [
+        "workflow conclusion",
+        "job/step logs",
+        "uploaded verifier artifacts where emitted"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
       "decision_effect": "May block acceptance of a repository candidate when the governance workflow fails within its declared scope.",
-      "non_effects": ["Does not establish scientific efficacy.", "Does not by itself establish runtime deployment identity.", "Does not grant experimental or High-Assurance authorization."],
+      "non_effects": [
+        "Does not establish scientific efficacy.",
+        "Does not by itself establish runtime deployment identity.",
+        "Does not grant experimental or High-Assurance authorization."
+      ],
       "fail_behavior": "FAIL_CLOSED_FOR_WORKFLOW_SCOPE",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Workflow success is not independent external verification; exact requiredness depends on protected-branch/ruleset authority."],
+      "known_gaps": [
+        "Workflow success is not independent external verification; exact requiredness depends on protected-branch/ruleset authority."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-PREFREEZE",
       "name": "PDMAL Pre-Freeze Runner Validation",
       "class": "EXPERIMENT_GOVERNANCE",
-      "target_layers": ["REPOSITORY", "EXPERIMENT", "GOVERNANCE"],
+      "target_layers": [
+        "REPOSITORY",
+        "EXPERIMENT",
+        "GOVERNANCE"
+      ],
       "assertion": "Pre-freeze runner and associated experiment-governance contracts satisfy their repository-defined structural and fail-closed checks.",
       "owner": "PDMAL/DGAF experiment governance",
-      "implementation": [".github/workflows/pdmal-pre-freeze-runner-validation.yml"],
-      "trigger": ["pull_request", "push"],
+      "implementation": [
+        ".github/workflows/pdmal-pre-freeze-runner-validation.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
       "blocking": true,
-      "evidence": ["workflow conclusion", "runner validation logs", "repository-bound test results"],
-      "verdicts": ["SUCCESS", "FAILURE"],
+      "evidence": [
+        "workflow conclusion",
+        "runner validation logs",
+        "repository-bound test results"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
       "decision_effect": "May block repository acceptance for candidates covered by the pre-freeze validation workflow.",
-      "non_effects": ["Does not itself establish freeze.", "Does not authorize collection, materialization, unblinding, or primary analysis.", "Does not increment scientific N."],
+      "non_effects": [
+        "Does not itself establish freeze.",
+        "Does not authorize collection, materialization, unblinding, or primary analysis.",
+        "Does not increment scientific N."
+      ],
       "fail_behavior": "FAIL_CLOSED_FOR_WORKFLOW_SCOPE",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Passing structural validation is not execution evidence for a scientific transition."],
+      "known_gaps": [
+        "Passing structural validation is not execution evidence for a scientific transition."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-TRUTH",
       "name": "Truth Layer Validation",
       "class": "EPISTEMIC_CONTROL",
-      "target_layers": ["REPOSITORY", "CLAIM", "GOVERNANCE"],
+      "target_layers": [
+        "REPOSITORY",
+        "CLAIM",
+        "GOVERNANCE"
+      ],
       "assertion": "Current repository projections do not violate the declared truth-layer and control-state consistency contracts exercised by the workflow.",
       "owner": "DGAF truth-layer governance",
-      "implementation": [".github/workflows/truth-layer-validation.yml", ".github/workflows/truth-layer-tests.yml"],
-      "trigger": ["pull_request", "push"],
+      "implementation": [
+        ".github/workflows/truth-layer-validation.yml",
+        ".github/workflows/truth-layer-tests.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
       "blocking": true,
-      "evidence": ["workflow conclusions", "truth-layer test output"],
-      "verdicts": ["SUCCESS", "FAILURE"],
+      "evidence": [
+        "workflow conclusions",
+        "truth-layer test output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
       "decision_effect": "May reject a repository candidate with a detected truth-layer inconsistency in the covered checks.",
-      "non_effects": ["Does not prove every claim in the repository true.", "Does not create external corroboration or independent validation.", "Does not establish runtime or scientific state beyond the checked projection semantics."],
+      "non_effects": [
+        "Does not prove every claim in the repository true.",
+        "Does not create external corroboration or independent validation.",
+        "Does not establish runtime or scientific state beyond the checked projection semantics."
+      ],
       "fail_behavior": "FAIL_CLOSED_FOR_COVERED_ASSERTIONS",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Coverage is bounded by implemented assertions and cannot be treated as exhaustive claim verification."],
+      "known_gaps": [
+        "Coverage is bounded by implemented assertions and cannot be treated as exhaustive claim verification."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-ECOSYSTEM",
       "name": "Ecosystem Registry Audit",
       "class": "REGISTRY_PROJECTION",
-      "target_layers": ["REPOSITORY", "DOCUMENTATION", "ECOSYSTEM"],
+      "target_layers": [
+        "REPOSITORY",
+        "DOCUMENTATION",
+        "ECOSYSTEM"
+      ],
       "assertion": "The machine-readable ecosystem registry satisfies repository-defined projection, metadata, persona-authority, and claim-boundary invariants.",
       "owner": "DGAF ecosystem registry governance",
-      "implementation": [".github/workflows/ecosystem-audit.yml", "registry/ecosystem_audit.py", "tests/test_ecosystem_registry_projection_hygiene.py"],
-      "trigger": ["pull_request", "push"],
+      "implementation": [
+        ".github/workflows/ecosystem-audit.yml",
+        "registry/ecosystem_audit.py",
+        "tests/test_ecosystem_registry_projection_hygiene.py"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
       "blocking": true,
-      "evidence": ["workflow conclusion", "semantic violation output", "deterministic pytest results"],
-      "verdicts": ["PASS", "FAIL"],
+      "evidence": [
+        "workflow conclusion",
+        "semantic violation output",
+        "deterministic pytest results"
+      ],
+      "verdicts": [
+        "PASS",
+        "FAIL"
+      ],
       "decision_effect": "May block a repository candidate whose ecosystem projection violates the implemented registry invariants.",
-      "non_effects": ["Does not make the ecosystem registry authoritative for project-local source/runtime truth.", "Does not establish scientific efficacy or authorization."],
+      "non_effects": [
+        "Does not make the ecosystem registry authoritative for project-local source/runtime truth.",
+        "Does not establish scientific efficacy or authorization."
+      ],
       "fail_behavior": "FAIL_CLOSED_ON_REPORTED_SEMANTIC_VIOLATIONS",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Live provider facts remain provider-owned; the audit can only validate the evidence and projection inputs it receives."],
+      "known_gaps": [
+        "Live provider facts remain provider-owned; the audit can only validate the evidence and projection inputs it receives."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-RUNTIME-LIVE",
       "name": "Exact-Source Live Runtime Verification",
       "class": "RUNTIME_VERIFICATION",
-      "target_layers": ["RUNTIME", "REPOSITORY", "PROVENANCE"],
+      "target_layers": [
+        "RUNTIME",
+        "REPOSITORY",
+        "PROVENANCE"
+      ],
       "assertion": "A production runtime observation is bound to the exact deployed source identity and satisfies the declared health/regression/audit readback contract for that deployment event.",
       "owner": "DGAF deployment/runtime verification lane",
-      "implementation": ["scripts/verify_deployment.sh", ".github/workflows/regression.yml", "tests/test_vercel_runtime_identity_hygiene.py", "tests/test_live_regression_endpoint_binding.py"],
-      "trigger": ["deployment", "push", "manual verification"],
+      "implementation": [
+        "scripts/verify_deployment.sh",
+        ".github/workflows/regression.yml",
+        "tests/test_vercel_runtime_identity_hygiene.py",
+        "tests/test_live_regression_endpoint_binding.py"
+      ],
+      "trigger": [
+        "deployment",
+        "push",
+        "manual verification"
+      ],
       "blocking": true,
-      "evidence": ["deployment identity", "source SHA binding", "health/readback results", "regression/audit evidence", "workflow/job logs"],
-      "verdicts": ["PASS", "FAIL", "PASS_WITH_LIMITATION", "NOT_VERIFIED"],
+      "evidence": [
+        "deployment identity",
+        "source SHA binding",
+        "health/readback results",
+        "regression/audit evidence",
+        "workflow/job logs"
+      ],
+      "verdicts": [
+        "PASS",
+        "FAIL",
+        "PASS_WITH_LIMITATION",
+        "NOT_VERIFIED"
+      ],
       "decision_effect": "May establish or reject exact-source runtime verification for a named deployment event when all required bindings and observations are present.",
-      "non_effects": ["Does not transfer runtime evidence to later source revisions.", "Does not establish durable replay authority, scientific efficacy, independent validation, or experimental authorization."],
+      "non_effects": [
+        "Does not transfer runtime evidence to later source revisions.",
+        "Does not establish durable replay authority, scientific efficacy, independent validation, or experimental authorization."
+      ],
       "fail_behavior": "FAIL_CLOSED_ON_MISSING_OR_MISMATCHED_SOURCE_RUNTIME_BINDING",
       "independence": "CROSS_PROVIDER_BUT_NOT_INDEPENDENT_VALIDATION",
-      "known_gaps": ["Current source has advanced beyond the last fully reconciled historical runtime; #767 controls warning-contract reconciliation on a future exact-source deployment."],
+      "known_gaps": [
+        "Current source has advanced beyond the last fully reconciled historical runtime; #767 controls warning-contract reconciliation on a future exact-source deployment."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-CLAIM-HYGIENE",
       "name": "Claim Hygiene Audit",
       "class": "CLAIMS_EVIDENCE",
-      "target_layers": ["REPOSITORY", "CLAIM", "DOCUMENTATION"],
+      "target_layers": [
+        "REPOSITORY",
+        "CLAIM",
+        "DOCUMENTATION"
+      ],
       "assertion": "Repository claim surfaces satisfy the implemented claim-language, truth-layer reconciliation, canonical-parity, and registry-consistency checks for the candidate under test.",
       "owner": "DGAF claim-hygiene workflow",
-      "implementation": [".github/workflows/claim-hygiene.yml"],
-      "trigger": ["pull_request", "push"],
+      "implementation": [
+        ".github/workflows/claim-hygiene.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
       "blocking": false,
-      "evidence": ["workflow conclusion", "claim-hygiene checker output", "truth-layer reconciliation output", "claim-language inventory artifact"],
-      "verdicts": ["SUCCESS", "FAILURE"],
+      "evidence": [
+        "workflow conclusion",
+        "claim-hygiene checker output",
+        "truth-layer reconciliation output",
+        "claim-language inventory artifact"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
       "decision_effect": "Provides recurring repository claim-hygiene assurance evidence; current protected-main required-context readback does not list this workflow as a required merge context.",
-      "non_effects": ["Does not establish scientific validity.", "Does not establish production validity or runtime identity.", "Does not grant authorization or independent validation."],
+      "non_effects": [
+        "Does not establish scientific validity.",
+        "Does not establish production validity or runtime identity.",
+        "Does not grant authorization or independent validation."
+      ],
       "fail_behavior": "WORKFLOW_FAILURE_SURFACES_CLAIM_HYGIENE_DEFECT_WITHOUT_IMPLYING_BRANCH_REQUIREDNESS",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Checks are bounded to implemented claim surfaces and validators; absence of a detected violation is not exhaustive claim verification."],
+      "known_gaps": [
+        "Checks are bounded to implemented claim surfaces and validators; absence of a detected violation is not exhaustive claim verification."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-CONTROL-STATE",
       "name": "Control State Consistency",
       "class": "EPISTEMIC_CONTROL",
-      "target_layers": ["REPOSITORY", "GOVERNANCE", "CONTROL_STATE"],
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "CONTROL_STATE"
+      ],
       "assertion": "Canonical control-state records satisfy the repository-defined consistency validator for the exact candidate under test.",
       "owner": "DGAF control-state consistency workflow",
-      "implementation": [".github/workflows/control-state-consistency.yml"],
-      "trigger": ["pull_request", "push"],
+      "implementation": [
+        ".github/workflows/control-state-consistency.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
       "blocking": false,
-      "evidence": ["workflow conclusion", "scripts/validate_control_state.py output"],
-      "verdicts": ["SUCCESS", "FAILURE"],
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_control_state.py output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
       "decision_effect": "Surfaces a control-state consistency defect when the validator fails; current protected-main required-context readback does not list this workflow as a required merge context.",
-      "non_effects": ["Does not authorize any governance transition.", "Does not establish runtime deployment state.", "Does not establish scientific efficacy or independent validation."],
+      "non_effects": [
+        "Does not authorize any governance transition.",
+        "Does not establish runtime deployment state.",
+        "Does not establish scientific efficacy or independent validation."
+      ],
       "fail_behavior": "FAIL_CLOSED_WITHIN_VALIDATOR_EXECUTION_SCOPE",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Consistency is limited to encoded validator rules and is not proof that every upstream factual input is externally correct."],
+      "known_gaps": [
+        "Consistency is limited to encoded validator rules and is not proof that every upstream factual input is externally correct."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-CRITICAL-PR-CUSTODY",
       "name": "Critical PR Lane Custody",
       "class": "PROVENANCE_CUSTODY",
-      "target_layers": ["REPOSITORY", "PROVENANCE", "GOVERNANCE"],
+      "target_layers": [
+        "REPOSITORY",
+        "PROVENANCE",
+        "GOVERNANCE"
+      ],
       "assertion": "Registered critical PR lanes preserve exact payload/head/base custody semantics and reject the workflow's defined negative-control violations.",
       "owner": "DGAF critical PR lane custody workflow",
-      "implementation": [".github/workflows/critical-pr-lane-custody.yml"],
-      "trigger": ["pull_request"],
+      "implementation": [
+        ".github/workflows/critical-pr-lane-custody.yml"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
       "blocking": false,
-      "evidence": ["workflow conclusion", "registered-lane validation output", "negative-control results"],
-      "verdicts": ["SUCCESS", "FAILURE"],
+      "evidence": [
+        "workflow conclusion",
+        "registered-lane validation output",
+        "negative-control results"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
       "decision_effect": "Provides custody assurance for covered registered PR lanes; current protected-main required-context readback does not list this workflow as a required merge context.",
-      "non_effects": ["Does not authorize the PR or its downstream action.", "Does not establish scientific, runtime, or High-Assurance state."],
+      "non_effects": [
+        "Does not authorize the PR or its downstream action.",
+        "Does not establish scientific, runtime, or High-Assurance state."
+      ],
       "fail_behavior": "FAIL_CLOSED_FOR_REGISTERED_LANE_CUSTODY_ASSERTIONS",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Coverage is limited to registered lanes and repository-visible custody inputs; successful custody validation is non-authorizing."],
+      "known_gaps": [
+        "Coverage is limited to registered lanes and repository-visible custody inputs; successful custody validation is non-authorizing."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-EPISTEMIC-EVIDENCE",
       "name": "Epistemic Evidence Validation",
       "class": "EXPERIMENT_RESEARCH",
-      "target_layers": ["REPOSITORY", "EVIDENCE", "EXPERIMENT"],
+      "target_layers": [
+        "REPOSITORY",
+        "EVIDENCE",
+        "EXPERIMENT"
+      ],
       "assertion": "Evidence-card, PDMAL structural, manifest, and instrumentation-only smoke checks satisfy their repository-defined validation contracts without performing inferential analysis.",
       "owner": "DGAF/PDMAL epistemic evidence workflow",
-      "implementation": [".github/workflows/epistemic-evidence-validation.yml"],
-      "trigger": ["pull_request", "push"],
+      "implementation": [
+        ".github/workflows/epistemic-evidence-validation.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
       "blocking": false,
-      "evidence": ["workflow conclusion", "evidence-card pytest results", "PDMAL structural/manifest output", "instrumentation-only smoke output"],
-      "verdicts": ["SUCCESS", "FAILURE", "NOT_PASS_FOR_DECLARED_DEPENDENCY_LIMIT"],
+      "evidence": [
+        "workflow conclusion",
+        "evidence-card pytest results",
+        "PDMAL structural/manifest output",
+        "instrumentation-only smoke output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE",
+        "NOT_PASS_FOR_DECLARED_DEPENDENCY_LIMIT"
+      ],
       "decision_effect": "Provides bounded epistemic/instrumentation validation evidence; current protected-main required-context readback does not list this workflow as a required merge context.",
-      "non_effects": ["Does not perform inferential analysis.", "Does not establish E2b PASS when immutable transitive dependency locking is absent.", "Does not establish efficacy, authorization, or scientific-N advancement."],
+      "non_effects": [
+        "Does not perform inferential analysis.",
+        "Does not establish E2b PASS when immutable transitive dependency locking is absent.",
+        "Does not establish efficacy, authorization, or scientific-N advancement."
+      ],
       "fail_behavior": "FAIL_CLOSED_FOR_IMPLEMENTED_EVIDENCE_AND_INSTRUMENTATION_ASSERTIONS",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Instrumentation smoke coverage is deliberately non-inferential and cannot substitute for experiment execution or independent validation."],
+      "known_gaps": [
+        "Instrumentation smoke coverage is deliberately non-inferential and cannot substitute for experiment execution or independent validation."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-EXTERNAL-READINESS",
       "name": "External Acceptance Readiness Validation",
       "class": "PUBLIC_EXTERNALIZATION",
-      "target_layers": ["REPOSITORY", "DOCUMENTATION", "EXTERNALIZATION"],
+      "target_layers": [
+        "REPOSITORY",
+        "DOCUMENTATION",
+        "EXTERNALIZATION"
+      ],
       "assertion": "Inert external-acceptance readiness templates and validators preserve the repository-defined readiness constraints and negative-control behavior.",
       "owner": "DGAF external-acceptance readiness workflow",
-      "implementation": [".github/workflows/external-acceptance-readiness-validation.yml"],
-      "trigger": ["pull_request", "push", "workflow_dispatch"],
+      "implementation": [
+        ".github/workflows/external-acceptance-readiness-validation.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
       "blocking": false,
-      "evidence": ["workflow conclusion", "readiness validator results", "validator self-test and negative-control output"],
-      "verdicts": ["SUCCESS", "FAILURE"],
+      "evidence": [
+        "workflow conclusion",
+        "readiness validator results",
+        "validator self-test and negative-control output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
       "decision_effect": "Validates the covered readiness artifacts and self-tests; current protected-main required-context readback does not list this workflow as a required merge context.",
-      "non_effects": ["Does not establish external acceptance.", "Does not activate or authorize an external integration.", "Does not establish production, scientific, or High-Assurance state."],
+      "non_effects": [
+        "Does not establish external acceptance.",
+        "Does not activate or authorize an external integration.",
+        "Does not establish production, scientific, or High-Assurance state."
+      ],
       "fail_behavior": "FAIL_CLOSED_FOR_COVERED_READINESS_VALIDATORS",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Readiness templates are inert; validation does not prove any external system has accepted, executed, or independently verified them."],
+      "known_gaps": [
+        "Readiness templates are inert; validation does not prove any external system has accepted, executed, or independently verified them."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-FULL-REPO",
       "name": "Full Repository Audit",
       "class": "REPOSITORY_CI",
-      "target_layers": ["REPOSITORY", "DOCUMENTATION", "GOVERNANCE"],
+      "target_layers": [
+        "REPOSITORY",
+        "DOCUMENTATION",
+        "GOVERNANCE"
+      ],
       "assertion": "The repository-wide audit script completes its implemented cross-repository hygiene and consistency checks and emits a machine-readable audit artifact.",
       "owner": "DGAF full repository audit workflow",
-      "implementation": [".github/workflows/full-repo-audit.yml"],
-      "trigger": ["pull_request", "push", "workflow_dispatch"],
+      "implementation": [
+        ".github/workflows/full-repo-audit.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
       "blocking": false,
-      "evidence": ["workflow conclusion", "scripts/full_repo_audit.py output", "full_repo_audit.json artifact"],
-      "verdicts": ["SUCCESS", "FAILURE"],
+      "evidence": [
+        "workflow conclusion",
+        "scripts/full_repo_audit.py output",
+        "full_repo_audit.json artifact"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
       "decision_effect": "Surfaces repository-wide audit findings within the implemented method; current protected-main required-context readback does not list this workflow as a required merge context.",
-      "non_effects": ["Does not constitute independent external audit.", "Does not establish scientific efficacy, runtime identity, certification, or authorization."],
+      "non_effects": [
+        "Does not constitute independent external audit.",
+        "Does not establish scientific efficacy, runtime identity, certification, or authorization."
+      ],
       "fail_behavior": "FAIL_CLOSED_FOR_WORKFLOW_EXECUTION_AND_ARTIFACT_EMISSION_SCOPE",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Coverage is bounded by scripts/full_repo_audit.py and its inputs; the name 'full' must not be interpreted as proof of exhaustive assurance coverage."],
+      "known_gaps": [
+        "Coverage is bounded by scripts/full_repo_audit.py and its inputs; the name 'full' must not be interpreted as proof of exhaustive assurance coverage."
+      ],
       "lifecycle": "CURRENT"
     },
     {
       "id": "AUD-CI-IP-HYGIENE",
       "name": "IP and Public-Root Hygiene",
       "class": "CLAIMS_EVIDENCE",
-      "target_layers": ["REPOSITORY", "DOCUMENTATION", "PUBLIC_EXTERNALIZATION"],
+      "target_layers": [
+        "REPOSITORY",
+        "DOCUMENTATION",
+        "PUBLIC_EXTERNALIZATION"
+      ],
       "assertion": "Public-root, citation/notice, secret-pattern, claim-hygiene, and portfolio-staleness checks execute with the workflow's declared hygiene semantics.",
       "owner": "DGAF IP hygiene workflow",
-      "implementation": [".github/workflows/ip-hygiene.yml"],
-      "trigger": ["pull_request", "push", "schedule"],
+      "implementation": [
+        ".github/workflows/ip-hygiene.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push",
+        "schedule"
+      ],
       "blocking": false,
-      "evidence": ["workflow conclusion", "public-root checks", "citation/notice checks", "secret-pattern scan output", "claim-hygiene checker output", "portfolio staleness output"],
-      "verdicts": ["SUCCESS", "FAILURE", "WARNING"],
+      "evidence": [
+        "workflow conclusion",
+        "public-root checks",
+        "citation/notice checks",
+        "secret-pattern scan output",
+        "claim-hygiene checker output",
+        "portfolio staleness output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE",
+        "WARNING"
+      ],
       "decision_effect": "Surfaces public-root/IP/claim hygiene defects or warnings within the implemented workflow; current protected-main required-context readback does not list this workflow as a required merge context.",
-      "non_effects": ["Does not provide blanket security assurance.", "Secret-pattern warnings are not proof that no secret exists.", "Does not establish legal clearance, scientific validity, runtime identity, or authorization."],
+      "non_effects": [
+        "Does not provide blanket security assurance.",
+        "Secret-pattern warnings are not proof that no secret exists.",
+        "Does not establish legal clearance, scientific validity, runtime identity, or authorization."
+      ],
       "fail_behavior": "MIXED_EXPLICIT_FAILURES_AND_WARNINGS_PER_WORKFLOW_STEP",
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
-      "known_gaps": ["Reuses the repository claim-hygiene checker, creating a shared dependency; warning-only secret-pattern checks must not be promoted to fail-closed security assurance."],
+      "known_gaps": [
+        "Reuses the repository claim-hygiene checker, creating a shared dependency; warning-only secret-pattern checks must not be promoted to fail-closed security assurance."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-PPTL-PROVENANCE",
+      "name": "PPTL CI",
+      "class": "PROVENANCE_VALIDATION",
+      "target_layers": [
+        "REPOSITORY",
+        "PROVENANCE",
+        "METRICS"
+      ],
+      "assertion": "Dependency-aware metric provenance satisfies the encoded registry, dependency, reproducibility, and promotion constraints, and the dedicated provenance regression tests remain green for the exact candidate under test.",
+      "owner": "DGAF/PPTL metric-provenance workflow",
+      "implementation": [
+        ".github/workflows/pptl-ci.yml",
+        "scripts/lint_provenance.py",
+        "tests/test_lint_provenance.py"
+      ],
+      "trigger": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "blocking": true,
+      "evidence": [
+        "workflow conclusion",
+        "metric-provenance validator output",
+        "dedicated provenance regression-test output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "May block protected-main candidate acceptance when the separately configured required PPTL CI context fails its provenance validator or regression tests.",
+      "non_effects": [
+        "Does not establish scientific efficacy.",
+        "Does not authorize collection, materialization, primary analysis, or High-Assurance operation.",
+        "Does not establish runtime deployment identity.",
+        "Does not independently validate every metric or upstream dependency."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_ENCODED_PROVENANCE_AND_PROMOTION_ASSERTIONS",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Coverage is limited to the encoded metric-provenance registry, known metric claim patterns, dependency rules, and dedicated regression tests.",
+        "Protected-main requiredness is a separate repository configuration fact observed through branch metadata; this catalog entry does not create that requiredness."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-PR-ISSUE-STATE-GUARD",
+      "name": "PR Issue-State Keyword Guard",
+      "class": "GOVERNANCE_GUARD",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "PR_METADATA"
+      ],
+      "assertion": "Pull requests targeting main bind the exact PR head and reject dangerous GitHub issue-closing keyword plus issue-reference syntax or malformed governed PR-body input within the workflow's declared scope.",
+      "owner": "DGAF pull-request issue-state governance workflow",
+      "implementation": [
+        ".github/workflows/pr-issue-closure-keyword-guard.yml",
+        "scripts/check_pr_closure_keywords.py",
+        "tests/test_pr_closure_keywords.py"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": true,
+      "evidence": [
+        "workflow conclusion",
+        "exact PR-head verification",
+        "deterministic guard-test output",
+        "pull-request body scan result"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "May block protected-main pull-request acceptance when the separately configured required guard detects dangerous issue-closing syntax, malformed governed input, or exact-head mismatch within its scope.",
+      "non_effects": [
+        "Does not itself perform or adjudicate an issue-state transition.",
+        "Does not authorize any scientific, governance, or runtime action beyond its PR-body guard scope.",
+        "Does not establish scientific efficacy, independent validation, or High-Assurance status.",
+        "Does not prove that PR titles, comments, commit messages, or other unscanned surfaces are safe."
+      ],
+      "fail_behavior": "FAIL_CLOSED_ON_MALFORMED_GOVERNED_INPUT_DANGEROUS_CLOSURE_SYNTAX_OR_HEAD_MISMATCH",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Workflow scope is pull-request events targeting main and the pull-request body syntax checked by the current parser; it does not imply equivalent coverage of unrelated GitHub text surfaces.",
+        "Protected-main requiredness is a separate repository configuration fact observed through branch metadata; this catalog entry does not create that requiredness."
+      ],
       "lifecycle": "CURRENT"
     }
   ]
