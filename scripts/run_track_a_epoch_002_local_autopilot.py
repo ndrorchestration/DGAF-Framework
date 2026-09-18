@@ -14,7 +14,6 @@ PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 import shutil
 import subprocess
@@ -22,7 +21,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, NoReturn
+from typing import NoReturn
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = ROOT / "scripts"
@@ -246,8 +245,8 @@ def create_admission_pr(evidence_path: Path, evidence_sha: str) -> str:
                     "materialization evidence as the first repository event after "
                     "local controlled materialization.\n\n"
                     "## Scope\n\n"
-                    f"- exactly one changed path: \`{EVIDENCE_REL}\`;\n"
-                    f"- local evidence SHA-256: \`{evidence_sha}\`;\n"
+                    f"- exactly one changed path: `{EVIDENCE_REL}`;\n"
+                    f"- local evidence SHA-256: `{evidence_sha}`;\n"
                     "- evidence-admission validator PASS was required before push;\n"
                     "- no secret-bearing material is committed.\n\n"
                     "## Explicit non-effects\n\n"
@@ -256,7 +255,7 @@ def create_admission_pr(evidence_path: Path, evidence_sha: str) -> str:
                     "scientific N, and does not establish canonical DGAF efficacy or "
                     "independent validation.\n\n"
                     "Related controller: #633.\n\n"
-                    "\`PRE-FREEZE / FAIL-CLOSED / PRIMARY ANALYSIS NOT AUTHORIZED / N=0\`\n"
+                    "`PRE-FREEZE / FAIL-CLOSED / PRIMARY ANALYSIS NOT AUTHORIZED / N=0`\n"
                 ),
                 encoding="utf-8",
             )
