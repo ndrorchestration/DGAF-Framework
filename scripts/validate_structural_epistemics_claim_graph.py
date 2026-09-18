@@ -27,10 +27,7 @@ DEPENDENCE_RELATIONS = {
 
 
 def _schema_errors(validator: Draft202012Validator, value: object) -> list[str]:
-    return [
-        error.message
-        for error in sorted(validator.iter_errors(value), key=lambda item: list(item.path))
-    ]
+    return [error.message for error in sorted(validator.iter_errors(value), key=lambda item: list(item.path))]
 
 
 def _require(condition: bool, message: str) -> None:
@@ -38,9 +35,7 @@ def _require(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
-def _relation_exists(
-    relations: list[dict], relation_type: str, source_id: str, target_id: str
-) -> bool:
+def _relation_exists(relations: list[dict], relation_type: str, source_id: str, target_id: str) -> bool:
     return any(
         relation["relation_type"] == relation_type
         and relation["source_id"] == source_id
@@ -49,9 +44,7 @@ def _relation_exists(
     )
 
 
-def _dependency_relation_exists(
-    relations: list[dict], left: str, right: str
-) -> bool:
+def _dependency_relation_exists(relations: list[dict], left: str, right: str) -> bool:
     return any(
         relation["relation_type"] in DEPENDENCE_RELATIONS
         and {relation["source_id"], relation["target_id"]} == {left, right}
@@ -76,9 +69,7 @@ def validate_claim_graph(graph: dict) -> None:
     for claim in claims:
         errors = _schema_errors(claim_validator, claim)
         if errors:
-            raise ValueError(
-                f"claim schema invalid for {claim.get('claim_id', '<unknown>')}: {errors[0]}"
-            )
+            raise ValueError(f"claim schema invalid for {claim.get('claim_id', '<unknown>')}: {errors[0]}")
 
     claim_by_id = {claim["claim_id"]: claim for claim in claims}
     evidence_by_id = {item["evidence_id"]: item for item in evidence}
@@ -161,9 +152,7 @@ def validate_claim_graph(graph: dict) -> None:
                 f"{claim_id} retraction record conflicts with applicability_state",
             )
 
-        triggered = [
-            item for item in claim["defeaters"] if item["status"] == "TRIGGERED"
-        ]
+        triggered = [item for item in claim["defeaters"] if item["status"] == "TRIGGERED"]
         _require(
             not triggered or claim["applicability_state"] != "CURRENT",
             f"{claim_id} has a triggered defeater but remains CURRENT",
@@ -171,8 +160,7 @@ def validate_claim_graph(graph: dict) -> None:
 
         if claim["epistemic_state"] in {"VERIFIED", "EMPIRICALLY_SUPPORTED"}:
             _require(
-                claim["verification_status"]
-                in {"VERIFIED_IN_SCOPE", "INDEPENDENTLY_VERIFIED"},
+                claim["verification_status"] in {"VERIFIED_IN_SCOPE", "INDEPENDENTLY_VERIFIED"},
                 f"{claim_id} epistemic_state requires verified status",
             )
 
@@ -183,18 +171,14 @@ def validate_claim_graph(graph: dict) -> None:
             )
             empirical_classes = {"MEASUREMENT", "EXPERIMENT", "CAUSAL_DESIGN"}
             _require(
-                any(
-                    evidence_by_id[evidence_id]["evidence_class"] in empirical_classes
-                    for evidence_id in supports
-                ),
+                any(evidence_by_id[evidence_id]["evidence_class"] in empirical_classes for evidence_id in supports),
                 f"{claim_id} EMPIRICALLY_SUPPORTED requires empirical support evidence",
             )
 
         if claim["causal_level"] == "CAUSAL_IDENTIFIED":
             _require(
                 any(
-                    evidence_by_id[evidence_id]["evidence_class"]
-                    in {"EXPERIMENT", "CAUSAL_DESIGN"}
+                    evidence_by_id[evidence_id]["evidence_class"] in {"EXPERIMENT", "CAUSAL_DESIGN"}
                     for evidence_id in supports
                 ),
                 f"{claim_id} CAUSAL_IDENTIFIED requires intervention/causal-design evidence",
@@ -202,10 +186,7 @@ def validate_claim_graph(graph: dict) -> None:
 
         if claim["epistemic_state"] != "PROPOSED" and supports:
             _require(
-                any(
-                    evidence_by_id[evidence_id]["validity"]["state"] == "CURRENT"
-                    for evidence_id in supports
-                ),
+                any(evidence_by_id[evidence_id]["validity"]["state"] == "CURRENT" for evidence_id in supports),
                 f"{claim_id} has no CURRENT supporting evidence",
             )
 
@@ -229,14 +210,10 @@ def validate_claim_graph(graph: dict) -> None:
         supporting_nodes = [evidence_by_id[item] for item in supports]
         for left, right in combinations(supporting_nodes, 2):
             shared_sources = set(left["source_roots"]).intersection(right["source_roots"])
-            shared_dependencies = set(left["dependency_roots"]).intersection(
-                right["dependency_roots"]
-            )
+            shared_dependencies = set(left["dependency_roots"]).intersection(right["dependency_roots"])
             if shared_sources or shared_dependencies:
                 _require(
-                    _dependency_relation_exists(
-                        relations, left["evidence_id"], right["evidence_id"]
-                    ),
+                    _dependency_relation_exists(relations, left["evidence_id"], right["evidence_id"]),
                     (
                         f"{claim_id} supporting evidence {left['evidence_id']} and "
                         f"{right['evidence_id']} share dependency roots without an "
