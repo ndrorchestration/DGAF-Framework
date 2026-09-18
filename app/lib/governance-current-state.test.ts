@@ -9,8 +9,8 @@ import { GOVERNANCE_STAGES, TRUTH_BOUNDARY } from './governance.ts'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const OVERVIEW_SOURCE = readFileSync(path.join(ROOT, 'app/components/overview-view.tsx'), 'utf8')
 
-test('public governance projection reflects the accepted 2026-09-17 documentation frontier', () => {
-  assert.equal(TRUTH_BOUNDARY.sourceUpdated, '2026-09-17')
+test('public governance projection reflects the accepted 2026-09-18 documentation frontier', () => {
+  assert.equal(TRUTH_BOUNDARY.sourceUpdated, '2026-09-18')
 
   const analysisAuthorization = GOVERNANCE_STAGES.find(
     stage => stage.id === 'primary-analysis-authorization',

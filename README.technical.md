@@ -79,6 +79,17 @@ Important semantics:
 - `UNMAPPED` or `UNCLASSIFIED` must not be translated into “non-assurance” without explicit adjudication;
 - catalog coverage remains partial and does not claim exhaustive audit, security, governance, or scientific assurance.
 
+## Current materialization tooling lineage
+
+The accepted Epoch 002 materialization apparatus is tooling/provenance only:
+
+- predecessor Stage-1 / Stage-2 tooling: PR #713 / PR #715;
+- accepted Stage-1 locked-archive representation repair: PR #794;
+- accepted Stage-2 provenance rebind: PR #797;
+- accepted Stage-1 identity: commit `cf32a62bbf08a1b8db39709f4989be1be800d64e`, blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
+
+The dedicated materialization workflow verifies tooling-only mode, Stage-1 tests, the Stage-1→Stage-2 binding, and bound Stage-2 bundle behavior. The real evidence-admission and real receipt-event paths remain unexecuted/skipped. No real materialization, receipt, primary-analysis authorization, scientific-N increment, efficacy, or independent validation is established by these tooling results.
+
 ## Runtime components
 
 | Component | Purpose |
@@ -140,4 +151,4 @@ Historical implementation records and earlier terminology remain available for p
 
 ---
 
-*This reference is an implementation map, not a certification, regulatory-conformance statement, deployment attestation, or efficacy report. Updated 2026-09-17. Exact source identity is established by Git history and the protected `main` commit at the time of use; this document does not embed a volatile SHA as a standing current-state claim.*
+*This reference is an implementation map, not a certification, regulatory-conformance statement, deployment attestation, or efficacy report. Updated 2026-09-18. Exact source identity is established by Git history and the protected `main` commit at the time of use; this document does not embed a volatile SHA as a standing current-state claim.*

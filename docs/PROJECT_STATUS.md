@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-As of the 2026-09-17 protected-main reconciliation through commit `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`:
+This 2026-09-18 reconciliation was prepared against protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -20,7 +20,7 @@ As of the 2026-09-17 protected-main reconciliation through commit `b1d91621bd73e
 - Track A Epoch 002 collection: **COMPLETE** at 50 paired seed units / 2,250 blinded observations;
 - successor dataset lock: **ESTABLISHED** through an accepted PASS `DATASET_LOCK_RECEIPT`;
 - successor bounded unblinding: **AUTHORIZED** for `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
-- successor materialization tooling: **ACCEPTED**, including Stage-1 PR #713 and Stage-2 operator bundle PR #715;
+- successor materialization tooling: **ACCEPTED**, with PR #713/#715 retained as predecessor tooling, Stage-1 repaired against the exact locked archive representation by PR #794, and Stage 2 rebound to the accepted #794 merge identity by PR #797;
 - successor prospective primary-analysis authorization tooling: **ACCEPTED / TOOLING ONLY** through PR #728;
 - successor real materialization: **NOT ESTABLISHED**;
 - successor materialization receipt: **NOT ESTABLISHED**;
@@ -52,7 +52,16 @@ Protected `main` contains a machine-readable but explicitly partial recurring-as
 
 Current protected-main required status contexts remain separately read as **PPTL CI**, **Governance CI**, and **PR Issue-State Keyword Guard**. Catalog membership does not mean a workflow is a required branch-protection context, and non-membership means only **UNMAPPED / UNCLASSIFIED pending adjudication**, not “non-assurance.”
 
-Known assurance-inventory gaps remain: wider workflow/script/test classification, exact job/workflow/ruleset mapping, shared-dependency and independence analysis, external-runtime ingress assurance, presentation-projection coverage, and historical family-versus-execution-instance reconciliation.
+Accepted assurance inventory has since expanded through PRs #789, #791, #792, and #793, including exact mappings for the currently observed protected-main required contexts, core exact-head verification families, provider-neutral external runtime ingress, and Semantic Control Field projection contracts. Coverage remains **PARTIAL_CORE_FAMILIES_ONLY**; catalog membership still does not imply protected-branch requiredness or complete assurance coverage.
+
+## Accepted materialization-tooling repair lineage
+
+### Accepted Stage-1 repair and Stage-2 rebind
+
+- **PR #794** accepted the exact retained public archive's harmless dot-prefixed flat-member representation while preserving both locked archive byte identities and fail-closed rejection of absolute/nested/traversal/link/duplicate/unreadable/unexpected members.
+- **PR #797** rebound Stage 2 to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` and blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
+- The dedicated materialization-receipt workflow passed in tooling-only/binding mode. Real evidence admission and the real receipt-event path remained skipped.
+- These are tooling/provenance milestones only. They do not establish real materialization or a materialization receipt.
 
 ## Next admissible scientific transition
 

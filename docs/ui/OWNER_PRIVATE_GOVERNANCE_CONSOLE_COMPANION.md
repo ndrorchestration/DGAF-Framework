@@ -3,8 +3,8 @@
 **Status:** ACTIVE / OWNER-PRIVATE / READ-ONLY  
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
-**Source snapshot:** protected `main` at `0e0e1a67644be224de3212a4aea83e191de41f23`  
-**Snapshot event:** post-PR #718 materialization-apparatus hardening reconciliation
+**Source snapshot:** protected `main` at `40d301583048e0c47e8bf38154ac40fa023b4f5e`  
+**Snapshot event:** post-PR #797 Stage-2 accepted-lineage rebind and post-PR #795 authority/documentation reconciliation
 
 ## Purpose
 
@@ -24,8 +24,10 @@ It separately represents the Track A Epoch 002 state:
 - blinded collection: COMPLETE at 50 paired seed units / 2,250 observations;
 - dataset lock: ESTABLISHED;
 - bounded unblinding: AUTHORIZED for controlled mapping release/decryption only;
-- Stage-1 materializer: ACCEPTED via PR #713;
-- Stage-2 operator materialization bundle: ACCEPTED via PR #715;
+- Stage-1 predecessor materializer: ACCEPTED via PR #713;
+- Stage-2 predecessor operator materialization bundle: ACCEPTED via PR #715;
+- Stage-1 locked-archive representation repair: ACCEPTED via PR #794;
+- Stage-2 accepted-lineage rebind: ACCEPTED via PR #797, bound to materializer commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` / blob `3a825b026423952c2844cb18664eb6395b72fdc1`;
 - real materialization: NOT ESTABLISHED;
 - materialization receipt: NOT ESTABLISHED;
 - primary analysis: NOT AUTHORIZED / NOT RUN;
