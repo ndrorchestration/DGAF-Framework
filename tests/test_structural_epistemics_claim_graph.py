@@ -7,14 +7,9 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_structural_epistemics_claim_graph.py"
-FIXTURE_PATH = (
-    ROOT
-    / "docs/research/fixtures/STRUCTURAL_EPISTEMICS_CLAIM_GRAPH_REFERENCE.json"
-)
+FIXTURE_PATH = ROOT / "docs/research/fixtures/STRUCTURAL_EPISTEMICS_CLAIM_GRAPH_REFERENCE.json"
 
-spec = importlib.util.spec_from_file_location(
-    "validate_structural_epistemics_claim_graph", MODULE_PATH
-)
+spec = importlib.util.spec_from_file_location("validate_structural_epistemics_claim_graph", MODULE_PATH)
 assert spec and spec.loader
 validator = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(validator)
@@ -47,22 +42,14 @@ def test_unknown_evidence_reference_fails_closed() -> None:
 
 def test_support_listing_requires_matching_relation() -> None:
     graph = _graph()
-    graph["relations"] = [
-        relation
-        for relation in graph["relations"]
-        if relation["relation_type"] != "SUPPORTS"
-    ]
+    graph["relations"] = [relation for relation in graph["relations"] if relation["relation_type"] != "SUPPORTS"]
     with pytest.raises(ValueError, match="lacks SUPPORTS relation"):
         validator.validate_claim_graph(graph)
 
 
 def test_contradiction_listing_requires_matching_relation() -> None:
     graph = _graph()
-    graph["relations"] = [
-        relation
-        for relation in graph["relations"]
-        if relation["relation_type"] != "CONTRADICTS"
-    ]
+    graph["relations"] = [relation for relation in graph["relations"] if relation["relation_type"] != "CONTRADICTS"]
     with pytest.raises(ValueError, match="lacks CONTRADICTS relation"):
         validator.validate_claim_graph(graph)
 
@@ -85,11 +72,7 @@ def test_repeated_support_root_requires_explicit_dependency_relation() -> None:
             "provenance_ref": "fixture://support-2",
         }
     )
-    graph["relations"].append(
-        _support_relation(
-            "EVID-REFERENCE-SUPPORT-2", "CLAIM-REFERENCE-001", "REFERENCE-2"
-        )
-    )
+    graph["relations"].append(_support_relation("EVID-REFERENCE-SUPPORT-2", "CLAIM-REFERENCE-001", "REFERENCE-2"))
 
     with pytest.raises(ValueError, match="share dependency roots without"):
         validator.validate_claim_graph(graph)
@@ -182,8 +165,6 @@ def test_supersession_must_be_reciprocal() -> None:
 
 def test_same_evidence_cannot_support_and_contradict_claim() -> None:
     graph = _graph()
-    graph["claims"][0]["contradicting_evidence_ids"].append(
-        "EVID-REFERENCE-SUPPORT"
-    )
+    graph["claims"][0]["contradicting_evidence_ids"].append("EVID-REFERENCE-SUPPORT")
     with pytest.raises(ValueError, match="same evidence as support and contradiction"):
         validator.validate_claim_graph(graph)
