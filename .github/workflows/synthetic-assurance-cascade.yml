@@ -33,6 +33,8 @@ jobs:
     name: PDMAL synthetic matrix and timing
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      PYTHONPATH: ${{ github.workspace }}
     steps:
       - name: Checkout exact source
         uses: actions/checkout@v4
