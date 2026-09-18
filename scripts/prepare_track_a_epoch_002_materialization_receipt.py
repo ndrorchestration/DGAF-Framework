@@ -64,12 +64,7 @@ def require_clean_worktree() -> None:
 
 
 def generated_at_now() -> str:
-    return (
-        datetime.now(timezone.utc)
-        .replace(microsecond=0)
-        .isoformat()
-        .replace("+00:00", "Z")
-    )
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def canonical_json_bytes(value: dict[str, Any]) -> bytes:
@@ -99,17 +94,11 @@ def build_receipt(generated_at_utc: str) -> dict[str, Any]:
         fail("accepted evidence-admission HEAD must have exactly one parent")
     evidence_parent = parents[1]
 
-    changed = [
-        line
-        for line in git("diff", "--name-only", evidence_parent, head).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff", "--name-only", evidence_parent, head).splitlines() if line]
     if changed != [validator.MATERIALIZATION_EVIDENCE_REL]:
         fail("HEAD must be the one-file materialization evidence-admission event")
 
-    if validator.git_object_exists(
-        f"{evidence_parent}:{validator.MATERIALIZATION_EVIDENCE_REL}"
-    ):
+    if validator.git_object_exists(f"{evidence_parent}:{validator.MATERIALIZATION_EVIDENCE_REL}"):
         fail("materialization evidence must be creation-only at HEAD")
 
     if validator.path_history(validator.MATERIALIZATION_EVIDENCE_REL) != [head]:
@@ -118,9 +107,7 @@ def build_receipt(generated_at_utc: str) -> dict[str, Any]:
     dataset_lock = validator.load_json(validator.DATASET_LOCK_PATH)
     decision = validator.load_json(validator.UNBLINDING_DECISION_PATH)
     evidence = validator.load_json(validator.MATERIALIZATION_EVIDENCE_PATH)
-    dataset_lock_evidence = validator.load_json(
-        validator.DATASET_LOCK_EVIDENCE_PATH
-    )
+    dataset_lock_evidence = validator.load_json(validator.DATASET_LOCK_EVIDENCE_PATH)
 
     validator.validate_dataset_lock_receipt_object(dataset_lock)
     validator.validate_unblinding_decision_object(decision, dataset_lock)
@@ -143,9 +130,7 @@ def build_receipt(generated_at_utc: str) -> dict[str, Any]:
         f"{evidence_parent}:{validator.UNBLINDING_DECISION_REL}",
     ).encode("utf-8")
     decision_digest = validator.sha256_bytes(decision_bytes)
-    evidence_digest = validator.sha256_file(
-        validator.MATERIALIZATION_EVIDENCE_PATH
-    )
+    evidence_digest = validator.sha256_file(validator.MATERIALIZATION_EVIDENCE_PATH)
 
     receipt = validator.expected_receipt(
         decision,
@@ -176,11 +161,7 @@ def write_receipt(receipt: dict[str, Any]) -> Path:
         fail("canonical materialization receipt already exists")
     path.write_bytes(canonical_json_bytes(receipt))
 
-    changed = [
-        line
-        for line in git("status", "--porcelain").splitlines()
-        if line.strip()
-    ]
+    changed = [line for line in git("status", "--porcelain").splitlines() if line.strip()]
     expected_suffix = RECEIPT_REL
     if len(changed) != 1 or not changed[0].endswith(expected_suffix):
         try:
