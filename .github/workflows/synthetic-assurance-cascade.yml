@@ -198,6 +198,8 @@ jobs:
           python scripts/summarize_synthetic_assurance_cascade.py             --full-timing synthetic-artifacts/pdmal/full-task-timing.json             --partial-timing synthetic-artifacts/pdmal/component-timing.json             --weighted-forman synthetic-artifacts/track-a/weighted-forman-replication.json             --junit synthetic-artifacts/pdmal/pdmal-tests.xml             --junit synthetic-artifacts/track-a/track-a-tests.xml             --output synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json
 
       - name: Enforce zero empirical/scientific promotion
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python - <<'PY'
           import json
@@ -207,6 +209,7 @@ jobs:
               Path("synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json").read_text()
           )
           assert summary["classification"] == "SYNTHETIC_ENGINEERING_ASSURANCE_ONLY"
+          assert summary["source_sha"] == __import__("os").environ["SOURCE_SHA"]
           assert summary["empirical_data_used"] is False
           assert summary["protected_material_used"] is False
           assert summary["real_materialization_performed"] is False
@@ -220,6 +223,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: synthetic-assurance-cascade-summary
-          path: synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json
+          path: |
+            synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json
+            synthetic-artifacts/SYNTHETIC_ASSURANCE_CASCADE_SUMMARY.json.sha256
           if-no-files-found: error
           retention-days: 30
