@@ -144,7 +144,7 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
     description: 'Construct the real analysis-ready unblinded input under operator control, admit only non-secret evidence, then establish a separate immutable receipt.',
     predicateState: 'not_established',
     toolingPrepared: true,
-    toolingNote: 'PR #713 accepted the Stage-1 materializer; PR #715 accepted the Stage-2 operator evidence bundle. Real materialization has not occurred.',
+    toolingNote: 'PR #713/#715 are predecessor Stage-1/Stage-2 tooling; PR #794 accepted the locked-archive Stage-1 repair and PR #797 rebound Stage 2 to the accepted #794 materializer identity. Real materialization has not occurred.',
     evidenceBoundary: 'No accepted Epoch 002 MATERIALIZATION_RECEIPT exists.',
     doesNotEstablish: 'Primary-analysis authority, efficacy, independent validation, or High-Assurance authorization.',
   },
