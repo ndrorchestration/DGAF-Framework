@@ -47,7 +47,7 @@ The Governance Command Center now contains three accepted presentation-only Sema
 
 These interfaces are explanatory projections. They do not create governance authority, authorize actions, establish deployment health, change scientific state, or promote empirical support.
 
-Merged PR #845 additionally establishes the evidence-first operator route: Overview directs users to Evidence before Governance interpretation. The subsequent Evidence provenance-spine PR #849 and audience-journey/mobile-containment PR #850 are not accepted current-main state: both were validated on historical heads, but #849 diverged after the locked-analysis result and interpretation frontier advanced, and #850 is stacked on #849. Their intended deltas are tracked in [`ui/UI_CURRENT_STATE.md`](ui/UI_CURRENT_STATE.md) and must be reconstructed on current protected main before merge.
+Merged PR #845 additionally establishes the evidence-first operator route: Overview directs users to Evidence before Governance interpretation. The subsequent Evidence provenance-spine PR #849 and audience-journey/mobile-containment PR #850 are **CLOSED / UNMERGED / STALE-LINEAGE**: both were validated on historical heads, but #849 diverged after the locked-analysis result and interpretation frontier advanced, and #850 was stacked on #849. Their intended deltas are tracked in [`ui/UI_CURRENT_STATE.md`](ui/UI_CURRENT_STATE.md) and must be reconstructed on current protected main before merge.
 
 State-Space Explorer V0 does **not** establish continuous tensor/manifold coordinates, authorization distance, readiness percentages, confidence scores, efficacy gradients, inferred consequence, or inferred reversibility. Consequence and reversibility remain explicitly **NOT MODELED — DO NOT INFER** in V0.
 
