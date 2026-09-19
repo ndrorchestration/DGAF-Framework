@@ -181,19 +181,30 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
     evidenceBoundary: 'INTERPRETATION_EXECUTION = COMPLETED; INTERPRETATION_NOTE = ESTABLISHED; evidence remains SAME_SYSTEM_NONINDEPENDENT.',
     doesNotEstablish: 'Canonical DGAF efficacy, independent validation, production readiness, certification, High-Assurance authorization, or a scientific-N increment.',
   },
+  {
+    id: 'post-interpretation-disposition',
+    label: 'Epoch 002 post-interpretation disposition',
+    shortLabel: 'Close',
+    description: 'An outcome-agnostic creation-only disposition closes Epoch 002 for its exact preregistered scope while preserving same-system/nonindependent evidence limits.',
+    predicateState: 'pass',
+    toolingPrepared: true,
+    toolingNote: 'PR #880 accepted fail-closed disposition tooling; PR #881 established the creation-only post-interpretation disposition record.',
+    evidenceBoundary: 'POST_INTERPRETATION_DISPOSITION = CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT; NEW_EMPIRICAL_EPOCH_AUTHORIZED = FALSE.',
+    doesNotEstablish: 'Canonical DGAF efficacy, independent validation, production readiness, certification, High-Assurance authorization, or authorization for a successor empirical epoch.',
+  },
 ]
 
 export const NEXT_TRANSITION = {
-  title: 'Identify the next admissible post-interpretation gate',
+  title: 'No successor empirical lane designated',
   summary:
-    'The currently modeled Epoch 002 lifecycle is established through interpretation admission. No downstream claim-state transition is designated or authorized by PR #872; any next transition must be defined and justified separately against the accepted evidence and claim ceiling.',
+    'PR #881 closes Track A Epoch 002 for its exact preregistered scope as CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT. Any future independent replication or fresh empirical epoch requires a new controller, preregistration, evidence/custody plan, and explicit authorization; none is designated or authorized here.',
   artifacts: [
-    'accepted TRACK_A_EPOCH_002_INTERPRETATION_NOTE.json',
-    'current evidence and claim-boundary review',
-    'separate governed transition record if a downstream gate is defined',
+    'accepted TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION.json',
+    'closed controller #879',
+    'new separately governed proposal only if future research is intentionally opened',
   ],
   warning:
-    'Do not expose the operator-local numerical interpretation in general projections. Do not infer efficacy, independence, production readiness, certification, High-Assurance authorization, or a scientific-N increment from interpretation admission.',
+    'Do not expose the operator-local numerical interpretation in general projections. Closure does not establish efficacy, independence, production readiness, certification, High-Assurance authorization, scientific-N promotion, or authorization for another empirical epoch.',
 } as const
 
 export interface EpochSummary {
@@ -227,7 +238,7 @@ export const EPOCH_SUMMARIES: EpochSummary[] = [
     title: 'Track A · Epoch 002',
     state: 'pass',
     summary:
-      'Collection, dataset lock, bounded unblinding, materialization, primary-analysis authorization, local primary-analysis execution, locked-result admission, and bounded interpretation admission are accepted at their exact scopes.',
+      'Collection, dataset lock, bounded unblinding, materialization, primary-analysis authorization, local primary-analysis execution, locked-result admission, bounded interpretation, and outcome-agnostic post-interpretation disposition are accepted at their exact scopes; Epoch 002 is closed for this preregistered lane.',
     facts: [
       'Collection: COMPLETE · 50 paired seed units / 2,250 blinded observations',
       'Custody: SAME_SYSTEM_NONINDEPENDENT',
@@ -241,6 +252,8 @@ export const EPOCH_SUMMARIES: EpochSummary[] = [
       'Interpretation execution: COMPLETED',
       'Interpretation note: ESTABLISHED · PR #872',
       'Interpretation evidence class: SAME_SYSTEM_NONINDEPENDENT',
+      'Post-interpretation disposition: CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT · PR #881',
+      'Successor empirical epoch: NOT AUTHORIZED',
     ],
   },
 ]
