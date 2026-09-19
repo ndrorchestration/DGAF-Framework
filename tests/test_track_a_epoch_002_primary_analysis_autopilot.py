@@ -25,10 +25,7 @@ def test_autopilot_uses_expected_local_paths_and_exact_runtime() -> None:
 def test_autopilot_bootstraps_only_signed_official_python_when_needed() -> None:
     text = source()
 
-    assert (
-        "https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe"
-        in text
-    )
+    assert "https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe" in text
     assert "Get-AuthenticodeSignature" in text
     assert '"Valid"' in text
     assert "Python Software Foundation" in text
@@ -73,10 +70,9 @@ def test_autopilot_admits_exactly_one_result_record_path() -> None:
     text = source()
 
     assert (
-        '$ResultRecordRel = '
+        "$ResultRecordRel = "
         '"docs/experiment/track_a_runs/'
-        'TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"'
-        in text
+        'TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"' in text
     )
     assert '"status", "--porcelain"' in text
     assert '$expectedStatus = "?? $ResultRecordRel"' in text
