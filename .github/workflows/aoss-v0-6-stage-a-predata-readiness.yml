@@ -10,6 +10,7 @@ on:
       - 'registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json'
       - 'registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json'
       - 'registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json'
+      - 'registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json'
       - 'registry/aoss_v0_6_stage_a_decision_policy_v1.json'
       - 'registry/aoss_v0_6_stage_a_freshness_calibration_v1.json'
       - 'registry/aoss_v0_6_stage_a_episode_eligibility_repetition_v1.json'
@@ -18,15 +19,18 @@ on:
       - 'schemas/aoss_v0_6_stage_a_replay_receipt.schema.json'
       - 'registry/aoss_v0_6_acp_measurement_manifest_v1.json'
       - 'scripts/aoss_v0_6_acp_adapter.py'
+      - 'scripts/aoss_v0_6_stage_a_acp_direct_baseline.py'
       - 'scripts/aoss_v0_6_stage_a_decision_policy.py'
       - 'scripts/validate_aoss_v0_6_stage_a_predata_readiness.py'
       - 'tests/test_aoss_v0_6_stage_a_predata_readiness.py'
+      - 'tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py'
       - 'tests/test_aoss_v0_6_stage_a_decision_policy.py'
       - 'docs/research/AOSS_V0_6_STAGE_A_PREDATA_GATE.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_ARTIFACT_REPLAY_RECEIPT.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_ANALYSIS_ADOPTION_CONTRACT.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_COMPARATOR_INPUT_DERIVATION_GAP.md'
+      - 'docs/research/AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_DECISION_POLICY.md'
   push:
     branches:
@@ -39,6 +43,7 @@ on:
       - 'registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json'
       - 'registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json'
       - 'registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json'
+      - 'registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json'
       - 'registry/aoss_v0_6_stage_a_decision_policy_v1.json'
       - 'docs/research/AOSS_V0_6_STAGE_A_SAMPLING_GROUND_TRUTH.md'
       - 'registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json'
@@ -47,15 +52,18 @@ on:
       - 'schemas/aoss_v0_6_stage_a_replay_receipt.schema.json'
       - 'registry/aoss_v0_6_acp_measurement_manifest_v1.json'
       - 'scripts/aoss_v0_6_acp_adapter.py'
+      - 'scripts/aoss_v0_6_stage_a_acp_direct_baseline.py'
       - 'scripts/aoss_v0_6_stage_a_decision_policy.py'
       - 'scripts/validate_aoss_v0_6_stage_a_predata_readiness.py'
       - 'tests/test_aoss_v0_6_stage_a_predata_readiness.py'
+      - 'tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py'
       - 'tests/test_aoss_v0_6_stage_a_decision_policy.py'
       - 'docs/research/AOSS_V0_6_STAGE_A_PREDATA_GATE.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_ARTIFACT_REPLAY_RECEIPT.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_ANALYSIS_ADOPTION_CONTRACT.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_COMPARATOR_INPUT_DERIVATION_GAP.md'
+      - 'docs/research/AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_DECISION_POLICY.md'
 
 permissions:
@@ -92,8 +100,8 @@ jobs:
       - name: Compile readiness validator
         run: python -m py_compile scripts/validate_aoss_v0_6_stage_a_predata_readiness.py
 
-      - name: Prove current Stage A remains fail-closed
-        run: python scripts/validate_aoss_v0_6_stage_a_predata_readiness.py --assert-not-ready
+      - name: Prove Stage A is ready only for separate authorization review
+        run: python scripts/validate_aoss_v0_6_stage_a_predata_readiness.py --assert-ready
 
       - name: Run focused readiness tests
-        run: python -m pytest -q tests/test_aoss_v0_6_stage_a_predata_readiness.py tests/test_aoss_v0_6_stage_a_decision_policy.py
+        run: python -m pytest -q tests/test_aoss_v0_6_stage_a_predata_readiness.py tests/test_aoss_v0_6_stage_a_decision_policy.py tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
