@@ -196,7 +196,7 @@ PR #728 installed prospective fail-closed primary-analysis authorization tooling
 
 ## Current scientific frontier
 
-The current control frontier is **explicit identification of the next admissible post-interpretation gate under issue #719**. The authorized frozen Epoch 002 primary analysis has executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment, and PR #851 established the immutable content-addressed result receipt. The numerical interpretation artifact remains outside repository projections; its admitted note is separate, non-authorizing, and does not promote efficacy, independence, scientific N, or High-Assurance authorization.
+Track A Epoch 002 is **CLOSED for its exact preregistered scope** through the outcome-agnostic creation-only post-interpretation disposition accepted in PR #881. Issues #719 and #879 are completed. The authorized frozen primary analysis remains executed locally, PR #851 retains the immutable content-addressed result receipt, and PR #872 retains the bounded SAME_SYSTEM_NONINDEPENDENT interpretation note. The numerical interpretation artifact remains outside repository projections. No successor empirical lane is designated or authorized; any future independent replication or fresh empirical epoch requires a new controller, preregistration, evidence/custody plan, and explicit authorization.
 
 Current boundary:
 
@@ -209,6 +209,8 @@ Current boundary:
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
 - `INTERPRETATION_NOTE = ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT`;
+- `TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION = CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT`;
+- `NEW_EMPIRICAL_EPOCH_AUTHORIZED = FALSE`;
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
 
 Private keys, passphrases, encrypted backup copies, blinding secrets, protected plaintext mappings, and other recoverable secret material remain prohibited from GitHub, Notion, chat, CI inputs, workflow logs, and committed files.
@@ -234,6 +236,8 @@ Tooling readiness never skips predecessor state. The governed order is:
 `→ locked primary analysis — EXECUTED / LOCKED / RETAINED`
 `→ locked-analysis result admission — ESTABLISHED (#851 / c0690e599d25304f1d920d5235adff04ba76094a)`
 `→ interpretation/adjudication — EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT (#872)`
+`→ post-interpretation disposition — CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT (#881)`
+`→ successor empirical lane — NOT DESIGNATED / NOT AUTHORIZED`
 
 Current predicates:
 
@@ -250,7 +254,9 @@ Current predicates:
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = EXECUTED_LOCKED / RETAINED`
 - `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = ESTABLISHED`
 - `TRACK_A_EPOCH_002_INTERPRETATION = EXECUTED_ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT`
+- `TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION = CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT`
 - `TRACK_A_EPOCH_002_RESULT_ADMISSION_TOOLING = ACCEPTED / NON-EXECUTING`
+- `NEW_EMPIRICAL_EPOCH_AUTHORIZED = FALSE`
 - `SCIENTIFIC_N_INCREMENT = 0`
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`
