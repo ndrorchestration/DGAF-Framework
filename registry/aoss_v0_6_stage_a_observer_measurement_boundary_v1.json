@@ -1,0 +1,156 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES",
+  "source_system": {
+    "repository": "ndrorchestration/agent-control-plane",
+    "commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+    "provenance_schema": "agent-control-plane.provenance.v1"
+  },
+  "observer": {
+    "version": "AOSS_V0_6_ACP_ADAPTER_V1",
+    "deployment_mode": "EXTERNAL_POST_EXPORT_READ_ONLY",
+    "input_surface": "EXPORTED_ACP_PROVENANCE_MANIFEST_ONLY",
+    "source_process_mutation": false,
+    "callbacks_into_source": false,
+    "source_environment_or_config_injection": false,
+    "source_scheduling_or_policy_control": false,
+    "source_instrumentation_patch": false
+  },
+  "trust_domain_contract": {
+    "source_event_origin": {
+      "classification": "SYSTEM",
+      "derivation": "ADAPTER_DERIVED_ORIGIN_CLASSIFICATION",
+      "authority_implication": "NONE"
+    },
+    "observer_metadata_origin": {
+      "classification": "OBSERVER",
+      "scope": "adapter version, derivation class, source identity, normalized digest"
+    },
+    "validator_domain": {
+      "classification": "UNMEASURED",
+      "source_evidence": "ABSENT"
+    },
+    "authority_domain": {
+      "classification": "UNMEASURED",
+      "source_evidence": "ABSENT"
+    }
+  },
+  "extraction_functions": {
+    "trace_id": {
+      "function_id": "DIRECT_COPY_RUN_ID_V1",
+      "source": "run_id",
+      "output": "opaque_id",
+      "tolerance": "EXACT"
+    },
+    "observer_event_id": {
+      "function_id": "SHA256_CANONICAL_EVENT_PLUS_INDEX_V1",
+      "source": "canonicalized event content + source_order_index",
+      "output": "sha256",
+      "tolerance": "EXACT"
+    },
+    "source_event_id": {
+      "function_id": "ABSENT_TO_UNMEASURED_V1",
+      "source": null,
+      "output": null,
+      "tolerance": "NOT_APPLICABLE"
+    },
+    "parent_event_id": {
+      "function_id": "ABSENT_TO_UNMEASURED_V1",
+      "source": null,
+      "output": null,
+      "tolerance": "NOT_APPLICABLE"
+    },
+    "source_order_index": {
+      "function_id": "EVENT_LIST_ENUMERATE_INDEX_V1",
+      "source": "events[] position",
+      "output": "zero_based_index",
+      "tolerance": "EXACT_INTEGER_ZERO_TOLERANCE"
+    },
+    "component": {
+      "function_id": "CONSTANT_AGENT_CONTROL_PLANE_V1",
+      "source": null,
+      "output": "agent-control-plane",
+      "tolerance": "EXACT"
+    },
+    "event_kind": {
+      "function_id": "DIRECT_COPY_VALIDATED_EVENT_ENUM_V1",
+      "source": "event",
+      "output": "enum_like_string",
+      "tolerance": "EXACT"
+    },
+    "task_id": {
+      "function_id": "DIRECT_COPY_TASK_ID_V1",
+      "source": "task_id",
+      "output": "opaque_id",
+      "tolerance": "EXACT"
+    },
+    "capability": {
+      "function_id": "DIRECT_COPY_OPTIONAL_CAPABILITY_V1",
+      "source": "capability",
+      "output": "string_or_null",
+      "tolerance": "EXACT"
+    },
+    "state": {
+      "function_id": "DIRECT_COPY_OPTIONAL_STATE_V1",
+      "source": "state",
+      "output": "string_or_null",
+      "tolerance": "EXACT"
+    },
+    "detail": {
+      "function_id": "DIRECT_COPY_OPTIONAL_DETAIL_V1",
+      "source": "detail",
+      "output": "string_or_null",
+      "tolerance": "EXACT"
+    },
+    "wall_time": {
+      "function_id": "PARSE_TIMEZONE_AWARE_ISO8601_PRESERVE_SOURCE_V1",
+      "source": "timestamp",
+      "output": "original_timezone_aware_timestamp_string",
+      "tolerance": "EXACT_PARSE_AND_PRESERVE",
+      "freshness_threshold": "SEPARATE_UNRESOLVED_PREDICATE"
+    },
+    "trust_domain": {
+      "function_id": "CLASSIFY_SOURCE_ORIGIN_SYSTEM_V1",
+      "source": null,
+      "output": "SYSTEM",
+      "tolerance": "EXACT"
+    },
+    "validation_state": {
+      "function_id": "ABSENT_TO_UNMEASURED_V1",
+      "source": null,
+      "output": "UNMEASURED",
+      "tolerance": "NOT_APPLICABLE"
+    },
+    "authorization_state": {
+      "function_id": "ABSENT_TO_UNMEASURED_V1",
+      "source": null,
+      "output": "UNMEASURED",
+      "tolerance": "NOT_APPLICABLE"
+    },
+    "durable_attestation": {
+      "function_id": "ABSENT_TO_NOT_ESTABLISHED_V1",
+      "source": null,
+      "output": "NOT_ESTABLISHED",
+      "tolerance": "NOT_APPLICABLE"
+    }
+  },
+  "numeric_tolerance_policy": {
+    "floating_numeric_measurements_present": false,
+    "source_order_index_tolerance": 0,
+    "timestamp_extraction_tolerance": "NONE_EXACT_PARSE_AND_PRESERVE",
+    "freshness_threshold_is_not_an_extraction_tolerance": true
+  },
+  "non_inference_rules": [
+    "Observer read-only access does not become validator authority.",
+    "Observer read-only access does not become authorization authority.",
+    "SYSTEM is an adapter-derived origin classification, not a source-native trust claim.",
+    "UNMEASURED validator or authority evidence must remain UNMEASURED.",
+    "Exact timestamp extraction does not establish freshness or clock calibration.",
+    "No extraction function may mutate ACP or manufacture missing evidence."
+  ],
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}
