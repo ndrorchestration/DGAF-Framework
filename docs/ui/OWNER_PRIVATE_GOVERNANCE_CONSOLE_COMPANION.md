@@ -4,7 +4,7 @@
 **Lifecycle:** DERIVATIVE  
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
-**Reconciliation input:** protected `main` at `9ef99ac7ed803609b4a7a4eb2b98bab328f853cc`  
+**Reconciliation input:** protected `main` at `f636c822f16e0814fe0d95221553aea7d3515a46`  
 **Reconciliation event:** post-#851/#854/#855 Epoch 002 locked-result and interpretation-tooling reconciliation
 
 ## Purpose
