@@ -24,6 +24,8 @@ GROUND_TRUTH_REL = "registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json"
 ANALYSIS_CONTRACT_REL = "registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json"
 ADOPTION_RULE_REL = "registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json"
 COMPARATOR_INPUT_GAP_REL = "registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json"
+PRIMARY_COMPARATOR_REL = "registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json"
+PRIMARY_COMPARATOR_SOURCE_REL = "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py"
 DECISION_POLICY_REL = "registry/aoss_v0_6_stage_a_decision_policy_v1.json"
 DECISION_POLICY_SOURCE_REL = "scripts/aoss_v0_6_stage_a_decision_policy.py"
 
@@ -35,7 +37,7 @@ REQUIRED_PREDICATES = {
     "extraction_functions_units_tolerances",
     "freshness_and_calibration",
     "comparator_policy",
-    "comparator_input_derivation",
+    "primary_comparator_machine_derivation",
     "aoss_decision_policy",
     "primary_endpoint",
     "secondary_and_safety_endpoints",
@@ -55,6 +57,8 @@ EXPECTED_SCHEMA = "agent-control-plane.provenance.v1"
 EXPECTED_ADAPTER = "AOSS_V0_6_ACP_ADAPTER_V1"
 EXPECTED_DECISION_POLICY = "AOSS_V0_6_STAGE_A_POLICY_V1"
 EXPECTED_DECISION_POLICY_SOURCE_BLOB = "dd03a34fe17579c57dcf386abac9f1f5e7eb23de"
+EXPECTED_PRIMARY_COMPARATOR = "AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1"
+EXPECTED_PRIMARY_COMPARATOR_SOURCE_BLOB = "f1846d00084b9e0a1b1ddbd21999f1ce9627c4f5"
 EXPECTED_COMPARATOR = {
     "version": "AOSS_V0_5_OMR_FROZEN",
     "rule": {
@@ -281,7 +285,7 @@ def validate_artifact_replay_receipt_contract(readiness: dict[str, Any]) -> None
     expected_contract_roles = {
         "measurement_manifest_sha256",
         "observer_measurement_boundary_sha256",
-        "comparator_input_derivation_sha256",
+        "primary_comparator_amendment_sha256",
         "decision_policy_sha256",
         "freshness_calibration_sha256",
         "eligibility_repetition_sha256",
@@ -502,11 +506,19 @@ def validate_analysis_and_adoption_contracts(readiness: dict[str, Any]) -> None:
     }:
         fail("analysis population contract drift")
 
+    if analysis.get("primary_comparator_amendment") != {
+        "version": "AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT_V1",
+        "contract": PRIMARY_COMPARATOR_REL,
+        "baseline_version": EXPECTED_PRIMARY_COMPARATOR,
+        "executable": PRIMARY_COMPARATOR_SOURCE_REL,
+    }:
+        fail("analysis primary comparator amendment binding drift")
+
     primary = analysis.get("primary_analysis")
     if not isinstance(primary, dict):
         fail("primary analysis contract is malformed")
     expected_primary = {
-        "endpoint": "AOSS_DECISION_DIFFERS_FROM_FROZEN_OMR",
+        "endpoint": "AOSS_DECISION_DIFFERS_FROM_ACP_DIRECT_EVENT_BASELINE",
         "estimator": "EXACT_FINITE_CORPUS_FRACTION",
         "sampling_confidence_interval": "NONE",
         "p_value": "NONE",
@@ -518,7 +530,7 @@ def validate_analysis_and_adoption_contracts(readiness: dict[str, Any]) -> None:
         if primary.get(key) != expected:
             fail(f"primary analysis contract drift: {key}")
     if primary.get("numerator") != (
-        "count of unique eligible episodes with AOSS decision != frozen OMR comparator decision"
+        "count of unique eligible episodes with AOSS decision != prospective ACP direct-event baseline decision"
     ):
         fail("primary numerator drift")
     if primary.get("denominator") != (
@@ -570,6 +582,7 @@ def validate_analysis_and_adoption_contracts(readiness: dict[str, Any]) -> None:
         "Decision divergence is not causal value of added observables.",
         "Finite-corpus fractions do not generalize to other frameworks, workloads, or populations.",
         "Deterministic replays do not increase effective sample size.",
+        "The ACP direct-event baseline is a pre-data source-native comparator, not ground truth.",
     }
     if not isinstance(limits, list) or set(limits) != expected_limits:
         fail("analysis interpretation limits drift")
@@ -781,41 +794,20 @@ def validate_decision_policy(readiness: dict[str, Any]) -> None:
         fail("AOSS decision policy predicate must be BOUND")
 
 
-def validate_comparator_input_derivation_gap(readiness: dict[str, Any]) -> None:
+def validate_primary_comparator_amendment(readiness: dict[str, Any]) -> None:
     gap = load_json(ROOT / COMPARATOR_INPUT_GAP_REL)
+    amendment = load_json(ROOT / PRIMARY_COMPARATOR_REL)
+
     if gap.get("record_type") != "AOSS_V0_6_STAGE_A_COMPARATOR_INPUT_DERIVATION_GAP":
-        fail("comparator input derivation gap record_type drift")
-    if gap.get("schema_version") != 1 or gap.get("controller_issue") != 810:
-        fail("comparator input derivation gap identity drift")
+        fail("historical comparator gap record_type drift")
     if gap.get("status") != "BLOCKED_NO_MACHINE_BOUND_DERIVATION":
-        fail("comparator input derivation gap must remain blocked until a separate frozen contract replaces it")
-    source = gap.get("source_system")
-    if not isinstance(source, dict):
-        fail("comparator input derivation source identity malformed")
-    if source.get("commit") != EXPECTED_SOURCE_COMMIT or source.get("provenance_schema") != EXPECTED_SCHEMA:
-        fail("comparator input derivation source identity drift")
-    comparator = gap.get("comparator")
-    if not isinstance(comparator, dict):
-        fail("comparator input derivation comparator identity malformed")
-    if comparator.get("version") != EXPECTED_COMPARATOR["version"]:
-        fail("comparator input derivation comparator version drift")
-    if comparator.get("coarse_state") != ["O", "M", "R"]:
-        fail("comparator coarse-state identity drift")
-    if comparator.get("decision_rule") != EXPECTED_COMPARATOR["rule"]:
-        fail("comparator input derivation decision rule drift")
-    established = gap.get("established")
-    if not isinstance(established, dict) or established.get("comparator_decision_rule_frozen") is not True:
-        fail("comparator decision-rule binding drift")
-    missing = gap.get("not_established")
-    if not isinstance(missing, dict) or not all(
-        missing.get(k) is True
-        for k in (
-            "authoritative_semantic_definition_for_each_coarse_dimension",
-            "machine_bound_acp_to_omr_extraction",
-            "unit_and_tolerance_contract_for_each_coarse_dimension",
-        )
-    ):
-        fail("comparator input derivation missing-state drift")
+        fail("historical OMR gap must remain explicit rather than being rewritten as recovered")
+    if gap.get("not_established") != {
+        "authoritative_semantic_definition_for_each_coarse_dimension": True,
+        "machine_bound_acp_to_omr_extraction": True,
+        "unit_and_tolerance_contract_for_each_coarse_dimension": True,
+    }:
+        fail("historical OMR missing-state evidence drift")
     prohibited = gap.get("prohibited")
     if not isinstance(prohibited, dict) or not all(
         prohibited.get(k) is True
@@ -826,19 +818,153 @@ def validate_comparator_input_derivation_gap(readiness: dict[str, Any]) -> None:
             "collect_stage_a_outcomes_before_resolution",
         )
     ):
-        fail("comparator input derivation prohibition drift")
-    if gap.get("outcome_collection_authorized") is not False:
-        fail("comparator input gap cannot authorize outcome collection")
-    if gap.get("external_validation_established") is not False:
-        fail("comparator input gap cannot establish external validation")
-    if gap.get("scientific_n_increment") != 0:
-        fail("comparator input gap cannot increment scientific N")
+        fail("historical OMR gap prohibition drift")
+
+    if amendment.get("record_type") != "AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT":
+        fail("primary comparator amendment record_type drift")
+    if amendment.get("schema_version") != 1 or amendment.get("controller_issue") != 810:
+        fail("primary comparator amendment identity drift")
+    if amendment.get("status") != "FROZEN_PREDATA_PROTOCOL_AMENDMENT_NO_OUTCOMES":
+        fail("primary comparator amendment status drift")
+    if amendment.get("amendment_version") != "AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT_V1":
+        fail("primary comparator amendment version drift")
+
+    timing = amendment.get("timing")
+    if timing != {
+        "stage_a_outcome_collection_started": False,
+        "stage_a_outcomes_inspected": False,
+        "existing_apparatus_fixtures_available_before_amendment": True,
+        "amendment_is_predata": True,
+    }:
+        fail("primary comparator amendment timing boundary drift")
+
+    superseded = amendment.get("superseded_confirmatory_comparator")
+    if not isinstance(superseded, dict):
+        fail("superseded comparator record malformed")
+    if superseded.get("version") != EXPECTED_COMPARATOR["version"]:
+        fail("superseded historical comparator identity drift")
+    if superseded.get("status") != "NOT_MACHINE_USABLE_FOR_STAGE_A":
+        fail("historical OMR comparator usability classification drift")
+    if superseded.get("historical_gap_record") != COMPARATOR_INPUT_GAP_REL:
+        fail("historical OMR gap binding drift")
+    if superseded.get("historical_reference_projection_is_not_derivation") is not True:
+        fail("historical reference projection must not become a derivation")
+    if superseded.get("omr_semantics_inferred_or_reconstructed") is not False:
+        fail("OMR semantics must not be inferred or reconstructed")
+
+    primary = amendment.get("primary_comparator")
+    if not isinstance(primary, dict):
+        fail("primary comparator contract malformed")
+    if primary.get("version") != EXPECTED_PRIMARY_COMPARATOR:
+        fail("primary comparator version drift")
+    if primary.get("classification") != "PROSPECTIVE_MACHINE_DERIVABLE_SOURCE_EVENT_BASELINE":
+        fail("primary comparator classification drift")
+
+    executable = primary.get("executable_binding")
+    if not isinstance(executable, dict):
+        fail("primary comparator executable binding malformed")
+    if executable.get("path") != PRIMARY_COMPARATOR_SOURCE_REL:
+        fail("primary comparator executable path drift")
+    if executable.get("git_blob_sha") != EXPECTED_PRIMARY_COMPARATOR_SOURCE_BLOB:
+        fail("primary comparator executable blob binding drift")
+    if executable.get("entrypoint") != "evaluate_baseline":
+        fail("primary comparator entrypoint drift")
+    source_bytes = (ROOT / PRIMARY_COMPARATOR_SOURCE_REL).read_bytes()
+    source_header = f"blob {len(source_bytes)}\0".encode("utf-8")
+    actual_source_blob = hashlib.sha1(source_header + source_bytes, usedforsecurity=False).hexdigest()
+    if actual_source_blob != EXPECTED_PRIMARY_COMPARATOR_SOURCE_BLOB:
+        fail("primary comparator executable source bytes drift")
+
+    if primary.get("source_identity") != {
+        "repository": "ndrorchestration/agent-control-plane",
+        "commit": EXPECTED_SOURCE_COMMIT,
+        "provenance_schema": EXPECTED_SCHEMA,
+    }:
+        fail("primary comparator source identity drift")
+    if set(primary.get("source_fields_used", [])) != {
+        "manifest.schema",
+        "manifest.run_id",
+        "manifest.event_count",
+        "events[].run_id",
+        "events[].event",
+    }:
+        fail("primary comparator source-field set drift")
+    ignored = set(primary.get("explicitly_ignored_for_baseline", []))
+    if "historical O/M/R variables" not in ignored:
+        fail("primary comparator must explicitly exclude historical OMR variables")
+    if "AOSS authorization state" not in ignored or "AOSS provenance-valid state" not in ignored:
+        fail("primary comparator must remain independent of richer AOSS governance state")
+
+    if primary.get("units_and_tolerances") != {
+        "schema": "exact string identity; zero tolerance",
+        "run_id": "exact opaque identifier equality; zero tolerance",
+        "event_count": "exact integer equality to events[] length; zero tolerance",
+        "event_kind": "exact categorical string membership; zero tolerance",
+        "terminal_event_cardinality": "exact integer count; zero tolerance",
+    }:
+        fail("primary comparator unit/tolerance contract drift")
+
+    expected_rules = [
+        (1, "structural manifest identity invalid", "HOLD", False),
+        (2, "no recognized terminal event", "HOLD", True),
+        (3, "more than one recognized terminal event", "HOLD", True),
+        (4, "exactly one terminal event == task.completed", "RECORD_OUTCOME", True),
+        (
+            5,
+            "exactly one terminal event in {task.denied, task.rejected, task.failed, task.cancelled, task.budget_exhausted}",
+            "ESCALATE_BLOCK",
+            True,
+        ),
+    ]
+    rules = primary.get("decision_rules")
+    if not isinstance(rules, list):
+        fail("primary comparator decision rules malformed")
+    actual_rules = [
+        (entry.get("priority"), entry.get("when"), entry.get("decision"), entry.get("input_valid"))
+        for entry in rules
+        if isinstance(entry, dict)
+    ]
+    if actual_rules != expected_rules:
+        fail("primary comparator decision-rule drift")
+    if primary.get("fail_closed_default") != "HOLD":
+        fail("primary comparator fail-closed default drift")
+
+    endpoint = amendment.get("primary_endpoint_amendment")
+    if endpoint != {
+        "previous_endpoint": "AOSS_DECISION_DIFFERS_FROM_FROZEN_OMR",
+        "replacement_endpoint": "AOSS_DECISION_DIFFERS_FROM_ACP_DIRECT_EVENT_BASELINE",
+        "estimator": "EXACT_FINITE_CORPUS_FRACTION",
+        "comparison": "exact AOSS policy action string != exact ACP direct-event baseline action string",
+        "interpretation": "DESCRIPTIVE_DECISION_DIVERGENCE_NOT_CORRECTNESS_OR_SUPERIORITY",
+    }:
+        fail("primary endpoint amendment drift")
+
+    integrity = amendment.get("integrity_boundary")
+    if not isinstance(integrity, list):
+        fail("primary comparator amendment integrity boundary malformed")
+    if "Injected ground-truth condition labels are not inputs to the baseline." not in integrity:
+        fail("primary comparator cannot use injected ground-truth labels")
+    if "A null divergence result remains admissible evidence." not in integrity:
+        fail("primary comparator amendment must preserve null-result admissibility")
+
+    if amendment.get("authorization_effect") != "NONE":
+        fail("primary comparator amendment cannot create authorization")
+    if amendment.get("outcome_collection_authorized") is not False:
+        fail("primary comparator amendment cannot authorize outcome collection")
+    if amendment.get("external_validation_established") is not False:
+        fail("primary comparator amendment cannot establish external validation")
+    if amendment.get("scientific_n_increment") != 0:
+        fail("primary comparator amendment cannot increment scientific N")
+
     predicates = readiness.get("required_predicates")
     if not isinstance(predicates, dict):
         fail("required_predicates must be an object")
-    entry = predicates.get("comparator_input_derivation")
-    if not isinstance(entry, dict) or entry.get("status") != "BLOCKED":
-        fail("comparator input derivation predicate must remain BLOCKED")
+    comparator_policy = predicates.get("comparator_policy")
+    machine_derivation = predicates.get("primary_comparator_machine_derivation")
+    if not isinstance(comparator_policy, dict) or comparator_policy.get("status") != "BOUND":
+        fail("primary comparator policy predicate must be BOUND")
+    if not isinstance(machine_derivation, dict) or machine_derivation.get("status") != "BOUND":
+        fail("primary comparator machine derivation predicate must be BOUND")
 
 
 def validate_readiness(readiness: dict[str, Any]) -> list[str]:
@@ -861,7 +987,7 @@ def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     validate_freshness_sampling_ground_truth(readiness)
     validate_analysis_and_adoption_contracts(readiness)
     validate_decision_policy(readiness)
-    validate_comparator_input_derivation_gap(readiness)
+    validate_primary_comparator_amendment(readiness)
     unresolved = unresolved_predicates(readiness)
     expected_status = "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW" if not unresolved else "NOT_READY_FAIL_CLOSED"
     if readiness.get("status") != expected_status:
