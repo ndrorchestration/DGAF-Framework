@@ -28,11 +28,15 @@ test('state-space projection keeps derived reachability separate from native pre
   const interpretation = STATE_SPACE_PROJECTION.regions.find(
     region => region.id === 'interpretation-adjudication',
   )
+  const disposition = STATE_SPACE_PROJECTION.regions.find(
+    region => region.id === 'post-interpretation-disposition',
+  )
 
   assert.ok(materialization)
   assert.ok(analysisAuthorization)
   assert.ok(lockedAnalysis)
   assert.ok(interpretation)
+  assert.ok(disposition)
 
   assert.equal(materialization.reachability, 'established')
   assert.equal(materialization.nativeState, 'pass')
@@ -45,6 +49,9 @@ test('state-space projection keeps derived reachability separate from native pre
 
   assert.equal(interpretation.reachability, 'established')
   assert.equal(interpretation.nativeState, 'pass')
+
+  assert.equal(disposition.reachability, 'established')
+  assert.equal(disposition.nativeState, 'pass')
 })
 
 test('state-space projection preserves global fail-closed constraints without scalar readiness', () => {
