@@ -4,7 +4,7 @@
 <!-- A successful run does not establish independent certification, universal coverage, safety, efficacy, or production readiness. -->
 
 **Version:** 2.0 (P-24 retrofit)  
-**Owner:** Agent Apogee (scorer) + Agent Amethyst (altitude conductor)  
+**Functional owner:** `role.evidence-verification-reviewer` + `role.governance-orchestrator`  
 **Canonical home:** `DGAF-Framework/docs/gates/TELESCOPIC_LENS.md`  
 **Pattern:** P-12 (Telescopic-Lens-Audit) | P-24 (Canonical Practice Unit)
 
