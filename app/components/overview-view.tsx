@@ -65,7 +65,7 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
         <div><span>Empirical N</span><strong>{TRUTH_BOUNDARY.empiricalN}</strong></div>
         <div><span>Canonical efficacy</span><StatusChip state="not_established" label={TRUTH_BOUNDARY.efficacy}/></div>
       </div>
-      <p className="boundary-note">Substantial engineering and governance evidence exists. Epoch 002 materialization, bounded locked-primary-analysis authorization, local primary-analysis execution, and the content-addressed locked-result receipt are established; interpretation tooling is accepted, but interpretation has not run, no INTERPRETATION_NOTE is established, and canonical DGAF efficacy, independent validation, and High-Assurance authority remain unestablished.</p>
+      <p className="boundary-note">Substantial engineering and governance evidence exists. Epoch 002 materialization, bounded locked-primary-analysis authorization, local primary-analysis execution, the content-addressed locked-result receipt, and the bounded interpretation note are established at their exact scopes; canonical DGAF efficacy and independent validation remain NOT ESTABLISHED, and High-Assurance authority remains NOT AUTHORIZED.</p>
     </section>
 
     <section>
