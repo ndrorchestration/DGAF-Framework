@@ -32,6 +32,9 @@ def test_current_stage_a_state_is_explicitly_not_ready() -> None:
     assert "aoss_decision_policy" in unresolved
     assert "freshness_and_calibration" in unresolved
     assert "analysis_and_multiplicity" in unresolved
+    assert "observer_boundary_and_trust_domains" not in unresolved
+    assert "extraction_functions_units_tolerances" not in unresolved
+    assert len(unresolved) == 8
     assert readiness["outcome_collection_authorized"] is False
     assert readiness["scientific_n_increment"] == 0
 
@@ -86,3 +89,61 @@ def test_apparatus_identity_is_exactly_bound() -> None:
     broken["apparatus_acceptance"]["repository_commit"] = "0" * 40
     with pytest.raises(SystemExit, match="accepted apparatus commit drift"):
         validator.validate_readiness(broken)
+
+
+def test_observer_boundary_is_external_read_only_and_nonauthoritative() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    validator.validate_readiness(readiness)
+    boundary = validator.load_json(ROOT / validator.BOUNDARY_REL)
+    assert boundary["observer"]["deployment_mode"] == "EXTERNAL_POST_EXPORT_READ_ONLY"
+    assert boundary["observer"]["source_process_mutation"] is False
+    assert boundary["observer"]["callbacks_into_source"] is False
+    assert boundary["trust_domain_contract"]["validator_domain"]["classification"] == "UNMEASURED"
+    assert boundary["trust_domain_contract"]["authority_domain"]["classification"] == "UNMEASURED"
+
+
+def test_timestamp_extraction_does_not_bind_freshness() -> None:
+    validator = load_validator()
+    boundary = validator.load_json(ROOT / validator.BOUNDARY_REL)
+    wall_time = boundary["extraction_functions"]["wall_time"]
+    assert wall_time["tolerance"] == "EXACT_PARSE_AND_PRESERVE"
+    assert wall_time["freshness_threshold"] == "SEPARATE_UNRESOLVED_PREDICATE"
+    readiness = current_readiness(validator)
+    assert readiness["required_predicates"]["freshness_and_calibration"]["status"] == "OPEN"
+
+
+def test_observer_boundary_rejects_source_mutation() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    boundary = validator.load_json(ROOT / validator.BOUNDARY_REL)
+    broken = copy.deepcopy(boundary)
+    broken["observer"]["source_process_mutation"] = True
+    original_load = validator.load_json
+
+    def fake_load(path):
+        if path == ROOT / validator.BOUNDARY_REL:
+            return broken
+        return original_load(path)
+
+    validator.load_json = fake_load
+    with pytest.raises(SystemExit, match="observer deployment boundary drift"):
+        validator.validate_readiness(readiness)
+
+
+def test_extraction_contract_requires_every_field_function_identity() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    boundary = validator.load_json(ROOT / validator.BOUNDARY_REL)
+    broken = copy.deepcopy(boundary)
+    broken["extraction_functions"]["task_id"]["function_id"] = ""
+    original_load = validator.load_json
+
+    def fake_load(path):
+        if path == ROOT / validator.BOUNDARY_REL:
+            return broken
+        return original_load(path)
+
+    validator.load_json = fake_load
+    with pytest.raises(SystemExit, match="extraction function identity missing"):
+        validator.validate_readiness(readiness)
