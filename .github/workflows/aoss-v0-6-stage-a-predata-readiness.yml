@@ -6,12 +6,15 @@ on:
       - '.github/workflows/aoss-v0-6-stage-a-predata-readiness.yml'
       - 'registry/aoss_v0_6_stage_a_predata_readiness_v1.json'
       - 'registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json'
+      - 'registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json'
+      - 'schemas/aoss_v0_6_stage_a_replay_receipt.schema.json'
       - 'registry/aoss_v0_6_acp_measurement_manifest_v1.json'
       - 'scripts/aoss_v0_6_acp_adapter.py'
       - 'scripts/validate_aoss_v0_6_stage_a_predata_readiness.py'
       - 'tests/test_aoss_v0_6_stage_a_predata_readiness.py'
       - 'docs/research/AOSS_V0_6_STAGE_A_PREDATA_GATE.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md'
+      - 'docs/research/AOSS_V0_6_STAGE_A_ARTIFACT_REPLAY_RECEIPT.md'
   push:
     branches:
       - main
@@ -19,12 +22,15 @@ on:
       - '.github/workflows/aoss-v0-6-stage-a-predata-readiness.yml'
       - 'registry/aoss_v0_6_stage_a_predata_readiness_v1.json'
       - 'registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json'
+      - 'registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json'
+      - 'schemas/aoss_v0_6_stage_a_replay_receipt.schema.json'
       - 'registry/aoss_v0_6_acp_measurement_manifest_v1.json'
       - 'scripts/aoss_v0_6_acp_adapter.py'
       - 'scripts/validate_aoss_v0_6_stage_a_predata_readiness.py'
       - 'tests/test_aoss_v0_6_stage_a_predata_readiness.py'
       - 'docs/research/AOSS_V0_6_STAGE_A_PREDATA_GATE.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md'
+      - 'docs/research/AOSS_V0_6_STAGE_A_ARTIFACT_REPLAY_RECEIPT.md'
 
 permissions:
   contents: read
