@@ -372,6 +372,7 @@ def test_comparator_input_gap_cannot_be_silently_promoted() -> None:
     with pytest.raises(SystemExit, match="must remain blocked"):
         validator.validate_readiness(readiness)
 
+
 def test_prospective_decision_policy_is_bound_without_claiming_v05_recovery() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
@@ -419,4 +420,3 @@ def test_decision_policy_contract_rejects_historical_equivalence_promotion() -> 
     validator.load_json = fake_load
     with pytest.raises(SystemExit, match="cannot claim historical v0.5 equivalence"):
         validator.validate_readiness(readiness)
-
