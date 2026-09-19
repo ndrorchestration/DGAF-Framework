@@ -7,15 +7,49 @@ import { StatusChip } from './status-chip'
 
 export type ViewId = 'overview' | 'control' | 'governance' | 'state-space' | 'agents' | 'evidence' | 'tools'
 
-const NAV = [
-  { id: 'overview' as const, label: 'Overview', sub: 'What DGAF is', Icon: OverviewIcon },
-  { id: 'control' as const, label: 'Control Room', sub: 'Runtime telemetry', Icon: ActivityIcon },
-  { id: 'evidence' as const, label: 'Evidence & Research', sub: 'Claims & experiment state', Icon: EvidenceIcon },
-  { id: 'governance' as const, label: 'Governance', sub: 'Lifecycle & authority', Icon: ShieldIcon },
-  { id: 'state-space' as const, label: 'State Space', sub: 'Reachability model', Icon: NodesIcon },
-  { id: 'agents' as const, label: 'Agents & Formations', sub: 'Roles & topology', Icon: NodesIcon },
-  { id: 'tools' as const, label: 'Tools', sub: 'P-07 sweep workspace', Icon: ToolsIcon },
+type NavItem = {
+  id: ViewId
+  label: string
+  sub: string
+  Icon: typeof OverviewIcon
+}
+
+type NavGroup = {
+  label: 'UNDERSTAND' | 'VERIFY' | 'INSPECT' | 'OPERATE'
+  items: NavItem[]
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: 'UNDERSTAND',
+    items: [
+      { id: 'overview', label: 'Overview', sub: 'What DGAF is', Icon: OverviewIcon },
+    ],
+  },
+  {
+    label: 'VERIFY',
+    items: [
+      { id: 'evidence', label: 'Evidence & Research', sub: 'Claims, provenance & experiment', Icon: EvidenceIcon },
+    ],
+  },
+  {
+    label: 'INSPECT',
+    items: [
+      { id: 'governance', label: 'Governance', sub: 'Lifecycle & authority', Icon: ShieldIcon },
+      { id: 'state-space', label: 'State Space', sub: 'Reachability model', Icon: NodesIcon },
+      { id: 'agents', label: 'Agents & Formations', sub: 'Roles & topology', Icon: NodesIcon },
+    ],
+  },
+  {
+    label: 'OPERATE',
+    items: [
+      { id: 'control', label: 'Control Room', sub: 'Operator actions & runtime', Icon: ActivityIcon },
+      { id: 'tools', label: 'Tools', sub: 'P-07 sweep workspace', Icon: ToolsIcon },
+    ],
+  },
 ]
+
+const NAV = NAV_GROUPS.flatMap(group => group.items)
 
 function phaseState(phase: DashboardPhase) {
   if (phase === 'fresh') return 'pass' as const
@@ -57,12 +91,18 @@ export function AppShell({ activeView, onNavigate, children, phase, lastSuccessA
           <div className="brand-mark" aria-hidden="true"><span /><span /><span /></div>
           <div><div className="brand-name">DGAF</div><div className="brand-subtitle">Governance Command Center</div></div>
         </div>
-        <nav className="nav-list">
-          {NAV.map(({ id, label, sub, Icon }) => (
-            <button key={id} className="nav-item" data-active={activeView === id ? 'true' : 'false'} onClick={() => navigate(id)} aria-current={activeView === id ? 'page' : undefined}>
-              <Icon /><span><strong>{label}</strong><small>{sub}</small></span>
-            </button>
-          ))}
+        <nav className="nav-list" aria-label="DGAF audience journey">
+          {NAV_GROUPS.map(group => {
+            const groupId = `nav-stage-${group.label.toLowerCase()}`
+            return <div className="nav-group" role="group" aria-labelledby={groupId} key={group.label}>
+              <span className="nav-stage" id={groupId}>{group.label}</span>
+              {group.items.map(({ id, label, sub, Icon }) => (
+                <button key={id} className="nav-item" data-active={activeView === id ? 'true' : 'false'} onClick={() => navigate(id)} aria-current={activeView === id ? 'page' : undefined}>
+                  <Icon /><span><strong>{label}</strong><small>{sub}</small></span>
+                </button>
+              ))}
+            </div>
+          })}
         </nav>
         <div className="sidebar-boundary">
           <span className="eyebrow">CONTROL BOUNDARY</span>
@@ -77,7 +117,7 @@ export function AppShell({ activeView, onNavigate, children, phase, lastSuccessA
             <button ref={menuButtonRef} className="icon-button mobile-menu" onClick={() => setMobileOpen(true)} aria-label="Open navigation" aria-expanded={mobileOpen} aria-controls="primary-navigation"><MenuIcon /></button>
             <div><span className="eyebrow">DGAF / {active.id.toUpperCase()}</span><h1>{active.label}</h1></div>
           </div>
-          <div className="runtime-pill"><StatusChip state={phaseState(phase)} label={phase === 'fresh' ? 'Runtime live' : phase === 'stale' ? 'Runtime stale' : phase === 'error' ? 'Runtime unavailable' : 'Connecting'} compact /><span>{lastSuccessAt ? `Updated ${lastSuccessAt.toLocaleTimeString()}` : 'Awaiting first valid snapshot'}</span></div>
+          <div className="runtime-pill" aria-label="Runtime observability only; not governance authority"><StatusChip state={phaseState(phase)} label={phase === 'fresh' ? 'Runtime live' : phase === 'stale' ? 'Runtime stale' : phase === 'error' ? 'Runtime unavailable' : 'Connecting'} compact /><span>{lastSuccessAt ? `Updated ${lastSuccessAt.toLocaleTimeString()}` : 'Awaiting first valid snapshot'}</span></div>
         </header>
         <main id="main-content" className="page-content" tabIndex={-1}>{children}</main>
       </div>
