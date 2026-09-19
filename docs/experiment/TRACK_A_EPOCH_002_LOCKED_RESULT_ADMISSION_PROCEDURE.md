@@ -1,8 +1,8 @@
 # Track A Epoch 002 Locked Result Admission Procedure
 
-Status: **PROSPECTIVE TOOLING / NO RESULT ADMITTED**
+Status: **ACCEPTED RESULT / HISTORICAL ADMISSION PROCEDURE**
 
-This procedure governs the repository admission of the content-addressed output from the already-frozen Track A Epoch 002 primary analysis. It does not execute analysis, expose numerical outcomes in the repository record, interpret the result, increment scientific N, establish canonical DGAF efficacy, establish independent validation, or authorize High-Assurance operation.
+This procedure governed the repository admission of the content-addressed output from the frozen Track A Epoch 002 primary analysis. The governed event is now accepted: PR #851 merged as `c0690e599d25304f1d920d5235adff04ba76094a`, creating the canonical result record. The procedure does not execute analysis, expose numerical outcomes in the repository record, interpret the result, increment scientific N, establish canonical DGAF efficacy, establish independent validation, or authorize High-Assurance operation.
 
 ## Sequence
 
@@ -13,6 +13,19 @@ This procedure governs the repository admission of the content-addressed output 
 5. The candidate record contains the authorization-event commit and the local output SHA-256, but not the numerical estimate, confidence interval, or classification.
 6. The result record is admitted only through a separate one-parent, one-file, creation-only protected-main event.
 7. Interpretation remains a later, separate `INTERPRETATION_NOTE` stage.
+
+## Accepted event
+
+The accepted creation-only event is:
+
+- PR: `#851`;
+- commit: `c0690e599d25304f1d920d5235adff04ba76094a`;
+- accepted parent: `4cfa8e18779d5788d739f37e47892ad43d51cd8d`;
+- retained output SHA-256: `966fe9f1c218d8f64eae8465288a5e23b332555484eac2602c3764c3172336da`;
+- authorization-event binding: `e87917e644d71de7351c5983fa7ed89d9231962f`;
+- numerical estimate, confidence interval, and classification: **not copied into the repository record**.
+
+The canonical result-record path has exactly one history event. The current downstream frontier is the separate `INTERPRETATION_NOTE` stage governed by #719.
 
 ## Canonical result record
 
@@ -58,4 +71,4 @@ A validation PASS on a PR head is `VALIDATED_PENDING_ACCEPTANCE`, not a scientif
 
 ## Post-admission boundary
 
-After an accepted result record exists, later tooling PRs validate the result record as an immutable historical event rather than attempting to recreate it. Numerical interpretation remains downstream and separately governed. No exploratory analysis becomes confirmatory by virtue of result admission.
+The result record now exists on protected `main` and must be treated as an immutable historical event rather than recreated or replaced. Later tooling validates that accepted history and, when explicitly invoked with the retained operator-local output, may prepare a separate `INTERPRETATION_NOTE` candidate. Numerical interpretation remains downstream and separately governed. No exploratory analysis becomes confirmatory by virtue of result admission, and the accepted receipt does not promote scientific N, canonical DGAF efficacy, independent validation, or High-Assurance authorization.
