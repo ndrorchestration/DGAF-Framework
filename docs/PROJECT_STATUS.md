@@ -75,7 +75,7 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 - PR #824 subsequently admitted the exact non-secret materialization evidence and PR #826 established the creation-only materialization receipt.
 - PR #831 accepted the fail-closed local locked-analysis runner; PR #828 accepted the separate bounded authorization event; PR #835 accepted content-addressed result-admission tooling.
 - The authorized primary analysis subsequently executed locally; PR #851 established the immutable content-addressed result receipt, PR #854 reconciled current-state projections, and PR #855 accepted fail-closed interpretation/adjudication tooling.
-- These later events establish only their exact scopes; the interpretation stage remains not run, no `INTERPRETATION_NOTE` is established, and efficacy, independent validation, scientific-N promotion, and High-Assurance authorization remain unestablished.
+- These later events establish only their exact scopes; the bounded interpretation note is established, while efficacy, independent validation, scientific-N promotion, and High-Assurance authorization remain unestablished.
 
 ## Next admissible scientific transition
 
