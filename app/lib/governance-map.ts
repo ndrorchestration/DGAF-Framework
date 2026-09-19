@@ -83,9 +83,9 @@ export const GOVERNANCE_RELATIONSHIPS: GovernanceMapRelationship[] = [
     kind: 'authority',
     label: 'Analysis authorization gates execution',
     provenance:
-      'Locked primary analysis remains unreachable until the separate analysis-authorization predicate is accepted.',
+      'The accepted bounded primary-analysis authorization is the exact authority predecessor to locked execution.',
     doesNotEstablish:
-      'A positive result, efficacy, independent validation, certification, or broader production authority.',
+      'Analysis execution, a positive result, efficacy, independent validation, certification, or broader production authority.',
   },
 ]
 

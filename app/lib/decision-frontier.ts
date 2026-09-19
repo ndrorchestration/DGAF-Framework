@@ -45,10 +45,10 @@ export const DECISION_FRONTIER = {
   downstream,
   consequence: blocking.doesNotEstablish,
   receipt: {
-    label: 'Immutable materialization receipt',
+    label: 'Locked analysis result record',
     state: blocking.state,
     summary:
-      'No accepted Epoch 002 MATERIALIZATION_RECEIPT exists. Execution evidence must remain non-secret and content-addressed before a separate receipt can be established.',
+      'No accepted Epoch 002 LOCKED_ANALYSIS_RESULT_RECORD exists. The bounded primary analysis is authorized but not yet run; local output must remain content-addressed and separately admitted before interpretation.',
   },
   transitionTitle: NEXT_TRANSITION.title,
   transitionSummary: NEXT_TRANSITION.summary,

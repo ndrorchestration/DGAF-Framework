@@ -4,8 +4,8 @@
 **Lifecycle:** DERIVATIVE  
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
-**Reconciliation input:** protected `main` at `2e34b856cb87153904e41205030b46911e77e038`  
-**Reconciliation event:** post-PR #798 current-facing documentation reconciliation through the accepted #794/#797 materialization-tooling lineage
+**Reconciliation input:** protected `main` at `037e9e878fb8d9ea7a4658219734158bb5300b1e`  
+**Reconciliation event:** post-#824/#826/#831/#828/#835 Epoch 002 materialization, authorization, and analysis-tooling reconciliation
 
 ## Purpose
 
@@ -31,9 +31,13 @@ It separately represents the Track A Epoch 002 state:
 - Stage-2 predecessor operator materialization bundle: ACCEPTED via PR #715;
 - Stage-1 locked-archive representation repair: ACCEPTED via PR #794;
 - Stage-2 accepted-lineage rebind: ACCEPTED via PR #797, bound to materializer commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` / blob `3a825b026423952c2844cb18664eb6395b72fdc1`;
-- real materialization: NOT ESTABLISHED;
-- materialization receipt: NOT ESTABLISHED;
-- primary analysis: NOT AUTHORIZED / NOT RUN;
+- real materialization evidence: ESTABLISHED / ACCEPTED via PR #824;
+- materialization receipt: ESTABLISHED via creation-only PR #826;
+- locked-analysis runner tooling: ACCEPTED via PR #831;
+- primary-analysis authorization: ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY via PR #828;
+- primary analysis: AUTHORIZED_BOUNDED / NOT RUN;
+- locked-analysis result: NOT ESTABLISHED;
+- result-admission tooling: ACCEPTED / NON-EXECUTING via PR #835;
 - independent validation: NOT ESTABLISHED.
 
 Track A completion counts must never be rendered as canonical High-Assurance scientific N.
@@ -50,7 +54,7 @@ Track A completion counts must never be rendered as canonical High-Assurance sci
 
 ## Current next action
 
-The console should present **controlled operator-side materialization** as the next frontier, not retained-byte admission or dataset lock. Any successful operator materialization remains non-authorizing until the resulting evidence is admitted and a separate immutable `MATERIALIZATION_RECEIPT` is accepted. Primary analysis remains prohibited until a later separate authorization event.
+The console should present **authorized locked primary analysis execution** as the next frontier. Materialization and its immutable receipt are established, and the separate bounded authorization event has been accepted. The analysis has not yet run; no `LOCKED_ANALYSIS_RESULT_RECORD` exists. Execution must remain bound to the frozen analysis/runtime/input contract, with later result admission and interpretation kept separate.
 
 ## Access and validation
 

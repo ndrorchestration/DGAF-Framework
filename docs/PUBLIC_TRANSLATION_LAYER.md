@@ -135,14 +135,14 @@ Any current-facing text that says only `Ionia` where the distinction matters mus
 | Track | Plain-English scope | Current public interpretation |
 |---|---|---|
 | **Track A — Epoch 001** | Historical prospective numeric topology-robustness collection | Blinded collection complete; 50 paired inferential seed units / 2,250 blinded raw observations retained; dataset lock established; protected mapping cryptographically unrecoverable; primary analysis unanalyzable / not run |
-| **Track A — Epoch 002 successor** | Replacement prospective numeric topology-robustness experiment | Operator-local custody-v2 recovery passed as self-attested/non-independent; repository custody NOT ESTABLISHED; empirical collection NOT AUTHORIZED; dataset lock NOT ESTABLISHED; unblinding NOT AUTHORIZED; materialization NOT ESTABLISHED; primary analysis NOT AUTHORIZED / NOT RUN |
+| **Track A — Epoch 002 successor** | Replacement prospective numeric topology-robustness experiment | Repository custody accepted as SAME_SYSTEM_NONINDEPENDENT; authorized blinded collection complete at 50 paired seed units / 2,250 observations; dataset lock established; bounded mapping release/decryption authorized; real materialization evidence and immutable materialization receipt accepted; locked primary-analysis authorization accepted; primary analysis AUTHORIZED_BOUNDED / NOT RUN; locked result, canonical efficacy, and independent validation not established |
 | **Track B1** | Semantic routing and safety behavior | Standalone non-empirical engineering/evaluation lane complete |
 | **Track B2** | Persistent context and closure behavior | Standalone non-empirical engineering/evaluation lane complete |
 | **Track B3** | Persistent graph-convergence monitoring | Standalone non-empirical engineering/evaluation lane complete |
 | **Track C** | Integrated DGAF composition | Non-empirical composition proposal only; empirical execution not authorized |
 | **Solo Epochs** | Historical developer-run bounded experiments | Historical exact-scope evidence; not automatically canonical DGAF evidence |
 
-Accepted Epoch 002 tooling through #627 is preparation/validation evidence only. It does not promote any successor experiment predicate.
+Epoch 002 has since advanced through distinct accepted events: non-secret materialization evidence (#824), immutable materialization receipt (#826), fail-closed locked-analysis runner tooling (#831), bounded locked-primary-analysis authorization (#828), and content-addressed result-admission tooling (#835). These transitions do not establish that the primary analysis has run, a locked result, canonical DGAF efficacy, independent validation, or High-Assurance authorization.
 
 ## Evidence-state translation
 
