@@ -19,13 +19,20 @@ test('governance map derives its vertical spine from canonical governance stages
 test('governance map relationships resolve only to canonical stage ids', () => {
   const stageIds = new Set(GOVERNANCE_STAGES.map(stage => stage.id))
 
-  assert.equal(GOVERNANCE_RELATIONSHIPS.length, 5)
+  assert.equal(GOVERNANCE_RELATIONSHIPS.length, 6)
   const interpretationDependency = GOVERNANCE_RELATIONSHIPS.find(
     relationship => relationship.id === 'locked-result-to-interpretation',
   )
   assert.equal(interpretationDependency?.sourceId, 'locked-analysis')
   assert.equal(interpretationDependency?.targetId, 'interpretation-adjudication')
   assert.equal(interpretationDependency?.kind, 'dependency')
+
+  const dispositionDependency = GOVERNANCE_RELATIONSHIPS.find(
+    relationship => relationship.id === 'interpretation-to-disposition',
+  )
+  assert.equal(dispositionDependency?.sourceId, 'interpretation-adjudication')
+  assert.equal(dispositionDependency?.targetId, 'post-interpretation-disposition')
+  assert.equal(dispositionDependency?.kind, 'dependency')
 
   for (const relationship of GOVERNANCE_RELATIONSHIPS) {
     assert.equal(stageIds.has(relationship.sourceId), true)
