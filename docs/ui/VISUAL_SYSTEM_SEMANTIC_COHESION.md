@@ -115,7 +115,7 @@ Reduced-motion mode must preserve the same information and ordering.
 
 ## Current implementation status
 
-Decision Frontier, Governance Map, State-Space Explorer, semantic token grammar, accessibility foundations, public claim-ceiling treatment, and evidence-first routing are accepted presentation foundations. PR #849 and #850 contain useful subsequent deltas but are stale-lineage and must be reconstructed on current protected main before acceptance. The current scientific frontier is interpretation/adjudication; visual emphasis must not preserve an older primary-analysis frontier.
+Decision Frontier, Governance Map, State-Space Explorer, semantic token grammar, accessibility foundations, public claim-ceiling treatment, and evidence-first routing are accepted presentation foundations. PR #849 and #850 contain useful subsequent deltas but are now **CLOSED / UNMERGED / STALE-LINEAGE** and must be reconstructed on current protected main before acceptance. The current scientific frontier is interpretation/adjudication; visual emphasis must not preserve an older primary-analysis frontier.
 
 ## Flagship surfaces
 
