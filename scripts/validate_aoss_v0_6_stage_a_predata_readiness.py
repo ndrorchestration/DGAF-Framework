@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, NoReturn
@@ -690,6 +691,11 @@ def validate_decision_policy(readiness: dict[str, Any]) -> None:
         fail("decision policy executable path drift")
     if executable.get("git_blob_sha") != EXPECTED_DECISION_POLICY_SOURCE_BLOB:
         fail("decision policy executable blob binding drift")
+    source_bytes = (ROOT / DECISION_POLICY_SOURCE_REL).read_bytes()
+    source_header = f"blob {len(source_bytes)}\0".encode("utf-8")
+    actual_source_blob = hashlib.sha1(source_header + source_bytes).hexdigest()
+    if actual_source_blob != EXPECTED_DECISION_POLICY_SOURCE_BLOB:
+        fail("decision policy executable source bytes drift")
     if executable.get("entrypoint") != "evaluate_policy":
         fail("decision policy entrypoint drift")
     if executable.get("input_type") != "PolicyInput" or executable.get("result_type") != "PolicyResult":
@@ -703,7 +709,8 @@ def validate_decision_policy(readiness: dict[str, Any]) -> None:
         (5, "uncertain == true", "REQUEST_EVIDENCE", "UNCERTAIN"),
         (
             6,
-            "authorization == TRUE and validation == TRUE and provenance_valid == TRUE and no required predicate is INCONCLUSIVE",
+            "authorization == TRUE and validation == TRUE and provenance_valid == TRUE "
+            "and no required predicate is INCONCLUSIVE",
             "EXECUTE",
             "AUTHORIZED_AND_VALIDATED_AND_PROVENANCE_VALID",
         ),
@@ -715,7 +722,8 @@ def validate_decision_policy(readiness: dict[str, Any]) -> None:
         ),
         (
             8,
-            "required_predicate_inconclusive == true or authorization/validation/provenance_valid contains INCONCLUSIVE",
+            "required_predicate_inconclusive == true or authorization/validation/provenance_valid "
+            "contains INCONCLUSIVE",
             "HOLD",
             "REQUIRED_PREDICATE_INCONCLUSIVE",
         ),
