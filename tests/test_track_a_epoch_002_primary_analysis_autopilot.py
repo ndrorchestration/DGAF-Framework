@@ -20,6 +20,25 @@ def test_autopilot_uses_expected_local_paths_and_exact_runtime() -> None:
     assert '$ExpectedNumPy = "2.5.1"' in text
     assert "requirements-full-lock.txt" in text
     assert "--require-hashes" in text
+    assert "--no-deps" in text
+
+
+def test_frozen_analysis_lock_installs_without_dependency_reresolution() -> None:
+    text = source()
+
+    assert "[switch]$NoDeps" in text
+    assert '$installArgs += "--no-deps"' in text
+    analysis_call = (
+        "$analysisPython = Ensure-Venv -PythonExe $python "
+        "-VenvPath $analysisVenv -RequirementsPath $analysisRequirements "
+        "-RequireHashes -NoDeps -RequiredNumPy $ExpectedNumPy"
+    )
+    assert analysis_call in text
+    tooling_call = (
+        "$toolingPython = Ensure-Venv -PythonExe $python "
+        "-VenvPath $toolingVenv -RequirementsPath $toolingRequirements"
+    )
+    assert tooling_call in text
 
 
 def test_autopilot_bootstraps_exact_python_side_by_side_when_needed() -> None:
