@@ -30,7 +30,7 @@ export default function Dashboard() {
       content = <AgentsView roster={dashboard.snapshot?.roster ?? null} />
       break
     case 'evidence':
-      content = <EvidenceView />
+      content = <EvidenceView onNavigate={setView} />
       break
     case 'tools':
       content = <ToolsView />
