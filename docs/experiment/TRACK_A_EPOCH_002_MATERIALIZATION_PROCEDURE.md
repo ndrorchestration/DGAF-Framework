@@ -1,11 +1,8 @@
 # Track A Epoch 002 materialization-receipt procedure
 
-Status: **HISTORICAL / CLOSED MATERIALIZATION PROCEDURE · LIVE STATE SUPERSEDED BY LATER ACCEPTED EVENTS**
+Status: **CORRECTIVE TOOLING · DATASET LOCK ESTABLISHED · BOUNDED UNBLINDING AUTHORIZED · MATERIALIZATION NOT ESTABLISHED · PRIMARY ANALYSIS NOT AUTHORIZED / NOT RUN · N=0**
 
 Controller: issue #632. Accepted tooling PR #703 established the first current-lineage materialization validator, but post-acceptance review found that its future real-event path still assumed GitHub Actions workflow/artifact IDs. Accepted Epoch 002 custody and dataset-lock evidence are instead `OPERATOR_CODESPACE` and content-addressed. This procedure defines the corrected model.
-
-> **Current-state routing — 2026-09-19:** this document preserves the materialization-stage procedure and its event-time fail-closed invariants. It is not the live Track A state summary. Later accepted events established real materialization (#824), the immutable materialization receipt (#826), bounded locked-primary-analysis authorization (#828), locked primary-analysis execution plus result receipt (#851), and interpretation tooling (#855). The live frontier is interpretation/adjudication: interpretation has not run, `INTERPRETATION_NOTE` is not established, scientific-N increment remains 0, and canonical DGAF efficacy / independent validation remain not established. Use `docs/CURRENT_STATE.md` for current state.
-
 
 The accepted dataset-lock event is `e7ba2fe6fc6b3587957c59231da81ae107cacab2`. The accepted bounded unblinding event is `bf6279b9989f211e324ff3e9012788bed95e5c84`. Historical Epoch 001 materialization code is a pattern source only; no Epoch 001 identity, artifact, key, custody assumption, result, or authorization transfers into Epoch 002.
 
@@ -238,9 +235,9 @@ There is no Actions-artifact retrieval mode. All real evidence required for repo
 
 Tooling-only maintenance is restricted to an explicit materialization-owned path allowlist. It may update only the dedicated workflow, materialization schemas/procedure/validator, Stage-2 operator bundle helper, and their focused tests. Dependency-trigger-only validation remains read-only. This bounded subset rule replaces the older requirement that every historical materialization-tooling file change together in one PR; it reduces unrelated churn without widening the lane beyond explicit owned paths.
 
-## Procedure-time boundary before later accepted events
+## Current boundary
 
-At the time this procedure governed the pre-admission materialization transition, and until the separately accepted evidence-admission and receipt events existed, the required boundary was:
+Until a separately accepted evidence-admission event and later receipt event exist, preserve:
 
 `TRACK_A_EPOCH_002_DATASET_LOCK = ESTABLISHED`
 
