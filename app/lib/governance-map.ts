@@ -95,6 +95,17 @@ export const GOVERNANCE_RELATIONSHIPS: GovernanceMapRelationship[] = [
     doesNotEstablish:
       'A favorable interpretation, canonical DGAF efficacy, independent validation, scientific-N promotion, or High-Assurance authorization.',
   },
+  {
+    id: 'interpretation-to-disposition',
+    sourceId: 'interpretation-adjudication',
+    targetId: 'post-interpretation-disposition',
+    kind: 'dependency',
+    label: 'Accepted interpretation gates bounded lane disposition',
+    provenance:
+      'The accepted creation-only INTERPRETATION_NOTE is the predecessor to the outcome-agnostic post-interpretation disposition established by PR #881.',
+    doesNotEstablish:
+      'Canonical DGAF efficacy, independent validation, scientific-N promotion, High-Assurance authorization, or permission for a successor empirical epoch.',
+  },
 ]
 
 const stageIds = new Set(GOVERNANCE_STAGES.map(stage => stage.id))
