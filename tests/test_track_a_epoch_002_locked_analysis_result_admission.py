@@ -94,8 +94,12 @@ def test_result_record_preserves_full_nonpromotion_ceiling() -> None:
     assert set(record["immutable_subject"]) == {"commit_sha", "sha256"}
 
 
-def test_tooling_mode_is_nonexecuting_and_result_absent() -> None:
+def test_tooling_mode_is_nonexecuting_and_result_absent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     validator = load_validator()
+    monkeypatch.setattr(validator, "ROOT", tmp_path)
+    monkeypatch.setattr(validator, "git_object_exists", lambda _spec: False)
     validator.validate_tooling_only()
 
 
