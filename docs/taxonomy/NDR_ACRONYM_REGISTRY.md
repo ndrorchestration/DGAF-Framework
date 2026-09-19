@@ -20,6 +20,7 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **PDMAL / PDMA-L** | Phi-Driven Multi-Agent Lattice | Lattice/control research architecture; topology is an experimental/design variable rather than implied by the acronym | DEFINED for architecture; graph/math quantities are VERIFIED only where explicitly tested | Current active identity. Dodecahedral math may be verified without establishing dodecahedral efficacy or making that topology constitutive. |
 | **PDMAL-D** | Phi-Dodecahedral Multi-Agent Lattice | Prospective successor identity in which dodecahedral topology would be constitutive | PROSPECTIVE / NOT_TRIGGERED | Evidence-gated naming transition. Do not describe PDMAL-D as active, canonical architecture, or established successor until the transition gate is satisfied. |
 | **DGAF** | Dynamic Governance Agentic Formation | Agentic governance/orchestration framework | DEFINED; implementation evidence is artifact-specific | Do not infer capability from framework name alone. |
+| **PHDGE** | Phi-Harmonic Dynamic Governance Ecosystem | Historical umbrella/ensemble brand in older ops/generator material | HISTORICAL / NON-CANONICAL | Preserve as lineage only. It is not current authority, not the active ensemble identity, and must not replace current NDR AI Systems ecosystem framing without a new explicit naming decision. |
 | **PPTL** | Phi-Pentagon Topology Lab | Repository-local topology/governance harness name | DEFINED; implementation/evidence remains artifact-specific | Supported by `pptl/README.md` and `pptl/__init__.py`; older competing expansions are historical/current-facing residue, not equal canonical candidates. |
 | **AXIS** | Agent X-axis Invariant Spectrum | DGAF invariant measurement/metric spine | DEFINED; operationalization status is artifact-specific | Canonical expansion is explicitly recorded in `docs/qa/AXIS_METRIC_SPEC.md`; the specification itself states that full operationalization remains a roadmap item. |
 | **SACP** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical/project-local term | AMBIGUOUS | Do not invent an expansion. Preserve the acronym until a canonical source is located. |
@@ -38,6 +39,23 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **PID** | Proportional–Integral–Derivative | Control method | STANDARD / DEFINED | AHG/Zeta-Pell usage must correspond to actual PID implementation. |
 | **FML** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical AHG/Zeta-Pell mitigation terminology | AMBIGUOUS | Do not expand from inference. |
 | **PDM** | **DO NOT ASSUME PDMAL** | Possible project-local abbreviation | AMBIGUOUS | Similar-looking acronyms are not interchangeable. |
+
+## Controlled non-acronym terms and notation
+
+These terms are governed here because they have repeatedly appeared near acronym/brand discussions, but they must **not** be converted into acronyms or silently normalized into one another.
+
+| Token | Classification | Controlled meaning / disposition |
+|---|---|---|
+| **Orbit** / **Orbit-Driftwatch** | Product / presentation name | Treat as a product/name, not a confirmed acronym. **Observable Multi-Agent Reasoning** is a project tagline, not an O-R-B-I-T expansion. `ORBIT-N1` is a named bounded orchestration pattern. Do not invent a backronym without explicit source authority. |
+| **noetic** | External established term | Philosophical/cognitive term relating to mind, intellect, or knowing. Optional analytical lens only; not canonical DGAF state vocabulary. |
+| **neotic** | Rare external term | Rare attested term roughly concerning what is addressed to understanding. Do not silently normalize it to `noetic` or reuse it as an emergence-state label. |
+| **ontic** | External established term | Concerns what exists or is actually the case. Optional analytical lens; not a substitute for explicit operational predicates. |
+| **epistemic** | Canonical DGAF evidence term | Use for justification, support, uncertainty, provenance, and claim status. |
+| **neontic** | External specialist term / rejected DGAF coinage | Existing specialist usage includes modern/extant meanings. Do not coin it as a DGAF emergence label; use explicit terms such as `emergent behavior`, `adaptive behavior`, or a defined transition predicate. |
+| **pP / Platinum Mean** | Project-defined mathematical notation/name | `pP = 1/(2 sin(pi/11)) ≈ 1.774732842`, the unit-side regular-hendecagon circumradius ratio. This project label does not establish any governance or efficacy property. |
+| **ρ / plastic constant** | External standard mathematical constant | Distinct from pP: the real root of `x^3 = x + 1`, approximately `1.3247179572447454`. Never conflate it with Platinum Mean. |
+
+A memorable label, numeric coincidence, project-defined notation, or product tagline does not establish implementation, optimality, causal stability, governance efficacy, or scientific authority.
 
 ## Critical acronym controls
 
@@ -98,6 +116,12 @@ Current documentation must therefore distinguish three things:
 Current canonical expansion: **Agent X-axis Invariant Spectrum**. The authoritative source is `docs/qa/AXIS_METRIC_SPEC.md`.
 
 The acronym is reconciled at the vocabulary level. Separate verification is still required for claims about AXIS's operational deployment, scoring validity, or performance.
+
+### PHDGE / Orbit
+
+PHDGE is retained only as **historical / non-canonical ecosystem branding**. Historical generator and Drive-update material may preserve it as event-time provenance, but current-facing authority must not be regenerated from those templates.
+
+Orbit is a **product/name**, not a confirmed acronym. The phrase “Observable Multi-Agent Reasoning” may be retained as a tagline where historically/source-accurate, but it must not be used as an O-R-B-I-T expansion unless a future explicit naming authority establishes one.
 
 ### SACP
 
