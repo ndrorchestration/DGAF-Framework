@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-This 2026-09-19 reconciliation was refreshed against protected `main` `af2ffb1ae82b58de8e253ca49c1c33b91a7baf59`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
+This 2026-09-19 reconciliation was refreshed against protected `main` `e06741b88d875f816c53e6da6bcf894a600f14bd`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -33,6 +33,8 @@ This 2026-09-19 reconciliation was refreshed against protected `main` `af2ffb1ae
 - successor interpretation/adjudication tooling: **ACCEPTED / NON-EXECUTING** through PR #855;
 - successor interpretation execution: **COMPLETED / ESTABLISHED** through PR #872;
 - successor `INTERPRETATION_NOTE`: **ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT**;
+- executable/current-state interpretation projection: **ACCEPTED** through PR #877;
+- post-interpretation disposition controller: **OPEN** under issue #879; PR #880 is a fully green tooling candidate but is not accepted current state until merged;
 - scientific-N increment: **0**.
 
 These accepted records preserve separate event boundaries. Materialization, its receipt, bounded primary-analysis authorization, local primary-analysis execution, and the content-addressed result receipt are established at their exact scopes; interpretation is established as a bounded note, while efficacy, independent validation, and High-Assurance authorization remain unestablished.
@@ -79,7 +81,7 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 
 ## Next admissible scientific transition
 
-The current control frontier is **explicit next-gate identification after accepted interpretation**. The frozen primary analysis has executed locally, its creation-only content-addressed result receipt is accepted, and PR #872 established the separate bounded `INTERPRETATION_NOTE` at SAME_SYSTEM_NONINDEPENDENT scope. No downstream transition is currently designated. Any next state-changing action requires a separate governed definition and must not infer efficacy, independent validation, scientific-N promotion, production readiness, certification, or High-Assurance authorization from interpretation admission.
+The current control frontier is **post-interpretation disposition and lane closure under issue #879**. The frozen primary analysis has executed locally, its creation-only content-addressed result receipt is accepted, and PR #872 established the separate bounded `INTERPRETATION_NOTE` at SAME_SYSTEM_NONINDEPENDENT scope. No downstream transition is currently designated. Any next state-changing action requires a separate governed definition and must not infer efficacy, independent validation, scientific-N promotion, production readiness, certification, or High-Assurance authorization from interpretation admission.
 
 The accepted apparatus now provides:
 
