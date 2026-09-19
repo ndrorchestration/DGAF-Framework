@@ -196,7 +196,7 @@ PR #728 installed prospective fail-closed primary-analysis authorization tooling
 
 ## Current scientific frontier
 
-The current control frontier is **post-interpretation projection reconciliation and explicit identification of the next admissible gate under issue #719**. The authorized frozen Epoch 002 primary analysis has executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment, and PR #851 established the immutable content-addressed result receipt. The numerical interpretation artifact remains outside repository projections; its admitted note is separate, non-authorizing, and does not promote efficacy, independence, scientific N, or High-Assurance authorization.
+The current control frontier is **explicit identification of the next admissible post-interpretation gate under issue #719**. The authorized frozen Epoch 002 primary analysis has executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment, and PR #851 established the immutable content-addressed result receipt. The numerical interpretation artifact remains outside repository projections; its admitted note is separate, non-authorizing, and does not promote efficacy, independence, scientific N, or High-Assurance authorization.
 
 Current boundary:
 
@@ -208,7 +208,8 @@ Current boundary:
 - `TRACK_A_EPOCH_002_INTERPRETATION = EXECUTED / ESTABLISHED`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
-- `INTERPRETATION_NOTE = ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT`;\n- `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
+- `INTERPRETATION_NOTE = ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT`;
+- `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
 
 Private keys, passphrases, encrypted backup copies, blinding secrets, protected plaintext mappings, and other recoverable secret material remain prohibited from GitHub, Notion, chat, CI inputs, workflow logs, and committed files.
 
