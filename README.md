@@ -14,7 +14,7 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **3. Read the current state from its owning record.** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) is the live project/evidence entrypoint. The status block immediately below is a public summary, not a substitute for exact-bound evidence records.
 
-**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock, bounded unblinding, real materialization evidence (#824), the immutable materialization receipt (#826), and locked-primary-analysis authorization (#828) are accepted. The frozen primary analysis has now executed locally, and PR #851 established the creation-only content-addressed locked-result receipt on protected `main`. The current frontier is **post-interpretation control-state reconciliation under #719**; scientific-N increment remains 0, and canonical DGAF efficacy and independent validation are not established.
+**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock, bounded unblinding, real materialization evidence (#824), the immutable materialization receipt (#826), and locked-primary-analysis authorization (#828) are accepted. The frozen primary analysis has now executed locally, and PR #851 established the creation-only content-addressed locked-result receipt on protected `main`. The bounded Epoch 002 lifecycle is now **CLOSED_FOR_EXACT_PREREGISTERED_SCOPE** through the creation-only post-interpretation disposition accepted via PR #881. Scientific-N increment remains 0, and canonical DGAF efficacy and independent validation are not established.
 
 **5. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
@@ -118,7 +118,7 @@ Issue #523 controls the replacement path. Epoch 002 uses a distinct protocol ide
 
 Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, separate collection authorization, retained-evidence admission/QC, dataset lock, and bounded unblinding have advanced through separate governed events. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
 
-The current control frontier is **post-interpretation projection reconciliation and explicit next-gate identification under issue #719**. The accepted apparatus now includes:
+The Epoch 002 lifecycle is **closed for its exact preregistered scope** via PR #881. No rerun, historical pooling, claim promotion, or new empirical epoch is authorized by that closure. The accepted apparatus now includes:
 
 - a PASS content-addressed dataset-lock receipt;
 - a separate PASS unblinding decision bounded to `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
@@ -148,7 +148,7 @@ Current boundary:
 
 The remaining ordered sequence is:
 
-`post-interpretation gate identification → any later separately governed claim-state transition`
+`closed Epoch 002 lifecycle → separate future proposal/preregistration/authorization if new empirical work is pursued`
 
 No private key, passphrase, blinding secret, protected plaintext mapping, decrypted protected data, or other recoverable secret material belongs in GitHub, Notion, chat, CI inputs, workflow logs, or committed files.
 
