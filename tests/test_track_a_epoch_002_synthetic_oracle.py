@@ -25,9 +25,7 @@ def test_synthetic_oracle_fixture_has_exact_track_a_shape() -> None:
     records = runner.build_records("positive_constant")
 
     assert len(records) == 2250
-    keys = {
-        (row["seed_id"], row["topology"], row["failure_count"]) for row in records
-    }
+    keys = {(row["seed_id"], row["topology"], row["failure_count"]) for row in records}
     assert len(keys) == 2250
     assert all(row["algorithm_id"] == runner.ALGORITHM_ID for row in records)
     assert all(isinstance(row["ffcr_success"], bool) for row in records)
@@ -80,17 +78,11 @@ def test_primary_result_is_invariant_to_record_order_and_nuisance_topologies() -
     analysis = load_module(ANALYSIS_PATH, "frozen_analysis_invariance")
 
     baseline = analysis.analyze(runner.build_records("positive_constant"))
-    reordered = analysis.analyze(
-        list(reversed(runner.build_records("positive_constant")))
-    )
-    nuisance_inverted = analysis.analyze(
-        runner.build_records("positive_constant", invert_nuisance=True)
-    )
+    reordered = analysis.analyze(list(reversed(runner.build_records("positive_constant"))))
+    nuisance_inverted = analysis.analyze(runner.build_records("positive_constant", invert_nuisance=True))
 
     assert runner.canonical_bytes(reordered) == runner.canonical_bytes(baseline)
-    assert runner.canonical_bytes(nuisance_inverted) == runner.canonical_bytes(
-        baseline
-    )
+    assert runner.canonical_bytes(nuisance_inverted) == runner.canonical_bytes(baseline)
 
 
 def test_fail_closed_negative_controls_reject_malformed_synthetic_data() -> None:
