@@ -37,7 +37,6 @@ def test_autopilot_bootstraps_exact_python_side_by_side_when_needed() -> None:
     assert "python\\tools\\python.exe" in text
 
 
-
 def test_checked_native_commands_write_to_host_not_function_pipeline() -> None:
     text = source()
 
