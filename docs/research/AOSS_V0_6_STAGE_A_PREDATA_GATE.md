@@ -12,10 +12,9 @@ The validator refuses a ready state while any required predicate is unresolved. 
 
 ## Current unresolved families
 
-Exactly two required predicates remain unresolved:
+Exactly one required predicate remains unresolved:
 
 - **comparator input derivation — BLOCKED:** the `AOSS_V0_5_OMR_FROZEN` decision rule is bound, but ACP telemetry does not yet have an accepted machine-bound derivation into `(O,M,R)`. Do not infer the dimensions from their names or reconstruct the mapping from outcomes.
-- **AOSS decision policy — BLOCKED:** no independently identifiable owning executable v0.5 policy source has been located, and no prospective v0.6 policy has yet been frozen.
 
 ## Frozen pre-data contracts
 
@@ -28,11 +27,12 @@ The following are now separately frozen and evidence-backed:
 - whole-study content-addressed replay receipt contract;
 - finite-corpus descriptive analysis/multiplicity contract;
 - practical-effect/portability adoption rule;
+- prospective executable `AOSS_V0_6_STAGE_A_POLICY_V1` decision policy, explicitly not a recovered v0.5 implementation;
 - primary, secondary, safety, falsification, and non-authority boundaries.
 
 Stage A remains a finite preregistered purposive conformance corpus. Deterministic replays test stability and do not increase the denominator. No sampling CI, p-value, bootstrap, or population-effect inference is attached to the primary finite-corpus fraction. A zero decision-divergence result does not by itself fail bounded portability if all structural and safety criteria pass.
 
-The whole-study replay receipt must bind the eventual comparator-input derivation contract and AOSS decision-policy contract by SHA-256 before a valid final receipt can exist.
+The whole-study replay receipt must bind the frozen AOSS decision-policy contract and the eventual comparator-input derivation contract by SHA-256 before a valid final receipt can exist.
 
 CI intentionally executes:
 
