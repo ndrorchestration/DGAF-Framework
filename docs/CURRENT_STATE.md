@@ -173,9 +173,9 @@ Repository engineering and controlled operator execution have crossed the materi
 12. creation-only immutable materialization receipt — **PR #826 accepted**;
 13. fail-closed locked-primary-analysis runner tooling — **PR #831 accepted**;
 14. bounded primary-analysis authorization event — **PR #828 accepted**, scope exactly `LOCKED_PRIMARY_ANALYSIS_ONLY`;
-16. content-addressed locked-result admission tooling — **PR #835 accepted**, non-executing and non-interpreting;
-17. lifecycle-aware result-admission test correction — **PR #848 accepted**;
-18. creation-only locked-analysis result receipt — **PR #851 accepted** as `c0690e599d25304f1d920d5235adff04ba76094a`, binding retained output SHA-256 `966fe9f1c218d8f64eae8465288a5e23b332555484eac2602c3764c3172336da` without copying the estimate, confidence interval, or classification into the repository.
+15. content-addressed locked-result admission tooling — **PR #835 accepted**, non-executing and non-interpreting;
+16. lifecycle-aware result-admission test correction — **PR #848 accepted**;
+17. creation-only locked-analysis result receipt — **PR #851 accepted** as `c0690e599d25304f1d920d5235adff04ba76094a`, binding retained output SHA-256 `966fe9f1c218d8f64eae8465288a5e23b332555484eac2602c3764c3172336da` without copying the estimate, confidence interval, or classification into the repository.
 
 PR #713 introduced the original controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
