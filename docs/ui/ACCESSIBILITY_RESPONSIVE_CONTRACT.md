@@ -1,16 +1,22 @@
 # Accessibility & Responsive Contract
 
-Status: **DESIGN-SYSTEM SUCCESSOR TO #800**
+Status: **ACCEPTED FOUNDATION / CURRENT-MAIN RECONCILIATION PENDING FOR #850 DELTA**
 
 Scientific/control effect: **NONE**
 
 `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
+
+Current interface-status authority: [`UI_CURRENT_STATE.md`](UI_CURRENT_STATE.md).
 
 ## Purpose
 
 The DGAF command center must remain operable and legible when navigation is
 keyboard-only, when the viewport is narrow, when technical identifiers are
 long, and when platform accessibility modes override ordinary presentation.
+
+## Current implementation boundary
+
+The accepted shell already provides skip-to-content, focus restoration, touch-target, wrapping, reduced-motion, and forced-colors foundations. The additional closed-drawer `visibility` / `pointer-events` containment and grouped audience-navigation treatment were implemented and validated on historical stacked PR #850, but that candidate is stale-lineage because its base PR #849 is stale. Those deltas must be reconstructed on current protected main before they are treated as accepted implementation.
 
 ## Keyboard path
 
