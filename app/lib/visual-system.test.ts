@@ -8,6 +8,8 @@ const governanceMap = readFileSync('app/styles/governance-map.css', 'utf8')
 const stateSpace = readFileSync('app/styles/state-space.css', 'utf8')
 const overview = readFileSync('app/components/overview-view.tsx', 'utf8')
 const appShell = readFileSync('app/components/app-shell.tsx', 'utf8')
+const evidenceView = readFileSync('app/components/evidence-view.tsx', 'utf8')
+const dashboardPage = readFileSync('app/page.tsx', 'utf8')
 
 const REQUIRED_TOKENS = [
   '--state-established',
@@ -97,4 +99,17 @@ test('operator journey verifies evidence before governance', () => {
     overview,
     /className="button primary" onClick=\{\(\) => onNavigate\('evidence'\)\}>Inspect evidence/,
   )
+})
+
+
+test('Evidence view exposes provenance boundaries before governance handoff', () => {
+  assert.match(evidenceView, /GOVERNANCE_STAGES/)
+  assert.match(evidenceView, /EVIDENCE SPINE/)
+  assert.match(evidenceView, /EVIDENCE BOUNDARY/)
+  assert.match(evidenceView, /DOES NOT ESTABLISH/)
+  assert.match(
+    evidenceView,
+    /onClick=\{\(\) => onNavigate\('governance'\)\}>Inspect governance context/,
+  )
+  assert.match(dashboardPage, /<EvidenceView onNavigate=\{setView\} \/>/)
 })
