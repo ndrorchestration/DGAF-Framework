@@ -15,7 +15,7 @@ function allowedOrigins(): Set<string> {
   return new Set(configured && configured.length > 0 ? configured : DEFAULT_ALLOWED_ORIGINS);
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (!request.nextUrl.pathname.startsWith("/api/")) {
     return NextResponse.next();
   }
