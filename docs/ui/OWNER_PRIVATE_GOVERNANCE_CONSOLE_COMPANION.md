@@ -5,7 +5,7 @@
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
 **Reconciliation input:** protected `main` at `28e5591115899408463278b034571671173a4c83`  
-**Reconciliation event:** post-#851/#854/#855 locked-result / interpretation-tooling state plus UI-lineage reconciliation
+**Reconciliation event:** post-#872 bounded interpretation admission plus UI-lineage reconciliation
 
 ## Purpose
 
@@ -39,8 +39,8 @@ It separately represents the Track A Epoch 002 state:
 - locked-analysis result receipt: ESTABLISHED via creation-only PR #851;
 - repository/current-state reconciliation: ACCEPTED via PR #854;
 - interpretation/adjudication tooling: ACCEPTED / NON-EXECUTING via PR #855;
-- interpretation execution: NOT RUN;
-- `INTERPRETATION_NOTE`: NOT ESTABLISHED;
+- interpretation execution: COMPLETED;
+- `INTERPRETATION_NOTE`: ESTABLISHED via PR #872 at SAME_SYSTEM_NONINDEPENDENT scope;
 - independent validation: NOT ESTABLISHED.
 
 Track A completion counts must never be rendered as canonical High-Assurance scientific N.
@@ -62,7 +62,7 @@ Merged PR #845 establishes evidence-first routing. PR #849 (Evidence provenance 
 
 ## Current next action
 
-The console should present **bounded interpretation/adjudication** as the next frontier. The locked primary analysis has executed locally and the creation-only content-addressed `LOCKED_ANALYSIS_RESULT_RECORD` is accepted. PR #855 accepted the fail-closed interpretation tooling, but interpretation itself has not run and no `INTERPRETATION_NOTE` exists. The numerical estimate, interval, and classification remain operator-local; the next state-changing action must revalidate the retained result bytes and frozen preregistration before preparing a separate content-addressed interpretation-note candidate.
+The console should present bounded interpretation/adjudication as **ESTABLISHED** via PR #872 while keeping the numerical estimate, interval, and classification operator-local. The currently modeled Epoch 002 lifecycle has no designated downstream gate; the next state-changing action, if any, must be separately defined and governed without inferring efficacy, independence, scientific-N promotion, or High-Assurance authorization.
 
 ## Access and validation
 
