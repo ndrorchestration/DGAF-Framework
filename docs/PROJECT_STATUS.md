@@ -31,11 +31,11 @@ This 2026-09-19 reconciliation was refreshed against protected `main` `af2ffb1ae
 - successor result-admission tooling: **ACCEPTED / NON-EXECUTING** through PR #835;
 - repository/current-state reconciliation: **ACCEPTED** through PR #854;
 - successor interpretation/adjudication tooling: **ACCEPTED / NON-EXECUTING** through PR #855;
-- successor interpretation execution: **NOT RUN**;
-- successor `INTERPRETATION_NOTE`: **NOT ESTABLISHED**;
+- successor interpretation execution: **COMPLETED / ESTABLISHED** through PR #872;
+- successor `INTERPRETATION_NOTE`: **ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT**;
 - scientific-N increment: **0**.
 
-These accepted records preserve separate event boundaries. Materialization, its receipt, bounded primary-analysis authorization, local primary-analysis execution, and the content-addressed result receipt are established at their exact scopes; interpretation remains separate and has not run, and efficacy, independent validation, and High-Assurance authorization remain unestablished.
+These accepted records preserve separate event boundaries. Materialization, its receipt, bounded primary-analysis authorization, local primary-analysis execution, and the content-addressed result receipt are established at their exact scopes; interpretation is established as a bounded note, while efficacy, independent validation, and High-Assurance authorization remain unestablished.
 
 ## Accepted repository presentation state
 
@@ -79,7 +79,7 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 
 ## Next admissible scientific transition
 
-The current scientific frontier is **bounded interpretation/adjudication of the accepted Epoch 002 locked result**. The frozen primary analysis has executed locally and its creation-only content-addressed result receipt is accepted. The next state-changing action must use the accepted fail-closed interpretation preparer against the retained operator-local result bytes, revalidate the accepted digest and frozen preregistration, keep the numerical interpretation artifact outside the repository, and admit only a separate content-addressed `INTERPRETATION_NOTE` candidate.
+The current control frontier is **post-interpretation projection reconciliation and explicit next-gate identification**. The frozen primary analysis has executed locally and its creation-only content-addressed result receipt is accepted. The next state-changing action must use the accepted fail-closed interpretation preparer against the retained operator-local result bytes, revalidate the accepted digest and frozen preregistration, keep the numerical interpretation artifact outside the repository, and admit only a separate content-addressed `INTERPRETATION_NOTE` candidate.
 
 The accepted apparatus now provides:
 

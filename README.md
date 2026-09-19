@@ -14,7 +14,7 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **3. Read the current state from its owning record.** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) is the live project/evidence entrypoint. The status block immediately below is a public summary, not a substitute for exact-bound evidence records.
 
-**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock, bounded unblinding, real materialization evidence (#824), the immutable materialization receipt (#826), and locked-primary-analysis authorization (#828) are accepted. The frozen primary analysis has now executed locally, and PR #851 established the creation-only content-addressed locked-result receipt on protected `main`. The current frontier is **interpretation/adjudication under #719**; scientific-N increment remains 0, and canonical DGAF efficacy and independent validation are not established.
+**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock, bounded unblinding, real materialization evidence (#824), the immutable materialization receipt (#826), and locked-primary-analysis authorization (#828) are accepted. The frozen primary analysis has now executed locally, and PR #851 established the creation-only content-addressed locked-result receipt on protected `main`. The current frontier is **post-interpretation control-state reconciliation under #719**; scientific-N increment remains 0, and canonical DGAF efficacy and independent validation are not established.
 
 **5. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
@@ -50,7 +50,7 @@ Those earlier engineering/presentation/assurance milestones did not establish ma
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
-> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, bounded unblinding, materialization, immutable materialization receipt, locked-primary-analysis authorization, local locked analysis execution, and the content-addressed locked-result receipt are **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · interpretation/adjudication **CURRENT FRONTIER / NOT ESTABLISHED**  
+> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, bounded unblinding, materialization, immutable materialization receipt, locked-primary-analysis authorization, local locked analysis execution, and the content-addressed locked-result receipt are **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · interpretation/adjudication **EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT**  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
@@ -118,7 +118,7 @@ Issue #523 controls the replacement path. Epoch 002 uses a distinct protocol ide
 
 Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, separate collection authorization, retained-evidence admission/QC, dataset lock, and bounded unblinding have advanced through separate governed events. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
 
-The current frontier is **post-analysis interpretation/adjudication under issue #719**. The accepted apparatus now includes:
+The current control frontier is **post-interpretation projection reconciliation and explicit next-gate identification under issue #719**. The accepted apparatus now includes:
 
 - a PASS content-addressed dataset-lock receipt;
 - a separate PASS unblinding decision bounded to `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
