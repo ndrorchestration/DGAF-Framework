@@ -11,7 +11,8 @@ Set-StrictMode -Version Latest
 $ExpectedRepo = "ndrorchestration/DGAF-Framework"
 $ExpectedPython = "3.12.0"
 $ExpectedNumPy = "2.5.1"
-$PythonInstallerUrl = "https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe"
+$NuGetExeUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
+$NuGetSource = "https://api.nuget.org/v3/index.json"
 $ResultRecordRel = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
 $OutputName = "track_a_epoch_002_locked_primary_analysis_output.json"
 $OutputSidecarName = "$OutputName.sha256"
@@ -85,8 +86,11 @@ function Get-PythonVersion([string]$PythonExe) {
 
 function Find-ExactPython([string]$TargetRuntimeDir) {
     $candidates = New-Object System.Collections.Generic.List[string]
-    $dedicated = Join-Path $TargetRuntimeDir "Python3120\python.exe"
-    $candidates.Add($dedicated)
+    $nugetDedicated = Join-Path $TargetRuntimeDir "python\tools\python.exe"
+    $candidates.Add($nugetDedicated)
+
+    $legacyDedicated = Join-Path $TargetRuntimeDir "Python3120\python.exe"
+    $candidates.Add($legacyDedicated)
 
     $knownLocal = Join-Path $env:LOCALAPPDATA "Programs\Python\Python312\python.exe"
     $candidates.Add($knownLocal)
@@ -118,50 +122,56 @@ function Find-ExactPython([string]$TargetRuntimeDir) {
 }
 
 function Install-DedicatedPython([string]$TargetRuntimeDir) {
-    $pythonRoot = Join-Path $TargetRuntimeDir "Python3120"
-    $pythonExe = Join-Path $pythonRoot "python.exe"
+    $pythonPackageDir = Join-Path $TargetRuntimeDir "python"
+    $pythonExe = Join-Path $pythonPackageDir "tools\python.exe"
     if ((Get-PythonVersion $pythonExe) -eq $ExpectedPython) {
         return $pythonExe
     }
 
     New-Item -ItemType Directory -Force -Path $TargetRuntimeDir | Out-Null
-    $installer = Join-Path $env:TEMP "dgaf-python-3.12.0-amd64.exe"
+    $nugetExe = Join-Path $env:TEMP "dgaf-nuget.exe"
 
-    Write-Host "Exact Python 3.12.0 is not installed. Installing a dedicated DGAF runtime in your user profile..."
-    Invoke-WebRequest -Uri $PythonInstallerUrl -OutFile $installer -UseBasicParsing
+    Write-Host "Exact Python 3.12.0 is not installed. Provisioning a side-by-side DGAF runtime via the official NuGet Python package..."
+    Invoke-WebRequest -Uri $NuGetExeUrl -OutFile $nugetExe -UseBasicParsing
 
-    $signature = Get-AuthenticodeSignature -FilePath $installer
-    if ($signature.Status -ne "Valid") {
-        Remove-Item -Force -ErrorAction SilentlyContinue $installer
-        Fail "downloaded Python installer does not have a valid Authenticode signature"
+    $nugetSignature = Get-AuthenticodeSignature -FilePath $nugetExe
+    if ($nugetSignature.Status -ne "Valid") {
+        Remove-Item -Force -ErrorAction SilentlyContinue $nugetExe
+        Fail "downloaded NuGet client does not have a valid Authenticode signature"
     }
-    if (-not $signature.SignerCertificate -or $signature.SignerCertificate.Subject -notmatch "Python Software Foundation") {
-        Remove-Item -Force -ErrorAction SilentlyContinue $installer
-        Fail "downloaded Python installer signer is not the Python Software Foundation"
-    }
-
-    if (Test-Path $pythonRoot) {
-        Remove-Item -Recurse -Force $pythonRoot
+    if (-not $nugetSignature.SignerCertificate -or $nugetSignature.SignerCertificate.Subject -notmatch "Microsoft") {
+        Remove-Item -Force -ErrorAction SilentlyContinue $nugetExe
+        Fail "downloaded NuGet client signer is not Microsoft"
     }
 
-    $arguments = @(
-        "/quiet",
-        "InstallAllUsers=0",
-        "TargetDir=$pythonRoot",
-        "Include_pip=1",
-        "Include_launcher=0",
-        "PrependPath=0",
-        "Include_test=0",
-        "Shortcuts=0"
+    if (Test-Path $pythonPackageDir) {
+        Remove-Item -Recurse -Force $pythonPackageDir
+    }
+
+    Invoke-Checked $nugetExe @(
+        "install", "python",
+        "-Version", $ExpectedPython,
+        "-ExcludeVersion",
+        "-OutputDirectory", $TargetRuntimeDir,
+        "-Source", $NuGetSource,
+        "-NonInteractive",
+        "-NoCache"
     )
-    $process = Start-Process -FilePath $installer -ArgumentList $arguments -Wait -PassThru
-    Remove-Item -Force -ErrorAction SilentlyContinue $installer
-    if ($process.ExitCode -ne 0) {
-        Fail "Python 3.12.0 installer exited with code $($process.ExitCode)"
-    }
+    Remove-Item -Force -ErrorAction SilentlyContinue $nugetExe
+
     if ((Get-PythonVersion $pythonExe) -ne $ExpectedPython) {
-        Fail "dedicated Python installation did not produce exact Python $ExpectedPython"
+        Fail "NuGet side-by-side runtime did not produce exact Python $ExpectedPython"
     }
+
+    $pythonSignature = Get-AuthenticodeSignature -FilePath $pythonExe
+    if ($pythonSignature.Status -ne "Valid") {
+        Fail "provisioned Python executable does not have a valid Authenticode signature"
+    }
+    if (-not $pythonSignature.SignerCertificate -or $pythonSignature.SignerCertificate.Subject -notmatch "Python Software Foundation") {
+        Fail "provisioned Python executable signer is not the Python Software Foundation"
+    }
+
+    Write-Host "DGAF_EXACT_PYTHON_PROVISIONING=NUGET_SIDE_BY_SIDE"
     return $pythonExe
 }
 
