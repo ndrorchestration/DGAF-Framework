@@ -68,7 +68,7 @@ def test_governance_support_overlay_is_separate_and_non_numerical() -> None:
     text = source()
 
     assert "function Ensure-GovernanceSupport" in text
-    assert '"jsonschemaVersion = "4.26.0"' in text
+    assert '$jsonschemaVersion = "4.26.0"' in text
     assert '"governance-support"' in text
     assert "governance support overlay unexpectedly contains NumPy" in text
     assert '$env:PYTHONPATH = $governanceSupport' in text
