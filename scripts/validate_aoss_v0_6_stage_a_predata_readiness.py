@@ -11,6 +11,7 @@ from typing import Any, NoReturn
 ROOT = Path(__file__).resolve().parents[1]
 READINESS_REL = "registry/aoss_v0_6_stage_a_predata_readiness_v1.json"
 MEASUREMENT_REL = "registry/aoss_v0_6_acp_measurement_manifest_v1.json"
+BOUNDARY_REL = "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json"
 
 ALLOWED_STATUSES = {"BOUND", "PARTIAL", "OPEN", "BLOCKED"}
 REQUIRED_PREDICATES = {
@@ -118,6 +119,112 @@ def validate_apparatus_binding(readiness: dict[str, Any]) -> None:
         fail("required Stage-A episode class contract drift")
 
 
+def validate_observer_measurement_boundary(readiness: dict[str, Any]) -> None:
+    boundary = load_json(ROOT / BOUNDARY_REL)
+    if boundary.get("record_type") != "AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY":
+        fail("observer measurement boundary record_type drift")
+    if boundary.get("schema_version") != 1 or boundary.get("controller_issue") != 810:
+        fail("observer measurement boundary identity drift")
+    if boundary.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+        fail("observer measurement boundary status drift")
+    if boundary.get("outcome_collection_authorized") is not False:
+        fail("observer measurement boundary cannot authorize outcome collection")
+    if boundary.get("external_validation_established") is not False:
+        fail("observer measurement boundary cannot establish external validation")
+    if boundary.get("scientific_n_increment") != 0:
+        fail("observer measurement boundary cannot increment scientific N")
+
+    source = boundary.get("source_system")
+    if not isinstance(source, dict):
+        fail("observer measurement source_system is malformed")
+    if source.get("commit") != EXPECTED_SOURCE_COMMIT or source.get("provenance_schema") != EXPECTED_SCHEMA:
+        fail("observer measurement source identity drift")
+
+    observer = boundary.get("observer")
+    if not isinstance(observer, dict):
+        fail("observer deployment contract is malformed")
+    expected_observer = {
+        "version": EXPECTED_ADAPTER,
+        "deployment_mode": "EXTERNAL_POST_EXPORT_READ_ONLY",
+        "input_surface": "EXPORTED_ACP_PROVENANCE_MANIFEST_ONLY",
+        "source_process_mutation": False,
+        "callbacks_into_source": False,
+        "source_environment_or_config_injection": False,
+        "source_scheduling_or_policy_control": False,
+        "source_instrumentation_patch": False,
+    }
+    if observer != expected_observer:
+        fail("observer deployment boundary drift")
+
+    trust = boundary.get("trust_domain_contract")
+    if not isinstance(trust, dict):
+        fail("trust-domain contract is malformed")
+    if trust.get("source_event_origin", {}).get("classification") != "SYSTEM":
+        fail("source event origin classification drift")
+    if trust.get("observer_metadata_origin", {}).get("classification") != "OBSERVER":
+        fail("observer metadata classification drift")
+    if trust.get("validator_domain") != {
+        "classification": "UNMEASURED",
+        "source_evidence": "ABSENT",
+    }:
+        fail("validator trust-domain boundary drift")
+    if trust.get("authority_domain") != {
+        "classification": "UNMEASURED",
+        "source_evidence": "ABSENT",
+    }:
+        fail("authority trust-domain boundary drift")
+
+    extraction = boundary.get("extraction_functions")
+    if not isinstance(extraction, dict):
+        fail("extraction function contract is malformed")
+    expected_fields = {
+        "trace_id",
+        "observer_event_id",
+        "source_event_id",
+        "parent_event_id",
+        "source_order_index",
+        "component",
+        "event_kind",
+        "task_id",
+        "capability",
+        "state",
+        "detail",
+        "wall_time",
+        "trust_domain",
+        "validation_state",
+        "authorization_state",
+        "durable_attestation",
+    }
+    if set(extraction) != expected_fields:
+        fail("extraction function field set drift")
+    if extraction["wall_time"].get("freshness_threshold") != "SEPARATE_UNRESOLVED_PREDICATE":
+        fail("timestamp extraction cannot silently bind freshness")
+    if extraction["source_order_index"].get("tolerance") != "EXACT_INTEGER_ZERO_TOLERANCE":
+        fail("source-order numeric tolerance drift")
+    for field, entry in extraction.items():
+        if not isinstance(entry, dict) or not entry.get("function_id"):
+            fail(f"extraction function identity missing for {field}")
+
+    tolerance = boundary.get("numeric_tolerance_policy")
+    if tolerance != {
+        "floating_numeric_measurements_present": False,
+        "source_order_index_tolerance": 0,
+        "timestamp_extraction_tolerance": "NONE_EXACT_PARSE_AND_PRESERVE",
+        "freshness_threshold_is_not_an_extraction_tolerance": True,
+    }:
+        fail("numeric tolerance policy drift")
+
+    predicates = readiness.get("required_predicates")
+    if not isinstance(predicates, dict):
+        fail("required_predicates must be an object")
+    observer_predicate = predicates.get("observer_boundary_and_trust_domains")
+    extraction_predicate = predicates.get("extraction_functions_units_tolerances")
+    if not isinstance(observer_predicate, dict) or observer_predicate.get("status") != "BOUND":
+        fail("observer boundary predicate must be BOUND")
+    if not isinstance(extraction_predicate, dict) or extraction_predicate.get("status") != "BOUND":
+        fail("extraction predicate must be BOUND")
+
+
 def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     if readiness.get("record_type") != "AOSS_V0_6_STAGE_A_PREDATA_READINESS":
         fail("record_type drift")
@@ -133,6 +240,7 @@ def validate_readiness(readiness: dict[str, Any]) -> list[str]:
         fail("this readiness artifact cannot increment scientific N")
 
     validate_apparatus_binding(readiness)
+    validate_observer_measurement_boundary(readiness)
     unresolved = unresolved_predicates(readiness)
     expected_status = "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW" if not unresolved else "NOT_READY_FAIL_CLOSED"
     if readiness.get("status") != expected_status:
