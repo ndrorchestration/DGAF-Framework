@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-18
-reconciliation_input_main: 037e9e878fb8d9ea7a4658219734158bb5300b1e
+last_verified: 2026-09-19
+reconciliation_input_main: c0690e599d25304f1d920d5235adff04ba76094a
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -26,8 +26,9 @@ track_a_successor_materialization: ESTABLISHED
 track_a_successor_materialization_receipt: ESTABLISHED
 track_a_successor_primary_analysis_authorization_tooling: ACCEPTED
 track_a_successor_primary_analysis_authorization: ACCEPTED_LOCKED_PRIMARY_ANALYSIS_ONLY
-track_a_successor_primary_analysis: AUTHORIZED_BOUNDED_NOT_RUN
-track_a_successor_locked_analysis_result: NOT_ESTABLISHED
+track_a_successor_primary_analysis: EXECUTED_LOCKED_RETAINED
+track_a_successor_locked_analysis_result: ESTABLISHED
+track_a_successor_interpretation: CURRENT_FRONTIER_NOT_ESTABLISHED
 accepted_dataset_lock_tooling_pr: 622
 accepted_unblinding_decision_tooling_pr: 627
 accepted_stage_1_materializer_pr: 794
@@ -60,6 +61,8 @@ accepted_primary_analysis_authorization_event_pr: 828
 accepted_primary_analysis_authorization_event_commit: e87917e644d71de7351c5983fa7ed89d9231962f
 accepted_locked_result_admission_tooling_pr: 835
 accepted_locked_result_admission_tooling_commit: 037e9e878fb8d9ea7a4658219734158bb5300b1e
+accepted_locked_analysis_result_pr: 851
+accepted_locked_analysis_result_commit: c0690e599d25304f1d920d5235adff04ba76094a
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -73,7 +76,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `037e9e878fb8d9ea7a4658219734158bb5300b1e` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `c0690e599d25304f1d920d5235adff04ba76094a` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -92,8 +95,9 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Epoch 002 materialization receipt | **ESTABLISHED · CREATION-ONLY EVENT VIA PR #826** |
 | Epoch 002 locked-analysis runner | **ACCEPTED · FAIL-CLOSED LOCAL TOOLING VIA PR #831** |
 | Epoch 002 primary-analysis authorization | **ACCEPTED · LOCKED_PRIMARY_ANALYSIS_ONLY · PR #828** |
-| Epoch 002 primary analysis | **AUTHORIZED_BOUNDED / NOT RUN** |
-| Epoch 002 locked-analysis result | **NOT ESTABLISHED** |
+| Epoch 002 primary analysis | **EXECUTED · LOCKED / RETAINED · OPERATOR-LOCAL OUTPUT** |
+| Epoch 002 locked-analysis result | **ESTABLISHED · CONTENT-ADDRESSED CREATION-ONLY RECEIPT VIA PR #851** |
+| Epoch 002 interpretation/adjudication | **CURRENT FRONTIER · NOT ESTABLISHED** |
 | Epoch 002 result-admission tooling | **ACCEPTED · CONTENT-ADDRESSED / NON-EXECUTING · PR #835** |
 | Independent validation | **NOT ESTABLISHED** |
 | Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
@@ -103,11 +107,11 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Workflow coverage-gap scanner | **ACCEPTED · UNMAPPED DOES NOT MEAN NON-ASSURANCE** |
 | Expanded recurring assurance mappings | **ACCEPTED · PR #785** |
 
-No row above establishes integrated DGAF efficacy, independent validation, production certification, High-Assurance authorization, or a completed successor Track A primary result.
+No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt establishes only the immutable content address of the locked primary-analysis output; interpretation remains separate and not established.
 
 ## Protected-main repository state
 
-This reconciliation was prepared against protected `main` `037e9e878fb8d9ea7a4658219734158bb5300b1e`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), and content-addressed locked-result admission tooling (#835). These accepted events establish materialization, its receipt, and permission to run exactly the frozen primary analysis; they do not establish that the analysis has run, a locked result, scientific-N promotion, efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was prepared against protected `main` `c0690e599d25304f1d920d5235adff04ba76094a`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), and the creation-only locked-analysis result receipt (#851). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, an interpretation/adjudication note, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
@@ -169,7 +173,9 @@ Repository engineering and controlled operator execution have crossed the materi
 12. creation-only immutable materialization receipt — **PR #826 accepted**;
 13. fail-closed locked-primary-analysis runner tooling — **PR #831 accepted**;
 14. bounded primary-analysis authorization event — **PR #828 accepted**, scope exactly `LOCKED_PRIMARY_ANALYSIS_ONLY`;
-15. content-addressed locked-result admission tooling — **PR #835 accepted**, non-executing and non-interpreting.
+15. content-addressed locked-result admission tooling — **PR #835 accepted**, non-executing and non-interpreting;
+16. lifecycle-aware result-admission test correction — **PR #848 accepted**;
+17. creation-only locked-analysis result receipt — **PR #851 accepted** as `c0690e599d25304f1d920d5235adff04ba76094a`, binding retained output SHA-256 `966fe9f1c218d8f64eae8465288a5e23b332555484eac2602c3764c3172336da` without copying the estimate, confidence interval, or classification into the repository.
 
 PR #713 introduced the original controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
@@ -185,15 +191,16 @@ PR #728 installed prospective fail-closed primary-analysis authorization tooling
 
 ## Current scientific frontier
 
-The next admissible scientific transition is **local execution of the authorized frozen Epoch 002 primary analysis**. The accepted runner is `scripts/run_track_a_epoch_002_locked_primary_analysis.py`; it must consume the exact retained materialized input outside the repository and run in the exact locked Python 3.12.0 / NumPy 2.5.1 environment. PR #835 provides the separate non-executing path for later content-addressed result admission.
+The current scientific frontier is **post-analysis interpretation/adjudication under issue #719**. The authorized frozen Epoch 002 primary analysis has executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment, and PR #851 established the immutable content-addressed result receipt. Numerical interpretation remains a separate non-authorizing stage and must bind the accepted result record plus the retained operator-local output.
 
 Current boundary:
 
 - `TRACK_A_EPOCH_002_MATERIALIZATION = ESTABLISHED`;
 - `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT = ESTABLISHED`;
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY`;
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = AUTHORIZED_BOUNDED / NOT_RUN`;
-- `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = NOT_ESTABLISHED`;
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = EXECUTED_LOCKED / RETAINED`;
+- `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = ESTABLISHED`;
+- `TRACK_A_EPOCH_002_INTERPRETATION = CURRENT_FRONTIER / NOT_ESTABLISHED`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
@@ -218,9 +225,9 @@ Tooling readiness never skips predecessor state. The governed order is:
 `→ immutable materialization receipt — ESTABLISHED (#826)`
 `→ primary-analysis authorization tooling — ACCEPTED (#728)`
 `→ separate primary-analysis authorization — ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY (#828)`
-`→ locked primary analysis — CURRENT FRONTIER / AUTHORIZED_BOUNDED / NOT RUN`
-`→ locked-analysis result admission — NOT ESTABLISHED; tooling ACCEPTED (#835)`
-`→ interpretation/adjudication — NOT REACHED`
+`→ locked primary analysis — EXECUTED / LOCKED / RETAINED`
+`→ locked-analysis result admission — ESTABLISHED (#851 / c0690e599d25304f1d920d5235adff04ba76094a)`
+`→ interpretation/adjudication — CURRENT FRONTIER / NOT ESTABLISHED (#719)`
 
 Current predicates:
 
@@ -234,8 +241,9 @@ Current predicates:
 - `TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT = ESTABLISHED`
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_TOOLING = ACCEPTED`
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY`
-- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = AUTHORIZED_BOUNDED / NOT RUN`
-- `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = NOT_ESTABLISHED`
+- `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = EXECUTED_LOCKED / RETAINED`
+- `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = ESTABLISHED`
+- `TRACK_A_EPOCH_002_INTERPRETATION = CURRENT_FRONTIER / NOT ESTABLISHED`
 - `TRACK_A_EPOCH_002_RESULT_ADMISSION_TOOLING = ACCEPTED / NON-EXECUTING`
 - `SCIENTIFIC_N_INCREMENT = 0`
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
@@ -300,14 +308,15 @@ Current-facing documentation must preserve these distinctions:
 10. Dataset lock is not unblinding authorization.
 11. Unblinding authorization is not materialization.
 12. Materialization is not primary-analysis authorization.
-13. Primary-analysis authorization is not a positive result.
-14. A completed blinded collection can still become unanalyzable if protected mapping custody fails.
-15. Dependency, adjacency, documentation repetition, catalog membership, or shared authorship does not transfer evidence or scientific state.
-16. Historical exact-scope evidence does not silently bind a later candidate, epoch, deployment, or apparatus.
-17. UI projection is not governance authority.
-18. Source verification is not successful deployment or runtime health.
-19. A recurring-assurance catalog entry is not branch-protection requiredness.
-20. `UNMAPPED` / `UNCLASSIFIED` is a fail-closed inventory state, not a negative assurance judgment.
+13. Primary-analysis authorization is not execution or a positive result.
+14. Result admission is not interpretation, efficacy, independent validation, or scientific-N promotion.
+15. A completed blinded collection can still become unanalyzable if protected mapping custody fails.
+16. Dependency, adjacency, documentation repetition, catalog membership, or shared authorship does not transfer evidence or scientific state.
+17. Historical exact-scope evidence does not silently bind a later candidate, epoch, deployment, or apparatus.
+18. UI projection is not governance authority.
+19. Source verification is not successful deployment or runtime health.
+20. A recurring-assurance catalog entry is not branch-protection requiredness.
+21. `UNMAPPED` / `UNCLASSIFIED` is a fail-closed inventory state, not a negative assurance judgment.
 
 ## Current documentation routing
 
