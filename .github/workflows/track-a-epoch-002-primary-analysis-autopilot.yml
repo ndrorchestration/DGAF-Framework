@@ -131,8 +131,20 @@ jobs:
           Write-Host "PYTHON=$pythonVersion"
           Write-Host "NUMPY=$numpyVersion"
 
+      - name: Build isolated governance support overlay
+        shell: pwsh
+        run: |
+          $support = Join-Path $env:RUNNER_TEMP "epoch002-governance-support"
+          python -m pip install --target "$support" jsonschema==4.26.0
+          $numpyArtifacts = @(Get-ChildItem -LiteralPath $support -Name | Where-Object { $_ -match '^numpy(?:-|$)' })
+          if ($numpyArtifacts.Count -ne 0) {
+            throw "governance support overlay unexpectedly contains NumPy"
+          }
+          "EPOCH002_GOVERNANCE_SUPPORT=$support" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
       - name: Run non-executing authorized preflight on Windows
         shell: pwsh
         run: |
+          $env:PYTHONPATH = $env:EPOCH002_GOVERNANCE_SUPPORT
           python scripts/run_track_a_epoch_002_locked_primary_analysis.py --preflight-only
 
