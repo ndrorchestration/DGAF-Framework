@@ -16,7 +16,7 @@ long, and when platform accessibility modes override ordinary presentation.
 
 ## Current implementation boundary
 
-The accepted shell already provides skip-to-content, focus restoration, touch-target, wrapping, reduced-motion, and forced-colors foundations. The additional closed-drawer `visibility` / `pointer-events` containment and grouped audience-navigation treatment were implemented and validated on historical stacked PR #850, but that candidate is stale-lineage because its base PR #849 is stale. Those deltas must be reconstructed on current protected main before they are treated as accepted implementation.
+The accepted shell already provides skip-to-content, focus restoration, touch-target, wrapping, reduced-motion, and forced-colors foundations. The additional closed-drawer `visibility` / `pointer-events` containment and grouped audience-navigation treatment were implemented and validated on historical stacked PR #850, which is now **CLOSED / UNMERGED / STALE-LINEAGE** because its base PR #849 is also closed/stale. Those deltas must be reconstructed on current protected main before they are treated as accepted implementation.
 
 ## Keyboard path
 
