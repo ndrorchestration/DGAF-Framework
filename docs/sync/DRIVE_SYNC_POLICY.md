@@ -1,7 +1,7 @@
 # DGAF Drive Sync Policy
 
 > **Canonical cross-platform and cloud storage sync specification for the ndrorchestration ecosystem.**  
-> Maintained by: **Agent COLLEEN** (continuity, archive) + **Agent Amethyst** (conductor)  
+> Maintained by: **`role.continuity-archive-coordinator`** + **`role.governance-orchestrator`**  
 > Status: ✅ Active — Session 019 2026-05-01  
 > Governance spine: [DGAF-Framework](https://github.com/ndrorchestration/DGAF-Framework)
 
@@ -12,7 +12,7 @@
 Hub-and-spoke model: **Google Drive as canonical storage control plane** across all devices.
 Device-local state is treated as ephemeral working memory; Drive is the source of truth.
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │              Google Drive (Canonical)               │
 │  My Drive/                                          │
@@ -57,7 +57,7 @@ Device-local state is treated as ephemeral working memory; Drive is the source o
 
 The following MUST be excluded from Drive sync (local-only):
 
-```
+```text
 .git/
 node_modules/
 .venv/
@@ -175,4 +175,4 @@ This policy extends GAP-06 with a full operational spec (Track A — Session 019
 
 ---
 
-*Policy authority: Agent COLLEEN. Conductor authorization: Agent Amethyst / Njineer ([@ndrorchestration](https://github.com/ndrorchestration))*
+*Current role contract: `role.continuity-archive-coordinator` maintains continuity/archive scope; `role.governance-orchestrator` owns governed disposition within its contract. Historical Agent COLLEEN / Agent Amethyst attribution remains provenance for Session 019; human owner authority is unchanged.*
