@@ -36,8 +36,7 @@ PRODUCER_SYSTEM = "DGAF_TRACK_A_EPOCH_002_INTERPRETATION_VALIDATOR"
 LOCAL_INTERPRETATION_TYPE = "TRACK_A_EPOCH_002_LOCAL_INTERPRETATION"
 EVIDENCE_CLASS = "SAME_SYSTEM_NONINDEPENDENT"
 EXACT_CLAIM_SCOPE = (
-    "TRACK_A_PDMAL_VS_RANDOM_REGULAR_TOPOLOGY_ROBUSTNESS_"
-    "UNDER_EXACT_FROZEN_REFERENCE_ALGORITHM_AND_PROTOCOL"
+    "TRACK_A_PDMAL_VS_RANDOM_REGULAR_TOPOLOGY_ROBUSTNESS_" "UNDER_EXACT_FROZEN_REFERENCE_ALGORITHM_AND_PROTOCOL"
 )
 SEPARATION_CONSTRAINTS = {
     "track_a_epoch_001_pooled": False,
@@ -483,18 +482,14 @@ def validate_interpretation_event(head: str, *, accepted_parent_sha: str) -> str
         fail("interpretation parent is not the accepted protected-main parent")
 
     changed = [
-        line
-        for line in validator.git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines()
-        if line
+        line for line in validator.git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line
     ]
     if changed != [INTERPRETATION_REL]:
         fail("interpretation event must create exactly the canonical interpretation note")
     if validator.git_object_exists(f"{parent}:{INTERPRETATION_REL}"):
         fail("interpretation note must be creation-only")
     history = [
-        line
-        for line in validator.git("log", "--format=%H", head, "--", INTERPRETATION_REL).splitlines()
-        if line
+        line for line in validator.git("log", "--format=%H", head, "--", INTERPRETATION_REL).splitlines() if line
     ]
     if history != [head]:
         fail("interpretation note must have first-and-only immutable history")
@@ -512,11 +507,7 @@ def validate_accepted_interpretation(ref: str = "HEAD") -> str:
     validator = result_validator()
     if not validator.git_object_exists(f"{ref}:{INTERPRETATION_REL}"):
         fail("accepted-state validation requires the interpretation note")
-    history = [
-        line
-        for line in validator.git("log", "--format=%H", ref, "--", INTERPRETATION_REL).splitlines()
-        if line
-    ]
+    history = [line for line in validator.git("log", "--format=%H", ref, "--", INTERPRETATION_REL).splitlines() if line]
     if len(history) != 1:
         fail("interpretation note must have one immutable history event")
     event = history[0]
@@ -525,9 +516,7 @@ def validate_accepted_interpretation(ref: str = "HEAD") -> str:
         fail("accepted interpretation event must have exactly one parent")
     parent = lineage[1]
     changed = [
-        line
-        for line in validator.git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines()
-        if line
+        line for line in validator.git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines() if line
     ]
     if changed != [INTERPRETATION_REL]:
         fail("accepted interpretation event changed more than its canonical note")
