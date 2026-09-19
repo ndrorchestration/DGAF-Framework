@@ -310,7 +310,7 @@ Current-facing documentation must preserve these distinctions:
 12. Materialization is not primary-analysis authorization.
 13. Primary-analysis authorization is not execution or a positive result.
 14. Result admission is not interpretation, efficacy, independent validation, or scientific-N promotion.
-16. A completed blinded collection can still become unanalyzable if protected mapping custody fails.
+15. A completed blinded collection can still become unanalyzable if protected mapping custody fails.
 16. Dependency, adjacency, documentation repetition, catalog membership, or shared authorship does not transfer evidence or scientific state.
 17. Historical exact-scope evidence does not silently bind a later candidate, epoch, deployment, or apparatus.
 18. UI projection is not governance authority.
