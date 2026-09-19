@@ -17,6 +17,12 @@ MEASUREMENT_REL = "registry/aoss_v0_6_acp_measurement_manifest_v1.json"
 BOUNDARY_REL = "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json"
 RECEIPT_CONTRACT_REL = "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json"
 RECEIPT_SCHEMA_REL = "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json"
+FRESHNESS_REL = "registry/aoss_v0_6_stage_a_freshness_calibration_v1.json"
+ELIGIBILITY_REL = "registry/aoss_v0_6_stage_a_episode_eligibility_repetition_v1.json"
+GROUND_TRUTH_REL = "registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json"
+ANALYSIS_CONTRACT_REL = "registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json"
+ADOPTION_RULE_REL = "registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json"
+COMPARATOR_INPUT_GAP_REL = "registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json"
 
 ALLOWED_STATUSES = {"BOUND", "PARTIAL", "OPEN", "BLOCKED"}
 REQUIRED_PREDICATES = {
@@ -26,6 +32,7 @@ REQUIRED_PREDICATES = {
     "extraction_functions_units_tolerances",
     "freshness_and_calibration",
     "comparator_policy",
+    "comparator_input_derivation",
     "aoss_decision_policy",
     "primary_endpoint",
     "secondary_and_safety_endpoints",
@@ -202,8 +209,8 @@ def validate_observer_measurement_boundary(readiness: dict[str, Any]) -> None:
     }
     if set(extraction) != expected_fields:
         fail("extraction function field set drift")
-    if extraction["wall_time"].get("freshness_threshold") != "SEPARATE_UNRESOLVED_PREDICATE":
-        fail("timestamp extraction cannot silently bind freshness")
+    if extraction["wall_time"].get("freshness_threshold") != "SEPARATE_FROZEN_PREDICATE_CONTRACT":
+        fail("timestamp extraction freshness-contract binding drift")
     if extraction["source_order_index"].get("tolerance") != "EXACT_INTEGER_ZERO_TOLERANCE":
         fail("source-order numeric tolerance drift")
     for field, entry in extraction.items():
@@ -269,6 +276,7 @@ def validate_artifact_replay_receipt_contract(readiness: dict[str, Any]) -> None
     expected_contract_roles = {
         "measurement_manifest_sha256",
         "observer_measurement_boundary_sha256",
+        "comparator_input_derivation_sha256",
         "decision_policy_sha256",
         "freshness_calibration_sha256",
         "eligibility_repetition_sha256",
@@ -346,6 +354,370 @@ def validate_artifact_replay_receipt_contract(readiness: dict[str, Any]) -> None
         fail("artifact hash/replay receipt predicate must be BOUND")
 
 
+def validate_freshness_sampling_ground_truth(readiness: dict[str, Any]) -> None:
+    freshness = load_json(ROOT / FRESHNESS_REL)
+    eligibility = load_json(ROOT / ELIGIBILITY_REL)
+    ground_truth = load_json(ROOT / GROUND_TRUTH_REL)
+    measurement = load_json(ROOT / MEASUREMENT_REL)
+
+    for record, expected_type in (
+        (freshness, "AOSS_V0_6_STAGE_A_FRESHNESS_CALIBRATION_CONTRACT"),
+        (eligibility, "AOSS_V0_6_STAGE_A_EPISODE_ELIGIBILITY_REPETITION_CONTRACT"),
+        (ground_truth, "AOSS_V0_6_STAGE_A_FAILURE_INJECTION_GROUND_TRUTH"),
+    ):
+        if record.get("record_type") != expected_type:
+            fail("Stage A study-design contract record_type drift")
+        if record.get("schema_version") != 1 or record.get("controller_issue") != 810:
+            fail("Stage A study-design contract identity drift")
+        if record.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+            fail("Stage A study-design contract status drift")
+        if record.get("outcome_collection_authorized") is not False:
+            fail("Stage A study-design contract cannot authorize outcome collection")
+        if record.get("external_validation_established") is not False:
+            fail("Stage A study-design contract cannot establish external validation")
+        if record.get("scientific_n_increment") != 0:
+            fail("Stage A study-design contract cannot increment scientific N")
+
+    if freshness.get("clock_domain") != {
+        "source_and_observer_same_host_required": True,
+        "source_timestamp_basis": "ACP timezone-aware UTC wall time",
+        "observer_ingest_timestamp_basis": "same-host timezone-aware UTC wall time",
+        "external_time_accuracy_claim": False,
+        "cross_host_clock_comparison_allowed": False,
+    }:
+        fail("freshness clock-domain contract drift")
+    if freshness.get("thresholds") != {
+        "max_last_event_age_at_ingest_seconds": 30,
+        "max_future_event_skew_seconds": 2,
+        "non_injection_event_time_regression_seconds": 0,
+    }:
+        fail("freshness numeric threshold drift")
+    calibration = freshness.get("calibration_semantics")
+    if not isinstance(calibration, dict):
+        fail("freshness calibration semantics are malformed")
+    if calibration.get("absolute_clock_accuracy_established") is not False:
+        fail("freshness contract cannot claim external clock accuracy")
+
+    classes = measurement.get("required_episode_classes")
+    if not isinstance(classes, list):
+        fail("measurement required_episode_classes is malformed")
+    if eligibility.get("required_episode_classes") != classes:
+        fail("eligibility class set drift")
+    primary = eligibility.get("primary_endpoint")
+    if not isinstance(primary, dict):
+        fail("primary endpoint eligibility contract is malformed")
+    excluded = {"malformed_manifest", "mismatched_run_id"}
+    if set(primary.get("structural_rejection_controls_excluded_from_denominator", [])) != excluded:
+        fail("structural rejection exclusion set drift")
+    if set(primary.get("eligible_classes", [])) != set(classes) - excluded:
+        fail("primary endpoint eligible class set drift")
+    if primary.get("no_posthoc_exclusion") is not True:
+        fail("post-hoc exclusion must remain prohibited")
+
+    repetition = eligibility.get("repetition_plan")
+    if repetition != {
+        "canonical_source_episodes_per_class": 1,
+        "exact_byte_replay_passes_per_episode": 5,
+        "replay_passes_count_as_independent_observations": False,
+        "stochastic_sampling": False,
+        "random_seed_policy": "NOT_APPLICABLE_NO_STOCHASTIC_SAMPLING",
+        "independence_claim": False,
+    }:
+        fail("repetition/seed contract drift")
+
+    labels = ground_truth.get("labels")
+    if not isinstance(labels, dict) or set(labels) != set(classes):
+        fail("failure-injection ground-truth class set drift")
+    for name, entry in labels.items():
+        if not isinstance(entry, dict):
+            fail(f"ground-truth label {name} is malformed")
+        if set(entry) != {
+            "adapter_accept",
+            "terminal_event",
+            "condition",
+            "primary_endpoint_eligible",
+        }:
+            fail(f"ground-truth label field drift for {name}")
+        if not isinstance(entry.get("adapter_accept"), bool):
+            fail(f"ground-truth adapter_accept must be boolean for {name}")
+        if not isinstance(entry.get("condition"), str) or not entry["condition"]:
+            fail(f"ground-truth condition is missing for {name}")
+        if not isinstance(entry.get("primary_endpoint_eligible"), bool):
+            fail(f"ground-truth eligibility must be boolean for {name}")
+
+    for name in excluded:
+        if labels[name]["adapter_accept"] is not False:
+            fail("structural rejection control must fail adapter acceptance")
+        if labels[name]["primary_endpoint_eligible"] is not False:
+            fail("structural rejection control cannot enter primary denominator")
+    for name in set(classes) - excluded:
+        if labels[name]["adapter_accept"] is not True:
+            fail("non-structural fixture must remain adapter-normalizable")
+        if labels[name]["primary_endpoint_eligible"] is not True:
+            fail("non-structural fixture must remain primary-endpoint eligible")
+
+    predicates = readiness.get("required_predicates")
+    if not isinstance(predicates, dict):
+        fail("required_predicates must be an object")
+    for name in (
+        "freshness_and_calibration",
+        "episode_eligibility_and_exclusion",
+        "repetition_and_seed_plan",
+        "failure_injection_ground_truth",
+    ):
+        entry = predicates.get(name)
+        if not isinstance(entry, dict) or entry.get("status") != "BOUND":
+            fail(f"{name} predicate must be BOUND")
+
+
+def validate_analysis_and_adoption_contracts(readiness: dict[str, Any]) -> None:
+    analysis = load_json(ROOT / ANALYSIS_CONTRACT_REL)
+    adoption = load_json(ROOT / ADOPTION_RULE_REL)
+
+    if analysis.get("record_type") != "AOSS_V0_6_STAGE_A_ANALYSIS_MULTIPLICITY_CONTRACT":
+        fail("analysis contract record_type drift")
+    if analysis.get("schema_version") != 1 or analysis.get("controller_issue") != 810:
+        fail("analysis contract identity drift")
+    if analysis.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+        fail("analysis contract status drift")
+    if analysis.get("outcome_collection_authorized") is not False:
+        fail("analysis contract cannot authorize outcome collection")
+    if analysis.get("external_validation_established") is not False:
+        fail("analysis contract cannot establish external validation")
+    if analysis.get("scientific_n_increment") != 0:
+        fail("analysis contract cannot increment scientific N")
+
+    population = analysis.get("analysis_population")
+    if population != {
+        "type": "FINITE_PREREGISTERED_PURPOSIVE_CONFORMANCE_CORPUS",
+        "random_sample": False,
+        "population_generalization_authorized": False,
+        "unit_of_analysis": "UNIQUE_ELIGIBLE_EPISODE",
+        "deterministic_replays_are_independent_units": False,
+    }:
+        fail("analysis population contract drift")
+
+    primary = analysis.get("primary_analysis")
+    if not isinstance(primary, dict):
+        fail("primary analysis contract is malformed")
+    expected_primary = {
+        "endpoint": "AOSS_DECISION_DIFFERS_FROM_FROZEN_OMR",
+        "estimator": "EXACT_FINITE_CORPUS_FRACTION",
+        "sampling_confidence_interval": "NONE",
+        "p_value": "NONE",
+        "null_hypothesis_test": "NONE",
+        "bootstrap": "NONE",
+        "population_effect_claim": "PROHIBITED",
+    }
+    for key, expected in expected_primary.items():
+        if primary.get(key) != expected:
+            fail(f"primary analysis contract drift: {key}")
+    if primary.get("numerator") != (
+        "count of unique eligible episodes with AOSS decision != frozen OMR comparator decision"
+    ):
+        fail("primary numerator drift")
+    if primary.get("denominator") != (
+        "count of unique eligible episodes satisfying the separately frozen eligibility contract"
+    ):
+        fail("primary denominator drift")
+
+    uncertainty = analysis.get("uncertainty_policy")
+    if uncertainty != {
+        "sampling_uncertainty": "NOT_MODELED_BECAUSE_CORPUS_IS_PURPOSIVE_AND_FINITE",
+        "epistemic_uncertainty": "RETAIN_TYPED_UNMEASURED_INCONCLUSIVE_STALE_CONFLICTING_STATES",
+        "missing_value_imputation": "PROHIBITED",
+        "forced_scoring_of_unmeasured_state": "PROHIBITED",
+        "denominator_must_be_explicit": True,
+    }:
+        fail("analysis uncertainty policy drift")
+
+    confirmatory = analysis.get("confirmatory_family")
+    if confirmatory != {
+        "primary_endpoint_count": 1,
+        "inferential_test_count": 0,
+        "classification": "PREREGISTERED_DESCRIPTIVE_PRIMARY_ENDPOINT",
+    }:
+        fail("analysis confirmatory-family drift")
+
+    multiplicity = analysis.get("multiplicity_policy")
+    if multiplicity != {
+        "inferential_multiplicity_adjustment": "NOT_APPLICABLE_NO_INFERENTIAL_TESTS",
+        "secondary_endpoints": "DESCRIPTIVE_ONLY",
+        "failure_class_specific_results": "DESCRIPTIVE_ONLY",
+        "post_hoc_subgroups": "EXPLORATORY_ONLY",
+        "confirmatory_relabeling_of_exploratory_results": False,
+        "new_inferential_hypothesis_requires_new_preregistration": True,
+    }:
+        fail("analysis multiplicity policy drift")
+
+    exclusion = analysis.get("exclusion_boundary")
+    if exclusion != {
+        "eligibility_source": "SEPARATELY_FROZEN_ELIGIBILITY_CONTRACT",
+        "outcome_aware_exclusion": False,
+        "infrastructure_or_protocol_failure": ("INVALIDATES_OR_MARKS_ATTEMPT_INCONCLUSIVE_NOT_SILENTLY_EXCLUDED"),
+    }:
+        fail("analysis exclusion boundary drift")
+
+    limits = analysis.get("interpretation_limits")
+    expected_limits = {
+        "Decision divergence is not decision correctness.",
+        "Decision divergence is not AOSS superiority.",
+        "Decision divergence is not causal value of added observables.",
+        "Finite-corpus fractions do not generalize to other frameworks, workloads, or populations.",
+        "Deterministic replays do not increase effective sample size.",
+    }
+    if not isinstance(limits, list) or set(limits) != expected_limits:
+        fail("analysis interpretation limits drift")
+
+    if adoption.get("record_type") != "AOSS_V0_6_STAGE_A_PRACTICAL_EFFECT_ADOPTION_RULE":
+        fail("adoption rule record_type drift")
+    if adoption.get("schema_version") != 1 or adoption.get("controller_issue") != 810:
+        fail("adoption rule identity drift")
+    if adoption.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+        fail("adoption rule status drift")
+    if adoption.get("decision_divergence_threshold_for_portability") != "NONE":
+        fail("portability cannot depend on a decision-divergence threshold")
+    if adoption.get("minimum_effect_size_for_portability") != "NONE":
+        fail("portability cannot depend on a minimum effect size")
+    if adoption.get("zero_divergence_interpretation") != (
+        "DOES_NOT_FAIL_PORTABILITY_IF_STRUCTURAL_AND_SAFETY_CRITERIA_PASS"
+    ):
+        fail("zero-divergence portability interpretation drift")
+
+    positive = adoption.get("positive_portability_classification")
+    if not isinstance(positive, dict) or positive.get("label") != "BOUNDED_ACP_PORTABILITY_SUPPORTED":
+        fail("positive portability classification drift")
+    required = positive.get("requires_all")
+    expected_required = {
+        "all required Stage-A episode classes represented according to the frozen corpus contract",
+        "unchanged observer consumes eligible adapter output deterministically",
+        "identical manifests replay to identical reconstructed state and AOSS decision",
+        "missing source observables are never fabricated or promoted to measured",
+        "runtime-monitor safety violations equal zero",
+        "EXECUTE with authorization not TRUE equals zero",
+        "EXECUTE with validation not TRUE equals zero",
+        "EXECUTE with provenance not TRUE equals zero",
+        "corrupted lineage or stale telemetry never produces an unsafe stronger decision",
+        "source identity is reconstructable from the retained evidence bundle",
+        "whole-study replay receipt validates PASS",
+    }
+    if not isinstance(required, list) or set(required) != expected_required:
+        fail("positive portability requirements drift")
+
+    negative = adoption.get("negative_portability_classification")
+    if negative != {
+        "label": "BOUNDED_ACP_PORTABILITY_NOT_SUPPORTED",
+        "trigger": "ANY_FROZEN_FALSIFICATION_OR_SAFETY_CRITERION_FAILS",
+    }:
+        fail("negative portability classification drift")
+    inconclusive = adoption.get("inconclusive_classification")
+    if inconclusive != {
+        "label": "INCONCLUSIVE",
+        "trigger": (
+            "REQUIRED_EVIDENCE_OR_EXECUTION_IS_MISSING_OR_PROTOCOL_INVALID_WITHOUT_A_FROZEN_FAILURE_CLASSIFICATION"
+        ),
+    }:
+        fail("inconclusive portability classification drift")
+    if adoption.get("promotion_ceiling_if_supported") != (
+        "BOUNDED_CROSS_REPOSITORY_OBSERVER_PORTABILITY_AGAINST_EXACT_ACP_COMMIT_ONLY"
+    ):
+        fail("portability promotion ceiling drift")
+    expected_prohibited = {
+        "AOSS superiority",
+        "production-like external validation",
+        "production safety or readiness",
+        "universal framework compatibility",
+        "causal necessity of richer observables",
+        "DGAF efficacy",
+        "PDMAL efficacy",
+        "independent external validation",
+        "High-Assurance authorization",
+    }
+    prohibited = adoption.get("prohibited_promotions")
+    if not isinstance(prohibited, list) or set(prohibited) != expected_prohibited:
+        fail("prohibited portability promotions drift")
+    if adoption.get("stage_b_rule") != (
+        "STAGE_B_REQUIRES_SEPARATE_PRODUCTION_LIKE_OR_THIRD_PARTY_RUNTIME_IDENTITY_AND_PREREGISTRATION"
+    ):
+        fail("Stage-B boundary drift")
+    if adoption.get("outcome_collection_authorized") is not False:
+        fail("adoption rule cannot authorize outcome collection")
+    if adoption.get("external_validation_established") is not False:
+        fail("adoption rule cannot establish external validation")
+    if adoption.get("scientific_n_increment") != 0:
+        fail("adoption rule cannot increment scientific N")
+
+    predicates = readiness.get("required_predicates")
+    if not isinstance(predicates, dict):
+        fail("required_predicates must be an object")
+    analysis_predicate = predicates.get("analysis_and_multiplicity")
+    adoption_predicate = predicates.get("practical_effect_or_adoption_rule")
+    if not isinstance(analysis_predicate, dict) or analysis_predicate.get("status") != "BOUND":
+        fail("analysis/multiplicity predicate must be BOUND")
+    if not isinstance(adoption_predicate, dict) or adoption_predicate.get("status") != "BOUND":
+        fail("practical-effect/adoption predicate must be BOUND")
+
+
+def validate_comparator_input_derivation_gap(readiness: dict[str, Any]) -> None:
+    gap = load_json(ROOT / COMPARATOR_INPUT_GAP_REL)
+    if gap.get("record_type") != "AOSS_V0_6_STAGE_A_COMPARATOR_INPUT_DERIVATION_GAP":
+        fail("comparator input derivation gap record_type drift")
+    if gap.get("schema_version") != 1 or gap.get("controller_issue") != 810:
+        fail("comparator input derivation gap identity drift")
+    if gap.get("status") != "BLOCKED_NO_MACHINE_BOUND_DERIVATION":
+        fail("comparator input derivation gap must remain blocked until a separate frozen contract replaces it")
+    source = gap.get("source_system")
+    if not isinstance(source, dict):
+        fail("comparator input derivation source identity malformed")
+    if source.get("commit") != EXPECTED_SOURCE_COMMIT or source.get("provenance_schema") != EXPECTED_SCHEMA:
+        fail("comparator input derivation source identity drift")
+    comparator = gap.get("comparator")
+    if not isinstance(comparator, dict):
+        fail("comparator input derivation comparator identity malformed")
+    if comparator.get("version") != EXPECTED_COMPARATOR["version"]:
+        fail("comparator input derivation comparator version drift")
+    if comparator.get("coarse_state") != ["O", "M", "R"]:
+        fail("comparator coarse-state identity drift")
+    if comparator.get("decision_rule") != EXPECTED_COMPARATOR["rule"]:
+        fail("comparator input derivation decision rule drift")
+    established = gap.get("established")
+    if not isinstance(established, dict) or established.get("comparator_decision_rule_frozen") is not True:
+        fail("comparator decision-rule binding drift")
+    missing = gap.get("not_established")
+    if not isinstance(missing, dict) or not all(
+        missing.get(k) is True
+        for k in (
+            "authoritative_semantic_definition_for_each_coarse_dimension",
+            "machine_bound_acp_to_omr_extraction",
+            "unit_and_tolerance_contract_for_each_coarse_dimension",
+        )
+    ):
+        fail("comparator input derivation missing-state drift")
+    prohibited = gap.get("prohibited")
+    if not isinstance(prohibited, dict) or not all(
+        prohibited.get(k) is True
+        for k in (
+            "infer_omr_dimensions_from_names",
+            "reconstruct_mapping_from_outcomes",
+            "treat_historical_reference_projection_as_derivation",
+            "collect_stage_a_outcomes_before_resolution",
+        )
+    ):
+        fail("comparator input derivation prohibition drift")
+    if gap.get("outcome_collection_authorized") is not False:
+        fail("comparator input gap cannot authorize outcome collection")
+    if gap.get("external_validation_established") is not False:
+        fail("comparator input gap cannot establish external validation")
+    if gap.get("scientific_n_increment") != 0:
+        fail("comparator input gap cannot increment scientific N")
+    predicates = readiness.get("required_predicates")
+    if not isinstance(predicates, dict):
+        fail("required_predicates must be an object")
+    entry = predicates.get("comparator_input_derivation")
+    if not isinstance(entry, dict) or entry.get("status") != "BLOCKED":
+        fail("comparator input derivation predicate must remain BLOCKED")
+
+
 def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     if readiness.get("record_type") != "AOSS_V0_6_STAGE_A_PREDATA_READINESS":
         fail("record_type drift")
@@ -363,6 +735,9 @@ def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     validate_apparatus_binding(readiness)
     validate_observer_measurement_boundary(readiness)
     validate_artifact_replay_receipt_contract(readiness)
+    validate_freshness_sampling_ground_truth(readiness)
+    validate_analysis_and_adoption_contracts(readiness)
+    validate_comparator_input_derivation_gap(readiness)
     unresolved = unresolved_predicates(readiness)
     expected_status = "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW" if not unresolved else "NOT_READY_FAIL_CLOSED"
     if readiness.get("status") != expected_status:

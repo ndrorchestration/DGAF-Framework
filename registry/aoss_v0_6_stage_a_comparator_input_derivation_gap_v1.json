@@ -1,0 +1,48 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_COMPARATOR_INPUT_DERIVATION_GAP",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "BLOCKED_NO_MACHINE_BOUND_DERIVATION",
+  "source_system": {
+    "repository": "ndrorchestration/agent-control-plane",
+    "commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+    "provenance_schema": "agent-control-plane.provenance.v1"
+  },
+  "comparator": {
+    "version": "AOSS_V0_5_OMR_FROZEN",
+    "coarse_state": [
+      "O",
+      "M",
+      "R"
+    ],
+    "decision_rule": {
+      "missing_coarse_state": "HOLD",
+      "o_eq_0_and_r_eq_0": "STOP",
+      "otherwise": "CONTINUE"
+    }
+  },
+  "established": {
+    "comparator_decision_rule_frozen": true,
+    "historical_reference_projection_documented": true,
+    "historical_reference_projection": [
+      3,
+      1,
+      1
+    ]
+  },
+  "not_established": {
+    "authoritative_semantic_definition_for_each_coarse_dimension": true,
+    "machine_bound_acp_to_omr_extraction": true,
+    "unit_and_tolerance_contract_for_each_coarse_dimension": true
+  },
+  "prohibited": {
+    "infer_omr_dimensions_from_names": true,
+    "reconstruct_mapping_from_outcomes": true,
+    "treat_historical_reference_projection_as_derivation": true,
+    "collect_stage_a_outcomes_before_resolution": true
+  },
+  "resolution_rule": "LOCATE_AND_BIND_AN_INDEPENDENTLY_IDENTIFIABLE_AUTHORITATIVE_DERIVATION_OR_PROSPECTIVELY_DEFINE_REVIEW_TEST_AND_FREEZE_A_NEW_V0_6_ACP_TO_OMR_DERIVATION_BEFORE_ANY_STAGE_A_OUTCOMES",
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}

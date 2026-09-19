@@ -75,6 +75,7 @@
       "required": [
         "measurement_manifest_sha256",
         "observer_measurement_boundary_sha256",
+        "comparator_input_derivation_sha256",
         "decision_policy_sha256",
         "freshness_calibration_sha256",
         "eligibility_repetition_sha256",
@@ -85,6 +86,7 @@
       "properties": {
         "measurement_manifest_sha256": {"$ref": "#/$defs/sha256"},
         "observer_measurement_boundary_sha256": {"$ref": "#/$defs/sha256"},
+        "comparator_input_derivation_sha256": {"$ref": "#/$defs/sha256"},
         "decision_policy_sha256": {"$ref": "#/$defs/sha256"},
         "freshness_calibration_sha256": {"$ref": "#/$defs/sha256"},
         "eligibility_repetition_sha256": {"$ref": "#/$defs/sha256"},

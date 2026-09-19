@@ -1,0 +1,68 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_ANALYSIS_MULTIPLICITY_CONTRACT",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES",
+  "analysis_population": {
+    "type": "FINITE_PREREGISTERED_PURPOSIVE_CONFORMANCE_CORPUS",
+    "random_sample": false,
+    "population_generalization_authorized": false,
+    "unit_of_analysis": "UNIQUE_ELIGIBLE_EPISODE",
+    "deterministic_replays_are_independent_units": false
+  },
+  "primary_analysis": {
+    "endpoint": "AOSS_DECISION_DIFFERS_FROM_FROZEN_OMR",
+    "estimator": "EXACT_FINITE_CORPUS_FRACTION",
+    "numerator": "count of unique eligible episodes with AOSS decision != frozen OMR comparator decision",
+    "denominator": "count of unique eligible episodes satisfying the separately frozen eligibility contract",
+    "report": [
+      "numerator",
+      "denominator",
+      "exact_fraction",
+      "episode_class",
+      "reconstructed_state",
+      "missing_or_adapter_derived_observables",
+      "INCONCLUSIVE_or_UNMEASURED_status"
+    ],
+    "sampling_confidence_interval": "NONE",
+    "p_value": "NONE",
+    "null_hypothesis_test": "NONE",
+    "bootstrap": "NONE",
+    "population_effect_claim": "PROHIBITED"
+  },
+  "uncertainty_policy": {
+    "sampling_uncertainty": "NOT_MODELED_BECAUSE_CORPUS_IS_PURPOSIVE_AND_FINITE",
+    "epistemic_uncertainty": "RETAIN_TYPED_UNMEASURED_INCONCLUSIVE_STALE_CONFLICTING_STATES",
+    "missing_value_imputation": "PROHIBITED",
+    "forced_scoring_of_unmeasured_state": "PROHIBITED",
+    "denominator_must_be_explicit": true
+  },
+  "confirmatory_family": {
+    "primary_endpoint_count": 1,
+    "inferential_test_count": 0,
+    "classification": "PREREGISTERED_DESCRIPTIVE_PRIMARY_ENDPOINT"
+  },
+  "multiplicity_policy": {
+    "inferential_multiplicity_adjustment": "NOT_APPLICABLE_NO_INFERENTIAL_TESTS",
+    "secondary_endpoints": "DESCRIPTIVE_ONLY",
+    "failure_class_specific_results": "DESCRIPTIVE_ONLY",
+    "post_hoc_subgroups": "EXPLORATORY_ONLY",
+    "confirmatory_relabeling_of_exploratory_results": false,
+    "new_inferential_hypothesis_requires_new_preregistration": true
+  },
+  "exclusion_boundary": {
+    "eligibility_source": "SEPARATELY_FROZEN_ELIGIBILITY_CONTRACT",
+    "outcome_aware_exclusion": false,
+    "infrastructure_or_protocol_failure": "INVALIDATES_OR_MARKS_ATTEMPT_INCONCLUSIVE_NOT_SILENTLY_EXCLUDED"
+  },
+  "interpretation_limits": [
+    "Decision divergence is not decision correctness.",
+    "Decision divergence is not AOSS superiority.",
+    "Decision divergence is not causal value of added observables.",
+    "Finite-corpus fractions do not generalize to other frameworks, workloads, or populations.",
+    "Deterministic replays do not increase effective sample size."
+  ],
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}

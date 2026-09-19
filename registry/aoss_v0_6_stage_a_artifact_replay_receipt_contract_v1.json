@@ -9,13 +9,17 @@
   "canonical_json": {
     "encoding": "UTF-8",
     "sort_keys": true,
-    "separators": [",", ":"],
+    "separators": [
+      ",",
+      ":"
+    ],
     "trailing_newline": true,
     "allow_nan": false
   },
   "required_contract_digest_roles": [
     "measurement_manifest_sha256",
     "observer_measurement_boundary_sha256",
+    "comparator_input_derivation_sha256",
     "decision_policy_sha256",
     "freshness_calibration_sha256",
     "eligibility_repetition_sha256",
