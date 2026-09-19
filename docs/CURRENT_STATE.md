@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-19
-reconciliation_input_main: f636c822f16e0814fe0d95221553aea7d3515a46
+reconciliation_input_main: 28e5591115899408463278b034571671173a4c83
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -332,5 +332,6 @@ Current-facing documentation must preserve these distinctions:
 - **Governance / standards crosswalk:** [`../README.governance.md`](../README.governance.md).
 - **Public / industry-neutral terminology:** [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md).
 - **Historical/provenance index:** [`HISTORICAL_RECORDS_INDEX.md`](HISTORICAL_RECORDS_INDEX.md).
+- **Current interface/UI workstream state:** [`ui/UI_CURRENT_STATE.md`](ui/UI_CURRENT_STATE.md).
 
 No documentation update can itself promote scientific N, custody acceptance, freeze, authorization, independent verification, efficacy, deployment health, or High-Assurance status.
