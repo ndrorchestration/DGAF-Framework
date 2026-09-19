@@ -20,13 +20,13 @@ Track A Epoch 002 has advanced beyond the state used when PR #849 was authored:
 - locked primary analysis: EXECUTED / RETAINED;
 - `LOCKED_ANALYSIS_RESULT_RECORD`: ESTABLISHED via PR #851;
 - interpretation/adjudication tooling: ACCEPTED via PR #855;
-- interpretation execution: NOT RUN;
-- `INTERPRETATION_NOTE`: NOT ESTABLISHED;
+- interpretation execution: COMPLETED;
+- `INTERPRETATION_NOTE`: ESTABLISHED via PR #872 at SAME_SYSTEM_NONINDEPENDENT scope;
 - canonical DGAF efficacy: NOT ESTABLISHED;
 - independent validation: NOT ESTABLISHED;
 - scientific-N increment: 0.
 
-The active scientific frontier is therefore **interpretation/adjudication**, not primary-analysis execution.
+The modeled Epoch 002 lifecycle is now established through **bounded interpretation/adjudication**. No downstream scientific/claim gate is currently designated; any next transition requires a separate governed definition.
 
 ## Accepted interface foundation
 
@@ -55,7 +55,7 @@ Implementation intent remains accepted:
 
 Its exact historical head completed 19/19 returned repository workflow families successfully. PR #849 is now **CLOSED / UNMERGED / STALE-LINEAGE / DO NOT MERGE AS-IS** because protected main advanced through changes to `app/lib/governance.ts`, Decision Frontier, Governance Map, current-state records, and the Track A locked-result/interpretation frontier. The old candidate text that primary analysis had not yet run is no longer admissible.
 
-Reconstruction requirement: replay only the presentation delta onto current protected main and consume the current canonical stage model, where locked analysis is established and interpretation/adjudication is the open frontier.
+Reconstruction requirement: replay only the presentation delta onto current protected main and consume the current canonical stage model, where locked analysis and bounded interpretation/adjudication are established, and no downstream gate is inferred.
 
 ### PR #850 — Audience journey groups + mobile containment
 
@@ -78,7 +78,7 @@ Vercel preview creation for the recent UI candidates is currently blocked by the
 
 1. Reconcile documentation across repository, Notion, and Drive mirrors.
 2. Reconstruct the Evidence provenance-spine delta on current protected main.
-3. Update all Evidence copy to the current interpretation/adjudication frontier.
+3. Update all Evidence copy to the accepted interpretation state and explicit post-interpretation no-gate-designated boundary.
 4. Run fresh exact-head UI/build, regression, governance, truth-layer, and applicable repository checks.
 5. Accept/merge only from current evidence.
 6. Reconstruct the audience-journey/mobile-containment delta on the resulting accepted main.
