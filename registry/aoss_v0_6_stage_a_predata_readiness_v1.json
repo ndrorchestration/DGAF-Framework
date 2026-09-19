@@ -77,14 +77,16 @@
       "evidence": ["docs/research/AOSS_V0_6_ACP_PORTABILITY_FREEZE.md#falsification-criteria"]
     },
     "practical_effect_or_adoption_rule": {
-      "status": "OPEN",
-      "evidence": [],
-      "missing": ["minimum practically meaningful promotion rule, if any"]
+      "status": "BOUND",
+      "evidence": [
+        "registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json"
+      ]
     },
     "analysis_and_multiplicity": {
-      "status": "OPEN",
-      "evidence": [],
-      "missing": ["estimator", "uncertainty treatment", "confirmatory family", "multiplicity handling", "exploratory labeling"]
+      "status": "BOUND",
+      "evidence": [
+        "registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json"
+      ]
     },
     "artifact_hash_and_replay_receipt": {
       "status": "BOUND",
