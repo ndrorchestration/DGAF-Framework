@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-19
-reconciliation_input_main: af2ffb1ae82b58de8e253ca49c1c33b91a7baf59
+reconciliation_input_main: dde7b3a07c9d8ccd8a24745437027bc5e15759c9
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -28,8 +28,8 @@ track_a_successor_primary_analysis_authorization_tooling: ACCEPTED
 track_a_successor_primary_analysis_authorization: ACCEPTED_LOCKED_PRIMARY_ANALYSIS_ONLY
 track_a_successor_primary_analysis: EXECUTED_LOCKED_RETAINED
 track_a_successor_locked_analysis_result: ESTABLISHED
-track_a_successor_interpretation_tooling: ACCEPTED_NONEXECUTING
-track_a_successor_interpretation: CURRENT_FRONTIER_NOT_ESTABLISHED
+track_a_successor_interpretation_tooling: ACCEPTED
+track_a_successor_interpretation: EXECUTED_ESTABLISHED
 accepted_dataset_lock_tooling_pr: 622
 accepted_unblinding_decision_tooling_pr: 627
 accepted_stage_1_materializer_pr: 794
@@ -79,7 +79,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `f636c822f16e0814fe0d95221553aea7d3515a46` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `dde7b3a07c9d8ccd8a24745437027bc5e15759c9` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -100,7 +100,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Epoch 002 primary-analysis authorization | **ACCEPTED · LOCKED_PRIMARY_ANALYSIS_ONLY · PR #828** |
 | Epoch 002 primary analysis | **EXECUTED · LOCKED / RETAINED · OPERATOR-LOCAL OUTPUT** |
 | Epoch 002 locked-analysis result | **ESTABLISHED · CONTENT-ADDRESSED CREATION-ONLY RECEIPT VIA PR #851** |
-| Epoch 002 interpretation/adjudication | **CURRENT FRONTIER · TOOLING ACCEPTED / NON-EXECUTING VIA PR #855 · EXECUTION NOT RUN · `INTERPRETATION_NOTE` NOT ESTABLISHED** |
+| Epoch 002 interpretation/adjudication | **EXECUTED / ESTABLISHED · creation-only `INTERPRETATION_NOTE` admitted via PR #872** |
 | Epoch 002 result-admission tooling | **ACCEPTED · CONTENT-ADDRESSED / NON-EXECUTING · PR #835** |
 | Independent validation | **NOT ESTABLISHED** |
 | Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
@@ -114,7 +114,7 @@ No row above establishes integrated DGAF efficacy, independent validation, produ
 
 ## Protected-main repository state
 
-This reconciliation was prepared against protected `main` `f636c822f16e0814fe0d95221553aea7d3515a46`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation tooling is accepted, but interpretation execution has not run and no `INTERPRETATION_NOTE` is established. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was prepared against protected `main` `dde7b3a07c9d8ccd8a24745437027bc5e15759c9`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
@@ -205,10 +205,10 @@ Current boundary:
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY`;
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = EXECUTED_LOCKED / RETAINED`;
 - `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = ESTABLISHED`;
-- `TRACK_A_EPOCH_002_INTERPRETATION = CURRENT_FRONTIER / NOT_ESTABLISHED`;
+- `TRACK_A_EPOCH_002_INTERPRETATION = EXECUTED / ESTABLISHED`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
-- `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
+- `INTERPRETATION_NOTE = ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT`;\n- `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
 
 Private keys, passphrases, encrypted backup copies, blinding secrets, protected plaintext mappings, and other recoverable secret material remain prohibited from GitHub, Notion, chat, CI inputs, workflow logs, and committed files.
 
