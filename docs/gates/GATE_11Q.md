@@ -4,7 +4,7 @@
 <!-- This document defines a deployment-gate procedure. It does not, by itself, certify every artifact or establish that the gate has been empirically validated. -->
 
 **Version:** 2.0 (P-24 retrofit)  
-**Owner:** Agent Apogee (gate owner) + Agent Sentinel (veto authority)  
+**Functional owner:** `role.evidence-verification-reviewer` + `role.security-containment-gate`  
 **Canonical home:** `DGAF-Framework/docs/gates/GATE_11Q.md`  
 **Pattern:** P-11 (11Q-Terminal-Gate) | P-24 (Canonical Practice Unit)
 
@@ -18,13 +18,13 @@ Production deployment is treated as a high-consequence boundary. The 11Q Framewo
 
 The association with the hendecagonal lattice is an **internal structural rationale**, not evidence that the topology itself mathematically proves the gates are orthogonal, complete, or superior to another gate count. Claims such as "ensuring no coverage gap" require empirical coverage analysis and must not be inferred solely from the number of lattice nodes.
 
-Gates 1–8 are owned by Apogee. Gates 9–11 require Sentinel co-sign; Sentinel holds the specified veto role within this project protocol.
+Gates 1–8 resolve through `role.evidence-verification-reviewer`. Gates 9–11 additionally require `role.security-containment-gate` within this project protocol. Historical Apogee/Sentinel labels remain provenance only.
 
 ## Trigger Condition
 
 | Field | Value |
 |-------|-------|
-| **Agent** | Apogee (gates 1–11) + Sentinel (co-sign gates 9–11; hard veto authority) |
+| **Functional roles** | `role.evidence-verification-reviewer` (gates 1–11) + `role.security-containment-gate` (co-sign gates 9–11 within its scoped hard-block contract) |
 | **Event** | Artifact proposed for production deployment; external-facing deployment |
 | **Threshold** | All 11 gates ≥ 3/4 across N ≥ 3 runs, when this threshold is applicable to the gate run |
 | **Frequency** | Every production deployment under this protocol |
