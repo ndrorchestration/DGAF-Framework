@@ -24,24 +24,17 @@ def current_readiness(validator):
     return validator.load_json(ROOT / validator.READINESS_REL)
 
 
-def test_current_stage_a_state_is_explicitly_not_ready() -> None:
+def test_current_stage_a_state_is_ready_for_separate_authorization_review() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
     unresolved = validator.validate_readiness(readiness)
-    assert readiness["status"] == "NOT_READY_FAIL_CLOSED"
-    assert "aoss_decision_policy" not in unresolved
-    assert "freshness_and_calibration" not in unresolved
-    assert "analysis_and_multiplicity" not in unresolved
-    assert "practical_effect_or_adoption_rule" not in unresolved
-    assert "comparator_input_derivation" in unresolved
-    assert "observer_boundary_and_trust_domains" not in unresolved
-    assert "extraction_functions_units_tolerances" not in unresolved
-    assert "artifact_hash_and_replay_receipt" not in unresolved
-    assert "episode_eligibility_and_exclusion" not in unresolved
-    assert "repetition_and_seed_plan" not in unresolved
-    assert "failure_injection_ground_truth" not in unresolved
-    assert len(unresolved) == 1
+    assert readiness["status"] == "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW"
+    assert unresolved == []
+    assert readiness["required_predicates"]["comparator_policy"]["status"] == "BOUND"
+    assert readiness["required_predicates"]["primary_comparator_machine_derivation"]["status"] == "BOUND"
+    assert readiness["required_predicates"]["aoss_decision_policy"]["status"] == "BOUND"
     assert readiness["outcome_collection_authorized"] is False
+    assert readiness["external_validation_established"] is False
     assert readiness["scientific_n_increment"] == 0
 
 
@@ -65,16 +58,21 @@ def test_cannot_promote_collection_authorization() -> None:
 def test_cannot_claim_ready_while_any_predicate_is_unresolved() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
-    readiness["status"] = "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW"
+    broken = copy.deepcopy(readiness)
+    entry = broken["required_predicates"]["primary_comparator_machine_derivation"]
+    entry["status"] = "BLOCKED"
+    entry["missing"] = ["synthetic test blocker"]
     with pytest.raises(SystemExit, match="readiness status is inconsistent"):
-        validator.validate_readiness(readiness)
+        validator.validate_readiness(broken)
 
 
 def test_unresolved_predicate_requires_explicit_missing_reasons() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
     broken = copy.deepcopy(readiness)
-    broken["required_predicates"]["comparator_input_derivation"]["missing"] = []
+    entry = broken["required_predicates"]["primary_comparator_machine_derivation"]
+    entry["status"] = "BLOCKED"
+    entry["missing"] = []
     with pytest.raises(SystemExit, match="requires a non-empty missing list"):
         validator.validate_readiness(broken)
 
@@ -209,7 +207,7 @@ def test_replay_receipt_contract_requires_future_frozen_contract_digests() -> No
     contract = validator.load_json(ROOT / validator.RECEIPT_CONTRACT_REL)
     roles = set(contract["required_contract_digest_roles"])
     assert {
-        "comparator_input_derivation_sha256",
+        "primary_comparator_amendment_sha256",
         "decision_policy_sha256",
         "freshness_calibration_sha256",
         "eligibility_repetition_sha256",
@@ -277,6 +275,8 @@ def test_analysis_contract_is_finite_corpus_without_pseudo_inference() -> None:
     assert analysis["analysis_population"]["population_generalization_authorized"] is False
     assert analysis["analysis_population"]["deterministic_replays_are_independent_units"] is False
     assert analysis["primary_analysis"]["estimator"] == "EXACT_FINITE_CORPUS_FRACTION"
+    assert analysis["primary_analysis"]["endpoint"] == "AOSS_DECISION_DIFFERS_FROM_ACP_DIRECT_EVENT_BASELINE"
+    assert analysis["primary_comparator_amendment"]["baseline_version"] == "AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1"
     assert analysis["primary_analysis"]["sampling_confidence_interval"] == "NONE"
     assert analysis["primary_analysis"]["p_value"] == "NONE"
     assert analysis["confirmatory_family"]["inferential_test_count"] == 0
@@ -341,21 +341,20 @@ def test_adoption_rule_rejects_post_hoc_effect_threshold() -> None:
         validator.validate_readiness(readiness)
 
 
-def test_comparator_input_derivation_is_explicitly_blocked() -> None:
+def test_primary_comparator_amendment_is_predata_and_machine_bound() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
-    unresolved = validator.validate_readiness(readiness)
-    assert "comparator_input_derivation" in unresolved
-    entry = readiness["required_predicates"]["comparator_input_derivation"]
-    assert entry["status"] == "BLOCKED"
+    assert validator.validate_readiness(readiness) == []
+    amendment = validator.load_json(ROOT / validator.PRIMARY_COMPARATOR_REL)
+    assert amendment["timing"]["stage_a_outcome_collection_started"] is False
+    assert amendment["timing"]["stage_a_outcomes_inspected"] is False
+    assert amendment["primary_comparator"]["version"] == "AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1"
+    assert amendment["superseded_confirmatory_comparator"]["omr_semantics_inferred_or_reconstructed"] is False
     gap = validator.load_json(ROOT / validator.COMPARATOR_INPUT_GAP_REL)
     assert gap["status"] == "BLOCKED_NO_MACHINE_BOUND_DERIVATION"
-    assert gap["prohibited"]["infer_omr_dimensions_from_names"] is True
-    assert gap["prohibited"]["reconstruct_mapping_from_outcomes"] is True
-    assert gap["outcome_collection_authorized"] is False
 
 
-def test_comparator_input_gap_cannot_be_silently_promoted() -> None:
+def test_historical_omr_gap_cannot_be_rewritten_as_recovered() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
     gap = validator.load_json(ROOT / validator.COMPARATOR_INPUT_GAP_REL)
@@ -369,7 +368,43 @@ def test_comparator_input_gap_cannot_be_silently_promoted() -> None:
         return original_load(path)
 
     validator.load_json = fake_load
-    with pytest.raises(SystemExit, match="must remain blocked"):
+    with pytest.raises(SystemExit, match="historical OMR gap must remain explicit"):
+        validator.validate_readiness(readiness)
+
+
+def test_primary_comparator_amendment_cannot_self_authorize_collection() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    amendment = validator.load_json(ROOT / validator.PRIMARY_COMPARATOR_REL)
+    broken = copy.deepcopy(amendment)
+    broken["outcome_collection_authorized"] = True
+    original_load = validator.load_json
+
+    def fake_load(path):
+        if path == ROOT / validator.PRIMARY_COMPARATOR_REL:
+            return broken
+        return original_load(path)
+
+    validator.load_json = fake_load
+    with pytest.raises(SystemExit, match="cannot authorize outcome collection"):
+        validator.validate_readiness(readiness)
+
+
+def test_primary_comparator_amendment_rejects_result_conditioning() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    amendment = validator.load_json(ROOT / validator.PRIMARY_COMPARATOR_REL)
+    broken = copy.deepcopy(amendment)
+    broken["timing"]["stage_a_outcomes_inspected"] = True
+    original_load = validator.load_json
+
+    def fake_load(path):
+        if path == ROOT / validator.PRIMARY_COMPARATOR_REL:
+            return broken
+        return original_load(path)
+
+    validator.load_json = fake_load
+    with pytest.raises(SystemExit, match="timing boundary drift"):
         validator.validate_readiness(readiness)
 
 
@@ -377,7 +412,7 @@ def test_prospective_decision_policy_is_bound_without_claiming_v05_recovery() ->
     validator = load_validator()
     readiness = current_readiness(validator)
     unresolved = validator.validate_readiness(readiness)
-    assert unresolved == ["comparator_input_derivation"]
+    assert unresolved == []
     policy = validator.load_json(ROOT / validator.DECISION_POLICY_REL)
     assert policy["policy_version"] == "AOSS_V0_6_STAGE_A_POLICY_V1"
     assert policy["provenance"]["classification"] == "NEW_PROSPECTIVE_V0_6_POLICY_FREEZE"
