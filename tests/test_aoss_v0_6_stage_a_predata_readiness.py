@@ -74,7 +74,7 @@ def test_unresolved_predicate_requires_explicit_missing_reasons() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
     broken = copy.deepcopy(readiness)
-    broken["required_predicates"]["aoss_decision_policy"]["missing"] = []
+    broken["required_predicates"]["comparator_input_derivation"]["missing"] = []
     with pytest.raises(SystemExit, match="requires a non-empty missing list"):
         validator.validate_readiness(broken)
 
