@@ -1,6 +1,15 @@
 """
 Phi-Pentagon topology constants and edge-weight matrix.
-Agents: Apogee, Reson, Sentinel, DemiJoule, Herald
+
+The persona-like strings used by PENTAGON_EDGES, AGENT_ROLES, and TRIAD_C are
+frozen experimental/compatibility node identifiers. They do not grant current
+governance or execution authority. Current authority resolves through
+governance/role_capability_registry.v1.json and persona lineage is recorded in
+governance/persona_role_lineage.v1.json. Renaming these identifiers requires
+explicit treatment/API equivalence review because experiments and tests consume
+them as stable node labels.
+
+Nodes: Apogee, Reson, Sentinel, DemiJoule, Herald
 Edge weights derived from phi = 0.618 (golden ratio conjugate).
 """
 PHI = 0.618033988749895  # 1/phi = phi - 1
