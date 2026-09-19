@@ -52,6 +52,7 @@ jobs:
           python - <<'PY'
           import importlib.util
           import platform
+          import sys
           from pathlib import Path
 
           import numpy as np
@@ -63,6 +64,7 @@ jobs:
           spec = importlib.util.spec_from_file_location("frozen_analysis_identity", path)
           assert spec is not None and spec.loader is not None
           module = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = module
           spec.loader.exec_module(module)
           assert (
               module.analysis_config_sha256()
