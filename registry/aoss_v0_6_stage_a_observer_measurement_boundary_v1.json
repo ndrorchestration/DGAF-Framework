@@ -109,7 +109,7 @@
       "source": "timestamp",
       "output": "original_timezone_aware_timestamp_string",
       "tolerance": "EXACT_PARSE_AND_PRESERVE",
-      "freshness_threshold": "SEPARATE_UNRESOLVED_PREDICATE"
+      "freshness_threshold": "SEPARATE_FROZEN_PREDICATE_CONTRACT"
     },
     "trust_domain": {
       "function_id": "CLASSIFY_SOURCE_ORIGIN_SYSTEM_V1",
