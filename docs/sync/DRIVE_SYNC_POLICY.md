@@ -12,7 +12,7 @@
 Hub-and-spoke model: **Google Drive as canonical storage control plane** across all devices.
 Device-local state is treated as ephemeral working memory; Drive is the source of truth.
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │              Google Drive (Canonical)               │
 │  My Drive/                                          │
@@ -57,7 +57,7 @@ Device-local state is treated as ephemeral working memory; Drive is the source o
 
 The following MUST be excluded from Drive sync (local-only):
 
-```
+```text
 .git/
 node_modules/
 .venv/
