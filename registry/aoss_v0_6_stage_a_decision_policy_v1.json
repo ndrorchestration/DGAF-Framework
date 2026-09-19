@@ -1,0 +1,135 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_DECISION_POLICY",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES",
+  "policy_version": "AOSS_V0_6_STAGE_A_POLICY_V1",
+  "provenance": {
+    "classification": "NEW_PROSPECTIVE_V0_6_POLICY_FREEZE",
+    "historical_v0_5_executable_source_located": false,
+    "historical_v0_5_equivalence_claimed": false,
+    "design_basis": [
+      "Canonical AOSS research workstream reference decision table recorded before Stage-A outcome collection.",
+      "Canonical AOSS governing semantics: UNMEASURED implies INCONCLUSIVE; validation does not imply authorization; authorization does not imply empirical success.",
+      "Canonical runtime safety constraints RV-001 and RV-002."
+    ]
+  },
+  "executable_binding": {
+    "path": "scripts/aoss_v0_6_stage_a_decision_policy.py",
+    "git_blob_sha": "dd03a34fe17579c57dcf386abac9f1f5e7eb23de",
+    "entrypoint": "evaluate_policy",
+    "input_type": "PolicyInput",
+    "result_type": "PolicyResult"
+  },
+  "input_contract": {
+    "boolean_predicates": [
+      "terminal",
+      "blocked",
+      "deadlock_candidate",
+      "conflicted",
+      "uncertain",
+      "required_predicate_inconclusive"
+    ],
+    "tri_state_predicates": {
+      "authorization": [
+        "TRUE",
+        "FALSE",
+        "INCONCLUSIVE"
+      ],
+      "validation": [
+        "TRUE",
+        "FALSE",
+        "INCONCLUSIVE"
+      ],
+      "provenance_valid": [
+        "TRUE",
+        "FALSE",
+        "INCONCLUSIVE"
+      ]
+    },
+    "invalid_input_decision": "HOLD"
+  },
+  "ordered_rules": [
+    {
+      "priority": 1,
+      "when": "terminal == true",
+      "decision": "RECORD_OUTCOME",
+      "rule_id": "TERMINAL"
+    },
+    {
+      "priority": 2,
+      "when": "blocked == true",
+      "decision": "ESCALATE_BLOCK",
+      "rule_id": "BLOCKED"
+    },
+    {
+      "priority": 3,
+      "when": "deadlock_candidate == true",
+      "decision": "PERTURB",
+      "rule_id": "DEADLOCK_CANDIDATE"
+    },
+    {
+      "priority": 4,
+      "when": "conflicted == true",
+      "decision": "ESCALATE_CONFLICT",
+      "rule_id": "CONFLICTED"
+    },
+    {
+      "priority": 5,
+      "when": "uncertain == true",
+      "decision": "REQUEST_EVIDENCE",
+      "rule_id": "UNCERTAIN"
+    },
+    {
+      "priority": 6,
+      "when": "authorization == TRUE and validation == TRUE and provenance_valid == TRUE and no required predicate is INCONCLUSIVE",
+      "decision": "EXECUTE",
+      "rule_id": "AUTHORIZED_AND_VALIDATED_AND_PROVENANCE_VALID"
+    },
+    {
+      "priority": 7,
+      "when": "validation == TRUE and authorization == FALSE",
+      "decision": "REQUEST_AUTHORIZATION",
+      "rule_id": "VALIDATED_AND_NOT_AUTHORIZED"
+    },
+    {
+      "priority": 8,
+      "when": "required_predicate_inconclusive == true or authorization/validation/provenance_valid contains INCONCLUSIVE",
+      "decision": "HOLD",
+      "rule_id": "REQUIRED_PREDICATE_INCONCLUSIVE"
+    },
+    {
+      "priority": 9,
+      "when": "otherwise",
+      "decision": "HOLD",
+      "rule_id": "DEFAULT_FAIL_CLOSED"
+    }
+  ],
+  "execution_boundary": {
+    "execution_bearing_decision": "EXECUTE",
+    "non_execute_outputs_are_control_or_advisory": true,
+    "execute_requires_authorization_true": true,
+    "execute_requires_validation_true": true,
+    "execute_requires_provenance_true": true,
+    "execute_forbidden_when_required_predicate_inconclusive": true
+  },
+  "stage_a_scope": {
+    "external_target_repository": "ndrorchestration/agent-control-plane",
+    "external_target_commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+    "observer_version": "AOSS_V0_6_ACP_ADAPTER_V1",
+    "policy_is_not_dgaf_authorization_mapping": true,
+    "policy_is_not_production_authority": true
+  },
+  "non_effects": [
+    "Does not authorize Stage-A outcome collection.",
+    "Does not recover or establish historical v0.5 executable equivalence.",
+    "Does not establish external validation.",
+    "Does not establish AOSS superiority.",
+    "Does not establish DGAF or PDMAL efficacy.",
+    "Does not increment scientific N.",
+    "Does not resolve the separate ACP-to-OMR comparator-input derivation blocker."
+  ],
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}
