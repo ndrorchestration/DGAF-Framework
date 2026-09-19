@@ -1,9 +1,10 @@
 # DGAF Visual System — Semantic Cohesion Tranche
 
-**Status:** implementation candidate  
-**Issue:** #799  
+**Status:** ACCEPTED FOUNDATION / ACTIVE RECONCILIATION  
+**Historical controller:** #799  
 **Scientific/control effect:** NONE  
-**Authority effect:** NONE
+**Authority effect:** NONE  
+**Current interface-status authority:** [`UI_CURRENT_STATE.md`](UI_CURRENT_STATE.md)
 
 ## Intent
 
@@ -111,6 +112,10 @@ Reduced-motion mode must preserve the same information and ordering.
 - generic KPI-dashboard redesign
 - completion rings that imply maturity
 - glow/saturation as proof, authority, or evidence
+
+## Current implementation status
+
+Decision Frontier, Governance Map, State-Space Explorer, semantic token grammar, accessibility foundations, public claim-ceiling treatment, and evidence-first routing are accepted presentation foundations. PR #849 and #850 contain useful subsequent deltas but are now **CLOSED / UNMERGED / STALE-LINEAGE** and must be reconstructed on current protected main before acceptance. The current scientific frontier is interpretation/adjudication; visual emphasis must not preserve an older primary-analysis frontier.
 
 ## Flagship surfaces
 

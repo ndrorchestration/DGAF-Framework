@@ -1,16 +1,22 @@
 # Motion & Interaction Grammar
 
-Status: **DESIGN-SYSTEM SUCCESSOR TO #800**
+Status: **ACCEPTED PRESENTATION CONTRACT**
 
 Scientific/control effect: **NONE**
 
 `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
+
+Current interface-status authority: [`UI_CURRENT_STATE.md`](UI_CURRENT_STATE.md).
 
 ## Purpose
 
 DGAF motion exists only when it helps a user understand causality, reachability,
 focus, or provenance. Motion must never imply authorization, completion, or
 scientific validity on its own.
+
+## Current implementation boundary
+
+The motion grammar is part of the accepted semantic visual foundation. It remains subordinate to current canonical state: locked primary analysis is executed and receipt-bound, while interpretation/adjudication is the open scientific frontier. Motion must not visually preserve an older frontier after the underlying governance model changes.
 
 ## Motion roles
 
