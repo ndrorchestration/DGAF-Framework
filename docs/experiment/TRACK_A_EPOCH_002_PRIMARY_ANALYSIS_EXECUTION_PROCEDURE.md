@@ -24,7 +24,11 @@ Any failed precondition stops execution.
 
 The accepted requirements lock is frozen by Git blob identity `00c1f779e97030f9b25ae494642edb31b5b09de5` and must not be regenerated or edited after authorization. On Windows, pip may otherwise discover platform-only transitive packages that were not part of the accepted resolved lock. Therefore the operator autopilot installs the frozen package set with `--require-hashes --no-deps`.
 
-This does not change the analysis dependency identity: it prevents a new platform-specific resolution step and installs only packages already named and hashed in the authorized lock. The repository CI includes a Windows runner that verifies this exact installation mode, Python `3.12.0`, NumPy `2.5.1`, the unchanged requirements blob, and the non-executing authorization preflight.
+This does not change the analysis dependency identity: it prevents a new platform-specific resolution step and installs only packages already named and hashed in the authorized lock.
+
+The execution runner also imports the repository authorization validator, which depends on `jsonschema`. That dependency is governance tooling, not part of the frozen numerical analysis package set. The Windows operator path therefore provisions `jsonschema==4.26.0` and its non-numerical dependencies into a separate `governance-support` directory and exposes that directory only through a temporary `PYTHONPATH` while the runner validates authorization and executes. The autopilot fails closed if that support overlay contains a NumPy package, preventing it from replacing or shadowing the frozen NumPy `2.5.1` environment.
+
+The repository CI includes a Windows runner that verifies the exact frozen-lock installation mode, Python `3.12.0`, NumPy `2.5.1`, the unchanged requirements blob, a NumPy-free governance support overlay, and the non-executing authorization preflight.
 
 ## One-command Windows operator path
 
