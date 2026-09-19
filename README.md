@@ -118,7 +118,7 @@ Issue #523 controls the replacement path. Epoch 002 uses a distinct protocol ide
 
 Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, separate collection authorization, retained-evidence admission/QC, dataset lock, and bounded unblinding have advanced through separate governed events. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
 
-The current control frontier is **post-interpretation disposition and lane closure under issue #879**. PR #877 has accepted the executable/current-state projection of the established interpretation. The accepted apparatus now includes:
+The current control frontier is **post-interpretation disposition and lane closure under issue #879**. PR #877 accepted the executable/current-state projection of the established interpretation, and PR #880 accepted fail-closed non-executing disposition tooling. The creation-only disposition record is not yet accepted. The accepted apparatus now includes:
 
 - a PASS content-addressed dataset-lock receipt;
 - a separate PASS unblinding decision bounded to `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
