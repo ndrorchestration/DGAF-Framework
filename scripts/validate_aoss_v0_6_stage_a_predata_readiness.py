@@ -276,6 +276,7 @@ def validate_artifact_replay_receipt_contract(readiness: dict[str, Any]) -> None
     expected_contract_roles = {
         "measurement_manifest_sha256",
         "observer_measurement_boundary_sha256",
+        "comparator_input_derivation_sha256",
         "decision_policy_sha256",
         "freshness_calibration_sha256",
         "eligibility_repetition_sha256",
