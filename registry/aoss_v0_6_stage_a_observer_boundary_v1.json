@@ -1,0 +1,54 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_OBSERVER_BOUNDARY",
+  "schema_version": 1,
+  "status": "FROZEN_PREDATA_CONTRACT",
+  "controller_issue": 810,
+  "source_system": {
+    "repository": "ndrorchestration/agent-control-plane",
+    "commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+    "provenance_schema": "agent-control-plane.provenance.v1"
+  },
+  "observer": {
+    "version": "AOSS_V0_6_ACP_ADAPTER_V1",
+    "deployment_mode": "EXTERNAL_READ_ONLY_POST_EXPORT",
+    "input_surface": "EXPORTED_ACP_PROVENANCE_MANIFEST_ONLY",
+    "target_system_mutation_allowed": false,
+    "instrumentation_injection_allowed": false,
+    "write_back_allowed": false,
+    "special_target_patch_allowed": false
+  },
+  "trust_domains": {
+    "source_system": {
+      "value": "SYSTEM",
+      "derivation_class": "ADAPTER_DERIVED",
+      "meaning": "Classifies telemetry as originating from the frozen ACP source-system boundary; it is not an authorization or validation assertion."
+    },
+    "validator": {
+      "source_contract": "ABSENT_IN_FROZEN_ACP_EXPORT",
+      "stage_a_state": "UNMEASURED",
+      "may_be_inferred_from_system_events": false
+    },
+    "authority": {
+      "source_contract": "ABSENT_IN_FROZEN_ACP_EXPORT",
+      "stage_a_state": "UNMEASURED",
+      "may_be_inferred_from_policy_allow_or_completion": false
+    }
+  },
+  "future_external_evidence_rule": {
+    "validator_or_authority_evidence_requires_separate_source_contract": true,
+    "may_not_be_added_after_outcome_inspection_under_same_study_identity": true,
+    "absence_must_remain_unmeasured": true
+  },
+  "non_inference_rules": [
+    "ACP completion does not imply validation.",
+    "ACP policy allow does not imply AOSS authorization.",
+    "ACP policy denial is a source event, not an authorization oracle.",
+    "SYSTEM trust-domain classification does not imply VALIDATOR or AUTHORITY trust.",
+    "Missing validator or authority evidence remains UNMEASURED."
+  ],
+  "scientific_effect": {
+    "outcome_collection_authorized": false,
+    "external_validation_established": false,
+    "scientific_n_increment": 0
+  }
+}
