@@ -11,9 +11,9 @@ test('state-space projection derives its ordered regions from canonical governan
     GOVERNANCE_STAGES.map(stage => stage.id),
   )
 
-  assert.equal(STATE_SPACE_PROJECTION.frontierId, 'locked-analysis')
+  assert.equal(STATE_SPACE_PROJECTION.frontierId, 'interpretation-adjudication')
 
-  const frontierIndex = GOVERNANCE_STAGES.findIndex(stage => stage.id === 'locked-analysis')
+  const frontierIndex = GOVERNANCE_STAGES.findIndex(stage => stage.id === 'interpretation-adjudication')
   assert.ok(frontierIndex > 0)
 
   for (const region of STATE_SPACE_PROJECTION.regions.slice(0, frontierIndex)) {
@@ -28,10 +28,14 @@ test('state-space projection keeps derived reachability separate from native pre
     region => region.id === 'primary-analysis-authorization',
   )
   const lockedAnalysis = STATE_SPACE_PROJECTION.regions.find(region => region.id === 'locked-analysis')
+  const interpretation = STATE_SPACE_PROJECTION.regions.find(
+    region => region.id === 'interpretation-adjudication',
+  )
 
   assert.ok(materialization)
   assert.ok(analysisAuthorization)
   assert.ok(lockedAnalysis)
+  assert.ok(interpretation)
 
   assert.equal(materialization.reachability, 'established')
   assert.equal(materialization.nativeState, 'pass')
@@ -39,8 +43,11 @@ test('state-space projection keeps derived reachability separate from native pre
   assert.equal(analysisAuthorization.reachability, 'established')
   assert.equal(analysisAuthorization.nativeState, 'pass')
 
-  assert.equal(lockedAnalysis.reachability, 'frontier')
-  assert.equal(lockedAnalysis.nativeState, 'open')
+  assert.equal(lockedAnalysis.reachability, 'established')
+  assert.equal(lockedAnalysis.nativeState, 'pass')
+
+  assert.equal(interpretation.reachability, 'frontier')
+  assert.equal(interpretation.nativeState, 'open')
 })
 
 test('state-space projection preserves global fail-closed constraints without scalar readiness', () => {
