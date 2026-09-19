@@ -267,6 +267,7 @@ def test_replay_receipt_schema_rejects_embedded_outcome_payload() -> None:
     with pytest.raises(validator.ValidationError):
         validator.Draft202012Validator(schema).validate(receipt)
 
+
 def test_analysis_contract_is_finite_corpus_without_pseudo_inference() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
