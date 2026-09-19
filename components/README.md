@@ -1,6 +1,6 @@
 # Components — Runtime Index
 
-> **Maintainer:** Agent Amethyst + COLLEEN  
+> **Maintainer roles:** `role.governance-orchestrator` + `role.continuity-archive-coordinator`  
 > **Last reviewed:** 2026-09-02  
 > **Evidence boundary:** The attestation records below are dated project-local QA records. They do not by themselves establish current external certification, universal fitness, production readiness, or independent validation.
 

@@ -87,6 +87,17 @@ export const GOVERNANCE_RELATIONSHIPS: GovernanceMapRelationship[] = [
     doesNotEstablish:
       'Analysis execution, a positive result, efficacy, independent validation, certification, or broader production authority.',
   },
+  {
+    id: 'locked-result-to-interpretation',
+    sourceId: 'locked-analysis',
+    targetId: 'interpretation-adjudication',
+    kind: 'dependency',
+    label: 'Accepted locked result gates interpretation',
+    provenance:
+      'The accepted creation-only LOCKED_ANALYSIS_RESULT_RECORD and its retained operator-local bytes are predecessors to bounded interpretation/adjudication.',
+    doesNotEstablish:
+      'A favorable interpretation, canonical DGAF efficacy, independent validation, scientific-N promotion, or High-Assurance authorization.',
+  },
 ]
 
 const stageIds = new Set(GOVERNANCE_STAGES.map(stage => stage.id))

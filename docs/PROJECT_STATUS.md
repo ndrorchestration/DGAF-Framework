@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-This 2026-09-18 reconciliation was prepared against protected `main` `037e9e878fb8d9ea7a4658219734158bb5300b1e`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
+This 2026-09-19 reconciliation was prepared against protected `main` `f636c822f16e0814fe0d95221553aea7d3515a46`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -26,12 +26,16 @@ This 2026-09-18 reconciliation was prepared against protected `main` `037e9e878f
 - successor materialization receipt: **ESTABLISHED** through creation-only PR #826;
 - successor locked-analysis runner tooling: **ACCEPTED** through PR #831;
 - successor primary-analysis authorization event: **ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY** through PR #828;
-- successor primary analysis: **AUTHORIZED_BOUNDED / NOT RUN**;
-- successor locked-analysis result: **NOT ESTABLISHED**;
+- successor primary analysis: **EXECUTED_LOCAL** under the accepted bounded authorization;
+- successor locked-analysis result receipt: **ESTABLISHED** through creation-only PR #851;
 - successor result-admission tooling: **ACCEPTED / NON-EXECUTING** through PR #835;
+- repository/current-state reconciliation: **ACCEPTED** through PR #854;
+- successor interpretation/adjudication tooling: **ACCEPTED / NON-EXECUTING** through PR #855;
+- successor interpretation execution: **NOT RUN**;
+- successor `INTERPRETATION_NOTE`: **NOT ESTABLISHED**;
 - scientific-N increment: **0**.
 
-These accepted records preserve separate event boundaries. Materialization, its receipt, and bounded primary-analysis authorization are established at their exact scopes; the primary analysis has not run, no locked result has been admitted, and efficacy, independent validation, and High-Assurance authorization remain unestablished.
+These accepted records preserve separate event boundaries. Materialization, its receipt, bounded primary-analysis authorization, local primary-analysis execution, and the content-addressed result receipt are established at their exact scopes; interpretation remains separate and has not run, and efficacy, independent validation, and High-Assurance authorization remain unestablished.
 
 ## Accepted repository presentation state
 
@@ -68,11 +72,12 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 - **PR #813** accepted the one-command local materialization autopilot, which performs secret-bearing materialization only on the operator machine, prepares exactly one non-secret evidence-admission path, and stops before receipt or primary-analysis authorization.
 - PR #824 subsequently admitted the exact non-secret materialization evidence and PR #826 established the creation-only materialization receipt.
 - PR #831 accepted the fail-closed local locked-analysis runner; PR #828 accepted the separate bounded authorization event; PR #835 accepted content-addressed result-admission tooling.
-- These later events establish materialization/receipt/authorization only at their exact scopes; they do not establish analysis execution, a result, efficacy, independent validation, or High-Assurance authorization.
+- The authorized primary analysis subsequently executed locally; PR #851 established the immutable content-addressed result receipt, PR #854 reconciled current-state projections, and PR #855 accepted fail-closed interpretation/adjudication tooling.
+- These later events establish only their exact scopes; the interpretation stage remains not run, no `INTERPRETATION_NOTE` is established, and efficacy, independent validation, scientific-N promotion, and High-Assurance authorization remain unestablished.
 
 ## Next admissible scientific transition
 
-The current scientific frontier is **local execution of the authorized frozen Epoch 002 primary analysis**. Materialization evidence and receipt are accepted, and the separate bounded authorization event is accepted. Execution must use the accepted fail-closed runner against the retained content-addressed input in the exact locked Python 3.12.0 / NumPy 2.5.1 environment; the resulting local output is then admitted by content address through a separate result-record event before interpretation.
+The current scientific frontier is **bounded interpretation/adjudication of the accepted Epoch 002 locked result**. The frozen primary analysis has executed locally and its creation-only content-addressed result receipt is accepted. The next state-changing action must use the accepted fail-closed interpretation preparer against the retained operator-local result bytes, revalidate the accepted digest and frozen preregistration, keep the numerical interpretation artifact outside the repository, and admit only a separate content-addressed `INTERPRETATION_NOTE` candidate.
 
 The accepted apparatus now provides:
 
@@ -80,10 +85,11 @@ The accepted apparatus now provides:
 2. a non-secret evidence-bundle and immutable receipt chain already accepted for Epoch 002;
 3. a bounded human-controlled authorization record with exact scope `LOCKED_PRIMARY_ANALYSIS_ONLY`;
 4. a fail-closed local locked-analysis runner bound to the frozen analysis/configuration, exact materialized-input digest, and exact Python 3.12.0 / NumPy 2.5.1 runtime;
-5. a separate non-executing result-admission lane that validates and content-addresses the local output without copying numerical outcomes into the repository record;
-6. explicit preservation of scientific-N increment 0, canonical efficacy `NOT_ESTABLISHED`, independent validation `NOT_ESTABLISHED`, and High-Assurance `NOT AUTHORIZED`.
+5. an accepted creation-only locked-result receipt that binds the already executed local output by content address without copying numerical outcomes into the repository record;
+6. accepted fail-closed interpretation/adjudication tooling that revalidates the retained result bytes and frozen preregistration before preparing a separate content-addressed interpretation note;
+7. explicit preservation of scientific-N increment 0, canonical efficacy `NOT_ESTABLISHED`, independent validation `NOT_ESTABLISHED`, and High-Assurance `NOT AUTHORIZED`.
 
-Do not place private keys, passphrases, protected plaintext mappings, or other recoverable secret material in GitHub, Notion, chat, CI inputs, workflow logs, or committed files. Do not alter the frozen endpoint, estimand, bootstrap contract, historical pooling boundary, or locked runtime after outcome access. Analysis execution, result admission, and later interpretation remain separate events.
+Do not place private keys, passphrases, protected plaintext mappings, numerical result values, or other recoverable secret/protected material in general GitHub, Notion, Drive, chat, CI inputs, workflow logs, or projections. Do not alter the frozen endpoint, estimand, bootstrap contract, historical pooling boundary, or locked runtime after outcome access. Analysis execution, result admission, interpretation preparation, and interpretation-note admission remain separate events.
 
 ## Presentation boundary
 

@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-19
-reconciliation_input_main: c0690e599d25304f1d920d5235adff04ba76094a
+reconciliation_input_main: f636c822f16e0814fe0d95221553aea7d3515a46
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -28,6 +28,7 @@ track_a_successor_primary_analysis_authorization_tooling: ACCEPTED
 track_a_successor_primary_analysis_authorization: ACCEPTED_LOCKED_PRIMARY_ANALYSIS_ONLY
 track_a_successor_primary_analysis: EXECUTED_LOCKED_RETAINED
 track_a_successor_locked_analysis_result: ESTABLISHED
+track_a_successor_interpretation_tooling: ACCEPTED_NONEXECUTING
 track_a_successor_interpretation: CURRENT_FRONTIER_NOT_ESTABLISHED
 accepted_dataset_lock_tooling_pr: 622
 accepted_unblinding_decision_tooling_pr: 627
@@ -63,6 +64,8 @@ accepted_locked_result_admission_tooling_pr: 835
 accepted_locked_result_admission_tooling_commit: 037e9e878fb8d9ea7a4658219734158bb5300b1e
 accepted_locked_analysis_result_pr: 851
 accepted_locked_analysis_result_commit: c0690e599d25304f1d920d5235adff04ba76094a
+accepted_interpretation_tooling_pr: 855
+accepted_interpretation_tooling_commit: 9ef99ac7ed803609b4a7a4eb2b98bab328f853cc
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -76,7 +79,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `c0690e599d25304f1d920d5235adff04ba76094a` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `f636c822f16e0814fe0d95221553aea7d3515a46` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -97,7 +100,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Epoch 002 primary-analysis authorization | **ACCEPTED · LOCKED_PRIMARY_ANALYSIS_ONLY · PR #828** |
 | Epoch 002 primary analysis | **EXECUTED · LOCKED / RETAINED · OPERATOR-LOCAL OUTPUT** |
 | Epoch 002 locked-analysis result | **ESTABLISHED · CONTENT-ADDRESSED CREATION-ONLY RECEIPT VIA PR #851** |
-| Epoch 002 interpretation/adjudication | **CURRENT FRONTIER · NOT ESTABLISHED** |
+| Epoch 002 interpretation/adjudication | **CURRENT FRONTIER · TOOLING ACCEPTED / NON-EXECUTING VIA PR #855 · EXECUTION NOT RUN · `INTERPRETATION_NOTE` NOT ESTABLISHED** |
 | Epoch 002 result-admission tooling | **ACCEPTED · CONTENT-ADDRESSED / NON-EXECUTING · PR #835** |
 | Independent validation | **NOT ESTABLISHED** |
 | Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
@@ -111,12 +114,12 @@ No row above establishes integrated DGAF efficacy, independent validation, produ
 
 ## Protected-main repository state
 
-This reconciliation was prepared against protected `main` `c0690e599d25304f1d920d5235adff04ba76094a`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), and the creation-only locked-analysis result receipt (#851). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, an interpretation/adjudication note, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was prepared against protected `main` `f636c822f16e0814fe0d95221553aea7d3515a46`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation tooling is accepted, but interpretation execution has not run and no `INTERPRETATION_NOTE` is established. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
 - **PR #776 — Decision Frontier** merged as `3777b66277135a31da496661e0cb12e87cb05e3c`. The component derives from the normalized governance model and presents the current governed state, evidence/provenance, blocking boundary, nearest admissible transition, unreachable transitions, consequence preview, and receipt semantics.
-- **PR #779 — Governance Map** merged as `29a7467b24e6709342874a048dd75b674a090463`. It projects vertical escalation from canonical governance stages, four explicit lateral relationships, and global field conditions without introducing a second state engine, continuous-manifold semantics, or readiness scoring.
+- **PR #779 — Governance Map** merged as `29a7467b24e6709342874a048dd75b674a090463`. It projects vertical escalation from canonical governance stages, five explicit relationships, including the accepted locked-result-to-interpretation dependency, and global field conditions without introducing a second state engine, continuous-manifold semantics, or readiness scoring.
 - **PR #783 — State-Space Explorer V0** merged as `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`. It projects canonical lifecycle stages into discrete categorical `established`, `frontier`, and `blocked_by_predecessor` regions while preserving native predicate state, evidence boundaries, and explicit model limits.
 
 These are **presentation-only** accepted source states. They do not create governance authority, grant authorization, establish runtime health, or promote scientific/empirical claims.
@@ -176,6 +179,8 @@ Repository engineering and controlled operator execution have crossed the materi
 15. content-addressed locked-result admission tooling — **PR #835 accepted**, non-executing and non-interpreting;
 16. lifecycle-aware result-admission test correction — **PR #848 accepted**;
 17. creation-only locked-analysis result receipt — **PR #851 accepted** as `c0690e599d25304f1d920d5235adff04ba76094a`, binding retained output SHA-256 `966fe9f1c218d8f64eae8465288a5e23b332555484eac2602c3764c3172336da` without copying the estimate, confidence interval, or classification into the repository.
+18. result/current-state documentation reconciliation — **PR #854 accepted**, advancing live repository projections to the accepted result-receipt frontier without exposing the numerical outcome.
+19. fail-closed interpretation/adjudication tooling — **PR #855 accepted** as `9ef99ac7ed803609b4a7a4eb2b98bab328f853cc`, preserving external-only numerical interpretation custody, exact preregistration/claim-ceiling binding, competing interpretations, and creation-only content-addressed `INTERPRETATION_NOTE` admission.
 
 PR #713 introduced the original controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 

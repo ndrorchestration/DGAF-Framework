@@ -4,7 +4,7 @@
 <!-- This document does not establish mathematical convergence, correctness, efficacy, production readiness, or independent certification. -->
 
 **Version:** 2.0 (P-24 retrofit)  
-**Owner:** Agent Amethyst (QA Orchestrator) + Agent DemiJoule (timing optimization)  
+**Functional owner:** `role.governance-orchestrator` + `role.efficiency-resource-advisor`  
 **Canonical home:** `DGAF-Framework/docs/gates/ACOUSTIC_GATES.md`  
 **Pattern:** P-13 (Acoustic-Gate-Chain) | P-24 (Canonical Practice Unit)
 

@@ -6,7 +6,7 @@ export const TRUTH_BOUNDARY = {
   authorization: 'NOT AUTHORIZED',
   empiricalN: 0,
   efficacy: 'NOT ESTABLISHED',
-  sourceUpdated: '2026-09-18',
+  sourceUpdated: '2026-09-19',
   sources: ['docs/PROJECT_STATUS.md', 'docs/CURRENT_STATE.md', 'docs/PUBLIC_TRANSLATION_LAYER.md'],
 } as const
 
@@ -161,28 +161,39 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
   },
   {
     id: 'locked-analysis',
-    label: 'Locked primary analysis',
+    label: 'Locked primary analysis + result receipt',
     shortLabel: 'Analyze',
-    description: 'Run the preregistered analysis locally against the retained content-addressed input under the accepted bounded authorization.',
+    description: 'The preregistered Epoch 002 primary analysis executed locally under bounded authorization, and its content-addressed result receipt was accepted separately.',
+    predicateState: 'pass',
+    toolingPrepared: true,
+    toolingNote: 'PR #851 established the creation-only LOCKED_ANALYSIS_RESULT_RECORD after local execution; the numerical output remains operator-local.',
+    evidenceBoundary: 'Primary analysis is EXECUTED_LOCAL and LOCKED_ANALYSIS_RESULT_RECORD is ESTABLISHED at the accepted content address.',
+    doesNotEstablish: 'Canonical DGAF efficacy, independent validation, or High-Assurance authorization; interpretation remains a separate stage.',
+  },
+  {
+    id: 'interpretation-adjudication',
+    label: 'Interpretation / adjudication',
+    shortLabel: 'Interpret',
+    description: 'Revalidate the retained operator-local locked-analysis output and derive only the frozen preregistered interpretation under the accepted claim ceiling.',
     predicateState: 'open',
     toolingPrepared: true,
-    toolingNote: 'PR #831 accepted the fail-closed local runner; PR #835 accepted content-addressed result-admission tooling. The real primary analysis has not yet run.',
-    evidenceBoundary: 'Primary analysis is AUTHORIZED_BOUNDED / NOT RUN; no accepted LOCKED_ANALYSIS_RESULT_RECORD exists.',
-    doesNotEstablish: 'Canonical DGAF efficacy, independent validation, or High-Assurance authorization without later result admission and interpretation.',
+    toolingNote: 'PR #855 accepted fail-closed interpretation tooling. No INTERPRETATION_NOTE has been admitted.',
+    evidenceBoundary: 'INTERPRETATION_TOOLING = ACCEPTED; INTERPRETATION_EXECUTION = NOT RUN; INTERPRETATION_NOTE = NOT ESTABLISHED.',
+    doesNotEstablish: 'Canonical DGAF efficacy, independent validation, production readiness, certification, High-Assurance authorization, or a scientific-N increment.',
   },
 ]
 
 export const NEXT_TRANSITION = {
-  title: 'Execute the authorized locked Epoch 002 primary analysis',
+  title: 'Prepare and admit the bounded Epoch 002 interpretation',
   summary:
-    'Use the accepted fail-closed local runner against the exact retained materialized input in the locked Python 3.12.0 / NumPy 2.5.1 environment, retain the output outside GitHub, then admit only its validated content address through the separate result-record event.',
+    'Use the accepted fail-closed interpretation preparer against the exact retained locked-analysis output outside the repository. It must revalidate the accepted result digest and frozen preregistration, write the numerical interpretation artifact externally, and prepare only a content-addressed INTERPRETATION_NOTE candidate for separate admission.',
   artifacts: [
-    'track_a_epoch_002_locked_primary_analysis_output.json (operator-controlled)',
-    'locked-analysis output SHA-256 sidecar',
-    'TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json (later separate repository event)',
+    'Track A Epoch 002 local interpretation artifact (operator-controlled, external)',
+    'local interpretation artifact SHA-256',
+    'TRACK_A_EPOCH_002_INTERPRETATION_NOTE.json (separate creation-only repository event)',
   ],
   warning:
-    'Authorization is bounded to the frozen confirmatory analysis. Do not substitute endpoints, pool historical epochs, expose protected material, or treat execution/result admission as canonical efficacy.',
+    'Do not copy the numerical estimate, interval, or classification into general repository projections. Do not pool historical epochs, relabel exploratory results, or treat the interpretation note as canonical DGAF efficacy, independent validation, or High-Assurance authorization.',
 } as const
 
 export interface EpochSummary {
@@ -216,7 +227,7 @@ export const EPOCH_SUMMARIES: EpochSummary[] = [
     title: 'Track A · Epoch 002',
     state: 'open',
     summary:
-      'Collection, dataset lock, bounded unblinding, real materialization, immutable materialization receipt, and bounded locked-analysis authorization are accepted; the primary analysis has not yet run.',
+      'Collection, dataset lock, bounded unblinding, materialization, primary-analysis authorization, local primary-analysis execution, and the content-addressed locked-result receipt are accepted; interpretation tooling is accepted but interpretation has not yet run.',
     facts: [
       'Collection: COMPLETE · 50 paired seed units / 2,250 blinded observations',
       'Custody: SAME_SYSTEM_NONINDEPENDENT',
@@ -224,8 +235,10 @@ export const EPOCH_SUMMARIES: EpochSummary[] = [
       'Bounded unblinding: AUTHORIZED',
       'Materialization + receipt: ESTABLISHED',
       'Primary-analysis authorization: ACCEPTED · LOCKED_PRIMARY_ANALYSIS_ONLY',
-      'Primary analysis: AUTHORIZED_BOUNDED / NOT RUN',
-      'Locked analysis result: NOT ESTABLISHED',
+      'Primary analysis: EXECUTED_LOCAL',
+      'Locked analysis result receipt: ESTABLISHED · PR #851',
+      'Interpretation tooling: ACCEPTED · PR #855',
+      'Interpretation note: NOT ESTABLISHED',
     ],
   },
 ]
