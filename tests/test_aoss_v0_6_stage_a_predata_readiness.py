@@ -30,12 +30,15 @@ def test_current_stage_a_state_is_explicitly_not_ready() -> None:
     unresolved = validator.validate_readiness(readiness)
     assert readiness["status"] == "NOT_READY_FAIL_CLOSED"
     assert "aoss_decision_policy" in unresolved
-    assert "freshness_and_calibration" in unresolved
+    assert "freshness_and_calibration" not in unresolved
     assert "analysis_and_multiplicity" in unresolved
     assert "observer_boundary_and_trust_domains" not in unresolved
     assert "extraction_functions_units_tolerances" not in unresolved
     assert "artifact_hash_and_replay_receipt" not in unresolved
-    assert len(unresolved) == 7
+    assert "episode_eligibility_and_exclusion" not in unresolved
+    assert "repetition_and_seed_plan" not in unresolved
+    assert "failure_injection_ground_truth" not in unresolved
+    assert len(unresolved) == 3
     assert readiness["outcome_collection_authorized"] is False
     assert readiness["scientific_n_increment"] == 0
 
@@ -104,14 +107,49 @@ def test_observer_boundary_is_external_read_only_and_nonauthoritative() -> None:
     assert boundary["trust_domain_contract"]["authority_domain"]["classification"] == "UNMEASURED"
 
 
-def test_timestamp_extraction_does_not_bind_freshness() -> None:
+def test_timestamp_extraction_stays_separate_from_bound_freshness_contract() -> None:
     validator = load_validator()
     boundary = validator.load_json(ROOT / validator.BOUNDARY_REL)
     wall_time = boundary["extraction_functions"]["wall_time"]
     assert wall_time["tolerance"] == "EXACT_PARSE_AND_PRESERVE"
-    assert wall_time["freshness_threshold"] == "SEPARATE_UNRESOLVED_PREDICATE"
+    assert wall_time["freshness_threshold"] == "SEPARATE_FROZEN_PREDICATE_CONTRACT"
     readiness = current_readiness(validator)
-    assert readiness["required_predicates"]["freshness_and_calibration"]["status"] == "OPEN"
+    assert readiness["required_predicates"]["freshness_and_calibration"]["status"] == "BOUND"
+
+
+def test_freshness_contract_has_numeric_fail_closed_thresholds() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    validator.validate_readiness(readiness)
+    contract = validator.load_json(ROOT / validator.FRESHNESS_REL)
+    assert contract["thresholds"] == {
+        "max_last_event_age_at_ingest_seconds": 30,
+        "max_future_event_skew_seconds": 2,
+        "non_injection_event_time_regression_seconds": 0,
+    }
+    assert contract["clock_domain"]["source_and_observer_same_host_required"] is True
+    assert contract["calibration_semantics"]["absolute_clock_accuracy_established"] is False
+
+
+def test_sampling_contract_does_not_inflate_replays_into_independent_units() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    validator.validate_readiness(readiness)
+    contract = validator.load_json(ROOT / validator.ELIGIBILITY_REL)
+    assert contract["repetition_plan"]["canonical_source_episodes_per_class"] == 1
+    assert contract["repetition_plan"]["exact_byte_replay_passes_per_episode"] == 5
+    assert contract["repetition_plan"]["replay_passes_count_as_independent_observations"] is False
+    assert contract["repetition_plan"]["stochastic_sampling"] is False
+
+
+def test_ground_truth_preserves_structural_controls_outside_primary_denominator() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    validator.validate_readiness(readiness)
+    truth = validator.load_json(ROOT / validator.GROUND_TRUTH_REL)
+    for name in ("malformed_manifest", "mismatched_run_id"):
+        assert truth["labels"][name]["adapter_accept"] is False
+        assert truth["labels"][name]["primary_endpoint_eligible"] is False
 
 
 def test_observer_boundary_rejects_source_mutation() -> None:
