@@ -19,6 +19,30 @@ Execution is admissible only when all of the following are true:
 
 Any failed precondition stops execution.
 
+## One-command Windows operator path
+
+For the accepted Windows operator environment, use:
+
+`scripts/run_track_a_epoch_002_primary_analysis_autopilot.ps1`
+
+The autopilot is the preferred nontechnical path. It:
+
+1. reads the retained materialized input from the operator-controlled user-profile location by default;
+2. verifies GitHub CLI authentication and the expected DGAF repository origin;
+3. fetches protected `main` and creates an isolated detached worktree;
+4. finds exact Python `3.12.0`, or if absent downloads the official Python Software Foundation 64-bit installer, verifies its Authenticode signer, and installs a dedicated user-local DGAF runtime without modifying PATH;
+5. creates/reuses an isolated analysis virtual environment from the hash-locked requirements;
+6. runs the non-executing authorization/runtime preflight;
+7. executes the frozen primary analysis only if no retained output bundle already exists;
+8. resumes from an existing complete retained output without re-executing analysis;
+9. validates and prepares the non-numerical, content-addressed result record;
+10. creates a one-file result-admission commit in an isolated worktree, validates the exact event, confirms protected `main` has not moved, pushes the branch, and opens a draft result-admission PR;
+11. never prints the estimate, confidence interval, or preregistered classification.
+
+If protected `main` moves during result admission, the autopilot retries admission without re-running the empirical analysis. If the local output is partial or ambiguous, it fails closed instead of overwriting or re-executing.
+
+Default local paths are derived from `$env:USERPROFILE`; no username-specific path is stored in the repository.
+
 ## Local preflight
 
 After the authorization event has been accepted on protected `main`, use the exact locked analysis environment and run:
