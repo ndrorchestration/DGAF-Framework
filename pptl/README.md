@@ -1,7 +1,7 @@
 # PPTL Python Harness
 
 **Phi-Pentagon Topology Lab — Multi-Agent Governance Harness**
-DGAF-governed · Agent Amethyst meta-orchestrated · NDR pattern registry
+DGAF-governed · functional authority resolves through the role/capability registry · NDR pattern registry
 
 ![pptl-ci](https://github.com/ndrorchestration/DGAF-Framework/actions/workflows/pptl-ci.yml/badge.svg)
 
