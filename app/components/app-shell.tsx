@@ -10,10 +10,10 @@ export type ViewId = 'overview' | 'control' | 'governance' | 'state-space' | 'ag
 const NAV = [
   { id: 'overview' as const, label: 'Overview', sub: 'What DGAF is', Icon: OverviewIcon },
   { id: 'control' as const, label: 'Control Room', sub: 'Runtime telemetry', Icon: ActivityIcon },
+  { id: 'evidence' as const, label: 'Evidence & Research', sub: 'Claims & experiment state', Icon: EvidenceIcon },
   { id: 'governance' as const, label: 'Governance', sub: 'Lifecycle & authority', Icon: ShieldIcon },
   { id: 'state-space' as const, label: 'State Space', sub: 'Reachability model', Icon: NodesIcon },
   { id: 'agents' as const, label: 'Agents & Formations', sub: 'Roles & topology', Icon: NodesIcon },
-  { id: 'evidence' as const, label: 'Evidence & Research', sub: 'Claims & experiment state', Icon: EvidenceIcon },
   { id: 'tools' as const, label: 'Tools', sub: 'P-07 sweep workspace', Icon: ToolsIcon },
 ]
 
