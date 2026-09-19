@@ -7,6 +7,7 @@ const frontier = readFileSync('app/styles/decision-frontier.css', 'utf8')
 const governanceMap = readFileSync('app/styles/governance-map.css', 'utf8')
 const stateSpace = readFileSync('app/styles/state-space.css', 'utf8')
 const overview = readFileSync('app/components/overview-view.tsx', 'utf8')
+const appShell = readFileSync('app/components/app-shell.tsx', 'utf8')
 
 const REQUIRED_TOKENS = [
   '--state-established',
@@ -82,4 +83,18 @@ test('Overview hero remains a semantic control field rather than decorative-only
 test('mobile does not hide the semantic hero field', () => {
   assert.doesNotMatch(globals, /\.hero-field\{display:none\}/)
   assert.match(globals, /\.hero-field\{width:100%;justify-self:stretch/)
+})
+
+
+test('operator journey verifies evidence before governance', () => {
+  const evidenceNav = appShell.indexOf("id: 'evidence'")
+  const governanceNav = appShell.indexOf("id: 'governance'")
+
+  assert.ok(evidenceNav >= 0, 'Evidence navigation entry must exist')
+  assert.ok(governanceNav >= 0, 'Governance navigation entry must exist')
+  assert.ok(evidenceNav < governanceNav, 'Evidence must appear before Governance in the primary operator journey')
+  assert.match(
+    overview,
+    /className="button primary" onClick=\{\(\) => onNavigate\('evidence'\)\}>Inspect evidence/,
+  )
 })

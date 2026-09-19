@@ -24,7 +24,7 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
         <h2>Make the difference between <em>can act</em> and <em>may act</em> impossible to miss.</h2>
         <p>DGAF separates evidence, verification, authority, and permission so engineering capability cannot silently become authorization—or testing become proof.</p>
         <div className="hero-actions">
-          <button className="button primary" onClick={() => onNavigate('governance')}>Inspect governance <ArrowIcon /></button>
+          <button className="button primary" onClick={() => onNavigate('evidence')}>Inspect evidence <ArrowIcon /></button>
           <button className="button ghost" onClick={() => onNavigate('control')}>Open control room</button>
         </div>
       </div>
