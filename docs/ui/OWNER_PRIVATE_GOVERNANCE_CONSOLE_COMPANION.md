@@ -4,8 +4,8 @@
 **Lifecycle:** DERIVATIVE  
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
-**Reconciliation input:** protected `main` at `037e9e878fb8d9ea7a4658219734158bb5300b1e`  
-**Reconciliation event:** post-#824/#826/#831/#828/#835 Epoch 002 materialization, authorization, and analysis-tooling reconciliation
+**Reconciliation input:** protected `main` at `f636c822f16e0814fe0d95221553aea7d3515a46`  
+**Reconciliation event:** post-#851/#854/#855 Epoch 002 locked-result and interpretation-tooling reconciliation
 
 ## Purpose
 
@@ -35,9 +35,12 @@ It separately represents the Track A Epoch 002 state:
 - materialization receipt: ESTABLISHED via creation-only PR #826;
 - locked-analysis runner tooling: ACCEPTED via PR #831;
 - primary-analysis authorization: ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY via PR #828;
-- primary analysis: AUTHORIZED_BOUNDED / NOT RUN;
-- locked-analysis result: NOT ESTABLISHED;
-- result-admission tooling: ACCEPTED / NON-EXECUTING via PR #835;
+- primary analysis: EXECUTED_LOCAL under the bounded accepted authorization;
+- locked-analysis result receipt: ESTABLISHED via creation-only PR #851;
+- repository/current-state reconciliation: ACCEPTED via PR #854;
+- interpretation/adjudication tooling: ACCEPTED / NON-EXECUTING via PR #855;
+- interpretation execution: NOT RUN;
+- `INTERPRETATION_NOTE`: NOT ESTABLISHED;
 - independent validation: NOT ESTABLISHED.
 
 Track A completion counts must never be rendered as canonical High-Assurance scientific N.
@@ -54,7 +57,7 @@ Track A completion counts must never be rendered as canonical High-Assurance sci
 
 ## Current next action
 
-The console should present **authorized locked primary analysis execution** as the next frontier. Materialization and its immutable receipt are established, and the separate bounded authorization event has been accepted. The analysis has not yet run; no `LOCKED_ANALYSIS_RESULT_RECORD` exists. Execution must remain bound to the frozen analysis/runtime/input contract, with later result admission and interpretation kept separate.
+The console should present **bounded interpretation/adjudication** as the next frontier. The locked primary analysis has executed locally and the creation-only content-addressed `LOCKED_ANALYSIS_RESULT_RECORD` is accepted. PR #855 accepted the fail-closed interpretation tooling, but interpretation itself has not run and no `INTERPRETATION_NOTE` exists. The numerical estimate, interval, and classification remain operator-local; the next state-changing action must revalidate the retained result bytes and frozen preregistration before preparing a separate content-addressed interpretation-note candidate.
 
 ## Access and validation
 

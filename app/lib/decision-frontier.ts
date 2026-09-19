@@ -45,10 +45,10 @@ export const DECISION_FRONTIER = {
   downstream,
   consequence: blocking.doesNotEstablish,
   receipt: {
-    label: 'Locked analysis result record',
+    label: 'Interpretation note',
     state: blocking.state,
     summary:
-      'No accepted Epoch 002 LOCKED_ANALYSIS_RESULT_RECORD exists. The bounded primary analysis is authorized but not yet run; local output must remain content-addressed and separately admitted before interpretation.',
+      'The Epoch 002 locked primary analysis executed locally and its content-addressed result receipt is accepted. Interpretation tooling is accepted, but no INTERPRETATION_NOTE exists; the numerical output remains operator-local and must be revalidated before any separate interpretation admission.',
   },
   transitionTitle: NEXT_TRANSITION.title,
   transitionSummary: NEXT_TRANSITION.summary,
