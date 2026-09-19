@@ -32,7 +32,7 @@ function Invoke-Checked {
         Push-Location $WorkingDirectory
     }
     try {
-        & $FilePath @Arguments
+        & $FilePath @Arguments | Out-Host
         if ($LASTEXITCODE -ne 0) {
             Fail "$FilePath exited with code $LASTEXITCODE"
         }
@@ -155,7 +155,7 @@ function Install-DedicatedPython([string]$TargetRuntimeDir) {
         "-OutputDirectory", $TargetRuntimeDir,
         "-Source", $NuGetSource,
         "-NonInteractive",
-        "-NoCache"
+        "-NoHttpCache"
     )
     Remove-Item -Force -ErrorAction SilentlyContinue $nugetExe
 
