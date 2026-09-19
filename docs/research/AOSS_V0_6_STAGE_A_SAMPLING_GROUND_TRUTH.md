@@ -11,6 +11,7 @@ This tranche closes four Stage-A readiness predicates without defining the still
 Freshness is intentionally a **same-host relative-time property**, not a claim that either machine clock is externally calibrated.
 
 For a real Stage-A episode:
+
 - ACP source generation and AOSS observer ingestion must use the same host clock domain;
 - the final source event may be at most **30 seconds old** at observer ingestion;
 - an event may be at most **2 seconds in the future** relative to observer ingestion;
