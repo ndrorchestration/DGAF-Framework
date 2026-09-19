@@ -2,7 +2,7 @@
   "record_type": "AOSS_V0_6_STAGE_A_PREDATA_READINESS",
   "schema_version": 1,
   "controller_issue": 810,
-  "status": "NOT_READY_FAIL_CLOSED",
+  "status": "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW",
   "apparatus_acceptance": {
     "repository_commit": "69821cdcc1b9b9432b7001c6f52c867f9669f54d",
     "pull_request": 859,
@@ -48,17 +48,18 @@
     "comparator_policy": {
       "status": "BOUND",
       "evidence": [
-        "registry/aoss_v0_6_acp_measurement_manifest_v1.json#comparator"
+        "registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json#primary_comparator",
+        "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py",
+        "tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py"
       ]
     },
-    "comparator_input_derivation": {
-      "status": "BLOCKED",
+    "primary_comparator_machine_derivation": {
+      "status": "BOUND",
       "evidence": [
+        "registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json",
+        "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py",
+        "tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py",
         "registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json"
-      ],
-      "missing": [
-        "authoritative machine-bound ACP telemetry to O/M/R extraction contract",
-        "units and tolerances for each coarse comparator input"
       ]
     },
     "aoss_decision_policy": {
@@ -72,6 +73,8 @@
     "primary_endpoint": {
       "status": "BOUND",
       "evidence": [
+        "registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json#primary_endpoint_amendment",
+        "registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json#primary_analysis",
         "docs/research/AOSS_V0_6_ACP_PORTABILITY_FREEZE.md#primary-endpoint"
       ]
     },
