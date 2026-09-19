@@ -58,7 +58,7 @@ Track A completion counts must never be rendered as canonical High-Assurance sci
 
 ## UI lineage note
 
-Merged PR #845 establishes evidence-first routing. PR #849 (Evidence provenance spine) and stacked PR #850 (audience journey groups + mobile focus containment) validated successfully on their historical exact heads but are stale-lineage relative to current protected main. Neither should be treated as accepted current-main implementation until reconstructed and revalidated against the post-analysis interpretation frontier.
+Merged PR #845 establishes evidence-first routing. PR #849 (Evidence provenance spine) and stacked PR #850 (audience journey groups + mobile focus containment) validated successfully on their historical exact heads and are now **CLOSED / UNMERGED / STALE-LINEAGE**. Neither is accepted current-main implementation; each must be reconstructed and revalidated against the post-analysis interpretation frontier.
 
 ## Current next action
 
