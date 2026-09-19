@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dgaf:aoss:v0.6:stage-a:replay-receipt:v1",
+  "title": "AOSS v0.6 Stage A Whole-Study Replay Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "study_id",
+    "attempt_id",
+    "generated_at_utc",
+    "source_system",
+    "apparatus",
+    "contract_digests",
+    "artifact_digests",
+    "replay_environment",
+    "replay_verification",
+    "outcome_payload_embedded",
+    "authorization_effect",
+    "external_validation_effect",
+    "scientific_n_increment"
+  ],
+  "properties": {
+    "record_type": {
+      "const": "AOSS_V0_6_STAGE_A_WHOLE_STUDY_REPLAY_RECEIPT"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "study_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "provenance_schema"],
+      "properties": {
+        "repository": {
+          "const": "ndrorchestration/agent-control-plane"
+        },
+        "commit": {
+          "const": "dbab7c1afafec524ce7c18157de2089cafe79c87"
+        },
+        "provenance_schema": {
+          "const": "agent-control-plane.provenance.v1"
+        }
+      }
+    },
+    "apparatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted_commit", "adapter_version"],
+      "properties": {
+        "accepted_commit": {
+          "const": "69821cdcc1b9b9432b7001c6f52c867f9669f54d"
+        },
+        "adapter_version": {
+          "const": "AOSS_V0_6_ACP_ADAPTER_V1"
+        }
+      }
+    },
+    "contract_digests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "measurement_manifest_sha256",
+        "observer_measurement_boundary_sha256",
+        "decision_policy_sha256",
+        "freshness_calibration_sha256",
+        "eligibility_repetition_sha256",
+        "failure_ground_truth_sha256",
+        "analysis_multiplicity_sha256",
+        "practical_effect_rule_sha256"
+      ],
+      "properties": {
+        "measurement_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "observer_measurement_boundary_sha256": {"$ref": "#/$defs/sha256"},
+        "decision_policy_sha256": {"$ref": "#/$defs/sha256"},
+        "freshness_calibration_sha256": {"$ref": "#/$defs/sha256"},
+        "eligibility_repetition_sha256": {"$ref": "#/$defs/sha256"},
+        "failure_ground_truth_sha256": {"$ref": "#/$defs/sha256"},
+        "analysis_multiplicity_sha256": {"$ref": "#/$defs/sha256"},
+        "practical_effect_rule_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "artifact_digests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "study_manifest_sha256",
+        "source_episode_bundle_sha256",
+        "normalized_bundle_sha256",
+        "decision_bundle_sha256",
+        "analysis_bundle_sha256"
+      ],
+      "properties": {
+        "study_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "source_episode_bundle_sha256": {"$ref": "#/$defs/sha256"},
+        "normalized_bundle_sha256": {"$ref": "#/$defs/sha256"},
+        "decision_bundle_sha256": {"$ref": "#/$defs/sha256"},
+        "analysis_bundle_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "replay_environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "python_version",
+        "os",
+        "architecture",
+        "dependency_lock_sha256",
+        "adapter_source_sha256"
+      ],
+      "properties": {
+        "python_version": {"type": "string", "minLength": 1},
+        "os": {"type": "string", "minLength": 1},
+        "architecture": {"type": "string", "minLength": 1},
+        "dependency_lock_sha256": {"$ref": "#/$defs/sha256"},
+        "adapter_source_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "replay_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "source_identity_match",
+        "contract_digest_match",
+        "study_manifest_hash_match",
+        "source_episode_bundle_hash_match",
+        "normalized_replay_digest_match",
+        "decision_replay_digest_match",
+        "analysis_replay_digest_match"
+      ],
+      "properties": {
+        "status": {
+          "enum": ["PASS", "FAIL"]
+        },
+        "source_identity_match": {"type": "boolean"},
+        "contract_digest_match": {"type": "boolean"},
+        "study_manifest_hash_match": {"type": "boolean"},
+        "source_episode_bundle_hash_match": {"type": "boolean"},
+        "normalized_replay_digest_match": {"type": "boolean"},
+        "decision_replay_digest_match": {"type": "boolean"},
+        "analysis_replay_digest_match": {"type": "boolean"}
+      }
+    },
+    "outcome_payload_embedded": {
+      "const": false
+    },
+    "authorization_effect": {
+      "const": "NONE"
+    },
+    "external_validation_effect": {
+      "const": "NONE"
+    },
+    "scientific_n_increment": {
+      "const": 0
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

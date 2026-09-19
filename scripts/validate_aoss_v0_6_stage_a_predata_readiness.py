@@ -8,10 +8,15 @@ import json
 from pathlib import Path
 from typing import Any, NoReturn
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import ValidationError
+
 ROOT = Path(__file__).resolve().parents[1]
 READINESS_REL = "registry/aoss_v0_6_stage_a_predata_readiness_v1.json"
 MEASUREMENT_REL = "registry/aoss_v0_6_acp_measurement_manifest_v1.json"
 BOUNDARY_REL = "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json"
+RECEIPT_CONTRACT_REL = "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json"
+RECEIPT_SCHEMA_REL = "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json"
 
 ALLOWED_STATUSES = {"BOUND", "PARTIAL", "OPEN", "BLOCKED"}
 REQUIRED_PREDICATES = {
@@ -225,6 +230,122 @@ def validate_observer_measurement_boundary(readiness: dict[str, Any]) -> None:
         fail("extraction predicate must be BOUND")
 
 
+def validate_artifact_replay_receipt_contract(readiness: dict[str, Any]) -> None:
+    contract = load_json(ROOT / RECEIPT_CONTRACT_REL)
+    schema = load_json(ROOT / RECEIPT_SCHEMA_REL)
+
+    if contract.get("record_type") != "AOSS_V0_6_STAGE_A_ARTIFACT_REPLAY_RECEIPT_CONTRACT":
+        fail("artifact replay receipt contract record_type drift")
+    if contract.get("schema_version") != 1 or contract.get("controller_issue") != 810:
+        fail("artifact replay receipt contract identity drift")
+    if contract.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+        fail("artifact replay receipt contract status drift")
+    if contract.get("receipt_schema") != RECEIPT_SCHEMA_REL:
+        fail("artifact replay receipt schema binding drift")
+    if contract.get("digest_algorithm") != "SHA-256":
+        fail("artifact replay digest algorithm drift")
+    if contract.get("digest_encoding") != "lowercase_hex_without_prefix":
+        fail("artifact replay digest encoding drift")
+    if contract.get("pass_rule") != "PASS_IFF_ALL_REPLAY_VERIFICATION_BOOLEANS_TRUE":
+        fail("artifact replay PASS rule drift")
+    if contract.get("failure_rule") != "ANY_FALSE_OR_MISSING_REQUIRED_FIELD_YIELDS_FAIL_OR_SCHEMA_REJECTION":
+        fail("artifact replay failure rule drift")
+    if contract.get("outcome_collection_authorized") is not False:
+        fail("artifact replay contract cannot authorize outcome collection")
+    if contract.get("external_validation_established") is not False:
+        fail("artifact replay contract cannot establish external validation")
+    if contract.get("scientific_n_increment") != 0:
+        fail("artifact replay contract cannot increment scientific N")
+
+    content_boundary = contract.get("receipt_content_boundary")
+    if content_boundary != {
+        "outcome_payload_embedded": False,
+        "episode_payload_embedded": False,
+        "numerical_analysis_payload_embedded": False,
+        "content_addresses_and_replay_status_only": True,
+    }:
+        fail("artifact replay receipt content boundary drift")
+
+    expected_contract_roles = {
+        "measurement_manifest_sha256",
+        "observer_measurement_boundary_sha256",
+        "decision_policy_sha256",
+        "freshness_calibration_sha256",
+        "eligibility_repetition_sha256",
+        "failure_ground_truth_sha256",
+        "analysis_multiplicity_sha256",
+        "practical_effect_rule_sha256",
+    }
+    expected_artifact_roles = {
+        "study_manifest_sha256",
+        "source_episode_bundle_sha256",
+        "normalized_bundle_sha256",
+        "decision_bundle_sha256",
+        "analysis_bundle_sha256",
+    }
+    if set(contract.get("required_contract_digest_roles", [])) != expected_contract_roles:
+        fail("required contract digest roles drift")
+    if set(contract.get("required_artifact_digest_roles", [])) != expected_artifact_roles:
+        fail("required artifact digest roles drift")
+
+    try:
+        Draft202012Validator.check_schema(schema)
+    except Exception as exc:
+        fail(f"replay receipt JSON Schema is invalid: {exc}")
+
+    sample_sha = "0" * 64
+    sample = {
+        "record_type": "AOSS_V0_6_STAGE_A_WHOLE_STUDY_REPLAY_RECEIPT",
+        "schema_version": 1,
+        "study_id": "synthetic-schema-check",
+        "attempt_id": "attempt-0",
+        "generated_at_utc": "2026-09-19T00:00:00Z",
+        "source_system": {
+            "repository": "ndrorchestration/agent-control-plane",
+            "commit": EXPECTED_SOURCE_COMMIT,
+            "provenance_schema": EXPECTED_SCHEMA,
+        },
+        "apparatus": {
+            "accepted_commit": EXPECTED_APPARATUS_COMMIT,
+            "adapter_version": EXPECTED_ADAPTER,
+        },
+        "contract_digests": {name: sample_sha for name in expected_contract_roles},
+        "artifact_digests": {name: sample_sha for name in expected_artifact_roles},
+        "replay_environment": {
+            "python_version": "schema-check",
+            "os": "schema-check",
+            "architecture": "schema-check",
+            "dependency_lock_sha256": sample_sha,
+            "adapter_source_sha256": sample_sha,
+        },
+        "replay_verification": {
+            "status": "FAIL",
+            "source_identity_match": False,
+            "contract_digest_match": False,
+            "study_manifest_hash_match": False,
+            "source_episode_bundle_hash_match": False,
+            "normalized_replay_digest_match": False,
+            "decision_replay_digest_match": False,
+            "analysis_replay_digest_match": False,
+        },
+        "outcome_payload_embedded": False,
+        "authorization_effect": "NONE",
+        "external_validation_effect": "NONE",
+        "scientific_n_increment": 0,
+    }
+    try:
+        Draft202012Validator(schema).validate(sample)
+    except ValidationError as exc:
+        fail(f"replay receipt schema rejects its synthetic contract check: {exc.message}")
+
+    predicates = readiness.get("required_predicates")
+    if not isinstance(predicates, dict):
+        fail("required_predicates must be an object")
+    receipt_predicate = predicates.get("artifact_hash_and_replay_receipt")
+    if not isinstance(receipt_predicate, dict) or receipt_predicate.get("status") != "BOUND":
+        fail("artifact hash/replay receipt predicate must be BOUND")
+
+
 def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     if readiness.get("record_type") != "AOSS_V0_6_STAGE_A_PREDATA_READINESS":
         fail("record_type drift")
@@ -241,6 +362,7 @@ def validate_readiness(readiness: dict[str, Any]) -> list[str]:
 
     validate_apparatus_binding(readiness)
     validate_observer_measurement_boundary(readiness)
+    validate_artifact_replay_receipt_contract(readiness)
     unresolved = unresolved_predicates(readiness)
     expected_status = "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW" if not unresolved else "NOT_READY_FAIL_CLOSED"
     if readiness.get("status") != expected_status:
