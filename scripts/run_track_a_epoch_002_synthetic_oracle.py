@@ -51,10 +51,7 @@ def fail(message: str) -> None:
 
 
 def canonical_bytes(value: Any) -> bytes:
-    return (
-        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-        + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8")
 
 
 def sha256_bytes(value: bytes) -> str:
@@ -254,10 +251,7 @@ def validate_oracle_result(scenario: str, result: dict[str, Any]) -> None:
 
     assert_close(estimate, expected_estimate, f"{scenario} estimate")
     if classification != expected_class:
-        fail(
-            f"{scenario} classification mismatch: expected {expected_class}, "
-            f"got {classification}"
-        )
+        fail(f"{scenario} classification mismatch: expected {expected_class}, " f"got {classification}")
 
     if scenario in {"positive_constant", "negative_constant"}:
         assert_close(low, expected_estimate, f"{scenario} CI lower")
@@ -295,9 +289,7 @@ def negative_control(
     except ValueError as exc:
         message = str(exc)
         if expected_fragment not in message:
-            fail(
-                f"negative control {name} rejected for unexpected reason: {message}"
-            )
+            fail(f"negative control {name} rejected for unexpected reason: {message}")
         return {"status": "PASS_REJECTED", "reason": message}
     fail(f"negative control {name} was not rejected")
 
@@ -349,9 +341,7 @@ def main() -> int:
             "input_sha256": input_sha,
             "analysis_result_sha256": result_digest(first),
             "estimate": first["estimate_pdmal_minus_random_regular"],
-            "two_sided_95pct_percentile_ci": first[
-                "two_sided_95pct_percentile_ci"
-            ],
+            "two_sided_95pct_percentile_ci": first["two_sided_95pct_percentile_ci"],
             "classification": first["classification"],
             "first_runtime_ms": first_ms,
             "replay_runtime_ms": second_ms,
@@ -456,9 +446,7 @@ def main() -> int:
             "records_per_scenario": 2250,
             "synthetic_records_exercised_in_oracle_scenarios": 9000,
             "negative_controls_required": 5,
-            "negative_controls_rejected": sum(
-                1 for item in controls.values() if item["status"] == "PASS_REJECTED"
-            ),
+            "negative_controls_rejected": sum(1 for item in controls.values() if item["status"] == "PASS_REJECTED"),
         },
         "empirical_data_used": False,
         "protected_material_used": False,
