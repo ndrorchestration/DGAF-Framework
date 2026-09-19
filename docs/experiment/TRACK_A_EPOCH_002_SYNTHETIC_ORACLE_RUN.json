@@ -1,0 +1,88 @@
+{
+  "record_type": "TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RUN_DEFINITION",
+  "schema_version": 1,
+  "controller_issue": 822,
+  "classification": "SYNTHETIC_ENGINEERING_ASSURANCE_ONLY",
+  "execution_scope": "FROZEN_ANALYSIS_KNOWN_TRUTH_ORACLE_ONLY",
+  "purpose": "Test whether the exact frozen Track A Epoch 002 primary-analysis implementation recovers planted ground truth and fails closed on malformed synthetic inputs without using or advancing empirical evidence.",
+  "bindings": {
+    "analysis_path": "experiments/pdmal_pilot/track_a_epoch_002_analysis.py",
+    "analysis_blob_sha": "d4495f7cdf211b974039ec0e66292dc62ea0881f",
+    "analysis_config_sha256": "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73",
+    "requirements_lock_path": "experiments/pdmal_pilot/requirements-full-lock.txt",
+    "requirements_lock_blob_sha": "00c1f779e97030f9b25ae494642edb31b5b09de5",
+    "python_version": "3.12.0",
+    "numpy_version": "2.5.1"
+  },
+  "matrix": {
+    "seed_count": 50,
+    "topologies": ["ring", "pdmal", "random_regular", "small_world", "complete"],
+    "failure_counts": [0, 1, 2, 3, 4, 5, 6, 8, 10],
+    "records_per_seed": 45,
+    "total_records_per_scenario": 2250,
+    "algorithm_id": "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1"
+  },
+  "oracle_scenarios": [
+    {
+      "id": "positive_constant",
+      "pdmal_successes_per_seed": 8,
+      "random_regular_successes_per_seed": 4,
+      "expected_estimate": 0.4444444444444444,
+      "expected_ci": "point_at_estimate",
+      "expected_classification": "SUPPORTS_DIRECTIONAL_TRACK_A_HYPOTHESIS"
+    },
+    {
+      "id": "null_constant",
+      "pdmal_successes_per_seed": 5,
+      "random_regular_successes_per_seed": 5,
+      "expected_estimate": 0.0,
+      "expected_ci": "point_at_zero",
+      "expected_classification": "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED"
+    },
+    {
+      "id": "negative_constant",
+      "pdmal_successes_per_seed": 3,
+      "random_regular_successes_per_seed": 7,
+      "expected_estimate": -0.4444444444444444,
+      "expected_ci": "point_at_estimate",
+      "expected_classification": "EVIDENCE_AGAINST_DIRECTIONAL_TRACK_A_HYPOTHESIS"
+    },
+    {
+      "id": "balanced_mixed",
+      "first_25": {"pdmal_successes_per_seed": 6, "random_regular_successes_per_seed": 5},
+      "last_25": {"pdmal_successes_per_seed": 5, "random_regular_successes_per_seed": 6},
+      "expected_estimate": 0.0,
+      "expected_ci": "straddles_zero",
+      "expected_classification": "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED"
+    }
+  ],
+  "invariance_checks": [
+    "record_order_invariance",
+    "nonprimary_topology_outcome_invariance",
+    "deterministic_replay"
+  ],
+  "negative_controls": [
+    "missing_matrix_cell",
+    "duplicate_matrix_cell",
+    "non_boolean_endpoint",
+    "wrong_algorithm_identity",
+    "outcome_exclusion_attempt"
+  ],
+  "required_artifacts": [
+    "TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_INPUT_MANIFEST.json",
+    "TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_INPUT_MANIFEST.json.sha256",
+    "TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RESULT.json",
+    "TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RESULT.json.sha256",
+    "track-a-epoch002-synthetic-oracle-tests.xml"
+  ],
+  "state_effect": {
+    "empirical_data_used": false,
+    "protected_material_used": false,
+    "real_primary_analysis_performed": false,
+    "scientific_n_increment": 0,
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "independent_validation": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED_N0"
+  },
+  "claim_ceiling": "ENGINEERING_ASSURANCE_OF_THE_FROZEN_ANALYSIS_CODE_PATH_ONLY"
+}

@@ -1,0 +1,132 @@
+name: Track A Epoch 002 Synthetic Oracle
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/track-a-epoch-002-synthetic-oracle.yml"
+      - "docs/experiment/TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RUN.json"
+      - "scripts/run_track_a_epoch_002_synthetic_oracle.py"
+      - "tests/test_track_a_epoch_002_synthetic_oracle.py"
+      - "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
+      - "experiments/pdmal_pilot/requirements-full-lock.txt"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/track-a-epoch-002-synthetic-oracle.yml"
+      - "docs/experiment/TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RUN.json"
+      - "scripts/run_track_a_epoch_002_synthetic_oracle.py"
+      - "tests/test_track_a_epoch_002_synthetic_oracle.py"
+      - "experiments/pdmal_pilot/track_a_epoch_002_analysis.py"
+      - "experiments/pdmal_pilot/requirements-full-lock.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-oracle:
+    name: Frozen analysis known-truth oracle
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up exact Python 3.12.0
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.0"
+
+      - name: Instantiate frozen analysis environment without resolver drift
+        run: |
+          python -m pip install --require-hashes --no-deps \
+            -r experiments/pdmal_pilot/requirements-full-lock.txt
+
+      - name: Verify exact runtime and frozen analysis identity
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import platform
+          import sys
+          from pathlib import Path
+
+          import numpy as np
+
+          assert platform.python_version() == "3.12.0"
+          assert np.__version__ == "2.5.1"
+
+          path = Path("experiments/pdmal_pilot/track_a_epoch_002_analysis.py")
+          spec = importlib.util.spec_from_file_location("frozen_analysis_identity", path)
+          assert spec is not None and spec.loader is not None
+          module = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = module
+          spec.loader.exec_module(module)
+          assert (
+              module.analysis_config_sha256()
+              == "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73"
+          )
+          PY
+          test "$(git rev-parse HEAD:experiments/pdmal_pilot/track_a_epoch_002_analysis.py)" = \
+            "d4495f7cdf211b974039ec0e66292dc62ea0881f"
+          test "$(git rev-parse HEAD:experiments/pdmal_pilot/requirements-full-lock.txt)" = \
+            "00c1f779e97030f9b25ae494642edb31b5b09de5"
+
+      - name: Run oracle contract and rejection tests
+        run: |
+          mkdir -p synthetic-artifacts/track-a-epoch002-oracle
+          python -m pytest tests/test_track_a_epoch_002_synthetic_oracle.py -q \
+            --junitxml=synthetic-artifacts/track-a-epoch002-oracle/track-a-epoch002-synthetic-oracle-tests.xml
+
+      - name: Execute synthetic oracle replay
+        run: |
+          python scripts/run_track_a_epoch_002_synthetic_oracle.py \
+            --output-dir synthetic-artifacts/track-a-epoch002-oracle
+
+      - name: Verify sealed artifacts and fail-closed boundary
+        run: |
+          cd synthetic-artifacts/track-a-epoch002-oracle
+          sha256sum --check TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_INPUT_MANIFEST.json.sha256
+          sha256sum --check TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RESULT.json.sha256
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(
+              Path("TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RESULT.json").read_text()
+          )
+          assert result["classification"] == "SYNTHETIC_ENGINEERING_ASSURANCE_ONLY"
+          assert result["empirical_data_used"] is False
+          assert result["protected_material_used"] is False
+          assert result["real_primary_analysis_performed"] is False
+          assert result["scientific_n_increment"] == 0
+          assert result["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+          assert result["independent_validation"] == "NOT_ESTABLISHED"
+          assert result["high_assurance"] == "NOT_AUTHORIZED_N0"
+          assert result["measurements"]["scenario_count"] == 4
+          assert (
+              result["measurements"]["synthetic_records_exercised_in_oracle_scenarios"]
+              == 9000
+          )
+          assert result["measurements"]["negative_controls_rejected"] == 5
+          assert all(
+              item["status"] == "PASS"
+              for item in result["scenarios"].values()
+          )
+          assert all(
+              value == "PASS"
+              for value in result["invariance_checks"].values()
+          )
+          PY
+
+      - name: Upload synthetic-only evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-a-epoch002-synthetic-oracle
+          path: synthetic-artifacts/track-a-epoch002-oracle/
+          if-no-files-found: error
+          retention-days: 30
