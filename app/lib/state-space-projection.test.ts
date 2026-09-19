@@ -11,12 +11,9 @@ test('state-space projection derives its ordered regions from canonical governan
     GOVERNANCE_STAGES.map(stage => stage.id),
   )
 
-  assert.equal(STATE_SPACE_PROJECTION.frontierId, 'interpretation-adjudication')
+  assert.equal(STATE_SPACE_PROJECTION.frontierId, null)
 
-  const frontierIndex = GOVERNANCE_STAGES.findIndex(stage => stage.id === 'interpretation-adjudication')
-  assert.ok(frontierIndex > 0)
-
-  for (const region of STATE_SPACE_PROJECTION.regions.slice(0, frontierIndex)) {
+  for (const region of STATE_SPACE_PROJECTION.regions) {
     assert.equal(region.reachability, 'established')
     assert.equal(region.nativeState, 'pass')
   }
@@ -46,8 +43,8 @@ test('state-space projection keeps derived reachability separate from native pre
   assert.equal(lockedAnalysis.reachability, 'established')
   assert.equal(lockedAnalysis.nativeState, 'pass')
 
-  assert.equal(interpretation.reachability, 'frontier')
-  assert.equal(interpretation.nativeState, 'open')
+  assert.equal(interpretation.reachability, 'established')
+  assert.equal(interpretation.nativeState, 'pass')
 })
 
 test('state-space projection preserves global fail-closed constraints without scalar readiness', () => {
