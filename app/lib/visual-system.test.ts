@@ -107,6 +107,8 @@ test('Evidence view exposes provenance boundaries before governance handoff', ()
   assert.match(evidenceView, /EVIDENCE SPINE/)
   assert.match(evidenceView, /EVIDENCE BOUNDARY/)
   assert.match(evidenceView, /DOES NOT ESTABLISH/)
+  assert.match(evidenceView, /establishes—or still leaves open/)
+  assert.doesNotMatch(evidenceView, /each accepted state establishes/)
   assert.match(
     evidenceView,
     /onClick=\{\(\) => onNavigate\('governance'\)\}>Inspect governance context/,
