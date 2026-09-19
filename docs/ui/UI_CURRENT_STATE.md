@@ -2,7 +2,7 @@
 
 **Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-19  
 **Authority class:** PRESENTATION / DOCUMENTATION ONLY  
-**Reconciliation input:** protected signed/verified `main` `af2ffb1ae82b58de8e253ca49c1c33b91a7baf59`  
+**Reconciliation input:** protected signed/verified `main` `133dbab5622882f02d5ec5cacad9841c3a97a2df`  
 **Scientific/control effect:** NONE  
 **Canonical High-Assurance boundary:** `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
 
@@ -26,7 +26,7 @@ Track A Epoch 002 has advanced beyond the state used when PR #849 was authored:
 - independent validation: NOT ESTABLISHED;
 - scientific-N increment: 0.
 
-The active control frontier is therefore **post-interpretation projection reconciliation and gate identification**; no new empirical or authorization transition is implied.
+The modeled Epoch 002 lifecycle is now closed for its exact preregistered scope through PR #881; the UI must not invent a successor empirical gate or imply claim promotion.
 
 ## Accepted interface foundation
 
@@ -41,6 +41,10 @@ The following presentation architecture is accepted on protected main:
 - evidence-first Overview routing from merged PR #845: users are directed to Evidence before Governance interpretation.
 
 These surfaces are projections only. They cannot create evidence, authorize a transition, establish efficacy, increment scientific N, or alter High-Assurance state.
+
+### PR #881 — accepted post-interpretation disposition
+
+PR #881 establishes `CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT` for Epoch 002. The UI must render the lane as closed for the exact preregistered scope without implying efficacy, independence, scientific-N promotion, or permission for a new experiment. Any independent replication or new empirical epoch requires a separate proposal, preregistration, and authorization.
 
 ## Closed provenance requiring current-main reconstruction
 
