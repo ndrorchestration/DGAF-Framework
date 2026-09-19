@@ -34,7 +34,8 @@ def test_current_stage_a_state_is_explicitly_not_ready() -> None:
     assert "analysis_and_multiplicity" in unresolved
     assert "observer_boundary_and_trust_domains" not in unresolved
     assert "extraction_functions_units_tolerances" not in unresolved
-    assert len(unresolved) == 8
+    assert "artifact_hash_and_replay_receipt" not in unresolved
+    assert len(unresolved) == 7
     assert readiness["outcome_collection_authorized"] is False
     assert readiness["scientific_n_increment"] == 0
 
@@ -147,3 +148,84 @@ def test_extraction_contract_requires_every_field_function_identity() -> None:
     validator.load_json = fake_load
     with pytest.raises(SystemExit, match="extraction function identity missing"):
         validator.validate_readiness(readiness)
+
+
+def test_replay_receipt_contract_is_content_address_only() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    validator.validate_readiness(readiness)
+    contract = validator.load_json(ROOT / validator.RECEIPT_CONTRACT_REL)
+    assert contract["receipt_content_boundary"] == {
+        "outcome_payload_embedded": False,
+        "episode_payload_embedded": False,
+        "numerical_analysis_payload_embedded": False,
+        "content_addresses_and_replay_status_only": True,
+    }
+    assert contract["pass_rule"] == "PASS_IFF_ALL_REPLAY_VERIFICATION_BOOLEANS_TRUE"
+
+
+def test_replay_receipt_contract_requires_future_frozen_contract_digests() -> None:
+    validator = load_validator()
+    contract = validator.load_json(ROOT / validator.RECEIPT_CONTRACT_REL)
+    roles = set(contract["required_contract_digest_roles"])
+    assert {
+        "decision_policy_sha256",
+        "freshness_calibration_sha256",
+        "eligibility_repetition_sha256",
+        "failure_ground_truth_sha256",
+        "analysis_multiplicity_sha256",
+        "practical_effect_rule_sha256",
+    }.issubset(roles)
+
+
+def test_replay_receipt_schema_rejects_embedded_outcome_payload() -> None:
+    validator = load_validator()
+    schema = validator.load_json(ROOT / validator.RECEIPT_SCHEMA_REL)
+    sample_sha = "0" * 64
+    contract = validator.load_json(ROOT / validator.RECEIPT_CONTRACT_REL)
+    receipt = {
+        "record_type": "AOSS_V0_6_STAGE_A_WHOLE_STUDY_REPLAY_RECEIPT",
+        "schema_version": 1,
+        "study_id": "synthetic-test",
+        "attempt_id": "attempt-0",
+        "generated_at_utc": "2026-09-19T00:00:00Z",
+        "source_system": {
+            "repository": "ndrorchestration/agent-control-plane",
+            "commit": validator.EXPECTED_SOURCE_COMMIT,
+            "provenance_schema": validator.EXPECTED_SCHEMA,
+        },
+        "apparatus": {
+            "accepted_commit": validator.EXPECTED_APPARATUS_COMMIT,
+            "adapter_version": validator.EXPECTED_ADAPTER,
+        },
+        "contract_digests": {
+            name: sample_sha for name in contract["required_contract_digest_roles"]
+        },
+        "artifact_digests": {
+            name: sample_sha for name in contract["required_artifact_digest_roles"]
+        },
+        "replay_environment": {
+            "python_version": "test",
+            "os": "test",
+            "architecture": "test",
+            "dependency_lock_sha256": sample_sha,
+            "adapter_source_sha256": sample_sha,
+        },
+        "replay_verification": {
+            "status": "PASS",
+            "source_identity_match": True,
+            "contract_digest_match": True,
+            "study_manifest_hash_match": True,
+            "source_episode_bundle_hash_match": True,
+            "normalized_replay_digest_match": True,
+            "decision_replay_digest_match": True,
+            "analysis_replay_digest_match": True,
+        },
+        "outcome_payload_embedded": False,
+        "authorization_effect": "NONE",
+        "external_validation_effect": "NONE",
+        "scientific_n_increment": 0,
+        "numerical_result": {"estimate": 0.5},
+    }
+    with pytest.raises(validator.ValidationError):
+        validator.Draft202012Validator(schema).validate(receipt)
