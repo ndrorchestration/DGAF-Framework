@@ -19,7 +19,6 @@ Execution is admissible only when all of the following are true:
 
 Any failed precondition stops execution.
 
-
 ### Windows lock-instantiation rule
 
 The accepted requirements lock is frozen by Git blob identity `00c1f779e97030f9b25ae494642edb31b5b09de5` and must not be regenerated or edited after authorization. On Windows, pip may otherwise discover platform-only transitive packages that were not part of the accepted resolved lock. Therefore the operator autopilot installs the frozen package set with `--require-hashes --no-deps`.
