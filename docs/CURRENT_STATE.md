@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-19
-reconciliation_input_main: dde7b3a07c9d8ccd8a24745437027bc5e15759c9
+reconciliation_input_main: e06741b88d875f816c53e6da6bcf894a600f14bd
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -66,6 +66,8 @@ accepted_locked_analysis_result_pr: 851
 accepted_locked_analysis_result_commit: c0690e599d25304f1d920d5235adff04ba76094a
 accepted_interpretation_tooling_pr: 855
 accepted_interpretation_tooling_commit: 9ef99ac7ed803609b4a7a4eb2b98bab328f853cc
+accepted_interpretation_projection_pr: 877
+post_interpretation_controller_issue: 879
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -114,7 +116,7 @@ No row above establishes integrated DGAF efficacy, independent validation, produ
 
 ## Protected-main repository state
 
-This reconciliation was prepared against protected `main` `dde7b3a07c9d8ccd8a24745437027bc5e15759c9`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was refreshed against protected `main` `e06741b88d875f816c53e6da6bcf894a600f14bd` after accepted PR #877. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
