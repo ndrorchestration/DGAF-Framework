@@ -59,7 +59,7 @@ def test_cannot_claim_ready_while_any_predicate_is_unresolved() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
     broken = copy.deepcopy(readiness)
-    entry = broken["required_predicates"]["primary_comparator_machine_derivation"]
+    entry = broken["required_predicates"]["authorization_and_nonauthority_boundary"]
     entry["status"] = "BLOCKED"
     entry["missing"] = ["synthetic test blocker"]
     with pytest.raises(SystemExit, match="readiness status is inconsistent"):
@@ -70,7 +70,7 @@ def test_unresolved_predicate_requires_explicit_missing_reasons() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
     broken = copy.deepcopy(readiness)
-    entry = broken["required_predicates"]["primary_comparator_machine_derivation"]
+    entry = broken["required_predicates"]["authorization_and_nonauthority_boundary"]
     entry["status"] = "BLOCKED"
     entry["missing"] = []
     with pytest.raises(SystemExit, match="requires a non-empty missing list"):
