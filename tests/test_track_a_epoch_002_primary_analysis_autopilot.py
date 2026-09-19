@@ -22,15 +22,19 @@ def test_autopilot_uses_expected_local_paths_and_exact_runtime() -> None:
     assert "--require-hashes" in text
 
 
-def test_autopilot_bootstraps_only_signed_official_python_when_needed() -> None:
+def test_autopilot_bootstraps_exact_python_side_by_side_when_needed() -> None:
     text = source()
 
-    assert "https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe" in text
+    assert "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" in text
+    assert "https://api.nuget.org/v3/index.json" in text
+    assert '"install", "python"' in text
+    assert '"-Version", $ExpectedPython' in text
+    assert '"-ExcludeVersion"' in text
     assert "Get-AuthenticodeSignature" in text
-    assert '"Valid"' in text
+    assert '"Microsoft"' in text
     assert "Python Software Foundation" in text
-    assert "InstallAllUsers=0" in text
-    assert "PrependPath=0" in text
+    assert "DGAF_EXACT_PYTHON_PROVISIONING=NUGET_SIDE_BY_SIDE" in text
+    assert "python\\tools\\python.exe" in text
 
 
 def test_autopilot_runs_preflight_before_empirical_execution() -> None:
