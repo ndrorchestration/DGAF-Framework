@@ -1,6 +1,6 @@
 # Contributing
 
-> **Governance:** DGAF / Agent Amethyst — changes are subject to repository integrity and governance checks before merge. See the public documentation spine and `CROSS_REF.md` for current boundaries.
+> **Governance:** DGAF functional authority resolves through `governance/role_capability_registry.v1.json`; repository-level orchestration uses `role.governance-orchestrator` and specialist gates retain their own scoped authority. Changes remain subject to repository integrity and governance checks before merge.
 
 ## Scope
 
@@ -55,7 +55,7 @@ The Apache-2.0 license does not grant trademark rights. See `docs/GOVERNANCE/DGA
 
 ## Spec changes
 
-- Agent role changes must update the canonical role table in architecture documentation.
+- Functional role or capability changes must update `governance/role_capability_registry.v1.json`; persona/identity lineage changes must update `governance/persona_role_lineage.v1.json` without granting new authority.
 - Pattern changes must identify the relevant Pattern Commons namespace/relationship.
 - Retired artifacts must be annotated as historical/deprecated rather than silently deleted when provenance matters.
 
