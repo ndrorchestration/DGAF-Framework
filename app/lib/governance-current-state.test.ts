@@ -9,8 +9,8 @@ import { GOVERNANCE_STAGES, TRUTH_BOUNDARY } from './governance.ts'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const OVERVIEW_SOURCE = readFileSync(path.join(ROOT, 'app/components/overview-view.tsx'), 'utf8')
 
-test('public governance projection reflects the accepted 2026-09-18 documentation frontier', () => {
-  assert.equal(TRUTH_BOUNDARY.sourceUpdated, '2026-09-18')
+test('public governance projection reflects the accepted 2026-09-19 documentation frontier', () => {
+  assert.equal(TRUTH_BOUNDARY.sourceUpdated, '2026-09-19')
 
   const analysisAuthorization = GOVERNANCE_STAGES.find(
     stage => stage.id === 'primary-analysis-authorization',
@@ -20,13 +20,18 @@ test('public governance projection reflects the accepted 2026-09-18 documentatio
   assert.match(analysisAuthorization?.toolingNote ?? '', /#828/)
 
   const lockedAnalysis = GOVERNANCE_STAGES.find(stage => stage.id === 'locked-analysis')
-  assert.equal(lockedAnalysis?.predicateState, 'open')
+  const interpretation = GOVERNANCE_STAGES.find(stage => stage.id === 'interpretation-adjudication')
+  assert.equal(lockedAnalysis?.predicateState, 'pass')
   assert.equal(lockedAnalysis?.toolingPrepared, true)
+  assert.equal(interpretation?.predicateState, 'open')
+  assert.equal(interpretation?.toolingPrepared, true)
+  assert.match(interpretation?.toolingNote ?? '', /#855/)
 })
 
-test('overview truth-boundary copy reflects the accepted locked-analysis frontier', () => {
-  assert.match(OVERVIEW_SOURCE, /materialization and its immutable receipt are established/)
-  assert.match(OVERVIEW_SOURCE, /bounded locked-primary-analysis authorization is accepted/)
-  assert.match(OVERVIEW_SOURCE, /the analysis has not run/)
-  assert.match(OVERVIEW_SOURCE, /no locked result is established/)
+test('overview truth-boundary copy reflects the accepted interpretation frontier', () => {
+  assert.match(OVERVIEW_SOURCE, /local primary-analysis execution/)
+  assert.match(OVERVIEW_SOURCE, /content-addressed locked-result receipt are established/)
+  assert.match(OVERVIEW_SOURCE, /interpretation tooling is accepted/)
+  assert.match(OVERVIEW_SOURCE, /interpretation has not run/)
+  assert.match(OVERVIEW_SOURCE, /no INTERPRETATION_NOTE is established/)
 })
