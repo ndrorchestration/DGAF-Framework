@@ -1,0 +1,112 @@
+name: Track A Epoch 002 Interpretation Adjudication
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-interpretation.yml'
+      - 'scripts/validate_track_a_epoch_002_interpretation.py'
+      - 'scripts/prepare_track_a_epoch_002_interpretation_note.py'
+      - 'tests/test_track_a_epoch_002_interpretation.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_INTERPRETATION_PROCEDURE.md'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_INTERPRETATION_NOTE.json'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/track-a-epoch-002-interpretation.yml'
+      - 'scripts/validate_track_a_epoch_002_interpretation.py'
+      - 'scripts/prepare_track_a_epoch_002_interpretation_note.py'
+      - 'tests/test_track_a_epoch_002_interpretation.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_INTERPRETATION_PROCEDURE.md'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_INTERPRETATION_NOTE.json'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 interpretation adjudication
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install CI-only validation dependencies
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Compile interpretation tooling
+        run: |
+          python -m py_compile scripts/validate_track_a_epoch_002_interpretation.py
+          python -m py_compile scripts/prepare_track_a_epoch_002_interpretation_note.py
+
+      - name: Resolve interpretation lifecycle mode
+        id: mode
+        run: |
+          set -euo pipefail
+          note='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_INTERPRETATION_NOTE.json'
+          prior=''
+          case "${{ github.event_name }}" in
+            pull_request) prior="${{ github.event.pull_request.base.sha }}" ;;
+            push) prior="${{ github.event.before }}" ;;
+          esac
+
+          if test -e "$note"; then
+            if test -n "$prior" && git cat-file -e "$prior:$note" 2>/dev/null && git diff --quiet "$prior" HEAD -- "$note"; then
+              echo 'value=accepted_state' >> "$GITHUB_OUTPUT"
+            else
+              echo 'value=note_event' >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo 'value=tooling_only' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate prospective interpretation tooling
+        if: ${{ steps.mode.outputs.value == 'tooling_only' }}
+        run: python scripts/validate_track_a_epoch_002_interpretation.py --tooling
+
+      - name: Validate creation-only interpretation event
+        if: ${{ steps.mode.outputs.value == 'note_event' }}
+        env:
+          ACCEPTED_PARENT: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          test -n "$ACCEPTED_PARENT"
+          python scripts/validate_track_a_epoch_002_interpretation.py \
+            --event-commit HEAD \
+            --accepted-parent "$ACCEPTED_PARENT"
+
+      - name: Validate accepted immutable interpretation state
+        if: ${{ steps.mode.outputs.value == 'accepted_state' }}
+        run: python scripts/validate_track_a_epoch_002_interpretation.py --accepted-state
+
+      - name: Run synthetic-only interpretation tests
+        run: python -m pytest -q tests/test_track_a_epoch_002_interpretation.py
+
+      - name: Prove CI has no empirical interpretation input surface
+        run: |
+          set -euo pipefail
+          workflow='.github/workflows/track-a-epoch-002-interpretation.yml'
+          ! grep -q -- '--analysis-output' "$workflow"
+          ! grep -q -- '--interpretation-packet' "$workflow"
+          ! grep -q 'unblinded_analysis_input' "$workflow"
+          ! grep -q 'run_track_a_epoch_002_locked_primary_analysis.py' "$workflow"
+          echo 'TRACK_A_EPOCH_002_INTERPRETATION_CI=PASS_NONEXECUTING'
+          echo 'NUMERICAL_RESULT_AVAILABLE_TO_CI=FALSE'
+          echo 'SCIENTIFIC_N_INCREMENT=0'
+          echo 'CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED'
