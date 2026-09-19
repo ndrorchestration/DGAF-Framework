@@ -174,26 +174,26 @@ export const GOVERNANCE_STAGES: GovernanceStage[] = [
     id: 'interpretation-adjudication',
     label: 'Interpretation / adjudication',
     shortLabel: 'Interpret',
-    description: 'Revalidate the retained operator-local locked-analysis output and derive only the frozen preregistered interpretation under the accepted claim ceiling.',
-    predicateState: 'open',
+    description: 'The retained operator-local locked-analysis output was revalidated under the frozen preregistered interpretation contract, and a separate content-addressed INTERPRETATION_NOTE was admitted.',
+    predicateState: 'pass',
     toolingPrepared: true,
-    toolingNote: 'PR #855 accepted fail-closed interpretation tooling. No INTERPRETATION_NOTE has been admitted.',
-    evidenceBoundary: 'INTERPRETATION_TOOLING = ACCEPTED; INTERPRETATION_EXECUTION = NOT RUN; INTERPRETATION_NOTE = NOT ESTABLISHED.',
+    toolingNote: 'PR #855 accepted fail-closed interpretation tooling; PR #872 established the creation-only INTERPRETATION_NOTE without exposing the numerical estimate, interval, or classification.',
+    evidenceBoundary: 'INTERPRETATION_EXECUTION = COMPLETED; INTERPRETATION_NOTE = ESTABLISHED; evidence remains SAME_SYSTEM_NONINDEPENDENT.',
     doesNotEstablish: 'Canonical DGAF efficacy, independent validation, production readiness, certification, High-Assurance authorization, or a scientific-N increment.',
   },
 ]
 
 export const NEXT_TRANSITION = {
-  title: 'Prepare and admit the bounded Epoch 002 interpretation',
+  title: 'Identify the next admissible post-interpretation gate',
   summary:
-    'Use the accepted fail-closed interpretation preparer against the exact retained locked-analysis output outside the repository. It must revalidate the accepted result digest and frozen preregistration, write the numerical interpretation artifact externally, and prepare only a content-addressed INTERPRETATION_NOTE candidate for separate admission.',
+    'The currently modeled Epoch 002 lifecycle is established through interpretation admission. No downstream claim-state transition is designated or authorized by PR #872; any next transition must be defined and justified separately against the accepted evidence and claim ceiling.',
   artifacts: [
-    'Track A Epoch 002 local interpretation artifact (operator-controlled, external)',
-    'local interpretation artifact SHA-256',
-    'TRACK_A_EPOCH_002_INTERPRETATION_NOTE.json (separate creation-only repository event)',
+    'accepted TRACK_A_EPOCH_002_INTERPRETATION_NOTE.json',
+    'current evidence and claim-boundary review',
+    'separate governed transition record if a downstream gate is defined',
   ],
   warning:
-    'Do not copy the numerical estimate, interval, or classification into general repository projections. Do not pool historical epochs, relabel exploratory results, or treat the interpretation note as canonical DGAF efficacy, independent validation, or High-Assurance authorization.',
+    'Do not expose the operator-local numerical interpretation in general projections. Do not infer efficacy, independence, production readiness, certification, High-Assurance authorization, or a scientific-N increment from interpretation admission.',
 } as const
 
 export interface EpochSummary {
@@ -225,9 +225,9 @@ export const EPOCH_SUMMARIES: EpochSummary[] = [
     id: 'epoch-002',
     eyebrow: 'Successor prospective path',
     title: 'Track A · Epoch 002',
-    state: 'open',
+    state: 'pass',
     summary:
-      'Collection, dataset lock, bounded unblinding, materialization, primary-analysis authorization, local primary-analysis execution, and the content-addressed locked-result receipt are accepted; interpretation tooling is accepted but interpretation has not yet run.',
+      'Collection, dataset lock, bounded unblinding, materialization, primary-analysis authorization, local primary-analysis execution, locked-result admission, and bounded interpretation admission are accepted at their exact scopes.',
     facts: [
       'Collection: COMPLETE · 50 paired seed units / 2,250 blinded observations',
       'Custody: SAME_SYSTEM_NONINDEPENDENT',
@@ -238,7 +238,9 @@ export const EPOCH_SUMMARIES: EpochSummary[] = [
       'Primary analysis: EXECUTED_LOCAL',
       'Locked analysis result receipt: ESTABLISHED · PR #851',
       'Interpretation tooling: ACCEPTED · PR #855',
-      'Interpretation note: NOT ESTABLISHED',
+      'Interpretation execution: COMPLETED',
+      'Interpretation note: ESTABLISHED · PR #872',
+      'Interpretation evidence class: SAME_SYSTEM_NONINDEPENDENT',
     ],
   },
 ]
