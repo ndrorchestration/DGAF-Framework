@@ -2,7 +2,8 @@ import { GOVERNANCE_MAP, GOVERNANCE_RELATIONSHIPS } from '../lib/governance-map'
 import { StatusChip } from './status-chip'
 
 function stageRole(index: number) {
-  const blockingIndex = GOVERNANCE_MAP.stages.findIndex(stage => stage.id === GOVERNANCE_MAP.blocking.id)
+  if (!GOVERNANCE_MAP.blocking) return 'completed'
+  const blockingIndex = GOVERNANCE_MAP.stages.findIndex(stage => stage.id === GOVERNANCE_MAP.blocking?.id)
   if (index < blockingIndex) return 'completed'
   if (index === blockingIndex) return 'blocking'
   return 'downstream'
