@@ -242,3 +242,33 @@ def test_technical_reference_does_not_publish_stale_protected_main_marker():
     assert "through protected-main `b1d91621...`" not in text
     assert "exact source identity" in text.lower()
     assert "git history" in text.lower()
+
+
+def test_taxonomy_controls_phdge_orbit_language_and_math_notation():
+    text = (ROOT / "docs" / "taxonomy" / "NDR_ACRONYM_REGISTRY.md").read_text(encoding="utf-8")
+
+    assert "| **PHDGE** | Phi-Harmonic Dynamic Governance Ecosystem |" in text
+    assert "HISTORICAL / NON-CANONICAL" in text
+    assert "Orbit" in text
+    assert "not a confirmed acronym" in text
+    assert "Observable Multi-Agent Reasoning" in text
+    assert "not an O-R-B-I-T expansion" in text
+    for token in ("noetic", "neotic", "ontic", "epistemic", "neontic"):
+        assert f"**{token}**" in text
+    assert "1.774732842" in text
+    assert "1.3247179572447454" in text
+    assert "Never conflate it with Platinum Mean" in text
+
+
+def test_pptl_persona_names_are_compatibility_nodes_not_authority_seats():
+    topology = (ROOT / "pptl" / "topology.py").read_text(encoding="utf-8")
+    readme = (ROOT / "pptl" / "README.md").read_text(encoding="utf-8")
+
+    assert "frozen experimental/compatibility node identifiers" in topology
+    assert "They do not grant current" in topology
+    assert "governance/role_capability_registry.v1.json" in topology
+    assert "Agent Amethyst meta-orchestrated" not in readme
+    assert "stable experimental/compatibility node identifiers" in readme
+    assert "bare `Sentinel` remains a historical/compatibility label" in readme
+    assert "role_capability_registry.v1.json" in readme
+    assert "persona_role_lineage.v1.json" in readme
