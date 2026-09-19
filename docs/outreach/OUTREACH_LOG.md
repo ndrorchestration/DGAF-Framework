@@ -1,6 +1,6 @@
 # OUTREACH_LOG — ndrorchestration Public Comms Record
 
-> Maintained by Agent COLLEEN (continuity) under direction of Agent Amethyst.
+> Maintained by `role.continuity-archive-coordinator`; governance direction, when required, resolves through `role.governance-orchestrator`.
 > Records all public-facing posts, announcements, and social content tied to the DGAF ecosystem and Needle template stack.
 
 ---
