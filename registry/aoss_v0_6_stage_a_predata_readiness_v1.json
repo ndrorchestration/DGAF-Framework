@@ -17,18 +17,23 @@
       "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#source_system"]
     },
     "observer_boundary_and_trust_domains": {
-      "status": "PARTIAL",
-      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#field_contracts.trust_domain"],
-      "missing": ["separately versioned operational observer deployment boundary", "validator/authority trust-domain source contract"]
+      "status": "BOUND",
+      "evidence": [
+        "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json#observer",
+        "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json#trust_domain_contract"
+      ]
     },
     "telemetry_schema": {
       "status": "BOUND",
       "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#source_system.provenance_schema"]
     },
     "extraction_functions_units_tolerances": {
-      "status": "PARTIAL",
-      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#field_contracts", "scripts/aoss_v0_6_acp_adapter.py"],
-      "missing": ["complete extraction-function identity per consequential field", "numeric tolerances where applicable"]
+      "status": "BOUND",
+      "evidence": [
+        "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json#extraction_functions",
+        "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json#numeric_tolerance_policy",
+        "scripts/aoss_v0_6_acp_adapter.py"
+      ]
     },
     "freshness_and_calibration": {
       "status": "OPEN",
