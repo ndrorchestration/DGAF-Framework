@@ -1,0 +1,39 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_FRESHNESS_CALIBRATION_CONTRACT",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES",
+  "clock_domain": {
+    "source_and_observer_same_host_required": true,
+    "source_timestamp_basis": "ACP timezone-aware UTC wall time",
+    "observer_ingest_timestamp_basis": "same-host timezone-aware UTC wall time",
+    "external_time_accuracy_claim": false,
+    "cross_host_clock_comparison_allowed": false
+  },
+  "thresholds": {
+    "max_last_event_age_at_ingest_seconds": 30,
+    "max_future_event_skew_seconds": 2,
+    "non_injection_event_time_regression_seconds": 0
+  },
+  "adjudication": {
+    "fresh": "last source event age is between -2 and 30 seconds inclusive at observer ingest",
+    "stale": "last source event age exceeds 30 seconds",
+    "future_skew": "last source event is more than 2 seconds ahead of observer ingest",
+    "invalid_clock_domain": "source and observer are not running in the required same-host clock domain",
+    "action_on_stale_or_invalid": "HOLD_OR_REJECT_FROM_PRIMARY_POLICY_EVALUATION_AND_COUNT_IN_SAFETY_FALSIFICATION"
+  },
+  "fixture_rule": {
+    "fixtures_are_not_live_freshness_evidence": true,
+    "stale_timestamp_fixture_reference_utc": "2026-09-18T10:00:02Z",
+    "stale_timestamp_fixture_must_classify": "STALE"
+  },
+  "calibration_semantics": {
+    "calibration_type": "SAME_HOST_CLOCK_DOMAIN_CONSTRAINT",
+    "ntp_or_external_reference_required": false,
+    "absolute_clock_accuracy_established": false,
+    "claim": "freshness is relative to same-host observer ingest time only"
+  },
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}
