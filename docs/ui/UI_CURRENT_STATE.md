@@ -42,7 +42,7 @@ The following presentation architecture is accepted on protected main:
 
 These surfaces are projections only. They cannot create evidence, authorize a transition, establish efficacy, increment scientific N, or alter High-Assurance state.
 
-## Candidates requiring current-main reconstruction
+## Closed provenance requiring current-main reconstruction
 
 ### PR #849 — Evidence provenance spine
 
@@ -53,7 +53,7 @@ Implementation intent remains accepted:
 - route explicitly from Verify / Evidence to Inspect / Governance;
 - preserve responsive and forced-colors semantics.
 
-Its exact historical head completed 19/19 returned repository workflow families successfully, but it is **STALE-LINEAGE / DO NOT MERGE AS-IS** because protected main advanced through changes to `app/lib/governance.ts`, Decision Frontier, Governance Map, current-state records, and the Track A locked-result/interpretation frontier. The old candidate text that primary analysis had not yet run is no longer admissible.
+Its exact historical head completed 19/19 returned repository workflow families successfully. PR #849 is now **CLOSED / UNMERGED / STALE-LINEAGE / DO NOT MERGE AS-IS** because protected main advanced through changes to `app/lib/governance.ts`, Decision Frontier, Governance Map, current-state records, and the Track A locked-result/interpretation frontier. The old candidate text that primary analysis had not yet run is no longer admissible.
 
 Reconstruction requirement: replay only the presentation delta onto current protected main and consume the current canonical stage model, where locked analysis is established and interpretation/adjudication is the open frontier.
 
@@ -68,7 +68,7 @@ Implementation intent remains accepted:
 - closed mobile navigation must be removed from pointer/focus interaction;
 - runtime status must remain explicitly scoped as observability, not governance authority.
 
-Its stacked exact head completed all 10 returned workflow families successfully, but it is **STACKED / STALE-LINEAGE / DO NOT MERGE AS-IS** because its base is #849. It must be reconstructed only after the Evidence tranche is rebound to current protected main.
+Its stacked exact head completed all 10 returned workflow families successfully. PR #850 is now **CLOSED / UNMERGED / STACKED / STALE-LINEAGE / DO NOT MERGE AS-IS** because its base is #849. It must be reconstructed only after the Evidence tranche is rebound to current protected main.
 
 ## Provider/deployment boundary
 
