@@ -17,6 +17,8 @@ MEASUREMENT_REL = "registry/aoss_v0_6_acp_measurement_manifest_v1.json"
 BOUNDARY_REL = "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json"
 RECEIPT_CONTRACT_REL = "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json"
 RECEIPT_SCHEMA_REL = "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json"
+ANALYSIS_CONTRACT_REL = "registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json"
+ADOPTION_RULE_REL = "registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json"
 
 ALLOWED_STATUSES = {"BOUND", "PARTIAL", "OPEN", "BLOCKED"}
 REQUIRED_PREDICATES = {
@@ -346,6 +348,196 @@ def validate_artifact_replay_receipt_contract(readiness: dict[str, Any]) -> None
         fail("artifact hash/replay receipt predicate must be BOUND")
 
 
+def validate_analysis_and_adoption_contracts(readiness: dict[str, Any]) -> None:
+    analysis = load_json(ROOT / ANALYSIS_CONTRACT_REL)
+    adoption = load_json(ROOT / ADOPTION_RULE_REL)
+
+    if analysis.get("record_type") != "AOSS_V0_6_STAGE_A_ANALYSIS_MULTIPLICITY_CONTRACT":
+        fail("analysis contract record_type drift")
+    if analysis.get("schema_version") != 1 or analysis.get("controller_issue") != 810:
+        fail("analysis contract identity drift")
+    if analysis.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+        fail("analysis contract status drift")
+    if analysis.get("outcome_collection_authorized") is not False:
+        fail("analysis contract cannot authorize outcome collection")
+    if analysis.get("external_validation_established") is not False:
+        fail("analysis contract cannot establish external validation")
+    if analysis.get("scientific_n_increment") != 0:
+        fail("analysis contract cannot increment scientific N")
+
+    population = analysis.get("analysis_population")
+    if population != {
+        "type": "FINITE_PREREGISTERED_PURPOSIVE_CONFORMANCE_CORPUS",
+        "random_sample": False,
+        "population_generalization_authorized": False,
+        "unit_of_analysis": "UNIQUE_ELIGIBLE_EPISODE",
+        "deterministic_replays_are_independent_units": False,
+    }:
+        fail("analysis population contract drift")
+
+    primary = analysis.get("primary_analysis")
+    if not isinstance(primary, dict):
+        fail("primary analysis contract is malformed")
+    expected_primary = {
+        "endpoint": "AOSS_DECISION_DIFFERS_FROM_FROZEN_OMR",
+        "estimator": "EXACT_FINITE_CORPUS_FRACTION",
+        "sampling_confidence_interval": "NONE",
+        "p_value": "NONE",
+        "null_hypothesis_test": "NONE",
+        "bootstrap": "NONE",
+        "population_effect_claim": "PROHIBITED",
+    }
+    for key, expected in expected_primary.items():
+        if primary.get(key) != expected:
+            fail(f"primary analysis contract drift: {key}")
+    if primary.get("numerator") != (
+        "count of unique eligible episodes with AOSS decision != frozen OMR comparator decision"
+    ):
+        fail("primary numerator drift")
+    if primary.get("denominator") != (
+        "count of unique eligible episodes satisfying the separately frozen eligibility contract"
+    ):
+        fail("primary denominator drift")
+
+    uncertainty = analysis.get("uncertainty_policy")
+    if uncertainty != {
+        "sampling_uncertainty": "NOT_MODELED_BECAUSE_CORPUS_IS_PURPOSIVE_AND_FINITE",
+        "epistemic_uncertainty": "RETAIN_TYPED_UNMEASURED_INCONCLUSIVE_STALE_CONFLICTING_STATES",
+        "missing_value_imputation": "PROHIBITED",
+        "forced_scoring_of_unmeasured_state": "PROHIBITED",
+        "denominator_must_be_explicit": True,
+    }:
+        fail("analysis uncertainty policy drift")
+
+    confirmatory = analysis.get("confirmatory_family")
+    if confirmatory != {
+        "primary_endpoint_count": 1,
+        "inferential_test_count": 0,
+        "classification": "PREREGISTERED_DESCRIPTIVE_PRIMARY_ENDPOINT",
+    }:
+        fail("analysis confirmatory-family drift")
+
+    multiplicity = analysis.get("multiplicity_policy")
+    if multiplicity != {
+        "inferential_multiplicity_adjustment": "NOT_APPLICABLE_NO_INFERENTIAL_TESTS",
+        "secondary_endpoints": "DESCRIPTIVE_ONLY",
+        "failure_class_specific_results": "DESCRIPTIVE_ONLY",
+        "post_hoc_subgroups": "EXPLORATORY_ONLY",
+        "confirmatory_relabeling_of_exploratory_results": False,
+        "new_inferential_hypothesis_requires_new_preregistration": True,
+    }:
+        fail("analysis multiplicity policy drift")
+
+    exclusion = analysis.get("exclusion_boundary")
+    if exclusion != {
+        "eligibility_source": "SEPARATELY_FROZEN_ELIGIBILITY_CONTRACT",
+        "outcome_aware_exclusion": False,
+        "infrastructure_or_protocol_failure": (
+            "INVALIDATES_OR_MARKS_ATTEMPT_INCONCLUSIVE_NOT_SILENTLY_EXCLUDED"
+        ),
+    }:
+        fail("analysis exclusion boundary drift")
+
+    limits = analysis.get("interpretation_limits")
+    expected_limits = {
+        "Decision divergence is not decision correctness.",
+        "Decision divergence is not AOSS superiority.",
+        "Decision divergence is not causal value of added observables.",
+        "Finite-corpus fractions do not generalize to other frameworks, workloads, or populations.",
+        "Deterministic replays do not increase effective sample size.",
+    }
+    if not isinstance(limits, list) or set(limits) != expected_limits:
+        fail("analysis interpretation limits drift")
+
+    if adoption.get("record_type") != "AOSS_V0_6_STAGE_A_PRACTICAL_EFFECT_ADOPTION_RULE":
+        fail("adoption rule record_type drift")
+    if adoption.get("schema_version") != 1 or adoption.get("controller_issue") != 810:
+        fail("adoption rule identity drift")
+    if adoption.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+        fail("adoption rule status drift")
+    if adoption.get("decision_divergence_threshold_for_portability") != "NONE":
+        fail("portability cannot depend on a decision-divergence threshold")
+    if adoption.get("minimum_effect_size_for_portability") != "NONE":
+        fail("portability cannot depend on a minimum effect size")
+    if adoption.get("zero_divergence_interpretation") != (
+        "DOES_NOT_FAIL_PORTABILITY_IF_STRUCTURAL_AND_SAFETY_CRITERIA_PASS"
+    ):
+        fail("zero-divergence portability interpretation drift")
+
+    positive = adoption.get("positive_portability_classification")
+    if not isinstance(positive, dict) or positive.get("label") != "BOUNDED_ACP_PORTABILITY_SUPPORTED":
+        fail("positive portability classification drift")
+    required = positive.get("requires_all")
+    expected_required = {
+        "all required Stage-A episode classes represented according to the frozen corpus contract",
+        "unchanged observer consumes eligible adapter output deterministically",
+        "identical manifests replay to identical reconstructed state and AOSS decision",
+        "missing source observables are never fabricated or promoted to measured",
+        "runtime-monitor safety violations equal zero",
+        "EXECUTE with authorization not TRUE equals zero",
+        "EXECUTE with validation not TRUE equals zero",
+        "EXECUTE with provenance not TRUE equals zero",
+        "corrupted lineage or stale telemetry never produces an unsafe stronger decision",
+        "source identity is reconstructable from the retained evidence bundle",
+        "whole-study replay receipt validates PASS",
+    }
+    if not isinstance(required, list) or set(required) != expected_required:
+        fail("positive portability requirements drift")
+
+    negative = adoption.get("negative_portability_classification")
+    if negative != {
+        "label": "BOUNDED_ACP_PORTABILITY_NOT_SUPPORTED",
+        "trigger": "ANY_FROZEN_FALSIFICATION_OR_SAFETY_CRITERION_FAILS",
+    }:
+        fail("negative portability classification drift")
+    inconclusive = adoption.get("inconclusive_classification")
+    if inconclusive != {
+        "label": "INCONCLUSIVE",
+        "trigger": (
+            "REQUIRED_EVIDENCE_OR_EXECUTION_IS_MISSING_OR_PROTOCOL_INVALID_WITHOUT_A_FROZEN_FAILURE_CLASSIFICATION"
+        ),
+    }:
+        fail("inconclusive portability classification drift")
+    if adoption.get("promotion_ceiling_if_supported") != (
+        "BOUNDED_CROSS_REPOSITORY_OBSERVER_PORTABILITY_AGAINST_EXACT_ACP_COMMIT_ONLY"
+    ):
+        fail("portability promotion ceiling drift")
+    expected_prohibited = {
+        "AOSS superiority",
+        "production-like external validation",
+        "production safety or readiness",
+        "universal framework compatibility",
+        "causal necessity of richer observables",
+        "DGAF efficacy",
+        "PDMAL efficacy",
+        "independent external validation",
+        "High-Assurance authorization",
+    }
+    prohibited = adoption.get("prohibited_promotions")
+    if not isinstance(prohibited, list) or set(prohibited) != expected_prohibited:
+        fail("prohibited portability promotions drift")
+    if adoption.get("stage_b_rule") != (
+        "STAGE_B_REQUIRES_SEPARATE_PRODUCTION_LIKE_OR_THIRD_PARTY_RUNTIME_IDENTITY_AND_PREREGISTRATION"
+    ):
+        fail("Stage-B boundary drift")
+    if adoption.get("outcome_collection_authorized") is not False:
+        fail("adoption rule cannot authorize outcome collection")
+    if adoption.get("external_validation_established") is not False:
+        fail("adoption rule cannot establish external validation")
+    if adoption.get("scientific_n_increment") != 0:
+        fail("adoption rule cannot increment scientific N")
+
+    predicates = readiness.get("required_predicates")
+    if not isinstance(predicates, dict):
+        fail("required_predicates must be an object")
+    analysis_predicate = predicates.get("analysis_and_multiplicity")
+    adoption_predicate = predicates.get("practical_effect_or_adoption_rule")
+    if not isinstance(analysis_predicate, dict) or analysis_predicate.get("status") != "BOUND":
+        fail("analysis/multiplicity predicate must be BOUND")
+    if not isinstance(adoption_predicate, dict) or adoption_predicate.get("status") != "BOUND":
+        fail("practical-effect/adoption predicate must be BOUND")
+
+
 def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     if readiness.get("record_type") != "AOSS_V0_6_STAGE_A_PREDATA_READINESS":
         fail("record_type drift")
@@ -363,6 +555,7 @@ def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     validate_apparatus_binding(readiness)
     validate_observer_measurement_boundary(readiness)
     validate_artifact_replay_receipt_contract(readiness)
+    validate_analysis_and_adoption_contracts(readiness)
     unresolved = unresolved_predicates(readiness)
     expected_status = "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW" if not unresolved else "NOT_READY_FAIL_CLOSED"
     if readiness.get("status") != expected_status:
