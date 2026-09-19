@@ -6,21 +6,33 @@
 
 This gate converts the Stage-A pre-data checklist into a machine-checked readiness contract. It does not select missing scientific or operational values.
 
-The accepted #859 apparatus is bound as the starting evidence state. Predicates already established by that apparatus or the frozen study document may be marked `BOUND`. Every unresolved predicate must remain `PARTIAL`, `OPEN`, or `BLOCKED` and must state exactly what is missing.
+The accepted #859 apparatus remains the starting evidence state. Predicates established by accepted apparatus or frozen pre-data contracts may be marked `BOUND`. Every unresolved predicate must remain `PARTIAL`, `OPEN`, or `BLOCKED` and must state exactly what is missing.
 
-The validator refuses a ready state while any required predicate is unresolved. Even when every predicate is eventually bound, the resulting status is only `READY_FOR_SEPARATE_AUTHORIZATION_REVIEW`; the readiness record itself can never authorize outcome collection, establish external validation, or increment scientific N.
+The validator refuses a ready state while any required predicate is unresolved. Even if every predicate is eventually bound, the resulting status is only `READY_FOR_SEPARATE_AUTHORIZATION_REVIEW`; the readiness record itself can never authorize outcome collection, establish external validation, or increment scientific N.
 
-Current unresolved families include:
+## Current unresolved families
 
-- numeric freshness and clock calibration;
-- owning AOSS decision policy or a new prospective v0.6 policy freeze;
-- episode eligibility/exclusion;
-- repetitions/seeds;
-- per-class ground-truth expectations;
-- practical-effect/adoption rule;
-- analysis/uncertainty/multiplicity;
+Exactly two required predicates remain unresolved:
 
-The observer/trust-domain boundary, extraction-function/tolerance identity, and whole-study artifact/hash/replay receipt contract are now separately frozen by `AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md` and its machine-readable registry. Exact timestamp extraction remains distinct from freshness adjudication.
+- **comparator input derivation — BLOCKED:** the `AOSS_V0_5_OMR_FROZEN` decision rule is bound, but ACP telemetry does not yet have an accepted machine-bound derivation into `(O,M,R)`. Do not infer the dimensions from their names or reconstruct the mapping from outcomes.
+- **AOSS decision policy — BLOCKED:** no independently identifiable owning executable v0.5 policy source has been located, and no prospective v0.6 policy has yet been frozen.
+
+## Frozen pre-data contracts
+
+The following are now separately frozen and evidence-backed:
+
+- external target identity, telemetry schema, observer/trust-domain boundary, and extraction-function/tolerance identity;
+- numeric same-host freshness/calibration semantics;
+- episode eligibility/exclusion and deterministic replay/repetition plan;
+- per-class failure-injection ground truth;
+- whole-study content-addressed replay receipt contract;
+- finite-corpus descriptive analysis/multiplicity contract;
+- practical-effect/portability adoption rule;
+- primary, secondary, safety, falsification, and non-authority boundaries.
+
+Stage A remains a finite preregistered purposive conformance corpus. Deterministic replays test stability and do not increase the denominator. No sampling CI, p-value, bootstrap, or population-effect inference is attached to the primary finite-corpus fraction. A zero decision-divergence result does not by itself fail bounded portability if all structural and safety criteria pass.
+
+The whole-study replay receipt must bind the eventual comparator-input derivation contract and AOSS decision-policy contract by SHA-256 before a valid final receipt can exist.
 
 CI intentionally executes:
 
@@ -28,4 +40,4 @@ CI intentionally executes:
 python scripts/validate_aoss_v0_6_stage_a_predata_readiness.py --assert-not-ready
 ```
 
-A green result therefore means the repository is accurately fail-closed, not that Stage A may begin.
+A green result means the repository accurately preserves the fail-closed boundary. It does **not** authorize Stage-A outcome generation.
