@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-This 2026-09-19 reconciliation was prepared against protected `main` `f636c822f16e0814fe0d95221553aea7d3515a46`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
+This 2026-09-19 reconciliation was refreshed against protected `main` `28e5591115899408463278b034571671173a4c83`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -46,6 +46,8 @@ The Governance Command Center now contains three accepted presentation-only Sema
 3. **State-Space Explorer V0 — PR #783**, merged as `b1d91621bd73e70866d5ff8fd38fb98e440b30e9`. It projects canonical lifecycle stages into discrete categorical `established`, `frontier`, and `blocked_by_predecessor` regions while preserving each stage's native predicate state and explicit model limits.
 
 These interfaces are explanatory projections. They do not create governance authority, authorize actions, establish deployment health, change scientific state, or promote empirical support.
+
+Merged PR #845 additionally establishes the evidence-first operator route: Overview directs users to Evidence before Governance interpretation. The subsequent Evidence provenance-spine PR #849 and audience-journey/mobile-containment PR #850 are not accepted current-main state: both were validated on historical heads, but #849 diverged after the locked-analysis result and interpretation frontier advanced, and #850 is stacked on #849. Their intended deltas are tracked in [`ui/UI_CURRENT_STATE.md`](ui/UI_CURRENT_STATE.md) and must be reconstructed on current protected main before merge.
 
 State-Space Explorer V0 does **not** establish continuous tensor/manifold coordinates, authorization distance, readiness percentages, confidence scores, efficacy gradients, inferred consequence, or inferred reversibility. Consequence and reversibility remain explicitly **NOT MODELED — DO NOT INFER** in V0.
 
