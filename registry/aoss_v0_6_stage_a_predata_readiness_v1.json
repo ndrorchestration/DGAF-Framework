@@ -87,9 +87,11 @@
       "missing": ["estimator", "uncertainty treatment", "confirmatory family", "multiplicity handling", "exploratory labeling"]
     },
     "artifact_hash_and_replay_receipt": {
-      "status": "PARTIAL",
-      "evidence": ["scripts/aoss_v0_6_acp_adapter.py", "tests/test_aoss_v0_6_acp_adapter.py"],
-      "missing": ["whole-study bundle manifest", "whole-study digest contract", "replay receipt"]
+      "status": "BOUND",
+      "evidence": [
+        "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json",
+        "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json"
+      ]
     },
     "authorization_and_nonauthority_boundary": {
       "status": "BOUND",
