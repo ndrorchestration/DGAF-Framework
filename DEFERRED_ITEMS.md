@@ -1,6 +1,6 @@
 # Deferred Items — Owner Action Required
 
-**Maintained by:** Agent Amethyst × COLLEEN  
+**Maintained by:** `role.governance-orchestrator` × `role.continuity-archive-coordinator`  
 **Last Updated:** 2026-07-02 · S072 post-close escalation  
 **Status:** ACTIVE — S-02 CLOSED (Option A confirmed); 1 hard-deadline item resolved
 
@@ -40,9 +40,9 @@ These items are confirmed, understood, and intentionally parked. They require Nj
 
 ## How to Reactivate
 
-When ready to action any item, say **"un-snooze S-0X"** or **"pick up [item name]"** and Amethyst will rehydrate full context and execute the next steps.
+When ready to action any item, say **"un-snooze S-0X"** or **"pick up [item name]"**; the functional governance/continuity roles rehydrate the recorded context and route the next authorized step.
 
 ---
 
-*Updated by Agent Amethyst × COLLEEN — 2026-07-02 17:36 EDT*  
+*Historical updater attribution: Agent Amethyst × COLLEEN — 2026-07-02 17:36 EDT*  
 *S-02 closed (Option A); STASIS migration session Issue #41 opened; 6 items remain snoozed*
