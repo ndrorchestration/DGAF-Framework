@@ -41,7 +41,7 @@ test('current truth boundary remains fail-closed and non-authorized', () => {
   assert.equal(TRUTH_BOUNDARY.efficacy, 'NOT ESTABLISHED')
 })
 
-test('lifecycle reflects the post-result interpretation frontier without downstream promotion', () => {
+test('lifecycle reflects accepted interpretation without downstream promotion', () => {
   const custody = GOVERNANCE_STAGES.find(stage => stage.id === 'repository-custody')
   const freeze = GOVERNANCE_STAGES.find(stage => stage.id === 'immutable-freeze')
   const authorization = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
@@ -68,8 +68,9 @@ test('lifecycle reflects the post-result interpretation frontier without downstr
   assert.equal(analysisAuthorization?.predicateState, 'pass')
   assert.equal(lockedAnalysis?.predicateState, 'pass')
   assert.equal(lockedAnalysis?.toolingPrepared, true)
-  assert.equal(interpretation?.predicateState, 'open')
+  assert.equal(interpretation?.predicateState, 'pass')
   assert.equal(interpretation?.toolingPrepared, true)
+  assert.match(interpretation?.toolingNote ?? '', /#872/)
 })
 
 test('every lifecycle stage carries an explicit claim boundary', () => {
