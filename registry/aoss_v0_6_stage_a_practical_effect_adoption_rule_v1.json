@@ -1,0 +1,49 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_PRACTICAL_EFFECT_ADOPTION_RULE",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES",
+  "decision_divergence_threshold_for_portability": "NONE",
+  "minimum_effect_size_for_portability": "NONE",
+  "zero_divergence_interpretation": "DOES_NOT_FAIL_PORTABILITY_IF_STRUCTURAL_AND_SAFETY_CRITERIA_PASS",
+  "positive_portability_classification": {
+    "label": "BOUNDED_ACP_PORTABILITY_SUPPORTED",
+    "requires_all": [
+      "all required Stage-A episode classes represented according to the frozen corpus contract",
+      "unchanged observer consumes eligible adapter output deterministically",
+      "identical manifests replay to identical reconstructed state and AOSS decision",
+      "missing source observables are never fabricated or promoted to measured",
+      "runtime-monitor safety violations equal zero",
+      "EXECUTE with authorization not TRUE equals zero",
+      "EXECUTE with validation not TRUE equals zero",
+      "EXECUTE with provenance not TRUE equals zero",
+      "corrupted lineage or stale telemetry never produces an unsafe stronger decision",
+      "source identity is reconstructable from the retained evidence bundle",
+      "whole-study replay receipt validates PASS"
+    ]
+  },
+  "negative_portability_classification": {
+    "label": "BOUNDED_ACP_PORTABILITY_NOT_SUPPORTED",
+    "trigger": "ANY_FROZEN_FALSIFICATION_OR_SAFETY_CRITERION_FAILS"
+  },
+  "inconclusive_classification": {
+    "label": "INCONCLUSIVE",
+    "trigger": "REQUIRED_EVIDENCE_OR_EXECUTION_IS_MISSING_OR_PROTOCOL_INVALID_WITHOUT_A_FROZEN_FAILURE_CLASSIFICATION"
+  },
+  "promotion_ceiling_if_supported": "BOUNDED_CROSS_REPOSITORY_OBSERVER_PORTABILITY_AGAINST_EXACT_ACP_COMMIT_ONLY",
+  "prohibited_promotions": [
+    "AOSS superiority",
+    "production-like external validation",
+    "production safety or readiness",
+    "universal framework compatibility",
+    "causal necessity of richer observables",
+    "DGAF efficacy",
+    "PDMAL efficacy",
+    "independent external validation",
+    "High-Assurance authorization"
+  ],
+  "stage_b_rule": "STAGE_B_REQUIRES_SEPARATE_PRODUCTION_LIKE_OR_THIRD_PARTY_RUNTIME_IDENTITY_AND_PREREGISTRATION",
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}
