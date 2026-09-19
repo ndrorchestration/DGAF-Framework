@@ -163,11 +163,20 @@ def validate_preregistered_contract() -> dict[str, Any]:
     historical = prereg.get("historical_evidence_policy")
     ceiling = prereg.get("claim_ceiling")
     rationale = prereg.get("sample_size_rationale")
-    if not all(
-        isinstance(value, dict)
-        for value in (algorithm, endpoint, analysis, multiplicity, historical, ceiling, rationale)
-    ):
-        fail("preregistration contract sections are malformed")
+    if not isinstance(algorithm, dict):
+        fail("preregistration algorithm section is malformed")
+    if not isinstance(endpoint, dict):
+        fail("preregistration endpoint section is malformed")
+    if not isinstance(analysis, dict):
+        fail("preregistration primary-analysis section is malformed")
+    if not isinstance(multiplicity, dict):
+        fail("preregistration multiplicity section is malformed")
+    if not isinstance(historical, dict):
+        fail("preregistration historical-evidence section is malformed")
+    if not isinstance(ceiling, dict):
+        fail("preregistration claim-ceiling section is malformed")
+    if not isinstance(rationale, dict):
+        fail("preregistration sample-size rationale is malformed")
 
     expected_analysis = {
         "primary_comparator": "random_regular",
