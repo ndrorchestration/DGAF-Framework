@@ -19,6 +19,16 @@ Execution is admissible only when all of the following are true:
 
 Any failed precondition stops execution.
 
+### Windows lock-instantiation rule
+
+The accepted requirements lock is frozen by Git blob identity `00c1f779e97030f9b25ae494642edb31b5b09de5` and must not be regenerated or edited after authorization. On Windows, pip may otherwise discover platform-only transitive packages that were not part of the accepted resolved lock. Therefore the operator autopilot installs the frozen package set with `--require-hashes --no-deps`.
+
+This does not change the analysis dependency identity: it prevents a new platform-specific resolution step and installs only packages already named and hashed in the authorized lock.
+
+The execution runner also imports the repository authorization validator, which depends on `jsonschema`. That dependency is governance tooling, not part of the frozen numerical analysis package set. The Windows operator path therefore provisions `jsonschema==4.26.0` and its non-numerical dependencies into a separate `governance-support` directory and exposes that directory only through a temporary `PYTHONPATH` while the runner validates authorization and executes. The autopilot fails closed if that support overlay contains a NumPy package, preventing it from replacing or shadowing the frozen NumPy `2.5.1` environment.
+
+The repository CI includes a Windows runner that verifies the exact frozen-lock installation mode, Python `3.12.0`, NumPy `2.5.1`, the unchanged requirements blob, a NumPy-free governance support overlay, and the non-executing authorization preflight.
+
 ## One-command Windows operator path
 
 For the accepted Windows operator environment, use:
@@ -31,7 +41,7 @@ The autopilot is the preferred nontechnical path. It:
 2. verifies GitHub CLI authentication and the expected DGAF repository origin;
 3. fetches protected `main` and creates an isolated detached worktree;
 4. finds exact Python `3.12.0`, or if absent provisions the official `python` 3.12.0 NuGet package side-by-side in the DGAF user-local runtime directory, verifying the NuGet client and provisioned Python executable signatures; this avoids Windows Installer product-version conflicts and does not modify or uninstall any existing Python installation;
-5. creates/reuses an isolated analysis virtual environment from the hash-locked requirements;
+5. creates/reuses an isolated analysis virtual environment from the already-resolved hash-locked requirements using `--require-hashes --no-deps`, preserving the authorized lock blob byte-for-byte and preventing Windows-only resolver expansion from changing the frozen dependency set;
 6. runs the non-executing authorization/runtime preflight;
 7. executes the frozen primary analysis only if no retained output bundle already exists;
 8. resumes from an existing complete retained output without re-executing analysis;

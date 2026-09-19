@@ -175,12 +175,69 @@ function Install-DedicatedPython([string]$TargetRuntimeDir) {
     return $pythonExe
 }
 
+function Ensure-GovernanceSupport {
+    param(
+        [string]$PythonExe,
+        [string]$SupportDir
+    )
+
+    $jsonschemaVersion = "4.26.0"
+    $valid = $false
+    if (Test-Path $SupportDir) {
+        try {
+            $probe = & $PythonExe -c @"
+import importlib.metadata
+import sys
+sys.path.insert(0, r'''$SupportDir''')
+print(importlib.metadata.version('jsonschema'))
+"@ 2>$null
+            if ($LASTEXITCODE -eq 0 -and ("$probe").Trim() -eq $jsonschemaVersion) {
+                $numpyArtifacts = @(Get-ChildItem -LiteralPath $SupportDir -Name -ErrorAction SilentlyContinue | Where-Object { $_ -match '^numpy(?:-|$)' })
+                if ($numpyArtifacts.Count -eq 0) {
+                    $valid = $true
+                }
+            }
+        }
+        catch {
+        }
+    }
+
+    if (-not $valid) {
+        if (Test-Path $SupportDir) {
+            Remove-Item -Recurse -Force $SupportDir
+        }
+        New-Item -ItemType Directory -Force -Path $SupportDir | Out-Null
+        Invoke-Checked $PythonExe @(
+            "-m", "pip", "install",
+            "--target", $SupportDir,
+            "jsonschema==$jsonschemaVersion"
+        )
+
+        $numpyArtifacts = @(Get-ChildItem -LiteralPath $SupportDir -Name -ErrorAction SilentlyContinue | Where-Object { $_ -match '^numpy(?:-|$)' })
+        if ($numpyArtifacts.Count -ne 0) {
+            Fail "governance support overlay unexpectedly contains NumPy"
+        }
+
+        $probe = Invoke-Capture $PythonExe @(
+            "-c",
+            "import importlib.metadata,sys;sys.path.insert(0,r'$SupportDir');print(importlib.metadata.version('jsonschema'))"
+        )
+        if ($probe -ne $jsonschemaVersion) {
+            Fail "governance support overlay jsonschema mismatch: expected $jsonschemaVersion, got $probe"
+        }
+    }
+
+    return $SupportDir
+}
+
+
 function Ensure-Venv {
     param(
         [string]$PythonExe,
         [string]$VenvPath,
         [string]$RequirementsPath,
         [switch]$RequireHashes,
+        [switch]$NoDeps,
         [string]$RequiredNumPy = ""
     )
 
@@ -211,6 +268,9 @@ function Ensure-Venv {
         $installArgs = @("-m", "pip", "install")
         if ($RequireHashes) {
             $installArgs += "--require-hashes"
+        }
+        if ($NoDeps) {
+            $installArgs += "--no-deps"
         }
         $installArgs += @("-r", $RequirementsPath)
         Invoke-Checked $venvPython $installArgs
@@ -278,11 +338,21 @@ Write-Host "DGAF_LOCKED_PYTHON=$python"
 
 $analysisVenv = Join-Path $RuntimeDir "analysis-venv"
 $analysisRequirements = Join-Path $worktree "experiments\pdmal_pilot\requirements-full-lock.txt"
-$analysisPython = Ensure-Venv -PythonExe $python -VenvPath $analysisVenv -RequirementsPath $analysisRequirements -RequireHashes -RequiredNumPy $ExpectedNumPy
+$analysisPython = Ensure-Venv -PythonExe $python -VenvPath $analysisVenv -RequirementsPath $analysisRequirements -RequireHashes -NoDeps -RequiredNumPy $ExpectedNumPy
+
+$governanceSupportDir = Join-Path $RuntimeDir "governance-support"
+$governanceSupport = Ensure-GovernanceSupport -PythonExe $python -SupportDir $governanceSupportDir
 
 $runner = Join-Path $worktree "scripts\run_track_a_epoch_002_locked_primary_analysis.py"
-Write-Host "Running non-executing authorization/runtime preflight..."
-Invoke-Checked $analysisPython @($runner, "--preflight-only") $worktree
+$priorPythonPath = $env:PYTHONPATH
+$env:PYTHONPATH = $governanceSupport
+try {
+    Write-Host "Running non-executing authorization/runtime preflight..."
+    Invoke-Checked $analysisPython @($runner, "--preflight-only") $worktree
+}
+finally {
+    $env:PYTHONPATH = $priorPythonPath
+}
 
 $outputFile = Join-Path $ResultDir $OutputName
 $outputSidecar = Join-Path $ResultDir $OutputSidecarName
@@ -302,11 +372,18 @@ if (-not $outputExists) {
     }
 
     Write-Host "Executing the already-authorized frozen primary analysis locally..."
-    Invoke-Checked $analysisPython @(
-        $runner,
-        "--input", $InputPath,
-        "--output-dir", $ResultDir
-    ) $worktree
+    $priorPythonPath = $env:PYTHONPATH
+    $env:PYTHONPATH = $governanceSupport
+    try {
+        Invoke-Checked $analysisPython @(
+            $runner,
+            "--input", $InputPath,
+            "--output-dir", $ResultDir
+        ) $worktree
+    }
+    finally {
+        $env:PYTHONPATH = $priorPythonPath
+    }
 }
 else {
     Write-Host "RETAINED_LOCKED_ANALYSIS_OUTPUT=FOUND_RESUME_WITHOUT_REEXECUTION"
