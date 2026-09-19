@@ -1,0 +1,111 @@
+name: Track A Epoch 002 Post-Interpretation Disposition
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/track-a-epoch-002-post-interpretation-disposition.yml'
+      - 'scripts/validate_track_a_epoch_002_post_interpretation_disposition.py'
+      - 'scripts/prepare_track_a_epoch_002_post_interpretation_disposition.py'
+      - 'tests/test_track_a_epoch_002_post_interpretation_disposition.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION_PROCEDURE.md'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION.json'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/track-a-epoch-002-post-interpretation-disposition.yml'
+      - 'scripts/validate_track_a_epoch_002_post_interpretation_disposition.py'
+      - 'scripts/prepare_track_a_epoch_002_post_interpretation_disposition.py'
+      - 'tests/test_track_a_epoch_002_post_interpretation_disposition.py'
+      - 'docs/experiment/TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION_PROCEDURE.md'
+      - 'docs/experiment/track_a_runs/TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION.json'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Epoch 002 post-interpretation disposition
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install CI-only validation dependencies
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Compile disposition tooling
+        run: |
+          python -m py_compile scripts/validate_track_a_epoch_002_post_interpretation_disposition.py
+          python -m py_compile scripts/prepare_track_a_epoch_002_post_interpretation_disposition.py
+
+      - name: Resolve disposition lifecycle mode
+        id: mode
+        run: |
+          set -euo pipefail
+          record='docs/experiment/track_a_runs/TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION.json'
+          prior=''
+          case "${{ github.event_name }}" in
+            pull_request) prior="${{ github.event.pull_request.base.sha }}" ;;
+            push) prior="${{ github.event.before }}" ;;
+          esac
+
+          if test -e "$record"; then
+            if test -n "$prior" && git cat-file -e "$prior:$record" 2>/dev/null && git diff --quiet "$prior" HEAD -- "$record"; then
+              echo 'value=accepted_state' >> "$GITHUB_OUTPUT"
+            else
+              echo 'value=disposition_event' >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo 'value=tooling_only' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate prospective disposition tooling
+        if: ${{ steps.mode.outputs.value == 'tooling_only' }}
+        run: python scripts/validate_track_a_epoch_002_post_interpretation_disposition.py --tooling
+
+      - name: Validate creation-only disposition event
+        if: ${{ steps.mode.outputs.value == 'disposition_event' }}
+        env:
+          ACCEPTED_PARENT: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          test -n "$ACCEPTED_PARENT"
+          python scripts/validate_track_a_epoch_002_post_interpretation_disposition.py \
+            --event-commit HEAD \
+            --accepted-parent "$ACCEPTED_PARENT"
+
+      - name: Validate accepted immutable disposition state
+        if: ${{ steps.mode.outputs.value == 'accepted_state' }}
+        run: python scripts/validate_track_a_epoch_002_post_interpretation_disposition.py --accepted-state
+
+      - name: Run synthetic-only disposition tests
+        run: python -m pytest -q tests/test_track_a_epoch_002_post_interpretation_disposition.py
+
+      - name: Prove CI has no private numerical interpretation input
+        run: |
+          set -euo pipefail
+          workflow='.github/workflows/track-a-epoch-002-post-interpretation-disposition.yml'
+          ! grep -q -- '--analysis-output' "$workflow"
+          ! grep -q 'track_a_epoch_002_local_interpretation.json' "$workflow"
+          echo 'TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION_CI=PASS_NONEXECUTING'
+          echo 'SCIENTIFIC_N_INCREMENT=0'
+          echo 'CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED'
+          echo 'INDEPENDENT_VALIDATION=NOT_ESTABLISHED'
+          echo 'NEW_EMPIRICAL_EPOCH_AUTHORIZED=FALSE'
