@@ -1,0 +1,69 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_ARTIFACT_REPLAY_RECEIPT_CONTRACT",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES",
+  "receipt_schema": "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json",
+  "digest_algorithm": "SHA-256",
+  "digest_encoding": "lowercase_hex_without_prefix",
+  "canonical_json": {
+    "encoding": "UTF-8",
+    "sort_keys": true,
+    "separators": [",", ":"],
+    "trailing_newline": true,
+    "allow_nan": false
+  },
+  "required_contract_digest_roles": [
+    "measurement_manifest_sha256",
+    "observer_measurement_boundary_sha256",
+    "decision_policy_sha256",
+    "freshness_calibration_sha256",
+    "eligibility_repetition_sha256",
+    "failure_ground_truth_sha256",
+    "analysis_multiplicity_sha256",
+    "practical_effect_rule_sha256"
+  ],
+  "required_artifact_digest_roles": [
+    "study_manifest_sha256",
+    "source_episode_bundle_sha256",
+    "normalized_bundle_sha256",
+    "decision_bundle_sha256",
+    "analysis_bundle_sha256"
+  ],
+  "replay_environment_fields": [
+    "python_version",
+    "os",
+    "architecture",
+    "dependency_lock_sha256",
+    "adapter_source_sha256"
+  ],
+  "replay_verification_fields": [
+    "source_identity_match",
+    "contract_digest_match",
+    "study_manifest_hash_match",
+    "source_episode_bundle_hash_match",
+    "normalized_replay_digest_match",
+    "decision_replay_digest_match",
+    "analysis_replay_digest_match"
+  ],
+  "pass_rule": "PASS_IFF_ALL_REPLAY_VERIFICATION_BOOLEANS_TRUE",
+  "failure_rule": "ANY_FALSE_OR_MISSING_REQUIRED_FIELD_YIELDS_FAIL_OR_SCHEMA_REJECTION",
+  "receipt_content_boundary": {
+    "outcome_payload_embedded": false,
+    "episode_payload_embedded": false,
+    "numerical_analysis_payload_embedded": false,
+    "content_addresses_and_replay_status_only": true
+  },
+  "retention_rule": "RETAIN_RECEIPT_AND_REFERENCED_CONTENT_ADDRESSES_WITHOUT_REPLACING_SOURCE_ARTIFACTS",
+  "non_effects": [
+    "Does not authorize Stage-A outcome collection.",
+    "Does not establish external validation.",
+    "Does not establish AOSS superiority.",
+    "Does not establish DGAF or PDMAL efficacy.",
+    "Does not increment scientific N.",
+    "Does not convert a FAIL replay into a PASS by omission."
+  ],
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}
