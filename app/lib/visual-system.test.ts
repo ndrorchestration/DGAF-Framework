@@ -115,3 +115,27 @@ test('Evidence view exposes provenance boundaries before governance handoff', ()
   )
   assert.match(dashboardPage, /<EvidenceView onNavigate=\{setView\} \/>/)
 })
+
+
+test('primary navigation preserves Understand Verify Inspect Operate architecture', () => {
+  const understand = appShell.indexOf("label: 'UNDERSTAND'")
+  const verify = appShell.indexOf("label: 'VERIFY'")
+  const inspect = appShell.indexOf("label: 'INSPECT'")
+  const operate = appShell.indexOf("label: 'OPERATE'")
+
+  for (const index of [understand, verify, inspect, operate]) assert.ok(index >= 0)
+  assert.ok(understand < verify && verify < inspect && inspect < operate)
+
+  assert.match(appShell, /label: 'VERIFY',[\s\S]*id: 'evidence'/)
+  assert.match(appShell, /label: 'INSPECT',[\s\S]*id: 'governance'[\s\S]*id: 'state-space'[\s\S]*id: 'agents'/)
+  assert.match(appShell, /label: 'OPERATE',[\s\S]*id: 'control'[\s\S]*id: 'tools'/)
+})
+
+test('navigation restores mobile focus containment and runtime authority scope', () => {
+  assert.match(appShell, /aria-label="DGAF audience journey"/)
+  assert.match(appShell, /role="group"/)
+  assert.match(appShell, /Operator actions & runtime/)
+  assert.match(appShell, /Runtime observability only; not governance authority/)
+  assert.match(globals, /@media \(max-width: 760px\)[\s\S]*\.sidebar\s*\{[\s\S]*visibility:hidden;[\s\S]*pointer-events:none;/)
+  assert.match(globals, /@media \(max-width: 760px\)[\s\S]*\.sidebar\.mobile-open\s*\{[\s\S]*visibility:visible;[\s\S]*pointer-events:auto;/)
+})
