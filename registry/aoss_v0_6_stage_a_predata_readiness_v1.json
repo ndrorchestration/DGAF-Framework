@@ -1,0 +1,97 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_PREDATA_READINESS",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "NOT_READY_FAIL_CLOSED",
+  "apparatus_acceptance": {
+    "repository_commit": "69821cdcc1b9b9432b7001c6f52c867f9669f54d",
+    "pull_request": 859,
+    "measurement_manifest": "registry/aoss_v0_6_acp_measurement_manifest_v1.json",
+    "adapter": "scripts/aoss_v0_6_acp_adapter.py",
+    "fixture_bundle": "tests/resources/aoss_v0_6_acp_fixture_bundle.json",
+    "adapter_tests": "tests/test_aoss_v0_6_acp_adapter.py"
+  },
+  "required_predicates": {
+    "external_target_identity": {
+      "status": "BOUND",
+      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#source_system"]
+    },
+    "observer_boundary_and_trust_domains": {
+      "status": "PARTIAL",
+      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#field_contracts.trust_domain"],
+      "missing": ["separately versioned operational observer deployment boundary", "validator/authority trust-domain source contract"]
+    },
+    "telemetry_schema": {
+      "status": "BOUND",
+      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#source_system.provenance_schema"]
+    },
+    "extraction_functions_units_tolerances": {
+      "status": "PARTIAL",
+      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#field_contracts", "scripts/aoss_v0_6_acp_adapter.py"],
+      "missing": ["complete extraction-function identity per consequential field", "numeric tolerances where applicable"]
+    },
+    "freshness_and_calibration": {
+      "status": "OPEN",
+      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#field_contracts.wall_time"],
+      "missing": ["numeric freshness threshold", "clock calibration semantics"]
+    },
+    "comparator_policy": {
+      "status": "BOUND",
+      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#comparator"]
+    },
+    "aoss_decision_policy": {
+      "status": "BLOCKED",
+      "evidence": [],
+      "missing": ["owning executable AOSS policy source or newly frozen prospective v0.6 policy"]
+    },
+    "primary_endpoint": {
+      "status": "BOUND",
+      "evidence": ["docs/research/AOSS_V0_6_ACP_PORTABILITY_FREEZE.md#primary-endpoint"]
+    },
+    "secondary_and_safety_endpoints": {
+      "status": "BOUND",
+      "evidence": ["docs/research/AOSS_V0_6_ACP_PORTABILITY_FREEZE.md#safety-endpoints", "docs/research/AOSS_V0_6_ACP_PORTABILITY_FREEZE.md#secondary-endpoints"]
+    },
+    "episode_eligibility_and_exclusion": {
+      "status": "OPEN",
+      "evidence": ["registry/aoss_v0_6_acp_measurement_manifest_v1.json#required_episode_classes"],
+      "missing": ["eligibility rules", "exclusion rules"]
+    },
+    "repetition_and_seed_plan": {
+      "status": "OPEN",
+      "evidence": [],
+      "missing": ["repetition count", "seed policy"]
+    },
+    "failure_injection_ground_truth": {
+      "status": "PARTIAL",
+      "evidence": ["tests/resources/aoss_v0_6_acp_fixture_bundle.json", "registry/aoss_v0_6_acp_measurement_manifest_v1.json#required_episode_classes"],
+      "missing": ["explicit expected ground-truth labels/outcomes per fixture class"]
+    },
+    "falsification_criteria": {
+      "status": "BOUND",
+      "evidence": ["docs/research/AOSS_V0_6_ACP_PORTABILITY_FREEZE.md#falsification-criteria"]
+    },
+    "practical_effect_or_adoption_rule": {
+      "status": "OPEN",
+      "evidence": [],
+      "missing": ["minimum practically meaningful promotion rule, if any"]
+    },
+    "analysis_and_multiplicity": {
+      "status": "OPEN",
+      "evidence": [],
+      "missing": ["estimator", "uncertainty treatment", "confirmatory family", "multiplicity handling", "exploratory labeling"]
+    },
+    "artifact_hash_and_replay_receipt": {
+      "status": "PARTIAL",
+      "evidence": ["scripts/aoss_v0_6_acp_adapter.py", "tests/test_aoss_v0_6_acp_adapter.py"],
+      "missing": ["whole-study bundle manifest", "whole-study digest contract", "replay receipt"]
+    },
+    "authorization_and_nonauthority_boundary": {
+      "status": "BOUND",
+      "evidence": ["docs/research/AOSS_V0_6_ACP_PORTABILITY_FREEZE.md#promotion-ceiling", "registry/aoss_v0_6_acp_measurement_manifest_v1.json#safety_non_inference_rules"]
+    }
+  },
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}

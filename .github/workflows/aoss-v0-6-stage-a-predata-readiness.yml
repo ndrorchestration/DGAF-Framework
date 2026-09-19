@@ -1,0 +1,63 @@
+name: AOSS v0.6 Stage A Pre-Data Readiness
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/aoss-v0-6-stage-a-predata-readiness.yml'
+      - 'registry/aoss_v0_6_stage_a_predata_readiness_v1.json'
+      - 'registry/aoss_v0_6_acp_measurement_manifest_v1.json'
+      - 'scripts/aoss_v0_6_acp_adapter.py'
+      - 'scripts/validate_aoss_v0_6_stage_a_predata_readiness.py'
+      - 'tests/test_aoss_v0_6_stage_a_predata_readiness.py'
+      - 'docs/research/AOSS_V0_6_STAGE_A_PREDATA_GATE.md'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/aoss-v0-6-stage-a-predata-readiness.yml'
+      - 'registry/aoss_v0_6_stage_a_predata_readiness_v1.json'
+      - 'registry/aoss_v0_6_acp_measurement_manifest_v1.json'
+      - 'scripts/aoss_v0_6_acp_adapter.py'
+      - 'scripts/validate_aoss_v0_6_stage_a_predata_readiness.py'
+      - 'tests/test_aoss_v0_6_stage_a_predata_readiness.py'
+      - 'docs/research/AOSS_V0_6_STAGE_A_PREDATA_GATE.md'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Stage A pre-data readiness
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install CI-only validation dependencies
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Compile readiness validator
+        run: python -m py_compile scripts/validate_aoss_v0_6_stage_a_predata_readiness.py
+
+      - name: Prove current Stage A remains fail-closed
+        run: python scripts/validate_aoss_v0_6_stage_a_predata_readiness.py --assert-not-ready
+
+      - name: Run focused readiness tests
+        run: python -m pytest -q tests/test_aoss_v0_6_stage_a_predata_readiness.py
