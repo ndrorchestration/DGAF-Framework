@@ -44,6 +44,7 @@ def test_checked_native_commands_write_to_host_not_function_pipeline() -> None:
     assert '"-NoHttpCache"' in text
     assert '"-NoCache"' not in text
 
+
 def test_autopilot_runs_preflight_before_empirical_execution() -> None:
     text = source()
 
