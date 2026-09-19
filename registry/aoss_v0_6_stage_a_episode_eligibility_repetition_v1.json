@@ -1,0 +1,67 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_EPISODE_ELIGIBILITY_REPETITION_CONTRACT",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES",
+  "required_episode_classes": [
+    "normal_completion",
+    "policy_denial",
+    "unknown_capability_rejection",
+    "handler_failure",
+    "cancellation",
+    "exact_budget_success",
+    "budget_exhaustion",
+    "suppressed_budget_exception_fail_closed",
+    "missing_event",
+    "reordered_exported_events",
+    "duplicate_replayed_event",
+    "stale_timestamp",
+    "malformed_manifest",
+    "mismatched_run_id",
+    "source_order_ambiguity",
+    "missing_authority_evidence"
+  ],
+  "primary_endpoint": {
+    "unit": "PREDECLARED_EPISODE_CLASS_CANONICAL_INSTANCE",
+    "eligible_classes": [
+      "normal_completion",
+      "policy_denial",
+      "unknown_capability_rejection",
+      "handler_failure",
+      "cancellation",
+      "exact_budget_success",
+      "budget_exhaustion",
+      "suppressed_budget_exception_fail_closed",
+      "missing_event",
+      "reordered_exported_events",
+      "duplicate_replayed_event",
+      "stale_timestamp",
+      "source_order_ambiguity",
+      "missing_authority_evidence"
+    ],
+    "structural_rejection_controls_excluded_from_denominator": [
+      "malformed_manifest",
+      "mismatched_run_id"
+    ],
+    "denominator_rule": "COUNT_EACH_ELIGIBLE_CLASS_ONCE_IF_ITS_CANONICAL_SOURCE_EPISODE_IS_GENERATED_AND_POLICY_EVALUATION_COMPLETES",
+    "no_posthoc_exclusion": true
+  },
+  "repetition_plan": {
+    "canonical_source_episodes_per_class": 1,
+    "exact_byte_replay_passes_per_episode": 5,
+    "replay_passes_count_as_independent_observations": false,
+    "stochastic_sampling": false,
+    "random_seed_policy": "NOT_APPLICABLE_NO_STOCHASTIC_SAMPLING",
+    "independence_claim": false
+  },
+  "attempt_integrity": {
+    "duplicate_attempts_do_not_add_units": true,
+    "source_identity_drift_invalidates_study_attempt": true,
+    "contract_or_artifact_hash_mismatch_invalidates_study_attempt": true,
+    "missing_required_class_invalidates_study_attempt": true,
+    "retry_after_outcome_inspection_prohibited": true
+  },
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}
