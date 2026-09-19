@@ -911,7 +911,8 @@ def validate_primary_comparator_amendment(readiness: dict[str, Any]) -> None:
         (4, "exactly one terminal event == task.completed", "RECORD_OUTCOME", True),
         (
             5,
-            "exactly one terminal event in {task.denied, task.rejected, task.failed, task.cancelled, task.budget_exhausted}",
+            "exactly one terminal event in {task.denied, task.rejected, task.failed, "
+            "task.cancelled, task.budget_exhausted}",
             "ESCALATE_BLOCK",
             True,
         ),
