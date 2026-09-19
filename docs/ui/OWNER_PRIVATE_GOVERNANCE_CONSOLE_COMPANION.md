@@ -58,11 +58,13 @@ Track A completion counts must never be rendered as canonical High-Assurance sci
 
 ## UI lineage note
 
-Merged PR #845 establishes evidence-first routing. PR #849 (Evidence provenance spine) and stacked PR #850 (audience journey groups + mobile focus containment) validated successfully on their historical exact heads and are now **CLOSED / UNMERGED / STALE-LINEAGE**. Neither is accepted current-main implementation; each must be reconstructed and revalidated against the post-analysis interpretation frontier.
+Merged PR #845 establishes evidence-first routing. PR #849 (Evidence provenance spine) and stacked PR #850 (audience journey groups + mobile focus containment) validated successfully on their historical exact heads and are now **CLOSED / UNMERGED / STALE-LINEAGE**. Neither is accepted current-main implementation; each must be reconstructed and revalidated against the current post-#881 closed Epoch 002 projection.
 
-## Current next action
+## Current boundary
 
-The console should present **bounded post-interpretation control-state reconciliation and next-gate identification** as the next frontier. The locked primary analysis has executed locally and the creation-only content-addressed `LOCKED_ANALYSIS_RESULT_RECORD` is accepted. PR #872 admitted the creation-only `INTERPRETATION_NOTE`, and PR #873 reconciled the current repository state; the numerical estimate, interval, and classification remain operator-local. The numerical estimate, interval, and classification remain operator-local; the next state-changing action must not infer authorization or efficacy; it should only reconcile projections or execute a separately governed gate whose prerequisites are already satisfied.
+The console should present **Epoch 002 CLOSED FOR EXACT PREREGISTERED SCOPE** via PR #881 with disposition `CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT`. The locked primary analysis/result receipt (#851), bounded interpretation note (#872), and outcome-agnostic post-interpretation disposition (#881) are accepted at their exact scopes. The numerical estimate, interval, and classification remain operator-local.
+
+There is no authorized Epoch 002 next action and no successor empirical lane is designated. Any future independent replication or fresh empirical epoch requires a new controller, preregistration, evidence/custody plan, and explicit authorization. The console must not infer authorization, efficacy, independence, scientific-N promotion, or High-Assurance status from bounded lane closure.
 
 ## Access and validation
 
