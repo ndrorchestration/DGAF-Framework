@@ -10,7 +10,7 @@ export function EvidenceView({ onNavigate }: { onNavigate: (view: ViewId) => voi
     <div className="card-grid two">{EPOCH_SUMMARIES.map(epoch => <article className="epoch-card panel" key={epoch.id}><div className="card-header"><div><span className="eyebrow">{epoch.eyebrow}</span><h3>{epoch.title}</h3></div><StatusChip state={epoch.state}/></div><p>{epoch.summary}</p><ul className="fact-list">{epoch.facts.map(fact => <li key={fact}>{fact}</li>)}</ul></article>)}</div>
 
     <section aria-labelledby="evidence-spine-title">
-      <div className="section-heading"><div><span className="eyebrow">EVIDENCE SPINE</span><h3 id="evidence-spine-title">Trace what each accepted state establishes—and what it does not.</h3><p>The evidence spine reuses the same governed stages as the lifecycle view. It exposes scope before interpretation so a passed predecessor cannot silently widen into authorization, efficacy, or independence.</p></div></div>
+      <div className="section-heading"><div><span className="eyebrow">EVIDENCE SPINE</span><h3 id="evidence-spine-title">Trace what each governed stage establishes—or still leaves open.</h3><p>The evidence spine reuses the same governed stages as the lifecycle view. It exposes scope before interpretation so a passed predecessor cannot silently widen into authorization, efficacy, or independence.</p></div></div>
       <div className="evidence-spine">
         {GOVERNANCE_STAGES.map((stage, index) => <article className="evidence-spine-row panel" key={stage.id}>
           <div className="evidence-spine-index">{String(index + 1).padStart(2, '0')}</div>
@@ -26,7 +26,7 @@ export function EvidenceView({ onNavigate }: { onNavigate: (view: ViewId) => voi
     </section>
 
     <section className="evidence-handoff panel panel-accent">
-      <div><span className="eyebrow accent">VERIFY → INSPECT</span><h3>Evidence first; governance interpretation second.</h3><p>These records establish scoped predicates and limitations. Governance uses the same stage model to show ordering, blocking relationships, authority boundaries, and the next admissible transition.</p></div>
+      <div><span className="eyebrow accent">VERIFY → INSPECT</span><h3>Evidence first; governance interpretation second.</h3><p>These entries preserve each predicate's established or open state, scope, and limitations. Governance uses the same stage model to show ordering, blocking relationships, authority boundaries, and the next admissible transition.</p></div>
       <button className="button ghost" onClick={() => onNavigate('governance')}>Inspect governance context <ArrowIcon /></button>
     </section>
 
