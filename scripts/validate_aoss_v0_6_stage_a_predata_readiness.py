@@ -17,6 +17,9 @@ MEASUREMENT_REL = "registry/aoss_v0_6_acp_measurement_manifest_v1.json"
 BOUNDARY_REL = "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json"
 RECEIPT_CONTRACT_REL = "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json"
 RECEIPT_SCHEMA_REL = "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json"
+FRESHNESS_REL = "registry/aoss_v0_6_stage_a_freshness_calibration_v1.json"
+ELIGIBILITY_REL = "registry/aoss_v0_6_stage_a_episode_eligibility_repetition_v1.json"
+GROUND_TRUTH_REL = "registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json"
 
 ALLOWED_STATUSES = {"BOUND", "PARTIAL", "OPEN", "BLOCKED"}
 REQUIRED_PREDICATES = {
@@ -202,8 +205,8 @@ def validate_observer_measurement_boundary(readiness: dict[str, Any]) -> None:
     }
     if set(extraction) != expected_fields:
         fail("extraction function field set drift")
-    if extraction["wall_time"].get("freshness_threshold") != "SEPARATE_UNRESOLVED_PREDICATE":
-        fail("timestamp extraction cannot silently bind freshness")
+    if extraction["wall_time"].get("freshness_threshold") != "SEPARATE_FROZEN_PREDICATE_CONTRACT":
+        fail("timestamp extraction freshness-contract binding drift")
     if extraction["source_order_index"].get("tolerance") != "EXACT_INTEGER_ZERO_TOLERANCE":
         fail("source-order numeric tolerance drift")
     for field, entry in extraction.items():
@@ -346,6 +349,123 @@ def validate_artifact_replay_receipt_contract(readiness: dict[str, Any]) -> None
         fail("artifact hash/replay receipt predicate must be BOUND")
 
 
+
+def validate_freshness_sampling_ground_truth(readiness: dict[str, Any]) -> None:
+    freshness = load_json(ROOT / FRESHNESS_REL)
+    eligibility = load_json(ROOT / ELIGIBILITY_REL)
+    ground_truth = load_json(ROOT / GROUND_TRUTH_REL)
+    measurement = load_json(ROOT / MEASUREMENT_REL)
+
+    for record, expected_type in (
+        (freshness, "AOSS_V0_6_STAGE_A_FRESHNESS_CALIBRATION_CONTRACT"),
+        (eligibility, "AOSS_V0_6_STAGE_A_EPISODE_ELIGIBILITY_REPETITION_CONTRACT"),
+        (ground_truth, "AOSS_V0_6_STAGE_A_FAILURE_INJECTION_GROUND_TRUTH"),
+    ):
+        if record.get("record_type") != expected_type:
+            fail("Stage A study-design contract record_type drift")
+        if record.get("schema_version") != 1 or record.get("controller_issue") != 810:
+            fail("Stage A study-design contract identity drift")
+        if record.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+            fail("Stage A study-design contract status drift")
+        if record.get("outcome_collection_authorized") is not False:
+            fail("Stage A study-design contract cannot authorize outcome collection")
+        if record.get("external_validation_established") is not False:
+            fail("Stage A study-design contract cannot establish external validation")
+        if record.get("scientific_n_increment") != 0:
+            fail("Stage A study-design contract cannot increment scientific N")
+
+    if freshness.get("clock_domain") != {
+        "source_and_observer_same_host_required": True,
+        "source_timestamp_basis": "ACP timezone-aware UTC wall time",
+        "observer_ingest_timestamp_basis": "same-host timezone-aware UTC wall time",
+        "external_time_accuracy_claim": False,
+        "cross_host_clock_comparison_allowed": False,
+    }:
+        fail("freshness clock-domain contract drift")
+    if freshness.get("thresholds") != {
+        "max_last_event_age_at_ingest_seconds": 30,
+        "max_future_event_skew_seconds": 2,
+        "non_injection_event_time_regression_seconds": 0,
+    }:
+        fail("freshness numeric threshold drift")
+    calibration = freshness.get("calibration_semantics")
+    if not isinstance(calibration, dict):
+        fail("freshness calibration semantics are malformed")
+    if calibration.get("absolute_clock_accuracy_established") is not False:
+        fail("freshness contract cannot claim external clock accuracy")
+
+    classes = measurement.get("required_episode_classes")
+    if not isinstance(classes, list):
+        fail("measurement required_episode_classes is malformed")
+    if eligibility.get("required_episode_classes") != classes:
+        fail("eligibility class set drift")
+    primary = eligibility.get("primary_endpoint")
+    if not isinstance(primary, dict):
+        fail("primary endpoint eligibility contract is malformed")
+    excluded = {"malformed_manifest", "mismatched_run_id"}
+    if set(primary.get("structural_rejection_controls_excluded_from_denominator", [])) != excluded:
+        fail("structural rejection exclusion set drift")
+    if set(primary.get("eligible_classes", [])) != set(classes) - excluded:
+        fail("primary endpoint eligible class set drift")
+    if primary.get("no_posthoc_exclusion") is not True:
+        fail("post-hoc exclusion must remain prohibited")
+
+    repetition = eligibility.get("repetition_plan")
+    if repetition != {
+        "canonical_source_episodes_per_class": 1,
+        "exact_byte_replay_passes_per_episode": 5,
+        "replay_passes_count_as_independent_observations": False,
+        "stochastic_sampling": False,
+        "random_seed_policy": "NOT_APPLICABLE_NO_STOCHASTIC_SAMPLING",
+        "independence_claim": False,
+    }:
+        fail("repetition/seed contract drift")
+
+    labels = ground_truth.get("labels")
+    if not isinstance(labels, dict) or set(labels) != set(classes):
+        fail("failure-injection ground-truth class set drift")
+    for name, entry in labels.items():
+        if not isinstance(entry, dict):
+            fail(f"ground-truth label {name} is malformed")
+        if set(entry) != {
+            "adapter_accept",
+            "terminal_event",
+            "condition",
+            "primary_endpoint_eligible",
+        }:
+            fail(f"ground-truth label field drift for {name}")
+        if not isinstance(entry.get("adapter_accept"), bool):
+            fail(f"ground-truth adapter_accept must be boolean for {name}")
+        if not isinstance(entry.get("condition"), str) or not entry["condition"]:
+            fail(f"ground-truth condition is missing for {name}")
+        if not isinstance(entry.get("primary_endpoint_eligible"), bool):
+            fail(f"ground-truth eligibility must be boolean for {name}")
+
+    for name in excluded:
+        if labels[name]["adapter_accept"] is not False:
+            fail("structural rejection control must fail adapter acceptance")
+        if labels[name]["primary_endpoint_eligible"] is not False:
+            fail("structural rejection control cannot enter primary denominator")
+    for name in set(classes) - excluded:
+        if labels[name]["adapter_accept"] is not True:
+            fail("non-structural fixture must remain adapter-normalizable")
+        if labels[name]["primary_endpoint_eligible"] is not True:
+            fail("non-structural fixture must remain primary-endpoint eligible")
+
+    predicates = readiness.get("required_predicates")
+    if not isinstance(predicates, dict):
+        fail("required_predicates must be an object")
+    for name in (
+        "freshness_and_calibration",
+        "episode_eligibility_and_exclusion",
+        "repetition_and_seed_plan",
+        "failure_injection_ground_truth",
+    ):
+        entry = predicates.get(name)
+        if not isinstance(entry, dict) or entry.get("status") != "BOUND":
+            fail(f"{name} predicate must be BOUND")
+
+
 def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     if readiness.get("record_type") != "AOSS_V0_6_STAGE_A_PREDATA_READINESS":
         fail("record_type drift")
@@ -363,6 +483,7 @@ def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     validate_apparatus_binding(readiness)
     validate_observer_measurement_boundary(readiness)
     validate_artifact_replay_receipt_contract(readiness)
+    validate_freshness_sampling_ground_truth(readiness)
     unresolved = unresolved_predicates(readiness)
     expected_status = "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW" if not unresolved else "NOT_READY_FAIL_CLOSED"
     if readiness.get("status") != expected_status:
