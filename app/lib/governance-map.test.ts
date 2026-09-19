@@ -10,8 +10,10 @@ test('governance map derives its vertical spine from canonical governance stages
     GOVERNANCE_MAP.stages.map(stage => stage.id),
     GOVERNANCE_STAGES.map(stage => stage.id),
   )
-  assert.equal(GOVERNANCE_MAP.blocking.id, 'interpretation-adjudication')
-  assert.equal(GOVERNANCE_MAP.blocking.state, 'open')
+  assert.equal(GOVERNANCE_MAP.lifecycleComplete, true)
+  assert.equal(GOVERNANCE_MAP.blocking, null)
+  assert.equal(GOVERNANCE_MAP.completed.length, GOVERNANCE_STAGES.length)
+  assert.equal(GOVERNANCE_MAP.downstream.length, 0)
 })
 
 test('governance map relationships resolve only to canonical stage ids', () => {
