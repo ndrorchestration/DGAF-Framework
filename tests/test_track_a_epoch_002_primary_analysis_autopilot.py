@@ -71,8 +71,8 @@ def test_governance_support_overlay_is_separate_and_non_numerical() -> None:
     assert '$jsonschemaVersion = "4.26.0"' in text
     assert '"governance-support"' in text
     assert "governance support overlay unexpectedly contains NumPy" in text
-    assert '$env:PYTHONPATH = $governanceSupport' in text
-    assert '$env:PYTHONPATH = $priorPythonPath' in text
+    assert "$env:PYTHONPATH = $governanceSupport" in text
+    assert "$env:PYTHONPATH = $priorPythonPath" in text
 
 
 def test_autopilot_runs_preflight_before_empirical_execution() -> None:
