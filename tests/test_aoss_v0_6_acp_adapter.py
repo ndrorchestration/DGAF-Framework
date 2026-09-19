@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.aoss_v0_6_acp_adapter import AdapterError, classify_manifest, normalize_manifest
+from scripts.aoss_v0_6_acp_adapter import (\n    AdapterError,\n    classify_manifest,\n    normalize_manifest,\n)
 
 ROOT = Path(__file__).resolve().parents[1]
 BUNDLE_PATH = ROOT / "tests/resources/aoss_v0_6_acp_fixture_bundle.json"
