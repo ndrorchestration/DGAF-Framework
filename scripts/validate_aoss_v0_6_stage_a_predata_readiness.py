@@ -684,19 +684,25 @@ def validate_comparator_input_derivation_gap(readiness: dict[str, Any]) -> None:
     if not isinstance(established, dict) or established.get("comparator_decision_rule_frozen") is not True:
         fail("comparator decision-rule binding drift")
     missing = gap.get("not_established")
-    if not isinstance(missing, dict) or not all(missing.get(k) is True for k in (
-        "authoritative_semantic_definition_for_each_coarse_dimension",
-        "machine_bound_acp_to_omr_extraction",
-        "unit_and_tolerance_contract_for_each_coarse_dimension",
-    )):
+    if not isinstance(missing, dict) or not all(
+        missing.get(k) is True
+        for k in (
+            "authoritative_semantic_definition_for_each_coarse_dimension",
+            "machine_bound_acp_to_omr_extraction",
+            "unit_and_tolerance_contract_for_each_coarse_dimension",
+        )
+    ):
         fail("comparator input derivation missing-state drift")
     prohibited = gap.get("prohibited")
-    if not isinstance(prohibited, dict) or not all(prohibited.get(k) is True for k in (
-        "infer_omr_dimensions_from_names",
-        "reconstruct_mapping_from_outcomes",
-        "treat_historical_reference_projection_as_derivation",
-        "collect_stage_a_outcomes_before_resolution",
-    )):
+    if not isinstance(prohibited, dict) or not all(
+        prohibited.get(k) is True
+        for k in (
+            "infer_omr_dimensions_from_names",
+            "reconstruct_mapping_from_outcomes",
+            "treat_historical_reference_projection_as_derivation",
+            "collect_stage_a_outcomes_before_resolution",
+        )
+    ):
         fail("comparator input derivation prohibition drift")
     if gap.get("outcome_collection_authorized") is not False:
         fail("comparator input gap cannot authorize outcome collection")
