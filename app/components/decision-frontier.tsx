@@ -32,8 +32,8 @@ export function DecisionFrontier() {
     <div className="section-heading frontier-heading">
       <div>
         <span className="eyebrow accent">SEMANTIC CONTROL FIELD · DECISION FRONTIER</span>
-        <h3 id="decision-frontier-title">The nearest admissible change, without collapsing the truth boundary</h3>
-        <p>Canonical governance stages are projected here as a field of established state, boundary, reachable work, and explicitly unreachable downstream transitions.</p>
+        <h3 id="decision-frontier-title">{frontier.lifecycleComplete ? 'The current bounded lifecycle endpoint, without inventing a successor' : 'The nearest admissible change, without collapsing the truth boundary'}</h3>
+        <p>{frontier.lifecycleComplete ? 'Canonical governance stages are fully established through the accepted Epoch 002 disposition. Any future empirical lane begins under a separate governed proposal and authorization chain.' : 'Canonical governance stages are projected here as a field of established state, boundary, reachable work, and explicitly unreachable downstream transitions.'}</p>
       </div>
       <div className="frontier-legend" aria-label="Decision Frontier legend">
         <span><i className="frontier-key established" aria-hidden="true"/>Established</span>
@@ -67,11 +67,11 @@ export function DecisionFrontier() {
           relation="Reachable work · not an authorization grant"
         />
       </> : <FrontierNode
-        eyebrow="POST-INTERPRETATION BOUNDARY"
-        label="No downstream gate designated"
+        eyebrow="POST-EPOCH-002 BOUNDARY"
+        label={frontier.transitionTitle}
         state="info"
         copy={frontier.transitionSummary}
-        relation="Requires a separate governed definition"
+        relation="Separate proposal and authorization required"
       />}
     </div>
 
@@ -105,7 +105,7 @@ export function DecisionFrontier() {
           <StatusChip state={transition.state} compact />
         </div>) : <div className="frontier-unreachable-item">
           <span aria-hidden="true">×</span>
-          <div><strong>No downstream lifecycle stage is currently modeled</strong><small>Absence of a modeled stage does not create authority; any next gate requires a separate governed definition.</small></div>
+          <div><strong>No successor empirical lifecycle is currently modeled</strong><small>Epoch 002 closure creates no successor authority; a future lane requires a new controller, preregistration, evidence/custody plan, and explicit authorization.</small></div>
           <StatusChip state="info" compact />
         </div>}
       </div>
