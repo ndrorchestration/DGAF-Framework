@@ -198,12 +198,8 @@ def test_replay_receipt_schema_rejects_embedded_outcome_payload() -> None:
             "accepted_commit": validator.EXPECTED_APPARATUS_COMMIT,
             "adapter_version": validator.EXPECTED_ADAPTER,
         },
-        "contract_digests": {
-            name: sample_sha for name in contract["required_contract_digest_roles"]
-        },
-        "artifact_digests": {
-            name: sample_sha for name in contract["required_artifact_digest_roles"]
-        },
+        "contract_digests": {name: sample_sha for name in contract["required_contract_digest_roles"]},
+        "artifact_digests": {name: sample_sha for name in contract["required_artifact_digest_roles"]},
         "replay_environment": {
             "python_version": "test",
             "os": "test",
