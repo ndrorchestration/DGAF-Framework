@@ -17,10 +17,10 @@ Current unresolved families include:
 - episode eligibility/exclusion;
 - repetitions/seeds;
 - per-class ground-truth expectations;
-- practical-effect/adoption rule;
-- analysis/uncertainty/multiplicity;
 
-The observer/trust-domain boundary, extraction-function/tolerance identity, and whole-study artifact/hash/replay receipt contract are now separately frozen by `AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md` and its machine-readable registry. Exact timestamp extraction remains distinct from freshness adjudication.
+The observer/trust-domain boundary, extraction-function/tolerance identity, whole-study artifact/hash/replay receipt, finite-corpus analysis/multiplicity contract, and practical-effect/adoption rule are now separately frozen. Exact timestamp extraction remains distinct from freshness adjudication.
+
+Stage A analysis is descriptive over a finite purposive conformance corpus: deterministic replays do not increase the denominator, no sampling CI/p-value/bootstrap is attached, and secondary/post-hoc analyses cannot be relabeled confirmatory. Portability has no minimum decision-divergence threshold; a zero-divergence result does not fail portability when the structural and safety criteria pass.
 
 CI intentionally executes:
 
