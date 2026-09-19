@@ -26,6 +26,7 @@ RESULT_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RES
 INTERPRETATION_REL = "docs/experiment/track_a_runs/TRACK_A_EPOCH_002_INTERPRETATION_NOTE.json"
 SCHEMA_REL = "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json"
 SEMANTICS_REL = "docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json"
+PREREG_REL = "docs/experiment/TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json"
 RESULT_VALIDATOR_REL = "scripts/validate_track_a_epoch_002_locked_analysis_result.py"
 
 RESULT_RECORD_ID = "E002-ANALYSIS-RESULT-0001"
@@ -34,6 +35,20 @@ INTERPRETATION_SCOPE = "INTERPRETATION_CONTENT_ADDRESS_ONLY_SAME_SYSTEM_NONINDEP
 PRODUCER_SYSTEM = "DGAF_TRACK_A_EPOCH_002_INTERPRETATION_VALIDATOR"
 LOCAL_INTERPRETATION_TYPE = "TRACK_A_EPOCH_002_LOCAL_INTERPRETATION"
 EVIDENCE_CLASS = "SAME_SYSTEM_NONINDEPENDENT"
+EXACT_CLAIM_SCOPE = (
+    "TRACK_A_PDMAL_VS_RANDOM_REGULAR_TOPOLOGY_ROBUSTNESS_"
+    "UNDER_EXACT_FROZEN_REFERENCE_ALGORITHM_AND_PROTOCOL"
+)
+SEPARATION_CONSTRAINTS = {
+    "track_a_epoch_001_pooled": False,
+    "epoch_003_pooled": False,
+    "epoch_004_pooled": False,
+    "structural_diagnostic_seeds_pooled": False,
+    "other_topology_comparisons": "EXPLORATORY_ONLY",
+    "failure_count_specific_effects": "EXPLORATORY_ONLY",
+    "post_hoc_subgroups": "EXPLORATORY_ONLY",
+    "confirmatory_relabeling_from_exploratory_results": False,
+}
 
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
@@ -127,6 +142,97 @@ def result_validator() -> Any:
     return load_module(ROOT / RESULT_VALIDATOR_REL, "track_a_epoch_002_result_for_interpretation")
 
 
+def validate_preregistered_contract() -> dict[str, Any]:
+    prereg = load_repo_json(PREREG_REL)
+    if prereg.get("protocol_id") != PROTOCOL_ID:
+        fail("preregistration protocol drift")
+
+    expected_question = (
+        "Under the fixed reference neighbor-mean alpha-0.5 consensus algorithm, "
+        "does the PDMAL topology yield higher failure-and-recovery success than "
+        "the matched random-regular topology across the preregistered failure-count panel?"
+    )
+    if prereg.get("research_question") != expected_question:
+        fail("preregistered research question drift")
+    if prereg.get("directional_hypothesis") != "PDMAL_TOPOLOGY_FFCR_GREATER_THAN_RANDOM_REGULAR":
+        fail("preregistered directional hypothesis drift")
+
+    algorithm = prereg.get("algorithm")
+    endpoint = prereg.get("endpoint")
+    analysis = prereg.get("primary_analysis")
+    multiplicity = prereg.get("multiplicity_policy")
+    historical = prereg.get("historical_evidence_policy")
+    ceiling = prereg.get("claim_ceiling")
+    rationale = prereg.get("sample_size_rationale")
+    if not all(
+        isinstance(value, dict)
+        for value in (algorithm, endpoint, analysis, multiplicity, historical, ceiling, rationale)
+    ):
+        fail("preregistration contract sections are malformed")
+
+    expected_analysis = {
+        "primary_comparator": "random_regular",
+        "primary_topology": "pdmal",
+        "estimand": "mean of 50 paired_seed_effect values",
+        "bootstrap": "paired_seed_effects_percentile",
+        "bootstrap_resamples": 10000,
+        "bootstrap_seed": 20270251,
+        "confidence_interval": "two_sided_95_percentile",
+        "alpha": 0.05,
+        "directional_support_rule": "estimate_gt_0_and_two_sided_95pct_ci_lower_gt_0",
+        "directional_negative_rule": "estimate_lt_0_and_two_sided_95pct_ci_upper_lt_0",
+        "otherwise_rule": "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED",
+    }
+    for key, expected in expected_analysis.items():
+        if analysis.get(key) != expected:
+            fail(f"preregistered primary-analysis contract drift: {key}")
+
+    if algorithm.get("public_id") != "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1":
+        fail("preregistered algorithm identity drift")
+    if endpoint.get("field") != "ffcr_success" or endpoint.get("type") != "boolean":
+        fail("preregistered endpoint drift")
+    if rationale.get("paired_seed_units") != 50 or rationale.get("power_claim") != "NONE":
+        fail("preregistered sample-size rationale drift")
+
+    if multiplicity.get("confirmatory_family") != ["pdmal_vs_random_regular"]:
+        fail("confirmatory family drift")
+    if multiplicity.get("confirmatory_test_count") != 1:
+        fail("confirmatory test-count drift")
+    for key in (
+        "other_topology_comparisons",
+        "failure_count_specific_effects",
+        "post_hoc_subgroups",
+    ):
+        if multiplicity.get(key) != "EXPLORATORY_ONLY":
+            fail(f"exploratory-separation policy drift: {key}")
+    if multiplicity.get("confirmatory_relabeling_from_exploratory_results") is not False:
+        fail("confirmatory relabeling prohibition drift")
+
+    for key in (
+        "pool_experiment_001",
+        "pool_epoch_003",
+        "pool_epoch_004",
+        "pool_structural_diagnostic_seeds",
+        "pool_track_a_epoch_001",
+    ):
+        if historical.get(key) is not False:
+            fail(f"historical pooling prohibition drift: {key}")
+
+    if ceiling.get("allowed_if_executed") != EXACT_CLAIM_SCOPE:
+        fail("exact Track A claim ceiling drift")
+    expected_ceiling = {
+        "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+        "integrated_track_c": "NOT_ESTABLISHED",
+        "independent_validation": "NOT_ESTABLISHED",
+        "high_assurance": "NOT_AUTHORIZED_N0",
+        "production_readiness": "NOT_ESTABLISHED",
+    }
+    for key, expected in expected_ceiling.items():
+        if ceiling.get(key) != expected:
+            fail(f"claim ceiling drift: {key}")
+    return prereg
+
+
 def validate_schema(record: dict[str, Any]) -> None:
     schema = load_repo_json(SCHEMA_REL)
     try:
@@ -200,6 +306,7 @@ def expected_local_interpretation(
     locked_output_sha256: str,
     result: dict[str, Any],
 ) -> dict[str, Any]:
+    validate_preregistered_contract()
     classification = result["classification"]
     return {
         "record_type": LOCAL_INTERPRETATION_TYPE,
@@ -209,21 +316,31 @@ def expected_local_interpretation(
         "result_record_event_commit_sha": result_event_sha,
         "locked_analysis_output_sha256": locked_output_sha256,
         "evidence_class": EVIDENCE_CLASS,
+        "separation_constraints": dict(SEPARATION_CONSTRAINTS),
         "confirmatory_contract": {
+            "research_question": (
+                "Under the fixed reference neighbor-mean alpha-0.5 consensus algorithm, "
+                "does the PDMAL topology yield higher failure-and-recovery success than "
+                "the matched random-regular topology across the preregistered failure-count panel?"
+            ),
+            "directional_hypothesis": "PDMAL_TOPOLOGY_FFCR_GREATER_THAN_RANDOM_REGULAR",
+            "algorithm_id": "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1",
+            "endpoint_field": "ffcr_success",
             "primary_topology": "pdmal",
             "primary_comparator": "random_regular",
             "paired_seed_count": 50,
-            "estimand": "estimate_pdmal_minus_random_regular",
-            "interval": "two_sided_95pct_percentile_ci",
+            "estimand_definition": "mean of 50 paired_seed_effect values",
+            "estimate_result_field": "estimate_pdmal_minus_random_regular",
+            "interval_definition": "two_sided_95_percentile",
+            "interval_result_field": "two_sided_95pct_percentile_ci",
             "alpha": 0.05,
+            "bootstrap": "paired_seed_effects_percentile",
             "bootstrap_resamples": 10000,
             "bootstrap_seed": 20270251,
             "confirmatory_test_count": 1,
-            "decision_rule": (
-                "support iff estimate > 0 and both bounds of the frozen two-sided 95% percentile CI are > 0; "
-                "evidence against iff estimate < 0 and both bounds are < 0; otherwise "
-                "inconclusive/not directionally supported"
-            ),
+            "directional_support_rule": "estimate_gt_0_and_two_sided_95pct_ci_lower_gt_0",
+            "directional_negative_rule": "estimate_lt_0_and_two_sided_95pct_ci_upper_lt_0",
+            "otherwise_rule": "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED",
         },
         "result": {
             "estimate_pdmal_minus_random_regular": result["estimate_pdmal_minus_random_regular"],
@@ -234,13 +351,16 @@ def expected_local_interpretation(
             "confirmatory_statement": interpretation_statement(classification),
             "competing_interpretations": COMPETING_INTERPRETATIONS[classification],
             "scope_limitations": SCOPE_LIMITATIONS,
+            "claim_scope": EXACT_CLAIM_SCOPE,
             "exploratory_claims": [],
         },
         "scientific_state_effect": {
             "empirical_n_increment": 0,
             "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+            "integrated_track_c": "NOT_ESTABLISHED",
             "independent_validation": "NOT_ESTABLISHED",
             "high_assurance": "NOT_AUTHORIZED_N0",
+            "production_readiness": "NOT_ESTABLISHED",
         },
     }
 
@@ -338,6 +458,7 @@ def validate_external_interpretation_bytes(
 
 def validate_tooling_only() -> None:
     validator = result_validator()
+    validate_preregistered_contract()
     result_event, _ = accepted_result_binding("HEAD")
     if (ROOT / INTERPRETATION_REL).exists() or validator.git_object_exists(f"HEAD:{INTERPRETATION_REL}"):
         fail("tooling mode requires the canonical interpretation note to remain absent")
