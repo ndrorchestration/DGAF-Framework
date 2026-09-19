@@ -1,43 +1,60 @@
 # AOSS v0.6 Stage A — Pre-Data Readiness Gate
 
 **Controller:** #810  
-**Current state:** NOT READY / FAIL-CLOSED  
+**Current candidate state:** READY FOR SEPARATE AUTHORIZATION REVIEW  
 **Outcome collection:** NOT AUTHORIZED BY THIS GATE
 
-This gate converts the Stage-A pre-data checklist into a machine-checked readiness contract. It does not select missing scientific or operational values.
+This gate converts the Stage-A pre-data checklist into a machine-checked readiness contract. It cannot authorize outcome collection, establish external validation, or increment scientific N.
 
-The accepted #859 apparatus remains the starting evidence state. Predicates established by accepted apparatus or frozen pre-data contracts may be marked `BOUND`. Every unresolved predicate must remain `PARTIAL`, `OPEN`, or `BLOCKED` and must state exactly what is missing.
+## Comparator amendment boundary
 
-The validator refuses a ready state while any required predicate is unresolved. Even if every predicate is eventually bound, the resulting status is only `READY_FOR_SEPARATE_AUTHORIZATION_REVIEW`; the readiness record itself can never authorize outcome collection, establish external validation, or increment scientific N.
+The historical `AOSS_V0_5_OMR_FROZEN` decision rule remains documented, but O/M/R semantic definitions and an ACP→O/M/R extraction contract were not recoverable before Stage-A outcome collection. The historical `(3,1,1.0)` fixture projection is not treated as an extraction rule.
 
-## Current unresolved families
+Rather than invent O/M/R, Stage A now carries an explicit prospective pre-data protocol amendment:
 
-Exactly one required predicate remains unresolved:
+- amendment: `AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT_V1`;
+- primary comparator: `AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1`;
+- executable: `scripts/aoss_v0_6_stage_a_acp_direct_baseline.py`;
+- inputs: exact ACP manifest identity plus source-native event kind only;
+- richer AOSS observables and injected ground-truth labels are not comparator inputs.
 
-- **comparator input derivation — BLOCKED:** the `AOSS_V0_5_OMR_FROZEN` decision rule is bound, but ACP telemetry does not yet have an accepted machine-bound derivation into `(O,M,R)`. Do not infer the dimensions from their names or reconstruct the mapping from outcomes.
+The original OMR gap record is retained as historical evidence of the unrecovered derivation.
 
-## Frozen pre-data contracts
+## Bound pre-data contracts
 
-The following are now separately frozen and evidence-backed:
+All required pre-data predicates in this candidate are evidence-backed, including:
 
-- external target identity, telemetry schema, observer/trust-domain boundary, and extraction-function/tolerance identity;
+- exact external target identity and telemetry schema;
+- external read-only observer/trust-domain boundary;
+- extraction functions, units, and tolerances;
 - numeric same-host freshness/calibration semantics;
+- prospective source-native primary comparator and exact machine derivation;
+- prospective executable `AOSS_V0_6_STAGE_A_POLICY_V1` decision policy;
+- primary, secondary, safety, and falsification endpoints;
 - episode eligibility/exclusion and deterministic replay/repetition plan;
 - per-class failure-injection ground truth;
-- whole-study content-addressed replay receipt contract;
 - finite-corpus descriptive analysis/multiplicity contract;
 - practical-effect/portability adoption rule;
-- prospective executable `AOSS_V0_6_STAGE_A_POLICY_V1` decision policy, explicitly not a recovered v0.5 implementation;
-- primary, secondary, safety, falsification, and non-authority boundaries.
+- whole-study content-addressed replay receipt contract;
+- authorization/non-authority boundary.
 
-Stage A remains a finite preregistered purposive conformance corpus. Deterministic replays test stability and do not increase the denominator. No sampling CI, p-value, bootstrap, or population-effect inference is attached to the primary finite-corpus fraction. A zero decision-divergence result does not by itself fail bounded portability if all structural and safety criteria pass.
+Stage A remains a finite preregistered purposive conformance corpus. Deterministic replays test stability and do not increase the denominator. No sampling CI, p-value, bootstrap, or population-effect inference is attached to the primary finite-corpus fraction.
 
-The whole-study replay receipt must bind the frozen AOSS decision-policy contract and the eventual comparator-input derivation contract by SHA-256 before a valid final receipt can exist.
+## State semantics
 
-CI intentionally executes:
+`READY_FOR_SEPARATE_AUTHORIZATION_REVIEW` means only that the pre-data contract is complete enough for a separate authorization decision. It does **not** mean:
+
+- outcome collection is authorized;
+- external validation is established;
+- AOSS is superior to the comparator;
+- DGAF or PDMAL efficacy is established;
+- scientific N has increased;
+- Track A Epoch 002 is reopened.
+
+CI must validate this candidate with:
 
 ```text
-python scripts/validate_aoss_v0_6_stage_a_predata_readiness.py --assert-not-ready
+python scripts/validate_aoss_v0_6_stage_a_predata_readiness.py --assert-ready
 ```
 
-A green result means the repository accurately preserves the fail-closed boundary. It does **not** authorize Stage-A outcome generation.
+A green result is readiness evidence only. A separate explicit authorization record is required before Stage-A outcome generation.

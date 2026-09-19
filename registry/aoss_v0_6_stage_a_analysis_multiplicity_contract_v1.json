@@ -11,9 +11,9 @@
     "deterministic_replays_are_independent_units": false
   },
   "primary_analysis": {
-    "endpoint": "AOSS_DECISION_DIFFERS_FROM_FROZEN_OMR",
+    "endpoint": "AOSS_DECISION_DIFFERS_FROM_ACP_DIRECT_EVENT_BASELINE",
     "estimator": "EXACT_FINITE_CORPUS_FRACTION",
-    "numerator": "count of unique eligible episodes with AOSS decision != frozen OMR comparator decision",
+    "numerator": "count of unique eligible episodes with AOSS decision != prospective ACP direct-event baseline decision",
     "denominator": "count of unique eligible episodes satisfying the separately frozen eligibility contract",
     "report": [
       "numerator",
@@ -22,7 +22,9 @@
       "episode_class",
       "reconstructed_state",
       "missing_or_adapter_derived_observables",
-      "INCONCLUSIVE_or_UNMEASURED_status"
+      "INCONCLUSIVE_or_UNMEASURED_status",
+      "primary_comparator_decision",
+      "primary_comparator_rule"
     ],
     "sampling_confidence_interval": "NONE",
     "p_value": "NONE",
@@ -60,9 +62,16 @@
     "Decision divergence is not AOSS superiority.",
     "Decision divergence is not causal value of added observables.",
     "Finite-corpus fractions do not generalize to other frameworks, workloads, or populations.",
-    "Deterministic replays do not increase effective sample size."
+    "Deterministic replays do not increase effective sample size.",
+    "The ACP direct-event baseline is a pre-data source-native comparator, not ground truth."
   ],
   "outcome_collection_authorized": false,
   "external_validation_established": false,
-  "scientific_n_increment": 0
+  "scientific_n_increment": 0,
+  "primary_comparator_amendment": {
+    "version": "AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT_V1",
+    "contract": "registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json",
+    "baseline_version": "AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1",
+    "executable": "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py"
+  }
 }

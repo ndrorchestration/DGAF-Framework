@@ -1,0 +1,117 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_PROTOCOL_AMENDMENT_NO_OUTCOMES",
+  "amendment_version": "AOSS_V0_6_STAGE_A_PRIMARY_COMPARATOR_AMENDMENT_V1",
+  "timing": {
+    "stage_a_outcome_collection_started": false,
+    "stage_a_outcomes_inspected": false,
+    "existing_apparatus_fixtures_available_before_amendment": true,
+    "amendment_is_predata": true
+  },
+  "superseded_confirmatory_comparator": {
+    "version": "AOSS_V0_5_OMR_FROZEN",
+    "status": "NOT_MACHINE_USABLE_FOR_STAGE_A",
+    "reason": "AUTHORITATIVE_OMR_DIMENSION_SEMANTICS_AND_ACP_EXTRACTION_NOT_RECOVERABLE_PRE_DATA",
+    "historical_gap_record": "registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json",
+    "historical_reference_projection_is_not_derivation": true,
+    "omr_semantics_inferred_or_reconstructed": false
+  },
+  "primary_comparator": {
+    "version": "AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1",
+    "classification": "PROSPECTIVE_MACHINE_DERIVABLE_SOURCE_EVENT_BASELINE",
+    "executable_binding": {
+      "path": "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py",
+      "git_blob_sha": "f1846d00084b9e0a1b1ddbd21999f1ce9627c4f5",
+      "entrypoint": "evaluate_baseline",
+      "result_type": "BaselineResult"
+    },
+    "source_identity": {
+      "repository": "ndrorchestration/agent-control-plane",
+      "commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+      "provenance_schema": "agent-control-plane.provenance.v1"
+    },
+    "source_fields_used": [
+      "manifest.schema",
+      "manifest.run_id",
+      "manifest.event_count",
+      "events[].run_id",
+      "events[].event"
+    ],
+    "explicitly_ignored_for_baseline": [
+      "events[].timestamp",
+      "events[].task_id",
+      "events[].capability",
+      "events[].state",
+      "events[].detail",
+      "event ordering beyond terminal-event cardinality",
+      "AOSS observer-derived IDs",
+      "AOSS freshness classification",
+      "AOSS lineage reconstruction",
+      "AOSS validation state",
+      "AOSS authorization state",
+      "AOSS provenance-valid state",
+      "historical O/M/R variables"
+    ],
+    "units_and_tolerances": {
+      "schema": "exact string identity; zero tolerance",
+      "run_id": "exact opaque identifier equality; zero tolerance",
+      "event_count": "exact integer equality to events[] length; zero tolerance",
+      "event_kind": "exact categorical string membership; zero tolerance",
+      "terminal_event_cardinality": "exact integer count; zero tolerance"
+    },
+    "decision_rules": [
+      {
+        "priority": 1,
+        "when": "structural manifest identity invalid",
+        "decision": "HOLD",
+        "input_valid": false
+      },
+      {
+        "priority": 2,
+        "when": "no recognized terminal event",
+        "decision": "HOLD",
+        "input_valid": true
+      },
+      {
+        "priority": 3,
+        "when": "more than one recognized terminal event",
+        "decision": "HOLD",
+        "input_valid": true
+      },
+      {
+        "priority": 4,
+        "when": "exactly one terminal event == task.completed",
+        "decision": "RECORD_OUTCOME",
+        "input_valid": true
+      },
+      {
+        "priority": 5,
+        "when": "exactly one terminal event in {task.denied, task.rejected, task.failed, task.cancelled, task.budget_exhausted}",
+        "decision": "ESCALATE_BLOCK",
+        "input_valid": true
+      }
+    ],
+    "fail_closed_default": "HOLD"
+  },
+  "primary_endpoint_amendment": {
+    "previous_endpoint": "AOSS_DECISION_DIFFERS_FROM_FROZEN_OMR",
+    "replacement_endpoint": "AOSS_DECISION_DIFFERS_FROM_ACP_DIRECT_EVENT_BASELINE",
+    "estimator": "EXACT_FINITE_CORPUS_FRACTION",
+    "comparison": "exact AOSS policy action string != exact ACP direct-event baseline action string",
+    "interpretation": "DESCRIPTIVE_DECISION_DIVERGENCE_NOT_CORRECTNESS_OR_SUPERIORITY"
+  },
+  "integrity_boundary": [
+    "The amendment replaces the unusable historical OMR comparator; it does not recover O, M, or R.",
+    "The baseline does not inspect Stage-A outcomes because no Stage-A outcomes have been collected.",
+    "The baseline intentionally excludes richer AOSS observables so richer-state divergence is not encoded into the comparator.",
+    "Injected ground-truth condition labels are not inputs to the baseline.",
+    "Structural rejection controls remain outside the primary denominator under the existing eligibility contract.",
+    "A null divergence result remains admissible evidence."
+  ],
+  "authorization_effect": "NONE",
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}
