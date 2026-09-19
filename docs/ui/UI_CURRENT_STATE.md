@@ -22,11 +22,14 @@ Track A Epoch 002 has advanced beyond the state used when PR #849 was authored:
 - interpretation/adjudication tooling: ACCEPTED via PR #855;
 - interpretation execution: COMPLETED / ESTABLISHED via PR #872;
 - `INTERPRETATION_NOTE`: ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT;
+- post-interpretation disposition: `CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT` via PR #881;
+- Epoch 002 lifecycle: CLOSED FOR EXACT PREREGISTERED SCOPE;
+- successor empirical epoch: NOT DESIGNATED / NOT AUTHORIZED;
 - canonical DGAF efficacy: NOT ESTABLISHED;
 - independent validation: NOT ESTABLISHED;
 - scientific-N increment: 0.
 
-The active control frontier is therefore **post-interpretation projection reconciliation and gate identification**; no new empirical or authorization transition is implied.
+There is no remaining Epoch 002 control frontier. The interface must project **bounded lifecycle closure via PR #881** and an explicit **no successor empirical lane designated or authorized** boundary. A future research lane, if intentionally opened, begins under a separate controller and authorization chain.
 
 ## Accepted interface foundation
 
@@ -55,7 +58,7 @@ Implementation intent remains accepted:
 
 Its exact historical head completed 19/19 returned repository workflow families successfully. PR #849 is now **CLOSED / UNMERGED / STALE-LINEAGE / DO NOT MERGE AS-IS** because protected main advanced through changes to `app/lib/governance.ts`, Decision Frontier, Governance Map, current-state records, and the Track A locked-result/interpretation frontier. The old candidate text that primary analysis had not yet run is no longer admissible.
 
-Reconstruction requirement: replay only the presentation delta onto current protected main and consume the current canonical stage model, where locked analysis and bounded interpretation are established, while authorization and scientific-claim promotion remain blocked.
+Reconstruction requirement: replay only the presentation delta onto current protected main and consume the current canonical stage model, where locked analysis, bounded interpretation, and post-interpretation disposition are established and Epoch 002 is closed, while successor empirical authorization and scientific-claim promotion remain blocked.
 
 ### PR #850 — Audience journey groups + mobile containment
 
