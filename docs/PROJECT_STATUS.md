@@ -77,9 +77,9 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 - The authorized primary analysis subsequently executed locally; PR #851 established the immutable content-addressed result receipt, PR #854 reconciled current-state projections, and PR #855 accepted fail-closed interpretation/adjudication tooling.
 - These later events establish only their exact scopes; the bounded interpretation note is established, while efficacy, independent validation, scientific-N promotion, and High-Assurance authorization remain unestablished.
 
-## Next admissible scientific transition
+## Post-Epoch-002 boundary
 
-The current control frontier is **explicit next-gate identification after accepted interpretation**. The frozen primary analysis has executed locally, its creation-only content-addressed result receipt is accepted, and PR #872 established the separate bounded `INTERPRETATION_NOTE` at SAME_SYSTEM_NONINDEPENDENT scope. No downstream transition is currently designated. Any next state-changing action requires a separate governed definition and must not infer efficacy, independent validation, scientific-N promotion, production readiness, certification, or High-Assurance authorization from interpretation admission.
+Track A Epoch 002 is **closed for its exact preregistered scope**. PR #880 accepted the outcome-agnostic disposition tooling, and PR #881 established the creation-only `TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION` as `CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT`. Issues #719 and #879 are completed. No successor empirical lane is designated or authorized. Any future independent replication or fresh empirical epoch requires a separate controller, preregistration, evidence/custody plan, and explicit authorization and must not infer efficacy, independent validation, scientific-N promotion, production readiness, certification, or High-Assurance authorization from Epoch 002 closure.
 
 The accepted apparatus now provides:
 
@@ -88,10 +88,11 @@ The accepted apparatus now provides:
 3. a bounded human-controlled authorization record with exact scope `LOCKED_PRIMARY_ANALYSIS_ONLY`;
 4. a fail-closed local locked-analysis runner bound to the frozen analysis/configuration, exact materialized-input digest, and exact Python 3.12.0 / NumPy 2.5.1 runtime;
 5. an accepted creation-only locked-result receipt that binds the already executed local output by content address without copying numerical outcomes into the repository record;
-6. accepted fail-closed interpretation/adjudication tooling that revalidates the retained result bytes and frozen preregistration before preparing a separate content-addressed interpretation note;
-7. explicit preservation of scientific-N increment 0, canonical efficacy `NOT_ESTABLISHED`, independent validation `NOT_ESTABLISHED`, and High-Assurance `NOT AUTHORIZED`.
+6. accepted fail-closed interpretation/adjudication tooling plus the creation-only bounded interpretation note accepted via PR #872;
+7. accepted outcome-agnostic post-interpretation disposition tooling and the creation-only closure record accepted via PR #881;
+8. explicit preservation of scientific-N increment 0, canonical efficacy `NOT_ESTABLISHED`, independent validation `NOT_ESTABLISHED`, High-Assurance `NOT AUTHORIZED`, and successor empirical execution `NOT AUTHORIZED`.
 
-Do not place private keys, passphrases, protected plaintext mappings, numerical result values, or other recoverable secret/protected material in general GitHub, Notion, Drive, chat, CI inputs, workflow logs, or projections. Do not alter the frozen endpoint, estimand, bootstrap contract, historical pooling boundary, or locked runtime after outcome access. Analysis execution, result admission, interpretation preparation, and interpretation-note admission remain separate events.
+Do not place private keys, passphrases, protected plaintext mappings, numerical result values, or other recoverable secret/protected material in general GitHub, Notion, Drive, chat, CI inputs, workflow logs, or projections. Do not alter the frozen endpoint, estimand, bootstrap contract, historical pooling boundary, or locked runtime after outcome access. Analysis execution, result admission, interpretation preparation, interpretation-note admission, and post-interpretation disposition remain separate events. Epoch 002 closure does not authorize a successor lane.
 
 ## Presentation boundary
 
