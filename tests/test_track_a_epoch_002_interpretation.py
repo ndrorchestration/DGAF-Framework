@@ -97,9 +97,7 @@ def test_all_frozen_interpretation_branches_preserve_competing_views(
         locked_output_sha256="b" * 64,
         result=result,
     )
-    assert artifact["interpretation"]["confirmatory_statement"] == validator.interpretation_statement(
-        classification
-    )
+    assert artifact["interpretation"]["confirmatory_statement"] == validator.interpretation_statement(classification)
     assert artifact["interpretation"]["competing_interpretations"] == (
         validator.COMPETING_INTERPRETATIONS[classification]
     )
