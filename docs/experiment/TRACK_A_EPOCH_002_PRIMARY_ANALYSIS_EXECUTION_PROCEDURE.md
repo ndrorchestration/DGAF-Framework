@@ -30,7 +30,7 @@ The autopilot is the preferred nontechnical path. It:
 1. reads the retained materialized input from the operator-controlled user-profile location by default;
 2. verifies GitHub CLI authentication and the expected DGAF repository origin;
 3. fetches protected `main` and creates an isolated detached worktree;
-4. finds exact Python `3.12.0`, or if absent downloads the official Python Software Foundation 64-bit installer, verifies its Authenticode signer, and installs a dedicated user-local DGAF runtime without modifying PATH;
+4. finds exact Python `3.12.0`, or if absent provisions the official `python` 3.12.0 NuGet package side-by-side in the DGAF user-local runtime directory, verifying the NuGet client and provisioned Python executable signatures; this avoids Windows Installer product-version conflicts and does not modify or uninstall any existing Python installation;
 5. creates/reuses an isolated analysis virtual environment from the hash-locked requirements;
 6. runs the non-executing authorization/runtime preflight;
 7. executes the frozen primary analysis only if no retained output bundle already exists;
