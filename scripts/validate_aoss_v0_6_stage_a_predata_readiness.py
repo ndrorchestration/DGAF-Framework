@@ -349,7 +349,6 @@ def validate_artifact_replay_receipt_contract(readiness: dict[str, Any]) -> None
         fail("artifact hash/replay receipt predicate must be BOUND")
 
 
-
 def validate_freshness_sampling_ground_truth(readiness: dict[str, Any]) -> None:
     freshness = load_json(ROOT / FRESHNESS_REL)
     eligibility = load_json(ROOT / ELIGIBILITY_REL)
