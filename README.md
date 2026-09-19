@@ -14,7 +14,7 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **3. Read the current state from its owning record.** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) is the live project/evidence entrypoint. The status block immediately below is a public summary, not a substitute for exact-bound evidence records.
 
-**4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock, bounded unblinding, real materialization evidence (#824), the immutable materialization receipt (#826), and locked-primary-analysis authorization (#828) are accepted. The frozen primary analysis has now executed locally, and PR #851 established the creation-only content-addressed locked-result receipt on protected `main`. The current frontier is **post-interpretation control-state reconciliation under #719**; scientific-N increment remains 0, and canonical DGAF efficacy and independent validation are not established.
+**4. Understand the current Track A boundary.** Epoch 002 completed its governed chain through bounded interpretation and an outcome-agnostic post-interpretation disposition. PR #881 closes Epoch 002 as `CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT` for its exact preregistered scope. No successor empirical lane is designated or authorized; scientific-N increment remains 0, and canonical DGAF efficacy and independent validation are not established.
 
 **5. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
@@ -45,12 +45,12 @@ For this reconciliation, the accepted source lineage through PR #797 was read fr
 - **Stage-1 retained-archive repair — PR #794** is merged and accepts the exact locked archive's harmless `./` flat-member representation without changing archive bytes or weakening unsafe-member rejection.
 - **Stage-2 accepted-lineage rebind — PR #797** is merged and binds the operator bundle to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` / blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
 
-Those earlier engineering/presentation/assurance milestones did not establish materialization or primary-analysis authorization. Subsequent separately governed events advanced the lane: PR #824 admitted real non-secret materialization evidence, PR #826 established its immutable receipt, PR #831 accepted the fail-closed local analysis runner, PR #828 accepted bounded locked-analysis authorization, PR #835 accepted non-executing content-addressed result-admission tooling, PR #848 corrected the lifecycle-aware admission test, and PR #851 established the immutable locked-analysis result receipt. PR #872 separately established bounded interpretation admission at SAME_SYSTEM_NONINDEPENDENT scope. These events establish execution, result admission, and bounded interpretation at their exact scopes, but not canonical DGAF efficacy, independent validation, production certification, or High-Assurance authorization.
+Those earlier engineering/presentation/assurance milestones did not establish materialization or primary-analysis authorization. Subsequent separately governed events advanced the lane: PR #824 admitted real non-secret materialization evidence, PR #826 established its immutable receipt, PR #831 accepted the fail-closed local analysis runner, PR #828 accepted bounded locked-analysis authorization, PR #835 accepted non-executing content-addressed result-admission tooling, PR #848 corrected the lifecycle-aware admission test, and PR #851 established the immutable locked-analysis result receipt. PR #872 separately established bounded interpretation admission at SAME_SYSTEM_NONINDEPENDENT scope, PR #880 accepted outcome-agnostic disposition tooling, and PR #881 closed Epoch 002 for its exact preregistered scope. These events establish execution, result admission, bounded interpretation, and bounded lane closure at their exact scopes, but not canonical DGAF efficacy, independent validation, production certification, High-Assurance authorization, or authorization for another empirical epoch.
 
 > **Canonical High-Assurance research status:** PRE-FREEZE · FAIL-CLOSED · NOT AUTHORIZED · empirical N = 0  
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
-> **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, bounded unblinding, materialization, immutable materialization receipt, locked-primary-analysis authorization, local locked analysis execution, and the content-addressed locked-result receipt are **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · interpretation/adjudication **EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT**  
+> **Successor Track A / Epoch 002:** governed lifecycle **CLOSED FOR EXACT PREREGISTERED SCOPE** via PR #881 · disposition **CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · locked analysis/result and interpretation **EXECUTED / ESTABLISHED AT THEIR EXACT SCOPES** · successor empirical lane **NOT DESIGNATED / NOT AUTHORIZED**  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
@@ -102,7 +102,7 @@ DGAF separates prospective evaluation by workload instead of treating one experi
 | Track | Plain-English purpose | Current boundary |
 |---|---|---|
 | **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
-| **A — Epoch 002 successor** | Replacement prospective topology robustness | Collection COMPLETE at 50 paired seed units / 2,250 observations; dataset lock ESTABLISHED; bounded unblinding AUTHORIZED; materialization and immutable receipt ESTABLISHED; locked-primary-analysis authorization ACCEPTED; primary analysis EXECUTED locally under the frozen contract; content-addressed locked-result receipt ESTABLISHED via #851; interpretation/adjudication EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT |
+| **A — Epoch 002 successor** | Replacement prospective topology robustness | Governed lifecycle CLOSED for exact preregistered scope via #881 as CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT; collection COMPLETE at 50 paired seed units / 2,250 observations; locked result receipt ESTABLISHED via #851; interpretation ESTABLISHED via #872; successor empirical lane NOT DESIGNATED / NOT AUTHORIZED |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B2** | Persistent context and closure | Standalone non-empirical lane complete; no empirical efficacy claim |
 | **B3** | Persistent weighted-graph convergence monitoring | Standalone non-empirical lane complete; no empirical efficacy claim |
@@ -118,7 +118,7 @@ Issue #523 controls the replacement path. Epoch 002 uses a distinct protocol ide
 
 Repository custody, precollection preflight, immutable freeze, final closure, bounded non-independent verification classification, separate collection authorization, retained-evidence admission/QC, dataset lock, and bounded unblinding have advanced through separate governed events. The authorized operator-executed Codespace collection is complete at **50 paired seed units / 2,250 blinded observations**.
 
-The current control frontier is **post-interpretation projection reconciliation and explicit next-gate identification under issue #719**. The accepted apparatus now includes:
+Track A Epoch 002 is now **closed for its exact preregistered scope** through PR #881. Issues #719 and #879 are completed, and no successor empirical lane is designated or authorized. The accepted apparatus now includes:
 
 - a PASS content-addressed dataset-lock receipt;
 - a separate PASS unblinding decision bounded to `CONTROLLED_MAPPING_RELEASE_OR_DECRYPTION_ONLY`;
@@ -129,7 +129,10 @@ The current control frontier is **post-interpretation projection reconciliation 
 - the separate primary-analysis authorization event accepted through PR #828 with exact scope `LOCKED_PRIMARY_ANALYSIS_ONLY`;
 - non-executing content-addressed result-admission tooling accepted through PR #835;
 - lifecycle-aware result-admission tests accepted through PR #848;
-- the creation-only locked-analysis result receipt accepted through PR #851 as `c0690e599d25304f1d920d5235adff04ba76094a`.
+- the creation-only locked-analysis result receipt accepted through PR #851 as `c0690e599d25304f1d920d5235adff04ba76094a`;
+- bounded interpretation admitted through PR #872 at SAME_SYSTEM_NONINDEPENDENT scope;
+- outcome-agnostic post-interpretation disposition tooling accepted through PR #880;
+- the creation-only disposition record accepted through PR #881 as `CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT`.
 
 Current boundary:
 
@@ -141,14 +144,16 @@ Current boundary:
 - `PRIMARY_ANALYSIS = EXECUTED_LOCKED / RETAINED`;
 - `LOCKED_ANALYSIS_RESULT = ESTABLISHED`;
 - `INTERPRETATION_ADJUDICATION = EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT`;
+- `POST_INTERPRETATION_DISPOSITION = CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT`;
+- `NEW_EMPIRICAL_EPOCH_AUTHORIZED = FALSE`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`;
 - `HIGH_ASSURANCE = PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`.
 
-The remaining ordered sequence is:
+There is no remaining Epoch 002 transition. Any future research sequence begins only through a separately governed proposal:
 
-`post-interpretation gate identification → any later separately governed claim-state transition`
+`new controller → new preregistration/evidence-custody plan → separate authorization decision → only then any successor empirical execution`
 
 No private key, passphrase, blinding secret, protected plaintext mapping, decrypted protected data, or other recoverable secret material belongs in GitHub, Notion, chat, CI inputs, workflow logs, or committed files.
 
