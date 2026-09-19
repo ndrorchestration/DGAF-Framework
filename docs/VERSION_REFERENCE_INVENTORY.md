@@ -71,7 +71,7 @@ Root npm direct dependencies in `package.json` are exact, but transitive npm res
 
 ## Files Without Version References (Verified)
 
-- `middleware.ts` — no version string
+- `proxy.ts` — no version string
 - `lib/evidence.ts` — no version string
 - `src/evidence_mode.py` — no version string
 - `vercel.json` — no version strings
