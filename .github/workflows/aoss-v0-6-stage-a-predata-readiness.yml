@@ -7,6 +7,13 @@ on:
       - 'registry/aoss_v0_6_stage_a_predata_readiness_v1.json'
       - 'registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json'
       - 'registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json'
+      - 'registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json'
+      - 'registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json'
+      - 'registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json'
+      - 'registry/aoss_v0_6_stage_a_freshness_calibration_v1.json'
+      - 'registry/aoss_v0_6_stage_a_episode_eligibility_repetition_v1.json'
+      - 'registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json'
+      - 'docs/research/AOSS_V0_6_STAGE_A_SAMPLING_GROUND_TRUTH.md'
       - 'schemas/aoss_v0_6_stage_a_replay_receipt.schema.json'
       - 'registry/aoss_v0_6_acp_measurement_manifest_v1.json'
       - 'scripts/aoss_v0_6_acp_adapter.py'
@@ -15,6 +22,8 @@ on:
       - 'docs/research/AOSS_V0_6_STAGE_A_PREDATA_GATE.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_ARTIFACT_REPLAY_RECEIPT.md'
+      - 'docs/research/AOSS_V0_6_STAGE_A_ANALYSIS_ADOPTION_CONTRACT.md'
+      - 'docs/research/AOSS_V0_6_STAGE_A_COMPARATOR_INPUT_DERIVATION_GAP.md'
   push:
     branches:
       - main
@@ -23,6 +32,13 @@ on:
       - 'registry/aoss_v0_6_stage_a_predata_readiness_v1.json'
       - 'registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json'
       - 'registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json'
+      - 'registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json'
+      - 'registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json'
+      - 'registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json'
+      - 'docs/research/AOSS_V0_6_STAGE_A_SAMPLING_GROUND_TRUTH.md'
+      - 'registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json'
+      - 'registry/aoss_v0_6_stage_a_episode_eligibility_repetition_v1.json'
+      - 'registry/aoss_v0_6_stage_a_freshness_calibration_v1.json'
       - 'schemas/aoss_v0_6_stage_a_replay_receipt.schema.json'
       - 'registry/aoss_v0_6_acp_measurement_manifest_v1.json'
       - 'scripts/aoss_v0_6_acp_adapter.py'
@@ -31,6 +47,8 @@ on:
       - 'docs/research/AOSS_V0_6_STAGE_A_PREDATA_GATE.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md'
       - 'docs/research/AOSS_V0_6_STAGE_A_ARTIFACT_REPLAY_RECEIPT.md'
+      - 'docs/research/AOSS_V0_6_STAGE_A_ANALYSIS_ADOPTION_CONTRACT.md'
+      - 'docs/research/AOSS_V0_6_STAGE_A_COMPARATOR_INPUT_DERIVATION_GAP.md'
 
 permissions:
   contents: read
