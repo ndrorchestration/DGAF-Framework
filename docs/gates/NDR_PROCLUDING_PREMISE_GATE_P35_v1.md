@@ -4,7 +4,7 @@
 <!-- Historical certification metadata is retained for provenance only and is not current certification. -->
 
 **Version:** 1.0  
-**Maintained by:** Agent Amethyst  
+**Maintained by:** `role.governance-orchestrator`  
 **Canonical home:** `DGAF-Framework/docs/gates/NDR_PROCLUDING_PREMISE_GATE_P35_v1.md`  
 **Pattern:** P-35
 
@@ -40,9 +40,9 @@ Let `Π = {π₁, π₂, ..., πₙ}` be the set of required premises. P-35 spec
 
 | ID | Premise | Verification Method |
 |----|---------|---------------------|
-| π₁ | Agent identity assertions are non-empty and match AGENT_ROSTER | AGENT_ROSTER.md SHA cross-check |
+| π₁ | Current authority assertions resolve to registered functional role IDs | `governance/role_capability_registry.v1.json` cross-check |
 | π₂ | AttestationGate (P-30) token is valid and non-expired | Token expiry field check |
-| π₃ | No deprecated agent names present in active context | Project scan |
+| π₃ | Persona/legacy labels in active context do not create current authority | `governance/persona_role_lineage.v1.json` classification check |
 | π₄ | Sovereign files are at canonical SHA | Project SHA comparison |
 | π₅ | PDMAL trust graph is initialized and non-empty | Graph node-count check |
 | π₆ | SESSION_ANCHOR is sealed or explicitly OPEN with sign-off | SESSION_ANCHOR status field |
