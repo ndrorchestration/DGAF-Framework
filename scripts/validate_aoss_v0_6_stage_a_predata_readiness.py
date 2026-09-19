@@ -23,6 +23,8 @@ GROUND_TRUTH_REL = "registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json"
 ANALYSIS_CONTRACT_REL = "registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json"
 ADOPTION_RULE_REL = "registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json"
 COMPARATOR_INPUT_GAP_REL = "registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json"
+DECISION_POLICY_REL = "registry/aoss_v0_6_stage_a_decision_policy_v1.json"
+DECISION_POLICY_SOURCE_REL = "scripts/aoss_v0_6_stage_a_decision_policy.py"
 
 ALLOWED_STATUSES = {"BOUND", "PARTIAL", "OPEN", "BLOCKED"}
 REQUIRED_PREDICATES = {
@@ -50,6 +52,8 @@ EXPECTED_APPARATUS_COMMIT = "69821cdcc1b9b9432b7001c6f52c867f9669f54d"
 EXPECTED_SOURCE_COMMIT = "dbab7c1afafec524ce7c18157de2089cafe79c87"
 EXPECTED_SCHEMA = "agent-control-plane.provenance.v1"
 EXPECTED_ADAPTER = "AOSS_V0_6_ACP_ADAPTER_V1"
+EXPECTED_DECISION_POLICY = "AOSS_V0_6_STAGE_A_POLICY_V1"
+EXPECTED_DECISION_POLICY_SOURCE_BLOB = "dd03a34fe17579c57dcf386abac9f1f5e7eb23de"
 EXPECTED_COMPARATOR = {
     "version": "AOSS_V0_5_OMR_FROZEN",
     "rule": {
@@ -658,6 +662,117 @@ def validate_analysis_and_adoption_contracts(readiness: dict[str, Any]) -> None:
         fail("practical-effect/adoption predicate must be BOUND")
 
 
+def validate_decision_policy(readiness: dict[str, Any]) -> None:
+    policy = load_json(ROOT / DECISION_POLICY_REL)
+    if policy.get("record_type") != "AOSS_V0_6_STAGE_A_DECISION_POLICY":
+        fail("decision policy record_type drift")
+    if policy.get("schema_version") != 1 or policy.get("controller_issue") != 810:
+        fail("decision policy identity drift")
+    if policy.get("status") != "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES":
+        fail("decision policy status drift")
+    if policy.get("policy_version") != EXPECTED_DECISION_POLICY:
+        fail("decision policy version drift")
+
+    provenance = policy.get("provenance")
+    if not isinstance(provenance, dict):
+        fail("decision policy provenance malformed")
+    if provenance.get("classification") != "NEW_PROSPECTIVE_V0_6_POLICY_FREEZE":
+        fail("decision policy provenance classification drift")
+    if provenance.get("historical_v0_5_executable_source_located") is not False:
+        fail("decision policy cannot claim a located historical v0.5 executable source")
+    if provenance.get("historical_v0_5_equivalence_claimed") is not False:
+        fail("decision policy cannot claim historical v0.5 equivalence")
+
+    executable = policy.get("executable_binding")
+    if not isinstance(executable, dict):
+        fail("decision policy executable binding malformed")
+    if executable.get("path") != DECISION_POLICY_SOURCE_REL:
+        fail("decision policy executable path drift")
+    if executable.get("git_blob_sha") != EXPECTED_DECISION_POLICY_SOURCE_BLOB:
+        fail("decision policy executable blob binding drift")
+    if executable.get("entrypoint") != "evaluate_policy":
+        fail("decision policy entrypoint drift")
+    if executable.get("input_type") != "PolicyInput" or executable.get("result_type") != "PolicyResult":
+        fail("decision policy executable type binding drift")
+
+    expected_rules = [
+        (1, "terminal == true", "RECORD_OUTCOME", "TERMINAL"),
+        (2, "blocked == true", "ESCALATE_BLOCK", "BLOCKED"),
+        (3, "deadlock_candidate == true", "PERTURB", "DEADLOCK_CANDIDATE"),
+        (4, "conflicted == true", "ESCALATE_CONFLICT", "CONFLICTED"),
+        (5, "uncertain == true", "REQUEST_EVIDENCE", "UNCERTAIN"),
+        (
+            6,
+            "authorization == TRUE and validation == TRUE and provenance_valid == TRUE and no required predicate is INCONCLUSIVE",
+            "EXECUTE",
+            "AUTHORIZED_AND_VALIDATED_AND_PROVENANCE_VALID",
+        ),
+        (
+            7,
+            "validation == TRUE and authorization == FALSE",
+            "REQUEST_AUTHORIZATION",
+            "VALIDATED_AND_NOT_AUTHORIZED",
+        ),
+        (
+            8,
+            "required_predicate_inconclusive == true or authorization/validation/provenance_valid contains INCONCLUSIVE",
+            "HOLD",
+            "REQUIRED_PREDICATE_INCONCLUSIVE",
+        ),
+        (9, "otherwise", "HOLD", "DEFAULT_FAIL_CLOSED"),
+    ]
+    rules = policy.get("ordered_rules")
+    if not isinstance(rules, list) or len(rules) != len(expected_rules):
+        fail("decision policy ordered rule set drift")
+    actual_rules = [
+        (entry.get("priority"), entry.get("when"), entry.get("decision"), entry.get("rule_id"))
+        for entry in rules
+        if isinstance(entry, dict)
+    ]
+    if actual_rules != expected_rules:
+        fail("decision policy ordered rule semantics drift")
+
+    execution = policy.get("execution_boundary")
+    expected_execution = {
+        "execution_bearing_decision": "EXECUTE",
+        "non_execute_outputs_are_control_or_advisory": True,
+        "execute_requires_authorization_true": True,
+        "execute_requires_validation_true": True,
+        "execute_requires_provenance_true": True,
+        "execute_forbidden_when_required_predicate_inconclusive": True,
+    }
+    if execution != expected_execution:
+        fail("decision policy execution boundary drift")
+
+    scope = policy.get("stage_a_scope")
+    if not isinstance(scope, dict):
+        fail("decision policy Stage-A scope malformed")
+    if scope.get("external_target_repository") != "ndrorchestration/agent-control-plane":
+        fail("decision policy target repository drift")
+    if scope.get("external_target_commit") != EXPECTED_SOURCE_COMMIT:
+        fail("decision policy target commit drift")
+    if scope.get("observer_version") != EXPECTED_ADAPTER:
+        fail("decision policy observer binding drift")
+    if scope.get("policy_is_not_dgaf_authorization_mapping") is not True:
+        fail("decision policy must remain outside DGAF authorization mapping")
+    if scope.get("policy_is_not_production_authority") is not True:
+        fail("decision policy must remain non-production authority")
+
+    if policy.get("outcome_collection_authorized") is not False:
+        fail("decision policy cannot authorize outcome collection")
+    if policy.get("external_validation_established") is not False:
+        fail("decision policy cannot establish external validation")
+    if policy.get("scientific_n_increment") != 0:
+        fail("decision policy cannot increment scientific N")
+
+    predicates = readiness.get("required_predicates")
+    if not isinstance(predicates, dict):
+        fail("required_predicates must be an object")
+    entry = predicates.get("aoss_decision_policy")
+    if not isinstance(entry, dict) or entry.get("status") != "BOUND":
+        fail("AOSS decision policy predicate must be BOUND")
+
+
 def validate_comparator_input_derivation_gap(readiness: dict[str, Any]) -> None:
     gap = load_json(ROOT / COMPARATOR_INPUT_GAP_REL)
     if gap.get("record_type") != "AOSS_V0_6_STAGE_A_COMPARATOR_INPUT_DERIVATION_GAP":
@@ -737,6 +852,7 @@ def validate_readiness(readiness: dict[str, Any]) -> list[str]:
     validate_artifact_replay_receipt_contract(readiness)
     validate_freshness_sampling_ground_truth(readiness)
     validate_analysis_and_adoption_contracts(readiness)
+    validate_decision_policy(readiness)
     validate_comparator_input_derivation_gap(readiness)
     unresolved = unresolved_predicates(readiness)
     expected_status = "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW" if not unresolved else "NOT_READY_FAIL_CLOSED"
