@@ -28,14 +28,14 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
           <button className="button ghost" onClick={() => onNavigate('control')}>Open control room</button>
         </div>
       </div>
-      <div className="hero-field" role="img" aria-label={`Governed transition field. Current program state: ${TRUTH_BOUNDARY.programState}. Authorization: ${TRUTH_BOUNDARY.authorization}. Next admissible transition: ${NEXT_TRANSITION.title}.`}>
+      <div className="hero-field" role="img" aria-label={`Governed transition field. Current program state: ${TRUTH_BOUNDARY.programState}. Authorization: ${TRUTH_BOUNDARY.authorization}. Post-Epoch-002 boundary: ${NEXT_TRANSITION.title}.`}>
         <div className="hero-field-frame">
           <div className="hero-field-caption"><span className="eyebrow">SEMANTIC CONTROL FIELD</span><span>reachability preview</span></div>
           <div className="hero-state hero-state-current"><span>CURRENT STATE</span><strong>{TRUTH_BOUNDARY.programState}</strong><small>Established governance context</small></div>
           <div className="hero-filament hero-filament-established"><span>evidence + provenance</span></div>
           <div className="hero-boundary"><span>AUTHORIZATION BOUNDARY</span><strong>{TRUTH_BOUNDARY.authorization}</strong></div>
-          <div className="hero-filament hero-filament-frontier"><span>nearest admissible path</span></div>
-          <div className="hero-state hero-state-frontier"><span>NEXT ADMISSIBLE</span><strong>{NEXT_TRANSITION.title}</strong><small>Not execution; operator handoff</small></div>
+          <div className="hero-filament hero-filament-frontier"><span>separate-governance boundary</span></div>
+          <div className="hero-state hero-state-frontier"><span>POST-EPOCH-002 BOUNDARY</span><strong>{NEXT_TRANSITION.title}</strong><small>No successor authority inferred</small></div>
         </div>
       </div>
     </section>
@@ -65,7 +65,7 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
         <div><span>Empirical N</span><strong>{TRUTH_BOUNDARY.empiricalN}</strong></div>
         <div><span>Canonical efficacy</span><StatusChip state="not_established" label={TRUTH_BOUNDARY.efficacy}/></div>
       </div>
-      <p className="boundary-note">Substantial engineering and governance evidence exists. Epoch 002 materialization, bounded locked-primary-analysis authorization, local primary-analysis execution, the content-addressed locked-result receipt, and the bounded interpretation note are established at their exact scopes; canonical DGAF efficacy and independent validation remain NOT ESTABLISHED, and High-Assurance authority remains NOT AUTHORIZED.</p>
+      <p className="boundary-note">Substantial engineering and governance evidence exists. Epoch 002 materialization, bounded locked-primary-analysis authorization, local primary-analysis execution, the content-addressed locked-result receipt, bounded interpretation, and the creation-only post-interpretation disposition are established at their exact scopes; Epoch 002 is closed for this preregistered lane, while canonical DGAF efficacy and independent validation remain NOT ESTABLISHED and High-Assurance authority remains NOT AUTHORIZED.</p>
     </section>
 
     <section>
@@ -79,7 +79,7 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
     </section>
 
     <section className="next-transition panel panel-accent">
-      <div><span className="eyebrow accent">NEXT ADMISSIBLE TRANSITION</span><h3>{NEXT_TRANSITION.title}</h3><p>{NEXT_TRANSITION.summary}</p><div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div><p className="warning-copy">{NEXT_TRANSITION.warning}</p></div>
+      <div><span className="eyebrow accent">POST-EPOCH-002 BOUNDARY</span><h3>{NEXT_TRANSITION.title}</h3><p>{NEXT_TRANSITION.summary}</p><div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div><p className="warning-copy">{NEXT_TRANSITION.warning}</p></div>
       <button className="button ghost" onClick={() => onNavigate('governance')}>View ordered chain <ArrowIcon /></button>
     </section>
   </div>
