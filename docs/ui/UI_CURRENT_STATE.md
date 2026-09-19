@@ -2,7 +2,7 @@
 
 **Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-19  
 **Authority class:** PRESENTATION / DOCUMENTATION ONLY  
-**Reconciliation input:** protected signed/verified `main` `af2ffb1ae82b58de8e253ca49c1c33b91a7baf59`  
+**Reconciliation input:** protected signed/verified `main` `e06741b88d875f816c53e6da6bcf894a600f14bd`  
 **Scientific/control effect:** NONE  
 **Canonical High-Assurance boundary:** `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
 
@@ -26,7 +26,7 @@ Track A Epoch 002 has advanced beyond the state used when PR #849 was authored:
 - independent validation: NOT ESTABLISHED;
 - scientific-N increment: 0.
 
-The active control frontier is therefore **post-interpretation projection reconciliation and gate identification**; no new empirical or authorization transition is implied.
+PR #877 has accepted the executable/current-state projection of the established interpretation. The active control frontier is therefore **post-interpretation disposition and lane closure under #879**; no new empirical or authorization transition is implied.
 
 ## Accepted interface foundation
 
@@ -41,6 +41,12 @@ The following presentation architecture is accepted on protected main:
 - evidence-first Overview routing from merged PR #845: users are directed to Evidence before Governance interpretation.
 
 These surfaces are projections only. They cannot create evidence, authorize a transition, establish efficacy, increment scientific N, or alter High-Assurance state.
+
+## Accepted current-state projection
+
+### PR #877 — accepted interpretation-state projection
+
+PR #877 is merged on protected main. It marks the modeled interpretation/adjudication stage established, renders the completed modeled lifecycle without inventing a new downstream stage, and preserves the explicit statement that no downstream gate is designated by the UI. This is presentation/state-projection acceptance only; it does not establish efficacy, independent validation, scientific-N promotion, production readiness, certification, or High-Assurance authorization.
 
 ## Closed provenance requiring current-main reconstruction
 
