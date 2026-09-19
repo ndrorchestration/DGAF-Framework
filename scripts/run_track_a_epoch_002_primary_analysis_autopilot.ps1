@@ -181,6 +181,7 @@ function Ensure-Venv {
         [string]$VenvPath,
         [string]$RequirementsPath,
         [switch]$RequireHashes,
+        [switch]$NoDeps,
         [string]$RequiredNumPy = ""
     )
 
@@ -211,6 +212,9 @@ function Ensure-Venv {
         $installArgs = @("-m", "pip", "install")
         if ($RequireHashes) {
             $installArgs += "--require-hashes"
+        }
+        if ($NoDeps) {
+            $installArgs += "--no-deps"
         }
         $installArgs += @("-r", $RequirementsPath)
         Invoke-Checked $venvPython $installArgs
@@ -278,7 +282,7 @@ Write-Host "DGAF_LOCKED_PYTHON=$python"
 
 $analysisVenv = Join-Path $RuntimeDir "analysis-venv"
 $analysisRequirements = Join-Path $worktree "experiments\pdmal_pilot\requirements-full-lock.txt"
-$analysisPython = Ensure-Venv -PythonExe $python -VenvPath $analysisVenv -RequirementsPath $analysisRequirements -RequireHashes -RequiredNumPy $ExpectedNumPy
+$analysisPython = Ensure-Venv -PythonExe $python -VenvPath $analysisVenv -RequirementsPath $analysisRequirements -RequireHashes -NoDeps -RequiredNumPy $ExpectedNumPy
 
 $runner = Join-Path $worktree "scripts\run_track_a_epoch_002_locked_primary_analysis.py"
 Write-Host "Running non-executing authorization/runtime preflight..."
