@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-19
-reconciliation_input_main: af2ffb1ae82b58de8e253ca49c1c33b91a7baf59
+reconciliation_input_main: dde7b3a07c9d8ccd8a24745437027bc5e15759c9
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -29,7 +29,7 @@ track_a_successor_primary_analysis_authorization: ACCEPTED_LOCKED_PRIMARY_ANALYS
 track_a_successor_primary_analysis: EXECUTED_LOCKED_RETAINED
 track_a_successor_locked_analysis_result: ESTABLISHED
 track_a_successor_interpretation_tooling: ACCEPTED_NONEXECUTING
-track_a_successor_interpretation: CURRENT_FRONTIER_NOT_ESTABLISHED
+track_a_successor_interpretation: ESTABLISHED_CONTENT_ADDRESSED_SAME_SYSTEM_NONINDEPENDENT
 accepted_dataset_lock_tooling_pr: 622
 accepted_unblinding_decision_tooling_pr: 627
 accepted_stage_1_materializer_pr: 794
@@ -66,6 +66,9 @@ accepted_locked_analysis_result_pr: 851
 accepted_locked_analysis_result_commit: c0690e599d25304f1d920d5235adff04ba76094a
 accepted_interpretation_tooling_pr: 855
 accepted_interpretation_tooling_commit: 9ef99ac7ed803609b4a7a4eb2b98bab328f853cc
+accepted_interpretation_pr: 872
+accepted_interpretation_event_commit: 2ee3194b08b7610e534aa98c99bfa9849b7a1462
+accepted_interpretation_merge_commit: dde7b3a07c9d8ccd8a24745437027bc5e15759c9
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -100,7 +103,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Epoch 002 primary-analysis authorization | **ACCEPTED · LOCKED_PRIMARY_ANALYSIS_ONLY · PR #828** |
 | Epoch 002 primary analysis | **EXECUTED · LOCKED / RETAINED · OPERATOR-LOCAL OUTPUT** |
 | Epoch 002 locked-analysis result | **ESTABLISHED · CONTENT-ADDRESSED CREATION-ONLY RECEIPT VIA PR #851** |
-| Epoch 002 interpretation/adjudication | **CURRENT FRONTIER · TOOLING ACCEPTED / NON-EXECUTING VIA PR #855 · EXECUTION NOT RUN · `INTERPRETATION_NOTE` NOT ESTABLISHED** |
+| Epoch 002 interpretation/adjudication | **ESTABLISHED · BOUNDED SAME-SYSTEM/NONINDEPENDENT INTERPRETATION ADMITTED VIA PR #872** |
 | Epoch 002 result-admission tooling | **ACCEPTED · CONTENT-ADDRESSED / NON-EXECUTING · PR #835** |
 | Independent validation | **NOT ESTABLISHED** |
 | Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
@@ -110,11 +113,11 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Workflow coverage-gap scanner | **ACCEPTED · UNMAPPED DOES NOT MEAN NON-ASSURANCE** |
 | Expanded recurring assurance mappings | **ACCEPTED · PR #785** |
 
-No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt establishes only the immutable content address of the locked primary-analysis output; interpretation remains separate and not established.
+No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt establishes the immutable content address of the locked primary-analysis output, and PR #872 separately establishes a bounded content-addressed interpretation note. Neither event establishes canonical DGAF efficacy, independent validation, scientific-N promotion, or High-Assurance authorization.
 
 ## Protected-main repository state
 
-This reconciliation was prepared against protected `main` `f636c822f16e0814fe0d95221553aea7d3515a46`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation tooling is accepted, but interpretation execution has not run and no `INTERPRETATION_NOTE` is established. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was prepared against protected `main` `f636c822f16e0814fe0d95221553aea7d3515a46`. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete and PR #872 established the creation-only content-addressed `INTERPRETATION_NOTE`; the numerical estimate, interval, and classification remain operator-local. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
@@ -181,6 +184,7 @@ Repository engineering and controlled operator execution have crossed the materi
 17. creation-only locked-analysis result receipt — **PR #851 accepted** as `c0690e599d25304f1d920d5235adff04ba76094a`, binding retained output SHA-256 `966fe9f1c218d8f64eae8465288a5e23b332555484eac2602c3764c3172336da` without copying the estimate, confidence interval, or classification into the repository.
 18. result/current-state documentation reconciliation — **PR #854 accepted**, advancing live repository projections to the accepted result-receipt frontier without exposing the numerical outcome.
 19. fail-closed interpretation/adjudication tooling — **PR #855 accepted** as `9ef99ac7ed803609b4a7a4eb2b98bab328f853cc`, preserving external-only numerical interpretation custody, exact preregistration/claim-ceiling binding, competing interpretations, and creation-only content-addressed `INTERPRETATION_NOTE` admission.
+20. bounded interpretation admission — **PR #872 accepted**, event commit `2ee3194b08b7610e534aa98c99bfa9849b7a1462`, merge commit `dde7b3a07c9d8ccd8a24745437027bc5e15759c9`; the repository note contains only content-addressed interpretation identity and non-effects while protected numerical interpretation remains operator-local.
 
 PR #713 introduced the original controlled operator-side materializer with exact archive-member validation, duplicate-entry rejection, path/link/unexpected-member rejection, wrong-key and archive-drift fail-closed behavior, exclusive output creation, deterministic synthetic coverage, and the explicit source marker `PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN`.
 
@@ -196,7 +200,7 @@ PR #728 installed prospective fail-closed primary-analysis authorization tooling
 
 ## Current scientific frontier
 
-The current scientific frontier is **post-analysis interpretation/adjudication under issue #719**. The authorized frozen Epoch 002 primary analysis has executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment, and PR #851 established the immutable content-addressed result receipt. Numerical interpretation remains a separate non-authorizing stage and must bind the accepted result record plus the retained operator-local output.
+The accepted Track A Epoch 002 chain is now established through **bounded interpretation admission**. The authorized frozen primary analysis executed locally, PR #851 established its immutable content-addressed result receipt, and PR #872 separately established the content-addressed `INTERPRETATION_NOTE` at SAME_SYSTEM_NONINDEPENDENT scope. The next scientific/governance task is to identify whether any post-interpretation claim-state transition is admissible; no downstream gate is currently designated or authorized by interpretation admission.
 
 Current boundary:
 
@@ -205,7 +209,7 @@ Current boundary:
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY`;
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = EXECUTED_LOCKED / RETAINED`;
 - `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = ESTABLISHED`;
-- `TRACK_A_EPOCH_002_INTERPRETATION = CURRENT_FRONTIER / NOT_ESTABLISHED`;
+- `TRACK_A_EPOCH_002_INTERPRETATION = ESTABLISHED / CONTENT_ADDRESSED / SAME_SYSTEM_NONINDEPENDENT`;
 - `SCIENTIFIC_N_INCREMENT = 0`;
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`;
 - `INDEPENDENT_VALIDATION = NOT_ESTABLISHED`.
@@ -232,7 +236,8 @@ Tooling readiness never skips predecessor state. The governed order is:
 `→ separate primary-analysis authorization — ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY (#828)`
 `→ locked primary analysis — EXECUTED / LOCKED / RETAINED`
 `→ locked-analysis result admission — ESTABLISHED (#851 / c0690e599d25304f1d920d5235adff04ba76094a)`
-`→ interpretation/adjudication — CURRENT FRONTIER / NOT ESTABLISHED (#719)`
+`→ interpretation/adjudication — ESTABLISHED / CONTENT-ADDRESSED / SAME_SYSTEM_NONINDEPENDENT (#872)`
+`→ post-interpretation transition — NOT DESIGNATED / REQUIRES SEPARATE GOVERNED DEFINITION`
 
 Current predicates:
 
@@ -248,7 +253,7 @@ Current predicates:
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION = ACCEPTED / LOCKED_PRIMARY_ANALYSIS_ONLY`
 - `TRACK_A_EPOCH_002_PRIMARY_ANALYSIS = EXECUTED_LOCKED / RETAINED`
 - `TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT = ESTABLISHED`
-- `TRACK_A_EPOCH_002_INTERPRETATION = CURRENT_FRONTIER / NOT ESTABLISHED`
+- `TRACK_A_EPOCH_002_INTERPRETATION = ESTABLISHED / CONTENT_ADDRESSED / SAME_SYSTEM_NONINDEPENDENT`
 - `TRACK_A_EPOCH_002_RESULT_ADMISSION_TOOLING = ACCEPTED / NON-EXECUTING`
 - `SCIENTIFIC_N_INCREMENT = 0`
 - `CANONICAL_DGAF_EFFICACY = NOT_ESTABLISHED`
