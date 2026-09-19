@@ -21,7 +21,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, NoReturn
 
 import numpy as np
 
@@ -46,7 +46,7 @@ FAILURE_COUNTS = (0, 1, 2, 3, 4, 5, 6, 8, 10)
 ALGORITHM_ID = "REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1"
 
 
-def fail(message: str) -> None:
+def fail(message: str) -> NoReturn:
     raise SystemExit(f"TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_FAIL: {message}")
 
 
@@ -279,7 +279,7 @@ def validate_oracle_result(scenario: str, result: dict[str, Any]) -> None:
 def negative_control(
     analysis: Any,
     name: str,
-    mutate: Callable[[list[dict[str, object]]], None],
+    mutate: Callable[[list[dict[str, object]]], object],
     expected_fragment: str,
 ) -> dict[str, str]:
     records = [dict(row) for row in build_records("positive_constant")]
