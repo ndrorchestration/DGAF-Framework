@@ -693,7 +693,7 @@ def validate_decision_policy(readiness: dict[str, Any]) -> None:
         fail("decision policy executable blob binding drift")
     source_bytes = (ROOT / DECISION_POLICY_SOURCE_REL).read_bytes()
     source_header = f"blob {len(source_bytes)}\0".encode("utf-8")
-    actual_source_blob = hashlib.sha1(source_header + source_bytes).hexdigest()
+    actual_source_blob = hashlib.sha1(source_header + source_bytes, usedforsecurity=False).hexdigest()
     if actual_source_blob != EXPECTED_DECISION_POLICY_SOURCE_BLOB:
         fail("decision policy executable source bytes drift")
     if executable.get("entrypoint") != "evaluate_policy":
