@@ -51,20 +51,28 @@ export function DecisionFrontier() {
         copy={frontier.why}
         relation="Established predecessor"
       />
-      <FrontierNode
-        eyebrow="BLOCKING BOUNDARY"
-        label={frontier.blocking.label}
-        state={frontier.blocking.state}
-        copy={frontier.blocking.evidenceBoundary}
-        relation="No admissible downstream transition yet"
-      />
-      <FrontierNode
-        eyebrow="NEAREST ADMISSIBLE TRANSITION"
-        label={frontier.nearest.label}
-        state={frontier.nearest.state}
+      {frontier.blocking && frontier.nearest ? <>
+        <FrontierNode
+          eyebrow="BLOCKING BOUNDARY"
+          label={frontier.blocking.label}
+          state={frontier.blocking.state}
+          copy={frontier.blocking.evidenceBoundary}
+          relation="No admissible downstream transition yet"
+        />
+        <FrontierNode
+          eyebrow="NEAREST ADMISSIBLE TRANSITION"
+          label={frontier.nearest.label}
+          state={frontier.nearest.state}
+          copy={frontier.transitionSummary}
+          relation="Reachable work · not an authorization grant"
+        />
+      </> : <FrontierNode
+        eyebrow="POST-INTERPRETATION BOUNDARY"
+        label="No downstream gate designated"
+        state="info"
         copy={frontier.transitionSummary}
-        relation="Reachable work · not an authorization grant"
-      />
+        relation="Requires a separate governed definition"
+      />}
     </div>
 
     <div className="frontier-detail-grid">
@@ -91,11 +99,15 @@ export function DecisionFrontier() {
         <strong>Downstream capability does not imply admissibility</strong>
       </div>
       <div className="frontier-unreachable-list">
-        {frontier.downstream.map(transition => <div className="frontier-unreachable-item" key={transition.id}>
+        {frontier.downstream.length ? frontier.downstream.map(transition => <div className="frontier-unreachable-item" key={transition.id}>
           <span aria-hidden="true">×</span>
           <div><strong>{transition.label}</strong><small>{transition.evidenceBoundary}</small></div>
           <StatusChip state={transition.state} compact />
-        </div>)}
+        </div>) : <div className="frontier-unreachable-item">
+          <span aria-hidden="true">×</span>
+          <div><strong>No downstream lifecycle stage is currently modeled</strong><small>Absence of a modeled stage does not create authority; any next gate requires a separate governed definition.</small></div>
+          <StatusChip state="info" compact />
+        </div>}
       </div>
     </div>
 
