@@ -315,3 +315,34 @@ code,.mono,.source-stamp,.artifact-row code,.finding-meta code,.tool-contract st
   .public-summary-grid { grid-template-columns: 1fr; }
   .public-claim-ceiling { border-left-width: 2px; }
 }
+
+
+/* Evidence provenance spine: scope before governance interpretation. */
+.evidence-spine { display:grid; gap:9px; }
+.evidence-spine-row { display:grid; grid-template-columns:52px minmax(0,1fr); padding:15px; position:relative; overflow:hidden; }
+.evidence-spine-row:before { content:""; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--provenance); opacity:.55; }
+.evidence-spine-index { width:30px; height:30px; display:grid; place-items:center; border:1px solid var(--border); border-radius:9px; background:var(--surface-inspection); color:var(--provenance); font:700 .64rem var(--mono); }
+.evidence-spine-main { min-width:0; }
+.evidence-spine-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+.evidence-spine-heading h4 { margin:4px 0 0; }
+.evidence-boundary-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
+.evidence-boundary-grid>div { border:1px solid var(--border-soft); border-radius:9px; padding:10px 11px; background:var(--surface-inspection); }
+.evidence-boundary-grid>div:first-child { border-left:2px solid var(--evidence); }
+.evidence-boundary-grid>div:last-child { border-left:2px solid var(--consequence); }
+.evidence-boundary-grid span { display:block; margin-bottom:5px; font:800 .57rem var(--mono); letter-spacing:.08em; color:var(--text-quiet); }
+.evidence-boundary-grid p { margin:0; font-size:.72rem; line-height:1.5; }
+.evidence-handoff { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:22px 24px; }
+.evidence-handoff h3 { margin:6px 0; }
+.evidence-handoff p { margin:0; max-width:900px; font-size:.78rem; }
+@media (max-width:760px) {
+  .evidence-spine-row { grid-template-columns:40px minmax(0,1fr); padding:13px; }
+  .evidence-spine-heading { display:grid; }
+  .evidence-boundary-grid { grid-template-columns:1fr; }
+  .evidence-handoff { display:grid; }
+  .evidence-handoff .button { width:100%; }
+}
+@media (forced-colors: active) {
+  .evidence-spine-row:before,
+  .evidence-boundary-grid>div:first-child,
+  .evidence-boundary-grid>div:last-child { border-color:CanvasText; background:Canvas; }
+}
