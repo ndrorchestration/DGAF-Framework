@@ -13,8 +13,9 @@ test('decision frontier derives the current boundary from canonical governance s
   assert.equal(DECISION_FRONTIER.nearest.reachable, true)
 })
 
-test('decision frontier has no invented downstream stage after the current interpretation frontier', () => {
+test('decision frontier has no invented downstream stage after accepted interpretation', () => {
   assert.equal(DECISION_FRONTIER.downstream.length, 0)
+  assert.match(DECISION_FRONTIER.transitionTitle, /next admissible post-interpretation gate/i)
 })
 
 test('decision frontier preserves evidence and consequence text without readiness scoring', () => {
