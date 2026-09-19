@@ -1,0 +1,55 @@
+{
+  "record_type": "TRACK_A_EPOCH_002_SYNTHETIC_ORACLE_RECEIPT",
+  "schema_version": 1,
+  "controller_issue": 822,
+  "source_pr": 841,
+  "accepted_main_sha": "6bbb232426680df59a67d5055c2bc5121a4801d9",
+  "classification": "SYNTHETIC_ENGINEERING_ASSURANCE_ONLY",
+  "empirical_data_used": false,
+  "protected_material_used": false,
+  "real_primary_analysis_performed": false,
+  "exact_frozen_bindings": {
+    "analysis_blob_sha": "d4495f7cdf211b974039ec0e66292dc62ea0881f",
+    "analysis_config_sha256": "a008832cc9e353f323ed18cacf5529e700e73e18fe374aac9e2dcd54bcb10d73",
+    "requirements_lock_blob_sha": "00c1f779e97030f9b25ae494642edb31b5b09de5",
+    "python_version": "3.12.0",
+    "numpy_version": "2.5.1"
+  },
+  "workflow_evidence": {
+    "exact_pr_head_sha": "4d398cbcfa1e284c3c640beb46a0ccbeab29a648",
+    "workflow_run_id": 35429980909,
+    "workflow_name": "Track A Epoch 002 Synthetic Oracle",
+    "conclusion": "success",
+    "artifact_id": 10580073024,
+    "artifact_name": "track-a-epoch002-synthetic-oracle",
+    "artifact_zip_sha256": "a8418f7b7540a3954f577baa3064f0fa9f6099b159d5fdaafc6c4707853ed1c8",
+    "artifact_size_bytes": 4038,
+    "artifact_retention_days": 30,
+    "artifact_expires_at": "2026-10-19T07:44:47Z",
+    "durable_record_scope": "SOURCE_BINDING_SUMMARY_AND_ARTIFACT_ZIP_DIGEST_ONLY"
+  },
+  "measurements": {
+    "pytest_contract_tests_passed": 7,
+    "oracle_scenarios_passed": 4,
+    "oracle_scenario_count": 4,
+    "synthetic_records_exercised": 9000,
+    "negative_controls_rejected": 5,
+    "negative_control_count": 5,
+    "deterministic_replay": "PASS",
+    "record_order_invariance": "PASS",
+    "nonprimary_topology_outcome_invariance": "PASS",
+    "json_sidecars_verified": true
+  },
+  "state_effect": {
+    "scientific_n_increment": 0,
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "independent_validation": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED_N0"
+  },
+  "claim_ceiling": "ENGINEERING_ASSURANCE_OF_THE_EXACT_FROZEN_ANALYSIS_CODE_PATH_ONLY",
+  "notes": [
+    "This receipt preserves the accepted source/run/artifact identity after the temporary GitHub Actions artifact expires.",
+    "It does not preserve the artifact bytes themselves.",
+    "It does not authorize or substitute for the real empirical primary analysis."
+  ]
+}
