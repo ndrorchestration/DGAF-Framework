@@ -23,15 +23,15 @@ test('public governance projection reflects the accepted 2026-09-19 documentatio
   const interpretation = GOVERNANCE_STAGES.find(stage => stage.id === 'interpretation-adjudication')
   assert.equal(lockedAnalysis?.predicateState, 'pass')
   assert.equal(lockedAnalysis?.toolingPrepared, true)
-  assert.equal(interpretation?.predicateState, 'open')
+  assert.equal(interpretation?.predicateState, 'pass')
   assert.equal(interpretation?.toolingPrepared, true)
-  assert.match(interpretation?.toolingNote ?? '', /#855/)
+  assert.match(interpretation?.toolingNote ?? '', /#872/)
 })
 
-test('overview truth-boundary copy reflects the accepted interpretation frontier', () => {
+test('overview truth-boundary copy reflects the accepted interpretation state', () => {
   assert.match(OVERVIEW_SOURCE, /local primary-analysis execution/)
-  assert.match(OVERVIEW_SOURCE, /content-addressed locked-result receipt are established/)
-  assert.match(OVERVIEW_SOURCE, /interpretation tooling is accepted/)
-  assert.match(OVERVIEW_SOURCE, /interpretation has not run/)
-  assert.match(OVERVIEW_SOURCE, /no INTERPRETATION_NOTE is established/)
+  assert.match(OVERVIEW_SOURCE, /content-addressed locked-result receipt/)
+  assert.match(OVERVIEW_SOURCE, /bounded interpretation note are established/)
+  assert.match(OVERVIEW_SOURCE, /canonical DGAF efficacy and independent validation remain NOT ESTABLISHED/)
+  assert.match(OVERVIEW_SOURCE, /High-Assurance authority remains NOT AUTHORIZED/)
 })
