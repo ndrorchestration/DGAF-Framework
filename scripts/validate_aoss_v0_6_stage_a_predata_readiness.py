@@ -432,9 +432,7 @@ def validate_analysis_and_adoption_contracts(readiness: dict[str, Any]) -> None:
     if exclusion != {
         "eligibility_source": "SEPARATELY_FROZEN_ELIGIBILITY_CONTRACT",
         "outcome_aware_exclusion": False,
-        "infrastructure_or_protocol_failure": (
-            "INVALIDATES_OR_MARKS_ATTEMPT_INCONCLUSIVE_NOT_SILENTLY_EXCLUDED"
-        ),
+        "infrastructure_or_protocol_failure": ("INVALIDATES_OR_MARKS_ATTEMPT_INCONCLUSIVE_NOT_SILENTLY_EXCLUDED"),
     }:
         fail("analysis exclusion boundary drift")
 
