@@ -38,7 +38,7 @@
 
 ### Post Body (verbatim)
 
-```
+```text
 Hello Friends!
 Over roughly the last 90 days, the AI governance & automation templates I share on Needle
 have passed 10.7K views! — and in just this current stretch (since May 31), they didn't
@@ -76,7 +76,7 @@ https://lnkd.in/gVGVh-ri
 
 ---
 
-*Log initialized: 2026-06-09 | Agent COLLEEN | S069*
+Log initialized: 2026-06-09 | Agent COLLEEN | S069
 
 ---
 
@@ -164,7 +164,7 @@ https://lnkd.in/gVGVh-ri
 
 ## Metrics Snapshot — NMS-002
 
-**NMS-002: Needle Partner Hub — Multi-Period Snapshot (Jun 12, 2026)**
+### NMS-002: Needle Partner Hub — Multi-Period Snapshot (Jun 12, 2026)
 
 **Captured by:** Agent Amethyst (Comet session)
 **Session Anchor:** S070
@@ -221,7 +221,7 @@ https://lnkd.in/gVGVh-ri
 - Payouts remain $4.19; monetization layer not yet activated.
 - Next milestones: 12K total views, 1.5K uses, 4K runs, first referral conversion.
 
-*Snapshot logged: 2026-06-09 | Agent COLLEEN | S069*
+Snapshot logged: 2026-06-09 | Agent COLLEEN | S069
 
 ---
 
@@ -320,4 +320,4 @@ https://lnkd.in/gVGVh-ri
 - Payouts hold at $4.19; no referral-based revenue yet.
 - Next milestones: 12K total views, 1.5K uses, 4K runs, first referral conversion.
 
-*Snapshot logged: 2026-06-13 | Agent Amethyst | S071*
+Snapshot logged: 2026-06-13 | Agent Amethyst | S071
