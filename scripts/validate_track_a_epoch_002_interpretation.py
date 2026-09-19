@@ -58,18 +58,36 @@ SCOPE_LIMITATIONS = [
 COMPETING_INTERPRETATIONS = {
     "SUPPORTS_DIRECTIONAL_TRACK_A_HYPOTHESIS": [
         "The frozen primary contrast is directionally positive under the preregistered decision rule.",
-        "A same-system implementation, measurement, or execution artifact could still contribute to the observed contrast.",
-        "The result may be specific to the frozen topology, failure regime, runner, or estimator rather than DGAF generally.",
+        (
+            "A same-system implementation, measurement, or execution artifact could still contribute "
+            "to the observed contrast."
+        ),
+        (
+            "The result may be specific to the frozen topology, failure regime, runner, or estimator "
+            "rather than DGAF generally."
+        ),
     ],
     "EVIDENCE_AGAINST_DIRECTIONAL_TRACK_A_HYPOTHESIS": [
         "The frozen primary contrast is directionally negative under the preregistered decision rule.",
-        "A same-system implementation, measurement, or execution artifact could still contribute to the observed contrast.",
-        "The result may be specific to the frozen topology, failure regime, runner, or estimator rather than DGAF generally.",
+        (
+            "A same-system implementation, measurement, or execution artifact could still contribute "
+            "to the observed contrast."
+        ),
+        (
+            "The result may be specific to the frozen topology, failure regime, runner, or estimator "
+            "rather than DGAF generally."
+        ),
     ],
     "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED": [
         "The frozen primary contrast does not satisfy the preregistered directional-support rule.",
-        "The data may be compatible with a smaller effect, no practically useful effect, or uncertainty at the planned sample size.",
-        "The result may be specific to the frozen topology, failure regime, runner, or estimator rather than DGAF generally.",
+        (
+            "The data may be compatible with a smaller effect, no practically useful effect, or uncertainty "
+            "at the planned sample size."
+        ),
+        (
+            "The result may be specific to the frozen topology, failure regime, runner, or estimator "
+            "rather than DGAF generally."
+        ),
     ],
 }
 
@@ -167,7 +185,8 @@ def interpretation_statement(classification: str) -> str:
             "The preregistered Track A Epoch 002 primary comparison is directionally negative under the frozen rule."
         ),
         "INCONCLUSIVE_OR_NOT_DIRECTIONALLY_SUPPORTED": (
-            "The preregistered Track A Epoch 002 primary comparison does not satisfy the frozen directional-support rule."
+            "The preregistered Track A Epoch 002 primary comparison does not satisfy the frozen "
+            "directional-support rule."
         ),
     }
     if classification not in statements:
@@ -202,7 +221,8 @@ def expected_local_interpretation(
             "confirmatory_test_count": 1,
             "decision_rule": (
                 "support iff estimate > 0 and both bounds of the frozen two-sided 95% percentile CI are > 0; "
-                "evidence against iff estimate < 0 and both bounds are < 0; otherwise inconclusive/not directionally supported"
+                "evidence against iff estimate < 0 and both bounds are < 0; otherwise "
+                "inconclusive/not directionally supported"
             ),
         },
         "result": {
