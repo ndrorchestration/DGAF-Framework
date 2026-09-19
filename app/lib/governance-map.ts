@@ -37,10 +37,7 @@ function projectStage(index: number): GovernanceMapStage {
 }
 
 const blockingIndex = GOVERNANCE_STAGES.findIndex(stage => stage.predicateState !== 'pass')
-
-if (blockingIndex < 0) {
-  throw new Error('Governance Map requires an unresolved canonical governance stage')
-}
+const lifecycleComplete = blockingIndex === -1
 
 export const GOVERNANCE_RELATIONSHIPS: GovernanceMapRelationship[] = [
   {
@@ -108,12 +105,17 @@ for (const relationship of GOVERNANCE_RELATIONSHIPS) {
 }
 
 export const GOVERNANCE_MAP = {
+  lifecycleComplete,
   stages: GOVERNANCE_STAGES.map((_, index) => projectStage(index)),
-  blocking: projectStage(blockingIndex),
-  completed: GOVERNANCE_STAGES.slice(0, blockingIndex).map((_, index) => projectStage(index)),
-  downstream: GOVERNANCE_STAGES.slice(blockingIndex + 1).map((_, offset) =>
-    projectStage(blockingIndex + 1 + offset),
-  ),
+  blocking: lifecycleComplete ? null : projectStage(blockingIndex),
+  completed: lifecycleComplete
+    ? GOVERNANCE_STAGES.map((_, index) => projectStage(index))
+    : GOVERNANCE_STAGES.slice(0, blockingIndex).map((_, index) => projectStage(index)),
+  downstream: lifecycleComplete
+    ? []
+    : GOVERNANCE_STAGES.slice(blockingIndex + 1).map((_, offset) =>
+        projectStage(blockingIndex + 1 + offset),
+      ),
   constraints: TRUTH_BOUNDARY,
   relationships: GOVERNANCE_RELATIONSHIPS,
 } as const
