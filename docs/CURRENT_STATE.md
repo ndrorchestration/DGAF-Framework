@@ -110,7 +110,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Workflow coverage-gap scanner | **ACCEPTED · UNMAPPED DOES NOT MEAN NON-ASSURANCE** |
 | Expanded recurring assurance mappings | **ACCEPTED · PR #785** |
 
-No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt establishes only the immutable content address of the locked primary-analysis output; interpretation remains separate and not established.
+No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt and creation-only interpretation note establish bounded, same-system/nonindependent interpretation; they do not establish canonical DGAF efficacy, independent validation, or High-Assurance authorization.
 
 ## Protected-main repository state
 
@@ -196,7 +196,7 @@ PR #728 installed prospective fail-closed primary-analysis authorization tooling
 
 ## Current scientific frontier
 
-The current scientific frontier is **post-analysis interpretation/adjudication under issue #719**. The authorized frozen Epoch 002 primary analysis has executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment, and PR #851 established the immutable content-addressed result receipt. Numerical interpretation remains a separate non-authorizing stage and must bind the accepted result record plus the retained operator-local output.
+The current control frontier is **post-interpretation projection reconciliation and explicit identification of the next admissible gate under issue #719**. The authorized frozen Epoch 002 primary analysis has executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment, and PR #851 established the immutable content-addressed result receipt. The numerical interpretation artifact remains outside repository projections; its admitted note is separate, non-authorizing, and does not promote efficacy, independence, scientific N, or High-Assurance authorization.
 
 Current boundary:
 

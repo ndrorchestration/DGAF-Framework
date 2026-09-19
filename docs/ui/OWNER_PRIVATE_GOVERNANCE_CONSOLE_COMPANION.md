@@ -39,8 +39,8 @@ It separately represents the Track A Epoch 002 state:
 - locked-analysis result receipt: ESTABLISHED via creation-only PR #851;
 - repository/current-state reconciliation: ACCEPTED via PR #854;
 - interpretation/adjudication tooling: ACCEPTED / NON-EXECUTING via PR #855;
-- interpretation execution: NOT RUN;
-- `INTERPRETATION_NOTE`: NOT ESTABLISHED;
+- interpretation execution: COMPLETED / ESTABLISHED via PR #872;
+- `INTERPRETATION_NOTE`: ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT;
 - independent validation: NOT ESTABLISHED.
 
 Track A completion counts must never be rendered as canonical High-Assurance scientific N.
@@ -62,7 +62,7 @@ Merged PR #845 establishes evidence-first routing. PR #849 (Evidence provenance 
 
 ## Current next action
 
-The console should present **bounded interpretation/adjudication** as the next frontier. The locked primary analysis has executed locally and the creation-only content-addressed `LOCKED_ANALYSIS_RESULT_RECORD` is accepted. PR #855 accepted the fail-closed interpretation tooling, but interpretation itself has not run and no `INTERPRETATION_NOTE` exists. The numerical estimate, interval, and classification remain operator-local; the next state-changing action must revalidate the retained result bytes and frozen preregistration before preparing a separate content-addressed interpretation-note candidate.
+The console should present **bounded post-interpretation control-state reconciliation and next-gate identification** as the next frontier. The locked primary analysis has executed locally and the creation-only content-addressed `LOCKED_ANALYSIS_RESULT_RECORD` is accepted. PR #872 admitted the creation-only `INTERPRETATION_NOTE`, and PR #873 reconciled the current repository state; the numerical estimate, interval, and classification remain operator-local. The numerical estimate, interval, and classification remain operator-local; the next state-changing action must not infer authorization or efficacy; it should only reconcile projections or execute a separately governed gate whose prerequisites are already satisfied.
 
 ## Access and validation
 

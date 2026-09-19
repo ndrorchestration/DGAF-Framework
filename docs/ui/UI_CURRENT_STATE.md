@@ -20,13 +20,13 @@ Track A Epoch 002 has advanced beyond the state used when PR #849 was authored:
 - locked primary analysis: EXECUTED / RETAINED;
 - `LOCKED_ANALYSIS_RESULT_RECORD`: ESTABLISHED via PR #851;
 - interpretation/adjudication tooling: ACCEPTED via PR #855;
-- interpretation execution: NOT RUN;
-- `INTERPRETATION_NOTE`: NOT ESTABLISHED;
+- interpretation execution: COMPLETED / ESTABLISHED via PR #872;
+- `INTERPRETATION_NOTE`: ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT;
 - canonical DGAF efficacy: NOT ESTABLISHED;
 - independent validation: NOT ESTABLISHED;
 - scientific-N increment: 0.
 
-The active scientific frontier is therefore **interpretation/adjudication**, not primary-analysis execution.
+The active control frontier is therefore **post-interpretation projection reconciliation and gate identification**; no new empirical or authorization transition is implied.
 
 ## Accepted interface foundation
 
@@ -55,7 +55,7 @@ Implementation intent remains accepted:
 
 Its exact historical head completed 19/19 returned repository workflow families successfully. PR #849 is now **CLOSED / UNMERGED / STALE-LINEAGE / DO NOT MERGE AS-IS** because protected main advanced through changes to `app/lib/governance.ts`, Decision Frontier, Governance Map, current-state records, and the Track A locked-result/interpretation frontier. The old candidate text that primary analysis had not yet run is no longer admissible.
 
-Reconstruction requirement: replay only the presentation delta onto current protected main and consume the current canonical stage model, where locked analysis is established and interpretation/adjudication is the open frontier.
+Reconstruction requirement: replay only the presentation delta onto current protected main and consume the current canonical stage model, where locked analysis and bounded interpretation are established, while authorization and scientific-claim promotion remain blocked.
 
 ### PR #850 — Audience journey groups + mobile containment
 
