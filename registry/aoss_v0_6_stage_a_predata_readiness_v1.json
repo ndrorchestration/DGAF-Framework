@@ -62,10 +62,11 @@
       ]
     },
     "aoss_decision_policy": {
-      "status": "BLOCKED",
-      "evidence": [],
-      "missing": [
-        "owning executable AOSS policy source or newly frozen prospective v0.6 policy"
+      "status": "BOUND",
+      "evidence": [
+        "registry/aoss_v0_6_stage_a_decision_policy_v1.json",
+        "scripts/aoss_v0_6_stage_a_decision_policy.py",
+        "tests/test_aoss_v0_6_stage_a_decision_policy.py"
       ]
     },
     "primary_endpoint": {

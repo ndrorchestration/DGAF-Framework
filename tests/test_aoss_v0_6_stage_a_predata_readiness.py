@@ -29,7 +29,7 @@ def test_current_stage_a_state_is_explicitly_not_ready() -> None:
     readiness = current_readiness(validator)
     unresolved = validator.validate_readiness(readiness)
     assert readiness["status"] == "NOT_READY_FAIL_CLOSED"
-    assert "aoss_decision_policy" in unresolved
+    assert "aoss_decision_policy" not in unresolved
     assert "freshness_and_calibration" not in unresolved
     assert "analysis_and_multiplicity" not in unresolved
     assert "practical_effect_or_adoption_rule" not in unresolved
@@ -40,7 +40,7 @@ def test_current_stage_a_state_is_explicitly_not_ready() -> None:
     assert "episode_eligibility_and_exclusion" not in unresolved
     assert "repetition_and_seed_plan" not in unresolved
     assert "failure_injection_ground_truth" not in unresolved
-    assert len(unresolved) == 2
+    assert len(unresolved) == 1
     assert readiness["outcome_collection_authorized"] is False
     assert readiness["scientific_n_increment"] == 0
 
@@ -74,7 +74,7 @@ def test_unresolved_predicate_requires_explicit_missing_reasons() -> None:
     validator = load_validator()
     readiness = current_readiness(validator)
     broken = copy.deepcopy(readiness)
-    broken["required_predicates"]["aoss_decision_policy"]["missing"] = []
+    broken["required_predicates"]["comparator_input_derivation"]["missing"] = []
     with pytest.raises(SystemExit, match="requires a non-empty missing list"):
         validator.validate_readiness(broken)
 
@@ -370,4 +370,53 @@ def test_comparator_input_gap_cannot_be_silently_promoted() -> None:
 
     validator.load_json = fake_load
     with pytest.raises(SystemExit, match="must remain blocked"):
+        validator.validate_readiness(readiness)
+
+
+def test_prospective_decision_policy_is_bound_without_claiming_v05_recovery() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    unresolved = validator.validate_readiness(readiness)
+    assert unresolved == ["comparator_input_derivation"]
+    policy = validator.load_json(ROOT / validator.DECISION_POLICY_REL)
+    assert policy["policy_version"] == "AOSS_V0_6_STAGE_A_POLICY_V1"
+    assert policy["provenance"]["classification"] == "NEW_PROSPECTIVE_V0_6_POLICY_FREEZE"
+    assert policy["provenance"]["historical_v0_5_executable_source_located"] is False
+    assert policy["provenance"]["historical_v0_5_equivalence_claimed"] is False
+    assert policy["outcome_collection_authorized"] is False
+
+
+def test_decision_policy_contract_cannot_self_authorize_collection() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    policy = validator.load_json(ROOT / validator.DECISION_POLICY_REL)
+    broken = copy.deepcopy(policy)
+    broken["outcome_collection_authorized"] = True
+    original_load = validator.load_json
+
+    def fake_load(path):
+        if path == ROOT / validator.DECISION_POLICY_REL:
+            return broken
+        return original_load(path)
+
+    validator.load_json = fake_load
+    with pytest.raises(SystemExit, match="decision policy cannot authorize outcome collection"):
+        validator.validate_readiness(readiness)
+
+
+def test_decision_policy_contract_rejects_historical_equivalence_promotion() -> None:
+    validator = load_validator()
+    readiness = current_readiness(validator)
+    policy = validator.load_json(ROOT / validator.DECISION_POLICY_REL)
+    broken = copy.deepcopy(policy)
+    broken["provenance"]["historical_v0_5_equivalence_claimed"] = True
+    original_load = validator.load_json
+
+    def fake_load(path):
+        if path == ROOT / validator.DECISION_POLICY_REL:
+            return broken
+        return original_load(path)
+
+    validator.load_json = fake_load
+    with pytest.raises(SystemExit, match="cannot claim historical v0.5 equivalence"):
         validator.validate_readiness(readiness)
