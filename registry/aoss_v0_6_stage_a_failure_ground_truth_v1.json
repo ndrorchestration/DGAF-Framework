@@ -1,0 +1,113 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_FAILURE_INJECTION_GROUND_TRUTH",
+  "schema_version": 1,
+  "controller_issue": 810,
+  "status": "FROZEN_PREDATA_CONTRACT_NO_OUTCOMES",
+  "labels": {
+    "normal_completion": {
+      "adapter_accept": true,
+      "terminal_event": "task.completed",
+      "condition": "NOMINAL_COMPLETION",
+      "primary_endpoint_eligible": true
+    },
+    "policy_denial": {
+      "adapter_accept": true,
+      "terminal_event": "task.denied",
+      "condition": "SOURCE_POLICY_DENIAL",
+      "primary_endpoint_eligible": true
+    },
+    "unknown_capability_rejection": {
+      "adapter_accept": true,
+      "terminal_event": "task.rejected",
+      "condition": "UNKNOWN_CAPABILITY_REJECTION",
+      "primary_endpoint_eligible": true
+    },
+    "handler_failure": {
+      "adapter_accept": true,
+      "terminal_event": "task.failed",
+      "condition": "HANDLER_FAILURE",
+      "primary_endpoint_eligible": true
+    },
+    "cancellation": {
+      "adapter_accept": true,
+      "terminal_event": "task.cancelled",
+      "condition": "CANCELLATION",
+      "primary_endpoint_eligible": true
+    },
+    "exact_budget_success": {
+      "adapter_accept": true,
+      "terminal_event": "task.completed",
+      "condition": "EXACT_BUDGET_SUCCESS",
+      "primary_endpoint_eligible": true
+    },
+    "budget_exhaustion": {
+      "adapter_accept": true,
+      "terminal_event": "task.budget_exhausted",
+      "condition": "BUDGET_EXHAUSTION",
+      "primary_endpoint_eligible": true
+    },
+    "suppressed_budget_exception_fail_closed": {
+      "adapter_accept": true,
+      "terminal_event": "task.budget_exhausted",
+      "condition": "SUPPRESSED_EXCEPTION_STILL_FAIL_CLOSED",
+      "primary_endpoint_eligible": true
+    },
+    "missing_event": {
+      "adapter_accept": true,
+      "terminal_event": null,
+      "condition": "INCOMPLETE_LIFECYCLE_MISSING_TERMINAL_EVENT",
+      "primary_endpoint_eligible": true
+    },
+    "reordered_exported_events": {
+      "adapter_accept": true,
+      "terminal_event": "task.completed",
+      "condition": "TEMPORAL_ORDER_VIOLATION",
+      "primary_endpoint_eligible": true
+    },
+    "duplicate_replayed_event": {
+      "adapter_accept": true,
+      "terminal_event": "task.completed",
+      "condition": "DUPLICATE_EVENT_REPLAY",
+      "primary_endpoint_eligible": true
+    },
+    "stale_timestamp": {
+      "adapter_accept": true,
+      "terminal_event": "task.completed",
+      "condition": "STALE_TELEMETRY_BY_FROZEN_FRESHNESS_RULE",
+      "primary_endpoint_eligible": true
+    },
+    "malformed_manifest": {
+      "adapter_accept": false,
+      "terminal_event": null,
+      "condition": "PROVENANCE_SCHEMA_MISMATCH",
+      "primary_endpoint_eligible": false
+    },
+    "mismatched_run_id": {
+      "adapter_accept": false,
+      "terminal_event": null,
+      "condition": "EVENT_RUN_ID_MISMATCH",
+      "primary_endpoint_eligible": false
+    },
+    "source_order_ambiguity": {
+      "adapter_accept": true,
+      "terminal_event": "task.completed",
+      "condition": "CAUSAL_ORDER_UNMEASURED_AMBIGUOUS",
+      "primary_endpoint_eligible": true
+    },
+    "missing_authority_evidence": {
+      "adapter_accept": true,
+      "terminal_event": "task.completed",
+      "condition": "AUTHORIZATION_REMAINS_UNMEASURED",
+      "primary_endpoint_eligible": true
+    }
+  },
+  "interpretation_boundary": [
+    "ground-truth labels describe injected/source conditions, not AOSS correctness",
+    "adapter_accept does not imply policy authorization",
+    "primary_endpoint_eligible does not imply a favorable or safe policy decision",
+    "expected AOSS decisions remain governed by the separate prospective decision-policy contract"
+  ],
+  "outcome_collection_authorized": false,
+  "external_validation_established": false,
+  "scientific_n_increment": 0
+}
