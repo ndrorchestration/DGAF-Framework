@@ -140,8 +140,10 @@ def expected_record(
             fail("specific defect id is malformed")
         if not isinstance(summary, str) or len(summary.strip()) < 12:
             fail("specific defect summary is too short")
-        if not isinstance(evidence_refs, list) or not evidence_refs or not all(
-            isinstance(x, str) and x.strip() for x in evidence_refs
+        if (
+            not isinstance(evidence_refs, list)
+            or not evidence_refs
+            or not all(isinstance(x, str) and x.strip() for x in evidence_refs)
         ):
             fail("specific defect requires nonempty evidence refs")
         lane_state = "OPEN_ONLY_FOR_NAMED_DEFECT_REMEDIATION"
@@ -238,9 +240,7 @@ def validate_disposition_event(head: str, *, accepted_parent_sha: str) -> str:
     if parent != accepted_parent_sha:
         fail("disposition parent is not the accepted protected-main parent")
 
-    changed = [
-        line for line in rv.git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line
-    ]
+    changed = [line for line in rv.git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line]
     if changed != [DISPOSITION_REL]:
         fail("disposition event must create exactly the canonical disposition record")
     if rv.git_object_exists(f"{parent}:{DISPOSITION_REL}"):
@@ -271,9 +271,7 @@ def validate_accepted_disposition(ref: str = "HEAD") -> str:
     if len(lineage) != 2 or lineage[0] != event:
         fail("accepted disposition event must have exactly one parent")
     parent = lineage[1]
-    changed = [
-        line for line in rv.git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines() if line
-    ]
+    changed = [line for line in rv.git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines() if line]
     if changed != [DISPOSITION_REL]:
         fail("accepted disposition event changed more than its canonical record")
     if rv.git_object_exists(f"{parent}:{DISPOSITION_REL}"):
