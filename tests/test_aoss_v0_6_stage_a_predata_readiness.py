@@ -209,6 +209,7 @@ def test_replay_receipt_contract_requires_future_frozen_contract_digests() -> No
     contract = validator.load_json(ROOT / validator.RECEIPT_CONTRACT_REL)
     roles = set(contract["required_contract_digest_roles"])
     assert {
+        "comparator_input_derivation_sha256",
         "decision_policy_sha256",
         "freshness_calibration_sha256",
         "eligibility_repetition_sha256",
