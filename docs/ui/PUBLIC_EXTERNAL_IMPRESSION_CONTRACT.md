@@ -1,10 +1,12 @@
 # Public / External Impression Contract
 
-Status: **DESIGN-SYSTEM SUCCESSOR TO #800**
+Status: **ACCEPTED PRESENTATION CONTRACT**
 
 Scientific/control effect: **NONE**
 
 `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
+
+Current interface-status authority: [`UI_CURRENT_STATE.md`](UI_CURRENT_STATE.md).
 
 ## Purpose
 
@@ -28,6 +30,10 @@ The Overview now describes DGAF in three operational verbs:
 
 This wording is intentionally less repository-internal than the surrounding
 operator surfaces while remaining faithful to the same semantics.
+
+## Current scientific wording boundary
+
+Public copy must now reflect that Track A Epoch 002 locked primary analysis has executed and its result receipt is established, while interpretation/adjudication remains not established. Public copy must not describe primary analysis as pending, and it must still preserve canonical efficacy `NOT ESTABLISHED`, independent validation `NOT ESTABLISHED`, scientific-N increment 0, and High-Assurance `NOT AUTHORIZED`.
 
 ## Claim ceiling
 
