@@ -346,3 +346,31 @@ code,.mono,.source-stamp,.artifact-row code,.finding-meta code,.tool-contract st
   .evidence-boundary-grid>div:first-child,
   .evidence-boundary-grid>div:last-child { border-color:CanvasText; background:Canvas; }
 }
+
+
+/* Audience-journey navigation: Understand → Verify → Inspect → Operate. */
+.nav-list { gap:0; align-content:start; }
+.nav-group { display:grid; gap:4px; padding:10px 0 12px; border-top:1px solid var(--border-soft); }
+.nav-group:first-child { padding-top:0; border-top:0; }
+.nav-stage { display:block; padding:0 11px 4px; color:var(--text-quiet); font:800 .56rem var(--mono); letter-spacing:.14em; line-height:1.2; opacity:.78; }
+.nav-group:focus-within .nav-stage { color:var(--text-secondary); opacity:1; }
+.nav-group:last-child { margin-top:4px; padding-top:14px; border-top-color:color-mix(in srgb,var(--coupling-authority) 22%,var(--border-soft)); }
+.nav-group:last-child .nav-stage { color:var(--coupling-authority); opacity:.9; }
+.nav-group .nav-item { width:100%; }
+
+@media (min-width:761px) and (max-width:1100px) {
+  .nav-group { padding:4px 0; border-top:0; }
+  .nav-stage { display:none; }
+}
+
+@media (max-width:760px) {
+  .sidebar { visibility:hidden; pointer-events:none; overflow-y:auto; overscroll-behavior:contain; }
+  .sidebar.mobile-open { visibility:visible; pointer-events:auto; }
+  .nav-group { padding:9px 0 10px; }
+  .nav-stage { display:block; padding-bottom:3px; font-size:.58rem; }
+}
+
+@media (forced-colors: active) {
+  .nav-group { border-top-color:CanvasText; }
+  .nav-stage { color:CanvasText; }
+}
