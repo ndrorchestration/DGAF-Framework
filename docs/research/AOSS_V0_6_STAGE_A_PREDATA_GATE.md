@@ -12,15 +12,11 @@ The validator refuses a ready state while any required predicate is unresolved. 
 
 Current unresolved families include:
 
-- numeric freshness and clock calibration;
 - owning AOSS decision policy or a new prospective v0.6 policy freeze;
-- episode eligibility/exclusion;
-- repetitions/seeds;
-- per-class ground-truth expectations;
 - practical-effect/adoption rule;
 - analysis/uncertainty/multiplicity;
 
-The observer/trust-domain boundary, extraction-function/tolerance identity, and whole-study artifact/hash/replay receipt contract are now separately frozen by `AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md` and its machine-readable registry. Exact timestamp extraction remains distinct from freshness adjudication.
+The observer/trust-domain boundary, extraction-function/tolerance identity, whole-study artifact/hash/replay receipt, numeric freshness/calibration rule, episode eligibility/repetition plan, and per-class failure-injection ground truth are now separately frozen. Exact timestamp extraction remains distinct from freshness adjudication, and replay passes remain deterministic checks rather than independent observations.
 
 CI intentionally executes:
 
