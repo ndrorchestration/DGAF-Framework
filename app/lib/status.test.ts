@@ -41,7 +41,7 @@ test('current truth boundary remains fail-closed and non-authorized', () => {
   assert.equal(TRUTH_BOUNDARY.efficacy, 'NOT ESTABLISHED')
 })
 
-test('lifecycle reflects accepted interpretation without downstream promotion', () => {
+test('lifecycle reflects accepted Epoch 002 closure without downstream promotion', () => {
   const custody = GOVERNANCE_STAGES.find(stage => stage.id === 'repository-custody')
   const freeze = GOVERNANCE_STAGES.find(stage => stage.id === 'immutable-freeze')
   const authorization = GOVERNANCE_STAGES.find(stage => stage.id === 'collection-authorization')
@@ -54,6 +54,7 @@ test('lifecycle reflects accepted interpretation without downstream promotion', 
   const analysisAuthorization = GOVERNANCE_STAGES.find(stage => stage.id === 'primary-analysis-authorization')
   const lockedAnalysis = GOVERNANCE_STAGES.find(stage => stage.id === 'locked-analysis')
   const interpretation = GOVERNANCE_STAGES.find(stage => stage.id === 'interpretation-adjudication')
+  const disposition = GOVERNANCE_STAGES.find(stage => stage.id === 'post-interpretation-disposition')
 
   assert.equal(custody?.predicateState, 'pass')
   assert.equal(freeze?.predicateState, 'pass')
@@ -71,6 +72,9 @@ test('lifecycle reflects accepted interpretation without downstream promotion', 
   assert.equal(interpretation?.predicateState, 'pass')
   assert.equal(interpretation?.toolingPrepared, true)
   assert.match(interpretation?.toolingNote ?? '', /#872/)
+  assert.equal(disposition?.predicateState, 'pass')
+  assert.equal(disposition?.toolingPrepared, true)
+  assert.match(disposition?.toolingNote ?? '', /#881/)
 })
 
 test('every lifecycle stage carries an explicit claim boundary', () => {

@@ -75,7 +75,7 @@ test('Overview hero remains a semantic control field rather than decorative-only
   assert.match(overview, /SEMANTIC CONTROL FIELD/)
   assert.match(overview, /CURRENT STATE/)
   assert.match(overview, /AUTHORIZATION BOUNDARY/)
-  assert.match(overview, /NEXT ADMISSIBLE/)
+  assert.match(overview, /POST-EPOCH-002 BOUNDARY/)
   assert.doesNotMatch(overview, /hero-orbit/)
 })
 
