@@ -83,7 +83,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `dde7b3a07c9d8ccd8a24745437027bc5e15759c9` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `133dbab5622882f02d5ec5cacad9841c3a97a2df` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -200,7 +200,7 @@ PR #728 installed prospective fail-closed primary-analysis authorization tooling
 
 ## Current scientific frontier
 
-The current control frontier is **explicit identification of the next admissible post-interpretation gate under issue #719**. The authorized frozen Epoch 002 primary analysis has executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment, and PR #851 established the immutable content-addressed result receipt. The numerical interpretation artifact remains outside repository projections; its admitted note is separate, non-authorizing, and does not promote efficacy, independence, scientific N, or High-Assurance authorization.
+Track A Epoch 002 is **CLOSED_FOR_EXACT_PREREGISTERED_SCOPE** through the creation-only post-interpretation disposition accepted via PR #881. The authorized frozen primary analysis executed locally under the locked Python 3.12.0 / NumPy 2.5.1 environment; PR #851 established the immutable content-addressed result receipt; PR #872 established the bounded same-system interpretation; PR #877 reconciled the executable projection; and PR #880 established the fail-closed disposition tooling. The numerical interpretation artifact remains outside repository projections. Any independent replication or new empirical epoch requires a separate proposal, preregistration, and authorization.
 
 Current boundary:
 
