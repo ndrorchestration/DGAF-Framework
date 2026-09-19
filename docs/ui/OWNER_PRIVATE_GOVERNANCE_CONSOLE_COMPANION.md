@@ -4,8 +4,8 @@
 **Lifecycle:** DERIVATIVE  
 **Scientific-state effect:** NONE  
 **Authority effect:** NONE  
-**Reconciliation input:** protected `main` at `f636c822f16e0814fe0d95221553aea7d3515a46`  
-**Reconciliation event:** post-#851/#854/#855 Epoch 002 locked-result and interpretation-tooling reconciliation
+**Reconciliation input:** protected `main` at `28e5591115899408463278b034571671173a4c83`  
+**Reconciliation event:** post-#851/#854/#855 locked-result / interpretation-tooling state plus UI-lineage reconciliation
 
 ## Purpose
 
@@ -50,10 +50,15 @@ Track A completion counts must never be rendered as canonical High-Assurance sci
 - `app/lib/governance.ts` is the public application's bounded presentation-state model.
 - `docs/CURRENT_STATE.md` is the primary current-facing repository summary.
 - `docs/PROJECT_STATUS.md` is a compatibility entrypoint only.
+- `docs/ui/UI_CURRENT_STATE.md` is the current-facing interface-workstream reconciliation index.
 - The DGAF Operational Control Center in Notion is the interpreted governance mirror.
 - GitHub remains authoritative for repository, commit, issue, PR, and CI identity.
 - Runtime reachability remains operational evidence only.
 - Missing or failed live refresh retains the last timestamped snapshot and must not promote or negate a governance predicate.
+
+## UI lineage note
+
+Merged PR #845 establishes evidence-first routing. PR #849 (Evidence provenance spine) and stacked PR #850 (audience journey groups + mobile focus containment) validated successfully on their historical exact heads but are stale-lineage relative to current protected main. Neither should be treated as accepted current-main implementation until reconstructed and revalidated against the post-analysis interpretation frontier.
 
 ## Current next action
 
