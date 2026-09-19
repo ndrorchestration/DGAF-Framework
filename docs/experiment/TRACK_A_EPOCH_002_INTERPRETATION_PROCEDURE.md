@@ -38,20 +38,29 @@ The preparer prints only content addresses and paths. It does not print the esti
 
 ## Frozen confirmatory interpretation
 
-The local interpretation artifact preserves:
+The local interpretation artifact is checked directly against
+`TRACK_A_TOPOLOGY_ROBUSTNESS_EPOCH_002_PREREGISTRATION.json` and preserves:
 
+- research question and directional hypothesis;
+- algorithm: `REFERENCE_NEIGHBOR_MEAN_ALPHA_0_5_V1`;
+- endpoint: boolean `ffcr_success`;
 - primary topology: `pdmal`;
 - primary comparator: `random_regular`;
 - paired-seed count: 50;
-- estimand: `estimate_pdmal_minus_random_regular`;
-- interval: frozen two-sided 95% percentile bootstrap interval;
+- estimand: mean of the 50 paired-seed effects;
+- frozen two-sided 95% percentile bootstrap interval;
 - alpha: 0.05;
 - bootstrap resamples: 10,000;
 - bootstrap seed: 20270251;
 - exactly one confirmatory primary comparison;
-- the preregistered classification rule already enforced by the locked-result validator.
+- the preregistered positive, negative, and otherwise classification rules;
+- exact allowed claim scope:
+  `TRACK_A_PDMAL_VS_RANDOM_REGULAR_TOPOLOGY_ROBUSTNESS_UNDER_EXACT_FROZEN_REFERENCE_ALGORITHM_AND_PROTOCOL`.
 
-No exploratory analysis may be relabeled as confirmatory.
+The validator fails closed if the preregistration, multiplicity policy, historical
+pooling policy, or claim ceiling drifts. Other topology comparisons,
+failure-count-specific effects, and post-hoc subgroups remain
+`EXPLORATORY_ONLY`; exploratory results cannot be relabeled confirmatory.
 
 ## Mandatory limitations
 
