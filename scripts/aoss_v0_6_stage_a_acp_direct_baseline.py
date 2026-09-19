@@ -24,6 +24,7 @@ _TERMINAL_DECISIONS: dict[str, Decision] = {
     "task.cancelled": "ESCALATE_BLOCK",
     "task.budget_exhausted": "ESCALATE_BLOCK",
 }
+_KNOWN_EVENT_KINDS = {"task.started", *_TERMINAL_DECISIONS}
 
 
 @dataclass(frozen=True)
@@ -49,7 +50,7 @@ def evaluate_baseline(manifest: dict[str, Any]) -> BaselineResult:
     event_count = manifest.get("event_count")
     if not isinstance(run_id, str) or not run_id:
         return BaselineResult(BASELINE_VERSION, "HOLD", "INVALID_RUN_ID", False, None, 0)
-    if not isinstance(events, list) or event_count != len(events):
+    if not isinstance(events, list) or type(event_count) is not int or event_count != len(events):
         return BaselineResult(BASELINE_VERSION, "HOLD", "INVALID_EVENT_CONTAINER", False, None, 0)
 
     terminal_kinds: list[str] = []
@@ -59,7 +60,7 @@ def evaluate_baseline(manifest: dict[str, Any]) -> BaselineResult:
         if event.get("run_id") != run_id:
             return BaselineResult(BASELINE_VERSION, "HOLD", "EVENT_RUN_ID_MISMATCH", False, None, 0)
         event_kind = event.get("event")
-        if not isinstance(event_kind, str):
+        if not isinstance(event_kind, str) or event_kind not in _KNOWN_EVENT_KINDS:
             return BaselineResult(BASELINE_VERSION, "HOLD", "INVALID_EVENT_KIND", False, None, 0)
         if event_kind in _TERMINAL_DECISIONS:
             terminal_kinds.append(event_kind)
