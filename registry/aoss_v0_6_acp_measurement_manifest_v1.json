@@ -1,0 +1,140 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_MEASUREMENT_MANIFEST",
+  "schema_version": 1,
+  "status": "FROZEN_APPARATUS_CONTRACT_NO_OUTCOMES",
+  "freeze_parent": {
+    "repository": "ndrorchestration/DGAF-Framework",
+    "pr": 843,
+    "commit": "bf7fa5c806b3b93e4b07a97c599a855d0a986459"
+  },
+  "source_system": {
+    "repository": "ndrorchestration/agent-control-plane",
+    "commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+    "provenance_schema": "agent-control-plane.provenance.v1",
+    "core_blob_sha": "1341df7296a426b336b76ac6b1e4df67611ec931",
+    "provenance_blob_sha": "9c3d1dd3c9c55ff77c55806d6a89dc2be89b325c"
+  },
+  "observer_version": "AOSS_V0_6_ACP_ADAPTER_V1",
+  "comparator": {
+    "version": "AOSS_V0_5_OMR_FROZEN",
+    "rule": {
+      "missing_coarse_state": "HOLD",
+      "o_eq_0_and_r_eq_0": "STOP",
+      "otherwise": "CONTINUE"
+    }
+  },
+  "field_contracts": {
+    "trace_id": {
+      "source_field": "run_id",
+      "derivation_class": "DIRECT",
+      "unit": "opaque_id",
+      "freshness_rule": "episode-scoped",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "source_event_id": {
+      "source_field": null,
+      "derivation_class": "UNMEASURED",
+      "unit": "opaque_id",
+      "freshness_rule": "NOT_APPLICABLE",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "observer_event_id": {
+      "source_field": "canonicalized event content + source_order_index",
+      "derivation_class": "ADAPTER_DERIVED",
+      "unit": "sha256",
+      "freshness_rule": "deterministic replay stable",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "parent_event_id": {
+      "source_field": null,
+      "derivation_class": "UNMEASURED",
+      "unit": "opaque_id",
+      "freshness_rule": "NOT_APPLICABLE",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "source_order_index": {
+      "source_field": "events[] position",
+      "derivation_class": "ADAPTER_DERIVED",
+      "unit": "zero_based_index",
+      "freshness_rule": "manifest-local",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "component": {
+      "source_field": null,
+      "derivation_class": "ADAPTER_DERIVED",
+      "value": "agent-control-plane",
+      "unit": "label",
+      "freshness_rule": "bound to source identity",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "event_kind": {
+      "source_field": "event",
+      "derivation_class": "DIRECT",
+      "unit": "enum_like_string",
+      "freshness_rule": "manifest-local",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "wall_time": {
+      "source_field": "timestamp",
+      "derivation_class": "DIRECT",
+      "unit": "RFC3339/ISO8601 UTC timestamp",
+      "freshness_rule": "must satisfy episode freshness threshold at analysis time",
+      "calibration_status": "NOT_CALIBRATED_AS_CLOCK"
+    },
+    "trust_domain": {
+      "source_field": null,
+      "derivation_class": "ADAPTER_DERIVED",
+      "value": "SYSTEM",
+      "unit": "classification",
+      "freshness_rule": "bound to source repository/commit",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "validation_state": {
+      "source_field": null,
+      "derivation_class": "UNMEASURED",
+      "unit": "tri_state",
+      "freshness_rule": "NOT_APPLICABLE",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "authorization_state": {
+      "source_field": null,
+      "derivation_class": "UNMEASURED",
+      "unit": "authorization_state",
+      "freshness_rule": "NOT_APPLICABLE",
+      "calibration_status": "NOT_APPLICABLE"
+    },
+    "durable_attestation": {
+      "source_field": null,
+      "derivation_class": "UNMEASURED",
+      "unit": "boolean_or_unknown",
+      "freshness_rule": "NOT_APPLICABLE",
+      "calibration_status": "NOT_APPLICABLE"
+    }
+  },
+  "required_episode_classes": [
+    "normal_completion",
+    "policy_denial",
+    "unknown_capability_rejection",
+    "handler_failure",
+    "cancellation",
+    "exact_budget_success",
+    "budget_exhaustion",
+    "suppressed_budget_exception_fail_closed",
+    "missing_event",
+    "reordered_exported_events",
+    "duplicate_replayed_event",
+    "stale_timestamp",
+    "malformed_manifest",
+    "mismatched_run_id",
+    "source_order_ambiguity",
+    "missing_authority_evidence"
+  ],
+  "safety_non_inference_rules": [
+    "ACP completion does not imply validation.",
+    "ACP policy allow does not imply AOSS authorization.",
+    "ACP policy denial is a source event, not an authorization oracle.",
+    "Adapter-derived observer IDs do not become source-native IDs.",
+    "Manifest order does not establish causal parentage.",
+    "Process-local provenance does not become durable/tamper-evident attestation."
+  ]
+}
