@@ -79,7 +79,7 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 
 ## Next admissible scientific transition
 
-The current control frontier is **post-interpretation projection reconciliation and explicit next-gate identification**. The frozen primary analysis has executed locally and its creation-only content-addressed result receipt is accepted. The next state-changing action must use the accepted fail-closed interpretation preparer against the retained operator-local result bytes, revalidate the accepted digest and frozen preregistration, keep the numerical interpretation artifact outside the repository, and admit only a separate content-addressed `INTERPRETATION_NOTE` candidate.
+The current control frontier is **explicit next-gate identification after accepted interpretation**. The frozen primary analysis has executed locally, its creation-only content-addressed result receipt is accepted, and PR #872 established the separate bounded `INTERPRETATION_NOTE` at SAME_SYSTEM_NONINDEPENDENT scope. No downstream transition is currently designated. Any next state-changing action requires a separate governed definition and must not infer efficacy, independent validation, scientific-N promotion, production readiness, certification, or High-Assurance authorization from interpretation admission.
 
 The accepted apparatus now provides:
 
