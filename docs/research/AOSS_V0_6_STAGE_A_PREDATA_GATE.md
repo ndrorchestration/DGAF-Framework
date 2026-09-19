@@ -19,9 +19,7 @@ Current unresolved families include:
 - per-class ground-truth expectations;
 - practical-effect/adoption rule;
 - analysis/uncertainty/multiplicity;
-- whole-study manifest/hash/replay receipt.
-
-The observer/trust-domain boundary and extraction-function/tolerance identity are now separately frozen by `AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md` and its machine-readable registry. Exact timestamp extraction remains distinct from freshness adjudication.
+The observer/trust-domain boundary, extraction-function/tolerance identity, and whole-study artifact/hash/replay receipt contract are now separately frozen by `AOSS_V0_6_STAGE_A_OBSERVER_MEASUREMENT_BOUNDARY.md` and its machine-readable registry. Exact timestamp extraction remains distinct from freshness adjudication.
 
 CI intentionally executes:
 
