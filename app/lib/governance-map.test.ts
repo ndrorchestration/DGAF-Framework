@@ -10,7 +10,7 @@ test('governance map derives its vertical spine from canonical governance stages
     GOVERNANCE_MAP.stages.map(stage => stage.id),
     GOVERNANCE_STAGES.map(stage => stage.id),
   )
-  assert.equal(GOVERNANCE_MAP.blocking.id, 'locked-analysis')
+  assert.equal(GOVERNANCE_MAP.blocking.id, 'interpretation-adjudication')
   assert.equal(GOVERNANCE_MAP.blocking.state, 'open')
 })
 
