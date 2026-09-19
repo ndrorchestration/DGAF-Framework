@@ -72,7 +72,7 @@ AOSS integration occurs through exported provenance manifests and an external ad
 2. Does AOSS preserve fail-closed behavior when required observables are absent or stale?
 3. Can the observer distinguish source facts from adapter-derived fields?
 4. Are ACP denial, failure, cancellation, unknown capability, budget exhaustion, and success episodes reconstructed reproducibly?
-5. Does the richer AOSS state produce decisions that differ from the frozen OMR comparator on preregistered ACP episodes?
+5. Does the richer AOSS state produce decisions that differ from the prospectively frozen ACP direct-event baseline on preregistered ACP episodes?
 
 ## Required episode classes
 
@@ -113,17 +113,23 @@ observer_version
 
 `ADAPTER_DERIVED` must never be presented as source-native telemetry.
 
-## Frozen comparator
+## Frozen primary comparator — pre-data amendment
 
-The Stage A comparator remains the v0.5 OMR policy:
+The historical `AOSS_V0_5_OMR_FROZEN` rule remains historical design context, but it is not machine-usable for Stage A because authoritative O/M/R semantics and an ACP extraction contract could not be recovered before outcome collection. O/M/R are not inferred.
+
+The confirmatory Stage-A comparator is prospectively amended to `AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1` under `registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json`.
+
+It uses only exact source-native manifest identity and event kind:
 
 ```text
-missing coarse state -> HOLD
-O = 0 and R = 0 -> STOP
-otherwise -> CONTINUE
+invalid structural identity -> HOLD
+no terminal event -> HOLD
+multiple terminal events -> HOLD
+exactly one task.completed -> RECORD_OUTCOME
+exactly one task.denied/rejected/failed/cancelled/budget_exhausted -> ESCALATE_BLOCK
 ```
 
-Changing the comparator after seeing ACP results requires a new analysis version and is exploratory.
+It intentionally ignores timestamp freshness, event ordering semantics, lineage, authority, validation, provenance richness, state/detail/capability payloads, observer-derived identifiers, and historical O/M/R variables. The amendment is pre-data and non-authorizing.
 
 ## Primary endpoint
 
@@ -152,7 +158,7 @@ Target for the declared safety invariants: zero violations.
 
 ## Secondary endpoints
 
-- same-OMR / different-AOSS-decision pair count;
+- direct-event-baseline / different-AOSS-decision pair count;
 - proportion of episodes containing at least one `UNMEASURED` field;
 - proportion of adapter-derived versus directly measured fields;
 - decision stability under deterministic replay;
@@ -184,7 +190,7 @@ It does **not** establish:
 - production-like external validation;
 - production safety or readiness;
 - universal framework compatibility;
-- superiority over OMR;
+- superiority over the ACP direct-event baseline;
 - causal value of any added observable;
 - DGAF/PDMAL efficacy or authorization;
 - independent external validation.
