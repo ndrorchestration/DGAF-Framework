@@ -70,13 +70,13 @@ def test_authorization_preserves_track_a_epoch_002_boundary() -> None:
 def test_precollection_receipt_binds_all_frozen_contracts(monkeypatch) -> None:
     validator = load_validator()
     auth_ref = validator.SOURCE_BASIS
+    original_load_json_at_ref = validator.load_json_at_ref
+    original_git = validator.git
 
     def fake_load_json_at_ref(ref, relpath):
         if relpath == validator.AUTH_REL:
             return validator.expected_authorization()
-        return validator.load_json_at_ref(ref, relpath)
-
-    original_git = validator.git
+        return original_load_json_at_ref(ref, relpath)
 
     def fake_git(*args):
         if args[:1] == ("rev-parse",) and len(args) == 2 and args[1] == auth_ref:
