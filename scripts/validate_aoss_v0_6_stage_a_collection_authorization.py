@@ -281,10 +281,36 @@ def validate_tooling_only() -> None:
         fail("tooling-only validation requires pre-collection receipt to be absent")
 
 
+def validate_repository_state(ref: str = "HEAD") -> None:
+    ref = git("rev-parse", ref)
+    has_auth = git_object_exists(f"{ref}:{AUTH_REL}")
+    has_receipt = git_object_exists(f"{ref}:{RECEIPT_REL}")
+    if not has_auth:
+        if has_receipt:
+            fail("pre-collection receipt cannot exist without authorization")
+        assert_frozen_predata_basis()
+        return
+
+    auth_ref = git("log", "-1", "--format=%H", ref, "--", AUTH_REL)
+    authorization = load_json_at_ref(ref, AUTH_REL)
+    validate_authorization(authorization)
+
+    if not has_receipt:
+        return
+
+    receipt_ref = git("log", "-1", "--format=%H", ref, "--", RECEIPT_REL)
+    lineage = git("rev-list", "--parents", "-n", "1", receipt_ref).split()
+    if len(lineage) != 2 or lineage[1] != auth_ref:
+        fail("accepted pre-collection receipt is not the direct child of the authorization event")
+    receipt = load_json_at_ref(ref, RECEIPT_REL)
+    validate_precollection_receipt(receipt, auth_ref)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--tooling-only", action="store_true")
+    group.add_argument("--validate-state", action="store_true")
     group.add_argument("--print-authorization", action="store_true")
     group.add_argument("--validate-authorization-event")
     group.add_argument("--print-precollection-receipt")
@@ -295,6 +321,8 @@ def main() -> int:
 
     if args.tooling_only:
         validate_tooling_only()
+    elif args.validate_state:
+        validate_repository_state()
     elif args.print_authorization:
         assert_frozen_predata_basis()
         print(json.dumps(expected_authorization(), indent=2, sort_keys=True))
