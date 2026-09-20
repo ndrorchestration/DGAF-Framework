@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dgaf:aoss:v0.6:stage-a:precollection-receipt:v1",
+  "title": "AOSS v0.6 Stage A Pre-Collection Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "status",
+    "authorization_binding",
+    "protected_source_basis",
+    "source_system",
+    "apparatus",
+    "frozen_contract_blobs",
+    "predata_readiness",
+    "outcomes_generated_before_receipt",
+    "outcome_collection_authorized",
+    "external_validation_established",
+    "scientific_n_increment",
+    "canonical_dgaf_efficacy",
+    "high_assurance"
+  ],
+  "properties": {
+    "record_type": {"const": "AOSS_V0_6_STAGE_A_PRECOLLECTION_RECEIPT"},
+    "schema_version": {"const": 1},
+    "status": {"const": "PASS"},
+    "authorization_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit_sha", "blob_sha", "path"],
+      "properties": {
+        "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "blob_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "path": {"const": "registry/aoss_v0_6_stage_a_collection_authorization_v1.json"}
+      }
+    },
+    "protected_source_basis": {"const": "807216df1bd5b28c677b8c42822975b2941c1211"},
+    "source_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "provenance_schema"],
+      "properties": {
+        "repository": {"const": "ndrorchestration/agent-control-plane"},
+        "commit": {"const": "dbab7c1afafec524ce7c18157de2089cafe79c87"},
+        "provenance_schema": {"const": "agent-control-plane.provenance.v1"}
+      }
+    },
+    "apparatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted_commit", "adapter_version", "decision_policy", "primary_comparator"],
+      "properties": {
+        "accepted_commit": {"const": "69821cdcc1b9b9432b7001c6f52c867f9669f54d"},
+        "adapter_version": {"const": "AOSS_V0_6_ACP_ADAPTER_V1"},
+        "decision_policy": {"const": "AOSS_V0_6_STAGE_A_POLICY_V1"},
+        "primary_comparator": {"const": "AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1"}
+      }
+    },
+    "frozen_contract_blobs": {
+      "type": "object",
+      "minProperties": 9,
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+    },
+    "predata_readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "blob_sha", "status"],
+      "properties": {
+        "path": {"const": "registry/aoss_v0_6_stage_a_predata_readiness_v1.json"},
+        "blob_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "status": {"const": "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW"}
+      }
+    },
+    "outcomes_generated_before_receipt": {"const": false},
+    "outcome_collection_authorized": {"const": true},
+    "external_validation_established": {"const": false},
+    "scientific_n_increment": {"const": 0},
+    "canonical_dgaf_efficacy": {"const": "NOT_ESTABLISHED"},
+    "high_assurance": {"const": "NOT_AUTHORIZED"}
+  }
+}

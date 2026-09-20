@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dgaf:aoss:v0.6:stage-a:collection-authorization:v1",
+  "title": "AOSS v0.6 Stage A Collection Authorization",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "controller_issue",
+    "status",
+    "authority",
+    "authorization_basis",
+    "protected_source_basis",
+    "source_system",
+    "apparatus",
+    "scope",
+    "non_effects",
+    "outcome_collection_authorized",
+    "external_validation_established",
+    "scientific_n_increment",
+    "canonical_dgaf_efficacy",
+    "high_assurance"
+  ],
+  "properties": {
+    "record_type": {"const": "AOSS_V0_6_STAGE_A_COLLECTION_AUTHORIZATION"},
+    "schema_version": {"const": 1},
+    "controller_issue": {"const": 890},
+    "status": {"const": "AUTHORIZED_BOUNDED_STAGE_A_COLLECTION"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "actor", "decision"],
+      "properties": {
+        "class": {"const": "PROJECT_OWNER_EXPLICIT_AUTHORIZATION"},
+        "actor": {"const": "ndrorchestration"},
+        "decision": {"const": "AUTHORIZE_EXACT_FROZEN_STAGE_A_COLLECTION_ONLY"}
+      }
+    },
+    "authorization_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issue", "comment_id", "comment_url"],
+      "properties": {
+        "issue": {"const": 890},
+        "comment_id": {"const": 5744865345},
+        "comment_url": {"const": "https://github.com/ndrorchestration/DGAF-Framework/issues/890#issuecomment-5744865345"}
+      }
+    },
+    "protected_source_basis": {"const": "807216df1bd5b28c677b8c42822975b2941c1211"},
+    "source_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "provenance_schema"],
+      "properties": {
+        "repository": {"const": "ndrorchestration/agent-control-plane"},
+        "commit": {"const": "dbab7c1afafec524ce7c18157de2089cafe79c87"},
+        "provenance_schema": {"const": "agent-control-plane.provenance.v1"}
+      }
+    },
+    "apparatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted_commit", "adapter_version", "decision_policy", "primary_comparator"],
+      "properties": {
+        "accepted_commit": {"const": "69821cdcc1b9b9432b7001c6f52c867f9669f54d"},
+        "adapter_version": {"const": "AOSS_V0_6_ACP_ADAPTER_V1"},
+        "decision_policy": {"const": "AOSS_V0_6_STAGE_A_POLICY_V1"},
+        "primary_comparator": {"const": "AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1"}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "episode_classes",
+        "canonical_source_episodes_per_class",
+        "exact_byte_replay_passes_per_episode",
+        "frozen_eligibility_only",
+        "frozen_failure_ground_truth_only",
+        "frozen_analysis_only"
+      ],
+      "properties": {
+        "episode_classes": {"const": 16},
+        "canonical_source_episodes_per_class": {"const": 1},
+        "exact_byte_replay_passes_per_episode": {"const": 5},
+        "frozen_eligibility_only": {"const": true},
+        "frozen_failure_ground_truth_only": {"const": true},
+        "frozen_analysis_only": {"const": true}
+      }
+    },
+    "non_effects": {
+      "const": [
+        "DOES_NOT_ESTABLISH_EXTERNAL_VALIDATION",
+        "DOES_NOT_ESTABLISH_AOSS_SUPERIORITY",
+        "DOES_NOT_ESTABLISH_DGAF_EFFICACY",
+        "DOES_NOT_ESTABLISH_INDEPENDENT_VALIDATION",
+        "DOES_NOT_AUTHORIZE_PRODUCTION_ASSURANCE",
+        "DOES_NOT_AUTHORIZE_HIGH_ASSURANCE",
+        "DOES_NOT_REOPEN_OR_POOL_TRACK_A_EPOCH_002",
+        "DOES_NOT_INCREMENT_SCIENTIFIC_N_BEFORE_GOVERNED_ANALYSIS_AND_DISPOSITION"
+      ]
+    },
+    "outcome_collection_authorized": {"const": true},
+    "external_validation_established": {"const": false},
+    "scientific_n_increment": {"const": 0},
+    "canonical_dgaf_efficacy": {"const": "NOT_ESTABLISHED"},
+    "high_assurance": {"const": "NOT_AUTHORIZED"}
+  }
+}

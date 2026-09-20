@@ -1,0 +1,78 @@
+name: AOSS v0.6 Stage A Collection Authorization
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/aoss-v0-6-stage-a-collection-authorization.yml'
+      - 'schemas/aoss_v0_6_stage_a_collection_authorization.schema.json'
+      - 'schemas/aoss_v0_6_stage_a_precollection_receipt.schema.json'
+      - 'scripts/validate_aoss_v0_6_stage_a_collection_authorization.py'
+      - 'tests/test_aoss_v0_6_stage_a_collection_authorization.py'
+      - 'docs/research/AOSS_V0_6_STAGE_A_COLLECTION_AUTHORIZATION.md'
+      - 'registry/aoss_v0_6_stage_a_collection_authorization_v1.json'
+      - 'registry/aoss_v0_6_stage_a_precollection_receipt_v1.json'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/aoss-v0-6-stage-a-collection-authorization.yml'
+      - 'schemas/aoss_v0_6_stage_a_collection_authorization.schema.json'
+      - 'schemas/aoss_v0_6_stage_a_precollection_receipt.schema.json'
+      - 'scripts/validate_aoss_v0_6_stage_a_collection_authorization.py'
+      - 'tests/test_aoss_v0_6_stage_a_collection_authorization.py'
+      - 'docs/research/AOSS_V0_6_STAGE_A_COLLECTION_AUTHORIZATION.md'
+      - 'registry/aoss_v0_6_stage_a_collection_authorization_v1.json'
+      - 'registry/aoss_v0_6_stage_a_precollection_receipt_v1.json'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Stage A collection authorization
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Compile validator
+        run: python -m py_compile scripts/validate_aoss_v0_6_stage_a_collection_authorization.py
+
+      - name: Validate pull-request transition
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if git cat-file -e "$HEAD_SHA:registry/aoss_v0_6_stage_a_precollection_receipt_v1.json" 2>/dev/null; then
+            python scripts/validate_aoss_v0_6_stage_a_collection_authorization.py --validate-precollection-event "$HEAD_SHA" --authorization-ref "$BASE_SHA"
+          elif git cat-file -e "$HEAD_SHA:registry/aoss_v0_6_stage_a_collection_authorization_v1.json" 2>/dev/null; then
+            python scripts/validate_aoss_v0_6_stage_a_collection_authorization.py --validate-authorization-event "$HEAD_SHA" --accepted-parent "$BASE_SHA"
+          else
+            python scripts/validate_aoss_v0_6_stage_a_collection_authorization.py --tooling-only
+            python -m pytest -q tests/test_aoss_v0_6_stage_a_collection_authorization.py
+          fi
+
+      - name: Validate accepted repository state
+        if: ${{ github.event_name == 'push' }}
+        run: python scripts/validate_aoss_v0_6_stage_a_collection_authorization.py --validate-state
