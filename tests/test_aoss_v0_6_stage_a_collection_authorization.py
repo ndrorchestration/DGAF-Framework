@@ -20,9 +20,9 @@ def load_validator():
     return module
 
 
-def test_tooling_is_nonexecuting_and_source_basis_is_ready() -> None:
+def test_repository_state_matches_current_authorization_phase() -> None:
     validator = load_validator()
-    validator.validate_tooling_only()
+    validator.validate_repository_state()
 
 
 def test_expected_authorization_is_exact_and_bounded() -> None:
