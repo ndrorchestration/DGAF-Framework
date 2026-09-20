@@ -77,12 +77,15 @@ def git(*args: str) -> str:
 
 
 def git_object_exists(spec: str) -> bool:
-    return subprocess.run(
-        ["git", "cat-file", "-e", spec],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-    ).returncode == 0
+    return (
+        subprocess.run(
+            ["git", "cat-file", "-e", spec],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        ).returncode
+        == 0
+    )
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -187,10 +190,7 @@ def expected_precollection_receipt(authorization_ref: str) -> dict[str, Any]:
     authorization_ref = git("rev-parse", authorization_ref)
     authorization = load_json_at_ref(authorization_ref, AUTH_REL)
     validate_authorization(authorization)
-    contract_blobs = {
-        path: git("rev-parse", f"{SOURCE_BASIS}:{path}")
-        for path in CONTRACT_PATHS
-    }
+    contract_blobs = {path: git("rev-parse", f"{SOURCE_BASIS}:{path}") for path in CONTRACT_PATHS}
     return {
         "record_type": "AOSS_V0_6_STAGE_A_PRECOLLECTION_RECEIPT",
         "schema_version": 1,
@@ -239,11 +239,7 @@ def creation_only_parent(head: str, path: str) -> str:
     if len(lineage) != 2 or lineage[0] != head:
         fail("creation event must have exactly one parent")
     parent = lineage[1]
-    changed = [
-        line
-        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", head).splitlines() if line]
     if changed != [path]:
         fail(f"creation event must change exactly {path}")
     if git_object_exists(f"{parent}:{path}"):
