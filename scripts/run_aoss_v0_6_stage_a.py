@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
 
 # isort: off
 from scripts.aoss_stage_a.preflight import PreflightError, inspect_preflight  # noqa: E402
+
 # isort: on
 
 
