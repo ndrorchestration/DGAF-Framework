@@ -38,6 +38,21 @@ export function StateSpaceView() {
         </div>
       </section>
 
+      <section className="panel state-space-lane" aria-labelledby="aoss-lane-heading">
+        <div className="section-heading">
+          <span className="eyebrow">SEPARATE RESEARCH LANE</span>
+          <h3 id="aoss-lane-heading">AOSS Stage A readiness is not a canonical DGAF state transition</h3>
+          <p>The Stage-A engineering chain is projected alongside the canonical field, never into it. Environment observation is evidence about execution readiness; it does not alter High-Assurance authorization, efficacy, or empirical N.</p>
+        </div>
+        <div className="state-space-lane-boundary">
+          <strong>OBSERVED_NOT_ACCEPTED</strong>
+          <span aria-hidden="true">→</span>
+          <strong>COLLECTION_EXECUTION_READINESS=NOT_ESTABLISHED</strong>
+          <span aria-hidden="true">∥</span>
+          <strong>HIGH_ASSURANCE=NOT_AUTHORIZED</strong>
+        </div>
+      </section>
+
       <section className="state-space-field panel" aria-labelledby="reachability-heading">
         <div className="section-heading">
           <span className="eyebrow">REACHABILITY FIELD</span>
