@@ -1,0 +1,44 @@
+{
+  "apparatus": {
+    "accepted_commit": "69821cdcc1b9b9432b7001c6f52c867f9669f54d",
+    "adapter_version": "AOSS_V0_6_ACP_ADAPTER_V1",
+    "decision_policy": "AOSS_V0_6_STAGE_A_POLICY_V1",
+    "primary_comparator": "AOSS_V0_6_ACP_DIRECT_EVENT_BASELINE_V1"
+  },
+  "authorization_binding": {
+    "blob_sha": "3a5efa22b99e03ef35bea71c261a4bcd681f0e6f",
+    "commit_sha": "854b9d5adb33c6ee6158a63017f133f20b90742e",
+    "path": "registry/aoss_v0_6_stage_a_collection_authorization_v1.json"
+  },
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "external_validation_established": false,
+  "frozen_contract_blobs": {
+    "registry/aoss_v0_6_acp_measurement_manifest_v1.json": "1c690abbe2ab451f5081f56c25970eb85b031ce4",
+    "registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json": "8e95d00e6cc12f95336b004c75c3771ac7530bf6",
+    "registry/aoss_v0_6_stage_a_decision_policy_v1.json": "b93f01af1825e93279e945f7dc07f299daab89bb",
+    "registry/aoss_v0_6_stage_a_episode_eligibility_repetition_v1.json": "f91735ae51b44921e78a50e9f6bb4486750ba96f",
+    "registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json": "02a393bf025df6dbd8bd0126a0626a31d832ee00",
+    "registry/aoss_v0_6_stage_a_freshness_calibration_v1.json": "694ecec6c7214e5c4047f6d7de612513d176b740",
+    "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json": "108dc570dd5dc1903e49a2b4afbf9a4eb3d604ce",
+    "registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json": "4576366f839f80af1fcb1318a3a9ac69f90e7244",
+    "registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json": "aaf2a62399158dda0ffdc3006d6b7fbe64a1d0e8"
+  },
+  "high_assurance": "NOT_AUTHORIZED",
+  "outcome_collection_authorized": true,
+  "outcomes_generated_before_receipt": false,
+  "predata_readiness": {
+    "blob_sha": "9592e0357d7b20baf4b64c0a05513fb5d68cb11d",
+    "path": "registry/aoss_v0_6_stage_a_predata_readiness_v1.json",
+    "status": "READY_FOR_SEPARATE_AUTHORIZATION_REVIEW"
+  },
+  "protected_source_basis": "807216df1bd5b28c677b8c42822975b2941c1211",
+  "record_type": "AOSS_V0_6_STAGE_A_PRECOLLECTION_RECEIPT",
+  "schema_version": 1,
+  "scientific_n_increment": 0,
+  "source_system": {
+    "commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+    "provenance_schema": "agent-control-plane.provenance.v1",
+    "repository": "ndrorchestration/agent-control-plane"
+  },
+  "status": "PASS"
+}
