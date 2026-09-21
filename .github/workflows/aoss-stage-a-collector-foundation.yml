@@ -100,6 +100,23 @@ jobs:
           assert report["outcomes_generated"] is False
           PY
 
+      - name: Observe runtime facts without accepting environment readiness
+        run: |
+          python - <<'PY'
+          import json
+          from scripts.aoss_stage_a.environment_manifest import (
+              observe_unaccepted_environment_manifest,
+              validate_unaccepted_environment_manifest,
+          )
+          manifest = observe_unaccepted_environment_manifest()
+          report = validate_unaccepted_environment_manifest(manifest)
+          assert manifest["status"] == "OBSERVED_NOT_ACCEPTED"
+          assert report["manifest_validation"] == "PASS_OBSERVED_NOT_ACCEPTED"
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["outcomes_generated"] is False
+          print(json.dumps(manifest, sort_keys=True))
+          PY
+
       - name: Prove collection remains disabled
         run: |
           set +e
