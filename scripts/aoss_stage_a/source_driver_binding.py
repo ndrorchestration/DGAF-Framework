@@ -55,6 +55,8 @@ _REQUIRED_FIELDS = {
     "collection_execution_readiness",
     "outcomes_generated",
     "scientific_n_increment",
+    "canonical_dgaf_efficacy",
+    "high_assurance",
 }
 
 
@@ -107,6 +109,10 @@ def validate_unaccepted_source_driver_binding(
         _fail("OUTCOME_GENERATION_PREMATURE")
     if binding["scientific_n_increment"] != 0:
         _fail("SCIENTIFIC_N_INCREMENT_INVALID")
+    if binding["canonical_dgaf_efficacy"] != "NOT_ESTABLISHED":
+        _fail("EFFICACY_PREMATURE")
+    if binding["high_assurance"] != "NOT_AUTHORIZED":
+        _fail("HIGH_ASSURANCE_PREMATURE")
 
     return {
         "record_type": "AOSS_STAGE_A_SOURCE_DRIVER_BINDING_REPORT",
