@@ -1,4 +1,5 @@
 import json
+import sys
 
 from scripts import run_aoss_v0_6_stage_a as cli
 
@@ -27,16 +28,20 @@ def test_preflight_success_surfaces_static_report_without_side_effects(tmp_path,
         return expected
 
     monkeypatch.setattr(cli, "inspect_preflight", fake_inspect_preflight)
-
-    exit_code = cli.main(
+    monkeypatch.setattr(
+        sys,
+        "argv",
         [
+            str(cli.CLI),
             "preflight",
             "--dgaf-root",
             str(dgaf),
             "--acp-root",
             str(acp),
-        ]
+        ],
     )
+
+    exit_code = cli.main()
 
     assert exit_code == 0
     assert observed["paths"] == (dgaf, acp)
