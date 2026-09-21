@@ -4,6 +4,7 @@ from scripts.aoss_stage_a.policy_input_mapping import (
     MappingError,
     map_observation,
 )
+from scripts.aoss_v0_6_stage_a_decision_policy import evaluate_policy
 
 
 def _observation(**overrides):
@@ -57,6 +58,10 @@ def test_ambiguous_or_unfresh_observations_hold_without_action(overrides):
     assert state.blocked is False
     assert state.uncertain is True
     assert state.required_predicate_inconclusive is True
+
+    result = evaluate_policy(state)
+    assert result.decision == "REQUEST_EVIDENCE"
+    assert result.matched_rule == "UNCERTAIN"
 
 
 @pytest.mark.parametrize(
