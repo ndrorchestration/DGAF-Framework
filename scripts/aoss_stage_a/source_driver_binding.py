@@ -39,6 +39,7 @@ EXPECTED_RECIPE_CLASSES = (
 
 _REQUIRED_FIELDS = {
     "record_type",
+    "schema_version",
     "status",
     "controller_issue",
     "catalog_path",
@@ -77,6 +78,8 @@ def validate_unaccepted_source_driver_binding(
         _fail("SOURCE_DRIVER_BINDING_FIELD_SET_MISMATCH")
     if binding["record_type"] != RECORD_TYPE:
         _fail("SOURCE_DRIVER_BINDING_RECORD_TYPE_MISMATCH")
+    if binding["schema_version"] != 1:
+        _fail("SOURCE_DRIVER_BINDING_SCHEMA_VERSION_MISMATCH")
     if binding["status"] != EXPECTED_STATUS:
         _fail("SOURCE_DRIVER_BINDING_STATUS_MISMATCH")
     if binding["controller_issue"] != EXPECTED_CONTROLLER_ISSUE:
