@@ -68,6 +68,7 @@ jobs:
             tests/test_aoss_stage_a_execution_admission.py \
             tests/test_aoss_stage_a_execution_identity_review.py \
             tests/test_aoss_stage_a_execution_identity_candidate.py \
+            tests/test_aoss_stage_a_external_admission_decision_intake.py \
             tests/test_aoss_stage_a_installed_environment_evidence.py \
             tests/test_aoss_stage_a_installed_environment_acceptance.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
@@ -296,6 +297,66 @@ jobs:
           assert report["executable_acceptance"] == "NOT_ESTABLISHED"
           assert report["destination_acceptance"] == "NOT_ESTABLISHED"
           assert report["external_adjudication"] == "NOT_EXECUTED"
+          assert report["execution_allowed"] is False
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["scientific_n_increment"] == 0
+          PY
+
+      - name: Validate external admission decision intake without promotion
+        run: |
+          python - <<'PY'
+          from scripts.aoss_stage_a.execution_identity_candidate import (
+              prepare_execution_identity_candidate,
+          )
+          from scripts.aoss_stage_a.external_admission_decision_intake import (
+              prepare_external_admission_decision_intake,
+              record_sha256,
+              validate_external_admission_decision_intake,
+          )
+          from scripts.aoss_stage_a.installed_environment_evidence import (
+              capture_installed_environment_evidence_candidate,
+          )
+
+          environment = capture_installed_environment_evidence_candidate(
+              observed_at="2026-09-21T23:30:00Z",
+          )
+          identity = prepare_execution_identity_candidate(
+              interpreter_path="/opt/python/3.12.3/bin/python",
+              interpreter_sha256="a" * 64,
+              argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
+              working_directory="/srv/aoss-stage-a",
+              destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+              attempt_id="aoss-stage-a-attempt-0001",
+              recipe_catalog_sha256="b" * 64,
+              environment_candidate_record_sha256=record_sha256(environment),
+          )
+          intake = prepare_external_admission_decision_intake(
+              environment_candidate=environment,
+              execution_identity_candidate=identity,
+              reviewer_identity="external-reviewer:ci-fixture",
+              reviewed_at="2026-09-21T23:31:00Z",
+              external_record_uri="https://example.invalid/aoss-stage-a/decision.json",
+              external_record_sha256="d" * 64,
+              independence_claimed=True,
+              independence_basis="CI structural fixture only",
+              installed_environment_decision="ACCEPT",
+              source_driver_executable_decision="ACCEPT",
+              destination_attempt_decision="ACCEPT",
+          )
+          report = validate_external_admission_decision_intake(
+              intake,
+              environment_candidate=environment,
+              execution_identity_candidate=identity,
+          )
+
+          assert report["intake_validation"] == "PASS_EXTERNAL_DECISION_STRUCTURAL_ONLY"
+          assert report["reviewer_attribution_verified"] is False
+          assert report["independence_verified"] is False
+          assert report["local_adjudication"] == "NOT_EXECUTED"
+          assert report["installed_environment_acceptance"] == "NOT_ESTABLISHED"
+          assert report["source_driver_binding"] == "NOT_ESTABLISHED"
+          assert report["executable_acceptance"] == "NOT_ESTABLISHED"
+          assert report["destination_acceptance"] == "NOT_ESTABLISHED"
           assert report["execution_allowed"] is False
           assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
           assert report["scientific_n_increment"] == 0
