@@ -33,6 +33,7 @@ Alternatives rejected:
 
 - Replaying the existing fixture bundle as collection would misclassify apparatus
   as new outcomes and would not establish live freshness.
+
 - Adding instrumentation to ACP would change the exact authorized target.
 
 Neither is an admissible shortcut.
@@ -66,14 +67,19 @@ point must reject execution until the mapping and collector identity are accepte
 
 - `scripts/aoss_stage_a/preflight.py`: read-only Git identity, blob and runtime
   checks; no ACP import or execution.
+
 - `scripts/aoss_stage_a/source_driver.py`: exact-source workload execution and
   raw export; separate process from the observer.
+
 - `scripts/aoss_stage_a/observer.py`: frozen adapter and comparator calls,
   accepted mapping, freshness adjudication and frozen policy evaluation.
+
 - `scripts/aoss_stage_a/custody.py`: canonical serialization, SHA-256 objects,
   atomic creation and attempt ledger.
+
 - `scripts/aoss_stage_a/replay.py`: five read-only replays using retained bytes
   and captured ingest references.
+
 - `scripts/run_aoss_v0_6_stage_a.py`: preflight and guarded collection commands.
 - `tests/test_aoss_stage_a_collector.py`: synthetic contract and fault tests.
 - `requirements-aoss-stage-a.lock`: exact runner dependencies with hashes.
@@ -154,20 +160,26 @@ Required tests:
 
 1. Wrong commit, dirty ACP, mismatched contract/code blob, substituted import,
    dependency drift, missing receipt and broken lineage each block preflight.
+
 2. Preflight imports no ACP driver and produces no episode or outcome files.
 3. Duplicate attempt, symlink destination, path traversal, partial write and
    interrupted execution cannot overwrite or masquerade as a complete attempt.
+
 4. Every declared transformation preserves raw source bytes and records digests.
 5. Freshness thresholds at -2 and 30 seconds are inclusive; values outside them,
    naive timestamps and cross-host timing are rejected or held as contracted.
+
 6. Frozen baseline is unaffected by observer-only fields or injected class labels.
 7. Policy-input mapping tests follow the separately accepted mapping, including
    terminal-plus-blocked and terminal-plus-stale cases; never derive expected
    decisions from ground-truth labels.
+
 8. Five exact-byte synthetic replays match; tampering in each artifact layer
    fails the corresponding receipt comparison.
+
 9. Missing classes invalidate; two structural controls remain excluded; replay
    passes never inflate the denominator.
+
 10. Invalid/incomplete attempts retain evidence and cannot be silently retried.
 
 ## Implementation sequence
