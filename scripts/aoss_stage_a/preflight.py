@@ -54,7 +54,7 @@ DEFAULT_BINDINGS = ExpectedBindings(
     },
     authorization_parent_commit="d11885b9338e7d05493f4cd58dc7f3b11942906e",
     auxiliary_blobs={
-        "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json": "1d2b44acb63f30660253e3c96f1a6cac602d62eb",
+        "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json": (\n            "1d2b44acb63f30660253e3c96f1a6cac602d62eb"\n        ),
         "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json": "fa1f58aff79320352f285ba41ad85c237adc97cc",
     },
 )
