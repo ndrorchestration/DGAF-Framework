@@ -59,7 +59,19 @@ jobs:
             tests/test_aoss_v0_6_acp_adapter.py \
             tests/test_aoss_v0_6_stage_a_decision_policy.py \
             tests/test_aoss_stage_a_policy_input_mapping.py \
+            tests/test_aoss_stage_a_runtime_binding.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
+
+      - name: Verify prospective exact runtime binding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from scripts.aoss_stage_a.runtime_binding import verify_runtime_binding
+          report = verify_runtime_binding(Path("."))
+          assert report["runtime_binding"] == "PASS_PROSPECTIVE_NON_COLLECTING"
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["outcomes_generated"] is False
+          PY
 
       - name: Prove collection remains disabled
         run: |
