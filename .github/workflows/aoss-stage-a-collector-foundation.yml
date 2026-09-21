@@ -60,6 +60,7 @@ jobs:
             tests/test_aoss_v0_6_stage_a_decision_policy.py \
             tests/test_aoss_stage_a_policy_input_mapping.py \
             tests/test_aoss_stage_a_runtime_binding.py \
+            tests/test_aoss_stage_a_source_driver_binding.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 
       - name: Verify prospective exact runtime binding
@@ -115,6 +116,28 @@ jobs:
           assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
           assert report["outcomes_generated"] is False
           print(json.dumps(manifest, sort_keys=True))
+          PY
+
+      - name: Verify proposed source-driver binding without accepting execution
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.aoss_stage_a.source_driver_binding import (
+              validate_unaccepted_source_driver_binding,
+          )
+          binding = json.loads(
+              Path(
+                  "registry/aoss_v0_6_stage_a_source_driver_binding_v1.json"
+              ).read_text(encoding="utf-8")
+          )
+          report = validate_unaccepted_source_driver_binding(binding)
+          assert report["catalog_binding"] == "PASS_PROPOSED_NON_COLLECTING"
+          assert report["source_driver_binding"] == "NOT_ESTABLISHED"
+          assert report["driver_execution"] == "NOT_PERFORMED"
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["outcomes_generated"] is False
+          print(json.dumps(report, sort_keys=True))
           PY
 
       - name: Prove collection remains disabled

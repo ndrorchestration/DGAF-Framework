@@ -79,6 +79,25 @@ does not establish collection readiness unless separately accepted, and even
 after acceptance the installed-environment manifest and source-driver binding
 remain separate predicates.
 
+## Proposed source-driver binding boundary
+
+The source-driver binding contract is now represented by
+`registry/aoss_v0_6_stage_a_source_driver_binding_v1.json` and verified by
+`scripts/aoss_stage_a/source_driver_binding.py`. It binds the 16-class
+synthetic recipe catalog to the exact ACP source repository and commit.
+
+This is still a proposed, non-collecting contract. It explicitly requires:
+
+- source-driver import and ACP execution to remain disabled;
+- executable identity and destination identity to remain absent;
+- source-driver acceptance and collection execution readiness to remain
+  `NOT_ESTABLISHED`;
+- outcomes and scientific-N increment to remain zero.
+
+A passing verifier therefore proves contract identity and fail-closed
+non-acceptance only. It does not accept a source driver, execute ACP, create
+episodes or outcomes, or establish readiness.
+
 ## Remaining gates
 
 Collection remains disabled until separate review and acceptance establish:
