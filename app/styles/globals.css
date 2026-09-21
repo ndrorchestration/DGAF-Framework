@@ -316,3 +316,34 @@ code,.mono,.source-stamp,.artifact-row code,.finding-meta code,.tool-contract st
   .public-summary-grid { grid-template-columns: 1fr; }
   .public-claim-ceiling { border-left-width: 2px; }
 }
+
+
+/* AOSS Stage-A readiness: engineering progress remains visually subordinate to authority. */
+.aoss-readiness { padding: 22px 24px; }
+.aoss-readiness > p { max-width: 980px; margin: 0 0 16px; font-size: .79rem; }
+.readiness-strip { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--border-soft); border-radius: 12px; background: var(--border-soft); }
+.readiness-strip > div { min-width: 0; display: grid; gap: 7px; align-content: start; padding: 13px; background: var(--surface-inspection); }
+.readiness-strip span { color: var(--muted); font-size: .64rem; }
+.readiness-strip strong { font: 800 .65rem var(--mono); overflow-wrap: anywhere; }
+.readiness-strip > div:nth-child(-n+3) strong { color: var(--state-established); }
+.readiness-strip > div:nth-child(4) strong { color: var(--state-frontier); }
+.readiness-strip > div:nth-child(n+5) strong { color: var(--state-unreachable); }
+.aoss-readiness-footer { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; color: var(--text-2); font-size: .69rem; }
+.aoss-readiness-footer strong { color: var(--text); font-family: var(--mono); font-size: .64rem; }
+@media (max-width: 980px) { .readiness-strip { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media (max-width: 560px) { .readiness-strip { grid-template-columns: 1fr; } .aoss-readiness { padding: 17px; } }
+@media (forced-colors: active) { .readiness-strip > div { border: 1px solid CanvasText; } }
+
+
+/* Execution/readiness separation across Control Room and State Space. */
+.execution-boundary { padding: 20px 22px; }
+.execution-boundary-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; border:1px solid var(--border-soft); border-radius:12px; overflow:hidden; background:var(--border-soft); }
+.execution-boundary-grid > div { display:grid; gap:6px; padding:13px 14px; background:var(--surface-inspection); }
+.execution-boundary-grid span { color:var(--muted); font-size:.64rem; }
+.execution-boundary-grid strong { color:var(--state-frontier); font:800 .67rem var(--mono); overflow-wrap:anywhere; }
+.execution-boundary-grid small { color:var(--text-2); font-size:.66rem; line-height:1.45; }
+.state-space-lane { padding:20px 22px; border-style:dashed; }
+.state-space-lane-boundary { display:flex; align-items:center; flex-wrap:wrap; gap:9px; padding:12px 14px; border:1px solid var(--border-soft); border-radius:10px; background:var(--surface-inspection); }
+.state-space-lane-boundary strong { font:800 .64rem var(--mono); overflow-wrap:anywhere; }
+.state-space-lane-boundary span { color:var(--muted); font-family:var(--mono); }
+@media (max-width:760px) { .execution-boundary-grid { grid-template-columns:1fr; } }
