@@ -12,9 +12,7 @@ from typing import Any, Mapping
 RECORD_TYPE = "AOSS_V0_6_STAGE_A_SOURCE_DRIVER_BINDING"
 EXPECTED_STATUS = "PROPOSED_NON_COLLECTING_SYNTHETIC_ONLY"
 EXPECTED_CONTROLLER_ISSUE = 901
-EXPECTED_CATALOG_PATH = (
-    "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json"
-)
+EXPECTED_CATALOG_PATH = "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json"
 EXPECTED_RECIPE_VERSION = "AOSS_V0_6_STAGE_A_SYNTHETIC_RECIPE_CATALOG_V1"
 EXPECTED_SOURCE_REPOSITORY = "ndrorchestration/agent-control-plane"
 EXPECTED_SOURCE_COMMIT = "dbab7c1afafec524ce7c18157de2089cafe79c87"
