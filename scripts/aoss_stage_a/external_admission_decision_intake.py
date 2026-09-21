@@ -184,6 +184,12 @@ def validate_external_admission_decision_intake(
     execution_report = validate_execution_identity_candidate(
         execution_identity_candidate
     )
+    expected_environment_record_sha = record_sha256(environment_candidate)
+    if (
+        execution_identity_candidate.get("environment_candidate_record_sha256")
+        != expected_environment_record_sha
+    ):
+        _fail("EXTERNAL_DECISION_IDENTITY_ENVIRONMENT_BINDING_MISMATCH")
 
     if intake.get("record_type") != RECORD_TYPE:
         _fail("EXTERNAL_DECISION_RECORD_TYPE_MISMATCH")
@@ -195,7 +201,6 @@ def validate_external_admission_decision_intake(
     bindings = intake.get("candidate_bindings")
     if not isinstance(bindings, Mapping):
         _fail("EXTERNAL_DECISION_CANDIDATE_BINDINGS_MISSING")
-    expected_environment_record_sha = record_sha256(environment_candidate)
     if bindings.get("environment_candidate_record_sha256") != expected_environment_record_sha:
         _fail("EXTERNAL_DECISION_ENVIRONMENT_CANDIDATE_SHA_MISMATCH")
     if bindings.get("environment_evidence_sha256") != environment_report["evidence_sha256"]:
