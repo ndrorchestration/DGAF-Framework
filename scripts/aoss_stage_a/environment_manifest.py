@@ -57,17 +57,20 @@ def validate_synthetic_manifest(manifest: Mapping[str, Any]) -> dict[str, object
 
 def observe_unaccepted_environment_manifest(
     observed_at: str | None = None,
+    facts: RuntimeFacts | None = None,
 ) -> dict[str, object]:
-    """Observe CI runtime facts while preserving an explicit unaccepted status."""
+    """Observe runtime facts while preserving an explicit unaccepted status."""
 
     observed_facts = facts or inspect_runtime_facts()
-    timestamp = observed_at or (datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"))
+    timestamp = observed_at or (
+        datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    )
     return {
         "record_type": MANIFEST_CONTRACT,
         "status": "OBSERVED_NOT_ACCEPTED",
         "manifest_id": (
-            f"runtime-observation-{facts.implementation}-{facts.version}-"
-            f"{facts.platform_system}-{facts.platform_machine}"
+            f"runtime-observation-{observed_facts.implementation}-{observed_facts.version}-"
+            f"{observed_facts.platform_system}-{observed_facts.platform_machine}"
         ),
         "manifest_status": "NOT_ESTABLISHED",
         "runtime_binding_record_type": "AOSS_V0_6_STAGE_A_RUNTIME_BINDING",
