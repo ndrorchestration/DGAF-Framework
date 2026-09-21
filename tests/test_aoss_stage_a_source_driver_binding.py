@@ -45,6 +45,8 @@ def _binding(**changes):
         "collection_execution_readiness": "NOT_ESTABLISHED",
         "outcomes_generated": False,
         "scientific_n_increment": 0,
+        "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+        "high_assurance": "NOT_AUTHORIZED",
     }
     value.update(changes)
     return value
