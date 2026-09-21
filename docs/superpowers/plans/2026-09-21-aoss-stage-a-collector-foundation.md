@@ -100,6 +100,7 @@ def test_preflight_has_no_outcome_destination():
 
   Never return PASS if any required static identity check failed. A missing
   runtime/mapping binding prevents readiness even when static checks pass.
+
 - [ ] Add real-Git negative cases: wrong ACP commit, dirty tracked file,
   untracked import-shadow file, changed contract, authorization path modified
   and restored, receipt wrong parent, replaced object and shallow clone.
@@ -205,6 +206,7 @@ python scripts/run_aoss_v0_6_stage_a.py collect
 
   Explain that the first reports static evidence only and the second is expected
   to fail. List mapping, driver, runtime lock and executable acceptance as open.
+
 - [ ] Add CI that checks out the exact PR head with full history and runs the
   new synthetic unit tests and existing AOSS regression tests using repository
   test dependency conventions. Do not execute ACP or create a study artifact.
@@ -219,6 +221,7 @@ git diff --check
   Apply the repository's changed-Python static checks and CI gates. Report any
   unavailable dependency or unrelated failure explicitly. Never rerun a real
   study to make tests pass.
+
 - [ ] Review the diff for changed frozen files, hidden ACP imports, mock-only
   assertions, authority upgrades and production-like test labels. Open an
   implementation PR with exact head, tests and remaining blockers.
