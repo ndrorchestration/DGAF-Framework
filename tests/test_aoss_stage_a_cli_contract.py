@@ -32,7 +32,7 @@ def test_preflight_success_surfaces_static_report_without_side_effects(tmp_path,
         sys,
         "argv",
         [
-            str(cli.CLI),
+            str(cli.__file__),
             "preflight",
             "--dgaf-root",
             str(dgaf),
