@@ -41,10 +41,9 @@ def test_runtime_contract_selects_one_exact_interpreter_and_empty_direct_depende
     assert contract["record_type"] == "AOSS_V0_6_STAGE_A_RUNTIME_BINDING"
     assert contract["status"] == "PROPOSED_NON_COLLECTING_RUNTIME_BINDING"
     assert contract["controller_issue"] == 901
-    assert contract["interpreter"] == {
-        "implementation": "cpython",
-        "version": "3.12.3",
-    }
+    assert contract["interpreter"]["implementation"] == "cpython"
+    assert contract["interpreter"]["version"] == "3.12.3"
+    assert contract["interpreter"]["historical_runtime_equivalence_claimed"] is False
     assert contract["dependency_lock"]["path"] == LOCK_REL
     assert contract["dependency_lock"]["sha256"] == _lock_digest()
     assert contract["dependency_lock"]["direct_third_party_dependencies"] == []
