@@ -1,9 +1,11 @@
 # AOSS Stage-A Collector Design
+
 Date: 2026-09-21
 Status: PROPOSED / NON-EXECUTING / REQUIRES DESIGN REVIEW
 Controller: #890
 
 ## Purpose and scope
+
 Implement an external collector for the already authorized finite Stage-A study.
 Success means reproducible, content-addressed execution of the frozen 16 classes
 against unchanged ACP, without upgrading fixtures, replay counts, or decision
@@ -19,6 +21,7 @@ Verified starting point: DGAF receipt commit
 All nine receipt contract blobs and adapter bytes matched during static audit.
 
 ## Approach
+
 Recommended: a separate Python collector in DGAF, with a source driver separated
 from the read-only observer by exported manifest files. It reuses the frozen
 adapter, policy, and baseline without editing them. The observer cannot call
@@ -27,12 +30,15 @@ A source driver necessarily selects the preregistered workloads; it is not the
 observer. The boundary must be explicit in code and reviewed before execution.
 
 Alternatives rejected:
+
 - Replaying the existing fixture bundle as collection would misclassify apparatus
   as new outcomes and would not establish live freshness.
 - Adding instrumentation to ACP would change the exact authorized target.
+
 Neither is an admissible shortcut.
 
 ## Newly identified semantic prerequisite
+
 The frozen adapter normalizes manifests and exposes a terminal-event summary.
 The frozen policy accepts PolicyInput booleans and tri-state predicates.
 In the inspected modules there is no executable bridge defining how every
@@ -57,6 +63,7 @@ tests while this mapping gate remains closed. The production collection entry
 point must reject execution until the mapping and collector identity are accepted.
 
 ## Components and proposed files
+
 - `scripts/aoss_stage_a/preflight.py`: read-only Git identity, blob and runtime
   checks; no ACP import or execution.
 - `scripts/aoss_stage_a/source_driver.py`: exact-source workload execution and
@@ -76,6 +83,7 @@ point must reject execution until the mapping and collector identity are accepte
 These are proposed interfaces, not implemented or accepted files.
 
 ## Preflight
+
 Require explicit paths for DGAF, ACP, accepted collector binding and a new
 attempt destination. Resolve commit identities locally and prove the accepted
 authorization/receipt lineage. Verify receipt contract blobs plus the frozen
@@ -88,6 +96,7 @@ environment against it. Fail on drift. Preflight must be independently callable
 without creating episodes, running policy decisions or allocating a study attempt.
 
 ## Collection and attempt custody
+
 Require acceptance of the exact collector and mapping identities before the
 collection command runs. Create the attempt reservation exclusively before
 source dispatch; never overwrite or resume an existing attempt. Record STARTED,
@@ -110,6 +119,7 @@ primary denominator. Unknown/missing classes or identity/hash drift invalidate
 the attempt; infrastructure failures are retained, not silently excluded.
 
 ## Artifacts and replay
+
 Retain study manifest, source episode bundle, normalized bundle, decision bundle
 and analysis bundle as separate SHA-256-addressed objects. Study manifest binds
 all source, contract, code and runtime identities plus attempt identity and
@@ -127,6 +137,7 @@ Any false/missing verification field makes replay fail or schema-reject.
 The whole-study receipt contains hashes/status, not outcome payloads.
 
 ## Analysis and claims
+
 Use only the accepted finite descriptive endpoint with explicit numerator and
 denominator and retained UNMEASURED/INCONCLUSIVE states. No p-values, confidence
 intervals, bootstrap, superiority or population generalization. Replays do not
@@ -134,11 +145,13 @@ add independent units. Do not resolve the historical O/M/R gap by invention.
 Keep scientific-N increment at 0 and preserve Track A separation.
 
 ## Verification before acceptance
+
 Write tests before implementation. Synthetic inputs are classified
 SYNTHETIC_TEST_ONLY and use temporary artifact stores; tests must not run a
 registered study attempt or emit accepted-study receipts.
 
 Required tests:
+
 1. Wrong commit, dirty ACP, mismatched contract/code blob, substituted import,
    dependency drift, missing receipt and broken lineage each block preflight.
 2. Preflight imports no ACP driver and produces no episode or outcome files.
@@ -158,6 +171,7 @@ Required tests:
 10. Invalid/incomplete attempts retain evidence and cannot be silently retried.
 
 ## Implementation sequence
+
 First implement and test read-only preflight and exclusive custody on synthetic
 inputs. Then accept the recovered/proposed policy mapping and source-driver
 boundary, implement the driver/observer, and test replay/analysis end to end
@@ -165,6 +179,7 @@ with synthetic inputs. Review the exact collector, lock and execution binding.
 Only after acceptance, rerun preflight and begin the bounded study separately.
 
 ## Review disposition
+
 The source contracts provide most requirements, but do not by themselves prove
 the missing executable mapping or collector. Approving this design permits
 implementation planning; it does not resolve that semantic gap, accept a future
