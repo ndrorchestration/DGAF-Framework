@@ -111,6 +111,12 @@ def _require_blob(root: Path, ref: str, path: str, expected: str) -> None:
         raise PreflightError("WORKTREE_BLOB_MISMATCH", f"{path} {actual_working} != {expected}")
 
 
+def _require_event_history(root: Path, path: str, expected_commit: str, code: str) -> None:
+    history = [line for line in _git(root, "log", "--format=%H", "HEAD", "--", path).splitlines() if line]
+    if history != [expected_commit]:
+        raise PreflightError(code, f"{path} history={history}")
+
+
 def _require_json_contracts(dgaf: Path) -> None:
     try:
         authorization = json.loads((dgaf / AUTH_REL).read_text(encoding="utf-8"))
@@ -157,6 +163,19 @@ def _inspect_preflight(dgaf: Path, acp: Path, bindings: ExpectedBindings) -> dic
         _require_blob(dgaf, bindings.protected_source_basis, path, expected)
     for path, expected in bindings.executable_blobs.items():
         _require_blob(dgaf, "HEAD", path, expected)
+
+    _require_event_history(
+        dgaf,
+        AUTH_REL,
+        bindings.dgaf_authorization_commit,
+        "AUTHORIZATION_EVENT_HISTORY_MUTATED",
+    )
+    _require_event_history(
+        dgaf,
+        RECEIPT_REL,
+        bindings.dgaf_receipt_commit,
+        "RECEIPT_EVENT_HISTORY_MUTATED",
+    )
 
     current_auth = _working_blob(dgaf, AUTH_REL)
     accepted_auth = _blob_at(dgaf, bindings.dgaf_authorization_commit, AUTH_REL)
