@@ -23,7 +23,7 @@ SHA_D = "d" * 64
 
 def _environment_candidate():
     facts = RuntimeFacts(
-        implementation="CPython",
+        implementation="cpython",
         version="3.12.3",
         platform_system="Linux",
         platform_machine="x86_64",
@@ -181,6 +181,21 @@ def test_external_decision_intake_cannot_promote_boundary(field, value):
     ):
         validate_external_admission_decision_intake(
             mutated,
+            environment_candidate=environment,
+            execution_identity_candidate=identity,
+        )
+
+
+def test_execution_identity_must_bind_same_environment_candidate():
+    environment, identity, intake = _intake()
+    identity["environment_candidate_record_sha256"] = SHA_C
+
+    with pytest.raises(
+        ExternalAdmissionDecisionIntakeError,
+        match="EXTERNAL_DECISION_IDENTITY_ENVIRONMENT_BINDING_MISMATCH",
+    ):
+        validate_external_admission_decision_intake(
+            intake,
             environment_candidate=environment,
             execution_identity_candidate=identity,
         )
