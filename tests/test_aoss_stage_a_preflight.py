@@ -62,8 +62,7 @@ def _valid_repositories(tmp_path, *, extra_before_receipt=False):
 
     auth_path = registry / "aoss_v0_6_stage_a_collection_authorization_v1.json"
     auth_path.write_text(
-        '{"outcome_collection_authorized":true,'
-        '"status":"AUTHORIZED_BOUNDED_STAGE_A_COLLECTION"}\n',
+        '{"outcome_collection_authorized":true,' '"status":"AUTHORIZED_BOUNDED_STAGE_A_COLLECTION"}\n',
         encoding="utf-8",
     )
     auth_commit = _commit_all(dgaf, "authorization")
@@ -74,8 +73,7 @@ def _valid_repositories(tmp_path, *, extra_before_receipt=False):
 
     receipt_path = registry / "aoss_v0_6_stage_a_precollection_receipt_v1.json"
     receipt_path.write_text(
-        '{"outcomes_generated_before_receipt":false,'
-        '"scientific_n_increment":0,"status":"PASS"}\n',
+        '{"outcomes_generated_before_receipt":false,' '"scientific_n_increment":0,"status":"PASS"}\n',
         encoding="utf-8",
     )
     receipt_commit = _commit_all(dgaf, "receipt")
@@ -238,16 +236,11 @@ def test_default_bindings_include_replay_contract_and_schema():
         "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json": (
             "1d2b44acb63f30660253e3c96f1a6cac602d62eb"
         ),
-        "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json": (
-            "fa1f58aff79320352f285ba41ad85c237adc97cc"
-        ),
+        "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json": ("fa1f58aff79320352f285ba41ad85c237adc97cc"),
     }
 
 
 def test_default_bindings_fix_authorization_parent():
     from scripts.aoss_stage_a.preflight import DEFAULT_BINDINGS
 
-    assert (
-        DEFAULT_BINDINGS.authorization_parent_commit
-        == "d11885b9338e7d05493f4cd58dc7f3b11942906e"
-    )
+    assert DEFAULT_BINDINGS.authorization_parent_commit == "d11885b9338e7d05493f4cd58dc7f3b11942906e"
