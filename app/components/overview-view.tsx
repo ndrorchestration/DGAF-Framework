@@ -56,6 +56,29 @@ export function OverviewView() {
       </div>
     </section>
 
+    <section className="aoss-readiness panel" aria-labelledby="aoss-readiness-title">
+      <div className="section-heading">
+        <div><span className="eyebrow">AOSS V0.6 / STAGE A</span><h3 id="aoss-readiness-title">Execution-readiness boundary</h3></div>
+        <StatusChip state="open" label="NOT ESTABLISHED" />
+      </div>
+      <p>Stage A has advanced through the non-collecting foundation, PolicyInput mapping, exact CPython 3.12.3 runtime/dependency binding, synthetic environment-manifest contract, and environment observation. Observation remains explicitly unaccepted: it does not enable collection or create outcomes.</p>
+      <div className="readiness-strip" aria-label="AOSS Stage A readiness progression">
+        {[
+          ['Foundation', 'ESTABLISHED'],
+          ['Policy mapping', 'ESTABLISHED'],
+          ['Runtime binding', 'ESTABLISHED'],
+          ['Environment observed', 'OBSERVED · NOT ACCEPTED'],
+          ['Source driver', 'NOT ESTABLISHED'],
+          ['Collector + custody', 'NOT ESTABLISHED'],
+        ].map(([label, state]) => <div key={label}><span>{label}</span><strong>{state}</strong></div>)}
+      </div>
+      <div className="aoss-readiness-footer">
+        <span><strong>Outcome collection</strong> NOT EXECUTED</span>
+        <span><strong>Scientific N increment</strong> 0</span>
+        <span><strong>Next gate</strong> exact source-driver executable binding</span>
+      </div>
+    </section>
+
     <section className="truth-boundary panel">
       <div className="section-heading"><div><span className="eyebrow">CANONICAL HIGH-ASSURANCE BOUNDARY</span><h3>Truth boundary</h3></div><span className="source-stamp">SSoT reconciled {TRUTH_BOUNDARY.sourceUpdated}</span></div>
       <div className="truth-grid">
