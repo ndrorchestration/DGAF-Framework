@@ -1,0 +1,33 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_EXECUTABLE_DESTINATION_BINDING",
+  "schema_version": 1,
+  "controller_issue": 901,
+  "status": "PROPOSED_NON_COLLECTING_IDENTITY_ONLY",
+  "source_repository": "ndrorchestration/agent-control-plane",
+  "source_commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+  "source_module": "src/agent_control_plane/core.py",
+  "source_module_blob": "1341df7296a426b336b76ac6b1e4df67611ec931",
+  "executable_identity": {
+    "kind": "SOURCE_MODULE_PROVENANCE_ONLY",
+    "repository": "ndrorchestration/agent-control-plane",
+    "commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+    "path": "src/agent_control_plane/core.py",
+    "blob": "1341df7296a426b336b76ac6b1e4df67611ec931"
+  },
+  "destination_identity": {
+    "kind": "SYNTHETIC_FIXTURE_ONLY",
+    "uri": "fixture://aoss-v0.6-stage-a/non-collecting"
+  },
+  "attempt_identity": {
+    "kind": "SYNTHETIC_FIXTURE_ONLY",
+    "attempt_id": "aoss-stage-a-fixture-0001"
+  },
+  "executable_acceptance": "NOT_ESTABLISHED",
+  "destination_acceptance": "NOT_ESTABLISHED",
+  "execution_allowed": false,
+  "outcomes_generated": false,
+  "collection_execution_readiness": "NOT_ESTABLISHED",
+  "scientific_n_increment": 0,
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED"
+}
