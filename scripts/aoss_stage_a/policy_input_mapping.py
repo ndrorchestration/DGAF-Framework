@@ -91,18 +91,12 @@ def observation_from_dict(value: Mapping[str, Any]) -> MappingObservation:
         terminal_event_kind=kind,
         terminal_event_count=count,
         freshness=freshness,
-        source_order_ambiguous=_require_bool(
-            value["source_order_ambiguous"], "source_order_ambiguous"
-        ),
+        source_order_ambiguous=_require_bool(value["source_order_ambiguous"], "source_order_ambiguous"),
         authorization=_require_tri_state(value["authorization"], "authorization"),
         validation=_require_tri_state(value["validation"], "validation"),
-        provenance_valid=_require_tri_state(
-            value["provenance_valid"], "provenance_valid"
-        ),
+        provenance_valid=_require_tri_state(value["provenance_valid"], "provenance_valid"),
         conflicted=_require_bool(value["conflicted"], "conflicted"),
-        deadlock_candidate=_require_bool(
-            value["deadlock_candidate"], "deadlock_candidate"
-        ),
+        deadlock_candidate=_require_bool(value["deadlock_candidate"], "deadlock_candidate"),
     )
 
 
@@ -110,9 +104,7 @@ def map_observation(value: Mapping[str, Any]) -> PolicyInput:
     """Map one explicit synthetic observation without permissive inference."""
 
     observation = observation_from_dict(value)
-    structurally_ambiguous = (
-        observation.terminal_event_count != 1 or observation.source_order_ambiguous
-    )
+    structurally_ambiguous = observation.terminal_event_count != 1 or observation.source_order_ambiguous
     evidence_inconclusive = (
         structurally_ambiguous
         or observation.freshness != "FRESH"
