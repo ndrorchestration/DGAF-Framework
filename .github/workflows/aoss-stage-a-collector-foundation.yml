@@ -63,6 +63,7 @@ jobs:
             tests/test_aoss_stage_a_source_driver_binding.py \
             tests/test_aoss_stage_a_executable_destination_binding.py \
             tests/test_aoss_stage_a_ingest_freshness.py \
+            tests/test_aoss_stage_a_replay.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 
       - name: Verify prospective exact runtime binding
