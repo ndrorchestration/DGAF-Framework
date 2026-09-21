@@ -67,6 +67,7 @@ jobs:
             tests/test_aoss_stage_a_attempt_integrity.py \
             tests/test_aoss_stage_a_execution_admission.py \
             tests/test_aoss_stage_a_installed_environment_evidence.py \
+            tests/test_aoss_stage_a_installed_environment_acceptance.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 
       - name: Verify prospective exact runtime binding
@@ -146,6 +147,39 @@ jobs:
           assert report["outcomes_generated"] is False
           assert report["scientific_n_increment"] == 0
           print(json.dumps(candidate, sort_keys=True))
+          PY
+
+      - name: Prepare environment acceptance packet without adjudication
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timezone
+          from scripts.aoss_stage_a.installed_environment_acceptance import (
+              prepare_installed_environment_acceptance_packet,
+              validate_installed_environment_acceptance_packet,
+          )
+          from scripts.aoss_stage_a.installed_environment_evidence import (
+              capture_installed_environment_evidence_candidate,
+          )
+
+          observed_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+          candidate = capture_installed_environment_evidence_candidate(
+              observed_at=observed_at,
+          )
+          packet = prepare_installed_environment_acceptance_packet(
+              candidate=candidate,
+              candidate_source_ref="ci://aoss-stage-a/environment-candidate",
+          )
+          report = validate_installed_environment_acceptance_packet(
+              packet,
+              candidate=candidate,
+          )
+
+          assert report["packet_validation"] == "PASS_STRUCTURAL_BINDING_ONLY"
+          assert report["external_adjudication"] == "NOT_EXECUTED"
+          assert report["installed_environment_acceptance"] == "NOT_ESTABLISHED"
+          assert report["execution_allowed"] is False
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["scientific_n_increment"] == 0
           PY
 
       - name: Verify proposed source-driver binding without accepting execution
