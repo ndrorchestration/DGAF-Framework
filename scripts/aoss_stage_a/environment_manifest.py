@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any, Mapping
 
-from scripts.aoss_v0_6_stage_a.runtime_binding import inspect_runtime_facts
+from scripts.aoss_stage_a.runtime_binding import inspect_runtime_facts
 
 MANIFEST_CONTRACT = "AOSS_V0_6_STAGE_A_ENVIRONMENT_MANIFEST"
 EXPECTED_INTERPRETER = "cpython"
@@ -61,7 +61,9 @@ def observe_unaccepted_environment_manifest(
     """Observe CI runtime facts while preserving an explicit unaccepted status."""
 
     facts = inspect_runtime_facts()
-    timestamp = observed_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    timestamp = observed_at or (
+        datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    )
     return {
         "record_type": MANIFEST_CONTRACT,
         "status": "OBSERVED_NOT_ACCEPTED",
