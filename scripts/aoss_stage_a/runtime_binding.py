@@ -18,7 +18,7 @@ from typing import Any, Mapping
 CONTRACT_REL = "registry/aoss_v0_6_stage_a_runtime_binding_v1.json"
 LOCK_REL = "requirements-aoss-stage-a.lock"
 EXPECTED_IMPLEMENTATION = "cpython"
-EXPECTED_VERSION = "3.12.0"
+EXPECTED_VERSION = "3.12.3"
 EXPECTED_LOCK_SHA256 = "81c1ade0b76ff38cbdcbe4ddbc615c273f02dc97a9ff055c8c2889940a2ca6bd"
 
 
