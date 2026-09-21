@@ -15,7 +15,7 @@ binding, execution permission, collection readiness, outcomes, or scientific N.
 
 A successful candidate validation means only:
 
-```
+```text
 INSTALLED_ENVIRONMENT_EVIDENCE_CANDIDATE=PASS_OBSERVED_CANDIDATE_NOT_ACCEPTED
 INSTALLED_ENVIRONMENT_ACCEPTANCE=NOT_ESTABLISHED
 SOURCE_DRIVER_BINDING=NOT_ESTABLISHED
