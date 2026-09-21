@@ -1,0 +1,35 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_ENVIRONMENT_MANIFEST",
+  "schema_version": 1,
+  "controller_issue": 901,
+  "status": "PROPOSED_NON_COLLECTING_SYNTHETIC_ONLY",
+  "manifest_status": "NOT_ESTABLISHED",
+  "required_fields": [
+    "manifest_id",
+    "runtime_binding_record_type",
+    "interpreter_implementation",
+    "interpreter_version",
+    "dependency_lock_sha256",
+    "platform_system",
+    "platform_machine",
+    "environment_observed_at",
+    "collection_execution_readiness",
+    "outcomes_generated",
+    "scientific_n_increment"
+  ],
+  "binding": {
+    "runtime_binding_record_type": "AOSS_V0_6_STAGE_A_RUNTIME_BINDING",
+    "interpreter_implementation": "cpython",
+    "interpreter_version": "3.12.3",
+    "dependency_lock_sha256": "81c1ade0b76ff38cbdcbe4ddbc615c273f02dc97a9ff055c8c2889940a2ca6bd"
+  },
+  "platform_policy": "OBSERVED_NOT_ACCEPTED",
+  "synthetic_fixture_allowed": true,
+  "installed_environment_acceptance": "NOT_ESTABLISHED",
+  "source_driver_binding": "NOT_ESTABLISHED",
+  "collection_execution_readiness": "NOT_ESTABLISHED",
+  "outcomes_generated": false,
+  "scientific_n_increment": 0,
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED"
+}
