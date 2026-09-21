@@ -42,7 +42,7 @@ Do not write guessed policy predicates to make an end-to-end demonstration pass.
 
 ## Task 1: Read-only evidence preflight
 
-**Files:** Create `scripts/aoss_stage_a/__init__.py`,
+**Files:** Create `scripts/aoss_stage_a/**init**.py`,
 `scripts/aoss_stage_a/preflight.py`, `tests/test_aoss_stage_a_preflight.py`.
 **Consumes:** Explicit DGAF and ACP filesystem paths plus the fixed accepted identities above.
 **Produces:** inspect_preflight(dgaf: Path, acp: Path) -> dict[str, object];
@@ -55,6 +55,7 @@ PreflightError with a stable reason code. No writable destination argument.
   JSON, exact receipt JSON, all nine contract blobs, adapter bytes and policy/
   comparator executable bindings. The test repo must use actual Git objects,
   not a mocked command runner.
+
 - [ ] Start with these public-boundary tests:
 
 ```python
@@ -66,11 +67,13 @@ def test_missing_acp_checkout_fails_closed(tmp_path):
 def test_preflight_has_no_outcome_destination():
     from scripts.aoss_stage_a.preflight import inspect_preflight
     assert list(inspect.signature(inspect_preflight).parameters) == ["dgaf", "acp"]
+
 ```
 
 - [ ] Run python -m pytest -q tests/test_aoss_stage_a_preflight.py and confirm the
   new module is absent. Then add a minimal module and run tests again until
   failures identify missing behavior rather than import errors.
+
 - [ ] Implement subprocess Git calls as argument arrays with check=True and
   GIT_NO_REPLACE_OBJECTS=1. Reject shallow repositories and any refs/replace
   entries. Resolve commits by full SHA; check worktree status including
@@ -78,11 +81,13 @@ def test_preflight_has_no_outcome_destination():
   Require accepted receipt ancestry in the inspected DGAF revision rather than
   requiring HEAD equal the receipt commit, so additive tooling can be reviewed.
   Reject altered event history even when current JSON happens to match.
+
 - [ ] Reuse the expected authorization/receipt contract via a verifier loaded
   from its trusted accepted revision, not a caller-supplied module. Alternatively
   compare immutable JSON and binding bytes directly; do not import ACP.
   Verify nine contract identities plus separate adapter, policy, comparator,
   replay schema and custody-contract identities from their accepted sources.
+
 - [ ] Return a JSON-serializable report with inspected commits, per-check
   booleans, failures and explicit non-authority fields:
 
@@ -96,6 +101,7 @@ def test_preflight_has_no_outcome_destination():
     "scientific_n_increment": 0,
     "outcomes_generated": False,
 }
+
 ```
 
   Never return PASS if any required static identity check failed. A missing
@@ -105,6 +111,7 @@ def test_preflight_has_no_outcome_destination():
   untracked import-shadow file, changed contract, authorization path modified
   and restored, receipt wrong parent, replaced object and shallow clone.
   Ensure snapshots of both trees are byte-identical before and after inspection.
+
 - [ ] Run tests to green; commit only the three Task 1 files.
 
 ## Task 2: Exclusive synthetic custody primitives
@@ -133,28 +140,34 @@ def test_attempt_cannot_be_reused(tmp_path):
     assert (path / "SYNTHETIC_TEST_ONLY").is_file()
     with pytest.raises(FileExistsError):
         reserve_synthetic_attempt(tmp_path, "case-1")
+
 ```
 
 - [ ] Implement canonical serialization with UTF-8, sorted keys, compact
   separators, allow_nan=False and exactly one trailing newline. Use explicit
   ensure_ascii=False for this new bundle convention; do not alter the adapter.
   digest_bytes returns lowercase 64-character SHA-256 without a prefix.
+
 - [ ] Validate attempt IDs against `[A-Za-z0-9][A-Za-z0-9_-]{0,63}`.
   Reject traversal, separators, symlink parent components and existing attempt
   paths. On supported POSIX environments use directory file descriptors and
   O_NOFOLLOW/O_EXCL to prevent check-then-open symlink substitution. Fail
   explicitly on platforms without those protections; do not claim Windows
   support from path-string checks.
+
 - [ ] Create reservation directory exclusively; write a synthetic marker and
   immutable STARTED event before any payload. Failed reservation leaves a
   blocked incomplete directory. No cleanup-and-retry convenience method.
+
 - [ ] Write each object exclusively under objects/<sha256>.json. For an existing
   object, require exact bytes before treating it as deduplicated. fsync data and
   relevant directory entries. A partial write stays invalid; no COMPLETE state
   is provided by this foundation.
+
 - [ ] Add tests for symlink parent/destination/object, concurrent reservation,
   existing corrupt same-name object, simulated write failure, missing synthetic
   marker and disallowed identifiers. Verify originals remain unchanged.
+
 - [ ] Run python -m pytest -q tests/test_aoss_stage_a_custody.py to green and commit.
 
 ## Task 3: Non-collecting command and evidence output
@@ -176,18 +189,22 @@ def test_collect_is_disabled(tmp_path):
     assert completed.returncode != 0
     assert "COLLECTION_IMPLEMENTATION_NOT_ACCEPTED" in completed.stderr
     assert list(tmp_path.iterdir()) == []
+
 ```
 
 - [ ] Add a preflight test using temporary real repositories from Task 1.
   Place a sentinel ACP package on the import path that raises if imported;
   preflight must still perform only Git/file inspection. Snapshot the working
   directory and both repositories and prove no file writes.
+
 - [ ] Implement argparse with required subcommands. preflight requires
   --dgaf-root and --acp-root. Emit report JSON to stdout; return nonzero for
   static identity failure. On static success retain collection_readiness=
   NOT_ESTABLISHED, with no run token or executable permission.
+
 - [ ] Reject collect before resolving or importing any source-driver code;
   there is no accepted driver in this tranche.
+
 - [ ] Run all three new test files and existing AOSS authorization/adapter/
   policy/baseline tests. Commit the command and tests.
 
@@ -202,6 +219,7 @@ the repository workflow conventions. Do not modify frozen registries.
 ```bash
 python scripts/run_aoss_v0_6_stage_a.py preflight --dgaf-root . --acp-root ../agent-control-plane
 python scripts/run_aoss_v0_6_stage_a.py collect
+
 ```
 
   Explain that the first reports static evidence only and the second is expected
@@ -211,11 +229,13 @@ python scripts/run_aoss_v0_6_stage_a.py collect
   new synthetic unit tests and existing AOSS regression tests using repository
   test dependency conventions. Do not execute ACP or create a study artifact.
   CI evidence is development evidence only, not collection acceptance.
+
 - [ ] Run:
 
 ```bash
 python -m pytest -q tests/test_aoss_stage_a_preflight.py tests/test_aoss_stage_a_custody.py tests/test_aoss_stage_a_cli.py tests/test_aoss_v0_6_stage_a_collection_authorization.py tests/test_aoss_v0_6_acp_adapter.py tests/test_aoss_v0_6_stage_a_decision_policy.py tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 git diff --check
+
 ```
 
   Apply the repository's changed-Python static checks and CI gates. Report any
@@ -225,6 +245,7 @@ git diff --check
 - [ ] Review the diff for changed frozen files, hidden ACP imports, mock-only
   assertions, authority upgrades and production-like test labels. Open an
   implementation PR with exact head, tests and remaining blockers.
+
 - [ ] Stop before collection. The next plan requires an accepted predicate
   mapping and concrete source-driver recipes; that review must address
   terminal-plus-blocked, terminal-plus-stale, duplicate terminals, source-order
