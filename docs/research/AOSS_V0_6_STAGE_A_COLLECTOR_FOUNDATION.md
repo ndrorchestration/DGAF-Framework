@@ -49,9 +49,9 @@ The preflight rejects, at minimum:
 - shallow repositories;
 - Git replacement refs;
 - dirty or untracked worktrees;
-- authorization or receipt lineage drift;
+- authorization or receipt lineage drift, including the exact authorization parent and direct-child receipt relation;
 - authorization/receipt event-history mutation even when bytes are later restored;
-- frozen contract or executable blob mismatch;
+- frozen contract or executable blob mismatch, including the replay-receipt contract and schema;
 - authorization/receipt byte drift;
 - invalid accepted authorization/receipt boundary fields.
 
@@ -61,9 +61,9 @@ execution-readiness checks.
 ## Synthetic custody boundary
 
 Synthetic custody uses exclusive directory/file creation, `O_NOFOLLOW`,
-content-addressed SHA-256 objects, canonical JSON bytes, and an explicit
-`SYNTHETIC_TEST_ONLY` marker. Incomplete reservations are retained rather than
-cleaned and reused.
+content-addressed SHA-256 objects, canonical JSON bytes, explicit file and
+directory-entry `fsync`, and an explicit `SYNTHETIC_TEST_ONLY` marker. Incomplete
+reservations are retained rather than cleaned and reused.
 
 These primitives are development apparatus only. They are not the accepted
 five-bundle study custody/replay implementation.
