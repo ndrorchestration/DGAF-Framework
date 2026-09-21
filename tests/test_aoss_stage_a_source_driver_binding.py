@@ -5,7 +5,6 @@ from scripts.aoss_stage_a.source_driver_binding import (
     validate_unaccepted_source_driver_binding,
 )
 
-
 EXPECTED_CLASSES = [
     "normal_completion",
     "policy_denial",
