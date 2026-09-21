@@ -62,6 +62,7 @@ jobs:
             tests/test_aoss_stage_a_runtime_binding.py \
             tests/test_aoss_stage_a_source_driver_binding.py \
             tests/test_aoss_stage_a_executable_destination_binding.py \
+            tests/test_aoss_stage_a_ingest_freshness.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 
       - name: Verify prospective exact runtime binding
@@ -162,6 +163,26 @@ jobs:
           assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
           assert report["outcomes_generated"] is False
           print(json.dumps(report, sort_keys=True))
+          PY
+
+      - name: Verify synthetic ingest-reference receipt without collection
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timezone
+          from scripts.aoss_stage_a.ingest_freshness import (
+              capture_ingest_reference,
+              validate_ingest_reference,
+          )
+          reference = capture_ingest_reference(
+              "2026-09-21T12:00:00Z",
+              clock=lambda: datetime(2026, 9, 21, 12, 0, 1, tzinfo=timezone.utc),
+          )
+          report = validate_ingest_reference(reference)
+          assert report["ingest_reference"] == "PASS_SYNTHETIC_NON_COLLECTING"
+          assert report["freshness"] == "FRESH"
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["outcomes_generated"] is False
+          assert report["scientific_n_increment"] == 0
           PY
 
       - name: Prove collection remains disabled
