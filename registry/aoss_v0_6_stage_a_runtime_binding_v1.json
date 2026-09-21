@@ -5,8 +5,8 @@
   "status": "PROPOSED_NON_COLLECTING_RUNTIME_BINDING",
   "interpreter": {
     "implementation": "cpython",
-    "version": "3.12.0",
-    "selection_basis": "PROSPECTIVE_EXACT_RUNTIME_CANDIDATE_WITHIN_DGAF_AND_ACP_SUPPORTED_RANGES",
+    "version": "3.12.3",
+    "selection_basis": "REUSE_EXACT_INTERPRETER_FROM_ACCEPTED_AOSS_STAGE_A_FOUNDATION_GATE",
     "historical_runtime_equivalence_claimed": false
   },
   "dependency_lock": {
