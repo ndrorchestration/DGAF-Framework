@@ -1,21 +1,22 @@
 'use client'
 
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import type { DashboardPhase } from '../hooks/use-dashboard-data'
+import { NAV_ITEMS, navigationForPath, type ViewId } from '../lib/navigation'
+import { useDashboardRuntime } from './dashboard-runtime-provider'
 import { ActivityIcon, EvidenceIcon, MenuIcon, NodesIcon, OverviewIcon, ShieldIcon, ToolsIcon } from './icons'
 import { StatusChip } from './status-chip'
 
-export type ViewId = 'overview' | 'control' | 'governance' | 'state-space' | 'agents' | 'evidence' | 'tools'
-
-const NAV = [
-  { id: 'overview' as const, label: 'Overview', sub: 'What DGAF is', Icon: OverviewIcon },
-  { id: 'control' as const, label: 'Control Room', sub: 'Runtime telemetry', Icon: ActivityIcon },
-  { id: 'evidence' as const, label: 'Evidence & Research', sub: 'Claims & experiment state', Icon: EvidenceIcon },
-  { id: 'governance' as const, label: 'Governance', sub: 'Lifecycle & authority', Icon: ShieldIcon },
-  { id: 'state-space' as const, label: 'State Space', sub: 'Reachability model', Icon: NodesIcon },
-  { id: 'agents' as const, label: 'Agents & Formations', sub: 'Roles & topology', Icon: NodesIcon },
-  { id: 'tools' as const, label: 'Tools', sub: 'P-07 sweep workspace', Icon: ToolsIcon },
-]
+function iconForView(view: ViewId) {
+  if (view === 'overview') return OverviewIcon
+  if (view === 'control') return ActivityIcon
+  if (view === 'evidence') return EvidenceIcon
+  if (view === 'governance') return ShieldIcon
+  if (view === 'tools') return ToolsIcon
+  return NodesIcon
+}
 
 function phaseState(phase: DashboardPhase) {
   if (phase === 'fresh') return 'pass' as const
@@ -24,22 +25,18 @@ function phaseState(phase: DashboardPhase) {
   return 'loading' as const
 }
 
-export function AppShell({ activeView, onNavigate, children, phase, lastSuccessAt }: {
-  activeView: ViewId
-  onNavigate: (view: ViewId) => void
-  children: React.ReactNode
-  phase: DashboardPhase
-  lastSuccessAt: Date | null
-}) {
+export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const navigationRef = useRef<HTMLElement>(null)
-  const active = NAV.find(item => item.id === activeView) ?? NAV[0]
-  const navigate = (view: ViewId) => { onNavigate(view); setMobileOpen(false) }
+  const pathname = usePathname()
+  const active = navigationForPath(pathname ?? '/')
+  const activeView = active.id
+  const { phase, lastSuccessAt } = useDashboardRuntime()
 
   useEffect(() => {
     if (!mobileOpen) return
-    navigationRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
+    navigationRef.current?.querySelector<HTMLAnchorElement>('a.nav-item')?.focus()
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return
       setMobileOpen(false)
@@ -58,11 +55,14 @@ export function AppShell({ activeView, onNavigate, children, phase, lastSuccessA
           <div><div className="brand-name">DGAF</div><div className="brand-subtitle">Governance Command Center</div></div>
         </div>
         <nav className="nav-list">
-          {NAV.map(({ id, label, sub, Icon }) => (
-            <button key={id} className="nav-item" data-active={activeView === id ? 'true' : 'false'} onClick={() => navigate(id)} aria-current={activeView === id ? 'page' : undefined}>
-              <Icon /><span><strong>{label}</strong><small>{sub}</small></span>
-            </button>
-          ))}
+          {NAV_ITEMS.map(({ id, href, label, sub }) => {
+            const Icon = iconForView(id)
+            return (
+              <Link key={id} href={href} className="nav-item" data-active={activeView === id ? 'true' : 'false'} onClick={() => setMobileOpen(false)} aria-current={activeView === id ? 'page' : undefined}>
+                <Icon /><span><strong>{label}</strong><small>{sub}</small></span>
+              </Link>
+            )
+          })}
         </nav>
         <div className="sidebar-boundary">
           <span className="eyebrow">CONTROL BOUNDARY</span>

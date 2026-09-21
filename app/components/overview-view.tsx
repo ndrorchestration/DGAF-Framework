@@ -1,5 +1,5 @@
+import Link from 'next/link'
 import { EPOCH_SUMMARIES, NEXT_TRANSITION, TRUTH_BOUNDARY } from '../lib/governance'
-import type { ViewId } from './app-shell'
 import { ArrowIcon } from './icons'
 import { StatusChip } from './status-chip'
 
@@ -16,7 +16,7 @@ const PILLARS = [
   ['Permission', 'Whether the exact next action is actually allowed to occur.'],
 ]
 
-export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => void }) {
+export function OverviewView() {
   return <div className="view-stack">
     <section className="hero panel-accent">
       <div className="hero-copy">
@@ -24,8 +24,8 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
         <h2>Make the difference between <em>can act</em> and <em>may act</em> impossible to miss.</h2>
         <p>DGAF separates evidence, verification, authority, and permission so engineering capability cannot silently become authorization—or testing become proof.</p>
         <div className="hero-actions">
-          <button className="button primary" onClick={() => onNavigate('evidence')}>Inspect evidence <ArrowIcon /></button>
-          <button className="button ghost" onClick={() => onNavigate('control')}>Open control room</button>
+          <Link className="button primary" href="/evidence">Inspect evidence <ArrowIcon /></Link>
+          <Link className="button ghost" href="/control">Open control room</Link>
         </div>
       </div>
       <div className="hero-field" role="img" aria-label={`Governed transition field. Current program state: ${TRUTH_BOUNDARY.programState}. Authorization: ${TRUTH_BOUNDARY.authorization}. Post-Epoch-002 boundary: ${NEXT_TRANSITION.title}.`}>
@@ -74,13 +74,13 @@ export function OverviewView({ onNavigate }: { onNavigate: (view: ViewId) => voi
     </section>
 
     <section>
-      <div className="section-heading"><div><span className="eyebrow">RESEARCH STATE</span><h3>Track A at a glance</h3></div><button className="text-button" onClick={() => onNavigate('evidence')}>Explore evidence <ArrowIcon /></button></div>
+      <div className="section-heading"><div><span className="eyebrow">RESEARCH STATE</span><h3>Track A at a glance</h3></div><Link className="text-button" href="/evidence">Explore evidence <ArrowIcon /></Link></div>
       <div className="card-grid two">{EPOCH_SUMMARIES.map(epoch => <article className="epoch-card panel" key={epoch.id}><div className="card-header"><div><span className="eyebrow">{epoch.eyebrow}</span><h4>{epoch.title}</h4></div><StatusChip state={epoch.state}/></div><p>{epoch.summary}</p><ul className="fact-list">{epoch.facts.map(fact => <li key={fact}>{fact}</li>)}</ul></article>)}</div>
     </section>
 
     <section className="next-transition panel panel-accent">
       <div><span className="eyebrow accent">POST-EPOCH-002 BOUNDARY</span><h3>{NEXT_TRANSITION.title}</h3><p>{NEXT_TRANSITION.summary}</p><div className="artifact-row">{NEXT_TRANSITION.artifacts.map(item => <code key={item}>{item}</code>)}</div><p className="warning-copy">{NEXT_TRANSITION.warning}</p></div>
-      <button className="button ghost" onClick={() => onNavigate('governance')}>View ordered chain <ArrowIcon /></button>
+      <Link className="button ghost" href="/governance">View ordered chain <ArrowIcon /></Link>
     </section>
   </div>
 }

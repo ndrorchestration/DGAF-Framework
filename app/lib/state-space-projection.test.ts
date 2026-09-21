@@ -112,14 +112,14 @@ test('State Space stylesheet remains contained to the expert surface', () => {
   assert.match(css, /\.state-space-view \.section-heading\s*\{/)
 })
 
-test('State Space is a separate expert view routed through the shared projection', () => {
-  const shell = readFileSync('app/components/app-shell.tsx', 'utf8')
-  const page = readFileSync('app/page.tsx', 'utf8')
+test('State Space is a separate expert route through the shared projection', () => {
+  const navigation = readFileSync('app/lib/navigation.ts', 'utf8')
+  const page = readFileSync('app/(command-center)/state-space/page.tsx', 'utf8')
 
-  assert.match(shell, /'state-space'/)
-  assert.match(shell, /State Space/)
-  assert.match(shell, /Reachability model/)
+  assert.match(navigation, /'state-space'/)
+  assert.match(navigation, /State Space/)
+  assert.match(navigation, /Reachability model/)
+  assert.match(navigation, /href: '\/state-space'/)
   assert.match(page, /StateSpaceView/)
-  assert.match(page, /case 'state-space'/)
   assert.doesNotMatch(page, /const\s+GOVERNANCE_STAGES\s*=/)
 })
