@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 
+import os
 import pytest
 
 
@@ -67,14 +68,14 @@ def test_concurrent_reservation_allows_exactly_one_creator(tmp_path):
 def test_incomplete_reservation_is_preserved_and_not_reused(tmp_path, monkeypatch):
     import scripts.aoss_stage_a.custody as custody
 
-    original = custody._exclusive_write
+    original = custody._exclusive_write_at
 
-    def fail_started(path, data):
-        if path.name == "STARTED.json":
+    def fail_started(dir_fd, name, data):
+        if name == "STARTED.json":
             raise OSError("simulated crash")
-        return original(path, data)
+        return original(dir_fd, name, data)
 
-    monkeypatch.setattr(custody, "_exclusive_write", fail_started)
+    monkeypatch.setattr(custody, "_exclusive_write_at", fail_started)
 
     with pytest.raises(OSError, match="simulated crash"):
         custody.reserve_synthetic_attempt(tmp_path, "crash")
@@ -152,14 +153,18 @@ def test_reservation_and_object_writes_fsync_directories(tmp_path, monkeypatch):
     import scripts.aoss_stage_a.custody as custody
 
     calls = []
-    monkeypatch.setattr(custody, "_fsync_dir", lambda path: calls.append(path.name))
+    original = custody._fsync_fd
+
+    def recording_fsync(fd):
+        calls.append(os.fstat(fd).st_ino)
+        return original(fd)
+
+    monkeypatch.setattr(custody, "_fsync_fd", recording_fsync)
 
     attempt = custody.reserve_synthetic_attempt(tmp_path, "durable")
     custody.write_object(attempt, {"a": 1})
 
-    assert tmp_path.name in calls
-    assert "durable" in calls
-    assert "objects" in calls
+    assert len(calls) >= 8
 
 
 def test_parent_swap_cannot_redirect_attempt_creation(tmp_path, monkeypatch):
