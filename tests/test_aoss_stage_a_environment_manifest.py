@@ -75,9 +75,7 @@ def test_real_environment_status_cannot_be_smuggled_into_fixture():
 def test_observed_manifest_cannot_be_relabelled_as_accepted():
     observed = observe_unaccepted_environment_manifest("2026-09-21T00:00:00Z")
     try:
-        validate_unaccepted_environment_manifest(
-            {**observed, "status": "INSTALLED_ENVIRONMENT_ACCEPTED"}
-        )
+        validate_unaccepted_environment_manifest({**observed, "status": "INSTALLED_ENVIRONMENT_ACCEPTED"})
     except EnvironmentManifestError as exc:
         assert str(exc) == "MANIFEST_STATUS_MUST_REMAIN_UNACCEPTED"
     else:
