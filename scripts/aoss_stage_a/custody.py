@@ -162,7 +162,10 @@ def write_object(attempt: Path, payload: object) -> str:
         if marker != _MARKER:
             raise ValueError("synthetic attempt marker missing or invalid")
 
-        objects_fd = _open_dir_fd("objects", dir_fd=attempt_fd)
+        try:
+            objects_fd = _open_dir_fd("objects", dir_fd=attempt_fd)
+        except ValueError as exc:
+            raise ValueError("synthetic object directory invalid") from exc
         objects = attempt / "objects"
         _require_path_matches_fd(objects, objects_fd, "synthetic object directory invalid")
 
