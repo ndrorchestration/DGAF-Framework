@@ -90,12 +90,8 @@ def prepare_external_admission_decision_intake(
 ) -> dict[str, object]:
     """Prepare an unverified external-decision intake without local promotion."""
 
-    environment_report = validate_installed_environment_evidence_candidate(
-        environment_candidate
-    )
-    execution_report = validate_execution_identity_candidate(
-        execution_identity_candidate
-    )
+    environment_report = validate_installed_environment_evidence_candidate(environment_candidate)
+    execution_report = validate_execution_identity_candidate(execution_identity_candidate)
 
     reviewer = _require_nonempty(
         reviewer_identity,
@@ -118,9 +114,7 @@ def prepare_external_admission_decision_intake(
             independence_basis,
             "EXTERNAL_DECISION_INDEPENDENCE_BASIS_MISSING",
         )
-    elif independence_basis is not None and (
-        not isinstance(independence_basis, str) or not independence_basis.strip()
-    ):
+    elif independence_basis is not None and (not isinstance(independence_basis, str) or not independence_basis.strip()):
         _fail("EXTERNAL_DECISION_INDEPENDENCE_BASIS_INVALID")
 
     decisions = {
@@ -137,13 +131,9 @@ def prepare_external_admission_decision_intake(
         "status": STATUS,
         "controller_issue": EXPECTED_CONTROLLER_ISSUE,
         "candidate_bindings": {
-            "environment_candidate_record_sha256": record_sha256(
-                environment_candidate
-            ),
+            "environment_candidate_record_sha256": record_sha256(environment_candidate),
             "environment_evidence_sha256": environment_report["evidence_sha256"],
-            "execution_identity_candidate_record_sha256": execution_report[
-                "candidate_record_sha256"
-            ],
+            "execution_identity_candidate_record_sha256": execution_report["candidate_record_sha256"],
         },
         "external_review": {
             "reviewer_identity": reviewer,
@@ -184,10 +174,7 @@ def validate_external_admission_decision_intake(
         execution_identity_candidate
     )
     expected_environment_record_sha = record_sha256(environment_candidate)
-    if (
-        execution_identity_candidate.get("environment_candidate_record_sha256")
-        != expected_environment_record_sha
-    ):
+    if execution_identity_candidate.get("environment_candidate_record_sha256") != expected_environment_record_sha:
         _fail("EXTERNAL_DECISION_IDENTITY_ENVIRONMENT_BINDING_MISMATCH")
 
     if intake.get("record_type") != RECORD_TYPE:
@@ -204,9 +191,7 @@ def validate_external_admission_decision_intake(
         _fail("EXTERNAL_DECISION_ENVIRONMENT_CANDIDATE_SHA_MISMATCH")
     if bindings.get("environment_evidence_sha256") != environment_report["evidence_sha256"]:
         _fail("EXTERNAL_DECISION_ENVIRONMENT_EVIDENCE_SHA_MISMATCH")
-    if bindings.get("execution_identity_candidate_record_sha256") != execution_report[
-        "candidate_record_sha256"
-    ]:
+    if bindings.get("execution_identity_candidate_record_sha256") != execution_report["candidate_record_sha256"]:
         _fail("EXTERNAL_DECISION_EXECUTION_IDENTITY_SHA_MISMATCH")
 
     review = intake.get("external_review")
