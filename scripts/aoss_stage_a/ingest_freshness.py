@@ -88,9 +88,7 @@ def capture_ingest_reference(
 def canonical_receipt_bytes(reference: IngestReference) -> bytes:
     """Serialize the retained ingest reference deterministically for replay."""
 
-    return (
-        json.dumps(asdict(reference), sort_keys=True, separators=(",", ":")) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(asdict(reference), sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
 
 
 def receipt_sha256(reference: IngestReference) -> str:
