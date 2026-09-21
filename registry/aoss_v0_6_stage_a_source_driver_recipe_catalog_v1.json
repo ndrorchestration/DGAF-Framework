@@ -1,0 +1,47 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_SOURCE_DRIVER_RECIPE_CATALOG",
+  "schema_version": 1,
+  "controller_issue": 901,
+  "status": "PROPOSED_NON_COLLECTING_SYNTHETIC_ONLY",
+  "recipe_version": "AOSS_V0_6_STAGE_A_SYNTHETIC_RECIPE_CATALOG_V1",
+  "execution_status": "NO_SOURCE_DRIVER_IMPLEMENTED",
+  "recipe_boundary": {
+    "source_repository": "ndrorchestration/agent-control-plane",
+    "source_commit": "dbab7c1afafec524ce7c18157de2089cafe79c87",
+    "driver_import_allowed": false,
+    "acp_execution_allowed": false,
+    "accepted_outcome_artifacts": false
+  },
+  "recipes": [
+    {"class": "normal_completion", "synthetic_terminal_event": "task.completed", "expected_boundary": "non-collecting fixture only"},
+    {"class": "policy_denial", "synthetic_terminal_event": "task.denied", "expected_boundary": "non-collecting fixture only"},
+    {"class": "unknown_capability_rejection", "synthetic_terminal_event": "task.rejected", "expected_boundary": "non-collecting fixture only"},
+    {"class": "handler_failure", "synthetic_terminal_event": "task.failed", "expected_boundary": "non-collecting fixture only"},
+    {"class": "cancellation", "synthetic_terminal_event": "task.cancelled", "expected_boundary": "non-collecting fixture only"},
+    {"class": "exact_budget_success", "synthetic_terminal_event": "task.completed", "expected_boundary": "non-collecting fixture only"},
+    {"class": "budget_exhaustion", "synthetic_terminal_event": "task.budget_exhausted", "expected_boundary": "non-collecting fixture only"},
+    {"class": "suppressed_budget_exception_fail_closed", "synthetic_terminal_event": "task.failed", "expected_boundary": "non-collecting fixture only"},
+    {"class": "missing_event", "synthetic_terminal_event": null, "expected_boundary": "hold and exclude until accepted eligibility mapping"},
+    {"class": "reordered_exported_events", "synthetic_terminal_event": "task.completed", "expected_boundary": "source-order ambiguity holds"},
+    {"class": "duplicate_replayed_event", "synthetic_terminal_event": "task.completed", "expected_boundary": "duplicate identity requires invalidation"},
+    {"class": "stale_timestamp", "synthetic_terminal_event": "task.completed", "expected_boundary": "stale freshness holds"},
+    {"class": "malformed_manifest", "synthetic_terminal_event": null, "expected_boundary": "structural rejection control"},
+    {"class": "mismatched_run_id", "synthetic_terminal_event": null, "expected_boundary": "structural rejection control"},
+    {"class": "source_order_ambiguity", "synthetic_terminal_event": "task.completed", "expected_boundary": "source-order ambiguity holds"},
+    {"class": "missing_authority_evidence", "synthetic_terminal_event": "task.completed", "expected_boundary": "authorization inconclusive holds"}
+  ],
+  "acceptance_gates": [
+    "Exact source-driver executable identity and runtime/dependency lock separately accepted.",
+    "Each recipe is bound to unchanged ACP source and preserved raw export bytes.",
+    "Freshness, custody, replay, invalidation, and no-retry rules are separately verified.",
+    "Collection remains disabled until all execution-readiness predicates are accepted."
+  ],
+  "non_effects": [
+    "Catalog entries are not collected outcomes.",
+    "No ACP episode is executed.",
+    "No authorization is granted by this catalog.",
+    "Scientific N remains zero."
+  ],
+  "collection_execution_readiness": "NOT_ESTABLISHED",
+  "scientific_n_increment": 0
+}

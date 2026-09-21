@@ -1,0 +1,59 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_POLICY_INPUT_MAPPING",
+  "schema_version": 1,
+  "controller_issue": 901,
+  "status": "PROPOSED_NON_COLLECTING_SYNTHETIC_ONLY",
+  "mapping_version": "AOSS_V0_6_STAGE_A_POLICY_INPUT_MAPPING_V1",
+  "purpose": "Define a conservative pre-data bridge from an explicit synthetic observation to PolicyInput without inferring authorization, validation, provenance, or outcomes.",
+  "source_execution": "NOT_IMPLEMENTED",
+  "source_driver": "NOT_ACCEPTED",
+  "required_observation_fields": {
+    "terminal_event_kind": ["task.completed", "task.denied", "task.rejected", "task.failed", "task.cancelled", "task.budget_exhausted", null],
+    "terminal_event_count": "NON_NEGATIVE_INTEGER",
+    "freshness": ["FRESH", "STALE", "FUTURE_SKEW", "INCONCLUSIVE"],
+    "source_order_ambiguous": "BOOLEAN",
+    "authorization": ["TRUE", "FALSE", "INCONCLUSIVE"],
+    "validation": ["TRUE", "FALSE", "INCONCLUSIVE"],
+    "provenance_valid": ["TRUE", "FALSE", "INCONCLUSIVE"],
+    "conflicted": "BOOLEAN",
+    "deadlock_candidate": "BOOLEAN"
+  },
+  "rules": [
+    "Exactly one known terminal event and FRESH freshness are required before terminal or blocked action flags can be set.",
+    "task.completed maps to terminal=true; non-completion terminal kinds map to blocked=true.",
+    "STALE, FUTURE_SKEW, INCONCLUSIVE, missing terminal, multiple terminals, or source-order ambiguity map to uncertain=true and required_predicate_inconclusive=true.",
+    "Authorization, validation, and provenance are passed only as explicit tri-state observations; no event label infers them.",
+    "Invalid field domains or missing required keys are rejected before PolicyInput construction; structurally ambiguous or unfresh but well-formed observations map only to an uncertain required-predicate hold."
+  ],
+  "required_episode_classes": [
+    "normal_completion",
+    "policy_denial",
+    "unknown_capability_rejection",
+    "handler_failure",
+    "cancellation",
+    "exact_budget_success",
+    "budget_exhaustion",
+    "suppressed_budget_exception_fail_closed",
+    "missing_event",
+    "reordered_exported_events",
+    "duplicate_replayed_event",
+    "stale_timestamp",
+    "malformed_manifest",
+    "mismatched_run_id",
+    "source_order_ambiguity",
+    "missing_authority_evidence"
+  ],
+  "non_effects": [
+    "Does not execute ACP.",
+    "Does not generate or retain a Stage-A outcome.",
+    "Does not accept a source driver or runtime lock.",
+    "Does not authorize collection.",
+    "Does not establish efficacy, external validation, or High-Assurance.",
+    "Does not increment scientific N."
+  ],
+  "outcome_collection_authorized": true,
+  "collection_execution_readiness": "NOT_ESTABLISHED",
+  "scientific_n_increment": 0,
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED"
+}

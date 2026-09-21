@@ -58,6 +58,7 @@ jobs:
             tests/test_aoss_v0_6_stage_a_collection_authorization.py \
             tests/test_aoss_v0_6_acp_adapter.py \
             tests/test_aoss_v0_6_stage_a_decision_policy.py \
+            tests/test_aoss_stage_a_policy_input_mapping.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 
       - name: Prove collection remains disabled
