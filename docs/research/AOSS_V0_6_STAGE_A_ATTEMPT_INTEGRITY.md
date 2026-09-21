@@ -1,7 +1,7 @@
 # AOSS v0.6 Stage-A synthetic attempt-integrity boundary
 
-This draft implements the remaining synthetic attempt-integrity semantics under
-Issue #901.
+This tranche implements the remaining synthetic attempt-integrity semantics under
+Issue #901, downstream of the accepted five-bundle replay mechanics in PR #913.
 
 The contract fails closed when any of the following drifts:
 
