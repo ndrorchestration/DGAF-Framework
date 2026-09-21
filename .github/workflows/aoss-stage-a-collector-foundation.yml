@@ -66,6 +66,7 @@ jobs:
             tests/test_aoss_stage_a_replay.py \
             tests/test_aoss_stage_a_attempt_integrity.py \
             tests/test_aoss_stage_a_execution_admission.py \
+            tests/test_aoss_stage_a_installed_environment_evidence.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 
       - name: Verify prospective exact runtime binding
@@ -121,6 +122,30 @@ jobs:
           assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
           assert report["outcomes_generated"] is False
           print(json.dumps(manifest, sort_keys=True))
+          PY
+
+      - name: Capture installed-environment evidence candidate without accepting it
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from scripts.aoss_stage_a.installed_environment_evidence import (
+              capture_installed_environment_evidence_candidate,
+              validate_installed_environment_evidence_candidate,
+          )
+          observed_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+          candidate = capture_installed_environment_evidence_candidate(
+              observed_at=observed_at,
+          )
+          report = validate_installed_environment_evidence_candidate(candidate)
+          assert report["candidate_validation"] == "PASS_OBSERVED_CANDIDATE_NOT_ACCEPTED"
+          assert report["installed_environment_acceptance"] == "NOT_ESTABLISHED"
+          assert report["source_driver_binding"] == "NOT_ESTABLISHED"
+          assert report["execution_allowed"] is False
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["outcomes_generated"] is False
+          assert report["scientific_n_increment"] == 0
+          print(json.dumps(candidate, sort_keys=True))
           PY
 
       - name: Verify proposed source-driver binding without accepting execution
