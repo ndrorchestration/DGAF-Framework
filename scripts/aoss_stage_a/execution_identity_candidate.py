@@ -205,11 +205,7 @@ def validate_execution_identity_candidate(
         _fail("EXECUTION_IDENTITY_INTERPRETER_SHA_INVALID")
     _validate_sha256(interpreter_sha, "EXECUTION_IDENTITY_INTERPRETER_SHA_INVALID")
     argv = executable.get("argv")
-    if (
-        not isinstance(argv, list)
-        or not argv
-        or any(not isinstance(item, str) or not item for item in argv)
-    ):
+    if not isinstance(argv, list) or not argv or any(not isinstance(item, str) or not item for item in argv):
         _fail("EXECUTION_IDENTITY_ARGV_INVALID")
     workdir = executable.get("working_directory")
     if not isinstance(workdir, str):
