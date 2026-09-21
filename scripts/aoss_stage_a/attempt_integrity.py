@@ -30,11 +30,7 @@ def _require_digest_map(value: Mapping[str, str], label: str) -> dict[str, str]:
     for key, digest in normalized.items():
         if not isinstance(key, str) or not key:
             raise AttemptIntegrityError(f"{label} contains invalid role")
-        if (
-            not isinstance(digest, str)
-            or len(digest) != 64
-            or any(char not in "0123456789abcdef" for char in digest)
-        ):
+        if not isinstance(digest, str) or len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
             raise AttemptIntegrityError(f"{label} contains invalid SHA-256")
     return normalized
 
@@ -58,24 +54,14 @@ def assess_attempt_integrity(
     if type(outcome_inspected) is not bool:
         raise AttemptIntegrityError("outcome_inspected must be boolean")
 
-    expected_contracts = _require_digest_map(
-        expected_contract_digests, "expected_contract_digests"
-    )
-    actual_contracts = _require_digest_map(
-        actual_contract_digests, "actual_contract_digests"
-    )
-    expected_artifacts = _require_digest_map(
-        expected_artifact_digests, "expected_artifact_digests"
-    )
-    actual_artifacts = _require_digest_map(
-        actual_artifact_digests, "actual_artifact_digests"
-    )
+    expected_contracts = _require_digest_map(expected_contract_digests, "expected_contract_digests")
+    actual_contracts = _require_digest_map(actual_contract_digests, "actual_contract_digests")
+    expected_artifacts = _require_digest_map(expected_artifact_digests, "expected_artifact_digests")
+    actual_artifacts = _require_digest_map(actual_artifact_digests, "actual_artifact_digests")
 
     required = tuple(required_classes)
     observed = tuple(observed_classes)
-    if not required or any(
-        not isinstance(item, str) or not item for item in required
-    ):
+    if not required or any(not isinstance(item, str) or not item for item in required):
         raise AttemptIntegrityError("required_classes must contain explicit names")
     if len(set(required)) != len(required):
         raise AttemptIntegrityError("required_classes must be unique")
@@ -89,12 +75,7 @@ def assess_attempt_integrity(
     artifact_digest_match = actual_artifacts == expected_artifacts
     required_classes_complete = set(observed) == set(required)
 
-    valid = (
-        source_identity_match
-        and contract_digest_match
-        and artifact_digest_match
-        and required_classes_complete
-    )
+    valid = source_identity_match and contract_digest_match and artifact_digest_match and required_classes_complete
     status = "VALID_SYNTHETIC_ATTEMPT" if valid else "INVALID_SYNTHETIC_ATTEMPT"
 
     # The frozen contract prohibits retry once outcomes have been inspected.
