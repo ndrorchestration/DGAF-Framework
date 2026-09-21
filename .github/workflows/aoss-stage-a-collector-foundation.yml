@@ -1,0 +1,73 @@
+name: AOSS Stage A Collector Foundation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/aoss-stage-a-collector-foundation.yml'
+      - 'scripts/aoss_stage_a/**'
+      - 'scripts/run_aoss_v0_6_stage_a.py'
+      - 'tests/test_aoss_stage_a_*.py'
+      - 'docs/research/AOSS_V0_6_STAGE_A_COLLECTOR_FOUNDATION.md'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/aoss-stage-a-collector-foundation.yml'
+      - 'scripts/aoss_stage_a/**'
+      - 'scripts/run_aoss_v0_6_stage_a.py'
+      - 'tests/test_aoss_stage_a_*.py'
+      - 'docs/research/AOSS_V0_6_STAGE_A_COLLECTOR_FOUNDATION.md'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  foundation:
+    name: Non-collecting Stage A foundation
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install repository CI dependencies
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Run focused non-collecting foundation suite
+        run: |
+          python -m pytest -q \
+            tests/test_aoss_stage_a_preflight.py \
+            tests/test_aoss_stage_a_custody.py \
+            tests/test_aoss_stage_a_cli.py \
+            tests/test_aoss_v0_6_stage_a_collection_authorization.py \
+            tests/test_aoss_v0_6_acp_adapter.py \
+            tests/test_aoss_v0_6_stage_a_decision_policy.py \
+            tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
+
+      - name: Prove collection remains disabled
+        run: |
+          set +e
+          output="$(python scripts/run_aoss_v0_6_stage_a.py collect 2>&1)"
+          status=$?
+          set -e
+          test "$status" -ne 0
+          printf '%s\n' "$output" | grep -F 'COLLECTION_IMPLEMENTATION_NOT_ACCEPTED'
+
+      - name: Verify whitespace
+        run: git diff --check
