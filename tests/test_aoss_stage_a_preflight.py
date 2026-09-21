@@ -41,7 +41,11 @@ def _init_repo(path):
 
 
 def test_restored_authorization_history_fails_closed(tmp_path):
-    from scripts.aoss_stage_a.preflight import ExpectedBindings, PreflightError, _inspect_preflight
+    from scripts.aoss_stage_a.preflight import (
+        ExpectedBindings,
+        PreflightError,
+        _inspect_preflight,
+    )
 
     dgaf = tmp_path / "dgaf"
     acp = tmp_path / "acp"
