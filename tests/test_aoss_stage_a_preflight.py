@@ -88,3 +88,21 @@ def test_restored_authorization_history_fails_closed(tmp_path):
 
     with pytest.raises(PreflightError, match="AUTHORIZATION_EVENT_HISTORY_MUTATED"):
         _inspect_preflight(dgaf, acp, bindings)
+
+
+def test_default_bindings_include_replay_contract_and_schema():
+    from scripts.aoss_stage_a.preflight import DEFAULT_BINDINGS
+
+    assert DEFAULT_BINDINGS.auxiliary_blobs == {
+        "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json": "1d2b44acb63f30660253e3c96f1a6cac602d62eb",
+        "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json": "fa1f58aff79320352f285ba41ad85c237adc97cc",
+    }
+
+
+def test_default_bindings_fix_authorization_parent():
+    from scripts.aoss_stage_a.preflight import DEFAULT_BINDINGS
+
+    assert (
+        DEFAULT_BINDINGS.authorization_parent_commit
+        == "d11885b9338e7d05493f4cd58dc7f3b11942906e"
+    )
