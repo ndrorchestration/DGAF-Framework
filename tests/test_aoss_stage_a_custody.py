@@ -160,3 +160,32 @@ def test_reservation_and_object_writes_fsync_directories(tmp_path, monkeypatch):
     assert tmp_path.name in calls
     assert "durable" in calls
     assert "objects" in calls
+
+
+def test_parent_swap_cannot_redirect_attempt_creation(tmp_path, monkeypatch):
+    import scripts.aoss_stage_a.custody as custody
+
+    parent = tmp_path / "parent"
+    parent.mkdir()
+    moved = tmp_path / "moved-parent"
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    original_mkdir = custody.os.mkdir
+    swapped = False
+
+    def swapping_mkdir(path, mode=0o777, *, dir_fd=None):
+        nonlocal swapped
+        if not swapped:
+            swapped = True
+            parent.rename(moved)
+            parent.symlink_to(outside, target_is_directory=True)
+        if dir_fd is None:
+            return original_mkdir(path, mode)
+        return original_mkdir(path, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(custody.os, "mkdir", swapping_mkdir)
+
+    with pytest.raises(ValueError, match="parent directory changed during reservation"):
+        custody.reserve_synthetic_attempt(parent, "case")
+
+    assert not (outside / "case").exists()
