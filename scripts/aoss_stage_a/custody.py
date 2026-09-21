@@ -63,11 +63,7 @@ def _require_path_matches_fd(path: Path, fd: int, message: str) -> None:
     except OSError as exc:
         raise ValueError(message) from exc
     fd_stat = os.fstat(fd)
-    if (
-        not stat.S_ISDIR(path_stat.st_mode)
-        or path_stat.st_dev != fd_stat.st_dev
-        or path_stat.st_ino != fd_stat.st_ino
-    ):
+    if not stat.S_ISDIR(path_stat.st_mode) or path_stat.st_dev != fd_stat.st_dev or path_stat.st_ino != fd_stat.st_ino:
         raise ValueError(message)
 
 
