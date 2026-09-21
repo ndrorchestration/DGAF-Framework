@@ -12,7 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-# isort: off\nfrom scripts.aoss_stage_a.preflight import PreflightError, inspect_preflight  # noqa: E402\n# isort: on
+# isort: off
+from scripts.aoss_stage_a.preflight import PreflightError, inspect_preflight  # noqa: E402
+# isort: on
 
 
 def main() -> int:
