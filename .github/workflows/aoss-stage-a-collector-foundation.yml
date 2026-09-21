@@ -61,6 +61,7 @@ jobs:
             tests/test_aoss_stage_a_policy_input_mapping.py \
             tests/test_aoss_stage_a_runtime_binding.py \
             tests/test_aoss_stage_a_source_driver_binding.py \
+            tests/test_aoss_stage_a_executable_destination_binding.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 
       - name: Verify prospective exact runtime binding
@@ -135,6 +136,29 @@ jobs:
           assert report["catalog_binding"] == "PASS_PROPOSED_NON_COLLECTING"
           assert report["source_driver_binding"] == "NOT_ESTABLISHED"
           assert report["driver_execution"] == "NOT_PERFORMED"
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["outcomes_generated"] is False
+          print(json.dumps(report, sort_keys=True))
+          PY
+
+      - name: Verify proposed executable and fixture identities without accepting execution
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.aoss_stage_a.executable_destination_binding import (
+              validate_proposed_executable_destination_binding,
+          )
+          binding = json.loads(
+              Path(
+                  "registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json"
+              ).read_text(encoding="utf-8")
+          )
+          report = validate_proposed_executable_destination_binding(binding)
+          assert report["identity_contract"] == "PASS_PROPOSED_NON_COLLECTING"
+          assert report["executable_acceptance"] == "NOT_ESTABLISHED"
+          assert report["destination_acceptance"] == "NOT_ESTABLISHED"
+          assert report["execution"] == "NOT_PERFORMED"
           assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
           assert report["outcomes_generated"] is False
           print(json.dumps(report, sort_keys=True))
