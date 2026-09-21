@@ -83,6 +83,7 @@ body { margin: 0; background: radial-gradient(circle at 74% 0%, rgba(91,216,255,
 button, input, select, textarea { font: inherit; }
 button { color: inherit; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 code, .mono { font-family: var(--mono); }
 p { color: var(--text-secondary); line-height: var(--type-body-leading); }
 h1,h2,h3,h4,p { margin-top: 0; }
@@ -99,7 +100,7 @@ h4 { font-size: 1rem; }
 .brand-name { font-weight:800; letter-spacing:.12em; font-size:.92rem; }
 .brand-subtitle { color:var(--muted); font-size:.71rem; margin-top:2px; }
 .nav-list { display:grid; gap:5px; }
-.nav-item { appearance:none; border:1px solid transparent; background:transparent; border-radius:11px; padding:10px 11px; display:grid; grid-template-columns:23px 1fr; text-align:left; gap:10px; cursor:pointer; color:var(--muted); transition:background var(--motion-standard) var(--ease-control), border-color var(--motion-standard) var(--ease-control), color var(--motion-standard) var(--ease-control); }
+.nav-item { appearance:none; border:1px solid transparent; background:transparent; border-radius:11px; padding:10px 11px; display:grid; grid-template-columns:23px 1fr; text-align:left; gap:10px; cursor:pointer; color:var(--muted); text-decoration:none; transition:background var(--motion-standard) var(--ease-control), border-color var(--motion-standard) var(--ease-control), color var(--motion-standard) var(--ease-control); }
 .nav-item span { display:grid; gap:2px; }.nav-item strong{font-size:.83rem;color:inherit}.nav-item small{font-size:.68rem;color:var(--muted)}
 .nav-item:hover { color:var(--text); background:rgba(255,255,255,.025); }
 .nav-item[data-active="true"] { background:linear-gradient(90deg,var(--provenance-soft),transparent); border-color:color-mix(in srgb, var(--provenance) 20%, transparent); color:var(--provenance); }
