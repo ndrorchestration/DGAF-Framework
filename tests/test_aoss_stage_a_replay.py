@@ -56,9 +56,7 @@ def test_tampering_each_artifact_layer_fails_corresponding_replay(role):
     ("source_identity_match", "contract_digest_match"),
     [(False, True), (True, False), (False, False)],
 )
-def test_source_or_contract_identity_mismatch_fails(
-    source_identity_match, contract_digest_match
-):
+def test_source_or_contract_identity_mismatch_fails(source_identity_match, contract_digest_match):
     expected = _bundles()
     report = verify_five_exact_byte_replays(
         expected,
