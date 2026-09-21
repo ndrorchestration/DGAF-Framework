@@ -61,9 +61,7 @@ def test_retry_is_permanently_blocked_after_outcome_inspection():
     report = assess_attempt_integrity(**kwargs)
 
     assert report.retry_allowed is False
-    with pytest.raises(
-        AttemptIntegrityError, match="retry after outcome inspection is prohibited"
-    ):
+    with pytest.raises(AttemptIntegrityError, match="retry after outcome inspection is prohibited"):
         require_retry_allowed(report)
 
 
