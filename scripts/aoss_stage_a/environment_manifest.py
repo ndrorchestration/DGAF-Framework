@@ -1,13 +1,15 @@
-"""Validate a synthetic environment-manifest shape without accepting a real environment.
+"""Validate synthetic and explicitly unaccepted environment observations.
 
-This module does not inspect the host, install dependencies, import ACP, execute
-a source driver, create a study attempt, or establish collection readiness.
+This module does not accept an installed environment, import ACP, execute a
+source driver, create a study attempt, or establish collection readiness.
 """
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Mapping
+
+from scripts.aoss_v0_6_stage_a.runtime_binding import inspect_runtime_facts
 
 MANIFEST_CONTRACT = "AOSS_V0_6_STAGE_A_ENVIRONMENT_MANIFEST"
 EXPECTED_INTERPRETER = "cpython"
@@ -29,7 +31,7 @@ _REQUIRED_FIELDS = {
 
 
 class EnvironmentManifestError(ValueError):
-    """Raised when a synthetic manifest is incomplete or overclaims."""
+    """Raised when a manifest is incomplete or overclaims."""
 
 
 def _fail(code: str) -> None:
@@ -37,7 +39,7 @@ def _fail(code: str) -> None:
 
 
 def validate_synthetic_manifest(manifest: Mapping[str, Any]) -> dict[str, object]:
-    """Validate one explicit fixture; never treat it as installed-environment evidence."""
+    """Validate one explicit fixture; never treat it as installed evidence."""
 
     if manifest.get("record_type") != MANIFEST_CONTRACT:
         _fail("MANIFEST_RECORD_TYPE_MISMATCH")
@@ -50,6 +52,58 @@ def validate_synthetic_manifest(manifest: Mapping[str, Any]) -> dict[str, object
         "source_driver_binding",
     }:
         _fail("MANIFEST_FIELD_SET_MISMATCH")
+    return _validate_common_fields(manifest, "PASS_SYNTHETIC_FIXTURE_NON_COLLECTING")
+
+
+def observe_unaccepted_environment_manifest(
+    observed_at: str | None = None,
+) -> dict[str, object]:
+    """Observe CI runtime facts while preserving an explicit unaccepted status."""
+
+    facts = inspect_runtime_facts()
+    timestamp = observed_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    return {
+        "record_type": MANIFEST_CONTRACT,
+        "status": "OBSERVED_NOT_ACCEPTED",
+        "manifest_id": f"runtime-observation-{facts.implementation}-{facts.version}-{facts.platform_system}-{facts.platform_machine}",
+        "manifest_status": "NOT_ESTABLISHED",
+        "runtime_binding_record_type": "AOSS_V0_6_STAGE_A_RUNTIME_BINDING",
+        "interpreter_implementation": facts.implementation,
+        "interpreter_version": facts.version,
+        "dependency_lock_sha256": EXPECTED_LOCK_SHA256,
+        "platform_system": facts.platform_system,
+        "platform_machine": facts.platform_machine,
+        "environment_observed_at": timestamp,
+        "source_driver_binding": "NOT_ESTABLISHED",
+        "collection_execution_readiness": "NOT_ESTABLISHED",
+        "outcomes_generated": False,
+        "scientific_n_increment": 0,
+    }
+
+
+def validate_unaccepted_environment_manifest(
+    manifest: Mapping[str, Any],
+) -> dict[str, object]:
+    """Validate an observation without upgrading it to installed evidence."""
+
+    if manifest.get("record_type") != MANIFEST_CONTRACT:
+        _fail("MANIFEST_RECORD_TYPE_MISMATCH")
+    if manifest.get("status") != "OBSERVED_NOT_ACCEPTED":
+        _fail("MANIFEST_STATUS_MUST_REMAIN_UNACCEPTED")
+    if set(manifest) != _REQUIRED_FIELDS | {
+        "record_type",
+        "status",
+        "manifest_status",
+        "source_driver_binding",
+    }:
+        _fail("MANIFEST_FIELD_SET_MISMATCH")
+    return _validate_common_fields(manifest, "PASS_OBSERVED_NOT_ACCEPTED")
+
+
+def _validate_common_fields(
+    manifest: Mapping[str, Any],
+    validation_status: str,
+) -> dict[str, object]:
     if manifest.get("manifest_status") != "NOT_ESTABLISHED":
         _fail("INSTALLED_MANIFEST_PREMATURE")
     if manifest.get("runtime_binding_record_type") != "AOSS_V0_6_STAGE_A_RUNTIME_BINDING":
@@ -81,7 +135,7 @@ def validate_synthetic_manifest(manifest: Mapping[str, Any]) -> dict[str, object
 
     return {
         "record_type": "AOSS_STAGE_A_ENVIRONMENT_MANIFEST_REPORT",
-        "manifest_validation": "PASS_SYNTHETIC_FIXTURE_NON_COLLECTING",
+        "manifest_validation": validation_status,
         "manifest_status": "NOT_ESTABLISHED",
         "platform_binding": "OBSERVED_NOT_ACCEPTED",
         "source_driver_binding": "NOT_ESTABLISHED",
