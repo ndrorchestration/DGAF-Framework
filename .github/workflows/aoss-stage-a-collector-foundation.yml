@@ -67,6 +67,7 @@ jobs:
             tests/test_aoss_stage_a_attempt_integrity.py \
             tests/test_aoss_stage_a_execution_admission.py \
             tests/test_aoss_stage_a_execution_identity_review.py \
+            tests/test_aoss_stage_a_execution_identity_candidate.py \
             tests/test_aoss_stage_a_installed_environment_evidence.py \
             tests/test_aoss_stage_a_installed_environment_acceptance.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
@@ -263,6 +264,37 @@ jobs:
           assert "REAL_EXECUTABLE_IDENTITY_REQUIRED" in report["blockers"]
           assert "REAL_DESTINATION_IDENTITY_REQUIRED" in report["blockers"]
           assert "REAL_ATTEMPT_IDENTITY_REQUIRED" in report["blockers"]
+          assert report["external_adjudication"] == "NOT_EXECUTED"
+          assert report["execution_allowed"] is False
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["scientific_n_increment"] == 0
+          PY
+
+      - name: Verify non-fixture execution identity candidate without acceptance
+        run: |
+          python - <<'PY'
+          from scripts.aoss_stage_a.execution_identity_candidate import (
+              prepare_execution_identity_candidate,
+              validate_execution_identity_candidate,
+          )
+
+          candidate = prepare_execution_identity_candidate(
+              interpreter_path="/opt/python/3.12.3/bin/python",
+              interpreter_sha256="a" * 64,
+              argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
+              working_directory="/srv/aoss-stage-a",
+              destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+              attempt_id="aoss-stage-a-attempt-0001",
+              recipe_catalog_sha256="b" * 64,
+              environment_candidate_record_sha256="c" * 64,
+          )
+          report = validate_execution_identity_candidate(candidate)
+
+          assert report["candidate_validation"] == "PASS_NON_FIXTURE_IDENTITY_CANDIDATE"
+          assert report["installed_environment_acceptance"] == "NOT_ESTABLISHED"
+          assert report["source_driver_binding"] == "NOT_ESTABLISHED"
+          assert report["executable_acceptance"] == "NOT_ESTABLISHED"
+          assert report["destination_acceptance"] == "NOT_ESTABLISHED"
           assert report["external_adjudication"] == "NOT_EXECUTED"
           assert report["execution_allowed"] is False
           assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
