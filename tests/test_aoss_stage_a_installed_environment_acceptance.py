@@ -9,6 +9,7 @@ from scripts.aoss_stage_a.installed_environment_acceptance import (
     validate_installed_environment_acceptance_packet,
 )
 from scripts.aoss_stage_a.installed_environment_evidence import (
+    InstalledEnvironmentEvidenceError,
     capture_installed_environment_evidence_candidate,
 )
 from scripts.aoss_stage_a.runtime_binding import RuntimeFacts
@@ -128,5 +129,8 @@ def test_acceptance_packet_detects_candidate_mutation_after_packet_preparation()
     mutated = deepcopy(candidate)
     mutated["evidence"]["platform_machine"] = "arm64"
 
-    with pytest.raises(Exception):
+    with pytest.raises(
+        InstalledEnvironmentEvidenceError,
+        match="ENVIRONMENT_EVIDENCE_DIGEST_MISMATCH",
+    ):
         validate_installed_environment_acceptance_packet(packet, candidate=mutated)
