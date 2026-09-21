@@ -66,6 +66,7 @@ jobs:
             tests/test_aoss_stage_a_replay.py \
             tests/test_aoss_stage_a_attempt_integrity.py \
             tests/test_aoss_stage_a_execution_admission.py \
+            tests/test_aoss_stage_a_execution_identity_review.py \
             tests/test_aoss_stage_a_installed_environment_evidence.py \
             tests/test_aoss_stage_a_installed_environment_acceptance.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
@@ -225,6 +226,47 @@ jobs:
           assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
           assert report["outcomes_generated"] is False
           print(json.dumps(report, sort_keys=True))
+          PY
+
+      - name: Verify execution identity review remains blocked on fixture identities
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.aoss_stage_a.execution_identity_review import (
+              prepare_execution_identity_review_packet,
+              validate_execution_identity_review_packet,
+          )
+
+          root = Path(".")
+          source = json.loads(
+              (root / "registry/aoss_v0_6_stage_a_source_driver_binding_v1.json").read_text()
+          )
+          identities = json.loads(
+              (
+                  root
+                  / "registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json"
+              ).read_text()
+          )
+          packet = prepare_execution_identity_review_packet(
+              source_driver_binding=source,
+              executable_destination_binding=identities,
+              source_driver_ref="registry://aoss/source-driver-binding-v1",
+              executable_destination_ref="registry://aoss/executable-destination-binding-v1",
+          )
+          report = validate_execution_identity_review_packet(
+              packet,
+              source_driver_binding=source,
+              executable_destination_binding=identities,
+          )
+          assert report["packet_validation"] == "PASS_BLOCKED_REVIEW_PACKET"
+          assert "REAL_EXECUTABLE_IDENTITY_REQUIRED" in report["blockers"]
+          assert "REAL_DESTINATION_IDENTITY_REQUIRED" in report["blockers"]
+          assert "REAL_ATTEMPT_IDENTITY_REQUIRED" in report["blockers"]
+          assert report["external_adjudication"] == "NOT_EXECUTED"
+          assert report["execution_allowed"] is False
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["scientific_n_increment"] == 0
           PY
 
       - name: Verify synthetic ingest-reference receipt without collection
