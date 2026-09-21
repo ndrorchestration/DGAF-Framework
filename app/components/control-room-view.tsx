@@ -18,6 +18,17 @@ export function ControlRoomView({ snapshot, phase, error, lastSuccessAt, onRefre
   return <div className="view-stack">
     <section className="section-heading standalone"><div><span className="eyebrow">OPERATIONS</span><h2>Runtime observability without authority inflation</h2><p>Live application health is shown separately from repository governance and scientific state.</p></div><button className="button ghost" onClick={onRefresh}><RefreshIcon /> Refresh</button></section>
     {(phase === 'stale' || phase === 'error') && <div className={`alert ${phase === 'stale' ? 'warning' : 'danger'}`} role="status"><strong>{phase === 'stale' ? 'Showing last valid snapshot.' : 'Runtime data unavailable.'}</strong><span>{error ?? 'A refresh did not complete successfully.'}</span></div>}
+    <section className="panel execution-boundary" aria-labelledby="execution-boundary-title">
+      <div className="section-heading">
+        <div><span className="eyebrow">AOSS STAGE A</span><h3 id="execution-boundary-title">Execution boundary</h3></div>
+        <StatusChip state="open" label="READINESS NOT ESTABLISHED" />
+      </div>
+      <div className="execution-boundary-grid">
+        <div><span>Environment</span><strong>OBSERVED · NOT ACCEPTED</strong><small>Observation cannot promote itself into an installed-environment acceptance.</small></div>
+        <div><span>Source driver</span><strong>NOT ESTABLISHED</strong><small>No accepted executable binding to ACP episode generation.</small></div>
+        <div><span>Outcome execution</span><strong>NOT EXECUTED</strong><small>No Stage-A study outcomes are represented by this runtime surface.</small></div>
+      </div>
+    </section>
     <DecisionFrontier />
     <div className="metric-grid">
       <article className="metric-card panel"><span>Runtime health</span>{loading ? <StatusChip state="loading"/> : <StatusChip state={health ? normalizeRuntimeStatus(health.status) : 'unavailable'} label={health?.status?.toUpperCase() ?? 'UNAVAILABLE'}/>}<small>{health?.runtime ?? 'No validated runtime snapshot'}</small></article>
