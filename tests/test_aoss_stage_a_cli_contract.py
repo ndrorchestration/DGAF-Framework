@@ -3,9 +3,7 @@ import json
 from scripts import run_aoss_v0_6_stage_a as cli
 
 
-def test_preflight_success_surfaces_static_report_without_side_effects(
-    tmp_path, monkeypatch, capsys
-):
+def test_preflight_success_surfaces_static_report_without_side_effects(tmp_path, monkeypatch, capsys):
     dgaf = tmp_path / "dgaf"
     acp = tmp_path / "acp"
     dgaf.mkdir()
