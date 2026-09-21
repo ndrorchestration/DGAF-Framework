@@ -1,6 +1,6 @@
+import os
 from concurrent.futures import ThreadPoolExecutor
 
-import os
 import pytest
 
 
