@@ -67,9 +67,7 @@ def prepare_execution_identity_review_packet(
     """Bind the current proposal records while preserving their blockers."""
 
     source_report = validate_unaccepted_source_driver_binding(source_driver_binding)
-    identity_report = validate_proposed_executable_destination_binding(
-        executable_destination_binding
-    )
+    identity_report = validate_proposed_executable_destination_binding(executable_destination_binding)
 
     if not source_driver_ref.strip():
         _fail("SOURCE_DRIVER_REVIEW_REF_MISSING")
