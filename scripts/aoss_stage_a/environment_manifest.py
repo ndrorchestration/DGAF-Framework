@@ -67,7 +67,10 @@ def observe_unaccepted_environment_manifest(
     return {
         "record_type": MANIFEST_CONTRACT,
         "status": "OBSERVED_NOT_ACCEPTED",
-        "manifest_id": (\n            f"runtime-observation-{facts.implementation}-{facts.version}-"\n            f"{facts.platform_system}-{facts.platform_machine}"\n        ),
+        "manifest_id": (
+            f"runtime-observation-{facts.implementation}-{facts.version}-"
+            f"{facts.platform_system}-{facts.platform_machine}"
+        ),
         "manifest_status": "NOT_ESTABLISHED",
         "runtime_binding_record_type": "AOSS_V0_6_STAGE_A_RUNTIME_BINDING",
         "interpreter_implementation": facts.implementation,
