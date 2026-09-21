@@ -73,7 +73,7 @@ def test_real_environment_status_cannot_be_smuggled_into_fixture():
 
 
 def test_observed_manifest_cannot_be_relabelled_as_accepted():
-    observed = observe_unaccepted_environment_manifest("2026-09-21T00:00:00Z")
+    observed = observe_unaccepted_environment_manifest(\n        "2026-09-21T00:00:00Z",\n        facts=RuntimeFacts(\n            implementation="cpython",\n            version="3.12.3",\n            platform_system="SyntheticOS",\n            platform_machine="synthetic-machine",\n            executable="/synthetic/bin/python",\n            prefix="/synthetic",\n            base_prefix="/synthetic",\n        ),\n    )
     try:
         validate_unaccepted_environment_manifest({**observed, "status": "INSTALLED_ENVIRONMENT_ACCEPTED"})
     except EnvironmentManifestError as exc:
