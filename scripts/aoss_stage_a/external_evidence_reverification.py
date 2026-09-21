@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Any, Mapping, NoReturn, Sequence
 
 from scripts.aoss_stage_a.external_admission_decision_intake import (
-    record_sha256 as intake_record_sha256,
+    record_sha256,
     validate_external_admission_decision_intake,
 )
 
@@ -159,7 +159,7 @@ def prepare_external_evidence_reverification_packet(
         "record_type": RECORD_TYPE,
         "status": STATUS,
         "controller_issue": EXPECTED_CONTROLLER_ISSUE,
-        "intake_record_sha256": intake_record_sha256(intake),
+        "intake_record_sha256": record_sha256(intake),
         "retrieval": {
             "source_uri": declared_uri,
             "retrieved_at": _timestamp(retrieved_at),
@@ -210,7 +210,7 @@ def validate_external_evidence_reverification_packet(
         _fail("REVERIFICATION_PACKET_STATUS_MISMATCH")
     if packet.get("controller_issue") != EXPECTED_CONTROLLER_ISSUE:
         _fail("REVERIFICATION_CONTROLLER_MISMATCH")
-    if packet.get("intake_record_sha256") != intake_record_sha256(intake):
+    if packet.get("intake_record_sha256") != record_sha256(intake):
         _fail("REVERIFICATION_INTAKE_SHA_MISMATCH")
 
     retrieval = packet.get("retrieval")
@@ -271,7 +271,7 @@ def validate_external_evidence_reverification_packet(
     return {
         "record_type": "AOSS_STAGE_A_EXTERNAL_EVIDENCE_REVERIFICATION_REPORT",
         "reverification": "PASS_DECLARED_BYTES_MATCH_SHA256",
-        "intake_record_sha256": intake_record_sha256(intake),
+        "intake_record_sha256": record_sha256(intake),
         "external_record_retrieved": True,
         "attribution_evidence_retrieved": True,
         "reviewer_attribution_verified": False,
