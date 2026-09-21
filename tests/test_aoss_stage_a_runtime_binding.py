@@ -24,7 +24,7 @@ def _lock_digest() -> str:
 def _facts(**changes: object) -> RuntimeFacts:
     values: dict[str, object] = {
         "implementation": "cpython",
-        "version": "3.12.0",
+        "version": "3.12.3",
         "platform_system": "Linux",
         "platform_machine": "x86_64",
         "executable": "/isolated/bin/python",
@@ -43,7 +43,7 @@ def test_runtime_contract_selects_one_exact_interpreter_and_empty_direct_depende
     assert contract["controller_issue"] == 901
     assert contract["interpreter"] == {
         "implementation": "cpython",
-        "version": "3.12.0",
+        "version": "3.12.3",
     }
     assert contract["dependency_lock"]["path"] == LOCK_REL
     assert contract["dependency_lock"]["sha256"] == _lock_digest()
@@ -66,7 +66,7 @@ def test_exact_runtime_candidate_verifies_without_promoting_collection_readiness
 
     assert report["runtime_binding"] == "PASS_PROSPECTIVE_NON_COLLECTING"
     assert report["implementation"] == "cpython"
-    assert report["version"] == "3.12.0"
+    assert report["version"] == "3.12.3"
     assert report["dependency_lock_sha256"] == _lock_digest()
     assert report["installed_environment_manifest"] == "NOT_ESTABLISHED"
     assert report["source_driver_binding"] == "NOT_ESTABLISHED"
@@ -79,7 +79,7 @@ def test_exact_runtime_candidate_verifies_without_promoting_collection_readiness
     ("facts", "code"),
     [
         (_facts(implementation="pypy"), "RUNTIME_IMPLEMENTATION_MISMATCH"),
-        (_facts(version="3.12.1"), "RUNTIME_VERSION_MISMATCH"),
+        (_facts(version="3.12.4"), "RUNTIME_VERSION_MISMATCH"),
         (_facts(version="3.11.9"), "RUNTIME_VERSION_MISMATCH"),
     ],
 )
