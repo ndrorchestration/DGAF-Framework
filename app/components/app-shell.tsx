@@ -30,7 +30,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const navigationRef = useRef<HTMLElement>(null)
   const pathname = usePathname()
-  const active = navigationForPath(pathname)
+  const active = navigationForPath(pathname ?? '/')
   const activeView = active.id
   const { phase, lastSuccessAt } = useDashboardRuntime()
 
