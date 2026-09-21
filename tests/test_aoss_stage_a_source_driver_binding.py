@@ -29,6 +29,7 @@ EXPECTED_CLASSES = [
 def _binding(**changes):
     value = {
         "record_type": "AOSS_V0_6_STAGE_A_SOURCE_DRIVER_BINDING",
+        "schema_version": 1,
         "status": "PROPOSED_NON_COLLECTING_SYNTHETIC_ONLY",
         "controller_issue": 901,
         "catalog_path": "registry/aoss_v0_6_stage_a_source_driver_recipe_catalog_v1.json",
