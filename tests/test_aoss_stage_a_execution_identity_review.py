@@ -15,15 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _records():
-    source = json.loads(
-        (ROOT / "registry/aoss_v0_6_stage_a_source_driver_binding_v1.json").read_text()
-    )
-    identities = json.loads(
-        (
-            ROOT
-            / "registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json"
-        ).read_text()
-    )
+    source = json.loads((ROOT / "registry/aoss_v0_6_stage_a_source_driver_binding_v1.json").read_text())
+    identities = json.loads((ROOT / "registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json").read_text())
     return source, identities
 
 
