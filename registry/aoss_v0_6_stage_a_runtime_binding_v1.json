@@ -1,0 +1,28 @@
+{
+  "record_type": "AOSS_V0_6_STAGE_A_RUNTIME_BINDING",
+  "schema_version": 1,
+  "controller_issue": 901,
+  "status": "PROPOSED_NON_COLLECTING_RUNTIME_BINDING",
+  "interpreter": {
+    "implementation": "cpython",
+    "version": "3.12.0",
+    "selection_basis": "PROSPECTIVE_EXACT_RUNTIME_CANDIDATE_WITHIN_DGAF_AND_ACP_SUPPORTED_RANGES",
+    "historical_runtime_equivalence_claimed": false
+  },
+  "dependency_lock": {
+    "path": "requirements-aoss-stage-a.lock",
+    "sha256": "81c1ade0b76ff38cbdcbe4ddbc615c273f02dc97a9ff055c8c2889940a2ca6bd",
+    "direct_third_party_dependencies": [],
+    "acp_install_from_package_index": false,
+    "acp_identity_bound_as_exact_source_checkout": true
+  },
+  "platform_binding": "OBSERVED_NOT_ACCEPTED",
+  "installed_environment_manifest_required_before_collection": true,
+  "installed_environment_manifest": "NOT_ESTABLISHED",
+  "source_driver_binding": "NOT_ESTABLISHED",
+  "collection_execution_readiness": "NOT_ESTABLISHED",
+  "outcomes_generated": false,
+  "scientific_n_increment": 0,
+  "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+  "high_assurance": "NOT_AUTHORIZED"
+}
