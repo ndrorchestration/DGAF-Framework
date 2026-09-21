@@ -60,6 +60,6 @@ jobs:
             echo "## PR-Scoped Doc Lint Summary"
             echo "- Linter: markdownlint-cli 0.39.0"
             echo "- Scope: Markdown files introduced or modified by this PR"
-            echo "- Baseline repository-wide documentation debt: tracked separately in #73"
+            echo "- Repository-wide documentation debt: ratchet-controlled; baseline controller #73 is closed"
             echo "- This gate does not alter .markdownlint.yml or the full-tree Doc Lint workflow"
           } >> "$GITHUB_STEP_SUMMARY"
