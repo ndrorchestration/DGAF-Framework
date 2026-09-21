@@ -23,7 +23,7 @@
     "task.completed maps to terminal=true; non-completion terminal kinds map to blocked=true.",
     "STALE, FUTURE_SKEW, INCONCLUSIVE, missing terminal, multiple terminals, or source-order ambiguity map to uncertain=true and required_predicate_inconclusive=true.",
     "Authorization, validation, and provenance are passed only as explicit tri-state observations; no event label infers them.",
-    "Invalid or incomplete observations fail closed before PolicyInput construction."
+    "Invalid field domains or missing required keys are rejected before PolicyInput construction; structurally ambiguous or unfresh but well-formed observations map only to an uncertain required-predicate hold."
   ],
   "required_episode_classes": [
     "normal_completion",
