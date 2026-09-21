@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any, Mapping
 
-from scripts.aoss_stage_a.runtime_binding import inspect_runtime_facts
+from scripts.aoss_stage_a.runtime_binding import RuntimeFacts, inspect_runtime_facts
 
 MANIFEST_CONTRACT = "AOSS_V0_6_STAGE_A_ENVIRONMENT_MANIFEST"
 EXPECTED_INTERPRETER = "cpython"
@@ -60,7 +60,7 @@ def observe_unaccepted_environment_manifest(
 ) -> dict[str, object]:
     """Observe CI runtime facts while preserving an explicit unaccepted status."""
 
-    facts = inspect_runtime_facts()
+    observed_facts = facts or inspect_runtime_facts()
     timestamp = observed_at or (datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"))
     return {
         "record_type": MANIFEST_CONTRACT,
@@ -71,11 +71,11 @@ def observe_unaccepted_environment_manifest(
         ),
         "manifest_status": "NOT_ESTABLISHED",
         "runtime_binding_record_type": "AOSS_V0_6_STAGE_A_RUNTIME_BINDING",
-        "interpreter_implementation": facts.implementation,
-        "interpreter_version": facts.version,
+        "interpreter_implementation": observed_facts.implementation,
+        "interpreter_version": observed_facts.version,
         "dependency_lock_sha256": EXPECTED_LOCK_SHA256,
-        "platform_system": facts.platform_system,
-        "platform_machine": facts.platform_machine,
+        "platform_system": observed_facts.platform_system,
+        "platform_machine": observed_facts.platform_machine,
         "environment_observed_at": timestamp,
         "source_driver_binding": "NOT_ESTABLISHED",
         "collection_execution_readiness": "NOT_ESTABLISHED",
