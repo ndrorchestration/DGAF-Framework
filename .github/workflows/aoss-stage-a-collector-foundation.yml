@@ -69,6 +69,7 @@ jobs:
             tests/test_aoss_stage_a_execution_identity_review.py \
             tests/test_aoss_stage_a_execution_identity_candidate.py \
             tests/test_aoss_stage_a_external_admission_decision_intake.py \
+            tests/test_aoss_stage_a_external_evidence_reverification.py \
             tests/test_aoss_stage_a_installed_environment_evidence.py \
             tests/test_aoss_stage_a_installed_environment_acceptance.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
@@ -357,6 +358,89 @@ jobs:
           assert report["source_driver_binding"] == "NOT_ESTABLISHED"
           assert report["executable_acceptance"] == "NOT_ESTABLISHED"
           assert report["destination_acceptance"] == "NOT_ESTABLISHED"
+          assert report["execution_allowed"] is False
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["scientific_n_increment"] == 0
+          PY
+
+      - name: Verify external evidence bytes without promoting trust
+        run: |
+          python - <<'PY'
+          import hashlib
+          from scripts.aoss_stage_a.execution_identity_candidate import (
+              prepare_execution_identity_candidate,
+          )
+          from scripts.aoss_stage_a.external_admission_decision_intake import (
+              prepare_external_admission_decision_intake,
+              record_sha256,
+          )
+          from scripts.aoss_stage_a.external_evidence_reverification import (
+              prepare_external_evidence_reverification_packet,
+              validate_external_evidence_reverification_packet,
+          )
+          from scripts.aoss_stage_a.installed_environment_evidence import (
+              capture_installed_environment_evidence_candidate,
+          )
+
+          external_bytes = b'{"decision":"ACCEPT","scope":"ci-fixture"}\n'
+          attribution_bytes = b'{"reviewer":"ci-fixture"}\n'
+          environment = capture_installed_environment_evidence_candidate(
+              observed_at="2026-09-21T23:40:00Z",
+          )
+          identity = prepare_execution_identity_candidate(
+              interpreter_path="/opt/python/3.12.3/bin/python",
+              interpreter_sha256="a" * 64,
+              argv=["-m", "aoss_stage_a_driver", "--plan", "stage-a"],
+              working_directory="/srv/aoss-stage-a",
+              destination_uri="file:///srv/aoss-stage-a/retained/attempt-0001",
+              attempt_id="aoss-stage-a-attempt-0001",
+              recipe_catalog_sha256="b" * 64,
+              environment_candidate_record_sha256=record_sha256(environment),
+          )
+          intake = prepare_external_admission_decision_intake(
+              environment_candidate=environment,
+              execution_identity_candidate=identity,
+              reviewer_identity="external-reviewer:ci-fixture",
+              reviewed_at="2026-09-21T23:41:00Z",
+              external_record_uri="https://example.invalid/aoss-stage-a/decision.json",
+              external_record_sha256=hashlib.sha256(external_bytes).hexdigest(),
+              independence_claimed=True,
+              independence_basis="CI fixture claim only",
+              installed_environment_decision="ACCEPT",
+              source_driver_executable_decision="ACCEPT",
+              destination_attempt_decision="ACCEPT",
+          )
+          artifacts = [
+              (
+                  "reviewer-attribution",
+                  "https://example.invalid/aoss-stage-a/reviewer.json",
+                  hashlib.sha256(attribution_bytes).hexdigest(),
+                  attribution_bytes,
+              )
+          ]
+          packet = prepare_external_evidence_reverification_packet(
+              intake=intake,
+              environment_candidate=environment,
+              execution_identity_candidate=identity,
+              retrieval_source_uri="https://example.invalid/aoss-stage-a/decision.json",
+              retrieved_at="2026-09-21T23:42:00Z",
+              external_record_bytes=external_bytes,
+              attribution_artifacts=artifacts,
+          )
+          report = validate_external_evidence_reverification_packet(
+              packet,
+              intake=intake,
+              environment_candidate=environment,
+              execution_identity_candidate=identity,
+              external_record_bytes=external_bytes,
+              attribution_artifacts=artifacts,
+          )
+
+          assert report["reverification"] == "PASS_DECLARED_BYTES_MATCH_SHA256"
+          assert report["external_record_retrieved"] is True
+          assert report["reviewer_attribution_verified"] is False
+          assert report["independence_verified"] is False
+          assert report["local_adjudication"] == "NOT_EXECUTED"
           assert report["execution_allowed"] is False
           assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
           assert report["scientific_n_increment"] == 0
