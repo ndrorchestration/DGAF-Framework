@@ -94,9 +94,7 @@ def test_observed_manifest_cannot_be_relabelled_as_accepted():
         facts=_bound_facts(),
     )
     try:
-        validate_unaccepted_environment_manifest(
-            {**observed, "status": "INSTALLED_ENVIRONMENT_ACCEPTED"}
-        )
+        validate_unaccepted_environment_manifest({**observed, "status": "INSTALLED_ENVIRONMENT_ACCEPTED"})
     except EnvironmentManifestError as exc:
         assert str(exc) == "MANIFEST_STATUS_MUST_REMAIN_UNACCEPTED"
     else:
