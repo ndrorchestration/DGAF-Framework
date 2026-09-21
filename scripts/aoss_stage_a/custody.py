@@ -41,6 +41,19 @@ def _assert_no_symlink_components(path: Path) -> None:
             raise ValueError(f"symlink path component rejected: {current}")
 
 
+def _fsync_dir(path: Path) -> None:
+    flags = os.O_RDONLY
+    directory_flag = getattr(os, "O_DIRECTORY", 0)
+    nofollow = getattr(os, "O_NOFOLLOW", None)
+    if nofollow is None:
+        raise OSError("O_NOFOLLOW_REQUIRED")
+    fd = os.open(path, flags | directory_flag | nofollow)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
 def _exclusive_write(path: Path, data: bytes) -> None:
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
     nofollow = getattr(os, "O_NOFOLLOW", None)
@@ -55,6 +68,7 @@ def _exclusive_write(path: Path, data: bytes) -> None:
             os.fsync(handle.fileno())
     finally:
         os.close(fd)
+        _fsync_dir(path.parent)
 
 
 def reserve_synthetic_attempt(parent: Path, attempt_id: str) -> Path:
@@ -67,6 +81,7 @@ def reserve_synthetic_attempt(parent: Path, attempt_id: str) -> Path:
 
     attempt = parent / attempt_id
     os.mkdir(attempt, 0o700)
+    _fsync_dir(parent)
     try:
         _exclusive_write(attempt / "SYNTHETIC_TEST_ONLY", _MARKER)
         _exclusive_write(
@@ -81,6 +96,7 @@ def reserve_synthetic_attempt(parent: Path, attempt_id: str) -> Path:
         )
         objects = attempt / "objects"
         os.mkdir(objects, 0o700)
+        _fsync_dir(attempt)
     except Exception:
         # Preserve the incomplete reservation as evidence. Never clean and reuse.
         raise
