@@ -73,9 +73,7 @@ def observation_from_dict(value: Mapping[str, Any]) -> MappingObservation:
         raise MappingError("required mapping fields missing: " + ",".join(missing))
     unexpected = [key for key in value if key not in required]
     if unexpected:
-        raise MappingError(
-            "unexpected mapping fields: " + ",".join(sorted(str(key) for key in unexpected))
-        )
+        raise MappingError("unexpected mapping fields: " + ",".join(sorted(str(key) for key in unexpected)))
 
     kind = value["terminal_event_kind"]
     if kind is not None and (type(kind) is not str or kind not in _TERMINAL_KINDS):
