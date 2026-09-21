@@ -73,6 +73,33 @@ jobs:
           assert report["outcomes_generated"] is False
           PY
 
+      - name: Verify synthetic environment manifest contract
+        run: |
+          python - <<'PY'
+          from scripts.aoss_stage_a.environment_manifest import validate_synthetic_manifest
+          manifest = {
+              "record_type": "AOSS_V0_6_STAGE_A_ENVIRONMENT_MANIFEST",
+              "status": "SYNTHETIC_FIXTURE_NOT_INSTALLED_ENVIRONMENT",
+              "manifest_id": "ci-synthetic-fixture",
+              "manifest_status": "NOT_ESTABLISHED",
+              "runtime_binding_record_type": "AOSS_V0_6_STAGE_A_RUNTIME_BINDING",
+              "interpreter_implementation": "cpython",
+              "interpreter_version": "3.12.3",
+              "dependency_lock_sha256": "81c1ade0b76ff38cbdcbe4ddbc615c273f02dc97a9ff055c8c2889940a2ca6bd",
+              "platform_system": "SyntheticOS",
+              "platform_machine": "synthetic-machine",
+              "environment_observed_at": "2026-09-21T00:00:00Z",
+              "source_driver_binding": "NOT_ESTABLISHED",
+              "collection_execution_readiness": "NOT_ESTABLISHED",
+              "outcomes_generated": False,
+              "scientific_n_increment": 0,
+          }
+          report = validate_synthetic_manifest(manifest)
+          assert report["manifest_validation"] == "PASS_SYNTHETIC_FIXTURE_NON_COLLECTING"
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["outcomes_generated"] is False
+          PY
+
       - name: Prove collection remains disabled
         run: |
           set +e
