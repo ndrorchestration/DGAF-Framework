@@ -11,6 +11,7 @@
 **Spec:** docs/superpowers/specs/2026-09-21-aoss-stage-a-collector-design.md at design commit 1360a3f005e955aa39ac2f9fd8067f054cd4df29.
 
 ## Global Constraints
+
 - ACP commit: dbab7c1afafec524ce7c18157de2089cafe79c87.
 - Accepted receipt: 6baea5a6b6a316add6292cc647f5b455eb235ce3.
 - Accepted authorization: 854b9d5adb33c6ee6158a63017f133f20b90742e.
@@ -24,6 +25,7 @@
 - The fixture bundle remains APPARATUS_FIXTURES_NOT_COLLECTED_OUTCOMES.
 
 ## Scope and handoff
+
 This is the first independently testable tranche of the approved collector design.
 It does not purport to implement the complete collector. Driver, semantic mapping,
 runtime lock, accepted executable binding, actual replay and analysis require a
@@ -31,6 +33,7 @@ subsequent plan once the mapping is recovered or prospectively accepted.
 Do not write guessed policy predicates to make an end-to-end demonstration pass.
 
 ## Review Focus
+
 1. Git replacement objects, shallow history or moving refs must not manufacture accepted lineage (Task 1).
 2. Dirty/untracked source or contract bytes must not pass a committed-blob-only check (Task 1).
 3. Symlink ancestors, path traversal and concurrent creation must not overwrite evidence (Task 2).
@@ -39,8 +42,8 @@ Do not write guessed policy predicates to make an end-to-end demonstration pass.
 
 ## Task 1: Read-only evidence preflight
 
-**Files:** Create scripts/aoss_stage_a/__init__.py,
-scripts/aoss_stage_a/preflight.py, tests/test_aoss_stage_a_preflight.py.
+**Files:** Create `scripts/aoss_stage_a/__init__.py`,
+`scripts/aoss_stage_a/preflight.py`, `tests/test_aoss_stage_a_preflight.py`.
 **Consumes:** Explicit DGAF and ACP filesystem paths plus the fixed accepted identities above.
 **Produces:** inspect_preflight(dgaf: Path, acp: Path) -> dict[str, object];
 PreflightError with a stable reason code. No writable destination argument.
@@ -53,6 +56,7 @@ PreflightError with a stable reason code. No writable destination argument.
   comparator executable bindings. The test repo must use actual Git objects,
   not a mocked command runner.
 - [ ] Start with these public-boundary tests:
+
 ```python
 def test_missing_acp_checkout_fails_closed(tmp_path):
     from scripts.aoss_stage_a.preflight import inspect_preflight, PreflightError
@@ -63,6 +67,7 @@ def test_preflight_has_no_outcome_destination():
     from scripts.aoss_stage_a.preflight import inspect_preflight
     assert list(inspect.signature(inspect_preflight).parameters) == ["dgaf", "acp"]
 ```
+
 - [ ] Run python -m pytest -q tests/test_aoss_stage_a_preflight.py and confirm the
   new module is absent. Then add a minimal module and run tests again until
   failures identify missing behavior rather than import errors.
@@ -80,6 +85,7 @@ def test_preflight_has_no_outcome_destination():
   replay schema and custody-contract identities from their accepted sources.
 - [ ] Return a JSON-serializable report with inspected commits, per-check
   booleans, failures and explicit non-authority fields:
+
 ```python
 {
     "record_type": "AOSS_STAGE_A_STATIC_PREFLIGHT",
@@ -91,6 +97,7 @@ def test_preflight_has_no_outcome_destination():
     "outcomes_generated": False,
 }
 ```
+
   Never return PASS if any required static identity check failed. A missing
   runtime/mapping binding prevents readiness even when static checks pass.
 - [ ] Add real-Git negative cases: wrong ACP commit, dirty tracked file,
@@ -111,6 +118,7 @@ write_object(attempt: Path, payload: object) -> str.
 These primitives are not wired to a production collection command.
 
 - [ ] Write failing tests before code:
+
 ```python
 def test_canonical_bytes_are_exact():
     assert canonical_bytes({"b": 2, "a": 1}) == b'{"a":1,"b":2}\n'
@@ -125,11 +133,12 @@ def test_attempt_cannot_be_reused(tmp_path):
     with pytest.raises(FileExistsError):
         reserve_synthetic_attempt(tmp_path, "case-1")
 ```
+
 - [ ] Implement canonical serialization with UTF-8, sorted keys, compact
   separators, allow_nan=False and exactly one trailing newline. Use explicit
   ensure_ascii=False for this new bundle convention; do not alter the adapter.
   digest_bytes returns lowercase 64-character SHA-256 without a prefix.
-- [ ] Validate attempt IDs against [A-Za-z0-9][A-Za-z0-9_-]{0,63}.
+- [ ] Validate attempt IDs against `[A-Za-z0-9][A-Za-z0-9_-]{0,63}`.
   Reject traversal, separators, symlink parent components and existing attempt
   paths. On supported POSIX environments use directory file descriptors and
   O_NOFOLLOW/O_EXCL to prevent check-then-open symlink substitution. Fail
@@ -156,6 +165,7 @@ tests/test_aoss_stage_a_cli.py.
 A collect subcommand always fails with COLLECTION_IMPLEMENTATION_NOT_ACCEPTED.
 
 - [ ] Write subprocess tests before code:
+
 ```python
 def test_collect_is_disabled(tmp_path):
     completed = subprocess.run(
@@ -166,6 +176,7 @@ def test_collect_is_disabled(tmp_path):
     assert "COLLECTION_IMPLEMENTATION_NOT_ACCEPTED" in completed.stderr
     assert list(tmp_path.iterdir()) == []
 ```
+
 - [ ] Add a preflight test using temporary real repositories from Task 1.
   Place a sentinel ACP package on the import path that raises if imported;
   preflight must still perform only Git/file inspection. Snapshot the working
@@ -186,10 +197,12 @@ Add .github/workflows/aoss-stage-a-collector-foundation.yml only after inspectin
 the repository workflow conventions. Do not modify frozen registries.
 
 - [ ] Document the exact non-collecting interface:
+
 ```bash
 python scripts/run_aoss_v0_6_stage_a.py preflight --dgaf-root . --acp-root ../agent-control-plane
 python scripts/run_aoss_v0_6_stage_a.py collect
 ```
+
   Explain that the first reports static evidence only and the second is expected
   to fail. List mapping, driver, runtime lock and executable acceptance as open.
 - [ ] Add CI that checks out the exact PR head with full history and runs the
@@ -197,10 +210,12 @@ python scripts/run_aoss_v0_6_stage_a.py collect
   test dependency conventions. Do not execute ACP or create a study artifact.
   CI evidence is development evidence only, not collection acceptance.
 - [ ] Run:
+
 ```bash
 python -m pytest -q tests/test_aoss_stage_a_preflight.py tests/test_aoss_stage_a_custody.py tests/test_aoss_stage_a_cli.py tests/test_aoss_v0_6_stage_a_collection_authorization.py tests/test_aoss_v0_6_acp_adapter.py tests/test_aoss_v0_6_stage_a_decision_policy.py tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
 git diff --check
 ```
+
   Apply the repository's changed-Python static checks and CI gates. Report any
   unavailable dependency or unrelated failure explicitly. Never rerun a real
   study to make tests pass.
@@ -213,6 +228,7 @@ git diff --check
   ambiguity and absent authority without conditioning rules on outcomes.
 
 ## Coverage review
+
 This tranche covers design preflight, synthetic custody and the execution stop.
 It intentionally does not implement source generation, policy reconstruction,
 runtime locking, replay or analysis. Those requirements remain visible here
