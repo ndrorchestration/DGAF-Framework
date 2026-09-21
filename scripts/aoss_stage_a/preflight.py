@@ -149,9 +149,7 @@ def _inspect_preflight(dgaf: Path, acp: Path, bindings: ExpectedBindings) -> dic
         except PreflightError as exc:
             raise PreflightError(code) from exc
 
-    receipt_lineage = _git(
-        dgaf, "rev-list", "--parents", "-n", "1", bindings.dgaf_receipt_commit
-    ).split()
+    receipt_lineage = _git(dgaf, "rev-list", "--parents", "-n", "1", bindings.dgaf_receipt_commit).split()
     if receipt_lineage != [bindings.dgaf_receipt_commit, bindings.dgaf_authorization_commit]:
         raise PreflightError("RECEIPT_AUTHORIZATION_LINEAGE_INVALID")
 
