@@ -14,7 +14,6 @@ from datetime import datetime
 from typing import Any, Mapping, NoReturn
 
 from scripts.aoss_stage_a.execution_identity_candidate import (
-    record_sha256 as execution_identity_record_sha256,
     validate_execution_identity_candidate,
 )
 from scripts.aoss_stage_a.installed_environment_evidence import (
