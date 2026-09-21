@@ -167,12 +167,8 @@ def validate_external_admission_decision_intake(
 ) -> dict[str, object]:
     """Validate an external decision as intake evidence, never as local acceptance."""
 
-    environment_report = validate_installed_environment_evidence_candidate(
-        environment_candidate
-    )
-    execution_report = validate_execution_identity_candidate(
-        execution_identity_candidate
-    )
+    environment_report = validate_installed_environment_evidence_candidate(environment_candidate)
+    execution_report = validate_execution_identity_candidate(execution_identity_candidate)
     expected_environment_record_sha = record_sha256(environment_candidate)
     if execution_identity_candidate.get("environment_candidate_record_sha256") != expected_environment_record_sha:
         _fail("EXTERNAL_DECISION_IDENTITY_ENVIRONMENT_BINDING_MISMATCH")
@@ -220,9 +216,7 @@ def validate_external_admission_decision_intake(
             independence_basis,
             "EXTERNAL_DECISION_INDEPENDENCE_BASIS_MISSING",
         )
-    elif independence_basis is not None and (
-        not isinstance(independence_basis, str) or not independence_basis.strip()
-    ):
+    elif independence_basis is not None and (not isinstance(independence_basis, str) or not independence_basis.strip()):
         _fail("EXTERNAL_DECISION_INDEPENDENCE_BASIS_INVALID")
 
     decisions = intake.get("external_decisions")
