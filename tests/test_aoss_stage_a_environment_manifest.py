@@ -102,16 +102,16 @@ def test_observed_manifest_cannot_be_relabelled_as_accepted():
 
 
 def test_drift_and_overclaim_fail_closed():
-    for changes, code in [
+    for field, value, code in [
         ("dependency_lock_sha256", "wrong", "DEPENDENCY_LOCK_DIGEST_MISMATCH"),
         ("environment_observed_at", "not-a-timestamp", "ENVIRONMENT_TIMESTAMP_INVALID"),
         ("outcomes_generated", True, "OUTCOME_GENERATION_PREMATURE"),
         ("scientific_n_increment", 1, "SCIENTIFIC_N_INCREMENT_INVALID"),
     ]:
-        value = _manifest(**{changes[0]: changes[1]})
+        value = _manifest(**{field: value})
         try:
             validate_synthetic_manifest(value)
         except EnvironmentManifestError as exc:
-            assert str(exc) == changes[2]
+            assert str(exc) == code
         else:
-            raise AssertionError(f"{changes[2]} unexpectedly passed")
+            raise AssertionError(f"{code} unexpectedly passed")
