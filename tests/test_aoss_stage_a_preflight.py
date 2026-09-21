@@ -54,17 +54,13 @@ def test_restored_authorization_history_fails_closed(tmp_path):
 
     auth_path = dgaf / "registry" / "aoss_v0_6_stage_a_collection_authorization_v1.json"
     auth_path.parent.mkdir()
-    auth_bytes = (
-        '{"outcome_collection_authorized":true,'
-        '"status":"AUTHORIZED_BOUNDED_STAGE_A_COLLECTION"}\n'
-    )
+    auth_bytes = '{"outcome_collection_authorized":true,"status":"AUTHORIZED_BOUNDED_STAGE_A_COLLECTION"}\n'
     auth_path.write_text(auth_bytes, encoding="utf-8")
     auth_commit = _commit_all(dgaf, "authorization")
 
     receipt_path = dgaf / "registry" / "aoss_v0_6_stage_a_precollection_receipt_v1.json"
     receipt_path.write_text(
-        '{"outcomes_generated_before_receipt":false,'
-        '"scientific_n_increment":0,"status":"PASS"}\n',
+        '{"outcomes_generated_before_receipt":false,"scientific_n_increment":0,"status":"PASS"}\n',
         encoding="utf-8",
     )
     receipt_commit = _commit_all(dgaf, "receipt")
