@@ -9,7 +9,6 @@ from scripts.aoss_stage_a.installed_environment_evidence import (
 )
 from scripts.aoss_stage_a.runtime_binding import RuntimeFacts
 
-
 _FACTS = RuntimeFacts(
     implementation="cpython",
     version="3.12.3",
