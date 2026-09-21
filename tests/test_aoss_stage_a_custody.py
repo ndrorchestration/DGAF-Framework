@@ -146,3 +146,17 @@ def test_symlink_object_directory_is_rejected(tmp_path):
 
     with pytest.raises(ValueError, match="object directory"):
         write_object(attempt, {"a": 1})
+
+
+def test_reservation_and_object_writes_fsync_directories(tmp_path, monkeypatch):
+    import scripts.aoss_stage_a.custody as custody
+
+    calls = []
+    monkeypatch.setattr(custody, "_fsync_dir", lambda path: calls.append(path.name))
+
+    attempt = custody.reserve_synthetic_attempt(tmp_path, "durable")
+    custody.write_object(attempt, {"a": 1})
+
+    assert tmp_path.name in calls
+    assert "durable" in calls
+    assert "objects" in calls
