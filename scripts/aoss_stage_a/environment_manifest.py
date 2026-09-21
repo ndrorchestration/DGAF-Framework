@@ -61,9 +61,7 @@ def observe_unaccepted_environment_manifest(
     """Observe CI runtime facts while preserving an explicit unaccepted status."""
 
     facts = inspect_runtime_facts()
-    timestamp = observed_at or (
-        datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    )
+    timestamp = observed_at or (datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"))
     return {
         "record_type": MANIFEST_CONTRACT,
         "status": "OBSERVED_NOT_ACCEPTED",
