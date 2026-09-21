@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import datetime
-from typing import Any, Mapping
+from typing import Any, Mapping, NoReturn
 
 from scripts.aoss_stage_a.runtime_binding import (
     EXPECTED_IMPLEMENTATION,
@@ -39,7 +39,7 @@ class InstalledEnvironmentEvidenceError(ValueError):
     """Raised when candidate environment evidence is malformed or overclaims."""
 
 
-def _fail(code: str) -> None:
+def _fail(code: str) -> NoReturn:
     raise InstalledEnvironmentEvidenceError(code)
 
 
