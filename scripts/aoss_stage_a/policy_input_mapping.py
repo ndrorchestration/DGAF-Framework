@@ -51,7 +51,7 @@ def _require_bool(value: Any, name: str) -> bool:
 
 
 def _require_tri_state(value: Any, name: str) -> TriState:
-    if value not in _TRI_STATES:
+    if type(value) is not str or value not in _TRI_STATES:
         raise MappingError(f"{name} must be TRUE, FALSE, or INCONCLUSIVE")
     return value  # type: ignore[return-value]
 
@@ -71,9 +71,14 @@ def observation_from_dict(value: Mapping[str, Any]) -> MappingObservation:
     missing = sorted(required - set(value))
     if missing:
         raise MappingError("required mapping fields missing: " + ",".join(missing))
+    unexpected = [key for key in value if key not in required]
+    if unexpected:
+        raise MappingError(
+            "unexpected mapping fields: " + ",".join(sorted(str(key) for key in unexpected))
+        )
 
     kind = value["terminal_event_kind"]
-    if kind is not None and kind not in _TERMINAL_KINDS:
+    if kind is not None and (type(kind) is not str or kind not in _TERMINAL_KINDS):
         raise MappingError("terminal_event_kind is unknown")
     count = value["terminal_event_count"]
     if type(count) is not int or count < 0:
@@ -84,7 +89,7 @@ def observation_from_dict(value: Mapping[str, Any]) -> MappingObservation:
         raise MappingError("terminal_event_kind is ambiguous when count is not one")
 
     freshness = value["freshness"]
-    if freshness not in _FRESHNESS_STATES:
+    if type(freshness) is not str or freshness not in _FRESHNESS_STATES:
         raise MappingError("freshness state is unknown")
 
     return MappingObservation(
