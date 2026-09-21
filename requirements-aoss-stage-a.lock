@@ -1,0 +1,4 @@
+# AOSS Stage-A runtime dependency lock v1
+# Direct third-party runtime dependencies: NONE
+# ACP is loaded from an exact source checkout and verified by commit/blob identities.
+# This lock does not authorize collection.

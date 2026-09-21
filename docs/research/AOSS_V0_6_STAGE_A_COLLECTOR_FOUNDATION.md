@@ -68,18 +68,28 @@ reservations are retained rather than cleaned and reused.
 These primitives are development apparatus only. They are not the accepted
 five-bundle study custody/replay implementation.
 
+## Accepted follow-on contracts
+
+PR #903 established the bounded, synthetic-only observation-to-`PolicyInput`
+mapping contract and the 16-class synthetic source-driver recipe catalog. That
+acceptance does not implement or accept an ACP source-driver executable.
+
+PR #904 is the prospective non-collecting exact-runtime binding candidate. It
+does not establish collection readiness unless separately accepted, and even
+after acceptance the installed-environment manifest and source-driver binding
+remain separate predicates.
+
 ## Remaining gates
 
 Collection remains disabled until separate review and acceptance establish:
 
-1. exact telemetry-to-`PolicyInput` mapping;
-2. concrete source-driver recipes for all frozen episode classes;
-3. an exact runtime/dependency lock;
-4. executable collector binding and destination identity;
-5. retained study/source/normalized/decision/analysis bundle custody;
-6. five exact-byte replay passes and their verification booleans;
-7. same-host freshness/ingest reference preservation;
-8. attempt invalidation and no-retry-after-outcome-inspection behavior.
+1. exact source-driver executable binding for the frozen recipe catalog;
+2. accepted exact runtime/dependency binding plus the execution environment manifest;
+3. executable collector binding and destination identity;
+4. retained study/source/normalized/decision/analysis bundle custody;
+5. five exact-byte replay passes and their verification booleans;
+6. same-host freshness/ingest reference preservation;
+7. attempt invalidation and no-retry-after-outcome-inspection behavior.
 
 ## Evidence boundary
 
