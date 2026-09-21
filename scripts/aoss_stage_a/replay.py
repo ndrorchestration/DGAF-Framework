@@ -67,11 +67,7 @@ def verify_replay_pass(
     for role, field in _ROLE_TO_VERIFICATION.items():
         verification[field] = replay_digests[role] == expected_digests[role]
 
-    status = (
-        "PASS"
-        if all(verification[field] for field in REPLAY_VERIFICATION_FIELDS)
-        else "FAIL"
-    )
+    status = "PASS" if all(verification[field] for field in REPLAY_VERIFICATION_FIELDS) else "FAIL"
     return {
         "status": status,
         **verification,
@@ -102,11 +98,7 @@ def verify_five_exact_byte_replays(
     ]
     return {
         "record_type": "AOSS_STAGE_A_SYNTHETIC_REPLAY_REPORT",
-        "status": (
-            "PASS"
-            if all(item["status"] == "PASS" for item in passes)
-            else "FAIL"
-        ),
+        "status": ("PASS" if all(item["status"] == "PASS" for item in passes) else "FAIL"),
         "artifact_digests": expected_digests,
         "replay_pass_count": EXPECTED_REPLAY_PASSES,
         "passes": passes,
