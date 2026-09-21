@@ -16,7 +16,7 @@ test('mobile navigation exposes state and keyboard dismissal', () => {
   assert.match(shell, /aria-controls="primary-navigation"/)
   assert.match(shell, /event\.key !== 'Escape'/)
   assert.match(shell, /menuButtonRef\.current\?\.focus\(\)/)
-  assert.match(shell, /querySelector<HTMLButtonElement>\('button'\)\?\.focus\(\)/)
+  assert.match(shell, /querySelector<HTMLAnchorElement>\('a\.nav-item'\)\?\.focus\(\)/)
 })
 
 test('interactive controls retain minimum touch target sizing', () => {
