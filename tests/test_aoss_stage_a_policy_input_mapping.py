@@ -80,6 +80,26 @@ def test_missing_required_predicate_is_rejected(field):
         map_observation(value)
 
 
+def test_unexpected_mapping_field_is_rejected():
+    with pytest.raises(MappingError, match="unexpected mapping fields"):
+        map_observation(_observation(unfrozen_extra_field="not-allowed"))
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("terminal_event_kind", [], "terminal_event_kind is unknown"),
+        ("freshness", {}, "freshness state is unknown"),
+        ("authorization", [], "authorization must be TRUE, FALSE, or INCONCLUSIVE"),
+        ("validation", {}, "validation must be TRUE, FALSE, or INCONCLUSIVE"),
+        ("provenance_valid", [], "provenance_valid must be TRUE, FALSE, or INCONCLUSIVE"),
+    ],
+)
+def test_malformed_enum_domains_raise_mapping_error(field, value, message):
+    with pytest.raises(MappingError, match=message):
+        map_observation(_observation(**{field: value}))
+
+
 def test_unknown_terminal_kind_is_rejected():
     with pytest.raises(MappingError, match="terminal_event_kind is unknown"):
         map_observation(_observation(terminal_event_kind="task.started"))
