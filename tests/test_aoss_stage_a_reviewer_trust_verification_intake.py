@@ -169,9 +169,5 @@ def test_external_findings_cannot_self_promote_local_trust_state():
 
 def test_binding_is_exact_record_hash():
     external_admission, reverification, packet = _packet()
-    assert packet["bindings"]["external_admission_intake_sha256"] == record_sha256(
-        external_admission
-    )
-    assert packet["bindings"]["reverification_packet_sha256"] == record_sha256(
-        reverification
-    )
+    assert packet["bindings"]["external_admission_intake_sha256"] == record_sha256(external_admission)
+    assert packet["bindings"]["reverification_packet_sha256"] == record_sha256(reverification)
