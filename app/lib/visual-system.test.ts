@@ -95,6 +95,6 @@ test('operator journey verifies evidence before governance', () => {
   assert.ok(evidenceNav < governanceNav, 'Evidence must appear before Governance in the primary operator journey')
   assert.match(
     overview,
-    /className="button primary" onClick=\{\(\) => onNavigate\('evidence'\)\}>Inspect evidence/,
+    /<Link className="button primary" href="\\/evidence">Inspect evidence/,
   )
 })
