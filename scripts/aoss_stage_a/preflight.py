@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Mapping
 
@@ -27,6 +27,8 @@ class ExpectedBindings:
     acp_commit: str
     contract_blobs: Mapping[str, str]
     executable_blobs: Mapping[str, str]
+    authorization_parent_commit: str | None = None
+    auxiliary_blobs: Mapping[str, str] = field(default_factory=dict)
 
 
 DEFAULT_BINDINGS = ExpectedBindings(
@@ -49,6 +51,11 @@ DEFAULT_BINDINGS = ExpectedBindings(
         "scripts/aoss_v0_6_acp_adapter.py": "a2505deb457157e535bab713150d49d3950f789f",
         "scripts/aoss_v0_6_stage_a_decision_policy.py": "dd03a34fe17579c57dcf386abac9f1f5e7eb23de",
         "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py": "f1846d00084b9e0a1b1ddbd21999f1ce9627c4f5",
+    },
+    authorization_parent_commit="d11885b9338e7d05493f4cd58dc7f3b11942906e",
+    auxiliary_blobs={
+        "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json": "1d2b44acb63f30660253e3c96f1a6cac602d62eb",
+        "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json": "fa1f58aff79320352f285ba41ad85c237adc97cc",
     },
 )
 
@@ -159,10 +166,22 @@ def _inspect_preflight(dgaf: Path, acp: Path, bindings: ExpectedBindings) -> dic
     if receipt_lineage != [bindings.dgaf_receipt_commit, bindings.dgaf_authorization_commit]:
         raise PreflightError("RECEIPT_AUTHORIZATION_LINEAGE_INVALID")
 
+    if bindings.authorization_parent_commit is not None:
+        authorization_lineage = _git(
+            dgaf, "rev-list", "--parents", "-n", "1", bindings.dgaf_authorization_commit
+        ).split()
+        if authorization_lineage != [
+            bindings.dgaf_authorization_commit,
+            bindings.authorization_parent_commit,
+        ]:
+            raise PreflightError("AUTHORIZATION_PARENT_INVALID")
+
     for path, expected in bindings.contract_blobs.items():
         _require_blob(dgaf, bindings.protected_source_basis, path, expected)
     for path, expected in bindings.executable_blobs.items():
         _require_blob(dgaf, "HEAD", path, expected)
+    for path, expected in bindings.auxiliary_blobs.items():
+        _require_blob(dgaf, bindings.protected_source_basis, path, expected)
 
     _require_event_history(
         dgaf,
