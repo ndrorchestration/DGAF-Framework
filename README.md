@@ -16,7 +16,9 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **4. Understand the current Track A frontier.** Epoch 002 blinded collection is complete at 50 paired inferential seed units / 2,250 observations; dataset lock, bounded unblinding, real materialization evidence (#824), the immutable materialization receipt (#826), and locked-primary-analysis authorization (#828) are accepted. The frozen primary analysis has now executed locally, and PR #851 established the creation-only content-addressed locked-result receipt on protected `main`. The bounded Epoch 002 lifecycle is now **CLOSED_FOR_EXACT_PREREGISTERED_SCOPE** through the creation-only post-interpretation disposition accepted via PR #881. Scientific-N increment remains 0, and canonical DGAF efficacy and independent validation are not established.
 
-**5. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
+**5. Understand the AOSS Stage-A external-validation frontier.** The non-collecting Stage-A assurance apparatus is accepted through PR #925. PR #928 adds the accepted independent-validation handoff, so an external review is now operationally requestable. Issue #929 controls actual reviewer engagement and returned evidence. No reviewer has yet been established as independent, no external review has been executed, and collection execution readiness remains not established.
+
+**6. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
 ### What this demonstrates
 
@@ -44,6 +46,7 @@ For this reconciliation, the accepted source lineage through PR #797 was read fr
 - **Current-facing authority/documentation reconciliation — PR #795** is merged; security, operations, pattern-registry, authority-matrix, bootstrap, and technical-reference surfaces now route current executable authority through functional `role.*` contracts while retaining personas as provenance.
 - **Stage-1 retained-archive repair — PR #794** is merged and accepts the exact locked archive's harmless `./` flat-member representation without changing archive bytes or weakening unsafe-member rejection.
 - **Stage-2 accepted-lineage rebind — PR #797** is merged and binds the operator bundle to accepted Stage-1 commit `cf32a62bbf08a1b8db39709f4989be1be800d64e` / blob `3a825b026423952c2844cb18664eb6395b72fdc1`.
+- **AOSS Stage-A independent-validation handoff — PR #928** is merged and binds the external-review package to exact DGAF/ACP identities, reviewer-independence disclosure, verification procedure, returned-evidence requirements, and claim ceiling without asserting that an independent review has occurred.
 
 Those earlier engineering/presentation/assurance milestones did not establish materialization or primary-analysis authorization. Subsequent separately governed events advanced the lane: PR #824 admitted real non-secret materialization evidence, PR #826 established its immutable receipt, PR #831 accepted the fail-closed local analysis runner, PR #828 accepted bounded locked-analysis authorization, PR #835 accepted non-executing content-addressed result-admission tooling, PR #848 corrected the lifecycle-aware admission test, and PR #851 established the immutable locked-analysis result receipt. PR #872 separately established bounded interpretation admission at SAME_SYSTEM_NONINDEPENDENT scope. These events establish execution, result admission, and bounded interpretation at their exact scopes, but not canonical DGAF efficacy, independent validation, production certification, or High-Assurance authorization.
 
@@ -51,6 +54,7 @@ Those earlier engineering/presentation/assurance milestones did not establish ma
 > **Track A Epoch 001:** PROSPECTIVE BLINDED COLLECTION COMPLETE · 50 paired inferential seed units · 2,250 blinded observations · DATASET LOCK ESTABLISHED  
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
 > **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, bounded unblinding, materialization, immutable materialization receipt, locked-primary-analysis authorization, local locked analysis execution, and the content-addressed locked-result receipt are **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · interpretation/adjudication **EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT**  
+> **AOSS Stage-A external review:** HANDOFF ACCEPTED VIA PR #928 · REVIEW NOT EXECUTED · ISSUE #929 OPEN · reviewer attribution / independence NOT VERIFIED · execution_allowed=false  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
