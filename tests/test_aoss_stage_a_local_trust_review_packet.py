@@ -215,7 +215,7 @@ def test_review_packet_cannot_promote_execution_boundary(field, value):
 
 
 def test_duplicate_or_missing_evidence_roles_fail_closed():
-    external, reverification, trust, candidate, _, = _records()
+    external, reverification, trust, candidate, _ = _records()
     duplicate = [
         ("reviewer_attribution", "evidence://one", "c" * 64),
         ("reviewer_attribution", "evidence://two", "d" * 64),
