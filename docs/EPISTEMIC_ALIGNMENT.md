@@ -113,3 +113,25 @@ Do not transform:
 ## 7. Acceptance criterion
 
 An external reviewer should be able to select a consequential DGAF claim and trace it from its exact wording through measurement and evidence to the bounded conclusion without relying on undocumented conventions.
+
+## 8. Current application: independent-review boundary
+
+The AOSS Stage-A external-review phase is a direct application of the verification-versus-validation distinction above.
+
+The following transitions must remain separate:
+
+`artifact bytes match declared digest → cryptographic reverification`
+
+`reviewer reports VERIFIED/ACCEPT → externally reported finding`
+
+`relationship/conflict evidence supports independence → local trust adjudication input`
+
+`local adjudicator accepts the evidence → accepted local predicate`
+
+`all execution-admission predicates accepted → possible later execution-readiness transition`
+
+None of those arrows is implicit.
+
+Accordingly, the accepted Stage-A handoff and any later returned reviewer record must not be described as independent validation until reviewer attribution, reviewer independence, evidence sufficiency, and the relevant acceptance predicates have been explicitly adjudicated. A negative or blocked external result is valid evidence and must be retained rather than treated as a failed workflow to be retried until positive.
+
+This application preserves the governing rule: **the strongest supported statement is the permitted statement**.

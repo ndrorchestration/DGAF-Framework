@@ -40,6 +40,9 @@ A later record must not retroactively change the epistemic meaning of an earlier
 | Document | Lifecycle | Authority | Scope / note |
 |---|---|---|---|
 | `docs/CURRENT_STATE.md` | ACTIVE | Both | Concise current repository/gate snapshot |
+| `docs/PROJECT_STATUS.md` | DERIVATIVE | Both | Compatibility summary; must defer to CURRENT_STATE for live gate truth |
+| `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` | HISTORICAL | Historical audit | Preserves the 2026-08-20 pre-authorization gap audit; not a current gate list |
+| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / DERIVATIVE | Audit/control | Accepted external-review handoff; operationally requestable, but does not establish an external review result or independent validation |
 | `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | ACTIVE | Both | Detailed PDMAL operational control record |
 | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` | ACTIVE / PRE-FREEZE | Both | Authoritative experimental protocol; remains unfrozen |
 | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` | ACTIVE | Both | Authoritative implementation workload specification |
