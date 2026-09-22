@@ -120,3 +120,14 @@ def test_claim_evidence_index_routes_live_truth_to_current_state():
     assert "| Claim | Recorded / exact-scope status |" in claims
     assert "CLOSED_FOR_EXACT_PREREGISTERED_SCOPE" in claims
     assert "HANDOFF ACCEPTED / EXTERNAL REVIEW NOT EXECUTED" in claims
+
+
+def test_canonical_technical_overview_does_not_present_legacy_pdmal_as_live_state():
+    overview = (ROOT / "docs" / "CANONICAL_TECHNICAL_OVERVIEW.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "**Date:** 2026-09-22" in overview
+    assert "not the live project-state authority" in overview
+    assert "Track A Epoch 002 successor lifecycle" in overview
+    assert "current evidence-changing frontier is AOSS Stage-A external review" in overview
