@@ -2,7 +2,7 @@
 
 **Status:** Public technical overview; conceptual and implementation claims only unless separately evidenced  
 **Version:** 0.1.0-draft  
-**Date:** 2026-08-25
+**Date:** 2026-09-22
 
 ## Executive summary
 
@@ -54,11 +54,15 @@ The exact canonical vocabulary and evidence status for individual claims remain 
 
 ## 5. Relationship to PDMAL
 
-**Phi-Driven Multi-Agent Lattice (PDMAL / PDMA-L)** is a related lattice/control research track within the broader DGAF ecosystem. Shared terminology or repository location does not make DGAF and PDMAL equivalent.
+**Phi-Driven Multi-Agent Lattice (PDMAL / PDMA-L)** is a related lattice/control research lineage within the broader DGAF ecosystem. Shared terminology or repository location does not make DGAF and PDMAL equivalent.
 
-The current PDMAL experimental track is **pre-freeze**. The corrected candidate apparatus has not been freeze-verified, pilot authorization has not been granted, and empirical **N = 0**. Consequently, this overview makes no claim that PDMAL improves coordination, reliability, fault tolerance, or other outcomes.
+The repository contains more than one PDMAL/Track-A-era evidence lineage. The legacy PDMAL v0.7.6 protocol remains an active specification/workflow contract for its exact apparatus scope, but its September 6 PRE-FREEZE / Issue #309 candidate-reconstruction state is **not** the live project-state authority.
 
-PDMAL may become a source of empirical research questions about orchestration topology and control. Those questions must be answered through the frozen protocol and evidence process rather than inferred from architecture alone.
+The later Track A Epoch 002 successor lifecycle advanced through separately governed collection, dataset lock, bounded unblinding, materialization, locked primary analysis, and bounded same-system interpretation, and is now closed for its exact preregistered scope. Scientific-N increment remains 0, canonical DGAF efficacy is not established, and independent validation is not established.
+
+The current evidence-changing frontier is AOSS Stage-A external review: the independent-validation handoff is accepted, but no external review has executed and reviewer independence has not been locally established. For exact current state, use `docs/CURRENT_STATE.md`.
+
+Consequently, this overview makes no claim that PDMAL or DGAF improves coordination, reliability, fault tolerance, or other outcomes beyond the exact evidence scopes retained in the repository.
 
 ## 6. What is currently inspectable
 
@@ -122,5 +126,5 @@ The public objective is **discoverability with epistemic integrity**: make the f
 - [`CURRENT_STATE.md`](CURRENT_STATE.md)
 - [`README.md`](../README.md)
 - [`PATTERN_COMMONS_ARCHITECTURE.md`](PATTERN_COMMONS_ARCHITECTURE.md)
-- [`experiment/PDMAL_CURRENT_CONTROL_STATE.md`](experiment/PDMAL_CURRENT_CONTROL_STATE.md)
-- [`experiment/PDMAL_EXPERIMENT_PROTOCOL.md`](experiment/PDMAL_EXPERIMENT_PROTOCOL.md)
+- [`experiment/PDMAL_CURRENT_CONTROL_STATE.md`](experiment/PDMAL_CURRENT_CONTROL_STATE.md) — historical September 6 control-state snapshot
+- [`experiment/PDMAL_EXPERIMENT_PROTOCOL.md`](experiment/PDMAL_EXPERIMENT_PROTOCOL.md) — active exact-scope legacy PDMAL specification/workflow contract
