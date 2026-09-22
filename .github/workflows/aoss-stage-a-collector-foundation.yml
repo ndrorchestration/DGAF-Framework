@@ -73,6 +73,7 @@ jobs:
             tests/test_aoss_stage_a_reviewer_trust_verification_intake.py \
             tests/test_aoss_stage_a_local_adjudication_candidate.py \
             tests/test_aoss_stage_a_local_trust_review_packet.py \
+            tests/test_aoss_stage_a_local_trust_adjudication_result_intake.py \
             tests/test_aoss_stage_a_installed_environment_evidence.py \
             tests/test_aoss_stage_a_installed_environment_acceptance.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
