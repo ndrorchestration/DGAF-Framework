@@ -47,3 +47,10 @@ def test_ui_current_state_is_not_the_stale_september_19_snapshot():
     assert "133dbab5622882f02d5ec5cacad9841c3a97a2df" not in ui
     assert "independent-validation handoff: ACCEPTED" in ui
     assert "reviewer independence: NOT VERIFIED LOCALLY" in ui
+
+
+def test_ui_current_state_is_registered_as_derivative_lifecycle_surface():
+    lifecycle = (ROOT / "docs" / "DOCUMENT_LIFECYCLE.md").read_text(encoding="utf-8")
+
+    assert "| `docs/ui/UI_CURRENT_STATE.md` | DERIVATIVE | Presentation/documentation |" in lifecycle
+    assert "must defer to CURRENT_STATE" in lifecycle
