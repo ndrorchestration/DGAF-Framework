@@ -128,9 +128,7 @@ def _positive_intake():
 
 
 def test_positive_reported_findings_do_not_promote_local_trust():
-    external, reverification, trust, candidate, evidence, packet, intake = (
-        _positive_intake()
-    )
+    external, reverification, trust, candidate, evidence, packet, intake = _positive_intake()
     report = validate_local_trust_adjudication_result_intake(
         intake,
         review_packet=packet,
@@ -169,9 +167,7 @@ def test_non_positive_findings_are_retained_without_promotion():
         independence_finding="BLOCKED",
     )
 
-    assert intake["reported_review"]["reported_outcome"] == (
-        "NON_POSITIVE_REVIEW_REPORTED"
-    )
+    assert intake["reported_review"]["reported_outcome"] == ("NON_POSITIVE_REVIEW_REPORTED")
     assert intake["reviewer_attribution_verified"] is False
     assert intake["independence_verified"] is False
 
