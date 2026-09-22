@@ -1,25 +1,15 @@
 ---
 status: ACTIVE
 state: PRE-FREEZE
-authority: Experimental specification / design contract
+authority: Both
 owner: DGAF/PDMAL experimental-design control
 last_verified: 2026-09-06
-last_reconciled: 2026-09-22
-current_state_authority: docs/CURRENT_STATE.md
 applies_to_sha: CURRENT_SPECIFICATION; EXECUTABLE_CANDIDATE_BOUND_SEPARATELY_BY_P8
 protocol_blob_sha: BOUND_EXTERNALLY_BY_P8_LOCK
 supersedes: prior protocol revisions; v0.7.5 matrix amendment plus v0.7.6 blinding noninterference amendment incorporated
 ---
 
 # PDMAL Experiment Protocol
-
-## 2026-09-22 authority note
-
-This document remains an **active experimental specification / executable contract input** for the legacy PDMAL v0.7.6 apparatus and workflows that consume it. It is **not** the live DGAF project-state authority and must not be read as today's global gate sequence.
-
-Its PRE-FREEZE language describes the experiment design state bound to this protocol lineage. Current DGAF / Track A / AOSS state is owned by `docs/CURRENT_STATE.md` and active controllers. Later accepted Epoch 002 and AOSS transitions do not retroactively rewrite this protocol's exact-scope design history.
-
----
 
 This is the PDMAL experiment protocol. It is pre-freeze. No empirical data collection is authorized until the protocol is frozen and pilot authorization is separately recorded.
 
