@@ -41,12 +41,13 @@ A later record must not retroactively change the epistemic meaning of an earlier
 |---|---|---|---|
 | `docs/CURRENT_STATE.md` | ACTIVE | Both | Concise current repository/gate snapshot |
 | `docs/PROJECT_STATUS.md` | DERIVATIVE | Both | Compatibility summary; must defer to CURRENT_STATE for live gate truth |
+| `docs/ui/UI_CURRENT_STATE.md` | DERIVATIVE | Presentation/documentation | Current UI/interface projection index; must defer to CURRENT_STATE and active controllers for live gate truth |
 | `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` | HISTORICAL | Historical audit | Preserves the 2026-08-20 pre-authorization gap audit; not a current gate list |
 | `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / DERIVATIVE | Audit/control | Accepted external-review handoff; operationally requestable, but does not establish an external review result or independent validation |
-| `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | ACTIVE | Both | Detailed PDMAL operational control record |
-| `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` | ACTIVE / PRE-FREEZE | Both | Authoritative experimental protocol; remains unfrozen |
+| `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | HISTORICAL / SUPERSEDED | Historical control snapshot | Preserves the 2026-09-06 pre-authorization/final-candidate reconstruction state; live state belongs to CURRENT_STATE and active controllers |
+| `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` | ACTIVE / SPECIFICATION / PRE-FREEZE | Experimental specification | Active exact-scope protocol/workflow contract for legacy PDMAL v0.7.6; not live project-state authority |
 | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` | ACTIVE | Both | Authoritative implementation workload specification |
-| `docs/evidence/PDMAL_EVIDENCE_INDEX.md` | ACTIVE | Both | Current evidence-to-control mapping |
+| `docs/evidence/PDMAL_EVIDENCE_INDEX.md` | ACTIVE / EXACT-SCOPE HISTORICAL INDEX | Evidence lineage | September 6 PDMAL v0.7.6 / #309 evidence map; not live project-state authority |
 | `docs/evidence/EVIDENCE_LADDER_POLICY.md` | ACTIVE | Both | Permanent evidence-promotion policy |
 | `docs/experiment/FREEZE_MANIFEST_TEMPLATE.md` | TEMPLATE | Both | Becomes `FREEZE_MANIFEST.md` only at freeze |
 | `docs/DOCUMENT_LIFECYCLE.md` | ACTIVE | Both | Lifecycle registry itself |

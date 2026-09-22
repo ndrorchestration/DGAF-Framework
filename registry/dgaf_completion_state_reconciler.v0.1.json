@@ -7,13 +7,18 @@
   "scientific_state_effect": "NONE",
   "can_authorize": false,
   "can_execute_empirical_work": false,
+  "lifecycle_scope": "HISTORICAL_FIXED_SCOPE_TRACK_A_EPOCH_002_PRECOLLECTION",
+  "current_state_authority": "docs/CURRENT_STATE.md",
+  "historical_source_context": [
+    "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md"
+  ],
   "authority": {
     "human_final_arbiter": "Ender",
     "canonical_authority_sources": [
       "docs/agents/AGENT_AUTHORITY_MATRIX.md",
       "docs/agents/LAYER_0_CONSTITUTION.md",
       "docs/CURRENT_STATE.md",
-      "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md"
+      "docs/DOCUMENT_LIFECYCLE.md"
     ],
     "forbidden_actions": [
       "GRANT_FREEZE",

@@ -9,7 +9,7 @@ CONTROL_DOCS = {
     "docs/CURRENT_STATE.md": "active apparatus state",
     "docs/CLAIM_EVIDENCE_INDEX.md": "claim/evidence control surface",
     "docs/experiment/NEW_CANDIDATE_MANIFEST.md": "candidate manifest",
-    "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md": "PDMAL control state",
+    "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md": "historical PDMAL apparatus-lineage binding",
     "docs/experiment/N1_OPERATIONAL_CHARACTERIZATION_GATE_2026-08-30.md": "N=1 gate",
     "docs/experiment/FREEZE_MANIFEST.md": "freeze manifest",
     "docs/governance/P1_TO_P9_EVIDENCE_MATRIX.md": "P1-P9 matrix",
@@ -31,9 +31,7 @@ def assert_contains(text: str, needle: str, path: str) -> None:
 def unique_match(text: str, pattern: str, path: str, label: str) -> str:
     matches = list(re.finditer(pattern, text, flags=re.MULTILINE))
     if len(matches) != 1:
-        raise AssertionError(
-            f"{path}: expected exactly one authoritative {label}, found {len(matches)}"
-        )
+        raise AssertionError(f"{path}: expected exactly one authoritative {label}, found {len(matches)}")
     return matches[0].group(1)
 
 
@@ -70,20 +68,18 @@ def frontmatter(text: str, path: str) -> str:
 
 
 def fenced_yaml(text: str, path: str) -> str:
-    matches = list(re.finditer(r"^```yaml\s*\n(?P<body>.*?)^```\s*$", text, flags=re.MULTILINE | re.DOTALL))
+    fence = "```"
+    pattern = rf"^{fence}yaml\s*\n(?P<body>.*?)^{fence}\s*$"
+    matches = list(re.finditer(pattern, text, flags=re.MULTILINE | re.DOTALL))
     if len(matches) != 1:
-        raise AssertionError(
-            f"{path}: expected exactly one authoritative fenced YAML manifest, found {len(matches)}"
-        )
+        raise AssertionError(f"{path}: expected exactly one authoritative fenced YAML manifest, found {len(matches)}")
     return matches[0].group("body")
 
 
 def section(text: str, heading: str, path: str) -> str:
     matches = list(re.finditer(rf"^{re.escape(heading)}\s*$", text, flags=re.MULTILINE))
     if len(matches) != 1:
-        raise AssertionError(
-            f"{path}: expected exactly one authoritative section {heading!r}, found {len(matches)}"
-        )
+        raise AssertionError(f"{path}: expected exactly one authoritative section {heading!r}, found {len(matches)}")
     start = matches[0].end()
     remainder = text[start:]
     next_heading = re.search(r"^#{1,2}\s+", remainder, flags=re.MULTILINE)
@@ -110,11 +106,11 @@ def markdown_bold_value(text: str, label: str, path: str) -> str:
 
 
 def semantic_apparatus_source(path: str, text: str) -> str:
-    """Extract the current apparatus source from the document's authoritative field.
+    """Extract the bound apparatus source from each document's scoped identity field.
 
-    Each control surface already carries a semantically scoped marker. Historical
-    or explanatory mentions elsewhere in the same document must never satisfy the
-    current-identity invariant.
+    These surfaces span live and historical exact-scope records. Historical or
+    explanatory mentions elsewhere in the same document must never satisfy the
+    apparatus-identity invariant.
     """
     if path == "docs/experiment/NEW_CANDIDATE_MANIFEST.md":
         return unique_field(fenced_yaml(text, path), "apparatus_source_sha", path)
@@ -212,9 +208,7 @@ def main() -> int:
                 )
 
     prior_sha = None
-    prior_match = re.search(
-        r"prior_candidate:\s*\n\s*sha:\s*(\S+)", manifest, flags=re.MULTILINE
-    )
+    prior_match = re.search(r"prior_candidate:\s*\n\s*sha:\s*(\S+)", manifest, flags=re.MULTILINE)
     if prior_match:
         prior_sha = prior_match.group(1)
 

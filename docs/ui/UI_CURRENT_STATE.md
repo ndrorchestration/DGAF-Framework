@@ -1,8 +1,8 @@
 # DGAF UI / Interface Current State
 
-**Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-19  
+**Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-22  
 **Authority class:** PRESENTATION / DOCUMENTATION ONLY  
-**Reconciliation input:** protected signed/verified `main` `133dbab5622882f02d5ec5cacad9841c3a97a2df`  
+**Reconciliation input:** protected signed/verified `main` `f71e122cc25a1072dc1c01df781332ead31beac7`  
 **Scientific/control effect:** NONE  
 **Canonical High-Assurance boundary:** `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
 
@@ -27,6 +27,29 @@ Track A Epoch 002 has advanced beyond the state used when PR #849 was authored:
 - scientific-N increment: 0.
 
 The modeled Epoch 002 lifecycle is now closed for its exact preregistered scope through PR #881; the UI must not invent a successor empirical gate or imply claim promotion.
+
+## AOSS Stage-A external-review truth the interface must project
+
+The current DGAF evidence frontier is no longer another internally generated apparatus tranche. Protected main contains the accepted Stage-A non-promoting apparatus chain through PR #925 and the independent-validation handoff through PR #928.
+
+The interface must preserve all of the following simultaneously:
+
+- independent-validation handoff: ACCEPTED;
+- external review: NOT EXECUTED;
+- reviewer attribution: NOT VERIFIED LOCALLY;
+- reviewer independence: NOT VERIFIED LOCALLY;
+- installed-environment acceptance: NOT ESTABLISHED;
+- source-driver / executable acceptance: NOT ESTABLISHED;
+- destination / attempt acceptance: NOT ESTABLISHED;
+- execution allowed: FALSE;
+- collection execution readiness: NOT ESTABLISHED;
+- scientific-N increment: 0;
+- canonical DGAF efficacy: NOT ESTABLISHED;
+- High-Assurance: NOT AUTHORIZED.
+
+GitHub Issue #929 owns actual reviewer engagement and independently retained evidence return. The UI may expose that frontier, returned-evidence state, blockers, and later local adjudication results, but it must not equate a signed/authentic reviewer record with accepted local trust or independent validation.
+
+Internal CI, same-system replay, fixtures, owner self-review, or another DGAF-authored packet cannot be presented as satisfying #929.
 
 ## Accepted interface foundation
 
@@ -80,9 +103,9 @@ Vercel preview creation for the recent UI candidates is currently blocked by the
 
 ## Required order before further UI expansion
 
-1. Reconcile documentation across repository, Notion, and Drive mirrors.
+1. Keep current-facing authority surfaces synchronized with `docs/CURRENT_STATE.md` and the active GitHub controllers.
 2. Reconstruct the Evidence provenance-spine delta on current protected main.
-3. Update all Evidence copy to the current interpretation/adjudication frontier.
+3. Update Evidence copy to include both the closed Epoch 002 lane and the AOSS Stage-A external-review frontier.
 4. Run fresh exact-head UI/build, regression, governance, truth-layer, and applicable repository checks.
 5. Accept/merge only from current evidence.
 6. Reconstruct the audience-journey/mobile-containment delta on the resulting accepted main.

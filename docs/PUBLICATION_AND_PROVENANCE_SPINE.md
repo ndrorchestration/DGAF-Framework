@@ -1,7 +1,7 @@
 # DGAF Publication and Provenance Spine
 
 **Status:** Active publication architecture; not an empirical validation or absolute novelty claim  
-**Updated:** 2026-09-01  
+**Updated:** 2026-09-22  
 **Purpose:** Make DGAF and related research externally legible without overstating novelty, efficacy, maturity, or historical priority.
 
 ## 1. Publication principle
@@ -32,7 +32,7 @@ Implementation existence is not evidence of real-world efficacy or historical fi
 
 ### Layer C — Experimental record
 
-Experimental claims require version-bound protocols, candidate identity, retained artifacts, analysis rules, and explicit null/negative-result handling. The current PDMAL track remains pre-freeze with empirical N = 0; publication must preserve that boundary.
+Experimental claims require version-bound protocols, candidate identity, retained artifacts, analysis rules, and explicit null/negative-result handling. The repository contains historical and successor PDMAL/Track-A lineages with different states; publication must route present-tense project claims through `docs/CURRENT_STATE.md` rather than promoting an older protocol/control snapshot into current truth.
 
 ### Layer D — Independent scrutiny
 
@@ -133,7 +133,7 @@ The record does **not** support presenting DGAF as first in the individual mecha
 
 A narrower architecture-level hypothesis remains under review: DGAF may have independently coupled formation-state governance with candidate-bound experimental evidence, verification, and authorization. This remains conditional on completion of a broader cross-domain prior-art comparison.
 
-The current PDMAL research track remains PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.
+Current publication-state routing is: Track A Epoch 002 is closed for its exact preregistered scope at SAME_SYSTEM_NONINDEPENDENT evidence class; scientific-N increment remains 0; canonical DGAF efficacy and independent validation remain NOT ESTABLISHED. AOSS Stage-A has an accepted independent-validation handoff, but external review is NOT EXECUTED and execution readiness is NOT ESTABLISHED. The legacy PDMAL v0.7.6 PRE-FREEZE / Issue #309 state remains historical exact-scope provenance, not present-tense global project state.
 
 ## Cross-references
 
@@ -145,6 +145,6 @@ The current PDMAL research track remains PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZ
 - [`research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md`](research/DGAF_HISTORICAL_PRIORITY_ADJUDICATION_2026-09-01.md)
 - [`PRIOR_ART_AND_RELATED_WORK_SCOPE.md`](PRIOR_ART_AND_RELATED_WORK_SCOPE.md)
 - [`PATTERN_COMMONS_ARCHITECTURE.md`](PATTERN_COMMONS_ARCHITECTURE.md)
-- [`experiment/PDMAL_CURRENT_CONTROL_STATE.md`](experiment/PDMAL_CURRENT_CONTROL_STATE.md)
-- [`experiment/PDMAL_EXPERIMENT_PROTOCOL.md`](experiment/PDMAL_EXPERIMENT_PROTOCOL.md)
+- [`experiment/PDMAL_CURRENT_CONTROL_STATE.md`](experiment/PDMAL_CURRENT_CONTROL_STATE.md) — historical September 6 control snapshot
+- [`experiment/PDMAL_EXPERIMENT_PROTOCOL.md`](experiment/PDMAL_EXPERIMENT_PROTOCOL.md) — identity-bearing legacy specification/workflow contract
 - [`DGAF_EVIDENCE_AND_RELEASE_POLICY.md`](DGAF_EVIDENCE_AND_RELEASE_POLICY.md)

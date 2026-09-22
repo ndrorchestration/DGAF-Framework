@@ -1,8 +1,10 @@
 ---
-status: ACTIVE
+status: HISTORICAL / SUPERSEDED
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-06
+last_reconciled: 2026-09-22
+current_authority: docs/CURRENT_STATE.md
 live_source_boundary: 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
 live_source_boundary_role: V0_7_6_APPARATUS_INTRODUCTION_BOUNDARY_NOT_CURRENT_HEAD
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
@@ -19,7 +21,17 @@ empirical_n: 0
 
 # PDMAL Current Control State
 
-This is the current pre-authorization control record. PR #308 advanced the apparatus to protocol v0.7.6 / artifact schema 1.1 at `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. The prior runtime candidate `7c1cc4bb…` retains valid exact-scope evidence but is historical provenance for final-candidate purposes. **Final v0.7.6 candidate is NOT DESIGNATED; Issue #309 is authoritative for reconstruction and evidence regeneration.**
+## 2026-09-22 applicability note
+
+This file is retained as a **historical pre-authorization control-state snapshot** for the September 6 PDMAL/final-candidate reconstruction phase. It is no longer a live current-state authority.
+
+For current DGAF / Track A / AOSS state, use `docs/CURRENT_STATE.md`, `docs/PROJECT_STATUS.md`, and the active GitHub controllers. In particular, later accepted work advanced beyond this snapshot through Epoch 002 collection, dataset lock, bounded unblinding, materialization, locked analysis, bounded same-system interpretation, exact-scope lifecycle closure, and the AOSS Stage-A independent-validation handoff.
+
+The gate table and Issue #309 sequence below remain event-time provenance. They must not be used to infer today's authorization, readiness, efficacy, independence, or next transition.
+
+---
+
+This was the current pre-authorization control record at its recorded boundary. PR #308 advanced the apparatus to protocol v0.7.6 / artifact schema 1.1 at `972edd41f16c69c6912af08c7d6c3aa627fdd8a9`. The prior runtime candidate `7c1cc4bb…` retains valid exact-scope evidence but is historical provenance for final-candidate purposes. **Final v0.7.6 candidate is NOT DESIGNATED; Issue #309 is authoritative for reconstruction and evidence regeneration.**
 
 The consolidated control-state anchor `89be386b…` remains valid for its control/provenance role and does not itself designate the final candidate. Neither `main`, a PR head, a deployment, nor a documentation checkpoint becomes the final candidate merely by recency.
 
