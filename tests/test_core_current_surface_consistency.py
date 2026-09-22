@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -131,3 +132,20 @@ def test_canonical_technical_overview_does_not_present_legacy_pdmal_as_live_stat
     assert "not the live project-state authority" in overview
     assert "Track A Epoch 002 successor lifecycle" in overview
     assert "current evidence-changing frontier is AOSS Stage-A external review" in overview
+
+
+def test_completion_reconciler_separates_current_authority_from_historical_context():
+    graph = json.loads(
+        (ROOT / "registry" / "dgaf_completion_state_reconciler.v0.1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert graph["lifecycle_scope"] == "HISTORICAL_FIXED_SCOPE_TRACK_A_EPOCH_002_PRECOLLECTION"
+    assert graph["current_state_authority"] == "docs/CURRENT_STATE.md"
+    assert "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md" not in graph["authority"][
+        "canonical_authority_sources"
+    ]
+    assert "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md" in graph[
+        "historical_source_context"
+    ]
