@@ -109,3 +109,14 @@ def test_machine_readable_current_authority_fixture_does_not_route_to_stale_pdma
     assert "next_gate: external reviewer engagement and independently retained evidence under issue #929" in fixture
     assert "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md" not in fixture
     assert "docs/CURRENT_STATE.md" in fixture
+
+
+def test_claim_evidence_index_routes_live_truth_to_current_state():
+    claims = (ROOT / "docs" / "CLAIM_EVIDENCE_INDEX.md").read_text(encoding="utf-8")
+
+    assert "**Current reconciliation:** 2026-09-22" in claims
+    assert "**Live project-state authority is `docs/CURRENT_STATE.md`**" in claims
+    assert "Issue #929 owns the next external evidence-changing transition" in claims
+    assert "| Claim | Recorded / exact-scope status |" in claims
+    assert "CLOSED_FOR_EXACT_PREREGISTERED_SCOPE" in claims
+    assert "HANDOFF ACCEPTED / EXTERNAL REVIEW NOT EXECUTED" in claims
