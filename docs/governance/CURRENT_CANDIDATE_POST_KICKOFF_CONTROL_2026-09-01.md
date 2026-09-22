@@ -1,4 +1,4 @@
-> **Historical snapshot / superseded for present-state use — 2026-09-05:** This post-kickoff record preserves the 2026-09-01 candidate/control state and exact evidence then under review. It is not current authority. The current designated runtime candidate is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`; use `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`, `docs/experiment/NEW_CANDIDATE_MANIFEST.md`, and `docs/CURRENT_STATE.md` for present state.
+> **Historical snapshot / superseded for present-state use — 2026-09-22:** This record preserves the September 1, 2026 candidate/control state and exact evidence then under review. It is not current authority. Live DGAF state is governed by `docs/CURRENT_STATE.md` and active lane controllers. The identities and dispositions below remain exact-scope historical provenance.
 
 # Current-Candidate Post-Kickoff Control — 2026-09-01
 

@@ -1,4 +1,4 @@
-> **Historical snapshot / superseded for present-state use — 2026-09-05:** This file preserves the 2026-09-01 control-plane state and its then-current candidate/evidence identities. It is not current gate authority. The current designated runtime candidate is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`; present gate state is controlled by `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`, `docs/experiment/NEW_CANDIDATE_MANIFEST.md`, and `docs/CURRENT_STATE.md`. Do not promote the historical OPEN/VERIFIED states below into present-state claims.
+> **Historical snapshot / superseded for present-state use — 2026-09-22:** This file preserves the September 1, 2026 control-plane state and its then-current candidate/evidence identities. It is not current gate authority. Live DGAF state is governed by `docs/CURRENT_STATE.md` and its active controllers. The candidate identifiers and OPEN/VERIFIED dispositions below remain exact-scope historical provenance; do not promote them into present-state claims.
 
 # DGAF/PDMAL Current State — 2026-09-01
 

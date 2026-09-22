@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL documentation control
 last_verified: 2026-09-22
-reconciliation_input_main: 92bc930bdd84f6c4258852e764d3e42019e41342
+reconciliation_input_main: f99e9e0464625711ac7c9daba0e65de4a6c277a7
 ---
 
 # Documentation Lifecycle Registry
@@ -45,6 +45,10 @@ A later record must not retroactively change the epistemic meaning of an earlier
 | `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` | HISTORICAL | Historical audit | Preserves the 2026-08-20 pre-authorization gap audit; not a current gate list |
 | `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE / DERIVATIVE | Audit/control | Accepted external-review handoff; operationally requestable, but does not establish an external review result or independent validation |
 | `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | HISTORICAL / SUPERSEDED | Historical control snapshot | Preserves the 2026-09-06 pre-authorization/final-candidate reconstruction state; live state belongs to CURRENT_STATE and active controllers |
+| `docs/governance/CURRENT_STATE_2026-09-01.md` | HISTORICAL | Historical control snapshot | Preserves September 1 state and identities; present project state belongs to `docs/CURRENT_STATE.md` |
+| `docs/governance/CURRENT_CANDIDATE_POST_KICKOFF_CONTROL_2026-09-01.md` | HISTORICAL | Historical candidate/control record | Preserves the September 1 candidate and completion-control boundary; does not designate present candidates or state |
+| `docs/governance/CURRENT_CANDIDATE_EVIDENCE_READINESS_2026-09-01.md` | HISTORICAL | Historical evidence-readiness record | Preserves the September 1 candidate/readiness assessment; dispositions are exact-scope historical provenance |
+| `docs/reports/pdmal-multimedia-report-2026-09-05/README.md` | HISTORICAL / DERIVATIVE | Historical presentation artifact | Describes the September 5 report snapshot; current DGAF state belongs to `docs/CURRENT_STATE.md` |
 | `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` | ACTIVE / SPECIFICATION / PRE-FREEZE | Experimental specification | Active exact-scope protocol/workflow contract for legacy PDMAL v0.7.6; not live project-state authority |
 | `docs/experiment/PDMAL_TASK_SPEC_V0.7.4.md` | ACTIVE | Both | Authoritative implementation workload specification |
 | `docs/evidence/PDMAL_EVIDENCE_INDEX.md` | ACTIVE / EXACT-SCOPE HISTORICAL INDEX | Evidence lineage | September 6 PDMAL v0.7.6 / #309 evidence map; not live project-state authority |
