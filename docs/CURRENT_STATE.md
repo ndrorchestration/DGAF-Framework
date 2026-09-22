@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-19
-reconciliation_input_main: 133dbab5622882f02d5ec5cacad9841c3a97a2df
+last_verified: 2026-09-22
+reconciliation_input_main: c6bf7007879c778ab46570eba598c4792e9d53bd
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -70,6 +70,20 @@ accepted_interpretation_projection_pr: 877
 accepted_post_interpretation_disposition_tooling_pr: 880
 accepted_post_interpretation_disposition_pr: 881
 track_a_epoch_002_lifecycle: CLOSED_FOR_EXACT_PREREGISTERED_SCOPE
+aoss_stage_a_controller_issue: 901
+aoss_stage_a_outcome_collection_authorized: TRUE_BOUNDED
+aoss_stage_a_collection_execution_readiness: NOT_ESTABLISHED
+aoss_stage_a_external_validation: NOT_ESTABLISHED
+aoss_stage_a_trust_promotion: NOT_EXECUTED
+aoss_stage_a_reviewer_attribution_verified: false
+aoss_stage_a_independence_verified: false
+aoss_stage_a_installed_environment_acceptance: NOT_ESTABLISHED
+aoss_stage_a_source_driver_binding: NOT_ESTABLISHED
+aoss_stage_a_executable_acceptance: NOT_ESTABLISHED
+aoss_stage_a_destination_acceptance: NOT_ESTABLISHED
+aoss_stage_a_execution_allowed: false
+accepted_aoss_local_trust_result_intake_pr: 925
+accepted_aoss_local_trust_result_intake_commit: c6bf7007879c778ab46570eba598c4792e9d53bd
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -83,7 +97,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `133dbab5622882f02d5ec5cacad9841c3a97a2df` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `c6bf7007879c778ab46570eba598c4792e9d53bd` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -107,6 +121,11 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Epoch 002 interpretation/adjudication | **EXECUTED / ESTABLISHED · creation-only `INTERPRETATION_NOTE` admitted via PR #872** |
 | Epoch 002 result-admission tooling | **ACCEPTED · CONTENT-ADDRESSED / NON-EXECUTING · PR #835** |
 | Independent validation | **NOT ESTABLISHED** |
+| AOSS Stage A outcome collection authorization | **TRUE · BOUNDED · ACCEPTED AUTHORIZATION BASIS** |
+| AOSS Stage A apparatus | **ACCEPTED THROUGH NON-PROMOTING LOCAL TRUST RESULT INTAKE · PR #925** |
+| AOSS Stage A reviewer attribution / independence | **NOT VERIFIED LOCALLY** |
+| AOSS Stage A execution admission | **BLOCKED · ENVIRONMENT / SOURCE-DRIVER / EXECUTABLE / DESTINATION ACCEPTANCE NOT ESTABLISHED** |
+| AOSS Stage A collection execution readiness | **NOT ESTABLISHED · `execution_allowed=false`** |
 | Governance Command Center — Decision Frontier | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #776** |
 | Governance Command Center — Governance Map | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #779** |
 | Governance Command Center — State-Space Explorer V0 | **ACCEPTED PRESENTATION-ONLY SOURCE STATE · PR #783** |
@@ -116,9 +135,67 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt and creation-only interpretation note establish bounded, same-system/nonindependent interpretation; they do not establish canonical DGAF efficacy, independent validation, or High-Assurance authorization.
 
+## AOSS v0.6 Stage A — current execution-admission frontier
+
+Issue #901 controls the current AOSS v0.6 Stage-A execution-readiness lane. Bounded outcome collection authorization exists, but authorization and execution readiness remain separate. The accepted apparatus now covers the non-collecting engineering chain through local trust-result intake without converting evidence into execution authority.
+
+### Accepted apparatus sequence
+
+Protected main now contains the accepted Stage-A chain through PR #925:
+
+- #900 — non-collecting collector/preflight/custody foundation;
+- #903/#910 — fail-closed telemetry-to-`PolicyInput` mapping and frozen source-driver contract;
+- #904–#906 — prospective runtime/dependency binding plus observed installed-environment evidence without acceptance;
+- #912 — same-process ingest-time capture and frozen freshness/future-skew checks;
+- #913 — five-role bundle custody and exactly five read-only exact-byte replay passes;
+- #914 — attempt invalidation and permanent no-retry after outcome inspection;
+- #915 — read-only execution-admission blocker projection;
+- #916/#917 — installed-environment evidence candidate and non-self-adjudicating acceptance packet;
+- #918/#919 — blocked execution-identity review plus prospective non-fixture executable/destination/attempt identity candidate;
+- #920 — non-promoting external admission-decision intake;
+- #921 — external evidence byte custody and SHA-256 reverification;
+- #922 — non-promoting reviewer-attribution / independence verification intake;
+- #923 — blocked local-adjudication candidate;
+- #924 — inert local trust-review evidence packet;
+- #925 — non-promoting local trust adjudication-result intake.
+
+The design invariant across this chain is that **evidence, verification, acceptance, authorization, execution, and scientific claim promotion are distinct events**. A reported external or local `ACCEPT`/`VERIFIED` finding remains evidence until a separately authorized acceptance transition establishes the corresponding local predicate.
+
+### Current unresolved acceptance predicates
+
+The remaining execution-admission blockers are real trust/acceptance questions, not missing synthetic apparatus:
+
+- installed environment manifest acceptance for the exact frozen runtime/interpreter/dependency lock;
+- source-driver / collector executable identity acceptance against the frozen ACP source/recipe contract;
+- destination and prospective attempt identity acceptance;
+- local reviewer-attribution verification and reviewer-independence verification against real retained evidence;
+- separate authorized trust/execution-admission promotion after those findings are verified.
+
+Current Stage-A boundary remains:
+
+```text
+OUTCOME_COLLECTION_AUTHORIZED=TRUE
+trust_promotion=NOT_EXECUTED
+reviewer_attribution_verified=false
+independence_verified=false
+INSTALLED_ENVIRONMENT_ACCEPTANCE=NOT_ESTABLISHED
+SOURCE_DRIVER_BINDING=NOT_ESTABLISHED
+EXECUTABLE_ACCEPTANCE=NOT_ESTABLISHED
+DESTINATION_ACCEPTANCE=NOT_ESTABLISHED
+execution_allowed=false
+COLLECTION_EXECUTION_READINESS=NOT_ESTABLISHED
+SCIENTIFIC_N_INCREMENT=0
+EXTERNAL_VALIDATION_ESTABLISHED=FALSE
+CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED
+HIGH_ASSURANCE=NOT_AUTHORIZED
+```
+
+No accepted Stage-A apparatus PR through #925 executes an ACP study episode, creates a Stage-A empirical outcome, increments scientific N, establishes canonical DGAF efficacy, or establishes independent validation.
+
 ## Protected-main repository state
 
-This reconciliation was refreshed against protected `main` `133dbab5622882f02d5ec5cacad9841c3a97a2df` after accepted PR #881. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was refreshed against protected `main` `c6bf7007879c778ab46570eba598c4792e9d53bd` after accepted PR #925. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
