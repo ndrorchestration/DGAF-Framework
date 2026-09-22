@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-22
-reconciliation_input_main: c6bf7007879c778ab46570eba598c4792e9d53bd
+reconciliation_input_main: 92bc930bdd84f6c4258852e764d3e42019e41342
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -84,6 +84,11 @@ aoss_stage_a_destination_acceptance: NOT_ESTABLISHED
 aoss_stage_a_execution_allowed: false
 accepted_aoss_local_trust_result_intake_pr: 925
 accepted_aoss_local_trust_result_intake_commit: c6bf7007879c778ab46570eba598c4792e9d53bd
+accepted_aoss_independent_validation_handoff_pr: 928
+accepted_aoss_independent_validation_handoff_commit: 92bc930bdd84f6c4258852e764d3e42019e41342
+aoss_stage_a_external_review_issue: 929
+aoss_stage_a_independent_validation_handoff: ACCEPTED
+aoss_stage_a_external_review: NOT_EXECUTED
 assurance_catalog_coverage: PARTIAL_CORE_FAMILIES_ONLY
 ---
 
@@ -97,7 +102,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `c6bf7007879c778ab46570eba598c4792e9d53bd` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `92bc930bdd84f6c4258852e764d3e42019e41342` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -123,6 +128,8 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Independent validation | **NOT ESTABLISHED** |
 | AOSS Stage A outcome collection authorization | **TRUE · BOUNDED · ACCEPTED AUTHORIZATION BASIS** |
 | AOSS Stage A apparatus | **ACCEPTED THROUGH NON-PROMOTING LOCAL TRUST RESULT INTAKE · PR #925** |
+| AOSS Stage A independent-validation handoff | **ACCEPTED · PR #928 · EXTERNAL REVIEW OPERATIONALLY REQUESTABLE** |
+| AOSS Stage A external review | **NOT EXECUTED · CONTROLLER #929 OPEN** |
 | AOSS Stage A reviewer attribution / independence | **NOT VERIFIED LOCALLY** |
 | AOSS Stage A execution admission | **BLOCKED · ENVIRONMENT / SOURCE-DRIVER / EXECUTABLE / DESTINATION ACCEPTANCE NOT ESTABLISHED** |
 | AOSS Stage A collection execution readiness | **NOT ESTABLISHED · `execution_allowed=false`** |
@@ -141,7 +148,7 @@ Issue #901 controls the current AOSS v0.6 Stage-A execution-readiness lane. Boun
 
 ### Accepted apparatus sequence
 
-Protected main now contains the accepted Stage-A chain through PR #925:
+Protected main now contains the accepted Stage-A apparatus chain through PR #925, plus the independent-validation handoff accepted via PR #928:
 
 - #900 — non-collecting collector/preflight/custody foundation;
 - #903/#910 — fail-closed telemetry-to-`PolicyInput` mapping and frozen source-driver contract;
@@ -157,9 +164,20 @@ Protected main now contains the accepted Stage-A chain through PR #925:
 - #922 — non-promoting reviewer-attribution / independence verification intake;
 - #923 — blocked local-adjudication candidate;
 - #924 — inert local trust-review evidence packet;
-- #925 — non-promoting local trust adjudication-result intake.
+- #925 — non-promoting local trust adjudication-result intake;
+- #928 — independent-validation handoff package binding exact DGAF/ACP identities, reviewer independence disclosure, verification procedure, required returned-evidence fields, custody/replay/no-retry checks, and claim ceiling without performing the review.
 
 The design invariant across this chain is that **evidence, verification, acceptance, authorization, execution, and scientific claim promotion are distinct events**. A reported external or local `ACCEPT`/`VERIFIED` finding remains evidence until a separately authorized acceptance transition establishes the corresponding local predicate.
+
+### External-review phase
+
+Issue #929 now controls actual independent reviewer engagement and returned evidence. The accepted #928 handoff makes independent validation operationally requestable, but no reviewer has yet been verified as independent and no external review result has been accepted.
+
+The next evidence-changing sequence is:
+
+`candidate reviewer → conflict/relationship disclosure → accepted handoff delivery → independently retained returned evidence → local cryptographic reverification → separate reviewer-attribution/independence adjudication → separate environment/executable/destination acceptance → possible later collection-execution-readiness transition under #901`.
+
+Internal CI, fixtures, same-system replay, project-owner self-review, or another DGAF-authored packet cannot satisfy #929.
 
 ### Current unresolved acceptance predicates
 
@@ -195,7 +213,7 @@ No accepted Stage-A apparatus PR through #925 executes an ACP study episode, cre
 
 ## Protected-main repository state
 
-This reconciliation was refreshed against protected `main` `c6bf7007879c778ab46570eba598c4792e9d53bd` after accepted PR #925. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+This reconciliation was refreshed against protected `main` `92bc930bdd84f6c4258852e764d3e42019e41342` after accepted PR #928. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
