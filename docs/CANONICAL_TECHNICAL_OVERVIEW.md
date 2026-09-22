@@ -56,7 +56,7 @@ The exact canonical vocabulary and evidence status for individual claims remain 
 
 **Phi-Driven Multi-Agent Lattice (PDMAL / PDMA-L)** is a related lattice/control research lineage within the broader DGAF ecosystem. Shared terminology or repository location does not make DGAF and PDMAL equivalent.
 
-The repository contains more than one PDMAL/Track-A-era evidence lineage. The legacy PDMAL v0.7.6 protocol remains an active specification/workflow contract for its exact apparatus scope, but its September 6 PRE-FREEZE / Issue #309 candidate-reconstruction state is **not** the live project-state authority; it is not the live project-state authority.
+The repository contains more than one PDMAL/Track-A-era evidence lineage. The legacy PDMAL v0.7.6 protocol remains an active specification/workflow contract for its exact apparatus scope, but its September 6 PRE-FREEZE / Issue #309 candidate-reconstruction state is **not** the live project-state authority; it remains an exact-scope historical source.
 
 The later Track A Epoch 002 successor lifecycle advanced through separately governed collection, dataset lock, bounded unblinding, materialization, locked primary analysis, and bounded same-system interpretation, and is now closed for its exact preregistered scope. Scientific-N increment remains 0, canonical DGAF efficacy is not established, and independent validation is not established.
 
