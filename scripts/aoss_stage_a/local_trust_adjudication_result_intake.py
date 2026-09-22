@@ -111,11 +111,7 @@ def prepare_local_trust_adjudication_result_intake(
 
     reported_outcome = (
         "POSITIVE_REVIEW_REPORTED"
-        if (
-            fresh_cryptographic_verification_reported
-            and attribution == "VERIFIED"
-            and independence == "VERIFIED"
-        )
+        if (fresh_cryptographic_verification_reported and attribution == "VERIFIED" and independence == "VERIFIED")
         else "NON_POSITIVE_REVIEW_REPORTED"
     )
 
@@ -131,9 +127,7 @@ def prepare_local_trust_adjudication_result_intake(
             "reviewed_at": timestamp,
             "decision_record_uri": record_uri,
             "decision_record_sha256": record_digest,
-            "fresh_cryptographic_verification_reported": (
-                fresh_cryptographic_verification_reported
-            ),
+            "fresh_cryptographic_verification_reported": (fresh_cryptographic_verification_reported),
             "findings": {
                 "reviewer_attribution": attribution,
                 "independence": independence,
