@@ -9,7 +9,7 @@ CONTROL_DOCS = {
     "docs/CURRENT_STATE.md": "active apparatus state",
     "docs/CLAIM_EVIDENCE_INDEX.md": "claim/evidence control surface",
     "docs/experiment/NEW_CANDIDATE_MANIFEST.md": "candidate manifest",
-    "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md": "PDMAL control state",
+    "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md": "historical PDMAL apparatus-lineage binding",
     "docs/experiment/N1_OPERATIONAL_CHARACTERIZATION_GATE_2026-08-30.md": "N=1 gate",
     "docs/experiment/FREEZE_MANIFEST.md": "freeze manifest",
     "docs/governance/P1_TO_P9_EVIDENCE_MATRIX.md": "P1-P9 matrix",
@@ -110,11 +110,11 @@ def markdown_bold_value(text: str, label: str, path: str) -> str:
 
 
 def semantic_apparatus_source(path: str, text: str) -> str:
-    """Extract the current apparatus source from the document's authoritative field.
+    """Extract the bound apparatus source from each document's scoped identity field.
 
-    Each control surface already carries a semantically scoped marker. Historical
-    or explanatory mentions elsewhere in the same document must never satisfy the
-    current-identity invariant.
+    These surfaces span live and historical exact-scope records. Historical or
+    explanatory mentions elsewhere in the same document must never satisfy the
+    apparatus-identity invariant.
     """
     if path == "docs/experiment/NEW_CANDIDATE_MANIFEST.md":
         return unique_field(fenced_yaml(text, path), "apparatus_source_sha", path)
