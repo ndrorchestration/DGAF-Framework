@@ -173,9 +173,7 @@ def test_non_positive_findings_are_retained_without_promotion():
 
 
 def test_binding_drift_fails_closed():
-    external, reverification, trust, candidate, evidence, packet, intake = (
-        _positive_intake()
-    )
+    external, reverification, trust, candidate, evidence, packet, intake = _positive_intake()
     mutated = deepcopy(intake)
     mutated["bindings"]["local_trust_review_packet_sha256"] = "f" * 64
 
