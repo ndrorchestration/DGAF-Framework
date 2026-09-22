@@ -103,9 +103,7 @@ def prepare_local_trust_review_packet(
         "controller_issue": EXPECTED_CONTROLLER_ISSUE,
         "bindings": {
             "reviewer_trust_intake_sha256": record_sha256(reviewer_trust_intake),
-            "local_adjudication_candidate_sha256": record_sha256(
-                local_adjudication_candidate
-            ),
+            "local_adjudication_candidate_sha256": record_sha256(local_adjudication_candidate),
         },
         "retained_evidence": evidence,
         "review_state": {
@@ -158,9 +156,7 @@ def validate_local_trust_review_packet(
     bindings = packet.get("bindings")
     expected_bindings = {
         "reviewer_trust_intake_sha256": record_sha256(reviewer_trust_intake),
-        "local_adjudication_candidate_sha256": record_sha256(
-            local_adjudication_candidate
-        ),
+        "local_adjudication_candidate_sha256": record_sha256(local_adjudication_candidate),
     }
     if not isinstance(bindings, Mapping) or dict(bindings) != expected_bindings:
         _fail("LOCAL_TRUST_REVIEW_BINDING_MISMATCH")
