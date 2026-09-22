@@ -1,4 +1,4 @@
-> **Historical snapshot / superseded for present-state use — 2026-09-05:** This file preserves the 2026-09-01 candidate-readiness assessment and its then-current identities. It is not current gate authority. The current designated runtime candidate is `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8`; present gate state is controlled by `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md`, `docs/experiment/NEW_CANDIDATE_MANIFEST.md`, and `docs/CURRENT_STATE.md`. The historical P3/P5/P6/P9 dispositions below must not be reused as current state.
+> **Historical snapshot / superseded for present-state use — 2026-09-22:** This file preserves the September 1, 2026 candidate-readiness assessment and its then-current identities. It is not current gate authority. Live DGAF state is governed by `docs/CURRENT_STATE.md` and active lane controllers. The P3/P5/P6/P9 dispositions below remain exact-scope historical provenance and must not be reused as present state.
 
 # DGAF/PDMAL — Current-Candidate Evidence Readiness — 2026-09-01
 
