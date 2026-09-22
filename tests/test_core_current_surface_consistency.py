@@ -72,19 +72,16 @@ def test_stale_pdmal_current_control_snapshot_is_not_live_authority():
     )
 
 
-def test_legacy_pdmal_protocol_is_not_live_project_state_authority():
-    protocol = (ROOT / "docs" / "experiment" / "PDMAL_EXPERIMENT_PROTOCOL.md").read_text(
-        encoding="utf-8"
-    )
+def test_legacy_pdmal_protocol_authority_is_scoped_without_rewriting_protocol():
     lifecycle = (ROOT / "docs" / "DOCUMENT_LIFECYCLE.md").read_text(encoding="utf-8")
+    protocol = ROOT / "docs" / "experiment" / "PDMAL_EXPERIMENT_PROTOCOL.md"
 
-    assert "authority: Experimental specification / design contract" in protocol
-    assert "current_state_authority: docs/CURRENT_STATE.md" in protocol
-    assert "not the live DGAF project-state authority" in protocol
     assert (
         "| `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` | ACTIVE / SPECIFICATION / PRE-FREEZE |"
         in lifecycle
     )
+    assert "not live project-state authority" in lifecycle
+    assert protocol.exists()
 
 
 def test_legacy_pdmal_evidence_index_is_exact_scope_not_live_gate_truth():
