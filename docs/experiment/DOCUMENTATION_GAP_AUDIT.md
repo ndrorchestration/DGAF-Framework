@@ -15,7 +15,6 @@ For live state, use `docs/CURRENT_STATE.md`. For AOSS Stage-A execution readines
 
 The current external-review frontier does not reopen or rewrite the historical audit below. In particular, the existence of an accepted external-review handoff does not establish external validation, reviewer independence, collection execution readiness, canonical DGAF efficacy, or High-Assurance authorization.
 
-
 ## Status
 
 Audit reconciled on 2026-08-20 against the frozen experimental apparatus at `3510b86889cd341f7a7cf9ab684fd37b2fafd758`. Earlier pre-freeze findings remain historical evidence; they must not be read as the current gate state. The genuine executor gap is CLOSED. The apparatus is frozen. Remaining work is post-freeze verification, methodological closure, analysis implementation locking, and authorization.
