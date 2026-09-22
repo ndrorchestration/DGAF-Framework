@@ -68,9 +68,9 @@ def frontmatter(text: str, path: str) -> str:
 
 
 def fenced_yaml(text: str, path: str) -> str:
-    matches = list(
-        re.finditer(r"^\`\`\`yaml\\s*\\n(?P<body>.*?)^\`\`\`\\s*$", text, flags=re.MULTILINE | re.DOTALL)
-    )
+    fence = "```"
+    pattern = rf"^{fence}yaml\\s*\\n(?P<body>.*?)^{fence}\\s*$"
+    matches = list(re.finditer(pattern, text, flags=re.MULTILINE | re.DOTALL))
     if len(matches) != 1:
         raise AssertionError(f"{path}: expected exactly one authoritative fenced YAML manifest, found {len(matches)}")
     return matches[0].group("body")
