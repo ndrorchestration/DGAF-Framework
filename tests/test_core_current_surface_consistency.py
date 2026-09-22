@@ -69,3 +69,43 @@ def test_stale_pdmal_current_control_snapshot_is_not_live_authority():
         "| `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | HISTORICAL / SUPERSEDED |"
         in lifecycle
     )
+
+
+def test_legacy_pdmal_protocol_is_not_live_project_state_authority():
+    protocol = (ROOT / "docs" / "experiment" / "PDMAL_EXPERIMENT_PROTOCOL.md").read_text(
+        encoding="utf-8"
+    )
+    lifecycle = (ROOT / "docs" / "DOCUMENT_LIFECYCLE.md").read_text(encoding="utf-8")
+
+    assert "authority: Experimental specification / design contract" in protocol
+    assert "current_state_authority: docs/CURRENT_STATE.md" in protocol
+    assert "not the live DGAF project-state authority" in protocol
+    assert (
+        "| `docs/experiment/PDMAL_EXPERIMENT_PROTOCOL.md` | ACTIVE / SPECIFICATION / PRE-FREEZE |"
+        in lifecycle
+    )
+
+
+def test_legacy_pdmal_evidence_index_is_exact_scope_not_live_gate_truth():
+    evidence = (ROOT / "docs" / "evidence" / "PDMAL_EVIDENCE_INDEX.md").read_text(
+        encoding="utf-8"
+    )
+    lifecycle = (ROOT / "docs" / "DOCUMENT_LIFECYCLE.md").read_text(encoding="utf-8")
+
+    assert "status: ACTIVE / EXACT-SCOPE HISTORICAL INDEX" in evidence
+    assert "current_state_authority: docs/CURRENT_STATE.md" in evidence
+    assert "supersede this file as a source of present-tense project gate truth" in evidence
+    assert (
+        "| `docs/evidence/PDMAL_EVIDENCE_INDEX.md` | ACTIVE / EXACT-SCOPE HISTORICAL INDEX |"
+        in lifecycle
+    )
+
+
+def test_machine_readable_current_authority_fixture_does_not_route_to_stale_pdmal_state():
+    fixture = (
+        ROOT / "docs" / "governance" / "fixtures" / "current-authority-current-state.yaml"
+    ).read_text(encoding="utf-8")
+
+    assert "next_gate: external reviewer engagement and independently retained evidence under issue #929" in fixture
+    assert "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md" not in fixture
+    assert "docs/CURRENT_STATE.md" in fixture
