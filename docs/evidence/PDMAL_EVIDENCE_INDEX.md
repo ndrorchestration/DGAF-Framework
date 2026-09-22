@@ -1,8 +1,10 @@
 ---
-status: ACTIVE
-authority: Both
+status: ACTIVE / EXACT-SCOPE HISTORICAL INDEX
+authority: Evidence lineage / historical exact-scope index
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-06
+last_reconciled: 2026-09-22
+current_state_authority: docs/CURRENT_STATE.md
 live_source_boundary: 972edd41f16c69c6912af08c7d6c3aa627fdd8a9
 live_source_boundary_role: V0_7_6_APPARATUS_INTRODUCTION_BOUNDARY_NOT_CURRENT_HEAD
 consolidated_control_state_anchor: 89be386b136aeb5f1fc5ca39d4aac4b3781a9f58
@@ -16,6 +18,14 @@ empirical_n: 0
 ---
 
 # PDMAL Evidence Index
+
+## 2026-09-22 authority note
+
+This index remains active only as an **exact-scope evidence-lineage map** for the September 6 PDMAL v0.7.6 / Issue #309 phase. Its `Current inventory`, P8/P9, freeze, authorization, and N=0 rows are event-time statements for that lineage, not current global DGAF state.
+
+Use `docs/CURRENT_STATE.md` for live DGAF / Track A / AOSS state. Later accepted Epoch 002 execution/closure and AOSS external-review preparation do not invalidate the historical evidence identities below, but they do supersede this file as a source of present-tense project gate truth.
+
+---
 
 This is a control-plane index, not empirical evidence, external certification, or a self-authorizing freeze record.
 
