@@ -70,6 +70,7 @@ jobs:
             tests/test_aoss_stage_a_execution_identity_candidate.py \
             tests/test_aoss_stage_a_external_admission_decision_intake.py \
             tests/test_aoss_stage_a_external_evidence_reverification.py \
+            tests/test_aoss_stage_a_reviewer_trust_verification_intake.py \
             tests/test_aoss_stage_a_installed_environment_evidence.py \
             tests/test_aoss_stage_a_installed_environment_acceptance.py \
             tests/test_aoss_v0_6_stage_a_acp_direct_baseline.py
@@ -438,6 +439,68 @@ jobs:
 
           assert report["reverification"] == "PASS_DECLARED_BYTES_MATCH_SHA256"
           assert report["external_record_retrieved"] is True
+          assert report["reviewer_attribution_verified"] is False
+          assert report["independence_verified"] is False
+          assert report["local_adjudication"] == "NOT_EXECUTED"
+          assert report["execution_allowed"] is False
+          assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"
+          assert report["scientific_n_increment"] == 0
+          PY
+
+      - name: Record external trust findings without local trust promotion
+        run: |
+          python - <<'PY'
+          from scripts.aoss_stage_a.reviewer_trust_verification_intake import (
+              prepare_reviewer_trust_verification_intake,
+              validate_reviewer_trust_verification_intake,
+          )
+
+          external_admission = {
+              "record_type": "AOSS_V0_6_STAGE_A_EXTERNAL_ADMISSION_DECISION_INTAKE",
+              "status": "EXTERNAL_DECISION_UNVERIFIED_NOT_ADJUDICATED",
+              "controller_issue": 901,
+              "fixture": "ci-structural-only",
+          }
+          reverification = {
+              "record_type": "AOSS_V0_6_STAGE_A_EXTERNAL_EVIDENCE_REVERIFICATION_PACKET",
+              "status": "CRYPTOGRAPHIC_BYTES_MATCHED_NO_TRUST_PROMOTION",
+              "controller_issue": 901,
+              "cryptographic_reverification": "PASS_DECLARED_BYTES_MATCH_SHA256",
+              "reviewer_attribution_evidence": [
+                  {
+                      "artifact_id": "reviewer-attribution",
+                      "declared_sha256": "b" * 64,
+                      "observed_sha256": "b" * 64,
+                      "digest_match": True,
+                  }
+              ],
+              "reviewer_attribution_verified": False,
+              "independence_verified": False,
+              "local_adjudication": "NOT_EXECUTED",
+              "execution_allowed": False,
+              "collection_execution_readiness": "NOT_ESTABLISHED",
+              "scientific_n_increment": 0,
+          }
+          intake = prepare_reviewer_trust_verification_intake(
+              external_admission_intake=external_admission,
+              reverification_packet=reverification,
+              verifier_identity="external-trust-verifier:ci-fixture",
+              verified_at="2026-09-21T23:50:00Z",
+              verification_record_uri="https://example.invalid/aoss/trust-verification.json",
+              verification_record_sha256="a" * 64,
+              verification_method_summary="CI structural fixture only",
+              reviewer_attribution_finding="VERIFIED",
+              independence_finding="VERIFIED",
+          )
+          report = validate_reviewer_trust_verification_intake(
+              intake,
+              external_admission_intake=external_admission,
+              reverification_packet=reverification,
+          )
+
+          assert report["intake_validation"] == "PASS_EXTERNAL_TRUST_FINDINGS_STRUCTURAL_ONLY"
+          assert report["external_findings"]["reviewer_attribution"] == "VERIFIED"
+          assert report["external_findings"]["independence"] == "VERIFIED"
           assert report["reviewer_attribution_verified"] is False
           assert report["independence_verified"] is False
           assert report["local_adjudication"] == "NOT_EXECUTED"
