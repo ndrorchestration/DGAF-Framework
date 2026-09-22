@@ -1,8 +1,8 @@
 # DGAF UI / Interface Current State
 
-**Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-19  
+**Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-22  
 **Authority class:** PRESENTATION / DOCUMENTATION ONLY  
-**Reconciliation input:** protected signed/verified `main` `133dbab5622882f02d5ec5cacad9841c3a97a2df`  
+**Reconciliation input:** protected signed/verified `main` `a65e862cce193b8a6aa8a6d702505f4987a859e0`  
 **Scientific/control effect:** NONE  
 **Canonical High-Assurance boundary:** `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
 
@@ -25,8 +25,20 @@ Track A Epoch 002 has advanced beyond the state used when PR #849 was authored:
 - canonical DGAF efficacy: NOT ESTABLISHED;
 - independent validation: NOT ESTABLISHED;
 - scientific-N increment: 0.
+- AOSS Stage-A independent-validation handoff: ACCEPTED via PR #928;
+- AOSS Stage-A external review: NOT EXECUTED under Issue #929;
+- reviewer attribution / independence: NOT VERIFIED;
+- AOSS execution permission: disabled; collection execution readiness NOT ESTABLISHED.
 
 The modeled Epoch 002 lifecycle is now closed for its exact preregistered scope through PR #881; the UI must not invent a successor empirical gate or imply claim promotion.
+
+## External-review UI projection boundary
+
+The interface may now expose that an independent-validation handoff exists and that external review is operationally requestable. It must simultaneously show the controlling negative state: no external review has executed, reviewer attribution and independence are unverified, execution remains disabled, and collection execution readiness is not established.
+
+A UI label such as `HANDOFF READY` must never be rendered as `INDEPENDENTLY VALIDATED`, `EXTERNALLY ACCEPTED`, or equivalent. Issue #929 is the active evidence-return controller; Issue #901 remains the collection-execution-readiness controller.
+
+The UI may present candidate reviewers or outreach status only as coordination metadata. Candidate listing, contact, or willingness does not establish reviewer independence.
 
 ## Accepted interface foundation
 
@@ -80,7 +92,7 @@ Vercel preview creation for the recent UI candidates is currently blocked by the
 
 ## Required order before further UI expansion
 
-1. Reconcile documentation across repository, Notion, and Drive mirrors.
+1. Keep repository and Notion projections synchronized with accepted external-review evidence.
 2. Reconstruct the Evidence provenance-spine delta on current protected main.
 3. Update all Evidence copy to the current interpretation/adjudication frontier.
 4. Run fresh exact-head UI/build, regression, governance, truth-layer, and applicable repository checks.
