@@ -128,7 +128,6 @@ Documentation reconciliation alone does not create a freeze, authorize a pilot, 
 
 **Scientific boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.
 
-
 ## 2026-09-22 — AOSS Stage-A independent-review documentation state
 
 The following current-facing records are **ACTIVE** for the AOSS Stage-A external-review phase:
