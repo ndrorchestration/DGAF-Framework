@@ -58,9 +58,7 @@ def test_ui_current_state_is_registered_as_derivative_lifecycle_surface():
 
 
 def test_stale_pdmal_current_control_snapshot_is_not_live_authority():
-    pdmal = (ROOT / "docs" / "experiment" / "PDMAL_CURRENT_CONTROL_STATE.md").read_text(
-        encoding="utf-8"
-    )
+    pdmal = (ROOT / "docs" / "experiment" / "PDMAL_CURRENT_CONTROL_STATE.md").read_text(encoding="utf-8")
     lifecycle = (ROOT / "docs" / "DOCUMENT_LIFECYCLE.md").read_text(encoding="utf-8")
 
     assert "status: HISTORICAL / SUPERSEDED" in pdmal
