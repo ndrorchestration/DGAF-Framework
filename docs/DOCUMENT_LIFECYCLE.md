@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL documentation control
-last_verified: 2026-09-18
-reconciliation_input_main: 2e34b856cb87153904e41205030b46911e77e038
+last_verified: 2026-09-22
+reconciliation_input_main: 92bc930bdd84f6c4258852e764d3e42019e41342
 ---
 
 # Documentation Lifecycle Registry
@@ -127,3 +127,34 @@ Every material state change must update the applicable active current-state/evid
 Documentation reconciliation alone does not create a freeze, authorize a pilot, permit unblinding, or increase empirical N.
 
 **Scientific boundary:** PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / empirical N = 0.
+
+
+## 2026-09-22 — AOSS Stage-A independent-review documentation state
+
+The following current-facing records are **ACTIVE** for the AOSS Stage-A external-review phase:
+
+| Document / controller | Lifecycle | Authority / role |
+|---|---|---|
+| `docs/CURRENT_STATE.md` | ACTIVE | Primary current-facing repository state summary; must preserve exact evidence/authorization boundaries |
+| `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE | Reviewer-facing handoff contract accepted via PR #928; makes external review operationally requestable but does not itself establish independence or validation |
+| GitHub Issue #901 | ACTIVE | Stage-A collection-execution-readiness controller |
+| GitHub Issue #929 | ACTIVE | External reviewer engagement and returned-evidence controller |
+| GitHub Issue #927 | HISTORICAL / COMPLETED | Handoff-preparation controller; closed after PR #928 acceptance |
+
+The #900–#925 AOSS apparatus records remain authoritative for the exact mechanisms they bind, but they are not substitutes for the accepted #928 external-review handoff or for real reviewer evidence under #929.
+
+Current external-review boundary:
+
+```text
+INDEPENDENT_VALIDATION_HANDOFF=ACCEPTED
+EXTERNAL_REVIEW=NOT_EXECUTED
+reviewer_attribution_verified=false
+independence_verified=false
+execution_allowed=false
+COLLECTION_EXECUTION_READINESS=NOT_ESTABLISHED
+SCIENTIFIC_N_INCREMENT=0
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED
+HIGH_ASSURANCE=NOT_AUTHORIZED
+```
+
+This lifecycle update is documentation-only. It does not grant reviewer independence, execution admission, collection readiness, scientific-N promotion, canonical DGAF efficacy, or High-Assurance authorization.
