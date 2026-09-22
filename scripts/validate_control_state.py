@@ -31,9 +31,7 @@ def assert_contains(text: str, needle: str, path: str) -> None:
 def unique_match(text: str, pattern: str, path: str, label: str) -> str:
     matches = list(re.finditer(pattern, text, flags=re.MULTILINE))
     if len(matches) != 1:
-        raise AssertionError(
-            f"{path}: expected exactly one authoritative {label}, found {len(matches)}"
-        )
+        raise AssertionError(f"{path}: expected exactly one authoritative {label}, found {len(matches)}")
     return matches[0].group(1)
 
 
@@ -70,20 +68,18 @@ def frontmatter(text: str, path: str) -> str:
 
 
 def fenced_yaml(text: str, path: str) -> str:
-    matches = list(re.finditer(r"^```yaml\s*\n(?P<body>.*?)^```\s*$", text, flags=re.MULTILINE | re.DOTALL))
+    matches = list(
+        re.finditer(r"^\`\`\`yaml\s*\n(?P<body>.*?)^\`\`\`\s*$", text, flags=re.MULTILINE | re.DOTALL)
+    )
     if len(matches) != 1:
-        raise AssertionError(
-            f"{path}: expected exactly one authoritative fenced YAML manifest, found {len(matches)}"
-        )
+        raise AssertionError(f"{path}: expected exactly one authoritative fenced YAML manifest, found {len(matches)}")
     return matches[0].group("body")
 
 
 def section(text: str, heading: str, path: str) -> str:
     matches = list(re.finditer(rf"^{re.escape(heading)}\s*$", text, flags=re.MULTILINE))
     if len(matches) != 1:
-        raise AssertionError(
-            f"{path}: expected exactly one authoritative section {heading!r}, found {len(matches)}"
-        )
+        raise AssertionError(f"{path}: expected exactly one authoritative section {heading!r}, found {len(matches)}")
     start = matches[0].end()
     remainder = text[start:]
     next_heading = re.search(r"^#{1,2}\s+", remainder, flags=re.MULTILINE)
@@ -212,9 +208,7 @@ def main() -> int:
                 )
 
     prior_sha = None
-    prior_match = re.search(
-        r"prior_candidate:\s*\n\s*sha:\s*(\S+)", manifest, flags=re.MULTILINE
-    )
+    prior_match = re.search(r"prior_candidate:\s*\n\s*sha:\s*(\S+)", manifest, flags=re.MULTILINE)
     if prior_match:
         prior_sha = prior_match.group(1)
 
