@@ -8,11 +8,15 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-This 2026-09-19 reconciliation was refreshed against protected `main` `133dbab5622882f02d5ec5cacad9841c3a97a2df`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
+This 2026-09-22 compatibility reconciliation was refreshed against protected `main` `a65e862cce193b8a6aa8a6d702505f4987a859e0`. Exact later protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
 - independent validation: **NOT ESTABLISHED**;
+- AOSS Stage-A independent-validation handoff: **ACCEPTED** through PR #928;
+- AOSS Stage-A external review: **NOT EXECUTED** under Issue #929;
+- AOSS reviewer attribution / independence: **NOT VERIFIED**;
+- AOSS collection execution readiness: **NOT ESTABLISHED** / `execution_allowed=false`;
 - Track A Epoch 001: **COMPLETE / BLINDED / DATASET LOCKED / CRYPTOGRAPHICALLY UNRECOVERABLE FOR PRIMARY ANALYSIS**;
 - Track A Epoch 002 repository custody: **ACCEPTED / SAME_SYSTEM_NONINDEPENDENT**;
 - Track A Epoch 002 immutable freeze, final closure, and bounded verification classification: **ACCEPTED**;
@@ -80,6 +84,16 @@ Accepted assurance inventory has since expanded through PRs #789, #791, #792, an
 - PR #831 accepted the fail-closed local locked-analysis runner; PR #828 accepted the separate bounded authorization event; PR #835 accepted content-addressed result-admission tooling.
 - The authorized primary analysis subsequently executed locally; PR #851 established the immutable content-addressed result receipt, PR #854 reconciled current-state projections, and PR #855 accepted fail-closed interpretation/adjudication tooling.
 - These later events establish only their exact scopes; the bounded interpretation note is established, while efficacy, independent validation, scientific-N promotion, and High-Assurance authorization remain unestablished.
+
+## Current AOSS external-review frontier
+
+The accepted AOSS Stage-A non-collecting apparatus now extends through PR #925, and PR #928 adds the independent-validation handoff. Issue #929 controls actual reviewer engagement and independently retained evidence return.
+
+The handoff makes external review operationally requestable; it does not itself establish reviewer identity, reviewer independence, installed-environment acceptance, source-driver/executable acceptance, destination/attempt acceptance, collection execution readiness, scientific-N promotion, canonical DGAF efficacy, or independent validation.
+
+The next evidence-changing action is external: obtain conflict/relationship disclosure, provide the accepted handoff without a pre-filled conclusion, receive independently retained review evidence, then locally reverify and separately adjudicate the reviewer and execution-admission predicates.
+
+Internal CI, fixture replay, project-owner self-review, or another DGAF-authored packet cannot satisfy that transition.
 
 ## Next admissible scientific transition
 
