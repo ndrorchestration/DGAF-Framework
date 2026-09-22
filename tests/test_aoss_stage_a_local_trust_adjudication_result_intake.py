@@ -209,9 +209,7 @@ def test_binding_drift_fails_closed():
     ],
 )
 def test_intake_cannot_promote_trust_or_execution_boundary(field, value):
-    external, reverification, trust, candidate, evidence, packet, intake = (
-        _positive_intake()
-    )
+    external, reverification, trust, candidate, evidence, packet, intake = _positive_intake()
     mutated = deepcopy(intake)
     mutated[field] = value
 
