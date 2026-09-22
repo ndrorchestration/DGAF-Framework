@@ -114,7 +114,6 @@ Do not transform:
 
 An external reviewer should be able to select a consequential DGAF claim and trace it from its exact wording through measurement and evidence to the bounded conclusion without relying on undocumented conventions.
 
-
 ## 8. Current application: independent-review boundary
 
 The AOSS Stage-A external-review phase is a direct application of the verification-versus-validation distinction above.
