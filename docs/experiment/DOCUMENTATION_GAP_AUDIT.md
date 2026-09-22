@@ -1,4 +1,20 @@
+---
+status: HISTORICAL
+authority: Historical audit
+last_reconciled: 2026-09-22
+current_authority: docs/CURRENT_STATE.md
+---
+
 # DGAF Documentation Gap Audit
+
+## 2026-09-22 applicability note
+
+This file preserves the **2026-08-20 pre-authorization documentation-gap audit as historical evidence**. Its row-level OPEN/VERIFY/CLOSED statuses describe that earlier frozen-apparatus phase and are not the current DGAF/AOSS gate list.
+
+For live state, use `docs/CURRENT_STATE.md`. For AOSS Stage-A execution readiness, use Issue #901. For independent reviewer engagement and returned evidence, use Issue #929 and the accepted `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md`.
+
+The current external-review frontier does not reopen or rewrite the historical audit below. In particular, the existence of an accepted external-review handoff does not establish external validation, reviewer independence, collection execution readiness, canonical DGAF efficacy, or High-Assurance authorization.
+
 
 ## Status
 
