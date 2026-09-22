@@ -1,6 +1,6 @@
 # Claim / Evidence Index
 
-**Current reconciliation:** 2026-09-06  
+**Current reconciliation:** 2026-09-22  
 **Canonical source repository:** `ndrorchestration/DGAF-Framework`  
 **v0.7.6 apparatus-introduction boundary:** `972edd41f16c69c6912af08c7d6c3aa627fdd8a9` (legacy lineage boundary; not current `main`)
 **Corrected apparatus source:** `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`  
@@ -8,16 +8,20 @@
 **Historical runtime-evidence candidate:** `7c1cc4bb78025b21501b6f790bf55f4b5e3bbdc8` with exact tree `586c00d6dedb589e52108279f9759be3c4f927e1` and deployment `dpl_8MsufVUMXHMGqx9d1dcK9va5EWUA`.  
 **Final v0.7.6 candidate:** `NOT DESIGNATED` — Issue #309.
 
-> **Reconciliation notice:** Historical claim/evidence rows preserve their original evidence scope. They must not be read as automatic final-candidate closure. Current gate authority is `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` plus the exact retained evidence named there.
+> **Reconciliation notice:** Historical claim/evidence rows preserve their original evidence scope. They must not be read as current project gate truth or automatic final-candidate closure. **Live project-state authority is `docs/CURRENT_STATE.md`**, with active controllers governing their exact lanes. `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` and the legacy PDMAL evidence records remain historical/exact-scope sources only.
 >
-> **Current experimental boundary:** **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0.** Historical P1, P2, P3, P5, P6, and P6a evidence remains exact-scope provenance for `7c1cc4bb…`. PR #326 integrated Mode-T engineering mechanisms, but real H/I/T custody/access separation remains operationally open pending independent/external acceptance. P7 final binding remains open; P8 remains fail-closed; final P9 is not executed; no immutable freeze or pilot authorization exists.
+> **Current DGAF boundary:** Track A Epoch 002 is **CLOSED_FOR_EXACT_PREREGISTERED_SCOPE / SAME_SYSTEM_NONINDEPENDENT**, scientific-N increment remains **0**, canonical DGAF efficacy is **NOT ESTABLISHED**, and independent validation is **NOT ESTABLISHED**. AOSS Stage-A has an accepted independent-validation handoff through PR #928, but external review is **NOT EXECUTED**, reviewer attribution/independence are not verified, `execution_allowed=false`, and collection execution readiness is **NOT ESTABLISHED**. Issue #929 owns the next external evidence-changing transition.
+>
+> **Legacy PDMAL v0.7.6 lineage:** the P1/P2/P3/P4/P5/P6/P6a/P7/P8/P9 rows below preserve the September 6 / Issue #309 evidence-and-candidate reconstruction state. They remain useful exact-scope provenance but do not override the later Track A/AOSS state above.
 
 This index maps high-impact claims to the evidence class actually supported. It is intentionally conservative and claim-specific. A repository or subsystem is never globally “verified” merely because one workflow succeeds.
 
 The repository runs deterministic claim-language checks. Textual presence alone is not proof; evidence identity, scope, and claim class determine admissibility.
 
-| Claim | Current status | Evidence | Scope / limitations | Falsifier or revision trigger |
+| Claim | Recorded / exact-scope status | Evidence | Scope / limitations | Falsifier or revision trigger |
 |---|---|---|---|---|
+| Track A Epoch 002 lifecycle is closed for its exact preregistered scope. | `ESTABLISHED / CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT` | Accepted lifecycle/disposition chain through PR #881 and `docs/CURRENT_STATE.md`. | Same-system/nonindependent exact-scope closure only; no efficacy, independent validation, production certification, or scientific-N promotion. | Contradictory accepted lifecycle evidence or a separately authorized new epoch. |
+| AOSS Stage-A independent-validation handoff is accepted, but external review has not executed. | `HANDOFF ACCEPTED / EXTERNAL REVIEW NOT EXECUTED` | PR #928; Issue #929; `docs/CURRENT_STATE.md`. | Reviewer attribution/independence and environment/executable/destination acceptance remain unestablished; execution remains disabled. | Independently retained reviewer evidence followed by separate local adjudication. |
 | DGAF containment specification is executable and checks its configured bounded invariants/state space without TLC error. | `VERIFIED` — bounded model-check scope | Governance CI / retained TLC evidence under the applicable exact runs. | Bounded state graph only; not an unbounded theorem and not efficacy evidence. | TLC counterexample, changed spec/config/bounds, or broader claim than checked scope. |
 | DGAF deterministic circuit-breaker sequence executes as designed in the repository-local harness. | `VERIFIED` — deterministic harness scope | Python/staging-evidence harness under exact runs. | Repository-local control-flow evidence; not live-staging efficacy. | Harness assertion failure or contradictory independently retained execution. |
 | Repository blocking pytest suite passes on the PR #269 supported Python matrix. | `VERIFIED` — exact PR-head test scope | Python Tests & Quality Checks `33957199893`; Python 3.10/3.11/3.12 jobs successful; Python 3.12 190 passed / 4 skipped. | Historical exact PR-head scope; later quality remediation is tracked separately. | Blocking pytest regression or supported-runtime policy change. |
