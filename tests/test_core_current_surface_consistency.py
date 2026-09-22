@@ -54,3 +54,18 @@ def test_ui_current_state_is_registered_as_derivative_lifecycle_surface():
 
     assert "| `docs/ui/UI_CURRENT_STATE.md` | DERIVATIVE | Presentation/documentation |" in lifecycle
     assert "must defer to CURRENT_STATE" in lifecycle
+
+
+def test_stale_pdmal_current_control_snapshot_is_not_live_authority():
+    pdmal = (ROOT / "docs" / "experiment" / "PDMAL_CURRENT_CONTROL_STATE.md").read_text(
+        encoding="utf-8"
+    )
+    lifecycle = (ROOT / "docs" / "DOCUMENT_LIFECYCLE.md").read_text(encoding="utf-8")
+
+    assert "status: HISTORICAL / SUPERSEDED" in pdmal
+    assert "current_authority: docs/CURRENT_STATE.md" in pdmal
+    assert "no longer a live current-state authority" in pdmal
+    assert (
+        "| `docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md` | HISTORICAL / SUPERSEDED |"
+        in lifecycle
+    )
