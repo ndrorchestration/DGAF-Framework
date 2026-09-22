@@ -146,3 +146,15 @@ def test_completion_reconciler_separates_current_authority_from_historical_conte
     assert "docs/experiment/PDMAL_CURRENT_CONTROL_STATE.md" in graph[
         "historical_source_context"
     ]
+
+
+def test_publication_spine_routes_present_claims_to_current_state():
+    spine = (ROOT / "docs" / "PUBLICATION_AND_PROVENANCE_SPINE.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "**Updated:** 2026-09-22" in spine
+    assert "route present-tense project claims through `docs/CURRENT_STATE.md`" in spine
+    assert "Track A Epoch 002 is closed for its exact preregistered scope" in spine
+    assert "external review is NOT EXECUTED" in spine
+    assert "historical September 6 control snapshot" in spine
