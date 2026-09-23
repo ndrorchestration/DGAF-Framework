@@ -3,7 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from registry.audit_catalog import (\n    collect_catalog_violations,\n    collect_missing_implementation_paths,\n    load_catalog,\n)
+from registry.audit_catalog import (
+    collect_catalog_violations,
+    collect_missing_implementation_paths,
+    load_catalog,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = REPO_ROOT / "registry" / "audit_catalog.v1.json"
