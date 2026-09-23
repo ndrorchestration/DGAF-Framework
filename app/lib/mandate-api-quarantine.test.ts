@@ -1,19 +1,45 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import test from 'node:test'
 import assert from 'node:assert/strict'
+import test from 'node:test'
 
-const routePath = path.join(process.cwd(), 'pages', 'api', 'mandate.ts')
-const source = fs.readFileSync(routePath, 'utf8')
+import handler from '../../pages/api/mandate.ts'
 
-test('legacy mandate API is explicitly quarantined as non-authoritative', () => {
-  assert.match(source, /NON_AUTHORITATIVE_LEGACY_SURFACE/)
-  assert.match(source, /status\(410\)/)
-  assert.doesNotMatch(source, /mandates\.set\(/)
-  assert.doesNotMatch(source, /m\.status\s*=\s*status/)
-})
+type ResponseSnapshot = {
+  statusCode?: number
+  body?: unknown
+}
 
-test('legacy mandate API cannot advertise itself as governance authority', () => {
-  assert.doesNotMatch(source, /Implements Triumvirate Governance Contract/)
-  assert.doesNotMatch(source, /Mandate may only be issued by Prime/)
-})
+function invoke(method: string, body?: unknown): ResponseSnapshot {
+  const snapshot: ResponseSnapshot = {}
+  const req = { method, body }
+  const res = {
+    status(code: number) {
+      snapshot.statusCode = code
+      return this
+    },
+    json(payload: unknown) {
+      snapshot.body = payload
+      return this
+    },
+  }
+
+  handler(req as never, res as never)
+  return snapshot
+}
+
+for (const [method, body] of [
+  ['GET', undefined],
+  ['POST', { issued_by: 'amethyst' }],
+  ['PATCH', { status: 'signed_off' }],
+  ['DELETE', undefined],
+] as const) {
+  test(`legacy mandate API fails closed for ${method}`, () => {
+    const result = invoke(method, body)
+    assert.equal(result.statusCode, 410)
+    assert.deepEqual(result.body, {
+      error: 'NON_AUTHORITATIVE_LEGACY_SURFACE',
+      authority: 'NONE',
+      state_change: 'DISABLED',
+      guidance: 'Use reviewed PPTL governance paths; this endpoint cannot issue, mutate, or sign off mandates.',
+    })
+  })
+}
