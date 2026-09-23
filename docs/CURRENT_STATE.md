@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-22
-reconciliation_input_main: 92bc930bdd84f6c4258852e764d3e42019e41342
+last_verified: 2026-09-23
+reconciliation_input_main: 3ba57706b75ed32d1cbae0a2fddd220a0cd1da20
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -102,7 +102,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `92bc930bdd84f6c4258852e764d3e42019e41342` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `3ba57706b75ed32d1cbae0a2fddd220a0cd1da20` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -210,6 +210,21 @@ HIGH_ASSURANCE=NOT_AUTHORIZED
 ```
 
 No accepted Stage-A apparatus PR through #925 executes an ACP study episode, creates a Stage-A empirical outcome, increments scientific N, establishes canonical DGAF efficacy, or establishes independent validation.
+
+## Repository integrity and all-family audit — 2026-09-23
+
+The current audit execution is bound to protected `main` `3ba57706b75ed32d1cbae0a2fddd220a0cd1da20`. This is repository/documentation assurance work only and does not promote scientific, empirical, authorization, efficacy, or independent-validation state.
+
+- **PR #938 accepted:** the legacy mandate HTTP surface is explicitly non-authoritative and fail-closed.
+- **PR #940 accepted:** external Actions in the three protected-main required merge-gate workflows are pinned to immutable commit identities.
+- **PR #942 accepted:** the mandate quarantine oracle now executes the handler behaviorally. Its initial exact-head UI failure caused by invalid TypeScript syntax remains preserved as negative evidence; the corrected head completed all returned workflow families successfully before merge.
+- **PR #945 accepted:** UI Command Center Validation now pins `actions/checkout` and `actions/setup-node` to immutable identities observed in successful run #314. Issue #939 remains open for the remaining repository-wide migration.
+- **Issue #943 open:** CI dependency resolution remains incompletely reproducible because `setuptools>=83.0.0,<84` is range-bound and package hashes are not recorded.
+- **PRs #941 and #944 superseded:** both documentation candidates completed useful validation but became stale after protected main advanced. They were closed rather than forced across a changed base.
+- The 2026-09-23 all-family audit is recorded in the Notion Audit & Assurance system. Several audit families remain PARTIAL or NOT VERIFIED where exact runtime, provider, independent-review, exhaustive public-surface, or ecosystem-wide evidence is unavailable.
+- PR-head CI, merge identity, provider/deployment state, and protected-main post-merge evidence remain separate propositions. A success is never projected across a changed SHA without target-bound evidence.
+
+The audit preserves the canonical boundary: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**.
 
 ## Protected-main repository state
 

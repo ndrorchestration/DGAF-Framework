@@ -1,8 +1,8 @@
 # DGAF UI / Interface Current State
 
-**Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-22  
+**Status:** CURRENT DOCUMENTATION / RECONCILED 2026-09-23  
 **Authority class:** PRESENTATION / DOCUMENTATION ONLY  
-**Reconciliation input:** protected signed/verified `main` `f71e122cc25a1072dc1c01df781332ead31beac7`  
+**Reconciliation input:** protected `main` `3ba57706b75ed32d1cbae0a2fddd220a0cd1da20`  
 **Scientific/control effect:** NONE  
 **Canonical High-Assurance boundary:** `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0`
 
@@ -99,7 +99,7 @@ Its stacked exact head completed all 10 returned workflow families successfully.
 
 ## Provider/deployment boundary
 
-Vercel preview creation for the recent UI candidates is currently blocked by the account daily deployment quota. This is provider/runtime evidence only. It is not a repository test failure, governance failure, authorization event, scientific-state change, or proof of deployment readiness.
+A 2026-09-22 event-time snapshot recorded recent UI preview creation as blocked by an account deployment quota. That provider condition is not treated as a standing current fact: current deployment/preview status must be verified from provider-bound evidence at use time. Provider/runtime status is separate from repository test results, governance authority, authorization, scientific state, and deployment readiness.
 
 ## Required order before further UI expansion
 

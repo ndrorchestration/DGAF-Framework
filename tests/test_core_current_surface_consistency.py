@@ -44,7 +44,8 @@ def test_epoch_002_remains_closed_and_non_promoting():
 def test_ui_current_state_is_not_the_stale_september_19_snapshot():
     ui = _read("UI_CURRENT_STATE")
 
-    assert "CURRENT DOCUMENTATION / RECONCILED 2026-09-22" in ui
+    assert "**Status:** CURRENT DOCUMENTATION / RECONCILED " in ui
+    assert "CURRENT DOCUMENTATION / RECONCILED 2026-09-19" not in ui
     assert "133dbab5622882f02d5ec5cacad9841c3a97a2df" not in ui
     assert "independent-validation handoff: ACCEPTED" in ui
     assert "reviewer independence: NOT VERIFIED LOCALLY" in ui
