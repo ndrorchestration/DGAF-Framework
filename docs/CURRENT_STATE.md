@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-22
-reconciliation_input_main: 92bc930bdd84f6c4258852e764d3e42019e41342
+last_verified: 2026-09-23
+reconciliation_input_main: c82126fe5624ad176b4fd30316208c8d4f58a85c
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -210,6 +210,17 @@ HIGH_ASSURANCE=NOT_AUTHORIZED
 ```
 
 No accepted Stage-A apparatus PR through #925 executes an ACP study episode, creates a Stage-A empirical outcome, increments scientific N, establishes canonical DGAF efficacy, or establishes independent validation.
+
+## Repository integrity audit — 2026-09-23
+
+The current daily integrity audit is bound to protected `main` `c82126fe5624ad176b4fd30316208c8d4f58a85c`. This audit is repository-assurance work only and does not promote scientific, empirical, authorization, efficacy, or independent-validation state.
+
+- **PR #938 accepted:** the legacy `pages/api/mandate.ts` HTTP surface is now explicitly non-authoritative and fail-closed. All methods return HTTP 410 with `authority=NONE` and `state_change=DISABLED`; the former caller-asserted issuer/sign-off mutation path is removed. Authoritative Triumvirate lifecycle semantics must not be inferred from that compatibility endpoint.
+- **Issue #939 open:** repository-wide GitHub Actions supply-chain hardening is tracking replacement of mutable action tags with immutable commit identities. No compromise is evidenced; this is reproducibility/integrity hardening.
+- **PR #940 in progress:** the first bounded #939 tranche targets only the three protected-main required workflows (PPTL CI, Governance CI, PR Issue-State Keyword Guard). It is not accepted evidence until exact-head validation completes and the PR is merged.
+- Post-merge CI evidence and PR-head CI evidence remain distinct. A green predecessor/head is never projected onto a changed or merged SHA without a fresh exact-head run.
+
+The audit preserves the canonical boundary: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**.
 
 ## Protected-main repository state
 
