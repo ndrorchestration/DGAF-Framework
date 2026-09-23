@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-23
-reconciliation_input_main: 3ba57706b75ed32d1cbae0a2fddd220a0cd1da20
+reconciliation_input_main: 3a91a915df62d5a669c34d8c4987f2dcf755c601
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -228,7 +228,9 @@ The audit preserves the canonical boundary: **PRE-FREEZE / FAIL-CLOSED / NOT AUT
 
 ## Protected-main repository state
 
-This reconciliation was refreshed against protected `main` `92bc930bdd84f6c4258852e764d3e42019e41342` after accepted PR #928. After the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
+**Historical reconciliation checkpoint:** the paragraph below was refreshed against protected `main` `92bc930bdd84f6c4258852e764d3e42019e41342` after accepted PR #928. It is retained as event-time provenance and is not the current protected-main identity; current source identity must be read from Git at use time.
+
+At that checkpoint, after the earlier operator-tooling lineage (#806/#809/#813), protected main accepted real non-secret materialization evidence (#824), the creation-only materialization receipt (#826), fail-closed local locked-analysis runner tooling (#831), the separate bounded primary-analysis authorization event (#828), content-addressed locked-result admission tooling (#835), lifecycle-aware admission tests (#848), the creation-only locked-analysis result receipt (#851), the result/current-state reconciliation (#854), and fail-closed interpretation/adjudication tooling (#855). The authorized frozen primary analysis has executed locally and its retained output is bound by SHA-256 in the accepted result receipt. Interpretation execution is complete under the accepted fail-closed tooling, and the creation-only `INTERPRETATION_NOTE` is established via PR #872. The numerical result and interpretation remain outside the repository record. These events do not establish scientific-N promotion, canonical DGAF efficacy, independent validation, or High-Assurance promotion. Because this document itself is versioned on `main`, the exact current protected-main SHA must be read from Git at use time rather than treated as a self-referential standing field.
 
 ### Accepted presentation / Semantic Control Field sequence
 
