@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-22
-reconciliation_input_main: 92bc930bdd84f6c4258852e764d3e42019e41342
+last_verified: 2026-09-23
+reconciliation_input_main: 6b0282182f9b82916574bdf405f5dda189ed7f4c
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -210,6 +210,19 @@ HIGH_ASSURANCE=NOT_AUTHORIZED
 ```
 
 No accepted Stage-A apparatus PR through #925 executes an ACP study episode, creates a Stage-A empirical outcome, increments scientific N, establishes canonical DGAF efficacy, or establishes independent validation.
+
+## Repository integrity audit — 2026-09-23
+
+The current daily integrity audit is bound to protected `main` `6b0282182f9b82916574bdf405f5dda189ed7f4c`. This audit is repository-assurance work only and does not promote scientific, empirical, authorization, efficacy, or independent-validation state.
+
+- **PR #938 accepted:** the legacy `pages/api/mandate.ts` HTTP surface is explicitly non-authoritative and fail-closed. All methods return HTTP 410 with `authority=NONE` and `state_change=DISABLED`.
+- **Issue #939 open:** repository-wide GitHub Actions supply-chain hardening remains incomplete. PR #940 accepted the first bounded tranche by pinning external Actions in the three protected-main required workflows.
+- **PR #942 accepted:** the mandate quarantine regression oracle now executes the handler directly for GET, formerly privileged POST, attempted signed-off PATCH, and unsupported DELETE. Its initial exact-head UI validation failure from invalid TypeScript syntax is preserved as negative evidence; corrected head `ec11f9e55d4feb888406ba8fd31344b3a7e81683` completed all 19 returned workflow families successfully before merge.
+- **Issue #943 open:** `requirements-ci.txt` remains incompletely reproducible because `setuptools>=83.0.0,<84` is range-bound and package hashes are not recorded.
+- **PR #941 superseded:** its documentation correction was fully green at exact head but became stale/non-mergeable after protected main advanced through #942. This refreshed reconciliation replaces it rather than forcing a stale branch.
+- PR-head CI evidence and protected-main post-merge evidence remain distinct. No success is projected across a changed SHA without exact target-bound evidence.
+
+The audit preserves the canonical boundary: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0**.
 
 ## Protected-main repository state
 
