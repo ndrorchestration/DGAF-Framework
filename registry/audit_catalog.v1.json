@@ -64,7 +64,7 @@
       "assertion": "Pre-freeze runner and associated experiment-governance contracts satisfy their repository-defined structural and fail-closed checks.",
       "owner": "PDMAL/DGAF experiment governance",
       "implementation": [
-        ".github/workflows/pdmal-pre-freeze-runner-validation.yml"
+        ".github/workflows/pdmal-pre-freeze-runner.yml"
       ],
       "trigger": [
         "pull_request",
@@ -105,7 +105,7 @@
       "assertion": "Current repository projections do not violate the declared truth-layer and control-state consistency contracts exercised by the workflow.",
       "owner": "DGAF truth-layer governance",
       "implementation": [
-        ".github/workflows/truth-layer-validation.yml",
+        ".github/workflows/truth-layer.yml",
         ".github/workflows/truth-layer-tests.yml"
       ],
       "trigger": [
