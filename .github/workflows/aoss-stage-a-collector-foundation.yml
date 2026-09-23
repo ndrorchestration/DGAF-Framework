@@ -1,6 +1,7 @@
 name: AOSS Stage A Collector Foundation
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - '.github/workflows/aoss-stage-a-collector-foundation.yml'
