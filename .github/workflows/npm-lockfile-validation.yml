@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout exact source
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
@@ -58,7 +58,7 @@ jobs:
           python3 tests/test_npm_lockfile_contract.py
 
       - name: Set up exact Node runtime
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24.20.0'
           registry-url: 'https://registry.npmjs.org'
@@ -126,7 +126,7 @@ jobs:
           sha256sum npm-lockfile-validation.json > npm-lockfile-validation.json.sha256
 
       - name: Upload validation evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: npm-lockfile-validation-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
           if-no-files-found: error
