@@ -68,12 +68,15 @@ def frontmatter(text: str, path: str) -> str:
 
 
 def fenced_yaml(text: str, path: str) -> str:
-    fence = "```"
-    pattern = rf"^{fence}yaml\s*\n(?P<body>.*?)^{fence}\s*$"
-    matches = list(re.finditer(pattern, text, flags=re.MULTILINE | re.DOTALL))
-    if len(matches) != 1:
-        raise AssertionError(f"{path}: expected exactly one authoritative fenced YAML manifest, found {len(matches)}")
-    return matches[0].group("body")
+    lines = text.splitlines()
+    opening = [index for index, line in enumerate(lines) if line.strip() == "```yaml"]
+    if len(opening) != 1:
+        raise AssertionError(f"{path}: expected exactly one authoritative fenced YAML manifest, found {len(opening)}")
+    start = opening[0] + 1
+    closing = next((index for index in range(start, len(lines)) if lines[index].strip() == "```"), None)
+    if closing is None:
+        raise AssertionError(f"{path}: authoritative fenced YAML manifest is not closed")
+    return "\\n".join(lines[start:closing])
 
 
 def section(text: str, heading: str, path: str) -> str:
