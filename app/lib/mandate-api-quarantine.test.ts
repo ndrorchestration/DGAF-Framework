@@ -32,7 +32,7 @@ for (const [method, body] of [
   ['PATCH', { status: 'signed_off' }],
   ['DELETE', undefined],
 ] as const) {
-  test(\`legacy mandate API fails closed for ${method}\`, () => {
+  test(`legacy mandate API fails closed for ${method}`, () => {
     const result = invoke(method, body)
     assert.equal(result.statusCode, 410)
     assert.deepEqual(result.body, {
