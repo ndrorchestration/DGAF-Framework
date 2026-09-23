@@ -29,12 +29,12 @@ jobs:
       should_deploy: ${{ steps.classify.outputs.should_deploy }}
       decision: ${{ steps.classify.outputs.decision }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           fetch-depth: 2
 
       - name: Set up Node 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
 
@@ -71,10 +71,10 @@ jobs:
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
 
       - name: Set up Node 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
 
@@ -136,7 +136,7 @@ jobs:
             '{evidence_class:"DEPLOYMENT_EXACT_SOURCE_ATTESTATION",source_commit:$source,vercel_source_commit:$vercel_source,workflow_run_id:$run,deployment_id:$deployment,deployment_url:$url,ready_state:$ready,target:$target,exact_source_match:true}' > deployment_provenance.json
 
       - name: Upload deployment provenance
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: deployment-provenance-${{ github.sha }}
           path: deployment_provenance.json
@@ -150,10 +150,10 @@ jobs:
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
       EXPECTED_ENSEMBLE_VERSION: 1.8.0
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
           python-version: '3.12'
 
@@ -195,7 +195,7 @@ jobs:
 
       - name: Upload regression results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: regression-${{ github.sha }}
           path: regression_results_v17.json
@@ -219,7 +219,7 @@ jobs:
             '{evidence_class:"RUNTIME_VERIFICATION",source_commit:$source,workflow_run_id:$run,deployment_url:$url,result:"PASS_WITH_LIMITATION",limitations:["Audit state is in-memory and does not establish cross-request persistence.","Phi-Closure checkpoints remain fail-closed until live audit state is wired into /api/orchestrate.","The staging breaker exercise endpoint is unavailable in production; preview-only staging evidence does not establish a persistent production breaker.","Runtime integration evidence does not establish experimental efficacy, freeze, or authorization."]}' > runtime_verification.json
 
       - name: Upload runtime verification evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: runtime-verification-${{ github.sha }}
           path: runtime_verification.json
