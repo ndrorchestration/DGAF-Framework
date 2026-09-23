@@ -31,7 +31,7 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           fetch-depth: 1
 
@@ -127,7 +127,7 @@ jobs:
           PY
 
       - name: Upload claim hygiene evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: claim-hygiene-evidence-${{ github.sha }}
           path: ci-artifacts/claim-hygiene.json
