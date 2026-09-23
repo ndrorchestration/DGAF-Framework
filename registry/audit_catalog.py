@@ -149,3 +149,33 @@ def collect_unmapped_workflows(repo_root: Path | str, catalog: dict[str, Any]) -
             mapped.update(value for value in implementation if isinstance(value, str) and value)
 
     return sorted(discovered - mapped)
+
+
+def collect_missing_implementation_paths(repo_root: Path | str, catalog: dict[str, Any]) -> list[dict[str, str]]:
+    """Return catalog implementation bindings that do not resolve in the repository.
+
+    Only repository-relative implementation bindings are accepted by this catalog.
+    Missing bindings are assurance defects; this helper does not infer whether an
+    unmapped repository path is itself an audit.
+    """
+
+    root = Path(repo_root)
+    missing: list[dict[str, str]] = []
+    audits = catalog.get("audits")
+    if not isinstance(audits, list):
+        return missing
+
+    for entry in audits:
+        if not isinstance(entry, dict):
+            continue
+        audit_id = entry.get("id")
+        implementation = entry.get("implementation")
+        if not isinstance(implementation, list):
+            continue
+        for value in implementation:
+            if not isinstance(value, str) or not value:
+                continue
+            if not (root / value).exists():
+                missing.append({"audit_id": str(audit_id or ""), "path": value})
+
+    return sorted(missing, key=lambda item: (item["audit_id"], item["path"]))
