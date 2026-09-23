@@ -121,7 +121,7 @@ jobs:
             artifacts/evaluation_integrity_fixture_suite.json
 
       - name: Set up Java 17
-        uses: actions/setup-java@7a445ee88d4e23b52c33b8a1b4013f66fbe4b3e6 # v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: temurin
           java-version: '17'
