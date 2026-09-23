@@ -21,12 +21,12 @@ jobs:
     name: Governance CI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           fetch-depth: 0
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
           python-version: '3.12'
 
@@ -46,7 +46,7 @@ jobs:
           PDMAL_MODE: contract
 
       - name: Upload E2b/M6 evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dgaf-freeze-control-evidence
           path: |
@@ -111,7 +111,7 @@ jobs:
           PY
 
       - name: Upload evaluation evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dgaf-evaluation-evidence
           path: |
@@ -121,7 +121,7 @@ jobs:
             artifacts/evaluation_integrity_fixture_suite.json
 
       - name: Set up Java 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@7a445ee88d4e23b52c33b8a1b4013f66fbe4b3e6 # v5
         with:
           distribution: temurin
           java-version: '17'
@@ -183,7 +183,7 @@ jobs:
           PY
 
       - name: Upload formal model evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dgaf-tlc-model-check
           path: |
