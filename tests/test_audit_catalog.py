@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from registry.audit_catalog import collect_catalog_violations, load_catalog
+from registry.audit_catalog import (\n    collect_catalog_violations,\n    collect_missing_implementation_paths,\n    load_catalog,\n)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = REPO_ROOT / "registry" / "audit_catalog.v1.json"
@@ -78,3 +78,23 @@ def test_real_catalog_does_not_claim_complete_repository_coverage():
 def test_catalog_json_is_machine_readable_without_loader_side_effects():
     raw = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
     assert raw["version"] == "AUDIT_CATALOG_V1"
+
+
+def test_catalog_implementation_bindings_resolve_to_existing_repository_paths():
+    catalog = load_catalog(CATALOG_PATH)
+    assert collect_missing_implementation_paths(REPO_ROOT, catalog) == []
+
+
+def test_missing_implementation_path_is_reported_deterministically(tmp_path):
+    catalog = {
+        "version": "AUDIT_CATALOG_V1",
+        "audits": [
+            _entry(id="AUD-Z", implementation=["missing/z.yml"]),
+            _entry(id="AUD-A", implementation=["missing/a.yml"]),
+        ],
+    }
+
+    assert collect_missing_implementation_paths(tmp_path, catalog) == [
+        {"audit_id": "AUD-A", "path": "missing/a.yml"},
+        {"audit_id": "AUD-Z", "path": "missing/z.yml"},
+    ]
