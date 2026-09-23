@@ -12,7 +12,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout exact candidate
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           fetch-depth: 0
 
@@ -20,7 +20,7 @@ jobs:
         run: python scripts/full_repo_audit.py
 
       - name: Upload complete coverage manifest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: full-repo-audit-${{ github.sha }}
           path: full_repo_audit.json
