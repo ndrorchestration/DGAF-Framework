@@ -46,8 +46,8 @@ Known boundaries:
 
 - commit-message issue-closing semantics are outside the initial parser scope;
 - a user with sufficient GitHub permissions may still change issue state directly;
-- branch/ruleset configuration currently does not establish this workflow as a required protected-main check;
-- therefore this workflow is a pre-merge/detective compensating control until repository-admin readback proves otherwise;
+- current protected-branch metadata establishes this workflow as a required protected-main status check at enforcement level `everyone`;
+- complete repository-admin protection, review, and bypass semantics remain only partially readable through the available integration, so this required pre-merge control does not by itself establish the full preventive-admin policy;
 - Issue #277 remains the authority for preventive protected-main enforcement.
 
 ## Acceptance evidence for this control
