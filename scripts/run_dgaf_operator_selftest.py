@@ -235,7 +235,8 @@ def main() -> int:
                 checks.append(
                     _pass(
                         "windows_custody_primitive_fail_closed",
-                        "POSIX O_NOFOLLOW is unavailable on Windows; custody implementation correctly refuses this substrate",
+                        "POSIX O_NOFOLLOW is unavailable on Windows; "
+                        "custody implementation correctly refuses this substrate",
                     )
                 )
             else:
@@ -255,7 +256,15 @@ def main() -> int:
             "aoss_focused_pytest",
             pytest_result,
             predicate=pytest_result["returncode"] == 0 and bool(aoss_tests),
-            detail=f"{len(aoss_tests)} AOSS test modules" + ("; POSIX custody module excluded on Windows and checked fail-closed separately" if os.name == "nt" else ""),
+            detail=(
+                f"{len(aoss_tests)} AOSS test modules"
+                + (
+                    "; POSIX custody module excluded on Windows and checked "
+                    "fail-closed separately"
+                    if os.name == "nt"
+                    else ""
+                )
+            ),
         )
 
         collect = _run(
