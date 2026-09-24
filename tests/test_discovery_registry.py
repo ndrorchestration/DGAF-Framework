@@ -141,7 +141,39 @@ def test_registry_seed_files_are_non_authorizing_and_non_exhaustive():
     blindspot_ledger = json.loads((root / "docs/governance/BLIND_SPOT_LEDGER_V1.json").read_text())
     assert assumption_registry["authoritative_effect"] == "NONE"
     assert assumption_registry["completeness_claim"] is False
-    assert assumption_registry["assumptions"] == []
+    assert assumption_registry["assumptions"]
+    assert assumption_registry["completeness_claim"] is False
+
+    required_ids = {
+        "ASM-DGAF-ENV-PORTABILITY",
+        "ASM-DGAF-EXECUTION-IDENTITY",
+        "ASM-DGAF-MAINTENANCE-SOURCE-BINDING",
+        "ASM-DGAF-MUTATION-CORPUS-REPRESENTATIVENESS",
+        "ASM-DGAF-ASSURANCE-INDEPENDENCE",
+        "ASM-DGAF-REDUNDANCY-REMOVABILITY",
+        "ASM-DGAF-DOCUMENTATION-PROJECTION",
+        "ASM-DGAF-FAIL-CLOSED-LIVENESS",
+        "ASM-DGAF-OPERATOR-COMPREHENSION",
+        "ASM-DGAF-DISCOVERY-COMPLETENESS",
+    }
+    actual_ids = {item["assumption_id"] for item in assumption_registry["assumptions"]}
+    assert required_ids <= actual_ids
+
+    for item in assumption_registry["assumptions"]:
+        record = AssumptionRecord(
+            assumption_id=item["assumption_id"],
+            statement=item["statement"],
+            evidence_refs=tuple(item["evidence_refs"]),
+            validity_class=EvidenceValidityClass(item["validity_class"]),
+            invalidation_triggers=tuple(item["invalidation_triggers"]),
+            falsification_test=item["falsification_test"],
+            revalidate_after=item.get("revalidate_after"),
+            authoritative_effect=assumption_registry["authoritative_effect"],
+        )
+        validate_assumption(record)
+        assert item["mitigation"].strip()
+        assert item["affected_controls"]
+        assert item["status"].strip()
     assert blindspot_ledger["authoritative_effect"] == "NONE"
     assert blindspot_ledger["completeness_claim"] is False
     assert blindspot_ledger["findings"] == []
