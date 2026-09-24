@@ -347,6 +347,7 @@ def test_wave_two_recurring_assurance_families_are_catalog_mapped():
         assert audit["blocking"] is False
         assert "NONINDEPENDENT" in audit["independence"] or "NOT_INDEPENDENT_VALIDATION" in audit["independence"]
 
+
 def test_workflow_classification_registry_separates_non_audits_from_true_gaps():
     from registry.audit_catalog import (
         collect_missing_classified_workflow_paths,
