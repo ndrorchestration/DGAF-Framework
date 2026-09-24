@@ -7,6 +7,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "requirements-ci.txt"
 WORKFLOW = ROOT / ".github" / "workflows" / "python-tests.yml"
+CONTROL_PLANE_WORKFLOW = ROOT / ".github" / "workflows" / "control-plane-contract.yml"
+CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
 EXPECTED_SOURCE_SHA256 = "1abada5e8dabbcb6706e33c5b5dfa30c45b784e8b9a9b18166a52562b5c3dfa9"
@@ -27,6 +29,9 @@ EXPECTED_LOCKS = {
         "7931d5f2ad8b22cbd71dea2cc60ce4c1f8a3b4ccde34a46be0fa5e284526fba9",
     ),
 }
+CONTROL_PLANE_LOCK_SHA256 = "208c68c614cbb4a3e17dfc7eaeffdd39b57ee3688f3b662c7c22e7e64d802b70"
+CONTROL_PLANE_RESOLVED_SET_SHA256 = "e18eb434f83c2f0e2801f218c77b1fbb8db76526dc57c57a734b3f12a3ed7b41"
+CONTROL_PLANE_OVERLAY_SHA256 = "0f7011f8e062802ab40c0bcfa852c079b99f0097f1a3ea085d2eacfef42263f9"
 PIP_WHEEL_SHA256 = "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e"
 PIN_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([^\s\\]+)(?:\s+\\)?$")
 
@@ -114,6 +119,33 @@ def test_python_workflow_consumes_interpreter_scoped_hash_locks() -> None:
     assert workflow.count("bash scripts/bootstrap_ci_pip.sh") == 4
     assert "python -m pip install -r requirements-ci.txt" not in workflow
     assert "requirements-ci.txt pyyaml" not in workflow
+
+
+def test_control_plane_augmented_lock_is_bound_and_hash_complete() -> None:
+    text = CONTROL_PLANE_LOCK.read_text(encoding="utf-8")
+    assert sha256(CONTROL_PLANE_LOCK) == CONTROL_PLANE_LOCK_SHA256
+    assert f"# source_sha256: {EXPECTED_SOURCE_SHA256}" in text
+    assert f"# overlay_sha256: {CONTROL_PLANE_OVERLAY_SHA256}" in text
+    assert f"# resolved_set_sha256: {CONTROL_PLANE_RESOLVED_SET_SHA256}" in text
+    assert "# python_minor: 3.12" in text
+    assert "# runner_os: ubuntu-24.04" in text
+    assert "# resolver: pip==26.2.1" in text
+
+    locked = lock_pins(CONTROL_PLANE_LOCK)
+    assert len(locked) == 66
+    assert locked["pandas"][0] == "3.0.5"
+    assert all(re.fullmatch(r"[0-9a-f]{64}", digest) for _, digest in locked.values())
+
+
+def test_control_plane_workflow_consumes_augmented_hash_lock() -> None:
+    workflow = CONTROL_PLANE_WORKFLOW.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-control-plane-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt pandas==3.0.5" not in workflow
+    assert "assert pandas.__version__ == '3.0.5'" in workflow
 
 
 def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
