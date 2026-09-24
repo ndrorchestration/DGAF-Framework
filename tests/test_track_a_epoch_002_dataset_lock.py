@@ -397,6 +397,7 @@ def test_workflow_routes_unchanged_dataset_lock_records_to_accepted_state() -> N
     assert "steps.mode.outputs.value == 'accepted_state'" in workflow
     assert "git diff --quiet" in workflow
 
+
 def test_dataset_lock_workflow_uses_bound_ci_lock_in_accepted_state() -> None:
     workflow = (ROOT / ".github" / "workflows" / "track-a-epoch-002-dataset-lock.yml").read_text(encoding="utf-8")
     assert "runs-on: ubuntu-24.04" in workflow
@@ -412,4 +413,3 @@ def test_dataset_lock_workflow_uses_bound_ci_lock_in_accepted_state() -> None:
     assert "Validate accepted immutable dataset-lock state" in workflow
     assert "SUCCESSOR_COLLECTION_AUTHORIZATION_UNCHANGED = TRUE" in workflow
     assert "SCIENTIFIC_N_INCREMENT = 0" in workflow
-
