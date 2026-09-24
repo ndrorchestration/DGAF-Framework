@@ -497,9 +497,7 @@ def install_accepted_state_fixture(monkeypatch: pytest.MonkeyPatch, validator):
             (result_parent, validator.AUTH_REL): state["authorization_result_parent_bytes"],
             (result_event, validator.AUTH_REL): state["authorization_result_event_bytes"],
             ("HEAD", validator.MATERIALIZATION_RECEIPT_REL): state["receipt_head_bytes"],
-            (authorization_event, validator.MATERIALIZATION_RECEIPT_REL): state[
-                "receipt_authorization_event_bytes"
-            ],
+            (authorization_event, validator.MATERIALIZATION_RECEIPT_REL): state["receipt_authorization_event_bytes"],
             ("HEAD", validator.RESULT_REL): state["result_head_bytes"],
             (result_event, validator.RESULT_REL): state["result_event_bytes"],
         }
