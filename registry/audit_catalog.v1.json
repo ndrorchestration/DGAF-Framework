@@ -4,7 +4,7 @@
   "coverage": {
     "status": "PARTIAL_CORE_FAMILIES_ONLY",
     "known_gaps": [
-      "Many current workflows, assurance scripts, governance tests, security checks, documentation audits, and historical audit families still require classification and mapping. A 2026-09-24 readback found 135 workflow definitions with 35 mapped before the current tranche; raw workflow count must not be equated with distinct audit-family count.",
+      "Many current workflows, assurance scripts, governance tests, security checks, documentation audits, and historical audit families still require classification and mapping. After the 2026-09-24 current-family waves, remaining unmapped workflow definitions are dominated by historical/experiment epoch lanes, Mode-T security/execution families, diagnostics/rehearsals, execution/deployment workflows, and other mechanisms requiring family-vs-instance adjudication.",
       "Current protected-main readback identifies PPTL CI, Governance CI, and PR Issue-State Keyword Guard as required contexts, and all three now have exact workflow-path catalog mappings; exact job/ruleset administration semantics and broader protected-branch configuration remain incomplete for the catalog.",
       "Shared-dependency and independence analysis remains incomplete across the wider assurance surface; some cataloged families intentionally reuse repository-local validators.",
       "Historical dated audit reports still require family-versus-execution-instance classification.",
@@ -1844,6 +1844,258 @@
       "independence": "SAME_REPOSITORY_NONINDEPENDENT",
       "known_gaps": [
         "Diagnostic scope is engineering-only and must not be promoted into empirical or scientific evidence."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-DOC-LINT",
+      "name": "Doc Lint",
+      "class": "DOCUMENTATION_ASSURANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "DOCUMENTATION"
+      ],
+      "assertion": "Public/current documentation surfaces satisfy strict markdown lint while repository-wide markdown debt does not increase beyond the retained baseline.",
+      "owner": "DGAF documentation-quality workflow",
+      "implementation": [
+        ".github/workflows/doc-lint.yml",
+        ".github/markdownlint-repo-baseline.json"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "repository-wide markdownlint report",
+        "rule-count summary"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides current-surface documentation lint assurance and a non-increasing debt ratchet for the repository-wide markdown corpus.",
+      "non_effects": [
+        "Does not establish factual truth of documentation claims.",
+        "Does not establish scientific efficacy or independent validation.",
+        "Does not authorize any governance transition."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_PUBLIC_CURRENT_SURFACE_AND_DEBT_RATCHET",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Repository-wide audit step intentionally tolerates existing debt before enforcing the non-increasing ratchet; historical evidence may remain lint-imperfect by design."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-MAIN-PUSH-PROVENANCE",
+      "name": "Main Push Provenance Audit",
+      "class": "PROVENANCE_CUSTODY",
+      "target_layers": [
+        "REPOSITORY",
+        "PROVENANCE",
+        "GOVERNANCE"
+      ],
+      "assertion": "Each pushed main head is associated with exactly one merged pull request targeting main, with fail-closed classifier tests for the provenance rule.",
+      "owner": "DGAF main-push provenance workflow",
+      "implementation": [
+        ".github/workflows/main-push-provenance-audit.yml",
+        "scripts/main_push_provenance_audit.py",
+        "scripts/main_push_provenance_audit_test.py"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "classifier test output",
+        "live main association result"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Detects main heads lacking the declared merged-PR provenance association.",
+      "non_effects": [
+        "Detective only; does not itself establish preventive branch protection.",
+        "Does not establish scientific efficacy, runtime correctness, or independent validation.",
+        "Does not authorize a governance or experiment transition."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_DECLARED_MAIN_PROVENANCE_CLASSIFICATION",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "A successful detective audit does not prove branch-protection settings prevented all alternate write paths."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-RUNTIME-P2",
+      "name": "P2 Live Runtime Verification",
+      "class": "RUNTIME_VERIFICATION",
+      "target_layers": [
+        "RUNTIME",
+        "REPOSITORY",
+        "PROVENANCE"
+      ],
+      "assertion": "A manually specified candidate SHA, deployment ID, and protected deployment URL satisfy the five-case live orchestration runtime matrix for that exact deployment event.",
+      "owner": "DGAF P2 runtime-verification workflow",
+      "implementation": [
+        ".github/workflows/p2-runtime-verification.yml"
+      ],
+      "trigger": [
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "runtime matrix JSON artifact",
+        "workflow conclusion",
+        "candidate/deployment identity inputs"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "May establish bounded P2 runtime-contract verification for the named candidate/deployment event when the exact workflow succeeds.",
+      "non_effects": [
+        "Does not transfer runtime evidence to another deployment or later source revision.",
+        "Does not establish scientific efficacy or independent validation.",
+        "Does not authorize empirical execution or High-Assurance."
+      ],
+      "fail_behavior": "FAIL_CLOSED_ON_MISSING_IDENTITY_SECRET_OR_RUNTIME_MATRIX_MISMATCH",
+      "independence": "CROSS_PROVIDER_BUT_NOT_INDEPENDENT_VALIDATION",
+      "known_gaps": [
+        "Relies on caller-supplied deployment identity inputs and Vercel runtime access; success is exact-event runtime evidence only."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-RUNTIME-P6A-CORS",
+      "name": "P6a Live CORS Verification",
+      "class": "RUNTIME_SECURITY_VERIFICATION",
+      "target_layers": [
+        "RUNTIME",
+        "SECURITY",
+        "PROVENANCE"
+      ],
+      "assertion": "The named deployment enforces the declared allowed/disallowed origin behavior for POST and preflight requests at the tested endpoint.",
+      "owner": "DGAF P6a runtime-verification workflow",
+      "implementation": [
+        ".github/workflows/p6a-cors-verification.yml"
+      ],
+      "trigger": [
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "CORS verification JSON artifact",
+        "workflow conclusion",
+        "candidate/deployment/origin identity inputs"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "May establish bounded CORS runtime behavior for the named endpoint, deployment, environment, and configured origins.",
+      "non_effects": [
+        "Does not establish whole-application security.",
+        "Does not transfer evidence across deployments or origin configurations.",
+        "Does not establish scientific efficacy or independent validation."
+      ],
+      "fail_behavior": "FAIL_CLOSED_ON_MISSING_IDENTITY_SECRET_OR_CORS_MISMATCH",
+      "independence": "CROSS_PROVIDER_BUT_NOT_INDEPENDENT_VALIDATION",
+      "known_gaps": [
+        "Scope is limited to the tested endpoint/deployment/origin set and depends on protected-deployment access."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-PDMAL-HARNESS",
+      "name": "PDMAL Harness Validation",
+      "class": "EXPERIMENT_GOVERNANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "EXPERIMENT",
+        "ENVIRONMENT"
+      ],
+      "assertion": "The pre-freeze PDMAL harness satisfies deterministic contract tests under the declared Python and locked dependency environment and emits an environment manifest.",
+      "owner": "PDMAL harness-validation workflow",
+      "implementation": [
+        ".github/workflows/pdmal-harness-validation.yml",
+        "experiments/pdmal_pilot/test_harness_contract.py",
+        "experiments/pdmal_pilot/requirements-lock.txt"
+      ],
+      "trigger": [
+        "pull_request",
+        "push"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "deterministic contract-test output",
+        "environment manifest artifact"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides bounded pre-freeze harness/environment contract assurance for the exact candidate under test.",
+      "non_effects": [
+        "Does not execute empirical collection.",
+        "Does not establish freeze, authorization, efficacy, or scientific-N advancement.",
+        "Does not establish independent validation."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_DECLARED_HARNESS_AND_ENVIRONMENT_CONTRACT",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Harness contract validation is non-empirical and cannot substitute for authorized experiment execution or external review."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-PROPAGATION-CONSISTENCY",
+      "name": "Propagation Consistency",
+      "class": "DOCUMENTATION_GOVERNANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "DOCUMENTATION",
+        "GOVERNANCE"
+      ],
+      "assertion": "Registered propagation targets and document-control temporal routing remain consistent under the repository-defined propagation registry and checker.",
+      "owner": "DGAF propagation-consistency workflow",
+      "implementation": [
+        ".github/workflows/propagation-consistency.yml",
+        "scripts/propagation_check.py",
+        "scripts/validate_document_control_r2.py",
+        "registry/propagation_registry.json"
+      ],
+      "trigger": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "propagation-report JSON",
+        "document-control validation output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Surfaces registered propagation or temporal-routing inconsistency within the declared checker scope.",
+      "non_effects": [
+        "Does not make every propagated document authoritative.",
+        "Does not establish scientific efficacy, independent validation, or runtime correctness.",
+        "Does not authorize governance transitions."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_REGISTERED_PROPAGATION_ASSERTIONS",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Coverage is limited to registered propagation relationships and implemented temporal-routing assertions."
       ],
       "lifecycle": "CURRENT"
     }
