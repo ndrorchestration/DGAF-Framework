@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 from registry import ecosystem_audit
@@ -16,6 +17,7 @@ def test_account_lifecycle_authority_is_bound_to_profile_registry():
 
 
 def test_audit_labels_local_lifecycle_state_as_non_authoritative(capsys, monkeypatch, tmp_path):
+    projection_checked_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     registry_path = tmp_path / "registry.json"
     registry_path.write_text(
         json.dumps(
@@ -25,7 +27,7 @@ def test_audit_labels_local_lifecycle_state_as_non_authoritative(capsys, monkeyp
                     "authority_scope": "projection_only",
                     "canonical_source": "project-local repository governance/evidence",
                     "canonical_source_revision": "test",
-                    "projection_checked_at": "2026-09-17T00:00:00Z",
+                    "projection_checked_at": projection_checked_at,
                     "projection_status": "CURRENT",
                     "staleness_class": None,
                 },
