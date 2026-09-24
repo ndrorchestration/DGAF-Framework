@@ -64,12 +64,29 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          if git cat-file -e "$HEAD_SHA:registry/aoss_v0_6_stage_a_precollection_receipt_v1.json" 2>/dev/null; then
+          set -euo pipefail
+          AUTH_REL='registry/aoss_v0_6_stage_a_collection_authorization_v1.json'
+          RECEIPT_REL='registry/aoss_v0_6_stage_a_precollection_receipt_v1.json'
+          CHANGED="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
+          AUTH_CHANGED=false
+          RECEIPT_CHANGED=false
+
+          while IFS= read -r path; do
+            case "$path" in
+              "$AUTH_REL") AUTH_CHANGED=true ;;
+              "$RECEIPT_REL") RECEIPT_CHANGED=true ;;
+            esac
+          done <<< "$CHANGED"
+
+          if [ "$AUTH_CHANGED" = true ] && [ "$RECEIPT_CHANGED" = true ]; then
+            echo "FAIL: authorization and precollection receipt cannot change in one PR" >&2
+            exit 1
+          elif [ "$RECEIPT_CHANGED" = true ]; then
             python scripts/validate_aoss_v0_6_stage_a_collection_authorization.py --validate-precollection-event "$HEAD_SHA" --authorization-ref "$BASE_SHA"
-          elif git cat-file -e "$HEAD_SHA:registry/aoss_v0_6_stage_a_collection_authorization_v1.json" 2>/dev/null; then
+          elif [ "$AUTH_CHANGED" = true ]; then
             python scripts/validate_aoss_v0_6_stage_a_collection_authorization.py --validate-authorization-event "$HEAD_SHA" --accepted-parent "$BASE_SHA"
           else
-            python scripts/validate_aoss_v0_6_stage_a_collection_authorization.py --tooling-only
+            python scripts/validate_aoss_v0_6_stage_a_collection_authorization.py --validate-state
             python -m pytest -q tests/test_aoss_v0_6_stage_a_collection_authorization.py
           fi
 
