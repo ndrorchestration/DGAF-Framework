@@ -19,9 +19,7 @@ TRACK_A_EPOCH_002_RESULT_SEMANTICS_WORKFLOW = (
 TRACK_A_EPOCH_002_LOCKED_RESULT_ADMISSION_WORKFLOW = (
     ROOT / ".github" / "workflows" / "track-a-epoch-002-locked-result-admission.yml"
 )
-TRACK_A_EPOCH_002_INTERPRETATION_WORKFLOW = (
-    ROOT / ".github" / "workflows" / "track-a-epoch-002-interpretation.yml"
-)
+TRACK_A_EPOCH_002_INTERPRETATION_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-interpretation.yml"
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
