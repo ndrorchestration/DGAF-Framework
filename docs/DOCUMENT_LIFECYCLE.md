@@ -55,6 +55,7 @@ A later record must not retroactively change the epistemic meaning of an earlier
 | `docs/evidence/EVIDENCE_LADDER_POLICY.md` | ACTIVE | Both | Permanent evidence-promotion policy |
 | `docs/experiment/FREEZE_MANIFEST_TEMPLATE.md` | TEMPLATE | Both | Becomes `FREEZE_MANIFEST.md` only at freeze |
 | `docs/DOCUMENT_LIFECYCLE.md` | ACTIVE | Both | Lifecycle registry itself |
+| `COVERAGE_AUDIT.md` | HISTORICAL | Historical audit | 2026-08-02 test-coverage snapshot; percentages and missing-test findings are not current coverage authority |
 | `docs/governance/DGAF_DOCUMENTATION_ARCHITECTURE_v1.md` | RECONCILIATION | Audit/control | Cross-family integration map; non-authoritative unless separately ratified |
 | `docs/governance/AGENT_IDENTITY_RECONCILIATION_2026-09-04.md` | RECONCILIATION | Audit/control | Preserves agent-ID conflicts without replacing sovereign identity authority |
 | `docs/governance/instrument_identity_manifest_2026-09-04.json` | RECONCILIATION | Audit/control | Numerical/control instrument identity conflict register; fail-closed pending authority decisions |

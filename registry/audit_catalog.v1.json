@@ -4,7 +4,7 @@
   "coverage": {
     "status": "PARTIAL_CORE_FAMILIES_ONLY",
     "known_gaps": [
-      "Many current workflows, assurance scripts, governance tests, security checks, documentation audits, and historical audit families still require classification and mapping.",
+      "Many current workflows, assurance scripts, governance tests, security checks, documentation audits, and historical audit families still require classification and mapping. A 2026-09-24 readback found 135 workflow definitions with 35 mapped before the current tranche; raw workflow count must not be equated with distinct audit-family count.",
       "Current protected-main readback identifies PPTL CI, Governance CI, and PR Issue-State Keyword Guard as required contexts, and all three now have exact workflow-path catalog mappings; exact job/ruleset administration semantics and broader protected-branch configuration remain incomplete for the catalog.",
       "Shared-dependency and independence analysis remains incomplete across the wider assurance surface; some cataloged families intentionally reuse repository-local validators.",
       "Historical dated audit reports still require family-versus-execution-instance classification.",
@@ -1670,6 +1670,180 @@
         "The secret-like-material scan is a bounded pattern check, not a general secret-scanning or package-security proof.",
         "Repository-local build success is not production deployment or browser/runtime verification.",
         "The bootstrap lock digest is retained as historical provenance only; future reviewed dependency changes legitimately produce new lock bytes and identities."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-DGAF-OPERATOR-SELFTEST",
+      "name": "DGAF Operator Self-Test Contract",
+      "class": "OPERATOR_ENGINEERING_VALIDATION",
+      "target_layers": [
+        "REPOSITORY",
+        "OPERATOR",
+        "GOVERNANCE"
+      ],
+      "assertion": "The bounded operator self-test exercises the declared quick regression, AOSS, unauthorized-collection refusal, dirty-worktree refusal, restoration, and platform-boundary contracts on the exact candidate under test.",
+      "owner": "DGAF operator-validation workflow",
+      "implementation": [
+        ".github/workflows/dgaf-operator-selftest.yml",
+        "scripts/run_dgaf_operator_selftest.py",
+        "scripts/run_dgaf_operator_selftest.ps1"
+      ],
+      "trigger": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "retained JSON/Markdown evidence",
+        "SHA-256 sidecar",
+        "platform-specific result"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides bounded internal operator-engineering validation for the exact source/platform path exercised.",
+      "non_effects": [
+        "Does not establish independent validation.",
+        "Does not establish canonical DGAF efficacy.",
+        "Does not increment scientific N or authorize High-Assurance."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_DECLARED_OPERATOR_CONTRACT",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Windows custody semantics remain explicitly bounded where POSIX O_NOFOLLOW is unavailable; external independent reproduction remains #929."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-SELF-APPLICATION-MUTATION",
+      "name": "DGAF Self-Application Mutation Benchmark",
+      "class": "SELF_APPLICATION_ASSURANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "CLAIM",
+        "PROVENANCE"
+      ],
+      "assertion": "Predeclared synthetic corruptions applied only in detached disposable worktrees are detected by existing DGAF validators and resolve fail-closed within the benchmark scope.",
+      "owner": "DGAF self-application benchmark",
+      "implementation": [
+        ".github/workflows/dgaf-self-application-mutation.yml",
+        "registry/dgaf_self_application_mutations_v1.json",
+        "scripts/run_dgaf_self_application_mutations.py",
+        "tests/test_dgaf_self_application_mutations.py"
+      ],
+      "trigger": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "per-case validator output",
+        "retained JSON evidence",
+        "SHA-256 sidecar"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides internal evidence that the selected current validators detect the predeclared mutation corpus on the exact tested source.",
+      "non_effects": [
+        "Does not establish independent or external validation.",
+        "Does not establish canonical DGAF efficacy.",
+        "Does not imply untested failure classes are covered.",
+        "Does not increment scientific N or authorize High-Assurance."
+      ],
+      "fail_behavior": "FAIL_CLOSED_IF_ANY_PREDECLARED_MUTATION_ESCAPES_OR_BASELINE_INTEGRITY_FAILS",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Initial accepted corpus covers eight mutations across four validator families; ablation, historical replay, and cold-start reproduction remain separate #1022 lanes."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-PDMAL-PREAUTH-SECURITY",
+      "name": "PDMAL Pre-Authorization Security",
+      "class": "SECURITY_GOVERNANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "EXPERIMENT",
+        "SECURITY",
+        "GOVERNANCE"
+      ],
+      "assertion": "Pre-authorization/security contracts and negative controls remain satisfied without performing empirical execution.",
+      "owner": "PDMAL pre-authorization security workflow",
+      "implementation": [
+        ".github/workflows/pdmal-preauth-security.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "security/adversarial contract results"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides bounded non-empirical pre-authorization security assurance for the covered contracts.",
+      "non_effects": [
+        "Does not authorize empirical execution.",
+        "Does not increment scientific N.",
+        "Does not establish efficacy, independence, or High-Assurance."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_COVERED_PREAUTH_SECURITY_ASSERTIONS",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Passing this workflow is contract evidence only and cannot substitute for execution authorization or external review."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-CANONICAL-TGL-DIAGNOSTIC",
+      "name": "Canonical Profile TGL Diagnostic",
+      "class": "NON_EMPIRICAL_DIAGNOSTIC",
+      "target_layers": [
+        "REPOSITORY",
+        "EXPERIMENT",
+        "DIAGNOSTIC"
+      ],
+      "assertion": "The canonical TGL diagnostic executes its declared non-empirical engineering checks and retains the diagnostic artifact for the exact tested source.",
+      "owner": "DGAF canonical profile diagnostic workflow",
+      "implementation": [
+        ".github/workflows/canonical-profile-tgl-diagnostic.yml"
+      ],
+      "trigger": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "diagnostic output",
+        "uploaded diagnostic artifact"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Provides bounded non-empirical diagnostic evidence for the canonical profile TGL scope.",
+      "non_effects": [
+        "Does not authorize empirical execution.",
+        "Does not establish scientific efficacy or independent validation.",
+        "Does not increment scientific N."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_DECLARED_DIAGNOSTIC_CONTRACT",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Diagnostic scope is engineering-only and must not be promoted into empirical or scientific evidence."
       ],
       "lifecycle": "CURRENT"
     }
