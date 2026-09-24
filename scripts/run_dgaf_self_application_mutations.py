@@ -107,14 +107,17 @@ def mutate_truth_layer_synthetic_promotion(root: Path) -> None:
     claims = data.get("claims")
     if not isinstance(claims, list):
         raise RuntimeError("claims registry is missing claims list")
-    for claim in claims:
-        if isinstance(claim, dict) and claim.get("evidence_mode") == "synthetic":
-            claim["status"] = "VERIFIED"
-            claim.pop("run_id", None)
-            claim.pop("dataset", None)
-            _write_json(path, data)
-            return
-    raise RuntimeError("no synthetic claim available for mutation")
+    claims.append(
+        {
+            "claim_id": "SELF_APPLICATION_MUTATION_SYNTHETIC_PROMOTION",
+            "statement": "Temporary self-application mutation.",
+            "scope": "isolated mutation worktree only",
+            "evidence_mode": "synthetic",
+            "status": "VERIFIED",
+            "provenance": {"source": "self-application mutation harness"},
+        }
+    )
+    _write_json(path, data)
 
 
 def mutate_truth_layer_duplicate_claim(root: Path) -> None:
