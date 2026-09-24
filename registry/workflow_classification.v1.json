@@ -1,0 +1,320 @@
+{
+  "version": "WORKFLOW_CLASSIFICATION_V1",
+  "classifications": [
+    {
+      "path": ".github/workflows/track-a-epoch-001-analysis-lock.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-collection-authorization.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-collection-receipt.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-custody-key-preflight.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-final-closure.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-immutable-freeze.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-precollection-preflight.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-preregistration.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-primary-analysis-authorization.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-runner.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-unblinded-input-receipt.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-unblinding-authorization.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-unblinding-materialization.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-verification-classification.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-analysis-lock.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-collection-authorization-boundary.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-dataset-lock.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-final-closure.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-immutable-freeze.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-interpretation.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-locked-result-admission.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-materialization.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-operator-admission.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-post-interpretation-disposition.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-preflight.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-preregistration.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-primary-analysis-autopilot.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-primary-analysis-runner.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-result-record-semantics.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-runner.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-synthetic-oracle.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-unblinding-decision.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-verification-classification.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "controller": "Track A epoch-specific governance/evidence lineage",
+      "decision_effect": "Preserves or validates an exact epoch-specific transition/evidence step; it is not promoted to a separate recurring audit-family identity.",
+      "reason": "Epoch-specific workflow instance retained for exact-scope provenance. Audit-family coverage is tracked separately from experiment workflow lineage."
+    },
+    {
+      "path": ".github/workflows/completion-controller.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "AUTHORITY_BEARING_EVENT_CONTROLLER",
+      "lifecycle": "CURRENT",
+      "controller": "DGAF Completion Controller",
+      "decision_effect": "Consumes named producer-workflow evidence and evaluates completion predicates under its explicit controller semantics.",
+      "reason": "Event-driven completion/control mechanism with authority semantics; inventory it explicitly without misrepresenting it as an audit-family implementation."
+    }
+  ]
+}

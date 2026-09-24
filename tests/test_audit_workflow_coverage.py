@@ -346,3 +346,42 @@ def test_wave_two_recurring_assurance_families_are_catalog_mapped():
         assert workflow_path not in unmapped
         assert audit["blocking"] is False
         assert "NONINDEPENDENT" in audit["independence"] or "NOT_INDEPENDENT_VALIDATION" in audit["independence"]
+
+
+def test_workflow_classification_registry_separates_non_audits_from_true_gaps():
+    from registry.audit_catalog import (
+        collect_missing_classified_workflow_paths,
+        collect_unclassified_workflows,
+        collect_workflow_classification_violations,
+        load_workflow_classification,
+    )
+
+    classification_path = REPO_ROOT / "registry" / "workflow_classification.v1.json"
+    classification = load_workflow_classification(classification_path)
+    catalog = load_catalog(CATALOG_PATH)
+
+    assert collect_workflow_classification_violations(classification) == []
+    assert collect_missing_classified_workflow_paths(REPO_ROOT, classification) == []
+
+    classified = {
+        entry["path"]
+        for entry in classification["classifications"]
+        if entry["classification"] == "CLASSIFIED_NON_AUDIT"
+    }
+    unclassified = collect_unclassified_workflows(REPO_ROOT, catalog, classification)
+
+    assert ".github/workflows/completion-controller.yml" in classified
+    assert ".github/workflows/completion-controller.yml" not in unclassified
+    assert ".github/workflows/track-a-epoch-002-final-closure.yml" in classified
+    assert ".github/workflows/track-a-epoch-002-final-closure.yml" not in unclassified
+
+
+def test_workflow_classification_registry_preserves_audit_family_distinction():
+    from registry.audit_catalog import load_workflow_classification
+
+    classification = load_workflow_classification(REPO_ROOT / "registry" / "workflow_classification.v1.json")
+    classified = {entry["path"] for entry in classification["classifications"]}
+
+    assert ".github/workflows/governance-ci.yml" not in classified
+    assert ".github/workflows/dgaf-self-application-mutation.yml" not in classified
+    assert all(entry["classification"] == "CLASSIFIED_NON_AUDIT" for entry in classification["classifications"])
