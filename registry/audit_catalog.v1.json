@@ -942,6 +942,55 @@
         "Catalog membership records assurance semantics only and does not establish protected-branch requiredness."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-E2B-VERIFIER-LOCK",
+      "name": "E2b Verifier Lock",
+      "class": "DEPENDENCY_INTEGRITY",
+      "target_layers": [
+        "REPOSITORY",
+        "DEPENDENCY",
+        "PROVENANCE",
+        "GOVERNANCE"
+      ],
+      "assertion": "The bounded E2b verifier-policy dependency surface is evaluated on the exact target tree, matches the bound source requirements fingerprint, installs only from the hash-pinned Python 3.12 lock, and emits exact source/lock/workflow provenance fingerprints.",
+      "owner": "DGAF E2b verifier-policy workflow",
+      "implementation": [
+        ".github/workflows/e2b-verifier-lock.yml",
+        "requirements-epistemic.txt",
+        "requirements-epistemic.lock",
+        "docs/governance/E2B_VERIFIER_LOCK_POLICY.md"
+      ],
+      "trigger": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "exact checked-out target SHA assertion",
+        "bound source requirements SHA-256 verification",
+        "pip --require-hashes installation result",
+        "e2b-dependency-fingerprint artifact with source, lock, workflow, and target identities"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the bounded E2b verifier-policy dependency surface for the exact tree under test; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not declare E2b CLOSED; independent verification remains required by the governing policy.",
+        "Does not govern or mutate the PDMAL experimental candidate, freeze, authorization, unblinding, or empirical data.",
+        "Does not establish scientific efficacy, independent validation, runtime deployment identity, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_E2B_VERIFIER_POLICY_DEPENDENCY_SURFACE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The governing policy explicitly retains E2b as OPEN / candidate implementation pending independent verification.",
+        "The dependency lock is scoped to the verifier-policy Python 3.12 surface and is not a general experimental/runtime dependency contract.",
+        "Same-repository CI success is not independent verification."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
