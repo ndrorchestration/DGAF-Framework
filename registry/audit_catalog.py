@@ -274,9 +274,7 @@ def collect_unclassified_workflows(
     return sorted(discovered - audit_paths - classified_paths)
 
 
-def collect_missing_classified_workflow_paths(
-    repo_root: Path | str, classification: dict[str, Any]
-) -> list[str]:
+def collect_missing_classified_workflow_paths(repo_root: Path | str, classification: dict[str, Any]) -> list[str]:
     """Return classified workflow paths that do not exist in the repository."""
 
     root = Path(repo_root)
