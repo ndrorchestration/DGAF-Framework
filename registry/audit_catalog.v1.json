@@ -991,6 +991,57 @@
         "Same-repository CI success is not independent verification."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-COMPLETION-STATE-RECONCILER",
+      "name": "DGAF Completion State Reconciler",
+      "class": "EPISTEMIC_CONTROL",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "CONTROL_STATE",
+        "HISTORICAL_EXPERIMENT_SCOPE"
+      ],
+      "assertion": "The fixed Track A Epoch 002 precollection completion graph and bound repository evidence reduce deterministically and fail-closed to an observational completion-state projection while preserving the reconciler's explicit inability to authorize or execute empirical work.",
+      "owner": "DGAF Completion State Reconciler workflow",
+      "implementation": [
+        ".github/workflows/completion-state-reconciler.yml",
+        "registry/dgaf_completion_state_reconciler.v0.1.json",
+        "scripts/derive_dgaf_completion_state.py",
+        "tests/test_dgaf_completion_state_reconciler.py"
+      ],
+      "trigger": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "exact evaluated-commit checkout assertion",
+        "dependency-free adversarial test results",
+        "derived dgaf-completion-state JSON artifact",
+        "artifact SHA-256 identity from GitHub Actions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Surfaces SATISFIED, ACTIONABLE, HUMAN_ACTION_REQUIRED, BLOCKED, or NOT_VERIFIED completion-state conditions within the fixed reconciler graph; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize any governance or scientific transition.",
+        "Does not execute empirical work or increment scientific N.",
+        "Does not make specialist output equivalent to authorization.",
+        "Does not establish current global DGAF state, canonical efficacy, independent validation, certification, or High-Assurance status."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_FIXED_COMPLETION_GRAPH_AND_BOUND_REPOSITORY_EVIDENCE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The registry explicitly scopes this reconciler to HISTORICAL_FIXED_SCOPE_TRACK_A_EPOCH_002_PRECOLLECTION; it must not be presented as the current global DGAF lifecycle state.",
+        "The reconciler is observational/advisory and can only evaluate encoded repository evidence and allowlisted validators.",
+        "Repository-local success does not externally verify the factual correctness or independence of upstream evidence."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
