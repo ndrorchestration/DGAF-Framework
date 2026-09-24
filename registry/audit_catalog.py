@@ -179,3 +179,112 @@ def collect_missing_implementation_paths(repo_root: Path | str, catalog: dict[st
                 missing.append({"audit_id": str(audit_id or ""), "path": value})
 
     return sorted(missing, key=lambda item: (item["audit_id"], item["path"]))
+
+
+_ALLOWED_WORKFLOW_CLASSIFICATIONS = {"CLASSIFIED_NON_AUDIT"}
+_ALLOWED_WORKFLOW_LIFECYCLES = {
+    "CURRENT",
+    "HISTORICAL_EXACT_SCOPE",
+    "CLOSED_BOUNDED_EXACT_SCOPE",
+}
+
+
+def load_workflow_classification(path: Path | str) -> dict[str, Any]:
+    """Load the machine-readable workflow classification registry."""
+
+    classification_path = Path(path)
+    return json.loads(classification_path.read_text(encoding="utf-8"))
+
+
+def collect_workflow_classification_violations(
+    classification: dict[str, Any],
+) -> list[dict[str, str]]:
+    """Return deterministic structural violations for workflow classifications."""
+
+    violations: list[dict[str, str]] = []
+    if classification.get("version") != "WORKFLOW_CLASSIFICATION_V1":
+        violations.append(_violation("WORKFLOW_CLASSIFICATION_VERSION_INVALID"))
+        return violations
+
+    entries = classification.get("classifications")
+    if not isinstance(entries, list):
+        violations.append(_violation("WORKFLOW_CLASSIFICATION_LIST_MISSING"))
+        return violations
+
+    seen: set[str] = set()
+    for entry in entries:
+        if not isinstance(entry, dict):
+            violations.append(_violation("WORKFLOW_CLASSIFICATION_ENTRY_INVALID"))
+            continue
+        path = entry.get("path")
+        if not isinstance(path, str) or not path.startswith(".github/workflows/"):
+            violations.append(_violation("WORKFLOW_CLASSIFICATION_PATH_INVALID"))
+            continue
+        if path in seen:
+            violations.append(_violation("WORKFLOW_CLASSIFICATION_DUPLICATE_PATH"))
+        seen.add(path)
+
+        if entry.get("classification") not in _ALLOWED_WORKFLOW_CLASSIFICATIONS:
+            violations.append(_violation("WORKFLOW_CLASSIFICATION_KIND_INVALID"))
+        if entry.get("lifecycle") not in _ALLOWED_WORKFLOW_LIFECYCLES:
+            violations.append(_violation("WORKFLOW_CLASSIFICATION_LIFECYCLE_INVALID"))
+        for field in ("kind", "controller", "decision_effect", "reason"):
+            value = entry.get(field)
+            if not isinstance(value, str) or not value.strip():
+                violations.append(_violation("WORKFLOW_CLASSIFICATION_FIELD_MISSING", field=field))
+
+    return violations
+
+
+def collect_unclassified_workflows(
+    repo_root: Path | str,
+    catalog: dict[str, Any],
+    classification: dict[str, Any],
+) -> list[str]:
+    """Return workflow definitions neither audit-mapped nor explicitly classified."""
+
+    root = Path(repo_root)
+    workflows_dir = root / ".github" / "workflows"
+    discovered = {
+        path.relative_to(root).as_posix()
+        for pattern in ("*.yml", "*.yaml")
+        for path in workflows_dir.glob(pattern)
+        if path.is_file()
+    }
+
+    audit_paths: set[str] = set()
+    audits = catalog.get("audits")
+    if isinstance(audits, list):
+        for entry in audits:
+            if isinstance(entry, dict) and isinstance(entry.get("implementation"), list):
+                audit_paths.update(
+                    value
+                    for value in entry["implementation"]
+                    if isinstance(value, str) and value.startswith(".github/workflows/")
+                )
+
+    classified_paths = {
+        entry["path"]
+        for entry in classification.get("classifications", [])
+        if isinstance(entry, dict)
+        and isinstance(entry.get("path"), str)
+        and entry.get("classification") == "CLASSIFIED_NON_AUDIT"
+    }
+
+    return sorted(discovered - audit_paths - classified_paths)
+
+
+def collect_missing_classified_workflow_paths(
+    repo_root: Path | str, classification: dict[str, Any]
+) -> list[str]:
+    """Return classified workflow paths that do not exist in the repository."""
+
+    root = Path(repo_root)
+    missing = []
+    for entry in classification.get("classifications", []):
+        if not isinstance(entry, dict):
+            continue
+        path = entry.get("path")
+        if isinstance(path, str) and path and not (root / path).exists():
+            missing.append(path)
+    return sorted(missing)
