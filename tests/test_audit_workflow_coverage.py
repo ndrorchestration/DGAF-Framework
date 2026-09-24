@@ -97,11 +97,7 @@ def test_completion_state_reconciler_family_is_catalog_mapped_with_historical_sc
     catalog = load_catalog(CATALOG_PATH)
     unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
     audit = next(
-        (
-            entry
-            for entry in catalog["audits"]
-            if entry.get("id") == "AUD-CI-COMPLETION-STATE-RECONCILER"
-        ),
+        (entry for entry in catalog["audits"] if entry.get("id") == "AUD-CI-COMPLETION-STATE-RECONCILER"),
         None,
     )
 
