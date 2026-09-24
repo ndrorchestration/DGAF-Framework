@@ -106,4 +106,3 @@ def test_workflow_routes_pull_request_validation_by_changed_paths() -> None:
     assert '--validate-state' in workflow
     assert '--tooling-only' not in workflow
     assert 'git cat-file -e "$HEAD_SHA:registry/aoss_v0_6_stage_a_precollection_receipt_v1.json"' not in workflow
-
