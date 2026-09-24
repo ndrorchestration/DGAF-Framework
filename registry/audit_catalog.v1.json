@@ -895,6 +895,53 @@
         "Successful UI tests and production build do not establish live deployment or runtime correctness."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-AGENT-ONTOLOGY",
+      "name": "Agent Ontology Adjudication",
+      "class": "GOVERNANCE_ONTOLOGY",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "ONTOLOGY"
+      ],
+      "assertion": "The agent-ontology adjudication record, governance record, validator, and focused regression contract remain internally consistent while preserving the workflow's explicit non-scientific and non-authority-matrix boundary.",
+      "owner": "DGAF agent ontology adjudication workflow",
+      "implementation": [
+        ".github/workflows/agent-ontology-adjudication.yml",
+        "registry/agent_ontology_adjudication.v1.json",
+        "docs/governance/AGENT_ONTOLOGY_ADJUDICATION_2026-09-09.md",
+        "scripts/validate_agent_ontology_adjudication.py",
+        "tests/test_agent_ontology_adjudication.py"
+      ],
+      "trigger": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_agent_ontology_adjudication.py output",
+        "tests/test_agent_ontology_adjudication.py results",
+        "explicit SCIENTIFIC_STATE_EFFECT=NONE and AUTHORITY_MATRIX_EFFECT=NONE boundary output"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Surfaces or rejects inconsistency in the covered agent-ontology adjudication contract; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not change scientific state or increment scientific N.",
+        "Does not change the authority matrix or authorize a governance transition.",
+        "Does not establish runtime identity, efficacy, independent validation, certification, or High-Assurance status."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_ADJUDICATION_CONTRACT_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Validation is limited to the repository-defined adjudication record and encoded invariants; it does not externally verify agent identity, competence, authority, or independence.",
+        "Catalog membership records assurance semantics only and does not establish protected-branch requiredness."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
