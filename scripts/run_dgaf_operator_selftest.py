@@ -228,6 +228,23 @@ def main() -> int:
         )
 
         aoss_tests = sorted(str(path) for path in (dgaf / "tests").glob("test_aoss*.py"))
+        if os.name == "nt":
+            custody_test = str(dgaf / "tests" / "test_aoss_stage_a_custody.py")
+            aoss_tests = [path for path in aoss_tests if path != custody_test]
+            if getattr(os, "O_NOFOLLOW", None) is None:
+                checks.append(
+                    _pass(
+                        "windows_custody_primitive_fail_closed",
+                        "POSIX O_NOFOLLOW is unavailable on Windows; custody implementation correctly refuses this substrate",
+                    )
+                )
+            else:
+                checks.append(
+                    _fail(
+                        "windows_custody_primitive_fail_closed",
+                        "Unexpected Windows O_NOFOLLOW support requires custody-contract review",
+                    )
+                )
         pytest_result = _run(
             [sys.executable, "-m", "pytest", "-q", *aoss_tests],
             cwd=dgaf,
@@ -238,7 +255,7 @@ def main() -> int:
             "aoss_focused_pytest",
             pytest_result,
             predicate=pytest_result["returncode"] == 0 and bool(aoss_tests),
-            detail=f"{len(aoss_tests)} AOSS test modules",
+            detail=f"{len(aoss_tests)} AOSS test modules" + ("; POSIX custody module excluded on Windows and checked fail-closed separately" if os.name == "nt" else ""),
         )
 
         collect = _run(
