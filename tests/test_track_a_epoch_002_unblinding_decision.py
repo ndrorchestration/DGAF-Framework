@@ -233,6 +233,13 @@ def test_workflow_preserves_accepted_unblinding_state_for_maintenance() -> None:
     assert "steps.mode.outputs.value == 'accepted_state'" in workflow
 
 
+def test_dependency_triggered_revalidation_does_not_police_unrelated_paths() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "if test \"$lane_changed\" = true; then" in workflow
+    assert "forbidden cross-lane edit in unblinding tooling PR" in workflow
+    assert "UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_OR_UNRELATED" in workflow
+
+
 def test_validator_exposes_accepted_state_without_replaying_event() -> None:
     source = MODULE_PATH.read_text(encoding="utf-8")
     assert "def validate_accepted_state(" in source
@@ -256,4 +263,4 @@ def test_workflow_uses_hash_locked_dependencies_without_cross_lane_shared_test_t
     assert "python -m pip install -r requirements-ci.txt" not in workflow
     assert "tests/test_ci_lock_contract.py" not in workflow
     assert "UNBLINDING_TOOLING_SCOPE=DEDICATED_PLUS_DEPENDENCY_MAINTENANCE" in workflow
-    assert "UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_ONLY" in workflow
+    assert "UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_OR_UNRELATED" in workflow
