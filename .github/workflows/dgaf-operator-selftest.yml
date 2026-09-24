@@ -85,6 +85,10 @@ jobs:
     name: Windows operator wrapper end-to-end
     runs-on: windows-latest
     steps:
+      - name: Configure exact-byte Git checkout
+        shell: pwsh
+        run: git config --global core.autocrlf false
+
       - name: Checkout exact DGAF candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
