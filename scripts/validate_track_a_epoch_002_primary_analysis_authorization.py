@@ -387,9 +387,7 @@ def validate_accepted_state() -> tuple[str, str]:
     result_event = _single_history("HEAD", RESULT_REL, "locked analysis result")
     result_parent = _single_parent(result_event, "locked analysis result")
     result_changed = [
-        line
-        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", result_event).splitlines()
-        if line
+        line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", result_event).splitlines() if line
     ]
     if result_changed != [RESULT_REL]:
         fail("locked analysis result event must change exactly the canonical result path")
@@ -406,9 +404,7 @@ def validate_accepted_state() -> tuple[str, str]:
         if read_git_bytes("HEAD", relpath) != read_git_bytes(event_ref, relpath):
             fail(f"{label} bytes drifted after its accepted historical event")
 
-    if not git_object_exists(f"{result_parent}:{AUTH_REL}") or not git_object_exists(
-        f"{result_event}:{AUTH_REL}"
-    ):
+    if not git_object_exists(f"{result_parent}:{AUTH_REL}") or not git_object_exists(f"{result_event}:{AUTH_REL}"):
         fail("locked result requires the accepted authorization predecessor")
     if read_git_bytes(result_parent, AUTH_REL) != read_git_bytes(result_event, AUTH_REL):
         fail("authorization bytes changed during locked-result admission")
