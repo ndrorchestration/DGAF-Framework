@@ -377,3 +377,22 @@ def test_protected_root_accepts_canonical_retained_sidecar_names(tmp_path: Path,
     }
 
     validator.validate_protected_root(root, evidence)
+
+
+def test_validator_exposes_accepted_dataset_lock_state_without_replaying_events() -> None:
+    source = MODULE_PATH.read_text(encoding="utf-8")
+    assert "def validate_accepted_state(" in source
+    assert "dataset-lock receipt must have one immutable history event" in source
+    assert "accepted dataset-lock receipt event changed more than its canonical record" in source
+    assert "accepted operator evidence and pre-lock ledger must share one immutable history event" in source
+    assert "accepted dataset-lock receipt must directly follow the operator evidence admission event" in source
+    assert "accepted dataset-lock bytes drifted after the event" in source
+
+
+def test_workflow_routes_unchanged_dataset_lock_records_to_accepted_state() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "track-a-epoch-002-dataset-lock.yml").read_text(encoding="utf-8")
+    assert "value=accepted_state" in workflow
+    assert "Validate accepted immutable dataset-lock state" in workflow
+    assert "--accepted-state" in workflow
+    assert "steps.mode.outputs.value == 'accepted_state'" in workflow
+    assert "git diff --quiet" in workflow

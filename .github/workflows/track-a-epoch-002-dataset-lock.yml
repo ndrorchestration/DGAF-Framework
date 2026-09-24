@@ -70,16 +70,30 @@ jobs:
           if test -e "$receipt"; then
             if test -e "$evidence" || test -e "$ledger"; then
               test -e "$evidence" && test -e "$ledger"
-              evidence_class="$(python - "$evidence" <<'PY'
+
+              if test "${{ github.event_name }}" = 'pull_request'; then
+                prior="${{ github.event.pull_request.base.sha }}"
+                if test -n "$prior" \
+                  && git cat-file -e "$prior:$receipt" 2>/dev/null \
+                  && git cat-file -e "$prior:$evidence" 2>/dev/null \
+                  && git cat-file -e "$prior:$ledger" 2>/dev/null \
+                  && git diff --quiet "$prior" HEAD -- "$receipt" "$evidence" "$ledger"; then
+                  echo 'value=accepted_state' >> "$GITHUB_OUTPUT"
+                else
+                  evidence_class="$(python - "$evidence" <<'PY'
           import json
           import sys
 
           value = json.load(open(sys.argv[1], encoding='utf-8'))
           print(value.get('evidence_execution_class', ''))
           PY
-              )"
-              test "$evidence_class" = 'OPERATOR_CODESPACE'
-              echo 'value=operator_receipt_event' >> "$GITHUB_OUTPUT"
+                  )"
+                  test "$evidence_class" = 'OPERATOR_CODESPACE'
+                  echo 'value=operator_receipt_event' >> "$GITHUB_OUTPUT"
+                fi
+              else
+                echo 'value=accepted_state' >> "$GITHUB_OUTPUT"
+              fi
             else
               echo 'value=actions_receipt_event' >> "$GITHUB_OUTPUT"
             fi
@@ -103,8 +117,12 @@ jobs:
         if: ${{ steps.mode.outputs.value == 'tooling_only' }}
         run: python scripts/validate_track_a_epoch_002_dataset_lock.py --tooling-only
 
+      - name: Validate accepted immutable dataset-lock state
+        if: ${{ steps.mode.outputs.value == 'accepted_state' }}
+        run: python scripts/validate_track_a_epoch_002_dataset_lock.py --accepted-state
+
       - name: Prove tooling PR stays within the dedicated lane
-        if: ${{ github.event_name == 'pull_request' && steps.mode.outputs.value == 'tooling_only' }}
+        if: ${{ github.event_name == 'pull_request' && (steps.mode.outputs.value == 'tooling_only' || steps.mode.outputs.value == 'accepted_state') }}
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
