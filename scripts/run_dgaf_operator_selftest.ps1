@@ -33,7 +33,10 @@ if ($DgafDirtyBeforeNormalization) {
 # DGAF's evidence contracts bind exact repository bytes, so normalize the clean
 # checkout to the Git object representation before any byte-sensitive checks.
 Invoke-Checked { & git -C $DgafRoot config --local core.autocrlf false } "DGAF line-ending policy"
-Invoke-Checked { & git -C $DgafRoot reset --hard HEAD } "DGAF exact-byte rematerialization"
+# reset --hard can leave an already-clean CRLF worktree physically unchanged after
+# core.autocrlf is flipped. Force a path checkout so tracked bytes are actually
+# rematerialized from HEAD under the new no-conversion policy.
+Invoke-Checked { & git -C $DgafRoot checkout --force HEAD -- . } "DGAF exact-byte rematerialization"
 
 $BootstrapPython = $null
 $BootstrapPythonArgs = @()
