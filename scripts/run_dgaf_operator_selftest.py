@@ -387,7 +387,7 @@ def main() -> int:
         "# DGAF Operator Self-Test",
         "",
         f"- Status: **{status}**",
-        f"- Evidence class: `INTERNAL_OPERATOR_ENGINEERING_VALIDATION`",
+        "- Evidence class: `INTERNAL_OPERATOR_ENGINEERING_VALIDATION`",
         f"- Started: `{report['started_at']}`",
         f"- Completed: `{report['completed_at']}`",
         f"- Report SHA-256: `{digest}`",
