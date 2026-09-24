@@ -21,18 +21,31 @@ Write-Host "[DGAF] Operator self-test bootstrap"
 Write-Host "DGAF: $DgafRoot"
 Write-Host "ACP:  $AcpRoot"
 
-if (-not (Get-Command py -ErrorAction SilentlyContinue)) {
-    throw "Python launcher 'py' was not found. Install/use Python 3.12 before running this suite."
+$BootstrapPython = $null
+$BootstrapPythonArgs = @()
+
+if (Get-Command py -ErrorAction SilentlyContinue) {
+    $BootstrapPython = "py"
+    $BootstrapPythonArgs = @("-3.12")
+} elseif (Get-Command python -ErrorAction SilentlyContinue) {
+    & python -c "import sys; raise SystemExit(0 if sys.version_info[:2] == (3, 12) else 1)"
+    if ($LASTEXITCODE -eq 0) {
+        $BootstrapPython = "python"
+    }
 }
 
-& py -3.12 -c "import sys; assert sys.version_info[:2] == (3, 12); print(sys.version)"
+if (-not $BootstrapPython) {
+    throw "Python 3.12 was not found. Install/use Python 3.12 before running this suite."
+}
+
+& $BootstrapPython @BootstrapPythonArgs -c "import sys; assert sys.version_info[:2] == (3, 12); print(sys.version)"
 if ($LASTEXITCODE -ne 0) {
     throw "Python 3.12 is required."
 }
 
 if (-not (Test-Path $VenvRoot)) {
     Write-Host "[DGAF] Creating isolated Python 3.12 environment..."
-    Invoke-Checked { & py -3.12 -m venv $VenvRoot } "venv creation"
+    Invoke-Checked { & $BootstrapPython @BootstrapPythonArgs -m venv $VenvRoot } "venv creation"
     $RefreshDependencies = $true
 }
 
