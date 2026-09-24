@@ -553,6 +553,31 @@ def test_primary_analysis_authorization_semantic_policy_is_exact() -> None:
     validator.validate_semantic_policy()
 
 
+def test_ci_workflow_uses_immutable_actions_and_hash_locked_ci_dependencies() -> None:
+    assert WORKFLOW_PATH.exists(), "Epoch 002 primary-analysis authorization workflow is missing"
+    source = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    required = (
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c",
+        'python-version: "3.12.3"',
+        "bash scripts/bootstrap_ci_pip.sh",
+        "requirements-ci-py312-ubuntu2404-x64.lock",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "cache-dependency-path: requirements-ci-py312-ubuntu2404-x64.lock",
+        "mode=accepted_state",
+        "PRIMARY_ANALYSIS_RUN_THIS_WORKFLOW=FALSE",
+    )
+    for marker in required:
+        assert marker in source, marker
+
+    assert "actions/checkout@v4" not in source
+    assert "actions/setup-python@v4" not in source
+    assert "python -m pip install -r requirements-ci.txt" not in source
+    assert source.count('      - "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
+
+
 def test_ci_workflow_is_read_only_exact_head_and_never_runs_analysis() -> None:
     assert WORKFLOW_PATH.exists(), "Epoch 002 primary-analysis authorization workflow is missing"
     source = WORKFLOW_PATH.read_text(encoding="utf-8")
