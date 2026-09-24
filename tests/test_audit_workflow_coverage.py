@@ -379,14 +379,9 @@ def test_workflow_classification_registry_separates_non_audits_from_true_gaps():
 def test_workflow_classification_registry_preserves_audit_family_distinction():
     from registry.audit_catalog import load_workflow_classification
 
-    classification = load_workflow_classification(
-        REPO_ROOT / "registry" / "workflow_classification.v1.json"
-    )
+    classification = load_workflow_classification(REPO_ROOT / "registry" / "workflow_classification.v1.json")
     classified = {entry["path"] for entry in classification["classifications"]}
 
     assert ".github/workflows/governance-ci.yml" not in classified
     assert ".github/workflows/dgaf-self-application-mutation.yml" not in classified
-    assert all(
-        entry["classification"] == "CLASSIFIED_NON_AUDIT"
-        for entry in classification["classifications"]
-    )
+    assert all(entry["classification"] == "CLASSIFIED_NON_AUDIT" for entry in classification["classifications"])
