@@ -50,6 +50,7 @@ Only `.github/workflows/python-tests.yml` is migrated here:
 Temporary proof PR #986, exact head `fb26ea011fbc4eb50457a640173a18d6c1a1b314`, resolved `requirements-ci.txt + pandas==3.0.5` under Python 3.12, 3.12.0, and 3.12.3 on Ubuntu 24.04 x64.
 
 All three proof lanes produced an identical 66-package artifact set:
+
 - resolved-set SHA-256: `e18eb434f83c2f0e2801f218c77b1fbb8db76526dc57c57a734b3f12a3ed7b41`;
 - package/body SHA-256: `a793e17998fb403a214cd362fbae68f586e09540e806eb9c2626add52c6b483b`;
 - pandas overlay literal SHA-256: `0f7011f8e062802ab40c0bcfa852c079b99f0097f1a3ea085d2eacfef42263f9`;
