@@ -98,9 +98,7 @@ def _record_command(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Run bounded internal DGAF operator self-testing."
-    )
+    parser = argparse.ArgumentParser(description="Run bounded internal DGAF operator self-testing.")
     parser.add_argument(
         "--dgaf-root",
         type=Path,
@@ -165,9 +163,7 @@ def main() -> int:
         for label, root in (("DGAF", dgaf), ("ACP", acp)):
             shallow = _git(root, "rev-parse", "--is-shallow-repository")
             dirty = _git(root, "status", "--porcelain=v1", "--untracked-files=all")
-            replacement_refs = _git(
-                root, "for-each-ref", "--format=%(refname)", "refs/replace"
-            )
+            replacement_refs = _git(root, "for-each-ref", "--format=%(refname)", "refs/replace")
             checks.append(
                 _pass(f"{label.lower()}_full_clone")
                 if shallow == "false"
@@ -181,9 +177,7 @@ def main() -> int:
             checks.append(
                 _pass(f"{label.lower()}_no_replace_objects")
                 if not replacement_refs
-                else _fail(
-                    f"{label.lower()}_no_replace_objects", replacement_refs
-                )
+                else _fail(f"{label.lower()}_no_replace_objects", replacement_refs)
             )
 
         if any(item["status"] == "FAIL" for item in checks):
@@ -229,8 +223,7 @@ def main() -> int:
             logs,
             "dgaf_quick_regression",
             quick,
-            predicate=quick["returncode"] == 0
-            and "ALL CHECKS PASSED" in quick["stdout"],
+            predicate=quick["returncode"] == 0 and "ALL CHECKS PASSED" in quick["stdout"],
             detail="Core DGAF regression and tamper checks",
         )
 
@@ -259,16 +252,13 @@ def main() -> int:
             logs,
             "unauthorized_collection_block",
             collect,
-            predicate=collect["returncode"] == 2
-            and "COLLECTION_IMPLEMENTATION_NOT_ACCEPTED" in collect_text,
+            predicate=collect["returncode"] == 2 and "COLLECTION_IMPLEMENTATION_NOT_ACCEPTED" in collect_text,
             detail="Collection must remain unavailable at the current boundary",
         )
 
         probe = dgaf / DIRTY_PROBE
         if probe.exists():
-            checks.append(
-                _fail("dirty_worktree_fail_closed", f"Probe already exists: {probe}")
-            )
+            checks.append(_fail("dirty_worktree_fail_closed", f"Probe already exists: {probe}"))
         else:
             try:
                 probe.write_text(
@@ -294,8 +284,7 @@ def main() -> int:
                     logs,
                     "dirty_worktree_fail_closed",
                     dirty_preflight,
-                    predicate=dirty_preflight["returncode"] == 1
-                    and "DGAF_WORKTREE_DIRTY" in dirty_text,
+                    predicate=dirty_preflight["returncode"] == 1 and "DGAF_WORKTREE_DIRTY" in dirty_text,
                     detail="Intentional untracked probe must be rejected",
                 )
             finally:
@@ -325,9 +314,7 @@ def main() -> int:
 
         final_dirty = _git(dgaf, "status", "--porcelain=v1", "--untracked-files=all")
         checks.append(
-            _pass("dgaf_clean_after_selftest")
-            if not final_dirty
-            else _fail("dgaf_clean_after_selftest", final_dirty)
+            _pass("dgaf_clean_after_selftest") if not final_dirty else _fail("dgaf_clean_after_selftest", final_dirty)
         )
 
     except Exception as exc:  # preserve partial evidence instead of hiding failure
@@ -367,16 +354,12 @@ def main() -> int:
     }
 
     report_path = output_dir / "operator_selftest_report.json"
-    report_path.write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+    report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     logs_dir = output_dir / "logs"
     logs_dir.mkdir()
     for name, payload in logs.items():
-        (logs_dir / f"{name}.json").write_text(
-            json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-        )
+        (logs_dir / f"{name}.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     digest = _sha256(report_path)
     (output_dir / "operator_selftest_report.json.sha256").write_text(
@@ -411,9 +394,7 @@ def main() -> int:
             "",
         ]
     )
-    (output_dir / "operator_selftest_summary.md").write_text(
-        "\n".join(md_lines), encoding="utf-8"
-    )
+    (output_dir / "operator_selftest_summary.md").write_text("\n".join(md_lines), encoding="utf-8")
 
     print(json.dumps({"status": status, "output_dir": str(output_dir), "report_sha256": digest}))
     return 0 if status == "PASS" else 1
