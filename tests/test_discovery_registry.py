@@ -135,7 +135,7 @@ def test_blindspot_record_is_non_authorizing_and_requires_disjoint_methods():
         )
 
 
-def test_registry_seed_files_are_non_authorizing_and_non_exhaustive():
+def test_registry_files_are_non_authorizing_and_non_exhaustive():
     root = Path(__file__).resolve().parents[1]
     assumption_registry = json.loads((root / "docs/governance/ASSUMPTION_REGISTRY_V1.json").read_text())
     blindspot_ledger = json.loads((root / "docs/governance/BLIND_SPOT_LEDGER_V1.json").read_text())
@@ -156,7 +156,9 @@ def test_registry_seed_files_are_non_authorizing_and_non_exhaustive():
         "ASM-DGAF-OPERATOR-COMPREHENSION",
         "ASM-DGAF-DISCOVERY-COMPLETENESS",
     }
-    actual_ids = {item["assumption_id"] for item in assumption_registry["assumptions"]}
+    assumption_ids = [item["assumption_id"] for item in assumption_registry["assumptions"]]
+    actual_ids = set(assumption_ids)
+    assert len(assumption_ids) == len(actual_ids)
     assert required_ids <= actual_ids
 
     for item in assumption_registry["assumptions"]:
@@ -173,6 +175,7 @@ def test_registry_seed_files_are_non_authorizing_and_non_exhaustive():
         validate_assumption(record)
         assert item["mitigation"].strip()
         assert item["affected_controls"]
+        assert all(str(control).strip() for control in item["affected_controls"])
         assert item["status"].strip()
     assert blindspot_ledger["authoritative_effect"] == "NONE"
     assert blindspot_ledger["completeness_claim"] is False
