@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Fail-closed validator for the Track A Epoch 002 unblinding decision.
 
-This tool validates a future human-controlled authorization record only. It does
-not decrypt protected material, release mappings, materialize analysis input,
-authorize primary analysis, execute empirical work, or change scientific N.
+This tool validates either a future human-controlled authorization event or the
+immutable accepted authorization state. It does not decrypt protected material,
+release mappings, materialize analysis input, authorize primary analysis, execute
+empirical work, or change scientific N.
 """
 
 from __future__ import annotations
@@ -88,6 +89,30 @@ def git(*args: str) -> str:
     if result.returncode != 0:
         fail(f"git {' '.join(args)} failed: {result.stderr.strip()}")
     return result.stdout.strip()
+
+
+def git_object_exists(spec: str) -> bool:
+    result = subprocess.run(
+        ["git", "cat-file", "-e", spec],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    return result.returncode == 0
+
+
+def read_git_bytes(ref: str, relpath: str) -> bytes:
+    result = subprocess.run(
+        ["git", "show", f"{ref}:{relpath}"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        detail = result.stderr.decode("utf-8", errors="replace").strip()
+        fail(f"cannot read {ref}:{relpath}: {detail}")
+    return result.stdout
 
 
 def assert_no_secret_surface(value: Any, path: str = "record") -> None:
@@ -315,11 +340,68 @@ def validate_event() -> None:
     )
 
 
+def validate_accepted_state(ref: str = "HEAD") -> str:
+    validate_semantic_policy()
+    if not git_object_exists(f"{ref}:{DECISION_REL}"):
+        fail("accepted-state validation requires the unblinding decision")
+    if not git_object_exists(f"{ref}:{DATASET_LOCK_REL}"):
+        fail("accepted-state validation requires the dataset-lock receipt")
+
+    decision_history = [line for line in git("log", "--format=%H", ref, "--", DECISION_REL).splitlines() if line]
+    if len(decision_history) != 1:
+        fail("accepted unblinding decision must have one immutable history event")
+    event = decision_history[0]
+
+    lineage = git("rev-list", "--parents", "-n", "1", event).split()
+    if len(lineage) != 2 or lineage[0] != event:
+        fail("accepted unblinding decision event must have exactly one parent")
+    parent = lineage[1]
+
+    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines() if line]
+    if changed != [DECISION_REL]:
+        fail("accepted unblinding decision event changed more than its canonical record")
+    if git_object_exists(f"{parent}:{DECISION_REL}"):
+        fail("accepted unblinding decision is not creation-only")
+
+    lock_history = [line for line in git("log", "--format=%H", parent, "--", DATASET_LOCK_REL).splitlines() if line]
+    if len(lock_history) != 1:
+        fail("accepted dataset-lock receipt must have one immutable history event")
+    dataset_lock_commit = lock_history[0]
+    git("merge-base", "--is-ancestor", dataset_lock_commit, parent)
+
+    parent_lock_blob = git("rev-parse", f"{parent}:{DATASET_LOCK_REL}")
+    event_lock_blob = git("rev-parse", f"{event}:{DATASET_LOCK_REL}")
+    current_lock_blob = git("rev-parse", f"{ref}:{DATASET_LOCK_REL}")
+    if len({parent_lock_blob, event_lock_blob, current_lock_blob}) != 1:
+        fail("dataset-lock receipt changed across accepted unblinding state")
+
+    event_decision_blob = git("rev-parse", f"{event}:{DECISION_REL}")
+    current_decision_blob = git("rev-parse", f"{ref}:{DECISION_REL}")
+    if event_decision_blob != current_decision_blob:
+        fail("accepted unblinding decision bytes drifted after the event")
+
+    dataset_lock_bytes = read_git_bytes(ref, DATASET_LOCK_REL)
+    dataset_lock = json.loads(dataset_lock_bytes)
+    decision = json.loads(read_git_bytes(ref, DECISION_REL))
+    if not isinstance(dataset_lock, dict) or not isinstance(decision, dict):
+        fail("accepted unblinding records must be JSON objects")
+
+    validate_decision_object(
+        decision,
+        dataset_lock,
+        dataset_lock_commit_sha=dataset_lock_commit,
+        dataset_lock_receipt_sha256=sha256_bytes(dataset_lock_bytes),
+        authorization_parent_sha=parent,
+    )
+    return event
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--tooling-only", action="store_true")
     mode.add_argument("--validate-event", action="store_true")
+    mode.add_argument("--accepted-state", action="store_true")
     return parser.parse_args()
 
 
@@ -332,6 +414,14 @@ def main() -> None:
         print("PRIMARY_ANALYSIS=NOT_AUTHORIZED")
         print("SCIENTIFIC_N_INCREMENT=0")
         print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")
+        return
+    if args.accepted_state:
+        validate_accepted_state()
+        print("TRACK_A_EPOCH_002_UNBLINDING_DECISION=ESTABLISHED_PRESERVED")
+        print("SUCCESSOR_STATE=OUT_OF_SCOPE_PRESERVED")
+        print("SCIENTIFIC_N_INCREMENT=0")
+        print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")
+        print("INDEPENDENT_VALIDATION=NOT_ESTABLISHED")
         return
     validate_event()
     print("TRACK_A_EPOCH_002_UNBLINDING_DECISION_EVENT=PASS_BOUNDED")

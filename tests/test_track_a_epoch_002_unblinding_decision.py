@@ -7,6 +7,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts/validate_track_a_epoch_002_unblinding_decision.py"
+WORKFLOW_PATH = ROOT / ".github" / "workflows" / "track-a-epoch-002-unblinding-decision.yml"
 
 FULL_NON_EFFECTS = [
     "DOES_NOT_AUTHORIZE_COLLECTION",
@@ -219,3 +220,24 @@ def test_tooling_mode_preserves_absence_and_semantic_boundary(
     validator = load_validator()
     monkeypatch.setattr(validator, "DECISION_PATH", tmp_path / "absent-unblinding-decision.json")
     validator.validate_tooling_only()
+
+
+def test_workflow_preserves_accepted_unblinding_state_for_maintenance() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "value=accepted_state" in workflow
+    assert "Validate accepted immutable unblinding decision state" in workflow
+    assert "--accepted-state" in workflow
+    assert "TRACK_A_EPOCH_002_UNBLINDING=AUTHORIZED_BOUNDED_PRESERVED" in workflow
+    assert "TRACK_A_EPOCH_002_SUCCESSOR_STATE=OUT_OF_SCOPE_PRESERVED" in workflow
+    assert "INDEPENDENT_VALIDATION=NOT_ESTABLISHED" in workflow
+    assert "steps.mode.outputs.value == 'accepted_state'" in workflow
+
+
+def test_validator_exposes_accepted_state_without_replaying_event() -> None:
+    source = MODULE_PATH.read_text(encoding="utf-8")
+    assert "def validate_accepted_state(" in source
+    assert "accepted unblinding decision must have one immutable history event" in source
+    assert "accepted unblinding decision event changed more than its canonical record" in source
+    assert "accepted unblinding decision is not creation-only" in source
+    assert "dataset-lock receipt changed across accepted unblinding state" in source
+    assert "accepted unblinding decision bytes drifted after the event" in source
