@@ -211,6 +211,10 @@ def test_aoss_stage_a_collection_authorization_uses_bound_py312_lock_without_aut
     assert 'CHANGED="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"' in workflow
     assert "--validate-state" in workflow
     assert "authorization and precollection receipt cannot change in one PR" in workflow
+    assert workflow.count("      - 'requirements-ci.txt'") == 2
+    assert workflow.count("      - 'requirements-ci-py312-ubuntu2404-x64.lock'") == 2
+    assert workflow.count("      - 'scripts/bootstrap_ci_pip.sh'") == 2
+    assert workflow.count("      - 'tests/test_ci_lock_contract.py'") == 2
 
 
 def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
