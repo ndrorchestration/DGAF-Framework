@@ -714,6 +714,80 @@ def _validate_repository_ancestry(evidence: dict[str, Any], descendant: str) -> 
         fail("evidence tooling commit is not an ancestor of the evidence chain")
 
 
+def validate_accepted_state(ref: str = "HEAD") -> tuple[str, str]:
+    required = (OPERATOR_EVIDENCE_REL, OPERATOR_PRE_LOCK_LEDGER_REL, RECEIPT_REL)
+    for relpath in required:
+        if not git_object_exists(f"{ref}:{relpath}"):
+            fail(f"accepted-state validation requires {relpath}")
+
+    receipt_history = [
+        line
+        for line in git("log", "--format=%H", ref, "--", RECEIPT_REL).splitlines()
+        if line
+    ]
+    if len(receipt_history) != 1:
+        fail("dataset-lock receipt must have one immutable history event")
+    receipt_event = receipt_history[0]
+    receipt_lineage = git("rev-list", "--parents", "-n", "1", receipt_event).split()
+    if len(receipt_lineage) != 2 or receipt_lineage[0] != receipt_event:
+        fail("accepted dataset-lock receipt event must have exactly one parent")
+    receipt_parent = receipt_lineage[1]
+    if _changed_paths(receipt_event) != [RECEIPT_REL]:
+        fail("accepted dataset-lock receipt event changed more than its canonical record")
+    if git_object_exists(f"{receipt_parent}:{RECEIPT_REL}"):
+        fail("accepted dataset-lock receipt is not creation-only")
+
+    evidence_history = [
+        line
+        for line in git("log", "--format=%H", receipt_parent, "--", OPERATOR_EVIDENCE_REL).splitlines()
+        if line
+    ]
+    ledger_history = [
+        line
+        for line in git("log", "--format=%H", receipt_parent, "--", OPERATOR_PRE_LOCK_LEDGER_REL).splitlines()
+        if line
+    ]
+    if len(evidence_history) != 1 or evidence_history != ledger_history:
+        fail("accepted operator evidence and pre-lock ledger must share one immutable history event")
+    evidence_event = evidence_history[0]
+    if receipt_parent != evidence_event:
+        fail("accepted dataset-lock receipt must directly follow the operator evidence admission event")
+
+    evidence_lineage = git("rev-list", "--parents", "-n", "1", evidence_event).split()
+    if len(evidence_lineage) != 2 or evidence_lineage[0] != evidence_event:
+        fail("accepted operator evidence event must have exactly one parent")
+    evidence_parent = evidence_lineage[1]
+    expected_changed = sorted((OPERATOR_EVIDENCE_REL, OPERATOR_PRE_LOCK_LEDGER_REL))
+    if _changed_paths(evidence_event) != expected_changed:
+        fail("accepted operator evidence event changed outside the evidence/ledger pair")
+    for relpath in (OPERATOR_EVIDENCE_REL, OPERATOR_PRE_LOCK_LEDGER_REL):
+        if git_object_exists(f"{evidence_parent}:{relpath}"):
+            fail(f"accepted operator evidence path is not creation-only: {relpath}")
+
+    event_bindings = {
+        OPERATOR_EVIDENCE_REL: evidence_event,
+        OPERATOR_PRE_LOCK_LEDGER_REL: evidence_event,
+        RECEIPT_REL: receipt_event,
+    }
+    for relpath, event in event_bindings.items():
+        current_blob = git("rev-parse", f"{ref}:{relpath}")
+        event_blob = git("rev-parse", f"{event}:{relpath}")
+        if current_blob != event_blob:
+            fail(f"accepted dataset-lock bytes drifted after the event: {relpath}")
+
+    evidence, evidence_sha256 = validate_evidence_file(OPERATOR_EVIDENCE_PATH)
+    validate_pre_lock_ledger(OPERATOR_PRE_LOCK_LEDGER_PATH, evidence)
+    receipt = load_object(RECEIPT_PATH, "dataset-lock receipt")
+    validate_operator_receipt_object(
+        receipt,
+        evidence,
+        evidence_sha256,
+        evidence_event,
+    )
+    _validate_repository_ancestry(evidence, evidence_event)
+    return evidence_event, receipt_event
+
+
 def validate_tooling_only() -> None:
     if RECEIPT_PATH.exists():
         fail("tooling mode requires the canonical dataset-lock receipt to remain absent")
@@ -847,6 +921,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--tooling-only", action="store_true")
+    mode.add_argument("--accepted-state", action="store_true")
     mode.add_argument("--evidence-only", action="store_true")
     mode.add_argument("--operator-evidence-admission-event", action="store_true")
     mode.add_argument("--receipt-event", action="store_true")
@@ -863,6 +938,13 @@ def main() -> int:
         validate_tooling_only()
         print("TRACK_A_EPOCH_002_DATASET_LOCK_TOOLING=PASS_NONAUTHORIZING")
         print("TRACK_A_EPOCH_002_DATASET_LOCK=NOT_ESTABLISHED")
+    elif args.accepted_state:
+        validate_accepted_state()
+        print("TRACK_A_EPOCH_002_DATASET_LOCK=ESTABLISHED_PRESERVED")
+        print("TRACK_A_EPOCH_002_SUCCESSOR_STATE=OUT_OF_SCOPE_PRESERVED")
+        print("SCIENTIFIC_N_INCREMENT=0")
+        print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")
+        return 0
     elif args.evidence_only:
         if args.evidence is None or args.pre_lock_ledger is None:
             fail("--evidence-only requires --evidence and --pre-lock-ledger")
