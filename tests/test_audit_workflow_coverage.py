@@ -304,3 +304,24 @@ def test_semantic_control_field_projection_assurance_family_is_catalog_mapped():
     }
 
     assert expected_paths.issubset(set(audit["implementation"]))
+
+
+def test_recent_self_assurance_families_are_catalog_mapped_without_promotion():
+    catalog = load_catalog(CATALOG_PATH)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
+    expected = {
+        "AUD-CI-DGAF-OPERATOR-SELFTEST": ".github/workflows/dgaf-operator-selftest.yml",
+        "AUD-CI-SELF-APPLICATION-MUTATION": ".github/workflows/dgaf-self-application-mutation.yml",
+        "AUD-CI-PDMAL-PREAUTH-SECURITY": ".github/workflows/pdmal-preauth-security.yml",
+        "AUD-CI-CANONICAL-TGL-DIAGNOSTIC": ".github/workflows/canonical-profile-tgl-diagnostic.yml",
+    }
+
+    for audit_id, workflow_path in expected.items():
+        audit = next((entry for entry in catalog["audits"] if entry.get("id") == audit_id), None)
+        assert audit is not None
+        assert workflow_path in audit["implementation"]
+        assert workflow_path not in unmapped
+        assert audit["blocking"] is False
+        assert audit["independence"] == "SAME_REPOSITORY_NONINDEPENDENT"
+        joined = " ".join(audit["non_effects"]).lower()
+        assert "scientific" in joined or "efficacy" in joined
