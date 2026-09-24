@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "requirements-ci.txt"
 WORKFLOW = ROOT / ".github" / "workflows" / "python-tests.yml"
 CONTROL_PLANE_WORKFLOW = ROOT / ".github" / "workflows" / "control-plane-contract.yml"
+CANONICAL_PROFILE_WORKFLOW = ROOT / ".github" / "workflows" / "canonical-treatment-profile.yml"
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
@@ -146,6 +147,19 @@ def test_control_plane_workflow_consumes_augmented_hash_lock() -> None:
     assert "--only-binary=:all:" in workflow
     assert "python -m pip install -r requirements-ci.txt pandas==3.0.5" not in workflow
     assert "assert pandas.__version__ == '3.0.5'" in workflow
+
+
+def test_canonical_treatment_profile_workflow_uses_bound_py312_lock() -> None:
+    workflow = CANONICAL_PROFILE_WORKFLOW.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
+    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
+    assert "python-version: '3.12'" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
 
 
 def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
