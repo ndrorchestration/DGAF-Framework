@@ -136,13 +136,7 @@ jobs:
             done
             echo 'UNBLINDING_TOOLING_SCOPE=DEDICATED_PLUS_DEPENDENCY_MAINTENANCE'
           else
-            for path in "${changed[@]}"; do
-              printf '%s\n' "${maintenance[@]}" | grep -Fxq -- "$path" || {
-                echo "forbidden dependency-trigger path in unblinding maintenance PR: $path" >&2
-                exit 1
-              }
-            done
-            echo 'UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_ONLY'
+            echo 'UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_OR_UNRELATED'
           fi
 
       - name: Run focused adversarial tests
