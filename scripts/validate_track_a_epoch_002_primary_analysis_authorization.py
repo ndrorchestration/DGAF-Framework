@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Fail-closed Track A Epoch 002 primary-analysis authorization validator.
 
-This module installs prospective authorization tooling only. It does not create an
-authorization record, perform materialization, execute analysis, inspect outcomes,
-or change scientific state.
+This module validates prospective authorization tooling, the one-time authorization
+event, or the accepted closed historical state. It does not create an authorization
+record, perform materialization, execute analysis, inspect numerical outcomes, or
+change scientific state.
 """
 
 from __future__ import annotations
@@ -351,10 +352,116 @@ def validate_authorization_event(head: str, *, accepted_parent_sha: str) -> str:
     return parent
 
 
+def _single_history(ref: str, relpath: str, label: str) -> str:
+    history = [line for line in git("log", "--format=%H", ref, "--", relpath).splitlines() if line]
+    if len(history) != 1:
+        fail(f"{label} must have exactly one immutable history event; got {history}")
+    return history[0]
+
+
+def _single_parent(commit: str, label: str) -> str:
+    lineage = git("rev-list", "--parents", "-n", "1", commit).split()
+    if len(lineage) != 2 or lineage[0] != commit:
+        fail(f"{label} event must have exactly one parent")
+    return lineage[1]
+
+
+def validate_accepted_state() -> tuple[str, str]:
+    validate_semantic_policy()
+
+    for relpath, label in (
+        (MATERIALIZATION_RECEIPT_REL, "materialization receipt"),
+        (AUTH_REL, "primary-analysis authorization"),
+        (RESULT_REL, "locked analysis result"),
+    ):
+        if not git_object_exists(f"HEAD:{relpath}"):
+            fail(f"accepted state requires {label} at HEAD")
+
+    authorization_event = _single_history("HEAD", AUTH_REL, "primary-analysis authorization")
+    authorization_parent = _single_parent(authorization_event, "primary-analysis authorization")
+    validate_authorization_event(
+        authorization_event,
+        accepted_parent_sha=authorization_parent,
+    )
+
+    result_event = _single_history("HEAD", RESULT_REL, "locked analysis result")
+    result_parent = _single_parent(result_event, "locked analysis result")
+    result_changed = [
+        line
+        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", result_event).splitlines()
+        if line
+    ]
+    if result_changed != [RESULT_REL]:
+        fail("locked analysis result event must change exactly the canonical result path")
+    if git_object_exists(f"{result_parent}:{RESULT_REL}"):
+        fail("locked analysis result event must be creation-only")
+
+    git("merge-base", "--is-ancestor", authorization_event, result_parent)
+
+    for relpath, event_ref, label in (
+        (MATERIALIZATION_RECEIPT_REL, authorization_event, "materialization receipt"),
+        (AUTH_REL, authorization_event, "primary-analysis authorization"),
+        (RESULT_REL, result_event, "locked analysis result"),
+    ):
+        if read_git_bytes("HEAD", relpath) != read_git_bytes(event_ref, relpath):
+            fail(f"{label} bytes drifted after its accepted historical event")
+
+    if not git_object_exists(f"{result_parent}:{AUTH_REL}") or not git_object_exists(
+        f"{result_event}:{AUTH_REL}"
+    ):
+        fail("locked result requires the accepted authorization predecessor")
+    if read_git_bytes(result_parent, AUTH_REL) != read_git_bytes(result_event, AUTH_REL):
+        fail("authorization bytes changed during locked-result admission")
+    if read_git_bytes(result_event, AUTH_REL) != read_git_bytes("HEAD", AUTH_REL):
+        fail("authorization bytes drifted after locked-result admission")
+
+    authorization = load_json_at_ref("HEAD", AUTH_REL)
+    result = load_json_at_ref("HEAD", RESULT_REL)
+    validate_schema(result)
+
+    expected_result = {
+        "record_type": "LOCKED_ANALYSIS_RESULT_RECORD",
+        "schema_version": 1,
+        "protocol_id": PROTOCOL_ID,
+        "epoch": EPOCH,
+        "evidence_scope": "LOCKED_PRIMARY_ANALYSIS_OUTPUT_CONTENT_ADDRESS_ONLY",
+        "non_effects": FULL_NON_EFFECTS,
+        "status": "PASS",
+        "predecessor_record_ids": [authorization["record_id"]],
+        "authorization_effect": "NONE",
+        "scientific_state_effect": {
+            "empirical_n_increment": 0,
+            "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+        },
+    }
+    for key, expected in expected_result.items():
+        if result.get(key) != expected:
+            fail(f"locked analysis result {key} drifted from the accepted closed state")
+
+    immutable_subject = result.get("immutable_subject")
+    if not isinstance(immutable_subject, dict):
+        fail("locked analysis result immutable_subject is malformed")
+    if immutable_subject.get("commit_sha") != authorization_event:
+        fail("locked analysis result no longer binds the accepted authorization event")
+    digest = immutable_subject.get("sha256")
+    if not isinstance(digest, str) or len(digest) != 64:
+        fail("locked analysis result content digest is malformed")
+
+    producer = result.get("producer")
+    if not isinstance(producer, dict):
+        fail("locked analysis result producer is malformed")
+    if producer.get("version_or_commit") != result_parent:
+        fail("locked analysis result producer no longer binds its event parent")
+
+    validate_frozen_analysis_identities("HEAD")
+    return authorization_event, result_event
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--tooling", action="store_true", help="validate prospective tooling-only state")
+    mode.add_argument("--accepted-state", action="store_true", help="validate accepted closed historical state")
     mode.add_argument("--event-commit", metavar="SHA", help="validate authorization event repository shape")
     parser.add_argument(
         "--accepted-parent",
@@ -370,6 +477,21 @@ def main() -> None:
         print("PRIMARY_ANALYSIS_AUTHORIZATION=NOT_ESTABLISHED")
         print("PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN")
         print("SCIENTIFIC_N_INCREMENT=0")
+        return
+
+    if args.accepted_state:
+        if args.accepted_parent:
+            fail("accepted-state mode does not accept --accepted-parent")
+        authorization_event, result_event = validate_accepted_state()
+        print(f"PRIMARY_ANALYSIS_AUTHORIZATION_EVENT={authorization_event}")
+        print(f"LOCKED_ANALYSIS_RESULT_EVENT={result_event}")
+        print("PRIMARY_ANALYSIS_AUTHORIZATION=ESTABLISHED_PRESERVED")
+        print("LOCKED_ANALYSIS_RESULT=ESTABLISHED_PRESERVED")
+        print("PRIMARY_ANALYSIS_EXECUTION_REQUESTED=FALSE")
+        print("SCIENTIFIC_N_INCREMENT=0")
+        print("CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED")
+        print("INDEPENDENT_VALIDATION=NOT_ESTABLISHED")
+        print("HIGH_ASSURANCE=NOT_AUTHORIZED")
         return
 
     if not args.accepted_parent:
