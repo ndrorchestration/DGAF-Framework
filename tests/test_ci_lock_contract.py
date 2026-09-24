@@ -16,6 +16,9 @@ TRACK_A_EPOCH_002_RUNNER_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-ep
 TRACK_A_EPOCH_002_RESULT_SEMANTICS_WORKFLOW = (
     ROOT / ".github" / "workflows" / "track-a-epoch-002-result-record-semantics.yml"
 )
+TRACK_A_EPOCH_002_LOCKED_RESULT_ADMISSION_WORKFLOW = (
+    ROOT / ".github" / "workflows" / "track-a-epoch-002-locked-result-admission.yml"
+)
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
@@ -253,6 +256,25 @@ def test_track_a_epoch002_result_semantics_uses_bound_py312_lock_without_authori
     assert "Validate semantic policy coherence" in workflow
     assert "Prove semantic tooling cannot create authority or execute science" in workflow
     assert "RESULT_RECORD_SEMANTIC_TOOLING_NONAUTHORIZING=TRUE" in workflow
+    assert "SCIENTIFIC_N_INCREMENT=0" in workflow
+
+
+def test_track_a_epoch002_locked_result_admission_uses_bound_lock_and_accepted_state_routing() -> None:
+    workflow = TRACK_A_EPOCH_002_LOCKED_RESULT_ADMISSION_WORKFLOW.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "python-version: '3.12.3'" in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
+    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
+    assert workflow.count("      - 'requirements-ci-py312-ubuntu2404-x64.lock'") == 2
+    assert "value=accepted_state" in workflow
+    assert "Validate accepted immutable result state" in workflow
+    assert "Run synthetic-only result-admission tests" in workflow
+    assert "Prove CI has no empirical execution surface" in workflow
     assert "SCIENTIFIC_N_INCREMENT=0" in workflow
 
 
