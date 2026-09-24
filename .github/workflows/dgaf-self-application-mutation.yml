@@ -1,0 +1,79 @@
+name: DGAF Self-Application Mutation Benchmark
+
+on:
+  pull_request:
+    paths:
+      - 'registry/dgaf_self_application_mutations_v1.json'
+      - 'scripts/run_dgaf_self_application_mutations.py'
+      - 'tests/test_dgaf_self_application_mutations.py'
+      - '.github/workflows/dgaf-self-application-mutation.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  mutation-benchmark:
+    name: Bounded self-application mutation benchmark
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Prove exact source identity
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Run real-validator mutation benchmark
+        run: >-
+          python scripts/run_dgaf_self_application_mutations.py
+          --output ci-artifacts/dgaf-self-application-mutation-results.json
+
+      - name: Verify retained evidence ceiling and result
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('ci-artifacts/dgaf-self-application-mutation-results.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          assert data['evidence_class'] == 'INTERNAL_SELF_APPLICATION_ENGINEERING_VALIDATION'
+          assert data['source_commit'] == __import__('os').environ['SOURCE_SHA']
+          assert data['result'] == 'PASS_ALL_PREDECLARED_MUTATIONS_DETECTED'
+          assert data['summary']['all_expected_mutations_detected'] is True
+          assert data['summary']['all_expected_mutations_fail_closed'] is True
+          assert data['claim_ceiling'] == {
+              'scientific_n_increment': 0,
+              'independent_validation': 'NOT_ESTABLISHED',
+              'external_validation': 'NOT_ESTABLISHED',
+              'canonical_dgaf_efficacy': 'NOT_ESTABLISHED',
+              'high_assurance': 'NOT_AUTHORIZED',
+          }
+          assert data['scientific_state_effect'] == 'NONE'
+          assert data['independent_review_effect'] == 'NONE'
+          print('DGAF_SELF_APPLICATION_MUTATION_EVIDENCE_PASS')
+          PY
+
+      - name: Upload retained mutation evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dgaf-self-application-mutation-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: error
+          path: |
+            ci-artifacts/dgaf-self-application-mutation-results.json
+            ci-artifacts/dgaf-self-application-mutation-results.json.sha256
