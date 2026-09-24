@@ -1,0 +1,125 @@
+from __future__ import annotations
+
+import hashlib
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE = ROOT / "requirements-ci.txt"
+WORKFLOW = ROOT / ".github" / "workflows" / "python-tests.yml"
+BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
+
+EXPECTED_SOURCE_SHA256 = "1abada5e8dabbcb6706e33c5b5dfa30c45b784e8b9a9b18166a52562b5c3dfa9"
+EXPECTED_LOCKS = {
+    "3.10": (
+        ROOT / "requirements-ci-py310-ubuntu2404-x64.lock",
+        "18206a193da4de952c25d5384187edd82fa134eb4a9a3c5322f6999258a6d05c",
+        "7b7f6edb9c686b921d1450aabc3c8345ec6cb41ca84a6feadd16210dafb3c4e3",
+    ),
+    "3.11": (
+        ROOT / "requirements-ci-py311-ubuntu2404-x64.lock",
+        "ff5111b07dc1949c06a6a364722bdece93f1f10e70a0c6e719704c091096344d",
+        "dabebe2879148dfed404f1163f17c248ba01ce7b98778782f9c6c12f9acac14d",
+    ),
+    "3.12": (
+        ROOT / "requirements-ci-py312-ubuntu2404-x64.lock",
+        "d131e53fc8c8506ee282f4082eae451af77b45c08c37b69fce091b4bca865197",
+        "7931d5f2ad8b22cbd71dea2cc60ce4c1f8a3b4ccde34a46be0fa5e284526fba9",
+    ),
+}
+PIP_WHEEL_SHA256 = "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e"
+PIN_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([^\s\\]+)(?:\s+\\)?$")
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def canonical(name: str) -> str:
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def direct_pins() -> dict[str, str]:
+    pins: dict[str, str] = {}
+    for raw in SOURCE.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        match = PIN_RE.fullmatch(line)
+        assert match, line
+        pins[canonical(match.group(1))] = match.group(2)
+    return pins
+
+
+def lock_pins(path: Path) -> dict[str, tuple[str, str]]:
+    lines = path.read_text(encoding="utf-8").splitlines()
+    pins: dict[str, tuple[str, str]] = {}
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        if not line or line.startswith("#"):
+            i += 1
+            continue
+        match = PIN_RE.fullmatch(line)
+        assert match and line.endswith("\\"), line
+        assert i + 1 < len(lines)
+        hash_line = lines[i + 1].strip()
+        assert re.fullmatch(r"--hash=sha256:[0-9a-f]{64}", hash_line), hash_line
+        key = canonical(match.group(1))
+        assert key not in pins, key
+        pins[key] = (match.group(2), hash_line.split(":", 1)[1])
+        i += 2
+    return pins
+
+
+def test_source_and_canonical_lock_identities_are_bound() -> None:
+    assert sha256(SOURCE) == EXPECTED_SOURCE_SHA256
+    for minor, (path, expected_lock_sha, resolved_set_sha) in EXPECTED_LOCKS.items():
+        text = path.read_text(encoding="utf-8")
+        assert sha256(path) == expected_lock_sha
+        assert f"# source_sha256: {EXPECTED_SOURCE_SHA256}" in text
+        assert f"# python_minor: {minor}" in text
+        assert "# runner_os: ubuntu-24.04" in text
+        assert "# runner_arch: x64" in text
+        assert "# resolver: pip==26.2.1" in text
+        assert "# binary_policy: only-binary=:all:" in text
+        assert f"# resolved_set_sha256: {resolved_set_sha}" in text
+
+
+def test_every_direct_ci_pin_is_exactly_represented_in_every_lock() -> None:
+    direct = direct_pins()
+    assert len(direct) == 15
+    for path, _, _ in EXPECTED_LOCKS.values():
+        locked = lock_pins(path)
+        for name, version in direct.items():
+            assert name in locked
+            assert locked[name][0] == version
+
+
+def test_every_lock_requirement_is_hash_bound() -> None:
+    for path, _, _ in EXPECTED_LOCKS.values():
+        locked = lock_pins(path)
+        assert locked
+        assert all(re.fullmatch(r"[0-9a-f]{64}", digest) for _, digest in locked.values())
+
+
+def test_python_workflow_consumes_interpreter_scoped_hash_locks() -> None:
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    assert workflow.count("runs-on: ubuntu-24.04") == 4
+    for minor, (path, _, _) in EXPECTED_LOCKS.items():
+        assert path.name in workflow
+        assert f"python-version: '{minor}'" in workflow
+    assert workflow.count("--require-hashes") == 4
+    assert workflow.count("--only-binary=:all:") == 4
+    assert workflow.count("bash scripts/bootstrap_ci_pip.sh") == 4
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
+    assert "requirements-ci.txt pyyaml" not in workflow
+
+
+def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
+    bootstrap = BOOTSTRAP.read_text(encoding="utf-8")
+    assert 'PIP_VERSION="26.2.1"' in bootstrap
+    assert f'PIP_SHA256="{PIP_WHEEL_SHA256}"' in bootstrap
+    assert "--no-index" in bootstrap
+    assert "--find-links" in bootstrap
+    assert "sha256sum" in bootstrap
