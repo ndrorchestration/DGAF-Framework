@@ -115,11 +115,7 @@ def test_track_c_nonempirical_composition_family_is_catalog_mapped_without_autho
     catalog = load_catalog(CATALOG_PATH)
     unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
     audit = next(
-        (
-            entry
-            for entry in catalog["audits"]
-            if entry.get("id") == "AUD-CI-TRACK-C-NONEMPIRICAL-COMPOSITION"
-        ),
+        (entry for entry in catalog["audits"] if entry.get("id") == "AUD-CI-TRACK-C-NONEMPIRICAL-COMPOSITION"),
         None,
     )
 
