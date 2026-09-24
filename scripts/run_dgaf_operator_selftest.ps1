@@ -5,7 +5,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ExpectedAcpCommit = "dbab7c1afafec524ce7c18157de2089cafe79c87"
-$DgafRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$SourceDgafRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$ExactCloneRoot = Join-Path $env:TEMP ("DGAF-ExactByte-SelfTest-" + [guid]::NewGuid().ToString("N"))
+$DgafRoot = $SourceDgafRoot
 $VenvRoot = Join-Path $HOME ".venvs\dgaf-operator-selftest"
 $Python = Join-Path $VenvRoot "Scripts\python.exe"
 
@@ -18,10 +20,10 @@ function Invoke-Checked {
 }
 
 Write-Host "[DGAF] Operator self-test bootstrap"
-Write-Host "DGAF: $DgafRoot"
-Write-Host "ACP:  $AcpRoot"
+Write-Host "DGAF source: $SourceDgafRoot"
+Write-Host "ACP:         $AcpRoot"
 
-$DgafDirtyBeforeNormalization = & git -C $DgafRoot status --porcelain=v1 --untracked-files=all
+$DgafDirtyBeforeNormalization = & git -C $SourceDgafRoot status --porcelain=v1 --untracked-files=all
 if ($LASTEXITCODE -ne 0) {
     throw "Could not inspect DGAF worktree before Windows normalization."
 }
@@ -29,11 +31,21 @@ if ($DgafDirtyBeforeNormalization) {
     throw "DGAF checkout is dirty. Commit/stash/remove changes before operator self-testing."
 }
 
-# Windows Git may materialize CRLF bytes even while reporting a clean worktree.
-# DGAF's evidence contracts bind exact repository bytes, so normalize the clean
-# checkout to the Git object representation before any byte-sensitive checks.
-Invoke-Checked { & git -C $DgafRoot config --local core.autocrlf false } "DGAF line-ending policy"
-Invoke-Checked { & git -C $DgafRoot reset --hard HEAD } "DGAF exact-byte rematerialization"
+# Windows Git may materialize CRLF bytes while reporting a clean worktree.
+# Do not rewrite the operator's checkout in place: Git may retain those physical
+# bytes even after core.autocrlf changes. Instead create a disposable local clone
+# whose checkout policy is fixed before materialization, then execute all
+# byte-sensitive validation against that exact-byte clone.
+$SourceShallow = (& git -C $SourceDgafRoot rev-parse --is-shallow-repository).Trim()
+if ($LASTEXITCODE -ne 0 -or $SourceShallow -ne "false") {
+    throw "DGAF source checkout must be a full clone before operator self-testing."
+}
+Write-Host "[DGAF] Creating disposable exact-byte DGAF clone..."
+Invoke-Checked {
+    & git -c core.autocrlf=false clone --no-hardlinks $SourceDgafRoot $ExactCloneRoot
+} "DGAF exact-byte local clone"
+$DgafRoot = $ExactCloneRoot
+Write-Host "DGAF exact:  $DgafRoot"
 
 $BootstrapPython = $null
 $BootstrapPythonArgs = @()
