@@ -1,0 +1,187 @@
+name: Control-Plane Pandas Hash-Lock Proof
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/control-plane-pandas-lock-proof.yml'
+      - 'requirements-ci.txt'
+      - 'scripts/bootstrap_ci_pip.sh'
+
+permissions:
+  contents: read
+
+jobs:
+  generate-and-verify:
+    name: Generate and verify control-plane lock (Python ${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.12', '3.12.0', '3.12.3']
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Verify exact PR head
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Bootstrap exact pip resolver
+        run: bash scripts/bootstrap_ci_pip.sh
+
+      - name: Resolve exact control-plane wheel set
+        run: |
+          set -euo pipefail
+          python -m pip install             --disable-pip-version-check             --dry-run             --ignore-installed             --only-binary=:all:             --report control-plane-lock-report.json             -r requirements-ci.txt             'pandas==3.0.5'
+
+      - name: Materialize artifact-exact augmented lock
+        env:
+          PYTHON_REQUESTED: ${{ matrix.python }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import platform
+          import re
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path("control-plane-lock-report.json").read_text(encoding="utf-8"))
+          source = Path("requirements-ci.txt")
+          source_sha = hashlib.sha256(source.read_bytes()).hexdigest()
+          overlay = "pandas==3.0.5"
+          overlay_sha = hashlib.sha256((overlay + "\n").encode()).hexdigest()
+          requested = os.environ["PYTHON_REQUESTED"]
+          expected_minor = ".".join(requested.split(".")[:2])
+          actual_full = platform.python_version()
+          actual_minor = f"{sys.version_info.major}.{sys.version_info.minor}"
+          assert actual_minor == expected_minor, (actual_minor, expected_minor)
+          if len(requested.split(".")) == 3:
+              assert actual_full == requested, (actual_full, requested)
+
+          def canonical(name: str) -> str:
+              return re.sub(r"[-_.]+", "-", name).lower()
+
+          rows = []
+          seen = set()
+          for item in report.get("install", []):
+              metadata = item.get("metadata") or {}
+              name = metadata.get("name")
+              version = metadata.get("version")
+              archive = ((item.get("download_info") or {}).get("archive_info") or {})
+              sha256 = (archive.get("hashes") or {}).get("sha256")
+              assert name and version and sha256, item
+              key = canonical(name)
+              assert key not in seen, key
+              seen.add(key)
+              rows.append((key, version, sha256))
+
+          assert rows
+          assert any(name == "pandas" and version == "3.0.5" for name, version, _ in rows)
+          rows.sort()
+          lane_id = requested.replace(".", "")
+          out = Path(f"requirements-ci-control-plane-py{lane_id}-ubuntu2404-x64.lock")
+          header = [
+              "# GENERATED CONTROL-PLANE PROOF ARTIFACT — NOT YET CANONICAL",
+              "# source: requirements-ci.txt + pandas==3.0.5",
+              f"# source_sha256: {source_sha}",
+              f"# overlay_sha256: {overlay_sha}",
+              f"# python_requested: {requested}",
+              f"# python_minor: {expected_minor}",
+              f"# python_full: {actual_full}",
+              "# runner_os: ubuntu-24.04",
+              "# runner_arch: x64",
+              "# resolver: pip==26.2.1",
+              "# binary_policy: only-binary=:all:",
+              "",
+          ]
+          body = []
+          for name, version, sha256 in rows:
+              body.append(f"{name}=={version} \\")
+              body.append(f"    --hash=sha256:{sha256}")
+          out.write_text("\n".join(header + body) + "\n", encoding="utf-8")
+
+          resolved_set = "\n".join(
+              f"{name}=={version} sha256:{sha256}" for name, version, sha256 in rows
+          ).encode("utf-8")
+          manifest = {
+              "evidence_class": "DGAF_CONTROL_PLANE_HASH_LOCK_PROOF_V1",
+              "scientific_state_effect": "NONE",
+              "authorization_effect": "NONE",
+              "source_sha256": source_sha,
+              "overlay": overlay,
+              "overlay_sha256": overlay_sha,
+              "lock_path": str(out),
+              "lock_sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+              "resolved_set_sha256": hashlib.sha256(resolved_set).hexdigest(),
+              "python_requested": requested,
+              "python_full": actual_full,
+              "platform": platform.platform(),
+              "resolver": "pip==26.2.1",
+              "resolved_package_count": len(rows),
+          }
+          Path("control-plane-lock-manifest.json").write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(manifest, indent=2, sort_keys=True))
+          PY
+
+      - name: Verify augmented lock in fresh environment
+        env:
+          PYTHON_REQUESTED: ${{ matrix.python }}
+        run: |
+          set -euo pipefail
+          lane_id="${PYTHON_REQUESTED//./}"
+          lock="requirements-ci-control-plane-py${lane_id}-ubuntu2404-x64.lock"
+          python -m venv .control-plane-lock-verify
+          source .control-plane-lock-verify/bin/activate
+          bash scripts/bootstrap_ci_pip.sh
+          python -m pip install             --disable-pip-version-check             --require-hashes             --only-binary=:all:             -r "$lock"
+          python -m pip check
+          python - <<'PY'
+          import pandas
+          assert pandas.__version__ == "3.0.5"
+          print("CONTROL_PLANE_PANDAS_VERSION_BOUND")
+          PY
+          python -m pip freeze --all | sort > control-plane-lock-freeze.txt
+
+      - name: Assert proof non-effects
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path("control-plane-lock-manifest.json").read_text())
+          assert d["scientific_state_effect"] == "NONE"
+          assert d["authorization_effect"] == "NONE"
+          assert d["overlay"] == "pandas==3.0.5"
+          assert d["resolved_package_count"] > 0
+          print("CONTROL_PLANE_HASH_LOCK_PROOF_BOUNDARY_PASS")
+          PY
+
+      - name: Upload proof artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: control-plane-hash-lock-proof-py${{ matrix.python }}-${{ github.event.pull_request.head.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            requirements-ci-control-plane-py*-ubuntu2404-x64.lock
+            control-plane-lock-report.json
+            control-plane-lock-manifest.json
+            control-plane-lock-freeze.txt
