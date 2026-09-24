@@ -23,6 +23,9 @@ TRACK_A_EPOCH_002_INTERPRETATION_WORKFLOW = ROOT / ".github" / "workflows" / "tr
 TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION_WORKFLOW = (
     ROOT / ".github" / "workflows" / "track-a-epoch-002-post-interpretation-disposition.yml"
 )
+TRACK_A_EPOCH_002_OPERATOR_ADMISSION_WORKFLOW = (
+    ROOT / ".github" / "workflows" / "track-a-epoch-002-operator-admission.yml"
+)
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
@@ -319,6 +322,23 @@ def test_track_a_epoch002_post_interpretation_disposition_uses_bound_lock_and_cl
     assert "Prove CI has no private numerical interpretation input" in workflow
     assert "NEW_EMPIRICAL_EPOCH_AUTHORIZED=FALSE" in workflow
     assert "SCIENTIFIC_N_INCREMENT=0" in workflow
+
+
+def test_track_a_epoch002_operator_admission_uses_bound_lock_without_authority_promotion() -> None:
+    workflow = TRACK_A_EPOCH_002_OPERATOR_ADMISSION_WORKFLOW.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "python-version: '3.12.0'" in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
+    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
+    assert workflow.count("      - 'requirements-ci-py312-ubuntu2404-x64.lock'") == 1
+    assert "tests/test_track_a_epoch_002_operator_codespace_admission.py" in workflow
+    assert "tests/test_track_a_epoch_002_operator_admission_preparer.py" in workflow
+    assert "workflow_dispatch: {}" in workflow
 
 
 def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
