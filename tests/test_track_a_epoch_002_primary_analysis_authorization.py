@@ -588,6 +588,37 @@ def test_ci_workflow_is_read_only_exact_head_and_never_runs_analysis() -> None:
     assert "run_primary_analysis" not in source
 
 
+def test_ci_workflow_uses_hash_locked_dependencies_without_cross_lane_trigger() -> None:
+    source = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    required = (
+        "runs-on: ubuntu-24.04",
+        'python-version: "3.12.3"',
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405",
+        "bash scripts/bootstrap_ci_pip.sh",
+        "requirements-ci-py312-ubuntu2404-x64.lock",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "mode=accepted_state",
+        "PRIMARY_ANALYSIS_RUN_THIS_WORKFLOW=FALSE",
+        "SCIENTIFIC_N_INCREMENT=0",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED",
+    )
+    for marker in required:
+        assert marker in source, marker
+
+    assert "actions/checkout@v4" not in source
+    assert "actions/setup-python@v4" not in source
+    assert "cache: pip" not in source
+    assert "python -m pip install -r requirements-ci.txt" not in source
+    assert "tests/test_ci_lock_contract.py" not in source
+    assert source.count('      - "requirements-ci-py312-ubuntu2404-x64.lock"') == 2
+    assert source.count('            "requirements-ci-py312-ubuntu2404-x64.lock"') == 1
+
+
 def test_procedure_preserves_prospective_fail_closed_boundary() -> None:
     assert PROCEDURE_PATH.exists(), "Epoch 002 primary-analysis authorization procedure is missing"
     source = PROCEDURE_PATH.read_text(encoding="utf-8")
