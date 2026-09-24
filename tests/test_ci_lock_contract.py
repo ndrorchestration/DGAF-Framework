@@ -13,6 +13,7 @@ AOSS_STAGE_A_FOUNDATION_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-stage-
 AOSS_STAGE_A_PREDATA_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-v0-6-stage-a-predata-readiness.yml"
 AOSS_STAGE_A_AUTH_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-v0-6-stage-a-collection-authorization.yml"
 TRACK_A_EPOCH_002_RUNNER_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-primary-analysis-runner.yml"
+TRACK_A_EPOCH_002_RESULT_SEMANTICS_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-result-record-semantics.yml"
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
@@ -233,6 +234,23 @@ def test_track_a_epoch002_runner_tooling_uses_bound_py312_lock_without_empirical
     assert "Run runner unit tests with synthetic inputs only" in workflow
     assert "Prove workflow never executes empirical analysis" in workflow
     assert "PRIMARY_ANALYSIS_EXECUTION=NOT_PERFORMED" in workflow
+    assert "SCIENTIFIC_N_INCREMENT=0" in workflow
+
+
+def test_track_a_epoch002_result_semantics_uses_bound_py312_lock_without_authority() -> None:
+    workflow = TRACK_A_EPOCH_002_RESULT_SEMANTICS_WORKFLOW.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "python-version: '3.12.0'" in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
+    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
+    assert "Validate semantic policy coherence" in workflow
+    assert "Prove semantic tooling cannot create authority or execute science" in workflow
+    assert "RESULT_RECORD_SEMANTIC_TOOLING_NONAUTHORIZING=TRUE" in workflow
     assert "SCIENTIFIC_N_INCREMENT=0" in workflow
 
 
