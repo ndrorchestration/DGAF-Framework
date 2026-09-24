@@ -79,3 +79,54 @@ jobs:
           name: dgaf-operator-selftest-internal-evidence
           path: ${{ runner.temp }}/dgaf-operator-selftest-results/**
           if-no-files-found: warn
+
+
+  windows-operator-selftest:
+    name: Windows operator wrapper end-to-end
+    runs-on: windows-latest
+    steps:
+      - name: Checkout exact DGAF candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Prove exact DGAF checkout identity
+        shell: pwsh
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          $observed = (git rev-parse HEAD).Trim()
+          if ($observed -ne $env:EXPECTED_HEAD) {
+            throw "DGAF checkout mismatch: expected $env:EXPECTED_HEAD, observed $observed"
+          }
+
+      - name: Run one-command Windows operator path
+        shell: pwsh
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_dgaf_operator_selftest.ps1 -RefreshDependencies
+
+      - name: Stage retained Windows evidence
+        if: always()
+        shell: pwsh
+        run: |
+          $source = Join-Path $HOME "DGAF-Operator-SelfTest-Results"
+          $dest = Join-Path "${{ runner.temp }}" "dgaf-operator-selftest-windows-results"
+          New-Item -ItemType Directory -Force -Path $dest | Out-Null
+          if (Test-Path $source) {
+            Copy-Item -Path (Join-Path $source "*") -Destination $dest -Recurse -Force
+          }
+
+      - name: Upload Windows operator evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dgaf-operator-selftest-windows-evidence
+          path: ${{ runner.temp }}/dgaf-operator-selftest-windows-results/**
+          if-no-files-found: warn
