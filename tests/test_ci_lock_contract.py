@@ -19,6 +19,7 @@ TRACK_A_EPOCH_002_RESULT_SEMANTICS_WORKFLOW = (
 TRACK_A_EPOCH_002_LOCKED_RESULT_ADMISSION_WORKFLOW = (
     ROOT / ".github" / "workflows" / "track-a-epoch-002-locked-result-admission.yml"
 )
+TRACK_A_EPOCH_002_INTERPRETATION_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-interpretation.yml"
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
@@ -275,6 +276,25 @@ def test_track_a_epoch002_locked_result_admission_uses_bound_lock_and_accepted_s
     assert "Validate accepted immutable result state" in workflow
     assert "Run synthetic-only result-admission tests" in workflow
     assert "Prove CI has no empirical execution surface" in workflow
+    assert "SCIENTIFIC_N_INCREMENT=0" in workflow
+
+
+def test_track_a_epoch002_interpretation_uses_bound_lock_and_accepted_state_routing() -> None:
+    workflow = TRACK_A_EPOCH_002_INTERPRETATION_WORKFLOW.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "python-version: '3.12.3'" in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
+    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
+    assert workflow.count("      - 'requirements-ci-py312-ubuntu2404-x64.lock'") == 2
+    assert "value=accepted_state" in workflow
+    assert "Validate accepted immutable interpretation state" in workflow
+    assert "Run synthetic-only interpretation tests" in workflow
+    assert "Prove CI has no empirical interpretation input" in workflow
     assert "SCIENTIFIC_N_INCREMENT=0" in workflow
 
 
