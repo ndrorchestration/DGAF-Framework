@@ -182,6 +182,8 @@ Internal CI, fixtures, same-system replay, project-owner self-review, or another
 
 PR #1012 introduces a separate bounded **operator self-test** lane for pre-review engineering confidence. It exercises frozen-identity preflight, core regression behavior, the AOSS test family, unauthorized-collection refusal, and a deliberate dirty-worktree fail-closed probe while retaining a content-hashed local evidence packet. Its evidence class is `INTERNAL_OPERATOR_ENGINEERING_VALIDATION`; regardless of PASS/FAIL, it cannot establish reviewer independence, external validation, scientific-N increment, canonical DGAF efficacy, or High-Assurance authorization.
 
+On exact PR head `07eb7bef7902874e7a983ff3187d436251ad9dbc`, workflow run `36049273107` completed **PASS**. The generated operator report SHA-256 was `14b1aea7677a7ce19f9eea9b16ea4f9cfbbfbbe66b15f37aba79a41a867b7a1f`; retained Actions artifact `10829119107` has digest `sha256:bb8b93c6c941eb70470e88bb58b1dad6c19e1941d72883a62739f702a8f731a5`. This establishes only that the new internal self-test contract executed successfully on that candidate head.
+
 ### Current unresolved acceptance predicates
 
 The remaining execution-admission blockers are real trust/acceptance questions, not missing synthetic apparatus:
