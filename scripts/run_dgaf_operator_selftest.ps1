@@ -21,6 +21,20 @@ Write-Host "[DGAF] Operator self-test bootstrap"
 Write-Host "DGAF: $DgafRoot"
 Write-Host "ACP:  $AcpRoot"
 
+$DgafDirtyBeforeNormalization = & git -C $DgafRoot status --porcelain=v1 --untracked-files=all
+if ($LASTEXITCODE -ne 0) {
+    throw "Could not inspect DGAF worktree before Windows normalization."
+}
+if ($DgafDirtyBeforeNormalization) {
+    throw "DGAF checkout is dirty. Commit/stash/remove changes before operator self-testing."
+}
+
+# Windows Git may materialize CRLF bytes even while reporting a clean worktree.
+# DGAF's evidence contracts bind exact repository bytes, so normalize the clean
+# checkout to the Git object representation before any byte-sensitive checks.
+Invoke-Checked { & git -C $DgafRoot config --local core.autocrlf false } "DGAF line-ending policy"
+Invoke-Checked { & git -C $DgafRoot reset --hard HEAD } "DGAF exact-byte rematerialization"
+
 $BootstrapPython = $null
 $BootstrapPythonArgs = @()
 
