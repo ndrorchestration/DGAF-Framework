@@ -37,13 +37,13 @@ Assumptions are classified by evidence validity mode:
 - `ENVIRONMENT_BOUND` — revalidation is triggered by a relevant environment change;
 - `TEMPORAL` — a timezone-aware revalidation deadline is required.
 
-Expiry is trigger-based first. The registry is seeded empty and carries `completeness_claim: false`; an empty registry therefore does not claim that no unregistered assumptions exist.
+Expiry is trigger-based first. The registry carries `completeness_claim: false`; populated records therefore remain a bounded inventory and do not claim that no unregistered assumptions exist.
 
 ### Blind-spot ledger
 
 A blind-spot record separates methods that discovered a finding from methods that missed it, binds reproduction evidence, may point to a candidate generated detector, and is always `authoritative_effect: NONE`.
 
-The seed ledger is deliberately empty with `completeness_claim: false`. Findings may be marked only `CANDIDATE`, `REVIEWED`, or `REJECTED`; the ledger itself cannot promote a finding into governance truth.
+The blind-spot ledger may remain empty with `completeness_claim: false`; an empty ledger does not establish absence of blind spots. Findings may be marked only `CANDIDATE`, `REVIEWED`, or `REJECTED`; the ledger itself cannot promote a finding into governance truth.
 
 Surviving detector mutants may be converted into candidate blind-spot records. The conversion records `detector-mutation` as the discovery method, the evaluated detector or property suite as the method that missed the mutant, binds reproduction evidence to the mutant identifier, and keeps the record at `CANDIDATE` with `authoritative_effect: NONE`. Killed mutants do not create blind-spot records.
 
