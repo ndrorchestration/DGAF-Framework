@@ -720,11 +720,7 @@ def validate_accepted_state(ref: str = "HEAD") -> tuple[str, str]:
         if not git_object_exists(f"{ref}:{relpath}"):
             fail(f"accepted-state validation requires {relpath}")
 
-    receipt_history = [
-        line
-        for line in git("log", "--format=%H", ref, "--", RECEIPT_REL).splitlines()
-        if line
-    ]
+    receipt_history = [line for line in git("log", "--format=%H", ref, "--", RECEIPT_REL).splitlines() if line]
     if len(receipt_history) != 1:
         fail("dataset-lock receipt must have one immutable history event")
     receipt_event = receipt_history[0]
@@ -738,9 +734,7 @@ def validate_accepted_state(ref: str = "HEAD") -> tuple[str, str]:
         fail("accepted dataset-lock receipt is not creation-only")
 
     evidence_history = [
-        line
-        for line in git("log", "--format=%H", receipt_parent, "--", OPERATOR_EVIDENCE_REL).splitlines()
-        if line
+        line for line in git("log", "--format=%H", receipt_parent, "--", OPERATOR_EVIDENCE_REL).splitlines() if line
     ]
     ledger_history = [
         line
