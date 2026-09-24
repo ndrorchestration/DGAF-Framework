@@ -83,13 +83,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - python-version: '3.10'
-            lock-file: requirements-ci-py310-ubuntu2404-x64.lock
-          - python-version: '3.11'
-            lock-file: requirements-ci-py311-ubuntu2404-x64.lock
-          - python-version: '3.12'
-            lock-file: requirements-ci-py312-ubuntu2404-x64.lock
+        python-version: ['3.10', '3.11', '3.12']
 
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
@@ -101,7 +95,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         cache: 'pip'
-        cache-dependency-path: ${{ matrix.lock-file }}
 
     - name: Establish repository import path
       run: echo "PYTHONPATH=$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}" >> "$GITHUB_ENV"
@@ -110,10 +103,15 @@ jobs:
       run: bash scripts/bootstrap_ci_pip.sh
 
     - name: Install hash-locked CI dependencies
-      env:
-        CI_LOCK: ${{ matrix.lock-file }}
       run: |
-        python -m pip install           --disable-pip-version-check           --require-hashes           --only-binary=:all:           -r "$CI_LOCK"
+        python_minor="${{ matrix.python-version }}"
+        ci_lock="requirements-ci-py${python_minor//./}-ubuntu2404-x64.lock"
+        test -s "$ci_lock"
+        python -m pip install \
+          --disable-pip-version-check \
+          --require-hashes \
+          --only-binary=:all: \
+          -r "$ci_lock"
         if [ -s requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -s requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
 
