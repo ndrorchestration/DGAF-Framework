@@ -325,3 +325,24 @@ def test_recent_self_assurance_families_are_catalog_mapped_without_promotion():
         assert audit["independence"] == "SAME_REPOSITORY_NONINDEPENDENT"
         joined = " ".join(audit["non_effects"]).lower()
         assert "scientific" in joined or "efficacy" in joined
+
+
+def test_wave_two_recurring_assurance_families_are_catalog_mapped():
+    catalog = load_catalog(CATALOG_PATH)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
+    expected = {
+        "AUD-CI-DOC-LINT": ".github/workflows/doc-lint.yml",
+        "AUD-CI-MAIN-PUSH-PROVENANCE": ".github/workflows/main-push-provenance-audit.yml",
+        "AUD-RUNTIME-P2": ".github/workflows/p2-runtime-verification.yml",
+        "AUD-RUNTIME-P6A-CORS": ".github/workflows/p6a-cors-verification.yml",
+        "AUD-CI-PDMAL-HARNESS": ".github/workflows/pdmal-harness-validation.yml",
+        "AUD-CI-PROPAGATION-CONSISTENCY": ".github/workflows/propagation-consistency.yml",
+    }
+
+    for audit_id, workflow_path in expected.items():
+        audit = next((entry for entry in catalog["audits"] if entry.get("id") == audit_id), None)
+        assert audit is not None
+        assert workflow_path in audit["implementation"]
+        assert workflow_path not in unmapped
+        assert audit["blocking"] is False
+        assert "NONINDEPENDENT" in audit["independence"] or "NOT_INDEPENDENT_VALIDATION" in audit["independence"]
