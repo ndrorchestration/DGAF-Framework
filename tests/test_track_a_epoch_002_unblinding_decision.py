@@ -241,3 +241,19 @@ def test_validator_exposes_accepted_state_without_replaying_event() -> None:
     assert "accepted unblinding decision is not creation-only" in source
     assert "dataset-lock receipt changed across accepted unblinding state" in source
     assert "accepted unblinding decision bytes drifted after the event" in source
+
+
+def test_workflow_uses_hash_locked_dependencies_without_cross_lane_shared_test_trigger() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "python-version: '3.12.0'" in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
+    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
+    assert "tests/test_ci_lock_contract.py" not in workflow
+    assert "UNBLINDING_TOOLING_SCOPE=DEDICATED_PLUS_DEPENDENCY_MAINTENANCE" in workflow
+    assert "UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_ONLY" in workflow
