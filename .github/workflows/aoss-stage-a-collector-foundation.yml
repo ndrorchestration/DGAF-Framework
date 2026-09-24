@@ -5,6 +5,10 @@ on:
   pull_request:
     paths:
       - '.github/workflows/aoss-stage-a-collector-foundation.yml'
+      - 'requirements-ci.txt'
+      - 'requirements-ci-py312-ubuntu2404-x64.lock'
+      - 'scripts/bootstrap_ci_pip.sh'
+      - 'tests/test_ci_lock_contract.py'
       - 'scripts/aoss_stage_a/**'
       - 'scripts/run_aoss_v0_6_stage_a.py'
       - 'tests/test_aoss_stage_a_*.py'
@@ -31,7 +35,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout exact evaluated commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
@@ -43,12 +47,20 @@ jobs:
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
           python-version: '3.12.3'
 
-      - name: Install repository CI dependencies
-        run: python -m pip install -r requirements-ci.txt
+      - name: Bootstrap exact pip resolver
+        run: bash scripts/bootstrap_ci_pip.sh
+
+      - name: Install hash-locked repository CI dependencies
+        run: >-
+          python -m pip install
+          --disable-pip-version-check
+          --require-hashes
+          --only-binary=:all:
+          -r requirements-ci-py312-ubuntu2404-x64.lock
 
       - name: Run focused non-collecting foundation suite
         run: |
