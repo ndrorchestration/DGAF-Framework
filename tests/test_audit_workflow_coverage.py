@@ -17,7 +17,7 @@ def test_workflow_coverage_scanner_reports_current_unmapped_definitions():
     unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
 
     assert unmapped
-    assert ".github/workflows/workload-specific-evaluation-tracks.yml" in unmapped
+    assert ".github/workflows/aoss-stage-a-collector-foundation.yml" in unmapped
     assert ".github/workflows/governance-ci.yml" not in unmapped
     assert all(path.startswith(".github/workflows/") for path in unmapped)
     assert unmapped == sorted(unmapped)
@@ -189,6 +189,24 @@ def test_b123_p30_qualification_families_are_catalog_mapped_without_promotion():
         assert any("independent verification" in item.lower() for item in audit["non_effects"])
         assert any("empirical execution" in item.lower() for item in audit["non_effects"])
         assert any("self-attested" in item.lower() for item in audit["known_gaps"])
+
+
+def test_workload_specific_evaluation_architecture_is_catalog_mapped_without_empirical_promotion():
+    catalog = load_catalog(CATALOG_PATH)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
+    audit = next(
+        (entry for entry in catalog["audits"] if entry.get("id") == "AUD-CI-WORKLOAD-SPECIFIC-EVALUATION-ARCHITECTURE"),
+        None,
+    )
+
+    assert audit is not None
+    assert ".github/workflows/workload-specific-evaluation-tracks.yml" in audit["implementation"]
+    assert ".github/workflows/workload-specific-evaluation-tracks.yml" not in unmapped
+    assert audit["blocking"] is False
+    assert audit["independence"] == "SAME_REPOSITORY_NONINDEPENDENT"
+    assert any("does not authorize empirical execution" in item.lower() for item in audit["non_effects"])
+    assert any("historical epoch 004" in item.lower() for item in audit["non_effects"])
+    assert any("integrated track c remains deferred" in item.lower() for item in audit["known_gaps"])
 
 
 def test_protected_main_required_context_workflows_are_catalog_mapped():
