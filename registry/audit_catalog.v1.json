@@ -1520,6 +1520,56 @@
         "Qualification success alone does not substitute for the separate B3_NONEMPIRICAL_INTEGRATION_ADJUDICATION adjudication or independent validation."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-WORKLOAD-SPECIFIC-EVALUATION-ARCHITECTURE",
+      "name": "Workload-Specific Evaluation Tracks",
+      "class": "NONEMPIRICAL_EVALUATION_ARCHITECTURE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "EVALUATION_ARCHITECTURE",
+        "HISTORICAL_EVIDENCE_BOUNDARY"
+      ],
+      "assertion": "The workload-specific evaluation architecture preserves distinct workload substrates, explicit gate inclusion/exclusion rules, state-lifetime requirements, historical Epoch 004 non-rewrite/non-pooling constraints, and a fail-closed non-empirical authorization ceiling for all declared future tracks.",
+      "owner": "DGAF Workload-Specific Evaluation Tracks workflow",
+      "implementation": [
+        ".github/workflows/workload-specific-evaluation-tracks.yml",
+        "docs/governance/WORKLOAD_SPECIFIC_DGAF_EVALUATION_TRACKS_V1.json",
+        "docs/governance/WORKLOAD_SPECIFIC_DGAF_EVALUATION_TRACKS_V1.md",
+        "scripts/validate_workload_specific_evaluation_tracks.py"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_workload_specific_evaluation_tracks.py output",
+        "exact historical canonical-profile blob preservation check",
+        "KAPPA threshold/source-substrate checks",
+        "explicit scientific-N and empirical-authorization assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the bounded workload-specific non-empirical evaluation architecture contract; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize empirical execution for Track A, B1, B2, B3, or integrated Track C.",
+        "Does not increment scientific N or establish canonical DGAF efficacy, independent validation, certification, production assurance, or High-Assurance authorization.",
+        "Does not rewrite, pool, or reclassify historical Epoch 004 evidence or make its historical profile canonical for future work.",
+        "Does not make any future profile empirically ready without fresh identity, qualification, preregistration, seeds, and separate authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_WORKLOAD_SPECIFIC_NONEMPIRICAL_ARCHITECTURE_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The architecture record is NONEMPIRICAL_CANDIDATE_ARCHITECTURE, not an empirical execution contract.",
+        "Track A/B1/B2/B3 profiles and qualifications are separate assurance identities and must not be collapsed into this architecture record.",
+        "Integrated Track C remains DEFERRED with empirical status PROHIBITED.",
+        "Successful repository-local validation does not establish real-workload benefit, scientific efficacy, or independent validation."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
