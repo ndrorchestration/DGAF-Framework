@@ -227,6 +227,24 @@ def test_branch_disposition_inventory_is_catalog_mapped_without_deletion_authori
     assert any("manual dispatch" in item.lower() for item in audit["known_gaps"])
 
 
+def test_npm_lockfile_validation_is_catalog_mapped_without_scientific_effect():
+    catalog = load_catalog(CATALOG_PATH)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
+    audit = next(
+        (entry for entry in catalog["audits"] if entry.get("id") == "AUD-CI-NPM-LOCKFILE-VALIDATION"),
+        None,
+    )
+
+    assert audit is not None
+    assert ".github/workflows/npm-lockfile-validation.yml" in audit["implementation"]
+    assert ".github/workflows/npm-lockfile-validation.yml" not in unmapped
+    assert audit["blocking"] is False
+    assert audit["independence"] == "SAME_REPOSITORY_NONINDEPENDENT"
+    assert any("does not authorize scientific" in item.lower() for item in audit["non_effects"])
+    assert any("production deployment" in item.lower() for item in audit["non_effects"])
+    assert any("bootstrap lock digest" in item.lower() for item in audit["known_gaps"])
+
+
 def test_protected_main_required_context_workflows_are_catalog_mapped():
     catalog = load_catalog(CATALOG_PATH)
     unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
