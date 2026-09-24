@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - ".github/workflows/completion-state-reconciler.yml"
-      - ".github/workflows/completion-state-reconciler.yml"
       - "registry/dgaf_completion_state_reconciler.v0.1.json"
       - "scripts/derive_dgaf_completion_state.py"
       - "tests/test_dgaf_completion_state_reconciler.py"
@@ -21,6 +20,7 @@ on:
     branches:
       - main
     paths:
+      - ".github/workflows/completion-state-reconciler.yml"
       - "registry/dgaf_completion_state_reconciler.v0.1.json"
       - "scripts/derive_dgaf_completion_state.py"
       - "tests/test_dgaf_completion_state_reconciler.py"
