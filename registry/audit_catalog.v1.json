@@ -1570,6 +1570,53 @@
         "Successful repository-local validation does not establish real-workload benefit, scientific efficacy, or independent validation."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-BRANCH-DISPOSITION-INVENTORY",
+      "name": "Branch Disposition Inventory",
+      "class": "REPOSITORY_HYGIENE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "BRANCH_LIFECYCLE"
+      ],
+      "assertion": "The read-only branch inventory classifies branch refs conservatively from current GitHub compare evidence, protects open-PR heads, degrades unique/diverged/ambiguous/error states to review-required, and never authorizes or performs branch deletion.",
+      "owner": "DGAF Branch Disposition Inventory workflow",
+      "implementation": [
+        ".github/workflows/branch-disposition-inventory.yml",
+        "scripts/inventory_branch_disposition.py",
+        "tests/test_branch_disposition_inventory.py"
+      ],
+      "trigger": [
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "tests/test_branch_disposition_inventory.py results",
+        "branch-disposition-ledger JSON artifact",
+        "base SHA and per-branch compare facts"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Produces a point-in-time read-only disposition ledger labeling refs ACTIVE_DO_NOT_PRUNE, MERGED_SAFE_TO_PRUNE_CANDIDATE, or REVIEW_REQUIRED for later operator review.",
+      "non_effects": [
+        "Does not delete, move, rewrite, or otherwise mutate any branch ref.",
+        "Does not make MERGED_SAFE_TO_PRUNE_CANDIDATE equivalent to deletion authorization.",
+        "Does not infer that ahead, diverged, ambiguous, error, closed-PR, old, or unusually named work is obsolete.",
+        "Does not change issue/PR state, governance authority, scientific state, authorization, scientific N, efficacy, independent validation, or High-Assurance status."
+      ],
+      "fail_behavior": "FAIL_CLOSED_TO_REVIEW_REQUIRED_OR_WORKFLOW_FAILURE_ON_AMBIGUOUS_OR_UNAVAILABLE_BRANCH_EVIDENCE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The workflow is manual dispatch only and the current connected GitHub tool surface does not expose workflow_dispatch.",
+        "The ledger is point-in-time evidence and must be regenerated from exact current main before destructive pruning decisions.",
+        "A safe-to-prune candidate still requires separate human review and an authorized branch-deletion surface.",
+        "GitHub API/network errors deliberately prevent prune inference rather than proving branch safety."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
