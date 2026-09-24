@@ -1042,6 +1042,55 @@
         "Repository-local success does not externally verify the factual correctness or independence of upstream evidence."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-TRACK-C-NONEMPIRICAL-COMPOSITION",
+      "name": "Track C Non-Empirical Composition Proposal",
+      "class": "GOVERNANCE_NONEMPIRICAL_COMPOSITION",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_COMPOSITION"
+      ],
+      "assertion": "The source-bound B1/B2/B3 adjudication records compose only their declared non-empirical roles, reject source drift or invalid lane records, preserve fail-closed conflict rules, and retain the proposal's explicit non-authorizing scientific boundary.",
+      "owner": "DGAF Track C Non-Empirical Composition Proposal workflow",
+      "implementation": [
+        ".github/workflows/track-c-nonempirical-composition.yml",
+        "docs/governance/TRACK_C_NONEMPIRICAL_COMPOSITION_PROPOSAL_V1.json",
+        "scripts/validate_track_c_nonempirical_composition.py",
+        "docs/governance/B1_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json",
+        "docs/governance/B2_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json",
+        "docs/governance/B3_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_track_c_nonempirical_composition.py output",
+        "exact B1/B2/B3 adjudication blob and merge-SHA bindings",
+        "explicit non-authorizing/non-empirical boundary assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the bounded source-bound Track C non-empirical composition proposal; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not implement integrated Track C execution.",
+        "Does not authorize Track C empirical execution, scientific collection, unblinding, or any governance transition.",
+        "Does not increment scientific N or establish canonical DGAF efficacy.",
+        "Does not establish independent validation, certification, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_SOURCE_BOUND_NONEMPIRICAL_COMPOSITION_PROPOSAL",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "B1, B2, and B3 qualification/adjudication records are developer self-attested and non-independent.",
+        "This artifact is a proposal and validator contract; integrated execution is explicitly not implemented.",
+        "Synthetic and structural evidence does not establish real-workload safety, benefit, or efficacy."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
