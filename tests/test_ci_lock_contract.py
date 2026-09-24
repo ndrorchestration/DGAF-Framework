@@ -26,9 +26,7 @@ TRACK_A_EPOCH_002_POST_INTERPRETATION_DISPOSITION_WORKFLOW = (
 TRACK_A_EPOCH_002_OPERATOR_ADMISSION_WORKFLOW = (
     ROOT / ".github" / "workflows" / "track-a-epoch-002-operator-admission.yml"
 )
-TRACK_A_EPOCH_002_MATERIALIZATION_WORKFLOW = (
-    ROOT / ".github" / "workflows" / "track-a-epoch-002-materialization.yml"
-)
+TRACK_A_EPOCH_002_MATERIALIZATION_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-materialization.yml"
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
