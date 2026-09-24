@@ -256,4 +256,4 @@ def test_workflow_uses_hash_locked_dependencies_without_cross_lane_shared_test_t
     assert "python -m pip install -r requirements-ci.txt" not in workflow
     assert "tests/test_ci_lock_contract.py" not in workflow
     assert "UNBLINDING_TOOLING_SCOPE=DEDICATED_PLUS_DEPENDENCY_MAINTENANCE" in workflow
-    assert "UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_ONLY" in workflow
+    assert "UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_OR_UNRELATED" in workflow
