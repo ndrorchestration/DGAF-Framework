@@ -344,7 +344,7 @@ def test_track_a_epoch002_operator_admission_uses_bound_lock_without_authority_p
     assert "workflow_dispatch: {}" in workflow
 
 
-def test_track_a_epoch002_materialization_uses_bound_lock_and_post_receipt_maintenance_route() -> None:
+def test_epoch002_materialization_uses_bound_lock_and_post_receipt_route() -> None:
     workflow = TRACK_A_EPOCH_002_MATERIALIZATION_WORKFLOW.read_text(encoding="utf-8")
     assert "runs-on: ubuntu-24.04" in workflow
     assert "python-version: '3.12.3'" in workflow
