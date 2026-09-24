@@ -46,4 +46,4 @@ def test_preflight_success_surfaces_static_report_without_side_effects(tmp_path,
     assert exit_code == 0
     assert observed["paths"] == (dgaf, acp)
     assert json.loads(capsys.readouterr().out) == expected
-    assert list(tmp_path.iterdir()) == [dgaf, acp]
+    assert set(tmp_path.iterdir()) == {dgaf, acp}
