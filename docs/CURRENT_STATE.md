@@ -130,6 +130,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | AOSS Stage A apparatus | **ACCEPTED THROUGH NON-PROMOTING LOCAL TRUST RESULT INTAKE · PR #925** |
 | AOSS Stage A independent-validation handoff | **ACCEPTED · PR #928 · EXTERNAL REVIEW OPERATIONALLY REQUESTABLE** |
 | AOSS Stage A external review | **NOT EXECUTED · CONTROLLER #929 OPEN** |
+| AOSS Stage A operator self-test | **PR #1012 OPEN · INTERNAL ENGINEERING VALIDATION ONLY · NOT EXTERNAL REVIEW** |
 | AOSS Stage A reviewer attribution / independence | **NOT VERIFIED LOCALLY** |
 | AOSS Stage A execution admission | **BLOCKED · ENVIRONMENT / SOURCE-DRIVER / EXECUTABLE / DESTINATION ACCEPTANCE NOT ESTABLISHED** |
 | AOSS Stage A collection execution readiness | **NOT ESTABLISHED · `execution_allowed=false`** |
@@ -178,6 +179,8 @@ The next evidence-changing sequence is:
 `candidate reviewer → conflict/relationship disclosure → accepted handoff delivery → independently retained returned evidence → local cryptographic reverification → separate reviewer-attribution/independence adjudication → separate environment/executable/destination acceptance → possible later collection-execution-readiness transition under #901`.
 
 Internal CI, fixtures, same-system replay, project-owner self-review, or another DGAF-authored packet cannot satisfy #929.
+
+PR #1012 introduces a separate bounded **operator self-test** lane for pre-review engineering confidence. It exercises frozen-identity preflight, core regression behavior, the AOSS test family, unauthorized-collection refusal, and a deliberate dirty-worktree fail-closed probe while retaining a content-hashed local evidence packet. Its evidence class is `INTERNAL_OPERATOR_ENGINEERING_VALIDATION`; regardless of PASS/FAIL, it cannot establish reviewer independence, external validation, scientific-N increment, canonical DGAF efficacy, or High-Assurance authorization.
 
 ### Current unresolved acceptance predicates
 
