@@ -17,7 +17,7 @@ def test_workflow_coverage_scanner_reports_current_unmapped_definitions():
     unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
 
     assert unmapped
-    assert ".github/workflows/agent-ontology-adjudication.yml" in unmapped
+    assert ".github/workflows/e2b-verifier-lock.yml" in unmapped
     assert ".github/workflows/governance-ci.yml" not in unmapped
     assert all(path.startswith(".github/workflows/") for path in unmapped)
     assert unmapped == sorted(unmapped)
@@ -55,10 +55,25 @@ def test_verified_recurring_assurance_workflows_are_catalog_mapped():
         ".github/workflows/external-acceptance-readiness-validation.yml",
         ".github/workflows/full-repo-audit.yml",
         ".github/workflows/ip-hygiene.yml",
+        ".github/workflows/agent-ontology-adjudication.yml",
     }
 
     assert expected_mapped.isdisjoint(unmapped)
-    assert ".github/workflows/agent-ontology-adjudication.yml" in unmapped
+
+
+def test_agent_ontology_adjudication_assurance_family_is_catalog_mapped():
+    catalog = load_catalog(CATALOG_PATH)
+    audit = next(
+        (entry for entry in catalog["audits"] if entry.get("id") == "AUD-CI-AGENT-ONTOLOGY"),
+        None,
+    )
+
+    assert audit is not None
+    assert ".github/workflows/agent-ontology-adjudication.yml" in audit["implementation"]
+    assert audit["blocking"] is False
+    assert audit["independence"] == "SAME_REPOSITORY_NONINDEPENDENT"
+    assert any("scientific" in item.lower() for item in audit["non_effects"])
+    assert any("authority matrix" in item.lower() for item in audit["non_effects"])
 
 
 def test_protected_main_required_context_workflows_are_catalog_mapped():
