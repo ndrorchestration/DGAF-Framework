@@ -106,9 +106,9 @@ def test_every_lock_requirement_is_hash_bound() -> None:
 def test_python_workflow_consumes_interpreter_scoped_hash_locks() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     assert workflow.count("runs-on: ubuntu-24.04") == 4
-    for minor, (path, _, _) in EXPECTED_LOCKS.items():
-        assert path.name in workflow
-        assert f"python-version: '{minor}'" in workflow
+    assert "python-version: ['3.10', '3.11', '3.12']" in workflow
+    assert 'ci_lock="requirements-ci-py${python_minor//./}-ubuntu2404-x64.lock"' in workflow
+    assert 'python_minor="${{ matrix.python-version }}"' in workflow
     assert workflow.count("--require-hashes") == 4
     assert workflow.count("--only-binary=:all:") == 4
     assert workflow.count("bash scripts/bootstrap_ci_pip.sh") == 4
