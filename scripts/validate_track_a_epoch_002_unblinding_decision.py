@@ -347,9 +347,7 @@ def validate_accepted_state(ref: str = "HEAD") -> str:
     if not git_object_exists(f"{ref}:{DATASET_LOCK_REL}"):
         fail("accepted-state validation requires the dataset-lock receipt")
 
-    decision_history = [
-        line for line in git("log", "--format=%H", ref, "--", DECISION_REL).splitlines() if line
-    ]
+    decision_history = [line for line in git("log", "--format=%H", ref, "--", DECISION_REL).splitlines() if line]
     if len(decision_history) != 1:
         fail("accepted unblinding decision must have one immutable history event")
     event = decision_history[0]
@@ -359,19 +357,13 @@ def validate_accepted_state(ref: str = "HEAD") -> str:
         fail("accepted unblinding decision event must have exactly one parent")
     parent = lineage[1]
 
-    changed = [
-        line
-        for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines()
-        if line
-    ]
+    changed = [line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", event).splitlines() if line]
     if changed != [DECISION_REL]:
         fail("accepted unblinding decision event changed more than its canonical record")
     if git_object_exists(f"{parent}:{DECISION_REL}"):
         fail("accepted unblinding decision is not creation-only")
 
-    lock_history = [
-        line for line in git("log", "--format=%H", parent, "--", DATASET_LOCK_REL).splitlines() if line
-    ]
+    lock_history = [line for line in git("log", "--format=%H", parent, "--", DATASET_LOCK_REL).splitlines() if line]
     if len(lock_history) != 1:
         fail("accepted dataset-lock receipt must have one immutable history event")
     dataset_lock_commit = lock_history[0]
