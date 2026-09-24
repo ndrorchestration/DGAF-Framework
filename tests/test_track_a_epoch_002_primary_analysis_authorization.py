@@ -423,6 +423,131 @@ def test_authorization_event_rejects_invalid_receipt_event_shape(
         validate_event_fixture(validator, head, parent)
 
 
+def install_accepted_state_fixture(monkeypatch: pytest.MonkeyPatch, validator):
+    authorization_event = "e" * 40
+    authorization_parent = "a" * 40
+    result_event = "c" * 40
+    result_parent = "b" * 40
+    authorization = {"record_id": validator.AUTH_RECORD_ID}
+    result = {
+        "record_type": "LOCKED_ANALYSIS_RESULT_RECORD",
+        "schema_version": 1,
+        "protocol_id": validator.PROTOCOL_ID,
+        "epoch": validator.EPOCH,
+        "evidence_scope": "LOCKED_PRIMARY_ANALYSIS_OUTPUT_CONTENT_ADDRESS_ONLY",
+        "non_effects": list(validator.FULL_NON_EFFECTS),
+        "status": "PASS",
+        "predecessor_record_ids": [validator.AUTH_RECORD_ID],
+        "authorization_effect": "NONE",
+        "scientific_state_effect": {
+            "empirical_n_increment": 0,
+            "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+        },
+        "immutable_subject": {
+            "commit_sha": authorization_event,
+            "sha256": "9" * 64,
+        },
+        "producer": {
+            "system": "DGAF_TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_VALIDATOR",
+            "version_or_commit": result_parent,
+        },
+    }
+    state = {
+        "authorization_head_bytes": b"authorization-record\n",
+        "authorization_event_bytes": b"authorization-record\n",
+        "authorization_result_parent_bytes": b"authorization-record\n",
+        "authorization_result_event_bytes": b"authorization-record\n",
+        "receipt_head_bytes": b"materialization-receipt\n",
+        "receipt_authorization_event_bytes": b"materialization-receipt\n",
+        "result_head_bytes": b"locked-result\n",
+        "result_event_bytes": b"locked-result\n",
+    }
+
+    def fake_git(*args: str) -> str:
+        if args == ("log", "--format=%H", "HEAD", "--", validator.AUTH_REL):
+            return authorization_event
+        if args == ("log", "--format=%H", "HEAD", "--", validator.RESULT_REL):
+            return result_event
+        if args == ("rev-list", "--parents", "-n", "1", authorization_event):
+            return f"{authorization_event} {authorization_parent}"
+        if args == ("rev-list", "--parents", "-n", "1", result_event):
+            return f"{result_event} {result_parent}"
+        if args == ("diff-tree", "--no-commit-id", "--name-only", "-r", result_event):
+            return validator.RESULT_REL
+        if args == ("merge-base", "--is-ancestor", authorization_event, result_parent):
+            return ""
+        raise AssertionError(f"unexpected accepted-state git call: {args}")
+
+    def fake_exists(spec: str) -> bool:
+        required = {
+            f"HEAD:{validator.MATERIALIZATION_RECEIPT_REL}",
+            f"HEAD:{validator.AUTH_REL}",
+            f"HEAD:{validator.RESULT_REL}",
+            f"{result_parent}:{validator.AUTH_REL}",
+            f"{result_event}:{validator.AUTH_REL}",
+        }
+        if spec == f"{result_parent}:{validator.RESULT_REL}":
+            return False
+        return spec in required
+
+    def fake_read(ref: str, relpath: str) -> bytes:
+        values = {
+            ("HEAD", validator.AUTH_REL): state["authorization_head_bytes"],
+            (authorization_event, validator.AUTH_REL): state["authorization_event_bytes"],
+            (result_parent, validator.AUTH_REL): state["authorization_result_parent_bytes"],
+            (result_event, validator.AUTH_REL): state["authorization_result_event_bytes"],
+            ("HEAD", validator.MATERIALIZATION_RECEIPT_REL): state["receipt_head_bytes"],
+            (authorization_event, validator.MATERIALIZATION_RECEIPT_REL): state["receipt_authorization_event_bytes"],
+            ("HEAD", validator.RESULT_REL): state["result_head_bytes"],
+            (result_event, validator.RESULT_REL): state["result_event_bytes"],
+        }
+        try:
+            return values[(ref, relpath)]
+        except KeyError as exc:
+            raise AssertionError(f"unexpected accepted-state byte read: {ref}:{relpath}") from exc
+
+    def fake_load(ref: str, relpath: str) -> dict:
+        if ref == "HEAD" and relpath == validator.AUTH_REL:
+            return authorization
+        if ref == "HEAD" and relpath == validator.RESULT_REL:
+            return result
+        raise AssertionError(f"unexpected accepted-state JSON read: {ref}:{relpath}")
+
+    monkeypatch.setattr(validator, "validate_semantic_policy", lambda: None)
+    monkeypatch.setattr(
+        validator,
+        "validate_authorization_event",
+        lambda event, accepted_parent_sha: accepted_parent_sha,
+    )
+    monkeypatch.setattr(validator, "validate_frozen_analysis_identities", lambda ref: None)
+    monkeypatch.setattr(validator, "validate_schema", lambda record: None)
+    monkeypatch.setattr(validator, "git", fake_git)
+    monkeypatch.setattr(validator, "git_object_exists", fake_exists)
+    monkeypatch.setattr(validator, "read_git_bytes", fake_read)
+    monkeypatch.setattr(validator, "load_json_at_ref", fake_load)
+    return authorization_event, result_event, state
+
+
+def test_accepted_state_preserves_one_time_authorization_and_result(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    authorization_event, result_event, _ = install_accepted_state_fixture(monkeypatch, validator)
+
+    assert validator.validate_accepted_state() == (authorization_event, result_event)
+
+
+def test_accepted_state_rejects_authorization_byte_drift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    validator = load_validator()
+    _, _, state = install_accepted_state_fixture(monkeypatch, validator)
+    state["authorization_head_bytes"] = b"drifted-authorization-record\n"
+
+    with pytest.raises(SystemExit):
+        validator.validate_accepted_state()
+
+
 def test_primary_analysis_authorization_semantic_policy_is_exact() -> None:
     validator = load_validator()
     validator.validate_semantic_policy()
@@ -438,6 +563,11 @@ def test_ci_workflow_is_read_only_exact_head_and_never_runs_analysis() -> None:
         "fetch-depth: 0",
         "persist-credentials: false",
         "python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --tooling",
+        "--accepted-state",
+        "mode=accepted_state",
+        "Validate accepted historical authorization and result state",
+        "PRIMARY_ANALYSIS_AUTHORIZATION=ESTABLISHED_PRESERVED",
+        "LOCKED_ANALYSIS_RESULT=ESTABLISHED_PRESERVED",
         "--event-commit HEAD",
         '--accepted-parent "${{ steps.mode.outputs.accepted_parent }}"',
         'accepted_parent="${{ github.event.pull_request.base.sha }}"',
@@ -445,7 +575,7 @@ def test_ci_workflow_is_read_only_exact_head_and_never_runs_analysis() -> None:
         "TRACK_A_EPOCH_002_MATERIALIZATION_RECEIPT.json",
         "TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_RECORD.json",
         "TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json",
-        "PRIMARY_ANALYSIS_RUN=FALSE",
+        "PRIMARY_ANALYSIS_RUN_THIS_WORKFLOW=FALSE",
         "SCIENTIFIC_N_INCREMENT=0",
         "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
         "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",

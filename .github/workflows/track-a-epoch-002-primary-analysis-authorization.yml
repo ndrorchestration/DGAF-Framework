@@ -82,11 +82,12 @@ jobs:
           result="docs/experiment/track_a_runs/TRACK_A_EPOCH_002_LOCKED_ANALYSIS_RESULT_RECORD.json"
 
           if [ -e "$result" ]; then
-            echo "locked analysis result exists; this authorization lane does not admit result state" >&2
-            exit 1
-          fi
-
-          if [ -e "$authorization" ]; then
+            if [ ! -e "$authorization" ] || [ ! -e "$receipt" ]; then
+              echo "locked result requires preserved authorization and materialization predecessors" >&2
+              exit 1
+            fi
+            echo "mode=accepted_state" >> "$GITHUB_OUTPUT"
+          elif [ -e "$authorization" ]; then
             if [ ! -e "$receipt" ]; then
               echo "authorization record exists without materialization receipt predecessor" >&2
               exit 1
@@ -148,6 +149,41 @@ jobs:
         if: steps.mode.outputs.mode == 'tooling'
         run: python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --tooling
 
+      - name: Validate accepted historical authorization and result state
+        if: steps.mode.outputs.mode == 'accepted_state'
+        run: python scripts/validate_track_a_epoch_002_primary_analysis_authorization.py --accepted-state
+
+      - name: Enforce accepted-state maintenance PR surface
+        if: github.event_name == 'pull_request' && steps.mode.outputs.mode == 'accepted_state'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ github.event.pull_request.base.sha }}"
+          mapfile -t changed < <(git diff --name-only "$base" HEAD)
+          allowed=(
+            ".github/workflows/track-a-epoch-002-primary-analysis-authorization.yml"
+            "docs/experiment/TRACK_A_EPOCH_002_PRIMARY_ANALYSIS_AUTHORIZATION_PROCEDURE.md"
+            "scripts/validate_track_a_epoch_002_primary_analysis_authorization.py"
+            "tests/test_track_a_epoch_002_primary_analysis_authorization.py"
+            "requirements-ci.txt"
+            "requirements-ci-py312-ubuntu2404-x64.lock"
+            "scripts/bootstrap_ci_pip.sh"
+            "tests/test_ci_lock_contract.py"
+          )
+          for path in "${changed[@]}"; do
+            ok=false
+            for candidate in "${allowed[@]}"; do
+              if [ "$path" = "$candidate" ]; then
+                ok=true
+                break
+              fi
+            done
+            if [ "$ok" != true ]; then
+              echo "unexpected accepted-state maintenance path: $path" >&2
+              exit 1
+            fi
+          done
+
       - name: Validate exact authorization creation event
         if: steps.mode.outputs.mode == 'event'
         shell: bash
@@ -186,12 +222,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${{ steps.mode.outputs.mode }}" = "event" ]; then
-            echo "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD=VALIDATED_PENDING_ACCEPTANCE"
-          else
-            echo "PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN"
-          fi
-          echo "PRIMARY_ANALYSIS_RUN=FALSE"
+          case "${{ steps.mode.outputs.mode }}" in
+            event)
+              echo "PRIMARY_ANALYSIS_AUTHORIZATION_RECORD=VALIDATED_PENDING_ACCEPTANCE"
+              ;;
+            accepted_state)
+              echo "PRIMARY_ANALYSIS_AUTHORIZATION=ESTABLISHED_PRESERVED"
+              echo "LOCKED_ANALYSIS_RESULT=ESTABLISHED_PRESERVED"
+              echo "PRIMARY_ANALYSIS_HISTORICAL_STATE=CLOSED_SCOPE_PRESERVED"
+              ;;
+            *)
+              echo "PRIMARY_ANALYSIS=NOT_AUTHORIZED_NOT_RUN"
+              ;;
+          esac
+          echo "PRIMARY_ANALYSIS_RUN_THIS_WORKFLOW=FALSE"
           echo "OBSERVATIONS_RETAINED=2250_BLINDED"
           echo "PAIRED_SEED_UNITS=50"
           echo "SCIENTIFIC_N_INCREMENT=0"
