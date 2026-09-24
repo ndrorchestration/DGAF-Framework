@@ -1,0 +1,173 @@
+name: CI Dependency Lock Generation Proof
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ci-dependency-lock-generation-proof.yml'
+      - 'requirements-ci.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  generate-and-verify:
+    name: Generate and verify CI hash lock (Python ${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.11', '3.12']
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Verify exact PR head
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Bootstrap and verify exact pip resolver
+        run: |
+          set -euo pipefail
+          mkdir -p .ci-lock-bootstrap
+          python -m pip download             --disable-pip-version-check             --only-binary=:all:             --no-deps             --dest .ci-lock-bootstrap             'pip==26.2.1'
+          test "$(sha256sum .ci-lock-bootstrap/pip-26.2.1-py3-none-any.whl | awk '{print $1}')" =             "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e"
+          python -m pip install             --disable-pip-version-check             --no-index             --find-links .ci-lock-bootstrap             'pip==26.2.1'
+          test "$(python -m pip --version | awk '{print $2}')" = "26.2.1"
+
+      - name: Resolve exact wheel set
+        run: |
+          set -euo pipefail
+          python -m pip install             --disable-pip-version-check             --dry-run             --ignore-installed             --only-binary=:all:             --report ci-lock-report.json             -r requirements-ci.txt
+
+      - name: Materialize artifact-exact hash lock
+        env:
+          PYTHON_MINOR: ${{ matrix.python }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import platform
+          import re
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path("ci-lock-report.json").read_text(encoding="utf-8"))
+          source = Path("requirements-ci.txt")
+          source_sha = hashlib.sha256(source.read_bytes()).hexdigest()
+          expected_minor = os.environ["PYTHON_MINOR"]
+          actual_minor = f"{sys.version_info.major}.{sys.version_info.minor}"
+          assert actual_minor == expected_minor, (actual_minor, expected_minor)
+
+          def canonical(name: str) -> str:
+              return re.sub(r"[-_.]+", "-", name).lower()
+
+          rows = []
+          seen = set()
+          for item in report.get("install", []):
+              metadata = item.get("metadata") or {}
+              name = metadata.get("name")
+              version = metadata.get("version")
+              archive = ((item.get("download_info") or {}).get("archive_info") or {})
+              hashes = archive.get("hashes") or {}
+              sha256 = hashes.get("sha256")
+              assert name and version and sha256, item
+              key = canonical(name)
+              assert key not in seen, key
+              seen.add(key)
+              rows.append((key, version, sha256))
+
+          assert rows, "resolver report contained no install set"
+          rows.sort()
+          out = Path(f"requirements-ci-py{expected_minor.replace('.', '')}-ubuntu2404-x64.lock")
+          header = [
+              "# GENERATED PROOF ARTIFACT — NOT YET CANONICAL",
+              "# source: requirements-ci.txt",
+              f"# source_sha256: {source_sha}",
+              f"# python_minor: {expected_minor}",
+              f"# python_full: {platform.python_version()}",
+              "# runner_os: ubuntu-24.04",
+              "# runner_arch: x64",
+              "# resolver: pip==26.2.1",
+              "# binary_policy: only-binary=:all:",
+              "",
+          ]
+          body = []
+          for name, version, sha256 in rows:
+              body.append(f"{name}=={version} \\")
+              body.append(f"    --hash=sha256:{sha256}")
+          out.write_text("\n".join(header + body) + "\n", encoding="utf-8")
+
+          lock_sha = hashlib.sha256(out.read_bytes()).hexdigest()
+          manifest = {
+              "evidence_class": "DGAF_CI_HASH_LOCK_GENERATION_PROOF_V1",
+              "scientific_state_effect": "NONE",
+              "authorization_effect": "NONE",
+              "source": "requirements-ci.txt",
+              "source_sha256": source_sha,
+              "lock_path": str(out),
+              "lock_sha256": lock_sha,
+              "python_minor": expected_minor,
+              "python_full": platform.python_version(),
+              "platform": platform.platform(),
+              "resolver": "pip==26.2.1",
+              "binary_policy": "only-binary=:all:",
+              "resolved_package_count": len(rows),
+          }
+          Path("ci-lock-manifest.json").write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(manifest, indent=2, sort_keys=True))
+          PY
+
+      - name: Verify lock in fresh environment with required hashes
+        env:
+          PYTHON_MINOR: ${{ matrix.python }}
+        run: |
+          set -euo pipefail
+          lock="requirements-ci-py${PYTHON_MINOR//./}-ubuntu2404-x64.lock"
+          python -m venv .ci-lock-verify
+          .ci-lock-verify/bin/python -m pip install             --disable-pip-version-check             --no-index             --find-links .ci-lock-bootstrap             'pip==26.2.1'
+          .ci-lock-verify/bin/python -m pip install             --disable-pip-version-check             --require-hashes             --only-binary=:all:             -r "$lock"
+          .ci-lock-verify/bin/python -m pip check
+          .ci-lock-verify/bin/python -m pip freeze --all | sort > ci-lock-freeze.txt
+
+      - name: Assert proof non-effects
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path("ci-lock-manifest.json").read_text())
+          assert d["scientific_state_effect"] == "NONE"
+          assert d["authorization_effect"] == "NONE"
+          assert d["resolver"] == "pip==26.2.1"
+          assert d["resolved_package_count"] > 0
+          print("CI_HASH_LOCK_PROOF_BOUNDARY_PASS")
+          PY
+
+      - name: Upload lock proof artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ci-hash-lock-proof-py${{ matrix.python }}-${{ github.event.pull_request.head.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            requirements-ci-py*-ubuntu2404-x64.lock
+            ci-lock-report.json
+            ci-lock-manifest.json
+            ci-lock-freeze.txt
