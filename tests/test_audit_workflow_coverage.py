@@ -17,7 +17,7 @@ def test_workflow_coverage_scanner_reports_current_unmapped_definitions():
     unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
 
     assert unmapped
-    assert ".github/workflows/b1-semantic-routing-safety-profile.yml" in unmapped
+    assert ".github/workflows/b1-p30-11q-qualification.yml" in unmapped
     assert ".github/workflows/governance-ci.yml" not in unmapped
     assert all(path.startswith(".github/workflows/") for path in unmapped)
     assert unmapped == sorted(unmapped)
@@ -148,6 +148,26 @@ def test_b123_nonempirical_adjudication_families_are_catalog_mapped_without_auth
         assert any("empirical execution" in item.lower() for item in audit["non_effects"])
         assert any("scientific n" in item.lower() for item in audit["non_effects"])
         assert any("self-attested" in item.lower() for item in audit["known_gaps"])
+
+
+def test_b123_nonempirical_profile_families_are_catalog_mapped_with_identity_boundary():
+    catalog = load_catalog(CATALOG_PATH)
+    unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
+    expected = {
+        "AUD-CI-B1-NONEMPIRICAL-PROFILE": ".github/workflows/b1-semantic-routing-safety-profile.yml",
+        "AUD-CI-B2-NONEMPIRICAL-PROFILE": ".github/workflows/b2-stateful-context-closure-profile.yml",
+        "AUD-CI-B3-NONEMPIRICAL-PROFILE": ".github/workflows/b3-p33-convergence-profile.yml",
+    }
+
+    for audit_id, workflow_path in expected.items():
+        audit = next((entry for entry in catalog["audits"] if entry.get("id") == audit_id), None)
+        assert audit is not None
+        assert workflow_path in audit["implementation"]
+        assert workflow_path not in unmapped
+        assert audit["blocking"] is False
+        assert audit["independence"] == "SAME_REPOSITORY_NONINDEPENDENT"
+        assert any("empirical execution" in item.lower() for item in audit["non_effects"])
+        assert any("requalification/supersession" in item.lower() for item in audit["known_gaps"])
 
 
 def test_protected_main_required_context_workflows_are_catalog_mapped():
