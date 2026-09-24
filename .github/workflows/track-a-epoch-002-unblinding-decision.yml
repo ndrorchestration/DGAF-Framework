@@ -7,7 +7,6 @@ on:
       - 'requirements-ci.txt'
       - 'requirements-ci-py312-ubuntu2404-x64.lock'
       - 'scripts/bootstrap_ci_pip.sh'
-      - 'tests/test_ci_lock_contract.py'
       - 'docs/experiment/TRACK_A_EPOCH_002_UNBLINDING_DECISION_PROCEDURE.md'
       - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SCHEMA.json'
       - 'docs/experiment/TRACK_A_EPOCH_002_RESULT_RECORD_SEMANTICS.json'
@@ -107,7 +106,6 @@ jobs:
             'requirements-ci.txt'
             'requirements-ci-py312-ubuntu2404-x64.lock'
             'scripts/bootstrap_ci_pip.sh'
-            'tests/test_ci_lock_contract.py'
           )
           mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD | sort)
           test "${#changed[@]}" -gt 0
