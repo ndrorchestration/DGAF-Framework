@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "evidence_class": "INTERNAL_SELF_APPLICATION_ENGINEERING_VALIDATION",
+  "claim_ceiling": {
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "external_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED"
+  },
+  "cases": [
+    {
+      "id": "active_claim_overstatement",
+      "mutation": "active_claim_overstatement",
+      "validator": "claim_hygiene",
+      "expected_marker": "Unsupported active claim-language",
+      "expected_disposition": "BLOCKED"
+    },
+    {
+      "id": "apparatus_source_mismatch",
+      "mutation": "apparatus_source_mismatch",
+      "validator": "control_state",
+      "expected_marker": "does not match manifest apparatus source",
+      "expected_disposition": "BLOCKED"
+    },
+    {
+      "id": "authorization_with_n0",
+      "mutation": "authorization_with_n0",
+      "validator": "control_state",
+      "expected_marker": "empirical_n=0 must retain authorization=NOT_GRANTED",
+      "expected_disposition": "BLOCKED"
+    },
+    {
+      "id": "registry_representation_drift",
+      "mutation": "registry_representation_drift",
+      "validator": "registry_consistency",
+      "expected_marker": "Registry provenance check failed",
+      "expected_disposition": "BLOCKED"
+    },
+    {
+      "id": "truth_layer_synthetic_promotion",
+      "mutation": "truth_layer_synthetic_promotion",
+      "validator": "truth_layer",
+      "expected_marker": "cannot be backed only by synthetic evidence",
+      "expected_disposition": "BLOCKED"
+    },
+    {
+      "id": "truth_layer_duplicate_claim",
+      "mutation": "truth_layer_duplicate_claim",
+      "validator": "truth_layer",
+      "expected_marker": "duplicate claim_id",
+      "expected_disposition": "BLOCKED"
+    },
+    {
+      "id": "truth_layer_empirical_without_receipts",
+      "mutation": "truth_layer_empirical_without_receipts",
+      "validator": "truth_layer",
+      "expected_marker": "requires run_id",
+      "expected_disposition": "BLOCKED"
+    },
+    {
+      "id": "registry_release_identity_drift",
+      "mutation": "registry_release_identity_drift",
+      "validator": "registry_consistency",
+      "expected_marker": "manifest release identity mismatch",
+      "expected_disposition": "BLOCKED"
+    }
+  ]
+}
