@@ -516,7 +516,11 @@ def install_accepted_state_fixture(monkeypatch: pytest.MonkeyPatch, validator):
         raise AssertionError(f"unexpected accepted-state JSON read: {ref}:{relpath}")
 
     monkeypatch.setattr(validator, "validate_semantic_policy", lambda: None)
-    monkeypatch.setattr(validator, "validate_authorization_event", lambda event, accepted_parent_sha: accepted_parent_sha)
+    monkeypatch.setattr(
+        validator,
+        "validate_authorization_event",
+        lambda event, accepted_parent_sha: accepted_parent_sha,
+    )
     monkeypatch.setattr(validator, "validate_frozen_analysis_identities", lambda ref: None)
     monkeypatch.setattr(validator, "validate_schema", lambda record: None)
     monkeypatch.setattr(validator, "git", fake_git)
