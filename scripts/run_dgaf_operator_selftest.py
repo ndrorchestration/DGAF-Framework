@@ -259,8 +259,7 @@ def main() -> int:
             detail=(
                 f"{len(aoss_tests)} AOSS test modules"
                 + (
-                    "; POSIX custody module excluded on Windows and checked "
-                    "fail-closed separately"
+                    "; POSIX custody module excluded on Windows and checked " "fail-closed separately"
                     if os.name == "nt"
                     else ""
                 )
