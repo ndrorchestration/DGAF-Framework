@@ -13,7 +13,9 @@ AOSS_STAGE_A_FOUNDATION_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-stage-
 AOSS_STAGE_A_PREDATA_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-v0-6-stage-a-predata-readiness.yml"
 AOSS_STAGE_A_AUTH_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-v0-6-stage-a-collection-authorization.yml"
 TRACK_A_EPOCH_002_RUNNER_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-primary-analysis-runner.yml"
-TRACK_A_EPOCH_002_RESULT_SEMANTICS_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-result-record-semantics.yml"
+TRACK_A_EPOCH_002_RESULT_SEMANTICS_WORKFLOW = (
+    ROOT / ".github" / "workflows" / "track-a-epoch-002-result-record-semantics.yml"
+)
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
