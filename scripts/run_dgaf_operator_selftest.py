@@ -39,7 +39,7 @@ def _run(
         cwd=cwd,
         text=True,
         capture_output=True,
-        env={**os.environ, "PYTHONUNBUFFERED": "1"},
+        env={**os.environ, "PYTHONUNBUFFERED": "1", "PYTHONUTF8": "1"},
     )
     ended = _now()
     result = {
