@@ -1234,6 +1234,151 @@
         "Synthetic fixtures do not establish real-workload safety, benefit, or efficacy."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B1-NONEMPIRICAL-PROFILE",
+      "name": "B1 Semantic Routing Safety Profile",
+      "class": "NONEMPIRICAL_PROFILE_ASSURANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_PROFILE",
+        "SEMANTIC_ROUTING_SAFETY"
+      ],
+      "assertion": "The B1 source-bound semantic-routing/safety profile preserves its required record substrate, registered fixtures, fail-closed malformed-input behavior, source limitations, excluded B2/B3 responsibilities, and non-empirical claim ceiling.",
+      "owner": "DGAF B1 Semantic Routing Safety Profile workflow",
+      "implementation": [
+        ".github/workflows/b1-semantic-routing-safety-profile.yml",
+        "docs/governance/DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1.json",
+        "scripts/validate_b1_semantic_routing_safety_profile.py",
+        "experiments/pdmal_pilot/b1_semantic_routing_safety_profile.py",
+        "experiments/pdmal_pilot/test_b1_semantic_routing_safety_profile.py"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "source-binding validator output",
+        "registered fixture and negative-control pytest results",
+        "profile contract with scientific N=0 and empirical execution unauthorized"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the bounded B1 non-empirical profile contract and source-bound fixture behavior; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize empirical execution or increment scientific N.",
+        "Does not establish real-workload safety, benefit, canonical DGAF efficacy, or independent validation.",
+        "Does not establish B2/B3 behavior, integrated Track C execution, certification, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B1_NONEMPIRICAL_PROFILE_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The profile is a NONEMPIRICAL_PROFILE_CANDIDATE and uses synthetic/source-bound fixtures only.",
+        "DemiJoule reprompt remains unreachable under the current common six-axis score implementation.",
+        "P-10 forbidden is source-reachable only in the documented narrow KAPPA-derived confidence region.",
+        "The accepted P-30 qualification binds this workflow's exact blob; mutable Action-tag remediation requires explicit requalification/supersession rather than in-place mutation."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B2-NONEMPIRICAL-PROFILE",
+      "name": "B2 Stateful Context Closure Profile",
+      "class": "NONEMPIRICAL_PROFILE_ASSURANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_PROFILE",
+        "STATEFUL_CONTEXT_CLOSURE"
+      ],
+      "assertion": "The B2 source-bound stateful-context/closure profile preserves one-session state lifetime, session-boundary reset semantics, real persisted SCPE/Phi state, registered Fibonacci checkpoints, and its non-empirical claim ceiling.",
+      "owner": "DGAF B2 Stateful Context Closure Profile workflow",
+      "implementation": [
+        ".github/workflows/b2-stateful-context-closure-profile.yml",
+        "docs/governance/DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1.json",
+        "scripts/validate_b2_stateful_context_closure_profile.py",
+        "experiments/pdmal_pilot/b2_stateful_context_closure_profile.py",
+        "experiments/pdmal_pilot/test_b2_stateful_context_closure_profile.py"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "source-binding validator output",
+        "persistent-session focused pytest results",
+        "profile contract with scientific N=0 and empirical execution unauthorized"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the bounded B2 non-empirical profile contract and persistent-session behavior; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize empirical execution or increment scientific N.",
+        "Does not establish real-workload benefit, canonical DGAF efficacy, or independent validation.",
+        "Does not establish B1/B3 behavior, integrated Track C execution, certification, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B2_NONEMPIRICAL_PROFILE_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The profile is a NONEMPIRICAL_PROFILE_CANDIDATE and uses synthetic/source-bound session fixtures only.",
+        "PhiDecision.REPROMPT remains defined but is not emitted by the current check() path.",
+        "The accepted P-30 qualification binds this workflow's exact blob; mutable Action-tag remediation requires explicit requalification/supersession rather than in-place mutation."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B3-NONEMPIRICAL-PROFILE",
+      "name": "B3 P-33 Persistent Convergence Profile",
+      "class": "NONEMPIRICAL_PROFILE_ASSURANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_PROFILE",
+        "GRAPH_CONVERGENCE_MONITORING"
+      ],
+      "assertion": "The B3 source-bound P-33 profile preserves one-sequence monitor lifetime, exact W_t/W_t-1 state semantics, registered status progression, malformed graph fail-closed controls, and the prohibition on interpreting monitor state as efficacy or treatment authority.",
+      "owner": "DGAF B3 P-33 Persistent Convergence Profile workflow",
+      "implementation": [
+        ".github/workflows/b3-p33-convergence-profile.yml",
+        "docs/governance/DGAF_P33_GRAPH_CONVERGENCE_MONITOR_PROFILE_V1.json",
+        "scripts/validate_b3_p33_convergence_profile.py",
+        "experiments/pdmal_pilot/b3_p33_convergence_profile.py",
+        "experiments/pdmal_pilot/test_b3_p33_convergence_profile.py"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "source-binding validator output",
+        "persistent graph-sequence focused pytest results",
+        "profile contract with scientific N=0 and empirical execution unauthorized"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the bounded B3 non-empirical convergence-monitor profile and persistent graph-sequence behavior; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize empirical execution or increment scientific N.",
+        "Does not map P-33 state to consensus alpha or establish DGAF efficacy or independent validation.",
+        "Does not authorize Epoch 004 outcome reuse, integrated Track C execution, certification, or High-Assurance state."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B3_NONEMPIRICAL_PROFILE_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The profile is a NONEMPIRICAL_PROFILE_CANDIDATE and uses a fixed synthetic graph sequence.",
+        "Consensus-alpha mapping and Epoch 004 outcome reuse remain prohibited.",
+        "The accepted P-30 qualification binds this workflow's exact blob; mutable Action-tag remediation requires explicit requalification/supersession rather than in-place mutation."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
