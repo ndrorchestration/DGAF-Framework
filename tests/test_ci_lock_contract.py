@@ -12,6 +12,7 @@ CANONICAL_PROFILE_WORKFLOW = ROOT / ".github" / "workflows" / "canonical-treatme
 AOSS_STAGE_A_FOUNDATION_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-stage-a-collector-foundation.yml"
 AOSS_STAGE_A_PREDATA_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-v0-6-stage-a-predata-readiness.yml"
 AOSS_STAGE_A_AUTH_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-v0-6-stage-a-collection-authorization.yml"
+TRACK_A_EPOCH_002_RUNNER_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-primary-analysis-runner.yml"
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
@@ -215,6 +216,24 @@ def test_aoss_stage_a_collection_authorization_uses_bound_py312_lock_without_aut
     assert workflow.count("      - 'requirements-ci-py312-ubuntu2404-x64.lock'") == 2
     assert workflow.count("      - 'scripts/bootstrap_ci_pip.sh'") == 2
     assert workflow.count("      - 'tests/test_ci_lock_contract.py'") == 2
+
+
+def test_track_a_epoch002_runner_tooling_uses_bound_py312_lock_without_empirical_execution() -> None:
+    workflow = TRACK_A_EPOCH_002_RUNNER_WORKFLOW.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "python-version: '3.12.3'" in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
+    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
+    assert workflow.count("      - 'requirements-ci-py312-ubuntu2404-x64.lock'") == 2
+    assert "Run runner unit tests with synthetic inputs only" in workflow
+    assert "Prove workflow never executes empirical analysis" in workflow
+    assert "PRIMARY_ANALYSIS_EXECUTION=NOT_PERFORMED" in workflow
+    assert "SCIENTIFIC_N_INCREMENT=0" in workflow
 
 
 def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
