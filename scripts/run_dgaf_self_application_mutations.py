@@ -37,9 +37,7 @@ VALIDATORS = {
 }
 
 
-def _run(
-    command: list[str], cwd: Path, *, check: bool = False
-) -> subprocess.CompletedProcess[str]:
+def _run(command: list[str], cwd: Path, *, check: bool = False) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         command,
         cwd=cwd,
@@ -226,10 +224,7 @@ def run_case(case: dict[str, str], source_commit: str) -> dict[str, Any]:
             ROOT,
         )
         if add.returncode != 0:
-            raise RuntimeError(
-                f"could not create isolated worktree for {case['id']}: "
-                f"{add.stdout}\n{add.stderr}"
-            )
+            raise RuntimeError(f"could not create isolated worktree for {case['id']}: " f"{add.stdout}\n{add.stderr}")
         try:
             MUTATIONS[case["mutation"]](worktree)
             result = _run(VALIDATORS[case["validator"]], worktree)
