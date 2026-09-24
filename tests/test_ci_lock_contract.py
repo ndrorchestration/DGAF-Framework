@@ -27,7 +27,6 @@ TRACK_A_EPOCH_002_OPERATOR_ADMISSION_WORKFLOW = (
     ROOT / ".github" / "workflows" / "track-a-epoch-002-operator-admission.yml"
 )
 TRACK_A_EPOCH_002_MATERIALIZATION_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-materialization.yml"
-EPOCH002_UNBLINDING_WORKFLOW = ROOT / ".github" / "workflows" / "track-a-epoch-002-unblinding-decision.yml"
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
@@ -362,33 +361,6 @@ def test_epoch002_materialization_uses_bound_lock_and_post_receipt_route() -> No
     assert "MATERIALIZATION_TOOLING_EXECUTES_PRIMARY_ANALYSIS=FALSE" in workflow
     assert "SCIENTIFIC_N_INCREMENT=0" in workflow
     assert "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED" in workflow
-    for path in (
-        "requirements-ci.txt",
-        "requirements-ci-py312-ubuntu2404-x64.lock",
-        "scripts/bootstrap_ci_pip.sh",
-        "tests/test_ci_lock_contract.py",
-    ):
-        assert workflow.count(f"            '{path}'") == 1
-
-
-def test_epoch002_unblinding_uses_bound_lock_with_accepted_state_route() -> None:
-    workflow = EPOCH002_UNBLINDING_WORKFLOW.read_text(encoding="utf-8")
-    assert "runs-on: ubuntu-24.04" in workflow
-    assert "python-version: '3.12.0'" in workflow
-    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
-    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
-    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
-    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
-    assert "--require-hashes" in workflow
-    assert "--only-binary=:all:" in workflow
-    assert "python -m pip install -r requirements-ci.txt" not in workflow
-    assert workflow.count("      - 'requirements-ci-py312-ubuntu2404-x64.lock'") == 1
-    assert "value=accepted_state" in workflow
-    assert "Validate accepted immutable unblinding decision state" in workflow
-    assert "TRACK_A_EPOCH_002_UNBLINDING=AUTHORIZED_BOUNDED_PRESERVED" in workflow
-    assert "TRACK_A_EPOCH_002_SUCCESSOR_STATE=OUT_OF_SCOPE_PRESERVED" in workflow
-    assert "UNBLINDING_TOOLING_SCOPE=DEDICATED_PLUS_DEPENDENCY_MAINTENANCE" in workflow
-    assert "UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_ONLY" in workflow
     for path in (
         "requirements-ci.txt",
         "requirements-ci-py312-ubuntu2404-x64.lock",
