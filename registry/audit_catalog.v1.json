@@ -1617,6 +1617,61 @@
         "GitHub API/network errors deliberately prevent prune inference rather than proving branch safety."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-NPM-LOCKFILE-VALIDATION",
+      "name": "NPM Lockfile Validation",
+      "class": "DEPENDENCY_INTEGRITY",
+      "target_layers": [
+        "REPOSITORY",
+        "DEPENDENCY",
+        "PROVENANCE",
+        "BUILD"
+      ],
+      "assertion": "The root npm dependency surface is validated on the exact source state with a single package-lock v3, exact direct-dependency declaration, exact Node/npm toolchain, byte-stable lock regeneration, clean lock-consuming install/build, and SHA-bound evidence while preserving a non-scientific boundary.",
+      "owner": "DGAF NPM Lockfile Validation workflow",
+      "implementation": [
+        ".github/workflows/npm-lockfile-validation.yml",
+        "package.json",
+        "package-lock.json",
+        "tests/test_npm_lockfile_contract.py",
+        "docs/security/npm-direct-dependency-state.json",
+        "docs/security/DEPENDENCY_PIN_REVIEW_2026-09-09.md"
+      ],
+      "trigger": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "exact source checkout assertion",
+        "tests/test_npm_lockfile_contract.py result",
+        "byte-stable package-lock regeneration check",
+        "clean npm ci and build result",
+        "SHA-256-bound npm-lockfile-validation evidence artifact"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the exact reviewed npm manifest/lock/direct-dependency-state contract and clean lock-consuming build for the source state under test; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize scientific, governance, collection, analysis, or High-Assurance transitions and does not increment scientific N.",
+        "Does not establish canonical DGAF efficacy, independent validation, production deployment success, or live runtime correctness.",
+        "Does not prove that every upstream npm package or registry response is trustworthy beyond the exact lock/toolchain/build checks performed.",
+        "Does not make the historical bootstrap lock SHA-256 a permanent pin for future deliberately reviewed lockfile updates."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_NPM_MANIFEST_LOCK_TOOLCHAIN_AND_CLEAN_BUILD_CONTRACT",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "Validation depends on registry/package availability for package-lock-only consistency and clean npm ci execution.",
+        "The secret-like-material scan is a bounded pattern check, not a general secret-scanning or package-security proof.",
+        "Repository-local build success is not production deployment or browser/runtime verification.",
+        "The bootstrap lock digest is retained as historical provenance only; future reviewed dependency changes legitimately produce new lock bytes and identities."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
