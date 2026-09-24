@@ -91,3 +91,19 @@ def test_precollection_receipt_binds_all_frozen_contracts(monkeypatch) -> None:
     assert set(receipt["frozen_contract_blobs"]) == set(validator.CONTRACT_PATHS)
     assert receipt["outcomes_generated_before_receipt"] is False
     assert receipt["scientific_n_increment"] == 0
+
+
+def test_workflow_routes_pull_request_validation_by_changed_paths() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "aoss-v0-6-stage-a-collection-authorization.yml").read_text(
+        encoding="utf-8"
+    )
+    assert 'CHANGED="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"' in workflow
+    assert 'AUTH_CHANGED=false' in workflow
+    assert 'RECEIPT_CHANGED=false' in workflow
+    assert 'authorization and precollection receipt cannot change in one PR' in workflow
+    assert '--validate-precollection-event "$HEAD_SHA" --authorization-ref "$BASE_SHA"' in workflow
+    assert '--validate-authorization-event "$HEAD_SHA" --accepted-parent "$BASE_SHA"' in workflow
+    assert '--validate-state' in workflow
+    assert '--tooling-only' not in workflow
+    assert 'git cat-file -e "$HEAD_SHA:registry/aoss_v0_6_stage_a_precollection_receipt_v1.json"' not in workflow
+
