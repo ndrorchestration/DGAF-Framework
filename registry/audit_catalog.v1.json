@@ -1379,6 +1379,147 @@
         "The accepted P-30 qualification binds this workflow's exact blob; mutable Action-tag remediation requires explicit requalification/supersession rather than in-place mutation."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B1-P30-11Q-QUALIFICATION",
+      "name": "B1 P-30 11Q Qualification",
+      "class": "NONEMPIRICAL_QUALIFICATION_ASSURANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_QUALIFICATION",
+        "SEMANTIC_ROUTING_SAFETY"
+      ],
+      "assertion": "The B1 developer P-30/P-11 11Q qualification remains exactly source-bound to the corresponding non-empirical profile evidence and preserves its recorded limitations, scoring contract, and non-authorizing claim ceiling.",
+      "owner": "DGAF B1 P-30 11Q qualification workflow",
+      "implementation": [
+        ".github/workflows/b1-p30-11q-qualification.yml",
+        "docs/qa/APOGEE_11Q_DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1_S081.json",
+        "scripts/validate_b1_p30_11q_qualification.py",
+        "docs/governance/DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1.json"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_b1_p30_11q_qualification.py output",
+        "exact profile/source/harness/test/validator/workflow blob bindings recorded by the qualification",
+        "explicit non-authorizing qualification-boundary assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the encoded source-bound developer 11Q qualification for B1; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not constitute independent verification or empirical evidence.",
+        "Does not authorize empirical execution or increment scientific N.",
+        "Does not establish canonical DGAF efficacy, integrated Track C execution, certification, production assurance, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B1_P30_11Q_QUALIFICATION_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The qualification is developer self-attested and non-independent.",
+        "The qualification is source/profile specific and cannot be generalized beyond its exact bound evidence.",
+        "Qualification success alone does not substitute for the separate B1_NONEMPIRICAL_INTEGRATION_ADJUDICATION adjudication or independent validation."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B2-P30-11Q-QUALIFICATION",
+      "name": "B2 P-30 11Q Qualification",
+      "class": "NONEMPIRICAL_QUALIFICATION_ASSURANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_QUALIFICATION",
+        "STATEFUL_CONTEXT_CLOSURE"
+      ],
+      "assertion": "The B2 developer P-30/P-11 11Q qualification remains exactly source-bound to the corresponding non-empirical profile evidence and preserves its recorded limitations, scoring contract, and non-authorizing claim ceiling.",
+      "owner": "DGAF B2 P-30 11Q qualification workflow",
+      "implementation": [
+        ".github/workflows/b2-p30-11q-qualification.yml",
+        "docs/qa/APOGEE_11Q_DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1_S079.json",
+        "scripts/validate_b2_p30_11q_qualification.py",
+        "docs/governance/DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1.json"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_b2_p30_11q_qualification.py output",
+        "exact profile/source/harness/test/validator/workflow blob bindings recorded by the qualification",
+        "explicit non-authorizing qualification-boundary assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the encoded source-bound developer 11Q qualification for B2; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not constitute independent verification or empirical evidence.",
+        "Does not authorize empirical execution or increment scientific N.",
+        "Does not establish canonical DGAF efficacy, integrated Track C execution, certification, production assurance, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B2_P30_11Q_QUALIFICATION_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The qualification is developer self-attested and non-independent.",
+        "The qualification is source/profile specific and cannot be generalized beyond its exact bound evidence.",
+        "Qualification success alone does not substitute for the separate B2_NONEMPIRICAL_INTEGRATION_ADJUDICATION adjudication or independent validation."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B3-P30-11Q-QUALIFICATION",
+      "name": "B3 P-30 11Q Qualification",
+      "class": "NONEMPIRICAL_QUALIFICATION_ASSURANCE",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_QUALIFICATION",
+        "GRAPH_CONVERGENCE_MONITORING"
+      ],
+      "assertion": "The B3 developer P-30/P-11 11Q qualification remains exactly source-bound to the corresponding non-empirical profile evidence and preserves its recorded limitations, scoring contract, and non-authorizing claim ceiling.",
+      "owner": "DGAF B3 P-30 11Q qualification workflow",
+      "implementation": [
+        ".github/workflows/b3-p30-11q-qualification.yml",
+        "docs/qa/APOGEE_11Q_DGAF_P33_GRAPH_CONVERGENCE_MONITOR_PROFILE_V1_S080.json",
+        "scripts/validate_b3_p30_11q_qualification.py",
+        "docs/governance/DGAF_P33_GRAPH_CONVERGENCE_MONITOR_PROFILE_V1.json"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_b3_p30_11q_qualification.py output",
+        "exact profile/source/harness/test/validator/workflow blob bindings recorded by the qualification",
+        "explicit non-authorizing qualification-boundary assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the encoded source-bound developer 11Q qualification for B3; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not constitute independent verification or empirical evidence.",
+        "Does not authorize empirical execution or increment scientific N.",
+        "Does not establish canonical DGAF efficacy, integrated Track C execution, certification, production assurance, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B3_P30_11Q_QUALIFICATION_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The qualification is developer self-attested and non-independent.",
+        "The qualification is source/profile specific and cannot be generalized beyond its exact bound evidence.",
+        "Qualification success alone does not substitute for the separate B3_NONEMPIRICAL_INTEGRATION_ADJUDICATION adjudication or independent validation."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
