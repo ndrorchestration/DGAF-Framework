@@ -378,6 +378,7 @@ def test_protected_root_accepts_canonical_retained_sidecar_names(tmp_path: Path,
 
     validator.validate_protected_root(root, evidence)
 
+
 def test_validator_exposes_accepted_dataset_lock_state_without_replaying_events() -> None:
     source = MODULE_PATH.read_text(encoding="utf-8")
     assert "def validate_accepted_state(" in source
@@ -395,4 +396,3 @@ def test_workflow_routes_unchanged_dataset_lock_records_to_accepted_state() -> N
     assert "--accepted-state" in workflow
     assert "steps.mode.outputs.value == 'accepted_state'" in workflow
     assert "git diff --quiet" in workflow
-
