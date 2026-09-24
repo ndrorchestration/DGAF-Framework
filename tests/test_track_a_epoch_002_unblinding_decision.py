@@ -235,7 +235,7 @@ def test_workflow_preserves_accepted_unblinding_state_for_maintenance() -> None:
 
 def test_dependency_triggered_revalidation_does_not_police_unrelated_paths() -> None:
     workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
-    assert "if test \"$lane_changed\" = true; then" in workflow
+    assert 'if test "$lane_changed" = true; then' in workflow
     assert "forbidden cross-lane edit in unblinding tooling PR" in workflow
     assert "UNBLINDING_TOOLING_SCOPE=DEPENDENCY_TRIGGER_OR_UNRELATED" in workflow
 
