@@ -130,7 +130,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | AOSS Stage A apparatus | **ACCEPTED THROUGH NON-PROMOTING LOCAL TRUST RESULT INTAKE · PR #925** |
 | AOSS Stage A independent-validation handoff | **ACCEPTED · PR #928 · EXTERNAL REVIEW OPERATIONALLY REQUESTABLE** |
 | AOSS Stage A external review | **NOT EXECUTED · CONTROLLER #929 OPEN** |
-| AOSS Stage A operator self-test | **PR #1012 OPEN · INTERNAL ENGINEERING VALIDATION ONLY · NOT EXTERNAL REVIEW** |
+| AOSS Stage A operator self-test | **PR #1012 · INTERNAL ENGINEERING VALIDATION ONLY · NOT EXTERNAL REVIEW** |
 | AOSS Stage A reviewer attribution / independence | **NOT VERIFIED LOCALLY** |
 | AOSS Stage A execution admission | **BLOCKED · ENVIRONMENT / SOURCE-DRIVER / EXECUTABLE / DESTINATION ACCEPTANCE NOT ESTABLISHED** |
 | AOSS Stage A collection execution readiness | **NOT ESTABLISHED · `execution_allowed=false`** |
