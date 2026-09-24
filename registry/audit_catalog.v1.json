@@ -1091,6 +1091,149 @@
         "Synthetic and structural evidence does not establish real-workload safety, benefit, or efficacy."
       ],
       "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B1-NONEMPIRICAL-ADJUDICATION",
+      "name": "B1 Non-Empirical Integration Adjudication",
+      "class": "GOVERNANCE_NONEMPIRICAL_ADJUDICATION",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_ADJUDICATION",
+        "SEMANTIC_ROUTING_SAFETY"
+      ],
+      "assertion": "The B1 adjudication remains exactly bound to its semantic-routing/safety implementation and qualification evidence, preserves the recorded source limitations, and retains the explicit non-empirical/non-authorizing claim ceiling.",
+      "owner": "DGAF B1 non-empirical integration adjudication workflow",
+      "implementation": [
+        ".github/workflows/b1-integration-adjudication.yml",
+        "docs/governance/B1_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json",
+        "scripts/validate_b1_integration_adjudication.py",
+        "docs/qa/APOGEE_11Q_DGAF_SEMANTIC_ROUTING_SAFETY_PROFILE_V1_S081.json"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_b1_integration_adjudication.py output",
+        "exact implementation/qualification/blob bindings",
+        "explicit non-authorizing disposition assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the source-bound B1 standalone non-empirical adjudication contract; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize B1 or Track C empirical execution.",
+        "Does not increment scientific N or establish canonical DGAF efficacy.",
+        "Does not establish independent validation, certification, integrated Track C execution, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B1_NONEMPIRICAL_ADJUDICATION_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The B1 qualification/adjudication is developer self-attested and non-independent.",
+        "DemiJoule reprompt remains unreachable under the current common six-axis score implementation.",
+        "P-10 forbidden remains source-reachable only in the demonstrated narrow KAPPA-derived confidence region.",
+        "Synthetic fixtures do not establish real-workload safety, benefit, or efficacy."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B2-NONEMPIRICAL-ADJUDICATION",
+      "name": "B2 Non-Empirical Integration Adjudication",
+      "class": "GOVERNANCE_NONEMPIRICAL_ADJUDICATION",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_ADJUDICATION",
+        "STATEFUL_CONTEXT_CLOSURE"
+      ],
+      "assertion": "The B2 adjudication remains exactly bound to its stateful-context/closure implementation and qualification evidence, preserves the recorded state/reprompt limitations, and retains the explicit non-empirical/non-authorizing claim ceiling.",
+      "owner": "DGAF B2 non-empirical integration adjudication workflow",
+      "implementation": [
+        ".github/workflows/b2-integration-adjudication.yml",
+        "docs/governance/B2_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json",
+        "scripts/validate_b2_integration_adjudication.py",
+        "docs/qa/APOGEE_11Q_DGAF_STATEFUL_CONTEXT_CLOSURE_PROFILE_V1_S079.json"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_b2_integration_adjudication.py output",
+        "exact implementation/qualification/blob bindings",
+        "explicit non-authorizing disposition assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the source-bound B2 standalone non-empirical adjudication contract; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize B2 or Track C empirical execution.",
+        "Does not increment scientific N or establish canonical DGAF efficacy.",
+        "Does not establish independent validation, certification, integrated Track C execution, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B2_NONEMPIRICAL_ADJUDICATION_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The B2 qualification/adjudication is developer self-attested and non-independent.",
+        "PhiDecision.REPROMPT remains defined but is not emitted by the current check() path.",
+        "Synthetic fixtures do not establish real-workload safety, benefit, or efficacy."
+      ],
+      "lifecycle": "CURRENT"
+    },
+    {
+      "id": "AUD-CI-B3-NONEMPIRICAL-ADJUDICATION",
+      "name": "B3 Non-Empirical Integration Adjudication",
+      "class": "GOVERNANCE_NONEMPIRICAL_ADJUDICATION",
+      "target_layers": [
+        "REPOSITORY",
+        "GOVERNANCE",
+        "NONEMPIRICAL_ADJUDICATION",
+        "GRAPH_CONVERGENCE_MONITORING"
+      ],
+      "assertion": "The B3 adjudication remains exactly bound to its graph-convergence-monitor implementation and qualification evidence, preserves the recorded consensus/outcome-reuse prohibitions, and retains the explicit non-empirical/non-authorizing claim ceiling.",
+      "owner": "DGAF B3 non-empirical integration adjudication workflow",
+      "implementation": [
+        ".github/workflows/b3-integration-adjudication.yml",
+        "docs/governance/B3_NONEMPIRICAL_INTEGRATION_ADJUDICATION_V1.json",
+        "scripts/validate_b3_integration_adjudication.py",
+        "docs/qa/APOGEE_11Q_DGAF_P33_GRAPH_CONVERGENCE_MONITOR_PROFILE_V1_S080.json"
+      ],
+      "trigger": [
+        "pull_request"
+      ],
+      "blocking": false,
+      "evidence": [
+        "workflow conclusion",
+        "scripts/validate_b3_integration_adjudication.py output",
+        "exact implementation/qualification/blob bindings",
+        "explicit non-authorizing disposition assertions"
+      ],
+      "verdicts": [
+        "SUCCESS",
+        "FAILURE"
+      ],
+      "decision_effect": "Validates or rejects the source-bound B3 standalone non-empirical adjudication contract; current protected-main required-context readback does not list this workflow as a required merge context.",
+      "non_effects": [
+        "Does not authorize B3 or Track C empirical execution.",
+        "Does not increment scientific N or establish canonical DGAF efficacy.",
+        "Does not establish independent validation, certification, integrated Track C execution, or High-Assurance authorization."
+      ],
+      "fail_behavior": "FAIL_CLOSED_FOR_B3_NONEMPIRICAL_ADJUDICATION_SCOPE",
+      "independence": "SAME_REPOSITORY_NONINDEPENDENT",
+      "known_gaps": [
+        "The B3 qualification/adjudication is developer self-attested and non-independent.",
+        "Consensus-alpha mapping remains prohibited.",
+        "Epoch 004 outcome reuse remains prohibited.",
+        "Synthetic fixtures do not establish real-workload safety, benefit, or efficacy."
+      ],
+      "lifecycle": "CURRENT"
     }
   ]
 }
