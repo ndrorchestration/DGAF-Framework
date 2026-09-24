@@ -106,13 +106,20 @@ def test_completion_state_reconciler_family_is_catalog_mapped_with_historical_sc
     )
 
     assert audit is not None
-    assert ".github/workflows/completion-state-reconciler.yml" in audit["implementation"]
+    assert (
+        ".github/workflows/completion-state-reconciler.yml" in audit["implementation"]
+    )
     assert ".github/workflows/completion-state-reconciler.yml" not in unmapped
     assert audit["blocking"] is False
     assert audit["independence"] == "SAME_REPOSITORY_NONINDEPENDENT"
     assert any("does not authorize" in item.lower() for item in audit["non_effects"])
-    assert any("historical_fixed_scope_track_a_epoch_002_precollection" in item.lower() for item in audit["known_gaps"])
-    assert any("current global dgaf state" in item.lower() for item in audit["non_effects"])
+    assert any(
+        "historical_fixed_scope_track_a_epoch_002_precollection" in item.lower()
+        for item in audit["known_gaps"]
+    )
+    assert any(
+        "current global dgaf state" in item.lower() for item in audit["non_effects"]
+    )
 
 
 def test_protected_main_required_context_workflows_are_catalog_mapped():
