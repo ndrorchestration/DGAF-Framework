@@ -195,11 +195,7 @@ def test_workload_specific_evaluation_architecture_is_catalog_mapped_without_emp
     catalog = load_catalog(CATALOG_PATH)
     unmapped = _collect_unmapped_workflows(REPO_ROOT, catalog)
     audit = next(
-        (
-            entry
-            for entry in catalog["audits"]
-            if entry.get("id") == "AUD-CI-WORKLOAD-SPECIFIC-EVALUATION-ARCHITECTURE"
-        ),
+        (entry for entry in catalog["audits"] if entry.get("id") == "AUD-CI-WORKLOAD-SPECIFIC-EVALUATION-ARCHITECTURE"),
         None,
     )
 
