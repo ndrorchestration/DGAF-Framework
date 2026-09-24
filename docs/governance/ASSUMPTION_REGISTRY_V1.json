@@ -10,5 +10,240 @@
     "ENVIRONMENT_BOUND",
     "TEMPORAL"
   ],
-  "assumptions": []
+  "assumptions": [
+    {
+      "assumption_id": "ASM-DGAF-ENV-PORTABILITY",
+      "statement": "Passing Linux-hosted repository CI does not imply equivalent behavior on Windows or on environments with different locale, line-ending, filesystem-order, or platform custody semantics.",
+      "evidence_refs": [
+        "issue://1022",
+        "workflow://DGAF Operator Self-Test Contract",
+        "history://windows-python-launcher-cp1252-crlf-filesystem-posix-findings"
+      ],
+      "validity_class": "ENVIRONMENT_BOUND",
+      "invalidation_triggers": [
+        "operating_system_changed",
+        "locale_or_encoding_changed",
+        "line_ending_policy_changed",
+        "filesystem_semantics_changed",
+        "custody_substrate_changed"
+      ],
+      "falsification_test": "Replay the bounded operator contract on the changed environment and retain exact-source platform evidence; any environment-specific escape falsifies portability for that environment.",
+      "mitigation": "Require environment manifests and platform-specific replay for supported operator paths; preserve explicit unsupported-substrate boundaries.",
+      "affected_controls": [
+        "DGAF Operator Self-Test",
+        "custody checks",
+        "exact-byte/source checks"
+      ],
+      "status": "SUPPORTED_WITH_BOUNDARY"
+    },
+    {
+      "assumption_id": "ASM-DGAF-EXECUTION-IDENTITY",
+      "statement": "A source commit SHA alone is insufficient to identify an execution event because runner image, interpreter/dependencies, provider configuration, deployment identity, and relevant runtime settings can differ.",
+      "evidence_refs": [
+        "issue://1022",
+        "audit://AUD-RUNTIME-P2",
+        "audit://AUD-RUNTIME-P6A-CORS"
+      ],
+      "validity_class": "ENVIRONMENT_BOUND",
+      "invalidation_triggers": [
+        "runner_image_changed",
+        "interpreter_changed",
+        "dependency_lock_changed",
+        "provider_configuration_changed",
+        "deployment_identity_changed"
+      ],
+      "falsification_test": "Compare the retained execution tuple against source SHA plus environment manifest, dependency identity, provider/deployment identity, and relevant configuration; any mismatch rejects exact-execution equivalence.",
+      "mitigation": "Bind execution evidence to a multi-part identity tuple rather than source SHA alone.",
+      "affected_controls": [
+        "runtime verification",
+        "operator self-test",
+        "external reviewer handoff"
+      ],
+      "status": "MITIGATED_BY_BOUND_IDENTITY"
+    },
+    {
+      "assumption_id": "ASM-DGAF-MAINTENANCE-SOURCE-BINDING",
+      "statement": "A maintenance-only workflow edit can invalidate accepted evidence when historical qualification or adjudication records bind the exact workflow bytes.",
+      "evidence_refs": [
+        "pr://1019",
+        "issue://939",
+        "history://B3-P33-source-blob-drift"
+      ],
+      "validity_class": "VERSION_BOUND",
+      "invalidation_triggers": [
+        "source_bound_workflow_changed",
+        "accepted_binding_set_changed"
+      ],
+      "falsification_test": "Before maintenance, search accepted validators and records for exact source/blob/hash bindings; if any bind the target bytes, ordinary maintenance safety is falsified unless an explicit rebinding route is accepted.",
+      "mitigation": "Preflight source-binding search before workflow edits; defer bound workflows or use a separately reviewed maintenance-safe rebinding mechanism.",
+      "affected_controls": [
+        "supply-chain hardening",
+        "historical qualification",
+        "accepted adjudication"
+      ],
+      "status": "MITIGATED_BY_PREFLIGHT"
+    },
+    {
+      "assumption_id": "ASM-DGAF-MUTATION-CORPUS-REPRESENTATIVENESS",
+      "statement": "The accepted self-application mutation corpus demonstrates detection only for its declared cases and does not establish general failure-mode coverage.",
+      "evidence_refs": [
+        "pr://1025",
+        "issue://1022",
+        "registry://dgaf_self_application_mutations_v1"
+      ],
+      "validity_class": "VERSION_BOUND",
+      "invalidation_triggers": [
+        "mutation_corpus_changed",
+        "validator_set_changed",
+        "control_set_changed",
+        "new_failure_class_discovered"
+      ],
+      "falsification_test": "Introduce independently motivated historical, metamorphic, or adversarial mutations; any escaped case falsifies representativeness beyond the previous corpus.",
+      "mitigation": "Version the corpus, always report numerator and denominator, and expand it with historical replay and heterogeneous discovery methods.",
+      "affected_controls": [
+        "self-application mutation benchmark",
+        "claim reporting"
+      ],
+      "status": "BOUNDED_NOT_GENERALIZED"
+    },
+    {
+      "assumption_id": "ASM-DGAF-ASSURANCE-INDEPENDENCE",
+      "statement": "Multiple green assurance workflows may share code, runners, providers, trust roots, evidence generators, or governance ownership and therefore must not be counted as independent confirmations by workflow count alone.",
+      "evidence_refs": [
+        "issue://777",
+        "registry://audit_catalog.v1.json",
+        "issue://929"
+      ],
+      "validity_class": "CONFIGURATION_BOUND",
+      "invalidation_triggers": [
+        "assurance_dependency_graph_changed",
+        "runner_provider_changed",
+        "validator_implementation_changed",
+        "trust_root_changed"
+      ],
+      "falsification_test": "Map shared dependencies for the relevant controls and replay selected assertions through heterogeneous or independently retained paths; shared critical dependencies falsify an independence interpretation.",
+      "mitigation": "Maintain shared-dependency classes and reserve independent-validation language for separately retained external evidence.",
+      "affected_controls": [
+        "audit catalog",
+        "external review",
+        "control ablation"
+      ],
+      "status": "NONINDEPENDENT_BY_DEFAULT"
+    },
+    {
+      "assumption_id": "ASM-DGAF-REDUNDANCY-REMOVABILITY",
+      "statement": "A control with zero unique detections in single-control ablation is not thereby proven removable because it may provide fallback protection under multi-control failure or correlated dependency loss.",
+      "evidence_refs": [
+        "issue://1022",
+        "notion://DGAF-on-DGAF-Self-Application-Benchmark-Control-and-QA-Plan"
+      ],
+      "validity_class": "VERSION_BOUND",
+      "invalidation_triggers": [
+        "ablation_corpus_changed",
+        "control_graph_changed",
+        "dependency_graph_changed"
+      ],
+      "falsification_test": "Perform multi-control ablation and dependency-aware interaction replay; removal is supported only if safety coverage and fallback behavior remain acceptable under the declared fault model.",
+      "mitigation": "Report unique contribution, overlap, fallback contribution, and shared-dependency exposure separately; do not equate redundancy with uselessness.",
+      "affected_controls": [
+        "future control-ablation lane",
+        "architecture simplification"
+      ],
+      "status": "PREVENTS_PREMATURE_REMOVAL"
+    },
+    {
+      "assumption_id": "ASM-DGAF-DOCUMENTATION-PROJECTION",
+      "statement": "Human-readable current-state documentation can lag executable repository or control-state truth after protected-main changes.",
+      "evidence_refs": [
+        "issue://777",
+        "audit://AUD-CI-PROPAGATION-CONSISTENCY",
+        "history://documentation-reconciliation-tranches"
+      ],
+      "validity_class": "VERSION_BOUND",
+      "invalidation_triggers": [
+        "protected_main_changed",
+        "control_state_changed",
+        "runtime_identity_changed",
+        "canonical_document_changed"
+      ],
+      "falsification_test": "Reconcile current documentation claims against canonical machine-readable control state, protected main, and runtime evidence where applicable; any disagreement falsifies current projection accuracy.",
+      "mitigation": "Prefer machine-derived current projections, retain historical snapshots as historical, and run propagation/document-authority checks after authoritative changes.",
+      "affected_controls": [
+        "Operational Control Center",
+        "CURRENT_STATE",
+        "documentation authority"
+      ],
+      "status": "MITIGATED_BY_RECONCILIATION"
+    },
+    {
+      "assumption_id": "ASM-DGAF-FAIL-CLOSED-LIVENESS",
+      "statement": "Fail-closed rejection of invalid transitions does not prove that all intended valid transitions remain reachable under the control graph.",
+      "evidence_refs": [
+        "issue://1022",
+        "docs://DISCOVERY_HARNESS_V1",
+        "governance://fail-closed-boundary"
+      ],
+      "validity_class": "VERSION_BOUND",
+      "invalidation_triggers": [
+        "control_graph_changed",
+        "authorization_path_changed",
+        "transition_contract_changed"
+      ],
+      "falsification_test": "Execute positive-path/liveness tests for each declared legal transition from admissible predecessor states; an unreachable valid transition falsifies the liveness assumption.",
+      "mitigation": "Pair negative fail-closed tests with explicit legal-transition reachability and recovery tests.",
+      "affected_controls": [
+        "governance transitions",
+        "authorization paths",
+        "discovery harness"
+      ],
+      "status": "OPEN_FOR_LIVENESS_MEASUREMENT"
+    },
+    {
+      "assumption_id": "ASM-DGAF-OPERATOR-COMPREHENSION",
+      "statement": "Successful construction and operation of DGAF does not by itself demonstrate that every critical control is understood well enough to defend, simplify, or safely modify.",
+      "evidence_refs": [
+        "issue://1022",
+        "notion://DGAF-Expert-Panel-Stabilization-Review-and-Forward-Direction-2026-09-24"
+      ],
+      "validity_class": "VERSION_BOUND",
+      "invalidation_triggers": [
+        "critical_control_added",
+        "critical_control_changed",
+        "architecture_reorganized"
+      ],
+      "falsification_test": "For each critical control, require an architecture-defense record covering purpose, threat/failure mode, enforcement point, evidence, known limitation, and removal criterion; inability to supply one leaves the assumption unsupported.",
+      "mitigation": "Maintain an architecture-defense checklist and use it before control removal or major redesign.",
+      "affected_controls": [
+        "critical assurance controls",
+        "architecture simplification",
+        "external review"
+      ],
+      "status": "NEEDS_DIRECT_TEST"
+    },
+    {
+      "assumption_id": "ASM-DGAF-DISCOVERY-COMPLETENESS",
+      "statement": "The discovery harness and its mutation/property/metamorphic methods can share blind spots with the controls they inspect and therefore cannot claim completeness from self-consistency alone.",
+      "evidence_refs": [
+        "docs://DISCOVERY_HARNESS_V1",
+        "docs://BLIND_SPOT_LEDGER_V1",
+        "tests://test_discovery_detector_mutation.py"
+      ],
+      "validity_class": "VERSION_BOUND",
+      "invalidation_triggers": [
+        "discovery_method_changed",
+        "property_oracle_changed",
+        "mutation_operator_changed",
+        "surviving_mutant_observed",
+        "new_blindspot_discovered"
+      ],
+      "falsification_test": "Mutate discovery detectors/properties, compare heterogeneous discovery methods, and retain shared misses; surviving mutants or cross-method misses falsify completeness for the tested scope.",
+      "mitigation": "Use multiple discovery methods, retain candidate blind spots, and keep completeness_claim=false.",
+      "affected_controls": [
+        "discovery harness",
+        "blind-spot ledger",
+        "assumption registry"
+      ],
+      "status": "NONEXHAUSTIVE_BY_DESIGN"
+    }
+  ]
 }
