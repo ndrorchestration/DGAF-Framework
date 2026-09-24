@@ -10,6 +10,7 @@ WORKFLOW = ROOT / ".github" / "workflows" / "python-tests.yml"
 CONTROL_PLANE_WORKFLOW = ROOT / ".github" / "workflows" / "control-plane-contract.yml"
 CANONICAL_PROFILE_WORKFLOW = ROOT / ".github" / "workflows" / "canonical-treatment-profile.yml"
 AOSS_STAGE_A_FOUNDATION_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-stage-a-collector-foundation.yml"
+AOSS_STAGE_A_PREDATA_WORKFLOW = ROOT / ".github" / "workflows" / "aoss-v0-6-stage-a-predata-readiness.yml"
 CONTROL_PLANE_LOCK = ROOT / "requirements-ci-control-plane-py312-ubuntu2404-x64.lock"
 BOOTSTRAP = ROOT / "scripts" / "bootstrap_ci_pip.sh"
 
@@ -177,6 +178,22 @@ def test_aoss_stage_a_foundation_uses_bound_py312_lock_without_collection_promot
     assert 'assert report["collection_execution_readiness"] == "NOT_ESTABLISHED"' in workflow
     assert 'assert report["outcomes_generated"] is False' in workflow
     assert 'assert report["scientific_n_increment"] == 0' in workflow
+
+
+def test_aoss_stage_a_predata_readiness_uses_bound_py312_lock_without_authorization() -> None:
+    workflow = AOSS_STAGE_A_PREDATA_WORKFLOW.read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in workflow
+    assert "python-version: '3.12.3'" in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
+    assert "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405" in workflow
+    assert "bash scripts/bootstrap_ci_pip.sh" in workflow
+    assert "requirements-ci-py312-ubuntu2404-x64.lock" in workflow
+    assert "--require-hashes" in workflow
+    assert "--only-binary=:all:" in workflow
+    assert "python -m pip install -r requirements-ci.txt" not in workflow
+    assert "ready only for separate authorization review" in workflow.lower()
+    assert "validate_aoss_v0_6_stage_a_predata_readiness.py --assert-ready" in workflow
+    assert "run_aoss_v0_6_stage_a.py" not in workflow
 
 
 def test_bootstrap_verifies_exact_pip_wheel_before_install() -> None:
