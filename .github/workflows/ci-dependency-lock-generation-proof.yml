@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.10', '3.11', '3.12']
+        python: ['3.10', '3.11', '3.12', '3.12.0', '3.12.3']
 
     steps:
       - name: Checkout exact PR head
@@ -53,7 +53,7 @@ jobs:
 
       - name: Materialize artifact-exact hash lock
         env:
-          PYTHON_MINOR: ${{ matrix.python }}
+          PYTHON_REQUESTED: ${{ matrix.python }}
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -68,9 +68,13 @@ jobs:
           report = json.loads(Path("ci-lock-report.json").read_text(encoding="utf-8"))
           source = Path("requirements-ci.txt")
           source_sha = hashlib.sha256(source.read_bytes()).hexdigest()
-          expected_minor = os.environ["PYTHON_MINOR"]
+          requested = os.environ["PYTHON_REQUESTED"]
+          expected_minor = ".".join(requested.split(".")[:2])
+          actual_full = platform.python_version()
           actual_minor = f"{sys.version_info.major}.{sys.version_info.minor}"
           assert actual_minor == expected_minor, (actual_minor, expected_minor)
+          if len(requested.split(".")) == 3:
+              assert actual_full == requested, (actual_full, requested)
 
           def canonical(name: str) -> str:
               return re.sub(r"[-_.]+", "-", name).lower()
@@ -92,13 +96,15 @@ jobs:
 
           assert rows, "resolver report contained no install set"
           rows.sort()
-          out = Path(f"requirements-ci-py{expected_minor.replace('.', '')}-ubuntu2404-x64.lock")
+          lane_id = requested.replace(".", "")
+          out = Path(f"requirements-ci-py{lane_id}-ubuntu2404-x64.lock")
           header = [
               "# GENERATED PROOF ARTIFACT — NOT YET CANONICAL",
               "# source: requirements-ci.txt",
               f"# source_sha256: {source_sha}",
+              f"# python_requested: {requested}",
               f"# python_minor: {expected_minor}",
-              f"# python_full: {platform.python_version()}",
+              f"# python_full: {actual_full}",
               "# runner_os: ubuntu-24.04",
               "# runner_arch: x64",
               "# resolver: pip==26.2.1",
@@ -112,6 +118,10 @@ jobs:
           out.write_text("\n".join(header + body) + "\n", encoding="utf-8")
 
           lock_sha = hashlib.sha256(out.read_bytes()).hexdigest()
+          resolved_set = "\n".join(
+              f"{name}=={version} sha256:{sha256}" for name, version, sha256 in rows
+          ).encode("utf-8")
+          resolved_set_sha = hashlib.sha256(resolved_set).hexdigest()
           manifest = {
               "evidence_class": "DGAF_CI_HASH_LOCK_GENERATION_PROOF_V1",
               "scientific_state_effect": "NONE",
@@ -120,8 +130,10 @@ jobs:
               "source_sha256": source_sha,
               "lock_path": str(out),
               "lock_sha256": lock_sha,
+              "resolved_set_sha256": resolved_set_sha,
+              "python_requested": requested,
               "python_minor": expected_minor,
-              "python_full": platform.python_version(),
+              "python_full": actual_full,
               "platform": platform.platform(),
               "resolver": "pip==26.2.1",
               "binary_policy": "only-binary=:all:",
@@ -136,10 +148,10 @@ jobs:
 
       - name: Verify lock in fresh environment with required hashes
         env:
-          PYTHON_MINOR: ${{ matrix.python }}
+          PYTHON_REQUESTED: ${{ matrix.python }}
         run: |
           set -euo pipefail
-          lock="requirements-ci-py${PYTHON_MINOR//./}-ubuntu2404-x64.lock"
+          lock="requirements-ci-py${PYTHON_REQUESTED//./}-ubuntu2404-x64.lock"
           python -m venv .ci-lock-verify
           .ci-lock-verify/bin/python -m pip install             --disable-pip-version-check             --no-index             --find-links .ci-lock-bootstrap             'pip==26.2.1'
           .ci-lock-verify/bin/python -m pip install             --disable-pip-version-check             --require-hashes             --only-binary=:all:             -r "$lock"
