@@ -10,6 +10,9 @@ on:
       - '**/*.py'
       - '**/*.pyi'
       - 'requirements*.txt'
+      - 'requirements-ci-py*-ubuntu2404-x64.lock'
+      - 'scripts/bootstrap_ci_pip.sh'
+      - 'tests/test_ci_lock_contract.py'
       - 'pyproject.toml'
       - '.flake8'
       - '.github/workflows/python-tests.yml'
@@ -22,15 +25,22 @@ on:
 
 jobs:
   staging-evidence:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
     - name: Set up Python
       uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
       with:
         python-version: '3.11'
-    - name: Install pinned evidence-gate toolchain
-      run: python -m pip install -r requirements-ci.txt
+    - name: Bootstrap exact pip resolver
+      run: bash scripts/bootstrap_ci_pip.sh
+    - name: Install hash-locked evidence-gate toolchain
+      run: >-
+        python -m pip install
+        --disable-pip-version-check
+        --require-hashes
+        --only-binary=:all:
+        -r requirements-ci-py311-ubuntu2404-x64.lock
     - name: Run deterministic staging circuit-breaker harness
       run: python -m pytest tests/test_staging_circuit_breaker_evidence.py -q
     - name: Add staging evidence provenance
@@ -69,7 +79,7 @@ jobs:
         path: test-artifacts/staging-circuit-breaker-evidence.json
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -89,11 +99,21 @@ jobs:
     - name: Establish repository import path
       run: echo "PYTHONPATH=$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}" >> "$GITHUB_ENV"
 
-    - name: Install pinned CI dependencies
+    - name: Bootstrap exact pip resolver
+      run: bash scripts/bootstrap_ci_pip.sh
+
+    - name: Install hash-locked CI dependencies
       run: |
-        python -m pip install -r requirements-ci.txt
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        python_minor="${{ matrix.python-version }}"
+        ci_lock="requirements-ci-py${python_minor//./}-ubuntu2404-x64.lock"
+        test -s "$ci_lock"
+        python -m pip install \
+          --disable-pip-version-check \
+          --require-hashes \
+          --only-binary=:all: \
+          -r "$ci_lock"
+        if [ -s requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -s requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
 
     - name: Capture toolchain manifest
       run: |
@@ -245,7 +265,7 @@ jobs:
       if: always()
 
   integration-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: test
 
     steps:
@@ -255,12 +275,15 @@ jobs:
       with:
         python-version: '3.11'
         cache: 'pip'
+        cache-dependency-path: requirements-ci-py311-ubuntu2404-x64.lock
     - name: Establish repository import path
       run: echo "PYTHONPATH=$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}" >> "$GITHUB_ENV"
-    - name: Install pinned integration dependencies
+    - name: Bootstrap exact pip resolver
+      run: bash scripts/bootstrap_ci_pip.sh
+    - name: Install hash-locked integration dependencies
       run: |
-        python -m pip install -r requirements-ci.txt pyyaml
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        python -m pip install           --disable-pip-version-check           --require-hashes           --only-binary=:all:           -r requirements-ci-py311-ubuntu2404-x64.lock
+        if [ -s requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Detect integration test suite
       id: detect-integration
       shell: bash
@@ -277,15 +300,22 @@ jobs:
       timeout-minutes: 15
 
   security-scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
     - name: Set up Python
       uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
       with:
         python-version: '3.11'
-    - name: Install pinned security tools
-      run: python -m pip install -r requirements-ci.txt
+    - name: Bootstrap exact pip resolver
+      run: bash scripts/bootstrap_ci_pip.sh
+    - name: Install hash-locked security tools
+      run: >-
+        python -m pip install
+        --disable-pip-version-check
+        --require-hashes
+        --only-binary=:all:
+        -r requirements-ci-py311-ubuntu2404-x64.lock
     - name: Run full first-party Bandit report
       shell: bash
       run: |
