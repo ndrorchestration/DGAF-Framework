@@ -4,10 +4,12 @@ from types import SimpleNamespace
 
 import pytest
 
+from dgaf_discovery.state_coverage import validate_positive_path_liveness
 from pptl.branch_registry import BranchRecord, BranchRegistry
 from pptl.budget_ledger import BudgetExceeded, BudgetLedger, Consumption
 from pptl.commit_gate import CommitDenied, CommitGate, CommitRequest
 from pptl.control_plane import (
+    _ALLOWED,
     ControlPlane,
     ControlPlaneViolation,
     ControlTask,
