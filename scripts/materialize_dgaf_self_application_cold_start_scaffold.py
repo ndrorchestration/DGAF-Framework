@@ -98,9 +98,7 @@ def materialize_scaffold(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Materialize a bounded DGAF cold-start NOT_EXECUTED scaffold bundle."
-    )
+    parser = argparse.ArgumentParser(description="Materialize a bounded DGAF cold-start NOT_EXECUTED scaffold bundle.")
     parser.add_argument("--manifest", default=str(DEFAULT_MANIFEST), help="Path to cold-start manifest JSON.")
     parser.add_argument(
         "--output-dir",
