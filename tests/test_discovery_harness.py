@@ -9,7 +9,10 @@ from dgaf_discovery.blindspots import (
 from dgaf_discovery.harness import DiscoveryEnvelope, validate_discovery_envelope
 from dgaf_discovery.interactions import ControlContract, analyze_pairwise
 from dgaf_discovery.mutations import critical_mutations
-from dgaf_discovery.state_coverage import compute_transition_coverage
+from dgaf_discovery.state_coverage import (
+    compute_transition_coverage,
+    validate_positive_path_liveness,
+)
 
 
 def test_envelope_rejects_authorization_and_scientific_changes():
@@ -54,6 +57,25 @@ def test_state_transition_coverage_separates_positive_and_negative_paths():
     assert result.state_coverage == 2 / 3
     assert result.legal_transition_coverage == 0.5
     assert result.forbidden_rejection_coverage == 1.0
+
+
+def test_positive_path_liveness_rejects_unreachable_declared_legal_transition():
+    with pytest.raises(ValueError, match="A->C"):
+        validate_positive_path_liveness(
+            {("A", "B"), ("A", "C")},
+            {("A", "B")},
+        )
+
+
+def test_positive_path_liveness_has_no_authorizing_or_scientific_effect():
+    result = validate_positive_path_liveness(
+        {("DATASET_LOCKED", "UNBLINDING_AUTHORIZED")},
+        {("DATASET_LOCKED", "UNBLINDING_AUTHORIZED")},
+    )
+    assert result.liveness_established_for_declared_scope is True
+    assert result.authoritative_effect == "NONE"
+    assert result.scientific_state_effect == "NONE"
+    assert result.scientific_n_increment == 0
 
 
 def test_control_interaction_detects_collisions():
