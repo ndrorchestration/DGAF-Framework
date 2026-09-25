@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/registry/dgaf_self_application_cold_start_execution_record_v1.schema.json",
+  "title": "DGAF self-application cold-start execution record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_class",
+    "controller_issue",
+    "external_review_controller",
+    "claim_ceiling",
+    "same_system_run_independence",
+    "runtime_authorization_effect",
+    "scientific_state_effect",
+    "execution_mode",
+    "operator_context",
+    "manifest",
+    "per_step_results",
+    "summary",
+    "executed_cold_start_reproduction",
+    "interpretation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "dgaf.self_application.cold_start_execution_record.v1"
+    },
+    "evidence_class": {
+      "const": "INTERNAL_SELF_APPLICATION_ENGINEERING_VALIDATION"
+    },
+    "controller_issue": {
+      "const": "issue://1022"
+    },
+    "external_review_controller": {
+      "const": "issue://929"
+    },
+    "claim_ceiling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scientific_n_increment",
+        "independent_validation",
+        "external_validation",
+        "canonical_dgaf_efficacy",
+        "high_assurance"
+      ],
+      "properties": {
+        "scientific_n_increment": {
+          "const": 0
+        },
+        "independent_validation": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "external_validation": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "canonical_dgaf_efficacy": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "high_assurance": {
+          "const": "NOT_AUTHORIZED"
+        }
+      }
+    },
+    "same_system_run_independence": {
+      "const": "NOT_ESTABLISHED"
+    },
+    "runtime_authorization_effect": {
+      "const": "NONE"
+    },
+    "scientific_state_effect": {
+      "const": "NONE"
+    },
+    "execution_mode": {
+      "enum": [
+        "OPERATOR_LOCAL_REPLAY",
+        "INDEPENDENT_REVIEWER_REPLAY"
+      ]
+    },
+    "operator_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retained_context_allowed",
+        "executor_relationship",
+        "environment_description"
+      ],
+      "properties": {
+        "retained_context_allowed": {
+          "type": "boolean"
+        },
+        "executor_relationship": {
+          "enum": [
+            "SAME_SYSTEM_OPERATOR",
+            "EXTERNAL_REVIEWER"
+          ]
+        },
+        "environment_description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "schema_version"
+      ],
+      "properties": {
+        "path": {
+          "const": "registry/dgaf_self_application_cold_start_manifest_v1.json"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "schema_version": {
+          "const": "dgaf.self_application.cold_start_manifest.v1"
+        }
+      }
+    },
+    "per_step_results": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "step_index",
+          "measure_id",
+          "question",
+          "failure_record",
+          "metric",
+          "status",
+          "evidence_retained",
+          "evidence_location",
+          "operator_observation"
+        ],
+        "properties": {
+          "step_index": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "measure_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "failure_record": {
+            "type": "string",
+            "minLength": 1
+          },
+          "metric": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "BLOCKED",
+              "NOT_EXECUTED"
+            ]
+          },
+          "evidence_retained": {
+            "type": "boolean"
+          },
+          "evidence_location": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "operator_observation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "cold_start_completion_rate",
+        "raw_per_step_results_retained_before_summary",
+        "same_system_run_independence",
+        "external_review_controller"
+      ],
+      "properties": {
+        "cold_start_completion_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "raw_per_step_results_retained_before_summary": {
+          "const": true
+        },
+        "same_system_run_independence": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "external_review_controller": {
+          "const": "issue://929"
+        }
+      }
+    },
+    "executed_cold_start_reproduction": {
+      "type": "boolean"
+    },
+    "interpretation": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
