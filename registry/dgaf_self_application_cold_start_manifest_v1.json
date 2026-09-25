@@ -1,0 +1,64 @@
+{
+  "schema_version": "dgaf.self_application.cold_start_manifest.v1",
+  "evidence_class": "INTERNAL_SELF_APPLICATION_ENGINEERING_VALIDATION",
+  "claim_ceiling": {
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "external_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED"
+  },
+  "controller_issue": "issue://1022",
+  "external_review_controller": "issue://929",
+  "same_system_run_independence": "NOT_ESTABLISHED",
+  "runtime_authorization_effect": "NONE",
+  "scientific_state_effect": "NONE",
+  "manifest_purpose": "Predeclare the cold-start reproduction evidence categories and fail-closed scoring contract before any same-system or external reviewer run is interpreted.",
+  "measures": [
+    {
+      "id": "documented_prerequisites",
+      "question": "Can a clean-context operator identify the required tools, versions, permissions, and repository state from canonical public instructions?",
+      "failure_record": "missing_or_ambiguous_prerequisite",
+      "metric": "undocumented_prerequisite_count"
+    },
+    {
+      "id": "command_order",
+      "question": "Can the operator determine the intended command sequence without retained chat context or private memory?",
+      "failure_record": "manual_sequence_inference_required",
+      "metric": "manual_decision_count"
+    },
+    {
+      "id": "evidence_locations",
+      "question": "Can the operator locate the required evidence artifacts, logs, and receipts without hidden workspace knowledge?",
+      "failure_record": "evidence_location_ambiguity",
+      "metric": "ambiguous_evidence_location_count"
+    },
+    {
+      "id": "environment_reproduction",
+      "question": "Can a clean environment reproduce the bounded operator path without unsupported local assumptions?",
+      "failure_record": "environment_setup_failure",
+      "metric": "setup_failure_count"
+    },
+    {
+      "id": "retained_context_dependence",
+      "question": "Does the run require facts remembered from prior chat, local-only files, or undocumented project history?",
+      "failure_record": "hidden_retained_context_dependence",
+      "metric": "hidden_context_dependency_count"
+    }
+  ],
+  "acceptance_contract": {
+    "raw_per_step_results_retained_before_summary": true,
+    "same_system_runs_must_not_be_labeled_independent": true,
+    "external_review_must_route_to_issue_929": true,
+    "unexpected_success_without_required_evidence_is_not_acceptance": true,
+    "missing_or_ambiguous_required_input_fails_closed": true
+  },
+  "summary_requirements": [
+    "cold_start_completion_rate",
+    "undocumented_prerequisite_count",
+    "manual_decision_count",
+    "ambiguous_evidence_location_count",
+    "setup_failure_count",
+    "hidden_context_dependency_count"
+  ]
+}
