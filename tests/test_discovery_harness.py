@@ -9,7 +9,10 @@ from dgaf_discovery.blindspots import (
 from dgaf_discovery.harness import DiscoveryEnvelope, validate_discovery_envelope
 from dgaf_discovery.interactions import ControlContract, analyze_pairwise
 from dgaf_discovery.mutations import critical_mutations
-from dgaf_discovery.state_coverage import compute_transition_coverage, validate_positive_path_liveness
+from dgaf_discovery.state_coverage import (
+    compute_transition_coverage,
+    validate_positive_path_liveness,
+)
 
 
 def test_envelope_rejects_authorization_and_scientific_changes():
