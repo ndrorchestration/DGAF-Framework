@@ -1,0 +1,45 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://dgaf.dev/schemas/capability_audit_event.schema.json",
+  "title":"DGAF Capability Audit Event",
+  "type":"object",
+  "additionalProperties":false,
+  "required":[
+    "schema_version","event_id","event_type","timestamp",
+    "initiating_principal","executing_principal","workflow_id",
+    "capability_id","policy","authorization_id","action_digest",
+    "decision","execution_state","postcondition_state","recovery_state"
+  ],
+  "properties":{
+    "schema_version":{"const":"0.1-draft"},
+    "event_id":{"type":"string","minLength":1},
+    "event_type":{"enum":["DECISION","EXECUTION","POSTCONDITION","RECOVERY"]},
+    "timestamp":{"type":"string","format":"date-time"},
+    "initiating_principal":{"type":"string","minLength":1},
+    "executing_principal":{"type":"string","minLength":1},
+    "workflow_id":{"type":"string","minLength":1},
+    "invocation_id":{"type":["string","null"]},
+    "capability_id":{"type":"string","minLength":1},
+    "capability_version":{"type":"string"},
+    "policy":{
+      "type":"object",
+      "additionalProperties":false,
+      "required":["id","version"],
+      "properties":{"id":{"type":"string"},"version":{"type":"string"}}
+    },
+    "authorization_id":{"type":"string","minLength":1},
+    "delegation_chain_id":{"type":["string","null"]},
+    "action_digest":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "decision":{"enum":["ALLOW","DENY","ESCALATE","NOT_APPLICABLE"]},
+    "decision_reasons":{"type":"array","items":{"type":"string"}},
+    "evidence_ids":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+    "verifier_ids":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+    "adapter_identity":{"type":["string","null"]},
+    "runtime_identity":{"type":["string","null"]},
+    "provider_receipt_id":{"type":["string","null"]},
+    "execution_state":{"enum":["NOT_STARTED","EXECUTING","EXECUTED","FAILED","EXECUTION_OUTCOME_UNKNOWN","PARTIALLY_EXECUTED"]},
+    "postcondition_state":{"enum":["NOT_CHECKED","VERIFIED","FAILED","INCONCLUSIVE"]},
+    "recovery_state":{"enum":["NONE","PENDING","ROLLED_BACK","COMPENSATED","FAILED","ESCALATED"]},
+    "secret_material_present":{"const":false}
+  }
+}

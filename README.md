@@ -20,6 +20,8 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **6. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
+**7. Review the provider-neutral capability-governance design lane.** The current design branch formalizes how agents may obtain and exercise authority across MCP, APIs, SDKs, CLIs, plugins, and connectors without treating any transport or vendor API as the governance model. It separates PDP, PEP, credentials, adapters, data-flow controls, receipts, postconditions, and audit evidence. Draft PR #1041 is prospective/non-authorizing and now demonstrates **12/12 bounded model-check tests PASS** plus **127 passed, 1 skipped** in the broader capability-selected test slice, with bounded G1–G16 invariant slices, the first bounded end-to-end reference transaction, a second non-MCP mock HTTP/OpenAPI-style adapter preserving the same governed `dgaf.local.status` capability identity, fail-closed idempotency/replay semantics, and finite-state/small-state checks spanning authorization order, commit revalidation, composition, recovery, competing idempotency claims, unknown execution outcomes, postconditions, and audit-before-closure; it is not protected-main authority or a production-security claim.
+
 ### What this demonstrates
 
 Within the evidence boundaries documented in this repository, DGAF demonstrates practical work in:
@@ -104,7 +106,7 @@ The same rule applies to presentation and assurance inventory: **UI state does n
 DGAF separates prospective evaluation by workload instead of treating one experiment as proof of the entire framework.
 
 | Track | Plain-English purpose | Current boundary |
-|---|---|---|
+| --- | --- | --- |
 | **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
 | **A — Epoch 002 successor** | Replacement prospective topology robustness | Collection COMPLETE at 50 paired seed units / 2,250 observations; dataset lock ESTABLISHED; bounded unblinding AUTHORIZED; materialization and immutable receipt ESTABLISHED; locked-primary-analysis authorization ACCEPTED; primary analysis EXECUTED locally under the frozen contract; content-addressed locked-result receipt ESTABLISHED via #851; interpretation/adjudication EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
@@ -206,7 +208,7 @@ DGAF is **not** currently presented as:
 ## Internal terms in plain English
 
 | Internal term | Public / industry-neutral translation |
-|---|---|
+| --- | --- |
 | **Formation** | The set and structure of agents selected for a governed task |
 | **TGL / P-35** | Per-turn governance and state-transition kernel |
 | **P-* gate** | Project-specific evidence, policy, or authorization checkpoint |

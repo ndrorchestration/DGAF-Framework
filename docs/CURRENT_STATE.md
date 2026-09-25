@@ -98,10 +98,20 @@ This file is the **primary current-facing repository summary**. GitHub is author
 
 The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, presentation/UI state, repository assurance inventory, runtime/deployment state, and historical evidence are separate governance/evidence dimensions. Evidence, authorization, N, verification class, deployment health, catalog membership, and efficacy do not transfer between them without an explicit governed rule.
 
+## Capability-governance design track — prospective / non-authorizing
+
+A provider-neutral capability-governance track is under active development on branch `design/capability-governance-protocol-2026-09-25`. This branch is not protected-main authority and does not change scientific or High-Assurance state.
+
+Current review surface: draft PR **#1041**. The current state-machine checkpoint adds a machine-checkable finite transaction model on top of the bounded end-to-end reference transaction, fail-closed idempotency/replay controls, and second non-MCP mock HTTP/OpenAPI-style adapter. The track separates provider, capability, adapter/transport, multidimensional effect/risk, policy, credentials, execution evidence, and postconditions. It introduces prospective contracts for capability manifests, authorization, delegation, workflow authorization, execution receipts, reconciliation, capability audit events, exact-action canonicalization/digest binding, bounded PEP enforcement, composition/data-egress checks, recovery semantics, evidence-strength monotonicity, and guarded transaction-state progression.
+
+The current bounded model-checking slice is **12/12 PASS**, and the broader `pytest tests -k capability -q` selection is **127 passed, 1 skipped**. Each existing Agent Governance invariant G1–G16 has at least one bounded local `TESTED-SLICE` in `docs/formalism/CAPABILITY_GOVERNANCE_CONFORMANCE_MATRIX.md`. The finite model now checks graph-path safety and exhaustive guard products plus 32 composition combinations, 1,128 recovery combinations, and bounded competing-idempotency interleavings, with mutation tests that demonstrate detection of unsafe shortcuts. These tests are engineering/conformance evidence only: they do not establish universal correctness, production security, independent verification, empirical efficacy, scientific-N promotion, or High-Assurance authorization.
+
+The existing four-tool local MCP adapter remains unchanged. The bounded reference transaction exercises canonical action → authorization/verifier state → PEP → idempotency claim → injected dispatch → execution receipt → postcondition/reconciliation → capability audit event. Completed actions replay from the ledger without redispatch; reuse of a key with a different action digest fails closed; in-flight duplicates are blocked; unknown outcomes require reconciliation before retry. A second in-process mock HTTP/OpenAPI-style adapter maps only `GET /v1/status` to the same bridge action, opens no listener, and preserves the same governed capability fields across transport substitution. Protected-side-effect execution remains synthetic/injected; real protected operator materialization is not invoked by these reference tests.
+
 ## Executive boundary
 
 | Area | Current state |
-|---|---|
+| --- | --- |
 | Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `3ba57706b75ed32d1cbae0a2fddd220a0cd1da20` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |

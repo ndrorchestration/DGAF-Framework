@@ -1,0 +1,36 @@
+{
+  "canonicalization": "dgaf-json-v0.1",
+  "vectors": [
+    {
+      "name": "gmail-send-basic",
+      "action": {
+        "canonicalization": "dgaf-json-v0.1",
+        "capability": {
+          "id": "gmail.message.send",
+          "version": "1.0.0"
+        },
+        "resource": {
+          "mailbox": "me"
+        },
+        "parameters": {
+          "to": ["research@example.org"],
+          "subject": "Status",
+          "body": "Ready"
+        },
+        "initiating_principal": "user:alice",
+        "executing_principal": "agent:assistant-7",
+        "delegation_chain_id": "delegation:alpha",
+        "policy": {
+          "id": "policy:outbound-mail",
+          "version": "3.2.1"
+        },
+        "state_guards": {
+          "allowlist_version": "42"
+        },
+        "nonce": "nonce-001"
+      },
+      "canonical_json": "{\"canonicalization\":\"dgaf-json-v0.1\",\"capability\":{\"id\":\"gmail.message.send\",\"version\":\"1.0.0\"},\"delegation_chain_id\":\"delegation:alpha\",\"executing_principal\":\"agent:assistant-7\",\"initiating_principal\":\"user:alice\",\"nonce\":\"nonce-001\",\"parameters\":{\"body\":\"Ready\",\"subject\":\"Status\",\"to\":[\"research@example.org\"]},\"policy\":{\"id\":\"policy:outbound-mail\",\"version\":\"3.2.1\"},\"resource\":{\"mailbox\":\"me\"},\"state_guards\":{\"allowlist_version\":\"42\"}}",
+      "sha256": "sha256:a4a02b7d06d4b1c1ef3fcf064ebba5d5954fa2b8999f54dd1a8e20c3558d4053"
+    }
+  ]
+}

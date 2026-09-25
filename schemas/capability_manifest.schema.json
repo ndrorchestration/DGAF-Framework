@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dgaf.dev/schemas/capability_manifest.schema.json",
+  "title": "DGAF Capability Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "version",
+    "provider",
+    "operation",
+    "adapter",
+    "effect",
+    "verification",
+    "lifecycle"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1-draft" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$" },
+    "provider": { "type": "string", "minLength": 1 },
+    "resource_type": { "type": "string" },
+    "operation": { "type": "string", "minLength": 1 },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "identity"],
+      "properties": {
+        "kind": { "enum": ["mcp", "rest", "graphql", "sdk", "cli", "plugin", "connector", "local"] },
+        "identity": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string" }
+      }
+    },
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["access", "sensitivity", "reversibility", "externality", "blast_radius", "financial", "privilege"],
+      "properties": {
+        "access": { "enum": ["read", "write", "delete", "privilege_change"] },
+        "sensitivity": { "enum": ["public", "internal", "confidential", "PII", "regulated"] },
+        "reversibility": { "enum": ["reversible", "compensable", "irreversible"] },
+        "externality": { "enum": ["none", "internal", "external"] },
+        "blast_radius": { "enum": ["low", "medium", "high"] },
+        "financial": { "enum": ["none", "low", "high"] },
+        "privilege": { "enum": ["none", "elevate", "credential_change"] }
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "items": { "enum": ["DISCOVER", "INSPECT_SCHEMA", "REQUEST_AUTHORIZATION", "INVOKE", "DELEGATE"] },
+      "uniqueItems": true
+    },
+    "constraints": { "type": "object", "additionalProperties": true },
+    "preconditions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "commit_guards": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "postconditions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "verification": { "enum": ["VERIFIABLE", "BEST_EFFORT", "UNVERIFIABLE"] },
+    "recovery": { "enum": ["REVERSIBLE", "COMPENSATABLE", "IRREVERSIBLE"] },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "lifecycle": {
+      "enum": ["DRAFT", "REVIEW", "REGISTERED", "DEPRECATED", "REVOKED", "RETIRED"]
+    },
+    "signing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "signer": { "type": "string" },
+        "manifest_digest": { "type": "string" },
+        "signature": { "type": "string" }
+      }
+    }
+  }
+}
