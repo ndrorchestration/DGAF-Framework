@@ -1,3 +1,5 @@
+import subprocess
+
 import pytest
 
 from dgaf_discovery.blindspots import (
@@ -7,12 +9,25 @@ from dgaf_discovery.blindspots import (
     unique_discovery_rate,
 )
 from dgaf_discovery.harness import DiscoveryEnvelope, validate_discovery_envelope
+from dgaf_discovery.historical_replay import (
+    HistoricalReplayResult,
+    validate_historical_replay_result,
+)
 from dgaf_discovery.interactions import ControlContract, analyze_pairwise
 from dgaf_discovery.mutations import critical_mutations
 from dgaf_discovery.state_coverage import (
     compute_transition_coverage,
     validate_positive_path_liveness,
 )
+
+
+def _git(repo, *args):
+    return subprocess.run(
+        ["git", "-C", str(repo), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
 
 
 def test_envelope_rejects_authorization_and_scientific_changes():
@@ -76,6 +91,75 @@ def test_positive_path_liveness_has_no_authorizing_or_scientific_effect():
     assert result.authoritative_effect == "NONE"
     assert result.scientific_state_effect == "NONE"
     assert result.scientific_n_increment == 0
+
+
+def test_historical_crlf_exact_byte_defect_is_detected_now(tmp_path):
+    from scripts.aoss_stage_a.preflight import PreflightError, _require_blob
+
+    repo = tmp_path / "crlf-replay"
+    repo.mkdir()
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "replay@example.invalid")
+    _git(repo, "config", "user.name", "DGAF Historical Replay")
+
+    fixture = repo / "fixture.txt"
+    fixture.write_bytes(b"line-one\nline-two\n")
+    _git(repo, "add", "fixture.txt")
+    _git(repo, "commit", "-m", "retain canonical LF bytes")
+    expected_blob = _git(repo, "rev-parse", "HEAD:fixture.txt")
+
+    fixture.write_bytes(b"line-one\r\nline-two\r\n")
+    assert _git(repo, "rev-parse", "HEAD:fixture.txt") == expected_blob
+    assert _git(repo, "hash-object", "--", "fixture.txt") != expected_blob
+
+    with pytest.raises(PreflightError) as caught:
+        _require_blob(repo, "HEAD", "fixture.txt", expected_blob)
+
+    assert caught.value.code == "WORKTREE_BLOB_MISMATCH"
+    result = HistoricalReplayResult(
+        case_id="HIST-CRLF-EXACT-BYTE-001",
+        historical_defect="LF index bytes rematerialized as CRLF worktree bytes",
+        detector="scripts.aoss_stage_a.preflight._require_blob",
+        expected_disposition="FAIL_CLOSED",
+        observed_disposition="FAIL_CLOSED",
+        observed_code=caught.value.code,
+        detected_now=True,
+    )
+    validate_historical_replay_result(result)
+    assert result.replay_pass is True
+    assert result.historical_prevention_claimed is False
+    assert result.scientific_n_increment == 0
+
+
+def test_historical_replay_rejects_counterfactual_prevention_claim():
+    result = HistoricalReplayResult(
+        case_id="HIST-CRLF-EXACT-BYTE-001",
+        historical_defect="CRLF exact-byte mismatch",
+        detector="scripts.aoss_stage_a.preflight._require_blob",
+        expected_disposition="FAIL_CLOSED",
+        observed_disposition="FAIL_CLOSED",
+        observed_code="WORKTREE_BLOB_MISMATCH",
+        detected_now=True,
+        historical_prevention_claimed=True,
+    )
+    with pytest.raises(ValueError, match="counterfactual"):
+        validate_historical_replay_result(result)
+
+
+def test_historical_replay_may_retain_an_escape_without_claim_inflation():
+    escaped = HistoricalReplayResult(
+        case_id="HIST-FUTURE-ESCAPE",
+        historical_defect="placeholder retained escaped defect",
+        detector="example.detector",
+        expected_disposition="FAIL_CLOSED",
+        observed_disposition="ESCAPED",
+        observed_code=None,
+        detected_now=False,
+    )
+    validate_historical_replay_result(escaped)
+    assert escaped.replay_pass is False
+    assert escaped.authoritative_effect == "NONE"
+    assert escaped.canonical_dgaf_efficacy == "NOT_ESTABLISHED"
 
 
 def test_control_interaction_detects_collisions():
