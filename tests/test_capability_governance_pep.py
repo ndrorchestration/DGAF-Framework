@@ -89,6 +89,21 @@ def test_g2_missing_effective_authority_blocks_before_dispatch():
     assert calls == []
 
 
+def test_g3_authorization_scope_does_not_transfer_to_adjacent_resource():
+    calls = []
+    wrong_scope = authority(
+        {"dgaf.local.materialize"},
+        {"dgaf.local.other-materialized-input"},
+    )
+    with pytest.raises(EnforcementRefusal, match="effective authority"):
+        governed_dispatch(
+            {"action": "materialize"},
+            base_context(delegation_authority=wrong_scope),
+            dispatcher=counting_dispatcher(calls),
+        )
+    assert calls == []
+
+
 def test_g4_self_approval_is_blocked():
     calls = []
     digest = "sha256:" + "a" * 64

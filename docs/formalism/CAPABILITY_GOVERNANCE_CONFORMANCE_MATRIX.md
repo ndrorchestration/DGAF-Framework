@@ -7,20 +7,20 @@
 |---|---|---|---|
 | G1 | No protected side effect without authorization | bounded PEP blocks protected dispatch without active authorization | TESTED-SLICE |
 | G2 | Authorization precedes execution | bounded PEP checks authority before dispatcher invocation | TESTED-SLICE |
-| G3 | Authorization is scoped | authorization schema | PARTIAL |
+| G3 | Authorization is scoped | bounded PEP rejects adjacent-resource scope substitution | TESTED-SLICE |
 | G4 | No self-approval of exceptions | bounded PEP rejects requester == approver | TESTED-SLICE |
-| G5 | Verification != authorization | transition spec | PARTIAL |
-| G6 | Authorization != execution | receipt schema | PARTIAL |
-| G7 | Material evidence preserves provenance | audit fields/design | PARTIAL |
+| G5 | Verification != authorization | executable verification/authorization separation tests | TESTED-SLICE |
+| G6 | Authorization != execution | execution-state + provider-receipt separation tests | TESTED-SLICE |
+| G7 | Material evidence preserves provenance | capability audit schema requires evidence/verifier linkage fields | TESTED-SLICE |
 | G8 | Failed required verifier blocks transition | bounded PEP blocks required verifier failure before dispatch | TESTED-SLICE |
 | G9 | Revocation blocks future use | executable authorization-status test | TESTED-SLICE |
-| G10 | Audit survives success/failure | receipt/reconciliation schemas | PARTIAL |
+| G10 | Audit survives success/failure | capability audit schema accepts explicit failed execution records | TESTED-SLICE |
 | G11 | Delegation cannot widen authority | executable capability/resource/budget attenuation tests | TESTED-SLICE |
 | G12 | Approval is action-digest-bound | canonicalization + substitution + replay-consumption tests | TESTED-SLICE |
 | G13 | Commit-time volatile predicates revalidated | executable missing/changed state-guard tests | TESTED-SLICE |
 | G14 | Authorization not automatically compositional | workflow composition + sensitive-egress tests | TESTED-SLICE |
 | G15 | Postcondition failure does not erase execution | partial/postcondition recovery-state tests | TESTED-SLICE |
-| G16 | Weaker evidence cannot increase authority | transition spec | OPEN |
+| G16 | Weaker evidence cannot increase authority | executable evidence-strength monotonicity tests | TESTED-SLICE |
 ## Existing executable evidence
 
 `tests/test_capability_governance_contracts.py` currently verifies:

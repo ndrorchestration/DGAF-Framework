@@ -81,6 +81,17 @@ def composed_workflow_permitted(
     )
 
 
+def execution_established(
+    *,
+    execution_state: ExecutionState,
+    provider_receipt_present: bool,
+) -> bool:
+    return (
+        execution_state == ExecutionState.EXECUTED
+        and provider_receipt_present
+    )
+
+
 def classify_outcome(
     *,
     completed_steps: int,

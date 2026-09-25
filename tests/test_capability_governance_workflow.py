@@ -7,6 +7,7 @@ from scripts.dgaf_capability_workflow import (
     WorkflowStep,
     classify_outcome,
     composed_workflow_permitted,
+    execution_established,
 )
 
 
@@ -88,6 +89,27 @@ def test_g14_approved_destination_allows_governed_egress():
         composition_authorized=True,
         protected_labels=frozenset({"confidential"}),
         allowed_destinations=frozenset({"approved-secure-channel"}),
+    ) is True
+
+
+def test_g6_authorization_state_alone_does_not_establish_execution():
+    assert execution_established(
+        execution_state=ExecutionState.NEW,
+        provider_receipt_present=False,
+    ) is False
+
+
+def test_g6_executed_without_provider_receipt_is_not_established():
+    assert execution_established(
+        execution_state=ExecutionState.EXECUTED,
+        provider_receipt_present=False,
+    ) is False
+
+
+def test_g6_execution_requires_executed_state_and_provider_receipt():
+    assert execution_established(
+        execution_state=ExecutionState.EXECUTED,
+        provider_receipt_present=True,
     ) is True
 
 
