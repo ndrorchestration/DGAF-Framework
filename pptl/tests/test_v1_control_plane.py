@@ -4,10 +4,12 @@ from types import SimpleNamespace
 
 import pytest
 
+from dgaf_discovery.state_coverage import validate_positive_path_liveness
 from pptl.branch_registry import BranchRecord, BranchRegistry
 from pptl.budget_ledger import BudgetExceeded, BudgetLedger, Consumption
 from pptl.commit_gate import CommitDenied, CommitGate, CommitRequest
 from pptl.control_plane import (
+    _ALLOWED,
     ControlPlane,
     ControlPlaneViolation,
     ControlTask,
@@ -487,3 +489,110 @@ def test_create_child_duplicate_id_does_not_pollute_state_registry():
 
 def root_lineage(task: ControlTask) -> str:
     return task.lineage_id or task.envelope.trace_id
+
+
+def _observe_state_change(task: ControlTask, action) -> tuple[str, str]:
+    before = task.state.value
+    action()
+    after = task.state.value
+    assert before != after
+    return before, after
+
+
+def _public_control_plane_transition_edges() -> set[tuple[str, str]]:
+    observed: set[tuple[str, str]] = set()
+
+    def fresh(*, side_effect_mode: str = "PROPOSE_ONLY", with_tgl: bool = False):
+        runner = (lambda _input, _context: tgl_result("PASS")) if with_tgl else None
+        plane = ControlPlane(tgl_runner=runner)
+        task = ControlTask("root", envelope(side_effect_mode=side_effect_mode))
+        observed.add(_observe_state_change(task, lambda: plane.submit(task)))
+        return plane, task
+
+    def admitted(*, side_effect_mode: str = "PROPOSE_ONLY", with_tgl: bool = False):
+        plane, task = fresh(side_effect_mode=side_effect_mode, with_tgl=with_tgl)
+        observed.add(_observe_state_change(task, lambda: plane.admit("root")))
+        return plane, task
+
+    def expanding():
+        plane, task = admitted()
+        observed.add(_observe_state_change(task, lambda: plane.start_expansion("root")))
+        return plane, task
+
+    def evaluating(*, side_effect_mode: str = "PROPOSE_ONLY", with_tgl: bool = False):
+        plane, task = admitted(side_effect_mode=side_effect_mode, with_tgl=with_tgl)
+        observed.add(_observe_state_change(task, lambda: plane.begin_evaluation("root")))
+        return plane, task
+
+    def merge_ready(*, side_effect_mode: str = "PROPOSE_ONLY"):
+        plane, task = evaluating(side_effect_mode=side_effect_mode, with_tgl=True)
+        plane.evaluate_turn("root", "liveness")
+        observed.add(_observe_state_change(task, lambda: plane.mark_merge_ready("root")))
+        return plane, task
+
+    plane, task = fresh()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = fresh()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    plane, task = admitted()
+    observed.add(_observe_state_change(task, lambda: plane.start_expansion("root")))
+    plane, task = admitted()
+    observed.add(_observe_state_change(task, lambda: plane.begin_evaluation("root")))
+    plane, task = admitted()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = admitted()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    plane, task = expanding()
+    observed.add(_observe_state_change(task, lambda: plane.begin_evaluation("root")))
+    plane, task = expanding()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = expanding()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    plane, task = evaluating()
+    observed.add(_observe_state_change(task, lambda: plane.start_expansion("root")))
+    plane, task = merge_ready()
+    plane, task = evaluating()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = evaluating()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    plane, task = merge_ready(side_effect_mode="COMMIT_ALLOWED")
+    observed.add(_observe_state_change(task, lambda: plane.mark_commit_ready("root")))
+    plane, task = merge_ready()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = merge_ready()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    plane, task = merge_ready(side_effect_mode="COMMIT_ALLOWED")
+    observed.add(_observe_state_change(task, lambda: plane.mark_commit_ready("root")))
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+    plane, task = merge_ready(side_effect_mode="COMMIT_ALLOWED")
+    observed.add(_observe_state_change(task, lambda: plane.mark_commit_ready("root")))
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+
+    plane, task = fresh()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    return observed
+
+
+def test_declared_control_plane_liveness_exposes_received_termination_gap():
+    declared = {(source.value, target.value) for source, targets in _ALLOWED.items() for target in targets}
+    observed = _public_control_plane_transition_edges()
+
+    assert len(declared) == 22
+    assert observed <= declared
+    assert declared - observed == {("RECEIVED", "TERMINATED")}
+
+    plane = ControlPlane()
+    task = ControlTask("root", envelope())
+    with pytest.raises(KeyError):
+        plane.terminate("root")
+    assert task.state is TaskState.RECEIVED
+
+    with pytest.raises(ValueError, match="RECEIVED->TERMINATED"):
+        validate_positive_path_liveness(declared, observed)
