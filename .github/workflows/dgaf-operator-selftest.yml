@@ -36,15 +36,6 @@ jobs:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
 
-      - name: Prove historical CRLF precondition
-        shell: pwsh
-        run: |
-          $eol = git ls-files --eol -- registry/aoss_v0_6_acp_measurement_manifest_v1.json
-          Write-Host $eol
-          if ($eol -notmatch "i/lf\s+w/crlf") {
-            throw "Historical replay precondition not realized: expected LF index with CRLF worktree."
-          }
-
       - name: Set up Python 3.12
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
@@ -104,6 +95,15 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Prove historical CRLF precondition
+        shell: pwsh
+        run: |
+          $eol = git ls-files --eol -- registry/aoss_v0_6_acp_measurement_manifest_v1.json
+          Write-Host $eol
+          if ($eol -notmatch "i/lf\s+w/crlf") {
+            throw "Historical replay precondition not realized: expected LF index with CRLF worktree."
+          }
 
       - name: Set up Python 3.12
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
