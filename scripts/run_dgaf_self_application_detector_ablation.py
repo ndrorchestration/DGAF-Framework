@@ -12,7 +12,9 @@ import json
 import tempfile
 from pathlib import Path
 from typing import Any
+import sys
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run_dgaf_self_application_mutations as mutation
 
 ROOT = Path(__file__).resolve().parents[1]
