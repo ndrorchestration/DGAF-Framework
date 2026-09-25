@@ -1,7 +1,6 @@
 from dataclasses import asdict, dataclass
 from typing import Any
 
-
 EVIDENCE_CLASS = "INTERNAL_SELF_APPLICATION_ENGINEERING_VALIDATION"
 
 
