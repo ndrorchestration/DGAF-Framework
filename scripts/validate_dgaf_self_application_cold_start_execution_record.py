@@ -104,9 +104,9 @@ def validate_record(record: dict[str, Any], manifest_path: Path = DEFAULT_MANIFE
         "runtime_authorization_effect": "NONE",
         "scientific_state_effect": "NONE",
     }
-    for key, expected in expected_constants.items():
-        if record.get(key) != expected:
-            errors.append(f"{key} must be {expected!r}")
+    for key, expected_constant in expected_constants.items():
+        if record.get(key) != expected_constant:
+            errors.append(f"{key} must be {expected_constant!r}")
 
     if record.get("claim_ceiling") != CLAIM_CEILING:
         errors.append("claim_ceiling must preserve the non-promoting #1022 boundary")
@@ -159,15 +159,15 @@ def validate_record(record: dict[str, Any], manifest_path: Path = DEFAULT_MANIFE
             errors.append(f"per_step_results[{index - 1}] must be an object")
             continue
         result = per_step_results[index - 1]
-        expected_values = {
+        expected_values: dict[str, object] = {
             "step_index": index,
             "measure_id": expected_measure["id"],
             "question": expected_measure["question"],
             "failure_record": expected_measure["failure_record"],
             "metric": expected_measure["metric"],
         }
-        for key, expected in expected_values.items():
-            if result.get(key) != expected:
+        for key, expected_value in expected_values.items():
+            if result.get(key) != expected_value:
                 errors.append(f"per_step_results[{index - 1}].{key} must match manifest")
 
         status = result.get("status")
