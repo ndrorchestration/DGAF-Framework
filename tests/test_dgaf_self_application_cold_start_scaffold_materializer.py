@@ -75,9 +75,7 @@ def test_materializer_cli_writes_same_bounded_bundle(tmp_path: Path, monkeypatch
 
     assert materializer.main() == 0
 
-    summary = json.loads(
-        (output_dir / "cold_start_scaffold_materialization_summary.json").read_text(encoding="utf-8")
-    )
+    summary = json.loads((output_dir / "cold_start_scaffold_materialization_summary.json").read_text(encoding="utf-8"))
     record = json.loads((output_dir / "cold_start_execution_record.json").read_text(encoding="utf-8"))
     validation = json.loads(
         (output_dir / "cold_start_execution_record_validation_result.json").read_text(encoding="utf-8")
