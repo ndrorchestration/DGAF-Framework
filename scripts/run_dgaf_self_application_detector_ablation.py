@@ -89,7 +89,11 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=ROOT / "ci-artifacts" / "dgaf-self-application-detector-ablation.json")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=ROOT / "ci-artifacts" / "dgaf-self-application-detector-ablation.json",
+    )
     args = parser.parse_args()
 
     registry = json.loads(mutation.DEFAULT_REGISTRY.read_text(encoding="utf-8"))
