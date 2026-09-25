@@ -581,11 +581,7 @@ def _public_control_plane_transition_edges() -> set[tuple[str, str]]:
 
 
 def test_declared_control_plane_liveness_exposes_received_termination_gap():
-    declared = {
-        (source.value, target.value)
-        for source, targets in _ALLOWED.items()
-        for target in targets
-    }
+    declared = {(source.value, target.value) for source, targets in _ALLOWED.items() for target in targets}
     observed = _public_control_plane_transition_edges()
 
     assert len(declared) == 22
