@@ -1,0 +1,67 @@
+name: DGAF Self-Application Detector Ablation
+
+on:
+  pull_request:
+    paths:
+      - 'registry/dgaf_self_application_mutations_v1.json'
+      - 'scripts/run_dgaf_self_application_mutations.py'
+      - 'scripts/run_dgaf_self_application_detector_ablation.py'
+      - 'tests/test_dgaf_self_application_detector_ablation.py'
+      - '.github/workflows/dgaf-self-application-detector-ablation.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  detector-ablation:
+    name: Bounded detector ablation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Prove exact source identity
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Run detector ablation
+        run: python scripts/run_dgaf_self_application_detector_ablation.py
+
+      - name: Verify non-promotion ceiling
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('ci-artifacts/dgaf-self-application-detector-ablation.json').read_text())
+          assert data['program_lane']=='DETECTOR_ABLATION_V1'
+          assert data['ablation_scope']=='HARNESS_LEVEL_ONE_DETECTOR_AT_A_TIME'
+          assert data['summary']['baseline_detected']==data['summary']['total_mutations']
+          assert data['claim_ceiling']['scientific_n_increment']==0
+          assert data['scientific_state_effect']=='NONE'
+          assert data['independent_review_effect']=='NONE'
+          print('DGAF_DETECTOR_ABLATION_EVIDENCE_PASS')
+          PY
+
+      - name: Upload retained ablation evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dgaf-self-application-detector-ablation-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: error
+          path: |
+            ci-artifacts/dgaf-self-application-detector-ablation.json
+            ci-artifacts/dgaf-self-application-detector-ablation.json.sha256
