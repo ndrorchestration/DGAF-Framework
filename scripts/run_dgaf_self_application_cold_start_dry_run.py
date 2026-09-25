@@ -81,6 +81,11 @@ def build_dry_run_record(manifest_path: Path = DEFAULT_MANIFEST) -> dict[str, An
         "external_review_controller": manifest["external_review_controller"],
     }
 
+    interpretation = (
+        "Internal dry-run contract record only. It retains the measurement scaffold but does not execute "
+        "cold-start reproduction or establish independence."
+    )
+
     return {
         "schema_version": "dgaf.self_application.cold_start_dry_run_result.v1",
         "generated_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -99,7 +104,7 @@ def build_dry_run_record(manifest_path: Path = DEFAULT_MANIFEST) -> dict[str, An
         "per_step_results": per_step_results,
         "summary": summary,
         "executed_cold_start_reproduction": False,
-        "interpretation": "Internal dry-run contract record only. It retains the measurement scaffold but does not execute cold-start reproduction or establish independence.",
+        "interpretation": interpretation,
     }
 
 
