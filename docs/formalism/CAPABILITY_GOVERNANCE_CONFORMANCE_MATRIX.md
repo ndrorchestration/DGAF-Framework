@@ -42,7 +42,7 @@ These tests establish only the tested structural properties.
 The original first-order invariant slices above are now represented by bounded local tests. Highest-priority additions now move beyond those initial slices:
 
 1. persistent/concurrent idempotency under process restart and competing workers;
-2. formal finite-state/model-checking traces for composed authorization and recovery;
+2. extend the implemented finite-state guarded transaction model into exhaustive small-state/model-checking traces for composition, recovery, and concurrency;
 3. adversarial adapter/runtime substitution and manifest/runtime identity mismatch;
 4. capability discovery versus invocation/delegation visibility enforcement;
 5. credential-broker trust-root, audience, and proof-of-possession profiles;
@@ -58,7 +58,7 @@ The original first-order invariant slices above are now represented by bounded l
 
 `tests/test_capability_reference_transaction.py` now exercises the composed control path across canonical action binding, PEP admission/refusal, dispatcher invocation, execution receipts, postconditions, reconciliation state, and capability audit events. The safe real-bridge integration uses only the read-only `status` action; protected-side-effect paths use injected synthetic dispatch and do not execute operator materialization.
 
-At replay/idempotency implementation checkpoint `93f85f971c95`, the relevant local compatibility slice is **100/100 PASS**.
+At the current state-machine checkpoint, the relevant local compatibility slice is **124/124 PASS**. `tests/test_capability_state_machine.py` adds a bounded finite-state trace model for legal and illegal authorization, commit, execution, postcondition, recovery, uncertainty, and closure paths.
 
 `tests/test_capability_transport_independence.py` additionally validates a second non-MCP mock HTTP/OpenAPI-style path: the alternate manifest conforms to the same capability schema, governed fields for `dgaf.local.status` remain identical across MCP and REST-style adapters, the safe real bridge returns the same bounded status semantics, and unadmitted HTTP routes/extra request fields fail closed.
 

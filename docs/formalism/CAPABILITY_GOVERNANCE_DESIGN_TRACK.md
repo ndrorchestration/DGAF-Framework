@@ -270,7 +270,7 @@ A Telescopic Lens PASS is structural evidence only and must not be represented a
 
 ### Validate next
 
-- finite-state/model-checking slice;
+- extend the implemented finite-state transaction model toward small-state exhaustive/model-checking analysis;
 - persistent/concurrent idempotency semantics beyond the in-memory reference ledger;
 - credential-broker trust-root and token-boundary profile;
 - postcondition verification classes beyond the bounded mock/local paths;
