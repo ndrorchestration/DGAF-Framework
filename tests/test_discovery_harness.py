@@ -19,6 +19,9 @@ from dgaf_discovery.state_coverage import (
     compute_transition_coverage,
     validate_positive_path_liveness,
 )
+from pptl.control_plane import _ALLOWED, ControlPlane, ControlTask
+from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
+from pptl.triadic_governance_loop import TurnAuditRecord, TurnStatus
 
 
 def _git(repo, *args):
