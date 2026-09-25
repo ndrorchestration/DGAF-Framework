@@ -51,7 +51,10 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def materialize_scaffold(output_dir: Path = DEFAULT_OUTPUT_DIR, manifest_path: Path = DEFAULT_MANIFEST) -> dict[str, Any]:
+def materialize_scaffold(
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
+    manifest_path: Path = DEFAULT_MANIFEST,
+) -> dict[str, Any]:
     builder = _load_module("cold_start_execution_record_builder", BUILDER_SCRIPT)
     validator = _load_module("cold_start_execution_record_validator", VALIDATOR_SCRIPT)
 
