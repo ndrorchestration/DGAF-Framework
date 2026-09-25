@@ -191,3 +191,161 @@ def test_blind_spot_metrics_measure_method_diversity_and_shared_misses():
     assert method_overlap(records, "mutation", "formal") == 1 / 3
     shared = unexplained_shared_misses(records)
     assert shared[frozenset({"formal", "chaos"})] == ("F1",)
+
+
+def _control_budget():
+    return ResourceBudget(
+        max_input_tokens=100,
+        max_output_tokens=100,
+        max_tool_calls=4,
+        max_elapsed_ms=1000,
+        max_rounds=4,
+        max_nodes=8,
+        max_depth=2,
+        max_concurrency=2,
+    )
+
+
+def _control_envelope(*, side_effect_mode="PROPOSE_ONLY"):
+    return GovernanceEnvelope(
+        trace_id="liveness-trace",
+        task_id="root",
+        authority_scope={"research"},
+        permitted_tools={"read"},
+        data_classes={"public"},
+        prohibited_actions={"delete"},
+        budget=_control_budget(),
+        side_effect_mode=side_effect_mode,
+    )
+
+
+def _sealed_pass_result():
+    audit = TurnAuditRecord(
+        session_id="liveness-test",
+        turn_index=1,
+        agent_id="test-agent",
+        input_hash="a" * 64,
+        gate_records=[],
+        final_status=TurnStatus("PASS"),
+        timestamp="2026-09-25T00:00:00+00:00",
+    )
+    audit.seal()
+    return audit
+
+
+def _observe_state_change(task, action):
+    before = task.state.value
+    action()
+    after = task.state.value
+    assert before != after
+    return before, after
+
+
+def _public_control_plane_transition_edges():
+    observed = set()
+
+    def fresh(*, side_effect_mode="PROPOSE_ONLY", with_tgl=False):
+        runner = (lambda _input, _context: _sealed_pass_result()) if with_tgl else None
+        plane = ControlPlane(tgl_runner=runner)
+        task = ControlTask("root", _control_envelope(side_effect_mode=side_effect_mode))
+        observed.add(_observe_state_change(task, lambda: plane.submit(task)))
+        return plane, task
+
+    def admitted(*, side_effect_mode="PROPOSE_ONLY", with_tgl=False):
+        plane, task = fresh(side_effect_mode=side_effect_mode, with_tgl=with_tgl)
+        observed.add(_observe_state_change(task, lambda: plane.admit("root")))
+        return plane, task
+
+    def expanding():
+        plane, task = admitted()
+        observed.add(_observe_state_change(task, lambda: plane.start_expansion("root")))
+        return plane, task
+
+    def evaluating(*, side_effect_mode="PROPOSE_ONLY", with_tgl=False):
+        plane, task = admitted(side_effect_mode=side_effect_mode, with_tgl=with_tgl)
+        observed.add(_observe_state_change(task, lambda: plane.begin_evaluation("root")))
+        return plane, task
+
+    def merge_ready(*, side_effect_mode="PROPOSE_ONLY"):
+        plane, task = evaluating(side_effect_mode=side_effect_mode, with_tgl=True)
+        plane.evaluate_turn("root", "liveness")
+        observed.add(_observe_state_change(task, lambda: plane.mark_merge_ready("root")))
+        return plane, task
+
+    # PREFLIGHT exits.
+    plane, task = fresh()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = fresh()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    # ADMITTED exits.
+    plane, task = admitted()
+    observed.add(_observe_state_change(task, lambda: plane.start_expansion("root")))
+    plane, task = admitted()
+    observed.add(_observe_state_change(task, lambda: plane.begin_evaluation("root")))
+    plane, task = admitted()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = admitted()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    # EXPANDING exits.
+    plane, task = expanding()
+    observed.add(_observe_state_change(task, lambda: plane.begin_evaluation("root")))
+    plane, task = expanding()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = expanding()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    # EVALUATING exits.
+    plane, task = evaluating()
+    observed.add(_observe_state_change(task, lambda: plane.start_expansion("root")))
+    plane, task = merge_ready()
+    plane, task = evaluating()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = evaluating()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    # MERGE_READY exits.
+    plane, task = merge_ready(side_effect_mode="COMMIT_ALLOWED")
+    observed.add(_observe_state_change(task, lambda: plane.mark_commit_ready("root")))
+    plane, task = merge_ready()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    plane, task = merge_ready()
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    # COMMIT_READY exits.
+    plane, task = merge_ready(side_effect_mode="COMMIT_ALLOWED")
+    observed.add(_observe_state_change(task, lambda: plane.mark_commit_ready("root")))
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+    plane, task = merge_ready(side_effect_mode="COMMIT_ALLOWED")
+    observed.add(_observe_state_change(task, lambda: plane.mark_commit_ready("root")))
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+
+    # ESCALATED exit.
+    plane, task = fresh()
+    observed.add(_observe_state_change(task, lambda: plane.veto("root", "liveness")))
+    observed.add(_observe_state_change(task, lambda: plane.terminate("root")))
+
+    return observed
+
+
+def test_control_plane_declared_liveness_exposes_received_termination_gap():
+    declared = {
+        (source.value, target.value)
+        for source, targets in _ALLOWED.items()
+        for target in targets
+    }
+    observed = _public_control_plane_transition_edges()
+
+    assert len(declared) == 22
+    assert observed <= declared
+    assert declared - observed == {("RECEIVED", "TERMINATED")}
+
+    plane = ControlPlane()
+    task = ControlTask("root", _control_envelope())
+    with pytest.raises(KeyError):
+        plane.terminate("root")
+    assert task.state.value == "RECEIVED"
+
+    with pytest.raises(ValueError, match="RECEIVED->TERMINATED"):
+        validate_positive_path_liveness(declared, observed)
