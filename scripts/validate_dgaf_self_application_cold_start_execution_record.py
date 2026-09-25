@@ -200,10 +200,7 @@ def validate_record(record: dict[str, Any], manifest_path: Path = DEFAULT_MANIFE
     executed = record.get("executed_cold_start_reproduction")
     if not isinstance(executed, bool):
         errors.append("executed_cold_start_reproduction must be boolean")
-    any_executed = any(
-        isinstance(result, dict) and result.get("status") in {"PASS", "FAIL", "BLOCKED"}
-        for result in per_step_results
-    )
+    any_executed = any(isinstance(result, dict) and result.get("status") in {"PASS", "FAIL", "BLOCKED"} for result in per_step_results)
     if executed is True and not any_executed:
         errors.append("executed_cold_start_reproduction=true requires at least one executed step")
     if executed is False and any_executed:
