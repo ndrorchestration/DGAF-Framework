@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from scripts.dgaf_capability_idempotency import InMemoryIdempotencyLedger
 from scripts.dgaf_capability_model_check import (
     all_paths_include,
     composition_findings,
@@ -11,14 +12,13 @@ from scripts.dgaf_capability_model_check import (
     simple_paths,
     small_state_findings,
 )
-from scripts.dgaf_capability_idempotency import InMemoryIdempotencyLedger
+from scripts.dgaf_capability_state_machine import (
+    _ALLOWED,
+    TransactionState,
+)
 from scripts.dgaf_capability_workflow import (
     ExecutionState,
     WorkflowOutcome,
-)
-from scripts.dgaf_capability_state_machine import (
-    TransactionState,
-    _ALLOWED,
 )
 
 
@@ -48,9 +48,8 @@ def test_exhaustive_guard_products_match_reference_predicates():
 
 def test_model_checker_detects_authorized_to_executing_shortcut():
     mutated = dict(_ALLOWED)
-    mutated[TransactionState.AUTHORIZED] = (
-        mutated[TransactionState.AUTHORIZED]
-        | frozenset({TransactionState.EXECUTING})
+    mutated[TransactionState.AUTHORIZED] = mutated[TransactionState.AUTHORIZED] | frozenset(
+        {TransactionState.EXECUTING}
     )
     findings = graph_safety_findings(graph=mutated)
     assert any(f.invariant in {"G1_G2_G13", "G13"} for f in findings)
@@ -58,19 +57,17 @@ def test_model_checker_detects_authorized_to_executing_shortcut():
 
 def test_model_checker_detects_unknown_outcome_retry_edge():
     mutated = dict(_ALLOWED)
-    mutated[TransactionState.EXECUTION_OUTCOME_UNKNOWN] = (
-        mutated[TransactionState.EXECUTION_OUTCOME_UNKNOWN]
-        | frozenset({TransactionState.EXECUTING})
-    )
+    mutated[TransactionState.EXECUTION_OUTCOME_UNKNOWN] = mutated[
+        TransactionState.EXECUTION_OUTCOME_UNKNOWN
+    ] | frozenset({TransactionState.EXECUTING})
     findings = graph_safety_findings(graph=mutated)
     assert any(f.invariant == "REPLAY_UNKNOWN" for f in findings)
 
 
 def test_model_checker_detects_postcondition_fail_direct_close():
     mutated = dict(_ALLOWED)
-    mutated[TransactionState.POSTCONDITION_FAILED] = (
-        mutated[TransactionState.POSTCONDITION_FAILED]
-        | frozenset({TransactionState.CLOSED})
+    mutated[TransactionState.POSTCONDITION_FAILED] = mutated[TransactionState.POSTCONDITION_FAILED] | frozenset(
+        {TransactionState.CLOSED}
     )
     findings = graph_safety_findings(graph=mutated)
     assert any(f.invariant == "G15" for f in findings)

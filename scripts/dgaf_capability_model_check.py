@@ -4,19 +4,19 @@ from dataclasses import dataclass
 from itertools import product
 from typing import Mapping
 
-from scripts.dgaf_capability_state_machine import (
-    TransactionSnapshot,
-    TransactionState,
-    TransitionFacts,
-    TransitionRefusal,
-    _ALLOWED,
-    transition,
-)
 from scripts.dgaf_capability_idempotency import (
     IdempotencyConflict,
     IdempotencyInFlight,
     IdempotencyOutcomeUnknown,
     InMemoryIdempotencyLedger,
+)
+from scripts.dgaf_capability_state_machine import (
+    _ALLOWED,
+    TransactionSnapshot,
+    TransactionState,
+    TransitionFacts,
+    TransitionRefusal,
+    transition,
 )
 from scripts.dgaf_capability_workflow import (
     ExecutionState,
@@ -45,9 +45,7 @@ def simple_paths(
     graph: Graph = _ALLOWED,
 ) -> tuple[tuple[TransactionState, ...], ...]:
     found: list[tuple[TransactionState, ...]] = []
-    stack: list[tuple[TransactionState, tuple[TransactionState, ...]]] = [
-        (start, (start,))
-    ]
+    stack: list[tuple[TransactionState, tuple[TransactionState, ...]]] = [(start, (start,))]
     while stack:
         node, path = stack.pop()
         if node == target:
@@ -95,9 +93,7 @@ def graph_safety_findings(*, graph: Graph = _ALLOWED) -> tuple[ModelFinding, ...
         (TransactionState.EXECUTING,),
         graph=graph,
     ):
-        findings.append(
-            ModelFinding("G6", "an executed path bypasses the executing state")
-        )
+        findings.append(ModelFinding("G6", "an executed path bypasses the executing state"))
 
     unknown_targets = graph.get(
         TransactionState.EXECUTION_OUTCOME_UNKNOWN,
@@ -123,40 +119,51 @@ def graph_safety_findings(*, graph: Graph = _ALLOWED) -> tuple[ModelFinding, ...
             )
 
     if TransactionState.EXECUTING in graph.get(TransactionState.AUTHORIZED, frozenset()):
-        findings.append(
-            ModelFinding("G13", "AUTHORIZED can execute without commit revalidation")
-        )
+        findings.append(ModelFinding("G13", "AUTHORIZED can execute without commit revalidation"))
 
     return tuple(findings)
 
 
-def _facts(**changes: bool) -> TransitionFacts:
-    base = dict(
+def _facts(
+    *,
+    required_verification_passed: bool = True,
+    approval_present: bool = True,
+    requester_approver_separated: bool = True,
+    authorization_active: bool = True,
+    authorization_scoped: bool = True,
+    delegation_non_widening: bool = True,
+    action_digest_matches: bool = True,
+    commit_guards_passed: bool = True,
+    authorization_consumed: bool = False,
+    idempotency_safe: bool = True,
+    execution_receipt_present: bool = True,
+    execution_outcome_unknown: bool = False,
+    audit_recorded: bool = True,
+) -> TransitionFacts:
+    return TransitionFacts(
         action_canonicalized=True,
         evidence_complete=True,
-        required_verification_passed=True,
+        required_verification_passed=required_verification_passed,
         verification_inconclusive=False,
         approval_required=True,
-        approval_present=True,
-        requester_approver_separated=True,
-        authorization_active=True,
-        authorization_scoped=True,
-        delegation_non_widening=True,
-        action_digest_matches=True,
-        commit_guards_passed=True,
-        authorization_consumed=False,
-        idempotency_safe=True,
-        execution_receipt_present=True,
-        execution_outcome_unknown=False,
+        approval_present=approval_present,
+        requester_approver_separated=requester_approver_separated,
+        authorization_active=authorization_active,
+        authorization_scoped=authorization_scoped,
+        delegation_non_widening=delegation_non_widening,
+        action_digest_matches=action_digest_matches,
+        commit_guards_passed=commit_guards_passed,
+        authorization_consumed=authorization_consumed,
+        idempotency_safe=idempotency_safe,
+        execution_receipt_present=execution_receipt_present,
+        execution_outcome_unknown=execution_outcome_unknown,
         postcondition_verified=True,
         postcondition_failed=False,
         postcondition_inconclusive=False,
         recovery_required=False,
         recovery_mode=None,
-        audit_recorded=True,
+        audit_recorded=audit_recorded,
     )
-    base.update(changes)
-    return TransitionFacts(**base)
 
 
 def _permitted(source: TransactionState, target: TransactionState, facts: TransitionFacts) -> bool:
@@ -445,16 +452,8 @@ def idempotency_interleaving_findings(
 
 
 def small_state_findings() -> tuple[ModelFinding, ...]:
-    return (
-        composition_findings()
-        + recovery_findings()
-        + idempotency_interleaving_findings()
-    )
+    return composition_findings() + recovery_findings() + idempotency_interleaving_findings()
 
 
 def model_check() -> tuple[ModelFinding, ...]:
-    return (
-        graph_safety_findings()
-        + exhaustive_guard_findings()
-        + small_state_findings()
-    )
+    return graph_safety_findings() + exhaustive_guard_findings() + small_state_findings()

@@ -82,41 +82,51 @@ _ALLOWED: dict[TransactionState, frozenset[TransactionState]] = {
     TransactionState.PROPOSED: frozenset({TransactionState.CANONICALIZED, TransactionState.REJECTED}),
     TransactionState.CANONICALIZED: frozenset({TransactionState.EVIDENCE_GATHERING, TransactionState.REJECTED}),
     TransactionState.EVIDENCE_GATHERING: frozenset({TransactionState.VERIFICATION_PENDING, TransactionState.REJECTED}),
-    TransactionState.VERIFICATION_PENDING: frozenset({
-        TransactionState.VERIFIED,
-        TransactionState.INCONCLUSIVE,
-        TransactionState.REJECTED,
-    }),
+    TransactionState.VERIFICATION_PENDING: frozenset(
+        {
+            TransactionState.VERIFIED,
+            TransactionState.INCONCLUSIVE,
+            TransactionState.REJECTED,
+        }
+    ),
     TransactionState.VERIFIED: frozenset({TransactionState.APPROVAL_PENDING, TransactionState.AUTHORIZED}),
     TransactionState.INCONCLUSIVE: frozenset({TransactionState.ESCALATED, TransactionState.REJECTED}),
     TransactionState.APPROVAL_PENDING: frozenset({TransactionState.AUTHORIZED, TransactionState.REJECTED}),
     TransactionState.AUTHORIZED: frozenset({TransactionState.PREPARED, TransactionState.REJECTED}),
     TransactionState.PREPARED: frozenset({TransactionState.COMMIT_REVALIDATION, TransactionState.REJECTED}),
-    TransactionState.COMMIT_REVALIDATION: frozenset({
-        TransactionState.COMMIT_REVALIDATED,
-        TransactionState.REJECTED,
-    }),
+    TransactionState.COMMIT_REVALIDATION: frozenset(
+        {
+            TransactionState.COMMIT_REVALIDATED,
+            TransactionState.REJECTED,
+        }
+    ),
     TransactionState.COMMIT_REVALIDATED: frozenset({TransactionState.EXECUTING, TransactionState.REJECTED}),
-    TransactionState.EXECUTING: frozenset({
-        TransactionState.EXECUTED,
-        TransactionState.EXECUTION_OUTCOME_UNKNOWN,
-        TransactionState.FAILED,
-    }),
+    TransactionState.EXECUTING: frozenset(
+        {
+            TransactionState.EXECUTED,
+            TransactionState.EXECUTION_OUTCOME_UNKNOWN,
+            TransactionState.FAILED,
+        }
+    ),
     TransactionState.EXECUTED: frozenset({TransactionState.POSTCONDITION_PENDING, TransactionState.CONTAINMENT}),
     TransactionState.EXECUTION_OUTCOME_UNKNOWN: frozenset({TransactionState.CONTAINMENT, TransactionState.ESCALATED}),
-    TransactionState.POSTCONDITION_PENDING: frozenset({
-        TransactionState.VERIFIED_POSTCONDITION,
-        TransactionState.POSTCONDITION_FAILED,
-        TransactionState.POSTCONDITION_INCONCLUSIVE,
-    }),
+    TransactionState.POSTCONDITION_PENDING: frozenset(
+        {
+            TransactionState.VERIFIED_POSTCONDITION,
+            TransactionState.POSTCONDITION_FAILED,
+            TransactionState.POSTCONDITION_INCONCLUSIVE,
+        }
+    ),
     TransactionState.VERIFIED_POSTCONDITION: frozenset({TransactionState.CLOSED}),
     TransactionState.POSTCONDITION_FAILED: frozenset({TransactionState.CONTAINMENT, TransactionState.ESCALATED}),
     TransactionState.POSTCONDITION_INCONCLUSIVE: frozenset({TransactionState.CONTAINMENT, TransactionState.ESCALATED}),
-    TransactionState.CONTAINMENT: frozenset({
-        TransactionState.ROLLBACK_PENDING,
-        TransactionState.COMPENSATION_PENDING,
-        TransactionState.ESCALATED,
-    }),
+    TransactionState.CONTAINMENT: frozenset(
+        {
+            TransactionState.ROLLBACK_PENDING,
+            TransactionState.COMPENSATION_PENDING,
+            TransactionState.ESCALATED,
+        }
+    ),
     TransactionState.ROLLBACK_PENDING: frozenset({TransactionState.ROLLED_BACK, TransactionState.RECOVERY_FAILED}),
     TransactionState.COMPENSATION_PENDING: frozenset({TransactionState.COMPENSATED, TransactionState.RECOVERY_FAILED}),
     TransactionState.ROLLED_BACK: frozenset({TransactionState.CLOSED}),
@@ -190,11 +200,16 @@ def validate_transition(snapshot: TransactionSnapshot, target: TransactionState)
         _require(facts.recovery_required, "recovery is not required")
         _require(facts.recovery_mode == "COMPENSATE", "compensation is not the selected recovery mode")
     elif target == TransactionState.CLOSED:
-        _require(source in _TERMINAL or source in {
-            TransactionState.VERIFIED_POSTCONDITION,
-            TransactionState.ROLLED_BACK,
-            TransactionState.COMPENSATED,
-        }, "closure source is not terminal")
+        _require(
+            source in _TERMINAL
+            or source
+            in {
+                TransactionState.VERIFIED_POSTCONDITION,
+                TransactionState.ROLLED_BACK,
+                TransactionState.COMPENSATED,
+            },
+            "closure source is not terminal",
+        )
         _require(facts.audit_recorded, "audit record is required before closure")
 
 

@@ -29,6 +29,7 @@ PROPOSED
  -> VERIFIED_POSTCONDITION
  -> CLOSED
 ```
+
 When policy does not require a separate approval event, `VERIFIED -> AUTHORIZED` is permitted only if the authorization guards themselves are satisfied.
 
 ## Refusal and uncertainty paths
@@ -50,6 +51,7 @@ EXECUTED / POSTCONDITION_* / EXECUTION_OUTCOME_UNKNOWN
 ```
 
 Recovery mode must be explicit. Compensation is a new governed action and is not equivalent to erasing the original execution.
+
 ## Guard obligations
 
 The executable model binds representative guards to transition targets:
