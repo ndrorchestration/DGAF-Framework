@@ -8,14 +8,18 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import tempfile
 from pathlib import Path
 from typing import Any
-import sys
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import run_dgaf_self_application_mutations as mutation
+_MUTATION_SCRIPT = Path(__file__).resolve().parent / "run_dgaf_self_application_mutations.py"
+_SPEC = importlib.util.spec_from_file_location("run_dgaf_self_application_mutations", _MUTATION_SCRIPT)
+if _SPEC is None or _SPEC.loader is None:
+    raise RuntimeError("could not load mutation runner")
+mutation = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(mutation)
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE_CLASS = mutation.EVIDENCE_CLASS
@@ -92,13 +96,17 @@ def main() -> int:
     cases = mutation.validate_registry(registry)
     source_commit = mutation._source_commit()
 
-    dirty_before = mutation._run(["git", "status", "--porcelain=v1", "--untracked-files=all"], ROOT, check=True).stdout
+    dirty_before = mutation._run(
+        ["git", "status", "--porcelain=v1", "--untracked-files=all"], ROOT, check=True
+    ).stdout
     if dirty_before:
         raise SystemExit("source worktree must be clean before detector ablation")
 
     records = run_matrix(cases, source_commit)
 
-    dirty_after = mutation._run(["git", "status", "--porcelain=v1", "--untracked-files=all"], ROOT, check=True).stdout
+    dirty_after = mutation._run(
+        ["git", "status", "--porcelain=v1", "--untracked-files=all"], ROOT, check=True
+    ).stdout
     if dirty_after:
         raise SystemExit("detector ablation dirtied the source worktree")
 
