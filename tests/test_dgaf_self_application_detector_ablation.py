@@ -17,15 +17,17 @@ def load_module():
 
 def test_summary_counts_unique_escapes_without_overclaiming():
     module = load_module()
-    records = [{
-        "baseline_detected": True,
-        "ablations": {
-            "claim_hygiene": {"escaped": True},
-            "control_state": {"escaped": False},
-            "truth_layer": {"escaped": False},
-            "registry_consistency": {"escaped": False},
-        },
-    }]
+    records = [
+        {
+            "baseline_detected": True,
+            "ablations": {
+                "claim_hygiene": {"escaped": True},
+                "control_state": {"escaped": False},
+                "truth_layer": {"escaped": False},
+                "registry_consistency": {"escaped": False},
+            },
+        }
+    ]
     summary = module.summarize(records)
     assert summary["baseline_detection_rate"] == 1.0
     assert summary["unique_escape_count_by_ablated_detector"]["claim_hygiene"] == 1
