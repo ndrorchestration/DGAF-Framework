@@ -1,0 +1,124 @@
+{
+  "status": "PROSPECTIVE / NON-AUTHORIZING",
+  "schema_version": "0.1-draft",
+  "source": "docs/experiment/DGAF_LOCAL_MCP_ADAPTER.md",
+  "capabilities": [
+    {
+      "schema_version": "0.1-draft",
+      "id": "dgaf.local.status",
+      "version": "0.1.0",
+      "provider": "dgaf-local-operator-bridge",
+      "resource_type": "dgaf.local.state",
+      "operation": "status",
+      "adapter": {
+        "kind": "mcp",
+        "identity": "dgaf-local-mcp-adapter"
+      },
+      "effect": {
+        "access": "read",
+        "sensitivity": "internal",
+        "reversibility": "reversible",
+        "externality": "none",
+        "blast_radius": "low",
+        "financial": "none",
+        "privilege": "none"
+      },
+      "permissions": ["DISCOVER", "INSPECT_SCHEMA", "REQUEST_AUTHORIZATION", "INVOKE"],
+      "preconditions": [],
+      "commit_guards": [],
+      "postconditions": ["bridge_status_returned"],
+      "verification": "VERIFIABLE",
+      "recovery": "REVERSIBLE",
+      "audit": { "include": ["actor", "agent", "capability", "policy_version", "outcome"] },
+      "lifecycle": "DRAFT"
+    },
+    {
+      "schema_version": "0.1-draft",
+      "id": "dgaf.local.verify_inputs",
+      "version": "0.1.0",
+      "provider": "dgaf-local-operator-bridge",
+      "resource_type": "dgaf.local.input_set",
+      "operation": "verify_inputs",
+      "adapter": {
+        "kind": "mcp",
+        "identity": "dgaf-local-mcp-adapter"
+      },
+      "effect": {
+        "access": "read",
+        "sensitivity": "confidential",
+        "reversibility": "reversible",
+        "externality": "none",
+        "blast_radius": "low",
+        "financial": "none",
+        "privilege": "none"
+      },
+      "permissions": ["DISCOVER", "INSPECT_SCHEMA", "REQUEST_AUTHORIZATION", "INVOKE"],
+      "preconditions": ["configured_input_paths_present"],
+      "commit_guards": ["input_identity_unchanged"],
+      "postconditions": ["verification_result_returned"],
+      "verification": "VERIFIABLE",
+      "recovery": "REVERSIBLE",
+      "audit": { "include": ["actor", "agent", "capability", "input_identity", "outcome"] },
+      "lifecycle": "DRAFT"
+    },
+    {
+      "schema_version": "0.1-draft",
+      "id": "dgaf.local.materialize",
+      "version": "0.1.0",
+      "provider": "dgaf-local-operator-bridge",
+      "resource_type": "dgaf.local.materialized_input",
+      "operation": "materialize",
+      "adapter": {
+        "kind": "mcp",
+        "identity": "dgaf-local-mcp-adapter"
+      },
+      "effect": {
+        "access": "write",
+        "sensitivity": "confidential",
+        "reversibility": "compensable",
+        "externality": "none",
+        "blast_radius": "medium",
+        "financial": "none",
+        "privilege": "none"
+      },
+      "permissions": ["DISCOVER", "INSPECT_SCHEMA", "REQUEST_AUTHORIZATION", "INVOKE"],
+      "preconditions": ["inputs_verified", "bounded_unblinding_authority_valid"],
+      "commit_guards": ["authorization_not_revoked", "input_identity_unchanged", "output_scope_admitted"],
+      "postconditions": ["materialized_artifact_identity_present"],
+      "verification": "VERIFIABLE",
+      "recovery": "COMPENSATABLE",
+      "audit": { "include": ["actor", "agent", "capability", "action_digest", "authorization_id", "artifact_identity", "outcome"] },
+      "lifecycle": "DRAFT"
+    },
+    {
+      "schema_version": "0.1-draft",
+      "id": "dgaf.local.get_evidence",
+      "version": "0.1.0",
+      "provider": "dgaf-local-operator-bridge",
+      "resource_type": "dgaf.local.evidence",
+      "operation": "get_evidence",
+      "adapter": {
+        "kind": "mcp",
+        "identity": "dgaf-local-mcp-adapter"
+      },
+      "effect": {
+        "access": "read",
+        "sensitivity": "confidential",
+        "reversibility": "reversible",
+        "externality": "none",
+        "blast_radius": "low",
+        "financial": "none",
+        "privilege": "none"
+      },
+      "permissions": ["DISCOVER", "INSPECT_SCHEMA", "REQUEST_AUTHORIZATION", "INVOKE"],
+      "preconditions": ["evidence_available"],
+      "commit_guards": [],
+      "postconditions": ["evidence_payload_returned"],
+      "verification": "VERIFIABLE",
+      "recovery": "REVERSIBLE",
+      "audit": { "include": ["actor", "agent", "capability", "evidence_identity", "outcome"] },
+      "lifecycle": "DRAFT"
+    }
+  ],
+  "non_authority_statement": "These draft manifests describe prospective capability metadata only. They do not broaden the local adapter, create provider credentials, authorize primary analysis, alter scientific N, or establish efficacy."
+}
