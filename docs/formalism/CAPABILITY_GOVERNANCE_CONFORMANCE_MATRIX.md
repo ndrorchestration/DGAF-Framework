@@ -39,18 +39,18 @@ These tests establish only the tested structural properties.
 
 ## Next conformance tests
 
-Highest-priority additions:
+The original first-order invariant slices above are now represented by bounded local tests. Highest-priority additions now move beyond those initial slices:
 
-1. delegation attenuation evaluator: T1 / G11;
-2. effective-authority intersection: T2;
-3. approval consumption/replay protection: T4;
-4. commit-state guard mutation: T6 / G13;
-5. revocation-at-commit: T10 / G9;
-6. workflow sensitive-read -> external-write denial: T7 / G14;
-7. policy self-broadening denial: T11 / G4;
-8. partial execution + compensation trace: T13 / G15;
-9. provider receipt != postcondition: T14 / G6/G15;
-10. capability visibility distinct from invocation: T15.
+1. persistent/concurrent idempotency under process restart and competing workers;
+2. formal finite-state/model-checking traces for composed authorization and recovery;
+3. adversarial adapter/runtime substitution and manifest/runtime identity mismatch;
+4. capability discovery versus invocation/delegation visibility enforcement;
+5. credential-broker trust-root, audience, and proof-of-possession profiles;
+6. policy-engine conflict semantics and mutation tests;
+7. stronger provider receipt/readback and postcondition verification profiles;
+8. data-flow/egress cases with redaction and multi-hop composition;
+9. degraded-mode and dependency-partition behavior;
+10. independent external conformance/review evidence.
 
 ## Evidence boundary
 
@@ -58,8 +58,10 @@ Highest-priority additions:
 
 `tests/test_capability_reference_transaction.py` now exercises the composed control path across canonical action binding, PEP admission/refusal, dispatcher invocation, execution receipts, postconditions, reconciliation state, and capability audit events. The safe real-bridge integration uses only the read-only `status` action; protected-side-effect paths use injected synthetic dispatch and do not execute operator materialization.
 
-At implementation checkpoint `b04b5a4cef8f`, the relevant local compatibility slice is **91/91 PASS**.
+At replay/idempotency implementation checkpoint `93f85f971c95`, the relevant local compatibility slice is **100/100 PASS**.
 
 `tests/test_capability_transport_independence.py` additionally validates a second non-MCP mock HTTP/OpenAPI-style path: the alternate manifest conforms to the same capability schema, governed fields for `dgaf.local.status` remain identical across MCP and REST-style adapters, the safe real bridge returns the same bounded status semantics, and unadmitted HTTP routes/extra request fields fail closed.
+
+`tests/test_capability_idempotency.py` and the replay cases in `tests/test_capability_reference_transaction.py` validate exact key→digest binding, duplicate in-flight refusal, completed-result replay without redispatch, unknown-outcome retry blocking, failed-outcome reconciliation, and release/reuse after a denied reservation. These tests exercise a process-local reference ledger only; durable distributed idempotency remains future work.
 
 A row marked TESTED-SLICE means only that the named local test passed for the represented case. It does not establish universal correctness, production assurance, or independent verification.

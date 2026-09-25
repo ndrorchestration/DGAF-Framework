@@ -119,6 +119,8 @@ Implement only:
 - postcondition state;
 - audit/provenance linkage.
 
+**Bounded replay/idempotency slice implemented on draft PR #1041:** idempotency keys bind to exact action digests; completed results replay without a second dispatch; digest collisions and in-flight duplicates fail closed; unknown outcomes block retry until reconciliation; denied reservations can be released for a later authorized attempt. The reference ledger is process-local and is not a production persistence mechanism.
+
 Do not yet implement:
 
 - arbitrary provider proxying;
@@ -269,11 +271,11 @@ A Telescopic Lens PASS is structural evidence only and must not be represented a
 ### Validate next
 
 - finite-state/model-checking slice;
-- bounded PEP prototype;
-- second adapter path;
-- idempotency/reconciliation semantics;
-- postcondition verification classes;
-- minimal policy-engine comparison.
+- persistent/concurrent idempotency semantics beyond the in-memory reference ledger;
+- credential-broker trust-root and token-boundary profile;
+- postcondition verification classes beyond the bounded mock/local paths;
+- minimal policy-engine comparison;
+- adversarial adapter/runtime substitution tests.
 
 ### Defer
 
