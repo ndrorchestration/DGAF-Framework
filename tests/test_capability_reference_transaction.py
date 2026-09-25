@@ -11,6 +11,7 @@ from scripts.dgaf_capability_idempotency import (
     IdempotencyState,
     InMemoryIdempotencyLedger,
 )
+from scripts.dgaf_capability_idempotency_sqlite import SQLiteIdempotencyLedger
 from scripts.dgaf_capability_pep import (
     ApprovalState,
     EnforcementContext,
@@ -412,3 +413,81 @@ def test_reconciled_failed_unknown_outcome_can_retry():
     assert retry.audit_event["decision"] == "ALLOW"
     assert retry.execution_receipt["execution_state"] == "EXECUTED"
     assert calls == [{"action": "materialize"}]
+
+
+def test_sqlite_completed_transaction_replays_after_restart(tmp_path):
+    path = tmp_path / "reference-idem.sqlite3"
+    metadata = protected_metadata()
+    calls = []
+    first_ledger = SQLiteIdempotencyLedger(path)
+
+    first = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: calls.append(request)
+        or {
+            "status": "PASS",
+            "synthetic_reference_only": True,
+        },
+        postcondition=lambda response: response["status"] == "PASS",
+        timestamp=NOW,
+        idempotency_ledger=first_ledger,
+    )
+    second_ledger = SQLiteIdempotencyLedger(path)
+    second = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: (_ for _ in ()).throw(AssertionError("replay must not redispatch")),
+        postcondition=lambda response: True,
+        timestamp=NOW,
+        idempotency_ledger=second_ledger,
+    )
+
+    assert first.replayed is False
+    assert second.replayed is True
+    assert second.action_digest == first.action_digest
+    assert second.response == first.response
+    assert calls == [{"action": "materialize"}]
+
+
+def test_sqlite_unknown_outcome_blocks_retry_after_restart(tmp_path):
+    path = tmp_path / "reference-idem.sqlite3"
+    metadata = protected_metadata()
+    calls = []
+    first_ledger = SQLiteIdempotencyLedger(path)
+
+    first = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: (
+            calls.append(request),
+            (_ for _ in ()).throw(ExecutionOutcomeUnknown("timeout after provider dispatch")),
+        )[1],
+        postcondition=lambda response: False,
+        timestamp=NOW,
+        idempotency_ledger=first_ledger,
+    )
+
+    second_ledger = SQLiteIdempotencyLedger(path)
+    retry = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: calls.append(request) or {"status": "PASS"},
+        postcondition=lambda response: True,
+        timestamp=NOW,
+        idempotency_ledger=second_ledger,
+    )
+
+    assert first.reconciliation_required is True
+    assert retry.reconciliation_required is True
+    assert retry.audit_event["decision"] == "ESCALATE"
+    assert retry.audit_event["execution_state"] == "EXECUTION_OUTCOME_UNKNOWN"
+    assert len(calls) == 1

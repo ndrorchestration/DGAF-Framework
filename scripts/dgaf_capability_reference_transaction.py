@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from datetime import datetime, timezone
-from typing import Any, Callable
+from typing import Any, Callable, Protocol
 
 from scripts.dgaf_capability_canonicalize import (
     canonical_action_envelope,
@@ -12,7 +12,6 @@ from scripts.dgaf_capability_idempotency import (
     IdempotencyConflict,
     IdempotencyInFlight,
     IdempotencyOutcomeUnknown,
-    InMemoryIdempotencyLedger,
 )
 from scripts.dgaf_capability_pep import (
     EnforcementContext,
@@ -27,6 +26,21 @@ from scripts.dgaf_capability_workflow import (
 
 class ExecutionOutcomeUnknown(RuntimeError):
     """Dispatcher may have completed the side effect, but outcome is unknown."""
+
+
+class IdempotencyLedger(Protocol):
+    def claim(self, key: str, action_digest: str) -> Any | None: ...
+
+    def mark_completed(
+        self,
+        key: str,
+        action_digest: str,
+        result: Any,
+    ) -> None: ...
+
+    def mark_unknown(self, key: str, action_digest: str) -> None: ...
+
+    def release_denied(self, key: str, action_digest: str) -> None: ...
 
 
 @dataclass(frozen=True)
@@ -64,6 +78,35 @@ class TransactionResult:
     audit_event: dict[str, Any]
     reconciliation_required: bool
     replayed: bool = False
+
+
+CACHE_SCHEMA = "dgaf-transaction-result-v0.1"
+
+
+def _cache_payload(result: TransactionResult) -> dict[str, Any]:
+    return {
+        "schema": CACHE_SCHEMA,
+        "action_envelope": result.action_envelope,
+        "action_digest": result.action_digest,
+        "response": result.response,
+        "execution_receipt": result.execution_receipt,
+        "audit_event": result.audit_event,
+        "reconciliation_required": result.reconciliation_required,
+    }
+
+
+def _result_from_cache(value: Any) -> TransactionResult:
+    if not isinstance(value, dict) or value.get("schema") != CACHE_SCHEMA:
+        raise TypeError("cached idempotency result has an unsupported shape")
+    return TransactionResult(
+        action_envelope=value["action_envelope"],
+        action_digest=value["action_digest"],
+        response=value.get("response"),
+        execution_receipt=value.get("execution_receipt"),
+        audit_event=value["audit_event"],
+        reconciliation_required=bool(value["reconciliation_required"]),
+        replayed=False,
+    )
 
 
 def _iso(timestamp: datetime) -> str:
@@ -157,7 +200,7 @@ def run_reference_transaction(
     timestamp: datetime,
     evidence_ids: list[str] | None = None,
     verifier_ids: list[str] | None = None,
-    idempotency_ledger: InMemoryIdempotencyLedger | None = None,
+    idempotency_ledger: IdempotencyLedger | None = None,
 ) -> TransactionResult:
     envelope = canonical_action_envelope(
         capability_id=metadata.capability_id,
@@ -224,9 +267,7 @@ def run_reference_transaction(
             return TransactionResult(envelope, digest, None, None, audit, False)
 
         if cached is not None:
-            if not isinstance(cached, TransactionResult):
-                raise TypeError("cached idempotency result is not a TransactionResult")
-            return replace(cached, replayed=True)
+            return replace(_result_from_cache(cached), replayed=True)
 
     context = context_factory(digest)
 
@@ -315,5 +356,9 @@ def run_reference_transaction(
     )
     result = TransactionResult(envelope, digest, response, receipt, audit, False)
     if idempotency_ledger is not None:
-        idempotency_ledger.mark_completed(identity.idempotency_key, digest, result)
+        idempotency_ledger.mark_completed(
+            identity.idempotency_key,
+            digest,
+            _cache_payload(result),
+        )
     return result

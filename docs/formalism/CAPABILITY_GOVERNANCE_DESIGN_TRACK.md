@@ -119,7 +119,7 @@ Implement only:
 - postcondition state;
 - audit/provenance linkage.
 
-**Bounded replay/idempotency slice implemented on draft PR #1041:** idempotency keys bind to exact action digests; completed results replay without a second dispatch; digest collisions and in-flight duplicates fail closed; unknown outcomes block retry until reconciliation; denied reservations can be released for a later authorized attempt. The reference ledger is process-local and is not a production persistence mechanism.
+**Bounded replay/idempotency slice implemented on draft PR #1041:** idempotency keys bind to exact action digests; completed results replay without a second dispatch; digest collisions and in-flight duplicates fail closed; unknown outcomes block retry until reconciliation; denied reservations can be released for a later authorized attempt. The original process-local ledger is now complemented by a SQLite-backed reference ledger using `BEGIN IMMEDIATE`, WAL mode, and bounded busy-timeout semantics. Completed results, unknown outcomes, digest binding, and denied-release state survive ledger re-instantiation; two local contenders cannot both reserve the same key. This remains a single-host reference mechanism, not distributed consensus or production-grade cross-region idempotency.
 
 Do not yet implement:
 
@@ -271,7 +271,7 @@ A Telescopic Lens PASS is structural evidence only and must not be represented a
 ### Validate next
 
 - extend the implemented bounded small-state/model-checking analysis beyond the current composition, recovery, and competing-idempotency interleavings toward larger state spaces, persistent storage, and stronger concurrency models;
-- persistent/concurrent idempotency semantics beyond the in-memory reference ledger;
+- extend the implemented SQLite-backed single-host persistent/concurrent idempotency slice toward multi-process crash recovery, lease/owner semantics, and stronger distributed-storage models;
 - credential-broker trust-root and token-boundary profile;
 - postcondition verification classes beyond the bounded mock/local paths;
 - minimal policy-engine comparison;
