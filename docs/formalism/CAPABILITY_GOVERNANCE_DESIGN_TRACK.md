@@ -119,6 +119,8 @@ Exit criteria:
 - no new scientific or primary-analysis authority introduced.
 ## Phase 5 — Second independent adapter path
 
+**Bounded slice implemented on draft PR #1041:** an in-process mock HTTP/OpenAPI-style adapter exposes only `GET /v1/status`, opens no listener, and maps to the same `dgaf.local.status` governed capability as the MCP path.
+
 Add one adapter with meaningfully different mechanics from local MCP, such as a mock REST/OpenAPI service or isolated GitHub read/write test fixture.
 
 Purpose:

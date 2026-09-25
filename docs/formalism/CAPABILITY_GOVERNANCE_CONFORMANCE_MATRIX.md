@@ -55,6 +55,8 @@ Highest-priority additions:
 
 `tests/test_capability_reference_transaction.py` now exercises the composed control path across canonical action binding, PEP admission/refusal, dispatcher invocation, execution receipts, postconditions, reconciliation state, and capability audit events. The safe real-bridge integration uses only the read-only `status` action; protected-side-effect paths use injected synthetic dispatch and do not execute operator materialization.
 
-At implementation checkpoint `2a1523f329ed`, the relevant local compatibility slice is **86/86 PASS**.
+At implementation checkpoint `b04b5a4cef8f`, the relevant local compatibility slice is **91/91 PASS**.
+
+`tests/test_capability_transport_independence.py` additionally validates a second non-MCP mock HTTP/OpenAPI-style path: the alternate manifest conforms to the same capability schema, governed fields for `dgaf.local.status` remain identical across MCP and REST-style adapters, the safe real bridge returns the same bounded status semantics, and unadmitted HTTP routes/extra request fields fail closed.
 
 A row marked TESTED-SLICE means only that the named local test passed for the represented case. It does not establish universal correctness, production assurance, or independent verification.
