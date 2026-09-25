@@ -51,4 +51,10 @@ Highest-priority additions:
 
 ## Evidence boundary
 
+## Bounded reference transaction
+
+`tests/test_capability_reference_transaction.py` now exercises the composed control path across canonical action binding, PEP admission/refusal, dispatcher invocation, execution receipts, postconditions, reconciliation state, and capability audit events. The safe real-bridge integration uses only the read-only `status` action; protected-side-effect paths use injected synthetic dispatch and do not execute operator materialization.
+
+At implementation checkpoint `2a1523f329ed`, the relevant local compatibility slice is **86/86 PASS**.
+
 A row marked TESTED-SLICE means only that the named local test passed for the represented case. It does not establish universal correctness, production assurance, or independent verification.
