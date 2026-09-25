@@ -40,12 +40,21 @@ $SourceShallow = (& git -C $SourceDgafRoot rev-parse --is-shallow-repository).Tr
 if ($LASTEXITCODE -ne 0 -or $SourceShallow -ne "false") {
     throw "DGAF source checkout must be a full clone before operator self-testing."
 }
+$SourceDgafHead = (& git -C $SourceDgafRoot rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0 -or -not $SourceDgafHead) {
+    throw "Could not resolve DGAF source HEAD."
+}
 Write-Host "[DGAF] Creating disposable exact-byte DGAF clone..."
 Invoke-Checked {
     & git -c core.autocrlf=false clone --no-hardlinks $SourceDgafRoot $ExactCloneRoot
 } "DGAF exact-byte local clone"
 $DgafRoot = $ExactCloneRoot
+$ExactDgafHead = (& git -C $DgafRoot rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0 -or $ExactDgafHead -ne $SourceDgafHead) {
+    throw "Exact-byte clone HEAD mismatch: source $SourceDgafHead, clone $ExactDgafHead"
+}
 Write-Host "DGAF exact:  $DgafRoot"
+Write-Host "DGAF HEAD:   $ExactDgafHead"
 
 $BootstrapPython = $null
 $BootstrapPythonArgs = @()
