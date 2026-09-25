@@ -13,14 +13,9 @@ from scripts.dgaf_mock_http_adapter import (
     dispatch_http,
 )
 
-
 ROOT = Path(__file__).resolve().parents[1]
-MCP_MANIFESTS = (
-    ROOT / "docs" / "experiment" / "DGAF_LOCAL_MCP_CAPABILITY_MANIFESTS.draft.json"
-)
-HTTP_MANIFESTS = (
-    ROOT / "docs" / "experiment" / "DGAF_MOCK_HTTP_CAPABILITY_MANIFESTS.draft.json"
-)
+MCP_MANIFESTS = ROOT / "docs" / "experiment" / "DGAF_LOCAL_MCP_CAPABILITY_MANIFESTS.draft.json"
+HTTP_MANIFESTS = ROOT / "docs" / "experiment" / "DGAF_MOCK_HTTP_CAPABILITY_MANIFESTS.draft.json"
 
 
 def load_bridge():
@@ -43,17 +38,15 @@ def load_json(path: Path):
 
 
 def governed_fields(manifest):
-    return {
-        key: value
-        for key, value in manifest.items()
-        if key not in {"adapter", "signing", "lifecycle"}
-    }
+    return {key: value for key, value in manifest.items() if key not in {"adapter", "signing", "lifecycle"}}
 
 
 def test_mock_http_manifest_validates_against_same_capability_schema():
     schema = load_json(ROOT / "schemas" / "capability_manifest.schema.json")
     manifest = load_json(HTTP_MANIFESTS)["capabilities"][0]
     jsonschema.validate(manifest, schema)
+
+
 def test_same_capability_identity_survives_transport_substitution():
     mcp = load_json(MCP_MANIFESTS)["capabilities"][0]
     http = load_json(HTTP_MANIFESTS)["capabilities"][0]
@@ -79,6 +72,8 @@ def test_mock_http_status_reaches_same_bridge_status_without_network_listener():
     assert provider["bridge"] == "DGAF_LOCAL_OPERATOR_BRIDGE"
     assert provider["scientific_n_increment"] == 0
     assert provider["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+
+
 def test_mock_http_adapter_rejects_unadmitted_route():
     bridge = load_bridge()
     with pytest.raises(MockHttpAdapterRefusal, match="route is not admitted"):

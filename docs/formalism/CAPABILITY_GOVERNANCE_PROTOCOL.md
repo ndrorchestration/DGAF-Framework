@@ -18,6 +18,7 @@ Provider -> Capability -> Adapter/Transport -> Effect/Risk -> Policy
 ```
 
 A capability may be implemented through MCP, REST, GraphQL, SDK, CLI, plugin, connector, or another admitted adapter without changing its governance identity, provided implementation trust requirements remain satisfied.
+
 ## Reference architecture
 
 ```text
@@ -39,6 +40,7 @@ The PDP decides. The PEP enforces. The credential broker holds or exchanges secr
 ## Trust boundary
 
 The minimal trusted computing base SHOULD include:
+
 - action canonicalization and digest generation;
 - policy decision and obligation evaluation;
 - authorization verification;
@@ -51,11 +53,13 @@ The minimal trusted computing base SHOULD include:
 - integrity protection for policy, manifests, and audit records.
 
 Agents, model outputs, retrieved content, tool descriptions, provider responses, plugin metadata, and external documentation MUST be treated as untrusted inputs unless separately verified.
+
 ## Capability identity and manifest
 
 Every governed capability SHOULD have a signed, versioned manifest with a stable provider-neutral identifier.
 
 Minimum fields SHOULD include:
+
 - capability identifier and semantic version;
 - provider and provider resource type;
 - operation;
@@ -81,6 +85,7 @@ Recommended permission verbs:
 Risk MUST NOT be represented by a single total ordering such as READ < WRITE.
 
 A capability SHOULD classify at least:
+
 ```text
 access          = read | write | delete | privilege_change
 sensitivity     = public | internal | confidential | PII | regulated
@@ -90,11 +95,13 @@ blast_radius    = low | medium | high
 financial       = none | low | high
 privilege       = none | elevate | credential_change
 ```
+
 Policies MAY add domain-specific dimensions. Unknown or missing required risk attributes MUST NOT silently weaken the decision.
 
 ## Identity model
 
 Protected actions SHOULD distinguish:
+
 - human principal;
 - initiating principal;
 - logical agent identity;
@@ -120,9 +127,11 @@ effective_authority =
 ```
 
 This is a confused-deputy control and extends the non-widening delegation invariant.
+
 ## Authorization object
 
 An authorization SHOULD bind:
+
 - subject and initiating principal;
 - capability identifier and version;
 - target/resource scope;
@@ -151,6 +160,7 @@ H(capability, version, resource, parameters, actor,
 ```
 
 Material substitution, target drift, policy drift, state-guard failure, expiry, revocation, or replay MUST invalidate the approval.
+
 ## Workflow and composition semantics
 
 Action authorization is not automatically compositional.
@@ -162,6 +172,7 @@ Authorized(A) AND Authorized(B) -/-> Authorized(A then B)
 A governed workflow SHOULD have its own identity, dependency graph, accumulated data labels, aggregate cost/risk, destination boundaries, and recovery policy.
 
 DGAF SHOULD evaluate composition risks including:
+
 - sensitive-read followed by external-write exfiltration;
 - privilege transfer through a higher-authority executor;
 - aggregate blast radius across individually low-risk actions;
@@ -175,6 +186,7 @@ Workflow authorization MAY be required even when all component actions are indiv
 DGAF SHOULD track material data classifications across read, transform, summarize, store, transmit, and publish operations.
 
 A data-flow guard SHOULD support:
+
 - source classification;
 - taint/lineage propagation;
 - egress destination policy;
@@ -182,9 +194,11 @@ A data-flow guard SHOULD support:
 - retention limits;
 - model-context contamination controls;
 - cross-tenant/cross-domain restrictions.
+
 ## Execution semantics
 
 Every side-effecting invocation SHOULD bind:
+
 - workflow ID;
 - invocation ID;
 - action digest;
@@ -204,6 +218,7 @@ Unknown execution outcomes require reconciliation before unsafe retry.
 Volatile predicates MUST be revalidated immediately before the protected side effect when required by policy.
 
 Examples include:
+
 - authorization not expired/revoked/consumed;
 - policy version still admitted;
 - target identity unchanged;
@@ -214,12 +229,14 @@ Examples include:
 - required verifier/provider health acceptable.
 
 Required predicates that are FALSE, UNKNOWN, missing, stale, or identity-mismatched fail closed unless an explicitly authorized escalation path applies.
+
 ## Recovery and postconditions
 
 Capabilities SHOULD declare recovery class:
 `REVERSIBLE`, `COMPENSATABLE`, or `IRREVERSIBLE`.
 
 Postcondition verification SHOULD classify capabilities as:
+
 - `VERIFIABLE`;
 - `BEST_EFFORT`;
 - `UNVERIFIABLE`.
@@ -229,6 +246,7 @@ A transport-level success response is not sufficient evidence of the intended si
 Postcondition failure MUST NOT erase historical execution.
 
 Composed workflows MUST define one or more of:
+
 - retry;
 - rollback;
 - compensation;
@@ -243,11 +261,13 @@ Concrete DGAF policy profiles MUST define deterministic conflict resolution. A d
 Policy engines, policy authors, approvers, executors, and credential brokers SHOULD remain separate authorities where practical.
 
 An agent MUST NOT broaden the policy governing itself through an ordinary capability invocation.
+
 ## Provider and supply-chain trust
 
 Capability-manifest trust does not imply implementation trust.
 
 Higher-risk profiles SHOULD bind:
+
 - manifest digest;
 - adapter/binary/container digest;
 - dependency lock or attestation;
@@ -264,6 +284,7 @@ Tool metadata, MCP descriptions, OpenAPI text, plugin manifests, provider output
 Fail-closed behavior MUST be explicit per dependency and capability.
 
 Profiles SHOULD define outcomes for:
+
 - PDP unavailable;
 - PEP unavailable;
 - credential broker unavailable;
@@ -274,11 +295,13 @@ Profiles SHOULD define outcomes for:
 - network partition or rate limit.
 
 No degraded-mode rule may silently widen authority.
+
 ## Audit and evidence
 
 Audit integrity and audit confidentiality are separate requirements.
 
 Audit records SHOULD bind:
+
 - initiating and executing identities;
 - workflow and invocation identities;
 - capability and manifest versions;
@@ -301,6 +324,7 @@ Sensitive values SHOULD use privacy-preserving representations appropriate to th
 This protocol MUST be reviewed using the canonical 4-altitude x 8-dimension Telescopic Lens.
 
 The eight dimensions are:
+
 1. Intent Alignment
 2. Provenance Integrity
 3. Boundary Clarity
@@ -316,6 +340,7 @@ Review MUST consider each dimension at Macro, Mid, Tactical, and Quantum altitud
 The core protocol SHOULD remain smaller than the full possible feature set.
 
 Core profile:
+
 - canonical capability identity;
 - PDP/PEP separation;
 - scoped authorization;
@@ -328,6 +353,7 @@ Core profile:
 - audit/provenance linkage.
 
 Optional profiles MAY cover:
+
 - credential exchange and proof-of-possession;
 - data-flow/DLP enforcement;
 - multi-tenant/federated operation;
@@ -338,9 +364,11 @@ Optional profiles MAY cover:
 - advanced supply-chain attestation.
 
 DGAF SHOULD NOT build a general-purpose provider proxy until the core protocol has conformance tests and at least two independently implemented adapter paths.
+
 ## Initial conformance requirements
 
 A reference implementation MUST demonstrate at minimum:
+
 1. unauthorized invocation is blocked at the PEP;
 2. expired/revoked authorization is blocked;
 3. changed action digest invalidates approval;
@@ -357,6 +385,7 @@ A reference implementation MUST demonstrate at minimum:
 DGAF SHOULD reuse established standards where they fit, while keeping the protocol provider-neutral. Candidate mappings include OAuth authorization and token exchange mechanisms, proof-of-possession, workload identity, policy engines, API description formats, MCP transport, supply-chain attestations, and sandboxed execution.
 
 Standards mapping MUST distinguish:
+
 - normative dependency;
 - optional interoperability profile;
 - implementation example;

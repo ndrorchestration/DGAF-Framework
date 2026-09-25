@@ -25,11 +25,11 @@ def load_json(path: Path):
 def validator(name: str) -> jsonschema.Draft202012Validator:
     schema = load_json(SCHEMAS / name)
     return jsonschema.Draft202012Validator(schema)
+
+
 def test_local_mcp_capability_manifests_validate():
     schema = load_json(SCHEMAS / "capability_manifest.schema.json")
-    manifest_set = load_json(
-        ROOT / "docs" / "experiment" / "DGAF_LOCAL_MCP_CAPABILITY_MANIFESTS.draft.json"
-    )
+    manifest_set = load_json(ROOT / "docs" / "experiment" / "DGAF_LOCAL_MCP_CAPABILITY_MANIFESTS.draft.json")
     for manifest in manifest_set["capabilities"]:
         jsonschema.validate(manifest, schema)
 

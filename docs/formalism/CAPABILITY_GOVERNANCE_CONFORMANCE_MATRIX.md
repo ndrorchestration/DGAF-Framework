@@ -4,7 +4,7 @@
 > **Purpose:** Bind protocol invariants to executable evidence.
 
 | Invariant | Core requirement | Current evidence | Status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | G1 | No protected side effect without authorization | bounded PEP blocks protected dispatch without active authorization | TESTED-SLICE |
 | G2 | Authorization precedes execution | bounded PEP checks authority before dispatcher invocation | TESTED-SLICE |
 | G3 | Authorization is scoped | bounded PEP rejects adjacent-resource scope substitution | TESTED-SLICE |
@@ -21,9 +21,11 @@
 | G14 | Authorization not automatically compositional | workflow composition + sensitive-egress tests | TESTED-SLICE |
 | G15 | Postcondition failure does not erase execution | partial/postcondition recovery-state tests | TESTED-SLICE |
 | G16 | Weaker evidence cannot increase authority | executable evidence-strength monotonicity tests | TESTED-SLICE |
+
 ## Existing executable evidence
 
 `tests/test_capability_governance_contracts.py` currently verifies:
+
 - all four bounded local MCP capability manifests validate;
 - five core schemas are themselves valid Draft 2020-12 JSON Schemas;
 - canonical action digest is deterministic;
@@ -38,6 +40,7 @@ These tests establish only the tested structural properties.
 ## Next conformance tests
 
 Highest-priority additions:
+
 1. delegation attenuation evaluator: T1 / G11;
 2. effective-authority intersection: T2;
 3. approval consumption/replay protection: T4;

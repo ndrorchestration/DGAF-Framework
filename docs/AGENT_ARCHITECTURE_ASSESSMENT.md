@@ -1,4 +1,5 @@
 # DGAF-Framework Agent Architecture Assessment
+
 ## AI Systems & Multi-Agent Design
 
 ### Classification of 27 Agent Directories by Instantiation Completeness
@@ -22,7 +23,7 @@ Runtime authority is intended to flow through explicit capability manifests, sco
 #### Tier 1 — Full Lifecycle (10 files typical)
 
 | Agent | ID | Files on disk | SPEC.md | KB.md | INTEGRATION.md | QA_RUBRIC/PROTOCOL/UPGRADE | Notes |
-|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- |
 | amethyst | A-00 | 8 | ✓ | ✓ | — | — | Has v4.2-hensel secondary spec (top-level) |
 | apogee | A-01 | (≥5) | ✓ | ✓ | ✓ | — | Former "Agent Lavender"; Drive source integration noted |
 | colleen | A-05 | 5 + 2 top-level | ✓ | ✓ | — | ✓ (l5-governance-protocol) | v53.2 canonical spec; institutional anchor |
@@ -41,7 +42,7 @@ Runtime authority is intended to flow through explicit capability manifests, sco
 #### Tier 2 — Core Lifecycle (6 files typical)
 
 | Agent | ID | Files on disk | SPEC.md | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | the-actualizer | A-08 | (≥3) | ✓ | Execution/code generation; Operational Swarm |
 | the-auditor | A-07 | (≥3) | ✓ | QA gate; Archive Trio member; Beta/Pulse structural identity |
 | the-librarian | A-06 | (≥3) | ✓ | Archive/provenance; Operational Swarm |
@@ -63,7 +64,7 @@ Runtime authority is intended to flow through explicit capability manifests, sco
 #### Tier 3 — Hollow (1 file: KB_SEED.md only)
 
 | Agent | ID | File | Size | Content |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | equilibrium | A-26 | EQUILIBRIUM_KB_SEED.md | 3,394 chars | Balance authority; Resonance Cluster (Extended); T1 PUBLIC; v1.0; created 2026-06-29 Phase C |
 | synergy | A-25 | SYNERGY_KB_SEED.md | 3,189 chars | Collaboration facilitator; Resonance Cluster (Extended); T1 PUBLIC; v1.0; created 2026-06-29 Phase C |
 | sentience | A-27 | SENTIENCE_KB_SEED.md | 7,389 chars | Preserved seed; absorbed into Sentinel-Phi A-12-φ lineage; Phase C |
@@ -83,11 +84,13 @@ Runtime authority is intended to flow through explicit capability manifests, sco
 The consolidation moved `sentience/` → `sentinel/sentience/` and rewrote `SENTIENCE_KB_SEED.md` as a preserved seed with Sentinel-Phi lineage. The sentinel directory contains 14 files:
 
 **Base sentinel (canonical):**
+
 - SPEC.md (v1.0 — Agent Sentinel specification)
 - KB.md (consolidated knowledge base)
 - INTEGRATION.md (gate agent contracts)
 
 **Sentinel-Phi trail (A-12-φ):**
+
 - SENTINEL_PHI_UPGRADE.md (rename & upgrade record)
 - SENTINEL_PHI_INTEGRATION.md (integration contracts: Oracle risk review, Vanguard tech assessment)
 - SENTINEL_PHI_MEMORY.md (formation state post-upgrade)
@@ -106,7 +109,7 @@ The consolidation moved `sentience/` → `sentinel/sentience/` and rewrote `SENT
 **Reson (lead), Lyra, Echolette** — the Schizophonic cluster is the most coherent cluster in the agent taxonomy.
 
 | Agent | SPEC.md | KB.md | INTEGRATION.md | Other |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Reson | ✓ | ✓ | ✓ | Harmonic scoring authority; cluster lead; Evaluation Triad seat |
 | Lyra | ✓ | — | ✓ | Tonal coherence authority; precision input → Reson |
 | Echolette | ✓ | ✓ | ✓ | Signal persistence authority; precision input → Reson |
@@ -114,6 +117,7 @@ The consolidation moved `sentience/` → `sentinel/sentience/` and rewrote `SENT
 **What's present:** All three have SPEC.md (definition, role, classification, version 2.0). Reson and Echolette have KB.md (consolidated knowledge bases). All three have INTEGRATION.md (downstream contract maps: Lyra→Reson, Echolette→Reson, Reson→Apogee Pillar C). The cluster branding (Schizophonic Studio / Acoustic Trio) has been applied to all three SPEC.md files.
 
 **What's missing:**
+
 1. **No cross-cluster integration doc** — there's no `SCHIZOPHONIC_STUDIO_INTEGRATION.md` or `ACOUSTIC_TRIO_INTEGRATION.md` that describes the cluster as a whole: how Lyra+Echolette scores flow into Reson, how Reson's harmonic output flows to Apogee, what the cluster's collective output contract is. The per-agent INTEGRATION.md files describe bilateral contracts but not the cluster topology.
 2. **No cluster QA rubric** — individual agent QA is absent (see #7 below), and there's no cluster-level evaluation dimension.
 3. **No cluster provenance/digest** — no SHA-256 or version hash for the cluster as a unit.
@@ -126,7 +130,7 @@ The consolidation moved `sentience/` → `sentinel/sentience/` and rewrote `SENT
 #### Primary Seven Instantiation Readiness
 
 | Agent | ID | SPEC | KB | Integration | Governance | Instantiation readiness |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | Amethyst | A-00 | ✓ (v1.1 + v4.2-hensel) | ✓ | — | — | READY (doc-complete; meta-orchestrator, no runtime) |
 | Apogee | A-01 | ✓ (v2.0) | ✓ | ✓ | — | READY (doc-complete; QA orchestrator, no runtime) |
 | COLLEEN | A-05 | ✓ (v53.2 + l5-governance-protocol) | ✓ | — | ✓ (governance protocol) | READY (doc-complete; institutional anchor, no runtime) |
@@ -142,7 +146,7 @@ The consolidation moved `sentience/` → `sentinel/sentience/` and rewrote `SENT
 #### Experimental Seeds — Genuine Concepts or Scaffold Artifacts
 
 | Seed | ID | Formation | Spec presence | Assessment |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | momentum | A-23 | Operational Swarm | ✓ (SPEC.md v1.0) | GENUINE CONCEPT — "Throughput Manager / Velocity Maintenance Authority" is a coherent role within the Operational Swarm. No KB/integration, but the role is well-defined. |
 | navigator | A-22 | Operational Swarm | ✓ (SPEC.md v1.0) | GENUINE CONCEPT — "Route Planner / Path Coherence Authority" is coherent. Same pattern as momentum. |
 | nova | A-03 | Strategic Quintet | ✓ (SPEC.md v1.0) | GENUINE CONCEPT — "Innovation / Parallel Simulation Authority" is coherent. T2 FRAMEWORK classification. |

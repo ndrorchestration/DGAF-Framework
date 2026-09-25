@@ -20,13 +20,14 @@ from scripts.dgaf_capability_reference_transaction import (
     run_reference_transaction,
 )
 
-
 ROOT = Path(__file__).resolve().parents[1]
 NOW = datetime(2026, 9, 25, 13, 45, tzinfo=timezone.utc)
 
 
 def authority(capabilities, resources):
     return Authority(frozenset(capabilities), frozenset(resources))
+
+
 def identities():
     return TransactionIdentity(
         workflow_id="workflow:reference-1",
@@ -53,6 +54,8 @@ def protected_metadata():
         adapter_identity="dgaf-local-mcp-adapter",
         runtime_identity="runtime:local-test",
     )
+
+
 def status_metadata():
     return TransactionMetadata(
         capability_id="dgaf.local.status",
@@ -100,16 +103,13 @@ def context_factory(metadata, *, protected=True, active=True):
             observed_state_guards=metadata.state_guards,
             now=NOW,
         )
+
     return factory
 
 
 def validate_result(result):
-    receipt_schema = json.loads(
-        (ROOT / "schemas" / "execution_receipt.schema.json").read_text(encoding="utf-8")
-    )
-    audit_schema = json.loads(
-        (ROOT / "schemas" / "capability_audit_event.schema.json").read_text(encoding="utf-8")
-    )
+    receipt_schema = json.loads((ROOT / "schemas" / "execution_receipt.schema.json").read_text(encoding="utf-8"))
+    audit_schema = json.loads((ROOT / "schemas" / "capability_audit_event.schema.json").read_text(encoding="utf-8"))
     if result.execution_receipt is not None:
         jsonschema.validate(result.execution_receipt, receipt_schema)
     jsonschema.validate(result.audit_event, audit_schema)
@@ -167,6 +167,8 @@ def test_denied_reference_transaction_never_calls_dispatcher():
     assert result.audit_event["decision"] == "DENY"
     assert result.audit_event["execution_state"] == "NOT_STARTED"
     validate_result(result)
+
+
 def test_unknown_execution_outcome_requires_reconciliation():
     metadata = protected_metadata()
 

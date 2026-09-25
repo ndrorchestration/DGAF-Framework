@@ -26,6 +26,8 @@ def test_g11_child_delegation_cannot_add_capability():
     parent = auth({"repo.read"}, {"repo:a"}, 100)
     child = auth({"repo.read", "repo.write"}, {"repo:a"}, 100)
     assert delegation_is_non_widening(parent, child) is False
+
+
 def test_g11_child_delegation_cannot_expand_resource_scope():
     parent = auth({"repo.read"}, {"repo:a"}, 100)
     child = auth({"repo.read"}, {"repo:a", "repo:b"}, 100)
@@ -50,14 +52,17 @@ def test_confused_deputy_intersection_blocks_executor_only_power():
     delegation = auth({"repo.read"}, {"repo:a"})
     executor = auth({"repo.read", "repo.delete"}, {"repo:a"})
     policy = auth({"repo.read", "repo.delete"}, {"repo:a"})
-    assert permitted_by_effective_authority(
-        "repo.delete",
-        "repo:a",
-        requester=requester,
-        delegation=delegation,
-        executor=executor,
-        policy=policy,
-    ) is False
+    assert (
+        permitted_by_effective_authority(
+            "repo.delete",
+            "repo:a",
+            requester=requester,
+            delegation=delegation,
+            executor=executor,
+            policy=policy,
+        )
+        is False
+    )
 
 
 def test_effective_authority_is_intersection():
@@ -72,39 +77,53 @@ def test_effective_authority_is_intersection():
 
 def test_g12_consumed_approval_cannot_replay():
     digest = "sha256:" + "a" * 64
-    assert approval_matches_commit(
-        approved_digest=digest,
-        commit_digest=digest,
-        authorization_status="ACTIVE",
-        consumed=True,
-    ) is False
+    assert (
+        approval_matches_commit(
+            approved_digest=digest,
+            commit_digest=digest,
+            authorization_status="ACTIVE",
+            consumed=True,
+        )
+        is False
+    )
 
 
 def test_g12_digest_substitution_is_blocked():
-    assert approval_matches_commit(
-        approved_digest="sha256:" + "a" * 64,
-        commit_digest="sha256:" + "b" * 64,
-        authorization_status="ACTIVE",
-        consumed=False,
-    ) is False
+    assert (
+        approval_matches_commit(
+            approved_digest="sha256:" + "a" * 64,
+            commit_digest="sha256:" + "b" * 64,
+            authorization_status="ACTIVE",
+            consumed=False,
+        )
+        is False
+    )
 
 
 def test_g9_revoked_authorization_is_inactive():
     now = datetime(2026, 9, 25, 12, tzinfo=timezone.utc)
-    assert authorization_is_active(
-        "REVOKED",
-        not_before=now - timedelta(minutes=5),
-        expires_at=now + timedelta(minutes=5),
-        now=now,
-    ) is False
+    assert (
+        authorization_is_active(
+            "REVOKED",
+            not_before=now - timedelta(minutes=5),
+            expires_at=now + timedelta(minutes=5),
+            now=now,
+        )
+        is False
+    )
+
+
 def test_expired_authorization_is_inactive():
     now = datetime(2026, 9, 25, 12, tzinfo=timezone.utc)
-    assert authorization_is_active(
-        "ACTIVE",
-        not_before=now - timedelta(minutes=10),
-        expires_at=now,
-        now=now,
-    ) is False
+    assert (
+        authorization_is_active(
+            "ACTIVE",
+            not_before=now - timedelta(minutes=10),
+            expires_at=now,
+            now=now,
+        )
+        is False
+    )
 
 
 def test_g13_missing_commit_guard_fails_closed():

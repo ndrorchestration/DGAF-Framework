@@ -5,11 +5,11 @@ from datetime import datetime
 from typing import Any, Callable
 
 from scripts.dgaf_capability_policy import (
+    Authority,
     approval_matches_commit,
     authorization_is_active,
     commit_guards_pass,
     permitted_by_effective_authority,
-    Authority,
 )
 
 
@@ -29,6 +29,8 @@ class ApprovalState:
     approver: str | None
     approved_digest: str | None
     consumed: bool = False
+
+
 @dataclass(frozen=True)
 class EnforcementContext:
     capability: str
@@ -57,6 +59,8 @@ def approval_separation_passes(state: ApprovalState) -> bool:
     if state.approver is None:
         return False
     return state.requester != state.approver
+
+
 def enforce_before_dispatch(context: EnforcementContext) -> None:
     if not context.protected_side_effect:
         return

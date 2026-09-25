@@ -30,6 +30,8 @@ class TransactionIdentity:
     authorization_id: str
     idempotency_key: str
     event_id: str
+
+
 @dataclass(frozen=True)
 class TransactionMetadata:
     capability_id: str
@@ -61,6 +63,8 @@ def _iso(timestamp: datetime) -> str:
     if timestamp.tzinfo is None:
         raise ValueError("timestamp must be timezone-aware")
     return timestamp.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
 def _receipt(
     *,
     identity: TransactionIdentity,

@@ -111,7 +111,7 @@ The existing four-tool local MCP adapter remains unchanged. The bounded referenc
 ## Executive boundary
 
 | Area | Current state |
-|---|---|
+| --- | --- |
 | Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `3ba57706b75ed32d1cbae0a2fddd220a0cd1da20` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |

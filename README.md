@@ -106,7 +106,7 @@ The same rule applies to presentation and assurance inventory: **UI state does n
 DGAF separates prospective evaluation by workload instead of treating one experiment as proof of the entire framework.
 
 | Track | Plain-English purpose | Current boundary |
-|---|---|---|
+| --- | --- | --- |
 | **A — Epoch 001** | Numeric topology robustness | Prospective blinded collection complete and dataset locked; protected mapping is cryptographically unrecoverable; primary analysis unanalyzable/not run; retained as historical blinded evidence plus custody-design failure evidence |
 | **A — Epoch 002 successor** | Replacement prospective topology robustness | Collection COMPLETE at 50 paired seed units / 2,250 observations; dataset lock ESTABLISHED; bounded unblinding AUTHORIZED; materialization and immutable receipt ESTABLISHED; locked-primary-analysis authorization ACCEPTED; primary analysis EXECUTED locally under the frozen contract; content-addressed locked-result receipt ESTABLISHED via #851; interpretation/adjudication EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT |
 | **B1** | Semantic routing and safety | Standalone non-empirical lane complete; no empirical efficacy claim |
@@ -208,7 +208,7 @@ DGAF is **not** currently presented as:
 ## Internal terms in plain English
 
 | Internal term | Public / industry-neutral translation |
-|---|---|
+| --- | --- |
 | **Formation** | The set and structure of agents selected for a governed task |
 | **TGL / P-35** | Per-turn governance and state-transition kernel |
 | **P-* gate** | Project-specific evidence, policy, or authorization checkpoint |

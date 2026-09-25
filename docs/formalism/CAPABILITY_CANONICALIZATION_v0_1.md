@@ -12,6 +12,7 @@ DGAF JSON v0.1 defines a deliberately narrow canonicalization profile for the in
 ## Rules
 
 The canonical payload:
+
 - MUST be valid JSON data;
 - MUST reject NaN and Infinity;
 - MUST sort object keys lexicographically;
@@ -26,9 +27,11 @@ The digest format is:
 ```text
 sha256:<64 lowercase hexadecimal characters>
 ```
+
 ## Minimum action envelope
 
 The digest-bound envelope SHOULD include:
+
 - canonicalization profile identifier;
 - capability ID and version;
 - resource identity/scope;

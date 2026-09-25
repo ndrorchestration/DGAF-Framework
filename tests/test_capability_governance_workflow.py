@@ -29,13 +29,16 @@ def test_g14_individual_authorization_does_not_authorize_composition():
             destination_class="public-channel",
         ),
     ]
-    assert composed_workflow_permitted(
-        steps,
-        individually_authorized=True,
-        composition_authorized=False,
-        protected_labels=frozenset({"confidential"}),
-        allowed_destinations=frozenset(),
-    ) is False
+    assert (
+        composed_workflow_permitted(
+            steps,
+            individually_authorized=True,
+            composition_authorized=False,
+            protected_labels=frozenset({"confidential"}),
+            allowed_destinations=frozenset(),
+        )
+        is False
+    )
 
 
 def test_g14_sensitive_read_to_unapproved_external_write_is_blocked():
@@ -56,13 +59,16 @@ def test_g14_sensitive_read_to_unapproved_external_write_is_blocked():
             destination_class="external-recipient",
         ),
     ]
-    assert composed_workflow_permitted(
-        steps,
-        individually_authorized=True,
-        composition_authorized=True,
-        protected_labels=frozenset({"PII"}),
-        allowed_destinations=frozenset({"internal-recipient"}),
-    ) is False
+    assert (
+        composed_workflow_permitted(
+            steps,
+            individually_authorized=True,
+            composition_authorized=True,
+            protected_labels=frozenset({"PII"}),
+            allowed_destinations=frozenset({"internal-recipient"}),
+        )
+        is False
+    )
 
 
 def test_g14_approved_destination_allows_governed_egress():
@@ -83,34 +89,46 @@ def test_g14_approved_destination_allows_governed_egress():
             destination_class="approved-secure-channel",
         ),
     ]
-    assert composed_workflow_permitted(
-        steps,
-        individually_authorized=True,
-        composition_authorized=True,
-        protected_labels=frozenset({"confidential"}),
-        allowed_destinations=frozenset({"approved-secure-channel"}),
-    ) is True
+    assert (
+        composed_workflow_permitted(
+            steps,
+            individually_authorized=True,
+            composition_authorized=True,
+            protected_labels=frozenset({"confidential"}),
+            allowed_destinations=frozenset({"approved-secure-channel"}),
+        )
+        is True
+    )
 
 
 def test_g6_authorization_state_alone_does_not_establish_execution():
-    assert execution_established(
-        execution_state=ExecutionState.NEW,
-        provider_receipt_present=False,
-    ) is False
+    assert (
+        execution_established(
+            execution_state=ExecutionState.NEW,
+            provider_receipt_present=False,
+        )
+        is False
+    )
 
 
 def test_g6_executed_without_provider_receipt_is_not_established():
-    assert execution_established(
-        execution_state=ExecutionState.EXECUTED,
-        provider_receipt_present=False,
-    ) is False
+    assert (
+        execution_established(
+            execution_state=ExecutionState.EXECUTED,
+            provider_receipt_present=False,
+        )
+        is False
+    )
 
 
 def test_g6_execution_requires_executed_state_and_provider_receipt():
-    assert execution_established(
-        execution_state=ExecutionState.EXECUTED,
-        provider_receipt_present=True,
-    ) is True
+    assert (
+        execution_established(
+            execution_state=ExecutionState.EXECUTED,
+            provider_receipt_present=True,
+        )
+        is True
+    )
 
 
 def test_g15_partial_execution_preserves_partial_state_and_compensates():
@@ -157,6 +175,8 @@ def test_g15_postcondition_failure_does_not_erase_execution():
     assert outcome.postcondition_state == PostconditionState.FAILED
     assert outcome.recovery_required is True
     assert outcome.recovery_mode == "COMPENSATE"
+
+
 def test_unknown_provider_outcome_requires_reconciliation():
     outcome = classify_outcome(
         completed_steps=0,

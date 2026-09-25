@@ -21,6 +21,7 @@ No conclusion here establishes production security, completeness, independent ce
 **Quantum:** OPEN — failure intent for unknown execution, stale state, replay, and partial execution is specified but not yet tested.
 
 Priority: convert the remaining core objects into machine-readable contracts before adding providers.
+
 ## 2. Provenance Integrity
 
 **Macro:** PASS-WITH-GAPS — protocol explicitly inherits the Agent Governance Transition Specification and Telescopic Lens.  
@@ -29,6 +30,7 @@ Priority: convert the remaining core objects into machine-readable contracts bef
 **Quantum:** OPEN — no canonical digest test vectors exist yet.
 
 Priority:
+
 - add canonicalization specification;
 - generate deterministic digest fixtures;
 - record source/version lineage for protocol revisions.
@@ -41,6 +43,7 @@ Priority:
 **Quantum:** OPEN — exact handling of malformed manifests, unknown fields, stale state, and degraded dependencies requires conformance tests.
 
 Priority: preserve deferred product/deployment choices until the core protocol is validated.
+
 ## 4. Coherence
 
 **Macro:** PASS-WITH-GAPS — the protocol is compatible with G1-G16 from the agent-governance transition formalism.  
@@ -49,9 +52,11 @@ Priority: preserve deferred product/deployment choices until the core protocol i
 **Quantum:** OPEN — conflict semantics between role authority, runtime authorization, workflow policy, and provider constraints are not executable yet.
 
 Priority: define an explicit mapping:
+
 ```text
 functional role capability != runtime invocation capability
 ```
+
 and specify where the two may reference each other without authority inheritance.
 
 ## 5. Coverage
@@ -62,6 +67,7 @@ and specify where the two may reference each other without authority inheritance
 **Quantum:** OPEN — adversarial corpus has not yet been implemented.
 
 Priority: threat-model and conformance harness before new live connectors.
+
 ## 6. Calibration
 
 **Macro:** PASS — the protocol repeatedly states non-transfer and non-certification boundaries.  
@@ -79,6 +85,7 @@ Priority: do not convert the risk vector into a universal numeric score until em
 **Quantum:** OPEN — tenant, delegation, and runtime identity substitution attacks need executable tests.
 
 Priority: treat identity and trust-root selection as explicit profiles, not hidden implementation assumptions.
+
 ## 8. Evolvability
 
 **Macro:** PASS — provider-neutral capability identity supports adapter replacement.  
@@ -87,6 +94,7 @@ Priority: treat identity and trust-root selection as explicit profiles, not hidd
 **Quantum:** OPEN — migration behavior for renamed/deprecated/revoked capabilities is not specified.
 
 Priority:
+
 - specify lifecycle transitions;
 - define compatibility rules;
 - add deprecation/revocation test fixtures;
@@ -95,6 +103,7 @@ Priority:
 ## Cross-altitude blockers
 
 The current design SHOULD NOT advance to a general MCP/API proxy until:
+
 1. authorization, delegation, workflow, receipt, and reconciliation schemas exist;
 2. canonicalization/digest test vectors pass;
 3. core G1-G16 invariants are linked to conformance tests;

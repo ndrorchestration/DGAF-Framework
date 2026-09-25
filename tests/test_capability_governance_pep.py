@@ -13,7 +13,6 @@ from scripts.dgaf_capability_pep import (
 )
 from scripts.dgaf_capability_policy import Authority
 
-
 NOW = datetime(2026, 9, 25, 13, 0, tzinfo=timezone.utc)
 
 
@@ -54,7 +53,10 @@ def counting_dispatcher(calls):
     def dispatch(request):
         calls.append(request)
         return {"status": "PASS", "action": request["action"]}
+
     return dispatch
+
+
 def test_g1_g2_authorized_materialize_reaches_dispatcher():
     calls = []
     result = governed_dispatch(
