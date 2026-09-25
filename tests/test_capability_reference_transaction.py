@@ -7,6 +7,10 @@ from pathlib import Path
 
 import jsonschema
 
+from scripts.dgaf_capability_idempotency import (
+    IdempotencyState,
+    InMemoryIdempotencyLedger,
+)
 from scripts.dgaf_capability_pep import (
     ApprovalState,
     EnforcementContext,
@@ -258,3 +262,153 @@ def test_failed_postcondition_preserves_execution_and_marks_recovery_pending():
     assert result.execution_receipt["recovery_state"] == "PENDING"
     assert result.audit_event["execution_state"] == "EXECUTED"
     validate_result(result)
+
+
+def test_completed_idempotent_replay_does_not_dispatch_twice():
+    metadata = protected_metadata()
+    ledger = InMemoryIdempotencyLedger()
+    calls = []
+
+    def dispatcher(request):
+        calls.append(request)
+        return {
+            "status": "PASS",
+            "action": request["action"],
+            "synthetic_reference_only": True,
+        }
+
+    first = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=dispatcher,
+        postcondition=lambda response: True,
+        timestamp=NOW,
+        idempotency_ledger=ledger,
+    )
+    second = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=dispatcher,
+        postcondition=lambda response: True,
+        timestamp=NOW,
+        idempotency_ledger=ledger,
+    )
+
+    assert calls == [{"action": "materialize"}]
+    assert first.replayed is False
+    assert second.replayed is True
+    assert second.action_digest == first.action_digest
+    assert ledger.get(identities().idempotency_key).state == IdempotencyState.COMPLETED
+
+
+def test_idempotency_key_cannot_bind_different_action_digest():
+    ledger = InMemoryIdempotencyLedger()
+    metadata = protected_metadata()
+    calls = []
+    first = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: calls.append(request) or {"status": "PASS"},
+        postcondition=lambda response: True,
+        timestamp=NOW,
+        idempotency_ledger=ledger,
+    )
+
+    changed = TransactionMetadata(
+        **{
+            **metadata.__dict__,
+            "parameters": {"action": "materialize", "variant": "changed"},
+        }
+    )
+    second = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=changed,
+        context_factory=context_factory(changed),
+        dispatcher=lambda request: calls.append(request) or {"status": "PASS"},
+        postcondition=lambda response: True,
+        timestamp=NOW,
+        idempotency_ledger=ledger,
+    )
+    assert first.audit_event["decision"] == "ALLOW"
+    assert second.audit_event["decision"] == "DENY"
+    assert "different action digest" in second.audit_event["decision_reasons"][0]
+    assert len(calls) == 1
+
+
+def test_unknown_outcome_blocks_retry_until_reconciled():
+    ledger = InMemoryIdempotencyLedger()
+    metadata = protected_metadata()
+    calls = []
+
+    def unknown_dispatcher(request):
+        calls.append(request)
+        raise ExecutionOutcomeUnknown("timeout after provider dispatch")
+
+    first = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=unknown_dispatcher,
+        postcondition=lambda response: False,
+        timestamp=NOW,
+        idempotency_ledger=ledger,
+    )
+    retry = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: calls.append(request) or {"status": "PASS"},
+        postcondition=lambda response: True,
+        timestamp=NOW,
+        idempotency_ledger=ledger,
+    )
+
+    assert first.reconciliation_required is True
+    assert ledger.get(identities().idempotency_key).state == IdempotencyState.OUTCOME_UNKNOWN
+    assert retry.audit_event["decision"] == "ESCALATE"
+    assert retry.reconciliation_required is True
+    assert len(calls) == 1
+
+
+def test_reconciled_failed_unknown_outcome_can_retry():
+    ledger = InMemoryIdempotencyLedger()
+    metadata = protected_metadata()
+    calls = []
+    first = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: (_ for _ in ()).throw(ExecutionOutcomeUnknown("timeout after provider dispatch")),
+        postcondition=lambda response: False,
+        timestamp=NOW,
+        idempotency_ledger=ledger,
+    )
+    ledger.reconcile_failed(
+        identities().idempotency_key,
+        first.action_digest,
+    )
+
+    retry = run_reference_transaction(
+        request={"action": "materialize"},
+        identity=identities(),
+        metadata=metadata,
+        context_factory=context_factory(metadata),
+        dispatcher=lambda request: calls.append(request) or {"status": "PASS"},
+        postcondition=lambda response: True,
+        timestamp=NOW,
+        idempotency_ledger=ledger,
+    )
+
+    assert retry.audit_event["decision"] == "ALLOW"
+    assert retry.execution_receipt["execution_state"] == "EXECUTED"
+    assert calls == [{"action": "materialize"}]

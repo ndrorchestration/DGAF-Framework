@@ -1,12 +1,18 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from typing import Any, Callable
 
 from scripts.dgaf_capability_canonicalize import (
     canonical_action_envelope,
     sha256_digest,
+)
+from scripts.dgaf_capability_idempotency import (
+    IdempotencyConflict,
+    IdempotencyInFlight,
+    IdempotencyOutcomeUnknown,
+    InMemoryIdempotencyLedger,
 )
 from scripts.dgaf_capability_pep import (
     EnforcementContext,
@@ -57,6 +63,7 @@ class TransactionResult:
     execution_receipt: dict[str, Any] | None
     audit_event: dict[str, Any]
     reconciliation_required: bool
+    replayed: bool = False
 
 
 def _iso(timestamp: datetime) -> str:
@@ -150,6 +157,7 @@ def run_reference_transaction(
     timestamp: datetime,
     evidence_ids: list[str] | None = None,
     verifier_ids: list[str] | None = None,
+    idempotency_ledger: InMemoryIdempotencyLedger | None = None,
 ) -> TransactionResult:
     envelope = canonical_action_envelope(
         capability_id=metadata.capability_id,
@@ -165,6 +173,61 @@ def run_reference_transaction(
         nonce=metadata.nonce,
     )
     digest = sha256_digest(envelope)
+
+    if idempotency_ledger is not None:
+        try:
+            cached = idempotency_ledger.claim(identity.idempotency_key, digest)
+        except IdempotencyConflict as exc:
+            audit = _audit(
+                identity=identity,
+                metadata=metadata,
+                action_digest=digest,
+                timestamp=timestamp,
+                decision="DENY",
+                decision_reasons=[str(exc)],
+                execution_state="NOT_STARTED",
+                postcondition_state="NOT_CHECKED",
+                recovery_state="NONE",
+                evidence_ids=evidence_ids,
+                verifier_ids=verifier_ids,
+            )
+            return TransactionResult(envelope, digest, None, None, audit, False)
+        except IdempotencyOutcomeUnknown as exc:
+            audit = _audit(
+                identity=identity,
+                metadata=metadata,
+                action_digest=digest,
+                timestamp=timestamp,
+                decision="ESCALATE",
+                decision_reasons=[str(exc)],
+                execution_state="EXECUTION_OUTCOME_UNKNOWN",
+                postcondition_state="INCONCLUSIVE",
+                recovery_state="PENDING",
+                evidence_ids=evidence_ids,
+                verifier_ids=verifier_ids,
+            )
+            return TransactionResult(envelope, digest, None, None, audit, True)
+        except IdempotencyInFlight as exc:
+            audit = _audit(
+                identity=identity,
+                metadata=metadata,
+                action_digest=digest,
+                timestamp=timestamp,
+                decision="DENY",
+                decision_reasons=[str(exc)],
+                execution_state="NOT_STARTED",
+                postcondition_state="NOT_CHECKED",
+                recovery_state="NONE",
+                evidence_ids=evidence_ids,
+                verifier_ids=verifier_ids,
+            )
+            return TransactionResult(envelope, digest, None, None, audit, False)
+
+        if cached is not None:
+            if not isinstance(cached, TransactionResult):
+                raise TypeError("cached idempotency result is not a TransactionResult")
+            return replace(cached, replayed=True)
+
     context = context_factory(digest)
 
     try:
@@ -187,6 +250,8 @@ def run_reference_transaction(
             evidence_ids=evidence_ids,
             verifier_ids=verifier_ids,
         )
+        if idempotency_ledger is not None:
+            idempotency_ledger.release_denied(identity.idempotency_key, digest)
         return TransactionResult(envelope, digest, None, None, audit, False)
     except ExecutionOutcomeUnknown:
         receipt = _receipt(
@@ -212,7 +277,10 @@ def run_reference_transaction(
             evidence_ids=evidence_ids,
             verifier_ids=verifier_ids,
         )
-        return TransactionResult(envelope, digest, None, receipt, audit, True)
+        result = TransactionResult(envelope, digest, None, receipt, audit, True)
+        if idempotency_ledger is not None:
+            idempotency_ledger.mark_unknown(identity.idempotency_key, digest)
+        return result
 
     verified = postcondition(response)
     post_state = PostconditionState.VERIFIED if verified else PostconditionState.FAILED
@@ -245,4 +313,7 @@ def run_reference_transaction(
         evidence_ids=evidence_ids,
         verifier_ids=verifier_ids,
     )
-    return TransactionResult(envelope, digest, response, receipt, audit, False)
+    result = TransactionResult(envelope, digest, response, receipt, audit, False)
+    if idempotency_ledger is not None:
+        idempotency_ledger.mark_completed(identity.idempotency_key, digest, result)
+    return result
