@@ -6,6 +6,14 @@ This path is retained for compatibility and is not an independent current-state 
 
 For public terminology and industry-neutral explanations of DGAF-specific names, use [`PUBLIC_TRANSLATION_LAYER.md`](PUBLIC_TRANSLATION_LAYER.md).
 
+## Capability-governance design lane
+
+A prospective provider-neutral capability-governance lane is active on `design/capability-governance-protocol-2026-09-25`. It is a DGAF governance-architecture/reference-implementation workstream, not a separate research program and not an MCP-specific authority model.
+
+Current local evidence: checkpoint `c9f21a021318`, **81/81 relevant tests PASS**, and bounded local test coverage for all G1–G16 invariants. The lane keeps the existing four-tool local MCP adapter intact while adding schemas, canonical action binding, delegation/authorization checks, a bounded PEP wrapper, workflow composition/egress controls, recovery/postcondition semantics, and capability-specific audit provenance.
+
+This lane is **prospective / non-authorizing** until separately accepted into protected `main`; it has no scientific-state, empirical-N, efficacy, independent-validation, certification, or High-Assurance effect.
+
 ## Current hard boundary
 
 This 2026-09-22 compatibility reconciliation was refreshed against protected `main` `a65e862cce193b8a6aa8a6d702505f4987a859e0`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.

@@ -40,6 +40,11 @@ A later record must not retroactively change the epistemic meaning of an earlier
 | Document | Lifecycle | Authority | Scope / note |
 |---|---|---|---|
 | `docs/CURRENT_STATE.md` | ACTIVE | Both | Concise current repository/gate snapshot |
+| `docs/formalism/CAPABILITY_GOVERNANCE_PROTOCOL.md` | PROSPECTIVE / SPECIFICATION | Audit/control | Provider-neutral capability-governance contract; non-authorizing until separately accepted |
+| `docs/formalism/CAPABILITY_GOVERNANCE_DESIGN_TRACK.md` | PROSPECTIVE / ROADMAP | Audit/control | Specification-first staged implementation path; explicitly defers general proxy/productization |
+| `docs/formalism/CAPABILITY_GOVERNANCE_THREAT_MODEL.md` | PROSPECTIVE / SECURITY ANALYSIS | Audit/control | Abuse-case corpus and trust-boundary model for governed capabilities |
+| `docs/formalism/CAPABILITY_GOVERNANCE_CONFORMANCE_MATRIX.md` | PROSPECTIVE / DERIVATIVE | Audit/control | Maps G1–G16 to bounded local executable evidence; does not establish certification or universal correctness |
+| `docs/formalism/CAPABILITY_CANONICALIZATION_v0_1.md` | PROSPECTIVE / SPECIFICATION | Audit/control | Versioned canonical action-byte/digest profile for exact-action binding |
 | `docs/PROJECT_STATUS.md` | DERIVATIVE | Both | Compatibility summary; must defer to CURRENT_STATE for live gate truth |
 | `docs/ui/UI_CURRENT_STATE.md` | DERIVATIVE | Presentation/documentation | Current UI/interface projection index; must defer to CURRENT_STATE and active controllers for live gate truth |
 | `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` | HISTORICAL | Historical audit | Preserves the 2026-08-20 pre-authorization gap audit; not a current gate list |

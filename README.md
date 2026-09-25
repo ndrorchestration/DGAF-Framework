@@ -20,6 +20,8 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **6. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
+**7. Review the provider-neutral capability-governance design lane.** The current design branch formalizes how agents may obtain and exercise authority across MCP, APIs, SDKs, CLIs, plugins, and connectors without treating any transport or vendor API as the governance model. It separates PDP, PEP, credentials, adapters, data-flow controls, receipts, postconditions, and audit evidence. The branch is prospective/non-authorizing and currently demonstrates 81/81 relevant local tests with bounded G1–G16 invariant slices; it is not protected-main authority or a production-security claim.
+
 ### What this demonstrates
 
 Within the evidence boundaries documented in this repository, DGAF demonstrates practical work in:

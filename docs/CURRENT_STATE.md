@@ -98,6 +98,16 @@ This file is the **primary current-facing repository summary**. GitHub is author
 
 The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, presentation/UI state, repository assurance inventory, runtime/deployment state, and historical evidence are separate governance/evidence dimensions. Evidence, authorization, N, verification class, deployment health, catalog membership, and efficacy do not transfer between them without an explicit governed rule.
 
+## Capability-governance design track — prospective / non-authorizing
+
+A provider-neutral capability-governance track is under active development on branch `design/capability-governance-protocol-2026-09-25`. This branch is not protected-main authority and does not change scientific or High-Assurance state.
+
+Current local checkpoint: `c9f21a021318`. The track separates provider, capability, adapter/transport, multidimensional effect/risk, policy, credentials, execution evidence, and postconditions. It introduces prospective contracts for capability manifests, authorization, delegation, workflow authorization, execution receipts, reconciliation, capability audit events, exact-action canonicalization/digest binding, bounded PEP enforcement, composition/data-egress checks, recovery semantics, and evidence-strength monotonicity.
+
+The current relevant local compatibility slice is **81/81 PASS**. Each existing Agent Governance invariant G1–G16 now has at least one bounded local `TESTED-SLICE` in `docs/formalism/CAPABILITY_GOVERNANCE_CONFORMANCE_MATRIX.md`. These tests are engineering/conformance evidence only: they do not establish universal correctness, production security, independent verification, empirical efficacy, scientific-N promotion, or High-Assurance authorization.
+
+The existing four-tool local MCP adapter remains unchanged. The next implementation target is one bounded end-to-end reference transaction: canonical action → authorization/verifier state → PEP → existing local bridge → execution receipt → postcondition/reconciliation → capability audit event.
+
 ## Executive boundary
 
 | Area | Current state |

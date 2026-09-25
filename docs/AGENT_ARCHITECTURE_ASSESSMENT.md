@@ -7,6 +7,16 @@
 
 Note: the "27" figure in the brief overcounts; on-disk there are 25 agent subdirectories (sentience was consolidated into sentinel/sentience/). The 10 top-level documents (AMETHYST_AGENT_SPEC_v4.2-hensel.md, COLLEEN_SPEC_v53.2.md, colleen-l5-governance-protocol.md, FORMATION_TOPOLOGY.md, HARMONIC_QUINTET_META_ORCHESTRATION.md, IONIAN_MODAL_HARMONIC_MATRIX.md, PROFESSOR_PRODIGY_KB.md, PROPRIETARY.md, AGENT_ECOSYSTEM_REGISTRY.md, AGENT_ROSTER.md) are cross-cutting — not per-agent lifecycle containers.
 
+### 2026-09-25 runtime-governance clarification
+
+This assessment remains correct that the named agent taxonomy is primarily a knowledge/taxonomy layer rather than a set of already-running autonomous agents. A separate prospective capability-governance track now defines how a future instantiated agent or formation could receive, delegate, and exercise runtime authority without silently inheriting permissions from its persona or role description.
+
+Functional role capability and runtime invocation capability are therefore distinct:
+
+`role capability != provider/tool execution authority`
+
+Runtime authority is intended to flow through explicit capability manifests, scoped authorization/delegation, exact-action binding, bounded PEP enforcement, provider adapters, execution receipts, postcondition verification, and audit/provenance. This clarification does not convert any conceptual agent in this document into an executable runtime principal.
+
 ---
 
 #### Tier 1 — Full Lifecycle (10 files typical)
