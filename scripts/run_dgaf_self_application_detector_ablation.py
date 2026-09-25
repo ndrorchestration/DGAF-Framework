@@ -58,13 +58,15 @@ def run_matrix(cases: list[dict[str, str]], source_commit: str) -> list[dict[str
                         "detected": detected,
                         "escaped": baseline_detected and not detected,
                     }
-                records.append({
-                    "case_id": case["id"],
-                    "mutation": case["mutation"],
-                    "baseline_detected": baseline_detected,
-                    "detectors": detector_results,
-                    "ablations": ablations,
-                })
+                records.append(
+                    {
+                        "case_id": case["id"],
+                        "mutation": case["mutation"],
+                        "baseline_detected": baseline_detected,
+                        "detectors": detector_results,
+                        "ablations": ablations,
+                    }
+                )
             finally:
                 mutation._run(["git", "worktree", "remove", "--force", str(worktree)], ROOT)
                 mutation._run(["git", "worktree", "prune"], ROOT)
@@ -100,17 +102,13 @@ def main() -> int:
     cases = mutation.validate_registry(registry)
     source_commit = mutation._source_commit()
 
-    dirty_before = mutation._run(
-        ["git", "status", "--porcelain=v1", "--untracked-files=all"], ROOT, check=True
-    ).stdout
+    dirty_before = mutation._run(["git", "status", "--porcelain=v1", "--untracked-files=all"], ROOT, check=True).stdout
     if dirty_before:
         raise SystemExit("source worktree must be clean before detector ablation")
 
     records = run_matrix(cases, source_commit)
 
-    dirty_after = mutation._run(
-        ["git", "status", "--porcelain=v1", "--untracked-files=all"], ROOT, check=True
-    ).stdout
+    dirty_after = mutation._run(["git", "status", "--porcelain=v1", "--untracked-files=all"], ROOT, check=True).stdout
     if dirty_after:
         raise SystemExit("detector ablation dirtied the source worktree")
 
