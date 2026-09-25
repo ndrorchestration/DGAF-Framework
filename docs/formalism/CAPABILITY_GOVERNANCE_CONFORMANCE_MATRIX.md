@@ -5,21 +5,21 @@
 
 | Invariant | Core requirement | Current evidence | Status |
 |---|---|---|---|
-| G1 | No protected side effect without authorization | Schema/design only | OPEN |
-| G2 | Authorization precedes execution | Transition spec | OPEN |
+| G1 | No protected side effect without authorization | bounded PEP blocks protected dispatch without active authorization | TESTED-SLICE |
+| G2 | Authorization precedes execution | bounded PEP checks authority before dispatcher invocation | TESTED-SLICE |
 | G3 | Authorization is scoped | authorization schema | PARTIAL |
-| G4 | No self-approval of exceptions | transition spec | OPEN |
+| G4 | No self-approval of exceptions | bounded PEP rejects requester == approver | TESTED-SLICE |
 | G5 | Verification != authorization | transition spec | PARTIAL |
 | G6 | Authorization != execution | receipt schema | PARTIAL |
 | G7 | Material evidence preserves provenance | audit fields/design | PARTIAL |
-| G8 | Failed required verifier blocks transition | transition spec | OPEN |
+| G8 | Failed required verifier blocks transition | bounded PEP blocks required verifier failure before dispatch | TESTED-SLICE |
 | G9 | Revocation blocks future use | executable authorization-status test | TESTED-SLICE |
 | G10 | Audit survives success/failure | receipt/reconciliation schemas | PARTIAL |
 | G11 | Delegation cannot widen authority | executable capability/resource/budget attenuation tests | TESTED-SLICE |
 | G12 | Approval is action-digest-bound | canonicalization + substitution + replay-consumption tests | TESTED-SLICE |
 | G13 | Commit-time volatile predicates revalidated | executable missing/changed state-guard tests | TESTED-SLICE |
-| G14 | Authorization not automatically compositional | workflow schema + threat T7 | PARTIAL |
-| G15 | Postcondition failure does not erase execution | receipt/reconciliation schema | PARTIAL |
+| G14 | Authorization not automatically compositional | workflow composition + sensitive-egress tests | TESTED-SLICE |
+| G15 | Postcondition failure does not erase execution | partial/postcondition recovery-state tests | TESTED-SLICE |
 | G16 | Weaker evidence cannot increase authority | transition spec | OPEN |
 ## Existing executable evidence
 
