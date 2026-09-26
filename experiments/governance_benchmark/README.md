@@ -57,7 +57,6 @@ specified. It does not establish general DGAF efficacy, external validity,
 independent validation, production safety, standards compliance, or
 state-of-the-art status.
 
-
 ## Metamorphic mutation suite
 
 `run_mutations.py` starts from legitimate seed cases and flips one governance
@@ -80,7 +79,6 @@ python -m pytest tests/test_governance_benchmark_mutations.py
 
 The suite is deterministic and intentionally small. It is not randomized fuzzing
 and does not establish robustness outside the enumerated mutation dimensions.
-
 
 ## Two-factor interaction suite
 
