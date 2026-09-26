@@ -84,9 +84,11 @@ def _probe_measure(measure_id: str) -> dict[str, Any]:
         )
         return {
             "status": status,
-            "observation": "Repository runbook exposes the bounded operator prerequisites."
-            if status == "PASS"
-            else "Repository runbook is missing required prerequisite tokens.",
+            "observation": (
+                "Repository runbook exposes the bounded operator prerequisites."
+                if status == "PASS"
+                else "Repository runbook is missing required prerequisite tokens."
+            ),
             "evidence": {
                 "runbook_path": str(RUNBOOK.relative_to(ROOT)),
                 "runbook_sha256": _sha256(RUNBOOK) if RUNBOOK.exists() else None,
@@ -106,9 +108,11 @@ def _probe_measure(measure_id: str) -> dict[str, Any]:
         )
         return {
             "status": status,
-            "observation": "Canonical runbook provides explicit command-order paths."
-            if status == "PASS"
-            else "Canonical command-order documentation is incomplete.",
+            "observation": (
+                "Canonical runbook provides explicit command-order paths."
+                if status == "PASS"
+                else "Canonical command-order documentation is incomplete."
+            ),
             "evidence": {
                 "runbook_path": str(RUNBOOK.relative_to(ROOT)),
                 "runbook_sha256": _sha256(RUNBOOK) if RUNBOOK.exists() else None,
@@ -128,9 +132,11 @@ def _probe_measure(measure_id: str) -> dict[str, Any]:
         combined_status = "PASS" if status == "PASS" and workflow_status == "PASS" else "FAIL"
         return {
             "status": combined_status,
-            "observation": "Repository documentation and artifact workflow expose retained evidence locations."
-            if combined_status == "PASS"
-            else "Evidence-location documentation or artifact workflow coverage is incomplete.",
+            "observation": (
+                "Repository documentation and artifact workflow expose retained evidence locations."
+                if combined_status == "PASS"
+                else "Evidence-location documentation or artifact workflow coverage is incomplete."
+            ),
             "evidence": {
                 "runbook_path": str(RUNBOOK.relative_to(ROOT)),
                 "runbook_sha256": _sha256(RUNBOOK) if RUNBOOK.exists() else None,
