@@ -18,7 +18,9 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **5. Understand the AOSS Stage-A external-validation frontier.** The non-collecting Stage-A assurance apparatus is accepted through PR #925. PR #928 adds the accepted independent-validation handoff, so an external review is now operationally requestable. Issue #929 controls actual reviewer engagement and returned evidence. No reviewer has yet been established as independent, no external review has been executed, and collection execution readiness remains not established.
 
-**6. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
+**6. Understand DGAF-on-DGAF self-application.** Issue #1022 has accepted mutation, ablation, historical-replay, and cold-start scaffold work, followed by same-system execution and adjudication through PR #1049. #1022 remains open pending an external reviewer package and independently performed replay under #929. This is internal same-system engineering validation only: scientific-N increment is 0, efficacy and independent/external validation are not established, and High-Assurance remains not authorized.
+
+**7. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
 ### What this demonstrates
 
@@ -35,7 +37,7 @@ Within the evidence boundaries documented in this repository, DGAF demonstrates 
 
 ### Current repository engineering milestones
 
-For this reconciliation, the accepted source lineage through PR #797 was read from protected `main` `40d301583048e0c47e8bf38154ac40fa023b4f5e`. Exact current protected-main identity is a Git fact and must be read at use time:
+The following bullets are selected historical engineering milestones, not a complete list of current work. For the live gate and evidence state, use [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md); exact current protected-main identity is a Git fact and must be read at use time:
 
 - **Decision Frontier — PR #776** is merged as a presentation-only Semantic Control Field component derived from canonical governance state.
 - **Governance Map — PR #779** is merged and renders ordered escalation, explicitly named lateral relationships, and global field constraints without creating a second state engine.
@@ -55,6 +57,7 @@ Those earlier engineering/presentation/assurance milestones did not establish ma
 > **Epoch 001 disposition:** protected mapping is **CRYPTOGRAPHICALLY UNRECOVERABLE** · primary analysis **UNANALYZABLE / NOT RUN**  
 > **Successor Track A / Epoch 002:** custody, freeze, closure, bounded verification classification, collection authorization, dataset lock, bounded unblinding, materialization, immutable materialization receipt, locked-primary-analysis authorization, local locked analysis execution, and the content-addressed locked-result receipt are **ACCEPTED/ESTABLISHED AT THEIR EXACT SCOPES** · blinded collection **COMPLETE** at 50 paired seed units / 2,250 observations · interpretation/adjudication **EXECUTED / ESTABLISHED / SAME_SYSTEM_NONINDEPENDENT**  
 > **AOSS Stage-A external review:** HANDOFF ACCEPTED VIA PR #928 · REVIEW NOT EXECUTED · ISSUE #929 OPEN · reviewer attribution / independence NOT VERIFIED · execution_allowed=false  
+> **DGAF-on-DGAF self-application:** ISSUE #1022 OPEN · scaffold / same-system execution / same-system adjudication ACCEPTED THROUGH PR #1049 · independent replay under #929 OPEN · INTERNAL ENGINEERING VALIDATION ONLY · SCIENTIFIC_N_INCREMENT=0 · HIGH_ASSURANCE=NOT_AUTHORIZED  
 > **Canonical DGAF efficacy:** NOT ESTABLISHED
 
 ## What problem DGAF is trying to solve
