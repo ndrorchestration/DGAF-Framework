@@ -1,0 +1,547 @@
+{
+  "record_type": "NDR_ACRONYM_REGISTRY",
+  "schema_version": 1,
+  "authority": {
+    "purpose": "Machine-readable acronym and identifier completeness registry for current-facing ecosystem documentation.",
+    "undefined_current_acronyms_prohibited": true,
+    "backronyms_prohibited": true,
+    "scientific_state_effect": "NONE",
+    "authority_effect": "NONE"
+  },
+  "entries": [
+    {
+      "token": "DGAF",
+      "expansion": "Dynamic Governance Agentic Formation",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "PDMAL",
+      "expansion": "Phi-Driven Multi-Agent Lattice",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "PDMAL-D",
+      "expansion": "Phi-Dodecahedral Multi-Agent Lattice",
+      "classification": "acronym",
+      "status": "prospective"
+    },
+    {
+      "token": "AHG",
+      "expansion": "Adaptive Harmonic Governance",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "ASIS",
+      "expansion": "Acoustic Spatial Insight System",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "AOSS",
+      "expansion": "Agent Observation and Safety System",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "ACP",
+      "expansion": "Agent Control Plane",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "AXIS",
+      "expansion": "Agent X-axis Invariant Spectrum",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "PPTL",
+      "expansion": "Phi-Pentagon Topology Lab",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "TGL",
+      "expansion": "Triadic Governance Loop",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "MDAR",
+      "expansion": "Monitor–Detect–Assess–Respond",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "AOGA",
+      "expansion": "Agentic Orchestration and Governance Architecture",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "GSAE",
+      "expansion": "Governed Self-Improving Agent Ecosystem",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "CCB",
+      "expansion": "Coherence Control Benchmark",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "AAR",
+      "expansion": "Action Admission Record",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "PDP",
+      "expansion": "Policy Decision Point",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "PEP",
+      "expansion": "Policy Enforcement Point",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "SSOT",
+      "expansion": "Single Source of Truth",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "SSoT",
+      "expansion": "Single Source of Truth",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "RDC",
+      "expansion": "Remote Desktop Commander",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "MORSE",
+      "expansion": "Multi-Orbital Resonance Scheduling Experiment",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "MOLI",
+      "expansion": "Multi-Orbital Loop Interchange",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "AIMY",
+      "expansion": "Agentic Iteration Metaconcert YAML",
+      "classification": "acronym",
+      "status": "current"
+    },
+    {
+      "token": "CSDF",
+      "expansion": "Cyber Shield Defense Framework",
+      "classification": "acronym",
+      "status": "historical"
+    },
+    {
+      "token": "PHDGE",
+      "expansion": "Phi-Harmonic Dynamic Governance Ecosystem",
+      "classification": "acronym",
+      "status": "historical"
+    },
+    {
+      "token": "NDR",
+      "expansion": "NDR AI Systems brand token; Named Design Rule only in NDR Pattern scope",
+      "classification": "brand_or_scoped_token",
+      "status": "current"
+    },
+    {
+      "token": "ORBIT",
+      "expansion": "Product/name token; not a confirmed acronym",
+      "classification": "brand_token",
+      "status": "current"
+    },
+    {
+      "token": "SACP",
+      "expansion": "Historical opaque identifier; deprecated from current naming",
+      "classification": "opaque_historical_identifier",
+      "status": "deprecated"
+    },
+    {
+      "token": "FML",
+      "expansion": "Historical opaque identifier; deprecated from current naming",
+      "classification": "opaque_historical_identifier",
+      "status": "deprecated"
+    },
+    {
+      "token": "NDR-HDFS",
+      "expansion": "Historical conflicted identifier; requires scope-qualified expansion",
+      "classification": "conflicted_historical_identifier",
+      "status": "historical"
+    },
+    {
+      "token": "TLE",
+      "expansion": "Triaxial Lemniscate research identifier",
+      "classification": "identifier",
+      "status": "current"
+    },
+    {
+      "token": "TL3",
+      "expansion": "Triaxial Lemniscate family identifier",
+      "classification": "identifier",
+      "status": "current"
+    },
+    {
+      "token": "M0",
+      "expansion": "Milestone 0",
+      "classification": "identifier",
+      "status": "current"
+    },
+    {
+      "token": "E0",
+      "expansion": "Experiment 0",
+      "classification": "identifier",
+      "status": "current"
+    },
+    {
+      "token": "R0-R7",
+      "expansion": "Research process stages 0 through 7",
+      "classification": "identifier_range",
+      "status": "current"
+    },
+    {
+      "token": "AI",
+      "expansion": "Artificial Intelligence",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "LLM",
+      "expansion": "Large Language Model",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "RAG",
+      "expansion": "Retrieval-Augmented Generation",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "CI",
+      "expansion": "Continuous Integration",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "QA",
+      "expansion": "Quality Assurance",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "UI",
+      "expansion": "User Interface",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "UX",
+      "expansion": "User Experience",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "API",
+      "expansion": "Application Programming Interface",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "CLI",
+      "expansion": "Command-Line Interface",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "SDK",
+      "expansion": "Software Development Kit",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "MCP",
+      "expansion": "Model Context Protocol",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "HTTP",
+      "expansion": "Hypertext Transfer Protocol",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "REST",
+      "expansion": "Representational State Transfer",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "RPC",
+      "expansion": "Remote Procedure Call",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "JSON",
+      "expansion": "JavaScript Object Notation",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "CSV",
+      "expansion": "Comma-Separated Values",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "SQL",
+      "expansion": "Structured Query Language",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "RLS",
+      "expansion": "Row-Level Security",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "HMAC",
+      "expansion": "Hash-Based Message Authentication Code",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "SHA",
+      "expansion": "Secure Hash Algorithm",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "ACL",
+      "expansion": "Access Control List",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "SCM",
+      "expansion": "Service Control Manager",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "SLA",
+      "expansion": "Service-Level Agreement",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "PR",
+      "expansion": "Pull Request",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "ADR",
+      "expansion": "Architecture Decision Record",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "IP",
+      "expansion": "Intellectual Property",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "BFT",
+      "expansion": "Byzantine Fault Tolerance",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "AR",
+      "expansion": "Augmented Reality",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "SLAM",
+      "expansion": "Simultaneous Localization and Mapping",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "FFT",
+      "expansion": "Fast Fourier Transform",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "CSI",
+      "expansion": "Channel State Information",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "PID",
+      "expansion": "Proportional–Integral–Derivative",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "TF-IDF",
+      "expansion": "Term Frequency–Inverse Document Frequency",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "MSE",
+      "expansion": "Mean Squared Error",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "KB",
+      "expansion": "Knowledge Base",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "NIST",
+      "expansion": "National Institute of Standards and Technology",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "RMF",
+      "expansion": "Risk Management Framework",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "ISO",
+      "expansion": "International Organization for Standardization",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "IEC",
+      "expansion": "International Electrotechnical Commission",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "EU",
+      "expansion": "European Union",
+      "classification": "external_standard",
+      "status": "current"
+    },
+    {
+      "token": "OWASP",
+      "expansion": "Open Worldwide Application Security Project",
+      "classification": "external_standard",
+      "status": "current"
+    }
+  ],
+  "scan_paths": [
+    "README.md",
+    "README.governance.md",
+    "NOTICE",
+    "docs/CURRENT_STATE.md",
+    "docs/VOCABULARY_GOVERNANCE.md",
+    "docs/PUBLIC_TRANSLATION_LAYER.md",
+    "docs/taxonomy/NDR_ACRONYM_REGISTRY.md"
+  ],
+  "literal_allowlist": [
+    "PASS",
+    "FAIL",
+    "FAILED",
+    "SUCCESS",
+    "OPEN",
+    "CLOSED",
+    "CURRENT",
+    "HISTORICAL",
+    "NONE",
+    "TRUE",
+    "FALSE",
+    "READY",
+    "BLOCKED",
+    "ACCEPTED",
+    "REJECTED",
+    "DEFINED",
+    "AMBIGUOUS",
+    "PROSPECTIVE",
+    "DEPRECATED",
+    "NOT",
+    "ESTABLISHED",
+    "AUTHORIZED",
+    "EXECUTED",
+    "VERIFIED",
+    "UNVERIFIED",
+    "UNRESOLVED",
+    "ACTIVE",
+    "INACTIVE",
+    "CANONICAL",
+    "EXTERNAL",
+    "INTERNAL",
+    "PUBLIC",
+    "PRIVATE",
+    "HIGH",
+    "LOW",
+    "MEDIUM",
+    "RED",
+    "GREEN",
+    "HEAD",
+    "UTC",
+    "UUID",
+    "URL",
+    "URI",
+    "UTF",
+    "YAML",
+    "TOML",
+    "HTML",
+    "CSS",
+    "JS",
+    "TS",
+    "PY",
+    "OS",
+    "CPU",
+    "GPU"
+  ],
+  "ignored_patterns": [
+    "^P\\d+[a-z]?$",
+    "^M\\d+$",
+    "^R\\d+$",
+    "^E\\d+$",
+    "^C\\d+$",
+    "^G\\d+$",
+    "^V\\d+$",
+    "^S\\d+$",
+    "^[A-F0-9]{7,64}$",
+    "^\\d+[A-Z]$",
+    "^[A-Z]+_V\\d+$"
+  ]
+}
