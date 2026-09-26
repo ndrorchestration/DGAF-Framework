@@ -70,16 +70,18 @@ Repository controllers tagged or refreshed for documentation/currentness follow-
 - `#553` / `#293` / `#296` / `#320` — Mode-T temporal-order, timing, Rekor, and independent security-review gates;
 - closed Track A provenance controllers `#523`, `#719`, `#879`, and `#834`.
 
-## Current unresolved update work
+## Follow-up reconciliation after PR #1050
 
-The following remain current documentation debt after this addendum:
+The six documentation/control follow-ups listed in the original checkpoint have been completed on 2026-09-26. Their source baseline for the entrypoint refresh was protected main `0cc79245f30f01f0b2d98c870589318fc7c69494`; subsequent documentation-only merges brought protected main to `37f02b1ccb1a33a2f7ea71da24c4b6ae689a4901`.
 
-1. Rewrite the top metadata/current-state sections of `docs/CURRENT_STATE.md` to reflect protected main `bda0f52d...` and the accepted #1022 chain through #1049.
-2. Refresh `README.md` only after `docs/CURRENT_STATE.md` is updated, so the public entrypoint does not overstate the latest state.
-3. Refresh `docs/PROJECT_STATUS.md` as a compatibility page, preserving that it is not the current authority.
-4. Add a top-level current checkpoint to #1022's body or retained controller comments summarizing accepted work through #1049.
-5. Add #1049/current-main checkpoint comments to #777 and optionally #770, without claiming provider admission or complete assurance-inventory coverage.
-6. Clean duplicate #1041 checkpoint language in connected workspace records.
+1. **Current-state entrypoint:** PR [#1052](https://github.com/ndrorchestration/DGAF-Framework/pull/1052) refreshed `docs/CURRENT_STATE.md` for accepted #1022 work through #1049. #1022 and the independent replay dependency under #929 remain open.
+2. **Public README:** PR [#1053](https://github.com/ndrorchestration/DGAF-Framework/pull/1053) routed live state to `docs/CURRENT_STATE.md` and bounded the self-application summary.
+3. **Compatibility page:** PR [#1054](https://github.com/ndrorchestration/DGAF-Framework/pull/1054) refreshed `docs/PROJECT_STATUS.md` while retaining its non-authority status.
+4. **#1022 controller:** a protected-main comment (ID `5844334699`) records accepted work through #1049, keeps #1022 open, and preserves the external replay boundary under #929.
+5. **Assurance/provider controllers:** comments on #777 (ID `5844332682`) and #770 (ID `5844332763`) refresh bounded status without claiming complete assurance coverage, provider admission, durable replay, or exactly-once effects.
+6. **Connected workspace records:** the capability-governance record, Research Program Registry, and Ecosystem Home & Authority Map now identify PR #1041's 2026-09-26 head `af91128ad6f9b91b6295d902eeee13d8eef23b03`; the earlier #1041 checkpoint heads and test counts remain historical evidence.
+
+These follow-ups update documentation and controller context only. They do not close #1022 or #929 and do not change governance, authorization, or scientific state.
 
 ## Non-effects / claim ceiling
 
