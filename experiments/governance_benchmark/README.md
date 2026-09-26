@@ -24,7 +24,12 @@ bounded comparator, not a claim about every production policy engine.
 - GB-005: confused deputy;
 - GB-006: authorization replay;
 - GB-007: prompt-injection intent substitution;
-- GB-008: compromised delegated sub-agent.
+- GB-008: compromised delegated sub-agent;
+- GB-009: valid independently verified claim;
+- GB-010: explicitly authorized sensitive-data composition;
+- GB-011: valid delegated requester;
+- GB-012: valid intent-bound model action;
+- GB-013: attested non-widening delegated sub-agent.
 
 ## Run
 
@@ -42,7 +47,8 @@ python experiments/governance_benchmark/run_benchmark.py \
 
 Runtime nanoseconds are informational only and must not be treated as stable
 performance evidence. The deterministic comparison uses decisions, error
-classes, false blocks, and decision-step counts.
+classes, false blocks, and decision-step counts. The report also records the
+incremental decision-step cost of DGAF relative to the hardened policy baseline.
 
 ## Evidence boundary
 
