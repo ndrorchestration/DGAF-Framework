@@ -8,7 +8,7 @@ For public terminology and industry-neutral explanations of DGAF-specific names,
 
 ## Current hard boundary
 
-This 2026-09-22 compatibility reconciliation was refreshed against protected `main` `a65e862cce193b8a6aa8a6d702505f4987a859e0`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
+This 2026-09-26 compatibility reconciliation was refreshed against protected `main` `bfaab36af0ee1c233ce5e2cb3186475ce86cd61a`. Exact current protected-main identity must be read from Git at use time; this compatibility page does not maintain a self-referential standing SHA.
 
 - canonical High-Assurance program: **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0**;
 - canonical DGAF efficacy: **NOT ESTABLISHED**;
@@ -37,9 +37,10 @@ This 2026-09-22 compatibility reconciliation was refreshed against protected `ma
 - post-interpretation disposition tooling: **ACCEPTED / NON-EXECUTING** through PR #880;
 - post-interpretation disposition: **ESTABLISHED** through PR #881 as `CLOSED_BOUNDED_SAME_SYSTEM_NONINDEPENDENT`;
 - Epoch 002 lifecycle: **CLOSED_FOR_EXACT_PREREGISTERED_SCOPE**; rerun, historical pooling, claim promotion, and a new empirical epoch remain unauthorized;
-- scientific-N increment: **0**.
+- scientific-N increment: **0**;
+- DGAF-on-DGAF self-application (#1022): bounded mutation, ablation, historical-replay, cold-start scaffold, same-system execution, and same-system adjudication accepted through PR #1049; #1022 remains open pending an external reviewer package and independently performed replay under #929; internal engineering validation only.
 
-These accepted records preserve separate event boundaries. Materialization, its receipt, bounded primary-analysis authorization, local primary-analysis execution, and the content-addressed result receipt are established at their exact scopes; interpretation is established as a bounded note, while efficacy, independent validation, and High-Assurance authorization remain unestablished.
+These accepted records preserve separate event boundaries. Materialization, its receipt, bounded primary-analysis authorization, local primary-analysis execution, and the content-addressed result receipt are established at their exact scopes; interpretation is established as a bounded note, while efficacy, independent validation, and High-Assurance authorization remain unestablished. The #1022 work is same-system internal engineering validation only and does not change scientific N, efficacy, independent-validation, external-validation, or High-Assurance status.
 
 ## AOSS Stage-A external-review frontier
 
