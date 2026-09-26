@@ -23,9 +23,9 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **PHDGE** | Phi-Harmonic Dynamic Governance Ecosystem | Historical umbrella/ensemble brand in older ops/generator material | HISTORICAL / NON-CANONICAL | Preserve as lineage only. It is not current authority, not the active ensemble identity, and must not replace current NDR AI Systems ecosystem framing without a new explicit naming decision. |
 | **PPTL** | Phi-Pentagon Topology Lab | Repository-local topology/governance harness name | DEFINED; implementation/evidence remains artifact-specific | Supported by `pptl/README.md` and `pptl/__init__.py`; older competing expansions are historical/current-facing residue, not equal canonical candidates. |
 | **AXIS** | Agent X-axis Invariant Spectrum | DGAF invariant measurement/metric spine | DEFINED; operationalization status is artifact-specific | Canonical expansion is explicitly recorded in `docs/qa/AXIS_METRIC_SPEC.md`; the specification itself states that full operationalization remains a roadmap item. |
-| **SACP** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical/project-local term | AMBIGUOUS | Do not invent an expansion. Preserve the acronym until a canonical source is located. |
+| **SACP** | Historical opaque identifier; deprecated from current naming | Historical/project-local term | HISTORICAL / DEPRECATED | No stronger owning expansion has been recovered. Do not backronym; use the concrete capability/mechanism name in current prose. |
 | **BFT** | Byzantine Fault Tolerance | Established distributed-systems fault model/property | EXTERNAL STANDARD TERM | PDMAL is not automatically BFT merely because BFT terminology appears nearby. |
-| **MDAR** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | DGAF protocol reference | AMBIGUOUS | The repository contains references to an `MDAR_PROTOCOL_v1.md`, but the current search surface did not establish its expansion. Do not infer one. |
+| **MDAR** | Monitor–Detect–Assess–Respond | DGAF protocol / response loop | DEFINED | Canonicalized 2026-09-26 after repeated historical candidate usage and no stronger conflicting owner was recovered. |
 | **KB** | Knowledge Base | Agent knowledge/documentation artifact | STANDARD / DEFINED | Descriptive, not a capability claim. |
 | **QA** | Quality Assurance | Testing/review terminology | STANDARD / DEFINED | Does not imply that quality has been demonstrated unless tests are actually run. |
 | **API** | Application Programming Interface | Software interface | STANDARD / DEFINED | Standard external term. |
@@ -37,7 +37,7 @@ When an acronym has conflicting historical expansions, the conflict is recorded 
 | **AR** | Augmented Reality | Spatial/phone perception context | STANDARD / DEFINED | Do not imply AR capability beyond the implemented platform. |
 | **SLAM** | Simultaneous Localization and Mapping | Spatial-computing method | STANDARD / DEFINED | Do not claim a SLAM implementation unless source code/evaluation supports it. |
 | **PID** | Proportional–Integral–Derivative | Control method | STANDARD / DEFINED | AHG/Zeta-Pell usage must correspond to actual PID implementation. |
-| **FML** | **UNRESOLVED IN CURRENT GITHUB SURFACE** | Historical AHG/Zeta-Pell mitigation terminology | AMBIGUOUS | Do not expand from inference. |
+| **FML** | Historical opaque identifier; deprecated from current naming | Historical AHG/Zeta-Pell mitigation terminology | HISTORICAL / DEPRECATED | No recoverable canonical expansion. Current prose must spell out the concrete mechanism instead of using bare FML. |
 | **PDM** | **DO NOT ASSUME PDMAL** | Possible project-local abbreviation | AMBIGUOUS | Similar-looking acronyms are not interchangeable. |
 
 ## Controlled non-acronym terms and notation
@@ -123,13 +123,13 @@ PHDGE is retained only as **historical / non-canonical ecosystem branding**. His
 
 Orbit is a **product/name**, not a confirmed acronym. The phrase “Observable Multi-Agent Reasoning” may be retained as a tagline where historically/source-accurate, but it must not be used as an O-R-B-I-T expansion unless a future explicit naming authority establishes one.
 
-### SACP
+### SACP / FML
 
-The acronym is present in historical project context, but the current repository search did not provide sufficient evidence to safely expand it. Until its canonical source is located, it remains `UNRESOLVED`.
+Both are retained as **historical opaque identifiers**. No stronger owning expansion has been recovered, so neither may be used as an undefined current acronym. Current prose must name the concrete capability/mechanism instead. Historical literal occurrences remain provenance.
 
-### MDAR / FML
+### MDAR
 
-These are established project-local tokens, but their expansions require direct inspection of their canonical specifications. Do not infer expansions from file names or surrounding prose.
+Current canonical expansion: **Monitor–Detect–Assess–Respond**. The missing historical `MDAR_PROTOCOL_v1.md` path remains a provenance gap; it does not leave the current acronym undefined.
 
 ## Audit rule
 
@@ -144,3 +144,33 @@ Future acronym sweeps must report:
 7. whether the acronym is being used as an external-standard term or an NDR-local term.
 
 **No acronym is considered reconciled merely because one plausible expansion exists.**
+
+
+## 2026-09-26 ecosystem acronym-completeness overlay
+
+Current reader-facing ecosystem terminology follows a stronger rule: every acronym must either have a canonical expansion or be explicitly classified as a non-acronym token / historical opaque identifier. Undefined current acronyms are prohibited.
+
+Additional current definitions used across connected ecosystem documentation include:
+
+| Identifier | Expansion / classification |
+|---|---|
+| **AOSS** | Agent Observation and Safety System |
+| **ACP** | Agent Control Plane |
+| **AOGA** | Agentic Orchestration and Governance Architecture |
+| **GSAE** | Governed Self-Improving Agent Ecosystem |
+| **CCB** | Coherence Control Benchmark |
+| **MORSE** | Multi-Orbital Resonance Scheduling Experiment |
+| **MOLI** | Multi-Orbital Loop Interchange |
+| **AIMY** | Agentic Iteration Metaconcert YAML |
+| **CSDF** | Cyber Shield Defense Framework (historical DGAF lineage name) |
+| **PHDGE** | Phi-Harmonic Dynamic Governance Ecosystem (historical / non-canonical) |
+| **AAR** | Action Admission Record |
+| **PDP** | Policy Decision Point |
+| **PEP** | Policy Enforcement Point |
+| **SSoT / SSOT** | Single Source of Truth |
+| **RDC** | Remote Desktop Commander |
+
+Identifier-only labels such as **TLE**, **TL3**, **M0**, **E0**, and **R0–R7** must be defined by scope without inventing letter-perfect backronyms.
+
+Machine-readable completeness authority: `docs/taxonomy/ACRONYM_REGISTRY.v1.json`.
+Validation entry point: `python scripts/validate_acronym_registry.py`.
