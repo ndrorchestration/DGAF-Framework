@@ -173,3 +173,43 @@ Identifier-only labels such as **TLE**, **TL3**, **M0**, **E0**, and **R0–R7**
 
 Machine-readable completeness authority: `docs/taxonomy/ACRONYM_REGISTRY.v1.json`.
 Validation entry point: `python scripts/validate_acronym_registry.py`.
+## Machine-derived project token projection
+
+This marked table is generated from `ACRONYM_REGISTRY.v1.json` for project-owned acronyms, names, brand/scoped tokens, and historical opaque/conflicted identifiers. External-standard abbreviations remain governed by JSON but are intentionally excluded from this human-facing projection. CI fails if this marked projection drifts from JSON.
+
+<!-- ACRONYM_JSON_PROJECTION_START -->
+| Token | JSON expansion / classification | Status |
+|---|---|---|
+| **AAR** | Action Admission Record _(classification: acronym)_ | current |
+| **ACP** | Agent Control Plane _(classification: acronym)_ | current |
+| **AH3** | Adaptive Harmonic-Hierarchical Hybrid _(classification: historical_acronym)_ | historical |
+| **AHG** | Adaptive Harmonic Governance _(classification: acronym)_ | current |
+| **AIMY** | Agentic Iteration Metaconcert YAML _(classification: acronym)_ | current |
+| **AOGA** | Agentic Orchestration and Governance Architecture _(classification: acronym)_ | current |
+| **AOSS** | Agent Observation and Safety System _(classification: acronym)_ | current |
+| **ASIS** | Acoustic Spatial Insight System _(classification: acronym)_ | current |
+| **AXIS** | Agent X-axis Invariant Spectrum _(classification: acronym)_ | current |
+| **CCB** | Coherence Control Benchmark _(classification: acronym)_ | current |
+| **COLLEEN** | Canonical agent/persona name token; not an acronym _(classification: name_token)_ | current |
+| **CSDF** | Cyber Shield Defense Framework _(classification: acronym)_ | historical |
+| **DGAF** | Dynamic Governance Agentic Formation _(classification: acronym)_ | current |
+| **FML** | Historical opaque identifier; deprecated from current naming _(classification: opaque_historical_identifier)_ | deprecated |
+| **GSAE** | Governed Self-Improving Agent Ecosystem _(classification: acronym)_ | current |
+| **MDAR** | Monitor–Detect–Assess–Respond _(classification: acronym)_ | current |
+| **MOLI** | Multi-Orbital Loop Interchange _(classification: acronym)_ | current |
+| **MORSE** | Multi-Orbital Resonance Scheduling Experiment _(classification: acronym)_ | current |
+| **NDR** | NDR AI Systems brand token; Named Design Rule only in NDR Pattern scope _(classification: brand_or_scoped_token)_ | current |
+| **NDR-HDFS** | Historical conflicted identifier; requires scope-qualified expansion _(classification: conflicted_historical_identifier)_ | historical |
+| **ORBIT** | Product/name token; not a confirmed acronym _(classification: brand_token)_ | current |
+| **PDMAL** | Phi-Driven Multi-Agent Lattice _(classification: acronym)_ | current |
+| **PDMAL-D** | Phi-Dodecahedral Multi-Agent Lattice _(classification: acronym)_ | prospective |
+| **PDP** | Policy Decision Point _(classification: acronym)_ | current |
+| **PEP** | Policy Enforcement Point _(classification: acronym)_ | current |
+| **PHDGE** | Phi-Harmonic Dynamic Governance Ecosystem _(classification: acronym)_ | historical |
+| **PPTL** | Phi-Pentagon Topology Lab _(classification: acronym)_ | current |
+| **RDC** | Remote Desktop Commander _(classification: acronym)_ | current |
+| **SACP** | Historical opaque identifier; deprecated from current naming _(classification: opaque_historical_identifier)_ | deprecated |
+| **SSoT** | Single Source of Truth _(classification: acronym)_ | current |
+| **SSOT** | Single Source of Truth _(classification: acronym)_ | current |
+| **TGL** | Triadic Governance Loop _(classification: acronym)_ | current |
+<!-- ACRONYM_JSON_PROJECTION_END -->
