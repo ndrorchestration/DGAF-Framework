@@ -1,4 +1,3 @@
-
 # DGAF Operator Self-Test
 
 Status: **INTERNAL ENGINEERING VALIDATION ONLY**
@@ -17,7 +16,7 @@ production certification, or High-Assurance authorization.
 
 ## One-command Windows path
 
-Create a fresh full clone, then run the wrapper from that checkout. This keeps
+Create a clean DGAF checkout as a fresh full clone, then run the wrapper from that checkout. This keeps
 the operator's working tree untouched and avoids Windows line-ending state from
 an older checkout:
 
