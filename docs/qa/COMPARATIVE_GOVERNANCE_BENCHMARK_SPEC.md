@@ -141,3 +141,36 @@ Build the smallest deterministic harness with:
 6. zero scientific-state promotion.
 
 Expand only after that slice passes repository QA.
+
+
+## Mutation robustness layer
+
+After the fixed seed suite is green, the benchmark SHOULD generate bounded
+metamorphic mutations from legitimate seed cases.
+
+The first mutation layer changes exactly one governance predicate at a time:
+
+- delegated requester authorization;
+- replay state;
+- intent binding;
+- workload attestation;
+- delegation-width relation;
+- evidence presence;
+- evidence freshness;
+- verification independence class;
+- flow provenance;
+- composed-flow authorization.
+
+The purpose is to test local robustness and control attribution. It is not
+randomized fuzzing and MUST NOT be described as broad adversarial robustness.
+
+Acceptance requires:
+
+1. every generated mutation has a declared seed and mutated field;
+2. expected behavior is defined independently of observed DGAF output;
+3. runtime-authority mutations are expected to be caught by the hardened policy
+   comparator as well as DGAF;
+4. epistemic/composed-authority mutations may count as DGAF incremental
+   protection only where the hardened comparator is intentionally out of scope;
+5. legitimate paired fixtures remain unblocked;
+6. the mutation suite preserves all existing claim ceilings.
