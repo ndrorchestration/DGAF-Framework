@@ -167,10 +167,21 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
 
     c2_steps = summary["C2_HARDENED_POLICY_AS_CODE"]["decision_steps"]
     dgaf_steps = summary["D_DGAF"]["decision_steps"]
+    incremental_protections = (
+        summary["C2_HARDENED_POLICY_AS_CODE"]["unsafe_action_or_flow_admitted"]
+        - summary["D_DGAF"]["unsafe_action_or_flow_admitted"]
+    )
+    extra_steps = dgaf_steps - c2_steps
     complexity_delta = {
-        "dgaf_minus_hardened_policy_decision_steps": dgaf_steps - c2_steps,
+        "dgaf_minus_hardened_policy_decision_steps": extra_steps,
         "dgaf_over_hardened_policy_steps_ratio_milli": (
             1000 * dgaf_steps // c2_steps if c2_steps else None
+        ),
+        "incremental_unsafe_admissions_prevented": incremental_protections,
+        "extra_steps_per_incremental_prevention_milli": (
+            1000 * extra_steps // incremental_protections
+            if incremental_protections
+            else None
         ),
     }
 
