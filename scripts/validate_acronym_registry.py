@@ -68,10 +68,7 @@ def validate_registry(data: dict) -> list[str]:
             if token in seen:
                 errors.append(f"duplicate token: {token}")
             seen.add(token)
-        if (
-            entry.get("status") == "current"
-            and entry.get("classification") == "opaque_historical_identifier"
-        ):
+        if entry.get("status") == "current" and entry.get("classification") == "opaque_historical_identifier":
             errors.append(f"{token}: opaque historical identifier cannot be current")
 
     missing = REQUIRED - seen
