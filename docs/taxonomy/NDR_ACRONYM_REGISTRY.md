@@ -145,7 +145,6 @@ Future acronym sweeps must report:
 
 **No acronym is considered reconciled merely because one plausible expansion exists.**
 
-
 ## 2026-09-26 ecosystem acronym-completeness overlay
 
 Current reader-facing ecosystem terminology follows a stronger rule: every acronym must either have a canonical expansion or be explicitly classified as a non-acronym token / historical opaque identifier. Undefined current acronyms are prohibited.
