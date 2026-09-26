@@ -1,0 +1,86 @@
+name: DGAF Cold-Start Scaffold Artifact
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/dgaf-cold-start-scaffold-artifact.yml'
+      - 'registry/dgaf_self_application_cold_start_manifest_v1.json'
+      - 'scripts/build_dgaf_self_application_cold_start_execution_record.py'
+      - 'scripts/validate_dgaf_self_application_cold_start_execution_record.py'
+      - 'scripts/materialize_dgaf_self_application_cold_start_scaffold.py'
+      - 'tests/test_dgaf_self_application_cold_start_scaffold_artifact_workflow.py'
+      - 'tests/test_dgaf_self_application_cold_start_scaffold_materializer.py'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  materialize-cold-start-scaffold:
+    name: Materialize NOT_EXECUTED cold-start scaffold artifact
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact DGAF candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact DGAF checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Materialize bounded cold-start scaffold bundle
+        run: >-
+          python scripts/materialize_dgaf_self_application_cold_start_scaffold.py
+          --output-dir artifacts/dgaf_self_application_cold_start_scaffold
+
+      - name: Verify scaffold artifact boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("artifacts/dgaf_self_application_cold_start_scaffold")
+          summary_path = root / "cold_start_scaffold_materialization_summary.json"
+          record_path = root / "cold_start_execution_record.json"
+          validation_path = root / "cold_start_execution_record_validation_result.json"
+          missing = [str(path) for path in (summary_path, record_path, validation_path) if not path.exists()]
+          if missing:
+              raise SystemExit(f"missing scaffold artifact files: {missing}")
+
+          summary = json.loads(summary_path.read_text(encoding="utf-8"))
+          record = json.loads(record_path.read_text(encoding="utf-8"))
+          validation = json.loads(validation_path.read_text(encoding="utf-8"))
+
+          statuses = {step.get("status") for step in record.get("per_step_results", [])}
+          assert statuses == {"NOT_EXECUTED"}
+          assert validation["valid"] is True
+          assert validation["scientific_state_effect"] == "NONE"
+          assert validation["runtime_authorization_effect"] == "NONE"
+          assert record["executed_cold_start_reproduction"] is False
+          assert summary["executed_cold_start_reproduction"] is False
+          assert summary["scientific_state_effect"] == "NONE"
+          assert summary["runtime_authorization_effect"] == "NONE"
+          assert summary["claim_ceiling"]["scientific_n_increment"] == 0
+          assert summary["claim_ceiling"]["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+          assert summary["claim_ceiling"]["high_assurance"] == "NOT_AUTHORIZED"
+          PY
+
+      - name: Upload retained cold-start scaffold artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dgaf-cold-start-scaffold-${{ github.sha }}
+          path: artifacts/dgaf_self_application_cold_start_scaffold/**
+          if-no-files-found: error
