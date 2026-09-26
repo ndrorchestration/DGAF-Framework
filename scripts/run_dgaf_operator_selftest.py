@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """Run the bounded DGAF operator self-test and retain a local evidence packet.
 
