@@ -28,3 +28,17 @@ def test_status_prose_is_not_misclassified_as_acronyms():
 
 def test_parenthetical_first_use_is_detected():
     assert module._candidate_tokens("Policy Enforcement Point (PEP)") == {"PEP"}
+
+
+def test_markdown_projection_matches_machine_registry():
+    data = module.load()
+    assert module.validate_markdown_projection(data) == []
+
+
+def test_projection_is_deterministic_and_bounded_to_project_tokens():
+    data = module.load()
+    projection = module.render_markdown_projection(data)
+    assert "**DGAF**" in projection
+    assert "**AOSS**" in projection
+    assert "**COLLEEN**" in projection
+    assert "**HTTP**" not in projection
