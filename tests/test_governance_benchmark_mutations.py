@@ -38,11 +38,7 @@ def test_authority_mutations_are_caught_without_crediting_minimal_policy() -> No
 
 def test_epistemic_and_flow_mutations_isolate_dgaf_increment() -> None:
     report = mutations.run_mutations()
-    rows = [
-        row
-        for row in report["rows"]
-        if row["mutated_field"].startswith(("claim.", "flow."))
-    ]
+    rows = [row for row in report["rows"] if row["mutated_field"].startswith(("claim.", "flow."))]
     assert rows
     for row in rows:
         if row["baseline"] == "D_DGAF":

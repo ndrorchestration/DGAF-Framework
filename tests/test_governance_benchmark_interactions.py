@@ -28,9 +28,7 @@ def test_every_interaction_matches_declared_expectation() -> None:
 def test_authority_interactions_are_not_unique_dgaf_credit() -> None:
     report = interactions.run_interactions()
     rows = [
-        row
-        for row in report["rows"]
-        if all(field.startswith("authority_context.") for field in row["mutated_fields"])
+        row for row in report["rows"] if all(field.startswith("authority_context.") for field in row["mutated_fields"])
     ]
     assert rows
     for row in rows:
@@ -43,9 +41,7 @@ def test_authority_interactions_are_not_unique_dgaf_credit() -> None:
 def test_claim_and_flow_interactions_remain_dgaf_incremental_scope() -> None:
     report = interactions.run_interactions()
     rows = [
-        row
-        for row in report["rows"]
-        if any(field.startswith(("claim.", "flow.")) for field in row["mutated_fields"])
+        row for row in report["rows"] if any(field.startswith(("claim.", "flow.")) for field in row["mutated_fields"])
     ]
     assert rows
     for row in rows:

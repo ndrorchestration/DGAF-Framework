@@ -160,9 +160,7 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
             "unsupported_claim_admitted": sum(row["unsupported_claim_admitted"] for row in rows),
             "false_block": sum(row["false_block"] for row in rows),
             "decision_steps": sum(row["decision_step_count"] for row in rows),
-            "mean_decision_steps_milli": (
-                1000 * sum(row["decision_step_count"] for row in rows) // len(rows)
-            ),
+            "mean_decision_steps_milli": (1000 * sum(row["decision_step_count"] for row in rows) // len(rows)),
         }
 
     c2_steps = summary["C2_HARDENED_POLICY_AS_CODE"]["decision_steps"]
@@ -174,14 +172,10 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
     extra_steps = dgaf_steps - c2_steps
     complexity_delta = {
         "dgaf_minus_hardened_policy_decision_steps": extra_steps,
-        "dgaf_over_hardened_policy_steps_ratio_milli": (
-            1000 * dgaf_steps // c2_steps if c2_steps else None
-        ),
+        "dgaf_over_hardened_policy_steps_ratio_milli": (1000 * dgaf_steps // c2_steps if c2_steps else None),
         "incremental_unsafe_admissions_prevented": incremental_protections,
         "extra_steps_per_incremental_prevention_milli": (
-            1000 * extra_steps // incremental_protections
-            if incremental_protections
-            else None
+            1000 * extra_steps // incremental_protections if incremental_protections else None
         ),
     }
 
@@ -191,8 +185,7 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
         "baseline_limitations": {
             "C1_MINIMAL_POLICY_AS_CODE": "Minimal action-level comparator.",
             "C2_HARDENED_POLICY_AS_CODE": (
-                "Synthetic hardened runtime-policy comparator, "
-                "not a universal policy engine."
+                "Synthetic hardened runtime-policy comparator, " "not a universal policy engine."
             ),
             "D_DGAF": "Synthetic bounded DGAF guard model, not the full production control plane.",
         },
