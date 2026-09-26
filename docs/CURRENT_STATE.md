@@ -130,7 +130,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | AOSS Stage A apparatus | **ACCEPTED THROUGH NON-PROMOTING LOCAL TRUST RESULT INTAKE · PR #925** |
 | AOSS Stage A independent-validation handoff | **ACCEPTED · PR #928 · EXTERNAL REVIEW OPERATIONALLY REQUESTABLE** |
 | AOSS Stage A external review | **NOT EXECUTED · CONTROLLER #929 OPEN** |
-| AOSS Stage A operator self-test | **PR #1012 · INTERNAL ENGINEERING VALIDATION ONLY · NOT EXTERNAL REVIEW** |
+| AOSS Stage A operator self-test | **PR #1012 · INTERNAL ENGINEERING VALIDATION ONLY · Windows operator run PASS (19/19) on 2026-09-26 · #1022 · NOT EXTERNAL REVIEW** |
 | AOSS Stage A reviewer attribution / independence | **NOT VERIFIED LOCALLY** |
 | AOSS Stage A execution admission | **BLOCKED · ENVIRONMENT / SOURCE-DRIVER / EXECUTABLE / DESTINATION ACCEPTANCE NOT ESTABLISHED** |
 | AOSS Stage A collection execution readiness | **NOT ESTABLISHED · `execution_allowed=false`** |
@@ -184,6 +184,8 @@ Internal CI, fixtures, same-system replay, project-owner self-review, or another
 PR #1012 adds a bounded **operator self-test** lane for pre-review engineering confidence. It exercises frozen-identity preflight, core regression behavior, the AOSS test family, unauthorized-collection refusal, and a deliberate dirty-worktree fail-closed probe while retaining a content-hashed evidence packet. Its evidence class is `INTERNAL_OPERATOR_ENGINEERING_VALIDATION`; regardless of PASS/FAIL, it cannot establish reviewer independence, external validation, scientific-N increment, canonical DGAF efficacy, or High-Assurance authorization.
 
 On pre-reconciliation candidate head `9ba92a8e12863bf2fd353c2c7d5776513a20da99`, the DGAF Operator Self-Test Contract completed **PASS** in workflow run `36050080302`. The generated operator report SHA-256 was `3047985a48ce19ffb0003d3b1e54da1ef5fb97a5d3f8ca8ea3f5d7713a612c6b`; retained Actions artifact `10829709484` has digest `sha256:b5ddf4159d28043532729a254d7ba0a5665c40a6ccf0d50617aaaa4d50cd216e`. The exact-head Python quality matrix, PPTL CI, Governance CI, PDMAL pre-freeze validation, and all other returned Actions workflows also completed successfully before mainline reconciliation. This remains same-system/internal engineering evidence only.
+
+On 2026-09-26, the bounded Windows operator self-test passed **19/19 recorded checks** on protected DGAF `main` `7f610c71f646135e2c767a5a103a11e6ad3ce9dc` with frozen ACP `dbab7c1afafec524ce7c18157de2089cafe79c87`, using CPython 3.12.10 on Windows 11 build 26200. The retained report SHA-256 is `ea451897f20f143383e8351ea969536e801a39ccfcb576eef4b5adfcdeab34ca`; its operator-local packet and run details are recorded in [#1022](https://github.com/ndrorchestration/DGAF-Framework/issues/1022#issuecomment-5845488399). This is internal engineering evidence for the exact tested identities and environment only. It does not establish independent/external validation, canonical DGAF efficacy, or collection execution readiness; scientific N increment remains 0 and High-Assurance remains not authorized.
 
 ### Current unresolved acceptance predicates
 
