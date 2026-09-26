@@ -96,9 +96,9 @@ def adjudicate_same_system_execution(output_dir: Path = DEFAULT_OUTPUT_DIR) -> d
     adjudication_path = output_dir / "cold_start_same_system_adjudication.json"
 
     summary = _load_json(summary_path)
+    _require_summary_boundary(summary)
     record = _load_json(record_path)
     validation_result = _load_json(validation_path)
-    _require_summary_boundary(summary)
     _require_validation_result(validation_result)
 
     pass_count = int(summary.get("pass_count", 0))
