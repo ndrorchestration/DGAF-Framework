@@ -103,3 +103,26 @@ python -m pytest tests/test_governance_benchmark_interactions.py
 Authority-only interactions remain creditable to hardened runtime policy as well
 as DGAF. Epistemic and composed-flow interactions count as DGAF incremental
 scope only within this synthetic model.
+
+## Cross-domain interaction suite
+
+`run_cross_domain.py` combines failures across distinct governance domains. The
+current bounded suite contains six interactions across authority, epistemic, and
+flow controls.
+
+These cases ask whether a control path remains stable when one domain can already
+block while another domain is also degraded. Credit remains conservative:
+hardened runtime policy receives credit whenever its authority checks already
+block the interaction; DGAF receives incremental credit only for claim/flow
+conditions absent from the hardened comparator by construction.
+
+Run:
+
+```bash
+python experiments/governance_benchmark/run_cross_domain.py
+python -m pytest tests/test_governance_benchmark_cross_domain.py
+```
+
+This is synthetic cross-domain engineering evidence only. It does not establish
+general compositional robustness, production safety, independent validation, or
+state-of-the-art status.

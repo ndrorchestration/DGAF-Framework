@@ -196,3 +196,27 @@ Acceptance requires:
 5. the suite is described as bounded two-factor engineering evidence, not proof
    of emergent, production, or general adversarial robustness;
 6. all claim ceilings from the fixed and one-field suites remain unchanged.
+
+## Cross-domain interaction layer
+
+After same-domain two-factor interactions, the benchmark MAY combine degraded
+conditions across distinct governance domains.
+
+The initial cross-domain layer is limited to:
+
+- authority + epistemic;
+- authority + flow;
+- epistemic + flow.
+
+Acceptance requires:
+
+1. each case identifies the seed and every mutated field;
+2. expected decisions are fixed before observing tested outputs;
+3. hardened runtime policy receives credit whenever authority controls already
+   block the interaction;
+4. DGAF incremental credit is limited to claim/flow controls absent from the
+   hardened comparator by construction;
+5. early denial by one domain does not count as evidence that later domains were
+   independently exercised;
+6. the layer is described as bounded synthetic engineering evidence, not general
+   compositional robustness.
