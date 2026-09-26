@@ -1,3 +1,4 @@
+
 # DGAF Operator Self-Test
 
 Status: **INTERNAL ENGINEERING VALIDATION ONLY**
@@ -16,7 +17,19 @@ production certification, or High-Assurance authorization.
 
 ## One-command Windows path
 
-From a clean DGAF checkout on Windows PowerShell:
+Create a fresh full clone, then run the wrapper from that checkout. This keeps
+the operator's working tree untouched and avoids Windows line-ending state from
+an older checkout:
+
+```powershell
+git clone --no-hardlinks https://github.com/ndrorchestration/DGAF-Framework.git DGAF-Framework-selftest
+Set-Location .\DGAF-Framework-selftest
+git fetch --unshallow
+git checkout --detach origin/main
+git status --short --branch
+```
+
+The final status must show a clean detached checkout. Then run:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_dgaf_operator_selftest.ps1 -RefreshDependencies
@@ -33,8 +46,9 @@ The wrapper:
    `%USERPROFILE%\DGAF-ACP-SelfTest`;
 5. checks out the frozen ACP target
    `dbab7c1afafec524ce7c18157de2089cafe79c87`;
-6. refuses to proceed when either source checkout is dirty;
-7. launches the bounded Python operator runner.
+6. creates a disposable exact-byte DGAF clone for the byte-sensitive checks;
+7. refuses to proceed when either source checkout is dirty;
+8. launches the bounded Python operator runner.
 
 On later runs, when dependencies are already installed:
 
@@ -81,7 +95,9 @@ The runner records and evaluates:
 - preservation of `external_validation_established=false`;
 - preservation of `canonical_dgaf_efficacy=NOT_ESTABLISHED`;
 - DGAF quick regression behavior;
-- all discovered `tests/test_aoss*.py` modules;
+- all discovered `tests/test_aoss*.py` modules supported by the host;
+- on Windows, exercises the custody implementation and verifies the expected
+  `O_NOFOLLOW_REQUIRED` refusal without filesystem side effects;
 - explicit refusal of `collect` with
   `COLLECTION_IMPLEMENTATION_NOT_ACCEPTED`;
 - deliberate dirty-worktree injection and expected
@@ -144,7 +160,9 @@ the correction through normal repository review, then run a fresh test.
 A prerequisite problem such as the wrong ACP commit, a dirty source checkout,
 missing Python 3.12, or missing dependencies should be treated as a blocked
 operator run rather than evidence that the underlying DGAF behavior passed or
-failed.
+failed. The wrapper reports prerequisite errors before the retained runner
+packet exists; preserve the terminal output and correct the prerequisite before
+starting a fresh run.
 
 ## Relationship to external review
 
