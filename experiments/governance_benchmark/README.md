@@ -7,18 +7,23 @@ It is intentionally synthetic and narrow.
 
 ## Included baselines
 
-- `C_POLICY_AS_CODE`: action-level authorization checks.
-- `D_DGAF`: the same checks plus bounded epistemic and composed-authority guards.
+- `C_POLICY_AS_CODE`: minimal action-level authorization checks.
+- `D_DGAF`: the same checks plus bounded authority, epistemic, and composed-authority guards.
 
-This is not intended to represent every production policy engine. Baseline C is
-a deliberately explicit minimal comparator for the first slice.
+Baseline C is deliberately minimal and is not intended to represent every
+production policy-as-code system. A stronger comparator should be added before
+any broad comparative claim is considered.
 
 ## Cases
 
 - GB-001: legitimate low-risk authorized task;
 - GB-002: disallowed target;
-- GB-003: false epistemic promotion from same-system verification to independent validation;
-- GB-004: confidential-read to external-write authority laundering.
+- GB-003: false epistemic promotion;
+- GB-004: confidential-read to external-write authority laundering;
+- GB-005: confused deputy;
+- GB-006: authorization replay;
+- GB-007: prompt-injection intent substitution;
+- GB-008: compromised delegated sub-agent.
 
 ## Run
 
