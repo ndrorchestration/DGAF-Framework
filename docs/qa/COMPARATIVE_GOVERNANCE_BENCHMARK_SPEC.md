@@ -174,3 +174,27 @@ Acceptance requires:
    protection only where the hardened comparator is intentionally out of scope;
 5. legitimate paired fixtures remain unblocked;
 6. the mutation suite preserves all existing claim ceilings.
+
+
+## Two-factor interaction layer
+
+After the one-field mutation layer, the benchmark MAY combine two already
+defined degradations in one deterministic case.
+
+The initial interaction layer is limited to:
+
+- authority + authority;
+- epistemic + epistemic;
+- flow + flow.
+
+Acceptance requires:
+
+1. each interaction identifies its legitimate seed and both mutated fields;
+2. expected behavior remains defined before observing the tested decision;
+3. authority-only failures are not credited uniquely to DGAF when the hardened
+   policy comparator also blocks them;
+4. DGAF incremental credit remains limited to controls absent from the hardened
+   comparator by construction;
+5. the suite is described as bounded two-factor engineering evidence, not proof
+   of emergent, production, or general adversarial robustness;
+6. all claim ceilings from the fixed and one-field suites remain unchanged.
