@@ -96,7 +96,12 @@ def _probe_measure(measure_id: str) -> dict[str, Any]:
 
     if measure_id == "command_order":
         status, missing = _source_status(
-            ["One-command Windows path", "Direct Python path", "powershell -NoProfile", "run_dgaf_operator_selftest.py"],
+            [
+                "One-command Windows path",
+                "Direct Python path",
+                "powershell -NoProfile",
+                "run_dgaf_operator_selftest.py",
+            ],
             runbook_text,
         )
         return {
