@@ -31,6 +31,8 @@ HIGH_ASSURANCE=NOT_AUTHORIZED
 
 Internal same-system engineering evidence has advanced materially, especially through the #1022 cold-start/self-application chain ending most recently in the accepted #1049 same-system adjudication record and #1050 documentation reconciliation checkpoint. That evidence is useful engineering assurance, but it is not independent validation or external validation.
 
+Human-readable boundary: canonical DGAF efficacy, independent validation, and external validation remain NOT ESTABLISHED. High-Assurance remains NOT AUTHORIZED; scientific-N increment remains 0. These are current boundary summaries, with `docs/status/CURRENT.md` pointing to the accepted detailed record.
+
 ## Five-minute evaluator orientation
 
 If you are evaluating DGAF as an AI-systems, governance, or research-engineering portfolio artifact, use this path before reading the full control history.
