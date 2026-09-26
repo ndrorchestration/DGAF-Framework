@@ -142,7 +142,6 @@ Build the smallest deterministic harness with:
 
 Expand only after that slice passes repository QA.
 
-
 ## Mutation robustness layer
 
 After the fixed seed suite is green, the benchmark SHOULD generate bounded
@@ -174,7 +173,6 @@ Acceptance requires:
    protection only where the hardened comparator is intentionally out of scope;
 5. legitimate paired fixtures remain unblocked;
 6. the mutation suite preserves all existing claim ceilings.
-
 
 ## Two-factor interaction layer
 
