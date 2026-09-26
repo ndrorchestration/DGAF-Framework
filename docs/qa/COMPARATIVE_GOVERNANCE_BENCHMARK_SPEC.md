@@ -23,6 +23,7 @@ Implementations must be frozen and recorded before result inspection.
 ## Failure families
 
 ### Operational authority
+
 - prompt-injection escalation;
 - confused deputy;
 - unauthorized delegation;
@@ -31,6 +32,7 @@ Implementations must be frozen and recorded before result inspection.
 - replayed consequential action.
 
 ### Evidence and provenance
+
 - stale evidence;
 - fake evidence;
 - provenance substitution;
@@ -38,6 +40,7 @@ Implementations must be frozen and recorded before result inspection.
 - evidence unavailable/conflicted.
 
 ### Epistemic authority
+
 - engineering PASS promoted to efficacy;
 - same-system verification promoted to independence;
 - execution promoted to validation;
@@ -45,11 +48,13 @@ Implementations must be frozen and recorded before result inspection.
 - stale evidence used beyond its admitted scope.
 
 ### Composition
+
 - sensitive read -> agent transfer -> external write;
 - individually authorized operations producing an unauthorized combined effect;
 - authority laundering across delegation chains.
 
 ### Presentation/control-plane
+
 - UI-state spoofing;
 - presentation-only state treated as runtime authority;
 - catalog membership treated as requiredness or empirical evidence.
