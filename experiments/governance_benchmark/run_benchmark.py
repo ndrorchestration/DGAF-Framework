@@ -160,7 +160,19 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
             "unsupported_claim_admitted": sum(row["unsupported_claim_admitted"] for row in rows),
             "false_block": sum(row["false_block"] for row in rows),
             "decision_steps": sum(row["decision_step_count"] for row in rows),
+            "mean_decision_steps_milli": (
+                1000 * sum(row["decision_step_count"] for row in rows) // len(rows)
+            ),
         }
+
+    c2_steps = summary["C2_HARDENED_POLICY_AS_CODE"]["decision_steps"]
+    dgaf_steps = summary["D_DGAF"]["decision_steps"]
+    complexity_delta = {
+        "dgaf_minus_hardened_policy_decision_steps": dgaf_steps - c2_steps,
+        "dgaf_over_hardened_policy_steps_ratio_milli": (
+            1000 * dgaf_steps // c2_steps if c2_steps else None
+        ),
+    }
 
     return {
         "benchmark_version": payload["version"],
@@ -178,6 +190,7 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
         ],
         "results": results,
         "summary": summary,
+        "complexity_delta": complexity_delta,
     }
 
 
