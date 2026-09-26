@@ -56,3 +56,27 @@ A passing run establishes only that this exact synthetic harness behaves as
 specified. It does not establish general DGAF efficacy, external validity,
 independent validation, production safety, standards compliance, or
 state-of-the-art status.
+
+
+## Metamorphic mutation suite
+
+`run_mutations.py` starts from legitimate seed cases and flips one governance
+predicate at a time. The current bounded suite generates 10 mutations:
+
+- five authority-context mutations from a valid delegated-action seed;
+- three epistemic mutations from a valid independently supported claim;
+- two flow mutations from an explicitly authorized sensitive-data composition.
+
+This produces 30 baseline decisions across C1, C2, and DGAF. The expected
+property is structural: C2 and DGAF should catch authority-context violations,
+while only DGAF should catch the current epistemic and composed-flow violations.
+
+Run:
+
+```bash
+python experiments/governance_benchmark/run_mutations.py
+python -m pytest tests/test_governance_benchmark_mutations.py
+```
+
+The suite is deterministic and intentionally small. It is not randomized fuzzing
+and does not establish robustness outside the enumerated mutation dimensions.
