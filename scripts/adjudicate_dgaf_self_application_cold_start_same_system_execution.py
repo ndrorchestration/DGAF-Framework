@@ -69,11 +69,23 @@ def _classify(pass_count: int, fail_count: int, blocked_count: int) -> tuple[str
     external_replay_required = True
     internal_remediation_required = fail_count > 0
     if fail_count > 0:
-        return "SAME_SYSTEM_EXECUTED_INTERNAL_REMEDIATION_REQUIRED", internal_remediation_required, external_replay_required
+        return (
+            "SAME_SYSTEM_EXECUTED_INTERNAL_REMEDIATION_REQUIRED",
+            internal_remediation_required,
+            external_replay_required,
+        )
     if blocked_count > 0:
-        return "SAME_SYSTEM_EXECUTED_EXTERNAL_REPLAY_REQUIRED", internal_remediation_required, external_replay_required
+        return (
+            "SAME_SYSTEM_EXECUTED_EXTERNAL_REPLAY_REQUIRED",
+            internal_remediation_required,
+            external_replay_required,
+        )
     if pass_count > 0:
-        return "SAME_SYSTEM_EXECUTED_EXTERNAL_REPLAY_REQUIRED", internal_remediation_required, external_replay_required
+        return (
+            "SAME_SYSTEM_EXECUTED_EXTERNAL_REPLAY_REQUIRED",
+            internal_remediation_required,
+            external_replay_required,
+        )
     return "SAME_SYSTEM_EXECUTED_NO_ADMISSIBLE_STEPS", True, external_replay_required
 
 
