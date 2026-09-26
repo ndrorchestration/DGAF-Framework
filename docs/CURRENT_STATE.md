@@ -56,7 +56,7 @@ PR #1050 accepted a bounded current-state reconciliation addendum after:
 - protected `main` was read back and verified at the #1050 checkpoint;
 - the remaining large-entrypoint documentation debt was explicitly preserved rather than silently overwritten.
 
-#1050 is documentation/routing evidence only. It does not create a new self-application execution, new artifact, independent replay, external validation, scientific efficacy evidence, scientific-N increment, High-Assurance authorization, or controller closure.
+PR #1050 is documentation/routing evidence only. It does not create a new self-application execution, new artifact, independent replay, external validation, scientific efficacy evidence, scientific-N increment, High-Assurance authorization, or controller closure.
 
 ## Self-application lane status
 
