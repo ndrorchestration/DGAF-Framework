@@ -9,6 +9,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "docs" / "taxonomy" / "ACRONYM_REGISTRY.v1.json"
+HUMAN_REGISTRY = ROOT / "docs" / "taxonomy" / "NDR_ACRONYM_REGISTRY.md"
+PROJECTION_START = "<!-- ACRONYM_JSON_PROJECTION_START -->"
+PROJECTION_END = "<!-- ACRONYM_JSON_PROJECTION_END -->"
+PROJECT_CLASSIFICATIONS = {
+    "acronym",
+    "historical_acronym",
+    "opaque_historical_identifier",
+    "conflicted_historical_identifier",
+    "brand_or_scoped_token",
+    "brand_token",
+    "name_token",
+}
 
 # We intentionally do not treat every uppercase word as an acronym. Current-state
 # docs legitimately contain uppercase status vocabulary (PASS, CURRENT,
@@ -77,6 +89,55 @@ def validate_registry(data: dict) -> list[str]:
     return errors
 
 
+def _project_projection_entries(data: dict) -> list[dict]:
+    return sorted(
+        (
+            entry
+            for entry in data["entries"]
+            if entry["classification"] in PROJECT_CLASSIFICATIONS
+        ),
+        key=lambda entry: entry["token"].casefold(),
+    )
+
+
+def render_markdown_projection(data: dict) -> str:
+    lines = [
+        PROJECTION_START,
+        "| Token | JSON expansion / classification | Status |",
+        "|---|---|---|",
+    ]
+    for entry in _project_projection_entries(data):
+        token = entry["token"].replace("|", "\\|")
+        expansion = entry["expansion"].replace("|", "\\|")
+        classification = entry["classification"].replace("|", "\\|")
+        status = entry["status"].replace("|", "\\|")
+        lines.append(
+            f"| **{token}** | {expansion} _(classification: {classification})_ | {status} |"
+        )
+    lines.append(PROJECTION_END)
+    return "\n".join(lines)
+
+
+def validate_markdown_projection(data: dict) -> list[str]:
+    if not HUMAN_REGISTRY.exists():
+        return ["human-readable acronym registry missing"]
+
+    text = HUMAN_REGISTRY.read_text(encoding="utf-8")
+    if text.count(PROJECTION_START) != 1 or text.count(PROJECTION_END) != 1:
+        return ["human-readable registry must contain exactly one JSON projection marker pair"]
+
+    start = text.index(PROJECTION_START)
+    end = text.index(PROJECTION_END) + len(PROJECTION_END)
+    actual = text[start:end]
+    expected = render_markdown_projection(data)
+    if actual != expected:
+        return [
+            "human-readable acronym registry JSON projection drifted; "
+            "regenerate the marked projection from ACRONYM_REGISTRY.v1.json"
+        ]
+    return []
+
+
 def _candidate_tokens(text: str) -> set[str]:
     tokens = set(PAREN_TOKEN_RE.findall(text))
     tokens.update(DEFINITION_TOKEN_RE.findall(text))
@@ -111,12 +172,12 @@ def lint_surfaces(data: dict) -> list[str]:
 
 def main() -> int:
     data = load()
-    errors = validate_registry(data) + lint_surfaces(data)
+    errors = validate_registry(data) + lint_surfaces(data) + validate_markdown_projection(data)
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    print("PASS: acronym registry v1 (schema + current-surface completeness)")
+    print("PASS: acronym registry v1 (schema + current-surface completeness + Markdown projection)")
     return 0
 
 
