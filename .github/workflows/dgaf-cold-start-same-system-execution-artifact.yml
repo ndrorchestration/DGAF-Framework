@@ -1,0 +1,108 @@
+name: DGAF Cold-Start Same-System Execution Artifact
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/dgaf-cold-start-same-system-execution-artifact.yml'
+      - '.github/workflows/dgaf-cold-start-scaffold-artifact.yml'
+      - 'docs/qa/DGAF_OPERATOR_SELFTEST.md'
+      - 'registry/dgaf_self_application_cold_start_manifest_v1.json'
+      - 'scripts/build_dgaf_self_application_cold_start_execution_record.py'
+      - 'scripts/validate_dgaf_self_application_cold_start_execution_record.py'
+      - 'scripts/run_dgaf_self_application_cold_start_same_system_execution.py'
+      - 'tests/test_dgaf_self_application_cold_start_same_system_artifact_workflow.py'
+      - 'tests/test_dgaf_self_application_cold_start_same_system_execution.py'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  materialize-cold-start-same-system-execution:
+    name: Materialize same-system cold-start execution artifact
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact DGAF candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact DGAF checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Materialize bounded same-system cold-start execution bundle
+        run: >-
+          python scripts/run_dgaf_self_application_cold_start_same_system_execution.py
+          --output-dir artifacts/dgaf_self_application_cold_start_same_system_execution
+
+      - name: Verify same-system execution artifact boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("artifacts/dgaf_self_application_cold_start_same_system_execution")
+          summary_path = root / "cold_start_same_system_execution_summary.json"
+          record_path = root / "cold_start_execution_record.json"
+          validation_path = root / "cold_start_execution_record_validation_result.json"
+          evidence_dir = root / "evidence"
+
+          missing = [
+              str(path)
+              for path in (summary_path, record_path, validation_path, evidence_dir)
+              if not path.exists()
+          ]
+          if missing:
+              raise SystemExit(f"missing same-system execution artifact files: {missing}")
+
+          summary = json.loads(summary_path.read_text(encoding="utf-8"))
+          record = json.loads(record_path.read_text(encoding="utf-8"))
+          validation = json.loads(validation_path.read_text(encoding="utf-8"))
+
+          statuses = {step.get("status") for step in record.get("per_step_results", [])}
+          assert statuses
+          assert statuses <= {"PASS", "FAIL", "BLOCKED"}
+          assert validation["valid"] is True
+          assert validation["scientific_state_effect"] == "NONE"
+          assert validation["runtime_authorization_effect"] == "NONE"
+          assert record["executed_cold_start_reproduction"] is True
+          assert summary["schema_version"] == "dgaf.self_application.cold_start_same_system_execution.v1"
+          assert summary["executed_cold_start_reproduction"] is True
+          assert summary["same_system_run_independence"] == "NOT_ESTABLISHED"
+          assert summary["scientific_state_effect"] == "NONE"
+          assert summary["runtime_authorization_effect"] == "NONE"
+          assert summary["claim_ceiling"]["scientific_n_increment"] == 0
+          assert summary["claim_ceiling"]["independent_validation"] == "NOT_ESTABLISHED"
+          assert summary["claim_ceiling"]["external_validation"] == "NOT_ESTABLISHED"
+          assert summary["claim_ceiling"]["canonical_dgaf_efficacy"] == "NOT_ESTABLISHED"
+          assert summary["claim_ceiling"]["high_assurance"] == "NOT_AUTHORIZED"
+          assert summary["external_review_controller"] == "issue://929"
+          assert all(
+              step.get("evidence_retained") is True
+              for step in record.get("per_step_results", [])
+          )
+          assert all(
+              (root / step["evidence_location"]).exists()
+              for step in record.get("per_step_results", [])
+          )
+          PY
+
+      - name: Upload retained same-system cold-start execution artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dgaf-cold-start-same-system-execution-${{ github.sha }}
+          path: artifacts/dgaf_self_application_cold_start_same_system_execution/**
+          if-no-files-found: error
