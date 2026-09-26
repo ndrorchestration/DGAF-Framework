@@ -263,8 +263,7 @@ def main() -> int:
                 "windows_custody_primitive_fail_closed",
                 custody_probe,
                 predicate=(
-                    custody_probe["returncode"] == 0
-                    and custody_probe["stdout"].strip() == "CUSTODY_REFUSAL_VERIFIED"
+                    custody_probe["returncode"] == 0 and custody_probe["stdout"].strip() == "CUSTODY_REFUSAL_VERIFIED"
                 ),
                 detail="Custody reservation refused O_NOFOLLOW_REQUIRED without filesystem side effects",
             )
