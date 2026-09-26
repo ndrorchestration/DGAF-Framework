@@ -2,8 +2,8 @@
 status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
-last_verified: 2026-09-23
-reconciliation_input_main: 3a91a915df62d5a669c34d8c4987f2dcf755c601
+last_verified: 2026-09-26
+reconciliation_input_main: 0cc79245f30f01f0b2d98c870589318fc7c69494
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
@@ -102,7 +102,7 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 
 | Area | Current state |
 |---|---|
-| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `3ba57706b75ed32d1cbae0a2fddd220a0cd1da20` |
+| Protected repository `main` | **READ FROM GIT AT USE TIME** · this reconciliation input was `0cc79245f30f01f0b2d98c870589318fc7c69494` |
 | Canonical High-Assurance program | **PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / AUTHORIZATION NOT GRANTED / N=0** |
 | Canonical DGAF efficacy | **NOT ESTABLISHED** |
 | Track A Epoch 001 collection | **COMPLETE / BLINDED / RETAINED** |
@@ -140,8 +140,9 @@ The canonical High-Assurance program, Track A Epoch 001, Track A Epoch 002, pres
 | Repository assurance catalog | **ACCEPTED · PARTIAL_CORE_FAMILIES_ONLY** |
 | Workflow coverage-gap scanner | **ACCEPTED · UNMAPPED DOES NOT MEAN NON-ASSURANCE** |
 | Expanded recurring assurance mappings | **ACCEPTED · PR #785** |
+| DGAF-on-DGAF self-application benchmark (#1022) | **SCAFFOLD / SAME-SYSTEM EXECUTION / SAME-SYSTEM ADJUDICATION ACCEPTED THROUGH #1049 · #1022 OPEN · EXTERNAL REPLAY UNDER #929 OPEN** |
 
-No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt and creation-only interpretation note establish bounded, same-system/nonindependent interpretation; they do not establish canonical DGAF efficacy, independent validation, or High-Assurance authorization.
+No row above establishes integrated DGAF efficacy, independent validation, production certification, or High-Assurance authorization. The accepted Epoch 002 result receipt and creation-only interpretation note establish bounded, same-system/nonindependent interpretation; they do not establish canonical DGAF efficacy, independent validation, or High-Assurance authorization. The #1022 self-application chain through #1049 is internal same-system engineering evidence only; independent replay and external validation remain outstanding under #929.
 
 ## AOSS v0.6 Stage A — current execution-admission frontier
 
