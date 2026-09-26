@@ -1,0 +1,184 @@
+{
+  "version": "DGAF_STANDARDS_RISK_CROSSWALK_V0",
+  "status": "INITIAL_PARTIAL_NON_CERTIFYING",
+  "last_verified": "2026-09-26",
+  "claim_ceiling": [
+    "FRAMEWORK_ALIGNMENT_ONLY",
+    "NO_COMPLIANCE_DETERMINATION",
+    "NO_CERTIFICATION",
+    "NO_LEGAL_APPLICABILITY_DETERMINATION"
+  ],
+  "sources": [
+    {
+      "id": "NIST_AI_RMF_1_0_CORE",
+      "authority": "NIST",
+      "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0) — Core",
+      "version_or_date": "AI RMF 1.0 / 2023; revision in progress as of 2026-09-26",
+      "official_url": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/"
+    },
+    {
+      "id": "ISO_IEC_42001_2023",
+      "authority": "ISO/IEC",
+      "title": "ISO/IEC 42001:2023 Artificial intelligence — Management system",
+      "version_or_date": "Edition 1 / 2023-12",
+      "official_url": "https://committee.iso.org/cms/live/live/en/sites/isoorg/contents/news/insights/AI/what-is-ai-all-you-need-to-know/newsBody/standard-reference/standard-reference%40/81230.html"
+    },
+    {
+      "id": "OWASP_AGENTIC_TOP10_2026",
+      "authority": "OWASP GenAI Security Project",
+      "title": "OWASP Top 10 for Agentic Applications for 2026",
+      "version_or_date": "2026 edition / published 2025-12-09",
+      "official_url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "id": "EU_AI_ACT_ARTICLE_14",
+      "authority": "European Union",
+      "title": "Regulation (EU) 2024/1689 — Article 14 Human oversight",
+      "version_or_date": "OJ L 2024/1689",
+      "official_url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:32024R1689"
+    }
+  ],
+  "mappings": [
+    {
+      "external_framework": "NIST AI RMF 1.0",
+      "external_control_or_requirement": "GOVERN — cross-cutting governance of AI risk",
+      "source_id": "NIST_AI_RMF_1_0_CORE",
+      "dgaf_control_id": "DGAF-GOV-AUTHORITY",
+      "dgaf_artifacts": [
+        "docs/agents/AGENT_AUTHORITY_MATRIX.md",
+        "docs/formalism/AGENT_GOVERNANCE_TRANSITION_SPEC.md"
+      ],
+      "mapping_status": "PARTIAL_SUPPORT",
+      "evidence_class": "REPOSITORY_CONTROL_MODEL",
+      "limitations": "Does not establish completion of every NIST GOVERN category or subcategory."
+    },
+    {
+      "external_framework": "NIST AI RMF 1.0",
+      "external_control_or_requirement": "MAP — contextual risk identification and characterization",
+      "source_id": "NIST_AI_RMF_1_0_CORE",
+      "dgaf_control_id": "DGAF-MAP-THREATS",
+      "dgaf_artifacts": [
+        "docs/governance/CORRELATED_VERIFICATION_THREAT_MODEL.md",
+        "docs/governance/COMPOSED_AUTHORITY_DATA_FLOW_THREAT_MODEL.md"
+      ],
+      "mapping_status": "PARTIAL_SUPPORT",
+      "evidence_class": "THREAT_MODEL_AND_PROSPECTIVE_CONTROL_SPEC",
+      "limitations": "Current threat models are not evidence that every deployment context has been mapped."
+    },
+    {
+      "external_framework": "NIST AI RMF 1.0",
+      "external_control_or_requirement": "MEASURE — analyze, assess, benchmark, and monitor AI risk",
+      "source_id": "NIST_AI_RMF_1_0_CORE",
+      "dgaf_control_id": "DGAF-MEASURE-EVIDENCE",
+      "dgaf_artifacts": [
+        "docs/EPISTEMIC_EVIDENCE_STANDARD.md",
+        "docs/qa/COMPARATIVE_GOVERNANCE_BENCHMARK_SPEC.md"
+      ],
+      "mapping_status": "PARTIAL_SUPPORT",
+      "evidence_class": "STANDARD_PLUS_PROSPECTIVE_BENCHMARK",
+      "limitations": "The comparative benchmark is synthetic and not independent validation."
+    },
+    {
+      "external_framework": "NIST AI RMF 1.0",
+      "external_control_or_requirement": "MANAGE — prioritize and respond to identified AI risks",
+      "source_id": "NIST_AI_RMF_1_0_CORE",
+      "dgaf_control_id": "DGAF-MANAGE-ADMISSION",
+      "dgaf_artifacts": [
+        "docs/governance/ACTION_ADMISSION_AUTHORITY_CONTRACT.md",
+        "docs/formalism/AGENT_GOVERNANCE_TRANSITION_SPEC.md"
+      ],
+      "mapping_status": "PARTIAL_SUPPORT",
+      "evidence_class": "MIXED_IMPLEMENTED_AND_DESIGN_BOUNDARY",
+      "limitations": "Provider-neutral design contracts do not establish a complete production risk-management program."
+    },
+    {
+      "external_framework": "ISO/IEC 42001:2023",
+      "external_control_or_requirement": "AI management system governance and continual-management context",
+      "source_id": "ISO_IEC_42001_2023",
+      "dgaf_control_id": "DGAF-ISO-AIMS-RELATIONSHIP",
+      "dgaf_artifacts": [
+        "README.governance.md",
+        "docs/EPISTEMIC_EVIDENCE_STANDARD.md"
+      ],
+      "mapping_status": "RELATED",
+      "evidence_class": "CONCEPTUAL_ALIGNMENT",
+      "limitations": "No clause-level conformity mapping or certification is established."
+    },
+    {
+      "external_framework": "OWASP Top 10 for Agentic Applications 2026",
+      "external_control_or_requirement": "ASI01 Goal Hijacking",
+      "source_id": "OWASP_AGENTIC_TOP10_2026",
+      "dgaf_control_id": "DGAF-OWASP-ASI01",
+      "dgaf_artifacts": [
+        "experiments/governance_benchmark/fixtures_v1.json",
+        "docs/formalism/AGENT_GOVERNANCE_TRANSITION_SPEC.md"
+      ],
+      "mapping_status": "PARTIAL_SUPPORT",
+      "evidence_class": "SYNTHETIC_FIXTURE_AND_CONTROL_MODEL",
+      "limitations": "Current fixture demonstrates intent-binding logic only within the bounded synthetic harness."
+    },
+    {
+      "external_framework": "OWASP Top 10 for Agentic Applications 2026",
+      "external_control_or_requirement": "ASI02 Tool Misuse",
+      "source_id": "OWASP_AGENTIC_TOP10_2026",
+      "dgaf_control_id": "DGAF-OWASP-ASI02",
+      "dgaf_artifacts": [
+        "docs/governance/ACTION_ADMISSION_AUTHORITY_CONTRACT.md",
+        "docs/formalism/AGENT_GOVERNANCE_TRANSITION_SPEC.md"
+      ],
+      "mapping_status": "PARTIAL_SUPPORT",
+      "evidence_class": "CONTROL_MODEL",
+      "limitations": "Coverage depends on the concrete capability gateway and admitted action classes."
+    },
+    {
+      "external_framework": "OWASP Top 10 for Agentic Applications 2026",
+      "external_control_or_requirement": "ASI03 Identity & Privilege Abuse",
+      "source_id": "OWASP_AGENTIC_TOP10_2026",
+      "dgaf_control_id": "DGAF-OWASP-ASI03",
+      "dgaf_artifacts": [
+        "docs/agents/AGENT_AUTHORITY_INVARIANT.md",
+        "docs/formalism/AGENT_GOVERNANCE_TRANSITION_SPEC.md"
+      ],
+      "mapping_status": "PARTIAL_SUPPORT",
+      "evidence_class": "AUTHORITY_INVARIANTS",
+      "limitations": "Full workload-identity and credential-broker implementation is not established."
+    },
+    {
+      "external_framework": "OWASP Top 10 for Agentic Applications 2026",
+      "external_control_or_requirement": "ASI07 Insecure Inter-Agent Communication",
+      "source_id": "OWASP_AGENTIC_TOP10_2026",
+      "dgaf_control_id": "DGAF-OWASP-ASI07",
+      "dgaf_artifacts": [
+        "docs/governance/COMPOSED_AUTHORITY_DATA_FLOW_THREAT_MODEL.md"
+      ],
+      "mapping_status": "RELATED",
+      "evidence_class": "PROSPECTIVE_THREAT_MODEL",
+      "limitations": "Authenticated secure inter-agent transport is not established by this threat model."
+    },
+    {
+      "external_framework": "OWASP Top 10 for Agentic Applications 2026",
+      "external_control_or_requirement": "ASI09 Human-Agent Trust Exploitation",
+      "source_id": "OWASP_AGENTIC_TOP10_2026",
+      "dgaf_control_id": "DGAF-OWASP-ASI09",
+      "dgaf_artifacts": [
+        "docs/governance/SOTA_HARDENING_TRACK_2026-09-26.md"
+      ],
+      "mapping_status": "NOT_COVERED",
+      "evidence_class": "GAP_RECORDED",
+      "limitations": "Effective-human-oversight implementation and evaluation remain future work."
+    },
+    {
+      "external_framework": "EU AI Act Article 14",
+      "external_control_or_requirement": "Article 14(4)(d)-(e): ability to disregard/override/reverse output and intervene or interrupt",
+      "source_id": "EU_AI_ACT_ARTICLE_14",
+      "dgaf_control_id": "DGAF-EU-A14-INTERVENTION",
+      "dgaf_artifacts": [
+        "docs/governance/SOTA_HARDENING_TRACK_2026-09-26.md"
+      ],
+      "mapping_status": "NOT_COVERED",
+      "evidence_class": "GAP_RECORDED",
+      "applicability": "UNRESOLVED_CONTEXT_DEPENDENT",
+      "limitations": "No legal applicability determination is made; explicit Article 14 intervention conformity is not established."
+    }
+  ]
+}
