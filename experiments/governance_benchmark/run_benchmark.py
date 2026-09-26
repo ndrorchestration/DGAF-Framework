@@ -190,7 +190,7 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
         "evidence_class": payload["status"],
         "baseline_limitations": {
             "C1_MINIMAL_POLICY_AS_CODE": "Minimal action-level comparator.",
-            "C2_HARDENED_POLICY_AS_CODE": "Synthetic hardened runtime-policy comparator, not a universal policy engine.",
+            "C2_HARDENED_POLICY_AS_CODE": (\n                "Synthetic hardened runtime-policy comparator, not a universal policy engine."\n            ),
             "D_DGAF": "Synthetic bounded DGAF guard model, not the full production control plane.",
         },
         "claim_ceiling": [
