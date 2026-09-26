@@ -173,6 +173,7 @@ Identifier-only labels such as **TLE**, **TL3**, **M0**, **E0**, and **R0–R7**
 
 Machine-readable completeness authority: `docs/taxonomy/ACRONYM_REGISTRY.v1.json`.
 Validation entry point: `python scripts/validate_acronym_registry.py`.
+
 ## Machine-derived project token projection
 
 This marked table is generated from `ACRONYM_REGISTRY.v1.json` for project-owned acronyms, names, brand/scoped tokens, and historical opaque/conflicted identifiers. External-standard abbreviations remain governed by JSON but are intentionally excluded from this human-facing projection. CI fails if this marked projection drifts from JSON.
