@@ -38,6 +38,15 @@ For the newest accepted status addendum, see [`docs/status/CURRENT.md`](status/C
 | Self-application controller | Issue #1022 remains open. |
 | External-review controller | Issue #929 remains open. |
 
+## Canonical High-Assurance provenance boundary
+
+This section is retained for control-state consistency tooling. It binds the active High-Assurance apparatus lineage without promoting current DGAF efficacy or external-validation state.
+
+- main: read from protected Git at use time; #1050 checkpoint readback was `0cc79245f30f01f0b2d98c870589318fc7c69494`
+- apparatus source: `2a54a67d84870e4eeb71b8aaf04413e0ca492ba1`
+- candidate identity: `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED`
+- deployment identity: historical exact-scope runtime evidence only; not a current High-Assurance authorization or efficacy claim
+
 ## Accepted current checkpoint
 
 PR #1050 accepted a bounded current-state reconciliation addendum after:
