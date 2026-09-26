@@ -1,3 +1,4 @@
+
 # DGAF-Framework
 
 **Dynamic Governance Agentic Formation (DGAF)** is an experimental framework for governed multi-agent AI systems. It treats **capability, evidence, verification, authority, and permission to act as separate machine-relevant states** rather than assuming that one implies another.
@@ -20,7 +21,9 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **6. Understand DGAF-on-DGAF self-application.** Issue #1022 has accepted mutation, ablation, historical-replay, and cold-start scaffold work, followed by same-system execution and adjudication through PR #1049. #1022 remains open pending an external reviewer package and independently performed replay under #929. This is internal same-system engineering validation only: scientific-N increment is 0, efficacy and independent/external validation are not established, and High-Assurance remains not authorized.
 
-**7. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
+**7. Run the bounded operator check.** For a personal engineering test, use [`docs/qa/DGAF_OPERATOR_SELFTEST.md`](docs/qa/DGAF_OPERATOR_SELFTEST.md). It provides the clean-checkout setup, the one-command Windows path, the frozen ACP identity, retained report location, and PASS/FAIL/BLOCKED interpretation. A passing run covers the exact tested environment only and does not promote scientific or external-validation state.
+
+**8. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
 ### What this demonstrates
 
