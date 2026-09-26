@@ -80,3 +80,28 @@ python -m pytest tests/test_governance_benchmark_mutations.py
 
 The suite is deterministic and intentionally small. It is not randomized fuzzing
 and does not establish robustness outside the enumerated mutation dimensions.
+
+
+## Two-factor interaction suite
+
+`run_interactions.py` combines two previously isolated governance degradations
+in a single case. The current bounded suite contains seven interactions:
+
+- three authority interactions;
+- three epistemic interactions;
+- one composed-flow interaction.
+
+These tests ask whether the control behavior remains stable when more than one
+condition degrades at once. They do not establish emergent robustness or broad
+adversarial generalization.
+
+Run:
+
+```bash
+python experiments/governance_benchmark/run_interactions.py
+python -m pytest tests/test_governance_benchmark_interactions.py
+```
+
+Authority-only interactions remain creditable to hardened runtime policy as well
+as DGAF. Epistemic and composed-flow interactions count as DGAF incremental
+scope only within this synthetic model.
