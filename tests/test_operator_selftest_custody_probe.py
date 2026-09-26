@@ -8,7 +8,6 @@ import pytest
 
 from scripts.run_dgaf_operator_selftest import WINDOWS_CUSTODY_PROBE
 
-
 ROOT = Path(__file__).resolve().parents[1]
 UNSUPPORTED_SUBSTRATE = "import os\nif hasattr(os, 'O_NOFOLLOW'): del os.O_NOFOLLOW\n"
 
