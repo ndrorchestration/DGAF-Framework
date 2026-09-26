@@ -22,6 +22,28 @@ from typing import Any
 EXPECTED_ACP_COMMIT = "dbab7c1afafec524ce7c18157de2089cafe79c87"
 DIRTY_PROBE = "OPERATOR_SELFTEST_DIRTY_PROBE.txt"
 
+WINDOWS_CUSTODY_PROBE = """
+import os
+import tempfile
+from pathlib import Path
+from scripts.aoss_stage_a.custody import reserve_synthetic_attempt
+
+if getattr(os, "O_NOFOLLOW", None) is not None:
+    raise RuntimeError("Unexpected O_NOFOLLOW support requires custody-contract review")
+with tempfile.TemporaryDirectory(prefix="dgaf-custody-refusal-") as root:
+    parent = Path(root)
+    try:
+        reserve_synthetic_attempt(parent, "operator-refusal-probe")
+    except OSError as exc:
+        if str(exc) != "O_NOFOLLOW_REQUIRED":
+            raise RuntimeError("Unexpected custody refusal") from exc
+    else:
+        raise RuntimeError("Custody accepted an unsupported substrate")
+    if any(parent.iterdir()):
+        raise RuntimeError("Custody refusal left filesystem side effects")
+print("CUSTODY_REFUSAL_VERIFIED")
+"""
+
 
 def _now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
@@ -231,21 +253,20 @@ def main() -> int:
         if os.name == "nt":
             custody_test = str(dgaf / "tests" / "test_aoss_stage_a_custody.py")
             aoss_tests = [path for path in aoss_tests if path != custody_test]
-            if getattr(os, "O_NOFOLLOW", None) is None:
-                checks.append(
-                    _pass(
-                        "windows_custody_primitive_fail_closed",
-                        "POSIX O_NOFOLLOW is unavailable on Windows; "
-                        "custody implementation correctly refuses this substrate",
-                    )
-                )
-            else:
-                checks.append(
-                    _fail(
-                        "windows_custody_primitive_fail_closed",
-                        "Unexpected Windows O_NOFOLLOW support requires custody-contract review",
-                    )
-                )
+            custody_probe = _run(
+                [sys.executable, "-c", WINDOWS_CUSTODY_PROBE],
+                cwd=dgaf,
+            )
+            _record_command(
+                checks,
+                logs,
+                "windows_custody_primitive_fail_closed",
+                custody_probe,
+                predicate=(
+                    custody_probe["returncode"] == 0 and custody_probe["stdout"].strip() == "CUSTODY_REFUSAL_VERIFIED"
+                ),
+                detail="Custody reservation refused O_NOFOLLOW_REQUIRED without filesystem side effects",
+            )
         pytest_result = _run(
             [sys.executable, "-m", "pytest", "-q", *aoss_tests],
             cwd=dgaf,
