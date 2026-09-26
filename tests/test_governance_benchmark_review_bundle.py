@@ -1,4 +1,4 @@
-"""Tests for reproducible governance benchmark review bundles."""
+﻿"""Tests for reproducible governance benchmark review bundles."""
 
 import hashlib
 import importlib.util
@@ -47,7 +47,12 @@ def test_sha256sums_match_every_archived_payload(tmp_path: Path) -> None:
 
     with zipfile.ZipFile(output) as archive:
         checksum_lines = archive.read("SHA256SUMS.txt").decode("ascii").splitlines()
-        checksums = dict(line.split("  ", 1) for line in checksum_lines if line)
+        checksums = {}
+        for line in checksum_lines:
+            if not line:
+                continue
+            digest_value, name = line.split("  ", 1)
+            checksums[name] = digest_value
         payload_names = set(archive.namelist()) - {"SHA256SUMS.txt"}
         assert set(checksums) == payload_names
         for name in payload_names:
