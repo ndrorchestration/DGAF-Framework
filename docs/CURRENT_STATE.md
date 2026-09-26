@@ -40,6 +40,12 @@ For the newest accepted status addendum, see [`docs/status/CURRENT.md`](status/C
 
 Human-readable boundary: canonical DGAF efficacy remains NOT ESTABLISHED. The underscored form above is the machine-readable state token; the spaced form is retained for current-surface consistency checks and public-facing clarity.
 
+## Current claim and lifecycle tokens
+
+Canonical DGAF efficacy is **NOT ESTABLISHED**. Independent validation and external validation are **NOT ESTABLISHED**; High-Assurance remains **NOT AUTHORIZED**. Issue #929 remains the external-review controller, and external review is **NOT EXECUTED**.
+
+Track A Epoch 002 lifecycle status is `CLOSED_FOR_EXACT_PREREGISTERED_SCOPE`: closed for its exact preregistered scope. It remains bounded same-system, nonindependent work, with scientific-N increment: 0. These lifecycle and claim tokens summarize the current boundary; the linked accepted status addendum remains the detailed record.
+
 ## Canonical High-Assurance provenance boundary
 
 This section is retained for control-state consistency tooling. It binds the active High-Assurance apparatus lineage without promoting current DGAF efficacy or external-validation state.
