@@ -7,12 +7,13 @@ It is intentionally synthetic and narrow.
 
 ## Included baselines
 
-- `C_POLICY_AS_CODE`: minimal action-level authorization checks.
-- `D_DGAF`: the same checks plus bounded authority, epistemic, and composed-authority guards.
+- `C1_MINIMAL_POLICY_AS_CODE`: minimal action-level authorization checks.
+- `C2_HARDENED_POLICY_AS_CODE`: adds delegation, replay, intent-binding, and workload-attestation guards.
+- `D_DGAF`: adds epistemic-authority and composed-authority guards to the hardened runtime-policy checks.
 
-Baseline C is deliberately minimal and is not intended to represent every
-production policy-as-code system. A stronger comparator should be added before
-any broad comparative claim is considered.
+The hardened comparator is included specifically to avoid treating a weak policy
+engine as representative of policy-as-code in general. It remains a synthetic
+bounded comparator, not a claim about every production policy engine.
 
 ## Cases
 
