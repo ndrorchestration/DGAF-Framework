@@ -107,9 +107,7 @@ def lint_surfaces(data: dict) -> list[str]:
             unknown.add(token)
 
         if unknown:
-            errors.append(
-                f"{rel}: undefined acronym/identifier candidates: {sorted(unknown)}"
-            )
+            errors.append(f"{rel}: undefined acronym/identifier candidates: {sorted(unknown)}")
 
     return errors
 
