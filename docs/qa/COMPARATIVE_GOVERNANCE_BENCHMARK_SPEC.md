@@ -237,3 +237,19 @@ Acceptance requires:
    the canonical digest scope;
 5. a stable digest is not interpreted as independent validation or scientific
    evidence.
+
+## Evidence-envelope claim binding
+
+Retained benchmark evidence SHOULD be wrapped in a machine-readable envelope
+that binds the exact repository commit, verification class, canonical evidence
+digests, supported statements, prohibited inferences, and current state
+projection.
+
+Acceptance requires:
+
+1. the repository commit is exact and machine-verifiable;
+2. same-system/local verification cannot be represented as independent review;
+3. supported statements remain bounded to the synthetic fixtures actually run;
+4. prohibited inferences include SOTA, generalized safety, efficacy,
+   certification/compliance, independent validation, and scientific-N claims;
+5. the state projection preserves all controlling fail-closed boundaries.

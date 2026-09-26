@@ -145,3 +145,24 @@ python experiments/governance_benchmark/build_evidence_manifest.py
 
 The manifest is an engineering evidence index. Its digests do not create
 scientific evidence, independent validation, canonical efficacy, or SOTA status.
+
+## Evidence envelope
+
+`build_evidence_envelope.py` wraps the canonical evidence manifest with an exact
+repository commit binding, verification class, supported statements, prohibited
+inferences, and an explicit state projection.
+
+The envelope is intended to travel with retained benchmark evidence so that a
+copied result cannot silently lose its claim ceiling.
+
+Run:
+
+```bash
+python experiments/governance_benchmark/build_evidence_envelope.py \
+  --output artifacts/governance-benchmark-evidence-envelope.json
+```
+
+The envelope records `SAME_SYSTEM_LOCAL_ENGINEERING_VERIFICATION` and preserves
+`SCIENTIFIC_N_INCREMENT=0`, `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`,
+`CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED`, `STATE_OF_THE_ART=NOT_ESTABLISHED`,
+and `HIGH_ASSURANCE=NOT_AUTHORIZED`.
