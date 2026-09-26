@@ -16,8 +16,8 @@ ROOT = Path(__file__).resolve().parent
 DEFAULT_FIXTURES = ROOT / "fixtures_v1.json"
 
 
-def policy_as_code(case: dict[str, Any]) -> tuple[str, list[str]]:
-    """Baseline C: minimal action-level allow/deny policy only."""
+def minimal_policy_as_code(case: dict[str, Any]) -> tuple[str, list[str]]:
+    """Baseline C1: minimal action-level allow/deny policy."""
     steps: list[str] = []
     action = case["action"]
 
@@ -36,35 +36,48 @@ def policy_as_code(case: dict[str, Any]) -> tuple[str, list[str]]:
     return "ALLOW", steps
 
 
+def hardened_policy_as_code(case: dict[str, Any]) -> tuple[str, list[str]]:
+    """Baseline C2: action policy plus common delegation and workload guards."""
+    decision, steps = minimal_policy_as_code(case)
+    steps = list(steps)
+
+    if decision != "ALLOW":
+        return decision, steps
+
+    authority = case.get("authority_context")
+    if authority is None:
+        return "ALLOW", steps
+
+    steps.append("CHECK_DELEGATED_REQUESTER")
+    if not authority["delegated_requester_authorized"]:
+        return "DENY", steps
+
+    steps.append("CHECK_REPLAY")
+    if authority["token_replay_detected"]:
+        return "DENY", steps
+
+    steps.append("CHECK_INTENT_BINDING")
+    if not authority["request_bound_to_authorized_intent"]:
+        return "DENY", steps
+
+    steps.append("CHECK_WORKLOAD_ATTESTATION")
+    if not authority["workload_attested"]:
+        return "DENY", steps
+
+    steps.append("CHECK_NON_WIDENING_DELEGATION")
+    if not authority["child_scope_subset"]:
+        return "DENY", steps
+
+    return "ALLOW", steps
+
+
 def dgaf(case: dict[str, Any]) -> tuple[str, list[str]]:
-    """Baseline D: action admission plus authority, epistemic, and composition guards."""
-    action_decision, steps = policy_as_code(case)
+    """Baseline D: hardened action policy plus epistemic and composition guards."""
+    action_decision, steps = hardened_policy_as_code(case)
     steps = list(steps)
 
     if action_decision != "ALLOW":
         return action_decision, steps
-
-    authority = case.get("authority_context")
-    if authority is not None:
-        steps.append("CHECK_DELEGATED_REQUESTER")
-        if not authority["delegated_requester_authorized"]:
-            return "DENY", steps
-
-        steps.append("CHECK_REPLAY")
-        if authority["token_replay_detected"]:
-            return "DENY", steps
-
-        steps.append("CHECK_INTENT_BINDING")
-        if not authority["request_bound_to_authorized_intent"]:
-            return "DENY", steps
-
-        steps.append("CHECK_WORKLOAD_ATTESTATION")
-        if not authority["workload_attested"]:
-            return "DENY", steps
-
-        steps.append("CHECK_NON_WIDENING_DELEGATION")
-        if not authority["child_scope_subset"]:
-            return "DENY", steps
 
     claim = case.get("claim")
     if claim is not None:
@@ -96,7 +109,8 @@ def dgaf(case: dict[str, Any]) -> tuple[str, list[str]]:
 
 
 BASELINES: dict[str, Callable[[dict[str, Any]], tuple[str, list[str]]]] = {
-    "C_POLICY_AS_CODE": policy_as_code,
+    "C1_MINIMAL_POLICY_AS_CODE": minimal_policy_as_code,
+    "C2_HARDENED_POLICY_AS_CODE": hardened_policy_as_code,
     "D_DGAF": dgaf,
 }
 
@@ -152,8 +166,9 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
         "benchmark_version": payload["version"],
         "evidence_class": payload["status"],
         "baseline_limitations": {
-            "C_POLICY_AS_CODE": "Minimal action-level comparator; not representative of all policy-as-code systems.",
-            "D_DGAF": "Synthetic bounded DGAF guard model; not the full production control plane.",
+            "C1_MINIMAL_POLICY_AS_CODE": "Minimal action-level comparator.",
+            "C2_HARDENED_POLICY_AS_CODE": "Synthetic hardened runtime-policy comparator, not a universal policy engine.",
+            "D_DGAF": "Synthetic bounded DGAF guard model, not the full production control plane.",
         },
         "claim_ceiling": [
             "SYNTHETIC_ENGINEERING_EVIDENCE_ONLY",
