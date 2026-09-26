@@ -26,5 +26,7 @@ jobs:
         run: python -m pip install pytest==9.1.1
       - name: Validate canonical vocabulary registry
         run: python scripts/validate_vocabulary_translation_matrix.py
+      - name: Validate acronym and identifier completeness
+        run: python scripts/validate_acronym_registry.py
       - name: Run vocabulary regression tests
-        run: python -m pytest -q tests/test_vocabulary_translation_matrix.py
+        run: python -m pytest -q tests/test_vocabulary_translation_matrix.py tests/test_acronym_registry.py
