@@ -1,4 +1,3 @@
-
 """The Windows operator probe must exercise refusal, not infer it from the OS."""
 
 import subprocess
