@@ -48,6 +48,7 @@ reviewer
 ## Initial DGAF mapping families
 
 ### Governance / identity / delegation
+
 Candidate DGAF sources:
 
 - agent authority matrix and invariant;
@@ -57,6 +58,7 @@ Candidate DGAF sources:
 - revocation/replay contracts.
 
 ### Risk mapping / consequence
+
 Candidate sources:
 
 - action classes and effect classifications;
@@ -65,6 +67,7 @@ Candidate sources:
 - failure-mode and assurance registries.
 
 ### Measurement / assurance
+
 Candidate sources:
 
 - epistemic evidence standard;
@@ -74,6 +77,7 @@ Candidate sources:
 - retained execution receipts.
 
 ### Management / intervention
+
 Candidate sources:
 
 - fail-closed admission;
@@ -83,6 +87,7 @@ Candidate sources:
 - operator-facing next-admissible-action surfaces.
 
 ### Agentic-security risks
+
 OWASP mappings must be evidence-specific, particularly for:
 
 - goal hijacking;
