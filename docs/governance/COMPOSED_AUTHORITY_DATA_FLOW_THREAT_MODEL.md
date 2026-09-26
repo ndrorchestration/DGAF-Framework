@@ -31,24 +31,31 @@ Neither agent individually holds both authorities, yet the composed workflow pro
 ## Threat classes
 
 ### CA-01 — Read/write authority laundering
+
 Sensitive read output reaches an external-write capability through another agent or tool.
 
 ### CA-02 — Delegation widening by composition
+
 Several narrow delegated scopes combine into an effect broader than any delegator intended.
 
 ### CA-03 — Provenance stripping
+
 A transformation removes or obscures source classification, allowing protected data to cross a boundary as apparently unclassified content.
 
 ### CA-04 — Memory-mediated laundering
+
 Sensitive output is written to shared memory/context and later consumed by an agent with broader egress authority.
 
 ### CA-05 — Tool-mediated laundering
+
 A permitted tool transforms data in a way that bypasses destination or classification policy.
 
 ### CA-06 — Aggregation escalation
+
 Multiple individually non-sensitive observations combine into a sensitive inference or protected aggregate.
 
 ### CA-07 — Unknown-classification escape
+
 Missing classification/provenance is treated as unrestricted rather than unresolved.
 
 ## Decision inputs
