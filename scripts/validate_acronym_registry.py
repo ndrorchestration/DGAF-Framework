@@ -91,11 +91,7 @@ def validate_registry(data: dict) -> list[str]:
 
 def _project_projection_entries(data: dict) -> list[dict]:
     return sorted(
-        (
-            entry
-            for entry in data["entries"]
-            if entry["classification"] in PROJECT_CLASSIFICATIONS
-        ),
+        (entry for entry in data["entries"] if entry["classification"] in PROJECT_CLASSIFICATIONS),
         key=lambda entry: entry["token"].casefold(),
     )
 
@@ -111,9 +107,7 @@ def render_markdown_projection(data: dict) -> str:
         expansion = entry["expansion"].replace("|", "\\|")
         classification = entry["classification"].replace("|", "\\|")
         status = entry["status"].replace("|", "\\|")
-        lines.append(
-            f"| **{token}** | {expansion} _(classification: {classification})_ | {status} |"
-        )
+        lines.append(f"| **{token}** | {expansion} _(classification: {classification})_ | {status} |")
     lines.append(PROJECTION_END)
     return "\n".join(lines)
 
