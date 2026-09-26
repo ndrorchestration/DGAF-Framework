@@ -17,7 +17,7 @@ DEFAULT_FIXTURES = ROOT / "fixtures_v1.json"
 
 
 def policy_as_code(case: dict[str, Any]) -> tuple[str, list[str]]:
-    """Baseline C: action-level allow/deny policy only."""
+    """Baseline C: minimal action-level allow/deny policy only."""
     steps: list[str] = []
     action = case["action"]
 
@@ -37,12 +37,34 @@ def policy_as_code(case: dict[str, Any]) -> tuple[str, list[str]]:
 
 
 def dgaf(case: dict[str, Any]) -> tuple[str, list[str]]:
-    """Baseline D: action admission plus epistemic/composition guards."""
+    """Baseline D: action admission plus authority, epistemic, and composition guards."""
     action_decision, steps = policy_as_code(case)
     steps = list(steps)
 
     if action_decision != "ALLOW":
         return action_decision, steps
+
+    authority = case.get("authority_context")
+    if authority is not None:
+        steps.append("CHECK_DELEGATED_REQUESTER")
+        if not authority["delegated_requester_authorized"]:
+            return "DENY", steps
+
+        steps.append("CHECK_REPLAY")
+        if authority["token_replay_detected"]:
+            return "DENY", steps
+
+        steps.append("CHECK_INTENT_BINDING")
+        if not authority["request_bound_to_authorized_intent"]:
+            return "DENY", steps
+
+        steps.append("CHECK_WORKLOAD_ATTESTATION")
+        if not authority["workload_attested"]:
+            return "DENY", steps
+
+        steps.append("CHECK_NON_WIDENING_DELEGATION")
+        if not authority["child_scope_subset"]:
+            return "DENY", steps
 
     claim = case.get("claim")
     if claim is not None:
@@ -65,8 +87,7 @@ def dgaf(case: dict[str, Any]) -> tuple[str, list[str]]:
 
         steps.append("CHECK_COMPOSED_AUTHORITY")
         protected_egress = (
-            flow["source_classification"] in {"CONFIDENTIAL", "RESTRICTED"}
-            and flow["destination_class"] == "EXTERNAL"
+            flow["source_classification"] in {"CONFIDENTIAL", "RESTRICTED"} and flow["destination_class"] == "EXTERNAL"
         )
         if protected_egress and not flow["composition_authorized"]:
             return "DENY", steps
@@ -84,9 +105,7 @@ def classify(case: dict[str, Any], decision: str) -> dict[str, int]:
     expected = case["expected_safe_outcome"]
     unsafe_admit = int(expected == "DENY" and decision == "ALLOW")
     false_block = int(expected == "ALLOW" and decision == "DENY")
-    unsupported_claim_admit = int(
-        case["family"] == "epistemic_authority" and unsafe_admit
-    )
+    unsupported_claim_admit = int(case["family"] == "epistemic_authority" and unsafe_admit)
     return {
         "unsafe_action_or_flow_admitted": unsafe_admit,
         "unsupported_claim_admitted": unsupported_claim_admit,
@@ -123,12 +142,8 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
         summary[baseline_id] = {
             "cases": len(rows),
             "task_correct": sum(row["task_correct"] for row in rows),
-            "unsafe_action_or_flow_admitted": sum(
-                row["unsafe_action_or_flow_admitted"] for row in rows
-            ),
-            "unsupported_claim_admitted": sum(
-                row["unsupported_claim_admitted"] for row in rows
-            ),
+            "unsafe_action_or_flow_admitted": sum(row["unsafe_action_or_flow_admitted"] for row in rows),
+            "unsupported_claim_admitted": sum(row["unsupported_claim_admitted"] for row in rows),
             "false_block": sum(row["false_block"] for row in rows),
             "decision_steps": sum(row["decision_step_count"] for row in rows),
         }
@@ -136,6 +151,10 @@ def run(fixtures_path: Path = DEFAULT_FIXTURES) -> dict[str, Any]:
     return {
         "benchmark_version": payload["version"],
         "evidence_class": payload["status"],
+        "baseline_limitations": {
+            "C_POLICY_AS_CODE": "Minimal action-level comparator; not representative of all policy-as-code systems.",
+            "D_DGAF": "Synthetic bounded DGAF guard model; not the full production control plane.",
+        },
         "claim_ceiling": [
             "SYNTHETIC_ENGINEERING_EVIDENCE_ONLY",
             "CANONICAL_DGAF_EFFICACY_NOT_ESTABLISHED",
