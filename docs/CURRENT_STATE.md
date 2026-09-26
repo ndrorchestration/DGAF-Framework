@@ -30,13 +30,15 @@ For the newest accepted status addendum, see [`docs/status/CURRENT.md`](status/C
 |---|---|
 | Protected repository `main` | Read from Git at use time. The accepted #1050 checkpoint readback was `0cc79245f30f01f0b2d98c870589318fc7c69494`. |
 | Canonical High-Assurance program | `PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED / N=0` |
-| Canonical DGAF efficacy | `NOT_ESTABLISHED` |
+| Canonical DGAF efficacy | `NOT_ESTABLISHED` (`NOT ESTABLISHED`) |
 | Independent validation | `NOT_ESTABLISHED` |
 | External validation | `NOT_ESTABLISHED` |
 | High-Assurance authorization | `NOT_AUTHORIZED` |
 | Scientific-N increment | `0` |
 | Self-application controller | Issue #1022 remains open. |
 | External-review controller | Issue #929 remains open. |
+
+Human-readable boundary: canonical DGAF efficacy remains NOT ESTABLISHED. The underscored form above is the machine-readable state token; the spaced form is retained for current-surface consistency checks and public-facing clarity.
 
 ## Canonical High-Assurance provenance boundary
 
@@ -73,7 +75,11 @@ Current interpretation:
 
 ## Track A / PDMAL boundary
 
-Track A Epoch 002 remains closed for its exact preregistered scope as bounded same-system, nonindependent work. Operator-local results and interpretation records do not establish canonical DGAF efficacy, independent validation, external validation, production certification, or High-Assurance authorization.
+Track A Epoch 002 remains closed for its exact preregistered scope as bounded same-system, nonindependent work.
+
+Lifecycle token: `CLOSED_FOR_EXACT_PREREGISTERED_SCOPE`.
+
+Operator-local results and interpretation records do not establish canonical DGAF efficacy, independent validation, external validation, production certification, or High-Assurance authorization.
 
 Historical Track A details remain evidence-bound to their exact accepted commits, receipts, artifacts, and issue records. They should not be read as current promotion evidence unless a later governed record explicitly authorizes that interpretation.
 
