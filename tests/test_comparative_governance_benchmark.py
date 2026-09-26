@@ -97,3 +97,5 @@ def test_summary_exposes_incremental_benefit_and_cost_signals() -> None:
     assert c1["decision_steps"] < c2["decision_steps"] < d["decision_steps"]
     assert delta["dgaf_minus_hardened_policy_decision_steps"] > 0
     assert delta["dgaf_over_hardened_policy_steps_ratio_milli"] > 1000
+    assert delta["incremental_unsafe_admissions_prevented"] == 2
+    assert delta["extra_steps_per_incremental_prevention_milli"] > 0
