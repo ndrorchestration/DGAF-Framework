@@ -21,6 +21,8 @@ EXTERNAL_VALIDATION=NOT_ESTABLISHED
 HIGH_ASSURANCE=NOT_AUTHORIZED
 ```
 
+Human-readable boundary: canonical DGAF efficacy remains NOT ESTABLISHED. Independent validation and external validation remain NOT ESTABLISHED; High-Assurance is NOT AUTHORIZED. See `docs/CURRENT_STATE.md` and the accepted status addendum for the controlling detail.
+
 ## Current controller boundaries
 
 - **#1022 — DGAF-on-DGAF self-application benchmark:** open. Internal same-system engineering evidence has advanced through cold-start scaffold/schema/validator/builder/materializer, CI artifactization, same-system execution, retained same-system execution artifactization, and same-system adjudication. This does not establish independent validation, external validation, canonical efficacy, or High-Assurance authorization.
