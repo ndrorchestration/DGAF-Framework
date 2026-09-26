@@ -62,9 +62,7 @@ def test_sha256sums_match_every_archived_payload(tmp_path: Path) -> None:
 def test_bundle_binds_evidence_to_exact_repository_head(tmp_path: Path) -> None:
     output = tmp_path / "review.zip"
     bundle.build_bundle(output)
-    expected_head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True
-    ).strip()
+    expected_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True).strip()
 
     with zipfile.ZipFile(output) as archive:
         envelope = json.loads(archive.read("evidence-envelope.json"))
