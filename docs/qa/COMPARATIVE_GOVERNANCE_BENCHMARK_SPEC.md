@@ -220,3 +220,20 @@ Acceptance requires:
    independently exercised;
 6. the layer is described as bounded synthetic engineering evidence, not general
    compositional robustness.
+
+## Evidence-manifest reproducibility
+
+Retained benchmark evidence SHOULD include a canonical manifest whose digest
+scope excludes explicitly informational nondeterministic measurements such as
+wall-clock or high-resolution runtime timing.
+
+Acceptance requires:
+
+1. canonicalization rules are explicit and tested;
+2. two repeated executions of unchanged decision logic produce identical
+   canonical digests;
+3. excluded fields remain available as informational measurements where useful;
+4. decision outputs, summaries, evidence classes, and claim ceilings remain in
+   the canonical digest scope;
+5. a stable digest is not interpreted as independent validation or scientific
+   evidence.

@@ -126,3 +126,22 @@ python -m pytest tests/test_governance_benchmark_cross_domain.py
 This is synthetic cross-domain engineering evidence only. It does not establish
 general compositional robustness, production safety, independent validation, or
 state-of-the-art status.
+
+## Stable evidence manifest
+
+`build_evidence_manifest.py` emits one manifest across the fixed, mutation,
+same-domain interaction, and cross-domain interaction layers.
+
+Canonical SHA-256 digests exclude `elapsed_ns_informational`, because runtime
+nanoseconds are retained only as informational measurements and are not stable
+reproducibility identifiers. Decision-relevant content, summaries, evidence
+classes, and claim ceilings remain inside the canonical digest scope.
+
+Run:
+
+```bash
+python experiments/governance_benchmark/build_evidence_manifest.py
+```
+
+The manifest is an engineering evidence index. Its digests do not create
+scientific evidence, independent validation, canonical efficacy, or SOTA status.
