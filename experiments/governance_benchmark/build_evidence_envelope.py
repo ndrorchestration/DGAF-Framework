@@ -59,7 +59,7 @@ def build_envelope(repo_root: Path) -> dict[str, Any]:
             "same_domain_interactions": manifest["entries"]["same_domain_interactions"]["case_count"],
             "cross_domain_interactions": manifest["entries"]["cross_domain_interactions"]["case_count"],
             "strong_policy_cases": extended["strong_policy_comparator"]["summary"]["cases"],
-            "semantic_equivalence_states": extended["semantic_equivalence"]["summary"]["total_states"],
+            "semantic_equivalence_states": extended["semantic_equivalence"]["enumeration_scope"]["total_cases"],
             "configuration_scaling_points": len(extended["configuration_scaling"]["scope_counts"]),
             "recovery_composition_cases": extended["recovery_composition"]["summary"]["cases"],
             "provenance_custody_mutations": extended["provenance_custody"]["summary"]["mutation_cases"],
