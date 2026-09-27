@@ -23,7 +23,7 @@ layers:
 - matched recovery/composition parity;
 - matched provenance-custody parity.
 
-It also contains a reviewer note and `SHA256SUMS.txt`.
+It also contains a reviewer note, `SHA256SUMS.txt`, `DGAF_SMOKE_CONTRACT_V1.md`, and `run_dgaf_smoke_v1.py`. The smoke files are included as reproducibility inputs only; the review bundle does not embed or assert a smoke PASS.
 
 The ZIP writer uses fixed metadata and sorted filenames so two unchanged runs
 produce the same archive digest.
@@ -48,6 +48,34 @@ python -m pytest \
   tests/test_governance_benchmark_provenance_custody.py \
   tests/test_standards_risk_crosswalk.py
 ```
+
+
+## Operational smoke verification
+
+The governance benchmark bundle and the DGAF smoke contract answer different questions.
+
+- The benchmark bundle evaluates the bounded governance benchmark and admitted falsification layers.
+- DGAF Smoke Contract v1 checks whether the exact revision can execute a minimal governed control path, preserve provenance, reject an authority-widening attempt, and block ambiguous promotion.
+
+To reproduce the smoke check from the exact commit under review, use the canonical control-plane dependency lock:
+
+```bash
+python -m pip install --require-hashes -r requirements-ci-control-plane-py312-ubuntu2404-x64.lock
+python -m pytest -q tests/test_dgaf_smoke_v1.py
+python scripts/run_dgaf_smoke_v1.py --output artifacts/dgaf-smoke-v1/result.json
+```
+
+A valid smoke result must remain revision-bound and preserve:
+
+```text
+SCIENTIFIC_N_INCREMENT=0
+AUTHORIZATION_EFFECT=NONE
+INDEPENDENT_VALIDATION=NOT_ESTABLISHED
+CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED
+HIGH_ASSURANCE=NOT_AUTHORIZED
+```
+
+Smoke `PASS` means the bounded engineering contract executed successfully. `FAIL` or `NOT_OBSERVED` remains promotion-blocking. None of these outcomes establishes empirical efficacy, independent validation, SOTA status, production certification, or High-Assurance authorization.
 
 ## Independent review boundary
 
