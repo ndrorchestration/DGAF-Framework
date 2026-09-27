@@ -1,0 +1,25 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://dgaf.dev/schemas/execution_receipt.schema.json",
+  "title":"DGAF Execution Receipt",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","invocation_id","workflow_id","authorization_id","capability_id","action_digest","attempt","execution_state","executor_identity","timestamp"],
+  "properties":{
+    "schema_version":{"const":"0.1-draft"},
+    "invocation_id":{"type":"string"},
+    "workflow_id":{"type":"string"},
+    "authorization_id":{"type":"string"},
+    "capability_id":{"type":"string"},
+    "action_digest":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "idempotency_key":{"type":"string"},
+    "attempt":{"type":"integer","minimum":1},
+    "execution_state":{"enum":["NEW","EXECUTING","EXECUTED","FAILED","EXECUTION_OUTCOME_UNKNOWN","PARTIALLY_EXECUTED"]},
+    "executor_identity":{"type":"string"},
+    "adapter_identity":{"type":"string"},
+    "provider_receipt":{"type":["object","null"]},
+    "timestamp":{"type":"string","format":"date-time"},
+    "postcondition_state":{"enum":["NOT_CHECKED","VERIFIED","FAILED","INCONCLUSIVE"]},
+    "recovery_state":{"enum":["NONE","PENDING","ROLLED_BACK","COMPENSATED","FAILED","ESCALATED"]}
+  }
+}

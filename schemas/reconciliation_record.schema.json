@@ -1,0 +1,19 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://dgaf.dev/schemas/reconciliation_record.schema.json",
+  "title":"DGAF Reconciliation Record",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","reconciliation_id","invocation_id","prior_state","resolution","evidence","timestamp"],
+  "properties":{
+    "schema_version":{"const":"0.1-draft"},
+    "reconciliation_id":{"type":"string"},
+    "invocation_id":{"type":"string"},
+    "prior_state":{"enum":["EXECUTION_OUTCOME_UNKNOWN","PARTIALLY_EXECUTED","POSTCONDITION_INCONCLUSIVE"]},
+    "resolution":{"enum":["EXECUTED","FAILED","PARTIAL_CONFIRMED","UNRESOLVED"]},
+    "evidence":{"type":"array","minItems":1,"items":{"type":"object"}},
+    "retry_permitted":{"type":"boolean"},
+    "provider_state":{"type":["object","null"]},
+    "timestamp":{"type":"string","format":"date-time"}
+  }
+}

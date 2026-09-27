@@ -1,0 +1,52 @@
+{
+  "status": "PROSPECTIVE / NON-AUTHORIZING",
+  "schema_version": "0.1-draft",
+  "purpose": "Second adapter path demonstrating transport-independent capability identity.",
+  "capabilities": [
+    {
+      "schema_version": "0.1-draft",
+      "id": "dgaf.local.status",
+      "version": "0.1.0",
+      "provider": "dgaf-local-operator-bridge",
+      "resource_type": "dgaf.local.state",
+      "operation": "status",
+      "adapter": {
+        "kind": "rest",
+        "identity": "dgaf-mock-http-adapter"
+      },
+      "effect": {
+        "access": "read",
+        "sensitivity": "internal",
+        "reversibility": "reversible",
+        "externality": "none",
+        "blast_radius": "low",
+        "financial": "none",
+        "privilege": "none"
+      },
+      "permissions": [
+        "DISCOVER",
+        "INSPECT_SCHEMA",
+        "REQUEST_AUTHORIZATION",
+        "INVOKE"
+      ],
+      "preconditions": [],
+      "commit_guards": [],
+      "postconditions": [
+        "bridge_status_returned"
+      ],
+      "verification": "VERIFIABLE",
+      "recovery": "REVERSIBLE",
+      "audit": {
+        "include": [
+          "actor",
+          "agent",
+          "capability",
+          "policy_version",
+          "outcome"
+        ]
+      },
+      "lifecycle": "DRAFT"
+    }
+  ],
+  "non_authority_statement": "This mock HTTP/OpenAPI-style adapter opens no network listener and grants no new authority. It exists only to test transport independence."
+}

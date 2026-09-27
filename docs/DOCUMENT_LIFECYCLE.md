@@ -38,8 +38,13 @@ A later record must not retroactively change the epistemic meaning of an earlier
 ## Primary documents
 
 | Document | Lifecycle | Authority | Scope / note |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `docs/CURRENT_STATE.md` | ACTIVE | Both | Concise current repository/gate snapshot |
+| `docs/formalism/CAPABILITY_GOVERNANCE_PROTOCOL.md` | PROSPECTIVE / SPECIFICATION | Audit/control | Provider-neutral capability-governance contract; non-authorizing until separately accepted |
+| `docs/formalism/CAPABILITY_GOVERNANCE_DESIGN_TRACK.md` | PROSPECTIVE / ROADMAP | Audit/control | Specification-first staged implementation path; explicitly defers general proxy/productization |
+| `docs/formalism/CAPABILITY_GOVERNANCE_THREAT_MODEL.md` | PROSPECTIVE / SECURITY ANALYSIS | Audit/control | Abuse-case corpus and trust-boundary model for governed capabilities |
+| `docs/formalism/CAPABILITY_GOVERNANCE_CONFORMANCE_MATRIX.md` | PROSPECTIVE / DERIVATIVE | Audit/control | Maps G1–G16 to bounded local executable evidence; does not establish certification or universal correctness |
+| `docs/formalism/CAPABILITY_CANONICALIZATION_v0_1.md` | PROSPECTIVE / SPECIFICATION | Audit/control | Versioned canonical action-byte/digest profile for exact-action binding |
 | `docs/PROJECT_STATUS.md` | DERIVATIVE | Both | Compatibility summary; must defer to CURRENT_STATE for live gate truth |
 | `docs/ui/UI_CURRENT_STATE.md` | DERIVATIVE | Presentation/documentation | Current UI/interface projection index; must defer to CURRENT_STATE and active controllers for live gate truth |
 | `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` | HISTORICAL | Historical audit | Preserves the 2026-08-20 pre-authorization gap audit; not a current gate list |
@@ -65,7 +70,7 @@ A later record must not retroactively change the epistemic meaning of an earlier
 Before proposing a new documentation artifact, inspect the existing owner for that concern. Current source families include:
 
 | Concern | Existing seed/source family |
-|---|---|
+| --- | --- |
 | Documentation lifecycle | `docs/DOCUMENT_LIFECYCLE.md` |
 | Documentation gaps/hygiene | `docs/experiment/DOCUMENTATION_GAP_AUDIT.md` plus dated documentation reconciliation/hygiene records |
 | Temporal/history | session logs, version histories, dated governance/evidence records |
@@ -142,7 +147,7 @@ Documentation reconciliation alone does not create a freeze, authorize a pilot, 
 The following current-facing records are **ACTIVE** for the AOSS Stage-A external-review phase:
 
 | Document / controller | Lifecycle | Authority / role |
-|---|---|---|
+| --- | --- | --- |
 | `docs/CURRENT_STATE.md` | ACTIVE | Primary current-facing repository state summary; must preserve exact evidence/authorization boundaries |
 | `docs/research/AOSS_V0_6_STAGE_A_INDEPENDENT_VALIDATION_HANDOFF.md` | ACTIVE | Reviewer-facing handoff contract accepted via PR #928; makes external review operationally requestable but does not itself establish independence or validation |
 | GitHub Issue #901 | ACTIVE | Stage-A collection-execution-readiness controller |

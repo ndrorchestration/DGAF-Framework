@@ -1,0 +1,35 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://dgaf.dev/schemas/delegation_chain.schema.json",
+  "title":"DGAF Delegation Chain",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","delegation_id","root_principal","links"],
+  "properties":{
+    "schema_version":{"const":"0.1-draft"},
+    "delegation_id":{"type":"string"},
+    "root_principal":{"type":"string"},
+    "links":{
+      "type":"array",
+      "minItems":1,
+      "items":{
+        "type":"object",
+        "additionalProperties":false,
+        "required":["delegator","delegatee","capabilities","resource_scope","not_before","expires_at"],
+        "properties":{
+          "delegator":{"type":"string"},
+          "delegatee":{"type":"string"},
+          "capabilities":{"type":"array","items":{"type":"string"},"minItems":1,"uniqueItems":true},
+          "resource_scope":{"type":"object","minProperties":1},
+          "constraints":{"type":"object"},
+          "budgets":{"type":"object"},
+          "not_before":{"type":"string","format":"date-time"},
+          "expires_at":{"type":"string","format":"date-time"},
+          "parent_link_digest":{"type":["string","null"]},
+          "link_digest":{"type":"string"}
+        }
+      }
+    },
+    "status":{"enum":["ACTIVE","REVOKED","EXPIRED"]}
+  }
+}
