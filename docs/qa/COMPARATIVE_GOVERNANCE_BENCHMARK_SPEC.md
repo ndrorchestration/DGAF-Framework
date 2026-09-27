@@ -280,3 +280,24 @@ describe those fixtures as evidence of unique DGAF protection. Future
 comparative work should instead test scaling, configuration/update burden,
 cross-workflow composition, evidence-state semantics, recovery/reconciliation,
 and operator burden.
+
+## Exhaustive bounded semantic-equivalence layer
+
+After fixed-fixture parity, the comparator SHOULD be evaluated across the
+complete currently declared Boolean/categorical input schema rather than only
+hand-selected cases.
+
+The first bounded enumeration covers action, authority context, claim state,
+and flow state, including absent optional domains.
+
+Acceptance requires:
+
+1. enumerate the declared finite schema without sampling;
+2. evaluate identical generated states under C3 and DGAF;
+3. retain total state count, parity count, difference count, and allow counts;
+4. treat zero differences as decision-function equivalence only for the
+   enumerated schema;
+5. do not infer architectural equivalence from decision equivalence;
+6. move subsequent research toward scaling, evidence lifecycle,
+   composition/recovery, provenance custody, and operator burden;
+7. preserve all scientific and assurance claim ceilings.
