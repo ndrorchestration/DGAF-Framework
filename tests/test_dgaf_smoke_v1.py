@@ -1,15 +1,28 @@
 from __future__ import annotations
 
+import importlib.util
 import json
+from pathlib import Path
+from types import ModuleType
 
-from scripts.run_dgaf_smoke_v1 import FIXTURES, SCHEMA, main, run_smoke
+ROOT = Path(__file__).resolve().parents[1]
+RUNNER_PATH = ROOT / "scripts/run_dgaf_smoke_v1.py"
+
+
+def load_runner() -> ModuleType:
+    spec = importlib.util.spec_from_file_location("dgaf_smoke_v1_runner", RUNNER_PATH)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_dgaf_smoke_v1_passes_all_required_gates(monkeypatch):
+    runner = load_runner()
     monkeypatch.setenv("DGAF_REVISION", "test-revision")
-    result = run_smoke()
+    result = runner.run_smoke()
 
-    assert result["schema"] == SCHEMA
+    assert result["schema"] == runner.SCHEMA
     assert result["revision"] == "test-revision"
     assert result["outcome"] == "PASS"
     assert set(result["gates"]) == {
@@ -24,12 +37,13 @@ def test_dgaf_smoke_v1_passes_all_required_gates(monkeypatch):
 
 
 def test_dgaf_smoke_v1_preserves_nonempirical_boundary():
-    result = run_smoke()
+    runner = load_runner()
+    result = runner.run_smoke()
 
     assert result["fixtures"] == {
-        "allow": FIXTURES["allow"],
-        "deny": FIXTURES["deny"],
-        "ambiguous": FIXTURES["ambiguous"],
+        "allow": runner.FIXTURES["allow"],
+        "deny": runner.FIXTURES["deny"],
+        "ambiguous": runner.FIXTURES["ambiguous"],
     }
     assert result["boundary"] == {
         "scientific_n_increment": 0,
@@ -41,15 +55,16 @@ def test_dgaf_smoke_v1_preserves_nonempirical_boundary():
 
 
 def test_dgaf_smoke_v1_emits_machine_readable_result(tmp_path, monkeypatch):
+    runner = load_runner()
     output = tmp_path / "result.json"
     monkeypatch.setattr(
         "sys.argv",
         ["run_dgaf_smoke_v1.py", "--output", str(output)],
     )
 
-    assert main() == 0
+    assert runner.main() == 0
     payload = json.loads(output.read_text(encoding="utf-8"))
-    assert payload["schema"] == SCHEMA
+    assert payload["schema"] == runner.SCHEMA
     assert payload["outcome"] == "PASS"
     assert payload["gates"]["SMOKE_DENY"]["rejected"] is True
     assert payload["gates"]["SMOKE_STATE"]["promotion_blocked"] is True
