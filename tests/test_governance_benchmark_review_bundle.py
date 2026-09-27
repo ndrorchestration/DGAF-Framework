@@ -43,6 +43,8 @@ def test_bundle_is_reproducible_and_contains_required_files(tmp_path: Path) -> N
         "configuration-scaling.json",
         "recovery-composition.json",
         "provenance-custody.json",
+        "DGAF_SMOKE_CONTRACT_V1.md",
+        "run_dgaf_smoke_v1.py",
     }
 
 
@@ -126,3 +128,19 @@ def test_bundle_evidence_payloads_are_indexed_by_envelope(tmp_path: Path) -> Non
         for payload_name, layer_name in payload_to_layer.items():
             payload = json.loads(archive.read(payload_name))
             assert bundle.manifest_module.digest(payload) == indexed[layer_name]
+
+
+def test_bundle_includes_smoke_reproducibility_inputs_without_claiming_smoke_result(tmp_path: Path) -> None:
+    output = tmp_path / "review.zip"
+    bundle.build_bundle(output)
+
+    with zipfile.ZipFile(output) as archive:
+        handoff = archive.read("REVIEWER_HANDOFF.md").decode("utf-8")
+        smoke_spec = archive.read("DGAF_SMOKE_CONTRACT_V1.md").decode("utf-8")
+        smoke_runner = archive.read("run_dgaf_smoke_v1.py").decode("utf-8")
+
+    assert "DGAF Smoke Contract v1" in smoke_spec
+    assert "SMOKE_BOOT" in smoke_spec
+    assert "SMOKE_DENY" in smoke_spec
+    assert "run_smoke" in smoke_runner
+    assert "not as benchmark evidence or as a recorded smoke PASS" in handoff
