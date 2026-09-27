@@ -35,6 +35,8 @@ The candidate bundle MUST include the complete current bounded evidence surface:
 - strong-policy fixed-fixture comparator;
 - exhaustive bounded semantic-equivalence enumeration;
 - neutral reusable-abstraction configuration-scaling model;
+- matched recovery/composition parity result;
+- matched provenance-custody parity result;
 - reviewer handoff;
 - archive-wide SHA-256 manifest.
 
