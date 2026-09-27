@@ -10,6 +10,8 @@ It answers one bounded question:
 
 This contract composes existing checks. It does not redefine them.
 
+Review-surface predecessor: PR #1077 merged to `main` as `f51c318929fccef7480fa84ae74c10ab6361e089`. This records only repository lineage; it does not add authority or empirical evidence.
+
 ## Required checks
 
 | Gate | Source | Pass condition |
