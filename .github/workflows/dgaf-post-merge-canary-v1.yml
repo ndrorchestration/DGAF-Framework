@@ -1,0 +1,68 @@
+name: DGAF Post-Merge Mainline Canary v1
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  canary:
+    name: DGAF exact-main post-merge canary
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pushed main revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Bootstrap exact pip resolver
+        run: bash scripts/bootstrap_ci_pip.sh
+
+      - name: Install hash-locked control-plane CI dependencies
+        run: >-
+          python -m pip install
+          --disable-pip-version-check
+          --require-hashes
+          --only-binary=:all:
+          -r requirements-ci-control-plane-py312-ubuntu2404-x64.lock
+
+      - name: Compile post-merge canary runner
+        run: python -m py_compile scripts/run_dgaf_post_merge_canary_v1.py
+
+      - name: Run focused canary tests
+        run: python -m pytest -q tests/test_dgaf_post_merge_canary_v1.py
+
+      - name: Execute exact-main post-merge canary
+        env:
+          DGAF_REVISION: ${{ github.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_EVENT_NAME: push
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          PYTHONPATH: ${{ github.workspace }}
+        run: python scripts/run_dgaf_post_merge_canary_v1.py
+
+      - name: Upload canary evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dgaf-post-merge-canary-v1-${{ github.sha }}
+          path: artifacts/dgaf-post-merge-canary-v1/result.json
+          if-no-files-found: error
+          retention-days: 14
