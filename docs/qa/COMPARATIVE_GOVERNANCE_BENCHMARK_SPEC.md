@@ -301,4 +301,3 @@ Acceptance requires:
 6. move subsequent research toward scaling, evidence lifecycle,
    composition/recovery, provenance custody, and operator burden;
 7. preserve all scientific and assurance claim ceilings.
-
