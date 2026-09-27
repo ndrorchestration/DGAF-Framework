@@ -28,6 +28,7 @@ from scripts.dgaf_capability_reference_transaction import (  # noqa: E402
     TransactionMetadata,
     run_reference_transaction,
 )
+
 # isort: on
 
 NOW = datetime(2026, 9, 27, 7, 45, tzinfo=timezone.utc)
