@@ -14,6 +14,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent
 REPO_ROOT = ROOT.parents[1]
 MANIFEST_PATH = ROOT / "build_evidence_manifest.py"
+SMOKE_SPEC_PATH = REPO_ROOT / "specs/DGAF_SMOKE_CONTRACT_V1.md"
+SMOKE_RUNNER_PATH = REPO_ROOT / "scripts/run_dgaf_smoke_v1.py"
 
 spec = importlib.util.spec_from_file_location("benchmark_manifest", MANIFEST_PATH)
 assert spec and spec.loader
@@ -57,6 +59,8 @@ def build_bundle(output: Path) -> dict[str, str]:
         "configuration-scaling.json": encode_canonical(load_json_script("run_configuration_scaling.py")),
         "recovery-composition.json": encode_canonical(load_json_script("run_recovery_composition_parity.py")),
         "provenance-custody.json": encode_canonical(load_json_script("run_provenance_custody_parity.py")),
+        "DGAF_SMOKE_CONTRACT_V1.md": SMOKE_SPEC_PATH.read_bytes(),
+        "run_dgaf_smoke_v1.py": SMOKE_RUNNER_PATH.read_bytes(),
     }
 
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True).strip()
@@ -69,6 +73,8 @@ def build_bundle(output: Path) -> dict[str, str]:
         "The bundle includes the admitted negative/parity falsification layers: strong-policy "
         "fixed-fixture parity, bounded semantic equivalence, neutral configuration scaling, "
         "matched recovery/composition parity, and matched provenance-custody parity. "
+        "The archive also includes DGAF Smoke Contract v1 and its runner as reproducibility inputs, "
+        "not as benchmark evidence or as a recorded smoke PASS. "
         "Regenerate the bundle from this exact commit and compare canonical digests. "
         "This bundle does not establish independent validation, canonical efficacy, "
         "SOTA status, scientific-N increment, regulatory compliance, or High-Assurance authorization.\n"
