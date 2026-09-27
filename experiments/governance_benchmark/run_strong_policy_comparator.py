@@ -187,7 +187,10 @@ def run() -> dict[str, Any]:
             "Parity weakens any claim that the current fixed fixtures demonstrate unique DGAF protection.",
             "Parity does not show architectural equivalence, equal operational burden, or equal production safety.",
             "Non-parity would require case-level analysis before any comparative inference.",
-            "This synthetic result does not establish efficacy, SOTA status, independent validation, compliance, or scientific evidence.",
+            (
+                "This synthetic result does not establish efficacy, SOTA status, "
+                "independent validation, compliance, or scientific evidence."
+            ),
         ],
         "claim_ceiling": policy["claim_ceiling"],
     }
