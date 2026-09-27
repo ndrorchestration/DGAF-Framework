@@ -223,7 +223,10 @@ def run() -> dict[str, Any]:
         "interpretation_boundary": [
             "The comparator is intentionally allowed the same ordinary cross-link and schema checks.",
             "Parity weakens claims that these bounded provenance-link checks are inherently unique to DGAF.",
-            "This does not measure durable storage, independent custody, distributed tamper resistance, or operator time.",
+            (
+                "This does not measure durable storage, independent custody, "
+                "distributed tamper resistance, or operator time."
+            ),
         ],
         "claim_ceiling": [
             "SCIENTIFIC_N_INCREMENT_0",
