@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+from functools import cache
 import json
 from pathlib import Path
 from typing import Any
@@ -32,6 +33,7 @@ def _get(case: dict[str, Any], dotted: str) -> tuple[bool, Any]:
     return True, current
 
 
+@cache
 def load_rules() -> dict[str, Any]:
     return json.loads(RULES_PATH.read_text(encoding="utf-8"))
 
