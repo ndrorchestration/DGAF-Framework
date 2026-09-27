@@ -1,0 +1,6 @@
+# Governance CI NetworkX overlay; use with the canonical control-plane lock.
+# Identity copied from experiments/pdmal_pilot/requirements-full-lock.txt at
+# 51fad284395650a38792a6c85a825628c3fc168d; that frozen lock is unchanged.
+networkx==3.6.1 \
+    --hash=sha256:26b7c357accc0c8cde558ad486283728b65b6a95d85ee1cd66bafab4c8168509 \
+    --hash=sha256:d47fbf302e7d9cbbb9e2555a0d267983d2aa476bac30e90dfbe5669bd57f3762
