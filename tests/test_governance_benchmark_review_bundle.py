@@ -1,4 +1,4 @@
-﻿"""Tests for reproducible governance benchmark review bundles."""
+"""Tests for reproducible governance benchmark review bundles."""
 
 import hashlib
 import importlib.util
@@ -87,10 +87,7 @@ def test_bundle_binds_evidence_to_exact_repository_head(tmp_path: Path) -> None:
     assert strong["summary"]["difference_count"] == 0
     assert equivalence["summary"]["difference_count"] == 0
     assert equivalence["summary"]["semantically_equivalent_on_enumerated_schema"] is True
-    assert (
-        scaling["falsification_outcome"]
-        == "NO_UNIQUE_CONFIGURATION_SCALING_ADVANTAGE_IN_NEUTRAL_REUSE_MODEL"
-    )
+    assert scaling["falsification_outcome"] == "NO_UNIQUE_CONFIGURATION_SCALING_ADVANTAGE_IN_NEUTRAL_REUSE_MODEL"
     for payload in (strong, equivalence, scaling):
         assert "STATE_OF_THE_ART_NOT_ESTABLISHED" in payload["claim_ceiling"]
         assert "CANONICAL_DGAF_EFFICACY_NOT_ESTABLISHED" in payload["claim_ceiling"]
