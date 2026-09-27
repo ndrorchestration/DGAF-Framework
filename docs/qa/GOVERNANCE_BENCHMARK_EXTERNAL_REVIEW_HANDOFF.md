@@ -19,7 +19,9 @@ layers:
 
 - strong-policy fixed-fixture parity;
 - exhaustive bounded semantic equivalence;
-- neutral reusable-abstraction configuration scaling.
+- neutral reusable-abstraction configuration scaling;
+- matched recovery/composition parity;
+- matched provenance-custody parity.
 
 It also contains a reviewer note and `SHA256SUMS.txt`.
 
@@ -42,6 +44,8 @@ python -m pytest \
   tests/test_governance_benchmark_strong_policy.py \
   tests/test_governance_benchmark_semantic_equivalence.py \
   tests/test_governance_benchmark_configuration_scaling.py \
+  tests/test_governance_benchmark_recovery_composition.py \
+  tests/test_governance_benchmark_provenance_custody.py \
   tests/test_standards_risk_crosswalk.py
 ```
 
@@ -53,8 +57,8 @@ their own environment.
 
 The negative/parity layers are part of the evidence and must not be omitted or
 reinterpreted as failures to be tuned away. In particular, decision parity or
-configuration-scaling parity does not establish architectural equivalence, and
-it does not establish DGAF superiority.
+configuration-scaling, recovery/composition, or provenance-custody parity does
+not establish architectural equivalence, and none establishes DGAF superiority.
 
 A matching bundle or passing test run is engineering verification. It does not,
 by itself, establish independent validation, canonical efficacy, scientific-N
