@@ -301,3 +301,35 @@ Acceptance requires:
 6. move subsequent research toward scaling, evidence lifecycle,
    composition/recovery, provenance custody, and operator burden;
 7. preserve all scientific and assurance claim ceilings.
+
+## Configuration-scaling falsification layer
+
+After semantic-equivalence testing, configuration-growth claims MUST be tested
+without forcing the conventional comparator to duplicate rules per governed
+scope.
+
+The neutral reuse model grants both architectures:
+
+1. shared semantic modules;
+2. one binding per governed scope;
+3. a central semantic version;
+4. one shared-module edit for the modeled semantic change.
+
+Initial scale points are 1, 8, 64, and 512 governed scopes.
+
+Acceptance requires:
+
+1. report shared semantic-module count and scope-binding count for both;
+2. report semantic-update artifacts touched for both;
+3. allow reusable abstractions equally;
+4. treat linear binding growth and constant-time shared semantic updates as
+   parity where observed;
+5. report serialized configuration size descriptively only;
+6. do not interpret representation byte counts as operator burden or
+   superiority scores;
+7. preserve every existing scientific and assurance claim ceiling.
+
+If both architectures show the same structural growth under fair reuse, the
+benchmark MUST NOT claim an inherent DGAF configuration-scaling advantage from
+this model alone.
+
