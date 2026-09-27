@@ -3,6 +3,38 @@
 This handoff describes how to reproduce the bounded DGAF governance benchmark
 without relying on an operator-created archive.
 
+
+## One-command reviewer helper
+
+The manual commands below remain the review contract. A reviewer may execute the
+same contract through the fail-closed helper:
+
+```bash
+python scripts/run_governance_benchmark_independent_review.py \
+  --expected-commit <commit-from-issue-1067> \
+  --expected-bundle-sha256 <bundle-sha256-from-issue-1067> \
+  --reviewer-identity "<name-or-reviewer-id>" \
+  --affiliation "<affiliation>" \
+  --relationship-disclosure "<relationship/conflict disclosure>" \
+  --output-dir review-reproduction
+```
+
+The helper:
+
+- refuses a checked-out HEAD that differs from the frozen controller target;
+- runs the exact bounded reviewer test list;
+- regenerates the deterministic review bundle;
+- verifies the expected ZIP digest and complete `SHA256SUMS.txt`;
+- verifies handoff/envelope commit binding;
+- recomputes all Envelope V2 canonical layer digests from archived payloads;
+- writes `review-reproduction/review_receipt.json`;
+- records the first result as `REPRODUCED`, `MISMATCH`, or `BLOCKED`.
+
+The receipt is local reviewer evidence and is not automatically trusted,
+uploaded, or admitted. The helper does **not** prove reviewer independence; the
+identity, affiliation, relationship/conflict disclosure, execution environment,
+and separately retained evidence still require review under issue #1067.
+
 ## Build the review bundle
 
 From the exact commit under review:
