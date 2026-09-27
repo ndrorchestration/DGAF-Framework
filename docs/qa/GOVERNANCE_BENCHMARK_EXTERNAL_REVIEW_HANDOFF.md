@@ -49,6 +49,45 @@ python -m pytest \
   tests/test_standards_risk_crosswalk.py
 ```
 
+
+## One-command reviewer protocol
+
+A reviewer may use the creation-only protocol below instead of manually
+assembling a return record. Read the frozen commit and bundle SHA-256 from
+controller #1067, then run from that exact checked-out commit:
+
+```bash
+python experiments/governance_benchmark/run_independent_reviewer_protocol.py \
+  --expected-commit <FROZEN_COMMIT_FROM_ISSUE_1067> \
+  --expected-bundle-sha256 <FROZEN_SHA256_FROM_ISSUE_1067> \
+  --output-dir reviewer-result-first \
+  --reviewer-id "<durable reviewer identity>" \
+  --affiliation "<affiliation>" \
+  --relationship-disclosure "<relationship/conflict disclosure>" \
+  --environment-note "<environment and relevant limitations>"
+```
+
+The protocol independently checks the checked-out commit, runs the bounded
+handoff test set, regenerates the deterministic review bundle, compares its
+SHA-256 to the frozen controller value, and writes
+`independent-review-record.json`.
+
+The first record is creation-only and MUST be preserved. The protocol refuses
+to overwrite it. Any diagnostic rerun must use a different output directory and
+retain the first result.
+
+Possible protocol dispositions are:
+
+- `REPRODUCED`: frozen commit, tests, and bundle digest matched;
+- `MISMATCH`: the exact target was reached but tests or bundle digest differed;
+- `BLOCKED`: the frozen commit was not reached or execution encountered a
+  prerequisite/tooling blocker.
+
+These dispositions are reproduction findings only. The script does not
+adjudicate reviewer independence and cannot promote
+`INDEPENDENT_VALIDATION`, scientific N, efficacy, SOTA status, or
+High-Assurance authorization.
+
 ## Independent review boundary
 
 An external reviewer should clone the repository independently, check out the
