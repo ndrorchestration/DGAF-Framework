@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
-from functools import cache
 import json
+from functools import cache
 from pathlib import Path
 from typing import Any
 
