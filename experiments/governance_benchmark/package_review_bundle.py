@@ -55,6 +55,8 @@ def build_bundle(output: Path) -> dict[str, str]:
         "strong-policy-comparator.json": encode_canonical(load_json_script("run_strong_policy_comparator.py")),
         "semantic-equivalence.json": encode_canonical(load_json_script("run_semantic_equivalence.py")),
         "configuration-scaling.json": encode_canonical(load_json_script("run_configuration_scaling.py")),
+        "recovery-composition.json": encode_canonical(load_json_script("run_recovery_composition_parity.py")),
+        "provenance-custody.json": encode_canonical(load_json_script("run_provenance_custody_parity.py")),
     }
 
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True).strip()
@@ -65,7 +67,8 @@ def build_bundle(output: Path) -> dict[str, str]:
         "All JSON payloads in this archive are canonicalized for reproducibility; "
         "informational runtime timing is excluded.\n\n"
         "The bundle includes the admitted negative/parity falsification layers: strong-policy "
-        "fixed-fixture parity, bounded semantic equivalence, and neutral configuration scaling. "
+        "fixed-fixture parity, bounded semantic equivalence, neutral configuration scaling, "
+        "matched recovery/composition parity, and matched provenance-custody parity. "
         "Regenerate the bundle from this exact commit and compare canonical digests. "
         "This bundle does not establish independent validation, canonical efficacy, "
         "SOTA status, scientific-N increment, regulatory compliance, or High-Assurance authorization.\n"
