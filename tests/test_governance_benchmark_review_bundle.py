@@ -1,4 +1,4 @@
-﻿"""Tests for reproducible governance benchmark review bundles."""
+"""Tests for reproducible governance benchmark review bundles."""
 
 import hashlib
 import importlib.util
@@ -38,6 +38,9 @@ def test_bundle_is_reproducible_and_contains_required_files(tmp_path: Path) -> N
         "fixed-benchmark.json",
         "mutations.json",
         "same-domain-interactions.json",
+        "strong-policy-comparator.json",
+        "semantic-equivalence.json",
+        "configuration-scaling.json",
     }
 
 
@@ -68,6 +71,9 @@ def test_bundle_binds_evidence_to_exact_repository_head(tmp_path: Path) -> None:
         envelope = json.loads(archive.read("evidence-envelope.json"))
         handoff = archive.read("REVIEWER_HANDOFF.md").decode("utf-8")
         fixed = archive.read("fixed-benchmark.json").decode("utf-8")
+        strong = json.loads(archive.read("strong-policy-comparator.json"))
+        equivalence = json.loads(archive.read("semantic-equivalence.json"))
+        scaling = json.loads(archive.read("configuration-scaling.json"))
 
     assert envelope["repository_commit"] == expected_head
     assert f"`{expected_head}`" in handoff
@@ -77,3 +83,12 @@ def test_bundle_binds_evidence_to_exact_repository_head(tmp_path: Path) -> None:
     assert envelope["state_projection"]["STATE_OF_THE_ART"] == "NOT_ESTABLISHED"
     assert envelope["state_projection"]["HIGH_ASSURANCE"] == "NOT_AUTHORIZED"
     assert "elapsed_ns_informational" not in fixed
+    assert strong["falsification_outcome"] == "PARITY_ON_CURRENT_FIXED_FIXTURES"
+    assert strong["summary"]["difference_count"] == 0
+    assert equivalence["summary"]["difference_count"] == 0
+    assert equivalence["summary"]["semantically_equivalent_on_enumerated_schema"] is True
+    assert scaling["falsification_outcome"] == "NO_UNIQUE_CONFIGURATION_SCALING_ADVANTAGE_IN_NEUTRAL_REUSE_MODEL"
+    for payload in (strong, equivalence, scaling):
+        assert "STATE_OF_THE_ART_NOT_ESTABLISHED" in payload["claim_ceiling"]
+        assert "CANONICAL_DGAF_EFFICACY_NOT_ESTABLISHED" in payload["claim_ceiling"]
+        assert "INDEPENDENT_VALIDATION_NOT_ESTABLISHED" in payload["claim_ceiling"]
