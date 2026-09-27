@@ -253,3 +253,31 @@ Acceptance requires:
 4. prohibited inferences include SOTA, generalized safety, efficacy,
    certification/compliance, independent validation, and scientific-N claims;
 5. the state projection preserves all controlling fail-closed boundaries.
+
+## Strong policy falsification layer
+
+After the bounded C1/C2 comparison, a stronger conventional policy comparator
+MUST be permitted equivalent access to declared claim, provenance, composition,
+and authority inputs wherever ordinary policy-as-code can reasonably express
+the same rule.
+
+The first frozen implementation is `C3_STRONG_POLICY_AS_CODE_V1`.
+
+Acceptance requires:
+
+1. freeze the C3 machine-readable ruleset before inspecting its result;
+2. run C3 and DGAF on the identical fixed fixture set;
+3. record decision parity, task correctness, false blocks, rule count, and
+   canonical policy size;
+4. treat parity as a valid falsification outcome rather than tuning the
+   comparator until DGAF wins;
+5. interpret parity only as evidence about the bounded fixtures, not
+   architectural equivalence;
+6. preserve scientific N=0 and every existing claim ceiling.
+
+If C3 reproduces DGAF decisions on the fixed fixtures, the benchmark MUST NOT
+describe those fixtures as evidence of unique DGAF protection. Future
+comparative work should instead test scaling, configuration/update burden,
+cross-workflow composition, evidence-state semantics, recovery/reconciliation,
+and operator burden.
+
