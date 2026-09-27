@@ -40,10 +40,7 @@ def test_scope_binding_growth_is_linear_for_both() -> None:
 def test_neutral_reuse_model_records_parity_as_falsification() -> None:
     report = scaling.run()
     assert report["summary"]["structural_scaling_parity"] is True
-    assert (
-        report["falsification_outcome"]
-        == "NO_UNIQUE_CONFIGURATION_SCALING_ADVANTAGE_IN_NEUTRAL_REUSE_MODEL"
-    )
+    assert report["falsification_outcome"] == "NO_UNIQUE_CONFIGURATION_SCALING_ADVANTAGE_IN_NEUTRAL_REUSE_MODEL"
 
 
 def test_byte_size_is_explicitly_non_authoritative() -> None:

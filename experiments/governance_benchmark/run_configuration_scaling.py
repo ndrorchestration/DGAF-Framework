@@ -100,8 +100,7 @@ def run() -> dict[str, Any]:
     structural_parity = all(
         row["c3"]["shared_semantic_modules"] == row["dgaf"]["shared_semantic_modules"]
         and row["c3"]["scope_bindings"] == row["dgaf"]["scope_bindings"]
-        and row["c3"]["semantic_update_artifacts_touched"]
-        == row["dgaf"]["semantic_update_artifacts_touched"]
+        and row["c3"]["semantic_update_artifacts_touched"] == row["dgaf"]["semantic_update_artifacts_touched"]
         for row in rows
     )
 
@@ -120,12 +119,8 @@ def run() -> dict[str, Any]:
         "rows": rows,
         "summary": {
             "structural_scaling_parity": structural_parity,
-            "c3_update_artifacts_touched": sorted(
-                {row["c3"]["semantic_update_artifacts_touched"] for row in rows}
-            ),
-            "dgaf_update_artifacts_touched": sorted(
-                {row["dgaf"]["semantic_update_artifacts_touched"] for row in rows}
-            ),
+            "c3_update_artifacts_touched": sorted({row["c3"]["semantic_update_artifacts_touched"] for row in rows}),
+            "dgaf_update_artifacts_touched": sorted({row["dgaf"]["semantic_update_artifacts_touched"] for row in rows}),
             "scope_binding_growth": "LINEAR_FOR_BOTH",
             "semantic_update_growth": "CONSTANT_FOR_BOTH",
         },
