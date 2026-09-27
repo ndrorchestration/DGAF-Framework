@@ -101,6 +101,7 @@ def test_bundle_binds_evidence_to_exact_repository_head(tmp_path: Path) -> None:
         assert "CANONICAL_DGAF_EFFICACY_NOT_ESTABLISHED" in payload["claim_ceiling"]
         assert "INDEPENDENT_VALIDATION_NOT_ESTABLISHED" in payload["claim_ceiling"]
 
+
 def test_bundle_evidence_payloads_are_indexed_by_envelope(tmp_path: Path) -> None:
     output = tmp_path / "review.zip"
     bundle.build_bundle(output)
@@ -125,4 +126,3 @@ def test_bundle_evidence_payloads_are_indexed_by_envelope(tmp_path: Path) -> Non
         for payload_name, layer_name in payload_to_layer.items():
             payload = json.loads(archive.read(payload_name))
             assert bundle.manifest_module.digest(payload) == indexed[layer_name]
-
