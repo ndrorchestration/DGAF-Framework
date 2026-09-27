@@ -319,14 +319,14 @@ def run() -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
 
     for case in composition_cases():
-        c3 = conventional_composition(
+        c3_composition = conventional_composition(
             steps=case["steps"],
             individually_authorized=case["individually_authorized"],
             composition_authorized=case["composition_authorized"],
             protected_labels=case["protected_labels"],
             allowed_destinations=case["allowed_destinations"],
         )
-        dgaf = composed_workflow_permitted(
+        dgaf_composition = composed_workflow_permitted(
             [_workflow_step(step) for step in case["steps"]],
             individually_authorized=case["individually_authorized"],
             composition_authorized=case["composition_authorized"],
@@ -337,22 +337,22 @@ def run() -> dict[str, Any]:
             {
                 "case_id": case["id"],
                 "family": "COMPOSITION",
-                "c3": "ALLOW" if c3 else "DENY",
-                "dgaf": "ALLOW" if dgaf else "DENY",
-                "parity": c3 == dgaf,
+                "c3": "ALLOW" if c3_composition else "DENY",
+                "dgaf": "ALLOW" if dgaf_composition else "DENY",
+                "parity": c3_composition == dgaf_composition,
             }
         )
 
     for case in recovery_cases():
-        c3 = conventional_recovery(**{k: v for k, v in case.items() if k != "id"})
-        dgaf = _dgaf_recovery(case)
+        c3_recovery = conventional_recovery(**{k: v for k, v in case.items() if k != "id"})
+        dgaf_recovery = _dgaf_recovery(case)
         rows.append(
             {
                 "case_id": case["id"],
                 "family": "RECOVERY",
-                "c3": c3,
-                "dgaf": dgaf,
-                "parity": c3 == dgaf,
+                "c3": c3_recovery,
+                "dgaf": dgaf_recovery,
+                "parity": c3_recovery == dgaf_recovery,
             }
         )
 
