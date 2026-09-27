@@ -99,7 +99,8 @@ def execute_protocol(
     record_path = output_dir / "independent-review-record.json"
     if record_path.exists():
         raise FileExistsError(
-            "independent-review-record.json already exists; preserve the first result and use a new directory for diagnosis"
+            "independent-review-record.json already exists; preserve the first result "
+            "and use a new directory for diagnosis"
         )
 
     current_commit = git_text("rev-parse", "HEAD")
