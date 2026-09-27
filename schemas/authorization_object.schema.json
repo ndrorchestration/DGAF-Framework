@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dgaf.dev/schemas/authorization_object.schema.json",
+  "title": "DGAF Authorization Object",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","authorization_id","subject","initiating_principal","capability","resource_scope","policy","validity","status"],
+  "properties": {
+    "schema_version": {"const":"0.1-draft"},
+    "authorization_id": {"type":"string","minLength":1},
+    "subject": {"type":"string","minLength":1},
+    "initiating_principal": {"type":"string","minLength":1},
+    "capability": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["id","version"],
+      "properties":{"id":{"type":"string"},"version":{"type":"string"}}
+    },
+    "resource_scope": {"type":"object","minProperties":1},
+    "action_digest": {"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "delegation_chain": {"type":"array","items":{"type":"string"},"uniqueItems":true},
+    "policy": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["id","version"],
+      "properties":{"id":{"type":"string"},"version":{"type":"string"}}
+    },
+    "validity": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["not_before","expires_at"],
+      "properties":{
+        "not_before":{"type":"string","format":"date-time"},
+        "expires_at":{"type":"string","format":"date-time"}
+      }
+    },
+    "audience": {"type":"string"},
+    "tenant": {"type":"string"},
+    "budgets": {"type":"object"},
+    "data_constraints": {"type":"object"},
+    "approval_id": {"type":"string"},
+    "proof_binding": {"type":"object"},
+    "status": {"enum":["PENDING","ACTIVE","CONSUMED","REVOKED","EXPIRED"]}
+  }
+}

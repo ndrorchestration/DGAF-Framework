@@ -97,7 +97,7 @@ def build_dry_run_record(manifest_path: Path = DEFAULT_MANIFEST) -> dict[str, An
         "runtime_authorization_effect": "NONE",
         "scientific_state_effect": "NONE",
         "manifest": {
-            "path": str(manifest_path.relative_to(ROOT)),
+            "path": manifest_path.relative_to(ROOT).as_posix(),
             "sha256": _sha256_bytes(manifest_bytes),
             "schema_version": manifest["schema_version"],
         },

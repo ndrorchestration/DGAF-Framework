@@ -1,0 +1,47 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://dgaf.dev/schemas/workflow_authorization.schema.json",
+  "title":"DGAF Workflow Authorization",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","workflow_id","initiating_principal","nodes","edges","policy","status"],
+  "properties":{
+    "schema_version":{"const":"0.1-draft"},
+    "workflow_id":{"type":"string"},
+    "initiating_principal":{"type":"string"},
+    "nodes":{
+      "type":"array",
+      "minItems":1,
+      "items":{
+        "type":"object",
+        "additionalProperties":false,
+        "required":["node_id","capability_id","authorization_id"],
+        "properties":{
+          "node_id":{"type":"string"},
+          "capability_id":{"type":"string"},
+          "authorization_id":{"type":"string"},
+          "data_labels_in":{"type":"array","items":{"type":"string"}},
+          "data_labels_out":{"type":"array","items":{"type":"string"}}
+        }
+      }
+    },
+    "edges":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "additionalProperties":false,
+        "required":["from","to"],
+        "properties":{
+          "from":{"type":"string"},
+          "to":{"type":"string"},
+          "data_flow":{"type":"array","items":{"type":"string"}}
+        }
+      }
+    },
+    "aggregate_constraints":{"type":"object"},
+    "recovery_policy":{"type":"object"},
+    "policy":{"type":"object","required":["id","version"],"properties":{"id":{"type":"string"},"version":{"type":"string"}}},
+    "action_digest":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "status":{"enum":["DRAFT","AUTHORIZED","REJECTED","REVOKED","COMPLETED","PARTIAL","FAILED"]}
+  }
+}
