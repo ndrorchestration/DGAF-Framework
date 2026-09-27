@@ -137,17 +137,14 @@ def run() -> dict[str, Any]:
 
     policy = load_rules()
     parity_count = sum(int(row["parity"]) for row in rows)
-    policy_bytes = len(
-        json.dumps(policy, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    )
+    policy_bytes = len(json.dumps(policy, sort_keys=True, separators=(",", ":")).encode("utf-8"))
 
     return {
         "version": "DGAF_STRONG_POLICY_COMPARATOR_V1",
         "evidence_class": "SYNTHETIC_FALSIFICATION_ENGINEERING_EVIDENCE",
         "ruleset_version": policy["version"],
         "ruleset_sha256": rules_sha256(),
-        "rules_frozen_before_result_inspection": policy["status"]
-        == "FROZEN_BEFORE_RESULT_INSPECTION",
+        "rules_frozen_before_result_inspection": policy["status"] == "FROZEN_BEFORE_RESULT_INSPECTION",
         "configuration_complexity": {
             "rule_count": len(policy["rules"]),
             "canonical_policy_bytes": policy_bytes,
@@ -160,28 +157,16 @@ def run() -> dict[str, Any]:
             "strong_policy_task_correct": sum(
                 int(row["strong_policy_decision"] == row["expected_safe_outcome"]) for row in rows
             ),
-            "dgaf_task_correct": sum(
-                int(row["dgaf_decision"] == row["expected_safe_outcome"]) for row in rows
-            ),
+            "dgaf_task_correct": sum(int(row["dgaf_decision"] == row["expected_safe_outcome"]) for row in rows),
             "strong_policy_false_blocks": sum(
-                int(
-                    row["expected_safe_outcome"] == "ALLOW"
-                    and row["strong_policy_decision"] == "DENY"
-                )
-                for row in rows
+                int(row["expected_safe_outcome"] == "ALLOW" and row["strong_policy_decision"] == "DENY") for row in rows
             ),
             "dgaf_false_blocks": sum(
-                int(
-                    row["expected_safe_outcome"] == "ALLOW"
-                    and row["dgaf_decision"] == "DENY"
-                )
-                for row in rows
+                int(row["expected_safe_outcome"] == "ALLOW" and row["dgaf_decision"] == "DENY") for row in rows
             ),
         },
         "falsification_outcome": (
-            "PARITY_ON_CURRENT_FIXED_FIXTURES"
-            if parity_count == len(rows)
-            else "NON_PARITY_ON_CURRENT_FIXED_FIXTURES"
+            "PARITY_ON_CURRENT_FIXED_FIXTURES" if parity_count == len(rows) else "NON_PARITY_ON_CURRENT_FIXED_FIXTURES"
         ),
         "interpretation_boundary": [
             "Parity weakens any claim that the current fixed fixtures demonstrate unique DGAF protection.",
