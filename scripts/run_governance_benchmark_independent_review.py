@@ -133,6 +133,7 @@ def verify_bundle(
         "expected_bundle_sha256": expected_bundle_sha256.upper(),
         "bundle_digest_matches": observed_bundle_sha256 == expected_bundle_sha256.upper(),
         "sha256sums_valid": False,
+        "sha256sums_complete": False,
         "handoff_commit_matches": False,
         "envelope_commit_matches": False,
         "envelope_version": None,
@@ -148,15 +149,21 @@ def verify_bundle(
             names = set(archive.namelist())
             sums = archive.read("SHA256SUMS.txt").decode("ascii").splitlines()
             manifest_valid = True
+            manifest_names: set[str] = set()
             for line in sums:
                 if not line:
                     continue
                 expected_digest, name = line.split("  ", 1)
+                manifest_names.add(name)
                 actual_digest = hashlib.sha256(archive.read(name)).hexdigest()
                 if actual_digest != expected_digest:
                     manifest_valid = False
                     checks["errors"].append(f"SHA256SUMS mismatch: {name}")
             checks["sha256sums_valid"] = manifest_valid
+            expected_manifest_names = names - {"SHA256SUMS.txt"}
+            checks["sha256sums_complete"] = manifest_names == expected_manifest_names
+            if not checks["sha256sums_complete"]:
+                checks["errors"].append("SHA256SUMS payload set is incomplete or contains extras")
 
             handoff = archive.read("REVIEWER_HANDOFF.md").decode("utf-8")
             checks["handoff_commit_matches"] = expected_commit in handoff
@@ -195,6 +202,7 @@ def verify_bundle(
         (
             checks["bundle_digest_matches"],
             checks["sha256sums_valid"],
+            checks["sha256sums_complete"],
             checks["handoff_commit_matches"],
             checks["envelope_commit_matches"],
             checks["envelope_layers_complete"],
