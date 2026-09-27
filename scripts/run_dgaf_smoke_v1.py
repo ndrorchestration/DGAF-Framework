@@ -14,13 +14,13 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from pptl.control_plane import (
+from pptl.control_plane import (  # noqa: E402
     ControlPlane,
     ControlPlaneViolation,
     ControlTask,
     TaskState,
 )
-from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget
+from pptl.governance_envelope import GovernanceEnvelope, ResourceBudget  # noqa: E402
 
 SCHEMA = "dgaf.smoke.v1"
 FIXTURES = {
