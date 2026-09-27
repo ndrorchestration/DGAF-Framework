@@ -137,7 +137,10 @@ def run() -> dict[str, Any]:
         "interpretation_boundary": [
             "This model tests representation structure, not real operator time or production maintenance cost.",
             "Parity weakens claims of an inherent DGAF configuration-scaling advantage under reusable abstractions.",
-            "Real integrations may differ because tooling, schemas, provenance, recovery, and lifecycle requirements differ.",
+            (
+                "Real integrations may differ because tooling, schemas, provenance, "
+                "recovery, and lifecycle requirements differ."
+            ),
             "Canonical byte counts are descriptive and must not be treated as burden scores.",
         ],
         "claim_ceiling": [
