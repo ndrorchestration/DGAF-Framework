@@ -52,6 +52,9 @@ def build_bundle(output: Path) -> dict[str, str]:
         "cross-domain-interactions.json": encode_canonical(
             manifest_module.cross_domain.run_cross_domain_interactions()
         ),
+        "strong-policy-comparator.json": encode_canonical(load_json_script("run_strong_policy_comparator.py")),
+        "semantic-equivalence.json": encode_canonical(load_json_script("run_semantic_equivalence.py")),
+        "configuration-scaling.json": encode_canonical(load_json_script("run_configuration_scaling.py")),
     }
 
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True).strip()
@@ -61,6 +64,8 @@ def build_bundle(output: Path) -> dict[str, str]:
         "Verification class: same-system engineering evidence.\n\n"
         "All JSON payloads in this archive are canonicalized for reproducibility; "
         "informational runtime timing is excluded.\n\n"
+        "The bundle includes the admitted negative/parity falsification layers: strong-policy "
+        "fixed-fixture parity, bounded semantic equivalence, and neutral configuration scaling. "
         "Regenerate the bundle from this exact commit and compare canonical digests. "
         "This bundle does not establish independent validation, canonical efficacy, "
         "SOTA status, scientific-N increment, regulatory compliance, or High-Assurance authorization.\n"
