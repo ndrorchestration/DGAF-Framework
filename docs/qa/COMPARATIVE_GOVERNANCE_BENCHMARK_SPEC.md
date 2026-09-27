@@ -399,4 +399,3 @@ Acceptance requires:
 If both implementations detect the same mutations and require the same review
 count, the benchmark MUST NOT claim unique DGAF provenance-custody protection
 from those checks alone.
-
