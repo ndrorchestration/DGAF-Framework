@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+# isort: off
 from scripts.dgaf_capability_pep import ApprovalState, EnforcementContext, VerificationState  # noqa: E402
 from scripts.dgaf_capability_policy import Authority  # noqa: E402
 from scripts.dgaf_capability_reference_transaction import (  # noqa: E402
@@ -27,6 +28,7 @@ from scripts.dgaf_capability_reference_transaction import (  # noqa: E402
     TransactionMetadata,
     run_reference_transaction,
 )
+# isort: on
 
 NOW = datetime(2026, 9, 27, 7, 45, tzinfo=timezone.utc)
 
