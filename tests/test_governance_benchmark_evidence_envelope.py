@@ -1,4 +1,4 @@
-﻿"""Tests for the governance benchmark evidence envelope."""
+"""Tests for the governance benchmark evidence envelope."""
 
 import importlib.util
 from pathlib import Path
@@ -20,6 +20,10 @@ def test_envelope_is_bound_to_exact_repository_commit() -> None:
     envelope = build()
     assert len(envelope["repository_commit"]) == 40
     assert envelope["repository_commit"] == envelope_module.git_head(REPO_ROOT)
+
+
+def test_envelope_version_is_v2() -> None:
+    assert build()["version"] == "DGAF_GOVERNANCE_BENCHMARK_EVIDENCE_ENVELOPE_V2"
 
 
 def test_verification_class_remains_same_system_engineering_only() -> None:
@@ -56,5 +60,23 @@ def test_envelope_binds_all_canonical_layer_digests() -> None:
         "mutations",
         "same_domain_interactions",
         "cross_domain_interactions",
+        "strong_policy_comparator",
+        "semantic_equivalence",
+        "configuration_scaling",
+        "recovery_composition",
+        "provenance_custody",
     }
     assert all(len(value) == 64 for value in envelope["canonical_layer_digests"].values())
+
+
+def test_envelope_scope_covers_all_admitted_layers() -> None:
+    scope = build()["evidence_scope"]
+    assert scope["fixed_cases"] == 13
+    assert scope["one_field_mutations"] == 10
+    assert scope["same_domain_interactions"] == 7
+    assert scope["cross_domain_interactions"] == 6
+    assert scope["strong_policy_cases"] == 13
+    assert scope["semantic_equivalence_states"] == 112200
+    assert scope["configuration_scaling_points"] == 4
+    assert scope["recovery_composition_cases"] == 11
+    assert scope["provenance_custody_mutations"] == 8
