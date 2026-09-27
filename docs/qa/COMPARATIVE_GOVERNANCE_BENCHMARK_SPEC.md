@@ -367,4 +367,3 @@ Acceptance requires:
 If both implementations produce the same outcomes under matched semantics, the
 benchmark MUST NOT claim unique DGAF composition or recovery protection from
 those cases alone.
-
