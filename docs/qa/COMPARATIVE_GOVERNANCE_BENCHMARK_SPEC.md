@@ -280,4 +280,3 @@ describe those fixtures as evidence of unique DGAF protection. Future
 comparative work should instead test scaling, configuration/update burden,
 cross-workflow composition, evidence-state semantics, recovery/reconciliation,
 and operator burden.
-
