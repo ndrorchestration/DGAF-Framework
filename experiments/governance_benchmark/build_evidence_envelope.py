@@ -42,12 +42,8 @@ def build_envelope(repo_root: Path) -> dict[str, Any]:
     manifest = manifest_module.build_manifest()
     extended = _extended_reports()
 
-    canonical_layer_digests = {
-        name: entry["canonical_sha256"] for name, entry in manifest["entries"].items()
-    }
-    canonical_layer_digests.update(
-        {name: manifest_module.digest(report) for name, report in extended.items()}
-    )
+    canonical_layer_digests = {name: entry["canonical_sha256"] for name, entry in manifest["entries"].items()}
+    canonical_layer_digests.update({name: manifest_module.digest(report) for name, report in extended.items()})
 
     return {
         "version": "DGAF_GOVERNANCE_BENCHMARK_EVIDENCE_ENVELOPE_V2",
