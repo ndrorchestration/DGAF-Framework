@@ -25,6 +25,8 @@ If you are evaluating DGAF as an AI-systems, governance, or research-engineering
 
 **8. Evaluate the separation discipline.** The central engineering/research claim is not that DGAF is already proven. It is that the repository makes state transitions, evidence classes, provenance, authorization, assurance coverage, and non-claims explicit and machine-checkable enough to prevent one category from silently substituting for another.
 
+**9. External reviewers.** Use [`EXTERNAL_REVIEW.md`](EXTERNAL_REVIEW.md) as the root entrypoint. Governance-benchmark reproduction is controlled by #1067 and AOSS Stage-A external review remains separately controlled by #929; neither lane inherits validation from the other.
+
 ### What this demonstrates
 
 Within the evidence boundaries documented in this repository, DGAF demonstrates practical work in:
