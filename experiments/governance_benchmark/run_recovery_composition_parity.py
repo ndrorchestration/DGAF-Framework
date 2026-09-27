@@ -415,7 +415,10 @@ def run() -> dict[str, Any]:
         "interpretation_boundary": [
             "These are synthetic paired cases over the merged reference APIs, not production incident evidence.",
             "Parity weakens claims that the current recovery/composition semantics are inherently unique to DGAF.",
-            "The benchmark does not measure implementation complexity, operator time, provenance durability, or real provider behavior.",
+            (
+                "The benchmark does not measure implementation complexity, operator time, "
+                "provenance durability, or real provider behavior."
+            ),
         ],
         "claim_ceiling": [
             "SCIENTIFIC_N_INCREMENT_0",
