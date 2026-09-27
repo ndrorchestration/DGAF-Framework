@@ -14,7 +14,7 @@ on:
       - 'pptl/state_identity.py'
       - 'pptl/branch_registry.py'
       - 'pptl/triadic_governance_loop.py'
-      - 'requirements-ci-py312-ubuntu2404-x64.lock'
+      - 'requirements-ci-control-plane-py312-ubuntu2404-x64.lock'
       - 'scripts/bootstrap_ci_pip.sh'
   push:
     branches: [main]
@@ -61,13 +61,13 @@ jobs:
       - name: Bootstrap exact pip resolver
         run: bash scripts/bootstrap_ci_pip.sh
 
-      - name: Install hash-locked CI dependencies
+      - name: Install hash-locked control-plane CI dependencies
         run: >-
           python -m pip install
           --disable-pip-version-check
           --require-hashes
           --only-binary=:all:
-          -r requirements-ci-py312-ubuntu2404-x64.lock
+          -r requirements-ci-control-plane-py312-ubuntu2404-x64.lock
 
       - name: Compile smoke runner
         run: python -m py_compile scripts/run_dgaf_smoke_v1.py
