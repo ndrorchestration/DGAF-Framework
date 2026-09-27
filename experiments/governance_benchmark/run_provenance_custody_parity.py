@@ -20,9 +20,9 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.dgaf_capability_pep import ApprovalState, EnforcementContext, VerificationState
-from scripts.dgaf_capability_policy import Authority
-from scripts.dgaf_capability_reference_transaction import (
+from scripts.dgaf_capability_pep import ApprovalState, EnforcementContext, VerificationState  # noqa: E402
+from scripts.dgaf_capability_policy import Authority  # noqa: E402
+from scripts.dgaf_capability_reference_transaction import (  # noqa: E402
     TransactionIdentity,
     TransactionMetadata,
     run_reference_transaction,
