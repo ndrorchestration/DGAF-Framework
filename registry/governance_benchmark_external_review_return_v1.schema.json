@@ -1,0 +1,117 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/registry/governance_benchmark_external_review_return_v1.schema.json",
+  "title": "DGAF Governance Benchmark External Review Return v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reviewer",
+    "independence_disclosure",
+    "environment",
+    "frozen_target",
+    "execution",
+    "returned_evidence",
+    "disposition",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "DGAF_GOVERNANCE_BENCHMARK_EXTERNAL_REVIEW_RETURN_V1"},
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["durable_identity", "affiliation", "role"],
+      "properties": {
+        "durable_identity": {"type": "string", "minLength": 1},
+        "affiliation": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1}
+      }
+    },
+    "independence_disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relationship_to_project",
+        "prior_artifact_authorship_or_modification",
+        "prior_outcome_access",
+        "commercial_relationship",
+        "reviewer_stated_independence",
+        "limitations"
+      ],
+      "properties": {
+        "relationship_to_project": {"type": "string"},
+        "prior_artifact_authorship_or_modification": {"type": "boolean"},
+        "prior_outcome_access": {"type": "boolean"},
+        "commercial_relationship": {"type": "string"},
+        "reviewer_stated_independence": {"type": "boolean"},
+        "limitations": {"type": "string"}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["os", "python", "git", "notes"],
+      "properties": {
+        "os": {"type": "string", "minLength": 1},
+        "python": {"type": "string", "minLength": 1},
+        "git": {"type": "string", "minLength": 1},
+        "notes": {"type": "string"}
+      }
+    },
+    "frozen_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "expected_bundle_sha256"],
+      "properties": {
+        "repository": {"const": "https://github.com/ndrorchestration/DGAF-Framework"},
+        "commit": {"const": "b5057bf836f67136c6030a81a604e5fd0d269076"},
+        "expected_bundle_sha256": {"const": "1a55c88c7e8536be67ea13e2ba0718fc8318cc938f0b3bf4e275be4961c4de48"}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["first_attempt_preserved", "contract_tests", "regenerated_bundle_sha256", "canonical_layer_digests", "notes"],
+      "properties": {
+        "first_attempt_preserved": {"const": true},
+        "contract_tests": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+        "regenerated_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "canonical_layer_digests": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fixed", "mutations", "same_domain_interactions", "cross_domain_interactions"],
+          "properties": {
+            "fixed": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "mutations": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "same_domain_interactions": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "cross_domain_interactions": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        },
+        "notes": {"type": "string"}
+      }
+    },
+    "returned_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["independently_retained_location", "sha256", "retained_before_project_owner_adjudication"],
+      "properties": {
+        "independently_retained_location": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "retained_before_project_owner_adjudication": {"const": true}
+      }
+    },
+    "disposition": {"enum": ["REPRODUCED", "MISMATCH", "BLOCKED"]},
+    "claim_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scientific_n_increment", "canonical_dgaf_efficacy", "state_of_the_art", "high_assurance", "independent_validation_self_promoted"],
+      "properties": {
+        "scientific_n_increment": {"const": 0},
+        "canonical_dgaf_efficacy": {"const": "NOT_ESTABLISHED"},
+        "state_of_the_art": {"const": "NOT_ESTABLISHED"},
+        "high_assurance": {"const": "NOT_AUTHORIZED"},
+        "independent_validation_self_promoted": {"const": false}
+      }
+    }
+  }
+}
