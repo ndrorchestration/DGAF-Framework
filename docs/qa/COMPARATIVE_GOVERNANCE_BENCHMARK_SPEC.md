@@ -367,3 +367,35 @@ Acceptance requires:
 If both implementations produce the same outcomes under matched semantics, the
 benchmark MUST NOT claim unique DGAF composition or recovery protection from
 those cases alone.
+
+## Provenance-custody falsification layer
+
+After semantic, scaling, and recovery/composition parity, provenance claims MUST
+be tested against a comparator permitted ordinary schema validation and
+cross-link custody checks.
+
+The first bounded mutation layer uses the merged reference transaction to emit
+a receipt/audit pair and mutates:
+
+1. action digest;
+2. authorization ID;
+3. workflow ID;
+4. invocation ID;
+5. capability ID;
+6. adapter identity;
+7. executor identity;
+8. provider-receipt evidence ID.
+
+Acceptance requires:
+
+1. validate the unmodified base artifacts first;
+2. apply one mutation at a time;
+3. compare detection on identical mutated artifacts;
+4. report operator-review counts for both;
+5. treat parity and conventional-policy advantage as valid outcomes;
+6. do not interpret equal mutation detection as architectural equivalence;
+7. preserve all scientific and assurance claim ceilings.
+
+If both implementations detect the same mutations and require the same review
+count, the benchmark MUST NOT claim unique DGAF provenance-custody protection
+from those checks alone.
