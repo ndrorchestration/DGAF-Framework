@@ -321,7 +321,7 @@ def run() -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
 
     for case in composition_cases():
-        c3 = conventional_composition(**case | {"id": case["id"]}) if False else conventional_composition(
+        c3 = conventional_composition(
             steps=case["steps"],
             individually_authorized=case["individually_authorized"],
             composition_authorized=case["composition_authorized"],
