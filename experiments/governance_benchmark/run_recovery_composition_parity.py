@@ -26,7 +26,6 @@ from dgaf_capability_idempotency import (  # noqa: E402
     InMemoryIdempotencyLedger,
 )
 from dgaf_capability_workflow import (  # noqa: E402
-    ExecutionState,
     PostconditionState,
     RecoveryClass,
     WorkflowStep,
