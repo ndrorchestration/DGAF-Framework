@@ -56,6 +56,15 @@ If a rerun is needed for diagnosis, preserve the first result and record:
 
 Parity is a valid outcome and must not be reclassified as benchmark failure.
 
+## Reviewer helper boundary
+
+The repository-native reviewer helper may automate the frozen checks and produce
+a receipt, but the helper is project-authored tooling. Its execution does not
+establish reviewer independence by itself. A reviewer using the helper must
+still preserve the first result, retain the generated receipt/bundle outside the
+project-owner execution context, and provide the identity/disclosure/environment
+record required below.
+
 ## Independence record
 
 The returned review evidence should record:
