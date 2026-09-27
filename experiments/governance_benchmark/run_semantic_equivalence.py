@@ -145,7 +145,10 @@ def run() -> dict[str, Any]:
         "difference_retention_note": "At most first 100 differences retained in report.",
         "interpretation_boundary": [
             "Zero differences would establish decision-function equivalence only over this enumerated bounded schema.",
-            "It would not establish architectural equivalence, equal provenance guarantees, equal recovery semantics, or equal operator burden.",
+            (
+                "It would not establish architectural equivalence, equal provenance guarantees, "
+                "equal recovery semantics, or equal operator burden."
+            ),
             "The enumeration does not represent production distributions or scientific sampling.",
             "Any difference requires case-level analysis and is not automatically evidence of superiority.",
         ],
