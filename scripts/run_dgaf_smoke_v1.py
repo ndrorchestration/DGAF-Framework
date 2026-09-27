@@ -54,7 +54,7 @@ def _record_gate(
 ) -> None:
     try:
         detail = fn()
-    except Exception as exc:  # smoke evidence must retain the concrete failing gate
+    except Exception as exc:
         gates[name] = {
             "outcome": "FAIL",
             "error_type": type(exc).__name__,
@@ -189,7 +189,7 @@ def run_smoke() -> dict[str, Any]:
     outcome = "PASS" if all(gate["outcome"] == "PASS" for gate in gates.values()) else "FAIL"
     return {
         "schema": SCHEMA,
-        "revision": os.environ.get("GITHUB_SHA") or os.environ.get("DGAF_REVISION") or "LOCAL_UNBOUND",
+        "revision": os.environ.get("DGAF_REVISION") or os.environ.get("GITHUB_SHA") or "LOCAL_UNBOUND",
         "outcome": outcome,
         "fixtures": FIXTURES,
         "gates": gates,
