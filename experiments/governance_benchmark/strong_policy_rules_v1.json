@@ -1,0 +1,95 @@
+{
+  "version": "C3_STRONG_POLICY_AS_CODE_V1",
+  "status": "FROZEN_BEFORE_RESULT_INSPECTION",
+  "purpose": "Strong conventional policy-as-code comparator over the same declared fixture inputs used by the bounded DGAF model.",
+  "claim_ceiling": [
+    "SYNTHETIC_ENGINEERING_EVIDENCE_ONLY",
+    "NO_GENERAL_SUPERIORITY_INFERENCE",
+    "CANONICAL_DGAF_EFFICACY_NOT_ESTABLISHED",
+    "INDEPENDENT_VALIDATION_NOT_ESTABLISHED",
+    "STATE_OF_THE_ART_NOT_ESTABLISHED"
+  ],
+  "rules": [
+    {
+      "id": "ACTION_AUTHORIZED",
+      "kind": "require_true",
+      "field": "action.authorized"
+    },
+    {
+      "id": "TOOL_ALLOWED",
+      "kind": "require_true",
+      "field": "action.tool_allowed"
+    },
+    {
+      "id": "TARGET_ALLOWED",
+      "kind": "require_true",
+      "field": "action.target_allowed"
+    },
+    {
+      "id": "DELEGATED_REQUESTER_AUTHORIZED",
+      "kind": "require_true_if_present",
+      "field": "authority_context.delegated_requester_authorized"
+    },
+    {
+      "id": "NO_TOKEN_REPLAY",
+      "kind": "require_false_if_present",
+      "field": "authority_context.token_replay_detected"
+    },
+    {
+      "id": "INTENT_BOUND",
+      "kind": "require_true_if_present",
+      "field": "authority_context.request_bound_to_authorized_intent"
+    },
+    {
+      "id": "WORKLOAD_ATTESTED",
+      "kind": "require_true_if_present",
+      "field": "authority_context.workload_attested"
+    },
+    {
+      "id": "CHILD_SCOPE_SUBSET",
+      "kind": "require_true_if_present",
+      "field": "authority_context.child_scope_subset"
+    },
+    {
+      "id": "CLAIM_EVIDENCE_PRESENT_AND_FRESH",
+      "kind": "require_all_true_if_present",
+      "fields": [
+        "claim.evidence_present",
+        "claim.evidence_fresh"
+      ]
+    },
+    {
+      "id": "INDEPENDENT_STATUS_REQUIRES_INDEPENDENT_VERIFICATION",
+      "kind": "require_equal_if",
+      "if_field": "claim.requested_status",
+      "if_value": "INDEPENDENT_VALIDATION_ESTABLISHED",
+      "field": "claim.verification_class",
+      "value": "INDEPENDENT"
+    },
+    {
+      "id": "FLOW_PROVENANCE_KNOWN",
+      "kind": "require_true_if_present",
+      "field": "flow.provenance_known"
+    },
+    {
+      "id": "PROTECTED_EGRESS_REQUIRES_COMPOSITION_AUTHORIZATION",
+      "kind": "require_true_if",
+      "if_all": [
+        [
+          "flow.source_classification",
+          [
+            "CONFIDENTIAL",
+            "RESTRICTED"
+          ]
+        ],
+        [
+          "flow.destination_class",
+          [
+            "EXTERNAL"
+          ]
+        ]
+      ],
+      "field": "flow.composition_authorized"
+    }
+  ]
+}
