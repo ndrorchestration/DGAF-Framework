@@ -41,6 +41,8 @@ def test_bundle_is_reproducible_and_contains_required_files(tmp_path: Path) -> N
         "strong-policy-comparator.json",
         "semantic-equivalence.json",
         "configuration-scaling.json",
+        "recovery-composition.json",
+        "provenance-custody.json",
     }
 
 
@@ -74,6 +76,8 @@ def test_bundle_binds_evidence_to_exact_repository_head(tmp_path: Path) -> None:
         strong = json.loads(archive.read("strong-policy-comparator.json"))
         equivalence = json.loads(archive.read("semantic-equivalence.json"))
         scaling = json.loads(archive.read("configuration-scaling.json"))
+        recovery = json.loads(archive.read("recovery-composition.json"))
+        custody = json.loads(archive.read("provenance-custody.json"))
 
     assert envelope["repository_commit"] == expected_head
     assert f"`{expected_head}`" in handoff
@@ -88,7 +92,11 @@ def test_bundle_binds_evidence_to_exact_repository_head(tmp_path: Path) -> None:
     assert equivalence["summary"]["difference_count"] == 0
     assert equivalence["summary"]["semantically_equivalent_on_enumerated_schema"] is True
     assert scaling["falsification_outcome"] == "NO_UNIQUE_CONFIGURATION_SCALING_ADVANTAGE_IN_NEUTRAL_REUSE_MODEL"
-    for payload in (strong, equivalence, scaling):
+    assert recovery["falsification_outcome"] == "NO_UNIQUE_COMPOSITION_OR_RECOVERY_ADVANTAGE_IN_MATCHED_SEMANTICS_CASES"
+    assert recovery["summary"]["difference_count"] == 0
+    assert custody["falsification_outcome"] == "NO_UNIQUE_PROVENANCE_CUSTODY_ADVANTAGE_IN_MATCHED_CHECKS"
+    assert custody["summary"]["difference_count"] == 0
+    for payload in (strong, equivalence, scaling, recovery, custody):
         assert "STATE_OF_THE_ART_NOT_ESTABLISHED" in payload["claim_ceiling"]
         assert "CANONICAL_DGAF_EFFICACY_NOT_ESTABLISHED" in payload["claim_ceiling"]
         assert "INDEPENDENT_VALIDATION_NOT_ESTABLISHED" in payload["claim_ceiling"]
