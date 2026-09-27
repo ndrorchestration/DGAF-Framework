@@ -5,8 +5,12 @@ import json
 from pathlib import Path
 from types import ModuleType
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 RUNNER_PATH = ROOT / "scripts/run_dgaf_smoke_v1.py"
+
+pytest.importorskip("pandas")
 
 
 def load_runner() -> ModuleType:
