@@ -65,7 +65,7 @@ def build_result(
     )
     control_state_outcome = "PASS" if head_binding_returncode == 0 else "FAIL"
 
-    gates = {
+    gates: dict[str, dict[str, Any]] = {
         "CANARY_HEAD": {
             "outcome": head_outcome,
             "expected_revision": expected_revision,
