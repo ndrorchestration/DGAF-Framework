@@ -310,8 +310,7 @@ def replay_scenario() -> dict[str, Any]:
         "retry": {"c3": conventional_retry, "dgaf": dgaf_retry},
         "after_reconcile_failed": {"c3": conventional_after, "dgaf": dgaf_after},
         "parity": (
-            conventional_retry == dgaf_retry == "RECONCILE_REQUIRED"
-            and conventional_after == dgaf_after == "CLAIMED"
+            conventional_retry == dgaf_retry == "RECONCILE_REQUIRED" and conventional_after == dgaf_after == "CLAIMED"
         ),
     }
 

@@ -72,10 +72,7 @@ def test_no_wrong_authority_or_stale_retry_continuation_in_cases() -> None:
 
 def test_parity_is_falsification_not_equivalence_claim() -> None:
     report = benchmark.run()
-    assert (
-        report["falsification_outcome"]
-        == "NO_UNIQUE_COMPOSITION_OR_RECOVERY_ADVANTAGE_IN_MATCHED_SEMANTICS_CASES"
-    )
+    assert report["falsification_outcome"] == "NO_UNIQUE_COMPOSITION_OR_RECOVERY_ADVANTAGE_IN_MATCHED_SEMANTICS_CASES"
     boundary = " ".join(report["interpretation_boundary"])
     assert "not production incident evidence" in boundary
     assert "implementation complexity" in boundary
