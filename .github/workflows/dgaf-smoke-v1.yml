@@ -84,7 +84,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: dgaf-smoke-v1-${{ github.sha }}
+          name: dgaf-smoke-v1-${{ github.event.pull_request.head.sha || github.sha }}
           path: artifacts/dgaf-smoke-v1/result.json
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
