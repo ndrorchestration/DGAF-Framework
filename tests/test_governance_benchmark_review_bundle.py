@@ -100,3 +100,29 @@ def test_bundle_binds_evidence_to_exact_repository_head(tmp_path: Path) -> None:
         assert "STATE_OF_THE_ART_NOT_ESTABLISHED" in payload["claim_ceiling"]
         assert "CANONICAL_DGAF_EFFICACY_NOT_ESTABLISHED" in payload["claim_ceiling"]
         assert "INDEPENDENT_VALIDATION_NOT_ESTABLISHED" in payload["claim_ceiling"]
+
+
+def test_bundle_evidence_payloads_are_indexed_by_envelope(tmp_path: Path) -> None:
+    output = tmp_path / "review.zip"
+    bundle.build_bundle(output)
+
+    payload_to_layer = {
+        "fixed-benchmark.json": "fixed",
+        "mutations.json": "mutations",
+        "same-domain-interactions.json": "same_domain_interactions",
+        "cross-domain-interactions.json": "cross_domain_interactions",
+        "strong-policy-comparator.json": "strong_policy_comparator",
+        "semantic-equivalence.json": "semantic_equivalence",
+        "configuration-scaling.json": "configuration_scaling",
+        "recovery-composition.json": "recovery_composition",
+        "provenance-custody.json": "provenance_custody",
+    }
+
+    with zipfile.ZipFile(output) as archive:
+        envelope = json.loads(archive.read("evidence-envelope.json"))
+        indexed = envelope["canonical_layer_digests"]
+        assert set(indexed) == set(payload_to_layer.values())
+
+        for payload_name, layer_name in payload_to_layer.items():
+            payload = json.loads(archive.read(payload_name))
+            assert bundle.manifest_module.digest(payload) == indexed[layer_name]
