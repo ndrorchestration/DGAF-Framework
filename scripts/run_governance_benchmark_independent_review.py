@@ -37,17 +37,18 @@ TEST_PATHS = (
     "tests/test_standards_risk_crosswalk.py",
 )
 
-EXPECTED_LAYER_NAMES = {
-    "configuration_scaling",
-    "cross_domain_interactions",
-    "fixed",
-    "mutations",
-    "provenance_custody",
-    "recovery_composition",
-    "same_domain_interactions",
-    "semantic_equivalence",
-    "strong_policy_comparator",
+PAYLOAD_TO_LAYER = {
+    "fixed-benchmark.json": "fixed",
+    "mutations.json": "mutations",
+    "same-domain-interactions.json": "same_domain_interactions",
+    "cross-domain-interactions.json": "cross_domain_interactions",
+    "strong-policy-comparator.json": "strong_policy_comparator",
+    "semantic-equivalence.json": "semantic_equivalence",
+    "configuration-scaling.json": "configuration_scaling",
+    "recovery-composition.json": "recovery_composition",
+    "provenance-custody.json": "provenance_custody",
 }
+EXPECTED_LAYER_NAMES = set(PAYLOAD_TO_LAYER.values())
 
 
 def sha256_file(path: Path) -> str:
@@ -56,6 +57,23 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest().upper()
+
+
+def canonicalize(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: canonicalize(item)
+            for key, item in sorted(value.items())
+            if key != "elapsed_ns_informational"
+        }
+    if isinstance(value, list):
+        return [canonicalize(item) for item in value]
+    return value
+
+
+def canonical_digest(value: Any) -> str:
+    encoded = json.dumps(canonicalize(value), sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def git_output(*args: str) -> str:
@@ -121,6 +139,7 @@ def verify_bundle(
         "envelope_layer_names": [],
         "envelope_layers_complete": False,
         "canonical_layer_digests": {},
+        "canonical_layer_digests_match": False,
         "errors": [],
     }
 
@@ -150,20 +169,21 @@ def verify_bundle(
             checks["envelope_layer_names"] = sorted(layer_digests)
             checks["envelope_layers_complete"] = set(layer_digests) == EXPECTED_LAYER_NAMES
 
+            digest_match = True
+            for payload_name, layer_name in PAYLOAD_TO_LAYER.items():
+                payload = json.loads(archive.read(payload_name))
+                observed = canonical_digest(payload)
+                if layer_digests.get(layer_name) != observed:
+                    digest_match = False
+                    checks["errors"].append(f"envelope digest mismatch: {payload_name}")
+            checks["canonical_layer_digests_match"] = digest_match
+
             required = {
                 "REVIEWER_HANDOFF.md",
                 "SHA256SUMS.txt",
                 "evidence-envelope.json",
                 "evidence-manifest.json",
-                "fixed-benchmark.json",
-                "mutations.json",
-                "same-domain-interactions.json",
-                "cross-domain-interactions.json",
-                "strong-policy-comparator.json",
-                "semantic-equivalence.json",
-                "configuration-scaling.json",
-                "recovery-composition.json",
-                "provenance-custody.json",
+                *PAYLOAD_TO_LAYER,
             }
             missing = sorted(required - names)
             if missing:
@@ -178,6 +198,7 @@ def verify_bundle(
             checks["handoff_commit_matches"],
             checks["envelope_commit_matches"],
             checks["envelope_layers_complete"],
+            checks["canonical_layer_digests_match"],
             not checks["errors"],
         )
     )
