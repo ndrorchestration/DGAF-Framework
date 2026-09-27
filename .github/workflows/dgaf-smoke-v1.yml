@@ -78,6 +78,7 @@ jobs:
       - name: Execute bounded smoke runner
         env:
           DGAF_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+          PYTHONPATH: ${{ github.workspace }}
         run: python scripts/run_dgaf_smoke_v1.py
 
       - name: Upload smoke evidence
