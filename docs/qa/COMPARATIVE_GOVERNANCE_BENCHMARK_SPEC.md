@@ -332,3 +332,38 @@ Acceptance requires:
 If both architectures show the same structural growth under fair reuse, the
 benchmark MUST NOT claim an inherent DGAF configuration-scaling advantage from
 this model alone.
+
+## Matched composition and recovery falsification layer
+
+After static decision and configuration parity, composition/recovery claims MUST
+be tested against a conventional comparator that is permitted ordinary stateful
+engineering mechanisms rather than a stateless policy stub.
+
+The comparator may use:
+
+1. workflow context and composition authorization;
+2. sensitivity propagation;
+3. idempotency state;
+4. unknown-outcome state;
+5. reconciliation state;
+6. structured recovery modes.
+
+DGAF MUST NOT receive hidden inputs unavailable to the comparator.
+
+The first paired implementation binds DGAF to the merged capability workflow and
+idempotency reference APIs on protected main.
+
+Acceptance requires:
+
+1. paired composition and recovery scenarios;
+2. explicit unknown-outcome and retry-blocking behavior;
+3. rollback, compensation, and contain/escalate cases;
+4. protected-egress composition cases;
+5. wrong-authority and stale-retry continuation counts;
+6. parity and conventional-policy advantage treated as valid outcomes;
+7. no inference from synthetic parity to architectural equivalence;
+8. unchanged scientific and assurance claim ceilings.
+
+If both implementations produce the same outcomes under matched semantics, the
+benchmark MUST NOT claim unique DGAF composition or recovery protection from
+those cases alone.
