@@ -9,11 +9,16 @@ from __future__ import annotations
 
 import copy
 import json
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
 import jsonschema
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from scripts.dgaf_capability_pep import ApprovalState, EnforcementContext, VerificationState
 from scripts.dgaf_capability_policy import Authority
@@ -23,7 +28,6 @@ from scripts.dgaf_capability_reference_transaction import (
     run_reference_transaction,
 )
 
-ROOT = Path(__file__).resolve().parents[2]
 NOW = datetime(2026, 9, 27, 7, 45, tzinfo=timezone.utc)
 
 
