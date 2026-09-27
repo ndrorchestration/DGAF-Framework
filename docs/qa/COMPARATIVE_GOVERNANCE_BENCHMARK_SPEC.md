@@ -332,4 +332,3 @@ Acceptance requires:
 If both architectures show the same structural growth under fair reuse, the
 benchmark MUST NOT claim an inherent DGAF configuration-scaling advantage from
 this model alone.
-
