@@ -49,7 +49,6 @@ python -m pytest \
   tests/test_standards_risk_crosswalk.py
 ```
 
-
 ## Operational smoke verification
 
 The governance benchmark bundle and the DGAF smoke contract answer different questions.
