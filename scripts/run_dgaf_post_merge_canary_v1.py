@@ -60,8 +60,7 @@ def build_result(
     head_outcome = "PASS" if actual_revision == expected_revision else "FAIL"
     smoke_outcome = (
         "PASS"
-        if smoke_result.get("outcome") == "PASS"
-        and smoke_result.get("revision") == expected_revision
+        if smoke_result.get("outcome") == "PASS" and smoke_result.get("revision") == expected_revision
         else "FAIL"
     )
     control_state_outcome = "PASS" if head_binding_returncode == 0 else "FAIL"
@@ -82,11 +81,7 @@ def build_result(
             "diagnostic": head_binding_output,
         },
     }
-    outcome = (
-        "PASS"
-        if all(gate["outcome"] == "PASS" for gate in gates.values())
-        else "FAIL"
-    )
+    outcome = "PASS" if all(gate["outcome"] == "PASS" for gate in gates.values()) else "FAIL"
 
     return {
         "schema": SCHEMA,
@@ -108,9 +103,7 @@ def build_result(
 
 
 def run_canary() -> dict[str, Any]:
-    expected_revision = os.environ.get("DGAF_REVISION") or os.environ.get(
-        "GITHUB_SHA"
-    )
+    expected_revision = os.environ.get("DGAF_REVISION") or os.environ.get("GITHUB_SHA")
     if not expected_revision:
         raise SystemExit("DGAF_REVISION or GITHUB_SHA is required")
 
@@ -142,9 +135,7 @@ def main() -> int:
     result = run_canary()
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(
-        json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+    output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result["outcome"] == "PASS" else 1
 
