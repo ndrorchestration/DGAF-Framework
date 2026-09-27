@@ -1,0 +1,90 @@
+name: DGAF Smoke Contract v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/dgaf-smoke-v1.yml'
+      - 'specs/DGAF_SMOKE_CONTRACT_V1.md'
+      - 'scripts/run_dgaf_smoke_v1.py'
+      - 'tests/test_dgaf_smoke_v1.py'
+      - 'pptl/control_plane.py'
+      - 'pptl/governance_envelope.py'
+      - 'pptl/budget_ledger.py'
+      - 'pptl/state_identity.py'
+      - 'pptl/branch_registry.py'
+      - 'pptl/triadic_governance_loop.py'
+      - 'requirements-ci-py312-ubuntu2404-x64.lock'
+      - 'scripts/bootstrap_ci_pip.sh'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/dgaf-smoke-v1.yml'
+      - 'specs/DGAF_SMOKE_CONTRACT_V1.md'
+      - 'scripts/run_dgaf_smoke_v1.py'
+      - 'tests/test_dgaf_smoke_v1.py'
+      - 'pptl/control_plane.py'
+      - 'pptl/governance_envelope.py'
+      - 'pptl/budget_ledger.py'
+      - 'pptl/state_identity.py'
+      - 'pptl/branch_registry.py'
+      - 'pptl/triadic_governance_loop.py'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  smoke:
+    name: DGAF bounded control-plane smoke
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact evaluated commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact checkout identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Bootstrap exact pip resolver
+        run: bash scripts/bootstrap_ci_pip.sh
+
+      - name: Install hash-locked CI dependencies
+        run: >-
+          python -m pip install
+          --disable-pip-version-check
+          --require-hashes
+          --only-binary=:all:
+          -r requirements-ci-py312-ubuntu2404-x64.lock
+
+      - name: Compile smoke runner
+        run: python -m py_compile scripts/run_dgaf_smoke_v1.py
+
+      - name: Run focused smoke contract tests
+        run: python -m pytest -q tests/test_dgaf_smoke_v1.py
+
+      - name: Execute bounded smoke runner
+        env:
+          DGAF_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python scripts/run_dgaf_smoke_v1.py
+
+      - name: Upload smoke evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dgaf-smoke-v1-${{ github.sha }}
+          path: artifacts/dgaf-smoke-v1/result.json
+          if-no-files-found: warn
+          retention-days: 14
