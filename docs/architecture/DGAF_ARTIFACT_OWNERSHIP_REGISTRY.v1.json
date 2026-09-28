@@ -766,6 +766,64 @@
       "tests_or_validators": [],
       "source_binding": "git blob at candidate",
       "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/dgaf_completion_state_reconciler.v0.1.json",
+      "artifact_type": "registry",
+      "primary_owner": "P-TRACK",
+      "secondary_dependencies": [
+        "A1",
+        "A2",
+        "K4",
+        "K8"
+      ],
+      "role": "Historical non-authorizing Track A Epoch 002 precollection completion graph",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-TRACK",
+      "evidence_scope": "historical fixed-scope Track A Epoch 002 precollection readiness",
+      "tests_or_validators": [
+        "scripts/derive_dgaf_completion_state.py"
+      ],
+      "source_binding": "git blob at candidate; lifecycle_scope explicitly historical",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/emit_freeze_control_evidence.py",
+      "artifact_type": "code",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "K6",
+        "K8",
+        "P-PDMAL"
+      ],
+      "role": "Emit candidate/toolchain and negative-state provenance evidence for legacy pre-freeze controls",
+      "authority_effect": "EVIDENCE_BINDING",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "legacy PDMAL pre-freeze E2b/M6 evidence generation",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate and emitted target_candidate_sha",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/freeze_consistency_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "K4",
+        "K8",
+        "P-PDMAL"
+      ],
+      "role": "Fail-closed consistency checker for legacy DGAF/PDMAL freeze predicate metadata",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "consistency only; cannot promote freeze predicates",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
     }
   ]
 }
