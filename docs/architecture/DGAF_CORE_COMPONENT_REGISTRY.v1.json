@@ -1,0 +1,204 @@
+{
+  "schema_version": "dgaf-core-component-registry.v1",
+  "status": "PROPOSED_NON_AUTHORIZING",
+  "purpose": "Machine-readable classification of DGAF core governance components, cross-cutting assurance components, and governed profiles.",
+  "invariants": [
+    "OBSERVED != VERIFIED != ACCEPTED != AUTHORIZED != EXECUTED != SCIENTIFICALLY_VALIDATED",
+    "External executors do not inherit DGAF governance authority.",
+    "Profiles may strengthen core semantics but must not silently redefine them.",
+    "Historical aliases and retired mechanisms do not create parallel authority."
+  ],
+  "core_components": [
+    {
+      "id": "K1",
+      "name": "Action Canonicalization & Effect Identity",
+      "authority_effect": "IDENTITY_BINDING",
+      "primary_artifacts": [
+        "scripts/dgaf_capability_canonicalize.py"
+      ],
+      "outputs": [
+        "canonical_action_envelope",
+        "action_digest",
+        "effect_identity"
+      ]
+    },
+    {
+      "id": "K2",
+      "name": "Policy, Delegation & Effective Authority",
+      "authority_effect": "AUTHORITY_BOUNDING",
+      "primary_artifacts": [
+        "scripts/dgaf_capability_policy.py",
+        "schemas/capability_manifest.schema.json",
+        "schemas/delegation_chain.schema.json"
+      ],
+      "outputs": [
+        "effective_authority",
+        "delegation_validity",
+        "commit_guard_result"
+      ]
+    },
+    {
+      "id": "K3",
+      "name": "Admission & Enforcement",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "primary_artifacts": [
+        "scripts/dgaf_capability_pep.py",
+        "docs/governance/ACTION_ADMISSION_AUTHORITY_CONTRACT.md",
+        "schemas/authorization_object.schema.json"
+      ],
+      "outputs": [
+        "admission_decision",
+        "enforcement_result"
+      ]
+    },
+    {
+      "id": "K4",
+      "name": "Governed State-Transition Control",
+      "authority_effect": "STATE_TRANSITION_GATING",
+      "primary_artifacts": [
+        "scripts/dgaf_capability_state_machine.py",
+        "scripts/dgaf_capability_workflow.py",
+        "scripts/validate_control_state.py"
+      ],
+      "outputs": [
+        "transition_decision",
+        "workflow_state"
+      ]
+    },
+    {
+      "id": "K5",
+      "name": "Replay, Idempotency, Revocation & Trust Safeguards",
+      "authority_effect": "REPLAY_AND_COMMIT_TIME_AUTHORITY",
+      "primary_artifacts": [
+        "scripts/dgaf_capability_idempotency.py",
+        "scripts/dgaf_capability_idempotency_sqlite.py",
+        "docs/governance/ACTION_ADMISSION_AUTHORITY_CONTRACT.md"
+      ],
+      "outputs": [
+        "replay_state",
+        "revocation_state",
+        "trust_state"
+      ]
+    },
+    {
+      "id": "K6",
+      "name": "Execution Evidence, Receipts & Provenance Binding",
+      "authority_effect": "EVIDENCE_BINDING_ONLY",
+      "primary_artifacts": [
+        "scripts/dgaf_capability_reference_transaction.py",
+        "schemas/execution_receipt.schema.json",
+        "schemas/capability_audit_event.schema.json"
+      ],
+      "outputs": [
+        "execution_receipt",
+        "audit_event",
+        "provenance_binding"
+      ]
+    },
+    {
+      "id": "K7",
+      "name": "Postcondition, Ambiguity, Recovery & Reconciliation",
+      "authority_effect": "RECOVERY_GATING",
+      "primary_artifacts": [
+        "scripts/dgaf_capability_reference_transaction.py",
+        "schemas/reconciliation_record.schema.json"
+      ],
+      "outputs": [
+        "postcondition_state",
+        "recovery_state",
+        "reconciliation_requirement"
+      ]
+    },
+    {
+      "id": "K8",
+      "name": "Epistemic & Claim-State Governance",
+      "authority_effect": "CLAIM_PROMOTION_GATING",
+      "primary_artifacts": [
+        "docs/EPISTEMIC_EVIDENCE_STANDARD.md",
+        "scripts/dgaf_capability_evidence.py",
+        "scripts/validate_structural_epistemics_claim_graph.py"
+      ],
+      "outputs": [
+        "evidence_state",
+        "claim_ceiling",
+        "epistemic_decision"
+      ]
+    }
+  ],
+  "assurance_components": [
+    {
+      "id": "A1",
+      "name": "Audit & Quality Governance",
+      "authority_effect": "ASSURANCE_DECISION_ONLY"
+    },
+    {
+      "id": "A2",
+      "name": "Provenance & Custody Assurance",
+      "authority_effect": "CUSTODY_AND_PROVENANCE_GATING"
+    },
+    {
+      "id": "A3",
+      "name": "Documentation & Semantic Authority",
+      "authority_effect": "SEMANTIC_ROUTING_ONLY"
+    },
+    {
+      "id": "A4",
+      "name": "Operator & Review Control Surfaces",
+      "authority_effect": "PRESENTATION_AND_MEDIATION_ONLY"
+    }
+  ],
+  "governed_profiles": [
+    {
+      "id": "P-TRACK",
+      "name": "Track / Epoch Experimental Lifecycles",
+      "classification": "EXPERIMENTAL_CAMPAIGN"
+    },
+    {
+      "id": "P-AOSS",
+      "name": "AOSS Stage-A Lifecycle",
+      "classification": "ASSURANCE_VALIDATION_PROFILE"
+    },
+    {
+      "id": "P-MODET",
+      "name": "Mode-T Lifecycle",
+      "classification": "ASSURANCE_DEPLOYMENT_PROFILE"
+    },
+    {
+      "id": "P-PDMAL",
+      "name": "PDMAL Experimental Governance",
+      "classification": "RESEARCH_PROFILE"
+    },
+    {
+      "id": "P-EXTREV",
+      "name": "External Review / Independent Reproduction",
+      "classification": "REVIEW_PROFILE"
+    },
+    {
+      "id": "P-SELF",
+      "name": "Self-Application / Cold-Start Validation",
+      "classification": "SELF_VALIDATION_PROFILE"
+    }
+  ],
+  "external_integrations": [
+    {
+      "id": "X-ACP",
+      "name": "Agent Control Plane",
+      "classification": "EXECUTION_SUBSTRATE"
+    },
+    {
+      "id": "X-RDC",
+      "name": "Remote Desktop Commander",
+      "classification": "EXECUTION_ENDPOINT"
+    },
+    {
+      "id": "X-N8N",
+      "name": "n8n",
+      "classification": "WORKFLOW_RUNTIME"
+    },
+    {
+      "id": "X-RET",
+      "name": "Reticulum",
+      "classification": "TRANSPORT_INTEGRATION_RESEARCH"
+    }
+  ]
+}
