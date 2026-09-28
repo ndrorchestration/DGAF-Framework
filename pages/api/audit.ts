@@ -1,6 +1,8 @@
 // pages/api/audit.ts — Pages Router API
 // ⚠️  STATE RESETS ON COLD START — in-memory only.
 // Production upgrade path: bind `state` to an admitted durable store after dependency admission.
+import { timingSafeEqual } from 'node:crypto'
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { consumeAuditAdmission, validateAuditAdmission } from '../../app/lib/action-admission.ts'
@@ -19,9 +21,21 @@ const state = {
   cold_start_at: new Date().toISOString(),
 }
 
+function demoTrustKey(req: NextApiRequest): string | undefined {
+  const expectedToken = process.env.TEKTITE_DEMO_INTERNAL_TOKEN
+  const trustKey = process.env.TEKTITE_DEMO_AAR_HMAC_KEY
+  const supplied = req.headers?.['x-tektite-demo-token']
+  if (!expectedToken || !trustKey || typeof supplied !== 'string') return undefined
+
+  const expected = Buffer.from(expectedToken)
+  const actual = Buffer.from(supplied)
+  if (expected.length !== actual.length || !timingSafeEqual(expected, actual)) return undefined
+  return trustKey
+}
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const admission = validateAuditAdmission(req.body)
+    const admission = validateAuditAdmission(req.body, Date.now(), demoTrustKey(req))
     if (!admission.ok) {
       return res.status(403).json({ status: 'denied', reason: admission.reason, _warning: COLD_START_WARNING })
     }

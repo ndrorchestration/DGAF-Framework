@@ -139,8 +139,8 @@ function extractParameters(body: Record<string, unknown>): Record<string, unknow
   return parameters
 }
 
-function verifyAttestation(record: ActionAdmissionRecord): AuditAdmissionFailure | null {
-  const trustKey = process.env.DGAF_AAR_HMAC_KEY
+function verifyAttestation(record: ActionAdmissionRecord, trustKeyOverride?: string): AuditAdmissionFailure | null {
+  const trustKey = trustKeyOverride ?? process.env.DGAF_AAR_HMAC_KEY
   if (!trustKey) return { ok: false, reason: 'TRUST_ANCHOR_UNAVAILABLE' }
 
   const { attestation, ...unsignedRecord } = record
@@ -151,13 +151,17 @@ function verifyAttestation(record: ActionAdmissionRecord): AuditAdmissionFailure
   return null
 }
 
-export function validateAuditAdmission(body: unknown, nowMs = Date.now()): AuditAdmissionResult {
+export function validateAuditAdmission(
+  body: unknown,
+  nowMs = Date.now(),
+  trustKeyOverride?: string,
+): AuditAdmissionResult {
   if (!isRecord(body)) return { ok: false, reason: 'INVALID_REQUEST' }
   const record = parseAar(body.aar)
   if (!record) return { ok: false, reason: 'AAR_REQUIRED_OR_MALFORMED' }
   if (usedRecordIds.has(record.record_id)) return { ok: false, reason: 'AAR_REPLAY' }
 
-  const attestationFailure = verifyAttestation(record)
+  const attestationFailure = verifyAttestation(record, trustKeyOverride)
   if (attestationFailure) return attestationFailure
 
   const parameters = extractParameters(body)
