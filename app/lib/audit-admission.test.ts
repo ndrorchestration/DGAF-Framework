@@ -7,6 +7,7 @@ import auditHandler from '../../pages/api/audit.ts'
 type MockRequest = {
   method: string
   body?: Record<string, unknown>
+  headers?: Record<string, string>
 }
 
 type MockResponse = {
@@ -47,9 +48,13 @@ function response(): MockResponse {
   }
 }
 
-function invoke(method: string, body?: Record<string, unknown>): MockResponse {
+function invoke(
+  method: string,
+  body?: Record<string, unknown>,
+  headers?: Record<string, string>,
+): MockResponse {
   const res = response()
-  auditHandler({ method, body } as never, res as never)
+  auditHandler({ method, body, headers } as never, res as never)
   return res
 }
 
@@ -194,4 +199,51 @@ test('POST /api/audit accepts an exact trusted AAR once, emits a receipt, and re
   assert.equal(replay.statusCode, 403)
   assert.equal(replay.payload?.status, 'denied')
   assert.equal(turnCount(), before + 1)
+})
+
+test('Tektite demo trust key requires the exact private internal token', () => {
+  const demoKey = 'tektite-demo-test-key-only'
+  const demoToken = 'tektite-demo-test-internal-token'
+  const previousDemoKey = process.env.TEKTITE_DEMO_AAR_HMAC_KEY
+  const previousDemoToken = process.env.TEKTITE_DEMO_INTERNAL_TOKEN
+  process.env.TEKTITE_DEMO_AAR_HMAC_KEY = demoKey
+  process.env.TEKTITE_DEMO_INTERNAL_TOKEN = demoToken
+
+  try {
+    const before = turnCount()
+    const parameters = { turn_count: before + 1 }
+    recordCounter += 1
+    const unsigned = {
+      version: 'AAR_V1',
+      record_id: `aar-demo-token-${recordCounter}`,
+      action_class: 'AUDIT_COUNTER_UPDATE_V1',
+      target: '/api/audit',
+      policy_id: 'AAR_AUDIT_POLICY_V1',
+      action_digest: actionDigest(parameters),
+      authorization: {
+        authorization_id: 'auth-test-1',
+        parent_scope: ['audit:counter:update'],
+        delegated_scope: ['audit:counter:update'],
+        expires_at: '2099-01-01T00:00:00.000Z',
+        revoked: false,
+      },
+      predicates: { verifier_status: 'PASS' },
+    }
+    const record = { ...unsigned, attestation: attest(unsigned, demoKey) }
+
+    const denied = invoke('POST', { ...parameters, aar: record }, { 'x-tektite-demo-token': 'wrong-token' })
+    assert.equal(denied.statusCode, 403)
+    assert.equal(denied.payload?.reason, 'AAR_ATTESTATION_INVALID')
+    assert.equal(turnCount(), before)
+
+    const accepted = invoke('POST', { ...parameters, aar: record }, { 'x-tektite-demo-token': demoToken })
+    assert.equal(accepted.statusCode, 200)
+    assert.equal(accepted.payload?.status, 'updated')
+    assert.equal(accepted.payload?.turn_count, before + 1)
+  } finally {
+    if (previousDemoKey === undefined) delete process.env.TEKTITE_DEMO_AAR_HMAC_KEY
+    else process.env.TEKTITE_DEMO_AAR_HMAC_KEY = previousDemoKey
+    if (previousDemoToken === undefined) delete process.env.TEKTITE_DEMO_INTERNAL_TOKEN
+    else process.env.TEKTITE_DEMO_INTERNAL_TOKEN = previousDemoToken
+  }
 })
