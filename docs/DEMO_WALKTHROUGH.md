@@ -4,7 +4,7 @@ This page is the shortest path for evaluating the public DGAF proof-of-operation
 
 ## Open the demo
 
-**Public demo:** https://project-7ybao.vercel.app/demo
+**Public demo:** [Open the DGAF proof-of-operation demo](https://project-7ybao.vercel.app/demo)
 
 The page is intentionally usable without authentication.
 
