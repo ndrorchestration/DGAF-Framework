@@ -3,7 +3,7 @@ status: ACTIVE
 authority: Both
 owner: DGAF/PDMAL control plane
 last_verified: 2026-09-28
-reconciliation_input_main: 806faa70229788fecc813aa617b1b5bde16ccc34
+reconciliation_input_main: 6b9c75a85a0004958fd955d740ae3a8fea6ba363
 canonical_high_assurance_empirical_n: 0
 final_candidate_status: NOT_DESIGNATED
 candidate_status: PRE-FREEZE / FAIL-CLOSED / NOT AUTHORIZED
