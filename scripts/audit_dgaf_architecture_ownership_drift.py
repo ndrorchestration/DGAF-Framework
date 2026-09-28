@@ -45,6 +45,8 @@ def classify(rel: str, text: str) -> str | None:
 
     if (
         ".test." in rel
+        or rel.endswith("_test.py")
+        or rel.endswith("_tests.py")
         or "/tests/" in rel
         or rel.startswith("tests/")
         or ASSURANCE_TERMS.search(rel)
