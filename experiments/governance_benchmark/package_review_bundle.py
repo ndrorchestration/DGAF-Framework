@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 import json
 import subprocess
+import sys
 import zipfile
 from pathlib import Path
 from typing import Any
@@ -25,7 +26,7 @@ spec.loader.exec_module(manifest_module)
 
 def load_json_script(script: str) -> Any:
     completed = subprocess.run(
-        ["python", str(ROOT / script)],
+        [sys.executable, str(ROOT / script)],
         cwd=REPO_ROOT,
         check=True,
         capture_output=True,
