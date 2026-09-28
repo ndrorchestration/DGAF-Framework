@@ -21,6 +21,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ status: 'method_not_allowed' })
   }
 
+  if (process.env.TEKTITE_DEMO_ENABLED !== 'true') {
+    return res.status(503).json({
+      status: 'blocked',
+      reason: 'TEKTITE_DEMO_NOT_ENABLED',
+      boundary: 'FAIL_CLOSED_DEMO_DISABLED',
+    })
+  }
+
+  const internalToken = process.env.TEKTITE_DEMO_INTERNAL_TOKEN
+  if (!internalToken) {
+    return res.status(503).json({
+      status: 'blocked',
+      reason: 'TEKTITE_DEMO_INTERNAL_TOKEN_UNAVAILABLE',
+      boundary: 'FAIL_CLOSED_NO_DEMO_ISSUANCE',
+    })
+  }
+
   const scenario = req.body?.scenario
   if (!isTektiteDemoScenario(scenario)) {
     return res.status(400).json({
@@ -47,7 +64,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   for (let attempt = 1; attempt <= count; attempt += 1) {
     const response = await fetch(`${origin}/api/audit`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        'x-tektite-demo-token': internalToken,
+        ...(typeof req.headers['x-vercel-protection-bypass'] === 'string'
+          ? { 'x-vercel-protection-bypass': req.headers['x-vercel-protection-bypass'] }
+          : {}),
+      },
       body: JSON.stringify(demo.requestBody),
     })
     let result: unknown
