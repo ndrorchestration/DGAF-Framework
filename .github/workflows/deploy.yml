@@ -96,6 +96,16 @@ jobs:
           printf '%s\n' "$EXPECTED_ENSEMBLE_VERSION" | vercel env add ENSEMBLE_VERSION production --token="$VERCEL_TOKEN" --force
           printf '%s\n' enabled | vercel env add PSI_CHECK production --token="$VERCEL_TOKEN" --force
 
+          # Tektite uses a per-deployment server-only trust channel. These
+          # values are never exposed to the browser and do not establish the
+          # general DGAF_AAR_HMAC_KEY production issuer.
+          tektite_demo_key="$(openssl rand -hex 32)"
+          tektite_demo_token="$(openssl rand -hex 32)"
+          printf '%s\n' true | vercel env add TEKTITE_DEMO_ENABLED production --token="$VERCEL_TOKEN" --force
+          printf '%s\n' "$tektite_demo_key" | vercel env add TEKTITE_DEMO_AAR_HMAC_KEY production --token="$VERCEL_TOKEN" --force
+          printf '%s\n' "$tektite_demo_token" | vercel env add TEKTITE_DEMO_INTERNAL_TOKEN production --token="$VERCEL_TOKEN" --force
+          unset tektite_demo_key tektite_demo_token
+
       - name: Deploy to Vercel production
         id: deploy
         run: |
