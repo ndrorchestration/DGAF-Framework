@@ -46,15 +46,10 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
     normalized = path.as_posix()
     is_workflow = normalized.startswith(".github/workflows/")
 
-    # The scanner source necessarily contains its own sentinel strings and
-    # rule vocabulary; those literals are implementation, not repository claims.
     if normalized == "scripts/full_repo_audit.py":
         return findings
 
     if is_workflow:
-        # Immutable third-party Action pins are supply-chain controls, not
-        # references to DGAF repository commits. Exclude those lines from the
-        # repository-SHA binding scan.
         repository_binding_text = "\n".join(
             line
             for line in text.splitlines()
@@ -65,36 +60,44 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
         )
         for referenced in sorted(set(FULL_SHA.findall(repository_binding_text))):
             if referenced != head:
-                findings.append({
-                    "severity": "HIGH",
-                    "type": "workflow_stale_commit_reference",
-                    "path": str(path),
-                    "referenced_commit": referenced,
-                    "audit_head": head,
-                })
+                findings.append(
+                    {
+                        "severity": "REVIEW",
+                        "type": "workflow_literal_40hex_review",
+                        "path": str(path),
+                        "referenced_commit": referenced,
+                        "audit_head": head,
+                    }
+                )
 
         if "EXPECTED_COMMIT" in text and "e1f077f" in text:
-            findings.append({
-                "severity": "CRITICAL",
-                "type": "workflow_historical_commit_binding",
-                "path": str(path),
-            })
+            findings.append(
+                {
+                    "severity": "CRITICAL",
+                    "type": "workflow_historical_commit_binding",
+                    "path": str(path),
+                }
+            )
 
     if "340%" in text and any(
         word in text.lower() for word in ("closed", "verified", "confirmed")
     ):
-        findings.append({
-            "severity": "HIGH",
-            "type": "340_claim_status_language",
-            "path": str(path),
-        })
+        findings.append(
+            {
+                "severity": "HIGH",
+                "type": "340_claim_status_language",
+                "path": str(path),
+            }
+        )
 
     if "FLAG-02" in text and "qualitative" in text.lower():
-        findings.append({
-            "severity": "REVIEW",
-            "type": "FLAG02_namespace_migration",
-            "path": str(path),
-        })
+        findings.append(
+            {
+                "severity": "REVIEW",
+                "type": "FLAG02_namespace_migration",
+                "path": str(path),
+            }
+        )
 
     return findings
 
@@ -126,11 +129,13 @@ def main() -> int:
         records.append(record)
 
     if Path("SESSION_ANCHOR.md").exists() and Path("docs/SESSION_ANCHORS.md").exists():
-        findings.append({
-            "severity": "HIGH",
-            "type": "duplicate_anchor_documents",
-            "paths": ["SESSION_ANCHOR.md", "docs/SESSION_ANCHORS.md"],
-        })
+        findings.append(
+            {
+                "severity": "HIGH",
+                "type": "duplicate_anchor_documents",
+                "paths": ["SESSION_ANCHOR.md", "docs/SESSION_ANCHORS.md"],
+            }
+        )
 
     report = {
         "schema_version": "1.1",
