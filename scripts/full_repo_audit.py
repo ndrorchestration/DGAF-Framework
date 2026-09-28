@@ -109,9 +109,7 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
         "replaced with",
     )
     for context in windows("340%"):
-        has_promotion = any(
-            word in context for word in ("closed", "verified", "confirmed")
-        )
+        has_promotion = any(word in context for word in ("closed", "verified", "confirmed"))
         has_qualifier = any(q in context for q in claim_340_qualifiers)
         if has_promotion and not has_qualifier:
             findings.append(
@@ -194,9 +192,7 @@ def main() -> int:
         "findings": findings,
         "files": records,
     }
-    Path("full_repo_audit.json").write_text(
-        json.dumps(report, indent=2, sort_keys=True), encoding="utf-8"
-    )
+    Path("full_repo_audit.json").write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
 
     summary = {
         "audit_head": head,
