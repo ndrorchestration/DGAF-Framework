@@ -5,6 +5,7 @@ QA/reporting control only. This inventories every Git-tracked file, hashes each
 file, scans readable text, and reports possible consistency/provenance findings.
 It never promotes evidence, rewrites history, or authorizes a freeze.
 """
+
 from __future__ import annotations
 
 import hashlib
