@@ -222,7 +222,7 @@ Historical labels such as NDR-SACP and other recovered architecture concepts sho
 
 ## Recommended internal architecture
 
-```
+```text
 DGAF Governance Kernel
   K1 Action Canonicalization & Effect Identity
         ↓
