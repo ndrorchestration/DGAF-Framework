@@ -55,7 +55,7 @@ It does **not** mean:
 - scientifically validated;
 - independently validated;
 - runtime-authorized;
-- production-ready;
+- production readiness established;
 - High-Assurance authorized.
 
 ### ACCEPTED
