@@ -1,4 +1,4 @@
-export type ViewId = 'overview' | 'control' | 'governance' | 'state-space' | 'agents' | 'evidence' | 'tools'
+export type ViewId = 'overview' | 'demo' | 'control' | 'governance' | 'state-space' | 'agents' | 'evidence' | 'tools'
 
 export type NavigationItem = {
   id: ViewId
@@ -9,6 +9,7 @@ export type NavigationItem = {
 
 export const NAV_ITEMS: readonly NavigationItem[] = [
   { id: 'overview', href: '/', label: 'Overview', sub: 'What DGAF is' },
+  { id: 'demo', href: '/demo', label: 'Tektite Demo', sub: 'Proof of operation' },
   { id: 'control', href: '/control', label: 'Control Room', sub: 'Runtime telemetry' },
   { id: 'evidence', href: '/evidence', label: 'Evidence & Research', sub: 'Claims & experiment state' },
   { id: 'governance', href: '/governance', label: 'Governance', sub: 'Lifecycle & authority' },

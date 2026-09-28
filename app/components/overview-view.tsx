@@ -24,7 +24,8 @@ export function OverviewView() {
         <h2>Make the difference between <em>can act</em> and <em>may act</em> impossible to miss.</h2>
         <p>DGAF separates evidence, verification, authority, and permission so engineering capability cannot silently become authorization—or testing become proof.</p>
         <div className="hero-actions">
-          <Link className="button primary" href="/evidence">Inspect evidence <ArrowIcon /></Link>
+          <Link className="button primary" href="/demo">Run the Tektite demo <ArrowIcon /></Link>
+          <Link className="button ghost" href="/evidence">Inspect evidence</Link>
           <Link className="button ghost" href="/control">Open control room</Link>
         </div>
       </div>

@@ -10,6 +10,7 @@ const commandCenterLayout = readFileSync('app/(command-center)/layout.tsx', 'utf
 
 const REQUIRED_ROUTES = [
   ['overview', '/'],
+  ['demo', '/demo'],
   ['control', '/control'],
   ['governance', '/governance'],
   ['agents', '/agents'],
@@ -37,7 +38,8 @@ test('shared shell derives navigation from pathname and semantic links', () => {
 })
 
 test('overview actions are real links rather than callback navigation', () => {
-  assert.match(overview, /<Link className="button primary" href="\/evidence">Inspect evidence/)
+  assert.match(overview, /<Link className="button primary" href="\/demo">Run the Tektite demo/)
+  assert.match(overview, /<Link className="button ghost" href="\/evidence">Inspect evidence<\/Link>/)
   assert.match(overview, /<Link className="button ghost" href="\/control">Open control room<\/Link>/)
   assert.match(overview, /<Link className="text-button" href="\/evidence">Explore evidence/)
   assert.match(overview, /<Link className="button ghost" href="\/governance">View ordered chain/)
@@ -52,6 +54,7 @@ test('one shared runtime provider owns dashboard polling', () => {
 
   const routeFiles = [
     'app/(command-center)/page.tsx',
+    'app/(command-center)/demo/page.tsx',
     'app/(command-center)/control/page.tsx',
     'app/(command-center)/governance/page.tsx',
     'app/(command-center)/state-space/page.tsx',

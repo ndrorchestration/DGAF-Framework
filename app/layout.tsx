@@ -4,6 +4,7 @@ import './styles/decision-frontier.css'
 import './styles/governance-map.css'
 import './styles/state-space.css'
 import './styles/typography-editorial.css'
+import './styles/tektite-demo.css'
 
 export const metadata: Metadata = {
   title: 'DGAF — Governance Command Center',
