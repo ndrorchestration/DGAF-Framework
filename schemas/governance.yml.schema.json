@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/ndrorchestration/DGAF-Framework/schemas/governance.yml.schema.json",
   "title": "DGAF Governance YAML Schema",
-  "description": "Pydantic-enforced schema for governance.yml. extra=forbid. All downstream kernels, CI gates, and eval harnesses derive from this file.",
+  "description": "Versioned JSON Schema for governance.yml role/configuration records used by repository conformance and evaluation surfaces. additionalProperties=false provides closed-object validation here; this schema is not the architectural root of all DGAF kernels or CI gates.",
   "type": "object",
   "required": ["schema_version", "session_id", "roles"],
   "additionalProperties": false,

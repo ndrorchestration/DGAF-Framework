@@ -6,7 +6,7 @@
       "id": "AD-001",
       "title": "governance.yml schema overstates current architectural root role",
       "severity": "MEDIUM",
-      "state": "OPEN",
+      "state": "RESOLVED",
       "artifact": "schemas/governance.yml.schema.json",
       "current_text_claim": "All downstream kernels, CI gates, and eval harnesses derive from this file.",
       "observed_repository_usage": [
@@ -16,7 +16,9 @@
       ],
       "finding": "Observed usage supports a synthetic/legacy governance-role schema and evaluation surface, not a demonstrated current root for all K1-K8 kernels or CI gates.",
       "risk": "Current-facing readers may infer a second or older architecture authority root that conflicts with the canonical K1-K8 ownership model.",
-      "recommended_disposition": "In a separate bounded correction, narrow the schema description and any dependent documentation to its actual conformance/evaluation scope unless additional live derivation evidence is found.",
+      "recommended_disposition": "Narrow the schema description and any dependent documentation to its actual conformance/evaluation scope unless additional live derivation evidence is found.",
+      "resolution": "The schema description now identifies governance.yml.schema.json as a versioned JSON Schema used by repository conformance/evaluation surfaces, notes the closed-object validation semantics represented by additionalProperties=false, and explicitly states that the schema is not the architectural root of all DGAF kernels or CI gates.",
+      "resolution_scope": "DESCRIPTION_ONLY_NO_SCHEMA_CONSTRAINT_CHANGE",
       "non_effects": [
         "DOES_NOT_INVALIDATE_SCHEMA_TESTS",
         "DOES_NOT_CHANGE_RUNTIME_AUTHORITY",
