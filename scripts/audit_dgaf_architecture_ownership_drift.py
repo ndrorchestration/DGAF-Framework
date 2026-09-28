@@ -69,7 +69,7 @@ def classify(rel: str, text: str) -> str | None:
 
 def candidates() -> dict[str, list[str]]:
     registered = registered_paths()
-    buckets = {
+    buckets: dict[str, list[str]] = {
         "HIGH": [],
         "PROFILE": [],
         "MEDIUM": [],
