@@ -8,14 +8,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "docs" / "architecture" / "DGAF_ARTIFACT_OWNERSHIP_REGISTRY.v1.json"
 
-SENSITIVE_PATTERNS = (
-    re.compile(r"authorization|authorize|admission|allow|deny|policy", re.I),
-    re.compile(r"state_machine|transition|control_state|status", re.I),
-    re.compile(r"replay|idempot|revocation|trust_anchor", re.I),
-    re.compile(r"custody|freeze|unblind|materializ", re.I),
-    re.compile(r"receipt|provenance|evidence|attestation", re.I),
-    re.compile(r"rollback|compensat|reconcil|postcondition", re.I),
+AUTHORITY_TERMS = re.compile(
+    r"authorization|authorize|admission|allow|deny|policy|replay|idempot|revocation|"
+    r"state_machine|transition|custody|freeze|unblind|materializ|rollback|compensat|reconcil",
+    re.I,
 )
+EVIDENCE_TERMS = re.compile(r"receipt|provenance|evidence|attestation|verification|claim", re.I)
+PROFILE_TERMS = re.compile(r"aoss|track_a|epoch_|mode_t|pdmal|self_application", re.I)
+ASSURANCE_TERMS = re.compile(r"(^|/)(test|tests|validate|validator|audit|check|lint|reconcile|derive)", re.I)
 
 IN_SCOPE_PREFIXES = ("scripts/","schemas/","app/lib/","registry/")
 EXTENSIONS = {".py",".ts",".js",".json",".yaml",".yml"}
@@ -26,9 +26,37 @@ def registered_paths() -> set[str]:
     return {str(r["path"]) for r in data["records"]}
 
 
-def candidate_paths() -> list[str]:
+def classify(rel: str, text: str) -> str | None:
+    name_authority = bool(AUTHORITY_TERMS.search(rel))
+    content_authority = bool(AUTHORITY_TERMS.search(text))
+    evidence = bool(EVIDENCE_TERMS.search(rel)) or bool(EVIDENCE_TERMS.search(text))
+
+    if not (name_authority or content_authority or evidence):
+        return None
+
+    # Tests and explicit validators are useful inventory candidates, but they do
+    # not receive the same urgency as runtime/authority-bearing implementations.
+    if ".test." in rel or "/tests/" in rel or rel.startswith("tests/") or ASSURANCE_TERMS.search(rel):
+        return "ASSURANCE"
+
+    if PROFILE_TERMS.search(rel):
+        return "PROFILE"
+
+    # Schemas/registries with authority vocabulary and non-test app/runtime code
+    # are the highest-priority candidates for primary-owner adjudication.
+    if rel.startswith(("app/lib/","schemas/","registry/")) and name_authority:
+        return "HIGH"
+
+    if rel.startswith("scripts/") and name_authority:
+        return "HIGH"
+
+    return "MEDIUM"
+
+
+def candidates() -> dict[str, list[str]]:
     registered = registered_paths()
-    findings: list[str] = []
+    buckets = {"HIGH":[],"PROFILE":[],"MEDIUM":[],"ASSURANCE":[]}
+
     for prefix in IN_SCOPE_PREFIXES:
         base = ROOT / prefix
         if not base.exists():
@@ -41,23 +69,31 @@ def candidate_paths() -> list[str]:
                 continue
             if any(part in {"node_modules","__pycache__"} for part in path.parts):
                 continue
-            name_hit = any(rx.search(rel) for rx in SENSITIVE_PATTERNS)
             try:
                 text = path.read_text(encoding="utf-8", errors="ignore")[:12000]
             except OSError:
                 text = ""
-            content_hits = sum(bool(rx.search(text)) for rx in SENSITIVE_PATTERNS)
-            if name_hit or content_hits >= 2:
-                findings.append(rel)
-    return sorted(set(findings))
+            bucket = classify(rel,text)
+            if bucket:
+                buckets[bucket].append(rel)
+
+    for bucket in buckets:
+        buckets[bucket] = sorted(set(buckets[bucket]))
+    return buckets
 
 
 def main() -> int:
-    findings = candidate_paths()
+    buckets = candidates()
     print("DGAF architecture ownership drift scan: ADVISORY")
-    print(f"UNMAPPED_AUTHORITY_SENSITIVE_CANDIDATES={len(findings)}")
-    for path in findings:
-        print(path)
+    for bucket in ("HIGH","PROFILE","MEDIUM","ASSURANCE"):
+        items = buckets[bucket]
+        print(f"{bucket}_UNMAPPED={len(items)}")
+        # Keep operator output usable. Full lists remain reproducible by
+        # importing candidates(); default CLI prints the first 40 per bucket.
+        for path in items[:40]:
+            print(f"{bucket}: {path}")
+        if len(items) > 40:
+            print(f"{bucket}: ... {len(items)-40} additional candidates omitted from CLI display")
     return 0
 
 
