@@ -102,7 +102,6 @@ def candidates() -> dict[str, list[str]]:
     return buckets
 
 
-
 def profile_bundle_covered_paths(paths: list[str]) -> set[str]:
     if not PROFILE_BUNDLES.exists():
         return set()
@@ -146,6 +145,7 @@ def assurance_bundle_covered_paths(paths: list[str]) -> set[str]:
         if matches == 1:
             covered.add(path)
     return covered
+
 
 def main() -> int:
     buckets = candidates()
