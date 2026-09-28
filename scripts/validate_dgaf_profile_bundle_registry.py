@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import fnmatch
 import json
+import sys
 from pathlib import Path
-
-from scripts.audit_dgaf_architecture_ownership_drift import candidates
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.audit_dgaf_architecture_ownership_drift import candidates  # noqa: E402
 BUNDLES = ROOT / "docs" / "architecture" / "DGAF_PROFILE_BUNDLE_REGISTRY.v1.json"
 COMPONENTS = ROOT / "docs" / "architecture" / "DGAF_CORE_COMPONENT_REGISTRY.v1.json"
 
