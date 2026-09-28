@@ -1,6 +1,6 @@
 # DGAF System Architecture — Relationship Taxonomy
 
-**Status:** PROPOSED / DOCUMENTATION-ONLY / NON-AUTHORIZING  
+**Status:** ACTIVE_NON_AUTHORIZING / DOCUMENTATION-ONLY / NON-AUTHORIZING  
 **Purpose:** classify DGAF-related entities by architectural relationship without collapsing governance, observation, research, execution, and presentation into one generic "subsystem" label.
 
 ## Canonical rule
