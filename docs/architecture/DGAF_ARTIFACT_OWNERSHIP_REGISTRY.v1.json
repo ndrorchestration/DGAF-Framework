@@ -1166,6 +1166,289 @@
       "tests_or_validators": [],
       "source_binding": "git blob at candidate and expected source/blob identities",
       "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json",
+      "artifact_type": "policy",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1",
+        "K2",
+        "K3"
+      ],
+      "role": "Historical co-orchestration contract with human-final authority and pattern-use rules",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": null,
+      "evidence_scope": "historical orchestration design lineage; not current general authority kernel",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/ensemble_v16_manifest.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1",
+        "K3",
+        "K4"
+      ],
+      "role": "Historical ensemble/orchestration manifest for v16 turn-sequence gates",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": null,
+      "evidence_scope": "historical orchestration architecture and declared integrations",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate; manifest supersedes v14",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/lifecycle_stability_report.json",
+      "artifact_type": "evidence",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Historical lifecycle stability report and gate attestation",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": null,
+      "evidence_scope": "S043/SWEEP-002 lifecycle report only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/adversarial_preflight.py",
+      "artifact_type": "validator",
+      "primary_owner": "P-PDMAL",
+      "secondary_dependencies": [
+        "A1",
+        "A2",
+        "K4",
+        "K8"
+      ],
+      "role": "Historical fail-closed PDMAL freeze-readiness preflight",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "legacy pre-freeze readiness checks; cannot grant freeze or authorization",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_model_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K4",
+        "K5",
+        "K7"
+      ],
+      "role": "Exhaustive/model-check style safety verification of capability transaction invariants",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "capability state/replay/recovery invariants",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/inventory_branch_disposition.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "A3"
+      ],
+      "role": "Conservative non-destructive branch disposition inventory",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "branch representation/merge evidence only; no deletion authority",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/live_regression_v17.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K6"
+      ],
+      "role": "Live runtime regression harness against the deployed orchestration API",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "current-contract runtime regression evidence; no authorization promotion",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/lock_audit_hallucination_corpus.py",
+      "artifact_type": "code",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "A1",
+        "K6",
+        "K8"
+      ],
+      "role": "Evaluation corpus intake/custody lock and deterministic manifest generation",
+      "authority_effect": "CUSTODY_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "EVAL-001 corpus structure/alignment/hash custody; not independence or performance",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/main_push_provenance_audit.py",
+      "artifact_type": "validator",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "A1",
+        "K6"
+      ],
+      "role": "Detective audit binding main-branch writes to exact merged PR provenance",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "post-hoc push provenance; not preventive branch protection",
+      "tests_or_validators": [
+        "scripts/main_push_provenance_audit_test.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/p2_runtime_matrix.py",
+      "artifact_type": "validator",
+      "primary_owner": "P-PDMAL",
+      "secondary_dependencies": [
+        "A1",
+        "K6",
+        "K8"
+      ],
+      "role": "Historical P2 live runtime behavior evidence matrix",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "P2 runtime evidence only; cannot self-promote to VERIFIED",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/propagation_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8",
+        "A3"
+      ],
+      "role": "Claim/terminology propagation consistency checker",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "derivative claim and terminology consistency",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/qa_rubric_11q.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8"
+      ],
+      "role": "Executable reference implementation of DGAF Core QA Rubric 11Q",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "artifact-quality and seal-eligibility heuristic scoring only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/run_dgaf_operator_selftest.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "K6",
+        "P-AOSS"
+      ],
+      "role": "Bounded internal operator self-test with retained local evidence packet",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": "P-SELF",
+      "evidence_scope": "same-system internal engineering validation only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/run_dgaf_post_merge_canary_v1.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "K4",
+        "K6"
+      ],
+      "role": "Post-merge exact-revision smoke/control-state canary",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "post-merge canary health evidence; no scientific or deployment-readiness promotion",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/run_dgaf_smoke_v1.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K2",
+        "K3",
+        "K4",
+        "K6"
+      ],
+      "role": "Bounded DGAF smoke contract over control-plane allow/deny/state/provenance fixtures",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "engineering smoke evidence only; authorization effect NONE",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/verify_p9_frozen_chain.py",
+      "artifact_type": "validator",
+      "primary_owner": "P-PDMAL",
+      "secondary_dependencies": [
+        "A2",
+        "A1",
+        "K8"
+      ],
+      "role": "Historical fail-closed final P9 frozen-chain verifier",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "immutable PDMAL freeze/P8/P4 chain verification; no execution/authorization",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
     }
   ]
 }
