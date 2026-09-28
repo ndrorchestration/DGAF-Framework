@@ -13,17 +13,26 @@ AUTHORITY_TERMS = re.compile(
     r"state_machine|transition|custody|freeze|unblind|materializ|rollback|compensat|reconcil",
     re.I,
 )
-EVIDENCE_TERMS = re.compile(r"receipt|provenance|evidence|attestation|verification|claim", re.I)
-PROFILE_TERMS = re.compile(r"aoss|track_a|epoch_|mode_t|pdmal|self_application", re.I)
-ASSURANCE_TERMS = re.compile(r"(^|/)(test|tests|validate|validator|audit|check|lint|reconcile|derive)", re.I)
+EVIDENCE_TERMS = re.compile(
+    r"receipt|provenance|evidence|attestation|verification|claim",
+    re.I,
+)
+PROFILE_TERMS = re.compile(
+    r"aoss|track_a|epoch_|mode_t|pdmal|self_application",
+    re.I,
+)
+ASSURANCE_TERMS = re.compile(
+    r"(^|/)(test|tests|validate|validator|audit|check|lint|reconcile|derive)",
+    re.I,
+)
 
-IN_SCOPE_PREFIXES = ("scripts/","schemas/","app/lib/","registry/")
-EXTENSIONS = {".py",".ts",".js",".json",".yaml",".yml"}
+IN_SCOPE_PREFIXES = ("scripts/", "schemas/", "app/lib/", "registry/")
+EXTENSIONS = {".py", ".ts", ".js", ".json", ".yaml", ".yml"}
 
 
 def registered_paths() -> set[str]:
     data = json.loads(REGISTRY.read_text(encoding="utf-8"))
-    return {str(r["path"]) for r in data["records"]}
+    return {str(record["path"]) for record in data["records"]}
 
 
 def classify(rel: str, text: str) -> str | None:
@@ -34,17 +43,18 @@ def classify(rel: str, text: str) -> str | None:
     if not (name_authority or content_authority or evidence):
         return None
 
-    # Tests and explicit validators are useful inventory candidates, but they do
-    # not receive the same urgency as runtime/authority-bearing implementations.
-    if ".test." in rel or "/tests/" in rel or rel.startswith("tests/") or ASSURANCE_TERMS.search(rel):
+    if (
+        ".test." in rel
+        or "/tests/" in rel
+        or rel.startswith("tests/")
+        or ASSURANCE_TERMS.search(rel)
+    ):
         return "ASSURANCE"
 
     if PROFILE_TERMS.search(rel):
         return "PROFILE"
 
-    # Schemas/registries with authority vocabulary and non-test app/runtime code
-    # are the highest-priority candidates for primary-owner adjudication.
-    if rel.startswith(("app/lib/","schemas/","registry/")) and name_authority:
+    if rel.startswith(("app/lib/", "schemas/", "registry/")) and name_authority:
         return "HIGH"
 
     if rel.startswith("scripts/") and name_authority:
@@ -55,7 +65,12 @@ def classify(rel: str, text: str) -> str | None:
 
 def candidates() -> dict[str, list[str]]:
     registered = registered_paths()
-    buckets = {"HIGH":[],"PROFILE":[],"MEDIUM":[],"ASSURANCE":[]}
+    buckets = {
+        "HIGH": [],
+        "PROFILE": [],
+        "MEDIUM": [],
+        "ASSURANCE": [],
+    }
 
     for prefix in IN_SCOPE_PREFIXES:
         base = ROOT / prefix
@@ -67,13 +82,13 @@ def candidates() -> dict[str, list[str]]:
             rel = path.relative_to(ROOT).as_posix()
             if rel in registered:
                 continue
-            if any(part in {"node_modules","__pycache__"} for part in path.parts):
+            if any(part in {"node_modules", "__pycache__"} for part in path.parts):
                 continue
             try:
                 text = path.read_text(encoding="utf-8", errors="ignore")[:12000]
             except OSError:
                 text = ""
-            bucket = classify(rel,text)
+            bucket = classify(rel, text)
             if bucket:
                 buckets[bucket].append(rel)
 
@@ -85,15 +100,16 @@ def candidates() -> dict[str, list[str]]:
 def main() -> int:
     buckets = candidates()
     print("DGAF architecture ownership drift scan: ADVISORY")
-    for bucket in ("HIGH","PROFILE","MEDIUM","ASSURANCE"):
+    for bucket in ("HIGH", "PROFILE", "MEDIUM", "ASSURANCE"):
         items = buckets[bucket]
         print(f"{bucket}_UNMAPPED={len(items)}")
-        # Keep operator output usable. Full lists remain reproducible by
-        # importing candidates(); default CLI prints the first 40 per bucket.
         for path in items[:40]:
             print(f"{bucket}: {path}")
         if len(items) > 40:
-            print(f"{bucket}: ... {len(items)-40} additional candidates omitted from CLI display")
+            print(
+                f"{bucket}: ... {len(items) - 40} additional candidates "
+                "omitted from CLI display"
+            )
     return 0
 
 
