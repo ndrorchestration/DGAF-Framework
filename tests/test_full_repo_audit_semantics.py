@@ -101,3 +101,12 @@ def test_unrelated_qualitative_text_does_not_create_flag02_collision():
     text = "FLAG-02 historical metric." + ("x" * 700) + " qualitative mode."
     findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
     assert not any(f["type"] == "FLAG02_namespace_migration" for f in findings)
+
+
+def test_explicit_340_math_correction_is_not_flagged():
+    text = (
+        'Correction (v2): original draft stated "340% more coordination pathways". '
+        "The correct derivation gives a 67% increase, not 340%."
+    )
+    findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
+    assert not any(f["type"] == "340_claim_status_language" for f in findings)
