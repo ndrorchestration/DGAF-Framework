@@ -85,3 +85,19 @@ def test_unqualified_flag02_qualitative_collision_is_flagged():
     text = "FLAG-02 is qualitative."
     findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
     assert any(f["type"] == "FLAG02_namespace_migration" for f in findings)
+
+
+def test_unrelated_verified_text_does_not_contaminate_historical_340_context():
+    text = (
+        "VERIFIED unrelated control.\n"
+        + ("x" * 700)
+        + "\nHistorical claim: +340% is HISTORICAL_UNVERIFIED."
+    )
+    findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
+    assert not any(f["type"] == "340_claim_status_language" for f in findings)
+
+
+def test_unrelated_qualitative_text_does_not_create_flag02_collision():
+    text = "FLAG-02 historical metric." + ("x" * 700) + " qualitative mode."
+    findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
+    assert not any(f["type"] == "FLAG02_namespace_migration" for f in findings)
