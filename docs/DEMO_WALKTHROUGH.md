@@ -67,12 +67,12 @@ The same demo also exposes:
 
 The currently accepted public proof is bound to:
 
-- DGAF source SHA: `35ab0e7c9df45bbbf4a31ea8160780b0488960c4`;
-- Vercel production deployment: `dpl_5ukeFKxjDs5hQBWTfUsdRzsf7bWy`;
-- GitHub Actions workflow run: `36473896842`;
-- proof artifact: `tektite-proof-35ab0e7c9df45bbbf4a31ea8160780b0488960c4`;
-- artifact ID: `10994161948`;
-- artifact SHA-256: `73ddc36c2a10a6091b3b59c2253cf628474763e4f1f350b141cadd9e77cd6bae`;
+- DGAF source SHA: `ae0d254158fa831162274077872c3f752a891431`;
+- Vercel production deployment: `dpl_6W1uTG3sJ6dyU7KJsAzHpXpFXvvU`;
+- GitHub Actions workflow run: `36476664359`;
+- proof artifact: `tektite-proof-ae0d254158fa831162274077872c3f752a891431`;
+- artifact ID: `10993339146`;
+- artifact SHA-256: `35a39d19a11d65b7c6af36fe1a6d7e8672636137a66003482d3306505fbe2862`;
 - verifier result: `TEKTITE_PROOF_OF_OPERATION_V1 = PASS`.
 
 A separate fresh unauthenticated browser acceptance confirmed that the public alias loads without login, the allowed action visibly executes and emits a receipt, the revoked-authority action is denied without a receipt, and the six-stage walkthrough remains coherent.
