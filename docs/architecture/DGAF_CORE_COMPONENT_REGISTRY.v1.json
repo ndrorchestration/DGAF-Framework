@@ -177,6 +177,11 @@
       "id": "P-SELF",
       "name": "Self-Application / Cold-Start Validation",
       "classification": "SELF_VALIDATION_PROFILE"
+    },
+    {
+      "id": "P-AAR",
+      "name": "Bounded Action Admission Record v1",
+      "classification": "ACTION_ADMISSION_PROFILE"
     }
   ],
   "external_integrations": [
