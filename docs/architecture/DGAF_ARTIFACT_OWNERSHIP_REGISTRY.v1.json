@@ -824,6 +824,161 @@
       "tests_or_validators": [],
       "source_binding": "git blob at candidate",
       "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/external_runtime_adapter_contract_v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "K1",
+      "secondary_dependencies": [
+        "K5",
+        "K6",
+        "K8"
+      ],
+      "role": "Provider-neutral non-authoritative external runtime ingress contract",
+      "authority_effect": "IDENTITY_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "external input normalization; authority presented not granted",
+      "tests_or_validators": [
+        "scripts/validate_external_runtime_adapter.py",
+        "tests/test_external_runtime_adapter_contract.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/validate_external_runtime_adapter.py",
+      "artifact_type": "validator",
+      "primary_owner": "K1",
+      "secondary_dependencies": [
+        "K5",
+        "K6",
+        "K8"
+      ],
+      "role": "Validate and normalize external runtime submissions without granting authority",
+      "authority_effect": "IDENTITY_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "non-authoritative ingress validation",
+      "tests_or_validators": [
+        "tests/test_external_runtime_adapter_contract.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_local_operator_bridge.py",
+      "artifact_type": "code",
+      "primary_owner": "P-TRACK",
+      "secondary_dependencies": [
+        "K3",
+        "K6",
+        "K7",
+        "A2"
+      ],
+      "role": "Local-only Epoch 002 materialization operator bridge",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-TRACK",
+      "evidence_scope": "Epoch 002 local materialization only; primary analysis not authorized by bridge",
+      "tests_or_validators": [
+        "tests/test_dgaf_local_operator_bridge.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_local_operator_mcp.py",
+      "artifact_type": "code",
+      "primary_owner": "P-TRACK",
+      "secondary_dependencies": [
+        "K3",
+        "A4"
+      ],
+      "role": "MCP stdio adapter exposing exactly four bounded local operator bridge tools",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-TRACK",
+      "evidence_scope": "Epoch 002 local operator transport adapter; no additional authority",
+      "tests_or_validators": [
+        "tests/test_dgaf_local_operator_mcp_contract.py",
+        "tests/test_capability_transport_independence.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/governance-map.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "A3",
+        "K4"
+      ],
+      "role": "Governance relationship map projection",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI evidence/authority/dependency relationship projection",
+      "tests_or_validators": [
+        "app/lib/governance-map.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/status.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "A3",
+        "K8"
+      ],
+      "role": "UI status metadata and runtime-status normalization",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "presentation semantics only; no promotion authority",
+      "tests_or_validators": [
+        "app/lib/status.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/public-translation.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A4"
+      ],
+      "role": "Public-facing functional role/agent translation layer",
+      "authority_effect": "NONE",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "semantic translation only; ontology records remain authoritative",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/governance.yml.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Legacy/synthetic governance-role schema used by conformance/evaluation tooling",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "synthetic governance schema conformance; broad 'all downstream kernels' description under architecture review",
+      "tests_or_validators": [
+        "evaluations/governance_schema_conformance.py",
+        "tests/dgaf_eval_suite.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "MEDIUM"
     }
   ]
 }
