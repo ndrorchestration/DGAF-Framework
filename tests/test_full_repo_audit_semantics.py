@@ -38,7 +38,6 @@ def test_workflow_historical_binding_remains_critical():
     )
 
 
-
 def test_immutable_action_pin_is_not_a_stale_repo_commit():
     text = "      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
     findings = MODULE.semantic_findings(
