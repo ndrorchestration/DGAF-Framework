@@ -1,6 +1,6 @@
 {
   "schema_version": "dgaf-profile-bundle-registry.v1",
-  "status": "PROPOSED_NON_AUTHORIZING",
+  "status": "ACTIVE_NON_AUTHORIZING",
   "purpose": "Machine-readable ownership coverage for profile-specific DGAF artifacts without flattening profile specialization into the core kernel.",
   "profiles": [
     {
