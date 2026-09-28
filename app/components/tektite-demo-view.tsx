@@ -79,7 +79,8 @@ export function TektiteDemoView() {
   const selected = useMemo(() => SCENARIOS.find(item => item.id === scenario) ?? SCENARIOS[0], [scenario])
   const outcome = resultLabel(result)
 
-  async function run() {
+  async function run(nextScenario: Scenario = scenario) {
+    setScenario(nextScenario)
     setPhase('running')
     setError(null)
     setResult(null)
@@ -87,7 +88,7 @@ export function TektiteDemoView() {
       const response = await fetch('/api/tektite-demo', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ scenario }),
+        body: JSON.stringify({ scenario: nextScenario }),
       })
       const payload = await response.json()
       if (!response.ok) {
@@ -120,9 +121,42 @@ export function TektiteDemoView() {
       </div>
     </section>
 
+    <section className="panel tektite-start-here" aria-labelledby="tektite-start-title">
+      <div className="section-heading">
+        <div>
+          <span className="eyebrow accent">START HERE · 60 SECOND WALKTHROUGH</span>
+          <h3 id="tektite-start-title">See the basic idea before learning the framework.</h3>
+          <p>You do not need to understand DGAF's architecture first. Run these two cases and compare what changes.</p>
+        </div>
+      </div>
+      <div className="tektite-starter-grid">
+        <article className="tektite-starter-card">
+          <span className="tektite-starter-number">A</span>
+          <div>
+            <strong>1. Let a valid action through</strong>
+            <p>The request has live, scoped authority and an untampered action binding. DGAF should admit it, execute the bounded effect, and emit a receipt.</p>
+            <button className="button primary" type="button" disabled={phase === 'running'} onClick={() => void run('authorized')}>Run allowed action</button>
+          </div>
+        </article>
+        <article className="tektite-starter-card">
+          <span className="tektite-starter-number">B</span>
+          <div>
+            <strong>2. Take the authority away</strong>
+            <p>The same kind of request carries revoked authority. DGAF should deny it before execution and produce no execution receipt.</p>
+            <button className="button ghost" type="button" disabled={phase === 'running'} onClick={() => void run('revoked')}>Run blocked action</button>
+          </div>
+        </article>
+      </div>
+      <div className="tektite-reading-key">
+        <div><span>Watch</span><strong>REQUEST → AUTHORITY → ADMISSION → EFFECT → RECEIPT</strong></div>
+        <div><span>Then check</span><strong>CLAIM BOUNDARY</strong></div>
+        <p>The important behavior is not simply “allow” or “deny.” It is that execution and evidence remain downstream of explicit authority, and the resulting evidence cannot silently promote its own claims.</p>
+      </div>
+    </section>
+
     <section className="panel tektite-scenario-panel">
       <div className="section-heading">
-        <div><span className="eyebrow">1 · CHOOSE A SCENARIO</span><h3>What should DGAF have to decide?</h3></div>
+        <div><span className="eyebrow">DEEPER TESTS · CHOOSE A SCENARIO</span><h3>Now try the failure modes individually.</h3></div>
         <StatusChip state={outcome.state} label={outcome.label} />
       </div>
       <div className="tektite-scenarios" role="radiogroup" aria-label="DGAF demonstration scenario">
@@ -163,7 +197,7 @@ export function TektiteDemoView() {
     </section>
 
     {result && <section className="panel tektite-evidence">
-      <div className="section-heading"><div><span className="eyebrow">2 · INSPECT THE EVIDENCE</span><h3>Machine-readable demonstration record</h3></div><StatusChip state="pass" label={result.version} /></div>
+      <div className="section-heading"><div><span className="eyebrow">INSPECT THE EVIDENCE</span><h3>Machine-readable demonstration record</h3></div><StatusChip state="pass" label={result.version} /></div>
       <div className="tektite-evidence-grid">
         <div><span>Policy</span><code>{result.action.policy_id}</code></div>
         <div><span>Attestation fingerprint</span><code>{result.authority.attestation_fingerprint}</code></div>
@@ -177,8 +211,8 @@ export function TektiteDemoView() {
     </section>}
 
     <section className="alert info tektite-explainer">
-      <strong>What to take away</strong>
-      <span>DGAF is not the button. DGAF is the control chain around the button: identify the exact action, bind authority, admit or deny, execute only when permitted, retain a receipt, and keep the resulting claim inside the evidence it actually supports.</span>
+      <strong>What you just saw</strong>
+      <span>DGAF is not the button. DGAF is the control chain around the button: identify the exact action, bind authority, admit or deny, execute only when permitted, retain a receipt, and keep the resulting claim inside the evidence it actually supports. A successful demo is engineering evidence that this bounded path behaved as specified; it is not independent validation or proof of general efficacy.</span>
     </section>
   </div>
 }
