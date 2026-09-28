@@ -104,6 +104,9 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
         "requires empirical validation",
         "downgraded",
         "correction",
+        "not 340%",
+        "corrected to",
+        "replaced with",
     )
     for context in windows("340%"):
         has_promotion = any(
