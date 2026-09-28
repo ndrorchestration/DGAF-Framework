@@ -41,6 +41,64 @@ def read_text(path: Path) -> tuple[str | None, bytes]:
         return None, data
 
 
+def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
+    findings: list[dict[str, str]] = []
+    normalized = path.as_posix()
+    is_workflow = normalized.startswith(".github/workflows/")
+
+    # The scanner source necessarily contains its own sentinel strings and
+    # rule vocabulary; those literals are implementation, not repository claims.
+    if normalized == "scripts/full_repo_audit.py":
+        return findings
+
+    if is_workflow:
+        # Immutable third-party Action pins are supply-chain controls, not
+        # references to DGAF repository commits. Exclude those lines from the
+        # repository-SHA binding scan.
+        repository_binding_text = "\n".join(
+            line
+            for line in text.splitlines()
+            if not re.match(
+                r"^\s*-?\s*uses:\s*[^\s@]+@[0-9a-fA-F]{40}(?:\s|#|$)",
+                line,
+            )
+        )
+        for referenced in sorted(set(FULL_SHA.findall(repository_binding_text))):
+            if referenced != head:
+                findings.append({
+                    "severity": "HIGH",
+                    "type": "workflow_stale_commit_reference",
+                    "path": str(path),
+                    "referenced_commit": referenced,
+                    "audit_head": head,
+                })
+
+        if "EXPECTED_COMMIT" in text and "e1f077f" in text:
+            findings.append({
+                "severity": "CRITICAL",
+                "type": "workflow_historical_commit_binding",
+                "path": str(path),
+            })
+
+    if "340%" in text and any(
+        word in text.lower() for word in ("closed", "verified", "confirmed")
+    ):
+        findings.append({
+            "severity": "HIGH",
+            "type": "340_claim_status_language",
+            "path": str(path),
+        })
+
+    if "FLAG-02" in text and "qualitative" in text.lower():
+        findings.append({
+            "severity": "REVIEW",
+            "type": "FLAG02_namespace_migration",
+            "path": str(path),
+        })
+
+    return findings
+
+
 def main() -> int:
     files = tracked_files()
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
@@ -63,42 +121,7 @@ def main() -> int:
                 if count:
                     record.setdefault("matches", {})[name] = count
 
-            # Workflow files are operational apparatus, so any literal full SHA
-            # other than the checked-out HEAD is a review finding. Historical
-            # documents are allowed to contain historical SHAs.
-            if str(path).startswith(".github/workflows/"):
-                for referenced in sorted(set(FULL_SHA.findall(text))):
-                    if referenced != head:
-                        findings.append({
-                            "severity": "HIGH",
-                            "type": "workflow_stale_commit_reference",
-                            "path": str(path),
-                            "referenced_commit": referenced,
-                            "audit_head": head,
-                        })
-
-            if "EXPECTED_COMMIT" in text and "e1f077f" in text:
-                findings.append({
-                    "severity": "CRITICAL",
-                    "type": "workflow_historical_commit_binding",
-                    "path": str(path),
-                })
-
-            if "340%" in text and any(
-                word in text.lower() for word in ("closed", "verified", "confirmed")
-            ):
-                findings.append({
-                    "severity": "HIGH",
-                    "type": "340_claim_status_language",
-                    "path": str(path),
-                })
-
-            if "FLAG-02" in text and "qualitative" in text.lower():
-                findings.append({
-                    "severity": "REVIEW",
-                    "type": "FLAG02_namespace_migration",
-                    "path": str(path),
-                })
+            findings.extend(semantic_findings(path, text, head))
 
         records.append(record)
 
