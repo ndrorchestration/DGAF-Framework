@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import os
 import subprocess
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -14,9 +14,11 @@ def _normalize_changed_paths(raw: bytes, root: Path = ROOT) -> list[str]:
         if not entry:
             continue
         path = os.fsdecode(entry).replace("\\", "/")
-        candidate = Path(path)
-        if candidate.is_absolute() or ".." in candidate.parts:
+        posix_path = PurePosixPath(path)
+        windows_path = PureWindowsPath(path)
+        if posix_path.is_absolute() or windows_path.is_absolute() or ".." in posix_path.parts:
             raise ValueError(f"unsafe changed path: {path!r}")
+        candidate = Path(*posix_path.parts)
         if candidate.suffix not in {".py", ".pyi"}:
             continue
         if (root / candidate).is_file():
