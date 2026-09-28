@@ -96,6 +96,10 @@ test('operator journey verifies evidence before governance', () => {
   assert.ok(evidenceNav < governanceNav, 'Evidence must appear before Governance in the primary operator journey')
   assert.match(
     overview,
-    /<Link className="button primary" href="\/evidence">Inspect evidence/,
+    /<Link className="button primary" href="\/demo">Run the Tektite demo/,
+  )
+  assert.match(
+    overview,
+    /<Link className="button ghost" href="\/evidence">Inspect evidence<\/Link>/,
   )
 })
