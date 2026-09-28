@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="DGAF bounded proof-of-operation: explicit authority, admission, execution receipts, provenance, and claim limits for agentic systems.">
+  <title>DGAF — Governed Agent Proof of Operation</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#081019;--surface:#0e1824;--surface2:#13202e;--border:#26384b;
+      --text:#edf4fb;--muted:#94a7ba;--accent:#7dd3fc;--ok:#86efac;
+      --warn:#fcd34d;--deny:#fca5a5;--max:1180px
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:
+      radial-gradient(circle at 80% 0%,rgba(125,211,252,.09),transparent 35%),
+      linear-gradient(180deg,#07101a,#09131d 48%,#07101a);
+      color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+    a{color:inherit}
+    main{max-width:var(--max);margin:auto;padding:32px 22px 64px}
+    .eyebrow{font:800 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.13em;color:var(--accent)}
+    .hero{padding:52px 0 30px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:28px;align-items:center}
+    h1{font-size:clamp(2.5rem,6vw,5.4rem);line-height:.95;letter-spacing:-.055em;margin:12px 0 20px;max-width:850px}
+    h1 span{color:var(--accent)}
+    .lead{font-size:clamp(1rem,2vw,1.2rem);max-width:760px;color:#c4d2df;margin:0}
+    .actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:26px}
+    .button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-weight:800;font-size:.9rem;background:var(--surface)}
+    .button.primary{background:var(--accent);color:#041019;border-color:var(--accent)}
+    .button:hover{transform:translateY(-1px)}
+    .boundary,.panel{border:1px solid var(--border);border-radius:16px;background:rgba(14,24,36,.88)}
+    .boundary{padding:20px}
+    .boundary strong{display:block;margin:5px 0 9px;font:800 .82rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--warn)}
+    .boundary p{margin:0;color:var(--muted);font-size:.86rem}
+    .section{margin-top:32px}
+    h2{font-size:1.55rem;margin:8px 0 8px}
+    .section-intro{color:var(--muted);max-width:760px;margin:0 0 18px}
+    .pipeline{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+    .stage{padding:16px 12px;min-height:128px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+    .num{font:800 .68rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent)}
+    .stage strong{display:block;margin:8px 0 5px;font-size:.82rem}
+    .stage p{font-size:.72rem;color:var(--muted);margin:0}
+    .cases{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .case{padding:22px}
+    .case h3{margin:3px 0 8px}
+    .case p{color:var(--muted);margin:0 0 13px}
+    .outcome{display:inline-block;border-radius:8px;padding:7px 9px;font:800 .7rem ui-monospace,SFMono-Regular,Menlo,monospace}
+    .allow .outcome{color:var(--ok);background:rgba(134,239,172,.08);border:1px solid rgba(134,239,172,.25)}
+    .deny .outcome{color:var(--deny);background:rgba(252,165,165,.08);border:1px solid rgba(252,165,165,.25)}
+    .proof{padding:22px}
+    .proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:16px}
+    .proof-grid div{background:var(--surface);padding:13px;min-width:0}
+    .proof-grid span{display:block;color:var(--muted);font-size:.67rem}
+    .proof-grid code{display:block;margin-top:5px;font-size:.7rem;overflow-wrap:anywhere}
+    .claims{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .claim{padding:16px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+    .claim span{font-size:.68rem;color:var(--muted)}
+    .claim strong{display:block;margin-top:5px;font:800 .72rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--warn);overflow-wrap:anywhere}
+    .explain{padding:24px;border-left:3px solid var(--accent)}
+    .explain blockquote{margin:0;font-size:1.1rem;font-weight:700}
+    .explain p{color:var(--muted);margin:12px 0 0}
+    footer{margin-top:38px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:.76rem}
+    footer a{color:var(--accent)}
+    @media(max-width:900px){.hero{grid-template-columns:1fr}.pipeline{grid-template-columns:repeat(3,1fr)}.proof-grid{grid-template-columns:1fr 1fr}.claims{grid-template-columns:1fr 1fr}}
+    @media(max-width:620px){main{padding-inline:15px}.pipeline,.cases,.proof-grid,.claims{grid-template-columns:1fr}.hero{padding-top:30px}.button{width:100%}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.button:hover{transform:none}}
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">DYNAMIC GOVERNANCE AGENTIC FORMATION</div>
+      <h1>Can act is not the same as <span>may act.</span></h1>
+      <p class="lead">DGAF is an experimental governance and evidence framework for agentic systems. It keeps capability, evidence, verification, authority, execution, and claim scope from silently collapsing into one another.</p>
+      <div class="actions">
+        <a class="button primary" href="https://project-7ybao.vercel.app/demo" target="_blank" rel="noopener">Run the live proof →</a>
+        <a class="button" href="https://github.com/ndrorchestration/DGAF-Framework" target="_blank" rel="noopener">Inspect the source</a>
+      </div>
+    </div>
+    <aside class="boundary">
+      <div class="eyebrow">EVIDENCE BOUNDARY</div>
+      <strong>SAME-SYSTEM · BOUNDED ENGINEERING DEMO</strong>
+      <p>This showcase is presentation-only. The governed effect runs on the accepted DGAF deployment. Neither this page nor a successful demo establishes independent validation, general efficacy, certification, or High-Assurance authority.</p>
+    </aside>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">THE CONTROL CHAIN</div>
+    <h2>What happens around the button</h2>
+    <p class="section-intro">The demo makes each state transition visible instead of treating successful execution as automatic permission or proof.</p>
+    <div class="pipeline">
+      <article class="stage"><span class="num">01</span><strong>REQUEST</strong><p>Bind the exact action, target, parameters, and policy.</p></article>
+      <article class="stage"><span class="num">02</span><strong>AUTHORITY</strong><p>Inspect scope, delegation, expiry, and revocation.</p></article>
+      <article class="stage"><span class="num">03</span><strong>ADMISSION</strong><p>Evaluate predicates and explicitly allow or deny.</p></article>
+      <article class="stage"><span class="num">04</span><strong>EFFECT</strong><p>Execute only after admission succeeds.</p></article>
+      <article class="stage"><span class="num">05</span><strong>RECEIPT</strong><p>Retain what happened and verify the postcondition.</p></article>
+      <article class="stage"><span class="num">06</span><strong>CLAIM BOUNDARY</strong><p>Keep the conclusion inside what the evidence supports.</p></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">60-SECOND EVALUATION</div>
+    <h2>Run these two cases first</h2>
+    <div class="cases">
+      <article class="case panel allow">
+        <div class="eyebrow">A · ALLOWED</div>
+        <h3>Live, scoped authority</h3>
+        <p>A bounded request carries valid delegated scope, a passing verifier state, and an untampered action binding.</p>
+        <span class="outcome">ALLOW → EXECUTE → VERIFIED RECEIPT</span>
+      </article>
+      <article class="case panel deny">
+        <div class="eyebrow">B · BLOCKED</div>
+        <h3>Revoked authority</h3>
+        <p>The action remains well formed, but its authorization is explicitly revoked. Execution stops before an effect occurs.</p>
+        <span class="outcome">DENY · AUTHORIZATION_REVOKED · NO RECEIPT</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="section panel proof">
+    <div class="eyebrow">ACCEPTED PROOF IDENTITY</div>
+    <h2>Bound to exact retained evidence</h2>
+    <p class="section-intro">The public proof was verified against an exact production source identity and retained as a machine-readable workflow artifact.</p>
+    <div class="proof-grid">
+      <div><span>Source SHA</span><code>ae0d254158fa831162274077872c3f752a891431</code></div>
+      <div><span>Production deployment</span><code>dpl_6W1uTG3sJ6dyU7KJsAzHpXpFXvvU</code></div>
+      <div><span>Workflow run</span><code>36476664359</code></div>
+      <div><span>Proof artifact ID</span><code>10993339146</code></div>
+      <div><span>Verifier result</span><code>TEKTITE_PROOF_OF_OPERATION_V1 = PASS</code></div>
+      <div><span>Showcase effect</span><code>PRESENTATION_ONLY · AUTHORITY_EFFECT=NONE</code></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">CLAIM CEILING</div>
+    <h2>What the accepted demo does not establish</h2>
+    <div class="claims">
+      <div class="claim"><span>Scientific N increment</span><strong>0</strong></div>
+      <div class="claim"><span>Independent validation</span><strong>NOT_ESTABLISHED</strong></div>
+      <div class="claim"><span>Canonical DGAF efficacy</span><strong>NOT_ESTABLISHED</strong></div>
+      <div class="claim"><span>High-Assurance authority</span><strong>NOT_AUTHORIZED</strong></div>
+    </div>
+  </section>
+
+  <section class="section panel explain">
+    <blockquote>“DGAF is not the button. DGAF is the control chain around the button.”</blockquote>
+    <p>The central question is not only whether an agent can perform an operation. It is whether the current evidence and authority permit that exact operation—and what the resulting evidence is actually entitled to support afterward.</p>
+  </section>
+
+  <footer>
+    <span>Static showcase · presentation_effect=NONE · authority_effect=NONE</span>
+    <span><a href="https://github.com/ndrorchestration/DGAF-Framework/blob/main/docs/DEMO_WALKTHROUGH.md" target="_blank" rel="noopener">Evaluator walkthrough</a> · <a href="evidence.json">Machine-readable evidence identity</a></span>
+  </footer>
+</main>
+</body>
+</html>
