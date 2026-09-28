@@ -6,7 +6,7 @@ This page is the shortest evaluator path into Dynamic Governance Agentic Formati
 
 The public demonstration is available at:
 
-**https://project-7ybao.vercel.app/demo**
+[Run the public DGAF demo](https://project-7ybao.vercel.app/demo)
 
 It is intended to make one DGAF idea concrete before a reviewer reads the full architecture or research history:
 
