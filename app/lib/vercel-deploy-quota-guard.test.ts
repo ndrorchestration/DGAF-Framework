@@ -147,10 +147,10 @@ test('runtime rename into an inert surface still classifies BUILD', () => {
   }
 })
 
-test('Vercel and GitHub deploy paths are wired to the same classifier', () => {
+test('automatic Vercel Git deployments stay disabled and the governed workflow owns deployment', () => {
   const config = JSON.parse(readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'))
   assert.equal(config.ignoreCommand, 'node scripts/vercel-ignore-build.mjs')
-  assert.equal(config.git?.deploymentEnabled?.main, false)
+  assert.equal(config.git?.deploymentEnabled, false)
 
   const workflow = readFileSync(path.join(ROOT, '.github/workflows/deploy.yml'), 'utf8')
   assert.match(workflow, /name: Classify deploy relevance/)
