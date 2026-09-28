@@ -1,0 +1,27 @@
+{
+  "schema_version": "DGAF_HF_SHOWCASE_EVIDENCE_V1",
+  "presentation_effect": "NONE",
+  "authority_effect": "NONE",
+  "runtime_location": "https://project-7ybao.vercel.app/demo",
+  "accepted_proof": {
+    "source_sha": "35ab0e7c9df45bbbf4a31ea8160780b0488960c4",
+    "vercel_deployment_id": "dpl_5ukeFKxjDs5hQBWTfUsdRzsf7bWy",
+    "workflow_run_id": "36473896842",
+    "artifact_id": "10994161948",
+    "artifact_sha256": "73ddc36c2a10a6091b3b59c2253cf628474763e4f1f350b141cadd9e77cd6bae",
+    "verifier_result": "PASS"
+  },
+  "scenarios": {
+    "authorized": "EXECUTED_RECEIPT_POSTCONDITION_VERIFIED",
+    "revoked": "DENIED_AUTHORIZATION_REVOKED_NO_RECEIPT",
+    "missing_scope": "DENIED_REQUIRED_SCOPE_MISSING",
+    "tampered_action": "DENIED_ACTION_DIGEST_MISMATCH",
+    "replay": "FIRST_EXECUTES_SECOND_DENIED_AAR_REPLAY"
+  },
+  "claim_boundary": {
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED"
+  }
+}
