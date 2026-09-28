@@ -979,6 +979,193 @@
       ],
       "source_binding": "git blob at candidate",
       "classification_confidence": "MEDIUM"
+    },
+    {
+      "path": "app/lib/navigation.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [],
+      "role": "Operator navigation model for DGAF control surfaces",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI navigation only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/sweep-detection.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Advisory repository sweep finding detector",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "advisory repository surface findings; no remediation authority",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/types.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Shared UI projection types for status, roster, audit and sweep data",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "presentation/data-shape typing only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/agent_identity_manifest.v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Conflict-preserving agent identity manifest; not authority resolution",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "agent identity conflicts and observed designations",
+      "tests_or_validators": [
+        "scripts/validate_agent_identity_manifest.py"
+      ],
+      "source_binding": "git blob at candidate and declared source_snapshot",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/agent_ontology_adjudication.v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Accepted semantic adjudication of agent identities, variants, states and seats",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "agent ontology semantics; scientific and authority-matrix effects none",
+      "tests_or_validators": [
+        "scripts/validate_agent_ontology_adjudication.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/ecosystem_registry.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Bounded ecosystem project/deployment metadata projection",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "ecosystem metadata projection; project-local sources remain authoritative",
+      "tests_or_validators": [
+        "registry/ecosystem_audit.py"
+      ],
+      "source_binding": "git blob at candidate and projection metadata",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/ecosystem_audit.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3",
+        "A2"
+      ],
+      "role": "Fail-closed audit of ecosystem registry projection and GitHub metadata drift",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "structural/semantic ecosystem projection audit only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/propagation_registry.json",
+      "artifact_type": "registry",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8",
+        "A3"
+      ],
+      "role": "Claim propagation and terminology-migration QA registry",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "derivative claim/terminology propagation checks; not empirical truth",
+      "tests_or_validators": [
+        "scripts/propagation_check.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/workflow_classification.v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1",
+        "P-TRACK"
+      ],
+      "role": "Semantic/lifecycle classification of audit versus experiment workflow instances",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "workflow classification and historical exact-scope provenance",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/standards_risk_crosswalk.v0.json",
+      "artifact_type": "registry",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8",
+        "A3"
+      ],
+      "role": "Non-certifying standards/risk alignment crosswalk",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "framework alignment only; no compliance/certification determination",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate and official source references",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/registry_consistency_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "A3"
+      ],
+      "role": "Pattern registry release identity and provenance consistency checker",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "registry identity/provenance consistency",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate and expected source/blob identities",
+      "classification_confidence": "HIGH"
     }
   ]
 }
