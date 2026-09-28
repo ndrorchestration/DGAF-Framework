@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "docs" / "architecture" / "DGAF_ARTIFACT_OWNERSHIP_REGISTRY.v1.json"
 PROFILE_BUNDLES = ROOT / "docs" / "architecture" / "DGAF_PROFILE_BUNDLE_REGISTRY.v1.json"
+ASSURANCE_BUNDLES = ROOT / "docs" / "architecture" / "DGAF_ASSURANCE_BUNDLE_REGISTRY.v1.json"
 
 AUTHORITY_TERMS = re.compile(
     r"authorization|authorize|admission|allow|deny|policy|replay|idempot|revocation|"
@@ -120,14 +121,43 @@ def profile_bundle_covered_paths(paths: list[str]) -> set[str]:
             covered.add(path)
     return covered
 
+
+def assurance_bundle_covered_paths(paths: list[str]) -> set[str]:
+    if not ASSURANCE_BUNDLES.exists():
+        return set()
+    data = json.loads(ASSURANCE_BUNDLES.read_text(encoding="utf-8"))
+    bundles = data.get("bundles", [])
+    covered: set[str] = set()
+    for path in paths:
+        matches = 0
+        for bundle in bundles:
+            includes = bundle.get("include_globs", [])
+            excludes = bundle.get("exclude_globs", [])
+            if not isinstance(includes, list) or not isinstance(excludes, list):
+                continue
+            included = any(
+                fnmatch.fnmatch(path, str(pattern)) for pattern in includes
+            )
+            excluded = any(
+                fnmatch.fnmatch(path, str(pattern)) for pattern in excludes
+            )
+            if included and not excluded:
+                matches += 1
+        if matches == 1:
+            covered.add(path)
+    return covered
+
 def main() -> int:
     buckets = candidates()
     print("DGAF architecture ownership drift scan: ADVISORY")
     profile_covered = profile_bundle_covered_paths(buckets["PROFILE"])
+    assurance_covered = assurance_bundle_covered_paths(buckets["ASSURANCE"])
     for bucket in ("HIGH", "PROFILE", "MEDIUM", "ASSURANCE"):
         items = buckets[bucket]
         if bucket == "PROFILE":
             items = [path for path in items if path not in profile_covered]
+        if bucket == "ASSURANCE":
+            items = [path for path in items if path not in assurance_covered]
         print(f"{bucket}_UNMAPPED={len(items)}")
         for path in items[:40]:
             print(f"{bucket}: {path}")
