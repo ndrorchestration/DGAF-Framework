@@ -1,6 +1,6 @@
 {
   "schema_version": "dgaf-assurance-bundle-registry.v1",
-  "status": "PROPOSED_NON_AUTHORIZING",
+  "status": "ACTIVE_NON_AUTHORIZING",
   "purpose": "Machine-readable grouping of lower-risk tests, validators, audit contracts, and drift checks under cross-cutting assurance ownership.",
   "bundles": [
     {
