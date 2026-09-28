@@ -5,6 +5,12 @@
 from __future__ import annotations
 import sys, math, time, hashlib
 from pathlib import Path
+
+# Keep the operator self-check non-crashing on legacy Windows consoles where
+# stdout defaults to cp1252 and cannot encode DGAF's Unicode status glyphs.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(errors="replace")
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from resonant_decay import (
