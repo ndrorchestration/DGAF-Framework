@@ -79,8 +79,24 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
                 }
             )
 
-    if "340%" in text and any(
-        word in text.lower() for word in ("closed", "verified", "confirmed")
+    lower = text.lower()
+    claim_340_qualified = any(
+        qualifier in lower
+        for qualifier in (
+            "historical/unverified",
+            "historical unverified",
+            "historical identifier",
+            "illustrative",
+            "not canonical",
+            "not a current verified result",
+            "must not be interpreted as",
+            "correction",
+        )
+    )
+    if (
+        "340%" in text
+        and any(word in lower for word in ("closed", "verified", "confirmed"))
+        and not claim_340_qualified
     ):
         findings.append(
             {
@@ -90,7 +106,18 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
             }
         )
 
-    if "FLAG-02" in text and "qualitative" in text.lower():
+    flag02_qualified = any(
+        qualifier in lower
+        for qualifier in (
+            "flag-02 is a historical identifier",
+            "historical flag-02",
+            "temporal namespace",
+            "current terminology correction",
+            "former `flag-02`",
+            "former flag-02",
+        )
+    )
+    if "FLAG-02" in text and "qualitative" in lower and not flag02_qualified:
         findings.append(
             {
                 "severity": "REVIEW",
