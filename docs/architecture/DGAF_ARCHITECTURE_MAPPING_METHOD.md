@@ -22,25 +22,31 @@ These sources inform process quality; they do not certify DGAF or establish equi
 ## Mapping levels
 
 ### L0 — Ecosystem landscape
+
 Question: **What systems exist and what authority relationship connects them?**
 
 Examples: DGAF, AOSS, ACP, PDMAL, PPTL, RDC, n8n.
 
 Primary artifact:
+
 - `DGAF_SYSTEM_ARCHITECTURE_TAXONOMY.md`
 
 ### L1 — DGAF component architecture
+
 Question: **Which first-class internal component owns each responsibility?**
 
 Canonical owners:
+
 - K1–K8 governance kernel;
 - A1–A4 cross-cutting assurance.
 
 Primary artifacts:
+
 - `DGAF_CORE_COMPONENT_INVENTORY.md`
 - `DGAF_CORE_COMPONENT_REGISTRY.v1.json`
 
 ### L2 — Profile architecture
+
 Question: **Which domain lifecycle specializes the kernel and why?**
 
 Profiles include Track/Epoch, AOSS Stage A, Mode-T, PDMAL, external review, and self-application.
@@ -48,6 +54,7 @@ Profiles include Track/Epoch, AOSS Stage A, Mode-T, PDMAL, external review, and 
 A profile may add states, evidence requirements, custody, or stronger guards. It must not silently redefine kernel semantics.
 
 ### L3 — Artifact/code ownership
+
 Question: **What source file, schema, controller, test, or record implements or evidences each component/profile?**
 
 This level is machine-readable and should be validated automatically.
@@ -77,6 +84,7 @@ Every architecture-sensitive active artifact gets **one primary owner**.
 Many secondary dependencies are allowed.
 
 This prevents:
+
 - dual authority;
 - orphan controls;
 - circular ownership;
@@ -123,31 +131,37 @@ For each artifact:
 Never label two similar artifacts as duplicates until they are classified.
 
 ### O1 — TRUE_DUPLICATE_AUTHORITY
+
 Two active mechanisms independently make materially equivalent authority decisions for the same scope without an explicit composition relationship.
 
 **Default action:** block expansion; converge or formally compose via ADR.
 
 ### O2 — PROFILE_SPECIALIZATION
+
 A domain lifecycle adds narrower/stronger states or evidence requirements on top of kernel semantics.
 
 **Default action:** preserve; document mapping to kernel.
 
 ### O3 — ADAPTER_OR_IMPLEMENTATION_VARIANT
+
 Multiple implementations realize the same contract for different runtime/language/provider contexts.
 
 **Default action:** preserve if contract/conformance is explicit; test semantic parity where important.
 
 ### O4 — HISTORICAL_OR_SUPERSEDED
+
 Old mechanism remains for provenance, evidence, compatibility, or historical reconstruction.
 
 **Default action:** preserve; mark lifecycle and successor.
 
 ### O5 — ASSURANCE_OBSERVER
+
 Artifact evaluates or records a control but does not own the underlying authority.
 
 **Default action:** classify under A1/A2/A3 or assurance profile; prohibit authority inheritance.
 
 ### O6 — ORPHAN_OR_AMBIGUOUS
+
 Active artifact has no clear owner or plausible multiple primary owners.
 
 **Default action:** fail architecture review until adjudicated.
@@ -157,6 +171,7 @@ Active artifact has no clear owner or plausible multiple primary owners.
 Architecture rules should be executable where practical.
 
 ### Blocking fitness functions
+
 - every registered path exists;
 - every active architecture-sensitive artifact has one primary owner;
 - owner IDs are canonical;
@@ -166,6 +181,7 @@ Architecture rules should be executable where practical.
 - superseded artifacts identify successor/decision reference where applicable.
 
 ### Advisory drift functions
+
 - scan new/changed files for authority-sensitive terms;
 - flag unregistered authorization/state/replay/revocation/custody/evidence controllers;
 - flag new schemas containing authorization/status/decision fields;
@@ -192,6 +208,7 @@ A sixth **profile** question asks whether the behavior is universal DGAF kernel 
 ## Drift and review cadence
 
 Review mappings:
+
 - on every architecture-sensitive PR;
 - when a new schema/controller/action class/profile is introduced;
 - when an ADR changes ownership/boundaries;
@@ -203,6 +220,7 @@ Do not require manual review of unchanged historical evidence on every cycle.
 ## Decision discipline
 
 Create or supersede an ADR when:
+
 - adding/removing K1–K8 or A1–A4;
 - changing a component's authority effect;
 - moving an active authority-bearing artifact between primary owners;

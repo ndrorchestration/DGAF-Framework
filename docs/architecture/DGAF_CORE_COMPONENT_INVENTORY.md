@@ -14,6 +14,7 @@ Identify the first-class internal DGAF components that constitute the governance
 **Responsibility:** convert a requested consequential action into a stable, inspectable identity before authority is evaluated.
 
 Current implementation evidence includes:
+
 - canonical action envelopes;
 - exact action digests;
 - distinction between record identity and effect identity;
@@ -28,6 +29,7 @@ Current implementation evidence includes:
 **Responsibility:** determine the maximum authority available after requester, delegation, executor, and policy constraints are intersected.
 
 Current implementation evidence includes:
+
 - capability/resource authority sets;
 - budget attenuation;
 - non-widening delegation checks;
@@ -44,6 +46,7 @@ Current implementation evidence includes:
 **Responsibility:** convert policy/evidence/authorization state into an allow/deny/escalate decision immediately before consequential execution.
 
 Current implementation evidence includes:
+
 - Policy Decision Point / Policy Enforcement Point separation;
 - Action Admission Record concepts;
 - governed dispatch;
@@ -59,6 +62,7 @@ Current implementation evidence includes:
 **Responsibility:** define legal workflow states, transitions, guards, and terminal/ambiguous conditions.
 
 Current implementation evidence includes:
+
 - finite transaction-state modeling;
 - execution/postcondition states;
 - guarded legal and illegal transitions;
@@ -73,6 +77,7 @@ Current implementation evidence includes:
 **Responsibility:** prevent unsafe duplicate effects and ensure authorization/trust remains valid at commit time.
 
 Current implementation evidence includes:
+
 - idempotency reservation/completion/outcome-unknown states;
 - action-digest conflict detection;
 - replay blocking;
@@ -89,6 +94,7 @@ Current implementation evidence includes:
 **Responsibility:** retain machine-readable evidence linking identity, authority, execution, postconditions, runtime/adapter identity, and source evidence.
 
 Current implementation evidence includes:
+
 - execution receipts;
 - audit events;
 - provider receipt binding;
@@ -105,6 +111,7 @@ Current implementation evidence includes:
 **Responsibility:** determine whether an admitted effect actually achieved its intended state and safely handle failed or unknown outcomes.
 
 Current implementation evidence includes:
+
 - postcondition VERIFIED/FAILED/INCONCLUSIVE distinctions;
 - EXECUTION_OUTCOME_UNKNOWN;
 - recovery state;
@@ -121,6 +128,7 @@ Current implementation evidence includes:
 **Responsibility:** govern what claims may be made from available evidence and prevent implementation/testing/deployment from being confused with validation or efficacy.
 
 Current implementation evidence includes:
+
 - canonical evidence ladder;
 - claim-specific scope;
 - evidence-strength monotonicity;
@@ -137,15 +145,19 @@ Current implementation evidence includes:
 These are internal DGAF capabilities but should not be confused with the transactional governance kernel.
 
 ### A1 — Audit & quality governance
+
 Owns audit inventory, meta-audit, claim hygiene, IP hygiene, regression/coverage controls, propagation consistency, and quality criteria.
 
 ### A2 — Provenance & custody assurance
+
 Owns source/artifact identity, custody records, protected-lane controls, freeze evidence, evidence retention, and provenance parity.
 
 ### A3 — Documentation / semantic authority
+
 Owns canonical vocabulary, architecture routing, current-state projection, document lifecycle, and stale/superseded-state handling.
 
 ### A4 — Operator / review control surfaces
+
 Owns current-state, evidence, governance, state-space, and review presentation. These surfaces consume authority; they do not create it.
 
 ## Governed profiles built on the kernel

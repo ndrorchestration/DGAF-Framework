@@ -41,6 +41,7 @@ DGAF also has multiple state systems at different abstraction layers.
 ### Generic transaction state machine — K4
 
 `scripts/dgaf_capability_state_machine.py` governs a consequential transaction lifecycle:
+
 - proposal/canonicalization;
 - evidence gathering/verification;
 - approval/authorization;
@@ -55,6 +56,7 @@ Its states answer: **"What is the governed execution state of this action?"**
 ### Workflow outcome state — K7
 
 `scripts/dgaf_capability_workflow.py` classifies execution/postcondition/recovery outcomes such as:
+
 - `EXECUTED`;
 - `EXECUTION_OUTCOME_UNKNOWN`;
 - `PARTIALLY_EXECUTED`;
@@ -66,6 +68,7 @@ These answer: **"What happened to the attempted effect, and what recovery is req
 ### Domain lifecycle profiles
 
 Track/Epoch, AOSS Stage A, Mode-T, PDMAL and external-review lanes define profile-specific states such as:
+
 - dataset lock;
 - collection authorization;
 - unblinding;
@@ -90,6 +93,7 @@ They are not aliases for K4 transaction states.
 ## Architectural consequence
 
 Use:
+
 - K4 for generic consequential-action transitions;
 - K7 for execution/postcondition/recovery outcomes;
 - K8 for evidence/claim ceilings;

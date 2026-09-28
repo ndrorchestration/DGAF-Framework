@@ -7,6 +7,7 @@
 Custody belongs primarily to **A2 — Provenance & Custody Assurance**.
 
 It provides reusable primitives for:
+
 - exact source/artifact identity;
 - controlled access and separation;
 - retention and retrieval;
@@ -22,6 +23,7 @@ Custody may gate K2/K3/K4 decisions when a policy requires it, but custody itsel
 An immutable freeze is **not** a universal K1–K8 kernel state.
 
 Freeze semantics belong to profiles that require prospective immutability, such as:
+
 - controlled experiments;
 - blinded analysis;
 - external-review handoffs;
@@ -41,6 +43,7 @@ A profile may require freeze. The kernel must support exact identity, evidence, 
 Recovery/reconciliation belongs primarily to **K7 — Postcondition, Ambiguity, Recovery & Reconciliation**.
 
 Reusable kernel semantics include:
+
 - outcome-known vs outcome-unknown;
 - postcondition verified / failed / inconclusive;
 - reconcile-before-retry;
@@ -53,6 +56,7 @@ Profiles may add stronger recovery procedures, custody, human approval, or rollb
 ## Novelty boundary
 
 The paired recovery-composition benchmark retained on protected main reports:
+
 - 11 paired synthetic cases;
 - parity: 11/11;
 - differences: 0;
@@ -63,6 +67,7 @@ Therefore:
 **DGAF must not present K7's current bounded recovery/idempotency mechanisms as inherently unique merely because they are implemented inside DGAF.**
 
 The architecture contribution, if supported, must instead be evaluated at the level of:
+
 - how governance components are composed;
 - evidence/provenance attachment;
 - fail-closed claim-state discipline;

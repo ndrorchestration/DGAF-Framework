@@ -10,6 +10,7 @@
 DGAF contains a governance kernel, cross-cutting assurance mechanisms, multiple research/assurance profiles, UI projections, retained historical artifacts, and external execution integrations.
 
 Several artifacts use similar words—authorization, verification, state, replay, custody, freeze, recovery—while operating at different scopes. A file-by-file documentation-only approach risks:
+
 - accidental dual authority;
 - treating profile specialization as duplication;
 - treating observers as authority;
@@ -22,11 +23,13 @@ The repository therefore needs a repeatable architecture ownership method with m
 ## Decision
 
 DGAF uses the architecture method defined in:
+
 - `DGAF_SYSTEM_ARCHITECTURE_TAXONOMY.md`;
 - `DGAF_CORE_COMPONENT_INVENTORY.md`;
 - `DGAF_ARCHITECTURE_MAPPING_METHOD.md`.
 
 The canonical internal owners are:
+
 - K1–K8 governance-kernel components;
 - A1–A4 cross-cutting assurance components;
 - P-* governed profiles;
@@ -35,6 +38,7 @@ The canonical internal owners are:
 Every active architecture-sensitive artifact has exactly one primary owner and may declare multiple secondary dependencies.
 
 Architecture overlap is classified before remediation as:
+
 - O1 TRUE_DUPLICATE_AUTHORITY;
 - O2 PROFILE_SPECIALIZATION;
 - O3 ADAPTER_OR_IMPLEMENTATION_VARIANT;
@@ -47,6 +51,7 @@ High-risk unmapped authority candidates are architecture-review priorities. Advi
 ## Consequences
 
 ### Positive
+
 - authority ownership becomes explicit;
 - profile-specific controls can remain specialized without being mistaken for parallel DGAF kernels;
 - historical provenance is preserved;
@@ -55,6 +60,7 @@ High-risk unmapped authority candidates are architecture-review priorities. Advi
 - current-facing architecture can be generated from source registries rather than maintained only as prose.
 
 ### Costs
+
 - registry maintenance is required for architecture-sensitive changes;
 - some artifacts need interpretation rather than filename-based classification;
 - profile and assurance inventories will grow over time;
@@ -67,6 +73,7 @@ If K1–K8/A1–A4 ownership, the one-primary-owner rule, or the overlap taxonom
 ## Evidence at proposal
 
 At exact branch head `e8600bc63426de6ba3c5b984cdd456a9d5e3d079`:
+
 - core component registry: PASS;
 - artifact ownership registry: PASS (44 records);
 - focused architecture/capability tests: 52 passed;

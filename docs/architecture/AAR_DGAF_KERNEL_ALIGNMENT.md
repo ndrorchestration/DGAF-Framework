@@ -7,12 +7,14 @@
 DGAF does not currently contain two equivalent general-purpose authorization engines.
 
 `AAR_V1` is a **bounded action-admission implementation/profile** for exactly:
+
 - action class: `AUDIT_COUNTER_UPDATE_V1`;
 - target: `/api/audit`;
 - policy: `AAR_AUDIT_POLICY_V1`;
 - decision effect: non-scientific ephemeral audit-counter update only.
 
 Its own coverage report explicitly remains incomplete and identifies:
+
 - process-local replay only;
 - record-local revocation only;
 - server-HMAC trust anchor;
@@ -51,6 +53,7 @@ Specifically:
 Do not rewrite `AAR_V1` merely for architectural uniformity. Its exact current bounded behavior is evidence-bearing and tested.
 
 Any migration should be:
+
 - additive or versioned;
 - test-first;
 - claim-preserving;
