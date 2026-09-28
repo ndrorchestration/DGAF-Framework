@@ -9,43 +9,28 @@ from __future__ import annotations
 
 import json
 import os
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import httpx
 
-SCENARIOS = {
-    "authorized": {
-        "first_status": "updated",
-        "first_reason": None,
-        "attempts": 1,
-        "receipt": True,
-    },
-    "revoked": {
-        "first_status": "denied",
-        "first_reason": "AUTHORIZATION_REVOKED",
-        "attempts": 1,
-        "receipt": False,
-    },
-    "missing_scope": {
-        "first_status": "denied",
-        "first_reason": "REQUIRED_SCOPE_MISSING",
-        "attempts": 1,
-        "receipt": False,
-    },
-    "tampered_action": {
-        "first_status": "denied",
-        "first_reason": "ACTION_DIGEST_MISMATCH",
-        "attempts": 1,
-        "receipt": False,
-    },
-    "replay": {
-        "first_status": "updated",
-        "first_reason": None,
-        "attempts": 2,
-        "receipt": True,
-        "second_status": "denied",
-        "second_reason": "AAR_REPLAY",
-    },
+@dataclass(frozen=True)
+class ScenarioExpectation:
+    first_status: str
+    first_reason: str | None
+    attempts: int
+    receipt: bool
+    second_status: str | None = None
+    second_reason: str | None = None
+
+
+SCENARIOS: dict[str, ScenarioExpectation] = {
+    "authorized": ScenarioExpectation("updated", None, 1, True),
+    "revoked": ScenarioExpectation("denied", "AUTHORIZATION_REVOKED", 1, False),
+    "missing_scope": ScenarioExpectation("denied", "REQUIRED_SCOPE_MISSING", 1, False),
+    "tampered_action": ScenarioExpectation("denied", "ACTION_DIGEST_MISMATCH", 1, False),
+    "replay": ScenarioExpectation("updated", None, 2, True, "denied", "AAR_REPLAY"),
 }
 
 EXPECTED_BOUNDARY = {
@@ -66,7 +51,7 @@ def main() -> int:
         "x-vercel-protection-bypass": bypass,
     }
 
-    evidence: dict[str, object] = {
+    evidence: dict[str, Any] = {
         "evidence_class": "TEKTITE_PROOF_OF_OPERATION_V1",
         "source_commit": source,
         "deployment_url": base_url,
@@ -92,7 +77,7 @@ def main() -> int:
             except Exception:
                 body = {"_raw": response.text}
             observed["body"] = body
-            evidence["scenarios"][scenario] = observed  # type: ignore[index]
+            evidence["scenarios"][scenario] = observed
 
             if response.status_code != 200:
                 failures.append(f"{scenario}: HTTP {response.status_code}")
@@ -102,18 +87,18 @@ def main() -> int:
                 continue
 
             attempts = body.get("attempts")
-            if not isinstance(attempts, list) or len(attempts) != expected["attempts"]:
+            if not isinstance(attempts, list) or len(attempts) != expected.attempts:
                 failures.append(f"{scenario}: attempt count mismatch")
                 continue
 
             first = attempts[0].get("result", {}) if attempts else {}
-            if first.get("status") != expected["first_status"]:
+            if first.get("status") != expected.first_status:
                 failures.append(f"{scenario}: first status {first.get('status')!r}")
-            if first.get("reason") != expected["first_reason"]:
+            if first.get("reason") != expected.first_reason:
                 failures.append(f"{scenario}: first reason {first.get('reason')!r}")
 
             receipt = first.get("execution_receipt")
-            if expected["receipt"]:
+            if expected.receipt:
                 if not isinstance(receipt, dict):
                     failures.append(f"{scenario}: execution receipt missing")
                 elif receipt.get("postcondition") != "VERIFIED":
@@ -123,9 +108,9 @@ def main() -> int:
 
             if scenario == "replay" and len(attempts) == 2:
                 second = attempts[1].get("result", {})
-                if second.get("status") != expected["second_status"]:
+                if second.get("status") != expected.second_status:
                     failures.append(f"{scenario}: second status {second.get('status')!r}")
-                if second.get("reason") != expected["second_reason"]:
+                if second.get("reason") != expected.second_reason:
                     failures.append(f"{scenario}: second reason {second.get('reason')!r}")
 
     evidence["failures"] = failures
