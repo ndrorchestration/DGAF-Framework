@@ -15,6 +15,7 @@ from typing import Any
 
 import httpx
 
+
 @dataclass(frozen=True)
 class ScenarioExpectation:
     first_status: str
