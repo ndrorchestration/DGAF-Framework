@@ -24,7 +24,7 @@ const state = {
 function demoTrustKey(req: NextApiRequest): string | undefined {
   const expectedToken = process.env.TEKTITE_DEMO_INTERNAL_TOKEN
   const trustKey = process.env.TEKTITE_DEMO_AAR_HMAC_KEY
-  const supplied = req.headers['x-tektite-demo-token']
+  const supplied = req.headers?.['x-tektite-demo-token']
   if (!expectedToken || !trustKey || typeof supplied !== 'string') return undefined
 
   const expected = Buffer.from(expectedToken)
