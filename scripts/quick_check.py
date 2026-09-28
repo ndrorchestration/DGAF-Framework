@@ -3,90 +3,106 @@
 # 60-second local integration check (no network required).
 # Run: python3 scripts/quick_check.py
 from __future__ import annotations
-import sys, math, time, hashlib
+
+import sys
+import time
 from pathlib import Path
+
+# Keep the operator self-check non-crashing on legacy Windows consoles where
+# stdout defaults to cp1252 and cannot encode DGAF's Unicode status glyphs.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(errors="replace")
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from resonant_decay import (
-    StructuralContextPruningEngine, ContextToken, Tier
+from resonant_decay import (  # noqa: E402
+    ContextToken,
+    StructuralContextPruningEngine,
+    Tier,
 )
-from resonant_decay.phi_gate import PhiClosureGate
-from resonant_decay.math_core import PSI, PHI_STAR, psi_cubic_check
-from resonant_decay.governance import lock_token, validate_token
+from resonant_decay.governance import lock_token, validate_token  # noqa: E402
+from resonant_decay.math_core import PHI_STAR, PSI, psi_cubic_check  # noqa: E402
+from resonant_decay.phi_gate import PhiClosureGate  # noqa: E402
 
-ERRORS = []
+ERRORS: list[str] = []
+
 
 def chk(name, cond, msg=""):
     icon = "✓" if cond else "✗"
     print(f"  {icon} {name}" + (f": {msg}" if msg else ""))
-    if not cond: ERRORS.append(name)
+    if not cond:
+        ERRORS.append(name)
+
 
 print("[DGAF] Quick Check — resonant_decay package v1.8.0")
 print("─" * 60)
 
 # 1. PSI cubic
-chk("PSI cubic invariant", psi_cubic_check(),
-    f"PSI={PSI:.10f}")
+chk("PSI cubic invariant", psi_cubic_check(), f"PSI={PSI:.10f}")
 
 # 2. PHI_STAR
-chk("PHI_STAR value", abs(PHI_STAR - 0.6180339887) < 1e-8,
-    f"phi_star={PHI_STAR:.10f}")
+chk("PHI_STAR value", abs(PHI_STAR - 0.6180339887) < 1e-8, f"phi_star={PHI_STAR:.10f}")
 
 # 3. T0 axiom guard
 eng = StructuralContextPruningEngine(threshold=0.99)
-ax = ContextToken("ax0", "governance rule", Tier.AXIOM,
-                  inserted_at=time.time() - 1000)
-ex = ContextToken("ex0", "cot noise",       Tier.EXPLORATORY,
-                  inserted_at=time.time() - 1000)
-eng.ingest(ax); eng.ingest(ex)
+ax = ContextToken("ax0", "governance rule", Tier.AXIOM, inserted_at=time.time() - 1000)
+ex = ContextToken("ex0", "cot noise", Tier.EXPLORATORY, inserted_at=time.time() - 1000)
+eng.ingest(ax)
+eng.ingest(ex)
 s = eng.prune()
-chk("T0 axiom guard",     s["axiom_count"]       == 1)
-chk("T3 fully pruned",    s["exploratory_count"] == 0)
-chk("compression <= 1",   s["compression_ratio"] <= 1.0)
+chk("T0 axiom guard", s["axiom_count"] == 1)
+chk("T3 fully pruned", s["exploratory_count"] == 0)
+chk("compression <= 1", s["compression_ratio"] <= 1.0)
 
 # 4. Hash lock / validate
 tok = ContextToken("t1", "locked content", Tier.STRUCTURAL)
 tok = lock_token(tok)
-chk("Hash lock valid",    validate_token(tok))
+chk("Hash lock valid", validate_token(tok))
 tok.content = "tampered"
 chk("Hash tamper detect", not validate_token(tok))
 
 # 5. Phi-Closure Gate — 13 clean turns → PASS
 gate = PhiClosureGate(tolerance=0.05)
 # _phi_stable derived dynamically: k = round(PHI_STAR * N) turns marked stable
-_N_PHI = 13; _k_phi = round(PHI_STAR * _N_PHI); _phi_stable = {i for i in range(1, _N_PHI + 1) if (i * _k_phi) % _N_PHI < _k_phi}
+_N_PHI = 13
+_k_phi = round(PHI_STAR * _N_PHI)
+_phi_stable = {i for i in range(1, _N_PHI + 1) if (i * _k_phi) % _N_PHI < _k_phi}
 for i in range(1, 14):
-        result = gate.record(stable=(i in _phi_stable))
-chk("Phi gate T13 PASS",  result["checkpoint"] and result["decision"] == "PASS",
-    f"R={result['R']:.4f} delta={result['delta']}")
+    result = gate.record(stable=(i in _phi_stable))
+chk(
+    "Phi gate T13 PASS",
+    result["checkpoint"] and result["decision"] == "PASS",
+    f"R={result['R']:.4f} delta={result['delta']}",
+)
 
 # 6. Phi-Closure Gate — adversarial drift → REPROMPT
 gate2 = PhiClosureGate(tolerance=0.05)
-for i in range(1, 10):  gate2.record(stable=True)
-for i in range(10, 14): gate2.record(stable=False)  # 4 DGAF kills
+for i in range(1, 10):
+    gate2.record(stable=True)
+for i in range(10, 14):
+    gate2.record(stable=False)  # 4 DGAF kills
 res2 = gate2.events[-1]
-chk("Phi gate adversarial REPROMPT",
-    res2.decision in ("REPROMPT", "KILL_RECOMMENDATION"),
-    f"decision={res2.decision}")
+chk("Phi gate adversarial REPROMPT", res2.decision in ("REPROMPT", "KILL_RECOMMENDATION"), f"decision={res2.decision}")
 
 # 7. Adapter imports
 try:
-    from resonant_decay.adapters.raw      import scpe_middleware
+    from resonant_decay.adapters.crewai import scpe_kickoff_wrapper
     from resonant_decay.adapters.langgraph import make_scpe_node
-    from resonant_decay.adapters.crewai    import scpe_kickoff_wrapper
-    chk("Adapter imports", True)
+    from resonant_decay.adapters.raw import scpe_middleware
+
+    _adapter_symbols = (scpe_middleware, make_scpe_node, scpe_kickoff_wrapper)
+    chk("Adapter imports", all(_adapter_symbols))
 except ImportError as e:
     chk("Adapter imports", False, str(e))
 
 # 8. 30-turn local simulation
-from resonant_decay.simulations.drift_v17 import run as drift_run
+from resonant_decay.simulations.drift_v17 import run as drift_run  # noqa: E402
+
 results = drift_run(n_turns=30)
 kills = [r for r in results if r["dgaf_decision"] == "KILL"]
-chk("30-turn: 3 DGAF kills",        len(kills) == 3,     f"{len(kills)} kills")
-chk("30-turn: T0 never drops",
-    all(r["axiom_count"] == results[0]["axiom_count"] for r in results))
-chk("30-turn: seal hashes present",
-    all(len(r["seal_hash"]) == 16 for r in results))
+chk("30-turn: 3 DGAF kills", len(kills) == 3, f"{len(kills)} kills")
+chk("30-turn: T0 never drops", all(r["axiom_count"] == results[0]["axiom_count"] for r in results))
+chk("30-turn: seal hashes present", all(len(r["seal_hash"]) == 16 for r in results))
 
 print("─" * 60)
 if ERRORS:
