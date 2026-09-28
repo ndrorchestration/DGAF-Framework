@@ -1,6 +1,6 @@
 # ADR-001 — DGAF Architecture Ownership and Mapping Method
 
-**Status:** PROPOSED  
+**Status:** ACCEPTED  
 **Date:** 2026-09-28  
 **Decision owner:** DGAF architecture governance  
 **Scope:** DGAF repository architecture classification and drift control
