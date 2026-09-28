@@ -7,7 +7,7 @@ import {
   AUDIT_TARGET,
   canonicalActionDigest,
   type ActionAdmissionRecord,
-} from './action-admission'
+} from './action-admission.ts'
 
 export const TEKTITE_DEMO_SCENARIOS = [
   'authorized',
