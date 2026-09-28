@@ -7,7 +7,15 @@ sdk: static
 app_file: index.html
 fullWidth: true
 header: mini
-short_description: A bounded live demonstration of explicit authority, admission, execution receipts, and claim limits in an agentic system.
+license: apache-2.0
+pinned: true
+tags:
+  - agents
+  - governance
+  - evaluation
+  - ai-safety
+  - reproducibility
+short_description: DGAF governed-action proof with receipts and claim limits.
 ---
 
 ## DGAF — Governed Agent Proof of Operation
