@@ -38,22 +38,23 @@ def test_workflow_historical_binding_remains_critical():
     )
 
 
-def test_immutable_action_pin_is_not_a_stale_repo_commit():
+def test_immutable_action_pin_is_not_a_literal_review():
     text = "      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
     findings = MODULE.semantic_findings(
         Path(".github/workflows/example.yml"), text, "0" * 40
     )
-    assert not any(f["type"] == "workflow_stale_commit_reference" for f in findings)
+    assert not any(f["type"] == "workflow_literal_40hex_review" for f in findings)
 
 
-def test_non_action_repo_sha_in_workflow_is_still_reviewed():
+def test_non_action_40hex_in_workflow_is_reviewed_without_stale_claim():
     sha = "1234567890abcdef1234567890abcdef12345678"
     text = f"env:\n  EXPECTED_SOURCE_SHA: {sha}"
     findings = MODULE.semantic_findings(
         Path(".github/workflows/example.yml"), text, "0" * 40
     )
     assert any(
-        f["type"] == "workflow_stale_commit_reference"
+        f["severity"] == "REVIEW"
+        and f["type"] == "workflow_literal_40hex_review"
         and f["referenced_commit"] == sha
         for f in findings
     )
