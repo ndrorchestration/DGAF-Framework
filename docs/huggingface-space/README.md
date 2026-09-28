@@ -10,7 +10,7 @@ header: mini
 short_description: A bounded live demonstration of explicit authority, admission, execution receipts, and claim limits in an agentic system.
 ---
 
-# DGAF — Governed Agent Proof of Operation
+## DGAF — Governed Agent Proof of Operation
 
 This Static Space is a presentation layer for **Dynamic Governance Agentic Formation (DGAF)**.
 
