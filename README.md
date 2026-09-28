@@ -5,6 +5,23 @@
 
 In plain English: an agent may be able to do something and still be blocked from doing it; a system may pass engineering tests and still be blocked from claiming that it is empirically validated.
 
+## Try the bounded live demo
+
+**[Open the DGAF proof-of-operation demo](https://project-7ybao.vercel.app/demo)**
+
+The public demo shows one governed action moving through:
+
+`REQUEST → AUTHORITY → ADMISSION → EFFECT → RECEIPT → CLAIM BOUNDARY`
+
+Start with the two guided cases:
+
+- **Allowed action:** valid scoped authority admits a bounded non-scientific effect and emits a verified execution receipt.
+- **Revoked authority:** the same action class is denied before execution with `AUTHORIZATION_REVOKED` and emits no execution receipt.
+
+This is a **same-system bounded engineering demonstration**, not independent validation or proof of general efficacy. The accepted public proof preserves `SCIENTIFIC_N_INCREMENT=0`, `INDEPENDENT_VALIDATION=NOT_ESTABLISHED`, `CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED`, and `HIGH_ASSURANCE=NOT_AUTHORIZED`.
+
+For the short evaluator walkthrough and retained proof identity, see [`docs/DEMO_WALKTHROUGH.md`](docs/DEMO_WALKTHROUGH.md).
+
 ## Five-minute evaluator orientation
 
 If you are evaluating DGAF as an AI-systems, governance, or research-engineering portfolio artifact, use this path before reading the full control history.
