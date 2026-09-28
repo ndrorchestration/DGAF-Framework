@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import fnmatch
 import json
 import re
 from pathlib import Path
@@ -7,6 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "docs" / "architecture" / "DGAF_ARTIFACT_OWNERSHIP_REGISTRY.v1.json"
+PROFILE_BUNDLES = ROOT / "docs" / "architecture" / "DGAF_PROFILE_BUNDLE_REGISTRY.v1.json"
 
 AUTHORITY_TERMS = re.compile(
     r"authorization|authorize|admission|allow|deny|policy|replay|idempot|revocation|"
@@ -99,11 +101,33 @@ def candidates() -> dict[str, list[str]]:
     return buckets
 
 
+
+def profile_bundle_covered_paths(paths: list[str]) -> set[str]:
+    if not PROFILE_BUNDLES.exists():
+        return set()
+    data = json.loads(PROFILE_BUNDLES.read_text(encoding="utf-8"))
+    profiles = data.get("profiles", [])
+    covered: set[str] = set()
+    for path in paths:
+        matches = 0
+        for profile in profiles:
+            globs = profile.get("path_globs", [])
+            if isinstance(globs, list) and any(
+                fnmatch.fnmatch(path, str(pattern)) for pattern in globs
+            ):
+                matches += 1
+        if matches == 1:
+            covered.add(path)
+    return covered
+
 def main() -> int:
     buckets = candidates()
     print("DGAF architecture ownership drift scan: ADVISORY")
+    profile_covered = profile_bundle_covered_paths(buckets["PROFILE"])
     for bucket in ("HIGH", "PROFILE", "MEDIUM", "ASSURANCE"):
         items = buckets[bucket]
+        if bucket == "PROFILE":
+            items = [path for path in items if path not in profile_covered]
         print(f"{bucket}_UNMAPPED={len(items)}")
         for path in items[:40]:
             print(f"{bucket}: {path}")
