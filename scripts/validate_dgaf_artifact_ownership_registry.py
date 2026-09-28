@@ -3,20 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
-REGISTRY = (
-    ROOT
-    / "docs"
-    / "architecture"
-    / "DGAF_ARTIFACT_OWNERSHIP_REGISTRY.v1.json"
-)
-COMPONENTS = (
-    ROOT
-    / "docs"
-    / "architecture"
-    / "DGAF_CORE_COMPONENT_REGISTRY.v1.json"
-)
+REGISTRY = ROOT / "docs" / "architecture" / "DGAF_ARTIFACT_OWNERSHIP_REGISTRY.v1.json"
+COMPONENTS = ROOT / "docs" / "architecture" / "DGAF_CORE_COMPONENT_REGISTRY.v1.json"
 
 ALLOWED_TYPES = {
     "code",
@@ -99,24 +88,16 @@ def validate_registry(path: Path = REGISTRY) -> list[str]:
 
         deps = rec.get("secondary_dependencies")
         if not isinstance(deps, list):
-            errors.append(
-                f"{path_value}: secondary_dependencies must be a list"
-            )
+            errors.append(f"{path_value}: secondary_dependencies must be a list")
         else:
             unknown = sorted(set(map(str, deps)) - ids)
             if unknown:
-                errors.append(
-                    f"{path_value}: unknown secondary_dependencies {unknown}"
-                )
+                errors.append(f"{path_value}: unknown secondary_dependencies {unknown}")
             if owner in deps:
-                errors.append(
-                    f"{path_value}: primary owner duplicated as secondary dependency"
-                )
+                errors.append(f"{path_value}: primary owner duplicated as secondary dependency")
 
         profile = rec.get("profile")
-        if profile is not None and (
-            profile not in ids or not str(profile).startswith("P-")
-        ):
+        if profile is not None and (profile not in ids or not str(profile).startswith("P-")):
             errors.append(f"{path_value}: invalid profile {profile!r}")
 
         if rec.get("artifact_type") not in ALLOWED_TYPES:
@@ -128,22 +109,14 @@ def validate_registry(path: Path = REGISTRY) -> list[str]:
 
         effect = rec.get("authority_effect")
         if effect not in ALLOWED_EFFECTS:
-            errors.append(
-                f"{path_value}: invalid authority_effect {effect!r}"
-            )
+            errors.append(f"{path_value}: invalid authority_effect {effect!r}")
 
         if (
             rec.get("lifecycle") == "ACTIVE"
-            and (
-                str(owner).startswith("K")
-                or str(owner).startswith("P-")
-            )
+            and (str(owner).startswith("K") or str(owner).startswith("P-"))
             and effect == "NONE"
         ):
-            errors.append(
-                f"{path_value}: active kernel/profile artifact cannot have "
-                "NONE authority effect"
-            )
+            errors.append(f"{path_value}: active kernel/profile artifact cannot have " "NONE authority effect")
 
         if not rec.get("role"):
             errors.append(f"{path_value}: role missing")
@@ -154,16 +127,11 @@ def validate_registry(path: Path = REGISTRY) -> list[str]:
 
         tests = rec.get("tests_or_validators")
         if not isinstance(tests, list):
-            errors.append(
-                f"{path_value}: tests_or_validators must be a list"
-            )
+            errors.append(f"{path_value}: tests_or_validators must be a list")
         else:
             for test_path in tests:
                 if not (ROOT / str(test_path)).exists():
-                    errors.append(
-                        f"{path_value}: linked test/validator absent: "
-                        f"{test_path}"
-                    )
+                    errors.append(f"{path_value}: linked test/validator absent: " f"{test_path}")
 
     return errors
 
@@ -175,9 +143,7 @@ def main() -> int:
             print(f"ERROR: {error}")
         return 1
 
-    record_count = len(
-        json.loads(REGISTRY.read_text(encoding="utf-8"))["records"]
-    )
+    record_count = len(json.loads(REGISTRY.read_text(encoding="utf-8"))["records"])
     print(f"DGAF artifact ownership registry: PASS ({record_count} records)")
     return 0
 

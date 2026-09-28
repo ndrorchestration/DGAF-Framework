@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-
 REGISTRY = Path("docs/architecture/DGAF_CORE_COMPONENT_REGISTRY.v1.json")
 EXPECTED_CORE = {f"K{i}" for i in range(1, 9)}
 EXPECTED_ASSURANCE = {f"A{i}" for i in range(1, 5)}

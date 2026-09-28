@@ -15,9 +15,7 @@ def test_profile_candidates_are_covered():
 
 
 def test_unknown_profile_id_fails(tmp_path: Path):
-    source = Path("docs/architecture/DGAF_PROFILE_BUNDLE_REGISTRY.v1.json").read_text(
-        encoding="utf-8"
-    )
+    source = Path("docs/architecture/DGAF_PROFILE_BUNDLE_REGISTRY.v1.json").read_text(encoding="utf-8")
     path = tmp_path / "profiles.json"
     path.write_text(source.replace('"id": "P-AOSS"', '"id": "P-UNKNOWN"', 1), encoding="utf-8")
     assert any("unknown profile id" in error for error in validate_profile_bundles(path))

@@ -5,7 +5,6 @@ import json
 import re
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "docs" / "architecture" / "DGAF_ARTIFACT_OWNERSHIP_REGISTRY.v1.json"
 PROFILE_BUNDLES = ROOT / "docs" / "architecture" / "DGAF_PROFILE_BUNDLE_REGISTRY.v1.json"
@@ -112,9 +111,7 @@ def profile_bundle_covered_paths(paths: list[str]) -> set[str]:
         matches = 0
         for profile in profiles:
             globs = profile.get("path_globs", [])
-            if isinstance(globs, list) and any(
-                fnmatch.fnmatch(path, str(pattern)) for pattern in globs
-            ):
+            if isinstance(globs, list) and any(fnmatch.fnmatch(path, str(pattern)) for pattern in globs):
                 matches += 1
         if matches == 1:
             covered.add(path)
@@ -134,12 +131,8 @@ def assurance_bundle_covered_paths(paths: list[str]) -> set[str]:
             excludes = bundle.get("exclude_globs", [])
             if not isinstance(includes, list) or not isinstance(excludes, list):
                 continue
-            included = any(
-                fnmatch.fnmatch(path, str(pattern)) for pattern in includes
-            )
-            excluded = any(
-                fnmatch.fnmatch(path, str(pattern)) for pattern in excludes
-            )
+            included = any(fnmatch.fnmatch(path, str(pattern)) for pattern in includes)
+            excluded = any(fnmatch.fnmatch(path, str(pattern)) for pattern in excludes)
             if included and not excluded:
                 matches += 1
         if matches == 1:
@@ -162,10 +155,7 @@ def main() -> int:
         for path in items[:40]:
             print(f"{bucket}: {path}")
         if len(items) > 40:
-            print(
-                f"{bucket}: ... {len(items) - 40} additional candidates "
-                "omitted from CLI display"
-            )
+            print(f"{bucket}: ... {len(items) - 40} additional candidates " "omitted from CLI display")
     return 0
 
 

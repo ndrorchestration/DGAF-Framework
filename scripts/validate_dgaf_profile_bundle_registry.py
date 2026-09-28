@@ -5,12 +5,12 @@ import json
 import sys
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.audit_dgaf_architecture_ownership_drift import candidates  # noqa: E402
+
 BUNDLES = ROOT / "docs" / "architecture" / "DGAF_PROFILE_BUNDLE_REGISTRY.v1.json"
 COMPONENTS = ROOT / "docs" / "architecture" / "DGAF_CORE_COMPONENT_REGISTRY.v1.json"
 
@@ -59,8 +59,7 @@ def validate_profile_bundles(path: Path = BUNDLES) -> list[str]:
                 matched = [
                     p.relative_to(ROOT).as_posix()
                     for p in ROOT.rglob("*")
-                    if p.is_file()
-                    and fnmatch.fnmatch(p.relative_to(ROOT).as_posix(), str(pattern))
+                    if p.is_file() and fnmatch.fnmatch(p.relative_to(ROOT).as_posix(), str(pattern))
                 ]
                 if not matched:
                     errors.append(f"{profile_id}: glob matches no files: {pattern}")
@@ -79,9 +78,7 @@ def validate_profile_bundles(path: Path = BUNDLES) -> list[str]:
     for candidate in candidates()["PROFILE"]:
         matches = _matching_profiles(candidate, profiles)
         if len(matches) != 1:
-            errors.append(
-                f"{candidate}: expected exactly one profile bundle, got {matches}"
-            )
+            errors.append(f"{candidate}: expected exactly one profile bundle, got {matches}")
 
     return errors
 
