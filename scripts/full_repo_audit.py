@@ -81,44 +81,59 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
             )
 
     lower = text.lower()
-    claim_340_qualified = any(
-        qualifier in lower
-        for qualifier in (
-            "historical/unverified",
-            "historical unverified",
-            "historical identifier",
-            "illustrative",
-            "not canonical",
-            "not a current verified result",
-            "must not be interpreted as",
-            "correction",
-        )
-    )
-    if (
-        "340%" in text
-        and any(word in lower for word in ("closed", "verified", "confirmed"))
-        and not claim_340_qualified
-    ):
-        findings.append(
-            {
-                "severity": "HIGH",
-                "type": "340_claim_status_language",
-                "path": str(path),
-            }
-        )
 
-    flag02_qualified = any(
-        qualifier in lower
-        for qualifier in (
-            "flag-02 is a historical identifier",
-            "historical flag-02",
-            "temporal namespace",
-            "current terminology correction",
-            "former `flag-02`",
-            "former flag-02",
-        )
+    def windows(needle: str, radius: int = 320) -> list[str]:
+        out: list[str] = []
+        start = 0
+        needle_lower = needle.lower()
+        while True:
+            idx = lower.find(needle_lower, start)
+            if idx < 0:
+                break
+            out.append(lower[max(0, idx - radius) : idx + len(needle) + radius])
+            start = idx + len(needle)
+        return out
+
+    claim_340_qualifiers = (
+        "unverified",
+        "historical",
+        "illustrative",
+        "not canonical",
+        "not a current verified result",
+        "must not be interpreted as",
+        "requires empirical validation",
+        "downgraded",
+        "correction",
     )
-    if "FLAG-02" in text and "qualitative" in lower and not flag02_qualified:
+    for context in windows("340%"):
+        has_promotion = any(
+            word in context for word in ("closed", "verified", "confirmed")
+        )
+        has_qualifier = any(q in context for q in claim_340_qualifiers)
+        if has_promotion and not has_qualifier:
+            findings.append(
+                {
+                    "severity": "HIGH",
+                    "type": "340_claim_status_language",
+                    "path": str(path),
+                }
+            )
+            break
+
+    flag02_qualifiers = (
+        "historical",
+        "formerly",
+        "former ",
+        "temporal namespace",
+        "current terminology correction",
+        "legacy",
+        "superseded",
+    )
+    for context in windows("FLAG-02"):
+        if "qualitative" not in context:
+            continue
+        if any(q in context for q in flag02_qualifiers):
+            continue
         findings.append(
             {
                 "severity": "REVIEW",
@@ -126,6 +141,7 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
                 "path": str(path),
             }
         )
+        break
 
     return findings
 
