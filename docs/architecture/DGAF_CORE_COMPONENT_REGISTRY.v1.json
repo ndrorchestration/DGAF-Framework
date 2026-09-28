@@ -1,6 +1,6 @@
 {
   "schema_version": "dgaf-core-component-registry.v1",
-  "status": "PROPOSED_NON_AUTHORIZING",
+  "status": "ACTIVE_NON_AUTHORIZING",
   "purpose": "Machine-readable classification of DGAF core governance components, cross-cutting assurance components, and governed profiles.",
   "invariants": [
     "OBSERVED != VERIFIED != ACCEPTED != AUTHORIZED != EXECUTED != SCIENTIFICALLY_VALIDATED",
