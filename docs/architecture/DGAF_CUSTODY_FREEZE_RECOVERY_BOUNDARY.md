@@ -1,6 +1,6 @@
 # DGAF Custody, Freeze, and Recovery Boundary
 
-**Status:** PROPOSED / ARCHITECTURE BOUNDARY / NON-AUTHORIZING
+**Status:** ACTIVE_NON_AUTHORIZING / ARCHITECTURE BOUNDARY / NON-AUTHORIZING
 
 ## Custody is cross-cutting assurance
 
