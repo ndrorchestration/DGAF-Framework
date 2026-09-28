@@ -3,6 +3,7 @@
 # 60-second local integration check (no network required).
 # Run: python3 scripts/quick_check.py
 from __future__ import annotations
+
 import sys
 import time
 from pathlib import Path
@@ -14,7 +15,11 @@ if hasattr(sys.stdout, "reconfigure"):
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from resonant_decay import StructuralContextPruningEngine, ContextToken, Tier  # noqa: E402
+from resonant_decay import (  # noqa: E402
+    ContextToken,
+    StructuralContextPruningEngine,
+    Tier,
+)
 from resonant_decay.governance import lock_token, validate_token  # noqa: E402
 from resonant_decay.math_core import PHI_STAR, PSI, psi_cubic_check  # noqa: E402
 from resonant_decay.phi_gate import PhiClosureGate  # noqa: E402
