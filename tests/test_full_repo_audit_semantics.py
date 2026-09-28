@@ -58,3 +58,30 @@ def test_non_action_40hex_in_workflow_is_reviewed_without_stale_claim():
         and f["referenced_commit"] == sha
         for f in findings
     )
+
+
+def test_qualified_historical_340_language_is_not_flagged():
+    text = "FLAG-02 | 340% coordination gain | CLOSED — historical/unverified claim"
+    findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
+    assert not any(f["type"] == "340_claim_status_language" for f in findings)
+
+
+def test_unqualified_verified_340_language_is_flagged():
+    text = "340% coordination gain VERIFIED"
+    findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
+    assert any(f["type"] == "340_claim_status_language" for f in findings)
+
+
+def test_historical_flag02_qualitative_correction_is_not_flagged():
+    text = (
+        "FLAG-02 is a historical identifier. Current terminology correction: "
+        "the evaluation-mode term is qualitative."
+    )
+    findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
+    assert not any(f["type"] == "FLAG02_namespace_migration" for f in findings)
+
+
+def test_unqualified_flag02_qualitative_collision_is_flagged():
+    text = "FLAG-02 is qualitative."
+    findings = MODULE.semantic_findings(Path("docs/current.md"), text, "0" * 40)
+    assert any(f["type"] == "FLAG02_namespace_migration" for f in findings)
