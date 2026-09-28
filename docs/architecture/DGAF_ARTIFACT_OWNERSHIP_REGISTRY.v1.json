@@ -628,6 +628,144 @@
       "tests_or_validators": [],
       "source_binding": "git blob at candidate",
       "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/replay-authority.ts",
+      "artifact_type": "code",
+      "primary_owner": "P-AAR",
+      "secondary_dependencies": [
+        "K1",
+        "K5"
+      ],
+      "role": "Bounded durable replay-authority adapters keyed by effect identity",
+      "authority_effect": "REPLAY_OR_COMMIT_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AAR",
+      "evidence_scope": "AAR effect-identity replay adapters",
+      "tests_or_validators": [
+        "app/lib/replay-authority.test.ts",
+        "app/lib/replay-authority-postgres.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/governance.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "A3",
+        "K4",
+        "K8",
+        "P-TRACK"
+      ],
+      "role": "Human-facing governance/current-state projection model",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI projection; does not create authority",
+      "tests_or_validators": [
+        "app/lib/governance-current-state.test.ts",
+        "app/lib/governance-map.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/decision-frontier.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "K4",
+        "A3"
+      ],
+      "role": "Derived decision-frontier presentation from governance stages",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI reachability projection only",
+      "tests_or_validators": [
+        "app/lib/decision-frontier.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/state-space-projection.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "K4",
+        "A3"
+      ],
+      "role": "Derived state-space visualization projection",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI state-space projection only",
+      "tests_or_validators": [
+        "app/lib/state-space-projection.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/aoss_v0_6_stage_a_collection_authorization_v1.json",
+      "artifact_type": "record",
+      "primary_owner": "P-AOSS",
+      "secondary_dependencies": [
+        "K1",
+        "K2",
+        "K3",
+        "A2"
+      ],
+      "role": "Exact bounded AOSS Stage-A collection authorization record",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AOSS",
+      "evidence_scope": "AOSS v0.6 Stage-A frozen collection only",
+      "tests_or_validators": [
+        "scripts/validate_aoss_v0_6_stage_a_collection_authorization.py"
+      ],
+      "source_binding": "git blob at candidate and protected_source_basis",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/aoss_v0_6_stage_a_collection_authorization.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "P-AOSS",
+      "secondary_dependencies": [
+        "K2",
+        "K3"
+      ],
+      "role": "AOSS Stage-A collection authorization schema",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AOSS",
+      "evidence_scope": "AOSS Stage-A authorization record shape",
+      "tests_or_validators": [
+        "scripts/validate_aoss_v0_6_stage_a_collection_authorization.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/derive_dgaf_completion_state.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K4",
+        "K8",
+        "A2"
+      ],
+      "role": "Observational fail-closed completion-state reconciler",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "advisory completion-state derivation; cannot authorize",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
     }
   ]
 }
