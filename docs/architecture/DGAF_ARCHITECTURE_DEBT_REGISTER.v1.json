@@ -1,0 +1,27 @@
+{
+  "schema_version": "dgaf-architecture-debt-register.v1",
+  "status": "PROPOSED_NON_AUTHORIZING",
+  "items": [
+    {
+      "id": "AD-001",
+      "title": "governance.yml schema overstates current architectural root role",
+      "severity": "MEDIUM",
+      "state": "OPEN",
+      "artifact": "schemas/governance.yml.schema.json",
+      "current_text_claim": "All downstream kernels, CI gates, and eval harnesses derive from this file.",
+      "observed_repository_usage": [
+        "evaluations/governance_schema_conformance.py",
+        "tests/dgaf_eval_suite.py",
+        "schemas/audit_event.json"
+      ],
+      "finding": "Observed usage supports a synthetic/legacy governance-role schema and evaluation surface, not a demonstrated current root for all K1-K8 kernels or CI gates.",
+      "risk": "Current-facing readers may infer a second or older architecture authority root that conflicts with the canonical K1-K8 ownership model.",
+      "recommended_disposition": "In a separate bounded correction, narrow the schema description and any dependent documentation to its actual conformance/evaluation scope unless additional live derivation evidence is found.",
+      "non_effects": [
+        "DOES_NOT_INVALIDATE_SCHEMA_TESTS",
+        "DOES_NOT_CHANGE_RUNTIME_AUTHORITY",
+        "DOES_NOT_CHANGE_SCIENTIFIC_STATE"
+      ]
+    }
+  ]
+}

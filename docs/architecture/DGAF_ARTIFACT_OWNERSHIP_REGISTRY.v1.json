@@ -1,0 +1,1454 @@
+{
+  "schema_version": "dgaf-artifact-ownership-registry.v1",
+  "status": "PROPOSED_NON_AUTHORIZING",
+  "source_method": "docs/architecture/DGAF_ARCHITECTURE_MAPPING_METHOD.md",
+  "records": [
+    {
+      "path": "scripts/dgaf_capability_canonicalize.py",
+      "artifact_type": "code",
+      "primary_owner": "K1",
+      "secondary_dependencies": [],
+      "role": "Canonical action envelope and digest construction",
+      "authority_effect": "IDENTITY_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "bounded capability action identity",
+      "tests_or_validators": [
+        "tests/test_capability_governance_contracts.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/capability_manifest.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "K2",
+      "secondary_dependencies": [
+        "K1"
+      ],
+      "role": "Capability declaration contract",
+      "authority_effect": "AUTHORITY_BOUNDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "capability manifest shape",
+      "tests_or_validators": [
+        "tests/test_capability_governance_contracts.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/delegation_chain.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "K2",
+      "secondary_dependencies": [
+        "K3"
+      ],
+      "role": "Delegation-chain contract",
+      "authority_effect": "AUTHORITY_BOUNDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "delegation representation",
+      "tests_or_validators": [
+        "tests/test_capability_governance_contracts.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_policy.py",
+      "artifact_type": "code",
+      "primary_owner": "K2",
+      "secondary_dependencies": [
+        "K1"
+      ],
+      "role": "Effective authority and non-widening policy checks",
+      "authority_effect": "AUTHORITY_BOUNDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "bounded capability authority semantics",
+      "tests_or_validators": [
+        "tests/test_capability_governance_invariants.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/authorization_object.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "K3",
+      "secondary_dependencies": [
+        "K2",
+        "K1"
+      ],
+      "role": "Generic authorization object contract",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "generic capability authorization shape",
+      "tests_or_validators": [
+        "tests/test_capability_governance_contracts.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_pep.py",
+      "artifact_type": "code",
+      "primary_owner": "K3",
+      "secondary_dependencies": [
+        "K1",
+        "K2",
+        "K5"
+      ],
+      "role": "Policy enforcement and governed dispatch",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "bounded capability enforcement",
+      "tests_or_validators": [
+        "tests/test_capability_governance_pep.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "docs/governance/ACTION_ADMISSION_AUTHORITY_CONTRACT.md",
+      "artifact_type": "policy",
+      "primary_owner": "K3",
+      "secondary_dependencies": [
+        "K1",
+        "K2",
+        "K5",
+        "K6",
+        "K7"
+      ],
+      "role": "Provider-neutral action-admission authority contract",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AAR",
+      "evidence_scope": "design contract; not runtime authority",
+      "tests_or_validators": [
+        "tests/test_action_admission_authority_contract.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/action-admission.ts",
+      "artifact_type": "code",
+      "primary_owner": "P-AAR",
+      "secondary_dependencies": [
+        "K1",
+        "K2",
+        "K3",
+        "K5"
+      ],
+      "role": "Bounded audit-counter action-admission implementation",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AAR",
+      "evidence_scope": "AUDIT_COUNTER_UPDATE_V1 only",
+      "tests_or_validators": [
+        "app/lib/audit-admission.test.ts",
+        "app/lib/action-admission-mutation.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/action_admission_authority_contract.json",
+      "artifact_type": "policy",
+      "primary_owner": "P-AAR",
+      "secondary_dependencies": [
+        "K3",
+        "K5",
+        "K6",
+        "K7"
+      ],
+      "role": "Machine-readable AAR authority design contract",
+      "authority_effect": "REPLAY_OR_COMMIT_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AAR",
+      "evidence_scope": "design-only future AAR hardening",
+      "tests_or_validators": [
+        "tests/test_action_admission_authority_contract.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_state_machine.py",
+      "artifact_type": "code",
+      "primary_owner": "K4",
+      "secondary_dependencies": [
+        "K1",
+        "K2",
+        "K3",
+        "K5",
+        "K7"
+      ],
+      "role": "Generic governed transaction state machine",
+      "authority_effect": "STATE_TRANSITION_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "generic consequential transaction lifecycle",
+      "tests_or_validators": [
+        "tests/test_capability_state_machine.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_workflow.py",
+      "artifact_type": "code",
+      "primary_owner": "K7",
+      "secondary_dependencies": [
+        "K4",
+        "K3"
+      ],
+      "role": "Workflow outcome, postcondition and recovery classification",
+      "authority_effect": "RECOVERY_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "bounded workflow/recovery semantics",
+      "tests_or_validators": [
+        "tests/test_capability_governance_workflow.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/workflow_authorization.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "K4",
+      "secondary_dependencies": [
+        "K2",
+        "K3"
+      ],
+      "role": "Workflow-level authorization/composition contract",
+      "authority_effect": "STATE_TRANSITION_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "workflow authorization shape",
+      "tests_or_validators": [
+        "tests/test_capability_governance_contracts.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "MEDIUM"
+    },
+    {
+      "path": "scripts/dgaf_capability_idempotency.py",
+      "artifact_type": "code",
+      "primary_owner": "K5",
+      "secondary_dependencies": [
+        "K1",
+        "K7"
+      ],
+      "role": "Reference replay/idempotency state",
+      "authority_effect": "REPLAY_OR_COMMIT_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "process-local deterministic replay semantics",
+      "tests_or_validators": [
+        "tests/test_capability_idempotency.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_idempotency_sqlite.py",
+      "artifact_type": "code",
+      "primary_owner": "K5",
+      "secondary_dependencies": [
+        "K1",
+        "K7"
+      ],
+      "role": "SQLite-backed idempotency implementation",
+      "authority_effect": "REPLAY_OR_COMMIT_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "local durable idempotency adapter",
+      "tests_or_validators": [
+        "tests/test_capability_idempotency_sqlite.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_reference_transaction.py",
+      "artifact_type": "code",
+      "primary_owner": "K6",
+      "secondary_dependencies": [
+        "K1",
+        "K3",
+        "K5",
+        "K7"
+      ],
+      "role": "Reference governed transaction and receipt/audit production",
+      "authority_effect": "EVIDENCE_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "bounded reference transaction",
+      "tests_or_validators": [
+        "tests/test_capability_reference_transaction.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "MEDIUM"
+    },
+    {
+      "path": "schemas/execution_receipt.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "K6",
+      "secondary_dependencies": [
+        "K7"
+      ],
+      "role": "Execution receipt contract",
+      "authority_effect": "EVIDENCE_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "execution identity/outcome evidence",
+      "tests_or_validators": [
+        "tests/test_capability_governance_contracts.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/capability_audit_event.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "K6",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Capability audit-event contract",
+      "authority_effect": "EVIDENCE_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "capability audit event",
+      "tests_or_validators": [
+        "tests/test_capability_governance_evidence_audit.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/reconciliation_record.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "K7",
+      "secondary_dependencies": [
+        "K6"
+      ],
+      "role": "Reconciliation record contract",
+      "authority_effect": "RECOVERY_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "ambiguous/partial execution reconciliation",
+      "tests_or_validators": [
+        "tests/test_capability_governance_contracts.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_evidence.py",
+      "artifact_type": "code",
+      "primary_owner": "K8",
+      "secondary_dependencies": [
+        "K2"
+      ],
+      "role": "Local evidence-strength monotonicity and verification/authorization separation",
+      "authority_effect": "CLAIM_PROMOTION_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "capability-local evidence signal only",
+      "tests_or_validators": [
+        "tests/test_capability_governance_evidence_audit.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "docs/EPISTEMIC_EVIDENCE_STANDARD.md",
+      "artifact_type": "policy",
+      "primary_owner": "K8",
+      "secondary_dependencies": [
+        "A1",
+        "A3"
+      ],
+      "role": "Canonical repository evidence ladder and non-equivalences",
+      "authority_effect": "CLAIM_PROMOTION_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "repository/public claim-state semantics",
+      "tests_or_validators": [
+        "scripts/claim_hygiene_check.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/validate_structural_epistemics_claim_graph.py",
+      "artifact_type": "validator",
+      "primary_owner": "K8",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Structural epistemics claim-graph validation",
+      "authority_effect": "CLAIM_PROMOTION_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "bounded claim-graph conformance",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/claim_hygiene_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8",
+        "A3"
+      ],
+      "role": "Claim-language hygiene audit",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "repository claim language",
+      "tests_or_validators": [
+        "scripts/claim_hygiene_check_test.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/full_repo_audit.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Full repository coverage/audit surface",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "repository audit coverage",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "MEDIUM"
+    },
+    {
+      "path": "scripts/lint_provenance.py",
+      "artifact_type": "validator",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "K6",
+        "A1"
+      ],
+      "role": "Provenance linting",
+      "authority_effect": "CUSTODY_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "provenance metadata quality",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/validate_critical_pr_lane_custody.py",
+      "artifact_type": "validator",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "A1",
+        "K6"
+      ],
+      "role": "Critical PR lane custody verification",
+      "authority_effect": "CUSTODY_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "protected review-lane custody",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/prepare_track_a_epoch_002_immutable_freeze.py",
+      "artifact_type": "code",
+      "primary_owner": "P-TRACK",
+      "secondary_dependencies": [
+        "A2",
+        "K4",
+        "K8"
+      ],
+      "role": "Track A Epoch 002 immutable-freeze preparation/validation",
+      "authority_effect": "STATE_TRANSITION_GATING",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-TRACK",
+      "evidence_scope": "Epoch 002 exact-scope freeze lifecycle",
+      "tests_or_validators": [
+        "scripts/validate_track_a_epoch_002_analysis_lock.py"
+      ],
+      "source_binding": "git blob at candidate; historical exact-scope record",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/aoss_stage_a/execution_admission.py",
+      "artifact_type": "code",
+      "primary_owner": "P-AOSS",
+      "secondary_dependencies": [
+        "K1",
+        "K2",
+        "K3"
+      ],
+      "role": "AOSS Stage-A execution/collection admission logic",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AOSS",
+      "evidence_scope": "AOSS Stage-A profile",
+      "tests_or_validators": [
+        "scripts/validate_aoss_v0_6_stage_a_collection_authorization.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/aoss_stage_a/replay.py",
+      "artifact_type": "code",
+      "primary_owner": "P-AOSS",
+      "secondary_dependencies": [
+        "K5",
+        "A2"
+      ],
+      "role": "AOSS Stage-A replay/profile handling",
+      "authority_effect": "REPLAY_OR_COMMIT_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AOSS",
+      "evidence_scope": "AOSS Stage-A profile",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/aoss_stage_a/custody.py",
+      "artifact_type": "code",
+      "primary_owner": "P-AOSS",
+      "secondary_dependencies": [
+        "A2"
+      ],
+      "role": "AOSS Stage-A custody/profile handling",
+      "authority_effect": "CUSTODY_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AOSS",
+      "evidence_scope": "AOSS Stage-A profile",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "docs/governance/P4_INDEPENDENT_BLINDING_CUSTODY_PROCEDURE.md",
+      "artifact_type": "policy",
+      "primary_owner": "P-TRACK",
+      "secondary_dependencies": [
+        "A2",
+        "K4",
+        "K8"
+      ],
+      "role": "Independent blinding-custody profile policy",
+      "authority_effect": "CUSTODY_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": "P-TRACK",
+      "evidence_scope": "P4 exact custody semantics",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/validate_control_state.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K4",
+        "A3"
+      ],
+      "role": "Control-state consistency validator",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "repository control-state projection",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "MEDIUM"
+    },
+    {
+      "path": "scripts/validate_control_state_head.py",
+      "artifact_type": "validator",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "K4",
+        "K6"
+      ],
+      "role": "Exact-HEAD control-state binding",
+      "authority_effect": "EVIDENCE_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "control-state source binding",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "docs/taxonomy/ACRONYM_REGISTRY.v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [],
+      "role": "Machine-readable acronym/semantic registry",
+      "authority_effect": "NONE",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "semantic vocabulary",
+      "tests_or_validators": [
+        "scripts/validate_acronym_registry.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/validate_vocabulary_translation_matrix.py",
+      "artifact_type": "validator",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Vocabulary/translation consistency validation",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "semantic consistency",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/replay-authority.ts",
+      "artifact_type": "code",
+      "primary_owner": "P-AAR",
+      "secondary_dependencies": [
+        "K1",
+        "K5"
+      ],
+      "role": "Bounded durable replay-authority adapters keyed by effect identity",
+      "authority_effect": "REPLAY_OR_COMMIT_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AAR",
+      "evidence_scope": "AAR effect-identity replay adapters",
+      "tests_or_validators": [
+        "app/lib/replay-authority.test.ts",
+        "app/lib/replay-authority-postgres.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/governance.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "A3",
+        "K4",
+        "K8",
+        "P-TRACK"
+      ],
+      "role": "Human-facing governance/current-state projection model",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI projection; does not create authority",
+      "tests_or_validators": [
+        "app/lib/governance-current-state.test.ts",
+        "app/lib/governance-map.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/decision-frontier.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "K4",
+        "A3"
+      ],
+      "role": "Derived decision-frontier presentation from governance stages",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI reachability projection only",
+      "tests_or_validators": [
+        "app/lib/decision-frontier.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/state-space-projection.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "K4",
+        "A3"
+      ],
+      "role": "Derived state-space visualization projection",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI state-space projection only",
+      "tests_or_validators": [
+        "app/lib/state-space-projection.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/aoss_v0_6_stage_a_collection_authorization_v1.json",
+      "artifact_type": "record",
+      "primary_owner": "P-AOSS",
+      "secondary_dependencies": [
+        "K1",
+        "K2",
+        "K3",
+        "A2"
+      ],
+      "role": "Exact bounded AOSS Stage-A collection authorization record",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AOSS",
+      "evidence_scope": "AOSS v0.6 Stage-A frozen collection only",
+      "tests_or_validators": [
+        "scripts/validate_aoss_v0_6_stage_a_collection_authorization.py"
+      ],
+      "source_binding": "git blob at candidate and protected_source_basis",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/aoss_v0_6_stage_a_collection_authorization.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "P-AOSS",
+      "secondary_dependencies": [
+        "K2",
+        "K3"
+      ],
+      "role": "AOSS Stage-A collection authorization schema",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "ACTIVE",
+      "profile": "P-AOSS",
+      "evidence_scope": "AOSS Stage-A authorization record shape",
+      "tests_or_validators": [
+        "scripts/validate_aoss_v0_6_stage_a_collection_authorization.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/derive_dgaf_completion_state.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K4",
+        "K8",
+        "A2"
+      ],
+      "role": "Observational fail-closed completion-state reconciler",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "advisory completion-state derivation; cannot authorize",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/dgaf_completion_state_reconciler.v0.1.json",
+      "artifact_type": "registry",
+      "primary_owner": "P-TRACK",
+      "secondary_dependencies": [
+        "A1",
+        "A2",
+        "K4",
+        "K8"
+      ],
+      "role": "Historical non-authorizing Track A Epoch 002 precollection completion graph",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-TRACK",
+      "evidence_scope": "historical fixed-scope Track A Epoch 002 precollection readiness",
+      "tests_or_validators": [
+        "scripts/derive_dgaf_completion_state.py"
+      ],
+      "source_binding": "git blob at candidate; lifecycle_scope explicitly historical",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/emit_freeze_control_evidence.py",
+      "artifact_type": "code",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "K6",
+        "K8",
+        "P-PDMAL"
+      ],
+      "role": "Emit candidate/toolchain and negative-state provenance evidence for legacy pre-freeze controls",
+      "authority_effect": "EVIDENCE_BINDING",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "legacy PDMAL pre-freeze E2b/M6 evidence generation",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate and emitted target_candidate_sha",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/freeze_consistency_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "K4",
+        "K8",
+        "P-PDMAL"
+      ],
+      "role": "Fail-closed consistency checker for legacy DGAF/PDMAL freeze predicate metadata",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "consistency only; cannot promote freeze predicates",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/external_runtime_adapter_contract_v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "K1",
+      "secondary_dependencies": [
+        "K5",
+        "K6",
+        "K8"
+      ],
+      "role": "Provider-neutral non-authoritative external runtime ingress contract",
+      "authority_effect": "IDENTITY_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "external input normalization; authority presented not granted",
+      "tests_or_validators": [
+        "scripts/validate_external_runtime_adapter.py",
+        "tests/test_external_runtime_adapter_contract.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/validate_external_runtime_adapter.py",
+      "artifact_type": "validator",
+      "primary_owner": "K1",
+      "secondary_dependencies": [
+        "K5",
+        "K6",
+        "K8"
+      ],
+      "role": "Validate and normalize external runtime submissions without granting authority",
+      "authority_effect": "IDENTITY_BINDING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "non-authoritative ingress validation",
+      "tests_or_validators": [
+        "tests/test_external_runtime_adapter_contract.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_local_operator_bridge.py",
+      "artifact_type": "code",
+      "primary_owner": "P-TRACK",
+      "secondary_dependencies": [
+        "K3",
+        "K6",
+        "K7",
+        "A2"
+      ],
+      "role": "Local-only Epoch 002 materialization operator bridge",
+      "authority_effect": "ALLOW_DENY_ESCALATE",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-TRACK",
+      "evidence_scope": "Epoch 002 local materialization only; primary analysis not authorized by bridge",
+      "tests_or_validators": [
+        "tests/test_dgaf_local_operator_bridge.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_local_operator_mcp.py",
+      "artifact_type": "code",
+      "primary_owner": "P-TRACK",
+      "secondary_dependencies": [
+        "K3",
+        "A4"
+      ],
+      "role": "MCP stdio adapter exposing exactly four bounded local operator bridge tools",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-TRACK",
+      "evidence_scope": "Epoch 002 local operator transport adapter; no additional authority",
+      "tests_or_validators": [
+        "tests/test_dgaf_local_operator_mcp_contract.py",
+        "tests/test_capability_transport_independence.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/governance-map.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "A3",
+        "K4"
+      ],
+      "role": "Governance relationship map projection",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI evidence/authority/dependency relationship projection",
+      "tests_or_validators": [
+        "app/lib/governance-map.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/status.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "A3",
+        "K8"
+      ],
+      "role": "UI status metadata and runtime-status normalization",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "presentation semantics only; no promotion authority",
+      "tests_or_validators": [
+        "app/lib/status.test.ts"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/public-translation.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A4"
+      ],
+      "role": "Public-facing functional role/agent translation layer",
+      "authority_effect": "NONE",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "semantic translation only; ontology records remain authoritative",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "schemas/governance.yml.schema.json",
+      "artifact_type": "schema",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Legacy/synthetic governance-role schema used by conformance/evaluation tooling",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "synthetic governance schema conformance; broad 'all downstream kernels' description under architecture review",
+      "tests_or_validators": [
+        "evaluations/governance_schema_conformance.py",
+        "tests/dgaf_eval_suite.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "MEDIUM"
+    },
+    {
+      "path": "app/lib/navigation.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [],
+      "role": "Operator navigation model for DGAF control surfaces",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "UI navigation only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/sweep-detection.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Advisory repository sweep finding detector",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "advisory repository surface findings; no remediation authority",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "app/lib/types.ts",
+      "artifact_type": "ui",
+      "primary_owner": "A4",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Shared UI projection types for status, roster, audit and sweep data",
+      "authority_effect": "PRESENTATION_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "presentation/data-shape typing only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/agent_identity_manifest.v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Conflict-preserving agent identity manifest; not authority resolution",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "agent identity conflicts and observed designations",
+      "tests_or_validators": [
+        "scripts/validate_agent_identity_manifest.py"
+      ],
+      "source_binding": "git blob at candidate and declared source_snapshot",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/agent_ontology_adjudication.v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Accepted semantic adjudication of agent identities, variants, states and seats",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "agent ontology semantics; scientific and authority-matrix effects none",
+      "tests_or_validators": [
+        "scripts/validate_agent_ontology_adjudication.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/ecosystem_registry.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1"
+      ],
+      "role": "Bounded ecosystem project/deployment metadata projection",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "ecosystem metadata projection; project-local sources remain authoritative",
+      "tests_or_validators": [
+        "registry/ecosystem_audit.py"
+      ],
+      "source_binding": "git blob at candidate and projection metadata",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/ecosystem_audit.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3",
+        "A2"
+      ],
+      "role": "Fail-closed audit of ecosystem registry projection and GitHub metadata drift",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "structural/semantic ecosystem projection audit only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/propagation_registry.json",
+      "artifact_type": "registry",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8",
+        "A3"
+      ],
+      "role": "Claim propagation and terminology-migration QA registry",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "derivative claim/terminology propagation checks; not empirical truth",
+      "tests_or_validators": [
+        "scripts/propagation_check.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/workflow_classification.v1.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1",
+        "P-TRACK"
+      ],
+      "role": "Semantic/lifecycle classification of audit versus experiment workflow instances",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "workflow classification and historical exact-scope provenance",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/standards_risk_crosswalk.v0.json",
+      "artifact_type": "registry",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8",
+        "A3"
+      ],
+      "role": "Non-certifying standards/risk alignment crosswalk",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "framework alignment only; no compliance/certification determination",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate and official source references",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/registry_consistency_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "A3"
+      ],
+      "role": "Pattern registry release identity and provenance consistency checker",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "registry identity/provenance consistency",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate and expected source/blob identities",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/AMETHYST_COLLEEN_CO_ORCH_CONTRACT_v1.json",
+      "artifact_type": "policy",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1",
+        "K2",
+        "K3"
+      ],
+      "role": "Historical co-orchestration contract with human-final authority and pattern-use rules",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": null,
+      "evidence_scope": "historical orchestration design lineage; not current general authority kernel",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/ensemble_v16_manifest.json",
+      "artifact_type": "registry",
+      "primary_owner": "A3",
+      "secondary_dependencies": [
+        "A1",
+        "K3",
+        "K4"
+      ],
+      "role": "Historical ensemble/orchestration manifest for v16 turn-sequence gates",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": null,
+      "evidence_scope": "historical orchestration architecture and declared integrations",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate; manifest supersedes v14",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "registry/lifecycle_stability_report.json",
+      "artifact_type": "evidence",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A3"
+      ],
+      "role": "Historical lifecycle stability report and gate attestation",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": null,
+      "evidence_scope": "S043/SWEEP-002 lifecycle report only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/adversarial_preflight.py",
+      "artifact_type": "validator",
+      "primary_owner": "P-PDMAL",
+      "secondary_dependencies": [
+        "A1",
+        "A2",
+        "K4",
+        "K8"
+      ],
+      "role": "Historical fail-closed PDMAL freeze-readiness preflight",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "legacy pre-freeze readiness checks; cannot grant freeze or authorization",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/dgaf_capability_model_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K4",
+        "K5",
+        "K7"
+      ],
+      "role": "Exhaustive/model-check style safety verification of capability transaction invariants",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "capability state/replay/recovery invariants",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/inventory_branch_disposition.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "A3"
+      ],
+      "role": "Conservative non-destructive branch disposition inventory",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "branch representation/merge evidence only; no deletion authority",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/live_regression_v17.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K6"
+      ],
+      "role": "Live runtime regression harness against the deployed orchestration API",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "current-contract runtime regression evidence; no authorization promotion",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/lock_audit_hallucination_corpus.py",
+      "artifact_type": "code",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "A1",
+        "K6",
+        "K8"
+      ],
+      "role": "Evaluation corpus intake/custody lock and deterministic manifest generation",
+      "authority_effect": "CUSTODY_GATING",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "EVAL-001 corpus structure/alignment/hash custody; not independence or performance",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/main_push_provenance_audit.py",
+      "artifact_type": "validator",
+      "primary_owner": "A2",
+      "secondary_dependencies": [
+        "A1",
+        "K6"
+      ],
+      "role": "Detective audit binding main-branch writes to exact merged PR provenance",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "post-hoc push provenance; not preventive branch protection",
+      "tests_or_validators": [
+        "scripts/main_push_provenance_audit_test.py"
+      ],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/p2_runtime_matrix.py",
+      "artifact_type": "validator",
+      "primary_owner": "P-PDMAL",
+      "secondary_dependencies": [
+        "A1",
+        "K6",
+        "K8"
+      ],
+      "role": "Historical P2 live runtime behavior evidence matrix",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "P2 runtime evidence only; cannot self-promote to VERIFIED",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/propagation_check.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8",
+        "A3"
+      ],
+      "role": "Claim/terminology propagation consistency checker",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "derivative claim and terminology consistency",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/qa_rubric_11q.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K8"
+      ],
+      "role": "Executable reference implementation of DGAF Core QA Rubric 11Q",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "artifact-quality and seal-eligibility heuristic scoring only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/run_dgaf_operator_selftest.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "K6",
+        "P-AOSS"
+      ],
+      "role": "Bounded internal operator self-test with retained local evidence packet",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": "P-SELF",
+      "evidence_scope": "same-system internal engineering validation only",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/run_dgaf_post_merge_canary_v1.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "K4",
+        "K6"
+      ],
+      "role": "Post-merge exact-revision smoke/control-state canary",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "post-merge canary health evidence; no scientific or deployment-readiness promotion",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/run_dgaf_smoke_v1.py",
+      "artifact_type": "validator",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "K2",
+        "K3",
+        "K4",
+        "K6"
+      ],
+      "role": "Bounded DGAF smoke contract over control-plane allow/deny/state/provenance fixtures",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "ACTIVE",
+      "profile": null,
+      "evidence_scope": "engineering smoke evidence only; authorization effect NONE",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    },
+    {
+      "path": "scripts/verify_p9_frozen_chain.py",
+      "artifact_type": "validator",
+      "primary_owner": "P-PDMAL",
+      "secondary_dependencies": [
+        "A2",
+        "A1",
+        "K8"
+      ],
+      "role": "Historical fail-closed final P9 frozen-chain verifier",
+      "authority_effect": "ASSURANCE_ONLY",
+      "lifecycle": "HISTORICAL",
+      "profile": "P-PDMAL",
+      "evidence_scope": "immutable PDMAL freeze/P8/P4 chain verification; no execution/authorization",
+      "tests_or_validators": [],
+      "source_binding": "git blob at candidate",
+      "classification_confidence": "HIGH"
+    }
+  ]
+}

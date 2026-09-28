@@ -1,0 +1,132 @@
+{
+  "schema_version": "dgaf-profile-bundle-registry.v1",
+  "status": "PROPOSED_NON_AUTHORIZING",
+  "purpose": "Machine-readable ownership coverage for profile-specific DGAF artifacts without flattening profile specialization into the core kernel.",
+  "profiles": [
+    {
+      "id": "P-AOSS",
+      "name": "AOSS v0.6 Stage-A assurance/validation profile",
+      "lifecycle": "ACTIVE_REVIEW_BOUND",
+      "path_globs": [
+        "registry/aoss_v0_6*.json",
+        "schemas/aoss_v0_6*.json",
+        "scripts/aoss_stage_a/*.py",
+        "scripts/aoss_v0_6*.py"
+      ],
+      "sections": [
+        {
+          "id": "apparatus_measurement",
+          "description": "Measurement manifest, observer boundary, comparator, failure ground truth, endpoint/multiplicity and effect rules."
+        },
+        {
+          "id": "runtime_source_environment",
+          "description": "Runtime, dependency, source-driver, executable/destination and installed-environment binding."
+        },
+        {
+          "id": "authorization_policy",
+          "description": "Collection authorization, policy-input mapping and fail-closed Stage-A decision policy."
+        },
+        {
+          "id": "custody_replay_integrity",
+          "description": "Precollection/replay receipts, attempt integrity, freshness and artifact identity."
+        },
+        {
+          "id": "readiness_preflight",
+          "description": "Predata readiness, preflight and execution-identity readiness without outcome promotion."
+        },
+        {
+          "id": "external_local_review",
+          "description": "External admission/trust intake, reverification, local adjudication and retained review packets."
+        }
+      ],
+      "kernel_dependencies": [
+        "K1",
+        "K2",
+        "K3",
+        "K5",
+        "K6",
+        "K8",
+        "A1",
+        "A2"
+      ],
+      "authority_boundary": "AOSS may observe, normalize, validate, recommend, or produce profile-scoped decisions; it does not inherit DGAF-wide governance authority or establish scientific efficacy/independence by itself."
+    },
+    {
+      "id": "P-SELF",
+      "name": "DGAF self-application / cold-start validation profile",
+      "lifecycle": "ACTIVE_SAME_SYSTEM",
+      "path_globs": [
+        "registry/dgaf_self_application*.json",
+        "scripts/*dgaf_self_application*.py"
+      ],
+      "sections": [
+        {
+          "id": "manifest_scaffold",
+          "description": "Manifest, scaffold and exact mutation declarations."
+        },
+        {
+          "id": "execution",
+          "description": "Dry-run and same-system execution paths."
+        },
+        {
+          "id": "adjudication",
+          "description": "Same-system evidence adjudication and execution records."
+        },
+        {
+          "id": "ablation_mutation",
+          "description": "Detector ablation and controlled mutation experiments."
+        }
+      ],
+      "kernel_dependencies": [
+        "K1",
+        "K3",
+        "K6",
+        "K8",
+        "A1",
+        "A2"
+      ],
+      "authority_boundary": "Self-application evidence remains same-system/nonindependent unless a separately evidenced independent process establishes otherwise."
+    },
+    {
+      "id": "P-TRACK",
+      "name": "Track / Epoch experimental lifecycle profile",
+      "lifecycle": "HISTORICAL_AND_EXACT_SCOPE_ACTIVE_RECORDS",
+      "path_globs": [
+        "scripts/*track_a*.py"
+      ],
+      "sections": [
+        {
+          "id": "custody_preflight",
+          "description": "Custody keys, drills, admission and precollection preflight."
+        },
+        {
+          "id": "collection_lock",
+          "description": "Collection admission, evidence admission, pre-lock ledger and dataset-lock evidence/receipts."
+        },
+        {
+          "id": "materialization",
+          "description": "Controlled materialization and materialization receipts."
+        },
+        {
+          "id": "analysis",
+          "description": "Locked primary-analysis execution/result records and synthetic oracle support."
+        },
+        {
+          "id": "interpretation_closure",
+          "description": "Interpretation records, final closure and post-interpretation disposition."
+        }
+      ],
+      "kernel_dependencies": [
+        "K2",
+        "K3",
+        "K4",
+        "K6",
+        "K7",
+        "K8",
+        "A1",
+        "A2"
+      ],
+      "authority_boundary": "Track/Epoch records are exact-scope experimental lifecycle controls; they do not create a second general DGAF state/authorization engine."
+    }
+  ]
+}

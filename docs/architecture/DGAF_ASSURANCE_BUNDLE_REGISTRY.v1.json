@@ -1,0 +1,144 @@
+{
+  "schema_version": "dgaf-assurance-bundle-registry.v1",
+  "status": "PROPOSED_NON_AUTHORIZING",
+  "purpose": "Machine-readable grouping of lower-risk tests, validators, audit contracts, and drift checks under cross-cutting assurance ownership.",
+  "bundles": [
+    {
+      "id": "AB-UI-TEST",
+      "name": "UI and runtime contract tests",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A4"
+      ],
+      "profile": null,
+      "include_globs": [
+        "app/lib/*.test.ts"
+      ],
+      "exclude_globs": [],
+      "assurance_effect": "TEST_OR_CONTRACT_VALIDATION"
+    },
+    {
+      "id": "AB-AUDIT-CONTRACT",
+      "name": "Audit catalog and event contracts",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "K6"
+      ],
+      "profile": null,
+      "include_globs": [
+        "registry/audit_catalog.py",
+        "registry/audit_catalog.v1.json",
+        "schemas/audit_event.json"
+      ],
+      "exclude_globs": [],
+      "assurance_effect": "AUDIT_SCHEMA_AND_CATALOG"
+    },
+    {
+      "id": "AB-AUDIT-DRIFT",
+      "name": "Audit, reconciliation, and drift checks",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "A3",
+        "K8"
+      ],
+      "profile": null,
+      "include_globs": [
+        "scripts/audit_*.py",
+        "scripts/check_*.py",
+        "scripts/reconcile_*.py",
+        "scripts/*_test.py"
+      ],
+      "exclude_globs": [],
+      "assurance_effect": "DETECTIVE_ASSURANCE"
+    },
+    {
+      "id": "AB-AOSS-VALIDATORS",
+      "name": "AOSS profile validators",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "P-AOSS",
+        "A2",
+        "K8"
+      ],
+      "profile": "P-AOSS",
+      "include_globs": [
+        "scripts/validate_aoss_*.py"
+      ],
+      "exclude_globs": [],
+      "assurance_effect": "PROFILE_VALIDATION"
+    },
+    {
+      "id": "AB-TRACK-VALIDATORS",
+      "name": "Track profile validators",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "P-TRACK",
+        "A2",
+        "K4",
+        "K8"
+      ],
+      "profile": "P-TRACK",
+      "include_globs": [
+        "scripts/validate_track_a_*.py"
+      ],
+      "exclude_globs": [],
+      "assurance_effect": "PROFILE_VALIDATION"
+    },
+    {
+      "id": "AB-SELF-VALIDATORS",
+      "name": "Self-application profile validators",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "P-SELF",
+        "A2",
+        "K8"
+      ],
+      "profile": "P-SELF",
+      "include_globs": [
+        "scripts/validate_dgaf_self_application_*.py"
+      ],
+      "exclude_globs": [],
+      "assurance_effect": "PROFILE_VALIDATION"
+    },
+    {
+      "id": "AB-MODET-VALIDATORS",
+      "name": "Mode-T profile validators",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "P-MODET",
+        "A2",
+        "K8"
+      ],
+      "profile": "P-MODET",
+      "include_globs": [
+        "scripts/validate_mode_t_*.py"
+      ],
+      "exclude_globs": [],
+      "assurance_effect": "PROFILE_VALIDATION"
+    },
+    {
+      "id": "AB-GENERAL-VALIDATORS",
+      "name": "General governance, evidence, identity, and readiness validators",
+      "primary_owner": "A1",
+      "secondary_dependencies": [
+        "A2",
+        "A3",
+        "K8"
+      ],
+      "profile": null,
+      "include_globs": [
+        "scripts/validate_*.py"
+      ],
+      "exclude_globs": [
+        "scripts/validate_aoss_*.py",
+        "scripts/validate_track_a_*.py",
+        "scripts/validate_dgaf_self_application_*.py",
+        "scripts/validate_mode_t_*.py"
+      ],
+      "assurance_effect": "GENERAL_VALIDATION"
+    }
+  ],
+  "boundary": "Assurance bundles validate, test, reconcile, or observe controls. Membership does not transfer the underlying K/P authority to the assurance artifact."
+}
