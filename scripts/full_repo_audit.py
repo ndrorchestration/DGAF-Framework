@@ -42,8 +42,8 @@ def read_text(path: Path) -> tuple[str | None, bytes]:
         return None, data
 
 
-def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
-    findings: list[dict[str, str]] = []
+def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, object]]:
+    findings: list[dict[str, object]] = []
     normalized = path.as_posix()
     is_workflow = normalized.startswith(".github/workflows/")
 
@@ -150,24 +150,27 @@ def semantic_findings(path: Path, text: str, head: str) -> list[dict[str, str]]:
 def main() -> int:
     files = tracked_files()
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-    records = []
-    findings = []
-    counts = {name: 0 for name in PATTERNS}
+    records: list[dict[str, object]] = []
+    findings: list[dict[str, object]] = []
+    counts: dict[str, int] = {name: 0 for name in PATTERNS}
 
     for path in files:
         text, data = read_text(path)
-        record = {
+        record: dict[str, object] = {
             "path": str(path),
             "bytes": len(data),
             "sha256": hashlib.sha256(data).hexdigest(),
             "text": text is not None,
         }
         if text is not None:
+            matches: dict[str, int] = {}
             for name, pattern in PATTERNS.items():
                 count = text.count(pattern)
                 counts[name] += count
                 if count:
-                    record.setdefault("matches", {})[name] = count
+                    matches[name] = count
+            if matches:
+                record["matches"] = matches
 
             findings.extend(semantic_findings(path, text, head))
 
@@ -186,8 +189,8 @@ def main() -> int:
         "schema_version": "1.1",
         "audit_head": head,
         "tracked_file_count": len(files),
-        "text_file_count": sum(r["text"] for r in records),
-        "binary_or_unreadable_count": sum(not r["text"] for r in records),
+        "text_file_count": sum(1 for r in records if bool(r["text"])),
+        "binary_or_unreadable_count": sum(1 for r in records if not bool(r["text"])),
         "pattern_counts": counts,
         "findings": findings,
         "files": records,
