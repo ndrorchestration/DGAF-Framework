@@ -46,7 +46,7 @@ export function createTektiteDemoRequest(
   options: { nowMs?: number; trustKey?: string; recordId?: string } = {},
 ): TektiteDemoRequest {
   const nowMs = options.nowMs ?? Date.now()
-  const trustKey = options.trustKey ?? process.env.DGAF_AAR_HMAC_KEY
+  const trustKey = options.trustKey ?? process.env.TEKTITE_DEMO_AAR_HMAC_KEY
   if (!trustKey) throw new Error('TEKTITE_DEMO_TRUST_ANCHOR_UNAVAILABLE')
 
   const recordId = options.recordId ?? `tektite-demo-${randomUUID()}`
