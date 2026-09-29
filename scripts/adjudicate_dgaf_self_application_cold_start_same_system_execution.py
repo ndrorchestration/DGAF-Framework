@@ -32,7 +32,7 @@ def _sha256(path: Path) -> str:
 
 
 def _relative_to_output(path: Path, output_dir: Path) -> str:
-    return str(path.resolve().relative_to(output_dir.resolve()))
+    return path.resolve().relative_to(output_dir.resolve()).as_posix()
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
