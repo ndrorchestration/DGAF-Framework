@@ -41,7 +41,7 @@ def _sha256(path: Path) -> str:
 def _relative_to_root(path: Path) -> str:
     resolved = path.resolve()
     try:
-        return str(resolved.relative_to(ROOT))
+        return resolved.relative_to(ROOT).as_posix()
     except ValueError:
         return str(resolved)
 
