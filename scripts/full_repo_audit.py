@@ -37,7 +37,7 @@ def read_text(path: Path) -> tuple[str | None, bytes]:
     if b"\x00" in data[:8192]:
         return None, data
     try:
-        return data.decode("utf-8") , data
+        return data.decode("utf-8"), data
     except UnicodeDecodeError:
         return None, data
 
