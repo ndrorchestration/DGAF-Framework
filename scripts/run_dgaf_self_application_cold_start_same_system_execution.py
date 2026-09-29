@@ -48,7 +48,7 @@ def _sha256(path: Path) -> str:
 
 
 def _relative_to_output(path: Path, output_dir: Path) -> str:
-    return str(path.resolve().relative_to(output_dir.resolve()))
+    return path.resolve().relative_to(output_dir.resolve()).as_posix()
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -90,7 +90,7 @@ def _probe_measure(measure_id: str) -> dict[str, Any]:
                 else "Repository runbook is missing required prerequisite tokens."
             ),
             "evidence": {
-                "runbook_path": str(RUNBOOK.relative_to(ROOT)),
+                "runbook_path": RUNBOOK.relative_to(ROOT).as_posix(),
                 "runbook_sha256": _sha256(RUNBOOK) if RUNBOOK.exists() else None,
                 "missing_tokens": missing,
             },
@@ -114,7 +114,7 @@ def _probe_measure(measure_id: str) -> dict[str, Any]:
                 else "Canonical command-order documentation is incomplete."
             ),
             "evidence": {
-                "runbook_path": str(RUNBOOK.relative_to(ROOT)),
+                "runbook_path": RUNBOOK.relative_to(ROOT).as_posix(),
                 "runbook_sha256": _sha256(RUNBOOK) if RUNBOOK.exists() else None,
                 "missing_tokens": missing,
             },
@@ -138,9 +138,9 @@ def _probe_measure(measure_id: str) -> dict[str, Any]:
                 else "Evidence-location documentation or artifact workflow coverage is incomplete."
             ),
             "evidence": {
-                "runbook_path": str(RUNBOOK.relative_to(ROOT)),
+                "runbook_path": RUNBOOK.relative_to(ROOT).as_posix(),
                 "runbook_sha256": _sha256(RUNBOOK) if RUNBOOK.exists() else None,
-                "artifact_workflow_path": str(ARTIFACT_WORKFLOW.relative_to(ROOT)),
+                "artifact_workflow_path": ARTIFACT_WORKFLOW.relative_to(ROOT).as_posix(),
                 "artifact_workflow_sha256": _sha256(ARTIFACT_WORKFLOW) if ARTIFACT_WORKFLOW.exists() else None,
                 "missing_runbook_tokens": missing,
                 "missing_workflow_tokens": workflow_missing,

@@ -44,7 +44,7 @@ def _sha256(path: Path) -> str:
 
 
 def _manifest_path_for_record(manifest_path: Path) -> str:
-    return str(manifest_path.resolve().relative_to(ROOT))
+    return manifest_path.resolve().relative_to(ROOT).as_posix()
 
 
 def _build_not_executed_steps(manifest: dict[str, Any]) -> list[dict[str, Any]]:
