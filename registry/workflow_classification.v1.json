@@ -315,6 +315,15 @@
       "controller": "DGAF Completion Controller",
       "decision_effect": "Consumes named producer-workflow evidence and evaluates completion predicates under its explicit controller semantics.",
       "reason": "Event-driven completion/control mechanism with authority semantics; inventory it explicitly without misrepresenting it as an audit-family implementation."
+    },
+    {
+      "path": ".github/workflows/pdmal-solo-final-experiment.yml",
+      "classification": "CLASSIFIED_NON_AUDIT",
+      "kind": "RETIRED_EXPERIMENT_EXECUTION_GUARD",
+      "lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "controller": "PDMAL Solo Final Experiment 001 retirement boundary",
+      "decision_effect": "Preserves and verifies that the retired Solo Experiment 001 execution authority remains absent; it does not execute the experiment or establish a recurring audit-family identity.",
+      "reason": "The workflow is explicitly named Retired, contains only pull-request retirement checks, forbids executable authority tokens, and verifies the retained retirement record."
     }
   ]
 }
