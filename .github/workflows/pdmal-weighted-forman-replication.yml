@@ -24,7 +24,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout exact source head
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           ref: ${{ env.SOURCE_SHA }}
           persist-credentials: false
@@ -33,7 +33,7 @@ jobs:
         run: test "$(git rev-parse HEAD)" = "${SOURCE_SHA}"
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
           python-version: "3.12"
 
@@ -70,7 +70,7 @@ jobs:
         run: sha256sum weighted-forman-replication.json > weighted-forman-replication.json.sha256
 
       - name: Upload exact-head research evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: pdmal-weighted-forman-replication-${{ env.SOURCE_SHA }}
           path: |
