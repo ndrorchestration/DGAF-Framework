@@ -40,6 +40,62 @@
       ]
     },
     {
+      "path": ".github/workflows/b1-semantic-routing-safety-profile.yml",
+      "policy_id": "MUTATION_BLOCKED_SOURCE_BOUND_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "AUDIT_CATALOG_MAPPED_PROFILE_WORKFLOW",
+      "workflow_lifecycle": "SOURCE_BOUND_EVIDENCE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Perform explicit source-binding reconciliation before retrying ordinary #939 hardening for the B1 semantic-routing/safety profile.",
+      "minimum_verification_before_mutation": [
+        "identify every validator that hashes or source-binds this workflow path",
+        "update expected bindings only under a dedicated reconciliation PR",
+        "prove adjacent B1 semantic-routing/safety profile profile, integration, and qualification validators pass on the exact head"
+      ],
+      "triggering_evidence": [
+        "search evidence shows validators source-bind .github/workflows/b1-semantic-routing-safety-profile.yml by expected hash",
+        "audit_catalog.v1.json identifies the B1 semantic-routing/safety profile as a source-bound non-empirical profile workflow"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/b2-stateful-context-closure-profile.yml",
+      "policy_id": "MUTATION_BLOCKED_SOURCE_BOUND_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "AUDIT_CATALOG_MAPPED_PROFILE_WORKFLOW",
+      "workflow_lifecycle": "SOURCE_BOUND_EVIDENCE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Perform explicit source-binding reconciliation before retrying ordinary #939 hardening for the B2 stateful-context/closure profile.",
+      "minimum_verification_before_mutation": [
+        "identify every validator that hashes or source-binds this workflow path",
+        "update expected bindings only under a dedicated reconciliation PR",
+        "prove adjacent B2 stateful-context/closure profile profile, integration, and qualification validators pass on the exact head"
+      ],
+      "triggering_evidence": [
+        "search evidence shows validators source-bind .github/workflows/b2-stateful-context-closure-profile.yml by expected hash",
+        "audit_catalog.v1.json identifies the B2 stateful-context/closure profile as a source-bound non-empirical profile workflow"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
       "path": ".github/workflows/b3-p33-convergence-profile.yml",
       "policy_id": "MUTATION_BLOCKED_SOURCE_BOUND_RECONCILIATION_REQUIRED",
       "workflow_classification_kind": "AUDIT_CATALOG_MAPPED_PROFILE_WORKFLOW",
