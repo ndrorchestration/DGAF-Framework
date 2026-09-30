@@ -1,0 +1,88 @@
+{
+  "version": "WORKFLOW_MUTATION_POLICY_SUPPLEMENT_EPOCH001_SUCCESSOR_V1",
+  "scope": "Supplemental Tektite-facing mutation-policy projection for remaining #939 lanes that were intentionally left out of the primary registry pending separate verification. This supplement does not authorize scientific, empirical, deployment, independence, efficacy, or High-Assurance state changes.",
+  "supplements": "registry/workflow_mutation_policy.v1.json",
+  "source_evidence": [
+    "protected main 6971d8a20520505c17e1fede329ea0f8e29cb374",
+    "direct workflow inspection on current protected main",
+    "prior #1149 negative evidence for stale post-result lifecycle checks"
+  ],
+  "policies": [
+    {
+      "path": ".github/workflows/track-a-epoch-001-unblinding-materialization.yml",
+      "policy_id": "MUTATION_BLOCKED_UNBLINDING_MATERIALIZATION_STATE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile validation-time no-unblinding assertions against the established Epoch 001 lineage before any routine immutable-action mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve the accepted unblinding materializer contract and no-analysis boundary",
+        "separate tooling validation absence assertions from any historical or current materialized input state",
+        "prove no unblinding, primary analysis, outcome aggregation, or scientific N increment is introduced"
+      ],
+      "triggering_evidence": [
+        "workflow asserts track_a_epoch_001_unblinded_analysis_input.json is absent during validation",
+        "workflow is a historical exact-scope unblinding-materialization validator, not a routine dependency-hardening lane"
+      ],
+      "related_issues": ["#939", "#1135"],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-primary-analysis-authorization.yml",
+      "policy_id": "MUTATION_BLOCKED_PRIMARY_AUTHORIZATION_EXACT_SCOPE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile the primary-analysis authorization workflow's exact event/tooling branches and result-absence assertions before routine mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve exact authorization-event semantics",
+        "preserve the three-file tooling-only maintenance branch unless explicitly redesigned",
+        "prove primary-result absence checks are historical-state-aware rather than current-state-invalid"
+      ],
+      "triggering_evidence": [
+        "workflow compares changed files against an exact maintenance set when authorization is absent",
+        "workflow also asserts primary-result files are absent and must not run analysis"
+      ],
+      "related_issues": ["#939", "#1135"],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/track-a-successor-solo-custody.yml",
+      "policy_id": "MUTATION_BLOCKED_SUCCESSOR_CUSTODY_SIDE_EFFECT_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "SUCCESSOR_CUSTODY_TOOLING_CONTRACT",
+      "workflow_lifecycle": "SYNTHETIC_ONLY_WITH_CURRENT_STATE_CONFLICT",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile the successor custody validation workflow's no-recovery-receipt and no-private-key side-effect checks against current successor-custody evidence before routine mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve synthetic-only validation and no-secret-generation semantics",
+        "separate validation workspace side-effect checks from repository-retained successor custody evidence",
+        "prove no empirical collection authority or canonical efficacy claim is introduced"
+      ],
+      "triggering_evidence": [
+        "workflow asserts TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json is absent",
+        "workflow asserts track_a_successor_private_key_encrypted.pem is absent",
+        "successor custody evidence now exists on protected main and must not be erased or reinterpreted by routine #939 hardening"
+      ],
+      "related_issues": ["#939", "#1135"],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    }
+  ]
+}
