@@ -86,6 +86,24 @@ def test_b3_p33_workflow_retains_original_source_bound_issue_lineage():
     assert "#1127" in entry["related_issues"]
 
 
+def test_epoch002_historical_workflows_are_blocked_by_current_state_reconciliation():
+    policies = _policies_by_path()
+
+    prereg = policies[".github/workflows/track-a-epoch-002-preregistration.yml"]
+    assert prereg["policy_id"] == "MUTATION_BLOCKED_STALE_SUCCESSOR_STATE_RECONCILIATION_REQUIRED"
+    assert prereg["workflow_lifecycle"] == "CLOSED_BOUNDED_EXACT_SCOPE"
+    assert prereg["routine_hardening_allowed"] is False
+
+    analysis_lock = policies[".github/workflows/track-a-epoch-002-analysis-lock.yml"]
+    assert analysis_lock["policy_id"] == "MUTATION_BLOCKED_STALE_SUCCESSOR_STATE_RECONCILIATION_REQUIRED"
+    assert analysis_lock["routine_hardening_allowed"] is False
+
+    autopilot = policies[".github/workflows/track-a-epoch-002-primary-analysis-autopilot.yml"]
+    assert autopilot["policy_id"] == "MUTATION_BLOCKED_POST_RESULT_LIFECYCLE_RECONCILIATION_REQUIRED"
+    assert autopilot["routine_hardening_allowed"] is False
+    assert "#1149" in autopilot["related_issues"]
+
+
 def test_mutation_policy_preserves_claim_boundaries():
     for entry in _policies_by_path().values():
         boundary = set(entry["claim_boundary"])
