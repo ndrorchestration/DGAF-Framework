@@ -111,3 +111,21 @@ def test_epoch002_historical_workflows_are_blocked_by_current_state_reconciliati
     assert autopilot["policy_id"] == "MUTATION_BLOCKED_POST_RESULT_LIFECYCLE_RECONCILIATION_REQUIRED"
     assert autopilot["routine_hardening_allowed"] is False
     assert "#1149" in autopilot["related_issues"]
+
+
+def test_epoch001_confirmed_stale_downstream_workflows_are_blocked():
+    policies = _policies_by_path()
+    paths = [
+        ".github/workflows/track-a-epoch-001-runner.yml",
+        ".github/workflows/track-a-epoch-001-precollection-preflight.yml",
+        ".github/workflows/track-a-epoch-001-immutable-freeze.yml",
+        ".github/workflows/track-a-epoch-001-final-closure.yml",
+        ".github/workflows/track-a-epoch-001-verification-classification.yml",
+    ]
+
+    for path in paths:
+        entry = policies[path]
+        assert entry["policy_id"] == "MUTATION_BLOCKED_STALE_DOWNSTREAM_STATE_RECONCILIATION_REQUIRED"
+        assert entry["workflow_lifecycle"] == "HISTORICAL_EXACT_SCOPE"
+        assert entry["tektite_lane_status"] == "BLOCKED"
+        assert entry["routine_hardening_allowed"] is False
