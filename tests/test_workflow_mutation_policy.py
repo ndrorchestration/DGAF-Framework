@@ -60,14 +60,30 @@ def test_retired_solo_workflow_is_blocked_pending_retirement_contract_cleanup():
     assert any("historical provenance tokens" in item for item in entry["minimum_verification_before_mutation"])
 
 
-def test_b3_p33_workflow_is_blocked_pending_source_binding_reconciliation():
+def test_b_series_source_bound_profiles_are_blocked_pending_source_binding_reconciliation():
+    policies = _policies_by_path()
+    expected = {
+        ".github/workflows/b1-semantic-routing-safety-profile.yml": "B1 semantic-routing/safety profile",
+        ".github/workflows/b2-stateful-context-closure-profile.yml": "B2 stateful-context/closure profile",
+        ".github/workflows/b3-p33-convergence-profile.yml": "B3",
+    }
+
+    for path, descriptor in expected.items():
+        entry = policies[path]
+
+        assert entry["policy_id"] == "MUTATION_BLOCKED_SOURCE_BOUND_RECONCILIATION_REQUIRED"
+        assert entry["workflow_classification_kind"] == "AUDIT_CATALOG_MAPPED_PROFILE_WORKFLOW"
+        assert entry["workflow_lifecycle"] == "SOURCE_BOUND_EVIDENCE"
+        assert entry["routine_hardening_allowed"] is False
+        assert entry["tektite_lane_status"] == "BLOCKED"
+        assert any("source-binds this workflow path" in item for item in entry["minimum_verification_before_mutation"])
+        assert any(descriptor in item or path in item for item in entry["triggering_evidence"])
+
+
+def test_b3_p33_workflow_retains_original_source_bound_issue_lineage():
     entry = _policies_by_path()[".github/workflows/b3-p33-convergence-profile.yml"]
 
-    assert entry["policy_id"] == "MUTATION_BLOCKED_SOURCE_BOUND_RECONCILIATION_REQUIRED"
-    assert entry["workflow_lifecycle"] == "SOURCE_BOUND_EVIDENCE"
-    assert entry["routine_hardening_allowed"] is False
     assert "#1127" in entry["related_issues"]
-    assert any("source-binds this workflow path" in item for item in entry["minimum_verification_before_mutation"])
 
 
 def test_mutation_policy_preserves_claim_boundaries():
