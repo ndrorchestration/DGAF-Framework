@@ -50,12 +50,15 @@ def test_1163_hold_does_not_authorize_bypass_or_admin_mutation():
 def test_1163_hold_is_consistent_with_required_context_policy():
     record = _load(HOLD_RECORD)
     policy = _load(POLICY_RECORD)
+    policy_context = record["policy_context"]
+    policy_observed = policy["observed_state"]
+    policy_protocol = policy["application_protocol"]
 
-    assert record["policy_context"]["source_policy_record"] == "docs/governance/PROTECTED_MAIN_REQUIRED_CONTEXT_POLICY_V1.json"
-    assert record["policy_context"]["global_required_context_hygiene"] == policy["observed_state"]["global_required_context_hygiene"]
-    assert record["policy_context"]["literal_global_context_list_authorized_for_application"] is False
-    assert policy["application_protocol"]["literal_global_context_list_authorized_for_application"] is False
-    assert policy["application_protocol"]["specialized_gate_strategy"] == record["policy_context"]["specialized_gate_strategy"]
+    assert policy_context["source_policy_record"] == "docs/governance/PROTECTED_MAIN_REQUIRED_CONTEXT_POLICY_V1.json"
+    assert policy_context["global_required_context_hygiene"] == policy_observed["global_required_context_hygiene"]
+    assert policy_context["literal_global_context_list_authorized_for_application"] is False
+    assert policy_protocol["literal_global_context_list_authorized_for_application"] is False
+    assert policy_protocol["specialized_gate_strategy"] == policy_context["specialized_gate_strategy"]
 
 
 def test_1163_hold_preserves_claim_boundary():
