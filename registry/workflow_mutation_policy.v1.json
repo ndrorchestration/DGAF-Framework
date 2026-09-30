@@ -1,0 +1,72 @@
+{
+  "version": "WORKFLOW_MUTATION_POLICY_V1",
+  "scope": "Tektite-facing mutation-policy projection over workflow_classification.v1.json and audit_catalog.v1.json. This registry does not reclassify audit families and does not authorize scientific, empirical, deployment, independence, efficacy, or High-Assurance state changes.",
+  "source_registries": [
+    "registry/workflow_classification.v1.json",
+    "registry/audit_catalog.v1.json"
+  ],
+  "policies": [
+    {
+      "path": ".github/workflows/pdmal-solo-final-experiment.yml",
+      "policy_id": "MUTATION_BLOCKED_PENDING_RETIREMENT_CONTRACT_CLEANUP",
+      "workflow_classification_kind": "RETIRED_EXPERIMENT_EXECUTION_GUARD",
+      "workflow_lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Resolve #1138 before any future #939 immutable-action pin touches this retired workflow.",
+      "minimum_verification_before_mutation": [
+        "retirement-contract cleanup proves the live workflow has no push trigger",
+        "retirement-contract cleanup proves no empirical runner invocation exists",
+        "historical provenance tokens remain preserved in docs/experiment/SOLO_FINAL_EXPERIMENT_001_RETIREMENT.md",
+        "#369 remains blocking for any fresh empirical Solo epoch"
+      ],
+      "triggering_evidence": [
+        "#1134 exact-head focused retirement guard failed after checkout succeeded",
+        "the guard rejected retained historical authority-token text rather than an immutable-action installation defect",
+        "#1138 opened as the dedicated retirement-contract cleanup lane"
+      ],
+      "related_issues": [
+        "#939",
+        "#1134",
+        "#1135",
+        "#1138",
+        "#369"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/b3-p33-convergence-profile.yml",
+      "policy_id": "MUTATION_BLOCKED_SOURCE_BOUND_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "AUDIT_CATALOG_MAPPED_PROFILE_WORKFLOW",
+      "workflow_lifecycle": "SOURCE_BOUND_EVIDENCE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Perform explicit source-binding reconciliation before retrying ordinary #939 hardening.",
+      "minimum_verification_before_mutation": [
+        "identify every validator that hashes or source-binds this workflow path",
+        "update expected bindings only under a dedicated reconciliation PR",
+        "prove adjacent B3 qualification and integration validators pass on the exact head"
+      ],
+      "triggering_evidence": [
+        "#1127 exact-head CI exposed adjacent validator source-blob drift for this workflow",
+        "the workflow is implementation evidence for B3 P-33 profile/adjudication/qualification lanes"
+      ],
+      "related_issues": [
+        "#939",
+        "#1127",
+        "#1135"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    }
+  ]
+}
