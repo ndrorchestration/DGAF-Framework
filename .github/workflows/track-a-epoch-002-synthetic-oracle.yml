@@ -31,14 +31,14 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout exact source
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
 
       - name: Set up exact Python 3.12.0
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
           python-version: "3.12.0"
 
@@ -124,7 +124,7 @@ jobs:
           PY
 
       - name: Upload synthetic-only evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: track-a-epoch002-synthetic-oracle
           path: synthetic-artifacts/track-a-epoch002-oracle/
