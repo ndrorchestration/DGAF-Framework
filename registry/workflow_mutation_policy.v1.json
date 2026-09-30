@@ -209,6 +209,147 @@
         "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
         "HIGH_ASSURANCE=NOT_AUTHORIZED"
       ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-runner.yml",
+      "policy_id": "MUTATION_BLOCKED_STALE_DOWNSTREAM_STATE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile the historical runner's successor-gate absence assertions against the now-established Epoch 001 downstream artifacts before routine mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve historical runner provenance and non-authorization semantics",
+        "separate runner-time absence assertions from current repository state",
+        "prove maintenance does not reinterpret accepted Epoch 001 lineage"
+      ],
+      "triggering_evidence": [
+        "runner asserts precollection preflight, immutable freeze, final closure, verification classification, and collection authorization are absent",
+        "all five referenced downstream artifacts now exist on protected main"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-precollection-preflight.yml",
+      "policy_id": "MUTATION_BLOCKED_STALE_DOWNSTREAM_STATE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile historical precollection absence assertions against the established freeze/closure/verification/authorization lineage before routine mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve the accepted precollection record",
+        "separate historical precollection state from current downstream state",
+        "keep scientific N and authorization boundaries unchanged"
+      ],
+      "triggering_evidence": [
+        "workflow asserts immutable freeze, final closure, verification classification, and collection authorization are absent",
+        "all four referenced downstream artifacts now exist on protected main"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-immutable-freeze.yml",
+      "policy_id": "MUTATION_BLOCKED_STALE_DOWNSTREAM_STATE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile historical freeze-time downstream absence checks before routine mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve immutable freeze identity and accepted preflight binding",
+        "separate freeze-time absence assertions from current downstream state",
+        "do not rewrite accepted frozen scientific inputs"
+      ],
+      "triggering_evidence": [
+        "workflow asserts final closure, verification classification, and collection authorization are absent",
+        "all three referenced downstream artifacts now exist on protected main"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-final-closure.yml",
+      "policy_id": "MUTATION_BLOCKED_STALE_DOWNSTREAM_STATE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile the closure workflow's historical verification/authorization absence branch and exact-scope maintenance contract before routine mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve accepted final-closure packet identity",
+        "preserve exact-scope tooling maintenance semantics",
+        "separate historical downstream absence from current established records"
+      ],
+      "triggering_evidence": [
+        "workflow tooling path asserts verification classification and collection authorization are absent",
+        "both referenced downstream artifacts now exist on protected main"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-001-verification-classification.yml",
+      "policy_id": "MUTATION_BLOCKED_STALE_DOWNSTREAM_STATE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "HISTORICAL_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile the verification workflow's historical collection-authorization absence branch and exact three-file maintenance contract before routine mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve accepted verification classification identity",
+        "preserve exact three-file tooling maintenance contract unless explicitly redesigned",
+        "separate verification-time absence from current established collection authorization"
+      ],
+      "triggering_evidence": [
+        "workflow tooling path requires collection authorization to remain absent",
+        "TRACK_A_EPOCH_001_COLLECTION_AUTHORIZATION.json now exists on protected main"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135",
+        "#1129"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
     }
   ]
 }
