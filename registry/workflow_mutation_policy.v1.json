@@ -123,6 +123,92 @@
         "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
         "HIGH_ASSURANCE=NOT_AUTHORIZED"
       ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-preregistration.yml",
+      "policy_id": "MUTATION_BLOCKED_STALE_SUCCESSOR_STATE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile the retained Epoch 002 preregistration workflow's successor-custody absence assertion before any future #939 mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve the accepted preregistration artifact and historical claim boundary",
+        "separate historical-at-preregistration state from current successor-custody state",
+        "prove any maintenance change does not reinterpret the accepted Epoch 002 preregistration"
+      ],
+      "triggering_evidence": [
+        "current workflow still asserts TRACK_A_SUCCESSOR_SOLO_CUSTODY_RECOVERY_RECEIPT.json is absent",
+        "successor custody recovery evidence now exists on protected main"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135",
+        "#1133"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-analysis-lock.yml",
+      "policy_id": "MUTATION_BLOCKED_STALE_SUCCESSOR_STATE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Reconcile historical analysis-lock boundary fields against the now-established successor custody state before any routine mutation.",
+      "minimum_verification_before_mutation": [
+        "preserve frozen protocol, analysis, requirements, and configuration identities",
+        "distinguish historical lock-time boundary state from current repository state",
+        "prove no scientific or execution authority is promoted by reconciliation"
+      ],
+      "triggering_evidence": [
+        "workflow asserts successor_custody_recovery_receipt_established is false",
+        "validator repeats the same historical boundary assertion against current protected-main inputs"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "path": ".github/workflows/track-a-epoch-002-primary-analysis-autopilot.yml",
+      "policy_id": "MUTATION_BLOCKED_POST_RESULT_LIFECYCLE_RECONCILIATION_REQUIRED",
+      "workflow_classification_kind": "EXPERIMENT_EPOCH_WORKFLOW_INSTANCE",
+      "workflow_lifecycle": "CLOSED_BOUNDED_EXACT_SCOPE",
+      "tektite_lane_status": "BLOCKED",
+      "routine_hardening_allowed": false,
+      "allowed_next_action": "Define an explicit post-result verification mode before attempting routine maintenance of the historical autopilot workflow.",
+      "minimum_verification_before_mutation": [
+        "preserve the locked analysis implementation and requirements identities",
+        "retain refusal to re-execute once the locked result record exists",
+        "separate post-result verification from pre-execution authorization validation"
+      ],
+      "triggering_evidence": [
+        "#1149 exact-head Windows smoke passed immutable action setup and locked runtime checks",
+        "#1149 then failed deterministically because preflight refused current state after the locked result record already existed"
+      ],
+      "related_issues": [
+        "#939",
+        "#1135",
+        "#1149"
+      ],
+      "claim_boundary": [
+        "SCIENTIFIC_N_INCREMENT=0",
+        "INDEPENDENT_VALIDATION=NOT_ESTABLISHED",
+        "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED",
+        "HIGH_ASSURANCE=NOT_AUTHORIZED"
+      ]
     }
   ]
 }
