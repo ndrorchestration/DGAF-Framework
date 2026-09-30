@@ -78,6 +78,7 @@ def test_mutation_policy_preserves_claim_boundaries():
         assert "CANONICAL_DGAF_EFFICACY=NOT_ESTABLISHED" in boundary
         assert "HIGH_ASSURANCE=NOT_AUTHORIZED" in boundary
 
+
 def test_epoch002_historical_workflows_are_blocked_by_current_state_reconciliation():
     policies = _policies_by_path()
 
@@ -94,4 +95,3 @@ def test_epoch002_historical_workflows_are_blocked_by_current_state_reconciliati
     assert autopilot["policy_id"] == "MUTATION_BLOCKED_POST_RESULT_LIFECYCLE_RECONCILIATION_REQUIRED"
     assert autopilot["routine_hardening_allowed"] is False
     assert "#1149" in autopilot["related_issues"]
-
