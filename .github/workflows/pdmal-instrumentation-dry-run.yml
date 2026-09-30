@@ -26,7 +26,7 @@ jobs:
       PYTHONPATH: ${{ github.workspace }}/experiments/pdmal_topology
     steps:
       - name: Checkout control plane for candidate resolution
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
@@ -60,7 +60,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Checkout designated runtime candidate
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
           ref: ${{ steps.candidate.outputs.candidate_sha }}
           persist-credentials: false
@@ -107,7 +107,7 @@ jobs:
             echo "execution_timestamp=$execution_timestamp"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
           python-version: '3.12'
       - name: Install experiment dependencies from hash-pinned requirements
@@ -163,7 +163,7 @@ jobs:
           print(f'checksum: PASS {actual}')
           PY
       - name: Upload dry-run artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: pdmal-instrumentation-dry-run
           path: /tmp/pdmal-artifact/raw_pilot_*.csv*
@@ -287,7 +287,7 @@ jobs:
           print("emitted designated-candidate registry for", candidate)
           PY
       - name: Upload exact-candidate evidence registry
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dgaf-evidence-registry
           path: /tmp/dgaf-evidence-registry.json
