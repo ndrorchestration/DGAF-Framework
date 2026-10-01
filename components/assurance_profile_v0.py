@@ -136,10 +136,9 @@ def evaluate_assurance_profile(profile: AssuranceProfileInput) -> AssuranceProfi
         if assessment.required and assessment.status is not DimensionStatus.PASS:
             blockers.append(f"{display_name}:{assessment.status.value}")
 
-    if (
-        profile.trust_independence_review.required
-        and profile.independence_class
-        in (IndependenceClass.UNKNOWN, IndependenceClass.INDEPENDENT_UNVERIFIED)
+    if profile.trust_independence_review.required and profile.independence_class in (
+        IndependenceClass.UNKNOWN,
+        IndependenceClass.INDEPENDENT_UNVERIFIED,
     ):
         blockers.append(f"independence:{profile.independence_class.value}")
 
