@@ -95,7 +95,10 @@ def test_exact_evidence_admits_without_authorization_effect():
 def test_missing_bytes_are_not_evidence_acceptance():
     receipt = admit(evidence_bytes=None)
     assert receipt.admitted is False
-    assert receipt.reason_code is EvidenceAdmissionReason.EVIDENCE_MISSING_OR_INVALID
+    assert (
+        receipt.reason_code
+        is EvidenceAdmissionReason.EVIDENCE_MISSING_OR_INVALID
+    )
     assert receipt.digest_checked is False
 
 
@@ -115,20 +118,29 @@ def test_scope_mismatch_fails_as_target_identity_mismatch():
 def test_source_revision_mismatch_fails_closed():
     expected = target(source_revision="def456")
     receipt = admit(expected_target=expected)
-    assert receipt.reason_code is EvidenceAdmissionReason.SOURCE_IDENTITY_MISMATCH
+    assert (
+        receipt.reason_code
+        is EvidenceAdmissionReason.SOURCE_IDENTITY_MISMATCH
+    )
     assert receipt.source_checked is True
 
 
 def test_environment_mismatch_fails_closed():
     expected = target(environment_identity="python-3.13")
     receipt = admit(expected_target=expected)
-    assert receipt.reason_code is EvidenceAdmissionReason.ENVIRONMENT_IDENTITY_MISMATCH
+    assert (
+        receipt.reason_code
+        is EvidenceAdmissionReason.ENVIRONMENT_IDENTITY_MISMATCH
+    )
     assert receipt.environment_checked is True
 
 
 def test_provenance_class_mismatch_fails_closed():
     receipt = admit(required_producer_class="GITHUB_ACTIONS")
-    assert receipt.reason_code is EvidenceAdmissionReason.PROVENANCE_CLASS_MISMATCH
+    assert (
+        receipt.reason_code
+        is EvidenceAdmissionReason.PROVENANCE_CLASS_MISMATCH
+    )
     assert receipt.provenance_checked is True
 
 
@@ -152,13 +164,19 @@ def test_content_set_check_failure_fails_closed():
 
 def test_custody_check_failure_fails_closed():
     receipt = admit(custody_checker=lambda e, t, p, c: False)
-    assert receipt.reason_code is EvidenceAdmissionReason.CUSTODY_REQUIREMENT_UNSATISFIED
+    assert (
+        receipt.reason_code
+        is EvidenceAdmissionReason.CUSTODY_REQUIREMENT_UNSATISFIED
+    )
     assert receipt.custody_checked is True
 
 
 def test_claim_scope_checker_can_block_overbroad_claim():
     receipt = admit(claim_scope_checker=lambda e, t, p, c: False)
-    assert receipt.reason_code is EvidenceAdmissionReason.CLAIM_SCOPE_EXCEEDS_EVIDENCE
+    assert (
+        receipt.reason_code
+        is EvidenceAdmissionReason.CLAIM_SCOPE_EXCEEDS_EVIDENCE
+    )
     assert receipt.claim_scope_checked is True
 
 
@@ -167,12 +185,18 @@ def test_claim_scope_must_match_target_scope():
         claim_scope=claim(scope_id="system-wide"),
         claim_scope_checker=lambda e, t, p, c: True,
     )
-    assert receipt.reason_code is EvidenceAdmissionReason.CLAIM_SCOPE_EXCEEDS_EVIDENCE
+    assert (
+        receipt.reason_code
+        is EvidenceAdmissionReason.CLAIM_SCOPE_EXCEEDS_EVIDENCE
+    )
 
 
 def test_changed_target_requires_explicit_transfer():
     receipt = admit(expected_target=target(target_id="def456", source_revision=None))
-    assert receipt.reason_code is EvidenceAdmissionReason.HISTORICAL_TRANSFER_NOT_ESTABLISHED
+    assert (
+        receipt.reason_code
+        is EvidenceAdmissionReason.HISTORICAL_TRANSFER_NOT_ESTABLISHED
+    )
     assert receipt.historical_transfer_checked is True
 
 
