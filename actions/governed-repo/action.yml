@@ -1,0 +1,72 @@
+name: Governed Repo v0
+description: Evaluate repository promotion eligibility without performing repository mutation.
+author: ndrorchestration
+
+inputs:
+  repository:
+    description: Repository identity in owner/name form.
+    required: true
+  pull-request-json:
+    description: Bounded GitHub pull-request observation as JSON.
+    required: true
+  check-runs-json:
+    description: Array of bounded GitHub check-run observations as JSON.
+    required: true
+  expected-base-sha:
+    description: Expected exact base commit SHA.
+    required: true
+  expected-head-sha:
+    description: Expected exact head commit SHA.
+    required: true
+  observed-at:
+    description: Observation timestamp supplied by the caller.
+    required: true
+  policy-json:
+    description: Governed Repo promotion policy as JSON.
+    required: true
+  upstream-decisions-json:
+    description: Optional evidence, claim_scope, mutation_policy, and authority decisions as JSON.
+    required: false
+    default: '{}'
+
+outputs:
+  eligible:
+    description: Whether the supplied observations satisfy the declared policy.
+    value: ${{ steps.evaluate.outputs.eligible }}
+  reason-code:
+    description: Stable Governed Repo reason code.
+    value: ${{ steps.evaluate.outputs.reason_code }}
+  promotion-receipt:
+    description: Compact JSON promotion receipt.
+    value: ${{ steps.evaluate.outputs.promotion_receipt }}
+  merge-executed:
+    description: Always false for Governed Repo v0.
+    value: ${{ steps.evaluate.outputs.merge_executed }}
+  mutation-executed:
+    description: Always false for Governed Repo v0.
+    value: ${{ steps.evaluate.outputs.mutation_executed }}
+  authorization-effect:
+    description: Always NONE for Governed Repo v0.
+    value: ${{ steps.evaluate.outputs.authorization_effect }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+      with:
+        python-version: '3.12.0'
+
+    - name: Evaluate promotion eligibility
+      id: evaluate
+      shell: bash
+      env:
+        GOVERNED_REPO_REPOSITORY: ${{ inputs.repository }}
+        GOVERNED_REPO_PULL_REQUEST_JSON: ${{ inputs.pull-request-json }}
+        GOVERNED_REPO_CHECK_RUNS_JSON: ${{ inputs.check-runs-json }}
+        GOVERNED_REPO_EXPECTED_BASE_SHA: ${{ inputs.expected-base-sha }}
+        GOVERNED_REPO_EXPECTED_HEAD_SHA: ${{ inputs.expected-head-sha }}
+        GOVERNED_REPO_OBSERVED_AT: ${{ inputs.observed-at }}
+        GOVERNED_REPO_POLICY_JSON: ${{ inputs.policy-json }}
+        GOVERNED_REPO_UPSTREAM_DECISIONS_JSON: ${{ inputs.upstream-decisions-json }}
+      run: python "$GITHUB_ACTION_PATH/run.py"
