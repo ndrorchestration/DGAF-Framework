@@ -1,0 +1,66 @@
+name: Governed Repo P0 Package
+
+on:
+  pull_request:
+    paths:
+      - "components/governed_repo.py"
+      - "packages/governed-repo/**"
+      - ".github/workflows/governed-repo-package.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-install-test:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Assert package core is exact mirror
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp             components/governed_repo.py             packages/governed-repo/src/governed_repo/core.py
+
+      - name: Install build and test tooling
+        run: python -m pip install --upgrade build pytest
+
+      - name: Build wheel and sdist
+        working-directory: packages/governed-repo
+        run: python -m build
+
+      - name: Install built wheel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --force-reinstall packages/governed-repo/dist/*.whl
+
+      - name: Verify installed import outside source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${RUNNER_TEMP}"
+          python - <<'PY'
+          import governed_repo
+
+          assert governed_repo.__version__ == "0.0.0.dev0"
+          assert callable(governed_repo.assess_promotion)
+          print("installed_import=PASS")
+          PY
+
+      - name: Run package contract tests against installed artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${RUNNER_TEMP}"
+          pytest             "${GITHUB_WORKSPACE}/packages/governed-repo/tests/test_package_contract.py"             -q
