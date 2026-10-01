@@ -8,13 +8,15 @@ Controller: issue #1224
 ## Frozen identities
 
 Participant surface:
+
 - URL: `https://dynamicgovernanceagenticformation-1ei0gb4sl-ndrorchestration.vercel.app`
 - Vercel deployment: `dpl_EcDrRmUzFaWiGQf9nK6xzxw1LQLV`
 - DGAF source SHA: `d172c1430c7d97fba74b182f4aedf0d6b374d96a`
 
-Protocol:
+Protocol packet:
+
 - PR: #1227
-- protocol head: `ceda4fba0c0542c0fa189cfd3b53e6e1fbc6e502`
+- canonical packet commit: record the merged/canonical commit used for the session
 
 If either the participant surface or protocol changes materially, do not reuse this sheet without rebinding the identities.
 
@@ -28,6 +30,7 @@ If either the participant surface or protocol changes materially, do not reuse t
 - [ ] Record technical familiarity: low / medium / high.
 - [ ] Record governance-tool familiarity: none / some / substantial.
 - [ ] Confirm the pinned participant URL loads.
+- [ ] Record the canonical protocol packet commit used for this session.
 - [ ] Do not explain the four-stage pattern.
 
 ## During the session
@@ -37,11 +40,13 @@ Read only:
 > Please use the interface and answer the questions in the participant brief in your own words. I am testing the interface, not you. I will not explain what the interface is intended to mean until the tasks are complete.
 
 Allowed facilitator help:
+
 - browser/network access;
 - scrolling/navigation mechanics if the participant is physically unable to proceed;
 - repeating a task verbatim.
 
 Not allowed:
+
 - explaining DGAF/Tektite terminology;
 - pointing to the correct evidence or blocker;
 - explaining readiness vs authorization;
@@ -63,7 +68,7 @@ GOVERNANCE_TOOL_FAMILIARITY:
 REPOSITORY_SHA: d172c1430c7d97fba74b182f4aedf0d6b374d96a
 VERCEL_DEPLOYMENT: dpl_EcDrRmUzFaWiGQf9nK6xzxw1LQLV
 SURFACE_URL: https://dynamicgovernanceagenticformation-1ei0gb4sl-ndrorchestration.vercel.app
-PROTOCOL_SHA: ceda4fba0c0542c0fa189cfd3b53e6e1fbc6e502
+PROTOCOL_PACKET_COMMIT:
 
 SYSTEM_PURPOSE_RAW:
 CURRENT_STATE_RAW:
@@ -100,6 +105,7 @@ BOUNDARY:
 ## Adjudication floor
 
 A bounded receiver-transfer PASS requires:
+
 - eligible unfamiliar participant;
 - exact surface/protocol identity captured;
 - state, evidence, blocker, and readiness/authorization each at least partially correct;
