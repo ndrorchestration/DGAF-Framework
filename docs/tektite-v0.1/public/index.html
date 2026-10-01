@@ -11,17 +11,19 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
     <header class="site-header">
       <nav class="nav" aria-label="Primary navigation">
         <a href="#home">Home</a>
         <a href="#console">Governance Console</a>
         <a href="#ledger">Evidence Ledger</a>
+        <a href="#sources">Source Links</a>
         <a href="#cases">Case Studies</a>
         <a href="#services">Services / About</a>
       </nav>
     </header>
 
-    <main>
+    <main id="main">
       <section id="home" class="hero panel">
         <p class="eyebrow">Tektite v0.1</p>
         <h1>Public governance console for evidence-bound AI systems.</h1>
@@ -33,16 +35,20 @@
           <span>Core question</span>
           <strong>What did the system do, what evidence supports it, and what is it authorized to do next?</strong>
         </div>
-        <div class="notice">
+        <div class="notice" role="note" aria-label="Static shell boundary">
           <strong>Boundary:</strong> This static shell is display-only. It does not execute actions, mutate repositories,
           mirror private systems, or establish independent validation.
         </div>
       </section>
 
-      <section id="console" class="panel">
+      <section id="console" class="panel" aria-labelledby="console-title">
         <div class="section-heading">
           <p class="eyebrow">Governance Console</p>
-          <h2>Current status snapshot</h2>
+          <h2 id="console-title">Current status snapshot</h2>
+          <p>
+            This snapshot is a public projection of merged documentation and static seed artifacts. It is not an
+            execution surface, certification artifact, or independent validation result.
+          </p>
         </div>
         <div class="status-grid">
           <article class="status-card positive">
@@ -56,9 +62,9 @@
             <p>Queue and boundary documentation are represented in public seed artifacts.</p>
           </article>
           <article class="status-card positive">
-            <h3>ACP Boundary Docs</h3>
+            <h3>Tektite Static Shell</h3>
             <p class="status">MERGED</p>
-            <p>Documentation/static-data seed is merged to main.</p>
+            <p>The display-only public shell and local preview guidance are merged to main.</p>
           </article>
           <article class="status-card neutral">
             <h3>Independent Validation</h3>
@@ -93,10 +99,10 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel" aria-labelledby="ceilings-title">
         <div class="section-heading">
           <p class="eyebrow">Claim ceilings</p>
-          <h2>Preserved public boundary</h2>
+          <h2 id="ceilings-title">Preserved public boundary</h2>
         </div>
         <pre class="code-block"><code>SCIENTIFIC_N_INCREMENT=0
 INDEPENDENT_VALIDATION=NOT_ESTABLISHED
@@ -107,16 +113,19 @@ ROLLBACK_EXECUTION=NOT_AUTHORIZED
 PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
       </section>
 
-      <section id="ledger" class="panel">
+      <section id="ledger" class="panel" aria-labelledby="ledger-title">
         <div class="section-heading">
           <p class="eyebrow">Evidence Ledger</p>
-          <h2>Seed public evidence rows</h2>
+          <h2 id="ledger-title">Seed public evidence rows</h2>
         </div>
         <div class="ledger-list">
           <article>
             <h3>ACP PR #145</h3>
             <p><strong>Supports:</strong> ACP queue classification, dependency map, and executor boundary documentation.</p>
-            <p><strong>Does not support:</strong> live executor authority, rollback execution, production deployment, independent validation, or High-Assurance.</p>
+            <p>
+              <strong>Does not support:</strong> live executor authority, rollback execution, production deployment,
+              independent validation, or High-Assurance.
+            </p>
             <p><strong>Authorization effect:</strong> Executor promotion remains blocked.</p>
           </article>
           <article>
@@ -128,16 +137,43 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
           <article>
             <h3>ACP blockers #117 and #118</h3>
             <p><strong>Supports:</strong> explicit blocked-transition handling for executor surfaces.</p>
-            <p><strong>Does not support:</strong> resolving object identity, TOCTOU, process identity, or isolation concerns.</p>
+            <p>
+              <strong>Does not support:</strong> resolving object identity, TOCTOU, process identity, or isolation concerns.
+            </p>
             <p><strong>Authorization effect:</strong> Held executor PRs remain held.</p>
           </article>
         </div>
       </section>
 
-      <section id="cases" class="panel">
+      <section id="sources" class="panel" aria-labelledby="sources-title">
+        <div class="section-heading">
+          <p class="eyebrow">Source Links</p>
+          <h2 id="sources-title">Public artifacts behind this shell</h2>
+          <p>
+            These links identify the public repository artifacts used for this static projection. They do not convert
+            the shell into an execution surface or validation result.
+          </p>
+        </div>
+        <div class="source-grid">
+          <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1166">
+            PR #1166 — Tektite v0.1 seed plan
+          </a>
+          <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1167">
+            PR #1167 — Static HTML shell
+          </a>
+          <a href="https://github.com/ndrorchestration/DGAF-Framework/pull/1168">
+            PR #1168 — Preview instructions
+          </a>
+          <a href="https://github.com/ndrorchestration/DGAF-Framework/issues/1136">
+            Issue #1136 — Tektite v0 governance-console scope
+          </a>
+        </div>
+      </section>
+
+      <section id="cases" class="panel" aria-labelledby="cases-title">
         <div class="section-heading">
           <p class="eyebrow">Case Studies</p>
-          <h2>Minimum public case-study set</h2>
+          <h2 id="cases-title">Minimum public case-study set</h2>
         </div>
         <div class="card-grid">
           <article class="case-card">
@@ -158,14 +194,15 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
         </div>
       </section>
 
-      <section id="services" class="panel">
+      <section id="services" class="panel" aria-labelledby="services-title">
         <div class="section-heading">
           <p class="eyebrow">Services / About</p>
-          <h2>Professional translation</h2>
+          <h2 id="services-title">Professional translation</h2>
         </div>
         <p>
           Andrew Hensel works on AI systems design, evaluation, agentic governance, and provenance-focused orchestration.
-          The work centers on a practical question: what did the system do, what evidence supports it, and what is it authorized to do next?
+          The work centers on a practical question: what did the system do, what evidence supports it, and what is it
+          authorized to do next?
         </p>
         <ul class="service-list">
           <li>AI Evidence Audit</li>
@@ -177,5 +214,12 @@ PRODUCTION_EXECUTOR=NOT_ESTABLISHED</code></pre>
         </ul>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <p>
+        Tektite v0.1 is a static public projection. It preserves negative status, blocked transitions, and claim
+        ceilings rather than hiding them.
+      </p>
+    </footer>
   </body>
 </html>
