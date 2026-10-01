@@ -1,0 +1,84 @@
+{
+  "schema_version": "ECOSYSTEM_STATE_POINTER_V1",
+  "observed_at": "2026-10-01T09:07:25Z",
+  "authorities": [
+    {
+      "authority_id": "DGAF_SOURCE",
+      "surface": "GITHUB",
+      "role": "Exact source, CI, evidence and commit identity",
+      "object_identity": "05ba55a33193855394dc4dc69ce6deea375ece93",
+      "predecessor_object_identity": "b4fd93dfe29c26376a2ff96a7cbe4c5f2197aeb7",
+      "freshness_state": "CURRENT",
+      "invalidation_reason": "NONE",
+      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/commit/05ba55a33193855394dc4dc69ce6deea375ece93"
+    },
+    {
+      "authority_id": "ACP_SOURCE",
+      "surface": "GITHUB",
+      "role": "Execution-boundary and control-plane source authority",
+      "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
+      "predecessor_object_identity": null,
+      "freshness_state": "CURRENT",
+      "invalidation_reason": "NONE",
+      "evidence_url": "https://github.com/ndrorchestration/agent-control-plane/commit/4d3cdd21a445b765753cb5d36360f643210fe0b5"
+    },
+    {
+      "authority_id": "TEKTITE_PUBLIC_SNAPSHOT",
+      "surface": "TEKTITE_PUBLIC",
+      "role": "Public projection only; never an authorization source",
+      "object_identity": "DGAF:05ba55a33193855394dc4dc69ce6deea375ece93:docs/tektite-v0.1/public",
+      "predecessor_object_identity": "DGAF:b4fd93dfe29c26376a2ff96a7cbe4c5f2197aeb7:docs/tektite-v0.1/public",
+      "freshness_state": "CURRENT",
+      "invalidation_reason": "NONE",
+      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/tree/05ba55a33193855394dc4dc69ce6deea375ece93/docs/tektite-v0.1/public"
+    },
+    {
+      "authority_id": "NOTION_INTERPRETED_STATE",
+      "surface": "NOTION",
+      "role": "Interpreted ecosystem state, routing and reconciliation",
+      "object_identity": "https://app.notion.com/p/3d5f5bad238b811a8bc3fabe5edf209c",
+      "predecessor_object_identity": null,
+      "freshness_state": "CURRENT",
+      "invalidation_reason": "NONE",
+      "evidence_url": "https://app.notion.com/p/3d5f5bad238b811a8bc3fabe5edf209c"
+    }
+  ],
+  "consumer_bindings": [
+    {
+      "consumer_id": "AOSS_STAGE_A_READINESS",
+      "authority_ids": [
+        "DGAF_SOURCE",
+        "ACP_SOURCE"
+      ],
+      "manifest_path": "registry/aoss_stage_a_readiness_semantic_source_v1.json",
+      "manifest_digest_sha256": "6b02ada1009f717f7177ef72ecd281f08b5081824ec911c16ae23f826ab9e418",
+      "freshness_state": "CURRENT",
+      "invalidation_reason": "NONE"
+    },
+    {
+      "consumer_id": "TEKTITE_PUBLIC_STATUS",
+      "authority_ids": [
+        "DGAF_SOURCE",
+        "ACP_SOURCE"
+      ],
+      "manifest_path": "registry/tektite_public_status_semantic_source_v1.json",
+      "manifest_digest_sha256": "d59a85a739630bf9c58db3b0b507659d5c9d743122391e8828e3541c980c4f87",
+      "freshness_state": "CURRENT",
+      "invalidation_reason": "NONE"
+    }
+  ],
+  "claim_ceiling": {
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED",
+    "live_repository_mutation": "NOT_AUTHORIZED",
+    "production_executor": "NOT_ESTABLISHED"
+  },
+  "freshness_policy": {
+    "whole_repository_identity_is_provenance": true,
+    "semantic_manifest_controls_material_change": true,
+    "consumer_specific_bindings_required": true,
+    "unknown_change_fails_closed": true
+  }
+}
