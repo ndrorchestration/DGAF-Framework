@@ -109,15 +109,9 @@ def test_positive_receipts_preserve_primitive_semantics():
 
 
 def test_negative_receipts_preserve_denial_reasons():
-    evidence = evidence_gate_decision(
-        evidence_receipt(admitted=False, reason_code="DIGEST_MISMATCH")
-    )
-    claim_scope = claimgraph_decision(
-        claimgraph_receipt(valid=False, reason_code="CONTRACT_INVALID")
-    )
-    authority = action_admission_decision(
-        action_receipt(admitted=False, reason_code="OPERATION_MISMATCH")
-    )
+    evidence = evidence_gate_decision(evidence_receipt(admitted=False, reason_code="DIGEST_MISMATCH"))
+    claim_scope = claimgraph_decision(claimgraph_receipt(valid=False, reason_code="CONTRACT_INVALID"))
+    authority = action_admission_decision(action_receipt(admitted=False, reason_code="OPERATION_MISMATCH"))
 
     assert evidence.accepted is False
     assert evidence.reason_code == "DIGEST_MISMATCH"
