@@ -113,3 +113,31 @@ def test_claim_ceiling_cannot_be_promoted():
     value["claim_ceiling"]["independent_validation"] = "ESTABLISHED"
     errors = validate(value)
     assert any("claim_ceiling" in error for error in errors)
+
+
+def test_aoss_readiness_manifest_covers_transitive_semantic_closure():
+    manifest = read_json(AOSS_MANIFEST)
+    paths = {item["path"] for item in manifest["artifacts"]}
+    required = {
+        "scripts/validate_aoss_v0_6_stage_a_predata_readiness.py",
+        "registry/aoss_v0_6_stage_a_predata_readiness_v1.json",
+        "registry/aoss_v0_6_acp_measurement_manifest_v1.json",
+        "registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json",
+        "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json",
+        "schemas/aoss_v0_6_stage_a_replay_receipt.schema.json",
+        "registry/aoss_v0_6_stage_a_freshness_calibration_v1.json",
+        "registry/aoss_v0_6_stage_a_episode_eligibility_repetition_v1.json",
+        "registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json",
+        "registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json",
+        "registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json",
+        "registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json",
+        "registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json",
+        "scripts/aoss_v0_6_stage_a_acp_direct_baseline.py",
+        "registry/aoss_v0_6_stage_a_decision_policy_v1.json",
+        "scripts/aoss_v0_6_stage_a_decision_policy.py",
+        "scripts/aoss_v0_6_acp_adapter.py",
+        "registry/aoss_v0_6_stage_a_collection_authorization_v1.json",
+        "registry/aoss_v0_6_stage_a_environment_manifest_v1.json",
+        "registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json",
+    }
+    assert required <= paths

@@ -2,19 +2,33 @@
   "schema_version": "SEMANTIC_SOURCE_MANIFEST_V1",
   "manifest_id": "AOSS_STAGE_A_READINESS_SEMANTIC_SOURCE_V1",
   "consumer": "AOSS_STAGE_A_READINESS",
-  "observed_at": "2026-10-01T14:24:26Z",
+  "observed_at": "2026-10-01T17:13:00Z",
   "repository": "ndrorchestration/DGAF-Framework",
-  "repository_commit": "9be30ce5b88df8e0435896e0d62ba4930686b278",
+  "repository_commit": "561654322231b83da34498bfc1c3a69d46738cc9",
   "artifacts": [
-    {"path": "registry/aoss_v0_6_acp_measurement_manifest_v1.json", "git_blob_sha1": "1c690abbe2ab451f5081f56c25970eb85b031ce4", "role": "ACP measurement mapping"},
-    {"path": "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json", "git_blob_sha1": "1d2b44acb63f30660253e3c96f1a6cac602d62eb", "role": "artifact replay and receipt contract"},
-    {"path": "registry/aoss_v0_6_stage_a_collection_authorization_v1.json", "git_blob_sha1": "3a5efa22b99e03ef35bea71c261a4bcd681f0e6f", "role": "collection authorization boundary"},
-    {"path": "registry/aoss_v0_6_stage_a_decision_policy_v1.json", "git_blob_sha1": "b93f01af1825e93279e945f7dc07f299daab89bb", "role": "decision policy"},
-    {"path": "registry/aoss_v0_6_stage_a_environment_manifest_v1.json", "git_blob_sha1": "d6d67fc4542d47e22f6f40503335c2e7580b405c", "role": "environment binding"},
-    {"path": "registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json", "git_blob_sha1": "80e7ea19a3da601b1a80c4d9c9e89c774f303814", "role": "executable/destination binding"}
+    {"path":"scripts/validate_aoss_v0_6_stage_a_predata_readiness.py","git_blob_sha1":"fe53b2d694a15966779191162dcc5abfd2ce852a","role":"pre-data readiness validator semantics"},
+    {"path":"registry/aoss_v0_6_stage_a_predata_readiness_v1.json","git_blob_sha1":"9592e0357d7b20baf4b64c0a05513fb5d68cb11d","role":"pre-data readiness predicate state"},
+    {"path":"registry/aoss_v0_6_acp_measurement_manifest_v1.json","git_blob_sha1":"1c690abbe2ab451f5081f56c25970eb85b031ce4","role":"ACP measurement mapping"},
+    {"path":"registry/aoss_v0_6_stage_a_observer_measurement_boundary_v1.json","git_blob_sha1":"108dc570dd5dc1903e49a2b4afbf9a4eb3d604ce","role":"observer measurement and trust-domain boundary"},
+    {"path":"registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json","git_blob_sha1":"1d2b44acb63f30660253e3c96f1a6cac602d62eb","role":"artifact replay and receipt contract"},
+    {"path":"schemas/aoss_v0_6_stage_a_replay_receipt.schema.json","git_blob_sha1":"fa1f58aff79320352f285ba41ad85c237adc97cc","role":"replay receipt schema"},
+    {"path":"registry/aoss_v0_6_stage_a_freshness_calibration_v1.json","git_blob_sha1":"694ecec6c7214e5c4047f6d7de612513d176b740","role":"freshness and calibration contract"},
+    {"path":"registry/aoss_v0_6_stage_a_episode_eligibility_repetition_v1.json","git_blob_sha1":"f91735ae51b44921e78a50e9f6bb4486750ba96f","role":"episode eligibility and repetition contract"},
+    {"path":"registry/aoss_v0_6_stage_a_failure_ground_truth_v1.json","git_blob_sha1":"02a393bf025df6dbd8bd0126a0626a31d832ee00","role":"failure-injection ground-truth contract"},
+    {"path":"registry/aoss_v0_6_stage_a_analysis_multiplicity_contract_v1.json","git_blob_sha1":"8e95d00e6cc12f95336b004c75c3771ac7530bf6","role":"analysis and multiplicity contract"},
+    {"path":"registry/aoss_v0_6_stage_a_practical_effect_adoption_rule_v1.json","git_blob_sha1":"4576366f839f80af1fcb1318a3a9ac69f90e7244","role":"practical-effect and adoption rule"},
+    {"path":"registry/aoss_v0_6_stage_a_comparator_input_derivation_gap_v1.json","git_blob_sha1":"f45436881ecb7391116dcb793bf289621bd159a5","role":"historical comparator derivation gap"},
+    {"path":"registry/aoss_v0_6_stage_a_primary_comparator_amendment_v1.json","git_blob_sha1":"aaf2a62399158dda0ffdc3006d6b7fbe64a1d0e8","role":"primary comparator amendment"},
+    {"path":"scripts/aoss_v0_6_stage_a_acp_direct_baseline.py","git_blob_sha1":"f1846d00084b9e0a1b1ddbd21999f1ce9627c4f5","role":"primary comparator executable semantics"},
+    {"path":"registry/aoss_v0_6_stage_a_decision_policy_v1.json","git_blob_sha1":"b93f01af1825e93279e945f7dc07f299daab89bb","role":"decision policy contract"},
+    {"path":"scripts/aoss_v0_6_stage_a_decision_policy.py","git_blob_sha1":"dd03a34fe17579c57dcf386abac9f1f5e7eb23de","role":"decision policy executable semantics"},
+    {"path":"scripts/aoss_v0_6_acp_adapter.py","git_blob_sha1":"a2505deb457157e535bab713150d49d3950f789f","role":"ACP-to-AOSS adapter semantics referenced by readiness evidence"},
+    {"path":"registry/aoss_v0_6_stage_a_collection_authorization_v1.json","git_blob_sha1":"3a5efa22b99e03ef35bea71c261a4bcd681f0e6f","role":"broader Stage-A collection authorization boundary"},
+    {"path":"registry/aoss_v0_6_stage_a_environment_manifest_v1.json","git_blob_sha1":"d6d67fc4542d47e22f6f40503335c2e7580b405c","role":"broader Stage-A environment binding"},
+    {"path":"registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json","git_blob_sha1":"80e7ea19a3da601b1a80c4d9c9e89c774f303814","role":"broader Stage-A executable and destination binding"}
   ],
   "external_authorities": [
-    {"authority_id": "ACP_SOURCE", "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5", "role": "execution-boundary/control-plane dependency"}
+    {"authority_id":"ACP_SOURCE","object_identity":"4d3cdd21a445b765753cb5d36360f643210fe0b5","role":"execution-boundary/control-plane dependency"}
   ],
   "non_effects": {
     "scientific_n_increment": 0,
@@ -22,5 +36,5 @@
     "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
     "high_assurance": "NOT_AUTHORIZED"
   },
-  "semantic_material_digest_sha256": "1f1cab77c385b6e0202c812faeaf7649843d6fc9c817bdbfe8a8bf6435aeeeac"
+  "semantic_material_digest_sha256": "55dd4140f0ce8347f4b2476b0c1de8ef79f643f6417c07fc7b120f2639a9c2b5"
 }
