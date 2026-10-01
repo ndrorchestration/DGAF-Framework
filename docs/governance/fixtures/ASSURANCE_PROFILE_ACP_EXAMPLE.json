@@ -1,0 +1,15 @@
+{
+  "profile_id": "ASSURANCE-PROFILE-V0-ACP-EXAMPLE",
+  "profile_version": "v0-candidate",
+  "target_system": "agent-control-plane",
+  "source_identity": "example-acp-source",
+  "runtime_identity": "python-example",
+  "environment_identity": "local-test-example",
+  "material_source_manifest_ref": "manifest://acp/example",
+  "independence_class": "SAME_SYSTEM",
+  "claim_ceiling": [
+    "no production-executor claim",
+    "no High-Assurance claim",
+    "no independent-validation claim"
+  ]
+}
