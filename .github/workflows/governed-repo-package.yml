@@ -55,6 +55,7 @@ jobs:
 
           assert governed_repo.__version__ == "0.0.0.dev0"
           assert callable(governed_repo.assess_promotion)
+          assert callable(governed_repo.assess_github_promotion)
           print("installed_import=PASS")
           PY
 
@@ -63,4 +64,4 @@ jobs:
         run: |
           set -euo pipefail
           cd "${RUNNER_TEMP}"
-          pytest             "${GITHUB_WORKSPACE}/packages/governed-repo/tests/test_package_contract.py"             -q
+          pytest             "${GITHUB_WORKSPACE}/packages/governed-repo/tests"             -q
