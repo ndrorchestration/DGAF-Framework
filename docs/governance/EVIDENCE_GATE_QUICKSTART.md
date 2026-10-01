@@ -49,6 +49,7 @@ print(evidence_admission_receipt_to_dict(receipt))
 ```
 
 The receipt records:
+
 - admitted / denied;
 - stable reason code;
 - evidence and exact target identities;
@@ -80,6 +81,7 @@ An admitted receipt means only:
 > The supplied evidence satisfied the declared Evidence Gate v0 contract for the exact recorded target, provenance class, and claim scope.
 
 Admission does not establish:
+
 - deployment or release authority;
 - execution or mutation authority;
 - dataset lock;
