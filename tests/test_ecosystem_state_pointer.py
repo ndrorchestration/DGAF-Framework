@@ -115,7 +115,8 @@ def test_missing_consumer_binding_fails_closed_as_missing_binding():
 def test_new_consumer_binding_is_missing_binding_until_reconciled():
     after = pointer()
     before = copy.deepcopy(after)
-    consumer_id = "AOSS_STAGE_A_READINESS"\n    before["consumer_bindings"] = [x for x in before["consumer_bindings"] if x["consumer_id"] != consumer_id]
+    consumer_id = "AOSS_STAGE_A_READINESS"
+    before["consumer_bindings"] = [x for x in before["consumer_bindings"] if x["consumer_id"] != consumer_id]
 
     result = classify(before, after)
     classes = {x["consumer_id"]: x["classification"] for x in result["consumer_bindings"]}
