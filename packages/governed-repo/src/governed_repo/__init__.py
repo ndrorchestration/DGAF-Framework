@@ -10,6 +10,12 @@ from .core import (
     UpstreamDecision,
     assess_promotion,
 )
+from .github_adapter import (
+    GitHubAdapterInputError,
+    assess_github_promotion,
+    change_identity_from_pull_request,
+    gate_receipt_from_check_run,
+)
 
 __all__ = [
     "ChangeIdentity",
@@ -20,6 +26,10 @@ __all__ = [
     "PromotionReceipt",
     "UpstreamDecision",
     "assess_promotion",
+    "GitHubAdapterInputError",
+    "assess_github_promotion",
+    "change_identity_from_pull_request",
+    "gate_receipt_from_check_run",
 ]
 
 __version__ = "0.0.0.dev0"
