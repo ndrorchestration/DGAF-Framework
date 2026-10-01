@@ -1,0 +1,50 @@
+name: Semantic Source Git Binding
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - "registry/*semantic_source_v1.json"
+      - "scripts/verify_semantic_source_git_bindings.py"
+      - "tests/test_semantic_source_git_bindings.py"
+      - ".github/workflows/semantic-source-git-binding.yml"
+  pull_request:
+    paths:
+      - "registry/*semantic_source_v1.json"
+      - "scripts/verify_semantic_source_git_bindings.py"
+      - "tests/test_semantic_source_git_bindings.py"
+      - ".github/workflows/semantic-source-git-binding.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-git-bindings:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full Git history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Run verifier regression tests
+        run: python -m pytest -q tests/test_semantic_source_git_bindings.py
+
+      - name: Verify AOSS semantic-source Git bindings
+        run: >-
+          python scripts/verify_semantic_source_git_bindings.py
+          registry/aoss_stage_a_readiness_semantic_source_v1.json
+          --repo .
+          --check
+
+      - name: Verify Tektite semantic-source Git bindings
+        run: >-
+          python scripts/verify_semantic_source_git_bindings.py
+          registry/tektite_public_status_semantic_source_v1.json
+          --repo .
+          --check
