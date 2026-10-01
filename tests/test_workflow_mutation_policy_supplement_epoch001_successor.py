@@ -61,7 +61,10 @@ def test_unblinding_materialization_policy_records_no_unblinding_boundary():
     entry = _policies_by_path()[".github/workflows/track-a-epoch-001-unblinding-materialization.yml"]
 
     assert entry["policy_id"] == "MUTATION_BLOCKED_UNBLINDING_MATERIALIZATION_STATE_RECONCILIATION_REQUIRED"
-    assert any("no-unblinding" in item for item in entry["allowed_next_action"].split()) or "no-unblinding" in entry["allowed_next_action"]
+    assert (
+        any("no-unblinding" in item for item in entry["allowed_next_action"].split())
+        or "no-unblinding" in entry["allowed_next_action"]
+    )
     assert any("unblinding" in item for item in entry["minimum_verification_before_mutation"])
     assert any("track_a_epoch_001_unblinded_analysis_input.json" in item for item in entry["triggering_evidence"])
 
