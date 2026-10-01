@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ndrorchestration/DGAF-Framework/registry/semantic_source_manifest_v1.schema.json",
+  "title": "SEMANTIC_SOURCE_MANIFEST_V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "consumer",
+    "observed_at",
+    "repository",
+    "repository_commit",
+    "artifacts",
+    "external_authorities",
+    "non_effects",
+    "manifest_digest_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "SEMANTIC_SOURCE_MANIFEST_V1"},
+    "manifest_id": {"type": "string", "minLength": 1},
+    "consumer": {"type": "string", "minLength": 1},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "repository": {"type": "string", "minLength": 1},
+    "repository_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "git_blob_sha1", "role"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "git_blob_sha1": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "role": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "external_authorities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["authority_id", "object_identity", "role"],
+        "properties": {
+          "authority_id": {"type": "string", "minLength": 1},
+          "object_identity": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "non_effects": {"type": "object"},
+    "manifest_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
