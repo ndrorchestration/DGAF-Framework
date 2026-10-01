@@ -1,0 +1,155 @@
+name: Governed Repo P2 Action
+
+on:
+  pull_request:
+    paths:
+      - "actions/governed-repo/**"
+      - "packages/governed-repo/**"
+      - ".github/workflows/governed-repo-action.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Eligible case
+        id: eligible
+        uses: ./actions/governed-repo
+        with:
+          repository: example/repo
+          pull-request-json: '{"number":42,"base":{"sha":"base123"},"head":{"sha":"head456"},"merge_commit_sha":"merge789"}'
+          check-runs-json: '[{"name":"ci","status":"completed","conclusion":"success","head_sha":"head456","completed_at":"2026-10-01T17:10:00Z","app":{"slug":"github-actions","id":15368}}]'
+          expected-base-sha: base123
+          expected-head-sha: head456
+          observed-at: '2026-10-01T17:11:00Z'
+          policy-json: '{"required_gates":[{"gate_id":"ci","gate_class":"quality","require_head_binding":true,"require_base_binding":false}]}'
+
+      - name: Assert eligible outputs
+        shell: bash
+        env:
+          ELIGIBLE: ${{ steps.eligible.outputs.eligible }}
+          REASON: ${{ steps.eligible.outputs['reason-code'] }}
+          RECEIPT: ${{ steps.eligible.outputs['promotion-receipt'] }}
+          MERGE_EXECUTED: ${{ steps.eligible.outputs['merge-executed'] }}
+          MUTATION_EXECUTED: ${{ steps.eligible.outputs['mutation-executed'] }}
+          AUTHORIZATION_EFFECT: ${{ steps.eligible.outputs['authorization-effect'] }}
+        run: |
+          set -euo pipefail
+          test "$ELIGIBLE" = "true"
+          test "$REASON" = "ELIGIBLE_FOR_PROMOTION"
+          test "$MERGE_EXECUTED" = "false"
+          test "$MUTATION_EXECUTED" = "false"
+          test "$AUTHORIZATION_EFFECT" = "NONE"
+          RECEIPT="$RECEIPT" python - <<'PY'
+          import json
+          import os
+
+          payload = json.loads(os.environ["RECEIPT"])
+          assert payload["eligible"] is True
+          assert payload["merge_executed"] is False
+          assert payload["mutation_executed"] is False
+          assert payload["authorization_effect"] == "NONE"
+          PY
+
+      - name: Stale-base denial
+        id: stale
+        uses: ./actions/governed-repo
+        with:
+          repository: example/repo
+          pull-request-json: '{"number":42,"base":{"sha":"older-base"},"head":{"sha":"head456"}}'
+          check-runs-json: '[{"name":"ci","status":"completed","conclusion":"success","head_sha":"head456","completed_at":"2026-10-01T17:10:00Z"}]'
+          expected-base-sha: base123
+          expected-head-sha: head456
+          observed-at: '2026-10-01T17:11:00Z'
+          policy-json: '{"required_gates":[{"gate_id":"ci","gate_class":"quality"}]}'
+
+      - name: Assert stale-base denial
+        shell: bash
+        env:
+          ELIGIBLE: ${{ steps.stale.outputs.eligible }}
+          REASON: ${{ steps.stale.outputs['reason-code'] }}
+        run: |
+          set -euo pipefail
+          test "$ELIGIBLE" = "false"
+          test "$REASON" = "STALE_BASE"
+
+      - name: Missing-check denial
+        id: missing
+        uses: ./actions/governed-repo
+        with:
+          repository: example/repo
+          pull-request-json: '{"number":42,"base":{"sha":"base123"},"head":{"sha":"head456"}}'
+          check-runs-json: '[]'
+          expected-base-sha: base123
+          expected-head-sha: head456
+          observed-at: '2026-10-01T17:11:00Z'
+          policy-json: '{"required_gates":[{"gate_id":"ci","gate_class":"quality"}]}'
+
+      - name: Assert missing-check denial
+        shell: bash
+        env:
+          ELIGIBLE: ${{ steps.missing.outputs.eligible }}
+          REASON: ${{ steps.missing.outputs['reason-code'] }}
+        run: |
+          set -euo pipefail
+          test "$ELIGIBLE" = "false"
+          test "$REASON" = "REQUIRED_CHECK_MISSING"
+
+      - name: Required upstream evidence denial
+        id: evidence
+        uses: ./actions/governed-repo
+        with:
+          repository: example/repo
+          pull-request-json: '{"number":42,"base":{"sha":"base123"},"head":{"sha":"head456"}}'
+          check-runs-json: '[{"name":"ci","status":"completed","conclusion":"success","head_sha":"head456","completed_at":"2026-10-01T17:10:00Z"}]'
+          expected-base-sha: base123
+          expected-head-sha: head456
+          observed-at: '2026-10-01T17:11:00Z'
+          policy-json: '{"required_gates":[{"gate_id":"ci","gate_class":"quality"}],"require_evidence_acceptance":true}'
+          upstream-decisions-json: '{"evidence":{"decision_class":"evidence","accepted":false,"reason_code":"DIGEST_MISMATCH","receipt_id":"evidence-1"}}'
+
+      - name: Assert upstream evidence denial
+        shell: bash
+        env:
+          ELIGIBLE: ${{ steps.evidence.outputs.eligible }}
+          REASON: ${{ steps.evidence.outputs['reason-code'] }}
+        run: |
+          set -euo pipefail
+          test "$ELIGIBLE" = "false"
+          test "$REASON" = "EVIDENCE_INSUFFICIENT"
+
+      - name: Malformed input fails closed
+        id: malformed
+        continue-on-error: true
+        uses: ./actions/governed-repo
+        with:
+          repository: example/repo
+          pull-request-json: '{not-json'
+          check-runs-json: '[]'
+          expected-base-sha: base123
+          expected-head-sha: head456
+          observed-at: '2026-10-01T17:11:00Z'
+          policy-json: '{"required_gates":[]}'
+
+      - name: Assert malformed input failed
+        shell: bash
+        env:
+          OUTCOME: ${{ steps.malformed.outcome }}
+        run: |
+          set -euo pipefail
+          test "$OUTCOME" = "failure"
+
+      - name: Assert wrapper contains no mutation or token interface
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -Eiq 'pull-requests:[[:space:]]*write|contents:[[:space:]]*write|actions:[[:space:]]*write' actions/governed-repo/action.yml
+          ! grep -Eiq 'github[_-]?token|GITHUB_TOKEN|secret' actions/governed-repo/action.yml
+          ! grep -Eiq '(^|[[:space:]])(subprocess|requests|urllib)([[:space:]]|$)|api\.github\.com|github[_-]?token|GITHUB_TOKEN|os\.system|git[[:space:]]+(push|merge)|gh[[:space:]]+pr[[:space:]]+merge' actions/governed-repo/run.py
