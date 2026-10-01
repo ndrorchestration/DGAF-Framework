@@ -1,0 +1,111 @@
+name: Governed Repo Release Provenance
+
+on:
+  pull_request:
+    paths:
+      - "packages/governed-repo/**"
+      - "actions/governed-repo/**"
+      - "scripts/build_governed_repo_release_provenance.py"
+      - "tests/test_governed_repo_release_provenance.py"
+      - "docs/governance/governed_repo_release_provenance.v1.schema.json"
+      - ".github/workflows/governed-repo-release-provenance.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  package-matrix:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install build and test tooling
+        run: python -m pip install --upgrade build pytest
+      - name: Build wheel and sdist
+        working-directory: packages/governed-repo
+        run: python -m build
+      - name: Install built wheel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --force-reinstall packages/governed-repo/dist/*.whl
+      - name: Run installed package contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${RUNNER_TEMP}"
+          pytest "${GITHUB_WORKSPACE}/packages/governed-repo/tests" -q
+
+  provenance:
+    name: Build provenance manifest
+    needs: package-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build and test tooling
+        run: python -m pip install --upgrade build pytest
+
+      - name: Run provenance unit tests
+        run: pytest tests/test_governed_repo_release_provenance.py -q
+
+      - name: Build exact package artifacts
+        working-directory: packages/governed-repo
+        run: python -m build
+
+      - name: Generate source-bound provenance manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/build_governed_repo_release_provenance.py             --dist-dir packages/governed-repo/dist             --pyproject packages/governed-repo/pyproject.toml             --output release-evidence/governed_repo_release_provenance.v1.json             --repository "${GITHUB_REPOSITORY}"             --source-sha "${GITHUB_SHA}"             --action-sha "${GITHUB_SHA}"             --workflow-run-id "${GITHUB_RUN_ID}"             --workflow-run-attempt "${GITHUB_RUN_ATTEMPT}"
+
+      - name: Verify manifest digests and non-effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(
+              Path("release-evidence/governed_repo_release_provenance.v1.json").read_text()
+          )
+          dist = Path("packages/governed-repo/dist")
+
+          for key in ("wheel", "sdist"):
+              record = manifest["package"][key]
+              path = dist / record["filename"]
+              assert path.is_file()
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              assert actual == record["sha256"]
+
+          assert manifest["source"]["commit_sha"] == manifest["action"]["source_sha"]
+          assert manifest["non_effects"] == {
+              "merge_executed": False,
+              "mutation_executed": False,
+              "authorization_effect": "NONE",
+          }
+          print("release_provenance_verification=PASS")
+          PY
+
+      - name: Upload release-provenance evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: governed-repo-release-provenance-${{ github.sha }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          path: |
+            release-evidence/governed_repo_release_provenance.v1.json
+            packages/governed-repo/dist/*.whl
+            packages/governed-repo/dist/*.tar.gz
