@@ -111,13 +111,16 @@ It does not treat the Tektite public shell as material to AOSS readiness.
 
 ## Tektite binding
 
-The Tektite public-status manifest currently binds:
+The Tektite public-status manifest binds the material public-status closure:
 
 - DGAF `docs/CURRENT_STATE.md`;
-- Tektite `index.html`, because it contains the projected status claims;
+- Tektite `public/index.html`, because it contains the rendered projected status claims;
+- `status.seed.json`, because the public shell describes itself as a projection of static status seed artifacts;
+- `evidence-ledger.seed.json`, because it carries public evidence-to-claim semantics;
+- `case-studies/ACP_PR_145.md`, because the public shell links it as bounded case-study detail;
 - exact ACP source authority identity.
 
-It deliberately excludes `styles.css`. A styling-only change therefore advances repository provenance without changing the Tektite status semantic digest.
+It deliberately excludes `styles.css`. The audited stylesheet contains presentation rules only and no content-hiding, generated-text, or status-dependent logic. A styling-only change therefore advances repository provenance without changing the Tektite status semantic digest. If future CSS or client-side code can suppress, reveal, generate, or reinterpret governance status, that artifact becomes semantic material and must be added before release.
 
 Mutable Notion prose is also not used as a cryptographic semantic dependency for the public snapshot. Notion remains the interpreted-state/routing layer; public current-status claims resolve through the owning source authorities.
 
