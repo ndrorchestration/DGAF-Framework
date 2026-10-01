@@ -82,7 +82,6 @@ def test_validation_rejects_authorization_or_publication_effect(tmp_path: Path):
     assert any("non_effects" in error for error in errors)
 
 
-
 def test_validation_rejects_claim_ceiling_tamper(tmp_path: Path):
     module = load_module()
     manifest = module.build_manifest(
