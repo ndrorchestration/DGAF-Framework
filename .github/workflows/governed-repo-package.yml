@@ -5,6 +5,9 @@ on:
     paths:
       - "components/governed_repo.py"
       - "packages/governed-repo/**"
+      - "registry/governed_repo_release_provenance_v1.schema.json"
+      - "scripts/build_governed_repo_release_provenance.py"
+      - "tests/test_governed_repo_release_provenance.py"
       - ".github/workflows/governed-repo-package.yml"
 
 permissions:
@@ -84,4 +87,82 @@ jobs:
         run: |
           set -euo pipefail
           cd "${RUNNER_TEMP}"
-          pytest             "${GITHUB_WORKSPACE}/packages/governed-repo/tests"             -q
+          pytest "${GITHUB_WORKSPACE}/packages/governed-repo/tests" -q
+
+      - name: Run release provenance unit tests
+        run: pytest tests/test_governed_repo_release_provenance.py -q
+
+  release-provenance-candidate:
+    name: Release provenance candidate
+    needs: build-install-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade build
+
+      - name: Build release-candidate wheel and sdist
+        working-directory: packages/governed-repo
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          python -m build
+
+      - name: Emit source-bound release provenance manifest
+        run: |
+          set -euo pipefail
+          python scripts/build_governed_repo_release_provenance.py \
+            --dist-dir packages/governed-repo/dist \
+            --source-sha "${{ github.event.pull_request.head.sha }}" \
+            --workflow-run-id "${{ github.run_id }}" \
+            --python-version 3.10 \
+            --python-version 3.11 \
+            --python-version 3.12 \
+            --python-version 3.13 \
+            --python-version 3.14 \
+            --release-notes-ref issue://1214 \
+            --output artifacts/governed-repo-release-provenance.json
+
+      - name: Verify manifest source and non-effect boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import importlib.util
+          import json
+          from pathlib import Path
+
+          script = Path("scripts/build_governed_repo_release_provenance.py")
+          spec = importlib.util.spec_from_file_location("release_provenance", script)
+          assert spec is not None and spec.loader is not None
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+
+          path = Path("artifacts/governed-repo-release-provenance.json")
+          manifest = json.loads(path.read_text(encoding="utf-8"))
+          errors = module.validate_manifest(manifest)
+          assert errors == [], errors
+          assert manifest["source"]["sha"] == "${{ github.event.pull_request.head.sha }}"
+          assert manifest["workflow"]["run_id"] == "${{ github.run_id }}"
+          assert manifest["non_effects"]["merge_executed"] is False
+          assert manifest["non_effects"]["mutation_executed"] is False
+          assert manifest["non_effects"]["authorization_effect"] == "NONE"
+          assert manifest["non_effects"]["publication_effect"] == "NONE"
+          print("release_provenance_candidate=PASS")
+          PY
+
+      - name: Upload non-publishing release candidate evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: governed-repo-release-provenance-${{ github.event.pull_request.head.sha }}
+          path: |
+            artifacts/governed-repo-release-provenance.json
+            packages/governed-repo/dist/*.whl
+            packages/governed-repo/dist/*.tar.gz
+          if-no-files-found: error
