@@ -135,15 +135,9 @@ def _policy(raw: Any) -> PromotionPolicy:
         hold=_bool(raw, "hold", False),
         lifecycle_blocked=_bool(raw, "lifecycle_blocked", False),
         require_evidence_acceptance=_bool(raw, "require_evidence_acceptance", False),
-        require_claim_scope_acceptance=_bool(
-            raw, "require_claim_scope_acceptance", False
-        ),
-        require_mutation_policy_acceptance=_bool(
-            raw, "require_mutation_policy_acceptance", False
-        ),
-        require_authority_resolution=_bool(
-            raw, "require_authority_resolution", False
-        ),
+        require_claim_scope_acceptance=_bool(raw, "require_claim_scope_acceptance", False),
+        require_mutation_policy_acceptance=_bool(raw, "require_mutation_policy_acceptance", False),
+        require_authority_resolution=_bool(raw, "require_authority_resolution", False),
     )
 
 
@@ -220,9 +214,7 @@ def main() -> None:
 
     if not isinstance(pull_request, Mapping):
         raise ActionInputError("pull-request-json must decode to an object")
-    if not isinstance(check_runs, list) or any(
-        not isinstance(item, Mapping) for item in check_runs
-    ):
+    if not isinstance(check_runs, list) or any(not isinstance(item, Mapping) for item in check_runs):
         raise ActionInputError("check-runs-json must decode to an array of objects")
 
     receipt = assess_github_promotion(
