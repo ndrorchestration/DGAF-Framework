@@ -1,0 +1,160 @@
+{
+  "record_type": "STRUCTURAL_EPISTEMICS_EVIDENCE_GRAPH",
+  "schema_version": 1,
+  "graph_id": "EGRAPH-SOFTWARE-INCIDENT-001",
+  "claims": [
+    {
+      "record_type": "STRUCTURAL_EPISTEMICS_CLAIM_RECORD",
+      "schema_version": 1,
+      "claim_id": "CLAIM-INCIDENT-DEPLOYMENT-ROOT-CAUSE",
+      "proposition": "Deployment v42 is associated with the incident's elevated HTTP 503 rate in the reviewed interval.",
+      "claim_class": "INFERENCE",
+      "scope": {
+        "system": "PAYMENTS_API",
+        "population_or_context": "incident INC-2026-1001 reviewed interval",
+        "exclusions": [
+          "future incidents",
+          "general service reliability",
+          "sole-cause or causal-identification claims"
+        ]
+      },
+      "temporal_validity": {
+        "valid_from": "2026-10-01T08:00:00Z",
+        "valid_until": null,
+        "review_by_or_condition": "review on new incident evidence, source correction, or deployment reconstruction"
+      },
+      "source_roots": [
+        "incident-observability-bundle",
+        "rollback-event-log"
+      ],
+      "derivation_steps": [
+        "compare deployment timing with HTTP 503 time series",
+        "compare rollback timing with post-rollback error behavior",
+        "retain contradictory post-rollback evidence"
+      ],
+      "dependency_signature": {
+        "status": "KNOWN",
+        "roots": [
+          "incident-observability-bundle",
+          "rollback-event-log"
+        ]
+      },
+      "supporting_evidence_ids": [
+        "EVID-INCIDENT-DEPLOY-TIMING",
+        "EVID-INCIDENT-ERROR-TIMING"
+      ],
+      "contradicting_evidence_ids": [
+        "EVID-INCIDENT-POSTROLLBACK-503"
+      ],
+      "defeaters": [
+        {
+          "defeater_id": "DEF-INCIDENT-REPRODUCTION",
+          "condition": "controlled replay does not reproduce the error increase on deployment v42",
+          "status": "NOT_TRIGGERED"
+        }
+      ],
+      "uncertainty": {
+        "aleatoric": "UNKNOWN",
+        "model_or_parameter": "UNKNOWN",
+        "structural_or_model_form": "UNKNOWN",
+        "data_coverage": 0.35,
+        "provenance": 0.1,
+        "dependency": 0.4,
+        "measurement": 0.15,
+        "temporal": 0.1,
+        "adversarial": "UNKNOWN",
+        "decision_or_consequence": 0.4
+      },
+      "calibration_status": "NOT_APPLICABLE",
+      "verification_status": "NOT_VERIFIED",
+      "epistemic_state": "SUPPORTED",
+      "applicability_state": "CHALLENGED",
+      "causal_level": "ASSOCIATION",
+      "authorization_relevance": "NONE",
+      "supersedes": [],
+      "superseded_by": [],
+      "retraction": {
+        "state": "NOT_RETRACTED",
+        "reason": null
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVID-INCIDENT-DEPLOY-TIMING",
+      "evidence_class": "PRIMARY_SOURCE",
+      "source_roots": [
+        "incident-observability-bundle"
+      ],
+      "dependency_roots": [
+        "incident-observability-bundle"
+      ],
+      "observed_at": "2026-10-01T08:03:00Z",
+      "validity": {
+        "state": "CURRENT",
+        "review_condition": "review if deployment log is corrected or superseded"
+      },
+      "provenance_ref": "incident://INC-2026-1001/deploy-v42"
+    },
+    {
+      "evidence_id": "EVID-INCIDENT-ERROR-TIMING",
+      "evidence_class": "MEASUREMENT",
+      "source_roots": [
+        "incident-observability-bundle"
+      ],
+      "dependency_roots": [
+        "incident-observability-bundle"
+      ],
+      "observed_at": "2026-10-01T08:04:00Z",
+      "validity": {
+        "state": "CURRENT",
+        "review_condition": "review if telemetry export is recomputed or invalidated"
+      },
+      "provenance_ref": "incident://INC-2026-1001/http-503-series"
+    },
+    {
+      "evidence_id": "EVID-INCIDENT-POSTROLLBACK-503",
+      "evidence_class": "COUNTEREVIDENCE",
+      "source_roots": [
+        "rollback-event-log"
+      ],
+      "dependency_roots": [],
+      "observed_at": "2026-10-01T08:18:00Z",
+      "validity": {
+        "state": "CURRENT",
+        "review_condition": "review if rollback timing or error timestamps change"
+      },
+      "provenance_ref": "incident://INC-2026-1001/postrollback-503"
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "REL-INCIDENT-DEPLOY-SUPPORTS",
+      "relation_type": "SUPPORTS",
+      "source_id": "EVID-INCIDENT-DEPLOY-TIMING",
+      "target_id": "CLAIM-INCIDENT-DEPLOYMENT-ROOT-CAUSE",
+      "scope": "reviewed incident interval"
+    },
+    {
+      "relation_id": "REL-INCIDENT-ERROR-SUPPORTS",
+      "relation_type": "SUPPORTS",
+      "source_id": "EVID-INCIDENT-ERROR-TIMING",
+      "target_id": "CLAIM-INCIDENT-DEPLOYMENT-ROOT-CAUSE",
+      "scope": "reviewed incident interval"
+    },
+    {
+      "relation_id": "REL-INCIDENT-POSTROLLBACK-CONTRADICTS",
+      "relation_type": "CONTRADICTS",
+      "source_id": "EVID-INCIDENT-POSTROLLBACK-503",
+      "target_id": "CLAIM-INCIDENT-DEPLOYMENT-ROOT-CAUSE",
+      "scope": "sole-cause interpretation"
+    },
+    {
+      "relation_id": "REL-INCIDENT-SHARED-OBSERVABILITY",
+      "relation_type": "SHARES_SOURCE_ROOT",
+      "source_id": "EVID-INCIDENT-DEPLOY-TIMING",
+      "target_id": "EVID-INCIDENT-ERROR-TIMING",
+      "scope": "shared incident-observability-bundle dependency"
+    }
+  ]
+}
