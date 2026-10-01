@@ -82,6 +82,22 @@ def test_validation_rejects_authorization_or_publication_effect(tmp_path: Path):
     assert any("non_effects" in error for error in errors)
 
 
+
+def test_validation_rejects_claim_ceiling_tamper(tmp_path: Path):
+    module = load_module()
+    manifest = module.build_manifest(
+        dist_dir=make_dist(tmp_path),
+        source_sha="f" * 40,
+        workflow_run_id="654",
+        python_versions=["3.12"],
+        release_notes_ref="issue://1214",
+    )
+    manifest["claim_ceiling"]["publication_readiness"] = "ESTABLISHED"
+
+    errors = module.validate_manifest(manifest)
+
+    assert any("claim_ceiling" in error for error in errors)
+
 def test_cli_emits_deterministic_json_for_same_inputs(tmp_path: Path, monkeypatch):
     module = load_module()
     dist = make_dist(tmp_path)
