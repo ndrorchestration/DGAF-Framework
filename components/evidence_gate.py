@@ -314,7 +314,6 @@ def admit_evidence(
             digest_checked=True,
         )
 
-    common = dict(verified_digest=digest, digest_checked=True)
 
     target_checked = True
     if target.target_type != expected_target.target_type or target.scope_id != expected_target.scope_id:
@@ -326,7 +325,8 @@ def admit_evidence(
             admitted=False,
             reason_code=EvidenceAdmissionReason.TARGET_IDENTITY_MISMATCH,
             target_checked=target_checked,
-            **common,
+            verified_digest=digest,
+            digest_checked=True,
         )
 
     historical_transfer_checked = False
@@ -342,7 +342,8 @@ def admit_evidence(
                 reason_code=EvidenceAdmissionReason.HISTORICAL_TRANSFER_NOT_ESTABLISHED,
                 target_checked=target_checked,
                 historical_transfer_checked=True,
-                **common,
+                verified_digest=digest,
+                digest_checked=True,
             )
         try:
             transfer_ok = historical_transfer_checker(
@@ -364,7 +365,8 @@ def admit_evidence(
                 reason_code=EvidenceAdmissionReason.HISTORICAL_TRANSFER_NOT_ESTABLISHED,
                 target_checked=target_checked,
                 historical_transfer_checked=True,
-                **common,
+                verified_digest=digest,
+                digest_checked=True,
             )
 
     source_checked = any(
@@ -389,7 +391,8 @@ def admit_evidence(
                 target_checked=target_checked,
                 source_checked=source_checked,
                 historical_transfer_checked=historical_transfer_checked,
-                **common,
+                verified_digest=digest,
+                digest_checked=True,
             )
 
     environment_checked = expected_target.environment_identity is not None
@@ -408,7 +411,8 @@ def admit_evidence(
             source_checked=source_checked,
             environment_checked=environment_checked,
             historical_transfer_checked=historical_transfer_checked,
-            **common,
+            verified_digest=digest,
+            digest_checked=True,
         )
 
     provenance_checked = required_producer_class is not None
@@ -425,7 +429,8 @@ def admit_evidence(
             environment_checked=environment_checked,
             provenance_checked=True,
             historical_transfer_checked=historical_transfer_checked,
-            **common,
+            verified_digest=digest,
+            digest_checked=True,
         )
 
     checker_specs = (
@@ -462,8 +467,12 @@ def admit_evidence(
                 environment_checked=environment_checked,
                 provenance_checked=provenance_checked,
                 historical_transfer_checked=historical_transfer_checked,
-                **flags,
-                **common,
+                receipt_checked=flags["receipt_checked"],
+                manifest_checked=flags["manifest_checked"],
+                content_set_checked=flags["content_set_checked"],
+                custody_checked=flags["custody_checked"],
+                verified_digest=digest,
+                digest_checked=True,
             )
 
     if not claim_scope.claim_id or not claim_scope.scope_id:
@@ -479,8 +488,12 @@ def admit_evidence(
             environment_checked=environment_checked,
             provenance_checked=provenance_checked,
             historical_transfer_checked=historical_transfer_checked,
-            **flags,
-            **common,
+            receipt_checked=flags["receipt_checked"],
+            manifest_checked=flags["manifest_checked"],
+            content_set_checked=flags["content_set_checked"],
+            custody_checked=flags["custody_checked"],
+            verified_digest=digest,
+            digest_checked=True,
         )
 
     claim_scope_checked = True
@@ -498,8 +511,12 @@ def admit_evidence(
             provenance_checked=provenance_checked,
             claim_scope_checked=True,
             historical_transfer_checked=historical_transfer_checked,
-            **flags,
-            **common,
+            receipt_checked=flags["receipt_checked"],
+            manifest_checked=flags["manifest_checked"],
+            content_set_checked=flags["content_set_checked"],
+            custody_checked=flags["custody_checked"],
+            verified_digest=digest,
+            digest_checked=True,
         )
     if claim_scope_checker is not None:
         result = _run_required_check(
@@ -523,8 +540,12 @@ def admit_evidence(
                 provenance_checked=provenance_checked,
                 claim_scope_checked=True,
                 historical_transfer_checked=historical_transfer_checked,
-                **flags,
-                **common,
+                receipt_checked=flags["receipt_checked"],
+                manifest_checked=flags["manifest_checked"],
+                content_set_checked=flags["content_set_checked"],
+                custody_checked=flags["custody_checked"],
+                verified_digest=digest,
+                digest_checked=True,
             )
 
     return _receipt(
@@ -540,6 +561,10 @@ def admit_evidence(
         provenance_checked=provenance_checked,
         claim_scope_checked=claim_scope_checked,
         historical_transfer_checked=historical_transfer_checked,
-        **flags,
-        **common,
+        receipt_checked=flags["receipt_checked"],
+        manifest_checked=flags["manifest_checked"],
+        content_set_checked=flags["content_set_checked"],
+        custody_checked=flags["custody_checked"],
+        verified_digest=digest,
+        digest_checked=True,
     )
