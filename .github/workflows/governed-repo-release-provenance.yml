@@ -24,6 +24,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact candidate head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -50,6 +57,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact candidate head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v5
         with:
           python-version: "3.12"
@@ -68,7 +82,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/build_governed_repo_release_provenance.py             --dist-dir packages/governed-repo/dist             --pyproject packages/governed-repo/pyproject.toml             --output release-evidence/governed_repo_release_provenance.v1.json             --repository "${GITHUB_REPOSITORY}"             --source-sha "${GITHUB_SHA}"             --action-sha "${GITHUB_SHA}"             --workflow-run-id "${GITHUB_RUN_ID}"             --workflow-run-attempt "${GITHUB_RUN_ATTEMPT}"
+          python scripts/build_governed_repo_release_provenance.py             --dist-dir packages/governed-repo/dist             --pyproject packages/governed-repo/pyproject.toml             --output release-evidence/governed_repo_release_provenance.v1.json             --repository "${GITHUB_REPOSITORY}"             --source-sha "${{ github.event.pull_request.head.sha }}"             --action-sha "${{ github.event.pull_request.head.sha }}"             --workflow-run-id "${GITHUB_RUN_ID}"             --workflow-run-attempt "${GITHUB_RUN_ATTEMPT}"
 
       - name: Verify manifest digests and non-effects
         shell: bash
@@ -91,7 +105,9 @@ jobs:
               actual = hashlib.sha256(path.read_bytes()).hexdigest()
               assert actual == record["sha256"]
 
-          assert manifest["source"]["commit_sha"] == manifest["action"]["source_sha"]
+          expected_head = "${{ github.event.pull_request.head.sha }}"
+          assert manifest["source"]["commit_sha"] == expected_head
+          assert manifest["action"]["source_sha"] == expected_head
           assert manifest["non_effects"] == {
               "merge_executed": False,
               "mutation_executed": False,
@@ -103,7 +119,7 @@ jobs:
       - name: Upload release-provenance evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: governed-repo-release-provenance-${{ github.sha }}-${{ github.run_attempt }}
+          name: governed-repo-release-provenance-${{ github.event.pull_request.head.sha }}-${{ github.run_attempt }}
           if-no-files-found: error
           path: |
             release-evidence/governed_repo_release_provenance.v1.json
