@@ -192,9 +192,7 @@ def validate_manifest(manifest: dict) -> list[str]:
     if not isinstance(expected, str) or not SHA256_RE.fullmatch(expected):
         errors.append("semantic_material_digest_sha256 must be lowercase SHA-256")
     elif expected != actual:
-        errors.append(
-            f"semantic_material_digest_sha256 mismatch: expected {expected}, recomputed {actual}"
-        )
+        errors.append(f"semantic_material_digest_sha256 mismatch: expected {expected}, recomputed {actual}")
     return errors
 
 
@@ -204,8 +202,7 @@ def classify(previous: dict, current: dict) -> dict:
     changed_authorities = {
         aid
         for aid in set(old_authorities) | set(new_authorities)
-        if old_authorities.get(aid, {}).get("object_identity")
-        != new_authorities.get(aid, {}).get("object_identity")
+        if old_authorities.get(aid, {}).get("object_identity") != new_authorities.get(aid, {}).get("object_identity")
     }
 
     old_bindings = {x["consumer_id"]: x for x in previous["consumer_bindings"]}
