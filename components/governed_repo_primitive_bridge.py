@@ -75,10 +75,7 @@ def claimgraph_decision(
     receipt_id: Optional[str] = None,
 ) -> UpstreamDecision:
     value = _mapping(receipt, "claimgraph")
-    if (
-        _required_string(value, "receipt_schema_version", "claimgraph")
-        != CLAIMGRAPH_RECEIPT_SCHEMA_VERSION
-    ):
+    if _required_string(value, "receipt_schema_version", "claimgraph") != CLAIMGRAPH_RECEIPT_SCHEMA_VERSION:
         raise PrimitiveReceiptError("unsupported ClaimGraph receipt_schema_version")
     if _required_string(value, "truth_effect", "claimgraph") != "NONE":
         raise PrimitiveReceiptError("ClaimGraph truth_effect must be NONE")
@@ -101,10 +98,7 @@ def action_admission_decision(
     receipt_id: Optional[str] = None,
 ) -> UpstreamDecision:
     value = _mapping(receipt, "action_admission")
-    if (
-        _required_string(value, "schema_version", "action_admission")
-        != ACTION_ADMISSION_SCHEMA_VERSION
-    ):
+    if _required_string(value, "schema_version", "action_admission") != ACTION_ADMISSION_SCHEMA_VERSION:
         raise PrimitiveReceiptError("unsupported Action Admission schema_version")
     execution_enabled = _required_bool(value, "execution_enabled", "action_admission")
     if execution_enabled:
