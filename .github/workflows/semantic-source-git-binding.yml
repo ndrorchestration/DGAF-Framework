@@ -33,7 +33,7 @@ jobs:
           python-version: "3.12"
 
       - name: Run verifier regression tests
-        run: python -m pytest -q tests/test_semantic_source_git_bindings.py
+        run: python -m unittest tests.test_semantic_source_git_bindings -v
 
       - name: Verify AOSS semantic-source Git bindings
         run: >-
