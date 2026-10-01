@@ -1,0 +1,31 @@
+{
+  "schema": "TEKTITE_V0_1_EVIDENCE_LEDGER_SEED",
+  "date": "2026-09-30",
+  "rule": "Every evidence row must state both what it supports and what it does not support.",
+  "entries": [
+    {
+      "artifact": "ACP PR #145",
+      "source_surface": "GitHub",
+      "claim_supported": "ACP queue, dependency, and boundary documentation are merged.",
+      "claim_not_supported": "No executor authority, rollback authority, independent validation, or High-Assurance is established.",
+      "authorization_effect": "Executor PRs remain held.",
+      "public_link": "https://github.com/ndrorchestration/agent-control-plane/pull/145"
+    },
+    {
+      "artifact": "DGAF claim ceiling",
+      "source_surface": "DGAF governance state",
+      "claim_supported": "Claim ceilings are explicit and active.",
+      "claim_not_supported": "Independent validation and canonical efficacy remain not established.",
+      "authorization_effect": "No scientific or High-Assurance state change.",
+      "public_link": "https://github.com/ndrorchestration/DGAF-Framework"
+    },
+    {
+      "artifact": "AI Evidence Audit positioning",
+      "source_surface": "Tektite services layer",
+      "claim_supported": "The work can be explained as evidence audit and evaluation-design services.",
+      "claim_not_supported": "No certification or compliance claim is made.",
+      "authorization_effect": "Allowed as public service positioning only.",
+      "public_link": ""
+    }
+  ]
+}

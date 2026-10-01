@@ -1,0 +1,50 @@
+{
+  "schema": "TEKTITE_V0_1_STATUS_SEED",
+  "date": "2026-09-30",
+  "authority_note": "Tektite projects public status only. It is not a governance authority or execution surface.",
+  "current_status": {
+    "DGAF_CLAIM_DISCIPLINE": "ACTIVE",
+    "ACP_QUEUE_RECONCILIATION": "ESTABLISHED",
+    "ACP_BOUNDARY_DOCS": "MERGED",
+    "INDEPENDENT_VALIDATION": "NOT_ESTABLISHED",
+    "CANONICAL_DGAF_EFFICACY": "NOT_ESTABLISHED",
+    "HIGH_ASSURANCE": "NOT_AUTHORIZED",
+    "LIVE_REPOSITORY_MUTATION": "NOT_AUTHORIZED",
+    "ROLLBACK_EXECUTION": "NOT_AUTHORIZED",
+    "PRODUCTION_EXECUTOR": "NOT_ESTABLISHED",
+    "PUBLIC_DEMO_SURFACE": "IN_DEVELOPMENT"
+  },
+  "latest_milestone": {
+    "title": "ACP PR #145 merged",
+    "date": "2026-09-30",
+    "merge_commit": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
+    "effect": "Documentation-only reconciliation",
+    "supports": [
+      "ACP queue classification",
+      "ACP dependency map",
+      "ACP executor boundary model"
+    ],
+    "does_not_support": [
+      "Live executor authorization",
+      "Rollback execution",
+      "Production executor deployment",
+      "Independent validation",
+      "High-Assurance status"
+    ],
+    "authorization_effect": "#110, #137, and #139 remain HOLD"
+  },
+  "active_blockers": [
+    {
+      "id": "#117",
+      "name": "Filesystem object identity / TOCTOU",
+      "blocks": ["#110", "#137", "#139"],
+      "status": "ACTIVE_BLOCKER"
+    },
+    {
+      "id": "#118",
+      "name": "Trusted process boundary / identity / isolation",
+      "blocks": ["#110", "#137", "#139"],
+      "status": "ACTIVE_BLOCKER"
+    }
+  ]
+}
