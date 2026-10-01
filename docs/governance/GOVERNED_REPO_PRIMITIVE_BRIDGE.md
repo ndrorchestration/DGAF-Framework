@@ -29,11 +29,18 @@ effects, or Action Admission receipts that enable execution are rejected.
 The bridge never merges, pushes, deploys, mutates a repository, or grants
 authorization.
 
-## Dependency hold
+## Accepted primitive sources and CGAP-5 verification
 
-This draft may be tested before Evidence Gate acceptance, but CGAP-5 remains
-open until the integration is verified against accepted primitive versions on
-their canonical branches.
+The current integration target consumes the accepted primitive families:
+
+- Evidence Gate v0 accepted on DGAF `main` via #1215;
+- ClaimGraph v0 accepted on DGAF `main` via #1177;
+- Action Admission v0 accepted on ACP `main` via #150.
+
+CGAP-5 remains open until this bridge and the complete Governed Repo stack are
+verified together on a direct protected-`main` pull request with exact-head
+repository CI. Green historical or stacked-branch CI is supporting evidence,
+not a substitute for that current-main verification.
 
 ## Claim ceiling
 
