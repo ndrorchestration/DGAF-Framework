@@ -262,7 +262,7 @@ def classify(previous: dict, current: dict) -> dict:
         before = old_bindings.get(cid)
         after = new_bindings.get(cid)
         if before is None or after is None:
-            classification = "DEPENDENCY_ADVANCED"
+            classification = "MISSING_BINDING"
         else:
             old_digest = before.get("semantic_material_digest_sha256")
             new_digest = after.get("semantic_material_digest_sha256")
