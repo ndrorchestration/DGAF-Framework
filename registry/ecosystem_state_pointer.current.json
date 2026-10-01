@@ -1,9 +1,9 @@
 {
   "schema_version": "ECOSYSTEM_STATE_POINTER_V1",
-  "observed_at": "2026-10-01T17:13:00Z",
+  "observed_at": "2026-10-01T23:01:00Z",
   "snapshot_provenance": {
     "storage_mode": "IN_REPOSITORY_SNAPSHOT",
-    "source_observation_commit": "561654322231b83da34498bfc1c3a69d46738cc9",
+    "source_observation_commit": "c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91",
     "container_commit": null,
     "container_commit_binding": "EXTERNAL_ONLY",
     "live_reconciliation": {
@@ -16,79 +16,85 @@
   },
   "authorities": [
     {
-      "authority_id":"DGAF_SOURCE",
-      "surface":"GITHUB",
-      "role":"Exact source, CI, evidence and commit identity",
-      "object_identity":"561654322231b83da34498bfc1c3a69d46738cc9",
-      "predecessor_object_identity":"9be30ce5b88df8e0435896e0d62ba4930686b278",
-      "freshness_state":"HISTORICAL_SNAPSHOT",
-      "invalidation_reason":"NONE",
-      "evidence_url":"https://github.com/ndrorchestration/DGAF-Framework/commit/561654322231b83da34498bfc1c3a69d46738cc9"
+      "authority_id": "DGAF_SOURCE",
+      "surface": "GITHUB",
+      "role": "Exact source, CI, evidence and commit identity",
+      "object_identity": "c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91",
+      "predecessor_object_identity": "561654322231b83da34498bfc1c3a69d46738cc9",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
+      "invalidation_reason": "NONE",
+      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/commit/c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91"
     },
     {
-      "authority_id":"ACP_SOURCE",
-      "surface":"GITHUB",
-      "role":"Execution-boundary and control-plane source authority",
-      "object_identity":"4d3cdd21a445b765753cb5d36360f643210fe0b5",
-      "predecessor_object_identity":null,
-      "freshness_state":"HISTORICAL_SNAPSHOT",
-      "invalidation_reason":"NONE",
-      "evidence_url":"https://github.com/ndrorchestration/agent-control-plane/commit/4d3cdd21a445b765753cb5d36360f643210fe0b5"
+      "authority_id": "ACP_SOURCE",
+      "surface": "GITHUB",
+      "role": "Execution-boundary and control-plane source authority",
+      "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
+      "predecessor_object_identity": null,
+      "freshness_state": "HISTORICAL_SNAPSHOT",
+      "invalidation_reason": "NONE",
+      "evidence_url": "https://github.com/ndrorchestration/agent-control-plane/commit/4d3cdd21a445b765753cb5d36360f643210fe0b5"
     },
     {
-      "authority_id":"TEKTITE_PUBLIC_SNAPSHOT",
-      "surface":"TEKTITE_PUBLIC",
-      "role":"Public projection only; never an authorization source",
-      "object_identity":"DGAF:561654322231b83da34498bfc1c3a69d46738cc9:docs/tektite-v0.1/public",
-      "predecessor_object_identity":"DGAF:9be30ce5b88df8e0435896e0d62ba4930686b278:docs/tektite-v0.1/public",
-      "freshness_state":"HISTORICAL_SNAPSHOT",
-      "invalidation_reason":"NONE",
-      "evidence_url":"https://github.com/ndrorchestration/DGAF-Framework/tree/561654322231b83da34498bfc1c3a69d46738cc9/docs/tektite-v0.1/public"
+      "authority_id": "TEKTITE_PUBLIC_SNAPSHOT",
+      "surface": "TEKTITE_PUBLIC",
+      "role": "Public projection only; never an authorization source",
+      "object_identity": "DGAF:c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91:docs/tektite-v0.1/public",
+      "predecessor_object_identity": "DGAF:561654322231b83da34498bfc1c3a69d46738cc9:docs/tektite-v0.1/public",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
+      "invalidation_reason": "NONE",
+      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/tree/c4f8fda24d2d44c47d7de8c77fcbbd3d478f5a91/docs/tektite-v0.1/public"
     },
     {
-      "authority_id":"NOTION_INTERPRETED_STATE",
-      "surface":"NOTION",
-      "role":"Interpreted ecosystem state, routing and reconciliation",
-      "object_identity":"https://app.notion.com/p/3d5f5bad238b811a8bc3fabe5edf209c",
-      "predecessor_object_identity":null,
-      "freshness_state":"HISTORICAL_SNAPSHOT",
-      "invalidation_reason":"NONE",
-      "evidence_url":"https://app.notion.com/p/3d5f5bad238b811a8bc3fabe5edf209c"
+      "authority_id": "NOTION_INTERPRETED_STATE",
+      "surface": "NOTION",
+      "role": "Interpreted ecosystem state, routing and reconciliation",
+      "object_identity": "https://app.notion.com/p/3d5f5bad238b811a8bc3fabe5edf209c",
+      "predecessor_object_identity": null,
+      "freshness_state": "HISTORICAL_SNAPSHOT",
+      "invalidation_reason": "NONE",
+      "evidence_url": "https://app.notion.com/p/3d5f5bad238b811a8bc3fabe5edf209c"
     }
   ],
   "consumer_bindings": [
     {
-      "consumer_id":"AOSS_STAGE_A_READINESS",
-      "authority_ids":["DGAF_SOURCE","ACP_SOURCE"],
-      "manifest_path":"registry/aoss_stage_a_readiness_semantic_source_v1.json",
-      "semantic_material_digest_sha256":"55dd4140f0ce8347f4b2476b0c1de8ef79f643f6417c07fc7b120f2639a9c2b5",
-      "freshness_state":"HISTORICAL_SNAPSHOT",
-      "invalidation_reason":"SEMANTIC_SOURCE_CHANGED"
+      "consumer_id": "AOSS_STAGE_A_READINESS",
+      "authority_ids": [
+        "DGAF_SOURCE",
+        "ACP_SOURCE"
+      ],
+      "manifest_path": "registry/aoss_stage_a_readiness_semantic_source_v1.json",
+      "semantic_material_digest_sha256": "55dd4140f0ce8347f4b2476b0c1de8ef79f643f6417c07fc7b120f2639a9c2b5",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
+      "invalidation_reason": "NON_SEMANTIC_REPOSITORY_ADVANCE"
     },
     {
-      "consumer_id":"TEKTITE_PUBLIC_STATUS",
-      "authority_ids":["DGAF_SOURCE","ACP_SOURCE"],
-      "manifest_path":"registry/tektite_public_status_semantic_source_v1.json",
-      "semantic_material_digest_sha256":"102c101d7c737d5222da08cd674172e09d95a41afd328bc464bd13ce9ee6675b",
-      "freshness_state":"HISTORICAL_SNAPSHOT",
-      "invalidation_reason":"NON_SEMANTIC_REPOSITORY_ADVANCE"
+      "consumer_id": "TEKTITE_PUBLIC_STATUS",
+      "authority_ids": [
+        "DGAF_SOURCE",
+        "ACP_SOURCE"
+      ],
+      "manifest_path": "registry/tektite_public_status_semantic_source_v1.json",
+      "semantic_material_digest_sha256": "5444e5576310a85ee84f7cb1005cda1b2e2ad31e805374732cca3fb3d5d911c2",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
+      "invalidation_reason": "SEMANTIC_SOURCE_CHANGED"
     }
   ],
   "claim_ceiling": {
-    "scientific_n_increment":0,
-    "independent_validation":"NOT_ESTABLISHED",
-    "canonical_dgaf_efficacy":"NOT_ESTABLISHED",
-    "high_assurance":"NOT_AUTHORIZED",
-    "live_repository_mutation":"NOT_AUTHORIZED",
-    "production_executor":"NOT_ESTABLISHED"
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED",
+    "live_repository_mutation": "NOT_AUTHORIZED",
+    "production_executor": "NOT_ESTABLISHED"
   },
   "freshness_policy": {
-    "whole_repository_identity_is_provenance":true,
-    "semantic_manifest_controls_material_change":true,
-    "consumer_specific_bindings_required":true,
-    "provenance_fields_excluded_from_semantic_digest":true,
-    "embedded_pointer_is_observation_snapshot":true,
-    "live_tip_currentness_requires_external_reconciliation":true,
-    "unknown_change_fails_closed":true
+    "whole_repository_identity_is_provenance": true,
+    "semantic_manifest_controls_material_change": true,
+    "consumer_specific_bindings_required": true,
+    "provenance_fields_excluded_from_semantic_digest": true,
+    "embedded_pointer_is_observation_snapshot": true,
+    "live_tip_currentness_requires_external_reconciliation": true,
+    "unknown_change_fails_closed": true
   }
 }
