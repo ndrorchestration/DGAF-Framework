@@ -35,16 +35,16 @@ def _args(tmp_path):
 
 
 def test_manifest_binds_artifacts_source_and_non_effects(tmp_path):
-    manifest = MODULE.build_manifest(_args(tmp_path))
+    args = _args(tmp_path)
+    manifest = MODULE.build_manifest(args)
+    dist = Path(args.dist_dir)
 
     assert manifest["source"]["commit_sha"] == "a" * 40
     assert manifest["package"]["wheel"]["sha256"] == MODULE.sha256(
-        Path(_args(tmp_path).dist_dir)
-        / "ndrorchestration_governed_repo-0.0.0.dev0-py3-none-any.whl"
+        dist / "ndrorchestration_governed_repo-0.0.0.dev0-py3-none-any.whl"
     )
     assert manifest["package"]["sdist"]["sha256"] == MODULE.sha256(
-        Path(_args(tmp_path).dist_dir)
-        / "ndrorchestration_governed_repo-0.0.0.dev0.tar.gz"
+        dist / "ndrorchestration_governed_repo-0.0.0.dev0.tar.gz"
     )
     assert manifest["verification"]["python_versions"] == [
         "3.10",
