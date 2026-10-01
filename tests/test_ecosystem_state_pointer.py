@@ -104,9 +104,7 @@ def test_changed_consumer_digest_is_semantic_source_change():
 def test_missing_consumer_binding_fails_closed_as_missing_binding():
     before = pointer()
     after = copy.deepcopy(before)
-    after["consumer_bindings"] = [
-        x for x in after["consumer_bindings"] if x["consumer_id"] != "AOSS_STAGE_A_READINESS"
-    ]
+    after["consumer_bindings"] = [x for x in after["consumer_bindings"] if x["consumer_id"] != "AOSS_STAGE_A_READINESS"]
 
     result = classify(before, after)
     classes = {x["consumer_id"]: x["classification"] for x in result["consumer_bindings"]}
@@ -117,9 +115,7 @@ def test_missing_consumer_binding_fails_closed_as_missing_binding():
 def test_new_consumer_binding_is_missing_binding_until_reconciled():
     after = pointer()
     before = copy.deepcopy(after)
-    before["consumer_bindings"] = [
-        x for x in before["consumer_bindings"] if x["consumer_id"] != "AOSS_STAGE_A_READINESS"
-    ]
+    before["consumer_bindings"] = [x for x in before["consumer_bindings"] if x["consumer_id"] != "AOSS_STAGE_A_READINESS"]
 
     result = classify(before, after)
     classes = {x["consumer_id"]: x["classification"] for x in result["consumer_bindings"]}
