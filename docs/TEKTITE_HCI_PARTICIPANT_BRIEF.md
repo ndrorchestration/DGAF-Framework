@@ -6,7 +6,7 @@ Thank you for helping test an experimental governance interface.
 
 Use this exact website:
 
-https://dynamicgovernanceagenticformation-1ei0gb4sl-ndrorchestration.vercel.app
+[Tektite participant surface](https://dynamicgovernanceagenticformation-1ei0gb4sl-ndrorchestration.vercel.app)
 
 You do **not** need to install anything, create an account, or understand DGAF/Tektite beforehand.
 
