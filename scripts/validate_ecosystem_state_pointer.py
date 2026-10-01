@@ -41,6 +41,31 @@ def validate(pointer: dict) -> list[str]:
     if not isinstance(pointer.get("observed_at"), str) or not pointer["observed_at"]:
         errors.append("observed_at must be a non-empty string")
 
+    snapshot = pointer.get("snapshot_provenance")
+    if not isinstance(snapshot, dict):
+        errors.append("snapshot_provenance must be an object")
+        snapshot = {}
+    if snapshot.get("storage_mode") != "IN_REPOSITORY_SNAPSHOT":
+        errors.append("snapshot_provenance.storage_mode must be IN_REPOSITORY_SNAPSHOT")
+    source_commit = snapshot.get("source_observation_commit")
+    if not isinstance(source_commit, str) or not SHA1_RE.fullmatch(source_commit):
+        errors.append("snapshot_provenance.source_observation_commit must be a lowercase 40-character Git SHA")
+    if snapshot.get("container_commit") is not None:
+        errors.append("snapshot_provenance.container_commit must be null for an in-repository snapshot")
+    if snapshot.get("container_commit_binding") != "EXTERNAL_ONLY":
+        errors.append("snapshot_provenance.container_commit_binding must be EXTERNAL_ONLY")
+    live = snapshot.get("live_reconciliation")
+    if not isinstance(live, dict):
+        errors.append("snapshot_provenance.live_reconciliation must be an object")
+        live = {}
+    if live.get("required_for_repository_tip_currentness") is not True:
+        errors.append("live reconciliation must be required for repository-tip currentness")
+    if live.get("status") != "NOT_EMBEDDED":
+        errors.append("embedded live reconciliation status must be NOT_EMBEDDED")
+    for key in ("observed_commit", "observed_at", "evidence_url"):
+        if live.get(key) is not None:
+            errors.append(f"snapshot_provenance.live_reconciliation.{key} must be null in-repository")
+
     authorities = pointer.get("authorities")
     if not isinstance(authorities, list) or not authorities:
         errors.append("authorities must be a non-empty array")
@@ -67,6 +92,12 @@ def validate(pointer: dict) -> list[str]:
             errors.append(f"{prefix}.invalidation_reason is invalid")
         if not isinstance(item.get("object_identity"), str) or not item["object_identity"]:
             errors.append(f"{prefix}.object_identity must be non-empty")
+
+    dgaf = next((item for item in authorities if item.get("authority_id") == "DGAF_SOURCE"), None)
+    if dgaf is None:
+        errors.append("DGAF_SOURCE authority is required")
+    elif source_commit and dgaf.get("object_identity") != source_commit:
+        errors.append("DGAF_SOURCE.object_identity must equal snapshot_provenance.source_observation_commit")
 
     bindings = pointer.get("consumer_bindings")
     if not isinstance(bindings, list) or not bindings:
@@ -122,10 +153,28 @@ def validate(pointer: dict) -> list[str]:
         "semantic_manifest_controls_material_change",
         "consumer_specific_bindings_required",
         "provenance_fields_excluded_from_semantic_digest",
+        "embedded_pointer_is_observation_snapshot",
+        "live_tip_currentness_requires_external_reconciliation",
         "unknown_change_fails_closed",
     ):
         if policy.get(key) is not True:
             errors.append(f"freshness_policy.{key} must be true")
+    return errors
+
+
+def validate_live_reconciliation(pointer: dict, live_repository_commit: str, container_commit: str) -> list[str]:
+    errors: list[str] = []
+    if not SHA1_RE.fullmatch(live_repository_commit):
+        errors.append("live_repository_commit must be a lowercase 40-character Git SHA")
+    if not SHA1_RE.fullmatch(container_commit):
+        errors.append("container_commit must be a lowercase 40-character Git SHA")
+    source_commit = pointer.get("snapshot_provenance", {}).get("source_observation_commit")
+    if live_repository_commit != source_commit:
+        errors.append(
+            "embedded pointer is not repository-tip current: live repository commit differs from source observation commit"
+        )
+    if container_commit == source_commit:
+        errors.append("container_commit must not be treated as the source observation commit")
     return errors
 
 
@@ -237,20 +286,29 @@ def main() -> int:
     parser.add_argument("pointer", type=Path)
     parser.add_argument("--compare", type=Path, help="previous pointer to compare against")
     parser.add_argument("--manifest", action="append", type=Path, default=[])
+    parser.add_argument("--live-repository-commit")
+    parser.add_argument("--container-commit")
     args = parser.parse_args()
 
     current = load(args.pointer)
     errors = validate(current)
     for manifest_path in args.manifest:
         errors.extend(f"{manifest_path}: {error}" for error in validate_manifest(load(manifest_path)))
+    if (args.live_repository_commit is None) != (args.container_commit is None):
+        errors.append("--live-repository-commit and --container-commit must be supplied together")
+    elif args.live_repository_commit is not None and args.container_commit is not None:
+        errors.extend(validate_live_reconciliation(current, args.live_repository_commit, args.container_commit))
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
 
     print("ECOSYSTEM_STATE_POINTER_V1: PASS")
+    print("EMBEDDED_POINTER_SCOPE: HISTORICAL_SNAPSHOT")
     for manifest_path in args.manifest:
         print(f"SEMANTIC_SOURCE_MANIFEST_V1: PASS {manifest_path}")
+    if args.live_repository_commit is not None:
+        print("LIVE_REPOSITORY_TIP_RECONCILIATION: PASS")
 
     if args.compare:
         previous = load(args.compare)
