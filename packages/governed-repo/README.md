@@ -34,16 +34,21 @@ and the canonical package objects.
 
 ## Tested package boundary
 
-The canonical-source migration was validated on exact commit:
+Canonical merged source for outside-operator testing:
 
 ```text
-4738619157aa6ace9ed13bb56bec4721be5d35ef
+c90c74c04583c5a3f23f6a261cf38cd6922c781c
 ```
 
-At that exact head, the package workflow completed successfully on Python
-3.10, 3.11, 3.12, 3.13, and 3.14. The workflow builds wheel and sdist
-artifacts, installs the built wheel outside the source tree, imports
-`governed_repo`, and runs the package contract tests.
+The merged commit has the same Git tree as fully tested PR head
+`77c818ecc5d57e5dd354bc86396dc9e7c5c6be9e`. That PR head completed the
+Governed Repo package workflow successfully on Python 3.10, 3.11, 3.12,
+3.13, and 3.14. The merged commit then completed the observed post-merge
+mainline suite successfully, including Main Push Provenance Audit and live
+regression.
+
+This preserves the distinction between package-matrix evidence on the PR head
+and canonical repository identity on protected `main`.
 
 That is bounded compatibility evidence for the tested environments, not a
 perpetual support guarantee.
@@ -56,7 +61,7 @@ repository and check out the exact validated commit:
 ```bash
 git clone https://github.com/ndrorchestration/DGAF-Framework.git
 cd DGAF-Framework
-git checkout 4738619157aa6ace9ed13bb56bec4721be5d35ef
+git checkout c90c74c04583c5a3f23f6a261cf38cd6922c781c
 python -m pip install ./packages/governed-repo
 ```
 
