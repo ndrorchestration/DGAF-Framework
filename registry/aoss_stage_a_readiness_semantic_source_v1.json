@@ -2,9 +2,9 @@
   "schema_version": "SEMANTIC_SOURCE_MANIFEST_V1",
   "manifest_id": "AOSS_STAGE_A_READINESS_SEMANTIC_SOURCE_V1",
   "consumer": "AOSS_STAGE_A_READINESS",
-  "observed_at": "2026-10-01T09:07:25Z",
+  "observed_at": "2026-10-01T14:24:26Z",
   "repository": "ndrorchestration/DGAF-Framework",
-  "repository_commit": "05ba55a33193855394dc4dc69ce6deea375ece93",
+  "repository_commit": "9be30ce5b88df8e0435896e0d62ba4930686b278",
   "artifacts": [
     {"path": "registry/aoss_v0_6_acp_measurement_manifest_v1.json", "git_blob_sha1": "1c690abbe2ab451f5081f56c25970eb85b031ce4", "role": "ACP measurement mapping"},
     {"path": "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json", "git_blob_sha1": "1d2b44acb63f30660253e3c96f1a6cac602d62eb", "role": "artifact replay and receipt contract"},
