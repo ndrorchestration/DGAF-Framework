@@ -11,6 +11,7 @@ TEKTITE_MANIFEST = ROOT / "registry" / "tektite_public_status_semantic_source_v1
 
 module = runpy.run_path(str(SCRIPT))
 validate = module["validate"]
+validate_live_reconciliation = module["validate_live_reconciliation"]
 validate_manifest = module["validate_manifest"]
 semantic_material_digest = module["semantic_material_digest"]
 classify = module["classify"]
@@ -24,8 +25,17 @@ def pointer():
     return read_json(CURRENT)
 
 
-def test_current_pointer_validates():
-    assert validate(pointer()) == []
+def test_current_pointer_validates_as_embedded_snapshot():
+    value = pointer()
+    assert validate(value) == []
+    assert value["snapshot_provenance"]["container_commit"] is None
+    assert value["snapshot_provenance"]["live_reconciliation"]["status"] == "NOT_EMBEDDED"
+
+
+def test_embedded_pointer_records_historical_snapshot_state():
+    value = pointer()
+    assert all(x["freshness_state"] == "HISTORICAL_SNAPSHOT" for x in value["authorities"])
+    assert all(x["freshness_state"] == "HISTORICAL_SNAPSHOT" for x in value["consumer_bindings"])
 
 
 def test_semantic_manifests_recompute_to_declared_digests():
@@ -39,6 +49,32 @@ def test_provenance_refresh_does_not_change_semantic_digest():
     after["observed_at"] = "2099-01-01T00:00:00Z"
     after["repository_commit"] = "f" * 40
     assert semantic_material_digest(before) == semantic_material_digest(after)
+
+
+def test_self_reference_is_not_encoded_in_pointer():
+    value = pointer()
+    value["snapshot_provenance"]["container_commit"] = value["snapshot_provenance"]["source_observation_commit"]
+    errors = validate(value)
+    assert any("container_commit must be null" in error for error in errors)
+
+
+def test_live_tip_currentness_requires_external_reconciliation():
+    value = pointer()
+    source = value["snapshot_provenance"]["source_observation_commit"]
+    assert validate_live_reconciliation(value, source, "e" * 40) == []
+
+
+def test_live_tip_advance_fails_closed():
+    value = pointer()
+    errors = validate_live_reconciliation(value, "f" * 40, "e" * 40)
+    assert any("not repository-tip current" in error for error in errors)
+
+
+def test_container_commit_cannot_masquerade_as_source_observation():
+    value = pointer()
+    source = value["snapshot_provenance"]["source_observation_commit"]
+    errors = validate_live_reconciliation(value, source, source)
+    assert any("container_commit must not be treated" in error for error in errors)
 
 
 def test_same_binding_after_authority_advance_is_non_semantic():
