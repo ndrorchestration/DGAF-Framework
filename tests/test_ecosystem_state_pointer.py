@@ -138,6 +138,19 @@ def test_claim_ceiling_cannot_be_promoted():
     assert any("claim_ceiling" in error for error in errors)
 
 
+def test_tektite_public_status_manifest_covers_public_semantic_closure():
+    manifest = read_json(TEKTITE_MANIFEST)
+    paths = {item["path"] for item in manifest["artifacts"]}
+    required = {
+        "docs/CURRENT_STATE.md",
+        "docs/tektite-v0.1/public/index.html",
+        "docs/tektite-v0.1/status.seed.json",
+        "docs/tektite-v0.1/evidence-ledger.seed.json",
+        "docs/tektite-v0.1/case-studies/ACP_PR_145.md",
+    }
+    assert required <= paths
+
+
 def test_aoss_readiness_manifest_covers_transitive_semantic_closure():
     manifest = read_json(AOSS_MANIFEST)
     paths = {item["path"] for item in manifest["artifacts"]}
