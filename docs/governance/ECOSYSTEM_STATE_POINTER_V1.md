@@ -177,7 +177,6 @@ This control does not establish:
 
 It is freshness and provenance infrastructure only.
 
-
 ## Embedded snapshot rule
 
 The checked-in pointer is intentionally an immutable historical snapshot. It must:
