@@ -147,3 +147,22 @@ def test_receipt_serialization_preserves_non_effects():
     assert payload["merge_executed"] is False
     assert payload["mutation_executed"] is False
     assert payload["authorization_effect"] == "NONE"
+
+
+def test_legacy_component_surface_reexports_canonical_package_objects():
+    import components.governed_repo as legacy
+    import governed_repo.core as canonical
+
+    public_names = (
+        "ChangeIdentity",
+        "GateReceipt",
+        "GateRequirement",
+        "PromotionPolicy",
+        "PromotionReason",
+        "PromotionReceipt",
+        "UpstreamDecision",
+        "assess_promotion",
+    )
+
+    for name in public_names:
+        assert getattr(legacy, name) is getattr(canonical, name)
