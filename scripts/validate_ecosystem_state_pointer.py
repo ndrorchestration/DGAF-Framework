@@ -95,9 +95,9 @@ def validate(pointer: dict) -> list[str]:
             if missing:
                 errors.append(f"{prefix}.authority_ids reference missing authorities: {missing}")
 
-        digest = item.get("manifest_digest_sha256")
+        digest = item.get("semantic_material_digest_sha256")
         if not isinstance(digest, str) or not SHA256_RE.fullmatch(digest):
-            errors.append(f"{prefix}.manifest_digest_sha256 must be lowercase SHA-256")
+            errors.append(f"{prefix}.semantic_material_digest_sha256 must be lowercase SHA-256")
         if item.get("freshness_state") not in FRESHNESS:
             errors.append(f"{prefix}.freshness_state is invalid")
         if item.get("invalidation_reason") not in REASONS:
@@ -121,6 +121,7 @@ def validate(pointer: dict) -> list[str]:
         "whole_repository_identity_is_provenance",
         "semantic_manifest_controls_material_change",
         "consumer_specific_bindings_required",
+        "provenance_fields_excluded_from_semantic_digest",
         "unknown_change_fails_closed",
     ):
         if policy.get(key) is not True:
@@ -128,11 +129,18 @@ def validate(pointer: dict) -> list[str]:
     return errors
 
 
-def canonical_manifest_digest(manifest: dict) -> str:
-    material = dict(manifest)
-    material.pop("manifest_digest_sha256", None)
+def semantic_material(manifest: dict) -> dict:
+    return {
+        "consumer": manifest.get("consumer"),
+        "artifacts": manifest.get("artifacts"),
+        "external_authorities": manifest.get("external_authorities"),
+        "non_effects": manifest.get("non_effects"),
+    }
+
+
+def semantic_material_digest(manifest: dict) -> str:
     encoded = json.dumps(
-        material,
+        semantic_material(manifest),
         sort_keys=True,
         separators=(",", ":"),
         ensure_ascii=False,
@@ -148,6 +156,10 @@ def validate_manifest(manifest: dict) -> list[str]:
         errors.append("manifest_id must be non-empty")
     if not isinstance(manifest.get("consumer"), str) or not manifest["consumer"]:
         errors.append("consumer must be non-empty")
+    if not isinstance(manifest.get("observed_at"), str) or not manifest["observed_at"]:
+        errors.append("observed_at must be non-empty")
+    if not isinstance(manifest.get("repository"), str) or not manifest["repository"]:
+        errors.append("repository must be non-empty")
     commit = manifest.get("repository_commit")
     if not isinstance(commit, str) or not SHA1_RE.fullmatch(commit):
         errors.append("repository_commit must be a lowercase 40-character Git SHA")
@@ -175,12 +187,14 @@ def validate_manifest(manifest: dict) -> list[str]:
         if not isinstance(item.get("role"), str) or not item["role"]:
             errors.append(f"{prefix}.role must be non-empty")
 
-    expected = manifest.get("manifest_digest_sha256")
-    actual = canonical_manifest_digest(manifest)
+    expected = manifest.get("semantic_material_digest_sha256")
+    actual = semantic_material_digest(manifest)
     if not isinstance(expected, str) or not SHA256_RE.fullmatch(expected):
-        errors.append("manifest_digest_sha256 must be lowercase SHA-256")
+        errors.append("semantic_material_digest_sha256 must be lowercase SHA-256")
     elif expected != actual:
-        errors.append(f"manifest_digest_sha256 mismatch: expected {expected}, recomputed {actual}")
+        errors.append(
+            f"semantic_material_digest_sha256 mismatch: expected {expected}, recomputed {actual}"
+        )
     return errors
 
 
@@ -190,7 +204,8 @@ def classify(previous: dict, current: dict) -> dict:
     changed_authorities = {
         aid
         for aid in set(old_authorities) | set(new_authorities)
-        if old_authorities.get(aid, {}).get("object_identity") != new_authorities.get(aid, {}).get("object_identity")
+        if old_authorities.get(aid, {}).get("object_identity")
+        != new_authorities.get(aid, {}).get("object_identity")
     }
 
     old_bindings = {x["consumer_id"]: x for x in previous["consumer_bindings"]}
@@ -202,8 +217,8 @@ def classify(previous: dict, current: dict) -> dict:
         if before is None or after is None:
             classification = "DEPENDENCY_ADVANCED"
         else:
-            old_digest = before.get("manifest_digest_sha256")
-            new_digest = after.get("manifest_digest_sha256")
+            old_digest = before.get("semantic_material_digest_sha256")
+            new_digest = after.get("semantic_material_digest_sha256")
             if not old_digest or not new_digest:
                 classification = "UNVERIFIED"
             elif old_digest != new_digest:
