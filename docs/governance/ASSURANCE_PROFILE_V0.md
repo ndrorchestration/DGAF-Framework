@@ -19,6 +19,7 @@ ACP, DGAF, Evidence Gate, Action Admission, or ClaimGraph.
 6. Trust / independence review.
 
 Each dimension records:
+
 - status;
 - whether it is required;
 - evidence references;
@@ -51,6 +52,7 @@ repetition.
 ## Receipt semantics
 
 The evaluator returns:
+
 - pass/fail for the declared profile;
 - dimension statuses;
 - unresolved blockers;
@@ -68,6 +70,7 @@ A PASS means only:
 > PASS, and no required independence state remained unknown or unverified.
 
 A PASS does not establish:
+
 - High Assurance;
 - production security or safety;
 - independent validation unless independently sourced evidence is actually
