@@ -14,6 +14,14 @@ A repository commit advancing is never ignored. It is recorded as provenance. Bu
 
 If a required binding is absent, incomplete, or cannot be reverified, the state is `UNVERIFIED` and the system fails closed.
 
+### Observation trust boundary
+
+The v1 validator is a consistency validator over supplied source observations. It verifies pointer structure, manifest structure, deterministic digests, authority references, and fixed non-promotion ceilings.
+
+It does **not** autonomously query Git, GitHub, Notion, Drive, or another source authority to prove that a current path resolves to a declared blob/object identity. A producer or reconciliation step must first obtain those current source observations and bind them into the pointer/manifests. That observation procedure is part of the evidence chain.
+
+Therefore `CURRENT` means the declared bindings were reverified by the producing reconciliation process and then passed this contract; it must not be described as an autonomous freshness-oracle result. If the producer cannot establish a current binding, it must emit `UNVERIFIED` or otherwise fail closed.
+
 ## Two-layer model
 
 ### Authority pointers
