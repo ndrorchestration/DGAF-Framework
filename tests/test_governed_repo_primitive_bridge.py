@@ -172,27 +172,21 @@ def test_all_three_primitive_decisions_can_satisfy_non_mutating_policy():
     ("evidence", "claim_scope", "authority", "expected"),
     [
         (
-            evidence_gate_decision(
-                evidence_receipt(admitted=False, reason_code="DIGEST_MISMATCH")
-            ),
+            evidence_gate_decision(evidence_receipt(admitted=False, reason_code="DIGEST_MISMATCH")),
             claimgraph_decision(claimgraph_receipt()),
             action_admission_decision(action_receipt()),
             PromotionReason.EVIDENCE_INSUFFICIENT,
         ),
         (
             evidence_gate_decision(evidence_receipt()),
-            claimgraph_decision(
-                claimgraph_receipt(valid=False, reason_code="CONTRACT_INVALID")
-            ),
+            claimgraph_decision(claimgraph_receipt(valid=False, reason_code="CONTRACT_INVALID")),
             action_admission_decision(action_receipt()),
             PromotionReason.CLAIM_SCOPE_INVALID,
         ),
         (
             evidence_gate_decision(evidence_receipt()),
             claimgraph_decision(claimgraph_receipt()),
-            action_admission_decision(
-                action_receipt(admitted=False, reason_code="OPERATION_MISMATCH")
-            ),
+            action_admission_decision(action_receipt(admitted=False, reason_code="OPERATION_MISMATCH")),
             PromotionReason.AUTHORITY_UNRESOLVED,
         ),
     ],
