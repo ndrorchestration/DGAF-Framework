@@ -27,12 +27,14 @@ If a blocking defect appears, record it. A defect is useful usability evidence.
 Use this exact source commit:
 
 ```text
-4738619157aa6ace9ed13bb56bec4721be5d35ef
+c90c74c04583c5a3f23f6a261cf38cd6922c781c
 ```
 
-This exact commit completed the Governed Repo package workflow successfully on
-Python 3.10, 3.11, 3.12, 3.13, and 3.14, along with all repository-wide
-pull-request workflows returned for the head.
+This commit is the accepted Governed Repo merge on protected main. Its package
+files are byte-identical to fully verified PR #1229 head
+`77c818ecc5d57e5dd354bc86396dc9e7c5c6be9e`, which completed all 23 returned
+workflow families successfully, including the Governed Repo package matrix on
+Python 3.10, 3.11, 3.12, 3.13, and 3.14.
 
 The package is not published. Install it from the exact source checkout.
 
@@ -56,14 +58,14 @@ git --version
 ```bash
 git clone https://github.com/ndrorchestration/DGAF-Framework.git
 cd DGAF-Framework
-git checkout 4738619157aa6ace9ed13bb56bec4721be5d35ef
+git checkout c90c74c04583c5a3f23f6a261cf38cd6922c781c
 git rev-parse HEAD
 ```
 
 Expected final SHA:
 
 ```text
-4738619157aa6ace9ed13bb56bec4721be5d35ef
+c90c74c04583c5a3f23f6a261cf38cd6922c781c
 ```
 
 If the SHA differs, stop and record the mismatch.
