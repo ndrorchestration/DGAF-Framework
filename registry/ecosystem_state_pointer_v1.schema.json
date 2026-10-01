@@ -4,10 +4,33 @@
   "title": "ECOSYSTEM_STATE_POINTER_V1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version","observed_at","authorities","consumer_bindings","claim_ceiling","freshness_policy"],
+  "required": ["schema_version","observed_at","snapshot_provenance","authorities","consumer_bindings","claim_ceiling","freshness_policy"],
   "properties": {
     "schema_version": {"const": "ECOSYSTEM_STATE_POINTER_V1"},
     "observed_at": {"type": "string", "format": "date-time"},
+    "snapshot_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storage_mode","source_observation_commit","container_commit","container_commit_binding","live_reconciliation"],
+      "properties": {
+        "storage_mode": {"const": "IN_REPOSITORY_SNAPSHOT"},
+        "source_observation_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "container_commit": {"type": "null"},
+        "container_commit_binding": {"const": "EXTERNAL_ONLY"},
+        "live_reconciliation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required_for_repository_tip_currentness","status","observed_commit","observed_at","evidence_url"],
+          "properties": {
+            "required_for_repository_tip_currentness": {"const": true},
+            "status": {"const": "NOT_EMBEDDED"},
+            "observed_commit": {"type": "null"},
+            "observed_at": {"type": "null"},
+            "evidence_url": {"type": "null"}
+          }
+        }
+      }
+    },
     "authorities": {
       "type": "array",
       "minItems": 1,
@@ -36,12 +59,7 @@
         "required": ["consumer_id","authority_ids","manifest_path","semantic_material_digest_sha256","freshness_state","invalidation_reason"],
         "properties": {
           "consumer_id": {"type": "string", "minLength": 1},
-          "authority_ids": {
-            "type": "array",
-            "minItems": 1,
-            "uniqueItems": true,
-            "items": {"type": "string", "minLength": 1}
-          },
+          "authority_ids": {"type": "array","minItems": 1,"uniqueItems": true,"items": {"type": "string","minLength": 1}},
           "manifest_path": {"type": "string", "minLength": 1},
           "semantic_material_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "freshness_state": {"enum": ["CURRENT","STALE_SOURCE_ADVANCED","UNVERIFIED","HISTORICAL_SNAPSHOT"]},
@@ -65,12 +83,14 @@
     "freshness_policy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["whole_repository_identity_is_provenance","semantic_manifest_controls_material_change","consumer_specific_bindings_required","provenance_fields_excluded_from_semantic_digest","unknown_change_fails_closed"],
+      "required": ["whole_repository_identity_is_provenance","semantic_manifest_controls_material_change","consumer_specific_bindings_required","provenance_fields_excluded_from_semantic_digest","embedded_pointer_is_observation_snapshot","live_tip_currentness_requires_external_reconciliation","unknown_change_fails_closed"],
       "properties": {
         "whole_repository_identity_is_provenance": {"const": true},
         "semantic_manifest_controls_material_change": {"const": true},
         "consumer_specific_bindings_required": {"const": true},
         "provenance_fields_excluded_from_semantic_digest": {"const": true},
+        "embedded_pointer_is_observation_snapshot": {"const": true},
+        "live_tip_currentness_requires_external_reconciliation": {"const": true},
         "unknown_change_fails_closed": {"const": true}
       }
     }
