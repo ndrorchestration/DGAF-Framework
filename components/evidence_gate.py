@@ -314,7 +314,6 @@ def admit_evidence(
             digest_checked=True,
         )
 
-
     target_checked = True
     if target.target_type != expected_target.target_type or target.scope_id != expected_target.scope_id:
         return _receipt(
