@@ -7,8 +7,9 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
 CANONICAL_PRODUCTION_URL = "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
-COLD_START_WARNING = (
-    "Audit counters are in-memory and reset on each serverless cold start. " "Wire to Vercel KV for persistence."
+CANONICAL_COLD_START_WARNING = (
+    "Audit counters are in-memory and reset on each serverless cold start. "
+    "Configure an admitted durable store before relying on persistent audit state."
 )
 
 
@@ -43,5 +44,18 @@ def test_live_audit_check_does_not_require_cross_request_serverless_counter_pers
     assert "d.get('status') == 'ok'" in audit_block
     assert "d.get('version') == '1.8.0'" in audit_block
     assert "d.get('_warning') in (None, expected_warning)" in audit_block
-    assert COLD_START_WARNING in audit_block
+    assert CANONICAL_COLD_START_WARNING in audit_block
     assert "audit response contract FAIL" in audit_block
+
+
+def test_live_audit_contract_matches_runtime_warning_and_fails_job_closed() -> None:
+    workflow = (REPO_ROOT / ".github/workflows/regression.yml").read_text(encoding="utf-8")
+    verifier = (REPO_ROOT / "scripts/verify_deployment.sh").read_text(encoding="utf-8")
+    runtime = (REPO_ROOT / "pages/api/audit.ts").read_text(encoding="utf-8")
+    live_job = workflow.split("  live-regression:", 1)[1]
+
+    assert "Configure an admitted durable store" in runtime
+    assert CANONICAL_COLD_START_WARNING in workflow
+    assert CANONICAL_COLD_START_WARNING in verifier
+    assert "continue-on-error: true" not in live_job
+    assert "Vercel unavailable" not in live_job
