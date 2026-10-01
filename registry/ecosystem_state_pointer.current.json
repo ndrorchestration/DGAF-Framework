@@ -1,16 +1,16 @@
 {
   "schema_version": "ECOSYSTEM_STATE_POINTER_V1",
-  "observed_at": "2026-10-01T09:07:25Z",
+  "observed_at": "2026-10-01T14:24:26Z",
   "authorities": [
     {
       "authority_id": "DGAF_SOURCE",
       "surface": "GITHUB",
       "role": "Exact source, CI, evidence and commit identity",
-      "object_identity": "05ba55a33193855394dc4dc69ce6deea375ece93",
-      "predecessor_object_identity": "b4fd93dfe29c26376a2ff96a7cbe4c5f2197aeb7",
+      "object_identity": "9be30ce5b88df8e0435896e0d62ba4930686b278",
+      "predecessor_object_identity": "05ba55a33193855394dc4dc69ce6deea375ece93",
       "freshness_state": "CURRENT",
       "invalidation_reason": "NONE",
-      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/commit/05ba55a33193855394dc4dc69ce6deea375ece93"
+      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/commit/9be30ce5b88df8e0435896e0d62ba4930686b278"
     },
     {
       "authority_id": "ACP_SOURCE",
@@ -26,11 +26,11 @@
       "authority_id": "TEKTITE_PUBLIC_SNAPSHOT",
       "surface": "TEKTITE_PUBLIC",
       "role": "Public projection only; never an authorization source",
-      "object_identity": "DGAF:05ba55a33193855394dc4dc69ce6deea375ece93:docs/tektite-v0.1/public",
-      "predecessor_object_identity": "DGAF:b4fd93dfe29c26376a2ff96a7cbe4c5f2197aeb7:docs/tektite-v0.1/public",
+      "object_identity": "DGAF:9be30ce5b88df8e0435896e0d62ba4930686b278:docs/tektite-v0.1/public",
+      "predecessor_object_identity": "DGAF:05ba55a33193855394dc4dc69ce6deea375ece93:docs/tektite-v0.1/public",
       "freshness_state": "CURRENT",
       "invalidation_reason": "NONE",
-      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/tree/05ba55a33193855394dc4dc69ce6deea375ece93/docs/tektite-v0.1/public"
+      "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/tree/9be30ce5b88df8e0435896e0d62ba4930686b278/docs/tektite-v0.1/public"
     },
     {
       "authority_id": "NOTION_INTERPRETED_STATE",
@@ -56,7 +56,7 @@
       "consumer_id": "TEKTITE_PUBLIC_STATUS",
       "authority_ids": ["DGAF_SOURCE","ACP_SOURCE"],
       "manifest_path": "registry/tektite_public_status_semantic_source_v1.json",
-      "semantic_material_digest_sha256": "2cdd2dc579d377ffd2fa24df4bfc97e8cf33cd2cb08f2670fc189ef8b9d80916",
+      "semantic_material_digest_sha256": "102c101d7c737d5222da08cd674172e09d95a41afd328bc464bd13ce9ee6675b",
       "freshness_state": "CURRENT",
       "invalidation_reason": "SEMANTIC_SOURCE_CHANGED"
     }
