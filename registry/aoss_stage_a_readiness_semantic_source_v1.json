@@ -1,0 +1,54 @@
+{
+  "schema_version": "SEMANTIC_SOURCE_MANIFEST_V1",
+  "manifest_id": "AOSS_STAGE_A_READINESS_SEMANTIC_SOURCE_V1",
+  "consumer": "AOSS_STAGE_A_READINESS",
+  "observed_at": "2026-10-01T08:19:00Z",
+  "repository": "ndrorchestration/DGAF-Framework",
+  "repository_commit": "b4fd93dfe29c26376a2ff96a7cbe4c5f2197aeb7",
+  "artifacts": [
+    {
+      "path": "registry/aoss_v0_6_acp_measurement_manifest_v1.json",
+      "git_blob_sha1": "1c690abbe2ab451f5081f56c25970eb85b031ce4",
+      "role": "ACP measurement mapping"
+    },
+    {
+      "path": "registry/aoss_v0_6_stage_a_artifact_replay_receipt_contract_v1.json",
+      "git_blob_sha1": "1d2b44acb63f30660253e3c96f1a6cac602d62eb",
+      "role": "artifact replay and receipt contract"
+    },
+    {
+      "path": "registry/aoss_v0_6_stage_a_collection_authorization_v1.json",
+      "git_blob_sha1": "3a5efa22b99e03ef35bea71c261a4bcd681f0e6f",
+      "role": "collection authorization boundary"
+    },
+    {
+      "path": "registry/aoss_v0_6_stage_a_decision_policy_v1.json",
+      "git_blob_sha1": "b93f01af1825e93279e945f7dc07f299daab89bb",
+      "role": "decision policy"
+    },
+    {
+      "path": "registry/aoss_v0_6_stage_a_environment_manifest_v1.json",
+      "git_blob_sha1": "d6d67fc4542d47e22f6f40503335c2e7580b405c",
+      "role": "environment binding"
+    },
+    {
+      "path": "registry/aoss_v0_6_stage_a_executable_destination_binding_v1.json",
+      "git_blob_sha1": "80e7ea19a3da601b1a80c4d9c9e89c774f303814",
+      "role": "executable/destination binding"
+    }
+  ],
+  "external_authorities": [
+    {
+      "authority_id": "ACP_SOURCE",
+      "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
+      "role": "execution-boundary/control-plane dependency"
+    }
+  ],
+  "non_effects": {
+    "scientific_n_increment": 0,
+    "independent_validation": "NOT_ESTABLISHED",
+    "canonical_dgaf_efficacy": "NOT_ESTABLISHED",
+    "high_assurance": "NOT_AUTHORIZED"
+  },
+  "manifest_digest_sha256": "6b02ada1009f717f7177ef72ecd281f08b5081824ec911c16ae23f826ab9e418"
+}
