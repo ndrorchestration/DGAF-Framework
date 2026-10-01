@@ -12,6 +12,7 @@ TEKTITE_MANIFEST = ROOT / "registry" / "tektite_public_status_semantic_source_v1
 module = runpy.run_path(str(SCRIPT))
 validate = module["validate"]
 validate_manifest = module["validate_manifest"]
+semantic_material_digest = module["semantic_material_digest"]
 classify = module["classify"]
 
 
@@ -32,6 +33,14 @@ def test_semantic_manifests_recompute_to_declared_digests():
     assert validate_manifest(read_json(TEKTITE_MANIFEST)) == []
 
 
+def test_provenance_refresh_does_not_change_semantic_digest():
+    before = read_json(AOSS_MANIFEST)
+    after = copy.deepcopy(before)
+    after["observed_at"] = "2099-01-01T00:00:00Z"
+    after["repository_commit"] = "f" * 40
+    assert semantic_material_digest(before) == semantic_material_digest(after)
+
+
 def test_same_binding_after_authority_advance_is_non_semantic():
     before = pointer()
     after = copy.deepcopy(before)
@@ -48,7 +57,7 @@ def test_changed_consumer_digest_is_semantic_source_change():
     before = pointer()
     after = copy.deepcopy(before)
     binding = next(x for x in after["consumer_bindings"] if x["consumer_id"] == "AOSS_STAGE_A_READINESS")
-    binding["manifest_digest_sha256"] = "f" * 64
+    binding["semantic_material_digest_sha256"] = "f" * 64
 
     result = classify(before, after)
     classes = {x["consumer_id"]: x["classification"] for x in result["consumer_bindings"]}
@@ -56,7 +65,7 @@ def test_changed_consumer_digest_is_semantic_source_change():
     assert classes["TEKTITE_PUBLIC_STATUS"] == "NONE"
 
 
-def test_manifest_digest_tampering_is_rejected():
+def test_semantic_material_tampering_is_rejected():
     manifest = read_json(AOSS_MANIFEST)
     manifest["artifacts"][0]["role"] = "tampered"
     errors = validate_manifest(manifest)
