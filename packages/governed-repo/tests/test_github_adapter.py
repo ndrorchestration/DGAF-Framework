@@ -1,5 +1,4 @@
 import pytest
-
 from governed_repo import (
     GateRequirement,
     GitHubAdapterInputError,
