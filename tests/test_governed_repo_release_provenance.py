@@ -97,6 +97,7 @@ def test_validation_rejects_claim_ceiling_tamper(tmp_path: Path):
 
     assert any("claim_ceiling" in error for error in errors)
 
+
 def test_cli_emits_deterministic_json_for_same_inputs(tmp_path: Path, monkeypatch):
     module = load_module()
     dist = make_dist(tmp_path)
