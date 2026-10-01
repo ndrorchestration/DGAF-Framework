@@ -1,6 +1,19 @@
 {
   "schema_version": "ECOSYSTEM_STATE_POINTER_V1",
   "observed_at": "2026-10-01T14:24:26Z",
+  "snapshot_provenance": {
+    "storage_mode": "IN_REPOSITORY_SNAPSHOT",
+    "source_observation_commit": "9be30ce5b88df8e0435896e0d62ba4930686b278",
+    "container_commit": null,
+    "container_commit_binding": "EXTERNAL_ONLY",
+    "live_reconciliation": {
+      "required_for_repository_tip_currentness": true,
+      "status": "NOT_EMBEDDED",
+      "observed_commit": null,
+      "observed_at": null,
+      "evidence_url": null
+    }
+  },
   "authorities": [
     {
       "authority_id": "DGAF_SOURCE",
@@ -8,7 +21,7 @@
       "role": "Exact source, CI, evidence and commit identity",
       "object_identity": "9be30ce5b88df8e0435896e0d62ba4930686b278",
       "predecessor_object_identity": "05ba55a33193855394dc4dc69ce6deea375ece93",
-      "freshness_state": "CURRENT",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "NONE",
       "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/commit/9be30ce5b88df8e0435896e0d62ba4930686b278"
     },
@@ -18,7 +31,7 @@
       "role": "Execution-boundary and control-plane source authority",
       "object_identity": "4d3cdd21a445b765753cb5d36360f643210fe0b5",
       "predecessor_object_identity": null,
-      "freshness_state": "CURRENT",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "NONE",
       "evidence_url": "https://github.com/ndrorchestration/agent-control-plane/commit/4d3cdd21a445b765753cb5d36360f643210fe0b5"
     },
@@ -28,7 +41,7 @@
       "role": "Public projection only; never an authorization source",
       "object_identity": "DGAF:9be30ce5b88df8e0435896e0d62ba4930686b278:docs/tektite-v0.1/public",
       "predecessor_object_identity": "DGAF:05ba55a33193855394dc4dc69ce6deea375ece93:docs/tektite-v0.1/public",
-      "freshness_state": "CURRENT",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "NONE",
       "evidence_url": "https://github.com/ndrorchestration/DGAF-Framework/tree/9be30ce5b88df8e0435896e0d62ba4930686b278/docs/tektite-v0.1/public"
     },
@@ -38,7 +51,7 @@
       "role": "Interpreted ecosystem state, routing and reconciliation",
       "object_identity": "https://app.notion.com/p/3d5f5bad238b811a8bc3fabe5edf209c",
       "predecessor_object_identity": null,
-      "freshness_state": "CURRENT",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "NONE",
       "evidence_url": "https://app.notion.com/p/3d5f5bad238b811a8bc3fabe5edf209c"
     }
@@ -49,7 +62,7 @@
       "authority_ids": ["DGAF_SOURCE","ACP_SOURCE"],
       "manifest_path": "registry/aoss_stage_a_readiness_semantic_source_v1.json",
       "semantic_material_digest_sha256": "1f1cab77c385b6e0202c812faeaf7649843d6fc9c817bdbfe8a8bf6435aeeeac",
-      "freshness_state": "CURRENT",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "NON_SEMANTIC_REPOSITORY_ADVANCE"
     },
     {
@@ -57,7 +70,7 @@
       "authority_ids": ["DGAF_SOURCE","ACP_SOURCE"],
       "manifest_path": "registry/tektite_public_status_semantic_source_v1.json",
       "semantic_material_digest_sha256": "102c101d7c737d5222da08cd674172e09d95a41afd328bc464bd13ce9ee6675b",
-      "freshness_state": "CURRENT",
+      "freshness_state": "HISTORICAL_SNAPSHOT",
       "invalidation_reason": "SEMANTIC_SOURCE_CHANGED"
     }
   ],
@@ -74,6 +87,8 @@
     "semantic_manifest_controls_material_change": true,
     "consumer_specific_bindings_required": true,
     "provenance_fields_excluded_from_semantic_digest": true,
+    "embedded_pointer_is_observation_snapshot": true,
+    "live_tip_currentness_requires_external_reconciliation": true,
     "unknown_change_fails_closed": true
   }
 }
