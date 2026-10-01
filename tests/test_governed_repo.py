@@ -1,11 +1,11 @@
 from components.governed_repo import (
-    assess_promotion,
     ChangeIdentity,
     GateReceipt,
     GateRequirement,
     PromotionPolicy,
     PromotionReason,
     UpstreamDecision,
+    assess_promotion,
 )
 
 
