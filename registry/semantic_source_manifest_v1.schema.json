@@ -14,7 +14,7 @@
     "artifacts",
     "external_authorities",
     "non_effects",
-    "manifest_digest_sha256"
+    "semantic_material_digest_sha256"
   ],
   "properties": {
     "schema_version": {"const": "SEMANTIC_SOURCE_MANIFEST_V1"},
@@ -51,6 +51,6 @@
       }
     },
     "non_effects": {"type": "object"},
-    "manifest_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    "semantic_material_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
   }
 }
