@@ -7,9 +7,9 @@ transitions.
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
 from enum import Enum
-import hashlib
 from typing import Callable, Optional
 
 EVIDENCE_GATE_SCHEMA_VERSION = "dgaf.evidence-gate.v0-candidate"
