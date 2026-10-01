@@ -20,7 +20,21 @@ The v1 validator is a consistency validator over supplied source observations. I
 
 It does **not** autonomously query Git, GitHub, Notion, Drive, or another source authority to prove that a current path resolves to a declared blob/object identity. A producer or reconciliation step must first obtain those current source observations and bind them into the pointer/manifests. That observation procedure is part of the evidence chain.
 
-Therefore `CURRENT` means the declared bindings were reverified by the producing reconciliation process and then passed this contract; it must not be described as an autonomous freshness-oracle result. If the producer cannot establish a current binding, it must emit `UNVERIFIED` or otherwise fail closed.
+An embedded pointer is an immutable observation snapshot, not an autonomous freshness oracle. The legacy filename `ecosystem_state_pointer.current.json` means "latest embedded pointer artifact," not "self-proving current repository tip."
+
+For an in-repository pointer, live repository-tip currentness requires external reconciliation evidence. The embedded artifact records the source observation commit, while its own container commit is bound externally after commit creation. If a producer cannot establish live currentness, it must fail closed rather than infer it from the embedded file.
+
+## Three-way repository identity
+
+An in-repository freshness pointer must distinguish three identities:
+
+1. **source observation commit** — the repository state evaluated when the pointer was produced;
+2. **container commit** — the immutable commit that contains the pointer snapshot; this is necessarily bound externally because writing it into the same file would create a new commit;
+3. **live reconciliation observation** — an external or CI observation used when claiming current repository-tip state.
+
+The pointer therefore sets `container_commit=null` and `container_commit_binding=EXTERNAL_ONLY`. Its embedded `live_reconciliation` status is `NOT_EMBEDDED`.
+
+This avoids the fixed-point error where a file attempts to contain the SHA of the commit that contains that same file.
 
 ## Two-layer model
 
@@ -104,10 +118,10 @@ Mutable Notion prose is also not used as a cryptographic semantic dependency for
 
 ## Freshness states
 
-- `CURRENT`: required authority identities and semantic bindings have been reverified.
+- `CURRENT`: valid only in externally reconciled live-state evidence; an embedded in-repository pointer must not use it to claim repository-tip currentness.
 - `STALE_SOURCE_ADVANCED`: material semantic source changed after the pointer was created.
 - `UNVERIFIED`: currentness cannot be established from available bindings.
-- `HISTORICAL_SNAPSHOT`: event-time evidence, not eligible to answer current-state questions.
+- `HISTORICAL_SNAPSHOT`: event-time or embedded snapshot evidence, not by itself eligible to answer live repository-tip current-state questions.
 
 ## Invalidation reasons
 
@@ -162,3 +176,19 @@ This control does not establish:
 - production executor readiness.
 
 It is freshness and provenance infrastructure only.
+
+
+## Embedded snapshot rule
+
+The checked-in pointer is intentionally an immutable historical snapshot. It must:
+
+- record `snapshot_provenance.source_observation_commit`;
+- keep `snapshot_provenance.container_commit=null`;
+- declare `container_commit_binding=EXTERNAL_ONLY`;
+- keep embedded live-reconciliation fields null;
+- use `HISTORICAL_SNAPSHOT` for embedded authority and consumer freshness states;
+- require external/CI reconciliation before claiming repository-tip currentness.
+
+The validator accepts `--live-repository-commit` and `--container-commit` only as external runtime evidence. If the live repository commit differs from the source observation commit, the embedded pointer fails closed as not repository-tip current. The container commit must never be substituted for the source observation commit.
+
+This refinement preserves the consumer-specific semantic-material model. It changes only the semantics of embedded currentness claims.
