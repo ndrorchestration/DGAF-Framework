@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import json
+from dataclasses import dataclass
 from typing import Any
 
-from .evidence_gate import ClaimScope, EvidenceObject, EvidenceTarget, ProvenanceBinding
+from .evidence_gate import (
+    ClaimScope,
+    EvidenceObject,
+    EvidenceTarget,
+    ProvenanceBinding,
+)
 
 
 @dataclass(frozen=True)
@@ -29,7 +34,9 @@ class LocalTestArtifact:
     output_bytes: bytes
 
 
-def local_test_artifact_to_gate_inputs(artifact: LocalTestArtifact) -> EvidenceGateInputs:
+def local_test_artifact_to_gate_inputs(
+    artifact: LocalTestArtifact,
+) -> EvidenceGateInputs:
     """Map a generic deterministic local-test artifact into Evidence Gate inputs."""
     if not isinstance(artifact, LocalTestArtifact):
         raise TypeError("artifact must be LocalTestArtifact")
@@ -87,7 +94,9 @@ def validated_track_a_operator_admission_to_gate_inputs(
     succeeds against the concrete receipt and retained archives.
     """
     if domain_validation_passed is not True:
-        raise ValueError("Track A domain validation must pass before Evidence Gate mapping")
+        raise ValueError(
+            "Track A domain validation must pass before Evidence Gate mapping"
+        )
     if not isinstance(record_bytes, bytes):
         raise TypeError("record_bytes must be bytes")
     try:
@@ -117,7 +126,10 @@ def validated_track_a_operator_admission_to_gate_inputs(
     if record["record_type"] != "TRACK_A_EPOCH_002_OPERATOR_COLLECTION_ADMISSION":
         raise ValueError("unexpected Track A record_type")
 
-    scope_id = f"{record['protocol_id']}:epoch:{record['epoch']}:operator-collection-provenance"
+    scope_id = (
+        f"{record['protocol_id']}:epoch:{record['epoch']}:"
+        "operator-collection-provenance"
+    )
     environment = (
         f"python:{record['python_version']}|requirements:{record['requirements_lock_blob_sha']}"
     )
