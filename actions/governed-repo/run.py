@@ -64,9 +64,7 @@ def _gate(raw: Any, index: int) -> GateRequirement:
     }
     unknown = set(raw) - allowed
     if unknown:
-        raise ActionInputError(
-            f"policy.required_gates[{index}] contains unsupported keys: {sorted(unknown)}"
-        )
+        raise ActionInputError(f"policy.required_gates[{index}] contains unsupported keys: {sorted(unknown)}")
 
     gate_id = raw.get("gate_id")
     gate_class = raw.get("gate_class")
@@ -82,8 +80,7 @@ def _gate(raw: Any, index: int) -> GateRequirement:
         or any(not isinstance(item, str) or not item.strip() for item in conclusions)
     ):
         raise ActionInputError(
-            f"policy.required_gates[{index}].accepted_conclusions "
-            "must be a non-empty string array"
+            f"policy.required_gates[{index}].accepted_conclusions " "must be a non-empty string array"
         )
 
     required = raw.get("required", True)
@@ -95,9 +92,7 @@ def _gate(raw: Any, index: int) -> GateRequirement:
         ("require_base_binding", base_binding),
     ):
         if type(value) is not bool:
-            raise ActionInputError(
-                f"policy.required_gates[{index}].{name} must be boolean"
-            )
+            raise ActionInputError(f"policy.required_gates[{index}].{name} must be boolean")
 
     return GateRequirement(
         gate_id=gate_id,
@@ -150,9 +145,7 @@ def _decision(raw: Any, key: str) -> Optional[UpstreamDecision]:
     allowed = {"decision_class", "accepted", "reason_code", "receipt_id"}
     unknown = set(raw) - allowed
     if unknown:
-        raise ActionInputError(
-            f"upstream_decisions.{key} contains unsupported keys: {sorted(unknown)}"
-        )
+        raise ActionInputError(f"upstream_decisions.{key} contains unsupported keys: {sorted(unknown)}")
 
     decision_class = raw.get("decision_class")
     accepted = raw.get("accepted")
@@ -160,21 +153,13 @@ def _decision(raw: Any, key: str) -> Optional[UpstreamDecision]:
     receipt_id = raw.get("receipt_id")
 
     if not isinstance(decision_class, str) or not decision_class.strip():
-        raise ActionInputError(
-            f"upstream_decisions.{key}.decision_class must be a non-empty string"
-        )
+        raise ActionInputError(f"upstream_decisions.{key}.decision_class must be a non-empty string")
     if type(accepted) is not bool:
         raise ActionInputError(f"upstream_decisions.{key}.accepted must be boolean")
     if not isinstance(reason_code, str) or not reason_code.strip():
-        raise ActionInputError(
-            f"upstream_decisions.{key}.reason_code must be a non-empty string"
-        )
-    if receipt_id is not None and (
-        not isinstance(receipt_id, str) or not receipt_id.strip()
-    ):
-        raise ActionInputError(
-            f"upstream_decisions.{key}.receipt_id must be null or a non-empty string"
-        )
+        raise ActionInputError(f"upstream_decisions.{key}.reason_code must be a non-empty string")
+    if receipt_id is not None and (not isinstance(receipt_id, str) or not receipt_id.strip()):
+        raise ActionInputError(f"upstream_decisions.{key}.receipt_id must be null or a non-empty string")
 
     return UpstreamDecision(
         decision_class=decision_class,
@@ -191,9 +176,7 @@ def _upstream(raw: Any) -> dict[str, Optional[UpstreamDecision]]:
     allowed = {"evidence", "claim_scope", "mutation_policy", "authority"}
     unknown = set(raw) - allowed
     if unknown:
-        raise ActionInputError(
-            f"upstream_decisions contains unsupported keys: {sorted(unknown)}"
-        )
+        raise ActionInputError(f"upstream_decisions contains unsupported keys: {sorted(unknown)}")
 
     return {key: _decision(raw.get(key), key) for key in allowed}
 
