@@ -8,7 +8,8 @@ LEGACY_PRODUCTION_URL = "https://dgaf-framework.vercel.app"
 CANONICAL_PRODUCTION_URL = "https://dynamicgovernanceagenticformation-ndrorchestration.vercel.app"
 VERCEL_PROJECT_ID = "prj_euzjAnhqct0wayTWWojizanKN3cX"
 COLD_START_WARNING = (
-    "Audit counters are in-memory and reset on each serverless cold start. " "Wire to Vercel KV for persistence."
+    "Audit counters are in-memory and reset on each serverless cold start. "
+    "Configure an admitted durable store before relying on persistent audit state."
 )
 
 

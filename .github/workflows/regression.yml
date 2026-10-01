@@ -47,7 +47,6 @@ jobs:
           print(f'PSI cubic OK: PSI={PSI:.10f}')
           EOF
   live-regression:
-    continue-on-error: true
     name: Live Regression (Vercel)
     runs-on: ubuntu-latest
     if: >
@@ -109,7 +108,7 @@ jobs:
           import os
           import sys
           d = json.loads(os.environ["AUDIT_JSON"])
-          expected_warning = 'Audit counters are in-memory and reset on each serverless cold start. Wire to Vercel KV for persistence.'
+          expected_warning = 'Audit counters are in-memory and reset on each serverless cold start. Configure an admitted durable store before relying on persistent audit state.'
           ok = (
               d.get('status') == 'ok'
               and d.get('version') == '1.8.0'
@@ -123,4 +122,4 @@ jobs:
 
       - name: Notify on live-regression failure
         if: failure()
-        run: echo DGAF live-regression failed run ${{ github.run_id }} Vercel unavailable suite passing via continue-on-error
+        run: echo DGAF live-regression failed run ${{ github.run_id }}; inspect the failed step before classifying the cause
