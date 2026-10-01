@@ -150,8 +150,9 @@ def test_receipt_serialization_preserves_non_effects():
 
 
 def test_legacy_component_surface_reexports_canonical_package_objects():
-    import components.governed_repo as legacy
     import governed_repo.core as canonical
+
+    import components.governed_repo as legacy
 
     public_names = (
         "ChangeIdentity",
