@@ -1,12 +1,12 @@
 import pytest
 
 from governed_repo import (
+    assess_github_promotion,
     GateRequirement,
+    gate_receipt_from_check_run,
     GitHubAdapterInputError,
     PromotionPolicy,
     PromotionReason,
-    assess_github_promotion,
-    gate_receipt_from_check_run,
 )
 
 
