@@ -1,6 +1,7 @@
 # Tektite v0.1 Static Preview Instructions
 
-This document explains how to preview the static Tektite v0.1 public governance-console shell added under `docs/tektite-v0.1/public/`.
+This document explains how to preview the static Tektite v0.1 public
+Governance Console shell added under `docs/tektite-v0.1/public/`.
 
 ## Scope
 
@@ -38,11 +39,13 @@ docs/tektite-v0.1/public/index.html
 
 in a browser.
 
-This is sufficient for static visual review because the shell does not depend on JavaScript, package installation, private APIs, or a local server.
+This is sufficient for static visual review because the shell does not depend
+on JavaScript, package installation, private APIs, or a local server.
 
 ## Preview option B: serve the folder locally
 
-If a browser blocks local-file behavior or a reviewer prefers a localhost URL, serve the folder with Python:
+If a browser blocks local-file behavior or a reviewer prefers a localhost URL,
+serve the folder with Python:
 
 ```bash
 cd docs/tektite-v0.1/public
@@ -55,21 +58,25 @@ Then open:
 http://127.0.0.1:8080/
 ```
 
-This local server is only a static file server. It does not create executor authority, deployment readiness, or public release authorization.
+This local server is only a static file server. It does not create executor
+authority, deployment readiness, or public release authorization.
 
 ## Review checklist
 
 Use this checklist for a bounded visual and content review:
 
 - The page visibly explains Tektite as a public governance console.
-- The page shows the five v0.1 sections: Home, Governance Console, Evidence Ledger, Case Studies, Services/About.
+- The page shows the five v0.1 sections: Home, Governance Console,
+  Evidence Ledger, Case Studies, Services/About.
 - The page shows current claim ceilings and does not hide negative status.
 - The page does not imply independent validation.
 - The page does not imply High-Assurance status.
 - The page does not imply canonical DGAF efficacy.
 - The page does not imply certification or legal compliance.
-- The page does not expose private Notion, RDC, filesystem, credentials, personal logistics, or unsafe executor internals.
-- The page remains understandable without running scripts or connecting services.
+- The page does not expose private Notion, RDC, filesystem, credentials,
+  personal logistics, or unsafe executor internals.
+- The page remains understandable without running scripts or connecting
+  services.
 
 ## Evidence ceiling preserved
 
