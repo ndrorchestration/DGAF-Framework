@@ -16,9 +16,11 @@ If a required binding is absent, incomplete, or cannot be reverified, the state 
 
 ### Observation trust boundary
 
-The v1 validator is a consistency validator over supplied source observations. It verifies pointer structure, manifest structure, deterministic digests, authority references, and fixed non-promotion ceilings.
+The v1 pointer validator is a consistency validator over supplied source observations. It verifies pointer structure, manifest structure, deterministic digests, authority references, and fixed non-promotion ceilings.
 
-It does **not** autonomously query Git, GitHub, Notion, Drive, or another source authority to prove that a current path resolves to a declared blob/object identity. A producer or reconciliation step must first obtain those current source observations and bind them into the pointer/manifests. That observation procedure is part of the evidence chain.
+Repository artifact bindings receive an additional Git-object verification layer. `scripts/verify_semantic_source_git_bindings.py` resolves each declared `repository_commit:path` against local full Git history, requires the resolved object to be a blob, and fails if the actual blob identity differs from `git_blob_sha1`. CI runs this check for the AOSS and Tektite semantic-source manifests with `fetch-depth: 0`.
+
+This closes the repository path/blob trust gap but does **not** autonomously verify external authorities such as GitHub repositories, Notion, Drive, or runtime state. Those observations still require their own producer/reconciliation evidence.
 
 An embedded pointer is an immutable observation snapshot, not an autonomous freshness oracle. The legacy filename `ecosystem_state_pointer.current.json` means "latest embedded pointer artifact," not "self-proving current repository tip."
 
