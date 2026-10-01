@@ -143,8 +143,6 @@ Mutable Notion prose is also not used as a cryptographic semantic dependency for
 
 Consumer presence is itself part of the freshness contract. If a consumer binding exists on only one side of a comparison, the result is `MISSING_BINDING`, not `DEPENDENCY_ADVANCED`. Addition or disappearance of a binding therefore fails closed until the consumer is explicitly reconciled.
 
-
-
 For previous and newly observed pointers:
 
 1. Compare authority object identities.
